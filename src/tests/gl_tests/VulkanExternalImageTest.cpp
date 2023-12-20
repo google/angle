@@ -1382,5 +1382,134 @@ TEST_P(VulkanExternalImageTest, PreInitializedOnGLImportLinearWithFlags)
                                                     enableDebugLayers());
 }
 
+template <typename Traits>
+void RunUninitializedOnGLImportTest(bool useMemoryObjectFlags,
+                                    bool isSwiftshader,
+                                    bool enableDebugLayers)
+{
+    ASSERT(EnsureGLExtensionEnabled(Traits::MemoryObjectExtension()));
+    ASSERT(EnsureGLExtensionEnabled(Traits::SemaphoreExtension()));
+
+    VulkanHelper helper;
+    helper.initialize(isSwiftshader, enableDebugLayers);
+
+    VkFormat format = VK_FORMAT_R8G8B8A8_UNORM;
+    ANGLE_SKIP_TEST_IF(!Traits::CanCreateImage(helper, format, VK_IMAGE_TYPE_2D,
+                                               VK_IMAGE_TILING_OPTIMAL, kDefaultImageCreateFlags,
+                                               kDefaultImageUsageFlags));
+    ANGLE_SKIP_TEST_IF(!Traits::CanCreateSemaphore(helper));
+
+    VkSemaphore vkAcquireSemaphore = VK_NULL_HANDLE;
+    VkResult result                = Traits::CreateSemaphore(&helper, &vkAcquireSemaphore);
+    EXPECT_EQ(result, VK_SUCCESS);
+    EXPECT_TRUE(vkAcquireSemaphore != VK_NULL_HANDLE);
+
+    VkSemaphore vkReleaseSemaphore = VK_NULL_HANDLE;
+    result                         = Traits::CreateSemaphore(&helper, &vkReleaseSemaphore);
+    EXPECT_EQ(result, VK_SUCCESS);
+    EXPECT_TRUE(vkReleaseSemaphore != VK_NULL_HANDLE);
+
+    typename Traits::Handle acquireSemaphoreHandle = Traits::InvalidHandle();
+    result = Traits::ExportSemaphore(&helper, vkAcquireSemaphore, &acquireSemaphoreHandle);
+    EXPECT_EQ(result, VK_SUCCESS);
+    EXPECT_NE(acquireSemaphoreHandle, Traits::InvalidHandle());
+
+    typename Traits::Handle releaseSemaphoreHandle = Traits::InvalidHandle();
+    result = Traits::ExportSemaphore(&helper, vkReleaseSemaphore, &releaseSemaphoreHandle);
+    EXPECT_EQ(result, VK_SUCCESS);
+    EXPECT_NE(releaseSemaphoreHandle, Traits::InvalidHandle());
+
+    VkImage image                 = VK_NULL_HANDLE;
+    VkDeviceMemory deviceMemory   = VK_NULL_HANDLE;
+    VkDeviceSize deviceMemorySize = 0;
+
+    VkExtent3D extent = {64, 64, 1};
+    result =
+        Traits::CreateImage2D(&helper, format, kDefaultImageCreateFlags, kDefaultImageUsageFlags,
+                              nullptr, extent, &image, &deviceMemory, &deviceMemorySize);
+    EXPECT_EQ(result, VK_SUCCESS);
+
+    typename Traits::Handle memoryHandle = Traits::InvalidHandle();
+    result = Traits::ExportMemory(&helper, deviceMemory, &memoryHandle);
+    EXPECT_EQ(result, VK_SUCCESS);
+    EXPECT_NE(memoryHandle, Traits::InvalidHandle());
+
+    {
+        GLMemoryObject memoryObject;
+        GLint dedicatedMemory = GL_TRUE;
+        glMemoryObjectParameterivEXT(memoryObject, GL_DEDICATED_MEMORY_OBJECT_EXT,
+                                     &dedicatedMemory);
+        Traits::ImportMemory(memoryObject, deviceMemorySize, memoryHandle);
+
+        GLTexture texture;
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        if (useMemoryObjectFlags)
+        {
+            glTexStorageMemFlags2DANGLE(GL_TEXTURE_2D, 1, GL_RGBA8, 64, 64, memoryObject, 0,
+                                        kDefaultImageCreateFlags, kDefaultImageUsageFlags, nullptr);
+        }
+        else
+        {
+            glTexStorageMem2DEXT(GL_TEXTURE_2D, 1, GL_RGBA8, 64, 64, memoryObject, 0);
+        }
+
+        GLSemaphore glAcquireSemaphore;
+        Traits::ImportSemaphore(glAcquireSemaphore, acquireSemaphoreHandle);
+
+        // Submit the semaphore without touching the image
+        helper.signalSemaphore(vkAcquireSemaphore);
+
+        const GLuint barrierTexture   = texture;
+        const GLenum textureSrcLayout = GL_NONE;
+        glWaitSemaphoreEXT(glAcquireSemaphore, 0, nullptr, 1, &barrierTexture, &textureSrcLayout);
+
+        GLFramebuffer framebuffer;
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+
+        glClearColor(1, 0, 0, 1);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        uint32_t pixel             = 0u;
+        constexpr uint32_t kExpect = 0xFF0000FF;
+        glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, &pixel);
+        EXPECT_GL_NO_ERROR();
+
+        EXPECT_EQ(pixel, kExpect);
+        EXPECT_GL_NO_ERROR();
+
+        GLSemaphore glReleaseSemaphore;
+        Traits::ImportSemaphore(glReleaseSemaphore, releaseSemaphoreHandle);
+
+        const GLenum textureDstLayout = GL_LAYOUT_TRANSFER_SRC_EXT;
+        glSignalSemaphoreEXT(glReleaseSemaphore, 0, nullptr, 1, &barrierTexture, &textureDstLayout);
+
+        helper.waitSemaphoreAndAcquireImage(image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                                            VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+                                            vkReleaseSemaphore);
+    }
+
+    EXPECT_GL_NO_ERROR();
+
+    vkDeviceWaitIdle(helper.getDevice());
+    vkDestroyImage(helper.getDevice(), image, nullptr);
+    vkDestroySemaphore(helper.getDevice(), vkAcquireSemaphore, nullptr);
+    vkDestroySemaphore(helper.getDevice(), vkReleaseSemaphore, nullptr);
+    vkFreeMemory(helper.getDevice(), deviceMemory, nullptr);
+}
+
+// Test that texture storage created from VkImage memory can be imported as uninitialized in GL.
+TEST_P(VulkanExternalImageTest, UninitializedOnGLImport)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_memory_object_fd"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_semaphore_fd"));
+
+    RunUninitializedOnGLImportTest<OpaqueFdTraits>(false, isSwiftshader(), enableDebugLayers());
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(VulkanExternalImageTest);
 }  // namespace angle

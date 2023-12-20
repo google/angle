@@ -931,6 +931,35 @@ void VulkanHelper::releaseImageAndSignalSemaphore(VkImage image,
     ASSERT(result == VK_SUCCESS);
 }
 
+void VulkanHelper::signalSemaphore(VkSemaphore semaphore)
+{
+    VkResult result;
+
+    const VkSemaphore signalSemaphores[] = {
+        semaphore,
+    };
+    constexpr uint32_t signalSemaphoreCount = std::extent<decltype(signalSemaphores)>();
+
+    const VkSubmitInfo submits[] = {
+        /* [0] = */ {
+            /* .sType */ VK_STRUCTURE_TYPE_SUBMIT_INFO,
+            /* .pNext = */ nullptr,
+            /* .waitSemaphoreCount = */ 0,
+            /* .pWaitSemaphores = */ nullptr,
+            /* .pWaitDstStageMask = */ nullptr,
+            /* .commandBufferCount = */ 0,
+            /* .pCommandBuffers = */ nullptr,
+            /* .signalSemaphoreCount = */ signalSemaphoreCount,
+            /* .pSignalSemaphores = */ signalSemaphores,
+        },
+    };
+    constexpr uint32_t submitCount = std::extent<decltype(submits)>();
+
+    const VkFence fence = VK_NULL_HANDLE;
+    result              = vkQueueSubmit(mGraphicsQueue, submitCount, submits, fence);
+    ASSERT(result == VK_SUCCESS);
+}
+
 void VulkanHelper::waitSemaphoreAndAcquireImage(VkImage image,
                                                 VkImageLayout oldLayout,
                                                 VkImageLayout newLayout,
