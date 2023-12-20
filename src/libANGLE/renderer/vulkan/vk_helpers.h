@@ -896,6 +896,9 @@ class BufferHelper : public ReadWriteResource
     DescriptorSetCacheManager mDescriptorSetCacheManager;
     // For external buffer
     GLeglClientBufferEXT mClientBuffer;
+
+    // Whether ANGLE currently has ownership of this resource or it's released to external.
+    bool mIsReleasedToExternal;
 };
 
 class BufferPool : angle::NonCopyable
@@ -2850,6 +2853,9 @@ class ImageHelper final : public Resource, public angle::Subject
     RenderPassUsageFlags mRenderPassUsageFlags;
     // The QueueSerial that associated with the last barrier.
     QueueSerial mBarrierQueueSerial;
+
+    // Whether ANGLE currently has ownership of this resource or it's released to external.
+    bool mIsReleasedToExternal;
 
     // For imported images
     YcbcrConversionDesc mYcbcrConversionDesc;

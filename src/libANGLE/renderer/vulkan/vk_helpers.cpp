@@ -866,14 +866,6 @@ VkClearValue GetRobustResourceClearValue(const angle::Format &intendedFormat,
     return clearValue;
 }
 
-#if !defined(ANGLE_PLATFORM_MACOS) && !defined(ANGLE_PLATFORM_ANDROID)
-bool IsExternalQueueFamily(uint32_t queueFamilyIndex)
-{
-    return queueFamilyIndex == VK_QUEUE_FAMILY_EXTERNAL ||
-           queueFamilyIndex == VK_QUEUE_FAMILY_FOREIGN_EXT;
-}
-#endif
-
 bool IsShaderReadOnlyLayout(const ImageMemoryBarrierData &imageLayout)
 {
     // We also use VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL for texture sample from depth
@@ -4786,7 +4778,8 @@ BufferHelper::BufferHelper()
       mCurrentWriteStages(0),
       mCurrentReadStages(0),
       mSerial(),
-      mClientBuffer(nullptr)
+      mClientBuffer(nullptr),
+      mIsReleasedToExternal(false)
 {}
 
 BufferHelper::~BufferHelper()
@@ -4808,6 +4801,7 @@ BufferHelper &BufferHelper::operator=(BufferHelper &&other)
     mBufferWithUserSize = std::move(other.mBufferWithUserSize);
 
     mCurrentQueueFamilyIndex = other.mCurrentQueueFamilyIndex;
+    mIsReleasedToExternal    = other.mIsReleasedToExternal;
     mCurrentWriteAccess      = other.mCurrentWriteAccess;
     mCurrentReadAccess       = other.mCurrentReadAccess;
     mCurrentWriteStages      = other.mCurrentWriteStages;
@@ -4962,6 +4956,7 @@ void BufferHelper::initializeBarrierTracker(Context *context)
 {
     RendererVk *renderer     = context->getRenderer();
     mCurrentQueueFamilyIndex = renderer->getQueueFamilyIndex();
+    mIsReleasedToExternal    = false;
     mSerial                  = renderer->getResourceSerialFactory().generateBufferSerial();
     mCurrentWriteAccess      = 0;
     mCurrentReadAccess       = 0;
@@ -5228,6 +5223,7 @@ void BufferHelper::acquireFromExternal(ContextVk *contextVk,
                                        OutsideRenderPassCommandBuffer *commandBuffer)
 {
     mCurrentQueueFamilyIndex = externalQueueFamilyIndex;
+    mIsReleasedToExternal    = false;
     changeQueue(rendererQueueFamilyIndex, commandBuffer);
 }
 
@@ -5237,17 +5233,13 @@ void BufferHelper::releaseToExternal(ContextVk *contextVk,
                                      OutsideRenderPassCommandBuffer *commandBuffer)
 {
     ASSERT(mCurrentQueueFamilyIndex == rendererQueueFamilyIndex);
+    mIsReleasedToExternal = true;
     changeQueue(externalQueueFamilyIndex, commandBuffer);
 }
 
 bool BufferHelper::isReleasedToExternal() const
 {
-#if !defined(ANGLE_PLATFORM_MACOS) && !defined(ANGLE_PLATFORM_ANDROID)
-    return IsExternalQueueFamily(mCurrentQueueFamilyIndex);
-#else
-    // TODO(anglebug.com/4635): Implement external memory barriers on Mac/Android.
-    return false;
-#endif
+    return mIsReleasedToExternal;
 }
 
 bool BufferHelper::recordReadBarrier(VkAccessFlags readAccessType,
@@ -5396,6 +5388,7 @@ void ImageHelper::resetCachedProperties()
     mImageSerial                 = kInvalidImageSerial;
     mCurrentLayout               = ImageLayout::Undefined;
     mCurrentQueueFamilyIndex     = std::numeric_limits<uint32_t>::max();
+    mIsReleasedToExternal        = false;
     mLastNonShaderReadOnlyLayout = ImageLayout::Undefined;
     mCurrentShaderReadStageMask  = 0;
     mFirstAllocatedLevel         = gl::LevelIndex(0);
@@ -5678,6 +5671,7 @@ angle::Result ImageHelper::initExternal(Context *context,
 
     mCurrentLayout               = initialLayout;
     mCurrentQueueFamilyIndex     = std::numeric_limits<uint32_t>::max();
+    mIsReleasedToExternal        = false;
     mLastNonShaderReadOnlyLayout = ImageLayout::Undefined;
     mCurrentShaderReadStageMask  = 0;
 
@@ -5937,8 +5931,8 @@ angle::Result ImageHelper::initializeNonZeroMemory(Context *context,
 
     // Queue a DMA copy.
     VkSemaphore acquireNextImageSemaphore;
-    barrierImpl(context, getAspectFlags(), ImageLayout::TransferDst, mCurrentQueueFamilyIndex,
-                &commandBuffer, &acquireNextImageSemaphore);
+    barrierImpl(context, getAspectFlags(), ImageLayout::TransferDst,
+                renderer->getQueueFamilyIndex(), &commandBuffer, &acquireNextImageSemaphore);
     // SwapChain image should not come here
     ASSERT(acquireNextImageSemaphore == VK_NULL_HANDLE);
 
@@ -6066,6 +6060,7 @@ VkResult ImageHelper::initMemory(Context *context,
     }
 
     mCurrentQueueFamilyIndex = renderer->getQueueFamilyIndex();
+    mIsReleasedToExternal    = false;
     *sizeOut                 = mAllocationSize;
 
     return VK_SUCCESS;
@@ -6141,6 +6136,7 @@ angle::Result ImageHelper::initExternalMemory(Context *context,
                                   &mImage, &mMemoryTypeIndex, &mDeviceMemory));
     }
     mCurrentQueueFamilyIndex = currentQueueFamilyIndex;
+    mIsReleasedToExternal    = false;
 
     return angle::Result::Continue;
 }
@@ -6339,6 +6335,7 @@ void ImageHelper::init2DWeakReference(Context *context,
     mSamples            = std::max(samples, 1);
     mImageSerial        = context->getRenderer()->getResourceSerialFactory().generateImageSerial();
     mCurrentQueueFamilyIndex = context->getRenderer()->getQueueFamilyIndex();
+    mIsReleasedToExternal    = false;
     mCurrentLayout           = ImageLayout::Undefined;
     mLayerCount              = 1;
     mLevelCount              = 1;
@@ -6631,9 +6628,15 @@ void ImageHelper::acquireFromExternal(ContextVk *contextVk,
 
     mCurrentLayout           = currentLayout;
     mCurrentQueueFamilyIndex = externalQueueFamilyIndex;
+    mIsReleasedToExternal    = false;
 
-    changeLayoutAndQueue(contextVk, getAspectFlags(), mCurrentLayout, rendererQueueFamilyIndex,
-                         commandBuffer);
+    // Only change the layout and queue if the layout is anything by Undefined.  If it is undefined,
+    // leave it to transition out as the image is used later.
+    if (currentLayout != ImageLayout::Undefined)
+    {
+        changeLayoutAndQueue(contextVk, getAspectFlags(), mCurrentLayout, rendererQueueFamilyIndex,
+                             commandBuffer);
+    }
 
     // It is unknown how the external has modified the image, so assume every subresource has
     // defined content.  That is unless the layout is Undefined.
@@ -6653,19 +6656,20 @@ void ImageHelper::releaseToExternal(ContextVk *contextVk,
                                     ImageLayout desiredLayout,
                                     OutsideRenderPassCommandBuffer *commandBuffer)
 {
-    ASSERT(mCurrentQueueFamilyIndex == rendererQueueFamilyIndex);
-    changeLayoutAndQueue(contextVk, getAspectFlags(), desiredLayout, externalQueueFamilyIndex,
-                         commandBuffer);
+    ASSERT(!mIsReleasedToExternal);
+    mIsReleasedToExternal = true;
+    // A layout change is unnecessary if the image that was previously acquired was never used by
+    // GL!
+    if (mCurrentQueueFamilyIndex != externalQueueFamilyIndex || mCurrentLayout != desiredLayout)
+    {
+        changeLayoutAndQueue(contextVk, getAspectFlags(), desiredLayout, externalQueueFamilyIndex,
+                             commandBuffer);
+    }
 }
 
 bool ImageHelper::isReleasedToExternal() const
 {
-#if !defined(ANGLE_PLATFORM_MACOS) && !defined(ANGLE_PLATFORM_ANDROID)
-    return IsExternalQueueFamily(mCurrentQueueFamilyIndex);
-#else
-    // TODO(anglebug.com/4635): Implement external memory barriers on Mac/Android.
-    return false;
-#endif
+    return mIsReleasedToExternal;
 }
 
 LevelIndex ImageHelper::toVkLevel(gl::LevelIndex levelIndexGL) const
@@ -6696,18 +6700,6 @@ ANGLE_INLINE void ImageHelper::initImageMemoryBarrierStruct(
     imageMemoryBarrier->srcQueueFamilyIndex = mCurrentQueueFamilyIndex;
     imageMemoryBarrier->dstQueueFamilyIndex = newQueueFamilyIndex;
     imageMemoryBarrier->image               = mImage.getHandle();
-
-    // When an external texture is acquired, a queue family ownership transfer is done.  If the
-    // layout of the image is GL_NONE (i.e. VK_IMAGE_LAYOUT_UNDEFINED), it is possible for
-    // |imageMemoryBarrier->newLayout| to end up as UNDEFINED, which is invalid.  In that case, the
-    // GENERAL layout is used.
-    //
-    // mCurrentLayout will still be ImageLayout::Undefined and future transitions from the image
-    // will still use the UNDEFINED layout.
-    if (imageMemoryBarrier->newLayout == VK_IMAGE_LAYOUT_UNDEFINED)
-    {
-        imageMemoryBarrier->newLayout = VK_IMAGE_LAYOUT_GENERAL;
-    }
 
     // Transition the whole resource.
     imageMemoryBarrier->subresourceRange.aspectMask     = aspectMask;
@@ -6782,7 +6774,7 @@ void ImageHelper::recordWriteBarrier(Context *context,
                                      OutsideRenderPassCommandBufferHelper *commands)
 {
     VkSemaphore acquireNextImageSemaphore;
-    barrierImpl(context, aspectMask, newLayout, mCurrentQueueFamilyIndex,
+    barrierImpl(context, aspectMask, newLayout, context->getRenderer()->getQueueFamilyIndex(),
                 &commands->getCommandBuffer(), &acquireNextImageSemaphore);
 
     if (acquireNextImageSemaphore != VK_NULL_HANDLE)
@@ -6802,7 +6794,7 @@ void ImageHelper::recordReadBarrier(Context *context,
     }
 
     VkSemaphore acquireNextImageSemaphore;
-    barrierImpl(context, aspectMask, newLayout, mCurrentQueueFamilyIndex,
+    barrierImpl(context, aspectMask, newLayout, context->getRenderer()->getQueueFamilyIndex(),
                 &commands->getCommandBuffer(), &acquireNextImageSemaphore);
 
     if (acquireNextImageSemaphore != VK_NULL_HANDLE)
@@ -6874,7 +6866,8 @@ bool ImageHelper::updateLayoutAndBarrier(Context *context,
         else
         {
             VkImageMemoryBarrier imageMemoryBarrier = {};
-            initImageMemoryBarrierStruct(context, aspectMask, newLayout, mCurrentQueueFamilyIndex,
+            initImageMemoryBarrierStruct(context, aspectMask, newLayout,
+                                         context->getRenderer()->getQueueFamilyIndex(),
                                          &imageMemoryBarrier);
             // if we transition from shaderReadOnly, we must add in stashed shader stage masks since
             // there might be outstanding shader reads from stages other than current layout. We do
@@ -8645,6 +8638,7 @@ void ImageHelper::stageSelfAsSubresourceUpdates(
     // Reset information for current (invalid) image.
     mCurrentLayout               = ImageLayout::Undefined;
     mCurrentQueueFamilyIndex     = std::numeric_limits<uint32_t>::max();
+    mIsReleasedToExternal        = false;
     mLastNonShaderReadOnlyLayout = ImageLayout::Undefined;
     mCurrentShaderReadStageMask  = 0;
     mImageSerial                 = kInvalidImageSerial;
@@ -9472,8 +9466,9 @@ angle::Result ImageHelper::copySurfaceImageToBuffer(DisplayVk *displayVk,
                                                  &primaryCommandBuffer));
 
     VkSemaphore acquireNextImageSemaphore;
-    barrierImpl(displayVk, getAspectFlags(), ImageLayout::TransferSrc, mCurrentQueueFamilyIndex,
-                &primaryCommandBuffer, &acquireNextImageSemaphore);
+    barrierImpl(displayVk, getAspectFlags(), ImageLayout::TransferSrc,
+                rendererVk->getQueueFamilyIndex(), &primaryCommandBuffer,
+                &acquireNextImageSemaphore);
     primaryCommandBuffer.copyImageToBuffer(mImage, getCurrentLayout(displayVk),
                                            bufferHelper->getBuffer().getHandle(), 1, &region);
 
@@ -9519,8 +9514,8 @@ angle::Result ImageHelper::copyBufferToSurfaceImage(DisplayVk *displayVk,
         rendererVk->getCommandBufferOneOff(displayVk, ProtectionType::Unprotected, &commandBuffer));
 
     VkSemaphore acquireNextImageSemaphore;
-    barrierImpl(displayVk, getAspectFlags(), ImageLayout::TransferDst, mCurrentQueueFamilyIndex,
-                &commandBuffer, &acquireNextImageSemaphore);
+    barrierImpl(displayVk, getAspectFlags(), ImageLayout::TransferDst,
+                rendererVk->getQueueFamilyIndex(), &commandBuffer, &acquireNextImageSemaphore);
     commandBuffer.copyBufferToImage(bufferHelper->getBuffer().getHandle(), mImage,
                                     getCurrentLayout(displayVk), 1, &region);
 
