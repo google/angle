@@ -282,6 +282,8 @@ constexpr const char *kSkippedMessages[] = {
     // http://anglebug.com/8466
     "VUID-VkMemoryAllocateInfo-allocationSize-01742",
     "VUID-VkMemoryDedicatedAllocateInfo-image-01878",
+    // http://anglebug.com/8468
+    "VUID-vkCmdDraw-pNext-09461",
 };
 
 // Validation messages that should be ignored only when VK_EXT_primitive_topology_list_restart is
