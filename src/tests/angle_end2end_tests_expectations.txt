@@ -265,13 +265,6 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 5345 MAC METAL AMD : TransformFeedbackTest.BufferOutOfMemory/ES3_Metal = SKIP
 5345 MAC METAL INTEL : TransformFeedbackTest.BufferOutOfMemory/ES3_Metal = SKIP
 
-// Direct Metal does not yet implement vertex attribute aliasing
-// Attribute aliasing is only allowed in GLSL ES 1.0 but disallowed by WebGL
-// and GLSL ES 3.00 so it's a low priority to fix.
-6297 MAC METAL : VertexAttributeTest.AliasingMatrixAttribLocations/* = SKIP
-6297 MAC METAL : VertexAttributeTest.AliasingVectorAttribLocations/* = SKIP
-6297 MAC METAL : VertexAttributeTest.AliasingVectorAttribLocationsDifferingPrecisions/* = SKIP
-
 // Old Macs can't run these and there's apparently no way to filter the old Macs
 // from running these tests at the moment.
 
@@ -885,18 +878,6 @@ b/308668391 PIXEL4ORXL VULKAN : ImageTest.SourceYUVAHBTargetExternalRGBSampleNoD
 7994 IOS METAL : UniformBlockWithOneLargeArrayMemberTest.MemberTypeIsStructAndInstancedArray/ES3_Metal = SKIP
 7994 IOS METAL : UniformBlockWithOneLargeArrayMemberTest.SharedSameBufferWithOtherOne/ES3_Metal = SKIP
 7994 IOS METAL : UniformBlockWithOneLargeArrayMemberTest.TwoUniformBlocksInSameProgram/ES3_Metal = SKIP
-7994 IOS METAL : VertexAttributeTest.AliasingMatrixAttribLocations/ES2_Metal = SKIP
-7994 IOS METAL : VertexAttributeTest.AliasingMatrixAttribLocations/ES3_Metal = SKIP
-7994 IOS METAL : VertexAttributeTest.AliasingMatrixAttribLocations/ES3_Metal_HasCheapRenderPass_NoHasExplicitMemBarrier = SKIP
-7994 IOS METAL : VertexAttributeTest.AliasingMatrixAttribLocations/ES3_Metal_NoHasExplicitMemBarrier_NoHasCheapRenderPass = SKIP
-7994 IOS METAL : VertexAttributeTest.AliasingVectorAttribLocations/ES2_Metal = SKIP
-7994 IOS METAL : VertexAttributeTest.AliasingVectorAttribLocations/ES3_Metal = SKIP
-7994 IOS METAL : VertexAttributeTest.AliasingVectorAttribLocations/ES3_Metal_HasCheapRenderPass_NoHasExplicitMemBarrier = SKIP
-7994 IOS METAL : VertexAttributeTest.AliasingVectorAttribLocations/ES3_Metal_NoHasExplicitMemBarrier_NoHasCheapRenderPass = SKIP
-7994 IOS METAL : VertexAttributeTest.AliasingVectorAttribLocationsDifferingPrecisions/ES2_Metal = SKIP
-7994 IOS METAL : VertexAttributeTest.AliasingVectorAttribLocationsDifferingPrecisions/ES3_Metal = SKIP
-7994 IOS METAL : VertexAttributeTest.AliasingVectorAttribLocationsDifferingPrecisions/ES3_Metal_HasCheapRenderPass_NoHasExplicitMemBarrier = SKIP
-7994 IOS METAL : VertexAttributeTest.AliasingVectorAttribLocationsDifferingPrecisions/ES3_Metal_NoHasExplicitMemBarrier_NoHasCheapRenderPass = SKIP
 7994 IOS METAL : WebGL2ValidationStateChangeTest.MultiAttachmentDrawFramebufferNegativeAPI/ES3_Metal = SKIP
 8043 IOS METAL : FramebufferTest_ES3.RenderSharedExponent/ES3_Metal = SKIP
 8051 IOS METAL : Texture2DDepthStencilTestES3.TexSampleModes*Swizzled/ES3_Metal = SKIP
