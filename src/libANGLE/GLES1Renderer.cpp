@@ -153,7 +153,7 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode,
         unsigned int clientActiveTexture = gles1State->getClientTextureUnit();
         bool isTextureEnabled =
             tex2DEnables[clientActiveTexture] || texCubeEnables[clientActiveTexture];
-        glState->getVertexArray()->enableAttribute(
+        glState->setEnableVertexAttribArray(
             TexCoordArrayIndex(clientActiveTexture),
             isTextureEnabled && gles1State->isTexCoordArrayEnabled(clientActiveTexture));
         context->getStateCache().onGLES1TextureStateChange(context);

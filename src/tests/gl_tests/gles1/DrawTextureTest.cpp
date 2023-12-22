@@ -305,17 +305,31 @@ TEST_P(DrawTextureTest, DrawWithTexCoordPtrThenDisableTexture2DAndDrawAnother)
     EXPECT_GL_NO_ERROR();
     EXPECT_PIXEL_RECT_EQ(0, 0, kWindowWidth, kWindowHeight, GLColor::blue);
 
-    // Re-enable texture and draw a final triangle fan using the first vertex pointer. There is no
-    // need to set the texture coord pointer again. However, since GL_TEXTURE_ENV_MODE is set to the
-    // default GL_MODULATE, the effect of glColor4ub() from before should be reversed by resetting
-    // the color to the default (1, 1, 1, 1).
+    // Re-enable texture and draw using the same vertex pointer. This is to make sure that enabling
+    // GL_TEXTURE_2D is enough to use the texture data.
+    // There is no need to set the texture coord pointer again. However, since GL_TEXTURE_ENV_MODE
+    // is set to the default GL_MODULATE, the effect of glColor4ub() from before should be reversed
+    // by resetting the color to the default (1, 1, 1, 1).
+    // In addition, since the tex coord pointer is not defined for the current vertex pointer, the
+    // texture colors will shift position to be mapped to the new primitive, which will only cover
+    // the top-left half of the window.
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     glEnable(GL_TEXTURE_2D);
 
-    glVertexPointer(2, GL_FLOAT, 0, vertexPtrDataWithTexture.data());
     glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, kWindowHeight / 4, kColorCornerBL);
+    EXPECT_PIXEL_COLOR_EQ(kWindowWidth * 3 / 4, kWindowHeight - 1, kColorCornerBR);
+    EXPECT_PIXEL_COLOR_EQ(0, kWindowHeight * 3 / 4, kColorCornerTL);
+    EXPECT_PIXEL_COLOR_EQ(kWindowWidth / 2, kWindowHeight - 1, kColorCornerTR);
 
+    // Update the vertex pointer to the original and draw a final triangle fan.
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glVertexPointer(2, GL_FLOAT, 0, vertexPtrDataWithTexture.data());
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
     EXPECT_GL_NO_ERROR();
     EXPECT_PIXEL_RECT_EQ(0, 0, kWindowWidth / 2, kWindowHeight / 2, kColorCornerBL);
