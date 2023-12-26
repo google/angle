@@ -1321,6 +1321,13 @@ struct FeaturesVk : FeatureSetBase
         &members, "https://issuetracker.google.com/309028728"
     };
 
+    FeatureInfo forceSampleUsageForImageWithExternalFormat = {
+        "forceSampleUsageForImageWithExternalFormat",
+        FeatureCategory::VulkanAppWorkarounds,
+        "Force enable VK_IMAGE_USAGE_SAMPLED_BIT usage for images with external format",
+        &members, "https://issuetracker.google.com/155487768"
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;
