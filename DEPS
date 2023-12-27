@@ -45,7 +45,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '709f4a531d4b0fa603ab24c9186d1d5f8017253d',
+  'chromium_revision': '5bb93a4bc2f1e1f7231119e1936f935e3059b64b',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -90,7 +90,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': 'f2abc0cd0cd83b02d25af8ecb68c586470915793',
+  'catapult_revision': '2e8980b21ba0aa30566f99b88c44fc64e988f251',
 
   # the commit queue can handle CLs rolling Fuchsia sdk
   # and whatever else without interference from each other.
@@ -255,7 +255,7 @@ deps = {
       'packages': [
           {
                'package': 'chromium/third_party/android_build_tools/lint',
-               'version': 'pvFK7MtH5IsrWhv7D-JOyKc5CPgDCyDAWjN_DbAFjVwC',
+               'version': 'lFTxX9qC3bg4t8i5dN6Wqa666iz7rHuVSLkzpUDmdk4C',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -282,7 +282,7 @@ deps = {
       'packages': [
             {
                 'package': 'chromium/third_party/android_toolchain/android_toolchain',
-                'version': 'XSjN84pHxBPX13CrUj3fQjEroncvFGGeJY9wDVEDswoC',
+                'version': 'wpJvg81kuXdMM66r_l9Doa-pLfR6S26Jd1x40LpwWEoC',
             },
       ],
       'condition': 'checkout_android and not build_with_chromium',
