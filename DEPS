@@ -45,7 +45,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '785f1c59fc7fa3c6a543e4ed7316d2f0a0d5204c',
+  'chromium_revision': '51f403269037998448abafa553ff7f51b4a3c800',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
