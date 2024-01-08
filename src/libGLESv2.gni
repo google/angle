@@ -535,7 +535,7 @@ libangle_cl_headers = [
   "src/libANGLE/CLProgram.h",
   "src/libANGLE/CLRefPointer.h",
   "src/libANGLE/CLSampler.h",
-  "src/libANGLE/CLtypes.h",
+  "src/libANGLE/cl_types.h",
   "src/libANGLE/cl_utils.h",
   "src/libANGLE/renderer/CLCommandQueueImpl.h",
   "src/libANGLE/renderer/CLContextImpl.h",
@@ -547,7 +547,7 @@ libangle_cl_headers = [
   "src/libANGLE/renderer/CLPlatformImpl.h",
   "src/libANGLE/renderer/CLProgramImpl.h",
   "src/libANGLE/renderer/CLSamplerImpl.h",
-  "src/libANGLE/renderer/CLtypes.h",
+  "src/libANGLE/renderer/cl_types.h",
   "src/libANGLE/validationCL.h",
   "src/libANGLE/validationCL_autogen.h",
 ]

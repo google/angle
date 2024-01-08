@@ -3,12 +3,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// CLtypes.h: Defines common types for the OpenCL support in ANGLE.
+// cl_types.h: Defines common types for the OpenCL support in ANGLE.
 
 #ifndef LIBANGLE_RENDERER_CLTYPES_H_
 #define LIBANGLE_RENDERER_CLTYPES_H_
 
-#include "libANGLE/CLtypes.h"
+#include "libANGLE/cl_types.h"
 
 namespace rx
 {
