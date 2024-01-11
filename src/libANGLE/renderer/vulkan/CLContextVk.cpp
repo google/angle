@@ -6,6 +6,7 @@
 // CLContextVk.cpp: Implements the class methods for CLContextVk.
 
 #include "libANGLE/renderer/vulkan/CLContextVk.h"
+#include "libANGLE/renderer/vulkan/CLCommandQueueVk.h"
 #include "libANGLE/renderer/vulkan/DisplayVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
@@ -69,8 +70,12 @@ angle::Result CLContextVk::getDevices(cl::DevicePtrs *devicePtrsOut) const
 angle::Result CLContextVk::createCommandQueue(const cl::CommandQueue &commandQueue,
                                               CLCommandQueueImpl::Ptr *commandQueueOut)
 {
-    UNIMPLEMENTED();
-    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+    *commandQueueOut = CLCommandQueueVk::Ptr(new (std::nothrow) CLCommandQueueVk(commandQueue));
+    if (*commandQueueOut == nullptr)
+    {
+        ANGLE_CL_RETURN_ERROR(CL_OUT_OF_HOST_MEMORY);
+    }
+    return angle::Result::Continue;
 }
 
 angle::Result CLContextVk::createBuffer(const cl::Buffer &buffer,
