@@ -195,6 +195,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::HasTextureSwizzle, "hasTextureSwizzle"},
     {Feature::InitFragmentOutputVariables, "initFragmentOutputVariables"},
     {Feature::InitializeCurrentVertexAttributes, "initializeCurrentVertexAttributes"},
+    {Feature::InjectAsmStatementIntoLoopBodies, "injectAsmStatementIntoLoopBodies"},
     {Feature::IntelDisableFastMath, "intelDisableFastMath"},
     {Feature::IntelExplicitBoolCastWorkaround, "intelExplicitBoolCastWorkaround"},
     {Feature::KeepBufferShadowCopy, "keepBufferShadowCopy"},

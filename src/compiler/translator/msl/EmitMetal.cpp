@@ -144,6 +144,8 @@ class GenMetalTraverser : public TIntermTraverser
                            const VarDecl &decl,
                            const TQualifier qualifier);
 
+    void emitLoopBody(TIntermBlock *bodyNode);
+
     struct FieldAnnotationIndices
     {
         size_t attribute = 0;
@@ -191,13 +193,14 @@ class GenMetalTraverser : public TIntermTraverser
     bool isTraversingVertexMain       = false;
     bool mTemporarilyDisableSemicolon = false;
     std::unordered_map<const TSymbol *, Name> mRenamedSymbols;
-    const FuncToName mFuncToName          = BuildFuncToName();
-    size_t mMainTextureIndex              = 0;
-    size_t mMainSamplerIndex              = 0;
-    size_t mMainUniformBufferIndex        = 0;
-    size_t mDriverUniformsBindingIndex    = 0;
-    size_t mUBOArgumentBufferBindingIndex = 0;
-    bool mRasterOrderGroupsSupported      = false;
+    const FuncToName mFuncToName           = BuildFuncToName();
+    size_t mMainTextureIndex               = 0;
+    size_t mMainSamplerIndex               = 0;
+    size_t mMainUniformBufferIndex         = 0;
+    size_t mDriverUniformsBindingIndex     = 0;
+    size_t mUBOArgumentBufferBindingIndex  = 0;
+    bool mRasterOrderGroupsSupported       = false;
+    bool mInjectAsmStatementIntoLoopBodies = false;
 };
 }  // anonymous namespace
 
@@ -224,7 +227,8 @@ GenMetalTraverser::GenMetalTraverser(const TCompiler &compiler,
       mDriverUniformsBindingIndex(compileOptions.metal.driverUniformsBindingIndex),
       mUBOArgumentBufferBindingIndex(compileOptions.metal.UBOArgumentBufferBindingIndex),
       mRasterOrderGroupsSupported(compileOptions.pls.fragmentSyncType ==
-                                  ShFragmentSynchronizationType::RasterOrderGroups_Metal)
+                                  ShFragmentSynchronizationType::RasterOrderGroups_Metal),
+      mInjectAsmStatementIntoLoopBodies(compileOptions.metal.injectAsmStatementIntoLoopBodies)
 {}
 
 void GenMetalTraverser::emitIndentation()
@@ -875,6 +879,24 @@ void GenMetalTraverser::emitPostQualifier(const EmitVariableDeclarationConfig &e
 
         TranslatorMetalReflection *reflection = mtl::getTranslatorMetalReflection(&mCompiler);
         reflection->hasInvariance             = true;
+    }
+}
+
+void GenMetalTraverser::emitLoopBody(TIntermBlock *bodyNode)
+{
+    if (mInjectAsmStatementIntoLoopBodies)
+    {
+        emitOpenBrace();
+
+        emitIndentation();
+        mOut << "__asm__(\"\");\n";
+    }
+
+    bodyNode->traverse(this);
+
+    if (mInjectAsmStatementIntoLoopBodies)
+    {
+        emitCloseBrace();
     }
 }
 
@@ -2584,7 +2606,7 @@ bool GenMetalTraverser::visitForLoop(TIntermLoop *loopNode)
 
     mOut << ")\n";
 
-    bodyNode->traverse(this);
+    emitLoopBody(bodyNode);
 
     return false;
 }
@@ -2604,7 +2626,7 @@ bool GenMetalTraverser::visitWhileLoop(TIntermLoop *loopNode)
     mOut << "while (";
     condNode->traverse(this);
     mOut << ")\n";
-    bodyNode->traverse(this);
+    emitLoopBody(bodyNode);
 
     return false;
 }
@@ -2622,7 +2644,7 @@ bool GenMetalTraverser::visitDoWhileLoop(TIntermLoop *loopNode)
 
     emitIndentation();
     mOut << "do\n";
-    bodyNode->traverse(this);
+    emitLoopBody(bodyNode);
     mOut << "\n";
     emitIndentation();
     mOut << "while (";

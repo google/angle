@@ -1371,6 +1371,10 @@ void DisplayMtl::initializeFeatures()
     // anyway, so this feature would have no benefit besides adding additional resolve step and
     // memory overhead of the hidden single-sampled textures.
     ANGLE_FEATURE_CONDITION((&mFeatures), alwaysResolveMultisampleRenderBuffers, isARM);
+
+    // Metal compiler optimizations may remove infinite loops causing crashes later in shader
+    // execution. http://crbug.com/1513738
+    ANGLE_FEATURE_CONDITION((&mFeatures), injectAsmStatementIntoLoopBodies, true);
 }
 
 angle::Result DisplayMtl::initializeShaderLibrary()
