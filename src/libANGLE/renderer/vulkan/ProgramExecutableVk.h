@@ -124,7 +124,7 @@ class ProgramExecutableVk : public ProgramExecutableImpl
     angle::Result load(ContextVk *contextVk,
                        bool isSeparable,
                        gl::BinaryInputStream *stream,
-                       bool *successOut);
+                       egl::CacheGetResult *resultOut);
 
     void setUniform1fv(GLint location, GLsizei count, const GLfloat *v) override;
     void setUniform2fv(GLint location, GLsizei count, const GLfloat *v) override;
