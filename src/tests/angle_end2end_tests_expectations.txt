@@ -539,6 +539,8 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 
 7207 PIXEL4ORXL VULKAN : VulkanPerformanceCounterTest.InRenderpassFlushShouldNotBreakRenderpass/* = SKIP
 
+8480 PIXEL4ORXL : GLSLTest_ES3.LargeConstGlobalArraysOfStructs/* = SKIP
+
 7372 PIXEL4ORXL VULKAN : FramebufferTest_ES3.SurfaceDimensionsChangeAndFragCoord/* = SKIP
 
 7683 PIXEL4ORXL VULKAN : PixelLocalStorageTest.MaxCombinedDrawBuffersAndPLSPlanes/* = SKIP
