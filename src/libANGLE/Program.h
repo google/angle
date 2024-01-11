@@ -392,7 +392,7 @@ class Program final : public LabeledObject, public angle::Subject
     angle::Result loadBinary(const Context *context,
                              const void *binary,
                              GLsizei length,
-                             bool *successOut);
+                             egl::CacheGetResult *resultOut);
 
     InfoLog &getInfoLog() { return mState.mInfoLog; }
     int getInfoLogLength() const;
@@ -506,6 +506,7 @@ class Program final : public LabeledObject, public angle::Subject
     bool deserialize(const Context *context, BinaryInputStream &stream);
 
     void unlink();
+    void setupExecutableForLink(const Context *context);
     void deleteSelf(const Context *context);
 
     angle::Result linkJobImpl(const Caps &caps,

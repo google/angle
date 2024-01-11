@@ -70,6 +70,7 @@ enum class Feature
     CompressVertexData,
     CopyIOSurfaceToNonIOSurfaceForReadOptimization,
     CopyTextureToBufferForReadOptimization,
+    CorruptProgramBinaryForTesting,
     DecodeEncodeSRGBForGenerateMipmap,
     DeferFlushUntilEndRenderPass,
     DepthStencilBlitExtraCopy,

@@ -916,11 +916,8 @@ void Program::makeNewExecutable(const Context *context)
     onStateChange(angle::SubjectMessage::ProgramUnlinked);
 }
 
-angle::Result Program::link(const Context *context, angle::JobResultExpectancy resultExpectancy)
+void Program::setupExecutableForLink(const Context *context)
 {
-    auto *platform   = ANGLEPlatformCurrent();
-    double startTime = platform->currentTime(platform);
-
     // Create a new executable to hold the result of the link.  The previous executable may still be
     // referenced by the contexts the program is current on, and any program pipelines it may be
     // used in.  Once link succeeds, the users of the program are notified to update their
@@ -971,6 +968,14 @@ angle::Result Program::link(const Context *context, angle::JobResultExpectancy r
     mState.mExecutable->mPod.isSeparable                 = mState.mSeparable;
 
     mState.mInfoLog.reset();
+}
+
+angle::Result Program::link(const Context *context, angle::JobResultExpectancy resultExpectancy)
+{
+    auto *platform   = ANGLEPlatformCurrent();
+    double startTime = platform->currentTime(platform);
+
+    setupExecutableForLink(context);
 
     mProgramHash              = {0};
     MemoryProgramCache *cache = context->getMemoryProgramCache();
@@ -979,21 +984,33 @@ angle::Result Program::link(const Context *context, angle::JobResultExpectancy r
     if (cache && !isSeparable())
     {
         std::lock_guard<std::mutex> cacheLock(context->getProgramCacheMutex());
-        bool success = false;
-        ANGLE_TRY(cache->getProgram(context, this, &mProgramHash, &success));
+        egl::CacheGetResult result = egl::CacheGetResult::NotFound;
+        ANGLE_TRY(cache->getProgram(context, this, &mProgramHash, &result));
 
-        if (success)
+        switch (result)
         {
-            // No need to care about the compile jobs any more.
-            mState.mShaderCompileJobs = {};
+            case egl::CacheGetResult::GetSuccess:
+            {
+                // No need to care about the compile jobs any more.
+                mState.mShaderCompileJobs = {};
 
-            std::scoped_lock lock(mHistogramMutex);
-            // Succeeded in loading the binaries in the front-end, back end may still be loading
-            // asynchronously
-            double delta = platform->currentTime(platform) - startTime;
-            int us       = static_cast<int>(delta * 1000'000.0);
-            ANGLE_HISTOGRAM_COUNTS("GPU.ANGLE.ProgramCache.ProgramCacheHitTimeUS", us);
-            return angle::Result::Continue;
+                std::scoped_lock lock(mHistogramMutex);
+                // Succeeded in loading the binaries in the front-end, back end may still be loading
+                // asynchronously
+                double delta = platform->currentTime(platform) - startTime;
+                int us       = static_cast<int>(delta * 1000'000.0);
+                ANGLE_HISTOGRAM_COUNTS("GPU.ANGLE.ProgramCache.ProgramCacheHitTimeUS", us);
+                return angle::Result::Continue;
+            }
+            case egl::CacheGetResult::Rejected:
+                // If the program binary was found but rejected, the program executable may be in an
+                // inconsistent half-loaded state.  In that case, start over.
+                mLinkingState.reset();
+                setupExecutableForLink(context);
+                break;
+            case egl::CacheGetResult::NotFound:
+            default:
+                break;
         }
     }
 
@@ -1370,15 +1387,17 @@ angle::Result Program::setBinary(const Context *context,
 
     makeNewExecutable(context);
 
-    bool success = false;
-    return loadBinary(context, binary, length, &success);
+    egl::CacheGetResult result = egl::CacheGetResult::NotFound;
+    return loadBinary(context, binary, length, &result);
 }
 
 angle::Result Program::loadBinary(const Context *context,
                                   const void *binary,
                                   GLsizei length,
-                                  bool *successOut)
+                                  egl::CacheGetResult *resultOut)
 {
+    *resultOut = egl::CacheGetResult::Rejected;
+
     ASSERT(mLinkingState);
     unlink();
 
@@ -1403,8 +1422,8 @@ angle::Result Program::loadBinary(const Context *context,
     // backend.  Returning to the caller results in link happening using the original shader
     // sources.
     std::shared_ptr<rx::LinkTask> loadTask;
-    ANGLE_TRY(mProgram->load(context, &stream, &loadTask, successOut));
-    if (!*successOut)
+    ANGLE_TRY(mProgram->load(context, &stream, &loadTask, resultOut));
+    if (*resultOut == egl::CacheGetResult::Rejected)
     {
         return angle::Result::Continue;
     }
@@ -1427,7 +1446,7 @@ angle::Result Program::loadBinary(const Context *context,
     mLinkingState->linkingFromBinary = true;
     mLinkingState->linkEvent         = std::move(loadEvent);
 
-    *successOut = true;
+    *resultOut = egl::CacheGetResult::GetSuccess;
 
     return angle::Result::Continue;
 }
