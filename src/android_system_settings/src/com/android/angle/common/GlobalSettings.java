@@ -176,6 +176,15 @@ class GlobalSettings
         Settings.Global.putString(contentResolver, DRIVER_SELECTION_VALUES, driverSelectionValues);
     }
 
+    static void writeGlobalSettings(Context context, String driverSelectionPackages,
+            String driverSelectionValues)
+    {
+        final ContentResolver contentResolver = context.getContentResolver();
+        Settings.Global.putString(contentResolver,
+                DRIVER_SELECTION_PACKAGES, driverSelectionPackages);
+        Settings.Global.putString(contentResolver, DRIVER_SELECTION_VALUES, driverSelectionValues);
+    }
+
     private int getPackageIndex(String packageName)
     {
         for (int i = 0; i < mDriverSelectionPackages.size(); i++)
