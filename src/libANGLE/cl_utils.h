@@ -10,6 +10,8 @@
 
 #include "libANGLE/renderer/cl_types.h"
 
+#define ANGLE_CL_SET_ERROR(error) cl::gClErrorTls = error
+
 #define ANGLE_CL_RETURN_ERROR(error) \
     do                               \
     {                                \
