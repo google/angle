@@ -26,6 +26,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Process;
 import android.util.Log;
@@ -191,14 +192,21 @@ public class MainFragment extends PreferenceFragment implements OnSharedPreferen
             }
             try
             {
-                PackageInfo packageInfo = packageManager.getPackageInfo(packageName,
-                        PackageManager.PackageInfoFlags.of(0));
-                mInstalledPackages.add(packageInfo);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                {
+                    PackageInfo packageInfo = packageManager.getPackageInfo(packageName,
+                            PackageManager.PackageInfoFlags.of(0));
+                    mInstalledPackages.add(packageInfo);
+                }
+                else
+                {
+                    PackageInfo packageInfo = packageManager.getPackageInfo(packageName, 0);
+                    mInstalledPackages.add(packageInfo);
+                }
             }
             catch (NameNotFoundException e)
             {
                 Log.v(TAG, "Package not found: " + packageName);
-                continue;
             }
         }
 
