@@ -931,17 +931,19 @@ void SerializeCompiledShaderState(JsonSerializer *json, const gl::SharedCompiled
     SerializeShaderVariablesVector(json, state->activeOutputVariables);
     json->addScalar("NumViews", state->numViews);
     json->addScalar("SpecConstUsageBits", state->specConstUsageBits.bits());
-    if (state->geometryShaderInputPrimitiveType.valid())
-    {
-        json->addString("GeometryShaderInputPrimitiveType",
-                        ToString(state->geometryShaderInputPrimitiveType.value()));
-    }
-    if (state->geometryShaderOutputPrimitiveType.valid())
-    {
-        json->addString("GeometryShaderOutputPrimitiveType",
-                        ToString(state->geometryShaderOutputPrimitiveType.value()));
-    }
+    json->addScalar("MetadataFlags", state->metadataFlags.bits());
+    json->addScalar("AdvancedBlendEquations", state->advancedBlendEquations.bits());
+    json->addString("GeometryShaderInputPrimitiveType",
+                    ToString(state->geometryShaderInputPrimitiveType));
+    json->addString("GeometryShaderOutputPrimitiveType",
+                    ToString(state->geometryShaderOutputPrimitiveType));
+    json->addScalar("GeometryShaderMaxVertices", state->geometryShaderMaxVertices);
     json->addScalar("GeometryShaderInvocations", state->geometryShaderInvocations);
+    json->addScalar("TessControlShaderVertices", state->tessControlShaderVertices);
+    json->addScalar("TessGenMode", state->tessGenMode);
+    json->addScalar("TessGenSpacing", state->tessGenSpacing);
+    json->addScalar("TessGenVertexOrder", state->tessGenVertexOrder);
+    json->addScalar("TessGenPointMode", state->tessGenPointMode);
 }
 
 void SerializeShaderState(JsonSerializer *json, const gl::ShaderState &shaderState)

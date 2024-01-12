@@ -1144,8 +1144,9 @@ angle::Result Program::linkJobImpl(const Caps &caps,
         const SharedCompiledShaderState &vertexShader = mState.mAttachedShaders[ShaderType::Vertex];
         if (vertexShader)
         {
-            mState.mExecutable->mPod.numViews        = vertexShader->numViews;
-            mState.mExecutable->mPod.hasClipDistance = vertexShader->hasClipDistance;
+            mState.mExecutable->mPod.numViews = vertexShader->numViews;
+            mState.mExecutable->mPod.hasClipDistance =
+                vertexShader->metadataFlags.test(sh::MetadataFlags::HasClipDistance);
             mState.mExecutable->mPod.specConstUsageBits |= vertexShader->specConstUsageBits;
         }
 
@@ -1168,9 +1169,10 @@ angle::Result Program::linkJobImpl(const Caps &caps,
                 return angle::Result::Stop;
             }
 
-            mState.mExecutable->mPod.hasDiscard = fragmentShader->hasDiscard;
+            mState.mExecutable->mPod.hasDiscard =
+                fragmentShader->metadataFlags.test(sh::MetadataFlags::HasDiscard);
             mState.mExecutable->mPod.enablesPerSampleShading =
-                fragmentShader->enablesPerSampleShading;
+                fragmentShader->metadataFlags.test(sh::MetadataFlags::EnablesPerSampleShading);
             mState.mExecutable->mPod.advancedBlendEquations =
                 fragmentShader->advancedBlendEquations;
             mState.mExecutable->mPod.specConstUsageBits |= fragmentShader->specConstUsageBits;
@@ -1783,24 +1785,19 @@ bool Program::linkValidateShaders()
             //   - <program> is not separable and contains no objects to form a vertex shader; or
             //   - the input primitive type, output primitive type, or maximum output vertex count
             //     is not specified in the compiled geometry shader object.
-            Optional<PrimitiveMode> inputPrimitive =
-                geometryShader->geometryShaderInputPrimitiveType;
-            if (!inputPrimitive.valid())
+            if (!geometryShader->hasValidGeometryShaderInputPrimitiveType())
             {
                 mState.mInfoLog << "Input primitive type is not specified in the geometry shader.";
                 return false;
             }
 
-            Optional<PrimitiveMode> outputPrimitive =
-                geometryShader->geometryShaderOutputPrimitiveType;
-            if (!outputPrimitive.valid())
+            if (!geometryShader->hasValidGeometryShaderOutputPrimitiveType())
             {
                 mState.mInfoLog << "Output primitive type is not specified in the geometry shader.";
                 return false;
             }
 
-            Optional<GLint> maxVertices = geometryShader->geometryShaderMaxVertices;
-            if (!maxVertices.valid())
+            if (!geometryShader->hasValidGeometryShaderMaxVertices())
             {
                 mState.mInfoLog << "'max_vertices' is not specified in the geometry shader.";
                 return false;
@@ -1869,15 +1866,12 @@ void Program::linkShaders()
         const SharedCompiledShaderState &geometryShader = shaders[ShaderType::Geometry];
         if (geometryShader)
         {
-            Optional<PrimitiveMode> inputPrimitive =
+            mState.mExecutable->mPod.geometryShaderInputPrimitiveType =
                 geometryShader->geometryShaderInputPrimitiveType;
-            Optional<PrimitiveMode> outputPrimitive =
+            mState.mExecutable->mPod.geometryShaderOutputPrimitiveType =
                 geometryShader->geometryShaderOutputPrimitiveType;
-            Optional<GLint> maxVertices = geometryShader->geometryShaderMaxVertices;
-
-            mState.mExecutable->mPod.geometryShaderInputPrimitiveType  = inputPrimitive.value();
-            mState.mExecutable->mPod.geometryShaderOutputPrimitiveType = outputPrimitive.value();
-            mState.mExecutable->mPod.geometryShaderMaxVertices         = maxVertices.value();
+            mState.mExecutable->mPod.geometryShaderMaxVertices =
+                geometryShader->geometryShaderMaxVertices;
             mState.mExecutable->mPod.geometryShaderInvocations =
                 geometryShader->geometryShaderInvocations;
         }
