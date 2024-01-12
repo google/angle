@@ -531,6 +531,42 @@ TEST_P(EGLBlobCacheInternalRejectionTest, Functional)
     EXPECT_EQ(CacheOpResult::SetSuccess, gLastCacheOpResult);
 }
 
+// Makes sure ANGLE recovers from internal (backend) rejection of the shader blob, while everything
+// seems fine to ANGLE.
+TEST_P(EGLBlobCacheInternalRejectionTest, ShaderCacheFunctional)
+{
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
+
+    EGLDisplay display = getEGLWindow()->getDisplay();
+
+    EXPECT_TRUE(mHasBlobCache);
+    eglSetBlobCacheFuncsANDROID(display, SetBlob, GetBlob);
+    ASSERT_EGL_SUCCESS();
+
+    // Compile a shader so it puts something in the cache
+    GLuint shaderID = CompileShader(GL_VERTEX_SHADER, essl1_shaders::vs::Simple());
+    ASSERT_TRUE(shaderID != 0);
+    EXPECT_EQ(CacheOpResult::SetSuccess, gLastCacheOpResult);
+    gLastCacheOpResult = CacheOpResult::ValueNotSet;
+    glDeleteShader(shaderID);
+
+    // Compile another shader, which should create a new entry
+    shaderID = CompileShader(GL_FRAGMENT_SHADER, essl1_shaders::fs::UniformColor());
+    ASSERT_TRUE(shaderID != 0);
+    EXPECT_EQ(CacheOpResult::SetSuccess, gLastCacheOpResult);
+    gLastCacheOpResult = CacheOpResult::ValueNotSet;
+    glDeleteShader(shaderID);
+
+    // Compile the first shader again, which should still reside in the cache, but is corrupted.
+    // The cached entry should be discarded and compilation performed again (which sets another
+    // entry in the cache).
+    shaderID = CompileShader(GL_VERTEX_SHADER, essl1_shaders::vs::Simple());
+    ASSERT_TRUE(shaderID != 0);
+    EXPECT_EQ(CacheOpResult::SetSuccess, gLastCacheOpResult);
+    gLastCacheOpResult = CacheOpResult::ValueNotSet;
+    glDeleteShader(shaderID);
+}
+
 ANGLE_INSTANTIATE_TEST(EGLBlobCacheTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
