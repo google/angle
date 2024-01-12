@@ -1155,7 +1155,7 @@ void DisplayMtl::initializeExtensions() const
                 !mFeatures.disableRWTextureTier2Support.enabled &&
                 readWriteTextureTier == MTLReadWriteTextureTier2;
 
-            if (isAMD())
+            if (rasterOrderGroupsSupported && isAMD())
             {
                 // anglebug.com/7792 -- [[raster_order_group()]] does not work for read_write
                 // textures on AMD when the render pass doesn't have a color attachment on slot 0.
