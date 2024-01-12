@@ -43,6 +43,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import com.android.angle.R;
+
 public class MainFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener
 {
 

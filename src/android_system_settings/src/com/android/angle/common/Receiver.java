@@ -39,6 +39,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
+import com.android.angle.R;
+
 public class Receiver extends BroadcastReceiver
 {
     private static final String TAG = "AngleBroadcastReceiver";
