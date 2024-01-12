@@ -45,7 +45,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': 'acdb36669f649562bcd4bad4e51f09696bb31c08',
+  'chromium_revision': '84fab30ecd66c03986d452ed7039a05214ec78ef',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -135,7 +135,7 @@ vars = {
   'reclient_version': 're_client_version:0.126.0.4aaef37-gomaip',
 
   # siso CIPD package version.
-  'siso_version': 'git_revision:d01a25fcf2367e28e0abd1f22f3d67786c9bbf6f',
+  'siso_version': 'git_revision:d8744c99a9e175e6c4569de0717bd8c53981ce0c',
 
   # 'magic' text to tell depot_tools that git submodules should be accepted but
   # but parity with DEPS file is expected.
@@ -145,12 +145,12 @@ vars = {
 deps = {
 
   'build': {
-    'url': Var('chromium_git') + '/chromium/src/build.git@eba30cc9090708c7c7d5ea405a44a6464e781173',
+    'url': Var('chromium_git') + '/chromium/src/build.git@48ef4c0c294c193163cf22e37695cecc624dbf7c',
     'condition': 'not build_with_chromium',
   },
 
   'buildtools': {
-    'url': Var('chromium_git') + '/chromium/src/buildtools.git@a656fc7fe0d4121e6729cd11fd3e9480d61c4318',
+    'url': Var('chromium_git') + '/chromium/src/buildtools.git@4d143ade136d847c754b7c58b143d8f711a886ac',
     'condition': 'not build_with_chromium',
   },
 
@@ -163,7 +163,7 @@ deps = {
     'packages': [
       {
         'package': 'gn/gn/linux-${{arch}}',
-        'version': 'git_revision:85944ebc24a90ec1e489e85a46fdc68542c3146f',
+        'version': 'git_revision:d4be45bb28fbfc16a41a1e02c86137df6815f2dd',
       }
     ],
     'dep_type': 'cipd',
@@ -174,7 +174,7 @@ deps = {
     'packages': [
       {
         'package': 'gn/gn/mac-${{arch}}',
-        'version': 'git_revision:85944ebc24a90ec1e489e85a46fdc68542c3146f',
+        'version': 'git_revision:d4be45bb28fbfc16a41a1e02c86137df6815f2dd',
       }
     ],
     'dep_type': 'cipd',
@@ -196,7 +196,7 @@ deps = {
     'packages': [
       {
         'package': 'gn/gn/windows-amd64',
-        'version': 'git_revision:85944ebc24a90ec1e489e85a46fdc68542c3146f',
+        'version': 'git_revision:d4be45bb28fbfc16a41a1e02c86137df6815f2dd',
       }
     ],
     'dep_type': 'cipd',
@@ -204,7 +204,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@3888b83c28dbd3c4fa0b36e91cfd87d0c758888d',
+    'url': '{chromium_git}/chromium/src/testing@105d4c3f46da837b800634ae534fd3981127a1f6',
     'condition': 'not build_with_chromium',
   },
 
@@ -380,7 +380,7 @@ deps = {
   },
 
   'third_party/depot_tools': {
-    'url': Var('chromium_git') + '/chromium/tools/depot_tools.git@ad697e33c117b4bf4f9b405dd7bb51ba1f1d5280',
+    'url': Var('chromium_git') + '/chromium/tools/depot_tools.git@39bc04eb9f4fbbd05ae68894cc7e1fdbbe17484e',
     'condition': 'not build_with_chromium',
   },
 
@@ -499,12 +499,12 @@ deps = {
    },
 
   'third_party/libc++/src': {
-    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libcxx.git@e4aac3ace5ad6e3737740daee3afeaa9c9ab0360',
+    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libcxx.git@d1f035a3ffb719cbb5fb47c174b14555fa396cdd',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/libc++abi/src': {
-    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libcxxabi.git@f80f02a81e1d26217a9d15094600813e93eee6fb',
+    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libcxxabi.git@a1171ad54907ebbc41ca9c6f49dfc74df5e3a747',
     'condition': 'not build_with_chromium',
   },
 
@@ -586,7 +586,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/r8',
-              'version': 'QWZP08h89KyQf8Bmiw74dItBaIvpN4n7QUOIPP1fOJ4C',
+              'version': '-33V5QWJXVKP_bE-P5-BqM4rcEmndOTuK1LyWc2l3N4C',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -668,7 +668,7 @@ deps = {
   },
 
   'third_party/zlib': {
-    'url': Var('chromium_git') + '/chromium/src/third_party/zlib@40e35a76af71511ee701001df5bc1ba216472d67',
+    'url': Var('chromium_git') + '/chromium/src/third_party/zlib@956936c53cb6169f2b97e009bfaefd66da227ab6',
     'condition': 'not build_with_chromium',
   },
 
@@ -678,7 +678,7 @@ deps = {
   },
 
   'tools/clang': {
-    'url': Var('chromium_git') + '/chromium/src/tools/clang.git@28c2eefa98993de1f78670863c4acdb6d4a7d941',
+    'url': Var('chromium_git') + '/chromium/src/tools/clang.git@990bc36ac099048f4b4f81d5907dfa2e613b1353',
     'condition': 'not build_with_chromium',
   },
 
@@ -709,7 +709,7 @@ deps = {
   },
 
   'tools/mb': {
-    'url': Var('chromium_git') + '/chromium/src/tools/mb@b6623f2f01e4b26626373a892db08833e935ace2',
+    'url': Var('chromium_git') + '/chromium/src/tools/mb@d67de05ec4ed94eededc12d3c9402155ea67ba72',
     'condition': 'not build_with_chromium',
   },
 
@@ -719,12 +719,12 @@ deps = {
   },
 
   'tools/memory': {
-    'url': Var('chromium_git') + '/chromium/src/tools/memory@216d33bbf954ef7a6c277e8bb86d6a1b9a3dc3c6',
+    'url': Var('chromium_git') + '/chromium/src/tools/memory@137d838b1db2a7f4f83171a95654b4984e11283e',
     'condition': 'not build_with_chromium',
   },
 
   'tools/perf': {
-    'url': Var('chromium_git') + '/chromium/src/tools/perf@8c0c8db480e2b94d9494e424b79352464542cf8c',
+    'url': Var('chromium_git') + '/chromium/src/tools/perf@a1137e89f906167575b75a2f37637e81313a3ba1',
     'condition': 'not build_with_chromium',
   },
 
@@ -764,7 +764,7 @@ deps = {
       'packages': [
         {
           'package': 'skia/tools/goldctl/mac-amd64',
-          'version': 'aczic__c3_V2fDigCiqhiSUpK79EbS7cIzL2JHhsp6wC',
+          'version': 'lkI4UMXstA7DR9LqFykhbBB0sT-pbajdPVIN8nO1xCwC',
         },
       ],
       'dep_type': 'cipd',
@@ -775,7 +775,7 @@ deps = {
       'packages': [
         {
           'package': 'skia/tools/goldctl/mac-arm64',
-          'version': 'WJRRztj2l1AZCPM0pg9f3FpevNt22sN86zaNLStjH8wC',
+          'version': 'lhItSTy1WLT7ZDUaklin1sNQ2vdQFPwVcEKC5gRty-4C',
         },
       ],
       'dep_type': 'cipd',
