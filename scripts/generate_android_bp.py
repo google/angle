@@ -253,8 +253,8 @@ def gn_deps_to_blueprint_deps(abi, target, build_info):
             generated_headers += child_generated_headers
         elif dep == '//third_party/zlib/google:compression_utils_portable':
             # Replace zlib by Android's zlib, compression_utils_portable is the root dependency
-            static_libs.extend(
-                ['zlib_google_compression_utils_portable', 'libz_static', 'cpufeatures'])
+            shared_libs.append('libz')
+            static_libs.extend(['zlib_google_compression_utils_portable', 'cpufeatures'])
 
     return static_libs, shared_libs, defaults, generated_headers, header_libs
 
