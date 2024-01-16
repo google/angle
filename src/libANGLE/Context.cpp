@@ -6158,6 +6158,11 @@ void Context::bindBufferRange(BufferBinding target,
     {
         mStateCache.onBufferBindingChange(this);
     }
+
+    if (object)
+    {
+        object->onBind(this, target);
+    }
 }
 
 void Context::bindFramebuffer(GLenum target, FramebufferID framebuffer)
