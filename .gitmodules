@@ -58,6 +58,9 @@
 	path = third_party/cpu_features/src
 	url = https://chromium.googlesource.com/external/github.com/google/cpu_features
 	gclient-condition = checkout_android and not build_with_chromium
+[submodule "third_party/dawn"]
+	path = third_party/dawn
+	url = https://dawn.googlesource.com/dawn
 [submodule "third_party/depot_tools"]
 	path = third_party/depot_tools
 	url = https://chromium.googlesource.com/chromium/tools/depot_tools

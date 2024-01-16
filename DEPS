@@ -21,6 +21,7 @@ vars = {
   'chromium_git': 'https://chromium.googlesource.com',
   'chrome_internal_git': 'https://chrome-internal.googlesource.com',
   'swiftshader_git': 'https://swiftshader.googlesource.com',
+  'dawn_git': 'https://dawn.googlesource.com',
 
   # This variable is overrided in Chromium's DEPS file.
   'build_with_chromium': False,
@@ -139,7 +140,11 @@ vars = {
 
   # 'magic' text to tell depot_tools that git submodules should be accepted but
   # but parity with DEPS file is expected.
-  'SUBMODULE_MIGRATION': 'True'
+  'SUBMODULE_MIGRATION': 'True',
+
+   # Make Dawn skip its standalone dependencies
+  'dawn_standalone': False,
+  'dawn_revision': 'cafc60bd429c56b430afbbe141f7ca108a0c662c',
 }
 
 deps = {
@@ -378,6 +383,10 @@ deps = {
     'url': Var('chromium_git') + '/external/github.com/google/cpu_features.git' + '@' + '936b9ab5515dead115606559502e3864958f7f6e',
     'condition': 'checkout_android and not build_with_chromium',
   },
+
+
+  'third_party/dawn':
+    Var('dawn_git') + '/dawn.git' + '@' +  Var('dawn_revision'),
 
   'third_party/depot_tools': {
     'url': Var('chromium_git') + '/chromium/tools/depot_tools.git@39bc04eb9f4fbbd05ae68894cc7e1fdbbe17484e',
