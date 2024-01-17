@@ -4183,4 +4183,46 @@ bool ValidateLogicOpANGLE(const PrivateState &state,
 
     return ValidateLogicOpCommon(state, errors, entryPoint, opcodePacked);
 }
+
+bool ValidateFramebufferFoveationConfigQCOM(const Context *context,
+                                            angle::EntryPoint entryPoint,
+                                            GLuint framebuffer,
+                                            GLuint numLayers,
+                                            GLuint focalPointsPerLayer,
+                                            GLuint requestedFeatures,
+                                            const GLuint *providedFeatures)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateFramebufferFoveationParametersQCOM(const Context *context,
+                                                angle::EntryPoint entryPoint,
+                                                GLuint framebuffer,
+                                                GLuint layer,
+                                                GLuint focalPoint,
+                                                GLfloat focalX,
+                                                GLfloat focalY,
+                                                GLfloat gainX,
+                                                GLfloat gainY,
+                                                GLfloat foveaArea)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateTextureFoveationParametersQCOM(const Context *context,
+                                            angle::EntryPoint entryPoint,
+                                            GLuint texture,
+                                            GLuint layer,
+                                            GLuint focalPoint,
+                                            GLfloat focalX,
+                                            GLfloat focalY,
+                                            GLfloat gainX,
+                                            GLfloat gainY,
+                                            GLfloat foveaArea)
+{
+    UNIMPLEMENTED();
+    return false;
+}
 }  // namespace gl
