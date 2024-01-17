@@ -957,7 +957,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
         DIRTY_BIT_DYNAMIC_BLEND_CONSTANTS,    DIRTY_BIT_DYNAMIC_STENCIL_COMPARE_MASK,
         DIRTY_BIT_DYNAMIC_STENCIL_WRITE_MASK, DIRTY_BIT_DYNAMIC_STENCIL_REFERENCE,
     };
-    if (mRenderer->useVertexInputBindingStrideDynamicState())
+    if (mRenderer->useVertexInputBindingStrideDynamicState() ||
+        getFeatures().supportsVertexInputDynamicState.enabled)
     {
         mDynamicStateDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
     }
@@ -1210,6 +1211,10 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     if (mRenderer->useDepthBiasEnableDynamicState())
     {
         mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_POLYGON_OFFSET_FILL_ENABLED);
+    }
+    if (getFeatures().supportsVertexInputDynamicState.enabled)
+    {
+        mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_VERTEX_ARRAY_BINDING);
     }
 
     angle::PerfMonitorCounterGroup vulkanGroup;
@@ -2596,13 +2601,23 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffers(DirtyBits::Iterator *d
     const gl::AttribArray<VkDeviceSize> &bufferOffsets =
         vertexArrayVk->getCurrentArrayBufferOffsets();
 
-    if (mRenderer->useVertexInputBindingStrideDynamicState())
+    if (mRenderer->useVertexInputBindingStrideDynamicState() ||
+        getFeatures().supportsVertexInputDynamicState.enabled)
     {
         const gl::AttribArray<GLuint> &bufferStrides =
             vertexArrayVk->getCurrentArrayBufferStrides();
         const gl::AttribArray<angle::FormatID> &bufferFormats =
             vertexArrayVk->getCurrentArrayBufferFormats();
         gl::AttribArray<VkDeviceSize> strides = {};
+        const gl::AttribArray<GLuint> &bufferDivisors =
+            vertexArrayVk->getCurrentArrayBufferDivisors();
+        const gl::AttribArray<GLuint> &bufferRelativeOffsets =
+            vertexArrayVk->getCurrentArrayBufferRelativeOffsets();
+        const gl::AttributesMask &bufferCompressed =
+            vertexArrayVk->getCurrentArrayBufferCompressed();
+
+        gl::AttribVector<VkVertexInputBindingDescription2EXT> bindingDescs;
+        gl::AttribVector<VkVertexInputAttributeDescription2EXT> attributeDescs;
 
         // Set stride to 0 for mismatching formats between the program's declared attribute and that
         // which is specified in glVertexAttribPointer.  See comment in vk_cache_utils.cpp
@@ -2625,12 +2640,65 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffers(DirtyBits::Iterator *d
                 attribType != programAttribType && (programAttribType == gl::ComponentType::Float ||
                                                     attribType == gl::ComponentType::Float);
             strides[attribIndex] = mismatchingType ? 0 : bufferStrides[attribIndex];
+
+            if (getFeatures().supportsVertexInputDynamicState.enabled)
+            {
+                VkVertexInputBindingDescription2EXT bindingDesc  = {};
+                VkVertexInputAttributeDescription2EXT attribDesc = {};
+                bindingDesc.sType   = VK_STRUCTURE_TYPE_VERTEX_INPUT_BINDING_DESCRIPTION_2_EXT;
+                bindingDesc.binding = static_cast<uint32_t>(attribIndex);
+                bindingDesc.stride  = static_cast<uint32_t>(strides[attribIndex]);
+                bindingDesc.divisor =
+                    bufferDivisors[attribIndex] > mRenderer->getMaxVertexAttribDivisor()
+                        ? 1
+                        : bufferDivisors[attribIndex];
+                if (bindingDesc.divisor != 0)
+                {
+                    bindingDesc.inputRate =
+                        static_cast<VkVertexInputRate>(VK_VERTEX_INPUT_RATE_INSTANCE);
+                }
+                else
+                {
+                    bindingDesc.inputRate =
+                        static_cast<VkVertexInputRate>(VK_VERTEX_INPUT_RATE_VERTEX);
+                    // Divisor value is ignored by the implementation when using
+                    // VK_VERTEX_INPUT_RATE_VERTEX, but it is set to 1 to avoid a validation error
+                    // due to a validation layer issue.
+                    bindingDesc.divisor = 1;
+                }
+
+                attribDesc.sType   = VK_STRUCTURE_TYPE_VERTEX_INPUT_ATTRIBUTE_DESCRIPTION_2_EXT;
+                attribDesc.binding = static_cast<uint32_t>(attribIndex);
+                attribDesc.format  = vk::GraphicsPipelineDesc::getPipelineVertexInputStateFormat(
+                    this, bufferFormats[attribIndex], bufferCompressed[attribIndex],
+                    programAttribType, static_cast<uint32_t>(attribIndex));
+                attribDesc.location = static_cast<uint32_t>(attribIndex);
+                attribDesc.offset   = bufferRelativeOffsets[attribIndex];
+
+                bindingDescs.push_back(bindingDesc);
+                attributeDescs.push_back(attribDesc);
+            }
         }
 
-        // TODO: Use the sizes parameters here to fix the robustness issue worked around in
-        // crbug.com/1310038
-        mRenderPassCommandBuffer->bindVertexBuffers2(0, maxAttrib, bufferHandles.data(),
-                                                     bufferOffsets.data(), nullptr, strides.data());
+        if (getFeatures().supportsVertexInputDynamicState.enabled)
+        {
+            mRenderPassCommandBuffer->setVertexInput(
+                static_cast<uint32_t>(bindingDescs.size()), bindingDescs.data(),
+                static_cast<uint32_t>(attributeDescs.size()), attributeDescs.data());
+            if (bindingDescs.size() != 0)
+            {
+
+                mRenderPassCommandBuffer->bindVertexBuffers(0, maxAttrib, bufferHandles.data(),
+                                                            bufferOffsets.data());
+            }
+        }
+        else
+        {
+            // TODO: Use the sizes parameters here to fix the robustness issue worked around in
+            // crbug.com/1310038
+            mRenderPassCommandBuffer->bindVertexBuffers2(
+                0, maxAttrib, bufferHandles.data(), bufferOffsets.data(), nullptr, strides.data());
+        }
     }
     else
     {
@@ -5305,7 +5373,11 @@ angle::Result ContextVk::invalidateProgramExecutableHelper(const gl::Context *co
         // later.
         invalidateDefaultAttributes(context->getStateCache().getActiveDefaultAttribsMask());
         invalidateVertexAndIndexBuffers();
-        bool useVertexBuffer = (executable->getMaxActiveAttribLocation() > 0);
+        // If VK_EXT_vertex_input_dynamic_state is enabled then vkCmdSetVertexInputEXT must be
+        // called in the current command buffer prior to the draw command, even if there are no
+        // active vertex attributes.
+        bool useVertexBuffer = (executable->getMaxActiveAttribLocation() > 0) ||
+                               getFeatures().supportsVertexInputDynamicState.enabled;
         mNonIndexedDirtyBitsMask.set(DIRTY_BIT_VERTEX_BUFFERS, useVertexBuffer);
         mIndexedDirtyBitsMask.set(DIRTY_BIT_VERTEX_BUFFERS, useVertexBuffer);
         resetCurrentGraphicsPipeline();

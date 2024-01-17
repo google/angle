@@ -1096,6 +1096,9 @@ void InitExtendedDynamicStateEXTFunctions(VkDevice device);
 // VK_EXT_extended_dynamic_state2
 void InitExtendedDynamicState2EXTFunctions(VkDevice device);
 
+// VK_EXT_vertex_input_dynamic_state
+void InitVertexInputDynamicStateEXTFunctions(VkDevice device);
+
 // VK_KHR_fragment_shading_rate
 void InitFragmentShadingRateKHRInstanceFunction(VkInstance instance);
 void InitFragmentShadingRateKHRDeviceFunction(VkDevice device);
