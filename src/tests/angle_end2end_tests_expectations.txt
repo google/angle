@@ -571,6 +571,8 @@ b/308668391 PIXEL4ORXL VULKAN : ImageTest.SourceYUVAHBTargetExternalRGBSampleNoD
 
 7295 PIXEL4ORXL VULKAN : StateChangeTestES3.StencilReferenceAndCompareMask/* = SKIP
 
+3647 PIXEL4ORXL VULKAN : EGLPrintEGLinfoTest.PrintGLESCapabilities/* = SKIP
+
 // Pixel 6 expectations.
 6931 PIXEL6 VULKAN : BlitFramebufferTest.OOBWrite/* = SKIP
 6931 PIXEL6 VULKAN : BufferSubDataTest.MapInvalidateThenBufferSubData/* = SKIP
