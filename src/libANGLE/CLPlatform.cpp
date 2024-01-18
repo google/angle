@@ -254,7 +254,8 @@ Platform::~Platform() = default;
 Platform::Platform(const rx::CLPlatformImpl::CreateFunc &createFunc)
     : mImpl(createFunc(*this)),
       mInfo(mImpl->createInfo()),
-      mDevices(createDevices(mImpl->createDevices()))
+      mDevices(createDevices(mImpl->createDevices())),
+      mMultiThreadPool(angle::WorkerThreadPool::Create(0, ANGLEPlatformCurrent()))
 {}
 
 DevicePtrs Platform::createDevices(rx::CLDeviceImpl::CreateDatas &&createDatas)

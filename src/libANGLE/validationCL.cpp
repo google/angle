@@ -1163,6 +1163,37 @@ cl_int ValidateBuildProgram(cl_program program,
         return CL_INVALID_OPERATION;
     }
 
+    // If program was created with clCreateProgramWithBinary and device does not have a valid
+    // program binary loaded
+    std::vector<size_t> binSizes{prog.getDevices().size()};
+    std::vector<std::vector<unsigned char *>> bins{prog.getDevices().size()};
+    if (IsError(prog.getInfo(ProgramInfo::BinarySizes, binSizes.size() * sizeof(size_t),
+                             binSizes.data(), nullptr)))
+    {
+        return CL_INVALID_PROGRAM;
+    }
+    for (size_t i = 0; i < prog.getDevices().size(); ++i)
+    {
+        cl_program_binary_type binType;
+        bins.at(i).resize(binSizes[i]);
+
+        if (IsError(prog.getInfo(ProgramInfo::Binaries, sizeof(unsigned char *) * bins.size(),
+                                 bins.data(), nullptr)))
+        {
+            return CL_INVALID_VALUE;
+        }
+        if (IsError(prog.getBuildInfo(prog.getDevices()[i]->getNative(),
+                                      ProgramBuildInfo::BinaryType, sizeof(cl_program_binary_type),
+                                      &binType, nullptr)))
+        {
+            return CL_INVALID_VALUE;
+        }
+        if ((binType != CL_PROGRAM_BINARY_TYPE_NONE) && bins[i].empty())
+        {
+            return CL_INVALID_BINARY;
+        }
+    }
+
     return CL_SUCCESS;
 }
 

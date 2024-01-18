@@ -64,6 +64,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::ClampFragDepth, "clampFragDepth"},
     {Feature::ClampMscRate, "clampMscRate"},
     {Feature::ClampPointSize, "clampPointSize"},
+    {Feature::ClDumpVkSpirv, "clDumpVkSpirv"},
     {Feature::ClearToZeroOrOneBroken, "clearToZeroOrOneBroken"},
     {Feature::ClipSrcRegionForBlitFramebuffer, "clipSrcRegionForBlitFramebuffer"},
     {Feature::CompileJobIsThreadSafe, "compileJobIsThreadSafe"},

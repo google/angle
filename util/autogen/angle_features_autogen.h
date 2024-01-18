@@ -64,6 +64,7 @@ enum class Feature
     ClampFragDepth,
     ClampMscRate,
     ClampPointSize,
+    ClDumpVkSpirv,
     ClearToZeroOrOneBroken,
     ClipSrcRegionForBlitFramebuffer,
     CompileJobIsThreadSafe,

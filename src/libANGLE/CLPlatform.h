@@ -10,6 +10,9 @@
 #define LIBANGLE_CLPLATFORM_H_
 
 #include "libANGLE/CLObject.h"
+
+#include "common/WorkerThread.h"
+
 #include "libANGLE/renderer/CLPlatformImpl.h"
 
 #include "anglebase/no_destructor.h"
@@ -71,6 +74,8 @@ class Platform final : public _cl_platform_id, public Object
 
     static constexpr const char *GetVendor();
 
+    const std::shared_ptr<angle::WorkerThreadPool> &getMultiThreadPool() const;
+
   private:
     explicit Platform(const rx::CLPlatformImpl::CreateFunc &createFunc);
 
@@ -81,6 +86,7 @@ class Platform final : public _cl_platform_id, public Object
     const rx::CLPlatformImpl::Ptr mImpl;
     const rx::CLPlatformImpl::Info mInfo;
     const DevicePtrs mDevices;
+    std::shared_ptr<angle::WorkerThreadPool> mMultiThreadPool;
 
     static constexpr char kVendor[]    = "ANGLE";
     static constexpr char kIcdSuffix[] = "ANGLE";
@@ -137,6 +143,11 @@ inline const PlatformPtrs &Platform::GetPlatforms()
 constexpr const char *Platform::GetVendor()
 {
     return kVendor;
+}
+
+inline const std::shared_ptr<angle::WorkerThreadPool> &Platform::getMultiThreadPool() const
+{
+    return mMultiThreadPool;
 }
 
 inline PlatformPtrs &Platform::GetPointers()

@@ -12,8 +12,266 @@
 #include "libANGLE/CLProgram.h"
 #include "libANGLE/cl_utils.h"
 
+#include "clspv/Compiler.h"
+
+#include "spirv/unified1/NonSemanticClspvReflection.h"
+#include "spirv/unified1/spirv.hpp"
+
+#include "spirv-tools/libspirv.hpp"
+#include "spirv-tools/optimizer.hpp"
+
+#include "common/string_utils.h"
+
 namespace rx
 {
+
+namespace
+{
+#if defined(ANGLE_ENABLE_ASSERTS)
+constexpr bool kAngleDebug = true;
+#else
+constexpr bool kAngleDebug = false;
+#endif
+
+// Used by SPIRV-Tools to parse reflection info
+spv_result_t ParseReflection(CLProgramVk::SpvReflectionData &reflectionData,
+                             const spv_parsed_instruction_t &spvInstr)
+{
+    // Parse spir-v opcodes
+    switch (spvInstr.opcode)
+    {
+        // --- Clspv specific parsing for below cases ---
+        case spv::OpExtInst:
+        {
+            switch (spvInstr.words[4])
+            {
+                case NonSemanticClspvReflectionKernel:
+                {
+                    // Extract kernel name and args - add to kernel args map
+                    std::string functionName = reflectionData.spvStrLookup[spvInstr.words[6]];
+                    uint32_t numArgs         = reflectionData.spvIntLookup[spvInstr.words[7]];
+                    reflectionData.kernelArgsMap[functionName] = CLKernelArguments();
+                    reflectionData.kernelArgsMap[functionName].resize(numArgs);
+
+                    // Store kernel flags and attributes
+                    reflectionData.kernelFlags[functionName] =
+                        reflectionData.spvIntLookup[spvInstr.words[8]];
+                    reflectionData.kernelAttributes[functionName] =
+                        reflectionData.spvStrLookup[spvInstr.words[9]];
+
+                    // Save kernel name to reflection table for later use/lookup in parser routine
+                    reflectionData.spvStrLookup[spvInstr.words[2]] = std::string(functionName);
+                    break;
+                }
+                case NonSemanticClspvReflectionArgumentInfo:
+                {
+                    CLKernelVk::ArgInfo kernelArgInfo;
+                    kernelArgInfo.name = reflectionData.spvStrLookup[spvInstr.words[5]];
+                    // If instruction has more than 5 instruction operands (minus instruction
+                    // name/opcode), that means we have arg qualifiers. ArgumentInfo also counts as
+                    // an operand for OpExtInst. In below example, [ %e %f %g %h ] are the arg
+                    // qualifier operands.
+                    //
+                    // %a = OpExtInst %b %c ArgumentInfo %d [ %e %f %g %h ]
+                    if (spvInstr.num_operands > 5)
+                    {
+                        kernelArgInfo.typeName = reflectionData.spvStrLookup[spvInstr.words[6]];
+                        kernelArgInfo.addressQualifier =
+                            reflectionData.spvIntLookup[spvInstr.words[7]];
+                        kernelArgInfo.accessQualifier =
+                            reflectionData.spvIntLookup[spvInstr.words[8]];
+                        kernelArgInfo.typeQualifier =
+                            reflectionData.spvIntLookup[spvInstr.words[9]];
+                    }
+                    // Store kern arg for later lookup
+                    reflectionData.kernelArgInfos[spvInstr.words[2]] = std::move(kernelArgInfo);
+                    break;
+                }
+                case NonSemanticClspvReflectionArgumentPodUniform:
+                case NonSemanticClspvReflectionArgumentPointerUniform:
+                case NonSemanticClspvReflectionArgumentPodStorageBuffer:
+                {
+                    CLKernelArgument kernelArg;
+                    if (spvInstr.num_operands == 11)
+                    {
+                        const CLKernelVk::ArgInfo &kernelArgInfo =
+                            reflectionData.kernelArgInfos[spvInstr.words[11]];
+                        kernelArg.info.name             = kernelArgInfo.name;
+                        kernelArg.info.typeName         = kernelArgInfo.typeName;
+                        kernelArg.info.addressQualifier = kernelArgInfo.addressQualifier;
+                        kernelArg.info.accessQualifier  = kernelArgInfo.accessQualifier;
+                        kernelArg.info.typeQualifier    = kernelArgInfo.typeQualifier;
+                    }
+                    CLKernelArguments &kernelArgs =
+                        reflectionData
+                            .kernelArgsMap[reflectionData.spvStrLookup[spvInstr.words[5]]];
+                    kernelArg.type    = spvInstr.words[4];
+                    kernelArg.used    = true;
+                    kernelArg.ordinal = reflectionData.spvIntLookup[spvInstr.words[6]];
+                    kernelArg.op3     = reflectionData.spvIntLookup[spvInstr.words[7]];
+                    kernelArg.op4     = reflectionData.spvIntLookup[spvInstr.words[8]];
+                    kernelArg.op5     = reflectionData.spvIntLookup[spvInstr.words[9]];
+                    kernelArg.op6     = reflectionData.spvIntLookup[spvInstr.words[10]];
+
+                    if (!kernelArgs.empty())
+                    {
+                        kernelArgs.at(kernelArg.ordinal) = std::move(kernelArg);
+                    }
+                    break;
+                }
+                case NonSemanticClspvReflectionArgumentUniform:
+                case NonSemanticClspvReflectionArgumentWorkgroup:
+                case NonSemanticClspvReflectionArgumentStorageBuffer:
+                case NonSemanticClspvReflectionArgumentPodPushConstant:
+                case NonSemanticClspvReflectionArgumentPointerPushConstant:
+                {
+                    CLKernelArgument kernelArg;
+                    if (spvInstr.num_operands == 9)
+                    {
+                        const CLKernelVk::ArgInfo &kernelArgInfo =
+                            reflectionData.kernelArgInfos[spvInstr.words[9]];
+                        kernelArg.info.name             = kernelArgInfo.name;
+                        kernelArg.info.typeName         = kernelArgInfo.typeName;
+                        kernelArg.info.addressQualifier = kernelArgInfo.addressQualifier;
+                        kernelArg.info.accessQualifier  = kernelArgInfo.accessQualifier;
+                        kernelArg.info.typeQualifier    = kernelArgInfo.typeQualifier;
+                    }
+                    CLKernelArguments &kernelArgs =
+                        reflectionData
+                            .kernelArgsMap[reflectionData.spvStrLookup[spvInstr.words[5]]];
+                    kernelArg.type    = spvInstr.words[4];
+                    kernelArg.used    = true;
+                    kernelArg.ordinal = reflectionData.spvIntLookup[spvInstr.words[6]];
+                    kernelArg.op3     = reflectionData.spvIntLookup[spvInstr.words[7]];
+                    kernelArg.op4     = reflectionData.spvIntLookup[spvInstr.words[8]];
+                    kernelArgs.at(kernelArg.ordinal) = std::move(kernelArg);
+                    break;
+                }
+                case NonSemanticClspvReflectionPushConstantGlobalOffset:
+                case NonSemanticClspvReflectionPushConstantRegionOffset:
+                {
+                    uint32_t offset = reflectionData.spvIntLookup[spvInstr.words[5]];
+                    uint32_t size   = reflectionData.spvIntLookup[spvInstr.words[6]];
+                    reflectionData.pushConstants[spvInstr.words[4]] = {
+                        .stageFlags = 0, .offset = offset, .size = size};
+                    break;
+                }
+                case NonSemanticClspvReflectionSpecConstantWorkgroupSize:
+                {
+                    reflectionData.specConstantWGS = {
+                        reflectionData.spvIntLookup[spvInstr.words[5]],
+                        reflectionData.spvIntLookup[spvInstr.words[6]],
+                        reflectionData.spvIntLookup[spvInstr.words[7]]};
+                    break;
+                }
+                case NonSemanticClspvReflectionPropertyRequiredWorkgroupSize:
+                {
+                    reflectionData
+                        .kernelCompileWGS[reflectionData.spvStrLookup[spvInstr.words[5]]] = {
+                        reflectionData.spvIntLookup[spvInstr.words[6]],
+                        reflectionData.spvIntLookup[spvInstr.words[7]],
+                        reflectionData.spvIntLookup[spvInstr.words[8]]};
+                    break;
+                }
+                default:
+                    break;
+            }
+            break;
+        }
+        // --- Regular SPIR-V opcode parsing for below cases ---
+        case spv::OpString:
+        {
+            reflectionData.spvStrLookup[spvInstr.words[1]] =
+                reinterpret_cast<const char *>(&spvInstr.words[2]);
+            break;
+        }
+        case spv::OpConstant:
+        {
+            reflectionData.spvIntLookup[spvInstr.words[2]] = spvInstr.words[3];
+            break;
+        }
+        default:
+            break;
+    }
+    return SPV_SUCCESS;
+}
+
+class CLAsyncBuildTask : public angle::Closure
+{
+  public:
+    CLAsyncBuildTask(CLProgramVk *programVk,
+                     const cl::DevicePtrs &devices,
+                     std::string options,
+                     std::string internalOptions,
+                     CLProgramVk::BuildType buildType,
+                     const CLProgramVk::DeviceProgramDatas &inputProgramDatas,
+                     cl::Program *notify)
+        : mProgramVk(programVk),
+          mDevices(devices),
+          mOptions(options),
+          mInternalOptions(internalOptions),
+          mBuildType(buildType),
+          mDeviceProgramDatas(inputProgramDatas),
+          mNotify(notify)
+    {}
+
+    void operator()() override
+    {
+        ANGLE_TRACE_EVENT0("gpu.angle", "CLProgramVk::buildInternal (async)");
+        CLProgramVk::ScopedProgramCallback spc(mNotify);
+        if (!mProgramVk->buildInternal(mDevices, mOptions, mInternalOptions, mBuildType,
+                                       mDeviceProgramDatas))
+        {
+            ERR() << "Async build failed for program (" << mProgramVk
+                  << ")! Check the build status or build log for details.";
+        }
+    }
+
+  private:
+    CLProgramVk *mProgramVk;
+    const cl::DevicePtrs mDevices;
+    std::string mOptions;
+    std::string mInternalOptions;
+    CLProgramVk::BuildType mBuildType;
+    const CLProgramVk::DeviceProgramDatas mDeviceProgramDatas;
+    cl::Program *mNotify;
+};
+
+std::string ProcessBuildOptions(const std::vector<std::string> &optionTokens,
+                                CLProgramVk::BuildType buildType)
+{
+    std::string processedOptions;
+
+    // Need to remove/replace options that are not 1-1 mapped to clspv
+    for (const std::string &optionToken : optionTokens)
+    {
+        if (optionToken == "-create-library" && buildType == CLProgramVk::BuildType::LINK)
+        {
+            processedOptions += " --output-format=bc";
+            continue;
+        }
+        processedOptions += optionToken;
+    }
+
+    switch (buildType)
+    {
+        case CLProgramVk::BuildType::COMPILE:
+            processedOptions += " --output-format=bc";
+            break;
+        case CLProgramVk::BuildType::LINK:
+            processedOptions += " -x ir";
+            break;
+        default:
+            break;
+    }
+
+    // Other internal Clspv compiler flags that are needed/required
+    processedOptions += " --long-vector";
+
+    return processedOptions;
+}
+
+}  // namespace
 
 CLProgramVk::CLProgramVk(const cl::Program &program)
     : CLProgramImpl(program), mContext(&program.getContext().getImpl<CLContextVk>())
@@ -149,8 +407,27 @@ angle::Result CLProgramVk::build(const cl::DevicePtrs &devices,
                                  const char *options,
                                  cl::Program *notify)
 {
-    UNIMPLEMENTED();
-    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+    BuildType buildType = !mProgram.getSource().empty() ? BuildType::BUILD : BuildType::BINARY;
+    const cl::DevicePtrs &devicePtrs = !devices.empty() ? devices : mProgram.getDevices();
+
+    if (notify)
+    {
+        std::shared_ptr<angle::WaitableEvent> asyncEvent =
+            mProgram.getContext().getPlatform().getMultiThreadPool()->postWorkerTask(
+                std::make_shared<CLAsyncBuildTask>(this, devicePtrs,
+                                                   std::string(options ? options : ""), "",
+                                                   buildType, DeviceProgramDatas{}, notify));
+        ASSERT(asyncEvent != nullptr);
+    }
+    else
+    {
+        if (!buildInternal(devicePtrs, std::string(options ? options : ""), "", buildType,
+                           DeviceProgramDatas{}))
+        {
+            ANGLE_CL_RETURN_ERROR(CL_BUILD_PROGRAM_FAILURE);
+        }
+    }
+    return angle::Result::Continue;
 }
 
 angle::Result CLProgramVk::compile(const cl::DevicePtrs &devices,
@@ -222,6 +499,177 @@ const CLProgramVk::DeviceProgramData *CLProgramVk::getDeviceProgramData(
     WARN() << "Kernel name (" << kernelName << ") is not associated with program (" << this
            << ") !";
     return nullptr;
+}
+
+bool CLProgramVk::buildInternal(const cl::DevicePtrs &devices,
+                                std::string options,
+                                std::string internalOptions,
+                                BuildType buildType,
+                                const DeviceProgramDatas &inputProgramDatas)
+{
+    std::scoped_lock<std::mutex> sl(mProgramMutex);
+
+    // Cache original options string
+    mProgramOpts = options;
+
+    // Process options and append any other internal (required) options for clspv
+    std::vector<std::string> optionTokens;
+    angle::SplitStringAlongWhitespace(options + " " + internalOptions, &optionTokens);
+    const bool createLibrary     = std::find(optionTokens.begin(), optionTokens.end(),
+                                             "-create-library") != optionTokens.end();
+    std::string processedOptions = ProcessBuildOptions(optionTokens, buildType);
+
+    // Build for each associated device
+    for (const cl::RefPointer<cl::Device> &device : devices)
+    {
+        DeviceProgramData &deviceProgramData = mAssociatedDevicePrograms[device->getNative()];
+        deviceProgramData.buildStatus        = CL_BUILD_IN_PROGRESS;
+
+        if (buildType != BuildType::BINARY)
+        {
+            // Invoke clspv
+            switch (buildType)
+            {
+                case BuildType::BUILD:
+                case BuildType::COMPILE:
+                {
+                    ScopedClspvContext clspvCtx;
+                    const char *clSrc   = mProgram.getSource().c_str();
+                    ClspvError clspvRet = clspvCompileFromSourcesString(
+                        1, NULL, static_cast<const char **>(&clSrc), processedOptions.c_str(),
+                        &clspvCtx.mOutputBin, &clspvCtx.mOutputBinSize, &clspvCtx.mOutputBuildLog);
+                    deviceProgramData.buildLog =
+                        clspvCtx.mOutputBuildLog != nullptr ? clspvCtx.mOutputBuildLog : "";
+                    if (clspvRet != CLSPV_SUCCESS)
+                    {
+                        ERR() << "OpenCL build failed with: ClspvError(" << clspvRet << ")!";
+                        deviceProgramData.buildStatus = CL_BUILD_ERROR;
+                        return false;
+                    }
+
+                    if (buildType == BuildType::COMPILE)
+                    {
+                        deviceProgramData.IR.assign(clspvCtx.mOutputBinSize, 0);
+                        std::memcpy(deviceProgramData.IR.data(), clspvCtx.mOutputBin,
+                                    clspvCtx.mOutputBinSize);
+                        deviceProgramData.binaryType = CL_PROGRAM_BINARY_TYPE_COMPILED_OBJECT;
+                    }
+                    else
+                    {
+                        deviceProgramData.binary.assign(clspvCtx.mOutputBinSize / sizeof(uint32_t),
+                                                        0);
+                        std::memcpy(deviceProgramData.binary.data(), clspvCtx.mOutputBin,
+                                    clspvCtx.mOutputBinSize);
+                        deviceProgramData.binaryType = CL_PROGRAM_BINARY_TYPE_EXECUTABLE;
+                    }
+                    break;
+                }
+                case BuildType::LINK:
+                {
+                    ScopedClspvContext clspvCtx;
+                    std::vector<size_t> vSizes;
+                    std::vector<const char *> vBins;
+                    for (const CLProgramVk::DeviceProgramData *inputProgramData : inputProgramDatas)
+                    {
+                        vSizes.push_back(inputProgramData->IR.size());
+                        vBins.push_back(inputProgramData->IR.data());
+                    }
+                    ClspvError clspvRet = clspvCompileFromSourcesString(
+                        inputProgramDatas.size(), vSizes.data(), vBins.data(),
+                        processedOptions.c_str(), &clspvCtx.mOutputBin, &clspvCtx.mOutputBinSize,
+                        &clspvCtx.mOutputBuildLog);
+                    deviceProgramData.buildLog =
+                        clspvCtx.mOutputBuildLog != nullptr ? clspvCtx.mOutputBuildLog : "";
+                    if (clspvRet != CLSPV_SUCCESS)
+                    {
+                        ERR() << "OpenCL build failed with: ClspvError(" << clspvRet << ")!";
+                        deviceProgramData.buildStatus = CL_BUILD_ERROR;
+                        return false;
+                    }
+
+                    deviceProgramData.IR.assign(clspvCtx.mOutputBinSize, 0);
+                    std::memcpy(deviceProgramData.IR.data(), clspvCtx.mOutputBin,
+                                clspvCtx.mOutputBinSize);
+
+                    if (createLibrary)
+                    {
+                        deviceProgramData.binaryType = CL_PROGRAM_BINARY_TYPE_LIBRARY;
+                    }
+                    else
+                    {
+                        deviceProgramData.binaryType = CL_PROGRAM_BINARY_TYPE_EXECUTABLE;
+                    }
+                    break;
+                }
+                default:
+                    UNREACHABLE();
+                    return false;
+            }
+        }
+
+        // Extract reflection info from spv binary and populate reflection data
+        if (deviceProgramData.binaryType == CL_PROGRAM_BINARY_TYPE_EXECUTABLE)
+        {
+            spvtools::SpirvTools spvTool(SPV_ENV_UNIVERSAL_1_5);
+            bool parseRet = spvTool.Parse(
+                deviceProgramData.binary,
+                [](const spv_endianness_t endianess, const spv_parsed_header_t &instruction) {
+                    return SPV_SUCCESS;
+                },
+                [&deviceProgramData](const spv_parsed_instruction_t &instruction) {
+                    return ParseReflection(deviceProgramData.reflectionData, instruction);
+                });
+            if (!parseRet)
+            {
+                ERR() << "Failed to parse reflection info from SPIR-V!";
+                return false;
+            }
+
+            // Setup inital push constant range
+            uint32_t pushConstantMinOffet = UINT32_MAX, pushConstantMaxOffset = 0,
+                     pushConstantMaxSize = 0;
+            for (const auto &pushConstant : deviceProgramData.reflectionData.pushConstants)
+            {
+                pushConstantMinOffet = pushConstant.second.offset < pushConstantMinOffet
+                                           ? pushConstant.second.offset
+                                           : pushConstantMinOffet;
+                if (pushConstant.second.offset >= pushConstantMaxOffset)
+                {
+                    pushConstantMaxOffset = pushConstant.second.offset;
+                    pushConstantMaxSize   = pushConstant.second.size;
+                }
+            }
+            deviceProgramData.pushConstRange.stageFlags = VK_SHADER_STAGE_COMPUTE_BIT;
+            deviceProgramData.pushConstRange.offset =
+                pushConstantMinOffet == UINT32_MAX ? 0 : pushConstantMinOffet;
+            deviceProgramData.pushConstRange.size = pushConstantMaxOffset + pushConstantMaxSize;
+
+            if (kAngleDebug)
+            {
+                if (mContext->getFeatures().clDumpVkSpirv.enabled)
+                {
+                    angle::spirv::Print(deviceProgramData.binary);
+                }
+            }
+        }
+        deviceProgramData.buildStatus = CL_BUILD_SUCCESS;
+    }
+    return true;
+}
+
+angle::spirv::Blob CLProgramVk::stripReflection(const DeviceProgramData *deviceProgramData)
+{
+    angle::spirv::Blob binaryStripped;
+    spvtools::Optimizer opt(SPV_ENV_UNIVERSAL_1_5);
+    opt.RegisterPass(spvtools::CreateStripReflectInfoPass());
+    spvtools::OptimizerOptions optOptions;
+    optOptions.set_run_validator(false);
+    if (!opt.Run(deviceProgramData->binary.data(), deviceProgramData->binary.size(),
+                 &binaryStripped, optOptions))
+    {
+        ERR() << "Could not strip reflection data from binary!";
+    }
+    return binaryStripped;
 }
 
 }  // namespace rx

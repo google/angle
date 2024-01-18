@@ -15,7 +15,13 @@
 
 #include "libANGLE/renderer/CLProgramImpl.h"
 
+#include "libANGLE/CLProgram.h"
+
+#include "clspv/Compiler.h"
+
 #include "vulkan/vulkan_core.h"
+
+#include "spirv-tools/libspirv.h"
 
 namespace rx
 {
@@ -43,6 +49,39 @@ class CLProgramVk : public CLProgramImpl
         cl_program_binary_type binaryType{CL_PROGRAM_BINARY_TYPE_NONE};
     };
     static constexpr uint32_t LatestSupportedBinaryVersion = 1;
+
+    struct ScopedClspvContext : angle::NonCopyable
+    {
+        ScopedClspvContext() = default;
+        ~ScopedClspvContext() { clspvFreeOutputBuildObjs(mOutputBin, mOutputBuildLog); }
+
+        size_t mOutputBinSize{0};
+        char *mOutputBin{nullptr};
+        char *mOutputBuildLog{nullptr};
+    };
+
+    struct ScopedProgramCallback : angle::NonCopyable
+    {
+        ScopedProgramCallback() = delete;
+        ScopedProgramCallback(cl::Program *notify) : mNotify(notify) {}
+        ~ScopedProgramCallback()
+        {
+            if (mNotify)
+            {
+                mNotify->callback();
+            }
+        }
+
+        cl::Program *mNotify{nullptr};
+    };
+
+    enum class BuildType
+    {
+        BUILD = 0,
+        COMPILE,
+        LINK,
+        BINARY
+    };
 
     struct DeviceProgramData
     {
@@ -150,10 +189,15 @@ class CLProgramVk : public CLProgramImpl
                                 CLKernelImpl::CreateFuncs &createFuncs,
                                 cl_uint *numKernelsRet) override;
 
-    void setProgramOpts(const char *options) { mProgramOpts = std::string(options ? options : ""); }
-
     const DeviceProgramData *getDeviceProgramData(const char *kernelName) const;
     const DeviceProgramData *getDeviceProgramData(const _cl_device_id *device) const;
+
+    bool buildInternal(const cl::DevicePtrs &devices,
+                       std::string options,
+                       std::string internalOptions,
+                       BuildType buildType,
+                       const DeviceProgramDatas &inputProgramDatas);
+    angle::spirv::Blob stripReflection(const DeviceProgramData *deviceProgramData);
 
   private:
     CLContextVk *mContext;
@@ -164,6 +208,7 @@ class CLProgramVk : public CLProgramImpl
     DescriptorSetLayoutCache mDescSetLayoutCache;
     vk::DescriptorSetLayoutPointerArray mDescriptorSetLayouts;
     vk::DescriptorSetArray<vk::DescriptorPoolPointer> mDescriptorPools;
+    std::mutex mProgramMutex;
 };
 
 }  // namespace rx
