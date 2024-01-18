@@ -934,6 +934,10 @@ config("angle_backend_config") {
     configs += [ "src/libANGLE/renderer/null:angle_null_backend_config" ]
   }
 
+  if (angle_enable_wgpu) {
+    configs += [ "src/libANGLE/renderer/wgpu:angle_wgpu_backend_config" ]
+  }
+
   if (angle_enable_metal) {
     configs += [ "src/libANGLE/renderer/metal:angle_metal_backend_config" ]
   }
@@ -1082,6 +1086,10 @@ angle_source_set("libANGLE_no_vulkan") {
 
   if (angle_enable_null) {
     public_deps += [ "src/libANGLE/renderer/null:angle_null_backend" ]
+  }
+
+  if (angle_enable_wgpu) {
+    public_deps += [ "src/libANGLE/renderer/wgpu:angle_wgpu_backend" ]
   }
 
   if (angle_is_winuwp) {

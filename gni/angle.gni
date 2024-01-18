@@ -195,6 +195,9 @@ declare_args() {
 
   # Enables the OpenCL pass-through back end
   angle_enable_cl_passthrough = angle_enable_cl
+
+  # Disable WGPU backend.
+  angle_enable_wgpu = !is_official_build
 }
 
 declare_args() {
