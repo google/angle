@@ -9,6 +9,7 @@
 #include "libANGLE/renderer/vulkan/CLContextVk.h"
 
 #include "libANGLE/CLContext.h"
+#include "libANGLE/CLKernel.h"
 #include "libANGLE/CLProgram.h"
 #include "libANGLE/cl_utils.h"
 
@@ -594,16 +595,116 @@ angle::Result CLProgramVk::createKernel(const cl::Kernel &kernel,
                                         const char *name,
                                         CLKernelImpl::Ptr *kernelOut)
 {
-    UNIMPLEMENTED();
-    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+    const auto devProgram = getDeviceProgramData(name);
+    ASSERT(devProgram != nullptr);
+
+    // Create kernel
+    CLKernelArguments kernelArgs = devProgram->getKernelArguments(name);
+    std::string kernelAttributes = devProgram->getKernelAttributes(name);
+    std::string kernelName       = std::string(name ? name : "");
+    CLKernelVk::Ptr kernelImpl   = CLKernelVk::Ptr(
+        new (std::nothrow) CLKernelVk(kernel, kernelName, kernelAttributes, kernelArgs));
+    if (kernelImpl == nullptr)
+    {
+        ERR() << "Could not create kernel obj!";
+        ANGLE_CL_RETURN_ERROR(CL_OUT_OF_HOST_MEMORY);
+    }
+
+    // Update push contant range and add layout bindings for arguments
+    vk::DescriptorSetLayoutDesc descriptorSetDesc;
+    VkPushConstantRange pcRange = devProgram->pushConstRange;
+    for (const auto &arg : kernelImpl->getArgs())
+    {
+        VkDescriptorType descType = VK_DESCRIPTOR_TYPE_MAX_ENUM;
+        switch (arg.type)
+        {
+            case NonSemanticClspvReflectionArgumentStorageBuffer:
+            case NonSemanticClspvReflectionArgumentPodStorageBuffer:
+                descType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+                break;
+            case NonSemanticClspvReflectionArgumentUniform:
+            case NonSemanticClspvReflectionArgumentPodUniform:
+            case NonSemanticClspvReflectionArgumentPointerUniform:
+                descType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+                break;
+            case NonSemanticClspvReflectionArgumentPodPushConstant:
+                // Get existing push constant range and see if we need to update
+                if (arg.pushConstOffset + arg.pushConstantSize > pcRange.offset + pcRange.size)
+                {
+                    pcRange.size = arg.pushConstOffset + arg.pushConstantSize - pcRange.offset;
+                }
+                continue;
+            default:
+                continue;
+        }
+        descriptorSetDesc.update(arg.descriptorBinding, descType, 1, VK_SHADER_STAGE_COMPUTE_BIT,
+                                 nullptr);
+    }
+
+    // Get descriptor set layout from cache (creates if missed)
+    ANGLE_CL_IMPL_TRY_ERROR(mDescSetLayoutCache.getDescriptorSetLayout(
+                                mContext, descriptorSetDesc,
+                                &mDescriptorSetLayouts[DescriptorSetIndex::ShaderResource]),
+                            CL_INVALID_OPERATION);
+
+    // Get pipeline layout from cache (creates if missed)
+    vk::PipelineLayoutDesc pipelineLayoutDesc;
+    pipelineLayoutDesc.updateDescriptorSetLayout(DescriptorSetIndex::ShaderResource,
+                                                 descriptorSetDesc);
+    pipelineLayoutDesc.updatePushConstantRange(pcRange.stageFlags, pcRange.offset, pcRange.size);
+    ANGLE_CL_IMPL_TRY_ERROR(
+        mPipelineLayoutCache.getPipelineLayout(mContext, pipelineLayoutDesc, mDescriptorSetLayouts,
+                                               &kernelImpl->getPipelineLayout()),
+        CL_INVALID_OPERATION);
+
+    // Setup descriptor pool and allocate/get descriptor set
+    vk::RefCountedDescriptorPoolBinding poolBinding;
+    ANGLE_CL_IMPL_TRY_ERROR(mMetaDescriptorPool.bindCachedDescriptorPool(
+                                mContext, descriptorSetDesc, 1, &mDescSetLayoutCache,
+                                &mDescriptorPools[DescriptorSetIndex::ShaderResource]),
+                            CL_INVALID_OPERATION);
+    if (!descriptorSetDesc.empty())
+    {
+        ANGLE_CL_IMPL_TRY_ERROR(
+            mDescriptorPools[DescriptorSetIndex::ShaderResource].get().allocateDescriptorSet(
+                mContext, mDescriptorSetLayouts[DescriptorSetIndex::ShaderResource].get(),
+                &poolBinding, &kernelImpl->getDescriptorSet()),
+            CL_INVALID_OPERATION);
+    }
+
+    *kernelOut = std::move(kernelImpl);
+    return angle::Result::Continue;
 }
 
 angle::Result CLProgramVk::createKernels(cl_uint numKernels,
                                          CLKernelImpl::CreateFuncs &createFuncs,
                                          cl_uint *numKernelsRet)
 {
-    UNIMPLEMENTED();
-    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+    size_t numDevKernels = 0;
+    for (const auto &dev : mAssociatedDevicePrograms)
+    {
+        numDevKernels += dev.second.numKernels();
+    }
+    if (numKernelsRet != nullptr)
+    {
+        *numKernelsRet = static_cast<cl_uint>(numDevKernels);
+    }
+
+    if (numKernels != 0)
+    {
+        for (const auto &dev : mAssociatedDevicePrograms)
+        {
+            for (const auto &kernArgMap : dev.second.getKernelArgsMap())
+            {
+                createFuncs.emplace_back([this, &kernArgMap](const cl::Kernel &kern) {
+                    CLKernelImpl::Ptr implPtr = nullptr;
+                    ANGLE_CL_IMPL_TRY(this->createKernel(kern, kernArgMap.first.c_str(), &implPtr));
+                    return CLKernelImpl::Ptr(std::move(implPtr));
+                });
+            }
+        }
+    }
+    return angle::Result::Continue;
 }
 
 const CLProgramVk::DeviceProgramData *CLProgramVk::getDeviceProgramData(

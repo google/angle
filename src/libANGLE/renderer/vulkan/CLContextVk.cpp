@@ -71,11 +71,13 @@ angle::Result CLContextVk::getDevices(cl::DevicePtrs *devicePtrsOut) const
 angle::Result CLContextVk::createCommandQueue(const cl::CommandQueue &commandQueue,
                                               CLCommandQueueImpl::Ptr *commandQueueOut)
 {
-    *commandQueueOut = CLCommandQueueVk::Ptr(new (std::nothrow) CLCommandQueueVk(commandQueue));
-    if (*commandQueueOut == nullptr)
+    CLCommandQueueVk *queueImpl = new CLCommandQueueVk(commandQueue);
+    if (queueImpl == nullptr)
     {
         ANGLE_CL_RETURN_ERROR(CL_OUT_OF_HOST_MEMORY);
     }
+    ANGLE_TRY(queueImpl->init());
+    *commandQueueOut = CLCommandQueueVk::Ptr(std::move(queueImpl));
     return angle::Result::Continue;
 }
 

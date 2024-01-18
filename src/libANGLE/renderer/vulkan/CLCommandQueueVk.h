@@ -30,6 +30,8 @@ class CLCommandQueueVk : public CLCommandQueueImpl
     CLCommandQueueVk(const cl::CommandQueue &commandQueue);
     ~CLCommandQueueVk() override;
 
+    angle::Result init();
+
     angle::Result setProperty(cl::CommandQueueProperties properties, cl_bool enable) override;
 
     angle::Result enqueueReadBuffer(const cl::Buffer &buffer,

@@ -9,6 +9,8 @@
 
 #include "libANGLE/validationCL_autogen.h"
 
+#include "common/string_utils.h"
+
 #include "libANGLE/cl_utils.h"
 
 #define ANGLE_VALIDATE_VERSION(version, major, minor)          \
@@ -1311,11 +1313,68 @@ cl_int ValidateCreateKernel(cl_program program, const char *kernel_name)
     {
         return CL_INVALID_PROGRAM;
     }
+    cl::Program &prog = program->cast<cl::Program>();
 
     // CL_INVALID_VALUE if kernel_name is NULL.
     if (kernel_name == nullptr)
     {
         return CL_INVALID_VALUE;
+    }
+
+    // CL_INVALID_PROGRAM_EXECUTABLE if there is no successfully built executable for program.
+    std::vector<cl_device_id> associatedDevices;
+    size_t associatedDeviceCount = 0;
+    bool isAnyDeviceProgramBuilt = false;
+    if (IsError(prog.getInfo(ProgramInfo::Devices, 0, nullptr, &associatedDeviceCount)))
+    {
+        return CL_INVALID_PROGRAM;
+    }
+    associatedDevices.resize(associatedDeviceCount / sizeof(cl_device_id));
+    if (IsError(prog.getInfo(ProgramInfo::Devices, associatedDeviceCount, associatedDevices.data(),
+                             nullptr)))
+    {
+        return CL_INVALID_PROGRAM;
+    }
+    for (const cl_device_id &device : associatedDevices)
+    {
+        cl_build_status status = CL_BUILD_NONE;
+        if (IsError(prog.getBuildInfo(device, ProgramBuildInfo::Status, sizeof(cl_build_status),
+                                      &status, nullptr)))
+        {
+            return CL_INVALID_PROGRAM;
+        }
+
+        if (status == CL_BUILD_SUCCESS)
+        {
+            isAnyDeviceProgramBuilt = true;
+            break;
+        }
+    }
+    if (!isAnyDeviceProgramBuilt)
+    {
+        return CL_INVALID_PROGRAM_EXECUTABLE;
+    }
+
+    // CL_INVALID_KERNEL_NAME if kernel_name is not found in program.
+    std::string kernelNames;
+    size_t kernelNamesSize = 0;
+    if (IsError(prog.getInfo(ProgramInfo::KernelNames, 0, nullptr, &kernelNamesSize)))
+    {
+        return CL_INVALID_PROGRAM;
+    }
+    kernelNames.resize(kernelNamesSize);
+    if (IsError(
+            prog.getInfo(ProgramInfo::KernelNames, kernelNamesSize, kernelNames.data(), nullptr)))
+    {
+        return CL_INVALID_PROGRAM;
+    }
+    std::vector<std::string> tokenizedKernelNames =
+        angle::SplitString(kernelNames.c_str(), ";", angle::WhitespaceHandling::TRIM_WHITESPACE,
+                           angle::SplitResult::SPLIT_WANT_NONEMPTY);
+    if (std::find(tokenizedKernelNames.begin(), tokenizedKernelNames.end(), kernel_name) ==
+        tokenizedKernelNames.end())
+    {
+        return CL_INVALID_KERNEL_NAME;
     }
 
     return CL_SUCCESS;
@@ -1330,6 +1389,19 @@ cl_int ValidateCreateKernelsInProgram(cl_program program,
     if (!Program::IsValid(program))
     {
         return CL_INVALID_PROGRAM;
+    }
+
+    // CL_INVALID_VALUE if kernels is not NULL and num_kernels is less than the number of kernels in
+    // program.
+    size_t kernelCount = 0;
+    cl::Program &prog  = program->cast<cl::Program>();
+    if (IsError(prog.getInfo(ProgramInfo::NumKernels, sizeof(size_t), &prog, nullptr)))
+    {
+        return CL_INVALID_PROGRAM;
+    }
+    if (kernels != nullptr && num_kernels < kernelCount)
+    {
+        return CL_INVALID_VALUE;
     }
 
     return CL_SUCCESS;
