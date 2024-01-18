@@ -12,6 +12,8 @@
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
+#include "libANGLE/CLContext.h"
+#include "libANGLE/CLProgram.h"
 #include "libANGLE/cl_utils.h"
 
 namespace rx
@@ -45,8 +47,8 @@ void CLContextVk::handleError(VkResult errorCode,
         default:
             clErrorCode = CL_INVALID_OPERATION;
     }
-    ERR() << "Internal Vulkan error (" << errorCode << "): " << VulkanResultString(errorCode)
-          << ". " << "CL error (" << clErrorCode << ")";
+    ERR() << "Internal Vulkan error (" << errorCode << "): " << VulkanResultString(errorCode);
+    ERR() << "  CL error (" << clErrorCode << ")";
 
     if (errorCode == VK_ERROR_DEVICE_LOST)
     {
@@ -173,8 +175,62 @@ angle::Result CLContextVk::linkProgram(const cl::Program &program,
                                        cl::Program *notify,
                                        CLProgramImpl::Ptr *programOut)
 {
-    UNIMPLEMENTED();
-    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+    const cl::DevicePtrs &devicePtrs = !devices.empty() ? devices : mContext.getDevices();
+
+    CLProgramVk::Ptr programImpl = CLProgramVk::Ptr(new (std::nothrow) CLProgramVk(program));
+    if (programImpl == nullptr)
+    {
+        ANGLE_CL_RETURN_ERROR(CL_OUT_OF_HOST_MEMORY);
+    }
+
+    cl::DevicePtrs linkDeviceList;
+    CLProgramVk::LinkProgramsList linkProgramsList;
+    cl::BitField libraryOrObject(CL_PROGRAM_BINARY_TYPE_LIBRARY |
+                                 CL_PROGRAM_BINARY_TYPE_COMPILED_OBJECT);
+    for (const cl::DevicePtr &devicePtr : devicePtrs)
+    {
+        CLProgramVk::LinkPrograms linkPrograms;
+        for (const cl::ProgramPtr &inputProgram : inputPrograms)
+        {
+            const CLProgramVk::DeviceProgramData *deviceProgramData =
+                inputProgram->getImpl<CLProgramVk>().getDeviceProgramData(devicePtr->getNative());
+
+            // Should be valid at this point
+            ASSERT(deviceProgramData != nullptr);
+
+            if (libraryOrObject.isSet(deviceProgramData->binaryType))
+            {
+                linkPrograms.push_back(deviceProgramData);
+            }
+        }
+        if (!linkPrograms.empty())
+        {
+            linkDeviceList.push_back(devicePtr);
+            linkProgramsList.push_back(linkPrograms);
+        }
+    }
+
+    // Perform link
+    if (notify)
+    {
+        std::shared_ptr<angle::WaitableEvent> asyncEvent =
+            mContext.getPlatform().getMultiThreadPool()->postWorkerTask(
+                std::make_shared<CLAsyncBuildTask>(
+                    programImpl.get(), linkDeviceList, std::string(options ? options : ""), "",
+                    CLProgramVk::BuildType::LINK, linkProgramsList, notify));
+        ASSERT(asyncEvent != nullptr);
+    }
+    else
+    {
+        if (!programImpl->buildInternal(linkDeviceList, std::string(options ? options : ""), "",
+                                        CLProgramVk::BuildType::LINK, linkProgramsList))
+        {
+            ANGLE_CL_RETURN_ERROR(CL_LINK_PROGRAM_FAILURE);
+        }
+    }
+
+    *programOut = std::move(programImpl);
+    return angle::Result::Continue;
 }
 
 angle::Result CLContextVk::createUserEvent(const cl::Event &event, CLEventImpl::Ptr *eventOut)

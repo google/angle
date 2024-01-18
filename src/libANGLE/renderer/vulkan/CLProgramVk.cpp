@@ -13,6 +13,8 @@
 #include "libANGLE/CLProgram.h"
 #include "libANGLE/cl_utils.h"
 
+#include "common/system_utils.h"
+
 #include "clspv/Compiler.h"
 
 #include "spirv/unified1/NonSemanticClspvReflection.h"
@@ -197,47 +199,6 @@ spv_result_t ParseReflection(CLProgramVk::SpvReflectionData &reflectionData,
     return SPV_SUCCESS;
 }
 
-class CLAsyncBuildTask : public angle::Closure
-{
-  public:
-    CLAsyncBuildTask(CLProgramVk *programVk,
-                     const cl::DevicePtrs &devices,
-                     std::string options,
-                     std::string internalOptions,
-                     CLProgramVk::BuildType buildType,
-                     const CLProgramVk::DeviceProgramDatas &inputProgramDatas,
-                     cl::Program *notify)
-        : mProgramVk(programVk),
-          mDevices(devices),
-          mOptions(options),
-          mInternalOptions(internalOptions),
-          mBuildType(buildType),
-          mDeviceProgramDatas(inputProgramDatas),
-          mNotify(notify)
-    {}
-
-    void operator()() override
-    {
-        ANGLE_TRACE_EVENT0("gpu.angle", "CLProgramVk::buildInternal (async)");
-        CLProgramVk::ScopedProgramCallback spc(mNotify);
-        if (!mProgramVk->buildInternal(mDevices, mOptions, mInternalOptions, mBuildType,
-                                       mDeviceProgramDatas))
-        {
-            ERR() << "Async build failed for program (" << mProgramVk
-                  << ")! Check the build status or build log for details.";
-        }
-    }
-
-  private:
-    CLProgramVk *mProgramVk;
-    const cl::DevicePtrs mDevices;
-    std::string mOptions;
-    std::string mInternalOptions;
-    CLProgramVk::BuildType mBuildType;
-    const CLProgramVk::DeviceProgramDatas mDeviceProgramDatas;
-    cl::Program *mNotify;
-};
-
 std::string ProcessBuildOptions(const std::vector<std::string> &optionTokens,
                                 CLProgramVk::BuildType buildType)
 {
@@ -273,6 +234,18 @@ std::string ProcessBuildOptions(const std::vector<std::string> &optionTokens,
 }
 
 }  // namespace
+
+void CLAsyncBuildTask::operator()()
+{
+    ANGLE_TRACE_EVENT0("gpu.angle", "CLProgramVk::buildInternal (async)");
+    CLProgramVk::ScopedProgramCallback spc(mNotify);
+    if (!mProgramVk->buildInternal(mDevices, mOptions, mInternalOptions, mBuildType,
+                                   mLinkProgramsList))
+    {
+        ERR() << "Async build failed for program (" << mProgramVk
+              << ")! Check the build status or build log for details.";
+    }
+}
 
 CLProgramVk::CLProgramVk(const cl::Program &program)
     : CLProgramImpl(program), mContext(&program.getContext().getImpl<CLContextVk>())
@@ -417,13 +390,13 @@ angle::Result CLProgramVk::build(const cl::DevicePtrs &devices,
             mProgram.getContext().getPlatform().getMultiThreadPool()->postWorkerTask(
                 std::make_shared<CLAsyncBuildTask>(this, devicePtrs,
                                                    std::string(options ? options : ""), "",
-                                                   buildType, DeviceProgramDatas{}, notify));
+                                                   buildType, LinkProgramsList{}, notify));
         ASSERT(asyncEvent != nullptr);
     }
     else
     {
         if (!buildInternal(devicePtrs, std::string(options ? options : ""), "", buildType,
-                           DeviceProgramDatas{}))
+                           LinkProgramsList{}))
         {
             ANGLE_CL_RETURN_ERROR(CL_BUILD_PROGRAM_FAILURE);
         }
@@ -437,8 +410,58 @@ angle::Result CLProgramVk::compile(const cl::DevicePtrs &devices,
                                    const char **headerIncludeNames,
                                    cl::Program *notify)
 {
-    UNIMPLEMENTED();
-    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+    const cl::DevicePtrs &devicePtrs = !devices.empty() ? devices : mProgram.getDevices();
+
+    // Ensure OS temp dir is available
+    std::string internalCompileOpts;
+    Optional<std::string> tmpDir = angle::GetTempDirectory();
+    if (!tmpDir.valid())
+    {
+        ERR() << "Failed to open OS temp dir";
+        ANGLE_CL_RETURN_ERROR(CL_INVALID_OPERATION);
+    }
+    internalCompileOpts += inputHeaders.empty() ? "" : " -I" + tmpDir.value();
+
+    // Dump input headers to OS temp directory
+    for (size_t i = 0; i < inputHeaders.size(); ++i)
+    {
+        const std::string &inputHeaderSrc =
+            inputHeaders.at(i)->getImpl<CLProgramVk>().mProgram.getSource();
+        std::string headerFilePath(angle::ConcatenatePath(tmpDir.value(), headerIncludeNames[i]));
+
+        // Sanitize path so we can use "/" as universal path separator
+        angle::MakeForwardSlashThePathSeparator(headerFilePath);
+        size_t baseDirPos = headerFilePath.find_last_of("/");
+
+        // Ensure parent dir(s) exists
+        if (!angle::CreateDirectory(headerFilePath.substr(0, baseDirPos)))
+        {
+            ERR() << "Failed to create output path(s) for header(s)!";
+            ANGLE_CL_RETURN_ERROR(CL_INVALID_OPERATION);
+        }
+        writeFile(headerFilePath.c_str(), inputHeaderSrc.data(), inputHeaderSrc.size());
+    }
+
+    // Perform compile
+    if (notify)
+    {
+        std::shared_ptr<angle::WaitableEvent> asyncEvent =
+            mProgram.getContext().getPlatform().getMultiThreadPool()->postWorkerTask(
+                std::make_shared<CLAsyncBuildTask>(
+                    this, devicePtrs, std::string(options ? options : ""), internalCompileOpts,
+                    BuildType::COMPILE, LinkProgramsList{}, notify));
+        ASSERT(asyncEvent != nullptr);
+    }
+    else
+    {
+        if (!buildInternal(devicePtrs, std::string(options ? options : ""), internalCompileOpts,
+                           BuildType::COMPILE, LinkProgramsList{}))
+        {
+            ANGLE_CL_RETURN_ERROR(CL_COMPILE_PROGRAM_FAILURE);
+        }
+    }
+
+    return angle::Result::Continue;
 }
 
 angle::Result CLProgramVk::getInfo(cl::ProgramInfo name,
@@ -737,7 +760,7 @@ bool CLProgramVk::buildInternal(const cl::DevicePtrs &devices,
                                 std::string options,
                                 std::string internalOptions,
                                 BuildType buildType,
-                                const DeviceProgramDatas &inputProgramDatas)
+                                const LinkProgramsList &LinkProgramsList)
 {
     std::scoped_lock<std::mutex> sl(mProgramMutex);
 
@@ -752,10 +775,11 @@ bool CLProgramVk::buildInternal(const cl::DevicePtrs &devices,
     std::string processedOptions = ProcessBuildOptions(optionTokens, buildType);
 
     // Build for each associated device
-    for (const cl::RefPointer<cl::Device> &device : devices)
+    for (size_t i = 0; i < devices.size(); ++i)
     {
-        DeviceProgramData &deviceProgramData = mAssociatedDevicePrograms[device->getNative()];
-        deviceProgramData.buildStatus        = CL_BUILD_IN_PROGRESS;
+        const cl::RefPointer<cl::Device> &device = devices.at(i);
+        DeviceProgramData &deviceProgramData     = mAssociatedDevicePrograms[device->getNative()];
+        deviceProgramData.buildStatus            = CL_BUILD_IN_PROGRESS;
 
         if (buildType != BuildType::BINARY)
         {
@@ -801,15 +825,15 @@ bool CLProgramVk::buildInternal(const cl::DevicePtrs &devices,
                     ScopedClspvContext clspvCtx;
                     std::vector<size_t> vSizes;
                     std::vector<const char *> vBins;
-                    for (const CLProgramVk::DeviceProgramData *inputProgramData : inputProgramDatas)
+                    const LinkPrograms &linkPrograms = LinkProgramsList.at(i);
+                    for (const CLProgramVk::DeviceProgramData *linkProgramData : linkPrograms)
                     {
-                        vSizes.push_back(inputProgramData->IR.size());
-                        vBins.push_back(inputProgramData->IR.data());
+                        vSizes.push_back(linkProgramData->IR.size());
+                        vBins.push_back(linkProgramData->IR.data());
                     }
                     ClspvError clspvRet = clspvCompileFromSourcesString(
-                        inputProgramDatas.size(), vSizes.data(), vBins.data(),
-                        processedOptions.c_str(), &clspvCtx.mOutputBin, &clspvCtx.mOutputBinSize,
-                        &clspvCtx.mOutputBuildLog);
+                        linkPrograms.size(), vSizes.data(), vBins.data(), processedOptions.c_str(),
+                        &clspvCtx.mOutputBin, &clspvCtx.mOutputBinSize, &clspvCtx.mOutputBuildLog);
                     deviceProgramData.buildLog =
                         clspvCtx.mOutputBuildLog != nullptr ? clspvCtx.mOutputBuildLog : "";
                     if (clspvRet != CLSPV_SUCCESS)
@@ -819,16 +843,20 @@ bool CLProgramVk::buildInternal(const cl::DevicePtrs &devices,
                         return false;
                     }
 
-                    deviceProgramData.IR.assign(clspvCtx.mOutputBinSize, 0);
-                    std::memcpy(deviceProgramData.IR.data(), clspvCtx.mOutputBin,
-                                clspvCtx.mOutputBinSize);
-
                     if (createLibrary)
                     {
+                        deviceProgramData.IR.assign(clspvCtx.mOutputBinSize, 0);
+                        std::memcpy(deviceProgramData.IR.data(), clspvCtx.mOutputBin,
+                                    clspvCtx.mOutputBinSize);
                         deviceProgramData.binaryType = CL_PROGRAM_BINARY_TYPE_LIBRARY;
                     }
                     else
                     {
+                        deviceProgramData.binary.assign(clspvCtx.mOutputBinSize / sizeof(uint32_t),
+                                                        0);
+                        std::memcpy(deviceProgramData.binary.data(),
+                                    reinterpret_cast<char *>(clspvCtx.mOutputBin),
+                                    clspvCtx.mOutputBinSize);
                         deviceProgramData.binaryType = CL_PROGRAM_BINARY_TYPE_EXECUTABLE;
                     }
                     break;

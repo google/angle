@@ -3089,6 +3089,13 @@ cl_int ValidateCompileProgram(cl_program program,
         return CL_INVALID_PROGRAM;
     }
 
+    // CL_INVALID_OPERATION if we do not have source code.
+    if (prog.getSource().empty())
+    {
+        ERR() << "No OpenCL C source available from program object (" << &prog << ")!";
+        return CL_INVALID_OPERATION;
+    }
+
     // CL_INVALID_VALUE if device_list is NULL and num_devices is greater than zero,
     // or if device_list is not NULL and num_devices is zero.
     if ((device_list != nullptr) != (num_devices != 0u))
@@ -3152,6 +3159,69 @@ cl_int ValidateLinkProgram(cl_context context,
         return CL_INVALID_CONTEXT;
     }
     const Context &ctx = context->cast<Context>();
+
+    // CL_INVALID_OPERATION if the compilation or build of a program executable for any of the
+    // devices listed in device_list by a previous call to clCompileProgram or clBuildProgram for
+    // program has not completed.
+    for (size_t i = 0; i < num_devices; ++i)
+    {
+        Device &device = device_list[i]->cast<Device>();
+        for (size_t j = 0; j < num_input_programs; ++j)
+        {
+            cl_build_status buildStatus = CL_BUILD_NONE;
+            Program &program            = input_programs[j]->cast<Program>();
+            if (IsError(program.getBuildInfo(device.getNative(), ProgramBuildInfo::Status,
+                                             sizeof(cl_build_status), &buildStatus, nullptr)))
+            {
+                return CL_INVALID_PROGRAM;
+            }
+
+            if (buildStatus != CL_BUILD_SUCCESS)
+            {
+                return CL_INVALID_OPERATION;
+            }
+        }
+    }
+
+    // CL_INVALID_OPERATION if the rules for devices containing compiled binaries or libraries as
+    // described in input_programs argument below are not followed.
+    //
+    // All programs specified by input_programs contain a compiled binary or library for the device.
+    // In this case, a link is performed to generate a program executable for this device.
+    //
+    // None of the programs contain a compiled binary or library for that device. In this case, no
+    // link is performed and there will be no program executable generated for this device.
+    //
+    // All other cases will return a CL_INVALID_OPERATION error.
+    BitField libraryOrObject(CL_PROGRAM_BINARY_TYPE_LIBRARY |
+                             CL_PROGRAM_BINARY_TYPE_COMPILED_OBJECT);
+    for (size_t i = 0; i < num_devices; ++i)
+    {
+        bool foundAnyLibraryOrObject = false;
+        Device &device               = device_list[i]->cast<Device>();
+        for (size_t j = 0; j < num_input_programs; ++j)
+        {
+            cl_program_binary_type binaryType = CL_PROGRAM_BINARY_TYPE_NONE;
+            Program &program                  = input_programs[j]->cast<Program>();
+            if (IsError(program.getBuildInfo(device.getNative(), ProgramBuildInfo::BinaryType,
+                                             sizeof(cl_program_binary_type), &binaryType, nullptr)))
+            {
+                return CL_INVALID_PROGRAM;
+            }
+
+            if (libraryOrObject.isNotSet(binaryType))
+            {
+                if (foundAnyLibraryOrObject)
+                {
+                    return CL_INVALID_OPERATION;
+                }
+            }
+            else
+            {
+                foundAnyLibraryOrObject = true;
+            }
+        }
+    }
 
     // CL_INVALID_VALUE if device_list is NULL and num_devices is greater than zero,
     // or if device_list is not NULL and num_devices is zero.
