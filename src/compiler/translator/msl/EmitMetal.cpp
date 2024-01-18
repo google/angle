@@ -433,23 +433,23 @@ static const char *GetOperatorString(TOperator op,
         case TOperator::EOpDegrees:
             return "ANGLE_degrees";
         case TOperator::EOpAtan:
-            return "ANGLE_atan";
+            return argType1 == nullptr ? "metal::atan" : "metal::atan2";
         case TOperator::EOpMod:
             return "ANGLE_mod";  // differs from metal::mod
         case TOperator::EOpRefract:
-            return "ANGLE_refract";
+            return argType0->isVector() ? "metal::refract" : "ANGLE_refract_scalar";
         case TOperator::EOpDistance:
-            return "ANGLE_distance";
+            return argType0->isVector() ? "metal::distance" : "ANGLE_distance_scalar";
         case TOperator::EOpLength:
-            return "ANGLE_length";
+            return argType0->isVector() ? "metal::length" : "metal::abs";
         case TOperator::EOpDot:
-            return "ANGLE_dot";
+            return argType0->isVector() ? "metal::dot" : "*";
         case TOperator::EOpNormalize:
-            return "ANGLE_normalize";
+            return argType0->isVector() ? "metal::fast::normalize" : "metal::sign";
         case TOperator::EOpFaceforward:
-            return "ANGLE_faceforward";
+            return argType0->isVector() ? "metal::faceforward" : "ANGLE_faceforward_scalar";
         case TOperator::EOpReflect:
-            return "ANGLE_reflect";
+            return argType0->isVector() ? "metal::reflect" : "ANGLE_reflect_scalar";
         case TOperator::EOpMatrixCompMult:
             return "ANGLE_componentWiseMultiply";
         case TOperator::EOpOuterProduct:
