@@ -5216,20 +5216,18 @@ void WriteDescriptorDescs::updateInputAttachments(
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
     FramebufferVk *framebufferVk)
 {
-    const std::vector<gl::LinkedUniform> &uniforms = executable.getUniforms();
-
     if (!executable.usesFramebufferFetch())
     {
         return;
     }
 
-    const uint32_t baseUniformIndex              = executable.getFragmentInoutRange().low();
-    const gl::LinkedUniform &baseInputAttachment = uniforms.at(baseUniformIndex);
+    const uint32_t firstInputAttachment =
+        static_cast<uint32_t>(executable.getFragmentInoutIndices().first());
 
     const ShaderInterfaceVariableInfo &baseInfo = variableInfoMap.getVariableById(
-        gl::ShaderType::Fragment, baseInputAttachment.getId(gl::ShaderType::Fragment));
+        gl::ShaderType::Fragment, sh::vk::spirv::kIdInputAttachment0 + firstInputAttachment);
 
-    uint32_t baseBinding = baseInfo.binding - baseInputAttachment.getLocation();
+    const uint32_t baseBinding = baseInfo.binding - firstInputAttachment;
 
     for (size_t colorIndex : framebufferVk->getState().getColorAttachmentsMask())
     {
@@ -6106,20 +6104,18 @@ angle::Result DescriptorSetDescBuilder::updateInputAttachments(
     FramebufferVk *framebufferVk,
     const WriteDescriptorDescs &writeDescriptorDescs)
 {
-    const std::vector<gl::LinkedUniform> &uniforms = executable.getUniforms();
-
     if (!executable.usesFramebufferFetch())
     {
         return angle::Result::Continue;
     }
 
-    const uint32_t baseUniformIndex              = executable.getFragmentInoutRange().low();
-    const gl::LinkedUniform &baseInputAttachment = uniforms.at(baseUniformIndex);
+    const uint32_t firstInputAttachment =
+        static_cast<uint32_t>(executable.getFragmentInoutIndices().first());
 
     const ShaderInterfaceVariableInfo &baseInfo = variableInfoMap.getVariableById(
-        gl::ShaderType::Fragment, baseInputAttachment.getId(gl::ShaderType::Fragment));
+        gl::ShaderType::Fragment, sh::vk::spirv::kIdInputAttachment0 + firstInputAttachment);
 
-    uint32_t baseBinding = baseInfo.binding - baseInputAttachment.getLocation();
+    const uint32_t baseBinding = baseInfo.binding - firstInputAttachment;
 
     for (size_t colorIndex : framebufferVk->getState().getColorAttachmentsMask())
     {

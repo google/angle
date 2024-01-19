@@ -340,7 +340,7 @@ class ProgramExecutable final : public angle::Subject
     {
         return !getLinkedTransformFeedbackVaryings().empty();
     }
-    bool usesFramebufferFetch() const { return (mPod.fragmentInoutRange.length() > 0); }
+    bool usesFramebufferFetch() const { return mPod.fragmentInoutIndices.any(); }
 
     // Count the number of uniform and storage buffer declarations, counting arrays as one.
     size_t getTransformFeedbackBufferCount() const { return mTransformFeedbackStrides.size(); }
@@ -375,7 +375,7 @@ class ProgramExecutable final : public angle::Subject
     const RangeUI &getSamplerUniformRange() const { return mPod.samplerUniformRange; }
     const RangeUI &getImageUniformRange() const { return mPod.imageUniformRange; }
     const RangeUI &getAtomicCounterUniformRange() const { return mPod.atomicCounterUniformRange; }
-    const RangeUI &getFragmentInoutRange() const { return mPod.fragmentInoutRange; }
+    DrawBufferMask getFragmentInoutIndices() const { return mPod.fragmentInoutIndices; }
     bool hasClipDistance() const { return mPod.hasClipDistance; }
     bool hasDiscard() const { return mPod.hasDiscard; }
     bool enablesPerSampleShading() const { return mPod.enablesPerSampleShading; }
@@ -848,12 +848,14 @@ class ProgramExecutable final : public angle::Subject
         RangeUI samplerUniformRange;
         RangeUI imageUniformRange;
         RangeUI atomicCounterUniformRange;
-        RangeUI fragmentInoutRange;
+
+        // 1 byte.  Bitset of which input attachments have been declared
+        DrawBufferMask fragmentInoutIndices;
 
         // GL_EXT_geometry_shader.
+        uint8_t pad0;
         PrimitiveMode geometryShaderInputPrimitiveType;
         PrimitiveMode geometryShaderOutputPrimitiveType;
-        uint8_t pad0, pad1;
         int32_t geometryShaderInvocations;
         int32_t geometryShaderMaxVertices;
         GLenum transformFeedbackBufferMode;

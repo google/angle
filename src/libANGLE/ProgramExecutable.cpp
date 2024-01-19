@@ -766,7 +766,8 @@ void ProgramExecutable::reset()
     mPod.samplerUniformRange       = RangeUI(0, 0);
     mPod.imageUniformRange         = RangeUI(0, 0);
     mPod.atomicCounterUniformRange = RangeUI(0, 0);
-    mPod.fragmentInoutRange        = RangeUI(0, 0);
+
+    mPod.fragmentInoutIndices.reset();
 
     mPod.hasClipDistance         = false;
     mPod.hasDiscard              = false;
@@ -1829,17 +1830,7 @@ void ProgramExecutable::linkSamplerAndImageBindings(GLuint *combinedImageUniform
 
     // Note that uniform block uniforms are not yet appended to this list.
     ASSERT(mUniforms.empty() || highIter->isAtomicCounter() || highIter->isImage() ||
-           highIter->isSampler() || highIter->isInDefaultBlock() || highIter->isFragmentInOut());
-
-    for (; lowIter != mUniforms.rend() && lowIter->isFragmentInOut(); ++lowIter)
-    {
-        --low;
-    }
-
-    mPod.fragmentInoutRange = RangeUI(low, high);
-
-    highIter = lowIter;
-    high     = low;
+           highIter->isSampler() || highIter->isInDefaultBlock());
 
     for (; lowIter != mUniforms.rend() && lowIter->isAtomicCounter(); ++lowIter)
     {
@@ -2071,13 +2062,6 @@ void ProgramExecutable::copyUniformsFromProgramMap(
     mPod.atomicCounterUniformRange =
         AddUniforms(executables, mPod.linkedShaderStages, &mUniforms, &mUniformNames,
                     &mUniformMappedNames, getAtomicRange);
-
-    // Merge fragment in/out uniforms.
-    auto getInoutRange = [](const ProgramExecutable &state) {
-        return state.getFragmentInoutRange();
-    };
-    mPod.fragmentInoutRange = AddUniforms(executables, mPod.linkedShaderStages, &mUniforms,
-                                          &mUniformNames, &mUniformMappedNames, getInoutRange);
 
     // Note: uniforms are set through the program, and the program pipeline never needs it.
     ASSERT(mUniformLocations.empty());

@@ -438,8 +438,8 @@ void ProgramPipeline::updateFragmentInoutRangeAndEnablesPerSampleShading()
         return;
     }
 
-    mState.mExecutable->mPod.fragmentInoutRange = fragmentExecutable->mPod.fragmentInoutRange;
-    mState.mExecutable->mPod.hasDiscard         = fragmentExecutable->mPod.hasDiscard;
+    mState.mExecutable->mPod.fragmentInoutIndices = fragmentExecutable->mPod.fragmentInoutIndices;
+    mState.mExecutable->mPod.hasDiscard           = fragmentExecutable->mPod.hasDiscard;
     mState.mExecutable->mPod.enablesPerSampleShading =
         fragmentExecutable->mPod.enablesPerSampleShading;
 }
@@ -626,14 +626,14 @@ angle::Result ProgramPipeline::link(const Context *context)
         mState.mExecutable->copyOutputsFromProgram(*executable);
     }
 
+    mState.mExecutable->mActiveSamplerRefCounts.fill(0);
+    updateExecutable();
+
     if (mState.mExecutable->hasLinkedShaderStage(ShaderType::Vertex) ||
         mState.mExecutable->hasLinkedShaderStage(ShaderType::Compute))
     {
         ANGLE_TRY(getImplementation()->link(context, mergedVaryings, varyingPacking));
     }
-
-    mState.mExecutable->mActiveSamplerRefCounts.fill(0);
-    updateExecutable();
 
     mState.mIsLinked = true;
     onStateChange(angle::SubjectMessage::ProgramRelinked);

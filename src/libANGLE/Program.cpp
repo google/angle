@@ -1176,6 +1176,16 @@ angle::Result Program::linkJobImpl(const Caps &caps,
             mState.mExecutable->mPod.advancedBlendEquations =
                 fragmentShader->advancedBlendEquations;
             mState.mExecutable->mPod.specConstUsageBits |= fragmentShader->specConstUsageBits;
+
+            for (uint32_t index = 0; index < IMPLEMENTATION_MAX_DRAW_BUFFERS; ++index)
+            {
+                const sh::MetadataFlags flag = static_cast<sh::MetadataFlags>(
+                    static_cast<uint32_t>(sh::MetadataFlags::HasInputAttachment0) + index);
+                if (fragmentShader->metadataFlags.test(flag))
+                {
+                    mState.mExecutable->mPod.fragmentInoutIndices.set(index);
+                }
+            }
         }
 
         *mergedVaryingsOut = GetMergedVaryingsFromLinkingVariables(*linkingVariables);

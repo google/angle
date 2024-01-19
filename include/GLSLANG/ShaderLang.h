@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 346
+#define ANGLE_SH_VERSION 347
 
 enum ShShaderSpec
 {
@@ -939,6 +939,9 @@ enum class MetadataFlags
     // Applicable to fragment shaders
     HasDiscard,
     EnablesPerSampleShading,
+    HasInputAttachment0,
+    // Flag for attachment i is HasInputAttachment0 + i
+    HasInputAttachment7 = HasInputAttachment0 + 7,
     // Applicable to geometry shaders
     HasValidGeometryShaderInputPrimitiveType,
     HasValidGeometryShaderOutputPrimitiveType,
@@ -1090,6 +1093,9 @@ enum ReservedIds
     kIdXfbEmulationBufferBlockThree,
     // Additional varying added to hold untransformed gl_Position for transform feedback capture
     kIdXfbExtensionPosition,
+    // Input attachments used for framebuffer fetch and advanced blend emulation
+    kIdInputAttachment0,
+    kIdInputAttachment7 = kIdInputAttachment0 + 7,
 
     kIdFirstUnreserved,
 };
