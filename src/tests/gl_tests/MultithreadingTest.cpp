@@ -676,6 +676,201 @@ TEST_P(MultithreadingTest, CreateMultiSharedContextAndDraw)
     EXPECT_EGL_SUCCESS();
 }
 
+// Producer/Consumer test using EGLImages and EGLSyncs
+TEST_P(MultithreadingTest, EGLImageProduceConsume)
+{
+    EGLWindow *window  = getEGLWindow();
+    EGLDisplay dpy     = window->getDisplay();
+    EGLContext rootCtx = window->getContext();
+
+    ANGLE_SKIP_TEST_IF(!IsEGLDisplayExtensionEnabled(dpy, "EGL_KHR_image"));
+    ANGLE_SKIP_TEST_IF(!IsEGLDisplayExtensionEnabled(dpy, "EGL_KHR_gl_texture_2D_image"));
+    ANGLE_SKIP_TEST_IF(!IsEGLDisplayExtensionEnabled(dpy, "EGL_KHR_fence_sync"));
+
+    struct sharedImage
+    {
+        EGLImage image;
+        EGLSync sync;
+        GLuint rootTexture;
+    };
+
+    std::mutex mutex;
+    std::vector<sharedImage> waitingForProduce;
+    std::vector<sharedImage> waitingForConsume;
+
+    constexpr size_t kNumImages = 10;
+    for (size_t i = 0; i < kNumImages; i++)
+    {
+        GLuint texture;
+        glGenTextures(1, &texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+        sharedImage img;
+        img.image       = eglCreateImageKHR(dpy, rootCtx, EGL_GL_TEXTURE_2D_KHR,
+                                            reinterpret_cast<EGLClientBuffer>(texture), nullptr);
+        img.sync        = eglCreateSyncKHR(dpy, EGL_SYNC_FENCE_KHR, nullptr);
+        img.rootTexture = texture;
+
+        waitingForProduce.push_back(std::move(img));
+    }
+
+    constexpr size_t kIterations = 10000;
+
+    std::thread producerThread([&]() {
+        EGLContext ctx = createMultithreadedContext(window, EGL_NO_CONTEXT);
+        EXPECT_EGL_TRUE(eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, ctx));
+
+        {
+            ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(),
+                             essl1_shaders::fs::UniformColor());
+            glUseProgram(drawColor);
+            GLint colorUniformLocation =
+                glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+            ASSERT_NE(colorUniformLocation, -1);
+
+            size_t iteration = 0;
+            while (iteration < kIterations)
+            {
+                sharedImage img;
+                {
+                    std::lock_guard<decltype(mutex)> lock(mutex);
+                    if (waitingForProduce.empty())
+                    {
+                        continue;
+                    }
+                    img = std::move(waitingForProduce.back());
+                    waitingForProduce.pop_back();
+                }
+
+                eglWaitSync(dpy, img.sync, 0);
+                EXPECT_EGL_SUCCESS();
+
+                eglDestroySync(dpy, img.sync);
+
+                GLTexture texture;
+                glBindTexture(GL_TEXTURE_2D, texture);
+                glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, img.image);
+                EXPECT_GL_NO_ERROR();
+
+                GLFramebuffer fbo;
+                glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture,
+                                       0);
+
+                glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+                glClear(GL_COLOR_BUFFER_BIT);
+
+                glUniform4f(colorUniformLocation, float(iteration) / kIterations, 0.0f, 0.0f, 1.0f);
+                drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0);
+
+                glBindTexture(GL_TEXTURE_2D, 0);
+                glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+                img.sync = eglCreateSyncKHR(dpy, EGL_SYNC_FENCE_KHR, nullptr);
+                EXPECT_EGL_SUCCESS();
+                glFlush();
+
+                {
+                    std::lock_guard<decltype(mutex)> lock(mutex);
+                    waitingForConsume.insert(waitingForConsume.begin(), std::move(img));
+                }
+
+                iteration++;
+            }
+        }
+
+        eglDestroyContext(dpy, ctx);
+    });
+
+    std::thread consumerThread([&]() {
+        EGLContext ctx = createMultithreadedContext(window, EGL_NO_CONTEXT);
+        EXPECT_EGL_TRUE(eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, ctx));
+
+        {
+            ANGLE_GL_PROGRAM(drawTexture, essl1_shaders::vs::Texture2D(),
+                             essl1_shaders::fs::Texture2D());
+            glUseProgram(drawTexture);
+            GLint textureUniformLocation =
+                glGetUniformLocation(drawTexture, angle::essl1_shaders::Texture2DUniform());
+            ASSERT_NE(textureUniformLocation, -1);
+            glUniform1i(textureUniformLocation, 0);
+            glActiveTexture(GL_TEXTURE0);
+
+            GLTexture backbufferTexture;
+            glBindTexture(GL_TEXTURE_2D, backbufferTexture);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 256, 256, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                         nullptr);
+
+            GLFramebuffer fbo;
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                   backbufferTexture, 0);
+
+            size_t iteration = 0;
+            while (iteration < kIterations)
+            {
+                sharedImage img;
+                {
+                    std::lock_guard<decltype(mutex)> lock(mutex);
+                    if (waitingForConsume.empty())
+                    {
+                        continue;
+                    }
+                    img = std::move(waitingForConsume.back());
+                    waitingForConsume.pop_back();
+                }
+
+                eglWaitSync(dpy, img.sync, 0);
+                EXPECT_EGL_SUCCESS();
+                eglDestroySync(dpy, img.sync);
+
+                GLTexture texture;
+                glBindTexture(GL_TEXTURE_2D, texture);
+                glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, img.image);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+                drawQuad(drawTexture, essl1_shaders::PositionAttrib(), 0);
+                EXPECT_GL_NO_ERROR();
+
+                glBindTexture(GL_TEXTURE_2D, 0);
+
+                img.sync = eglCreateSyncKHR(dpy, EGL_SYNC_FENCE_KHR, nullptr);
+                EXPECT_EGL_SUCCESS();
+                glFlush();
+
+                {
+                    std::lock_guard<decltype(mutex)> lock(mutex);
+                    waitingForProduce.insert(waitingForProduce.begin(), std::move(img));
+                }
+
+                iteration++;
+            }
+        }
+        eglDestroyContext(dpy, ctx);
+    });
+
+    producerThread.join();
+    consumerThread.join();
+
+    // Clean up
+    {
+        for (auto &img : waitingForProduce)
+        {
+            eglDestroyImageKHR(dpy, img.image);
+            eglDestroySync(dpy, img.sync);
+            glDeleteTextures(1, &img.rootTexture);
+        }
+        for (auto &img : waitingForConsume)
+        {
+            eglDestroyImageKHR(dpy, img.image);
+            eglDestroySync(dpy, img.sync);
+            glDeleteTextures(1, &img.rootTexture);
+        }
+    }
+}
+
 void MultithreadingTestES3::textureThreadFunction(bool useDraw)
 {
     EGLWindow *window  = getEGLWindow();

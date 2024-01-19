@@ -158,7 +158,7 @@ struct ImageState : private angle::NonCopyable
     angle::FlatUnorderedSet<ImageSibling *, kTargetsSetSize> targets;
 };
 
-class Image final : public RefCountObject, public LabeledObject
+class Image final : public ThreadSafeRefCountObject, public LabeledObject
 {
   public:
     Image(rx::EGLImplFactory *factory,
