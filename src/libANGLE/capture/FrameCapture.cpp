@@ -8308,6 +8308,12 @@ void FrameCaptureShared::captureClientArraySnapshot(const gl::Context *context,
                                                     size_t vertexCount,
                                                     size_t instanceCount)
 {
+    if (vertexCount == 0)
+    {
+        // Nothing to capture
+        return;
+    }
+
     const gl::VertexArray *vao = context->getState().getVertexArray();
 
     // Capture client array data.
