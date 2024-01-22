@@ -645,7 +645,8 @@ class PixelLocalStorageImageLoadStore : public PixelLocalStorage
             // Note that the PLS extension disallows simultaneously binding a single texture image
             // to a PLS plane and attaching it to the draw framebuffer. Enabling this workaround on
             // any other platform would yield incorrect results.
-            mHadColorAttachment0 = framebuffer->getColorAttachment(0) != nullptr;
+            // This flag is set to true iff the framebuffer has an attachment 0 and it is enabled.
+            mHadColorAttachment0 = framebuffer->getDrawBufferMask().test(0);
             if (!mHadColorAttachment0)
             {
                 // Indexed color masks are always available on Metal.
