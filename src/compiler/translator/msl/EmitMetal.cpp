@@ -455,7 +455,7 @@ static const char *GetOperatorString(TOperator op,
         case TOperator::EOpOuterProduct:
             return "ANGLE_outerProduct";
         case TOperator::EOpSign:
-            return "ANGLE_sign";
+            return argType0->getBasicType() == EbtFloat ? "metal::sign" : "ANGLE_sign_int";
 
         case TOperator::EOpAbs:
             return "metal::abs";

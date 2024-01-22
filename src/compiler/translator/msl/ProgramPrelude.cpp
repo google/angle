@@ -175,7 +175,7 @@ class ProgramPrelude : public TIntermTraverser
     void equalArray();
     void equalStructArray();
     void notEqualArray();
-    void sign();
+    void signInt();
     void pack_half_2x16();
     void unpack_half_2x16();
     void vectorElemRef();
@@ -485,44 +485,23 @@ ANGLE_ALWAYS_INLINE T ANGLE_refract_scalar(T i, T n, T eta)
 )",
                         include_metal_math())
 
-PROGRAM_PRELUDE_DECLARE(sign,
+PROGRAM_PRELUDE_DECLARE(signInt,
                         R"(
-template <typename T, typename Enable = void>
-struct ANGLE_sign_impl
+ANGLE_ALWAYS_INLINE int ANGLE_sign_int(int x)
 {
-    static ANGLE_ALWAYS_INLINE T exec(T x)
-    {
-        return metal::sign(x);
-    }
-};
-template <>
-struct ANGLE_sign_impl<int>
-{
-    static ANGLE_ALWAYS_INLINE int exec(int x)
-    {
-        return (0 < x) - (x < 0);
-    }
-};
+    return (0 < x) - (x < 0);
+}
 template <int N>
-struct ANGLE_sign_impl<metal::vec<int, N>>
+ANGLE_ALWAYS_INLINE metal::vec<int, N> ANGLE_sign_int(metal::vec<int, N> x)
 {
-    static ANGLE_ALWAYS_INLINE metal::vec<int, N> exec(metal::vec<int, N> x)
+    metal::vec<int, N> s;
+    for (int i = 0; i < N; ++i)
     {
-        metal::vec<int, N> s;
-        for (int i = 0; i < N; ++i)
-        {
-            s[i] = ANGLE_sign_impl<int>::exec(x[i]);
-        }
-        return s;
+        s[i] = ANGLE_sign_int(x[i]);
     }
-};
-template <typename T>
-ANGLE_ALWAYS_INLINE T ANGLE_sign(T x)
-{
-    return ANGLE_sign_impl<T>::exec(x);
-};
-)",
-                        include_metal_common())
+    return s;
+}
+)")
 
 PROGRAM_PRELUDE_DECLARE(int_clamp,
                         R"(
@@ -3653,7 +3632,14 @@ void ProgramPrelude::visitOperator(TOperator op,
             break;
 
         case TOperator::EOpSign:
-            sign();
+            if (argType0->getBasicType() == TBasicType::EbtFloat)
+            {
+                include_metal_common();
+            }
+            else
+            {
+                signInt();
+            }
             break;
 
         case TOperator::EOpClamp:
