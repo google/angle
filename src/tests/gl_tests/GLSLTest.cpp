@@ -16119,6 +16119,55 @@ void main()
     EXPECT_NE(compileResult, 0);
 }
 
+// Test robustness of out-of-bounds lod in texelFetch
+TEST_P(WebGL2GLSLTest, TexelFetchLodOutOfBounds)
+{
+    constexpr char kVS[] = R"(#version 300 es
+in vec4 vertexPosition;
+void main() {
+    gl_Position = vertexPosition;
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+uniform highp sampler2DArray textureArray;
+uniform int textureLod;
+out vec4 fragColor;
+void main() {
+    fragColor = texelFetch(textureArray, ivec3(gl_FragCoord.xy, 0), textureLod);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+    const GLint lodLoc = glGetUniformLocation(program, "textureLod");
+    EXPECT_NE(lodLoc, -1);
+    const GLint textureLoc = glGetUniformLocation(program, "textureArray");
+    EXPECT_NE(textureLoc, -1);
+
+    const GLint attribLocation = glGetAttribLocation(program, "vertexPosition");
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    constexpr float vertices[12] = {
+        -1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1,
+    };
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(attribLocation);
+    glVertexAttribPointer(attribLocation, 2, GL_FLOAT, false, 0, 0);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, texture);
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 5, GL_RGBA8, 16, 16, 3);
+    glUniform1i(textureLoc, 0);
+
+    // Test LOD too large
+    glUniform1i(lodLoc, 0x7FFF);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    // Test LOD negative
+    glUniform1i(lodLoc, -1);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+}
+
 // Test that framebuffer fetch transforms gl_LastFragData in the presence of gl_FragCoord without
 // failing validation (adapted from a Chromium test, see anglebug.com/6951)
 TEST_P(GLSLTest, FramebufferFetchWithLastFragData)
