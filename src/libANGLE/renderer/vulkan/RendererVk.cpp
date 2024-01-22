@@ -1958,12 +1958,12 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
 
     ANGLE_TRY(setupDevice(displayVk));
 
-    // If only one queue family, go ahead and initialize the device. If there is more than one
-    // queue, we'll have to wait until we see a WindowSurface to know which supports present.
-    if (queueFamilyMatchCount == 1 && !mFeatures.forceDelayedDeviceCreationForTesting.enabled)
-    {
-        ANGLE_TRY(createDeviceAndQueue(displayVk, firstGraphicsQueueFamily));
-    }
+    // If only one queue family, that's the only choice and the device is initialize with that.  If
+    // there is more than one queue, we still create the device with the first queue family and hope
+    // for the best.  We cannot wait for a window surface to know which supports present because of
+    // EGL_KHR_surfaceless_context or simply pbuffers.  So far, only MoltenVk seems to expose
+    // multiple queue families, and using the first queue family is fine with it.
+    ANGLE_TRY(createDeviceAndQueue(displayVk, firstGraphicsQueueFamily));
 
     // Initialize the format table.
     mFormatTable.initialize(this, &mNativeTextureCaps);
@@ -3571,54 +3571,25 @@ void RendererVk::initializeValidationMessageSuppressions()
     }
 }
 
-angle::Result RendererVk::selectPresentQueueForSurface(DisplayVk *displayVk,
-                                                       VkSurfaceKHR surface,
-                                                       uint32_t *presentQueueOut)
+angle::Result RendererVk::checkQueueForSurfacePresent(DisplayVk *displayVk,
+                                                      VkSurfaceKHR surface,
+                                                      bool *supportedOut)
 {
     // We've already initialized a device, and can't re-create it unless it's never been used.
-    // TODO(jmadill): Handle the re-creation case if necessary.
-    if (mDevice != VK_NULL_HANDLE)
-    {
-        ASSERT(mCurrentQueueFamilyIndex != std::numeric_limits<uint32_t>::max());
+    // If recreation is ever necessary, it should be able to deal with contexts currently running in
+    // other threads using the existing queue.  For example, multiple contexts (not in a share
+    // group) may be currently recording commands and rendering to pbuffers or using
+    // EGL_KHR_surfaceless_context.
+    ASSERT(mDevice != VK_NULL_HANDLE);
+    ASSERT(mCurrentQueueFamilyIndex != std::numeric_limits<uint32_t>::max());
 
-        // Check if the current device supports present on this surface.
-        VkBool32 supportsPresent = VK_FALSE;
-        ANGLE_VK_TRY(displayVk,
-                     vkGetPhysicalDeviceSurfaceSupportKHR(mPhysicalDevice, mCurrentQueueFamilyIndex,
-                                                          surface, &supportsPresent));
+    // Check if the current device supports present on this surface.
+    VkBool32 supportsPresent = VK_FALSE;
+    ANGLE_VK_TRY(displayVk,
+                 vkGetPhysicalDeviceSurfaceSupportKHR(mPhysicalDevice, mCurrentQueueFamilyIndex,
+                                                      surface, &supportsPresent));
 
-        if (supportsPresent == VK_TRUE)
-        {
-            *presentQueueOut = mCurrentQueueFamilyIndex;
-            return angle::Result::Continue;
-        }
-    }
-
-    // Find a graphics and present queue.
-    Optional<uint32_t> newPresentQueue;
-    uint32_t queueCount = static_cast<uint32_t>(mQueueFamilyProperties.size());
-    constexpr VkQueueFlags kGraphicsAndCompute = VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT;
-    for (uint32_t queueIndex = 0; queueIndex < queueCount; ++queueIndex)
-    {
-        const auto &queueInfo = mQueueFamilyProperties[queueIndex];
-        if ((queueInfo.queueFlags & kGraphicsAndCompute) == kGraphicsAndCompute)
-        {
-            VkBool32 supportsPresent = VK_FALSE;
-            ANGLE_VK_TRY(displayVk, vkGetPhysicalDeviceSurfaceSupportKHR(
-                                        mPhysicalDevice, queueIndex, surface, &supportsPresent));
-
-            if (supportsPresent == VK_TRUE)
-            {
-                newPresentQueue = queueIndex;
-                break;
-            }
-        }
-    }
-
-    ANGLE_VK_CHECK(displayVk, newPresentQueue.valid(), VK_ERROR_INITIALIZATION_FAILED);
-    ANGLE_TRY(createDeviceAndQueue(displayVk, newPresentQueue.value()));
-
-    *presentQueueOut = newPresentQueue.value();
+    *supportedOut = supportsPresent == VK_TRUE;
     return angle::Result::Continue;
 }
 

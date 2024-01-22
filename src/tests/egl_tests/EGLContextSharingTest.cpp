@@ -1575,22 +1575,9 @@ TEST_P(EGLContextSharingTestNoSyncTextureUploads, NoSync)
 // created.
 TEST_P(EGLContextSharingTestNoFixture, ImmediateContextDestroyAfterCreation)
 {
-    EGLAttrib dispattrs[5] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(), EGL_NONE,
-                              EGL_NONE, EGL_NONE};
-
-    std::vector<const char *> enabledFeatureOverrides;
-    if (GetParam().isEnableRequested(Feature::ForceDelayedDeviceCreationForTesting))
-    {
-        enabledFeatureOverrides.push_back(
-            angle::GetFeatureName(Feature::ForceDelayedDeviceCreationForTesting));
-        enabledFeatureOverrides.push_back(nullptr);
-
-        dispattrs[2] = EGL_FEATURE_OVERRIDES_ENABLED_ANGLE;
-        dispattrs[3] = reinterpret_cast<EGLAttrib>(enabledFeatureOverrides.data());
-    }
-
-    mDisplay = eglGetPlatformDisplay(EGL_PLATFORM_ANGLE_ANGLE,
-                                     reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY), dispattrs);
+    EGLAttrib dispattrs[3] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(), EGL_NONE};
+    mDisplay               = eglGetPlatformDisplay(EGL_PLATFORM_ANGLE_ANGLE,
+                                                   reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY), dispattrs);
     EXPECT_TRUE(mDisplay != EGL_NO_DISPLAY);
     EXPECT_EGL_TRUE(eglInitialize(mDisplay, nullptr, nullptr));
 
@@ -1616,18 +1603,15 @@ ANGLE_INSTANTIATE_TEST(EGLContextSharingTest,
                        ES2_OPENGL(),
                        ES3_OPENGL(),
                        ES2_VULKAN(),
-                       ES3_VULKAN(),
-                       ES3_VULKAN().enable(Feature::ForceDelayedDeviceCreationForTesting));
+                       ES3_VULKAN());
 
-ANGLE_INSTANTIATE_TEST(
-    EGLContextSharingTestNoFixture,
-    WithNoFixture(ES2_OPENGLES()),
-    WithNoFixture(ES3_OPENGLES()),
-    WithNoFixture(ES2_OPENGL()),
-    WithNoFixture(ES3_OPENGL()),
-    WithNoFixture(ES2_VULKAN()),
-    WithNoFixture(ES3_VULKAN()),
-    WithNoFixture(ES3_VULKAN()).enable(Feature::ForceDelayedDeviceCreationForTesting));
+ANGLE_INSTANTIATE_TEST(EGLContextSharingTestNoFixture,
+                       WithNoFixture(ES2_OPENGLES()),
+                       WithNoFixture(ES3_OPENGLES()),
+                       WithNoFixture(ES2_OPENGL()),
+                       WithNoFixture(ES3_OPENGL()),
+                       WithNoFixture(ES2_VULKAN()),
+                       WithNoFixture(ES3_VULKAN()));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLContextSharingTestNoSyncTextureUploads);
 ANGLE_INSTANTIATE_TEST(EGLContextSharingTestNoSyncTextureUploads,

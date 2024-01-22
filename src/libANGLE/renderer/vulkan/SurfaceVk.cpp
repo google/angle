@@ -1181,9 +1181,13 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk, bool *anyMat
     gl::Extents windowSize;
     ANGLE_TRY(createSurfaceVk(displayVk, &windowSize));
 
-    uint32_t presentQueue = 0;
-    ANGLE_TRY(renderer->selectPresentQueueForSurface(displayVk, mSurface, &presentQueue));
-    ANGLE_UNUSED_VARIABLE(presentQueue);
+    // Check if the selected queue created supports present to this surface.
+    bool presentSupported = false;
+    ANGLE_TRY(renderer->checkQueueForSurfacePresent(displayVk, mSurface, &presentSupported));
+    if (!presentSupported)
+    {
+        return angle::Result::Continue;
+    }
 
     const VkPhysicalDevice &physicalDevice = renderer->getPhysicalDevice();
 
