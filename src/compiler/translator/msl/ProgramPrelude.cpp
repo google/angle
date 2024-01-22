@@ -1068,7 +1068,8 @@ ANGLE_ALWAYS_INLINE bool ANGLE_notEqualStructArray(metal::array<T, N> u, metal::
 )",
                         notEqualStruct())
 
-PROGRAM_PRELUDE_DECLARE(vectorElemRef, R"(
+PROGRAM_PRELUDE_DECLARE(vectorElemRef,
+                        R"(
 template <typename T, int N>
 struct ANGLE_VectorElemRef
 {
@@ -1084,9 +1085,10 @@ struct ANGLE_VectorElemRef
 template <typename T, int N>
 ANGLE_ALWAYS_INLINE ANGLE_VectorElemRef<T, N> ANGLE_elem_ref(thread metal::vec<T, N> &vec, int index)
 {
-    return ANGLE_VectorElemRef<T, N>(vec, index);
+    return ANGLE_VectorElemRef<T, N>(vec, metal::clamp(index, 0, N - 1));
 }
-)")
+)",
+                        include_metal_common())
 
 PROGRAM_PRELUDE_DECLARE(swizzleRef,
                         R"(
