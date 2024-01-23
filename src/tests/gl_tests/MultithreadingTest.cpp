@@ -3271,6 +3271,160 @@ void main()
     ASSERT_NE(currentStep, Step::Abort);
 }
 
+// Test that calling glUniformBlockBinding on one context affects all contexts.
+TEST_P(MultithreadingTestES3, UniformBlockBinding)
+{
+    ANGLE_SKIP_TEST_IF(!platformSupportsMultithreading());
+
+    constexpr char kVS[] = R"(#version 300 es
+void main()
+{
+    vec2 pos = vec2(0.0);
+    switch (gl_VertexID) {
+        case 0: pos = vec2(-1.0, -1.0); break;
+        case 1: pos = vec2(3.0, -1.0); break;
+        case 2: pos = vec2(-1.0, 3.0); break;
+    };
+    gl_Position = vec4(pos, 0.0, 1.0);
+})";
+    constexpr char kFS[] = R"(#version 300 es
+out mediump vec4 colorOut;
+
+layout(std140) uniform buffer { mediump vec4 color; };
+
+void main()
+{
+    colorOut = color;
+})";
+
+    GLProgram program;
+    GLint uniformBufferIndex;
+
+    // Sync primitives
+    std::mutex mutex;
+    std::condition_variable condVar;
+
+    enum class Step
+    {
+        Start,
+        Thread1Ready,
+        Thread0BindingChanged,
+        Thread1FinishedDrawing,
+        Finish,
+        Abort,
+    };
+    Step currentStep = Step::Start;
+
+    // Threads to create programs and draw with different uniform blocks.
+    auto thread0 = [&](EGLDisplay dpy, EGLSurface surface, EGLContext context) {
+        ThreadSynchronization<Step> threadSynchronization(&currentStep, &mutex, &condVar);
+        EXPECT_EGL_TRUE(eglMakeCurrent(dpy, surface, surface, context));
+
+        // Create buffers bound to bindings 1 and 2
+        constexpr std::array<float, 4> kRed              = {1, 0, 0, 1};
+        constexpr std::array<float, 4> kTransparentGreen = {0, 1, 0, 0};
+        GLBuffer red, transparentGreen;
+        glBindBuffer(GL_UNIFORM_BUFFER, red);
+        glBufferData(GL_UNIFORM_BUFFER, sizeof(kRed), kRed.data(), GL_STATIC_DRAW);
+        glBindBuffer(GL_UNIFORM_BUFFER, transparentGreen);
+        glBufferData(GL_UNIFORM_BUFFER, sizeof(kTransparentGreen), kTransparentGreen.data(),
+                     GL_STATIC_DRAW);
+
+        glBindBufferBase(GL_UNIFORM_BUFFER, 1, transparentGreen);
+        glBindBufferBase(GL_UNIFORM_BUFFER, 2, red);
+
+        // Wait for the other thread to set everything up
+        ASSERT_TRUE(threadSynchronization.waitForStep(Step::Thread1Ready));
+
+        // Issue a draw call.  The buffer should be transparent green now
+        glClearColor(0, 0, 0, 0);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE);
+
+        glUseProgram(program);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+
+        // Change the binding
+        glUniformBlockBinding(program, uniformBufferIndex, 1);
+        ASSERT_GL_NO_ERROR();
+
+        // Let the other thread work before any deferred operations for the binding change above are
+        // processed in this context.
+        threadSynchronization.nextStep(Step::Thread0BindingChanged);
+        ASSERT_TRUE(threadSynchronization.waitForStep(Step::Thread1FinishedDrawing));
+
+        // Draw again, it should accumulate blue and the buffer should become magenta.
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+
+        // Verify results
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
+        ASSERT_GL_NO_ERROR();
+
+        threadSynchronization.nextStep(Step::Finish);
+    };
+
+    auto thread1 = [&](EGLDisplay dpy, EGLSurface surface, EGLContext context) {
+        ThreadSynchronization<Step> threadSynchronization(&currentStep, &mutex, &condVar);
+        EXPECT_EGL_TRUE(eglMakeCurrent(dpy, surface, surface, context));
+
+        // Create buffers bound to bindings 1 and 2
+        constexpr std::array<float, 4> kBlue           = {0, 0, 1, 1};
+        constexpr std::array<float, 4> kTransparentRed = {1, 0, 0, 0};
+        GLBuffer blue, transparentRed;
+        glBindBuffer(GL_UNIFORM_BUFFER, blue);
+        glBufferData(GL_UNIFORM_BUFFER, sizeof(kBlue), kBlue.data(), GL_STATIC_DRAW);
+        glBindBuffer(GL_UNIFORM_BUFFER, transparentRed);
+        glBufferData(GL_UNIFORM_BUFFER, sizeof(kTransparentRed), kTransparentRed.data(),
+                     GL_STATIC_DRAW);
+
+        glBindBufferBase(GL_UNIFORM_BUFFER, 1, blue);
+        glBindBufferBase(GL_UNIFORM_BUFFER, 2, transparentRed);
+
+        // Create the program
+        program.makeRaster(kVS, kFS);
+        glUseProgram(program);
+        uniformBufferIndex = glGetUniformBlockIndex(program, "buffer");
+
+        // Configure the buffer binding to binding 2
+        glUniformBlockBinding(program, uniformBufferIndex, 2);
+        ASSERT_GL_NO_ERROR();
+
+        // Issue a draw call.  The buffer should be transparent red now
+        glClearColor(0, 0, 0, 0);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE);
+
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+
+        // Now that everything is set up, let the other thread continue
+        threadSynchronization.nextStep(Step::Thread1Ready);
+        ASSERT_TRUE(threadSynchronization.waitForStep(Step::Thread0BindingChanged));
+
+        // The other thread has changed the binding.  Draw again, it should accumulate blue and the
+        // buffer should become magenta.
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+
+        // Verify results
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::magenta);
+        ASSERT_GL_NO_ERROR();
+
+        // Tell the other thread to finish up.
+        threadSynchronization.nextStep(Step::Thread1FinishedDrawing);
+        ASSERT_TRUE(threadSynchronization.waitForStep(Step::Finish));
+    };
+
+    std::array<LockStepThreadFunc, 2> threadFuncs = {
+        std::move(thread0),
+        std::move(thread1),
+    };
+
+    RunLockStepThreads(getEGLWindow(), threadFuncs.size(), threadFuncs.data());
+
+    ASSERT_NE(currentStep, Step::Abort);
+}
+
 ANGLE_INSTANTIATE_TEST(
     MultithreadingTest,
     ES2_OPENGL(),

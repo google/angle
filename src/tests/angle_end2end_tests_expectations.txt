@@ -252,6 +252,7 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 7530 MAC NVIDIA OPENGL : TransformFeedbackTest.RenderOnceChangeXfbBufferRenderAgain/* = SKIP
 8448 MAC INTEL OPENGL : WebGL2CompatibilityTest.DrawWithInstancedAndNonInstancedAttributes/* = SKIP
 8465 MAC NVIDIA OPENGL : UniformBufferTest.BufferBlockBindingChange/* = SKIP
+8494 MAC NVIDIA OPENGL : StateChangeTestES3.UniformBlockBinding/* = SKIP
 
 // BlitFramebufferTest.ScissoredMultisampleStencil failures
 3496 MAC INTEL OPENGL : BlitFramebufferTest.ScissoredMultisampleStencil/* = SKIP
@@ -1286,6 +1287,8 @@ b/266235549 D3D11 : ComputeShaderTest.SSBOAliasOverWrite/* = SKIP
 
 // Workaround feature that is only supposed to be enabled on vulkan backend
 b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = SKIP
+
+8493 VULKAN : MultithreadingTestES3.UniformBlockBinding/* = SKIP
 
 // Slow tests, should appear last in this file
 5076 : GLSLTest.VerifyMaxVertexUniformVectors* = TIMEOUT

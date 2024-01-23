@@ -7853,13 +7853,6 @@ void Context::uniformBlockBinding(ShaderProgramID program,
 {
     Program *programObject = getProgramResolveLink(program);
     programObject->bindUniformBlock(uniformBlockIndex, uniformBlockBinding);
-
-    // Note: If the Program is shared between Contexts we would be better using Observer/Subject.
-    if (programObject->isInUse())
-    {
-        mState.setObjectDirty(GL_PROGRAM);
-        mStateCache.onUniformBufferStateChange(this);
-    }
 }
 
 GLsync Context::fenceSync(GLenum condition, GLbitfield flags)
@@ -9371,6 +9364,13 @@ void Context::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
                     ASSERT(program->isLinked());
                     ANGLE_CONTEXT_TRY(mState.installProgramExecutable(this));
                     mStateCache.onProgramExecutableChange(this);
+                    break;
+                }
+                case angle::SubjectMessage::ProgramUniformBlockBindingUpdated:
+                {
+                    mState.setObjectDirty(GL_PROGRAM);
+                    mState.mDirtyBits.set(state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS);
+                    mStateCache.onUniformBufferStateChange(this);
                     break;
                 }
                 default:
