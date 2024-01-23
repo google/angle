@@ -91,7 +91,7 @@ HRESULT RunOnUIThread(CODE &&code, const ComPtr<ICoreDispatcher> &dispatcher)
 bool SwapChainPanelNativeWindow::initialize(EGLNativeWindowType window, IPropertySet *propertySet)
 {
     ComPtr<IPropertySet> props = propertySet;
-    ComPtr<IInspectable> win   = window;
+    ComPtr<IInspectable> win   = reinterpret_cast<IInspectable *>(window);
     SIZE swapChainSize         = {};
     HRESULT result             = S_OK;
 
@@ -342,10 +342,9 @@ HRESULT SwapChainPanelNativeWindow::scaleSwapChain(const Size &windowSize, const
     return result;
 }
 
-HRESULT GetSwapChainPanelSize(
-    const ComPtr<ABI::Windows::UI::Xaml::Controls::ISwapChainPanel> &swapChainPanel,
-    const ComPtr<ICoreDispatcher> &dispatcher,
-    Size *windowSize)
+HRESULT GetSwapChainPanelSize(const ComPtr<ISwapChainPanel> &swapChainPanel,
+                              const ComPtr<ICoreDispatcher> &dispatcher,
+                              Size *windowSize)
 {
     ComPtr<IUIElement> uiElement;
     HRESULT result = swapChainPanel.As(&uiElement);

@@ -59,7 +59,7 @@ if (angle_enable_d3d11) {
   }
 
   config("angle_enable_winuwp_config") {
-    defines = [ "ANGLE_ENABLE_WINDOWS_UWP 1" ]
+    defines = [ "ANGLE_ENABLE_WINDOWS_UWP=1" ]
   }
 
   angle_source_set("angle_enable_winuwp") {

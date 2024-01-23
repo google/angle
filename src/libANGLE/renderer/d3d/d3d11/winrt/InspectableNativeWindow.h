@@ -29,6 +29,8 @@ using namespace Microsoft::WRL::Wrappers;
 using namespace ABI::Windows::Foundation;
 using namespace ABI::Windows::Foundation::Collections;
 
+using ISwapChainPanel = ABI::Windows::UI::Xaml::Controls::ISwapChainPanel;
+
 namespace rx
 {
 class InspectableNativeWindow
@@ -120,9 +122,8 @@ class InspectableNativeWindow
 
 bool IsCoreWindow(EGLNativeWindowType window,
                   ComPtr<ABI::Windows::UI::Core::ICoreWindow> *coreWindow = nullptr);
-bool IsSwapChainPanel(
-    EGLNativeWindowType window,
-    ComPtr<ABI::Windows::UI::Xaml::Controls::ISwapChainPanel> *swapChainPanel = nullptr);
+bool IsSwapChainPanel(EGLNativeWindowType window,
+                      ComPtr<ISwapChainPanel> *swapChainPanel = nullptr);
 bool IsEGLConfiguredPropertySet(
     EGLNativeWindowType window,
     ABI::Windows::Foundation::Collections::IPropertySet **propertySet = nullptr,
