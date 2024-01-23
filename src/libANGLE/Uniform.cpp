@@ -107,12 +107,12 @@ BufferVariable::BufferVariable(GLenum type,
     SetBitField(pod.basicTypeElementCount, arraySizes.empty() ? 1u : arraySizes.back());
 }
 
-ShaderVariableBuffer::ShaderVariableBuffer()
+AtomicCounterBuffer::AtomicCounterBuffer()
 {
     memset(&pod, 0, sizeof(pod));
 }
 
-void ShaderVariableBuffer::unionReferencesWith(const LinkedUniform &other)
+void AtomicCounterBuffer::unionReferencesWith(const LinkedUniform &other)
 {
     pod.activeUseBits |= other.pod.activeUseBits;
     for (const ShaderType shaderType : AllShaderTypes())

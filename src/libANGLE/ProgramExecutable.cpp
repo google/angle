@@ -317,13 +317,13 @@ void LoadBufferVariable(BinaryInputStream *stream, BufferVariable *var)
     stream->readStruct(&var->pod);
 }
 
-void WriteShaderVariableBuffer(BinaryOutputStream *stream, const ShaderVariableBuffer &var)
+void WriteAtomicCounterBuffer(BinaryOutputStream *stream, const AtomicCounterBuffer &var)
 {
     stream->writeVector(var.memberIndexes);
     stream->writeStruct(var.pod);
 }
 
-void LoadShaderVariableBuffer(BinaryInputStream *stream, ShaderVariableBuffer *var)
+void LoadAtomicCounterBuffer(BinaryInputStream *stream, AtomicCounterBuffer *var)
 {
     stream->readVector(&var->memberIndexes);
     stream->readStruct(&var->pod);
@@ -866,7 +866,7 @@ void ProgramExecutable::load(gl::BinaryInputStream *stream)
     for (size_t bufferIndex = 0; bufferIndex < atomicCounterBufferCount; ++bufferIndex)
     {
         AtomicCounterBuffer &atomicCounterBuffer = mAtomicCounterBuffers[bufferIndex];
-        LoadShaderVariableBuffer(stream, &atomicCounterBuffer);
+        LoadAtomicCounterBuffer(stream, &atomicCounterBuffer);
     }
 
     size_t bufferVariableCount = stream->readInt<size_t>();
@@ -981,7 +981,7 @@ void ProgramExecutable::save(gl::BinaryOutputStream *stream) const
     stream->writeInt(mAtomicCounterBuffers.size());
     for (const AtomicCounterBuffer &atomicCounterBuffer : getAtomicCounterBuffers())
     {
-        WriteShaderVariableBuffer(stream, atomicCounterBuffer);
+        WriteAtomicCounterBuffer(stream, atomicCounterBuffer);
     }
 
     stream->writeInt(getBufferVariables().size());

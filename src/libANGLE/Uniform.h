@@ -211,12 +211,11 @@ struct BufferVariable
     ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 };
 
-// Parent struct for atomic counter, uniform block, and shader storage block buffer, which all
-// contain a group of shader variables, and have a GL buffer backed.
-struct ShaderVariableBuffer
+// Represents a single atomic counter buffer
+struct AtomicCounterBuffer
 {
-    ShaderVariableBuffer();
-    ~ShaderVariableBuffer() {}
+    AtomicCounterBuffer();
+    ~AtomicCounterBuffer() {}
 
     ACTIVE_VARIABLE_COMMON_INTERFACES
     int numActiveVariables() const { return static_cast<int>(memberIndexes.size()); }
@@ -238,7 +237,7 @@ struct ShaderVariableBuffer
     ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 };
 
-using AtomicCounterBuffer = ShaderVariableBuffer;
+using AtomicCounterBuffer = AtomicCounterBuffer;
 
 // Helper struct representing a single shader interface block
 struct InterfaceBlock
