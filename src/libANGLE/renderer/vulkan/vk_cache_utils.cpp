@@ -27,7 +27,11 @@
 
 namespace rx
 {
+#if defined(ANGLE_DUMP_PIPELINE_CACHE_GRAPH)
+constexpr bool kDumpPipelineCacheGraph = true;
+#else
 constexpr bool kDumpPipelineCacheGraph = false;
+#endif  // ANGLE_DUMP_PIPELINE_CACHE_GRAPH
 
 namespace vk
 {
@@ -2345,6 +2349,11 @@ angle::Result InitializePipelineFromLibraries(Context *context,
     }
 
     return angle::Result::Continue;
+}
+
+bool ShouldDumpPipelineCacheGraph(ContextVk *contextVk)
+{
+    return kDumpPipelineCacheGraph && contextVk->isPipelineCacheGraphDumpEnabled();
 }
 }  // anonymous namespace
 
@@ -6889,7 +6898,7 @@ angle::Result RenderPassCache::MakeRenderPass(vk::Context *context,
 template <typename Hash>
 void GraphicsPipelineCache<Hash>::destroy(ContextVk *contextVk)
 {
-    if (kDumpPipelineCacheGraph && !mPayload.empty())
+    if (vk::ShouldDumpPipelineCacheGraph(contextVk) && !mPayload.empty())
     {
         vk::DumpPipelineCacheGraph<Hash>(contextVk, mPayload);
     }
@@ -6910,7 +6919,7 @@ void GraphicsPipelineCache<Hash>::destroy(ContextVk *contextVk)
 template <typename Hash>
 void GraphicsPipelineCache<Hash>::release(ContextVk *contextVk)
 {
-    if (kDumpPipelineCacheGraph && !mPayload.empty())
+    if (vk::ShouldDumpPipelineCacheGraph(contextVk) && !mPayload.empty())
     {
         vk::DumpPipelineCacheGraph<Hash>(contextVk, mPayload);
     }

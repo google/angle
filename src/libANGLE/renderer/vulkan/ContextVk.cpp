@@ -11,6 +11,7 @@
 
 #include "common/bitset_utils.h"
 #include "common/debug.h"
+#include "common/system_utils.h"
 #include "common/utilities.h"
 #include "image_util/loadimage.h"
 #include "libANGLE/Context.h"
@@ -42,10 +43,18 @@
 #include "libANGLE/renderer/vulkan/TransformFeedbackVk.h"
 #include "libANGLE/renderer/vulkan/VertexArrayVk.h"
 
+#include <fstream>
 #include <iostream>
+#include <sstream>
 
 namespace rx
 {
+
+#if defined(ANGLE_PLATFORM_ANDROID)
+constexpr const char *kDefaultPipelineCacheGraphDumpPath = "/data/local/tmp/angle_dumps/";
+#else
+constexpr const char *kDefaultPipelineCacheGraphDumpPath = "";
+#endif  // ANGLE_PLATFORM_ANDROID
 
 namespace
 {
@@ -671,7 +680,24 @@ VkDependencyFlags GetLocalDependencyFlags(ContextVk *contextVk)
 
 void DumpPipelineCacheGraph(ContextVk *contextVk, const std::ostringstream &graph)
 {
-    std::ostream &out = std::cout;
+    std::string dumpPath = contextVk->getPipelineCacheGraphDumpPath();
+    if (dumpPath.size() == 0)
+    {
+        WARN() << "No path supplied for pipeline cache graph dump!";
+        return;
+    }
+
+    std::string filename = dumpPath;
+    filename += angle::GetExecutableName();
+    filename += ".dump";
+
+    INFO() << "Dumping pipeline cache transition graph to: \"" << filename << "\"";
+
+    std::ofstream out = std::ofstream(filename, std::ofstream::binary);
+    if (!out.is_open())
+    {
+        ERR() << "Failed to open \"" << filename << "\"";
+    }
 
     out << "digraph {\n" << " node [shape=box";
     if (contextVk->getFeatures().supportsPipelineCreationFeedback.enabled)
@@ -681,6 +707,7 @@ void DumpPipelineCacheGraph(ContextVk *contextVk, const std::ostringstream &grap
     out << "]\n";
     out << graph.str();
     out << "}\n";
+    out.close();
 }
 
 bool BlendModeSupportsDither(const gl::State &state, size_t colorIndex)
@@ -1207,6 +1234,17 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
 #undef ANGLE_ADD_PERF_MONITOR_COUNTER_GROUP
 
     mPerfMonitorCounters.push_back(vulkanGroup);
+
+    mDumpPipelineCacheGraph =
+        (angle::GetEnvironmentVarOrAndroidProperty("ANGLE_DUMP_PIPELINE_CACHE_GRAPH",
+                                                   "angle.dump_pipeline_cache_graph") == "1");
+
+    mPipelineCacheGraphDumpPath = angle::GetEnvironmentVarOrAndroidProperty(
+        "ANGLE_PIPELINE_CACHE_GRAPH_DUMP_PATH", "angle.pipeline_cache_graph_dump_path");
+    if (mPipelineCacheGraphDumpPath.size() == 0)
+    {
+        mPipelineCacheGraphDumpPath = kDefaultPipelineCacheGraphDumpPath;
+    }
 }
 
 ContextVk::~ContextVk()

@@ -238,6 +238,7 @@ declare_args() {
   angle_enable_trace = false
   angle_enable_trace_android_logcat = false
   angle_enable_trace_events = false
+  angle_dump_pipeline_cache_graph = false
 
   # Unwind backtrace support. This feature is currently only implemented
   # on Android for debugging purposes. Disabled by default.
