@@ -46,7 +46,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '6d5cc7186844fc2bc9028bd8a3b0ab00e8c8aa9a',
+  'chromium_revision': '2e1050880b382181d46852eb87940b7424a3ce80',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -91,7 +91,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': '3e413d7b62c09fda8713146714ba2146a0369d86',
+  'catapult_revision': '1ac149069e91b643cec7b2870a1ff1f154950ff8',
 
   # the commit queue can handle CLs rolling Fuchsia sdk
   # and whatever else without interference from each other.
@@ -150,12 +150,12 @@ vars = {
 deps = {
 
   'build': {
-    'url': Var('chromium_git') + '/chromium/src/build.git@d506fb21305307344374958838c29706f0f7c74b',
+    'url': Var('chromium_git') + '/chromium/src/build.git@4031ab23618d77e96b46be452c276206bf26cb94',
     'condition': 'not build_with_chromium',
   },
 
   'buildtools': {
-    'url': Var('chromium_git') + '/chromium/src/buildtools.git@92e4da6e69b77f8f90eec0669763ee4cb5c27a94',
+    'url': Var('chromium_git') + '/chromium/src/buildtools.git@d8688b9036d46d14ef1f6fc26bcbb1da2b17f897',
     'condition': 'not build_with_chromium',
   },
 
@@ -168,7 +168,7 @@ deps = {
     'packages': [
       {
         'package': 'gn/gn/linux-${{arch}}',
-        'version': 'git_revision:f99e015ac35f689cfdbf46e4eb174e5d2da78d8e',
+        'version': 'git_revision:5110a7f03e86c6077516f62bd5b77a9a672ebfa6',
       }
     ],
     'dep_type': 'cipd',
@@ -179,7 +179,7 @@ deps = {
     'packages': [
       {
         'package': 'gn/gn/mac-${{arch}}',
-        'version': 'git_revision:f99e015ac35f689cfdbf46e4eb174e5d2da78d8e',
+        'version': 'git_revision:5110a7f03e86c6077516f62bd5b77a9a672ebfa6',
       }
     ],
     'dep_type': 'cipd',
@@ -201,7 +201,7 @@ deps = {
     'packages': [
       {
         'package': 'gn/gn/windows-amd64',
-        'version': 'git_revision:f99e015ac35f689cfdbf46e4eb174e5d2da78d8e',
+        'version': 'git_revision:5110a7f03e86c6077516f62bd5b77a9a672ebfa6',
       }
     ],
     'dep_type': 'cipd',
@@ -209,7 +209,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@a37402bece843dcf1efd04790be47c05da9ffd46',
+    'url': '{chromium_git}/chromium/src/testing@6bbaddde7dc21ac3ef9911295ad94d3723ee2029',
     'condition': 'not build_with_chromium',
   },
 
@@ -227,7 +227,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/android_build_tools/aapt2',
-              'version': 'y1G4s2RWI63L9ZLgzS3RzFdWdeblpCmYyAUzMphcQawC',
+              'version': 'G1S0vNnfv3f8FD-9mH5RFSUiK-mnSwri_IdiVQKwLP0C',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -271,7 +271,7 @@ deps = {
       'packages': [
           {
                'package': 'chromium/third_party/android_build_tools/manifest_merger',
-               'version': 'tFbjqslkduDT_-y8WEZlsl9iulzcm3mgienslcU71poC',
+               'version': 'fPIg5SQ9nbj982soSMoZlTPVfZ2zVKZRusg-r0ONCxUC',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -389,7 +389,7 @@ deps = {
     Var('dawn_git') + '/dawn.git' + '@' +  Var('dawn_revision'),
 
   'third_party/depot_tools': {
-    'url': Var('chromium_git') + '/chromium/tools/depot_tools.git@c341d58921ab188e4edacce04a221559bce86e8d',
+    'url': Var('chromium_git') + '/chromium/tools/depot_tools.git@6fc0c97ab284021b72e3bc962f7fa879ffcad65b',
     'condition': 'not build_with_chromium',
   },
 
@@ -733,7 +733,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': Var('chromium_git') + '/chromium/src/tools/perf@4b56db9f6af4bbcf82945e5c013c886c5620260f',
+    'url': Var('chromium_git') + '/chromium/src/tools/perf@eb7f7387333d2ff9473e2a802e5d5e8d1c728600',
     'condition': 'not build_with_chromium',
   },
 
