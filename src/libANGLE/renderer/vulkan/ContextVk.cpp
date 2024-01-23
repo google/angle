@@ -1550,6 +1550,7 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
     {
         mGraphicsDirtyBits.set(DIRTY_BIT_UNIFORMS);
     }
+    ASSERT(mState.getProgram() == nullptr || !mState.getProgram()->needsSync());
 
     // Update transform feedback offsets on every draw call when emulating transform feedback.  This
     // relies on the fact that no geometry/tessellation, indirect or indexed calls are supported in
@@ -1592,7 +1593,6 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
     // Render pass must be always available at this point.
     ASSERT(hasActiveRenderPass());
 
-    ASSERT(mState.getProgram() == nullptr || !mState.getProgram()->needsSync());
     ASSERT(mState.getProgramExecutable()->getAndResetDirtyBits().none());
 
     return angle::Result::Continue;
@@ -1813,6 +1813,7 @@ angle::Result ContextVk::setupDispatch(const gl::Context *context)
         mComputeDirtyBits.set(DIRTY_BIT_UNIFORMS);
         mComputeDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
     }
+    ASSERT(mState.getProgram() == nullptr || !mState.getProgram()->needsSync());
 
     DirtyBits dirtyBits = mComputeDirtyBits;
 
@@ -1826,7 +1827,6 @@ angle::Result ContextVk::setupDispatch(const gl::Context *context)
 
     mComputeDirtyBits.reset();
 
-    ASSERT(mState.getProgram() == nullptr || !mState.getProgram()->needsSync());
     ASSERT(mState.getProgramExecutable()->getAndResetDirtyBits().none());
 
     return angle::Result::Continue;

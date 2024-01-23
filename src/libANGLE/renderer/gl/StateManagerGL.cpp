@@ -1037,6 +1037,13 @@ void StateManagerGL::updateProgramUniformBufferBindings(const gl::Context *conte
     // Sync the current program executable state
     const gl::State &glState                = context->getState();
     const gl::ProgramExecutable *executable = glState.getProgramExecutable();
+    ProgramExecutableGL *executableGL       = GetImplAs<ProgramExecutableGL>(executable);
+
+    // If any calls to glUniformBlockBinding have been made, make them effective.  Note that if PPOs
+    // are ever supported in this backend, this needs to look at the Program's attached to PPOs
+    // instead of the PPOs own executable.  This is because glUniformBlockBinding operates on
+    // programs directly.
+    executableGL->syncUniformBlockBindings();
 
     for (size_t uniformBlockIndex = 0; uniformBlockIndex < executable->getUniformBlocks().size();
          uniformBlockIndex++)

@@ -1654,6 +1654,8 @@ void Program::bindUniformBlock(UniformBlockIndex uniformBlockIndex, GLuint unifo
     mState.mExecutable->mPod.activeUniformBlockBindings.set(uniformBlockIndex.value,
                                                             uniformBlockBinding != 0);
 
+    mProgram->onUniformBlockBinding(uniformBlockIndex);
+
     onUniformBufferStateChange(
         gl::ProgramExecutable::DirtyBitType::DIRTY_BIT_UNIFORM_BLOCK_BINDING_0 +
         uniformBlockIndex.value);
@@ -2166,7 +2168,7 @@ angle::Result Program::syncState(const Context *context)
     // Wait for the link tasks.  This is because these optimization passes are not currently
     // thread-safe with draw's usage of the executable.
     waitForOptionalLinkTasks(context);
-    return mProgram->syncState(context);
+    return angle::Result::Continue;
 }
 
 angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *binaryOut)

@@ -9368,7 +9368,6 @@ void Context::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
                 }
                 case angle::SubjectMessage::ProgramUniformBlockBindingUpdated:
                 {
-                    mState.setObjectDirty(GL_PROGRAM);
                     mState.mDirtyBits.set(state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS);
                     mStateCache.onUniformBufferStateChange(this);
                     break;
