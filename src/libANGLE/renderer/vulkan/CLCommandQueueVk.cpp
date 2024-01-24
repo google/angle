@@ -391,8 +391,12 @@ angle::Result CLCommandQueueVk::enqueueMarker(CLEventImpl::CreateFunc &eventCrea
 
 angle::Result CLCommandQueueVk::enqueueWaitForEvents(const cl::EventPtrs &events)
 {
-    UNIMPLEMENTED();
-    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+    std::scoped_lock<std::mutex> sl(mCommandQueueMutex);
+
+    // Unlike clWaitForEvents, this routine is non-blocking
+    ANGLE_TRY(processWaitlist(events));
+
+    return angle::Result::Continue;
 }
 
 angle::Result CLCommandQueueVk::enqueueBarrierWithWaitList(const cl::EventPtrs &waitEvents,
