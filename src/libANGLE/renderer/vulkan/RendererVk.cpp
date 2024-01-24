@@ -288,6 +288,8 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-VkImportMemoryFdInfoKHR-handleType-00667",
     // http://anglebug.com/8482
     "VUID-VkImportMemoryWin32HandleInfoKHR-handleType-00658",
+    // https://anglebug.com/8497
+    "VUID-vkCmdEndDebugUtilsLabelEXT-commandBuffer-01912",
 };
 
 // Validation messages that should be ignored only when VK_EXT_primitive_topology_list_restart is
