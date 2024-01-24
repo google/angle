@@ -3691,7 +3691,9 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
         contextVk, mState.getType(), vkExtent, intendedImageFormatID, actualImageFormatID, samples,
         mImageUsageFlags, mImageCreateFlags, vk::ImageLayout::Undefined, nullptr,
         gl::LevelIndex(firstLevel), levelCount, layerCount,
-        contextVk->isRobustResourceInitEnabled(), mState.hasProtectedContent()));
+        contextVk->isRobustResourceInitEnabled(), mState.hasProtectedContent(),
+        vk::ImageHelper::deriveConversionDesc(contextVk, actualImageFormatID,
+                                              intendedImageFormatID)));
 
     ANGLE_TRY(updateTextureLabel(contextVk));
 

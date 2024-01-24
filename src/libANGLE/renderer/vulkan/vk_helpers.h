@@ -1904,7 +1904,8 @@ class ImageHelper final : public Resource, public angle::Subject
                                uint32_t mipLevels,
                                uint32_t layerCount,
                                bool isRobustResourceInitEnabled,
-                               bool hasProtectedContent);
+                               bool hasProtectedContent,
+                               YcbcrConversionDesc conversionDesc);
     VkResult initMemory(Context *context,
                         const MemoryProperties &memoryProperties,
                         VkMemoryPropertyFlags flags,
@@ -2478,20 +2479,10 @@ class ImageHelper final : public Resource, public angle::Subject
         y2yDesc.updateConversionModel(VK_SAMPLER_YCBCR_MODEL_CONVERSION_RGB_IDENTITY);
         return y2yDesc;
     }
-    void updateYcbcrConversionDesc(RendererVk *rendererVk,
-                                   uint64_t externalFormat,
-                                   VkSamplerYcbcrModelConversion conversionModel,
-                                   VkSamplerYcbcrRange colorRange,
-                                   VkChromaLocation xChromaOffset,
-                                   VkChromaLocation yChromaOffset,
-                                   VkFilter chromaFilter,
-                                   VkComponentMapping components,
-                                   angle::FormatID intendedFormatID)
-    {
-        mYcbcrConversionDesc.update(rendererVk, externalFormat, conversionModel, colorRange,
-                                    xChromaOffset, yChromaOffset, chromaFilter, components,
-                                    intendedFormatID);
-    }
+
+    static YcbcrConversionDesc deriveConversionDesc(Context *context,
+                                                    angle::FormatID actualFormatID,
+                                                    angle::FormatID intendedFormatID);
 
     // Used by framebuffer and render pass functions to decide loadOps and invalidate/un-invalidate
     // render target contents.

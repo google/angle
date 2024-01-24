@@ -5445,6 +5445,50 @@ const ImageHelper::LevelContentDefinedMask &ImageHelper::getLevelStencilContentD
     return mStencilContentDefined[level.get()];
 }
 
+YcbcrConversionDesc ImageHelper::deriveConversionDesc(Context *context,
+                                                      angle::FormatID actualFormatID,
+                                                      angle::FormatID intendedFormatID)
+{
+    YcbcrConversionDesc conversionDesc{};
+    const angle::Format &actualFormat = angle::Format::Get(actualFormatID);
+
+    if (actualFormat.isYUV)
+    {
+        // Build a suitable conversionDesc; the image is not external but may be YUV
+        // if app is using ANGLE's YUV internalformat extensions.
+        RendererVk *rendererVk = context->getRenderer();
+
+        // The Vulkan spec states: The potential format features of the sampler YCBCR conversion
+        // must support VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT or
+        // VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT
+        constexpr VkFormatFeatureFlags kChromaSubSampleFeatureBits =
+            VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT |
+            VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT;
+
+        VkFormatFeatureFlags supportedChromaSubSampleFeatureBits =
+            rendererVk->getImageFormatFeatureBits(actualFormatID, kChromaSubSampleFeatureBits);
+
+        VkChromaLocation supportedLocation            = ((supportedChromaSubSampleFeatureBits &
+                                               VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT) != 0)
+                                                            ? VK_CHROMA_LOCATION_COSITED_EVEN
+                                                            : VK_CHROMA_LOCATION_MIDPOINT;
+        VkSamplerYcbcrModelConversion conversionModel = VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601;
+        VkSamplerYcbcrRange colorRange                = VK_SAMPLER_YCBCR_RANGE_ITU_NARROW;
+        VkFilter chromaFilter                         = kDefaultYCbCrChromaFilter;
+        VkComponentMapping components                 = {
+            VK_COMPONENT_SWIZZLE_IDENTITY,
+            VK_COMPONENT_SWIZZLE_IDENTITY,
+            VK_COMPONENT_SWIZZLE_IDENTITY,
+            VK_COMPONENT_SWIZZLE_IDENTITY,
+        };
+
+        conversionDesc.update(rendererVk, 0, conversionModel, colorRange, supportedLocation,
+                              supportedLocation, chromaFilter, components, intendedFormatID);
+    }
+
+    return conversionDesc;
+}
+
 angle::Result ImageHelper::init(Context *context,
                                 gl::TextureType textureType,
                                 const VkExtent3D &extents,
@@ -5460,7 +5504,9 @@ angle::Result ImageHelper::init(Context *context,
     return initExternal(context, textureType, extents, format.getIntendedFormatID(),
                         format.getActualRenderableImageFormatID(), samples, usage,
                         kVkImageCreateFlagsNone, ImageLayout::Undefined, nullptr, firstLevel,
-                        mipLevels, layerCount, isRobustResourceInitEnabled, hasProtectedContent);
+                        mipLevels, layerCount, isRobustResourceInitEnabled, hasProtectedContent,
+                        deriveConversionDesc(context, format.getActualRenderableImageFormatID(),
+                                             format.getIntendedFormatID()));
 }
 
 angle::Result ImageHelper::initMSAASwapchain(Context *context,
@@ -5479,8 +5525,8 @@ angle::Result ImageHelper::initMSAASwapchain(Context *context,
     ANGLE_TRY(initExternal(context, textureType, extents, format.getIntendedFormatID(),
                            format.getActualRenderableImageFormatID(), samples, usage,
                            kVkImageCreateFlagsNone, ImageLayout::Undefined, nullptr, firstLevel,
-                           mipLevels, layerCount, isRobustResourceInitEnabled,
-                           hasProtectedContent));
+                           mipLevels, layerCount, isRobustResourceInitEnabled, hasProtectedContent,
+                           YcbcrConversionDesc{}));
     if (rotatedAspectRatio)
     {
         std::swap(mExtents.width, mExtents.height);
@@ -5503,7 +5549,8 @@ angle::Result ImageHelper::initExternal(Context *context,
                                         uint32_t mipLevels,
                                         uint32_t layerCount,
                                         bool isRobustResourceInitEnabled,
-                                        bool hasProtectedContent)
+                                        bool hasProtectedContent,
+                                        YcbcrConversionDesc conversionDesc)
 {
     ASSERT(!valid());
     ASSERT(!IsAnySubresourceContentDefined(mContentDefined));
@@ -5551,7 +5598,7 @@ angle::Result ImageHelper::initExternal(Context *context,
         deriveExternalImageTiling(externalImageCreateInfo);
     }
 
-    mYcbcrConversionDesc.reset();
+    mYcbcrConversionDesc = conversionDesc;
 
     const angle::Format &actualFormat   = angle::Format::Get(actualFormatID);
     const angle::Format &intendedFormat = angle::Format::Get(intendedFormatID);
@@ -5564,6 +5611,8 @@ angle::Result ImageHelper::initExternal(Context *context,
 
     if (actualFormat.isYUV)
     {
+        ASSERT(mYcbcrConversionDesc.valid());
+
         // The Vulkan spec states: If the pNext chain includes a VkExternalFormatANDROID structure
         // whose externalFormat member is not 0, flags must not include
         // VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT
@@ -5574,34 +5623,6 @@ angle::Result ImageHelper::initExternal(Context *context,
             // VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT
             mCreateFlags |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
         }
-        // The Vulkan spec states: The potential format features of the sampler YCBCR conversion
-        // must support VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT or
-        // VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT
-        constexpr VkFormatFeatureFlags kChromaSubSampleFeatureBits =
-            VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT |
-            VK_FORMAT_FEATURE_MIDPOINT_CHROMA_SAMPLES_BIT;
-
-        VkFormatFeatureFlags supportedChromaSubSampleFeatureBits =
-            rendererVk->getImageFormatFeatureBits(mActualFormatID, kChromaSubSampleFeatureBits);
-
-        VkChromaLocation supportedLocation            = ((supportedChromaSubSampleFeatureBits &
-                                               VK_FORMAT_FEATURE_COSITED_CHROMA_SAMPLES_BIT) != 0)
-                                                            ? VK_CHROMA_LOCATION_COSITED_EVEN
-                                                            : VK_CHROMA_LOCATION_MIDPOINT;
-        VkSamplerYcbcrModelConversion conversionModel = VK_SAMPLER_YCBCR_MODEL_CONVERSION_YCBCR_601;
-        VkSamplerYcbcrRange colorRange                = VK_SAMPLER_YCBCR_RANGE_ITU_NARROW;
-        VkFilter chromaFilter                         = kDefaultYCbCrChromaFilter;
-        VkComponentMapping components                 = {
-            VK_COMPONENT_SWIZZLE_IDENTITY,
-            VK_COMPONENT_SWIZZLE_IDENTITY,
-            VK_COMPONENT_SWIZZLE_IDENTITY,
-            VK_COMPONENT_SWIZZLE_IDENTITY,
-        };
-
-        // Create the VkSamplerYcbcrConversion to associate with image views and samplers
-        // Update the SamplerYcbcrConversionCache key
-        updateYcbcrConversionDesc(rendererVk, 0, conversionModel, colorRange, supportedLocation,
-                                  supportedLocation, chromaFilter, components, intendedFormatID);
     }
 
     if (hasProtectedContent)
@@ -6436,7 +6457,8 @@ angle::Result ImageHelper::initImplicitMultisampledRenderToTexture(
                            samples, kMultisampledUsageFlags, kMultisampledCreateFlags,
                            ImageLayout::Undefined, nullptr, resolveImage.getFirstAllocatedLevel(),
                            resolveImage.getLevelCount(), resolveImage.getLayerCount(),
-                           isRobustResourceInitEnabled, hasProtectedContent));
+                           isRobustResourceInitEnabled, hasProtectedContent,
+                           YcbcrConversionDesc{}));
 
     // Remove the emulated format clear from the multisampled image if any.  There is one already
     // staged on the resolve image if needed.
