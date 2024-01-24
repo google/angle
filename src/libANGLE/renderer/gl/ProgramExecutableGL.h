@@ -106,7 +106,7 @@ class ProgramExecutableGL : public ProgramExecutableImpl
     GLint uniLoc(GLint glLocation) const { return mUniformRealLocationMap[glLocation]; }
 
     void setUniformBlockBinding(GLuint uniformBlockIndex, GLuint uniformBlockBinding);
-    void reapplyUBOBindingsIfNeeded(const gl::Context *context);
+    void reapplyUBOBindings();
 
     std::vector<GLint> mUniformRealLocationMap;
     std::vector<GLuint> mUniformBlockRealLocationMap;

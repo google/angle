@@ -10479,9 +10479,11 @@ void StateCache::updateActiveShaderStorageBufferIndices(Context *context)
     const ProgramExecutable *executable = context->getState().getProgramExecutable();
     if (executable)
     {
-        for (const InterfaceBlock &block : executable->getShaderStorageBlocks())
+        const std::vector<InterfaceBlock> &blocks = executable->getShaderStorageBlocks();
+        for (size_t blockIndex = 0; blockIndex < blocks.size(); ++blockIndex)
         {
-            mCachedActiveShaderStorageBufferIndices.set(block.pod.binding);
+            const GLuint binding = executable->getShaderStorageBlockBinding(blockIndex);
+            mCachedActiveShaderStorageBufferIndices.set(binding);
         }
     }
 }

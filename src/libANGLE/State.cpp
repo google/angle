@@ -3963,13 +3963,9 @@ void State::onImageStateChange(const Context *context, size_t unit)
 
 void State::onUniformBufferStateChange(size_t uniformBufferIndex)
 {
-    if (mProgram)
+    if (mExecutable)
     {
-        mProgram->onUniformBufferStateChange(uniformBufferIndex);
-    }
-    else if (mProgramPipeline.get())
-    {
-        mProgramPipeline->onUniformBufferStateChange(uniformBufferIndex);
+        mExecutable->onUniformBufferStateChange(uniformBufferIndex);
     }
     // This could be represented by a different dirty bit. Using the same one keeps it simple.
     mDirtyBits.set(state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS);

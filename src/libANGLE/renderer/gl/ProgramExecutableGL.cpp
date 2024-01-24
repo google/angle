@@ -500,16 +500,15 @@ void ProgramExecutableGL::setUniformBlockBinding(GLuint uniformBlockIndex,
     }
 }
 
-void ProgramExecutableGL::reapplyUBOBindingsIfNeeded(const gl::Context *context)
+void ProgramExecutableGL::reapplyUBOBindings()
 {
-    // Re-apply UBO bindings to work around driver bugs.
-    const angle::FeaturesGL &features = GetImplAs<ContextGL>(context)->getFeaturesGL();
-    if (features.reapplyUBOBindingsAfterUsingBinaryProgram.enabled)
+    const std::vector<gl::InterfaceBlock> &blocks = mExecutable->getUniformBlocks();
+    for (size_t blockIndex = 0; blockIndex < blocks.size(); ++blockIndex)
     {
-        const std::vector<gl::InterfaceBlock> &blocks = mExecutable->getUniformBlocks();
-        for (size_t blockIndex : mExecutable->getActiveUniformBlockBindings())
+        if (blocks[blockIndex].activeShaders().any())
         {
-            setUniformBlockBinding(static_cast<GLuint>(blockIndex), blocks[blockIndex].pod.binding);
+            const GLuint index = static_cast<GLuint>(blockIndex);
+            setUniformBlockBinding(index, mExecutable->getUniformBlockBinding(index));
         }
     }
 }
@@ -518,8 +517,8 @@ void ProgramExecutableGL::syncUniformBlockBindings()
 {
     for (size_t uniformBlockIndex : mDirtyUniformBlockBindings)
     {
-        const GLuint binding = static_cast<GLuint>(uniformBlockIndex);
-        setUniformBlockBinding(binding, mExecutable->getUniformBlockBinding(binding));
+        const GLuint index = static_cast<GLuint>(uniformBlockIndex);
+        setUniformBlockBinding(index, mExecutable->getUniformBlockBinding(index));
     }
 
     mDirtyUniformBlockBindings.reset();

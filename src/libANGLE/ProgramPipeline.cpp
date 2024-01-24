@@ -778,21 +778,6 @@ angle::Result ProgramPipeline::syncState(const Context *context)
     return angle::Result::Continue;
 }
 
-void ProgramPipeline::onUniformBufferStateChange(size_t uniformBufferIndex)
-{
-    for (const ShaderType shaderType : mState.mExecutable->getLinkedShaderStages())
-    {
-        Program *shaderProgram = mState.mPrograms[shaderType];
-        if (shaderProgram)
-        {
-            shaderProgram->onUniformBufferStateChange(uniformBufferIndex);
-            shaderProgram->onPPOUniformBufferStateChange(shaderType, uniformBufferIndex,
-                                                         mState.mExecutable.get(),
-                                                         mState.mUniformBlockMap[shaderType]);
-        }
-    }
-}
-
 void ProgramPipeline::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message)
 {
     switch (message)
@@ -839,8 +824,8 @@ void ProgramPipeline::onSubjectStateChange(angle::SubjectIndex index, angle::Sub
         case angle::SubjectMessage::ProgramUniformBlockBindingUpdated:
             if (mState.mIsLinked)
             {
-                // The |binding| member of one of the UBOs in this program has changed.  Currently,
-                // we don't track _which_ UBO has its binding changed, and we update all here.
+                // The program's UBO bindings have changed.  Currently, we don't track _which_ UBO
+                // has its binding changed, and we update all here.
                 ShaderType shaderType                     = static_cast<ShaderType>(index);
                 const SharedProgramExecutable &executable = getShaderProgramExecutable(shaderType);
                 const std::vector<InterfaceBlock> &blocks = executable->getUniformBlocks();
@@ -854,8 +839,9 @@ void ProgramPipeline::onSubjectStateChange(angle::SubjectIndex index, angle::Sub
                         mState.mUniformBlockMap[shaderType][static_cast<uint32_t>(blockIndex)];
                     ASSERT(blockIndexInPPO < mState.mExecutable->mUniformBlocks.size());
 
-                    mState.mExecutable->mUniformBlocks[blockIndexInPPO].setBinding(
-                        blocks[blockIndex].pod.binding);
+                    // Set the block buffer binding in the PPO to the same binding as the program's.
+                    mState.mExecutable->remapUniformBlockBinding(
+                        {blockIndexInPPO}, executable->getUniformBlockBinding(blockIndex));
                 }
 
                 // Notify the context that the bindings have changed.

@@ -815,30 +815,24 @@ void UpdateImagesWithSharedCacheKey(const gl::ActiveTextureArray<TextureVk *> &a
     }
 }
 
-template <typename T>
-void UpdateBuffersWithSharedCacheKey(const gl::BufferVector &buffers,
-                                     const std::vector<T> &blocks,
-                                     VkDescriptorType descriptorType,
-                                     const vk::SharedDescriptorSetCacheKey &sharedCacheKey)
+void UpdateBufferWithSharedCacheKey(const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding,
+                                    VkDescriptorType descriptorType,
+                                    const vk::SharedDescriptorSetCacheKey &sharedCacheKey)
 {
-    for (const T &block : blocks)
+    if (bufferBinding.get() != nullptr)
     {
-        const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding = buffers[block.pod.binding];
-        if (bufferBinding.get() != nullptr)
+        // For simplicity, we do not check if uniform is active or duplicate. The worst case is
+        // we unnecessarily delete the cache entry when buffer bound to inactive uniform is
+        // destroyed.
+        BufferVk *bufferVk             = vk::GetImpl(bufferBinding.get());
+        vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
+        if (vk::IsDynamicDescriptor(descriptorType))
         {
-            // For simplicity, we do not check if uniform is active or duplicate. The worst case is
-            // we unnecessarily delete the cache entry when image bound to inactive uniform is
-            // destroyed.
-            BufferVk *bufferVk             = vk::GetImpl(bufferBinding.get());
-            vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
-            if (vk::IsDynamicDescriptor(descriptorType))
-            {
-                bufferHelper.getBufferBlock()->onNewDescriptorSet(sharedCacheKey);
-            }
-            else
-            {
-                bufferHelper.onNewDescriptorSet(sharedCacheKey);
-            }
+            bufferHelper.getBufferBlock()->onNewDescriptorSet(sharedCacheKey);
+        }
+        else
+        {
+            bufferHelper.onNewDescriptorSet(sharedCacheKey);
         }
     }
 }
@@ -1927,7 +1921,7 @@ bool ContextVk::renderPassUsesStorageResources() const
     const std::vector<gl::InterfaceBlock> &blocks = executable->getShaderStorageBlocks();
     for (uint32_t bufferIndex = 0; bufferIndex < blocks.size(); ++bufferIndex)
     {
-        uint32_t binding = blocks[bufferIndex].pod.binding;
+        const uint32_t binding = executable->getShaderStorageBlockBinding(bufferIndex);
         const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding =
             mState.getIndexedShaderStorageBuffer(binding);
 
@@ -1948,7 +1942,7 @@ bool ContextVk::renderPassUsesStorageResources() const
         executable->getAtomicCounterBuffers();
     for (uint32_t bufferIndex = 0; bufferIndex < atomicCounterBuffers.size(); ++bufferIndex)
     {
-        uint32_t binding = atomicCounterBuffers[bufferIndex].pod.binding;
+        const uint32_t binding = executable->getAtomicCounterBufferBinding(bufferIndex);
         const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding =
             mState.getIndexedAtomicCounterBuffer(binding);
 
@@ -2758,7 +2752,7 @@ angle::Result ContextVk::handleDirtyShaderResourcesImpl(CommandBufferHelperT *co
     if (hasUniformBuffers)
     {
         mShaderBuffersDescriptorDesc.updateShaderBuffers(
-            this, commandBufferHelper, variableInfoMap,
+            this, commandBufferHelper, *executable, variableInfoMap,
             mState.getOffsetBindingPointerUniformBuffers(), executable->getUniformBlocks(),
             executableVk->getUniformBufferDescriptorType(), limits.maxUniformBufferRange,
             mEmptyBuffer, mShaderBufferWriteDescriptorDescs);
@@ -2766,7 +2760,7 @@ angle::Result ContextVk::handleDirtyShaderResourcesImpl(CommandBufferHelperT *co
     if (hasStorageBuffers)
     {
         mShaderBuffersDescriptorDesc.updateShaderBuffers(
-            this, commandBufferHelper, variableInfoMap,
+            this, commandBufferHelper, *executable, variableInfoMap,
             mState.getOffsetBindingPointerShaderStorageBuffers(),
             executable->getShaderStorageBlocks(), executableVk->getStorageBufferDescriptorType(),
             limits.maxStorageBufferRange, mEmptyBuffer, mShaderBufferWriteDescriptorDescs);
@@ -2774,7 +2768,7 @@ angle::Result ContextVk::handleDirtyShaderResourcesImpl(CommandBufferHelperT *co
     if (hasAtomicCounterBuffers)
     {
         mShaderBuffersDescriptorDesc.updateAtomicCounters(
-            this, commandBufferHelper, variableInfoMap,
+            this, commandBufferHelper, *executable, variableInfoMap,
             mState.getOffsetBindingPointerAtomicCounterBuffers(),
             executable->getAtomicCounterBuffers(), limits.minStorageBufferOffsetAlignment,
             mEmptyBuffer, mShaderBufferWriteDescriptorDescs);
@@ -2842,11 +2836,13 @@ angle::Result ContextVk::handleDirtyUniformBuffersImpl(CommandBufferT *commandBu
     gl::ProgramExecutable::DirtyBits dirtyBits = executable->getAndResetDirtyBits();
     for (size_t blockIndex : dirtyBits)
     {
+        const GLuint binding = executable->getUniformBlockBinding(blockIndex);
         mShaderBuffersDescriptorDesc.updateOneShaderBuffer(
             this, commandBufferHelper, variableInfoMap,
-            mState.getOffsetBindingPointerUniformBuffers(), executable->getUniformBlocks(),
-            static_cast<uint32_t>(blockIndex), executableVk->getUniformBufferDescriptorType(),
-            limits.maxUniformBufferRange, mEmptyBuffer, mShaderBufferWriteDescriptorDescs);
+            mState.getOffsetBindingPointerUniformBuffers(),
+            executable->getUniformBlocks()[blockIndex], binding,
+            executableVk->getUniformBufferDescriptorType(), limits.maxUniformBufferRange,
+            mEmptyBuffer, mShaderBufferWriteDescriptorDescs);
     }
 
     vk::SharedDescriptorSetCacheKey newSharedCacheKey;
@@ -6297,23 +6293,36 @@ void ContextVk::updateShaderResourcesWithSharedCacheKey(
 
     if (executable->hasUniformBuffers())
     {
-        UpdateBuffersWithSharedCacheKey(
-            mState.getOffsetBindingPointerUniformBuffers(), executable->getUniformBlocks(),
-            executableVk->getUniformBufferDescriptorType(), sharedCacheKey);
+        const std::vector<gl::InterfaceBlock> &blocks = executable->getUniformBlocks();
+        for (uint32_t bufferIndex = 0; bufferIndex < blocks.size(); ++bufferIndex)
+        {
+            const GLuint binding = executable->getUniformBlockBinding(bufferIndex);
+            UpdateBufferWithSharedCacheKey(mState.getOffsetBindingPointerUniformBuffers()[binding],
+                                           executableVk->getUniformBufferDescriptorType(),
+                                           sharedCacheKey);
+        }
     }
     if (executable->hasStorageBuffers())
     {
-        UpdateBuffersWithSharedCacheKey(mState.getOffsetBindingPointerShaderStorageBuffers(),
-                                        executable->getShaderStorageBlocks(),
-                                        executableVk->getStorageBufferDescriptorType(),
-                                        sharedCacheKey);
+        const std::vector<gl::InterfaceBlock> &blocks = executable->getShaderStorageBlocks();
+        for (uint32_t bufferIndex = 0; bufferIndex < blocks.size(); ++bufferIndex)
+        {
+            const GLuint binding = executable->getShaderStorageBlockBinding(bufferIndex);
+            UpdateBufferWithSharedCacheKey(
+                mState.getOffsetBindingPointerShaderStorageBuffers()[binding],
+                executableVk->getStorageBufferDescriptorType(), sharedCacheKey);
+        }
     }
     if (executable->hasAtomicCounterBuffers())
     {
-        UpdateBuffersWithSharedCacheKey(mState.getOffsetBindingPointerAtomicCounterBuffers(),
-                                        executable->getAtomicCounterBuffers(),
-                                        executableVk->getAtomicCounterBufferDescriptorType(),
-                                        sharedCacheKey);
+        const std::vector<gl::AtomicCounterBuffer> &blocks = executable->getAtomicCounterBuffers();
+        for (uint32_t bufferIndex = 0; bufferIndex < blocks.size(); ++bufferIndex)
+        {
+            const GLuint binding = executable->getAtomicCounterBufferBinding(bufferIndex);
+            UpdateBufferWithSharedCacheKey(
+                mState.getOffsetBindingPointerAtomicCounterBuffers()[binding],
+                executableVk->getAtomicCounterBufferDescriptorType(), sharedCacheKey);
+        }
     }
     if (executable->hasImages())
     {
@@ -8626,9 +8635,9 @@ angle::Result ContextVk::endRenderPassIfComputeReadAfterTransformFeedbackWrite()
 
     for (uint32_t bufferIndex = 0; bufferIndex < blocks.size(); ++bufferIndex)
     {
-        const gl::InterfaceBlock &block = blocks[bufferIndex];
+        const GLuint binding = executable->getUniformBlockBinding(bufferIndex);
         const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding =
-            mState.getIndexedUniformBuffer(block.pod.binding);
+            mState.getIndexedUniformBuffer(binding);
 
         if (bufferBinding.get() == nullptr)
         {

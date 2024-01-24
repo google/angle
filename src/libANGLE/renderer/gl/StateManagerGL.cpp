@@ -1073,10 +1073,12 @@ void StateManagerGL::updateProgramAtomicCounterBufferBindings(const gl::Context 
     const gl::State &glState                = context->getState();
     const gl::ProgramExecutable *executable = glState.getProgramExecutable();
 
-    for (const auto &atomicCounterBuffer : executable->getAtomicCounterBuffers())
+    const std::vector<gl::AtomicCounterBuffer> &atomicCounterBuffers =
+        executable->getAtomicCounterBuffers();
+    for (size_t index = 0; index < atomicCounterBuffers.size(); ++index)
     {
-        GLuint binding     = atomicCounterBuffer.pod.binding;
-        const auto &buffer = glState.getIndexedAtomicCounterBuffer(binding);
+        const GLuint binding = executable->getAtomicCounterBufferBinding(index);
+        const auto &buffer   = glState.getIndexedAtomicCounterBuffer(binding);
 
         if (buffer.get() != nullptr)
         {

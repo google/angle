@@ -144,7 +144,7 @@ InterfaceBlock::InterfaceBlock(const std::string &name,
 
     SetBitField(pod.isArray, isArray);
     SetBitField(pod.isReadOnly, isReadOnly);
-    SetBitField(pod.binding, binding);
+    SetBitField(pod.inShaderBinding, binding);
     pod.arrayElement        = arrayElementIn;
     pod.firstFieldArraySize = firstFieldArraySizeIn;
 }

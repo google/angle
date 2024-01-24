@@ -212,7 +212,7 @@ angle::Result ProgramGL::load(const gl::Context *context,
     }
 
     executableGL->postLink(mFunctions, mStateManager, mFeatures, mProgramID);
-    executableGL->reapplyUBOBindingsIfNeeded(context);
+    executableGL->reapplyUBOBindings();
 
     *loadTaskOut = {};
     *resultOut   = egl::CacheGetResult::GetSuccess;
@@ -233,7 +233,8 @@ void ProgramGL::save(const gl::Context *context, gl::BinaryOutputStream *stream)
     stream->writeInt(binaryFormat);
     stream->writeInt(binaryLength);
 
-    if (GetImplAs<ContextGL>(context)->getFeaturesGL().corruptProgramBinaryForTesting.enabled)
+    const angle::FeaturesGL &features = GetImplAs<ContextGL>(context)->getFeaturesGL();
+    if (features.corruptProgramBinaryForTesting.enabled)
     {
         // Random corruption of the binary data.  Corrupting the first byte has proven to be enough
         // to later cause the binary load to fail on most platforms.
@@ -242,7 +243,11 @@ void ProgramGL::save(const gl::Context *context, gl::BinaryOutputStream *stream)
 
     stream->writeBytes(binary.data(), binaryLength);
 
-    getExecutable()->reapplyUBOBindingsIfNeeded(context);
+    // Re-apply UBO bindings to work around driver bugs.
+    if (features.reapplyUBOBindingsAfterUsingBinaryProgram.enabled)
+    {
+        getExecutable()->reapplyUBOBindings();
+    }
 }
 
 void ProgramGL::setBinaryRetrievableHint(bool retrievable)

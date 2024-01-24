@@ -1751,8 +1751,8 @@ class DescriptorSetDescBuilder final
                                CommandBufferT *commandBufferHelper,
                                const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                const gl::BufferVector &buffers,
-                               const std::vector<gl::InterfaceBlock> &blocks,
-                               uint32_t blockIndex,
+                               const gl::InterfaceBlock &block,
+                               uint32_t bufferIndex,
                                VkDescriptorType descriptorType,
                                VkDeviceSize maxBoundBufferRange,
                                const BufferHelper &emptyBuffer,
@@ -1760,6 +1760,7 @@ class DescriptorSetDescBuilder final
     template <typename CommandBufferT>
     void updateShaderBuffers(ContextVk *contextVk,
                              CommandBufferT *commandBufferHelper,
+                             const gl::ProgramExecutable &executable,
                              const ShaderInterfaceVariableInfoMap &variableInfoMap,
                              const gl::BufferVector &buffers,
                              const std::vector<gl::InterfaceBlock> &blocks,
@@ -1770,6 +1771,7 @@ class DescriptorSetDescBuilder final
     template <typename CommandBufferT>
     void updateAtomicCounters(ContextVk *contextVk,
                               CommandBufferT *commandBufferHelper,
+                              const gl::ProgramExecutable &executable,
                               const ShaderInterfaceVariableInfoMap &variableInfoMap,
                               const gl::BufferVector &buffers,
                               const std::vector<gl::AtomicCounterBuffer> &atomicCounterBuffers,

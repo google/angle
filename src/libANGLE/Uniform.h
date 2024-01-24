@@ -229,15 +229,14 @@ struct AtomicCounterBuffer
         // The id of a linked variable in each shader stage.  This id originates from
         // sh::ShaderVariable::id or sh::InterfaceBlock::id
         ShaderMap<uint32_t> ids;
-        int binding;
+        // The binding as specified by the shader.
+        int inShaderBinding;
         unsigned int dataSize;
         ShaderBitSet activeUseBits;
         uint8_t pads[3];
     } pod;
     ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 };
-
-using AtomicCounterBuffer = AtomicCounterBuffer;
 
 // Helper struct representing a single shader interface block
 struct InterfaceBlock
@@ -257,7 +256,6 @@ struct InterfaceBlock
     ACTIVE_VARIABLE_COMMON_INTERFACES
 
     int numActiveVariables() const { return static_cast<int>(memberIndexes.size()); }
-    void setBinding(GLuint binding) { SetBitField(pod.binding, binding); }
 
     std::string name;
     std::string mappedName;
@@ -274,7 +272,8 @@ struct InterfaceBlock
         // Only valid for SSBOs, specifies whether it has the readonly qualifier.
         uint8_t isReadOnly : 1;
         uint8_t padings : 6;
-        int16_t binding;
+        // The binding as specified by the shader (0 if unspecified, per spec)
+        int16_t inShaderBinding;
 
         unsigned int dataSize;
         // The id of a linked variable in each shader stage.  This id originates from

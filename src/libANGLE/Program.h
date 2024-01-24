@@ -476,20 +476,6 @@ class Program final : public LabeledObject, public angle::Subject
         return mState.getSharedExecutable();
     }
 
-    void onUniformBufferStateChange(size_t uniformBufferIndex)
-    {
-        if (uniformBufferIndex >= mUniformBlockBindingMasks.size())
-        {
-            mUniformBlockBindingMasks.resize(uniformBufferIndex + 1, UniformBlockBindingMask());
-        }
-        getExecutable().mDirtyBits |= mUniformBlockBindingMasks[uniformBufferIndex];
-    }
-
-    void onPPOUniformBufferStateChange(ShaderType shaderType,
-                                       size_t uniformBufferIndex,
-                                       ProgramExecutable *ppoExecutable,
-                                       const ProgramPipelineUniformBlockIndexMap &blockMap);
-
   private:
     class MainLinkLoadTask;
     class MainLoadTask;
@@ -532,8 +518,6 @@ class Program final : public LabeledObject, public angle::Subject
                       GLuint *combinedImageUniformsOut);
 
     void updateLinkedShaderStages();
-
-    void initInterfaceBlockBindings();
 
     // Block until linking is finished and resolve it.
     void resolveLinkImpl(const gl::Context *context);
@@ -578,16 +562,6 @@ class Program final : public LabeledObject, public angle::Subject
     // stored here to support shader attach/detach and link without providing access to them in the
     // backends.
     ShaderMap<Shader *> mAttachedShaders;
-
-    // To simplify dirty bits handling, instead of tracking dirtiness of both uniform block index
-    // and uniform binding index, we only track which uniform block index is dirty. And then when
-    // buffer index is dirty, we look at which uniform blocks are bound to this buffer binding index
-    // and set all of these uniform blocks dirty. This variable tracks all the uniform blocks bound
-    // to the given binding index in the form of bitmask so that we can quickly convert them to the
-    // dirty bits.
-    static constexpr size_t kFastUniformBlockBindingLimit = 8;
-    angle::FastVector<UniformBlockBindingMask, kFastUniformBlockBindingLimit>
-        mUniformBlockBindingMasks;
 
     std::mutex mHistogramMutex;
 };

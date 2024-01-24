@@ -1024,9 +1024,6 @@ void GetShaderVariableBufferResourceProperty(const ShaderVariableT &buffer,
 {
     switch (pname)
     {
-        case GL_BUFFER_BINDING:
-            params[(*outputPosition)++] = buffer.pod.binding;
-            break;
         case GL_BUFFER_DATA_SIZE:
             params[(*outputPosition)++] = clampCast<GLint>(buffer.pod.dataSize);
             break;
@@ -1090,6 +1087,13 @@ void GetUniformBlockResourceProperty(const Program *program,
 
 {
     ASSERT(*outputPosition < bufSize);
+
+    if (pname == GL_BUFFER_BINDING)
+    {
+        params[(*outputPosition)++] = program->getExecutable().getUniformBlockBinding(blockIndex);
+        return;
+    }
+
     const auto &block = program->getExecutable().getUniformBlockByIndex(blockIndex);
     GetInterfaceBlockResourceProperty(block, pname, params, bufSize, outputPosition);
 }
@@ -1103,6 +1107,14 @@ void GetShaderStorageBlockResourceProperty(const Program *program,
 
 {
     ASSERT(*outputPosition < bufSize);
+
+    if (pname == GL_BUFFER_BINDING)
+    {
+        params[(*outputPosition)++] =
+            program->getExecutable().getShaderStorageBlockBinding(blockIndex);
+        return;
+    }
+
     const auto &block = program->getExecutable().getShaderStorageBlockByIndex(blockIndex);
     GetInterfaceBlockResourceProperty(block, pname, params, bufSize, outputPosition);
 }
@@ -1116,6 +1128,13 @@ void GetAtomicCounterBufferResourceProperty(const Program *program,
 
 {
     ASSERT(*outputPosition < bufSize);
+
+    if (pname == GL_BUFFER_BINDING)
+    {
+        params[(*outputPosition)++] = program->getExecutable().getAtomicCounterBufferBinding(index);
+        return;
+    }
+
     const auto &buffer = program->getExecutable().getAtomicCounterBuffers()[index];
     GetShaderVariableBufferResourceProperty(buffer, pname, params, bufSize, outputPosition);
 }
