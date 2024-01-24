@@ -376,8 +376,6 @@ def library_target_to_blueprint(target, build_info):
 
         bp['sdk_version'] = MIN_SDK_VERSION
         bp['stl'] = STL
-        if target in ROOT_TARGETS:
-            bp['defaults'].append('angle_vendor_cc_defaults')
         bps_for_abis[abi] = bp
 
     common_bp = merge_bps(bps_for_abis)
@@ -550,52 +548,6 @@ def get_gn_target_dependencies(abi, target, build_info):
     return result
 
 
-def get_angle_on_system_flag_config():
-    blueprint_results = []
-
-    blueprint_results.append(('soong_config_module_type', {
-        'name': 'angle_config_cc_defaults',
-        'module_type': 'cc_defaults',
-        'config_namespace': 'angle',
-        'bool_variables': ['angle_on_system',],
-        'properties': [
-            'target.android.relative_install_path',
-            'vendor',
-        ],
-    }))
-
-    blueprint_results.append(('soong_config_bool_variable', {
-        'name': 'angle_on_system',
-    }))
-
-    blueprint_results.append((
-        'angle_config_cc_defaults',
-        {
-            'name': 'angle_vendor_cc_defaults',
-            'vendor': True,
-            'target': {
-                'android': {
-                    'relative_install_path': 'egl',
-                },
-            },
-            'soong_config_variables': {
-                'angle_on_system': {
-                    'vendor': False,
-                    # Android EGL loader can not load from /system/egl/${LIB}
-                    # path and hence don't set the relative path so that ANGLE
-                    # libraries get built into /system/${LIB}
-                    'target': {
-                        'android': {
-                            'relative_install_path': '',
-                        },
-                    },
-                },
-            },
-        }))
-
-    return blueprint_results
-
-
 def main():
     parser = argparse.ArgumentParser(
         description='Generate Android blueprints from gn descriptions.')
@@ -621,8 +573,6 @@ def main():
             targets_to_write.update(get_gn_target_dependencies(abi, root_target, build_info))
 
     blueprint_targets = []
-
-    blueprint_targets.extend(get_angle_on_system_flag_config())
 
     blueprint_targets.append((
         'cc_defaults',
