@@ -55,6 +55,7 @@ class ImageSibling : public gl::FramebufferAttachmentObject
     bool isExternalImageWithoutIndividualSync() const override;
     bool hasFrontBufferUsage() const override;
     bool hasProtectedContent() const override;
+    bool hasFoveatedRendering() const override;
 
   protected:
     // Set the image target of this sibling
@@ -182,6 +183,7 @@ class Image final : public ThreadSafeRefCountObject, public LabeledObject
     bool isYUV() const;
     bool isExternalImageWithoutIndividualSync() const;
     bool hasFrontBufferUsage() const;
+    bool hasFoveatedRendering() const { return false; }
     // Returns true only if the eglImage contains a complete cubemap
     bool isCubeMap() const;
     size_t getWidth() const;

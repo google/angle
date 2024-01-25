@@ -9849,7 +9849,24 @@ void Context::framebufferFoveationConfig(FramebufferID framebufferPacked,
                                          GLuint requestedFeatures,
                                          GLuint *providedFeatures)
 {
-    return;
+    ASSERT(numLayers <= gl::IMPLEMENTATION_MAX_NUM_LAYERS);
+    ASSERT(focalPointsPerLayer <= gl::IMPLEMENTATION_MAX_FOCAL_POINTS);
+    ASSERT(providedFeatures);
+
+    Framebuffer *framebuffer = getFramebuffer(framebufferPacked);
+    ASSERT(!framebuffer->isFoveationConfigured());
+
+    *providedFeatures = 0;
+    if (framebuffer->canSupportFoveatedRendering())
+    {
+        // We only support GL_FOVEATION_ENABLE_BIT_QCOM feature, for now.
+        // If requestedFeatures == 0 return without configuring the framebuffer.
+        if (requestedFeatures != 0)
+        {
+            framebuffer->configureFoveation();
+            *providedFeatures = framebuffer->getSupportedFoveationFeatures();
+        }
+    }
 }
 
 void Context::framebufferFoveationParameters(FramebufferID framebufferPacked,
@@ -9861,7 +9878,12 @@ void Context::framebufferFoveationParameters(FramebufferID framebufferPacked,
                                              GLfloat gainY,
                                              GLfloat foveaArea)
 {
-    return;
+    Framebuffer *framebuffer = getFramebuffer(framebufferPacked);
+    ASSERT(framebuffer);
+    framebuffer->setFocalPoint(layer, focalPoint, focalX, focalY, gainX, gainY, foveaArea);
+    mState.mDirtyBits.set(state::DIRTY_BIT_EXTENDED);
+    mState.mExtendedDirtyBits.set(
+        state::ExtendedDirtyBitType::EXTENDED_DIRTY_BIT_FOVEATED_RENDERING);
 }
 
 void Context::textureFoveationParameters(TextureID texturePacked,
@@ -9873,7 +9895,12 @@ void Context::textureFoveationParameters(TextureID texturePacked,
                                          GLfloat gainY,
                                          GLfloat foveaArea)
 {
-    return;
+    Texture *texture = getTexture(texturePacked);
+    ASSERT(texture);
+    texture->setFocalPoint(layer, focalPoint, focalX, focalY, gainX, gainY, foveaArea);
+    mState.mDirtyBits.set(state::DIRTY_BIT_EXTENDED);
+    mState.mExtendedDirtyBits.set(
+        state::ExtendedDirtyBitType::EXTENDED_DIRTY_BIT_FOVEATED_RENDERING);
 }
 
 // ErrorSet implementation.
