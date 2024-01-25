@@ -97,7 +97,7 @@ function generate_Android_bp_file() {
         --gn_json_arm64=${GN_OUTPUT_DIRECTORY}/desc.arm64.json \
         --gn_json_x86=${GN_OUTPUT_DIRECTORY}/desc.x86.json \
         --gn_json_x64=${GN_OUTPUT_DIRECTORY}/desc.x64.json \
-        > Android.bp
+        --output=Android.bp
 }
 
 

@@ -605,6 +605,7 @@ def main():
             help=gn_abi(abi) +
             ' gn desc file in json format. Generated with \'gn desc <out_dir> --format=json "*"\'.',
             required=True)
+    parser.add_argument('--output', help='output file (e.g. Android.bp)')
     args = vars(parser.parse_args())
 
     infos = {}
@@ -639,8 +640,24 @@ def main():
             ],
         }))
 
+    generated_targets = []
     for target in reversed(targets_to_write.keys()):
-        blueprint_targets.append(gn_target_to_blueprint(target, build_info))
+        generated_targets.append(gn_target_to_blueprint(target, build_info))
+
+    # Move cflags that are repeated in each target to cc_defaults
+    all_cflags = [set(bp['cflags']) for _, bp in generated_targets if 'cflags' in bp]
+    all_target_cflags = set.intersection(*all_cflags)
+
+    for _, bp in generated_targets:
+        if 'cflags' in bp:
+            bp['cflags'] = list(set(bp['cflags']) - all_target_cflags)
+            bp['defaults'].append('angle_common_auto_cflags')
+
+    blueprint_targets.append(('cc_defaults', {
+        'name': 'angle_common_auto_cflags',
+        'cflags': list(all_target_cflags),
+    }))
+    blueprint_targets.extend(generated_targets)
 
     # Add license build rules
     blueprint_targets.append(('package', {
@@ -814,7 +831,8 @@ def main():
     for (blueprint_type, blueprint_data) in blueprint_targets:
         write_blueprint(output, blueprint_type, blueprint_data)
 
-    print('\n'.join(output))
+    with open(args['output'], 'w') as f:
+        f.write('\n'.join(output) + '\n')
 
 
 if __name__ == '__main__':
