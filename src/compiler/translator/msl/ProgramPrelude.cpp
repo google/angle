@@ -31,7 +31,7 @@ class ProgramPrelude : public TIntermTraverser
     ProgramPrelude(TInfoSinkBase &out, const ProgramPreludeConfig &ppc)
         : TIntermTraverser(true, false, false), mOut(out)
     {
-        include_metal_stdlib();
+        mOut << "#include <metal_stdlib>\n\n";
         ALWAYS_INLINE();
         int_clamp();
         if (ppc.hasStructEq)
@@ -111,17 +111,6 @@ class ProgramPrelude : public TIntermTraverser
 
   private:
     void ALWAYS_INLINE();
-
-    void include_metal_stdlib();
-    void include_metal_atomic();
-    void include_metal_common();
-    void include_metal_geometric();
-    void include_metal_graphics();
-    void include_metal_interpolate();
-    void include_metal_math();
-    void include_metal_matrix();
-    void include_metal_pack();
-    void include_metal_relational();
 
     void transform_feedback_guard();
 
@@ -289,15 +278,6 @@ class ProgramPrelude : public TIntermTraverser
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#define PROGRAM_PRELUDE_INCLUDE(header)             \
-    void ProgramPrelude::include_##header()         \
-    {                                               \
-        if (emitGuard(__LINE__))                    \
-        {                                           \
-            mOut << ("#include <" #header ">\n\n"); \
-        }                                           \
-    }
-
 #define PROGRAM_PRELUDE_DECLARE(name, code, ...)                \
     void ProgramPrelude::name()                                 \
     {                                                           \
@@ -310,17 +290,6 @@ class ProgramPrelude : public TIntermTraverser
     }
 
 ////////////////////////////////////////////////////////////////////////////////
-
-PROGRAM_PRELUDE_INCLUDE(metal_stdlib)
-PROGRAM_PRELUDE_INCLUDE(metal_atomic)
-PROGRAM_PRELUDE_INCLUDE(metal_common)
-PROGRAM_PRELUDE_INCLUDE(metal_geometric)
-PROGRAM_PRELUDE_INCLUDE(metal_graphics)
-PROGRAM_PRELUDE_INCLUDE(metal_interpolate)
-PROGRAM_PRELUDE_INCLUDE(metal_math)
-PROGRAM_PRELUDE_INCLUDE(metal_matrix)
-PROGRAM_PRELUDE_INCLUDE(metal_pack)
-PROGRAM_PRELUDE_INCLUDE(metal_relational)
 
 PROGRAM_PRELUDE_DECLARE(transform_feedback_guard, R"(
 #if TRANSFORM_FEEDBACK_ENABLED
@@ -445,8 +414,7 @@ ANGLE_ALWAYS_INLINE T ANGLE_distance_scalar(T x, T y)
 {
     return metal::abs(x - y);
 }
-)",
-                        include_metal_math())
+)")
 
 PROGRAM_PRELUDE_DECLARE(faceforwardScalar,
                         R"(
@@ -482,8 +450,7 @@ ANGLE_ALWAYS_INLINE T ANGLE_refract_scalar(T i, T n, T eta)
         return eta * i - (eta * dotNI + metal::sqrt(k)) * n;
     }
 }
-)",
-                        include_metal_math())
+)")
 
 PROGRAM_PRELUDE_DECLARE(signInt,
                         R"(
@@ -534,8 +501,7 @@ ANGLE_ALWAYS_INLINE X ANGLE_mod(X x, Y y)
 {
     return x - y * metal::floor(x / y);
 }
-)",
-                        include_metal_math())
+)")
 
 PROGRAM_PRELUDE_DECLARE(mixBool,
                         R"(
@@ -544,8 +510,7 @@ ANGLE_ALWAYS_INLINE metal::vec<T,N> ANGLE_mix_bool(metal::vec<T, N> a, metal::ve
 {
     return metal::mix(a, b, static_cast<metal::vec<T,N>>(c));
 }
-)",
-                        include_metal_common())
+)")
 
 PROGRAM_PRELUDE_DECLARE(pack_half_2x16,
                         R"(
@@ -553,7 +518,7 @@ ANGLE_ALWAYS_INLINE uint32_t ANGLE_pack_half_2x16(float2 v)
 {
     return as_type<uint32_t>(half2(v));
 }
-)", )
+)")
 
 PROGRAM_PRELUDE_DECLARE(unpack_half_2x16,
                         R"(
@@ -561,7 +526,7 @@ ANGLE_ALWAYS_INLINE float2 ANGLE_unpack_half_2x16(uint32_t x)
 {
     return float2(as_type<half2>(x));
 }
-)", )
+)")
 
 PROGRAM_PRELUDE_DECLARE(matmulAssign, R"(
 template <typename T, int Cols, int Rows>
@@ -630,7 +595,7 @@ ANGLE_ALWAYS_INLINE metal::matrix<T, Cols, Rows> operator-(metal::matrix<T, Cols
     }
     return m;
 }
-)", )
+)")
 
 PROGRAM_PRELUDE_DECLARE(addMatrixScalarAssign, R"(
 template <typename T, int Cols, int Rows>
@@ -679,7 +644,7 @@ ANGLE_ALWAYS_INLINE thread metal::matrix<T, Cols, Rows> &operator-=(thread metal
     }
     return m;
 }
-)", )
+)")
 
 PROGRAM_PRELUDE_DECLARE(subMatrixScalar,
                         R"(
@@ -717,7 +682,7 @@ ANGLE_ALWAYS_INLINE thread metal::matrix<T, Cols, Rows> &operator/=(thread metal
     }
     return m;
 }
-)", )
+)")
 
 PROGRAM_PRELUDE_DECLARE(divMatrixScalarAssign,
                         R"(
@@ -730,7 +695,7 @@ ANGLE_ALWAYS_INLINE thread metal::matrix<T, Cols, Rows> &operator/=(thread metal
     }
     return m;
 }
-)", )
+)")
 
 PROGRAM_PRELUDE_DECLARE(divMatrixScalarFast,
                         R"(
@@ -932,7 +897,7 @@ ANGLE_ALWAYS_INLINE bool ANGLE_equalStructArray(metal::array<T, N> u, metal::arr
 {
     for(size_t i = 0; i < N; i++)
     {
-        if (ANGLE_equal(u[i], v[i]) == false)
+        if (!ANGLE_equal(u[i], v[i]))
             return false;
     }
     return true;
@@ -956,8 +921,7 @@ ANGLE_ALWAYS_INLINE bool ANGLE_equal(T u, T v)
 {
     return u == v;
 }
-)",
-                        include_metal_math())
+)")
 
 PROGRAM_PRELUDE_DECLARE(equalVector,
                         R"(
@@ -966,8 +930,7 @@ ANGLE_ALWAYS_INLINE bool ANGLE_equal(metal::vec<T, N> u, metal::vec<T, N> v)
 {
     return metal::all(u == v);
 }
-)",
-                        include_metal_math())
+)")
 
 PROGRAM_PRELUDE_DECLARE(equalMatrix,
                         R"(
@@ -1066,8 +1029,7 @@ ANGLE_ALWAYS_INLINE ANGLE_VectorElemRef<T, N> ANGLE_elem_ref(thread metal::vec<T
 {
     return ANGLE_VectorElemRef<T, N>(vec, metal::clamp(index, 0, N - 1));
 }
-)",
-                        include_metal_common())
+)")
 
 PROGRAM_PRELUDE_DECLARE(swizzleRef,
                         R"(
@@ -2987,8 +2949,7 @@ ANGLE_ALWAYS_INLINE T ANGLE_interpolateAtCenter(
 {
     return interpolant.interpolate_at_center();
 }
-)",
-                        include_metal_interpolate())
+)")
 
 PROGRAM_PRELUDE_DECLARE(interpolateAtCentroid,
                         R"(
@@ -3000,8 +2961,7 @@ ANGLE_ALWAYS_INLINE T ANGLE_interpolateAtCentroid(
 }
 template <typename T>
 ANGLE_ALWAYS_INLINE T ANGLE_interpolateAtCentroid(T value) { return value; }
-)",
-                        include_metal_interpolate())
+)")
 
 PROGRAM_PRELUDE_DECLARE(interpolateAtSample,
                         R"(
@@ -3021,8 +2981,7 @@ ANGLE_ALWAYS_INLINE T ANGLE_interpolateAtSample(
 }
 template <typename T>
 ANGLE_ALWAYS_INLINE T ANGLE_interpolateAtSample(T value, int) { return value; }
-)",
-                        include_metal_interpolate())
+)")
 
 PROGRAM_PRELUDE_DECLARE(interpolateAtOffset,
                         R"(
@@ -3035,9 +2994,7 @@ ANGLE_ALWAYS_INLINE T ANGLE_interpolateAtOffset(
 }
 template <typename T>
 ANGLE_ALWAYS_INLINE T ANGLE_interpolateAtOffset(T value, float2) { return value; }
-)",
-                        include_metal_interpolate(),
-                        include_metal_math())
+)")
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -3479,69 +3436,29 @@ void ProgramPrelude::visitOperator(TOperator op,
             mod();
             break;
         case TOperator::EOpRefract:
-            if (argType0->isVector())
-            {
-                include_metal_geometric();
-            }
-            else
+            if (argType0->isScalar())
             {
                 refractScalar();
             }
             break;
         case TOperator::EOpDistance:
-            if (argType0->isVector())
-            {
-                include_metal_geometric();
-            }
-            else
+            if (argType0->isScalar())
             {
                 distanceScalar();
             }
             break;
         case TOperator::EOpLength:
-            if (argType0->isVector())
-            {
-                include_metal_geometric();
-            }
-            else
-            {
-                // metal::abs
-                include_metal_math();
-            }
-            break;
         case TOperator::EOpDot:
-            if (argType0->isVector())
-            {
-                include_metal_geometric();
-            }
-            break;
         case TOperator::EOpNormalize:
-            if (argType0->isVector())
-            {
-                include_metal_geometric();
-            }
-            else
-            {
-                // metal::sign
-                include_metal_common();
-            }
             break;
         case TOperator::EOpFaceforward:
-            if (argType0->isVector())
-            {
-                include_metal_geometric();
-            }
-            else
+            if (argType0->isScalar())
             {
                 faceforwardScalar();
             }
             break;
         case TOperator::EOpReflect:
-            if (argType0->isVector())
-            {
-                include_metal_geometric();
-            }
-            else
+            if (argType0->isScalar())
             {
                 reflectScalar();
             }
@@ -3578,7 +3495,6 @@ void ProgramPrelude::visitOperator(TOperator op,
         case TOperator::EOpLdexp:
         case TOperator::EOpFrexp:
         case TOperator::EOpInversesqrt:
-            include_metal_math();
             break;
 
         case TOperator::EOpEqual:
@@ -3628,15 +3544,10 @@ void ProgramPrelude::visitOperator(TOperator op,
             break;
 
         case TOperator::EOpCross:
-            include_metal_geometric();
             break;
 
         case TOperator::EOpSign:
-            if (argType0->getBasicType() == TBasicType::EbtFloat)
-            {
-                include_metal_common();
-            }
-            else
+            if (argType0->getBasicType() == TBasicType::EbtInt)
             {
                 signInt();
             }
@@ -3647,10 +3558,8 @@ void ProgramPrelude::visitOperator(TOperator op,
         case TOperator::EOpMax:
         case TOperator::EOpStep:
         case TOperator::EOpSmoothstep:
-            include_metal_common();
             break;
         case TOperator::EOpMix:
-            include_metal_common();
             if (argType2->getBasicType() == TBasicType::EbtBool)
             {
                 mixBool();
@@ -3661,18 +3570,11 @@ void ProgramPrelude::visitOperator(TOperator op,
         case TOperator::EOpAny:
         case TOperator::EOpIsnan:
         case TOperator::EOpIsinf:
-            include_metal_relational();
-            break;
-
         case TOperator::EOpDFdx:
         case TOperator::EOpDFdy:
         case TOperator::EOpFwidth:
-            include_metal_graphics();
-            break;
-
         case TOperator::EOpTranspose:
         case TOperator::EOpDeterminant:
-            include_metal_matrix();
             break;
 
         case TOperator::EOpAdd:
@@ -3864,13 +3766,7 @@ void ProgramPrelude::visitOperator(TOperator op,
         case TOperator::EOpUintBitsToFloat:
         case TOperator::EOpFloatBitsToUint:
         case TOperator::EOpNull:
-            // do nothing
-            break;
-
         case TOperator::EOpKill:
-            include_metal_graphics();
-            break;
-
         case TOperator::EOpPackUnorm2x16:
         case TOperator::EOpPackSnorm2x16:
         case TOperator::EOpPackUnorm4x8:
@@ -3879,7 +3775,6 @@ void ProgramPrelude::visitOperator(TOperator op,
         case TOperator::EOpUnpackUnorm2x16:
         case TOperator::EOpUnpackUnorm4x8:
         case TOperator::EOpUnpackSnorm4x8:
-            include_metal_pack();
             break;
 
         case TOperator::EOpPackHalf2x16:
