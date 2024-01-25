@@ -112,6 +112,7 @@ def write_blueprint(output, target_type, values):
 // See: http://go/android-license-faq"""
         output.append(comment)
 
+    output.append('')
     output.append('%s {' % target_type)
     for (key, value) in values.items():
         write_blueprint_key_value(output, key, value)
@@ -825,8 +826,7 @@ def main():
 // Copyright 2020 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-//
-""" % sys.argv[0]
+//""" % sys.argv[0]
     ]
     for (blueprint_type, blueprint_data) in blueprint_targets:
         write_blueprint(output, blueprint_type, blueprint_data)
