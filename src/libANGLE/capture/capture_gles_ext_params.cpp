@@ -4382,7 +4382,7 @@ void CaptureGetFramebufferPixelLocalStorageParameterivRobustANGLE_params(
 
 void CaptureFramebufferFoveationConfigQCOM_providedFeatures(const State &glState,
                                                             bool isCallValid,
-                                                            GLuint framebuffer,
+                                                            FramebufferID framebufferPacked,
                                                             GLuint numLayers,
                                                             GLuint focalPointsPerLayer,
                                                             GLuint requestedFeatures,

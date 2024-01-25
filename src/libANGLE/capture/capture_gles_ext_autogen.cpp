@@ -11872,7 +11872,7 @@ CallCapture CaptureFramebufferTextureMultiviewOVR(const State &glState,
 
 CallCapture CaptureFramebufferFoveationConfigQCOM(const State &glState,
                                                   bool isCallValid,
-                                                  GLuint framebuffer,
+                                                  FramebufferID framebufferPacked,
                                                   GLuint numLayers,
                                                   GLuint focalPointsPerLayer,
                                                   GLuint requestedFeatures,
@@ -11880,7 +11880,7 @@ CallCapture CaptureFramebufferFoveationConfigQCOM(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("framebuffer", ParamType::TGLuint, framebuffer);
+    paramBuffer.addValueParam("framebufferPacked", ParamType::TFramebufferID, framebufferPacked);
     paramBuffer.addValueParam("numLayers", ParamType::TGLuint, numLayers);
     paramBuffer.addValueParam("focalPointsPerLayer", ParamType::TGLuint, focalPointsPerLayer);
     paramBuffer.addValueParam("requestedFeatures", ParamType::TGLuint, requestedFeatures);
@@ -11890,8 +11890,8 @@ CallCapture CaptureFramebufferFoveationConfigQCOM(const State &glState,
         ParamCapture providedFeaturesParam("providedFeatures", ParamType::TGLuintPointer);
         InitParamValue(ParamType::TGLuintPointer, providedFeatures, &providedFeaturesParam.value);
         CaptureFramebufferFoveationConfigQCOM_providedFeatures(
-            glState, isCallValid, framebuffer, numLayers, focalPointsPerLayer, requestedFeatures,
-            providedFeatures, &providedFeaturesParam);
+            glState, isCallValid, framebufferPacked, numLayers, focalPointsPerLayer,
+            requestedFeatures, providedFeatures, &providedFeaturesParam);
         paramBuffer.addParam(std::move(providedFeaturesParam));
     }
     else
@@ -11907,7 +11907,7 @@ CallCapture CaptureFramebufferFoveationConfigQCOM(const State &glState,
 
 CallCapture CaptureFramebufferFoveationParametersQCOM(const State &glState,
                                                       bool isCallValid,
-                                                      GLuint framebuffer,
+                                                      FramebufferID framebufferPacked,
                                                       GLuint layer,
                                                       GLuint focalPoint,
                                                       GLfloat focalX,
@@ -11918,7 +11918,7 @@ CallCapture CaptureFramebufferFoveationParametersQCOM(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("framebuffer", ParamType::TGLuint, framebuffer);
+    paramBuffer.addValueParam("framebufferPacked", ParamType::TFramebufferID, framebufferPacked);
     paramBuffer.addValueParam("layer", ParamType::TGLuint, layer);
     paramBuffer.addValueParam("focalPoint", ParamType::TGLuint, focalPoint);
     paramBuffer.addValueParam("focalX", ParamType::TGLfloat, focalX);
@@ -11942,7 +11942,7 @@ CallCapture CaptureShadingRateQCOM(const State &glState, bool isCallValid, GLenu
 
 CallCapture CaptureTextureFoveationParametersQCOM(const State &glState,
                                                   bool isCallValid,
-                                                  GLuint texture,
+                                                  TextureID texturePacked,
                                                   GLuint layer,
                                                   GLuint focalPoint,
                                                   GLfloat focalX,
@@ -11953,7 +11953,7 @@ CallCapture CaptureTextureFoveationParametersQCOM(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addValueParam("texture", ParamType::TGLuint, texture);
+    paramBuffer.addValueParam("texturePacked", ParamType::TTextureID, texturePacked);
     paramBuffer.addValueParam("layer", ParamType::TGLuint, layer);
     paramBuffer.addValueParam("focalPoint", ParamType::TGLuint, focalPoint);
     paramBuffer.addValueParam("focalX", ParamType::TGLfloat, focalX);

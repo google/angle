@@ -13444,6 +13444,7 @@ void GL_APIENTRY GL_FramebufferFoveationConfigQCOM(GLuint framebuffer,
 
     if (context)
     {
+        FramebufferID framebufferPacked = PackParam<FramebufferID>(framebuffer);
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
@@ -13451,14 +13452,14 @@ void GL_APIENTRY GL_FramebufferFoveationConfigQCOM(GLuint framebuffer,
                   context->getPrivateState(), context->getMutableErrorSetForValidation(),
                   angle::EntryPoint::GLFramebufferFoveationConfigQCOM) &&
               ValidateFramebufferFoveationConfigQCOM(
-                  context, angle::EntryPoint::GLFramebufferFoveationConfigQCOM, framebuffer,
+                  context, angle::EntryPoint::GLFramebufferFoveationConfigQCOM, framebufferPacked,
                   numLayers, focalPointsPerLayer, requestedFeatures, providedFeatures)));
         if (isCallValid)
         {
-            context->framebufferFoveationConfig(framebuffer, numLayers, focalPointsPerLayer,
+            context->framebufferFoveationConfig(framebufferPacked, numLayers, focalPointsPerLayer,
                                                 requestedFeatures, providedFeatures);
         }
-        ANGLE_CAPTURE_GL(FramebufferFoveationConfigQCOM, isCallValid, context, framebuffer,
+        ANGLE_CAPTURE_GL(FramebufferFoveationConfigQCOM, isCallValid, context, framebufferPacked,
                          numLayers, focalPointsPerLayer, requestedFeatures, providedFeatures);
     }
     else
@@ -13485,6 +13486,7 @@ void GL_APIENTRY GL_FramebufferFoveationParametersQCOM(GLuint framebuffer,
 
     if (context)
     {
+        FramebufferID framebufferPacked = PackParam<FramebufferID>(framebuffer);
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
@@ -13492,15 +13494,16 @@ void GL_APIENTRY GL_FramebufferFoveationParametersQCOM(GLuint framebuffer,
                   context->getPrivateState(), context->getMutableErrorSetForValidation(),
                   angle::EntryPoint::GLFramebufferFoveationParametersQCOM) &&
               ValidateFramebufferFoveationParametersQCOM(
-                  context, angle::EntryPoint::GLFramebufferFoveationParametersQCOM, framebuffer,
-                  layer, focalPoint, focalX, focalY, gainX, gainY, foveaArea)));
+                  context, angle::EntryPoint::GLFramebufferFoveationParametersQCOM,
+                  framebufferPacked, layer, focalPoint, focalX, focalY, gainX, gainY, foveaArea)));
         if (isCallValid)
         {
-            context->framebufferFoveationParameters(framebuffer, layer, focalPoint, focalX, focalY,
-                                                    gainX, gainY, foveaArea);
+            context->framebufferFoveationParameters(framebufferPacked, layer, focalPoint, focalX,
+                                                    focalY, gainX, gainY, foveaArea);
         }
-        ANGLE_CAPTURE_GL(FramebufferFoveationParametersQCOM, isCallValid, context, framebuffer,
-                         layer, focalPoint, focalX, focalY, gainX, gainY, foveaArea);
+        ANGLE_CAPTURE_GL(FramebufferFoveationParametersQCOM, isCallValid, context,
+                         framebufferPacked, layer, focalPoint, focalX, focalY, gainX, gainY,
+                         foveaArea);
     }
     else
     {
@@ -13560,6 +13563,7 @@ void GL_APIENTRY GL_TextureFoveationParametersQCOM(GLuint texture,
 
     if (context)
     {
+        TextureID texturePacked = PackParam<TextureID>(texture);
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
@@ -13567,14 +13571,14 @@ void GL_APIENTRY GL_TextureFoveationParametersQCOM(GLuint texture,
                   context->getPrivateState(), context->getMutableErrorSetForValidation(),
                   angle::EntryPoint::GLTextureFoveationParametersQCOM) &&
               ValidateTextureFoveationParametersQCOM(
-                  context, angle::EntryPoint::GLTextureFoveationParametersQCOM, texture, layer,
-                  focalPoint, focalX, focalY, gainX, gainY, foveaArea)));
+                  context, angle::EntryPoint::GLTextureFoveationParametersQCOM, texturePacked,
+                  layer, focalPoint, focalX, focalY, gainX, gainY, foveaArea)));
         if (isCallValid)
         {
-            context->textureFoveationParameters(texture, layer, focalPoint, focalX, focalY, gainX,
-                                                gainY, foveaArea);
+            context->textureFoveationParameters(texturePacked, layer, focalPoint, focalX, focalY,
+                                                gainX, gainY, foveaArea);
         }
-        ANGLE_CAPTURE_GL(TextureFoveationParametersQCOM, isCallValid, context, texture, layer,
+        ANGLE_CAPTURE_GL(TextureFoveationParametersQCOM, isCallValid, context, texturePacked, layer,
                          focalPoint, focalX, focalY, gainX, gainY, foveaArea);
     }
     else

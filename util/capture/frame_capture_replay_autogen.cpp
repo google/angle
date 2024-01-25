@@ -986,13 +986,13 @@ void ReplayTraceFunctionCall(const CallCapture &call, const TraceFunctionMap &cu
             break;
         case angle::EntryPoint::GLFramebufferFoveationConfigQCOM:
             glFramebufferFoveationConfigQCOM(
-                captures[0].value.GLuintVal, captures[1].value.GLuintVal,
+                gFramebufferMap[captures[0].value.GLuintVal], captures[1].value.GLuintVal,
                 captures[2].value.GLuintVal, captures[3].value.GLuintVal,
                 captures[4].value.GLuintPointerVal);
             break;
         case angle::EntryPoint::GLFramebufferFoveationParametersQCOM:
             glFramebufferFoveationParametersQCOM(
-                captures[0].value.GLuintVal, captures[1].value.GLuintVal,
+                gFramebufferMap[captures[0].value.GLuintVal], captures[1].value.GLuintVal,
                 captures[2].value.GLuintVal, captures[3].value.GLfloatVal,
                 captures[4].value.GLfloatVal, captures[5].value.GLfloatVal,
                 captures[6].value.GLfloatVal, captures[7].value.GLfloatVal);
@@ -3535,7 +3535,7 @@ void ReplayTraceFunctionCall(const CallCapture &call, const TraceFunctionMap &cu
             break;
         case angle::EntryPoint::GLTextureFoveationParametersQCOM:
             glTextureFoveationParametersQCOM(
-                captures[0].value.GLuintVal, captures[1].value.GLuintVal,
+                gTextureMap[captures[0].value.GLuintVal], captures[1].value.GLuintVal,
                 captures[2].value.GLuintVal, captures[3].value.GLfloatVal,
                 captures[4].value.GLfloatVal, captures[5].value.GLfloatVal,
                 captures[6].value.GLfloatVal, captures[7].value.GLfloatVal);
