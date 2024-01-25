@@ -110,10 +110,11 @@ if (angle_build_all) {
       "$angle_root/src/tests:angle_tests",
     ]
     if (angle_enable_cl) {
-      deps += [
-        "$angle_clspv_dir:clspv",
-        "$angle_root/src/libOpenCL:angle_cl",
-      ]
+      deps += [ "$angle_root/src/libOpenCL:angle_cl" ]
+    }
+    if (angle_enable_cl && angle_enable_vulkan) {
+      # OpenCL through Vulkan in ANGLE requires clspv for online compiler
+      deps += [ "$angle_clspv_dir:clspv" ]
     }
     if (angle_build_mesa) {
       deps += [ "$angle_root/third_party/mesa" ]
