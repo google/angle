@@ -1430,6 +1430,15 @@
                 "Force enable VK_IMAGE_USAGE_SAMPLED_BIT usage for images with external format"
             ],
             "issue": "https://issuetracker.google.com/155487768"
+        },
+        {
+            "name": "avoid_OpSelect_with_mismatching_RelaxedPrecision",
+            "category": "Workarounds",
+            "description": [
+                "On some drivers, the OpSelect SPIR-V instruction with arguments with mismatching ",
+                "RelaxedPrecision decoration causes a crash"
+            ],
+            "issue": "http://anglebug.com/8503"
         }
     ]
 }

@@ -1321,6 +1321,14 @@ struct FeaturesVk : FeatureSetBase
         &members, "https://issuetracker.google.com/155487768"
     };
 
+    FeatureInfo avoidOpSelectWithMismatchingRelaxedPrecision = {
+        "avoidOpSelectWithMismatchingRelaxedPrecision",
+        FeatureCategory::VulkanWorkarounds,
+        "On some drivers, the OpSelect SPIR-V instruction with arguments with mismatching "
+        "RelaxedPrecision decoration causes a crash",
+        &members, "http://anglebug.com/8503"
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

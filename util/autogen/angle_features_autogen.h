@@ -51,6 +51,7 @@ enum class Feature
     AsyncCommandBufferReset,
     AsyncCommandQueue,
     Avoid1BitAlphaTextureFormats,
+    AvoidOpSelectWithMismatchingRelaxedPrecision,
     AvoidStencilTextureSwizzle,
     BindCompleteFramebufferForTimerQueries,
     BindTransformFeedbackBufferBeforeBindBufferRange,

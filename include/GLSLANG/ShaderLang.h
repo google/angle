@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 348
+#define ANGLE_SH_VERSION 349
 
 enum ShShaderSpec
 {
@@ -441,6 +441,9 @@ struct ShCompileOptions
 
     // Pre-transform explicit cubemap derivatives for Apple GPUs.
     uint64_t preTransformTextureCubeGradDerivatives : 1;
+
+    // Workaround for a driver bug with the use of the OpSelect SPIR-V instruction.
+    uint64_t avoidOpSelectWithMismatchingRelaxedPrecision : 1;
 
     ShCompileOptionsMetal metal;
     ShPixelLocalStorageOptions pls;

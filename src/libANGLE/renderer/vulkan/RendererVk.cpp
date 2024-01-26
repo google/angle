@@ -4046,6 +4046,10 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, clampPointSize,
                             isNvidia && nvidiaVersion.major < uint32_t(IsWindows() ? 430 : 421));
 
+    // Affecting Nvidia drivers 535 through 551.
+    ANGLE_FEATURE_CONDITION(&mFeatures, avoidOpSelectWithMismatchingRelaxedPrecision,
+                            isNvidia && (nvidiaVersion.major >= 535 && nvidiaVersion.major <= 551));
+
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsDepthClipEnable,
                             mDepthClipEnableFeatures.depthClipEnable == VK_TRUE);
 
