@@ -232,9 +232,6 @@ class ProgramPipelineState;
 class ProgramExecutable;
 using SharedProgramExecutable = std::shared_ptr<ProgramExecutable>;
 
-using ProgramPipelineUniformBlockIndexMap =
-    angle::FastMap<uint32_t, IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS>;
-
 class ProgramExecutable final : public angle::Subject
 {
   public:
@@ -638,7 +635,7 @@ class ProgramExecutable final : public angle::Subject
     void copyInputsFromProgram(const ProgramExecutable &executable);
     void copyUniformBuffersFromProgram(const ProgramExecutable &executable,
                                        ShaderType shaderType,
-                                       ProgramPipelineUniformBlockIndexMap *ppoUniformBlockMap);
+                                       ProgramUniformBlockArray<GLuint> *ppoUniformBlockMap);
     void copyStorageBuffersFromProgram(const ProgramExecutable &executable, ShaderType shaderType);
     void clearSamplerBindings();
     void copySamplerBindingsFromProgram(const ProgramExecutable &executable);
@@ -703,26 +700,9 @@ class ProgramExecutable final : public angle::Subject
     void setBaseVertexUniform(GLint baseVertex);
     void setBaseInstanceUniform(GLuint baseInstance);
 
-    enum DirtyBitType
+    ProgramUniformBlockMask getUniformBufferBlocksMappedToBinding(size_t uniformBufferIndex)
     {
-        DIRTY_BIT_UNIFORM_BLOCK_BINDING_0,
-        DIRTY_BIT_UNIFORM_BLOCK_BINDING_MAX =
-            DIRTY_BIT_UNIFORM_BLOCK_BINDING_0 + IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS,
-
-        DIRTY_BIT_COUNT = DIRTY_BIT_UNIFORM_BLOCK_BINDING_MAX,
-    };
-    static_assert(DIRTY_BIT_UNIFORM_BLOCK_BINDING_0 == 0,
-                  "ProgramUniformBlockMask must match DirtyBits because ProgramUniformBlockMask is "
-                  "used directly to set dirty bits.");
-
-    using DirtyBits = angle::BitSet<DIRTY_BIT_COUNT>;
-
-    ANGLE_INLINE bool hasAnyDirtyBit() const { return mDirtyBits.any(); }
-
-    DirtyBits getAndResetDirtyBits() const;
-    void onUniformBufferStateChange(size_t uniformBufferIndex)
-    {
-        mDirtyBits |= mUniformBufferBindingToUniformBlocks[uniformBufferIndex];
+        return mUniformBufferBindingToUniformBlocks[uniformBufferIndex];
     }
 
     const ProgramUniformBlockArray<GLuint> &getUniformBlockIndexToBufferBindingForCapture() const
@@ -994,8 +974,6 @@ class ProgramExecutable final : public angle::Subject
 
     // Cache for sampler validation
     mutable Optional<bool> mCachedValidateSamplersResult;
-
-    mutable DirtyBits mDirtyBits;
 };
 
 void InstallExecutable(const Context *context,

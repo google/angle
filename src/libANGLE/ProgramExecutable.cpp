@@ -196,7 +196,7 @@ template <typename BlockT>
 void AppendActiveBlocks(ShaderType shaderType,
                         const std::vector<BlockT> &blocksIn,
                         std::vector<BlockT> &blocksOut,
-                        ProgramPipelineUniformBlockIndexMap *ppoBlockMap)
+                        ProgramUniformBlockArray<GLuint> *ppoBlockMap)
 {
     for (size_t index = 0; index < blocksIn.size(); ++index)
     {
@@ -1975,7 +1975,7 @@ void ProgramExecutable::copyInputsFromProgram(const ProgramExecutable &executabl
 void ProgramExecutable::copyUniformBuffersFromProgram(
     const ProgramExecutable &executable,
     ShaderType shaderType,
-    ProgramPipelineUniformBlockIndexMap *ppoUniformBlockMap)
+    ProgramUniformBlockArray<GLuint> *ppoUniformBlockMap)
 {
     AppendActiveBlocks(shaderType, executable.getUniformBlocks(), mUniformBlocks,
                        ppoUniformBlockMap);
@@ -2895,9 +2895,6 @@ void ProgramExecutable::remapUniformBlockBinding(UniformBlockIndex uniformBlockI
     // Set new binding
     mUniformBlockIndexToBufferBinding[uniformBlockIndex.value] = uniformBlockBinding;
     mUniformBufferBindingToUniformBlocks[uniformBlockBinding].set(uniformBlockIndex.value);
-
-    mDirtyBits.set(gl::ProgramExecutable::DirtyBitType::DIRTY_BIT_UNIFORM_BLOCK_BINDING_0 +
-                   uniformBlockIndex.value);
 }
 
 void ProgramExecutable::setUniformValuesFromBindingQualifiers()
@@ -3153,13 +3150,6 @@ void ProgramExecutable::setBaseInstanceUniform(GLuint baseInstance)
     mCachedBaseInstance   = baseInstance;
     GLint baseInstanceInt = baseInstance;
     mImplementation->setUniform1iv(mPod.baseInstanceLocation, 1, &baseInstanceInt);
-}
-
-gl::ProgramExecutable::DirtyBits ProgramExecutable::getAndResetDirtyBits() const
-{
-    DirtyBits dirtyBits = mDirtyBits;
-    mDirtyBits.reset();
-    return dirtyBits;
 }
 
 void InstallExecutable(const Context *context,

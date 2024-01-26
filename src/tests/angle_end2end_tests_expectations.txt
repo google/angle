@@ -1286,8 +1286,6 @@ b/266235549 D3D11 : ComputeShaderTest.SSBOAliasOverWrite/* = SKIP
 // Workaround feature that is only supposed to be enabled on vulkan backend
 b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = SKIP
 
-8493 VULKAN : MultithreadingTestES3.UniformBlockBinding/* = SKIP
-
 // Slow tests, should appear last in this file
 5076 : GLSLTest.VerifyMaxVertexUniformVectors* = TIMEOUT
 5076 : GLSLTest.VerifyMaxFragmentUniformVectors* = TIMEOUT

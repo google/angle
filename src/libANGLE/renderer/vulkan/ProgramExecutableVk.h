@@ -329,9 +329,6 @@ class ProgramExecutableVk : public ProgramExecutableImpl
     {
         return mTextureWriteDescriptorDescs;
     }
-    const gl::ProgramExecutable::DirtyBits &getDirtyBits() const { return mDirtyBits; }
-    void resetUniformBufferDirtyBits() { mDirtyBits.reset(); }
-
     // The following functions are for internal use of programs, including from a threaded link job:
     angle::Result resizeUniformBlockMemory(vk::Context *context,
                                            const gl::ShaderMap<size_t> &requiredBufferSize);
@@ -531,8 +528,6 @@ class ProgramExecutableVk : public ProgramExecutableImpl
     vk::DescriptorSetLayoutDesc mShaderResourceSetDesc;
     vk::DescriptorSetLayoutDesc mTextureSetDesc;
     vk::DescriptorSetLayoutDesc mDefaultUniformAndXfbSetDesc;
-
-    gl::ProgramExecutable::DirtyBits mDirtyBits;
 };
 
 }  // namespace rx

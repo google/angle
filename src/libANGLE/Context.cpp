@@ -9300,6 +9300,13 @@ std::shared_ptr<angle::WorkerThreadPool> Context::getWorkerThreadPool() const
     return mDisplay->getMultiThreadPool();
 }
 
+void Context::onUniformBlockBindingUpdated(GLuint uniformBlockIndex)
+{
+    mState.mDirtyBits.set(state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS);
+    mState.mDirtyUniformBlocks.set(uniformBlockIndex);
+    mStateCache.onUniformBufferStateChange(this);
+}
+
 void Context::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message)
 {
     switch (index)
@@ -9366,13 +9373,13 @@ void Context::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
                     mStateCache.onProgramExecutableChange(this);
                     break;
                 }
-                case angle::SubjectMessage::ProgramUniformBlockBindingUpdated:
-                {
-                    mState.mDirtyBits.set(state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS);
-                    mStateCache.onUniformBufferStateChange(this);
-                    break;
-                }
                 default:
+                    if (angle::IsProgramUniformBlockBindingUpdatedMessage(message))
+                    {
+                        onUniformBlockBindingUpdated(
+                            angle::ProgramUniformBlockBindingUpdatedMessageToIndex(message));
+                        break;
+                    }
                     // Ignore all the other notifications
                     break;
             }
@@ -9388,13 +9395,18 @@ void Context::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
                     ANGLE_CONTEXT_TRY(mState.installProgramPipelineExecutable(this));
                     mStateCache.onProgramExecutableChange(this);
                     break;
-                case angle::SubjectMessage::ProgramUniformBlockBindingUpdated:
-                    // A heavier hammer than necessary, but ensures the UBOs are reprocessed after
-                    // the binding change.  Applications should not call glUniformBlockBinding other
-                    // than right after link.
-                    mState.mDirtyBits.set(state::DIRTY_BIT_PROGRAM_EXECUTABLE);
-                    break;
                 default:
+                    if (angle::IsProgramUniformBlockBindingUpdatedMessage(message))
+                    {
+                        // Note: if there's a program bound, its executable is used (and not the
+                        // PPO's)
+                        if (mState.getProgram() == nullptr)
+                        {
+                            onUniformBlockBindingUpdated(
+                                angle::ProgramUniformBlockBindingUpdatedMessageToIndex(message));
+                        }
+                        break;
+                    }
                     UNREACHABLE();
                     break;
             }

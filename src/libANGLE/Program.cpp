@@ -1634,7 +1634,8 @@ void Program::bindUniformBlock(UniformBlockIndex uniformBlockIndex, GLuint unifo
 
     mProgram->onUniformBlockBinding(uniformBlockIndex);
 
-    onStateChange(angle::SubjectMessage::ProgramUniformBlockBindingUpdated);
+    onStateChange(
+        angle::ProgramUniformBlockBindingUpdatedMessageFromIndex(uniformBlockIndex.value));
 }
 
 void Program::setTransformFeedbackVaryings(const Context *context,

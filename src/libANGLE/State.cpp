@@ -3702,10 +3702,6 @@ angle::Result State::syncProgram(const Context *context, Command command)
     {
         return mProgram->syncState(context);
     }
-    else if (mProgramPipeline.get())
-    {
-        return mProgramPipeline->syncState(context);
-    }
     return angle::Result::Continue;
 }
 
@@ -3861,6 +3857,10 @@ angle::Result State::onExecutableChange(const Context *context)
         }
     }
 
+    // Mark uniform blocks as _not_ dirty. When an executable changes, the backends should already
+    // reprocess all uniform blocks.  These dirty bits only track what's made dirty afterwards.
+    mDirtyUniformBlocks.reset();
+
     return angle::Result::Continue;
 }
 
@@ -3965,7 +3965,9 @@ void State::onUniformBufferStateChange(size_t uniformBufferIndex)
 {
     if (mExecutable)
     {
-        mExecutable->onUniformBufferStateChange(uniformBufferIndex);
+        // When a buffer at a given binding changes, set all blocks mapped to it dirty.
+        mDirtyUniformBlocks |=
+            mExecutable->getUniformBufferBlocksMappedToBinding(uniformBufferIndex);
     }
     // This could be represented by a different dirty bit. Using the same one keeps it simple.
     mDirtyBits.set(state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS);
