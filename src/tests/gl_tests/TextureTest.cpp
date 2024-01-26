@@ -3461,9 +3461,6 @@ TEST_P(Texture2DTestES3, TexImageWithDepthStencilPBO)
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_NV_pixel_buffer_object"));
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_storage"));
 
-    // http://anglebug.com/5313
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
-
     // http://anglebug.com/5315
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsMac());
 
@@ -4715,9 +4712,6 @@ TEST_P(Texture2DBaseMaxTestES3, ExtendMipChainAfterRedefine)
 
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
     EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
-
-    // http://anglebug.com/4704
-    ANGLE_SKIP_TEST_IF(IsVulkan());
 
     EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[0]);
 }
