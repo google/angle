@@ -122,6 +122,12 @@ declare_args() {
 
   # Indicate if the rapidJSON library is available to build with in third_party/.
   angle_has_rapidjson = angle_has_build
+
+  angle_is_winappsdk = false
+
+  # Windows App SDK is a separate dependency from nuget.org that needs to
+  # be pre-processed before being used.
+  winappsdk_dir = ""
 }
 
 declare_args() {
@@ -140,7 +146,9 @@ declare_args() {
   angle_shared_libvulkan = !is_mac
 
   # There's no "is_winuwp" helper in BUILDCONFIG.gn, so we define one ourselves
-  angle_is_winuwp = is_win && target_os == "winuwp"
+  # Windows App SDK is almost UWP but for Win32, so we want all the same things
+  angle_is_winuwp = (is_win && target_os == "winuwp") || angle_is_winappsdk
+
   angle_is_msvc = is_win && !is_clang
 
   # Default to using "_angle" suffix on Android
@@ -213,6 +221,9 @@ declare_args() {
 # supported by UWP. A workaround might be possible if CL support on UWP is required.
 assert(!angle_is_winuwp || !angle_enable_cl,
        "OpenCL is not supported on Windows UWP")
+
+assert(!angle_is_winappsdk || winappsdk_dir != "",
+       "No path to Windows App SDK was provided using 'winappsdk_dir'")
 
 if (!angle_enable_cl) {
   angle_enable_cl_passthrough = false

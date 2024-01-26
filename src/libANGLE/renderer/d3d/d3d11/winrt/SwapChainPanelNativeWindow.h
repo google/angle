@@ -11,11 +11,19 @@
 
 #include "libANGLE/renderer/d3d/d3d11/winrt/InspectableNativeWindow.h"
 
+#if defined(ANGLE_ENABLE_WINDOWS_APP_SDK)
+using ISwapChainPanel          = ABI::Microsoft::UI::Xaml::Controls::ISwapChainPanel;
+using ISizeChangedEventHandler = ABI::Microsoft::UI::Xaml::ISizeChangedEventHandler;
+using ISizeChangedEventArgs    = ABI::Microsoft::UI::Xaml::ISizeChangedEventArgs;
+using ICoreDispatcher          = ABI::Microsoft::UI::Dispatching::IDispatcherQueue;
+using IDispatchedHandler       = ABI::Microsoft::UI::Dispatching::IDispatcherQueueHandler;
+#else
 using ISwapChainPanel          = ABI::Windows::UI::Xaml::Controls::ISwapChainPanel;
 using ISizeChangedEventHandler = ABI::Windows::UI::Xaml::ISizeChangedEventHandler;
 using ISizeChangedEventArgs    = ABI::Windows::UI::Xaml::ISizeChangedEventArgs;
 using ICoreDispatcher          = ABI::Windows::UI::Core::ICoreDispatcher;
 using IDispatchedHandler       = ABI::Windows::UI::Core::IDispatchedHandler;
+#endif
 
 #include <memory>
 

@@ -158,6 +158,9 @@ config("internal_config") {
     if (angle_is_winuwp) {
       defines += [ "ANGLE_IS_WINUWP" ]
     }
+    if (angle_is_winappsdk) {
+      defines += [ "ANGLE_IS_WINAPPSDK" ]
+    }
   } else if (is_linux || is_chromeos) {
     defines += [ "ANGLE_IS_LINUX" ]
   }
@@ -374,7 +377,7 @@ config("includes_config") {
 }
 
 config("angle_uwp_env") {
-  if (angle_is_winuwp) {
+  if (angle_is_winuwp && !angle_is_winappsdk) {
     defines = [ "WINAPI_FAMILY=WINAPI_FAMILY_PC_APP" ]
   }
 }
@@ -1338,7 +1341,7 @@ config("shared_library_public_config") {
     }
   }
 
-  if (angle_is_winuwp) {
+  if (angle_is_winuwp && !angle_is_winappsdk) {
     ldflags = [
       "/APPCONTAINER",
 
