@@ -46,7 +46,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '70e6bcc158390fa5b3d62dfbd474207ede7e1114',
+  'chromium_revision': '0fdef08dd9c7e2ddce0c5112c55a7252e4bb9fae',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -91,7 +91,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': '31bf504bc362a83afb3ec923bd36860c316e2b66',
+  'catapult_revision': 'f448d5bf8e578518f3e655a454669e059cb81d14',
 
   # the commit queue can handle CLs rolling Fuchsia sdk
   # and whatever else without interference from each other.
@@ -136,7 +136,7 @@ vars = {
   'reclient_version': 're_client_version:0.128.1.7c74998-gomaip',
 
   # siso CIPD package version.
-  'siso_version': 'git_revision:c892a2c62436b0d4ffbf1e5c559c73cd0f5c7e31',
+  'siso_version': 'git_revision:669c48208b82db909d20a0e61f33f6f0f6916e08',
 
   # 'magic' text to tell depot_tools that git submodules should be accepted but
   # but parity with DEPS file is expected.
@@ -209,7 +209,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@1fde7f2264f2a1448a353e88b0eadb84ed9ba5b4',
+    'url': '{chromium_git}/chromium/src/testing@897c7702b39cda87f7c96d95df01218f7a1100c6',
     'condition': 'not build_with_chromium',
   },
 
