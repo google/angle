@@ -1374,7 +1374,8 @@ void DisplayMtl::initializeFeatures()
 
     // Metal compiler optimizations may remove infinite loops causing crashes later in shader
     // execution. http://crbug.com/1513738
-    ANGLE_FEATURE_CONDITION((&mFeatures), injectAsmStatementIntoLoopBodies, true);
+    // Temporarily disabled to confirm failures on Mac11. http://crbug.com/1522730
+    ANGLE_FEATURE_CONDITION((&mFeatures), injectAsmStatementIntoLoopBodies, false);
 }
 
 angle::Result DisplayMtl::initializeShaderLibrary()
