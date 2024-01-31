@@ -572,11 +572,6 @@ deps = {
     'condition': 'not build_with_chromium',
   },
 
-  'third_party/perfetto': {
-    'url': Var('android_git') + '/platform/external/perfetto.git@d06bef7807a8b90de9bce77132e188f68459a714',
-    'condition': 'not build_with_chromium and checkout_angle_restricted_traces',
-  },
-
   'third_party/proguard': {
       'packages': [
           {
