@@ -46,7 +46,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '84709e977bd19913790ab073895e31611a821362',
+  'chromium_revision': 'd3635c12e43a2c568e5a224af15099219ba72f43',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -91,7 +91,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': '92b51e4fd54770b58450ca3c3f9edb9bdb86e2fd',
+  'catapult_revision': '719cd9d9170b4898010708dce8dc44514efa4279',
 
   # the commit queue can handle CLs rolling Fuchsia sdk
   # and whatever else without interference from each other.
@@ -150,7 +150,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': Var('chromium_git') + '/chromium/src/build.git@de7324e5727938565898c0a98d329452b1b32dc4',
+    'url': Var('chromium_git') + '/chromium/src/build.git@7a16bc81a9b3d541c602101dea2960f0deff7b98',
     'condition': 'not build_with_chromium',
   },
 
@@ -209,7 +209,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@ec54c350e62ce498236964abd6b44b8dcf678264',
+    'url': '{chromium_git}/chromium/src/testing@46ea5627a52ede40df1c0d769dfad291768e6972',
     'condition': 'not build_with_chromium',
   },
 
@@ -391,7 +391,7 @@ deps = {
   },
 
   'third_party/depot_tools': {
-    'url': Var('chromium_git') + '/chromium/tools/depot_tools.git@b808b1bcdd79b344246e0147e98708b91b4573fa',
+    'url': Var('chromium_git') + '/chromium/tools/depot_tools.git@10bd39fd47865eb6c9af749e4d30e8ec5d06451f',
     'condition': 'not build_with_chromium',
   },
 
@@ -602,7 +602,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/r8',
-              'version': 'C9JntVaHiVuPur-3AdTgT9LdF-92xV5S53GPX-ahZsMC',
+              'version': '-2s3swpHJcZRAGeWCKjYARXN0pneLMhyYGBkbbAqz6gC',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
