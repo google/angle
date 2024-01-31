@@ -132,6 +132,7 @@ class DynamicBuffer : angle::NonCopyable
     std::unique_ptr<BufferHelper> mBuffer;
     uint32_t mNextAllocationOffset;
     size_t mSize;
+    size_t mSizeInRecentHistory;
     size_t mAlignment;
     VkMemoryPropertyFlags mMemoryPropertyFlags;
 
