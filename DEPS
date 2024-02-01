@@ -761,7 +761,7 @@ deps = {
 
   'third_party/jinja2': {
     'url': Var('chromium_git') + '/chromium/src/third_party/jinja2@e2d024354e11cc6b041b0cff032d73f0c7e43a07',
-    'condition': 'checkout_android and not build_with_chromium',
+    'condition': 'not build_with_chromium',
   },
 
   'third_party/jsoncpp': {
@@ -786,7 +786,7 @@ deps = {
 
   'third_party/markupsafe': {
     'url': Var('chromium_git') + '/chromium/src/third_party/markupsafe@0bad08bb207bbfc1d6f3bbc82b9242b0c50e5794',
-    'condition': 'checkout_android and not build_with_chromium',
+    'condition': 'not build_with_chromium',
   },
 
   # We use the upstream/main branch.
