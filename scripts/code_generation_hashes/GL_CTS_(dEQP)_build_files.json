@@ -12,7 +12,7 @@
   "third_party/VK-GL-CTS/src/executor/CMakeLists.txt":
     "3c256f00625f67d2a8d9ead5f21faddf",
   "third_party/VK-GL-CTS/src/external/ESExtractor/CMakeLists.txt":
-    "69b6601d8cadc4da4538d78c60ac912a",
+    "61e7242a88181c06d698c636f6ec343f",
   "third_party/VK-GL-CTS/src/external/amber/CMakeLists.txt":
     "8871068a2efa10bdce22d5a8588db7ab",
   "third_party/VK-GL-CTS/src/external/glslang/CMakeLists.txt":
@@ -144,7 +144,7 @@
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/util/CMakeLists.txt":
     "0ada8dd61fde51afc6c1313002489cc4",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/video/CMakeLists.txt":
-    "d8c821fb203f86fd879dc047fdb240be",
+    "6983d0ee355c848adf71dc274b26a7ad",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/wsi/CMakeLists.txt":
     "4b9b02f3fab98243826e777c3e71e340",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/ycbcr/CMakeLists.txt":
