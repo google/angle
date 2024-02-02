@@ -151,6 +151,10 @@ class RefCountedEventGarbageObjects final
     // Move the vector of events to the garbage list
     void add(std::vector<RefCountedEvent> *events);
 
+    // Make a copy of event (which adds another refcount to the VkEvent) and add the copied event to
+    // the garbages
+    void add(const RefCountedEvent &event);
+
     bool empty() const { return mGarbageObjects.empty(); }
 
     GarbageObjects &&release() { return std::move(mGarbageObjects); }
@@ -158,6 +162,125 @@ class RefCountedEventGarbageObjects final
   private:
     GarbageObjects mGarbageObjects;
 };
+
+// This wraps data and API for vkCmdWaitEvent call
+class EventBarrier : angle::NonCopyable
+{
+  public:
+    EventBarrier()
+        : mSrcStageMask(0), mDstStageMask(0), mMemoryBarrierSrcAccess(0), mMemoryBarrierDstAccess(0)
+    {}
+
+    EventBarrier(VkPipelineStageFlags srcStageMask,
+                 VkPipelineStageFlags dstStageMask,
+                 VkAccessFlags srcAccess,
+                 VkAccessFlags dstAccess,
+                 const VkEvent &event)
+        : mSrcStageMask(srcStageMask),
+          mDstStageMask(dstStageMask),
+          mMemoryBarrierSrcAccess(srcAccess),
+          mMemoryBarrierDstAccess(dstAccess)
+    {
+        mEvents.push_back(event);
+    }
+
+    EventBarrier(VkPipelineStageFlags srcStageMask,
+                 VkPipelineStageFlags dstStageMask,
+                 const VkEvent &event,
+                 const VkImageMemoryBarrier &imageMemoryBarrier)
+        : mSrcStageMask(srcStageMask),
+          mDstStageMask(dstStageMask),
+          mMemoryBarrierSrcAccess(0),
+          mMemoryBarrierDstAccess(0)
+    {
+        ASSERT(event != VK_NULL_HANDLE);
+        ASSERT(imageMemoryBarrier.pNext == nullptr);
+        mEvents.push_back(event);
+        mImageMemoryBarriers.push_back(imageMemoryBarrier);
+    }
+
+    EventBarrier(EventBarrier &&other)
+    {
+        mSrcStageMask           = other.mSrcStageMask;
+        mDstStageMask           = other.mDstStageMask;
+        mMemoryBarrierSrcAccess = other.mMemoryBarrierSrcAccess;
+        mMemoryBarrierDstAccess = other.mMemoryBarrierDstAccess;
+        std::swap(mEvents, other.mEvents);
+        std::swap(mImageMemoryBarriers, other.mImageMemoryBarriers);
+        other.mSrcStageMask           = 0;
+        other.mDstStageMask           = 0;
+        other.mMemoryBarrierSrcAccess = 0;
+        other.mMemoryBarrierDstAccess = 0;
+    }
+
+    ~EventBarrier()
+    {
+        ASSERT(mImageMemoryBarriers.empty());
+        ASSERT(mEvents.empty());
+    }
+
+    bool isEmpty() const
+    {
+        return mEvents.empty() && mImageMemoryBarriers.empty() && mMemoryBarrierDstAccess == 0;
+    }
+
+    bool hasEvent(const VkEvent &event) const;
+
+    void addAdditionalStageAccess(VkPipelineStageFlags dstStageMask, VkAccessFlags dstAccess)
+    {
+        mDstStageMask |= dstStageMask;
+        mMemoryBarrierDstAccess |= dstAccess;
+    }
+
+    void execute(PrimaryCommandBuffer *primary);
+
+    void reset()
+    {
+        mEvents.clear();
+        mImageMemoryBarriers.clear();
+    }
+
+    void addDiagnosticsString(std::ostringstream &out) const;
+
+  private:
+    friend class EventBarrierArray;
+    VkPipelineStageFlags mSrcStageMask;
+    VkPipelineStageFlags mDstStageMask;
+    VkAccessFlags mMemoryBarrierSrcAccess;
+    VkAccessFlags mMemoryBarrierDstAccess;
+    std::vector<VkEvent> mEvents;
+    std::vector<VkImageMemoryBarrier> mImageMemoryBarriers;
+};
+
+class EventBarrierArray final
+{
+  public:
+    bool isEmpty() const { return mBarriers.empty(); }
+
+    void execute(Renderer *renderer, PrimaryCommandBuffer *primary);
+
+    void addMemoryEvent(Context *context,
+                        const RefCountedEvent &waitEvent,
+                        VkPipelineStageFlags dstStageMask,
+                        VkAccessFlags dstAccess);
+
+    void addImageEvent(Context *context,
+                       const RefCountedEvent &waitEvent,
+                       VkPipelineStageFlags dstStageMask,
+                       const VkImageMemoryBarrier &imageMemoryBarrier);
+
+    void reset() { mBarriers.clear(); }
+
+    void addDiagnosticsString(std::ostringstream &out) const;
+
+  private:
+    std::vector<EventBarrier> mBarriers;
+};
+
+VkPipelineStageFlags GetRefCountedEventStageMask(Context *context, const RefCountedEvent &event);
+VkPipelineStageFlags GetRefCountedEventStageMask(Context *context,
+                                                 const RefCountedEvent &event,
+                                                 VkAccessFlags *accessMask);
 }  // namespace vk
 }  // namespace rx
 #endif  // LIBANGLE_RENDERER_VULKAN_REFCOUNTED_EVENT_H_
