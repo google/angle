@@ -55,6 +55,8 @@ bool IsValidImageFormat(const cl_image_format *imageFormat, const rx::CLExtensio
 bool IsImageType(cl::MemObjectType memObjectType);
 bool IsBufferType(cl::MemObjectType memObjectType);
 
+cl::Extents GetExtentFromDescriptor(cl::ImageDescriptor desc);
+
 extern thread_local cl_int gClErrorTls;
 
 }  // namespace cl

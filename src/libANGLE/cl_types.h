@@ -70,8 +70,9 @@ using WorkgroupCount   = std::array<uint32_t, 3>;
 template <typename T>
 using EventStatusMap = std::array<T, 3>;
 
-using Extents = ::gl::Extents;
-using Offset  = ::gl::Offset;
+using Extents = angle::Extents<size_t>;
+using Offset  = angle::Offset<size_t>;
+constexpr Offset kOffsetZero(0, 0, 0);
 
 struct KernelArg
 {
@@ -115,6 +116,45 @@ struct BufferBox
 
     size_t getRowPitch() { return mRowPitch; }
     size_t getSlicePitch() { return mSlicePitch; }
+    Offset mOrigin;
+    Extents mSize;
+    size_t mRowPitch;
+    size_t mSlicePitch;
+    size_t mElementSize;
+};
+
+struct BufferRect
+{
+    BufferRect(const Offset &offset,
+               const Extents &size,
+               const size_t row_pitch,
+               const size_t slice_pitch,
+               const size_t element_size = 1)
+        : mOrigin(offset),
+          mSize(size),
+          mRowPitch(row_pitch),
+          mSlicePitch(slice_pitch),
+          mElementSize(element_size)
+    {}
+    bool valid() const
+    {
+        return mSize.width != 0 && mSize.height != 0 && mSize.depth != 0 &&
+               mRowPitch >= mSize.width * mElementSize && mSlicePitch >= mRowPitch * mSize.height &&
+               mElementSize > 0;
+    }
+    bool operator==(const BufferRect &other) const
+    {
+        return (mOrigin == other.mOrigin && mSize == other.mSize && mRowPitch == other.mRowPitch &&
+                mSlicePitch == other.mSlicePitch && mElementSize == other.mElementSize);
+    }
+    bool operator!=(const BufferRect &other) const { return !(*this == other); }
+
+    size_t getRowOffset(size_t slice, size_t row) const
+    {
+        return ((mRowPitch * (mOrigin.y + row)) + (mOrigin.x * mElementSize)) +  // row offset
+               (mSlicePitch * (mOrigin.z + slice));                              // slice offset
+    }
+
     Offset mOrigin;
     Extents mSize;
     size_t mRowPitch;
@@ -173,11 +213,13 @@ struct MemOffsets
 {
     size_t x, y, z;
 };
+constexpr MemOffsets kMemOffsetsZero{0, 0, 0};
 
 struct Coordinate
 {
     size_t x, y, z;
 };
+constexpr Coordinate kCoordinateZero{0, 0, 0};
 
 struct NDRange
 {

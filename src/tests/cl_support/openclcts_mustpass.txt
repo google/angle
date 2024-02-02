@@ -16,6 +16,7 @@ basic.host_numeric_constants
 basic.kernel_limit_constants
 basic.vec_type_hint
 basic.local_linear_id
+basic.bufferreadwriterect
 api.get_platform_info
 api.get_command_queue_info
 api.get_command_queue_info_compatibility

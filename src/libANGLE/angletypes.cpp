@@ -995,26 +995,6 @@ void Box::extend(const Box &other)
     depth  = z1 - z0;
 }
 
-bool operator==(const Offset &a, const Offset &b)
-{
-    return a.x == b.x && a.y == b.y && a.z == b.z;
-}
-
-bool operator!=(const Offset &a, const Offset &b)
-{
-    return !(a == b);
-}
-
-bool operator==(const Extents &lhs, const Extents &rhs)
-{
-    return lhs.width == rhs.width && lhs.height == rhs.height && lhs.depth == rhs.depth;
-}
-
-bool operator!=(const Extents &lhs, const Extents &rhs)
-{
-    return !(lhs == rhs);
-}
-
 bool ValidateComponentTypeMasks(unsigned long outputTypes,
                                 unsigned long inputTypes,
                                 unsigned long outputMask,

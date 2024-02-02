@@ -235,6 +235,55 @@ void CLBufferVk::unmapImpl()
     mMappedMemory = nullptr;
 }
 
+angle::Result CLBufferVk::setRect(const void *data,
+                                  const cl::BufferRect &srcRect,
+                                  const cl::BufferRect &rect)
+{
+    ASSERT(srcRect.valid() && rect.valid());
+    ASSERT(srcRect.mSize == rect.mSize);
+
+    uint8_t *mapPtr = nullptr;
+    ANGLE_TRY(map(mapPtr));
+    const uint8_t *srcData = reinterpret_cast<const uint8_t *>(data);
+    for (size_t slice = 0; slice < rect.mSize.depth; slice++)
+    {
+        for (size_t row = 0; row < rect.mSize.height; row++)
+        {
+            const uint8_t *src = srcData + srcRect.getRowOffset(slice, row);
+            uint8_t *dst       = mapPtr + rect.getRowOffset(slice, row);
+
+            memcpy(dst, src, srcRect.mSize.width * srcRect.mElementSize);
+        }
+    }
+
+    return angle::Result::Continue;
+}
+
+angle::Result CLBufferVk::getRect(const cl::BufferRect &srcRect,
+                                  const cl::BufferRect &outRect,
+                                  void *outData)
+{
+    ASSERT(srcRect.valid() && outRect.valid());
+    ASSERT(srcRect.mSize == outRect.mSize);
+
+    uint8_t *mapPtr = nullptr;
+    ANGLE_TRY(map(mapPtr));
+    uint8_t *dstData = reinterpret_cast<uint8_t *>(outData);
+    for (size_t slice = 0; slice < srcRect.mSize.depth; slice++)
+    {
+        for (size_t row = 0; row < srcRect.mSize.height; row++)
+        {
+            const uint8_t *src = mapPtr + srcRect.getRowOffset(slice, row);
+            uint8_t *dst       = dstData + outRect.getRowOffset(slice, row);
+
+            memcpy(dst, src, srcRect.mSize.width * srcRect.mElementSize);
+        }
+    }
+
+    return angle::Result::Continue;
+}
+
+// offset is for mapped pointer
 angle::Result CLBufferVk::setDataImpl(const uint8_t *data, size_t size, size_t offset)
 {
     // buffer cannot be in use state
@@ -357,12 +406,7 @@ angle::Result CLImageVk::copyStagingToFromWithPitch(void *hostPtr,
 {
     uint8_t *ptrInBase  = nullptr;
     uint8_t *ptrOutBase = nullptr;
-    cl::BufferBox stagingBufferBox{
-        {},
-        {static_cast<int>(region.x), static_cast<int>(region.y), static_cast<int>(region.z)},
-        0,
-        0,
-        getElementSize()};
+    cl::BufferBox stagingBufferBox{{}, {region.x, region.y, region.z}, 0, 0, getElementSize()};
 
     if (copyStagingTo == StagingBufferCopyDirection::ToHost)
     {
@@ -395,7 +439,7 @@ angle::Result CLImageVk::copyStagingToFromWithPitch(void *hostPtr,
 
 CLImageVk::CLImageVk(const cl::Image &image)
     : CLMemoryVk(image),
-      mExtent(cl_vk::GetExtentFromDescriptor(image.getDescriptor())),
+      mExtent(cl::GetExtentFromDescriptor(image.getDescriptor())),
       mAngleFormat(CLImageFormatToAngleFormat(image.getFormat())),
       mStagingBufferInitialized(false),
       mImageViewType(cl_vk::GetImageViewType(image.getDescriptor().type))
@@ -452,11 +496,12 @@ angle::Result CLImageVk::create(void *hostPtr)
         }
     }
 
-    ANGLE_CL_IMPL_TRY_ERROR(mImage.initStaging(mContext, false, mRenderer->getMemoryProperties(),
-                                               getVkImageType(getDescriptor()), mExtent,
-                                               mAngleFormat, mAngleFormat, VK_SAMPLE_COUNT_1_BIT,
-                                               getVkImageUsageFlags(), 1, (uint32_t)getArraySize()),
-                            CL_OUT_OF_RESOURCES);
+    ANGLE_CL_IMPL_TRY_ERROR(
+        mImage.initStaging(mContext, false, mRenderer->getMemoryProperties(),
+                           getVkImageType(getDescriptor()), cl_vk::GetExtent(mExtent), mAngleFormat,
+                           mAngleFormat, VK_SAMPLE_COUNT_1_BIT, getVkImageUsageFlags(), 1,
+                           (uint32_t)getArraySize()),
+        CL_OUT_OF_RESOURCES);
 
     if (mMemory.getFlags().intersects(CL_MEM_USE_HOST_PTR | CL_MEM_COPY_HOST_PTR))
     {
@@ -476,11 +521,12 @@ angle::Result CLImageVk::create(void *hostPtr)
         copyRegion.bufferOffset      = 0;
         copyRegion.bufferRowLength   = 0;
         copyRegion.bufferImageHeight = 0;
-        copyRegion.imageExtent = getExtentForCopy({mExtent.width, mExtent.height, mExtent.depth});
-        copyRegion.imageOffset = getOffsetForCopy({0, 0, 0});
-        copyRegion.imageSubresource =
-            getSubresourceLayersForCopy({0, 0, 0}, {mExtent.width, mExtent.height, mExtent.depth},
-                                        getDescriptor().type, ImageCopyWith::Buffer);
+        copyRegion.imageExtent =
+            cl_vk::GetExtent(getExtentForCopy({mExtent.width, mExtent.height, mExtent.depth}));
+        copyRegion.imageOffset      = cl_vk::GetOffset(getOffsetForCopy(cl::kMemOffsetsZero));
+        copyRegion.imageSubresource = getSubresourceLayersForCopy(
+            cl::kMemOffsetsZero, {mExtent.width, mExtent.height, mExtent.depth}, getType(),
+            ImageCopyWith::Buffer);
 
         ANGLE_CL_IMPL_TRY_ERROR(mImage.copyToBufferOneOff(mContext, &mStagingBuffer, copyRegion),
                                 CL_OUT_OF_RESOURCES);
@@ -644,12 +690,7 @@ void CLImageVk::fillImageWithColor(const cl::MemOffsets &origin,
 {
     size_t elementSize = getElementSize();
     cl::BufferBox stagingBufferBox{
-        {},
-        {static_cast<int>(mExtent.width), static_cast<int>(mExtent.height),
-         static_cast<int>(mExtent.depth)},
-        0,
-        0,
-        elementSize};
+        {}, {mExtent.width, mExtent.height, mExtent.depth}, 0, 0, elementSize};
     uint8_t *ptrBase = imagePtr + (origin.z * stagingBufferBox.getSlicePitch()) +
                        (origin.y * stagingBufferBox.getRowPitch()) + (origin.x * elementSize);
     for (size_t slice = 0; slice < region.z; slice++)
@@ -667,12 +708,12 @@ void CLImageVk::fillImageWithColor(const cl::MemOffsets &origin,
     }
 }
 
-VkExtent3D CLImageVk::getExtentForCopy(const cl::Coordinate &region)
+cl::Extents CLImageVk::getExtentForCopy(const cl::Coordinate &region)
 {
-    VkExtent3D extent = {};
-    extent.width      = static_cast<uint32_t>(region.x);
-    extent.height     = static_cast<uint32_t>(region.y);
-    extent.depth      = static_cast<uint32_t>(region.z);
+    cl::Extents extent = {};
+    extent.width       = region.x;
+    extent.height      = region.y;
+    extent.depth       = region.z;
     switch (getDescriptor().type)
     {
         case cl::MemObjectType::Image1D_Array:
@@ -689,12 +730,12 @@ VkExtent3D CLImageVk::getExtentForCopy(const cl::Coordinate &region)
     return extent;
 }
 
-VkOffset3D CLImageVk::getOffsetForCopy(const cl::MemOffsets &origin)
+cl::Offset CLImageVk::getOffsetForCopy(const cl::MemOffsets &origin)
 {
-    VkOffset3D offset = {};
-    offset.x          = static_cast<int32_t>(origin.x);
-    offset.y          = static_cast<int32_t>(origin.y);
-    offset.z          = static_cast<int32_t>(origin.z);
+    cl::Offset offset = {};
+    offset.x          = origin.x;
+    offset.y          = origin.y;
+    offset.z          = origin.z;
     switch (getDescriptor().type)
     {
         case cl::MemObjectType::Image1D_Array:
