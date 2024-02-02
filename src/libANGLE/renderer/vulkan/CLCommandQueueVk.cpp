@@ -233,8 +233,27 @@ angle::Result CLCommandQueueVk::enqueueCopyBuffer(const cl::Buffer &srcBuffer,
                                                   const cl::EventPtrs &waitEvents,
                                                   CLEventImpl::CreateFunc *eventCreateFunc)
 {
-    UNIMPLEMENTED();
-    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+    std::scoped_lock<std::mutex> sl(mCommandQueueMutex);
+
+    ANGLE_TRY(processWaitlist(waitEvents));
+
+    CLMemoryVk *srcBufferVk = &srcBuffer.getImpl<CLMemoryVk>();
+    CLMemoryVk *dstBufferVk = &dstBuffer.getImpl<CLMemoryVk>();
+
+    vk::CommandBufferAccess access;
+    access.onBufferTransferRead(&srcBufferVk->getBuffer());
+    access.onBufferTransferWrite(&dstBufferVk->getBuffer());
+
+    vk::OutsideRenderPassCommandBuffer *commandBuffer;
+    ANGLE_TRY(getCommandBuffer(access, &commandBuffer));
+
+    const VkBufferCopy copyRegion = {srcOffset, dstOffset, size};
+    commandBuffer->copyBuffer(srcBufferVk->getBuffer().getBuffer(),
+                              dstBufferVk->getBuffer().getBuffer(), 1, &copyRegion);
+
+    ANGLE_TRY(createEvent(eventCreateFunc));
+
+    return angle::Result::Continue;
 }
 
 angle::Result CLCommandQueueVk::enqueueCopyBufferRect(const cl::Buffer &srcBuffer,
