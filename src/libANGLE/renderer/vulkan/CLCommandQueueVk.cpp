@@ -858,4 +858,51 @@ angle::Result CLCommandQueueVk::finishInternal()
     return angle::Result::Continue;
 }
 
+// Helper function to insert appropriate memory barriers before accessing the resources in the
+// command buffer.
+angle::Result CLCommandQueueVk::onResourceAccess(const vk::CommandBufferAccess &access)
+{
+    // Buffers
+    for (const vk::CommandBufferBufferAccess &bufferAccess : access.getReadBuffers())
+    {
+        if (mComputePassCommands->usesBufferForWrite(*bufferAccess.buffer))
+        {
+            // read buffers only need a new command buffer if previously used for write
+            ANGLE_TRY(flushComputePassCommands());
+        }
+
+        mComputePassCommands->bufferRead(bufferAccess.accessType, bufferAccess.stage,
+                                         bufferAccess.buffer);
+    }
+
+    for (const vk::CommandBufferBufferAccess &bufferAccess : access.getWriteBuffers())
+    {
+        if (mComputePassCommands->usesBuffer(*bufferAccess.buffer))
+        {
+            // write buffers always need a new command buffer
+            ANGLE_TRY(flushComputePassCommands());
+        }
+
+        mComputePassCommands->bufferWrite(bufferAccess.accessType, bufferAccess.stage,
+                                          bufferAccess.buffer);
+        if (bufferAccess.buffer->isHostVisible())
+        {
+            // currently all are host visible so nothing to do
+        }
+    }
+
+    for (const vk::CommandBufferBufferExternalAcquireRelease &bufferAcquireRelease :
+         access.getExternalAcquireReleaseBuffers())
+    {
+        mComputePassCommands->retainResourceForWrite(bufferAcquireRelease.buffer);
+    }
+
+    for (const vk::CommandBufferResourceAccess &resourceAccess : access.getAccessResources())
+    {
+        mComputePassCommands->retainResource(resourceAccess.resource);
+    }
+
+    return angle::Result::Continue;
+}
+
 }  // namespace rx
