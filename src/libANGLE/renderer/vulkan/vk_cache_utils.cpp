@@ -4676,19 +4676,20 @@ bool YcbcrConversionDesc::operator==(const YcbcrConversionDesc &other) const
 
 void YcbcrConversionDesc::reset()
 {
-    mExternalOrVkFormat = 0;
-    mIsExternalFormat   = 0;
-    mConversionModel    = 0;
-    mColorRange         = 0;
-    mXChromaOffset      = 0;
-    mYChromaOffset      = 0;
-    mChromaFilter       = 0;
-    mRSwizzle           = 0;
-    mGSwizzle           = 0;
-    mBSwizzle           = 0;
-    mASwizzle           = 0;
-    mPadding            = 0;
-    mReserved           = 0;
+    mExternalOrVkFormat    = 0;
+    mIsExternalFormat      = 0;
+    mConversionModel       = 0;
+    mColorRange            = 0;
+    mXChromaOffset         = 0;
+    mYChromaOffset         = 0;
+    mChromaFilter          = 0;
+    mRSwizzle              = 0;
+    mGSwizzle              = 0;
+    mBSwizzle              = 0;
+    mASwizzle              = 0;
+    mLinearFilterSupported = 0;
+    mPadding               = 0;
+    mReserved              = 0;
 }
 
 void YcbcrConversionDesc::update(RendererVk *rendererVk,
@@ -4699,12 +4700,15 @@ void YcbcrConversionDesc::update(RendererVk *rendererVk,
                                  VkChromaLocation yChromaOffset,
                                  VkFilter chromaFilter,
                                  VkComponentMapping components,
-                                 angle::FormatID intendedFormatID)
+                                 angle::FormatID intendedFormatID,
+                                 YcbcrLinearFilterSupport linearFilterSupported)
 {
     const vk::Format &vkFormat = rendererVk->getFormat(intendedFormatID);
     ASSERT(externalFormat != 0 || vkFormat.getIntendedFormat().isYUV);
 
     SetBitField(mIsExternalFormat, (externalFormat) ? 1 : 0);
+    SetBitField(mLinearFilterSupported,
+                linearFilterSupported == YcbcrLinearFilterSupport::Supported);
     mExternalOrVkFormat = (externalFormat)
                               ? externalFormat
                               : vkFormat.getActualImageVkFormat(vk::ImageAccess::SampleOnly);
@@ -4735,16 +4739,11 @@ bool YcbcrConversionDesc::updateChromaFilter(RendererVk *rendererVk, VkFilter fi
     VkFilter preferredChromaFilter = rendererVk->getPreferredFilterForYUV(filter);
     ASSERT(preferredChromaFilter == VK_FILTER_LINEAR || preferredChromaFilter == VK_FILTER_NEAREST);
 
-    if (preferredChromaFilter == VK_FILTER_LINEAR && mIsExternalFormat == 0)
+    if (preferredChromaFilter == VK_FILTER_LINEAR && !mLinearFilterSupported)
     {
-        // Vulkan ICDs are allowed to not support LINEAR filter.
-        angle::FormatID formatId =
-            vk::GetFormatIDFromVkFormat(static_cast<VkFormat>(mExternalOrVkFormat));
-        if (!rendererVk->hasImageFormatFeatureBits(
-                formatId, VK_FORMAT_FEATURE_SAMPLED_IMAGE_YCBCR_CONVERSION_LINEAR_FILTER_BIT))
-        {
-            preferredChromaFilter = VK_FILTER_NEAREST;
-        }
+        // Vulkan implementations may not support linear filtering in all cases. If not supported,
+        // use nearest filtering instead.
+        preferredChromaFilter = VK_FILTER_NEAREST;
     }
 
     if (getChromaFilter() != preferredChromaFilter)
