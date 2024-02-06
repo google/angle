@@ -290,8 +290,6 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-VkImportMemoryWin32HandleInfoKHR-handleType-00658",
     // https://anglebug.com/8497
     "VUID-vkCmdEndDebugUtilsLabelEXT-commandBuffer-01912",
-    // https://anglebug.com/8516
-    "VUID-VkGraphicsPipelineCreateInfo-dynamicRendering-06576",
     // https://anglebug.com/8522
     "VUID-VkPipelineVertexInputStateCreateInfo-pNext-pNext",
 };
