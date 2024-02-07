@@ -749,7 +749,7 @@ egl::Error DisplayGLX::waitClient(const gl::Context *context)
 
 egl::Error DisplayGLX::waitNative(const gl::Context *context, EGLint engine)
 {
-    // eglWaitNative is used to notify the driver of changes in X11 for the current surface, such as
+    // eglWaitNative is used to notice the driver of changes in X11 for the current surface, such as
     // changes of the window size. We use this event to update the child window of WindowSurfaceGLX
     // to match its parent window's size.
     // Handling eglWaitNative this way helps the application control when resize happens. This is

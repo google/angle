@@ -9,8 +9,8 @@
 
 #include "libANGLE/renderer/vulkan/linux/xcb/DisplayVkXcb.h"
 
+#include <X11/Xutil.h>
 #include <xcb/xcb.h>
-#include <xcb/xcb_aux.h>
 
 #include "common/system_utils.h"
 #include "libANGLE/Display.h"
@@ -157,7 +157,7 @@ DisplayImpl *CreateVulkanXcbDisplay(const egl::DisplayState &state)
 
 angle::Result DisplayVkXcb::waitNativeImpl()
 {
-    xcb_aux_sync(mXcbConnection);
+    XSync(reinterpret_cast<Display *>(mState.displayId), False);
     return angle::Result::Continue;
 }
 }  // namespace rx
