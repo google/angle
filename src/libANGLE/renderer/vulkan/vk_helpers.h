@@ -2113,6 +2113,7 @@ class ImageHelper final : public Resource, public angle::Subject
     bool hasEmulatedDepthChannel() const;
     bool hasEmulatedStencilChannel() const;
     bool hasEmulatedImageFormat() const { return mActualFormatID != mIntendedFormatID; }
+    bool hasInefficientlyEmulatedImageFormat() const;
     GLint getSamples() const { return mSamples; }
 
     ImageSerial getImageSerial() const

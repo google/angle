@@ -7387,7 +7387,7 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context, gl::Co
             ANGLE_TRY(textureVk->ensureMutable(this));
         }
 
-        if (image.hasEmulatedImageFormat())
+        if (image.hasInefficientlyEmulatedImageFormat())
         {
             ANGLE_VK_PERF_WARNING(
                 this, GL_DEBUG_SEVERITY_LOW,
