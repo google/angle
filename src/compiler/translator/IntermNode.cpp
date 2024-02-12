@@ -353,7 +353,11 @@ TIntermNode *TIntermUnary::getChildNode(size_t index) const
 
 bool TIntermUnary::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
 {
-    ASSERT(original->getAsTyped()->getType() == replacement->getAsTyped()->getType());
+    // gl_ClipDistance and gl_CullDistance arrays may be replaced with an adjusted
+    // array size. Allow mismatching types for the length() operation in this case.
+    ASSERT(original->getAsTyped()->getType() == replacement->getAsTyped()->getType() ||
+           (mOp == EOpArrayLength && (original->getAsTyped()->getQualifier() == EvqClipDistance ||
+                                      original->getAsTyped()->getQualifier() == EvqCullDistance)));
     REPLACE_IF_IS(mOperand, TIntermTyped, original, replacement);
     return false;
 }
@@ -2278,7 +2282,10 @@ TIntermTyped *TIntermUnary::fold(TDiagnostics *diagnostics)
     if (mOp == EOpArrayLength)
     {
         // The size of runtime-sized arrays may only be determined at runtime.
-        if (mOperand->hasSideEffects() || mOperand->getType().isUnsizedArray())
+        // This operation is folded for clip/cull distance arrays in RemoveArrayLengthMethod.
+        if (mOperand->hasSideEffects() || mOperand->getType().isUnsizedArray() ||
+            mOperand->getQualifier() == EvqClipDistance ||
+            mOperand->getQualifier() == EvqCullDistance)
         {
             return this;
         }
