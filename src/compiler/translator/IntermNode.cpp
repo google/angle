@@ -237,7 +237,7 @@ TIntermNode *TIntermConstantUnion::getChildNode(size_t index) const
 
 size_t TIntermLoop::getChildCount() const
 {
-    return (mInit ? 1 : 0) + (mCond ? 1 : 0) + (mExpr ? 1 : 0) + (mBody ? 1 : 0);
+    return (mInit ? 1 : 0) + (mCond ? 1 : 0) + (mExpr ? 1 : 0) + 1;
 }
 
 TIntermNode *TIntermLoop::getChildNode(size_t index) const
@@ -259,11 +259,9 @@ TIntermNode *TIntermLoop::getChildNode(size_t index) const
         children[childIndex] = mExpr;
         ++childIndex;
     }
-    if (mBody)
-    {
-        children[childIndex] = mBody;
-        ++childIndex;
-    }
+    children[childIndex] = mBody;
+    ++childIndex;
+
     ASSERT(index < childIndex);
     return children[index];
 }
@@ -1597,7 +1595,7 @@ TIntermLoop::TIntermLoop(TLoopType type,
                          TIntermTyped *cond,
                          TIntermTyped *expr,
                          TIntermBlock *body)
-    : mType(type), mInit(init), mCond(cond), mExpr(expr), mBody(body)
+    : mType(type), mInit(init), mCond(cond), mExpr(expr), mBody(EnsureBody(body))
 {
     // Declaration nodes with no children can appear if all the declarators just added constants to
     // the symbol table instead of generating code. They're no-ops so don't add them to the tree.
@@ -1613,7 +1611,7 @@ TIntermLoop::TIntermLoop(const TIntermLoop &node)
                   node.mInit ? node.mInit->deepCopy() : nullptr,
                   node.mCond ? node.mCond->deepCopy() : nullptr,
                   node.mExpr ? node.mExpr->deepCopy() : nullptr,
-                  node.mBody ? node.mBody->deepCopy() : nullptr)
+                  node.mBody->deepCopy())
 {}
 
 TIntermIfElse::TIntermIfElse(TIntermTyped *cond, TIntermBlock *trueB, TIntermBlock *falseB)
