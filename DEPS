@@ -5595,3 +5595,7 @@ recursedeps = [
   'third_party/jsoncpp',
   'third_party/vulkan-deps',
 ]
+
+skip_child_includes = [
+    'third_party'
+]

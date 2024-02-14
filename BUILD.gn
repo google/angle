@@ -10,6 +10,10 @@ if (angle_enable_vulkan) {
 if (angle_use_wayland) {
   import("//build_overrides/wayland.gni")
 }
+if (angle_enable_wgpu) {
+  import("//build_overrides/dawn.gni")
+  import("//build_overrides/tint.gni")
+}
 if (angle_has_build) {
   import("//build/config/linux/pkg_config.gni")
   import("//build/config/sanitizers/sanitizers.gni")
