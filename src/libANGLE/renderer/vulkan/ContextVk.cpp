@@ -7316,8 +7316,8 @@ angle::Result ContextVk::initBufferForVertexConversion(vk::BufferHelper *bufferH
     size_t alignment         = static_cast<size_t>(mRenderer->getVertexConversionBufferAlignment());
 
     // The size is retrieved and used in descriptor set. The descriptor set wants aligned size,
-    // otherwise there are test failures. Note that underline VMA allocation always allocate aligned
-    // size anyway.
+    // otherwise there are test failures. Note that the underlying VMA allocation is always
+    // allocated with an aligned size anyway.
     size_t sizeToAllocate = roundUp(size, alignment);
 
     return initBufferAllocation(bufferHelper, memoryTypeIndex, sizeToAllocate, alignment,
@@ -8013,7 +8013,7 @@ angle::Result ContextVk::syncExternalMemory()
     return angle::Result::Continue;
 }
 
-angle::Result ContextVk::onSyncObjectInit(vk::SyncHelper *syncHelper, bool isEGLSyncObject)
+angle::Result ContextVk::onSyncObjectInit(vk::SyncHelper *syncHelper, SyncFenceScope scope)
 {
     // Submit the commands:
     //
@@ -8029,13 +8029,28 @@ angle::Result ContextVk::onSyncObjectInit(vk::SyncHelper *syncHelper, bool isEGL
     // scenarios such as sync object init followed by eglSwapBuffers() (that would otherwise incur
     // another submission, as well as not being able to optimize the render-to-swapchain render
     // pass).
-    if (isEGLSyncObject || !mRenderPassCommands->started())
+    if (scope != SyncFenceScope::CurrentContextToShareGroup || !mRenderPassCommands->started())
     {
         ANGLE_TRY(flushImpl(nullptr, nullptr, RenderPassClosureReason::SyncObjectInit));
         // Even if no commands is generated, and flushImpl bails out, queueSerial is valid since
         // Context initialization. It will always test finished/signaled.
         ASSERT(mLastSubmittedQueueSerial.valid());
-        syncHelper->setQueueSerial(mLastSubmittedQueueSerial);
+
+        // If src synchronization scope is all contexts (an ANGLE extension), set the syncHelper
+        // serial to the last serial of all contexts, instead of just the current context.
+        if (scope == SyncFenceScope::AllContextsToAllContexts)
+        {
+            const size_t maxIndex = mRenderer->getLargestQueueSerialIndexEverAllocated();
+            for (SerialIndex index = 0; index <= maxIndex; ++index)
+            {
+                syncHelper->setSerial(index, mRenderer->getLastSubmittedSerial(index));
+            }
+        }
+        else
+        {
+            syncHelper->setQueueSerial(mLastSubmittedQueueSerial);
+        }
+
         return angle::Result::Continue;
     }
 
