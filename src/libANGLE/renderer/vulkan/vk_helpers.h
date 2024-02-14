@@ -2697,6 +2697,26 @@ class ImageHelper final : public Resource, public angle::Subject
                                           const GLuint depthPitch,
                                           bool *copiedOut);
 
+    // ClearEmulatedChannels updates are expected in the beginning of the level update list. They
+    // can be processed first and removed. By doing so, if this is the only update for the image,
+    // an unnecessary layout transition can be avoided.
+    angle::Result flushStagedClearEmulatedChannelsUpdates(ContextVk *contextVk,
+                                                          gl::LevelIndex levelGLStart,
+                                                          gl::LevelIndex levelGLLimit,
+                                                          bool *otherUpdatesToFlushOut);
+
+    // Flushes staged updates to a range of levels and layers from start to end. The updates do not
+    // include ClearEmulatedChannelsOnly, which are processed in a separate function.
+    angle::Result flushStagedUpdatesImpl(ContextVk *contextVk,
+                                         gl::LevelIndex levelGLStart,
+                                         gl::LevelIndex levelGLEnd,
+                                         uint32_t layerStart,
+                                         uint32_t layerEnd,
+                                         const gl::TexLevelMask &skipLevelsAllFaces);
+
+    // Limit the input level to the number of levels in subresource update list.
+    void clipLevelToUpdateListUpperLimit(gl::LevelIndex *level) const;
+
     std::vector<SubresourceUpdate> *getLevelUpdates(gl::LevelIndex level);
     const std::vector<SubresourceUpdate> *getLevelUpdates(gl::LevelIndex level) const;
 
