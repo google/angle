@@ -4102,9 +4102,6 @@ DynamicQueryPool::~DynamicQueryPool() = default;
 
 angle::Result DynamicQueryPool::init(ContextVk *contextVk, VkQueryType type, uint32_t poolSize)
 {
-    // SecondaryCommandBuffer's ResetQueryPoolParams would like the query index to fit in 24 bits.
-    ASSERT(poolSize < (1 << 24));
-
     ANGLE_TRY(initEntryPool(contextVk, poolSize));
     mQueryType = type;
     return angle::Result::Continue;

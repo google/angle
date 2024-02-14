@@ -1138,10 +1138,7 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.multiviewOVR =
         mFeatures.supportsMultiview.enabled && mFeatures.bresenhamLineRasterization.enabled;
     mNativeExtensions.multiview2OVR = mNativeExtensions.multiviewOVR;
-    // Max views affects the number of Vulkan queries per GL query in render pass, and
-    // SecondaryCommandBuffer's ResetQueryPoolParams would like this to have an upper limit (of
-    // 255).
-    mNativeCaps.maxViews = std::min(mMultiviewProperties.maxMultiviewViewCount, 8u);
+    mNativeCaps.maxViews            = mMultiviewProperties.maxMultiviewViewCount;
 
     // GL_ANGLE_yuv_internal_format
     mNativeExtensions.yuvInternalFormatANGLE =

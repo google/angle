@@ -166,23 +166,6 @@ const char *GetCommandString(CommandID id)
             return "--unreachable--";
     }
 }
-
-// Given the pointer to the parameter struct, returns the pointer to the first array parameter.
-template <typename T, typename StructType>
-ANGLE_INLINE const T *GetFirstArrayParameter(StructType *param)
-{
-    // The first array parameter is always right after the struct itself.
-    return Offset<T>(param, sizeof(*param));
-}
-
-// Given the pointer to one array parameter (and its array count), returns the pointer to the next
-// array parameter.
-template <typename NextT, typename PrevT>
-ANGLE_INLINE const NextT *GetNextArrayParameter(const PrevT *array, size_t arrayLen)
-{
-    const size_t arrayAllocateBytes = roundUpPow2<size_t>(sizeof(*array) * arrayLen, 8u);
-    return Offset<NextT>(array, arrayAllocateBytes);
-}
 }  // namespace
 
 ANGLE_INLINE const CommandHeader *NextCommand(const CommandHeader *command)
@@ -212,7 +195,7 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                 {
                     const DebugUtilsLabelParams *params =
                         getParamPtr<DebugUtilsLabelParams>(currentCommand);
-                    const char *pLabelName           = GetFirstArrayParameter<char>(params);
+                    const char *pLabelName = Offset<char>(params, sizeof(DebugUtilsLabelParams));
                     const VkDebugUtilsLabelEXT label = {
                         VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT,
                         nullptr,
@@ -225,14 +208,15 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                 case CommandID::BeginQuery:
                 {
                     const BeginQueryParams *params = getParamPtr<BeginQueryParams>(currentCommand);
-                    vkCmdBeginQuery(cmdBuffer, params->queryPool, params->query, 0);
+                    vkCmdBeginQuery(cmdBuffer, params->queryPool, params->query, params->flags);
                     break;
                 }
                 case CommandID::BeginTransformFeedback:
                 {
                     const BeginTransformFeedbackParams *params =
                         getParamPtr<BeginTransformFeedbackParams>(currentCommand);
-                    const VkBuffer *counterBuffers = GetFirstArrayParameter<VkBuffer>(params);
+                    const VkBuffer *counterBuffers =
+                        Offset<VkBuffer>(params, sizeof(BeginTransformFeedbackParams));
                     const VkDeviceSize *counterBufferOffsets =
                         reinterpret_cast<const VkDeviceSize *>(counterBuffers +
                                                                params->bufferCount);
@@ -252,9 +236,9 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                     const BindDescriptorSetParams *params =
                         getParamPtr<BindDescriptorSetParams>(currentCommand);
                     const VkDescriptorSet *descriptorSets =
-                        GetFirstArrayParameter<VkDescriptorSet>(params);
-                    const uint32_t *dynamicOffsets =
-                        GetNextArrayParameter<uint32_t>(descriptorSets, params->descriptorSetCount);
+                        Offset<VkDescriptorSet>(params, sizeof(BindDescriptorSetParams));
+                    const uint32_t *dynamicOffsets = Offset<uint32_t>(
+                        descriptorSets, sizeof(VkDescriptorSet) * params->descriptorSetCount);
                     vkCmdBindDescriptorSets(cmdBuffer, params->pipelineBindPoint, params->layout,
                                             params->firstSet, params->descriptorSetCount,
                                             descriptorSets, params->dynamicOffsetCount,
@@ -280,11 +264,12 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                 {
                     const BindTransformFeedbackBuffersParams *params =
                         getParamPtr<BindTransformFeedbackBuffersParams>(currentCommand);
-                    const VkBuffer *buffers = GetFirstArrayParameter<VkBuffer>(params);
+                    const VkBuffer *buffers =
+                        Offset<VkBuffer>(params, sizeof(BindTransformFeedbackBuffersParams));
                     const VkDeviceSize *offsets =
-                        GetNextArrayParameter<VkDeviceSize>(buffers, params->bindingCount);
+                        Offset<VkDeviceSize>(buffers, sizeof(VkBuffer) * params->bindingCount);
                     const VkDeviceSize *sizes =
-                        GetNextArrayParameter<VkDeviceSize>(offsets, params->bindingCount);
+                        Offset<VkDeviceSize>(offsets, sizeof(VkDeviceSize) * params->bindingCount);
                     vkCmdBindTransformFeedbackBuffersEXT(cmdBuffer, 0, params->bindingCount,
                                                          buffers, offsets, sizes);
                     break;
@@ -293,9 +278,10 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                 {
                     const BindVertexBuffersParams *params =
                         getParamPtr<BindVertexBuffersParams>(currentCommand);
-                    const VkBuffer *buffers = GetFirstArrayParameter<VkBuffer>(params);
+                    const VkBuffer *buffers =
+                        Offset<VkBuffer>(params, sizeof(BindVertexBuffersParams));
                     const VkDeviceSize *offsets =
-                        GetNextArrayParameter<VkDeviceSize>(buffers, params->bindingCount);
+                        Offset<VkDeviceSize>(buffers, sizeof(VkBuffer) * params->bindingCount);
                     vkCmdBindVertexBuffers(cmdBuffer, 0, params->bindingCount, buffers, offsets);
                     break;
                 }
@@ -303,11 +289,12 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                 {
                     const BindVertexBuffers2Params *params =
                         getParamPtr<BindVertexBuffers2Params>(currentCommand);
-                    const VkBuffer *buffers = GetFirstArrayParameter<VkBuffer>(params);
+                    const VkBuffer *buffers =
+                        Offset<VkBuffer>(params, sizeof(BindVertexBuffers2Params));
                     const VkDeviceSize *offsets =
-                        GetNextArrayParameter<VkDeviceSize>(buffers, params->bindingCount);
+                        Offset<VkDeviceSize>(buffers, sizeof(VkBuffer) * params->bindingCount);
                     const VkDeviceSize *strides =
-                        GetNextArrayParameter<VkDeviceSize>(offsets, params->bindingCount);
+                        Offset<VkDeviceSize>(offsets, sizeof(VkDeviceSize) * params->bindingCount);
                     vkCmdBindVertexBuffers2EXT(cmdBuffer, 0, params->bindingCount, buffers, offsets,
                                                nullptr, strides);
                     break;
@@ -325,9 +312,8 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                 {
                     const BufferBarrierParams *params =
                         getParamPtr<BufferBarrierParams>(currentCommand);
-                    vkCmdPipelineBarrier(cmdBuffer, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-                                         VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, 0, 0, nullptr, 1,
-                                         &params->bufferMemoryBarrier, 0, nullptr);
+                    vkCmdPipelineBarrier(cmdBuffer, params->srcStageMask, params->dstStageMask, 0,
+                                         0, nullptr, 1, &params->bufferMemoryBarrier, 0, nullptr);
                     break;
                 }
                 case CommandID::ClearAttachments:
@@ -335,7 +321,7 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                     const ClearAttachmentsParams *params =
                         getParamPtr<ClearAttachmentsParams>(currentCommand);
                     const VkClearAttachment *attachments =
-                        GetFirstArrayParameter<VkClearAttachment>(params);
+                        Offset<VkClearAttachment>(params, sizeof(ClearAttachmentsParams));
                     vkCmdClearAttachments(cmdBuffer, params->attachmentCount, attachments, 1,
                                           &params->rect);
                     break;
@@ -359,7 +345,8 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                 case CommandID::CopyBuffer:
                 {
                     const CopyBufferParams *params = getParamPtr<CopyBufferParams>(currentCommand);
-                    const VkBufferCopy *regions    = GetFirstArrayParameter<VkBufferCopy>(params);
+                    const VkBufferCopy *regions =
+                        Offset<VkBufferCopy>(params, sizeof(CopyBufferParams));
                     vkCmdCopyBuffer(cmdBuffer, params->srcBuffer, params->destBuffer,
                                     params->regionCount, regions);
                     break;
@@ -494,7 +481,8 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                 {
                     const EndTransformFeedbackParams *params =
                         getParamPtr<EndTransformFeedbackParams>(currentCommand);
-                    const VkBuffer *counterBuffers = GetFirstArrayParameter<VkBuffer>(params);
+                    const VkBuffer *counterBuffers =
+                        Offset<VkBuffer>(params, sizeof(EndTransformFeedbackParams));
                     const VkDeviceSize *counterBufferOffsets =
                         reinterpret_cast<const VkDeviceSize *>(counterBuffers +
                                                                params->bufferCount);
@@ -521,7 +509,7 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                 {
                     const DebugUtilsLabelParams *params =
                         getParamPtr<DebugUtilsLabelParams>(currentCommand);
-                    const char *pLabelName           = GetFirstArrayParameter<char>(params);
+                    const char *pLabelName = Offset<char>(params, sizeof(DebugUtilsLabelParams));
                     const VkDebugUtilsLabelEXT label = {
                         VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT,
                         nullptr,
@@ -541,7 +529,9 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                 }
                 case CommandID::NextSubpass:
                 {
-                    vkCmdNextSubpass(cmdBuffer, VK_SUBPASS_CONTENTS_INLINE);
+                    const NextSubpassParams *params =
+                        getParamPtr<NextSubpassParams>(currentCommand);
+                    vkCmdNextSubpass(cmdBuffer, params->subpassContents);
                     break;
                 }
                 case CommandID::PipelineBarrier:
@@ -549,21 +539,25 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                     const PipelineBarrierParams *params =
                         getParamPtr<PipelineBarrierParams>(currentCommand);
                     const VkMemoryBarrier *memoryBarriers =
-                        GetFirstArrayParameter<VkMemoryBarrier>(params);
-                    const VkImageMemoryBarrier *imageMemoryBarriers =
-                        GetNextArrayParameter<VkImageMemoryBarrier>(memoryBarriers,
-                                                                    params->memoryBarrierCount);
+                        Offset<VkMemoryBarrier>(params, sizeof(PipelineBarrierParams));
+                    const VkBufferMemoryBarrier *bufferMemoryBarriers =
+                        Offset<VkBufferMemoryBarrier>(
+                            memoryBarriers, params->memoryBarrierCount * sizeof(VkMemoryBarrier));
+                    const VkImageMemoryBarrier *imageMemoryBarriers = Offset<VkImageMemoryBarrier>(
+                        bufferMemoryBarriers,
+                        params->bufferMemoryBarrierCount * sizeof(VkBufferMemoryBarrier));
                     vkCmdPipelineBarrier(cmdBuffer, params->srcStageMask, params->dstStageMask,
                                          params->dependencyFlags, params->memoryBarrierCount,
-                                         memoryBarriers, 0, nullptr,
-                                         params->imageMemoryBarrierCount, imageMemoryBarriers);
+                                         memoryBarriers, params->bufferMemoryBarrierCount,
+                                         bufferMemoryBarriers, params->imageMemoryBarrierCount,
+                                         imageMemoryBarriers);
                     break;
                 }
                 case CommandID::PushConstants:
                 {
                     const PushConstantsParams *params =
                         getParamPtr<PushConstantsParams>(currentCommand);
-                    const void *data = GetFirstArrayParameter<void>(params);
+                    const void *data = Offset<void>(params, sizeof(PushConstantsParams));
                     vkCmdPushConstants(cmdBuffer, params->layout, params->flag, params->offset,
                                        params->size, data);
                     break;
@@ -757,15 +751,19 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                 case CommandID::WaitEvents:
                 {
                     const WaitEventsParams *params = getParamPtr<WaitEventsParams>(currentCommand);
-                    const VkEvent *events          = GetFirstArrayParameter<VkEvent>(params);
+                    const VkEvent *events = Offset<VkEvent>(params, sizeof(WaitEventsParams));
                     const VkMemoryBarrier *memoryBarriers =
-                        GetNextArrayParameter<VkMemoryBarrier>(events, params->eventCount);
-                    const VkImageMemoryBarrier *imageMemoryBarriers =
-                        GetNextArrayParameter<VkImageMemoryBarrier>(memoryBarriers,
-                                                                    params->memoryBarrierCount);
+                        Offset<VkMemoryBarrier>(events, params->eventCount * sizeof(VkEvent));
+                    const VkBufferMemoryBarrier *bufferMemoryBarriers =
+                        Offset<VkBufferMemoryBarrier>(
+                            memoryBarriers, params->memoryBarrierCount * sizeof(VkMemoryBarrier));
+                    const VkImageMemoryBarrier *imageMemoryBarriers = Offset<VkImageMemoryBarrier>(
+                        bufferMemoryBarriers,
+                        params->bufferMemoryBarrierCount * sizeof(VkBufferMemoryBarrier));
                     vkCmdWaitEvents(cmdBuffer, params->eventCount, events, params->srcStageMask,
                                     params->dstStageMask, params->memoryBarrierCount,
-                                    memoryBarriers, 0, nullptr, params->imageMemoryBarrierCount,
+                                    memoryBarriers, params->bufferMemoryBarrierCount,
+                                    bufferMemoryBarriers, params->imageMemoryBarrierCount,
                                     imageMemoryBarriers);
                     break;
                 }
@@ -773,8 +771,8 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                 {
                     const WriteTimestampParams *params =
                         getParamPtr<WriteTimestampParams>(currentCommand);
-                    vkCmdWriteTimestamp(cmdBuffer, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
-                                        params->queryPool, params->query);
+                    vkCmdWriteTimestamp(cmdBuffer, params->pipelineStage, params->queryPool,
+                                        params->query);
                     break;
                 }
                 default:
