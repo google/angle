@@ -378,6 +378,7 @@ enum class Feature
     UseDepthWriteEnableDynamicState,
     UseFrontFaceDynamicState,
     UseInstancedPointSpriteEmulation,
+    UseIntermediateTextureForGenerateMipmap,
     UseMultipleDescriptorsForExternalFormats,
     UseNonZeroStencilWriteMaskStaticState,
     UsePrimitiveRestartEnableDynamicState,
