@@ -8596,17 +8596,31 @@ angle::Result ContextVk::onResourceAccess(const vk::CommandBufferAccess &access)
         mOutsideRenderPassCommands->retainResource(imageAccess.image);
     }
 
-    for (const vk::CommandBufferImageWrite &imageWrite : access.getWriteImages())
+    for (const vk::CommandBufferImageSubresourceAccess &imageReadAccess :
+         access.getReadImageSubresources())
     {
-        ASSERT(!isRenderPassStartedAndUsesImage(*imageWrite.access.image));
+        vk::ImageHelper *image = imageReadAccess.access.image;
+        ASSERT(!isRenderPassStartedAndUsesImage(*image));
 
-        imageWrite.access.image->recordWriteBarrier(this, imageWrite.access.aspectFlags,
-                                                    imageWrite.access.imageLayout,
-                                                    mOutsideRenderPassCommands);
-        mOutsideRenderPassCommands->retainResource(imageWrite.access.image);
-        imageWrite.access.image->onWrite(imageWrite.levelStart, imageWrite.levelCount,
-                                         imageWrite.layerStart, imageWrite.layerCount,
-                                         imageWrite.access.aspectFlags);
+        image->recordReadSubresourceBarrier(
+            this, imageReadAccess.access.aspectFlags, imageReadAccess.access.imageLayout,
+            imageReadAccess.levelStart, imageReadAccess.levelCount, imageReadAccess.layerStart,
+            imageReadAccess.layerCount, mOutsideRenderPassCommands);
+        mOutsideRenderPassCommands->retainResource(image);
+    }
+
+    for (const vk::CommandBufferImageSubresourceAccess &imageWrite : access.getWriteImages())
+    {
+        vk::ImageHelper *image = imageWrite.access.image;
+        ASSERT(!isRenderPassStartedAndUsesImage(*image));
+
+        image->recordWriteBarrier(this, imageWrite.access.aspectFlags,
+                                  imageWrite.access.imageLayout, imageWrite.levelStart,
+                                  imageWrite.levelCount, imageWrite.layerStart,
+                                  imageWrite.layerCount, mOutsideRenderPassCommands);
+        mOutsideRenderPassCommands->retainResource(image);
+        image->onWrite(imageWrite.levelStart, imageWrite.levelCount, imageWrite.layerStart,
+                       imageWrite.layerCount, imageWrite.access.aspectFlags);
     }
 
     for (const vk::CommandBufferBufferAccess &bufferAccess : access.getReadBuffers())
@@ -8663,8 +8677,20 @@ angle::Result ContextVk::flushCommandBuffersIfNecessary(const vk::CommandBufferA
         }
     }
 
+    // In cases where the image has both read and write permissions, the render pass should be
+    // closed if there is a read from a previously written subresource (in a specific level/layer),
+    // or a write to a previously read one.
+    for (const vk::CommandBufferImageSubresourceAccess &imageSubresourceAccess :
+         access.getReadImageSubresources())
+    {
+        if (isRenderPassStartedAndUsesImage(*imageSubresourceAccess.access.image))
+        {
+            return flushCommandsAndEndRenderPass(RenderPassClosureReason::ImageUseThenOutOfRPRead);
+        }
+    }
+
     // Write images only need to close the render pass if they need a layout transition.
-    for (const vk::CommandBufferImageWrite &imageWrite : access.getWriteImages())
+    for (const vk::CommandBufferImageSubresourceAccess &imageWrite : access.getWriteImages())
     {
         if (isRenderPassStartedAndUsesImage(*imageWrite.access.image))
         {

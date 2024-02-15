@@ -1035,6 +1035,15 @@ gl::TexLevelMask AggregateSkipLevels(const gl::CubeFaceArray<gl::TexLevelMask> &
     }
     return skipLevelsAllFaces;
 }
+
+// Get layer mask for a particular image level.
+ImageLayerWriteMask GetImageLayerWriteMask(uint32_t layerStart, uint32_t layerCount)
+{
+    ImageLayerWriteMask layerMask = angle::BitMask<uint64_t>(layerCount);
+    uint32_t rotateShift          = layerStart % kMaxParallelLayerWrites;
+    layerMask = (layerMask << rotateShift) | (layerMask >> (kMaxParallelLayerWrites - rotateShift));
+    return layerMask;
+}
 }  // anonymous namespace
 
 // This is an arbitrary max. We can change this later if necessary.
@@ -1654,8 +1663,10 @@ void CommandBufferHelperCommon::imageWriteImpl(ContextVk *contextVk,
                                                ImageHelper *image)
 {
     image->onWrite(level, 1, layerStart, layerCount, aspectFlags);
-    // Write always requires a barrier
-    updateImageLayoutAndBarrier(contextVk, image, aspectFlags, imageLayout);
+    if (image->isWriteBarrierNecessary(imageLayout, level, 1, layerStart, layerCount))
+    {
+        updateImageLayoutAndBarrier(contextVk, image, aspectFlags, imageLayout);
+    }
 }
 
 void CommandBufferHelperCommon::updateImageLayoutAndBarrier(Context *context,
@@ -6580,6 +6591,65 @@ bool ImageHelper::isReadBarrierNecessary(ImageLayout newLayout) const
     return HasResourceWriteAccess(layoutData.type);
 }
 
+bool ImageHelper::isReadSubresourceBarrierNecessary(ImageLayout newLayout,
+                                                    gl::LevelIndex levelStart,
+                                                    uint32_t levelCount,
+                                                    uint32_t layerStart,
+                                                    uint32_t layerCount) const
+{
+    // In case an image has both read and write permissions, the written subresources since the last
+    // barrier should be checked to avoid RAW and WAR hazards. However, if a layout change is
+    // necessary regardless, there is no need to check the written subresources.
+    if (mCurrentLayout != newLayout)
+    {
+        return true;
+    }
+
+    ImageLayerWriteMask layerMask = GetImageLayerWriteMask(layerStart, layerCount);
+    for (uint32_t levelOffset = 0; levelOffset < levelCount; levelOffset++)
+    {
+        uint32_t level = levelStart.get() + levelOffset;
+        if (areLevelSubresourcesWrittenWithinMaskRange(level, layerMask))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool ImageHelper::isWriteBarrierNecessary(ImageLayout newLayout,
+                                          gl::LevelIndex levelStart,
+                                          uint32_t levelCount,
+                                          uint32_t layerStart,
+                                          uint32_t layerCount) const
+{
+    // If transitioning to a different layout, we need always need a barrier.
+    if (mCurrentLayout != newLayout)
+    {
+        return true;
+    }
+
+    if (layerCount >= kMaxParallelLayerWrites)
+    {
+        return true;
+    }
+
+    // If we are writing to the same parts of the image (level/layer), we need a barrier. Otherwise,
+    // it can be done in parallel.
+    ImageLayerWriteMask layerMask = GetImageLayerWriteMask(layerStart, layerCount);
+    for (uint32_t levelOffset = 0; levelOffset < levelCount; levelOffset++)
+    {
+        uint32_t level = levelStart.get() + levelOffset;
+        if (areLevelSubresourcesWrittenWithinMaskRange(level, layerMask))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 void ImageHelper::changeLayoutAndQueue(Context *context,
                                        VkImageAspectFlags aspectMask,
                                        ImageLayout newLayout,
@@ -6740,6 +6810,7 @@ void ImageHelper::barrierImpl(Context *context,
 
     mCurrentLayout           = newLayout;
     mCurrentQueueFamilyIndex = newQueueFamilyIndex;
+    resetSubresourcesWrittenSinceBarrier();
 }
 
 template void ImageHelper::barrierImpl<priv::CommandBuffer>(
@@ -6750,19 +6821,84 @@ template void ImageHelper::barrierImpl<priv::CommandBuffer>(
     priv::CommandBuffer *commandBuffer,
     VkSemaphore *acquireNextImageSemaphoreOut);
 
+void ImageHelper::setSubresourcesWrittenSinceBarrier(gl::LevelIndex levelStart,
+                                                     uint32_t levelCount,
+                                                     uint32_t layerStart,
+                                                     uint32_t layerCount)
+{
+    for (uint32_t levelOffset = 0; levelOffset < levelCount; levelOffset++)
+    {
+        uint32_t level = levelStart.get() + levelOffset;
+        if (layerCount >= kMaxParallelLayerWrites)
+        {
+            mSubresourcesWrittenSinceBarrier[level].set();
+        }
+        else
+        {
+            ImageLayerWriteMask layerMask = GetImageLayerWriteMask(layerStart, layerCount);
+            mSubresourcesWrittenSinceBarrier[level] |= layerMask;
+        }
+    }
+}
+
+void ImageHelper::resetSubresourcesWrittenSinceBarrier()
+{
+    for (auto &layerWriteMask : mSubresourcesWrittenSinceBarrier)
+    {
+        layerWriteMask.reset();
+    }
+}
+
 void ImageHelper::recordWriteBarrier(Context *context,
                                      VkImageAspectFlags aspectMask,
                                      ImageLayout newLayout,
+                                     gl::LevelIndex levelStart,
+                                     uint32_t levelCount,
+                                     uint32_t layerStart,
+                                     uint32_t layerCount,
                                      OutsideRenderPassCommandBufferHelper *commands)
 {
-    VkSemaphore acquireNextImageSemaphore;
-    barrierImpl(context, aspectMask, newLayout, context->getRenderer()->getQueueFamilyIndex(),
-                &commands->getCommandBuffer(), &acquireNextImageSemaphore);
-
-    if (acquireNextImageSemaphore != VK_NULL_HANDLE)
+    if (isWriteBarrierNecessary(newLayout, levelStart, levelCount, layerStart, layerCount))
     {
-        commands->setAcquireNextImageSemaphore(acquireNextImageSemaphore);
+        VkSemaphore acquireNextImageSemaphore;
+        barrierImpl(context, aspectMask, newLayout, context->getRenderer()->getQueueFamilyIndex(),
+                    &commands->getCommandBuffer(), &acquireNextImageSemaphore);
+
+        if (acquireNextImageSemaphore != VK_NULL_HANDLE)
+        {
+            commands->setAcquireNextImageSemaphore(acquireNextImageSemaphore);
+        }
     }
+
+    setSubresourcesWrittenSinceBarrier(levelStart, levelCount, layerStart, layerCount);
+}
+
+void ImageHelper::recordReadSubresourceBarrier(Context *context,
+                                               VkImageAspectFlags aspectMask,
+                                               ImageLayout newLayout,
+                                               gl::LevelIndex levelStart,
+                                               uint32_t levelCount,
+                                               uint32_t layerStart,
+                                               uint32_t layerCount,
+                                               OutsideRenderPassCommandBufferHelper *commands)
+{
+    // This barrier is used for an image with both read/write permissions, including during mipmap
+    // generation and self-copy.
+    if (isReadSubresourceBarrierNecessary(newLayout, levelStart, levelCount, layerStart,
+                                          layerCount))
+    {
+        VkSemaphore acquireNextImageSemaphore;
+        barrierImpl(context, aspectMask, newLayout, context->getRenderer()->getQueueFamilyIndex(),
+                    &commands->getCommandBuffer(), &acquireNextImageSemaphore);
+
+        if (acquireNextImageSemaphore != VK_NULL_HANDLE)
+        {
+            commands->setAcquireNextImageSemaphore(acquireNextImageSemaphore);
+        }
+    }
+
+    // Levels/layers being read from are also registered to avoid RAW and WAR hazards.
+    setSubresourcesWrittenSinceBarrier(levelStart, levelCount, layerStart, layerCount);
 }
 
 void ImageHelper::recordReadBarrier(Context *context,
@@ -7091,7 +7227,9 @@ angle::Result ImageHelper::CopyImageSubData(const gl::Context *context,
         CommandBufferAccess access;
         if (srcImage == dstImage)
         {
-            access.onImageSelfCopy(dstLevelGL, 1, region.dstSubresource.baseArrayLayer,
+            access.onImageSelfCopy(srcLevelGL, 1, region.srcSubresource.baseArrayLayer,
+                                   region.srcSubresource.layerCount, dstLevelGL, 1,
+                                   region.dstSubresource.baseArrayLayer,
                                    region.dstSubresource.layerCount, aspectFlags, srcImage);
         }
         else
@@ -8797,15 +8935,6 @@ angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
                                                   const gl::TexLevelMask &skipLevelsAllFaces)
 {
     RendererVk *renderer = contextVk->getRenderer();
-    // For each level, upload layers that don't conflict in parallel.  The layer is hashed to
-    // `layer % 64` and used to track whether that subresource is currently in transfer.  If so, a
-    // barrier is inserted.  If mLayerCount > 64, there will be a few unnecessary barriers.
-    //
-    // Note: when a barrier is necessary when uploading updates to a level, we could instead move to
-    // the next level and continue uploads in parallel.  Once all levels need a barrier, a single
-    // barrier can be issued and we could continue with the rest of the updates from the first
-    // level.
-    constexpr uint32_t kMaxParallelSubresourceUpload = 64;
 
     const angle::FormatID &actualformat   = getActualFormatID();
     const angle::FormatID &intendedFormat = getIntendedFormatID();
@@ -8842,9 +8971,6 @@ angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
         std::vector<SubresourceUpdate> *levelUpdates = getLevelUpdates(updateMipLevelGL);
         std::vector<SubresourceUpdate> updatesToKeep;
         ASSERT(levelUpdates != nullptr);
-
-        // Hash map of uploads in progress.  See comment on kMaxParallelSubresourceUpload.
-        uint64_t subresourceUploadsInProgress = 0;
 
         for (SubresourceUpdate &update : *levelUpdates)
         {
@@ -8920,35 +9046,34 @@ angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
                 }
             }
 
-            // In case of multiple layer updates within the same level, a barrier might be needed if
-            // there are multiple updates in the same parts of the image.
-            if (updateLayerCount >= kMaxParallelSubresourceUpload)
+            // When a barrier is necessary when uploading updates to a level, we could instead move
+            // to the next level and continue uploads in parallel.  Once all levels need a barrier,
+            // a single barrier can be issued and we could continue with the rest of the updates
+            // from the first level. In case of multiple layer updates within the same level, a
+            // barrier might be needed if there are multiple updates in the same parts of the image.
+            ImageLayout barrierLayout =
+                transCoding ? ImageLayout::TransferDstAndComputeWrite : ImageLayout::TransferDst;
+            if (updateLayerCount >= kMaxParallelLayerWrites)
             {
                 // If there are more subresources than bits we can track, always insert a barrier.
-                recordWriteBarrier(contextVk, aspectFlags,
-                                   transCoding ? ImageLayout::TransferDstAndComputeWrite
-                                               : ImageLayout::TransferDst,
-                                   commandBuffer);
-                subresourceUploadsInProgress = std::numeric_limits<uint64_t>::max();
+                recordWriteBarrier(contextVk, aspectFlags, barrierLayout, updateMipLevelGL, 1,
+                                   updateBaseLayer, updateLayerCount, commandBuffer);
+                mSubresourcesWrittenSinceBarrier[updateMipLevelGL.get()].set();
             }
             else
             {
-                const uint64_t subresourceHashRange = angle::BitMask<uint64_t>(updateLayerCount);
-                const uint32_t subresourceHashOffset =
-                    updateBaseLayer % kMaxParallelSubresourceUpload;
-                const uint64_t subresourceHash =
-                    ANGLE_ROTL64(subresourceHashRange, subresourceHashOffset);
+                ImageLayerWriteMask subresourceHash =
+                    GetImageLayerWriteMask(updateBaseLayer, updateLayerCount);
 
-                if ((subresourceUploadsInProgress & subresourceHash) != 0)
+                if (areLevelSubresourcesWrittenWithinMaskRange(updateMipLevelGL.get(),
+                                                               subresourceHash))
                 {
                     // If there's overlap in subresource upload, issue a barrier.
-                    recordWriteBarrier(contextVk, aspectFlags,
-                                       transCoding ? ImageLayout::TransferDstAndComputeWrite
-                                                   : ImageLayout::TransferDst,
-                                       commandBuffer);
-                    subresourceUploadsInProgress = 0;
+                    recordWriteBarrier(contextVk, aspectFlags, barrierLayout, updateMipLevelGL, 1,
+                                       updateBaseLayer, updateLayerCount, commandBuffer);
+                    mSubresourcesWrittenSinceBarrier[updateMipLevelGL.get()].reset();
                 }
-                subresourceUploadsInProgress |= subresourceHash;
+                mSubresourcesWrittenSinceBarrier[updateMipLevelGL.get()] |= subresourceHash;
             }
 
             // Add the necessary commands to the outside command buffer.
@@ -11475,6 +11600,20 @@ void CommandBufferAccess::onImageWrite(gl::LevelIndex levelStart,
     ASSERT(image->getImageSerial().valid());
     mWriteImages.emplace_back(CommandBufferImageAccess{image, aspectFlags, imageLayout}, levelStart,
                               levelCount, layerStart, layerCount);
+}
+
+void CommandBufferAccess::onImageReadSubresources(gl::LevelIndex levelStart,
+                                                  uint32_t levelCount,
+                                                  uint32_t layerStart,
+                                                  uint32_t layerCount,
+                                                  VkImageAspectFlags aspectFlags,
+                                                  ImageLayout imageLayout,
+                                                  ImageHelper *image)
+{
+    ASSERT(!image->isReleasedToExternal());
+    ASSERT(image->getImageSerial().valid());
+    mReadImageSubresources.emplace_back(CommandBufferImageAccess{image, aspectFlags, imageLayout},
+                                        levelStart, levelCount, layerStart, layerCount);
 }
 
 void CommandBufferAccess::onBufferExternalAcquireRelease(BufferHelper *buffer)
