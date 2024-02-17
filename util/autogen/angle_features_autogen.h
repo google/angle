@@ -175,7 +175,7 @@ enum class Feature
     ForceNearestMipFiltering,
     ForceNonCSBaseMipmapGeneration,
     ForceRobustResourceInit,
-    ForceSampleUsageForImageWithExternalFormat,
+    ForceSampleUsageForAhbBackedImages,
     ForceSubmitImmutableTextureUpdates,
     ForceTextureLodOffset1,
     ForceTextureLodOffset2,

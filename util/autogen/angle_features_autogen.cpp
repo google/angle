@@ -175,7 +175,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::ForceNearestMipFiltering, "forceNearestMipFiltering"},
     {Feature::ForceNonCSBaseMipmapGeneration, "forceNonCSBaseMipmapGeneration"},
     {Feature::ForceRobustResourceInit, "forceRobustResourceInit"},
-    {Feature::ForceSampleUsageForImageWithExternalFormat, "forceSampleUsageForImageWithExternalFormat"},
+    {Feature::ForceSampleUsageForAhbBackedImages, "forceSampleUsageForAhbBackedImages"},
     {Feature::ForceSubmitImmutableTextureUpdates, "forceSubmitImmutableTextureUpdates"},
     {Feature::ForceTextureLodOffset1, "forceTextureLodOffset1"},
     {Feature::ForceTextureLodOffset2, "forceTextureLodOffset2"},
