@@ -3483,12 +3483,13 @@ bool ValidateCreateImage(const ValidationContext *val,
                 break;
 
             case EGL_TEXTURE_INTERNAL_FORMAT_ANGLE:
-                if (!displayExtensions.imageD3D11Texture && !displayExtensions.vulkanImageANGLE)
+                if (!displayExtensions.imageD3D11Texture && !displayExtensions.vulkanImageANGLE &&
+                    !displayExtensions.mtlTextureClientBuffer)
                 {
-                    val->setError(
-                        EGL_BAD_PARAMETER,
-                        "EGL_TEXTURE_INTERNAL_FORMAT_ANGLE cannot be used without "
-                        "EGL_ANGLE_image_d3d11_texture or EGL_ANGLE_vulkan_image support.");
+                    val->setError(EGL_BAD_PARAMETER,
+                                  "EGL_TEXTURE_INTERNAL_FORMAT_ANGLE cannot be used without "
+                                  "EGL_ANGLE_image_d3d11_texture, EGL_ANGLE_vulkan_image, or "
+                                  "EGL_ANGLE_metal_texture_client_buffer support.");
                     return false;
                 }
                 break;
