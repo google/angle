@@ -325,6 +325,19 @@ bool AttachmentOverlapsWithTexture(const FramebufferAttachment &attachment,
     return attachmentLevel >= textureEffectiveBaseLevel && attachmentLevel <= textureMaxLevel;
 }
 
+constexpr ComponentType GetAttachmentComponentType(GLenum componentType)
+{
+    switch (componentType)
+    {
+        case GL_INT:
+            return ComponentType::Int;
+        case GL_UNSIGNED_INT:
+            return ComponentType::UnsignedInt;
+        default:
+            return ComponentType::Float;
+    }
+}
+
 }  // anonymous namespace
 
 bool FramebufferStatus::isComplete() const
@@ -1185,17 +1198,7 @@ ComponentType Framebuffer::getDrawbufferWriteType(size_t drawBuffer) const
         return ComponentType::NoType;
     }
 
-    GLenum componentType = attachment->getFormat().info->componentType;
-    switch (componentType)
-    {
-        case GL_INT:
-            return ComponentType::Int;
-        case GL_UNSIGNED_INT:
-            return ComponentType::UnsignedInt;
-
-        default:
-            return ComponentType::Float;
-    }
+    return GetAttachmentComponentType(attachment->getFormat().info->componentType);
 }
 
 ComponentTypeMask Framebuffer::getDrawBufferTypeMask() const
@@ -2275,13 +2278,19 @@ void Framebuffer::onSubjectStateChange(angle::SubjectIndex index, angle::Subject
     // Mark the appropriate init flag.
     mState.mResourceNeedsInit.set(index, attachment->initState() == InitState::MayNeedInit);
 
-    // Update mFloat32ColorAttachmentBits and mSharedExponentColorAttachmentBits cache
+    static_assert(DIRTY_BIT_COLOR_ATTACHMENT_MAX <= DIRTY_BIT_DEPTH_ATTACHMENT);
+    static_assert(DIRTY_BIT_COLOR_ATTACHMENT_MAX <= DIRTY_BIT_STENCIL_ATTACHMENT);
+
+    // Update component type mask, mFloat32ColorAttachmentBits,
+    // and mSharedExponentColorAttachmentBits cache
     if (index < DIRTY_BIT_COLOR_ATTACHMENT_MAX)
     {
-        ASSERT(index != DIRTY_BIT_DEPTH_ATTACHMENT);
-        ASSERT(index != DIRTY_BIT_STENCIL_ATTACHMENT);
-        updateFloat32AndSharedExponentColorAttachmentBits(index - DIRTY_BIT_COLOR_ATTACHMENT_0,
-                                                          attachment->getFormat().info);
+        const size_t colorIndex = index - DIRTY_BIT_COLOR_ATTACHMENT_0;
+        ASSERT(colorIndex < mState.mColorAttachments.size());
+        SetComponentTypeMask(
+            GetAttachmentComponentType(attachment->getFormat().info->componentType), colorIndex,
+            &mState.mDrawBufferTypeMask);
+        updateFloat32AndSharedExponentColorAttachmentBits(colorIndex, attachment->getFormat().info);
     }
 }
 
