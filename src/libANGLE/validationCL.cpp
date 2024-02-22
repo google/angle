@@ -750,6 +750,11 @@ cl_int ValidateCreateContextFromType(const cl_context_properties *properties,
         return CL_INVALID_DEVICE_TYPE;
     }
 
+    if (!platform->hasDeviceType(device_type))
+    {
+        return CL_DEVICE_NOT_FOUND;
+    }
+
     // CL_INVALID_VALUE if pfn_notify is NULL but user_data is not NULL.
     if (pfn_notify == nullptr && user_data != nullptr)
     {

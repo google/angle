@@ -46,6 +46,8 @@ class Platform final : public _cl_platform_id, public Object
                                cl_device_id *devices,
                                cl_uint *numDevices) const;
 
+    bool hasDeviceType(DeviceType) const;
+
     static cl_context CreateContext(const cl_context_properties *properties,
                                     cl_uint numDevices,
                                     const cl_device_id *devices,

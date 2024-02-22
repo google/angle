@@ -211,6 +211,18 @@ angle::Result Platform::getDeviceIDs(DeviceType deviceType,
     return angle::Result::Continue;
 }
 
+bool Platform::hasDeviceType(DeviceType deviceType) const
+{
+    for (const DevicePtr &device : mDevices)
+    {
+        if (IsDeviceTypeMatch(deviceType, device->getInfo().type))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 cl_context Platform::CreateContext(const cl_context_properties *properties,
                                    cl_uint numDevices,
                                    const cl_device_id *devices,
