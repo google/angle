@@ -451,6 +451,11 @@ angle::Result Context11::drawArraysIndirect(const gl::Context *context,
         const gl::DrawArraysIndirectCommand *cmd = nullptr;
         ANGLE_TRY(ReadbackIndirectBuffer(context, indirect, &cmd));
 
+        if (cmd->count == 0)
+        {
+            return angle::Result::Continue;
+        }
+
         ANGLE_TRY(mRenderer->getStateManager()->updateState(
             context, mode, cmd->first, cmd->count, gl::DrawElementsType::InvalidEnum, nullptr,
             cmd->instanceCount, 0, 0, true));
@@ -475,6 +480,11 @@ angle::Result Context11::drawElementsIndirect(const gl::Context *context,
     {
         const gl::DrawElementsIndirectCommand *cmd = nullptr;
         ANGLE_TRY(ReadbackIndirectBuffer(context, indirect, &cmd));
+
+        if (cmd->count == 0)
+        {
+            return angle::Result::Continue;
+        }
 
         const GLuint typeBytes = gl::GetDrawElementsTypeSize(type);
         const void *indices =
