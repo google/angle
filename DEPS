@@ -43,7 +43,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': 'cc824ffe820c4b6c1f1047494cf242d955de9629',
+  'chromium_revision': 'b54ff9b1d5ede0814c68585f6c9f63f6ec11d73e',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -88,7 +88,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': '49366de7c275c07ebd85ed5517b0231b4b7e8923',
+  'catapult_revision': '189b13f92ef8ce7f9b40ba1ac992482c7df7fcf6',
 
   # the commit queue can handle CLs rolling Fuchsia sdk
   # and whatever else without interference from each other.
@@ -130,7 +130,7 @@ vars = {
   # reclient CIPD package
   'reclient_package': 'infra/rbe/client/',
   # reclient CIPD package version
-  'reclient_version': 're_client_version:0.131.1.784ddbb-gomaip',
+  'reclient_version': 're_client_version:0.132.0.1a8ff94-gomaip',
 
   # siso CIPD package version.
   'siso_version': 'git_revision:b52a6552a2e17e34b747fd5d29875fc4aba99da8',
@@ -410,7 +410,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': Var('chromium_git') + '/chromium/src/build.git@429da13a62cbb697fa8148d8e78587053440c857',
+    'url': Var('chromium_git') + '/chromium/src/build.git@e36f984f6f6b87b2740cef9207fcc8f7159a955d',
     'condition': 'not build_with_chromium',
   },
 
@@ -469,12 +469,12 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@37ce1e68ac96de8d74318b3c57f998d778fba98b',
+    'url': '{chromium_git}/chromium/src/testing@87bad53b08ae5292054b8a4e99b27d7c01696c65',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/abseil-cpp': {
-    'url': Var('chromium_git') + '/chromium/src/third_party/abseil-cpp@60df7b9cbdc788a214acecb074391d295c1cb4a9',
+    'url': Var('chromium_git') + '/chromium/src/third_party/abseil-cpp@db06f03d99a04018c19c1e1fd24366bcf5489d62',
     'condition': 'not build_with_chromium',
   },
 
@@ -520,7 +520,7 @@ deps = {
       'packages': [
           {
                'package': 'chromium/third_party/android_build_tools/lint',
-               'version': 'h9svnJ7PVwpadvxWMqfDD9NPFiJ4mbLravLcmBYueXgC',
+               'version': 'H3namO3zonlUj075eXGd_my1zHGpGDoXubhIWd9CG0EC',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -651,7 +651,7 @@ deps = {
   },
 
   'third_party/depot_tools': {
-    'url': Var('chromium_git') + '/chromium/tools/depot_tools.git@03821aea695619e2b428c9979ac118eff29bcf4e',
+    'url': Var('chromium_git') + '/chromium/tools/depot_tools.git@9d64acedead8bf69b1eee2645a18f8fd47a1100d',
     'condition': 'not build_with_chromium',
   },
 
@@ -862,7 +862,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/r8',
-              'version': 'azPjCe4AE6NDDqbEeSVqaz9YXQeKrH1tA3GyZ4TTRMYC',
+              'version': 'ArRcmPYQPKnDIwdwwIr6T8QKNoFb-sQoKac2acxErbsC',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -944,7 +944,7 @@ deps = {
   },
 
   'third_party/zlib': {
-    'url': Var('chromium_git') + '/chromium/src/third_party/zlib@03c356e4c106e4e6850edaae29be45290a2cb36c',
+    'url': Var('chromium_git') + '/chromium/src/third_party/zlib@74a1c5030338acadbbfb32609774a974be89007f',
     'condition': 'not build_with_chromium',
   },
 
@@ -954,7 +954,7 @@ deps = {
   },
 
   'tools/clang': {
-    'url': Var('chromium_git') + '/chromium/src/tools/clang.git@4ec280bb4d94e76222ef6d2dbf121b22d6d47128',
+    'url': Var('chromium_git') + '/chromium/src/tools/clang.git@acd6cf57ac077a27e3eba00cf724a630bf613b99',
     'condition': 'not build_with_chromium',
   },
 
@@ -1000,7 +1000,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': Var('chromium_git') + '/chromium/src/tools/perf@610cbbc2e175e28f933b8445a4f9362881ca25bd',
+    'url': Var('chromium_git') + '/chromium/src/tools/perf@1552db09d2585088bfbe83eb9251b89ef0a35451',
     'condition': 'not build_with_chromium',
   },
 
