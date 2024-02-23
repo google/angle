@@ -721,7 +721,7 @@ deps = {
   # We use the upstream/main branch.
   'third_party/libdrm': {
     'url': Var('chromium_git') + '/chromiumos/third_party/libdrm@474894ed17a037a464e5bd845a0765a50f647898',
-    'condition': 'checkout_angle_mesa',
+    'condition': 'checkout_angle_mesa or not build_with_chromium',
   },
 
   # libjpeg_turbo is used by glmark2.
