@@ -3693,7 +3693,7 @@ std::string RendererVk::getVersionString(bool includeFullVersion) const
         else if (mPhysicalDeviceProperties.vendorID == VENDOR_ID_INTEL && IsWindows())
         {
             strstr << ANGLE_VK_VERSION_MAJOR_WIN_INTEL(driverVersion) << ".";
-            strstr << ANGLE_VK_VERSION_MAJOR_WIN_INTEL(driverVersion) << ".";
+            strstr << ANGLE_VK_VERSION_MINOR_WIN_INTEL(driverVersion);
         }
         // All other drivers use the Vulkan standard
         else
