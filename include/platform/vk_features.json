@@ -1008,6 +1008,14 @@
             "issue": "http://anglebug.com/7172"
         },
         {
+            "name": "supports_foveated_rendering",
+            "category": "Features",
+            "description": [
+                "Use VK_KHR_fragment_shading_rate extension to implement QCOM foveated rendering extensions"
+            ],
+            "issue": "http://anglebug.com/8484"
+        },
+        {
             "name": "supports_fragment_shader_pixel_interlock",
             "category": "Features",
             "description": [

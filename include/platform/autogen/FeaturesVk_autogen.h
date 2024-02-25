@@ -931,6 +931,13 @@ struct FeaturesVk : FeatureSetBase
         &members, "http://anglebug.com/7172"
     };
 
+    FeatureInfo supportsFoveatedRendering = {
+        "supportsFoveatedRendering",
+        FeatureCategory::VulkanFeatures,
+        "Use VK_KHR_fragment_shading_rate extension to implement QCOM foveated rendering extensions",
+        &members, "http://anglebug.com/8484"
+    };
+
     FeatureInfo supportsFragmentShaderPixelInterlock = {
         "supportsFragmentShaderPixelInterlock",
         FeatureCategory::VulkanFeatures,
