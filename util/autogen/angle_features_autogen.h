@@ -297,6 +297,7 @@ enum class Feature
     SupportsExternalSemaphoreFd,
     SupportsExternalSemaphoreFuchsia,
     SupportsFormatFeatureFlags2,
+    SupportsFoveatedRendering,
     SupportsFragmentShaderInterlockARB,
     SupportsFragmentShaderInterlockNV,
     SupportsFragmentShaderOrderingINTEL,
