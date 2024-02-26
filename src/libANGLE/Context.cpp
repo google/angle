@@ -4246,6 +4246,11 @@ void Context::initCaps()
         INFO() << "Limiting GL_MAX_SAMPLES to " << maxSamples;
         ANGLE_LIMIT_CAP(caps->maxSamples, maxSamples);
 
+        // Pixel 4/5 only supports GL_MAX_VERTEX_UNIFORM_VECTORS of 256
+        constexpr GLint maxVertexUniformVectors = 256;
+        INFO() << "Limiting GL_MAX_VERTEX_UNIFORM_VECTORS to " << maxVertexUniformVectors;
+        ANGLE_LIMIT_CAP(caps->maxVertexUniformVectors, maxVertexUniformVectors);
+
         // Test if we require shadow memory for coherent buffer tracking
         getShareGroup()->getFrameCaptureShared()->determineMemoryProtectionSupport(this);
     }
