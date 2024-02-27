@@ -1430,6 +1430,16 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         addExtensionPrerequisite("GL_EXT_texture_cube_map_array");
     }
 
+    if (traceNameIs("pokemon_masters_ex"))
+    {
+        if (isIntelLinux)
+        {
+            skipTest(
+                "https://issuetracker.google.com/u/2/issues/326199738#comment3 Renders incorrectly "
+                "on Intel Linux");
+        }
+    }
+
     if (traceNameIs("aztec_ruins_high"))
     {
         addExtensionPrerequisite("GL_KHR_texture_compression_astc_ldr");
