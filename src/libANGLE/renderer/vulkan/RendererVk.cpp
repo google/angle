@@ -1333,41 +1333,28 @@ constexpr char kEnableDebugMarkersPropertyName[] = "debug.angle.markers";
 
 ANGLE_INLINE gl::ShadingRate GetShadingRateFromVkExtent(const VkExtent2D &extent)
 {
-    if (extent.width == 1)
+    if (extent.width == 1 && extent.height == 2)
     {
-        if (extent.height == 1)
-        {
-            return gl::ShadingRate::_1x1;
-        }
-        else if (extent.height == 2)
-        {
-            return gl::ShadingRate::_1x2;
-        }
+        return gl::ShadingRate::_1x2;
     }
-    else if (extent.width == 2)
+    else if (extent.width == 2 && extent.height == 1)
     {
-        if (extent.height == 1)
-        {
-            return gl::ShadingRate::_2x1;
-        }
-        else if (extent.height == 2)
-        {
-            return gl::ShadingRate::_2x2;
-        }
+        return gl::ShadingRate::_2x1;
     }
-    else if (extent.width == 4)
+    else if (extent.width == 2 && extent.height == 2)
     {
-        if (extent.height == 2)
-        {
-            return gl::ShadingRate::_4x2;
-        }
-        else if (extent.height == 4)
-        {
-            return gl::ShadingRate::_4x4;
-        }
+        return gl::ShadingRate::_2x2;
+    }
+    else if (extent.width == 4 && extent.height == 2)
+    {
+        return gl::ShadingRate::_4x2;
+    }
+    else if (extent.width == 4 && extent.height == 4)
+    {
+        return gl::ShadingRate::_4x4;
     }
 
-    return gl::ShadingRate::Undefined;
+    return gl::ShadingRate::_1x1;
 }
 }  // namespace
 
@@ -2271,7 +2258,6 @@ void RendererVk::appendDeviceExtensionFeaturesNotPromoted(
     if (ExtensionFound(VK_KHR_FRAGMENT_SHADING_RATE_EXTENSION_NAME, deviceExtensionNames))
     {
         vk::AddToPNextChain(deviceFeatures, &mFragmentShadingRateFeatures);
-        vk::AddToPNextChain(deviceProperties, &mFragmentShadingRateProperties);
     }
 
     if (ExtensionFound(VK_EXT_FRAGMENT_SHADER_INTERLOCK_EXTENSION_NAME, deviceExtensionNames))
@@ -2604,10 +2590,6 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mFragmentShadingRateFeatures = {};
     mFragmentShadingRateFeatures.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_FEATURES_KHR;
-
-    mFragmentShadingRateProperties = {};
-    mFragmentShadingRateProperties.sType =
-        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_PROPERTIES_KHR;
 
     mFragmentShaderInterlockFeatures = {};
     mFragmentShaderInterlockFeatures.sType =
@@ -3853,8 +3835,21 @@ uint32_t RendererVk::getDeviceVersion()
     return mDeviceVersion == 0 ? mInstanceVersion : mDeviceVersion;
 }
 
-void RendererVk::queryAndCacheFragmentShadingRates()
+bool RendererVk::canSupportFragmentShadingRate(const vk::ExtensionNameList &deviceExtensionNames)
 {
+    // VK_KHR_create_renderpass2 is required for VK_KHR_fragment_shading_rate
+    if (!mFeatures.supportsRenderpass2.enabled)
+    {
+        return false;
+    }
+
+    // Device needs to support VK_KHR_fragment_shading_rate and specifically
+    // pipeline fragment shading rate.
+    if (mFragmentShadingRateFeatures.pipelineFragmentShadingRate != VK_TRUE)
+    {
+        return false;
+    }
+
     // Init required functions
 #if !defined(ANGLE_SHARED_LIBVULKAN)
     InitFragmentShadingRateKHRInstanceFunction(mInstance);
@@ -3879,37 +3874,14 @@ void RendererVk::queryAndCacheFragmentShadingRates()
 
     // Cache supported fragment shading rates
     mSupportedFragmentShadingRates.reset();
-    mSupportedFragmentShadingRateSampleCounts.fill(0u);
     for (const VkPhysicalDeviceFragmentShadingRateKHR &shadingRate : shadingRates)
     {
         if (shadingRate.sampleCounts == 0)
         {
             continue;
         }
-        const gl::ShadingRate rate = GetShadingRateFromVkExtent(shadingRate.fragmentSize);
-        mSupportedFragmentShadingRates.set(rate);
-        ASSERT(shadingRate.sampleCounts < 256);
-        mSupportedFragmentShadingRateSampleCounts[rate] =
-            static_cast<uint8_t>(shadingRate.sampleCounts);
+        mSupportedFragmentShadingRates.set(GetShadingRateFromVkExtent(shadingRate.fragmentSize));
     }
-}
-
-bool RendererVk::canSupportFragmentShadingRate() const
-{
-    // VK_KHR_create_renderpass2 is required for VK_KHR_fragment_shading_rate
-    if (!mFeatures.supportsRenderpass2.enabled)
-    {
-        return false;
-    }
-
-    // Device needs to support VK_KHR_fragment_shading_rate and specifically
-    // pipeline fragment shading rate.
-    if (mFragmentShadingRateFeatures.pipelineFragmentShadingRate != VK_TRUE)
-    {
-        return false;
-    }
-
-    ASSERT(mSupportedFragmentShadingRates.any());
 
     // To implement GL_QCOM_shading_rate extension the Vulkan ICD needs to support at least the
     // following shading rates -
@@ -3921,36 +3893,6 @@ bool RendererVk::canSupportFragmentShadingRate() const
            mSupportedFragmentShadingRates.test(gl::ShadingRate::_1x2) &&
            mSupportedFragmentShadingRates.test(gl::ShadingRate::_2x1) &&
            mSupportedFragmentShadingRates.test(gl::ShadingRate::_2x2);
-}
-
-bool RendererVk::canSupportFoveatedRendering() const
-{
-    // Device needs to support attachment fragment shading rate.
-    if (mFragmentShadingRateFeatures.attachmentFragmentShadingRate != VK_TRUE)
-    {
-        return false;
-    }
-
-    ASSERT(mSupportedFragmentShadingRates.any());
-    ASSERT(!mSupportedFragmentShadingRateSampleCounts.empty());
-
-    // To implement QCOM foveated rendering extensions the Vulkan ICD needs to support all sample
-    // count bits listed in VkPhysicalDeviceLimits::framebufferColorSampleCounts for these shading
-    // rates -
-    //     {1, 1}
-    //     {1, 2}
-    //     {2, 1}
-    //     {2, 2}
-    uint8_t framebufferSampleCounts =
-        static_cast<uint8_t>(getPhysicalDeviceProperties().limits.framebufferColorSampleCounts);
-    return (mSupportedFragmentShadingRateSampleCounts[gl::ShadingRate::_1x1] &
-            framebufferSampleCounts) == framebufferSampleCounts &&
-           (mSupportedFragmentShadingRateSampleCounts[gl::ShadingRate::_1x2] &
-            framebufferSampleCounts) == framebufferSampleCounts &&
-           (mSupportedFragmentShadingRateSampleCounts[gl::ShadingRate::_2x1] &
-            framebufferSampleCounts) == framebufferSampleCounts &&
-           (mSupportedFragmentShadingRateSampleCounts[gl::ShadingRate::_2x2] &
-            framebufferSampleCounts) == framebufferSampleCounts;
 }
 
 bool RendererVk::canPreferDeviceLocalMemoryHostVisible(VkPhysicalDeviceType deviceType)
@@ -4725,21 +4667,9 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
             mExtendedDynamicState2Features.extendedDynamicState2LogicOp == VK_TRUE &&
             !(IsLinux() && isIntel && isMesaLessThan22_2) && !(IsAndroid() && isGalaxyS23));
 
-    if (ExtensionFound(VK_KHR_FRAGMENT_SHADING_RATE_EXTENSION_NAME, deviceExtensionNames))
-    {
-        queryAndCacheFragmentShadingRates();
-    }
-
     // Support GL_QCOM_shading_rate extension
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsFragmentShadingRate,
-                            canSupportFragmentShadingRate());
-
-    // Support QCOM foveated rendering extensions.
-    // Gated on imageless framebuffer to reduce code complexity
-    ANGLE_FEATURE_CONDITION(&mFeatures, supportsFoveatedRendering,
-                            mFeatures.supportsImagelessFramebuffer.enabled &&
-                                mFeatures.supportsFragmentShadingRate.enabled &&
-                                canSupportFoveatedRendering());
+                            canSupportFragmentShadingRate(deviceExtensionNames));
 
     // We can use the interlock to support GL_ANGLE_shader_pixel_local_storage_coherent.
     ANGLE_FEATURE_CONDITION(
