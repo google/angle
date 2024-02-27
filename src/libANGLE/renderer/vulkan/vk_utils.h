@@ -168,6 +168,10 @@ static constexpr PackedAttachmentIndex kAttachmentIndexZero    = PackedAttachmen
 template <typename VulkanStruct1, typename VulkanStruct2>
 void AddToPNextChain(VulkanStruct1 *chainStart, VulkanStruct2 *ptr)
 {
+    // Catch bugs where this function is called with `&pointer` instead of `pointer`.
+    static_assert(!std::is_pointer<VulkanStruct1>::value);
+    static_assert(!std::is_pointer<VulkanStruct2>::value);
+
     ASSERT(ptr->pNext == nullptr);
 
     VkBaseOutStructure *localPtr = reinterpret_cast<VkBaseOutStructure *>(chainStart);
@@ -179,6 +183,9 @@ void AddToPNextChain(VulkanStruct1 *chainStart, VulkanStruct2 *ptr)
 template <typename VulkanStruct1, typename VulkanStruct2>
 void AppendToPNextChain(VulkanStruct1 *chainStart, VulkanStruct2 *ptr)
 {
+    static_assert(!std::is_pointer<VulkanStruct1>::value);
+    static_assert(!std::is_pointer<VulkanStruct2>::value);
+
     if (!ptr)
     {
         return;
