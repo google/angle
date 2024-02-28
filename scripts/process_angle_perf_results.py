@@ -71,7 +71,7 @@ def _upload_perf_results(json_to_upload, name, configuration_name, build_propert
         '--buildername',
         build_properties['buildername'],
         '--buildnumber',
-        build_properties['buildnumber'],
+        str(build_properties['buildnumber']),
         '--name',
         name,
         '--configuration-name',
