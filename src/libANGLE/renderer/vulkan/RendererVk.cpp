@@ -137,6 +137,23 @@ bool IsQualcommOpenSource(uint32_t vendorId, uint32_t driverId, const char *devi
     return strstr(deviceName, "Venus") != nullptr || strstr(deviceName, "Turnip") != nullptr;
 }
 
+bool IsXclipse()
+{
+    if (!IsAndroid())
+    {
+        return false;
+    }
+
+    std::string modelName;
+    if (!angle::android::GetSystemProperty(angle::android::kModelSystemPropertyName, &modelName))
+    {
+        return 0;
+    }
+
+    // Improve this when more Xclipse devices are available
+    return strstr(modelName.c_str(), "SM-S901B") != nullptr;
+}
+
 bool StrLess(const char *a, const char *b)
 {
     return strcmp(a, b) < 0;
@@ -1606,10 +1623,11 @@ angle::Result RendererVk::enableInstanceExtensions(
 
     // TODO: Validation layer has a bug when vkGetPhysicalDeviceSurfaceFormats2KHR is called
     // on Mock ICD with surface handle set as VK_NULL_HANDLE. http://anglebug.com/7631
+    // b/267953710: VK_GOOGLE_surfaceless_query isn't working on some Samsung Xclipse builds
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsSurfacelessQueryExtension,
         ExtensionFound(VK_GOOGLE_SURFACELESS_QUERY_EXTENSION_NAME, instanceExtensionNames) &&
-            displayVk->isUsingSwapchain() && !isMockICDEnabled());
+            displayVk->isUsingSwapchain() && !isMockICDEnabled() && !IsXclipse());
 
     // VK_KHR_external_fence_capabilities and VK_KHR_extenral_semaphore_capabilities are promoted to
     // core in Vulkan 1.1

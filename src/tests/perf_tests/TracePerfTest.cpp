@@ -1676,6 +1676,18 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         addExtensionPrerequisite("GL_OES_EGL_image_external");
     }
 
+    if (IsGalaxyS22())
+    {
+        if (traceNameIs("cod_mobile") || traceNameIs("dota_underlords") ||
+            traceNameIs("marvel_snap") || traceNameIs("nier_reincarnation") ||
+            traceNameIs("pokemon_unite") || traceNameIs("slingshot_test1") ||
+            traceNameIs("slingshot_test2") || traceNameIs("supertuxkart") ||
+            traceNameIs("the_witcher_monster_slayer") || traceNameIs("warcraft_rumble"))
+        {
+            skipTest("https://issuetracker.google.com/267953710 Trace needs triage on Galaxy S22");
+        }
+    }
+
     // glDebugMessageControlKHR and glDebugMessageCallbackKHR crash on ARM GLES1.
     if (IsARM() && mParams->traceInfo.contextClientMajorVersion == 1)
     {
