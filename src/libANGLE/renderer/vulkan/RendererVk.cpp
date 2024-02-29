@@ -137,30 +137,6 @@ bool IsQualcommOpenSource(uint32_t vendorId, uint32_t driverId, const char *devi
     return strstr(deviceName, "Venus") != nullptr || strstr(deviceName, "Turnip") != nullptr;
 }
 
-angle::vk::ICD ChooseICDFromAttribs(const egl::AttributeMap &attribs)
-{
-#if !defined(ANGLE_PLATFORM_ANDROID)
-    // Mock ICD does not currently run on Android
-    EGLAttrib deviceType = attribs.get(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE,
-                                       EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE);
-
-    switch (deviceType)
-    {
-        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE:
-            break;
-        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE:
-            return angle::vk::ICD::Mock;
-        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE:
-            return angle::vk::ICD::SwiftShader;
-        default:
-            UNREACHABLE();
-            break;
-    }
-#endif  // !defined(ANGLE_PLATFORM_ANDROID)
-
-    return angle::vk::ICD::Default;
-}
-
 bool StrLess(const char *a, const char *b)
 {
     return strcmp(a, b) < 0;
@@ -262,8 +238,6 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-VkDescriptorImageInfo-imageView-07796",
     // https://issuetracker.google.com/303441816
     "VUID-VkRenderPassBeginInfo-renderPass-00904",
-    // http://anglebug.com/8401
-    "Undefined-Value-ShaderOutputNotConsumed",
     // http://anglebug.com/8466
     "VUID-VkMemoryAllocateInfo-allocationSize-01742",
     "VUID-VkMemoryDedicatedAllocateInfo-image-01878",
@@ -824,17 +798,6 @@ MemoryReportCallback(const VkDeviceMemoryReportCallbackDataEXT *callbackData, vo
 {
     RendererVk *rendererVk = static_cast<RendererVk *>(userData);
     rendererVk->processMemoryReportCallback(*callbackData);
-}
-
-bool ShouldUseValidationLayers(const egl::AttributeMap &attribs)
-{
-#if defined(ANGLE_ENABLE_VULKAN_VALIDATION_LAYERS_BY_DEFAULT)
-    return ShouldUseDebugLayers(attribs);
-#else
-    EGLAttrib debugSetting =
-        attribs.get(EGL_PLATFORM_ANGLE_DEBUG_LAYERS_ENABLED_ANGLE, EGL_DONT_CARE);
-    return debugSetting == EGL_TRUE;
-#endif  // defined(ANGLE_ENABLE_VULKAN_VALIDATION_LAYERS_BY_DEFAULT)
 }
 
 gl::Version LimitVersionTo(const gl::Version &current, const gl::Version &lower)
@@ -1720,6 +1683,10 @@ angle::Result RendererVk::enableInstanceExtensions(
 
 angle::Result RendererVk::initialize(DisplayVk *displayVk,
                                      egl::Display *display,
+                                     angle::vk::ICD desiredICD,
+                                     uint32_t preferredVendorId,
+                                     uint32_t preferredDeviceId,
+                                     UseValidationLayers useValidationLayers,
                                      const char *wsiExtension,
                                      const char *wsiLayer)
 {
@@ -1747,11 +1714,10 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     }
 #endif  // defined(ANGLE_SHARED_LIBVULKAN)
 
-    mDisplay                         = display;
-    const egl::AttributeMap &attribs = mDisplay->getAttributeMap();
+    mDisplay = display;
 
-    angle::vk::ScopedVkLoaderEnvironment scopedEnvironment(ShouldUseValidationLayers(attribs),
-                                                           ChooseICDFromAttribs(attribs));
+    angle::vk::ScopedVkLoaderEnvironment scopedEnvironment(
+        useValidationLayers != UseValidationLayers::No, desiredICD);
     mEnableValidationLayers = scopedEnvironment.canEnableValidationLayers();
     mEnabledICD             = scopedEnvironment.getEnabledICD();
 
@@ -1775,8 +1741,7 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     VulkanLayerVector enabledInstanceLayerNames;
     if (mEnableValidationLayers)
     {
-        bool layersRequested =
-            (attribs.get(EGL_PLATFORM_ANGLE_DEBUG_LAYERS_ENABLED_ANGLE, EGL_DONT_CARE) == EGL_TRUE);
+        const bool layersRequested = useValidationLayers == UseValidationLayers::Yes;
         mEnableValidationLayers = GetAvailableValidationLayers(instanceLayerProps, layersRequested,
                                                                &enabledInstanceLayerNames);
     }
@@ -1907,10 +1872,6 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     std::vector<VkPhysicalDevice> physicalDevices(physicalDeviceCount);
     ANGLE_VK_TRY(displayVk, vkEnumeratePhysicalDevices(mInstance, &physicalDeviceCount,
                                                        physicalDevices.data()));
-    uint32_t preferredVendorId =
-        static_cast<uint32_t>(attribs.get(EGL_PLATFORM_ANGLE_DEVICE_ID_HIGH_ANGLE, 0));
-    uint32_t preferredDeviceId =
-        static_cast<uint32_t>(attribs.get(EGL_PLATFORM_ANGLE_DEVICE_ID_LOW_ANGLE, 0));
     ChoosePhysicalDevice(vkGetPhysicalDeviceProperties, physicalDevices, mEnabledICD,
                          preferredVendorId, preferredDeviceId, &mPhysicalDevice,
                          &mPhysicalDeviceProperties);
