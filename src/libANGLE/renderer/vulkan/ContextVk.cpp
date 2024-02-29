@@ -1338,6 +1338,8 @@ void ContextVk::onDestroy(const gl::Context *context)
     {
         releaseQueueSerialIndex();
     }
+
+    mImageLoadContext = {};
 }
 
 VertexArrayVk *ContextVk::getVertexArray() const
@@ -1358,9 +1360,11 @@ angle::Result ContextVk::getIncompleteTexture(const gl::Context *context,
     return mIncompleteTextures.getIncompleteTexture(context, type, format, this, textureOut);
 }
 
-angle::Result ContextVk::initialize()
+angle::Result ContextVk::initialize(const angle::ImageLoadContext &imageLoadContext)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::initialize");
+
+    mImageLoadContext = imageLoadContext;
 
     ANGLE_TRY(mShareGroupVk->unifyContextsPriority(this));
 
@@ -8984,11 +8988,6 @@ vk::ComputePipelineFlags ContextVk::getComputePipelineFlags() const
     }
 
     return pipelineFlags;
-}
-
-angle::ImageLoadContext ContextVk::getImageLoadContext() const
-{
-    return getRenderer()->getDisplay()->getImageLoadContext();
 }
 
 angle::Result ContextVk::ensureInterfacePipelineCache()

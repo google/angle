@@ -763,7 +763,7 @@ void Context::initializeDefaultResources()
 
     mState.initializeZeroTextures(this, mZeroTextures);
 
-    ANGLE_CONTEXT_TRY(mImplementation->initialize());
+    ANGLE_CONTEXT_TRY(mImplementation->initialize(mDisplay->getImageLoadContext()));
 
     // Add context into the share group
     mState.getShareGroup()->addSharedContext(this);

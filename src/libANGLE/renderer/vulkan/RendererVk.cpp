@@ -1749,6 +1749,7 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
 
     mDisplay                         = display;
     const egl::AttributeMap &attribs = mDisplay->getAttributeMap();
+
     angle::vk::ScopedVkLoaderEnvironment scopedEnvironment(ShouldUseValidationLayers(attribs),
                                                            ChooseICDFromAttribs(attribs));
     mEnableValidationLayers = scopedEnvironment.canEnableValidationLayers();
