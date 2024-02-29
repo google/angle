@@ -5,6 +5,7 @@
 //
 // CLCommandQueueVk.cpp: Implements the class methods for CLCommandQueueVk.
 
+#include "common/PackedCLEnums_autogen.h"
 #include "common/PackedEnums.h"
 
 #include "libANGLE/renderer/vulkan/CLCommandQueueVk.h"
@@ -57,6 +58,7 @@ CLCommandQueueVk::CLCommandQueueVk(const cl::CommandQueue &commandQueue)
     : CLCommandQueueImpl(commandQueue),
       mContext(&commandQueue.getContext().getImpl<CLContextVk>()),
       mDevice(&commandQueue.getDevice().getImpl<CLDeviceVk>()),
+      mPrintfBuffer(nullptr),
       mComputePassCommands(nullptr),
       mCurrentQueueSerialIndex(kInvalidQueueSerialIndex),
       mHasAnyCommandsPendingSubmission(false),
@@ -345,8 +347,39 @@ angle::Result CLCommandQueueVk::enqueueMapBuffer(const cl::Buffer &buffer,
                                                  CLEventImpl::CreateFunc *eventCreateFunc,
                                                  void *&mapPtr)
 {
-    UNIMPLEMENTED();
-    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+    std::scoped_lock<std::mutex> sl(mCommandQueueMutex);
+
+    ANGLE_TRY(processWaitlist(waitEvents));
+
+    bool eventComplete = false;
+    if (blocking || !eventCreateFunc)
+    {
+        ANGLE_TRY(finishInternal());
+        eventComplete = true;
+    }
+
+    CLBufferVk *bufferVk = &buffer.getImpl<CLBufferVk>();
+    uint8_t *mapPointer  = nullptr;
+    if (buffer.getFlags().intersects(CL_MEM_USE_HOST_PTR))
+    {
+        ANGLE_TRY(finishInternal());
+        mapPointer = static_cast<uint8_t *>(buffer.getHostPtr()) + offset;
+        ANGLE_TRY(bufferVk->copyTo(mapPointer, offset, size));
+        eventComplete = true;
+    }
+    else
+    {
+        ANGLE_TRY(bufferVk->map(mapPointer, offset));
+    }
+    mapPtr = static_cast<void *>(mapPointer);
+
+    if (bufferVk->isCurrentlyInUse())
+    {
+        eventComplete = false;
+    }
+    ANGLE_TRY(createEvent(eventCreateFunc, eventComplete));
+
+    return angle::Result::Continue;
 }
 
 angle::Result CLCommandQueueVk::copyImageToFromBuffer(CLImageVk &imageVk,
@@ -707,33 +740,46 @@ angle::Result CLCommandQueueVk::enqueueUnmapMemObject(const cl::Memory &memory,
                                                       const cl::EventPtrs &waitEvents,
                                                       CLEventImpl::CreateFunc *eventCreateFunc)
 {
-    ANGLE_TRY(enqueueWaitForEvents(waitEvents));
+    std::scoped_lock<std::mutex> sl(mCommandQueueMutex);
 
-    cl_mem_object_type memoryType;
-    ANGLE_TRY(memory.getInfo(cl::MemInfo::Type, sizeof(cl_mem_object_type), &memoryType, nullptr));
-    if ((memoryType != CL_MEM_OBJECT_BUFFER) && (memoryType != CL_MEM_OBJECT_PIPE))
+    ANGLE_TRY(processWaitlist(waitEvents));
+
+    bool eventComplete = false;
+    if (!eventCreateFunc)
     {
+        ANGLE_TRY(finishInternal());
+        eventComplete = true;
+    }
+
+    if (memory.getType() == cl::MemObjectType::Buffer)
+    {
+        CLBufferVk &bufferVk = memory.getImpl<CLBufferVk>();
+        if (memory.getFlags().intersects(CL_MEM_USE_HOST_PTR))
+        {
+            ANGLE_TRY(finishInternal());
+            ANGLE_TRY(bufferVk.copyFrom(memory.getHostPtr(), 0, bufferVk.getSize()));
+            eventComplete = true;
+        }
+    }
+    else if (memory.getType() != cl::MemObjectType::Pipe)
+    {
+        // of image type
         CLImageVk &imageVk = memory.getImpl<CLImageVk>();
         VkExtent3D extent  = imageVk.getImageExtent();
         ANGLE_TRY(copyImageToFromBuffer(imageVk, imageVk.getStagingBuffer(), {0, 0, 0},
                                         {extent.width, extent.height, extent.depth}, 0,
                                         ImageBufferCopyDirection::ToImage));
         ANGLE_TRY(finishInternal());
+        eventComplete = true;
     }
-
-    if (memoryType == CL_MEM_OBJECT_BUFFER)
+    else
     {
-        CLBufferVk &bufferVk = memory.getImpl<CLBufferVk>();
-        if (memory.getFlags().intersects(CL_MEM_USE_HOST_PTR))
-        {
-            // Transfer user's hostptr data back to BufferVk allocation
-            ANGLE_TRY(bufferVk.copyFrom(memory.getHostPtr(), 0, bufferVk.getSize()));
-        }
+        // mem object type pipe is not supported and creation of such an object should have failed
+        UNREACHABLE();
     }
 
     memory.getImpl<CLMemoryVk>().unmap();
-
-    ANGLE_TRY(createEvent(eventCreateFunc, true));
+    ANGLE_TRY(createEvent(eventCreateFunc, eventComplete));
 
     return angle::Result::Continue;
 }
