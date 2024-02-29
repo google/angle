@@ -137,22 +137,6 @@ bool IsQualcommOpenSource(uint32_t vendorId, uint32_t driverId, const char *devi
     return strstr(deviceName, "Venus") != nullptr || strstr(deviceName, "Turnip") != nullptr;
 }
 
-bool IsPixel()
-{
-    if (!IsAndroid())
-    {
-        return false;
-    }
-
-    angle::SystemInfo info;
-    if (!angle::GetSystemInfo(&info))
-    {
-        return false;
-    }
-
-    return strstr(info.machineModelName.c_str(), "Pixel") != nullptr;
-}
-
 angle::vk::ICD ChooseICDFromAttribs(const egl::AttributeMap &attribs)
 {
 #if !defined(ANGLE_PLATFORM_ANDROID)
@@ -4035,9 +4019,6 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     const bool isRADV = IsRADV(mPhysicalDeviceProperties.vendorID, mDriverProperties.driverID,
                                mPhysicalDeviceProperties.deviceName);
 
-    // Identify Google Pixel brand Android devices
-    const bool isPixel = IsPixel();
-
     angle::VersionInfo nvidiaVersion;
     if (isNvidia)
     {
@@ -4649,27 +4630,14 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // can root cause it.
     ANGLE_FEATURE_CONDITION(&mFeatures, requireCachedBitForStagingBuffer, !isARM);
 
-    bool dynamicStateWorks = true;
-    if (isARM)
-    {
-        // Multiple dynamic state issues on ARM have been fixed.
-        // http://issuetracker.google.com/285124778
-        // http://issuetracker.google.com/285196249
-        // http://issuetracker.google.com/286224923
-        // http://issuetracker.google.com/287318431
-
-        // Use it on drivers/devices known to work.
-        if (isPixel)
-        {
-            // Pixel devices are working after r44
-            dynamicStateWorks = armDriverVersion >= ARMDriverVersion(44, 0, 0);
-        }
-        else
-        {
-            // Others should work after r44p1
-            dynamicStateWorks = armDriverVersion >= ARMDriverVersion(44, 1, 0);
-        }
-    }
+    // Multiple dynamic state issues on ARM have been fixed.
+    // http://issuetracker.google.com/285124778
+    // http://issuetracker.google.com/285196249
+    // http://issuetracker.google.com/286224923
+    // http://issuetracker.google.com/287318431
+    //
+    // On Pixel devices, the issues have been fixed since r44, but on others since r44p1.
+    const bool isArm44OrLess = isARM && armDriverVersion < ARMDriverVersion(44, 1, 0);
 
     // Intel driver has issues with VK_EXT_vertex_input_dynamic_state
     // http://anglebug.com/7162#c8
@@ -4679,7 +4647,7 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsExtendedDynamicState,
-        mExtendedDynamicStateFeatures.extendedDynamicState == VK_TRUE && dynamicStateWorks);
+        mExtendedDynamicStateFeatures.extendedDynamicState == VK_TRUE && !isArm44OrLess);
 
     // VK_EXT_vertex_input_dynamic_state enables dynamic state for the full vertex input state. As
     // such, when available use supportsVertexInputDynamicState instead of
@@ -4687,15 +4655,15 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, useVertexInputBindingStrideDynamicState,
                             mFeatures.supportsExtendedDynamicState.enabled &&
                                 !mFeatures.supportsVertexInputDynamicState.enabled &&
-                                dynamicStateWorks);
+                                !isArm44OrLess);
     ANGLE_FEATURE_CONDITION(&mFeatures, useCullModeDynamicState,
-                            mFeatures.supportsExtendedDynamicState.enabled && dynamicStateWorks);
+                            mFeatures.supportsExtendedDynamicState.enabled && !isArm44OrLess);
     ANGLE_FEATURE_CONDITION(&mFeatures, useDepthCompareOpDynamicState,
                             mFeatures.supportsExtendedDynamicState.enabled);
     ANGLE_FEATURE_CONDITION(&mFeatures, useDepthTestEnableDynamicState,
                             mFeatures.supportsExtendedDynamicState.enabled);
     ANGLE_FEATURE_CONDITION(&mFeatures, useDepthWriteEnableDynamicState,
-                            mFeatures.supportsExtendedDynamicState.enabled && dynamicStateWorks);
+                            mFeatures.supportsExtendedDynamicState.enabled && !isArm44OrLess);
     ANGLE_FEATURE_CONDITION(&mFeatures, useFrontFaceDynamicState,
                             mFeatures.supportsExtendedDynamicState.enabled);
     ANGLE_FEATURE_CONDITION(&mFeatures, useStencilOpDynamicState,
@@ -4705,10 +4673,10 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsExtendedDynamicState2,
-        mExtendedDynamicState2Features.extendedDynamicState2 == VK_TRUE && dynamicStateWorks);
+        mExtendedDynamicState2Features.extendedDynamicState2 == VK_TRUE && !isArm44OrLess);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, usePrimitiveRestartEnableDynamicState,
-                            mFeatures.supportsExtendedDynamicState2.enabled && dynamicStateWorks);
+                            mFeatures.supportsExtendedDynamicState2.enabled && !isArm44OrLess);
     ANGLE_FEATURE_CONDITION(&mFeatures, useRasterizerDiscardEnableDynamicState,
                             mFeatures.supportsExtendedDynamicState2.enabled);
     ANGLE_FEATURE_CONDITION(&mFeatures, useDepthBiasEnableDynamicState,
