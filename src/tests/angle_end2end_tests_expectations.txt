@@ -1338,6 +1338,10 @@ b/267953710 GALAXYS22 VULKAN : VulkanPerformanceCounterTest_ES31.ColorMaskedFram
 // Workaround feature that is only supposed to be enabled on vulkan backend
 b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = SKIP
 
+// NVIDIA driver has a bug in its YCbCr implementation
+8584 NVIDIA VULKAN : Texture2DTestES3.TexStorage2DMultipleYuvSamplersSwitchSamplerUniformValues/* = SKIP
+8584 NVIDIA VULKAN : Texture2DTestES3.TexStorage2DMultipleYuvSamplersSwitchBoundTextures/* = SKIP
+
 // Slow tests, should appear last in this file
 5076 : GLSLTest.VerifyMaxVertexUniformVectors* = TIMEOUT
 5076 : GLSLTest.VerifyMaxFragmentUniformVectors* = TIMEOUT

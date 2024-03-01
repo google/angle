@@ -838,6 +838,18 @@ void UpdateBufferWithSharedCacheKey(const gl::OffsetBindingPointer<gl::Buffer> &
         }
     }
 }
+
+void GenerateTextureUnitSamplerIndexMap(
+    const std::vector<GLuint> &samplerBoundTextureUnits,
+    std::unordered_map<size_t, uint32_t> *textureUnitSamplerIndexMapOut)
+{
+    // Create a map of textureUnit <-> samplerIndex
+    for (size_t samplerIndex = 0; samplerIndex < samplerBoundTextureUnits.size(); samplerIndex++)
+    {
+        textureUnitSamplerIndexMapOut->insert(
+            {samplerBoundTextureUnits[samplerIndex], static_cast<uint32_t>(samplerIndex)});
+    }
+}
 }  // anonymous namespace
 
 void ContextVk::flushDescriptorSetUpdates()
@@ -7411,8 +7423,9 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context, gl::Co
 
     FillWithNullptr(&mActiveTextures);
 
-    bool recreatePipelineLayout                       = false;
-    ImmutableSamplerIndexMap immutableSamplerIndexMap = {};
+    bool recreatePipelineLayout                                     = false;
+    ImmutableSamplerIndexMap immutableSamplerIndexMap               = {};
+    std::unordered_map<size_t, uint32_t> textureUnitSamplerIndexMap = {};
     for (size_t textureUnit : activeTextures)
     {
         gl::Texture *texture        = textures[textureUnit];
@@ -7474,8 +7487,13 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context, gl::Co
 
         if (image.hasImmutableSampler())
         {
+            if (textureUnitSamplerIndexMap.empty())
+            {
+                GenerateTextureUnitSamplerIndexMap(executable->getSamplerBoundTextureUnits(),
+                                                   &textureUnitSamplerIndexMap);
+            }
             immutableSamplerIndexMap[image.getYcbcrConversionDesc()] =
-                static_cast<uint32_t>(textureUnit);
+                textureUnitSamplerIndexMap[textureUnit];
         }
 
         if (textureVk->getAndResetImmutableSamplerDirtyState())

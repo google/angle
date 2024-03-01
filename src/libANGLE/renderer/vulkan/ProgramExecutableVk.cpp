@@ -883,9 +883,9 @@ angle::Result ProgramExecutableVk::addTextureDescriptorSetDesc(
     const std::vector<GLuint> &samplerBoundTextureUnits =
         mExecutable->getSamplerBoundTextureUnits();
 
-    for (uint32_t textureIndex = 0; textureIndex < samplerBindings.size(); ++textureIndex)
+    for (uint32_t samplerIndex = 0; samplerIndex < samplerBindings.size(); ++samplerIndex)
     {
-        uint32_t uniformIndex = mExecutable->getUniformIndexFromSamplerIndex(textureIndex);
+        uint32_t uniformIndex = mExecutable->getUniformIndexFromSamplerIndex(samplerIndex);
         const gl::LinkedUniform &samplerUniform = uniforms[uniformIndex];
 
         // 2D arrays are split into multiple 1D arrays when generating LinkedUniforms. Since they
@@ -902,7 +902,7 @@ angle::Result ProgramExecutableVk::addTextureDescriptorSetDesc(
             mExecutable->getUniformNameByIndex(uniformIndex)));
 
         // The front-end always binds array sampler units sequentially.
-        const gl::SamplerBinding &samplerBinding = samplerBindings[textureIndex];
+        const gl::SamplerBinding &samplerBinding = samplerBindings[samplerIndex];
         uint32_t arraySize = static_cast<uint32_t>(samplerBinding.textureUnitsCount);
         arraySize *= samplerUniform.getOuterArraySizeProduct();
 
@@ -935,7 +935,7 @@ angle::Result ProgramExecutableVk::addTextureDescriptorSetDesc(
             const vk::YcbcrConversionDesc ycbcrConversionDesc =
                 isSamplerExternalY2Y ? image.getY2YConversionDesc()
                                      : image.getYcbcrConversionDesc();
-            mImmutableSamplerIndexMap[ycbcrConversionDesc] = textureIndex;
+            mImmutableSamplerIndexMap[ycbcrConversionDesc] = samplerIndex;
             // The Vulkan spec has the following note -
             // All descriptors in a binding use the same maximum
             // combinedImageSamplerDescriptorCount descriptors to allow implementations to use a
