@@ -238,8 +238,10 @@ class RendererVk : angle::NonCopyable
 
     const vk::Format &getFormat(angle::FormatID formatID) const { return mFormatTable[formatID]; }
 
-    angle::Result getPipelineCacheSize(DisplayVk *displayVk, size_t *pipelineCacheSizeOut);
-    angle::Result syncPipelineCacheVk(DisplayVk *displayVk, const gl::Context *context);
+    angle::Result getPipelineCacheSize(vk::Context *context, size_t *pipelineCacheSizeOut);
+    angle::Result syncPipelineCacheVk(vk::Context *context,
+                                      vk::GlobalOps *globalOps,
+                                      const gl::Context *contextGL);
 
     const angle::FeaturesVk &getFeatures() const { return mFeatures; }
     uint32_t getMaxVertexAttribDivisor() const { return mMaxVertexAttribDivisor; }
@@ -337,8 +339,9 @@ class RendererVk : angle::NonCopyable
         mSuballocationGarbageList.add(this, std::move(garbage));
     }
 
-    angle::Result getPipelineCache(vk::PipelineCacheAccess *pipelineCacheOut);
-    angle::Result mergeIntoPipelineCache(const vk::PipelineCache &pipelineCache);
+    angle::Result getPipelineCache(vk::Context *context, vk::PipelineCacheAccess *pipelineCacheOut);
+    angle::Result mergeIntoPipelineCache(vk::Context *context,
+                                         const vk::PipelineCache &pipelineCache);
 
     void onNewValidationMessage(const std::string &message);
     std::string getAndClearLastValidationMessage(uint32_t *countSinceLastClear);

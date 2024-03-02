@@ -194,8 +194,7 @@ void GetPipelineCacheData(ContextVk *contextVk,
         }
 
         // Compress it.
-        if (!egl::CompressBlobCacheData(pipelineCacheData.size(), pipelineCacheData.data(),
-                                        cacheDataOut))
+        if (!angle::CompressBlob(pipelineCacheData.size(), pipelineCacheData.data(), cacheDataOut))
         {
             cacheDataOut->clear();
         }
@@ -514,8 +513,8 @@ angle::Result ProgramExecutableVk::initializePipelineCache(vk::Context *context,
     angle::MemoryBuffer uncompressedData;
     if (compressed)
     {
-        if (!egl::DecompressBlobCacheData(dataPointer, dataSize, kMaxLocalPipelineCacheSize,
-                                          &uncompressedData))
+        if (!angle::DecompressBlob(dataPointer, dataSize, kMaxLocalPipelineCacheSize,
+                                   &uncompressedData))
         {
             return angle::Result::Stop;
         }
@@ -538,7 +537,7 @@ angle::Result ProgramExecutableVk::initializePipelineCache(vk::Context *context,
     // Merge the pipeline cache into RendererVk's.
     if (context->getFeatures().mergeProgramPipelineCachesToGlobalCache.enabled)
     {
-        ANGLE_TRY(context->getRenderer()->mergeIntoPipelineCache(mPipelineCache));
+        ANGLE_TRY(context->getRenderer()->mergeIntoPipelineCache(context, mPipelineCache));
     }
 
     return angle::Result::Continue;
@@ -688,7 +687,7 @@ angle::Result ProgramExecutableVk::warmUpPipelineCache(
         // Merge the cache with RendererVk's
         if (context->getFeatures().mergeProgramPipelineCachesToGlobalCache.enabled)
         {
-            ANGLE_TRY(context->getRenderer()->mergeIntoPipelineCache(mPipelineCache));
+            ANGLE_TRY(context->getRenderer()->mergeIntoPipelineCache(context, mPipelineCache));
         }
 
         return angle::Result::Continue;
@@ -754,7 +753,7 @@ angle::Result ProgramExecutableVk::warmUpPipelineCache(
     // Merge the cache with RendererVk's
     if (context->getFeatures().mergeProgramPipelineCachesToGlobalCache.enabled)
     {
-        ANGLE_TRY(context->getRenderer()->mergeIntoPipelineCache(mPipelineCache));
+        ANGLE_TRY(context->getRenderer()->mergeIntoPipelineCache(context, mPipelineCache));
     }
 
     return angle::Result::Continue;
@@ -1177,7 +1176,7 @@ angle::Result ProgramExecutableVk::createGraphicsPipeline(
     if (useProgramPipelineCache &&
         contextVk->getFeatures().mergeProgramPipelineCachesToGlobalCache.enabled)
     {
-        ANGLE_TRY(contextVk->getRenderer()->mergeIntoPipelineCache(mPipelineCache));
+        ANGLE_TRY(contextVk->getRenderer()->mergeIntoPipelineCache(contextVk, mPipelineCache));
     }
 
     return angle::Result::Continue;

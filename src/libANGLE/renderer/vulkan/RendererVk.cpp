@@ -993,7 +993,7 @@ void UnpackHeaderDataForPipelineCache(CacheDataHeader *data,
 
 void ComputePipelineCacheVkChunkKey(VkPhysicalDeviceProperties physicalDeviceProperties,
                                     const uint8_t chunkIndex,
-                                    egl::BlobCache::Key *hashOut)
+                                    angle::BlobCacheKey *hashOut)
 {
     std::ostringstream hashStream("ANGLE Pipeline Cache: ", std::ios_base::ate);
     // Add the pipeline cache UUID to make sure the blob cache always gives a compatible pipeline
@@ -1016,7 +1016,7 @@ void ComputePipelineCacheVkChunkKey(VkPhysicalDeviceProperties physicalDevicePro
 }
 
 void CompressAndStorePipelineCacheVk(VkPhysicalDeviceProperties physicalDeviceProperties,
-                                     DisplayVk *displayVk,
+                                     vk::GlobalOps *globalOps,
                                      ContextVk *contextVk,
                                      const std::vector<uint8_t> &cacheData,
                                      const size_t maxTotalSize)
@@ -1035,7 +1035,7 @@ void CompressAndStorePipelineCacheVk(VkPhysicalDeviceProperties physicalDevicePr
     // To make it possible to store more pipeline cache data, compress the whole pipelineCache.
     angle::MemoryBuffer compressedData;
 
-    if (!egl::CompressBlobCacheData(cacheData.size(), cacheData.data(), &compressedData))
+    if (!angle::CompressBlob(cacheData.size(), cacheData.data(), &compressedData))
     {
         ANGLE_PERF_WARNING(contextVk->getDebug(), GL_DEBUG_SEVERITY_LOW,
                            "Skip syncing pipeline cache data as it failed compression.");
@@ -1087,21 +1087,21 @@ void CompressAndStorePipelineCacheVk(VkPhysicalDeviceProperties physicalDevicePr
         compressedOffset += chunkSize;
 
         // Create unique hash key.
-        egl::BlobCache::Key chunkCacheHash;
+        angle::BlobCacheKey chunkCacheHash;
         ComputePipelineCacheVkChunkKey(physicalDeviceProperties, chunkIndex, &chunkCacheHash);
 
-        displayVk->getBlobCache()->putApplication(chunkCacheHash, keyData);
+        globalOps->putBlob(chunkCacheHash, keyData);
     }
 }
 
 class CompressAndStorePipelineCacheTask : public angle::Closure
 {
   public:
-    CompressAndStorePipelineCacheTask(DisplayVk *displayVk,
+    CompressAndStorePipelineCacheTask(vk::GlobalOps *globalOps,
                                       ContextVk *contextVk,
                                       std::vector<uint8_t> &&cacheData,
                                       size_t kMaxTotalSize)
-        : mDisplayVk(displayVk),
+        : mGlobalOps(globalOps),
           mContextVk(contextVk),
           mCacheData(std::move(cacheData)),
           mMaxTotalSize(kMaxTotalSize)
@@ -1111,18 +1111,19 @@ class CompressAndStorePipelineCacheTask : public angle::Closure
     {
         ANGLE_TRACE_EVENT0("gpu.angle", "CompressAndStorePipelineCacheVk");
         CompressAndStorePipelineCacheVk(mContextVk->getRenderer()->getPhysicalDeviceProperties(),
-                                        mDisplayVk, mContextVk, mCacheData, mMaxTotalSize);
+                                        mGlobalOps, mContextVk, mCacheData, mMaxTotalSize);
     }
 
   private:
-    DisplayVk *mDisplayVk;
+    vk::GlobalOps *mGlobalOps;
     ContextVk *mContextVk;
     std::vector<uint8_t> mCacheData;
     size_t mMaxTotalSize;
 };
 
 angle::Result GetAndDecompressPipelineCacheVk(VkPhysicalDeviceProperties physicalDeviceProperties,
-                                              DisplayVk *displayVk,
+                                              vk::Context *context,
+                                              vk::GlobalOps *globalOps,
                                               angle::MemoryBuffer *uncompressedData,
                                               bool *success)
 {
@@ -1130,14 +1131,11 @@ angle::Result GetAndDecompressPipelineCacheVk(VkPhysicalDeviceProperties physica
     *success = false;
 
     // Compute the hash key of chunkIndex 0 and find the first cache data in blob cache.
-    egl::BlobCache::Key chunkCacheHash;
+    angle::BlobCacheKey chunkCacheHash;
     ComputePipelineCacheVkChunkKey(physicalDeviceProperties, 0, &chunkCacheHash);
-    egl::BlobCache::Value keyData;
-    size_t keySize = 0;
+    angle::BlobCacheValue keyData;
 
-    if (!displayVk->getBlobCache()->get(displayVk->getScratchBuffer(), chunkCacheHash, &keyData,
-                                        &keySize) ||
-        keyData.size() < sizeof(CacheDataHeader))
+    if (!globalOps->getBlob(chunkCacheHash, &keyData) || keyData.size() < sizeof(CacheDataHeader))
     {
         // Nothing in the cache.
         return angle::Result::Continue;
@@ -1186,12 +1184,12 @@ angle::Result GetAndDecompressPipelineCacheVk(VkPhysicalDeviceProperties physica
         return angle::Result::Continue;
     }
 
-    size_t chunkSize      = keySize - sizeof(CacheDataHeader);
+    size_t chunkSize      = keyData.size() - sizeof(CacheDataHeader);
     size_t compressedSize = 0;
 
     // Allocate enough memory.
     angle::MemoryBuffer compressedData;
-    ANGLE_VK_CHECK(displayVk, compressedData.resize(chunkSize * numChunks),
+    ANGLE_VK_CHECK(context, compressedData.resize(chunkSize * numChunks),
                    VK_ERROR_INITIALIZATION_FAILED);
 
     // To combine the parts of the pipelineCache data.
@@ -1200,8 +1198,7 @@ angle::Result GetAndDecompressPipelineCacheVk(VkPhysicalDeviceProperties physica
         // Get the unique key by chunkIndex.
         ComputePipelineCacheVkChunkKey(physicalDeviceProperties, chunkIndex, &chunkCacheHash);
 
-        if (!displayVk->getBlobCache()->get(displayVk->getScratchBuffer(), chunkCacheHash, &keyData,
-                                            &keySize) ||
+        if (!globalOps->getBlob(chunkCacheHash, &keyData) ||
             keyData.size() < sizeof(CacheDataHeader))
         {
             // Can't find every part of the cache data.
@@ -1221,7 +1218,7 @@ angle::Result GetAndDecompressPipelineCacheVk(VkPhysicalDeviceProperties physica
                                          &checkUncompressedCacheDataSize, &checkNumChunks,
                                          &checkChunkIndex);
 
-        chunkSize = keySize - sizeof(CacheDataHeader);
+        chunkSize = keyData.size() - sizeof(CacheDataHeader);
         bool isHeaderDataCorrupted =
             (checkCacheVersion != cacheVersion) || (checkNumChunks != numChunks) ||
             (checkUncompressedCacheDataSize != uncompressedCacheDataSize) ||
@@ -1276,9 +1273,9 @@ angle::Result GetAndDecompressPipelineCacheVk(VkPhysicalDeviceProperties physica
         }
     }
 
-    ANGLE_VK_CHECK(displayVk,
-                   egl::DecompressBlobCacheData(compressedData.data(), compressedSize,
-                                                uncompressedCacheDataSize, uncompressedData),
+    ANGLE_VK_CHECK(context,
+                   angle::DecompressBlob(compressedData.data(), compressedSize,
+                                         uncompressedCacheDataSize, uncompressedData),
                    VK_ERROR_INITIALIZATION_FAILED);
 
     if (uncompressedData->size() != uncompressedCacheDataSize)
@@ -4945,8 +4942,8 @@ angle::Result RendererVk::initPipelineCache(DisplayVk *display,
     angle::MemoryBuffer initialData;
     if (!mFeatures.disablePipelineCacheLoadForTesting.enabled)
     {
-        ANGLE_TRY(GetAndDecompressPipelineCacheVk(mPhysicalDeviceProperties, display, &initialData,
-                                                  success));
+        ANGLE_TRY(GetAndDecompressPipelineCacheVk(mPhysicalDeviceProperties, display, display,
+                                                  &initialData, success));
     }
 
     VkPipelineCacheCreateInfo pipelineCacheCreateInfo = {};
@@ -4966,10 +4963,9 @@ angle::Result RendererVk::initPipelineCache(DisplayVk *display,
     return angle::Result::Continue;
 }
 
-angle::Result RendererVk::getPipelineCache(vk::PipelineCacheAccess *pipelineCacheOut)
+angle::Result RendererVk::getPipelineCache(vk::Context *context,
+                                           vk::PipelineCacheAccess *pipelineCacheOut)
 {
-    DisplayVk *displayVk = vk::GetImpl(mDisplay);
-
     // Note that ANGLE externally synchronizes the pipeline cache, and uses
     // VK_EXT_pipeline_creation_cache_control (where available) to disable internal synchronization.
     std::unique_lock<std::mutex> lock(mPipelineCacheMutex);
@@ -4979,13 +4975,13 @@ angle::Result RendererVk::getPipelineCache(vk::PipelineCacheAccess *pipelineCach
         // We should now recreate the pipeline cache with the blob cache pipeline data.
         vk::PipelineCache pCache;
         bool loadedFromBlobCache = false;
-        ANGLE_TRY(initPipelineCache(displayVk, &pCache, &loadedFromBlobCache));
+        ANGLE_TRY(initPipelineCache(vk::GetImpl(mDisplay), &pCache, &loadedFromBlobCache));
         if (loadedFromBlobCache)
         {
             // Merge the newly created pipeline cache into the existing one.
             mPipelineCache.merge(mDevice, 1, pCache.ptr());
 
-            ANGLE_TRY(getPipelineCacheSize(displayVk, &mPipelineCacheSizeAtLastSync));
+            ANGLE_TRY(getPipelineCacheSize(context, &mPipelineCacheSizeAtLastSync));
         }
 
         mPipelineCacheInitialized = true;
@@ -4996,10 +4992,11 @@ angle::Result RendererVk::getPipelineCache(vk::PipelineCacheAccess *pipelineCach
     return angle::Result::Continue;
 }
 
-angle::Result RendererVk::mergeIntoPipelineCache(const vk::PipelineCache &pipelineCache)
+angle::Result RendererVk::mergeIntoPipelineCache(vk::Context *context,
+                                                 const vk::PipelineCache &pipelineCache)
 {
     vk::PipelineCacheAccess globalCache;
-    ANGLE_TRY(getPipelineCache(&globalCache));
+    ANGLE_TRY(getPipelineCache(context, &globalCache));
 
     globalCache.merge(this, pipelineCache);
 
@@ -5058,15 +5055,15 @@ void RendererVk::initializeFrontendFeatures(angle::FrontendFeatures *features) c
     ANGLE_FEATURE_CONDITION(features, alwaysRunLinkSubJobsThreaded, true);
 }
 
-angle::Result RendererVk::getPipelineCacheSize(DisplayVk *displayVk, size_t *pipelineCacheSizeOut)
+angle::Result RendererVk::getPipelineCacheSize(vk::Context *context, size_t *pipelineCacheSizeOut)
 {
-    VkResult result = mPipelineCache.getCacheData(mDevice, pipelineCacheSizeOut, nullptr);
-    ANGLE_VK_TRY(displayVk, result);
-
+    ANGLE_VK_TRY(context, mPipelineCache.getCacheData(mDevice, pipelineCacheSizeOut, nullptr));
     return angle::Result::Continue;
 }
 
-angle::Result RendererVk::syncPipelineCacheVk(DisplayVk *displayVk, const gl::Context *context)
+angle::Result RendererVk::syncPipelineCacheVk(vk::Context *context,
+                                              vk::GlobalOps *globalOps,
+                                              const gl::Context *contextGL)
 {
     ASSERT(mPipelineCache.valid());
 
@@ -5083,7 +5080,7 @@ angle::Result RendererVk::syncPipelineCacheVk(DisplayVk *displayVk, const gl::Co
     mPipelineCacheVkUpdateTimeout = kPipelineCacheVkUpdatePeriod;
 
     size_t pipelineCacheSize = 0;
-    ANGLE_TRY(getPipelineCacheSize(displayVk, &pipelineCacheSize));
+    ANGLE_TRY(getPipelineCacheSize(context, &pipelineCacheSize));
     if (pipelineCacheSize <= mPipelineCacheSizeAtLastSync)
     {
         return angle::Result::Continue;
@@ -5099,7 +5096,7 @@ angle::Result RendererVk::syncPipelineCacheVk(DisplayVk *displayVk, const gl::Co
         return angle::Result::Continue;
     }
 
-    ContextVk *contextVk = vk::GetImpl(context);
+    ContextVk *contextVk = vk::GetImpl(contextGL);
 
     // Use worker thread pool to complete compression.
     // If the last task hasn't been finished, skip the syncing.
@@ -5134,7 +5131,7 @@ angle::Result RendererVk::syncPipelineCacheVk(DisplayVk *displayVk, const gl::Co
     }
     else
     {
-        ANGLE_VK_TRY(displayVk, result);
+        ANGLE_VK_TRY(context, result);
     }
 
     // If vkGetPipelineCacheData ends up writing fewer bytes than requested, shrink the buffer to
@@ -5150,16 +5147,16 @@ angle::Result RendererVk::syncPipelineCacheVk(DisplayVk *displayVk, const gl::Co
         constexpr size_t kMaxTotalSize = 64 * 1024 * 1024;
 
         // Create task to compress.
-        mCompressEvent = context->getWorkerThreadPool()->postWorkerTask(
+        mCompressEvent = contextGL->getWorkerThreadPool()->postWorkerTask(
             std::make_shared<CompressAndStorePipelineCacheTask>(
-                displayVk, contextVk, std::move(pipelineCacheData), kMaxTotalSize));
+                globalOps, contextVk, std::move(pipelineCacheData), kMaxTotalSize));
     }
     else
     {
         // If enableAsyncPipelineCacheCompression is disabled, to avoid the risk, set kMaxTotalSize
         // to 64k.
         constexpr size_t kMaxTotalSize = 64 * 1024;
-        CompressAndStorePipelineCacheVk(mPhysicalDeviceProperties, displayVk, contextVk,
+        CompressAndStorePipelineCacheVk(mPhysicalDeviceProperties, globalOps, contextVk,
                                         pipelineCacheData, kMaxTotalSize);
     }
 

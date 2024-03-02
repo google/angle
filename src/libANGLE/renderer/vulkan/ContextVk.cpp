@@ -2116,7 +2116,7 @@ angle::Result ContextVk::createGraphicsPipeline()
     ASSERT(executableVk);
 
     vk::PipelineCacheAccess pipelineCache;
-    ANGLE_TRY(mRenderer->getPipelineCache(&pipelineCache));
+    ANGLE_TRY(mRenderer->getPipelineCache(this, &pipelineCache));
 
     vk::PipelineHelper *oldGraphicsPipeline = mCurrentGraphicsPipeline;
 
@@ -2507,7 +2507,7 @@ angle::Result ContextVk::handleDirtyComputePipelineDesc(DirtyBits::Iterator *dir
     if (mCurrentComputePipeline == nullptr)
     {
         vk::PipelineCacheAccess pipelineCache;
-        ANGLE_TRY(mRenderer->getPipelineCache(&pipelineCache));
+        ANGLE_TRY(mRenderer->getPipelineCache(this, &pipelineCache));
 
         ProgramExecutableVk *executableVk = vk::GetImpl(mState.getProgramExecutable());
         ASSERT(executableVk);

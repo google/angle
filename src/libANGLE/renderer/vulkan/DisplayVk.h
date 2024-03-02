@@ -19,7 +19,7 @@ namespace rx
 {
 class RendererVk;
 
-class DisplayVk : public DisplayImpl, public vk::Context
+class DisplayVk : public DisplayImpl, public vk::Context, public vk::GlobalOps
 {
   public:
     DisplayVk(const egl::DisplayState &state);
@@ -96,9 +96,7 @@ class DisplayVk : public DisplayImpl, public vk::Context
     // surfaceType, which would still allow the config to be used for pbuffers.
     virtual void checkConfigSupport(egl::Config *config) = 0;
 
-    [[nodiscard]] bool getScratchBuffer(size_t requestedSizeBytes,
-                                        angle::MemoryBuffer **scratchBufferOut) const;
-    angle::ScratchBuffer *getScratchBuffer() const { return &mScratchBuffer; }
+    angle::ScratchBuffer *getScratchBuffer() { return &mScratchBuffer; }
 
     void handleError(VkResult result,
                      const char *file,
@@ -129,7 +127,11 @@ class DisplayVk : public DisplayImpl, public vk::Context
     bool isColorspaceSupported(VkColorSpaceKHR colorspace) const;
     void initSupportedSurfaceFormatColorspaces();
 
-    mutable angle::ScratchBuffer mScratchBuffer;
+    // vk::GlobalOps
+    void putBlob(const angle::BlobCacheKey &key, const angle::MemoryBuffer &value) override;
+    bool getBlob(const angle::BlobCacheKey &key, angle::BlobCacheValue *valueOut) override;
+
+    angle::ScratchBuffer mScratchBuffer;
 
     // Map of supported colorspace and associated surface format set.
     angle::HashMap<VkColorSpaceKHR, std::unordered_set<VkFormat>> mSupportedColorspaceFormatsMap;

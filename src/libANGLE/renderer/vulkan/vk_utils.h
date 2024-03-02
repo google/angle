@@ -276,7 +276,8 @@ class [[nodiscard]] ScopedQueueSerialIndex final : angle::NonCopyable
     QueueSerialIndexAllocator *mIndexAllocator;
 };
 
-// Abstracts error handling. Implemented by both ContextVk for GL and DisplayVk for EGL errors.
+// Abstracts error handling. Implemented by ContextVk for GL, DisplayVk for EGL, worker threads,
+// CLContextVk etc.
 class Context : angle::NonCopyable
 {
   public:
@@ -297,6 +298,16 @@ class Context : angle::NonCopyable
   protected:
     RendererVk *const mRenderer;
     angle::VulkanPerfCounters mPerfCounters;
+};
+
+// Abstract global operations that are handled differently between EGL and OpenCL.
+class GlobalOps : angle::NonCopyable
+{
+  public:
+    virtual ~GlobalOps() = default;
+
+    virtual void putBlob(const angle::BlobCacheKey &key, const angle::MemoryBuffer &value) = 0;
+    virtual bool getBlob(const angle::BlobCacheKey &key, angle::BlobCacheValue *valueOut)  = 0;
 };
 
 class RenderPassDesc;

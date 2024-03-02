@@ -615,12 +615,6 @@ bool DisplayVk::isUsingSwapchain() const
     return true;
 }
 
-bool DisplayVk::getScratchBuffer(size_t requstedSizeBytes,
-                                 angle::MemoryBuffer **scratchBufferOut) const
-{
-    return mScratchBuffer.get(requstedSizeBytes, scratchBufferOut);
-}
-
 void DisplayVk::handleError(VkResult result,
                             const char *file,
                             const char *function,
@@ -651,5 +645,16 @@ void DisplayVk::initializeFrontendFeatures(angle::FrontendFeatures *features) co
 void DisplayVk::populateFeatureList(angle::FeatureList *features)
 {
     mRenderer->getFeatures().populateFeatureList(features);
+}
+
+// vk::GlobalOps
+void DisplayVk::putBlob(const angle::BlobCacheKey &key, const angle::MemoryBuffer &value)
+{
+    getBlobCache()->putApplication(key, value);
+}
+
+bool DisplayVk::getBlob(const angle::BlobCacheKey &key, angle::BlobCacheValue *valueOut)
+{
+    return getBlobCache()->get(&mScratchBuffer, key, valueOut);
 }
 }  // namespace rx
