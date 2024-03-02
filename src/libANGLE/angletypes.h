@@ -1182,6 +1182,21 @@ inline DestT *SafeGetImplAs(SrcT *src)
 
 namespace angle
 {
+enum class NativeWindowSystem
+{
+    X11,
+    Wayland,
+    Gbm,
+    Other,
+};
+
+struct FeatureOverrides
+{
+    std::vector<std::string> enabled;
+    std::vector<std::string> disabled;
+    bool allDisabled = false;
+};
+
 // 160-bit SHA-1 hash key used for hasing a program.  BlobCache opts in using fixed keys for
 // simplicity and efficiency.
 static constexpr size_t kBlobCacheKeyLength = angle::base::kSHA1Length;

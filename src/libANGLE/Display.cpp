@@ -704,7 +704,7 @@ static constexpr uint32_t kScratchBufferLifetime = 64u;
 
 // DisplayState
 DisplayState::DisplayState(EGLNativeDisplayType nativeDisplayId)
-    : label(nullptr), featuresAllDisabled(false), displayId(nativeDisplayId)
+    : label(nullptr), displayId(nativeDisplayId)
 {}
 
 DisplayState::~DisplayState() {}
@@ -1030,9 +1030,9 @@ void Display::setupDisplayPlatform(rx::DisplayImpl *impl)
         reinterpret_cast<const char **>(mAttributeMap.get(EGL_FEATURE_OVERRIDES_ENABLED_ANGLE, 0));
     const char **featuresForceDisabled =
         reinterpret_cast<const char **>(mAttributeMap.get(EGL_FEATURE_OVERRIDES_DISABLED_ANGLE, 0));
-    mState.featureOverridesEnabled  = EGLStringArrayToStringVector(featuresForceEnabled);
-    mState.featureOverridesDisabled = EGLStringArrayToStringVector(featuresForceDisabled);
-    mState.featuresAllDisabled =
+    mState.featureOverrides.enabled  = EGLStringArrayToStringVector(featuresForceEnabled);
+    mState.featureOverrides.disabled = EGLStringArrayToStringVector(featuresForceDisabled);
+    mState.featureOverrides.allDisabled =
         static_cast<bool>(mAttributeMap.get(EGL_FEATURE_ALL_DISABLED_ANGLE, 0));
     mImplementation->addObserver(&mGPUSwitchedBinding);
 }
@@ -1095,8 +1095,8 @@ Error Display::initialize()
     }
 
     mFrontendFeatures.reset();
-    rx::ApplyFeatureOverrides(&mFrontendFeatures, mState);
-    if (!mState.featuresAllDisabled)
+    rx::ApplyFeatureOverrides(&mFrontendFeatures, mState.featureOverrides);
+    if (!mState.featureOverrides.allDisabled)
     {
         initializeFrontendFeatures();
     }

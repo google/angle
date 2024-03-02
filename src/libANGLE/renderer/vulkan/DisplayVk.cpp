@@ -159,9 +159,9 @@ egl::Error DisplayVk::initialize(egl::Display *display)
     const uint32_t preferredDeviceId =
         static_cast<uint32_t>(attribs.get(EGL_PLATFORM_ANGLE_DEVICE_ID_LOW_ANGLE, 0));
 
-    angle::Result result =
-        mRenderer->initialize(this, display, desiredICD, preferredVendorId, preferredDeviceId,
-                              useValidationLayers, getWSIExtension(), getWSILayer());
+    angle::Result result = mRenderer->initialize(
+        this, display, desiredICD, preferredVendorId, preferredDeviceId, useValidationLayers,
+        getWSIExtension(), getWSILayer(), getWindowSystem(), mState.featureOverrides);
     ANGLE_TRY(angle::ToEGL(result, EGL_NOT_INITIALIZED));
     // Query and cache supported surface format and colorspace for later use.
     initSupportedSurfaceFormatColorspaces();
@@ -608,11 +608,6 @@ void DisplayVk::generateCaps(egl::Caps *outCaps) const
 const char *DisplayVk::getWSILayer() const
 {
     return nullptr;
-}
-
-bool DisplayVk::isUsingSwapchain() const
-{
-    return true;
 }
 
 void DisplayVk::handleError(VkResult result,

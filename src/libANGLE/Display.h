@@ -69,9 +69,7 @@ struct DisplayState final : private angle::NonCopyable
     EGLLabelKHR label;
     ContextMap contextMap;
     SurfaceMap surfaceMap;
-    std::vector<std::string> featureOverridesEnabled;
-    std::vector<std::string> featureOverridesDisabled;
-    bool featuresAllDisabled;
+    angle::FeatureOverrides featureOverrides;
     EGLNativeDisplayType displayId;
 };
 

@@ -151,6 +151,12 @@ enum class UseValidationLayers
     No,
 };
 
+enum class UseVulkanSwapchain
+{
+    Yes,
+    No,
+};
+
 class RendererVk : angle::NonCopyable
 {
   public:
@@ -164,7 +170,9 @@ class RendererVk : angle::NonCopyable
                              uint32_t preferredDeviceId,
                              UseValidationLayers useValidationLayers,
                              const char *wsiExtension,
-                             const char *wsiLayer);
+                             const char *wsiLayer,
+                             angle::NativeWindowSystem nativeWindowSystem,
+                             const angle::FeatureOverrides &featureOverrides);
 
     // Reload volk vk* function ptrs if needed for an already initialized RendererVk
     void reloadVolkIfNeeded() const;
@@ -732,7 +740,11 @@ class RendererVk : angle::NonCopyable
     vk::ExternalFormatTable mExternalFormatTable;
 
   private:
-    angle::Result setupDevice(DisplayVk *displayVk);
+    angle::Result setupDevice(vk::Context *context,
+                              const angle::FeatureOverrides &featureOverrides,
+                              const char *wsiLayer,
+                              UseVulkanSwapchain useVulkanSwapchain,
+                              angle::NativeWindowSystem nativeWindowSystem);
     angle::Result createDeviceAndQueue(DisplayVk *displayVk, uint32_t queueFamilyIndex);
     void ensureCapsInitialized() const;
     void initializeValidationMessageSuppressions();
@@ -754,11 +766,15 @@ class RendererVk : angle::NonCopyable
         VkPhysicalDeviceFeatures2KHR *deviceFeatures,
         VkPhysicalDeviceProperties2 *deviceProperties);
 
-    angle::Result enableInstanceExtensions(DisplayVk *displayVk,
+    angle::Result enableInstanceExtensions(vk::Context *context,
                                            const VulkanLayerVector &enabledInstanceLayerNames,
                                            const char *wsiExtension,
+                                           UseVulkanSwapchain useVulkanSwapchain,
                                            bool canLoadDebugUtils);
-    angle::Result enableDeviceExtensions(DisplayVk *displayVk);
+    angle::Result enableDeviceExtensions(vk::Context *context,
+                                         const angle::FeatureOverrides &featureOverrides,
+                                         UseVulkanSwapchain useVulkanSwapchain,
+                                         angle::NativeWindowSystem nativeWindowSystem);
 
     void enableDeviceExtensionsNotPromoted(const vk::ExtensionNameList &deviceExtensionNames);
     void enableDeviceExtensionsPromotedTo11(const vk::ExtensionNameList &deviceExtensionNames);
@@ -771,8 +787,11 @@ class RendererVk : angle::NonCopyable
     void initializeInstanceExtensionEntryPointsFromCore() const;
     void initializeDeviceExtensionEntryPointsFromCore() const;
 
-    void initFeatures(DisplayVk *display, const vk::ExtensionNameList &extensions);
-    void appBasedFeatureOverrides(DisplayVk *display, const vk::ExtensionNameList &extensions);
+    void initFeatures(const vk::ExtensionNameList &extensions,
+                      const angle::FeatureOverrides &featureOverrides,
+                      UseVulkanSwapchain useVulkanSwapchain,
+                      angle::NativeWindowSystem nativeWindowSystem);
+    void appBasedFeatureOverrides(const vk::ExtensionNameList &extensions);
     angle::Result initPipelineCache(DisplayVk *display,
                                     vk::PipelineCache *pipelineCache,
                                     bool *success);

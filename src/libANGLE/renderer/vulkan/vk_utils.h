@@ -126,7 +126,6 @@ constexpr uint32_t kInvalidMemoryHeapIndex = UINT32_MAX;
 
 namespace vk
 {
-
 // Used for memory allocation tracking.
 enum class MemoryAllocationType;
 
