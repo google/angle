@@ -2257,7 +2257,10 @@ void Framebuffer::onSubjectStateChange(angle::SubjectIndex index, angle::Subject
         // This can be triggered when a subject's foveated rendering state is changed
         if (message == angle::SubjectMessage::FoveatedRenderingStateChanged)
         {
-            mDirtyBits.set(DIRTY_BIT_FOVEATION);
+            // Only a color attachment can be foveated.
+            ASSERT(index >= DIRTY_BIT_COLOR_ATTACHMENT_0 && index < DIRTY_BIT_COLOR_ATTACHMENT_MAX);
+            // Mark the attachment as dirty so we can grab its updated foveation state.
+            mDirtyBits.set(index);
             onStateChange(angle::SubjectMessage::DirtyBitsFlagged);
             return;
         }
@@ -2747,31 +2750,6 @@ void Framebuffer::setFocalPoint(uint32_t layer,
 const FocalPoint &Framebuffer::getFocalPoint(uint32_t layer, uint32_t focalPoint) const
 {
     return mState.mFoveationState.getFocalPoint(layer, focalPoint);
-}
-
-bool Framebuffer::canSupportFoveatedRendering() const
-{
-    // Can't foveate a framebuffer without an attachemnt.
-    if (mState.mColorAttachmentsMask.count() == 0)
-    {
-        return false;
-    }
-
-    for (size_t colorIndex : mState.mEnabledDrawBuffers)
-    {
-        const gl::FramebufferAttachment *attachment = mState.getColorAttachment(colorIndex);
-        ASSERT(attachment);
-        ASSERT(attachment->type() != GL_NONE);
-
-        // Only non-external texture attachments are supported for foveated rendering.
-        // TODO (anglebug.com/8484): Add support for renderbuffer attachments
-        if (attachment->type() != GL_TEXTURE || attachment->isExternalTexture())
-        {
-            return false;
-        }
-    }
-
-    return true;
 }
 
 GLuint Framebuffer::getSupportedFoveationFeatures() const

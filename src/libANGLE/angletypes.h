@@ -1364,6 +1364,8 @@ class FoveationState
                mFoveatedFeatureBits == other.mFoveatedFeatureBits &&
                mMinPixelDensity == other.mMinPixelDensity && mFocalPoints == other.mFocalPoints;
     }
+    bool operator!=(const FoveationState &other) const { return !(*this == other); }
+
     void setFoveatedFeatureBits(const GLuint features) { mFoveatedFeatureBits = features; }
     GLuint getFoveatedFeatureBits() const { return mFoveatedFeatureBits; }
     void setMinPixelDensity(const GLfloat density) { mMinPixelDensity = density; }

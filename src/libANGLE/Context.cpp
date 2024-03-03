@@ -9862,15 +9862,12 @@ void Context::framebufferFoveationConfig(FramebufferID framebufferPacked,
     ASSERT(!framebuffer->isFoveationConfigured());
 
     *providedFeatures = 0;
-    if (framebuffer->canSupportFoveatedRendering())
+    // We only support GL_FOVEATION_ENABLE_BIT_QCOM feature, for now.
+    // If requestedFeatures == 0 return without configuring the framebuffer.
+    if (requestedFeatures != 0)
     {
-        // We only support GL_FOVEATION_ENABLE_BIT_QCOM feature, for now.
-        // If requestedFeatures == 0 return without configuring the framebuffer.
-        if (requestedFeatures != 0)
-        {
-            framebuffer->configureFoveation();
-            *providedFeatures = framebuffer->getSupportedFoveationFeatures();
-        }
+        framebuffer->configureFoveation();
+        *providedFeatures = framebuffer->getSupportedFoveationFeatures();
     }
 }
 
@@ -9886,9 +9883,6 @@ void Context::framebufferFoveationParameters(FramebufferID framebufferPacked,
     Framebuffer *framebuffer = getFramebuffer(framebufferPacked);
     ASSERT(framebuffer);
     framebuffer->setFocalPoint(layer, focalPoint, focalX, focalY, gainX, gainY, foveaArea);
-    mState.mDirtyBits.set(state::DIRTY_BIT_EXTENDED);
-    mState.mExtendedDirtyBits.set(
-        state::ExtendedDirtyBitType::EXTENDED_DIRTY_BIT_FOVEATED_RENDERING);
 }
 
 void Context::textureFoveationParameters(TextureID texturePacked,
@@ -9903,9 +9897,6 @@ void Context::textureFoveationParameters(TextureID texturePacked,
     Texture *texture = getTexture(texturePacked);
     ASSERT(texture);
     texture->setFocalPoint(layer, focalPoint, focalX, focalY, gainX, gainY, foveaArea);
-    mState.mDirtyBits.set(state::DIRTY_BIT_EXTENDED);
-    mState.mExtendedDirtyBits.set(
-        state::ExtendedDirtyBitType::EXTENDED_DIRTY_BIT_FOVEATED_RENDERING);
 }
 
 // ErrorSet implementation.
