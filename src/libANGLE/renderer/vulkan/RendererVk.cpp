@@ -4709,9 +4709,11 @@ void RendererVk::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
                             canSupportFragmentShadingRate());
 
     // Support QCOM foveated rendering extensions.
-    // Gated on imageless framebuffer to reduce code complexity
+    // Gated on supportsImagelessFramebuffer and supportsRenderPassLoadStoreOpNone
+    // to reduce code complexity.
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsFoveatedRendering,
                             mFeatures.supportsImagelessFramebuffer.enabled &&
+                                mFeatures.supportsRenderPassLoadStoreOpNone.enabled &&
                                 mFeatures.supportsFragmentShadingRate.enabled &&
                                 canSupportFoveatedRendering());
 
