@@ -304,6 +304,10 @@ config("internal_config") {
   if (is_win && build_with_chromium) {
     defines += [ "ANGLE_WINDOWS_NO_FUTEX=1" ]
   }
+
+  if (angle_enable_cl) {
+    defines += [ "ANGLE_ENABLE_CL" ]
+  }
 }
 
 config("constructor_and_destructor_warnings") {
