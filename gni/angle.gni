@@ -20,6 +20,9 @@ declare_args() {
   # Enables OpenCL support, off by default.
   angle_enable_cl = false
 
+  # Enables OpenCL testing support, off by default.
+  angle_enable_cl_testing = false
+
   angle_restricted_traces = []
 
   # Don't build dEQP by default.

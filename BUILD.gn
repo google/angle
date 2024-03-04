@@ -112,6 +112,9 @@ if (angle_build_all) {
     if (angle_enable_cl) {
       deps += [ "$angle_root/src/libOpenCL:angle_cl" ]
     }
+    if (angle_enable_cl_testing) {
+      deps += [ "$angle_root/third_party/OpenCL-CTS/:opencl_cts" ]
+    }
     if (angle_enable_cl && angle_enable_vulkan) {
       # OpenCL through Vulkan in ANGLE requires clspv for online compiler
       deps += [ "$angle_clspv_dir:clspv" ]
