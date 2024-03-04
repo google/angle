@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+#include "common/string_utils.h"
 #include "common/utilities.h"
 #include "compiler/translator/msl/TranslatorMSL.h"
 #include "libANGLE/renderer/metal/ContextMtl.h"
@@ -21,16 +22,6 @@ constexpr char kXfbBindingsMarker[]     = "@@XFB-Bindings@@";
 constexpr char kXfbOutMarker[]          = "ANGLE_@@XFB-OUT@@";
 constexpr char kUserDefinedNamePrefix[] = "_u";  // Defined in GLSLANG/ShaderLang.h
 constexpr char kAttribBindingsMarker[]  = "@@Attrib-Bindings@@\n";
-
-template <size_t N>
-constexpr size_t ConstStrLen(const char (&)[N])
-{
-    static_assert(N > 0, "C++ shouldn't allow N to be zero");
-
-    // The length of a string defined as a char array is the size of the array minus 1 (the
-    // terminating '\0').
-    return N - 1;
-}
 
 std::string GetXfbBufferNameMtl(const uint32_t bufferIndex)
 {
@@ -225,7 +216,7 @@ std::string UpdateAliasedShaderAttributes(std::string shaderSourceIn,
     std::string outputSource = shaderSourceIn;
     size_t markerFound       = outputSource.find(kAttribBindingsMarker);
     ASSERT(markerFound != std::string::npos);
-    outputSource.replace(markerFound, strlen(kAttribBindingsMarker), stream.str());
+    outputSource.replace(markerFound, angle::ConstStrLen(kAttribBindingsMarker), stream.str());
     return outputSource;
 }
 
@@ -268,8 +259,9 @@ std::string updateShaderAttributes(std::string shaderSourceIn,
             stream.str("");
             stream << "[[attribute(" << it->second << ")]]";
             outputSource = outputSource.replace(
-                attribFound + it->first.length() - strlen(sh::kUnassignedAttributeString),
-                strlen(sh::kUnassignedAttributeString), stream.str());
+                attribFound + it->first.length() -
+                    angle::ConstStrLen(sh::kUnassignedAttributeString),
+                angle::ConstStrLen(sh::kUnassignedAttributeString), stream.str());
         }
     }
     return outputSource;
@@ -317,10 +309,10 @@ std::string UpdateFragmentShaderOutputs(std::string shaderSourceIn,
             {
                 stream.str("");
                 stream << "color(" << elementLocation << (secondary ? "), index(1)" : ")");
-                outputSource =
-                    outputSource.replace(outputFound + placeholder.length() -
-                                             strlen(sh::kUnassignedFragmentOutputString),
-                                         strlen(sh::kUnassignedFragmentOutputString), stream.str());
+                outputSource = outputSource.replace(
+                    outputFound + placeholder.length() -
+                        angle::ConstStrLen(sh::kUnassignedFragmentOutputString),
+                    angle::ConstStrLen(sh::kUnassignedFragmentOutputString), stream.str());
             }
 
             if (defineAlpha0 && elementLocation == 0 && !secondary &&
@@ -382,11 +374,12 @@ std::string SubstituteTransformFeedbackMarkers(const std::string &originalSource
 {
     const size_t xfbBindingsMarkerStart = originalSource.find(kXfbBindingsMarker);
     bool hasBindingsMarker              = xfbBindingsMarkerStart != std::string::npos;
-    const size_t xfbBindingsMarkerEnd   = xfbBindingsMarkerStart + ConstStrLen(kXfbBindingsMarker);
+    const size_t xfbBindingsMarkerEnd =
+        xfbBindingsMarkerStart + angle::ConstStrLen(kXfbBindingsMarker);
 
     const size_t xfbOutMarkerStart = originalSource.find(kXfbOutMarker, xfbBindingsMarkerStart);
     bool hasOutMarker              = xfbOutMarkerStart != std::string::npos;
-    const size_t xfbOutMarkerEnd   = xfbOutMarkerStart + ConstStrLen(kXfbOutMarker);
+    const size_t xfbOutMarkerEnd   = xfbOutMarkerStart + angle::ConstStrLen(kXfbOutMarker);
 
     // The shader is the following form:
     //
