@@ -56,15 +56,13 @@ class MacroExpander : public Lexer
 
     struct MacroContext
     {
-        MacroContext();
-        ~MacroContext();
         bool empty() const;
         const Token &get();
         void unget();
 
         std::shared_ptr<Macro> macro;
-        std::size_t index;
         std::vector<Token> replacements;
+        std::size_t index = 0;
     };
 
     Lexer *mLexer;
@@ -73,7 +71,7 @@ class MacroExpander : public Lexer
     bool mParseDefined;
 
     std::unique_ptr<Token> mReserveToken;
-    std::vector<MacroContext *> mContextStack;
+    std::vector<MacroContext> mContextStack;
     size_t mTotalTokensInContexts;
 
     PreprocessorSettings mSettings;
