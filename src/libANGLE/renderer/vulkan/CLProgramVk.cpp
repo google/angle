@@ -250,7 +250,7 @@ std::string ProcessBuildOptions(const std::vector<std::string> &optionTokens,
             processedOptions += " --output-format=bc";
             continue;
         }
-        processedOptions += optionToken;
+        processedOptions += " " + optionToken;
     }
 
     switch (buildType)
