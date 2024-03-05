@@ -7678,8 +7678,8 @@ TIntermTyped *TParseContext::addMethod(TFunctionLookup *fnCall, const TSourceLoc
     return CreateZeroNode(TType(EbtInt, EbpUndefined, EvqConst));
 }
 
-TIntermTyped *TParseContext::addNonConstructorFunctionCall(TFunctionLookup *fnCall,
-                                                           const TSourceLoc &loc)
+TIntermTyped *TParseContext::addNonConstructorFunctionCallImpl(TFunctionLookup *fnCall,
+                                                               const TSourceLoc &loc)
 {
     // First check whether the function has been hidden by a variable name or struct typename by
     // using the symbol looked up in the lexical phase. If the function is not hidden, look for one
@@ -7741,10 +7741,7 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(TFunctionLookup *fnCa
             {
                 // Treat it like a built-in unary operator.
                 TIntermNode *unaryParamNode = fnCall->arguments().front();
-                TIntermTyped *callNode =
-                    createUnaryMath(op, unaryParamNode->getAsTyped(), loc, fnCandidate);
-                ASSERT(callNode != nullptr);
-                return callNode;
+                return createUnaryMath(op, unaryParamNode->getAsTyped(), loc, fnCandidate);
             }
 
             TIntermAggregate *callNode =
@@ -7774,7 +7771,17 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(TFunctionLookup *fnCa
             error(loc, "no matching overloaded function found", fnCall->name());
         }
     }
+    return nullptr;
+}
 
+TIntermTyped *TParseContext::addNonConstructorFunctionCall(TFunctionLookup *fnCall,
+                                                           const TSourceLoc &loc)
+{
+    TIntermTyped *result = addNonConstructorFunctionCallImpl(fnCall, loc);
+    if (result != nullptr)
+    {
+        return result;
+    }
     // Error message was already written. Put on an unused node for error recovery.
     return CreateZeroNode(TType(EbtFloat, EbpMedium, EvqConst));
 }

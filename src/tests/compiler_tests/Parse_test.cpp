@@ -139,3 +139,15 @@ void main() { }
     EXPECT_TRUE(foundErrorInIntermediateTree());
     EXPECT_TRUE(foundInIntermediateTree("'index' : invalid layout qualifier"));
 }
+
+TEST_F(ParseTest, Radians320NoCrash)
+{
+    const char kShader[] = R"(#version 320 es
+precision mediump float;
+vec4 s() { writeonly vec4 color; radians(color); return vec4(1); })";
+    EXPECT_FALSE(compile(kShader));
+    EXPECT_TRUE(foundErrorInIntermediateTree());
+    EXPECT_TRUE(foundInIntermediateTree("'writeonly' : Only allowed with shader storage blocks,"));
+    EXPECT_TRUE(foundInIntermediateTree(
+        "'radians' : wrong operand type - no operation 'radians' exists that"));
+}
