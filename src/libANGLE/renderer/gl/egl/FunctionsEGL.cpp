@@ -19,6 +19,7 @@
 #if defined(ANGLE_HAS_LIBDRM)
 // clang-format off
 #include <fcntl.h>
+#include <unistd.h>
 #include <xf86drm.h>
 // clang-format on
 #endif  // defined(ANGLE_HAS_LIBDRM)
