@@ -4006,6 +4006,10 @@ void RendererVk::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     const ARMDriverVersion armDriverVersion =
         ParseARMDriverVersion(mPhysicalDeviceProperties.driverVersion);
 
+    // Parse the Intel driver version. (Currently it only supports the Windows driver.)
+    const IntelDriverVersion intelDriverVersion =
+        ParseIntelWindowsDriverVersion(mPhysicalDeviceProperties.driverVersion);
+
     // Distinguish between the mesa and proprietary drivers
     const bool isRADV = IsRADV(mPhysicalDeviceProperties.vendorID, mDriverProperties.driverID,
                                mPhysicalDeviceProperties.deviceName);
@@ -4631,6 +4635,10 @@ void RendererVk::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // On Pixel devices, the issues have been fixed since r44, but on others since r44p1.
     const bool isArm44OrLess = isARM && armDriverVersion < ARMDriverVersion(44, 1, 0);
 
+    // Vertex input binding stride is buggy for Windows/Intel drivers before 100.9684.
+    const bool isVertexInputBindingStrideBuggy =
+        IsWindows() && isIntel && intelDriverVersion < IntelDriverVersion(100, 9684);
+
     // Intel driver has issues with VK_EXT_vertex_input_dynamic_state
     // http://anglebug.com/7162#c8
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsVertexInputDynamicState,
@@ -4647,7 +4655,7 @@ void RendererVk::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, useVertexInputBindingStrideDynamicState,
                             mFeatures.supportsExtendedDynamicState.enabled &&
                                 !mFeatures.supportsVertexInputDynamicState.enabled &&
-                                !isArm44OrLess);
+                                !isArm44OrLess && !isVertexInputBindingStrideBuggy);
     ANGLE_FEATURE_CONDITION(&mFeatures, useCullModeDynamicState,
                             mFeatures.supportsExtendedDynamicState.enabled && !isArm44OrLess);
     ANGLE_FEATURE_CONDITION(&mFeatures, useDepthCompareOpDynamicState,
