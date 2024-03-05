@@ -639,6 +639,20 @@ b/308668391 PIXEL4ORXL VULKAN : ImageTest.SourceYUVAHBTargetExternalRGBSampleNoD
 7583 PIXEL6 VULKAN : VulkanPerformanceCounterTest.DisableInvalidateDraw/* = SKIP
 7583 PIXEL6 VULKAN : VulkanPerformanceCounterTest.ReadOnlyDepthBufferLayout/* = SKIP
 7705 PIXEL6 GLES : FramebufferTest_ES31.ChangeFBOSizeWithNoAttachments/* = SKIP
+// New failures after UQ1A.240105.002 upgrade
+8598 PIXEL6 VULKAN : ImageTest.SourceNativeClientBufferTargetRenderbuffer/* = SKIP
+8598 PIXEL6 VULKAN : MultisampledRenderToTextureES31Test.BlitFramebufferAttachment1/* = SKIP
+8598 PIXEL6 VULKAN : MultisampledRenderToTextureES31Test.MixedMultisampledAndMultisampledRenderToTexture/* = SKIP
+8598 PIXEL6 VULKAN : MultisampledRenderToTextureES31Test.RenderbufferBlitFramebufferAttachment1/* = SKIP
+8598 PIXEL6 VULKAN : MultisampledRenderToTextureWithAdvancedBlendTest.ClearThenDraw/* = SKIP
+8598 PIXEL6 VULKAN : MultisampledRenderToTextureWithAdvancedBlendTest.LoadThenDraw/* = SKIP
+8598 PIXEL6 VULKAN : MultisampledRenderToTextureWithAdvancedBlendTest.RenderbufferClearThenDraw/* = SKIP
+8598 PIXEL6 VULKAN : MultisampledRenderToTextureWithAdvancedBlendTest.RenderbufferLoadThenDraw/* = SKIP
+8598 PIXEL6 VULKAN : MultiviewDrawValidationTest.ActiveTransformFeedback/* = SKIP
+8598 PIXEL6 VULKAN : OcclusionQueriesTestES3.UnresolveNotCounted/* = SKIP
+8598 PIXEL6 VULKAN : VulkanPerformanceCounterTest.RenderToTextureDepthStencilRenderbufferShouldNotLoad/* = SKIP
+8598 PIXEL6 VULKAN : VulkanPerformanceCounterTest.RenderToTextureDepthStencilTextureShouldNotLoad/* = SKIP
+8598 PIXEL6 VULKAN : VulkanPerformanceCounterTest.RenderToTextureUninitializedAndUnusedDepthStencil/* = SKIP
 
 // ARM drivers cannot support xfb emulation because they lack support for the
 // vertexPipelineStoresAndAtomics Vulkan feature.  The tests that force-enable this feature are

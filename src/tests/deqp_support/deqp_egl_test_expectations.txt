@@ -115,6 +115,10 @@
 
 // Pixel 6 Vulkan
 6899 PIXEL6 VULKAN : dEQP-EGL.functional.query_context.*.rgb888_window = FAIL
+// New failures after UQ1A.240105.002 upgrade
+8598 PIXEL6 VULKAN : dEQP-EGL.functional.robustness.reset_context.shaders.out_of_bounds_non_robust.reset_status.writes.local_array.compute = FAIL
+8598 PIXEL6 VULKAN : dEQP-EGL.functional.robustness.reset_context.shaders.out_of_bounds_non_robust.reset_status.writes.shader_storage_block.compute = FAIL
+8598 PIXEL6 VULKAN : dEQP-EGL.functional.robustness.reset_context.shaders.out_of_bounds_non_robust.reset_status.writes.uniform_block.compute = FAIL
 
 // ES 1 tests
 2306 WIN : dEQP-EGL.functional.color_clears.single_context.gles1* = FAIL
