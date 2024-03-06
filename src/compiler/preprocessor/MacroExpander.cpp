@@ -259,7 +259,7 @@ bool MacroExpander::pushMacro(std::shared_ptr<Macro> macro, const Token &identif
     macro->disabled = true;
 
     mTotalTokensInContexts += replacements.size();
-    mContextStack.emplace_back(macro, std::move(replacements));
+    mContextStack.emplace_back(std::move(macro), std::move(replacements));
     return true;
 }
 

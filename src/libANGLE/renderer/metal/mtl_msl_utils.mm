@@ -81,9 +81,9 @@ ResolveModifiedAttributeName(const std::string &name, int registerIndex, int reg
 {
     if (registerCount < 2)
     {
-        return UserDefinedNameExpr(name);
+        return UserDefinedNameExpr{name};
     }
-    return InternalNameComponentExpr({name}, registerIndex);
+    return InternalNameComponentExpr{InternalNameExpr{name}, registerIndex};
 }
 
 std::variant<UserDefinedNameExpr, InternalNameComponentExpr>
@@ -91,9 +91,9 @@ ResolveModifiedOutputName(const std::string &name, int component, int componentC
 {
     if (componentCount == 0)
     {
-        return UserDefinedNameExpr(name);
+        return UserDefinedNameExpr{name};
     }
-    return InternalNameComponentExpr({name}, component);
+    return InternalNameComponentExpr{InternalNameExpr{name}, component};
 }
 
 // Accessing unmodified structs uses user-defined name, business as usual.
@@ -102,9 +102,9 @@ ResolveUserDefinedName(const std::string &name, int component, int componentCoun
 {
     if (componentCount == 0)
     {
-        return UserDefinedNameExpr(name);
+        return UserDefinedNameExpr{name};
     }
-    return UserDefinedNameComponentExpr({name}, component);
+    return UserDefinedNameComponentExpr{{name}, component};
 }
 
 template <class T>
@@ -112,14 +112,15 @@ struct ApplyOStream
 {
     const T &value;
 };
+
 template <class T>
 ApplyOStream(T) -> ApplyOStream<T>;
 
 template <class T>
-std::ostream &operator<<(std::ostream &os, ApplyOStream<T> s)
+std::ostream &operator<<(std::ostream &stream, ApplyOStream<T> sv)
 {
-    os << s.value;
-    return os;
+    stream << sv.value;
+    return stream;
 }
 
 template <class... Ts>
@@ -278,7 +279,7 @@ std::string UpdateAliasedShaderAttributes(std::string shaderSourceIn,
         for (int i = 0; i < registers; i++)
         {
             stream << "#define ANGLE_ALIASED_"
-                   << ApplyOStream(ResolveModifiedAttributeName(attribute.name, i, registers))
+                   << ApplyOStream{ResolveModifiedAttributeName(attribute.name, i, registers)}
                    << " ANGLE_modified.ANGLE_ATTRIBUTE_" << (location + i);
             if (components != maxComponents[location + i])
             {
@@ -332,7 +333,7 @@ std::string updateShaderAttributes(std::string shaderSourceIn,
         {
             stream.str("");
             stream << ' '
-                   << ApplyOStream(ResolveModifiedAttributeName(attribute.name, i, registers))
+                   << ApplyOStream{ResolveModifiedAttributeName(attribute.name, i, registers)}
                    << sh::kUnassignedAttributeString;
             attributeBindings.insert({stream.str(), i + attribute.getLocation()});
         }
@@ -381,7 +382,7 @@ std::string UpdateFragmentShaderOutputs(std::string shaderSourceIn,
             const int location                 = outputVar.pod.location + index;
             const int arraySize                = outputVar.getOutermostArraySize();
             stream.str("");
-            stream << ApplyOStream(ResolveModifiedOutputName(outputVar.name, index, arraySize))
+            stream << ApplyOStream{ResolveModifiedOutputName(outputVar.name, index, arraySize)}
                    << " [[" << sh::kUnassignedFragmentOutputString;
             const std::string placeholder(stream.str());
 
@@ -402,7 +403,7 @@ std::string UpdateFragmentShaderOutputs(std::string shaderSourceIn,
                 ASSERT(alphaOutputName.empty());
                 std::ostringstream nameStream;
                 nameStream << "ANGLE_fragmentOut."
-                           << ApplyOStream(ResolveUserDefinedName(outputVar.name, index, arraySize))
+                           << ApplyOStream{ResolveUserDefinedName(outputVar.name, index, arraySize)}
                            << ".a";
                 alphaOutputName = nameStream.str();
             }

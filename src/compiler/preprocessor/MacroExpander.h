@@ -13,6 +13,7 @@
 #include "compiler/preprocessor/Lexer.h"
 #include "compiler/preprocessor/Macro.h"
 #include "compiler/preprocessor/Preprocessor.h"
+#include "compiler/preprocessor/Token.h"
 
 namespace angle
 {
@@ -56,6 +57,9 @@ class MacroExpander : public Lexer
 
     struct MacroContext
     {
+        MacroContext(std::shared_ptr<Macro> macro, std::vector<Token> &&replacements)
+            : macro(std::move(macro)), replacements(std::move(replacements))
+        {}
         bool empty() const;
         const Token &get();
         void unget();
