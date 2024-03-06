@@ -3109,23 +3109,25 @@ void FramebufferVk::clearWithCommand(ContextVk *contextVk,
     {
         if (clears->getColorMask().test(colorIndexGL))
         {
-            if (!renderPassCommands->hasAnyColorAccess(colorIndexVk) && optimizeWithLoadOp)
+            if (renderPassCommands->hasAnyColorAccess(colorIndexVk) ||
+                renderPassCommands->getRenderPassDesc().hasColorUnresolveAttachment(colorIndexGL) ||
+                !optimizeWithLoadOp)
+            {
+                attachments.emplace_back(VkClearAttachment{VK_IMAGE_ASPECT_COLOR_BIT,
+                                                           static_cast<uint32_t>(colorIndexGL),
+                                                           (*clears)[colorIndexGL]});
+                clears->reset(colorIndexGL);
+                ++contextVk->getPerfCounters().colorClearAttachments;
+
+                renderPassCommands->onColorAccess(colorIndexVk, vk::ResourceAccess::ReadWrite);
+            }
+            else
             {
                 // Skip this attachment, so we can use a renderpass loadOp to clear it instead.
                 // Note that if loadOp=Clear was already used for this color attachment, it will be
                 // overriden by the new clear, which is valid because the attachment wasn't used in
                 // between.
-                ++colorIndexVk;
-                continue;
             }
-
-            attachments.emplace_back(VkClearAttachment{VK_IMAGE_ASPECT_COLOR_BIT,
-                                                       static_cast<uint32_t>(colorIndexGL),
-                                                       (*clears)[colorIndexGL]});
-            clears->reset(colorIndexGL);
-            ++contextVk->getPerfCounters().colorClearAttachments;
-
-            renderPassCommands->onColorAccess(colorIndexVk, vk::ResourceAccess::ReadWrite);
         }
         ++colorIndexVk;
     }
@@ -3135,7 +3137,10 @@ void FramebufferVk::clearWithCommand(ContextVk *contextVk,
     VkClearValue dsClearValue         = {};
     dsClearValue.depthStencil.depth   = clears->getDepthValue();
     dsClearValue.depthStencil.stencil = clears->getStencilValue();
-    if (clears->testDepth() && (renderPassCommands->hasAnyDepthAccess() || !optimizeWithLoadOp))
+    if (clears->testDepth() &&
+        (renderPassCommands->hasAnyDepthAccess() ||
+         renderPassCommands->getRenderPassDesc().hasDepthUnresolveAttachment() ||
+         !optimizeWithLoadOp))
     {
         dsAspectFlags |= VK_IMAGE_ASPECT_DEPTH_BIT;
         // Explicitly mark a depth write because we are clearing the depth buffer.
@@ -3144,7 +3149,10 @@ void FramebufferVk::clearWithCommand(ContextVk *contextVk,
         ++contextVk->getPerfCounters().depthClearAttachments;
     }
 
-    if (clears->testStencil() && (renderPassCommands->hasAnyStencilAccess() || !optimizeWithLoadOp))
+    if (clears->testStencil() &&
+        (renderPassCommands->hasAnyStencilAccess() ||
+         renderPassCommands->getRenderPassDesc().hasStencilUnresolveAttachment() ||
+         !optimizeWithLoadOp))
     {
         dsAspectFlags |= VK_IMAGE_ASPECT_STENCIL_BIT;
         // Explicitly mark a stencil write because we are clearing the stencil buffer.
