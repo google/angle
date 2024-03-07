@@ -4690,11 +4690,12 @@ void RendererVk::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
             mExtendedDynamicState2Features.extendedDynamicState2LogicOp == VK_TRUE &&
             !(IsLinux() && isIntel && isMesaLessThan22_2) && !(IsAndroid() && isGalaxyS23));
 
-    // Samsung Vulkan driver crashes in vkCmdClearAttachments() when imageless Framebuffer
-    // is used to begin Secondary Command Buffer before the corresponding vkCmdBeginRenderPass().
+    // Samsung Vulkan driver with API level < 1.3.244 has a bug in imageless framebuffer support.
+    const bool isSamsungDriverWithImagelessFramebufferBug =
+        isSamsung && mPhysicalDeviceProperties.apiVersion < VK_MAKE_VERSION(1, 3, 244);
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsImagelessFramebuffer,
                             mImagelessFramebufferFeatures.imagelessFramebuffer == VK_TRUE &&
-                                (vk::RenderPassCommandBuffer::ExecutesInline() || !isSamsung));
+                                !isSamsungDriverWithImagelessFramebufferBug);
 
     if (ExtensionFound(VK_KHR_FRAGMENT_SHADING_RATE_EXTENSION_NAME, deviceExtensionNames))
     {
