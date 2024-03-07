@@ -196,8 +196,14 @@ const std::string &CLPlatformVk::GetVersionString()
 
 CLPlatformVk::CLPlatformVk(const cl::Platform &platform) : CLPlatformImpl(platform)
 {
+    // Select vulkan backend
+    const EGLint attribList[]   = {EGL_PLATFORM_ANGLE_TYPE_ANGLE,
+                                   EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE, EGL_NONE};
+    egl::AttributeMap attribMap = egl::AttributeMap::CreateFromIntArray(attribList);
+    attribMap.initializeWithoutValidation();
+
     mDisplay = egl::Display::GetDisplayFromNativeDisplay(EGL_PLATFORM_ANGLE_ANGLE,
-                                                         EGL_DEFAULT_DISPLAY, egl::AttributeMap{});
+                                                         EGL_DEFAULT_DISPLAY, attribMap);
     ANGLE_CL_IMPL_TRY(InitBackendRenderer(mDisplay));
 }
 
