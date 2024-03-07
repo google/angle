@@ -4989,6 +4989,11 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
                                 mFeatures.supportsFragmentShadingRate.enabled &&
                                 canSupportFoveatedRendering());
 
+    // Force CPU based generation of fragment shading rate attachment data if
+    // VkPhysicalDeviceFeatures::shaderStorageImageExtendedFormats is not supported
+    ANGLE_FEATURE_CONDITION(&mFeatures, generateFragmentShadingRateAttchementWithCpu,
+                            mPhysicalDeviceFeatures.shaderStorageImageExtendedFormats != VK_TRUE);
+
     // We can use the interlock to support GL_ANGLE_shader_pixel_local_storage_coherent.
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsFragmentShaderPixelInterlock,
