@@ -74,6 +74,9 @@
 
 // Fails on 451.48 driver version
 40644748 D3D11 NVIDIA : dEQP-GLES3.functional.shaders.texture_functions.texturesize.* = FAIL
+// Fails on 546.01 driver version
+42267037 D3D11 NVIDIA : dEQP-GLES3.functional.rasterization.fbo.rbo_multisample_max.interpolation.lines = FAIL
+42267037 D3D11 NVIDIA : dEQP-GLES3.functional.rasterization.fbo.rbo_multisample_max.primitives.lines = FAIL
 
 42264508 WIN D3D11 NVIDIA : dEQP-GLES3.functional.texture.specification.texsubimage2d_pbo.pbo_bounds_2d = FAIL
 

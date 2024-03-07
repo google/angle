@@ -289,6 +289,16 @@
           'isolated_scripts': 'isolated_scripts_group_common',
         },
       },
+      'win10-x64-exp-nvidia': {
+        'os_type': 'win',
+        'mixins': [
+          'win10_nvidia_gtx_1660_experimental',
+        ],
+        'test_suites': {
+          'gtest_tests': 'win10_nvidia_gtests',
+          'isolated_scripts': 'isolated_scripts_group_common',
+        },
+      },
       'win10-x64-intel': {
         'os_type': 'win',
         'mixins': [

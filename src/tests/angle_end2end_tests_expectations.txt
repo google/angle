@@ -126,7 +126,6 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 42266963 WIN NVIDIA GLES : PbufferTest.UseAsFramebufferColorThenDeferredDestroy/* = SKIP
 42266963 WIN NVIDIA OPENGL : PbufferTest.UseAsFramebufferColorThenDeferredDestroy/* = SKIP
 377537290 WIN D3D11 : ReadPixelsMultisampleTest.DefaultFramebufferPBO/* = SKIP
-
 234602034 WIN INTEL D3D9 : ImageTest.SourceCubeAndSameTargetTextureWithEachCubeFace/* = SKIP
 234602034 WIN NVIDIA D3D9 : ImageTest.SourceCubeAndSameTargetTextureWithEachCubeFace/* = SKIP
 42266127 WIN INTEL OPENGL : StateChangeTestES3.LogicOp/* = SKIP
@@ -176,6 +175,18 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 352085732 WIN INTEL VULKAN : OcclusionQueriesTest.MultiContext/* = SKIP
 352085732 WIN INTEL VULKAN : OcclusionQueriesTest.MultiQueries/* = SKIP
 373818282 WIN INTEL OPENGL : ClearTest.ChangeFramebufferAttachmentFromRGBAtoRGB/* = SKIP
+
+// Failures on NVIDIA GTX 1660 driver 31.0.15.4601
+42267037 WIN NVIDIA VULKAN : RobustResourceInitTest.MaskedStencilClear/ES2_Vulkan_AllocateNonZeroMemory = SKIP
+42267037 WIN NVIDIA VULKAN : RobustResourceInitTestES3.MaskedStencilClearBuffer/ES3_Vulkan_AllocateNonZeroMemory = SKIP
+42267037 WIN NVIDIA VULKAN : Texture2DTestES3.TexImageWithStencilData/ES3_Vulkan_AllocateNonZeroMemory = SKIP
+42267037 WIN NVIDIA VULKAN : Texture2DTestES3.TexImageWithStencilPBO/ES3_Vulkan_AllocateNonZeroMemory = SKIP
+42267037 WIN NVIDIA VULKAN : Texture2DTestES3.TexStorage2DSimultaneousUseOfMultipleYuvSourcesNoData/* = SKIP
+42267037 WIN NVIDIA GLES : TextureCubeTestES3.SpecifyAndSampleFromBaseLevel1/* = SKIP
+42267037 WIN NVIDIA OPENGL : TextureCubeTestES3.SpecifyAndSampleFromBaseLevel1/* = SKIP
+42267037 WIN NVIDIA VULKAN : VulkanPerformanceCounterTest.PipelineCacheIsRestoredWithProgramBinary/* = SKIP
+42267037 WIN NVIDIA VULKAN : VulkanPerformanceCounterTest.PipelineCacheIsRestoredWithProgramBinaryTwice/* = SKIP
+42267037 WIN NVIDIA VULKAN : VulkanPerformanceCounterTest.PipelineCacheIsWarmedUpAtLinkTime/* = SKIP
 
 // Intel/windows does not ignore gl_Layer for non-layered framebuffers
 374790899 WIN INTEL OPENGL : GeometryShaderTest.GLLayerIneffectiveWithoutLayeredFramebuffer/* = SKIP
