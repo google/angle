@@ -541,7 +541,7 @@ class TParseContext : angle::NonCopyable
     int checkIndexLessThan(bool outOfRangeIndexIsError,
                            const TSourceLoc &location,
                            int index,
-                           int arraySize,
+                           unsigned int arraySize,
                            const char *reason);
 
     bool declareVariable(const TSourceLoc &line,

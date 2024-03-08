@@ -5478,14 +5478,12 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
 int TParseContext::checkIndexLessThan(bool outOfRangeIndexIsError,
                                       const TSourceLoc &location,
                                       int index,
-                                      int arraySize,
+                                      unsigned int arraySize,
                                       const char *reason)
 {
-    // Should not reach here with an unsized / runtime-sized array.
-    ASSERT(arraySize > 0);
     // A negative index should already have been checked.
     ASSERT(index >= 0);
-    if (index >= arraySize)
+    if (static_cast<unsigned int>(index) >= arraySize)
     {
         std::stringstream reasonStream = sh::InitializeStream<std::stringstream>();
         reasonStream << reason << " '" << index << "'";
