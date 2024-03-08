@@ -1824,6 +1824,12 @@ void ContextMtl::endEncoding(bool forceSaveRenderPassContent)
 
         endRenderEncoding(&mRenderEncoder);
     }
+    // End blit encoder after render encoder, as endRenderEncoding() might create a
+    // blit encoder to resolve the visibility results.
+    if (mBlitEncoder.valid())
+    {
+        mBlitEncoder.endEncoding();
+    }
 }
 
 void ContextMtl::flushCommandBuffer(mtl::CommandBufferFinishOperation operation)
