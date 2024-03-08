@@ -126,7 +126,7 @@ std::ostream &operator<<(std::ostream &stream, ApplyOStream<T> sv)
 template <class... Ts>
 std::ostream &operator<<(std::ostream &stream, ApplyOStream<std::variant<Ts...>> sv)
 {
-    std::visit([&stream](auto &&v) { stream << ApplyOStream(v); }, sv.value);
+    std::visit([&stream](auto &&v) { stream << ApplyOStream{v}; }, sv.value);
     return stream;
 }
 
