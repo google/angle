@@ -151,3 +151,14 @@ vec4 s() { writeonly vec4 color; radians(color); return vec4(1); })";
     EXPECT_TRUE(foundInIntermediateTree(
         "'radians' : wrong operand type - no operation 'radians' exists that"));
 }
+
+TEST_F(ParseTest, CoherentCoherentNoCrash)
+{
+    const char kShader[] = R"(#version 310 es
+uniform highp coherent coherent readonly image2D image1;\n"
+void main() {
+})";
+    EXPECT_FALSE(compile(kShader));
+    EXPECT_TRUE(foundErrorInIntermediateTree());
+    EXPECT_TRUE(foundInIntermediateTree("coherent specified multiple times"));
+}
