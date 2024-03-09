@@ -7,9 +7,9 @@
 #include <algorithm>
 #include <unordered_map>
 
+#include "compiler/translator/IntermRebuild.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/msl/AstHelpers.h"
-#include "compiler/translator/msl/IntermRebuild.h"
 #include "compiler/translator/msl/TranslatorMSL.h"
 #include "compiler/translator/tree_ops/SeparateDeclarations.h"
 #include "compiler/translator/tree_ops/msl/ReduceInterfaceBlocks.h"
