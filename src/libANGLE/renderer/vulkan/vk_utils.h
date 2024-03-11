@@ -865,6 +865,63 @@ class Shared final : angle::NonCopyable
     RefCounted<T> *mRefCounted;
 };
 
+// Atomic version of Shared.  Useful when vulkan handles need to be accessed simultaneously
+// across multiple threads.
+template <typename T>
+class AtomicShared final
+{
+  public:
+    AtomicShared() : mRefCounted(nullptr) {}
+    ~AtomicShared() { ASSERT(mRefCounted == nullptr); }
+    AtomicShared(const AtomicShared &other) { *this = other; }
+    AtomicShared &operator=(const AtomicShared &other)
+    {
+        ASSERT(other.mRefCounted);
+        other.mRefCounted->addRef();
+        mRefCounted = other.mRefCounted;
+
+        return *this;
+    }
+
+    void set(VkDevice device, T &&newObject)
+    {
+        update(device, new AtomicRefCounted<T>(std::move(newObject)));
+    }
+
+    void reset(VkDevice device) { update(device, nullptr); }
+
+    bool isReferenced() const { return mRefCounted->isReferenced(); }
+
+    const T &get() const
+    {
+        ASSERT(mRefCounted && mRefCounted->isReferenced());
+        return mRefCounted->get();
+    }
+
+  private:
+    void update(VkDevice device, AtomicRefCounted<T> *refCounted)
+    {
+        if (mRefCounted)
+        {
+            mRefCounted->releaseRef();
+            if (!mRefCounted->isReferenced())
+            {
+                mRefCounted->get().destroy(device);
+                SafeDelete(mRefCounted);
+            }
+        }
+
+        mRefCounted = refCounted;
+
+        if (mRefCounted)
+        {
+            mRefCounted->addRef();
+        }
+    }
+
+    AtomicRefCounted<T> *mRefCounted;
+};
+
 template <typename T>
 class Recycler final : angle::NonCopyable
 {
