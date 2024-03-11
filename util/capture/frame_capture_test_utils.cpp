@@ -96,6 +96,23 @@ bool UncompressData(const std::vector<uint8_t> &compressedData,
 
     return true;
 }
+
+void SaveDebugFile(const std::string &outputDir,
+                   const char *baseFileName,
+                   const char *suffix,
+                   const std::vector<uint8_t> data)
+{
+    if (outputDir.empty())
+    {
+        return;
+    }
+
+    std::ostringstream path;
+    path << outputDir << "/" << baseFileName << suffix;
+    FILE *fp = fopen(path.str().c_str(), "wb");
+    fwrite(data.data(), 1, data.size(), fp);
+    fclose(fp);
+}
 }  // namespace
 
 bool LoadTraceNamesFromJSON(const std::string jsonFilePath, std::vector<std::string> *namesOut)
@@ -278,8 +295,11 @@ uint8_t *TraceLibrary::LoadBinaryData(const char *fileName)
         if (!UncompressData(compressedData, &mBinaryData))
         {
             // Workaround for sporadic failures https://issuetracker.google.com/296921272
+            SaveDebugFile(mDebugOutputDir, fileName, ".gzdbg_input.gz", compressedData);
+            SaveDebugFile(mDebugOutputDir, fileName, ".gzdbg_attempt1", mBinaryData);
             std::vector<uint8_t> uncompressedData;
             bool secondResult = UncompressData(compressedData, &uncompressedData);
+            SaveDebugFile(mDebugOutputDir, fileName, ".gzdbg_attempt2", uncompressedData);
             if (!secondResult)
             {
                 std::cerr << "Uncompress retry failed\n";
