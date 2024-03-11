@@ -7073,14 +7073,14 @@ angle::Result RenderPassCache::MakeRenderPass(vk::Context *context,
     {
         ASSERT(!isRenderToTextureThroughExtension);
 
+        uint32_t depthStencilIndexGL = static_cast<uint32_t>(desc.depthStencilAttachmentIndex());
+        const angle::Format &angleFormat = angle::Format::Get(desc[depthStencilIndexGL]);
+
         depthStencilResolve.sType = VK_STRUCTURE_TYPE_SUBPASS_DESCRIPTION_DEPTH_STENCIL_RESOLVE;
 
         if (!context->getFeatures().supportsDepthStencilIndependentResolveNone.enabled)
         {
             // Assert that depth/stencil is not separately resolved without this feature
-            uint32_t depthStencilIndexGL =
-                static_cast<uint32_t>(desc.depthStencilAttachmentIndex());
-            const angle::Format &angleFormat = angle::Format::Get(desc[depthStencilIndexGL]);
             ASSERT(desc.hasDepthResolveAttachment() || angleFormat.depthBits == 0);
             ASSERT(desc.hasStencilResolveAttachment() || angleFormat.stencilBits == 0);
 
@@ -7099,12 +7099,16 @@ angle::Result RenderPassCache::MakeRenderPass(vk::Context *context,
                     : VK_RESOLVE_MODE_NONE;
         }
 
-        // If depth/stencil attachment is invalidated, try to remove its resolve attachment
-        // altogether.
-        const bool removeDepthStencilResolve = canRemoveResolveAttachments &&
-                                               isMSRTTEmulationDepthInvalidated &&
-                                               isMSRTTEmulationStencilInvalidated;
-        if (!removeDepthStencilResolve)
+        // If depth/stencil attachment is invalidated or is otherwise not really resolved, don't set
+        // it as the resolve attachment in the first place.
+        const bool isResolvingDepth = !isMSRTTEmulationDepthInvalidated &&
+                                      angleFormat.depthBits > 0 &&
+                                      depthStencilResolve.depthResolveMode != VK_RESOLVE_MODE_NONE;
+        const bool isResolvingStencil =
+            !isMSRTTEmulationStencilInvalidated && angleFormat.stencilBits > 0 &&
+            depthStencilResolve.stencilResolveMode != VK_RESOLVE_MODE_NONE;
+
+        if (isResolvingDepth || isResolvingStencil)
         {
             depthStencilResolve.pDepthStencilResolveAttachment = &depthStencilResolveAttachmentRef;
             vk::AddToPNextChain(&subpassDesc.back(), &depthStencilResolve);
