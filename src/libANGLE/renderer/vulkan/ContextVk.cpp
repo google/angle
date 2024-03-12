@@ -2739,8 +2739,7 @@ angle::Result ContextVk::handleDirtyGraphicsVertexBuffers(DirtyBits::Iterator *d
         vertexArrayVk->getCurrentArrayBuffers();
 
     // Mark all active vertex buffers as accessed.
-    const gl::AttributesMask attribsMask = executable->getActiveAttribLocationsMask();
-    for (size_t attribIndex : attribsMask)
+    for (uint32_t attribIndex = 0; attribIndex < maxAttrib; ++attribIndex)
     {
         vk::BufferHelper *arrayBuffer = arrayBufferResources[attribIndex];
         if (arrayBuffer)
