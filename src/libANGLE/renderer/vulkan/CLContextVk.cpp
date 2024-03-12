@@ -7,11 +7,13 @@
 
 #include "libANGLE/renderer/vulkan/CLContextVk.h"
 #include "libANGLE/renderer/vulkan/CLCommandQueueVk.h"
+#include "libANGLE/renderer/vulkan/CLMemoryVk.h"
 #include "libANGLE/renderer/vulkan/CLProgramVk.h"
 #include "libANGLE/renderer/vulkan/DisplayVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
+#include "libANGLE/CLBuffer.h"
 #include "libANGLE/CLContext.h"
 #include "libANGLE/CLProgram.h"
 #include "libANGLE/cl_utils.h"
@@ -84,12 +86,18 @@ angle::Result CLContextVk::createCommandQueue(const cl::CommandQueue &commandQue
 }
 
 angle::Result CLContextVk::createBuffer(const cl::Buffer &buffer,
-                                        size_t size,
                                         void *hostPtr,
                                         CLMemoryImpl::Ptr *bufferOut)
 {
-    UNIMPLEMENTED();
-    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+    CLBufferVk *memory = new (std::nothrow) CLBufferVk(buffer);
+    if (memory == nullptr)
+    {
+        ANGLE_CL_RETURN_ERROR(CL_OUT_OF_HOST_MEMORY);
+    }
+    ANGLE_TRY(memory->create(hostPtr));
+    *bufferOut = CLMemoryImpl::Ptr(memory);
+    mAssociatedObjects->mMemories.emplace(buffer.getNative());
+    return angle::Result::Continue;
 }
 
 angle::Result CLContextVk::createImage(const cl::Image &image,
