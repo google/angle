@@ -8,6 +8,7 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_CLPROGRAMVK_H_
 #define LIBANGLE_RENDERER_VULKAN_CLPROGRAMVK_H_
 
+#include "libANGLE/renderer/vulkan/CLContextVk.h"
 #include "libANGLE/renderer/vulkan/CLKernelVk.h"
 #include "libANGLE/renderer/vulkan/cl_types.h"
 #include "libANGLE/renderer/vulkan/vk_cache_utils.h"
@@ -193,6 +194,7 @@ class CLProgramVk : public CLProgramImpl
 
     const DeviceProgramData *getDeviceProgramData(const char *kernelName) const;
     const DeviceProgramData *getDeviceProgramData(const _cl_device_id *device) const;
+    CLPlatformVk *getPlatform() { return mContext->getPlatform(); }
 
     bool buildInternal(const cl::DevicePtrs &devices,
                        std::string options,

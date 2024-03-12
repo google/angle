@@ -6,6 +6,7 @@
 // CLPlatformVk.cpp: Implements the class methods for CLPlatformVk.
 
 #include "libANGLE/renderer/vulkan/CLPlatformVk.h"
+#include "common/MemoryBuffer.h"
 #include "libANGLE/renderer/vulkan/CLContextVk.h"
 #include "libANGLE/renderer/vulkan/CLDeviceVk.h"
 #include "libANGLE/renderer/vulkan/DisplayVk.h"
@@ -16,6 +17,7 @@
 
 #include "anglebase/no_destructor.h"
 #include "common/angle_version_info.h"
+#include "libANGLE/renderer/vulkan/vk_utils.h"
 
 namespace rx
 {
@@ -194,7 +196,8 @@ const std::string &CLPlatformVk::GetVersionString()
     return *sVersion;
 }
 
-CLPlatformVk::CLPlatformVk(const cl::Platform &platform) : CLPlatformImpl(platform)
+CLPlatformVk::CLPlatformVk(const cl::Platform &platform)
+    : CLPlatformImpl(platform), mBlobCache(1024 * 1024)
 {
     // Select vulkan backend
     const EGLint attribList[]   = {EGL_PLATFORM_ANGLE_TYPE_ANGLE,
@@ -205,6 +208,37 @@ CLPlatformVk::CLPlatformVk(const cl::Platform &platform) : CLPlatformImpl(platfo
     mDisplay = egl::Display::GetDisplayFromNativeDisplay(EGL_PLATFORM_ANGLE_ANGLE,
                                                          EGL_DEFAULT_DISPLAY, attribMap);
     ANGLE_CL_IMPL_TRY(InitBackendRenderer(mDisplay));
+}
+
+// vk::GlobalOps
+void CLPlatformVk::putBlob(const angle::BlobCacheKey &key, const angle::MemoryBuffer &value)
+{
+    std::scoped_lock<std::mutex> lock(mBlobCacheMutex);
+    size_t valueSize = value.size();
+    mBlobCache.put(key, std::move(const_cast<angle::MemoryBuffer &>(value)), valueSize);
+}
+
+bool CLPlatformVk::getBlob(const angle::BlobCacheKey &key, angle::BlobCacheValue *valueOut)
+{
+    std::scoped_lock<std::mutex> lock(mBlobCacheMutex);
+    const angle::MemoryBuffer *entry;
+    bool result = mBlobCache.get(key, &entry);
+    if (result)
+    {
+        *valueOut = angle::BlobCacheValue(entry->data(), entry->size());
+    }
+    return result;
+}
+
+std::shared_ptr<angle::WaitableEvent> CLPlatformVk::postMultiThreadWorkerTask(
+    const std::shared_ptr<angle::Closure> &task)
+{
+    return mPlatform.getMultiThreadPool()->postWorkerTask(task);
+}
+
+void CLPlatformVk::notifyDeviceLost()
+{
+    return;
 }
 
 }  // namespace rx

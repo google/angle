@@ -387,10 +387,9 @@ angle::Result CLProgramVk::build(const cl::DevicePtrs &devices,
     if (notify)
     {
         std::shared_ptr<angle::WaitableEvent> asyncEvent =
-            mProgram.getContext().getPlatform().getMultiThreadPool()->postWorkerTask(
-                std::make_shared<CLAsyncBuildTask>(this, devicePtrs,
-                                                   std::string(options ? options : ""), "",
-                                                   buildType, LinkProgramsList{}, notify));
+            getPlatform()->postMultiThreadWorkerTask(std::make_shared<CLAsyncBuildTask>(
+                this, devicePtrs, std::string(options ? options : ""), "", buildType,
+                LinkProgramsList{}, notify));
         ASSERT(asyncEvent != nullptr);
     }
     else
