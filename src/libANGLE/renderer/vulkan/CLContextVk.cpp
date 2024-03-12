@@ -7,6 +7,7 @@
 
 #include "libANGLE/renderer/vulkan/CLContextVk.h"
 #include "libANGLE/renderer/vulkan/CLCommandQueueVk.h"
+#include "libANGLE/renderer/vulkan/CLEventVk.h"
 #include "libANGLE/renderer/vulkan/CLMemoryVk.h"
 #include "libANGLE/renderer/vulkan/CLProgramVk.h"
 #include "libANGLE/renderer/vulkan/DisplayVk.h"
@@ -243,8 +244,12 @@ angle::Result CLContextVk::linkProgram(const cl::Program &program,
 
 angle::Result CLContextVk::createUserEvent(const cl::Event &event, CLEventImpl::Ptr *eventOut)
 {
-    UNIMPLEMENTED();
-    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+    *eventOut = CLEventImpl::Ptr(new (std::nothrow) CLEventVk(event, cl::EventPtrs{}));
+    if (*eventOut == nullptr)
+    {
+        ANGLE_CL_RETURN_ERROR(CL_OUT_OF_HOST_MEMORY);
+    }
+    return angle::Result::Continue;
 }
 
 angle::Result CLContextVk::waitForEvents(const cl::EventPtrs &events)
