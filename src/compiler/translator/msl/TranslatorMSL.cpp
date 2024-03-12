@@ -1469,7 +1469,7 @@ bool TranslatorMSL::translateImpl(TInfoSinkBase &sink,
         return false;
     }
 
-    if (!SeparateCompoundStructDeclarations(*this, idGen, *root, &getSymbolTable()))
+    if (!SeparateCompoundStructDeclarations(*this, idGen, *root))
     {
         return false;
     }
@@ -1479,7 +1479,7 @@ bool TranslatorMSL::translateImpl(TInfoSinkBase &sink,
         return false;
     }
 
-    if (!ReduceInterfaceBlocks(*this, *root, idGen, &getSymbolTable()))
+    if (!ReduceInterfaceBlocks(*this, *root, idGen))
     {
         return false;
     }

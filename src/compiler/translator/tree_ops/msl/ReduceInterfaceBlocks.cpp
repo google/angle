@@ -113,10 +113,7 @@ class Reducer : public TIntermRebuild
 
 ////////////////////////////////////////////////////////////////////////////////
 
-bool sh::ReduceInterfaceBlocks(TCompiler &compiler,
-                               TIntermBlock &root,
-                               IdGen &idGen,
-                               TSymbolTable *symbolTable)
+bool sh::ReduceInterfaceBlocks(TCompiler &compiler, TIntermBlock &root, IdGen &idGen)
 {
     Reducer reducer(compiler, idGen);
     if (!reducer.rebuildRoot(root))
@@ -124,7 +121,7 @@ bool sh::ReduceInterfaceBlocks(TCompiler &compiler,
         return false;
     }
 
-    if (!SeparateDeclarations(&compiler, &root, symbolTable))
+    if (!SeparateDeclarations(compiler, root))
     {
         return false;
     }
