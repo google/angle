@@ -40,7 +40,7 @@ const char *GetPathSeparatorForEnvironmentVar();
 bool PrependPathToEnvironmentVar(const char *variableName, const char *path);
 bool IsDirectory(const char *filename);
 bool IsFullPath(std::string dirName);
-bool CreateDirectory(const std::string &path);
+bool CreateDirectories(const std::string &path);
 void MakeForwardSlashThePathSeparator(std::string &path);
 std::string GetRootDirectory();
 std::string ConcatenatePath(std::string first, std::string second);

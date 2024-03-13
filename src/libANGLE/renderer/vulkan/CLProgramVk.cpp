@@ -434,7 +434,7 @@ angle::Result CLProgramVk::compile(const cl::DevicePtrs &devices,
         size_t baseDirPos = headerFilePath.find_last_of("/");
 
         // Ensure parent dir(s) exists
-        if (!angle::CreateDirectory(headerFilePath.substr(0, baseDirPos)))
+        if (!angle::CreateDirectories(headerFilePath.substr(0, baseDirPos)))
         {
             ERR() << "Failed to create output path(s) for header(s)!";
             ANGLE_CL_RETURN_ERROR(CL_INVALID_OPERATION);

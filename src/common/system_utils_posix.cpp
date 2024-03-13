@@ -283,7 +283,7 @@ std::string GetRootDirectory()
     return "/";
 }
 
-bool CreateDirectory(const std::string &path)
+bool CreateDirectories(const std::string &path)
 {
     // First sanitize path so we can use "/" as universal path separator
     std::string sanitizedPath(path);

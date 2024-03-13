@@ -171,7 +171,7 @@ std::string GetRootDirectory()
     return "C:\\";
 }
 
-bool CreateDirectory(const std::string &path)
+bool CreateDirectories(const std::string &path)
 {
     // First sanitize path so we can use "/" as universal path separator
     std::string sanitizedPath(path);
@@ -184,7 +184,7 @@ bool CreateDirectory(const std::string &path)
         std::string checkPath(sanitizedPath.substr(0, pos));
         if (!checkPath.empty() && !IsDirectory(checkPath.c_str()))
         {
-            if (!CreateDirectoryW(checkPath.c_str()))
+            if (!CreateDirectoryW(Widen(checkPath).c_str(), nullptr))
             {
                 return false;
             }
