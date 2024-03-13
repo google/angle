@@ -1343,6 +1343,15 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo enableAdditionalBlendFactorsForDithering = {
+        "enableAdditionalBlendFactorsForDithering",
+        FeatureCategory::VulkanAppWorkarounds,
+        "Dithering darkens or brightens pixels depending on coordinates and when repeated "
+        "sufficient numbers of times this effect becomes visible to users. Conditionally "
+        "enable additional blend factors for dithering",
+        &members, "https://issuetracker.google.com/328837151"
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

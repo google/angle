@@ -1462,6 +1462,16 @@
             "description": [
                 "Enable SPIR-V dumping at runtime for OpenCL programs compiled with clspv"
             ]
+        },
+        {
+            "name": "enable_additional_blend_factors_for_dithering",
+            "category": "AppWorkarounds",
+            "description": [
+                "Dithering darkens or brightens pixels depending on coordinates and when repeated ",
+                "sufficient numbers of times this effect becomes visible to users. Conditionally ",
+                "enable additional blend factors for dithering"
+            ],
+            "issue": "https://issuetracker.google.com/328837151"
         }
     ]
 }

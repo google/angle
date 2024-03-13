@@ -135,6 +135,7 @@ enum class Feature
     EmulateRGB10,
     EmulateTinyStencilTextures,
     EmulateTransformFeedback,
+    EnableAdditionalBlendFactorsForDithering,
     EnableAsyncPipelineCacheCompression,
     EnableCaptureLimits,
     EnableInMemoryMtlLibraryCache,

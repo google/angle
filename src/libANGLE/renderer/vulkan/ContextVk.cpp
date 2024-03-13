@@ -712,15 +712,26 @@ void DumpPipelineCacheGraph(ContextVk *contextVk, const std::ostringstream &grap
     out.close();
 }
 
-bool BlendModeSupportsDither(const gl::State &state, size_t colorIndex)
+bool BlendModeSupportsDither(const ContextVk *contextVk, size_t colorIndex)
 {
+    const gl::State &state = contextVk->getState();
+
     // Specific combinations of color blend modes are known to work with our dithering emulation.
     // Note we specifically don't check alpha blend, as dither isn't applied to alpha.
     // See http://b/232574868 for more discussion and reasoning.
-    return state.getBlendStateExt().getSrcColorIndexed(colorIndex) ==
-               gl::BlendFactorType::SrcAlpha &&
-           state.getBlendStateExt().getDstColorIndexed(colorIndex) ==
-               gl::BlendFactorType::OneMinusSrcAlpha;
+    gl::BlendFactorType srcBlendFactor = state.getBlendStateExt().getSrcColorIndexed(colorIndex);
+    gl::BlendFactorType dstBlendFactor = state.getBlendStateExt().getDstColorIndexed(colorIndex);
+
+    const bool ditheringCompatibleBlendFactors =
+        (srcBlendFactor == gl::BlendFactorType::SrcAlpha &&
+         dstBlendFactor == gl::BlendFactorType::OneMinusSrcAlpha);
+
+    const bool allowAdditionalBlendFactors =
+        contextVk->getFeatures().enableAdditionalBlendFactorsForDithering.enabled &&
+        (srcBlendFactor == gl::BlendFactorType::One &&
+         dstBlendFactor == gl::BlendFactorType::OneMinusSrcAlpha);
+
+    return ditheringCompatibleBlendFactors || allowAdditionalBlendFactors;
 }
 
 bool ShouldUseGraphicsDriverUniformsExtended(const vk::Context *context)
@@ -5326,7 +5337,7 @@ void ContextVk::updateDither()
             // situations that can lead to incorrect blending.  We only allow blending with specific
             // combinations know to not interfere with dithering.
             if (mState.isBlendEnabledIndexed(static_cast<GLuint>(colorIndex)) &&
-                !BlendModeSupportsDither(mState, colorIndex))
+                !BlendModeSupportsDither(this, colorIndex))
             {
                 continue;
             }

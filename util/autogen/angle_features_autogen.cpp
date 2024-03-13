@@ -135,6 +135,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::EmulateRGB10, "emulateRGB10"},
     {Feature::EmulateTinyStencilTextures, "emulateTinyStencilTextures"},
     {Feature::EmulateTransformFeedback, "emulateTransformFeedback"},
+    {Feature::EnableAdditionalBlendFactorsForDithering, "enableAdditionalBlendFactorsForDithering"},
     {Feature::EnableAsyncPipelineCacheCompression, "enableAsyncPipelineCacheCompression"},
     {Feature::EnableCaptureLimits, "enableCaptureLimits"},
     {Feature::EnableInMemoryMtlLibraryCache, "enableInMemoryMtlLibraryCache"},
