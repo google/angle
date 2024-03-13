@@ -6,10 +6,10 @@
 // CLPlatformVk.cpp: Implements the class methods for CLPlatformVk.
 
 #include "libANGLE/renderer/vulkan/CLPlatformVk.h"
-#include "common/MemoryBuffer.h"
+#include "common/vulkan/vulkan_icd.h"
+#include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/vulkan/CLContextVk.h"
 #include "libANGLE/renderer/vulkan/CLDeviceVk.h"
-#include "libANGLE/renderer/vulkan/DisplayVk.h"
 #include "libANGLE/renderer/vulkan/vk_renderer.h"
 
 #include "libANGLE/CLPlatform.h"
@@ -18,6 +18,7 @@
 #include "anglebase/no_destructor.h"
 #include "common/angle_version_info.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
+#include "vulkan/vulkan_core.h"
 
 namespace rx
 {
@@ -40,26 +41,24 @@ std::string CreateExtensionString(const NameVersionVector &extList)
     return extensions;
 }
 
-angle::Result InitBackendRenderer(egl::Display *display)
+}  // namespace
+
+angle::Result CLPlatformVk::initBackendRenderer()
 {
-    // Initialize the backend vk::Renderer by initializing a dummy/default EGL display object
-    // TODO(aannestrand) Implement display-less vk::Renderer init
-    // http://anglebug.com/8515
-    // TODO(aannestrand) Add CL and EGL context testing
-    // http://anglebug.com/8514
-    if (display == nullptr || IsError(display->initialize()))
-    {
-        ERR() << "Failed to init renderer!";
-        ANGLE_CL_RETURN_ERROR(CL_OUT_OF_HOST_MEMORY);
-    }
+    ASSERT(mRenderer != nullptr);
+
+    ANGLE_TRY(mRenderer->initialize(this, this, angle::vk::ICD::Default, 0, 0,
+                                    vk::UseValidationLayers::YesIfAvailable, getWSIExtension(),
+                                    getWSILayer(), getWindowSystem(), angle::FeatureOverrides{}));
+
     return angle::Result::Continue;
 }
 
-}  // namespace
-
 CLPlatformVk::~CLPlatformVk()
 {
-    mDisplay->getImplementation()->terminate();
+    ASSERT(mRenderer);
+    mRenderer->onDestroy(this);
+    delete mRenderer;
 }
 
 CLPlatformImpl::Info CLPlatformVk::createInfo() const
@@ -81,14 +80,11 @@ CLPlatformImpl::Info CLPlatformVk::createInfo() const
 
 CLDeviceImpl::CreateDatas CLPlatformVk::createDevices() const
 {
-    ASSERT(mDisplay);
-    ASSERT(mDisplay->isInitialized());
-
     CLDeviceImpl::CreateDatas createDatas;
 
     // Convert Vk device type to CL equivalent
     cl_device_type type = CL_DEVICE_TYPE_DEFAULT;
-    switch (GetImplAs<DisplayVk>(mDisplay)->getRenderer()->getPhysicalDeviceProperties().deviceType)
+    switch (mRenderer->getPhysicalDeviceProperties().deviceType)
     {
         case VK_PHYSICAL_DEVICE_TYPE_CPU:
             type |= CL_DEVICE_TYPE_CPU;
@@ -107,8 +103,7 @@ CLDeviceImpl::CreateDatas CLPlatformVk::createDevices() const
     }
 
     createDatas.emplace_back(type, [this](const cl::Device &device) {
-        return CLDeviceVk::Ptr(
-            new CLDeviceVk(device, GetImplAs<DisplayVk>(mDisplay)->getRenderer()));
+        return CLDeviceVk::Ptr(new CLDeviceVk(device, mRenderer));
     });
     return createDatas;
 }
@@ -118,7 +113,7 @@ angle::Result CLPlatformVk::createContext(cl::Context &context,
                                           bool userSync,
                                           CLContextImpl::Ptr *contextOut)
 {
-    *contextOut = CLContextImpl::Ptr(new (std::nothrow) CLContextVk(context, mDisplay, devices));
+    *contextOut = CLContextImpl::Ptr(new (std::nothrow) CLContextVk(context, devices));
     if (*contextOut == nullptr)
     {
         ANGLE_CL_RETURN_ERROR(CL_OUT_OF_HOST_MEMORY);
@@ -131,11 +126,8 @@ angle::Result CLPlatformVk::createContextFromType(cl::Context &context,
                                                   bool userSync,
                                                   CLContextImpl::Ptr *contextOut)
 {
-    ASSERT(mDisplay);
-    ASSERT(mDisplay->isInitialized());
-
     const VkPhysicalDeviceType &vkPhysicalDeviceType =
-        GetImplAs<DisplayVk>(mDisplay)->getRenderer()->getPhysicalDeviceProperties().deviceType;
+        getRenderer()->getPhysicalDeviceProperties().deviceType;
 
     if (deviceType.isSet(CL_DEVICE_TYPE_CPU) && vkPhysicalDeviceType != VK_PHYSICAL_DEVICE_TYPE_CPU)
     {
@@ -168,7 +160,7 @@ angle::Result CLPlatformVk::createContextFromType(cl::Context &context,
         }
     }
 
-    *contextOut = CLContextImpl::Ptr(new (std::nothrow) CLContextVk(context, mDisplay, devices));
+    *contextOut = CLContextImpl::Ptr(new (std::nothrow) CLContextVk(context, devices));
     if (*contextOut == nullptr)
     {
         ANGLE_CL_RETURN_ERROR(CL_OUT_OF_HOST_MEMORY);
@@ -183,8 +175,14 @@ angle::Result CLPlatformVk::unloadCompiler()
 
 void CLPlatformVk::Initialize(CreateFuncs &createFuncs)
 {
-    createFuncs.emplace_back(
-        [](const cl::Platform &platform) { return Ptr(new CLPlatformVk(platform)); });
+    createFuncs.emplace_back([](const cl::Platform &platform) -> CLPlatformImpl::Ptr {
+        CLPlatformVk::Ptr platformVk = CLPlatformVk::Ptr(new (std::nothrow) CLPlatformVk(platform));
+        if (platformVk == nullptr || IsError(platformVk->initBackendRenderer()))
+        {
+            return Ptr(nullptr);
+        }
+        return Ptr(std::move(platformVk));
+    });
 }
 
 const std::string &CLPlatformVk::GetVersionString()
@@ -197,17 +195,76 @@ const std::string &CLPlatformVk::GetVersionString()
 }
 
 CLPlatformVk::CLPlatformVk(const cl::Platform &platform)
-    : CLPlatformImpl(platform), mBlobCache(1024 * 1024)
-{
-    // Select vulkan backend
-    const EGLint attribList[]   = {EGL_PLATFORM_ANGLE_TYPE_ANGLE,
-                                   EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE, EGL_NONE};
-    egl::AttributeMap attribMap = egl::AttributeMap::CreateFromIntArray(attribList);
-    attribMap.initializeWithoutValidation();
+    : CLPlatformImpl(platform), vk::Context(new vk::Renderer()), mBlobCache(1024 * 1024)
+{}
 
-    mDisplay = egl::Display::GetDisplayFromNativeDisplay(EGL_PLATFORM_ANGLE_ANGLE,
-                                                         EGL_DEFAULT_DISPLAY, attribMap);
-    ANGLE_CL_IMPL_TRY(InitBackendRenderer(mDisplay));
+void CLPlatformVk::handleError(VkResult result,
+                               const char *file,
+                               const char *function,
+                               unsigned int line)
+{
+    ASSERT(result != VK_SUCCESS);
+
+    std::stringstream errorStream;
+    errorStream << "Internal Vulkan error (" << result << "): " << VulkanResultString(result)
+                << ", in " << file << ", " << function << ":" << line << ".";
+    std::string errorString = errorStream.str();
+
+    if (result == VK_ERROR_DEVICE_LOST)
+    {
+        WARN() << errorString;
+        mRenderer->notifyDeviceLost();
+    }
+}
+
+angle::NativeWindowSystem CLPlatformVk::getWindowSystem()
+{
+#if defined(ANGLE_ENABLE_VULKAN)
+#    if defined(ANGLE_PLATFORM_LINUX)
+#        if defined(ANGLE_USE_GBM)
+    return angle::NativeWindowSystem::Gbm;
+#        elif defined(ANGLE_USE_X11)
+    return angle::NativeWindowSystem::X11;
+#        elif defined(ANGLE_USE_WAYLAND)
+    return angle::NativeWindowSystem::Wayland;
+#        else
+    handleError(VK_ERROR_INCOMPATIBLE_DRIVER, __FILE__, __func__, __LINE__);
+    return angle::NativeWindowSystem::Other;
+#        endif
+#    elif defined(ANGLE_PLATFORM_ANDROID)
+    return angle::NativeWindowSystem::Other;
+#    else
+    handleError(VK_ERROR_INCOMPATIBLE_DRIVER, __FILE__, __func__, __LINE__);
+    return angle::NativeWindowSystem::Other;
+#    endif
+#elif
+    UNREACHABLE();
+#endif
+}
+
+const char *CLPlatformVk::getWSIExtension()
+{
+#if defined(ANGLE_ENABLE_VULKAN)
+#    if defined(ANGLE_PLATFORM_LINUX)
+#        if defined(ANGLE_USE_GBM)
+    return nullptr;
+#        elif defined(ANGLE_USE_X11)
+    return VK_KHR_XCB_SURFACE_EXTENSION_NAME;
+#        elif defined(ANGLE_USE_WAYLAND)
+    return VK_KHR_WAYLAND_SURFACE_EXTENSION_NAME;
+#        else
+    handleError(VK_ERROR_INCOMPATIBLE_DRIVER, __FILE__, __func__, __LINE__);
+    return nullptr;
+#        endif
+#    elif defined(ANGLE_PLATFORM_ANDROID)
+    return VK_KHR_ANDROID_SURFACE_EXTENSION_NAME;
+#    else
+    handleError(VK_ERROR_INCOMPATIBLE_DRIVER, __FILE__, __func__, __LINE__);
+    return nullptr;
+#    endif
+#elif
+    UNREACHABLE();
+#endif
 }
 
 // vk::GlobalOps

@@ -16,7 +16,6 @@
 
 #include <libANGLE/CLContext.h>
 #include "libANGLE/CLDevice.h"
-#include "libANGLE/Display.h"
 
 namespace rx
 {
@@ -24,9 +23,7 @@ namespace rx
 class CLContextVk : public CLContextImpl, public vk::Context
 {
   public:
-    CLContextVk(const cl::Context &context,
-                const egl::Display *display,
-                const cl::DevicePtrs devicePtrs);
+    CLContextVk(const cl::Context &context, const cl::DevicePtrs devicePtrs);
 
     ~CLContextVk() override;
 
