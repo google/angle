@@ -5655,6 +5655,7 @@ recursedeps = [
   'third_party/googletest',
   'third_party/jsoncpp',
   'third_party/vulkan-deps',
+  'third_party/dawn',
 ]
 
 skip_child_includes = [
