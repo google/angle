@@ -36,7 +36,7 @@ enum class TextureUpdateResult
 class TextureVk : public TextureImpl, public angle::ObserverInterface
 {
   public:
-    TextureVk(const gl::TextureState &state, RendererVk *renderer);
+    TextureVk(const gl::TextureState &state, vk::Renderer *renderer);
     ~TextureVk() override;
     void onDestroy(const gl::Context *context) override;
 
@@ -521,7 +521,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     angle::Result respecifyImageStorageIfNecessary(ContextVk *contextVk, gl::Command source);
 
     const gl::InternalFormat &getImplementationSizedFormat(const gl::Context *context) const;
-    const vk::Format &getBaseLevelFormat(RendererVk *renderer) const;
+    const vk::Format &getBaseLevelFormat(vk::Renderer *renderer) const;
     // Queues a flush of any modified image attributes. The image will be reallocated with its new
     // attributes at the next opportunity.
     angle::Result respecifyImageStorage(ContextVk *contextVk);
@@ -565,7 +565,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
 
     angle::Result updateTextureLabel(ContextVk *contextVk);
 
-    vk::BufferHelper *getRGBAConversionBufferHelper(RendererVk *renderer,
+    vk::BufferHelper *getRGBAConversionBufferHelper(vk::Renderer *renderer,
                                                     angle::FormatID formatID) const;
     angle::Result convertBufferToRGBA(ContextVk *contextVk, size_t &conversionBufferSize);
     bool isCompressedFormatEmulated(const gl::Context *context,

@@ -29,7 +29,7 @@ WindowSurfaceVkGGP::WindowSurfaceVkGGP(const egl::SurfaceState &surfaceState,
 
 angle::Result WindowSurfaceVkGGP::createSurfaceVk(vk::Context *context, gl::Extents *extentsOut)
 {
-    RendererVk *renderer = context->getRenderer();
+    vk::Renderer *renderer = context->getRenderer();
 
     // Get the stream descriptor if specified. Default is kGgpPrimaryStreamDescriptor.
     EGLAttrib streamDescriptor =
@@ -48,7 +48,7 @@ angle::Result WindowSurfaceVkGGP::createSurfaceVk(vk::Context *context, gl::Exte
 angle::Result WindowSurfaceVkGGP::getCurrentWindowSize(vk::Context *context,
                                                        gl::Extents *extentsOut)
 {
-    RendererVk *renderer                   = context->getRenderer();
+    vk::Renderer *renderer                 = context->getRenderer();
     const VkPhysicalDevice &physicalDevice = renderer->getPhysicalDevice();
 
     ANGLE_VK_TRY(context, vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, mSurface,

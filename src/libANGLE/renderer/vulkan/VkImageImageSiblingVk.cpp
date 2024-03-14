@@ -43,7 +43,7 @@ egl::Error VkImageImageSiblingVk::initialize(const egl::Display *display)
 
 angle::Result VkImageImageSiblingVk::initImpl(DisplayVk *displayVk)
 {
-    RendererVk *renderer = displayVk->getRenderer();
+    vk::Renderer *renderer = displayVk->getRenderer();
 
     const angle::FormatID formatID = vk::GetFormatIDFromVkFormat(mVkImageInfo.format);
     ANGLE_VK_CHECK(displayVk, formatID != angle::FormatID::NONE, VK_ERROR_FORMAT_NOT_SUPPORTED);
@@ -125,7 +125,7 @@ vk::ImageHelper *VkImageImageSiblingVk::getImage() const
     return mImage;
 }
 
-void VkImageImageSiblingVk::release(RendererVk *renderer)
+void VkImageImageSiblingVk::release(vk::Renderer *renderer)
 {
     if (mImage != nullptr)
     {

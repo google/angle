@@ -58,7 +58,7 @@ egl::Error DeviceVk::initialize()
 
 egl::Error DeviceVk::getAttribute(const egl::Display *display, EGLint attribute, void **outValue)
 {
-    RendererVk *renderer =
+    vk::Renderer *renderer =
         static_cast<rx::DisplayVk *>(display->getImplementation())->getRenderer();
     ASSERT(mRenderer == nullptr || mRenderer == renderer);
     mRenderer = renderer;

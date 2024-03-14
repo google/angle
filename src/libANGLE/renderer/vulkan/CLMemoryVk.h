@@ -48,7 +48,7 @@ class CLMemoryVk : public CLMemoryImpl
     CLMemoryVk(const cl::Memory &memory);
 
     CLContextVk *mContext;
-    RendererVk *mRenderer;
+    vk::Renderer *mRenderer;
     vk::Allocation mAllocation;
     std::mutex mMapLock;
     uint8_t *mMapPtr;

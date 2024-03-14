@@ -37,7 +37,7 @@ angle::Result WindowSurfaceVkAndroid::createSurfaceVk(vk::Context *context, gl::
 angle::Result WindowSurfaceVkAndroid::getCurrentWindowSize(vk::Context *context,
                                                            gl::Extents *extentsOut)
 {
-    RendererVk *renderer                   = context->getRenderer();
+    vk::Renderer *renderer                 = context->getRenderer();
     const VkPhysicalDevice &physicalDevice = renderer->getPhysicalDevice();
     VkSurfaceCapabilitiesKHR surfaceCaps;
     ANGLE_VK_TRY(context,

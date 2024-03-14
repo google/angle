@@ -92,7 +92,7 @@ void GetSupportedFormatColorspaces(VkPhysicalDevice physicalDevice,
     }
 }
 
-UseValidationLayers ShouldUseValidationLayers(const egl::AttributeMap &attribs)
+vk::UseValidationLayers ShouldUseValidationLayers(const egl::AttributeMap &attribs)
 {
     EGLAttrib debugSetting =
         attribs.get(EGL_PLATFORM_ANGLE_DEBUG_LAYERS_ENABLED_ANGLE, EGL_DONT_CARE);
@@ -105,9 +105,9 @@ UseValidationLayers ShouldUseValidationLayers(const egl::AttributeMap &attribs)
 
     const bool ifAvailable = debugSetting == EGL_DONT_CARE;
 
-    return yes && ifAvailable ? UseValidationLayers::YesIfAvailable
-           : yes              ? UseValidationLayers::Yes
-                              : UseValidationLayers::No;
+    return yes && ifAvailable ? vk::UseValidationLayers::YesIfAvailable
+           : yes              ? vk::UseValidationLayers::Yes
+                              : vk::UseValidationLayers::No;
 }
 
 angle::vk::ICD ChooseICDFromAttribs(const egl::AttributeMap &attribs)
@@ -134,7 +134,7 @@ angle::vk::ICD ChooseICDFromAttribs(const egl::AttributeMap &attribs)
     return angle::vk::ICD::Default;
 }
 
-void InstallDebugAnnotator(egl::Display *display, RendererVk *renderer)
+void InstallDebugAnnotator(egl::Display *display, vk::Renderer *renderer)
 {
     bool installedAnnotator = false;
 
@@ -152,7 +152,7 @@ void InstallDebugAnnotator(egl::Display *display, RendererVk *renderer)
 
 DisplayVk::DisplayVk(const egl::DisplayState &state)
     : DisplayImpl(state),
-      vk::Context(new RendererVk()),
+      vk::Context(new vk::Renderer()),
       mScratchBuffer(1000u),
       mSupportedColorspaceFormatsMap{}
 {}
@@ -167,8 +167,8 @@ egl::Error DisplayVk::initialize(egl::Display *display)
     ASSERT(mRenderer != nullptr && display != nullptr);
     const egl::AttributeMap &attribs = display->getAttributeMap();
 
-    const UseValidationLayers useValidationLayers = ShouldUseValidationLayers(attribs);
-    const angle::vk::ICD desiredICD               = ChooseICDFromAttribs(attribs);
+    const vk::UseValidationLayers useValidationLayers = ShouldUseValidationLayers(attribs);
+    const angle::vk::ICD desiredICD                   = ChooseICDFromAttribs(attribs);
     const uint32_t preferredVendorId =
         static_cast<uint32_t>(attribs.get(EGL_PLATFORM_ANGLE_DEVICE_ID_HIGH_ANGLE, 0));
     const uint32_t preferredDeviceId =

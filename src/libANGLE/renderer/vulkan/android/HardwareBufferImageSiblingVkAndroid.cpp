@@ -151,7 +151,7 @@ HardwareBufferImageSiblingVkAndroid::~HardwareBufferImageSiblingVkAndroid() {}
 
 // Static
 egl::Error HardwareBufferImageSiblingVkAndroid::ValidateHardwareBuffer(
-    RendererVk *renderer,
+    vk::Renderer *renderer,
     EGLClientBuffer buffer,
     const egl::AttributeMap &attribs)
 {
@@ -230,7 +230,7 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
     const AHBFunctions &functions = static_cast<DisplayVkAndroid *>(displayVk)->getAHBFunctions();
     ANGLE_VK_CHECK(displayVk, functions.valid(), VK_ERROR_INITIALIZATION_FAILED);
 
-    RendererVk *renderer = displayVk->getRenderer();
+    vk::Renderer *renderer = displayVk->getRenderer();
 
     struct ANativeWindowBuffer *windowBuffer =
         angle::android::ClientBufferToANativeWindowBuffer(mBuffer);
@@ -542,7 +542,7 @@ vk::ImageHelper *HardwareBufferImageSiblingVkAndroid::getImage() const
     return mImage;
 }
 
-void HardwareBufferImageSiblingVkAndroid::release(RendererVk *renderer)
+void HardwareBufferImageSiblingVkAndroid::release(vk::Renderer *renderer)
 {
     if (mImage != nullptr)
     {

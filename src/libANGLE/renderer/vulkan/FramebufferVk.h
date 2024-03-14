@@ -22,14 +22,13 @@
 
 namespace rx
 {
-class RendererVk;
 class RenderTargetVk;
 class WindowSurfaceVk;
 
 class FramebufferVk : public FramebufferImpl
 {
   public:
-    FramebufferVk(RendererVk *renderer, const gl::FramebufferState &state);
+    FramebufferVk(vk::Renderer *renderer, const gl::FramebufferState &state);
     ~FramebufferVk() override;
     void destroy(const gl::Context *context) override;
 

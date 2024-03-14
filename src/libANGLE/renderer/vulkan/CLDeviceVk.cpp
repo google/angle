@@ -15,7 +15,7 @@
 namespace rx
 {
 
-CLDeviceVk::CLDeviceVk(const cl::Device &device, RendererVk *renderer)
+CLDeviceVk::CLDeviceVk(const cl::Device &device, vk::Renderer *renderer)
     : CLDeviceImpl(device), mRenderer(renderer)
 {
     const VkPhysicalDeviceProperties &props = mRenderer->getPhysicalDeviceProperties();

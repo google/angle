@@ -534,7 +534,7 @@ angle::Result ProgramExecutableVk::initializePipelineCache(vk::Context *context,
 
     ANGLE_VK_TRY(context, mPipelineCache.init(context->getDevice(), pipelineCacheCreateInfo));
 
-    // Merge the pipeline cache into RendererVk's.
+    // Merge the pipeline cache into Renderer's.
     if (context->getFeatures().mergeProgramPipelineCachesToGlobalCache.enabled)
     {
         ANGLE_TRY(context->getRenderer()->mergeIntoPipelineCache(context, mPipelineCache));
@@ -684,7 +684,7 @@ angle::Result ProgramExecutableVk::warmUpPipelineCache(
                                              pipelineRobustness, pipelineProtectedAccess,
                                              &pipeline));
 
-        // Merge the cache with RendererVk's
+        // Merge the cache with Renderer's
         if (context->getFeatures().mergeProgramPipelineCachesToGlobalCache.enabled)
         {
             ANGLE_TRY(context->getRenderer()->mergeIntoPipelineCache(context, mPipelineCache));
@@ -750,7 +750,7 @@ angle::Result ProgramExecutableVk::warmUpPipelineCache(
             graphicsPipelineDesc, *temporaryCompatibleRenderPassOut, &descPtr, &pipeline));
     }
 
-    // Merge the cache with RendererVk's
+    // Merge the cache with Renderer's
     if (context->getFeatures().mergeProgramPipelineCachesToGlobalCache.enabled)
     {
         ANGLE_TRY(context->getRenderer()->mergeIntoPipelineCache(context, mPipelineCache));
@@ -943,7 +943,7 @@ angle::Result ProgramExecutableVk::addTextureDescriptorSetDesc(
             uint64_t externalFormat        = image.getExternalFormat();
             uint32_t formatDescriptorCount = 0;
 
-            RendererVk *renderer = context->getRenderer();
+            vk::Renderer *renderer = context->getRenderer();
 
             if (externalFormat != 0)
             {

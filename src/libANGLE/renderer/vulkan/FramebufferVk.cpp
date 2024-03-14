@@ -40,13 +40,13 @@ constexpr VkClearValue kUninitializedClearValue = {{{0.95, 0.05, 0.95, 0.95}}};
 // automatically convert to the actual data type.
 constexpr unsigned int kEmulatedAlphaValue = 1;
 
-bool HasSrcBlitFeature(RendererVk *renderer, RenderTargetVk *srcRenderTarget)
+bool HasSrcBlitFeature(vk::Renderer *renderer, RenderTargetVk *srcRenderTarget)
 {
     angle::FormatID srcFormatID = srcRenderTarget->getImageActualFormatID();
     return renderer->hasImageFormatFeatureBits(srcFormatID, VK_FORMAT_FEATURE_BLIT_SRC_BIT);
 }
 
-bool HasDstBlitFeature(RendererVk *renderer, RenderTargetVk *dstRenderTarget)
+bool HasDstBlitFeature(vk::Renderer *renderer, RenderTargetVk *dstRenderTarget)
 {
     angle::FormatID dstFormatID = dstRenderTarget->getImageActualFormatID();
     return renderer->hasImageFormatFeatureBits(dstFormatID, VK_FORMAT_FEATURE_BLIT_DST_BIT);
@@ -330,7 +330,7 @@ void AdjustLayersAndDepthFor3DImages(VkImageSubresourceLayers *subresource,
 }
 }  // anonymous namespace
 
-FramebufferVk::FramebufferVk(RendererVk *renderer, const gl::FramebufferState &state)
+FramebufferVk::FramebufferVk(vk::Renderer *renderer, const gl::FramebufferState &state)
     : FramebufferImpl(state), mBackbuffer(nullptr), mActiveColorComponentMasksForClear(0)
 {
     if (mState.isDefault())
@@ -352,7 +352,7 @@ void FramebufferVk::destroy(const gl::Context *context)
 
     if (mFragmentShadingRateImage.valid())
     {
-        RendererVk *renderer = contextVk->getRenderer();
+        vk::Renderer *renderer = contextVk->getRenderer();
         mFragmentShadingRateImageView.release(renderer, mFragmentShadingRateImage.getResourceUse());
         mFragmentShadingRateImage.releaseImage(renderer);
     }
@@ -1115,9 +1115,9 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
                                   GLbitfield mask,
                                   GLenum filter)
 {
-    ContextVk *contextVk = vk::GetImpl(context);
-    RendererVk *renderer = contextVk->getRenderer();
-    UtilsVk &utilsVk     = contextVk->getUtils();
+    ContextVk *contextVk   = vk::GetImpl(context);
+    vk::Renderer *renderer = contextVk->getRenderer();
+    UtilsVk &utilsVk       = contextVk->getUtils();
 
     // If any clears were picked up when syncing the read framebuffer (as the blit source), restage
     // them.  They correspond to attachments that are not used in the blit.  This will cause the
@@ -1637,7 +1637,7 @@ angle::Result FramebufferVk::ensureFragmentShadingRateImageAndViewInitialized(
     const uint32_t fragmentShadingRateAttachmentWidth,
     const uint32_t fragmentShadingRateAttachmentHeight)
 {
-    RendererVk *renderer = contextVk->getRenderer();
+    vk::Renderer *renderer = contextVk->getRenderer();
 
     // Release current valid image iff attachment extents need to change.
     if (mFragmentShadingRateImage.valid() &&

@@ -51,7 +51,7 @@ class Std140BlockLayoutEncoderFactory : public gl::CustomBlockLayoutEncoderFacto
 class LinkTaskVk final : public vk::Context, public LinkTask
 {
   public:
-    LinkTaskVk(RendererVk *renderer,
+    LinkTaskVk(vk::Renderer *renderer,
                PipelineLayoutCache &pipelineLayoutCache,
                DescriptorSetLayoutCache &descriptorSetLayoutCache,
                const gl::ProgramState &state,
@@ -172,7 +172,7 @@ class LinkTaskVk final : public vk::Context, public LinkTask
 class WarmUpTask : public vk::Context, public LinkSubTask
 {
   public:
-    WarmUpTask(RendererVk *renderer,
+    WarmUpTask(vk::Renderer *renderer,
                ProgramExecutableVk *executableVk,
                vk::PipelineRobustness pipelineRobustness,
                vk::PipelineProtectedAccess pipelineProtectedAccess)

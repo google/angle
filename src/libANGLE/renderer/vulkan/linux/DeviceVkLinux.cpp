@@ -24,7 +24,7 @@ DeviceVkLinux::DeviceVkLinux(DisplayVk *display) : mDisplay(display) {}
 
 egl::Error DeviceVkLinux::initialize()
 {
-    RendererVk *renderer                           = mDisplay->getRenderer();
+    vk::Renderer *renderer                         = mDisplay->getRenderer();
     VkPhysicalDeviceDrmPropertiesEXT drmProperties = renderer->getPhysicalDeviceDrmProperties();
 
     // Unfortunately `VkPhysicalDeviceDrmPropertiesEXT` doesn't give us the information about the

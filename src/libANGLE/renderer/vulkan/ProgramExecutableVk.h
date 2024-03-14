@@ -284,8 +284,8 @@ class ProgramExecutableVk : public ProgramExecutableImpl
 
     size_t getDefaultUniformAlignedSize(vk::Context *context, gl::ShaderType shaderType) const
     {
-        RendererVk *renderer = context->getRenderer();
-        size_t alignment     = static_cast<size_t>(
+        vk::Renderer *renderer = context->getRenderer();
+        size_t alignment       = static_cast<size_t>(
             renderer->getPhysicalDeviceProperties().limits.minUniformBufferOffsetAlignment);
         return roundUp(mDefaultUniformBlocks[shaderType]->uniformData.size(), alignment);
     }
@@ -507,9 +507,9 @@ class ProgramExecutableVk : public ProgramExecutableImpl
     // The pipeline cache specific to this program executable.  Currently:
     //
     // - This is used during warm up (at link time)
-    // - The contents are merged to RendererVk's pipeline cache immediately after warm up
+    // - The contents are merged to Renderer's pipeline cache immediately after warm up
     // - The contents are returned as part of program binary
-    // - Draw-time pipeline creation uses RendererVk's cache
+    // - Draw-time pipeline creation uses Renderer's cache
     //
     // Without VK_EXT_graphics_pipeline_library, this cache is not used for draw-time pipeline
     // creations to allow reuse of other blobs that are independent of the actual shaders; vertex

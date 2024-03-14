@@ -22,7 +22,7 @@ WindowSurfaceVkSimple::~WindowSurfaceVkSimple() {}
 
 angle::Result WindowSurfaceVkSimple::createSurfaceVk(vk::Context *context, gl::Extents *extentsOut)
 {
-    RendererVk *renderer = context->getRenderer();
+    vk::Renderer *renderer = context->getRenderer();
     ASSERT(renderer != nullptr);
     VkInstance instance             = renderer->getInstance();
     VkPhysicalDevice physicalDevice = renderer->getPhysicalDevice();
@@ -68,7 +68,7 @@ angle::Result WindowSurfaceVkSimple::createSurfaceVk(vk::Context *context, gl::E
 angle::Result WindowSurfaceVkSimple::getCurrentWindowSize(vk::Context *context,
                                                           gl::Extents *extentsOut)
 {
-    RendererVk *renderer                   = context->getRenderer();
+    vk::Renderer *renderer                 = context->getRenderer();
     const VkPhysicalDevice &physicalDevice = renderer->getPhysicalDevice();
 
     ANGLE_VK_TRY(context, vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, mSurface,
