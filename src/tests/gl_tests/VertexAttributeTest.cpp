@@ -1779,7 +1779,7 @@ TEST_P(VertexAttributeTest, DrawArraysWithDisabledAttribute)
         "}\n";
 
     ANGLE_GL_PROGRAM(program, testVertexShaderSource2, testFragmentShaderSource);
-    GLuint mProgram2 = program.get();
+    GLuint mProgram2 = program;
 
     ASSERT_EQ(positionLocation, glGetAttribLocation(mProgram2, "position"));
     ASSERT_EQ(mTestAttrib, glGetAttribLocation(mProgram2, "test"));
@@ -2514,7 +2514,7 @@ void main() {
 
     for (int i = 0; i < 3; i++)
     {
-        glUseProgram(renderProgram.get());
+        glUseProgram(renderProgram);
         glBindVertexArray(vao[0]);
         glDrawArraysInstanced(GL_TRIANGLES, 0, 6, kInstanceCount);
 
@@ -2525,10 +2525,10 @@ void main() {
         EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, 0, GLColor::yellow) << i;
 
         glBindVertexArray(vao[1]);
-        glUseProgram(computeProgram.get());
+        glUseProgram(computeProgram);
         glDispatchCompute(1, 1, 1);
 
-        glUseProgram(renderProgram1.get());
+        glUseProgram(renderProgram1);
         glBindVertexArray(vao[1]);
         glDrawArraysInstanced(GL_TRIANGLES, 0, 6, kInstanceCount);
 
