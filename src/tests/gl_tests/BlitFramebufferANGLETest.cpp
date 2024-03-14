@@ -1741,6 +1741,11 @@ TEST_P(BlitFramebufferTest, MultisampleDepth)
 
     glBindFramebuffer(GL_FRAMEBUFFER, resolved);
 
+    // Immediately destroy the framebuffer and the associated textures for additional cleanup
+    // ordering testing.
+    framebuffer.reset();
+    renderbuf.reset();
+
     GLTexture colorbuf;
     glBindTexture(GL_TEXTURE_2D, colorbuf);
     glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 256, 256);
@@ -2004,6 +2009,11 @@ TEST_P(BlitFramebufferTest, MultisampleStencil)
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
     glBlitFramebuffer(0, 0, 256, 256, 0, 0, 256, 256, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+
+    // Immediately destroy the framebuffer and the associated textures for additional cleanup
+    // ordering testing.
+    framebuffer.reset();
+    renderbuf.reset();
 
     glBindFramebuffer(GL_FRAMEBUFFER, resolved);
 
