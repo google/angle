@@ -3640,6 +3640,9 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
         mImageUsageFlags |= VK_IMAGE_USAGE_STORAGE_BIT;
     }
 
+    mImageCreateFlags |=
+        vk::GetMinimalImageCreateFlags(renderer, mState.getType(), mImageUsageFlags);
+
     const VkFormat actualImageFormat = rx::vk::GetVkFormatFromFormatID(actualImageFormatID);
     const VkImageType imageType      = gl_vk::GetImageType(mState.getType());
     const VkImageTiling imageTiling  = mImage->getTilingMode();
@@ -3649,13 +3652,22 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
         mOwnsImage && samples == 1 &&
         contextVk->getFeatures().supportsMultisampledRenderToSingleSampled.enabled)
     {
+        VkImageCreateFlags createFlagsMultisampled =
+            mImageCreateFlags | VK_IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT;
+        const VkFormat additionalViewFormat = rx::vk::GetVkFormatFromFormatID(
+            angle::Format::Get(actualImageFormatID).isSRGB ? ConvertToLinear(actualImageFormatID)
+                                                           : ConvertToSRGB(actualImageFormatID));
 
         // Note: If we ever fail the following check, we should use the emulation path for this
         // texture instead of ignoring MSRTT.
         if (vk::ImageHelper::FormatSupportsUsage(
                 renderer, actualImageFormat, imageType, imageTiling, mImageUsageFlags,
-                mImageCreateFlags | VK_IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT,
-                nullptr))
+                createFlagsMultisampled, nullptr,
+                vk::ImageHelper::FormatSupportCheck::RequireMultisampling) &&
+            vk::ImageHelper::FormatSupportsUsage(
+                renderer, additionalViewFormat, imageType, imageTiling, mImageUsageFlags,
+                createFlagsMultisampled, nullptr,
+                vk::ImageHelper::FormatSupportCheck::RequireMultisampling))
         {
             // If supported by format add the MSRTSS flag because any texture might end up as an
             // MSRTT attachment.
@@ -3680,7 +3692,7 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
         if (vk::ImageHelper::FormatSupportsUsage(
                 renderer, actualImageFormat, imageType, imageTiling,
                 mImageUsageFlags | VK_IMAGE_USAGE_HOST_TRANSFER_BIT_EXT, mImageCreateFlags,
-                &perfQuery))
+                &perfQuery, vk::ImageHelper::FormatSupportCheck::OnlyQuerySuccess))
         {
             // Only enable it if it has no performance impact whatsoever (or impact is tiny, given
             // feature).

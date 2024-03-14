@@ -5786,7 +5786,8 @@ bool ImageHelper::FormatSupportsUsage(RendererVk *renderer,
                                       VkImageTiling tilingMode,
                                       VkImageUsageFlags usageFlags,
                                       VkImageCreateFlags createFlags,
-                                      void *propertiesPNext)
+                                      void *propertiesPNext,
+                                      const FormatSupportCheck formatSupportCheck)
 {
     VkPhysicalDeviceImageFormatInfo2 imageFormatInfo = {};
     imageFormatInfo.sType  = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2;
@@ -5803,6 +5804,12 @@ bool ImageHelper::FormatSupportsUsage(RendererVk *renderer,
     VkResult result = vkGetPhysicalDeviceImageFormatProperties2(
         renderer->getPhysicalDevice(), &imageFormatInfo, &imageFormatProperties2);
 
+    if (formatSupportCheck == FormatSupportCheck::RequireMultisampling)
+    {
+        // Some drivers return success but sampleCounts == 1 which means no MSRTT
+        return result == VK_SUCCESS &&
+               imageFormatProperties2.imageFormatProperties.sampleCounts > 1;
+    }
     return result == VK_SUCCESS;
 }
 
