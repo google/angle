@@ -4002,14 +4002,15 @@ void Context::initCaps()
         ANGLE_LIMIT_CAP(caps->maxVertexAttribBindings, MAX_VERTEX_ATTRIB_BINDINGS);
     }
 
-    if (mWebGLContext && getLimitations().limitWebglMaxTextureSizeTo4096)
+    const Limitations &limitations = getLimitations();
+
+    if (mWebGLContext && limitations.webGLTextureSizeLimit > 0)
     {
-        constexpr GLint kMaxTextureSize = 4096;
-        ANGLE_LIMIT_CAP(caps->max2DTextureSize, kMaxTextureSize);
-        ANGLE_LIMIT_CAP(caps->max3DTextureSize, kMaxTextureSize);
-        ANGLE_LIMIT_CAP(caps->maxCubeMapTextureSize, kMaxTextureSize);
-        ANGLE_LIMIT_CAP(caps->maxArrayTextureLayers, kMaxTextureSize);
-        ANGLE_LIMIT_CAP(caps->maxRectangleTextureSize, kMaxTextureSize);
+        ANGLE_LIMIT_CAP(caps->max2DTextureSize, limitations.webGLTextureSizeLimit);
+        ANGLE_LIMIT_CAP(caps->max3DTextureSize, limitations.webGLTextureSizeLimit);
+        ANGLE_LIMIT_CAP(caps->maxCubeMapTextureSize, limitations.webGLTextureSizeLimit);
+        ANGLE_LIMIT_CAP(caps->maxArrayTextureLayers, limitations.webGLTextureSizeLimit);
+        ANGLE_LIMIT_CAP(caps->maxRectangleTextureSize, limitations.webGLTextureSizeLimit);
     }
 
     ANGLE_LIMIT_CAP(caps->max2DTextureSize, IMPLEMENTATION_MAX_2D_TEXTURE_SIZE);
@@ -4111,13 +4112,13 @@ void Context::initCaps()
     }
 
     // Hide emulated ETC1 extension from WebGL contexts.
-    if (mWebGLContext && getLimitations().emulatedEtc1)
+    if (mWebGLContext && limitations.emulatedEtc1)
     {
         mSupportedExtensions.compressedETC1RGB8SubTextureEXT = false;
         mSupportedExtensions.compressedETC1RGB8TextureOES    = false;
     }
 
-    if (getLimitations().emulatedAstc)
+    if (limitations.emulatedAstc)
     {
         // Hide emulated ASTC extension from WebGL contexts.
         if (mWebGLContext)
