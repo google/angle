@@ -7,7 +7,7 @@
 //    Resource lifetime tracking in the Vulkan back-end.
 //
 
-#include "libANGLE/renderer/vulkan/ResourceVk.h"
+#include "libANGLE/renderer/vulkan/vk_resource.h"
 
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 

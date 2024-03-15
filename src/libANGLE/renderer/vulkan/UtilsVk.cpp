@@ -2643,7 +2643,7 @@ angle::Result UtilsVk::colorBlitResolve(ContextVk *contextVk,
     // then the views are used in a new command buffer without having been retained for it.
     // http://crbug.com/1272266#c22
     //
-    // Note that depth/stencil views for blit are not derived from a ResourceVk object and are
+    // Note that depth/stencil views for blit are not derived from a |Resource| class and are
     // retained differently.
     ASSERT(!contextVk->hasActiveRenderPass());
 

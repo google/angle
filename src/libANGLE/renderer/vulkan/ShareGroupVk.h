@@ -11,9 +11,9 @@
 #define LIBANGLE_RENDERER_VULKAN_SHAREGROUPVK_H_
 
 #include "libANGLE/renderer/ShareGroupImpl.h"
-#include "libANGLE/renderer/vulkan/ResourceVk.h"
 #include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
+#include "libANGLE/renderer/vulkan/vk_resource.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
 namespace rx
