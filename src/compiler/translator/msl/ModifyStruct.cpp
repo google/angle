@@ -395,8 +395,8 @@ class ConvertStructState : angle::NonCopyable
         if (m == nullptr)
         {
             TranslatorMetalReflection *reflection = mtl::getTranslatorMetalReflection(&mCompiler);
-            reflection->addOriginalName(structure.uniqueId().get(), structure.name().data());
-            const Name name = idGen.createNewName(structure.name().data());
+            reflection->addOriginalName(structure.uniqueId().get(), structure.name());
+            const Name name = idGen.createNewName(structure.name());
             if (!TryCreateModifiedStruct(mCompiler, symbolEnv, idGen, config, structure, name,
                                          outMachineries, isUBORecurse, config.allowPadding, false))
             {

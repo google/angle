@@ -326,7 +326,7 @@ CollectVariablesTraverser::CollectVariablesTraverser(
 
 std::string CollectVariablesTraverser::getMappedName(const TSymbol *symbol) const
 {
-    return HashName(symbol, mHashFunction, nullptr).data();
+    return HashName(symbol, mHashFunction, nullptr);
 }
 
 void CollectVariablesTraverser::setBuiltInInfoFromSymbol(const TVariable &variable,
@@ -334,8 +334,8 @@ void CollectVariablesTraverser::setBuiltInInfoFromSymbol(const TVariable &variab
 {
     const TType &type = variable.getType();
 
-    info->name       = variable.name().data();
-    info->mappedName = variable.name().data();
+    info->name       = variable.name();
+    info->mappedName = variable.name();
 
     bool isShaderIOBlock =
         IsShaderIoBlock(type.getQualifier()) && type.getInterfaceBlock() != nullptr;
@@ -539,7 +539,7 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
                 }
 
                 // It's an internal error to reference an undefined user uniform
-                ASSERT(!gl::IsBuiltInName(symbolName.data()) || var);
+                ASSERT(!gl::IsBuiltInName(symbolName) || var);
             }
             break;
             case EvqBuffer:
@@ -748,7 +748,7 @@ void CollectVariablesTraverser::setFieldOrVariableProperties(const TType &type,
         variableOut->type = GL_NONE;
         if (structure->symbolType() != SymbolType::Empty)
         {
-            variableOut->structOrBlockName = structure->name().data();
+            variableOut->structOrBlockName = structure->name();
         }
 
         const TFieldList &fields = structure->fields();
@@ -769,10 +769,10 @@ void CollectVariablesTraverser::setFieldOrVariableProperties(const TType &type,
         variableOut->type      = GL_NONE;
         if (interfaceBlock->symbolType() != SymbolType::Empty)
         {
-            variableOut->structOrBlockName = interfaceBlock->name().data();
+            variableOut->structOrBlockName = interfaceBlock->name();
             variableOut->mappedStructOrBlockName =
-                isPerVertex ? interfaceBlock->name().data()
-                            : HashName(interfaceBlock->name(), mHashFunction, nullptr).data();
+                isPerVertex ? interfaceBlock->name()
+                            : HashName(interfaceBlock->name(), mHashFunction, nullptr);
         }
         const TFieldList &fields = interfaceBlock->fields();
         for (const TField *field : fields)
@@ -829,10 +829,9 @@ void CollectVariablesTraverser::setFieldProperties(const TType &type,
 {
     ASSERT(variableOut);
     setFieldOrVariableProperties(type, staticUse, isShaderIOBlock, isPatch, variableOut);
-    variableOut->name.assign(name.data(), name.length());
-    variableOut->mappedName = (symbolType == SymbolType::BuiltIn)
-                                  ? name.data()
-                                  : HashName(name, mHashFunction, nullptr).data();
+    variableOut->name = name;
+    variableOut->mappedName =
+        (symbolType == SymbolType::BuiltIn) ? name : HashName(name, mHashFunction, nullptr);
 }
 
 void CollectVariablesTraverser::setCommonVariableProperties(const TType &type,
@@ -854,7 +853,7 @@ void CollectVariablesTraverser::setCommonVariableProperties(const TType &type,
     ASSERT(isNamed || isShaderIOBlock);
     if (isNamed)
     {
-        variableOut->name.assign(variable.name().data(), variable.name().length());
+        variableOut->name       = variable.name();
         variableOut->mappedName = getMappedName(&variable);
     }
 
@@ -865,10 +864,9 @@ void CollectVariablesTraverser::setCommonVariableProperties(const TType &type,
         const TInterfaceBlock *interfaceBlock = type.getInterfaceBlock();
         ASSERT(interfaceBlock);
 
-        variableOut->structOrBlockName.assign(interfaceBlock->name().data(),
-                                              interfaceBlock->name().length());
+        variableOut->structOrBlockName = interfaceBlock->name();
         variableOut->mappedStructOrBlockName =
-            HashName(interfaceBlock->name(), mHashFunction, nullptr).data();
+            HashName(interfaceBlock->name(), mHashFunction, nullptr);
         variableOut->isShaderIOBlock = true;
     }
 }
@@ -993,7 +991,7 @@ void CollectVariablesTraverser::recordInterfaceBlock(const char *instanceName,
     const TInterfaceBlock *blockType = interfaceBlockType.getInterfaceBlock();
     ASSERT(blockType);
 
-    interfaceBlock->name       = blockType->name().data();
+    interfaceBlock->name       = blockType->name();
     interfaceBlock->mappedName = getMappedName(blockType);
 
     const bool isGLInBuiltin = (instanceName != nullptr) && strncmp(instanceName, "gl_in", 5u) == 0;

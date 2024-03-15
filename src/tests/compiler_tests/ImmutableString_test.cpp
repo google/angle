@@ -33,6 +33,24 @@ class ImmutableStringBuilderTest : public testing::Test
     angle::PoolAllocator allocator;
 };
 
+// Test that comparing various empty strings with empty ImmutableString is consistent.
+TEST(ImmutableStringTest, empty)
+{
+    EXPECT_EQ(ImmutableString(nullptr), "");
+    EXPECT_EQ(ImmutableString(nullptr), std::string(""));
+    EXPECT_EQ(ImmutableString(""), std::string(""));
+    EXPECT_EQ(ImmutableString(""), std::string());
+    EXPECT_EQ(ImmutableString(""), std::string());
+    EXPECT_EQ(static_cast<std::string>(ImmutableString("")), std::string());
+    EXPECT_EQ(static_cast<std::string>(ImmutableString("")), std::string(""));
+
+    // Common pattern for temporary compares.
+    std::string s;
+    EXPECT_EQ(ImmutableString(""), ImmutableString(s.c_str(), s.size()));
+    s = "";
+    EXPECT_EQ(ImmutableString(""), ImmutableString(s.c_str(), s.size()));
+}
+
 // Test writing a 32-bit signed int as hexadecimal using ImmutableStringBuilder.
 TEST_F(ImmutableStringBuilderTest, AppendHexInt32)
 {
