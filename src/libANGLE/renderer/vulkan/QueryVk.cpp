@@ -11,8 +11,8 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/TransformFeedback.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
-#include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/TransformFeedbackVk.h"
+#include "libANGLE/renderer/vulkan/vk_renderer.h"
 
 #include "common/debug.h"
 

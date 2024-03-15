@@ -8,7 +8,7 @@
 //
 
 #include "WindowSurfaceVkHeadless.h"
-#include "libANGLE/renderer/vulkan/RendererVk.h"
+#include "libANGLE/renderer/vulkan/vk_renderer.h"
 
 namespace rx
 {

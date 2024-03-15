@@ -10,7 +10,7 @@
 #include "libANGLE/renderer/vulkan/MemoryTracking.h"
 
 #include "common/debug.h"
-#include "libANGLE/renderer/vulkan/RendererVk.h"
+#include "libANGLE/renderer/vulkan/vk_renderer.h"
 
 // Consts
 namespace

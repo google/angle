@@ -11,8 +11,8 @@
 
 #include "libANGLE/renderer/vulkan/Suballocation.h"
 #include "libANGLE/Context.h"
-#include "libANGLE/renderer/vulkan/RendererVk.h"
 #include "libANGLE/renderer/vulkan/vk_mem_alloc_wrapper.h"
+#include "libANGLE/renderer/vulkan/vk_renderer.h"
 
 namespace rx
 {

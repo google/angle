@@ -3,7 +3,7 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// RendererVk.h:
+// vk_renderer.h:
 //    Defines the class interface for Renderer.
 //
 
