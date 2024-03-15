@@ -46,6 +46,19 @@
 359729255 D3D11 : VertexAttributeTest.VertexAttribPointerCopyBufferFromInvalid* = SKIP
 359729255 METAL : VertexAttributeTest.VertexAttribPointerCopyBufferFromInvalid* = SKIP
 
+// Does not work due to SeparateDeclarations.
+// Would need a pass to name in-out structs based on the contents and dedupe the structs.
+42267047 GLES : GLSLTest_ES3.VaryingAnonymousStructEquality/* = SKIP
+42267047 GLES : GLSLTest_ES3.VaryingAnonymousStructWithInlineDefinition2/* = SKIP
+42267047 GLES : GLSLTest_ES3.VaryingAnonymousStructWithInlineDefinition3/* = SKIP
+42267047 OPENGL : GLSLTest_ES3.VaryingAnonymousStructEquality/* = SKIP
+42267047 OPENGL : GLSLTest_ES3.VaryingAnonymousStructWithInlineDefinition2/* = SKIP
+42267047 OPENGL : GLSLTest_ES3.VaryingAnonymousStructWithInlineDefinition3/* = SKIP
+// Crash
+42267047 PIXEL4ORXL VULKAN : GLSLTest_ES3.VaryingAnonymousStructEquality/* = SKIP
+42267047 PIXEL4ORXL VULKAN : GLSLTest_ES3.VaryingAnonymousStructWithInlineDefinition2/* = SKIP
+42267047 PIXEL4ORXL VULKAN : GLSLTest_ES3.VaryingAnonymousStructWithInlineDefinition3/* = SKIP
+
 // Shared context failing on OpenGL and D3D11
 42266326 METAL : MultithreadingTest.CreateMultiSharedContextAndDraw/* = SKIP
 42266326 OPENGL : MultithreadingTest.CreateMultiSharedContextAndDraw/* = SKIP
