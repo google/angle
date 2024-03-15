@@ -32,7 +32,6 @@
 // Incorrectly handled pretty much in all backends
 8446 : CopyTexImageTestES3.RedefineSameLevel/* = SKIP
 // Currently fails on WebGPU as it's not fully implemented yet.
-8485 WGPU : RendererTest.* = SKIP
 
 6743 OPENGL : SimpleStateChangeTestES3.RespecifyBufferAfterBeginTransformFeedback/* = SKIP
 6743 GLES : SimpleStateChangeTestES3.RespecifyBufferAfterBeginTransformFeedback/* = SKIP
@@ -1401,6 +1400,9 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 5832 ANDROID GLES : TextureBufferTestES31.DrawIncompleteNonZeroTexture/* = SKIP
 5832 ANDROID GLES : TextureBufferTestES31.DrawCompleteZeroTexture/* = SKIP
 5832 ANDROID GLES : TextureBufferTestES31.DrawCompleteNonZeroTexture/* = SKIP
+
+// WebGPU failures
+8485 WGPU : RendererTest.SimpleOperation/* = SKIP
 
 // Slow tests, should appear last in this file
 5076 : GLSLTest.VerifyMaxVertexUniformVectors* = TIMEOUT
