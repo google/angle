@@ -167,6 +167,12 @@
 3297 WIN D3D11 : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_src_x_linear = FAIL
 3297 WIN D3D11 : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_src_y_linear = FAIL
 
+// Blit related failures on D3D11 for NVIDIA
+3297 WIN D3D11 NVIDIA : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_mag_reverse_dst_x = FAIL
+3297 WIN D3D11 NVIDIA : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_mag_reverse_dst_y = FAIL
+3297 WIN D3D11 NVIDIA : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_mag_reverse_src_x = FAIL
+3297 WIN D3D11 NVIDIA : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_mag_reverse_src_y = FAIL
+
 // Simultaneous use of GL_CONSTANT_ALPHA/GL_ONE_MINUS_CONSTANT_ALPHA and GL_CONSTANT_COLOR/GL_ONE_MINUS_CONSTANT_COLOR as color factors
 4394 D3D11 : dEQP-GLES3.functional.draw_buffers_indexed.random.max_required_draw_buffers.4 = FAIL
 4394 D3D11 : dEQP-GLES3.functional.draw_buffers_indexed.random.max_required_draw_buffers.7 = FAIL
@@ -382,6 +388,16 @@
 // All the out of bounds variants fail.
 2137 MAC OPENGL INTEL : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_mag_reverse_src_dst_y = FAIL
 2137 MAC OPENGL INTEL : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_min_reverse_src_dst_y = FAIL
+2137 MAC OPENGL INTEL : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_mag = FAIL
+2137 MAC OPENGL INTEL : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_mag_reverse_dst_x = FAIL
+2137 MAC OPENGL INTEL : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_mag_reverse_src_dst_x = FAIL
+2137 MAC OPENGL INTEL : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_mag_reverse_src_dst_y = FAIL
+2137 MAC OPENGL INTEL : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_mag_reverse_src_x = FAIL
+2137 MAC OPENGL INTEL : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_min = FAIL
+2137 MAC OPENGL INTEL : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_min_reverse_dst_x = FAIL
+2137 MAC OPENGL INTEL : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_min_reverse_src_dst_x = FAIL
+2137 MAC OPENGL INTEL : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_min_reverse_src_dst_y = FAIL
+2137 MAC OPENGL INTEL : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_min_reverse_src_x = FAIL
 // Fails for all integer formats
 2137 MAC OPENGL INTEL : dEQP-GLES3.functional.fbo.completeness.attachment_combinations.none_rbo_none_none = FAIL
 2137 MAC OPENGL INTEL : dEQP-GLES3.functional.fbo.completeness.attachment_combinations.none_tex_none_none = FAIL
