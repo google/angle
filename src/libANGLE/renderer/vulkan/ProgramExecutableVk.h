@@ -309,10 +309,26 @@ class ProgramExecutableVk : public ProgramExecutableImpl
 
     const ShaderInterfaceVariableInfoMap &getVariableInfoMap() const { return mVariableInfoMap; }
 
-    angle::Result warmUpPipelineCache(vk::Context *context,
-                                      vk::PipelineRobustness pipelineRobustness,
-                                      vk::PipelineProtectedAccess pipelineProtectedAccess,
-                                      vk::RenderPass *temporaryCompatibleRenderPassOut);
+    angle::Result prepareForWarmUpPipelineCache(
+        vk::Context *context,
+        vk::PipelineRobustness pipelineRobustness,
+        vk::PipelineProtectedAccess pipelineProtectedAccess,
+        bool *isComputeOut,
+        angle::FixedVector<bool, 2> *surfaceRotationVariationsOut,
+        vk::GraphicsPipelineDesc *graphicsPipelineDescOut,
+        vk::RenderPass *renderPassOut);
+
+    angle::Result warmUpComputePipelineCache(vk::Context *context,
+                                             vk::PipelineRobustness pipelineRobustness,
+                                             vk::PipelineProtectedAccess pipelineProtectedAccess);
+
+    angle::Result warmUpGraphicsPipelineCache(vk::Context *context,
+                                              vk::PipelineRobustness pipelineRobustness,
+                                              vk::PipelineProtectedAccess pipelineProtectedAccess,
+                                              vk::GraphicsPipelineSubset subset,
+                                              const bool isSurfaceRotated,
+                                              const vk::GraphicsPipelineDesc &graphicsPipelineDesc,
+                                              const vk::RenderPass &renderPass);
 
     const vk::WriteDescriptorDescs &getShaderResourceWriteDescriptorDescs() const
     {
