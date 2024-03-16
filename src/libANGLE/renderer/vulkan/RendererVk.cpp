@@ -2421,11 +2421,6 @@ void Renderer::appendDeviceExtensionFeaturesPromotedTo13(
     VkPhysicalDeviceFeatures2KHR *deviceFeatures,
     VkPhysicalDeviceProperties2 *deviceProperties)
 {
-    if (ExtensionFound(VK_EXT_PIPELINE_CREATION_CACHE_CONTROL_EXTENSION_NAME, deviceExtensionNames))
-    {
-        vk::AddToPNextChain(deviceFeatures, &mPipelineCreationCacheControlFeatures);
-    }
-
     if (ExtensionFound(VK_EXT_EXTENDED_DYNAMIC_STATE_EXTENSION_NAME, deviceExtensionNames))
     {
         vk::AddToPNextChain(deviceFeatures, &mExtendedDynamicStateFeatures);
@@ -2542,10 +2537,6 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
     mPrimitiveTopologyListRestartFeatures = {};
     mPrimitiveTopologyListRestartFeatures.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PRIMITIVE_TOPOLOGY_LIST_RESTART_FEATURES_EXT;
-
-    mPipelineCreationCacheControlFeatures = {};
-    mPipelineCreationCacheControlFeatures.sType =
-        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PIPELINE_CREATION_CACHE_CONTROL_FEATURES_EXT;
 
     mExtendedDynamicStateFeatures = {};
     mExtendedDynamicStateFeatures.sType =
@@ -2674,7 +2665,6 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
     mDepthClipControlFeatures.pNext                         = nullptr;
     mPrimitivesGeneratedQueryFeatures.pNext                 = nullptr;
     mPrimitiveTopologyListRestartFeatures.pNext             = nullptr;
-    mPipelineCreationCacheControlFeatures.pNext             = nullptr;
     mExtendedDynamicStateFeatures.pNext                     = nullptr;
     mExtendedDynamicState2Features.pNext                    = nullptr;
     mGraphicsPipelineLibraryFeatures.pNext                  = nullptr;
@@ -3117,12 +3107,6 @@ void Renderer::enableDeviceExtensionsPromotedTo12(const vk::ExtensionNameList &d
 // See comment above appendDeviceExtensionFeaturesPromotedTo13.
 void Renderer::enableDeviceExtensionsPromotedTo13(const vk::ExtensionNameList &deviceExtensionNames)
 {
-    if (mFeatures.supportsPipelineCreationCacheControl.enabled)
-    {
-        mEnabledDeviceExtensions.push_back(VK_EXT_PIPELINE_CREATION_CACHE_CONTROL_EXTENSION_NAME);
-        vk::AddToPNextChain(&mEnabledFeatures, &mPipelineCreationCacheControlFeatures);
-    }
-
     if (mFeatures.supportsPipelineCreationFeedback.enabled)
     {
         mEnabledDeviceExtensions.push_back(VK_EXT_PIPELINE_CREATION_FEEDBACK_EXTENSION_NAME);
@@ -3491,15 +3475,7 @@ angle::Result Renderer::createDeviceAndQueue(vk::Context *context, uint32_t queu
         mDefaultUniformBufferSize, getPhysicalDeviceProperties().limits.maxUniformBufferRange);
 
     // Initialize the vulkan pipeline cache.
-    {
-        std::unique_lock<std::mutex> lock(mPipelineCacheMutex);
-        bool loadedFromBlobCache = false;
-        ANGLE_TRY(initPipelineCache(context, &mPipelineCache, &loadedFromBlobCache));
-        if (loadedFromBlobCache)
-        {
-            ANGLE_TRY(getPipelineCacheSize(context, &mPipelineCacheSizeAtLastSync));
-        }
-    }
+    ANGLE_TRY(ensurePipelineCacheInitialized(context));
 
     // Track the set of supported pipeline stages.  This is used when issuing image layout
     // transitions that cover many stages (such as AllGraphicsReadOnly) to mask out unsupported
@@ -4081,11 +4057,6 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsPipelineCreationFeedback,
         ExtensionFound(VK_EXT_PIPELINE_CREATION_FEEDBACK_EXTENSION_NAME, deviceExtensionNames));
-
-    // Incomplete implementation on SwiftShader: http://issuetracker.google.com/234439593
-    ANGLE_FEATURE_CONDITION(
-        &mFeatures, supportsPipelineCreationCacheControl,
-        mPipelineCreationCacheControlFeatures.pipelineCreationCacheControl && !isSwiftShader);
 
     // Note: Protected Swapchains is not determined until we have a VkSurface to query.
     // So here vendors should indicate support so that protected_content extension
@@ -4970,12 +4941,36 @@ angle::Result Renderer::initPipelineCache(vk::Context *context,
     pipelineCacheCreateInfo.initialDataSize = *success ? initialData.size() : 0;
     pipelineCacheCreateInfo.pInitialData    = *success ? initialData.data() : nullptr;
 
-    if (getFeatures().supportsPipelineCreationCacheControl.enabled)
+    ANGLE_VK_TRY(context, pipelineCache->init(mDevice, pipelineCacheCreateInfo));
+
+    return angle::Result::Continue;
+}
+
+angle::Result Renderer::ensurePipelineCacheInitialized(vk::Context *context)
+{
+    // If it is initialized already, there is nothing to do
+    if (mPipelineCacheInitialized)
     {
-        pipelineCacheCreateInfo.flags |= VK_PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT;
+        return angle::Result::Continue;
     }
 
-    ANGLE_VK_TRY(context, pipelineCache->init(mDevice, pipelineCacheCreateInfo));
+    std::unique_lock<std::mutex> lock(mPipelineCacheMutex);
+
+    // If another thread initialized it first don't redo it
+    if (mPipelineCacheInitialized)
+    {
+        return angle::Result::Continue;
+    }
+
+    // We should now create the pipeline cache with the blob cache pipeline data.
+    bool loadedFromBlobCache = false;
+    ANGLE_TRY(initPipelineCache(context, &mPipelineCache, &loadedFromBlobCache));
+    if (loadedFromBlobCache)
+    {
+        ANGLE_TRY(getPipelineCacheSize(context, &mPipelineCacheSizeAtLastSync));
+    }
+
+    mPipelineCacheInitialized = true;
 
     return angle::Result::Continue;
 }
@@ -4983,35 +4978,23 @@ angle::Result Renderer::initPipelineCache(vk::Context *context,
 angle::Result Renderer::getPipelineCache(vk::Context *context,
                                          vk::PipelineCacheAccess *pipelineCacheOut)
 {
-    // Note that ANGLE externally synchronizes the pipeline cache, and uses
-    // VK_EXT_pipeline_creation_cache_control (where available) to disable internal synchronization.
-    std::unique_lock<std::mutex> lock(mPipelineCacheMutex);
+    ANGLE_TRY(ensurePipelineCacheInitialized(context));
 
-    if (!mPipelineCacheInitialized)
-    {
-        // We should now recreate the pipeline cache with the blob cache pipeline data.
-        vk::PipelineCache pCache;
-        bool loadedFromBlobCache = false;
-        ANGLE_TRY(initPipelineCache(context, &pCache, &loadedFromBlobCache));
-        if (loadedFromBlobCache)
-        {
-            // Merge the newly created pipeline cache into the existing one.
-            mPipelineCache.merge(mDevice, 1, pCache.ptr());
+    std::mutex *pipelineCacheMutex =
+        (context->getFeatures().mergeProgramPipelineCachesToGlobalCache.enabled)
+            ? &mPipelineCacheMutex
+            : nullptr;
 
-            ANGLE_TRY(getPipelineCacheSize(context, &mPipelineCacheSizeAtLastSync));
-        }
-
-        mPipelineCacheInitialized = true;
-        pCache.destroy(mDevice);
-    }
-
-    pipelineCacheOut->init(&mPipelineCache, &mPipelineCacheMutex);
+    pipelineCacheOut->init(&mPipelineCache, pipelineCacheMutex);
     return angle::Result::Continue;
 }
 
 angle::Result Renderer::mergeIntoPipelineCache(vk::Context *context,
                                                const vk::PipelineCache &pipelineCache)
 {
+    // It is an error to call into this method when the feature is disabled.
+    ASSERT(context->getFeatures().mergeProgramPipelineCachesToGlobalCache.enabled);
+
     vk::PipelineCacheAccess globalCache;
     ANGLE_TRY(getPipelineCache(context, &globalCache));
 

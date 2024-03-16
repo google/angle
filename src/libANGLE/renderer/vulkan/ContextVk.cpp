@@ -9053,12 +9053,6 @@ angle::Result ContextVk::ensureInterfacePipelineCache()
         VkPipelineCacheCreateInfo pipelineCacheCreateInfo = {};
         pipelineCacheCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
 
-        if (getFeatures().supportsPipelineCreationCacheControl.enabled)
-        {
-            pipelineCacheCreateInfo.flags |=
-                VK_PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT;
-        }
-
         ANGLE_VK_TRY(this, mInterfacePipelinesCache.init(getDevice(), pipelineCacheCreateInfo));
     }
 

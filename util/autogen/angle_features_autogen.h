@@ -330,7 +330,6 @@ enum class Feature
     SupportsMultisampledRenderToSingleSampledGOOGLEX,
     SupportsMultiview,
     SupportsNonConstantLoopIndexing,
-    SupportsPipelineCreationCacheControl,
     SupportsPipelineCreationFeedback,
     SupportsPipelineProtectedAccess,
     SupportsPipelineRobustness,

@@ -527,11 +527,6 @@ angle::Result ProgramExecutableVk::initializePipelineCache(vk::Context *context,
     pipelineCacheCreateInfo.initialDataSize = dataSize;
     pipelineCacheCreateInfo.pInitialData    = dataPointer;
 
-    if (context->getFeatures().supportsPipelineCreationCacheControl.enabled)
-    {
-        pipelineCacheCreateInfo.flags |= VK_PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT;
-    }
-
     ANGLE_VK_TRY(context, mPipelineCache.init(context->getDevice(), pipelineCacheCreateInfo));
 
     // Merge the pipeline cache into Renderer's.
@@ -549,12 +544,6 @@ angle::Result ProgramExecutableVk::ensurePipelineCacheInitialized(vk::Context *c
     {
         VkPipelineCacheCreateInfo pipelineCacheCreateInfo = {};
         pipelineCacheCreateInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CACHE_CREATE_INFO;
-
-        if (context->getFeatures().supportsPipelineCreationCacheControl.enabled)
-        {
-            pipelineCacheCreateInfo.flags |=
-                VK_PIPELINE_CACHE_CREATE_EXTERNALLY_SYNCHRONIZED_BIT_EXT;
-        }
 
         ANGLE_VK_TRY(context, mPipelineCache.init(context->getDevice(), pipelineCacheCreateInfo));
     }
