@@ -138,6 +138,11 @@ angle::Result ProgramPipelineVk::link(const gl::Context *glContext,
             }
         }
 
+        if (result == angle::Result::Continue)
+        {
+            ANGLE_TRY(executableVk->mergePipelineCacheToRenderer(contextVk));
+        }
+
         compatibleRenderPass.destroy(contextVk->getDevice());
     }
 

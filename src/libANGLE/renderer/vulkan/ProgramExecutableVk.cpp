@@ -730,12 +730,6 @@ angle::Result ProgramExecutableVk::warmUpComputePipelineCache(
     ANGLE_TRY(getOrCreateComputePipeline(context, &pipelineCache, PipelineSource::WarmUp,
                                          pipelineRobustness, pipelineProtectedAccess, &pipeline));
 
-    // Merge the cache with Renderer's
-    if (context->getFeatures().mergeProgramPipelineCachesToGlobalCache.enabled)
-    {
-        ANGLE_TRY(context->getRenderer()->mergeIntoPipelineCache(context, mPipelineCache));
-    }
-
     return angle::Result::Continue;
 }
 
@@ -763,9 +757,15 @@ angle::Result ProgramExecutableVk::warmUpGraphicsPipelineCache(
                                          PipelineSource::WarmUp, graphicsPipelineDesc, renderPass,
                                          &descPtr, &pipeline));
 
+    return angle::Result::Continue;
+}
+
+angle::Result ProgramExecutableVk::mergePipelineCacheToRenderer(vk::Context *context) const
+{
     // Merge the cache with Renderer's
     if (context->getFeatures().mergeProgramPipelineCachesToGlobalCache.enabled)
     {
+        ANGLE_TRACE_EVENT0("gpu.angle", "ProgramExecutableVk::mergePipelineCacheToRenderer");
         ANGLE_TRY(context->getRenderer()->mergeIntoPipelineCache(context, mPipelineCache));
     }
 
