@@ -1726,10 +1726,10 @@ angle::Result FramebufferVk::generateFragmentShadingRateWithCPU(
                 for (uint32_t point = 0; point < activeFocalPoints.size(); point++)
                 {
                     float density =
-                        1.0f / std::max(std::powf(activeFocalPoints[point].focalX - px, 2) *
-                                                std::powf(activeFocalPoints[point].gainX, 2) +
-                                            std::powf(activeFocalPoints[point].focalY - py, 2) *
-                                                std::powf(activeFocalPoints[point].gainY, 2) -
+                        1.0f / std::max(std::pow(activeFocalPoints[point].focalX - px, 2.0f) *
+                                                std::pow(activeFocalPoints[point].gainX, 2.0f) +
+                                            std::pow(activeFocalPoints[point].focalY - py, 2.0f) *
+                                                std::pow(activeFocalPoints[point].gainY, 2.0f) -
                                             activeFocalPoints[point].foveaArea,
                                         1.0f);
 
