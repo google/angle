@@ -53,9 +53,6 @@
 // The fragment_ops.depth_stencil.random tests all seem to fail on D3D11.
 3282 D3D11 : dEQP-GLES2.functional.fragment_ops.depth_stencil.random.* = FAIL
 
-// fragment_ops.depth_stencil.stencil_ops.* fail for D3D11.
-8617 D3D11 : dEQP-GLES2.functional.fragment_ops.depth_stencil.stencil_ops.* = FAIL
-
 // Failures related to the depth_range on Windows / NVIDIA and ATI.
 2426 D3D11 : dEQP-GLES2.functional.depth_range.write.reverse = FAIL
 2426 D3D11 : dEQP-GLES2.functional.depth_range.write.half_to_zero = FAIL

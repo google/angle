@@ -9,9 +9,6 @@
 // Depth/stencil related failures due to Vulkan driver bugs.
 3683 VULKAN PIXEL4ORXL : KHR-GLES3.packed_depth_stencil.clear_buffer.depth32f_stencil8 = FAIL
 
-// Texture related failure on Pixel 4.
-8616 VULKAN PIXEL4ORXL : KHR-GLES3.texture_lod_basic.lod_selection = FAIL
-
 // Test bug - fails in ASAN
 6678 VULKAN ANDROID : KHR-GLES3.packed_pixels.varied_rectangle.* = SKIP
 6678 VULKAN NVIDIA : KHR-GLES3.packed_pixels.varied_rectangle.r8_snorm = SKIP
