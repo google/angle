@@ -1359,7 +1359,15 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk, bool *anyMat
         return angle::Result::Continue;
     }
 
+    // Android used to only advertise INHERIT bit, but might update to advertise OPAQUE bit as a
+    // hint for RGBX backed VK_FORMAT_R8G8B8A8_* surface format. So here we would default to the
+    // INHERTI bit if detecting Android and the client has explicitly requested alpha channel.
     mCompositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
+    if (IsAndroid() && mState.config->alphaSize != 0)
+    {
+        mCompositeAlpha = VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR;
+    }
+
     if ((mSurfaceCaps.supportedCompositeAlpha & mCompositeAlpha) == 0)
     {
         mCompositeAlpha = VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR;
