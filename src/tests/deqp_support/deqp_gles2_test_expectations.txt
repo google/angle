@@ -361,8 +361,7 @@ b/328156792 PINEAPPLE VULKAN : dEQP-GLES2.functional.shaders.random.scalar_conve
 b/328156792 PINEAPPLE VULKAN : dEQP-GLES2.functional.shaders.random.swizzle.* = SKIP
 b/328156792 PINEAPPLE VULKAN : dEQP-GLES2.functional.shaders.random.texture.* = SKIP
 b/328156792 PINEAPPLE VULKAN : dEQP-GLES2.functional.shaders.random.trigonometric.fragment.* = SKIP
-b/328156792 PINEAPPLE VULKAN : dEQP-GLES2.functional.shaders.texture_functions.*cube* = SKIP
 b/328156792 PINEAPPLE VULKAN : dEQP-GLES2.functional.texture*cube* = SKIP
 b/328156792 PINEAPPLE VULKAN : dEQP-GLES2.functional.uniform_api.random.* = SKIP
 b/328156792 PINEAPPLE VULKAN : dEQP-GLES2.functional.uniform_api.value.assigned.* = SKIP
-b/328156792 PINEAPPLE VULKAN : dEQP-GLES2.functional.uniform_api.value.initial.render.basic.samplerCube* = SKIP
+
