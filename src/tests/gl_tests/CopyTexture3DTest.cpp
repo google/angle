@@ -554,11 +554,11 @@ void CopyTexture3DTest::testUnsizedFormats(const GLenum testTarget)
              GLColor(128, 191, 255, 200));
 
     testCopy(testTarget, kColorNoAlpha, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4, false, false, false,
-             GLColor(255, 204, 153, 102));
+             GLColor(250, 200, 150, 100));
     testCopy(testTarget, kColorPreAlpha, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4, false, true, false,
-             GLColor(102, 85, 51, 102));
+             GLColor(98, 78, 59, 100));
     testCopy(testTarget, kColorUnAlpha, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4, false, false, true,
-             GLColor(136, 187, 255, 204));
+             GLColor(128, 191, 255, 200));
 
     testCopy(testTarget, kColorNoAlpha, GL_RGBA, GL_UNSIGNED_SHORT_5_5_5_1, false, false, false,
              GLColor(247, 198, 148, 0));
@@ -685,18 +685,18 @@ void CopyTexture3DTest::testUnsignedByteFormats(const GLenum testTarget)
                  GLColor(221, 167, 110, 230));
 
         testCopy(testTarget, kColorNoAlpha, GL_RGBA4, GL_UNSIGNED_BYTE, false, false, false,
-                 GLColor(255, 204, 153, 102));
+                 GLColor(250, 200, 150, 100));
         testCopy(testTarget, kColorPreAlpha, GL_RGBA4, GL_UNSIGNED_BYTE, false, true, false,
-                 GLColor(102, 85, 51, 102));
-        testCopy(testTarget, GLColor(100, 150, 200, 210), GL_RGBA4, GL_UNSIGNED_BYTE, false, false,
-                 true, GLColor(119, 187, 238, 204));
+                 GLColor(98, 78, 59, 100));
+        testCopy(testTarget, kColorUnAlpha, GL_RGBA4, GL_UNSIGNED_BYTE, false, false, true,
+                 GLColor(221, 167, 110, 230));
 
         testCopy(testTarget, kColorNoAlpha, GL_RGBA4, GL_UNSIGNED_SHORT_4_4_4_4, false, false,
-                 false, GLColor(255, 204, 153, 102));
+                 false, GLColor(250, 200, 150, 100));
         testCopy(testTarget, kColorPreAlpha, GL_RGBA4, GL_UNSIGNED_SHORT_4_4_4_4, false, true,
-                 false, GLColor(102, 85, 51, 102));
-        testCopy(testTarget, GLColor(100, 150, 200, 210), GL_RGBA4, GL_UNSIGNED_SHORT_4_4_4_4,
-                 false, false, true, GLColor(119, 187, 238, 204));
+                 false, GLColor(98, 78, 59, 100));
+        testCopy(testTarget, kColorUnAlpha, GL_RGBA4, GL_UNSIGNED_SHORT_4_4_4_4, false, false, true,
+                 GLColor(221, 167, 110, 230));
 
         testCopy(testTarget, kColorNoAlpha, GL_SRGB8, GL_UNSIGNED_BYTE, false, false, false,
                  GLColor(244, 148, 78, 255));
@@ -1327,9 +1327,6 @@ TEST_P(Texture2DArrayCopy, UnsignedByteFormats)
 TEST_P(Texture2DArrayCopy, FloatFormats)
 {
     ANGLE_SKIP_TEST_IF(!checkExtensions());
-
-    // http://anglebug.com/4756
-    ANGLE_SKIP_TEST_IF(IsVulkan() && IsAndroid());
 
     testFloatFormats(GL_TEXTURE_2D_ARRAY);
 }
