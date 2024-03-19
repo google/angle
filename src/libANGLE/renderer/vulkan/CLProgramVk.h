@@ -45,12 +45,13 @@ class CLProgramVk : public CLProgramImpl
     };
 
     // Output binary structure (for CL_PROGRAM_BINARIES query)
+    static constexpr uint32_t kBinaryVersion = 2;
     struct ProgramBinaryOutputHeader
     {
-        uint32_t headerVersion{1};
+        uint32_t headerVersion{kBinaryVersion};
         cl_program_binary_type binaryType{CL_PROGRAM_BINARY_TYPE_NONE};
+        cl_build_status buildStatus{CL_BUILD_NONE};
     };
-    static constexpr uint32_t LatestSupportedBinaryVersion = 1;
 
     struct ScopedClspvContext : angle::NonCopyable
     {

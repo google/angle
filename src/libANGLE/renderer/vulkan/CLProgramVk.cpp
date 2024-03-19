@@ -299,7 +299,7 @@ angle::Result CLProgramVk::init(const size_t *lengths,
             }
             ANGLE_CL_RETURN_ERROR(CL_INVALID_BINARY);
         }
-        else if (binaryHeader->headerVersion < LatestSupportedBinaryVersion)
+        else if (binaryHeader->headerVersion < kBinaryVersion)
         {
             ERR() << "Binary version not compatible with runtime!";
             if (binaryStatus)
@@ -330,7 +330,8 @@ angle::Result CLProgramVk::init(const size_t *lengths,
 
         // Add device binary to program
         DeviceProgramData deviceBinary;
-        deviceBinary.binaryType = binaryHeader->binaryType;
+        deviceBinary.binaryType  = binaryHeader->binaryType;
+        deviceBinary.buildStatus = binaryHeader->buildStatus;
         switch (deviceBinary.binaryType)
         {
             case CL_PROGRAM_BINARY_TYPE_EXECUTABLE:
@@ -512,8 +513,9 @@ angle::Result CLProgramVk::getInfo(cl::ProgramInfo name,
                     deviceProgram.second.binaryType == CL_PROGRAM_BINARY_TYPE_EXECUTABLE
                         ? deviceProgram.second.binary.size() * sizeof(uint32_t)
                         : deviceProgram.second.IR.size();
-                ProgramBinaryOutputHeader header{.headerVersion = LatestSupportedBinaryVersion,
-                                                 .binaryType    = deviceProgram.second.binaryType};
+                ProgramBinaryOutputHeader header{.headerVersion = kBinaryVersion,
+                                                 .binaryType    = deviceProgram.second.binaryType,
+                                                 .buildStatus   = deviceProgram.second.buildStatus};
 
                 if (outputBins != nullptr)
                 {
