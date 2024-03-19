@@ -577,6 +577,11 @@ b/308668391 PIXEL4ORXL VULKAN : ImageTest.SourceYUVAHBTargetExternalRGBSampleNoD
 8537 PIXEL4ORXL GLES : PbufferTest.BindTexImageOverwriteReleasesOrphanedPbuffer/* = SKIP
 8537 PIXEL4ORXL GLES : PbufferTest.BindTexImageOverwrite/* = SKIP
 
+8626 PIXEL4ORXL GLES : FramebufferTest_ES31.MultisampleResolveBothAttachments/* = SKIP
+8626 PIXEL4ORXL GLES : FramebufferTest_ES31.MultisampleResolveMultipleTimes/* = SKIP
+8626 PIXEL4ORXL GLES : FramebufferTest_ES31.ResolveThenDrawWithoutResolveThenDrawWithResolve/* = SKIP
+8626 PIXEL4ORXL : FramebufferTest_ES31.MultisampleResolveMultipleTimesWithDrawInBetween/* = SKIP
+
 // Pixel 6 expectations.
 6931 PIXEL6 VULKAN : BlitFramebufferTest.OOBWrite/* = SKIP
 6931 PIXEL6 VULKAN : BufferSubDataTest.MapInvalidateThenBufferSubData/* = SKIP
@@ -655,10 +660,12 @@ b/308668391 PIXEL4ORXL VULKAN : ImageTest.SourceYUVAHBTargetExternalRGBSampleNoD
 7376 PIXEL6 VULKAN : *_NoSupportsTransformFeedbackExtension = SKIP
 
 // Crashing in Mali shader compiler
-217922015 PIXEL6 VULKAN : GLSLTest_ES3.NestedPowFromUniform/* = SKIP
+b/217922015 PIXEL6 VULKAN : GLSLTest_ES3.NestedPowFromUniform/* = SKIP
 
 7771 PIXEL6 VULKAN : PixelLocalStorageTest.DrawStateReset/* = SKIP
 7771 PIXEL6 VULKAN : PixelLocalStorageTestES31.DrawStateReset/* = SKIP
+
+b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachments/* = SKIP
 
 // iOS
 7653 IOS OPENGL : BufferDataTestES3.DrawWithNotCallingBufferData/* = SKIP
