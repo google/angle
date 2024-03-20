@@ -43,6 +43,7 @@ class ImageHelper
 
     LevelIndex toWgpuLevel(gl::LevelIndex levelIndexGl) const;
     gl::LevelIndex toGlLevel(LevelIndex levelIndexWgpu) const;
+    wgpu::Texture &getTexture() { return mTexture; }
 
   private:
     wgpu::Texture mTexture;
