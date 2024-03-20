@@ -518,7 +518,7 @@ void DisplayMtl::initializeFrontendFeatures(angle::FrontendFeatures *features) c
     ANGLE_FEATURE_CONDITION(features, compileJobIsThreadSafe, true);
 
     // The link job in this backend references gl::Context and ContextMtl, and thread-safety is not
-    // guaranteed.  The link subtasks are safe however, they are still parallelized.
+    // guaranteed.  The post link tasks are safe however, they are still parallelized.
     //
     // Once the link jobs are made thread-safe and using mtl::Context, this feature can be removed.
     ANGLE_FEATURE_CONDITION(features, linkJobIsThreadSafe, false);

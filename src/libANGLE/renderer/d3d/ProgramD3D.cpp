@@ -94,7 +94,7 @@ class HLSLBlockLayoutEncoderFactory : public gl::CustomBlockLayoutEncoderFactory
 };
 
 // GetExecutableTask class
-class GetExecutableTask : public LinkSubTask, public d3d::Context
+class GetExecutableTask : public PostLinkTask, public d3d::Context
 {
   public:
     GetExecutableTask(ProgramD3D *program, const SharedCompiledShaderStateD3D &shader)
@@ -491,9 +491,9 @@ class ProgramD3D::LinkTaskD3D final : public LinkLoadTaskD3D
     {}
     ~LinkTaskD3D() override = default;
 
-    std::vector<std::shared_ptr<LinkSubTask>> link(const gl::ProgramLinkedResources &resources,
-                                                   const gl::ProgramMergedVaryings &mergedVaryings,
-                                                   bool *areSubTasksOptionalOut) override;
+    std::vector<std::shared_ptr<PostLinkTask>> link(const gl::ProgramLinkedResources &resources,
+                                                    const gl::ProgramMergedVaryings &mergedVaryings,
+                                                    bool *arePostLinkTasksOptionalOut) override;
 
   private:
     const gl::Version mClientVersion;
@@ -502,10 +502,10 @@ class ProgramD3D::LinkTaskD3D final : public LinkLoadTaskD3D
     const gl::ProvokingVertexConvention mProvokingVertex;
 };
 
-std::vector<std::shared_ptr<LinkSubTask>> ProgramD3D::LinkTaskD3D::link(
+std::vector<std::shared_ptr<PostLinkTask>> ProgramD3D::LinkTaskD3D::link(
     const gl::ProgramLinkedResources &resources,
     const gl::ProgramMergedVaryings &mergedVaryings,
-    bool *areSubTasksOptionalOut)
+    bool *arePostLinkTasksOptionalOut)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "LinkTaskD3D::link");
 
@@ -518,12 +518,12 @@ std::vector<std::shared_ptr<LinkSubTask>> ProgramD3D::LinkTaskD3D::link(
         return {};
     }
 
-    // Create the subtasks
-    std::vector<std::shared_ptr<LinkSubTask>> subTasks;
+    // Create the post-link tasks
+    std::vector<std::shared_ptr<PostLinkTask>> postLinkTasks;
 
     if (mExecutable->hasShaderStage(gl::ShaderType::Compute))
     {
-        subTasks.push_back(std::make_shared<GetComputeExecutableTask>(
+        postLinkTasks.push_back(std::make_shared<GetComputeExecutableTask>(
             mProgram, mProgram->getAttachedShader(gl::ShaderType::Compute)));
     }
     else
@@ -531,17 +531,17 @@ std::vector<std::shared_ptr<LinkSubTask>> ProgramD3D::LinkTaskD3D::link(
         // Geometry shaders are currently only used internally, so there is no corresponding shader
         // object at the interface level. For now the geometry shader debug info is prepended to the
         // vertex shader.
-        subTasks.push_back(std::make_shared<GetVertexExecutableTask>(
+        postLinkTasks.push_back(std::make_shared<GetVertexExecutableTask>(
             mProgram, mProgram->getAttachedShader(gl::ShaderType::Vertex)));
-        subTasks.push_back(std::make_shared<GetPixelExecutableTask>(
+        postLinkTasks.push_back(std::make_shared<GetPixelExecutableTask>(
             mProgram, mProgram->getAttachedShader(gl::ShaderType::Fragment)));
-        subTasks.push_back(std::make_shared<GetGeometryExecutableTask>(
+        postLinkTasks.push_back(std::make_shared<GetGeometryExecutableTask>(
             mProgram, mProgram->getAttachedShader(gl::ShaderType::Vertex), mCaps,
             mProvokingVertex));
     }
 
-    *areSubTasksOptionalOut = false;
-    return subTasks;
+    *arePostLinkTasksOptionalOut = false;
+    return postLinkTasks;
 }
 
 class ProgramD3D::LoadTaskD3D final : public LinkLoadTaskD3D
@@ -552,7 +552,7 @@ class ProgramD3D::LoadTaskD3D final : public LinkLoadTaskD3D
     {}
     ~LoadTaskD3D() override = default;
 
-    std::vector<std::shared_ptr<LinkSubTask>> load(bool *areSubTasksOptionalOut) override
+    std::vector<std::shared_ptr<PostLinkTask>> load(bool *arePostLinkTasksOptionalOut) override
     {
         ANGLE_TRACE_EVENT0("gpu.angle", "LoadTaskD3D::load");
 

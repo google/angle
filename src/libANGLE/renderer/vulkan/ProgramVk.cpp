@@ -69,19 +69,19 @@ class LinkTaskVk final : public vk::Context, public LinkTask
     {}
     ~LinkTaskVk() override = default;
 
-    std::vector<std::shared_ptr<LinkSubTask>> link(const gl::ProgramLinkedResources &resources,
-                                                   const gl::ProgramMergedVaryings &mergedVaryings,
-                                                   bool *areSubTasksOptionalOut) override
+    std::vector<std::shared_ptr<PostLinkTask>> link(const gl::ProgramLinkedResources &resources,
+                                                    const gl::ProgramMergedVaryings &mergedVaryings,
+                                                    bool *arePostLinkTasksOptionalOut) override
     {
-        std::vector<std::shared_ptr<LinkSubTask>> subTasks;
-        angle::Result result = linkImpl(resources, mergedVaryings, &subTasks);
+        std::vector<std::shared_ptr<PostLinkTask>> postLinkTasks;
+        angle::Result result = linkImpl(resources, mergedVaryings, &postLinkTasks);
         ASSERT((result == angle::Result::Continue) == (mErrorCode == VK_SUCCESS));
 
-        // In the Vulkan backend, the only subtasks are pipeline warm up, which is not required for
-        // link.  Setting this flag allows the expensive warm up to be run in a thread without
-        // holding up the link results.
-        *areSubTasksOptionalOut = true;
-        return subTasks;
+        // In the Vulkan backend, the only post-link tasks are pipeline warm up, which is not
+        // required for link.  Setting this flag allows the expensive warm up to be run in a thread
+        // without holding up the link results.
+        *arePostLinkTasksOptionalOut = true;
+        return postLinkTasks;
     }
 
     void handleError(VkResult result,
@@ -142,7 +142,7 @@ class LinkTaskVk final : public vk::Context, public LinkTask
   private:
     angle::Result linkImpl(const gl::ProgramLinkedResources &resources,
                            const gl::ProgramMergedVaryings &mergedVaryings,
-                           std::vector<std::shared_ptr<LinkSubTask>> *subTasksOut);
+                           std::vector<std::shared_ptr<PostLinkTask>> *postLinkTasksOut);
 
     void linkResources(const gl::ProgramLinkedResources &resources);
     angle::Result initDefaultUniformBlocks();
@@ -169,7 +169,7 @@ class LinkTaskVk final : public vk::Context, public LinkTask
     unsigned int mErrorLine    = 0;
 };
 
-class WarmUpTaskCommon : public vk::Context, public LinkSubTask
+class WarmUpTaskCommon : public vk::Context, public PostLinkTask
 {
   public:
     WarmUpTaskCommon(vk::Renderer *renderer) : vk::Context(renderer) {}
@@ -222,10 +222,10 @@ class WarmUpTaskCommon : public vk::Context, public LinkSubTask
         }
     }
 
-    // The front-end ensures that the program is not modified while the subtask is running, so it is
-    // safe to directly access the executable from this parallel job.  Note that this is the reason
-    // why the front-end does not let the parallel job continue when a relink happens or the first
-    // draw with this program.
+    // The front-end ensures that the program is not modified while the post-link task is running,
+    // so it is safe to directly access the executable from this parallel job.  Note that this is
+    // the reason why the front-end does not let the parallel job continue when a relink happens or
+    // the first draw with this program.
     ProgramExecutableVk *mExecutableVk;
     const vk::PipelineRobustness mPipelineRobustness = vk::PipelineRobustness::NonRobust;
     const vk::PipelineProtectedAccess mPipelineProtectedAccess =
@@ -313,7 +313,7 @@ class WarmUpGraphicsTask : public WarmUpTaskCommon
 
 angle::Result LinkTaskVk::linkImpl(const gl::ProgramLinkedResources &resources,
                                    const gl::ProgramMergedVaryings &mergedVaryings,
-                                   std::vector<std::shared_ptr<LinkSubTask>> *subTasksOut)
+                                   std::vector<std::shared_ptr<PostLinkTask>> *postLinkTasksOut)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "LinkTaskVk::linkImpl");
     ProgramExecutableVk *executableVk = vk::GetImpl(mExecutable);
@@ -371,7 +371,7 @@ angle::Result LinkTaskVk::linkImpl(const gl::ProgramLinkedResources &resources,
         {
             ASSERT(!compatibleRenderPass.valid());
 
-            subTasksOut->push_back(std::make_shared<WarmUpComputeTask>(
+            postLinkTasksOut->push_back(std::make_shared<WarmUpComputeTask>(
                 mRenderer, executableVk, mPipelineRobustness, mPipelineProtectedAccess));
             return angle::Result::Continue;
         }
@@ -387,7 +387,7 @@ angle::Result LinkTaskVk::linkImpl(const gl::ProgramLinkedResources &resources,
 
         for (bool surfaceRotation : surfaceRotationVariations)
         {
-            subTasksOut->push_back(std::make_shared<WarmUpGraphicsTask>(
+            postLinkTasksOut->push_back(std::make_shared<WarmUpGraphicsTask>(
                 mRenderer, executableVk, mPipelineRobustness, mPipelineProtectedAccess, subset,
                 surfaceRotation, graphicsPipelineDesc, sharedRenderPass));
         }

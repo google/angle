@@ -9256,9 +9256,9 @@ std::shared_ptr<angle::WorkerThreadPool> Context::getShaderCompileThreadPool() c
     return mDisplay->getSingleThreadPool();
 }
 
-std::shared_ptr<angle::WorkerThreadPool> Context::getLinkSubTaskThreadPool() const
+std::shared_ptr<angle::WorkerThreadPool> Context::getPostLinkTaskThreadPool() const
 {
-    return getFrontendFeatures().alwaysRunLinkSubJobsThreaded.enabled
+    return getFrontendFeatures().alwaysRunPostLinkJobsThreaded.enabled
                ? getWorkerThreadPool()
                : getShaderCompileThreadPool();
 }

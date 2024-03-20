@@ -55,7 +55,7 @@ class Std140BlockLayoutEncoderFactory : public gl::CustomBlockLayoutEncoderFacto
     sh::BlockLayoutEncoder *makeEncoder() override { return new sh::Std140BlockEncoder(); }
 };
 
-class CompileMslTask final : public LinkSubTask
+class CompileMslTask final : public PostLinkTask
 {
   public:
     CompileMslTask(ContextMtl *context,
@@ -101,14 +101,14 @@ class ProgramMtl::LinkTaskMtl final : public LinkTask
     {}
     ~LinkTaskMtl() override = default;
 
-    std::vector<std::shared_ptr<LinkSubTask>> link(const gl::ProgramLinkedResources &resources,
-                                                   const gl::ProgramMergedVaryings &mergedVaryings,
-                                                   bool *areSubTasksOptionalOut) override
+    std::vector<std::shared_ptr<PostLinkTask>> link(const gl::ProgramLinkedResources &resources,
+                                                    const gl::ProgramMergedVaryings &mergedVaryings,
+                                                    bool *arePostLinkTasksOptionalOut) override
     {
-        std::vector<std::shared_ptr<LinkSubTask>> subTasks;
-        mResult                 = mProgram->linkJobImpl(mContext, resources, &subTasks);
-        *areSubTasksOptionalOut = false;
-        return subTasks;
+        std::vector<std::shared_ptr<PostLinkTask>> postLinkTasks;
+        mResult                      = mProgram->linkJobImpl(mContext, resources, &postLinkTasks);
+        *arePostLinkTasksOptionalOut = false;
+        return postLinkTasks;
     }
 
     angle::Result getResult(const gl::Context *context, gl::InfoLog &infoLog) override
@@ -127,15 +127,15 @@ class ProgramMtl::LinkTaskMtl final : public LinkTask
 class ProgramMtl::LoadTaskMtl final : public LinkTask
 {
   public:
-    LoadTaskMtl(std::vector<std::shared_ptr<LinkSubTask>> &&subTasks)
-        : mSubTasks(std::move(subTasks))
+    LoadTaskMtl(std::vector<std::shared_ptr<PostLinkTask>> &&postLinkTasks)
+        : mPostLinkTasks(std::move(postLinkTasks))
     {}
     ~LoadTaskMtl() override = default;
 
-    std::vector<std::shared_ptr<LinkSubTask>> load(bool *areSubTasksOptionalOut) override
+    std::vector<std::shared_ptr<PostLinkTask>> load(bool *arePostLinkTasksOptionalOut) override
     {
-        *areSubTasksOptionalOut = false;
-        return mSubTasks;
+        *arePostLinkTasksOptionalOut = false;
+        return mPostLinkTasks;
     }
 
     angle::Result getResult(const gl::Context *context, gl::InfoLog &infoLog) override
@@ -144,7 +144,7 @@ class ProgramMtl::LoadTaskMtl final : public LinkTask
     }
 
   private:
-    std::vector<std::shared_ptr<LinkSubTask>> mSubTasks;
+    std::vector<std::shared_ptr<PostLinkTask>> mPostLinkTasks;
 };
 
 // ProgramArgumentBufferEncoderMtl implementation
@@ -186,11 +186,11 @@ angle::Result ProgramMtl::load(const gl::Context *context,
     ANGLE_TRY(getExecutable()->load(contextMtl, stream));
 
     // TODO: parallelize the above too.  http://anglebug.com/8297
-    std::vector<std::shared_ptr<LinkSubTask>> subTasks;
+    std::vector<std::shared_ptr<PostLinkTask>> postLinkTasks;
 
-    ANGLE_TRY(compileMslShaderLibs(context, &subTasks));
+    ANGLE_TRY(compileMslShaderLibs(context, &postLinkTasks));
 
-    *loadTaskOut = std::shared_ptr<LinkTask>(new LoadTaskMtl(std::move(subTasks)));
+    *loadTaskOut = std::shared_ptr<LinkTask>(new LoadTaskMtl(std::move(postLinkTasks)));
     *resultOut   = egl::CacheGetResult::Success;
 
     return angle::Result::Continue;
@@ -230,7 +230,7 @@ angle::Result ProgramMtl::link(const gl::Context *context, std::shared_ptr<LinkT
 
 angle::Result ProgramMtl::linkJobImpl(const gl::Context *context,
                                       const gl::ProgramLinkedResources &resources,
-                                      std::vector<std::shared_ptr<LinkSubTask>> *subTasksOut)
+                                      std::vector<std::shared_ptr<PostLinkTask>> *postLinkTasksOut)
 {
     ContextMtl *contextMtl              = mtl::GetImpl(context);
     ProgramExecutableMtl *executableMtl = getExecutable();
@@ -251,12 +251,12 @@ angle::Result ProgramMtl::linkJobImpl(const gl::Context *context,
     executableMtl->mMslXfbOnlyVertexShaderInfo =
         executableMtl->mMslShaderTranslateInfo[gl::ShaderType::Vertex];
 
-    return compileMslShaderLibs(context, subTasksOut);
+    return compileMslShaderLibs(context, postLinkTasksOut);
 }
 
 angle::Result ProgramMtl::compileMslShaderLibs(
     const gl::Context *context,
-    std::vector<std::shared_ptr<LinkSubTask>> *subTasksOut)
+    std::vector<std::shared_ptr<PostLinkTask>> *postLinkTasksOut)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ProgramMtl::compileMslShaderLibs");
     gl::InfoLog &infoLog = mState.getExecutable().getInfoLog();
@@ -283,7 +283,8 @@ angle::Result ProgramMtl::compileMslShaderLibs(
         {
             if (asyncCompile)
             {
-                subTasksOut->emplace_back(new CompileMslTask(contextMtl, translateInfo, macros));
+                postLinkTasksOut->emplace_back(
+                    new CompileMslTask(contextMtl, translateInfo, macros));
             }
             else
             {
