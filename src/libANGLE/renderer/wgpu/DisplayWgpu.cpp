@@ -199,7 +199,7 @@ rx::ContextImpl *DisplayWgpu::createContext(const gl::State &state,
                                             const gl::Context *shareContext,
                                             const egl::AttributeMap &attribs)
 {
-    return new ContextWgpu(state, errorSet);
+    return new ContextWgpu(state, errorSet, this);
 }
 
 StreamProducerImpl *DisplayWgpu::createStreamProducerD3DTexture(
