@@ -30,7 +30,9 @@ def FindSrcDirPath():
     return os.path.dirname(os.path.abspath(os.path.join(__file__, '..')))
 
 ANGLE_CHROMIUM_DEPS = [
-    'build',
+    # Pin build because abseil-cpp is pinned, so its DEF files can't be kept in sync with build.
+    # https://skbug.com/330350366
+    # 'build',
     'buildtools',
     'buildtools/linux64',
     'buildtools/mac',
