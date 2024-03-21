@@ -4273,6 +4273,8 @@ TEST_P(ImageTestES3, RGBAHBUploadDataColorspace)
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!isAndroidHardwareBufferConfigurationSupported(
+        1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8_UNORM, kDefaultAHBUsage));
 
     const GLubyte kGarbage[]     = {123, 123, 123};
     const GLubyte kRed50SRGB[]   = {188, 0, 0};
