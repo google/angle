@@ -179,10 +179,10 @@
             "issue": "http://anglebug.com/8297"
         },
         {
-            "name": "always_run_post_link_jobs_threaded",
+            "name": "always_run_link_sub_jobs_threaded",
             "category": "Features",
             "description": [
-                "If true, post-link tasks of the link job are always threaded, regardless of GL_KHR_parallel_shader_compile"
+                "If true, sub tasks of the link job are always threaded, regardless of GL_KHR_parallel_shader_compile"
             ],
             "issue": "http://anglebug.com/8417"
         },

@@ -284,9 +284,9 @@ void ParallelLinkProgramBenchmark::drawBenchmark()
         EXPECT_TRUE(linkStatus) << i;
     }
 
-    // ANGLE supports running some optional post-link tasks beyond the actual end of the link.
-    // Ensure those are all finished by triggerring a wait on the jobs of the last program.
-    // Currently, detaching and attaching shaders does that (among other operations).
+    // ANGLE supports running some optional link subtasks beyond the actual end of the link.  Ensure
+    // those are all finished by triggerring a wait on the jobs of the last program.  Currently,
+    // detaching and attaching shaders does that (among other operations).
     const uint32_t last = params.iterationsPerStep - 1;
     glDetachShader(mPrograms[last].program, mPrograms[last].vs);
     glAttachShader(mPrograms[last].program, mPrograms[last].vs);

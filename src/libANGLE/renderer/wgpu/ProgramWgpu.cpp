@@ -19,9 +19,9 @@ class LinkTaskWgpu : public LinkTask
 {
   public:
     ~LinkTaskWgpu() override = default;
-    std::vector<std::shared_ptr<PostLinkTask>> link(const gl::ProgramLinkedResources &resources,
-                                                    const gl::ProgramMergedVaryings &mergedVaryings,
-                                                    bool *arePostLinkTasksOptionalOut) override
+    std::vector<std::shared_ptr<LinkSubTask>> link(const gl::ProgramLinkedResources &resources,
+                                                   const gl::ProgramMergedVaryings &mergedVaryings,
+                                                   bool *areSubTasksOptionalOut) override
     {
         return {};
     }

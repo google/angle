@@ -42,7 +42,7 @@ enum class Feature
     AlwaysCallUseProgramAfterLink,
     AlwaysPreferStagedTextureUploads,
     AlwaysResolveMultisampleRenderBuffers,
-    AlwaysRunPostLinkJobsThreaded,
+    AlwaysRunLinkSubJobsThreaded,
     AlwaysUnbindFramebufferTexture2D,
     AlwaysUseManagedStorageModeForBuffers,
     AlwaysUseSharedStorageModeForBuffers,

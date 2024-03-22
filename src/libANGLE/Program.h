@@ -41,7 +41,7 @@ namespace rx
 {
 class GLImplFactory;
 class ProgramImpl;
-class PostLinkTask;
+class LinkSubTask;
 struct TranslatedAttribute;
 }  // namespace rx
 
@@ -549,7 +549,7 @@ class Program final : public LabeledObject, public angle::Subject
     // Optional link tasks that may still be running after a link has succeeded.  These tasks are
     // not waited on in |resolveLink| as they are optimization passes.  Instead, they are waited on
     // when the program is first used.
-    std::vector<std::shared_ptr<rx::PostLinkTask>> mOptionalLinkTasks;
+    std::vector<std::shared_ptr<rx::LinkSubTask>> mOptionalLinkTasks;
     std::vector<std::shared_ptr<angle::WaitableEvent>> mOptionalLinkTaskWaitableEvents;
 
     unsigned int mRefCount;

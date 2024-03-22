@@ -5052,7 +5052,7 @@ void Renderer::initializeFrontendFeatures(angle::FrontendFeatures *features) con
     ANGLE_FEATURE_CONDITION(features, linkJobIsThreadSafe, true);
     // Always run the link's warm up job in a thread.  It's an optimization only, and does not block
     // the link resolution.
-    ANGLE_FEATURE_CONDITION(features, alwaysRunPostLinkJobsThreaded, true);
+    ANGLE_FEATURE_CONDITION(features, alwaysRunLinkSubJobsThreaded, true);
 }
 
 angle::Result Renderer::getPipelineCacheSize(vk::Context *context, size_t *pipelineCacheSizeOut)

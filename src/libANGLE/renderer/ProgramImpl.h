@@ -36,7 +36,7 @@ namespace rx
 //
 // - Front-end link
 // - Back-end link
-// - Post-link independent back-end tasks (typically native driver compile jobs)
+// - Independent back-end link subtasks (typically native driver compile jobs)
 // - Post-link finalization
 //
 // Each step depends on the previous.  These steps are executed as such:
@@ -46,29 +46,28 @@ namespace rx
 //   - ProgramImpl::link returns a LinkTask
 // 2. Program::link implements a closure that calls the front-end link and passes the results to
 //    the backend's LinkTask.
-// 3. The LinkTask potentially returns a set of PostLinkTasks to be scheduled by the worker pool
+// 3. The LinkTask potentially returns a set of LinkSubTasks to be scheduled by the worker pool
 // 4. Once the link is resolved, the post-link finalization is run
 //
 // In the above, steps 1 and 4 are done under the share group lock.  Steps 2 and 3 can be done in
 // threads or without holding the share group lock if the backend supports it.
-class PostLinkTask : public angle::Closure
+class LinkSubTask : public angle::Closure
 {
   public:
-    ~PostLinkTask() override                                                          = default;
+    ~LinkSubTask() override                                                           = default;
     virtual angle::Result getResult(const gl::Context *context, gl::InfoLog &infoLog) = 0;
 };
-
 class LinkTask
 {
   public:
     virtual ~LinkTask() = default;
     // Used for link()
-    virtual std::vector<std::shared_ptr<PostLinkTask>> link(
+    virtual std::vector<std::shared_ptr<LinkSubTask>> link(
         const gl::ProgramLinkedResources &resources,
         const gl::ProgramMergedVaryings &mergedVaryings,
-        bool *arePostLinkTasksOptionalOut);
+        bool *areSubTasksOptionalOut);
     // Used for load()
-    virtual std::vector<std::shared_ptr<PostLinkTask>> load(bool *arePostLinkTasksOptionalOut);
+    virtual std::vector<std::shared_ptr<LinkSubTask>> load(bool *areSubTasksOptionalOut);
     virtual angle::Result getResult(const gl::Context *context, gl::InfoLog &infoLog) = 0;
 
     // Used by the GL backend to query whether the driver is linking in parallel internally.

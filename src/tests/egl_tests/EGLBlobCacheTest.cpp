@@ -191,8 +191,8 @@ void main()
 })";
 
     // Compile a shader so it puts something in the cache.  Note that with Vulkan, some optional
-    // post-link tasks may run beyond link, and so the caching is delayed until the program is used.
-    // A small draw call is used to wait on these post-link tasks.
+    // link subtasks may run beyond link, and so the caching is delayed until the program is used.
+    // A small draw call is used to wait on these subtasks.
     if (programBinaryAvailable())
     {
         glEnable(GL_SCISSOR_TEST);
