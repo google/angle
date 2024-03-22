@@ -13,12 +13,10 @@
 #include "libANGLE/Error.h"
 #include "libANGLE/ImageIndex.h"
 #include "libANGLE/angletypes.h"
+#include "libANGLE/renderer/wgpu/wgpu_utils.h"
 
 namespace webgpu
 {
-
-// WebGPU image level index.
-using LevelIndex = gl::LevelIndexWrapper<uint32_t>;
 
 struct QueuedDataUpload
 {
@@ -56,6 +54,9 @@ class ImageHelper
     wgpu::Texture &getTexture() { return mTexture; }
     wgpu::Extent3D toWgpuExtent3D(const gl::Extents &size);
     TextureInfo getWgpuTextureInfo(const gl::ImageIndex &index);
+    wgpu::TextureFormat toWgpuTextureFormat() const { return mTextureDescriptor.format; }
+    const wgpu::TextureDescriptor &getTextureDescriptor() const { return mTextureDescriptor; }
+    gl::LevelIndex getFirstAllocatedLevel() { return mFirstAllocatedLevel; }
 
   private:
     wgpu::Texture mTexture;
@@ -66,15 +67,5 @@ class ImageHelper
     std::vector<QueuedDataUpload> mBufferQueue;
 };
 }  // namespace webgpu
-
-namespace wgpu_gl
-{
-gl::LevelIndex getLevelIndex(webgpu::LevelIndex levelWgpu, gl::LevelIndex baseLevel);
-}  // namespace wgpu_gl
-
-namespace gl_wgpu
-{
-webgpu::LevelIndex getLevelIndex(gl::LevelIndex levelGl, gl::LevelIndex baseLevel);
-}  // namespace gl_wgpu
 
 #endif  // LIBANGLE_RENDERER_WGPU_WGPU_HELPERS_H_
