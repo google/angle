@@ -1399,6 +1399,7 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 
 // WebGPU failures
 8485 WGPU : RendererTest.SimpleOperation/* = SKIP
+8582 WGPU : ClearTest.* = SKIP
 
 // Slow tests, should appear last in this file
 5076 : GLSLTest.VerifyMaxVertexUniformVectors* = TIMEOUT
