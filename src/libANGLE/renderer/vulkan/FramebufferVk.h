@@ -156,14 +156,14 @@ class FramebufferVk : public FramebufferImpl
 
     enum class RenderTargetImage
     {
-        AttachmentImage,
-        ResolveImage
+        Attachment,
+        Resolve,
+        FragmentShadingRate,
     };
 
     struct RenderTargetInfo
     {
-        RenderTargetInfo()
-            : renderTarget(nullptr), renderTargetImage(RenderTargetImage::AttachmentImage)
+        RenderTargetInfo() : renderTarget(nullptr), renderTargetImage(RenderTargetImage::Attachment)
         {}
         RenderTargetInfo(RenderTargetVk *renderTarget, RenderTargetImage renderTargetImage)
             : renderTarget(renderTarget), renderTargetImage(renderTargetImage)
