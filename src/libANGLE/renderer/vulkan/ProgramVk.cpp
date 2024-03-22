@@ -71,7 +71,7 @@ class LinkTaskVk final : public vk::Context, public LinkTask
 
     std::vector<std::shared_ptr<LinkSubTask>> link(const gl::ProgramLinkedResources &resources,
                                                    const gl::ProgramMergedVaryings &mergedVaryings,
-                                                   bool *areSubTasksOptionalOut) override
+                                                   bool *canSubTasksRunPostLinkOut) override
     {
         std::vector<std::shared_ptr<LinkSubTask>> subTasks;
         angle::Result result = linkImpl(resources, mergedVaryings, &subTasks);
@@ -80,7 +80,7 @@ class LinkTaskVk final : public vk::Context, public LinkTask
         // In the Vulkan backend, the only subtasks are pipeline warm up, which is not required for
         // link.  Setting this flag allows the expensive warm up to be run in a thread without
         // holding up the link results.
-        *areSubTasksOptionalOut = true;
+        *canSubTasksRunPostLinkOut = true;
         return subTasks;
     }
 
