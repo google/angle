@@ -28,22 +28,20 @@ class ImmutableString
     //  3. a null-terminated pool allocated char array. This can't be c_str() of a local TString,
     //     since when a TString goes out of scope it clears its first character.
     explicit constexpr ImmutableString(const char *data)
-        : ImmutableString(data, angle::ConstStrLen(data))
+        : mData(data), mLength(angle::ConstStrLen(data))
     {}
 
-    constexpr ImmutableString(const char *data, size_t length)
-        : mData(data ? data : ""), mLength(data ? length : 0)
-    {}
+    constexpr ImmutableString(const char *data, size_t length) : mData(data), mLength(length) {}
 
     ImmutableString(const std::string &str)
-        : ImmutableString(AllocatePoolCharArray(str.c_str(), str.size()), str.size())
+        : mData(AllocatePoolCharArray(str.c_str(), str.size())), mLength(str.size())
     {}
 
     constexpr ImmutableString(const ImmutableString &) = default;
 
     ImmutableString &operator=(const ImmutableString &) = default;
 
-    constexpr const char *data() const { return mData; }
+    constexpr const char *data() const { return mData ? mData : ""; }
     constexpr size_t length() const { return mLength; }
 
     char operator[](size_t index) const { return data()[index]; }
@@ -99,8 +97,6 @@ class ImmutableString
     // Perfect hash functions
     uint32_t mangledNameHash() const;
     uint32_t unmangledNameHash() const;
-
-    constexpr operator std::string() const { return std::string(data(), length()); }
 
   private:
     const char *mData;
