@@ -3167,16 +3167,18 @@ egl::Error WindowSurfaceVk::setAutoRefreshEnabled(bool enabled)
 
 egl::Error WindowSurfaceVk::getBufferAge(const gl::Context *context, EGLint *age)
 {
+    ContextVk *contextVk = vk::GetImpl(context);
+
     ANGLE_TRACE_EVENT0("gpu.angle", "getBufferAge");
 
-    if (needsAcquireImageOrProcessResult())
+    ASSERT(!mAcquireOperation.needToAcquireNextSwapchainImage);
+
+    // If the result of vkAcquireNextImageKHR is not yet processed, do so now.
+    if (NeedToProcessAcquireNextImageResult(mAcquireOperation.unlockedTryAcquireResult))
     {
-        // Acquire the current image if needed.
-        egl::Error result =
-            angle::ToEGL(doDeferredAcquireNextImage(context, false), EGL_BAD_SURFACE);
-        if (result.isError())
+        if (postProcessUnlockedTryAcquire(contextVk) != VK_SUCCESS)
         {
-            return result;
+            return egl::EglBadSurface();
         }
     }
 
@@ -3188,13 +3190,28 @@ egl::Error WindowSurfaceVk::getBufferAge(const gl::Context *context, EGLint *age
 
     if (mBufferAgeQueryFrameNumber == 0)
     {
-        ANGLE_VK_PERF_WARNING(vk::GetImpl(context), GL_DEBUG_SEVERITY_LOW,
+        ANGLE_VK_PERF_WARNING(contextVk, GL_DEBUG_SEVERITY_LOW,
                               "Querying age of a surface will make it retain its content");
 
         mBufferAgeQueryFrameNumber = mFrameCount;
     }
+
     if (age != nullptr)
     {
+        if (mState.swapBehavior == EGL_BUFFER_PRESERVED)
+        {
+            // EGL_EXT_buffer_age
+            //
+            // 1) What are the semantics if EGL_BUFFER_PRESERVED is in use
+            //
+            //     RESOLVED: The age will always be 1 in this case.
+
+            // Note: if the query is made before the 1st swap then age needs to be 0
+            *age = (mFrameCount == 1) ? 0 : 1;
+
+            return egl::NoError();
+        }
+
         uint64_t frameNumber = mSwapchainImages[mCurrentSwapchainImageIndex].frameNumber;
         if (frameNumber < mBufferAgeQueryFrameNumber)
         {
