@@ -2094,18 +2094,6 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
                     dsState, invalidateArea);
             }
         }
-        if (invalidateColorBuffers.any())
-        {
-            // Only end the render pass if invalidating at least one color buffer.  Do not end the
-            // render pass if only the depth and/or stencil buffer is invalidated.  At least one
-            // application invalidates those every frame, disables depth, and then continues to
-            // draw only to the color buffer.
-            //
-            // Since we are not aware of any application that invalidates a color buffer and
-            // continues to draw to it, we leave that unoptimized.
-            ANGLE_TRY(contextVk->flushCommandsAndEndRenderPass(
-                RenderPassClosureReason::ColorBufferInvalidate));
-        }
     }
 
     return angle::Result::Continue;
