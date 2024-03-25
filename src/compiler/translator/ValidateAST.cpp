@@ -333,21 +333,23 @@ void ValidateAST::visitStructOrInterfaceBlockDeclaration(const TType &type,
         if (type.getStruct() == nullptr)
         {
             // Allow interfaces to be doubly-defined.
+            std::string name(typeName.data());
+
             if (IsShaderIn(type.getQualifier()))
             {
-                typeName = MakeImmutableString(typeName, "<input>");
+                typeName = ImmutableString(name + "<input>");
             }
             else if (IsShaderOut(type.getQualifier()))
             {
-                typeName = MakeImmutableString(typeName, "<output>");
+                typeName = ImmutableString(name + "<output>");
             }
             else if (IsStorageBuffer(type.getQualifier()))
             {
-                typeName = MakeImmutableString(typeName, "<buffer>");
+                typeName = ImmutableString(name + "<buffer>");
             }
             else if (type.getQualifier() == EvqUniform)
             {
-                typeName = MakeImmutableString(typeName, "<uniform>");
+                typeName = ImmutableString(name + "<uniform>");
             }
         }
 

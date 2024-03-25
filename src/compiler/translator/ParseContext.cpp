@@ -6348,7 +6348,8 @@ TDeclarator *TParseContext::parseStructArrayDeclarator(const ImmutableString &id
 void TParseContext::checkDoesNotHaveDuplicateFieldNames(const TFieldList *fields,
                                                         const TSourceLoc &location)
 {
-    TUnorderedMap<ImmutableString, uint32_t> fieldNames;
+    TUnorderedMap<ImmutableString, uint32_t, ImmutableString::FowlerNollVoHash<sizeof(size_t)>>
+        fieldNames;
     for (TField *field : *fields)
     {
         // Note: operator[] adds this name to the map if it doesn't already exist, and initializes

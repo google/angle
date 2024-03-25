@@ -71,7 +71,9 @@ class TSymbolTable::TSymbolTableLevel
     TSymbol *find(const ImmutableString &name) const;
 
   private:
-    using tLevel        = TUnorderedMap<ImmutableString, TSymbol *>;
+    using tLevel        = TUnorderedMap<ImmutableString,
+                                        TSymbol *,
+                                        ImmutableString::FowlerNollVoHash<sizeof(size_t)>>;
     using tLevelPair    = const tLevel::value_type;
     using tInsertResult = std::pair<tLevel::iterator, bool>;
 

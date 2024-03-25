@@ -54,7 +54,7 @@ struct StructureData
 
 using StructureMap        = angle::HashMap<const TStructure *, StructureData>;
 using StructureUniformMap = angle::HashMap<const TVariable *, const TVariable *>;
-using ExtractedSamplerMap = angle::HashMap<ImmutableString, const TVariable *>;
+using ExtractedSamplerMap = angle::HashMap<std::string, const TVariable *>;
 
 TIntermTyped *RewriteModifiedStructFieldSelectionExpression(
     TCompiler *compiler,
@@ -522,7 +522,7 @@ class RewriteStructSamplersTraverser final : public TIntermTraverser
 
         for (const TField *field : structure->fields())
         {
-            extractFieldSamplers(variable.name(), field, newSequence);
+            extractFieldSamplers(variable.name().data(), field, newSequence);
         }
 
         // If there's a replacement structure (because there are non-sampler fields in the struct),
@@ -556,14 +556,14 @@ class RewriteStructSamplersTraverser final : public TIntermTraverser
     }
 
     // Extracts samplers from a field of a struct. Works with nested structs and arrays.
-    void extractFieldSamplers(const ImmutableString &prefix,
+    void extractFieldSamplers(const std::string &prefix,
                               const TField *field,
                               TIntermSequence *newSequence)
     {
         const TType &fieldType = *field->type();
         if (fieldType.isSampler() || fieldType.isStructureContainingSamplers())
         {
-            ImmutableString newPrefix = MakeImmutableString(prefix, '_', field->name());
+            std::string newPrefix = prefix + "_" + field->name().data();
 
             if (fieldType.isSampler())
             {
@@ -593,7 +593,7 @@ class RewriteStructSamplersTraverser final : public TIntermTraverser
     }
 
     // Extracts a sampler from a struct. Declares the new extracted sampler.
-    void extractSampler(const ImmutableString &newName,
+    void extractSampler(const std::string &newName,
                         const TType &fieldType,
                         TIntermSequence *newSequence)
     {
@@ -608,9 +608,12 @@ class RewriteStructSamplersTraverser final : public TIntermTraverser
         GenerateArraySizesFromStack(&parentArraySizes);
         newType->makeArrays(parentArraySizes);
 
+        ImmutableStringBuilder nameBuilder(newName.size() + 1);
+        nameBuilder << newName;
+
         newType->setQualifier(EvqUniform);
         TVariable *newVariable =
-            new TVariable(mSymbolTable, newName, newType, SymbolType::AngleInternal);
+            new TVariable(mSymbolTable, nameBuilder, newType, SymbolType::AngleInternal);
         TIntermSymbol *newSymbol = new TIntermSymbol(newVariable);
 
         TIntermDeclaration *samplerDecl = new TIntermDeclaration;

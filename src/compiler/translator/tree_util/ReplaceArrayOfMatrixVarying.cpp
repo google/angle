@@ -15,7 +15,6 @@
 #include "common/debug.h"
 #include "common/utilities.h"
 #include "compiler/translator/Compiler.h"
-#include "compiler/translator/ImmutableStringBuilder.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/tree_util/BuiltIn.h"
 #include "compiler/translator/tree_util/FindMain.h"
@@ -88,9 +87,9 @@ class CollectVaryingTraverser : public TIntermTraverser
     TType *tmpReplacementType = new TType(type);
     tmpReplacementType->setQualifier(EvqGlobal);
 
-    TVariable *tempReplaceVar =
-        new TVariable(symbolTable, MakeImmutableString("ANGLE_AOM_Temp_", varying->name()),
-                      tmpReplacementType, SymbolType::AngleInternal);
+    TVariable *tempReplaceVar = new TVariable(
+        symbolTable, ImmutableString(std::string("ANGLE_AOM_Temp_") + varying->name().data()),
+        tmpReplacementType, SymbolType::AngleInternal);
 
     if (!ReplaceVariable(compiler, root, varying, tempReplaceVar))
     {

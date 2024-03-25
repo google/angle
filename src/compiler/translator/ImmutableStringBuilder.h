@@ -60,11 +60,6 @@ class ImmutableStringBuilder
         return sizeof(T) * 2;
     }
 
-    static constexpr size_t Length(const char *object) { return angle::ConstStrLen(object); }
-    static constexpr size_t Length(char object) { return 1; }
-    static constexpr size_t Length(const std::string &object) { return object.size(); }
-    static constexpr size_t Length(const ImmutableString &object) { return object.length(); }
-
   private:
     inline static char *AllocateEmptyPoolCharArray(size_t strLength)
     {
@@ -76,15 +71,6 @@ class ImmutableStringBuilder
     size_t mMaxLength;
     char *mData;
 };
-
-template <typename... Types>
-ImmutableString MakeImmutableString(Types &&...args)
-{
-    size_t maxLength = (ImmutableStringBuilder::Length(args) + ...);
-    ImmutableStringBuilder str(maxLength);
-    (str << ... << args);
-    return str;
-}
 
 // GLSL ES 3.00.6 section 3.9: the maximum length of an identifier is 1024 characters.
 constexpr unsigned int kESSLMaxIdentifierLength = 1024u;

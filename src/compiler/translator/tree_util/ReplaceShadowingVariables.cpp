@@ -59,7 +59,7 @@ class ReplaceShadowingVariablesTraverser : public TIntermTraverser
             size_t paramCount = func->getParamCount();
             for (size_t i = 0; i < paramCount; ++i)
             {
-                mParameterNames.emplace(func->getParam(i)->name());
+                mParameterNames.emplace(std::string(func->getParam(i)->name().data()));
             }
             if (mParameterNames.size() > 0)
                 mFunctionBody = node->getBody();
@@ -89,7 +89,8 @@ class ReplaceShadowingVariablesTraverser : public TIntermTraverser
                     symNode = binaryNode->getLeft()->getAsSymbolNode();
                 }
                 ASSERT(symNode != nullptr);
-                if (mParameterNames.count(symNode->variable().name()) > 0)
+                std::string varName = std::string(symNode->variable().name().data());
+                if (mParameterNames.count(varName) > 0)
                 {
                     // We found a redefined var so queue replacement
                     mReplacements.emplace_back(DeferredReplacementBlock{
@@ -117,9 +118,9 @@ class ReplaceShadowingVariablesTraverser : public TIntermTraverser
     }
 
   private:
-    std::unordered_set<ImmutableString> mParameterNames;
+    std::unordered_set<std::string> mParameterNames;
     TIntermBlock *mFunctionBody;
-    TVector<DeferredReplacementBlock> mReplacements;
+    std::vector<DeferredReplacementBlock> mReplacements;
 };
 
 }  // anonymous namespace

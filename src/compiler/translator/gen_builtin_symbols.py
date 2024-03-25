@@ -108,6 +108,20 @@ int UnmangledPerfectHash(const char *key)
 namespace sh
 {{
 
+template <>
+const size_t ImmutableString::FowlerNollVoHash<4>::kFnvPrime = 16777619u;
+
+template <>
+const size_t ImmutableString::FowlerNollVoHash<4>::kFnvOffsetBasis = 0x811c9dc5u;
+
+template <>
+const size_t ImmutableString::FowlerNollVoHash<8>::kFnvPrime =
+    static_cast<size_t>(1099511628211ull);
+
+template <>
+const size_t ImmutableString::FowlerNollVoHash<8>::kFnvOffsetBasis =
+    static_cast<size_t>(0xcbf29ce484222325ull);
+
 uint32_t ImmutableString::mangledNameHash() const
 {{
     return MangledPerfectHash(data());
