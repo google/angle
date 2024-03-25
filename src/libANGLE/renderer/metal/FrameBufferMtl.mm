@@ -41,9 +41,9 @@ const gl::InternalFormat &GetReadAttachmentInfo(const gl::Context *context,
 {
     GLenum implFormat;
 
-    if (renderTarget && renderTarget->getFormat())
+    if (renderTarget)
     {
-        implFormat = renderTarget->getFormat()->actualAngleFormat().fboImplementationInternalFormat;
+        implFormat = renderTarget->getFormat().actualAngleFormat().fboImplementationInternalFormat;
     }
     else
     {
@@ -94,7 +94,7 @@ angle::Result Copy2DTextureSlice0Level0ToTempTexture(const gl::Context *context,
 
     ContextMtl *contextMtl = mtl::GetImpl(context);
     auto formatId          = mtl::Format::MetalToAngleFormatID(srcTexture->pixelFormat());
-    auto format            = contextMtl->getPixelFormat(formatId);
+    const auto &format     = contextMtl->getPixelFormat(formatId);
 
     mtl::TextureRef tempTexture;
     ANGLE_TRY(mtl::Texture::Make2DTexture(contextMtl, format, srcTexture->widthAt0(),
@@ -560,7 +560,7 @@ angle::Result FramebufferMtl::blitWithDraw(const gl::Context *context,
                 stencilOnlyBlitParams.dstStencilLayer = mStencilRenderTarget->getLayerIndex();
                 stencilOnlyBlitParams.dstStencilLevel = mStencilRenderTarget->getLevelIndex();
                 stencilOnlyBlitParams.dstPackedDepthStencilFormat =
-                    mStencilRenderTarget->getFormat()->hasDepthAndStencilBits();
+                    mStencilRenderTarget->getFormat().hasDepthAndStencilBits();
 
                 ANGLE_TRY(contextMtl->getDisplay()->getUtils().blitStencilViaCopyBuffer(
                     context, stencilOnlyBlitParams));
@@ -595,10 +595,10 @@ angle::Result FramebufferMtl::blitWithDraw(const gl::Context *context,
 
         colorBlitParams.enabledBuffers = getState().getEnabledDrawBuffers();
         colorBlitParams.filter         = filter;
-        colorBlitParams.dstLuminance   = srcColorRt->getFormat()->actualAngleFormat().isLUMA();
+        colorBlitParams.dstLuminance   = srcColorRt->getFormat().actualAngleFormat().isLUMA();
 
         ANGLE_TRY(contextMtl->getDisplay()->getUtils().blitColorWithDraw(
-            context, renderEncoder, srcColorRt->getFormat()->actualAngleFormat(), colorBlitParams));
+            context, renderEncoder, srcColorRt->getFormat().actualAngleFormat(), colorBlitParams));
     }
 
     return angle::Result::Continue;
@@ -1045,14 +1045,14 @@ angle::Result FramebufferMtl::prepareRenderPass(const gl::Context *context,
 
             if (!mRenderPassFirstColorAttachmentFormat)
             {
-                mRenderPassFirstColorAttachmentFormat = colorRenderTarget->getFormat();
+                mRenderPassFirstColorAttachmentFormat = &colorRenderTarget->getFormat();
             }
-            else if (colorRenderTarget->getFormat())
+            else
             {
                 if (mRenderPassFirstColorAttachmentFormat->actualAngleFormat().isSint() !=
-                        colorRenderTarget->getFormat()->actualAngleFormat().isSint() ||
+                        colorRenderTarget->getFormat().actualAngleFormat().isSint() ||
                     mRenderPassFirstColorAttachmentFormat->actualAngleFormat().isUint() !=
-                        colorRenderTarget->getFormat()->actualAngleFormat().isUint())
+                        colorRenderTarget->getFormat().actualAngleFormat().isUint())
                 {
                     mRenderPassAttachmentsSameColorType = false;
                 }
@@ -1286,7 +1286,7 @@ angle::Result FramebufferMtl::clearWithDraw(const gl::Context *context,
         {
             continue;
         }
-        const mtl::Format &format     = *renderTarget->getFormat();
+        const mtl::Format &format     = renderTarget->getFormat();
         mtl::PixelType clearColorType = overrideClearOps.clearColor.value().getType();
         if ((clearColorType == mtl::PixelType::Int && !format.actualAngleFormat().isSint()) ||
             (clearColorType == mtl::PixelType::UInt && !format.actualAngleFormat().isUint()) ||
@@ -1418,7 +1418,7 @@ angle::Result FramebufferMtl::invalidateImpl(const gl::Context *context,
             RenderTargetMtl *renderTarget = mColorRenderTargets[i];
             if (renderTarget && renderTarget->getTexture())
             {
-                const mtl::Format &mtlFormat        = *renderTarget->getFormat();
+                const mtl::Format &mtlFormat        = renderTarget->getFormat();
                 const angle::Format &intendedFormat = mtlFormat.intendedAngleFormat();
                 const angle::Format &actualFormat   = mtlFormat.actualAngleFormat();
                 if (intendedFormat.alphaBits == 0 && actualFormat.alphaBits)
@@ -1498,7 +1498,7 @@ angle::Result readPixelsCopyImpl(
     const std::function<angle::Result(const gl::Rectangle &region, const uint8_t *&src)> &getDataFn,
     uint8_t *pixels)
 {
-    const mtl::Format &readFormat        = *renderTarget->getFormat();
+    const mtl::Format &readFormat        = renderTarget->getFormat();
     const angle::Format &readAngleFormat = readFormat.actualAngleFormat();
 
     auto packPixelsRowParams = packPixelsParams;
@@ -1565,7 +1565,7 @@ angle::Result FramebufferMtl::readPixelsImpl(const gl::Context *context,
         ANGLE_MTL_CHECK(contextMtl, texture->samples() == 1, GL_INVALID_OPERATION);
     }
 
-    const mtl::Format &readFormat        = *renderTarget->getFormat();
+    const mtl::Format &readFormat        = renderTarget->getFormat();
     const angle::Format &readAngleFormat = readFormat.actualAngleFormat();
 
     if (features.copyIOSurfaceToNonIOSurfaceForReadOptimization.enabled &&
@@ -1660,7 +1660,7 @@ angle::Result FramebufferMtl::readPixelsToBuffer(const gl::Context *context,
 
     ContextMtl *contextMtl = mtl::GetImpl(context);
 
-    const mtl::Format &readFormat        = *renderTarget->getFormat();
+    const mtl::Format &readFormat        = renderTarget->getFormat();
     const angle::Format &readAngleFormat = readFormat.actualAngleFormat();
 
     mtl::TextureRef texture = renderTarget->getTexture();
