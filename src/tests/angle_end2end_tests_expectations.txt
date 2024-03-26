@@ -578,6 +578,7 @@ b/308668391 PIXEL4ORXL VULKAN : ImageTest.SourceYUVAHBTargetExternalRGBSampleNoD
 8537 PIXEL4ORXL GLES : PbufferTest.BindTexImageOverwrite/* = SKIP
 
 8626 PIXEL4ORXL GLES : FramebufferTest_ES31.MultisampleResolveMultipleTimes/* = SKIP
+8626 PIXEL4ORXL GLES : FramebufferTest_ES31.DepthStencilResolveThenDrawWithoutResolve/* = SKIP
 8626 PIXEL4ORXL GLES : FramebufferTest_ES31.ResolveThenDrawWithoutResolveThenDrawWithResolve/* = SKIP
 8626 PIXEL4ORXL : FramebufferTest_ES31.MultisampleResolveMultipleTimesWithDrawInBetween/* = SKIP
 8626 PIXEL4ORXL : FramebufferTest_ES31.MultisampleResolveBothAttachments/* = SKIP
