@@ -249,8 +249,8 @@ angle::Result CLCommandQueueVk::enqueueCopyBuffer(const cl::Buffer &srcBuffer,
 
     ANGLE_TRY(processWaitlist(waitEvents));
 
-    CLMemoryVk *srcBufferVk = &srcBuffer.getImpl<CLMemoryVk>();
-    CLMemoryVk *dstBufferVk = &dstBuffer.getImpl<CLMemoryVk>();
+    CLBufferVk *srcBufferVk = &srcBuffer.getImpl<CLBufferVk>();
+    CLBufferVk *dstBufferVk = &dstBuffer.getImpl<CLBufferVk>();
 
     vk::CommandBufferAccess access;
     access.onBufferTransferRead(&srcBufferVk->getBuffer());

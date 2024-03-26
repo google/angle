@@ -8,6 +8,7 @@
 
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
 
+#include "common/aligned_memory.h"
 #include "common/utilities.h"
 #include "common/vulkan/vk_headers.h"
 #include "image_util/loadimage.h"
@@ -5920,6 +5921,69 @@ angle::Result ImageHelper::init(Context *context,
                         mipLevels, layerCount, isRobustResourceInitEnabled, hasProtectedContent,
                         deriveConversionDesc(context, format.getActualRenderableImageFormatID(),
                                              format.getIntendedFormatID()));
+}
+
+angle::Result ImageHelper::initFromCreateInfo(Context *context,
+                                              const VkImageCreateInfo &requestedCreateInfo,
+                                              VkMemoryPropertyFlags memoryPropertyFlags)
+{
+    ASSERT(!valid());
+    ASSERT(!IsAnySubresourceContentDefined(mContentDefined));
+    ASSERT(!IsAnySubresourceContentDefined(mStencilContentDefined));
+
+    mImageType          = requestedCreateInfo.imageType;
+    mExtents            = requestedCreateInfo.extent;
+    mRotatedAspectRatio = false;
+    mSamples            = std::max((int)requestedCreateInfo.samples, 1);
+    mImageSerial        = context->getRenderer()->getResourceSerialFactory().generateImageSerial();
+    mLayerCount         = requestedCreateInfo.arrayLayers;
+    mLevelCount         = requestedCreateInfo.mipLevels;
+    mUsage              = requestedCreateInfo.usage;
+
+    // Validate that mLayerCount is compatible with the image type
+    ASSERT(requestedCreateInfo.imageType != VK_IMAGE_TYPE_3D || mLayerCount == 1);
+    ASSERT(requestedCreateInfo.imageType != VK_IMAGE_TYPE_2D || mExtents.depth == 1);
+
+    mCurrentLayout = ImageLayout::Undefined;
+
+    ANGLE_VK_TRY(context, mImage.init(context->getDevice(), requestedCreateInfo));
+
+    mVkImageCreateInfo               = requestedCreateInfo;
+    mVkImageCreateInfo.pNext         = nullptr;
+    mVkImageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+
+    MemoryProperties memoryProperties = {};
+
+    ANGLE_TRY(initMemoryAndNonZeroFillIfNeeded(context, false, memoryProperties,
+                                               memoryPropertyFlags,
+                                               vk::MemoryAllocationType::StagingImage));
+    return angle::Result::Continue;
+}
+
+angle::Result ImageHelper::copyToBufferOneOff(Context *context,
+                                              BufferHelper *stagingBuffer,
+                                              VkBufferImageCopy copyRegion)
+{
+    Renderer *renderer = context->getRenderer();
+    PrimaryCommandBuffer commandBuffer;
+    ANGLE_TRY(
+        renderer->getCommandBufferOneOff(context, ProtectionType::Unprotected, &commandBuffer));
+
+    VkSemaphore acquireNextImageSemaphore;
+    barrierImpl(context, getAspectFlags(), ImageLayout::TransferDst,
+                renderer->getQueueFamilyIndex(), nullptr, &commandBuffer,
+                &acquireNextImageSemaphore);
+    commandBuffer.copyBufferToImage(stagingBuffer->getBuffer().getHandle(), getImage(),
+                                    getCurrentLayout(renderer), 1, &copyRegion);
+    ANGLE_VK_TRY(context, commandBuffer.end());
+
+    QueueSerial submitQueueSerial;
+    ANGLE_TRY(renderer->queueSubmitOneOff(
+        context, std::move(commandBuffer), ProtectionType::Unprotected,
+        egl::ContextPriority::Medium, acquireNextImageSemaphore,
+        kSwapchainAcquireImageWaitStageFlags, SubmitPolicy::AllowDeferred, &submitQueueSerial));
+
+    return renderer->finishQueueSerial(context, submitQueueSerial);
 }
 
 angle::Result ImageHelper::initMSAASwapchain(Context *context,
