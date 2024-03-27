@@ -1273,9 +1273,6 @@ void ContextVk::onDestroy(const gl::Context *context)
     mRenderer->recycleOutsideRenderPassCommandBufferHelper(&mOutsideRenderPassCommands);
     mRenderer->recycleRenderPassCommandBufferHelper(&mRenderPassCommands);
 
-    mVertexInputGraphicsPipelineCache.destroy(this);
-    mFragmentOutputGraphicsPipelineCache.destroy(this);
-
     mInterfacePipelinesCache.destroy(device);
 
     mUtils.destroy(this);
@@ -2177,15 +2174,17 @@ angle::Result ContextVk::createGraphicsPipeline()
             ANGLE_TRY(CreateGraphicsPipelineSubset(
                 this, *mGraphicsPipelineDesc,
                 mGraphicsPipelineLibraryTransition & kVertexInputTransitionBitsMask,
-                GraphicsPipelineSubsetRenderPass::Unused, &mVertexInputGraphicsPipelineCache,
-                interfacePipelineCache, &mCurrentGraphicsPipelineVertexInput));
+                GraphicsPipelineSubsetRenderPass::Unused,
+                mShareGroupVk->getVertexInputGraphicsPipelineCache(), interfacePipelineCache,
+                &mCurrentGraphicsPipelineVertexInput));
 
             // Recreate the fragment output subset if necessary
             ANGLE_TRY(CreateGraphicsPipelineSubset(
                 this, *mGraphicsPipelineDesc,
                 mGraphicsPipelineLibraryTransition & kFragmentOutputTransitionBitsMask,
-                GraphicsPipelineSubsetRenderPass::Required, &mFragmentOutputGraphicsPipelineCache,
-                interfacePipelineCache, &mCurrentGraphicsPipelineFragmentOutput));
+                GraphicsPipelineSubsetRenderPass::Required,
+                mShareGroupVk->getFragmentOutputGraphicsPipelineCache(), interfacePipelineCache,
+                &mCurrentGraphicsPipelineFragmentOutput));
 
             // Link the three subsets into one pipeline.
             ANGLE_TRY(executableVk->linkGraphicsPipelineLibraries(

@@ -1447,11 +1447,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     vk::GraphicsPipelineTransitionBits mGraphicsPipelineTransition;
     vk::GraphicsPipelineTransitionBits mGraphicsPipelineLibraryTransition;
 
-    // Used when VK_EXT_graphics_pipeline_library is available, the vertex input and fragment output
-    // partial pipelines are created in the following caches.
-    VertexInputGraphicsPipelineCache mVertexInputGraphicsPipelineCache;
-    FragmentOutputGraphicsPipelineCache mFragmentOutputGraphicsPipelineCache;
-
     // A pipeline cache specifically used for vertex input and fragment output pipelines, when there
     // is no blob reuse between libraries and monolithic pipelines.  In that case, there's no point
     // in making monolithic pipelines be stored in the same cache as these partial pipelines.
