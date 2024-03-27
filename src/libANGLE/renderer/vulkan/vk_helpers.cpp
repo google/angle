@@ -2842,10 +2842,18 @@ void RenderPassCommandBufferHelper::addColorResolveAttachment(size_t colorIndexG
     mRenderPassDesc.packColorResolveAttachment(colorIndexGL);
 }
 
-void RenderPassCommandBufferHelper::addDepthStencilResolveAttachemnt(VkImageView view)
+void RenderPassCommandBufferHelper::addDepthStencilResolveAttachment(VkImageView view,
+                                                                     VkImageAspectFlags aspects)
 {
     mFramebuffer.addDepthStencilResolveAttachment(view);
-    mRenderPassDesc.packDepthStencilResolveAttachment();
+    if ((aspects & VK_IMAGE_ASPECT_DEPTH_BIT) != 0)
+    {
+        mRenderPassDesc.packDepthResolveAttachment();
+    }
+    if ((aspects & VK_IMAGE_ASPECT_STENCIL_BIT) != 0)
+    {
+        mRenderPassDesc.packStencilResolveAttachment();
+    }
 }
 
 void RenderPassCommandBufferHelper::resumeTransformFeedback()

@@ -1651,7 +1651,7 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     bool hasAnyStencilAccess() { return mStencilAttachment.hasAnyAccess(); }
 
     void addColorResolveAttachment(size_t colorIndexGL, VkImageView view);
-    void addDepthStencilResolveAttachemnt(VkImageView view);
+    void addDepthStencilResolveAttachment(VkImageView view, VkImageAspectFlags aspects);
 
     bool hasDepthWriteOrClear() const
     {

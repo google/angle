@@ -2507,7 +2507,8 @@ void FramebufferVk::updateRenderPassDesc(ContextVk *contextVk)
         // Add the resolve attachment, if any.
         if (depthStencilRenderTarget->hasResolveAttachment())
         {
-            mRenderPassDesc.packDepthStencilResolveAttachment();
+            mRenderPassDesc.packDepthResolveAttachment();
+            mRenderPassDesc.packStencilResolveAttachment();
         }
     }
 
@@ -3420,8 +3421,14 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
 
             if (unresolveDepth || unresolveStencil)
             {
-                mRenderPassDesc.packDepthStencilUnresolveAttachment(unresolveDepth,
-                                                                    unresolveStencil);
+                if (unresolveDepth)
+                {
+                    mRenderPassDesc.packDepthUnresolveAttachment();
+                }
+                if (unresolveStencil)
+                {
+                    mRenderPassDesc.packStencilUnresolveAttachment();
+                }
             }
             else
             {
