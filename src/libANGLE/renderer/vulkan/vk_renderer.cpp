@@ -4319,6 +4319,16 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsDepthStencilResolve,
                             mFeatures.supportsRenderpass2.enabled &&
                                 mDepthStencilResolveProperties.supportedDepthResolveModes != 0);
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsDepthStencilIndependentResolveNone,
+                            mFeatures.supportsDepthStencilResolve.enabled &&
+                                mDepthStencilResolveProperties.independentResolveNone);
+    // Disable optimizing depth/stencil resolve through glBlitFramebuffer for buggy drivers:
+    //
+    // - Nvidia: http://anglebug.com/8658
+    // - Pixel4: http://anglebug.com/8659
+    //
+    ANGLE_FEATURE_CONDITION(&mFeatures, disableDepthStencilResolveThroughAttachment,
+                            isNvidia || isQualcommProprietary);
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsMultisampledRenderToSingleSampled,

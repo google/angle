@@ -254,9 +254,16 @@ struct FeaturesVk : FeatureSetBase
     FeatureInfo supportsDepthStencilResolve = {
         "supportsDepthStencilResolve",
         FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_KHR_depth_stencil_resolve extension",
+        &members, "http://anglebug.com/4836"
+    };
+
+    FeatureInfo supportsDepthStencilIndependentResolveNone = {
+        "supportsDepthStencilIndependentResolveNone",
+        FeatureCategory::VulkanFeatures,
         "VkDevice supports the VK_KHR_depth_stencil_resolve "
         "extension with the independentResolveNone feature",
-        &members, "http://anglebug.com/4836"
+        &members, "http://anglebug.com/7551"
     };
 
     FeatureInfo supportsMultisampledRenderToSingleSampledGOOGLEX = {
@@ -1334,6 +1341,13 @@ struct FeaturesVk : FeatureSetBase
         "On some drivers, the OpSelect SPIR-V instruction with arguments with mismatching "
         "RelaxedPrecision decoration causes a crash",
         &members, "http://anglebug.com/8503"
+    };
+
+    FeatureInfo disableDepthStencilResolveThroughAttachment = {
+        "disableDepthStencilResolveThroughAttachment",
+        FeatureCategory::VulkanWorkarounds,
+        "On some drivers, using a depth/stencil resolve attachment results in errors",
+        &members, "http://anglebug.com/8658"
     };
 
     FeatureInfo clDumpVkSpirv = {

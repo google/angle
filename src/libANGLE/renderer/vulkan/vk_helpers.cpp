@@ -2543,17 +2543,18 @@ void RenderPassCommandBufferHelper::finalizeDepthStencilLoadStore(Context *conte
     // This has to be called after layout been finalized
     ASSERT(dsOps.initialLayout != static_cast<uint16_t>(ImageLayout::Undefined));
 
-    uint32_t currentCmdCount  = getRenderPassWriteCommandCount();
-    bool isDepthInvalidated   = false;
-    bool isStencilInvalidated = false;
-    bool hasResolveAttachment = mRenderPassDesc.hasDepthStencilResolveAttachment();
+    uint32_t currentCmdCount         = getRenderPassWriteCommandCount();
+    bool isDepthInvalidated          = false;
+    bool isStencilInvalidated        = false;
+    bool hasDepthResolveAttachment   = mRenderPassDesc.hasDepthResolveAttachment();
+    bool hasStencilResolveAttachment = mRenderPassDesc.hasStencilResolveAttachment();
 
     mDepthAttachment.finalizeLoadStore(
         context, currentCmdCount, mRenderPassDesc.hasDepthUnresolveAttachment(),
-        hasResolveAttachment, &depthLoadOp, &depthStoreOp, &isDepthInvalidated);
+        hasDepthResolveAttachment, &depthLoadOp, &depthStoreOp, &isDepthInvalidated);
     mStencilAttachment.finalizeLoadStore(
         context, currentCmdCount, mRenderPassDesc.hasStencilUnresolveAttachment(),
-        hasResolveAttachment, &stencilLoadOp, &stencilStoreOp, &isStencilInvalidated);
+        hasStencilResolveAttachment, &stencilLoadOp, &stencilStoreOp, &isStencilInvalidated);
 
     const bool disableMixedDepthStencilLoadOpNoneAndLoad =
         context->getRenderer()->getFeatures().disallowMixedDepthStencilLoadOpNoneAndLoad.enabled;

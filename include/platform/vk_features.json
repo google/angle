@@ -258,10 +258,18 @@
             "name": "supports_depth_stencil_resolve",
             "category": "Features",
             "description": [
+                "VkDevice supports the VK_KHR_depth_stencil_resolve extension"
+            ],
+            "issue": "http://anglebug.com/4836"
+        },
+        {
+            "name": "supports_depth_stencil_independent_resolve_none",
+            "category": "Features",
+            "description": [
                 "VkDevice supports the VK_KHR_depth_stencil_resolve ",
                 "extension with the independentResolveNone feature"
             ],
-            "issue": "http://anglebug.com/4836"
+            "issue": "http://anglebug.com/7551"
         },
         {
             "name": "supports_multisampled_render_to_single_sampled_GOOGLEX",
@@ -1455,6 +1463,14 @@
                 "RelaxedPrecision decoration causes a crash"
             ],
             "issue": "http://anglebug.com/8503"
+        },
+        {
+            "name": "disable_depth_stencil_resolve_through_attachment",
+            "category": "Workarounds",
+            "description": [
+                "On some drivers, using a depth/stencil resolve attachment results in errors"
+            ],
+            "issue": "http://anglebug.com/8658"
         },
         {
             "name": "cl_dump_vk_spirv",
