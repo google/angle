@@ -49,13 +49,6 @@
 
 namespace rx
 {
-
-#if defined(ANGLE_PLATFORM_ANDROID)
-constexpr const char *kDefaultPipelineCacheGraphDumpPath = "/data/local/tmp/angle_dumps/";
-#else
-constexpr const char *kDefaultPipelineCacheGraphDumpPath = "";
-#endif  // ANGLE_PLATFORM_ANDROID
-
 namespace
 {
 // If the total size of copyBufferToImage commands in the outside command buffer reaches the
@@ -678,40 +671,6 @@ VkDependencyFlags GetLocalDependencyFlags(ContextVk *contextVk)
     return dependencyFlags;
 }
 
-void DumpPipelineCacheGraph(ContextVk *contextVk, const std::ostringstream &graph)
-{
-    std::string dumpPath = contextVk->getPipelineCacheGraphDumpPath();
-    if (dumpPath.size() == 0)
-    {
-        WARN() << "No path supplied for pipeline cache graph dump!";
-        return;
-    }
-
-    static std::atomic<uint32_t> sContextIndex(0);
-    std::string filename = dumpPath;
-    filename += angle::GetExecutableName();
-    filename += std::to_string(sContextIndex.fetch_add(1));
-    filename += ".dump";
-
-    INFO() << "Dumping pipeline cache transition graph to: \"" << filename << "\"";
-
-    std::ofstream out = std::ofstream(filename, std::ofstream::binary);
-    if (!out.is_open())
-    {
-        ERR() << "Failed to open \"" << filename << "\"";
-    }
-
-    out << "digraph {\n" << " node [shape=box";
-    if (contextVk->getFeatures().supportsPipelineCreationFeedback.enabled)
-    {
-        out << ",color=green";
-    }
-    out << "]\n";
-    out << graph.str();
-    out << "}\n";
-    out.close();
-}
-
 bool BlendModeSupportsDither(const ContextVk *contextVk, size_t colorIndex)
 {
     const gl::State &state = contextVk->getState();
@@ -1258,26 +1217,9 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
 #undef ANGLE_ADD_PERF_MONITOR_COUNTER_GROUP
 
     mPerfMonitorCounters.push_back(vulkanGroup);
-
-    mDumpPipelineCacheGraph =
-        (angle::GetEnvironmentVarOrAndroidProperty("ANGLE_DUMP_PIPELINE_CACHE_GRAPH",
-                                                   "angle.dump_pipeline_cache_graph") == "1");
-
-    mPipelineCacheGraphDumpPath = angle::GetEnvironmentVarOrAndroidProperty(
-        "ANGLE_PIPELINE_CACHE_GRAPH_DUMP_PATH", "angle.pipeline_cache_graph_dump_path");
-    if (mPipelineCacheGraphDumpPath.size() == 0)
-    {
-        mPipelineCacheGraphDumpPath = kDefaultPipelineCacheGraphDumpPath;
-    }
 }
 
-ContextVk::~ContextVk()
-{
-    if (!mPipelineCacheGraph.str().empty())
-    {
-        DumpPipelineCacheGraph(this, mPipelineCacheGraph);
-    }
-}
+ContextVk::~ContextVk() {}
 
 void ContextVk::onDestroy(const gl::Context *context)
 {

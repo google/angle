@@ -2032,7 +2032,7 @@ PipelineState GetPipelineState(size_t stateIndex, bool *isRangedOut, size_t *sub
     out << "\\n";
 }
 
-[[maybe_unused]] void OutputAllPipelineState(ContextVk *contextVk,
+[[maybe_unused]] void OutputAllPipelineState(Context *context,
                                              std::ostream &out,
                                              const UnpackedPipelineState &pipeline,
                                              GraphicsPipelineSubset subset,
@@ -2062,7 +2062,7 @@ PipelineState GetPipelineState(size_t stateIndex, bool *isRangedOut, size_t *sub
 
         // Shaders state
         {PipelineState::ViewportNegativeOneToOne,
-         hasShaders && contextVk->getFeatures().supportsDepthClipControl.enabled},
+         hasShaders && context->getFeatures().supportsDepthClipControl.enabled},
         {PipelineState::DepthClampEnable, 0},
         {PipelineState::PolygonMode, hasShaders ? VK_POLYGON_MODE_FILL : 0},
         {PipelineState::CullMode, hasShaders ? VK_CULL_MODE_NONE : 0},
@@ -2146,7 +2146,7 @@ PipelineState GetPipelineState(size_t stateIndex, bool *isRangedOut, size_t *sub
 
 template <typename Hash>
 void DumpPipelineCacheGraph(
-    ContextVk *contextVk,
+    Context *context,
     const std::unordered_map<GraphicsPipelineDesc,
                              PipelineHelper,
                              Hash,
@@ -2154,7 +2154,7 @@ void DumpPipelineCacheGraph(
 {
     constexpr GraphicsPipelineSubset kSubset = GraphicsPipelineCacheTypeHelper<Hash>::kSubset;
 
-    std::ostream &out = contextVk->getPipelineCacheGraphStream();
+    std::ostream &out = context->getRenderer()->getPipelineCacheGraphStream();
 
     static std::atomic<uint32_t> sCacheSerial(0);
     angle::HashMap<GraphicsPipelineDesc, uint32_t, Hash,
@@ -2198,7 +2198,7 @@ void DumpPipelineCacheGraph(
     out << " subgraph cluster_" << subsetTag << cacheSerial << "{\n";
     out << "  label=\"Program " << cacheSerial << "\\n"
         << subsetDescription << "\\nCommon state:\\n";
-    OutputAllPipelineState(contextVk, out, pipelines[0], kSubset, commonState, true);
+    OutputAllPipelineState(context, out, pipelines[0], kSubset, commonState, true);
     out << "\";\n";
 
     descId = 0;
@@ -2250,7 +2250,7 @@ void DumpPipelineCacheGraph(
         out << "  p" << subsetTag << cacheSerial << "_" << descId << "[label=\"Pipeline " << descId
             << "\\n"
             << feedbackDesc << "\\n";
-        OutputAllPipelineState(contextVk, out, pipelines[descId], kSubset, nodeState, false);
+        OutputAllPipelineState(context, out, pipelines[descId], kSubset, nodeState, false);
         out << "\"]" << style << ";\n";
 
         descToId[desc] = descId++;
@@ -2366,9 +2366,9 @@ angle::Result InitializePipelineFromLibraries(Context *context,
     return angle::Result::Continue;
 }
 
-bool ShouldDumpPipelineCacheGraph(ContextVk *contextVk)
+bool ShouldDumpPipelineCacheGraph(Context *context)
 {
-    return kDumpPipelineCacheGraph && contextVk->isPipelineCacheGraphDumpEnabled();
+    return kDumpPipelineCacheGraph && context->getRenderer()->isPipelineCacheGraphDumpEnabled();
 }
 }  // anonymous namespace
 
@@ -4444,10 +4444,12 @@ void PipelineHelper::destroy(VkDevice device)
     reset();
 }
 
-void PipelineHelper::release(ContextVk *contextVk)
+void PipelineHelper::release(Context *context)
 {
-    contextVk->getRenderer()->collectGarbage(mUse, &mPipeline);
-    contextVk->getRenderer()->collectGarbage(mUse, &mLinkedPipelineToRelease);
+    Renderer *renderer = context->getRenderer();
+
+    renderer->collectGarbage(mUse, &mPipeline);
+    renderer->collectGarbage(mUse, &mLinkedPipelineToRelease);
 
     // If there is a pending task, wait for it before release.
     if (mMonolithicPipelineCreationTask.isValid())
@@ -4455,8 +4457,8 @@ void PipelineHelper::release(ContextVk *contextVk)
         if (mMonolithicPipelineCreationTask.isPosted())
         {
             mMonolithicPipelineCreationTask.wait();
-            contextVk->getRenderer()->collectGarbage(
-                mUse, &mMonolithicPipelineCreationTask.getTask()->getPipeline());
+            renderer->collectGarbage(mUse,
+                                     &mMonolithicPipelineCreationTask.getTask()->getPipeline());
         }
         mMonolithicPipelineCreationTask.reset();
     }
@@ -6770,7 +6772,7 @@ angle::Result RenderPassCache::MakeRenderPass(vk::Context *context,
         if (isYUVExternalFormat)
         {
             const vk::ExternalYuvFormatInfo &externalFormatInfo =
-                context->getRenderer()->mExternalFormatTable.getExternalFormatInfo(
+                context->getRenderer()->getExternalFormatTable()->getExternalFormatInfo(
                     attachmentFormatID);
             attachmentDescs[attachmentCount.get()].format =
                 externalFormatInfo.colorAttachmentFormat;
@@ -6880,7 +6882,7 @@ angle::Result RenderPassCache::MakeRenderPass(vk::Context *context,
         if (isYUVExternalFormat)
         {
             const vk::ExternalYuvFormatInfo &externalFormatInfo =
-                context->getRenderer()->mExternalFormatTable.getExternalFormatInfo(
+                context->getRenderer()->getExternalFormatTable()->getExternalFormatInfo(
                     attachmentFormatID);
             externalFormat.externalFormat        = externalFormatInfo.externalFormat;
             VkAttachmentDescription2 &attachment = attachmentDescs[attachmentCount.get()];
@@ -7090,16 +7092,16 @@ angle::Result RenderPassCache::MakeRenderPass(vk::Context *context,
 
 // GraphicsPipelineCache implementation.
 template <typename Hash>
-void GraphicsPipelineCache<Hash>::destroy(ContextVk *contextVk)
+void GraphicsPipelineCache<Hash>::destroy(vk::Context *context)
 {
-    if (vk::ShouldDumpPipelineCacheGraph(contextVk) && !mPayload.empty())
+    if (vk::ShouldDumpPipelineCacheGraph(context) && !mPayload.empty())
     {
-        vk::DumpPipelineCacheGraph<Hash>(contextVk, mPayload);
+        vk::DumpPipelineCacheGraph<Hash>(context, mPayload);
     }
 
-    accumulateCacheStats(contextVk->getRenderer());
+    accumulateCacheStats(context->getRenderer());
 
-    VkDevice device = contextVk->getDevice();
+    VkDevice device = context->getDevice();
 
     for (auto &item : mPayload)
     {
@@ -7111,17 +7113,17 @@ void GraphicsPipelineCache<Hash>::destroy(ContextVk *contextVk)
 }
 
 template <typename Hash>
-void GraphicsPipelineCache<Hash>::release(ContextVk *contextVk)
+void GraphicsPipelineCache<Hash>::release(vk::Context *context)
 {
-    if (vk::ShouldDumpPipelineCacheGraph(contextVk) && !mPayload.empty())
+    if (vk::ShouldDumpPipelineCacheGraph(context) && !mPayload.empty())
     {
-        vk::DumpPipelineCacheGraph<Hash>(contextVk, mPayload);
+        vk::DumpPipelineCacheGraph<Hash>(context, mPayload);
     }
 
     for (auto &item : mPayload)
     {
         vk::PipelineHelper &pipeline = item.second;
-        pipeline.release(contextVk);
+        pipeline.release(context);
     }
 
     mPayload.clear();
@@ -7240,9 +7242,9 @@ void GraphicsPipelineCache<Hash>::populate(const vk::GraphicsPipelineDesc &desc,
 
 // Instantiate the pipeline cache functions
 template void GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>::destroy(
-    ContextVk *contextVk);
+    vk::Context *context);
 template void GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>::release(
-    ContextVk *contextVk);
+    vk::Context *context);
 template angle::Result GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>::createPipeline(
     vk::Context *context,
     vk::PipelineCacheAccess *pipelineCache,
@@ -7269,9 +7271,9 @@ template void GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>::populate(
     vk::Pipeline &&pipeline);
 
 template void GraphicsPipelineCache<GraphicsPipelineDescVertexInputHash>::destroy(
-    ContextVk *contextVk);
+    vk::Context *context);
 template void GraphicsPipelineCache<GraphicsPipelineDescVertexInputHash>::release(
-    ContextVk *contextVk);
+    vk::Context *context);
 template angle::Result GraphicsPipelineCache<GraphicsPipelineDescVertexInputHash>::createPipeline(
     vk::Context *context,
     vk::PipelineCacheAccess *pipelineCache,
@@ -7287,8 +7289,8 @@ template void GraphicsPipelineCache<GraphicsPipelineDescVertexInputHash>::popula
     const vk::GraphicsPipelineDesc &desc,
     vk::Pipeline &&pipeline);
 
-template void GraphicsPipelineCache<GraphicsPipelineDescShadersHash>::destroy(ContextVk *contextVk);
-template void GraphicsPipelineCache<GraphicsPipelineDescShadersHash>::release(ContextVk *contextVk);
+template void GraphicsPipelineCache<GraphicsPipelineDescShadersHash>::destroy(vk::Context *context);
+template void GraphicsPipelineCache<GraphicsPipelineDescShadersHash>::release(vk::Context *context);
 template angle::Result GraphicsPipelineCache<GraphicsPipelineDescShadersHash>::createPipeline(
     vk::Context *context,
     vk::PipelineCacheAccess *pipelineCache,
@@ -7305,9 +7307,9 @@ template void GraphicsPipelineCache<GraphicsPipelineDescShadersHash>::populate(
     vk::Pipeline &&pipeline);
 
 template void GraphicsPipelineCache<GraphicsPipelineDescFragmentOutputHash>::destroy(
-    ContextVk *contextVk);
+    vk::Context *context);
 template void GraphicsPipelineCache<GraphicsPipelineDescFragmentOutputHash>::release(
-    ContextVk *contextVk);
+    vk::Context *context);
 template angle::Result
 GraphicsPipelineCache<GraphicsPipelineDescFragmentOutputHash>::createPipeline(
     vk::Context *context,

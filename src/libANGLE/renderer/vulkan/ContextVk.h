@@ -775,8 +775,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         mVulkanCacheStats[cache].accumulate(stats);
     }
 
-    std::ostringstream &getPipelineCacheGraphStream() { return mPipelineCacheGraph; }
-
     // Whether VK_EXT_pipeline_robustness should be used to enable robust buffer access in the
     // pipeline.
     vk::PipelineRobustness pipelineRobustness() const
@@ -817,12 +815,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     {
         return getFeatures().mutableMipmapTextureUpload.enabled && !hasDisplayTextureShareGroup() &&
                mShareGroupVk->getContexts().size() == 1;
-    }
-
-    bool isPipelineCacheGraphDumpEnabled() const { return mDumpPipelineCacheGraph; }
-    const char *getPipelineCacheGraphDumpPath() const
-    {
-        return mPipelineCacheGraphDumpPath.c_str();
     }
 
     vk::RenderPassUsageFlags getDepthStencilAttachmentFlags() const
@@ -1700,11 +1692,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     VkRect2D mScissor;
 
     VulkanCacheStats mVulkanCacheStats;
-
-    // A graph built from pipeline descs and their transitions.
-    std::ostringstream mPipelineCacheGraph;
-    bool mDumpPipelineCacheGraph;
-    std::string mPipelineCacheGraphDumpPath;
 
     RangedSerialFactory mOutsideRenderPassSerialFactory;
 };

@@ -1398,7 +1398,7 @@ class PipelineHelper final : public Resource
     inline explicit PipelineHelper(Pipeline &&pipeline, CacheLookUpFeedback feedback);
 
     void destroy(VkDevice device);
-    void release(ContextVk *contextVk);
+    void release(Context *context);
 
     bool valid() const { return mPipeline.valid(); }
     const Pipeline &getPipeline() const { return mPipeline; }
@@ -2457,8 +2457,8 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
     GraphicsPipelineCache() = default;
     ~GraphicsPipelineCache() override { ASSERT(mPayload.empty()); }
 
-    void destroy(ContextVk *contextVk);
-    void release(ContextVk *contextVk);
+    void destroy(vk::Context *context);
+    void release(vk::Context *context);
 
     void populate(const vk::GraphicsPipelineDesc &desc, vk::Pipeline &&pipeline);
 
