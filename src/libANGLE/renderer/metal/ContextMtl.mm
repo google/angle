@@ -372,7 +372,7 @@ angle::Result ContextMtl::drawTriFanArrays(const gl::Context *context,
 {
     if (count <= 3 && baseInstance == 0)
     {
-        return drawArraysInstanced(context, gl::PrimitiveMode::Triangles, first, count, instances);
+        return drawArraysImpl(context, gl::PrimitiveMode::Triangles, first, count, instances, 0);
     }
     if (getDisplay()->getFeatures().hasBaseVertexInstancedDraw.enabled)
     {
@@ -579,17 +579,8 @@ angle::Result ContextMtl::drawTriFanElements(const gl::Context *context,
 
         return angle::Result::Continue;
     }  // if (count > 3)
-    if (baseVertex == 0 && baseInstance == 0)
-    {
-        return drawElementsInstanced(context, gl::PrimitiveMode::Triangles, count, type, indices,
-                                     instances);
-    }
-    else
-    {
-        return drawElementsInstancedBaseVertexBaseInstance(context, gl::PrimitiveMode::Triangles,
-                                                           count, type, indices, instances,
-                                                           baseVertex, baseInstance);
-    }
+    return drawElementsImpl(context, gl::PrimitiveMode::Triangles, count, type, indices, instances,
+                            baseVertex, baseInstance);
 }
 
 angle::Result ContextMtl::drawLineLoopElementsNonInstancedNoPrimitiveRestart(
@@ -658,17 +649,8 @@ angle::Result ContextMtl::drawLineLoopElements(const gl::Context *context,
 
         return angle::Result::Continue;
     }  // if (count >= 2)
-    if (baseVertex == 0 && baseInstance == 0)
-    {
-        return drawElementsInstanced(context, gl::PrimitiveMode::Lines, count, type, indices,
-                                     instances);
-    }
-    else
-    {
-        return drawElementsInstancedBaseVertexBaseInstance(context, gl::PrimitiveMode::Lines, count,
-                                                           type, indices, instances, baseVertex,
-                                                           baseInstance);
-    }
+    return drawElementsImpl(context, gl::PrimitiveMode::Lines, count, type, indices, instances,
+                            baseVertex, baseInstance);
 }
 
 angle::Result ContextMtl::drawArraysProvokingVertexImpl(const gl::Context *context,
