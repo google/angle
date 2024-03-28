@@ -336,8 +336,6 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 
 6456 MAC METAL INTEL : Texture2DTest.TextureSizeCase1/* = SKIP
 
-5233 MAC METAL : WebGL2ValidationStateChangeTest.MultiAttachmentDrawFramebufferNegativeAPI/* = SKIP
-
 7451 MAC METAL INTEL : PointSpritesTest.PointSizeAboveMaxIsClamped/* = SKIP
 
 // New failures on MacBook Pro 2019 macOS 13.2.1
@@ -834,7 +832,6 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 7994 IOS METAL : UniformBlockWithOneLargeArrayMemberTest.MemberTypeIsStructAndInstancedArray/* = SKIP
 7994 IOS METAL : UniformBlockWithOneLargeArrayMemberTest.SharedSameBufferWithOtherOne/* = SKIP
 7994 IOS METAL : UniformBlockWithOneLargeArrayMemberTest.TwoUniformBlocksInSameProgram/* = SKIP
-7994 IOS METAL : WebGL2ValidationStateChangeTest.MultiAttachmentDrawFramebufferNegativeAPI/* = SKIP
 8043 IOS METAL : FramebufferTest_ES3.RenderSharedExponent/* = SKIP
 8051 IOS METAL : Texture2DDepthStencilTestES3.TexSampleModes*Swizzled/* = SKIP
 8278 IOS METAL : GLSLTest_ES3.LiteralInfinityOutput/* = SKIP

@@ -957,6 +957,13 @@ ANGLE_INLINE ComponentTypeMask GetActiveComponentTypeMask(gl::AttributesMask act
     return ComponentTypeMask(activeAttribs << kMaxComponentTypeMaskIndex | activeAttribs);
 }
 
+ANGLE_INLINE DrawBufferMask GetComponentTypeMaskDiff(ComponentTypeMask mask1,
+                                                     ComponentTypeMask mask2)
+{
+    const uint32_t diff = static_cast<uint32_t>((mask1 ^ mask2).bits());
+    return DrawBufferMask(static_cast<uint8_t>(diff | (diff >> gl::kMaxComponentTypeMaskIndex)));
+}
+
 bool ValidateComponentTypeMasks(unsigned long outputTypes,
                                 unsigned long inputTypes,
                                 unsigned long outputMask,

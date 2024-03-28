@@ -177,6 +177,12 @@ angle::Result FramebufferMtl::clear(const gl::Context *context, GLbitfield mask)
 {
     ContextMtl *contextMtl = mtl::GetImpl(context);
 
+    if (ANGLE_UNLIKELY(contextMtl->getForceResyncDrawFramebuffer()))
+    {
+        ANGLE_TRY(syncState(context, GL_DRAW_FRAMEBUFFER, gl::Framebuffer::DirtyBits(),
+                            gl::Command::Clear));
+    }
+
     mtl::ClearRectParams clearOpts;
 
     bool clearColor   = IsMaskFlagSet(mask, static_cast<GLbitfield>(GL_COLOR_BUFFER_BIT));
@@ -206,6 +212,12 @@ angle::Result FramebufferMtl::clearBufferfv(const gl::Context *context,
                                             GLint drawbuffer,
                                             const GLfloat *values)
 {
+    if (ANGLE_UNLIKELY(mtl::GetImpl(context)->getForceResyncDrawFramebuffer()))
+    {
+        ANGLE_TRY(syncState(context, GL_DRAW_FRAMEBUFFER, gl::Framebuffer::DirtyBits(),
+                            gl::Command::Clear));
+    }
+
     mtl::ClearRectParams clearOpts;
 
     gl::DrawBufferMask clearColorBuffers;
@@ -226,6 +238,12 @@ angle::Result FramebufferMtl::clearBufferuiv(const gl::Context *context,
                                              GLint drawbuffer,
                                              const GLuint *values)
 {
+    if (ANGLE_UNLIKELY(mtl::GetImpl(context)->getForceResyncDrawFramebuffer()))
+    {
+        ANGLE_TRY(syncState(context, GL_DRAW_FRAMEBUFFER, gl::Framebuffer::DirtyBits(),
+                            gl::Command::Clear));
+    }
+
     gl::DrawBufferMask clearColorBuffers;
     clearColorBuffers.set(drawbuffer);
 
@@ -239,6 +257,12 @@ angle::Result FramebufferMtl::clearBufferiv(const gl::Context *context,
                                             GLint drawbuffer,
                                             const GLint *values)
 {
+    if (ANGLE_UNLIKELY(mtl::GetImpl(context)->getForceResyncDrawFramebuffer()))
+    {
+        ANGLE_TRY(syncState(context, GL_DRAW_FRAMEBUFFER, gl::Framebuffer::DirtyBits(),
+                            gl::Command::Clear));
+    }
+
     mtl::ClearRectParams clearOpts;
 
     gl::DrawBufferMask clearColorBuffers;
@@ -457,6 +481,12 @@ angle::Result FramebufferMtl::blit(const gl::Context *context,
     {
         // No-op
         return angle::Result::Continue;
+    }
+
+    if (ANGLE_UNLIKELY(mtl::GetImpl(context)->getForceResyncDrawFramebuffer()))
+    {
+        ANGLE_TRY(syncState(context, GL_DRAW_FRAMEBUFFER, gl::Framebuffer::DirtyBits(),
+                            gl::Command::Blit));
     }
 
     const gl::Rectangle srcFramebufferDimensions = srcFrameBuffer->getCompleteRenderArea();
@@ -753,7 +783,21 @@ angle::Result FramebufferMtl::syncState(const gl::Context *context,
         }
     }
 
-    ANGLE_TRY(prepareRenderPass(context, &mRenderPassDesc));
+    // If attachments have been changed and this is the current draw framebuffer,
+    // update the Metal context's incompatible attachments cache before preparing a render pass.
+    static_assert(gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_0 == 0, "FB dirty bits");
+    constexpr gl::Framebuffer::DirtyBits kAttachmentsMask =
+        gl::Framebuffer::DirtyBits::Mask(gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_MAX);
+    if (mustNotifyContext || (dirtyBits & kAttachmentsMask).any())
+    {
+        const gl::State &glState = context->getState();
+        if (mtl::GetImpl(glState.getDrawFramebuffer()) == this)
+        {
+            contextMtl->updateIncompatibleAttachments(glState);
+        }
+    }
+
+    ANGLE_TRY(prepareRenderPass(context, &mRenderPassDesc, command));
     bool renderPassChanged = !oldRenderPassDesc.equalIgnoreLoadStoreOptions(mRenderPassDesc);
 
     if (mustNotifyContext || renderPassChanged)
@@ -1015,9 +1059,15 @@ angle::Result FramebufferMtl::updateCachedRenderTarget(const gl::Context *contex
 }
 
 angle::Result FramebufferMtl::prepareRenderPass(const gl::Context *context,
-                                                mtl::RenderPassDesc *pDescOut)
+                                                mtl::RenderPassDesc *pDescOut,
+                                                gl::Command command)
 {
-    const gl::DrawBufferMask enabledDrawBuffers = getState().getEnabledDrawBuffers();
+    // Skip incompatible attachments for draw ops to avoid triggering Metal runtime failures.
+    const gl::DrawBufferMask incompatibleAttachments =
+        (command == gl::Command::Draw) ? mtl::GetImpl(context)->getIncompatibleAttachments()
+                                       : gl::DrawBufferMask();
+    const gl::DrawBufferMask enabledDrawBuffers =
+        getState().getEnabledDrawBuffers() & ~incompatibleAttachments;
 
     mtl::RenderPassDesc &desc = *pDescOut;
 
