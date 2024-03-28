@@ -26,12 +26,31 @@
 namespace rx
 {
 
+class CLAsyncFinishTask : public angle::Closure
+{
+  public:
+    CLAsyncFinishTask(CLCommandQueueVk *queueVk) : mQueueVk(queueVk) {}
+
+    void operator()() override
+    {
+        ANGLE_TRACE_EVENT0("gpu.angle", "CLCommandQueueVk::finish (async)");
+        if (IsError(mQueueVk->finish()))
+        {
+            ERR() << "Async finish (clFlush) failed for queue (" << mQueueVk << ")!";
+        }
+    }
+
+  private:
+    CLCommandQueueVk *mQueueVk;
+};
+
 CLCommandQueueVk::CLCommandQueueVk(const cl::CommandQueue &commandQueue)
     : CLCommandQueueImpl(commandQueue),
       mContext(&commandQueue.getContext().getImpl<CLContextVk>()),
       mDevice(&commandQueue.getDevice().getImpl<CLDeviceVk>()),
       mComputePassCommands(nullptr),
-      mCurrentQueueSerialIndex(kInvalidQueueSerialIndex)
+      mCurrentQueueSerialIndex(kInvalidQueueSerialIndex),
+      mHasAnyCommandsPendingSubmission(false)
 {}
 
 angle::Result CLCommandQueueVk::init()
@@ -391,14 +410,26 @@ angle::Result CLCommandQueueVk::enqueueBarrier()
 
 angle::Result CLCommandQueueVk::flush()
 {
-    UNIMPLEMENTED();
-    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+    ANGLE_TRACE_EVENT0("gpu.angle", "CLCommandQueueVk::flush");
+
+    // Non-blocking finish
+    // TODO: Ideally we should try to find better impl. to avoid spawning a submit-thread/Task here
+    // https://anglebug.com/8669
+    std::shared_ptr<angle::WaitableEvent> asyncEvent =
+        getPlatform()->postMultiThreadWorkerTask(std::make_shared<CLAsyncFinishTask>(this));
+    ASSERT(asyncEvent != nullptr);
+
+    return angle::Result::Continue;
 }
 
 angle::Result CLCommandQueueVk::finish()
 {
-    UNIMPLEMENTED();
-    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+    std::scoped_lock<std::mutex> sl(mCommandQueueMutex);
+
+    ANGLE_TRACE_EVENT0("gpu.angle", "CLCommandQueueVk::finish");
+
+    // Blocking finish
+    return finishInternal();
 }
 
 angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
@@ -527,8 +558,22 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
 
 angle::Result CLCommandQueueVk::flushComputePassCommands()
 {
-    UNIMPLEMENTED();
-    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+    mLastFlushedQueueSerial = mComputePassCommands->getQueueSerial();
+
+    // Here, we flush our compute cmds to RendererVk's primary command buffer
+    ANGLE_TRY(mContext->getRenderer()->flushOutsideRPCommands(
+        mContext, getProtectionType(), egl::ContextPriority::Medium, &mComputePassCommands));
+
+    mHasAnyCommandsPendingSubmission = true;
+
+    mContext->getPerfCounters().flushedOutsideRenderPassCommandBuffers++;
+
+    // Generate new serial for next batch of cmds
+    mComputePassCommands->setQueueSerial(
+        mCurrentQueueSerialIndex,
+        mContext->getRenderer()->generateQueueSerial(mCurrentQueueSerialIndex));
+
+    return angle::Result::Continue;
 }
 
 angle::Result CLCommandQueueVk::processWaitlist(const cl::EventPtrs &waitEvents)
@@ -567,8 +612,22 @@ angle::Result CLCommandQueueVk::processWaitlist(const cl::EventPtrs &waitEvents)
 
 angle::Result CLCommandQueueVk::submitCommands()
 {
-    UNIMPLEMENTED();
-    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+    ANGLE_TRACE_EVENT0("gpu.angle", "CLCommandQueueVk::submitCommands()");
+
+    // Kick off renderer submit
+    ANGLE_TRY(mContext->getRenderer()->submitCommands(mContext, getProtectionType(),
+                                                      egl::ContextPriority::Medium, nullptr,
+                                                      nullptr, mLastFlushedQueueSerial));
+
+    mLastSubmittedQueueSerial = mLastFlushedQueueSerial;
+
+    // Now that we have submitted commands, some of pending garbage may no longer pending
+    // and should be moved to garbage list.
+    mContext->getRenderer()->cleanupPendingSubmissionGarbage();
+
+    mHasAnyCommandsPendingSubmission = false;
+
+    return angle::Result::Continue;
 }
 
 angle::Result CLCommandQueueVk::createEvent(CLEventImpl::CreateFunc *createFunc)
@@ -596,8 +655,67 @@ angle::Result CLCommandQueueVk::createEvent(CLEventImpl::CreateFunc *createFunc)
 
 angle::Result CLCommandQueueVk::finishInternal()
 {
-    UNIMPLEMENTED();
-    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+    for (cl::EventPtr event : mAssociatedEvents)
+    {
+        ANGLE_TRY(event->getImpl<CLEventVk>().setStatusAndExecuteCallback(CL_SUBMITTED));
+    }
+
+    if (!mComputePassCommands->empty())
+    {
+        // If we still have dependant events, handle them now
+        if (!mDependantEvents.empty())
+        {
+            for (const auto &depEvent : mDependantEvents)
+            {
+                if (depEvent->getImpl<CLEventVk>().isUserEvent())
+                {
+                    // We just wait here for user to set the event object
+                    cl_int status = CL_QUEUED;
+                    ANGLE_TRY(depEvent->getImpl<CLEventVk>().waitForUserEventStatus());
+                    ANGLE_TRY(depEvent->getImpl<CLEventVk>().getCommandExecutionStatus(status));
+                    if (status < 0)
+                    {
+                        ERR() << "Invalid dependant user-event (" << depEvent.get()
+                              << ") status encountered!";
+                        mComputePassCommands->getCommandBuffer().reset();
+                        ANGLE_CL_RETURN_ERROR(CL_EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST);
+                    }
+                }
+                else
+                {
+                    // Otherwise, we just need to submit/finish for dependant event queues
+                    // here that are not associated with this queue
+                    ANGLE_TRY(depEvent->getCommandQueue()->finish());
+                }
+            }
+            mDependantEvents.clear();
+        }
+
+        ANGLE_TRY(flushComputePassCommands());
+    }
+
+    for (cl::EventPtr event : mAssociatedEvents)
+    {
+        ANGLE_TRY(event->getImpl<CLEventVk>().setStatusAndExecuteCallback(CL_RUNNING));
+    }
+
+    if (mHasAnyCommandsPendingSubmission)
+    {
+        // Submit and wait for fence
+        ANGLE_TRY(submitCommands());
+        ANGLE_TRY(mContext->getRenderer()->finishQueueSerial(mContext, mLastSubmittedQueueSerial));
+    }
+
+    for (cl::EventPtr event : mAssociatedEvents)
+    {
+        ANGLE_TRY(event->getImpl<CLEventVk>().setStatusAndExecuteCallback(CL_COMPLETE));
+    }
+
+    mMemoryCaptures.clear();
+    mAssociatedEvents.clear();
+    mDependencyTracker.clear();
+
+    return angle::Result::Continue;
 }
 
 }  // namespace rx
