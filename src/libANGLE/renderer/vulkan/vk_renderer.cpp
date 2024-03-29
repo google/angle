@@ -568,6 +568,25 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithoutLoadStoreOpNon
     },
 };
 
+// Messages that are only generated with MSRTT emulation.  Some of these are syncval bugs (discussed
+// in https://gitlab.khronos.org/vulkan/vulkan/-/issues/3840)
+constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithMSRTTEmulation[] = {
+    // False positive: https://gitlab.khronos.org/vulkan/vulkan/-/issues/3840
+    {
+        "SYNC-HAZARD-READ-AFTER-WRITE",
+        "during depth/stencil resolve read",
+        "SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_READ",
+    },
+    // Unknown whether ANGLE or syncval bug.
+    {
+        "SYNC-HAZARD-WRITE-AFTER-WRITE",
+        "vkCmdBeginRenderPass():  Hazard WRITE_AFTER_WRITE in subpass 0 for attachment",
+        "image layout transition (old_layout: VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, "
+        "new_layout: VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL). Access info (usage: "
+        "SYNC_IMAGE_LAYOUT_TRANSITION",
+    },
+};
+
 enum class DebugMessageReport
 {
     Ignore,
@@ -3620,6 +3639,14 @@ void Renderer::initializeValidationMessageSuppressions()
             kSkippedSyncvalMessagesWithoutLoadStoreOpNone +
                 ArraySize(kSkippedSyncvalMessagesWithoutLoadStoreOpNone));
     }
+    if (getFeatures().enableMultisampledRenderToTexture.enabled &&
+        !getFeatures().supportsMultisampledRenderToSingleSampled.enabled)
+    {
+        mSkippedSyncvalMessages.insert(mSkippedSyncvalMessages.end(),
+                                       kSkippedSyncvalMessagesWithMSRTTEmulation,
+                                       kSkippedSyncvalMessagesWithMSRTTEmulation +
+                                           ArraySize(kSkippedSyncvalMessagesWithMSRTTEmulation));
+    }
 }
 
 angle::Result Renderer::checkQueueForSurfacePresent(vk::Context *context,
@@ -4473,17 +4500,16 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     //   * OOM: http://crbug.com/1263046
     // - Intel on windows: http://anglebug.com/5032
     // - AMD on windows: http://crbug.com/1132366
+    // - Old ARM drivers on Android fail multiple tests, though newer drivers don't (although they
+    //   support MSRTSS and emulation is unnecessary)
     //
-    const bool supportsIndependentDepthStencilResolve =
-        mFeatures.supportsDepthStencilResolve.enabled &&
-        mDepthStencilResolveProperties.independentResolveNone == VK_TRUE;
     ANGLE_FEATURE_CONDITION(&mFeatures, allowMultisampledRenderToTextureEmulation,
-                            isTileBasedRenderer || isSamsung);
+                            (isTileBasedRenderer && !isARM) || isSamsung);
     ANGLE_FEATURE_CONDITION(
         &mFeatures, enableMultisampledRenderToTexture,
         mFeatures.supportsMultisampledRenderToSingleSampled.enabled ||
             mFeatures.supportsMultisampledRenderToSingleSampledGOOGLEX.enabled ||
-            (supportsIndependentDepthStencilResolve &&
+            (mFeatures.supportsDepthStencilResolve.enabled &&
              mFeatures.allowMultisampledRenderToTextureEmulation.enabled));
 
     // Currently we enable cube map arrays based on the imageCubeArray Vk feature.

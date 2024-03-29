@@ -581,6 +581,8 @@ b/308668391 PIXEL4ORXL VULKAN : ImageTest.SourceYUVAHBTargetExternalRGBSampleNoD
 8626 PIXEL4ORXL : FramebufferTest_ES31.MultisampleResolveBothAttachments/* = SKIP
 8626 PIXEL4ORXL VULKAN : VulkanPerformanceCounterTest_ES31.MultisampleResolveBothAttachments/* = SKIP
 
+8657 PIXEL4ORXL VULKAN : MultisampledRenderToTextureES3Test.RenderbufferDrawThenBlitDepthStencilOnly/* = SKIP
+
 // Pixel 6 expectations.
 6931 PIXEL6 VULKAN : BlitFramebufferTest.OOBWrite/* = SKIP
 6931 PIXEL6 VULKAN : BufferSubDataTest.MapInvalidateThenBufferSubData/* = SKIP

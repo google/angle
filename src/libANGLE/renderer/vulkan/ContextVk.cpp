@@ -843,6 +843,9 @@ ANGLE_INLINE void ContextVk::onRenderPassFinished(RenderPassClosureReason reason
         }
 
         mRenderPassCommandBuffer = nullptr;
+
+        // Restart at subpass 0.
+        mGraphicsPipelineDesc->resetSubpass(&mGraphicsPipelineTransition);
     }
 
     mGraphicsDirtyBits.set(DIRTY_BIT_RENDER_PASS);
@@ -5705,8 +5708,6 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                     mCachedDrawFramebufferColorAttachmentMask, newColorAttachmentMask);
                 mCachedDrawFramebufferColorAttachmentMask = newColorAttachmentMask;
 
-                mGraphicsPipelineDesc->resetSubpass(&mGraphicsPipelineTransition);
-
                 // The framebuffer may not be in sync with usage of framebuffer fetch programs.
                 drawFramebufferVk->switchToFramebufferFetchMode(this, mIsInFramebufferFetchMode);
 
@@ -7955,8 +7956,6 @@ angle::Result ContextVk::flushCommandsAndEndRenderPassWithoutSubmit(RenderPassCl
 
     // Set dirty bits if render pass was open (and thus will be closed).
     mGraphicsDirtyBits |= mNewGraphicsCommandBufferDirtyBits;
-    // Restart at subpass 0.
-    mGraphicsPipelineDesc->resetSubpass(&mGraphicsPipelineTransition);
 
     mCurrentTransformFeedbackQueueSerial = QueueSerial();
 
@@ -8068,8 +8067,7 @@ angle::Result ContextVk::flushDirtyGraphicsRenderPass(DirtyBits::Iterator *dirty
     // after dirty bits are iterated, so there's no need to mask them out.
     mGraphicsDirtyBits |= mNewGraphicsCommandBufferDirtyBits;
 
-    // Restart at subpass 0.
-    mGraphicsPipelineDesc->resetSubpass(&mGraphicsPipelineTransition);
+    ASSERT(mGraphicsPipelineDesc->getSubpass() == 0);
 
     return angle::Result::Continue;
 }
