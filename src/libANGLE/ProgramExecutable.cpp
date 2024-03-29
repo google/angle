@@ -2471,19 +2471,10 @@ GLuint ProgramExecutable::getUniformIndex(const std::string &name) const
 
 bool ProgramExecutable::shouldIgnoreUniform(UniformLocation location) const
 {
-    if (location.value < 0)
-    {
-        return true;
-    }
-
-    if (static_cast<size_t>(location.value) >= mUniformLocations.size())
-    {
-        ERR() << "Invalid uniform location " << location.value << ", expected [0, "
-              << mUniformLocations.size() << ")";
-        return true;
-    }
-
-    return mUniformLocations[location.value].ignored;
+    // Casting to size_t will convert negative values to large positive avoiding double check.
+    // Adding ERR() log to report out of bound location harms performance on Android.
+    return ANGLE_UNLIKELY(static_cast<size_t>(location.value) >= mUniformLocations.size() ||
+                          mUniformLocations[location.value].ignored);
 }
 
 GLuint ProgramExecutable::getUniformIndexFromName(const std::string &name) const
