@@ -90,7 +90,9 @@ ANGLE_CHROMIUM_DEPS = [
     'third_party/turbine',
     'third_party/zlib',
     'tools/android',
-    'tools/clang',
+    # Pin clang because abseil-cpp is pinned, so its DEF files can't be kept in sync with clang.
+    # https://skbug.com/330350366
+    # 'tools/clang',
     'tools/clang/dsymutil',
     'tools/luci-go',
     'tools/mb',
