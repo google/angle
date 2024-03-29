@@ -28,7 +28,7 @@
   'limited_capacity_bot': {'swarming': {'expiration': 21600}},
   'linux-jammy': {'swarming': {'dimensions': {'os': 'Ubuntu-22.04'}}},
   'linux_amd_rx_5500_xt': { 'swarming': { 'dimensions': { 'display_attached': '1',
-                                                          'gpu': '1002:7340',
+                                                          'gpu': '1002:7340-23.2.1',
                                                           'os': 'Ubuntu-22.04',
                                                           'pool': 'chromium.tests.gpu'}}},
   'linux_intel_uhd_630_stable': { 'swarming': { 'dimensions': { 'gpu': '8086:9bc5-20.0.8',
