@@ -457,6 +457,19 @@ class ProgramExecutableVk : public ProgramExecutableImpl
     angle::Result initGraphicsShaderPrograms(vk::Context *context,
                                              ProgramTransformOptions transformOptions,
                                              vk::ShaderProgramHelper **shaderProgramOut);
+    angle::Result initGraphicsShaderProgramsForWarmUp(vk::Context *context,
+                                                      vk::GraphicsPipelineSubset subset,
+                                                      ProgramTransformOptions transformOptions,
+                                                      vk::ShaderProgramHelper **shaderProgramOut);
+    angle::Result initProgramThenCreateGraphicsPipeline(vk::Context *context,
+                                                        ProgramTransformOptions transformOptions,
+                                                        vk::GraphicsPipelineSubset pipelineSubset,
+                                                        vk::PipelineCacheAccess *pipelineCache,
+                                                        PipelineSource source,
+                                                        const vk::GraphicsPipelineDesc &desc,
+                                                        const vk::RenderPass &compatibleRenderPass,
+                                                        const vk::GraphicsPipelineDesc **descPtrOut,
+                                                        vk::PipelineHelper **pipelineOut);
     angle::Result createGraphicsPipelineImpl(vk::Context *context,
                                              ProgramTransformOptions transformOptions,
                                              vk::GraphicsPipelineSubset pipelineSubset,

@@ -7251,7 +7251,16 @@ angle::Result GraphicsPipelineCache<Hash>::createPipeline(
                                                       specConsts, &newPipeline, &feedback));
     }
 
-    addToCache(source, desc, std::move(newPipeline), feedback, descPtrOut, pipelineOut);
+    if (source == PipelineSource::WarmUp)
+    {
+        // ProgramExecutableVk::prepareForWarmUpPipelineCache should have inserted a placeholder
+        // entry in the cache, we just need to update it with the newly created Pipeline.
+        update(desc, std::move(newPipeline));
+    }
+    else
+    {
+        addToCache(source, desc, std::move(newPipeline), feedback, descPtrOut, pipelineOut);
+    }
     return angle::Result::Continue;
 }
 
@@ -7330,9 +7339,31 @@ void GraphicsPipelineCache<Hash>::populate(const vk::GraphicsPipelineDesc &desc,
         return;
     }
 
-    // Note: this function is only used for testing.
+    // This function is used by -
+    // 1. WarmUp tasks to insert placeholder pipelines
+    // 2. VulkanPipelineCachePerfTest
     mPayload.emplace(std::piecewise_construct, std::forward_as_tuple(desc),
                      std::forward_as_tuple(std::move(pipeline), vk::CacheLookUpFeedback::None));
+}
+
+template <typename Hash>
+void GraphicsPipelineCache<Hash>::update(const vk::GraphicsPipelineDesc &desc,
+                                         vk::Pipeline &&pipeline)
+{
+    // Note: this function is only used by WarmUp tasks to replace placeholder pipelines
+    // with valid ones when available.
+
+    auto item = mPayload.find(desc);
+    ASSERT(item != mPayload.end());
+
+    const vk::GraphicsPipelineDesc *placeholderDesc = &item->first;
+    vk::PipelineHelper *placeholderPipeline         = &item->second;
+    ASSERT(memcmp(placeholderDesc, &desc, sizeof(vk::GraphicsPipelineDesc)) == 0);
+    ASSERT(!placeholderPipeline->valid());
+
+    *placeholderPipeline =
+        vk::PipelineHelper(std::move(pipeline), vk::CacheLookUpFeedback::WarmUpMiss);
+    ASSERT(mPayload[desc].valid());
 }
 
 // Instantiate the pipeline cache functions
