@@ -43,7 +43,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': 'af09c69e52e4044dc31d362e2898003bb8323c1f',
+  'chromium_revision': '35e9d0924a4ce1d464e4fb104f9b2816192cc78f',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -133,7 +133,7 @@ vars = {
   'reclient_version': 're_client_version:0.134.1.2c9285b-gomaip',
 
   # siso CIPD package version.
-  'siso_version': 'git_revision:3ccd47200355e0a6fc7fecf6b16aba559d26e23c',
+  'siso_version': 'git_revision:3cec541372ec0556127a641d9c6e4a90d46ba1b8',
 
   # 'magic' text to tell depot_tools that git submodules should be accepted but
   # but parity with DEPS file is expected.
@@ -473,7 +473,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@d50c85d5cac544f5c6ecb3294ef02ec3c1948475',
+    'url': '{chromium_git}/chromium/src/testing@441bcf98e29db7726a8f9749d659c9526449b822',
     'condition': 'not build_with_chromium',
   },
 
@@ -1009,7 +1009,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': Var('chromium_git') + '/chromium/src/tools/perf@c7a92ea96bf64c1b3b375b8d2b260af6c141bffe',
+    'url': Var('chromium_git') + '/chromium/src/tools/perf@8da645951b929690510b20e94673955680e9f4f3',
     'condition': 'not build_with_chromium',
   },
 
