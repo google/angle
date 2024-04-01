@@ -2116,15 +2116,16 @@ angle::Result ContextVk::createGraphicsPipeline()
                     vk::GraphicsPipelineSubset::FragmentOutput);
 
             // Recreate the shaders subset if necessary
-            if (mCurrentGraphicsPipelineShaders == nullptr ||
-                (mGraphicsPipelineLibraryTransition & kShadersTransitionBitsMask).any())
+            const vk::GraphicsPipelineTransitionBits shadersTransitionBits =
+                mGraphicsPipelineLibraryTransition & kShadersTransitionBitsMask;
+            if (mCurrentGraphicsPipelineShaders == nullptr || shadersTransitionBits.any())
             {
                 bool shouldRecreatePipeline = true;
                 if (mCurrentGraphicsPipelineShaders != nullptr)
                 {
                     ASSERT(mCurrentGraphicsPipelineShaders->valid());
                     shouldRecreatePipeline = !mCurrentGraphicsPipelineShaders->findTransition(
-                        mGraphicsPipelineLibraryTransition, *mGraphicsPipelineDesc,
+                        shadersTransitionBits, *mGraphicsPipelineDesc,
                         &mCurrentGraphicsPipelineShaders);
                 }
 
@@ -2147,8 +2148,7 @@ angle::Result ContextVk::createGraphicsPipeline()
                     if (oldGraphicsPipelineShaders)
                     {
                         oldGraphicsPipelineShaders->addTransition(
-                            mGraphicsPipelineLibraryTransition & kShadersTransitionBitsMask,
-                            shadersDescPtr, mCurrentGraphicsPipelineShaders);
+                            shadersTransitionBits, shadersDescPtr, mCurrentGraphicsPipelineShaders);
                     }
                 }
             }
