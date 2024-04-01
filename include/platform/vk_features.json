@@ -1472,6 +1472,14 @@
                 "enable additional blend factors for dithering"
             ],
             "issue": "https://issuetracker.google.com/328837151"
+        },
+        {
+            "name": "enable_merge_client_attrib_buffer",
+            "category": "Features",
+            "description": [
+                "Enable merge for client attrib buffer if possible"
+            ],
+            "issue": "https://issuetracker.google.com/328301788"
         }
     ]
 }

@@ -1352,6 +1352,13 @@ struct FeaturesVk : FeatureSetBase
         &members, "https://issuetracker.google.com/328837151"
     };
 
+    FeatureInfo enableMergeClientAttribBuffer = {
+        "enableMergeClientAttribBuffer",
+        FeatureCategory::VulkanFeatures,
+        "Enable merge for client attrib buffer if possible",
+        &members, "https://issuetracker.google.com/328301788"
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

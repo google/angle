@@ -139,6 +139,7 @@ enum class Feature
     EnableAsyncPipelineCacheCompression,
     EnableCaptureLimits,
     EnableInMemoryMtlLibraryCache,
+    EnableMergeClientAttribBuffer,
     EnableMultisampledRenderToTexture,
     EnableParallelCompileAndLink,
     EnableParallelMtlLibraryCompilation,
