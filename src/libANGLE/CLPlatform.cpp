@@ -77,12 +77,16 @@ void Platform::Initialize(const cl_icd_dispatch &dispatch,
     while (!createFuncs.empty())
     {
         platforms.emplace_back(new Platform(createFuncs.front()));
+
         // Release initialization reference, lifetime controlled by RefPointer.
         platforms.back()->release();
+
+        // Remove platform on any errors
         if (!platforms.back()->mInfo.isValid() || platforms.back()->mDevices.empty())
         {
             platforms.pop_back();
         }
+
         createFuncs.pop_front();
     }
 }
@@ -265,9 +269,9 @@ Platform::~Platform() = default;
 
 Platform::Platform(const rx::CLPlatformImpl::CreateFunc &createFunc)
     : mImpl(createFunc(*this)),
-      mInfo(mImpl->createInfo()),
-      mDevices(createDevices(mImpl->createDevices())),
-      mMultiThreadPool(angle::WorkerThreadPool::Create(0, ANGLEPlatformCurrent()))
+      mInfo(mImpl ? mImpl->createInfo() : rx::CLPlatformImpl::Info{}),
+      mDevices(mImpl ? createDevices(mImpl->createDevices()) : DevicePtrs{}),
+      mMultiThreadPool(mImpl ? angle::WorkerThreadPool::Create(0, ANGLEPlatformCurrent()) : nullptr)
 {}
 
 DevicePtrs Platform::createDevices(rx::CLDeviceImpl::CreateDatas &&createDatas)
