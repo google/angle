@@ -43,7 +43,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '35e9d0924a4ce1d464e4fb104f9b2816192cc78f',
+  'chromium_revision': 'cf84d04c222b18ceeb4d2b577df2e3091d74e2c9',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -88,7 +88,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': 'd4b67cd8aae988e2cee25765fe7df8a870ab9eef',
+  'catapult_revision': 'bb95c350195ce0748de8029855bc71ca1336d5e6',
 
   # the commit queue can handle CLs rolling Fuchsia sdk
   # and whatever else without interference from each other.
@@ -473,7 +473,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@441bcf98e29db7726a8f9749d659c9526449b822',
+    'url': '{chromium_git}/chromium/src/testing@1d02fb45a30cf2f7751d2fc21d248257a96648d0',
     'condition': 'not build_with_chromium',
   },
 
@@ -655,7 +655,7 @@ deps = {
   },
 
   'third_party/depot_tools': {
-    'url': Var('chromium_git') + '/chromium/tools/depot_tools.git@4a9d989f52e9be9f50b3af38d02b51e63350bd05',
+    'url': Var('chromium_git') + '/chromium/tools/depot_tools.git@e545830db2fb823da1217b142cb5be10bf45d575',
     'condition': 'not build_with_chromium',
   },
 
@@ -926,7 +926,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/turbine',
-              'version': 'JYrlFcNFCmJoG4mYco1fxSNuhgASzU-EdBb4_Bd2-z0C',
+              'version': 'wdLjzY3JXKbaWmI4EB_0s8PaCDwCQzRrPZfPpXmamGUC',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -1009,7 +1009,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': Var('chromium_git') + '/chromium/src/tools/perf@8da645951b929690510b20e94673955680e9f4f3',
+    'url': Var('chromium_git') + '/chromium/src/tools/perf@14ded77a9bd0f7c69da3c2666830ce8fbbeff2e7',
     'condition': 'not build_with_chromium',
   },
 
