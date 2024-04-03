@@ -1612,7 +1612,7 @@ angle::Result ProgramExecutableVk::getOrCreateComputePipeline(
     ASSERT(shaderProgram);
     return shaderProgram->getOrCreateComputePipeline(context, &mComputePipelines, pipelineCache,
                                                      getPipelineLayout(), pipelineFlags, source,
-                                                     pipelineOut);
+                                                     pipelineOut, nullptr, nullptr);
 }
 
 angle::Result ProgramExecutableVk::createPipelineLayout(

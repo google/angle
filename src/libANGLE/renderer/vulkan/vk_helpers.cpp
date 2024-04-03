@@ -11698,7 +11698,9 @@ angle::Result ShaderProgramHelper::getOrCreateComputePipeline(
     const PipelineLayout &pipelineLayout,
     ComputePipelineFlags pipelineFlags,
     PipelineSource source,
-    PipelineHelper **pipelineOut) const
+    PipelineHelper **pipelineOut,
+    const char *shaderName,
+    VkSpecializationInfo *specializationInfo) const
 {
     PipelineHelper *computePipeline = &(*computePipelines)[pipelineFlags.bits()];
 
@@ -11715,8 +11717,8 @@ angle::Result ShaderProgramHelper::getOrCreateComputePipeline(
     shaderStage.flags               = 0;
     shaderStage.stage               = VK_SHADER_STAGE_COMPUTE_BIT;
     shaderStage.module              = mShaders[gl::ShaderType::Compute].get().getHandle();
-    shaderStage.pName               = "main";
-    shaderStage.pSpecializationInfo = nullptr;
+    shaderStage.pName               = shaderName ? shaderName : "main";
+    shaderStage.pSpecializationInfo = specializationInfo;
 
     createInfo.sType              = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
     createInfo.flags              = 0;
