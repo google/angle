@@ -143,9 +143,7 @@ CLDeviceImpl::Info CLDeviceVk::createInfo(cl::DeviceType type) const
     info.maxMemAllocSize  = 1 << 30;
     info.memBaseAddrAlign = 1024;
 
-    // TODO(aannestrand) Add image and sampler support later
-    // http://anglebug.com/42266936
-    info.imageSupport = CL_FALSE;
+    info.imageSupport = CL_TRUE;
 
     info.image2D_MaxWidth          = properties.limits.maxImageDimension2D;
     info.image2D_MaxHeight         = properties.limits.maxImageDimension2D;

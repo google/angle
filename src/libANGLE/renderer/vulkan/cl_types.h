@@ -33,6 +33,12 @@ enum class SpecConstantType : uint32_t
     EnumCount = InvalidEnum
 };
 
+enum class ImageBufferCopyDirection
+{
+    ToImage,
+    ToBuffer
+};
+
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_VULKAN_CL_TYPES_H_

@@ -83,6 +83,7 @@ class CLBufferVk : public CLMemoryVk
     CLBufferVk *getParent() { return static_cast<CLBufferVk *>(mParent); }
 
     angle::Result create(void *hostPtr);
+    angle::Result createStagingBuffer(size_t size);
 
     bool isSubBuffer() const { return mParent != nullptr; }
 
@@ -111,28 +112,33 @@ class CLImageVk : public CLMemoryVk
     angle::Result create(void *hostPtr);
 
     bool isCurrentlyInUse() const override;
-    bool isMapped() { return mMappedMemory != nullptr; }
     bool containsHostMemExtension();
 
     angle::Result createStagingBuffer(size_t size);
     angle::Result copyStagingFrom(void *ptr, size_t offset, size_t size);
+    angle::Result copyStagingTo(void *ptr, size_t offset, size_t size);
     VkImageUsageFlags getVkImageUsageFlags();
     VkImageType getVkImageType(const cl::ImageDescriptor &desc);
     size_t getSize() const override { return mImageSize; }
+    size_t getElementSize() { return mElementSize; }
+    size_t getArraySize() const { return mArrayLayers; }
+    bool isStagingBufferInitialized() { return mStagingBufferInitialized; }
+    VkExtent3D getImageExtent() { return mExtent; }
+    uint8_t *getMappedPtr() { return mMappedMemory; }
 
   private:
     angle::Result mapImpl() override;
     void unmapImpl() override;
     angle::Result setDataImpl(const uint8_t *data, size_t size, size_t offset);
 
-    vk::BufferHelper mStagingBuffer;
     vk::ImageHelper mImage;
+    vk::BufferHelper mStagingBuffer;
     VkExtent3D mExtent;
     angle::FormatID mFormat;
     uint32_t mArrayLayers;
     size_t mImageSize;
-    size_t mNumberChannels;
-    size_t mBytesPerChannel;
+    size_t mElementSize;
+    bool mStagingBufferInitialized;
 };
 
 }  // namespace rx
