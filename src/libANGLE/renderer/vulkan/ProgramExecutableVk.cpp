@@ -1027,7 +1027,22 @@ void ProgramExecutableVk::waitForPostLinkTasksIfNecessary(
         return;
     }
 
-    // Wait unconditionally for now.
+    const vk::GraphicsPipelineSubset subset =
+        contextVk->getFeatures().supportsGraphicsPipelineLibrary.enabled
+            ? vk::GraphicsPipelineSubset::Shaders
+            : vk::GraphicsPipelineSubset::Complete;
+
+    if (currentGraphicsPipelineDesc &&
+        (mWarmUpGraphicsPipelineDesc.hash(subset) != currentGraphicsPipelineDesc->hash(subset)))
+    {
+        // The GraphicsPipelineDesc used for warmup differs from the one used by the draw call.
+        // There is no need to wait for the warmup tasks to complete.
+        ANGLE_PERF_WARNING(
+            contextVk->getDebug(), GL_DEBUG_SEVERITY_LOW,
+            "GraphicsPipelineDesc used for warmup differs from the one used by draw.");
+        return;
+    }
+
     waitForPostLinkTasksImpl(contextVk);
 }
 
