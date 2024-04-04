@@ -5006,6 +5006,10 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
             mFeatures.logMemoryReportCallbacks.applyOverride(false);
         }
     }
+
+    // Check if VK implementation needs to strip-out non-semantic reflection info from shader module
+    // (Default is to assume not supported)
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsShaderNonSemanticInfo, false);
 }
 
 void Renderer::appBasedFeatureOverrides(const vk::ExtensionNameList &extensions) {}

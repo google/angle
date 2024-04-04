@@ -1480,6 +1480,14 @@
                 "Enable merge for client attrib buffer if possible"
             ],
             "issue": "https://issuetracker.google.com/328301788"
+        },
+        {
+            "name": "supports_shader_non_semantic_info",
+            "category": "Features",
+            "description": [
+                "Enable non-semantic info inside shader module via VK_KHR_shader_non_semantic_info extension"
+            ],
+            "issue": "http://anglebug.com/8549"
         }
     ]
 }
