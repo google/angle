@@ -257,6 +257,7 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 8465 MAC NVIDIA OPENGL : UniformBufferTest.BufferBlockBindingChange/* = SKIP
 8494 MAC NVIDIA OPENGL : StateChangeTestES3.UniformBlockBinding/* = SKIP
 8517 MAC INTEL OPENGL : CopyTexImagePreRotationTest.NonZeroNonSquare/* = SKIP
+8656 MAC AMD OPENGL : BlitFramebufferTest.FlippedBlits/* = SKIP
 
 // BlitFramebufferTest.ScissoredMultisampleStencil failures
 3496 MAC INTEL OPENGL : BlitFramebufferTest.ScissoredMultisampleStencil/* = SKIP
@@ -374,6 +375,7 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 8100 WIN D3D11 : WebGL2GLSLTest.InitOutputParams/* = SKIP
 1456243 WIN D3D11 : WebGL2CompatibilityTest.DrawWithZeroSizedBuffer/* = SKIP
 8411 WIN D3D9 : GLSLTest.VectorScalarArithmeticWithSideEffectInLoop/* = SKIP
+8655 WIN D3D11 : BlitFramebufferTest.FlippedBlits/* = SKIP
 
 // Android
 6095 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
