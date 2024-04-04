@@ -411,15 +411,10 @@ class Program final : public LabeledObject, public angle::Subject
                                       GLenum bufferMode);
     GLenum getTransformFeedbackBufferMode() const { return mState.mTransformFeedbackBufferMode; }
 
-    ANGLE_INLINE void addRef()
-    {
-        ASSERT(!mLinkingState);
-        mRefCount++;
-    }
+    ANGLE_INLINE void addRef() { mRefCount++; }
 
     ANGLE_INLINE void release(const Context *context)
     {
-        ASSERT(!mLinkingState);
         mRefCount--;
 
         if (mRefCount == 0 && mDeleteStatus)
