@@ -45,14 +45,6 @@
             "issue": "http://anglebug.com/2970"
         },
         {
-            "name": "supports_depth_clip_enable",
-            "category": "Features",
-            "description": [
-                "VkDevice supports the VK_EXT_depth_clip_enable extension."
-            ],
-            "issue": "http://anglebug.com/3970"
-        },
-        {
             "name": "supports_depth_clamp_zero_one",
             "category": "Features",
             "description": [

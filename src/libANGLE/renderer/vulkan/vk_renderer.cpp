@@ -2195,7 +2195,6 @@ angle::Result Renderer::initializeMemoryAllocator(vk::Context *context)
 // - VK_EXT_custom_border_color:                       customBorderColors (feature)
 //                                                     customBorderColorWithoutFormat (feature)
 // - VK_EXT_depth_clamp_zero_one:                      depthClampZeroOne (feature)
-// - VK_EXT_depth_clip_enable:                         depthClipEnable (feature)
 // - VK_EXT_depth_clip_control:                        depthClipControl (feature)
 // - VK_EXT_primitives_generated_query:                primitivesGeneratedQuery (feature),
 //                                                     primitivesGeneratedQueryWithRasterizerDiscard
@@ -2281,11 +2280,6 @@ void Renderer::appendDeviceExtensionFeaturesNotPromoted(
     if (ExtensionFound(VK_EXT_DEPTH_CLAMP_ZERO_ONE_EXTENSION_NAME, deviceExtensionNames))
     {
         vk::AddToPNextChain(deviceFeatures, &mDepthClampZeroOneFeatures);
-    }
-
-    if (ExtensionFound(VK_EXT_DEPTH_CLIP_ENABLE_EXTENSION_NAME, deviceExtensionNames))
-    {
-        vk::AddToPNextChain(deviceFeatures, &mDepthClipEnableFeatures);
     }
 
     if (ExtensionFound(VK_EXT_DEPTH_CLIP_CONTROL_EXTENSION_NAME, deviceExtensionNames))
@@ -2597,10 +2591,6 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
     mDepthClampZeroOneFeatures.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLAMP_ZERO_ONE_FEATURES_EXT;
 
-    mDepthClipEnableFeatures = {};
-    mDepthClipEnableFeatures.sType =
-        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_ENABLE_FEATURES_EXT;
-
     mDepthClipControlFeatures = {};
     mDepthClipControlFeatures.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_CLIP_CONTROL_FEATURES_EXT;
@@ -2736,7 +2726,6 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
     mProtectedMemoryFeatures.pNext                          = nullptr;
     mHostQueryResetFeatures.pNext                           = nullptr;
     mDepthClampZeroOneFeatures.pNext                        = nullptr;
-    mDepthClipEnableFeatures.pNext                          = nullptr;
     mDepthClipControlFeatures.pNext                         = nullptr;
     mPrimitivesGeneratedQueryFeatures.pNext                 = nullptr;
     mPrimitiveTopologyListRestartFeatures.pNext             = nullptr;
@@ -4157,9 +4146,6 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // Affecting Nvidia drivers 535 through 551.
     ANGLE_FEATURE_CONDITION(&mFeatures, avoidOpSelectWithMismatchingRelaxedPrecision,
                             isNvidia && (nvidiaVersion.major >= 535 && nvidiaVersion.major <= 551));
-
-    ANGLE_FEATURE_CONDITION(&mFeatures, supportsDepthClipEnable,
-                            mDepthClipEnableFeatures.depthClipEnable == VK_TRUE);
 
     // Vulkan implementations are not required to clamp gl_FragDepth to [0, 1] by default.
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsDepthClampZeroOne,

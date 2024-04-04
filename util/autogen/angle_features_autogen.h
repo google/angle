@@ -289,7 +289,6 @@ enum class Feature
     SupportsCustomBorderColor,
     SupportsDepthClampZeroOne,
     SupportsDepthClipControl,
-    SupportsDepthClipEnable,
     SupportsDepthStencilIndependentResolveNone,
     SupportsDepthStencilResolve,
     SupportsExtendedDynamicState,

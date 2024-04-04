@@ -55,13 +55,6 @@ struct FeaturesVk : FeatureSetBase
         &members, "http://anglebug.com/2970"
     };
 
-    FeatureInfo supportsDepthClipEnable = {
-        "supportsDepthClipEnable",
-        FeatureCategory::VulkanFeatures,
-        "VkDevice supports the VK_EXT_depth_clip_enable extension.",
-        &members, "http://anglebug.com/3970"
-    };
-
     FeatureInfo supportsDepthClampZeroOne = {
         "supportsDepthClampZeroOne",
         FeatureCategory::VulkanFeatures,
