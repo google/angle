@@ -15,6 +15,7 @@
 #include "libANGLE/queryconversions.h"
 #include "libANGLE/renderer/GLImplFactory.h"
 #include "libANGLE/renderer/ProgramExecutableImpl.h"
+#include "libANGLE/renderer/ProgramImpl.h"
 
 namespace gl
 {
@@ -735,6 +736,8 @@ ProgramExecutable::ProgramExecutable(rx::GLImplFactory *factory, InfoLog *infoLo
 
 ProgramExecutable::~ProgramExecutable()
 {
+    ASSERT(mPostLinkSubTasks.empty());
+    ASSERT(mPostLinkSubTaskWaitableEvents.empty());
     ASSERT(mImplementation == nullptr);
 }
 
@@ -820,6 +823,9 @@ void ProgramExecutable::reset()
     mSamplerBindings.clear();
     mSamplerBoundTextureUnits.clear();
     mImageBindings.clear();
+
+    mPostLinkSubTasks.clear();
+    mPostLinkSubTaskWaitableEvents.clear();
 }
 
 void ProgramExecutable::load(gl::BinaryInputStream *stream)
@@ -3150,6 +3156,36 @@ void ProgramExecutable::setBaseInstanceUniform(GLuint baseInstance)
     mCachedBaseInstance   = baseInstance;
     GLint baseInstanceInt = baseInstance;
     mImplementation->setUniform1iv(mPod.baseInstanceLocation, 1, &baseInstanceInt);
+}
+
+void ProgramExecutable::waitForPostLinkTasks(const Context *context)
+{
+    if (mPostLinkSubTasks.empty())
+    {
+        return;
+    }
+
+    // Wait for all post-link tasks to finish
+    angle::WaitableEvent::WaitMany(&mPostLinkSubTaskWaitableEvents);
+
+    // Get results and clean up
+    for (const std::shared_ptr<rx::LinkSubTask> &task : mPostLinkSubTasks)
+    {
+        // As these tasks can be run post-link, their results are ignored.  Failure is harmless, but
+        // more importantly the error (effectively due to a link event) may not be allowed through
+        // the entry point that results in this call.
+        InfoLog infoLog;
+        angle::Result result = task->getResult(context, infoLog);
+        if (result != angle::Result::Continue)
+        {
+            ANGLE_PERF_WARNING(context->getState().getDebug(), GL_DEBUG_SEVERITY_LOW,
+                               "Post-link task unexpectedly failed. Performance may degrade, or "
+                               "device may soon be lost");
+        }
+    }
+
+    mPostLinkSubTasks.clear();
+    mPostLinkSubTaskWaitableEvents.clear();
 }
 
 void InstallExecutable(const Context *context,
