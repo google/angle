@@ -134,12 +134,15 @@ class CLProgramVk : public CLProgramImpl
             return kargsCopy;
         }
 
-        cl::CompiledWorkgroupSize getCompiledWGS(const std::string &kernelName) const
+        cl::WorkgroupSize getCompiledWGS(const std::string &kernelName) const
         {
-            cl::CompiledWorkgroupSize compiledWGS{0, 0, 0};
+            cl::WorkgroupSize compiledWGS{0, 0, 0};
             if (reflectionData.kernelCompileWGS.contains(kernelName))
             {
-                compiledWGS = reflectionData.kernelCompileWGS.at(kernelName);
+                for (size_t i = 0; i < compiledWGS.size(); ++i)
+                {
+                    compiledWGS[i] = reflectionData.kernelCompileWGS.at(kernelName)[i];
+                }
             }
             return compiledWGS;
         }

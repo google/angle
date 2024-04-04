@@ -60,7 +60,10 @@ using MemoryPtrs   = std::vector<MemoryPtr>;
 using PlatformPtrs = std::vector<PlatformPtr>;
 using ProgramPtrs  = std::vector<ProgramPtr>;
 
-using CompiledWorkgroupSize = std::array<uint32_t, 3>;
+using WorkgroupSize    = std::array<size_t, 3>;
+using GlobalWorkOffset = std::array<size_t, 3>;
+using GlobalWorkSize   = std::array<size_t, 3>;
+using WorkgroupCount   = std::array<uint32_t, 3>;
 
 struct ImageDescriptor
 {
@@ -117,9 +120,9 @@ struct NDRange
     }
 
     cl_uint workDimensions;
-    std::array<size_t, 3> globalWorkOffset;
-    std::array<size_t, 3> globalWorkSize;
-    std::array<size_t, 3> localWorkSize;
+    GlobalWorkOffset globalWorkOffset;
+    GlobalWorkSize globalWorkSize;
+    WorkgroupSize localWorkSize;
     bool nullLocalWorkSize{false};
 };
 
