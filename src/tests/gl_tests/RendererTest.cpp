@@ -9,15 +9,15 @@
 //   configured incorrectly. For example, they might be using the D3D11 renderer when the test is
 //   meant to be using the D3D9 renderer.
 
+#include "common/string_utils.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
+#include "util/shader_utils.h"
 #include "util/test_utils.h"
-
-#include "common/string_utils.h"
 
 using namespace angle;
 
-namespace
+namespace angle
 {
 
 class RendererTest : public ANGLETest<>
@@ -190,6 +190,24 @@ TEST_P(RendererTest, BufferData)
     }
 }
 
+// Compile simple vertex and fragment shaders
+TEST_P(RendererTest, CompileShader)
+{
+    GLuint vs = CompileShader(GL_VERTEX_SHADER, essl1_shaders::vs::Zero());
+    EXPECT_NE(vs, 0u);
+    glDeleteShader(vs);
+
+    GLuint fs = CompileShader(GL_FRAGMENT_SHADER, essl1_shaders::fs::Red());
+    EXPECT_NE(fs, 0u);
+    glDeleteShader(fs);
+}
+
+// Link a simple program
+TEST_P(RendererTest, LinkProgram)
+{
+    ANGLE_GL_PROGRAM(prog, essl1_shaders::vs::Zero(), essl1_shaders::fs::Red());
+}
+
 // Select configurations (e.g. which renderer, which GLES major version) these tests should be run
 // against.
 // TODO(http://anglebug.com/8485): move ES2_WEBGPU to the definition of ANGLE_ALL_TEST_PLATFORMS_ES2
@@ -197,4 +215,4 @@ TEST_P(RendererTest, BufferData)
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND_ES31_AND_NULL_AND(RendererTest,
                                                          ANGLE_ALL_TEST_PLATFORMS_GL32_CORE,
                                                          ES2_WEBGPU());
-}  // anonymous namespace
+}  // namespace angle

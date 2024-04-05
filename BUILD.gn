@@ -755,6 +755,11 @@ template("translator_lib") {
         sources += angle_translator_lib_msl_sources
         defines += [ "ANGLE_ENABLE_METAL" ]
       }
+
+      if (angle_enable_wgpu) {
+        sources += angle_translator_lib_wgsl_sources
+        defines += [ "ANGLE_ENABLE_WGPU" ]
+      }
     }
 
     if (_needs_glsl_base) {
