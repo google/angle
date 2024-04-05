@@ -7138,9 +7138,18 @@ bool ImageHelper::updateLayoutAndBarrier(Context *context,
     {
         newLayout = ImageLayout::SharedPresent;
     }
+
     bool barrierModified = false;
     if (newLayout == mCurrentLayout)
     {
+        if (mBarrierQueueSerial == queueSerial)
+        {
+            // If there is no layout change and the previous layout change happened in the same
+            // render pass, then early out do nothing. This can happen when the same image is
+            // attached to the multiple attachments of the framebuffer.
+            return false;
+        }
+
         const ImageMemoryBarrierData &layoutData = kImageMemoryBarrierData[mCurrentLayout];
         // RAR is not a hazard and doesn't require a barrier, especially as the image layout hasn't
         // changed.  The following asserts that such a barrier is not attempted.
