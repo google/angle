@@ -3165,27 +3165,7 @@ void ProgramExecutable::waitForPostLinkTasks(const Context *context)
         return;
     }
 
-    // Wait for all post-link tasks to finish
-    angle::WaitableEvent::WaitMany(&mPostLinkSubTaskWaitableEvents);
-
-    // Get results and clean up
-    for (const std::shared_ptr<rx::LinkSubTask> &task : mPostLinkSubTasks)
-    {
-        // As these tasks can be run post-link, their results are ignored.  Failure is harmless, but
-        // more importantly the error (effectively due to a link event) may not be allowed through
-        // the entry point that results in this call.
-        InfoLog infoLog;
-        angle::Result result = task->getResult(context, infoLog);
-        if (result != angle::Result::Continue)
-        {
-            ANGLE_PERF_WARNING(context->getState().getDebug(), GL_DEBUG_SEVERITY_LOW,
-                               "Post-link task unexpectedly failed. Performance may degrade, or "
-                               "device may soon be lost");
-        }
-    }
-
-    mPostLinkSubTasks.clear();
-    mPostLinkSubTaskWaitableEvents.clear();
+    mImplementation->waitForPostLinkTasks(context);
 }
 
 void InstallExecutable(const Context *context,
