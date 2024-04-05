@@ -775,6 +775,9 @@ void ProgramExecutableVk::save(ContextVk *contextVk,
     {
         angle::MemoryBuffer cacheData;
 
+        // Need to wait for warm up tasks to complete.
+        waitForPostLinkTasksImpl(contextVk);
+
         GetPipelineCacheData(contextVk, mPipelineCache, &cacheData);
         stream->writeInt(cacheData.size());
         if (cacheData.size() > 0)

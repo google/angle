@@ -2073,9 +2073,13 @@ bool Program::linkAttributes(const Caps &caps,
 angle::Result Program::syncState(const Context *context)
 {
     ASSERT(!mLinkingState);
-    // Wait for the link tasks.  This is because these optimization passes are not currently
-    // thread-safe with draw's usage of the executable.
-    waitForPostLinkTasks(context);
+
+    if (!context->getFrontendFeatures().disableProgramCaching.enabled)
+    {
+        // Blob cache tests rely on an implicit caching of the program
+        waitForPostLinkTasks(context);
+    }
+
     return angle::Result::Continue;
 }
 
@@ -2148,10 +2152,6 @@ angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *bi
             }
         }
     }
-
-    // Need to wait for post-link tasks because they may be writing to caches that |serialize| would
-    // read from.  In the Vulkan backend, that would be the VkPipelineCache contents.
-    waitForPostLinkTasks(context);
 
     mProgram->save(context, &stream);
     ASSERT(mState.mExecutable->mPostLinkSubTasks.empty());
