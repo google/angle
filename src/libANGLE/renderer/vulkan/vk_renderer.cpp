@@ -3616,6 +3616,10 @@ angle::Result Renderer::setupDevice(vk::Context *context,
     mEnabledFeatures.features.logicOp = mPhysicalDeviceFeatures.logicOp;
     // Used to support EXT_multisample_compatibility
     mEnabledFeatures.features.alphaToOne = mPhysicalDeviceFeatures.alphaToOne;
+    // Used to support 16bit-integers in shader code
+    mEnabledFeatures.features.shaderInt16 = mPhysicalDeviceFeatures.shaderInt16;
+    // Used to support 64bit-integers in shader code
+    mEnabledFeatures.features.shaderInt64 = mPhysicalDeviceFeatures.shaderInt64;
 
     if (!vk::OutsideRenderPassCommandBuffer::ExecutesInline() ||
         !vk::RenderPassCommandBuffer::ExecutesInline())
