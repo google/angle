@@ -10,6 +10,7 @@
 //   meant to be using the D3D9 renderer.
 
 #include "test_utils/ANGLETest.h"
+#include "test_utils/gl_raii.h"
 #include "util/test_utils.h"
 
 #include "common/string_utils.h"
@@ -159,6 +160,34 @@ TEST_P(RendererTest, SimpleOperation)
     EXPECT_PIXEL_EQ(0, 0, 0, 255, 0, 255);
 
     ASSERT_GL_NO_ERROR();
+}
+
+// Perform a simple buffer operation.
+TEST_P(RendererTest, BufferData)
+{
+    constexpr size_t kBufferSize = 1024;
+    std::array<uint8_t, kBufferSize> data;
+    for (size_t i = 0; i < kBufferSize; i++)
+    {
+        data[i] = static_cast<uint8_t>(i);
+    }
+
+    // All at once in the glBufferData call
+    {
+        GLBuffer buffer;
+        glBindBuffer(GL_ARRAY_BUFFER, buffer);
+
+        glBufferData(GL_ARRAY_BUFFER, 1024, data.data(), GL_STATIC_DRAW);
+    }
+
+    // Set data with sub data
+    {
+        GLBuffer buffer;
+        glBindBuffer(GL_ARRAY_BUFFER, buffer);
+
+        glBufferData(GL_ARRAY_BUFFER, 1024, nullptr, GL_STATIC_DRAW);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, kBufferSize, data.data());
+    }
 }
 
 // Select configurations (e.g. which renderer, which GLES major version) these tests should be run

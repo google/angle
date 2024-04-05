@@ -266,14 +266,14 @@ angle::Result TextureWgpu::redefineLevel(const gl::Context *context,
     {
         return angle::Result::Continue;
     }
-    ContextWgpu *contextWgpu = GetImplAs<ContextWgpu>(context);
-    DisplayWgpu *displayWgpu = contextWgpu->getDisplay();
+
+    wgpu::Device device = webgpu::GetDevice(context);
 
     if (mImage == nullptr && !levelWithinRange)
     {
         mImage                          = new webgpu::ImageHelper();
         webgpu::TextureInfo textureInfo = mImage->getWgpuTextureInfo(index);
-        return mImage->initImage(displayWgpu->getDevice(), textureInfo.usage, textureInfo.dimension,
+        return mImage->initImage(device, textureInfo.usage, textureInfo.dimension,
                                  gl_wgpu::getExtent3D(size), wgpu::TextureFormat::RGBA8Sint,
                                  textureInfo.mipLevelCount, 1, 0);
     }

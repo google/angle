@@ -215,6 +215,11 @@ ShareGroupImpl *DisplayWgpu::createShareGroup(const egl::ShareGroupState &state)
     return new ShareGroupWgpu(state);
 }
 
+wgpu::Instance DisplayWgpu::getInstance() const
+{
+    return mInstance->Get();
+}
+
 void DisplayWgpu::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
     outExtensions->createContextRobustness            = true;

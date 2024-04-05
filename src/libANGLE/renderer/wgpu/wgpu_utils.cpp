@@ -6,6 +6,49 @@
 
 #include "libANGLE/renderer/wgpu/wgpu_utils.h"
 
+#include "libANGLE/renderer/wgpu/ContextWgpu.h"
+#include "libANGLE/renderer/wgpu/DisplayWgpu.h"
+
+namespace rx
+{
+
+namespace webgpu
+{
+ContextWgpu *GetImpl(const gl::Context *context)
+{
+    return GetImplAs<ContextWgpu>(context);
+}
+
+DisplayWgpu *GetDisplay(const gl::Context *context)
+{
+    ContextWgpu *contextWgpu = GetImpl(context);
+    return contextWgpu->getDisplay();
+}
+
+wgpu::Device GetDevice(const gl::Context *context)
+{
+    DisplayWgpu *display = GetDisplay(context);
+    return display->getDevice();
+}
+
+wgpu::Instance GetInstance(const gl::Context *context)
+{
+    DisplayWgpu *display = GetDisplay(context);
+    return display->getInstance();
+}
+
+bool IsError(wgpu::WaitStatus waitStatus)
+{
+    return waitStatus != wgpu::WaitStatus::Success;
+}
+
+bool IsError(WGPUBufferMapAsyncStatus mapBufferStatus)
+{
+    return mapBufferStatus != WGPUBufferMapAsyncStatus_Success;
+}
+
+}  // namespace webgpu
+
 namespace wgpu_gl
 {
 gl::LevelIndex getLevelIndex(webgpu::LevelIndex levelWgpu, gl::LevelIndex baseLevel)
@@ -66,3 +109,4 @@ wgpu::TextureDimension getWgpuTextureDimension(gl::TextureType glTextureType)
     return dimension;
 }
 }  // namespace gl_wgpu
+}  // namespace rx
