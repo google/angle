@@ -570,6 +570,10 @@ class Program::MainLinkLoadTask : public angle::Closure
     void scheduleSubTasks(std::vector<std::shared_ptr<rx::LinkSubTask>> &&linkSubTasks,
                           std::vector<std::shared_ptr<rx::LinkSubTask>> &&postLinkSubTasks)
     {
+        // Only one of linkSubTasks or postLinkSubTasks should have tasks.  This is because
+        // currently, there is no support for ordering them.
+        ASSERT(linkSubTasks.empty() || postLinkSubTasks.empty());
+
         // Schedule link subtasks
         mSubTasks = std::move(linkSubTasks);
         ScheduleSubTasks(mSubTaskWorkerPool, mSubTasks, &mSubTaskWaitableEvents);
@@ -578,6 +582,10 @@ class Program::MainLinkLoadTask : public angle::Closure
         mState.mExecutable->mPostLinkSubTasks = std::move(postLinkSubTasks);
         ScheduleSubTasks(mSubTaskWorkerPool, mState.mExecutable->mPostLinkSubTasks,
                          &mState.mExecutable->mPostLinkSubTaskWaitableEvents);
+
+        // No further use for worker pool.  Release it earlier than the destructor (to avoid
+        // situations such as http://anglebug.com/8661)
+        mSubTaskWorkerPool.reset();
     }
 
     std::shared_ptr<angle::WorkerThreadPool> mSubTaskWorkerPool;
@@ -691,9 +699,6 @@ angle::Result Program::MainLinkTask::linkImpl()
     std::vector<std::shared_ptr<rx::LinkSubTask>> postLinkSubTasks;
     mLinkTask->link(*mResources, mergedVaryings, &linkSubTasks, &postLinkSubTasks);
 
-    // Only one of linkSubTasks or postLinkSubTasks should have tasks.
-    ASSERT(linkSubTasks.empty() || postLinkSubTasks.empty());
-
     // Must be after backend's link to avoid misleading the linker about input/output variables.
     mState.updateProgramInterfaceInputs();
     mState.updateProgramInterfaceOutputs();
@@ -709,9 +714,6 @@ angle::Result Program::MainLoadTask::loadImpl()
     std::vector<std::shared_ptr<rx::LinkSubTask>> linkSubTasks;
     std::vector<std::shared_ptr<rx::LinkSubTask>> postLinkSubTasks;
     mLinkTask->load(&linkSubTasks, &postLinkSubTasks);
-
-    // Only one of linkSubTasks or postLinkSubTasks should have tasks.
-    ASSERT(linkSubTasks.empty() || postLinkSubTasks.empty());
 
     // Schedule the subtasks
     scheduleSubTasks(std::move(linkSubTasks), std::move(postLinkSubTasks));
