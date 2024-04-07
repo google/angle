@@ -589,6 +589,8 @@ void ProgramExecutableVk::destroy(const gl::Context *context)
 
 void ProgramExecutableVk::resetLayout(ContextVk *contextVk)
 {
+    waitForPostLinkTasksImpl(contextVk);
+
     for (auto &descriptorSetLayout : mDescriptorSetLayouts)
     {
         descriptorSetLayout.reset();
