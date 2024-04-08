@@ -1067,6 +1067,11 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     {
         return false;
     }
+    // Fold the expressions again, because |RemoveArrayLengthMethod| can introduce new constants.
+    if (!FoldExpressions(this, root, &mDiagnostics))
+    {
+        return false;
+    }
 
     if (!RemoveUnreferencedVariables(this, root, &mSymbolTable))
     {
