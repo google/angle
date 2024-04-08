@@ -2478,7 +2478,9 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
     void destroy(vk::Context *context);
     void release(vk::Context *context);
 
-    void populate(const vk::GraphicsPipelineDesc &desc, vk::Pipeline &&pipeline);
+    void populate(const vk::GraphicsPipelineDesc &desc,
+                  vk::Pipeline &&pipeline,
+                  vk::PipelineHelper **pipelineHelperOut);
 
     // Get a pipeline from the cache, if it exists
     ANGLE_INLINE bool getPipeline(const vk::GraphicsPipelineDesc &desc,
@@ -2530,7 +2532,6 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
                     vk::CacheLookUpFeedback feedback,
                     const vk::GraphicsPipelineDesc **descPtrOut,
                     vk::PipelineHelper **pipelineOut);
-    void update(const vk::GraphicsPipelineDesc &desc, vk::Pipeline &&pipeline);
 
     using KeyEqual = typename GraphicsPipelineCacheTypeHelper<Hash>::KeyEqual;
     std::unordered_map<vk::GraphicsPipelineDesc, vk::PipelineHelper, Hash, KeyEqual> mPayload;
