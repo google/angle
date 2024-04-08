@@ -8502,6 +8502,198 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that array length inside vector constructor works.
+TEST_P(GLSLTest_ES3, ArrayLengthInVectorConstructor)
+{
+    const char kVS[] = R"(#version 300 es
+precision highp float;
+flat out uvec4 v;
+
+int[1] f0()
+{
+    return int[1](1);
+}
+void main()
+{
+    v = uvec4(vec4(f0().length()));
+
+    gl_Position.x = ((gl_VertexID & 1) == 0 ? -1.0 : 1.0);
+    gl_Position.y = ((gl_VertexID & 2) == 0 ? -1.0 : 1.0);
+    gl_Position.zw = vec2(0, 1);
+})";
+
+    const char kFS[] = R"(#version 300 es
+precision highp float;
+flat in uvec4 v;
+out vec4 color;
+
+bool isEq(uint a, float b) { return abs(float(a) - b) < 0.01; }
+
+void main()
+{
+    if (isEq(v[0], 1.) &&
+        isEq(v[1], 1.) &&
+        isEq(v[2], 1.) &&
+        isEq(v[3], 1.))
+    {
+        color = vec4(0, 1, 0, 1);
+    }
+    else
+    {
+        color = vec4(1, 0, 0, 1);
+    }
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test that array length inside vector constructor works in complex expression.
+TEST_P(GLSLTest_ES3, ArrayLengthInVectorConstructorComplex)
+{
+    const char kVS[] = R"(#version 300 es
+precision highp float;
+out vec4 v;
+
+int[1] f0()
+{
+    return int[1](1);
+}
+void main()
+{
+    v = vec4(float(uint(f0().length()) + 1u) / 4.);
+
+    gl_Position.x = ((gl_VertexID & 1) == 0 ? -1.0 : 1.0);
+    gl_Position.y = ((gl_VertexID & 2) == 0 ? -1.0 : 1.0);
+    gl_Position.zw = vec2(0, 1);
+})";
+
+    const char kFS[] = R"(#version 300 es
+precision highp float;
+in vec4 v;
+out vec4 color;
+
+bool isEq(float a, float b) { return abs(float(a) - b) < 0.01; }
+
+void main()
+{
+    if (isEq(v[0], 0.5) &&
+        isEq(v[1], 0.5) &&
+        isEq(v[2], 0.5) &&
+        isEq(v[3], 0.5))
+    {
+        color = vec4(0, 1, 0, 1);
+    }
+    else
+    {
+        color = vec4(1, 0, 0, 1);
+    }
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test that array length inside matrix constructor works.
+TEST_P(GLSLTest_ES3, ArrayLengthInMatrixConstructor)
+{
+    const char kVS[] = R"(#version 300 es
+precision highp float;
+out mat2x2 v;
+
+int[1] f0()
+{
+    return int[1](1);
+}
+void main()
+{
+    v = mat2x2(f0().length());
+
+    gl_Position.x = ((gl_VertexID & 1) == 0 ? -1.0 : 1.0);
+    gl_Position.y = ((gl_VertexID & 2) == 0 ? -1.0 : 1.0);
+    gl_Position.zw = vec2(0, 1);
+})";
+
+    const char kFS[] = R"(#version 300 es
+precision highp float;
+in mat2x2 v;
+out vec4 color;
+
+bool isEq(float a, float b) { return abs(a - b) < 0.01; }
+
+void main()
+{
+    if (isEq(v[0][0], 1.) &&
+        isEq(v[0][1], 0.) &&
+        isEq(v[1][0], 0.) &&
+        isEq(v[1][1], 1.))
+    {
+        color = vec4(0, 1, 0, 1);
+    }
+    else
+    {
+        color = vec4(1, 0, 0, 1);
+    }
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test that array length inside vector constructor inside matrix constructor works.
+TEST_P(GLSLTest_ES3, ArrayLengthInVectorInMatrixConstructor)
+{
+    const char kVS[] = R"(#version 300 es
+precision highp float;
+out mat2x2 v;
+
+int[1] f0()
+{
+    return int[1](1);
+}
+void main()
+{
+    v = mat2x2(vec2(f0().length()), f0().length(), 0);
+
+    gl_Position.x = ((gl_VertexID & 1) == 0 ? -1.0 : 1.0);
+    gl_Position.y = ((gl_VertexID & 2) == 0 ? -1.0 : 1.0);
+    gl_Position.zw = vec2(0, 1);
+})";
+
+    const char kFS[] = R"(#version 300 es
+precision highp float;
+in mat2x2 v;
+out vec4 color;
+
+bool isEq(float a, float b) { return abs(a - b) < 0.01; }
+
+void main()
+{
+    if (isEq(v[0][0], 1.) &&
+        isEq(v[0][1], 1.) &&
+        isEq(v[1][0], 1.) &&
+        isEq(v[1][1], 0.))
+    {
+        color = vec4(0, 1, 0, 1);
+    }
+    else
+    {
+        color = vec4(1, 0, 0, 1);
+    }
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Test that statements inside switch() get translated to correct HLSL.
 TEST_P(GLSLTest_ES3, DifferentStatementsInsideSwitch)
 {
