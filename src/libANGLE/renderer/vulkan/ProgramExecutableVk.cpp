@@ -769,6 +769,9 @@ void ProgramExecutableVk::save(ContextVk *contextVk,
     }
     stream->writePackedEnumMap(uniformDataSize);
 
+    // Need to wait for warm up tasks to complete.
+    waitForPostLinkTasksImpl(contextVk);
+
     // Compress and save mPipelineCache.  Separable programs don't warm up the cache, while program
     // pipelines do.  However, currently ANGLE doesn't sync program pipelines to cache.  ANGLE could
     // potentially use VK_EXT_graphics_pipeline_library to create separate pipelines for
@@ -776,9 +779,6 @@ void ProgramExecutableVk::save(ContextVk *contextVk,
     if (!isSeparable)
     {
         angle::MemoryBuffer cacheData;
-
-        // Need to wait for warm up tasks to complete.
-        waitForPostLinkTasksImpl(contextVk);
 
         GetPipelineCacheData(contextVk, mPipelineCache, &cacheData);
         stream->writeInt(cacheData.size());
@@ -821,16 +821,16 @@ angle::Result ProgramExecutableVk::warmUpPipelineCache(
 
         warmUpSubTasks.push_back(std::make_shared<rx::WarmUpComputeTask>(
             renderer, this, pipelineRobustness, pipelineProtectedAccess));
-
-        return angle::Result::Continue;
     }
-
-    SharedRenderPass *sharedRenderPass = new SharedRenderPass(std::move(compatibleRenderPass));
-    for (bool surfaceRotation : surfaceRotationVariations)
+    else
     {
-        warmUpSubTasks.push_back(std::make_shared<rx::WarmUpGraphicsTask>(
-            renderer, this, pipelineRobustness, pipelineProtectedAccess, subset, surfaceRotation,
-            *graphicsPipelineDesc, sharedRenderPass));
+        SharedRenderPass *sharedRenderPass = new SharedRenderPass(std::move(compatibleRenderPass));
+        for (bool surfaceRotation : surfaceRotationVariations)
+        {
+            warmUpSubTasks.push_back(std::make_shared<rx::WarmUpGraphicsTask>(
+                renderer, this, pipelineRobustness, pipelineProtectedAccess, subset,
+                surfaceRotation, *graphicsPipelineDesc, sharedRenderPass));
+        }
     }
 
     // If the caller hasn't provided a valid async task container, inline the warmUp tasks.
