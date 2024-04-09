@@ -194,6 +194,7 @@ VkResult VerifyExtensionsPresent(const vk::ExtensionNameList &haystack,
 constexpr const char *kSkippedMessages[] = {
     // http://anglebug.com/8401
     "Undefined-Value-ShaderOutputNotConsumed",
+    "Undefined-Value-ShaderInputNotProduced",
     // http://anglebug.com/5304
     "VUID-vkCmdDraw-magFilter-04553",
     "VUID-vkCmdDrawIndexed-magFilter-04553",
