@@ -106,13 +106,6 @@ struct DefaultUniformBlockVk final : private angle::NonCopyable
     std::vector<sh::BlockMemberInfo> uniformLayout;
 };
 
-namespace
-{
-class WarmUpTaskCommon;
-class WarmUpComputeTask;
-class WarmUpGraphicsTask;
-}  // namespace
-
 // Performance and resource counters.
 using DescriptorSetCountList   = angle::PackedEnumMap<DescriptorSetIndex, uint32_t>;
 using ImmutableSamplerIndexMap = angle::HashMap<vk::YcbcrConversionDesc, uint32_t>;
@@ -378,6 +371,9 @@ class ProgramExecutableVk : public ProgramExecutableImpl
     }
 
   private:
+    class WarmUpTaskCommon;
+    class WarmUpComputeTask;
+    class WarmUpGraphicsTask;
     friend class ProgramVk;
     friend class ProgramPipelineVk;
     friend class WarmUpComputeTask;

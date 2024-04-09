@@ -303,8 +303,9 @@ void ReadFromDefaultUniformBlock(int componentCount,
         memcpy(dst, readPtr, elementSize);
     }
 }
+}  // namespace
 
-class WarmUpTaskCommon : public vk::Context, public LinkSubTask
+class ProgramExecutableVk::WarmUpTaskCommon : public vk::Context, public LinkSubTask
 {
   public:
     WarmUpTaskCommon(vk::Renderer *renderer) : vk::Context(renderer) {}
@@ -377,7 +378,7 @@ class WarmUpTaskCommon : public vk::Context, public LinkSubTask
     unsigned int mErrorLine    = 0;
 };
 
-class WarmUpComputeTask : public WarmUpTaskCommon
+class ProgramExecutableVk::WarmUpComputeTask : public WarmUpTaskCommon
 {
   public:
     WarmUpComputeTask(vk::Renderer *renderer,
@@ -399,7 +400,7 @@ class WarmUpComputeTask : public WarmUpTaskCommon
 };
 
 using SharedRenderPass = vk::AtomicRefCounted<vk::RenderPass>;
-class WarmUpGraphicsTask : public WarmUpTaskCommon
+class ProgramExecutableVk::WarmUpGraphicsTask : public WarmUpTaskCommon
 {
   public:
     WarmUpGraphicsTask(vk::Renderer *renderer,
@@ -452,7 +453,6 @@ class WarmUpGraphicsTask : public WarmUpTaskCommon
     // Temporary objects to clean up at the end
     SharedRenderPass *mCompatibleRenderPass;
 };
-}  // namespace
 
 DefaultUniformBlockVk::DefaultUniformBlockVk() = default;
 
@@ -828,7 +828,7 @@ angle::Result ProgramExecutableVk::getPipelineCacheWarmUpTasks(
     vk::GraphicsPipelineDesc *graphicsPipelineDesc        = nullptr;
     vk::RenderPass compatibleRenderPass;
 
-    rx::WarmUpTaskCommon prepForWarmUpContext(renderer);
+    WarmUpTaskCommon prepForWarmUpContext(renderer);
     ANGLE_TRY(prepareForWarmUpPipelineCache(
         &prepForWarmUpContext, pipelineRobustness, pipelineProtectedAccess, subset, &isCompute,
         &surfaceRotationVariations, &graphicsPipelineDesc, &compatibleRenderPass));
@@ -838,7 +838,7 @@ angle::Result ProgramExecutableVk::getPipelineCacheWarmUpTasks(
     {
         ASSERT(!compatibleRenderPass.valid());
 
-        warmUpSubTasks.push_back(std::make_shared<rx::WarmUpComputeTask>(
+        warmUpSubTasks.push_back(std::make_shared<WarmUpComputeTask>(
             renderer, this, pipelineRobustness, pipelineProtectedAccess));
     }
     else
@@ -863,7 +863,7 @@ angle::Result ProgramExecutableVk::getPipelineCacheWarmUpTasks(
                 pipelines.populate(mWarmUpGraphicsPipelineDesc, vk::Pipeline(), &pipelineHelper);
             }
 
-            warmUpSubTasks.push_back(std::make_shared<rx::WarmUpGraphicsTask>(
+            warmUpSubTasks.push_back(std::make_shared<WarmUpGraphicsTask>(
                 renderer, this, pipelineRobustness, pipelineProtectedAccess, subset,
                 surfaceRotation, *graphicsPipelineDesc, sharedRenderPass, pipelineHelper));
         }
@@ -1040,7 +1040,7 @@ void ProgramExecutableVk::waitForPostLinkTasksImpl(ContextVk *contextVk)
     // Get results and clean up
     for (const std::shared_ptr<rx::LinkSubTask> &task : postLinkSubTasks)
     {
-        rx::WarmUpTaskCommon *warmUpTask = static_cast<rx::WarmUpTaskCommon *>(task.get());
+        WarmUpTaskCommon *warmUpTask = static_cast<WarmUpTaskCommon *>(task.get());
 
         // As these tasks can be run post-link, their results are ignored.  Failure is harmless, but
         // more importantly the error (effectively due to a link event) may not be allowed through
