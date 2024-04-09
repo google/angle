@@ -5985,6 +5985,11 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // 2. GL_APPLE_clip_distance
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsAngleRgbxInternalFormat, !isSamsung);
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsAppleClipDistance, !isSamsung);
+
+    // Enable the use of below native kernels
+    // Each builtin kernel gets its own feature and condition, for now a single feature condition is
+    // setup
+    ANGLE_FEATURE_CONDITION(&mFeatures, usesNativeBuiltinClKernel, isSamsung);
 }
 
 void Renderer::appBasedFeatureOverrides(const vk::ExtensionNameList &extensions) {}

@@ -443,6 +443,7 @@ enum class Feature
     UseRasterizerDiscardEnableDynamicState,
     UseResetCommandBufferBitForSecondaryPools,
     UseShadowBuffersWhenAppropriate,
+    UsesNativeBuiltinClKernel,
     UseStencilOpDynamicState,
     UseStencilTestEnableDynamicState,
     UseSystemMemoryForConstantBuffers,

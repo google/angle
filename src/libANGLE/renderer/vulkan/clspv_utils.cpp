@@ -10,6 +10,8 @@
 #include "common/log_utils.h"
 #include "libANGLE/renderer/vulkan/CLDeviceVk.h"
 
+#include "libANGLE/renderer/driver_utils.h"
+
 #include <mutex>
 #include <string>
 
@@ -302,7 +304,16 @@ std::string GetSpvVersionAsClspvString(spv_target_env spvVersion)
     }
 }
 
-}  // namespace
+std::vector<std::string> GetNativeBuiltins(const vk::Renderer *renderer)
+{
+    if (renderer->getFeatures().usesNativeBuiltinClKernel.enabled)
+    {
+        return std::vector<std::string>({"fma", "half_exp2", "exp2"});
+    }
+
+    return {};
+}
+}  // anonymous namespace
 
 // Process the data recorded into printf storage buffer along with the info in printfino descriptor
 // and write it to stdout.
@@ -414,6 +425,13 @@ std::string ClspvGetCompilerOptions(const CLDeviceVk *device)
     {
         options += " --std430-ubo-layout";
     }
+
+    std::string nativeBuiltins{""};
+    for (const std::string &builtin : GetNativeBuiltins(rendererVk))
+    {
+        nativeBuiltins += builtin + ",";
+    }
+    options += " --use-native-builtins=" + nativeBuiltins;
 
     return options;
 }

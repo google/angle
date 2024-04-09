@@ -443,6 +443,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::UseRasterizerDiscardEnableDynamicState, "useRasterizerDiscardEnableDynamicState"},
     {Feature::UseResetCommandBufferBitForSecondaryPools, "useResetCommandBufferBitForSecondaryPools"},
     {Feature::UseShadowBuffersWhenAppropriate, "useShadowBuffersWhenAppropriate"},
+    {Feature::UsesNativeBuiltinClKernel, "usesNativeBuiltinClKernel"},
     {Feature::UseStencilOpDynamicState, "useStencilOpDynamicState"},
     {Feature::UseStencilTestEnableDynamicState, "useStencilTestEnableDynamicState"},
     {Feature::UseSystemMemoryForConstantBuffers, "useSystemMemoryForConstantBuffers"},

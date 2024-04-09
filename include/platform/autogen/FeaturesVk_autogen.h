@@ -1436,6 +1436,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo usesNativeBuiltinClKernel = {
+        "usesNativeBuiltinClKernel",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;
