@@ -79,7 +79,7 @@ class LinkEvent : angle::NonCopyable
     //
     // Waits until the linking is actually done. Returns true if the linking
     // succeeded, false otherwise.
-    virtual angle::Result wait(const gl::Context *context) = 0;
+    virtual angle::Result wait(const Context *context) = 0;
     // Peeks whether the linking is still ongoing.
     virtual bool isLinking() = 0;
 };
@@ -89,7 +89,7 @@ class LinkEventDone final : public LinkEvent
 {
   public:
     LinkEventDone(angle::Result result) : mResult(result) {}
-    angle::Result wait(const gl::Context *context) override { return mResult; }
+    angle::Result wait(const Context *context) override { return mResult; }
     bool isLinking() override { return false; }
 
   private:
@@ -666,7 +666,7 @@ class Program::MainLinkLoadEvent final : public LinkEvent
     {}
     ~MainLinkLoadEvent() override {}
 
-    angle::Result wait(const gl::Context *context) override
+    angle::Result wait(const Context *context) override
     {
         ANGLE_TRACE_EVENT0("gpu.angle", "Program::MainLinkLoadEvent::wait");
 
@@ -1176,6 +1176,27 @@ angle::Result Program::linkJobImpl(const Caps &caps,
 bool Program::isLinking() const
 {
     return mLinkingState.get() && mLinkingState->linkEvent && mLinkingState->linkEvent->isLinking();
+}
+
+bool Program::isBinaryReady(const Context *context)
+{
+    if (mState.mExecutable->mPostLinkSubTasks.empty())
+    {
+        return true;
+    }
+
+    const bool allPostLinkTasksComplete =
+        angle::WaitableEvent::AllReady(&mState.mExecutable->getPostLinkSubTaskWaitableEvents());
+
+    // Once the binary is ready, the |glGetProgramBinary| call will result in
+    // |waitForPostLinkTasks| which in turn may internally cache the binary.  However, for the sake
+    // of tests, call |waitForPostLinkTasks| anyway if tasks are already complete.
+    if (allPostLinkTasksComplete)
+    {
+        waitForPostLinkTasks(context);
+    }
+
+    return allPostLinkTasksComplete;
 }
 
 void Program::resolveLinkImpl(const Context *context)
@@ -2072,19 +2093,6 @@ bool Program::linkAttributes(const Caps &caps,
     return true;
 }
 
-angle::Result Program::syncState(const Context *context)
-{
-    ASSERT(!mLinkingState);
-
-    if (!context->getFrontendFeatures().disableProgramCaching.enabled)
-    {
-        // Blob cache tests rely on an implicit caching of the program
-        waitForPostLinkTasks(context);
-    }
-
-    return angle::Result::Continue;
-}
-
 angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *binaryOut)
 {
     BinaryOutputStream stream;
@@ -2288,7 +2296,7 @@ void Program::postResolveLink(const Context *context)
     }
 }
 
-void Program::cacheProgramBinary(const gl::Context *context)
+void Program::cacheProgramBinary(const Context *context)
 {
     if (context->getFrontendFeatures().disableProgramCaching.enabled || !mLinked)
     {

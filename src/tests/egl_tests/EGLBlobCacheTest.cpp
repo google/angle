@@ -18,6 +18,7 @@
 #include "test_utils/MultiThreadSteps.h"
 #include "test_utils/gl_raii.h"
 #include "util/EGLWindow.h"
+#include "util/test_utils.h"
 
 using namespace angle;
 
@@ -121,6 +122,24 @@ EGLsizeiANDROID GetBlob(const void *key,
 
     return entry->second.size();
 }
+
+void WaitProgramBinaryReady(GLuint program)
+{
+    // Using GL_ANGLE_program_binary_readiness_query, wait for post-link tasks to finish.
+    // Otherwise, the program binary may not yet be cached.  Only needed when a |set| operation is
+    // expected.
+    if (!IsGLExtensionEnabled("GL_ANGLE_program_binary_readiness_query"))
+    {
+        return;
+    }
+
+    GLint ready = false;
+    while (!ready)
+    {
+        glGetProgramiv(program, GL_PROGRAM_BINARY_READY_ANGLE, &ready);
+        angle::Sleep(0);
+    }
+}
 }  // anonymous namespace
 
 class EGLBlobCacheTest : public ANGLETest<>
@@ -202,6 +221,7 @@ void main()
         ANGLE_GL_PROGRAM(program, kVertexShaderSrc, kFragmentShaderSrc);
         glUseProgram(program);
         glDrawArrays(GL_TRIANGLES, 0, 3);
+        WaitProgramBinaryReady(program);
         EXPECT_EQ(CacheOpResult::SetSuccess, gLastCacheOpResult);
         gLastCacheOpResult = CacheOpResult::ValueNotSet;
 
@@ -218,6 +238,7 @@ void main()
         ASSERT_TRUE(program.valid());
         glUseProgram(program);
         glDrawArrays(GL_TRIANGLES, 0, 3);
+        WaitProgramBinaryReady(program);
         EXPECT_EQ(CacheOpResult::SetSuccess, gLastCacheOpResult);
         gLastCacheOpResult = CacheOpResult::ValueNotSet;
 
@@ -333,6 +354,7 @@ void main() {
         ASSERT_NE(0u, program);
         glUseProgram(program);
         glDrawArrays(GL_TRIANGLES, 0, 3);
+        WaitProgramBinaryReady(program);
         EXPECT_EQ(CacheOpResult::SetSuccess, gLastCacheOpResult);
         gLastCacheOpResult = CacheOpResult::ValueNotSet;
 
@@ -344,6 +366,7 @@ void main() {
         ASSERT_NE(0u, program);
         glUseProgram(program);
         glDrawArrays(GL_TRIANGLES, 0, 3);
+        WaitProgramBinaryReady(program);
         EXPECT_EQ(CacheOpResult::SetSuccess, gLastCacheOpResult);
         gLastCacheOpResult = CacheOpResult::ValueNotSet;
     }
@@ -491,6 +514,7 @@ TEST_P(EGLBlobCacheTest, CacheCorruption)
     EXPECT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 
+    WaitProgramBinaryReady(program);
     EXPECT_EQ(CacheOpResult::SetSuccess, gLastCacheOpResult);
     gLastCacheOpResult = CacheOpResult::ValueNotSet;
 
@@ -506,6 +530,7 @@ TEST_P(EGLBlobCacheTest, CacheCorruption)
     EXPECT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 
+    WaitProgramBinaryReady(program);
     EXPECT_EQ(CacheOpResult::SetSuccess, gLastCacheOpResult);
 }
 
@@ -537,6 +562,7 @@ TEST_P(EGLBlobCacheInternalRejectionTest, Functional)
     EXPECT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 
+    WaitProgramBinaryReady(program);
     EXPECT_EQ(CacheOpResult::SetSuccess, gLastCacheOpResult);
     gLastCacheOpResult = CacheOpResult::ValueNotSet;
 
@@ -553,6 +579,7 @@ TEST_P(EGLBlobCacheInternalRejectionTest, Functional)
     EXPECT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 
+    WaitProgramBinaryReady(program);
     EXPECT_EQ(CacheOpResult::SetSuccess, gLastCacheOpResult);
 }
 

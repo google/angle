@@ -375,6 +375,7 @@ class Program final : public LabeledObject, public angle::Subject
         ASSERT(!mLinkingState);
         return mLinked;
     }
+    bool isBinaryReady(const Context *context);
 
     angle::Result setBinary(const Context *context,
                             GLenum binaryFormat,
@@ -447,10 +448,6 @@ class Program final : public LabeledObject, public angle::Subject
         return mState.getFragmentOutputIndexes();
     }
 
-    bool needsSync() const { return !mState.mExecutable->mPostLinkSubTasks.empty(); }
-
-    angle::Result syncState(const Context *context);
-
     // Try to resolve linking. Inlined to make sure its overhead is as low as possible.
     void resolveLink(const Context *context)
     {
@@ -516,12 +513,12 @@ class Program final : public LabeledObject, public angle::Subject
     void updateLinkedShaderStages();
 
     // Block until linking is finished and resolve it.
-    void resolveLinkImpl(const gl::Context *context);
+    void resolveLinkImpl(const Context *context);
     // Block until post-link tasks are finished.
-    void waitForPostLinkTasks(const gl::Context *context);
+    void waitForPostLinkTasks(const Context *context);
 
-    void postResolveLink(const gl::Context *context);
-    void cacheProgramBinary(const gl::Context *context);
+    void postResolveLink(const Context *context);
+    void cacheProgramBinary(const Context *context);
 
     void dumpProgramInfo(const Context *context) const;
 

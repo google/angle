@@ -731,4 +731,9 @@ GL_APICALL void GL_APIENTRY glLogicOpANGLE (GLenum);
 #endif
 #endif /* GL_ANGLE_logic_op */
 
+#ifndef GL_ANGLE_program_binary_readiness_query
+#define GL_ANGLE_program_binary_readiness_query
+#define GL_PROGRAM_BINARY_READY_ANGLE    0x96BE
+#endif /* GL_ANGLE_program_binary_readiness_query */
+
 #endif  // INCLUDE_GLES2_GL2EXT_ANGLE_H_
