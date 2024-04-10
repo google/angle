@@ -727,6 +727,7 @@ Program::Program(rx::GLImplFactory *factory, ShaderProgramManager *manager, Shad
       mProgram(factory->createProgram(mState)),
       mValidated(false),
       mDeleteStatus(false),
+      mIsBinaryCached(true),
       mLinked(false),
       mProgramHash{0},
       mRefCount(0),
@@ -883,6 +884,9 @@ void Program::makeNewExecutable(const Context *context)
         std::make_shared<ProgramExecutable>(context->getImplementation(), &mState.mInfoLog),
         &mState.mExecutable);
     onStateChange(angle::SubjectMessage::ProgramUnlinked);
+
+    // If caching is disabled, consider it cached!
+    mIsBinaryCached = context->getFrontendFeatures().disableProgramCaching.enabled;
 }
 
 void Program::setupExecutableForLink(const Context *context)
@@ -1190,7 +1194,7 @@ bool Program::isBinaryReady(const Context *context)
 
     // Once the binary is ready, the |glGetProgramBinary| call will result in
     // |waitForPostLinkTasks| which in turn may internally cache the binary.  However, for the sake
-    // of tests, call |waitForPostLinkTasks| anyway if tasks are already complete.
+    // of blob cache tests, call |waitForPostLinkTasks| anyway if tasks are already complete.
     if (allPostLinkTasksComplete)
     {
         waitForPostLinkTasks(context);
@@ -1257,12 +1261,10 @@ void Program::resolveLinkImpl(const Context *context)
 
 void Program::waitForPostLinkTasks(const Context *context)
 {
-    if (mState.mExecutable->mPostLinkSubTasks.empty())
+    if (!mState.mExecutable->mPostLinkSubTasks.empty())
     {
-        return;
+        mState.mExecutable->waitForPostLinkTasks(context);
     }
-
-    mState.mExecutable->waitForPostLinkTasks(context);
 
     // Now that the subtasks are done, cache the binary (this was deferred in resolveLinkImpl).
     cacheProgramBinary(context);
@@ -1422,6 +1424,9 @@ angle::Result Program::loadBinary(const Context *context,
 
     mLinkingState->linkingFromBinary = true;
     mLinkingState->linkEvent         = std::move(loadEvent);
+
+    // Don't attempt to cache the binary that's just loaded
+    mIsBinaryCached = true;
 
     *resultOut = egl::CacheGetResult::Success;
 
@@ -2298,11 +2303,17 @@ void Program::postResolveLink(const Context *context)
 
 void Program::cacheProgramBinary(const Context *context)
 {
-    if (context->getFrontendFeatures().disableProgramCaching.enabled || !mLinked)
+    // If program caching is disabled, we already consider the binary cached.
+    ASSERT(!context->getFrontendFeatures().disableProgramCaching.enabled || mIsBinaryCached);
+    if (!mLinked || mIsBinaryCached)
     {
-        // Program caching is disabled or the program is yet to be linked, nothing to do.
+        // Program caching is disabled, the program is yet to be linked or it's already cached,
+        // nothing to do.
         return;
     }
+
+    // No post-link tasks should be pending.
+    ASSERT(mState.mExecutable->mPostLinkSubTasks.empty());
 
     // Save to the program cache.
     std::lock_guard<std::mutex> cacheLock(context->getProgramCacheMutex());
@@ -2320,6 +2331,8 @@ void Program::cacheProgramBinary(const Context *context)
                                "Failed to save linked program to memory program cache.");
         }
     }
+
+    mIsBinaryCached = true;
 }
 
 void Program::dumpProgramInfo(const Context *context) const

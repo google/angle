@@ -211,16 +211,11 @@ void main()
 })";
 
     // Compile a shader so it puts something in the cache.  Note that with Vulkan, some optional
-    // link subtasks may run beyond link, and so the caching is delayed until the program is used.
-    // A small draw call is used to wait on these subtasks.
+    // link subtasks may run beyond link, and so the caching is delayed.  An explicit wait on these
+    // tasks is done for this reason.
     if (programBinaryAvailable())
     {
-        glEnable(GL_SCISSOR_TEST);
-        glScissor(0, 0, 1, 1);
-
         ANGLE_GL_PROGRAM(program, kVertexShaderSrc, kFragmentShaderSrc);
-        glUseProgram(program);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
         WaitProgramBinaryReady(program);
         EXPECT_EQ(CacheOpResult::SetSuccess, gLastCacheOpResult);
         gLastCacheOpResult = CacheOpResult::ValueNotSet;
@@ -228,16 +223,12 @@ void main()
         // Compile the same shader again, so it would try to retrieve it from the cache
         program.makeRaster(kVertexShaderSrc, kFragmentShaderSrc);
         ASSERT_TRUE(program.valid());
-        glUseProgram(program);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
         EXPECT_EQ(CacheOpResult::GetSuccess, gLastCacheOpResult);
         gLastCacheOpResult = CacheOpResult::ValueNotSet;
 
         // Compile another shader, which should create a new entry
         program.makeRaster(kVertexShaderSrc2, kFragmentShaderSrc2);
         ASSERT_TRUE(program.valid());
-        glUseProgram(program);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
         WaitProgramBinaryReady(program);
         EXPECT_EQ(CacheOpResult::SetSuccess, gLastCacheOpResult);
         gLastCacheOpResult = CacheOpResult::ValueNotSet;
@@ -245,8 +236,6 @@ void main()
         // Compile the first shader again, which should still reside in the cache
         program.makeRaster(kVertexShaderSrc, kFragmentShaderSrc);
         ASSERT_TRUE(program.valid());
-        glUseProgram(program);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
         EXPECT_EQ(CacheOpResult::GetSuccess, gLastCacheOpResult);
         gLastCacheOpResult = CacheOpResult::ValueNotSet;
 
@@ -256,6 +245,68 @@ void main()
         program.reset();
 
         EXPECT_EQ(CacheOpResult::ValueNotSet, gLastCacheOpResult);
+    }
+}
+
+// Makes sure the caching is always done without an explicit wait for post-link events (if any)
+TEST_P(EGLBlobCacheTest, FunctionalWithoutWait)
+{
+    ANGLE_SKIP_TEST_IF(!getEGLWindow()->isFeatureEnabled(Feature::CacheCompiledShader));
+    ANGLE_SKIP_TEST_IF(getEGLWindow()->isFeatureEnabled(Feature::DisableProgramCaching));
+
+    EGLDisplay display = getEGLWindow()->getDisplay();
+
+    EXPECT_TRUE(mHasBlobCache);
+    eglSetBlobCacheFuncsANDROID(display, SetBlob, GetBlob);
+    ASSERT_EGL_SUCCESS();
+
+    constexpr char kVertexShaderSrc[] = R"(attribute vec4 aTest;
+attribute vec2 aPosition;
+varying vec4 vTest;
+varying vec4 vTest2;
+void main()
+{
+    vTest        = aTest;
+    vTest2       = aTest;
+    gl_Position  = vec4(aPosition, 1.0, 1.0);
+    gl_PointSize = 1.0;
+})";
+
+    constexpr char kFragmentShaderSrc[] = R"(precision mediump float;
+varying vec4 vTest;
+varying vec4 vTest2;
+void main()
+{
+    gl_FragColor = vTest + vTest2 - vec4(0.0, 1.0, 0.0, 0.0);
+})";
+
+    if (programBinaryAvailable())
+    {
+        // Make the conditions ideal for Vulkan's warm up task to match the draw call.
+        constexpr uint32_t kSize = 1;
+        GLTexture color;
+        glBindTexture(GL_TEXTURE_2D, color);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     nullptr);
+
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        ANGLE_GL_PROGRAM(program, kVertexShaderSrc, kFragmentShaderSrc);
+
+        // First, draw with the program.  In the Vulkan backend, this can lead to a wait on the warm
+        // up task since the description matches the one needed for the draw.
+        glUseProgram(program);
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 3);
+
+        // Delete the program to make sure caching the binary can no longer be delayed.
+        glUseProgram(0);
+        program.reset();
+
+        EXPECT_EQ(CacheOpResult::SetSuccess, gLastCacheOpResult);
+        gLastCacheOpResult = CacheOpResult::ValueNotSet;
     }
 }
 

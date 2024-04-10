@@ -376,6 +376,15 @@ class Program final : public LabeledObject, public angle::Subject
         return mLinked;
     }
     bool isBinaryReady(const Context *context);
+    ANGLE_INLINE void cacheProgramBinaryIfNotAlready(const Context *context)
+    {
+        // This function helps ensure the program binary is cached, even if the backend waits for
+        // post-link tasks without the knowledge of the front-end.
+        if (!mIsBinaryCached && mState.mExecutable->mPostLinkSubTasks.empty())
+        {
+            cacheProgramBinary(context);
+        }
+    }
 
     angle::Result setBinary(const Context *context,
                             GLenum binaryFormat,
@@ -527,7 +536,14 @@ class Program final : public LabeledObject, public angle::Subject
     rx::ProgramImpl *mProgram;
 
     bool mValidated;
-    bool mDeleteStatus;  // Flag to indicate that the program can be deleted when no longer in use
+    // Flag to indicate that the program can be deleted when no longer in use
+    bool mDeleteStatus;
+    // Whether the program binary is internally cached yet.  This is usually done in
+    // |resolveLinkImpl|, but may be deferred in the presence of post-link tasks.  In that case,
+    // |waitForPostLinkTasks| would cache the binary.  However, if the wait on the tasks is done by
+    // the backend itself, this caching will not be done.  This flag is used to make sure the binary
+    // is eventually cached at some point in the future.
+    bool mIsBinaryCached;
 
     bool mLinked;
     std::unique_ptr<LinkingState> mLinkingState;

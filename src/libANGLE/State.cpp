@@ -3757,6 +3757,11 @@ angle::Result State::installProgramExecutable(const Context *context)
 
     mDirtyBits.set(state::DIRTY_BIT_PROGRAM_EXECUTABLE);
 
+    // Make sure the program binary is cached if needed and not already.  This is automatically done
+    // on program destruction, but is done here anyway to support situations like Android apps that
+    // are typically killed instead of cleanly closed.
+    mProgram->cacheProgramBinaryIfNotAlready(context);
+
     // The bound Program always overrides the ProgramPipeline, so install the executable regardless
     // of whether a program pipeline is bound.
     InstallExecutable(context, mProgram->getSharedExecutable(), &mExecutable);
