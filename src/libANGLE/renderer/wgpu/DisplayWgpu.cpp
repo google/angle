@@ -285,6 +285,11 @@ egl::Error DisplayWgpu::createWgpuDevice()
 
     WGPUDeviceDescriptor deviceDesc = {};
     mDevice = wgpu::Device::Acquire(preferredAdapter->CreateDevice(&deviceDesc));
+    mDevice.SetUncapturedErrorCallback(
+        [](WGPUErrorType type, const char *message, void *userdata) {
+            ERR() << "Error: " << type << " - message: " << message;
+        },
+        nullptr);
     return egl::NoError();
 }
 
