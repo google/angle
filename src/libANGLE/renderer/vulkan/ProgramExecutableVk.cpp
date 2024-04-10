@@ -96,19 +96,21 @@ void SetupDefaultPipelineState(const vk::Context *context,
                                gl::PrimitiveMode mode,
                                vk::PipelineRobustness pipelineRobustness,
                                vk::PipelineProtectedAccess pipelineProtectedAccess,
+                               vk::GraphicsPipelineSubset subset,
                                vk::GraphicsPipelineDesc *graphicsPipelineDescOut)
 {
     graphicsPipelineDescOut->initDefaults(context, vk::GraphicsPipelineSubset::Complete,
                                           pipelineRobustness, pipelineProtectedAccess);
+
+    // Set render pass state, affecting both complete and shaders-only pipelines.
     graphicsPipelineDescOut->setTopology(mode);
     graphicsPipelineDescOut->setRenderPassSampleCount(1);
     graphicsPipelineDescOut->setRenderPassFramebufferFetchMode(glExecutable.usesFramebufferFetch());
 
-    graphicsPipelineDescOut->setVertexShaderComponentTypes(
-        glExecutable.getNonBuiltinAttribLocationsMask(), glExecutable.getAttributesTypeMask());
-
     const std::vector<gl::ProgramOutput> &outputVariables    = glExecutable.getOutputVariables();
     const std::vector<gl::VariableLocation> &outputLocations = glExecutable.getOutputLocations();
+
+    gl::DrawBufferMask drawBuffers;
 
     for (const gl::VariableLocation &outputLocation : outputLocations)
     {
@@ -143,6 +145,7 @@ void SetupDefaultPipelineState(const vk::Context *context,
             {
                 graphicsPipelineDescOut->setRenderPassColorAttachmentFormat(location + arrayIndex,
                                                                             format);
+                drawBuffers.set(location + arrayIndex);
             }
         }
     }
@@ -156,8 +159,23 @@ void SetupDefaultPipelineState(const vk::Context *context,
             {
                 graphicsPipelineDescOut->setRenderPassColorAttachmentFormat(
                     arrayIndex, angle::FormatID::R8G8B8A8_UNORM);
+                drawBuffers.set(arrayIndex);
             }
         }
+    }
+
+    if (subset == vk::GraphicsPipelineSubset::Complete)
+    {
+        // Include vertex input state
+        graphicsPipelineDescOut->setVertexShaderComponentTypes(
+            glExecutable.getNonBuiltinAttribLocationsMask(), glExecutable.getAttributesTypeMask());
+
+        // Include fragment output state
+        gl::BlendStateExt::ColorMaskStorage::Type colorMask =
+            gl::BlendStateExt::ColorMaskStorage::GetReplicatedValue(
+                gl::BlendStateExt::PackColorMask(true, true, true, true),
+                gl::BlendStateExt::ColorMaskStorage::GetMask(gl::IMPLEMENTATION_MAX_DRAW_BUFFERS));
+        graphicsPipelineDescOut->setColorWriteMasks(colorMask, {}, drawBuffers);
     }
 }
 
@@ -910,7 +928,7 @@ angle::Result ProgramExecutableVk::prepareForWarmUpPipelineCache(
                                  ? gl::PrimitiveMode::Patches
                                  : gl::PrimitiveMode::TriangleStrip;
     SetupDefaultPipelineState(context, *mExecutable, mode, pipelineRobustness,
-                              pipelineProtectedAccess, &mWarmUpGraphicsPipelineDesc);
+                              pipelineProtectedAccess, subset, &mWarmUpGraphicsPipelineDesc);
 
     // Create a temporary compatible RenderPass.  The render pass cache in ContextVk cannot be used
     // because this function may be called from a worker thread.
