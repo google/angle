@@ -538,7 +538,7 @@ class Program final : public LabeledObject, public angle::Subject
     bool mValidated;
     // Flag to indicate that the program can be deleted when no longer in use
     bool mDeleteStatus;
-    // Whether the program binary is internally cached yet.  This is usually done in
+    // Whether the program binary is implicitly cached yet.  This is usually done in
     // |resolveLinkImpl|, but may be deferred in the presence of post-link tasks.  In that case,
     // |waitForPostLinkTasks| would cache the binary.  However, if the wait on the tasks is done by
     // the backend itself, this caching will not be done.  This flag is used to make sure the binary
