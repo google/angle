@@ -1907,17 +1907,25 @@ angle::Result Renderer::initialize(vk::Context *context,
         instanceInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
     }
 
+    // Fine grain control of validation layer features
+    const char *name                     = "VK_LAYER_KHRONOS_validation";
+    const VkBool32 setting_validate_core = VK_TRUE;
+    const VkBool32 setting_validate_sync = IsAndroid() ? VK_FALSE : VK_TRUE;
+    const VkBool32 setting_thread_safety = VK_TRUE;
     // http://anglebug.com/7050 - Shader validation caching is broken on Android
-    VkValidationFeaturesEXT validationFeatures       = {};
-    VkValidationFeatureDisableEXT disabledFeatures[] = {
-        VK_VALIDATION_FEATURE_DISABLE_SHADER_VALIDATION_CACHE_EXT};
-    if (mEnableValidationLayers && IsAndroid())
+    const VkBool32 setting_check_shaders    = IsAndroid() ? VK_FALSE : VK_TRUE;
+    const VkLayerSettingEXT layerSettings[] = {
+        {name, "validate_core", VK_LAYER_SETTING_TYPE_BOOL32_EXT, 1, &setting_validate_core},
+        {name, "validate_sync", VK_LAYER_SETTING_TYPE_BOOL32_EXT, 1, &setting_validate_sync},
+        {name, "thread_safety", VK_LAYER_SETTING_TYPE_BOOL32_EXT, 1, &setting_thread_safety},
+        {name, "check_shaders", VK_LAYER_SETTING_TYPE_BOOL32_EXT, 1, &setting_check_shaders},
+    };
+    VkLayerSettingsCreateInfoEXT layerSettingsCreateInfo = {
+        VK_STRUCTURE_TYPE_LAYER_SETTINGS_CREATE_INFO_EXT, nullptr,
+        static_cast<uint32_t>(std::size(layerSettings)), layerSettings};
+    if (mEnableValidationLayers)
     {
-        validationFeatures.sType = VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT;
-        validationFeatures.disabledValidationFeatureCount = 1;
-        validationFeatures.pDisabledValidationFeatures    = disabledFeatures;
-
-        vk::AddToPNextChain(&instanceInfo, &validationFeatures);
+        vk::AddToPNextChain(&instanceInfo, &layerSettingsCreateInfo);
     }
 
     {
