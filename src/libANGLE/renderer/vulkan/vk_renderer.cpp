@@ -478,13 +478,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
      "store with storeOp VK_ATTACHMENT_STORE_OP_STORE. Access info (usage: "
      "SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
      "SYNC_FRAGMENT_SHADER_SHADER_"},
-    // b/316013423
-    {"SYNC-HAZARD-READ-AFTER-WRITE", "type = VK_OBJECT_TYPE_QUEUE",
-     "vkQueueSubmit():  Hazard READ_AFTER_WRITE for entry 0"},
-    {"SYNC-HAZARD-WRITE-AFTER-READ", "type = VK_OBJECT_TYPE_QUEUE",
-     "vkQueueSubmit():  Hazard WRITE_AFTER_READ for entry 0"},
-    {"SYNC-HAZARD-WRITE-AFTER-WRITE", "type = VK_OBJECT_TYPE_QUEUE",
-     "vkQueueSubmit():  Hazard WRITE_AFTER_WRITE for entry 0"},
 };
 
 // Messages that shouldn't be generated if storeOp=NONE is supported, otherwise they are expected.
@@ -1913,12 +1906,17 @@ angle::Result Renderer::initialize(vk::Context *context,
     const VkBool32 setting_validate_sync = IsAndroid() ? VK_FALSE : VK_TRUE;
     const VkBool32 setting_thread_safety = VK_TRUE;
     // http://anglebug.com/7050 - Shader validation caching is broken on Android
-    const VkBool32 setting_check_shaders    = IsAndroid() ? VK_FALSE : VK_TRUE;
-    const VkLayerSettingEXT layerSettings[] = {
+    const VkBool32 setting_check_shaders = IsAndroid() ? VK_FALSE : VK_TRUE;
+    // http://b/316013423 Disable QueueSubmit Synchronization Validation. Lots of failures and some
+    // test timeout due to https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/7285
+    const VkBool32 setting_sync_queue_submit = VK_FALSE;
+    const VkLayerSettingEXT layerSettings[]  = {
         {name, "validate_core", VK_LAYER_SETTING_TYPE_BOOL32_EXT, 1, &setting_validate_core},
         {name, "validate_sync", VK_LAYER_SETTING_TYPE_BOOL32_EXT, 1, &setting_validate_sync},
         {name, "thread_safety", VK_LAYER_SETTING_TYPE_BOOL32_EXT, 1, &setting_thread_safety},
         {name, "check_shaders", VK_LAYER_SETTING_TYPE_BOOL32_EXT, 1, &setting_check_shaders},
+        {name, "sync_queue_submit", VK_LAYER_SETTING_TYPE_BOOL32_EXT, 1,
+          &setting_sync_queue_submit},
     };
     VkLayerSettingsCreateInfoEXT layerSettingsCreateInfo = {
         VK_STRUCTURE_TYPE_LAYER_SETTINGS_CREATE_INFO_EXT, nullptr,
