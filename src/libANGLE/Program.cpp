@@ -1439,6 +1439,13 @@ angle::Result Program::getBinary(Context *context,
                                  GLsizei bufSize,
                                  GLsizei *length)
 {
+    if (!mState.mBinaryRetrieveableHint)
+    {
+        ANGLE_PERF_WARNING(
+            context->getState().getDebug(), GL_DEBUG_SEVERITY_LOW,
+            "Saving program binary without GL_PROGRAM_BINARY_RETRIEVABLE_HINT is suboptimal.");
+    }
+
     ASSERT(!mLinkingState);
     if (binaryFormat)
     {
@@ -2305,10 +2312,10 @@ void Program::cacheProgramBinary(const Context *context)
 {
     // If program caching is disabled, we already consider the binary cached.
     ASSERT(!context->getFrontendFeatures().disableProgramCaching.enabled || mIsBinaryCached);
-    if (!mLinked || mIsBinaryCached)
+    if (!mLinked || mIsBinaryCached || mState.mBinaryRetrieveableHint)
     {
-        // Program caching is disabled, the program is yet to be linked or it's already cached,
-        // nothing to do.
+        // Program caching is disabled, the program is yet to be linked, it's already cached, or the
+        // application has specified that it prefers to cache the program binary itself.
         return;
     }
 
