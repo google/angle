@@ -466,8 +466,9 @@ class Program final : public LabeledObject, public angle::Subject
         }
     }
 
-    // Writes a program's binary to the output memory buffer.
-    angle::Result serialize(const Context *context, angle::MemoryBuffer *binaryOut);
+    // Writes a program's binary to |mBinary|.
+    angle::Result serialize(const Context *context);
+    const angle::MemoryBuffer &getSerializedBinary() const { return mBinary; }
 
     rx::UniqueSerial serial() const { return mSerial; }
 
@@ -560,6 +561,11 @@ class Program final : public LabeledObject, public angle::Subject
     // stored here to support shader attach/detach and link without providing access to them in the
     // backends.
     ShaderMap<Shader *> mAttachedShaders;
+
+    // A cache of the program binary, prepared by |serialize()|.  OpenGL requires the application to
+    // query the length of the binary first (requiring a call to |serialize()|), and then get the
+    // actual binary.  This cache ensures the second call does not need to call |serialize()| again.
+    angle::MemoryBuffer mBinary;
 
     std::mutex mHistogramMutex;
 };

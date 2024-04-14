@@ -768,8 +768,11 @@ void Program::onDestroy(const Context *context)
     ASSERT(!mState.hasAnyAttachedShader());
     SafeDelete(mProgram);
 
+    mBinary.clear();
+
     delete this;
 }
+
 ShaderProgramID Program::id() const
 {
     return mHandle;
@@ -887,6 +890,11 @@ void Program::makeNewExecutable(const Context *context)
 
     // If caching is disabled, consider it cached!
     mIsBinaryCached = context->getFrontendFeatures().disableProgramCaching.enabled;
+
+    // Start with a clean slate every time a new executable is installed.  Note that the executable
+    // binary is not mutable; once linked it remains constant.  When the program changes, a new
+    // executable is installed in this function.
+    mBinary.clear();
 }
 
 void Program::setupExecutableForLink(const Context *context)
@@ -927,8 +935,8 @@ void Program::setupExecutableForLink(const Context *context)
 
     // Make sure the executable state is in sync with the program.
     //
-    // The transform feedback buffer mode is duplicated in the executable as is the only link-input
-    // that is also needed at draw time.
+    // The transform feedback buffer mode is duplicated in the executable as it is the only
+    // link-input that is also needed at draw time.
     //
     // The transform feedback varying names are duplicated because the program pipeline link is not
     // currently able to use the link result of the program directly (and redoes the link, using
@@ -1452,11 +1460,14 @@ angle::Result Program::getBinary(Context *context,
         *binaryFormat = GL_PROGRAM_BINARY_ANGLE;
     }
 
-    angle::MemoryBuffer memoryBuf;
-    ANGLE_TRY(serialize(context, &memoryBuf));
+    // Serialize the program only if not already done.
+    if (mBinary.empty())
+    {
+        ANGLE_TRY(serialize(context));
+    }
 
-    GLsizei streamLength       = static_cast<GLsizei>(memoryBuf.size());
-    const uint8_t *streamState = memoryBuf.data();
+    GLsizei streamLength       = static_cast<GLsizei>(mBinary.size());
+    const uint8_t *streamState = mBinary.data();
 
     if (streamLength > bufSize)
     {
@@ -1479,6 +1490,12 @@ angle::Result Program::getBinary(Context *context,
         ptr += streamLength;
 
         ASSERT(ptr - streamLength == binary);
+
+        // Once the binary is retrieved, assume the application will never need the binary and
+        // release the memory.  Note that implicit caching to blob cache is disabled when the
+        // GL_PROGRAM_BINARY_RETRIEVABLE_HINT is set.  If that hint is not set, serialization is
+        // done twice, which is what the perf warning above is about!
+        mBinary.clear();
     }
 
     if (length)
@@ -2105,8 +2122,18 @@ bool Program::linkAttributes(const Caps &caps,
     return true;
 }
 
-angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *binaryOut)
+angle::Result Program::serialize(const Context *context)
 {
+    // In typical applications, the binary should already be empty here.  However, in unusual
+    // situations this may not be true.  In particular, if the application doesn't set
+    // GL_PROGRAM_BINARY_RETRIEVABLE_HINT, gets the program length but doesn't get the binary, the
+    // cached binary remains until the program is destroyed or the program is bound (both causing
+    // |waitForPostLinkTasks()| to cache the program in the blob cache).
+    if (!mBinary.empty())
+    {
+        return angle::Result::Continue;
+    }
+
     BinaryOutputStream stream;
 
     stream.writeBytes(
@@ -2178,15 +2205,14 @@ angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *bi
     mProgram->save(context, &stream);
     ASSERT(mState.mExecutable->mPostLinkSubTasks.empty());
 
-    ASSERT(binaryOut);
-    if (!binaryOut->resize(stream.length()))
+    if (!mBinary.resize(stream.length()))
     {
         ANGLE_PERF_WARNING(context->getState().getDebug(), GL_DEBUG_SEVERITY_LOW,
                            "Failed to allocate enough memory to serialize a program. (%zu bytes)",
                            stream.length());
         return angle::Result::Stop;
     }
-    memcpy(binaryOut->data(), stream.data(), stream.length());
+    memcpy(mBinary.data(), stream.data(), stream.length());
     return angle::Result::Continue;
 }
 
@@ -2337,6 +2363,10 @@ void Program::cacheProgramBinary(const Context *context)
             ANGLE_PERF_WARNING(context->getState().getDebug(), GL_DEBUG_SEVERITY_LOW,
                                "Failed to save linked program to memory program cache.");
         }
+
+        // Drop the binary; the application didn't specify that it wants to retrieve the binary.  If
+        // it did, we wouldn't be implicitly caching it.
+        mBinary.clear();
     }
 
     mIsBinaryCached = true;
