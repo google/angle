@@ -7970,7 +7970,7 @@ angle::Result ContextVk::flushCommandsAndEndRenderPassWithoutSubmit(RenderPassCl
 
     if (vk::CommandBufferHelperCommon::kEnableCommandStreamDiagnostics)
     {
-        mRenderPassCommands->addCommandDiagnostics(this);
+        addCommandBufferDiagnostics(mRenderPassCommands->getCommandDiagnostics());
     }
 
     const vk::RenderPass *renderPass = nullptr;
@@ -8254,7 +8254,7 @@ angle::Result ContextVk::flushOutsideRenderPassCommands()
 
     if (vk::CommandBufferHelperCommon::kEnableCommandStreamDiagnostics)
     {
-        mOutsideRenderPassCommands->addCommandDiagnostics(this);
+        addCommandBufferDiagnostics(mOutsideRenderPassCommands->getCommandDiagnostics());
     }
 
     flushDescriptorSetUpdates();

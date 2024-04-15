@@ -1338,11 +1338,11 @@ class CommandBufferHelperCommon : angle::NonCopyable
             bufferReadImpl(readAccessType, readStage, buffer);
         }
     }
-    void imageReadImpl(ContextVk *contextVk,
+    void imageReadImpl(Context *context,
                        VkImageAspectFlags aspectFlags,
                        ImageLayout imageLayout,
                        ImageHelper *image);
-    void imageWriteImpl(ContextVk *contextVk,
+    void imageWriteImpl(Context *context,
                         gl::LevelIndex level,
                         uint32_t layerStart,
                         uint32_t layerCount,
@@ -1459,7 +1459,7 @@ class OutsideRenderPassCommandBufferHelper final : public CommandBufferHelperCom
         }
     }
 
-    void addCommandDiagnostics(ContextVk *contextVk);
+    std::string getCommandDiagnostics();
 
     void setQueueSerial(SerialIndex index, Serial serial)
     {
@@ -1789,7 +1789,7 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
             mHasGLMemoryBarrierIssued = true;
         }
     }
-    void addCommandDiagnostics(ContextVk *contextVk);
+    std::string getCommandDiagnostics();
 
     // Readonly depth stencil mode and feedback loop mode
     void updateDepthReadOnlyMode(RenderPassUsageFlags dsUsageFlags);
@@ -2477,14 +2477,14 @@ class ImageHelper final : public Resource, public angle::Subject
                                 VkSemaphore *semaphoreOut);
 
     // Performs an ownership transfer from an external instance or API.
-    void acquireFromExternal(ContextVk *contextVk,
+    void acquireFromExternal(Context *context,
                              uint32_t externalQueueFamilyIndex,
                              uint32_t rendererQueueFamilyIndex,
                              ImageLayout currentLayout,
                              OutsideRenderPassCommandBuffer *commandBuffer);
 
     // Performs an ownership transfer to an external instance or API.
-    void releaseToExternal(ContextVk *contextVk,
+    void releaseToExternal(Context *context,
                            uint32_t rendererQueueFamilyIndex,
                            uint32_t externalQueueFamilyIndex,
                            ImageLayout desiredLayout,

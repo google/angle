@@ -1689,18 +1689,18 @@ void CommandBufferHelperCommon::bufferReadImpl(VkAccessFlags readAccessType,
     ASSERT(!usesBufferForWrite(*buffer));
 }
 
-void CommandBufferHelperCommon::imageReadImpl(ContextVk *contextVk,
+void CommandBufferHelperCommon::imageReadImpl(Context *context,
                                               VkImageAspectFlags aspectFlags,
                                               ImageLayout imageLayout,
                                               ImageHelper *image)
 {
     if (image->isReadBarrierNecessary(imageLayout))
     {
-        updateImageLayoutAndBarrier(contextVk, image, aspectFlags, imageLayout);
+        updateImageLayoutAndBarrier(context, image, aspectFlags, imageLayout);
     }
 }
 
-void CommandBufferHelperCommon::imageWriteImpl(ContextVk *contextVk,
+void CommandBufferHelperCommon::imageWriteImpl(Context *context,
                                                gl::LevelIndex level,
                                                uint32_t layerStart,
                                                uint32_t layerCount,
@@ -1711,7 +1711,7 @@ void CommandBufferHelperCommon::imageWriteImpl(ContextVk *contextVk,
     image->onWrite(level, 1, layerStart, layerCount, aspectFlags);
     if (image->isWriteBarrierNecessary(imageLayout, level, 1, layerStart, layerCount))
     {
-        updateImageLayoutAndBarrier(contextVk, image, aspectFlags, imageLayout);
+        updateImageLayoutAndBarrier(context, image, aspectFlags, imageLayout);
     }
 }
 
@@ -1911,13 +1911,14 @@ void OutsideRenderPassCommandBufferHelper::assertCanBeRecycled()
     assertCanBeRecycledImpl<OutsideRenderPassCommandBufferHelper>();
 }
 
-void OutsideRenderPassCommandBufferHelper::addCommandDiagnostics(ContextVk *contextVk)
+std::string OutsideRenderPassCommandBufferHelper::getCommandDiagnostics()
 {
     std::ostringstream out;
     addCommandDiagnosticsCommon(&out);
 
     out << mCommandBuffer.dumpCommands("\\l");
-    contextVk->addCommandBufferDiagnostics(out.str());
+
+    return out.str();
 }
 
 // RenderPassFramebuffer implementation.
@@ -3003,7 +3004,7 @@ void RenderPassCommandBufferHelper::assertCanBeRecycled()
     assertCanBeRecycledImpl<RenderPassCommandBufferHelper>();
 }
 
-void RenderPassCommandBufferHelper::addCommandDiagnostics(ContextVk *contextVk)
+std::string RenderPassCommandBufferHelper::getCommandDiagnostics()
 {
     std::ostringstream out;
     addCommandDiagnosticsCommon(&out);
@@ -3062,7 +3063,8 @@ void RenderPassCommandBufferHelper::addCommandDiagnostics(ContextVk *contextVk)
         }
         out << mCommandBuffers[subpass].dumpCommands("\\l");
     }
-    contextVk->addCommandBufferDiagnostics(out.str());
+
+    return out.str();
 }
 
 // CommandBufferRecycler implementation.
@@ -6862,7 +6864,7 @@ void ImageHelper::changeLayoutAndQueue(Context *context,
     ASSERT(acquireNextImageSemaphore == VK_NULL_HANDLE);
 }
 
-void ImageHelper::acquireFromExternal(ContextVk *contextVk,
+void ImageHelper::acquireFromExternal(Context *context,
                                       uint32_t externalQueueFamilyIndex,
                                       uint32_t rendererQueueFamilyIndex,
                                       ImageLayout currentLayout,
@@ -6882,7 +6884,7 @@ void ImageHelper::acquireFromExternal(ContextVk *contextVk,
     // leave it to transition out as the image is used later.
     if (currentLayout != ImageLayout::Undefined)
     {
-        changeLayoutAndQueue(contextVk, getAspectFlags(), mCurrentLayout, rendererQueueFamilyIndex,
+        changeLayoutAndQueue(context, getAspectFlags(), mCurrentLayout, rendererQueueFamilyIndex,
                              commandBuffer);
     }
 
@@ -6898,7 +6900,7 @@ void ImageHelper::acquireFromExternal(ContextVk *contextVk,
     }
 }
 
-void ImageHelper::releaseToExternal(ContextVk *contextVk,
+void ImageHelper::releaseToExternal(Context *context,
                                     uint32_t rendererQueueFamilyIndex,
                                     uint32_t externalQueueFamilyIndex,
                                     ImageLayout desiredLayout,
@@ -6910,7 +6912,7 @@ void ImageHelper::releaseToExternal(ContextVk *contextVk,
     // GL!
     if (mCurrentQueueFamilyIndex != externalQueueFamilyIndex || mCurrentLayout != desiredLayout)
     {
-        changeLayoutAndQueue(contextVk, getAspectFlags(), desiredLayout, externalQueueFamilyIndex,
+        changeLayoutAndQueue(context, getAspectFlags(), desiredLayout, externalQueueFamilyIndex,
                              commandBuffer);
     }
 
