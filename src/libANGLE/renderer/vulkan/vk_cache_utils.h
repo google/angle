@@ -13,6 +13,7 @@
 
 #include "common/Color.h"
 #include "common/FixedVector.h"
+#include "common/SimpleMutex.h"
 #include "common/WorkerThread.h"
 #include "libANGLE/Uniform.h"
 #include "libANGLE/renderer/vulkan/ShaderInterfaceVariableInfoMap.h"
@@ -1306,7 +1307,7 @@ class PipelineCacheAccess
     PipelineCacheAccess()  = default;
     ~PipelineCacheAccess() = default;
 
-    void init(const vk::PipelineCache *pipelineCache, std::mutex *mutex)
+    void init(const vk::PipelineCache *pipelineCache, angle::SimpleMutex *mutex)
     {
         mPipelineCache = pipelineCache;
         mMutex         = mutex;
@@ -1324,10 +1325,10 @@ class PipelineCacheAccess
     bool isThreadSafe() const { return mMutex != nullptr; }
 
   private:
-    std::unique_lock<std::mutex> getLock();
+    std::unique_lock<angle::SimpleMutex> getLock();
 
     const vk::PipelineCache *mPipelineCache = nullptr;
-    std::mutex *mMutex;
+    angle::SimpleMutex *mMutex;
 };
 
 // Monolithic pipeline creation tasks are created as soon as a pipeline is created out of libraries.
@@ -2572,7 +2573,7 @@ class DescriptorSetLayoutCache final : angle::NonCopyable
     size_t getCacheMissCount() const { return mCacheStats.getMissCount(); }
 
   private:
-    mutable std::mutex mMutex;
+    mutable angle::SimpleMutex mMutex;
     std::unordered_map<vk::DescriptorSetLayoutDesc, vk::RefCountedDescriptorSetLayout> mPayload;
     CacheStats mCacheStats;
 };
@@ -2592,7 +2593,7 @@ class PipelineLayoutCache final : public HasCacheStats<VulkanCacheType::Pipeline
         vk::AtomicBindingPointer<vk::PipelineLayout> *pipelineLayoutOut);
 
   private:
-    mutable std::mutex mMutex;
+    mutable angle::SimpleMutex mMutex;
     std::unordered_map<vk::PipelineLayoutDesc, vk::RefCountedPipelineLayout> mPayload;
 };
 

@@ -483,7 +483,7 @@ void TryAcquireNextImageUnlocked(VkDevice device,
     impl::UnlockedTryAcquireData *tryAcquire = &acquire->unlockedTryAcquireData;
     impl::UnlockedTryAcquireResult *result   = &acquire->unlockedTryAcquireResult;
 
-    std::lock_guard<std::mutex> lock(tryAcquire->mutex);
+    std::lock_guard<angle::SimpleMutex> lock(tryAcquire->mutex);
 
     // Check again under lock if acquire is still needed.  Another thread might have done it before
     // the lock is taken.
