@@ -285,6 +285,10 @@ config("internal_config") {
   if (angle_standalone || build_with_chromium) {
     defines += [ "ANGLE_OUTSIDE_WEBKIT" ]
   }
+
+  if (is_win && build_with_chromium) {
+    defines += [ "ANGLE_WINDOWS_NO_FUTEX=1" ]
+  }
 }
 
 config("constructor_and_destructor_warnings") {
@@ -1094,6 +1098,11 @@ angle_source_set("libANGLE_no_vulkan") {
       "gdi32.lib",
       "user32.lib",
     ]
+
+    if (!build_with_chromium) {
+      # Needed for futex support
+      libs += [ "synchronization.lib" ]
+    }
   }
 
   if (angle_enable_d3d11) {
