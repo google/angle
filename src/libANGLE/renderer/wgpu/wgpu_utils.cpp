@@ -6,6 +6,7 @@
 
 #include "libANGLE/renderer/wgpu/wgpu_utils.h"
 
+#include "libANGLE/renderer/renderer_utils.h"
 #include "libANGLE/renderer/wgpu/ContextWgpu.h"
 #include "libANGLE/renderer/wgpu/DisplayWgpu.h"
 
@@ -47,6 +48,30 @@ bool IsError(WGPUBufferMapAsyncStatus mapBufferStatus)
     return mapBufferStatus != WGPUBufferMapAsyncStatus_Success;
 }
 
+void EnsureCapsInitialized(const wgpu::Device &device, gl::Caps *nativeCaps)
+{
+    wgpu::SupportedLimits limitsWgpu = {};
+    device.GetLimits(&limitsWgpu);
+
+    nativeCaps->maxElementIndex       = std::numeric_limits<GLuint>::max() - 1;
+    nativeCaps->max3DTextureSize      = rx::LimitToInt(limitsWgpu.limits.maxTextureDimension3D);
+    nativeCaps->max2DTextureSize      = rx::LimitToInt(limitsWgpu.limits.maxTextureDimension2D);
+    nativeCaps->maxArrayTextureLayers = rx::LimitToInt(limitsWgpu.limits.maxTextureArrayLayers);
+    nativeCaps->maxCubeMapTextureSize = rx::LimitToInt(limitsWgpu.limits.maxTextureDimension2D);
+    nativeCaps->maxRenderbufferSize   = rx::LimitToInt(limitsWgpu.limits.maxTextureDimension2D);
+
+    nativeCaps->maxDrawBuffers       = rx::LimitToInt(limitsWgpu.limits.maxColorAttachments);
+    nativeCaps->maxFramebufferWidth  = rx::LimitToInt(limitsWgpu.limits.maxTextureDimension2D);
+    nativeCaps->maxFramebufferHeight = rx::LimitToInt(limitsWgpu.limits.maxTextureDimension2D);
+    nativeCaps->maxColorAttachments  = rx::LimitToInt(limitsWgpu.limits.maxColorAttachments);
+
+    nativeCaps->maxVertexAttribStride =
+        rx::LimitToInt(limitsWgpu.limits.maxVertexBufferArrayStride);
+
+    nativeCaps->maxVertexAttributes = rx::LimitToInt(limitsWgpu.limits.maxVertexAttributes);
+
+    nativeCaps->maxTextureBufferSize = rx::LimitToInt(limitsWgpu.limits.maxBufferSize);
+}
 }  // namespace webgpu
 
 namespace wgpu_gl
