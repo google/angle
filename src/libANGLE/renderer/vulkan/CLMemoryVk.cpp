@@ -9,6 +9,7 @@
 
 #include "libANGLE/renderer/vulkan/CLContextVk.h"
 #include "libANGLE/renderer/vulkan/CLMemoryVk.h"
+#include "libANGLE/renderer/vulkan/vk_cl_utils.h"
 #include "libANGLE/renderer/vulkan/vk_renderer.h"
 
 #include "libANGLE/renderer/CLMemoryImpl.h"
@@ -41,37 +42,12 @@ CLMemoryVk::~CLMemoryVk()
 
 VkBufferUsageFlags CLMemoryVk::getVkUsageFlags()
 {
-    VkBufferUsageFlags usageFlags =
-        VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
-
-    if (mMemory.getFlags().intersects(CL_MEM_WRITE_ONLY))
-    {
-        usageFlags |= VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
-    }
-    else if (mMemory.getFlags().intersects(CL_MEM_READ_ONLY))
-    {
-        usageFlags |= VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
-    }
-    else
-    {
-        usageFlags |= VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
-    }
-
-    return usageFlags;
+    return cl_vk::GetBufferUsageFlags(mMemory.getFlags());
 }
 
 VkMemoryPropertyFlags CLMemoryVk::getVkMemPropertyFlags()
 {
-    // TODO: http://anglebug.com/42267018
-    VkMemoryPropertyFlags propFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
-
-    if (mMemory.getFlags().intersects(CL_MEM_USE_HOST_PTR | CL_MEM_ALLOC_HOST_PTR |
-                                      CL_MEM_COPY_HOST_PTR))
-    {
-        propFlags |= VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
-    }
-
-    return propFlags;
+    return cl_vk::GetMemoryPropertyFlags(mMemory.getFlags());
 }
 
 angle::Result CLMemoryVk::map(uint8_t *&ptrOut, size_t offset)
