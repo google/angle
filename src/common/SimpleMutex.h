@@ -20,7 +20,7 @@
 #ifndef COMMON_SIMPLEMUTEX_H_
 #define COMMON_SIMPLEMUTEX_H_
 
-#include "common/debug.h"
+#include "common/log_utils.h"
 #include "common/platform.h"
 
 #include <atomic>
