@@ -2148,7 +2148,7 @@ void ProgramExecutableVk::setUniformImpl(GLint location,
 
     ASSERT(!linkedUniform.isSampler());
 
-    if (linkedUniform.pod.type == entryPointType)
+    if (linkedUniform.getType() == entryPointType)
     {
         for (const gl::ShaderType shaderType : mExecutable->getLinkedShaderStages())
         {
@@ -2182,7 +2182,7 @@ void ProgramExecutableVk::setUniformImpl(GLint location,
 
             const GLint componentCount = linkedUniform.getElementComponents();
 
-            ASSERT(linkedUniform.pod.type == gl::VariableBoolVectorType(entryPointType));
+            ASSERT(linkedUniform.getType() == gl::VariableBoolVectorType(entryPointType));
 
             GLint initialArrayOffset =
                 locationInfo.arrayIndex * layoutInfo.arrayStride + layoutInfo.offset;
@@ -2218,8 +2218,8 @@ void ProgramExecutableVk::getUniformImpl(GLint location, T *v, GLenum entryPoint
     const DefaultUniformBlockVk &uniformBlock = *mDefaultUniformBlocks[shaderType];
     const sh::BlockMemberInfo &layoutInfo     = uniformBlock.uniformLayout[location];
 
-    ASSERT(gl::GetUniformTypeInfo(linkedUniform.pod.type).componentType == entryPointType ||
-           gl::GetUniformTypeInfo(linkedUniform.pod.type).componentType ==
+    ASSERT(linkedUniform.getUniformTypeInfo().componentType == entryPointType ||
+           linkedUniform.getUniformTypeInfo().componentType ==
                gl::VariableBoolVectorType(entryPointType));
 
     if (gl::IsMatrixType(linkedUniform.getType()))
