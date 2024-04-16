@@ -1375,6 +1375,55 @@ struct FeaturesVk : FeatureSetBase
         &members, "http://anglebug.com/8601"
     };
 
+    FeatureInfo supports8BitStorageBuffer = {
+        "supports8BitStorageBuffer",
+        FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_KHR_8bit_storage extension and has the storageBuffer8BitAccess feature",
+        &members, "http://anglebug.com/8676"
+    };
+
+    FeatureInfo supports8BitUniformAndStorageBuffer = {
+        "supports8BitUniformAndStorageBuffer",
+        FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_KHR_8bit_storage extension and has the uniformAndStorageBuffer8BitAccess feature",
+        &members, "http://anglebug.com/8676"
+    };
+
+    FeatureInfo supports8BitPushConstant = {
+        "supports8BitPushConstant",
+        FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_KHR_8bit_storage extension and has the storagePushConstant8 feature",
+        &members, "http://anglebug.com/8676"
+    };
+
+    FeatureInfo supports16BitStorageBuffer = {
+        "supports16BitStorageBuffer",
+        FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_KHR_16bit_storage extension and has the storageBuffer16BitAccess feature",
+        &members, "http://anglebug.com/8676"
+    };
+
+    FeatureInfo supports16BitUniformAndStorageBuffer = {
+        "supports16BitUniformAndStorageBuffer",
+        FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_KHR_16bit_storage extension and has the uniformAndStorageBuffer16BitAccess feature",
+        &members, "http://anglebug.com/8676"
+    };
+
+    FeatureInfo supports16BitPushConstant = {
+        "supports16BitPushConstant",
+        FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_KHR_16bit_storage extension and has the storagePushConstant16 feature",
+        &members, "http://anglebug.com/8676"
+    };
+
+    FeatureInfo supports16BitInputOutput = {
+        "supports16BitInputOutput",
+        FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_KHR_16bit_storage extension and has the storageInputOutput16 feature",
+        &members, "http://anglebug.com/8676"
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

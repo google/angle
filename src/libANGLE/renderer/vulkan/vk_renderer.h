@@ -925,6 +925,8 @@ class Renderer : angle::NonCopyable
     VkPhysicalDeviceExternalFormatResolveFeaturesANDROID mExternalFormatResolveFeatures;
     VkPhysicalDeviceExternalFormatResolvePropertiesANDROID mExternalFormatResolveProperties;
 #endif
+    VkPhysicalDevice8BitStorageFeatures m8BitStorageFeatures;
+    VkPhysicalDevice16BitStorageFeatures m16BitStorageFeatures;
 
     angle::PackedEnumBitSet<gl::ShadingRate, uint8_t> mSupportedFragmentShadingRates;
     angle::PackedEnumMap<gl::ShadingRate, VkSampleCountFlags>
