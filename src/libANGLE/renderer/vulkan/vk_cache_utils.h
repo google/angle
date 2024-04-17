@@ -1016,8 +1016,7 @@ class DescriptorSetLayoutDesc final
                 VkShaderStageFlags stages,
                 const Sampler *immutableSampler);
 
-    void unpackBindings(DescriptorSetLayoutBindingVector *bindings,
-                        std::vector<VkSampler> *immutableSamplers) const;
+    void unpackBindings(DescriptorSetLayoutBindingVector *bindings) const;
 
     bool empty() const { return !mValidDescriptorSetLayoutIndexMask.any(); }
 
@@ -1030,16 +1029,15 @@ class DescriptorSetLayoutDesc final
         uint8_t type;    // Stores a packed VkDescriptorType descriptorType.
         uint8_t stages;  // Stores a packed VkShaderStageFlags.
         uint16_t count;  // Stores a packed uint32_t descriptorCount.
-        uint32_t pad;
-        VkSampler immutableSampler;
     };
 
-    // 4x 32bit
-    static_assert(sizeof(PackedDescriptorSetBinding) == 16, "Unexpected size");
+    // 1x 32bit
+    static_assert(sizeof(PackedDescriptorSetBinding) == 4, "Unexpected size");
 
     // This is a compact representation of a descriptor set layout.
     std::array<PackedDescriptorSetBinding, kMaxDescriptorSetLayoutBindings>
         mPackedDescriptorSetLayout;
+    gl::ActiveTextureArray<VkSampler> mImmutableSamplers;
 
     DescriptorSetLayoutIndexMask mValidDescriptorSetLayoutIndexMask;
 };

@@ -1035,9 +1035,7 @@ angle::Result InitDynamicDescriptorPool(Context *context,
 {
     std::vector<VkDescriptorPoolSize> descriptorPoolSizes;
     DescriptorSetLayoutBindingVector bindingVector;
-    std::vector<VkSampler> immutableSamplers;
-
-    descriptorSetLayoutDesc.unpackBindings(&bindingVector, &immutableSamplers);
+    descriptorSetLayoutDesc.unpackBindings(&bindingVector);
 
     for (const VkDescriptorSetLayoutBinding &binding : bindingVector)
     {
