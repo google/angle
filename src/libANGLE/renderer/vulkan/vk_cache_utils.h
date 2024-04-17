@@ -993,6 +993,11 @@ constexpr uint32_t kMaxDescriptorSetLayoutBindings =
 using DescriptorSetLayoutBindingVector =
     angle::FixedVector<VkDescriptorSetLayoutBinding, kMaxDescriptorSetLayoutBindings>;
 
+// Technically this needs to only be kMaxDescriptorSetLayoutBindings but due to struct padding
+// issues round up size to 64.
+constexpr uint32_t kMaxDescriptorSetLayoutCount = roundUpPow2(kMaxDescriptorSetLayoutBindings, 64u);
+using DescriptorSetLayoutIndexMask              = angle::BitSet<kMaxDescriptorSetLayoutCount>;
+
 // A packed description of a descriptor set layout. Use similarly to RenderPassDesc and
 // GraphicsPipelineDesc. Currently we only need to differentiate layouts based on sampler and ubo
 // usage. In the future we could generalize this.
@@ -1016,7 +1021,7 @@ class DescriptorSetLayoutDesc final
     void unpackBindings(DescriptorSetLayoutBindingVector *bindings,
                         std::vector<VkSampler> *immutableSamplers) const;
 
-    bool empty() const { return *this == DescriptorSetLayoutDesc(); }
+    bool empty() const { return !mValidDescriptorSetLayoutIndexMask.any(); }
 
   private:
     // There is a small risk of an issue if the sampler cache is evicted but not the descriptor
@@ -1037,6 +1042,8 @@ class DescriptorSetLayoutDesc final
     // This is a compact representation of a descriptor set layout.
     std::array<PackedDescriptorSetBinding, kMaxDescriptorSetLayoutBindings>
         mPackedDescriptorSetLayout;
+
+    DescriptorSetLayoutIndexMask mValidDescriptorSetLayoutIndexMask;
 };
 
 // The following are for caching descriptor set layouts. Limited to max three descriptor set
