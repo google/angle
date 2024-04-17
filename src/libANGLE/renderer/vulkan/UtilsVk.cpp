@@ -454,6 +454,10 @@ void SetDepthDynamicStateForUnused(vk::Renderer *renderer,
     {
         commandBuffer->setDepthWriteEnable(VK_FALSE);
     }
+    if (renderer->useDepthCompareOpDynamicState())
+    {
+        commandBuffer->setDepthCompareOp(VK_COMPARE_OP_ALWAYS);
+    }
 }
 
 // Sets the appropriate settings in the pipeline for either the shader to output stencil, regardless
@@ -493,6 +497,26 @@ void SetStencilDynamicStateForWrite(vk::Renderer *renderer,
     }
 }
 
+void SetStencilDynamicStateForUnused(vk::Renderer *renderer,
+                                     vk::RenderPassCommandBuffer *commandBuffer)
+{
+    if (renderer->useStencilTestEnableDynamicState())
+    {
+        commandBuffer->setStencilTestEnable(false);
+    }
+    if (renderer->useStencilOpDynamicState())
+    {
+        commandBuffer->setStencilOp(VK_STENCIL_FACE_FRONT_BIT, VK_STENCIL_OP_REPLACE,
+                                    VK_STENCIL_OP_REPLACE, VK_STENCIL_OP_REPLACE,
+                                    VK_COMPARE_OP_ALWAYS);
+        commandBuffer->setStencilOp(VK_STENCIL_FACE_BACK_BIT, VK_STENCIL_OP_REPLACE,
+                                    VK_STENCIL_OP_REPLACE, VK_STENCIL_OP_REPLACE,
+                                    VK_COMPARE_OP_ALWAYS);
+    }
+    commandBuffer->setStencilCompareMask(0x00, 0x00);
+    commandBuffer->setStencilWriteMask(0x00, 0x00);
+    commandBuffer->setStencilReference(0x00, 0x00);
+}
 namespace unresolve
 {
 // The unresolve shader looks like the following, based on the number and types of unresolve
@@ -2508,6 +2532,10 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     {
         SetDepthDynamicStateForWrite(renderer, commandBuffer);
     }
+    else
+    {
+        SetDepthDynamicStateForUnused(renderer, commandBuffer);
+    }
 
     if (params.clearStencil)
     {
@@ -2520,6 +2548,10 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
         commandBuffer->setStencilReference(clearStencilValue, clearStencilValue);
 
         SetStencilDynamicStateForWrite(contextVk->getRenderer(), commandBuffer);
+    }
+    else
+    {
+        SetStencilDynamicStateForUnused(contextVk->getRenderer(), commandBuffer);
     }
 
     ASSERT(contextVk->hasStartedRenderPassWithQueueSerial(
@@ -2928,6 +2960,10 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
     {
         SetDepthDynamicStateForWrite(renderer, commandBuffer);
     }
+    else
+    {
+        SetDepthDynamicStateForUnused(renderer, commandBuffer);
+    }
 
     if (blitStencil)
     {
@@ -2939,6 +2975,10 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
         commandBuffer->setStencilReference(kUnusedReference, kUnusedReference);
 
         SetStencilDynamicStateForWrite(renderer, commandBuffer);
+    }
+    else
+    {
+        SetStencilDynamicStateForUnused(renderer, commandBuffer);
     }
 
     // Note: this utility starts the render pass directly, thus bypassing
@@ -4158,6 +4198,10 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
         {
             SetDepthDynamicStateForWrite(renderer, commandBuffer);
         }
+        else
+        {
+            SetDepthDynamicStateForUnused(renderer, commandBuffer);
+        }
 
         if (unresolveStencilWithShaderExport)
         {
@@ -4169,6 +4213,10 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
             commandBuffer->setStencilReference(kUnusedReference, kUnusedReference);
 
             SetStencilDynamicStateForWrite(renderer, commandBuffer);
+        }
+        else
+        {
+            SetStencilDynamicStateForUnused(renderer, commandBuffer);
         }
 
         // This draw call is made before ContextVk gets a chance to start the occlusion query.  As
