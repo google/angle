@@ -10515,7 +10515,6 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
     ANGLE_VK_PERF_WARNING(contextVk, GL_DEBUG_SEVERITY_HIGH, "GPU stall due to ReadPixels");
 
     // Triggers a full finish.
-    // TODO(jmadill): Don't block on asynchronous readback.
     ANGLE_TRY(contextVk->finishImpl(RenderPassClosureReason::GLReadPixels));
 
     return packReadPixelBuffer(contextVk, area, packPixelsParams, getActualFormat(), *readFormat,

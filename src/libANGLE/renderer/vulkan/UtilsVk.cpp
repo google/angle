@@ -2547,11 +2547,11 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
         commandBuffer->setStencilWriteMask(params.stencilMask, params.stencilMask);
         commandBuffer->setStencilReference(clearStencilValue, clearStencilValue);
 
-        SetStencilDynamicStateForWrite(contextVk->getRenderer(), commandBuffer);
+        SetStencilDynamicStateForWrite(renderer, commandBuffer);
     }
     else
     {
-        SetStencilDynamicStateForUnused(contextVk->getRenderer(), commandBuffer);
+        SetStencilDynamicStateForUnused(renderer, commandBuffer);
     }
 
     ASSERT(contextVk->hasStartedRenderPassWithQueueSerial(
@@ -2577,6 +2577,8 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
                                   vk::ImageHelper *dst,
                                   const ClearImageParameters &params)
 {
+    vk::Renderer *renderer = contextVk->getRenderer();
+
     ANGLE_TRY(ensureImageClearResourcesInitialized(contextVk));
 
     const angle::Format &dstActualFormat = dst->getActualFormat();
@@ -2596,8 +2598,7 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
     // format is renderable.
     //
     // http://anglebug.com/6151
-    if (!vk::FormatHasNecessaryFeature(contextVk->getRenderer(), dstActualFormat.id,
-                                       dst->getTilingMode(),
+    if (!vk::FormatHasNecessaryFeature(renderer, dstActualFormat.id, dst->getTilingMode(),
                                        VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT))
     {
         UNIMPLEMENTED();
@@ -2658,6 +2659,9 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
 
     VkRect2D scissor = gl_vk::GetRect(renderArea);
     commandBuffer->setScissor(0, 1, &scissor);
+
+    SetDepthDynamicStateForUnused(renderer, commandBuffer);
+    SetStencilDynamicStateForUnused(renderer, commandBuffer);
 
     // Note: this utility creates its own framebuffer, thus bypassing ContextVk::startRenderPass.
     // As such, occlusion queries are not enabled.
@@ -2998,6 +3002,8 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
                                                         const vk::ImageView *srcStencilView,
                                                         const BlitResolveParameters &params)
 {
+    vk::Renderer *renderer = contextVk->getRenderer();
+
     // When VK_EXT_shader_stencil_export is not available, stencil is blitted/resolved into a
     // temporary buffer which is then copied into the stencil aspect of the image.
     ANGLE_TRY(ensureBlitResolveStencilNoExportResourcesInitialized(contextVk));
@@ -3005,14 +3011,14 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
     bool isResolve = src->getSamples() > 1;
 
     // Create a temporary buffer to blit/resolve stencil into.
-    vk::RendererScoped<vk::BufferHelper> blitBuffer(contextVk->getRenderer());
+    vk::RendererScoped<vk::BufferHelper> blitBuffer(renderer);
 
     uint32_t bufferRowLengthInUints = UnsignedCeilDivide(params.blitArea.width, sizeof(uint32_t));
     VkDeviceSize bufferSize = bufferRowLengthInUints * sizeof(uint32_t) * params.blitArea.height;
 
     ANGLE_TRY(contextVk->initBufferAllocation(
-        &blitBuffer.get(), contextVk->getRenderer()->getDeviceLocalMemoryTypeIndex(),
-        static_cast<size_t>(bufferSize), contextVk->getRenderer()->getDefaultBufferAlignment(),
+        &blitBuffer.get(), renderer->getDeviceLocalMemoryTypeIndex(),
+        static_cast<size_t>(bufferSize), renderer->getDefaultBufferAlignment(),
         BufferUsageType::Static));
 
     BlitResolveStencilNoExportShaderParams shaderParams;
@@ -3183,6 +3189,8 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
                                  const vk::ImageView *srcView,
                                  const CopyImageParameters &params)
 {
+    vk::Renderer *renderer = contextVk->getRenderer();
+
     // The views passed to this function are already retained, so a render pass cannot be already
     // open.  Otherwise, this function closes the render pass, which may incur a vkQueueSubmit and
     // then the views are used in a new command buffer without having been retained for it.
@@ -3389,6 +3397,9 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
     VkRect2D scissor = gl_vk::GetRect(renderArea);
     commandBuffer->setScissor(0, 1, &scissor);
 
+    SetDepthDynamicStateForUnused(renderer, commandBuffer);
+    SetStencilDynamicStateForUnused(renderer, commandBuffer);
+
     // Note: this utility creates its own framebuffer, thus bypassing ContextVk::startRenderPass.
     // As such, occlusion queries are not enabled.
     commandBuffer->draw(3, 0);
@@ -3402,6 +3413,8 @@ angle::Result UtilsVk::copyImageBits(ContextVk *contextVk,
                                      vk::ImageHelper *src,
                                      const CopyImageBitsParameters &params)
 {
+    vk::Renderer *renderer = contextVk->getRenderer();
+
     // This function is used to copy the bit representation of an image to another, and is used to
     // support EXT_copy_image when a format is emulated.  Currently, only RGB->RGBA emulation is
     // possible, and so this function is tailored to this specific kind of emulation.
@@ -3433,8 +3446,8 @@ angle::Result UtilsVk::copyImageBits(ContextVk *contextVk,
     const angle::Format &dstImageFormat = dst->getActualFormat();
 
     // Create temporary buffers.
-    vk::RendererScoped<vk::BufferHelper> srcBuffer(contextVk->getRenderer());
-    vk::RendererScoped<vk::BufferHelper> dstBuffer(contextVk->getRenderer());
+    vk::RendererScoped<vk::BufferHelper> srcBuffer(renderer);
+    vk::RendererScoped<vk::BufferHelper> dstBuffer(renderer);
 
     const uint32_t srcPixelBytes = srcImageFormat.pixelBytes;
     const uint32_t dstPixelBytes = dstImageFormat.pixelBytes;
@@ -4309,6 +4322,8 @@ angle::Result UtilsVk::drawOverlay(ContextVk *contextVk,
                                    const vk::ImageView *destView,
                                    const OverlayDrawParameters &params)
 {
+    vk::Renderer *renderer = contextVk->getRenderer();
+
     ANGLE_TRY(ensureOverlayDrawResourcesInitialized(contextVk));
 
     OverlayDrawShaderParams shaderParams;
@@ -4416,6 +4431,9 @@ angle::Result UtilsVk::drawOverlay(ContextVk *contextVk,
 
     VkRect2D scissor = gl_vk::GetRect(renderArea);
     commandBuffer->setScissor(0, 1, &scissor);
+
+    SetDepthDynamicStateForUnused(renderer, commandBuffer);
+    SetStencilDynamicStateForUnused(renderer, commandBuffer);
 
     // Draw all the graph widgets.
     if (params.graphWidgetCount > 0)
