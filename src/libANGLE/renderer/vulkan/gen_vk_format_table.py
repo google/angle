@@ -181,6 +181,14 @@ def gen_format_case(angle, internal_format, vk_json_data):
         fallbacks += compressed
 
         if format in vk_map:
+            # if the fallbacks already contains the format, we should remove
+            # it from the fallbacks list before adding it as the first element
+            # in the fallbacks list. This prevents duplicated items in the
+            # fallbacks list.
+            if format in fallbacks:
+                fallbacks.remove(format)
+
+            assert format not in fallbacks
             fallbacks = [format] + fallbacks
 
         return (fallbacks, len(fallbacks) - len(compressed))
