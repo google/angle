@@ -85,8 +85,8 @@ TEST(MutexTest, BasicSimpleMutex)
     EXPECT_TRUE(runBasicMutexTest<SimpleMutex>());
 }
 
-// Tests failure with NoOpMutex.
-TEST(MutexTest, BasicNoOpMutex)
+// Tests failure with NoOpMutex.  Disabled because it can and will flake.
+TEST(MutexTest, DISABLED_BasicNoOpMutex)
 {
     // Technically not _guaranteed_ to calculate the wrong value, but highly likely to do so.
     EXPECT_FALSE(runBasicMutexTest<NoOpMutex>());
