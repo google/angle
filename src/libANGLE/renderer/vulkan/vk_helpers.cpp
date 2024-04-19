@@ -9809,7 +9809,6 @@ angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
     ANGLE_TRY(contextVk->initBufferForImageCopy(dstBuffer, bufferSize,
                                                 MemoryCoherency::CachedPreferCoherent,
                                                 imageFormat.id, &dstOffset, outDataPtr));
-    ANGLE_TRY(dstBuffer->invalidate(contextVk->getRenderer()));
     VkBuffer bufferHandle = dstBuffer->getBuffer().getHandle();
 
     LevelIndex sourceLevelVk = toVkLevel(sourceLevelGL);
@@ -10479,7 +10478,6 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
     ANGLE_TRY(contextVk->initBufferForImageCopy(stagingBuffer, allocationSize,
                                                 MemoryCoherency::CachedPreferCoherent,
                                                 readFormat->id, &stagingOffset, &readPixelBuffer));
-    ANGLE_TRY(stagingBuffer->invalidate(renderer));
     VkBuffer bufferHandle = stagingBuffer->getBuffer().getHandle();
 
     VkBufferImageCopy region = {};
@@ -10514,6 +10512,8 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
 
     // Triggers a full finish.
     ANGLE_TRY(contextVk->finishImpl(RenderPassClosureReason::GLReadPixels));
+    // invalidate must be called after wait for finish.
+    ANGLE_TRY(stagingBuffer->invalidate(renderer));
 
     return packReadPixelBuffer(contextVk, area, packPixelsParams, getActualFormat(), *readFormat,
                                readPixelBuffer, levelGL, pixels);
