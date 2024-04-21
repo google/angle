@@ -585,7 +585,6 @@ void ProgramInfo::release(ContextVk *contextVk)
 
 ProgramExecutableVk::ProgramExecutableVk(const gl::ProgramExecutable *executable)
     : ProgramExecutableImpl(executable),
-      mNumDefaultUniformDescriptors(0),
       mImmutableSamplersMaxDescriptorCount(1),
       mUniformBufferDescriptorType(VK_DESCRIPTOR_TYPE_MAX_ENUM),
       mDynamicUniformDescriptorOffsets{},
@@ -620,7 +619,6 @@ void ProgramExecutableVk::resetLayout(ContextVk *contextVk)
     mImmutableSamplerIndexMap.clear();
 
     mDescriptorSets.fill(VK_NULL_HANDLE);
-    mNumDefaultUniformDescriptors = 0;
 
     for (vk::RefCountedDescriptorPoolBinding &binding : mDescriptorPoolBindings)
     {
@@ -1627,8 +1625,8 @@ angle::Result ProgramExecutableVk::createPipelineLayout(
     // don't already exist in the cache.
 
     // Default uniforms and transform feedback:
-    mDefaultUniformAndXfbSetDesc  = {};
-    mNumDefaultUniformDescriptors = 0;
+    mDefaultUniformAndXfbSetDesc          = {};
+    uint32_t numDefaultUniformDescriptors = 0;
     for (gl::ShaderType shaderType : linkedShaderStages)
     {
         const ShaderInterfaceVariableInfo &info =
@@ -1638,7 +1636,7 @@ angle::Result ProgramExecutableVk::createPipelineLayout(
 
         mDefaultUniformAndXfbSetDesc.update(info.binding, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
                                             1, gl_vk::kShaderStageMap[shaderType], nullptr);
-        mNumDefaultUniformDescriptors++;
+        numDefaultUniformDescriptors++;
     }
 
     gl::ShaderType linkedTransformFeedbackStage = mExecutable->getLinkedTransformFeedbackStage();
@@ -1682,7 +1680,7 @@ angle::Result ProgramExecutableVk::createPipelineLayout(
     // Decide if we should use dynamic or fixed descriptor types.
     VkPhysicalDeviceLimits limits = context->getRenderer()->getPhysicalDeviceProperties().limits;
     uint32_t totalDynamicUniformBufferCount =
-        numActiveUniformBufferDescriptors + mNumDefaultUniformDescriptors;
+        numActiveUniformBufferDescriptors + numDefaultUniformDescriptors;
     if (totalDynamicUniformBufferCount <= limits.maxDescriptorSetUniformBuffersDynamic)
     {
         mUniformBufferDescriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;

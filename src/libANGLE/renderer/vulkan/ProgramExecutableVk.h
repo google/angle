@@ -526,7 +526,6 @@ class ProgramExecutableVk : public ProgramExecutableImpl
     vk::DescriptorSetArray<VkDescriptorSet> mDescriptorSets;
     vk::DescriptorSetArray<vk::DescriptorPoolPointer> mDescriptorPools;
     vk::DescriptorSetArray<vk::RefCountedDescriptorPoolBinding> mDescriptorPoolBindings;
-    uint32_t mNumDefaultUniformDescriptors;
     vk::BufferSerial mCurrentDefaultUniformBufferSerial;
 
     // We keep a reference to the pipeline and descriptor set layouts. This ensures they don't get
