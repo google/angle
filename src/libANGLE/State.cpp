@@ -3966,6 +3966,4 @@ void State::initializeForCapture(const Context *context)
     initialize(mutableContext);
 }
 
-constexpr State::DirtyObjectHandler State::kDirtyObjectHandlers[state::DIRTY_OBJECT_MAX];
-
 }  // namespace gl

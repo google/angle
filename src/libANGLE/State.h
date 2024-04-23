@@ -1447,14 +1447,46 @@ class State : angle::NonCopyable
     angle::Result syncProgramPipelineObject(const Context *context, Command command);
 
     using DirtyObjectHandler = angle::Result (State::*)(const Context *context, Command command);
+    using DirtyObjectHandlerArray = std::array<DirtyObjectHandler, state::DIRTY_OBJECT_MAX>;
 
-    static constexpr DirtyObjectHandler kDirtyObjectHandlers[state::DIRTY_OBJECT_MAX] = {
-        &State::syncActiveTextures,  &State::syncTexturesInit,
-        &State::syncImagesInit,      &State::syncReadAttachments,
-        &State::syncDrawAttachments, &State::syncReadFramebuffer,
-        &State::syncDrawFramebuffer, &State::syncVertexArray,
-        &State::syncTextures,        &State::syncImages,
-        &State::syncSamplers,        &State::syncProgramPipelineObject};
+    static constexpr DirtyObjectHandlerArray MakeDirtyObjectHandlers()
+    {
+        // Work around C++'s lack of array element support in designated initializers
+        // This function cannot be a lambda due to MSVC C++17 limitations b/330910097#comment5
+        DirtyObjectHandlerArray handlers{};
+
+        handlers[state::DIRTY_OBJECT_ACTIVE_TEXTURES]         = &State::syncActiveTextures;
+        handlers[state::DIRTY_OBJECT_TEXTURES_INIT]           = &State::syncTexturesInit;
+        handlers[state::DIRTY_OBJECT_IMAGES_INIT]             = &State::syncImagesInit;
+        handlers[state::DIRTY_OBJECT_READ_ATTACHMENTS]        = &State::syncReadAttachments;
+        handlers[state::DIRTY_OBJECT_DRAW_ATTACHMENTS]        = &State::syncDrawAttachments;
+        handlers[state::DIRTY_OBJECT_READ_FRAMEBUFFER]        = &State::syncReadFramebuffer;
+        handlers[state::DIRTY_OBJECT_DRAW_FRAMEBUFFER]        = &State::syncDrawFramebuffer;
+        handlers[state::DIRTY_OBJECT_VERTEX_ARRAY]            = &State::syncVertexArray;
+        handlers[state::DIRTY_OBJECT_TEXTURES]                = &State::syncTextures;
+        handlers[state::DIRTY_OBJECT_IMAGES]                  = &State::syncImages;
+        handlers[state::DIRTY_OBJECT_SAMPLERS]                = &State::syncSamplers;
+        handlers[state::DIRTY_OBJECT_PROGRAM_PIPELINE_OBJECT] = &State::syncProgramPipelineObject;
+
+        // If a handler is missing, reset everything for ease of static_assert
+        for (auto handler : handlers)
+        {
+            if (handler == nullptr)
+            {
+                return DirtyObjectHandlerArray();
+            }
+        }
+
+        return handlers;
+    }
+
+    angle::Result dirtyObjectHandler(size_t dirtyObject, const Context *context, Command command)
+    {
+        static constexpr DirtyObjectHandlerArray handlers = MakeDirtyObjectHandlers();
+        static_assert(handlers[0] != nullptr, "MakeDirtyObjectHandlers missing a handler");
+
+        return (this->*handlers[dirtyObject])(context, command);
+    }
 
     // Robust init must happen before Framebuffer init for the Vulkan back-end.
     static_assert(state::DIRTY_OBJECT_ACTIVE_TEXTURES < state::DIRTY_OBJECT_TEXTURES_INIT,
@@ -1467,25 +1499,6 @@ class State : angle::NonCopyable
                   "init order");
     static_assert(state::DIRTY_OBJECT_READ_ATTACHMENTS < state::DIRTY_OBJECT_READ_FRAMEBUFFER,
                   "init order");
-
-    static_assert(state::DIRTY_OBJECT_ACTIVE_TEXTURES == 0,
-                  "check DIRTY_OBJECT_ACTIVE_TEXTURES index");
-    static_assert(state::DIRTY_OBJECT_TEXTURES_INIT == 1, "check DIRTY_OBJECT_TEXTURES_INIT index");
-    static_assert(state::DIRTY_OBJECT_IMAGES_INIT == 2, "check DIRTY_OBJECT_IMAGES_INIT index");
-    static_assert(state::DIRTY_OBJECT_READ_ATTACHMENTS == 3,
-                  "check DIRTY_OBJECT_READ_ATTACHMENTS index");
-    static_assert(state::DIRTY_OBJECT_DRAW_ATTACHMENTS == 4,
-                  "check DIRTY_OBJECT_DRAW_ATTACHMENTS index");
-    static_assert(state::DIRTY_OBJECT_READ_FRAMEBUFFER == 5,
-                  "check DIRTY_OBJECT_READ_FRAMEBUFFER index");
-    static_assert(state::DIRTY_OBJECT_DRAW_FRAMEBUFFER == 6,
-                  "check DIRTY_OBJECT_DRAW_FRAMEBUFFER index");
-    static_assert(state::DIRTY_OBJECT_VERTEX_ARRAY == 7, "check DIRTY_OBJECT_VERTEX_ARRAY index");
-    static_assert(state::DIRTY_OBJECT_TEXTURES == 8, "check DIRTY_OBJECT_TEXTURES index");
-    static_assert(state::DIRTY_OBJECT_IMAGES == 9, "check DIRTY_OBJECT_IMAGES index");
-    static_assert(state::DIRTY_OBJECT_SAMPLERS == 10, "check DIRTY_OBJECT_SAMPLERS index");
-    static_assert(state::DIRTY_OBJECT_PROGRAM_PIPELINE_OBJECT == 11,
-                  "check DIRTY_OBJECT_PROGRAM_PIPELINE_OBJECT index");
 
     // Dispatch table for buffer update functions.
     static const angle::PackedEnumMap<BufferBinding, BufferBindingSetter> kBufferSetters;
@@ -1598,7 +1611,7 @@ ANGLE_INLINE angle::Result State::syncDirtyObjects(const Context *context,
 
     for (size_t dirtyObject : dirtyObjects)
     {
-        ANGLE_TRY((this->*kDirtyObjectHandlers[dirtyObject])(context, command));
+        ANGLE_TRY(dirtyObjectHandler(dirtyObject, context, command));
     }
 
     mDirtyObjects &= ~dirtyObjects;
