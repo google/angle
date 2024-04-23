@@ -3111,10 +3111,11 @@ def get_unlocked_tail_call(api, cmd_name):
     # - eglPrepareSwapBuffersANGLE -> Calls vkAcquireNextImageKHR in tail call
     #
     # - eglSwapBuffers, eglSwapBuffersWithDamageKHR and
-    #   eglSwapBuffersWithFrameTokenANGLE -> May throttle the CPU in tail call
+    #   eglSwapBuffersWithFrameTokenANGLE -> May throttle the CPU in tail call or
+    #   calls native EGL function
     #
     # - eglClientWaitSyncKHR, eglClientWaitSync, glClientWaitSync,
-    #   glFinishFenceNV -> May wait on fence in tail call
+    #   glFinishFenceNV -> May wait on fence in tail call or call native EGL function
     #
     # - glTexImage2D, glTexImage3D, glTexSubImage2D, glTexSubImage3D,
     #   glCompressedTexImage2D, glCompressedTexImage3D,
@@ -3124,10 +3125,13 @@ def get_unlocked_tail_call(api, cmd_name):
     # - glCompileShader and glLinkProgram -> May perform the compilation / link
     #   in tail call
     #
+    # - eglCreateSync, eglCreateImage, eglDestroySync, eglDestroyImage -> Calls
+    #   native EGL function in tail call
+    #
     if (cmd_name in [
-            'eglDestroySurface', 'eglMakeCurrent', 'eglReleaseThread', 'eglCreateWindowSurface',
-            'eglCreatePlatformWindowSurface', 'eglCreatePlatformWindowSurfaceEXT',
-            'eglPrepareSwapBuffersANGLE', 'eglSwapBuffers', 'eglSwapBuffersWithDamageKHR',
+            'eglCreateSyncKHR', 'eglDestroySurface', 'eglMakeCurrent', 'eglReleaseThread',
+            'eglCreateWindowSurface', 'eglCreatePlatformWindowSurface',
+            'eglCreatePlatformWindowSurfaceEXT', 'eglPrepareSwapBuffersANGLE',
             'eglSwapBuffersWithFrameTokenANGLE', 'glFinishFenceNV', 'glCompileShader',
             'glLinkProgram'
     ] or cmd_name.startswith('glTexImage2D') or cmd_name.startswith('glTexImage3D') or
@@ -3138,7 +3142,21 @@ def get_unlocked_tail_call(api, cmd_name):
             cmd_name.startswith('glCompressedTexSubImage3D')):
         return 'egl::Display::GetCurrentThreadUnlockedTailCall()->run(nullptr);'
 
-    if cmd_name in ['eglClientWaitSyncKHR', 'eglClientWaitSync', 'glClientWaitSync']:
+    if cmd_name in [
+            'eglClientWaitSyncKHR',
+            'eglClientWaitSync',
+            'eglCreateImageKHR',
+            'eglCreateImage',
+            'eglCreateSyncKHR',
+            'eglCreateSync',
+            'eglDestroySyncKHR',
+            'eglDestroySync',
+            'eglSwapBuffers',
+            'eglSwapBuffersWithDamageKHR',
+            'eglWaitSyncKHR',
+            'eglWaitSync',
+            'glClientWaitSync',
+    ]:
         return 'egl::Display::GetCurrentThreadUnlockedTailCall()->run(&returnValue);'
 
     # Otherwise assert that no tail calls where generated
