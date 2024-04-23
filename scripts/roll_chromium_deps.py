@@ -310,6 +310,9 @@ def BuildDepsentryDict(deps_dict):
                 dep = {'url': dep}
             if dep.get('dep_type') == 'cipd':
                 result[path] = CipdDepsEntry(path, dep['packages'])
+            elif dep.get('dep_type') == 'gcs':
+                # Ignore GCS deps - there aren't any that we want to sync yet
+                continue
             else:
                 if '@' not in dep['url']:
                     continue
