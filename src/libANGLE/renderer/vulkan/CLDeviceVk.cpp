@@ -92,7 +92,7 @@ CLDeviceVk::CLDeviceVk(const cl::Device &device, vk::Renderer *renderer)
         {cl::DeviceInfo::AddressBits, 32},
         {cl::DeviceInfo::EndianLittle, CL_TRUE},
         {cl::DeviceInfo::LocalMemType, CL_LOCAL},
-        {cl::DeviceInfo::MaxSamplers, 0},
+        {cl::DeviceInfo::MaxSamplers, props.limits.maxSamplerAllocationCount},
         {cl::DeviceInfo::MaxConstantArgs, 8},
         {cl::DeviceInfo::MaxNumSubGroups, 0},
         {cl::DeviceInfo::MaxComputeUnits, 4},

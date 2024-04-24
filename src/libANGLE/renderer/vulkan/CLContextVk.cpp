@@ -10,6 +10,8 @@
 #include "libANGLE/renderer/vulkan/CLEventVk.h"
 #include "libANGLE/renderer/vulkan/CLMemoryVk.h"
 #include "libANGLE/renderer/vulkan/CLProgramVk.h"
+#include "libANGLE/renderer/vulkan/CLSamplerVk.h"
+#include "libANGLE/renderer/vulkan/DisplayVk.h"
 #include "libANGLE/renderer/vulkan/vk_renderer.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
@@ -133,8 +135,14 @@ angle::Result CLContextVk::getSupportedImageFormats(cl::MemFlags flags,
 
 angle::Result CLContextVk::createSampler(const cl::Sampler &sampler, CLSamplerImpl::Ptr *samplerOut)
 {
-    UNIMPLEMENTED();
-    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+    CLSamplerVk *samplerVk = new (std::nothrow) CLSamplerVk(sampler);
+    if (samplerVk == nullptr)
+    {
+        ANGLE_CL_RETURN_ERROR(CL_OUT_OF_HOST_MEMORY);
+    }
+    ANGLE_TRY(samplerVk->create());
+    *samplerOut = CLSamplerImpl::Ptr(samplerVk);
+    return angle::Result::Continue;
 }
 
 angle::Result CLContextVk::createProgramWithSource(const cl::Program &program,

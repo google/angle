@@ -2141,7 +2141,7 @@ CreateSharedFramebufferCacheKey(const FramebufferDesc &desc)
 class SamplerHelper final : angle::NonCopyable
 {
   public:
-    SamplerHelper(ContextVk *contextVk);
+    SamplerHelper(vk::Context *context);
     ~SamplerHelper();
 
     explicit SamplerHelper(SamplerHelper &&samplerHelper);

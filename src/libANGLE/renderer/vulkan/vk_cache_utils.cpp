@@ -5804,9 +5804,8 @@ bool SamplerDesc::operator==(const SamplerDesc &other) const
     return memcmp(this, &other, sizeof(SamplerDesc)) == 0;
 }
 
-// SamplerHelper implementation.
-SamplerHelper::SamplerHelper(ContextVk *contextVk)
-    : mSamplerSerial(contextVk->getRenderer()->getResourceSerialFactory().generateSamplerSerial())
+SamplerHelper::SamplerHelper(vk::Context *context)
+    : mSamplerSerial(context->getRenderer()->getResourceSerialFactory().generateSamplerSerial())
 {}
 
 SamplerHelper::~SamplerHelper() {}
