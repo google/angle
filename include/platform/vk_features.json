@@ -1554,6 +1554,14 @@
                 "VkDevice supports the VK_KHR_16bit_storage extension and has the storageInputOutput16 feature"
             ],
             "issue": "http://anglebug.com/8676"
+        },
+        {
+            "name": "use_vkEvent_for_image_barrier",
+            "category": "Features",
+            "description": [
+                "Uses VkEvent instead of VkCmdPipelineBarrier for image barriers"
+            ],
+            "issue": "https://issuetracker.google.com/336844257"
         }
     ]
 }

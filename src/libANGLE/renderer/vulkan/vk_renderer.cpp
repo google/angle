@@ -5057,6 +5057,10 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsExternalFormatResolve, false);
 #endif
 
+    // Disable use of VkCmdWaitEvent for image barriers for now.
+    // https://issuetracker.google.com/336844257
+    ANGLE_FEATURE_CONDITION(&mFeatures, useVkEventForImageBarrier, false);
+
     // Disable memory report feature overrides if extension is not supported.
     if ((mFeatures.logMemoryReportCallbacks.enabled || mFeatures.logMemoryReportStats.enabled) &&
         !mMemoryReportFeatures.deviceMemoryReport)

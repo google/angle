@@ -1424,6 +1424,13 @@ struct FeaturesVk : FeatureSetBase
         &members, "http://anglebug.com/8676"
     };
 
+    FeatureInfo useVkEventForImageBarrier = {
+        "useVkEventForImageBarrier",
+        FeatureCategory::VulkanFeatures,
+        "Uses VkEvent instead of VkCmdPipelineBarrier for image barriers",
+        &members, "https://issuetracker.google.com/336844257"
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;
