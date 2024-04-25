@@ -338,6 +338,14 @@ class Renderer : angle::NonCopyable
         mSuballocationGarbageList.add(this, std::move(garbage));
     }
 
+    void collectRefCountedEventGarbage(const QueueSerial &queueSerial,
+                                       vk::RefCountedEventGarbageObjects &&garbageObjets)
+    {
+        ASSERT(!garbageObjets.empty());
+        vk::SharedGarbage garbage(vk::ResourceUse(queueSerial), std::move(garbageObjets.release()));
+        mSharedGarbageList.add(this, std::move(garbage));
+    }
+
     angle::Result getPipelineCache(vk::Context *context, vk::PipelineCacheAccess *pipelineCacheOut);
     angle::Result mergeIntoPipelineCache(vk::Context *context,
                                          const vk::PipelineCache &pipelineCache);

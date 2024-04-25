@@ -6624,6 +6624,8 @@ angle::Result ContextVk::dispatchCompute(const gl::Context *context,
     ANGLE_TRY(setupDispatch(context));
 
     mOutsideRenderPassCommands->getCommandBuffer().dispatch(numGroupsX, numGroupsY, numGroupsZ);
+    // Track completion of compute.
+    mOutsideRenderPassCommands->flushSetEvents(this);
 
     return angle::Result::Continue;
 }
@@ -6650,6 +6652,9 @@ angle::Result ContextVk::dispatchComputeIndirect(const gl::Context *context, GLi
 
     mOutsideRenderPassCommands->getCommandBuffer().dispatchIndirect(buffer.getBuffer(),
                                                                     buffer.getOffset() + indirect);
+
+    // Track completion of compute.
+    mOutsideRenderPassCommands->flushSetEvents(this);
 
     return angle::Result::Continue;
 }

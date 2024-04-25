@@ -61,6 +61,7 @@ enum class HandleType
 {
     Invalid,
     CommandBuffer,
+    RefCountedEvent,
     ANGLE_HANDLE_TYPES_X(ANGLE_COMMA_SEP_FUNC) EnumCount
 };
 

@@ -701,7 +701,9 @@ class AtomicRefCounted : angle::NonCopyable
     unsigned int getAndReleaseRef()
     {
         ASSERT(isReferenced());
-        return mRefCount.fetch_sub(1, std::memory_order_relaxed);
+        // This is used by RefCountedEvent which will decrement in clean up thread, so
+        // memory_order_acq_rel is needed.
+        return mRefCount.fetch_sub(1, std::memory_order_acq_rel);
     }
 
     bool isReferenced() const { return mRefCount.load(std::memory_order_relaxed) != 0; }
