@@ -1562,6 +1562,14 @@
                 "Uses VkEvent instead of VkCmdPipelineBarrier for image barriers"
             ],
             "issue": "https://issuetracker.google.com/336844257"
+        },
+        {
+            "name": "supports_synchronization2",
+            "category": "Features",
+            "description": [
+                "VkDevice supports VK_KHR_synchronization2 extension"
+            ],
+            "issue": "https://issuetracker.google.com/336844257"
         }
     ]
 }

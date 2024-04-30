@@ -369,6 +369,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SupportsSurfaceProtectedCapabilitiesExtension, "supportsSurfaceProtectedCapabilitiesExtension"},
     {Feature::SupportsSurfaceProtectedSwapchains, "supportsSurfaceProtectedSwapchains"},
     {Feature::SupportsSwapchainMaintenance1, "supportsSwapchainMaintenance1"},
+    {Feature::SupportsSynchronization2, "supportsSynchronization2"},
     {Feature::SupportsTimelineSemaphore, "supportsTimelineSemaphore"},
     {Feature::SupportsTimestampSurfaceAttribute, "supportsTimestampSurfaceAttribute"},
     {Feature::SupportsTransformFeedbackExtension, "supportsTransformFeedbackExtension"},

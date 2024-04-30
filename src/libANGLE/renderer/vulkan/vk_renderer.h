@@ -927,6 +927,7 @@ class Renderer : angle::NonCopyable
 #endif
     VkPhysicalDevice8BitStorageFeatures m8BitStorageFeatures;
     VkPhysicalDevice16BitStorageFeatures m16BitStorageFeatures;
+    VkPhysicalDeviceSynchronization2Features mSynchronization2Features;
 
     angle::PackedEnumBitSet<gl::ShadingRate, uint8_t> mSupportedFragmentShadingRates;
     angle::PackedEnumMap<gl::ShadingRate, VkSampleCountFlags>

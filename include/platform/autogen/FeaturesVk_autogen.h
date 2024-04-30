@@ -1431,6 +1431,13 @@ struct FeaturesVk : FeatureSetBase
         &members, "https://issuetracker.google.com/336844257"
     };
 
+    FeatureInfo supportsSynchronization2 = {
+        "supportsSynchronization2",
+        FeatureCategory::VulkanFeatures,
+        "VkDevice supports VK_KHR_synchronization2 extension",
+        &members, "https://issuetracker.google.com/336844257"
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;
