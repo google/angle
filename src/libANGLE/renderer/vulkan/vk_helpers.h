@@ -987,13 +987,14 @@ class BufferHelper : public ReadWriteResource
 
     void recordReadBarrier(VkAccessFlags readAccessType,
                            VkPipelineStageFlags readStage,
-                           PipelineBarrierArray *barriers,
-                           PipelineStage stageIndex);
+                           PipelineStage stageIndex,
+                           PipelineBarrierArray *barriers);
 
     void recordWriteBarrier(VkAccessFlags writeAccessType,
                             VkPipelineStageFlags writeStage,
-                            PipelineBarrierArray *barriers,
-                            PipelineStage stageIndex);
+                            PipelineStage stageIndex,
+                            PipelineBarrierArray *barriers);
+
     void fillWithColor(const angle::Color<uint8_t> &color,
                        const gl::InternalFormat &internalFormat);
 
