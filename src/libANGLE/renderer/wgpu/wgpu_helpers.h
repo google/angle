@@ -13,6 +13,7 @@
 #include "libANGLE/Error.h"
 #include "libANGLE/ImageIndex.h"
 #include "libANGLE/angletypes.h"
+#include "libANGLE/renderer/wgpu/ContextWgpu.h"
 #include "libANGLE/renderer/wgpu/wgpu_utils.h"
 
 namespace rx
@@ -25,16 +26,8 @@ namespace webgpu
 
 struct QueuedDataUpload
 {
-    wgpu::ImageCopyBuffer copyBuffer;
+    wgpu::ImageCopyBuffer buffer;
     gl::LevelIndex targetLevel;
-};
-
-// Stores subset of information required to create a wgpu::Texture
-struct TextureInfo
-{
-    wgpu::TextureUsage usage = wgpu::TextureUsage::None;
-    wgpu::TextureDimension dimension;
-    uint32_t mipLevelCount;
 };
 
 wgpu::TextureDimension toWgpuTextureDimension(gl::TextureType glTextureType);
@@ -46,33 +39,54 @@ class ImageHelper
     ~ImageHelper();
 
     angle::Result initImage(wgpu::Device &device,
-                            wgpu::TextureUsage usage,
-                            wgpu::TextureDimension dimension,
-                            wgpu::Extent3D size,
-                            wgpu::TextureFormat format,
-                            std::uint32_t mipLevelCount,
-                            std::uint32_t sampleCount,
-                            std::size_t ViewFormatCount);
+                            gl::LevelIndex firstAllocatedLevel,
+                            wgpu::TextureDescriptor textureDescriptor);
 
-    void flushStagedUpdates(wgpu::Device &device);
+    void flushStagedUpdates(ContextWgpu *contextWgpu);
+
+    wgpu::TextureDescriptor createTextureDescriptor(wgpu::TextureUsage usage,
+                                                    wgpu::TextureDimension dimension,
+                                                    wgpu::Extent3D size,
+                                                    wgpu::TextureFormat format,
+                                                    std::uint32_t mipLevelCount,
+                                                    std::uint32_t sampleCount,
+                                                    std::size_t viewFormatCount);
+
+    angle::Result stageTextureUpload(ContextWgpu *contextWgpu,
+                                     const gl::Extents &glExtents,
+                                     GLuint inputRowPitch,
+                                     GLuint inputDepthPitch,
+                                     uint32_t outputRowPitch,
+                                     uint32_t outputDepthPitch,
+                                     uint32_t allocationSize,
+                                     const gl::ImageIndex &index,
+                                     const uint8_t *pixels);
+
+    void removeStagedUpdates(gl::LevelIndex levelToRemove);
+
+    void resetImage();
 
     LevelIndex toWgpuLevel(gl::LevelIndex levelIndexGl) const;
     gl::LevelIndex toGlLevel(LevelIndex levelIndexWgpu) const;
+    bool isTextureLevelInAllocatedImage(gl::LevelIndex textureLevel);
     wgpu::Texture &getTexture() { return mTexture; }
-    TextureInfo getWgpuTextureInfo(const gl::ImageIndex &index);
     wgpu::TextureFormat toWgpuTextureFormat() const { return mTextureDescriptor.format; }
     const wgpu::TextureDescriptor &getTextureDescriptor() const { return mTextureDescriptor; }
     gl::LevelIndex getFirstAllocatedLevel() { return mFirstAllocatedLevel; }
+    gl::LevelIndex getLastAllocatedLevel();
+    uint32_t getLevelCount() { return mTextureDescriptor.mipLevelCount; }
+    wgpu::Extent3D getSize() { return mTextureDescriptor.size; }
+    bool isInitialized() { return mInitialized; }
 
   private:
     wgpu::Texture mTexture;
     wgpu::TextureDescriptor mTextureDescriptor = {};
+    bool mInitialized                          = false;
 
-    gl::LevelIndex mFirstAllocatedLevel;
+    gl::LevelIndex mFirstAllocatedLevel = gl::LevelIndex(0);
 
     std::vector<QueuedDataUpload> mBufferQueue;
 };
-
 struct BufferMapState
 {
     wgpu::MapMode mode;

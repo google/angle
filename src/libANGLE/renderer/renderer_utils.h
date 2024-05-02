@@ -18,6 +18,7 @@
 #include "GLSLANG/ShaderLang.h"
 #include "common/angleutils.h"
 #include "common/utilities.h"
+#include "libANGLE/ImageIndex.h"
 #include "libANGLE/angletypes.h"
 
 namespace angle
@@ -464,6 +465,49 @@ GLint LimitToInt(const LargerInt physicalDeviceValue)
         physicalDeviceValue, static_cast<LargerInt>(std::numeric_limits<int32_t>::max() / 2)));
 }
 
+bool TextureHasAnyRedefinedLevels(const gl::CubeFaceArray<gl::TexLevelMask> &redefinedLevels);
+bool IsTextureLevelRedefined(const gl::CubeFaceArray<gl::TexLevelMask> &redefinedLevels,
+                             gl::TextureType textureType,
+                             gl::LevelIndex level);
+
+enum class TextureLevelDefinition
+{
+    Compatible   = 0,
+    Incompatible = 1,
+
+    InvalidEnum = 2
+};
+
+enum class TextureLevelAllocation
+{
+    WithinAllocatedImage  = 0,
+    OutsideAllocatedImage = 1,
+
+    InvalidEnum = 2
+};
+// Returns true if the image should be released after the level is redefined, false otherwise.
+bool TextureRedefineLevel(const TextureLevelAllocation levelAllocation,
+                          const TextureLevelDefinition levelDefinition,
+                          bool immutableFormat,
+                          uint32_t levelCount,
+                          const uint32_t layerIndex,
+                          const gl::ImageIndex &index,
+                          gl::LevelIndex imageFirstAllocatedLevel,
+                          gl::CubeFaceArray<gl::TexLevelMask> *redefinedLevels);
+
+void TextureRedefineGenerateMipmapLevels(gl::LevelIndex baseLevel,
+                                         gl::LevelIndex maxLevel,
+                                         gl::LevelIndex firstGeneratedLevel,
+                                         gl::CubeFaceArray<gl::TexLevelMask> *redefinedLevels);
+
+enum class ImageMipLevels
+{
+    EnabledLevels                 = 0,
+    FullMipChainForGenerateMipmap = 1,
+
+    InvalidEnum = 2,
+};
+
 enum class PipelineType
 {
     Graphics = 0,
@@ -472,6 +516,7 @@ enum class PipelineType
     InvalidEnum = 2,
     EnumCount   = 2,
 };
+
 }  // namespace rx
 
 // MultiDraw macro patterns

@@ -2092,6 +2092,29 @@ TEST_P(Texture2DTest, ZeroSizedUploads)
     EXPECT_GL_NO_ERROR();
 }
 
+// Tests uploading a red texture and immediately reading from it.
+TEST_P(Texture2DTest, SimpleUpload)
+{
+    const GLuint width            = getWindowWidth();
+    const GLuint height           = getWindowHeight();
+    const GLuint windowPixelCount = width * height;
+    std::vector<GLColor> pixelsRed(windowPixelCount, GLColor::red);
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 pixelsRed.data());
+    EXPECT_GL_ERROR(GL_NO_ERROR);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTexture2D, 0);
+
+    EXPECT_GL_ERROR(GL_NO_ERROR);
+    std::vector<GLColor> output(windowPixelCount, GLColor::green);
+    glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, output.data());
+    EXPECT_EQ(pixelsRed, output);
+}
+
 // Test that interleaved superseded updates work as expected
 TEST_P(Texture2DTest, InterleavedSupersedingTextureUpdates)
 {
@@ -14390,7 +14413,8 @@ void main()
 ANGLE_INSTANTIATE_TEST(Texture2DTest,
                        ANGLE_ALL_TEST_PLATFORMS_ES2,
                        ES2_EMULATE_COPY_TEX_IMAGE_VIA_SUB(),
-                       ES2_EMULATE_COPY_TEX_IMAGE());
+                       ES2_EMULATE_COPY_TEX_IMAGE(),
+                       ES2_WEBGPU());
 ANGLE_INSTANTIATE_TEST_ES2(TextureCubeTest);
 ANGLE_INSTANTIATE_TEST_ES2(Texture2DTestWithDrawScale);
 ANGLE_INSTANTIATE_TEST_ES2(Sampler2DAsFunctionParameterTest);

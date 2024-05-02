@@ -261,6 +261,7 @@ class ContextWgpu : public ContextImpl
     DisplayWgpu *getDisplay() { return mDisplay; }
     wgpu::Device &getDevice() { return mDisplay->getDevice(); }
     wgpu::Queue &getQueue() { return mDisplay->getQueue(); }
+    angle::ImageLoadContext &getImageLoadContext() { return mImageLoadContext; }
     angle::Result ensureRenderPassStarted(const wgpu::RenderPassDescriptor &desc);
     angle::Result endRenderPass(webgpu::RenderPassClosureReason closure_reason);
 
