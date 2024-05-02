@@ -1165,7 +1165,12 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
     }
     if (mRenderer->useDepthTestEnableDynamicState())
     {
-        mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_DEPTH_TEST_ENABLED);
+        // Depth test affects depth write state too in GraphicsPipelineDesc, so the pipeline needs
+        // to stay dirty if depth test changes while depth write state is static.
+        if (mRenderer->useDepthWriteEnableDynamicState())
+        {
+            mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_DEPTH_TEST_ENABLED);
+        }
     }
     if (mRenderer->useDepthWriteEnableDynamicState())
     {
