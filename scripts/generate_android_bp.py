@@ -294,6 +294,7 @@ def gn_cflags_to_blueprint_cflags(target_info):
     # regexs of allowlisted cflags
     cflag_allowlist = [
         r'^-Wno-.*$',  # forward cflags that disable warnings
+        r'^-fvisibility.*$',  # forward visibility (https://gcc.gnu.org/wiki/Visibility) flags for better perf on x86
         r'-mpclmul'  # forward "-mpclmul" (used by zlib)
     ]
 
