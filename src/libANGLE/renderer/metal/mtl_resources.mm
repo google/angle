@@ -116,7 +116,14 @@ bool Resource::hasPendingWorks(Context *context) const
     return context->cmdQueue().resourceHasPendingWorks(this);
 }
 
-void Resource::setUsedByCommandBufferWithQueueSerial(uint64_t serial, bool writing)
+bool Resource::hasPendingRenderWorks(Context *context) const
+{
+    return context->cmdQueue().resourceHasPendingRenderWorks(this);
+}
+
+void Resource::setUsedByCommandBufferWithQueueSerial(uint64_t serial,
+                                                     bool writing,
+                                                     bool isRenderCommand)
 {
     if (writing)
     {
@@ -125,6 +132,18 @@ void Resource::setUsedByCommandBufferWithQueueSerial(uint64_t serial, bool writi
     }
 
     mUsageRef->cmdBufferQueueSerial = std::max(mUsageRef->cmdBufferQueueSerial, serial);
+
+    if (isRenderCommand)
+    {
+        if (writing)
+        {
+            mUsageRef->lastWritingRenderEncoderSerial = mUsageRef->cmdBufferQueueSerial;
+        }
+        else
+        {
+            mUsageRef->lastReadingRenderEncoderSerial = mUsageRef->cmdBufferQueueSerial;
+        }
+    }
 }
 
 // Texture implemenetation
