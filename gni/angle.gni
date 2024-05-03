@@ -278,6 +278,7 @@ declare_args() {
       angle_enable_vulkan && !is_ubsan && !is_tsan && !is_asan &&
       angle_debug_layers_enabled &&
       (!is_android || (ndk_api_level_at_least_26 && !build_with_chromium))
+  angle_enable_vulkan_api_dump_layer = false
 
   # ISpriteVisual windows cannot be validated and can lead to crashes if an invalid window is
   # provided to ANGLE. Disable them for non-standalone ANGLE builds. crbug.com/1176118
@@ -300,6 +301,8 @@ declare_args() {
   angle_vulkan_tools_dir = "$angle_root/third_party/vulkan-tools/src"
   angle_vulkan_validation_layers_dir =
       "$angle_root/third_party/vulkan-validation-layers/src"
+  angle_lunarg_vulkantools_dir =
+      "$angle_root/third_party/lunarg-vulkantools/src"
 
   angle_build_vulkan_system_info = angle_has_build && !angle_is_winuwp
 

@@ -1765,6 +1765,10 @@ if (is_android && symbol_level != 0) {
       }
     }
 
+    if (angle_enable_vulkan_api_dump_layer) {
+      sources += [ "$root_out_dir/libVkLayer_lunarg_api_dump$shlib_extension" ]
+    }
+
     script = rebase_path("${root_build_dir}/android/compress_symbols.py",
                          root_build_dir)
 
@@ -1777,6 +1781,10 @@ if (is_android && symbol_level != 0) {
       foreach(_layer, vulkan_validation_layers) {
         deps += [ "$angle_vulkan_validation_layers_dir:${_layer}" ]
       }
+    }
+
+    if (angle_enable_vulkan_api_dump_layer) {
+      deps += [ "$angle_lunarg_vulkantools_dir:VkLayer_lunarg_api_dump" ]
     }
 
     outputs = [ "$root_out_dir/lib.compressed/{{source_file_part}}" ]
