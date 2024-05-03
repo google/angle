@@ -189,11 +189,16 @@ class CommandBuffer final : public WrappedObject<id<MTLCommandBuffer>>, angle::N
 
   private:
     void set(id<MTLCommandBuffer> metalBuffer);
+
+    // This function returns either blit/compute encoder (if active) or render encoder.
+    // If both types of encoders are active (blit/compute and render), the former will be returned.
+    CommandEncoder *getPendingCommandEncoder();
+
     void cleanup();
 
     bool readyImpl() const;
     bool commitImpl();
-    void forceEndingCurrentEncoder();
+    void forceEndingAllEncoders();
 
     void setPendingEvents();
 #if ANGLE_MTL_EVENT_AVAILABLE
@@ -210,7 +215,11 @@ class CommandBuffer final : public WrappedObject<id<MTLCommandBuffer>>, angle::N
 
     CommandQueue &mCmdQueue;
 
-    CommandEncoder *mActiveCommandEncoder = nullptr;
+    // Note: due to render command encoder being a deferred encoder, it can coexist with
+    // blit/compute encoder. When submitting, blit/compute encoder will be executed before the
+    // render encoder.
+    CommandEncoder *mActiveRenderEncoder        = nullptr;
+    CommandEncoder *mActiveBlitOrComputeEncoder = nullptr;
 
     uint64_t mQueueSerial = 0;
 
