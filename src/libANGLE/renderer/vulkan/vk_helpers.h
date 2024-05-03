@@ -2514,8 +2514,11 @@ class ImageHelper final : public Resource, public angle::Subject
                                   PrimaryCommandBuffer *commandBuffer,
                                   VkSemaphore *acquireNextImageSemaphoreOut)
     {
-        barrierImpl(context, getAspectFlags(), newLayout, mCurrentQueueFamilyIndex,
-                    BarrierType::Pipeline, nullptr, commandBuffer, acquireNextImageSemaphoreOut);
+        // Since we are doing an out of order one off submission, there shouldn't be any pending
+        // setEvent.
+        ASSERT(!mCurrentEvent.valid());
+        barrierImpl(context, getAspectFlags(), newLayout, mCurrentQueueFamilyIndex, nullptr,
+                    commandBuffer, acquireNextImageSemaphoreOut);
     }
 
     // This function can be used to prevent issuing redundant layout transition commands.
@@ -2851,7 +2854,6 @@ class ImageHelper final : public Resource, public angle::Subject
                      VkImageAspectFlags aspectMask,
                      ImageLayout newLayout,
                      uint32_t newQueueFamilyIndex,
-                     BarrierType barrierType,
                      RefCountedEventGarbageObjects *garbageObjects,
                      CommandBufferT *commandBuffer,
                      VkSemaphore *acquireNextImageSemaphoreOut);

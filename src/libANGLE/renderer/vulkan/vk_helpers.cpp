@@ -6240,6 +6240,10 @@ angle::Result ImageHelper::initializeNonZeroMemory(Context *context,
         return angle::Result::Continue;
     }
 
+    // Since we are going to do a one off out of order submission, there shouldn't any pending
+    // setEvent.
+    ASSERT(!mCurrentEvent.valid());
+
     PrimaryCommandBuffer commandBuffer;
     auto protectionType = ConvertProtectionBoolToType(hasProtectedContent);
     ANGLE_TRY(renderer->getCommandBufferOneOff(context, protectionType, &commandBuffer));
@@ -6247,7 +6251,7 @@ angle::Result ImageHelper::initializeNonZeroMemory(Context *context,
     // Queue a DMA copy.
     VkSemaphore acquireNextImageSemaphore;
     barrierImpl(context, getAspectFlags(), ImageLayout::TransferDst,
-                renderer->getQueueFamilyIndex(), BarrierType::Pipeline, nullptr, &commandBuffer,
+                renderer->getQueueFamilyIndex(), nullptr, &commandBuffer,
                 &acquireNextImageSemaphore);
     // SwapChain image should not come here
     ASSERT(acquireNextImageSemaphore == VK_NULL_HANDLE);
@@ -6988,8 +6992,9 @@ void ImageHelper::changeLayoutAndQueue(Context *context,
 {
     ASSERT(isQueueChangeNeccesary(newQueueFamilyIndex));
     VkSemaphore acquireNextImageSemaphore;
-    barrierImpl(context, aspectMask, newLayout, newQueueFamilyIndex, BarrierType::Pipeline, nullptr,
-                commandBuffer, &acquireNextImageSemaphore);
+    // barrierImpl should detect there is queue switch and fall back to pipelineBarrier properly.
+    barrierImpl(context, aspectMask, newLayout, newQueueFamilyIndex, nullptr, commandBuffer,
+                &acquireNextImageSemaphore);
     // SwapChain image should not get here.
     ASSERT(acquireNextImageSemaphore == VK_NULL_HANDLE);
 }
@@ -7097,7 +7102,6 @@ void ImageHelper::barrierImpl(Context *context,
                               VkImageAspectFlags aspectMask,
                               ImageLayout newLayout,
                               uint32_t newQueueFamilyIndex,
-                              BarrierType barrierType,
                               RefCountedEventGarbageObjects *garbageObjects,
                               CommandBufferT *commandBuffer,
                               VkSemaphore *acquireNextImageSemaphoreOut)
@@ -7138,19 +7142,14 @@ void ImageHelper::barrierImpl(Context *context,
 
     VkPipelineStageFlags dstStageMask = GetImageLayoutDstStageMask(context, transitionTo);
 
-    if (mCurrentQueueFamilyIndex != newQueueFamilyIndex && barrierType == BarrierType::Event)
-    {
-        // VkCmdWaitEvent requires the srcQueueFamilyIndex and dstQueueFamilyIndex members of any
-        // element of pBufferMemoryBarriers or pImageMemoryBarriers must be equal
-        // (VUID-vkCmdWaitEvents-srcQueueFamilyIndex-02803).
-        barrierType = BarrierType::Pipeline;
-    }
-
-    if (!mCurrentEvent.valid())
-    {
-        // Fallback to pipelineBarrier if there is no event tracking image.
-        barrierType = BarrierType::Pipeline;
-    }
+    // Fallback to pipelineBarrier if there is no event tracking image.
+    // VkCmdWaitEvent requires the srcQueueFamilyIndex and dstQueueFamilyIndex members of any
+    // element of pBufferMemoryBarriers or pImageMemoryBarriers must be equal
+    // (VUID-vkCmdWaitEvents-srcQueueFamilyIndex-02803).
+    BarrierType barrierType =
+        mCurrentEvent.valid() && mCurrentQueueFamilyIndex == newQueueFamilyIndex
+            ? BarrierType::Event
+            : BarrierType::Pipeline;
 
     if (barrierType == BarrierType::Event)
     {
@@ -7194,7 +7193,6 @@ template void ImageHelper::barrierImpl<priv::CommandBuffer>(
     VkImageAspectFlags aspectMask,
     ImageLayout newLayout,
     uint32_t newQueueFamilyIndex,
-    BarrierType barrierType,
     RefCountedEventGarbageObjects *garbageObjects,
     priv::CommandBuffer *commandBuffer,
     VkSemaphore *acquireNextImageSemaphoreOut);
@@ -7241,8 +7239,8 @@ void ImageHelper::recordWriteBarrier(Context *context,
         ASSERT(!mCurrentEvent.valid() || !commands->hasSetEventPendingFlush(mCurrentEvent));
         VkSemaphore acquireNextImageSemaphore;
         barrierImpl(context, aspectMask, newLayout, context->getRenderer()->getQueueFamilyIndex(),
-                    BarrierType::Event, commands->getRefCountedEventGarbage(),
-                    &commands->getCommandBuffer(), &acquireNextImageSemaphore);
+                    commands->getRefCountedEventGarbage(), &commands->getCommandBuffer(),
+                    &acquireNextImageSemaphore);
 
         if (acquireNextImageSemaphore != VK_NULL_HANDLE)
         {
@@ -7270,8 +7268,8 @@ void ImageHelper::recordReadSubresourceBarrier(Context *context,
         ASSERT(!mCurrentEvent.valid() || !commands->hasSetEventPendingFlush(mCurrentEvent));
         VkSemaphore acquireNextImageSemaphore;
         barrierImpl(context, aspectMask, newLayout, context->getRenderer()->getQueueFamilyIndex(),
-                    BarrierType::Event, commands->getRefCountedEventGarbage(),
-                    &commands->getCommandBuffer(), &acquireNextImageSemaphore);
+                    commands->getRefCountedEventGarbage(), &commands->getCommandBuffer(),
+                    &acquireNextImageSemaphore);
 
         if (acquireNextImageSemaphore != VK_NULL_HANDLE)
         {
@@ -7296,8 +7294,8 @@ void ImageHelper::recordReadBarrier(Context *context,
     ASSERT(!mCurrentEvent.valid() || !commands->hasSetEventPendingFlush(mCurrentEvent));
     VkSemaphore acquireNextImageSemaphore;
     barrierImpl(context, aspectMask, newLayout, context->getRenderer()->getQueueFamilyIndex(),
-                BarrierType::Event, commands->getRefCountedEventGarbage(),
-                &commands->getCommandBuffer(), &acquireNextImageSemaphore);
+                commands->getRefCountedEventGarbage(), &commands->getCommandBuffer(),
+                &acquireNextImageSemaphore);
 
     if (acquireNextImageSemaphore != VK_NULL_HANDLE)
     {
@@ -10212,8 +10210,8 @@ angle::Result ImageHelper::copySurfaceImageToBuffer(DisplayVk *displayVk,
 
     VkSemaphore acquireNextImageSemaphore;
     barrierImpl(displayVk, getAspectFlags(), ImageLayout::TransferSrc,
-                renderer->getQueueFamilyIndex(), BarrierType::Pipeline, nullptr,
-                &primaryCommandBuffer, &acquireNextImageSemaphore);
+                renderer->getQueueFamilyIndex(), nullptr, &primaryCommandBuffer,
+                &acquireNextImageSemaphore);
     primaryCommandBuffer.copyImageToBuffer(mImage, getCurrentLayout(displayVk),
                                            bufferHelper->getBuffer().getHandle(), 1, &region);
 
@@ -10260,7 +10258,7 @@ angle::Result ImageHelper::copyBufferToSurfaceImage(DisplayVk *displayVk,
 
     VkSemaphore acquireNextImageSemaphore;
     barrierImpl(displayVk, getAspectFlags(), ImageLayout::TransferDst,
-                renderer->getQueueFamilyIndex(), BarrierType::Pipeline, nullptr, &commandBuffer,
+                renderer->getQueueFamilyIndex(), nullptr, &commandBuffer,
                 &acquireNextImageSemaphore);
     commandBuffer.copyBufferToImage(bufferHelper->getBuffer().getHandle(), mImage,
                                     getCurrentLayout(displayVk), 1, &region);
