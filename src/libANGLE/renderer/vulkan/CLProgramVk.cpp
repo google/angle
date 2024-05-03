@@ -164,10 +164,15 @@ spv_result_t ParseReflection(CLProgramVk::SpvReflectionData &reflectionData,
                 }
                 case NonSemanticClspvReflectionSpecConstantWorkgroupSize:
                 {
-                    reflectionData.specConstantWorkgroupSizeIDs = {
-                        reflectionData.spvIntLookup[spvInstr.words[5]],
-                        reflectionData.spvIntLookup[spvInstr.words[6]],
-                        reflectionData.spvIntLookup[spvInstr.words[7]]};
+                    reflectionData.specConstantIDs[SpecConstantType::WorkgroupSizeX] =
+                        reflectionData.spvIntLookup[spvInstr.words[5]];
+                    reflectionData.specConstantIDs[SpecConstantType::WorkgroupSizeY] =
+                        reflectionData.spvIntLookup[spvInstr.words[6]];
+                    reflectionData.specConstantIDs[SpecConstantType::WorkgroupSizeZ] =
+                        reflectionData.spvIntLookup[spvInstr.words[7]];
+                    reflectionData.specConstantsUsed[SpecConstantType::WorkgroupSizeX] = true;
+                    reflectionData.specConstantsUsed[SpecConstantType::WorkgroupSizeY] = true;
+                    reflectionData.specConstantsUsed[SpecConstantType::WorkgroupSizeZ] = true;
                     break;
                 }
                 case NonSemanticClspvReflectionPropertyRequiredWorkgroupSize:
@@ -179,6 +184,24 @@ spv_result_t ParseReflection(CLProgramVk::SpvReflectionData &reflectionData,
                         reflectionData.spvIntLookup[spvInstr.words[8]]};
                     break;
                 }
+                case NonSemanticClspvReflectionSpecConstantWorkDim:
+                {
+                    reflectionData.specConstantIDs[SpecConstantType::WorkDimension] =
+                        reflectionData.spvIntLookup[spvInstr.words[5]];
+                    reflectionData.specConstantsUsed[SpecConstantType::WorkDimension] = true;
+                    break;
+                }
+                case NonSemanticClspvReflectionSpecConstantGlobalOffset:
+                    reflectionData.specConstantIDs[SpecConstantType::GlobalOffsetX] =
+                        reflectionData.spvIntLookup[spvInstr.words[5]];
+                    reflectionData.specConstantIDs[SpecConstantType::GlobalOffsetY] =
+                        reflectionData.spvIntLookup[spvInstr.words[6]];
+                    reflectionData.specConstantIDs[SpecConstantType::GlobalOffsetZ] =
+                        reflectionData.spvIntLookup[spvInstr.words[7]];
+                    reflectionData.specConstantsUsed[SpecConstantType::GlobalOffsetX] = true;
+                    reflectionData.specConstantsUsed[SpecConstantType::GlobalOffsetY] = true;
+                    reflectionData.specConstantsUsed[SpecConstantType::GlobalOffsetZ] = true;
+                    break;
                 default:
                     break;
             }
