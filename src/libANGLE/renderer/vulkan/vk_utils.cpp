@@ -715,9 +715,6 @@ void GarbageObject::destroy(Renderer *renderer)
         case HandleType::PipelineLayout:
             vkDestroyPipelineLayout(device, (VkPipelineLayout)mHandle, nullptr);
             break;
-        case HandleType::RefCountedEvent:
-            ReleaseRefcountedEvent(device, (RefCountedEventAndLayoutHandle)mHandle);
-            break;
         case HandleType::RenderPass:
             vkDestroyRenderPass(device, (VkRenderPass)mHandle, nullptr);
             break;

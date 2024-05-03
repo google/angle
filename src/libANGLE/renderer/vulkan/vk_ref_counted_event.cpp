@@ -15,17 +15,6 @@ namespace rx
 {
 namespace vk
 {
-
-void ReleaseRefcountedEvent(VkDevice device, RefCountedEventAndLayoutHandle atomicRefCountedEvent)
-{
-    const bool isLastReference = atomicRefCountedEvent->getAndReleaseRef() == 1;
-    if (isLastReference)
-    {
-        atomicRefCountedEvent->get().event.destroy(device);
-        SafeDelete(atomicRefCountedEvent);
-    }
-}
-
 void RefCountedEvent::init(Context *context, ImageLayout layout)
 {
     ASSERT(mHandle == nullptr);
@@ -43,26 +32,26 @@ void RefCountedEvent::init(Context *context, ImageLayout layout)
     mHandle->get().imageLayout = layout;
 }
 
-// RefCountedEventGarbageObjects implementation
-void RefCountedEventGarbageObjects::add(RefCountedEvent *event)
+// RefCountedEventsGarbage implementation.
+bool RefCountedEventsGarbage::destroyIfComplete(Renderer *renderer)
 {
-    mGarbageObjects.emplace_back(GetGarbage(event));
-}
-
-void RefCountedEventGarbageObjects::add(std::vector<RefCountedEvent> *events)
-{
-    while (!events->empty())
+    if (renderer->hasResourceUseFinished(mLifetime))
     {
-        mGarbageObjects.emplace_back(GetGarbage(&events->back()));
-        events->pop_back();
+        for (RefCountedEvent &event : mRefCountedEvents)
+        {
+            ASSERT(event.valid());
+            event.release(renderer->getDevice());
+            ASSERT(!event.valid());
+        }
+        mRefCountedEvents.clear();
+        return true;
     }
+    return false;
 }
 
-void RefCountedEventGarbageObjects::add(const RefCountedEvent &event)
+bool RefCountedEventsGarbage::hasResourceUseSubmitted(Renderer *renderer) const
 {
-    RefCountedEvent localEventCopy = event;
-    mGarbageObjects.emplace_back(GetGarbage(&localEventCopy));
-    ASSERT(!localEventCopy.valid());
+    return renderer->hasResourceUseSubmitted(mLifetime);
 }
 
 // EventBarrier implementation.
