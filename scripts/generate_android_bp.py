@@ -639,6 +639,8 @@ def main():
                 '-O2',
                 # Override AOSP build flags to match ANGLE's CQ testing and reduce binary size
                 '-fno-unwind-tables',
+                # Disable stack protector to reduce cpu overhead.
+                '-fno-stack-protector',
             ],
         }))
 
