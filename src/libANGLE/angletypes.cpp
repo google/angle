@@ -1132,11 +1132,9 @@ bool DecompressBlob(const uint8_t *compressedData,
         return false;
     }
 
-    // Resize it to expected size.
-    if (!uncompressedData->resize(destLen))
-    {
-        return false;
-    }
+    // Trim to actual size.
+    ASSERT(destLen <= uncompressedSize);
+    uncompressedData->trim(destLen);
 
     return true;
 }
