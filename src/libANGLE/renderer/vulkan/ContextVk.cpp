@@ -1209,6 +1209,10 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
         mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_VERTEX_ARRAY_BINDING);
     }
 
+    // Stash the mRefCountedEventRecycler in vk::Context for ImageHelper to conveniently access
+    mShareGroupRefCountedEventsGarbageRecycler =
+        mShareGroupVk->getRefCountedEventsGarbageRecycler();
+
     angle::PerfMonitorCounterGroup vulkanGroup;
     vulkanGroup.name = "vulkan";
 
@@ -3649,6 +3653,9 @@ angle::Result ContextVk::submitCommands(const vk::Semaphore *signalSemaphore,
     // Now that we have submitted commands, some of pending garbage may no longer pending
     // and should be moved to garbage list.
     mRenderer->cleanupPendingSubmissionGarbage();
+    // In case of big amount of render/submission within one frame, if we accumulate excessive
+    // amount of garbage, also trigger the cleanup.
+    mShareGroupVk->cleanupExcessiveRefCountedEventGarbage(mRenderer);
 
     mComputeDirtyBits |= mNewComputeCommandBufferDirtyBits;
 
@@ -7688,12 +7695,17 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore,
 
     // Try to detect frame boundary for both on screen and offscreen usage by detecting
     // fush/finish/swap.
-    if ((renderPassClosureReason == RenderPassClosureReason::GLFlush ||
-         renderPassClosureReason == RenderPassClosureReason::GLFinish ||
-         renderPassClosureReason == RenderPassClosureReason::EGLSwapBuffers) &&
-        mShareGroupVk->isDueForBufferPoolPrune(mRenderer))
+    bool frameBoundary = renderPassClosureReason == RenderPassClosureReason::GLFlush ||
+                         renderPassClosureReason == RenderPassClosureReason::GLFinish ||
+                         renderPassClosureReason == RenderPassClosureReason::EGLSwapBuffers;
+    if (frameBoundary)
     {
-        mShareGroupVk->pruneDefaultBufferPools(mRenderer);
+        if (mShareGroupVk->isDueForBufferPoolPrune(mRenderer))
+        {
+            mShareGroupVk->pruneDefaultBufferPools(mRenderer);
+        }
+        // Always clean up grabage and destroy the excessive free list at frame boundary.
+        mShareGroupVk->cleanupRefCountedEventGarbage(mRenderer);
         mRenderer->getRefCountedEventRecycler()->destroy(getDevice());
     }
 
@@ -7991,7 +8003,8 @@ angle::Result ContextVk::flushCommandsAndEndRenderPassWithoutSubmit(RenderPassCl
 
     flushDescriptorSetUpdates();
     // Collect RefCountedEvent garbage before submitting to renderer
-    mRenderPassCommands->collectRefCountedEventsGarbage(mRenderer);
+    mRenderPassCommands->collectRefCountedEventsGarbage(
+        mShareGroupVk->getRefCountedEventsGarbageRecycler());
 
     // Save the queueSerial before calling flushRenderPassCommands, which may return a new
     // mRenderPassCommands
@@ -8275,7 +8288,8 @@ angle::Result ContextVk::flushOutsideRenderPassCommands()
 
     // Track completion of this command buffer.
     mOutsideRenderPassCommands->flushSetEvents(this);
-    mOutsideRenderPassCommands->collectRefCountedEventsGarbage(mRenderer);
+    mOutsideRenderPassCommands->collectRefCountedEventsGarbage(
+        mShareGroupVk->getRefCountedEventsGarbageRecycler());
 
     // Save the queueSerial before calling flushOutsideRPCommands, which may return a new
     // mOutsideRenderPassCommands

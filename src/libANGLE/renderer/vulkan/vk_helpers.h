@@ -1527,7 +1527,7 @@ class OutsideRenderPassCommandBufferHelper final : public CommandBufferHelperCom
     void flushSetEvents(Context *context) { flushSetEventsImpl(context, &mCommandBuffer); }
     // Clean up event garbage. Note that ImageHelper object may still holding reference count to it,
     // so the event itself will not gets destroyed until the last refCount goes away.
-    void collectRefCountedEventsGarbage(Renderer *renderer);
+    void collectRefCountedEventsGarbage(RefCountedEventsGarbageRecycler *garbageRecycler);
 
     angle::Result flushToPrimary(Context *context, CommandsState *commandsState);
 
@@ -1877,7 +1877,7 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     void updateDepthStencilReadOnlyMode(RenderPassUsageFlags dsUsageFlags,
                                         VkImageAspectFlags dsAspectFlags);
 
-    void collectRefCountedEventsGarbage(Renderer *renderer);
+    void collectRefCountedEventsGarbage(RefCountedEventsGarbageRecycler *garbageRecycler);
 
   private:
     uint32_t getSubpassCommandBufferCount() const { return mCurrentSubpassCommandBufferIndex + 1; }
