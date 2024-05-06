@@ -1139,6 +1139,11 @@ bool DecompressBlob(const uint8_t *compressedData,
     return true;
 }
 
+uint32_t GenerateCrc(const uint8_t *data, size_t size)
+{
+    return static_cast<uint32_t>(crc32_z(0u, data, size));
+}
+
 UnlockedTailCall::UnlockedTailCall() = default;
 
 UnlockedTailCall::~UnlockedTailCall()

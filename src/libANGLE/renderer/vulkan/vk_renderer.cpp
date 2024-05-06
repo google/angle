@@ -80,7 +80,7 @@ constexpr size_t kImageSizeThresholdForDedicatedMemoryAllocation = 4 * 1024 * 10
 
 // Pipeline cache header version. It should be incremented any time there is an update to the cache
 // header or data structure.
-constexpr uint16_t kPipelineCacheVersion = 1;
+constexpr uint32_t kPipelineCacheVersion = 2;
 
 // Update the pipeline cache every this many swaps.
 constexpr uint32_t kPipelineCacheVkUpdatePeriod = 60;
@@ -927,30 +927,13 @@ uint32_t GetMemoryTypeBitsExcludingHostVisible(Renderer *renderer,
     return memoryTypeBitsOut;
 }
 
-// CRC16-CCITT is used for header before the pipeline cache key data.
-uint16_t ComputeCRC16(const uint8_t *data, const size_t size)
-{
-    constexpr uint16_t kPolynomialCRC16 = 0x8408;
-    uint16_t rem                        = 0;
-
-    for (size_t i = 0; i < size; i++)
-    {
-        rem ^= data[i];
-        for (int j = 0; j < 8; j++)
-        {
-            rem = (rem & 1) ? kPolynomialCRC16 ^ (rem >> 1) : rem >> 1;
-        }
-    }
-    return rem;
-}
-
 // Header data type used for the pipeline cache.
 ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
 
 class CacheDataHeader
 {
   public:
-    void setData(uint16_t compressedDataCRC,
+    void setData(uint32_t compressedDataCRC,
                  uint32_t cacheDataSize,
                  uint16_t numChunks,
                  uint16_t chunkIndex)
@@ -962,8 +945,8 @@ class CacheDataHeader
         mChunkIndex        = chunkIndex;
     }
 
-    void getData(uint16_t *versionOut,
-                 uint16_t *compressedDataCRCOut,
+    void getData(uint32_t *versionOut,
+                 uint32_t *compressedDataCRCOut,
                  uint32_t *cacheDataSizeOut,
                  size_t *numChunksOut,
                  size_t *chunkIndexOut) const
@@ -987,8 +970,8 @@ class CacheDataHeader
     // it is possible to modify the fields in the header, it is recommended to keep the version on
     // top and the same size unless absolutely necessary.
 
-    uint16_t mVersion;
-    uint16_t mCompressedDataCRC;
+    uint32_t mVersion;
+    uint32_t mCompressedDataCRC;
     uint32_t mCacheDataSize;
     uint16_t mNumChunks;
     uint16_t mChunkIndex;
@@ -997,7 +980,7 @@ class CacheDataHeader
 ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 
 // Pack header data for the pipeline cache key data.
-void PackHeaderDataForPipelineCache(uint16_t compressedDataCRC,
+void PackHeaderDataForPipelineCache(uint32_t compressedDataCRC,
                                     uint32_t cacheDataSize,
                                     uint16_t numChunks,
                                     uint16_t chunkIndex,
@@ -1008,8 +991,8 @@ void PackHeaderDataForPipelineCache(uint16_t compressedDataCRC,
 
 // Unpack header data from the pipeline cache key data.
 void UnpackHeaderDataForPipelineCache(CacheDataHeader *data,
-                                      uint16_t *versionOut,
-                                      uint16_t *compressedDataCRCOut,
+                                      uint32_t *versionOut,
+                                      uint32_t *compressedDataCRCOut,
                                       uint32_t *cacheDataSizeOut,
                                       size_t *numChunksOut,
                                       size_t *chunkIndexOut)
@@ -1080,10 +1063,10 @@ void CompressAndStorePipelineCacheVk(VkPhysicalDeviceProperties physicalDevicePr
     ASSERT(numChunks <= UINT16_MAX);
     size_t chunkSize = UnsignedCeilDivide(static_cast<unsigned int>(compressedData.size()),
                                           static_cast<unsigned int>(numChunks));
-    uint16_t compressedDataCRC = 0;
+    uint32_t compressedDataCRC = 0;
     if (kEnableCRCForPipelineCache)
     {
-        compressedDataCRC = ComputeCRC16(compressedData.data(), compressedData.size());
+        compressedDataCRC = angle::GenerateCrc(compressedData.data(), compressedData.size());
     }
 
     for (size_t chunkIndex = 0; chunkIndex < numChunks; ++chunkIndex)
@@ -1168,8 +1151,8 @@ angle::Result GetAndDecompressPipelineCacheVk(VkPhysicalDeviceProperties physica
     }
 
     // Get the number of chunks and other values from the header for data validation.
-    uint16_t cacheVersion;
-    uint16_t compressedDataCRC;
+    uint32_t cacheVersion;
+    uint32_t compressedDataCRC;
     uint32_t uncompressedCacheDataSize;
     size_t numChunks;
     size_t chunkIndex0;
@@ -1191,22 +1174,9 @@ angle::Result GetAndDecompressPipelineCacheVk(VkPhysicalDeviceProperties physica
     }
     else
     {
-        // Either the header structure has been updated, or the header value has been changed.
-        if (cacheVersion > kPipelineCacheVersion + (1 << 8))
-        {
-            // TODO(abdolrashidi): Data corruption in the version should result in a fatal error.
-            // For now, a warning is shown instead, but it should change when the version field is
-            // no longer new.
-            WARN() << "Existing cache version is significantly greater than the new version"
-                      ", possibly due to data corruption: "
-                   << "newVersion = " << kPipelineCacheVersion
-                   << ", existingVersion = " << cacheVersion;
-        }
-        else
-        {
-            WARN() << "Change in cache header version detected: " << "newVersion = "
-                   << kPipelineCacheVersion << ", existingVersion = " << cacheVersion;
-        }
+        WARN() << "Change in cache header version detected: " << "newVersion = "
+               << kPipelineCacheVersion << ", existingVersion = " << cacheVersion;
+
         return angle::Result::Continue;
     }
 
@@ -1233,8 +1203,8 @@ angle::Result GetAndDecompressPipelineCacheVk(VkPhysicalDeviceProperties physica
         }
 
         // Validate the header values and ensure there is enough space to store.
-        uint16_t checkCacheVersion;
-        uint16_t checkCompressedDataCRC;
+        uint32_t checkCacheVersion;
+        uint32_t checkCompressedDataCRC;
         uint32_t checkUncompressedCacheDataSize;
         size_t checkNumChunks;
         size_t checkChunkIndex;
@@ -1273,7 +1243,8 @@ angle::Result GetAndDecompressPipelineCacheVk(VkPhysicalDeviceProperties physica
     // CRC for compressed data and size for decompressed data should match the values in the header.
     if (kEnableCRCForPipelineCache)
     {
-        uint16_t computedCompressedDataCRC = ComputeCRC16(compressedData.data(), compressedSize);
+        uint32_t computedCompressedDataCRC =
+            angle::GenerateCrc(compressedData.data(), compressedSize);
         if (computedCompressedDataCRC != compressedDataCRC)
         {
             if (compressedDataCRC == 0)
