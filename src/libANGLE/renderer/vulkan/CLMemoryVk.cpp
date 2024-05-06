@@ -323,6 +323,7 @@ CLImageVk::~CLImageVk()
         unmap();
     }
     mImage.destroy(mRenderer);
+    mImageView.destroy(mContext->getDevice());
 }
 
 angle::Result CLImageVk::create(void *hostPtr)
@@ -384,6 +385,28 @@ angle::Result CLImageVk::create(void *hostPtr)
             UNREACHABLE();
     }
 
+    switch (desc.type)
+    {
+        case cl::MemObjectType::Image1D_Buffer:
+        case cl::MemObjectType::Image1D:
+            mImageViewType = VK_IMAGE_VIEW_TYPE_1D;
+            break;
+        case cl::MemObjectType::Image1D_Array:
+            mImageViewType = VK_IMAGE_VIEW_TYPE_1D_ARRAY;
+            break;
+        case cl::MemObjectType::Image2D:
+            mImageViewType = VK_IMAGE_VIEW_TYPE_2D;
+            break;
+        case cl::MemObjectType::Image2D_Array:
+            mImageViewType = VK_IMAGE_VIEW_TYPE_2D_ARRAY;
+            break;
+        case cl::MemObjectType::Image3D:
+            mImageViewType = VK_IMAGE_VIEW_TYPE_3D;
+            break;
+        default:
+            UNREACHABLE();
+    }
+
     mElementSize = cl::GetElementSize(format);
 
     if (desc.slicePitch > 0)
@@ -434,6 +457,25 @@ angle::Result CLImageVk::create(void *hostPtr)
         ANGLE_CL_IMPL_TRY_ERROR(mImage.copyToBufferOneOff(mContext, &mStagingBuffer, copyRegion),
                                 CL_OUT_OF_RESOURCES);
     }
+
+    VkImageViewCreateInfo viewInfo = {};
+    viewInfo.sType                 = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+    viewInfo.flags                 = 0;
+    viewInfo.image                 = getImage().getImage().getHandle();
+    viewInfo.format                = getImage().getActualVkFormat();
+
+    viewInfo.subresourceRange.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
+    viewInfo.subresourceRange.baseMipLevel   = 0;
+    viewInfo.subresourceRange.levelCount     = 1;
+    viewInfo.subresourceRange.baseArrayLayer = 0;
+    viewInfo.subresourceRange.layerCount     = static_cast<uint32_t>(getArraySize());
+    viewInfo.components.r                    = VK_COMPONENT_SWIZZLE_IDENTITY;
+    viewInfo.components.g                    = VK_COMPONENT_SWIZZLE_IDENTITY;
+    viewInfo.components.b                    = VK_COMPONENT_SWIZZLE_IDENTITY;
+    viewInfo.components.a                    = VK_COMPONENT_SWIZZLE_IDENTITY;
+
+    viewInfo.viewType = mImageViewType;
+    ANGLE_VK_TRY(mContext, mImageView.init(mContext->getDevice(), viewInfo));
 
     return angle::Result::Continue;
 }

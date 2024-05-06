@@ -125,6 +125,7 @@ class CLImageVk : public CLMemoryVk
     bool isStagingBufferInitialized() { return mStagingBufferInitialized; }
     VkExtent3D getImageExtent() { return mExtent; }
     uint8_t *getMappedPtr() { return mMappedMemory; }
+    vk::ImageView &getImageView() { return mImageView; }
 
   private:
     angle::Result mapImpl() override;
@@ -139,6 +140,8 @@ class CLImageVk : public CLMemoryVk
     size_t mImageSize;
     size_t mElementSize;
     bool mStagingBufferInitialized;
+    vk::ImageView mImageView;
+    VkImageViewType mImageViewType;
 };
 
 }  // namespace rx

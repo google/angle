@@ -13,7 +13,9 @@
 #include "libANGLE/renderer/vulkan/CLKernelVk.h"
 #include "libANGLE/renderer/vulkan/CLMemoryVk.h"
 #include "libANGLE/renderer/vulkan/CLProgramVk.h"
+#include "libANGLE/renderer/vulkan/CLSamplerVk.h"
 #include "libANGLE/renderer/vulkan/cl_types.h"
+#include "libANGLE/renderer/vulkan/clspv_utils.h"
 #include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 #include "libANGLE/renderer/vulkan/vk_renderer.h"
 #include "libANGLE/renderer/vulkan/vk_wrapper.h"
@@ -24,6 +26,7 @@
 #include "libANGLE/CLEvent.h"
 #include "libANGLE/CLImage.h"
 #include "libANGLE/CLKernel.h"
+#include "libANGLE/CLSampler.h"
 #include "libANGLE/cl_utils.h"
 
 #include "spirv/unified1/NonSemanticClspvReflection.h"
@@ -998,9 +1001,68 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
                 break;
             }
             case NonSemanticClspvReflectionArgumentSampler:
-            case NonSemanticClspvReflectionArgumentPodUniform:
+            {
+                cl::Sampler *clSampler =
+                    cl::Sampler::Cast(*static_cast<const cl_sampler *>(arg.handle));
+                CLSamplerVk &vkSampler = clSampler->getImpl<CLSamplerVk>();
+                VkDescriptorImageInfo &samplerInfo =
+                    kernelArgDescSetBuilder.allocDescriptorImageInfo();
+                samplerInfo.sampler = vkSampler.getSamplerHelper().get().getHandle();
+                VkWriteDescriptorSet &writeDescriptorSet =
+                    kernelArgDescSetBuilder.allocWriteDescriptorSet();
+                writeDescriptorSet.descriptorCount = 1;
+                writeDescriptorSet.descriptorType  = VK_DESCRIPTOR_TYPE_SAMPLER;
+                writeDescriptorSet.pImageInfo      = &samplerInfo;
+                writeDescriptorSet.sType           = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+                writeDescriptorSet.dstSet =
+                    kernelVk.getDescriptorSet(DescriptorSetIndex::KernelArguments);
+                writeDescriptorSet.dstBinding = arg.descriptorBinding;
+                break;
+            }
             case NonSemanticClspvReflectionArgumentStorageImage:
             case NonSemanticClspvReflectionArgumentSampledImage:
+            {
+                cl::Memory *clMem = cl::Image::Cast(*static_cast<const cl_mem *>(arg.handle));
+                CLImageVk &vkMem  = clMem->getImpl<CLImageVk>();
+
+                mMemoryCaptures.emplace_back(clMem);
+
+                // Handle possible resource RAW hazard
+                if (clMem->getFlags().intersects(CL_MEM_READ_WRITE))
+                {
+                    if (mDependencyTracker.contains(clMem) ||
+                        mDependencyTracker.size() == kMaxDependencyTrackerSize)
+                    {
+                        ANGLE_TRY(enqueueBarrier());
+                        mDependencyTracker.clear();
+                    }
+                    mDependencyTracker.insert(clMem);
+                }
+
+                // Update image/descriptor info
+                VkDescriptorImageInfo &imageInfo =
+                    kernelArgDescSetBuilder.allocDescriptorImageInfo();
+                imageInfo.imageLayout =
+                    arg.type == NonSemanticClspvReflectionArgumentStorageImage
+                        ? VK_IMAGE_LAYOUT_GENERAL
+                        : vkMem.getImage().getCurrentLayout(mContext->getRenderer());
+                imageInfo.imageView = vkMem.getImageView().getHandle();
+                imageInfo.sampler   = VK_NULL_HANDLE;
+                VkWriteDescriptorSet &writeDescriptorSet =
+                    kernelArgDescSetBuilder.allocWriteDescriptorSet();
+                writeDescriptorSet.descriptorCount = 1;
+                writeDescriptorSet.descriptorType =
+                    arg.type == NonSemanticClspvReflectionArgumentStorageImage
+                        ? VK_DESCRIPTOR_TYPE_STORAGE_IMAGE
+                        : VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
+                writeDescriptorSet.pImageInfo = &imageInfo;
+                writeDescriptorSet.sType      = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+                writeDescriptorSet.dstSet =
+                    kernelVk.getDescriptorSet(DescriptorSetIndex::KernelArguments);
+                writeDescriptorSet.dstBinding = arg.descriptorBinding;
+                break;
+            }
+            case NonSemanticClspvReflectionArgumentPodUniform:
             case NonSemanticClspvReflectionArgumentPointerUniform:
             case NonSemanticClspvReflectionArgumentPodStorageBuffer:
             case NonSemanticClspvReflectionArgumentUniformTexelBuffer:

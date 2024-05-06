@@ -129,6 +129,9 @@ spv_result_t ParseReflection(CLProgramVk::SpvReflectionData &reflectionData,
                 }
                 case NonSemanticClspvReflectionArgumentUniform:
                 case NonSemanticClspvReflectionArgumentWorkgroup:
+                case NonSemanticClspvReflectionArgumentSampler:
+                case NonSemanticClspvReflectionArgumentStorageImage:
+                case NonSemanticClspvReflectionArgumentSampledImage:
                 case NonSemanticClspvReflectionArgumentStorageBuffer:
                 case NonSemanticClspvReflectionArgumentPodPushConstant:
                 case NonSemanticClspvReflectionArgumentPointerPushConstant:
