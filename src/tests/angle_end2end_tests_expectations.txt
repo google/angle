@@ -1412,6 +1412,7 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 
 // Linux/UHD 630 failures caused by OS/driver upgrade.
 8683 LINUX INTEL OPENGL : AtomicCounterBufferTest31.AtomicCounterReadCompute/* = SKIP
+8683 LINUX INTEL OPENGL : ClearTest.ChangeFramebufferAttachmentFromRGBAtoRGB/* = SKIP
 8683 LINUX INTEL OPENGL : ClipControlTest.OriginFragCoord/* = SKIP
 8683 LINUX INTEL VULKAN : CubeMapTextureTest.SampleCoordinateTransformGrad/* = SKIP
 8683 LINUX INTEL OPENGL : EGLMultiContextTest.ReuseUnterminatedDisplay/* = SKIP
