@@ -1021,15 +1021,16 @@ class DescriptorSetLayoutDesc final
     // TODO: https://issuetracker.google.com/issues/159156775: Have immutable sampler use serial
     union PackedDescriptorSetBinding
     {
+        static constexpr uint8_t kInvalidType = 255;
+
         struct
         {
-            uint8_t type;                  // Stores a packed VkDescriptorType descriptorType.
-            uint8_t stages;                // Stores a packed VkShaderStageFlags.
-            uint16_t count;                // Stores a packed uint32_t descriptorCount
-            uint16_t bindingIndex;         // Stores the binding index
-            uint16_t hasImmutableSampler;  // Whether this binding has an immutable sampler
+            uint8_t type;                      // Stores a packed VkDescriptorType descriptorType.
+            uint8_t stages;                    // Stores a packed VkShaderStageFlags.
+            uint16_t count : 15;               // Stores a packed uint32_t descriptorCount
+            uint16_t hasImmutableSampler : 1;  // Whether this binding has an immutable sampler
         };
-        uint64_t value;
+        uint32_t value;
 
         bool operator==(const PackedDescriptorSetBinding &other) const
         {
@@ -1037,12 +1038,16 @@ class DescriptorSetLayoutDesc final
         }
     };
 
-    // 1x 64bit
-    static_assert(sizeof(PackedDescriptorSetBinding) == 8, "Unexpected size");
+    // 1x 32bit
+    static_assert(sizeof(PackedDescriptorSetBinding) == 4, "Unexpected size");
 
+    angle::FastVector<VkSampler, kDefaultImmutableSamplerBindingsCount> mImmutableSamplers;
     angle::FastVector<PackedDescriptorSetBinding, kDefaultDescriptorSetLayoutBindingsCount>
         mDescriptorSetLayoutBindings;
-    angle::FastVector<VkSampler, kDefaultImmutableSamplerBindingsCount> mImmutableSamplers;
+
+#if !defined(ANGLE_IS_64_BIT_CPU)
+    ANGLE_MAYBE_UNUSED_PRIVATE_FIELD uint32_t mPadding = 0;
+#endif
 };
 
 // The following are for caching descriptor set layouts. Limited to max three descriptor set
