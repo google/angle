@@ -366,6 +366,7 @@ enum class Feature
     SupportsSharedPresentableImageExtension,
     SupportsSurfaceCapabilities2Extension,
     SupportsSurfacelessQueryExtension,
+    SupportsSurfaceMaintenance1,
     SupportsSurfaceProtectedCapabilitiesExtension,
     SupportsSurfaceProtectedSwapchains,
     SupportsSwapchainMaintenance1,

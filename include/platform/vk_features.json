@@ -1253,6 +1253,14 @@
             "issue": "https://anglebug.com/7899"
         },
         {
+            "name": "supports_surface_maintenance1",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_EXT_surface_maintenance1 extension"
+            ],
+            "issue": "https://anglebug.com/7847"
+        },
+        {
             "name": "supports_swapchain_maintenance1",
             "category": "Features",
             "description": [
