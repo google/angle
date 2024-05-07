@@ -53,39 +53,6 @@ ADDITIONAL_MIXINS = {
             }
         }
     },
-    'angle_pixel_4_stable': {
-        'swarming': {
-            'dimensions': {
-                "os": "Android",
-                "device_type": "flame",
-                "device_os": "RP1A.201105.002",
-                "device_os_type": "userdebug",
-                "pool": "chromium.tests.gpu",
-            }
-        }
-    },
-    'angle_pixel_6_stable': {
-        'swarming': {
-            'dimensions': {
-                "os": "Android",
-                "device_type": "oriole",
-                "device_os": "TP1A.220624.021",
-                "device_os_type": "userdebug",
-                "pool": "chromium.tests.gpu",
-            }
-        }
-    },
-    'angle_pixel_6_experimental': {
-        'swarming': {
-            'dimensions': {
-                "os": "Android",
-                "device_type": "oriole",
-                "device_os": "AP1A.240405.002",
-                "device_os_type": "userdebug",
-                "pool": "chromium.tests.gpu",
-            }
-        }
-    },
     'timeout_120m': {
         'swarming': {
             'hard_timeout': 7200,

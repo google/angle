@@ -22,7 +22,7 @@
       'android-arm64-exp-pixel6': {  # android-arm64-pixel6 below for android-arm64-test
         'os_type': 'android',
         'mixins': [
-          'angle_pixel_6_experimental',
+          'gpu_pixel_6_experimental',
           'limited_capacity_bot',
         ],
         'test_suites': {
@@ -44,7 +44,7 @@
       'android-arm64-pixel4': {
         'os_type': 'android',
         'mixins': [
-          'angle_pixel_4_stable',
+          'gpu_pixel_4_stable',
         ],
         'test_suites': {
           'gtest_tests': 'android_gtests',
@@ -54,7 +54,7 @@
       'android-arm64-pixel4-perf': {
         'os_type': 'android',
         'mixins': [
-          'angle_pixel_4_stable',
+          'gpu_pixel_4_stable',
           'timeout_120m',
         ],
         'test_suites': {
@@ -64,7 +64,7 @@
       'android-arm64-pixel6': {
         'os_type': 'android',
         'mixins': [
-          'angle_pixel_6_stable',
+          'gpu_pixel_6_stable',
         ],
         'test_suites': {
           'gtest_tests': 'android_vulkan_gtests',
@@ -74,7 +74,7 @@
       'android-arm64-pixel6-perf': {
         'os_type': 'android',
         'mixins': [
-          'angle_pixel_6_stable',
+          'gpu_pixel_6_stable',
           'timeout_120m',
         ],
         'test_suites': {
