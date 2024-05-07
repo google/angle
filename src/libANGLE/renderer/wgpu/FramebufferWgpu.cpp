@@ -16,6 +16,71 @@
 #include "libANGLE/renderer/wgpu/ContextWgpu.h"
 #include "libANGLE/renderer/wgpu/wgpu_utils.h"
 
+namespace
+{
+bool RenderPassColorAttachmentEqual(const wgpu::RenderPassColorAttachment &attachment1,
+                                    const wgpu::RenderPassColorAttachment &attachment2)
+{
+
+    if (attachment1.nextInChain != nullptr || attachment2.nextInChain != nullptr)
+    {
+        return false;
+    }
+
+    return attachment1.view.Get() == attachment2.view.Get() &&
+           attachment1.depthSlice == attachment2.depthSlice &&
+           attachment1.resolveTarget.Get() == attachment2.resolveTarget.Get() &&
+           attachment1.loadOp == attachment2.loadOp && attachment1.storeOp == attachment2.storeOp &&
+           attachment1.clearValue.r == attachment2.clearValue.r &&
+           attachment1.clearValue.g == attachment2.clearValue.g &&
+           attachment1.clearValue.b == attachment2.clearValue.b &&
+           attachment1.clearValue.a == attachment2.clearValue.a;
+}
+
+bool RenderPassDepthStencilAttachmentEqual(
+    const wgpu::RenderPassDepthStencilAttachment &attachment1,
+    const wgpu::RenderPassDepthStencilAttachment &attachment2)
+{
+    return attachment1.view.Get() == attachment2.view.Get() &&
+           attachment1.depthLoadOp == attachment2.depthLoadOp &&
+           attachment1.depthStoreOp == attachment2.depthStoreOp &&
+           attachment1.depthClearValue == attachment2.depthClearValue &&
+           attachment1.stencilLoadOp == attachment2.stencilLoadOp &&
+           attachment1.stencilStoreOp == attachment2.stencilStoreOp &&
+           attachment1.stencilClearValue == attachment2.stencilClearValue &&
+           attachment1.stencilReadOnly == attachment2.stencilReadOnly;
+}
+// TODO(anglebug.com/8582): this should eventually ignore load and store operations so we
+// can avoid starting a new render pass in more situations.
+bool RenderPassDescEqual(const wgpu::RenderPassDescriptor &desc1,
+                         const wgpu::RenderPassDescriptor &desc2)
+{
+
+    if (desc1.nextInChain != nullptr || desc2.nextInChain != nullptr)
+    {
+        return false;
+    }
+
+    if (desc1.colorAttachmentCount != desc2.colorAttachmentCount)
+    {
+        return false;
+    }
+
+    for (uint32_t i = 0; i < desc1.colorAttachmentCount; ++i)
+    {
+        if (!RenderPassColorAttachmentEqual(desc1.colorAttachments[i], desc2.colorAttachments[i]))
+        {
+            return false;
+        }
+    }
+
+    // TODO(anglebug.com/8582): for now ignore `occlusionQuerySet` and `timestampWrites`.
+
+    return RenderPassDepthStencilAttachmentEqual(*desc1.depthStencilAttachment,
+                                                 *desc2.depthStencilAttachment);
+}
+}  // namespace
+
 namespace rx
 {
 
@@ -56,8 +121,6 @@ angle::Result FramebufferWgpu::clear(const gl::Context *context, GLbitfield mask
     ContextWgpu *contextWgpu   = GetImplAs<ContextWgpu>(context);
     gl::ColorF colorClearValue = context->getState().getColorClearValue();
 
-    std::vector<wgpu::RenderPassColorAttachment> colorAttachments(
-        mState.getEnabledDrawBuffers().count());
     for (size_t enabledDrawBuffer : mState.getEnabledDrawBuffers())
     {
         wgpu::RenderPassColorAttachment colorAttachment;
@@ -70,15 +133,22 @@ angle::Result FramebufferWgpu::clear(const gl::Context *context, GLbitfield mask
         colorAttachment.clearValue.g = colorClearValue.green;
         colorAttachment.clearValue.b = colorClearValue.blue;
         colorAttachment.clearValue.a = colorClearValue.alpha;
-        colorAttachments.push_back(colorAttachment);
+        // TODO(liza): reset mCurrentColorAttachments in syncState.
+        mCurrentColorAttachments.push_back(colorAttachment);
     }
 
-    wgpu::RenderPassDescriptor renderPassDesc;
-    renderPassDesc.colorAttachmentCount = colorAttachments.size();
-    renderPassDesc.colorAttachments     = colorAttachments.data();
+    wgpu::RenderPassDescriptor newRenderPassDesc;
+    newRenderPassDesc.colorAttachmentCount = mCurrentColorAttachments.size();
+    newRenderPassDesc.colorAttachments     = mCurrentColorAttachments.data();
 
+    // Attempt to end a render pass if one has already been started.
+    if (!RenderPassDescEqual(mCurrentRenderPassDesc, newRenderPassDesc))
+    {
+        ANGLE_TRY(contextWgpu->endRenderPass(webgpu::RenderPassClosureReason::NewRenderPass));
+        mCurrentRenderPassDesc = newRenderPassDesc;
+    }
     // TODO(anglebug.com/8582): optimize this implementation.
-    ANGLE_TRY(contextWgpu->ensureRenderPassStarted(renderPassDesc));
+    ANGLE_TRY(contextWgpu->startRenderPass(mCurrentRenderPassDesc));
     ANGLE_TRY(contextWgpu->endRenderPass(webgpu::RenderPassClosureReason::NewRenderPass));
     ANGLE_TRY(contextWgpu->flush());
     return angle::Result::Continue;

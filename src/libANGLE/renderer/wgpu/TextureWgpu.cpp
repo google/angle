@@ -416,7 +416,7 @@ angle::Result TextureWgpu::initializeImage(ContextWgpu *contextWgpu, ImageMipLev
         displayWgpu->getDevice(), firstLevel,
         mImage->createTextureDescriptor(textureUsage, textureDimension,
                                         gl_wgpu::getExtent3D(firstLevelExtents),
-                                        wgpu::TextureFormat::RGBA8Uint, levelCount, 1, 0));
+                                        wgpu::TextureFormat::RGBA8Unorm, levelCount, 1));
 }
 
 angle::Result TextureWgpu::redefineLevel(const gl::Context *context,

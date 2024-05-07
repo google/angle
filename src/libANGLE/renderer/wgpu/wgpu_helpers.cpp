@@ -15,7 +15,11 @@ namespace rx
 {
 namespace webgpu
 {
-ImageHelper::ImageHelper() {}
+ImageHelper::ImageHelper()
+{
+    // TODO: support more TextureFormats.
+    mViewFormats.push_back(wgpu::TextureFormat::RGBA8Unorm);
+}
 
 ImageHelper::~ImageHelper() {}
 
@@ -33,6 +37,10 @@ angle::Result ImageHelper::initImage(wgpu::Device &device,
 
 void ImageHelper::flushStagedUpdates(ContextWgpu *contextWgpu)
 {
+    if (mBufferQueue.empty())
+    {
+        return;
+    }
     wgpu::Device device          = contextWgpu->getDevice();
     wgpu::Queue queue            = contextWgpu->getQueue();
     wgpu::CommandEncoder encoder = device.CreateCommandEncoder();
@@ -51,6 +59,7 @@ void ImageHelper::flushStagedUpdates(ContextWgpu *contextWgpu)
     }
     wgpu::CommandBuffer commandBuffer = encoder.Finish();
     queue.Submit(1, &commandBuffer);
+    encoder = nullptr;
     mBufferQueue.clear();
 }
 
@@ -59,8 +68,7 @@ wgpu::TextureDescriptor ImageHelper::createTextureDescriptor(wgpu::TextureUsage 
                                                              wgpu::Extent3D size,
                                                              wgpu::TextureFormat format,
                                                              std::uint32_t mipLevelCount,
-                                                             std::uint32_t sampleCount,
-                                                             std::size_t viewFormatCount)
+                                                             std::uint32_t sampleCount)
 {
     wgpu::TextureDescriptor textureDescriptor = {};
     textureDescriptor.usage                   = usage;
@@ -69,7 +77,8 @@ wgpu::TextureDescriptor ImageHelper::createTextureDescriptor(wgpu::TextureUsage 
     textureDescriptor.format                  = format;
     textureDescriptor.mipLevelCount           = mipLevelCount;
     textureDescriptor.sampleCount             = sampleCount;
-    textureDescriptor.viewFormatCount         = viewFormatCount;
+    textureDescriptor.viewFormatCount         = mViewFormats.size();
+    textureDescriptor.viewFormats = reinterpret_cast<wgpu::TextureFormat *>(mViewFormats.data());
     return textureDescriptor;
 }
 

@@ -49,8 +49,7 @@ class ImageHelper
                                                     wgpu::Extent3D size,
                                                     wgpu::TextureFormat format,
                                                     std::uint32_t mipLevelCount,
-                                                    std::uint32_t sampleCount,
-                                                    std::size_t viewFormatCount);
+                                                    std::uint32_t sampleCount);
 
     angle::Result stageTextureUpload(ContextWgpu *contextWgpu,
                                      const gl::Extents &glExtents,
@@ -81,7 +80,8 @@ class ImageHelper
   private:
     wgpu::Texture mTexture;
     wgpu::TextureDescriptor mTextureDescriptor = {};
-    bool mInitialized                          = false;
+    std::vector<wgpu::TextureFormat> mViewFormats;
+    bool mInitialized = false;
 
     gl::LevelIndex mFirstAllocatedLevel = gl::LevelIndex(0);
 
