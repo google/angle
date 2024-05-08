@@ -209,38 +209,25 @@ angle::Result FramebufferWgpu::readPixels(const gl::Context *context,
     // Clip read area to framebuffer.
     const gl::Extents fbSize = getState().getReadPixelsAttachment(format)->getSize();
     const gl::Rectangle fbRect(0, 0, fbSize.width, fbSize.height);
-    gl::Rectangle area;
-    if (!ClipRectangle(origArea, fbRect, &area))
+    gl::Rectangle clippedArea;
+    if (!ClipRectangle(origArea, fbRect, &clippedArea))
     {
         // nothing to read
         return angle::Result::Continue;
     }
 
-    // Compute size of unclipped rows and initial skip
-    const gl::InternalFormat &glFormat = gl::GetInternalFormatInfo(format, type);
-
     ContextWgpu *contextWgpu = GetImplAs<ContextWgpu>(context);
+    GLuint outputSkipBytes   = 0;
+    PackPixelsParams params;
+    const angle::Format &angleFormat = GetFormatFromFormatType(format, type);
+    ANGLE_TRY(webgpu::ImageHelper::getReadPixelsParams(contextWgpu, pack, packBuffer, format, type,
+                                                       origArea, clippedArea, &params,
+                                                       &outputSkipBytes));
 
-    GLuint rowBytes = 0;
-    ANGLE_CHECK_GL_MATH(contextWgpu, glFormat.computeRowPitch(type, origArea.width, pack.alignment,
-                                                              pack.rowLength, &rowBytes));
-
-    GLuint skipBytes = 0;
-    ANGLE_CHECK_GL_MATH(contextWgpu,
-                        glFormat.computeSkipBytes(type, rowBytes, 0, pack, false, &skipBytes));
-    pixels += skipBytes;
-
-    // Skip OOB region up to first in bounds pixel
-    int leftClip = area.x - origArea.x;
-    int topClip  = area.y - origArea.y;
-    pixels += leftClip * glFormat.pixelBytes + topClip * rowBytes;
-
-    // Write the in-bounds readpixels data with non-zero values
-    for (GLint y = area.y; y < area.y + area.height; ++y)
-    {
-        memset(pixels, 42, glFormat.pixelBytes * area.width);
-        pixels += rowBytes;
-    }
+    RenderTargetWgpu *renderTarget = getReadPixelsRenderTarget(angleFormat);
+    ANGLE_TRY(
+        renderTarget->getImage()->readPixels(contextWgpu, params.area, params, angleFormat,
+                                             static_cast<uint8_t *>(pixels) + outputSkipBytes));
 
     return angle::Result::Continue;
 }
@@ -320,6 +307,15 @@ angle::Result FramebufferWgpu::getSamplePosition(const gl::Context *context,
                                                  GLfloat *xy) const
 {
     return angle::Result::Continue;
+}
+
+RenderTargetWgpu *FramebufferWgpu::getReadPixelsRenderTarget(const angle::Format &format) const
+{
+    if (format.hasDepthOrStencilBits())
+    {
+        return mRenderTargetCache.getDepthStencil();
+    }
+    return mRenderTargetCache.getColorRead(mState);
 }
 
 }  // namespace rx

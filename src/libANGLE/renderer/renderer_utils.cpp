@@ -9,6 +9,7 @@
 
 #include "libANGLE/renderer/renderer_utils.h"
 
+#include "common/base/anglebase/numerics/checked_math.h"
 #include "common/string_utils.h"
 #include "common/system_utils.h"
 #include "common/utilities.h"
@@ -529,6 +530,32 @@ void PackPixels(const PackPixelsParams &params,
             pixelWriteFunction(temp, dest);
         }
     }
+}
+
+angle::Result GetPackPixelsParams(const gl::InternalFormat &sizedFormatInfo,
+                                  GLuint outputPitch,
+                                  const gl::PixelPackState &packState,
+                                  gl::Buffer *packBuffer,
+                                  const gl::Rectangle &area,
+                                  const gl::Rectangle &clippedArea,
+                                  rx::PackPixelsParams *paramsOut,
+                                  GLuint *skipBytesOut)
+{
+    angle::CheckedNumeric<GLuint> checkedSkipBytes = *skipBytesOut;
+    checkedSkipBytes += (clippedArea.x - area.x) * sizedFormatInfo.pixelBytes +
+                        (clippedArea.y - area.y) * outputPitch;
+    if (!checkedSkipBytes.AssignIfValid(skipBytesOut))
+    {
+        return angle::Result::Stop;
+    }
+
+    angle::FormatID angleFormatID =
+        angle::Format::InternalFormatToID(sizedFormatInfo.sizedInternalFormat);
+    const angle::Format &angleFormat = angle::Format::Get(angleFormatID);
+
+    *paramsOut = rx::PackPixelsParams(clippedArea, angleFormat, outputPitch,
+                                      packState.reverseRowOrder, packBuffer, 0);
+    return angle::Result::Continue;
 }
 
 bool FastCopyFunctionMap::has(angle::FormatID formatID) const

@@ -1408,7 +1408,12 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 // WebGPU failures
 8485 WGPU : RendererTest.SimpleOperation/* = SKIP
 8582 WGPU : ClearTest.* = SKIP
-8457 WGPU : Texture2DTest.* = SKIP
+8547 WGPU : Texture2DTest.Tex* = SKIP
+8547 WGPU : Texture2DTest.Upload* = SKIP
+8547 WGPU : Texture2DTest.*Superseding* = SKIP
+8547 WGPU : Texture2DTest.*Multiple* = SKIP
+8547 WGPU : Texture2DTest.*Copy* = SKIP
+8547 WGPU : Texture2DTest.*Mutable* = SKIP
 
 // Linux/UHD 630 failures caused by OS/driver upgrade.
 8683 LINUX INTEL OPENGL : AtomicCounterBufferTest31.AtomicCounterReadCompute/* = SKIP

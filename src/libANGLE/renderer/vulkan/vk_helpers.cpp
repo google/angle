@@ -10302,13 +10302,8 @@ angle::Result ImageHelper::GetReadPixelsParams(ContextVk *contextVk,
     ANGLE_VK_CHECK_MATH(contextVk, sizedFormatInfo.computeSkipBytes(type, outputPitch, 0, packState,
                                                                     false, skipBytesOut));
 
-    *skipBytesOut += (clippedArea.x - area.x) * sizedFormatInfo.pixelBytes +
-                     (clippedArea.y - area.y) * outputPitch;
-
-    const angle::Format &angleFormat = GetFormatFromFormatType(format, type);
-
-    *paramsOut = PackPixelsParams(clippedArea, angleFormat, outputPitch, packState.reverseRowOrder,
-                                  packBuffer, 0);
+    ANGLE_TRY(GetPackPixelsParams(sizedFormatInfo, outputPitch, packState, packBuffer, area,
+                                  clippedArea, paramsOut, skipBytesOut));
     return angle::Result::Continue;
 }
 

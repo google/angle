@@ -142,6 +142,15 @@ void PackPixels(const PackPixelsParams &params,
                 const uint8_t *source,
                 uint8_t *destination);
 
+angle::Result GetPackPixelsParams(const gl::InternalFormat &sizedFormatInfo,
+                                  GLuint outputPitch,
+                                  const gl::PixelPackState &packState,
+                                  gl::Buffer *packBuffer,
+                                  const gl::Rectangle &area,
+                                  const gl::Rectangle &clippedArea,
+                                  rx::PackPixelsParams *paramsOut,
+                                  GLuint *skipBytesOut);
+
 using InitializeTextureDataFunction = void (*)(size_t width,
                                                size_t height,
                                                size_t depth,
