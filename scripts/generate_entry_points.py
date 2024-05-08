@@ -3129,11 +3129,10 @@ def get_unlocked_tail_call(api, cmd_name):
     #   native EGL function in tail call
     #
     if (cmd_name in [
-            'eglCreateSyncKHR', 'eglDestroySurface', 'eglMakeCurrent', 'eglReleaseThread',
-            'eglCreateWindowSurface', 'eglCreatePlatformWindowSurface',
-            'eglCreatePlatformWindowSurfaceEXT', 'eglPrepareSwapBuffersANGLE',
-            'eglSwapBuffersWithFrameTokenANGLE', 'glFinishFenceNV', 'glCompileShader',
-            'glLinkProgram'
+            'eglDestroySurface', 'eglMakeCurrent', 'eglReleaseThread', 'eglCreateWindowSurface',
+            'eglCreatePlatformWindowSurface', 'eglCreatePlatformWindowSurfaceEXT',
+            'eglPrepareSwapBuffersANGLE', 'eglSwapBuffersWithFrameTokenANGLE', 'glFinishFenceNV',
+            'glCompileShader', 'glLinkProgram'
     ] or cmd_name.startswith('glTexImage2D') or cmd_name.startswith('glTexImage3D') or
             cmd_name.startswith('glTexSubImage2D') or cmd_name.startswith('glTexSubImage3D') or
             cmd_name.startswith('glCompressedTexImage2D') or

@@ -1451,7 +1451,7 @@ EGLSyncKHR EGLAPIENTRY EGL_CreateSyncKHR(EGLDisplay dpy, EGLenum type, const EGL
         ANGLE_CAPTURE_EGL(CreateSyncKHR, true, thread, dpyPacked, type, attrib_listPacked,
                           returnValue);
     }
-    egl::Display::GetCurrentThreadUnlockedTailCall()->run(nullptr);
+    egl::Display::GetCurrentThreadUnlockedTailCall()->run(&returnValue);
     return returnValue;
 }
 
