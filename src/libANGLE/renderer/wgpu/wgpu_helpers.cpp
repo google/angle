@@ -16,6 +16,22 @@ namespace rx
 {
 namespace webgpu
 {
+namespace
+{
+wgpu::TextureDescriptor TextureDescriptorFromTexture(const wgpu::Texture &texture)
+{
+    wgpu::TextureDescriptor descriptor = {};
+    descriptor.usage                   = texture.GetUsage();
+    descriptor.dimension               = texture.GetDimension();
+    descriptor.size   = {texture.GetWidth(), texture.GetHeight(), texture.GetDepthOrArrayLayers()};
+    descriptor.format = texture.GetFormat();
+    descriptor.mipLevelCount   = texture.GetMipLevelCount();
+    descriptor.sampleCount     = texture.GetSampleCount();
+    descriptor.viewFormatCount = 0;
+    return descriptor;
+}
+}  // namespace
+
 ImageHelper::ImageHelper()
 {
     // TODO: support more TextureFormats.
@@ -31,6 +47,16 @@ angle::Result ImageHelper::initImage(wgpu::Device &device,
     mTextureDescriptor   = textureDescriptor;
     mFirstAllocatedLevel = firstAllocatedLevel;
     mTexture             = device.CreateTexture(&mTextureDescriptor);
+    mInitialized         = true;
+
+    return angle::Result::Continue;
+}
+
+angle::Result ImageHelper::initExternal(wgpu::Texture externalTexture)
+{
+    mTextureDescriptor   = TextureDescriptorFromTexture(externalTexture);
+    mFirstAllocatedLevel = gl::LevelIndex(0);
+    mTexture             = externalTexture;
     mInitialized         = true;
 
     return angle::Result::Continue;

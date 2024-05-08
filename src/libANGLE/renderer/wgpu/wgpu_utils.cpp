@@ -15,12 +15,6 @@ namespace rx
 
 namespace webgpu
 {
-
-ContextWgpu *GetImpl(const gl::Context *context)
-{
-    return GetImplAs<ContextWgpu>(context);
-}
-
 DisplayWgpu *GetDisplay(const gl::Context *context)
 {
     ContextWgpu *contextWgpu = GetImpl(context);

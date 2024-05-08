@@ -53,3 +53,24 @@ wgpu_backend_sources = [
   "wgpu_utils.cpp",
   "wgpu_utils.h",
 ]
+
+if (is_win) {
+  wgpu_backend_sources += [
+    "win32/WindowSurfaceWgpuWin32.cpp",
+    "win32/WindowSurfaceWgpuWin32.h",
+  ]
+}
+
+if (is_mac) {
+  wgpu_backend_sources += [
+    "mac/WindowSurfaceWgpuMetalLayer.h",
+    "mac/WindowSurfaceWgpuMetalLayer.mm",
+  ]
+}
+
+if (angle_use_x11) {
+  wgpu_backend_sources += [
+    "linux/x11/WindowSurfaceWgpuX11.cpp",
+    "linux/x11/WindowSurfaceWgpuX11.h",
+  ]
+}
