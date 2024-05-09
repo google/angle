@@ -29,7 +29,7 @@ bool RefCountedEvent::init(Context *context, ImageLayout layout)
     else
     {
         // If failed to fetch from recycler, then create a new event.
-        mHandle                      = new AtomicRefCounted<EventAndLayout>;
+        mHandle                      = new RefCounted<EventAndLayout>;
         VkEventCreateInfo createInfo = {};
         createInfo.sType             = VK_STRUCTURE_TYPE_EVENT_CREATE_INFO;
         // Use device only for performance reasons.

@@ -143,7 +143,7 @@ class RefCountedEvent final
     template <typename RecyclerT>
     void releaseImpl(Renderer *renderer, RecyclerT *recycler);
 
-    AtomicRefCounted<EventAndLayout> *mHandle;
+    RefCounted<EventAndLayout> *mHandle;
 };
 using RefCountedEventCollector = std::vector<RefCountedEvent>;
 
