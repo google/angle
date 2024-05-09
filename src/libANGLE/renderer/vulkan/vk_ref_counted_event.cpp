@@ -112,7 +112,7 @@ void RefCountedEvent::destroy(VkDevice device)
 bool RefCountedEventsGarbage::releaseIfComplete(Renderer *renderer,
                                                 RefCountedEventsGarbageRecycler *recycler)
 {
-    if (!renderer->hasResourceUseFinished(mLifetime))
+    if (!renderer->hasQueueSerialFinished(mQueueSerial))
     {
         return false;
     }
@@ -129,7 +129,7 @@ bool RefCountedEventsGarbage::releaseIfComplete(Renderer *renderer,
 
 void RefCountedEventsGarbage::destroy(Renderer *renderer)
 {
-    ASSERT(renderer->hasResourceUseFinished(mLifetime));
+    ASSERT(renderer->hasQueueSerialFinished(mQueueSerial));
     for (RefCountedEvent &event : mRefCountedEvents)
     {
         ASSERT(event.valid());
