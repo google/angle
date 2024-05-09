@@ -8956,8 +8956,6 @@ void ContextVk::resetPerFramePerfCounters()
     mPerfCounters.flushedOutsideRenderPassCommandBuffers = 0;
     mPerfCounters.resolveImageCommands                   = 0;
     mPerfCounters.descriptorSetAllocations               = 0;
-    mPerfCounters.pipelineCreationCacheHits              = 0;
-    mPerfCounters.pipelineCreationCacheMisses            = 0;
 
     mRenderer->resetCommandQueuePerFrameCounters();
 
