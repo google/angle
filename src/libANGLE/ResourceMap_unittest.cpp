@@ -33,7 +33,7 @@ TEST(ResourceMapTest, AssignAndErase)
         ASSERT_EQ(&objects[index], found);
     }
 
-    ASSERT_TRUE(resourceMap.empty());
+    ASSERT_TRUE(UnsafeResourceMapIter(resourceMap).empty());
 }
 
 // Tests assigning slots in the map and then using clear() to free it.
@@ -48,7 +48,7 @@ TEST(ResourceMapTest, AssignAndClear)
     }
 
     resourceMap.clear();
-    ASSERT_TRUE(resourceMap.empty());
+    ASSERT_TRUE(UnsafeResourceMapIter(resourceMap).empty());
 }
 
 // Tests growing a map more than double the size.
@@ -80,7 +80,7 @@ TEST(ResourceMapTest, BigGrowth)
         ASSERT_EQ(object, *found);
     }
 
-    ASSERT_TRUE(resourceMap.empty());
+    ASSERT_TRUE(UnsafeResourceMapIter(resourceMap).empty());
 }
 
 // Tests querying unassigned or erased values.
@@ -106,7 +106,7 @@ TEST(ResourceMapTest, QueryUnassigned)
         resourceMap.assign(object, &object);
     }
 
-    ASSERT_FALSE(resourceMap.empty());
+    ASSERT_FALSE(UnsafeResourceMapIter(resourceMap).empty());
 
     for (size_t &object : objects)
     {
@@ -126,7 +126,7 @@ TEST(ResourceMapTest, QueryUnassigned)
         ASSERT_EQ(object, *found);
     }
 
-    ASSERT_TRUE(resourceMap.empty());
+    ASSERT_TRUE(UnsafeResourceMapIter(resourceMap).empty());
 
     ASSERT_FALSE(resourceMap.contains(0));
     ASSERT_EQ(nullptr, resourceMap.query(0));
