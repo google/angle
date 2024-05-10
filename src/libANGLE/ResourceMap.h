@@ -76,7 +76,7 @@ template <>
 struct ResourceMapParams<BufferID>
 {
     static constexpr size_t kInitialFlatResourcesSize = 6144;
-    static constexpr bool kNeedsLock                  = false;
+    static constexpr bool kNeedsLock                  = true;
 };
 template <>
 struct ResourceMapParams<TextureID>
