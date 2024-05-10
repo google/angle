@@ -3512,6 +3512,26 @@ TEST_P(GLSLTest_ES3, InitGlobalArrayWithArrayIndexing)
     EXPECT_NE(0u, program);
 }
 
+// Test that constant global matrix array with an initializer compiles.
+TEST_P(GLSLTest_ES3, InitConstantMatrixArray)
+{
+    constexpr char kFS[] = R"(#version 300 es
+        precision highp float;
+        uniform int index;
+
+        const mat4 matrix = mat4(1.0);
+        const mat4 array[1] = mat4[1](matrix);
+        out vec4 my_FragColor;
+        void main() {
+            my_FragColor = vec4(array[index][1].rgb, 1.0);
+        })";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Test that index-constant sampler array indexing is supported.
 TEST_P(GLSLTest, IndexConstantSamplerArrayIndexing)
 {
