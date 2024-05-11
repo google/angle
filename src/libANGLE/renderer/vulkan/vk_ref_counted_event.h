@@ -94,8 +94,9 @@ class RefCountedEvent final
     // Returns true if both points to the same underline object.
     bool operator==(const RefCountedEvent &other) const { return mHandle == other.mHandle; }
 
-    // Create VkEvent and associated it with given layout
-    void init(Context *context, ImageLayout layout);
+    // Create VkEvent and associated it with given layout. Returns true if success and false if
+    // failed.
+    bool init(Context *context, ImageLayout layout);
 
     // Release one reference count to the underline Event object and destroy if this is the
     // very last reference.

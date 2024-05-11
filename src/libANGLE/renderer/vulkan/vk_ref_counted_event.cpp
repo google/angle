@@ -15,7 +15,7 @@ namespace rx
 {
 namespace vk
 {
-void RefCountedEvent::init(Context *context, ImageLayout layout)
+bool RefCountedEvent::init(Context *context, ImageLayout layout)
 {
     ASSERT(mHandle == nullptr);
     ASSERT(layout != ImageLayout::Undefined);
@@ -27,9 +27,28 @@ void RefCountedEvent::init(Context *context, ImageLayout layout)
     createInfo.flags = context->getFeatures().supportsSynchronization2.enabled
                            ? VK_EVENT_CREATE_DEVICE_ONLY_BIT_KHR
                            : 0;
-    mHandle->get().event.init(context->getDevice(), createInfo);
+    VkResult result  = mHandle->get().event.init(context->getDevice(), createInfo);
+    if (result != VK_SUCCESS)
+    {
+        WARN() << "event.init failed. Clean up garbage and retry again";
+        // Proactively clean up garbage and retry
+        context->getRenderer()->cleanupGarbage();
+        result = mHandle->get().event.init(context->getDevice(), createInfo);
+        if (result != VK_SUCCESS)
+        {
+            // Drivers usually can allocate huge amount of VkEvents, and we should never use that
+            // many VkEvents under normal situation. If we failed to allocate, there is a high
+            // chance that we may have a leak somewhere. This macro should help us catch such
+            // potential bugs in the bots if that happens.
+            UNREACHABLE();
+            // If still fail to create, we just return. An invalid event will trigger
+            // pipelineBarrier code path
+            return false;
+        }
+    }
     mHandle->addRef();
     mHandle->get().imageLayout = layout;
+    return true;
 }
 
 // RefCountedEventsGarbage implementation.

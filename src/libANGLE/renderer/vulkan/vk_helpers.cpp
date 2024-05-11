@@ -7531,17 +7531,22 @@ void ImageHelper::setCurrentRefCountedEvent(Context *context, ImageLayoutEventMa
 {
     ASSERT(context->getRenderer()->getFeatures().useVkEventForImageBarrier.enabled);
 
+    // If there is already an event, release it first.
+    mCurrentEvent.release(context->getDevice());
+
     // Create the event if we have not yet so. Otherwise just use the already created event. This
     // means all images used in the same render pass that has the same layout will be tracked by the
     // same event.
     if (!layoutEventMaps.map[mCurrentLayout].valid())
     {
-        layoutEventMaps.map[mCurrentLayout].init(context, mCurrentLayout);
+        if (!layoutEventMaps.map[mCurrentLayout].init(context, mCurrentLayout))
+        {
+            // If VkEvent creation fail, we fallback to pipelineBarrier
+            return;
+        }
         layoutEventMaps.mask.set(mCurrentLayout);
     }
 
-    // If there is already an event, release it first.
-    mCurrentEvent.release(context->getDevice());
     // Copy the event to mCurrentEvent so that we can wait for it in future. This will add extra
     // refcount to the underlying VkEvent.
     mCurrentEvent = layoutEventMaps.map[mCurrentLayout];
