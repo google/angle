@@ -1404,8 +1404,7 @@ Result SerializeContextToString(const gl::Context *context, std::string *stringO
         const gl::FramebufferManager &framebufferManager =
             context->getState().getFramebufferManagerForCapture();
         GroupScope framebufferGroup(&json, "FramebufferManager");
-        for (const auto &framebuffer :
-             gl::UnsafeResourceMapIter(framebufferManager.getResourcesForCapture()))
+        for (const auto &framebuffer : framebufferManager)
         {
             gl::Framebuffer *framebufferPtr = framebuffer.second;
             ANGLE_TRY(SerializeFramebuffer(context, &json, &scratchBuffer, framebufferPtr));
@@ -1414,7 +1413,7 @@ Result SerializeContextToString(const gl::Context *context, std::string *stringO
     {
         const gl::BufferManager &bufferManager = context->getState().getBufferManagerForCapture();
         GroupScope framebufferGroup(&json, "BufferManager");
-        for (const auto &buffer : gl::UnsafeResourceMapIter(bufferManager.getResourcesForCapture()))
+        for (const auto &buffer : bufferManager)
         {
             gl::Buffer *bufferPtr = buffer.second;
             ANGLE_TRY(SerializeBuffer(context, &json, &scratchBuffer, bufferPtr));
@@ -1424,8 +1423,7 @@ Result SerializeContextToString(const gl::Context *context, std::string *stringO
         const gl::SamplerManager &samplerManager =
             context->getState().getSamplerManagerForCapture();
         GroupScope samplerGroup(&json, "SamplerManager");
-        for (const auto &sampler :
-             gl::UnsafeResourceMapIter(samplerManager.getResourcesForCapture()))
+        for (const auto &sampler : samplerManager)
         {
             gl::Sampler *samplerPtr = sampler.second;
             SerializeSampler(&json, samplerPtr);
@@ -1435,8 +1433,7 @@ Result SerializeContextToString(const gl::Context *context, std::string *stringO
         const gl::RenderbufferManager &renderbufferManager =
             context->getState().getRenderbufferManagerForCapture();
         GroupScope renderbufferGroup(&json, "RenderbufferManager");
-        for (const auto &renderbuffer :
-             gl::UnsafeResourceMapIter(renderbufferManager.getResourcesForCapture()))
+        for (const auto &renderbuffer : renderbufferManager)
         {
             gl::Renderbuffer *renderbufferPtr = renderbuffer.second;
             ANGLE_TRY(SerializeRenderbuffer(context, &json, &scratchBuffer, renderbufferPtr));
@@ -1448,7 +1445,7 @@ Result SerializeContextToString(const gl::Context *context, std::string *stringO
         const gl::ResourceMap<gl::Shader, gl::ShaderProgramID> &shaderManager =
             shaderProgramManager.getShadersForCapture();
         GroupScope shaderGroup(&json, "ShaderManager");
-        for (const auto &shader : gl::UnsafeResourceMapIter(shaderManager))
+        for (const auto &shader : shaderManager)
         {
             GLuint id             = shader.first;
             gl::Shader *shaderPtr = shader.second;
@@ -1459,7 +1456,7 @@ Result SerializeContextToString(const gl::Context *context, std::string *stringO
         const gl::ResourceMap<gl::Program, gl::ShaderProgramID> &programManager =
             shaderProgramManager.getProgramsForCaptureAndPerf();
         GroupScope shaderGroup(&json, "ProgramManager");
-        for (const auto &program : gl::UnsafeResourceMapIter(programManager))
+        for (const auto &program : programManager)
         {
             GLuint id               = program.first;
             gl::Program *programPtr = program.second;
@@ -1470,8 +1467,7 @@ Result SerializeContextToString(const gl::Context *context, std::string *stringO
         const gl::TextureManager &textureManager =
             context->getState().getTextureManagerForCapture();
         GroupScope shaderGroup(&json, "TextureManager");
-        for (const auto &texture :
-             gl::UnsafeResourceMapIter(textureManager.getResourcesForCapture()))
+        for (const auto &texture : textureManager)
         {
             gl::Texture *texturePtr = texture.second;
             ANGLE_TRY(SerializeTexture(context, &json, &scratchBuffer, texturePtr));
@@ -1480,7 +1476,7 @@ Result SerializeContextToString(const gl::Context *context, std::string *stringO
     {
         const gl::VertexArrayMap &vertexArrayMap = context->getVertexArraysForCapture();
         GroupScope shaderGroup(&json, "VertexArrayMap");
-        for (const auto &vertexArray : gl::UnsafeResourceMapIter(vertexArrayMap))
+        for (const auto &vertexArray : vertexArrayMap)
         {
             gl::VertexArray *vertexArrayPtr = vertexArray.second;
             SerializeVertexArray(&json, vertexArrayPtr);

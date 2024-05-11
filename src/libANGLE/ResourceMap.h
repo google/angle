@@ -73,11 +73,6 @@ class ResourceMap final : angle::NonCopyable
         bool mSkipNulls;
     };
 
-  private:
-    friend class Iterator;
-    template <typename SameResourceType, typename SameIDType>
-    friend class UnsafeResourceMapIter;
-
     // null values represent reserved handles.
     Iterator begin() const;
     Iterator end() const;
@@ -85,7 +80,12 @@ class ResourceMap final : angle::NonCopyable
     Iterator beginWithNull() const;
     Iterator endWithNull() const;
 
-    // Used by iterators and related functions only (due to lack of thread safety).
+    // Not a constant-time operation, should only be used for verification.
+    bool empty() const;
+
+  private:
+    friend class Iterator;
+
     GLuint nextResource(size_t flatIndex, bool skipNulls) const;
 
     // constexpr methods cannot contain reinterpret_cast, so we need a static method.
@@ -108,30 +108,6 @@ class ResourceMap final : angle::NonCopyable
     HashMap mHashedResources;
 };
 
-// A helper to retrieve the resource map iterators while being explicit that this is not thread
-// safe.  Usage of iterators are limited to clean up on destruction and capture/replay, neither of
-// which can race with other threads in their access to the resource map.
-template <typename ResourceType, typename IDType>
-class UnsafeResourceMapIter
-{
-  public:
-    using ResMap = ResourceMap<ResourceType, IDType>;
-
-    UnsafeResourceMapIter(const ResMap &resourceMap) : mResourceMap(resourceMap) {}
-
-    typename ResMap::Iterator begin() const { return mResourceMap.begin(); }
-    typename ResMap::Iterator end() const { return mResourceMap.end(); }
-
-    typename ResMap::Iterator beginWithNull() const { return mResourceMap.beginWithNull(); }
-    typename ResMap::Iterator endWithNull() const { return mResourceMap.endWithNull(); }
-
-    // Not a constant-time operation, should only be used for verification.
-    bool empty() const;
-
-  private:
-    const ResMap &mResourceMap;
-};
-
 template <typename ResourceType, typename IDType>
 ResourceMap<ResourceType, IDType>::ResourceMap()
     : mFlatResourcesSize(kInitialFlatResourcesSize),
@@ -143,7 +119,7 @@ ResourceMap<ResourceType, IDType>::ResourceMap()
 template <typename ResourceType, typename IDType>
 ResourceMap<ResourceType, IDType>::~ResourceMap()
 {
-    ASSERT(UnsafeResourceMapIter(*this).empty());
+    ASSERT(empty());
     delete[] mFlatResources;
 }
 
@@ -246,9 +222,9 @@ ResourceMap<ResourceType, IDType>::endWithNull() const
 }
 
 template <typename ResourceType, typename IDType>
-bool UnsafeResourceMapIter<ResourceType, IDType>::empty() const
+bool ResourceMap<ResourceType, IDType>::empty() const
 {
-    return begin() == end();
+    return (begin() == end());
 }
 
 template <typename ResourceType, typename IDType>

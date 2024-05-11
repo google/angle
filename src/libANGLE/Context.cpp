@@ -850,7 +850,7 @@ egl::Error Context::onDestroy(const egl::Display *display)
     mDefaultFramebuffer->onDestroy(this);
     mDefaultFramebuffer.reset();
 
-    for (auto fence : UnsafeResourceMapIter(mFenceNVMap))
+    for (auto fence : mFenceNVMap)
     {
         if (fence.second)
         {
@@ -860,7 +860,7 @@ egl::Error Context::onDestroy(const egl::Display *display)
     }
     mFenceNVMap.clear();
 
-    for (auto query : UnsafeResourceMapIter(mQueryMap))
+    for (auto query : mQueryMap)
     {
         if (query.second != nullptr)
         {
@@ -869,7 +869,7 @@ egl::Error Context::onDestroy(const egl::Display *display)
     }
     mQueryMap.clear();
 
-    for (auto vertexArray : UnsafeResourceMapIter(mVertexArrayMap))
+    for (auto vertexArray : mVertexArrayMap)
     {
         if (vertexArray.second)
         {
@@ -878,7 +878,7 @@ egl::Error Context::onDestroy(const egl::Display *display)
     }
     mVertexArrayMap.clear();
 
-    for (auto transformFeedback : UnsafeResourceMapIter(mTransformFeedbackMap))
+    for (auto transformFeedback : mTransformFeedbackMap)
     {
         if (transformFeedback.second != nullptr)
         {
@@ -3618,8 +3618,7 @@ void Context::beginTransformFeedback(PrimitiveMode primitiveMode)
 
 bool Context::hasActiveTransformFeedback(ShaderProgramID program) const
 {
-    // Note: transform feedback objects are private to context and so the map doesn't need locking
-    for (auto pair : UnsafeResourceMapIter(mTransformFeedbackMap))
+    for (auto pair : mTransformFeedbackMap)
     {
         if (pair.second != nullptr && pair.second->hasBoundProgram(program))
         {
@@ -4499,8 +4498,7 @@ void Context::updateCaps()
                                       (mState.isWebGL() || mState.hasRobustAccess()));
 
     // Cache this in the VertexArrays. They need to check it in state change notifications.
-    // Note: vertex array objects are private to context and so the map doesn't need locking
-    for (auto vaoIter : UnsafeResourceMapIter(mVertexArrayMap))
+    for (auto vaoIter : mVertexArrayMap)
     {
         VertexArray *vao = vaoIter.second;
         vao->setBufferAccessValidationEnabled(mBufferAccessValidationEnabled);

@@ -75,7 +75,11 @@ class TypedResourceManager : public ResourceManagerBase
         return GetIDValue(handle) == 0 || mObjectMap.contains(handle);
     }
 
-    const ResourceMap<ResourceType, IDType> &getResourcesForCapture() const { return mObjectMap; }
+    typename ResourceMap<ResourceType, IDType>::Iterator begin() const
+    {
+        return mObjectMap.begin();
+    }
+    typename ResourceMap<ResourceType, IDType>::Iterator end() const { return mObjectMap.end(); }
 
   protected:
     ~TypedResourceManager() override;

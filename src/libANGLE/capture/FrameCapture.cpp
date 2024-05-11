@@ -4125,7 +4125,7 @@ void CaptureShareGroupMidExecutionSetup(
 
     // Capture Buffer data.
     const gl::BufferManager &buffers = apiState.getBufferManagerForCapture();
-    for (const auto &bufferIter : gl::UnsafeResourceMapIter(buffers.getResourcesForCapture()))
+    for (const auto &bufferIter : buffers)
     {
         gl::BufferID id    = {bufferIter.first};
         gl::Buffer *buffer = bufferIter.second;
@@ -4267,7 +4267,7 @@ void CaptureShareGroupMidExecutionSetup(
     // Capture Texture setup and data.
     const gl::TextureManager &textures = apiState.getTextureManagerForCapture();
 
-    for (const auto &textureIter : gl::UnsafeResourceMapIter(textures.getResourcesForCapture()))
+    for (const auto &textureIter : textures)
     {
         gl::TextureID id     = {textureIter.first};
         gl::Texture *texture = textureIter.second;
@@ -4593,8 +4593,7 @@ void CaptureShareGroupMidExecutionSetup(
     const gl::RenderbufferManager &renderbuffers = apiState.getRenderbufferManagerForCapture();
     FramebufferCaptureFuncs framebufferFuncs(context->isGLES1());
 
-    for (const auto &renderbufIter :
-         gl::UnsafeResourceMapIter(renderbuffers.getResourcesForCapture()))
+    for (const auto &renderbufIter : renderbuffers)
     {
         gl::RenderbufferID id                = {renderbufIter.first};
         const gl::Renderbuffer *renderbuffer = renderbufIter.second;
@@ -4658,7 +4657,7 @@ void CaptureShareGroupMidExecutionSetup(
     // Capture Program binary state.
     gl::ShaderProgramID tempShaderStartID = {resourceTracker->getMaxShaderPrograms()};
     std::map<gl::ShaderProgramID, std::vector<gl::ShaderProgramID>> deferredAttachCalls;
-    for (const auto &programIter : gl::UnsafeResourceMapIter(programs))
+    for (const auto &programIter : programs)
     {
         gl::ShaderProgramID id = {programIter.first};
         gl::Program *program   = programIter.second;
@@ -4739,7 +4738,7 @@ void CaptureShareGroupMidExecutionSetup(
     }
 
     // Handle shaders.
-    for (const auto &shaderIter : gl::UnsafeResourceMapIter(shaders))
+    for (const auto &shaderIter : shaders)
     {
         gl::ShaderProgramID id = {shaderIter.first};
         gl::Shader *shader     = shaderIter.second;
@@ -4828,7 +4827,7 @@ void CaptureShareGroupMidExecutionSetup(
 
     // Capture Sampler Objects
     const gl::SamplerManager &samplers = apiState.getSamplerManagerForCapture();
-    for (const auto &samplerIter : gl::UnsafeResourceMapIter(samplers.getResourcesForCapture()))
+    for (const auto &samplerIter : samplers)
     {
         gl::SamplerID samplerID = {samplerIter.first};
 
@@ -4893,7 +4892,7 @@ void CaptureShareGroupMidExecutionSetup(
 
     // Capture Sync Objects
     const gl::SyncManager &syncs = apiState.getSyncManagerForCapture();
-    for (const auto &syncIter : gl::UnsafeResourceMapIter(syncs.getResourcesForCapture()))
+    for (const auto &syncIter : syncs)
     {
         gl::SyncID syncID    = {syncIter.first};
         const gl::Sync *sync = syncIter.second;
@@ -4968,7 +4967,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
 
     const gl::VertexArrayMap &vertexArrayMap = context->getVertexArraysForCapture();
     gl::VertexArrayID boundVertexArrayID     = {0};
-    for (const auto &vertexArrayIter : gl::UnsafeResourceMapIter(vertexArrayMap))
+    for (const auto &vertexArrayIter : vertexArrayMap)
     {
         TrackedResource &trackedVertexArrays =
             resourceTracker->getTrackedResource(context->id(), ResourceIDType::VertexArray);
@@ -5146,8 +5145,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
 
     const gl::RenderbufferManager &renderbuffers = apiState.getRenderbufferManagerForCapture();
     gl::RenderbufferID currentRenderbuffer       = {0};
-    for (const auto &renderbufIter :
-         gl::UnsafeResourceMapIter(renderbuffers.getResourcesForCapture()))
+    for (const auto &renderbufIter : renderbuffers)
     {
         currentRenderbuffer = renderbufIter.second->id();
     }
@@ -5164,8 +5162,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     gl::FramebufferID currentDrawFramebuffer = {0};
     gl::FramebufferID currentReadFramebuffer = {0};
 
-    for (const auto &framebufferIter :
-         gl::UnsafeResourceMapIter(framebuffers.getResourcesForCapture()))
+    for (const auto &framebufferIter : framebuffers)
     {
         gl::FramebufferID id               = {framebufferIter.first};
         const gl::Framebuffer *framebuffer = framebufferIter.second;
@@ -5300,8 +5297,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     const gl::ProgramPipelineManager *programPipelineManager =
         apiState.getProgramPipelineManagerForCapture();
 
-    for (const auto &ppoIterator :
-         gl::UnsafeResourceMapIter(programPipelineManager->getResourcesForCapture()))
+    for (const auto &ppoIterator : *programPipelineManager)
     {
         gl::ProgramPipeline *pipeline = ppoIterator.second;
         gl::ProgramPipelineID id      = {ppoIterator.first};
@@ -5384,9 +5380,8 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     // Create existing queries. Note that queries may be genned and not yet started. In that
     // case the queries will exist in the query map as nullptr entries.
     const gl::QueryMap &queryMap = context->getQueriesForCapture();
-    for (gl::QueryMap::Iterator queryIter = gl::UnsafeResourceMapIter(queryMap).beginWithNull(),
-                                endIter   = gl::UnsafeResourceMapIter(queryMap).endWithNull();
-         queryIter != endIter; ++queryIter)
+    for (gl::QueryMap::Iterator queryIter = queryMap.beginWithNull();
+         queryIter != queryMap.endWithNull(); ++queryIter)
     {
         ASSERT(queryIter->first);
         gl::QueryID queryID = {queryIter->first};
@@ -5412,7 +5407,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
 
     // Transform Feedback
     const gl::TransformFeedbackMap &xfbMap = context->getTransformFeedbacksForCapture();
-    for (const auto &xfbIter : gl::UnsafeResourceMapIter(xfbMap))
+    for (const auto &xfbIter : xfbMap)
     {
         gl::TransformFeedbackID xfbID = {xfbIter.first};
 

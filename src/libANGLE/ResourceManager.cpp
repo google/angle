@@ -61,16 +61,14 @@ void ResourceManagerBase::release(const Context *context)
 template <typename ResourceType, typename ImplT, typename IDType>
 TypedResourceManager<ResourceType, ImplT, IDType>::~TypedResourceManager()
 {
-    ASSERT(UnsafeResourceMapIter(mObjectMap).empty());
+    ASSERT(mObjectMap.empty());
 }
 
 template <typename ResourceType, typename ImplT, typename IDType>
 void TypedResourceManager<ResourceType, ImplT, IDType>::reset(const Context *context)
 {
-    // Note: this function is called when the last context in the share group is destroyed.  Thus
-    // there are no thread safety concerns.
     this->mHandleAllocator.reset();
-    for (const auto &resource : UnsafeResourceMapIter(mObjectMap))
+    for (const auto &resource : mObjectMap)
     {
         if (resource.second)
         {
@@ -140,30 +138,21 @@ ShaderProgramManager::ShaderProgramManager() {}
 
 ShaderProgramManager::~ShaderProgramManager()
 {
-    ASSERT(UnsafeResourceMapIter(mPrograms).empty());
-    ASSERT(UnsafeResourceMapIter(mShaders).empty());
+    ASSERT(mPrograms.empty());
+    ASSERT(mShaders.empty());
 }
 
 void ShaderProgramManager::reset(const Context *context)
 {
-    // Note: this function is called when the last context in the share group is destroyed.  Thus
-    // there are no thread safety concerns.
-    mHandleAllocator.reset();
-    for (const auto &program : UnsafeResourceMapIter(mPrograms))
+    while (!mPrograms.empty())
     {
-        if (program.second)
-        {
-            program.second->onDestroy(context);
-        }
-    }
-    for (const auto &shader : UnsafeResourceMapIter(mShaders))
-    {
-        if (shader.second)
-        {
-            shader.second->onDestroy(context);
-        }
+        deleteProgram(context, {mPrograms.begin()->first});
     }
     mPrograms.clear();
+    while (!mShaders.empty())
+    {
+        deleteShader(context, {mShaders.begin()->first});
+    }
     mShaders.clear();
 }
 
@@ -249,9 +238,7 @@ TextureID TextureManager::createTexture()
 
 void TextureManager::signalAllTexturesDirty() const
 {
-    // Note: this function is called with glRequestExtensionANGLE and glDisableExtensionANGLE.  The
-    // GL_ANGLE_request_extension explicitly requires the application to ensure thread safety.
-    for (const auto &texture : UnsafeResourceMapIter(mObjectMap))
+    for (const auto &texture : mObjectMap)
     {
         if (texture.second)
         {
@@ -397,8 +384,7 @@ Framebuffer *FramebufferManager::getDefaultFramebuffer() const
 
 void FramebufferManager::invalidateFramebufferCompletenessCache() const
 {
-    // Note: framebuffer objects are private to context and so the map doesn't need locking
-    for (const auto &framebuffer : UnsafeResourceMapIter(mObjectMap))
+    for (const auto &framebuffer : mObjectMap)
     {
         if (framebuffer.second)
         {
@@ -442,20 +428,14 @@ MemoryObjectManager::MemoryObjectManager() {}
 
 MemoryObjectManager::~MemoryObjectManager()
 {
-    ASSERT(UnsafeResourceMapIter(mMemoryObjects).empty());
+    ASSERT(mMemoryObjects.empty());
 }
 
 void MemoryObjectManager::reset(const Context *context)
 {
-    // Note: this function is called when the last context in the share group is destroyed.  Thus
-    // there are no thread safety concerns.
-    mHandleAllocator.reset();
-    for (const auto &memoryObject : UnsafeResourceMapIter(mMemoryObjects))
+    while (!mMemoryObjects.empty())
     {
-        if (memoryObject.second)
-        {
-            memoryObject.second->release(context);
-        }
+        deleteMemoryObject(context, {mMemoryObjects.begin()->first});
     }
     mMemoryObjects.clear();
 }
@@ -497,20 +477,14 @@ SemaphoreManager::SemaphoreManager() {}
 
 SemaphoreManager::~SemaphoreManager()
 {
-    ASSERT(UnsafeResourceMapIter(mSemaphores).empty());
+    ASSERT(mSemaphores.empty());
 }
 
 void SemaphoreManager::reset(const Context *context)
 {
-    // Note: this function is called when the last context in the share group is destroyed.  Thus
-    // there are no thread safety concerns.
-    mHandleAllocator.reset();
-    for (const auto &semaphore : UnsafeResourceMapIter(mSemaphores))
+    while (!mSemaphores.empty())
     {
-        if (semaphore.second)
-        {
-            semaphore.second->release(context);
-        }
+        deleteSemaphore(context, {mSemaphores.begin()->first});
     }
     mSemaphores.clear();
 }
