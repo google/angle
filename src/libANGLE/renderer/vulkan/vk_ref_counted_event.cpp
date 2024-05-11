@@ -20,52 +20,92 @@ bool RefCountedEvent::init(Context *context, ImageLayout layout)
     ASSERT(mHandle == nullptr);
     ASSERT(layout != ImageLayout::Undefined);
 
-    mHandle                      = new AtomicRefCounted<EventAndLayout>;
-    VkEventCreateInfo createInfo = {};
-    createInfo.sType             = VK_STRUCTURE_TYPE_EVENT_CREATE_INFO;
-    // Use device only for performance reasons.
-    createInfo.flags = context->getFeatures().supportsSynchronization2.enabled
-                           ? VK_EVENT_CREATE_DEVICE_ONLY_BIT_KHR
-                           : 0;
-    VkResult result  = mHandle->get().event.init(context->getDevice(), createInfo);
-    if (result != VK_SUCCESS)
+    // First try with recycler. We must issue VkCmdResetEvent before VkCmdSetEvent
+    if (context->getRenderer()->getRefCountedEventRecycler()->fetch(this))
     {
-        WARN() << "event.init failed. Clean up garbage and retry again";
-        // Proactively clean up garbage and retry
-        context->getRenderer()->cleanupGarbage();
-        result = mHandle->get().event.init(context->getDevice(), createInfo);
+        mHandle->get().needsReset = true;
+    }
+    else
+    {
+        // If failed to fetch from recycler, then create a new event.
+        mHandle                      = new AtomicRefCounted<EventAndLayout>;
+        VkEventCreateInfo createInfo = {};
+        createInfo.sType             = VK_STRUCTURE_TYPE_EVENT_CREATE_INFO;
+        // Use device only for performance reasons.
+        createInfo.flags = context->getFeatures().supportsSynchronization2.enabled
+                               ? VK_EVENT_CREATE_DEVICE_ONLY_BIT_KHR
+                               : 0;
+        VkResult result  = mHandle->get().event.init(context->getDevice(), createInfo);
         if (result != VK_SUCCESS)
         {
-            // Drivers usually can allocate huge amount of VkEvents, and we should never use that
-            // many VkEvents under normal situation. If we failed to allocate, there is a high
-            // chance that we may have a leak somewhere. This macro should help us catch such
-            // potential bugs in the bots if that happens.
-            UNREACHABLE();
-            // If still fail to create, we just return. An invalid event will trigger
-            // pipelineBarrier code path
-            return false;
+            WARN() << "event.init failed. Clean up garbage and retry again";
+            // Proactively clean up garbage and retry
+            context->getRenderer()->cleanupGarbage();
+            result = mHandle->get().event.init(context->getDevice(), createInfo);
+            if (result != VK_SUCCESS)
+            {
+                // Drivers usually can allocate huge amount of VkEvents, and we should never use
+                // that many VkEvents under normal situation. If we failed to allocate, there is a
+                // high chance that we may have a leak somewhere. This macro should help us catch
+                // such potential bugs in the bots if that happens.
+                UNREACHABLE();
+                // If still fail to create, we just return. An invalid event will trigger
+                // pipelineBarrier code path
+                return false;
+            }
         }
+        mHandle->get().needsReset = false;
     }
+
     mHandle->addRef();
     mHandle->get().imageLayout = layout;
     return true;
 }
 
+void RefCountedEvent::release(Renderer *renderer)
+{
+    if (mHandle != nullptr)
+    {
+        releaseImpl(renderer, renderer->getRefCountedEventRecycler());
+    }
+}
+
+template <typename RecyclerT>
+void RefCountedEvent::releaseImpl(Renderer *renderer, RecyclerT *recycler)
+{
+    ASSERT(mHandle != nullptr);
+    const bool isLastReference = mHandle->getAndReleaseRef() == 1;
+    if (isLastReference)
+    {
+        recycler->recycle(std::move(*this));
+        ASSERT(mHandle == nullptr);
+    }
+    else
+    {
+        mHandle = nullptr;
+    }
+}
+
+void RefCountedEvent::destroy(VkDevice device)
+{
+    ASSERT(mHandle != nullptr);
+    ASSERT(!mHandle->isReferenced());
+    mHandle->get().event.destroy(device);
+    SafeDelete(mHandle);
+}
+
 // RefCountedEventsGarbage implementation.
 bool RefCountedEventsGarbage::destroyIfComplete(Renderer *renderer)
 {
-    if (renderer->hasResourceUseFinished(mLifetime))
+    if (!renderer->hasResourceUseFinished(mLifetime))
     {
-        for (RefCountedEvent &event : mRefCountedEvents)
-        {
-            ASSERT(event.valid());
-            event.release(renderer->getDevice());
-            ASSERT(!event.valid());
-        }
-        mRefCountedEvents.clear();
-        return true;
+        return false;
     }
-    return false;
+
+    RefCountedEventRecycler *recycler = renderer->getRefCountedEventRecycler();
+    recycler->releaseOrRecycle(renderer, std::move(mRefCountedEvents));
+
+    return true;
 }
 
 bool RefCountedEventsGarbage::hasResourceUseSubmitted(Renderer *renderer) const

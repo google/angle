@@ -1513,6 +1513,8 @@ void Renderer::onDestroy(vk::Context *context)
     ASSERT(!hasSharedGarbage());
     ASSERT(mOrphanedBufferBlockList.empty());
 
+    mRefCountedEventRecycler.destroy(mDevice);
+
     for (OneOffCommandPool &oneOffCommandPool : mOneOffCommandPoolMap)
     {
         oneOffCommandPool.destroy(mDevice);

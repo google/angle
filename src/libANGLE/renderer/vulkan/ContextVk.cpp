@@ -1255,6 +1255,7 @@ void ContextVk::onDestroy(const gl::Context *context)
 
     VkDevice device = getDevice();
 
+    mRenderer->getRefCountedEventRecycler()->destroy(getDevice());
     mDefaultUniformStorage.release(mRenderer);
     mEmptyBuffer.release(mRenderer);
 
@@ -7693,6 +7694,7 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore,
         mShareGroupVk->isDueForBufferPoolPrune(mRenderer))
     {
         mShareGroupVk->pruneDefaultBufferPools(mRenderer);
+        mRenderer->getRefCountedEventRecycler()->destroy(getDevice());
     }
 
     // Since we just flushed, deferred flush is no longer deferred.

@@ -748,6 +748,8 @@ class Renderer : angle::NonCopyable
         return mPipelineCacheGraphDumpPath.c_str();
     }
 
+    vk::RefCountedEventRecycler *getRefCountedEventRecycler() { return &mRefCountedEventRecycler; }
+
   private:
     angle::Result setupDevice(vk::Context *context,
                               const angle::FeatureOverrides &featureOverrides,
@@ -959,6 +961,8 @@ class Renderer : angle::NonCopyable
     vk::BufferBlockGarbageList mOrphanedBufferBlockList;
     // Holds RefCountedEvent garbage
     vk::SharedGarbageList<vk::RefCountedEventsGarbage> mRefCountedEventGarbageList;
+    // Holds RefCountedEvent that are free and ready to reuse
+    vk::RefCountedEventRecycler mRefCountedEventRecycler;
 
     VkDeviceSize mPendingGarbageSizeLimit;
 

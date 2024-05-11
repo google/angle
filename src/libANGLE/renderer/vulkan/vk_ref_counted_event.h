@@ -15,6 +15,7 @@
 #include <queue>
 
 #include "common/PackedEnums.h"
+#include "common/SimpleMutex.h"
 #include "common/debug.h"
 #include "libANGLE/renderer/serial_utils.h"
 #include "libANGLE/renderer/vulkan/vk_resource.h"
@@ -45,6 +46,7 @@ struct EventAndLayout
     bool valid() const { return event.valid(); }
     Event event;
     ImageLayout imageLayout;
+    bool needsReset;
 };
 
 // The VkCmdSetEvent is called after VkCmdEndRenderPass and all images that used at the given
@@ -98,23 +100,13 @@ class RefCountedEvent final
     // failed.
     bool init(Context *context, ImageLayout layout);
 
-    // Release one reference count to the underline Event object and destroy if this is the
-    // very last reference.
-    void release(VkDevice device)
-    {
-        if (mHandle != nullptr)
-        {
-            const bool isLastReference = mHandle->getAndReleaseRef() == 1;
-            if (isLastReference)
-            {
-                destroy(device);
-            }
-            else
-            {
-                mHandle = nullptr;
-            }
-        }
-    }
+    // Release one reference count to the underline Event object and destroy or recycle the handle
+    // to renderer's recycler if this is the very last reference.
+    void release(Renderer *renderer);
+
+    // Destroy the event and mHandle. Caller must ensure there is no outstanding reference to the
+    // mHandle.
+    void destroy(VkDevice device);
 
     bool valid() const { return mHandle != nullptr; }
 
@@ -132,14 +124,18 @@ class RefCountedEvent final
         return mHandle->get().imageLayout;
     }
 
-  private:
-    void destroy(VkDevice device)
+    bool needsReset() const
     {
-        ASSERT(mHandle != nullptr);
-        ASSERT(!mHandle->isReferenced());
-        mHandle->get().event.destroy(device);
-        SafeDelete(mHandle);
+        ASSERT(valid());
+        return mHandle->get().needsReset;
     }
+
+  private:
+    // Release one reference count to the underline Event object and destroy or recycle the handle
+    // to the provided recycler if this is the very last reference.
+    friend class RefCountedEventRecycler;
+    template <typename RecyclerT>
+    void releaseImpl(Renderer *renderer, RecyclerT *recycler);
 
     AtomicRefCounted<EventAndLayout> *mHandle;
 };
@@ -211,6 +207,50 @@ class RefCountedEventsGarbage final
   private:
     ResourceUse mLifetime;
     RefCountedEventCollector mRefCountedEvents;
+};
+
+// Thread safe event recycler
+class RefCountedEventRecycler final
+{
+  public:
+    void recycle(RefCountedEvent &&garbageObject)
+    {
+        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        mFreeStack.recycle(std::move(garbageObject));
+    }
+
+    void releaseOrRecycle(Renderer *renderer, RefCountedEventCollector &&eventCollector)
+    {
+        // Take lock once and then use event's releaseImpl function to directly recycle into the
+        // underlying recycling storage.
+        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        for (RefCountedEvent &event : eventCollector)
+        {
+            event.releaseImpl(renderer, &mFreeStack);
+        }
+        eventCollector.clear();
+    }
+
+    bool fetch(RefCountedEvent *outObject)
+    {
+        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        if (mFreeStack.empty())
+        {
+            return false;
+        }
+        mFreeStack.fetch(outObject);
+        return true;
+    }
+
+    void destroy(VkDevice device)
+    {
+        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        mFreeStack.destroy(device);
+    }
+
+  private:
+    angle::SimpleMutex mMutex;
+    Recycler<RefCountedEvent> mFreeStack;
 };
 
 // This wraps data and API for vkCmdWaitEvent call
