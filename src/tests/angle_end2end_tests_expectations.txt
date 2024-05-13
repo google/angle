@@ -321,11 +321,6 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 // Skipped because Intel GPUs fail sampling stencil textures from swizzled views
 8051 MAC METAL INTEL : Texture2DDepthStencilTestES3.TexSampleModesWithStencil8Swizzled/* = SKIP
 
-6447 MAC METAL : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithBellowBaseLevelLOD/* = SKIP
-6447 MAC METAL : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithBeyondMaxLevel/* = SKIP
-6447 MAC METAL : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithSubImageWithBeyondMaxLevel/* = SKIP
-6447 MAC METAL : FramebufferTest_ES3.RenderSampleDepthTextureWithExcludedLevel/* = SKIP
-
 5100 MAC METAL NVIDIA : OcclusionQueriesTest.ClearNotCounted/* = SKIP
 5100 MAC METAL NVIDIA : OcclusionQueriesTest.CopyNotCounted/* = SKIP
 5443 MAC METAL NVIDIA : OcclusionQueriesTestES3.BlitNotCounted/* = SKIP
@@ -773,10 +768,6 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 7994 IOS METAL : EGLDisplaySelectionTestDeviceId.DeviceId/* = SKIP
 7994 IOS METAL : EGLDisplaySelectionTestDeviceId.DeviceIdConcurrently/* = SKIP
 7994 IOS METAL : ETC1CompressedTextureTest.ETC1CompressedImageDraws/* = SKIP
-7994 IOS METAL : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithBellowBaseLevelLOD/* = SKIP
-7994 IOS METAL : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithBeyondMaxLevel/* = SKIP
-7994 IOS METAL : FramebufferTest_ES3.RenderAndInvalidateImmutableTextureWithSubImageWithBeyondMaxLevel/* = SKIP
-7994 IOS METAL : FramebufferTest_ES3.RenderSampleDepthTextureWithExcludedLevel/* = SKIP
 7994 IOS METAL : KTXCompressedTextureTest.CompressedTexImageETC1/* = SKIP
 7994 IOS METAL : MaxTextureSizeTest.Render1xTexture/* = SKIP
 7994 IOS METAL : MultisampleTest.AlphaToSampleCoverage/* = SKIP
