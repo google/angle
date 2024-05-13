@@ -664,7 +664,21 @@ Context::Context(egl::Display *display,
 egl::Error Context::initialize()
 {
     if (!mImplementation)
+    {
         return egl::Error(EGL_NOT_INITIALIZED, "native context creation failed");
+    }
+
+    // If the final context version created (with backwards compatibility possibly added in),
+    // generate an error if it's higher than the maximum supported version for the display. This
+    // validation is always done even with EGL validation disabled because it's not possible to
+    // detect ahead of time if an ES 3.1 context is supported (no ES_31_BIT) or if
+    // KHR_no_config_context is used.
+    if (getClientType() == EGL_OPENGL_ES_API &&
+        getClientVersion() > getDisplay()->getMaxSupportedESVersion())
+    {
+        return egl::Error(EGL_BAD_ATTRIBUTE, "Requested version is not supported");
+    }
+
     return egl::NoError();
 }
 
