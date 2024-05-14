@@ -185,8 +185,8 @@ GLuint TextureState::getMipmapMaxLevel() const
     GLuint expectedMipLevels       = 0;
     if (mType == TextureType::_3D)
     {
-        const int maxDim  = std::max(std::max(baseImageDesc.size.width, baseImageDesc.size.height),
-                                     baseImageDesc.size.depth);
+        const int maxDim = std::max(
+            {baseImageDesc.size.width, baseImageDesc.size.height, baseImageDesc.size.depth});
         expectedMipLevels = static_cast<GLuint>(log2(maxDim));
     }
     else
