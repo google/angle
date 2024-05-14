@@ -594,7 +594,7 @@ GLuint TextureState::getEnabledLevelCount() const
 {
     GLuint levelCount      = 0;
     const GLuint baseLevel = getEffectiveBaseLevel();
-    const GLuint maxLevel  = std::min(getEffectiveMaxLevel(), getMipmapMaxLevel());
+    const GLuint maxLevel  = getMipmapMaxLevel();
 
     // The mip chain will have either one or more sequential levels, or max levels,
     // but not a sparse one.
