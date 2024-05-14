@@ -121,6 +121,42 @@ FormatID Format::CLRGBAFormatToID(cl_channel_type internalChannelType)
 {angle_rgba_format_switch}
     }}
 }}
+
+// static
+FormatID Format::CLBGRAFormatToID(cl_channel_type internalChannelType)
+{{
+    switch (internalChannelType)
+    {{
+{angle_bgra_format_switch}
+    }}
+}}
+
+// static
+FormatID Format::CLsRGBAFormatToID(cl_channel_type internalChannelType)
+{{
+    switch (internalChannelType)
+    {{
+{angle_srgba_format_switch}
+    }}
+}}
+
+// static
+FormatID Format::CLDEPTHFormatToID(cl_channel_type internalChannelType)
+{{
+    switch (internalChannelType)
+    {{
+{angle_depth_format_switch}
+    }}
+}}
+
+// static
+FormatID Format::CLDEPTHSTENCILFormatToID(cl_channel_type internalChannelType)
+{{
+    switch (internalChannelType)
+    {{
+{angle_depth_stencil_format_switch}
+    }}
+}}
 #endif  // ANGLE_ENABLE_CL
 
 const Format *GetFormatInfoTable()

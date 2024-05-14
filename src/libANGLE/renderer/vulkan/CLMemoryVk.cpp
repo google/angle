@@ -346,6 +346,18 @@ angle::Result CLImageVk::create(void *hostPtr)
         case CL_RGBA:
             mFormat = angle::Format::CLRGBAFormatToID(format.image_channel_data_type);
             break;
+        case CL_BGRA:
+            mFormat = angle::Format::CLBGRAFormatToID(format.image_channel_data_type);
+            break;
+        case CL_sRGBA:
+            mFormat = angle::Format::CLsRGBAFormatToID(format.image_channel_data_type);
+            break;
+        case CL_DEPTH:
+            mFormat = angle::Format::CLDEPTHFormatToID(format.image_channel_data_type);
+            break;
+        case CL_DEPTH_STENCIL:
+            mFormat = angle::Format::CLDEPTHSTENCILFormatToID(format.image_channel_data_type);
+            break;
         default:
             UNIMPLEMENTED();
             break;
