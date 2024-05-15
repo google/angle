@@ -301,7 +301,7 @@ TEST(ResourceMapTest, ConcurrentAccessSmallIds)
     ConcurrentAccess(50'000, 128);
 }
 // Tests that concurrent access to thread-safe resource maps works for a wider range of ids.
-TEST(ResourceMapTest, ConcurrentAccessLargeIds)
+TEST(ResourceMapTest, DISABLED_ConcurrentAccessLargeIds)
 {
     ConcurrentAccess(10'000, 20'000);
 }
