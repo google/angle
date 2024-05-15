@@ -202,6 +202,11 @@ TEST(ResourceMapTest, QueryUnassignedLocked)
 
 void ConcurrentAccess(size_t iterations, size_t idCycleSize)
 {
+    if (std::is_same_v<ResourceMapMutex, angle::NoOpMutex>)
+    {
+        GTEST_SKIP() << "Test skipped: Locking is disabled in build.";
+    }
+
     constexpr size_t kThreadCount = 13;
 
     ResourceMap<size_t, LockedType> resourceMap;
@@ -301,7 +306,7 @@ TEST(ResourceMapTest, ConcurrentAccessSmallIds)
     ConcurrentAccess(50'000, 128);
 }
 // Tests that concurrent access to thread-safe resource maps works for a wider range of ids.
-TEST(ResourceMapTest, DISABLED_ConcurrentAccessLargeIds)
+TEST(ResourceMapTest, ConcurrentAccessLargeIds)
 {
     ConcurrentAccess(10'000, 20'000);
 }
