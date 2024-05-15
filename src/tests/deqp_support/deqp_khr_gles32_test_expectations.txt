@@ -95,8 +95,6 @@
 3577 VULKAN PIXEL4ORXL : KHR-GLES32.core.gpu_shader5.*clamp*_edge = SKIP
 
 // Desktop cards without native etc support
-5276 AMD VULKAN LINUX : KHR-GLES32.core.texture_cube_map_array.etc2_texture = FAIL
-5276 AMD VULKAN WIN : KHR-GLES32.core.texture_cube_map_array.etc2_texture = FAIL
 5276 NVIDIA VULKAN : KHR-GLES32.core.texture_cube_map_array.etc2_texture = FAIL
 
 // Validation errors
