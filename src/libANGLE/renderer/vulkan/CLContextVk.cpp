@@ -123,14 +123,79 @@ angle::Result CLContextVk::createImage(const cl::Image &image,
     return angle::Result::Continue;
 }
 
+VkFormat CLContextVk::getVkFormatFromCL(cl_image_format format)
+{
+    angle::FormatID formatID;
+    switch (format.image_channel_order)
+    {
+        case CL_R:
+            formatID = angle::Format::CLRFormatToID(format.image_channel_data_type);
+            break;
+        case CL_RG:
+            formatID = angle::Format::CLRGFormatToID(format.image_channel_data_type);
+            break;
+        case CL_RGB:
+            formatID = angle::Format::CLRGBFormatToID(format.image_channel_data_type);
+            break;
+        case CL_RGBA:
+            formatID = angle::Format::CLRGBAFormatToID(format.image_channel_data_type);
+            break;
+        case CL_BGRA:
+            formatID = angle::Format::CLBGRAFormatToID(format.image_channel_data_type);
+            break;
+        case CL_sRGBA:
+            formatID = angle::Format::CLsRGBAFormatToID(format.image_channel_data_type);
+            break;
+        default:
+            return VK_FORMAT_UNDEFINED;
+    }
+    return getPlatform()->getRenderer()->getFormat(formatID).getActualRenderableImageVkFormat();
+}
+
 angle::Result CLContextVk::getSupportedImageFormats(cl::MemFlags flags,
                                                     cl::MemObjectType imageType,
                                                     cl_uint numEntries,
                                                     cl_image_format *imageFormats,
                                                     cl_uint *numImageFormats)
 {
-    UNIMPLEMENTED();
-    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+    VkPhysicalDevice physicalDevice = getPlatform()->getRenderer()->getPhysicalDevice();
+    std::vector<cl_image_format> supportedFormats;
+    std::vector<cl_image_format> minSupportedFormats;
+    if (flags.intersects((CL_MEM_READ_ONLY | CL_MEM_WRITE_ONLY)))
+    {
+        minSupportedFormats.insert(minSupportedFormats.end(),
+                                   std::begin(kMinSupportedFormatsReadOrWrite),
+                                   std::end(kMinSupportedFormatsReadOrWrite));
+    }
+    else
+    {
+        minSupportedFormats.insert(minSupportedFormats.end(),
+                                   std::begin(kMinSupportedFormatsReadAndWrite),
+                                   std::end(kMinSupportedFormatsReadAndWrite));
+    }
+    for (cl_image_format format : minSupportedFormats)
+    {
+        VkFormatProperties formatProperties;
+        VkFormat vkFormat = getVkFormatFromCL(format);
+        ASSERT(vkFormat != VK_FORMAT_UNDEFINED);
+        vkGetPhysicalDeviceFormatProperties(physicalDevice, vkFormat, &formatProperties);
+        if (formatProperties.optimalTilingFeatures != 0)
+        {
+            supportedFormats.push_back(format);
+        }
+    }
+    if (numImageFormats != nullptr)
+    {
+        *numImageFormats = static_cast<cl_uint>(supportedFormats.size());
+    }
+    if (imageFormats != nullptr)
+    {
+        memcpy(imageFormats, supportedFormats.data(),
+               sizeof(cl_image_format) *
+                   std::min(static_cast<cl_uint>(supportedFormats.size()), numEntries));
+    }
+
+    return angle::Result::Continue;
 }
 
 angle::Result CLContextVk::createSampler(const cl::Sampler &sampler, CLSamplerImpl::Ptr *samplerOut)
