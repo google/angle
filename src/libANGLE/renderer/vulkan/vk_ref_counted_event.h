@@ -145,7 +145,7 @@ class RefCountedEvent final
 
     RefCounted<EventAndLayout> *mHandle;
 };
-using RefCountedEventCollector = std::vector<RefCountedEvent>;
+using RefCountedEventCollector = std::deque<RefCountedEvent>;
 
 // This class tracks a vector of RefcountedEvent garbage. For performance reason, instead of
 // individually tracking each VkEvent garbage, we collect all events that are accessed in the
@@ -193,12 +193,8 @@ class RefCountedEventsGarbage final
     // Move the vector of events to the garbage list
     void add(RefCountedEventCollector &&events)
     {
-        mRefCountedEvents.reserve(mRefCountedEvents.size() + events.size());
-        for (RefCountedEvent &event : events)
-        {
-            mRefCountedEvents.emplace_back(std::move(event));
-        }
-        events.clear();
+        mRefCountedEvents.insert(mRefCountedEvents.end(), events.begin(), events.end());
+        ASSERT(events.empty());
     }
 
     // Make a copy of event (which adds another refcount to the VkEvent) and add the copied event to
@@ -238,11 +234,11 @@ class RefCountedEventRecycler final
         // Take lock once and then use event's releaseImpl function to directly recycle into the
         // underlying recycling storage.
         std::lock_guard<angle::SimpleMutex> lock(mMutex);
-        for (RefCountedEvent &event : eventCollector)
+        while (!eventCollector.empty())
         {
-            event.releaseImpl(renderer, &mFreeStack);
+            eventCollector.back().releaseImpl(renderer, &mFreeStack);
+            eventCollector.pop_back();
         }
-        eventCollector.clear();
     }
 
     bool fetch(RefCountedEvent *outObject)

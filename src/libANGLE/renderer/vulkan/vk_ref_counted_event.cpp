@@ -121,25 +121,25 @@ bool RefCountedEventsGarbage::releaseIfComplete(Renderer *renderer,
         return false;
     }
 
-    for (RefCountedEvent &event : mRefCountedEvents)
+    while (!mRefCountedEvents.empty())
     {
-        ASSERT(event.valid());
-        event.releaseImpl(renderer, recycler);
-        ASSERT(!event.valid());
+        ASSERT(mRefCountedEvents.back().valid());
+        mRefCountedEvents.back().releaseImpl(renderer, recycler);
+        ASSERT(!mRefCountedEvents.back().valid());
+        mRefCountedEvents.pop_back();
     }
-    mRefCountedEvents.clear();
     return true;
 }
 
 void RefCountedEventsGarbage::destroy(Renderer *renderer)
 {
     ASSERT(renderer->hasQueueSerialFinished(mQueueSerial));
-    for (RefCountedEvent &event : mRefCountedEvents)
+    while (!mRefCountedEvents.empty())
     {
-        ASSERT(event.valid());
-        event.release(renderer);
+        ASSERT(mRefCountedEvents.back().valid());
+        mRefCountedEvents.back().release(renderer);
+        mRefCountedEvents.pop_back();
     }
-    mRefCountedEvents.clear();
 }
 
 // RefCountedEventsGarbageRecycler implementation.

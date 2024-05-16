@@ -1351,8 +1351,6 @@ class CommandBufferHelperCommon : angle::NonCopyable
     template <typename CommandBufferT>
     void flushSetEventsImpl(Context *context, CommandBufferT *commandBuffer);
 
-    RefCountedEventCollector *getRefCountedEventCollector() { return &mRefCountedEventCollector; }
-
     const QueueSerial &getQueueSerial() const { return mQueueSerial; }
 
     void setAcquireNextImageSemaphore(VkSemaphore semaphore)
@@ -1530,6 +1528,8 @@ class OutsideRenderPassCommandBufferHelper final : public CommandBufferHelperCom
     // Clean up event garbage. Note that ImageHelper object may still holding reference count to it,
     // so the event itself will not gets destroyed until the last refCount goes away.
     void collectRefCountedEventsGarbage(RefCountedEventsGarbageRecycler *garbageRecycler);
+
+    RefCountedEventCollector *getRefCountedEventCollector() { return &mRefCountedEventCollector; }
 
     angle::Result flushToPrimary(Context *context, CommandsState *commandsState);
 
