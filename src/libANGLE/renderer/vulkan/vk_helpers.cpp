@@ -7442,6 +7442,8 @@ void ImageHelper::updateLayoutAndBarrier(Context *context,
                 return;
             }
 
+            ASSERT(!mLastNonShaderReadOnlyEvent.valid() ||
+                   mLastNonShaderReadOnlyEvent.getImageLayout() == mLastNonShaderReadOnlyLayout);
             if (!mLastNonShaderReadOnlyEvent.valid())
             {
                 barrierType = BarrierType::Pipeline;
@@ -7449,8 +7451,11 @@ void ImageHelper::updateLayoutAndBarrier(Context *context,
 
             if (barrierType == BarrierType::Event)
             {
-                eventBarriers->addMemoryEvent(context, mLastNonShaderReadOnlyEvent, dstStageMask,
-                                              transitionTo.dstAccessMask);
+                // If we already inserted a barrier in the same renderPass, we has to add
+                // the new stage mask to the existing VkCmdWaitEvent call, otherwise VVL will
+                // complain.
+                eventBarriers->addAdditionalStageAccess(mLastNonShaderReadOnlyEvent, dstStageMask,
+                                                        transitionTo.dstAccessMask);
                 eventCollector->emplace_back(mLastNonShaderReadOnlyEvent);
             }
             else
@@ -7472,15 +7477,6 @@ void ImageHelper::updateLayoutAndBarrier(Context *context,
             {
                 eventCollector->emplace_back(std::move(mCurrentEvent));
             }
-
-            const ImageMemoryBarrierData &layoutData =
-                kImageMemoryBarrierData[mLastNonShaderReadOnlyLayout];
-            pipelineBarriers->mergeMemoryBarrier(
-                transitionTo.barrierIndex, GetImageLayoutSrcStageMask(context, layoutData),
-                dstStageMask, layoutData.srcAccessMask, transitionTo.dstAccessMask);
-            mBarrierQueueSerial = queueSerial;
-            // Accumulate new read stage.
-            mCurrentShaderReadStageMask |= dstStageMask;
         }
         else
         {

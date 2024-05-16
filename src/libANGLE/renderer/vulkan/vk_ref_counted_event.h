@@ -398,6 +398,11 @@ class EventBarrierArray final
 
     void execute(Renderer *renderer, PrimaryCommandBuffer *primary);
 
+    // Add the additional stageMask to the existing waitEvent.
+    void addAdditionalStageAccess(const RefCountedEvent &waitEvent,
+                                  VkPipelineStageFlags dstStageMask,
+                                  VkAccessFlags dstAccess);
+
     void addMemoryEvent(Context *context,
                         const RefCountedEvent &waitEvent,
                         VkPipelineStageFlags dstStageMask,
