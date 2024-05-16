@@ -13,10 +13,10 @@ import os
 import sys
 
 # ANGLE uses SPIR-V 1.0 currently, so there's no reason to generate code for newer instructions.
-SPIRV_GRAMMAR_FILE = '../../../third_party/vulkan-deps/spirv-headers/src/include/spirv/1.0/spirv.core.grammar.json'
+SPIRV_GRAMMAR_FILE = '../../../third_party/spirv-headers/src/include/spirv/1.0/spirv.core.grammar.json'
 
 # Cherry pick some extra extensions from here that aren't in SPIR-V 1.0.
-SPIRV_CHERRY_PICKED_EXTENSIONS_FILE = '../../../third_party/vulkan-deps/spirv-headers/src/include/spirv/unified1/spirv.core.grammar.json'
+SPIRV_CHERRY_PICKED_EXTENSIONS_FILE = '../../../third_party/spirv-headers/src/include/spirv/unified1/spirv.core.grammar.json'
 
 # The script has two sets of outputs, a header and source file for SPIR-V code generation, and a
 # header and source file for SPIR-V parsing.
