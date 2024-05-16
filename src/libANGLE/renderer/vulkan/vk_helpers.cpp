@@ -2706,15 +2706,13 @@ void RenderPassCommandBufferHelper::executeSetEvents(Context *context,
     // Add VkCmdSetEvent here to track the completion of this renderPass.
     for (ImageLayout layout : mRefCountedEvents.mask)
     {
-        RefCountedEvent &refCountedEvent = mRefCountedEvents.map[layout];
-        ASSERT(refCountedEvent.valid());
-        const ImageMemoryBarrierData &layoutData =
-            kImageMemoryBarrierData[refCountedEvent.getImageLayout()];
-        primary->setEvent(refCountedEvent.getEvent().getHandle(),
+        // This must have been garbage collected. The VkEvent handle should have been copied to
+        // VkEvents.
+        ASSERT(!mRefCountedEvents.map[layout].valid());
+        ASSERT(mRefCountedEvents.vkEvents[layout] != VK_NULL_HANDLE);
+        const ImageMemoryBarrierData &layoutData = kImageMemoryBarrierData[layout];
+        primary->setEvent(mRefCountedEvents.vkEvents[layout],
                           GetImageLayoutDstStageMask(context, layoutData));
-        // Note that these events are already added to the garbage collector before command buffer
-        // leaves ContextVk, so we just need to release the event after use.
-        refCountedEvent.release(context);
     }
     mRefCountedEvents.mask.reset();
 }
@@ -2725,13 +2723,14 @@ void RenderPassCommandBufferHelper::collectRefCountedEventsGarbage(
     // For render pass the VkCmdSetEvent works differently from OutsideRenderPassCommands.
     // VkCmdEndRenderPass are called in the primary command buffer, and VkCmdSetEvents has to be
     // issued after VkCmdEndRenderPass. This means VkCmdSetEvent has to be delayed. Because of this,
-    // here we simply make a local copy of the events and add that local copy to the garbage
-    // collector. No VkCmdSetEvent is made here (they will be issued at flushToPrimary time).
+    // here we simply make a local copy of the VkEvent and then add the RefCountedEvent to the
+    // garbage collector. No VkCmdSetEvent call is issued here (they will be issued at
+    // flushToPrimary time).
     for (ImageLayout layout : mRefCountedEvents.mask)
     {
-        RefCountedEvent localRefCountedEvent = mRefCountedEvents.map[layout];
-        ASSERT(localRefCountedEvent.valid());
-        mRefCountedEventCollector.emplace_back(std::move(localRefCountedEvent));
+        ASSERT(mRefCountedEvents.map[layout].valid());
+        mRefCountedEvents.vkEvents[layout] = mRefCountedEvents.map[layout].getEvent().getHandle();
+        mRefCountedEventCollector.emplace_back(std::move(mRefCountedEvents.map[layout]));
     }
 
     if (!mRefCountedEventCollector.empty())

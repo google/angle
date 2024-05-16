@@ -742,6 +742,8 @@ class Renderer : angle::NonCopyable
 
     vk::RefCountedEventRecycler *getRefCountedEventRecycler() { return &mRefCountedEventRecycler; }
 
+    std::thread::id getCommandProcessorThreadId() const { return mCommandProcessor.getThreadId(); }
+
   private:
     angle::Result setupDevice(vk::Context *context,
                               const angle::FeatureOverrides &featureOverrides,

@@ -636,6 +636,8 @@ class CommandProcessor : public Context
     }
     Serial getLastEnqueuedSerial(SerialIndex index) const { return mLastEnqueuedSerials[index]; }
 
+    std::thread::id getThreadId() const { return mTaskThread.get_id(); }
+
   private:
     bool hasPendingError() const
     {

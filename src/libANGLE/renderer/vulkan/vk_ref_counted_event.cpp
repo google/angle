@@ -83,6 +83,10 @@ template <typename RecyclerT>
 void RefCountedEvent::releaseImpl(Renderer *renderer, RecyclerT *recycler)
 {
     ASSERT(mHandle != nullptr);
+    // This should never called from async submission thread since the refcount is not atomic. It is
+    // expected only called under context share lock.
+    ASSERT(std::this_thread::get_id() != renderer->getCommandProcessorThreadId());
+
     const bool isLastReference = mHandle->getAndReleaseRef() == 1;
     if (isLastReference)
     {

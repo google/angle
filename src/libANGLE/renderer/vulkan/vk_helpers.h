@@ -175,6 +175,8 @@ struct ImageLayoutEventMaps
     // loop of map
     angle::PackedEnumMap<ImageLayout, RefCountedEvent> map;
     angle::PackedEnumBitSet<ImageLayout, uint64_t> mask;
+    // Only used by RenderPassCommandBufferHelper
+    angle::PackedEnumMap<ImageLayout, VkEvent> vkEvents;
 };
 
 // A dynamic buffer is conceptually an infinitely long buffer. Each time you write to the buffer,
