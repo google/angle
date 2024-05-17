@@ -19251,6 +19251,52 @@ Foo foo(float bar)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that double underscores user defined name is allowed
+TEST_P(GLSLTest_ES3, DoubleUnderscoresName)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 oColor;
+uniform struct __Data {float red;} data;
+void main() {oColor=vec4(data.red,0,1,1);})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+    // populate uniform
+    GLint uniformLocation = glGetUniformLocation(program, "data.red");
+    EXPECT_NE(uniformLocation, -1);
+    glUniform1f(uniformLocation, 0);
+
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that user defined name starts with "ANGLE" or "ANGLE_"
+TEST_P(GLSLTest_ES3, VariableNameStartsWithANGLE)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 oColor;
+uniform struct ANGLEData{float red;} data;
+uniform struct ANGLE_Data{float green;} _data;
+void main() {oColor=vec4(data.red,_data.green,1,1);})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+    // populate uniform
+    GLint uniformRedLocation   = glGetUniformLocation(program, "data.red");
+    GLint uniformGreenLocation = glGetUniformLocation(program, "_data.green");
+    EXPECT_NE(uniformRedLocation, -1);
+    EXPECT_NE(uniformGreenLocation, -1);
+    glUniform1f(uniformRedLocation, 0);
+    glUniform1f(uniformGreenLocation, 0);
+
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test that underscores in array names work with out arrays.
 TEST_P(GLSLTest_ES3, UnderscoresWorkWithOutArrays)
 {
