@@ -413,7 +413,7 @@ class EventBarrierArray final
     void addDiagnosticsString(std::ostringstream &out) const;
 
   private:
-    std::vector<EventBarrier> mBarriers;
+    std::deque<EventBarrier> mBarriers;
 };
 
 VkPipelineStageFlags GetRefCountedEventStageMask(Context *context, const RefCountedEvent &event);
