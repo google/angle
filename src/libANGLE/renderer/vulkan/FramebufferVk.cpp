@@ -1900,8 +1900,7 @@ angle::Result FramebufferVk::updateFoveationState(ContextVk *contextVk,
                                                   const gl::FoveationState &newFoveationState,
                                                   const gl::Extents &foveatedAttachmentSize)
 {
-    mFoveationState                               = newFoveationState;
-    const bool isFoveationEnabled                 = mFoveationState.isFoveated();
+    const bool isFoveationEnabled                 = newFoveationState.isFoveated();
     vk::ImageOrBufferViewSubresourceSerial serial = vk::kInvalidImageOrBufferViewSubresourceSerial;
     if (isFoveationEnabled)
     {
@@ -1914,8 +1913,11 @@ angle::Result FramebufferVk::updateFoveationState(ContextVk *contextVk,
             gl::SrgbOverride::Default);
     }
 
+    // Update state after the possible failure point.
+    mFoveationState = newFoveationState;
     mCurrentFramebufferDesc.updateFragmentShadingRate(serial);
-    mRenderPassDesc.setFragmentShadingAttachment(isFoveationEnabled);
+    // mRenderPassDesc will be updated later in updateRenderPassDesc() in case if
+    // mCurrentFramebufferDesc was changed.
     return angle::Result::Continue;
 }
 
@@ -3341,6 +3343,9 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
     // Make sure render pass and framebuffer are in agreement w.r.t unresolve attachments.
     ASSERT(mCurrentFramebufferDesc.getUnresolveAttachmentMask() ==
            MakeUnresolveAttachmentMask(mRenderPassDesc));
+    // ... w.r.t foveation.
+    ASSERT(mCurrentFramebufferDesc.hasFragmentShadingRateAttachment() ==
+           mRenderPassDesc.hasFragmentShadingAttachment());
 
     // Color attachments.
     const auto &colorRenderTargets = mRenderTargetCache.getColors();
