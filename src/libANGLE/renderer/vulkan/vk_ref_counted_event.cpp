@@ -95,7 +95,9 @@ void RefCountedEvent::releaseImpl(Renderer *renderer, RecyclerT *recycler)
         // collector should have one reference count and will never release that reference count
         // until GPU finished.
         ASSERT(recycler != nullptr);
-        recycler->recycle(std::move(*this));
+        // TODO: Disable recycler and immediately destroy the event for now until I figure out
+        // SYNC-vkCmdSetEvent-missingbarrier-reset.
+        destroy(renderer->getDevice());
         ASSERT(mHandle == nullptr);
     }
     else
