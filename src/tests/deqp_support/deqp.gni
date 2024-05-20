@@ -871,6 +871,8 @@ deqp_khr_common_sources = [
   "$deqp_path/external/openglcts/modules/common/glcBlendEquationAdvancedTests.hpp",
   "$deqp_path/external/openglcts/modules/common/glcBufferObjectsTests.cpp",
   "$deqp_path/external/openglcts/modules/common/glcBufferObjectsTests.hpp",
+  "$deqp_path/external/openglcts/modules/common/glcClipDistance.cpp",
+  "$deqp_path/external/openglcts/modules/common/glcClipDistance.hpp",
   "$deqp_path/external/openglcts/modules/common/glcCompressedFormatTests.cpp",
   "$deqp_path/external/openglcts/modules/common/glcCompressedFormatTests.hpp",
   "$deqp_path/external/openglcts/modules/common/glcCompressedFormatTests_data.inl",
@@ -888,6 +890,8 @@ deqp_khr_common_sources = [
   "$deqp_path/external/openglcts/modules/common/glcContext.hpp",
   "$deqp_path/external/openglcts/modules/common/glcContextFlagsTests.cpp",
   "$deqp_path/external/openglcts/modules/common/glcContextFlagsTests.hpp",
+  "$deqp_path/external/openglcts/modules/common/glcCullDistance.cpp",
+  "$deqp_path/external/openglcts/modules/common/glcCullDistance.hpp",
   "$deqp_path/external/openglcts/modules/common/glcExposedExtensionsTests.cpp",
   "$deqp_path/external/openglcts/modules/common/glcExposedExtensionsTests.hpp",
   "$deqp_path/external/openglcts/modules/common/glcExtTokens.cpp",
@@ -1060,12 +1064,8 @@ deqp_khr_test_module_headers = [
 ]
 
 deqp_khr_gl_sources = [
-  "$deqp_path/external/openglcts/modules/gl/gl3cClipDistance.cpp",
-  "$deqp_path/external/openglcts/modules/gl/gl3cClipDistance.hpp",
   "$deqp_path/external/openglcts/modules/gl/gl3cCommonBugsTests.cpp",
   "$deqp_path/external/openglcts/modules/gl/gl3cCommonBugsTests.hpp",
-  "$deqp_path/external/openglcts/modules/gl/gl3cCullDistanceTests.cpp",
-  "$deqp_path/external/openglcts/modules/gl/gl3cCullDistanceTests.hpp",
   "$deqp_path/external/openglcts/modules/gl/gl3cGLSLnoperspectiveTests.cpp",
   "$deqp_path/external/openglcts/modules/gl/gl3cGLSLnoperspectiveTests.hpp",
   "$deqp_path/external/openglcts/modules/gl/gl3cGPUShader5Tests.cpp",
