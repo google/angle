@@ -69,7 +69,7 @@
                                                                'display_attached': '1',
                                                                'gpu': '1002:67ef',
                                                                'hidpi': '1',
-                                                               'os': 'Mac-13.5|Mac-14.4.1',
+                                                               'os': 'Mac-14.4.1',
                                                                'pool': 'chromium.tests.gpu'}}},
   'mac_retina_nvidia_gpu_experimental': { 'swarming': { 'dimensions': { 'cpu': 'x86-64',
                                                                         'display_attached': '1',
