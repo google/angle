@@ -378,7 +378,7 @@ class ProgramExecutableVk::WarmUpTaskCommon : public vk::Context, public LinkSub
     // safe to directly access the executable from this parallel job.  Note that this is the reason
     // why the front-end does not let the parallel job continue when a relink happens or the first
     // draw with this program.
-    ProgramExecutableVk *mExecutableVk;
+    ProgramExecutableVk *mExecutableVk               = nullptr;
     const vk::PipelineRobustness mPipelineRobustness = vk::PipelineRobustness::NonRobust;
     const vk::PipelineProtectedAccess mPipelineProtectedAccess =
         vk::PipelineProtectedAccess::Unprotected;
