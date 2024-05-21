@@ -676,6 +676,60 @@ bool ValidateBlendBarrierKHR(const Context *context, angle::EntryPoint entryPoin
     return true;
 }
 
+bool ValidateGetGraphicsResetStatusKHR(const Context *context, angle::EntryPoint entryPoint)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateGetnUniformfvKHR(const Context *context,
+                              angle::EntryPoint entryPoint,
+                              ShaderProgramID programPacked,
+                              UniformLocation locationPacked,
+                              GLsizei bufSize,
+                              const GLfloat *params)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateGetnUniformivKHR(const Context *context,
+                              angle::EntryPoint entryPoint,
+                              ShaderProgramID programPacked,
+                              UniformLocation locationPacked,
+                              GLsizei bufSize,
+                              const GLint *params)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateGetnUniformuivKHR(const Context *context,
+                               angle::EntryPoint entryPoint,
+                               ShaderProgramID programPacked,
+                               UniformLocation locationPacked,
+                               GLsizei bufSize,
+                               const GLuint *params)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateReadnPixelsKHR(const Context *context,
+                            angle::EntryPoint entryPoint,
+                            GLint x,
+                            GLint y,
+                            GLsizei width,
+                            GLsizei height,
+                            GLenum format,
+                            GLenum type,
+                            GLsizei bufSize,
+                            const void *data)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
 bool ValidateBlendEquationSeparateiEXT(const PrivateState &state,
                                        ErrorSet *errors,
                                        angle::EntryPoint entryPoint,

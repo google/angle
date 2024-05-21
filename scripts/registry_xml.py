@@ -269,6 +269,7 @@ gles_es_only_extensions = [
     "GL_KHR_debug",
     "GL_KHR_no_error",
     "GL_KHR_robust_buffer_access_behavior",
+    "GL_KHR_robustness",
     "GL_NV_fence",
     "GL_NV_robustness_video_memory_purge",
     "GL_OES_depth24",
