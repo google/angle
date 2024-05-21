@@ -973,18 +973,17 @@ class BufferHelper : public ReadWriteResource
     angle::Result invalidate(Renderer *renderer);
     angle::Result invalidate(Renderer *renderer, VkDeviceSize offset, VkDeviceSize size);
 
-    void changeQueue(uint32_t srcQueueFamilyIndex,
-                     uint32_t dstQueueFamilyIndex,
-                     OutsideRenderPassCommandBuffer *commandBuffer);
+    void changeQueueFamily(uint32_t srcQueueFamilyIndex,
+                           uint32_t dstQueueFamilyIndex,
+                           OutsideRenderPassCommandBuffer *commandBuffer);
 
     // Performs an ownership transfer from an external instance or API.
-    void acquireFromExternal(uint32_t externalQueueFamilyIndex,
+    void acquireFromExternal(DeviceQueueIndex externalQueueIndex,
                              DeviceQueueIndex newDeviceQueueIndex,
                              OutsideRenderPassCommandBuffer *commandBuffer);
 
     // Performs an ownership transfer to an external instance or API.
-    void releaseToExternal(DeviceQueueIndex rendererDeviceQueueIndex,
-                           uint32_t externalQueueFamilyIndex,
+    void releaseToExternal(DeviceQueueIndex externalQueueIndex,
                            OutsideRenderPassCommandBuffer *commandBuffer);
 
     // Returns true if the image is owned by an external API or instance.
@@ -2574,15 +2573,14 @@ class ImageHelper final : public Resource, public angle::Subject
 
     // Performs an ownership transfer from an external instance or API.
     void acquireFromExternal(Context *context,
-                             uint32_t externalQueueFamilyIndex,
+                             DeviceQueueIndex externalQueueIndex,
                              DeviceQueueIndex newDeviceQueueIndex,
                              ImageLayout currentLayout,
                              OutsideRenderPassCommandBuffer *commandBuffer);
 
     // Performs an ownership transfer to an external instance or API.
     void releaseToExternal(Context *context,
-                           DeviceQueueIndex rendererDeviceQueueIndex,
-                           uint32_t externalQueueFamilyIndex,
+                           DeviceQueueIndex externalQueueIndex,
                            ImageLayout desiredLayout,
                            OutsideRenderPassCommandBuffer *commandBuffer);
 
