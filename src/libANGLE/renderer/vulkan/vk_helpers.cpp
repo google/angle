@@ -7038,7 +7038,7 @@ void ImageHelper::changeLayoutAndQueue(Context *context,
                                        uint32_t newQueueFamilyIndex,
                                        OutsideRenderPassCommandBuffer *commandBuffer)
 {
-    ASSERT(isQueueChangeNeccesary(newQueueFamilyIndex));
+    ASSERT(isQueueFamilyChangeNeccesary(newQueueFamilyIndex));
     VkSemaphore acquireNextImageSemaphore;
     // barrierImpl should detect there is queue switch and fall back to pipelineBarrier properly.
     barrierImpl(context, aspectMask, newLayout, newQueueFamilyIndex, nullptr, commandBuffer,

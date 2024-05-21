@@ -204,7 +204,7 @@ angle::Result RenderbufferVk::setStorageEGLImageTarget(const gl::Context *contex
 
     // Transfer the image to this queue if needed
     uint32_t rendererQueueFamilyIndex = contextVk->getRenderer()->getQueueFamilyIndex();
-    if (mImage->isQueueChangeNeccesary(rendererQueueFamilyIndex))
+    if (mImage->isQueueFamilyChangeNeccesary(rendererQueueFamilyIndex))
     {
         vk::OutsideRenderPassCommandBuffer *commandBuffer;
         vk::CommandBufferAccess access;

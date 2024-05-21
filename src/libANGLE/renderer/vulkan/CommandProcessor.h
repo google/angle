@@ -382,7 +382,6 @@ class CommandQueue : angle::NonCopyable
     {
         return mQueueMap.getDevicePriority(priority);
     }
-    uint32_t getDeviceQueueIndex() const { return mQueueMap.getQueueFamilyIndex(); }
 
     VkQueue getQueue(egl::ContextPriority priority) const { return mQueueMap.getQueue(priority); }
 

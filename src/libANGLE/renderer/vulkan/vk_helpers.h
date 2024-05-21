@@ -2548,7 +2548,7 @@ class ImageHelper final : public Resource, public angle::Subject
                            ImageLayout newLayout,
                            OutsideRenderPassCommandBufferHelper *commands);
 
-    bool isQueueChangeNeccesary(uint32_t newQueueFamilyIndex) const
+    bool isQueueFamilyChangeNeccesary(uint32_t newQueueFamilyIndex) const
     {
         return mCurrentQueueFamilyIndex != newQueueFamilyIndex;
     }

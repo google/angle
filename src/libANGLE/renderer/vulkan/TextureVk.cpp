@@ -2800,7 +2800,7 @@ angle::Result TextureVk::performImageQueueTransferIfNecessary(ContextVk *context
     const vk::Renderer *renderer = contextVk->getRenderer();
 
     const uint32_t rendererQueueFamilyIndex = renderer->getQueueFamilyIndex();
-    if (mImage->valid() && mImage->isQueueChangeNeccesary(rendererQueueFamilyIndex))
+    if (mImage->valid() && mImage->isQueueFamilyChangeNeccesary(rendererQueueFamilyIndex))
     {
         vk::ImageLayout newLayout = vk::ImageLayout::AllGraphicsShadersWrite;
         if (mImage->getUsage() & VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT)

@@ -277,7 +277,6 @@ class Renderer : angle::NonCopyable
     {
         return mCommandQueue.getDriverPriority(priority);
     }
-    ANGLE_INLINE uint32_t getDeviceQueueIndex() { return mCommandQueue.getDeviceQueueIndex(); }
 
     VkQueue getQueue(egl::ContextPriority priority) { return mCommandQueue.getQueue(priority); }
 
