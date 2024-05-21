@@ -262,7 +262,7 @@ ResourceMap<ResourceType, IDType>::ResourceMap()
 template <typename ResourceType, typename IDType>
 ResourceMap<ResourceType, IDType>::~ResourceMap()
 {
-    ASSERT(UnsafeResourceMapIter(*this).empty());
+    ASSERT(begin() == end());
     delete[] mFlatResources;
 }
 
