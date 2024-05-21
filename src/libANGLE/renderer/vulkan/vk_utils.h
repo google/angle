@@ -132,6 +132,53 @@ class Renderer;
 // Used for memory allocation tracking.
 enum class MemoryAllocationType;
 
+// Encapsulate the graphics family index and VkQueue index (as seen in vkGetDeviceQueue API
+// arguments) into one integer so that we can easily pass around without introduce extra overhead..
+class DeviceQueueIndex final
+{
+  public:
+    constexpr DeviceQueueIndex()
+        : mFamilyIndex(kInvalidQueueFamilyIndex), mQueueIndex(kInvalidQueueIndex)
+    {}
+    constexpr DeviceQueueIndex(uint32_t familyIndex)
+        : mFamilyIndex(familyIndex), mQueueIndex(kInvalidQueueIndex)
+    {}
+    DeviceQueueIndex(uint32_t familyIndex, uint32_t queueIndex)
+        : mFamilyIndex(familyIndex), mQueueIndex(queueIndex)
+    {}
+    DeviceQueueIndex(const DeviceQueueIndex &other) { *this = other; }
+
+    DeviceQueueIndex &operator=(const DeviceQueueIndex &other)
+    {
+        mValue = other.mValue;
+        return *this;
+    }
+
+    uint32_t familyIndex() const { return mFamilyIndex; }
+    uint32_t queueIndex() const { return mQueueIndex; }
+
+    bool operator==(const DeviceQueueIndex &other) const { return mValue == other.mValue; }
+    bool operator!=(const DeviceQueueIndex &other) const { return mValue != other.mValue; }
+
+  private:
+    static constexpr uint32_t kInvalidQueueFamilyIndex = std::numeric_limits<uint32_t>::max();
+    static constexpr uint32_t kInvalidQueueIndex       = std::numeric_limits<uint32_t>::max();
+    union
+    {
+        struct
+        {
+            uint32_t mFamilyIndex;
+            uint32_t mQueueIndex;
+        };
+        uint64_t mValue;
+    };
+};
+static constexpr DeviceQueueIndex kInvalidDeviceQueueIndex = DeviceQueueIndex();
+static constexpr DeviceQueueIndex kForeignDeviceQueueIndex =
+    DeviceQueueIndex(VK_QUEUE_FAMILY_FOREIGN_EXT);
+static constexpr DeviceQueueIndex kExternalDeviceQueueIndex =
+    DeviceQueueIndex(VK_QUEUE_FAMILY_EXTERNAL);
+
 // A packed attachment index interface with vulkan API
 class PackedAttachmentIndex final
 {
@@ -301,11 +348,13 @@ class Context : angle::NonCopyable
     {
         return mShareGroupRefCountedEventsGarbageRecycler;
     }
+    const DeviceQueueIndex &getDeviceQueueIndex() const { return mDeviceQueueIndex; }
 
   protected:
     Renderer *const mRenderer;
     // Stash the ShareGroupVk's RefCountedEventRecycler here ImageHelper to conveniently access
     RefCountedEventsGarbageRecycler *mShareGroupRefCountedEventsGarbageRecycler;
+    DeviceQueueIndex mDeviceQueueIndex;
     angle::VulkanPerfCounters mPerfCounters;
 };
 
