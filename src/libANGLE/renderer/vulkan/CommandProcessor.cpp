@@ -1742,7 +1742,7 @@ DeviceQueueMap &DeviceQueueMap::operator=(const DeviceQueueMap &other)
     ASSERT(this != &other);
     if ((this != &other) && other.valid())
     {
-        mIndex                                    = other.mIndex;
+        mQueueFamilyIndex                         = other.mQueueFamilyIndex;
         mIsProtected                              = other.mIsProtected;
         mPriorities[egl::ContextPriority::Low]    = other.mPriorities[egl::ContextPriority::Low];
         mPriorities[egl::ContextPriority::Medium] = other.mPriorities[egl::ContextPriority::Medium];
@@ -1762,14 +1762,14 @@ void QueueFamily::getDeviceQueue(VkDevice device,
         VkDeviceQueueInfo2 queueInfo2 = {};
         queueInfo2.sType              = VK_STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2;
         queueInfo2.flags              = VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT;
-        queueInfo2.queueFamilyIndex   = mIndex;
+        queueInfo2.queueFamilyIndex   = mQueueFamilyIndex;
         queueInfo2.queueIndex         = queueIndex;
 
         vkGetDeviceQueue2(device, &queueInfo2, queue);
     }
     else
     {
-        vkGetDeviceQueue(device, mIndex, queueIndex, queue);
+        vkGetDeviceQueue(device, mQueueFamilyIndex, queueIndex, queue);
     }
 }
 
@@ -1785,7 +1785,7 @@ DeviceQueueMap QueueFamily::initializeQueueMap(VkDevice device,
 
     ASSERT(queueCount);
     ASSERT((queueIndex + queueCount) <= mProperties.queueCount);
-    DeviceQueueMap queueMap(mIndex, makeProtected);
+    DeviceQueueMap queueMap(mQueueFamilyIndex, makeProtected);
 
     getDeviceQueue(device, makeProtected, queueIndex + kQueueIndexMedium,
                    &queueMap[egl::ContextPriority::Medium]);
@@ -1818,10 +1818,11 @@ DeviceQueueMap QueueFamily::initializeQueueMap(VkDevice device,
     return queueMap;
 }
 
-void QueueFamily::initialize(const VkQueueFamilyProperties &queueFamilyProperties, uint32_t index)
+void QueueFamily::initialize(const VkQueueFamilyProperties &queueFamilyProperties,
+                             uint32_t queueFamilyIndex)
 {
-    mProperties = queueFamilyProperties;
-    mIndex      = index;
+    mProperties       = queueFamilyProperties;
+    mQueueFamilyIndex = queueFamilyIndex;
 }
 
 uint32_t QueueFamily::FindIndex(const std::vector<VkQueueFamilyProperties> &queueFamilyProperties,
