@@ -61,7 +61,8 @@ void ResourceManagerBase::release(const Context *context)
 template <typename ResourceType, typename ImplT, typename IDType>
 TypedResourceManager<ResourceType, ImplT, IDType>::~TypedResourceManager()
 {
-    ASSERT(UnsafeResourceMapIter(mObjectMap).empty());
+    using UnsafeResourceMapIterTyped = UnsafeResourceMapIter<ResourceType, IDType>;
+    ASSERT(UnsafeResourceMapIterTyped(mObjectMap).empty());
 }
 
 template <typename ResourceType, typename ImplT, typename IDType>
