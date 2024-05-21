@@ -289,6 +289,7 @@ void vk::Renderer::ensureCapsInitialized() const
     mNativeExtensions.copyCompressedTextureCHROMIUM = true;
     mNativeExtensions.debugMarkerEXT                = true;
     mNativeExtensions.robustnessEXT                 = true;
+    mNativeExtensions.robustnessKHR                 = true;
     mNativeExtensions.translatedShaderSourceANGLE   = true;
     mNativeExtensions.discardFramebufferEXT         = true;
     mNativeExtensions.stencilTexturingANGLE         = true;
