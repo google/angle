@@ -316,40 +316,48 @@ class QueueFamily final : angle::NonCopyable
     }
     uint32_t getDeviceQueueCount() const { return mProperties.queueCount; }
 
-    DeviceQueueMap initializeQueueMap(VkDevice device,
-                                      bool makeProtected,
-                                      uint32_t queueIndex,
-                                      uint32_t queueCount);
-
   private:
     VkQueueFamilyProperties mProperties;
     uint32_t mQueueFamilyIndex;
-
-    void getDeviceQueue(VkDevice device, bool makeProtected, uint32_t queueIndex, VkQueue *queue);
 };
 
-class DeviceQueueMap : public angle::PackedEnumMap<egl::ContextPriority, VkQueue>
+class DeviceQueueMap final
 {
-    friend QueueFamily;
-
   public:
     DeviceQueueMap() : mQueueFamilyIndex(QueueFamily::kInvalidIndex), mIsProtected(false) {}
-    DeviceQueueMap(uint32_t queueFamilyIndex, bool isProtected)
-        : mQueueFamilyIndex(queueFamilyIndex), mIsProtected(isProtected)
-    {}
-    DeviceQueueMap(const DeviceQueueMap &other) = default;
     ~DeviceQueueMap();
-    DeviceQueueMap &operator=(const DeviceQueueMap &other);
+
+    void initialize(VkDevice device,
+                    const QueueFamily &queueFamily,
+                    bool makeProtected,
+                    uint32_t queueIndex,
+                    uint32_t queueCount);
+    void destroy();
 
     bool valid() const { return (mQueueFamilyIndex != QueueFamily::kInvalidIndex); }
     uint32_t getQueueFamilyIndex() const { return mQueueFamilyIndex; }
     bool isProtected() const { return mIsProtected; }
-    egl::ContextPriority getDevicePriority(egl::ContextPriority priority) const;
+    egl::ContextPriority getDevicePriority(egl::ContextPriority priority) const
+    {
+        return mQueueAndIndices[priority].devicePriority;
+    }
+    const VkQueue &getQueue(egl::ContextPriority priority) const
+    {
+        return mQueueAndIndices[priority].queue;
+    }
 
   private:
     uint32_t mQueueFamilyIndex;
     bool mIsProtected;
-    angle::PackedEnumMap<egl::ContextPriority, egl::ContextPriority> mPriorities;
+    struct QueueAndIndex
+    {
+        // The actual priority that used
+        egl::ContextPriority devicePriority;
+        VkQueue queue;
+        // The queueIndex used for VkGetDeviceQueue
+        uint32_t index;
+    };
+    angle::PackedEnumMap<egl::ContextPriority, QueueAndIndex> mQueueAndIndices;
 };
 
 // Note all public APIs of CommandQueue class must be thread safe.
@@ -359,7 +367,11 @@ class CommandQueue : angle::NonCopyable
     CommandQueue();
     ~CommandQueue();
 
-    angle::Result init(Context *context, const DeviceQueueMap &queueMap);
+    angle::Result init(Context *context,
+                       const QueueFamily &queueFamily,
+                       bool enableProtectedContent,
+                       uint32_t queueCount);
+
     void destroy(Context *context);
 
     void handleDeviceLost(Renderer *renderer);
@@ -372,7 +384,7 @@ class CommandQueue : angle::NonCopyable
     }
     uint32_t getDeviceQueueIndex() const { return mQueueMap.getQueueFamilyIndex(); }
 
-    VkQueue getQueue(egl::ContextPriority priority) const { return mQueueMap[priority]; }
+    VkQueue getQueue(egl::ContextPriority priority) const { return mQueueMap.getQueue(priority); }
 
     Serial getLastSubmittedSerial(SerialIndex index) const { return mLastSubmittedSerials[index]; }
 
