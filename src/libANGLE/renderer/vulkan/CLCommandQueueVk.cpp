@@ -619,27 +619,63 @@ angle::Result CLCommandQueueVk::enqueueMapImage(const cl::Image &image,
                                                 CLEventImpl::CreateFunc *eventCreateFunc,
                                                 void *&mapPtr)
 {
-    std::scoped_lock<std::mutex> sl(mCommandQueueMutex);
-    CLImageVk &imageVk = image.getImpl<CLImageVk>();
-    size_t size        = (region.x * region.y * region.z * imageVk.getElementSize());
+    ANGLE_TRY(enqueueWaitForEvents(waitEvents));
 
-    ANGLE_TRY(processWaitlist(waitEvents));
-
-    if (imageVk.isStagingBufferInitialized() == false)
+    // TODO: Look into better enqueue handling of this map-op if non-blocking
+    // https://anglebug.com/376722715
+    CLImageVk *imageVk = &image.getImpl<CLImageVk>();
+    VkExtent3D extent  = imageVk->getImageExtent();
+    if (blocking)
     {
-        ANGLE_TRY(imageVk.createStagingBuffer(imageVk.getSize()));
+        ANGLE_TRY(finishInternal());
     }
 
-    ANGLE_TRY(copyImageToFromBuffer(imageVk, imageVk.getStagingBuffer(), origin, region, 0,
-                                    ImageBufferCopyDirection::ToBuffer));
+    if (imageVk->isStagingBufferInitialized() == false)
+    {
+        ANGLE_TRY(imageVk->createStagingBuffer(imageVk->getSize()));
+    }
 
+    ANGLE_TRY(copyImageToFromBuffer(*imageVk, imageVk->getStagingBuffer(), {0, 0, 0},
+                                    {extent.width, extent.height, extent.depth}, 0,
+                                    ImageBufferCopyDirection::ToBuffer));
     ANGLE_TRY(finishInternal());
-    mapPtr = static_cast<void *>(imageVk.getStagingBuffer().getMappedMemory());
+
+    uint8_t *mapPointer = nullptr;
+    size_t offset       = (origin.x * origin.y * origin.z * imageVk->getElementSize());
+    size_t size         = (region.x * region.y * region.z * imageVk->getElementSize());
     if (image.getFlags().intersects(CL_MEM_USE_HOST_PTR))
     {
-        void *hostPtr = image.getHostPtr();
-        std::memcpy(hostPtr, mapPtr, size);
-        mapPtr = hostPtr;
+        mapPointer = static_cast<uint8_t *>(image.getHostPtr()) + offset;
+        ANGLE_TRY(imageVk->copyTo(mapPointer, offset, size));
+    }
+    else
+    {
+        ANGLE_TRY(imageVk->map(mapPointer, offset));
+    }
+    mapPtr = static_cast<void *>(mapPointer);
+
+    *imageRowPitch = (region.x * imageVk->getElementSize());
+
+    switch (imageVk->getDesc().type)
+    {
+        case cl::MemObjectType::Image1D:
+        case cl::MemObjectType::Image1D_Buffer:
+        case cl::MemObjectType::Image2D:
+            if (imageSlicePitch != nullptr)
+            {
+                *imageSlicePitch = 0;
+            }
+            break;
+        case cl::MemObjectType::Image2D_Array:
+        case cl::MemObjectType::Image3D:
+            *imageSlicePitch = (region.y * (*imageRowPitch));
+            break;
+        case cl::MemObjectType::Image1D_Array:
+            *imageSlicePitch = *imageRowPitch;
+            break;
+        default:
+            UNREACHABLE();
+            break;
     }
 
     ANGLE_TRY(createEvent(eventCreateFunc, true));
@@ -652,8 +688,24 @@ angle::Result CLCommandQueueVk::enqueueUnmapMemObject(const cl::Memory &memory,
                                                       const cl::EventPtrs &waitEvents,
                                                       CLEventImpl::CreateFunc *eventCreateFunc)
 {
-    UNIMPLEMENTED();
-    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+    ANGLE_TRY(enqueueWaitForEvents(waitEvents));
+
+    cl_mem_object_type memoryType;
+    ANGLE_TRY(memory.getInfo(cl::MemInfo::Type, sizeof(cl_mem_object_type), &memoryType, nullptr));
+    if ((memoryType != CL_MEM_OBJECT_BUFFER) && (memoryType != CL_MEM_OBJECT_PIPE))
+    {
+        CLImageVk &imageVk = memory.getImpl<CLImageVk>();
+        VkExtent3D extent  = imageVk.getImageExtent();
+        ANGLE_TRY(copyImageToFromBuffer(imageVk, imageVk.getStagingBuffer(), {0, 0, 0},
+                                        {extent.width, extent.height, extent.depth}, 0,
+                                        ImageBufferCopyDirection::ToImage));
+        ANGLE_TRY(finishInternal());
+    }
+    memory.getImpl<CLMemoryVk>().unmap();
+
+    ANGLE_TRY(createEvent(eventCreateFunc, true));
+
+    return angle::Result::Continue;
 }
 
 angle::Result CLCommandQueueVk::enqueueMigrateMemObjects(const cl::MemoryPtrs &memObjects,

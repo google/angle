@@ -135,6 +135,8 @@ class CLImageVk : public CLMemoryVk
     VkExtent3D getImageExtent() { return mExtent; }
     uint8_t *getMappedPtr() { return mMappedMemory; }
     vk::ImageView &getImageView() { return mImageView; }
+    cl_image_format getImageFormat() { return mImageFormat; }
+    cl::ImageDescriptor getDesc() { return mDesc; }
 
   private:
     angle::Result mapImpl() override;
@@ -148,6 +150,8 @@ class CLImageVk : public CLMemoryVk
     uint32_t mArrayLayers;
     size_t mImageSize;
     size_t mElementSize;
+    cl_image_format mImageFormat;
+    cl::ImageDescriptor mDesc;
     bool mStagingBufferInitialized;
     vk::ImageView mImageView;
     VkImageViewType mImageViewType;

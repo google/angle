@@ -313,6 +313,7 @@ CLImageVk::CLImageVk(const cl::Image &image)
       mArrayLayers(1),
       mImageSize(0),
       mElementSize(0),
+      mDesc(image.getDescriptor()),
       mStagingBufferInitialized(false)
 {}
 
@@ -322,6 +323,7 @@ CLImageVk::~CLImageVk()
     {
         unmap();
     }
+
     mImage.destroy(mRenderer);
     mImageView.destroy(mContext->getDevice());
 }
@@ -408,6 +410,8 @@ angle::Result CLImageVk::create(void *hostPtr)
     }
 
     mElementSize = cl::GetElementSize(format);
+    mDesc        = desc;
+    mImageFormat = format;
 
     if (desc.slicePitch > 0)
     {
@@ -494,12 +498,17 @@ bool CLImageVk::containsHostMemExtension()
 
 angle::Result CLImageVk::mapImpl()
 {
-    UNIMPLEMENTED();
-    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+    ASSERT(!isMapped());
+
+    ASSERT(isStagingBufferInitialized());
+    ANGLE_TRY(getStagingBuffer().map(mContext, &mMappedMemory));
+
+    return angle::Result::Continue;
 }
 void CLImageVk::unmapImpl()
 {
-    UNIMPLEMENTED();
+    getStagingBuffer().unmap(mContext->getRenderer());
+    mMappedMemory = nullptr;
 }
 
 }  // namespace rx
