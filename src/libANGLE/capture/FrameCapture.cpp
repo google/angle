@@ -8926,6 +8926,7 @@ void FrameCaptureShared::onEndFrame(gl::Context *context)
         SaveBinaryData(mCompression, mOutDirectory, kSharedContextId, mCaptureLabel, mBinaryData);
         mBinaryData.clear();
         mWroteIndexFile = true;
+        INFO() << "Finished recording graphics API capture";
     }
 
     reset();
