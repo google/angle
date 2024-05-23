@@ -654,7 +654,7 @@ b/336847261 PIXEL6 VULKAN : StateChangeTestES3.LineWidth/* = SKIP
 // ARM drivers cannot support xfb emulation because they lack support for the
 // vertexPipelineStoresAndAtomics Vulkan feature.  The tests that force-enable this feature are
 // skipped.
-7376 PIXEL6 VULKAN : *_NoSupportsTransformFeedbackExtension = SKIP
+7376 PIXEL6 VULKAN : *_NoSupportsTransformFeedbackExtension* = SKIP
 
 // Crashing in Mali shader compiler
 b/217922015 PIXEL6 VULKAN : GLSLTest_ES3.NestedPowFromUniform/* = SKIP
@@ -872,7 +872,7 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 
 7112 SWIFTSHADER : TransformFeedbackTest.BaseInstance/* = SKIP
 7112 PIXEL4ORXL VULKAN : TransformFeedbackTest.BaseInstance/* = SKIP
-7112 VULKAN : TransformFeedbackTest.BaseInstance/ES3_Vulkan_NoSupportsTransformFeedbackExtension = SKIP
+7112 VULKAN : TransformFeedbackTest.BaseInstance/ES3_Vulkan_NoSupportsTransformFeedbackExtension* = SKIP
 
 // ASAN flaky timeouts and crashes with Win / Vulkan / Swiftshader
 6965 ASAN WIN VULKAN SWIFTSHADER : MipmapTest* = SKIP

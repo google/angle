@@ -398,7 +398,9 @@ class OutputSPIRVTraverser : public TIntermTraverser
     spirv::IdRef mCurrentFunctionId;
 };
 
-spv::StorageClass GetStorageClass(const TType &type, GLenum shaderType)
+spv::StorageClass GetStorageClass(const ShCompileOptions &compileOptions,
+                                  const TType &type,
+                                  GLenum shaderType)
 {
     // Opaque uniforms (samplers, images and subpass inputs) have the UniformConstant storage class
     if (IsOpaqueType(type.getBasicType()))
@@ -488,9 +490,10 @@ spv::StorageClass GetStorageClass(const TType &type, GLenum shaderType)
                                                     : spv::StorageClassInput;
 
         default:
-            // Uniform and storage buffers have the Uniform storage class.  Default uniforms are
-            // gathered in a uniform block as well. Push constants use the PushConstant storage
-            // class instead.
+            // Uniform buffers have the Uniform storage class.  Storage buffers have the Uniform
+            // storage class in SPIR-V 1.3, and the StorageBuffer storage class in SPIR-V 1.4.
+            // Default uniforms are gathered in a uniform block as well.  Push constants use the
+            // PushConstant storage class instead.
             ASSERT(type.getInterfaceBlock() != nullptr || qualifier == EvqUniform);
             // I/O blocks must have already been classified as input or output above.
             ASSERT(!IsShaderIoBlock(qualifier));
@@ -500,7 +503,9 @@ spv::StorageClass GetStorageClass(const TType &type, GLenum shaderType)
                 ASSERT(type.getInterfaceBlock() != nullptr);
                 return spv::StorageClassPushConstant;
             }
-            return spv::StorageClassUniform;
+            return compileOptions.emitSPIRV14 && qualifier == EvqBuffer
+                       ? spv::StorageClassStorageBuffer
+                       : spv::StorageClassUniform;
     }
 }
 
@@ -523,7 +528,7 @@ spirv::IdRef OutputSPIRVTraverser::getSymbolIdAndStorageClass(const TSymbol *sym
                                                               const TType &type,
                                                               spv::StorageClass *storageClass)
 {
-    *storageClass = GetStorageClass(type, mCompiler->getShaderType());
+    *storageClass = GetStorageClass(mCompileOptions, type, mCompiler->getShaderType());
     auto iter     = mSymbolIdMap.find(symbol);
     if (iter != mSymbolIdMap.end())
     {
@@ -701,7 +706,6 @@ spirv::IdRef OutputSPIRVTraverser::getSymbolIdAndStorageClass(const TSymbol *sym
     const spirv::IdRef varId  = mBuilder.declareVariable(
         typeId, *storageClass, mBuilder.getDecorations(type), nullptr, name, uniqueId);
 
-    mBuilder.addEntryPointInterfaceVariableId(varId);
     spirv::WriteDecorate(mBuilder.getSpirvDecorations(), varId, spv::DecorationBuiltIn,
                          {spirv::LiteralInteger(builtInDecoration)});
 
@@ -6056,7 +6060,8 @@ bool OutputSPIRVTraverser::visitDeclaration(Visit visit, TIntermDeclaration *nod
 
     const spirv::IdRef typeId = mBuilder.getTypeData(type, {}).id;
 
-    spv::StorageClass storageClass = GetStorageClass(type, mCompiler->getShaderType());
+    spv::StorageClass storageClass =
+        GetStorageClass(mCompileOptions, type, mCompiler->getShaderType());
 
     SpirvDecorations decorations = mBuilder.getDecorations(type);
     if (mBuilder.isInvariantOutput(type))
@@ -6122,9 +6127,6 @@ bool OutputSPIRVTraverser::visitDeclaration(Visit visit, TIntermDeclaration *nod
 
     if (isShaderInOut)
     {
-        // Add in and out variables to the list of interface variables.
-        mBuilder.addEntryPointInterfaceVariableId(variableId);
-
         if (IsShaderIoBlock(type.getQualifier()) && type.isInterfaceBlock())
         {
             // For gl_PerVertex in particular, write the necessary BuiltIn decorations
@@ -6147,9 +6149,12 @@ bool OutputSPIRVTraverser::visitDeclaration(Visit visit, TIntermDeclaration *nod
     }
     else if (isInterfaceBlock)
     {
-        // For uniform and buffer variables, add Block and BufferBlock decorations respectively.
+        // For uniform and buffer variables, with SPIR-V 1.3 add Block and BufferBlock decorations
+        // respectively.  With SPIR-V 1.4, always add Block.
         const spv::Decoration decoration =
-            type.getQualifier() == EvqUniform ? spv::DecorationBlock : spv::DecorationBufferBlock;
+            mCompileOptions.emitSPIRV14 || type.getQualifier() == EvqUniform
+                ? spv::DecorationBlock
+                : spv::DecorationBufferBlock;
         spirv::WriteDecorate(mBuilder.getSpirvDecorations(), nonArrayTypeId, decoration, {});
 
         if (type.getQualifier() == EvqBuffer && !memoryQualifier.restrictQualifier &&

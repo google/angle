@@ -3165,6 +3165,12 @@ void Renderer::enableDeviceExtensionsPromotedTo12(const vk::ExtensionNameList &d
         mEnabledDeviceExtensions.push_back(VK_KHR_IMAGE_FORMAT_LIST_EXTENSION_NAME);
     }
 
+    if (mFeatures.supportsSPIRV14.enabled)
+    {
+        mEnabledDeviceExtensions.push_back(VK_KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME);
+        mEnabledDeviceExtensions.push_back(VK_KHR_SPIRV_1_4_EXTENSION_NAME);
+    }
+
     if (mFeatures.supportsSamplerMirrorClampToEdge.enabled)
     {
         mEnabledDeviceExtensions.push_back(VK_KHR_SAMPLER_MIRROR_CLAMP_TO_EDGE_EXTENSION_NAME);
@@ -4722,6 +4728,14 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
 
     // Use VMA for image suballocation.
     ANGLE_FEATURE_CONDITION(&mFeatures, useVmaForImageSuballocation, true);
+
+    // Emit SPIR-V 1.4 when supported.  The following old drivers have various bugs with SPIR-V 1.4:
+    //
+    // - Nvidia drivers - Crashes when creating pipelines, not using any SPIR-V 1.4 features.  Known
+    //                    good since at least version 525.  http://anglebug.com/343249127
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsSPIRV14,
+                            ExtensionFound(VK_KHR_SPIRV_1_4_EXTENSION_NAME, deviceExtensionNames) &&
+                                !(isNvidia && nvidiaVersion.major < 525));
 
     // Retain debug info in SPIR-V blob.
     ANGLE_FEATURE_CONDITION(&mFeatures, retainSPIRVDebugInfo, getEnableValidationLayers());

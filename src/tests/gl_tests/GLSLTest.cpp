@@ -19363,7 +19363,8 @@ ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(
     GLSLTest,
     ES3_OPENGL().enable(Feature::ScalarizeVecAndMatConstructorArgs),
     ES3_OPENGLES().enable(Feature::ScalarizeVecAndMatConstructorArgs),
-    ES3_VULKAN().enable(Feature::AvoidOpSelectWithMismatchingRelaxedPrecision));
+    ES3_VULKAN().enable(Feature::AvoidOpSelectWithMismatchingRelaxedPrecision),
+    ES3_VULKAN().disable(Feature::SupportsSPIRV14));
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(GLSLTestNoValidation);
 
@@ -19372,7 +19373,8 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(
     GLSLTest_ES3,
     ES3_OPENGL().enable(Feature::ScalarizeVecAndMatConstructorArgs),
     ES3_OPENGLES().enable(Feature::ScalarizeVecAndMatConstructorArgs),
-    ES3_VULKAN().enable(Feature::AvoidOpSelectWithMismatchingRelaxedPrecision));
+    ES3_VULKAN().enable(Feature::AvoidOpSelectWithMismatchingRelaxedPrecision),
+    ES3_VULKAN().disable(Feature::SupportsSPIRV14));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLTestLoops);
 ANGLE_INSTANTIATE_TEST_ES3(GLSLTestLoops);
