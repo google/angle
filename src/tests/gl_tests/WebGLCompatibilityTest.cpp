@@ -6365,6 +6365,43 @@ void main() {
     }
 }
 
+// Test that vertex conversion correctly no-ops when the vertex format requires conversion but there
+// are no vertices to convert.
+TEST_P(WebGLCompatibilityTest, ConversionWithNoVertices)
+{
+    constexpr char kVS[] = R"(precision highp float;
+attribute vec3 attr1;
+void main(void) {
+   gl_Position = vec4(attr1, 1.0);
+})";
+
+    constexpr char kFS[] = R"(precision highp float;
+void main(void) {
+   gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);
+})";
+
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    std::array<int8_t, 12> data = {
+        1,
+    };
+    glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(data[0]), data.data(), GL_STATIC_DRAW);
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glBindAttribLocation(program, 0, "attr1");
+    glLinkProgram(program);
+    ASSERT_TRUE(CheckLinkStatusAndReturnProgram(program, true));
+    glUseProgram(program);
+
+    // Set the offset of the attribute past the end of the buffer but use a format that requires
+    // conversion in Vulkan
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 3, GL_BYTE, true, 128, reinterpret_cast<void *>(256));
+
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    // Either no error or invalid operation is okay.
+}
+
 // Tests that using an out of bounds draw offset with a dynamic array succeeds.
 TEST_P(WebGLCompatibilityTest, DynamicVertexArrayOffsetOutOfBounds)
 {
