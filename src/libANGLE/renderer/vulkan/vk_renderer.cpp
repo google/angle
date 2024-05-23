@@ -163,7 +163,8 @@ bool IsXclipse()
 
 bool ShouldUseEventForImageBarrier()
 {
-    return true;
+    // Disabled for now while performance is under investigation
+    return false;
 }
 
 bool StrLess(const char *a, const char *b)
