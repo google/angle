@@ -106,12 +106,12 @@ uint32_t MakeLengthOp(size_t length, spv::Op op)
 }
 }  // anonymous namespace
 
-void WriteSpirvHeader(std::vector<uint32_t> *blob, uint32_t idCount)
+void WriteSpirvHeader(std::vector<uint32_t> *blob, uint32_t version, uint32_t idCount)
 {
     // Header:
     //
     //  - Magic number
-    //  - Version (1.0)
+    //  - Version (1.X)
     //  - ANGLE's Generator number:
     //     * 24 for tool id (higher 16 bits)
     //     * 1 for tool version (lower 16 bits))
@@ -123,7 +123,7 @@ void WriteSpirvHeader(std::vector<uint32_t> *blob, uint32_t idCount)
     ASSERT(blob->empty());
 
     blob->push_back(spv::MagicNumber);
-    blob->push_back(0x00010000);
+    blob->push_back(version);
     blob->push_back(kANGLEGeneratorId << 16 | kANGLEGeneratorVersion);
     blob->push_back(idCount);
     blob->push_back(0x00000000);
@@ -131,7 +131,7 @@ void WriteSpirvHeader(std::vector<uint32_t> *blob, uint32_t idCount)
 """
 
 BUILDER_HELPER_FUNCTION_PROTOTYPE = """
-    void WriteSpirvHeader(std::vector<uint32_t> *blob, uint32_t idCount);
+    void WriteSpirvHeader(std::vector<uint32_t> *blob, uint32_t version, uint32_t idCount);
 """
 
 PARSER_FIXED_FUNCTIONS_PROTOTYPES = """void GetInstructionOpAndLength(const uint32_t *_instruction,
