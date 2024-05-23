@@ -419,8 +419,6 @@ angle::Result CLCommandQueueVk::enqueueNDRangeKernel(const cl::Kernel &kernel,
     vk::PipelineHelper *pipelineHelper = nullptr;
     CLKernelVk &kernelImpl             = kernel.getImpl<CLKernelVk>();
 
-    ANGLE_TRY(processKernelResources(kernelImpl, ndrange));
-
     // Fetch or create compute pipeline (if we miss in cache)
     ANGLE_CL_IMPL_TRY_ERROR(mContext->getRenderer()->getPipelineCache(mContext, &pipelineCache),
                             CL_OUT_OF_RESOURCES);
@@ -428,6 +426,11 @@ angle::Result CLCommandQueueVk::enqueueNDRangeKernel(const cl::Kernel &kernel,
         &pipelineCache, ndrange, mCommandQueue.getDevice(), &pipelineHelper, &workgroupCount));
 
     mComputePassCommands->retainResource(pipelineHelper);
+
+    // Here, we create-update-bind the kernel's descriptor set, put push-constants in cmd
+    // buffer, capture kernel resources, and handle kernel execution dependencies
+    ANGLE_TRY(processKernelResources(kernelImpl, ndrange));
+
     mComputePassCommands->getCommandBuffer().bindComputePipeline(pipelineHelper->getPipeline());
     mComputePassCommands->getCommandBuffer().dispatch(workgroupCount[0], workgroupCount[1],
                                                       workgroupCount[2]);
@@ -607,6 +610,16 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
         mComputePassCommands->getCommandBuffer().pushConstants(
             kernelVk.getPipelineLayout().get(), VK_SHADER_STAGE_COMPUTE_BIT,
             globalSizeRange->offset, globalSizeRange->size, ndrange.globalWorkSize.data());
+    }
+
+    // Push enqueued local size
+    const VkPushConstantRange *enqueuedLocalSizeRange = devProgramData->getEnqueuedLocalSizeRange();
+    if (enqueuedLocalSizeRange != nullptr)
+    {
+        mComputePassCommands->getCommandBuffer().pushConstants(
+            kernelVk.getPipelineLayout().get(), VK_SHADER_STAGE_COMPUTE_BIT,
+            enqueuedLocalSizeRange->offset, enqueuedLocalSizeRange->size,
+            ndrange.localWorkSize.data());
     }
 
     // Retain kernel object until we finish executing it later

@@ -184,6 +184,12 @@ class CLProgramVk : public CLProgramImpl
             return getPushConstantRangeFromClspvReflectionType(
                 NonSemanticClspvReflectionPushConstantGlobalSize);
         }
+
+        inline const VkPushConstantRange *getEnqueuedLocalSizeRange() const
+        {
+            return getPushConstantRangeFromClspvReflectionType(
+                NonSemanticClspvReflectionPushConstantEnqueuedLocalSize);
+        }
     };
     using DevicePrograms   = angle::HashMap<const _cl_device_id *, DeviceProgramData>;
     using LinkPrograms     = std::vector<const DeviceProgramData *>;
