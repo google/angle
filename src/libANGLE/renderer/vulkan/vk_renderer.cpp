@@ -4713,7 +4713,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(
         &mFeatures, emulateAdvancedBlendEquations,
         !mFeatures.supportsBlendOperationAdvanced.enabled &&
-            (isVenus || !isIntel || (isIntel && IsLinux() && isMesaAtLeast22_0_0)));
+            (IsAndroid() || !isIntel || (isIntel && IsLinux() && isMesaAtLeast22_0_0)));
 
     // http://anglebug.com/6933
     // Android expects VkPresentRegionsKHR rectangles with a bottom-left origin, while spec
