@@ -218,6 +218,11 @@ config("internal_config") {
     defines += [ "ANGLE_ENABLE_TRACE_EVENTS=1" ]
   }
 
+  # Output `INFO`-level logs and up.
+  if (angle_always_log_info) {
+    defines += [ "ANGLE_ALWAYS_LOG_INFO" ]
+  }
+
   # Enables pipeline cache graph dump functionality.
   # The dump path must have appropriate permissions for this to work.
   if (angle_dump_pipeline_cache_graph) {
