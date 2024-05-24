@@ -1261,7 +1261,8 @@ void ContextVk::onDestroy(const gl::Context *context)
 
     VkDevice device = getDevice();
 
-    mRenderer->getRefCountedEventRecycler()->destroy(getDevice());
+    mShareGroupVk->cleanupRefCountedEventGarbage(mRenderer);
+
     mDefaultUniformStorage.release(mRenderer);
     mEmptyBuffer.release(mRenderer);
 
@@ -7692,7 +7693,6 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore,
         }
         // Always clean up grabage and destroy the excessive free list at frame boundary.
         mShareGroupVk->cleanupRefCountedEventGarbage(mRenderer);
-        mRenderer->getRefCountedEventRecycler()->destroy(getDevice());
     }
 
     // Since we just flushed, deferred flush is no longer deferred.

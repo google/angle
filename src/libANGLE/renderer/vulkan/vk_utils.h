@@ -955,17 +955,33 @@ class Shared final : angle::NonCopyable
     RefCounted<T> *mRefCounted;
 };
 
-template <typename T>
+template <typename T, typename StorageT = std::deque<T>>
 class Recycler final : angle::NonCopyable
 {
   public:
     Recycler() = default;
+    Recycler(StorageT &&storage) { mObjectFreeList = std::move(storage); }
 
     void recycle(T &&garbageObject)
     {
         // Recycling invalid objects is pointless and potentially a bug.
         ASSERT(garbageObject.valid());
         mObjectFreeList.emplace_back(std::move(garbageObject));
+    }
+
+    void recycle(StorageT &&garbageObjects)
+    {
+        // Recycling invalid objects is pointless and potentially a bug.
+        ASSERT(!garbageObjects.empty());
+        mObjectFreeList.insert(mObjectFreeList.end(), garbageObjects.begin(), garbageObjects.end());
+        ASSERT(garbageObjects.empty());
+    }
+
+    void refill(StorageT &&garbageObjects)
+    {
+        ASSERT(!garbageObjects.empty());
+        ASSERT(mObjectFreeList.empty());
+        mObjectFreeList.swap(garbageObjects);
     }
 
     void fetch(T *outObject)
@@ -977,17 +993,18 @@ class Recycler final : angle::NonCopyable
 
     void destroy(VkDevice device)
     {
-        for (T &object : mObjectFreeList)
+        while (!mObjectFreeList.empty())
         {
+            T &object = mObjectFreeList.back();
             object.destroy(device);
+            mObjectFreeList.pop_back();
         }
-        mObjectFreeList.clear();
     }
 
     bool empty() const { return mObjectFreeList.empty(); }
 
   private:
-    std::deque<T> mObjectFreeList;
+    StorageT mObjectFreeList;
 };
 
 ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
