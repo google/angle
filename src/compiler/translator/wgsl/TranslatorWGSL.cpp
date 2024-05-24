@@ -20,6 +20,58 @@ namespace sh
 namespace
 {
 
+// When emitting a list of statements, this determines whether a semicolon follows the statement.
+bool RequiresSemicolonTerminator(TIntermNode &node)
+{
+    if (node.getAsBlock())
+    {
+        return false;
+    }
+    if (node.getAsLoopNode())
+    {
+        return false;
+    }
+    if (node.getAsSwitchNode())
+    {
+        return false;
+    }
+    if (node.getAsIfElseNode())
+    {
+        return false;
+    }
+    if (node.getAsFunctionDefinition())
+    {
+        return false;
+    }
+    if (node.getAsCaseNode())
+    {
+        return false;
+    }
+
+    return true;
+}
+
+// For pretty formatting of the resulting WGSL text.
+bool NewlinePad(TIntermNode &node)
+{
+    if (node.getAsFunctionDefinition())
+    {
+        return true;
+    }
+    if (TIntermDeclaration *declNode = node.getAsDeclarationNode())
+    {
+        ASSERT(declNode->getChildCount() == 1);
+        TIntermNode &childNode = *declNode->getChildNode(0);
+        if (TIntermSymbol *symbolNode = childNode.getAsSymbolNode())
+        {
+            const TVariable &var = symbolNode->variable();
+            return var.getType().isStructSpecifier();
+        }
+        return false;
+    }
+    return false;
+}
+
 // A traverser that generates WGSL as it walks the AST.
 class OutputWGSLTraverser : public TIntermTraverser
 {
@@ -50,11 +102,19 @@ class OutputWGSLTraverser : public TIntermTraverser
 
   private:
     void groupedTraverse(TIntermNode &node);
+    template <typename T>
+    void emitNameOf(const T &namedObject);
+    void emitIndentation();
+    void emitOpenBrace();
+    void emitCloseBrace();
     void emitFunctionSignature(const TFunction &func);
     void emitFunctionReturn(const TFunction &func);
     void emitFunctionParameter(const TFunction &func, const TVariable &param);
 
     TInfoSinkBase &mSink;
+
+    int mIndentLevel        = -1;
+    int mLastIndentationPos = -1;
 };
 
 OutputWGSLTraverser::OutputWGSLTraverser(TCompiler *compiler)
@@ -63,90 +123,271 @@ OutputWGSLTraverser::OutputWGSLTraverser(TCompiler *compiler)
 
 OutputWGSLTraverser::~OutputWGSLTraverser() = default;
 
+void OutputWGSLTraverser::groupedTraverse(TIntermNode &node)
+{
+    // TODO(anglebug.com/8662): to make generated code more readable, do not always
+    // emit parentheses like WGSL is some Lisp dialect.
+    const bool emitParens = true;
+
+    if (emitParens)
+    {
+        mSink << "(";
+    }
+
+    node.traverse(this);
+
+    if (emitParens)
+    {
+        mSink << ")";
+    }
+}
+
+// Can be used with TSymbol or TField. Must have a .name() and a .symbolType().
+template <typename T>
+void OutputWGSLTraverser::emitNameOf(const T &namedObject)
+{
+    switch (namedObject.symbolType())
+    {
+        case SymbolType::BuiltIn:
+        {
+            mSink << namedObject.name();
+        }
+        break;
+        case SymbolType::UserDefined:
+        {
+            mSink << kUserDefinedNamePrefix << namedObject.name();
+        }
+        break;
+        case SymbolType::AngleInternal:
+        case SymbolType::Empty:
+            // TODO(anglebug.com/8662): support these if necessary
+            UNREACHABLE();
+    }
+}
+
+void OutputWGSLTraverser::emitIndentation()
+{
+    ASSERT(mIndentLevel >= 0);
+
+    if (mLastIndentationPos == mSink.size())
+    {
+        return;  // Line is already indented.
+    }
+
+    for (int i = 0; i < mIndentLevel; ++i)
+    {
+        mSink << "  ";
+    }
+
+    mLastIndentationPos = mSink.size();
+}
+
+void OutputWGSLTraverser::emitOpenBrace()
+{
+    ASSERT(mIndentLevel >= 0);
+
+    emitIndentation();
+    mSink << "{\n";
+    ++mIndentLevel;
+}
+
+void OutputWGSLTraverser::emitCloseBrace()
+{
+    ASSERT(mIndentLevel >= 1);
+
+    --mIndentLevel;
+    emitIndentation();
+    mSink << "}";
+}
+
 void OutputWGSLTraverser::visitSymbol(TIntermSymbol *symbolNode)
 {
-    // TODO(anglebug.com/8662): support emitting symbols.
-    UNREACHABLE();
+
+    const TVariable &var = symbolNode->variable();
+    const TType &type    = var.getType();
+    ASSERT(var.symbolType() != SymbolType::Empty);
+
+    if (type.getBasicType() == TBasicType::EbtVoid)
+    {
+        UNREACHABLE();
+    }
+    else
+    {
+        emitNameOf(var);
+    }
 }
 
 void OutputWGSLTraverser::visitConstantUnion(TIntermConstantUnion *constValueNode)
 {
     // TODO(anglebug.com/8662): support emitting constants..
-    UNREACHABLE();
 }
 
 bool OutputWGSLTraverser::visitSwizzle(Visit, TIntermSwizzle *swizzleNode)
 {
     // TODO(anglebug.com/8662): support swizzle statements.
-    UNREACHABLE();
     return false;
 }
 
 bool OutputWGSLTraverser::visitBinary(Visit, TIntermBinary *binaryNode)
 {
     // TODO(anglebug.com/8662): support binary statements.
-    UNREACHABLE();
     return false;
 }
 
 bool OutputWGSLTraverser::visitUnary(Visit, TIntermUnary *unaryNode)
 {
     // TODO(anglebug.com/8662): support unary statements.
-    UNREACHABLE();
     return false;
 }
 
 bool OutputWGSLTraverser::visitTernary(Visit, TIntermTernary *conditionalNode)
 {
     // TODO(anglebug.com/8662): support ternaries.
-    UNREACHABLE();
     return false;
 }
 
 bool OutputWGSLTraverser::visitIfElse(Visit, TIntermIfElse *ifThenElseNode)
 {
     // TODO(anglebug.com/8662): support basic control flow.
-    UNREACHABLE();
     return false;
 }
 
 bool OutputWGSLTraverser::visitSwitch(Visit, TIntermSwitch *switchNode)
 {
     // TODO(anglebug.com/8662): support switch statements.
-    UNREACHABLE();
     return false;
 }
 
 bool OutputWGSLTraverser::visitCase(Visit, TIntermCase *caseNode)
 {
     // TODO(anglebug.com/8662): support switch statements.
-    UNREACHABLE();
     return false;
+}
+
+void OutputWGSLTraverser::emitFunctionReturn(const TFunction &func)
+{
+    const TType &returnType = func.getReturnType();
+    if (returnType.getBasicType() == EbtVoid)
+    {
+        return;
+    }
+    mSink << " -> ";
+    mSink << "FAKE_RETURN_TYPE";
+}
+
+// TODO(anglebug.com/42267100): Function overloads are not supported in WGSL, so function names
+// should either be emitted mangled or overloaded functions should be renamed in the AST as a
+// pre-pass. As of Apr 2024, WGSL function overloads are "not coming soon"
+// (https://github.com/gpuweb/gpuweb/issues/876).
+void OutputWGSLTraverser::emitFunctionSignature(const TFunction &func)
+{
+    // TODO(anglebug.com/42267100): main functions should be renamed and labeled with @vertex or
+    // @fragment.
+    mSink << "fn ";
+
+    emitNameOf(func);
+    mSink << "(";
+
+    bool emitComma          = false;
+    const size_t paramCount = func.getParamCount();
+    for (size_t i = 0; i < paramCount; ++i)
+    {
+        if (emitComma)
+        {
+            mSink << ", ";
+        }
+        emitComma = true;
+
+        const TVariable &param = *func.getParam(i);
+        emitFunctionParameter(func, param);
+    }
+
+    mSink << ")";
+
+    emitFunctionReturn(func);
+}
+
+void OutputWGSLTraverser::emitFunctionParameter(const TFunction &func, const TVariable &param)
+{
+    // TODO(anglebug.com/8662): actually emit function parameters.
+
+    mSink << "FAKE_FUNCTION_PARAMETER";
 }
 
 void OutputWGSLTraverser::visitFunctionPrototype(TIntermFunctionPrototype *funcProtoNode)
 {
-    // TODO(anglebug.com/8662): support function prototypes.
-    UNREACHABLE();
+    const TFunction &func = *funcProtoNode->getFunction();
+
+    emitIndentation();
+    emitFunctionSignature(func);
 }
 
 bool OutputWGSLTraverser::visitFunctionDefinition(Visit, TIntermFunctionDefinition *funcDefNode)
 {
-    // TODO(anglebug.com/8662): support function definitions.
-    UNREACHABLE();
+    const TFunction &func = *funcDefNode->getFunction();
+    TIntermBlock &body    = *funcDefNode->getBody();
+    emitIndentation();
+    emitFunctionSignature(func);
+    mSink << "\n";
+    body.traverse(this);
     return false;
 }
 
 bool OutputWGSLTraverser::visitAggregate(Visit, TIntermAggregate *aggregateNode)
 {
     // TODO(anglebug.com/8662): support aggregate statements.
-    UNREACHABLE();
     return false;
 }
 
 bool OutputWGSLTraverser::visitBlock(Visit, TIntermBlock *blockNode)
 {
-    // TODO(anglebug.com/8662): support emitting blocks.
+    ASSERT(mIndentLevel >= -1);
+    const bool isGlobalScope = mIndentLevel == -1;
+
+    if (isGlobalScope)
+    {
+        ++mIndentLevel;
+    }
+    else
+    {
+        emitOpenBrace();
+    }
+
+    TIntermNode *prevStmtNode = nullptr;
+
+    const size_t stmtCount = blockNode->getChildCount();
+    for (size_t i = 0; i < stmtCount; ++i)
+    {
+        TIntermNode &stmtNode = *blockNode->getChildNode(i);
+
+        if (isGlobalScope && prevStmtNode && (NewlinePad(*prevStmtNode) || NewlinePad(stmtNode)))
+        {
+            mSink << "\n";
+        }
+        const bool isCase = stmtNode.getAsCaseNode();
+        mIndentLevel -= isCase;
+        emitIndentation();
+        mIndentLevel += isCase;
+        stmtNode.traverse(this);
+        if (RequiresSemicolonTerminator(stmtNode))
+        {
+            mSink << ";";
+        }
+        mSink << "\n";
+
+        prevStmtNode = &stmtNode;
+    }
+
+    if (isGlobalScope)
+    {
+        ASSERT(mIndentLevel == 0);
+        --mIndentLevel;
+    }
+    else
+    {
+        emitCloseBrace();
+    }
+
     return false;
 }
 
@@ -159,21 +400,19 @@ bool OutputWGSLTraverser::visitGlobalQualifierDeclaration(Visit,
 bool OutputWGSLTraverser::visitDeclaration(Visit, TIntermDeclaration *declNode)
 {
     // TODO(anglebug.com/8662): support variable declarations.
-    UNREACHABLE();
+    mSink << "FAKE_DECLARATION";
     return false;
 }
 
 bool OutputWGSLTraverser::visitLoop(Visit, TIntermLoop *loopNode)
 {
     // TODO(anglebug.com/8662): emit loops.
-    UNREACHABLE();
     return false;
 }
 
 bool OutputWGSLTraverser::visitBranch(Visit, TIntermBranch *branchNode)
 {
     // TODO(anglebug.com/8662): emit branch instructions.
-    UNREACHABLE();
     return false;
 }
 
