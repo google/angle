@@ -21,6 +21,18 @@
 namespace rx
 {
 
+union PixelColor
+{
+    uint8_t u8[4];
+    int8_t s8[4];
+    uint16_t u16[4];
+    int16_t s16[4];
+    uint32_t u32[4];
+    int32_t s32[4];
+    cl_half fp16[4];
+    cl_float fp32[4];
+};
+
 class CLMemoryVk : public CLMemoryImpl
 {
   public:
@@ -133,6 +145,11 @@ class CLImageVk : public CLMemoryVk
     vk::ImageView &getImageView() { return mImageView; }
     cl_image_format getImageFormat() { return mImageFormat; }
     cl::ImageDescriptor getDesc() { return mDesc; }
+    void packPixels(const void *fillColor, PixelColor *packedColor);
+    void fillImageWithColor(const cl::MemOffsets &origin,
+                            const cl::Coordinate &region,
+                            uint8_t *imagePtr,
+                            PixelColor *packedColor);
 
   private:
     angle::Result mapImpl() override;

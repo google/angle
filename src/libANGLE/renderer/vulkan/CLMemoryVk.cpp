@@ -5,10 +5,12 @@
 //
 // CLMemoryVk.cpp: Implements the class methods for CLMemoryVk.
 
-#include <cstdint>
-
-#include "libANGLE/renderer/vulkan/CLContextVk.h"
 #include "libANGLE/renderer/vulkan/CLMemoryVk.h"
+#include "CL/cl.h"
+#include "CL/cl_half.h"
+#include "common/aligned_memory.h"
+#include "libANGLE/Error.h"
+#include "libANGLE/renderer/vulkan/CLContextVk.h"
 #include "libANGLE/renderer/vulkan/vk_cl_utils.h"
 #include "libANGLE/renderer/vulkan/vk_renderer.h"
 
@@ -25,6 +27,31 @@
 
 namespace rx
 {
+namespace
+{
+cl_int NormalizeFloatValue(float value, float maximum)
+{
+    if (value < 0)
+    {
+        return 0;
+    }
+    if (value > 1.f)
+    {
+        return static_cast<cl_int>(maximum);
+    }
+    float valueToRound = (value * maximum);
+
+    if (fabsf(valueToRound) < 0x1.0p23f)
+    {
+        constexpr float magic[2] = {0x1.0p23f, -0x1.0p23f};
+        float magicVal           = magic[valueToRound < 0.0f];
+        valueToRound += magicVal;
+        valueToRound -= magicVal;
+    }
+
+    return static_cast<cl_int>(valueToRound);
+}
+}  // anonymous namespace
 
 CLMemoryVk::CLMemoryVk(const cl::Memory &memory)
     : CLMemoryImpl(memory),
@@ -481,6 +508,161 @@ bool CLImageVk::containsHostMemExtension()
     const vk::ExtensionNameList &enabledDeviceExtensions = mRenderer->getEnabledDeviceExtensions();
     return std::find(enabledDeviceExtensions.begin(), enabledDeviceExtensions.end(),
                      "VK_EXT_external_memory_host") != enabledDeviceExtensions.end();
+}
+
+void CLImageVk::packPixels(const void *fillColor, PixelColor *packedColor)
+{
+    size_t channelCount = cl::GetChannelCount(mImageFormat.image_channel_order);
+
+    switch (mImageFormat.image_channel_data_type)
+    {
+        case CL_UNORM_INT8:
+        {
+            float *srcVector = static_cast<float *>(const_cast<void *>(fillColor));
+            if (mImageFormat.image_channel_order == CL_BGRA)
+            {
+                packedColor->u8[0] =
+                    static_cast<unsigned char>(NormalizeFloatValue(srcVector[2], 255.f));
+                packedColor->u8[1] =
+                    static_cast<unsigned char>(NormalizeFloatValue(srcVector[1], 255.f));
+                packedColor->u8[2] =
+                    static_cast<unsigned char>(NormalizeFloatValue(srcVector[0], 255.f));
+                packedColor->u8[3] =
+                    static_cast<unsigned char>(NormalizeFloatValue(srcVector[3], 255.f));
+            }
+            else
+            {
+                for (unsigned int i = 0; i < channelCount; i++)
+                    packedColor->u8[i] =
+                        static_cast<unsigned char>(NormalizeFloatValue(srcVector[i], 255.f));
+            }
+            break;
+        }
+        case CL_SIGNED_INT8:
+        {
+            int *srcVector = static_cast<int *>(const_cast<void *>(fillColor));
+            for (unsigned int i = 0; i < channelCount; i++)
+                packedColor->s8[i] = static_cast<char>(std::clamp(srcVector[i], -128, 127));
+            break;
+        }
+        case CL_UNSIGNED_INT8:
+        {
+            unsigned int *srcVector = static_cast<unsigned int *>(const_cast<void *>(fillColor));
+            for (unsigned int i = 0; i < channelCount; i++)
+                packedColor->u8[i] = static_cast<unsigned char>(
+                    std::clamp(static_cast<unsigned int>(srcVector[i]),
+                               static_cast<unsigned int>(0), static_cast<unsigned int>(255)));
+            break;
+        }
+        case CL_UNORM_INT16:
+        {
+            float *srcVector = static_cast<float *>(const_cast<void *>(fillColor));
+            for (unsigned int i = 0; i < channelCount; i++)
+                packedColor->u16[i] =
+                    static_cast<unsigned short>(NormalizeFloatValue(srcVector[i], 65535.f));
+            break;
+        }
+        case CL_SIGNED_INT16:
+        {
+            int *srcVector = static_cast<int *>(const_cast<void *>(fillColor));
+            for (unsigned int i = 0; i < channelCount; i++)
+                packedColor->s16[i] = static_cast<short>(std::clamp(srcVector[i], -32768, 32767));
+            break;
+        }
+        case CL_UNSIGNED_INT16:
+        {
+            unsigned int *srcVector = static_cast<unsigned int *>(const_cast<void *>(fillColor));
+            for (unsigned int i = 0; i < channelCount; i++)
+                packedColor->u16[i] = static_cast<unsigned short>(
+                    std::clamp(static_cast<unsigned int>(srcVector[i]),
+                               static_cast<unsigned int>(0), static_cast<unsigned int>(65535)));
+            break;
+        }
+        case CL_HALF_FLOAT:
+        {
+            float *srcVector = static_cast<float *>(const_cast<void *>(fillColor));
+            for (unsigned int i = 0; i < channelCount; i++)
+                packedColor->fp16[i] = cl_half_from_float(srcVector[i], CL_HALF_RTE);
+            break;
+        }
+        case CL_SIGNED_INT32:
+        {
+            int *srcVector = static_cast<int *>(const_cast<void *>(fillColor));
+            for (unsigned int i = 0; i < channelCount; i++)
+                packedColor->s32[i] = static_cast<int>(srcVector[i]);
+            break;
+        }
+        case CL_UNSIGNED_INT32:
+        {
+            unsigned int *srcVector = static_cast<unsigned int *>(const_cast<void *>(fillColor));
+            for (unsigned int i = 0; i < channelCount; i++)
+                packedColor->u32[i] = static_cast<unsigned int>(srcVector[i]);
+            break;
+        }
+        case CL_FLOAT:
+        {
+            float *srcVector = static_cast<float *>(const_cast<void *>(fillColor));
+            for (unsigned int i = 0; i < channelCount; i++)
+                packedColor->fp32[i] = srcVector[i];
+            break;
+        }
+        default:
+            UNIMPLEMENTED();
+            break;
+    }
+}
+
+void CLImageVk::fillImageWithColor(const cl::MemOffsets &origin,
+                                   const cl::Coordinate &region,
+                                   uint8_t *imagePtr,
+                                   PixelColor *packedColor)
+{
+    size_t imageRowPitch   = mDesc.rowPitch;
+    size_t imageSlicePitch = mDesc.slicePitch;
+    if (imageRowPitch == 0)
+    {
+        imageRowPitch = (region.x * mElementSize);
+    }
+
+    if (imageSlicePitch == 0)
+    {
+        switch (mDesc.type)
+        {
+            case cl::MemObjectType::Image1D:
+            case cl::MemObjectType::Image1D_Buffer:
+            case cl::MemObjectType::Image2D:
+                imageSlicePitch = 0;
+                break;
+            case cl::MemObjectType::Image2D_Array:
+            case cl::MemObjectType::Image3D:
+                imageSlicePitch = (region.y * imageRowPitch);
+                break;
+            case cl::MemObjectType::Image1D_Array:
+                imageSlicePitch = imageRowPitch;
+                break;
+            default:
+                UNREACHABLE();
+                break;
+        }
+    }
+
+    uint8_t *ptr = imagePtr + (origin.z * imageSlicePitch) + (origin.y * imageRowPitch) +
+                   (origin.x * mElementSize);
+    for (size_t z = 0; z < region.z; z++)
+    {
+        uint8_t *rowPtr = ptr;
+        for (size_t y = 0; y < region.y; y++)
+        {
+            uint8_t *pixelPtr = rowPtr;
+            for (size_t x = 0; x < region.x; x++)
+            {
+                memcpy(pixelPtr, packedColor, mElementSize);
+                pixelPtr += mElementSize;
+            }
+            rowPtr += imageRowPitch;
+        }
+        ptr += imageSlicePitch;
+    }
 }
 
 angle::Result CLImageVk::mapImpl()
