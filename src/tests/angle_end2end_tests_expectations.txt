@@ -199,6 +199,7 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 7866 WIN INTEL VULKAN : VulkanPerformanceCounterTest.PipelineCacheIsRestoredWithProgramBinary/* = SKIP
 7866 WIN INTEL VULKAN : VulkanPerformanceCounterTest.PipelineCacheIsRestoredWithProgramBinaryTwice/* = SKIP
 7866 WIN INTEL VULKAN : VulkanPerformanceCounterTest.PipelineCacheIsWarmedUpAtLinkTime/* = SKIP
+342557702 WIN INTEL VULKAN : StateChangeTestES3.RasterizerDiscard/ES3_Vulkan_NoSupportsExtendedDynamicState2 = SKIP
 // vk_icdNegotiateLoaderICDInterfaceVersion crashes (possibly Mesa bug?)
 8179 LINUX INTEL VULKAN : RGBTextureBufferTestES31.* = SKIP
 8179 LINUX INTEL VULKAN : TextureBufferTestES31.TexBufferFormatMismatch/* = SKIP
