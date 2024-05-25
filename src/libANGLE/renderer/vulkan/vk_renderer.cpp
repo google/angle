@@ -4733,9 +4733,11 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     //
     // - Nvidia drivers - Crashes when creating pipelines, not using any SPIR-V 1.4 features.  Known
     //                    good since at least version 525.  http://anglebug.com/343249127
+    // - Qualcomm drivers - Crashes when creating pipelines in the presence of OpCopyLogical with
+    //                      some types.  http://anglebug.com/343218484
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsSPIRV14,
                             ExtensionFound(VK_KHR_SPIRV_1_4_EXTENSION_NAME, deviceExtensionNames) &&
-                                !(isNvidia && nvidiaVersion.major < 525));
+                                !(isNvidia && nvidiaVersion.major < 525) && !isQualcommProprietary);
 
     // Retain debug info in SPIR-V blob.
     ANGLE_FEATURE_CONDITION(&mFeatures, retainSPIRVDebugInfo, getEnableValidationLayers());

@@ -4364,9 +4364,29 @@ spirv::IdRef OutputSPIRVTraverser::cast(spirv::IdRef value,
     // At this point, a value is loaded with the |valueType| GLSL type which is of a SPIR-V type
     // specialized by |valueTypeSpec|.  However, it's being assigned (for example through operator=,
     // used in a constructor or passed as a function argument) where the same GLSL type is expected
-    // but with different SPIR-V type specialization (|expectedTypeSpec|).  SPIR-V 1.4 has
-    // OpCopyLogical that does exactly that, but we generate SPIR-V 1.0 at the moment.
+    // but with different SPIR-V type specialization (|expectedTypeSpec|).
     //
+    // If SPIR-V 1.4 is available, use OpCopyLogical if possible.  OpCopyLogical works on arrays and
+    // structs, and only if the types are logically the same.  This means that arrays and structs
+    // can be copied with this instruction despite their SpirvTypeSpec being different.  The only
+    // exception is if there is a mismatch in the isOrHasBoolInInterfaceBlock type specialization
+    // as it actually changes the type of the struct members.
+    if (mCompileOptions.emitSPIRV14 && (valueType.isArray() || valueType.getStruct() != nullptr) &&
+        valueTypeSpec.isOrHasBoolInInterfaceBlock == expectedTypeSpec.isOrHasBoolInInterfaceBlock)
+    {
+        const spirv::IdRef expectedTypeId =
+            mBuilder.getTypeDataOverrideTypeSpec(valueType, expectedTypeSpec).id;
+        const spirv::IdRef expectedId = mBuilder.getNewId(mBuilder.getDecorations(valueType));
+
+        spirv::WriteCopyLogical(mBuilder.getSpirvCurrentFunctionBlock(), expectedTypeId, expectedId,
+                                value);
+        if (resultTypeIdOut)
+        {
+            *resultTypeIdOut = expectedTypeId;
+        }
+        return expectedId;
+    }
+
     // The following code recursively copies the array elements or struct fields and then constructs
     // the final result with the expected SPIR-V type.
 
@@ -6527,7 +6547,8 @@ spirv::Blob OutputSPIRVTraverser::getSpirv()
 
 #if ANGLE_DEBUG_SPIRV_GENERATION
     // Disassemble and log the generated SPIR-V for debugging.
-    spvtools::SpirvTools spirvTools(SPV_ENV_VULKAN_1_1);
+    spvtools::SpirvTools spirvTools(mCompileOptions.emitSPIRV14 ? SPV_ENV_VULKAN_1_1_SPIRV_1_4
+                                                                : SPV_ENV_VULKAN_1_1);
     std::string readableSpirv;
     spirvTools.Disassemble(result, &readableSpirv, 0);
     fprintf(stderr, "%s\n", readableSpirv.c_str());
