@@ -1820,7 +1820,6 @@ angle::Result ContextVk::setupDispatch(const gl::Context *context)
     if (executableVk->hasDirtyUniforms())
     {
         mComputeDirtyBits.set(DIRTY_BIT_UNIFORMS);
-        mComputeDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
     }
 
     DirtyBits dirtyBits = mComputeDirtyBits;
@@ -3074,17 +3073,19 @@ angle::Result ContextVk::handleDirtyGraphicsDescriptorSets(DirtyBits::Iterator *
 angle::Result ContextVk::handleDirtyGraphicsUniforms(DirtyBits::Iterator *dirtyBitsIterator,
                                                      DirtyBits dirtyBitMask)
 {
-    dirtyBitsIterator->setLaterBit(DIRTY_BIT_DESCRIPTOR_SETS);
-    return handleDirtyUniformsImpl(mRenderPassCommands);
+    return handleDirtyUniformsImpl(dirtyBitsIterator, mRenderPassCommands);
 }
 
 angle::Result ContextVk::handleDirtyComputeUniforms(DirtyBits::Iterator *dirtyBitsIterator)
 {
-    return handleDirtyUniformsImpl(mOutsideRenderPassCommands);
+    return handleDirtyUniformsImpl(dirtyBitsIterator, mOutsideRenderPassCommands);
 }
 
-angle::Result ContextVk::handleDirtyUniformsImpl(vk::CommandBufferHelperCommon *commandBufferHelper)
+angle::Result ContextVk::handleDirtyUniformsImpl(DirtyBits::Iterator *dirtyBitsIterator,
+                                                 vk::CommandBufferHelperCommon *commandBufferHelper)
 {
+    dirtyBitsIterator->setLaterBit(DIRTY_BIT_DESCRIPTOR_SETS);
+
     ProgramExecutableVk *executableVk = vk::GetImpl(mState.getProgramExecutable());
     TransformFeedbackVk *transformFeedbackVk =
         vk::SafeGetImpl(mState.getCurrentTransformFeedback());
