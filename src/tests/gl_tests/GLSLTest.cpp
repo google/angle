@@ -13410,6 +13410,219 @@ void main(){
                              static_cast<uint32_t>(ssbo430Expect.size())));
 }
 
+// Verify that ternary operator works when the operands are matrices used in different block
+// storage.
+TEST_P(GLSLTest_ES31, TernaryOnMatricesInDifferentBlockStorages)
+{
+    constexpr char kCS[] = R"(#version 310 es
+precision highp float;
+layout(local_size_x=1) in;
+
+layout(std140, column_major) uniform Ubo140c
+{
+    uint u;
+    layout(row_major) mat3x2 m;
+} ubo140cIn;
+
+layout(std430, row_major, binding = 0) buffer Ubo430r
+{
+    uint u;
+    layout(column_major) mat3x2 m;
+} ubo430rIn;
+
+layout(std140, column_major, binding = 1) buffer Ssbo140c
+{
+    uint u;
+    mat3x2 m;
+} ssbo140cIn;
+
+layout(std430, row_major, binding = 2) buffer Ssbo430r
+{
+    mat3x2 m1;
+    mat3x2 m2;
+} ssbo430rOut;
+
+void main(){
+    ssbo430rOut.m1 = ubo140cIn.u > ubo430rIn.u ? ubo140cIn.m : ubo430rIn.m;
+    ssbo430rOut.m2 = ssbo140cIn.u > ubo140cIn.u ? ssbo140cIn.m : ubo140cIn.m;
+
+    mat3x2 m = mat3x2(0);
+
+    ssbo430rOut.m1 = ubo140cIn.u == 0u ? m : ssbo430rOut.m1;
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+    EXPECT_GL_NO_ERROR();
+
+    // Test data, laid out with padding (0) based on std140/std430 rules.
+    // clang-format off
+    const std::vector<float> ubo140cData = {
+        // u (uint)
+        1, 0, 0, 0,
+
+        // m (mat3x2, row-major)
+        5, 7, 9, 0,     6, 8, 10, 0,
+    };
+    const std::vector<float> ubo430rData = {
+        // u (uint)
+        135, 0,
+
+        // m (mat3x2, column-major)
+        139, 140,         141, 142,         143, 144,
+    };
+    const std::vector<float> ssbo140cData = {
+        // u (uint)
+        204, 0, 0, 0,
+
+        // m (mat3x2, column-major)
+        205, 206, 0, 0,  207, 208, 0, 0,  209, 210, 0, 0,
+    };
+    const std::vector<float> ssbo430rExpect = {
+        // m1 (mat3x2, row-major), copied from ubo430rIn.m
+        139, 141, 143, 0,  140, 142, 144, 0,
+
+        // m2 (mat3x2, row-major), copied from ssbo140cIn.m
+        205, 207, 209, 0,  206, 208, 210, 0,
+    };
+    const std::vector<float> zeros(ssbo430rExpect.size(), 0);
+    // clang-format on
+
+    GLBuffer uboStd140ColMajor, uboStd430RowMajor;
+    GLBuffer ssboStd140ColMajor, ssboStd430RowMajor;
+
+    InitBuffer(program, "Ubo140c", uboStd140ColMajor, 0, ubo140cData.data(),
+               static_cast<uint32_t>(ubo140cData.size()), true);
+    InitBuffer(program, "Ubo430r", uboStd430RowMajor, 0, ubo430rData.data(),
+               static_cast<uint32_t>(ubo430rData.size()), false);
+    InitBuffer(program, "Ssbo140c", ssboStd140ColMajor, 1, ssbo140cData.data(),
+               static_cast<uint32_t>(ssbo140cData.size()), false);
+    InitBuffer(program, "Ssbo430r", ssboStd430RowMajor, 2, zeros.data(),
+               static_cast<uint32_t>(ssbo430rExpect.size()), false);
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(program);
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_TRUE(VerifyBuffer(ssboStd430RowMajor, ssbo430rExpect.data(),
+                             static_cast<uint32_t>(ssbo430rExpect.size())));
+}
+
+// Verify that ternary operator works when the operands are structs used in different block
+// storage.
+TEST_P(GLSLTest_ES31, TernaryOnStructsInDifferentBlockStorages)
+{
+    constexpr char kCS[] = R"(#version 310 es
+precision highp float;
+layout(local_size_x=1) in;
+
+struct S
+{
+    mat3x2 m[2];
+};
+
+layout(std140, column_major) uniform Ubo140c
+{
+    uint u;
+    layout(row_major) S s;
+} ubo140cIn;
+
+layout(std430, row_major, binding = 0) buffer Ubo430r
+{
+    uint u;
+    layout(column_major) S s;
+} ubo430rIn;
+
+layout(std140, column_major, binding = 1) buffer Ssbo140c
+{
+    uint u;
+    S s;
+} ssbo140cIn;
+
+layout(std430, row_major, binding = 2) buffer Ssbo430r
+{
+    S s1;
+    S s2;
+} ssbo430rOut;
+
+void main(){
+    ssbo430rOut.s1 = ubo140cIn.u > ubo430rIn.u ? ubo140cIn.s : ubo430rIn.s;
+    ssbo430rOut.s2 = ssbo140cIn.u > ubo140cIn.u ? ssbo140cIn.s : ubo140cIn.s;
+
+    S s;
+    s.m[0] = mat3x2(0);
+    s.m[1] = mat3x2(0);
+
+    ssbo430rOut.s1 = ubo140cIn.u == 0u ? s : ssbo430rOut.s1;
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+    EXPECT_GL_NO_ERROR();
+
+    // Test data, laid out with padding (0) based on std140/std430 rules.
+    // clang-format off
+    const std::vector<float> ubo140cData = {
+        // u (uint)
+        1, 0, 0, 0,
+
+        // s.m[0] (mat3x2, row-major)
+        5, 7, 9, 0,     6, 8, 10, 0,
+        // s.m[1] (mat3x2, row-major)
+        25, 27, 29, 0,  26, 28, 30, 0,
+    };
+    const std::vector<float> ubo430rData = {
+        // u (uint)
+        135, 0,
+
+        // s.m[0] (mat3x2, column-major)
+        139, 140,         141, 142,         143, 144,
+        // s.m[1] (mat3x2, column-major)
+        189, 190,         191, 192,         193, 194,
+    };
+    const std::vector<float> ssbo140cData = {
+        // u (uint)
+        204, 0, 0, 0,
+
+        // s.m[0] (mat3x2, column-major)
+        205, 206, 0, 0,  207, 208, 0, 0,  209, 210, 0, 0,
+        // s.m[1] (mat3x2, column-major)
+        245, 246, 0, 0,  247, 248, 0, 0,  249, 250, 0, 0,
+    };
+    const std::vector<float> ssbo430rExpect = {
+        // s1.m[0] (mat3x2, row-major), copied from ubo430rIn.s.m[0]
+        139, 141, 143, 0,  140, 142, 144, 0,
+        // s1.m[1] (mat3x2, row-major), copied from ubo430rIn.s.m[0]
+        189, 191, 193, 0,  190, 192, 194, 0,
+
+        // s2.m[0] (mat3x2, row-major), copied from ssbo140cIn.m
+        205, 207, 209, 0,  206, 208, 210, 0,
+        // s2.m[1] (mat3x2, row-major), copied from ssbo140cIn.m
+        245, 247, 249, 0,  246, 248, 250, 0,
+    };
+    const std::vector<float> zeros(ssbo430rExpect.size(), 0);
+    // clang-format on
+
+    GLBuffer uboStd140ColMajor, uboStd430RowMajor;
+    GLBuffer ssboStd140ColMajor, ssboStd430RowMajor;
+
+    InitBuffer(program, "Ubo140c", uboStd140ColMajor, 0, ubo140cData.data(),
+               static_cast<uint32_t>(ubo140cData.size()), true);
+    InitBuffer(program, "Ubo430r", uboStd430RowMajor, 0, ubo430rData.data(),
+               static_cast<uint32_t>(ubo430rData.size()), false);
+    InitBuffer(program, "Ssbo140c", ssboStd140ColMajor, 1, ssbo140cData.data(),
+               static_cast<uint32_t>(ssbo140cData.size()), false);
+    InitBuffer(program, "Ssbo430r", ssboStd430RowMajor, 2, zeros.data(),
+               static_cast<uint32_t>(ssbo430rExpect.size()), false);
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(program);
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_TRUE(VerifyBuffer(ssboStd430RowMajor, ssbo430rExpect.data(),
+                             static_cast<uint32_t>(ssbo430rExpect.size())));
+}
+
 // Verify that uint in interface block cast to bool works.
 TEST_P(GLSLTest_ES3, UintCastToBoolFromInterfaceBlocks)
 {
