@@ -74,6 +74,9 @@ class ProgramPipelineState final : angle::NonCopyable
     void updateExecutableSpecConstUsageBits();
 
   private:
+    SharedProgramExecutable makeNewExecutable(
+        rx::GLImplFactory *factory,
+        ShaderMap<SharedProgramExecutable> &&ppoProgramExecutables);
     void useProgramStage(const Context *context,
                          ShaderType shaderType,
                          Program *shaderProgram,

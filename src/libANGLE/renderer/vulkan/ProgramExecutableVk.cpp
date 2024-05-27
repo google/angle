@@ -2015,7 +2015,7 @@ angle::Result ProgramExecutableVk::updateUniforms(
     bool isTransformFeedbackActiveUnpaused,
     TransformFeedbackVk *transformFeedbackVk)
 {
-    ASSERT(hasDirtyUniforms());
+    ASSERT(mDefaultUniformBlocksDirty.any());
 
     vk::BufferHelper *defaultUniformBuffer;
     bool anyNewBufferAllocated          = false;
@@ -2121,6 +2121,8 @@ void ProgramExecutableVk::onProgramBind()
     // current uniform buffer is still the same buffer we last time used and buffer has not been
     // recycled. But statistics gathered on gfxbench shows that app always update uniform data on
     // program bind anyway, so not really worth it to add more tracking logic here.
+    //
+    // Note: if this is changed, PPO uniform checks need to be updated as well
     setAllDefaultUniformsDirty();
 }
 

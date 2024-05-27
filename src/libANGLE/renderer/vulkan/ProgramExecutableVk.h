@@ -295,7 +295,27 @@ class ProgramExecutableVk : public ProgramExecutableImpl
         return mDefaultUniformBlocks[shaderType];
     }
 
-    bool hasDirtyUniforms() const { return mDefaultUniformBlocksDirty.any(); }
+    bool updateAndCheckDirtyUniforms()
+    {
+        if (ANGLE_LIKELY(!mExecutable->IsPPO()))
+        {
+            return mDefaultUniformBlocksDirty.any();
+        }
+
+        const auto &ppoExecutables = mExecutable->getPPOProgramExecutables();
+        for (gl::ShaderType shaderType : mExecutable->getLinkedShaderStages())
+        {
+            ProgramExecutableVk *executableVk = vk::GetImpl(ppoExecutables[shaderType].get());
+            if (executableVk->mDefaultUniformBlocksDirty.test(shaderType))
+            {
+                mDefaultUniformBlocksDirty.set(shaderType);
+                // Note: this relies on onProgramBind marking everything as dirty
+                executableVk->mDefaultUniformBlocksDirty.reset(shaderType);
+            }
+        }
+
+        return mDefaultUniformBlocksDirty.any();
+    }
 
     void setAllDefaultUniformsDirty();
     angle::Result updateUniforms(vk::Context *context,
