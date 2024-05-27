@@ -6108,7 +6108,7 @@
             "pool": "chromium.tests.gpu"
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
-          "shards": 2
+          "shards": 4
         },
         "test": "angle_end2end_tests",
         "test_id_prefix": "ninja://src/tests:angle_end2end_tests/",
