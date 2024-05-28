@@ -1168,6 +1168,14 @@ Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensi
         caps.shaderStorageBufferOffsetAlignment = 256;
     }
 
+    if (clientVersion >= Version(3, 2))
+    {
+        // Table 21.40
+        caps.lineWidthGranularity    = 1.0;
+        caps.minMultisampleLineWidth = 1.0;
+        caps.maxMultisampleLineWidth = 1.0;
+    }
+
     if (extensions.blendFuncExtendedEXT)
     {
         caps.maxDualSourceDrawBuffers = 1;

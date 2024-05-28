@@ -1799,6 +1799,13 @@ void Context::getFloatvImpl(GLenum pname, GLfloat *params) const
             params[0] = mState.getCaps().minSmoothLineWidth;
             params[1] = mState.getCaps().maxSmoothLineWidth;
             break;
+        case GL_MULTISAMPLE_LINE_WIDTH_RANGE:
+            params[0] = mState.getCaps().minMultisampleLineWidth;
+            params[1] = mState.getCaps().maxMultisampleLineWidth;
+            break;
+        case GL_MULTISAMPLE_LINE_WIDTH_GRANULARITY:
+            *params = mState.getCaps().lineWidthGranularity;
+            break;
         case GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT:
             ASSERT(mState.getExtensions().textureFilterAnisotropicEXT);
             *params = mState.getCaps().maxTextureAnisotropy;

@@ -8452,9 +8452,12 @@ TEST_P(SimpleStateChangeTestES3, DeleteDoubleBoundBufferAndVertexArray)
 // Tests state change for glLineWidth.
 TEST_P(StateChangeTestES3, LineWidth)
 {
+    // According to the spec, the minimum value for the line width range limits is one.
     GLfloat range[2] = {1};
     glGetFloatv(GL_ALIASED_LINE_WIDTH_RANGE, range);
     EXPECT_GL_NO_ERROR();
+    EXPECT_GE(range[0], 1.0f);
+    EXPECT_GE(range[1], 1.0f);
 
     ANGLE_SKIP_TEST_IF(range[1] < 5.0);
 
