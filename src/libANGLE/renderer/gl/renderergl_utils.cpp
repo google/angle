@@ -2372,11 +2372,11 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     ANGLE_FEATURE_CONDITION(features, dontUseLoopsToInitializeVariables,
                             (!isMesa && isQualcomm) || (isIntel && IsApple()));
 
-    // Adreno drivers do not support glBindFragDataLocation* with MRT
     // Intel macOS condition ported from gpu_driver_bug_list.json (#327)
     ANGLE_FEATURE_CONDITION(features, disableBlendFuncExtended,
-                            (!isMesa && isQualcomm) ||
-                                (IsApple() && isIntel && GetMacOSVersion() < OSVersion(10, 14, 0)));
+                            IsApple() && isIntel && GetMacOSVersion() < OSVersion(10, 14, 0));
+
+    ANGLE_FEATURE_CONDITION(features, avoidBindFragDataLocation, !isMesa && isQualcomm);
 
     ANGLE_FEATURE_CONDITION(features, unsizedSRGBReadPixelsDoesntTransform, !isMesa && isQualcomm);
 

@@ -739,6 +739,13 @@ struct FeaturesGL : FeatureSetBase
         &members, "https://crbug.com/40279678"
     };
 
+    FeatureInfo avoidBindFragDataLocation = {
+        "avoidBindFragDataLocation",
+        FeatureCategory::OpenGLWorkarounds,
+        "Qualcomm drivers fail to link after binding fragment data locations.",
+        &members, "https://anglebug.com/8646"
+    };
+
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

@@ -801,6 +801,14 @@
                 "Some drivers lose context when repeatedly generating mipmaps on textures that were used as framebuffers."
             ],
             "issue": "https://crbug.com/40279678"
+        },
+        {
+            "name": "avoid_bind_frag_data_location",
+            "category": "Workarounds",
+            "description": [
+                "Qualcomm drivers fail to link after binding fragment data locations."
+            ],
+            "issue": "https://anglebug.com/8646"
         }
     ]
 }
