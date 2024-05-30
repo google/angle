@@ -1191,8 +1191,10 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
 
     // Process each kernel argument/resource
     vk::DescriptorSetArray<UpdateDescriptorSetsBuilder> updateDescriptorSetsBuilders;
-    for (const auto &arg : kernelVk.getArgs())
+    CLKernelArguments args = kernelVk.getArgs();
+    for (size_t index = 0; index < args.size(); index++)
     {
+        const auto &arg = args.at(index);
         UpdateDescriptorSetsBuilder &kernelArgDescSetBuilder =
             updateDescriptorSetsBuilders[DescriptorSetIndex::KernelArguments];
         switch (arg.type)
@@ -1277,6 +1279,27 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
                 CLImageVk &vkMem  = clMem->getImpl<CLImageVk>();
 
                 mMemoryCaptures.emplace_back(clMem);
+
+                cl_image_format imageFormat = vkMem.getImageFormat();
+                const VkPushConstantRange *imageDataChannelOrderRange =
+                    devProgramData->getImageDataChannelOrderRange(index);
+                if (imageDataChannelOrderRange != nullptr)
+                {
+                    mComputePassCommands->getCommandBuffer().pushConstants(
+                        kernelVk.getPipelineLayout().get(), VK_SHADER_STAGE_COMPUTE_BIT,
+                        imageDataChannelOrderRange->offset, imageDataChannelOrderRange->size,
+                        &imageFormat.image_channel_order);
+                }
+
+                const VkPushConstantRange *imageDataChannelDataTypeRange =
+                    devProgramData->getImageDataChannelDataTypeRange(index);
+                if (imageDataChannelDataTypeRange != nullptr)
+                {
+                    mComputePassCommands->getCommandBuffer().pushConstants(
+                        kernelVk.getPipelineLayout().get(), VK_SHADER_STAGE_COMPUTE_BIT,
+                        imageDataChannelDataTypeRange->offset, imageDataChannelDataTypeRange->size,
+                        &imageFormat.image_channel_data_type);
+                }
 
                 // Handle possible resource RAW hazard
                 if (clMem->getFlags().intersects(CL_MEM_READ_WRITE))

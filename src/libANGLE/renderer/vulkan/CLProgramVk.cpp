@@ -277,6 +277,17 @@ spv_result_t ParseReflection(CLProgramVk::SpvReflectionData &reflectionData,
                     UNREACHABLE();
                     return SPV_UNSUPPORTED;
                 }
+                case NonSemanticClspvReflectionImageArgumentInfoChannelOrderPushConstant:
+                case NonSemanticClspvReflectionImageArgumentInfoChannelDataTypePushConstant:
+                {
+                    uint32_t ordinal            = reflectionData.spvIntLookup[spvInstr.words[6]];
+                    uint32_t offset             = reflectionData.spvIntLookup[spvInstr.words[7]];
+                    uint32_t size               = reflectionData.spvIntLookup[spvInstr.words[8]];
+                    VkPushConstantRange pcRange = {.stageFlags = 0, .offset = offset, .size = size};
+                    reflectionData.imagePushConstants[spvInstr.words[4]].push_back(
+                        {.pcRange = pcRange, .ordinal = ordinal});
+                    break;
+                }
                 default:
                     break;
             }
@@ -966,6 +977,20 @@ bool CLProgramVk::buildInternal(const cl::DevicePtrs &devices,
                 {
                     pushConstantMaxOffset = pushConstant.second.offset;
                     pushConstantMaxSize   = pushConstant.second.size;
+                }
+            }
+            for (const auto &pushConstant : deviceProgramData.reflectionData.imagePushConstants)
+            {
+                for (const auto imageConstant : pushConstant.second)
+                {
+                    pushConstantMinOffet = imageConstant.pcRange.offset < pushConstantMinOffet
+                                               ? imageConstant.pcRange.offset
+                                               : pushConstantMinOffet;
+                    if (imageConstant.pcRange.offset >= pushConstantMaxOffset)
+                    {
+                        pushConstantMaxOffset = imageConstant.pcRange.offset;
+                        pushConstantMaxSize   = imageConstant.pcRange.size;
+                    }
                 }
             }
             deviceProgramData.pushConstRange.stageFlags = VK_SHADER_STAGE_COMPUTE_BIT;
