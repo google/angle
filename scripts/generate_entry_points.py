@@ -121,6 +121,7 @@ PLS_ALLOW_WILDCARDS = [
     "Is*",
     "ObjectLabel*",
     "ObjectPtrLabel*",
+    "PolygonMode*",
     "PolygonOffset*",
     "PopDebugGroup*",
     "PushDebugGroup*",

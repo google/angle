@@ -582,6 +582,8 @@ static bool IsCapBannedWithActivePLS(GLenum cap)
         case GL_DEBUG_OUTPUT_SYNCHRONOUS:
         case GL_DEPTH_CLAMP_EXT:
         case GL_DEPTH_TEST:
+        case GL_POLYGON_OFFSET_POINT_NV:
+        case GL_POLYGON_OFFSET_LINE_NV:  // = GL_POLYGON_OFFSET_LINE_ANGLE
         case GL_POLYGON_OFFSET_FILL:
         case GL_PRIMITIVE_RESTART_FIXED_INDEX:
         case GL_SCISSOR_TEST:

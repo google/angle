@@ -1485,12 +1485,9 @@ void GL_APIENTRY GL_PolygonModeANGLE(GLenum face, GLenum mode)
         PolygonMode modePacked = PackParam<PolygonMode>(mode);
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLPolygonModeANGLE) &&
-              ValidatePolygonModeANGLE(context->getPrivateState(),
-                                       context->getMutableErrorSetForValidation(),
-                                       angle::EntryPoint::GLPolygonModeANGLE, face, modePacked)));
+             ValidatePolygonModeANGLE(context->getPrivateState(),
+                                      context->getMutableErrorSetForValidation(),
+                                      angle::EntryPoint::GLPolygonModeANGLE, face, modePacked));
         if (isCallValid)
         {
             ContextPrivatePolygonMode(context->getMutablePrivateState(),
@@ -10822,12 +10819,9 @@ void GL_APIENTRY GL_PolygonModeNV(GLenum face, GLenum mode)
         PolygonMode modePacked = PackParam<PolygonMode>(mode);
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLPolygonModeNV) &&
-              ValidatePolygonModeNV(context->getPrivateState(),
-                                    context->getMutableErrorSetForValidation(),
-                                    angle::EntryPoint::GLPolygonModeNV, face, modePacked)));
+             ValidatePolygonModeNV(context->getPrivateState(),
+                                   context->getMutableErrorSetForValidation(),
+                                   angle::EntryPoint::GLPolygonModeNV, face, modePacked));
         if (isCallValid)
         {
             ContextPrivatePolygonModeNV(context->getMutablePrivateState(),
