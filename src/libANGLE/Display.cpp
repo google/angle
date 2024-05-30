@@ -1329,10 +1329,12 @@ Error Display::terminate(Thread *thread, TerminateReason terminateReason)
     return NoError();
 }
 
+#if ANGLE_USE_DISPLAY_PREPARE_FOR_CALL
 Error Display::prepareForCall()
 {
     return mImplementation->prepareForCall();
 }
+#endif
 
 Error Display::releaseThread()
 {
