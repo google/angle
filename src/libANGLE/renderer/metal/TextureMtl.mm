@@ -412,7 +412,9 @@ void CopyBufferToOriginalTextureIfDstIsAView(ContextMtl *contextMtl,
     mtl::TextureRef correctedTexture      = dst;
     mtl::MipmapNativeLevel correctedLevel = dstLevel;
     uint32_t correctedSlice               = dstSlice;
-    if (correctedTexture->parentTexture())
+    // TODO(b/343734719): Simulator has bug in parentRelativeSlice() so skip this step
+    // on simulator.
+    if (!contextMtl->getDisplay()->isSimulator() && correctedTexture->parentTexture())
     {
         correctedLevel = correctedLevel + correctedTexture->parentRelativeLevel().get();
         correctedSlice += correctedTexture->parentRelativeSlice();
