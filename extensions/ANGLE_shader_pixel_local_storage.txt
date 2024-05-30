@@ -788,7 +788,6 @@ Additions to the OpenGL ES Specification, Version 3.0.6
 
         - Zero if <backingtexture> is a TEXTURE_2D
         - The array index to bind if <backingtexture> is a TEXTURE_2D_ARRAY
-        - The Z coordinate to bind if <backingtexture> is a TEXTURE_3D
 
     Errors:
 
@@ -809,7 +808,7 @@ Additions to the OpenGL ES Specification, Version 3.0.6
         existing immutable texture object, or zero.
 
       * INVALID_OPERATION is generated if <backingtexture> is nonzero and not of
-        type TEXTURE_2D, TEXTURE_2D_ARRAY, or TEXTURE_3D.
+        type TEXTURE_2D or TEXTURE_2D_ARRAY.
 
       * INVALID_VALUE is generated if <backingtexture> is nonzero and
         <level> < 0.
