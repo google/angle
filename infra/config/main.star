@@ -290,6 +290,8 @@ def angle_builder(name, cpu):
         "test_mode": test_mode,
     }
 
+    # TODO(343503161): Remove sheriff_rotations after SoM is updated.
+    ci_properties["gardener_rotations"] = ["angle"]
     ci_properties["sheriff_rotations"] = ["angle"]
 
     if is_perf:
