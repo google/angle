@@ -3168,7 +3168,8 @@ def get_unlocked_tail_call(api, cmd_name):
     # - glCompileShader and glLinkProgram -> May perform the compilation / link
     #   in tail call
     #
-    # - eglCreateSync, eglCreateImage, eglDestroySync, eglDestroyImage -> Calls
+    # - eglCreateSync, eglCreateImage, eglDestroySync, eglDestroyImage,
+    #   eglGetCompositorTimingANDROID, eglGetFrameTimestampsANDROID -> Calls
     #   native EGL function in tail call
     #
     if (cmd_name in [
@@ -3193,6 +3194,8 @@ def get_unlocked_tail_call(api, cmd_name):
             'eglCreateSync',
             'eglDestroySyncKHR',
             'eglDestroySync',
+            'eglGetCompositorTimingANDROID',
+            'eglGetFrameTimestampsANDROID',
             'eglSwapBuffers',
             'eglSwapBuffersWithDamageKHR',
             'eglWaitSyncKHR',
