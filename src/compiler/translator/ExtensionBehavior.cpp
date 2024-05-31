@@ -37,6 +37,7 @@
     OP(OES_shader_io_blocks,                           310, 320) \
     OP(EXT_shader_io_blocks,                           310, 320) \
     OP(EXT_gpu_shader5,                                310, 320) \
+    OP(OES_gpu_shader5,                                310, 320) \
     OP(EXT_primitive_bounding_box,                     310, 320) \
     OP(OES_primitive_bounding_box,                     310, 320) \
     OP(EXT_separate_shader_objects,                    100, 320) \

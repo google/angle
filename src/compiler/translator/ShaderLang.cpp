@@ -200,6 +200,7 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     resources->EXT_geometry_shader                            = 0;
     resources->OES_geometry_shader                            = 0;
     resources->EXT_gpu_shader5                                = 0;
+    resources->OES_gpu_shader5                                = 0;
     resources->OES_shader_io_blocks                           = 0;
     resources->EXT_shader_io_blocks                           = 0;
     resources->EXT_shader_non_constant_global_initializers    = 0;

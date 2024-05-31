@@ -3755,6 +3755,7 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.geometryShaderEXT       = false;
         supportedExtensions.geometryShaderOES       = false;
         supportedExtensions.gpuShader5EXT           = false;
+        supportedExtensions.gpuShader5OES           = false;
         supportedExtensions.primitiveBoundingBoxEXT = false;
         supportedExtensions.shaderImageAtomicOES    = false;
         supportedExtensions.shaderIoBlocksEXT       = false;

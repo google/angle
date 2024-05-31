@@ -538,7 +538,10 @@ class GLSLTest_ES3 : public GLSLTest
 {};
 
 class GLSLTest_ES31 : public GLSLTest
-{};
+{
+  protected:
+    void testArrayOfArrayOfSamplerDynamicIndex(const APIExtensionVersion usedExtension);
+};
 
 // Tests the "init output variables" ANGLE shader translator option.
 class GLSLTest_ES31_InitShaderVariables : public GLSLTest
@@ -12188,11 +12191,9 @@ void main(void)
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
 
-// Test that array of array of samplers can be indexed correctly with dynamic indices.
-TEST_P(GLSLTest_ES31, ArrayOfArrayOfSamplerDynamicIndex)
+void GLSLTest_ES31::testArrayOfArrayOfSamplerDynamicIndex(const APIExtensionVersion usedExtension)
 {
-    // Skip if EXT_gpu_shader5 is not enabled.
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_gpu_shader5"));
+    ASSERT(usedExtension == APIExtensionVersion::EXT || usedExtension == APIExtensionVersion::OES);
 
     int maxTextureImageUnits = 0;
     glGetIntegerv(GL_MAX_COMPUTE_TEXTURE_IMAGE_UNITS, &maxTextureImageUnits);
@@ -12204,13 +12205,29 @@ TEST_P(GLSLTest_ES31, ArrayOfArrayOfSamplerDynamicIndex)
     // http://anglebug.com/5546
     ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsOpenGL());
 
-    constexpr char kComputeShader[] = R"(#version 310 es
-#extension GL_EXT_gpu_shader5 : require
+    std::string computeShader;
+    constexpr char kGLSLVersion[]  = R"(#version 310 es
+)";
+    constexpr char kGPUShaderEXT[] = R"(#extension GL_EXT_gpu_shader5 : require
+)";
+    constexpr char kGPUShaderOES[] = R"(#extension GL_OES_gpu_shader5 : require
+)";
 
+    computeShader.append(kGLSLVersion);
+    if (usedExtension == APIExtensionVersion::EXT)
+    {
+        computeShader.append(kGPUShaderEXT);
+    }
+    else
+    {
+        computeShader.append(kGPUShaderOES);
+    }
+
+    constexpr char kComputeShaderBody[] = R"(
 layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
 
 layout(binding = 1, std430) buffer Output {
-  uint success;
+uint success;
 } outbuf;
 
 uniform sampler2D smplr[2][3][4];
@@ -12218,47 +12235,49 @@ layout(binding=0) uniform atomic_uint ac;
 
 bool sampler1DAndAtomicCounter(uvec4 sExpect, in sampler2D s[4], in atomic_uint a, uint aExpect)
 {
-    uvec4 sResult = uvec4(uint(texture(s[0], vec2(0.5, 0.5)).x * 255.0),
-                          uint(texture(s[1], vec2(0.5, 0.5)).x * 255.0),
-                          uint(texture(s[2], vec2(0.5, 0.5)).x * 255.0),
-                          uint(texture(s[3], vec2(0.5, 0.5)).x * 255.0));
-    uint aResult = atomicCounter(a);
+uvec4 sResult = uvec4(uint(texture(s[0], vec2(0.5, 0.5)).x * 255.0),
+                      uint(texture(s[1], vec2(0.5, 0.5)).x * 255.0),
+                      uint(texture(s[2], vec2(0.5, 0.5)).x * 255.0),
+                      uint(texture(s[3], vec2(0.5, 0.5)).x * 255.0));
+uint aResult = atomicCounter(a);
 
-    return sExpect == sResult && aExpect == aResult;
+return sExpect == sResult && aExpect == aResult;
 }
 
 bool sampler3DAndAtomicCounter(in sampler2D s[2][3][4], uint aInitial, in atomic_uint a)
 {
-    bool success = true;
-    // [0][0]
-    success = sampler1DAndAtomicCounter(uvec4(0, 8, 16, 24),
-                    s[atomicCounterIncrement(ac)][0], a, aInitial + 1u) && success;
-    // [1][0]
-    success = sampler1DAndAtomicCounter(uvec4(96, 104, 112, 120),
-                    s[atomicCounterIncrement(ac)][0], a, aInitial + 2u) && success;
-    // [0][1]
-    success = sampler1DAndAtomicCounter(uvec4(32, 40, 48, 56),
-                    s[0][atomicCounterIncrement(ac) - 1u], a, aInitial + 3u) && success;
-    // [0][2]
-    success = sampler1DAndAtomicCounter(uvec4(64, 72, 80, 88),
-                    s[0][atomicCounterIncrement(ac) - 1u], a, aInitial + 4u) && success;
-    // [1][1]
-    success = sampler1DAndAtomicCounter(uvec4(128, 136, 144, 152),
-                    s[1][atomicCounterIncrement(ac) - 3u], a, aInitial + 5u) && success;
-    // [1][2]
-    uint acValue = atomicCounterIncrement(ac);  // Returns 5
-    success = sampler1DAndAtomicCounter(uvec4(160, 168, 176, 184),
-                    s[acValue - 4u][atomicCounterIncrement(ac) - 4u], a, aInitial + 7u) && success;
+bool success = true;
+// [0][0]
+success = sampler1DAndAtomicCounter(uvec4(0, 8, 16, 24),
+                s[atomicCounterIncrement(ac)][0], a, aInitial + 1u) && success;
+// [1][0]
+success = sampler1DAndAtomicCounter(uvec4(96, 104, 112, 120),
+                s[atomicCounterIncrement(ac)][0], a, aInitial + 2u) && success;
+// [0][1]
+success = sampler1DAndAtomicCounter(uvec4(32, 40, 48, 56),
+                s[0][atomicCounterIncrement(ac) - 1u], a, aInitial + 3u) && success;
+// [0][2]
+success = sampler1DAndAtomicCounter(uvec4(64, 72, 80, 88),
+                s[0][atomicCounterIncrement(ac) - 1u], a, aInitial + 4u) && success;
+// [1][1]
+success = sampler1DAndAtomicCounter(uvec4(128, 136, 144, 152),
+                s[1][atomicCounterIncrement(ac) - 3u], a, aInitial + 5u) && success;
+// [1][2]
+uint acValue = atomicCounterIncrement(ac);  // Returns 5
+success = sampler1DAndAtomicCounter(uvec4(160, 168, 176, 184),
+                s[acValue - 4u][atomicCounterIncrement(ac) - 4u], a, aInitial + 7u) && success;
 
-    return success;
+return success;
 }
 
 void main(void)
 {
-    outbuf.success = uint(sampler3DAndAtomicCounter(smplr, 0u, ac));
+outbuf.success = uint(sampler3DAndAtomicCounter(smplr, 0u, ac));
 }
 )";
-    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShader);
+    computeShader.append(kComputeShaderBody);
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, computeShader.c_str());
     EXPECT_GL_NO_ERROR();
 
     glUseProgram(program);
@@ -12322,6 +12341,22 @@ void main(void)
     EXPECT_EQ(ptr[0], 1u);
 
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+}
+
+// Test that array of array of samplers can be indexed correctly with dynamic indices.
+TEST_P(GLSLTest_ES31, ArrayOfArrayOfSamplerDynamicIndexEXT)
+{
+    // Skip if EXT_gpu_shader5 is not enabled.
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_gpu_shader5"));
+    testArrayOfArrayOfSamplerDynamicIndex(APIExtensionVersion::EXT);
+}
+
+// Test that array of array of samplers can be indexed correctly with dynamic indices.
+TEST_P(GLSLTest_ES31, ArrayOfArrayOfSamplerDynamicIndexOES)
+{
+    // Skip if OES_gpu_shader5 is not enabled.
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_gpu_shader5"));
+    testArrayOfArrayOfSamplerDynamicIndex(APIExtensionVersion::OES);
 }
 
 // Test that array of array of samplers can be indexed correctly with dynamic indices.  Uses

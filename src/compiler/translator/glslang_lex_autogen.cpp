@@ -961,9 +961,6 @@ static int ES3_reserved_ES3_extension_ES3_1_keyword(TParseContext *context,
 static int ES3_reserved_ES3_extension_ES3_2_keyword(TParseContext *context,
                                                     TExtension extension,
                                                     int token);
-static int ES3_1_reserved_ES3_1_extension_ES3_2_keyword(TParseContext *context,
-                                                        TExtension extension,
-                                                        int token);
 static int ES3_1_reserved_ES3_1_extension_ES3_2_keyword_2(TParseContext *context,
                                                           TExtension extension1,
                                                           TExtension extension2,
@@ -2133,8 +2130,9 @@ YY_DECL
                 case 127:
                     YY_RULE_SETUP
                     {
-                        return ES3_1_reserved_ES3_1_extension_ES3_2_keyword(
-                            context, TExtension::EXT_gpu_shader5, PRECISE);
+                        return ES3_1_reserved_ES3_1_extension_ES3_2_keyword_2(
+                            context, TExtension::EXT_gpu_shader5, TExtension::OES_gpu_shader5,
+                            PRECISE, PRECISE);
                     }
                     YY_BREAK
                 /* ANGLE_shader_pixel_local_storage */
@@ -4109,29 +4107,6 @@ int ES3_reserved_ES3_extension_ES3_2_keyword(TParseContext *context,
     }
 
     if (context->getShaderVersion() == 300 || context->getShaderVersion() == 310)
-    {
-        return reserved_word(yyscanner);
-    }
-
-    yylval->lex.string = AllocatePoolCharArray(yytext, yyleng);
-    return check_type(yyscanner);
-}
-
-static int ES3_1_reserved_ES3_1_extension_ES3_2_keyword(TParseContext *context,
-                                                        TExtension extension,
-                                                        int token)
-{
-    struct yyguts_t *yyg = (struct yyguts_t *)context->getScanner();
-    yyscan_t yyscanner   = (yyscan_t)context->getScanner();
-
-    // A keyword in GLSL ES 3.20 or GLSL ES 3.10 with enabled extension.
-    if (is_extension_enabled_or_is_core(context, 310, extension, 320))
-    {
-        return token;
-    }
-
-    // A reserved word in GLSL ES 3.10
-    if (context->getShaderVersion() == 310)
     {
         return reserved_word(yyscanner);
     }

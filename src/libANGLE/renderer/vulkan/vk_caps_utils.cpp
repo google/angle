@@ -220,9 +220,9 @@ uint32_t GetTimestampValidBits(const std::vector<VkQueueFamilyProperties> &queue
     return timestampValidBits;
 }
 
-bool CanSupportGPUShader5EXT(const VkPhysicalDeviceFeatures &features)
+bool CanSupportGPUShader5(const VkPhysicalDeviceFeatures &features)
 {
-    // We use the following Vulkan features to implement EXT_gpu_shader5:
+    // We use the following Vulkan features to implement EXT_gpu_shader5 and OES_gpu_shader5:
     // - shaderImageGatherExtended: textureGatherOffset with non-constant offset and
     //   textureGatherOffsets family of functions.
     // - shaderSampledImageArrayDynamicIndexing and shaderUniformBufferArrayDynamicIndexing:
@@ -536,7 +536,9 @@ void Renderer::ensureCapsInitialized() const
     mNativeExtensions.shaderIoBlocksOES = true;
     mNativeExtensions.shaderIoBlocksEXT = true;
 
-    mNativeExtensions.gpuShader5EXT = CanSupportGPUShader5EXT(mPhysicalDeviceFeatures);
+    bool gpuShader5Support          = vk::CanSupportGPUShader5(mPhysicalDeviceFeatures);
+    mNativeExtensions.gpuShader5EXT = gpuShader5Support;
+    mNativeExtensions.gpuShader5OES = gpuShader5Support;
 
     // Only expose texture cubemap array if the physical device supports it.
     mNativeExtensions.textureCubeMapArrayOES = getFeatures().supportsImageCubeArray.enabled;
@@ -544,8 +546,8 @@ void Renderer::ensureCapsInitialized() const
 
     mNativeExtensions.shadowSamplersEXT = true;
 
-    // Enable EXT_external_buffer on Andoid. External buffers are implemented using Android hadware
-    // buffer (struct AHardwareBuffer).
+    // Enable EXT_external_buffer on Android. External buffers are implemented using Android
+    // hardware buffer (struct AHardwareBuffer).
     mNativeExtensions.externalBufferEXT = IsAndroid() && GetAndroidSDKVersion() >= 26;
 
     // From the Vulkan specs:

@@ -57,6 +57,7 @@ enum class TExtension : uint8_t
     OES_EGL_image_external,
     OES_EGL_image_external_essl3,
     OES_geometry_shader,
+    OES_gpu_shader5,
     OES_primitive_bounding_box,
     OES_sample_variables,
     OES_shader_image_atomic,
