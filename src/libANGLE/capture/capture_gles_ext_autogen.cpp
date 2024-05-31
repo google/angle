@@ -12125,4 +12125,34 @@ CallCapture CaptureTextureFoveationParametersQCOM(const State &glState,
     return CallCapture(angle::EntryPoint::GLTextureFoveationParametersQCOM, std::move(paramBuffer));
 }
 
+CallCapture CaptureEndTilingQCOM(const State &glState, bool isCallValid, GLbitfield preserveMask)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addEnumParam("preserveMask", GLESEnum::BufferBitQCOM, ParamType::TGLbitfield,
+                             preserveMask);
+
+    return CallCapture(angle::EntryPoint::GLEndTilingQCOM, std::move(paramBuffer));
+}
+
+CallCapture CaptureStartTilingQCOM(const State &glState,
+                                   bool isCallValid,
+                                   GLuint x,
+                                   GLuint y,
+                                   GLuint width,
+                                   GLuint height,
+                                   GLbitfield preserveMask)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("x", ParamType::TGLuint, x);
+    paramBuffer.addValueParam("y", ParamType::TGLuint, y);
+    paramBuffer.addValueParam("width", ParamType::TGLuint, width);
+    paramBuffer.addValueParam("height", ParamType::TGLuint, height);
+    paramBuffer.addEnumParam("preserveMask", GLESEnum::BufferBitQCOM, ParamType::TGLbitfield,
+                             preserveMask);
+
+    return CallCapture(angle::EntryPoint::GLStartTilingQCOM, std::move(paramBuffer));
+}
+
 }  // namespace gl

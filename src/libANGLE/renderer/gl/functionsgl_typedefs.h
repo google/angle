@@ -1999,6 +1999,14 @@ typedef void(INTERNAL_GL_APIENTRY *PFNGLFRAMEBUFFERFETCHBARRIEREXTPROC)();
 // GL_MESA_framebuffer_flip_y
 typedef void(INTERNAL_GL_APIENTRY *PFNGLFRAMEBUFFERPARAMETERIMESAPROC)(GLenum, GLenum, GLint);
 
+// GL_QCOM_tiled_rendering
+typedef void(INTERNAL_GL_APIENTRY *PFNGLSTARTTILINGQCOMPROC)(GLuint x,
+                                                             GLuint y,
+                                                             GLuint width,
+                                                             GLuint height,
+                                                             GLbitfield preserveMask);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLENDTILINGQCOMPROC)(GLbitfield preserveMask);
+
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_GL_FUNCTIONSGLTYPEDEFS_H_

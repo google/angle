@@ -590,6 +590,9 @@ struct Extensions
     // GL_ANGLE_texture_usage
     bool textureUsageANGLE = false;
 
+    // GL_QCOM_tiled_rendering
+    bool tiledRenderingQCOM = false;
+
     // GL_ANGLE_translated_shader_source
     bool translatedShaderSourceANGLE = false;
 

@@ -946,6 +946,9 @@ void ReplayTraceFunctionCall(const CallCapture &call, const TraceFunctionMap &cu
         case angle::EntryPoint::GLEndQueryEXT:
             glEndQueryEXT(captures[0].value.GLenumVal);
             break;
+        case angle::EntryPoint::GLEndTilingQCOM:
+            glEndTilingQCOM(captures[0].value.GLbitfieldVal);
+            break;
         case angle::EntryPoint::GLEndTransformFeedback:
             glEndTransformFeedback();
             break;
@@ -3193,6 +3196,11 @@ void ReplayTraceFunctionCall(const CallCapture &call, const TraceFunctionMap &cu
                 gSemaphoreMap[captures[0].value.GLuintVal], captures[1].value.GLuintVal,
                 captures[2].value.GLuintConstPointerVal, captures[3].value.GLuintVal,
                 captures[4].value.GLuintConstPointerVal, captures[5].value.GLenumConstPointerVal);
+            break;
+        case angle::EntryPoint::GLStartTilingQCOM:
+            glStartTilingQCOM(captures[0].value.GLuintVal, captures[1].value.GLuintVal,
+                              captures[2].value.GLuintVal, captures[3].value.GLuintVal,
+                              captures[4].value.GLbitfieldVal);
             break;
         case angle::EntryPoint::GLStencilFunc:
             glStencilFunc(captures[0].value.GLenumVal, captures[1].value.GLintVal,

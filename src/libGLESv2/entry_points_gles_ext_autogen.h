@@ -1913,6 +1913,11 @@ ANGLE_EXPORT void GL_APIENTRY GL_TextureFoveationParametersQCOM(GLuint texture,
                                                                 GLfloat gainX,
                                                                 GLfloat gainY,
                                                                 GLfloat foveaArea);
+
+// GL_QCOM_tiled_rendering
+ANGLE_EXPORT void GL_APIENTRY GL_EndTilingQCOM(GLbitfield preserveMask);
+ANGLE_EXPORT void GL_APIENTRY
+GL_StartTilingQCOM(GLuint x, GLuint y, GLuint width, GLuint height, GLbitfield preserveMask);
 }  // extern "C"
 
 #endif  // LIBGLESV2_ENTRY_POINTS_GLES_EXT_AUTOGEN_H_

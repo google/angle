@@ -230,6 +230,7 @@ gles_requestable_extensions = [
     "GL_QCOM_render_shared_exponent",
     "GL_QCOM_shading_rate",
     "GL_QCOM_texture_foveated",
+    "GL_QCOM_tiled_rendering",
     "GL_WEBGL_video_texture",
 ]
 

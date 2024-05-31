@@ -9937,6 +9937,16 @@ void Context::textureFoveationParameters(TextureID texturePacked,
     texture->setFocalPoint(layer, focalPoint, focalX, focalY, gainX, gainY, foveaArea);
 }
 
+void Context::endTiling(GLbitfield preserveMask)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::startTiling(GLuint x, GLuint y, GLuint width, GLuint height, GLbitfield preserveMask)
+{
+    UNIMPLEMENTED();
+}
+
 // ErrorSet implementation.
 ErrorSet::ErrorSet(Debug *debug,
                    const angle::FrontendFeatures &frontendFeatures,

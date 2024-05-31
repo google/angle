@@ -2845,6 +2845,18 @@ angle::CallCapture CaptureTextureFoveationParametersQCOM(const State &glState,
                                                          GLfloat gainY,
                                                          GLfloat foveaArea);
 
+// GL_QCOM_tiled_rendering
+angle::CallCapture CaptureEndTilingQCOM(const State &glState,
+                                        bool isCallValid,
+                                        GLbitfield preserveMask);
+angle::CallCapture CaptureStartTilingQCOM(const State &glState,
+                                          bool isCallValid,
+                                          GLuint x,
+                                          GLuint y,
+                                          GLuint width,
+                                          GLuint height,
+                                          GLbitfield preserveMask);
+
 // Parameter Captures
 
 void CaptureDeletePerfMonitorsAMD_monitors(const State &glState,

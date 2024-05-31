@@ -6030,6 +6030,18 @@ void GL_APIENTRY glTextureFoveationParametersQCOM(GLuint texture,
                                              gainY, foveaArea);
 }
 
+// GL_QCOM_tiled_rendering
+void GL_APIENTRY glEndTilingQCOM(GLbitfield preserveMask)
+{
+    return GL_EndTilingQCOM(preserveMask);
+}
+
+void GL_APIENTRY
+glStartTilingQCOM(GLuint x, GLuint y, GLuint width, GLuint height, GLbitfield preserveMask)
+{
+    return GL_StartTilingQCOM(x, y, width, height, preserveMask);
+}
+
 #if defined(ANGLE_ENABLE_GL_DESKTOP_FRONTEND)
 
 // GL 1.0

@@ -65,7 +65,7 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                 case 0x7:
                     return "GL_QUADS";
                 case 0x8:
-                    return "GL_TESS_CONTROL_SHADER_BIT";
+                    return "GL_COLOR_BUFFER_BIT3_QCOM";
                 case 0xA:
                     return "GL_LINES_ADJACENCY";
                 case 0xB:
@@ -77,7 +77,7 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                 case 0xE:
                     return "GL_PATCHES";
                 case 0x10:
-                    return "GL_MAP_FLUSH_EXPLICIT_BIT";
+                    return "GL_COLOR_BUFFER_BIT4_QCOM";
                 case 0x16:
                     return "GL_UUID_SIZE_EXT";
                 case 0x20:
@@ -483,7 +483,7 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                 case 0x1F03:
                     return "GL_EXTENSIONS";
                 case 0x2000:
-                    return "GL_SHADER_STORAGE_BARRIER_BIT";
+                    return "GL_DEPTH_BUFFER_BIT5_QCOM";
                 case 0x2100:
                     return "GL_MODULATE";
                 case 0x2101:
@@ -556,6 +556,8 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                     return "GL_LIGHT6";
                 case 0x4007:
                     return "GL_LIGHT7";
+                case 0x8000:
+                    return "GL_DEPTH_BUFFER_BIT7_QCOM";
                 case 0x8001:
                     return "GL_CONSTANT_COLOR";
                 case 0x8002:
@@ -2844,6 +2846,38 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                     return "GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE";
                 case 0x9EA0:
                     return "GL_RENDERABILITY_VALIDATION_ANGLE";
+                case 0x10000:
+                    return "GL_STENCIL_BUFFER_BIT0_QCOM";
+                case 0x20000:
+                    return "GL_STENCIL_BUFFER_BIT1_QCOM";
+                case 0x40000:
+                    return "GL_STENCIL_BUFFER_BIT2_QCOM";
+                case 0x80000:
+                    return "GL_STENCIL_BUFFER_BIT3_QCOM";
+                case 0x100000:
+                    return "GL_STENCIL_BUFFER_BIT4_QCOM";
+                case 0x200000:
+                    return "GL_STENCIL_BUFFER_BIT5_QCOM";
+                case 0x400000:
+                    return "GL_STENCIL_BUFFER_BIT6_QCOM";
+                case 0x800000:
+                    return "GL_STENCIL_BUFFER_BIT7_QCOM";
+                case 0x1000000:
+                    return "GL_MULTISAMPLE_BUFFER_BIT0_QCOM";
+                case 0x2000000:
+                    return "GL_MULTISAMPLE_BUFFER_BIT1_QCOM";
+                case 0x4000000:
+                    return "GL_MULTISAMPLE_BUFFER_BIT2_QCOM";
+                case 0x8000000:
+                    return "GL_MULTISAMPLE_BUFFER_BIT3_QCOM";
+                case 0x10000000:
+                    return "GL_MULTISAMPLE_BUFFER_BIT4_QCOM";
+                case 0x20000000:
+                    return "GL_MULTISAMPLE_BUFFER_BIT5_QCOM";
+                case 0x40000000:
+                    return "GL_MULTISAMPLE_BUFFER_BIT6_QCOM";
+                case 0x80000000:
+                    return "GL_MULTISAMPLE_BUFFER_BIT7_QCOM";
                 case 0xFFFFFFFF:
                     return "GL_INVALID_INDEX";
                 default:
@@ -3190,6 +3224,79 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                     return "GL_WRITE_ONLY";
                 case 0x88BA:
                     return "GL_READ_WRITE";
+                default:
+                    return UnknownEnumToString(value);
+            }
+        }
+
+        case GLESEnum::BufferBitQCOM:
+        {
+            switch (value)
+            {
+                case 0x1:
+                    return "GL_COLOR_BUFFER_BIT0_QCOM";
+                case 0x2:
+                    return "GL_COLOR_BUFFER_BIT1_QCOM";
+                case 0x4:
+                    return "GL_COLOR_BUFFER_BIT2_QCOM";
+                case 0x8:
+                    return "GL_COLOR_BUFFER_BIT3_QCOM";
+                case 0x10:
+                    return "GL_COLOR_BUFFER_BIT4_QCOM";
+                case 0x20:
+                    return "GL_COLOR_BUFFER_BIT5_QCOM";
+                case 0x40:
+                    return "GL_COLOR_BUFFER_BIT6_QCOM";
+                case 0x80:
+                    return "GL_COLOR_BUFFER_BIT7_QCOM";
+                case 0x100:
+                    return "GL_DEPTH_BUFFER_BIT0_QCOM";
+                case 0x200:
+                    return "GL_DEPTH_BUFFER_BIT1_QCOM";
+                case 0x400:
+                    return "GL_DEPTH_BUFFER_BIT2_QCOM";
+                case 0x800:
+                    return "GL_DEPTH_BUFFER_BIT3_QCOM";
+                case 0x1000:
+                    return "GL_DEPTH_BUFFER_BIT4_QCOM";
+                case 0x2000:
+                    return "GL_DEPTH_BUFFER_BIT5_QCOM";
+                case 0x4000:
+                    return "GL_DEPTH_BUFFER_BIT6_QCOM";
+                case 0x8000:
+                    return "GL_DEPTH_BUFFER_BIT7_QCOM";
+                case 0x10000:
+                    return "GL_STENCIL_BUFFER_BIT0_QCOM";
+                case 0x20000:
+                    return "GL_STENCIL_BUFFER_BIT1_QCOM";
+                case 0x40000:
+                    return "GL_STENCIL_BUFFER_BIT2_QCOM";
+                case 0x80000:
+                    return "GL_STENCIL_BUFFER_BIT3_QCOM";
+                case 0x100000:
+                    return "GL_STENCIL_BUFFER_BIT4_QCOM";
+                case 0x200000:
+                    return "GL_STENCIL_BUFFER_BIT5_QCOM";
+                case 0x400000:
+                    return "GL_STENCIL_BUFFER_BIT6_QCOM";
+                case 0x800000:
+                    return "GL_STENCIL_BUFFER_BIT7_QCOM";
+                case 0x1000000:
+                    return "GL_MULTISAMPLE_BUFFER_BIT0_QCOM";
+                case 0x2000000:
+                    return "GL_MULTISAMPLE_BUFFER_BIT1_QCOM";
+                case 0x4000000:
+                    return "GL_MULTISAMPLE_BUFFER_BIT2_QCOM";
+                case 0x8000000:
+                    return "GL_MULTISAMPLE_BUFFER_BIT3_QCOM";
+                case 0x10000000:
+                    return "GL_MULTISAMPLE_BUFFER_BIT4_QCOM";
+                case 0x20000000:
+                    return "GL_MULTISAMPLE_BUFFER_BIT5_QCOM";
+                case 0x40000000:
+                    return "GL_MULTISAMPLE_BUFFER_BIT6_QCOM";
+                case 0x80000000:
+                    return "GL_MULTISAMPLE_BUFFER_BIT7_QCOM";
                 default:
                     return UnknownEnumToString(value);
             }

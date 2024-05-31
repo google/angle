@@ -4431,4 +4431,37 @@ bool ValidateTextureFoveationParametersQCOM(const Context *context,
 
     return true;
 }
+
+bool ValidateEndTilingQCOM(const Context *context,
+                           angle::EntryPoint entryPoint,
+                           GLbitfield preserveMask)
+{
+    if (!context->getExtensions().tiledRenderingQCOM)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateStartTilingQCOM(const Context *context,
+                             angle::EntryPoint entryPoint,
+                             GLuint x,
+                             GLuint y,
+                             GLuint width,
+                             GLuint height,
+                             GLbitfield preserveMask)
+{
+    if (!context->getExtensions().tiledRenderingQCOM)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    UNIMPLEMENTED();
+    return false;
+}
+
 }  // namespace gl
