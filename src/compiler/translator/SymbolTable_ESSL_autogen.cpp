@@ -486,7 +486,8 @@ constexpr const TVariable kgl_InvocationIDTCS(
     BuiltInId::gl_InvocationIDTCS,
     BuiltInName::gl_InvocationID,
     SymbolType::BuiltIn,
-    std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+    std::array<TExtension, 2u>{
+        {TExtension::EXT_tessellation_shader, TExtension::OES_tessellation_shader}},
     StaticType::Get<EbtInt, EbpHigh, EvqInvocationID, 1, 1>());
 constexpr const TVariable kgl_InvocationIDTCSES3_2(
     BuiltInId::gl_InvocationIDTCSES3_2,
@@ -566,7 +567,8 @@ constexpr const TVariable kgl_PatchVerticesInTCS(
     BuiltInId::gl_PatchVerticesInTCS,
     BuiltInName::gl_PatchVerticesIn,
     SymbolType::BuiltIn,
-    std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+    std::array<TExtension, 2u>{
+        {TExtension::EXT_tessellation_shader, TExtension::OES_tessellation_shader}},
     StaticType::Get<EbtInt, EbpHigh, EvqPatchVerticesIn, 1, 1>());
 constexpr const TVariable kgl_PatchVerticesInTCSES3_2(
     BuiltInId::gl_PatchVerticesInTCSES3_2,
@@ -578,7 +580,8 @@ constexpr const TVariable kgl_PatchVerticesInTES(
     BuiltInId::gl_PatchVerticesInTES,
     BuiltInName::gl_PatchVerticesIn,
     SymbolType::BuiltIn,
-    std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+    std::array<TExtension, 2u>{
+        {TExtension::EXT_tessellation_shader, TExtension::OES_tessellation_shader}},
     StaticType::Get<EbtInt, EbpHigh, EvqPatchVerticesIn, 1, 1>());
 constexpr const TVariable kgl_PatchVerticesInTESES3_2(
     BuiltInId::gl_PatchVerticesInTESES3_2,
@@ -648,7 +651,8 @@ constexpr const TVariable kgl_PrimitiveIDTCS(
     BuiltInId::gl_PrimitiveIDTCS,
     BuiltInName::gl_PrimitiveID,
     SymbolType::BuiltIn,
-    std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+    std::array<TExtension, 2u>{
+        {TExtension::EXT_tessellation_shader, TExtension::OES_tessellation_shader}},
     StaticType::Get<EbtInt, EbpHigh, EvqPrimitiveID, 1, 1>());
 constexpr const TVariable kgl_PrimitiveIDTCSES3_2(
     BuiltInId::gl_PrimitiveIDTCSES3_2,
@@ -660,7 +664,8 @@ constexpr const TVariable kgl_PrimitiveIDTES(
     BuiltInId::gl_PrimitiveIDTES,
     BuiltInName::gl_PrimitiveID,
     SymbolType::BuiltIn,
-    std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+    std::array<TExtension, 2u>{
+        {TExtension::EXT_tessellation_shader, TExtension::OES_tessellation_shader}},
     StaticType::Get<EbtInt, EbpHigh, EvqPrimitiveID, 1, 1>());
 constexpr const TVariable kgl_PrimitiveIDTESES3_2(
     BuiltInId::gl_PrimitiveIDTESES3_2,
@@ -21664,8 +21669,9 @@ constexpr const TFunction groupMemoryBarrier_(
     false);
 constexpr const TFunction barrierTCS_(BuiltInId::barrierTCS,
                                       BuiltInName::barrierTCS,
-                                      std::array<TExtension, 1u>{
-                                          {TExtension::EXT_tessellation_shader}},
+                                      std::array<TExtension, 2u>{
+                                          {TExtension::EXT_tessellation_shader,
+                                           TExtension::OES_tessellation_shader}},
                                       BuiltInParameters::empty,
                                       0,
                                       StaticType::Get<EbtVoid, EbpUndefined, EvqGlobal, 1, 1>(),
@@ -24839,6 +24845,8 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::ESSL, 320, Shader::TESS_CONTROL_EXT, 0>(&barrierTCSES3_2_),
     Rule::Get<Spec::ESSL, 310, Shader::TESS_CONTROL_EXT, EXT_INDEX(EXT_tessellation_shader)>(
         &barrierTCS_),
+    Rule::Get<Spec::ESSL, 310, Shader::TESS_CONTROL_EXT, EXT_INDEX(OES_tessellation_shader)>(
+        &barrierTCS_),
     Rule::Get<Spec::ESSL, 310, Shader::COMPUTE, 0>(&memoryBarrierShared_),
     Rule::Get<Spec::ESSL, 310, Shader::COMPUTE, 0>(&groupMemoryBarrier_),
     Rule::Get<Spec::ESSL, 320, Shader::GEOMETRY, 0>(&EmitVertexES3_2_),
@@ -24956,68 +24964,104 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&TableBase::m_gl_MaxTessControlInputComponentsES3_2),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_tessellation_shader)>(
         &TableBase::m_gl_MaxTessControlInputComponents),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(OES_tessellation_shader)>(
+        &TableBase::m_gl_MaxTessControlInputComponents),
     Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(
         &TableBase::m_gl_MaxTessControlOutputComponentsES3_2),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_tessellation_shader)>(
+        &TableBase::m_gl_MaxTessControlOutputComponents),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(OES_tessellation_shader)>(
         &TableBase::m_gl_MaxTessControlOutputComponents),
     Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(
         &TableBase::m_gl_MaxTessControlTextureImageUnitsES3_2),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_tessellation_shader)>(
         &TableBase::m_gl_MaxTessControlTextureImageUnits),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(OES_tessellation_shader)>(
+        &TableBase::m_gl_MaxTessControlTextureImageUnits),
     Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(
         &TableBase::m_gl_MaxTessControlUniformComponentsES3_2),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_tessellation_shader)>(
+        &TableBase::m_gl_MaxTessControlUniformComponents),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(OES_tessellation_shader)>(
         &TableBase::m_gl_MaxTessControlUniformComponents),
     Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(
         &TableBase::m_gl_MaxTessControlTotalOutputComponentsES3_2),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_tessellation_shader)>(
         &TableBase::m_gl_MaxTessControlTotalOutputComponents),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(OES_tessellation_shader)>(
+        &TableBase::m_gl_MaxTessControlTotalOutputComponents),
     Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&TableBase::m_gl_MaxTessControlImageUniformsES3_2),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_tessellation_shader)>(
         &TableBase::m_gl_MaxTessControlImageUniforms),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(OES_tessellation_shader)>(
+        &TableBase::m_gl_MaxTessControlImageUniforms),
     Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&TableBase::m_gl_MaxTessControlAtomicCountersES3_2),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_tessellation_shader)>(
+        &TableBase::m_gl_MaxTessControlAtomicCounters),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(OES_tessellation_shader)>(
         &TableBase::m_gl_MaxTessControlAtomicCounters),
     Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(
         &TableBase::m_gl_MaxTessControlAtomicCounterBuffersES3_2),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_tessellation_shader)>(
         &TableBase::m_gl_MaxTessControlAtomicCounterBuffers),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(OES_tessellation_shader)>(
+        &TableBase::m_gl_MaxTessControlAtomicCounterBuffers),
     Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&TableBase::m_gl_MaxTessPatchComponentsES3_2),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_tessellation_shader)>(
+        &TableBase::m_gl_MaxTessPatchComponents),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(OES_tessellation_shader)>(
         &TableBase::m_gl_MaxTessPatchComponents),
     Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&TableBase::m_gl_MaxPatchVerticesES3_2),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_tessellation_shader)>(
         &TableBase::m_gl_MaxPatchVertices),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(OES_tessellation_shader)>(
+        &TableBase::m_gl_MaxPatchVertices),
     Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&TableBase::m_gl_MaxTessGenLevelES3_2),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_tessellation_shader)>(
+        &TableBase::m_gl_MaxTessGenLevel),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(OES_tessellation_shader)>(
         &TableBase::m_gl_MaxTessGenLevel),
     Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(
         &TableBase::m_gl_MaxTessEvaluationInputComponentsES3_2),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_tessellation_shader)>(
         &TableBase::m_gl_MaxTessEvaluationInputComponents),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(OES_tessellation_shader)>(
+        &TableBase::m_gl_MaxTessEvaluationInputComponents),
     Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(
         &TableBase::m_gl_MaxTessEvaluationOutputComponentsES3_2),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_tessellation_shader)>(
+        &TableBase::m_gl_MaxTessEvaluationOutputComponents),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(OES_tessellation_shader)>(
         &TableBase::m_gl_MaxTessEvaluationOutputComponents),
     Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(
         &TableBase::m_gl_MaxTessEvaluationTextureImageUnitsES3_2),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_tessellation_shader)>(
         &TableBase::m_gl_MaxTessEvaluationTextureImageUnits),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(OES_tessellation_shader)>(
+        &TableBase::m_gl_MaxTessEvaluationTextureImageUnits),
     Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(
         &TableBase::m_gl_MaxTessEvaluationUniformComponentsES3_2),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_tessellation_shader)>(
+        &TableBase::m_gl_MaxTessEvaluationUniformComponents),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(OES_tessellation_shader)>(
         &TableBase::m_gl_MaxTessEvaluationUniformComponents),
     Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(
         &TableBase::m_gl_MaxTessEvaluationImageUniformsES3_2),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_tessellation_shader)>(
         &TableBase::m_gl_MaxTessEvaluationImageUniforms),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(OES_tessellation_shader)>(
+        &TableBase::m_gl_MaxTessEvaluationImageUniforms),
     Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(
         &TableBase::m_gl_MaxTessEvaluationAtomicCountersES3_2),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_tessellation_shader)>(
         &TableBase::m_gl_MaxTessEvaluationAtomicCounters),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(OES_tessellation_shader)>(
+        &TableBase::m_gl_MaxTessEvaluationAtomicCounters),
     Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(
         &TableBase::m_gl_MaxTessEvaluationAtomicCounterBuffersES3_2),
     Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_tessellation_shader)>(
+        &TableBase::m_gl_MaxTessEvaluationAtomicCounterBuffers),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(OES_tessellation_shader)>(
         &TableBase::m_gl_MaxTessEvaluationAtomicCounterBuffers),
     Rule::Get<Spec::ESSL, 320, Shader::ALL, 0>(&TableBase::m_gl_MaxSamplesES3_2),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, EXT_INDEX(OES_sample_variables)>(
@@ -25078,7 +25122,11 @@ constexpr SymbolRule kRules[] = {
         &BuiltInVariable::kgl_PrimitiveIDGS),
     Rule::Get<Spec::ESSL, 310, Shader::TESS_CONTROL_EXT, EXT_INDEX(EXT_tessellation_shader)>(
         &BuiltInVariable::kgl_PrimitiveIDTCS),
+    Rule::Get<Spec::ESSL, 310, Shader::TESS_CONTROL_EXT, EXT_INDEX(OES_tessellation_shader)>(
+        &BuiltInVariable::kgl_PrimitiveIDTCS),
     Rule::Get<Spec::ESSL, 310, Shader::TESS_EVALUATION_EXT, EXT_INDEX(EXT_tessellation_shader)>(
+        &BuiltInVariable::kgl_PrimitiveIDTES),
+    Rule::Get<Spec::ESSL, 310, Shader::TESS_EVALUATION_EXT, EXT_INDEX(OES_tessellation_shader)>(
         &BuiltInVariable::kgl_PrimitiveIDTES),
     Rule::Get<Spec::ESSL, 320, Shader::FRAGMENT, 0>(&BuiltInVariable::kgl_LayerES3_2),
     Rule::Get<Spec::ESSL, 320, Shader::GEOMETRY_EXT, 0>(&BuiltInVariable::kgl_LayerGSES3_2),
@@ -25112,7 +25160,11 @@ constexpr SymbolRule kRules[] = {
         &TableBase::m_gl_PositionGS),
     Rule::Get<Spec::ESSL, 310, Shader::TESS_CONTROL_EXT, EXT_INDEX(EXT_tessellation_shader)>(
         &TableBase::m_gl_PositionTCS),
+    Rule::Get<Spec::ESSL, 310, Shader::TESS_CONTROL_EXT, EXT_INDEX(OES_tessellation_shader)>(
+        &TableBase::m_gl_PositionTCS),
     Rule::Get<Spec::ESSL, 310, Shader::TESS_EVALUATION_EXT, EXT_INDEX(EXT_tessellation_shader)>(
+        &TableBase::m_gl_PositionTES),
+    Rule::Get<Spec::ESSL, 310, Shader::TESS_EVALUATION_EXT, EXT_INDEX(OES_tessellation_shader)>(
         &TableBase::m_gl_PositionTES),
     Rule::Get<Spec::ESSL, 100, Shader::VERTEX, 0>(&BuiltInVariable::kgl_PointSize),
     Rule::Get<Spec::ESSL, 300, Shader::VERTEX, 0>(&BuiltInVariable::kgl_PointSize300),
@@ -25166,6 +25218,8 @@ constexpr SymbolRule kRules[] = {
         &BuiltInVariable::kgl_InvocationID),
     Rule::Get<Spec::ESSL, 310, Shader::TESS_CONTROL_EXT, EXT_INDEX(EXT_tessellation_shader)>(
         &BuiltInVariable::kgl_InvocationIDTCS),
+    Rule::Get<Spec::ESSL, 310, Shader::TESS_CONTROL_EXT, EXT_INDEX(OES_tessellation_shader)>(
+        &BuiltInVariable::kgl_InvocationIDTCS),
     Rule::Get<Spec::ESSL, 320, Shader::GEOMETRY_EXT, 0>(&TableBase::m_gl_PerVertexES3_2),
     Rule::Get<Spec::ESSL, 320, Shader::TESS_CONTROL_EXT, 0>(&TableBase::m_gl_PerVertexTCSES3_2),
     Rule::Get<Spec::ESSL, 320, Shader::TESS_EVALUATION_EXT, 0>(&TableBase::m_gl_PerVertexTESES3_2),
@@ -25175,7 +25229,11 @@ constexpr SymbolRule kRules[] = {
         &TableBase::m_gl_PerVertex),
     Rule::Get<Spec::ESSL, 310, Shader::TESS_CONTROL_EXT, EXT_INDEX(EXT_tessellation_shader)>(
         &TableBase::m_gl_PerVertexTCS),
+    Rule::Get<Spec::ESSL, 310, Shader::TESS_CONTROL_EXT, EXT_INDEX(OES_tessellation_shader)>(
+        &TableBase::m_gl_PerVertexTCS),
     Rule::Get<Spec::ESSL, 310, Shader::TESS_EVALUATION_EXT, EXT_INDEX(EXT_tessellation_shader)>(
+        &TableBase::m_gl_PerVertexTES),
+    Rule::Get<Spec::ESSL, 310, Shader::TESS_EVALUATION_EXT, EXT_INDEX(OES_tessellation_shader)>(
         &TableBase::m_gl_PerVertexTES),
     Rule::Get<Spec::ESSL, 320, Shader::GEOMETRY_EXT, 0>(&TableBase::m_gl_inES3_2),
     Rule::Get<Spec::ESSL, 320, Shader::TESS_CONTROL_EXT, 0>(&TableBase::m_gl_inTCSES3_2),
@@ -25186,7 +25244,11 @@ constexpr SymbolRule kRules[] = {
         &TableBase::m_gl_in),
     Rule::Get<Spec::ESSL, 310, Shader::TESS_CONTROL_EXT, EXT_INDEX(EXT_tessellation_shader)>(
         &TableBase::m_gl_inTCS),
+    Rule::Get<Spec::ESSL, 310, Shader::TESS_CONTROL_EXT, EXT_INDEX(OES_tessellation_shader)>(
+        &TableBase::m_gl_inTCS),
     Rule::Get<Spec::ESSL, 310, Shader::TESS_EVALUATION_EXT, EXT_INDEX(EXT_tessellation_shader)>(
+        &TableBase::m_gl_inTES),
+    Rule::Get<Spec::ESSL, 310, Shader::TESS_EVALUATION_EXT, EXT_INDEX(OES_tessellation_shader)>(
         &TableBase::m_gl_inTES),
     Rule::Get<Spec::ESSL, 320, Shader::TESS_CONTROL_EXT, 0>(
         &BuiltInVariable::kgl_PatchVerticesInTCSES3_2),
@@ -25194,7 +25256,11 @@ constexpr SymbolRule kRules[] = {
         &BuiltInVariable::kgl_PatchVerticesInTESES3_2),
     Rule::Get<Spec::ESSL, 310, Shader::TESS_CONTROL_EXT, EXT_INDEX(EXT_tessellation_shader)>(
         &BuiltInVariable::kgl_PatchVerticesInTCS),
+    Rule::Get<Spec::ESSL, 310, Shader::TESS_CONTROL_EXT, EXT_INDEX(OES_tessellation_shader)>(
+        &BuiltInVariable::kgl_PatchVerticesInTCS),
     Rule::Get<Spec::ESSL, 310, Shader::TESS_EVALUATION_EXT, EXT_INDEX(EXT_tessellation_shader)>(
+        &BuiltInVariable::kgl_PatchVerticesInTES),
+    Rule::Get<Spec::ESSL, 310, Shader::TESS_EVALUATION_EXT, EXT_INDEX(OES_tessellation_shader)>(
         &BuiltInVariable::kgl_PatchVerticesInTES),
     Rule::Get<Spec::ESSL, 320, Shader::TESS_CONTROL_EXT, 0>(
         &TableBase::m_gl_TessLevelOuterTCSES3_2),
@@ -25202,7 +25268,11 @@ constexpr SymbolRule kRules[] = {
         &TableBase::m_gl_TessLevelOuterTESES3_2),
     Rule::Get<Spec::ESSL, 310, Shader::TESS_CONTROL_EXT, EXT_INDEX(EXT_tessellation_shader)>(
         &TableBase::m_gl_TessLevelOuterTCS),
+    Rule::Get<Spec::ESSL, 310, Shader::TESS_CONTROL_EXT, EXT_INDEX(OES_tessellation_shader)>(
+        &TableBase::m_gl_TessLevelOuterTCS),
     Rule::Get<Spec::ESSL, 310, Shader::TESS_EVALUATION_EXT, EXT_INDEX(EXT_tessellation_shader)>(
+        &TableBase::m_gl_TessLevelOuterTES),
+    Rule::Get<Spec::ESSL, 310, Shader::TESS_EVALUATION_EXT, EXT_INDEX(OES_tessellation_shader)>(
         &TableBase::m_gl_TessLevelOuterTES),
     Rule::Get<Spec::ESSL, 320, Shader::TESS_CONTROL_EXT, 0>(
         &TableBase::m_gl_TessLevelInnerTCSES3_2),
@@ -25210,24 +25280,38 @@ constexpr SymbolRule kRules[] = {
         &TableBase::m_gl_TessLevelInnerTESES3_2),
     Rule::Get<Spec::ESSL, 310, Shader::TESS_CONTROL_EXT, EXT_INDEX(EXT_tessellation_shader)>(
         &TableBase::m_gl_TessLevelInnerTCS),
+    Rule::Get<Spec::ESSL, 310, Shader::TESS_CONTROL_EXT, EXT_INDEX(OES_tessellation_shader)>(
+        &TableBase::m_gl_TessLevelInnerTCS),
     Rule::Get<Spec::ESSL, 310, Shader::TESS_EVALUATION_EXT, EXT_INDEX(EXT_tessellation_shader)>(
+        &TableBase::m_gl_TessLevelInnerTES),
+    Rule::Get<Spec::ESSL, 310, Shader::TESS_EVALUATION_EXT, EXT_INDEX(OES_tessellation_shader)>(
         &TableBase::m_gl_TessLevelInnerTES),
     Rule::Get<Spec::ESSL, 320, Shader::TESS_CONTROL_EXT, 0>(&TableBase::m_gl_outTCSES3_2),
     Rule::Get<Spec::ESSL, 320, Shader::TESS_EVALUATION_EXT, 0>(&TableBase::m_gl_outTESES3_2),
     Rule::Get<Spec::ESSL, 310, Shader::TESS_CONTROL_EXT, EXT_INDEX(EXT_tessellation_shader)>(
         &TableBase::m_gl_outTCS),
+    Rule::Get<Spec::ESSL, 310, Shader::TESS_CONTROL_EXT, EXT_INDEX(OES_tessellation_shader)>(
+        &TableBase::m_gl_outTCS),
     Rule::Get<Spec::ESSL, 310, Shader::TESS_EVALUATION_EXT, EXT_INDEX(EXT_tessellation_shader)>(
+        &TableBase::m_gl_outTES),
+    Rule::Get<Spec::ESSL, 310, Shader::TESS_EVALUATION_EXT, EXT_INDEX(OES_tessellation_shader)>(
         &TableBase::m_gl_outTES),
     Rule::Get<Spec::ESSL, 320, Shader::TESS_CONTROL_EXT, 0>(&TableBase::m_gl_BoundingBoxTCSES3_2),
     Rule::Get<Spec::ESSL, 320, Shader::TESS_CONTROL_EXT, EXT_INDEX(EXT_tessellation_shader)>(
+        &TableBase::m_gl_BoundingBoxTCS),
+    Rule::Get<Spec::ESSL, 320, Shader::TESS_CONTROL_EXT, EXT_INDEX(OES_tessellation_shader)>(
         &TableBase::m_gl_BoundingBoxTCS),
     Rule::Get<Spec::ESSL, 320, Shader::TESS_CONTROL_EXT, 0>(
         &TableBase::m_gl_BoundingBoxEXTTCSES3_2),
     Rule::Get<Spec::ESSL, 310, Shader::TESS_CONTROL_EXT, EXT_INDEX(EXT_tessellation_shader)>(
         &TableBase::m_gl_BoundingBoxEXTTCS),
+    Rule::Get<Spec::ESSL, 310, Shader::TESS_CONTROL_EXT, EXT_INDEX(OES_tessellation_shader)>(
+        &TableBase::m_gl_BoundingBoxEXTTCS),
     Rule::Get<Spec::ESSL, 320, Shader::TESS_CONTROL_EXT, 0>(
         &TableBase::m_gl_BoundingBoxOESTCSES3_2),
     Rule::Get<Spec::ESSL, 310, Shader::TESS_CONTROL_EXT, EXT_INDEX(EXT_tessellation_shader)>(
+        &TableBase::m_gl_BoundingBoxOESTCS),
+    Rule::Get<Spec::ESSL, 310, Shader::TESS_CONTROL_EXT, EXT_INDEX(OES_tessellation_shader)>(
         &TableBase::m_gl_BoundingBoxOESTCS),
     Rule::Get<Spec::ESSL, 310, Shader::TESS_EVALUATION_EXT, 0>(&BuiltInVariable::kgl_TessCoord),
     Rule::Get<Spec::ESSL, 300, Shader::NOT_COMPUTE, EXT_INDEX(OVR_multiview)>(
@@ -28412,145 +28496,145 @@ constexpr uint16_t kMangledOffsets[] = {
     2245,  // memoryBarrierBuffer_
     2246,  // memoryBarrierImage_
     2247,  // barrier_
-    2250,  // memoryBarrierShared_
-    2251,  // groupMemoryBarrier_
-    2252,  // EmitVertex_
-    2255,  // EndPrimitive_
-    2258,  // subpassLoad_01j
-    2259,  // subpassLoad_01k
-    2260,  // subpassLoad_01l
-    2261,  // subpassLoad_01m00D
-    2262,  // subpassLoad_01n00D
-    2263,  // subpassLoad_01o00D
-    2264,  // numSamples_
-    2265,  // samplePosition_00E
-    2266,  // interpolateAtCenter_00B
-    2267,  // interpolateAtCenter_10B
-    2268,  // interpolateAtCenter_20B
-    2269,  // interpolateAtCenter_30B
-    2270,  // saturate_00B
-    2271,  // saturate_10B
-    2272,  // saturate_20B
-    2273,  // saturate_30B
-    2274,  // gl_DepthRangeParameters
-    2275,  // gl_DepthRange
-    2276,  // gl_NumSamples
-    2278,  // gl_MaxVertexAttribs
-    2279,  // gl_MaxVertexUniformVectors
-    2280,  // gl_MaxVertexTextureImageUnits
-    2281,  // gl_MaxCombinedTextureImageUnits
-    2282,  // gl_MaxTextureImageUnits
-    2283,  // gl_MaxFragmentUniformVectors
-    2284,  // gl_MaxVaryingVectors
-    2285,  // gl_MaxDrawBuffers
-    2286,  // gl_MaxDualSourceDrawBuffersEXT
-    2287,  // gl_MaxVertexOutputVectors
-    2288,  // gl_MaxFragmentInputVectors
-    2289,  // gl_MinProgramTexelOffset
-    2290,  // gl_MaxProgramTexelOffset
-    2291,  // gl_MaxImageUnits
-    2292,  // gl_MaxVertexImageUniforms
-    2293,  // gl_MaxFragmentImageUniforms
-    2294,  // gl_MaxComputeImageUniforms
-    2295,  // gl_MaxCombinedImageUniforms
-    2296,  // gl_MaxCombinedShaderOutputResources
-    2297,  // gl_MaxComputeWorkGroupCount
-    2298,  // gl_MaxComputeWorkGroupSize
-    2299,  // gl_MaxComputeUniformComponents
-    2300,  // gl_MaxComputeTextureImageUnits
-    2301,  // gl_MaxComputeAtomicCounters
-    2302,  // gl_MaxComputeAtomicCounterBuffers
-    2303,  // gl_MaxVertexAtomicCounters
-    2304,  // gl_MaxFragmentAtomicCounters
-    2305,  // gl_MaxCombinedAtomicCounters
-    2306,  // gl_MaxAtomicCounterBindings
-    2307,  // gl_MaxVertexAtomicCounterBuffers
-    2308,  // gl_MaxFragmentAtomicCounterBuffers
-    2309,  // gl_MaxCombinedAtomicCounterBuffers
-    2310,  // gl_MaxAtomicCounterBufferSize
-    2311,  // gl_MaxGeometryInputComponents
-    2314,  // gl_MaxGeometryOutputComponents
-    2317,  // gl_MaxGeometryImageUniforms
-    2320,  // gl_MaxGeometryTextureImageUnits
-    2323,  // gl_MaxGeometryOutputVertices
-    2326,  // gl_MaxGeometryTotalOutputComponents
-    2329,  // gl_MaxGeometryUniformComponents
-    2332,  // gl_MaxGeometryAtomicCounters
-    2335,  // gl_MaxGeometryAtomicCounterBuffers
-    2338,  // gl_MaxTessControlInputComponents
-    2340,  // gl_MaxTessControlOutputComponents
-    2342,  // gl_MaxTessControlTextureImageUnits
-    2344,  // gl_MaxTessControlUniformComponents
-    2346,  // gl_MaxTessControlTotalOutputComponents
-    2348,  // gl_MaxTessControlImageUniforms
-    2350,  // gl_MaxTessControlAtomicCounters
-    2352,  // gl_MaxTessControlAtomicCounterBuffers
-    2354,  // gl_MaxTessPatchComponents
-    2356,  // gl_MaxPatchVertices
-    2358,  // gl_MaxTessGenLevel
-    2360,  // gl_MaxTessEvaluationInputComponents
-    2362,  // gl_MaxTessEvaluationOutputComponents
-    2364,  // gl_MaxTessEvaluationTextureImageUnits
-    2366,  // gl_MaxTessEvaluationUniformComponents
-    2368,  // gl_MaxTessEvaluationImageUniforms
-    2370,  // gl_MaxTessEvaluationAtomicCounters
-    2372,  // gl_MaxTessEvaluationAtomicCounterBuffers
-    2374,  // gl_MaxSamples
-    2376,  // gl_MaxClipDistances
-    2379,  // gl_MaxCullDistances
-    2381,  // gl_MaxCombinedClipAndCullDistances
-    2383,  // gl_FragCoord
-    2385,  // gl_FrontFacing
-    2386,  // gl_PointCoord
-    2387,  // gl_FragColor
-    2388,  // gl_FragData
-    2389,  // gl_FragDepth
-    2390,  // gl_HelperInvocation
-    2391,  // gl_SecondaryFragColorEXT
-    2392,  // gl_SecondaryFragDataEXT
-    2393,  // gl_FragDepthEXT
-    2394,  // gl_LastFragData
-    2397,  // gl_LastFragColor
-    2398,  // gl_LastFragColorARM
-    2399,  // gl_PrimitiveID
-    2409,  // gl_Layer
-    2415,  // gl_SampleID
-    2417,  // gl_SamplePosition
-    2419,  // gl_SampleMaskIn
-    2421,  // gl_SampleMask
-    2423,  // gl_Position
-    2431,  // gl_PointSize
-    2433,  // gl_InstanceID
-    2434,  // Empty
-    2434,  // gl_VertexID
-    2435,  // Empty
-    2435,  // Empty
-    2435,  // gl_DrawID
-    2436,  // gl_BaseVertex
-    2437,  // gl_BaseInstance
-    2438,  // angle_BaseVertex
-    2439,  // angle_BaseInstance
-    2440,  // gl_ClipDistance
-    2443,  // gl_NumWorkGroups
-    2444,  // gl_WorkGroupSize
-    2445,  // gl_WorkGroupID
-    2446,  // gl_LocalInvocationID
-    2447,  // gl_GlobalInvocationID
-    2448,  // gl_LocalInvocationIndex
-    2449,  // gl_PrimitiveIDIn
-    2452,  // gl_InvocationID
-    2457,  // gl_PerVertex
-    2464,  // gl_in
-    2471,  // gl_PatchVerticesIn
-    2475,  // gl_TessLevelOuter
-    2479,  // gl_TessLevelInner
-    2483,  // gl_out
-    2487,  // gl_BoundingBox
-    2489,  // gl_BoundingBoxEXT
-    2491,  // gl_BoundingBoxOES
-    2493,  // gl_TessCoord
-    2494,  // gl_ViewID_OVR
-    2495,  // gl_CullDistance
+    2251,  // memoryBarrierShared_
+    2252,  // groupMemoryBarrier_
+    2253,  // EmitVertex_
+    2256,  // EndPrimitive_
+    2259,  // subpassLoad_01j
+    2260,  // subpassLoad_01k
+    2261,  // subpassLoad_01l
+    2262,  // subpassLoad_01m00D
+    2263,  // subpassLoad_01n00D
+    2264,  // subpassLoad_01o00D
+    2265,  // numSamples_
+    2266,  // samplePosition_00E
+    2267,  // interpolateAtCenter_00B
+    2268,  // interpolateAtCenter_10B
+    2269,  // interpolateAtCenter_20B
+    2270,  // interpolateAtCenter_30B
+    2271,  // saturate_00B
+    2272,  // saturate_10B
+    2273,  // saturate_20B
+    2274,  // saturate_30B
+    2275,  // gl_DepthRangeParameters
+    2276,  // gl_DepthRange
+    2277,  // gl_NumSamples
+    2279,  // gl_MaxVertexAttribs
+    2280,  // gl_MaxVertexUniformVectors
+    2281,  // gl_MaxVertexTextureImageUnits
+    2282,  // gl_MaxCombinedTextureImageUnits
+    2283,  // gl_MaxTextureImageUnits
+    2284,  // gl_MaxFragmentUniformVectors
+    2285,  // gl_MaxVaryingVectors
+    2286,  // gl_MaxDrawBuffers
+    2287,  // gl_MaxDualSourceDrawBuffersEXT
+    2288,  // gl_MaxVertexOutputVectors
+    2289,  // gl_MaxFragmentInputVectors
+    2290,  // gl_MinProgramTexelOffset
+    2291,  // gl_MaxProgramTexelOffset
+    2292,  // gl_MaxImageUnits
+    2293,  // gl_MaxVertexImageUniforms
+    2294,  // gl_MaxFragmentImageUniforms
+    2295,  // gl_MaxComputeImageUniforms
+    2296,  // gl_MaxCombinedImageUniforms
+    2297,  // gl_MaxCombinedShaderOutputResources
+    2298,  // gl_MaxComputeWorkGroupCount
+    2299,  // gl_MaxComputeWorkGroupSize
+    2300,  // gl_MaxComputeUniformComponents
+    2301,  // gl_MaxComputeTextureImageUnits
+    2302,  // gl_MaxComputeAtomicCounters
+    2303,  // gl_MaxComputeAtomicCounterBuffers
+    2304,  // gl_MaxVertexAtomicCounters
+    2305,  // gl_MaxFragmentAtomicCounters
+    2306,  // gl_MaxCombinedAtomicCounters
+    2307,  // gl_MaxAtomicCounterBindings
+    2308,  // gl_MaxVertexAtomicCounterBuffers
+    2309,  // gl_MaxFragmentAtomicCounterBuffers
+    2310,  // gl_MaxCombinedAtomicCounterBuffers
+    2311,  // gl_MaxAtomicCounterBufferSize
+    2312,  // gl_MaxGeometryInputComponents
+    2315,  // gl_MaxGeometryOutputComponents
+    2318,  // gl_MaxGeometryImageUniforms
+    2321,  // gl_MaxGeometryTextureImageUnits
+    2324,  // gl_MaxGeometryOutputVertices
+    2327,  // gl_MaxGeometryTotalOutputComponents
+    2330,  // gl_MaxGeometryUniformComponents
+    2333,  // gl_MaxGeometryAtomicCounters
+    2336,  // gl_MaxGeometryAtomicCounterBuffers
+    2339,  // gl_MaxTessControlInputComponents
+    2342,  // gl_MaxTessControlOutputComponents
+    2345,  // gl_MaxTessControlTextureImageUnits
+    2348,  // gl_MaxTessControlUniformComponents
+    2351,  // gl_MaxTessControlTotalOutputComponents
+    2354,  // gl_MaxTessControlImageUniforms
+    2357,  // gl_MaxTessControlAtomicCounters
+    2360,  // gl_MaxTessControlAtomicCounterBuffers
+    2363,  // gl_MaxTessPatchComponents
+    2366,  // gl_MaxPatchVertices
+    2369,  // gl_MaxTessGenLevel
+    2372,  // gl_MaxTessEvaluationInputComponents
+    2375,  // gl_MaxTessEvaluationOutputComponents
+    2378,  // gl_MaxTessEvaluationTextureImageUnits
+    2381,  // gl_MaxTessEvaluationUniformComponents
+    2384,  // gl_MaxTessEvaluationImageUniforms
+    2387,  // gl_MaxTessEvaluationAtomicCounters
+    2390,  // gl_MaxTessEvaluationAtomicCounterBuffers
+    2393,  // gl_MaxSamples
+    2395,  // gl_MaxClipDistances
+    2398,  // gl_MaxCullDistances
+    2400,  // gl_MaxCombinedClipAndCullDistances
+    2402,  // gl_FragCoord
+    2404,  // gl_FrontFacing
+    2405,  // gl_PointCoord
+    2406,  // gl_FragColor
+    2407,  // gl_FragData
+    2408,  // gl_FragDepth
+    2409,  // gl_HelperInvocation
+    2410,  // gl_SecondaryFragColorEXT
+    2411,  // gl_SecondaryFragDataEXT
+    2412,  // gl_FragDepthEXT
+    2413,  // gl_LastFragData
+    2416,  // gl_LastFragColor
+    2417,  // gl_LastFragColorARM
+    2418,  // gl_PrimitiveID
+    2430,  // gl_Layer
+    2436,  // gl_SampleID
+    2438,  // gl_SamplePosition
+    2440,  // gl_SampleMaskIn
+    2442,  // gl_SampleMask
+    2444,  // gl_Position
+    2454,  // gl_PointSize
+    2456,  // gl_InstanceID
+    2457,  // Empty
+    2457,  // gl_VertexID
+    2458,  // Empty
+    2458,  // Empty
+    2458,  // gl_DrawID
+    2459,  // gl_BaseVertex
+    2460,  // gl_BaseInstance
+    2461,  // angle_BaseVertex
+    2462,  // angle_BaseInstance
+    2463,  // gl_ClipDistance
+    2466,  // gl_NumWorkGroups
+    2467,  // gl_WorkGroupSize
+    2468,  // gl_WorkGroupID
+    2469,  // gl_LocalInvocationID
+    2470,  // gl_GlobalInvocationID
+    2471,  // gl_LocalInvocationIndex
+    2472,  // gl_PrimitiveIDIn
+    2475,  // gl_InvocationID
+    2481,  // gl_PerVertex
+    2490,  // gl_in
+    2499,  // gl_PatchVerticesIn
+    2505,  // gl_TessLevelOuter
+    2511,  // gl_TessLevelInner
+    2517,  // gl_out
+    2523,  // gl_BoundingBox
+    2526,  // gl_BoundingBoxEXT
+    2529,  // gl_BoundingBoxOES
+    2532,  // gl_TessCoord
+    2533,  // gl_ViewID_OVR
+    2534,  // gl_CullDistance
 };
 
 using Ext = TExtension;
@@ -29392,10 +29476,12 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
         static_cast<TVariable *>(m_gl_MaxGeometryAtomicCounterBuffersES3_2)
             ->shareConstPointer(unionArray);
     }
-    m_gl_MaxTessControlInputComponents = new TVariable(
-        BuiltInId::gl_MaxTessControlInputComponents, BuiltInName::gl_MaxTessControlInputComponents,
-        SymbolType::BuiltIn, std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
-        StaticType::Get<EbtInt, EbpMedium, EvqConst, 1, 1>());
+    m_gl_MaxTessControlInputComponents =
+        new TVariable(BuiltInId::gl_MaxTessControlInputComponents,
+                      BuiltInName::gl_MaxTessControlInputComponents, SymbolType::BuiltIn,
+                      std::array<TExtension, 2u>{{TExtension::EXT_tessellation_shader,
+                                                  TExtension::OES_tessellation_shader}},
+                      StaticType::Get<EbtInt, EbpMedium, EvqConst, 1, 1>());
     {
         TConstantUnion *unionArray = new TConstantUnion[1];
         unionArray[0].setIConst(resources.MaxTessControlInputComponents);
@@ -29415,7 +29501,8 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     m_gl_MaxTessControlOutputComponents =
         new TVariable(BuiltInId::gl_MaxTessControlOutputComponents,
                       BuiltInName::gl_MaxTessControlOutputComponents, SymbolType::BuiltIn,
-                      std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+                      std::array<TExtension, 2u>{{TExtension::EXT_tessellation_shader,
+                                                  TExtension::OES_tessellation_shader}},
                       StaticType::Get<EbtInt, EbpMedium, EvqConst, 1, 1>());
     {
         TConstantUnion *unionArray = new TConstantUnion[1];
@@ -29437,7 +29524,8 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     m_gl_MaxTessControlTextureImageUnits =
         new TVariable(BuiltInId::gl_MaxTessControlTextureImageUnits,
                       BuiltInName::gl_MaxTessControlTextureImageUnits, SymbolType::BuiltIn,
-                      std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+                      std::array<TExtension, 2u>{{TExtension::EXT_tessellation_shader,
+                                                  TExtension::OES_tessellation_shader}},
                       StaticType::Get<EbtInt, EbpMedium, EvqConst, 1, 1>());
     {
         TConstantUnion *unionArray = new TConstantUnion[1];
@@ -29459,7 +29547,8 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     m_gl_MaxTessControlUniformComponents =
         new TVariable(BuiltInId::gl_MaxTessControlUniformComponents,
                       BuiltInName::gl_MaxTessControlUniformComponents, SymbolType::BuiltIn,
-                      std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+                      std::array<TExtension, 2u>{{TExtension::EXT_tessellation_shader,
+                                                  TExtension::OES_tessellation_shader}},
                       StaticType::Get<EbtInt, EbpMedium, EvqConst, 1, 1>());
     {
         TConstantUnion *unionArray = new TConstantUnion[1];
@@ -29481,7 +29570,8 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     m_gl_MaxTessControlTotalOutputComponents =
         new TVariable(BuiltInId::gl_MaxTessControlTotalOutputComponents,
                       BuiltInName::gl_MaxTessControlTotalOutputComponents, SymbolType::BuiltIn,
-                      std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+                      std::array<TExtension, 2u>{{TExtension::EXT_tessellation_shader,
+                                                  TExtension::OES_tessellation_shader}},
                       StaticType::Get<EbtInt, EbpMedium, EvqConst, 1, 1>());
     {
         TConstantUnion *unionArray = new TConstantUnion[1];
@@ -29500,10 +29590,12 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
         static_cast<TVariable *>(m_gl_MaxTessControlTotalOutputComponentsES3_2)
             ->shareConstPointer(unionArray);
     }
-    m_gl_MaxTessControlImageUniforms = new TVariable(
-        BuiltInId::gl_MaxTessControlImageUniforms, BuiltInName::gl_MaxTessControlImageUniforms,
-        SymbolType::BuiltIn, std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
-        StaticType::Get<EbtInt, EbpMedium, EvqConst, 1, 1>());
+    m_gl_MaxTessControlImageUniforms =
+        new TVariable(BuiltInId::gl_MaxTessControlImageUniforms,
+                      BuiltInName::gl_MaxTessControlImageUniforms, SymbolType::BuiltIn,
+                      std::array<TExtension, 2u>{{TExtension::EXT_tessellation_shader,
+                                                  TExtension::OES_tessellation_shader}},
+                      StaticType::Get<EbtInt, EbpMedium, EvqConst, 1, 1>());
     {
         TConstantUnion *unionArray = new TConstantUnion[1];
         unionArray[0].setIConst(resources.MaxTessControlImageUniforms);
@@ -29519,10 +29611,12 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
         static_cast<TVariable *>(m_gl_MaxTessControlImageUniformsES3_2)
             ->shareConstPointer(unionArray);
     }
-    m_gl_MaxTessControlAtomicCounters = new TVariable(
-        BuiltInId::gl_MaxTessControlAtomicCounters, BuiltInName::gl_MaxTessControlAtomicCounters,
-        SymbolType::BuiltIn, std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
-        StaticType::Get<EbtInt, EbpMedium, EvqConst, 1, 1>());
+    m_gl_MaxTessControlAtomicCounters =
+        new TVariable(BuiltInId::gl_MaxTessControlAtomicCounters,
+                      BuiltInName::gl_MaxTessControlAtomicCounters, SymbolType::BuiltIn,
+                      std::array<TExtension, 2u>{{TExtension::EXT_tessellation_shader,
+                                                  TExtension::OES_tessellation_shader}},
+                      StaticType::Get<EbtInt, EbpMedium, EvqConst, 1, 1>());
     {
         TConstantUnion *unionArray = new TConstantUnion[1];
         unionArray[0].setIConst(resources.MaxTessControlAtomicCounters);
@@ -29542,7 +29636,8 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     m_gl_MaxTessControlAtomicCounterBuffers =
         new TVariable(BuiltInId::gl_MaxTessControlAtomicCounterBuffers,
                       BuiltInName::gl_MaxTessControlAtomicCounterBuffers, SymbolType::BuiltIn,
-                      std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+                      std::array<TExtension, 2u>{{TExtension::EXT_tessellation_shader,
+                                                  TExtension::OES_tessellation_shader}},
                       StaticType::Get<EbtInt, EbpMedium, EvqConst, 1, 1>());
     {
         TConstantUnion *unionArray = new TConstantUnion[1];
@@ -29561,10 +29656,12 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
         static_cast<TVariable *>(m_gl_MaxTessControlAtomicCounterBuffersES3_2)
             ->shareConstPointer(unionArray);
     }
-    m_gl_MaxTessPatchComponents = new TVariable(
-        BuiltInId::gl_MaxTessPatchComponents, BuiltInName::gl_MaxTessPatchComponents,
-        SymbolType::BuiltIn, std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
-        StaticType::Get<EbtInt, EbpMedium, EvqConst, 1, 1>());
+    m_gl_MaxTessPatchComponents =
+        new TVariable(BuiltInId::gl_MaxTessPatchComponents, BuiltInName::gl_MaxTessPatchComponents,
+                      SymbolType::BuiltIn,
+                      std::array<TExtension, 2u>{{TExtension::EXT_tessellation_shader,
+                                                  TExtension::OES_tessellation_shader}},
+                      StaticType::Get<EbtInt, EbpMedium, EvqConst, 1, 1>());
     {
         TConstantUnion *unionArray = new TConstantUnion[1];
         unionArray[0].setIConst(resources.MaxTessPatchComponents);
@@ -29581,7 +29678,8 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     }
     m_gl_MaxPatchVertices = new TVariable(
         BuiltInId::gl_MaxPatchVertices, BuiltInName::gl_MaxPatchVertices, SymbolType::BuiltIn,
-        std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+        std::array<TExtension, 2u>{
+            {TExtension::EXT_tessellation_shader, TExtension::OES_tessellation_shader}},
         StaticType::Get<EbtInt, EbpMedium, EvqConst, 1, 1>());
     {
         TConstantUnion *unionArray = new TConstantUnion[1];
@@ -29599,7 +29697,8 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     }
     m_gl_MaxTessGenLevel = new TVariable(
         BuiltInId::gl_MaxTessGenLevel, BuiltInName::gl_MaxTessGenLevel, SymbolType::BuiltIn,
-        std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+        std::array<TExtension, 2u>{
+            {TExtension::EXT_tessellation_shader, TExtension::OES_tessellation_shader}},
         StaticType::Get<EbtInt, EbpMedium, EvqConst, 1, 1>());
     {
         TConstantUnion *unionArray = new TConstantUnion[1];
@@ -29618,7 +29717,8 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     m_gl_MaxTessEvaluationInputComponents =
         new TVariable(BuiltInId::gl_MaxTessEvaluationInputComponents,
                       BuiltInName::gl_MaxTessEvaluationInputComponents, SymbolType::BuiltIn,
-                      std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+                      std::array<TExtension, 2u>{{TExtension::EXT_tessellation_shader,
+                                                  TExtension::OES_tessellation_shader}},
                       StaticType::Get<EbtInt, EbpMedium, EvqConst, 1, 1>());
     {
         TConstantUnion *unionArray = new TConstantUnion[1];
@@ -29640,7 +29740,8 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     m_gl_MaxTessEvaluationOutputComponents =
         new TVariable(BuiltInId::gl_MaxTessEvaluationOutputComponents,
                       BuiltInName::gl_MaxTessEvaluationOutputComponents, SymbolType::BuiltIn,
-                      std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+                      std::array<TExtension, 2u>{{TExtension::EXT_tessellation_shader,
+                                                  TExtension::OES_tessellation_shader}},
                       StaticType::Get<EbtInt, EbpMedium, EvqConst, 1, 1>());
     {
         TConstantUnion *unionArray = new TConstantUnion[1];
@@ -29662,7 +29763,8 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     m_gl_MaxTessEvaluationTextureImageUnits =
         new TVariable(BuiltInId::gl_MaxTessEvaluationTextureImageUnits,
                       BuiltInName::gl_MaxTessEvaluationTextureImageUnits, SymbolType::BuiltIn,
-                      std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+                      std::array<TExtension, 2u>{{TExtension::EXT_tessellation_shader,
+                                                  TExtension::OES_tessellation_shader}},
                       StaticType::Get<EbtInt, EbpMedium, EvqConst, 1, 1>());
     {
         TConstantUnion *unionArray = new TConstantUnion[1];
@@ -29684,7 +29786,8 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     m_gl_MaxTessEvaluationUniformComponents =
         new TVariable(BuiltInId::gl_MaxTessEvaluationUniformComponents,
                       BuiltInName::gl_MaxTessEvaluationUniformComponents, SymbolType::BuiltIn,
-                      std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+                      std::array<TExtension, 2u>{{TExtension::EXT_tessellation_shader,
+                                                  TExtension::OES_tessellation_shader}},
                       StaticType::Get<EbtInt, EbpMedium, EvqConst, 1, 1>());
     {
         TConstantUnion *unionArray = new TConstantUnion[1];
@@ -29706,7 +29809,8 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     m_gl_MaxTessEvaluationImageUniforms =
         new TVariable(BuiltInId::gl_MaxTessEvaluationImageUniforms,
                       BuiltInName::gl_MaxTessEvaluationImageUniforms, SymbolType::BuiltIn,
-                      std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+                      std::array<TExtension, 2u>{{TExtension::EXT_tessellation_shader,
+                                                  TExtension::OES_tessellation_shader}},
                       StaticType::Get<EbtInt, EbpMedium, EvqConst, 1, 1>());
     {
         TConstantUnion *unionArray = new TConstantUnion[1];
@@ -29728,7 +29832,8 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     m_gl_MaxTessEvaluationAtomicCounters =
         new TVariable(BuiltInId::gl_MaxTessEvaluationAtomicCounters,
                       BuiltInName::gl_MaxTessEvaluationAtomicCounters, SymbolType::BuiltIn,
-                      std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+                      std::array<TExtension, 2u>{{TExtension::EXT_tessellation_shader,
+                                                  TExtension::OES_tessellation_shader}},
                       StaticType::Get<EbtInt, EbpMedium, EvqConst, 1, 1>());
     {
         TConstantUnion *unionArray = new TConstantUnion[1];
@@ -29750,7 +29855,8 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     m_gl_MaxTessEvaluationAtomicCounterBuffers =
         new TVariable(BuiltInId::gl_MaxTessEvaluationAtomicCounterBuffers,
                       BuiltInName::gl_MaxTessEvaluationAtomicCounterBuffers, SymbolType::BuiltIn,
-                      std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+                      std::array<TExtension, 2u>{{TExtension::EXT_tessellation_shader,
+                                                  TExtension::OES_tessellation_shader}},
                       StaticType::Get<EbtInt, EbpMedium, EvqConst, 1, 1>());
     {
         TConstantUnion *unionArray = new TConstantUnion[1];
@@ -29966,7 +30072,8 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     type_gl_TessLevelOuterTCS->realize();
     m_gl_TessLevelOuterTCS = new TVariable(
         BuiltInId::gl_TessLevelOuterTCS, BuiltInName::gl_TessLevelOuter, SymbolType::BuiltIn,
-        std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+        std::array<TExtension, 2u>{
+            {TExtension::EXT_tessellation_shader, TExtension::OES_tessellation_shader}},
         type_gl_TessLevelOuterTCS);
     TType *type_gl_TessLevelOuterTCSES3_2 = new TType(EbtFloat, EbpHigh, EvqTessLevelOuter, 1);
     type_gl_TessLevelOuterTCSES3_2->makeArray(4u);
@@ -29979,7 +30086,8 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     type_gl_TessLevelInnerTCS->realize();
     m_gl_TessLevelInnerTCS = new TVariable(
         BuiltInId::gl_TessLevelInnerTCS, BuiltInName::gl_TessLevelInner, SymbolType::BuiltIn,
-        std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+        std::array<TExtension, 2u>{
+            {TExtension::EXT_tessellation_shader, TExtension::OES_tessellation_shader}},
         type_gl_TessLevelInnerTCS);
     TType *type_gl_TessLevelInnerTCSES3_2 = new TType(EbtFloat, EbpHigh, EvqTessLevelInner, 1);
     type_gl_TessLevelInnerTCSES3_2->makeArray(2u);
@@ -29991,9 +30099,11 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     fields_gl_PerVertexTCS->push_back(new TField(new TType(EbtFloat, EbpHigh, EvqPosition, 4, 1),
                                                  BuiltInName::gl_Position, zeroSourceLoc,
                                                  SymbolType::BuiltIn));
-    TInterfaceBlock *gl_PerVertexTCS = new TInterfaceBlock(
-        BuiltInId::gl_PerVertexTCS, BuiltInName::gl_PerVertex,
-        std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}}, fields_gl_PerVertexTCS);
+    TInterfaceBlock *gl_PerVertexTCS =
+        new TInterfaceBlock(BuiltInId::gl_PerVertexTCS, BuiltInName::gl_PerVertex,
+                            std::array<TExtension, 2u>{{TExtension::EXT_tessellation_shader,
+                                                        TExtension::OES_tessellation_shader}},
+                            fields_gl_PerVertexTCS);
     m_gl_PerVertexTCS                       = gl_PerVertexTCS;
     TFieldList *fields_gl_PerVertexTCSES3_2 = new TFieldList();
     fields_gl_PerVertexTCSES3_2->push_back(
@@ -30007,7 +30117,8 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     type_gl_inTCS->makeArray(resources.MaxPatchVertices);
     type_gl_inTCS->realize();
     m_gl_inTCS = new TVariable(BuiltInId::gl_inTCS, BuiltInName::gl_in, SymbolType::BuiltIn,
-                               std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+                               std::array<TExtension, 2u>{{TExtension::EXT_tessellation_shader,
+                                                           TExtension::OES_tessellation_shader}},
                                type_gl_inTCS);
     TType *type_gl_inTCSES3_2 = new TType(gl_PerVertex, EvqPerVertexIn, TLayoutQualifier::Create());
     type_gl_inTCSES3_2->makeArray(resources.MaxPatchVertices);
@@ -30019,7 +30130,8 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     type_gl_outTCS->makeArray(resources.MaxPatchVertices);
     type_gl_outTCS->realize();
     m_gl_outTCS = new TVariable(BuiltInId::gl_outTCS, BuiltInName::gl_out, SymbolType::BuiltIn,
-                                std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+                                std::array<TExtension, 2u>{{TExtension::EXT_tessellation_shader,
+                                                            TExtension::OES_tessellation_shader}},
                                 type_gl_outTCS);
     TType *type_gl_outTCSES3_2 =
         new TType(gl_PerVertex, EvqPerVertexOut, TLayoutQualifier::Create());
@@ -30033,7 +30145,9 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     type_gl_BoundingBoxTCS->realize();
     m_gl_BoundingBoxTCS = new TVariable(
         BuiltInId::gl_BoundingBoxTCS, BuiltInName::gl_BoundingBox, SymbolType::BuiltIn,
-        std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}}, type_gl_BoundingBoxTCS);
+        std::array<TExtension, 2u>{
+            {TExtension::EXT_tessellation_shader, TExtension::OES_tessellation_shader}},
+        type_gl_BoundingBoxTCS);
     TType *type_gl_BoundingBoxTCSES3_2 = new TType(EbtFloat, EbpHigh, EvqBoundingBox, 4);
     type_gl_BoundingBoxTCSES3_2->makeArray(2u);
     type_gl_BoundingBoxTCSES3_2->realize();
@@ -30046,7 +30160,8 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
                    zeroSourceLoc, SymbolType::BuiltIn));
     TInterfaceBlock *gl_PerVertexOutTcsBlock =
         new TInterfaceBlock(BuiltInId::gl_PerVertexOutTcsBlock, BuiltInName::gl_PerVertex,
-                            std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+                            std::array<TExtension, 2u>{{TExtension::EXT_tessellation_shader,
+                                                        TExtension::OES_tessellation_shader}},
                             fields_gl_PerVertexOutTcsBlock);
     TFieldList *fields_gl_PerVertexOutTcsBlockES3_2 = new TFieldList();
     fields_gl_PerVertexOutTcsBlockES3_2->push_back(
@@ -30058,9 +30173,11 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     TType *type_gl_PositionTCS = new TType(EbtFloat, EbpHigh, EvqPosition, 4);
     type_gl_PositionTCS->setInterfaceBlock(gl_PerVertexOutTcsBlock);
     type_gl_PositionTCS->realize();
-    m_gl_PositionTCS = new TVariable(
-        BuiltInId::gl_PositionTCS, BuiltInName::gl_Position, SymbolType::BuiltIn,
-        std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}}, type_gl_PositionTCS);
+    m_gl_PositionTCS =
+        new TVariable(BuiltInId::gl_PositionTCS, BuiltInName::gl_Position, SymbolType::BuiltIn,
+                      std::array<TExtension, 2u>{{TExtension::EXT_tessellation_shader,
+                                                  TExtension::OES_tessellation_shader}},
+                      type_gl_PositionTCS);
     TType *type_gl_PositionTCSES3_2 = new TType(EbtFloat, EbpHigh, EvqPosition, 4);
     type_gl_PositionTCSES3_2->setInterfaceBlock(gl_PerVertexOutTcsBlockES3_2);
     type_gl_PositionTCSES3_2->realize();
@@ -30072,7 +30189,8 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     type_gl_BoundingBoxEXTTCS->realize();
     m_gl_BoundingBoxEXTTCS = new TVariable(
         BuiltInId::gl_BoundingBoxEXTTCS, BuiltInName::gl_BoundingBoxEXT, SymbolType::BuiltIn,
-        std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+        std::array<TExtension, 2u>{
+            {TExtension::EXT_tessellation_shader, TExtension::OES_tessellation_shader}},
         type_gl_BoundingBoxEXTTCS);
     TType *type_gl_BoundingBoxEXTTCSES3_2 = new TType(EbtFloat, EbpHigh, EvqBoundingBox, 4);
     type_gl_BoundingBoxEXTTCSES3_2->makeArray(2u);
@@ -30085,7 +30203,8 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     type_gl_BoundingBoxOESTCS->realize();
     m_gl_BoundingBoxOESTCS = new TVariable(
         BuiltInId::gl_BoundingBoxOESTCS, BuiltInName::gl_BoundingBoxOES, SymbolType::BuiltIn,
-        std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+        std::array<TExtension, 2u>{
+            {TExtension::EXT_tessellation_shader, TExtension::OES_tessellation_shader}},
         type_gl_BoundingBoxOESTCS);
     TType *type_gl_BoundingBoxOESTCSES3_2 = new TType(EbtFloat, EbpHigh, EvqBoundingBox, 4);
     type_gl_BoundingBoxOESTCSES3_2->makeArray(2u);
@@ -30098,7 +30217,8 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     type_gl_TessLevelOuterTES->realize();
     m_gl_TessLevelOuterTES = new TVariable(
         BuiltInId::gl_TessLevelOuterTES, BuiltInName::gl_TessLevelOuter, SymbolType::BuiltIn,
-        std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+        std::array<TExtension, 2u>{
+            {TExtension::EXT_tessellation_shader, TExtension::OES_tessellation_shader}},
         type_gl_TessLevelOuterTES);
     TType *type_gl_TessLevelOuterTESES3_2 = new TType(EbtFloat, EbpHigh, EvqTessLevelOuter, 1);
     type_gl_TessLevelOuterTESES3_2->makeArray(4u);
@@ -30111,7 +30231,8 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     type_gl_TessLevelInnerTES->realize();
     m_gl_TessLevelInnerTES = new TVariable(
         BuiltInId::gl_TessLevelInnerTES, BuiltInName::gl_TessLevelInner, SymbolType::BuiltIn,
-        std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+        std::array<TExtension, 2u>{
+            {TExtension::EXT_tessellation_shader, TExtension::OES_tessellation_shader}},
         type_gl_TessLevelInnerTES);
     TType *type_gl_TessLevelInnerTESES3_2 = new TType(EbtFloat, EbpHigh, EvqTessLevelInner, 1);
     type_gl_TessLevelInnerTESES3_2->makeArray(2u);
@@ -30123,9 +30244,11 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     fields_gl_PerVertexTES->push_back(new TField(new TType(EbtFloat, EbpHigh, EvqPosition, 4, 1),
                                                  BuiltInName::gl_Position, zeroSourceLoc,
                                                  SymbolType::BuiltIn));
-    TInterfaceBlock *gl_PerVertexTES = new TInterfaceBlock(
-        BuiltInId::gl_PerVertexTES, BuiltInName::gl_PerVertex,
-        std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}}, fields_gl_PerVertexTES);
+    TInterfaceBlock *gl_PerVertexTES =
+        new TInterfaceBlock(BuiltInId::gl_PerVertexTES, BuiltInName::gl_PerVertex,
+                            std::array<TExtension, 2u>{{TExtension::EXT_tessellation_shader,
+                                                        TExtension::OES_tessellation_shader}},
+                            fields_gl_PerVertexTES);
     m_gl_PerVertexTES                       = gl_PerVertexTES;
     TFieldList *fields_gl_PerVertexTESES3_2 = new TFieldList();
     fields_gl_PerVertexTESES3_2->push_back(
@@ -30139,7 +30262,8 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     type_gl_inTES->makeArray(resources.MaxPatchVertices);
     type_gl_inTES->realize();
     m_gl_inTES = new TVariable(BuiltInId::gl_inTES, BuiltInName::gl_in, SymbolType::BuiltIn,
-                               std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+                               std::array<TExtension, 2u>{{TExtension::EXT_tessellation_shader,
+                                                           TExtension::OES_tessellation_shader}},
                                type_gl_inTES);
     TType *type_gl_inTESES3_2 = new TType(gl_PerVertex, EvqPerVertexIn, TLayoutQualifier::Create());
     type_gl_inTESES3_2->makeArray(resources.MaxPatchVertices);
@@ -30151,7 +30275,8 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     type_gl_outTES->makeArray(resources.MaxPatchVertices);
     type_gl_outTES->realize();
     m_gl_outTES = new TVariable(BuiltInId::gl_outTES, BuiltInName::gl_out, SymbolType::BuiltIn,
-                                std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+                                std::array<TExtension, 2u>{{TExtension::EXT_tessellation_shader,
+                                                            TExtension::OES_tessellation_shader}},
                                 type_gl_outTES);
     TType *type_gl_outTESES3_2 =
         new TType(gl_PerVertex, EvqPerVertexOut, TLayoutQualifier::Create());
@@ -30166,7 +30291,8 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
                    zeroSourceLoc, SymbolType::BuiltIn));
     TInterfaceBlock *gl_PerVertexOutTesBlock =
         new TInterfaceBlock(BuiltInId::gl_PerVertexOutTesBlock, BuiltInName::gl_PerVertex,
-                            std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}},
+                            std::array<TExtension, 2u>{{TExtension::EXT_tessellation_shader,
+                                                        TExtension::OES_tessellation_shader}},
                             fields_gl_PerVertexOutTesBlock);
     TFieldList *fields_gl_PerVertexOutTesBlockES3_2 = new TFieldList();
     fields_gl_PerVertexOutTesBlockES3_2->push_back(
@@ -30178,9 +30304,11 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
     TType *type_gl_PositionTES = new TType(EbtFloat, EbpHigh, EvqPosition, 4);
     type_gl_PositionTES->setInterfaceBlock(gl_PerVertexOutTesBlock);
     type_gl_PositionTES->realize();
-    m_gl_PositionTES = new TVariable(
-        BuiltInId::gl_PositionTES, BuiltInName::gl_Position, SymbolType::BuiltIn,
-        std::array<TExtension, 1u>{{TExtension::EXT_tessellation_shader}}, type_gl_PositionTES);
+    m_gl_PositionTES =
+        new TVariable(BuiltInId::gl_PositionTES, BuiltInName::gl_Position, SymbolType::BuiltIn,
+                      std::array<TExtension, 2u>{{TExtension::EXT_tessellation_shader,
+                                                  TExtension::OES_tessellation_shader}},
+                      type_gl_PositionTES);
     TType *type_gl_PositionTESES3_2 = new TType(EbtFloat, EbpHigh, EvqPosition, 4);
     type_gl_PositionTESES3_2->setInterfaceBlock(gl_PerVertexOutTesBlockES3_2);
     type_gl_PositionTESES3_2->realize();

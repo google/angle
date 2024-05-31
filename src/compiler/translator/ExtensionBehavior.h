@@ -64,6 +64,7 @@ enum class TExtension : uint8_t
     OES_shader_io_blocks,
     OES_shader_multisample_interpolation,
     OES_standard_derivatives,
+    OES_tessellation_shader,
     OES_texture_3D,
     OES_texture_buffer,
     OES_texture_cube_map_array,

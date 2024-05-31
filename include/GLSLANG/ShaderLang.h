@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 353
+#define ANGLE_SH_VERSION 354
 
 enum ShShaderSpec
 {
@@ -523,6 +523,7 @@ struct ShBuiltInResources
     int OES_shader_multisample_interpolation;
     int OES_shader_image_atomic;
     int EXT_tessellation_shader;
+    int OES_tessellation_shader;
     int OES_texture_buffer;
     int EXT_texture_buffer;
     int OES_sample_variables;

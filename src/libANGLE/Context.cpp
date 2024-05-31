@@ -3761,6 +3761,7 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.shaderIoBlocksEXT       = false;
         supportedExtensions.shaderIoBlocksOES       = false;
         supportedExtensions.tessellationShaderEXT   = false;
+        supportedExtensions.tessellationShaderOES   = false;
         supportedExtensions.textureBufferEXT        = false;
         supportedExtensions.textureBufferOES        = false;
 
@@ -4070,7 +4071,7 @@ void Context::initCaps()
     ANGLE_LIMIT_CAP(caps->maxTransformFeedbackSeparateComponents,
                     IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS);
 
-    if (getClientVersion() < ES_3_2 && !extensions->tessellationShaderEXT)
+    if (getClientVersion() < ES_3_2 && !extensions->tessellationShaderAny())
     {
         ANGLE_LIMIT_CAP(caps->maxCombinedTextureImageUnits,
                         IMPLEMENTATION_MAX_ES31_ACTIVE_TEXTURES);
@@ -9658,7 +9659,7 @@ angle::SimpleMutex &Context::getProgramCacheMutex() const
 bool Context::supportsGeometryOrTesselation() const
 {
     return mState.getClientVersion() == ES_3_2 || mState.getExtensions().geometryShaderAny() ||
-           mState.getExtensions().tessellationShaderEXT;
+           mState.getExtensions().tessellationShaderAny();
 }
 
 void Context::dirtyAllState()
@@ -10424,7 +10425,8 @@ void StateCache::updateValidDrawModes(Context *context)
         // active and not paused, regardless of mode. Any primitive type may be used while transform
         // feedback is paused.
         if (!context->getExtensions().geometryShaderAny() &&
-            !context->getExtensions().tessellationShaderEXT && context->getClientVersion() < ES_3_2)
+            !context->getExtensions().tessellationShaderAny() &&
+            context->getClientVersion() < ES_3_2)
         {
             mCachedValidDrawModes.fill(false);
             mCachedValidDrawModes[curTransformFeedback->getPrimitiveMode()] = true;

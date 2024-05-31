@@ -627,7 +627,13 @@ bool ValidatePatchParameteri(const PrivateState &state,
                              GLenum pname,
                              GLint value)
 {
-    return true;
+    if (state.getClientVersion() < ES_3_2)
+    {
+        errors->validationError(entryPoint, GL_INVALID_OPERATION, kES32Required);
+        return false;
+    }
+
+    return ValidatePatchParameteriBase(state, errors, entryPoint, pname, value);
 }
 
 bool ValidatePopDebugGroup(const Context *context, angle::EntryPoint entryPoint)

@@ -221,6 +221,7 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     resources->NV_draw_buffers                                = 0;
     resources->OES_shader_image_atomic                        = 0;
     resources->EXT_tessellation_shader                        = 0;
+    resources->OES_tessellation_shader                        = 0;
     resources->OES_texture_buffer                             = 0;
     resources->EXT_texture_buffer                             = 0;
     resources->OES_sample_variables                           = 0;

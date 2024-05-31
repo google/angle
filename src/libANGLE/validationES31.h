@@ -295,6 +295,13 @@ bool ValidateUseProgramStagesBase(const Context *context,
 bool ValidateValidateProgramPipelineBase(const Context *context,
                                          angle::EntryPoint entryPoint,
                                          ProgramPipelineID pipelinePacked);
+
+// GL_EXT_tessellation_shader
+bool ValidatePatchParameteriBase(const PrivateState &state,
+                                 ErrorSet *errors,
+                                 angle::EntryPoint entryPoint,
+                                 GLenum pname,
+                                 GLint value);
 }  // namespace gl
 
 #endif  // LIBANGLE_VALIDATION_ES31_H_

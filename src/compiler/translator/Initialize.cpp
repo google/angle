@@ -181,6 +181,10 @@ void InitExtensionBehavior(const ShBuiltInResources &resources, TExtensionBehavi
     {
         extBehavior[TExtension::EXT_tessellation_shader] = EBhUndefined;
     }
+    if (resources.OES_tessellation_shader)
+    {
+        extBehavior[TExtension::OES_tessellation_shader] = EBhUndefined;
+    }
     if (resources.OES_texture_buffer)
     {
         extBehavior[TExtension::OES_texture_buffer] = EBhUndefined;

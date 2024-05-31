@@ -241,6 +241,7 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state, egl::Disp
 
     // Tessellation Shader constants
     mResources.EXT_tessellation_shader        = extensions.tessellationShaderEXT;
+    mResources.OES_tessellation_shader        = extensions.tessellationShaderOES;
     mResources.MaxTessControlInputComponents  = caps.maxTessControlInputComponents;
     mResources.MaxTessControlOutputComponents = caps.maxTessControlOutputComponents;
     mResources.MaxTessControlTextureImageUnits =

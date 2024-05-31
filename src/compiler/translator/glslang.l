@@ -106,6 +106,7 @@ static int ES3_1_keyword(TParseContext *context, int token);
 static int ES2_reserved_ES2_extension_ES3_keyword(TParseContext *context, TExtension extension, int token);
 static int ES3_extension(TParseContext *context, TExtension extension, int token);
 static int ES3_reserved_ES3_1_extension_ES3_2_keyword(TParseContext *context, TExtension extension, int token);
+static int ES3_reserved_ES3_1_extension_ES3_2_keyword_2(TParseContext *context, TExtension extension1, TExtension extension2, int token);
 static int ES3_reserved_ES3_extension(TParseContext *context, TExtension extension, int token);
 static int ES3_reserved_ES3_extension_ES3_1_keyword(TParseContext *context, TExtension extension, int token);
 static int ES3_reserved_ES3_extension_ES3_2_keyword(TParseContext *context, TExtension extension, int token);
@@ -165,7 +166,7 @@ O           [0-7]
 "smooth"        { return ES3_keyword(context, SMOOTH); }
 "noperspective" { return ES3_reserved_ES3_extension(context, TExtension::NV_shader_noperspective_interpolation, NOPERSPECTIVE); }
 
-"patch"        { return ES3_reserved_ES3_1_extension_ES3_2_keyword(context, TExtension::EXT_tessellation_shader, PATCH); }
+"patch"        { return ES3_reserved_ES3_1_extension_ES3_2_keyword_2(context, TExtension::EXT_tessellation_shader, TExtension::OES_tessellation_shader, PATCH); }
 
 "in"           { return IN_QUAL; }
 "out"          { return OUT_QUAL; }
@@ -687,6 +688,31 @@ int ES3_reserved_ES3_1_extension_ES3_2_keyword(TParseContext *context, TExtensio
 
     // a keyword in GLSL ES 3.10 with enabled extension
     if (is_extension_enabled_or_is_core(context, 310, extension, 320))
+    {
+        return token;
+    }
+    // a reserved word in GLSL ES 3.00+
+    if (context->getShaderVersion() >= 300)
+    {
+        return reserved_word(yyscanner);
+    }
+
+    // Otherwise can be used as an identifier/type name
+    yylval->lex.string = AllocatePoolCharArray(yytext, yyleng);
+    return check_type(yyscanner);
+}
+
+int ES3_reserved_ES3_1_extension_ES3_2_keyword_2(TParseContext *context, TExtension extension1, TExtension extension2, int token)
+{
+    struct yyguts_t* yyg = (struct yyguts_t*) context->getScanner();
+    yyscan_t yyscanner = (yyscan_t) context->getScanner();
+
+    // a keyword in GLSL ES 3.10 with enabled extension
+    if (is_extension_enabled_or_is_core(context, 310, extension1, 320))
+    {
+        return token;
+    }
+    else if (is_extension_enabled_or_is_core(context, 310, extension2, 320))
     {
         return token;
     }

@@ -3528,7 +3528,7 @@ bool ValidateCreateShader(const Context *context, angle::EntryPoint entryPoint, 
             break;
 
         case ShaderType::TessControl:
-            if (!context->getExtensions().tessellationShaderEXT &&
+            if (!context->getExtensions().tessellationShaderAny() &&
                 context->getClientVersion() < ES_3_2)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidShaderType);
@@ -3537,7 +3537,7 @@ bool ValidateCreateShader(const Context *context, angle::EntryPoint entryPoint, 
             break;
 
         case ShaderType::TessEvaluation:
-            if (!context->getExtensions().tessellationShaderEXT &&
+            if (!context->getExtensions().tessellationShaderAny() &&
                 context->getClientVersion() < ES_3_2)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidShaderType);

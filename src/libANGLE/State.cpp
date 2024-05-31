@@ -1714,7 +1714,7 @@ void PrivateState::getBooleanv(GLenum pname, GLboolean *params) const
             *params = mIsSampleShadingEnabled;
             break;
         case GL_PRIMITIVE_RESTART_FOR_PATCHES_SUPPORTED:
-            *params = isPrimitiveRestartEnabled() && getExtensions().tessellationShaderEXT;
+            *params = isPrimitiveRestartEnabled() && getExtensions().tessellationShaderAny();
             break;
         case GL_ROBUST_FRAGMENT_SHADER_OUTPUT_ANGLE:
             *params = mExtensions.robustFragmentShaderOutputANGLE ? GL_TRUE : GL_FALSE;
