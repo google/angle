@@ -510,10 +510,10 @@ ExternalImageSiblingImpl *DisplayVk::createExternalImageSibling(const gl::Contex
 
 void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
-    outExtensions->createContextRobustness    = getRenderer()->getNativeExtensions().robustnessEXT;
-    outExtensions->surfaceOrientation         = true;
-    outExtensions->displayTextureShareGroup   = true;
-    outExtensions->displaySemaphoreShareGroup = true;
+    outExtensions->createContextRobustness  = getRenderer()->getNativeExtensions().robustnessAny();
+    outExtensions->surfaceOrientation       = true;
+    outExtensions->displayTextureShareGroup = true;
+    outExtensions->displaySemaphoreShareGroup        = true;
     outExtensions->robustResourceInitializationANGLE = true;
 
     // The Vulkan implementation will always say that EGL_KHR_swap_buffers_with_damage is supported.
