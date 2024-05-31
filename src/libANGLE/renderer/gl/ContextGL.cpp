@@ -994,6 +994,23 @@ void ContextGL::framebufferFetchBarrier()
     mRenderer->framebufferFetchBarrier();
 }
 
+angle::Result ContextGL::startTiling(const gl::Context *context,
+                                     const gl::Rectangle &area,
+                                     GLbitfield preserveMask)
+{
+    const FunctionsGL *functions = getFunctions();
+    ANGLE_GL_TRY(context,
+                 functions->startTilingQCOM(area.x, area.y, area.width, area.height, preserveMask));
+    return angle::Result::Continue;
+}
+
+angle::Result ContextGL::endTiling(const gl::Context *context, GLbitfield preserveMask)
+{
+    const FunctionsGL *functions = getFunctions();
+    ANGLE_GL_TRY(context, functions->endTilingQCOM(preserveMask));
+    return angle::Result::Continue;
+}
+
 void ContextGL::setMaxShaderCompilerThreads(GLuint count)
 {
     mRenderer->setMaxShaderCompilerThreads(count);

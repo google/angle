@@ -161,6 +161,10 @@ constexpr state::ExtendedDirtyBits kPixelLocalStorageEXTEnableDisableExtendedDir
 constexpr state::DirtyObjects kPixelLocalStorageEXTEnableDisableDirtyObjects{
     state::DIRTY_OBJECT_DRAW_FRAMEBUFFER};
 
+constexpr state::DirtyBits kTilingDirtyBits{state::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING};
+constexpr state::ExtendedDirtyBits kTilingExtendedDirtyBits{};
+constexpr state::DirtyObjects kTilingDirtyObjects{state::DIRTY_OBJECT_DRAW_FRAMEBUFFER};
+
 egl::ShareGroup *AllocateOrGetShareGroup(egl::Display *display, const gl::Context *shareContext)
 {
     if (shareContext)
@@ -1468,6 +1472,7 @@ void Context::bindReadFramebuffer(FramebufferID framebufferHandle)
 
 void Context::bindDrawFramebuffer(FramebufferID framebufferHandle)
 {
+    endTilingImplicit();
     Framebuffer *framebuffer = mState.mFramebufferManager->checkFramebufferAllocation(
         mImplementation.get(), this, framebufferHandle);
     mState.setDrawFramebufferBinding(framebuffer);
@@ -9350,6 +9355,16 @@ void Context::onUniformBlockBindingUpdated(GLuint uniformBlockIndex)
     mStateCache.onUniformBufferStateChange(this);
 }
 
+void Context::endTilingImplicit()
+{
+    if (getMutablePrivateState()->isTiledRendering())
+    {
+        ANGLE_PERF_WARNING(getState().getDebug(), GL_DEBUG_SEVERITY_LOW,
+                           "Implicitly ending tiled rendering due to framebuffer state change");
+        getMutablePrivateState()->setTiledRendering(false);
+    }
+}
+
 void Context::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message)
 {
     switch (index)
@@ -9945,12 +9960,17 @@ void Context::textureFoveationParameters(TextureID texturePacked,
 
 void Context::endTiling(GLbitfield preserveMask)
 {
-    UNIMPLEMENTED();
+    ANGLE_CONTEXT_TRY(mImplementation->endTiling(this, preserveMask));
+    getMutablePrivateState()->setTiledRendering(false);
 }
 
 void Context::startTiling(GLuint x, GLuint y, GLuint width, GLuint height, GLbitfield preserveMask)
 {
-    UNIMPLEMENTED();
+    ANGLE_CONTEXT_TRY(syncDirtyObjects(kTilingDirtyObjects, Command::Other));
+    ANGLE_CONTEXT_TRY(syncDirtyBits(kTilingDirtyBits, kTilingExtendedDirtyBits, Command::Other));
+    ANGLE_CONTEXT_TRY(
+        mImplementation->startTiling(this, Rectangle(x, y, width, height), preserveMask));
+    getMutablePrivateState()->setTiledRendering(true);
 }
 
 void Context::clearTexImage(TextureID texturePacked,

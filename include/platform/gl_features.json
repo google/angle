@@ -820,6 +820,14 @@
                 "BGRA formats do not appear to be accepted by some qualcomm despite the extension being exposed."
             ],
             "issue": "https://anglebug.com/40096376"
+        },
+        {
+            "name": "disable_tiled_rendering",
+            "category": "Workarounds",
+            "description": [
+                "Disable QCOM_tiled_rendering on devices with rendering artifacts or which improperly expose the extension."
+            ],
+            "issue": "http://skbug.com/9491 https://github.com/flutter/flutter/issues/47164 https://github.com/flutter/flutter/issues/47804"
         }
     ]
 }

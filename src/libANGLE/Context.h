@@ -910,6 +910,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     void onUniformBlockBindingUpdated(GLuint uniformBlockIndex);
 
+    void endTilingImplicit();
+
     State mState;
     bool mShared;
     bool mDisplayTextureShareGroup;
