@@ -208,3 +208,6 @@
 8539 : EGLSyncTest.GlobalFenceSync/* = FAIL
 5773 : Texture2DTestES3.TexStorage2DMultipleYuvSamplersSwitchSamplerUniformValues/* = SKIP_FOR_CAPTURE
 5773 : Texture2DTestES3.TexStorage2DMultipleYuvSamplersSwitchBoundTextures/* = SKIP_FOR_CAPTURE
+
+# Capture not supported
+8677 : EGLMultiContextTest.NonSharedContextsReuseDescritorSetLayoutHandle/* = SKIP_FOR_CAPTURE
