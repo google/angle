@@ -89,6 +89,7 @@ using data from registry_xml.py and gl.xml.
 | [GL_OES_geometry_shader](https://khronos.org/registry/OpenGL/extensions/OES/OES_geometry_shader.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; |  |  | &#x2714; |
 | [GL_OES_get_program_binary](https://khronos.org/registry/OpenGL/extensions/OES/OES_get_program_binary.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_EXT_gpu_shader5](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_gpu_shader5.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; |  | &#x2714; | &#x2714; |
+| [GL_OES_gpu_shader5](https://khronos.org/registry/OpenGL/extensions/OES/OES_gpu_shader5.txt) |  |  |  |  |  |  |  |
 | [GL_ANGLE_instanced_arrays](https://khronos.org/registry/OpenGL/extensions/ANGLE/ANGLE_instanced_arrays.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_EXT_instanced_arrays](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_instanced_arrays.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_OES_mapbuffer](https://khronos.org/registry/OpenGL/extensions/OES/OES_mapbuffer.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |

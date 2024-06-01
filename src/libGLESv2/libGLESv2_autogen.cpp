@@ -5632,6 +5632,8 @@ void GL_APIENTRY glProgramBinaryOES(GLuint program,
     return GL_ProgramBinaryOES(program, binaryFormat, binary, length);
 }
 
+// GL_OES_gpu_shader5
+
 // GL_OES_mapbuffer
 void GL_APIENTRY glGetBufferPointervOES(GLenum target, GLenum pname, void **params)
 {

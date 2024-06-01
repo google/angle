@@ -307,6 +307,7 @@
     /* GL_OES_fbo_render_mipmap */                                                                 \
     /* GL_OES_geometry_shader */                                                                   \
     /* GL_OES_get_program_binary */                                                                \
+    /* GL_OES_gpu_shader5 */                                                                       \
     /* GL_OES_mapbuffer */                                                                         \
     void *mapBuffer(BufferBinding targetPacked, GLenum access);                                    \
     /* GL_OES_packed_depth_stencil */                                                              \

@@ -105,6 +105,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_geometry_shader"] = enableableExtension(&Extensions::geometryShaderOES);
         map["GL_OES_get_program_binary"] = enableableExtension(&Extensions::getProgramBinaryOES);
         map["GL_EXT_gpu_shader5"] = enableableExtension(&Extensions::gpuShader5EXT);
+        map["GL_OES_gpu_shader5"] = enableableExtension(&Extensions::gpuShader5OES);
         map["GL_ANGLE_instanced_arrays"] = enableableExtension(&Extensions::instancedArraysANGLE);
         map["GL_EXT_instanced_arrays"] = enableableExtension(&Extensions::instancedArraysEXT);
         map["GL_OES_mapbuffer"] = enableableExtension(&Extensions::mapbufferOES);

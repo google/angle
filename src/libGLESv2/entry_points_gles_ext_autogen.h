@@ -1677,6 +1677,8 @@ ANGLE_EXPORT void GL_APIENTRY GL_ProgramBinaryOES(GLuint program,
                                                   const void *binary,
                                                   GLint length);
 
+// GL_OES_gpu_shader5
+
 // GL_OES_mapbuffer
 ANGLE_EXPORT void GL_APIENTRY GL_GetBufferPointervOES(GLenum target, GLenum pname, void **params);
 ANGLE_EXPORT void *GL_APIENTRY GL_MapBufferOES(GLenum target, GLenum access);

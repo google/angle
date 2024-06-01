@@ -2485,6 +2485,8 @@ angle::CallCapture CaptureProgramBinaryOES(const State &glState,
                                            const void *binary,
                                            GLint length);
 
+// GL_OES_gpu_shader5
+
 // GL_OES_mapbuffer
 angle::CallCapture CaptureGetBufferPointervOES(const State &glState,
                                                bool isCallValid,

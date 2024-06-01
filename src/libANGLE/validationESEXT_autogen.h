@@ -2486,6 +2486,8 @@ bool ValidateProgramBinaryOES(const Context *context,
                               const void *binary,
                               GLint length);
 
+// GL_OES_gpu_shader5
+
 // GL_OES_mapbuffer
 bool ValidateGetBufferPointervOES(const Context *context,
                                   angle::EntryPoint entryPoint,
