@@ -166,6 +166,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_surfaceless_context"] = esOnlyExtension(&Extensions::surfacelessContextOES);
         map["GL_ARB_sync"] = enableableExtension(&Extensions::syncARB);
         map["GL_EXT_tessellation_shader"] = enableableExtension(&Extensions::tessellationShaderEXT);
+        map["GL_OES_tessellation_shader"] = enableableExtension(&Extensions::tessellationShaderOES);
         map["GL_OES_texture_3D"] = enableableExtension(&Extensions::texture3DOES);
         map["GL_EXT_texture_border_clamp"] = enableableExtension(&Extensions::textureBorderClampEXT);
         map["GL_OES_texture_border_clamp"] = enableableExtension(&Extensions::textureBorderClampOES);

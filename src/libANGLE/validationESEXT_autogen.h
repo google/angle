@@ -2571,6 +2571,13 @@ bool ValidateMinSampleShadingOES(const PrivateState &state,
 
 // GL_OES_surfaceless_context
 
+// GL_OES_tessellation_shader
+bool ValidatePatchParameteriOES(const PrivateState &state,
+                                ErrorSet *errors,
+                                angle::EntryPoint entryPoint,
+                                GLenum pname,
+                                GLint value);
+
 // GL_OES_texture_3D
 bool ValidateCompressedTexImage3DOES(const Context *context,
                                      angle::EntryPoint entryPoint,

@@ -2248,6 +2248,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glPatchParameteri";
         case EntryPoint::GLPatchParameteriEXT:
             return "glPatchParameteriEXT";
+        case EntryPoint::GLPatchParameteriOES:
+            return "glPatchParameteriOES";
         case EntryPoint::GLPauseTransformFeedback:
             return "glPauseTransformFeedback";
         case EntryPoint::GLPixelLocalStorageBarrierANGLE:

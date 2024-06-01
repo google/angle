@@ -1173,6 +1173,9 @@ EXPORTS
 
     ; GL_OES_surfaceless_context
 
+    ; GL_OES_tessellation_shader
+    glPatchParameteriOES
+
     ; GL_OES_texture_3D
     glCompressedTexImage3DOES
     glCompressedTexSubImage3DOES

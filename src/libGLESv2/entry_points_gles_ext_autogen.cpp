@@ -12479,6 +12479,37 @@ void GL_APIENTRY GL_MinSampleShadingOES(GLfloat value)
 
 // GL_OES_surfaceless_context
 
+// GL_OES_tessellation_shader
+void GL_APIENTRY GL_PatchParameteriOES(GLenum pname, GLint value)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLPatchParameteriOES, "context = %d, pname = %s, value = %d", CID(context),
+          GLenumToString(GLESEnum::PatchParameterName, pname), value);
+
+    if (context)
+    {
+        bool isCallValid =
+            (context->skipValidation() ||
+             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
+                                                context->getMutableErrorSetForValidation(),
+                                                angle::EntryPoint::GLPatchParameteriOES) &&
+              ValidatePatchParameteriOES(context->getPrivateState(),
+                                         context->getMutableErrorSetForValidation(),
+                                         angle::EntryPoint::GLPatchParameteriOES, pname, value)));
+        if (isCallValid)
+        {
+            ContextPrivatePatchParameteri(context->getMutablePrivateState(),
+                                          context->getMutablePrivateStateCache(), pname, value);
+        }
+        ANGLE_CAPTURE_GL(PatchParameteriOES, isCallValid, context, pname, value);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+}
+
 // GL_OES_texture_3D
 void GL_APIENTRY GL_CompressedTexImage3DOES(GLenum target,
                                             GLint level,

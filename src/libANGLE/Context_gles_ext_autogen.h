@@ -320,6 +320,7 @@
     /* GL_OES_shader_multisample_interpolation */                                                  \
     /* GL_OES_standard_derivatives */                                                              \
     /* GL_OES_surfaceless_context */                                                               \
+    /* GL_OES_tessellation_shader */                                                               \
     /* GL_OES_texture_3D */                                                                        \
     void framebufferTexture3D(GLenum target, GLenum attachment, TextureTarget textargetPacked,     \
                               TextureID texturePacked, GLint level, GLint zoffset);                \

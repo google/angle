@@ -5723,6 +5723,12 @@ void GL_APIENTRY glMinSampleShadingOES(GLfloat value)
 
 // GL_OES_surfaceless_context
 
+// GL_OES_tessellation_shader
+void GL_APIENTRY glPatchParameteriOES(GLenum pname, GLint value)
+{
+    return GL_PatchParameteriOES(pname, value);
+}
+
 // GL_OES_texture_3D
 void GL_APIENTRY glCompressedTexImage3DOES(GLenum target,
                                            GLint level,
