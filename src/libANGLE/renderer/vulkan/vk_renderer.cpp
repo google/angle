@@ -115,18 +115,6 @@ bool IsRADV(uint32_t vendorId, uint32_t driverId, const char *deviceName)
     return IsAMD(vendorId) && strstr(deviceName, "RADV") != nullptr;
 }
 
-bool IsVenus(uint32_t driverId, const char *deviceName)
-{
-    // Where driver id is available, check against Venus driver id:
-    if (driverId != 0)
-    {
-        return driverId == VK_DRIVER_ID_MESA_VENUS;
-    }
-
-    // Otherwise, look for Venus in the device name.
-    return strstr(deviceName, "Venus") != nullptr;
-}
-
 bool IsQualcommOpenSource(uint32_t vendorId, uint32_t driverId, const char *deviceName)
 {
     if (!IsQualcomm(vendorId))
@@ -4083,9 +4071,6 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     const bool isSwiftShader =
         IsSwiftshader(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID);
 
-    // MESA Virtio-GPU Venus driver: https://docs.mesa3d.org/drivers/venus.html
-    const bool isVenus = IsVenus(mDriverProperties.driverID, mPhysicalDeviceProperties.deviceName);
-
     const bool isGalaxyS23 =
         IsGalaxyS23(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID);
 
@@ -4594,10 +4579,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // required.
     ANGLE_FEATURE_CONDITION(&mFeatures, emulateR32fImageAtomicExchange, true);
 
-    // Whether non-conformant configurations and extensions should be exposed. Always disable for
-    // MESA Virtio-GPU Venus driver for production purpose.
+    // Whether non-conformant configurations and extensions should be exposed.
     ANGLE_FEATURE_CONDITION(&mFeatures, exposeNonConformantExtensionsAndVersions,
-                            kExposeNonConformantExtensionsAndVersions && !isVenus);
+                            kExposeNonConformantExtensionsAndVersions);
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsMemoryBudget,
@@ -4705,9 +4689,6 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     //
     // - Intel on windows
     // - Intel on Linux before mesa 22.0
-    //
-    // The above platforms are not excluded if behind MESA Virtio-GPU Venus driver since WSI is
-    // implemented with external memory there.
     //
     // Without VK_GOOGLE_surfaceless_query, there is no way to automatically deduce this support.
     const bool isMesaAtLeast22_0_0 = mesaVersion.major >= 22;
@@ -5043,10 +5024,6 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // Some ARM drivers may not free memory in "vkFreeCommandBuffers()" without
     // VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT flag.
     ANGLE_FEATURE_CONDITION(&mFeatures, useResetCommandBufferBitForSecondaryPools, isARM);
-
-    // Required to pass android.media.cts.DecodeAccuracyTest with MESA Virtio-GPU Venus driver in
-    // virtualized environment. https://issuetracker.google.com/246378938
-    ANGLE_FEATURE_CONDITION(&mFeatures, preferLinearFilterForYUV, isVenus);
 
     // Intel and AMD mesa drivers need depthBiasConstantFactor to be doubled to align with GL.
     ANGLE_FEATURE_CONDITION(&mFeatures, doubleDepthBiasConstantFactor,
