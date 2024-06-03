@@ -150,6 +150,12 @@ class CLImageVk : public CLMemoryVk
                             const cl::Coordinate &region,
                             uint8_t *imagePtr,
                             PixelColor *packedColor);
+    VkExtent3D getExtentForCopy(const cl::Coordinate &region);
+    VkOffset3D getOffsetForCopy(const cl::MemOffsets &origin);
+    VkImageSubresourceLayers getSubresourceLayersForCopy(const cl::MemOffsets &origin,
+                                                         const cl::Coordinate &region,
+                                                         cl::MemObjectType copyToType,
+                                                         ImageCopyWith imageCopy);
 
   private:
     angle::Result mapImpl() override;

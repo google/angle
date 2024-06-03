@@ -376,20 +376,14 @@ angle::Result CLCommandQueueVk::copyImageToFromBuffer(CLImageVk &imageVk,
     }
     ANGLE_TRY(getCommandBuffer(access, &commandBuffer));
 
-    VkBufferImageCopy copyRegion               = {};
-    copyRegion.bufferOffset                    = bufferOffset;
-    copyRegion.bufferRowLength                 = 0;
-    copyRegion.bufferImageHeight               = 0;
-    copyRegion.imageExtent.width               = static_cast<uint32_t>(region.x);
-    copyRegion.imageExtent.height              = static_cast<uint32_t>(region.y);
-    copyRegion.imageExtent.depth               = static_cast<uint32_t>(region.z);
-    copyRegion.imageOffset.x                   = static_cast<int32_t>(origin.x);
-    copyRegion.imageOffset.y                   = static_cast<int32_t>(origin.y);
-    copyRegion.imageOffset.z                   = static_cast<int32_t>(origin.z);
-    copyRegion.imageSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
-    copyRegion.imageSubresource.baseArrayLayer = 0;
-    copyRegion.imageSubresource.layerCount     = 1;
-    copyRegion.imageSubresource.mipLevel       = 0;
+    VkBufferImageCopy copyRegion = {};
+    copyRegion.bufferOffset      = bufferOffset;
+    copyRegion.bufferRowLength   = 0;
+    copyRegion.bufferImageHeight = 0;
+    copyRegion.imageExtent       = imageVk.getExtentForCopy(region);
+    copyRegion.imageOffset       = imageVk.getOffsetForCopy(origin);
+    copyRegion.imageSubresource  = imageVk.getSubresourceLayersForCopy(
+        origin, region, imageVk.getDesc().type, ImageCopyWith::Buffer);
     if (imageVk.isWritable())
     {
         // We need an execution barrier if image can be written to by kernel
@@ -625,24 +619,14 @@ angle::Result CLCommandQueueVk::enqueueCopyImage(const cl::Image &srcImage,
     access.onImageTransferRead(srcAspectFlags, &srcImageVk->getImage());
     ANGLE_TRY(getCommandBuffer(access, &commandBuffer));
 
-    VkImageCopy copyRegion                   = {};
-    copyRegion.srcSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
-    copyRegion.srcSubresource.mipLevel       = 0;
-    copyRegion.srcSubresource.baseArrayLayer = 0;
-    copyRegion.srcSubresource.layerCount     = 1;
-    copyRegion.dstSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
-    copyRegion.dstSubresource.mipLevel       = 0;
-    copyRegion.dstSubresource.baseArrayLayer = 0;
-    copyRegion.dstSubresource.layerCount     = 1;
-    copyRegion.srcOffset.x                   = static_cast<int32_t>(srcOrigin.x);
-    copyRegion.srcOffset.y                   = static_cast<int32_t>(srcOrigin.y);
-    copyRegion.srcOffset.z                   = static_cast<int32_t>(srcOrigin.z);
-    copyRegion.dstOffset.x                   = static_cast<int32_t>(dstOrigin.x);
-    copyRegion.dstOffset.y                   = static_cast<int32_t>(dstOrigin.y);
-    copyRegion.dstOffset.z                   = static_cast<int32_t>(dstOrigin.z);
-    copyRegion.extent.width                  = static_cast<uint32_t>(region.x);
-    copyRegion.extent.height                 = static_cast<uint32_t>(region.y);
-    copyRegion.extent.depth                  = static_cast<uint32_t>(region.z);
+    VkImageCopy copyRegion    = {};
+    copyRegion.extent         = srcImageVk->getExtentForCopy(region);
+    copyRegion.srcOffset      = srcImageVk->getOffsetForCopy(srcOrigin);
+    copyRegion.dstOffset      = dstImageVk->getOffsetForCopy(dstOrigin);
+    copyRegion.srcSubresource = srcImageVk->getSubresourceLayersForCopy(
+        srcOrigin, region, dstImageVk->getDesc().type, ImageCopyWith::Image);
+    copyRegion.dstSubresource = dstImageVk->getSubresourceLayersForCopy(
+        dstOrigin, region, srcImageVk->getDesc().type, ImageCopyWith::Image);
     if (srcImageVk->isWritable() || dstImageVk->isWritable())
     {
         // We need an execution barrier if buffer can be written to by kernel
