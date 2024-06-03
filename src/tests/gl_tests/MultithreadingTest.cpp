@@ -4052,7 +4052,7 @@ void main()
         }
         ASSERT_GL_NO_ERROR();
 
-        ASSERT_TRUE(threadSynchronization.waitForStep(Step::Finish));
+        threadSynchronization.nextStep(Step::Finish);
     };
     auto thread1 = [&](EGLDisplay dpy, EGLSurface surface, EGLContext context) {
         ThreadSynchronization<Step> threadSynchronization(&currentStep, &mutex, &condVar);
@@ -4082,7 +4082,7 @@ void main()
         EXPECT_PIXEL_RECT_EQ(0, 0, kSurfaceWidth, kSurfaceHeight, expect);
         ASSERT_GL_NO_ERROR();
 
-        threadSynchronization.nextStep(Step::Finish);
+        ASSERT_TRUE(threadSynchronization.waitForStep(Step::Finish));
     };
 
     std::array<LockStepThreadFunc, 2> threadFuncs = {
