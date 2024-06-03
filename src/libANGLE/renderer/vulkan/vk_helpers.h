@@ -169,16 +169,6 @@ GLenum ConvertImageLayoutToGLImageLayout(ImageLayout imageLayout);
 
 VkImageLayout ConvertImageLayoutToVkImageLayout(Context *context, ImageLayout imageLayout);
 
-struct ImageLayoutEventMaps
-{
-    // The list of RefCountedEvents that have been tracked. The mask is used to accelerate the
-    // loop of map
-    angle::PackedEnumMap<ImageLayout, RefCountedEvent> map;
-    angle::PackedEnumBitSet<ImageLayout, uint64_t> mask;
-    // Only used by RenderPassCommandBufferHelper
-    angle::PackedEnumMap<ImageLayout, VkEvent> vkEvents;
-};
-
 // A dynamic buffer is conceptually an infinitely long buffer. Each time you write to the buffer,
 // you will always write to a previously unused portion. After a series of writes, you must flush
 // the buffer data to the device. Buffer lifetime currently assumes that each new allocation will
@@ -1345,7 +1335,7 @@ class CommandBufferHelperCommon : angle::NonCopyable
     bool hasSetEventPendingFlush(const RefCountedEvent &event) const
     {
         ASSERT(event.valid());
-        return mRefCountedEvents.map[event.getImageLayout()] == event;
+        return mRefCountedEvents.map[event.getEventStage()] == event;
     }
 
     // Issue VkCmdSetEvent call for events in this command buffer.
@@ -1449,7 +1439,7 @@ class CommandBufferHelperCommon : angle::NonCopyable
     Semaphore mAcquireNextImageSemaphore;
 
     // The list of RefCountedEvents that have be tracked
-    ImageLayoutEventMaps mRefCountedEvents;
+    EventMaps mRefCountedEvents;
     // The list of RefCountedEvents that should be garbage collected when it gets reset.
     RefCountedEventCollector mRefCountedEventCollector;
 };
@@ -2748,7 +2738,7 @@ class ImageHelper final : public Resource, public angle::Subject
     size_t getLevelUpdateCount(gl::LevelIndex level) const;
 
     // Create event if needed and record the event in ImageHelper::mCurrentEvent.
-    void setCurrentRefCountedEvent(Context *context, ImageLayoutEventMaps &layoutEventMaps);
+    void setCurrentRefCountedEvent(Context *context, EventMaps &eventMaps);
 
   private:
     ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
@@ -3869,6 +3859,10 @@ enum class PresentMode
 
 VkPresentModeKHR ConvertPresentModeToVkPresentMode(PresentMode presentMode);
 PresentMode ConvertVkPresentModeToPresentMode(VkPresentModeKHR vkPresentMode);
+
+bool EventAndPipelineBarrierHaveMatchingStageFlags(
+    const angle::PackedEnumMap<EventStage, VkPipelineStageFlags> &map,
+    VkPipelineStageFlags supportedVulkanPipelineStageMask);
 
 }  // namespace vk
 }  // namespace rx

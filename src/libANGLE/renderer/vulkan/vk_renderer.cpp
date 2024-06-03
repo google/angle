@@ -3636,6 +3636,8 @@ angle::Result Renderer::createDeviceAndQueue(vk::Context *context, uint32_t queu
         mSupportedVulkanShaderStageMask |= VK_SHADER_STAGE_GEOMETRY_BIT;
     }
     mSupportedVulkanPipelineStageMask = ~unsupportedStages;
+    InitializeEventAndPipelineStagesMap(&mEventStageAndPipelineStageFlagsMap,
+                                        mSupportedVulkanPipelineStageMask);
 
     ANGLE_TRY(initializeMemoryAllocator(context));
 
