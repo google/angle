@@ -3760,7 +3760,7 @@ angle::Result State::installProgramExecutable(const Context *context)
     // Make sure the program binary is cached if needed and not already.  This is automatically done
     // on program destruction, but is done here anyway to support situations like Android apps that
     // are typically killed instead of cleanly closed.
-    mProgram->cacheProgramBinaryIfNotAlready(context);
+    mProgram->cacheProgramBinaryIfNecessary(context);
 
     // The bound Program always overrides the ProgramPipeline, so install the executable regardless
     // of whether a program pipeline is bound.
