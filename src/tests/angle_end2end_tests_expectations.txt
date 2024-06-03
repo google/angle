@@ -1439,6 +1439,12 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 8683 LINUX INTEL OPENGL : WEBGLVideoTextureTest.VerifySamplerVideoWEBGLAsParameter/* = SKIP
 8683 LINUX INTEL OPENGL : WEBGLVideoTextureTest.VerifyStateManagerKnowsBindingVideoImage/* = SKIP
 
+// MSRTT D3D11 failures
+4836 D3D11 : MultisampledRenderToTextureES3Test.MultipleLevelsMultisampleMRTDraw2DColor/* = SKIP
+
+// EGL_experimental_present_path_angle D3D11 failure
+347060511 D3D11 : EGLPresentPathD3D11.ClientBufferPresentPathFast/* = SKIP
+
 // Slow tests, should appear last in this file
 5076 : GLSLTest.VerifyMaxVertexUniformVectors* = TIMEOUT
 5076 : GLSLTest.VerifyMaxFragmentUniformVectors* = TIMEOUT

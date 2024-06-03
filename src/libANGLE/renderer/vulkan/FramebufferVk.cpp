@@ -2864,7 +2864,7 @@ angle::Result FramebufferVk::createNewFramebuffer(
                                      ? &info.renderTarget->getResolveImageForRenderPass()
                                      : &info.renderTarget->getImageForRenderPass();
 
-        const gl::LevelIndex level = info.renderTarget->getLevelIndex();
+        const gl::LevelIndex level = info.renderTarget->getLevelIndexForImage(*image);
         const uint32_t layerCount  = info.renderTarget->getLayerCount();
         const gl::Extents extents  = image->getLevelExtents2D(image->toVkLevel(level));
 

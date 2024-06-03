@@ -2197,6 +2197,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                                           gl::TextureType textureType,
                                                           GLint samples,
                                                           const ImageHelper &resolveImage,
+                                                          const VkExtent3D &multisampleImageExtents,
                                                           bool isRobustResourceInitEnabled);
 
     // Helper for initExternal and users to automatically derive the appropriate VkImageCreateInfo
