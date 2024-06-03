@@ -343,15 +343,19 @@ class ProgramExecutableVk : public ProgramExecutableImpl
         vk::PipelineProtectedAccess pipelineProtectedAccess,
         vk::GraphicsPipelineSubset subset,
         std::vector<std::shared_ptr<LinkSubTask>> *postLinkSubTasksOut);
+
     void waitForPostLinkTasks(const gl::Context *context) override
     {
         ContextVk *contextVk = vk::GetImpl(context);
         waitForPostLinkTasksImpl(contextVk);
     }
-
-    void waitForPostLinkTasksIfNecessary(
-        ContextVk *contextVk,
-        const vk::GraphicsPipelineDesc *currentGraphicsPipelineDesc);
+    void waitForComputePostLinkTasks(ContextVk *contextVk)
+    {
+        ASSERT(mExecutable->hasLinkedShaderStage(gl::ShaderType::Compute));
+        waitForPostLinkTasksImpl(contextVk);
+    }
+    void waitForGraphicsPostLinkTasks(ContextVk *contextVk,
+                                      const vk::GraphicsPipelineDesc &currentGraphicsPipelineDesc);
 
     angle::Result mergePipelineCacheToRenderer(vk::Context *context) const;
 
@@ -394,10 +398,9 @@ class ProgramExecutableVk : public ProgramExecutableImpl
     class WarmUpTaskCommon;
     class WarmUpComputeTask;
     class WarmUpGraphicsTask;
+
     friend class ProgramVk;
     friend class ProgramPipelineVk;
-    friend class WarmUpComputeTask;
-    friend class WarmUpGraphicsTask;
 
     void reset(ContextVk *contextVk);
 

@@ -700,8 +700,7 @@ ProgramExecutableVk::ProgramExecutableVk(const gl::ProgramExecutable *executable
     : ProgramExecutableImpl(executable),
       mImmutableSamplersMaxDescriptorCount(1),
       mUniformBufferDescriptorType(VK_DESCRIPTOR_TYPE_MAX_ENUM),
-      mDynamicUniformDescriptorOffsets{},
-      mWarmUpGraphicsPipelineDesc{}
+      mDynamicUniformDescriptorOffsets{}
 {
     mDescriptorSets.fill(VK_NULL_HANDLE);
     for (std::shared_ptr<DefaultUniformBlockVk> &defaultBlock : mDefaultUniformBlocks)
@@ -1026,8 +1025,7 @@ angle::Result ProgramExecutableVk::prepareForWarmUpPipelineCache(
         // Initialize compute program.
         ANGLE_TRY(initComputeProgram(context, &mComputeProgramInfo, mVariableInfoMap));
 
-        *isComputeOut               = true;
-        mWarmUpGraphicsPipelineDesc = {};
+        *isComputeOut = true;
         return angle::Result::Continue;
     }
 
@@ -1168,14 +1166,15 @@ void ProgramExecutableVk::waitForPostLinkTasksImpl(ContextVk *contextVk)
         }
     }
 
-    mWarmUpGraphicsPipelineDesc = {};
     mExecutable->onPostLinkTasksComplete();
 }
 
-void ProgramExecutableVk::waitForPostLinkTasksIfNecessary(
+void ProgramExecutableVk::waitForGraphicsPostLinkTasks(
     ContextVk *contextVk,
-    const vk::GraphicsPipelineDesc *currentGraphicsPipelineDesc)
+    const vk::GraphicsPipelineDesc &currentGraphicsPipelineDesc)
 {
+    ASSERT(mExecutable->hasLinkedShaderStage(gl::ShaderType::Vertex));
+
     if (mExecutable->getPostLinkSubTasks().empty())
     {
         return;
@@ -1186,15 +1185,19 @@ void ProgramExecutableVk::waitForPostLinkTasksIfNecessary(
             ? vk::GraphicsPipelineSubset::Shaders
             : vk::GraphicsPipelineSubset::Complete;
 
-    if (currentGraphicsPipelineDesc &&
-        (mWarmUpGraphicsPipelineDesc.hash(subset) != currentGraphicsPipelineDesc->hash(subset)))
+    if (!mWarmUpGraphicsPipelineDesc.keyEqual(currentGraphicsPipelineDesc, subset))
     {
         // The GraphicsPipelineDesc used for warmup differs from the one used by the draw call.
         // There is no need to wait for the warmup tasks to complete.
         ANGLE_PERF_WARNING(
             contextVk->getDebug(), GL_DEBUG_SEVERITY_LOW,
             "GraphicsPipelineDesc used for warmup differs from the one used by draw.");
-        return;
+
+        // If the warm up tasks are finished anyway, let |waitForPostLinkTasksImpl| clean them up.
+        if (!angle::WaitableEvent::AllReady(&mExecutable->getPostLinkSubTaskWaitableEvents()))
+        {
+            return;
+        }
     }
 
     waitForPostLinkTasksImpl(contextVk);
