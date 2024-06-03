@@ -401,12 +401,6 @@ class ProgramExecutableVk : public ProgramExecutableImpl
 
     void reset(ContextVk *contextVk);
 
-    template <int cols, int rows>
-    void setUniformMatrixfv(GLint location,
-                            GLsizei count,
-                            GLboolean transpose,
-                            const GLfloat *value);
-
     template <class T>
     void getUniformImpl(GLint location, T *v, GLenum entryPointType) const;
 

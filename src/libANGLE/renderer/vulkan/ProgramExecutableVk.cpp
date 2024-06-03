@@ -373,6 +373,37 @@ void SetUniformImpl(const gl::ProgramExecutable *executable,
         }
     }
 }
+
+template <int cols, int rows>
+void SetUniformMatrixfv(const gl::ProgramExecutable *executable,
+                        GLint location,
+                        GLsizei count,
+                        GLboolean transpose,
+                        const GLfloat *value,
+                        DefaultUniformBlockMap *defaultUniformBlocks,
+                        gl::ShaderBitSet *defaultUniformBlocksDirty)
+{
+    const gl::VariableLocation &locationInfo = executable->getUniformLocations()[location];
+    const gl::LinkedUniform &linkedUniform   = executable->getUniforms()[locationInfo.index];
+
+    for (const gl::ShaderType shaderType : executable->getLinkedShaderStages())
+    {
+        DefaultUniformBlockVk &uniformBlock   = *(*defaultUniformBlocks)[shaderType];
+        const sh::BlockMemberInfo &layoutInfo = uniformBlock.uniformLayout[location];
+
+        // Assume an offset of -1 means the block is unused.
+        if (layoutInfo.offset == -1)
+        {
+            continue;
+        }
+
+        SetFloatUniformMatrixGLSL<cols, rows>::Run(
+            locationInfo.arrayIndex, linkedUniform.getBasicTypeElementCount(), count, transpose,
+            value, uniformBlock.uniformData.data() + layoutInfo.offset);
+
+        defaultUniformBlocksDirty->set(shaderType);
+    }
+}
 }  // namespace
 
 class ProgramExecutableVk::WarmUpTaskCommon : public vk::Context, public LinkSubTask
@@ -2332,40 +2363,13 @@ void ProgramExecutableVk::setUniform4uiv(GLint location, GLsizei count, const GL
                    &mDefaultUniformBlocksDirty);
 }
 
-template <int cols, int rows>
-void ProgramExecutableVk::setUniformMatrixfv(GLint location,
-                                             GLsizei count,
-                                             GLboolean transpose,
-                                             const GLfloat *value)
-{
-    const gl::VariableLocation &locationInfo = mExecutable->getUniformLocations()[location];
-    const gl::LinkedUniform &linkedUniform   = mExecutable->getUniforms()[locationInfo.index];
-
-    for (const gl::ShaderType shaderType : mExecutable->getLinkedShaderStages())
-    {
-        DefaultUniformBlockVk &uniformBlock   = *mDefaultUniformBlocks[shaderType];
-        const sh::BlockMemberInfo &layoutInfo = uniformBlock.uniformLayout[location];
-
-        // Assume an offset of -1 means the block is unused.
-        if (layoutInfo.offset == -1)
-        {
-            continue;
-        }
-
-        SetFloatUniformMatrixGLSL<cols, rows>::Run(
-            locationInfo.arrayIndex, linkedUniform.getBasicTypeElementCount(), count, transpose,
-            value, uniformBlock.uniformData.data() + layoutInfo.offset);
-
-        mDefaultUniformBlocksDirty.set(shaderType);
-    }
-}
-
 void ProgramExecutableVk::setUniformMatrix2fv(GLint location,
                                               GLsizei count,
                                               GLboolean transpose,
                                               const GLfloat *value)
 {
-    setUniformMatrixfv<2, 2>(location, count, transpose, value);
+    SetUniformMatrixfv<2, 2>(mExecutable, location, count, transpose, value, &mDefaultUniformBlocks,
+                             &mDefaultUniformBlocksDirty);
 }
 
 void ProgramExecutableVk::setUniformMatrix3fv(GLint location,
@@ -2373,7 +2377,8 @@ void ProgramExecutableVk::setUniformMatrix3fv(GLint location,
                                               GLboolean transpose,
                                               const GLfloat *value)
 {
-    setUniformMatrixfv<3, 3>(location, count, transpose, value);
+    SetUniformMatrixfv<3, 3>(mExecutable, location, count, transpose, value, &mDefaultUniformBlocks,
+                             &mDefaultUniformBlocksDirty);
 }
 
 void ProgramExecutableVk::setUniformMatrix4fv(GLint location,
@@ -2381,7 +2386,8 @@ void ProgramExecutableVk::setUniformMatrix4fv(GLint location,
                                               GLboolean transpose,
                                               const GLfloat *value)
 {
-    setUniformMatrixfv<4, 4>(location, count, transpose, value);
+    SetUniformMatrixfv<4, 4>(mExecutable, location, count, transpose, value, &mDefaultUniformBlocks,
+                             &mDefaultUniformBlocksDirty);
 }
 
 void ProgramExecutableVk::setUniformMatrix2x3fv(GLint location,
@@ -2389,7 +2395,8 @@ void ProgramExecutableVk::setUniformMatrix2x3fv(GLint location,
                                                 GLboolean transpose,
                                                 const GLfloat *value)
 {
-    setUniformMatrixfv<2, 3>(location, count, transpose, value);
+    SetUniformMatrixfv<2, 3>(mExecutable, location, count, transpose, value, &mDefaultUniformBlocks,
+                             &mDefaultUniformBlocksDirty);
 }
 
 void ProgramExecutableVk::setUniformMatrix3x2fv(GLint location,
@@ -2397,7 +2404,8 @@ void ProgramExecutableVk::setUniformMatrix3x2fv(GLint location,
                                                 GLboolean transpose,
                                                 const GLfloat *value)
 {
-    setUniformMatrixfv<3, 2>(location, count, transpose, value);
+    SetUniformMatrixfv<3, 2>(mExecutable, location, count, transpose, value, &mDefaultUniformBlocks,
+                             &mDefaultUniformBlocksDirty);
 }
 
 void ProgramExecutableVk::setUniformMatrix2x4fv(GLint location,
@@ -2405,7 +2413,8 @@ void ProgramExecutableVk::setUniformMatrix2x4fv(GLint location,
                                                 GLboolean transpose,
                                                 const GLfloat *value)
 {
-    setUniformMatrixfv<2, 4>(location, count, transpose, value);
+    SetUniformMatrixfv<2, 4>(mExecutable, location, count, transpose, value, &mDefaultUniformBlocks,
+                             &mDefaultUniformBlocksDirty);
 }
 
 void ProgramExecutableVk::setUniformMatrix4x2fv(GLint location,
@@ -2413,7 +2422,8 @@ void ProgramExecutableVk::setUniformMatrix4x2fv(GLint location,
                                                 GLboolean transpose,
                                                 const GLfloat *value)
 {
-    setUniformMatrixfv<4, 2>(location, count, transpose, value);
+    SetUniformMatrixfv<4, 2>(mExecutable, location, count, transpose, value, &mDefaultUniformBlocks,
+                             &mDefaultUniformBlocksDirty);
 }
 
 void ProgramExecutableVk::setUniformMatrix3x4fv(GLint location,
@@ -2421,7 +2431,8 @@ void ProgramExecutableVk::setUniformMatrix3x4fv(GLint location,
                                                 GLboolean transpose,
                                                 const GLfloat *value)
 {
-    setUniformMatrixfv<3, 4>(location, count, transpose, value);
+    SetUniformMatrixfv<3, 4>(mExecutable, location, count, transpose, value, &mDefaultUniformBlocks,
+                             &mDefaultUniformBlocksDirty);
 }
 
 void ProgramExecutableVk::setUniformMatrix4x3fv(GLint location,
@@ -2429,7 +2440,8 @@ void ProgramExecutableVk::setUniformMatrix4x3fv(GLint location,
                                                 GLboolean transpose,
                                                 const GLfloat *value)
 {
-    setUniformMatrixfv<4, 3>(location, count, transpose, value);
+    SetUniformMatrixfv<4, 3>(mExecutable, location, count, transpose, value, &mDefaultUniformBlocks,
+                             &mDefaultUniformBlocksDirty);
 }
 
 void ProgramExecutableVk::getUniformfv(const gl::Context *context,
