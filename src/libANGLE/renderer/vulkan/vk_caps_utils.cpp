@@ -23,7 +23,8 @@
 
 namespace
 {
-constexpr unsigned int kComponentsPerVector = 4;
+constexpr unsigned int kComponentsPerVector         = 4;
+constexpr bool kEnableLogMissingExtensionsForGLES32 = false;
 }  // anonymous namespace
 
 namespace rx
@@ -270,6 +271,10 @@ ANGLE_INLINE std::vector<bool> GetRequiredGLES32ExtensionList(
 
 void LogMissingExtensionsForGLES32(const gl::Extensions &nativeExtensions)
 {
+    if (!kEnableLogMissingExtensionsForGLES32)
+    {
+        return;
+    }
     std::vector<bool> requiredExtensions = GetRequiredGLES32ExtensionList(nativeExtensions);
 
     constexpr const char *kRequiredExtensionNames[] = {
