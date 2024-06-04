@@ -5193,7 +5193,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsExternalFormatResolve, false);
 #endif
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, useVkEventForImageBarrier, false);
+    ANGLE_FEATURE_CONDITION(&mFeatures, useVkEventForImageBarrier, true);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsMaintenance5,
                             mMaintenance5Features.maintenance5 == VK_TRUE);
