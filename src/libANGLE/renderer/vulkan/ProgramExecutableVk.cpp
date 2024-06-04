@@ -1069,9 +1069,8 @@ angle::Result ProgramExecutableVk::prepareForWarmUpPipelineCache(
     for (bool rotation : *surfaceRotationVariationsOut)
     {
         // Initialize graphics programs.
-        transformOptions.surfaceRotation       = rotation;
-        vk::ShaderProgramHelper *shaderProgram = nullptr;
-        ANGLE_TRY(initGraphicsShaderPrograms(context, transformOptions, &shaderProgram));
+        transformOptions.surfaceRotation = rotation;
+        ANGLE_TRY(initGraphicsShaderPrograms(context, transformOptions));
     }
 
     return angle::Result::Continue;
@@ -1088,8 +1087,7 @@ angle::Result ProgramExecutableVk::warmUpComputePipelineCache(
     // been setup by the caller. Assert that all required state is valid so all that is left will
     // be the call to `vkCreateComputePipelines`
 
-    // Make sure the program and shader modules for compute shader stage is valid.
-    ASSERT(mComputeProgramInfo.getShaderProgram());
+    // Make sure the shader module for compute shader stage is valid.
     ASSERT(mComputeProgramInfo.valid(gl::ShaderType::Compute));
 
     // No synchronization necessary since mPipelineCache is internally synchronized.
@@ -1499,8 +1497,7 @@ ProgramTransformOptions ProgramExecutableVk::getTransformOptions(
 
 angle::Result ProgramExecutableVk::initGraphicsShaderPrograms(
     vk::Context *context,
-    ProgramTransformOptions transformOptions,
-    vk::ShaderProgramHelper **shaderProgramOut)
+    ProgramTransformOptions transformOptions)
 {
     ASSERT(mExecutable->hasLinkedShaderStage(gl::ShaderType::Vertex));
 
@@ -1519,9 +1516,6 @@ angle::Result ProgramExecutableVk::initGraphicsShaderPrograms(
                                             &programInfo, mVariableInfoMap));
     }
 
-    *shaderProgramOut = programInfo.getShaderProgram();
-    ASSERT(*shaderProgramOut);
-
     return angle::Result::Continue;
 }
 
@@ -1536,8 +1530,7 @@ angle::Result ProgramExecutableVk::initProgramThenCreateGraphicsPipeline(
     const vk::GraphicsPipelineDesc **descPtrOut,
     vk::PipelineHelper **pipelineOut)
 {
-    vk::ShaderProgramHelper *shaderProgram = nullptr;
-    ANGLE_TRY(initGraphicsShaderPrograms(context, transformOptions, &shaderProgram));
+    ANGLE_TRY(initGraphicsShaderPrograms(context, transformOptions));
 
     return createGraphicsPipelineImpl(context, transformOptions, pipelineSubset, pipelineCache,
                                       source, desc, compatibleRenderPass, descPtrOut, pipelineOut);
@@ -1562,10 +1555,8 @@ angle::Result ProgramExecutableVk::createGraphicsPipelineImpl(
     const uint8_t programIndex = GetGraphicsProgramIndex(transformOptions);
     ASSERT(programIndex >= 0 && programIndex < ProgramTransformOptions::kPermutationCount);
 
-    // Make sure the program and shader modules for all linked shader stages are valid.
-    ProgramInfo &programInfo               = mGraphicsProgramInfos[programIndex];
-    vk::ShaderProgramHelper *shaderProgram = programInfo.getShaderProgram();
-    ASSERT(shaderProgram);
+    // Make sure the shader modules for all linked shader stages are valid.
+    ProgramInfo &programInfo = mGraphicsProgramInfos[programIndex];
     for (gl::ShaderType shaderType : mExecutable->getLinkedShaderStages())
     {
         ASSERT(programInfo.valid(shaderType));
@@ -1578,7 +1569,7 @@ angle::Result ProgramExecutableVk::createGraphicsPipelineImpl(
     if (pipelineSubset == vk::GraphicsPipelineSubset::Complete)
     {
         CompleteGraphicsPipelineCache &pipelines = mCompleteGraphicsPipelines[programIndex];
-        return shaderProgram->createGraphicsPipeline(
+        return programInfo.getShaderProgram().createGraphicsPipeline(
             context, &pipelines, pipelineCache, compatibleRenderPass, getPipelineLayout(), source,
             desc, specConsts, descPtrOut, pipelineOut);
     }
@@ -1589,7 +1580,7 @@ angle::Result ProgramExecutableVk::createGraphicsPipelineImpl(
         ASSERT(pipelineSubset == vk::GraphicsPipelineSubset::Shaders);
 
         ShadersGraphicsPipelineCache &pipelines = mShadersGraphicsPipelines[programIndex];
-        return shaderProgram->createGraphicsPipeline(
+        return programInfo.getShaderProgram().createGraphicsPipeline(
             context, &pipelines, pipelineCache, compatibleRenderPass, getPipelineLayout(), source,
             desc, specConsts, descPtrOut, pipelineOut);
     }
@@ -1603,8 +1594,7 @@ angle::Result ProgramExecutableVk::getGraphicsPipeline(ContextVk *contextVk,
 {
     ProgramTransformOptions transformOptions = getTransformOptions(contextVk, desc);
 
-    vk::ShaderProgramHelper *shaderProgram = nullptr;
-    ANGLE_TRY(initGraphicsShaderPrograms(contextVk, transformOptions, &shaderProgram));
+    ANGLE_TRY(initGraphicsShaderPrograms(contextVk, transformOptions));
 
     const uint8_t programIndex = GetGraphicsProgramIndex(transformOptions);
 
@@ -1691,10 +1681,8 @@ angle::Result ProgramExecutableVk::linkGraphicsPipelineLibraries(
     {
         vk::SpecializationConstants specConsts = MakeSpecConsts(transformOptions, desc);
 
-        mGraphicsProgramInfos[programIndex]
-            .getShaderProgram()
-            ->createMonolithicPipelineCreationTask(contextVk, pipelineCache, desc,
-                                                   getPipelineLayout(), specConsts, *pipelineOut);
+        mGraphicsProgramInfos[programIndex].getShaderProgram().createMonolithicPipelineCreationTask(
+            contextVk, pipelineCache, desc, getPipelineLayout(), specConsts, *pipelineOut);
     }
 
     return angle::Result::Continue;
@@ -1722,11 +1710,9 @@ angle::Result ProgramExecutableVk::getOrCreateComputePipeline(
         pipelineFlags.set(vk::ComputePipelineFlag::Protected);
     }
 
-    vk::ShaderProgramHelper *shaderProgram = mComputeProgramInfo.getShaderProgram();
-    ASSERT(shaderProgram);
-    return shaderProgram->getOrCreateComputePipeline(context, &mComputePipelines, pipelineCache,
-                                                     getPipelineLayout(), pipelineFlags, source,
-                                                     pipelineOut, nullptr, nullptr);
+    return mComputeProgramInfo.getShaderProgram().getOrCreateComputePipeline(
+        context, &mComputePipelines, pipelineCache, getPipelineLayout(), pipelineFlags, source,
+        pipelineOut, nullptr, nullptr);
 }
 
 angle::Result ProgramExecutableVk::createPipelineLayout(

@@ -85,7 +85,7 @@ class ProgramInfo final : angle::NonCopyable
         return mProgramHelper.valid(shaderType);
     }
 
-    vk::ShaderProgramHelper *getShaderProgram() { return &mProgramHelper; }
+    vk::ShaderProgramHelper &getShaderProgram() { return mProgramHelper; }
 
   private:
     vk::ShaderProgramHelper mProgramHelper;
@@ -473,8 +473,7 @@ class ProgramExecutableVk : public ProgramExecutableImpl
     ProgramTransformOptions getTransformOptions(ContextVk *contextVk,
                                                 const vk::GraphicsPipelineDesc &desc);
     angle::Result initGraphicsShaderPrograms(vk::Context *context,
-                                             ProgramTransformOptions transformOptions,
-                                             vk::ShaderProgramHelper **shaderProgramOut);
+                                             ProgramTransformOptions transformOptions);
     angle::Result initProgramThenCreateGraphicsPipeline(vk::Context *context,
                                                         ProgramTransformOptions transformOptions,
                                                         vk::GraphicsPipelineSubset pipelineSubset,
