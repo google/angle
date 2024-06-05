@@ -65,9 +65,6 @@ void InitializeEventAndPipelineStagesMap(
     {
         flag &= supportedVulkanPipelineStageMask;
     }
-    // kEventStageAndPipelineStageFlagsMap supposedly should match the value in dstStageMask of
-    // kImageMemoryBarrierData
-    ASSERT(EventAndPipelineBarrierHaveMatchingStageFlags(*map, supportedVulkanPipelineStageMask));
 }
 
 bool RefCountedEvent::init(Context *context, EventStage eventStage)
