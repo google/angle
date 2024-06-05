@@ -466,6 +466,9 @@ class Texture2DTestES3 : public Texture2DTest
         EXPECT_PIXEL_NEAR(0, 0, referenceColor[0], referenceColor[1], referenceColor[2],
                           referenceColor[3], 1);
     }
+
+    void testCopyImage(const APIExtensionVersion usedExtension);
+    void testCopyImageDepthStencil(const APIExtensionVersion usedExtension);
 };
 
 class Texture2DMemoryTestES3 : public Texture2DTestES3
@@ -5816,10 +5819,9 @@ TEST_P(Texture2DTestES3, DrawWithBaseLevel1)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
-// Test basic GL_EXT_copy_image copy without any bound textures
-TEST_P(Texture2DTestES3, CopyImage)
+void Texture2DTestES3::testCopyImage(const APIExtensionVersion usedExtension)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_copy_image"));
+    ASSERT(usedExtension == APIExtensionVersion::EXT || usedExtension == APIExtensionVersion::OES);
 
     std::vector<GLColor> texDataRed(4u * 4u, GLColor::red);
     GLTexture srcTexture;
@@ -5845,11 +5847,17 @@ TEST_P(Texture2DTestES3, CopyImage)
     glBindTexture(GL_TEXTURE_2D, 0);
 
     // copy
-    glCopyImageSubDataEXT(srcTexture, GL_TEXTURE_2D, 0, 2, 2, 0, destTexture, GL_TEXTURE_2D, 0, 2,
-                          2, 0, 2, 2, 1);
-
+    if (usedExtension == APIExtensionVersion::OES)
+    {
+        glCopyImageSubDataOES(srcTexture, GL_TEXTURE_2D, 0, 2, 2, 0, destTexture, GL_TEXTURE_2D, 0,
+                              2, 2, 0, 2, 2, 1);
+    }
+    else
+    {
+        glCopyImageSubDataEXT(srcTexture, GL_TEXTURE_2D, 0, 2, 2, 0, destTexture, GL_TEXTURE_2D, 0,
+                              2, 2, 0, 2, 2, 1);
+    }
     glBindTexture(GL_TEXTURE_2D, destTexture);
-
     EXPECT_GL_NO_ERROR();
 
     glViewport(0, 0, 4, 4);
@@ -5861,10 +5869,23 @@ TEST_P(Texture2DTestES3, CopyImage)
     EXPECT_PIXEL_RECT_EQ(0, 0, 2, 4, GLColor::red);
 }
 
-// Test basic GL_EXT_copy_image copy with a depth/stencil texture
-TEST_P(Texture2DTestES3, CopyImageDepthStencil)
+// Test basic GL_EXT_copy_image copy without any bound textures
+TEST_P(Texture2DTestES3, CopyImageEXT)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_copy_image"));
+    testCopyImage(APIExtensionVersion::EXT);
+}
+
+// Test basic GL_OES_copy_image copy without any bound textures
+TEST_P(Texture2DTestES3, CopyImageOES)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_copy_image"));
+    testCopyImage(APIExtensionVersion::OES);
+}
+
+void Texture2DTestES3::testCopyImageDepthStencil(const APIExtensionVersion usedExtension)
+{
+    ASSERT(usedExtension == APIExtensionVersion::EXT || usedExtension == APIExtensionVersion::OES);
 
     std::vector<GLColor> texDataRed(4u * 4u, GLColor::red);
     GLTexture srcTexture;
@@ -5918,8 +5939,16 @@ TEST_P(Texture2DTestES3, CopyImageDepthStencil)
     ASSERT_GL_NO_ERROR();
 
     // Now that the depth stencil image is definitely initialized, copy it into the destination
-    glCopyImageSubDataEXT(src, GL_TEXTURE_2D, 0, 0, 0, 0, dst, GL_TEXTURE_2D, 0, 0, 0, 0, kSize,
-                          kSize, 1);
+    if (usedExtension == APIExtensionVersion::OES)
+    {
+        glCopyImageSubDataOES(src, GL_TEXTURE_2D, 0, 0, 0, 0, dst, GL_TEXTURE_2D, 0, 0, 0, 0, kSize,
+                              kSize, 1);
+    }
+    else
+    {
+        glCopyImageSubDataEXT(src, GL_TEXTURE_2D, 0, 0, 0, 0, dst, GL_TEXTURE_2D, 0, 0, 0, 0, kSize,
+                              kSize, 1);
+    }
     ASSERT_GL_NO_ERROR();
 
     // Verify the dst texture has the right depth/stencil values
@@ -5935,6 +5964,20 @@ TEST_P(Texture2DTestES3, CopyImageDepthStencil)
     drawQuad(program, essl1_shaders::PositionAttrib(), -0.39f);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
     ASSERT_GL_NO_ERROR();
+}
+
+// Test basic GL_EXT_copy_image copy with a depth/stencil texture
+TEST_P(Texture2DTestES3, CopyImageEXTDepthStencil)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_copy_image"));
+    testCopyImageDepthStencil(APIExtensionVersion::EXT);
+}
+
+// Test basic GL_OES_copy_image copy with a depth/stencil texture
+TEST_P(Texture2DTestES3, CopyImageOESDepthStencil)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_copy_image"));
+    testCopyImageDepthStencil(APIExtensionVersion::OES);
 }
 
 // Test GL_EXT_copy_image compressed texture copy with mipmaps smaller than the block size

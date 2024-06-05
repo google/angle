@@ -1147,7 +1147,7 @@ bool ValidateCopyImageSubDataOES(const Context *context,
                                  GLsizei srcHeight,
                                  GLsizei srcDepth)
 {
-    if (!context->getExtensions().copyImageEXT)
+    if (!context->getExtensions().copyImageOES)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;

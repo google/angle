@@ -1017,6 +1017,7 @@ void Renderer::ensureCapsInitialized() const
 
     // Enable GL_EXT_copy_image
     mNativeExtensions.copyImageEXT = true;
+    mNativeExtensions.copyImageOES = true;
 
     // GL_EXT_clip_control
     mNativeExtensions.clipControlEXT = true;
