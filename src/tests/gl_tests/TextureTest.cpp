@@ -6668,6 +6668,118 @@ TEST_P(Texture2DTestES3, TextureCompletenessChangesWithMaxLevel)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
 }
 
+// Test a bug that staged clear overlaps with glTexSubImage with multiple layers may incorrectly
+// keep the staged clear. http://anglebug.com/345532371
+TEST_P(Texture2DArrayTestES3, ClearThenTexSubImageWithOverlappingLayersThenRead)
+{
+    constexpr GLsizei kTexWidth  = 128;
+    constexpr GLsizei kTexHeight = 128;
+    constexpr GLsizei kTexDepth  = 6;
+    // Create a single leveled texture with 6 layers
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 4, GL_RGBA8, kTexWidth, kTexHeight, kTexDepth);
+
+    // Stage clear to red on all layers
+    GLFramebuffer drawFBO;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    for (GLsizei layer = 0; layer < kTexDepth; layer++)
+    {
+        glFramebufferTextureLayer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0, layer);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_DRAW_FRAMEBUFFER);
+        glClear(GL_COLOR_BUFFER_BIT);
+    }
+
+    // TexSubImage with green color on half of the image of layer 2,3,4
+    std::vector<GLColor> updateData((kTexWidth / 2) * kTexHeight * 3, GLColor::green);
+    GLsizei layerStart = 2;
+    GLsizei layerCount = 3;
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, layerStart, kTexWidth / 2, kTexHeight, layerCount,
+                    GL_RGBA, GL_UNSIGNED_BYTE, updateData.data());
+
+    // Now read out layer 2/3/4
+    GLFramebuffer readFBO;
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, readFBO);
+    for (GLsizei layer = layerStart; layer < layerStart + layerCount; layer++)
+    {
+        glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0, layer);
+        EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_READ_FRAMEBUFFER);
+        EXPECT_PIXEL_EQ(kTexWidth / 4, kTexHeight / 2, GLColor::green.R, GLColor::green.G,
+                        GLColor::green.B, GLColor::green.A);
+        EXPECT_PIXEL_EQ(3 * kTexWidth / 4, kTexHeight / 2, GLColor::red.R, GLColor::red.G,
+                        GLColor::red.B, GLColor::red.A);
+    }
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test a bug that staged clear overlaps with glTexSubImage with multiple layers may incorrectly
+// keep the staged clear. http://anglebug.com/345532371
+TEST_P(Texture2DArrayTestES3, ClearThenTexSubImageWithOverlappingLayersThenDrawAndRead)
+{
+    constexpr GLsizei kTexWidth  = 128;
+    constexpr GLsizei kTexHeight = 128;
+    constexpr GLsizei kTexDepth  = 6;
+    // Create a single leveled texture with 6 layers
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, tex);
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 4, GL_RGBA8, kTexWidth, kTexHeight, kTexDepth);
+
+    // Stage clear to red on all layers
+    GLFramebuffer drawFBO;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    for (GLsizei layer = 0; layer < kTexDepth; layer++)
+    {
+        glFramebufferTextureLayer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0, layer);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_DRAW_FRAMEBUFFER);
+        glClear(GL_COLOR_BUFFER_BIT);
+    }
+
+    // TexSubImage with green color on half of the image of layer 2,3,4
+    std::vector<GLColor> updateData((kTexWidth / 2) * kTexHeight * 3, GLColor::green);
+    GLsizei layerStart = 2;
+    GLsizei layerCount = 3;
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, layerStart, kTexWidth / 2, kTexHeight, layerCount,
+                    GL_RGBA, GL_UNSIGNED_BYTE, updateData.data());
+
+    // Now Draw to fbo on layerStart with blue color
+    GLsizei blueQuadLayer = 2;
+    glFramebufferTextureLayer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0, blueQuadLayer);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_DRAW_FRAMEBUFFER);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+    ANGLE_GL_PROGRAM(blueProgram, essl3_shaders::vs::Simple(), essl3_shaders::fs::Blue());
+    glUseProgram(blueProgram);
+    drawQuad(blueProgram, essl3_shaders::PositionAttrib(), 0.5f);
+
+    // Now read out layer 2/3/4
+    GLFramebuffer readFBO;
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, readFBO);
+    for (GLsizei layer = layerStart; layer < layerStart + layerCount; layer++)
+    {
+        glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0, layer);
+        EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_READ_FRAMEBUFFER);
+        if (layer == blueQuadLayer)
+        {
+            // green + blue = cyan
+            EXPECT_PIXEL_EQ(kTexWidth / 4, kTexHeight / 2, GLColor::cyan.R, GLColor::cyan.G,
+                            GLColor::cyan.B, GLColor::cyan.A);
+            // red + blue = magenta
+            EXPECT_PIXEL_EQ(3 * kTexWidth / 4, kTexHeight / 2, GLColor::magenta.R,
+                            GLColor::magenta.G, GLColor::magenta.B, GLColor::magenta.A);
+        }
+        else
+        {
+            EXPECT_PIXEL_EQ(kTexWidth / 4, kTexHeight / 2, GLColor::green.R, GLColor::green.G,
+                            GLColor::green.B, GLColor::green.A);
+            EXPECT_PIXEL_EQ(3 * kTexWidth / 4, kTexHeight / 2, GLColor::red.R, GLColor::red.G,
+                            GLColor::red.B, GLColor::red.A);
+        }
+    }
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test that compressed textures ignore the pixel unpack state.
 // (https://crbug.org/1267496)
 TEST_P(Texture3DTestES3, PixelUnpackStateTexImage)
