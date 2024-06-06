@@ -24,8 +24,12 @@
 
 341780527 LINUX VULKAN NVIDIA : KHR-GLES3.clip_distance.coverage = FAIL
 341780527 LINUX VULKAN NVIDIA : KHR-GLES3.cull_distance.functional = FAIL
+341780527 LINUX VULKAN AMD : KHR-GLES3.clip_distance.coverage = FAIL
+341780527 LINUX VULKAN AMD : KHR-GLES3.cull_distance.functional = FAIL
 341780527 WIN VULKAN NVIDIA : KHR-GLES3.clip_distance.coverage = FAIL
 341780527 WIN VULKAN NVIDIA : KHR-GLES3.cull_distance.functional = FAIL
+341780527 WIN VULKAN AMD : KHR-GLES3.clip_distance.coverage = FAIL
+341780527 WIN VULKAN AMD : KHR-GLES3.cull_distance.functional = FAIL
 
 // Fails only with SwiftShader:
 
