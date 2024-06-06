@@ -1147,10 +1147,6 @@ b/266235549 D3D11 : ComputeShaderTest.SSBOAliasOverWrite/* = SKIP
 
 // Incorrect image binding in Vulkan backend
 344950165 VULKAN : TextureTestES31.Texture2DLayered/* = SKIP
-// Likely driver bugs
-344950165 NVIDIA GLES   : TextureTestES31.Texture2DLayered/* = SKIP
-344950165 NVIDIA OPENGL : TextureTestES31.Texture2DLayered/* = SKIP
-344950165 PIXEL4ORXL GLES : TextureTestES31.Texture2DLayered/* = SKIP
 
 // Samsung Galaxy S22 (Xclipse)
 b/267953710 GALAXYS22 GLES : VulkanImageTest.DeviceVulkan/* = SKIP
