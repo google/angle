@@ -1473,6 +1473,15 @@
             "issue": "http://anglebug.com/8658"
         },
         {
+            "name": "limit_max_storage_buffer_size",
+            "category": "Workarounds",
+            "description": [
+                "On some drivers, a storage buffer max size limit is exposed that is incompatible with ",
+                "older hardware"
+            ],
+            "issue": "http://anglebug.com/345244067"
+        },
+        {
             "name": "cl_dump_vk_spirv",
             "category": "Features",
             "description": [

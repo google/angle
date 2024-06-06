@@ -1350,6 +1350,14 @@ struct FeaturesVk : FeatureSetBase
         &members, "http://anglebug.com/8658"
     };
 
+    FeatureInfo limitMaxStorageBufferSize = {
+        "limitMaxStorageBufferSize",
+        FeatureCategory::VulkanWorkarounds,
+        "On some drivers, a storage buffer max size limit is exposed that is incompatible with "
+        "older hardware",
+        &members, "http://anglebug.com/345244067"
+    };
+
     FeatureInfo clDumpVkSpirv = {
         "clDumpVkSpirv",
         FeatureCategory::VulkanFeatures,

@@ -823,8 +823,18 @@ void Renderer::ensureCapsInitialized() const
         rx::LimitToInt(maxPerStageStorageBuffers);
     mNativeCaps.maxCombinedShaderStorageBlocks = rx::LimitToInt(maxCombinedStorageBuffers);
 
+    // Emulated as storage buffers, atomic counter buffers have the same size limit.  However, the
+    // limit is a signed integer and values above int max will end up as a negative size.  The
+    // storage buffer size is just capped to int unconditionally.
+    uint32_t maxStorageBufferRange = rx::LimitToInt(limitsVk.maxStorageBufferRange);
+    if (mFeatures.limitMaxStorageBufferSize.enabled)
+    {
+        constexpr uint32_t kStorageBufferLimit = 256 * 1024 * 1024;
+        maxStorageBufferRange = std::min(maxStorageBufferRange, kStorageBufferLimit);
+    }
+
     mNativeCaps.maxShaderStorageBufferBindings = rx::LimitToInt(maxCombinedStorageBuffers);
-    mNativeCaps.maxShaderStorageBlockSize      = limitsVk.maxStorageBufferRange;
+    mNativeCaps.maxShaderStorageBlockSize      = maxStorageBufferRange;
     mNativeCaps.shaderStorageBufferOffsetAlignment =
         rx::LimitToInt(static_cast<uint32_t>(limitsVk.minStorageBufferOffsetAlignment));
 
@@ -841,14 +851,12 @@ void Renderer::ensureCapsInitialized() const
     mNativeCaps.maxCombinedAtomicCounterBuffers = rx::LimitToInt(maxCombinedAtomicCounterBuffers);
 
     mNativeCaps.maxAtomicCounterBufferBindings = rx::LimitToInt(maxCombinedAtomicCounterBuffers);
-    // Emulated as storage buffers, atomic counter buffers have the same size limit.  However, the
-    // limit is a signed integer and values above int max will end up as a negative size.
-    mNativeCaps.maxAtomicCounterBufferSize = rx::LimitToInt(limitsVk.maxStorageBufferRange);
+    mNativeCaps.maxAtomicCounterBufferSize     = maxStorageBufferRange;
 
     // There is no particular limit to how many atomic counters there can be, other than the size of
     // a storage buffer.  We nevertheless limit this to something reasonable (4096 arbitrarily).
     const int32_t maxAtomicCounters =
-        std::min<int32_t>(4096, limitsVk.maxStorageBufferRange / sizeof(uint32_t));
+        std::min<int32_t>(4096, maxStorageBufferRange / sizeof(uint32_t));
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
         mNativeCaps.maxShaderAtomicCounters[shaderType] = maxAtomicCounters;
