@@ -846,12 +846,15 @@ angle::Result ProgramExecutableD3D::loadBinaryShaderExecutables(d3d::Context *co
         stream->skip(computeShaderSize);
     }
 
-    size_t bindLayoutCount = stream->readInt<size_t>();
-    for (size_t bindLayoutIndex = 0; bindLayoutIndex < bindLayoutCount; bindLayoutIndex++)
+    for (const gl::ShaderType shaderType :
+         {gl::ShaderType::Vertex, gl::ShaderType::Fragment, gl::ShaderType::Compute})
     {
-        mImage2DBindLayoutCache[gl::ShaderType::Compute].insert(
-            std::pair<unsigned int, gl::TextureType>(stream->readInt<unsigned int>(),
-                                                     gl::TextureType::_2D));
+        size_t bindLayoutCount = stream->readInt<size_t>();
+        for (size_t bindLayoutIndex = 0; bindLayoutIndex < bindLayoutCount; bindLayoutIndex++)
+        {
+            mImage2DBindLayoutCache[shaderType].insert(std::pair<unsigned int, gl::TextureType>(
+                stream->readInt<unsigned int>(), gl::TextureType::_2D));
+        }
     }
 
     initializeUniformStorage(renderer, mExecutable->getLinkedShaderStages());
@@ -1079,7 +1082,8 @@ void ProgramExecutableD3D::save(const gl::Context *context,
         stream->writeBytes(computeBlob, computeShaderSize);
     }
 
-    for (gl::ShaderType shaderType : {gl::ShaderType::Compute})
+    for (const gl::ShaderType shaderType :
+         {gl::ShaderType::Vertex, gl::ShaderType::Fragment, gl::ShaderType::Compute})
     {
         stream->writeInt(mImage2DBindLayoutCache[shaderType].size());
         for (auto &image2DBindLayout : mImage2DBindLayoutCache[shaderType])
@@ -1810,10 +1814,11 @@ void ProgramExecutableD3D::updateCachedOutputLayout(const gl::Context *context,
     updateCachedPixelExecutableIndex();
 }
 
-void ProgramExecutableD3D::updateCachedComputeImage2DBindLayout(const gl::Context *context)
+void ProgramExecutableD3D::updateCachedImage2DBindLayout(const gl::Context *context,
+                                                         const gl::ShaderType shaderType)
 {
     const auto &glState = context->getState();
-    for (auto &image2DBindLayout : mImage2DBindLayoutCache[gl::ShaderType::Compute])
+    for (auto &image2DBindLayout : mImage2DBindLayoutCache[shaderType])
     {
         const gl::ImageUnit &imageUnit = glState.getImageUnit(image2DBindLayout.first);
         if (imageUnit.texture.get())
@@ -1826,7 +1831,21 @@ void ProgramExecutableD3D::updateCachedComputeImage2DBindLayout(const gl::Contex
         }
     }
 
-    updateCachedComputeExecutableIndex();
+    switch (shaderType)
+    {
+        case gl::ShaderType::Vertex:
+            updateCachedVertexExecutableIndex();
+            break;
+        case gl::ShaderType::Fragment:
+            updateCachedPixelExecutableIndex();
+            break;
+        case gl::ShaderType::Compute:
+            updateCachedComputeExecutableIndex();
+            break;
+        default:
+            ASSERT(false);
+            break;
+    }
 }
 
 void ProgramExecutableD3D::updateCachedVertexExecutableIndex()

@@ -1071,7 +1071,7 @@ angle::Result Context11::triggerDispatchCallProgramRecompilation(const gl::Conte
     gl::ProgramExecutable *executable   = glState.getProgramExecutable();
     ProgramExecutableD3D *executableD3D = GetImplAs<ProgramExecutableD3D>(executable);
 
-    executableD3D->updateCachedComputeImage2DBindLayout(context);
+    executableD3D->updateCachedImage2DBindLayout(context, gl::ShaderType::Compute);
 
     bool recompileCS = !executableD3D->hasComputeExecutableForCachedImage2DBindLayout();
 

@@ -1691,7 +1691,7 @@ void StateManager11::invalidateImageBindings()
     mInternalDirtyBits.set(DIRTY_BIT_GRAPHICS_UAV_STATE);
     mInternalDirtyBits.set(DIRTY_BIT_COMPUTE_SRV_STATE);
     mInternalDirtyBits.set(DIRTY_BIT_COMPUTE_UAV_STATE);
-    mInternalDirtyBits.set(DIRTY_BIT_PROGRAM_UNIFORMS);
+    mInternalDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
 }
 
 void StateManager11::invalidateConstantBuffer(unsigned int slot)
@@ -2820,7 +2820,7 @@ angle::Result StateManager11::setImageState(const gl::Context *context,
 
     if (mShaderConstants.onImageChange(type, index, imageUnit))
     {
-        invalidateProgramUniforms();
+        invalidateDriverUniforms();
     }
 
     return angle::Result::Continue;
@@ -3073,7 +3073,7 @@ angle::Result StateManager11::syncProgramForCompute(const gl::Context *context)
     Context11 *context11 = GetImplAs<Context11>(context);
     ANGLE_TRY(context11->triggerDispatchCallProgramRecompilation(context));
 
-    mExecutableD3D->updateCachedComputeImage2DBindLayout(context);
+    mExecutableD3D->updateCachedImage2DBindLayout(context, gl::ShaderType::Compute);
 
     // Binaries must be compiled before the sync.
     ASSERT(mExecutableD3D->hasComputeExecutableForCachedImage2DBindLayout());

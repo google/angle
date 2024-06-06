@@ -300,7 +300,7 @@ class ProgramExecutableD3D : public ProgramExecutableImpl
                                  UniqueSerial associatedSerial,
                                  const gl::State &state);
     void updateCachedOutputLayout(const gl::Context *context, const gl::Framebuffer *framebuffer);
-    void updateCachedComputeImage2DBindLayout(const gl::Context *context);
+    void updateCachedImage2DBindLayout(const gl::Context *context, const gl::ShaderType shaderType);
     void updateUniformBufferCache(const gl::Caps &caps);
 
     // Checks if we need to recompile certain shaders.
