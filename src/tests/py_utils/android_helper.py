@@ -575,3 +575,9 @@ def GetTraceFromTestName(test_name):
     if test_name.startswith('TraceTest.'):
         return test_name[len('TraceTest.'):]
     return None
+
+
+def LogTemps():
+    temps = _AdbShell(
+        'cat /dev/thermal/tz-by-name/*_therm/temp 2>/dev/null || true').decode().split()
+    logging.debug('tz-by-name temps: %s' % ','.join(temps))

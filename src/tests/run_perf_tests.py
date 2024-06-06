@@ -311,10 +311,13 @@ def _skipped_or_glmark2(test, test_status):
 
 
 def _maybe_log_system_temps():
-    if logging.getLogger().isEnabledFor(logging.DEBUG) and sys.platform == 'linux':
-        out = subprocess.check_output('cat /sys/class/hwmon/hwmon*/temp*_input', shell=True)
-        logging.debug('hwmon temps: %s',
-                      ','.join([str(int(n) // 1000) for n in out.decode().split('\n') if n]))
+    if logging.getLogger().isEnabledFor(logging.DEBUG):
+        if angle_test_util.IsAndroid():
+            android_helper.LogTemps()
+        elif sys.platform == 'linux':
+            out = subprocess.check_output('cat /sys/class/hwmon/hwmon*/temp*_input', shell=True)
+            logging.debug('hwmon temps: %s',
+                          ','.join([str(int(n) // 1000) for n in out.decode().split('\n') if n]))
 
 
 def _run_tests(tests, args, extra_flags, env):
