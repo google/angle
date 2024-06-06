@@ -14455,6 +14455,47 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that layer-related parameters are ignored when binding a 2D texture
+TEST_P(TextureTestES31, Texture2DLayered)
+{
+    constexpr char kFS[] = R"(#version 310 es
+precision highp float;
+precision highp image2D;
+layout(binding = 0, r32f) uniform image2D img;
+layout(location = 0) out vec4 color;
+
+void main()
+{
+    color = imageLoad(img, ivec2(0, 0));
+})";
+
+    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
+
+    GLTexture texture;
+    GLfloat value = 1.0;
+
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32F, 1, 1);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RED, GL_FLOAT, &value);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glClearColor(0.0, 1.0, 0.0, 1.0);
+    for (const bool layered : {true, false})
+    {
+        for (const GLint layer : {0, 1})
+        {
+            glClear(GL_COLOR_BUFFER_BIT);
+            glBindImageTexture(0, texture, 0, layered, layer, GL_READ_ONLY, GL_R32F);
+            ASSERT_GL_NO_ERROR();
+
+            drawQuad(program, essl31_shaders::PositionAttrib(), 0.0f);
+            EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red)
+                << "Layered: " << (layered ? "true" : "false") << ", Layer: " << layer;
+        }
+    }
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 #define ES2_EMULATE_COPY_TEX_IMAGE_VIA_SUB()             \
