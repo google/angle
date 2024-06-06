@@ -805,7 +805,6 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 7994 IOS METAL : PixelLocalStorageTest.ProgramCache/ES3_Metal_EmulatePixelLocalStorage* = SKIP
 7994 IOS METAL : PixelLocalStorageTest.R32/ES3_Metal_EmulatePixelLocalStorage* = SKIP
 7994 IOS METAL : PixelLocalStorageTest.RGBA8/ES3_Metal_EmulatePixelLocalStorage* = SKIP
-7994 IOS METAL : PixelLocalStorageTest.TextureLevelsAndLayers/ES3_Metal_EmulatePixelLocalStorage* = SKIP
 7994 IOS METAL : PointSpritesTest.PointSizeAboveMaxIsClamped/* = SKIP
 7994 IOS METAL : RobustBufferAccessWebGL2ValidationStateChangeTest.BindZeroSizeBufferThenDeleteBufferBug/* = SKIP
 7994 IOS METAL : SamplerTypeMixTestES3.SamplerTypeMixDraw/* = SKIP
@@ -1116,7 +1115,6 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 
 // GL_TEXTURE_2D_ARRAY and GL_TEXTURE_3D shader images.
 8124 D3D11 : PixelLocalStorageTest.TextureLevelsAndLayers/* = SKIP
-8125 MAC METAL : PixelLocalStorageTest.TextureLevelsAndLayers/* = SKIP
 
 // Failures as a result of Mac 13 -> Mac 14 upgrade.
 8628 MAC AMD METAL : GLSLTest_ES3.LiteralInfinityOutput/* = SKIP
