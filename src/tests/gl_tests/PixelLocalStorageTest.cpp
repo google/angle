@@ -1943,14 +1943,6 @@ TEST_P(PixelLocalStorageTest, MipMapLevels)
     GLFramebuffer fbo;
     for (int level = 0; level < LEVELS; ++level)
     {
-        if (IsVulkan())
-        {
-            // anglebug.com/7647 -- a workaround is to create and bind a new texture.
-            glGenTextures(1, &tex);
-            glBindTexture(GL_TEXTURE_2D, tex);
-            glTexStorage2D(GL_TEXTURE_2D, LEVELS, GL_RGBA8, 179, 313);
-        }
-
         glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
         glUniform1f(mProgram.widthUniform(), levelWidth);

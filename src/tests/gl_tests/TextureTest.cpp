@@ -14439,7 +14439,15 @@ TEST_P(RGBTextureBufferTestES31, SSBOWrite)
 class TextureTestES31 : public ANGLETest<>
 {
   protected:
-    TextureTestES31() {}
+    TextureTestES31()
+    {
+        setWindowWidth(128);
+        setWindowHeight(128);
+        setConfigRedBits(8);
+        setConfigGreenBits(8);
+        setConfigBlueBits(8);
+        setConfigAlphaBits(8);
+    }
 };
 
 // Verify that image uniforms can link in separable programs
@@ -14537,6 +14545,46 @@ void main()
                 << "Layered: " << (layered ? "true" : "false") << ", Layer: " << layer;
         }
     }
+}
+
+// Test that rebinding the shader image level without changing the program works
+TEST_P(TextureTestES31, Texture2DChangeLevel)
+{
+    constexpr char kFS[] = R"(#version 310 es
+precision highp float;
+precision highp image2D;
+layout(binding = 0, r32f) uniform image2D img;
+layout(location = 0) out vec4 color;
+
+void main()
+{
+    color = imageLoad(img, ivec2(0, 0));
+})";
+    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
+
+    // Must be active before calling drawQuad to avoid program switches
+    glUseProgram(program);
+
+    GLTexture texture;
+    const GLfloat level0[4] = {0.5, 0.5, 0.5, 0.5};
+    const GLfloat level1[1] = {1.0};
+
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexStorage2D(GL_TEXTURE_2D, 2, GL_R32F, 2, 2);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 2, GL_RED, GL_FLOAT, level0);
+    glTexSubImage2D(GL_TEXTURE_2D, 1, 0, 0, 1, 1, GL_RED, GL_FLOAT, level1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glBindImageTexture(0, texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32F);
+    ASSERT_GL_NO_ERROR();
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(127, 0, 0, 255), 1);
+
+    glBindImageTexture(0, texture, 1, GL_FALSE, 0, GL_READ_WRITE, GL_R32F);
+    ASSERT_GL_NO_ERROR();
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these

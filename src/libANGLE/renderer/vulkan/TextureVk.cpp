@@ -4067,11 +4067,10 @@ vk::ImageOrBufferViewSubresourceSerial TextureVk::getStorageImageViewSerial(
     uint32_t frontendLayer  = binding.layered == GL_TRUE ? 0 : static_cast<uint32_t>(binding.layer);
     uint32_t nativeLayer    = getNativeImageLayer(frontendLayer);
 
-    gl::LevelIndex baseLevel(mState.getEffectiveBaseLevel());
-    // getMipmapMaxLevel will clamp to the max level if it is smaller than the number of mips.
-    uint32_t levelCount = gl::LevelIndex(mState.getMipmapMaxLevel()) - baseLevel + 1;
+    gl::LevelIndex baseLevel(
+        getNativeImageLevel(gl::LevelIndex(static_cast<uint32_t>(binding.level))));
 
-    return getImageViews().getSubresourceSerial(baseLevel, levelCount, nativeLayer, layerMode,
+    return getImageViews().getSubresourceSerial(baseLevel, 1, nativeLayer, layerMode,
                                                 vk::SrgbDecodeMode::SkipDecode,
                                                 gl::SrgbOverride::Default);
 }
