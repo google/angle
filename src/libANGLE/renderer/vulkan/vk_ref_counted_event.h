@@ -69,9 +69,7 @@ enum class EventStage : uint32_t
     AllFragmentTestAndFragmentShader                  = 12,
     AllFragmentTestAndAllShaders                      = 13,
     TransferAndComputeShader                          = 14,
-    AllCommands                                       = 15,
-    BottomOfPipe                                      = 16,
-    InvalidEnum                                       = 17,
+    InvalidEnum                                       = 15,
     EnumCount                                         = InvalidEnum,
 };
 

@@ -42,9 +42,7 @@ constexpr angle::PackedEnumMap<EventStage, VkPipelineStageFlags>
         {EventStage::AllFragmentTestAndAllShaders,
          kAllShadersPipelineStageFlags | kAllDepthStencilPipelineStageFlags},
         {EventStage::TransferAndComputeShader,
-         VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT | VK_PIPELINE_STAGE_TRANSFER_BIT},
-        {EventStage::AllCommands, VK_PIPELINE_STAGE_ALL_COMMANDS_BIT},
-        {EventStage::BottomOfPipe, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT}};
+         VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT | VK_PIPELINE_STAGE_TRANSFER_BIT}};
 
 void DestroyRefCountedEvents(VkDevice device, RefCountedEventCollector &events)
 {

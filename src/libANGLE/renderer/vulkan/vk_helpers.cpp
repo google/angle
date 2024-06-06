@@ -86,6 +86,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             0,
             ResourceAccess::ReadOnly,
             PipelineStage::InvalidEnum,
+            // We do not directly using this layout in SetEvent. We transit to other layout before using
             EventStage::InvalidEnum,
         },
     },
@@ -405,7 +406,8 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             0,
             ResourceAccess::ReadOnly,
             PipelineStage::BottomOfPipe,
-            EventStage::BottomOfPipe,
+            // We do not directly using this layout in SetEvent.
+            EventStage::InvalidEnum,
         },
     },
     {
@@ -447,7 +449,8 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             VK_ACCESS_MEMORY_WRITE_BIT,
             ResourceAccess::ReadOnly,
             PipelineStage::InvalidEnum,
-            EventStage::BottomOfPipe,
+            // We do not directly using this layout in SetEvent. We transit to internal layout before using
+            EventStage::InvalidEnum,
         },
     },
     {
@@ -464,7 +467,8 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             ResourceAccess::ReadOnly,
             // In case of multiple destination stages, We barrier the earliest stage
             PipelineStage::TopOfPipe,
-            EventStage::AllCommands,
+            // We do not directly using this layout in SetEvent. We transit to internal layout before using
+            EventStage::InvalidEnum,
         },
     },
     {
@@ -481,7 +485,8 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             ResourceAccess::ReadWrite,
             // In case of multiple destination stages, We barrier the earliest stage
             PipelineStage::TopOfPipe,
-            EventStage::AllCommands,
+            // We do not directly using this layout in SetEvent. We transit to internal layout before using
+            EventStage::InvalidEnum,
         },
     },
     {
@@ -547,7 +552,8 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             0,
             ResourceAccess::ReadOnly,
             PipelineStage::InvalidEnum,
-            EventStage::BottomOfPipe,
+            // We do not directly using this layout in SetEvent.
+            EventStage::InvalidEnum,
         },
     },
     {
