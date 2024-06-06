@@ -383,8 +383,11 @@ bool D3DVertexExecutable::matchesSignature(const Signature &signature) const
 }
 
 D3DPixelExecutable::D3DPixelExecutable(const std::vector<GLenum> &outputSignature,
+                                       const gl::ImageUnitTextureTypeMap &image2DSignature,
                                        ShaderExecutableD3D *shaderExecutable)
-    : mOutputSignature(outputSignature), mShaderExecutable(shaderExecutable)
+    : mOutputSignature(outputSignature),
+      mImage2DSignature(image2DSignature),
+      mShaderExecutable(shaderExecutable)
 {}
 
 D3DPixelExecutable::~D3DPixelExecutable()
@@ -762,6 +765,17 @@ angle::Result ProgramExecutableD3D::loadBinaryShaderExecutables(d3d::Context *co
             stream->readInt(&outputs[outputIndex]);
         }
 
+        const size_t image2DCount = stream->readInt<size_t>();
+        gl::ImageUnitTextureTypeMap image2Ds;
+        for (size_t index = 0; index < image2DCount; index++)
+        {
+            unsigned int imageUint;
+            gl::TextureType textureType;
+            stream->readInt(&imageUint);
+            stream->readEnum(&textureType);
+            image2Ds.insert({imageUint, textureType});
+        }
+
         size_t pixelShaderSize                   = stream->readInt<size_t>();
         const unsigned char *pixelShaderFunction = binary + stream->offset();
         ShaderExecutableD3D *shaderExecutable    = nullptr;
@@ -777,8 +791,8 @@ angle::Result ProgramExecutableD3D::loadBinaryShaderExecutables(d3d::Context *co
         }
 
         // add new binary
-        mPixelExecutables.push_back(
-            std::unique_ptr<D3DPixelExecutable>(new D3DPixelExecutable(outputs, shaderExecutable)));
+        mPixelExecutables.push_back(std::unique_ptr<D3DPixelExecutable>(
+            new D3DPixelExecutable(outputs, image2Ds, shaderExecutable)));
 
         stream->skip(pixelShaderSize);
     }
@@ -1039,6 +1053,14 @@ void ProgramExecutableD3D::save(const gl::Context *context,
         for (size_t outputIndex = 0; outputIndex < outputs.size(); outputIndex++)
         {
             stream->writeInt(outputs[outputIndex]);
+        }
+
+        const gl::ImageUnitTextureTypeMap &image2Ds = pixelExecutable->image2DSignature();
+        stream->writeInt(image2Ds.size());
+        for (const auto &image2D : image2Ds)
+        {
+            stream->writeInt(image2D.first);
+            stream->writeEnum(image2D.second);
         }
 
         size_t pixelShaderSize = pixelExecutable->shaderExecutable()->getLength();
@@ -1459,8 +1481,9 @@ angle::Result ProgramExecutableD3D::getPixelExecutableForCachedOutputLayout(
 
     if (pixelExecutable)
     {
-        mPixelExecutables.push_back(std::unique_ptr<D3DPixelExecutable>(
-            new D3DPixelExecutable(mPixelShaderOutputLayoutCache, pixelExecutable)));
+        mPixelExecutables.push_back(std::unique_ptr<D3DPixelExecutable>(new D3DPixelExecutable(
+            mPixelShaderOutputLayoutCache, mImage2DBindLayoutCache[gl::ShaderType::Fragment],
+            pixelExecutable)));
         mCachedPixelExecutableIndex = mPixelExecutables.size() - 1;
     }
     else if (!infoLog)
@@ -1866,7 +1889,8 @@ void ProgramExecutableD3D::updateCachedPixelExecutableIndex()
     mCachedPixelExecutableIndex.reset();
     for (size_t executableIndex = 0; executableIndex < mPixelExecutables.size(); executableIndex++)
     {
-        if (mPixelExecutables[executableIndex]->matchesSignature(mPixelShaderOutputLayoutCache))
+        if (mPixelExecutables[executableIndex]->matchesSignature(
+                mPixelShaderOutputLayoutCache, mImage2DBindLayoutCache[gl::ShaderType::Fragment]))
         {
             mCachedPixelExecutableIndex = executableIndex;
             break;

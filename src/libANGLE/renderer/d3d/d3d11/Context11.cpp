@@ -999,6 +999,7 @@ angle::Result Context11::triggerDrawCallProgramRecompilation(const gl::Context *
 
     executableD3D->updateCachedInputLayout(mRenderer, va11->getCurrentStateSerial(), glState);
     executableD3D->updateCachedOutputLayout(context, drawFBO);
+    executableD3D->updateCachedImage2DBindLayout(context, gl::ShaderType::Fragment);
 
     bool recompileVS = !executableD3D->hasVertexExecutableForCachedInputLayout();
     bool recompileGS =

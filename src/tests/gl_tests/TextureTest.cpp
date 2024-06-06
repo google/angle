@@ -14699,6 +14699,126 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
+// Test that rebinding the shader image layer/level without changing the program works
+TEST_P(TextureTestES31, Texture2DArrayChangeLayerLevel)
+{
+    constexpr char kFS[] = R"(#version 310 es
+precision highp float;
+precision highp image2D;
+layout(binding = 0, r32f) uniform image2D img;
+layout(location = 0) out vec4 color;
+
+void main()
+{
+    color = imageLoad(img, ivec2(0, 0));
+})";
+    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
+
+    // Must be active before calling drawQuad to avoid program switches
+    glUseProgram(program);
+
+    GLTexture texture;
+    const GLfloat level0layer0[4] = {0.25, 0.25, 0.25, 0.25};
+    const GLfloat level0layer1[4] = {0.50, 0.50, 0.50, 0.50};
+    const GLfloat level1layer0[1] = {0.75};
+    const GLfloat level1layer1[1] = {1.00};
+
+    glBindTexture(GL_TEXTURE_2D_ARRAY, texture);
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 2, GL_R32F, 2, 2, 2);
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, 2, 2, 1, GL_RED, GL_FLOAT, level0layer0);
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 1, 2, 2, 1, GL_RED, GL_FLOAT, level0layer1);
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 1, 0, 0, 0, 1, 1, 1, GL_RED, GL_FLOAT, level1layer0);
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 1, 0, 0, 1, 1, 1, 1, GL_RED, GL_FLOAT, level1layer1);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Level 0, layer 0
+    glBindImageTexture(0, texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32F);
+    ASSERT_GL_NO_ERROR();
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(63, 0, 0, 255), 1);
+
+    // Level 0, layer 1
+    glBindImageTexture(0, texture, 0, GL_FALSE, 1, GL_READ_WRITE, GL_R32F);
+    ASSERT_GL_NO_ERROR();
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(127, 0, 0, 255), 1);
+
+    // Level 1, layer 0
+    glBindImageTexture(0, texture, 1, GL_FALSE, 0, GL_READ_WRITE, GL_R32F);
+    ASSERT_GL_NO_ERROR();
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(191, 0, 0, 255), 1);
+
+    // Level 1, layer 1
+    glBindImageTexture(0, texture, 1, GL_FALSE, 1, GL_READ_WRITE, GL_R32F);
+    ASSERT_GL_NO_ERROR();
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(255, 0, 0, 255), 1);
+}
+
+// Test that switching between a 2D texture and a layer of a 2D array texture works
+TEST_P(TextureTestES31, Texture2DTo2DArraySwitch)
+{
+    constexpr char kFS[] = R"(#version 310 es
+precision highp float;
+precision highp image2D;
+layout(binding = 0, r32f) uniform image2D img;
+layout(location = 0) out vec4 color;
+
+void main()
+{
+    color = imageLoad(img, ivec2(0, 0));
+})";
+    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
+
+    // Must be active before calling drawQuad to avoid program switches
+    glUseProgram(program);
+
+    GLTexture texture2D;
+    GLTexture texture2DArray;
+    const GLfloat data2D[1]       = {0.50};
+    const GLfloat data2DArray0[1] = {0.25};
+    const GLfloat data2DArray1[1] = {0.75};
+
+    glBindTexture(GL_TEXTURE_2D, texture2D);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32F, 1, 1);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RED, GL_FLOAT, data2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    glBindTexture(GL_TEXTURE_2D_ARRAY, texture2DArray);
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_R32F, 1, 1, 2);
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, 1, 1, 1, GL_RED, GL_FLOAT, data2DArray0);
+    glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 1, 1, 1, 1, GL_RED, GL_FLOAT, data2DArray1);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Texture2D
+    glBindImageTexture(0, texture2D, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32F);
+    ASSERT_GL_NO_ERROR();
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(127, 0, 0, 255), 1);
+
+    // Texture2D array, layer 0
+    glBindImageTexture(0, texture2DArray, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32F);
+    ASSERT_GL_NO_ERROR();
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(63, 0, 0, 255), 1);
+
+    // Texture2D again
+    glBindImageTexture(0, texture2D, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32F);
+    ASSERT_GL_NO_ERROR();
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(127, 0, 0, 255), 1);
+
+    // Texture2D array, layer 1
+    glBindImageTexture(0, texture2DArray, 0, GL_FALSE, 1, GL_READ_WRITE, GL_R32F);
+    ASSERT_GL_NO_ERROR();
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(191, 0, 0, 255), 1);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 #define ES2_EMULATE_COPY_TEX_IMAGE_VIA_SUB()             \
