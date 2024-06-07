@@ -577,7 +577,16 @@ def GetTraceFromTestName(test_name):
     return None
 
 
-def LogTemps():
+def GetTemps():
     temps = _AdbShell(
         'cat /dev/thermal/tz-by-name/*_therm/temp 2>/dev/null || true').decode().split()
     logging.debug('tz-by-name temps: %s' % ','.join(temps))
+
+    temps_celsius = []
+    for t in temps:
+        try:
+            temps_celsius.append(float(t) / 1e3)
+        except ValueError:
+            pass
+
+    return temps_celsius
