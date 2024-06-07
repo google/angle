@@ -5444,6 +5444,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 mGraphicsPipelineDesc->updateBlendEnabled(
                     &mGraphicsPipelineTransition, glState.getBlendStateExt().getEnabledMask());
                 updateDither();
+                updateAdvancedBlendEquations(programExecutable);
                 break;
             case gl::state::DIRTY_BIT_BLEND_COLOR:
                 mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_BLEND_CONSTANTS);
@@ -6988,7 +6989,7 @@ angle::Result ContextVk::handleDirtyGraphicsDriverUniforms(DirtyBits::Iterator *
     const uint32_t numSamples  = drawFramebufferVk->getSamples();
 
     uint32_t advancedBlendEquation = 0;
-    if (getFeatures().emulateAdvancedBlendEquations.enabled)
+    if (getFeatures().emulateAdvancedBlendEquations.enabled && mState.isBlendEnabled())
     {
         // Pass the advanced blend equation to shader as-is.  If the equation is not one of the
         // advanced ones, 0 is expected.
