@@ -812,6 +812,19 @@ void WriteBinaryParamReplay(ReplayWriter &replayWriter,
     }
 }
 
+void WriteComment(std::ostream &out, const CallCapture &call)
+{
+    // Read the string parameter
+    const ParamCapture &stringParam =
+        call.params.getParam("comment", ParamType::TGLcharConstPointer, 0);
+    const std::vector<uint8_t> &data = stringParam.data[0];
+    ASSERT(data.size() > 0 && data.back() == '\0');
+    std::string str(data.begin(), data.end() - 1);
+
+    // Write the string prefixed with single line comment
+    out << "// " << str;
+}
+
 void WriteCppReplayForCall(const CallCapture &call,
                            ReplayWriter &replayWriter,
                            std::ostream &out,
@@ -819,6 +832,13 @@ void WriteCppReplayForCall(const CallCapture &call,
                            std::vector<uint8_t> *binaryData,
                            size_t *maxResourceIDBufferSize)
 {
+    if (call.customFunctionName == "Comment")
+    {
+        // Just write it directly to the file and move on
+        WriteComment(out, call);
+        return;
+    }
+
     std::ostringstream callOut;
 
     callOut << call.name() << "(";
@@ -943,6 +963,16 @@ void WriteCppReplayForCall(const CallCapture &call,
     callOut << ")";
 
     out << callOut.str();
+}
+
+void AddComment(std::vector<CallCapture> *outCalls, const std::string &comment)
+{
+
+    ParamBuffer commentParamBuffer;
+    ParamCapture commentParam("comment", ParamType::TGLcharConstPointer);
+    CaptureString(comment.c_str(), &commentParam);
+    commentParamBuffer.addParam(std::move(commentParam));
+    outCalls->emplace_back("Comment", std::move(commentParamBuffer));
 }
 
 size_t MaxClientArraySize(const gl::AttribArray<size_t> &clientArraySizes)
@@ -8398,6 +8428,12 @@ void FrameCaptureShared::captureCall(gl::Context *context, CallCapture &&inCall,
             }
             INFO() << msg.str();
         }
+
+        std::stringstream skipCall;
+        skipCall << "Skipping invalid call to " << GetEntryPointName(inCall.entryPoint)
+                 << " with error: "
+                 << gl::GLenumToString(gl::GLESEnum::ErrorCode, context->getErrorForCapture());
+        AddComment(&mFrameCalls, skipCall.str());
     }
 }
 

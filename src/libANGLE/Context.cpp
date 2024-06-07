@@ -10128,6 +10128,19 @@ GLenum ErrorSet::getGraphicsResetStatus(rx::ContextImpl *contextImpl)
     return ToGLenum(mResetStatus);
 }
 
+GLenum ErrorSet::getErrorForCapture() const
+{
+    if (mErrors.empty())
+    {
+        return GL_NO_ERROR;
+    }
+    else
+    {
+        // Return the error without clearing it
+        return *mErrors.begin();
+    }
+}
+
 // StateCache implementation.
 StateCache::StateCache()
     : mCachedNonInstancedVertexElementLimit(0),
