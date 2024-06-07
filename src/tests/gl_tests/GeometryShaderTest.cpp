@@ -81,6 +81,12 @@ class GeometryShaderTest : public ANGLETest<>
     void layeredFramebufferClearTest(GLenum colorTarget);
     void layeredFramebufferPreRenderClearTest(GLenum colorTarget, bool doubleClear);
     void layeredFramebufferMidRenderClearTest(GLenum colorTarget);
+    void callFramebufferTextureAPI(APIExtensionVersion usedExtension,
+                                   GLenum target,
+                                   GLenum attachment,
+                                   GLuint texture,
+                                   GLint level);
+    void testNegativeFramebufferTexture(APIExtensionVersion usedExtension);
 
     static constexpr GLsizei kWidth              = 16;
     static constexpr GLsizei kHeight             = 16;
@@ -763,10 +769,26 @@ void main()
     }
 }
 
-// Verify correct errors can be reported when we use illegal parameters on FramebufferTextureEXT.
-TEST_P(GeometryShaderTest, NegativeFramebufferTextureEXT)
+void GeometryShaderTest::callFramebufferTextureAPI(APIExtensionVersion usedExtension,
+                                                   GLenum target,
+                                                   GLenum attachment,
+                                                   GLuint texture,
+                                                   GLint level)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
+    ASSERT(usedExtension == APIExtensionVersion::EXT || usedExtension == APIExtensionVersion::OES);
+    if (usedExtension == APIExtensionVersion::EXT)
+    {
+        glFramebufferTextureEXT(target, attachment, texture, level);
+    }
+    else
+    {
+        glFramebufferTextureOES(target, attachment, texture, level);
+    }
+}
+
+void GeometryShaderTest::testNegativeFramebufferTexture(APIExtensionVersion usedExtension)
+{
+    ASSERT(usedExtension == APIExtensionVersion::EXT || usedExtension == APIExtensionVersion::OES);
 
     GLFramebuffer fbo;
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -778,17 +800,17 @@ TEST_P(GeometryShaderTest, NegativeFramebufferTextureEXT)
     // [EXT_geometry_shader] Section 9.2.8, "Attaching Texture Images to a Framebuffer"
     // An INVALID_ENUM error is generated if <target> is not DRAW_FRAMEBUFFER, READ_FRAMEBUFFER, or
     // FRAMEBUFFER.
-    glFramebufferTextureEXT(GL_TEXTURE_2D, GL_COLOR_ATTACHMENT0, tex, 0);
+    callFramebufferTextureAPI(usedExtension, GL_TEXTURE_2D, GL_COLOR_ATTACHMENT0, tex, 0);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
     // An INVALID_ENUM error is generated if <attachment> is not one of the attachments in Table
     // 9.1.
-    glFramebufferTextureEXT(GL_FRAMEBUFFER, GL_TEXTURE_2D, tex, 0);
+    callFramebufferTextureAPI(usedExtension, GL_FRAMEBUFFER, GL_TEXTURE_2D, tex, 0);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
     // An INVALID_OPERATION error is generated if zero is bound to <target>.
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glFramebufferTextureEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0);
+    callFramebufferTextureAPI(usedExtension, GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -799,14 +821,29 @@ TEST_P(GeometryShaderTest, NegativeFramebufferTextureEXT)
     glGenTextures(1, &tex2);
     glDeleteTextures(1, &tex2);
     ASSERT_FALSE(glIsTexture(tex2));
-    glFramebufferTextureEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex2, 0);
+    callFramebufferTextureAPI(usedExtension, GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex2, 0);
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 
     GLint max3DSize;
     glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &max3DSize);
     GLint max3DLevel = static_cast<GLint>(std::log2(max3DSize));
-    glFramebufferTextureEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, max3DLevel + 1);
+    callFramebufferTextureAPI(usedExtension, GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex,
+                              max3DLevel + 1);
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
+}
+
+// Verify that correct errors are reported when we use illegal parameters in FramebufferTextureEXT.
+TEST_P(GeometryShaderTest, NegativeFramebufferTextureEXT)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
+    testNegativeFramebufferTexture(APIExtensionVersion::EXT);
+}
+
+// Verify that correct errors are reported when we use illegal parameters in FramebufferTextureOES.
+TEST_P(GeometryShaderTest, NegativeFramebufferTextureOES)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_geometry_shader"));
+    testNegativeFramebufferTexture(APIExtensionVersion::OES);
 }
 
 // Verify CheckFramebufferStatus can work correctly on layered depth and stencil attachments.
@@ -1468,6 +1505,50 @@ void main()
     EXPECT_PIXEL_RECT_EQ(0, 0, w / 2, h / 2, GLColor::green);
     EXPECT_PIXEL_RECT_EQ(0, h / 2, w, h / 2, GLColor::red);
     EXPECT_PIXEL_RECT_EQ(w / 2, 0, w / 2, h / 2, GLColor::red);
+}
+
+// Verify that correct errors are reported when we use illegal parameters in FramebufferTexture.
+TEST_P(GeometryShaderTestES32, NegativeFramebufferTexture)
+{
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_3D, tex);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 32, 32, 32, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    // [EXT_geometry_shader] Section 9.2.8, "Attaching Texture Images to a Framebuffer"
+    // An INVALID_ENUM error is generated if <target> is not DRAW_FRAMEBUFFER, READ_FRAMEBUFFER, or
+    // FRAMEBUFFER.
+    glFramebufferTexture(GL_TEXTURE_2D, GL_COLOR_ATTACHMENT0, tex, 0);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    // An INVALID_ENUM error is generated if <attachment> is not one of the attachments in Table
+    // 9.1.
+    glFramebufferTexture(GL_FRAMEBUFFER, GL_TEXTURE_2D, tex, 0);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    // An INVALID_OPERATION error is generated if zero is bound to <target>.
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    // An INVALID_VALUE error is generated if <texture> is not the name of a texture object, or if
+    // <level> is not a supported texture level for <texture>.
+    GLuint tex2;
+    glGenTextures(1, &tex2);
+    glDeleteTextures(1, &tex2);
+    ASSERT_FALSE(glIsTexture(tex2));
+    glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex2, 0);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    GLint max3DSize;
+    glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &max3DSize);
+    GLint max3DLevel = static_cast<GLint>(std::log2(max3DSize));
+    glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, max3DLevel + 1);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
 }
 
 // Verify that we can have the max amount of uniforms with a geometry shader.

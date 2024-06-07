@@ -28,6 +28,14 @@ bool ValidateTexBufferRangeBase(const Context *context,
                                 GLintptr offset,
                                 GLsizeiptr size);
 
+// GL_EXT_geometry_shader
+bool ValidateFramebufferTextureCommon(const Context *context,
+                                      angle::EntryPoint entryPoint,
+                                      GLenum target,
+                                      GLenum attachment,
+                                      TextureID texture,
+                                      GLint level);
+
 // GL_EXT_multi_draw_indirect
 bool ValidateMultiDrawIndirectBase(const Context *context,
                                    angle::EntryPoint entryPoint,
