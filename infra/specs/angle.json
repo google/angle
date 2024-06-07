@@ -2714,7 +2714,7 @@
           "--trials-per-sample=3",
           "--show-test-stdout",
           "--trial-time=10",
-          "--custom-throttling-temp=36"
+          "--custom-throttling-temp=38"
         ],
         "merge": {
           "script": "//scripts/process_angle_perf_results.py"
@@ -2746,7 +2746,7 @@
           "--use-gl=native",
           "--trace-tests",
           "--trial-time=10",
-          "--custom-throttling-temp=36"
+          "--custom-throttling-temp=38"
         ],
         "merge": {
           "script": "//scripts/process_angle_perf_results.py"
@@ -2778,7 +2778,7 @@
           "--use-angle=vulkan",
           "--trace-tests",
           "--trial-time=10",
-          "--custom-throttling-temp=36"
+          "--custom-throttling-temp=38"
         ],
         "merge": {
           "script": "//scripts/process_angle_perf_results.py"

@@ -37,7 +37,7 @@
       'android-arm64-pixel6-perf': {
         'args': [
           # Custom temp throttling for perf tests on pixel6 b/345514719
-          '--custom-throttling-temp=36',
+          '--custom-throttling-temp=38',
         ],
       },
     },
@@ -68,7 +68,7 @@
       'android-arm64-pixel6-perf': {
         'args': [
           # Custom temp throttling for perf tests on pixel6 b/345514719
-          '--custom-throttling-temp=36',
+          '--custom-throttling-temp=38',
         ],
       },
     },
@@ -78,7 +78,7 @@
       'android-arm64-pixel6-perf': {
         'args': [
           # Custom temp throttling for perf tests on pixel6 b/345514719
-          '--custom-throttling-temp=36',
+          '--custom-throttling-temp=38',
         ],
       },
     },
