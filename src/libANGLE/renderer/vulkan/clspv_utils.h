@@ -14,6 +14,8 @@
 
 #include <libANGLE/renderer/vulkan/CLDeviceVk.h>
 
+#include "clspv/Compiler.h"
+
 namespace rx
 {
 struct ClspvPrintfBufferStorage
@@ -39,6 +41,13 @@ angle::Result ClspvProcessPrintfBuffer(unsigned char *buffer,
 // vulkan renderer.
 std::string ClspvGetCompilerOptions(const CLDeviceVk *device);
 
+ClspvError ClspvCompileSource(const size_t programCount,
+                              const size_t *programSizes,
+                              const char **programs,
+                              const char *options,
+                              char **outputBinary,
+                              size_t *outputBinarySize,
+                              char **outputLog);
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_VULKAN_CLSPV_UTILS_H_

@@ -9,11 +9,12 @@
 #include "libANGLE/renderer/vulkan/clspv_utils.h"
 #include "libANGLE/renderer/vulkan/CLDeviceVk.h"
 
+#include <mutex>
 #include <string>
 
-#include "common/string_utils.h"
-
 #include "CL/cl_half.h"
+
+#include "clspv/Compiler.h"
 
 namespace rx
 {
@@ -361,6 +362,24 @@ std::string ClspvGetCompilerOptions(const CLDeviceVk *device)
     }
 
     return options;
+}
+
+// A locked wrapper for clspvCompileFromSourcesString - the underneath LLVM parser is non-rentrant.
+// So protecting it with mutex.
+ClspvError ClspvCompileSource(const size_t programCount,
+                              const size_t *programSizes,
+                              const char **programs,
+                              const char *options,
+                              char **outputBinary,
+                              size_t *outputBinarySize,
+                              char **outputLog)
+{
+    [[clang::no_destroy]] static angle::SimpleMutex mtx;
+
+    std::lock_guard<angle::SimpleMutex> lock(mtx);
+
+    return clspvCompileFromSourcesString(programCount, programSizes, programs, options,
+                                         outputBinary, outputBinarySize, outputLog);
 }
 
 }  // namespace rx

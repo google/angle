@@ -857,8 +857,9 @@ bool CLProgramVk::buildInternal(const cl::DevicePtrs &devices,
                 case BuildType::COMPILE:
                 {
                     ScopedClspvContext clspvCtx;
-                    const char *clSrc   = mProgram.getSource().c_str();
-                    ClspvError clspvRet = clspvCompileFromSourcesString(
+                    const char *clSrc = mProgram.getSource().c_str();
+
+                    ClspvError clspvRet = ClspvCompileSource(
                         1, NULL, static_cast<const char **>(&clSrc), processedOptions.c_str(),
                         &clspvCtx.mOutputBin, &clspvCtx.mOutputBinSize, &clspvCtx.mOutputBuildLog);
                     deviceProgramData.buildLog =
@@ -898,7 +899,8 @@ bool CLProgramVk::buildInternal(const cl::DevicePtrs &devices,
                         vSizes.push_back(linkProgramData->IR.size());
                         vBins.push_back(linkProgramData->IR.data());
                     }
-                    ClspvError clspvRet = clspvCompileFromSourcesString(
+
+                    ClspvError clspvRet = ClspvCompileSource(
                         linkPrograms.size(), vSizes.data(), vBins.data(), processedOptions.c_str(),
                         &clspvCtx.mOutputBin, &clspvCtx.mOutputBinSize, &clspvCtx.mOutputBuildLog);
                     deviceProgramData.buildLog =
