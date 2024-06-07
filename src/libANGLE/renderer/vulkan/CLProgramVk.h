@@ -196,6 +196,12 @@ class CLProgramVk : public CLProgramImpl
             return getPushConstantRangeFromClspvReflectionType(
                 NonSemanticClspvReflectionPushConstantNumWorkgroups);
         }
+
+        inline const VkPushConstantRange *getRegionOffsetRange() const
+        {
+            return getPushConstantRangeFromClspvReflectionType(
+                NonSemanticClspvReflectionPushConstantRegionOffset);
+        }
     };
     using DevicePrograms   = angle::HashMap<const _cl_device_id *, DeviceProgramData>;
     using LinkPrograms     = std::vector<const DeviceProgramData *>;

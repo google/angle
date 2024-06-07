@@ -613,6 +613,18 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
             globalSizeRange->offset, globalSizeRange->size, ndrange.globalWorkSize.data());
     }
 
+    // Push region offset data.
+    const VkPushConstantRange *regionOffsetRange = devProgramData->getRegionOffsetRange();
+    if (regionOffsetRange != nullptr)
+    {
+        // We dont support non-uniform batches yet in ANGLE, this field also represents global
+        // offset for NDR in uniform cases. Update this when non-uniform batches are supported.
+        // https://github.com/google/clspv/blob/main/docs/OpenCLCOnVulkan.md#module-scope-push-constants
+        mComputePassCommands->getCommandBuffer().pushConstants(
+            kernelVk.getPipelineLayout().get(), VK_SHADER_STAGE_COMPUTE_BIT,
+            regionOffsetRange->offset, regionOffsetRange->size, ndrange.globalWorkOffset.data());
+    }
+
     // Push enqueued local size
     const VkPushConstantRange *enqueuedLocalSizeRange = devProgramData->getEnqueuedLocalSizeRange();
     if (enqueuedLocalSizeRange != nullptr)
