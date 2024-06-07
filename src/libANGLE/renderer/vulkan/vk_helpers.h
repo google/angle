@@ -3086,6 +3086,10 @@ class ImageHelper final : public Resource, public angle::Subject
         return ext.width * ext.height > kThreadholdForComputeTransCoding;
     }
 
+    void adjustLayerRange(const std::vector<SubresourceUpdate> &levelUpdates,
+                          uint32_t *layerStart,
+                          uint32_t *layerEnd);
+
     // Vulkan objects.
     Image mImage;
     DeviceMemory mDeviceMemory;

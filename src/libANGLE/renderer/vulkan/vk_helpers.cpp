@@ -9590,11 +9590,31 @@ angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
     for (gl::LevelIndex updateMipLevelGL = levelGLStart; updateMipLevelGL < levelGLEnd;
          ++updateMipLevelGL)
     {
+        // If updates to this level are specifically asked to be skipped, skip
+        // them. This can happen when recreating an image that has been partially incompatibly
+        // redefined, in which case only updates to the levels that haven't been redefined
+        // should be flushed.
+        if (skipLevelsAllFaces.test(updateMipLevelGL.get()))
+        {
+            continue;
+        }
+
         // It is expected that the checked mip levels in this loop do not surpass the size of
         // mSubresourceUpdates.
         std::vector<SubresourceUpdate> *levelUpdates = getLevelUpdates(updateMipLevelGL);
         std::vector<SubresourceUpdate> updatesToKeep;
         ASSERT(levelUpdates != nullptr);
+
+        // Because updates may have overlapping layer ranges, we must first figure out the actual
+        // layer ranges that will be flushed. The updatesToKeep list must compare against this
+        // adjusted layer range. Otherwise you may end up keeping the update even though it is
+        // overlapped with the update that gets flushed, and then content gets overwritten when
+        // updatesToKeep gets flushed out.
+        uint32_t adjustedLayerStart = layerStart, adjustedLayerEnd = layerEnd;
+        if (levelUpdates->size() > 1)
+        {
+            adjustLayerRange(*levelUpdates, &adjustedLayerStart, &adjustedLayerEnd);
+        }
 
         for (SubresourceUpdate &update : *levelUpdates)
         {
@@ -9610,19 +9630,15 @@ angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
 
             // If the update layers don't intersect the requested layers, skip the update.
             const bool areUpdateLayersOutsideRange =
-                updateBaseLayer + updateLayerCount <= layerStart || updateBaseLayer >= layerEnd;
-
-            const LevelIndex updateMipLevelVk = toVkLevel(updateMipLevelGL);
-
-            // Additionally, if updates to this level are specifically asked to be skipped, skip
-            // them. This can happen when recreating an image that has been partially incompatibly
-            // redefined, in which case only updates to the levels that haven't been redefined
-            // should be flushed.
-            if (areUpdateLayersOutsideRange || skipLevelsAllFaces.test(updateMipLevelGL.get()))
+                updateBaseLayer + updateLayerCount <= adjustedLayerStart ||
+                updateBaseLayer >= adjustedLayerEnd;
+            if (areUpdateLayersOutsideRange)
             {
                 updatesToKeep.emplace_back(std::move(update));
                 continue;
             }
+
+            const LevelIndex updateMipLevelVk = toVkLevel(updateMipLevelGL);
 
             // It seems we haven't fully support glCopyImageSubData
             // when compressed format emulated by uncompressed format.
@@ -9946,6 +9962,29 @@ bool ImageHelper::removeStagedClearUpdatesAndReturnColor(gl::LevelIndex levelGL,
     }
 
     return result;
+}
+
+void ImageHelper::adjustLayerRange(const std::vector<SubresourceUpdate> &levelUpdates,
+                                   uint32_t *layerStart,
+                                   uint32_t *layerEnd)
+{
+    for (const SubresourceUpdate &update : levelUpdates)
+    {
+        uint32_t updateBaseLayer, updateLayerCount;
+        update.getDestSubresource(mLayerCount, &updateBaseLayer, &updateLayerCount);
+        uint32_t updateLayerEnd = updateBaseLayer + updateLayerCount;
+
+        // In some cases, the update has the bigger layer range than the request. If the update
+        // layers intersect the requested layers, then expand the layer range to the maximum from
+        // the update and from the request.
+        const bool areUpdateLayersWithinRange =
+            updateBaseLayer < *layerEnd && updateLayerEnd > *layerStart;
+        if (areUpdateLayersWithinRange)
+        {
+            *layerStart = std::min(*layerStart, updateBaseLayer);
+            *layerEnd   = std::max(*layerEnd, updateLayerEnd);
+        }
+    }
 }
 
 gl::LevelIndex ImageHelper::getLastAllocatedLevel() const
