@@ -6,7 +6,6 @@
 // CLProgramVk.cpp: Implements the class methods for CLProgramVk.
 
 #include "libANGLE/renderer/vulkan/CLProgramVk.h"
-#include "common/log_utils.h"
 #include "libANGLE/renderer/vulkan/CLContextVk.h"
 #include "libANGLE/renderer/vulkan/CLDeviceVk.h"
 #include "libANGLE/renderer/vulkan/clspv_utils.h"
@@ -18,7 +17,7 @@
 #include "libANGLE/CLProgram.h"
 #include "libANGLE/cl_utils.h"
 
-#include "common/PackedEnums.h"
+#include "common/log_utils.h"
 #include "common/string_utils.h"
 #include "common/system_utils.h"
 
@@ -358,7 +357,9 @@ void CLAsyncBuildTask::operator()()
 }
 
 CLProgramVk::CLProgramVk(const cl::Program &program)
-    : CLProgramImpl(program), mContext(&program.getContext().getImpl<CLContextVk>())
+    : CLProgramImpl(program),
+      mContext(&program.getContext().getImpl<CLContextVk>()),
+      mAsyncBuildEvent(nullptr)
 {}
 
 angle::Result CLProgramVk::init()
@@ -367,10 +368,12 @@ angle::Result CLProgramVk::init()
     ANGLE_TRY(mContext->getDevices(&devices));
 
     // The devices associated with the program object are the devices associated with context
-    for (const cl::RefPointer<cl::Device> &device : devices)
+    for (const cl::DevicePtr &device : devices)
     {
         mAssociatedDevicePrograms[device->getNative()] = DeviceProgramData{};
     }
+
+    mAsyncBuildEvent = std::make_shared<angle::WaitableEventDone>();
 
     return angle::Result::Continue;
 }
@@ -496,11 +499,11 @@ angle::Result CLProgramVk::build(const cl::DevicePtrs &devices,
 
     if (notify)
     {
-        std::shared_ptr<angle::WaitableEvent> asyncEvent =
+        mAsyncBuildEvent =
             getPlatform()->postMultiThreadWorkerTask(std::make_shared<CLAsyncBuildTask>(
                 this, devicePtrs, std::string(options ? options : ""), "", buildType,
                 LinkProgramsList{}, notify));
-        ASSERT(asyncEvent != nullptr);
+        ASSERT(mAsyncBuildEvent != nullptr);
     }
     else
     {
@@ -556,15 +559,15 @@ angle::Result CLProgramVk::compile(const cl::DevicePtrs &devices,
     // Perform compile
     if (notify)
     {
-        std::shared_ptr<angle::WaitableEvent> asyncEvent =
-            mProgram.getContext().getPlatform().getMultiThreadPool()->postWorkerTask(
-                std::make_shared<CLAsyncBuildTask>(
-                    this, devicePtrs, std::string(options ? options : ""), internalCompileOpts,
-                    BuildType::COMPILE, LinkProgramsList{}, notify));
-        ASSERT(asyncEvent != nullptr);
+        mAsyncBuildEvent = mProgram.getContext().getPlatform().getMultiThreadPool()->postWorkerTask(
+            std::make_shared<CLAsyncBuildTask>(
+                this, devicePtrs, std::string(options ? options : ""), internalCompileOpts,
+                BuildType::COMPILE, LinkProgramsList{}, notify));
+        ASSERT(mAsyncBuildEvent != nullptr);
     }
     else
     {
+        mAsyncBuildEvent = std::make_shared<angle::WaitableEventDone>();
         if (!buildInternal(devicePtrs, std::string(options ? options : ""), internalCompileOpts,
                            BuildType::COMPILE, LinkProgramsList{}))
         {
@@ -730,8 +733,10 @@ angle::Result CLProgramVk::createKernel(const cl::Kernel &kernel,
                                         const char *name,
                                         CLKernelImpl::Ptr *kernelOut)
 {
-    std::scoped_lock<angle::SimpleMutex> sl(mProgramMutex);
+    // Wait for the compile to finish
+    mAsyncBuildEvent->wait();
 
+    std::scoped_lock<angle::SimpleMutex> sl(mProgramMutex);
     const auto devProgram = getDeviceProgramData(name);
     ASSERT(devProgram != nullptr);
 

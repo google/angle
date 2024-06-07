@@ -369,6 +369,8 @@ class CLProgramVk : public CLProgramImpl
     vk::DescriptorSetArray<vk::MetaDescriptorPool> mMetaDescriptorPools;
     vk::DescriptorSetArray<vk::DynamicDescriptorPoolPointer> mDynamicDescriptorPools;
     angle::SimpleMutex mProgramMutex;
+
+    std::shared_ptr<angle::WaitableEvent> mAsyncBuildEvent;
 };
 
 class CLAsyncBuildTask : public angle::Closure
