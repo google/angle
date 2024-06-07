@@ -429,7 +429,7 @@ angle::Result CLCommandQueueVk::enqueueNDRangeKernel(const cl::Kernel &kernel,
 
     // Here, we create-update-bind the kernel's descriptor set, put push-constants in cmd
     // buffer, capture kernel resources, and handle kernel execution dependencies
-    ANGLE_TRY(processKernelResources(kernelImpl, ndrange));
+    ANGLE_TRY(processKernelResources(kernelImpl, ndrange, workgroupCount));
 
     mComputePassCommands->getCommandBuffer().bindComputePipeline(pipelineHelper->getPipeline());
     mComputePassCommands->getCommandBuffer().dispatch(workgroupCount[0], workgroupCount[1],
@@ -580,7 +580,8 @@ angle::Result CLCommandQueueVk::syncHostBuffers()
 }
 
 angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
-                                                       const cl::NDRange &ndrange)
+                                                       const cl::NDRange &ndrange,
+                                                       const cl::WorkgroupCount &workgroupCount)
 {
     bool needsBarrier = false;
     UpdateDescriptorSetsBuilder updateDescriptorSetsBuilder;
@@ -620,6 +621,17 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
             kernelVk.getPipelineLayout().get(), VK_SHADER_STAGE_COMPUTE_BIT,
             enqueuedLocalSizeRange->offset, enqueuedLocalSizeRange->size,
             ndrange.localWorkSize.data());
+    }
+
+    // Push number of workgroups
+    const VkPushConstantRange *numWorkgroupsRange = devProgramData->getNumWorkgroupsRange();
+    if (devProgramData->reflectionData.pushConstants.contains(
+            NonSemanticClspvReflectionPushConstantNumWorkgroups))
+    {
+        uint32_t numWorkgroups[3] = {workgroupCount[0], workgroupCount[1], workgroupCount[2]};
+        mComputePassCommands->getCommandBuffer().pushConstants(
+            kernelVk.getPipelineLayout().get(), VK_SHADER_STAGE_COMPUTE_BIT,
+            numWorkgroupsRange->offset, numWorkgroupsRange->size, &numWorkgroups);
     }
 
     // Retain kernel object until we finish executing it later
