@@ -87,6 +87,7 @@ class GeometryShaderTest : public ANGLETest<>
                                    GLuint texture,
                                    GLint level);
     void testNegativeFramebufferTexture(APIExtensionVersion usedExtension);
+    void testCreateAndAttachGeometryShader(APIExtensionVersion usedExtension);
 
     static constexpr GLsizei kWidth              = 16;
     static constexpr GLsizei kHeight             = 16;
@@ -100,10 +101,11 @@ class GeometryShaderTest : public ANGLETest<>
 class GeometryShaderTestES3 : public ANGLETest<>
 {};
 
-class GeometryShaderTestES32 : public ANGLETest<>
+class GeometryShaderTestES32 : public GeometryShaderTest
 {};
 
-// Verify that Geometry Shader cannot be created in an OpenGL ES 3.0 context.
+// Verify that a geometry shader cannot be created in an OpenGL ES 3.0 context, since at least
+// ES 3.1 is required.
 TEST_P(GeometryShaderTestES3, CreateGeometryShaderInES3)
 {
     EXPECT_TRUE(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
@@ -112,13 +114,38 @@ TEST_P(GeometryShaderTestES3, CreateGeometryShaderInES3)
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
 }
 
-// Verify that Geometry Shader can be created and attached to a program.
-TEST_P(GeometryShaderTest, CreateAndAttachGeometryShader)
+void GeometryShaderTest::testCreateAndAttachGeometryShader(APIExtensionVersion usedExtension)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
+    ASSERT(usedExtension == APIExtensionVersion::EXT || usedExtension == APIExtensionVersion::OES ||
+           usedExtension == APIExtensionVersion::Core);
 
-    constexpr char kGS[] = R"(#version 310 es
-#extension GL_EXT_geometry_shader : require
+    std::string gs;
+
+    constexpr char kGLSLVersion31[] = R"(#version 310 es
+)";
+    constexpr char kGLSLVersion32[] = R"(#version 320 es
+)";
+    constexpr char kGeometryEXT[]   = R"(#extension GL_EXT_geometry_shader : require
+)";
+    constexpr char kGeometryOES[]   = R"(#extension GL_OES_geometry_shader : require
+)";
+
+    if (usedExtension == APIExtensionVersion::EXT)
+    {
+        gs.append(kGLSLVersion31);
+        gs.append(kGeometryEXT);
+    }
+    else if (usedExtension == APIExtensionVersion::OES)
+    {
+        gs.append(kGLSLVersion31);
+        gs.append(kGeometryOES);
+    }
+    else
+    {
+        gs.append(kGLSLVersion32);
+    }
+
+    constexpr char kGSBody[] = R"(
 layout (invocations = 3, triangles) in;
 layout (triangle_strip, max_vertices = 3) out;
 in vec4 texcoord[];
@@ -135,9 +162,9 @@ void main()
     }
     EndPrimitive();
 })";
+    gs.append(kGSBody);
 
-    GLuint geometryShader = CompileShader(GL_GEOMETRY_SHADER_EXT, kGS);
-
+    GLuint geometryShader = CompileShader(GL_GEOMETRY_SHADER_EXT, gs.c_str());
     EXPECT_NE(0u, geometryShader);
 
     GLuint programID = glCreateProgram();
@@ -148,6 +175,26 @@ void main()
     glDeleteProgram(programID);
 
     EXPECT_GL_NO_ERROR();
+}
+
+// Verify that a geometry shader can be created and attached to a program using the EXT extension.
+TEST_P(GeometryShaderTest, CreateAndAttachGeometryShaderEXT)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
+    testCreateAndAttachGeometryShader(APIExtensionVersion::EXT);
+}
+
+// Verify that a geometry shader can be created and attached to a program using the OES extension.
+TEST_P(GeometryShaderTest, CreateAndAttachGeometryShaderOES)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_geometry_shader"));
+    testCreateAndAttachGeometryShader(APIExtensionVersion::OES);
+}
+
+// Verify that a geometry shader can be created and attached to a program in GLES 3.2.
+TEST_P(GeometryShaderTestES32, CreateAndAttachGeometryShader)
+{
+    testCreateAndAttachGeometryShader(APIExtensionVersion::Core);
 }
 
 // Verify that Geometry Shader can be compiled when geometry shader array input size
@@ -775,20 +822,26 @@ void GeometryShaderTest::callFramebufferTextureAPI(APIExtensionVersion usedExten
                                                    GLuint texture,
                                                    GLint level)
 {
-    ASSERT(usedExtension == APIExtensionVersion::EXT || usedExtension == APIExtensionVersion::OES);
+    ASSERT(usedExtension == APIExtensionVersion::EXT || usedExtension == APIExtensionVersion::OES ||
+           usedExtension == APIExtensionVersion::Core);
     if (usedExtension == APIExtensionVersion::EXT)
     {
         glFramebufferTextureEXT(target, attachment, texture, level);
     }
-    else
+    else if (usedExtension == APIExtensionVersion::OES)
     {
         glFramebufferTextureOES(target, attachment, texture, level);
+    }
+    else
+    {
+        glFramebufferTexture(target, attachment, texture, level);
     }
 }
 
 void GeometryShaderTest::testNegativeFramebufferTexture(APIExtensionVersion usedExtension)
 {
-    ASSERT(usedExtension == APIExtensionVersion::EXT || usedExtension == APIExtensionVersion::OES);
+    ASSERT(usedExtension == APIExtensionVersion::EXT || usedExtension == APIExtensionVersion::OES ||
+           usedExtension == APIExtensionVersion::Core);
 
     GLFramebuffer fbo;
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -1510,45 +1563,7 @@ void main()
 // Verify that correct errors are reported when we use illegal parameters in FramebufferTexture.
 TEST_P(GeometryShaderTestES32, NegativeFramebufferTexture)
 {
-    GLFramebuffer fbo;
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-
-    GLTexture tex;
-    glBindTexture(GL_TEXTURE_3D, tex);
-    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 32, 32, 32, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-
-    // [EXT_geometry_shader] Section 9.2.8, "Attaching Texture Images to a Framebuffer"
-    // An INVALID_ENUM error is generated if <target> is not DRAW_FRAMEBUFFER, READ_FRAMEBUFFER, or
-    // FRAMEBUFFER.
-    glFramebufferTexture(GL_TEXTURE_2D, GL_COLOR_ATTACHMENT0, tex, 0);
-    EXPECT_GL_ERROR(GL_INVALID_ENUM);
-
-    // An INVALID_ENUM error is generated if <attachment> is not one of the attachments in Table
-    // 9.1.
-    glFramebufferTexture(GL_FRAMEBUFFER, GL_TEXTURE_2D, tex, 0);
-    EXPECT_GL_ERROR(GL_INVALID_ENUM);
-
-    // An INVALID_OPERATION error is generated if zero is bound to <target>.
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0);
-    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-
-    // An INVALID_VALUE error is generated if <texture> is not the name of a texture object, or if
-    // <level> is not a supported texture level for <texture>.
-    GLuint tex2;
-    glGenTextures(1, &tex2);
-    glDeleteTextures(1, &tex2);
-    ASSERT_FALSE(glIsTexture(tex2));
-    glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex2, 0);
-    EXPECT_GL_ERROR(GL_INVALID_VALUE);
-
-    GLint max3DSize;
-    glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &max3DSize);
-    GLint max3DLevel = static_cast<GLint>(std::log2(max3DSize));
-    glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, max3DLevel + 1);
-    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+    testNegativeFramebufferTexture(APIExtensionVersion::Core);
 }
 
 // Verify that we can have the max amount of uniforms with a geometry shader.

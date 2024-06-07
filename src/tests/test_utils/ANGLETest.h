@@ -661,6 +661,7 @@ class ANGLETest : public ANGLETestBase, public ::testing::TestWithParam<Params>
 
 enum class APIExtensionVersion
 {
+    Core,
     OES,
     EXT,
 };
