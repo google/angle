@@ -1451,6 +1451,27 @@ struct FeaturesVk : FeatureSetBase
         &members, "https://issuetracker.google.com/336844257"
     };
 
+    FeatureInfo supportsDynamicRendering = {
+        "supportsDynamicRendering",
+        FeatureCategory::VulkanFeatures,
+        "VkDevice supports VK_KHR_dynamic_rendering extension",
+        &members, "http://anglebug.com/42267038"
+    };
+
+    FeatureInfo supportsDynamicRenderingLocalRead = {
+        "supportsDynamicRenderingLocalRead",
+        FeatureCategory::VulkanFeatures,
+        "VkDevice supports VK_KHR_dynamic_rendering_local_read extension",
+        &members, "http://anglebug.com/42267038"
+    };
+
+    FeatureInfo preferDynamicRendering = {
+        "preferDynamicRendering",
+        FeatureCategory::VulkanFeatures,
+        "Whether dynamic rendering should be used instead of render pass objects",
+        &members, "http://anglebug.com/42267038"
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

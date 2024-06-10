@@ -1585,6 +1585,30 @@
                 "VkDevice supports VK_KHR_synchronization2 extension"
             ],
             "issue": "https://issuetracker.google.com/336844257"
+        },
+        {
+            "name": "supports_dynamic_rendering",
+            "category": "Features",
+            "description": [
+                "VkDevice supports VK_KHR_dynamic_rendering extension"
+            ],
+            "issue": "http://anglebug.com/42267038"
+        },
+        {
+            "name": "supports_dynamic_rendering_local_read",
+            "category": "Features",
+            "description": [
+                "VkDevice supports VK_KHR_dynamic_rendering_local_read extension"
+            ],
+            "issue": "http://anglebug.com/42267038"
+        },
+        {
+            "name": "prefer_dynamic_rendering",
+            "category": "Features",
+            "description": [
+                "Whether dynamic rendering should be used instead of render pass objects"
+            ],
+            "issue": "http://anglebug.com/42267038"
         }
     ]
 }
