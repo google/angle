@@ -2747,6 +2747,8 @@ angle::Result FramebufferVk::createNewFramebuffer(
     const vk::FramebufferAttachmentsVector<VkImageView> &unpackedAttachments,
     const vk::FramebufferAttachmentsVector<RenderTargetInfo> &renderTargetsInfo)
 {
+    ASSERT(!contextVk->getFeatures().preferDynamicRendering.enabled);
+
     // The backbuffer framebuffer is cached in WindowSurfaceVk instead.
     ASSERT(mBackbuffer == nullptr);
     // Called only when a new framebuffer is needed.
@@ -2898,7 +2900,13 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk,
     ANGLE_TRY(getAttachmentsAndRenderTargets(contextVk, &unpackedAttachments, &renderTargetsInfo));
 
     vk::Framebuffer framebufferHandle;
-    if (mCurrentFramebuffer.valid())
+    if (contextVk->getFeatures().preferDynamicRendering.enabled)
+    {
+        // Nothing to do with dynamic rendering.  The image views and other info are still placed in
+        // |framebufferOut| to be passed to |vkCmdBeginRendering| similarly to how they are used
+        // with imageless framebuffers with render pass objects.
+    }
+    else if (mCurrentFramebuffer.valid())
     {
         // If a valid framebuffer is already created, use it.  This is not done when the swapchain
         // is being resolved, because the appropriate framebuffer needs to be queried from the back
@@ -2925,26 +2933,31 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk,
             ANGLE_TRY(contextVk->getCompatibleRenderPass(mRenderPassDesc, &compatibleRenderPass));
 
             // If there is a backbuffer, query the framebuffer from WindowSurfaceVk instead.
-            ANGLE_TRY(mBackbuffer->getCurrentFramebuffer(
-                contextVk,
-                mRenderPassDesc.hasFramebufferFetch() ? FramebufferFetchMode::Enabled
-                                                      : FramebufferFetchMode::Disabled,
-                *compatibleRenderPass, &framebufferHandle));
-
-            // Account for swapchain pre-rotation
-            framebufferWidth  = renderTargetsInfo[0].renderTarget->getRotatedExtents().width;
-            framebufferHeight = renderTargetsInfo[0].renderTarget->getRotatedExtents().height;
+            ANGLE_TRY(mBackbuffer->getCurrentFramebuffer(contextVk,
+                                                         mRenderPassDesc.hasFramebufferFetch()
+                                                             ? FramebufferFetchMode::Enabled
+                                                             : FramebufferFetchMode::Disabled,
+                                                         compatibleRenderPass, &framebufferHandle));
         }
     }
 
+    if (mBackbuffer != nullptr)
+    {
+        // Account for swapchain pre-rotation
+        framebufferWidth  = renderTargetsInfo[0].renderTarget->getRotatedExtents().width;
+        framebufferHeight = renderTargetsInfo[0].renderTarget->getRotatedExtents().height;
+    }
+
     const vk::ImagelessFramebuffer imagelessFramebuffer =
-        contextVk->getFeatures().supportsImagelessFramebuffer.enabled && mBackbuffer == nullptr
+        contextVk->getFeatures().preferDynamicRendering.enabled ||
+                (contextVk->getFeatures().supportsImagelessFramebuffer.enabled &&
+                 mBackbuffer == nullptr)
             ? vk::ImagelessFramebuffer::Yes
             : vk::ImagelessFramebuffer::No;
 
-    framebufferOut->setFramebuffer(std::move(framebufferHandle), std::move(unpackedAttachments),
-                                   framebufferWidth, framebufferHeight, framebufferLayers,
-                                   imagelessFramebuffer);
+    framebufferOut->setFramebuffer(contextVk, std::move(framebufferHandle),
+                                   std::move(unpackedAttachments), framebufferWidth,
+                                   framebufferHeight, framebufferLayers, imagelessFramebuffer);
 
     return angle::Result::Continue;
 }
@@ -3167,9 +3180,15 @@ void FramebufferVk::clearWithCommand(ContextVk *contextVk,
                 renderPassCommands->getRenderPassDesc().hasColorUnresolveAttachment(colorIndexGL) ||
                 !optimizeWithLoadOp)
             {
-                attachments.emplace_back(VkClearAttachment{VK_IMAGE_ASPECT_COLOR_BIT,
-                                                           static_cast<uint32_t>(colorIndexGL),
-                                                           (*clears)[colorIndexGL]});
+                // With render pass objects, the clears are indexed by the subpass-mapped locations.
+                // With dynamic rendering, they are indexed by the actual attachment index.
+                const uint32_t clearAttachmentIndex =
+                    contextVk->getFeatures().preferDynamicRendering.enabled
+                        ? colorIndexVk.get()
+                        : static_cast<uint32_t>(colorIndexGL);
+
+                attachments.emplace_back(VkClearAttachment{
+                    VK_IMAGE_ASPECT_COLOR_BIT, clearAttachmentIndex, (*clears)[colorIndexGL]});
                 clears->reset(colorIndexGL);
                 ++contextVk->getPerfCounters().colorClearAttachments;
 
@@ -3746,12 +3765,27 @@ void FramebufferVk::switchToFramebufferFetchMode(ContextVk *contextVk, bool hasF
         return;
     }
 
-    // Make sure framebuffer is recreated.
-    releaseCurrentFramebuffer(contextVk);
     mCurrentFramebufferDesc.setFramebufferFetchMode(hasFramebufferFetch);
 
     mRenderPassDesc.setFramebufferFetchMode(hasFramebufferFetch);
     contextVk->onDrawFramebufferRenderPassDescChange(this, nullptr);
+
+    if (contextVk->getFeatures().preferDynamicRendering.enabled)
+    {
+        // Note: with dynamic rendering, |onDrawFramebufferRenderPassDescChange| is really
+        // unnecessary, but is called for simplicity.  The downside is unnecessary recreation of
+        // pipelines, which is mitigated by |permanentlySwitchToFramebufferFetchMode| which is
+        // automatically enabled with |preferDynamicRendering|.
+        //
+        // If |onDrawFramebufferRenderPassDescChange| is to be optimized away, care must be taken
+        // as GraphicsPipelineDesc::mRenderPassDesc::mHasFramebufferFetch can get out of sync with
+        // FramebufferDesc::mHasFramebufferFetch, and
+        // RenderPassCommandBufferHelper::mRenderPassDesc::mHasFramebufferFetch.
+        return;
+    }
+
+    // Make sure framebuffer is recreated.
+    releaseCurrentFramebuffer(contextVk);
 
     // Clear the framebuffer cache, as none of the old framebuffers are usable.
     if (contextVk->getFeatures().permanentlySwitchToFramebufferFetchMode.enabled)

@@ -196,15 +196,6 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-VkImageViewCreateInfo-pNext-01585",
     // http://anglebug.com/42265014
     "vkEnumeratePhysicalDevices: One or more layers modified physical devices",
-    // When using Vulkan secondary command buffers, the command buffer is begun with the current
-    // framebuffer specified in pInheritanceInfo::framebuffer.  If the framebuffer is multisampled
-    // and is resolved, an optimization would change the framebuffer to add the resolve target and
-    // use a subpass resolve operation instead.  The following error complains that the framebuffer
-    // used to start the render pass and the one specified in pInheritanceInfo::framebuffer must be
-    // equal, which is not true in that case.  In practice, this is benign, as the part of the
-    // framebuffer that's accessed by the command buffer is identically laid out.
-    // http://anglebug.com/42265307
-    "VUID-vkCmdExecuteCommands-pCommandBuffers-00099",
     // http://anglebug.com/42265797
     "VUID-vkCmdBindVertexBuffers2-pStrides-06209",
     // http://anglebug.com/42266199
@@ -244,7 +235,6 @@ constexpr const char *kSkippedMessages[] = {
     // VVL bug: https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/7858
     "VUID-vkCmdDraw-None-08608",
     "VUID-vkCmdDrawIndexed-None-08608",
-    // https://anglebug.com/42266678
     // Invalid feedback loop caused by the application
     "VUID-vkCmdDraw-None-09000",
     "VUID-vkCmdDrawIndexed-None-09000",
@@ -295,6 +285,45 @@ constexpr const char *kSkippedMessagesWithVulkanSecondaryCommandBuffer[] = {
     "VUID-vkCmdWaitEvents-srcStageMask-parameter",
 };
 
+// When using Vulkan secondary command buffers, the command buffer is begun with the current
+// framebuffer specified in pInheritanceInfo::framebuffer.  If the framebuffer is multisampled
+// and is resolved, an optimization would change the framebuffer to add the resolve target and
+// use a subpass resolve operation instead.  The following error complains that the framebuffer
+// used to start the render pass and the one specified in pInheritanceInfo::framebuffer must be
+// equal, which is not true in that case.  In practice, this is benign, as the part of the
+// framebuffer that's accessed by the command buffer is identically laid out.
+// http://anglebug.com/42265307
+constexpr const char *kSkippedMessagesWithRenderPassObjectsAndVulkanSCB[] = {
+    "VUID-vkCmdExecuteCommands-pCommandBuffers-00099",
+};
+
+// VVL bugs with dynamic rendering
+constexpr const char *kSkippedMessagesWithDynamicRendering[] = {
+    // https://anglebug.com/42266678
+    // VVL bugs with rasterizer discard:
+    // https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/7858
+    "VUID-vkCmdDraw-dynamicRenderingUnusedAttachments-08914",
+    "VUID-vkCmdDraw-dynamicRenderingUnusedAttachments-08917",
+    "VUID-vkCmdDrawIndexed-dynamicRenderingUnusedAttachments-08914",
+    "VUID-vkCmdDrawIndexed-dynamicRenderingUnusedAttachments-08917",
+    "VUID-vkCmdDraw-pDepthAttachment-08964",
+    "VUID-vkCmdDraw-pStencilAttachment-08965",
+    "VUID-vkCmdDrawIndexed-pDepthAttachment-08964",
+    "VUID-vkCmdDrawIndexed-pStencilAttachment-08965",
+    "VUID-vkCmdDraw-None-07843",
+    "VUID-vkCmdDraw-None-07844",
+    "VUID-vkCmdDraw-None-07847",
+    "VUID-vkCmdDrawIndexed-None-07843",
+    "VUID-vkCmdDrawIndexed-None-07844",
+    "VUID-vkCmdDrawIndexed-None-07847",
+    "VUID-vkCmdDraw-multisampledRenderToSingleSampled-07285",
+    "VUID-vkCmdDraw-multisampledRenderToSingleSampled-07286",
+    "VUID-vkCmdDraw-multisampledRenderToSingleSampled-07287",
+    "VUID-vkCmdDrawIndexed-multisampledRenderToSingleSampled-07285",
+    "VUID-vkCmdDrawIndexed-multisampledRenderToSingleSampled-07286",
+    "VUID-vkCmdDrawIndexed-multisampledRenderToSingleSampled-07287",
+};
+
 // Some syncval errors are resolved in the presence of the NONE load or store render pass ops.  For
 // those, ANGLE makes no further attempt to resolve them and expects vendor support for the
 // extensions instead.  The list of skipped messages is split based on this support.
@@ -305,7 +334,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
         "SYNC-HAZARD-WRITE-AFTER-WRITE",
         "Access info (usage: SYNC_IMAGE_LAYOUT_TRANSITION, prior_usage: "
         "SYNC_IMAGE_LAYOUT_TRANSITION, "
-        "write_barriers: 0, command: vkCmdEndRenderPass",
+        "write_barriers: 0",
     },
     // These errors are caused by a feedback loop tests that don't produce correct Vulkan to begin
     // with.
@@ -330,14 +359,14 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
         "STENCIL_ATTACHMENT_WRITE|SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_READ|SYNC_LATE_"
         "FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE|SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_"
         "ATTACHMENT_"
-        "READ|SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, command: vkCmdEndRenderPass",
+        "READ|SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE",
     },
     {
         "SYNC-HAZARD-WRITE-AFTER-WRITE",
         "Access info (usage: SYNC_IMAGE_LAYOUT_TRANSITION, prior_usage: "
         "SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, write_barriers: "
         "SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_READ|SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_"
-        "ATTACHMENT_WRITE, command: vkCmdEndRenderPass",
+        "ATTACHMENT_WRITE",
     },
     // From: TraceTest.manhattan_31 with SwiftShader and
     // VulkanPerformanceCounterTest.NewTextureDoesNotBreakRenderPass for both depth and stencil
@@ -346,8 +375,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     // https://issuetracker.google.com/316337308
     {
         "SYNC-HAZARD-WRITE-AFTER-WRITE",
-        "Hazard WRITE_AFTER_WRITE in subpass ",
-        "during load with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info (usage: "
+        "with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info (usage: "
         "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
         "SYNC_IMAGE_LAYOUT_TRANSITION",
     },
@@ -384,7 +412,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     // From: MultisampledRenderToTextureES3Test.TransformFeedbackTest. http://anglebug.com/42265220
     {
         "SYNC-HAZARD-WRITE-AFTER-WRITE",
-        "vkCmdBeginRenderPass: Hazard WRITE_AFTER_WRITE in subpass",
         "write_barriers: "
         "SYNC_TRANSFORM_FEEDBACK_EXT_TRANSFORM_FEEDBACK_COUNTER_READ_EXT|SYNC_TRANSFORM_FEEDBACK_"
         "EXT_"
@@ -428,17 +455,15 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     // From: TraceTest.dead_by_daylight
     // From: TraceTest.genshin_impact
     {"SYNC-HAZARD-READ-AFTER-WRITE",
-     "vkCmdBeginRenderPass():  Hazard READ_AFTER_WRITE in subpass 0 for attachment ",
-     "aspect color during load with loadOp VK_ATTACHMENT_LOAD_OP_LOAD. Access info (usage: "
+     "with loadOp VK_ATTACHMENT_LOAD_OP_LOAD. Access info (usage: "
      "SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_READ, prior_usage: "
-     "SYNC_IMAGE_LAYOUT_TRANSITION, write_barriers: 0, command: vkCmdEndRenderPass",
-     true},
+     "SYNC_IMAGE_LAYOUT_TRANSITION, write_barriers: 0",
+     "", true},
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
-     "vkCmdBeginRenderPass():  Hazard WRITE_AFTER_WRITE in subpass 0 for attachment ",
      "image layout transition (old_layout: VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, new_layout: "
      "VK_IMAGE_LAYOUT_GENERAL). Access info (usage: SYNC_IMAGE_LAYOUT_TRANSITION, prior_usage: "
      "SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, write_barriers:",
-     true},
+     "", true},
     // From: TraceTest.special_forces_group_2 http://anglebug.com/42264123
     {
         "SYNC-HAZARD-WRITE-AFTER-READ",
@@ -460,8 +485,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     },
     // From: TraceTest.life_is_strange http://anglebug.com/42266180
     {"SYNC-HAZARD-WRITE-AFTER-READ",
-     "vkCmdEndRenderPass():  Hazard WRITE_AFTER_READ in subpass 0 for attachment 1 "
-     "depth aspect during store with storeOp VK_ATTACHMENT_STORE_OP_DONT_CARE. "
+     "with storeOp VK_ATTACHMENT_STORE_OP_DONT_CARE. "
      "Access info (usage: SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, "
      "prior_usage: SYNC_FRAGMENT_SHADER_SHADER_"},
     // From: TraceTest.life_is_strange http://anglebug.com/42266180
@@ -470,18 +494,18 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
      "imageLayout: VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL",
      "usage: SYNC_FRAGMENT_SHADER_SHADER_"},
     // From: TraceTest.diablo_immortal http://anglebug.com/42266309
-    {"SYNC-HAZARD-WRITE-AFTER-WRITE", "Hazard WRITE_AFTER_WRITE for VkImageView ",
-     "Subpass #0, and pColorAttachments #0. Access info (usage: "
+    {"SYNC-HAZARD-WRITE-AFTER-WRITE",
+     "Access info (usage: "
      "SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, prior_usage: "
-     "SYNC_IMAGE_LAYOUT_TRANSITION, write_barriers: 0, command: vkCmdEndRenderPass"},
+     "SYNC_IMAGE_LAYOUT_TRANSITION, write_barriers: 0"},
     // From: TraceTest.diablo_immortal http://anglebug.com/42266309
     {"SYNC-HAZARD-WRITE-AFTER-READ",
-     "load with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info (usage: "
+     "with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info (usage: "
      "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
      "SYNC_FRAGMENT_SHADER_SHADER_"},
     // From: TraceTest.catalyst_black http://anglebug.com/42266390
     {"SYNC-HAZARD-WRITE-AFTER-READ",
-     "store with storeOp VK_ATTACHMENT_STORE_OP_STORE. Access info (usage: "
+     "with storeOp VK_ATTACHMENT_STORE_OP_STORE. Access info (usage: "
      "SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
      "SYNC_FRAGMENT_SHADER_SHADER_"},
 };
@@ -501,13 +525,13 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithoutStoreOpNone[] 
     // http://anglebug.com/42264496
     {
         "SYNC-HAZARD-WRITE-AFTER-READ",
-        "depth aspect during store with storeOp VK_ATTACHMENT_STORE_OP_STORE. Access info (usage: "
+        "VK_ATTACHMENT_STORE_OP_STORE. Access info (usage: "
         "SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE",
         "usage: SYNC_FRAGMENT_SHADER_SHADER_",
     },
     {
         "SYNC-HAZARD-WRITE-AFTER-READ",
-        "stencil aspect during store with stencilStoreOp VK_ATTACHMENT_STORE_OP_STORE. Access info "
+        "VK_ATTACHMENT_STORE_OP_STORE. Access info "
         "(usage: SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE",
         "usage: SYNC_FRAGMENT_SHADER_SHADER_",
     },
@@ -534,34 +558,33 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithoutLoadStoreOpNon
     {
         "SYNC-HAZARD-WRITE-AFTER-WRITE",
         "Access info (usage: SYNC_IMAGE_LAYOUT_TRANSITION, prior_usage: "
-        "SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, write_barriers: 0, command: "
-        "vkCmdEndRenderPass",
+        "SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, write_barriers: 0",
     },
     // http://anglebug.com/42264926
     // http://anglebug.com/42265079
     {
         "SYNC-HAZARD-WRITE-AFTER-WRITE",
-        "aspect depth during load with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info (usage: "
+        "with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info (usage: "
         "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
         "SYNC_IMAGE_LAYOUT_TRANSITION",
     },
     {
         "SYNC-HAZARD-WRITE-AFTER-WRITE",
-        "aspect stencil during load with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info "
+        "with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info "
         "(usage: "
         "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE",
     },
     // http://anglebug.com/42264496
     {
         "SYNC-HAZARD-WRITE-AFTER-WRITE",
-        "aspect stencil during load with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info "
+        "with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info "
         "(usage: "
         "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
         "SYNC_IMAGE_LAYOUT_TRANSITION",
     },
     {
         "SYNC-HAZARD-WRITE-AFTER-WRITE",
-        "aspect stencil during load with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info "
+        "with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info "
         "(usage: "
         "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
         "SYNC_IMAGE_LAYOUT_TRANSITION",
@@ -580,7 +603,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithMSRTTEmulation[] 
     // Unknown whether ANGLE or syncval bug.
     {
         "SYNC-HAZARD-WRITE-AFTER-WRITE",
-        "vkCmdBeginRenderPass():  Hazard WRITE_AFTER_WRITE in subpass 0 for attachment",
         "image layout transition (old_layout: VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, "
         "new_layout: VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL). Access info (usage: "
         "SYNC_IMAGE_LAYOUT_TRANSITION",
@@ -3387,6 +3409,11 @@ angle::Result Renderer::enableDeviceExtensions(vk::Context *context,
         for (const VkExtensionProperties &prop : deviceExtensionProps)
         {
             deviceExtensionNames.push_back(prop.extensionName);
+
+            if (strcmp(prop.extensionName, VK_EXT_LEGACY_DITHERING_EXTENSION_NAME) == 0)
+            {
+                mLegacyDitheringVersion = prop.specVersion;
+            }
         }
         std::sort(deviceExtensionNames.begin(), deviceExtensionNames.end(), StrLess);
     }
@@ -3793,6 +3820,22 @@ void Renderer::initializeValidationMessageSuppressions()
             mSkippedValidationMessages.end(), kSkippedMessagesWithVulkanSecondaryCommandBuffer,
             kSkippedMessagesWithVulkanSecondaryCommandBuffer +
                 ArraySize(kSkippedMessagesWithVulkanSecondaryCommandBuffer));
+    }
+
+    if (!getFeatures().preferDynamicRendering.enabled &&
+        !vk::RenderPassCommandBuffer::ExecutesInline())
+    {
+        mSkippedValidationMessages.insert(
+            mSkippedValidationMessages.end(), kSkippedMessagesWithRenderPassObjectsAndVulkanSCB,
+            kSkippedMessagesWithRenderPassObjectsAndVulkanSCB +
+                ArraySize(kSkippedMessagesWithRenderPassObjectsAndVulkanSCB));
+    }
+
+    if (getFeatures().preferDynamicRendering.enabled)
+    {
+        mSkippedValidationMessages.insert(
+            mSkippedValidationMessages.end(), kSkippedMessagesWithDynamicRendering,
+            kSkippedMessagesWithDynamicRendering + ArraySize(kSkippedMessagesWithDynamicRendering));
     }
 
     // Build the list of syncval errors that are currently expected and should be skipped.
@@ -5211,8 +5254,25 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         &mFeatures, supportsDynamicRenderingLocalRead,
         mDynamicRenderingLocalReadFeatures.dynamicRenderingLocalRead == VK_TRUE);
 
-    // Dynamic rendering usage is not yet implemented.
-    ANGLE_FEATURE_CONDITION(&mFeatures, preferDynamicRendering, false);
+    // Using dynamic rendering when VK_KHR_dynamic_rendering_local_read is available, because that's
+    // needed for framebuffer fetch, MSRTT and advanced blend emulation.
+    //
+    // VK_EXT_legacy_dithering needs to be at version 2 and VK_KHR_maintenance5 to be usable with
+    // dynamic rendering.  If only version 1 is exposed, it's not sacrificied for dynamic rendering
+    // and render pass objects are continued to be used.
+    //
+    // Emulation of GL_EXT_multisampled_render_to_texture is not possible with dynamic rendering.
+    // That support is also not sacrificed for dynamic rendering.
+    const bool hasLegacyDitheringV1 =
+        mFeatures.supportsLegacyDithering.enabled &&
+        (mLegacyDitheringVersion < 2 || !mFeatures.supportsMaintenance5.enabled);
+    const bool emulatesMultisampledRenderToTexture =
+        mFeatures.enableMultisampledRenderToTexture.enabled &&
+        !mFeatures.supportsMultisampledRenderToSingleSampled.enabled;
+    ANGLE_FEATURE_CONDITION(&mFeatures, preferDynamicRendering,
+                            mFeatures.supportsDynamicRendering.enabled &&
+                                mFeatures.supportsDynamicRenderingLocalRead.enabled &&
+                                !hasLegacyDitheringV1 && !emulatesMultisampledRenderToTexture);
 
     // Disable memory report feature overrides if extension is not supported.
     if ((mFeatures.logMemoryReportCallbacks.enabled || mFeatures.logMemoryReportStats.enabled) &&
@@ -5945,7 +6005,7 @@ angle::Result Renderer::flushRenderPassCommands(
     vk::Context *context,
     vk::ProtectionType protectionType,
     egl::ContextPriority priority,
-    const vk::RenderPass &renderPass,
+    const vk::RenderPass *renderPass,
     VkFramebuffer framebufferOverride,
     vk::RenderPassCommandBufferHelper **renderPassCommands)
 {

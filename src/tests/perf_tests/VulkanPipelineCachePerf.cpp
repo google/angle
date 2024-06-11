@@ -121,7 +121,7 @@ void VulkanPipelineCachePerfTest::step()
         {
             if (!mCache.getPipeline(hit, &desc, &result))
             {
-                (void)mCache.createPipeline(VK_NULL_HANDLE, &spc, rp, pl, ssm, defaultSpecConsts,
+                (void)mCache.createPipeline(VK_NULL_HANDLE, &spc, &rp, pl, ssm, defaultSpecConsts,
                                             PipelineSource::Draw, hit, &desc, &result);
             }
         }
@@ -133,7 +133,7 @@ void VulkanPipelineCachePerfTest::step()
         const auto &miss = mCacheMisses[mMissIndex];
         if (!mCache.getPipeline(miss, &desc, &result))
         {
-            (void)mCache.createPipeline(VK_NULL_HANDLE, &spc, rp, pl, ssm, defaultSpecConsts,
+            (void)mCache.createPipeline(VK_NULL_HANDLE, &spc, &rp, pl, ssm, defaultSpecConsts,
                                         PipelineSource::Draw, miss, &desc, &result);
         }
     }
