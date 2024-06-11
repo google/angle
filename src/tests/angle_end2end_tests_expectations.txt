@@ -544,6 +544,8 @@ b/308668391 PIXEL4ORXL VULKAN : ImageTest.SourceYUVAHBTargetExternalRGBSampleNoD
 343011429 PIXEL4ORXL VULKAN : GLSLTest_ES31_InitShaderVariables.InitIOBlockWithComplexTypes/*_ForceInitShaderVariables* = SKIP
 343011429 PIXEL4ORXL VULKAN : GLSLTest_ES31_InitShaderVariables.InitIOBlockWithStruct/*_ForceInitShaderVariables* = SKIP
 
+42267047 PIXEL4ORXL VULKAN : GLSLTest_ES3.VaryingStructWithInlineDefinition2/*_ForceInitShaderVariables* = SKIP
+
 343218490 PIXEL4ORXL : GLSLTest_ES31.TernaryOnStructsInDifferentBlockStorages/* = SKIP
 
 8310 PIXEL4ORXL VULKAN : VulkanExternalImageTest.PreInitializedOnGLImportLinear*/* = SKIP

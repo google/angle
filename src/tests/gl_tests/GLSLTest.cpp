@@ -9094,6 +9094,42 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that multi variables struct should not crash in separated struct expressions.
+TEST_P(GLSLTest_ES3, VaryingStructWithInlineDefinition2)
+{
+    constexpr char kVS[] = R"(#version 300 es
+in vec4 inputAttribute;
+flat out struct A
+{
+    int a;
+} z1, z2;
+void main()
+{
+    z1.a = 1;
+    z2.a = 2;
+    gl_Position = inputAttribute;
+})";
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 my_FragColor;
+flat in struct A
+{
+    int a;
+} z1, z2;
+void main()
+{
+    bool success = (z1.a == 1 && z2.a == 2);
+    my_FragColor = vec4(1, 0, 0, 1);
+    if (success)
+    {
+        my_FragColor = vec4(0, 1, 0, 1);
+    }
+})";
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Test mismatched precision in varying is handled correctly.
 TEST_P(GLSLTest_ES3, MismatchPrecisionFloat)
 {
@@ -19653,6 +19689,7 @@ void main()
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(
     GLSLTest,
+    ES3_OPENGL().enable(Feature::ForceInitShaderVariables),
     ES3_OPENGL().enable(Feature::ScalarizeVecAndMatConstructorArgs),
     ES3_OPENGLES().enable(Feature::ScalarizeVecAndMatConstructorArgs),
     ES3_VULKAN().enable(Feature::AvoidOpSelectWithMismatchingRelaxedPrecision),
@@ -19664,6 +19701,7 @@ ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(GLSLTestNoValidation);
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLTest_ES3);
 ANGLE_INSTANTIATE_TEST_ES3_AND(
     GLSLTest_ES3,
+    ES3_OPENGL().enable(Feature::ForceInitShaderVariables),
     ES3_OPENGL().enable(Feature::ScalarizeVecAndMatConstructorArgs),
     ES3_OPENGLES().enable(Feature::ScalarizeVecAndMatConstructorArgs),
     ES3_VULKAN().enable(Feature::AvoidOpSelectWithMismatchingRelaxedPrecision),
