@@ -45,6 +45,12 @@ enum class ImageCopyWith
     Buffer
 };
 
+enum class StagingBufferCopyDirection
+{
+    ToHost,
+    ToStagingBuffer
+};
+
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_VULKAN_CL_TYPES_H_

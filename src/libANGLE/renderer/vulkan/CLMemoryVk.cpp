@@ -321,6 +321,49 @@ angle::Result CLImageVk::copyStagingTo(void *ptr, size_t offset, size_t size)
     return angle::Result::Continue;
 }
 
+angle::Result CLImageVk::copyStagingToFromWithPitch(void *hostPtr,
+                                                    const cl::Coordinate &region,
+                                                    const size_t rowPitch,
+                                                    const size_t slicePitch,
+                                                    StagingBufferCopyDirection copyStagingTo)
+{
+    uint8_t *ptrInBase  = nullptr;
+    uint8_t *ptrOutBase = nullptr;
+    size_t srcRowPitch =
+        (copyStagingTo == StagingBufferCopyDirection::ToHost) ? calculateRowPitch() : rowPitch;
+    size_t srcSlicePitch = (copyStagingTo == StagingBufferCopyDirection::ToHost)
+                               ? calculateSlicePitch(srcRowPitch)
+                               : slicePitch;
+    size_t dstRowPitch =
+        (copyStagingTo == StagingBufferCopyDirection::ToHost) ? rowPitch : calculateRowPitch();
+    size_t dstSlicePitch = (copyStagingTo == StagingBufferCopyDirection::ToHost)
+                               ? slicePitch
+                               : calculateSlicePitch(dstRowPitch);
+    if (copyStagingTo == StagingBufferCopyDirection::ToHost)
+    {
+        ptrOutBase = static_cast<uint8_t *>(hostPtr);
+        ANGLE_TRY(getStagingBuffer().map(mContext, &ptrInBase));
+    }
+    else
+    {
+        ptrInBase = static_cast<uint8_t *>(hostPtr);
+        ANGLE_TRY(getStagingBuffer().map(mContext, &ptrOutBase));
+    }
+    for (size_t slice = 0; slice < region.z; slice++)
+    {
+        for (size_t row = 0; row < region.y; row++)
+        {
+            size_t dstOffset = (slice * dstSlicePitch + row * dstRowPitch);
+            size_t srcOffset = (slice * srcSlicePitch + row * srcRowPitch);
+            uint8_t *dst     = ptrOutBase + dstOffset;
+            uint8_t *src     = ptrInBase + srcOffset;
+            memcpy(dst, src, region.x * mElementSize);
+        }
+    }
+    getStagingBuffer().unmap(mContext->getRenderer());
+    return angle::Result::Continue;
+}
+
 CLImageVk::CLImageVk(const cl::Image &image)
     : CLMemoryVk(image),
       mFormat(angle::FormatID::NONE),
@@ -461,8 +504,16 @@ angle::Result CLImageVk::create(void *hostPtr)
     {
         ASSERT(hostPtr);
         ANGLE_CL_IMPL_TRY_ERROR(createStagingBuffer(mImageSize), CL_OUT_OF_RESOURCES);
-        ANGLE_CL_IMPL_TRY_ERROR(copyStagingFrom(hostPtr, 0, mImageSize), CL_OUT_OF_RESOURCES);
-
+        if (mDesc.rowPitch == 0 && mDesc.slicePitch == 0)
+        {
+            ANGLE_CL_IMPL_TRY_ERROR(copyStagingFrom(hostPtr, 0, mImageSize), CL_OUT_OF_RESOURCES);
+        }
+        else
+        {
+            ANGLE_TRY(copyStagingToFromWithPitch(
+                hostPtr, {mExtent.width, mExtent.height, mExtent.depth}, mDesc.rowPitch,
+                mDesc.slicePitch, StagingBufferCopyDirection::ToStagingBuffer));
+        }
         VkBufferImageCopy copyRegion{};
         copyRegion.bufferOffset      = 0;
         copyRegion.bufferRowLength   = 0;
@@ -618,34 +669,8 @@ void CLImageVk::fillImageWithColor(const cl::MemOffsets &origin,
                                    uint8_t *imagePtr,
                                    PixelColor *packedColor)
 {
-    size_t imageRowPitch   = mDesc.rowPitch;
-    size_t imageSlicePitch = mDesc.slicePitch;
-    if (imageRowPitch == 0)
-    {
-        imageRowPitch = (region.x * mElementSize);
-    }
-
-    if (imageSlicePitch == 0)
-    {
-        switch (mDesc.type)
-        {
-            case cl::MemObjectType::Image1D:
-            case cl::MemObjectType::Image1D_Buffer:
-            case cl::MemObjectType::Image2D:
-                imageSlicePitch = 0;
-                break;
-            case cl::MemObjectType::Image2D_Array:
-            case cl::MemObjectType::Image3D:
-                imageSlicePitch = (region.y * imageRowPitch);
-                break;
-            case cl::MemObjectType::Image1D_Array:
-                imageSlicePitch = imageRowPitch;
-                break;
-            default:
-                UNREACHABLE();
-                break;
-        }
-    }
+    size_t imageRowPitch   = calculateRowPitch();
+    size_t imageSlicePitch = calculateSlicePitch(imageRowPitch);
 
     uint8_t *ptr = imagePtr + (origin.z * imageSlicePitch) + (origin.y * imageRowPitch) +
                    (origin.x * mElementSize);
@@ -767,6 +792,59 @@ void CLImageVk::unmapImpl()
 {
     getStagingBuffer().unmap(mContext->getRenderer());
     mMappedMemory = nullptr;
+}
+
+size_t CLImageVk::calculateRowPitch()
+{
+    return (mExtent.width * mElementSize);
+}
+
+size_t CLImageVk::calculateSlicePitch(size_t imageRowPitch)
+{
+    size_t slicePitch = 0;
+
+    switch (mDesc.type)
+    {
+        case cl::MemObjectType::Image1D:
+        case cl::MemObjectType::Image1D_Buffer:
+        case cl::MemObjectType::Image2D:
+            break;
+        case cl::MemObjectType::Image2D_Array:
+        case cl::MemObjectType::Image3D:
+            slicePitch = (mExtent.height * imageRowPitch);
+            break;
+        case cl::MemObjectType::Image1D_Array:
+            slicePitch = imageRowPitch;
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+
+    return slicePitch;
+}
+
+size_t CLImageVk::getRowPitch()
+{
+    size_t mRowPitch = mDesc.rowPitch;
+    if (mRowPitch == 0)
+    {
+        mRowPitch = calculateRowPitch();
+    }
+
+    return mRowPitch;
+}
+
+size_t CLImageVk::getSlicePitch(size_t imageRowPitch)
+{
+    size_t mSlicePitch = mDesc.slicePitch;
+
+    if (mSlicePitch == 0)
+    {
+        mSlicePitch = calculateSlicePitch(imageRowPitch);
+    }
+
+    return mSlicePitch;
 }
 
 }  // namespace rx
