@@ -4161,12 +4161,9 @@ TEST_P(VulkanPerformanceCounterTest, DrawbufferChangeWithAllColorMaskDisabled)
     EXPECT_EQ(expectedRenderPassCount, actualRenderPassCount);
 }
 
-// Tests the optimization that a glFlush call issued inside a renderpass will be skipped
-// (unless deferFlushUntilEndRenderPass feature is disabled).
+// Tests the optimization that a glFlush call issued inside a renderpass will be skipped.
 TEST_P(VulkanPerformanceCounterTest, InRenderpassFlushShouldNotBreakRenderpass)
 {
-    ANGLE_SKIP_TEST_IF(!isFeatureEnabled(Feature::DeferFlushUntilEndRenderPass));
-
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
 
     uint64_t expectedRenderPassCount = getPerfCounters().renderPasses + 1;

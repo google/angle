@@ -435,8 +435,7 @@ TEST_P(MultithreadingTest, MultiContextDrawWithSwapBuffers)
 }
 
 // Test that ANGLE handles multiple threads creating and destroying resources (vertex buffer in this
-// case). Disable defer_flush_until_endrenderpass so that glFlush will issue work to GPU in order to
-// maximize the chance we resources can be destroyed at the wrong time.
+// case).
 TEST_P(MultithreadingTest, MultiContextCreateAndDeleteResources)
 {
     ANGLE_SKIP_TEST_IF(!platformSupportsMultithreading());

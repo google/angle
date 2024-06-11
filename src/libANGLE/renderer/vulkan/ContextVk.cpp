@@ -1505,8 +1505,7 @@ angle::Result ContextVk::flush(const gl::Context *context)
     const bool frontBufferRenderingEnabled =
         isSingleBufferedWindow || drawFramebufferVk->hasFrontBufferUsage();
 
-    if (mRenderer->getFeatures().deferFlushUntilEndRenderPass.enabled && hasActiveRenderPass() &&
-        !frontBufferRenderingEnabled)
+    if (hasActiveRenderPass() && !frontBufferRenderingEnabled)
     {
         mHasDeferredFlush = true;
         return angle::Result::Continue;
@@ -8130,7 +8129,7 @@ angle::Result ContextVk::onSyncObjectInit(vk::SyncHelper *syncHelper, SyncFenceS
     // cause a submission in this context if another context wants to wait on the fence while the
     // original context never issued a submission naturally.  Note that this also takes care of
     // contexts that think they issued a submission (through glFlush) but that the submission got
-    // deferred (due to the deferFlushUntilEndRenderPass feature).
+    // deferred.
     mHasDeferredFlush = true;
 
     return angle::Result::Continue;

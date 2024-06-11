@@ -547,14 +547,6 @@
             "issue": "http://anglebug.com/4937"
         },
         {
-            "name": "defer_flush_until_end_render_pass",
-            "category": "Workarounds",
-            "description": [
-                "Allow glFlush to be deferred until renderpass ends"
-            ],
-            "issue": "https://issuetracker.google.com/issues/166475273"
-        },
-        {
             "name": "wait_idle_before_swapchain_recreation",
             "category": "Workarounds",
             "description": [

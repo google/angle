@@ -511,13 +511,6 @@ struct FeaturesVk : FeatureSetBase
         &members, "http://anglebug.com/4937"
     };
 
-    FeatureInfo deferFlushUntilEndRenderPass = {
-        "deferFlushUntilEndRenderPass",
-        FeatureCategory::VulkanWorkarounds,
-        "Allow glFlush to be deferred until renderpass ends",
-        &members, "https://issuetracker.google.com/issues/166475273"
-    };
-
     FeatureInfo waitIdleBeforeSwapchainRecreation = {
         "waitIdleBeforeSwapchainRecreation",
         FeatureCategory::VulkanWorkarounds,

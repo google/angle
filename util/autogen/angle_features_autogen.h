@@ -75,7 +75,6 @@ enum class Feature
     CopyTextureToBufferForReadOptimization,
     CorruptProgramBinaryForTesting,
     DecodeEncodeSRGBForGenerateMipmap,
-    DeferFlushUntilEndRenderPass,
     DepthStencilBlitExtraCopy,
     DisableAnisotropicFiltering,
     DisableB5G6R5Support,
