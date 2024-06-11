@@ -8045,7 +8045,7 @@ void ImageHelper::removeSingleSubresourceStagedUpdates(ContextVk *contextVk,
     for (size_t index = 0; index < levelUpdates->size();)
     {
         auto update = levelUpdates->begin() + index;
-        if (update->isUpdateToLayers(layerIndex, layerCount))
+        if (update->matchesLayerRange(layerIndex, layerCount))
         {
             // Update total staging buffer size
             mTotalStagedBufferUpdateSize -= update->updateSource == UpdateSource::Buffer
@@ -8079,7 +8079,7 @@ void ImageHelper::removeSingleStagedClearAfterInvalidate(gl::LevelIndex levelInd
     {
         auto update = levelUpdates->begin() + index;
         if (update->updateSource == UpdateSource::ClearAfterInvalidate &&
-            update->isUpdateToLayers(layerIndex, layerCount))
+            update->matchesLayerRange(layerIndex, layerCount))
         {
             // It's a clear, so doesn't need to be released.
             levelUpdates->erase(update);
@@ -9447,7 +9447,7 @@ angle::Result ImageHelper::flushSingleSubresourceStagedUpdates(ContextVk *contex
         {
             SubresourceUpdate &update = (*levelUpdates)[updateIndex];
 
-            if (update.isUpdateToLayers(layer, layerCount))
+            if (update.intersectsLayerRange(layer, layerCount))
             {
                 // On any data update, exit out. We'll need to do a full upload.
                 const bool isClear              = IsClearOfAllChannels(update.updateSource);
@@ -11202,14 +11202,24 @@ void ImageHelper::SubresourceUpdate::release(Renderer *renderer)
     }
 }
 
-bool ImageHelper::SubresourceUpdate::isUpdateToLayers(uint32_t layerIndex,
-                                                      uint32_t layerCount) const
+bool ImageHelper::SubresourceUpdate::matchesLayerRange(uint32_t layerIndex,
+                                                       uint32_t layerCount) const
 {
     uint32_t updateBaseLayer, updateLayerCount;
     getDestSubresource(gl::ImageIndex::kEntireLevel, &updateBaseLayer, &updateLayerCount);
 
     return updateBaseLayer == layerIndex &&
            (updateLayerCount == layerCount || updateLayerCount == VK_REMAINING_ARRAY_LAYERS);
+}
+
+bool ImageHelper::SubresourceUpdate::intersectsLayerRange(uint32_t layerIndex,
+                                                          uint32_t layerCount) const
+{
+    uint32_t updateBaseLayer, updateLayerCount;
+    getDestSubresource(gl::ImageIndex::kEntireLevel, &updateBaseLayer, &updateLayerCount);
+    uint32_t updateLayerEnd = updateBaseLayer + updateLayerCount;
+
+    return updateBaseLayer < (layerIndex + layerCount) && updateLayerEnd > layerIndex;
 }
 
 void ImageHelper::SubresourceUpdate::getDestSubresource(uint32_t imageLayerCount,
