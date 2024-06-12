@@ -259,13 +259,6 @@ struct FeaturesVk : FeatureSetBase
         &members, "http://anglebug.com/7551"
     };
 
-    FeatureInfo supportsMultisampledRenderToSingleSampledGOOGLEX = {
-        "supportsMultisampledRenderToSingleSampledGOOGLEX",
-        FeatureCategory::VulkanFeatures,
-        "VkDevice supports the VK_GOOGLEX_multisampled_render_to_single_sampled extension",
-        &members, "http://anglebug.com/4836"
-    };
-
     FeatureInfo supportsMultisampledRenderToSingleSampled = {
         "supportsMultisampledRenderToSingleSampled",
         FeatureCategory::VulkanFeatures,

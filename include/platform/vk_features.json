@@ -264,14 +264,6 @@
             "issue": "http://anglebug.com/7551"
         },
         {
-            "name": "supports_multisampled_render_to_single_sampled_GOOGLEX",
-            "category": "Features",
-            "description": [
-                "VkDevice supports the VK_GOOGLEX_multisampled_render_to_single_sampled extension"
-            ],
-            "issue": "http://anglebug.com/4836"
-        },
-        {
             "name": "supports_multisampled_render_to_single_sampled",
             "category": "Features",
             "description": [

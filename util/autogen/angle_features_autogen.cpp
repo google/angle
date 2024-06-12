@@ -339,7 +339,6 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SupportsMixedReadWriteDepthStencilLayouts, "supportsMixedReadWriteDepthStencilLayouts"},
     {Feature::SupportsMultiDrawIndirect, "supportsMultiDrawIndirect"},
     {Feature::SupportsMultisampledRenderToSingleSampled, "supportsMultisampledRenderToSingleSampled"},
-    {Feature::SupportsMultisampledRenderToSingleSampledGOOGLEX, "supportsMultisampledRenderToSingleSampledGOOGLEX"},
     {Feature::SupportsMultiview, "supportsMultiview"},
     {Feature::SupportsNonConstantLoopIndexing, "supportsNonConstantLoopIndexing"},
     {Feature::SupportsPipelineCreationFeedback, "supportsPipelineCreationFeedback"},
