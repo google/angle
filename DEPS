@@ -902,7 +902,7 @@ deps = {
     'condition': 'checkout_android and not build_with_chromium',
   },
 
-  'third_party/siso': {
+  'third_party/siso/cipd': {
     'packages': [
       {
         'package': 'infra/build/siso/${{platform}}',
