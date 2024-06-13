@@ -4339,9 +4339,11 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     }
 #endif  // defined(ANGLE_PLATFORM_ANDROID) || defined(ANGLE_PLATFORM_LINUX)
 
+    // Disabled on SwiftShader due to http://crbug.com/40942995
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsShaderStencilExport,
-        ExtensionFound(VK_EXT_SHADER_STENCIL_EXPORT_EXTENSION_NAME, deviceExtensionNames));
+        ExtensionFound(VK_EXT_SHADER_STENCIL_EXPORT_EXTENSION_NAME, deviceExtensionNames) &&
+            !isSwiftShader);
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsRenderPassLoadStoreOpNone,
