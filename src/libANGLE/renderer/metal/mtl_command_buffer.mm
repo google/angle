@@ -2486,6 +2486,7 @@ BlitCommandEncoder &BlitCommandEncoder::fillBuffer(const BufferRef &buffer,
         return *this;
     }
 
+    cmdBuffer().setWriteDependency(buffer, /*isRenderCommand=*/false);
     [get() fillBuffer:buffer->get() range:range value:value];
     return *this;
 }
