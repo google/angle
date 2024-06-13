@@ -53,13 +53,17 @@ class ShaderInfo final : angle::NonCopyable
     bool mIsInitialized = false;
 };
 
-struct ProgramTransformOptions final
+union ProgramTransformOptions final
 {
-    uint8_t surfaceRotation : 1;
-    uint8_t removeTransformFeedbackEmulation : 1;
-    uint8_t multiSampleFramebufferFetch : 1;
-    uint8_t enableSampleShading : 1;
-    uint8_t reserved : 4;  // must initialize to zero
+    struct
+    {
+        uint8_t surfaceRotation : 1;
+        uint8_t removeTransformFeedbackEmulation : 1;
+        uint8_t multiSampleFramebufferFetch : 1;
+        uint8_t enableSampleShading : 1;
+        uint8_t reserved : 4;  // must initialize to zero
+    };
+    uint8_t permutationIndex;
     static constexpr uint32_t kPermutationCount = 0x1 << 4;
 };
 static_assert(sizeof(ProgramTransformOptions) == 1, "Size check failed");
@@ -441,6 +445,7 @@ class ProgramExecutableVk : public ProgramExecutableImpl
             ANGLE_TRY(programInfo->initProgram(context, shaderType, isLastPreFragmentStage,
                                                isTransformFeedbackProgram, mOriginalShaderInfo,
                                                optionBits, variableInfoMap));
+            mValidPermutations.set(optionBits.permutationIndex);
         }
         ASSERT(programInfo->valid(shaderType));
 
@@ -550,6 +555,10 @@ class ProgramExecutableVk : public ProgramExecutableImpl
     std::vector<uint32_t> mDynamicShaderResourceDescriptorOffsets;
 
     ShaderInterfaceVariableInfoMap mVariableInfoMap;
+
+    static_assert((ProgramTransformOptions::kPermutationCount == 16),
+                  "ProgramTransformOptions::kPermutationCount must be 16.");
+    angle::BitSet16<ProgramTransformOptions::kPermutationCount> mValidPermutations;
 
     // We store all permutations of surface rotation and transformed SPIR-V programs here. We may
     // need some LRU algorithm to free least used programs to reduce the number of programs.
