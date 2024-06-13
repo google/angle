@@ -754,8 +754,11 @@ void InitializeDefaultSubpassSelfDependencies(
         renderer->getFeatures().supportsRasterizationOrderAttachmentAccess.enabled;
     const bool hasBlendOperationAdvanced =
         renderer->getFeatures().supportsBlendOperationAdvanced.enabled;
+    const bool hasCoherentBlendOperationAdvanced =
+        renderer->getFeatures().supportsBlendOperationAdvancedCoherent.enabled;
 
-    if (hasRasterizationOrderAttachmentAccess && !hasBlendOperationAdvanced)
+    if (hasRasterizationOrderAttachmentAccess &&
+        (!hasBlendOperationAdvanced || hasCoherentBlendOperationAdvanced))
     {
         // No need to specify a subpass dependency if VK_EXT_rasterization_order_attachment_access
         // is enabled, as that extension makes this subpass dependency implicit.
@@ -777,7 +780,7 @@ void InitializeDefaultSubpassSelfDependencies(
         dependency->dstStageMask |= VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
         dependency->dstAccessMask |= VK_ACCESS_INPUT_ATTACHMENT_READ_BIT;
     }
-    if (renderer->getFeatures().supportsBlendOperationAdvanced.enabled)
+    if (hasBlendOperationAdvanced && !hasCoherentBlendOperationAdvanced)
     {
         dependency->dstAccessMask |= VK_ACCESS_COLOR_ATTACHMENT_READ_NONCOHERENT_BIT_EXT;
     }

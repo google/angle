@@ -790,9 +790,13 @@ bool ValidateDrawRangeElementsBaseVertexOES(const Context *context,
 // GL_KHR_blend_equation_advanced
 bool ValidateBlendBarrierKHR(const Context *context, angle::EntryPoint entryPoint)
 {
-    const Extensions &extensions = context->getExtensions();
+    if (context->getClientVersion() < ES_2_0)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES2Required);
+        return false;
+    }
 
-    if (!extensions.blendEquationAdvancedKHR)
+    if (!context->getExtensions().blendEquationAdvancedKHR)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kAdvancedBlendExtensionNotEnabled);
     }

@@ -687,6 +687,10 @@ bool ValidCap(const PrivateState &state, ErrorSet *errors, GLenum cap, bool quer
         case GL_FRAGMENT_SHADER_FRAMEBUFFER_FETCH_MRT_ARM:
             return queryOnly && state.getExtensions().shaderFramebufferFetchARM;
 
+        case GL_BLEND_ADVANCED_COHERENT_KHR:
+            return state.getClientVersion() >= Version(2, 0) &&
+                   state.getExtensions().blendEquationAdvancedCoherentKHR;
+
         default:
             break;
     }

@@ -584,8 +584,12 @@ void Renderer::ensureCapsInitialized() const
     // Vulkan requires advancedBlendMaxColorAttachments to be at least one, so we can support
     // advanced blend as long as the Vulkan extension is supported.  Otherwise, the extension is
     // emulated where possible.
+    // GL_EXT_blend_minmax is required for this extension, which is always enabled (hence omitted).
     mNativeExtensions.blendEquationAdvancedKHR = mFeatures.supportsBlendOperationAdvanced.enabled ||
                                                  mFeatures.emulateAdvancedBlendEquations.enabled;
+
+    mNativeExtensions.blendEquationAdvancedCoherentKHR =
+        mFeatures.supportsBlendOperationAdvancedCoherent.enabled;
 
     // Enable EXT_unpack_subimage
     mNativeExtensions.unpackSubimageEXT = true;
