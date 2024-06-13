@@ -270,6 +270,7 @@ gles_es_only_extensions = [
     "GL_EXT_texture_format_sRGB_override",
     "GL_EXT_texture_sRGB_decode",
     "GL_KHR_blend_equation_advanced",
+    "GL_KHR_blend_equation_advanced_coherent",
     "GL_KHR_debug",
     "GL_KHR_no_error",
     "GL_KHR_robust_buffer_access_behavior",

@@ -1427,6 +1427,8 @@ ANGLE_EXPORT void GL_APIENTRY GL_TexStorage3DEXT(GLenum target,
 // GL_KHR_blend_equation_advanced
 ANGLE_EXPORT void GL_APIENTRY GL_BlendBarrierKHR();
 
+// GL_KHR_blend_equation_advanced_coherent
+
 // GL_KHR_debug
 ANGLE_EXPORT void GL_APIENTRY GL_DebugMessageCallbackKHR(GLDEBUGPROCKHR callback,
                                                          const void *userParam);

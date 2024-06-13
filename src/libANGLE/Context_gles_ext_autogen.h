@@ -251,6 +251,7 @@
     /* GL_IMG_texture_compression_pvrtc */                                                         \
     /* GL_IMG_texture_compression_pvrtc2 */                                                        \
     /* GL_KHR_blend_equation_advanced */                                                           \
+    /* GL_KHR_blend_equation_advanced_coherent */                                                  \
     /* GL_KHR_debug */                                                                             \
     /* GL_KHR_no_error */                                                                          \
     /* GL_KHR_parallel_shader_compile */                                                           \

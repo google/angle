@@ -2068,6 +2068,8 @@ bool ValidateTexStorage3DEXT(const Context *context,
 // GL_KHR_blend_equation_advanced
 bool ValidateBlendBarrierKHR(const Context *context, angle::EntryPoint entryPoint);
 
+// GL_KHR_blend_equation_advanced_coherent
+
 // GL_KHR_debug
 bool ValidateDebugMessageCallbackKHR(const Context *context,
                                      angle::EntryPoint entryPoint,

@@ -2394,6 +2394,8 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                     return "GL_COMPRESSED_RGBA8_ETC2_EAC";
                 case 0x9279:
                     return "GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC";
+                case 0x9285:
+                    return "GL_BLEND_ADVANCED_COHERENT_KHR";
                 case 0x9294:
                     return "GL_MULTIPLY";
                 case 0x9295:
@@ -11753,6 +11755,8 @@ const char *GLenumToString(BigGLEnum enumGroup, unsigned int value)
                     return "GL_COMPRESSED_RGBA8_ETC2_EAC";
                 case 0x9279:
                     return "GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC";
+                case 0x9285:
+                    return "GL_BLEND_ADVANCED_COHERENT_KHR";
                 case 0x9294:
                     return "GL_MULTIPLY_KHR";
                 case 0x9295:

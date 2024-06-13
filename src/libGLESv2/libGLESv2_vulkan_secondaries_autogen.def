@@ -996,6 +996,8 @@ EXPORTS
     ; GL_KHR_blend_equation_advanced
     glBlendBarrierKHR
 
+    ; GL_KHR_blend_equation_advanced_coherent
+
     ; GL_KHR_debug
     glDebugMessageCallbackKHR
     glDebugMessageControlKHR

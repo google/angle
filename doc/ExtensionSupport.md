@@ -25,6 +25,7 @@ using data from registry_xml.py and gl.xml.
 | -------------- | :---------------: | :-------------: | :---------------: | :-------------: | :---------------: | :----------------: | :----------------: |
 | [GL_EXT_base_instance](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_base_instance.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_KHR_blend_equation_advanced](https://khronos.org/registry/OpenGL/extensions/KHR/KHR_blend_equation_advanced.txt) | &#x2714; |  | &#x2714; |  | &#x2714; | &#x2714; | &#x2714; |
+| [GL_KHR_blend_equation_advanced_coherent](https://khronos.org/registry/OpenGL/extensions/KHR/KHR_blend_equation_advanced_coherent.txt) |  |  |  |  |  |  |  |
 | [GL_EXT_blend_func_extended](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_blend_func_extended.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; |  | &#x2714; |  |
 | [GL_EXT_blend_minmax](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_blend_minmax.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_EXT_buffer_storage](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_buffer_storage.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
