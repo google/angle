@@ -506,6 +506,14 @@
             "issue": "http://anglebug.com/42262249"
         },
         {
+            "name": "supports_blend_operation_advanced_coherent",
+            "category": "Features",
+            "description": [
+                "VkDevice supports VK_EXT_blend_operation_advanced_coherent extension."
+            ],
+            "issue": "http://anglebug.com/42262258"
+        },
+        {
             "name": "force_max_uniform_buffer_size_16KB",
             "category": "Workarounds",
             "description": [

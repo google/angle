@@ -927,6 +927,7 @@ class Renderer : angle::NonCopyable
     VkPhysicalDeviceHostQueryResetFeaturesEXT mHostQueryResetFeatures;
     VkPhysicalDeviceDepthClampZeroOneFeaturesEXT mDepthClampZeroOneFeatures;
     VkPhysicalDeviceDepthClipControlFeaturesEXT mDepthClipControlFeatures;
+    VkPhysicalDeviceBlendOperationAdvancedFeaturesEXT mBlendOperationAdvancedFeatures;
     VkPhysicalDevicePrimitivesGeneratedQueryFeaturesEXT mPrimitivesGeneratedQueryFeatures;
     VkPhysicalDevicePrimitiveTopologyListRestartFeaturesEXT mPrimitiveTopologyListRestartFeatures;
     VkPhysicalDeviceSamplerYcbcrConversionFeatures mSamplerYcbcrConversionFeatures;

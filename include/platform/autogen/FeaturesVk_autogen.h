@@ -475,6 +475,13 @@ struct FeaturesVk : FeatureSetBase
         &members, "http://anglebug.com/42262249"
     };
 
+    FeatureInfo supportsBlendOperationAdvancedCoherent = {
+        "supportsBlendOperationAdvancedCoherent",
+        FeatureCategory::VulkanFeatures,
+        "VkDevice supports VK_EXT_blend_operation_advanced_coherent extension.",
+        &members, "http://anglebug.com/42262258"
+    };
+
     FeatureInfo forceMaxUniformBufferSize16KB = {
         "forceMaxUniformBufferSize16KB",
         FeatureCategory::VulkanWorkarounds,
