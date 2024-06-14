@@ -8963,22 +8963,6 @@ void ContextVk::resetPerFramePerfCounters()
         .resetDescriptorCacheStats();
 }
 
-vk::ComputePipelineFlags ContextVk::getComputePipelineFlags() const
-{
-    vk::ComputePipelineFlags pipelineFlags = {};
-
-    if (pipelineRobustness() == vk::PipelineRobustness::Robust)
-    {
-        pipelineFlags.set(vk::ComputePipelineFlag::Robust);
-    }
-    if (pipelineProtectedAccess() == vk::PipelineProtectedAccess::Protected)
-    {
-        pipelineFlags.set(vk::ComputePipelineFlag::Protected);
-    }
-
-    return pipelineFlags;
-}
-
 angle::Result ContextVk::ensureInterfacePipelineCache()
 {
     if (!mInterfacePipelinesCache.valid())

@@ -817,8 +817,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                    : vk::PipelineProtectedAccess::Unprotected;
     }
 
-    vk::ComputePipelineFlags getComputePipelineFlags() const;
-
     const angle::ImageLoadContext &getImageLoadContext() const { return mImageLoadContext; }
 
     bool hasUnsubmittedUse(const vk::ResourceUse &use) const;

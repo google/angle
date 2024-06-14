@@ -696,7 +696,8 @@ ProgramExecutableVk::ProgramExecutableVk(const gl::ProgramExecutable *executable
       mImmutableSamplersMaxDescriptorCount(1),
       mUniformBufferDescriptorType(VK_DESCRIPTOR_TYPE_MAX_ENUM),
       mDynamicUniformDescriptorOffsets{},
-      mValidPermutations{}
+      mValidGraphicsPermutations{},
+      mValidComputePermutations{}
 {
     mDescriptorSets.fill(VK_NULL_HANDLE);
     for (std::shared_ptr<DefaultUniformBlockVk> &defaultBlock : mDefaultUniformBlocks)
@@ -717,6 +718,14 @@ void ProgramExecutableVk::destroy(const gl::Context *context)
 
 void ProgramExecutableVk::resetLayout(ContextVk *contextVk)
 {
+    if (!mPipelineLayout.valid())
+    {
+        ASSERT(mValidGraphicsPermutations.none());
+        ASSERT(mValidComputePermutations.none());
+
+        return;
+    }
+
     waitForPostLinkTasksImpl(contextVk);
 
     for (auto &descriptorSetLayout : mDescriptorSetLayouts)
@@ -741,7 +750,7 @@ void ProgramExecutableVk::resetLayout(ContextVk *contextVk)
     // Initialize with an invalid BufferSerial
     mCurrentDefaultUniformBufferSerial = vk::BufferSerial();
 
-    for (size_t index : mValidPermutations)
+    for (size_t index : mValidGraphicsPermutations)
     {
         mCompleteGraphicsPipelines[index].release(contextVk);
         mShadersGraphicsPipelines[index].release(contextVk);
@@ -750,13 +759,14 @@ void ProgramExecutableVk::resetLayout(ContextVk *contextVk)
         // having pending jobs that are referencing them.
         mGraphicsProgramInfos[index].release(contextVk);
     }
-    mValidPermutations.reset();
+    mValidGraphicsPermutations.reset();
 
-    for (vk::PipelineHelper &pipeline : mComputePipelines)
+    for (size_t index : mValidComputePermutations)
     {
-        pipeline.release(contextVk);
+        mComputePipelines[index].release(contextVk);
     }
     mComputeProgramInfo.release(contextVk);
+    mValidComputePermutations.reset();
 
     mPipelineLayout.reset();
 
@@ -1015,7 +1025,10 @@ angle::Result ProgramExecutableVk::prepareForWarmUpPipelineCache(
     if (isCompute)
     {
         // Initialize compute program.
-        ANGLE_TRY(initComputeProgram(context, &mComputeProgramInfo, mVariableInfoMap));
+        vk::ComputePipelineOptions pipelineOptions =
+            vk::GetComputePipelineOptions(pipelineRobustness, pipelineProtectedAccess);
+        ANGLE_TRY(
+            initComputeProgram(context, &mComputeProgramInfo, mVariableInfoMap, pipelineOptions));
 
         *isComputeOut = true;
         return angle::Result::Continue;
@@ -1690,20 +1703,12 @@ angle::Result ProgramExecutableVk::getOrCreateComputePipeline(
 {
     ASSERT(mExecutable->hasLinkedShaderStage(gl::ShaderType::Compute));
 
-    ANGLE_TRY(initComputeProgram(context, &mComputeProgramInfo, mVariableInfoMap));
-
-    vk::ComputePipelineFlags pipelineFlags = {};
-    if (pipelineRobustness == vk::PipelineRobustness::Robust)
-    {
-        pipelineFlags.set(vk::ComputePipelineFlag::Robust);
-    }
-    if (pipelineProtectedAccess == vk::PipelineProtectedAccess::Protected)
-    {
-        pipelineFlags.set(vk::ComputePipelineFlag::Protected);
-    }
+    vk::ComputePipelineOptions pipelineOptions =
+        vk::GetComputePipelineOptions(pipelineRobustness, pipelineProtectedAccess);
+    ANGLE_TRY(initComputeProgram(context, &mComputeProgramInfo, mVariableInfoMap, pipelineOptions));
 
     return mComputeProgramInfo.getShaderProgram().getOrCreateComputePipeline(
-        context, &mComputePipelines, pipelineCache, getPipelineLayout(), pipelineFlags, source,
+        context, &mComputePipelines, pipelineCache, getPipelineLayout(), pipelineOptions, source,
         pipelineOut, nullptr, nullptr);
 }
 
