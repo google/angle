@@ -852,6 +852,11 @@ angle::Result CLCommandQueueVk::enqueueUnmapMemObject(const cl::Memory &memory,
     {
         // of image type
         CLImageVk &imageVk = memory.getImpl<CLImageVk>();
+        if (memory.getFlags().intersects(CL_MEM_USE_HOST_PTR))
+        {
+            uint8_t *mapPointer = static_cast<uint8_t *>(memory.getHostPtr());
+            ANGLE_TRY(imageVk.copyStagingFrom(mapPointer, 0, imageVk.getSize()));
+        }
         VkExtent3D extent  = imageVk.getImageExtent();
         ANGLE_TRY(copyImageToFromBuffer(imageVk, imageVk.getStagingBuffer(), {0, 0, 0},
                                         {extent.width, extent.height, extent.depth}, 0,
