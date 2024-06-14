@@ -260,7 +260,7 @@ class TextureGL : public TextureImpl
                                           const FunctionsGL *functions,
                                           GLenum name,
                                           GLenum value,
-                                          GLenum *outValue);
+                                          GLenum *currentlyAppliedValue);
 
     void setLevelInfo(const gl::Context *context,
                       gl::TextureTarget target,
@@ -287,6 +287,7 @@ class TextureGL : public TextureImpl
     gl::SamplerState mAppliedSampler;
     GLuint mAppliedBaseLevel;
     GLuint mAppliedMaxLevel;
+    GLenum mAppliedDepthStencilTextureMode;
 
     GLuint mTextureID;
 };

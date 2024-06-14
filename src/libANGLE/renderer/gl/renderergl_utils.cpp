@@ -2253,15 +2253,14 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     bool isGetSystemInfoSuccess =
         GetSystemInfoVendorIDAndDeviceID(functions, &systemInfo, &vendor, &device);
 
-    bool isAMD         = IsAMD(vendor);
-    bool isApple       = IsAppleGPU(vendor);
-    bool isIntel       = IsIntel(vendor);
-    bool isNvidia      = IsNvidia(vendor);
-    bool isQualcomm    = IsQualcomm(vendor);
-    bool isVMWare      = IsVMWare(vendor);
-    bool hasAMD        = systemInfo.hasAMDGPU();
-    bool isImagination = IsPowerVR(vendor);
-    bool isMali        = IsARM(vendor);
+    bool isAMD      = IsAMD(vendor);
+    bool isApple    = IsAppleGPU(vendor);
+    bool isIntel    = IsIntel(vendor);
+    bool isNvidia   = IsNvidia(vendor);
+    bool isQualcomm = IsQualcomm(vendor);
+    bool isVMWare   = IsVMWare(vendor);
+    bool hasAMD     = systemInfo.hasAMDGPU();
+    bool isMali     = IsARM(vendor);
 
     std::array<int, 3> mesaVersion = {0, 0, 0};
     bool isMesa                    = IsMesa(functions, &mesaVersion);
@@ -2605,7 +2604,7 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
                             isNvidia && (IsWindows() || IsLinux()));
 
     // https://anglebug.com/7405
-    ANGLE_FEATURE_CONDITION(features, disableTextureClampToBorder, isImagination);
+    ANGLE_FEATURE_CONDITION(features, disableTextureClampToBorder, false);
 
     // https://anglebug.com/7527
     ANGLE_FEATURE_CONDITION(features, passHighpToPackUnormSnormBuiltins, isQualcomm);
