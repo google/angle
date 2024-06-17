@@ -303,6 +303,19 @@ void ReplayTraceFunctionCall(const CallCapture &call, const TraceFunctionMap &cu
         case angle::EntryPoint::GLClearStencil:
             glClearStencil(captures[0].value.GLintVal);
             break;
+        case angle::EntryPoint::GLClearTexImageEXT:
+            glClearTexImageEXT(gTextureMap[captures[0].value.GLuintVal], captures[1].value.GLintVal,
+                               captures[2].value.GLenumVal, captures[3].value.GLenumVal,
+                               captures[4].value.voidConstPointerVal);
+            break;
+        case angle::EntryPoint::GLClearTexSubImageEXT:
+            glClearTexSubImageEXT(
+                gTextureMap[captures[0].value.GLuintVal], captures[1].value.GLintVal,
+                captures[2].value.GLintVal, captures[3].value.GLintVal, captures[4].value.GLintVal,
+                captures[5].value.GLsizeiVal, captures[6].value.GLsizeiVal,
+                captures[7].value.GLsizeiVal, captures[8].value.GLenumVal,
+                captures[9].value.GLenumVal, captures[10].value.voidConstPointerVal);
+            break;
         case angle::EntryPoint::GLClientActiveTexture:
             glClientActiveTexture(captures[0].value.GLenumVal);
             break;

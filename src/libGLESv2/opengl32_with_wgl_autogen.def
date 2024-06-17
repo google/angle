@@ -720,6 +720,10 @@ EXPORTS
     ; GL_EXT_buffer_storage
     glBufferStorageEXT
 
+    ; GL_EXT_clear_texture
+    glClearTexImageEXT
+    glClearTexSubImageEXT
+
     ; GL_EXT_clip_control
     glClipControlEXT
 

@@ -263,7 +263,9 @@ const ProcEntry g_procTable[] = {
     DESKTOP_ONLY("glClearNamedFramebufferuiv", GL_ClearNamedFramebufferuiv)
     {"glClearStencil", P(GL_ClearStencil)},
     DESKTOP_ONLY("glClearTexImage", GL_ClearTexImage)
+    {"glClearTexImageEXT", P(GL_ClearTexImageEXT)},
     DESKTOP_ONLY("glClearTexSubImage", GL_ClearTexSubImage)
+    {"glClearTexSubImageEXT", P(GL_ClearTexSubImageEXT)},
     {"glClientActiveTexture", P(GL_ClientActiveTexture)},
     {"glClientWaitSync", P(GL_ClientWaitSync)},
     DESKTOP_ONLY("glClipControl", GL_ClipControl)

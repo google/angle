@@ -18,6 +18,8 @@
 #include "libANGLE/validationES31.h"
 #include "libANGLE/validationES32.h"
 
+#include <optional>
+
 namespace gl
 {
 using namespace err;
@@ -231,6 +233,128 @@ bool ValidateObjectIdentifierAndName(const Context *context,
             return false;
     }
 }
+
+bool ValidateClearTexImageFormat(const Context *context,
+                                 angle::EntryPoint entryPoint,
+                                 TextureType textureType,
+                                 const Format &textureFormat,
+                                 GLenum format,
+                                 GLenum type)
+{
+    if (textureFormat.info->compressed)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kTextureIsCompressed);
+        return false;
+    }
+
+    if (!ValidateTexImageFormatCombination(context, entryPoint, textureType,
+                                           textureFormat.info->internalFormat, format, type))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateClearTexImageCommon(const Context *context,
+                                 angle::EntryPoint entryPoint,
+                                 TextureID texturePacked,
+                                 GLint level,
+                                 const std::optional<Box> &area,
+                                 GLenum format,
+                                 GLenum type,
+                                 const void *data)
+{
+    if (!context->getExtensions().clearTextureEXT)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    if (texturePacked.value == 0)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kMissingTextureName);
+        return false;
+    }
+
+    Texture *tex = context->getTexture(texturePacked);
+    if (tex == nullptr)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kMissingTextureName);
+        return false;
+    }
+
+    if (tex->getType() == TextureType::Buffer)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kBufferTextureNotAllowed);
+        return false;
+    }
+
+    if (!ValidMipLevel(context, tex->getType(), level))
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidMipLevel);
+        return false;
+    }
+
+    if (area.has_value() && (area->x < 0 || area->y < 0 || area->z < 0 || area->width < 0 ||
+                             area->height < 0 || area->depth < 0))
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kNegativeOffset);
+        return false;
+    }
+
+    if (tex->getType() == TextureType::CubeMap)
+    {
+        if (area.has_value() && area->z + area->depth > 6)
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kDestinationTextureTooSmall);
+            return false;
+        }
+
+        ImageIndexIterator it = ImageIndexIterator::MakeGeneric(
+            tex->getType(), level, level + 1, area.has_value() ? area->z : ImageIndex::kEntireLevel,
+            area.has_value() ? area->z + area->depth : ImageIndex::kEntireLevel);
+        while (it.hasNext())
+        {
+            const ImageIndex index = it.next();
+            TextureTarget target   = index.getTarget();
+            const Extents extents  = tex->getExtents(target, level);
+            if (area.has_value() &&
+                (area->x + area->width > extents.width || area->y + area->height > extents.height))
+            {
+                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kDestinationTextureTooSmall);
+                return false;
+            }
+
+            if (!ValidateClearTexImageFormat(context, entryPoint, tex->getType(),
+                                             tex->getFormat(target, level), format, type))
+            {
+                return false;
+            }
+        }
+    }
+    else
+    {
+        TextureTarget target  = NonCubeTextureTypeToTarget(tex->getType());
+        const Extents extents = tex->getExtents(target, level);
+        if (area.has_value() &&
+            (area->x + area->width > extents.width || area->y + area->height > extents.height ||
+             area->z + area->depth > extents.depth))
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kDestinationTextureTooSmall);
+            return false;
+        }
+
+        if (!ValidateClearTexImageFormat(context, entryPoint, tex->getType(),
+                                         tex->getFormat(target, level), format, type))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 }  // namespace
 
 bool ValidateGetTexImage(const Context *context,
@@ -2872,6 +2996,38 @@ bool ValidateBufferStorageEXT(const Context *context,
     }
 
     return true;
+}
+
+// GL_EXT_clear_texture
+bool ValidateClearTexImageEXT(const Context *context,
+                              angle::EntryPoint entryPoint,
+                              TextureID texturePacked,
+                              GLint level,
+                              GLenum format,
+                              GLenum type,
+                              const void *data)
+{
+    return ValidateClearTexImageCommon(context, entryPoint, texturePacked, level, std::nullopt,
+                                       format, type, data);
+}
+
+bool ValidateClearTexSubImageEXT(const Context *context,
+                                 angle::EntryPoint entryPoint,
+                                 TextureID texturePacked,
+                                 GLint level,
+                                 GLint xoffset,
+                                 GLint yoffset,
+                                 GLint zoffset,
+                                 GLsizei width,
+                                 GLsizei height,
+                                 GLsizei depth,
+                                 GLenum format,
+                                 GLenum type,
+                                 const void *data)
+{
+    return ValidateClearTexImageCommon(context, entryPoint, texturePacked, level,
+                                       Box(xoffset, yoffset, zoffset, width, height, depth), format,
+                                       type, data);
 }
 
 // GL_EXT_clip_control

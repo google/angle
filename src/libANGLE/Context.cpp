@@ -9947,6 +9947,51 @@ void Context::startTiling(GLuint x, GLuint y, GLuint width, GLuint height, GLbit
     UNIMPLEMENTED();
 }
 
+void Context::clearTexImage(TextureID texturePacked,
+                            GLint level,
+                            GLenum format,
+                            GLenum type,
+                            const void *data)
+{
+    Texture *texture = getTexture(texturePacked);
+
+    // Sync the texture's state directly. EXT_clear_texture does not require that the texture is
+    // bound.
+    if (texture->hasAnyDirtyBit())
+    {
+        ANGLE_CONTEXT_TRY(texture->syncState(this, Command::Other));
+    }
+
+    ANGLE_CONTEXT_TRY(
+        texture->clearImage(this, level, format, type, static_cast<const uint8_t *>(data)));
+}
+
+void Context::clearTexSubImage(TextureID texturePacked,
+                               GLint level,
+                               GLint xoffset,
+                               GLint yoffset,
+                               GLint zoffset,
+                               GLsizei width,
+                               GLsizei height,
+                               GLsizei depth,
+                               GLenum format,
+                               GLenum type,
+                               const void *data)
+{
+    Texture *texture = getTexture(texturePacked);
+
+    // Sync the texture's state directly. EXT_clear_texture does not require that the texture is
+    // bound.
+    if (texture->hasAnyDirtyBit())
+    {
+        ANGLE_CONTEXT_TRY(texture->syncState(this, Command::Other));
+    }
+
+    Box area(xoffset, yoffset, zoffset, width, height, depth);
+    ANGLE_CONTEXT_TRY(texture->clearSubImage(this, level, area, format, type,
+                                             static_cast<const uint8_t *>(data)));
+}
+
 // ErrorSet implementation.
 ErrorSet::ErrorSet(Debug *debug,
                    const angle::FrontendFeatures &frontendFeatures,

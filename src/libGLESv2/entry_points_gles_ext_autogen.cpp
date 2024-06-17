@@ -5352,6 +5352,89 @@ void GL_APIENTRY GL_BufferStorageEXT(GLenum target,
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
 
+// GL_EXT_clear_texture
+void GL_APIENTRY
+GL_ClearTexImageEXT(GLuint texture, GLint level, GLenum format, GLenum type, const void *data)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLClearTexImageEXT,
+          "context = %d, texture = %u, level = %d, format = %s, type = %s, data = 0x%016" PRIxPTR
+          "",
+          CID(context), texture, level, GLenumToString(GLESEnum::PixelFormat, format),
+          GLenumToString(GLESEnum::PixelType, type), (uintptr_t)data);
+
+    if (context)
+    {
+        TextureID texturePacked = PackParam<TextureID>(texture);
+        SCOPED_SHARE_CONTEXT_LOCK(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
+                                                context->getMutableErrorSetForValidation(),
+                                                angle::EntryPoint::GLClearTexImageEXT) &&
+              ValidateClearTexImageEXT(context, angle::EntryPoint::GLClearTexImageEXT,
+                                       texturePacked, level, format, type, data)));
+        if (isCallValid)
+        {
+            context->clearTexImage(texturePacked, level, format, type, data);
+        }
+        ANGLE_CAPTURE_GL(ClearTexImageEXT, isCallValid, context, texturePacked, level, format, type,
+                         data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+}
+
+void GL_APIENTRY GL_ClearTexSubImageEXT(GLuint texture,
+                                        GLint level,
+                                        GLint xoffset,
+                                        GLint yoffset,
+                                        GLint zoffset,
+                                        GLsizei width,
+                                        GLsizei height,
+                                        GLsizei depth,
+                                        GLenum format,
+                                        GLenum type,
+                                        const void *data)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLClearTexSubImageEXT,
+          "context = %d, texture = %u, level = %d, xoffset = %d, yoffset = %d, zoffset = %d, width "
+          "= %d, height = %d, depth = %d, format = %s, type = %s, data = 0x%016" PRIxPTR "",
+          CID(context), texture, level, xoffset, yoffset, zoffset, width, height, depth,
+          GLenumToString(GLESEnum::PixelFormat, format), GLenumToString(GLESEnum::PixelType, type),
+          (uintptr_t)data);
+
+    if (context)
+    {
+        TextureID texturePacked = PackParam<TextureID>(texture);
+        SCOPED_SHARE_CONTEXT_LOCK(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
+                                                context->getMutableErrorSetForValidation(),
+                                                angle::EntryPoint::GLClearTexSubImageEXT) &&
+              ValidateClearTexSubImageEXT(context, angle::EntryPoint::GLClearTexSubImageEXT,
+                                          texturePacked, level, xoffset, yoffset, zoffset, width,
+                                          height, depth, format, type, data)));
+        if (isCallValid)
+        {
+            context->clearTexSubImage(texturePacked, level, xoffset, yoffset, zoffset, width,
+                                      height, depth, format, type, data);
+        }
+        ANGLE_CAPTURE_GL(ClearTexSubImageEXT, isCallValid, context, texturePacked, level, xoffset,
+                         yoffset, zoffset, width, height, depth, format, type, data);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+}
+
 // GL_EXT_clip_control
 void GL_APIENTRY GL_ClipControlEXT(GLenum origin, GLenum depth)
 {

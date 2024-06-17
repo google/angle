@@ -3689,6 +3689,51 @@ void CaptureBufferStorageEXT_data(const State &glState,
     }
 }
 
+// GL_EXT_clear_texture
+void CaptureClearTexImageEXT_data(const State &glState,
+                                  bool isCallValid,
+                                  TextureID texturePacked,
+                                  GLint level,
+                                  GLenum format,
+                                  GLenum type,
+                                  const void *data,
+                                  angle::ParamCapture *paramCapture)
+{
+    if (!data)
+    {
+        return;
+    }
+
+    const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(format, type);
+    GLuint captureSize                           = internalFormatInfo.computePixelBytes(type);
+    CaptureMemory(data, captureSize, paramCapture);
+}
+
+void CaptureClearTexSubImageEXT_data(const State &glState,
+                                     bool isCallValid,
+                                     TextureID texturePacked,
+                                     GLint level,
+                                     GLint xoffset,
+                                     GLint yoffset,
+                                     GLint zoffset,
+                                     GLsizei width,
+                                     GLsizei height,
+                                     GLsizei depth,
+                                     GLenum format,
+                                     GLenum type,
+                                     const void *data,
+                                     angle::ParamCapture *paramCapture)
+{
+    if (!data)
+    {
+        return;
+    }
+
+    const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(format, type);
+    GLuint captureSize                           = internalFormatInfo.computePixelBytes(type);
+    CaptureMemory(data, captureSize, paramCapture);
+}
+
 // GL_EXT_separate_shader_objects
 void CaptureCreateShaderProgramvEXT_strings(const State &glState,
                                             bool isCallValid,

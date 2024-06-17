@@ -2007,6 +2007,24 @@ typedef void(INTERNAL_GL_APIENTRY *PFNGLSTARTTILINGQCOMPROC)(GLuint x,
                                                              GLbitfield preserveMask);
 typedef void(INTERNAL_GL_APIENTRY *PFNGLENDTILINGQCOMPROC)(GLbitfield preserveMask);
 
+// GL_EXT_clear_texture
+typedef void(INTERNAL_GL_APIENTRY *PFNGLCLEARTEXIMAGEEXTPROC)(GLuint texture,
+                                                              GLint level,
+                                                              GLenum format,
+                                                              GLenum type,
+                                                              const void *data);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLCLEARTEXSUBIMAGEEXTPROC)(GLuint texture,
+                                                                 GLint level,
+                                                                 GLint xoffset,
+                                                                 GLint yoffset,
+                                                                 GLint zoffset,
+                                                                 GLsizei width,
+                                                                 GLsizei height,
+                                                                 GLsizei depth,
+                                                                 GLenum format,
+                                                                 GLenum type,
+                                                                 const void *data);
+
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_GL_FUNCTIONSGLTYPEDEFS_H_

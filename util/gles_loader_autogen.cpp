@@ -629,6 +629,8 @@ ANGLE_UTIL_EXPORT PFNGLGETFRAGDATAINDEXEXTPROC l_glGetFragDataIndexEXT;
 ANGLE_UTIL_EXPORT PFNGLGETPROGRAMRESOURCELOCATIONINDEXEXTPROC
     l_glGetProgramResourceLocationIndexEXT;
 ANGLE_UTIL_EXPORT PFNGLBUFFERSTORAGEEXTPROC l_glBufferStorageEXT;
+ANGLE_UTIL_EXPORT PFNGLCLEARTEXIMAGEEXTPROC l_glClearTexImageEXT;
+ANGLE_UTIL_EXPORT PFNGLCLEARTEXSUBIMAGEEXTPROC l_glClearTexSubImageEXT;
 ANGLE_UTIL_EXPORT PFNGLCLIPCONTROLEXTPROC l_glClipControlEXT;
 ANGLE_UTIL_EXPORT PFNGLCOPYIMAGESUBDATAEXTPROC l_glCopyImageSubDataEXT;
 ANGLE_UTIL_EXPORT PFNGLGETOBJECTLABELEXTPROC l_glGetObjectLabelEXT;
@@ -1851,6 +1853,10 @@ void LoadUtilGLES(LoadProc loadProc)
             loadProc("glGetProgramResourceLocationIndexEXT"));
     l_glBufferStorageEXT =
         reinterpret_cast<PFNGLBUFFERSTORAGEEXTPROC>(loadProc("glBufferStorageEXT"));
+    l_glClearTexImageEXT =
+        reinterpret_cast<PFNGLCLEARTEXIMAGEEXTPROC>(loadProc("glClearTexImageEXT"));
+    l_glClearTexSubImageEXT =
+        reinterpret_cast<PFNGLCLEARTEXSUBIMAGEEXTPROC>(loadProc("glClearTexSubImageEXT"));
     l_glClipControlEXT = reinterpret_cast<PFNGLCLIPCONTROLEXTPROC>(loadProc("glClipControlEXT"));
     l_glCopyImageSubDataEXT =
         reinterpret_cast<PFNGLCOPYIMAGESUBDATAEXTPROC>(loadProc("glCopyImageSubDataEXT"));

@@ -93,6 +93,7 @@ gles_requestable_extensions = [
     "GL_EXT_blend_func_extended",
     "GL_EXT_blend_minmax",
     "GL_EXT_buffer_storage",
+    "GL_EXT_clear_texture",
     "GL_EXT_clip_control",
     "GL_EXT_clip_cull_distance",
     "GL_EXT_color_buffer_float",

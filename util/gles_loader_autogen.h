@@ -614,6 +614,8 @@
 #define glGetFragDataIndexEXT l_glGetFragDataIndexEXT
 #define glGetProgramResourceLocationIndexEXT l_glGetProgramResourceLocationIndexEXT
 #define glBufferStorageEXT l_glBufferStorageEXT
+#define glClearTexImageEXT l_glClearTexImageEXT
+#define glClearTexSubImageEXT l_glClearTexSubImageEXT
 #define glClipControlEXT l_glClipControlEXT
 #define glCopyImageSubDataEXT l_glCopyImageSubDataEXT
 #define glGetObjectLabelEXT l_glGetObjectLabelEXT
@@ -1501,6 +1503,8 @@ ANGLE_UTIL_EXPORT extern PFNGLGETFRAGDATAINDEXEXTPROC l_glGetFragDataIndexEXT;
 ANGLE_UTIL_EXPORT extern PFNGLGETPROGRAMRESOURCELOCATIONINDEXEXTPROC
     l_glGetProgramResourceLocationIndexEXT;
 ANGLE_UTIL_EXPORT extern PFNGLBUFFERSTORAGEEXTPROC l_glBufferStorageEXT;
+ANGLE_UTIL_EXPORT extern PFNGLCLEARTEXIMAGEEXTPROC l_glClearTexImageEXT;
+ANGLE_UTIL_EXPORT extern PFNGLCLEARTEXSUBIMAGEEXTPROC l_glClearTexSubImageEXT;
 ANGLE_UTIL_EXPORT extern PFNGLCLIPCONTROLEXTPROC l_glClipControlEXT;
 ANGLE_UTIL_EXPORT extern PFNGLCOPYIMAGESUBDATAEXTPROC l_glCopyImageSubDataEXT;
 ANGLE_UTIL_EXPORT extern PFNGLGETOBJECTLABELEXTPROC l_glGetObjectLabelEXT;

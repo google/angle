@@ -1214,6 +1214,19 @@ CallCapture ParseCallCapture(const Token &nameToken,
             ParseParameters<std::remove_pointer<PFNGLCLEARSTENCILPROC>::type>(paramTokens, strings);
         return CallCapture(EntryPoint::GLClearStencil, std::move(params));
     }
+    if (strcmp(nameToken, "glClearTexImageEXT") == 0)
+    {
+        ParamBuffer params = ParseParameters<std::remove_pointer<PFNGLCLEARTEXIMAGEEXTPROC>::type>(
+            paramTokens, strings);
+        return CallCapture(EntryPoint::GLClearTexImageEXT, std::move(params));
+    }
+    if (strcmp(nameToken, "glClearTexSubImageEXT") == 0)
+    {
+        ParamBuffer params =
+            ParseParameters<std::remove_pointer<PFNGLCLEARTEXSUBIMAGEEXTPROC>::type>(paramTokens,
+                                                                                     strings);
+        return CallCapture(EntryPoint::GLClearTexSubImageEXT, std::move(params));
+    }
     if (strcmp(nameToken, "glClientActiveTexture") == 0)
     {
         ParamBuffer params =

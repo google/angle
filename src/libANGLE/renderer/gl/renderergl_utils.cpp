@@ -2156,6 +2156,11 @@ void GenerateCaps(const FunctionsGL *functions,
     // GL_ANGLE_logic_op
     extensions->logicOpANGLE = functions->isAtLeastGL(gl::Version(2, 0));
 
+    // GL_EXT_clear_texture
+    extensions->clearTextureEXT = functions->isAtLeastGL(gl::Version(4, 4)) ||
+                                  functions->hasGLESExtension("GL_EXT_clear_texture") ||
+                                  functions->hasGLExtension("GL_ARB_clear_texture");
+
     // PVRTC1 textures must be squares on Apple platforms.
     if (IsApple())
     {

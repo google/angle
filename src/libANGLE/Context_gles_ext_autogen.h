@@ -104,6 +104,12 @@
     /* GL_EXT_buffer_storage */                                                                    \
     void bufferStorage(BufferBinding targetPacked, GLsizeiptr size, const void *data,              \
                        GLbitfield flags);                                                          \
+    /* GL_EXT_clear_texture */                                                                     \
+    void clearTexImage(TextureID texturePacked, GLint level, GLenum format, GLenum type,           \
+                       const void *data);                                                          \
+    void clearTexSubImage(TextureID texturePacked, GLint level, GLint xoffset, GLint yoffset,      \
+                          GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,             \
+                          GLenum format, GLenum type, const void *data);                           \
     /* GL_EXT_clip_control */                                                                      \
     /* GL_EXT_clip_cull_distance */                                                                \
     /* GL_EXT_color_buffer_float */                                                                \

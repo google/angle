@@ -98,6 +98,9 @@ struct Extensions
     // GL_EXT_buffer_storage
     bool bufferStorageEXT = false;
 
+    // GL_EXT_clear_texture
+    bool clearTextureEXT = false;
+
     // GL_EXT_clip_control
     bool clipControlEXT = false;
 

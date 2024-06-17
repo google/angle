@@ -686,8 +686,12 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glClearStencil";
         case EntryPoint::GLClearTexImage:
             return "glClearTexImage";
+        case EntryPoint::GLClearTexImageEXT:
+            return "glClearTexImageEXT";
         case EntryPoint::GLClearTexSubImage:
             return "glClearTexSubImage";
+        case EntryPoint::GLClearTexSubImageEXT:
+            return "glClearTexSubImageEXT";
         case EntryPoint::GLClientActiveTexture:
             return "glClientActiveTexture";
         case EntryPoint::GLClientWaitSync:

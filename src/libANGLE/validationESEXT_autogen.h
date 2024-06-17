@@ -1144,6 +1144,28 @@ bool ValidateBufferStorageEXT(const Context *context,
                               const void *data,
                               GLbitfield flags);
 
+// GL_EXT_clear_texture
+bool ValidateClearTexImageEXT(const Context *context,
+                              angle::EntryPoint entryPoint,
+                              TextureID texturePacked,
+                              GLint level,
+                              GLenum format,
+                              GLenum type,
+                              const void *data);
+bool ValidateClearTexSubImageEXT(const Context *context,
+                                 angle::EntryPoint entryPoint,
+                                 TextureID texturePacked,
+                                 GLint level,
+                                 GLint xoffset,
+                                 GLint yoffset,
+                                 GLint zoffset,
+                                 GLsizei width,
+                                 GLsizei height,
+                                 GLsizei depth,
+                                 GLenum format,
+                                 GLenum type,
+                                 const void *data);
+
 // GL_EXT_clip_control
 bool ValidateClipControlEXT(const PrivateState &state,
                             ErrorSet *errors,

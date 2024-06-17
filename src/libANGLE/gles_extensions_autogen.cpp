@@ -44,6 +44,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_EXT_blend_func_extended"] = enableableExtension(&Extensions::blendFuncExtendedEXT);
         map["GL_EXT_blend_minmax"] = enableableExtension(&Extensions::blendMinmaxEXT);
         map["GL_EXT_buffer_storage"] = enableableExtension(&Extensions::bufferStorageEXT);
+        map["GL_EXT_clear_texture"] = enableableExtension(&Extensions::clearTextureEXT);
         map["GL_EXT_clip_control"] = enableableExtension(&Extensions::clipControlEXT);
         map["GL_EXT_clip_cull_distance"] = enableableExtension(&Extensions::clipCullDistanceEXT);
         map["GL_APPLE_clip_distance"] = enableableExtension(&Extensions::clipDistanceAPPLE);
