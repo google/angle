@@ -2499,6 +2499,7 @@ void Renderer::appendDeviceExtensionFeaturesPromotedTo12(
 //                                           extendedDynamicState2LogicOp (feature)
 // - VK_KHR_synchronization2:                synchronization2 (feature)
 // - VK_KHR_dynamic_rendering:               dynamicRendering (feature)
+// - VK_KHR_maintenance5:                    maintenance5 (feature)
 //
 // Note that VK_EXT_extended_dynamic_state2 is partially promoted to Vulkan 1.3.  If ANGLE creates a
 // Vulkan 1.3 device, it would still need to enable this extension separately for
@@ -2527,6 +2528,11 @@ void Renderer::appendDeviceExtensionFeaturesPromotedTo13(
     if (ExtensionFound(VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME, deviceExtensionNames))
     {
         vk::AddToPNextChain(deviceFeatures, &mDynamicRenderingFeatures);
+    }
+
+    if (ExtensionFound(VK_KHR_MAINTENANCE_5_EXTENSION_NAME, deviceExtensionNames))
+    {
+        vk::AddToPNextChain(deviceFeatures, &mMaintenance5Features);
     }
 }
 
@@ -2684,6 +2690,9 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
     mRasterizationOrderAttachmentAccessFeatures.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_FEATURES_EXT;
 
+    mMaintenance5Features       = {};
+    mMaintenance5Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_FEATURES_KHR;
+
     mSwapchainMaintenance1Features = {};
     mSwapchainMaintenance1Features.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SWAPCHAIN_MAINTENANCE_1_FEATURES_EXT;
@@ -2783,6 +2792,7 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
     mPipelineRobustnessFeatures.pNext                 = nullptr;
     mPipelineProtectedAccessFeatures.pNext            = nullptr;
     mRasterizationOrderAttachmentAccessFeatures.pNext = nullptr;
+    mMaintenance5Features.pNext                       = nullptr;
     mSwapchainMaintenance1Features.pNext              = nullptr;
     mDitheringFeatures.pNext                          = nullptr;
     mDrmProperties.pNext                              = nullptr;
@@ -3085,12 +3095,6 @@ void Renderer::enableDeviceExtensionsNotPromoted(const vk::ExtensionNameList &de
         vk::AddToPNextChain(&mEnabledFeatures, &mVertexInputDynamicStateFeatures);
     }
 
-    if (getFeatures().supportsDynamicRendering.enabled)
-    {
-        mEnabledDeviceExtensions.push_back(VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME);
-        vk::AddToPNextChain(&mEnabledFeatures, &mDynamicRenderingFeatures);
-    }
-
     if (getFeatures().supportsDynamicRenderingLocalRead.enabled)
     {
         mEnabledDeviceExtensions.push_back(VK_KHR_DYNAMIC_RENDERING_LOCAL_READ_EXTENSION_NAME);
@@ -3264,6 +3268,18 @@ void Renderer::enableDeviceExtensionsPromotedTo13(const vk::ExtensionNameList &d
     {
         mEnabledDeviceExtensions.push_back(VK_KHR_SYNCHRONIZATION_2_EXTENSION_NAME);
         vk::AddToPNextChain(&mEnabledFeatures, &mSynchronization2Features);
+    }
+
+    if (getFeatures().supportsDynamicRendering.enabled)
+    {
+        mEnabledDeviceExtensions.push_back(VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME);
+        vk::AddToPNextChain(&mEnabledFeatures, &mDynamicRenderingFeatures);
+    }
+
+    if (getFeatures().supportsMaintenance5.enabled)
+    {
+        mEnabledDeviceExtensions.push_back(VK_KHR_MAINTENANCE_5_EXTENSION_NAME);
+        vk::AddToPNextChain(&mEnabledFeatures, &mMaintenance5Features);
     }
 }
 
@@ -5120,6 +5136,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
 #endif
 
     ANGLE_FEATURE_CONDITION(&mFeatures, useVkEventForImageBarrier, false);
+
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsMaintenance5,
+                            mMaintenance5Features.maintenance5 == VK_TRUE);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsDynamicRendering,
                             mDynamicRenderingFeatures.dynamicRendering == VK_TRUE);

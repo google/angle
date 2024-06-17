@@ -1245,6 +1245,14 @@
             "issue": "https://anglebug.com/7899"
         },
         {
+            "name": "supports_maintenance5",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_KHR_maintenance5 extension"
+            ],
+            "issue": "https://anglebug.com/42267038"
+        },
+        {
             "name": "supports_surface_maintenance1",
             "category": "Features",
             "description": [

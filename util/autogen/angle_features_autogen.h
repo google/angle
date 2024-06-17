@@ -335,6 +335,7 @@ enum class Feature
     SupportsLegacyDithering,
     SupportsLockSurfaceExtension,
     SupportsLogicOpDynamicState,
+    SupportsMaintenance5,
     SupportsMemoryBudget,
     SupportsMixedReadWriteDepthStencilLayouts,
     SupportsMultiDrawIndirect,

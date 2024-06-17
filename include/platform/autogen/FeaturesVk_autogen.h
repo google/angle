@@ -1144,6 +1144,13 @@ struct FeaturesVk : FeatureSetBase
         &members, "https://anglebug.com/7899"
     };
 
+    FeatureInfo supportsMaintenance5 = {
+        "supportsMaintenance5",
+        FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_KHR_maintenance5 extension",
+        &members, "https://anglebug.com/42267038"
+    };
+
     FeatureInfo supportsSurfaceMaintenance1 = {
         "supportsSurfaceMaintenance1",
         FeatureCategory::VulkanFeatures,
