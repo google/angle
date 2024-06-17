@@ -87,6 +87,7 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     enum class RunTrialPolicy
     {
         FinishEveryStep,
+        RunContinuouslyWarmup,
         RunContinuously,
     };
 

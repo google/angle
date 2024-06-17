@@ -11,6 +11,7 @@
 
 #if defined(ANGLE_PLATFORM_ANDROID)
 #    include <android/log.h>
+#    include <dlfcn.h>
 #endif
 #include "ANGLEPerfTestArgs.h"
 #include "common/base/anglebase/trace_event/trace_event.h"
@@ -235,6 +236,45 @@ void FinishAndCheckForContextLoss()
         FAIL() << "Context lost";
     }
 }
+
+#if defined(ANGLE_PLATFORM_ANDROID)
+constexpr bool kHasATrace = true;
+
+void *gLibAndroid = nullptr;
+bool (*gATraceIsEnabled)(void);
+bool (*gATraceSetCounter)(const char *counterName, int64_t counterValue);
+
+void SetupATrace()
+{
+    if (gLibAndroid == nullptr)
+    {
+        gLibAndroid       = dlopen("libandroid.so", RTLD_NOW | RTLD_LOCAL);
+        gATraceIsEnabled  = (decltype(gATraceIsEnabled))dlsym(gLibAndroid, "ATrace_isEnabled");
+        gATraceSetCounter = (decltype(gATraceSetCounter))dlsym(gLibAndroid, "ATrace_setCounter");
+    }
+}
+
+bool ATraceEnabled()
+{
+    return gATraceIsEnabled();
+}
+
+void ATraceCounter(const char *counterName, int64_t counterValue)
+{
+    if (ATraceEnabled())
+    {
+        gATraceSetCounter(counterName, counterValue);
+    }
+}
+#else
+constexpr bool kHasATrace = false;
+void SetupATrace() {}
+bool ATraceEnabled()
+{
+    return false;
+}
+void ATraceCounter(const char *counterName, int64_t counterValue) {}
+#endif
 }  // anonymous namespace
 
 TraceEvent::TraceEvent(char phaseIn,
@@ -278,6 +318,11 @@ ANGLEPerfTest::ANGLEPerfTest(const std::string &name,
     mReporter->RegisterImportantMetric(".gpu_time", units);
     mReporter->RegisterFyiMetric(".trial_steps", "count");
     mReporter->RegisterFyiMetric(".total_steps", "count");
+
+    if (kHasATrace)
+    {
+        SetupATrace();
+    }
 }
 
 ANGLEPerfTest::~ANGLEPerfTest() {}
@@ -303,6 +348,8 @@ void ANGLEPerfTest::run()
         printf("Test Trials: %d\n", static_cast<int>(numTrials));
     }
 
+    ATraceCounter("TraceStage", 3);
+
     for (uint32_t trial = 0; trial < numTrials; ++trial)
     {
         runTrial(gTrialTimeSeconds, mStepsToRun, RunTrialPolicy::RunContinuously);
@@ -317,6 +364,8 @@ void ANGLEPerfTest::run()
             mTestTrialResults.push_back(secondsPerIteration * 1000.0);
         }
     }
+
+    ATraceCounter("TraceStage", 0);
 
     if (gVerboseLogging && !mTestTrialResults.empty())
     {
@@ -355,8 +404,24 @@ void ANGLEPerfTest::runTrial(double maxRunTime, int maxStepsToRun, RunTrialPolic
     mTrialTimer.start();
     startTest();
 
+    int loopStepsPerformed  = 0;
+    double lastLoopWallTime = 0;
     while (mRunning)
     {
+        // When ATrace enabled, track average frame time before the first frame of each trace loop.
+        if (ATraceEnabled() && stepAlignment > 1 && runPolicy == RunTrialPolicy::RunContinuously &&
+            mTrialNumStepsPerformed % stepAlignment == 0)
+        {
+            double wallTime = mTrialTimer.getElapsedWallClockTime();
+            if (loopStepsPerformed > 0)  // 0 at the first frame of the first loop
+            {
+                int frameTimeAvgUs = int(1e6 * (wallTime - lastLoopWallTime) / loopStepsPerformed);
+                ATraceCounter("TraceLoopFrameTimeAvgUs", frameTimeAvgUs);
+                loopStepsPerformed = 0;
+            }
+            lastLoopWallTime = wallTime;
+        }
+
         // Only stop on aligned steps or in a few special case modes
         if (mTrialNumStepsPerformed % stepAlignment == 0 || gStepsPerTrial == 1 || gRunToKeyFrame ||
             gMaxStepsPerformed != kDefaultMaxStepsPerformed)
@@ -402,12 +467,18 @@ void ANGLEPerfTest::runTrial(double maxRunTime, int maxStepsToRun, RunTrialPolic
         {
             mTrialNumStepsPerformed++;
             mTotalNumStepsPerformed++;
+            loopStepsPerformed++;
         }
 
         if ((mTotalNumStepsPerformed % kNumberOfStepsPerformedToComputeGPUTime) == 0)
         {
             computeGPUTime();
         }
+    }
+
+    if (runPolicy == RunTrialPolicy::RunContinuously)
+    {
+        ATraceCounter("TraceLoopFrameTimeAvgUs", 0);
     }
     finishTest();
     mTrialTimer.stop();
@@ -418,6 +489,8 @@ void ANGLEPerfTest::SetUp()
 {
     if (gWarmup)
     {
+        ATraceCounter("TraceStage", 1);
+
         // Trace tests run with glFinish for a loop (getStepAlignment == frameCount).
         int warmupSteps = getStepAlignment();
         if (gVerboseLogging)
@@ -432,6 +505,8 @@ void ANGLEPerfTest::SetUp()
 
         if (warmupSteps > 1)  // trace tests only: getStepAlignment() is 1 otherwise
         {
+            ATraceCounter("TraceStage", 2);
+
             // Short traces (e.g. 10 frames) have some spikes after the first loop b/308975999
             const double kMinWarmupTime = 1.5;
             double remainingTime        = kMinWarmupTime - warmupTimer.getElapsedWallClockTime();
@@ -440,7 +515,7 @@ void ANGLEPerfTest::SetUp()
                 printf("Warmup: Looping for remaining warmup time (%.2f seconds).\n",
                        remainingTime);
                 runTrial(remainingTime, std::numeric_limits<int>::max(),
-                         RunTrialPolicy::RunContinuously);
+                         RunTrialPolicy::RunContinuouslyWarmup);
             }
         }
 
