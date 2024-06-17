@@ -589,7 +589,9 @@ void Renderer::ensureCapsInitialized() const
                                                  mFeatures.emulateAdvancedBlendEquations.enabled;
 
     mNativeExtensions.blendEquationAdvancedCoherentKHR =
-        mFeatures.supportsBlendOperationAdvancedCoherent.enabled;
+        mFeatures.supportsBlendOperationAdvancedCoherent.enabled ||
+        (mFeatures.emulateAdvancedBlendEquations.enabled &&
+         mFeatures.supportsShaderFramebufferFetch.enabled);
 
     // Enable EXT_unpack_subimage
     mNativeExtensions.unpackSubimageEXT = true;
