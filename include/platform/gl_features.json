@@ -809,6 +809,25 @@
                 "Qualcomm drivers fail to link after binding fragment data locations."
             ],
             "issue": "https://anglebug.com/8646"
+        },
+        {
+            "name": "srgb_blending_broken",
+            "category": "Workarounds",
+            "description": [
+                "SRGB blending does not appear to work correctly on the some Qualcomm devices. ",
+                "Writing to an SRGB framebuffer with GL_FRAMEBUFFER_SRGB enabled and ",
+                "then reading back returns the same value. Disabling GL_FRAMEBUFFER_SRGB ",
+                "will then convert in the wrong direction."
+            ],
+            "issue": "https://crbug.com/40488750"
+        },
+        {
+            "name": "bgra_tex_image_formats_broken",
+            "category": "Workarounds",
+            "description": [
+                "BGRA formats do not appear to be accepted by some qualcomm despite the extension being exposed."
+            ],
+            "issue": "https://anglebug.com/40096376"
         }
     ]
 }

@@ -1837,21 +1837,16 @@ void GenerateCaps(const FunctionsGL *functions,
     }
 #endif
 
-    extensions->sRGBWriteControlEXT = functions->isAtLeastGL(gl::Version(3, 0)) ||
-                                      functions->hasGLExtension("GL_EXT_framebuffer_sRGB") ||
-                                      functions->hasGLExtension("GL_ARB_framebuffer_sRGB") ||
-                                      functions->hasGLESExtension("GL_EXT_sRGB_write_control");
+    extensions->sRGBWriteControlEXT = !features.srgbBlendingBroken.enabled &&
+                                      (functions->isAtLeastGL(gl::Version(3, 0)) ||
+                                       functions->hasGLExtension("GL_EXT_framebuffer_sRGB") ||
+                                       functions->hasGLExtension("GL_ARB_framebuffer_sRGB") ||
+                                       functions->hasGLESExtension("GL_EXT_sRGB_write_control"));
 
-#if defined(ANGLE_PLATFORM_ANDROID)
-    // SRGB blending does not appear to work correctly on the Nexus 5. Writing to an SRGB
-    // framebuffer with GL_FRAMEBUFFER_SRGB enabled and then reading back returns the same value.
-    // Disabling GL_FRAMEBUFFER_SRGB will then convert in the wrong direction.
-    extensions->sRGBWriteControlEXT = false;
-
-    // BGRA formats do not appear to be accepted by the Nexus 5X driver despite the extension being
-    // exposed.
-    extensions->textureFormatBGRA8888EXT = false;
-#endif
+    if (features.bgraTexImageFormatsBroken.enabled)
+    {
+        extensions->textureFormatBGRA8888EXT = false;
+    }
 
     // EXT_discard_framebuffer can be implemented as long as glDiscardFramebufferEXT or
     // glInvalidateFramebuffer is available
@@ -2681,6 +2676,15 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // https://crbug.com/40279678
     ANGLE_FEATURE_CONDITION(features, useIntermediateTextureForGenerateMipmap,
                             IsPixel7OrPixel8(functions));
+
+    // SRGB blending does not appear to work correctly on the Nexus 5 + other QC devices. Writing to
+    // an SRGB framebuffer with GL_FRAMEBUFFER_SRGB enabled and then reading back returns the same
+    // value. Disabling GL_FRAMEBUFFER_SRGB will then convert in the wrong direction.
+    ANGLE_FEATURE_CONDITION(features, srgbBlendingBroken, IsQualcomm(vendor));
+
+    // BGRA formats do not appear to be accepted by the qualcomm driver despite the extension being
+    // exposed.
+    ANGLE_FEATURE_CONDITION(features, bgraTexImageFormatsBroken, IsQualcomm(vendor));
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)
