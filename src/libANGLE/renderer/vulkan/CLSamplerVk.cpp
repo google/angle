@@ -14,6 +14,8 @@
 #include "libANGLE/cl_utils.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 
+using namespace clspv;
+
 namespace rx
 {
 
@@ -82,11 +84,51 @@ VkSamplerMipmapMode CLSamplerVk::getVkMipmapMode()
     return VK_SAMPLER_MIPMAP_MODE_NEAREST;
 }
 
+uint32_t CLSamplerVk::getSamplerMask()
+{
+    uint32_t mask = 0;
+    if (mSampler.getNormalizedCoords())
+    {
+        mask |= SamplerNormalizedCoords::CLK_NORMALIZED_COORDS_TRUE;
+    }
+    switch (mSampler.getAddressingMode())
+    {
+        case cl::AddressingMode::None:
+            break;
+        case cl::AddressingMode::ClampToEdge:
+            mask |= SamplerAddressingMode::CLK_ADDRESS_CLAMP_TO_EDGE;
+            break;
+        case cl::AddressingMode::Clamp:
+            mask |= SamplerAddressingMode::CLK_ADDRESS_CLAMP;
+            break;
+        case cl::AddressingMode::Repeat:
+            mask |= SamplerAddressingMode::CLK_ADDRESS_REPEAT;
+            break;
+        case cl::AddressingMode::MirroredRepeat:
+            mask |= SamplerAddressingMode::CLK_ADDRESS_MIRRORED_REPEAT;
+            break;
+        default:
+            break;
+    }
+    switch (mSampler.getFilterMode())
+    {
+        case cl::FilterMode::Nearest:
+            mask |= SamplerFilterMode::CLK_FILTER_NEAREST;
+            break;
+        case cl::FilterMode::Linear:
+        default:
+            mask |= SamplerFilterMode::CLK_FILTER_LINEAR;
+            break;
+    }
+    return mask;
+}
+
 CLSamplerVk::CLSamplerVk(const cl::Sampler &sampler)
     : CLSamplerImpl(sampler),
       mContext(&sampler.getContext().getImpl<CLContextVk>()),
       mRenderer(mContext->getRenderer()),
-      mSamplerHelper(mContext)
+      mSamplerHelper(mContext),
+      mSamplerHelperNormalized(mContext)
 {
     VkSamplerAddressMode addressMode = getVkAddressMode();
     VkFilter filter                  = getVkFilter();
@@ -118,12 +160,28 @@ CLSamplerVk::CLSamplerVk(const cl::Sampler &sampler)
 CLSamplerVk::~CLSamplerVk()
 {
     mSamplerHelper.get().destroy(mContext->getDevice());
+    if (mSamplerHelperNormalized.valid())
+    {
+        mSamplerHelperNormalized.get().destroy(mContext->getDevice());
+    }
 }
 
 angle::Result CLSamplerVk::create()
 {
     ANGLE_VK_TRY(mContext,
                  mSamplerHelper.get().init(mContext->getDevice(), mDefaultSamplerCreateInfo));
+
+    return angle::Result::Continue;
+}
+
+angle::Result CLSamplerVk::createNormalized()
+{
+    if (mSamplerHelperNormalized.valid())
+    {
+        mDefaultSamplerCreateInfo.unnormalizedCoordinates = false;
+        ANGLE_VK_TRY(mContext, mSamplerHelperNormalized.get().init(mContext->getDevice(),
+                                                                   mDefaultSamplerCreateInfo));
+    }
 
     return angle::Result::Continue;
 }

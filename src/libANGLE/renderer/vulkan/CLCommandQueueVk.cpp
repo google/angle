@@ -1276,6 +1276,22 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
                 writeDescriptorSet.dstSet =
                     kernelVk.getDescriptorSet(DescriptorSetIndex::KernelArguments);
                 writeDescriptorSet.dstBinding = arg.descriptorBinding;
+
+                const VkPushConstantRange *samplerMaskRange =
+                    devProgramData->getNormalizedSamplerMaskRange(index);
+                if (samplerMaskRange != nullptr)
+                {
+                    if (clSampler->getNormalizedCoords() == false)
+                    {
+                        ANGLE_TRY(vkSampler.createNormalized());
+                        samplerInfo.sampler =
+                            vkSampler.getSamplerHelperNormalized().get().getHandle();
+                    }
+                    uint32_t mask = vkSampler.getSamplerMask();
+                    mComputePassCommands->getCommandBuffer().pushConstants(
+                        kernelVk.getPipelineLayout().get(), VK_SHADER_STAGE_COMPUTE_BIT,
+                        samplerMaskRange->offset, samplerMaskRange->size, &mask);
+                }
                 break;
             }
             case NonSemanticClspvReflectionArgumentStorageImage:

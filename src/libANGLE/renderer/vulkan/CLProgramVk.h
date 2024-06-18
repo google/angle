@@ -240,7 +240,7 @@ class CLProgramVk : public CLProgramImpl
             if (reflectionData.imagePushConstants.contains(
                     NonSemanticClspvReflectionImageArgumentInfoChannelOrderPushConstant))
             {
-                for (const auto imageConstant : reflectionData.imagePushConstants.at(
+                for (const auto &imageConstant : reflectionData.imagePushConstants.at(
                          NonSemanticClspvReflectionImageArgumentInfoChannelOrderPushConstant))
                 {
                     if (static_cast<size_t>(imageConstant.ordinal) == ordinal)
@@ -258,8 +258,26 @@ class CLProgramVk : public CLProgramImpl
             if (reflectionData.imagePushConstants.contains(
                     NonSemanticClspvReflectionImageArgumentInfoChannelDataTypePushConstant))
             {
-                for (const auto imageConstant : reflectionData.imagePushConstants.at(
+                for (const auto &imageConstant : reflectionData.imagePushConstants.at(
                          NonSemanticClspvReflectionImageArgumentInfoChannelDataTypePushConstant))
+                {
+                    if (static_cast<size_t>(imageConstant.ordinal) == ordinal)
+                    {
+                        pushConstantRangePtr = &imageConstant.pcRange;
+                    }
+                }
+            }
+            return pushConstantRangePtr;
+        }
+
+        const VkPushConstantRange *getNormalizedSamplerMaskRange(size_t ordinal) const
+        {
+            const VkPushConstantRange *pushConstantRangePtr = nullptr;
+            if (reflectionData.imagePushConstants.contains(
+                    NonSemanticClspvReflectionNormalizedSamplerMaskPushConstant))
+            {
+                for (const auto &imageConstant : reflectionData.imagePushConstants.at(
+                         NonSemanticClspvReflectionNormalizedSamplerMaskPushConstant))
                 {
                     if (static_cast<size_t>(imageConstant.ordinal) == ordinal)
                     {

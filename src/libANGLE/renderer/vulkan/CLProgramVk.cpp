@@ -277,6 +277,7 @@ spv_result_t ParseReflection(CLProgramVk::SpvReflectionData &reflectionData,
                     UNREACHABLE();
                     return SPV_UNSUPPORTED;
                 }
+                case NonSemanticClspvReflectionNormalizedSamplerMaskPushConstant:
                 case NonSemanticClspvReflectionImageArgumentInfoChannelOrderPushConstant:
                 case NonSemanticClspvReflectionImageArgumentInfoChannelDataTypePushConstant:
                 {
