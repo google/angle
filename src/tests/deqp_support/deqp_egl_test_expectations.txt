@@ -140,7 +140,7 @@
 5170 VULKAN LINUX : dEQP-EGL.functional.swap_buffers_with_damage.resize_before_swap.* = SKIP
 
 // Tests that fail when the GL desktop frontend is enabled
-// TODO(http://anglebug.com/7566): Get these tests to pass.
+// TODO(http://anglebug.com/42266035): Get these tests to pass.
 7533 SWIFTSHADER : dEQP-EGL.functional.create_context_ext.gl_30.* = SKIP
 7533 SWIFTSHADER : dEQP-EGL.functional.create_context_ext.robust_gl_30.* = SKIP
 7533 VULKAN NVIDIA : dEQP-EGL.functional.create_context_ext.gl_30.* = SKIP

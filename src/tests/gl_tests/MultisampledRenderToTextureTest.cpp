@@ -208,7 +208,7 @@ TEST_P(MultisampledRenderToTextureTest, RenderbufferParameterCheck)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
 
-    // Linux Intel Vulkan returns 0 for GL_MAX_INTEGER_SAMPLES http://anglebug.com/5988
+    // Linux Intel Vulkan returns 0 for GL_MAX_INTEGER_SAMPLES http://anglebug.com/42264519
     ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
 
     GLRenderbuffer renderbuffer;
@@ -469,7 +469,7 @@ TEST_P(MultisampledRenderToTextureTest, FramebufferCompleteness)
     EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
 
     // D3D backend doesn't implement multisampled render to texture renderbuffers correctly.
-    // http://anglebug.com/3107
+    // http://anglebug.com/42261786
     ANGLE_SKIP_TEST_IF(IsD3D());
 
     if (getClientMajorVersion() >= 3)
@@ -548,7 +548,7 @@ TEST_P(MultisampledRenderToTextureTest, UnsizedTextureFormatSampleMissmatch)
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_texture_rg"));
 
-    // Test failure introduced by Apple's changes (anglebug.com/5505)
+    // Test failure introduced by Apple's changes (anglebug.com/40096755)
     ANGLE_SKIP_TEST_IF(IsMetal() && IsAMD());
 
     GLsizei samples = 0;
@@ -1093,7 +1093,7 @@ TEST_P(MultisampledRenderToTextureES3Test, ReadPixelsTest)
 TEST_P(MultisampledRenderToTextureES3Test, RenderbufferReadPixelsTest)
 {
     // D3D backend doesn't implement multisampled render to texture renderbuffers correctly.
-    // http://anglebug.com/3107
+    // http://anglebug.com/42261786
     ANGLE_SKIP_TEST_IF(IsD3D());
 
     readPixelsTestCommon(true);
@@ -1905,7 +1905,7 @@ void MultisampledRenderToTextureES3Test::drawCopyDrawAttachDepthStencilClearThen
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
     constexpr GLsizei kSize = 64;
 
-    // http://anglebug.com/4935
+    // http://anglebug.com/42263509
     ANGLE_SKIP_TEST_IF(IsD3D11());
 
     setupCopyTexProgram();
@@ -2304,7 +2304,7 @@ TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDepthStencilClearDrawCopy
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
 
-    // http://anglebug.com/5096
+    // http://anglebug.com/42263663
     ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
 
     constexpr GLsizei kSize = 64;
@@ -2393,7 +2393,7 @@ TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDepthStencilDrawCopyClear
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
 
-    // http://anglebug.com/5096
+    // http://anglebug.com/42263663
     ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
 
     constexpr GLsizei kSize = 64;
@@ -2496,7 +2496,7 @@ TEST_P(MultisampledRenderToTextureES3Test, RenderbufferClearThenBlitDepthStencil
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
 
     // D3D backend doesn't implement multisampled render to texture renderbuffers correctly.
-    // http://anglebug.com/3107
+    // http://anglebug.com/42261786
     ANGLE_SKIP_TEST_IF(IsD3D());
 
     constexpr GLsizei kSize = 64;
@@ -2607,7 +2607,7 @@ TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDrawThenBlitDepthStencil)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
 
-    // http://anglebug.com/5096
+    // http://anglebug.com/42263663
     ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
 
     constexpr GLsizei kSize = 64;
@@ -2716,10 +2716,10 @@ TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDrawThenBlitDepthStencilO
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
 
-    // http://anglebug.com/5096
+    // http://anglebug.com/42263663
     ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
 
-    // http://anglebug.com/5110
+    // http://anglebug.com/42263677
     ANGLE_SKIP_TEST_IF(IsD3D());
 
     constexpr GLsizei kSize = 64;
@@ -3597,7 +3597,7 @@ TEST_P(MultisampledRenderToTextureTest, DrawNonMultisampledThenMultisampled)
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
     constexpr GLsizei kSize = 64;
 
-    // http://anglebug.com/4935
+    // http://anglebug.com/42263509
     ANGLE_SKIP_TEST_IF(IsD3D11());
 
     // Texture attachment to the two framebuffers.
@@ -3916,7 +3916,7 @@ TEST_P(MultisampledRenderToTextureES31Test, DrawCopyThenBlendAllAttachmentsMixed
 // Same as DrawCopyThenBlendAllAttachmentsMixed but with renderbuffers.
 TEST_P(MultisampledRenderToTextureES31Test, RenderbufferDrawCopyThenBlendAllAttachmentsMixed)
 {
-    // Linux Intel Vulkan returns 0 for GL_MAX_INTEGER_SAMPLES http://anglebug.com/5988
+    // Linux Intel Vulkan returns 0 for GL_MAX_INTEGER_SAMPLES http://anglebug.com/42264519
     ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
 
     drawCopyThenBlendAllAttachmentsMixed(true);
@@ -3930,7 +3930,7 @@ void MultisampledRenderToTextureES3Test::renderbufferUnresolveColorAndDepthStenc
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture2"));
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_draw_buffers"));
 
-    // http://anglebug.com/5096
+    // http://anglebug.com/42263663
     ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsVulkan());
 
     constexpr GLsizei kSize = 64;

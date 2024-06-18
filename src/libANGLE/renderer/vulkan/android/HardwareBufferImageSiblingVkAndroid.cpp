@@ -131,7 +131,7 @@ gl::TextureType AhbDescUsageToTextureType(const AHardwareBuffer_Desc &ahbDescrip
     }
     return textureType;
 }
-// TODO(anglebug.com/7956): remove when NDK header is updated to contain FRONT_BUFFER usage flag
+// TODO(anglebug.com/42266422): remove when NDK header is updated to contain FRONT_BUFFER usage flag
 constexpr uint64_t kAHardwareBufferUsageFrontBuffer = (1ULL << 32);
 }  // namespace
 

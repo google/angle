@@ -2387,7 +2387,7 @@ void RenderPassCommandBufferHelper::finalizeColorImageLayout(
         mImageOptimizeForPresent->setCurrentImageLayout(ImageLayout::Present);
         // TODO(syoussefi):  We currently don't store the layout of the resolve attachments, so once
         // multisampled backbuffers are optimized to use resolve attachments, this information needs
-        // to be stored somewhere.  http://anglebug.com/7150
+        // to be stored somewhere.  http://anglebug.com/42265625
         SetBitField(mAttachmentOps[packedAttachmentIndex].finalLayout,
                     mImageOptimizeForPresent->getCurrentImageLayout());
         mImageOptimizeForPresent = nullptr;
@@ -8450,7 +8450,7 @@ angle::Result ImageHelper::updateSubresourceOnHost(Context *context,
     //
     // TODO: if there are any pending updates, see if they can be pruned given the incoming update.
     // This would most likely be the case where a clear is automatically staged for robustness or
-    // other reasons, which would now be superseded by the data upload.  http://anglebug.com/8341
+    // other reasons, which would now be superseded by the data upload. http://anglebug.com/42266771
     const gl::LevelIndex updateLevelGL(index.getLevelIndex());
     const uint32_t layerIndex = index.hasLayer() ? index.getLayerIndex() : 0;
     const uint32_t layerCount = index.getLayerCount();
@@ -9656,7 +9656,7 @@ angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
                 {
                     if (!transCoding && !isDataFormatMatchForCopy(update.data.buffer.formatID))
                     {
-                        // TODO: http://anglebug.com/6368, we should handle this in higher level
+                        // TODO: http://anglebug.com/42264884, we should handle this in higher level
                         // code. If we have incompatible updates, skip but keep it.
                         updatesToKeep.emplace_back(std::move(update));
                         continue;
@@ -10552,7 +10552,7 @@ angle::Result ImageHelper::readPixelsForCompressedGetImage(ContextVk *contextVk,
 
     const angle::Format *readFormat = &getActualFormat();
 
-    // TODO(anglebug.com/6177): Implement encoding for emuluated compression formats
+    // TODO(anglebug.com/42264702): Implement encoding for emuluated compression formats
     ANGLE_VK_CHECK(contextVk, readFormat->isBlock, VK_ERROR_FORMAT_NOT_SUPPORTED);
 
     if (mExtents.depth > 1 || layerCount > 1)

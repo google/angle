@@ -530,7 +530,7 @@ void OnTextureBufferRead(ContextVk *contextVk,
 {
     ASSERT(stages.any());
 
-    // TODO: accept multiple stages in bufferRead.  http://anglebug.com/3573
+    // TODO: accept multiple stages in bufferRead.  http://anglebug.com/42262235
     for (gl::ShaderType stage : stages)
     {
         // Note: if another range of the same buffer is simultaneously used for storage,
@@ -548,7 +548,7 @@ void OnImageBufferWrite(ContextVk *contextVk,
 {
     vk::BufferHelper &buffer = bufferVk->getBuffer();
 
-    // TODO: accept multiple stages in bufferWrite.  http://anglebug.com/3573
+    // TODO: accept multiple stages in bufferWrite.  http://anglebug.com/42262235
     for (gl::ShaderType stage : stages)
     {
         commandBufferHelper->bufferWrite(contextVk,
@@ -1400,7 +1400,7 @@ angle::Result ContextVk::initialize(const angle::ImageLoadContext &imageLoadCont
     angle::PlatformMethods *platform = ANGLEPlatformCurrent();
     ASSERT(platform);
 
-    // GPU tracing workaround for anglebug.com/2927.  The renderer should not emit gpu events
+    // GPU tracing workaround for anglebug.com/42261625.  The renderer should not emit gpu events
     // during platform discovery.
     const unsigned char *gpuEventsEnabled =
         platform->getTraceCategoryEnabledFlag(platform, "gpu.angle.gpu");
@@ -1813,7 +1813,7 @@ angle::Result ContextVk::setupDispatch(const gl::Context *context)
 {
     // Note: numerous tests miss a glMemoryBarrier call between the initial texture data upload and
     // the dispatch call.  Flush the outside render pass command buffer as a workaround.
-    // TODO: Remove this and fix tests.  http://anglebug.com/5070
+    // TODO: Remove this and fix tests.  http://anglebug.com/42263639
     ANGLE_TRY(flushOutsideRenderPassCommands());
 
     ProgramExecutableVk *executableVk = vk::GetImpl(mState.getProgramExecutable());
@@ -4597,7 +4597,7 @@ gl::GraphicsResetStatus ContextVk::getResetStatus()
     {
         // TODO(geofflang): It may be possible to track which context caused the device lost and
         // return either GL_GUILTY_CONTEXT_RESET or GL_INNOCENT_CONTEXT_RESET.
-        // http://anglebug.com/2787
+        // http://anglebug.com/42261488
         return gl::GraphicsResetStatus::UnknownContextReset;
     }
 
@@ -5788,7 +5788,8 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 // When disabled, this should configure the pipeline to render as if single-sampled,
                 // and write the results to all samples of a pixel regardless of coverage. See
                 // EXT_multisample_compatibility.  This is not possible in Vulkan without some
-                // gymnastics, so continue multisampled rendering anyway.  http://anglebug.com/7657
+                // gymnastics, so continue multisampled rendering anyway.
+                // http://anglebug.com/42266123
                 //
                 // Potentially, the GLES1 renderer can switch rendering between two images and blit
                 // from one to the other when the mode changes.  Then this extension wouldn't need
@@ -5798,7 +5799,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
             case gl::state::DIRTY_BIT_SAMPLE_ALPHA_TO_ONE:
                 // This is part of EXT_multisample_compatibility, and requires the alphaToOne Vulkan
                 // feature.
-                // http://anglebug.com/7657
+                // http://anglebug.com/42266123
                 mGraphicsPipelineDesc->updateAlphaToOneEnable(
                     &mGraphicsPipelineTransition,
                     glState.isMultisamplingEnabled() && glState.isSampleAlphaToOneEnabled());
@@ -5853,14 +5854,14 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                             invalidateGraphicsDriverUniforms();
                             break;
                         case gl::state::EXTENDED_DIRTY_BIT_DEPTH_CLAMP_ENABLED:
-                            // TODO(https://anglebug.com/7713): Use EDS3
+                            // TODO(https://anglebug.com/42266182): Use EDS3
                             mGraphicsPipelineDesc->updateDepthClampEnabled(
                                 &mGraphicsPipelineTransition, glState.isDepthClampEnabled());
                             break;
                         case gl::state::EXTENDED_DIRTY_BIT_MIPMAP_GENERATION_HINT:
                             break;
                         case gl::state::EXTENDED_DIRTY_BIT_POLYGON_MODE:
-                            // TODO(https://anglebug.com/7713): Use EDS3
+                            // TODO(https://anglebug.com/42266182): Use EDS3
                             mGraphicsPipelineDesc->updatePolygonMode(&mGraphicsPipelineTransition,
                                                                      glState.getPolygonMode());
                             // When polygon mode is changed, depth bias might need to be toggled.
@@ -6757,7 +6758,7 @@ angle::Result ContextVk::memoryBarrierByRegion(const gl::Context *context, GLbit
     // otherwise similar to memoryBarrier in function.
     //
     // TODO: Optimize memoryBarrierByRegion by issuing an in-subpass pipeline barrier instead of
-    // breaking the render pass.  http://anglebug.com/5132
+    // breaking the render pass.  http://anglebug.com/42263695
     return memoryBarrier(context, barriers);
 }
 
@@ -7506,7 +7507,7 @@ angle::Result ContextVk::updateActiveImages(CommandBufferHelperT *commandBufferH
 
     // Note: currently, the image layout is transitioned entirely even if only one level or layer is
     // used.  This is an issue if one subresource of the image is used as framebuffer attachment and
-    // the other as image.  This is a similar issue to http://anglebug.com/2914.  Another issue
+    // the other as image.  This is a similar issue to http://anglebug.com/40096531.  Another issue
     // however is if multiple subresources of the same image are used at the same time.
     // Inefficiencies aside, setting write dependency on the same image multiple times is not
     // supported.  The following makes sure write dependencies are set only once per image.
@@ -8478,7 +8479,7 @@ void ContextVk::onProgramExecutableReset(ProgramExecutableVk *executableVk)
     // here, the program executable in the context's state has already been updated.
     // Reset ContextVk::mCurrentGraphicsPipeline, since programInfo.release() freed the
     // PipelineHelper that it's currently pointing to.
-    // TODO(http://anglebug.com/5624): rework updateActiveTextures(), createPipelineLayout(),
+    // TODO(http://anglebug.com/42264159): rework updateActiveTextures(), createPipelineLayout(),
     // handleDirtyGraphicsPipeline(), and ProgramPipelineVk::link().
     resetCurrentGraphicsPipeline();
     invalidateCurrentComputePipeline();
@@ -8665,7 +8666,7 @@ angle::Result ContextVk::flushCommandBuffersIfNecessary(const vk::CommandBufferA
         // Note that different read methods are not compatible. A shader read uses a different
         // layout than a transfer read. So we cannot support simultaneous read usage as easily as
         // for Buffers.  TODO: Don't close the render pass if the image was only used read-only in
-        // the render pass.  http://anglebug.com/4984
+        // the render pass.  http://anglebug.com/42263557
         if (isRenderPassStartedAndUsesImage(*imageAccess.image))
         {
             return flushCommandsAndEndRenderPass(RenderPassClosureReason::ImageUseThenOutOfRPRead);

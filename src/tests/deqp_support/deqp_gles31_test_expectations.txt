@@ -39,7 +39,7 @@
 
 // D3D11 Failing Tests
 // Below cases are failed due to binding multi-UAVs to a single buffer is not supported in D3D backend.
-// http://anglebug.com/3032
+// http://anglebug.com/42261718
 3032 D3D11 : dEQP-GLES31.functional.ssbo.layout.*.single_buffer* = FAIL
 3032 D3D11 : dEQP-GLES31.functional.ssbo.layout.random.all_shared_buffer* = FAIL
 

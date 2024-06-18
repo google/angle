@@ -51,7 +51,7 @@ static void ValidateStateHelper(const FunctionsGL *functions,
     {
         WARN() << localName << " (" << localValue << ") != " << driverName << " (" << queryValue
                << ")";
-        // Re-add ASSERT: http://anglebug.com/3900
+        // Re-add ASSERT: http://anglebug.com/42262547
         // ASSERT(false);
     }
 }

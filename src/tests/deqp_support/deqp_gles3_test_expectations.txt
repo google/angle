@@ -35,7 +35,7 @@
 2428 WIN D3D11 NVIDIA : dEQP-GLES3.functional.fbo.invalidate.default.bind_all = SKIP
 2428 WIN D3D11 NVIDIA : dEQP-GLES3.functional.polygon_offset.default_render_with_units = SKIP
 
-// Tests were being hidden by flakiness (anglebug.com/3271)
+// Tests were being hidden by flakiness (anglebug.com/40096568)
 3329 WIN D3D11 NVIDIA : dEQP-GLES3.functional.transform_feedback.interpolation.flat.* = FAIL
 3329 WIN D3D11 NVIDIA : dEQP-GLES3.functional.transform_feedback.basic_types.interleaved.triangles.* = FAIL
 3329 WIN D3D11 NVIDIA : dEQP-GLES3.functional.transform_feedback.basic_types.separate.triangles.* = FAIL
@@ -701,7 +701,7 @@
 8091 MAC METAL AMD : dEQP-GLES3.functional.shaders.builtin_functions.pack_unpack.unpacksnorm2x16_vertex = FAIL
 8091 MAC METAL AMD : dEQP-GLES3.functional.shaders.builtin_functions.pack_unpack.unpackunorm2x16_vertex = FAIL
 
-// Test failures introduced by Apple's changes (anglebug.com/5505)
+// Test failures introduced by Apple's changes (anglebug.com/40096755)
 6467 MAC METAL : dEQP-GLES3.functional.fbo.invalidate.sub.unbind_blit_msaa_color = FAIL
 6467 MAC METAL : dEQP-GLES3.functional.fbo.invalidate.sub.unbind_blit_msaa_stencil = FAIL
 6467 MAC METAL : dEQP-GLES3.functional.fbo.invalidate.whole.unbind_blit_msaa_color = FAIL

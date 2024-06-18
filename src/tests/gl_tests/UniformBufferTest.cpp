@@ -1064,10 +1064,10 @@ TEST_P(UniformBufferTest31, BindingMustBeBothSpecified)
 // Test that uploading data to buffer that's in use then using it as indirect buffer works.
 TEST_P(UniformBufferTest31, UseAsUBOThenUpdateThenDrawIndirect)
 {
-    // http://anglebug.com/5826
+    // http://anglebug.com/42264362
     ANGLE_SKIP_TEST_IF(IsD3D11());
 
-    // http://anglebug.com/5871
+    // http://anglebug.com/42264411
     ANGLE_SKIP_TEST_IF(IsVulkan() && IsPixel2());
 
     const std::array<uint32_t, 4> kInitialData = {100, 200, 300, 400};
@@ -1471,7 +1471,7 @@ TEST_P(UniformBufferTest, Std140UniformBlockInstanceWithNestedStructsContainingV
 {
     // Got incorrect test result on non-NVIDIA Android - the alpha channel was not set correctly
     // from the second vector, possibly the platform doesn't implement std140 packing right?
-    // http://anglebug.com/2217
+    // http://anglebug.com/42260937
     ANGLE_SKIP_TEST_IF(IsAndroid() && !IsNVIDIA());
 
     constexpr char kFS[] =
@@ -1567,7 +1567,7 @@ TEST_P(UniformBufferTest, DetachShaders)
 TEST_P(UniformBufferTest, Std140UniformBlockWithRowMajorQualifier)
 {
     // AMD OpenGL driver doesn't seem to apply the row-major qualifier right.
-    // http://anglebug.com/2273
+    // http://anglebug.com/40096480
     ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL() && !IsMac());
 
     constexpr char kFS[] =
@@ -1615,7 +1615,7 @@ TEST_P(UniformBufferTest, Std140UniformBlockWithRowMajorQualifier)
 TEST_P(UniformBufferTest, Std140UniformBlockWithPerMemberRowMajorQualifier)
 {
     // AMD OpenGL driver doesn't seem to apply the row-major qualifier right.
-    // http://anglebug.com/2273
+    // http://anglebug.com/40096480
     ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL() && !IsMac());
 
     constexpr char kFS[] =
@@ -1709,7 +1709,7 @@ TEST_P(UniformBufferTest, Std140UniformBlockWithPerMemberColumnMajorQualifier)
 TEST_P(UniformBufferTest, Std140UniformBlockWithRowMajorQualifierOnStruct)
 {
     // AMD OpenGL driver doesn't seem to apply the row-major qualifier right.
-    // http://anglebug.com/2273
+    // http://anglebug.com/40096480
     ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL() && !IsMac());
 
     constexpr char kFS[] =
@@ -1774,7 +1774,7 @@ void main()
   fragColor = color;
 })";
 
-    // http://anglebug.com/2287
+    // http://anglebug.com/40096481
     ANGLE_SKIP_TEST_IF(IsMac() && IsNVIDIA() && IsDesktopOpenGL());
 
     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFragmentShader);
@@ -1935,7 +1935,7 @@ void main()
 }
 
 // Recreate WebGL conformance test conformance2/uniforms/large-uniform-buffers.html to test
-// regression in http://anglebug.com/3388
+// regression in http://anglebug.com/42262055
 TEST_P(UniformBufferTest, SizeOverMaxBlockSize)
 {
     constexpr char kFragmentShader[] = R"(#version 300 es
@@ -1954,7 +1954,7 @@ void main()
 
     // Test crashes on Windows AMD OpenGL
     ANGLE_SKIP_TEST_IF(IsAMD() && IsWindows() && IsOpenGL());
-    // http://anglebug.com/5382
+    // http://anglebug.com/42263922
     ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsDesktopOpenGL());
 
     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFragmentShader);
@@ -2036,7 +2036,7 @@ void main()
 // Test a uniform block where an array of row-major matrices is dynamically indexed.
 TEST_P(UniformBufferTest, Std140UniformBlockWithDynamicallyIndexedRowMajorArray)
 {
-    // http://anglebug.com/3837 , http://anglebug.com/2273
+    // http://anglebug.com/42262481 , http://anglebug.com/40096480
     ANGLE_SKIP_TEST_IF(IsMac() && IsOpenGL() && (IsIntel() || IsAMD()));
 
     constexpr char kFS[] =
@@ -2092,7 +2092,7 @@ TEST_P(UniformBufferTest, Std140UniformBlockWithDynamicallyIndexedRowMajorArray)
 // Test with many uniform buffers work as expected.
 TEST_P(UniformBufferTest, ManyBlocks)
 {
-    // http://anglebug.com/5039
+    // http://anglebug.com/42263608
     ANGLE_SKIP_TEST_IF(IsD3D11());
 
     constexpr char kFS[] =
@@ -3151,7 +3151,7 @@ TEST_P(UniformBlockWithOneLargeArrayMemberTest, MemberTypeIsMatrixAndInstanced)
 // Test uniform block with row major qualifier whose member is matrix type.
 TEST_P(UniformBlockWithOneLargeArrayMemberTest, MemberTypeIsMatrixAndRowMajorQualifier)
 {
-    // http://anglebug.com/3837 , http://anglebug.com/2273
+    // http://anglebug.com/42262481 , http://anglebug.com/40096480
     ANGLE_SKIP_TEST_IF((IsMac() && IsOpenGL()) || IsAndroid() || (IsAMD() && IsOpenGL()) ||
                        (IsLinux() && IsIntel() && IsOpenGL()));
 

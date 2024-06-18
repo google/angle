@@ -115,7 +115,7 @@ TEST_P(OcclusionQueriesTest, ClearNotCounted)
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
                        !IsGLExtensionEnabled("GL_EXT_occlusion_query_boolean"));
 
-    // http://anglebug.com/4925
+    // http://anglebug.com/42263499
     ANGLE_SKIP_TEST_IF(IsD3D11());
 
     glDepthMask(GL_TRUE);
@@ -184,7 +184,7 @@ TEST_P(OcclusionQueriesTest, MaskedClearNotCounted)
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
                        !IsGLExtensionEnabled("GL_EXT_occlusion_query_boolean"));
 
-    // http://anglebug.com/4925
+    // http://anglebug.com/42263499
     ANGLE_SKIP_TEST_IF(IsD3D());
 
     GLQueryEXT query;
@@ -212,7 +212,7 @@ TEST_P(OcclusionQueriesTest, CopyNotCounted)
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
                        !IsGLExtensionEnabled("GL_EXT_occlusion_query_boolean"));
 
-    // http://anglebug.com/4925
+    // http://anglebug.com/42263499
     ANGLE_SKIP_TEST_IF(IsD3D());
 
     GLQueryEXT query;
@@ -241,10 +241,10 @@ TEST_P(OcclusionQueriesTest, CopyNotCounted)
 // Test that blit should not be counted by occlusion query.
 TEST_P(OcclusionQueriesTestES3, BlitNotCounted)
 {
-    // http://anglebug.com/4925
+    // http://anglebug.com/42263499
     ANGLE_SKIP_TEST_IF(IsD3D11());
 
-    // http://anglebug.com/5101
+    // http://anglebug.com/42263669
     ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
 
     constexpr GLuint kSize = 64;
@@ -530,10 +530,10 @@ TEST_P(OcclusionQueriesTest, MultiQueries)
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
                        !IsGLExtensionEnabled("GL_EXT_occlusion_query_boolean"));
 
-    // http://anglebug.com/4925
+    // http://anglebug.com/42263499
     ANGLE_SKIP_TEST_IF(IsOpenGL() || IsD3D11());
 
-    // TODO(anglebug.com/5360): Failing on ARM-based Apple DTKs.
+    // TODO(anglebug.com/40096747): Failing on ARM-based Apple DTKs.
     ANGLE_SKIP_TEST_IF(IsMac() && IsARM64() && IsDesktopOpenGL());
 
     GLQueryEXT query[5];
@@ -707,7 +707,7 @@ TEST_P(OcclusionQueriesTest, MultiContext)
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
                        !IsGLExtensionEnabled("GL_EXT_occlusion_query_boolean"));
 
-    // TODO(cwallez@chromium.org): Suppression for http://anglebug.com/3080
+    // TODO(cwallez@chromium.org): Suppression for http://anglebug.com/42261759
     ANGLE_SKIP_TEST_IF(IsWindows() && IsNVIDIA() && IsVulkan());
 
     // Test skipped because the D3D backends cannot support simultaneous queries on multiple

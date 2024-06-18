@@ -2481,13 +2481,13 @@ bool ValidateBeginPixelLocalStorageANGLE(const Context *context,
     // INVALID_OPERATION is generated if a single texture image is bound to more than one pixel
     // local storage plane.
     //
-    //   TODO(anglebug.com/7279): Block feedback loops
+    //   TODO(anglebug.com/40096838): Block feedback loops
     //
 
     // INVALID_OPERATION is generated if a single texture image is simultaneously bound to a pixel
     // local storage plane and attached to the draw framebuffer.
     //
-    //   TODO(anglebug.com/7279): Block feedback loops
+    //   TODO(anglebug.com/40096838): Block feedback loops
     //
 
     return true;

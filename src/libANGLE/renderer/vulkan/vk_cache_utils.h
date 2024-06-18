@@ -985,7 +985,7 @@ class GraphicsPipelineDesc final
 constexpr size_t kGraphicsPipelineDescSize = sizeof(GraphicsPipelineDesc);
 static_assert(kGraphicsPipelineDescSize == kGraphicsPipelineDescSumOfSizes, "Size mismatch");
 
-// Values are based on data recorded here -> https://anglebug.com/8677#c4
+// Values are based on data recorded here -> https://anglebug.com/42267114#comment5
 constexpr size_t kDefaultDescriptorSetLayoutBindingsCount = 8;
 constexpr size_t kDefaultImmutableSamplerBindingsCount    = 1;
 using DescriptorSetLayoutBindingVector =
@@ -1492,7 +1492,7 @@ class PipelineHelper final : public Resource
     // If pipeline libraries are used and monolithic pipelines are created in parallel, this is the
     // temporary library created (previously in |mPipeline|) that is now replaced by the monolithic
     // one.  It is not immediately garbage collected when replaced, because there is currently a bug
-    // with that.  http://anglebug.com/7862
+    // with that.  http://anglebug.com/42266335
     Pipeline mLinkedPipelineToRelease;
 
     // An async task to create a monolithic pipeline.  Only used if the pipeline was originally

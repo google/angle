@@ -748,7 +748,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result initializeMultisampleTextureToBlack(const gl::Context *context,
                                                       gl::Texture *glTexture) override;
 
-    // TODO(http://anglebug.com/5624): rework updateActiveTextures(), createPipelineLayout(),
+    // TODO(http://anglebug.com/42264159): rework updateActiveTextures(), createPipelineLayout(),
     // handleDirtyGraphicsPipeline(), and ProgramPipelineVk::link().
     void resetCurrentGraphicsPipeline()
     {

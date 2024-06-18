@@ -499,10 +499,10 @@ TEST_P(ClearTest, TextureUploadAndRGBA8Framebuffer)
 // have a correct behavior after.
 TEST_P(ClearTest, ChangeFramebufferAttachmentFromRGBAtoRGB)
 {
-    // http://anglebug.com/2689
+    // http://anglebug.com/40096508
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsAdreno() && IsOpenGLES());
 
-    // http://anglebug.com/5165
+    // http://anglebug.com/40644765
     ANGLE_SKIP_TEST_IF(IsMac() && IsDesktopOpenGL() && IsIntel());
 
     ANGLE_GL_PROGRAM(program, angle::essl1_shaders::vs::Simple(),
@@ -879,7 +879,7 @@ TEST_P(ClearTestES3, ClearMultipleAttachmentsFollowedBySpecificOne)
 // done in a single render pass.
 TEST_P(ClearTestES3, ClearMultipleAttachmentsIndividually)
 {
-    // http://anglebug.com/4855
+    // http://anglebug.com/40096714
     ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
 
     constexpr uint32_t kSize             = 16;
@@ -1120,10 +1120,10 @@ TEST_P(ClearTestES3, MaskedIndexedClearMultipleAttachments)
 // and the relevant internal shaders.
 TEST_P(ClearTestES3, MaskedClearHeterogeneousAttachments)
 {
-    // http://anglebug.com/4855
+    // http://anglebug.com/40096714
     ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
 
-    // TODO(anglebug.com/5491)
+    // TODO(anglebug.com/42264029)
     ANGLE_SKIP_TEST_IF(IsIOS() && IsOpenGLES());
 
     constexpr uint32_t kSize                              = 16;
@@ -1239,16 +1239,16 @@ TEST_P(ClearTestES3, MaskedClearHeterogeneousAttachments)
 // and the relevant internal shaders.
 TEST_P(ClearTestES3, ScissoredClearHeterogeneousAttachments)
 {
-    // http://anglebug.com/4855
+    // http://anglebug.com/40096714
     ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
 
-    // http://anglebug.com/5116
+    // http://anglebug.com/42263682
     ANGLE_SKIP_TEST_IF(IsWindows() && (IsOpenGL() || IsD3D11()) && IsAMD());
 
-    // http://anglebug.com/5237
+    // http://anglebug.com/42263790
     ANGLE_SKIP_TEST_IF(IsWindows7() && IsD3D11() && IsNVIDIA());
 
-    // TODO(anglebug.com/5491)
+    // TODO(anglebug.com/42264029)
     ANGLE_SKIP_TEST_IF(IsIOS() && IsOpenGLES());
 
     constexpr uint32_t kSize                              = 16;
@@ -1515,7 +1515,7 @@ TEST_P(ClearTestES3, MixedSRGBClear)
 // flush or finish after ClearBufferfv or each draw.
 TEST_P(ClearTestES3, RepeatedClear)
 {
-    // Fails on 431.02 driver. http://anglebug.com/3748
+    // Fails on 431.02 driver. http://anglebug.com/40644697
     ANGLE_SKIP_TEST_IF(IsWindows() && IsNVIDIA() && IsVulkan());
     ANGLE_SKIP_TEST_IF(IsARM64() && IsWindows() && IsD3D());
 
@@ -1704,7 +1704,7 @@ void MaskedScissoredClearTestBase::maskedScissoredColorDepthStencilClear(
     const MaskedScissoredClearVariationsTestParams &params)
 {
     // Flaky on Android Nexus 5x and Pixel 2, possible Qualcomm driver bug.
-    // TODO(jmadill): Re-enable when possible. http://anglebug.com/2548
+    // TODO(jmadill): Re-enable when possible. http://anglebug.com/42261257
     ANGLE_SKIP_TEST_IF(IsOpenGLES() && IsAndroid());
 
     const int w      = getWindowWidth();
@@ -2085,7 +2085,7 @@ TEST_P(ClearTest, DrawThenInceptionScissorClears)
 // assert.
 TEST_P(ClearTestES3, ClearDisabledNonZeroAttachmentNoAssert)
 {
-    // http://anglebug.com/4612
+    // http://anglebug.com/40644728
     ANGLE_SKIP_TEST_IF(IsMac() && IsDesktopOpenGL());
 
     GLFramebuffer fb;
@@ -2117,9 +2117,9 @@ TEST_P(ClearTestES3, ClearDisabledNonZeroAttachmentNoAssert)
 // stencil works.
 TEST_P(ClearTestES3, ClearMaxAttachments)
 {
-    // http://anglebug.com/4612
+    // http://anglebug.com/40644728
     ANGLE_SKIP_TEST_IF(IsMac() && IsDesktopOpenGL());
-    // http://anglebug.com/5397
+    // http://anglebug.com/42263935
     ANGLE_SKIP_TEST_IF(IsAMD() && IsD3D11());
 
     constexpr GLsizei kSize = 16;
@@ -2206,7 +2206,7 @@ TEST_P(ClearTestES3, ClearMaxAttachments)
 // stencil after a draw call works.
 TEST_P(ClearTestES3, ClearMaxAttachmentsAfterDraw)
 {
-    // http://anglebug.com/4612
+    // http://anglebug.com/40644728
     ANGLE_SKIP_TEST_IF(IsMac() && IsDesktopOpenGL());
 
     constexpr GLsizei kSize = 16;
@@ -2388,7 +2388,7 @@ TEST_P(ClearTestES3, ClearThenMixedMaskedClear)
 // Test that clearing stencil after a draw call works.
 TEST_P(ClearTestES3, ClearStencilAfterDraw)
 {
-    // http://anglebug.com/4612
+    // http://anglebug.com/40644728
     ANGLE_SKIP_TEST_IF(IsMac() && IsDesktopOpenGL());
 
     constexpr GLsizei kSize = 16;
@@ -2493,7 +2493,7 @@ TEST_P(ClearTestES3, ClearStencilAfterDraw)
 // Test that mid-render pass clearing of mixed used and unused color attachments works.
 TEST_P(ClearTestES3, MixedRenderPassClearMixedUsedUnusedAttachments)
 {
-    // http://anglebug.com/4612
+    // http://anglebug.com/40644728
     ANGLE_SKIP_TEST_IF(IsMac() && IsDesktopOpenGL());
 
     constexpr GLsizei kSize = 16;

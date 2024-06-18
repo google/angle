@@ -12,7 +12,7 @@
 #
 #   SKIP_FOR_CAPTURE : SKIP from capture_replay tests
 #
-#   NOT_RUN (DEPRECATED https://anglebug.com/7516): already skipped by end2end test suite
+#   NOT_RUN (DEPRECATED https://anglebug.com/42265985): already skipped by end2end test suite
 #
 #   FAIL : the test is expected to fail
 #

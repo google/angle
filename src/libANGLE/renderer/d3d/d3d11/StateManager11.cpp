@@ -1508,7 +1508,7 @@ void StateManager11::syncViewport(const gl::Context *context)
     // The es 3.1 spec section 9.2 states that, "If there are no attachments, rendering
     // will be limited to a rectangle having a lower left of (0, 0) and an upper right of
     // (width, height), where width and height are the framebuffer object's default width
-    // and height." See http://anglebug.com/1594
+    // and height." See http://anglebug.com/42260558
     // If the Framebuffer has no color attachment and the default width or height is smaller
     // than the current viewport, use the smaller of the two sizes.
     // If framebuffer default width or height is 0, the params should not set.
@@ -3828,7 +3828,7 @@ angle::Result StateManager11::getUAVsForShaderStorageBuffers(const gl::Context *
             previouslyBound.end())
         {
             // D3D11 doesn't support binding a buffer multiple times
-            // http://anglebug.com/3032
+            // http://anglebug.com/42261718
             ERR() << "Writing to multiple blocks on the same buffer is not allowed.";
             return angle::Result::Stop;
         }
@@ -3905,7 +3905,7 @@ angle::Result StateManager11::getUAVsForAtomicCounterBuffers(const gl::Context *
 
         Buffer11 *bufferStorage = GetImplAs<Buffer11>(buffer.get());
         // TODO(enrico.galli@intel.com): Check to make sure that we aren't binding the same buffer
-        // multiple times, as this is unsupported by D3D11. http://anglebug.com/3141
+        // multiple times, as this is unsupported by D3D11. http://anglebug.com/42261818
 
         // Bindings only have a valid size if bound using glBindBufferRange. Therefore, we use the
         // buffer size for glBindBufferBase

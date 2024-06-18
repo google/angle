@@ -572,7 +572,7 @@ angle::Result TextureVk::setCompressedImage(const gl::Context *context,
     if (unpackBuffer &&
         this->isCompressedFormatEmulated(context, index.getTarget(), index.getLevelIndex()))
     {
-        // TODO (anglebug.com/7464): Can't populate from a buffer using emulated format
+        // TODO (anglebug.com/42265933): Can't populate from a buffer using emulated format
         UNIMPLEMENTED();
         return angle::Result::Stop;
     }
@@ -601,7 +601,7 @@ angle::Result TextureVk::setCompressedSubImage(const gl::Context *context,
     if (unpackBuffer &&
         this->isCompressedFormatEmulated(context, index.getTarget(), index.getLevelIndex()))
     {
-        // TODO (anglebug.com/7464): Can't populate from a buffer using emulated format
+        // TODO (anglebug.com/42265933): Can't populate from a buffer using emulated format
         UNIMPLEMENTED();
         return angle::Result::Stop;
     }
@@ -642,7 +642,7 @@ bool TextureVk::isFastUnpackPossible(const vk::Format &vkFormat,
 {
     // Conditions to determine if fast unpacking is possible
     // 1. Image must be well defined to unpack directly to it
-    //    TODO(http://anglebug.com/4222) Create and stage a temp image instead
+    //    TODO(http://anglebug.com/42262852) Create and stage a temp image instead
     // 2. Can't perform a fast copy for depth/stencil, except from non-emulated depth or stencil
     //    to emulated depth/stencil.  GL requires depth and stencil data to be packed, while Vulkan
     //    requires them to be separate.
@@ -1409,7 +1409,7 @@ angle::Result TextureVk::copySubImageImplWithTransfer(ContextVk *contextVk,
     }
 
     // Perform self-copies through a staging buffer.
-    // TODO: optimize to copy directly if possible.  http://anglebug.com/4719
+    // TODO: optimize to copy directly if possible.  http://anglebug.com/42263319
     bool isSelfCopy = mImage == srcImage;
 
     // If destination is valid, copy the source directly into it.
@@ -1577,7 +1577,7 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
     bool isDest3D = gl_vk::GetImageType(mState.getType()) == VK_IMAGE_TYPE_3D;
 
     // Perform self-copies through a staging buffer.
-    // TODO: optimize to copy directly if possible.  http://anglebug.com/4719
+    // TODO: optimize to copy directly if possible.  http://anglebug.com/42263319
     bool isSelfCopy = mImage == srcImage;
     params.srcColorEncoding =
         gl::GetSizedInternalFormatInfo(srcImage->getIntendedFormat().glInternalFormat)
@@ -1824,7 +1824,7 @@ angle::Result TextureVk::setEGLImageTarget(const gl::Context *context,
     ANGLE_TRY(contextVk->getShareGroup()->lockDefaultContextsPriority(contextVk));
 
     // TODO: Textures other than EGLImage targets can have immutable samplers.
-    // http://anglebug.com/5773
+    // http://anglebug.com/42264309
     handleImmutableSamplerTransition(mImage, imageVk ? imageVk->getImage() : nullptr);
 
     releaseAndDeleteImageAndViews(contextVk);
@@ -3996,7 +3996,7 @@ angle::Result TextureVk::getTexImage(const gl::Context *context,
 {
     if (packBuffer && this->isCompressedFormatEmulated(context, target, level))
     {
-        // TODO (anglebug.com/7464): Can't populate from a buffer using emulated format
+        // TODO (anglebug.com/42265933): Can't populate from a buffer using emulated format
         UNIMPLEMENTED();
         return angle::Result::Stop;
     }
@@ -4007,7 +4007,7 @@ angle::Result TextureVk::getTexImage(const gl::Context *context,
     GLint baseLevel = static_cast<int>(mState.getBaseLevel());
     if (level < baseLevel || level >= baseLevel + static_cast<int>(mState.getEnabledLevelCount()))
     {
-        // TODO(http://anglebug.com/6336): Handle inconsistent textures.
+        // TODO(http://anglebug.com/42264855): Handle inconsistent textures.
         WARN() << "GetTexImage for inconsistent texture levels is not implemented.";
         UNIMPLEMENTED();
         return angle::Result::Continue;
@@ -4050,7 +4050,7 @@ angle::Result TextureVk::getCompressedTexImage(const gl::Context *context,
     GLint baseLevel = static_cast<int>(mState.getBaseLevel());
     if (level < baseLevel || level >= baseLevel + static_cast<int>(mState.getEnabledLevelCount()))
     {
-        // TODO(http://anglebug.com/6336): Handle inconsistent textures.
+        // TODO(http://anglebug.com/42264855): Handle inconsistent textures.
         WARN() << "GetCompressedTexImage for inconsistent texture levels is not implemented.";
         UNIMPLEMENTED();
         return angle::Result::Continue;

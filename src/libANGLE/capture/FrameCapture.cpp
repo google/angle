@@ -67,7 +67,7 @@ namespace angle
 namespace
 {
 
-// TODO: Consolidate to C output and remove option. http://anglebug.com/7753
+// TODO: Consolidate to C output and remove option. http://anglebug.com/42266223
 
 constexpr char kEnabledVarName[]        = "ANGLE_CAPTURE_ENABLED";
 constexpr char kOutDirectoryVarName[]   = "ANGLE_CAPTURE_OUT_DIR";
@@ -1069,7 +1069,7 @@ void DeleteResourcesInReset(std::stringstream &out,
     }
 }
 
-// TODO (http://anglebug.com/4599): Reset more state on frame loop
+// TODO (http://anglebug.com/42263204): Reset more state on frame loop
 void MaybeResetResources(gl::ContextID contextID,
                          ResourceIDType resourceIDType,
                          ReplayWriter &replayWriter,
@@ -1503,7 +1503,7 @@ void MaybeResetResources(gl::ContextID contextID,
             break;
         }
         default:
-            // TODO (http://anglebug.com/4599): Reset more resource types
+            // TODO (http://anglebug.com/42263204): Reset more resource types
             break;
     }
 
@@ -3829,7 +3829,7 @@ void GenerateLinkedProgram(const gl::Context *context,
     }
 }
 
-// TODO(http://anglebug.com/4599): Improve reset/restore call generation
+// TODO(http://anglebug.com/42263204): Improve reset/restore call generation
 // There are multiple ways to track reset calls for individual resources. For now, we are tracking
 // separate lists of instructions that mirror the calls created during mid-execution setup. Other
 // methods could involve passing the original CallCaptures to this function, or tracking the
@@ -4307,7 +4307,7 @@ void CaptureShareGroupMidExecutionSetup(
         replayState.setSamplerTexture(context, texture->getType(), texture);
 
         // Capture sampler parameter states.
-        // TODO(jmadill): More sampler / texture states. http://anglebug.com/3662
+        // TODO(jmadill): More sampler / texture states. http://anglebug.com/42262323
         gl::SamplerState defaultSamplerState =
             gl::SamplerState::CreateDefaultForTarget(texture->getType());
         const gl::SamplerState &textureSamplerState = texture->getSamplerState();
@@ -4641,7 +4641,7 @@ void CaptureShareGroupMidExecutionSetup(
             }
         }
 
-        // TODO: Capture renderbuffer contents. http://anglebug.com/3662
+        // TODO: Capture renderbuffer contents. http://anglebug.com/42262323
     }
 
     // Capture Shaders and Programs.
@@ -4782,7 +4782,7 @@ void CaptureShareGroupMidExecutionSetup(
 
         // This does not handle some more tricky situations like attaching and then deleting a
         // shader.
-        // TODO(jmadill): Handle trickier program uses. http://anglebug.com/3662
+        // TODO(jmadill): Handle trickier program uses. http://anglebug.com/42262323
         if (shader->isCompiled(context))
         {
             const std::string &capturedSource =
@@ -5338,7 +5338,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     }
 
     // For now we assume the installed program executable is the same as the current program.
-    // TODO(jmadill): Handle installed program executable. http://anglebug.com/3662
+    // TODO(jmadill): Handle installed program executable. http://anglebug.com/42262323
     if (!context->isGLES1())
     {
         // If we have a program bound in the API, or if there is no program bound to the API at
@@ -5897,7 +5897,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     }
 
     // Clear state. Missing ES 3.x features.
-    // TODO(http://anglebug.com/3662): Complete state capture.
+    // TODO(http://anglebug.com/42262323): Complete state capture.
     const gl::ColorF &currentClearColor = apiState.getColorClearValue();
     if (currentClearColor != gl::ColorF())
     {
@@ -6166,7 +6166,7 @@ FrameCaptureShared::FrameCaptureShared()
         INFO() << "Validation expression is " << kValidationExprVarName;
     }
 
-    // TODO: Remove. http://anglebug.com/7753
+    // TODO: Remove. http://anglebug.com/42266223
     std::string sourceExtFromEnv =
         GetEnvironmentVarOrUnCachedAndroidProperty(kSourceExtVarName, kAndroidSourceExt);
     if (!sourceExtFromEnv.empty())
@@ -6617,7 +6617,7 @@ HashMap<std::shared_ptr<CoherentBuffer>, size_t> CoherentBufferTracker::getBuffe
         // callback. We need to add this tag manually to the untagged pointer in order to determine
         // the corresponding page.
         // See: https://source.android.com/docs/security/test/tagged-pointers
-        // TODO(http://anglebug.com/7402): Determine when heap pointer tagging is not enabled.
+        // TODO(http://anglebug.com/42265874): Determine when heap pointer tagging is not enabled.
         constexpr unsigned long long POINTER_TAG = 0xb400000000000000;
         unsigned long long taggedAddress         = address | POINTER_TAG;
         page                                     = static_cast<size_t>(taggedAddress / mPageSize);
@@ -8724,7 +8724,7 @@ void FrameCaptureShared::checkForCaptureTrigger()
     }
 
     // If the value has changed, use the original value as the frame count
-    // TODO (anglebug.com/4949): Improve capture at unknown frame time. It is good to
+    // TODO (anglebug.com/42263521): Improve capture at unknown frame time. It is good to
     // avoid polling if the feature is not enabled, but not entirely intuitive to set
     // a value to zero when you want to trigger it.
     uint32_t captureTrigger = atoi(captureTriggerStr.c_str());
@@ -9545,7 +9545,7 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
                     // MEC started
                     if (mActiveContexts.find(shareContext.first) != mActiveContexts.end())
                     {
-                        // TODO(http://anglebug.com/5878): Support capture/replay of
+                        // TODO(http://anglebug.com/42264418): Support capture/replay of
                         // eglCreateContext() so this block can be moved into SetupReplayContextXX()
                         // by injecting them into the beginning of the setup call stream.
                         out << "    CreateContext(" << shareContext.first << ");\n";
@@ -9589,10 +9589,10 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
         std::set<gl::ContextID> contextIDs;
         mResourceTracker.getContextIDs(contextIDs);
 
-        // TODO(http://anglebug.com/5878): Look at moving this into the shared context file since
-        // it's resetting shared objects.
+        // TODO(http://anglebug.com/42264418): Look at moving this into the shared context file
+        // since it's resetting shared objects.
 
-        // TODO(http://anglebug.com/4599): Support function parts when writing Reset functions
+        // TODO(http://anglebug.com/42263204): Support function parts when writing Reset functions
 
         // Track whether anything was written during Reset
         bool anyResourceReset = false;

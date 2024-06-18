@@ -1235,7 +1235,7 @@ void Context::deleteSemaphore(SemaphoreID semaphore)
 void Context::loseContext(GraphicsResetStatus current, GraphicsResetStatus other)
 {
     // TODO(geofflang): mark the rest of the share group lost. Requires access to the entire share
-    // group from a context. http://anglebug.com/3379
+    // group from a context. http://anglebug.com/42262046
     markContextLost(current);
 }
 
@@ -3632,7 +3632,7 @@ void Context::beginTransformFeedback(PrimitiveMode primitiveMode)
     ASSERT(transformFeedback != nullptr);
     ASSERT(!transformFeedback->isPaused());
 
-    // TODO: http://anglebug.com/7232: Handle PPOs
+    // TODO: http://anglebug.com/42265705: Handle PPOs
     ANGLE_CONTEXT_TRY(transformFeedback->begin(this, primitiveMode, mState.getProgram()));
     mStateCache.onActiveTransformFeedbackChange(this);
 }
@@ -3765,8 +3765,8 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.textureBufferEXT        = false;
         supportedExtensions.textureBufferOES        = false;
 
-        // TODO(http://anglebug.com/2775): Multisample arrays could be supported on ES 3.0 as well
-        // once 2D multisample texture extension is exposed there.
+        // TODO(http://anglebug.com/42261478): Multisample arrays could be supported on ES 3.0 as
+        // well once 2D multisample texture extension is exposed there.
         supportedExtensions.textureStorageMultisample2dArrayOES = false;
     }
 
@@ -3917,7 +3917,7 @@ void Context::initCaps()
     Caps *caps = mState.getMutableCaps();
     *caps      = mImplementation->getNativeCaps();
 
-    // TODO (http://anglebug.com/6010): mSupportedExtensions should not be modified here
+    // TODO (http://anglebug.com/42264543): mSupportedExtensions should not be modified here
     mSupportedExtensions = generateSupportedExtensions();
 
     if (!mDisplay->getFrontendFeatures().allowCompressedFormats.enabled)
@@ -5774,7 +5774,7 @@ void *Context::mapBufferRange(BufferBinding target,
         return nullptr;
     }
 
-    // TODO: (anglebug.com/7821): Modify return value in entry point layer
+    // TODO: (anglebug.com/42266294): Modify return value in entry point layer
     angle::FrameCaptureShared *frameCaptureShared = getShareGroup()->getFrameCaptureShared();
     if (frameCaptureShared->enabled())
     {

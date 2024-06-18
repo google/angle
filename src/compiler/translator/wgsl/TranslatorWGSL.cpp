@@ -127,7 +127,7 @@ OutputWGSLTraverser::~OutputWGSLTraverser() = default;
 
 void OutputWGSLTraverser::groupedTraverse(TIntermNode &node)
 {
-    // TODO(anglebug.com/8662): to make generated code more readable, do not always
+    // TODO(anglebug.com/42267100): to make generated code more readable, do not always
     // emit parentheses like WGSL is some Lisp dialect.
     const bool emitParens = true;
 
@@ -162,7 +162,7 @@ void OutputWGSLTraverser::emitNameOf(const T &namedObject)
         break;
         case SymbolType::AngleInternal:
         case SymbolType::Empty:
-            // TODO(anglebug.com/8662): support these if necessary
+            // TODO(anglebug.com/42267100): support these if necessary
             UNREACHABLE();
     }
 }
@@ -221,48 +221,48 @@ void OutputWGSLTraverser::visitSymbol(TIntermSymbol *symbolNode)
 
 void OutputWGSLTraverser::visitConstantUnion(TIntermConstantUnion *constValueNode)
 {
-    // TODO(anglebug.com/8662): support emitting constants..
+    // TODO(anglebug.com/42267100): support emitting constants..
 }
 
 bool OutputWGSLTraverser::visitSwizzle(Visit, TIntermSwizzle *swizzleNode)
 {
-    // TODO(anglebug.com/8662): support swizzle statements.
+    // TODO(anglebug.com/42267100): support swizzle statements.
     return false;
 }
 
 bool OutputWGSLTraverser::visitBinary(Visit, TIntermBinary *binaryNode)
 {
-    // TODO(anglebug.com/8662): support binary statements.
+    // TODO(anglebug.com/42267100): support binary statements.
     return false;
 }
 
 bool OutputWGSLTraverser::visitUnary(Visit, TIntermUnary *unaryNode)
 {
-    // TODO(anglebug.com/8662): support unary statements.
+    // TODO(anglebug.com/42267100): support unary statements.
     return false;
 }
 
 bool OutputWGSLTraverser::visitTernary(Visit, TIntermTernary *conditionalNode)
 {
-    // TODO(anglebug.com/8662): support ternaries.
+    // TODO(anglebug.com/42267100): support ternaries.
     return false;
 }
 
 bool OutputWGSLTraverser::visitIfElse(Visit, TIntermIfElse *ifThenElseNode)
 {
-    // TODO(anglebug.com/8662): support basic control flow.
+    // TODO(anglebug.com/42267100): support basic control flow.
     return false;
 }
 
 bool OutputWGSLTraverser::visitSwitch(Visit, TIntermSwitch *switchNode)
 {
-    // TODO(anglebug.com/8662): support switch statements.
+    // TODO(anglebug.com/42267100): support switch statements.
     return false;
 }
 
 bool OutputWGSLTraverser::visitCase(Visit, TIntermCase *caseNode)
 {
-    // TODO(anglebug.com/8662): support switch statements.
+    // TODO(anglebug.com/42267100): support switch statements.
     return false;
 }
 
@@ -311,7 +311,7 @@ void OutputWGSLTraverser::emitFunctionSignature(const TFunction &func)
 
 void OutputWGSLTraverser::emitFunctionParameter(const TFunction &func, const TVariable &param)
 {
-    // TODO(anglebug.com/8662): actually emit function parameters.
+    // TODO(anglebug.com/42267100): actually emit function parameters.
 
     mSink << "FAKE_FUNCTION_PARAMETER";
 }
@@ -337,7 +337,7 @@ bool OutputWGSLTraverser::visitFunctionDefinition(Visit, TIntermFunctionDefiniti
 
 bool OutputWGSLTraverser::visitAggregate(Visit, TIntermAggregate *aggregateNode)
 {
-    // TODO(anglebug.com/8662): support aggregate statements.
+    // TODO(anglebug.com/42267100): support aggregate statements.
     return false;
 }
 
@@ -401,20 +401,20 @@ bool OutputWGSLTraverser::visitGlobalQualifierDeclaration(Visit,
 
 bool OutputWGSLTraverser::visitDeclaration(Visit, TIntermDeclaration *declNode)
 {
-    // TODO(anglebug.com/8662): support variable declarations.
+    // TODO(anglebug.com/42267100): support variable declarations.
     mSink << "FAKE_DECLARATION";
     return false;
 }
 
 bool OutputWGSLTraverser::visitLoop(Visit, TIntermLoop *loopNode)
 {
-    // TODO(anglebug.com/8662): emit loops.
+    // TODO(anglebug.com/42267100): emit loops.
     return false;
 }
 
 bool OutputWGSLTraverser::visitBranch(Visit, TIntermBranch *branchNode)
 {
-    // TODO(anglebug.com/8662): emit branch instructions.
+    // TODO(anglebug.com/42267100): emit branch instructions.
     return false;
 }
 
@@ -434,9 +434,9 @@ void OutputWGSLTraverser::emitBareTypeName(const TType &type)
         case TBasicType::EbtBool:
             mSink << type.getBasicString();
             break;
-        // TODO(anglebug.com/8662): is there double precision (f64) in GLSL? It doesn't really exist
-        // in WGSL (i.e. f64 does not exist but AbstractFloat can handle 64 bits???) Metal does not
-        // have 64 bit double precision types. It's being implemented in WGPU:
+        // TODO(anglebug.com/42267100): is there double precision (f64) in GLSL? It doesn't really
+        // exist in WGSL (i.e. f64 does not exist but AbstractFloat can handle 64 bits???) Metal
+        // does not have 64 bit double precision types. It's being implemented in WGPU:
         // https://github.com/gpuweb/gpuweb/issues/2805
         case TBasicType::EbtFloat:
             mSink << "f32";
@@ -459,9 +459,9 @@ void OutputWGSLTraverser::emitBareTypeName(const TType &type)
         default:
             if (IsSampler(basicType))
             {
-                //  TODO(anglebug.com/8662): possibly emit both a sampler and a texture2d. WGSL has
-                //  sampler variables for the sampler configuration, whereas GLSL has sampler2d and
-                //  other sampler* variables for an actual texture.
+                //  TODO(anglebug.com/42267100): possibly emit both a sampler and a texture2d. WGSL
+                //  has sampler variables for the sampler configuration, whereas GLSL has sampler2d
+                //  and other sampler* variables for an actual texture.
                 mSink << "texture2d<";
                 switch (type.getBasicType())
                 {
@@ -475,21 +475,21 @@ void OutputWGSLTraverser::emitBareTypeName(const TType &type)
                         mSink << "u32";
                         break;
                     default:
-                        // TODO(anglebug.com/8662): are any of the other sampler types necessary to
-                        // translate?
+                        // TODO(anglebug.com/42267100): are any of the other sampler types necessary
+                        // to translate?
                         UNIMPLEMENTED();
                         break;
                 }
                 if (type.getMemoryQualifier().readonly || type.getMemoryQualifier().writeonly)
                 {
-                    // TODO(anglebug.com/8662): implement memory qualifiers.
+                    // TODO(anglebug.com/42267100): implement memory qualifiers.
                     UNIMPLEMENTED();
                 }
                 mSink << ">";
             }
             else if (IsImage(basicType))
             {
-                // TODO(anglebug.com/8662): does texture2d also correspond to GLSL's image type?
+                // TODO(anglebug.com/42267100): does texture2d also correspond to GLSL's image type?
                 mSink << "texture2d<";
                 switch (type.getBasicType())
                 {
@@ -503,14 +503,14 @@ void OutputWGSLTraverser::emitBareTypeName(const TType &type)
                         mSink << "u32";
                         break;
                     default:
-                        // TODO(anglebug.com/8662): are any of the other image types necessary to
-                        // translate?
+                        // TODO(anglebug.com/42267100): are any of the other image types necessary
+                        // to translate?
                         UNIMPLEMENTED();
                         break;
                 }
                 if (type.getMemoryQualifier().readonly || type.getMemoryQualifier().writeonly)
                 {
-                    // TODO(anglebug.com/8662): implement memory qualifiers.
+                    // TODO(anglebug.com/42267100): implement memory qualifiers.
                     UNREACHABLE();
                 }
                 mSink << ">";
@@ -525,7 +525,7 @@ void OutputWGSLTraverser::emitBareTypeName(const TType &type)
 
 void OutputWGSLTraverser::emitType(const TType &type)
 {
-    // TODO(anglebug.com/8662): support types with dimensions.
+    // TODO(anglebug.com/42267100): support types with dimensions.
     ASSERT(!type.isVector() && !type.isMatrix() && !type.isArray());
 
     // This type has no dimensions and is equivalent to its bare type.
@@ -542,8 +542,8 @@ bool TranslatorWGSL::translate(TIntermBlock *root,
                                const ShCompileOptions &compileOptions,
                                PerformanceDiagnostics *perfDiagnostics)
 {
-    // TODO(anglebug.com/8662): until the translator is ready to translate most basic shaders, emit
-    // the code commented out.
+    // TODO(anglebug.com/42267100): until the translator is ready to translate most basic shaders,
+    // emit the code commented out.
     TInfoSinkBase &sink = getInfoSink().obj;
     sink << "/*\n";
     OutputWGSLTraverser traverser(this);
@@ -552,7 +552,7 @@ bool TranslatorWGSL::translate(TIntermBlock *root,
 
     std::cout << getInfoSink().obj.str();
 
-    // TODO(anglebug.com/8662): delete this.
+    // TODO(anglebug.com/42267100): delete this.
     if (getShaderType() == GL_VERTEX_SHADER)
     {
         constexpr const char *kVertexShader = R"(@vertex

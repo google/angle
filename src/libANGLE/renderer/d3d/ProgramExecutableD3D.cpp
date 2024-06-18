@@ -1161,7 +1161,7 @@ unsigned int ProgramExecutableD3D::getAtomicCounterBufferRegisterIndex(
     if (shaderType != gl::ShaderType::Compute)
     {
         // Implement atomic counters for non-compute shaders
-        // http://anglebug.com/1729
+        // http://anglebug.com/42260658
         UNIMPLEMENTED();
     }
     return mComputeAtomicCounterBufferRegisterIndices[binding];
@@ -2203,7 +2203,7 @@ void ProgramExecutableD3D::assignAllAtomicCounterRegisters()
     else
     {
         // Implement atomic counters for non-compute shaders
-        // http://anglebug.com/1729
+        // http://anglebug.com/42260658
         UNIMPLEMENTED();
     }
 }

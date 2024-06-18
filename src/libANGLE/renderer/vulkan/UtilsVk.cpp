@@ -2598,7 +2598,7 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
     // cannot be taken if AHARDWAREBUFFER_USAGE_GPU_FRAMEBUFFER hasn't been specified, even if the
     // format is renderable.
     //
-    // http://anglebug.com/6151
+    // http://anglebug.com/42264676
     if (!vk::FormatHasNecessaryFeature(renderer, dstActualFormat.id, dst->getTilingMode(),
                                        VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT))
     {

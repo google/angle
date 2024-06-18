@@ -34,7 +34,7 @@ declare_args() {
 
 declare_args() {
   # Expose WGL entry points, which is necessary for running windows desktop GL applications against ANGLE.
-  # TODO(http://anglebug.com/7628): This condition should be `angle_enable_gl_desktop_frontend && is_win`
+  # TODO(http://anglebug.com/42266094): This condition should be `angle_enable_gl_desktop_frontend && is_win`
   # This is disabled by default on Windows because it was causing some test failures. Once the WGL frontend
   # has more functionality implemented, we can re-enable this.
   angle_expose_wgl_entry_points = false
@@ -145,7 +145,7 @@ declare_args() {
         (angle_64bit_current_cpu && android64_ndk_api_level >= 26)
   }
 
-  # Vulkan loader is statically linked on Mac. http://anglebug.com/4477
+  # Vulkan loader is statically linked on Mac. http://anglebug.com/40096682
   angle_shared_libvulkan = !is_mac
 
   # There's no "is_winuwp" helper in BUILDCONFIG.gn, so we define one ourselves
@@ -201,7 +201,7 @@ declare_args() {
   angle_enable_null = !is_official_build
   angle_enable_gl_desktop_backend = !is_android && !is_ios
 
-  # http://anglebug.com/2634
+  # http://anglebug.com/40096506
   angle_enable_metal = is_apple
 
   # Enables the OpenCL pass-through back end
@@ -209,7 +209,7 @@ declare_args() {
 
   # Disable WGPU backend.
   # Currently disabled on Android, Fuschia, WinUWP, and Win MSVC.
-  # anglebug.com/8541
+  # anglebug.com/42266968
   angle_enable_wgpu =
       !is_official_build && !(is_android || is_fuchsia || angle_is_winuwp) &&
       (!is_win || is_clang) && defined(angle_dawn_dir)
