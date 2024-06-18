@@ -8,6 +8,7 @@ To update volk in ANGLE, copy the latest volk.h/c files into ANGLE "src/third_pa
 If any changes are made to volk source files locally within ANGLE, please also make corresponding PRs so that
 the changes land in the upstream source volk GitHub repo.
 Make sure to change tabs to spaces, which clang-format later fixes, after updating the files.
+Also make sure to update the `Revision:` field in `README.chromium`.
 
 ## Purpose
 
