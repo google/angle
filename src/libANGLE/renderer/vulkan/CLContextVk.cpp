@@ -188,6 +188,7 @@ angle::Result CLContextVk::linkProgram(const cl::Program &program,
     {
         ANGLE_CL_RETURN_ERROR(CL_OUT_OF_HOST_MEMORY);
     }
+    ANGLE_TRY(programImpl->init());
 
     cl::DevicePtrs linkDeviceList;
     CLProgramVk::LinkProgramsList linkProgramsList;
