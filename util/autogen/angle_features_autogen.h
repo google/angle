@@ -51,7 +51,6 @@ enum class Feature
     AsyncCommandBufferReset,
     AsyncCommandQueue,
     Avoid1BitAlphaTextureFormats,
-    AvoidBindFragDataLocation,
     AvoidOpSelectWithMismatchingRelaxedPrecision,
     AvoidStencilTextureSwizzle,
     BgraTexImageFormatsBroken,
