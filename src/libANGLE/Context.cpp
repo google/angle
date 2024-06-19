@@ -9674,11 +9674,17 @@ void Context::finishImmutable() const
     ANGLE_CONTEXT_TRY(mImplementation->finish(this));
 }
 
-void Context::beginPerfMonitor(GLuint monitor) {}
+void Context::beginPerfMonitor(GLuint monitor)
+{
+    getMutablePrivateState()->setPerfMonitorActive(true);
+}
 
 void Context::deletePerfMonitors(GLsizei n, GLuint *monitors) {}
 
-void Context::endPerfMonitor(GLuint monitor) {}
+void Context::endPerfMonitor(GLuint monitor)
+{
+    getMutablePrivateState()->setPerfMonitorActive(false);
+}
 
 void Context::genPerfMonitors(GLsizei n, GLuint *monitors)
 {

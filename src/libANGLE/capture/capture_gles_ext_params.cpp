@@ -4175,7 +4175,7 @@ void CaptureDeletePerfMonitorsAMD_monitors(const State &glState,
                                            GLuint *monitors,
                                            angle::ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureArray(monitors, n, paramCapture);
 }
 
 void CaptureGenPerfMonitorsAMD_monitors(const State &glState,
@@ -4184,7 +4184,7 @@ void CaptureGenPerfMonitorsAMD_monitors(const State &glState,
                                         GLuint *monitors,
                                         angle::ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureArray(monitors, n, paramCapture);
 }
 
 void CaptureGetPerfMonitorCounterDataAMD_data(const State &glState,

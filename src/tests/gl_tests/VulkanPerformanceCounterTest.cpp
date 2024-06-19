@@ -146,6 +146,18 @@ class VulkanPerformanceCounterTest : public ANGLETest<>
 
     static constexpr GLsizei kOpsTestSize = 16;
 
+    void testSetUp() override
+    {
+        glGenPerfMonitorsAMD(1, &monitor);
+        glBeginPerfMonitorAMD(monitor);
+    }
+
+    void testTearDown() override
+    {
+        glEndPerfMonitorAMD(monitor);
+        glDeletePerfMonitorsAMD(1, &monitor);
+    }
+
     void setupForColorOpsTest(GLFramebuffer *framebuffer, GLTexture *texture)
     {
         // Setup the framebuffer
@@ -416,6 +428,7 @@ class VulkanPerformanceCounterTest : public ANGLETest<>
                !isFeatureEnabled(Feature::DisableDepthStencilResolveThroughAttachment);
     }
 
+    GLuint monitor;
     CounterNameToIndexMap mIndexMap;
 };
 

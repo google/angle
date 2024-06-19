@@ -4654,6 +4654,9 @@ TEST_P(ImageTestES3, AHBImportReleaseStress)
 
     glFinish();
 
+    GLPerfMonitor monitor;
+    glBeginPerfMonitorAMD(monitor);
+
     const uint64_t initialPendingSubmissionGarbageObjects =
         getPerfCounters().pendingSubmissionGarbageObjects;
 
@@ -4679,6 +4682,8 @@ TEST_P(ImageTestES3, AHBImportReleaseStress)
         eglDestroyImageKHR(getEGLWindow()->getDisplay(), ahbImage);
         destroyAndroidHardwareBuffer(ahb);
     }
+
+    glEndPerfMonitorAMD(monitor);
 
     EXPECT_LE(getPerfCounters().pendingSubmissionGarbageObjects,
               initialPendingSubmissionGarbageObjects + 10);

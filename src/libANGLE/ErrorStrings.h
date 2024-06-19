@@ -498,6 +498,7 @@ MSG kOffsetOverflow = "Offset overflows texture dimensions.";
 MSG kOtherQueryActive = "Other query is active.";
 MSG kOutsideOfBounds = "Parameter outside of bounds.";
 MSG kParamOverflow = "The provided parameters overflow with the provided buffer.";
+MSG kPerfMonitorNotActive = "Perf monitor is not started.";
 MSG kPixelDataNotNull = "Pixel data must be null.";
 MSG kPixelDataNull = "Pixel data cannot be null.";
 MSG kPixelPackBufferBoundForTransformFeedback = "It is undefined behavior to use a pixel pack buffer that is bound for transform feedback.";

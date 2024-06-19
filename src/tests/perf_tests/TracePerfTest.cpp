@@ -1832,6 +1832,8 @@ void TracePerfTest::startTest()
 {
     // runTrial() must align to frameCount()
     ASSERT(mCurrentFrame == mStartFrame);
+
+    ANGLERenderTest::startTest();
 }
 
 std::string FindTraceGzPath(const std::string &traceName)

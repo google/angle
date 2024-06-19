@@ -302,7 +302,8 @@ ANGLEPerfTest::ANGLEPerfTest(const std::string &name,
       mTrialNumStepsPerformed(0),
       mTotalNumStepsPerformed(0),
       mIterationsPerStep(iterationsPerStep),
-      mRunning(true)
+      mRunning(true),
+      mPerfMonitor(0)
 {
     if (mStory == "")
     {
@@ -1043,6 +1044,12 @@ void ANGLERenderTest::TearDown()
 {
     ASSERT(mTimestampQueries.empty());
 
+    if (!mPerfCounterInfo.empty())
+    {
+        glDeletePerfMonitorsAMD(1, &mPerfMonitor);
+        mPerfMonitor = 0;
+    }
+
     if (!mSkipTest)
     {
         destroyBenchmark();
@@ -1129,6 +1136,13 @@ void ANGLERenderTest::initPerfCounters()
         {
             fprintf(stderr, "'%s' does not match any available perf counters.\n", counter.c_str());
         }
+    }
+
+    if (!mPerfCounterInfo.empty())
+    {
+        glGenPerfMonitorsAMD(1, &mPerfMonitor);
+        // Note: technically, glSelectPerfMonitorCountersAMD should be used to select the counters,
+        // but currently ANGLE always captures all counters.
     }
 }
 
@@ -1295,7 +1309,13 @@ void ANGLERenderTest::computeGPUTime()
     }
 }
 
-void ANGLERenderTest::startTest() {}
+void ANGLERenderTest::startTest()
+{
+    if (!mPerfCounterInfo.empty())
+    {
+        glBeginPerfMonitorAMD(mPerfMonitor);
+    }
+}
 
 void ANGLERenderTest::finishTest()
 {
@@ -1303,6 +1323,11 @@ void ANGLERenderTest::finishTest()
         !gNoFinish && !gRetraceMode)
     {
         FinishAndCheckForContextLoss();
+    }
+
+    if (!mPerfCounterInfo.empty())
+    {
+        glEndPerfMonitorAMD(mPerfMonitor);
     }
 }
 

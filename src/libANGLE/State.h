@@ -597,6 +597,9 @@ class PrivateState : angle::NonCopyable
     const state::DirtyObjects &getDirtyObjects() const { return mDirtyObjects; }
     void clearDirtyObjects() { mDirtyObjects.reset(); }
 
+    void setPerfMonitorActive(bool active) { mIsPerfMonitorActive = active; }
+    bool isPerfMonitorActive() const { return mIsPerfMonitorActive; }
+
   private:
     bool hasConstantColor(GLenum sourceRGB, GLenum destRGB) const;
     bool hasConstantAlpha(GLenum sourceRGB, GLenum destRGB) const;
@@ -724,6 +727,9 @@ class PrivateState : angle::NonCopyable
 
     // GL_ARM_shader_framebuffer_fetch
     bool mFetchPerSample;
+
+    // Whether perf monitoring is enabled through GL_AMD_performance_monitor.
+    bool mIsPerfMonitorActive;
 
     const bool mBindGeneratesResource;
     const bool mClientArraysEnabled;
@@ -1406,6 +1412,7 @@ class State : angle::NonCopyable
     }
     bool isLogicOpEnabled() const { return mPrivateState.isLogicOpEnabled(); }
     LogicalOperation getLogicOp() const { return mPrivateState.getLogicOp(); }
+    bool isPerfMonitorActive() const { return mPrivateState.isPerfMonitorActive(); }
     const Debug &getDebug() const { return mPrivateState.getDebug(); }
     Debug &getDebug() { return mPrivateState.getDebug(); }
     bool getEnableFeature(GLenum feature) const { return mPrivateState.getEnableFeature(feature); }

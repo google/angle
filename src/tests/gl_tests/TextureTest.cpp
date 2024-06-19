@@ -3579,6 +3579,9 @@ TEST_P(Texture2DMemoryTestES3, TextureDataInLoopUntilFlush)
     // submissions.
     ANGLE_SKIP_TEST_IF(getEGLWindow()->isFeatureEnabled(Feature::SupportsHostImageCopy));
 
+    GLPerfMonitor monitor;
+    glBeginPerfMonitorAMD(monitor);
+
     uint64_t expectedSubmitCalls = getPerfCounters().commandQueueSubmitCallsTotal + 1;
 
     // Set up program
@@ -3639,6 +3642,8 @@ void main()
             break;
         }
     }
+    glEndPerfMonitorAMD(monitor);
+
     EXPECT_EQ(getPerfCounters().commandQueueSubmitCallsTotal, expectedSubmitCalls);
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_NEAR(0, 0, 128, 191, 64, 255, 1);
@@ -3651,6 +3656,10 @@ TEST_P(Texture2DMemoryTestES3, TextureDataInLoopManyTimes)
 {
     // Run this test for Vulkan only.
     ANGLE_SKIP_TEST_IF(!IsVulkan());
+
+    GLPerfMonitor monitor;
+    glBeginPerfMonitorAMD(monitor);
+
     uint64_t expectedSubmitCalls           = getPerfCounters().commandQueueSubmitCallsTotal + 1;
     uint64_t expectedDeviceMemoryFallbacks = getPerfCounters().deviceMemoryImageAllocationFallbacks;
 
@@ -3714,6 +3723,9 @@ void main()
             break;
         }
     }
+
+    glEndPerfMonitorAMD(monitor);
+
     EXPECT_EQ(getPerfCounters().commandQueueSubmitCallsTotal, expectedSubmitCalls);
     EXPECT_EQ(getPerfCounters().deviceMemoryImageAllocationFallbacks,
               expectedDeviceMemoryFallbacks);

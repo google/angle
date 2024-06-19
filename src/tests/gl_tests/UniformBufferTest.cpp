@@ -3762,6 +3762,9 @@ class UniformBufferMemoryTest : public UniformBufferTest
 // supposedly to issue flush if needed.
 TEST_P(UniformBufferMemoryTest, BufferDataInLoopManyTimes)
 {
+    GLPerfMonitor monitor;
+    glBeginPerfMonitorAMD(monitor);
+
     // Run this test for Vulkan only.
     ANGLE_SKIP_TEST_IF(!IsVulkan());
     uint64_t expectedSubmitCalls = getPerfCounters().commandQueueSubmitCallsTotal + 1;
@@ -3801,6 +3804,8 @@ TEST_P(UniformBufferMemoryTest, BufferDataInLoopManyTimes)
             break;
         }
     }
+    glEndPerfMonitorAMD(monitor);
+
     EXPECT_EQ(getPerfCounters().commandQueueSubmitCallsTotal, expectedSubmitCalls);
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_NEAR(0, 0, 128, 191, 64, 255, 1);
