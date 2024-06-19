@@ -1257,6 +1257,9 @@ void GenerateCaps(const FunctionsGL *functions,
     else
     {
         LimitVersion(maxSupportedESVersion, gl::Version(3, 0));
+        // Set maxVertexAttribBindings anyway, a number of places assume this value is at least as
+        // much as maxVertexAttributes.
+        caps->maxVertexAttribBindings = caps->maxVertexAttributes;
     }
 
     if (functions->isAtLeastGL(gl::Version(4, 3)) || functions->isAtLeastGLES(gl::Version(3, 1)) ||
