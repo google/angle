@@ -270,7 +270,7 @@ angle::FormatID Format::MetalToAngleFormatID(MTLPixelFormat formatMtl)
             return angle::FormatID::ASTC_8x6_UNORM_BLOCK;
         case MTLPixelFormatASTC_8x8_LDR:
             return angle::FormatID::ASTC_8x8_UNORM_BLOCK;
-#    if TARGET_OS_IOS || TARGET_OS_OSX
+#    if TARGET_OS_IOS || TARGET_OS_OSX || TARGET_OS_VISION
         case MTLPixelFormatASTC_10x10_HDR:
             return angle::FormatID::ASTC_10x10_UNORM_BLOCK;
         case MTLPixelFormatASTC_10x5_HDR:
@@ -299,7 +299,7 @@ angle::FormatID Format::MetalToAngleFormatID(MTLPixelFormat formatMtl)
             return angle::FormatID::ASTC_8x6_UNORM_BLOCK;
         case MTLPixelFormatASTC_8x8_HDR:
             return angle::FormatID::ASTC_8x8_UNORM_BLOCK;
-#    endif  // TARGET_OS_IOS || TARGET_OS_OSX
+#    endif  // TARGET_OS_IOS || TARGET_OS_OSX || TARGET_OS_VISION
 #endif      // TARGET_OS_IPHONE || mac 11.0+
         default:
             return angle::FormatID::NONE;
@@ -1199,7 +1199,7 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
             this->initFunction   = Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>;
             break;
 
-#    if TARGET_OS_IOS
+#    if TARGET_OS_IOS || TARGET_OS_VISION
         case angle::FormatID::ASTC_10x10_UNORM_BLOCK:
 
             if (display->supportsAppleGPUFamily(6))
@@ -1481,7 +1481,7 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
             this->actualFormatId = angle::FormatID::ASTC_8x8_UNORM_BLOCK;
             break;
 
-#    endif  // TARGET_OS_IOS
+#    endif  // ASTC formats
 #    if (TARGET_OS_IOS && __IPHONE_OS_VERSION_MAX_ALLOWED >= 160400) || \
         (TARGET_OS_TV && __TV_OS_VERSION_MAX_ALLOWED >= 160400) || TARGET_OS_VISION
         case angle::FormatID::BC1_RGBA_UNORM_BLOCK:
@@ -1844,7 +1844,7 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
             this->actualFormatId = angle::FormatID::D32_FLOAT_S8X24_UINT;
             break;
 
-#    if TARGET_OS_IOS
+#    if TARGET_OS_IOS || TARGET_OS_VISION
         case angle::FormatID::ASTC_10x10_UNORM_BLOCK:
 
             if (display->supportsAppleGPUFamily(6))
@@ -2126,7 +2126,7 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
             this->actualFormatId = angle::FormatID::ASTC_8x8_UNORM_BLOCK;
             break;
 
-#    endif  // TARGET_OS_IOS || TARGET_OS_TV
+#    endif  // ASTC formats
 #    if (TARGET_OS_IOS && __IPHONE_OS_VERSION_MAX_ALLOWED >= 160400) || \
         (TARGET_OS_TV && __TV_OS_VERSION_MAX_ALLOWED >= 160400) || TARGET_OS_VISION
         case angle::FormatID::BC1_RGBA_UNORM_BLOCK:
@@ -4384,7 +4384,7 @@ void FormatTable::initNativeFormatCapsAutogen(const DisplayMtl *display)
                   /** colorRenderable*/ display->supportsAppleGPUFamily(1),
                   /** depthRenderable*/ false);
 
-#    if TARGET_OS_IOS || TARGET_OS_OSX
+#    if TARGET_OS_IOS || TARGET_OS_OSX || TARGET_OS_VISION
     setFormatCaps(MTLPixelFormatASTC_10x10_HDR, /** filterable*/ display->supportsAppleGPUFamily(6),
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
                   /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
@@ -4441,7 +4441,7 @@ void FormatTable::initNativeFormatCapsAutogen(const DisplayMtl *display)
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
                   /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-#    endif  // TARGET_OS_IOS || mac 11.0+
+#    endif  // TARGET_OS_IOS || mac 11.0+ || TARGET_OS_VISION
 #endif      // TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST || mac 11.0+
 }
 
