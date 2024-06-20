@@ -143,7 +143,6 @@ case_image_format_template1 = """        case angle::FormatID::{angle_format}:
 """
 
 case_image_format_template2 = """        case angle::FormatID::{angle_format}:
-#if defined(__IPHONE_13_0) || defined(__MAC_10_15)
             if (display->getFeatures().hasTextureSwizzle.enabled)
             {{
                 {image_format_assign_swizzled}
@@ -151,7 +150,6 @@ case_image_format_template2 = """        case angle::FormatID::{angle_format}:
                 this->swizzle  = {mtl_swizzle};
             }}
             else
-#endif  // #if defined(__IPHONE_13_0) || defined(__MAC_10_15)
             {{
                 {image_format_assign_default}
             }}
@@ -412,17 +410,19 @@ def gen_image_map_switch_string(image_table, angle_to_gl):
     angle_override = image_table["override"]
     mac_override = image_table["override_mac"]
     mac_override_es3 = image_table["override_mac_es3"]
-    mac_override_bc1 = image_table["override_mac_bc1"]
+    override_bc1 = image_table["override_bc1"]
     ios_override = image_table["override_ios"]
     mac_depth_fallbacks = image_table["depth_fallbacks_mac"]
     angle_to_mtl = image_table["map"]
-    mac_specific_map = image_table["map_mac"]
+    mac_specific_map = image_table["map_mac"].copy()
+    bc = image_table["map_bc"]
     ios_specific_map = image_table["map_ios"]
     astc_tpl_map = image_table["map_astc_tpl"]
     sim_specific_map = image_table["map_sim"]
     sim_override = image_table["override_sim"]
 
     # mac_specific_map + angle_to_mtl:
+    mac_specific_map.update(bc)
     mac_angle_to_mtl = mac_specific_map.copy()
     mac_angle_to_mtl.update(angle_to_mtl)
     # ios_specific_map + angle_to_mtl
@@ -451,9 +451,8 @@ def gen_image_map_switch_string(image_table, angle_to_gl):
     for angle_format in sorted(mac_override.keys()):
         switch_data += gen_image_map_switch_simple_case(angle_format, mac_override[angle_format],
                                                         angle_to_gl, mac_angle_to_mtl)
-    for angle_format in sorted(mac_override_bc1.keys()):
-        switch_data += gen_image_map_switch_simple_case(angle_format,
-                                                        mac_override_bc1[angle_format],
+    for angle_format in sorted(override_bc1.keys()):
+        switch_data += gen_image_map_switch_simple_case(angle_format, override_bc1[angle_format],
                                                         angle_to_gl, mac_angle_to_mtl)
     switch_data += "#endif\n"
 
@@ -483,6 +482,18 @@ def gen_image_map_switch_string(image_table, angle_to_gl):
         switch_data += gen_image_map_switch_astc_case_tv_watchos(angle_format, angle_to_gl,
                                                                  astc_tpl_map)
     switch_data += "#endif // TARGET_OS_IOS\n "
+
+    # BC formats
+    switch_data += "#if (TARGET_OS_IOS && __IPHONE_OS_VERSION_MAX_ALLOWED >= 160400) || \\\n"
+    switch_data += "    (TARGET_OS_TV && __TV_OS_VERSION_MAX_ALLOWED >= 160400) || TARGET_OS_VISION\n"
+    for angle_format in sorted(bc.keys()):
+        switch_data += gen_image_map_switch_simple_case(angle_format, angle_format, angle_to_gl,
+                                                        bc)
+    for angle_format in sorted(override_bc1.keys()):
+        switch_data += gen_image_map_switch_simple_case(angle_format, override_bc1[angle_format],
+                                                        angle_to_gl, bc)
+    switch_data += "#endif // BC formats on iOS/tvOS/visionOS \n"
+
     # iOS specific
     switch_data += "#elif TARGET_OS_IPHONE && !TARGET_OS_MACCATALYST\n"
     for angle_format in sorted(ios_specific_map.keys()):
@@ -502,6 +513,18 @@ def gen_image_map_switch_string(image_table, angle_to_gl):
         switch_data += gen_image_map_switch_astc_case_tv_watchos(angle_format, angle_to_gl,
                                                                  astc_tpl_map)
     switch_data += "#endif // TARGET_OS_IOS || TARGET_OS_TV\n"
+
+    # BC formats
+    switch_data += "#if (TARGET_OS_IOS && __IPHONE_OS_VERSION_MAX_ALLOWED >= 160400) || \\\n"
+    switch_data += "    (TARGET_OS_TV && __TV_OS_VERSION_MAX_ALLOWED >= 160400) || TARGET_OS_VISION\n"
+    for angle_format in sorted(bc.keys()):
+        switch_data += gen_image_map_switch_simple_case(angle_format, angle_format, angle_to_gl,
+                                                        bc)
+    for angle_format in sorted(override_bc1.keys()):
+        switch_data += gen_image_map_switch_simple_case(angle_format, override_bc1[angle_format],
+                                                        angle_to_gl, bc)
+    switch_data += "#endif // BC formats on iOS/tvOS/visionOS \n"
+
     switch_data += "#endif // TARGET_OS_IPHONE\n"
 
     # Try to support all iOS formats on newer macOS with Apple GPU.
@@ -532,6 +555,7 @@ def gen_image_map_switch_string(image_table, angle_to_gl):
 
 def gen_image_mtl_to_angle_switch_string(image_table):
     angle_to_mtl = image_table["map"]
+    bc_map = image_table["map_bc"]
     mac_specific_map = image_table["map_mac"]
     ios_specific_map = image_table["map_ios"]
     astc_tpl_map = image_table["map_astc_tpl"]
@@ -542,6 +566,15 @@ def gen_image_mtl_to_angle_switch_string(image_table):
     for angle_format in sorted(angle_to_mtl.keys()):
         switch_data += case_image_mtl_to_angle_template.format(
             mtl_format=angle_to_mtl[angle_format], angle_format=angle_format)
+
+    # BC formats
+    switch_data += "#if TARGET_OS_OSX || TARGET_OS_MACCATALYST ||\\\n"
+    switch_data += "    (TARGET_OS_IOS && __IPHONE_OS_VERSION_MAX_ALLOWED >= 160400) ||\\\n"
+    switch_data += "    (TARGET_OS_TV && __TV_OS_VERSION_MAX_ALLOWED >= 160400) || TARGET_OS_VISION\n"
+    for angle_format in sorted(bc_map.keys()):
+        switch_data += case_image_mtl_to_angle_template.format(
+            mtl_format=bc_map[angle_format], angle_format=angle_format)
+    switch_data += "#endif  // BC formats\n"
 
     # Mac specific
     switch_data += "#if TARGET_OS_OSX || TARGET_OS_MACCATALYST\n"
@@ -637,6 +670,7 @@ def gen_vertex_map_switch_string(vertex_table):
 
 def gen_mtl_format_caps_init_string(map_image):
     caps = map_image['caps']
+    bc_caps = map_image['caps_bc']
     mac_caps = map_image['caps_mac']
     ios_platform_caps = map_image['caps_ios_platform']
     ios_specific_caps = map_image['caps_ios_specific']
@@ -664,6 +698,12 @@ def gen_mtl_format_caps_init_string(map_image):
         return init_str
 
     caps_init_str += caps_to_cpp(caps)
+
+    caps_init_str += "#if TARGET_OS_OSX || TARGET_OS_MACCATALYST ||\\\n"
+    caps_init_str += "    (TARGET_OS_IOS && __IPHONE_OS_VERSION_MAX_ALLOWED >= 160400) ||\\\n"
+    caps_init_str += "    (TARGET_OS_TV && __TV_OS_VERSION_MAX_ALLOWED >= 160400) || TARGET_OS_VISION\n"
+    caps_init_str += caps_to_cpp(bc_caps)
+    caps_init_str += "#endif  // BC formats\n"
 
     caps_init_str += "#if TARGET_OS_OSX || TARGET_OS_MACCATALYST\n"
     caps_init_str += caps_to_cpp(mac_caps)
