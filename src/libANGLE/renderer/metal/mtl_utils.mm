@@ -659,7 +659,6 @@ angle::Result InitializeDepthStencilTextureContentsGPU(const gl::Context *contex
     {
         rtMTL.toRenderPassAttachmentDesc(&rpDesc.depthAttachment);
         rpDesc.depthAttachment.loadAction = MTLLoadActionClear;
-        rpDesc.depthAttachment.clearDepth = 1.0;
     }
     if (angleFormat.stencilBits)
     {
