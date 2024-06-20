@@ -205,22 +205,6 @@ bool IsPowerVrRogue(const FunctionsGL *functions)
     return angle::BeginsWith(nativeGLRenderer, powerVRRogue);
 }
 
-void ClearErrors(const FunctionsGL *functions,
-                 const char *file,
-                 const char *function,
-                 unsigned int line)
-{
-    GLenum error = functions->getError();
-    while (error != GL_NO_ERROR)
-    {
-        INFO() << "Preexisting GL error " << gl::FmtHex(error) << " as of " << file << ", "
-               << function << ":" << line << ". ";
-        error = functions->getError();
-    }
-}
-
-#define ANGLE_GL_CLEAR_ERRORS() ClearErrors(functions, __FILE__, __FUNCTION__, __LINE__)
-
 }  // namespace
 
 SwapControlData::SwapControlData()
@@ -453,7 +437,7 @@ static bool CheckSizedInternalFormatTextureRenderability(const FunctionsGL *func
 
     if (!supported)
     {
-        ANGLE_GL_CLEAR_ERRORS();
+        ANGLE_GL_CLEAR_ERRORS(functions);
     }
 
     ASSERT(functions->getError() == GL_NO_ERROR);
@@ -505,7 +489,7 @@ static bool CheckInternalFormatRenderbufferRenderability(const FunctionsGL *func
 
     if (!supported)
     {
-        ANGLE_GL_CLEAR_ERRORS();
+        ANGLE_GL_CLEAR_ERRORS(functions);
     }
 
     ASSERT(functions->getError() == GL_NO_ERROR);
@@ -587,7 +571,7 @@ static gl::TextureCaps GenerateTextureFormatCaps(const FunctionsGL *functions,
             queryInternalFormat = GL_RGBA8;
         }
 
-        ANGLE_GL_CLEAR_ERRORS();
+        ANGLE_GL_CLEAR_ERRORS(functions);
         GLint numSamples = 0;
         functions->getInternalformativ(GL_RENDERBUFFER, queryInternalFormat, GL_NUM_SAMPLE_COUNTS,
                                        1, &numSamples);
@@ -1543,7 +1527,7 @@ void GenerateCaps(const FunctionsGL *functions,
     else if (functions->hasGLESExtension("GL_NV_polygon_mode"))
     {
         // Some drivers expose the extension string without supporting its caps.
-        ANGLE_GL_CLEAR_ERRORS();
+        ANGLE_GL_CLEAR_ERRORS(functions);
         functions->isEnabled(GL_POLYGON_OFFSET_LINE_NV);
         if (functions->getError() != GL_NO_ERROR)
         {
@@ -2389,11 +2373,11 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     ANGLE_FEATURE_CONDITION(features, dontUseLoopsToInitializeVariables,
                             (!isMesa && isQualcomm) || (isIntel && IsApple()));
 
-    // Adreno drivers do not support glBindFragDataLocation* with MRT
     // Intel macOS condition ported from gpu_driver_bug_list.json (#327)
     ANGLE_FEATURE_CONDITION(features, disableBlendFuncExtended,
-                            (!isMesa && isQualcomm) ||
-                                (IsApple() && isIntel && GetMacOSVersion() < OSVersion(10, 14, 0)));
+                            IsApple() && isIntel && GetMacOSVersion() < OSVersion(10, 14, 0));
+
+    ANGLE_FEATURE_CONDITION(features, avoidBindFragDataLocation, !isMesa && isQualcomm);
 
     ANGLE_FEATURE_CONDITION(features, unsizedSRGBReadPixelsDoesntTransform, !isMesa && isQualcomm);
 
@@ -3011,6 +2995,20 @@ ClearMultiviewGL *GetMultiviewClearer(const gl::Context *context)
 const angle::FeaturesGL &GetFeaturesGL(const gl::Context *context)
 {
     return GetImplAs<ContextGL>(context)->getFeaturesGL();
+}
+
+void ClearErrors(const FunctionsGL *functions,
+                 const char *file,
+                 const char *function,
+                 unsigned int line)
+{
+    GLenum error = functions->getError();
+    while (error != GL_NO_ERROR)
+    {
+        INFO() << "Preexisting GL error " << gl::FmtHex(error) << " as of " << file << ", "
+               << function << ":" << line << ". ";
+        error = functions->getError();
+    }
 }
 
 void ClearErrors(const gl::Context *context,
