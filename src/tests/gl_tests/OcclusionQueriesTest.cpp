@@ -524,6 +524,43 @@ TEST_P(OcclusionQueriesTest, EmptyQueryAfterCompletedQuery)
     EXPECT_FALSE(result);
 }
 
+// Some Metal drivers do not automatically clear visibility buffer
+// at the beginning of a render pass. This test makes two queries
+// that would use the same internal visibility buffer at the same
+// offset and checks the query results.
+TEST_P(OcclusionQueriesTest, EmptyQueryAfterCompletedQueryInterleaved)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
+                       !IsGLExtensionEnabled("GL_EXT_occlusion_query_boolean"));
+
+    GLQueryEXT query;
+
+    // Make a draw call to start a new render pass
+    drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.0f);
+
+    // Begin a query and make another draw call
+    glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_EXT, query);
+    drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.0f);
+    glEndQueryEXT(GL_ANY_SAMPLES_PASSED_EXT);
+
+    // Check the query result to end command encoding
+    GLuint result = GL_FALSE;
+    glGetQueryObjectuivEXT(query, GL_QUERY_RESULT_EXT, &result);
+    EXPECT_TRUE(result);
+    ASSERT_GL_NO_ERROR();
+
+    // Make a draw call to start a new render pass
+    drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.0f);
+
+    // Begin and immediately resolve a new query; it must return false
+    result = GL_FALSE;
+    glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_EXT, query);
+    glEndQueryEXT(GL_ANY_SAMPLES_PASSED_EXT);
+    glGetQueryObjectuivEXT(query, GL_QUERY_RESULT_EXT, &result);
+    EXPECT_FALSE(result);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test multiple occlusion queries.
 TEST_P(OcclusionQueriesTest, MultiQueries)
 {

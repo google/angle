@@ -1824,6 +1824,8 @@ void ContextMtl::endRenderEncoding(mtl::RenderCommandEncoder *encoder)
         mBlitEncoder.endEncoding();
     }
 
+    mOcclusionQueryPool.prepareRenderPassVisibilityPoolBuffer(this);
+
     encoder->endEncoding();
 
     // Resolve visibility results
