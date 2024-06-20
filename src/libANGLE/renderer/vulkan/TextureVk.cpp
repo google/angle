@@ -3650,20 +3650,34 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
     {
         VkImageCreateFlags createFlagsMultisampled =
             mImageCreateFlags | VK_IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT;
+        bool isActualFormatSRGB             = angle::Format::Get(actualImageFormatID).isSRGB;
         const VkFormat additionalViewFormat = rx::vk::GetVkFormatFromFormatID(
-            angle::Format::Get(actualImageFormatID).isSRGB ? ConvertToLinear(actualImageFormatID)
-                                                           : ConvertToSRGB(actualImageFormatID));
+            isActualFormatSRGB ? ConvertToLinear(actualImageFormatID)
+                               : ConvertToSRGB(actualImageFormatID));
+
+        // If the texture has already been bound to an MSRTT framebuffer, lack of support should
+        // result in failure.
+        bool supportsMSRTTUsageActualFormat = vk::ImageHelper::FormatSupportsUsage(
+            renderer, actualImageFormat, imageType, imageTiling, mImageUsageFlags,
+            createFlagsMultisampled, nullptr,
+            vk::ImageHelper::FormatSupportCheck::RequireMultisampling);
+        bool supportsMSRTTUsageAdditionalFormat = vk::ImageHelper::FormatSupportsUsage(
+            renderer, additionalViewFormat, imageType, imageTiling, mImageUsageFlags,
+            createFlagsMultisampled, nullptr,
+            vk::ImageHelper::FormatSupportCheck::RequireMultisampling);
+
+        bool supportsMSRTTUsage =
+            supportsMSRTTUsageActualFormat && supportsMSRTTUsageAdditionalFormat;
+        if (ANGLE_UNLIKELY(mState.hasBeenBoundToMSRTTFramebuffer() && !supportsMSRTTUsage))
+        {
+            ERR() << "Texture bound to EXT_multisampled_render_to_texture framebuffer, "
+                  << "but this device does not support this format.";
+            ANGLE_VK_TRY(contextVk, VK_ERROR_FORMAT_NOT_SUPPORTED);
+        }
 
         // Note: If we ever fail the following check, we should use the emulation path for this
         // texture instead of ignoring MSRTT.
-        if (vk::ImageHelper::FormatSupportsUsage(
-                renderer, actualImageFormat, imageType, imageTiling, mImageUsageFlags,
-                createFlagsMultisampled, nullptr,
-                vk::ImageHelper::FormatSupportCheck::RequireMultisampling) &&
-            vk::ImageHelper::FormatSupportsUsage(
-                renderer, additionalViewFormat, imageType, imageTiling, mImageUsageFlags,
-                createFlagsMultisampled, nullptr,
-                vk::ImageHelper::FormatSupportCheck::RequireMultisampling))
+        if (supportsMSRTTUsage)
         {
             // If supported by format add the MSRTSS flag because any texture might end up as an
             // MSRTT attachment.
