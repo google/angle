@@ -8,9 +8,11 @@
 //
 
 #include "libANGLE/renderer/vulkan/CommandQueue.h"
+#include <algorithm>
 #include "common/system_utils.h"
 #include "libANGLE/renderer/vulkan/SyncVk.h"
 #include "libANGLE/renderer/vulkan/vk_renderer.h"
+#include "vulkan/vulkan_core.h"
 
 namespace rx
 {
@@ -1300,32 +1302,36 @@ void QueueFamily::initialize(const VkQueueFamilyProperties &queueFamilyPropertie
 }
 
 uint32_t QueueFamily::FindIndex(const std::vector<VkQueueFamilyProperties> &queueFamilyProperties,
-                                VkQueueFlags flags,
-                                int32_t matchNumber,
+                                VkQueueFlags includeFlags,
+                                VkQueueFlags optionalFlags,
+                                VkQueueFlags excludeFlags,
                                 uint32_t *matchCount)
 {
-    uint32_t index = QueueFamily::kInvalidIndex;
-    uint32_t count = 0;
+    // check with both include and optional flags
+    VkQueueFlags preferredFlags = includeFlags | optionalFlags;
+    auto findIndexPredicate     = [&preferredFlags,
+                               &excludeFlags](const VkQueueFamilyProperties &queueInfo) {
+        return (queueInfo.queueFlags & excludeFlags) == 0 &&
+               (queueInfo.queueFlags & preferredFlags) == preferredFlags;
+    };
 
-    for (uint32_t familyIndex = 0; familyIndex < queueFamilyProperties.size(); ++familyIndex)
+    auto it = std::find_if(queueFamilyProperties.begin(), queueFamilyProperties.end(),
+                           findIndexPredicate);
+    if (it == queueFamilyProperties.end())
     {
-        const auto &queueInfo = queueFamilyProperties[familyIndex];
-        if ((queueInfo.queueFlags & flags) == flags)
-        {
-            ASSERT(queueInfo.queueCount > 0);
-            count++;
-            if ((index == QueueFamily::kInvalidIndex) && (matchNumber-- == 0))
-            {
-                index = familyIndex;
-            }
-        }
+        // didn't find a match, exclude the optional flags from the list
+        preferredFlags = includeFlags;
+        it             = std::find_if(queueFamilyProperties.begin(), queueFamilyProperties.end(),
+                                      findIndexPredicate);
     }
-    if (matchCount)
+    if (it == queueFamilyProperties.end())
     {
-        *matchCount = count;
+        *matchCount = 0;
+        return QueueFamily::kInvalidIndex;
     }
 
-    return index;
+    *matchCount = 1;
+    return static_cast<uint32_t>(std::distance(queueFamilyProperties.begin(), it));
 }
 
 }  // namespace vk

@@ -30,6 +30,12 @@ constexpr vk::UseDebugLayers kUseDebugLayers = vk::UseDebugLayers::YesIfAvailabl
 #else
 constexpr vk::UseDebugLayers kUseDebugLayers = vk::UseDebugLayers::No;
 #endif
+
+#if defined(ANGLE_OPENCL_COMPUTE_ONLY_PIPE)
+constexpr bool kUseComputeOnlyQueue = true;
+#else
+constexpr bool kUseComputeOnlyQueue = false;
+#endif
 }  // namespace
 
 angle::Result CLPlatformVk::initBackendRenderer()
@@ -218,27 +224,14 @@ void CLPlatformVk::handleError(VkResult result,
 
 angle::NativeWindowSystem CLPlatformVk::getWindowSystem()
 {
-#if defined(ANGLE_ENABLE_VULKAN)
-#    if defined(ANGLE_PLATFORM_LINUX)
-#        if defined(ANGLE_USE_GBM)
-    return angle::NativeWindowSystem::Gbm;
-#        elif defined(ANGLE_USE_X11)
-    return angle::NativeWindowSystem::X11;
-#        elif defined(ANGLE_USE_WAYLAND)
-    return angle::NativeWindowSystem::Wayland;
-#        else
-    handleError(VK_ERROR_INCOMPATIBLE_DRIVER, __FILE__, __func__, __LINE__);
-    return angle::NativeWindowSystem::Other;
-#        endif
-#    elif defined(ANGLE_PLATFORM_ANDROID)
-    return angle::NativeWindowSystem::Other;
-#    else
-    handleError(VK_ERROR_INCOMPATIBLE_DRIVER, __FILE__, __func__, __LINE__);
-    return angle::NativeWindowSystem::Other;
-#    endif
-#elif
-    UNREACHABLE();
-#endif
+    if (kUseComputeOnlyQueue)
+    {
+        return angle::NativeWindowSystem::NullCompute;
+    }
+    else
+    {
+        return angle::NativeWindowSystem::Other;
+    }
 }
 
 const char *CLPlatformVk::getWSIExtension()

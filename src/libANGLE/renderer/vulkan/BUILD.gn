@@ -18,6 +18,9 @@ declare_args() {
 
   # Enable Vulkan GPU trace event capability
   angle_enable_vulkan_gpu_trace_events = false
+
+  # Enable compute only queue for OpenCL Vulkan backend
+  angle_enable_cl_compute_only_pipe = true
 }
 
 declare_args() {
@@ -121,6 +124,7 @@ template("angle_vulkan_backend_template") {
   angle_source_set(target_name) {
     sources = vulkan_backend_sources
     libs = []
+    defines = []
     deps = [
       ":angle_vk_mem_alloc_wrapper",
       "$angle_root:angle_abseil",
@@ -149,6 +153,9 @@ template("angle_vulkan_backend_template") {
         "$angle_root/third_party/spirv-tools/src/include",
         "$angle_root/third_party/clspv/src/include",
       ]
+      if (angle_enable_cl_compute_only_pipe) {
+        defines += [ "ANGLE_OPENCL_COMPUTE_ONLY_PIPE" ]
+      }
     }
 
     public_deps = [
@@ -168,8 +175,6 @@ template("angle_vulkan_backend_template") {
     }
 
     data_deps = []
-
-    defines = []
 
     if (angle_enable_vulkan_validation_layers) {
       defines += [ "ANGLE_ENABLE_VULKAN_VALIDATION_LAYERS_BY_DEFAULT" ]

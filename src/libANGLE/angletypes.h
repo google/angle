@@ -1274,6 +1274,7 @@ enum class NativeWindowSystem
     X11,
     Wayland,
     Gbm,
+    NullCompute,
     Other,
 };
 

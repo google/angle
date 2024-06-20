@@ -10,6 +10,7 @@
 #include "libANGLE/renderer/vulkan/vk_renderer.h"
 
 // Placing this first seems to solve an intellisense bug.
+#include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
 #include <EGL/eglext.h>
@@ -36,6 +37,7 @@
 #include "libANGLE/renderer/vulkan/vk_resource.h"
 #include "libANGLE/trace.h"
 #include "platform/PlatformMethods.h"
+#include "vulkan/vulkan_core.h"
 
 // Consts
 namespace
@@ -2421,19 +2423,27 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
                                              mQueueFamilyProperties.data());
 
     uint32_t queueFamilyMatchCount = 0;
-    // Try first for a protected graphics queue family
-    uint32_t firstGraphicsQueueFamily = vk::QueueFamily::FindIndex(
-        mQueueFamilyProperties,
-        (VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT | VK_QUEUE_PROTECTED_BIT), 0,
-        &queueFamilyMatchCount);
-    // else just a graphics queue family
+
+    VkQueueFlags queueFamilyBits = VK_QUEUE_FLAG_BITS_MAX_ENUM;
+    uint32_t firstQueueFamily    = QueueFamily::kInvalidIndex;
+    if (nativeWindowSystem == angle::NativeWindowSystem::NullCompute)
+    {
+        queueFamilyBits = VK_QUEUE_COMPUTE_BIT;
+        firstQueueFamily =
+            QueueFamily::FindIndex(mQueueFamilyProperties, queueFamilyBits, VK_QUEUE_PROTECTED_BIT,
+                                   VK_QUEUE_GRAPHICS_BIT, &queueFamilyMatchCount);
+    }
     if (queueFamilyMatchCount == 0)
     {
-        firstGraphicsQueueFamily = vk::QueueFamily::FindIndex(
-            mQueueFamilyProperties, (VK_QUEUE_GRAPHICS_BIT | VK_QUEUE_COMPUTE_BIT), 0,
-            &queueFamilyMatchCount);
+        queueFamilyBits = VK_QUEUE_COMPUTE_BIT | VK_QUEUE_GRAPHICS_BIT;
+        firstQueueFamily =
+            QueueFamily::FindIndex(mQueueFamilyProperties, queueFamilyBits, VK_QUEUE_PROTECTED_BIT,
+                                   0, &queueFamilyMatchCount);
     }
-    ANGLE_VK_CHECK(context, queueFamilyMatchCount > 0, VK_ERROR_INITIALIZATION_FAILED);
+
+    ANGLE_VK_CHECK(context,
+                   queueFamilyMatchCount > 0 && firstQueueFamily != QueueFamily::kInvalidIndex,
+                   VK_ERROR_INITIALIZATION_FAILED);
 
     // Store the physical device memory properties so we can find the right memory pools.
     mMemoryProperties.init(mPhysicalDevice);
@@ -2457,7 +2467,7 @@ angle::Result Renderer::initialize(vk::ErrorContext *context,
     // for the best.  We cannot wait for a window surface to know which supports present because of
     // EGL_KHR_surfaceless_context or simply pbuffers.  So far, only MoltenVk seems to expose
     // multiple queue families, and using the first queue family is fine with it.
-    ANGLE_TRY(createDeviceAndQueue(context, firstGraphicsQueueFamily));
+    ANGLE_TRY(createDeviceAndQueue(context, firstQueueFamily));
 
     // Initialize the format table.
     mFormatTable.initialize(this, &mNativeTextureCaps);

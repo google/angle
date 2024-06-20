@@ -20,6 +20,7 @@
 #include "common/vulkan/vk_headers.h"
 #include "libANGLE/renderer/vulkan/PersistentCommandPool.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
+#include "vulkan/vulkan_core.h"
 
 namespace rx
 {
@@ -129,8 +130,9 @@ class QueueFamily final : angle::NonCopyable
     static const uint32_t kInvalidIndex = std::numeric_limits<uint32_t>::max();
 
     static uint32_t FindIndex(const std::vector<VkQueueFamilyProperties> &queueFamilyProperties,
-                              VkQueueFlags flags,
-                              int32_t matchNumber,  // 0 = first match, 1 = second match ...
+                              VkQueueFlags includeFlags,
+                              VkQueueFlags optionalFlags,
+                              VkQueueFlags excludeFlags,
                               uint32_t *matchCount);
     static const uint32_t kQueueCount = static_cast<uint32_t>(egl::ContextPriority::EnumCount);
     static const float kQueuePriorities[static_cast<uint32_t>(egl::ContextPriority::EnumCount)];
