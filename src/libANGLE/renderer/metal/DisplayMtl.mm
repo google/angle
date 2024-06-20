@@ -1422,18 +1422,19 @@ bool DisplayMtl::supportsMetal2_2() const
 
 bool DisplayMtl::supports32BitFloatFiltering() const
 {
-#if (defined(__MAC_11_0) && __MAC_OS_X_VERSION_MIN_REQUIRED >= __MAC_11_0) ||        \
-    (defined(__IPHONE_14_0) && __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_14_0) || \
-    (defined(__TVOS_14_0) && __TV_OS_VERSION_MIN_REQUIRED >= __TVOS_14_0)
-    if (@available(ios 14.0, macOS 11.0, *))
+#if ((TARGET_OS_OSX && __MAC_OS_X_VERSION_MAX_ALLOWED >= 110000) ||  \
+     (TARGET_OS_IOS && __IPHONE_OS_VERSION_MAX_ALLOWED >= 140000) || \
+     (TARGET_OS_TV && __TV_OS_VERSION_MAX_ALLOWED >= 160000) || TARGET_OS_VISION)
+    if (@available(macOS 11.0, macCatalyst 14.0, iOS 14.0, tvOS 16.0, *))
     {
         return [mMetalDevice supports32BitFloatFiltering];
     }
-    else
 #endif
-    {
-        return supportsMacGPUFamily(1);
-    }
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+    return true;  // Always true on old macOS
+#else
+    return false;  // Always false everywhere else
+#endif
 }
 
 bool DisplayMtl::supportsDepth24Stencil8PixelFormat() const
