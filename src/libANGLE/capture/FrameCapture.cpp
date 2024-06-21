@@ -4412,6 +4412,52 @@ void CaptureShareGroupMidExecutionSetup(
         ResourceCalls &textureRestoreCalls = trackedTextures.getResourceRestoreCalls();
         CallVector texSetupCalls({setupCalls, &textureRestoreCalls[id.value]});
 
+        // For each texture, set the correct active texture and binding
+        // There is similar code in CaptureMidExecutionSetup for per-context setup
+        const gl::TextureBindingMap &currentBoundTextures = apiState.getBoundTexturesForCapture();
+        const gl::TextureBindingVector &currentBindings = currentBoundTextures[texture->getType()];
+        const gl::TextureBindingVector &replayBindings =
+            replayState.getBoundTexturesForCapture()[texture->getType()];
+        ASSERT(currentBindings.size() == replayBindings.size());
+
+        // Look up the replay binding
+        size_t replayActiveTexture = replayState.getActiveSampler();
+        // If there ends up being no binding, just use the replay binding
+        // TODO: We may want to start using index 0 for everything, mark it dirty, and restore it
+        size_t currentActiveTexture = replayActiveTexture;
+
+        // Iterate through current bindings and find the correct index for this texture ID
+        for (size_t bindingIndex = 0; bindingIndex < currentBindings.size(); ++bindingIndex)
+        {
+            gl::TextureID currentTextureID = currentBindings[bindingIndex].id();
+            gl::TextureID replayTextureID  = replayBindings[bindingIndex].id();
+
+            // Only check the texture we care about
+            if (currentTextureID == texture->id())
+            {
+                // If the binding doesn't match, track it
+                if (currentTextureID != replayTextureID)
+                {
+                    currentActiveTexture = bindingIndex;
+                }
+
+                break;
+            }
+        }
+
+        // Set the correct active texture before performing any state changes, including binding
+        if (currentActiveTexture != replayActiveTexture)
+        {
+            for (std::vector<CallCapture> *calls : texSetupCalls)
+            {
+                Capture(calls, CaptureActiveTexture(
+                                   replayState, true,
+                                   GL_TEXTURE0 + static_cast<GLenum>(currentActiveTexture)));
+            }
+            replayState.getMutablePrivateStateForCapture()->setActiveSampler(
+                static_cast<unsigned int>(currentActiveTexture));
+        }
+
         for (std::vector<CallCapture> *calls : texSetupCalls)
         {
             Capture(calls, CaptureBindTexture(replayState, true, texture->getType(), id));
