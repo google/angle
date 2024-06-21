@@ -58,6 +58,12 @@ constexpr bool kEnableCRCForPipelineCache = true;
 #else
 constexpr bool kEnableCRCForPipelineCache = false;
 #endif
+
+#if defined(ANGLE_ENABLE_VULKAN_API_DUMP_LAYER)
+constexpr bool kEnableVulkanAPIDumpLayer = true;
+#else
+constexpr bool kEnableVulkanAPIDumpLayer = false;
+#endif
 }  // anonymous namespace
 
 namespace rx
@@ -1778,7 +1784,7 @@ angle::Result Renderer::initialize(vk::Context *context,
                                    angle::vk::ICD desiredICD,
                                    uint32_t preferredVendorId,
                                    uint32_t preferredDeviceId,
-                                   UseValidationLayers useValidationLayers,
+                                   UseDebugLayers useDebugLayers,
                                    const char *wsiExtension,
                                    const char *wsiLayer,
                                    angle::NativeWindowSystem nativeWindowSystem,
@@ -1810,9 +1816,19 @@ angle::Result Renderer::initialize(vk::Context *context,
 
     mGlobalOps = globalOps;
 
-    angle::vk::ScopedVkLoaderEnvironment scopedEnvironment(
-        useValidationLayers != UseValidationLayers::No, desiredICD);
-    mEnableValidationLayers = scopedEnvironment.canEnableValidationLayers();
+    // While the validation layer is loaded by default whenever present, apidump layer
+    // activation is controlled by an environment variable/android property allowing
+    // the two layers to be controlled independently.
+    bool enableApiDumpLayer =
+        kEnableVulkanAPIDumpLayer && angle::GetEnvironmentVarOrAndroidProperty(
+                                         "ANGLE_ENABLE_VULKAN_API_DUMP_LAYER",
+                                         "debug.angle.enable_vulkan_api_dump_layer") == "1";
+
+    bool loadLayers = (useDebugLayers != UseDebugLayers::No) || enableApiDumpLayer;
+    angle::vk::ScopedVkLoaderEnvironment scopedEnvironment(loadLayers, desiredICD);
+    bool debugLayersLoaded  = scopedEnvironment.canEnableDebugLayers();
+    mEnableValidationLayers = debugLayersLoaded;
+    enableApiDumpLayer      = enableApiDumpLayer && debugLayersLoaded;
     mEnabledICD             = scopedEnvironment.getEnabledICD();
 
     // Gather global layer properties.
@@ -1833,12 +1849,15 @@ angle::Result Renderer::initialize(vk::Context *context,
     }
 
     VulkanLayerVector enabledInstanceLayerNames;
-#if defined(ANGLE_ENABLE_VULKAN_API_DUMP_LAYER)
-    enabledInstanceLayerNames.push_back("VK_LAYER_LUNARG_api_dump");
-#endif
+
+    if (enableApiDumpLayer)
+    {
+        enabledInstanceLayerNames.push_back("VK_LAYER_LUNARG_api_dump");
+    }
+
     if (mEnableValidationLayers)
     {
-        const bool layersRequested = useValidationLayers == UseValidationLayers::Yes;
+        const bool layersRequested = useDebugLayers == UseDebugLayers::Yes;
         mEnableValidationLayers = GetAvailableValidationLayers(instanceLayerProps, layersRequested,
                                                                &enabledInstanceLayerNames);
     }

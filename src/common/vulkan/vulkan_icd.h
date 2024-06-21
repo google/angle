@@ -36,16 +36,16 @@ struct SimpleDisplayWindow
 class [[nodiscard]] ScopedVkLoaderEnvironment : angle::NonCopyable
 {
   public:
-    ScopedVkLoaderEnvironment(bool enableValidationLayers, vk::ICD icd);
+    ScopedVkLoaderEnvironment(bool enableDebugLayers, vk::ICD icd);
     ~ScopedVkLoaderEnvironment();
 
-    bool canEnableValidationLayers() const { return mEnableValidationLayers; }
+    bool canEnableDebugLayers() const { return mEnableDebugLayers; }
     vk::ICD getEnabledICD() const { return mICD; }
 
   private:
     bool setICDEnvironment(const char *icd);
 
-    bool mEnableValidationLayers;
+    bool mEnableDebugLayers;
     vk::ICD mICD;
     bool mChangedCWD;
     Optional<std::string> mPreviousCWD;

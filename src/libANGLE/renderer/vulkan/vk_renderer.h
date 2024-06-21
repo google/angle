@@ -136,7 +136,7 @@ class OneOffCommandPool : angle::NonCopyable
     std::deque<PendingOneOffCommands> mPendingCommands;
 };
 
-enum class UseValidationLayers
+enum class UseDebugLayers
 {
     Yes,
     YesIfAvailable,
@@ -160,7 +160,7 @@ class Renderer : angle::NonCopyable
                              angle::vk::ICD desiredICD,
                              uint32_t preferredVendorId,
                              uint32_t preferredDeviceId,
-                             UseValidationLayers useValidationLayers,
+                             UseDebugLayers useDebugLayers,
                              const char *wsiExtension,
                              const char *wsiLayer,
                              angle::NativeWindowSystem nativeWindowSystem,
