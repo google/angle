@@ -1492,10 +1492,15 @@ angle::Result TextureGL::clearImage(const gl::Context *context,
                                     GLenum type,
                                     const uint8_t *data)
 {
-    ContextGL *contextGL         = GetImplAs<ContextGL>(context);
-    const FunctionsGL *functions = GetFunctionsGL(context);
+    ContextGL *contextGL              = GetImplAs<ContextGL>(context);
+    const FunctionsGL *functions      = GetFunctionsGL(context);
+    const angle::FeaturesGL &features = GetFeaturesGL(context);
 
-    ANGLE_GL_TRY(context, functions->clearTexImage(mTextureID, level, format, type, data));
+    nativegl::TexSubImageFormat texSubImageFormat =
+        nativegl::GetTexSubImageFormat(functions, features, format, type);
+
+    ANGLE_GL_TRY(context, functions->clearTexImage(mTextureID, level, texSubImageFormat.format,
+                                                   texSubImageFormat.type, data));
 
     contextGL->markWorkSubmitted();
     return angle::Result::Continue;
@@ -1508,12 +1513,15 @@ angle::Result TextureGL::clearSubImage(const gl::Context *context,
                                        GLenum type,
                                        const uint8_t *data)
 {
-    ContextGL *contextGL         = GetImplAs<ContextGL>(context);
-    const FunctionsGL *functions = GetFunctionsGL(context);
+    ContextGL *contextGL              = GetImplAs<ContextGL>(context);
+    const FunctionsGL *functions      = GetFunctionsGL(context);
+    const angle::FeaturesGL &features = GetFeaturesGL(context);
 
-    ANGLE_GL_TRY(context,
-                 functions->clearTexSubImage(mTextureID, level, area.x, area.y, area.z, area.width,
-                                             area.height, area.depth, format, type, data));
+    nativegl::TexSubImageFormat texSubImageFormat =
+        nativegl::GetTexSubImageFormat(functions, features, format, type);
+    ANGLE_GL_TRY(context, functions->clearTexSubImage(
+                              mTextureID, level, area.x, area.y, area.z, area.width, area.height,
+                              area.depth, texSubImageFormat.format, texSubImageFormat.type, data));
 
     contextGL->markWorkSubmitted();
     return angle::Result::Continue;

@@ -3589,6 +3589,38 @@ TEST_P(ClearTextureEXTTest, Clear2D)
     EXPECT_PIXEL_COLOR_EQ(12, 12, GLColor::yellow);
 }
 
+// Test that luminance alpha textures are cleared correctly with GL_EXT_clear_texture. Regression
+// test for emulated luma formats.
+TEST_P(ClearTextureEXTTest, Luma)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_clear_texture"));
+
+    // Create a 16x16 texture with no data.
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+
+    // Clear the entire texture to transparent black and test
+    GLubyte luminmanceClearValue = 192;
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, 16, 16, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE,
+                 nullptr);
+    glClearTexImageEXT(tex, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, &luminmanceClearValue);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(
+        0, 0, GLColor(luminmanceClearValue, luminmanceClearValue, luminmanceClearValue, 255));
+
+    GLubyte lumaClearValue[2] = {128, 64};
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE_ALPHA, 16, 16, 0, GL_LUMINANCE_ALPHA,
+                 GL_UNSIGNED_BYTE, nullptr);
+    glClearTexImageEXT(tex, 0, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, &lumaClearValue);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(
+        0, 0, GLColor(lumaClearValue[0], lumaClearValue[0], lumaClearValue[0], lumaClearValue[1]));
+}
+
 // Test that interleaving glClearTexImageEXT and glTexSubImage2D calls produces the correct texture
 // data
 TEST_P(ClearTextureEXTTest, InterleavedUploads)
