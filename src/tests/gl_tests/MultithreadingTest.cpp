@@ -3448,8 +3448,8 @@ void main()
 
         for (uint32_t x = 0; x < 8; ++x)
         {
-            // The compressed data is gibberish, just ensure it's not black.
-            EXPECT_PIXEL_COLOR_NEAR(x * w / 8, h / 4, GLColor(128, 128, 128, 128), 127);
+            // The compressed data is gibberish, just ensure it's not all black.
+            EXPECT_PIXEL_NE(x * w / 8, h / 4, 0, 0, 0, 0);
         }
         ASSERT_GL_NO_ERROR();
     };
