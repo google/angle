@@ -52,12 +52,12 @@ TEST_F(WGSLOutputTest, BasicTranslation)
             mat3 aMatrix;
         };
 
-        void doFoo(Foo foo, float zw);
+        vec4 doFoo(Foo foo, float zw);
 
-        void doFoo(Foo foo, float zw)
+        vec4 doFoo(Foo foo, float zw)
         {
-            foo.x = foo.y;
-            outColor = vec4(foo.x, foo.y, zw, zw);
+            // foo.x = foo.y;
+            return vec4(foo.x, foo.y, zw, zw);
         }
 
         Foo returnFoo(Foo foo) {
@@ -68,12 +68,18 @@ TEST_F(WGSLOutputTest, BasicTranslation)
           return x;
         }
 
+        float takeArgs(vec2 x, float y) {
+          return y;
+        }
+
         void main()
         {
             Foo foo;
-            foo.x = 2.0;
-            foo.y = 2.0;
+            // foo.x = 2.0;
+            // foo.y = 2.0;
             doFoo(returnFoo(foo), returnFloat(3.0));
+            takeArgs(vec2(1.0, 2.0), foo.x);
+            returnFloat(doFoo(foo, 7.0 + 9.0).x);
         })";
     const std::string &outputString =
         R"(
@@ -87,11 +93,10 @@ struct _uFoo
   _uaMatrix : mat3x3<f32>,
 };
 
-fn _udoFoo(_ufoo : _uFoo, _uzw : f32);
+fn _udoFoo(_ufoo : _uFoo, _uzw : f32) -> vec4<f32>;
 
-fn _udoFoo(_ufoo : _uFoo, _uzw : f32)
+fn _udoFoo(_ufoo : _uFoo, _uzw : f32) -> vec4<f32>
 {
-  ;
   ;
 }
 
@@ -105,12 +110,17 @@ fn _ureturnFloat(_ux : f32) -> f32
   ;
 }
 
+fn _utakeArgs(_ux : vec2<f32>, _uy : f32) -> f32
+{
+  ;
+}
+
 fn _umain()
 {
   _ufoo : _uFoo;
-  ;
-  ;
-  ;
+  _udoFoo(_ureturnFoo(_ufoo), _ureturnFloat(3.0f));
+  _utakeArgs(vec2<f32>(1.0f, 2.0f), (_ufoo)._ux);
+  _ureturnFloat((_udoFoo(_ufoo, 16.0f)).x);
 }
 )";
     compile(shaderString);

@@ -9,6 +9,7 @@
 #include "GLSLANG/ShaderLang.h"
 #include "common/log_utils.h"
 #include "compiler/translator/BaseTypes.h"
+#include "compiler/translator/Common.h"
 #include "compiler/translator/Diagnostics.h"
 #include "compiler/translator/ImmutableString.h"
 #include "compiler/translator/InfoSink.h"
@@ -127,6 +128,12 @@ class OutputWGSLTraverser : public TIntermTraverser
     void emitNameOf(SymbolType symbolType, const ImmutableString &name);
     void emitBareTypeName(const TType &type);
     void emitType(const TType &type);
+    void emitSingleConstant(const TConstantUnion *const constUnion);
+    const TConstantUnion *emitConstantUnionArray(const TConstantUnion *const constUnion,
+                                                 const size_t size);
+    const TConstantUnion *emitConstantUnion(const TType &type,
+                                            const TConstantUnion *constUnionBegin);
+    const TField &getDirectField(const TIntermTyped &fieldsNode, TIntermTyped &indexNode);
     void emitIndentation();
     void emitOpenBrace();
     void emitCloseBrace();
@@ -253,20 +260,189 @@ void OutputWGSLTraverser::visitSymbol(TIntermSymbol *symbolNode)
     }
 }
 
+void OutputWGSLTraverser::emitSingleConstant(const TConstantUnion *const constUnion)
+{
+    switch (constUnion->getType())
+    {
+        case TBasicType::EbtBool:
+        {
+            mSink << (constUnion->getBConst() ? "true" : "false");
+        }
+        break;
+
+        case TBasicType::EbtFloat:
+        {
+            float value = constUnion->getFConst();
+            if (std::isnan(value))
+            {
+                UNIMPLEMENTED();
+                // TODO(anglebug.com/42267100): this is not a valid constant in WGPU.
+                // You can't even do something like bitcast<f32>(0xffffffffu).
+                // The WGSL compiler still complains. I think this is because
+                // WGSL supports implementations compiling with -ffastmath and
+                // therefore nans and infinities are assumed to not exist.
+                // See also https://github.com/gpuweb/gpuweb/issues/3749.
+                mSink << "NAN_INVALID";
+            }
+            else if (std::isinf(value))
+            {
+                UNIMPLEMENTED();
+                // see above.
+                mSink << "INFINITY_INVALID";
+            }
+            else
+            {
+                mSink << value << "f";
+            }
+        }
+        break;
+
+        case TBasicType::EbtInt:
+        {
+            mSink << constUnion->getIConst() << "i";
+        }
+        break;
+
+        case TBasicType::EbtUInt:
+        {
+            mSink << constUnion->getUConst() << "u";
+        }
+        break;
+
+        default:
+        {
+            UNIMPLEMENTED();
+        }
+    }
+}
+
+const TConstantUnion *OutputWGSLTraverser::emitConstantUnionArray(
+    const TConstantUnion *const constUnion,
+    const size_t size)
+{
+    const TConstantUnion *constUnionIterated = constUnion;
+    for (size_t i = 0; i < size; i++, constUnionIterated++)
+    {
+        emitSingleConstant(constUnionIterated);
+
+        if (i != size - 1)
+        {
+            mSink << ", ";
+        }
+    }
+    return constUnionIterated;
+}
+
+const TConstantUnion *OutputWGSLTraverser::emitConstantUnion(const TType &type,
+                                                             const TConstantUnion *constUnionBegin)
+{
+    const TConstantUnion *constUnionCurr = constUnionBegin;
+    const TStructure *structure          = type.getStruct();
+    if (structure)
+    {
+        emitType(type);
+        // Structs are constructed with parentheses in WGSL.
+        mSink << "(";
+        // Emit the constructor parameters. Both GLSL and WGSL require there to be the same number
+        // of parameters as struct fields.
+        const TFieldList &fields = structure->fields();
+        for (size_t i = 0; i < fields.size(); ++i)
+        {
+            const TType *fieldType = fields[i]->type();
+            constUnionCurr         = emitConstantUnion(*fieldType, constUnionCurr);
+            if (i != fields.size() - 1)
+            {
+                mSink << ", ";
+            }
+        }
+        mSink << ")";
+    }
+    else
+    {
+        size_t size = type.getObjectSize();
+        // If the type's size is more than 1, the type needs to be written with parantheses. This
+        // applies for vectors, matrices, and arrays.
+        bool writeType = size > 1;
+        if (writeType)
+        {
+            emitType(type);
+            mSink << "(";
+        }
+        constUnionCurr = emitConstantUnionArray(constUnionCurr, size);
+        if (writeType)
+        {
+            mSink << ")";
+        }
+    }
+    return constUnionCurr;
+}
+
 void OutputWGSLTraverser::visitConstantUnion(TIntermConstantUnion *constValueNode)
 {
-    // TODO(anglebug.com/42267100): support emitting constants..
+    emitConstantUnion(constValueNode->getType(), constValueNode->getConstantValue());
 }
 
 bool OutputWGSLTraverser::visitSwizzle(Visit, TIntermSwizzle *swizzleNode)
 {
-    // TODO(anglebug.com/42267100): support swizzle statements.
+    groupedTraverse(*swizzleNode->getOperand());
+    mSink << ".";
+    swizzleNode->writeOffsetsAsXYZW(&mSink);
+
     return false;
+}
+
+const TField &OutputWGSLTraverser::getDirectField(const TIntermTyped &fieldsNode,
+                                                  TIntermTyped &indexNode)
+{
+    const TType &fieldsType = fieldsNode.getType();
+
+    const TFieldListCollection *fieldListCollection = fieldsType.getStruct();
+    if (fieldListCollection == nullptr)
+    {
+        fieldListCollection = fieldsType.getInterfaceBlock();
+    }
+    ASSERT(fieldListCollection);
+
+    const TIntermConstantUnion *indexNodeAsConstantUnion = indexNode.getAsConstantUnion();
+    ASSERT(indexNodeAsConstantUnion);
+    const TConstantUnion &index = *indexNodeAsConstantUnion->getConstantValue();
+
+    ASSERT(index.getType() == TBasicType::EbtInt);
+
+    const TFieldList &fieldList = fieldListCollection->fields();
+    const int indexVal          = index.getIConst();
+    const TField &field         = *fieldList[indexVal];
+
+    return field;
 }
 
 bool OutputWGSLTraverser::visitBinary(Visit, TIntermBinary *binaryNode)
 {
-    // TODO(anglebug.com/42267100): support binary statements.
+    const TOperator op      = binaryNode->getOp();
+    TIntermTyped &leftNode  = *binaryNode->getLeft();
+    TIntermTyped &rightNode = *binaryNode->getRight();
+
+    switch (op)
+    {
+        case TOperator::EOpIndexDirectStruct:
+        case TOperator::EOpIndexDirectInterfaceBlock:
+            groupedTraverse(leftNode);
+            mSink << ".";
+            emitNameOf(getDirectField(leftNode, rightNode));
+            break;
+
+        case TOperator::EOpIndexDirect:
+        case TOperator::EOpIndexIndirect:
+            UNREACHABLE();
+            // TODO(anglebug.com/42267100): implement array access.
+            break;
+
+        default:
+            // TODO(anglebug.com/42267100): implement other binary operators (symbolic operators and
+            // builtins).
+            break;
+    }
+
     return false;
 }
 
@@ -278,7 +454,19 @@ bool OutputWGSLTraverser::visitUnary(Visit, TIntermUnary *unaryNode)
 
 bool OutputWGSLTraverser::visitTernary(Visit, TIntermTernary *conditionalNode)
 {
-    // TODO(anglebug.com/42267100): support ternaries.
+    // WGSL does not have a ternary. https://github.com/gpuweb/gpuweb/issues/3747
+    // The select() builtin is not short circuiting. Maybe we can get if () {} else {} as an
+    // expression, which would also solve the comma operator problem.
+    // TODO(anglebug.com/42267100): as mentioned above this is not correct if the operands have side
+    // effects. Even if they don't have side effects it could have performance implications.
+    mSink << "select(";
+    groupedTraverse(*conditionalNode->getTrueExpression());
+    mSink << ", ";
+    groupedTraverse(*conditionalNode->getFalseExpression());
+    mSink << ", ";
+    groupedTraverse(*conditionalNode->getCondition());
+    mSink << ")";
+
     return false;
 }
 
@@ -373,8 +561,55 @@ bool OutputWGSLTraverser::visitFunctionDefinition(Visit, TIntermFunctionDefiniti
 
 bool OutputWGSLTraverser::visitAggregate(Visit, TIntermAggregate *aggregateNode)
 {
-    // TODO(anglebug.com/42267100): support aggregate statements.
-    return false;
+    const TIntermSequence &args = *aggregateNode->getSequence();
+
+    auto emitArgList = [&]() {
+        mSink << "(";
+
+        bool emitComma = false;
+        for (TIntermNode *arg : args)
+        {
+            if (emitComma)
+            {
+                mSink << ", ";
+            }
+            emitComma = true;
+            arg->traverse(this);
+        }
+
+        mSink << ")";
+    };
+
+    const TType &retType = aggregateNode->getType();
+
+    if (aggregateNode->isConstructor())
+    {
+
+        emitType(retType);
+        emitArgList();
+
+        return false;
+    }
+    else
+    {
+        const TOperator op = aggregateNode->getOp();
+        switch (op)
+        {
+            case TOperator::EOpCallFunctionInAST:
+                emitNameOf(*aggregateNode->getFunction());
+                emitArgList();
+                return false;
+
+            default:
+                // Do not allow raw function calls, i.e. calls to functions
+                // not present in the AST.
+                ASSERT(op != TOperator::EOpCallInternalRawFunction);
+
+                // TODO(anglebug.com/42267100): support operators/builtins with 3+ args.
+                UNREACHABLE();
+                return false;
+        }
+    }
 }
 
 bool OutputWGSLTraverser::visitBlock(Visit, TIntermBlock *blockNode)
@@ -454,10 +689,7 @@ void OutputWGSLTraverser::emitStructDeclaration(const TType &type)
         // TODO(anglebug.com/42267100): emit qualifiers.
         EmitVariableDeclarationConfig evdConfig;
         evdConfig.disableStructSpecifier = true;
-        emitVariableDeclaration({.symbolType = field->symbolType(),
-                                 .symbolName = field->name(),
-                                 .type       = *field->type()},
-                                evdConfig);
+        emitVariableDeclaration({field->symbolType(), field->name(), *field->type()}, evdConfig);
         mSink << ",\n";
     }
 
@@ -692,15 +924,14 @@ bool TranslatorWGSL::translate(TIntermBlock *root,
                                const ShCompileOptions &compileOptions,
                                PerformanceDiagnostics *perfDiagnostics)
 {
-
     if (kOutputTreeBeforeTranslation)
     {
         OutputTree(root, getInfoSink().info);
         std::cout << getInfoSink().info.c_str();
     }
 
-    // TODO(anglebug.com/8662): until the translator is ready to translate most basic shaders, emit
-    // the code commented out.
+    // TODO(anglebug.com/42267100): until the translator is ready to translate most basic shaders,
+    // emit the code commented out.
     TInfoSinkBase &sink = getInfoSink().obj;
     sink << "/*\n";
     OutputWGSLTraverser traverser(this);
@@ -711,7 +942,7 @@ bool TranslatorWGSL::translate(TIntermBlock *root,
     {
         std::cout << getInfoSink().obj.str();
     }
-    // TODO(anglebug.com/8662): delete this.
+    // TODO(anglebug.com/42267100): delete this.
     if (getShaderType() == GL_VERTEX_SHADER)
     {
         constexpr const char *kVertexShader = R"(@vertex
