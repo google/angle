@@ -1065,6 +1065,10 @@ void GenerateCaps(const FunctionsGL *functions,
             QuerySingleGLInt64(functions, GL_MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS);
         caps->maxCombinedShaderUniformComponents[gl::ShaderType::Fragment] =
             QuerySingleGLInt64(functions, GL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS);
+
+        // Clamp the maxUniformBlockSize to 64KB (majority of devices support up to this size
+        // currently), some drivers expose an excessively large value.
+        caps->maxUniformBlockSize = std::min<GLint64>(0x10000, caps->maxUniformBlockSize);
     }
     else
     {
