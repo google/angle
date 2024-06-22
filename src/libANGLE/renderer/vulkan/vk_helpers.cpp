@@ -1121,6 +1121,36 @@ ImageLayerWriteMask GetImageLayerWriteMask(uint32_t layerStart, uint32_t layerCo
     layerMask = (layerMask << rotateShift) | (layerMask >> (kMaxParallelLayerWrites - rotateShift));
     return layerMask;
 }
+
+// Obtain VkClearColorValue from input byte data and actual format.
+void GetVkClearColorValueFromBytes(uint8_t *actualData,
+                                   const angle::Format &actualFormat,
+                                   VkClearValue *clearValueOut)
+{
+    ASSERT(actualData != nullptr && !actualFormat.hasDepthOrStencilBits());
+
+    *clearValueOut               = {};
+    VkClearColorValue colorValue = {{}};
+    actualFormat.pixelReadFunction(actualData, reinterpret_cast<uint8_t *>(&colorValue));
+    clearValueOut->color = colorValue;
+}
+
+// Obtain VkClearDepthStencilValue from input byte data and intended format.
+void GetVkClearDepthStencilValueFromBytes(uint8_t *intendedData,
+                                          const angle::Format &intendedFormat,
+                                          VkClearValue *clearValueOut)
+{
+    ASSERT(intendedData != nullptr && intendedFormat.hasDepthOrStencilBits());
+
+    *clearValueOut     = {};
+    uint32_t dsData[4] = {0};
+    double depthValue  = 0;
+
+    intendedFormat.pixelReadFunction(intendedData, reinterpret_cast<uint8_t *>(dsData));
+    memcpy(&depthValue, &dsData[0], sizeof(double));
+    clearValueOut->depthStencil.depth   = static_cast<float>(depthValue);
+    clearValueOut->depthStencil.stencil = dsData[2];
+}
 }  // anonymous namespace
 
 // This is an arbitrary max. We can change this later if necessary.
@@ -8846,6 +8876,77 @@ void ImageHelper::restoreSubresourceContentImpl(gl::LevelIndex level,
     *contentDefinedMask |= layerRangeBits;
 }
 
+angle::Result ImageHelper::stagePartialClear(ContextVk *contextVk,
+                                             const gl::Box &clearArea,
+                                             gl::TextureType textureType,
+                                             uint32_t levelIndex,
+                                             uint32_t layerIndex,
+                                             uint32_t layerCount,
+                                             GLenum type,
+                                             const gl::InternalFormat &formatInfo,
+                                             const Format &vkFormat,
+                                             ImageAccess access,
+                                             const uint8_t *data)
+{
+    // If the input data pointer is null, the texture is filled with zeros.
+    const angle::Format &intendedFormat = vkFormat.getIntendedFormat();
+    const angle::Format &actualFormat   = vkFormat.getActualImageFormat(access);
+    auto intendedPixelSize              = static_cast<uint32_t>(intendedFormat.pixelBytes);
+    auto actualPixelSize                = static_cast<uint32_t>(actualFormat.pixelBytes);
+
+    uint8_t intendedData[16] = {0};
+    if (data != nullptr)
+    {
+        memcpy(intendedData, data, intendedPixelSize);
+    }
+
+    // The appropriate loading function is used to take the original value as a single pixel and
+    // convert it into the format actually used for this image.
+    std::vector<uint8_t> actualData(actualPixelSize, 0);
+    LoadImageFunctionInfo loadFunctionInfo = vkFormat.getTextureLoadFunction(access, type);
+
+    bool stencilOnly = formatInfo.sizedInternalFormat == GL_STENCIL_INDEX8;
+    if (stencilOnly)
+    {
+        // Some Vulkan implementations do not support S8_UINT, so stencil-only data is
+        // uploaded using one of combined depth-stencil formats there. Since the uploaded
+        // stencil data must be tightly packed, the actual storage format should be ignored
+        // with regards to its load function and output row pitch.
+        loadFunctionInfo.loadFunction = angle::LoadToNative<GLubyte, 1>;
+    }
+
+    loadFunctionInfo.loadFunction(contextVk->getImageLoadContext(), 1, 1, 1, intendedData, 1, 1,
+                                  actualData.data(), 1, 1);
+
+    // VkClearValue is used for renderable images.
+    VkClearValue clearValue = {};
+    if (formatInfo.isDepthOrStencil())
+    {
+        GetVkClearDepthStencilValueFromBytes(intendedData, intendedFormat, &clearValue);
+    }
+    else
+    {
+        GetVkClearColorValueFromBytes(actualData.data(), actualFormat, &clearValue);
+    }
+
+    // Stage a ClearPartial update.
+    VkImageAspectFlags aspectFlags = 0;
+    if (!formatInfo.isDepthOrStencil())
+    {
+        aspectFlags |= VK_IMAGE_ASPECT_COLOR_BIT;
+    }
+    else
+    {
+        aspectFlags |= formatInfo.depthBits > 0 ? VK_IMAGE_ASPECT_DEPTH_BIT : 0;
+        aspectFlags |= formatInfo.stencilBits > 0 ? VK_IMAGE_ASPECT_STENCIL_BIT : 0;
+    }
+
+    appendSubresourceUpdate(gl::LevelIndex(levelIndex),
+                            SubresourceUpdate(aspectFlags, clearValue, textureType, levelIndex,
+                                              layerIndex, layerCount, clearArea));
+    return angle::Result::Continue;
+}
+
 angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
                                                   const gl::ImageIndex &index,
                                                   const gl::Extents &glExtents,
@@ -9552,6 +9653,7 @@ angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
         for (SubresourceUpdate &update : *levelUpdates)
         {
             ASSERT(IsClearOfAllChannels(update.updateSource) ||
+                   (update.updateSource == UpdateSource::ClearPartial) ||
                    (update.updateSource == UpdateSource::Buffer &&
                     update.data.buffer.bufferHelper != nullptr) ||
                    (update.updateSource == UpdateSource::Image &&
@@ -9586,6 +9688,11 @@ angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
                 case UpdateSource::ClearAfterInvalidate:
                 {
                     update.data.clear.levelIndex = updateMipLevelVk.get();
+                    break;
+                }
+                case UpdateSource::ClearPartial:
+                {
+                    update.data.clearPartial.levelIndex = updateMipLevelVk.get();
                     break;
                 }
                 case UpdateSource::Buffer:
@@ -9665,6 +9772,44 @@ angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
                     // setContentDefined directly.
                     setContentDefined(updateMipLevelVk, 1, updateBaseLayer, updateLayerCount,
                                       update.data.clear.aspectFlags);
+                    break;
+                }
+                case UpdateSource::ClearPartial:
+                {
+                    ClearPartialUpdate &clearPartialUpdate = update.data.clearPartial;
+                    gl::Box clearArea =
+                        gl::Box(clearPartialUpdate.offset, clearPartialUpdate.extent);
+
+                    // clearTexture() uses LOAD_OP_CLEAR in a render pass to clear the texture. If
+                    // the texture has the depth dimension or multiple layers, the clear will be
+                    // performed layer by layer. In case of the former, the z-dimension will be used
+                    // as the layer index.
+                    UtilsVk::ClearTextureParameters params = {};
+                    params.aspectFlags                     = clearPartialUpdate.aspectFlags;
+                    params.level                           = updateMipLevelVk;
+                    params.clearArea                       = clearArea;
+                    params.clearValue                      = clearPartialUpdate.clearValue;
+
+                    bool shouldUseDepthAsLayer =
+                        clearPartialUpdate.textureType == gl::TextureType::_3D;
+                    uint32_t clearBaseLayer =
+                        shouldUseDepthAsLayer ? clearArea.z : clearPartialUpdate.layerIndex;
+                    uint32_t clearLayerCount =
+                        shouldUseDepthAsLayer ? clearArea.depth : clearPartialUpdate.layerCount;
+
+                    for (uint32_t layerIndex = clearBaseLayer;
+                         layerIndex < clearBaseLayer + clearLayerCount; ++layerIndex)
+                    {
+                        params.layer = layerIndex;
+                        ANGLE_TRY(contextVk->getUtils().clearTexture(contextVk, this, params));
+                    }
+
+                    // Queue serial index becomes invalid after starting render pass for the op
+                    // above. Therefore, the outside command buffer should be re-acquired.
+                    ANGLE_TRY(
+                        contextVk->getOutsideRenderPassCommandBufferHelper({}, &commandBuffer));
+                    setContentDefined(updateMipLevelVk, 1, updateBaseLayer, updateLayerCount,
+                                      clearPartialUpdate.aspectFlags);
                     break;
                 }
                 case UpdateSource::Buffer:
@@ -9986,16 +10131,17 @@ bool ImageHelper::hasBufferSourcedStagedUpdatesInAllLevels() const
             return false;
         }
 
-        bool hasUpdateSourceWithBuffer = false;
+        bool hasUpdateSourceWithBufferOrPartialClear = false;
         for (const SubresourceUpdate &update : *levelUpdates)
         {
-            if (update.updateSource == UpdateSource::Buffer)
+            if (update.updateSource == UpdateSource::Buffer ||
+                update.updateSource == UpdateSource::ClearPartial)
             {
-                hasUpdateSourceWithBuffer = true;
+                hasUpdateSourceWithBufferOrPartialClear = true;
                 break;
             }
         }
-        if (!hasUpdateSourceWithBuffer)
+        if (!hasUpdateSourceWithBufferOrPartialClear)
         {
             return false;
         }
@@ -10126,6 +10272,13 @@ void ImageHelper::pruneSupersededUpdatesForLevel(ContextVk *contextVk,
         {
             currentUpdateBox = gl::Box(update.data.image.copyRegion.dstOffset,
                                        update.data.image.copyRegion.extent);
+        }
+        else if (update.updateSource == UpdateSource::ClearPartial)
+        {
+            currentUpdateBox = gl::Box(
+                update.data.clearPartial.offset.x, update.data.clearPartial.offset.z,
+                update.data.clearPartial.offset.z, update.data.clearPartial.extent.width,
+                update.data.clearPartial.extent.height, update.data.clearPartial.extent.depth);
         }
         else
         {
@@ -11023,6 +11176,27 @@ ImageHelper::SubresourceUpdate::SubresourceUpdate() : updateSource(UpdateSource:
     refCounted.buffer        = nullptr;
 }
 
+ImageHelper::SubresourceUpdate::SubresourceUpdate(const VkImageAspectFlags aspectFlags,
+                                                  const VkClearValue &clearValue,
+                                                  const gl::TextureType textureType,
+                                                  const uint32_t levelIndex,
+                                                  const uint32_t layerIndex,
+                                                  const uint32_t layerCount,
+                                                  const gl::Box &clearArea)
+    : updateSource(UpdateSource::ClearPartial)
+{
+    data.clearPartial.aspectFlags = aspectFlags;
+    data.clearPartial.levelIndex  = levelIndex;
+    data.clearPartial.textureType = textureType;
+    data.clearPartial.layerIndex  = layerIndex;
+    data.clearPartial.layerCount  = layerCount;
+    data.clearPartial.offset      = {clearArea.x, clearArea.y, clearArea.z};
+    data.clearPartial.extent      = {static_cast<uint32_t>(clearArea.width),
+                                     static_cast<uint32_t>(clearArea.height),
+                                     static_cast<uint32_t>(clearArea.depth)};
+    data.clearPartial.clearValue  = clearValue;
+}
+
 ImageHelper::SubresourceUpdate::~SubresourceUpdate() {}
 
 ImageHelper::SubresourceUpdate::SubresourceUpdate(RefCounted<BufferHelper> *bufferIn,
@@ -11104,6 +11278,9 @@ ImageHelper::SubresourceUpdate::SubresourceUpdate(SubresourceUpdate &&other)
         case UpdateSource::ClearAfterInvalidate:
             data.clear        = other.data.clear;
             refCounted.buffer = nullptr;
+            break;
+        case UpdateSource::ClearPartial:
+            data.clearPartial = other.data.clearPartial;
             break;
         case UpdateSource::Buffer:
             data.buffer             = other.data.buffer;
@@ -11206,6 +11383,16 @@ void ImageHelper::SubresourceUpdate::getDestSubresource(uint32_t imageLayerCount
             *layerCountOut = imageLayerCount;
         }
     }
+    else if (updateSource == UpdateSource::ClearPartial)
+    {
+        *baseLayerOut  = data.clearPartial.layerIndex;
+        *layerCountOut = data.clearPartial.layerCount;
+
+        if (*layerCountOut == static_cast<uint32_t>(gl::ImageIndex::kEntireLevel))
+        {
+            *layerCountOut = imageLayerCount;
+        }
+    }
     else
     {
         const VkImageSubresourceLayers &dstSubresource =
@@ -11223,6 +11410,10 @@ VkImageAspectFlags ImageHelper::SubresourceUpdate::getDestAspectFlags() const
     if (IsClear(updateSource))
     {
         return data.clear.aspectFlags;
+    }
+    else if (updateSource == UpdateSource::ClearPartial)
+    {
+        return data.clearPartial.aspectFlags;
     }
     else if (updateSource == UpdateSource::Buffer)
     {

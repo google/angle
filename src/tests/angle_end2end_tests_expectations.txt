@@ -1415,6 +1415,7 @@ b/328156792 PINEAPPLE VULKAN : BlitFramebufferTest.*Stencil* = SKIP
 b/328156792 PINEAPPLE VULKAN : ClearTestES3.RepeatedStencilClearWithBlitInBetween/* = SKIP
 b/328156792 PINEAPPLE VULKAN : ClearTest.MaskedClearThenDrawWithUniform/* = SKIP
 b/328156792 PINEAPPLE VULKAN : ClearTest.Stencil8Scissored/* = SKIP
+b/328156792 PINEAPPLE VULKAN : ClearTextureEXTTest.StencilTexture/* = SKIP
 b/328156792 PINEAPPLE VULKAN : DepthStencilTestES3.FramebufferClearThenStencilAttachedThenStencilTestState/* = SKIP
 b/328156792 PINEAPPLE VULKAN : DepthStencilTestES3.FramebufferClearThenStencilTestStateThenStencilAttached/* = SKIP
 b/328156792 PINEAPPLE VULKAN : DepthStencilTestES3.StencilTestStateThenFramebufferClearThenStencilAttached/* = SKIP
@@ -1422,6 +1423,7 @@ b/328156792 PINEAPPLE VULKAN : DepthStencilTest.StencilOnlyDrawThenCopyThenDraw/
 b/328156792 PINEAPPLE VULKAN : DepthStencilTest.StencilOnlyEmulatedWithPacked/* = SKIP
 b/328156792 PINEAPPLE VULKAN : DrawBuffersTest.NoneWithStencil/* = SKIP
 b/328156792 PINEAPPLE VULKAN : FramebufferTest_ES31.* = SKIP
+b/328156792 PINEAPPLE VULKAN : FramebufferTest_ES31.ClearTextureEXT2DMSStencil = SKIP
 b/328156792 PINEAPPLE VULKAN : GeometryShaderTest.LayeredFramebuffer* = SKIP
 b/328156792 PINEAPPLE VULKAN : GLSLTest.ConstantFoldedConstantsRetainPrecision/* = SKIP
 b/328156792 PINEAPPLE VULKAN : GLSLTest_ES31.ArrayOfArrayOfSamplerInStructDynamicIndex/* = SKIP
@@ -1565,6 +1567,12 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 42267119 LINUX INTEL OPENGL : WEBGLVideoTextureTest.VerifySamplerVideoWEBGL/* = SKIP
 42267119 LINUX INTEL OPENGL : WEBGLVideoTextureTest.VerifySamplerVideoWEBGLAsParameter/* = SKIP
 42267119 LINUX INTEL OPENGL : WEBGLVideoTextureTest.VerifyStateManagerKnowsBindingVideoImage/* = SKIP
+
+// OpenGL/GLES failures related to GL_EXT_clear_texture
+361623543 WIN INTEL OPENGL : ClearTextureEXTTest.ClearCubeMapArray/* = SKIP
+361623543 WIN INTEL OPENGL : ClearTextureEXTTest.StencilTexture/* = SKIP
+361623543 WIN INTEL OPENGL : FramebufferTest_ES31.ClearTextureEXT2DMSStencil/* = SKIP
+361623543 LINUX INTEL OPENGL : FramebufferTest_ES31.ClearTextureEXT2DMSStencil/* = SKIP
 
 // MSRTT D3D11 failures
 40644740 D3D11 : MultisampledRenderToTextureES3Test.MultipleLevelsMultisampleMRTDraw2DColor/* = SKIP

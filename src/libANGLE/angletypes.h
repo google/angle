@@ -44,6 +44,7 @@ enum class Command
     Blit,
     BlitAll = Blit + 0x7,
     Clear,
+    ClearTexture,
     CopyImage,
     Dispatch,
     Draw,

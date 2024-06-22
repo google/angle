@@ -2049,6 +2049,7 @@ enum class UpdateSource
 {
     // Clear an image subresource.
     Clear,
+    ClearPartial,
     // Clear only the emulated channels of the subresource.  This operation is more expensive than
     // Clear, and so is only used for emulated color formats and only for external images.  Color
     // only because depth or stencil clear is already per channel, so Clear works for them.
@@ -2455,6 +2456,18 @@ class ImageHelper final : public Resource, public angle::Subject
                              gl::LevelIndex levelGLStart,
                              gl::LevelIndex levelGLEnd);
 
+    angle::Result stagePartialClear(ContextVk *contextVk,
+                                    const gl::Box &clearArea,
+                                    gl::TextureType textureType,
+                                    uint32_t levelIndex,
+                                    uint32_t layerIndex,
+                                    uint32_t layerCount,
+                                    GLenum type,
+                                    const gl::InternalFormat &formatInfo,
+                                    const Format &vkFormat,
+                                    ImageAccess access,
+                                    const uint8_t *data);
+
     angle::Result stageSubresourceUpdateImpl(ContextVk *contextVk,
                                              const gl::ImageIndex &index,
                                              const gl::Extents &glExtents,
@@ -2848,6 +2861,24 @@ class ImageHelper final : public Resource, public angle::Subject
         VkColorComponentFlags colorMaskFlags;
     };
     ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
+    ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
+    struct ClearPartialUpdate
+    {
+        bool operator==(const ClearPartialUpdate &rhs) const
+        {
+            return memcmp(this, &rhs, sizeof(ClearPartialUpdate)) == 0;
+        }
+        VkImageAspectFlags aspectFlags;
+        VkClearValue clearValue;
+        uint32_t levelIndex;
+        uint32_t layerIndex;
+        uint32_t layerCount;
+        VkOffset3D offset;
+        VkExtent3D extent;
+        gl::TextureType textureType;
+        uint8_t _padding[3];
+    };
+    ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
     struct BufferUpdate
     {
         BufferHelper *bufferHelper;
@@ -2874,6 +2905,13 @@ class ImageHelper final : public Resource, public angle::Subject
         SubresourceUpdate(VkImageAspectFlags aspectFlags,
                           const VkClearValue &clearValue,
                           const gl::ImageIndex &imageIndex);
+        SubresourceUpdate(const VkImageAspectFlags aspectFlags,
+                          const VkClearValue &clearValue,
+                          const gl::TextureType textureType,
+                          const uint32_t levelIndex,
+                          const uint32_t layerIndex,
+                          const uint32_t layerCount,
+                          const gl::Box &clearArea);
         SubresourceUpdate(VkImageAspectFlags aspectFlags,
                           const VkClearValue &clearValue,
                           gl::LevelIndex level,
@@ -2903,6 +2941,7 @@ class ImageHelper final : public Resource, public angle::Subject
         union
         {
             ClearUpdate clear;
+            ClearPartialUpdate clearPartial;
             BufferUpdate buffer;
             ImageUpdate image;
         } data;
