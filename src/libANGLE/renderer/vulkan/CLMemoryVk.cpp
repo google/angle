@@ -6,13 +6,10 @@
 // CLMemoryVk.cpp: Implements the class methods for CLMemoryVk.
 
 #include "libANGLE/renderer/vulkan/CLMemoryVk.h"
-#include "CL/cl.h"
-#include "CL/cl_half.h"
-#include "common/aligned_memory.h"
-#include "libANGLE/Error.h"
 #include "libANGLE/renderer/vulkan/CLContextVk.h"
 #include "libANGLE/renderer/vulkan/vk_cl_utils.h"
 #include "libANGLE/renderer/vulkan/vk_renderer.h"
+#include "libANGLE/renderer/vulkan/vk_utils.h"
 
 #include "libANGLE/renderer/CLMemoryImpl.h"
 #include "libANGLE/renderer/Format.h"
@@ -24,6 +21,8 @@
 #include "libANGLE/CLMemory.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/cl_utils.h"
+
+#include "CL/cl_half.h"
 
 namespace rx
 {
@@ -51,7 +50,35 @@ cl_int NormalizeFloatValue(float value, float maximum)
 
     return static_cast<cl_int>(valueToRound);
 }
-}  // anonymous namespace
+
+angle::FormatID CLImageFormatToAngleFormat(cl_image_format format)
+{
+    switch (format.image_channel_order)
+    {
+        case CL_R:
+        case CL_LUMINANCE:
+        case CL_INTENSITY:
+            return angle::Format::CLRFormatToID(format.image_channel_data_type);
+        case CL_RG:
+            return angle::Format::CLRGFormatToID(format.image_channel_data_type);
+        case CL_RGB:
+            return angle::Format::CLRGBFormatToID(format.image_channel_data_type);
+        case CL_RGBA:
+            return angle::Format::CLRGBAFormatToID(format.image_channel_data_type);
+        case CL_BGRA:
+            return angle::Format::CLBGRAFormatToID(format.image_channel_data_type);
+        case CL_sRGBA:
+            return angle::Format::CLsRGBAFormatToID(format.image_channel_data_type);
+        case CL_DEPTH:
+            return angle::Format::CLDEPTHFormatToID(format.image_channel_data_type);
+        case CL_DEPTH_STENCIL:
+            return angle::Format::CLDEPTHSTENCILFormatToID(format.image_channel_data_type);
+        default:
+            return angle::FormatID::NONE;
+    }
+}
+
+}  // namespace
 
 CLMemoryVk::CLMemoryVk(const cl::Memory &memory)
     : CLMemoryImpl(memory),
@@ -367,12 +394,10 @@ angle::Result CLImageVk::copyStagingToFromWithPitch(void *hostPtr,
 
 CLImageVk::CLImageVk(const cl::Image &image)
     : CLMemoryVk(image),
-      mFormat(angle::FormatID::NONE),
-      mArrayLayers(1),
-      mImageSize(0),
-      mElementSize(0),
-      mDesc(image.getDescriptor()),
-      mStagingBufferInitialized(false)
+      mExtent(cl_vk::GetExtentFromDescriptor(image.getDescriptor())),
+      mAngleFormat(CLImageFormatToAngleFormat(image.getFormat())),
+      mStagingBufferInitialized(false),
+      mImageViewType(cl_vk::GetImageViewType(image.getDescriptor().type))
 {}
 
 CLImageVk::~CLImageVk()
@@ -392,128 +417,25 @@ CLImageVk::~CLImageVk()
 
 angle::Result CLImageVk::create(void *hostPtr)
 {
-    const cl::Image &image         = reinterpret_cast<const cl::Image &>(mMemory);
-    const cl::ImageDescriptor desc = image.getDescriptor();
-    const cl_image_format format   = image.getFormat();
-    switch (format.image_channel_order)
-    {
-        case CL_R:
-        case CL_LUMINANCE:
-        case CL_INTENSITY:
-            mFormat = angle::Format::CLRFormatToID(format.image_channel_data_type);
-            break;
-        case CL_RG:
-            mFormat = angle::Format::CLRGFormatToID(format.image_channel_data_type);
-            break;
-        case CL_RGB:
-            mFormat = angle::Format::CLRGBFormatToID(format.image_channel_data_type);
-            break;
-        case CL_RGBA:
-            mFormat = angle::Format::CLRGBAFormatToID(format.image_channel_data_type);
-            break;
-        case CL_BGRA:
-            mFormat = angle::Format::CLBGRAFormatToID(format.image_channel_data_type);
-            break;
-        case CL_sRGBA:
-            mFormat = angle::Format::CLsRGBAFormatToID(format.image_channel_data_type);
-            break;
-        case CL_DEPTH:
-            mFormat = angle::Format::CLDEPTHFormatToID(format.image_channel_data_type);
-            break;
-        case CL_DEPTH_STENCIL:
-            mFormat = angle::Format::CLDEPTHSTENCILFormatToID(format.image_channel_data_type);
-            break;
-        default:
-            UNIMPLEMENTED();
-            break;
-    }
-
-    mExtent.width  = static_cast<uint32_t>(desc.width);
-    mExtent.height = static_cast<uint32_t>(desc.height);
-    mExtent.depth  = static_cast<uint32_t>(desc.depth);
-    switch (desc.type)
-    {
-        case cl::MemObjectType::Image1D_Buffer:
-        case cl::MemObjectType::Image1D:
-        case cl::MemObjectType::Image1D_Array:
-            mExtent.height = 1;
-            mExtent.depth  = 1;
-            break;
-        case cl::MemObjectType::Image2D:
-        case cl::MemObjectType::Image2D_Array:
-            mExtent.depth = 1;
-            break;
-        case cl::MemObjectType::Image3D:
-            break;
-        default:
-            UNREACHABLE();
-    }
-
-    switch (desc.type)
-    {
-        case cl::MemObjectType::Image1D_Buffer:
-        case cl::MemObjectType::Image1D:
-            mImageViewType = VK_IMAGE_VIEW_TYPE_1D;
-            break;
-        case cl::MemObjectType::Image1D_Array:
-            mImageViewType = VK_IMAGE_VIEW_TYPE_1D_ARRAY;
-            break;
-        case cl::MemObjectType::Image2D:
-            mImageViewType = VK_IMAGE_VIEW_TYPE_2D;
-            break;
-        case cl::MemObjectType::Image2D_Array:
-            mImageViewType = VK_IMAGE_VIEW_TYPE_2D_ARRAY;
-            break;
-        case cl::MemObjectType::Image3D:
-            mImageViewType = VK_IMAGE_VIEW_TYPE_3D;
-            break;
-        default:
-            UNREACHABLE();
-    }
-
-    mElementSize = cl::GetElementSize(format);
-    mDesc        = desc;
-    mImageFormat = format;
-
-    if (desc.slicePitch > 0)
-    {
-        mImageSize = (desc.slicePitch * mExtent.depth);
-    }
-    else if (desc.rowPitch > 0)
-    {
-        mImageSize = (desc.rowPitch * mExtent.height * mExtent.depth);
-    }
-    else
-    {
-        mImageSize = (mExtent.height * mExtent.width * mExtent.depth * mElementSize);
-    }
-
-    if ((desc.type == cl::MemObjectType::Image1D_Array) ||
-        (desc.type == cl::MemObjectType::Image2D_Array))
-    {
-        mArrayLayers = static_cast<uint32_t>(desc.arraySize);
-        mImageSize *= desc.arraySize;
-    }
-
-    ANGLE_CL_IMPL_TRY_ERROR(
-        mImage.initStaging(mContext, false, mRenderer->getMemoryProperties(), getVkImageType(desc),
-                           mExtent, mFormat, mFormat, VK_SAMPLE_COUNT_1_BIT, getVkImageUsageFlags(),
-                           1, mArrayLayers),
-        CL_OUT_OF_RESOURCES);
+    ANGLE_CL_IMPL_TRY_ERROR(mImage.initStaging(mContext, false, mRenderer->getMemoryProperties(),
+                                               getVkImageType(getDescriptor()), mExtent,
+                                               mAngleFormat, mAngleFormat, VK_SAMPLE_COUNT_1_BIT,
+                                               getVkImageUsageFlags(), 1, (uint32_t)getArraySize()),
+                            CL_OUT_OF_RESOURCES);
 
     if (mMemory.getFlags().intersects(CL_MEM_USE_HOST_PTR | CL_MEM_COPY_HOST_PTR))
     {
         ASSERT(hostPtr);
-        ANGLE_CL_IMPL_TRY_ERROR(createStagingBuffer(mImageSize), CL_OUT_OF_RESOURCES);
-        if (mDesc.rowPitch == 0 && mDesc.slicePitch == 0)
+        ANGLE_CL_IMPL_TRY_ERROR(createStagingBuffer(getSize()), CL_OUT_OF_RESOURCES);
+        if (getDescriptor().rowPitch == 0 && getDescriptor().slicePitch == 0)
         {
-            ANGLE_CL_IMPL_TRY_ERROR(copyStagingFrom(hostPtr, 0, mImageSize), CL_OUT_OF_RESOURCES);
+            ANGLE_CL_IMPL_TRY_ERROR(copyStagingFrom(hostPtr, 0, getSize()), CL_OUT_OF_RESOURCES);
         }
         else
         {
             ANGLE_TRY(copyStagingToFromWithPitch(
-                hostPtr, {mExtent.width, mExtent.height, mExtent.depth}, mDesc.rowPitch,
-                mDesc.slicePitch, StagingBufferCopyDirection::ToStagingBuffer));
+                hostPtr, {mExtent.width, mExtent.height, mExtent.depth}, getDescriptor().rowPitch,
+                getDescriptor().slicePitch, StagingBufferCopyDirection::ToStagingBuffer));
         }
         VkBufferImageCopy copyRegion{};
         copyRegion.bufferOffset      = 0;
@@ -523,31 +445,46 @@ angle::Result CLImageVk::create(void *hostPtr)
         copyRegion.imageOffset = getOffsetForCopy({0, 0, 0});
         copyRegion.imageSubresource =
             getSubresourceLayersForCopy({0, 0, 0}, {mExtent.width, mExtent.height, mExtent.depth},
-                                        mDesc.type, ImageCopyWith::Buffer);
+                                        getDescriptor().type, ImageCopyWith::Buffer);
 
         ANGLE_CL_IMPL_TRY_ERROR(mImage.copyToBufferOneOff(mContext, &mStagingBuffer, copyRegion),
                                 CL_OUT_OF_RESOURCES);
     }
 
+    ANGLE_TRY(initImageViewImpl());
+    return angle::Result::Continue;
+}
+
+angle::Result CLImageVk::initImageViewImpl()
+{
     VkImageViewCreateInfo viewInfo = {};
     viewInfo.sType                 = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
     viewInfo.flags                 = 0;
     viewInfo.image                 = getImage().getImage().getHandle();
     viewInfo.format                = getImage().getActualVkFormat();
+    viewInfo.viewType              = mImageViewType;
 
-    viewInfo.subresourceRange.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
-    viewInfo.subresourceRange.baseMipLevel   = 0;
+    viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    // We don't support mip map levels and should have been validated
+    ASSERT(getDescriptor().numMipLevels == 0);
+    viewInfo.subresourceRange.baseMipLevel   = getDescriptor().numMipLevels;
     viewInfo.subresourceRange.levelCount     = 1;
     viewInfo.subresourceRange.baseArrayLayer = 0;
     viewInfo.subresourceRange.layerCount     = static_cast<uint32_t>(getArraySize());
-    viewInfo.components.r                    = VK_COMPONENT_SWIZZLE_IDENTITY;
-    viewInfo.components.g                    = VK_COMPONENT_SWIZZLE_IDENTITY;
-    viewInfo.components.b                    = VK_COMPONENT_SWIZZLE_IDENTITY;
-    viewInfo.components.a                    = VK_COMPONENT_SWIZZLE_IDENTITY;
 
-    viewInfo.viewType = mImageViewType;
+    // no swizzle support for now
+    viewInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+    viewInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+    viewInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+    viewInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+
+    VkImageViewUsageCreateInfo imageViewUsageCreateInfo = {};
+    imageViewUsageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_USAGE_CREATE_INFO;
+    imageViewUsageCreateInfo.usage = getVkImageUsageFlags();
+
+    viewInfo.pNext = &imageViewUsageCreateInfo;
+
     ANGLE_VK_TRY(mContext, mImageView.init(mContext->getDevice(), viewInfo));
-
     return angle::Result::Continue;
 }
 
@@ -565,14 +502,14 @@ bool CLImageVk::containsHostMemExtension()
 
 void CLImageVk::packPixels(const void *fillColor, PixelColor *packedColor)
 {
-    size_t channelCount = cl::GetChannelCount(mImageFormat.image_channel_order);
+    size_t channelCount = cl::GetChannelCount(getFormat().image_channel_order);
 
-    switch (mImageFormat.image_channel_data_type)
+    switch (getFormat().image_channel_data_type)
     {
         case CL_UNORM_INT8:
         {
             float *srcVector = static_cast<float *>(const_cast<void *>(fillColor));
-            if (mImageFormat.image_channel_order == CL_BGRA)
+            if (getFormat().image_channel_order == CL_BGRA)
             {
                 packedColor->u8[0] =
                     static_cast<unsigned char>(NormalizeFloatValue(srcVector[2], 255.f));
@@ -688,8 +625,8 @@ void CLImageVk::fillImageWithColor(const cl::MemOffsets &origin,
             uint8_t *pixelPtr          = ptrBase + stagingBufferOffset;
             for (size_t x = 0; x < region.x; x++)
             {
-                memcpy(pixelPtr, packedColor, mElementSize);
-                pixelPtr += mElementSize;
+                memcpy(pixelPtr, packedColor, elementSize);
+                pixelPtr += elementSize;
             }
         }
     }
@@ -701,7 +638,7 @@ VkExtent3D CLImageVk::getExtentForCopy(const cl::Coordinate &region)
     extent.width      = static_cast<uint32_t>(region.x);
     extent.height     = static_cast<uint32_t>(region.y);
     extent.depth      = static_cast<uint32_t>(region.z);
-    switch (mDesc.type)
+    switch (getDescriptor().type)
     {
         case cl::MemObjectType::Image1D_Array:
 
@@ -723,7 +660,7 @@ VkOffset3D CLImageVk::getOffsetForCopy(const cl::MemOffsets &origin)
     offset.x          = static_cast<int32_t>(origin.x);
     offset.y          = static_cast<int32_t>(origin.y);
     offset.z          = static_cast<int32_t>(origin.z);
-    switch (mDesc.type)
+    switch (getDescriptor().type)
     {
         case cl::MemObjectType::Image1D_Array:
             offset.y = 0;
@@ -746,7 +683,7 @@ VkImageSubresourceLayers CLImageVk::getSubresourceLayersForCopy(const cl::MemOff
     VkImageSubresourceLayers subresource = {};
     subresource.aspectMask               = VK_IMAGE_ASPECT_COLOR_BIT;
     subresource.mipLevel                 = 0;
-    switch (mDesc.type)
+    switch (getDescriptor().type)
     {
         case cl::MemObjectType::Image1D_Array:
             subresource.baseArrayLayer = static_cast<uint32_t>(origin.y);
@@ -756,7 +693,7 @@ VkImageSubresourceLayers CLImageVk::getSubresourceLayersForCopy(const cl::MemOff
             }
             else
             {
-                subresource.layerCount = static_cast<uint32_t>(mArrayLayers);
+                subresource.layerCount = static_cast<uint32_t>(getArraySize());
             }
             break;
         case cl::MemObjectType::Image2D_Array:
@@ -772,7 +709,7 @@ VkImageSubresourceLayers CLImageVk::getSubresourceLayersForCopy(const cl::MemOff
             }
             else
             {
-                subresource.layerCount = static_cast<uint32_t>(mArrayLayers);
+                subresource.layerCount = static_cast<uint32_t>(getArraySize());
             }
             break;
         default:
@@ -798,57 +735,14 @@ void CLImageVk::unmapImpl()
     mMappedMemory = nullptr;
 }
 
-size_t CLImageVk::calculateRowPitch()
+size_t CLImageVk::getRowPitch() const
 {
-    return (mExtent.width * mElementSize);
+    return getFrontendObject().getRowSize();
 }
 
-size_t CLImageVk::calculateSlicePitch(size_t imageRowPitch)
+size_t CLImageVk::getSlicePitch() const
 {
-    size_t slicePitch = 0;
-
-    switch (mDesc.type)
-    {
-        case cl::MemObjectType::Image1D:
-        case cl::MemObjectType::Image1D_Buffer:
-        case cl::MemObjectType::Image2D:
-            break;
-        case cl::MemObjectType::Image2D_Array:
-        case cl::MemObjectType::Image3D:
-            slicePitch = (mExtent.height * imageRowPitch);
-            break;
-        case cl::MemObjectType::Image1D_Array:
-            slicePitch = imageRowPitch;
-            break;
-        default:
-            UNREACHABLE();
-            break;
-    }
-
-    return slicePitch;
-}
-
-size_t CLImageVk::getRowPitch()
-{
-    size_t mRowPitch = mDesc.rowPitch;
-    if (mRowPitch == 0)
-    {
-        mRowPitch = calculateRowPitch();
-    }
-
-    return mRowPitch;
-}
-
-size_t CLImageVk::getSlicePitch(size_t imageRowPitch)
-{
-    size_t mSlicePitch = mDesc.slicePitch;
-
-    if (mSlicePitch == 0)
-    {
-        mSlicePitch = calculateSlicePitch(imageRowPitch);
-    }
-
-    return mSlicePitch;
+    return getFrontendObject().getSliceSize();
 }
 
 }  // namespace rx

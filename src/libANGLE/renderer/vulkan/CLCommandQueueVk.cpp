@@ -383,7 +383,7 @@ angle::Result CLCommandQueueVk::copyImageToFromBuffer(CLImageVk &imageVk,
     copyRegion.imageExtent       = imageVk.getExtentForCopy(region);
     copyRegion.imageOffset       = imageVk.getOffsetForCopy(origin);
     copyRegion.imageSubresource  = imageVk.getSubresourceLayersForCopy(
-        origin, region, imageVk.getDesc().type, ImageCopyWith::Buffer);
+        origin, region, imageVk.getType(), ImageCopyWith::Buffer);
     if (imageVk.isWritable())
     {
         // We need an execution barrier if image can be written to by kernel
@@ -641,9 +641,9 @@ angle::Result CLCommandQueueVk::enqueueCopyImage(const cl::Image &srcImage,
     copyRegion.srcOffset      = srcImageVk->getOffsetForCopy(srcOrigin);
     copyRegion.dstOffset      = dstImageVk->getOffsetForCopy(dstOrigin);
     copyRegion.srcSubresource = srcImageVk->getSubresourceLayersForCopy(
-        srcOrigin, region, dstImageVk->getDesc().type, ImageCopyWith::Image);
+        srcOrigin, region, dstImageVk->getType(), ImageCopyWith::Image);
     copyRegion.dstSubresource = dstImageVk->getSubresourceLayersForCopy(
-        dstOrigin, region, srcImageVk->getDesc().type, ImageCopyWith::Image);
+        dstOrigin, region, srcImageVk->getType(), ImageCopyWith::Image);
     if (srcImageVk->isWritable() || dstImageVk->isWritable())
     {
         // We need an execution barrier if buffer can be written to by kernel
@@ -799,7 +799,7 @@ angle::Result CLCommandQueueVk::enqueueMapImage(const cl::Image &image,
 
     *imageRowPitch = rowPitch;
 
-    switch (imageVk->getDesc().type)
+    switch (imageVk->getDescriptor().type)
     {
         case cl::MemObjectType::Image1D:
         case cl::MemObjectType::Image1D_Buffer:
@@ -1306,7 +1306,7 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
 
                 mMemoryCaptures.emplace_back(clMem);
 
-                cl_image_format imageFormat = vkMem.getImageFormat();
+                cl_image_format imageFormat = vkMem.getFormat();
                 const VkPushConstantRange *imageDataChannelOrderRange =
                     devProgramData->getImageDataChannelOrderRange(index);
                 if (imageDataChannelOrderRange != nullptr)
