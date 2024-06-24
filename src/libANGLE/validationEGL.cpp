@@ -3183,6 +3183,16 @@ bool ValidateCreatePbufferFromClientBuffer(const ValidationContext *val,
                 }
                 break;
 
+            case EGL_D3D11_TEXTURE_PLANE_ANGLE:
+                if (!displayExtensions.imageD3D11Texture)
+                {
+                    val->setError(EGL_BAD_ATTRIBUTE,
+                                  "EGL_D3D11_TEXTURE_PLANE_ANGLE cannot be used without "
+                                  "EGL_ANGLE_image_d3d11_texture support.");
+                    return false;
+                }
+                break;
+
             default:
                 val->setError(EGL_BAD_ATTRIBUTE);
                 return false;
