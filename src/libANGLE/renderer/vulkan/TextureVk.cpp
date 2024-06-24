@@ -3654,6 +3654,7 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
         const VkFormat additionalViewFormat = rx::vk::GetVkFormatFromFormatID(
             isActualFormatSRGB ? ConvertToLinear(actualImageFormatID)
                                : ConvertToSRGB(actualImageFormatID));
+        const bool isAdditionalFormatValid = additionalViewFormat != VK_FORMAT_UNDEFINED;
 
         // If the texture has already been bound to an MSRTT framebuffer, lack of support should
         // result in failure.
@@ -3661,10 +3662,12 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
             renderer, actualImageFormat, imageType, imageTiling, mImageUsageFlags,
             createFlagsMultisampled, nullptr,
             vk::ImageHelper::FormatSupportCheck::RequireMultisampling);
-        bool supportsMSRTTUsageAdditionalFormat = vk::ImageHelper::FormatSupportsUsage(
-            renderer, additionalViewFormat, imageType, imageTiling, mImageUsageFlags,
-            createFlagsMultisampled, nullptr,
-            vk::ImageHelper::FormatSupportCheck::RequireMultisampling);
+        bool supportsMSRTTUsageAdditionalFormat =
+            !isAdditionalFormatValid ||
+            vk::ImageHelper::FormatSupportsUsage(
+                renderer, additionalViewFormat, imageType, imageTiling, mImageUsageFlags,
+                createFlagsMultisampled, nullptr,
+                vk::ImageHelper::FormatSupportCheck::RequireMultisampling);
 
         bool supportsMSRTTUsage =
             supportsMSRTTUsageActualFormat && supportsMSRTTUsageAdditionalFormat;
