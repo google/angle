@@ -23,10 +23,10 @@
         "IsWebGLCompatibilityEnabled": false
     },
     "TraceFiles": [
-        "CapturedTest_MultiFrame_ES3_Vulkan.cpp",
-        "CapturedTest_MultiFrame_ES3_Vulkan.h",
-        "CapturedTest_MultiFrame_ES3_Vulkan_001.cpp",
-        "CapturedTest_MultiFrame_ES3_Vulkan_shared.cpp"
+        "CapturedTest_ActiveTextures_ES3_Vulkan.cpp",
+        "CapturedTest_ActiveTextures_ES3_Vulkan.h",
+        "CapturedTest_ActiveTextures_ES3_Vulkan_001.cpp",
+        "CapturedTest_ActiveTextures_ES3_Vulkan_shared.cpp"
     ],
-    "WindowSurfaceContextID": 1
+    "WindowSurfaceContextID": 3
 }
