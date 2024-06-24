@@ -269,6 +269,7 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 42266917 MAC NVIDIA OPENGL : StateChangeTestES3.UniformBlockBinding/* = SKIP
 42266941 MAC INTEL OPENGL : CopyTexImagePreRotationTest.NonZeroNonSquare/* = SKIP
 42267093 MAC AMD OPENGL : BlitFramebufferTest.FlippedBlits/* = SKIP
+346561003 MAC NVIDIA OPENGL : WebGL2UniformBufferTest.LargeArrayOfStructs/* = SKIP
 
 // BlitFramebufferTest.ScissoredMultisampleStencil failures
 42262159 MAC INTEL OPENGL : BlitFramebufferTest.ScissoredMultisampleStencil/* = SKIP
