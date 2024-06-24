@@ -669,6 +669,10 @@ b/346650202 PIXEL4ORXL : GeometryShaderTest.CreateAndAttachGeometryShaderOES/* =
 42267029 PIXEL6 VULKAN : VulkanPerformanceCounterTest.RenderToTextureUninitializedAndUnusedDepthStencil/* = SKIP
 // New failures after AP1A.240405.002 upgrade
 b/336847261 PIXEL6 VULKAN : StateChangeTestES3.LineWidth/* = SKIP
+348181798 PIXEL6 VULKAN : MultisampledRenderToTextureES31Test.DrawCopyThenBlendAllAttachmentsMixed/* = SKIP
+348181798 PIXEL6 VULKAN : MultisampledRenderToTextureES3Test.DepthStencilAttachment/* = SKIP
+348181798 PIXEL6 VULKAN : MultisampledRenderToTextureES3Test.DepthStencilClearThenDraw/* = SKIP
+348181798 PIXEL6 VULKAN : MultisampledRenderToTextureES3Test.DrawCopyDrawAttachDepthStencilClearThenDraw/* = SKIP
 
 // ARM drivers cannot support xfb emulation because they lack support for the
 // vertexPipelineStoresAndAtomics Vulkan feature.  The tests that force-enable this feature are
