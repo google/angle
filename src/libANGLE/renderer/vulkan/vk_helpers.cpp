@@ -1874,26 +1874,6 @@ void OutsideRenderPassCommandBufferHelper::trackImageWithEvent(Context *context,
     flushSetEventsImpl(context, &mCommandBuffer);
 }
 
-void OutsideRenderPassCommandBufferHelper::trackImagesWithEvent(Context *context,
-                                                                ImageHelper *srcImage,
-                                                                ImageHelper *dstImage)
-{
-    srcImage->setCurrentRefCountedEvent(context, mRefCountedEvents);
-    dstImage->setCurrentRefCountedEvent(context, mRefCountedEvents);
-    flushSetEventsImpl(context, &mCommandBuffer);
-}
-
-void OutsideRenderPassCommandBufferHelper::trackImagesWithEvent(Context *context,
-                                                                const ImageHelperPtr *images,
-                                                                size_t count)
-{
-    for (size_t i = 0; i < count; i++)
-    {
-        images[i]->setCurrentRefCountedEvent(context, mRefCountedEvents);
-    }
-    flushSetEventsImpl(context, &mCommandBuffer);
-}
-
 void OutsideRenderPassCommandBufferHelper::collectRefCountedEventsGarbage(
     RefCountedEventsGarbageRecycler *garbageRecycler)
 {
@@ -2727,16 +2707,6 @@ void RenderPassCommandBufferHelper::finalizeDepthStencilImageLayoutAndLoadStore(
     mDepthAttachment.getImage()->resetRenderPassUsageFlags();
 }
 
-void RenderPassCommandBufferHelper::trackImagesWithEvent(Context *context,
-                                                         const ImageHelperPtr *images,
-                                                         size_t count)
-{
-    for (size_t i = 0; i < count; i++)
-    {
-        images[i]->setCurrentRefCountedEvent(context, mRefCountedEvents);
-    }
-}
-
 void RenderPassCommandBufferHelper::executeSetEvents(Context *context,
                                                      PrimaryCommandBuffer *primary)
 {
@@ -2749,6 +2719,7 @@ void RenderPassCommandBufferHelper::executeSetEvents(Context *context,
         ASSERT(!mRefCountedEvents.map[stage].valid());
         ASSERT(mRefCountedEvents.vkEvents[stage] != VK_NULL_HANDLE);
         primary->setEvent(mRefCountedEvents.vkEvents[stage], renderer->getPipelineStageMask(stage));
+        mRefCountedEvents.vkEvents[stage] = VK_NULL_HANDLE;
     }
     mRefCountedEvents.mask.reset();
 }
@@ -2819,29 +2790,23 @@ angle::Result RenderPassCommandBufferHelper::endRenderPass(ContextVk *contextVk)
 {
     ANGLE_TRY(endRenderPassCommandBuffer(contextVk));
 
-    // *2 for resolve attachments
-    angle::FixedVector<ImageHelperPtr, gl::IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS << 1>
-        accessedImages;
     for (PackedAttachmentIndex index = kAttachmentIndexZero; index < mColorAttachmentsCount;
          ++index)
     {
         if (mColorAttachments[index].getImage() != nullptr)
         {
             finalizeColorImageLayoutAndLoadStore(contextVk, index);
-            accessedImages.push_back(mColorAttachments[index].getImage());
         }
         if (mColorResolveAttachments[index].getImage() != nullptr)
         {
             finalizeColorImageLayout(contextVk, mColorResolveAttachments[index].getImage(), index,
                                      true);
-            accessedImages.push_back(mColorResolveAttachments[index].getImage());
         }
     }
 
     if (mFragmentShadingRateAtachment.getImage() != nullptr)
     {
         finalizeFragmentShadingRateImageLayout(contextVk);
-        accessedImages.push_back(mFragmentShadingRateAtachment.getImage());
     }
 
     if (mDepthStencilAttachmentIndex != kAttachmentIndexInvalid)
@@ -2852,22 +2817,11 @@ angle::Result RenderPassCommandBufferHelper::endRenderPass(ContextVk *contextVk)
         if (mDepthAttachment.getImage() != nullptr)
         {
             finalizeDepthStencilImageLayoutAndLoadStore(contextVk);
-            accessedImages.push_back(mDepthAttachment.getImage());
         }
         if (mDepthResolveAttachment.getImage() != nullptr)
         {
             finalizeDepthStencilResolveImageLayout(contextVk);
-            accessedImages.push_back(mDepthResolveAttachment.getImage());
         }
-    }
-
-    if (contextVk->getRenderer()->getFeatures().useVkEventForImageBarrier.enabled)
-    {
-        // Even if there is no layout change, we always have to update event. In case of feedback
-        // loop, the sampler code should already set the event, which means we will be set it twice
-        // here. But since they uses the same layout and event is refCounted, it should work just
-        // fine.
-        trackImagesWithEvent(contextVk, accessedImages.data(), accessedImages.size());
     }
 
     return angle::Result::Continue;
@@ -7919,8 +7873,6 @@ angle::Result ImageHelper::CopyImageSubData(const gl::Context *context,
         ANGLE_VK_CHECK(contextVk, false, VK_ERROR_FEATURE_NOT_PRESENT);
     }
 
-    contextVk->trackImagesWithOutsideRenderPassEvent(srcImage, dstImage);
-
     return angle::Result::Continue;
 }
 
@@ -9823,12 +9775,6 @@ angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
         *levelUpdates = std::move(updatesToKeep);
     }
 
-    if (commandBuffer != nullptr)
-    {
-        // Track completion of this copy operation.
-        contextVk->trackImageWithOutsideRenderPassEvent(this);
-    }
-
     return angle::Result::Continue;
 }
 
@@ -10346,8 +10292,6 @@ angle::Result ImageHelper::copyImageDataToBuffer(ContextVk *contextVk,
 
     commandBuffer->copyImageToBuffer(mImage, getCurrentLayout(renderer), bufferHandle, regionCount,
                                      &regions);
-    // Track completion of this copy.
-    contextVk->trackImageWithOutsideRenderPassEvent(this);
 
     return angle::Result::Continue;
 }
@@ -10971,14 +10915,12 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
 
             copyCommandBuffer->copyImageToBuffer(src->getImage(), src->getCurrentLayout(renderer),
                                                  packBuffer.getBuffer().getHandle(), 1, &region);
-            contextVk->trackImageWithOutsideRenderPassEvent(this);
             return angle::Result::Continue;
         }
         if (canCopyWithComputeForReadPixels(packPixelsParams, readFormat, pixelsOffset))
         {
             ANGLE_TRY(readPixelsWithCompute(contextVk, src, packPixelsParams, srcOffset, srcExtent,
                                             pixelsOffset, srcSubresource));
-            contextVk->trackImageWithOutsideRenderPassEvent(this);
             return angle::Result::Continue;
         }
     }

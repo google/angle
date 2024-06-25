@@ -599,21 +599,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
             mOutsideRenderPassCommands->trackImageWithEvent(this, image);
         }
     }
-    void trackImagesWithOutsideRenderPassEvent(vk::ImageHelper *srcImage, vk::ImageHelper *dstImage)
-    {
-        if (mRenderer->getFeatures().useVkEventForImageBarrier.enabled)
-        {
-            mOutsideRenderPassCommands->trackImagesWithEvent(this, srcImage, dstImage);
-        }
-    }
-    void trackImagesWithOutsideRenderPassEvent(const vk::ImageHelperPtr *images, size_t count)
-    {
-        if (mRenderer->getFeatures().useVkEventForImageBarrier.enabled)
-        {
-            mOutsideRenderPassCommands->trackImagesWithEvent(this, images, count);
-        }
-    }
-
     angle::Result submitStagedTextureUpdates()
     {
         // Staged updates are recorded in outside RP cammand buffer, submit them.

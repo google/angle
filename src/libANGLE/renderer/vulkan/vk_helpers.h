@@ -1546,8 +1546,6 @@ class OutsideRenderPassCommandBufferHelper final : public CommandBufferHelperCom
 
     // Call SetEvent and have image's current event pointing to it.
     void trackImageWithEvent(Context *context, ImageHelper *image);
-    void trackImagesWithEvent(Context *context, ImageHelper *srcImage, ImageHelper *dstImage);
-    void trackImagesWithEvent(Context *context, const ImageHelperPtr *images, size_t count);
 
     // Issues SetEvent calls to the command buffer.
     void flushSetEvents(Context *context) { flushSetEventsImpl(context, &mCommandBuffer); }
@@ -1943,7 +1941,6 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     void finalizeDepthStencilImageLayoutAndLoadStore(Context *context);
     void finalizeFragmentShadingRateImageLayout(Context *context);
 
-    void trackImagesWithEvent(Context *context, const ImageHelperPtr *images, size_t count);
     void executeSetEvents(Context *context, PrimaryCommandBuffer *primary);
 
     // When using Vulkan secondary command buffers, each subpass must be recorded in a separate

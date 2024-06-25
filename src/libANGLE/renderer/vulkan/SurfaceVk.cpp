@@ -2218,7 +2218,6 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
         mColorImageMS.resolve(image.image.get(), resolveRegion,
                               &commandBufferHelper->getCommandBuffer());
 
-        contextVk->trackImagesWithOutsideRenderPassEvent(&mColorImageMS, image.image.get());
         contextVk->getPerfCounters().swapchainResolveOutsideSubpass++;
     }
 

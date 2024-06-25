@@ -1386,20 +1386,13 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
 
         if (canBlitWithCommand && areChannelsBlitCompatible && !reinterpretsColorspace)
         {
-            // Stash all images that involved with blit so that we can track them all at once.
-            angle::FixedVector<vk::ImageHelper *, 1 + gl::IMPLEMENTATION_MAX_DRAW_BUFFERS>
-                accessedImages;
-            accessedImages.push_back(&readRenderTarget->getImageForCopy());
             for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
             {
                 RenderTargetVk *drawRenderTarget = mRenderTargetCache.getColors()[colorIndexGL];
                 ANGLE_TRY(blitWithCommand(contextVk, sourceArea, destArea, readRenderTarget,
                                           drawRenderTarget, filter, true, false, false, flipX,
                                           flipY));
-                accessedImages.push_back(&drawRenderTarget->getImageForWrite());
             }
-            contextVk->trackImagesWithOutsideRenderPassEvent(accessedImages.data(),
-                                                             accessedImages.size());
         }
         // If we're not flipping or rotating, use Vulkan's builtin resolve.
         else if (isColorResolve && !flipX && !flipY && areChannelsBlitCompatible &&
@@ -1507,8 +1500,6 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
             ANGLE_TRY(blitWithCommand(contextVk, sourceArea, destArea, readRenderTarget,
                                       drawRenderTarget, filter, false, blitDepthBuffer,
                                       blitStencilBuffer, flipX, flipY));
-            contextVk->trackImagesWithOutsideRenderPassEvent(&readRenderTarget->getImageForCopy(),
-                                                             &drawRenderTarget->getImageForWrite());
         }
         else
         {
@@ -1853,8 +1844,6 @@ angle::Result FramebufferVk::generateFragmentShadingRateWithCPU(
                                   mFragmentShadingRateImage.getImage(),
                                   VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &copy);
 
-    contextVk->trackImageWithOutsideRenderPassEvent(&mFragmentShadingRateImage);
-
     return angle::Result::Continue;
 }
 
@@ -2011,8 +2000,6 @@ angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
     resolveRegion.extent.depth                  = 1;
 
     angle::VulkanPerfCounters &perfCounters = contextVk->getPerfCounters();
-    angle::FixedVector<vk::ImageHelperPtr, 1 + gl::IMPLEMENTATION_MAX_DRAW_BUFFERS> accessedImages;
-    accessedImages.push_back(srcImage);
     for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
     {
         RenderTargetVk *drawRenderTarget = mRenderTargetCache.getColors()[colorIndexGL];
@@ -2025,9 +2012,7 @@ angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
         srcImage->resolve(&dstImage, resolveRegion, commandBuffer);
 
         perfCounters.resolveImageCommands++;
-        accessedImages.push_back(&dstImage);
     }
-    contextVk->trackImagesWithOutsideRenderPassEvent(accessedImages.data(), accessedImages.size());
 
     return angle::Result::Continue;
 }
