@@ -489,8 +489,14 @@ cl_int ValidateHostRegionForImage(const Image &image,
         {
             return CL_INVALID_VALUE;
         }
+        else if (slicePitch < rowPitch)
+        {
+            return CL_INVALID_VALUE;
+        }
         // CL_INVALID_VALUE if slice_pitch is not 0 and is less than row_pitch x height.
-        if (slicePitch < rowPitch * region[1])
+        else if (((image.getType() == MemObjectType::Image2D_Array) ||
+                  (image.getType() == MemObjectType::Image3D)) &&
+                 (slicePitch < rowPitch * region[1]))
         {
             return CL_INVALID_VALUE;
         }

@@ -329,16 +329,13 @@ angle::Result CLImageVk::copyStagingToFromWithPitch(void *hostPtr,
 {
     uint8_t *ptrInBase  = nullptr;
     uint8_t *ptrOutBase = nullptr;
-    size_t srcRowPitch =
-        (copyStagingTo == StagingBufferCopyDirection::ToHost) ? calculateRowPitch() : rowPitch;
-    size_t srcSlicePitch = (copyStagingTo == StagingBufferCopyDirection::ToHost)
-                               ? calculateSlicePitch(srcRowPitch)
-                               : slicePitch;
-    size_t dstRowPitch =
-        (copyStagingTo == StagingBufferCopyDirection::ToHost) ? rowPitch : calculateRowPitch();
-    size_t dstSlicePitch = (copyStagingTo == StagingBufferCopyDirection::ToHost)
-                               ? slicePitch
-                               : calculateSlicePitch(dstRowPitch);
+    cl::BufferBox stagingBufferBox{
+        {},
+        {static_cast<int>(region.x), static_cast<int>(region.y), static_cast<int>(region.z)},
+        0,
+        0,
+        getElementSize()};
+
     if (copyStagingTo == StagingBufferCopyDirection::ToHost)
     {
         ptrOutBase = static_cast<uint8_t *>(hostPtr);
@@ -353,11 +350,15 @@ angle::Result CLImageVk::copyStagingToFromWithPitch(void *hostPtr,
     {
         for (size_t row = 0; row < region.y; row++)
         {
-            size_t dstOffset = (slice * dstSlicePitch + row * dstRowPitch);
-            size_t srcOffset = (slice * srcSlicePitch + row * srcRowPitch);
-            uint8_t *dst     = ptrOutBase + dstOffset;
-            uint8_t *src     = ptrInBase + srcOffset;
-            memcpy(dst, src, region.x * mElementSize);
+            size_t stagingBufferOffset = stagingBufferBox.getRowOffset(slice, row);
+            size_t hostPtrOffset       = (slice * slicePitch + row * rowPitch);
+            uint8_t *dst               = (copyStagingTo == StagingBufferCopyDirection::ToHost)
+                                             ? ptrOutBase + hostPtrOffset
+                                             : ptrOutBase + stagingBufferOffset;
+            uint8_t *src               = (copyStagingTo == StagingBufferCopyDirection::ToHost)
+                                             ? ptrInBase + stagingBufferOffset
+                                             : ptrInBase + hostPtrOffset;
+            memcpy(dst, src, region.x * getElementSize());
         }
     }
     getStagingBuffer().unmap(mContext->getRenderer());
@@ -669,25 +670,28 @@ void CLImageVk::fillImageWithColor(const cl::MemOffsets &origin,
                                    uint8_t *imagePtr,
                                    PixelColor *packedColor)
 {
-    size_t imageRowPitch   = calculateRowPitch();
-    size_t imageSlicePitch = calculateSlicePitch(imageRowPitch);
-
-    uint8_t *ptr = imagePtr + (origin.z * imageSlicePitch) + (origin.y * imageRowPitch) +
-                   (origin.x * mElementSize);
-    for (size_t z = 0; z < region.z; z++)
+    size_t elementSize = getElementSize();
+    cl::BufferBox stagingBufferBox{
+        {},
+        {static_cast<int>(mExtent.width), static_cast<int>(mExtent.height),
+         static_cast<int>(mExtent.depth)},
+        0,
+        0,
+        elementSize};
+    uint8_t *ptrBase = imagePtr + (origin.z * stagingBufferBox.getSlicePitch()) +
+                       (origin.y * stagingBufferBox.getRowPitch()) + (origin.x * elementSize);
+    for (size_t slice = 0; slice < region.z; slice++)
     {
-        uint8_t *rowPtr = ptr;
-        for (size_t y = 0; y < region.y; y++)
+        for (size_t row = 0; row < region.y; row++)
         {
-            uint8_t *pixelPtr = rowPtr;
+            size_t stagingBufferOffset = stagingBufferBox.getRowOffset(slice, row);
+            uint8_t *pixelPtr          = ptrBase + stagingBufferOffset;
             for (size_t x = 0; x < region.x; x++)
             {
                 memcpy(pixelPtr, packedColor, mElementSize);
                 pixelPtr += mElementSize;
             }
-            rowPtr += imageRowPitch;
         }
-        ptr += imageSlicePitch;
     }
 }
 

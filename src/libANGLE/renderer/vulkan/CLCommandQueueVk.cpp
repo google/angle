@@ -780,8 +780,12 @@ angle::Result CLCommandQueueVk::enqueueMapImage(const cl::Image &image,
     ANGLE_TRY(finishInternal());
 
     uint8_t *mapPointer = nullptr;
-    size_t offset       = (origin.x * origin.y * origin.z * imageVk->getElementSize());
-    size_t size         = (region.x * region.y * region.z * imageVk->getElementSize());
+    size_t elementSize  = imageVk->getElementSize();
+    size_t rowPitch     = (extent.width * elementSize);
+    size_t offset =
+        (origin.x * elementSize) + (origin.y * rowPitch) + (origin.z * extent.height * rowPitch);
+    size_t size = (region.x * region.y * region.z * elementSize);
+
     if (image.getFlags().intersects(CL_MEM_USE_HOST_PTR))
     {
         mapPointer = static_cast<uint8_t *>(image.getHostPtr()) + offset;
@@ -793,7 +797,7 @@ angle::Result CLCommandQueueVk::enqueueMapImage(const cl::Image &image,
     }
     mapPtr = static_cast<void *>(mapPointer);
 
-    *imageRowPitch = (region.x * imageVk->getElementSize());
+    *imageRowPitch = rowPitch;
 
     switch (imageVk->getDesc().type)
     {
@@ -807,7 +811,7 @@ angle::Result CLCommandQueueVk::enqueueMapImage(const cl::Image &image,
             break;
         case cl::MemObjectType::Image2D_Array:
         case cl::MemObjectType::Image3D:
-            *imageSlicePitch = (region.y * (*imageRowPitch));
+            *imageSlicePitch = (extent.height * (*imageRowPitch));
             break;
         case cl::MemObjectType::Image1D_Array:
             *imageSlicePitch = *imageRowPitch;
