@@ -2663,6 +2663,24 @@ void RenderPassCommandBufferHelper::finalizeDepthStencilLoadStore(Context *conte
         dsOps.isStencilInvalidated = true;
     }
 
+    // If any aspect is missing, set the corresponding ops to don't care.
+    const uint32_t depthStencilIndexGL =
+        static_cast<uint32_t>(mRenderPassDesc.depthStencilAttachmentIndex());
+    const angle::FormatID attachmentFormatID = mRenderPassDesc[depthStencilIndexGL];
+    ASSERT(attachmentFormatID != angle::FormatID::NONE);
+    const angle::Format &angleFormat = angle::Format::Get(attachmentFormatID);
+
+    if (angleFormat.depthBits == 0)
+    {
+        depthLoadOp  = RenderPassLoadOp::DontCare;
+        depthStoreOp = RenderPassStoreOp::DontCare;
+    }
+    if (angleFormat.stencilBits == 0)
+    {
+        stencilLoadOp  = RenderPassLoadOp::DontCare;
+        stencilStoreOp = RenderPassStoreOp::DontCare;
+    }
+
     // If the image is being written to, mark its contents defined.
     // This has to be done after storeOp has been finalized.
     ASSERT(mDepthAttachment.getImage() == mStencilAttachment.getImage());
