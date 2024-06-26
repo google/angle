@@ -9,6 +9,8 @@
 #include "libANGLE/renderer/vulkan/CLPlatformVk.h"
 #include "libANGLE/renderer/vulkan/vk_renderer.h"
 
+#include "libANGLE/renderer/cl_types.h"
+
 #include "libANGLE/Display.h"
 #include "libANGLE/cl_utils.h"
 
@@ -61,9 +63,12 @@ CLDeviceVk::CLDeviceVk(const cl::Device &device, vk::Renderer *renderer)
         {cl::DeviceInfo::SingleFpConfig, CL_FP_ROUND_TO_NEAREST | CL_FP_INF_NAN | CL_FP_FMA},
         {cl::DeviceInfo::AtomicMemoryCapabilities,
          CL_DEVICE_ATOMIC_ORDER_RELAXED | CL_DEVICE_ATOMIC_SCOPE_WORK_GROUP},
+        // TODO (http://anglebug.com/379669750) Add these based on the Vulkan features query
         {cl::DeviceInfo::AtomicFenceCapabilities, CL_DEVICE_ATOMIC_ORDER_RELAXED |
-                                                      CL_DEVICE_ATOMIC_SCOPE_WORK_ITEM |
-                                                      CL_DEVICE_ATOMIC_SCOPE_WORK_GROUP},
+                                                      CL_DEVICE_ATOMIC_ORDER_ACQ_REL |
+                                                      CL_DEVICE_ATOMIC_SCOPE_WORK_GROUP |
+                                                      // non-mandatory
+                                                      CL_DEVICE_ATOMIC_SCOPE_WORK_ITEM},
     };
     mInfoUInt = {
         {cl::DeviceInfo::VendorID, props.vendorID},
@@ -92,7 +97,9 @@ CLDeviceVk::CLDeviceVk(const cl::Device &device, vk::Renderer *renderer)
         {cl::DeviceInfo::AddressBits, 32},
         {cl::DeviceInfo::EndianLittle, CL_TRUE},
         {cl::DeviceInfo::LocalMemType, CL_LOCAL},
-        {cl::DeviceInfo::MaxSamplers, props.limits.maxSamplerAllocationCount},
+        // TODO (http://anglebug.com/379669750) Vulkan reports a big sampler count number, we dont
+        // need that many and set it to minimum req for now.
+        {cl::DeviceInfo::MaxSamplers, 16u},
         {cl::DeviceInfo::MaxConstantArgs, 8},
         {cl::DeviceInfo::MaxNumSubGroups, 0},
         {cl::DeviceInfo::MaxComputeUnits, 4},
@@ -145,12 +152,13 @@ CLDeviceImpl::Info CLDeviceVk::createInfo(cl::DeviceType type) const
 
     info.imageSupport = CL_TRUE;
 
-    info.image2D_MaxWidth          = properties.limits.maxImageDimension2D;
-    info.image2D_MaxHeight         = properties.limits.maxImageDimension2D;
-    info.image3D_MaxWidth          = properties.limits.maxImageDimension3D;
-    info.image3D_MaxHeight         = properties.limits.maxImageDimension3D;
-    info.image3D_MaxDepth          = properties.limits.maxImageDimension3D;
-    info.imageMaxBufferSize        = properties.limits.maxImageDimension1D;
+    info.image2D_MaxWidth  = properties.limits.maxImageDimension2D;
+    info.image2D_MaxHeight = properties.limits.maxImageDimension2D;
+    info.image3D_MaxWidth  = properties.limits.maxImageDimension3D;
+    info.image3D_MaxHeight = properties.limits.maxImageDimension3D;
+    info.image3D_MaxDepth  = properties.limits.maxImageDimension3D;
+    // TODO (http://anglebug.com/379669750) For now set it minimum requirement.
+    info.imageMaxBufferSize        = 65536;
     info.imageMaxArraySize         = properties.limits.maxImageArrayLayers;
     info.imagePitchAlignment       = 0u;
     info.imageBaseAddressAlignment = 0u;

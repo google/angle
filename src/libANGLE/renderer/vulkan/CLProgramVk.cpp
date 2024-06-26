@@ -586,6 +586,7 @@ angle::Result CLProgramVk::getInfo(cl::ProgramInfo name,
                                    size_t *valueSizeRet) const
 {
     cl_uint valUInt            = 0u;
+    cl_bool valBool            = CL_FALSE;
     void *valPointer           = nullptr;
     const void *copyValue      = nullptr;
     size_t copySize            = 0u;
@@ -658,6 +659,12 @@ angle::Result CLProgramVk::getInfo(cl::ProgramInfo name,
             valPointer = kernelNamesList.data();
             copyValue  = valPointer;
             copySize   = kernelNamesList.size() + 1;
+            break;
+        case cl::ProgramInfo::ScopeGlobalCtorsPresent:
+        case cl::ProgramInfo::ScopeGlobalDtorsPresent:
+            // These are deprecated by version 3.0 and are currently not supported
+            copyValue = &valBool;
+            copySize  = sizeof(cl_bool);
             break;
         default:
             UNREACHABLE();
