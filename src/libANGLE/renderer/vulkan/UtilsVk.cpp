@@ -1443,8 +1443,8 @@ angle::Result UtilsVk::ensureResourcesInitialized(ContextVk *contextVk,
     uint32_t currentBinding = 0;
     for (size_t i = 0; i < setSizesCount; ++i)
     {
-        descriptorSetDesc.update(currentBinding, setSizes[i].type, setSizes[i].descriptorCount,
-                                 descStages, nullptr);
+        descriptorSetDesc.addBinding(currentBinding, setSizes[i].type, setSizes[i].descriptorCount,
+                                     descStages, nullptr);
         ++currentBinding;
     }
 
@@ -1620,8 +1620,8 @@ angle::Result UtilsVk::ensureImageCopyResourcesInitializedWithSampler(
         contextVk->getRenderer()->getSamplerCache().getSampler(contextVk, samplerDesc, &sampler));
 
     vk::DescriptorSetLayoutDesc descriptorSetDesc;
-    descriptorSetDesc.update(0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1,
-                             VK_SHADER_STAGE_FRAGMENT_BIT, &sampler.get().get());
+    descriptorSetDesc.addBinding(0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1,
+                                 VK_SHADER_STAGE_FRAGMENT_BIT, &sampler.get().get());
 
     ANGLE_TRY(contextVk->getDescriptorSetLayoutCache().getDescriptorSetLayout(
         contextVk, descriptorSetDesc,

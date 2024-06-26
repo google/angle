@@ -4301,12 +4301,13 @@ bool DescriptorSetLayoutDesc::operator==(const DescriptorSetLayoutDesc &other) c
            mImmutableSamplers == other.mImmutableSamplers;
 }
 
-void DescriptorSetLayoutDesc::update(uint32_t bindingIndex,
-                                     VkDescriptorType descriptorType,
-                                     uint32_t count,
-                                     VkShaderStageFlags stages,
-                                     const Sampler *immutableSampler)
+void DescriptorSetLayoutDesc::addBinding(uint32_t bindingIndex,
+                                         VkDescriptorType descriptorType,
+                                         uint32_t count,
+                                         VkShaderStageFlags stages,
+                                         const Sampler *immutableSampler)
 {
+    ASSERT(static_cast<uint8_t>(descriptorType) != PackedDescriptorSetBinding::kInvalidType);
     ASSERT(static_cast<size_t>(descriptorType) < std::numeric_limits<uint8_t>::max());
     ASSERT(count < std::numeric_limits<uint16_t>::max());
     ASSERT(bindingIndex < std::numeric_limits<uint16_t>::max());
@@ -4319,6 +4320,7 @@ void DescriptorSetLayoutDesc::update(uint32_t bindingIndex,
     }
 
     PackedDescriptorSetBinding &packedBinding = mDescriptorSetLayoutBindings[bindingIndex];
+    ASSERT(packedBinding.type == PackedDescriptorSetBinding::kInvalidType);
     SetBitField(packedBinding.type, descriptorType);
     SetBitField(packedBinding.count, count);
     SetBitField(packedBinding.stages, stages);

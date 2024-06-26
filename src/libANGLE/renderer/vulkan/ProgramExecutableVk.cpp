@@ -1241,7 +1241,7 @@ void ProgramExecutableVk::addInterfaceBlockDescriptorSetDesc(
 
         const VkShaderStageFlags activeStages = gl_vk::GetShaderStageFlags(info.activeStages);
 
-        descOut->update(info.binding, descType, arraySize, activeStages, nullptr);
+        descOut->addBinding(info.binding, descType, arraySize, activeStages, nullptr);
     }
 }
 
@@ -1259,8 +1259,9 @@ void ProgramExecutableVk::addAtomicCounterBufferDescriptorSetDesc(
     VkShaderStageFlags activeStages = gl_vk::GetShaderStageFlags(info.activeStages);
 
     // A single storage buffer array is used for all stages for simplicity.
-    descOut->update(info.binding, vk::kStorageBufferDescriptorType,
-                    gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS, activeStages, nullptr);
+    descOut->addBinding(info.binding, vk::kStorageBufferDescriptorType,
+                        gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS, activeStages,
+                        nullptr);
 }
 
 void ProgramExecutableVk::addImageDescriptorSetDesc(vk::DescriptorSetLayoutDesc *descOut)
@@ -1300,7 +1301,7 @@ void ProgramExecutableVk::addImageDescriptorSetDesc(vk::DescriptorSetLayoutDesc 
         const VkDescriptorType descType = imageBinding.textureType == gl::TextureType::Buffer
                                               ? VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER
                                               : VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
-        descOut->update(info.binding, descType, arraySize, activeStages, nullptr);
+        descOut->addBinding(info.binding, descType, arraySize, activeStages, nullptr);
     }
 }
 
@@ -1326,8 +1327,8 @@ void ProgramExecutableVk::addInputAttachmentDescriptorSetDesc(vk::DescriptorSetL
 
     for (uint32_t colorIndex = 0; colorIndex < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; ++colorIndex)
     {
-        descOut->update(baseBinding, VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1,
-                        VK_SHADER_STAGE_FRAGMENT_BIT, nullptr);
+        descOut->addBinding(baseBinding, VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1,
+                            VK_SHADER_STAGE_FRAGMENT_BIT, nullptr);
         baseBinding++;
     }
 }
@@ -1388,8 +1389,8 @@ angle::Result ProgramExecutableVk::addTextureDescriptorSetDesc(
             // externalFormat
             const TextureVk *textureVk          = (*activeTextures)[textureUnit];
             const vk::Sampler &immutableSampler = textureVk->getSampler(isSamplerExternalY2Y).get();
-            descOut->update(info.binding, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, arraySize,
-                            activeStages, &immutableSampler);
+            descOut->addBinding(info.binding, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, arraySize,
+                                activeStages, &immutableSampler);
             const vk::ImageHelper &image = textureVk->getImage();
             const vk::YcbcrConversionDesc ycbcrConversionDesc =
                 isSamplerExternalY2Y ? image.getY2YConversionDesc()
@@ -1426,7 +1427,7 @@ angle::Result ProgramExecutableVk::addTextureDescriptorSetDesc(
             const VkDescriptorType descType = samplerBinding.textureType == gl::TextureType::Buffer
                                                   ? VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER
                                                   : VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
-            descOut->update(info.binding, descType, arraySize, activeStages, nullptr);
+            descOut->addBinding(info.binding, descType, arraySize, activeStages, nullptr);
         }
     }
 
@@ -1733,8 +1734,9 @@ angle::Result ProgramExecutableVk::createPipelineLayout(
         // Note that currently the default uniform block is added unconditionally.
         ASSERT(info.activeStages[shaderType]);
 
-        mDefaultUniformAndXfbSetDesc.update(info.binding, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC,
-                                            1, gl_vk::kShaderStageMap[shaderType], nullptr);
+        mDefaultUniformAndXfbSetDesc.addBinding(info.binding,
+                                                VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, 1,
+                                                gl_vk::kShaderStageMap[shaderType], nullptr);
         numDefaultUniformDescriptors++;
     }
 
@@ -1749,8 +1751,8 @@ angle::Result ProgramExecutableVk::createPipelineLayout(
             const uint32_t binding = mVariableInfoMap.getEmulatedXfbBufferBinding(bufferIndex);
             ASSERT(binding != std::numeric_limits<uint32_t>::max());
 
-            mDefaultUniformAndXfbSetDesc.update(binding, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1,
-                                                VK_SHADER_STAGE_VERTEX_BIT, nullptr);
+            mDefaultUniformAndXfbSetDesc.addBinding(binding, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1,
+                                                    VK_SHADER_STAGE_VERTEX_BIT, nullptr);
         }
     }
 
