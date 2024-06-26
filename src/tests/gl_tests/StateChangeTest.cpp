@@ -10047,6 +10047,29 @@ TEST_P(StateChangeTestES3, PrimitiveRestart)
     ASSERT_GL_NO_ERROR();
 }
 
+// Tests that primitive restart for patches can be queried when tessellation shaders are available,
+// and that its value is independent of whether primitive restart is enabled.
+TEST_P(StateChangeTestES31, PrimitiveRestartForPatchQuery)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_tessellation_shader"));
+
+    glEnable(GL_PRIMITIVE_RESTART_FIXED_INDEX);
+    GLint primitiveRestartForPatchesWhenEnabled = -1;
+    glGetIntegerv(GL_PRIMITIVE_RESTART_FOR_PATCHES_SUPPORTED,
+                  &primitiveRestartForPatchesWhenEnabled);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_GE(primitiveRestartForPatchesWhenEnabled, 0);
+
+    glDisable(GL_PRIMITIVE_RESTART_FIXED_INDEX);
+    GLint primitiveRestartForPatchesWhenDisabled = -1;
+    glGetIntegerv(GL_PRIMITIVE_RESTART_FOR_PATCHES_SUPPORTED,
+                  &primitiveRestartForPatchesWhenDisabled);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_GE(primitiveRestartForPatchesWhenDisabled, 0);
+
+    EXPECT_EQ(primitiveRestartForPatchesWhenEnabled, primitiveRestartForPatchesWhenDisabled);
+}
+
 // Tests state change for GL_COLOR_LOGIC_OP and glLogicOp.
 TEST_P(StateChangeTestES3, LogicOp)
 {

@@ -346,6 +346,8 @@ struct Caps
     GLint maxTessEvaluationInputComponents  = 0;
     GLint maxTessEvaluationOutputComponents = 0;
 
+    bool primitiveRestartForPatchesSupported = false;
+
     GLuint subPixelBits = 4;
 
     // GL_EXT_blend_func_extended
