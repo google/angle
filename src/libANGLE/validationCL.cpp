@@ -839,7 +839,8 @@ cl_int ValidateGetCommandQueueInfo(cl_command_queue command_queue,
     }
     const CommandQueue &queue = command_queue->cast<CommandQueue>();
     // or if command_queue is not a valid command-queue for param_name.
-    if (param_name == CommandQueueInfo::Size && queue.isOnDevice())
+    if (param_name == CommandQueueInfo::Size && queue.isOnDevice() &&
+        !queue.getDevice().hasDeviceEnqueueCaps())
     {
         return CL_INVALID_COMMAND_QUEUE;
     }
@@ -2237,6 +2238,22 @@ cl_int ValidateEnqueueNDRangeKernel(cl_command_queue command_queue,
     }
     if (local_work_size != nullptr)
     {
+        // CL_INVALID_WORK_GROUP_SIZE when non-uniform work-groups are not supported, the size of
+        // each work-group must be uniform. If local_work_size is specified, the values specified in
+        // global_work_size[0],...,global_work_size[work_dim - 1] must be evenly divisible by
+        // the corresponding values specified in local_work_size[0],...,
+        // local_work_size[work_dim-1].
+        if (!device.supportsNonUniformWorkGroups())
+        {
+            for (cl_uint i = 0; i < work_dim; ++i)
+            {
+                if (global_work_size[i] % local_work_size[i] != 0)
+                {
+                    return CL_INVALID_WORK_GROUP_SIZE;
+                }
+            }
+        }
+
         for (cl_uint i = 0; i < work_dim; ++i)
         {
             // CL_INVALID_WORK_GROUP_SIZE when non-uniform work-groups are not supported, the size
@@ -2659,6 +2676,18 @@ cl_int ValidateCreateSubBuffer(cl_mem buffer,
     if (region->size == 0u)
     {
         return CL_INVALID_BUFFER_SIZE;
+    }
+
+    // CL_MISALIGNED_SUB_BUFFER_OFFSET when the sub-buffer object is created with an offset that is
+    // not aligned to CL_DEVICE_MEM_BASE_ADDR_ALIGN value (which is in bits!) for devices associated
+    // with the context.
+    const Memory &memory = buffer->cast<Memory>();
+    for (const DevicePtr &device : memory.getContext().getDevices())
+    {
+        if (region->origin % (device->getInfo().memBaseAddrAlign / CHAR_BIT) != 0)
+        {
+            return CL_MISALIGNED_SUB_BUFFER_OFFSET;
+        }
     }
 
     return CL_SUCCESS;
