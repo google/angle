@@ -75,15 +75,33 @@ TEST_F(WGSLOutputTest, BasicTranslation)
         void main()
         {
             Foo foo;
-            // foo.x = 2.0;
-            // foo.y = 2.0;
+            // Struct field accesses.
+            foo.x = 2.0;
+            foo.y = 2.0;
+            // Complicated constUnion should be emitted correctly.
+            foo.multiArray = vec3[][](
+              vec3[](
+                vec3(1.0, 2.0, 3.0),
+                vec3(1.0, 2.0, 3.0),
+                vec3(1.0, 2.0, 3.0)),
+              vec3[](
+                vec3(4.0, 5.0, 6.0),
+                vec3(4.0, 5.0, 6.0),
+                vec3(4.0, 5.0, 6.0)
+              )
+            );
+            int arrIndex = 1;
+            // Access an array index with a constant index.
+            float f = foo.multiArray[0][1].x;
+            // Access an array index with a non-const index, should clamp by default.
+            float f2 = foo.multiArray[0][arrIndex].x;
+            gl_FragDepth = f + f2;
             doFoo(returnFoo(foo), returnFloat(3.0));
             takeArgs(vec2(1.0, 2.0), foo.x);
             returnFloat(doFoo(foo, 7.0 + 9.0).x);
         })";
     const std::string &outputString =
-        R"(
-_uoutColor : vec4<f32>;
+        R"(_uoutColor : vec4<f32>;
 
 struct _uFoo
 {
@@ -118,6 +136,13 @@ fn _utakeArgs(_ux : vec2<f32>, _uy : f32) -> f32
 fn _umain()
 {
   _ufoo : _uFoo;
+  ((_ufoo)._ux) = (2.0f);
+  ((_ufoo)._uy) = (2.0f);
+  ((_ufoo)._umultiArray) = (array<array<vec3<f32>, 3>, 2>(array<vec3<f32>, 3>(vec3<f32>(1.0f, 2.0f, 3.0f), vec3<f32>(1.0f, 2.0f, 3.0f), vec3<f32>(1.0f, 2.0f, 3.0f)), array<vec3<f32>, 3>(vec3<f32>(4.0f, 5.0f, 6.0f), vec3<f32>(4.0f, 5.0f, 6.0f), vec3<f32>(4.0f, 5.0f, 6.0f))));
+  _uarrIndex : i32 = (1i);
+  _uf : f32 = (((((_ufoo)._umultiArray)[0i])[1i]).x);
+  _uf2 : f32 = (((((_ufoo)._umultiArray)[0i])[clamp((_uarrIndex), 0, 2)]).x);
+  (gl_FragDepth) = ((_uf) + (_uf2));
   _udoFoo(_ureturnFoo(_ufoo), _ureturnFloat(3.0f));
   _utakeArgs(vec2<f32>(1.0f, 2.0f), (_ufoo)._ux);
   _ureturnFloat((_udoFoo(_ufoo, 16.0f)).x);
