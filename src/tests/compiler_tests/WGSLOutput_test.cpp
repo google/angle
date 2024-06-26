@@ -115,22 +115,22 @@ fn _udoFoo(_ufoo : _uFoo, _uzw : f32) -> vec4<f32>;
 
 fn _udoFoo(_ufoo : _uFoo, _uzw : f32) -> vec4<f32>
 {
-  ;
+  return vec4<f32>((_ufoo)._ux, (_ufoo)._uy, _uzw, _uzw);
 }
 
 fn _ureturnFoo(_ufoo : _uFoo) -> _uFoo
 {
-  ;
+  return _ufoo;
 }
 
 fn _ureturnFloat(_ux : f32) -> f32
 {
-  ;
+  return _ux;
 }
 
 fn _utakeArgs(_ux : vec2<f32>, _uy : f32) -> f32
 {
-  ;
+  return _uy;
 }
 
 fn _umain()
@@ -146,6 +146,167 @@ fn _umain()
   _udoFoo(_ureturnFoo(_ufoo), _ureturnFloat(3.0f));
   _utakeArgs(vec2<f32>(1.0f, 2.0f), (_ufoo)._ux);
   _ureturnFloat((_udoFoo(_ufoo, 16.0f)).x);
+}
+)";
+    compile(shaderString);
+    EXPECT_TRUE(foundInCode(outputString.c_str()));
+}
+
+TEST_F(WGSLOutputTest, ControlFlow)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision highp float;
+
+        int ifElseDemo() {
+          int x = 5;
+          if (x == 5) {
+            return 6;
+          } else if (x == 6) {
+            return 7;
+          } else {
+            return 8;
+          }
+        }
+
+        void switchDemo() {
+          int x = 5;
+          switch (x) {
+          case 5:
+          case 6:
+            discard;
+          case 7: {
+            return;
+          }
+          case 8:
+          case 9:
+            {
+              x = 7;
+            }
+            return;
+          default:
+            return;
+          }
+        }
+
+        void forLoopDemo() {
+          for (int i = 0; i < 5; i++) {
+            if (i == 4) {
+              break;
+            } else if (i == 5) {
+              continue;
+            }
+          }
+        }
+
+        void whileLoopDemo() {
+          int i = 0;
+          while (i < 5) {
+            i++;
+          }
+
+          do {
+            i++;
+          } while (i < 5);
+        }
+
+        void main()
+        {
+          ifElseDemo();
+          switchDemo();
+          forLoopDemo();
+          whileLoopDemo();
+        })";
+    const std::string &outputString =
+        R"(
+fn _uifElseDemo() -> i32
+{
+  _ux : i32 = (5i);
+  if ((_ux) == (5i))
+  {
+    return 6i;
+  }
+  else
+  {
+    if ((_ux) == (6i))
+    {
+      return 7i;
+    }
+    else
+    {
+      return 8i;
+    }
+  }
+}
+
+fn _uswitchDemo()
+{
+  _ux : i32 = (5i);
+  switch _ux
+  {
+    case 5i, 6i:
+    {
+      discard;
+    }
+    case 7i:
+    {
+      {
+        return;
+      }
+    }
+    case 8i, 9i:
+    {
+      {
+        (_ux) = (7i);
+      }
+      return;
+    }
+    case default:
+    {
+      return;
+    }
+  }
+}
+
+fn _uforLoopDemo()
+{
+  for (_ui : i32 = (0i); (_ui) < (5i); (_ui)++)
+  {
+    if ((_ui) == (4i))
+    {
+      break;
+    }
+    else
+    {
+      if ((_ui) == (5i))
+      {
+        continue;
+      }
+    }
+  }
+}
+
+fn _uwhileLoopDemo()
+{
+  _ui : i32 = (0i);
+  while ((_ui) < (5i))
+  {
+    (_ui)++;
+  }
+  loop {
+    {
+      (_ui)++;
+    }
+    if (!((_ui) < (5i)) { break; }
+  }
+}
+
+fn _umain()
+{
+  _uifElseDemo();
+  _uswitchDemo();
+  _uforLoopDemo();
+  _uwhileLoopDemo();
 }
 )";
     compile(shaderString);

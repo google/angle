@@ -137,6 +137,7 @@ class OutputWGSLTraverser : public TIntermTraverser
     void emitIndentation();
     void emitOpenBrace();
     void emitCloseBrace();
+    bool emitBlock(TSpan<TIntermNode *> nodes);
     void emitFunctionSignature(const TFunction &func);
     void emitFunctionReturn(const TFunction &func);
     void emitFunctionParameter(const TFunction &func, const TVariable &param);
@@ -144,6 +145,10 @@ class OutputWGSLTraverser : public TIntermTraverser
     void emitVariableDeclaration(const VarDecl &decl,
                                  const EmitVariableDeclarationConfig &evdConfig);
     void emitArrayIndex(TIntermTyped &leftNode, TIntermTyped &rightNode);
+
+    bool emitForLoop(TIntermLoop *);
+    bool emitWhileLoop(TIntermLoop *);
+    bool emulateDoWhileLoop(TIntermLoop *);
 
     TInfoSinkBase &mSink;
 
@@ -1087,19 +1092,120 @@ bool OutputWGSLTraverser::visitTernary(Visit, TIntermTernary *conditionalNode)
 
 bool OutputWGSLTraverser::visitIfElse(Visit, TIntermIfElse *ifThenElseNode)
 {
-    // TODO(anglebug.com/42267100): support basic control flow.
+    TIntermTyped &condNode = *ifThenElseNode->getCondition();
+    TIntermBlock *thenNode = ifThenElseNode->getTrueBlock();
+    TIntermBlock *elseNode = ifThenElseNode->getFalseBlock();
+
+    mSink << "if (";
+    condNode.traverse(this);
+    mSink << ")";
+
+    if (thenNode)
+    {
+        mSink << "\n";
+        thenNode->traverse(this);
+    }
+    else
+    {
+        mSink << " {}";
+    }
+
+    if (elseNode)
+    {
+        mSink << "\n";
+        emitIndentation();
+        mSink << "else\n";
+        elseNode->traverse(this);
+    }
+
     return false;
 }
 
 bool OutputWGSLTraverser::visitSwitch(Visit, TIntermSwitch *switchNode)
 {
-    // TODO(anglebug.com/42267100): support switch statements.
+    TIntermBlock &stmtList = *switchNode->getStatementList();
+
+    emitIndentation();
+    mSink << "switch ";
+    switchNode->getInit()->traverse(this);
+    mSink << "\n";
+
+    emitOpenBrace();
+
+    // TODO(anglebug.com/42267100): Case statements that fall through need to combined into a single
+    // case statement with multiple labels.
+
+    const size_t stmtCount = stmtList.getChildCount();
+    bool inCaseList        = false;
+    size_t currStmt        = 0;
+    while (currStmt < stmtCount)
+    {
+        TIntermNode &stmtNode = *stmtList.getChildNode(currStmt);
+        TIntermCase *caseNode = stmtNode.getAsCaseNode();
+        if (caseNode)
+        {
+            if (inCaseList)
+            {
+                mSink << ", ";
+            }
+            else
+            {
+                emitIndentation();
+                mSink << "case ";
+                inCaseList = true;
+            }
+            caseNode->traverse(this);
+
+            // Process the next statement.
+            currStmt++;
+        }
+        else
+        {
+            // The current statement is not a case statement, end the current case list and emit all
+            // the code until the next case statement. WGSL requires braces around the case
+            // statement's code.
+            ASSERT(inCaseList);
+            inCaseList = false;
+            mSink << ":\n";
+
+            // Count the statements until the next case (or the end of the switch) and emit them as
+            // a block. This assumes that the current statement list will never fallthrough to the
+            // next case statement.
+            size_t nextCaseStmt = currStmt + 1;
+            for (;
+                 nextCaseStmt < stmtCount && !stmtList.getChildNode(nextCaseStmt)->getAsCaseNode();
+                 nextCaseStmt++)
+            {
+            }
+            TSpan<TIntermNode *> stmtListView(&stmtList.getSequence()->at(currStmt),
+                                              nextCaseStmt - currStmt);
+            emitBlock(stmtListView);
+            mSink << "\n";
+
+            // Skip to the next case statement.
+            currStmt = nextCaseStmt;
+        }
+    }
+
+    emitCloseBrace();
+
     return false;
 }
 
 bool OutputWGSLTraverser::visitCase(Visit, TIntermCase *caseNode)
 {
-    // TODO(anglebug.com/42267100): support switch statements.
+    // "case" will have been emitted in the visitSwitch() override.
+
+    if (caseNode->hasCondition())
+    {
+        TIntermTyped *condExpr = caseNode->getCondition();
+        condExpr->traverse(this);
+    }
+    else
+    {
+        mSink << "default";
+    }
+
     return false;
 }
 
@@ -1289,7 +1395,7 @@ bool OutputWGSLTraverser::visitAggregate(Visit, TIntermAggregate *aggregateNode)
     }
 }
 
-bool OutputWGSLTraverser::visitBlock(Visit, TIntermBlock *blockNode)
+bool OutputWGSLTraverser::emitBlock(TSpan<TIntermNode *> nodes)
 {
     ASSERT(mIndentLevel >= -1);
     const bool isGlobalScope = mIndentLevel == -1;
@@ -1305,10 +1411,10 @@ bool OutputWGSLTraverser::visitBlock(Visit, TIntermBlock *blockNode)
 
     TIntermNode *prevStmtNode = nullptr;
 
-    const size_t stmtCount = blockNode->getChildCount();
+    const size_t stmtCount = nodes.size();
     for (size_t i = 0; i < stmtCount; ++i)
     {
-        TIntermNode &stmtNode = *blockNode->getChildNode(i);
+        TIntermNode &stmtNode = *nodes[i];
 
         if (isGlobalScope && prevStmtNode && (NewlinePad(*prevStmtNode) || NewlinePad(stmtNode)))
         {
@@ -1339,6 +1445,11 @@ bool OutputWGSLTraverser::visitBlock(Visit, TIntermBlock *blockNode)
     }
 
     return false;
+}
+
+bool OutputWGSLTraverser::visitBlock(Visit, TIntermBlock *blockNode)
+{
+    return emitBlock(TSpan(blockNode->getSequence()->data(), blockNode->getSequence()->size()));
 }
 
 bool OutputWGSLTraverser::visitGlobalQualifierDeclaration(Visit,
@@ -1443,13 +1554,153 @@ bool OutputWGSLTraverser::visitDeclaration(Visit, TIntermDeclaration *declNode)
 
 bool OutputWGSLTraverser::visitLoop(Visit, TIntermLoop *loopNode)
 {
-    // TODO(anglebug.com/42267100): emit loops.
+    const TLoopType loopType = loopNode->getType();
+
+    switch (loopType)
+    {
+        case TLoopType::ELoopFor:
+            return emitForLoop(loopNode);
+        case TLoopType::ELoopWhile:
+            return emitWhileLoop(loopNode);
+        case TLoopType::ELoopDoWhile:
+            return emulateDoWhileLoop(loopNode);
+    }
+}
+
+bool OutputWGSLTraverser::emitForLoop(TIntermLoop *loopNode)
+{
+    ASSERT(loopNode->getType() == TLoopType::ELoopFor);
+
+    TIntermNode *initNode  = loopNode->getInit();
+    TIntermTyped *condNode = loopNode->getCondition();
+    TIntermTyped *exprNode = loopNode->getExpression();
+
+    mSink << "for (";
+
+    if (initNode)
+    {
+        initNode->traverse(this);
+    }
+    else
+    {
+        mSink << " ";
+    }
+
+    mSink << "; ";
+
+    if (condNode)
+    {
+        condNode->traverse(this);
+    }
+
+    mSink << "; ";
+
+    if (exprNode)
+    {
+        exprNode->traverse(this);
+    }
+
+    mSink << ")\n";
+
+    loopNode->getBody()->traverse(this);
+
+    return false;
+}
+
+bool OutputWGSLTraverser::emitWhileLoop(TIntermLoop *loopNode)
+{
+    ASSERT(loopNode->getType() == TLoopType::ELoopWhile);
+
+    TIntermNode *initNode  = loopNode->getInit();
+    TIntermTyped *condNode = loopNode->getCondition();
+    TIntermTyped *exprNode = loopNode->getExpression();
+    ASSERT(condNode);
+    ASSERT(!initNode && !exprNode);
+
+    emitIndentation();
+    mSink << "while (";
+    condNode->traverse(this);
+    mSink << ")\n";
+    loopNode->getBody()->traverse(this);
+
+    return false;
+}
+
+bool OutputWGSLTraverser::emulateDoWhileLoop(TIntermLoop *loopNode)
+{
+    ASSERT(loopNode->getType() == TLoopType::ELoopDoWhile);
+
+    TIntermNode *initNode  = loopNode->getInit();
+    TIntermTyped *condNode = loopNode->getCondition();
+    TIntermTyped *exprNode = loopNode->getExpression();
+    ASSERT(condNode);
+    ASSERT(!initNode && !exprNode);
+
+    emitIndentation();
+    // Write an infinite loop.
+    mSink << "loop {\n";
+    mIndentLevel++;
+    loopNode->getBody()->traverse(this);
+    mSink << "\n";
+    emitIndentation();
+    // At the end of the loop, break if the loop condition dos not still hold.
+    mSink << "if (!(";
+    condNode->traverse(this);
+    mSink << ") { break; }\n";
+    mIndentLevel--;
+    emitIndentation();
+    mSink << "}";
+
     return false;
 }
 
 bool OutputWGSLTraverser::visitBranch(Visit, TIntermBranch *branchNode)
 {
-    // TODO(anglebug.com/42267100): emit branch instructions.
+    const TOperator flowOp = branchNode->getFlowOp();
+    TIntermTyped *exprNode = branchNode->getExpression();
+
+    emitIndentation();
+
+    switch (flowOp)
+    {
+        case TOperator::EOpKill:
+        {
+            ASSERT(exprNode == nullptr);
+            mSink << "discard";
+        }
+        break;
+
+        case TOperator::EOpReturn:
+        {
+            mSink << "return";
+            if (exprNode)
+            {
+                mSink << " ";
+                exprNode->traverse(this);
+            }
+        }
+        break;
+
+        case TOperator::EOpBreak:
+        {
+            ASSERT(exprNode == nullptr);
+            mSink << "break";
+        }
+        break;
+
+        case TOperator::EOpContinue:
+        {
+            ASSERT(exprNode == nullptr);
+            mSink << "continue";
+        }
+        break;
+
+        default:
+        {
+            UNREACHABLE();
+        }
+    }
+
     return false;
 }
 
