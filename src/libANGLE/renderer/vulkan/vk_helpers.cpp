@@ -1871,6 +1871,7 @@ void OutsideRenderPassCommandBufferHelper::retainImage(ImageHelper *image)
     // We want explicit control on when VkEvent is used for outsideRPCommands to minimize the
     // overhead, so do not setEvent here.
     image->setQueueSerial(mQueueSerial);
+    image->updatePipelineStageAccessHistory();
 }
 
 void OutsideRenderPassCommandBufferHelper::trackImageWithEvent(Context *context, ImageHelper *image)
@@ -2246,6 +2247,7 @@ void RenderPassCommandBufferHelper::fragmentShadingRateImageRead(ImageHelper *im
 void RenderPassCommandBufferHelper::retainImage(Context *context, ImageHelper *image)
 {
     image->setQueueSerial(mQueueSerial);
+    image->updatePipelineStageAccessHistory();
 
     if (context->getRenderer()->getFeatures().useVkEventForImageBarrier.enabled)
     {
@@ -7606,6 +7608,16 @@ void ImageHelper::setCurrentRefCountedEvent(Context *context, EventMaps &eventMa
     // If there is already an event, release it first.
     mCurrentEvent.release(context);
 
+    // VkCmdSetEvent can remove the unnecessary GPU pipeline bubble that comes from false dependency
+    // between fragment and vertex/transfer/compute stages. But it also comes with higher overhead.
+    // In order to strike the balance, we exclude the images that are only used by fragment stages
+    // in the past N references. Use of VkEvent will not be beneficial
+    // if it is only accessed by fragment stages or only accessed by non-fragment access.
+    if (mFragmentStageAccessHistory.all())
+    {
+        return;
+    }
+
     // Create the event if we have not yet so. Otherwise just use the already created event. This
     // means all images used in the same render pass that has the same layout will be tracked by the
     // same event.
@@ -7623,6 +7635,16 @@ void ImageHelper::setCurrentRefCountedEvent(Context *context, EventMaps &eventMa
     // Copy the event to mCurrentEvent so that we can wait for it in future. This will add extra
     // refcount to the underlying VkEvent.
     mCurrentEvent = eventMaps.map[stage];
+}
+
+void ImageHelper::updatePipelineStageAccessHistory()
+{
+    const ImageMemoryBarrierData &barrierData = kImageMemoryBarrierData[mCurrentLayout];
+    bool isCurrentAccessFragmentOnly =
+        (barrierData.dstStageMask & ~kFragmentAndAttachmentPipelineStageFlags) == 0;
+
+    mFragmentStageAccessHistory <<= 1;
+    mFragmentStageAccessHistory |= isCurrentAccessFragmentOnly ? 1 : 0;
 }
 
 void ImageHelper::clearColor(Renderer *renderer,
@@ -8678,6 +8700,11 @@ angle::Result ImageHelper::CalculateBufferInfo(ContextVk *contextVk,
 void ImageHelper::onRenderPassAttach(const QueueSerial &queueSerial)
 {
     setQueueSerial(queueSerial);
+    // updatePipelineStageAccessHistory uses mCurrentLayout which we dont know yet (deferred until
+    // endRenderPass time). So update it directly since we know attachment will be accessed by
+    // fragment and attachment stages.
+    mFragmentStageAccessHistory <<= 1;
+    mFragmentStageAccessHistory |= 1;
 }
 
 void ImageHelper::onWrite(gl::LevelIndex levelStart,

@@ -2796,6 +2796,8 @@ class ImageHelper final : public Resource, public angle::Subject
     // Create event if needed and record the event in ImageHelper::mCurrentEvent.
     void setCurrentRefCountedEvent(Context *context, EventMaps &eventMaps);
 
+    void updatePipelineStageAccessHistory();
+
   private:
     ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
     struct ClearUpdate
@@ -3154,6 +3156,15 @@ class ImageHelper final : public Resource, public angle::Subject
     // this event.
     RefCountedEvent mCurrentEvent;
     RefCountedEvent mLastNonShaderReadOnlyEvent;
+    // Track history of pipeline stages being used. Each bit represents the fragment or
+    // attachment usage, i.e, a bit is set if the layout indicates a fragment or colorAttachment
+    // pipeline stages, and bit is 0 if used by other stages like vertex shader or compute or
+    // transfer. Every use of image update the usage history by shifting the bitfields left and new
+    // bit that represents the new pipeline usage is added to the right most bit. This way we track
+    // if there is any non-fragment pipeline usage during the past usages (i.e., the window of
+    // usage history is number of bits in mFragmentStageAccessHistory). This information provides
+    // heuristic for making decisions if a VkEvent should be used to track the operation.
+    FragmentStageAccessHistory mFragmentStageAccessHistory;
 
     // Whether ANGLE currently has ownership of this resource or it's released to external.
     bool mIsReleasedToExternal;
