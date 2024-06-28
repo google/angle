@@ -1609,6 +1609,14 @@
                 "Whether dynamic rendering should be used instead of render pass objects"
             ],
             "issue": "http://anglebug.com/42267038"
+        },
+        {
+            "name": "prefer_cached_noncoherent_for_dynamic_stream_buffer_usage",
+            "category": "Features",
+            "description": [
+                "Prefer host cached + non-coherent memory for buffers with dynamic/stream usage."
+            ],
+            "issue": "https://issuetracker.google.com/347601787"
         }
     ]
 }

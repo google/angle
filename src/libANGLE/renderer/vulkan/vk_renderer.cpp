@@ -4610,6 +4610,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         (isQualcommProprietary && qualcommDriverVersion < QualcommDriverVersion(512, 513, 0)) ||
             isARM || isPowerVR || isSwiftShader);
 
+    ANGLE_FEATURE_CONDITION(&mFeatures, preferCachedNoncoherentForDynamicStreamBufferUsage,
+                            IsMeteorLake(mPhysicalDeviceProperties.deviceID));
+
     // The compute shader used to generate mipmaps needs -
     // 1. subgroup quad operations in compute shader stage.
     // 2. subgroup operations that can use extended types.
