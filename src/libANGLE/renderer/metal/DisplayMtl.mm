@@ -1077,6 +1077,8 @@ void DisplayMtl::initializeExtensions() const
     // GL_NV_pixel_buffer_object
     mNativeExtensions.pixelBufferObjectNV = true;
 
+    mNativeExtensions.packReverseRowOrderANGLE = true;
+
     if (mFeatures.hasEvents.enabled)
     {
         // MTLSharedEvent is only available since Metal 2.1
