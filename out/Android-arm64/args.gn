@@ -14,37 +14,22 @@ android32_ndk_api_level = 26
 android64_ndk_api_level = 26
 
 # Disable all backends except Vulkan
+angle_enable_gl = false
 angle_enable_vulkan = true
-angle_enable_gl = true
 angle_enable_d3d9 = false
 angle_enable_d3d11 = false
 angle_enable_null = false
 angle_enable_metal = false
+
 angle_enable_gl_desktop_frontend = true
-#angle_enable_gl_desktop_backend = true
-#angle_enable_gl_desktop = true
-
-# SwiftShader is loaded as the system Vulkan driver on Android, not compiled by ANGLE
-angle_enable_swiftshader = false
-
-# Disable all shader translator targets except desktop GL (for Vulkan)
-#angle_enable_wgpu = true
-angle_enable_glsl = true
-angle_enable_hlsl = true
-#angle_enable_vksl = true
-
-#angle_enable_commit_id = false
-
-#angle_test_enable_system_egl = true
 
 # Shader fix
 angle_use_spirv_gen_through_glslang = true
 
-# Enable using Vulkan to collect system info as a fallback.
-#angle_enable_vulkan_system_info = true
+# SwiftShader is loaded as the system Vulkan driver on Android, not compiled by ANGLE
+angle_enable_swiftshader = false
 
-# Link in system libGL, to work with apitrace.  See doc/DebuggingTips.md.
-#angle_link_glx = true
+#angle_enable_commit_id = false
 
 # Disable histogram/protobuf support
 angle_has_histograms = false
