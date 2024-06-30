@@ -1,0 +1,8 @@
+target_os = "android"
+
+# Build for 64-bit CPUs
+target_cpu = "arm64"
+
+# Target ndk API 26 to make sure ANGLE can use the Vulkan backend on Android
+android32_ndk_api_level = 26
+android64_ndk_api_level = 26
