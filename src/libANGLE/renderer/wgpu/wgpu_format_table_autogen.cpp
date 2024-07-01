@@ -2353,15 +2353,15 @@ angle::FormatID GetFormatIDFromWgpuTextureFormat(wgpu::TextureFormat wgpuFormat)
 wgpu::VertexFormat GetWgpuVertexFormatFromFormatID(angle::FormatID formatID)
 {
     static constexpr angle::FormatMap<wgpu::VertexFormat> kMap = {
-        {angle::FormatID::EXTERNAL0, wgpu::VertexFormat::Undefined},
-        {angle::FormatID::EXTERNAL1, wgpu::VertexFormat::Undefined},
-        {angle::FormatID::EXTERNAL2, wgpu::VertexFormat::Undefined},
-        {angle::FormatID::EXTERNAL3, wgpu::VertexFormat::Undefined},
-        {angle::FormatID::EXTERNAL4, wgpu::VertexFormat::Undefined},
-        {angle::FormatID::EXTERNAL5, wgpu::VertexFormat::Undefined},
-        {angle::FormatID::EXTERNAL6, wgpu::VertexFormat::Undefined},
-        {angle::FormatID::EXTERNAL7, wgpu::VertexFormat::Undefined},
-        {angle::FormatID::NONE, wgpu::VertexFormat::Undefined},
+        {angle::FormatID::EXTERNAL0, wgpu::VertexFormat(0u)},
+        {angle::FormatID::EXTERNAL1, wgpu::VertexFormat(0u)},
+        {angle::FormatID::EXTERNAL2, wgpu::VertexFormat(0u)},
+        {angle::FormatID::EXTERNAL3, wgpu::VertexFormat(0u)},
+        {angle::FormatID::EXTERNAL4, wgpu::VertexFormat(0u)},
+        {angle::FormatID::EXTERNAL5, wgpu::VertexFormat(0u)},
+        {angle::FormatID::EXTERNAL6, wgpu::VertexFormat(0u)},
+        {angle::FormatID::EXTERNAL7, wgpu::VertexFormat(0u)},
+        {angle::FormatID::NONE, wgpu::VertexFormat(0u)},
         {angle::FormatID::R10G10B10A2_UNORM, wgpu::VertexFormat::Unorm10_10_10_2},
         {angle::FormatID::R16G16B16A16_FLOAT, wgpu::VertexFormat::Float16x4},
         {angle::FormatID::R16G16B16A16_SINT, wgpu::VertexFormat::Sint16x4},
@@ -2401,8 +2401,6 @@ angle::FormatID GetFormatIDFromWgpuBufferFormat(wgpu::VertexFormat wgpuFormat)
 {
     switch (wgpuFormat)
     {
-        case wgpu::VertexFormat::Undefined:
-            return angle::FormatID::NONE;
         case wgpu::VertexFormat::Unorm10_10_10_2:
             return angle::FormatID::R10G10B10A2_UNORM;
         case wgpu::VertexFormat::Float16x4:
