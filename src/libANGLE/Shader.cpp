@@ -391,7 +391,7 @@ Shader::Shader(ShaderProgramManager *manager,
 void Shader::onDestroy(const gl::Context *context)
 {
     resolveCompile(context);
-    mImplementation->destroy();
+    mImplementation->onDestroy(context);
     mBoundCompiler.set(context, nullptr);
     mImplementation.reset(nullptr);
     delete this;

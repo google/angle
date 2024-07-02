@@ -59,7 +59,7 @@ class ShaderImpl : angle::NonCopyable
     ShaderImpl(const gl::ShaderState &state) : mState(state) {}
     virtual ~ShaderImpl() {}
 
-    virtual void destroy() {}
+    virtual void onDestroy(const gl::Context *context) {}
 
     virtual std::shared_ptr<ShaderTranslateTask> compile(const gl::Context *context,
                                                          ShCompileOptions *options) = 0;

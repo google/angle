@@ -19,13 +19,10 @@ enum class MultiviewImplementationTypeGL;
 class ShaderGL : public ShaderImpl
 {
   public:
-    ShaderGL(const gl::ShaderState &state,
-             GLuint shaderID,
-             MultiviewImplementationTypeGL multiviewImplementationType,
-             const std::shared_ptr<RendererGL> &renderer);
+    ShaderGL(const gl::ShaderState &state, GLuint shaderID);
     ~ShaderGL() override;
 
-    void destroy() override;
+    void onDestroy(const gl::Context *context) override;
 
     std::shared_ptr<ShaderTranslateTask> compile(const gl::Context *context,
                                                  ShCompileOptions *options) override;
@@ -35,9 +32,7 @@ class ShaderGL : public ShaderImpl
     GLuint getShaderID() const;
 
   private:
-    GLuint mShaderID;
-    MultiviewImplementationTypeGL mMultiviewImplementationType;
-    std::shared_ptr<RendererGL> mRenderer;
+    GLuint mShaderID = 0;
 };
 
 }  // namespace rx
