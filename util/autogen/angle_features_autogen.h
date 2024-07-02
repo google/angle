@@ -173,6 +173,7 @@ enum class Feature
     ForceDepthAttachmentInitOnClear,
     ForceDisableFullScreenExclusive,
     ForceFallbackFormat,
+    ForceFlushAfterDrawcallUsingShadowmap,
     ForceFragmentShaderPrecisionHighpToMediump,
     ForceGlErrorChecking,
     ForceInitShaderVariables,
