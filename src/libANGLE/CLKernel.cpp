@@ -217,6 +217,21 @@ angle::Result Kernel::getArgInfo(cl_uint argIndex,
     return angle::Result::Continue;
 }
 
+Kernel *Kernel::clone() const
+{
+    cl_kernel kernel = mProgram->createKernel(getName().c_str());
+
+    for (KernelArg arg : mSetArguments)
+    {
+        if (arg.isSet && IsError(kernel->cast<Kernel>().setArg(arg.index, arg.size, arg.valuePtr)))
+        {
+            ANGLE_CL_SET_ERROR(CL_OUT_OF_RESOURCES);
+            return nullptr;
+        }
+    }
+    return &kernel->cast<Kernel>();
+}
+
 Kernel::~Kernel()
 {
     --mProgram->mNumAttachedKernels;

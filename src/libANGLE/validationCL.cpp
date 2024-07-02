@@ -3838,6 +3838,10 @@ cl_int ValidateCreateProgramWithIL(cl_context context, const void *il, size_t le
 
 cl_int ValidateCloneKernel(cl_kernel source_kernel)
 {
+    if (!Kernel::IsValid(source_kernel))
+    {
+        return CL_INVALID_KERNEL;
+    }
     return CL_SUCCESS;
 }
 

@@ -46,6 +46,8 @@ class Kernel final : public _cl_kernel, public Object
                            [](KernelArg arg) { return arg.isSet == true; });
     }
 
+    Kernel *clone() const;
+
   public:
     ~Kernel() override;
 
