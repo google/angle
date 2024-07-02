@@ -2738,6 +2738,8 @@ void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFea
     // ANGLE supports delaying post-compile and post-link operations until that is done.
     ANGLE_FEATURE_CONDITION(features, compileJobIsThreadSafe, false);
     ANGLE_FEATURE_CONDITION(features, linkJobIsThreadSafe, false);
+
+    ANGLE_FEATURE_CONDITION(features, cacheCompiledShader, true);
 }
 
 void ReInitializeFeaturesAtGPUSwitch(const FunctionsGL *functions, angle::FeaturesGL *features)

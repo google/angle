@@ -140,6 +140,12 @@ std::shared_ptr<ShaderTranslateTask> ShaderVk::compile(const gl::Context *contex
     return std::shared_ptr<ShaderTranslateTask>(new ShaderTranslateTask);
 }
 
+std::shared_ptr<ShaderTranslateTask> ShaderVk::load(const gl::Context *context,
+                                                    gl::BinaryInputStream *stream)
+{
+    return std::shared_ptr<ShaderTranslateTask>(new ShaderTranslateTask);
+}
+
 std::string ShaderVk::getDebugInfo() const
 {
     const sh::BinaryBlob &spirv = mState.getCompiledState()->compiledBinary;

@@ -37,9 +37,12 @@ class ShaderTranslateTaskGL final : public ShaderTranslateTask
 
     void postTranslate(ShHandle compiler, const gl::CompiledShaderState &compiledState) override
     {
-        const char *source = compiledState.translatedSource.c_str();
-        mFunctions->shaderSource(mShaderID, 1, &source, nullptr);
-        mFunctions->compileShader(mShaderID);
+        startCompile(compiledState);
+    }
+
+    void load(const gl::CompiledShaderState &compiledState) override
+    {
+        startCompile(compiledState);
     }
 
     bool isCompilingInternally() override
@@ -86,6 +89,13 @@ class ShaderTranslateTaskGL final : public ShaderTranslateTask
     }
 
   private:
+    void startCompile(const gl::CompiledShaderState &compiledState)
+    {
+        const char *source = compiledState.translatedSource.c_str();
+        mFunctions->shaderSource(mShaderID, 1, &source, nullptr);
+        mFunctions->compileShader(mShaderID);
+    }
+
     const FunctionsGL *mFunctions;
     GLuint mShaderID;
     bool mHasNativeParallelCompile;
@@ -276,6 +286,16 @@ std::shared_ptr<ShaderTranslateTask> ShaderGL::compile(const gl::Context *contex
     {
         options->pls = contextGL->getNativePixelLocalStorageOptions();
     }
+
+    return std::shared_ptr<ShaderTranslateTask>(
+        new ShaderTranslateTaskGL(functions, mShaderID, contextGL->hasNativeParallelCompile()));
+}
+
+std::shared_ptr<ShaderTranslateTask> ShaderGL::load(const gl::Context *context,
+                                                    gl::BinaryInputStream *stream)
+{
+    ContextGL *contextGL         = GetImplAs<ContextGL>(context);
+    const FunctionsGL *functions = GetFunctionsGL(context);
 
     return std::shared_ptr<ShaderTranslateTask>(
         new ShaderTranslateTaskGL(functions, mShaderID, contextGL->hasNativeParallelCompile()));
