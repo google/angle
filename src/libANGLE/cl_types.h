@@ -17,14 +17,14 @@
 #    include "common/angleutils.h"
 
 // Include frequently used standard headers
-#include <algorithm>
-#include <array>
-#include <functional>
-#include <list>
-#include <memory>
-#include <string>
-#include <utility>
-#include <vector>
+#    include <algorithm>
+#    include <array>
+#    include <functional>
+#    include <list>
+#    include <memory>
+#    include <string>
+#    include <utility>
+#    include <vector>
 
 namespace cl
 {
@@ -68,6 +68,14 @@ using WorkgroupCount   = std::array<uint32_t, 3>;
 
 template <typename T>
 using EventStatusMap = std::array<T, 3>;
+
+struct KernelArg
+{
+    bool isSet;
+    cl_uint index;
+    size_t size;
+    const void *valuePtr;
+};
 
 struct ImageDescriptor
 {

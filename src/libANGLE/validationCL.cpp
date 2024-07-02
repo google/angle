@@ -7,11 +7,10 @@
 // based on the OpenCL Specification V3.0.7, see https://www.khronos.org/registry/OpenCL/
 // Each used CL error code is preceeded by a citation of the relevant rule in the spec.
 
+#include "libANGLE/cl_utils.h"
 #include "libANGLE/validationCL_autogen.h"
 
 #include "common/string_utils.h"
-
-#include "libANGLE/cl_utils.h"
 
 #define ANGLE_VALIDATE_VERSION(version, major, minor)          \
     do                                                         \
@@ -2221,6 +2220,12 @@ cl_int ValidateEnqueueNDRangeKernel(cl_command_queue command_queue,
     if (!queue.getContext().getPlatform().isVersionOrNewer(1u, 1u) && global_work_offset != nullptr)
     {
         return CL_INVALID_GLOBAL_OFFSET;
+    }
+
+    // CL_INVALID_KERNEL_ARGS if all the kernel arguments have not been set for the kernel
+    if (!krnl.areAllArgsSet())
+    {
+        return CL_INVALID_KERNEL_ARGS;
     }
 
     size_t compileWorkGroupSize[3] = {0, 0, 0};

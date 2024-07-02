@@ -18,7 +18,10 @@ namespace cl
 
 angle::Result Kernel::setArg(cl_uint argIndex, size_t argSize, const void *argValue)
 {
-    return mImpl->setArg(argIndex, argSize, argValue);
+    ANGLE_TRY(mImpl->setArg(argIndex, argSize, argValue));
+
+    mSetArguments[argIndex] = {true, argIndex, argSize, argValue};
+    return angle::Result::Continue;
 }
 
 angle::Result Kernel::getInfo(KernelInfo name,
@@ -223,9 +226,8 @@ Kernel::Kernel(Program &program, const char *name) : mProgram(&program), mImpl(n
 {
     if (!IsError(program.getImpl().createKernel(*this, name, &mImpl)))
     {
-        ANGLE_CL_IMPL_TRY(mImpl->createInfo(&mInfo));
+        initImpl();
     }
-    ++mProgram->mNumAttachedKernels;
 }
 
 Kernel::Kernel(Program &program, const rx::CLKernelImpl::CreateFunc &createFunc)
@@ -233,8 +235,17 @@ Kernel::Kernel(Program &program, const rx::CLKernelImpl::CreateFunc &createFunc)
 {
     if (mImpl)
     {
-        ANGLE_CL_IMPL_TRY(mImpl->createInfo(&mInfo));
+        initImpl();
     }
+}
+
+void Kernel::initImpl()
+{
+    ANGLE_CL_IMPL_TRY(mImpl->createInfo(&mInfo));
+
+    mSetArguments.resize(mInfo.numArgs);
+    std::fill(mSetArguments.begin(), mSetArguments.end(), KernelArg{false, 0, 0, 0});
+
     ++mProgram->mNumAttachedKernels;
 }
 
