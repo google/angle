@@ -2885,6 +2885,9 @@
         "use_isolated_scripts_api": true
       },
       {
+        "args": [
+          "--no-xvfb"
+        ],
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -3170,6 +3173,9 @@
         "use_isolated_scripts_api": true
       },
       {
+        "args": [
+          "--no-xvfb"
+        ],
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
@@ -4046,6 +4052,9 @@
         "use_isolated_scripts_api": true
       },
       {
+        "args": [
+          "--no-xvfb"
+        ],
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
