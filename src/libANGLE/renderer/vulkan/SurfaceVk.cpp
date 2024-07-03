@@ -2359,8 +2359,18 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
 
     renderer->queuePresent(contextVk, contextVk->getPriority(), presentInfo, &mSwapchainStatus);
 
-    // Set FrameNumber for the presented image.
-    mSwapchainImages[mCurrentSwapchainImageIndex].frameNumber = mFrameCount++;
+    // EGL_EXT_buffer_age
+    // 4) What is the buffer age of a single buffered surface?
+    //     RESOLVED: 0.  This falls out implicitly from the buffer age
+    //     calculations, which dictate that a buffer's age starts at 0,
+    //     and is only incremented by frame boundaries.  Since frame
+    //     boundary functions do not affect single buffered surfaces,
+    //     their age will always be 0.
+    if (!isSharedPresentMode())
+    {
+        // Set FrameNumber for the presented image.
+        mSwapchainImages[mCurrentSwapchainImageIndex].frameNumber = mFrameCount++;
+    }
 
     // Place the semaphore in the present history.  Schedule pending old swapchains to be destroyed
     // at the same time the semaphore for this present can be destroyed.
