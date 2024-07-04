@@ -241,7 +241,7 @@ angle::Result ProgramMtl::linkJobImpl(const gl::Context *context,
     gl::ShaderMap<std::string> shaderSources;
     mtl::MSLGetShaderSource(mState, resources, &shaderSources);
 
-    ANGLE_TRY(mtl::MTLGetMSL(contextMtl, mState.getExecutable(), contextMtl->getCaps(),
+    ANGLE_TRY(mtl::MTLGetMSL(contextMtl->getDisplay()->getFeatures(), mState.getExecutable(),
                              shaderSources, mAttachedShaders,
                              &executableMtl->mMslShaderTranslateInfo));
     executableMtl->mMslXfbOnlyVertexShaderInfo =
