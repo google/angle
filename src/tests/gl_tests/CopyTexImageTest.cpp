@@ -1224,9 +1224,6 @@ TEST_P(CopyTexImageTestES3, 3DSubImageRawTextureData)
 // Test glCopyTexSubImage3D with initialized texture data that was drawn to
 TEST_P(CopyTexImageTestES3, 3DSubImageDrawTextureData)
 {
-    // TODO(anglebug.com/42262446)
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D11());
-
     GLFramebuffer fbo;
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
@@ -1271,9 +1268,6 @@ TEST_P(CopyTexImageTestES3, 3DSubImageDrawTextureData)
 // Test glCopyTexSubImage3D with mismatched texture formats
 TEST_P(CopyTexImageTestES3, 3DSubImageDrawMismatchedTextureTypes)
 {
-    // TODO(anglebug.com/42262446)
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsD3D11());
-
     // TODO(anglebug.com/42264029)
     ANGLE_SKIP_TEST_IF(IsIOS() && IsOpenGLES());
 
