@@ -1100,9 +1100,6 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 42266528 IOS : DepthWriteTest.Test/*__DepthRangeReduced_Clipped_VertexDepthInsideClipVolume_FragmentDepthNegative_* = SKIP
 42266528 IOS : DepthWriteTest.Test/*__DepthRangeReduced_Clipped_VertexDepthInsideClipVolume_FragmentDepthGreaterThanOne_* = SKIP
 
-// Unimplemented
-347737886 D3D11 : ClipControlTest.DepthFragCoord/* = SKIP
-
 // gl_PointCoord origin is flipped for non-default framebuffers
 40096885 WIN INTEL OPENGL : ClipControlTest.OriginPointCoord/* = SKIP
 
