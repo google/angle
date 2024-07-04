@@ -140,6 +140,7 @@ void TranslatedShaderInfo::reset()
     metalShaderSource    = nullptr;
     metalLibrary         = nil;
     hasUBOArgumentBuffer = false;
+    hasIsnanOrIsinf      = false;
     hasInvariant         = false;
     for (mtl::SamplerBinding &binding : actualSamplerBindings)
     {
@@ -699,7 +700,8 @@ angle::Result MTLGetMSL(Context *context,
         {
             mslShaderInfoOut->at(type).actualImageBindings[i] = reflection->getRWTextureBinding(i);
         }
-        (*mslShaderInfoOut)[type].hasInvariant = reflection->hasInvariance;
+        (*mslShaderInfoOut)[type].hasIsnanOrIsinf = reflection->hasIsnanOrIsinf;
+        (*mslShaderInfoOut)[type].hasInvariant    = reflection->hasInvariance;
     }
     return angle::Result::Continue;
 }

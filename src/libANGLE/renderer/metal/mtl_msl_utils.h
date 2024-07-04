@@ -44,6 +44,7 @@ struct TranslatedShaderInfo
     std::array<uint32_t, kMaxGLUBOBindings> actualUBOBindings;
     std::array<uint32_t, kMaxShaderXFBs> actualXFBBindings;
     bool hasUBOArgumentBuffer;
+    bool hasIsnanOrIsinf;
     bool hasInvariant;
 };
 
