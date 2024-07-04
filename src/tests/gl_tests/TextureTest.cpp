@@ -9319,8 +9319,6 @@ class Texture2DNorm16TestES3 : public Texture2DTestES3
 
     void testNorm16Texture(GLint internalformat, GLenum format, GLenum type)
     {
-        // TODO(http://anglebug.com/40096653) Fails on Win Intel OpenGL driver
-        ANGLE_SKIP_TEST_IF(IsIntel() && IsOpenGL());
         ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_norm16"));
 
         GLushort pixelValue  = (type == GL_SHORT) ? 0x7FFF : 0x6A35;
@@ -9337,8 +9335,7 @@ class Texture2DNorm16TestES3 : public Texture2DTestES3
             bool isSubImage = i == 1;
             SCOPED_TRACE("is subimage:" + std::to_string(isSubImage));
             glBindTexture(GL_TEXTURE_2D, mTextures[0]);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16_EXT, 1, 1, 0, GL_RGBA, GL_UNSIGNED_SHORT,
-                         nullptr);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
             glBindTexture(GL_TEXTURE_2D, mTextures[1]);
             if (isSubImage)
