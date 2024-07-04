@@ -1780,8 +1780,8 @@ class D3DTextureYUVTest : public D3DTextureTest
         }
         else
         {
-            EXPECT_PIXEL_16UI(static_cast<GLint>(bufferSize) / 2,
-                              static_cast<GLint>(bufferSize) / 2, kYFillValue, 0, 0, 0xffff);
+            EXPECT_PIXEL_16_NEAR(static_cast<GLint>(bufferSize) / 2,
+                                 static_cast<GLint>(bufferSize) / 2, kYFillValue, 0, 0, 0xffff, 0);
         }
         ASSERT_GL_NO_ERROR();
 
@@ -1811,9 +1811,9 @@ class D3DTextureYUVTest : public D3DTextureTest
         }
         else
         {
-            EXPECT_PIXEL_16UI(static_cast<GLint>(bufferSize) / 4,
-                              static_cast<GLint>(bufferSize) / 4, kUFillValue, kVFillValue, 0,
-                              0xffff);
+            EXPECT_PIXEL_16_NEAR(static_cast<GLint>(bufferSize) / 4,
+                                 static_cast<GLint>(bufferSize) / 4, kUFillValue, kVFillValue, 0,
+                                 0xffff, 0);
         }
         ASSERT_GL_NO_ERROR();
 
