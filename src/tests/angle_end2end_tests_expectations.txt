@@ -5,8 +5,6 @@
 // See deqp_support/README.md for format.
 
 // Thread sanitizer skips.
-42265212 TSAN : MultithreadingTestES3.MultithreadFenceDraw/* = SKIP
-42265212 TSAN : MultithreadingTestES3.MultithreadFenceTexImage/* = SKIP
 42265241 TSAN : *_AsyncCommandQueue* = SKIP
 42265300 TSAN : MultithreadingTest.MultiContextDrawWithSwapBuffers/* = SKIP
 42265633 TSAN : InstancingTestES3.LargeDivisor/* = SKIP
@@ -461,7 +459,6 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 42264513 PIXEL4ORXL GLES : MipmapTest.RenderOntoLevelZeroAfterGenerateMipmap/* = SKIP
 42264513 PIXEL4ORXL GLES : MipmapTest.TextureCubeGeneralLevelZero/* = SKIP
 42264513 PIXEL4ORXL GLES : MipmapTest.TextureCubeRenderToLevelZero/* = SKIP
-42264513 PIXEL4ORXL GLES : MultithreadingTestES3.MultithreadFenceTexImage/* = SKIP
 42264513 PIXEL4ORXL GLES : PbufferTest.ClearAndBindTexImageSrgb/* = SKIP
 42264513 PIXEL4ORXL GLES : ReadPixelsPBOTest.ExistingDataPreserved/* = SKIP
 42264981 PIXEL4ORXL GLES : RobustResourceInitTestES3.CheckDepthStencilRenderbufferIsCleared/* = SKIP
@@ -1164,8 +1161,6 @@ b/267953710 GALAXYS22 VULKAN : MultisampledRenderToTextureES3Test.DrawCopyDrawAt
 b/267953710 GALAXYS22 VULKAN : MultisampledRenderToTextureES3Test.RenderbufferDrawCopyDrawAttachDepthStencilClearThenDraw/* = SKIP
 b/267953710 GALAXYS22 VULKAN : MultisampledRenderToTextureWithAdvancedBlendTest.LoadThenDraw/* = SKIP
 b/267953710 GALAXYS22 VULKAN : MultisampledRenderToTextureWithAdvancedBlendTest.RenderbufferLoadThenDraw/* = SKIP
-b/267953710 GALAXYS22 VULKAN : MultithreadingTestES3.MultithreadFenceDraw/* = SKIP
-b/267953710 GALAXYS22 VULKAN : MultithreadingTestES3.MultithreadFenceTexImage/* = SKIP
 b/267953710 GALAXYS22 VULKAN : MultithreadingTestES3.SimultaneousUploadAndDraw/* = SKIP
 b/267953710 GALAXYS22 VULKAN : OcclusionQueriesTest.ClearNotCounted/* = SKIP
 b/267953710 GALAXYS22 VULKAN : OcclusionQueriesTest.MultiQueries/* = SKIP
@@ -1217,8 +1212,6 @@ b/267953710 GALAXYS22 VULKAN : VulkanPerformanceCounterTest_ES31.ColorMaskedFram
 42266622 GALAXYQUALCOMM VULKAN : GLSLTest_ES31.ParameterArrayArrayArraySampler/* = SKIP
 42266622 GALAXYQUALCOMM VULKAN : GLSLTest_ES31.TypesUsedInDifferentBlockStorages/* = SKIP
 42266622 GALAXYQUALCOMM VULKAN : ImageTestES3.SourceYUVAHBTargetExternalYUVSampleLinearFiltering/* = SKIP
-42266622 GALAXYQUALCOMM VULKAN : MultithreadingTestES3.MultithreadFenceDraw/* = SKIP
-42266622 GALAXYQUALCOMM VULKAN : MultithreadingTestES3.MultithreadFenceTexImage/* = SKIP
 42266622 GALAXYQUALCOMM VULKAN : PixelLocalStorageTest.DrawStateReset/* = SKIP
 42266622 GALAXYQUALCOMM VULKAN : PixelLocalStorageTestES31.DrawStateReset/* = SKIP
 42266622 GALAXYQUALCOMM VULKAN : PixelLocalStorageTestES31.EarlyFragmentTests/* = SKIP
@@ -1322,7 +1315,6 @@ b/328156792 PINEAPPLE VULKAN : GLSLTest.VectorAndMatrixScalarizationDoesNotAffec
 b/328156792 PINEAPPLE VULKAN : ImageTestES3.RGBAHBUploadDataColorspace/* = SKIP
 b/328156792 PINEAPPLE VULKAN : ImageTest.SourceAHBTarget2DMSRTTInteraction/* = SKIP
 b/328156792 PINEAPPLE VULKAN : MultisampledRenderToTexture* = SKIP
-b/328156792 PINEAPPLE VULKAN : MultithreadingTestES3.MultithreadFence* = SKIP
 b/328156792 PINEAPPLE VULKAN : OcclusionQueriesTestES3.UnresolveNotCounted/* = SKIP
 b/328156792 PINEAPPLE VULKAN : PackUnpackTest.PackUnpack* = SKIP
 b/328156792 PINEAPPLE VULKAN : ProgramPipelineTest31.SampleTextureAThenTextureB/* = SKIP
@@ -1389,10 +1381,6 @@ b/328156792 PINEAPPLE VULKAN : WebGL2GLSLTest.InitUninitializedLocals/* = SKIP
 42266649 MALIG710 VULKAN : VulkanPerformanceCounterTest.RenderToTextureDepthStencilTextureShouldNotLoad/* = SKIP
 42266649 MALIG710 VULKAN : VulkanPerformanceCounterTest.RenderToTextureUninitializedAndUnusedDepthStencil/* = SKIP
 42266649 MALIG710 VULKAN : WebGLCompatibilityTest.FramebufferFloatColorAttachmentMRT/* = SKIP
-
-// Pixel7 non-crash failures:
-42266649 PIXEL7 VULKAN : MultithreadingTestES3.MultithreadFenceDraw/* = SKIP
-42266649 PIXEL7 VULKAN : MultithreadingTestES3.MultithreadFenceTexImage/* = SKIP
 
 42266807 VULKAN : Texture2DBaseMaxTestES3.NotColorRenderableWithColorRenderableBeyondMaxLevel/* = SKIP
 42266807 VULKAN : Texture2DBaseMaxTestES3.DepthRenderableWithColorRenderableBeyondMaxLevel/* = SKIP

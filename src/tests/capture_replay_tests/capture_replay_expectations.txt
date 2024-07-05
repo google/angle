@@ -94,8 +94,6 @@
 
 # ES3 Flaky
 42265129 : MultithreadingTest.MultiContextCreateAndDeleteResources/* = SKIP_FOR_CAPTURE
-42265129 WIN : MultithreadingTestES3.MultithreadFenceDraw/* = SKIP_FOR_CAPTURE
-42265129 WIN : MultithreadingTestES3.MultithreadFenceTexImage/* = SKIP_FOR_CAPTURE
 42265129 : MultithreadingTest.MultiContextDrawWithSwapBuffers/* = SKIP_FOR_CAPTURE
 
 # Uses multiple contexts, don't want to run
