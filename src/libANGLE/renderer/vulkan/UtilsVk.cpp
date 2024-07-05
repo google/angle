@@ -867,7 +867,7 @@ void InsertCommonTypes(angle::spirv::Blob *blobOut)
     spirv::WriteTypeFunction(blobOut, spirv::IdRef(kIdMainType), spirv::IdRef(kIdVoid), {});
 
     // Float types
-    spirv::WriteTypeFloat(blobOut, spirv::IdRef(kIdFloatType), spirv::LiteralInteger(32));
+    spirv::WriteTypeFloat(blobOut, spirv::IdRef(kIdFloatType), spirv::LiteralInteger(32), nullptr);
     InsertDerivativeTypes(spirv::IdRef(kIdFloatType), spirv::IdRef(kIdFloat4Type),
                           spirv::IdRef(kIdFloat4OutType), spirv::IdRef(kIdFloatSubpassImageType),
                           spirv::IdRef(kIdFloatSubpassInputType), blobOut);
