@@ -567,8 +567,6 @@ std::string BuildBigInitialStackShader(int length)
 // Tests a shader from conformance.olges/GL/build/build_017_to_024
 // This shader uses chained assign-equals ops with swizzle, often reusing the same variable
 // as part of a swizzle.
-
-// Skipped on NV: angleproject:7029
 TEST_P(GLSLTest, SwizzledChainedAssignIncrement)
 {
     constexpr char kFS[] =
@@ -11798,6 +11796,82 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that indexing swizzles out of bounds fails
+TEST_P(GLSLTest_ES3, OutOfBoundsIndexingOfSwizzle)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 colorOut;
+uniform vec3 colorIn;
+
+void main()
+{
+    colorOut = vec4(colorIn.yx[2], 0, 0, 1);
+})";
+
+    GLuint shader = CompileShader(GL_FRAGMENT_SHADER, kFS);
+    EXPECT_EQ(0u, shader);
+}
+
+// Test that indexing l-value swizzles work
+TEST_P(GLSLTest_ES3, IndexingOfSwizzledLValuesShouldWork)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 oColor;
+
+bool do_test() {
+    highp vec3 expected = vec3(3.0, 2.0, 1.0);
+    highp vec3 vec;
+
+    vec.yzx[2] = 3.0;
+    vec.yzx[1] = 1.0;
+    vec.yzx[0] = 2.0;
+
+    return vec == expected;
+}
+
+void main()
+{
+    oColor = vec4(do_test(), 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test that indexing r-value swizzles work
+TEST_P(GLSLTest_ES3, IndexingOfSwizzledRValuesShouldWork)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 oColor;
+
+bool do_test() {
+    highp vec3 expected = vec3(3.0, 2.0, 1.0);
+    highp vec3 vecA = vec3(1.0, 3.0, 2.0);
+    highp vec3 vecB;
+
+    vecB.x = vecA.zxy[2];
+    vecB.y = vecA.zxy[0];
+    vecB.z = vecA.zxy[1];
+
+    return vecB == expected;
+}
+
+void main()
+{
+    oColor = vec4(do_test(), 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test that dynamic indexing of swizzled l-values should work.
 // A simple porting of sdk/tests/conformance2/glsl3/vector-dynamic-indexing-swizzled-lvalue.html
 TEST_P(GLSLTest_ES3, DynamicIndexingOfSwizzledLValuesShouldWork)
@@ -11820,6 +11894,36 @@ void main() {
     EXPECT_GL_NO_ERROR();
     drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Another test for dynamic indexing of swizzled l-values.
+TEST_P(GLSLTest_ES3, DynamicIndexingOfSwizzledLValuesShouldWork2)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+out vec4 oColor;
+
+bool do_test() {
+    highp vec3 expected = vec3(3.0, 2.0, 1.0);
+    highp vec3 vec;
+
+    for (int i = 0; i < 3; ++i)
+    {
+        vec.zyx[i] = float(1 + i);
+    }
+
+    return vec == expected;
+}
+
+void main()
+{
+    oColor = vec4(do_test(), 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    EXPECT_GL_NO_ERROR();
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
 // Test that dead code after discard, return, continue and branch are pruned.

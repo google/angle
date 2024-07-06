@@ -358,6 +358,7 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 42266544 MAC METAL AMD : MaskedScissoredClearTest.Test/* = SKIP
 42266544 MAC METAL AMD : StateChangeTestES3.StencilReferenceAndCompareMask/* = SKIP
 
+351275980 MAC METAL : GLSLTest_ES3.DynamicIndexingOfSwizzledLValuesShouldWork2/* = SKIP
 
 // D3D
 42264944 WIN D3D9 : GLSLTest.HandleExcessiveLoopBug/* = SKIP
