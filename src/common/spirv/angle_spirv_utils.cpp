@@ -43,7 +43,7 @@ bool Validate(const Blob &blob)
     spvtools::SpirvTools spirvTools(GetEnv(blob));
 
     spvtools::ValidatorOptions options;
-    options.SetFriendlyNames(false);
+    #options.SetFriendlyNames(false);
 
     spirvTools.SetMessageConsumer(ValidateSpirvMessage);
     const bool result = spirvTools.Validate(blob.data(), blob.size(), options);
