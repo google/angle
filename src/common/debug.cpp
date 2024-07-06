@@ -268,7 +268,7 @@ void Trace(LogSeverity severity, const char *message)
         // Note: we also log to stdout/stderr below.
 #endif
 
-#if defined(ANGLE_PLATFORM_APPLE)
+#if 0 //defined(ANGLE_PLATFORM_APPLE)
         if (__builtin_available(macOS 10.12, iOS 10.0, *))
         {
             os_log_type_t apple_log_type = OS_LOG_TYPE_DEFAULT;
