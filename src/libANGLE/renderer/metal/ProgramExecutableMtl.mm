@@ -250,16 +250,6 @@ void InitArgumentBufferEncoder(mtl::Context *context,
     }
 }
 
-bool DisableFastMathForShaderCompilation(mtl::Context *context)
-{
-    return context->getDisplay()->getFeatures().intelDisableFastMath.enabled;
-}
-
-bool UsesInvariance(const mtl::TranslatedShaderInfo *translatedMslInfo)
-{
-    return translatedMslInfo->hasInvariant;
-}
-
 template <typename T>
 void UpdateDefaultUniformBlockWithElementSize(GLsizei count,
                                               uint32_t arrayIndex,
@@ -362,8 +352,10 @@ angle::Result CreateMslShaderLib(ContextMtl *context,
 
         // Convert to actual binary shader
         mtl::AutoObjCPtr<NSError *> err = nil;
-        bool disableFastMath            = DisableFastMathForShaderCompilation(context);
-        bool usesInvariance             = UsesInvariance(translatedMslInfo);
+        const bool disableFastMath =
+            context->getDisplay()->getFeatures().intelDisableFastMath.enabled ||
+            translatedMslInfo->hasIsnanOrIsinf;
+        const bool usesInvariance       = translatedMslInfo->hasInvariant;
         translatedMslInfo->metalLibrary = libraryCache.getOrCompileShaderLibrary(
             context, translatedMslInfo->metalShaderSource, substitutionMacros, disableFastMath,
             usesInvariance, &err);

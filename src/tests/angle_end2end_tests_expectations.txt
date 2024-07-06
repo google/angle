@@ -495,6 +495,7 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 42266774 PIXEL4ORXL GLES : MultithreadingTestES3.SimultaneousUploadAndDraw/* = SKIP
 42266774 PIXEL4ORXL VULKAN : MultithreadingTestES3.SimultaneousUploadAndDraw/* = SKIP
 
+42267082 PIXEL4ORXL GLES : EGLBlobCacheTest.FragmentOutputLocationKey/* = SKIP
 42267082 PIXEL4ORXL GLES : EXTBlendFuncExtendedDrawTestES3.ES3GettersArray/* = SKIP
 42267082 PIXEL4ORXL GLES : EXTBlendFuncExtendedDrawTestES3.ESSL3BindSimpleVarAsArrayNoBind/* = SKIP
 42267082 PIXEL4ORXL GLES : EXTBlendFuncExtendedDrawTestES3.MultipleDrawBuffersAPI/* = SKIP
@@ -854,8 +855,6 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 40096874 IOS METAL : UniformBlockWithOneLargeArrayMemberTest.TwoUniformBlocksInSameProgram/* = SKIP
 40096879 IOS METAL : FramebufferTest_ES3.RenderSharedExponent/* = SKIP
 40096883 IOS METAL : Texture2DDepthStencilTestES3.TexSampleModes*Swizzled/* = SKIP
-42266714 IOS METAL : GLSLTest_ES3.LiteralInfinityOutput/* = SKIP
-42266714 IOS METAL : GLSLTest_ES3.LiteralNegativeInfinityOutput/* = SKIP
 
 // Test is disabled as it only pertains to desktop GLSL
 42264721 : GLSLTest_ES31.InterpolateAtWithSwizzle/* = SKIP
@@ -1101,9 +1100,6 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 42266528 IOS : DepthWriteTest.Test/*__DepthRangeReduced_Clipped_VertexDepthInsideClipVolume_FragmentDepthNegative_* = SKIP
 42266528 IOS : DepthWriteTest.Test/*__DepthRangeReduced_Clipped_VertexDepthInsideClipVolume_FragmentDepthGreaterThanOne_* = SKIP
 
-// Unimplemented
-347737886 D3D11 : ClipControlTest.DepthFragCoord/* = SKIP
-
 // gl_PointCoord origin is flipped for non-default framebuffers
 40096885 WIN INTEL OPENGL : ClipControlTest.OriginPointCoord/* = SKIP
 
@@ -1128,12 +1124,6 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 
 // GL program cache failure with shader images.
 42266268 WIN OPENGL : PixelLocalStorageTest.ProgramCache/* = SKIP
-
-// Failures as a result of Mac 13 -> Mac 14 upgrade.
-42267063 MAC AMD METAL : GLSLTest_ES3.LiteralInfinityOutput/* = SKIP
-42267063 MAC AMD METAL : GLSLTest_ES3.LiteralNegativeInfinityOutput/* = SKIP
-42267063 MAC INTEL METAL : GLSLTest_ES3.LiteralInfinityOutput/* = SKIP
-42267063 MAC INTEL METAL : GLSLTest_ES3.LiteralNegativeInfinityOutput/* = SKIP
 
 // Skip device OOM tests for Linux/NVIDIA.
 42266674 LINUX NVIDIA : VulkanMemoryTest.* = SKIP

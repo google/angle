@@ -1005,11 +1005,11 @@ class DescriptorSetLayoutDesc final
     size_t hash() const;
     bool operator==(const DescriptorSetLayoutDesc &other) const;
 
-    void update(uint32_t bindingIndex,
-                VkDescriptorType descriptorType,
-                uint32_t count,
-                VkShaderStageFlags stages,
-                const Sampler *immutableSampler);
+    void addBinding(uint32_t bindingIndex,
+                    VkDescriptorType descriptorType,
+                    uint32_t count,
+                    VkShaderStageFlags stages,
+                    const Sampler *immutableSampler);
 
     void unpackBindings(DescriptorSetLayoutBindingVector *bindings) const;
 

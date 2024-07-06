@@ -246,7 +246,7 @@ class [[nodiscard]] TScopedPoolAllocator
     ~TScopedPoolAllocator()
     {
         SetGlobalPoolAllocator(nullptr);
-        mAllocator->pop();
+        mAllocator->pop(angle::PoolAllocator::ReleaseStrategy::All);
     }
 
   private:
