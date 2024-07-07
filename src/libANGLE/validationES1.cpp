@@ -15,8 +15,9 @@
 #include "libANGLE/queryconversions.h"
 #include "libANGLE/queryutils.h"
 #include "libANGLE/validationES.h"
-
-#define ANGLE_VALIDATE_IS_GLES1(state, errors, entryPoint)                                \
+// Hack(Pojav): allow callung ES1 functions in ES2 context for gl4es
+#define ANGLE_VALIDATE_IS_GLES1(state, errors, entryPoint)
+#define ANGLE_VALIDATE_IS_GLES1_REAL(state, errors, entryPoint)                           \                                \
     do                                                                                    \
     {                                                                                     \
         if (state.getClientType() != EGL_OPENGL_API && state.getClientMajorVersion() > 1) \
