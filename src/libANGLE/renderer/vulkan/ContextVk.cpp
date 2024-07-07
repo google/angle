@@ -640,8 +640,6 @@ constexpr angle::PackedEnumMap<RenderPassClosureReason, const char *> kRenderPas
     {RenderPassClosureReason::XfbPause, "Render pass closed due to transform feedback pause"},
     {RenderPassClosureReason::FramebufferFetchEmulation,
      "Render pass closed due to framebuffer fetch emulation"},
-    {RenderPassClosureReason::ColorBufferInvalidate,
-     "Render pass closed due to glInvalidateFramebuffer() on a color buffer"},
     {RenderPassClosureReason::GenerateMipmapOnCPU,
      "Render pass closed due to fallback to CPU when generating mipmaps"},
     {RenderPassClosureReason::CopyTextureOnCPU,
