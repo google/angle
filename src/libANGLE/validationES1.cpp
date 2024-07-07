@@ -28,7 +28,7 @@
     } while (0)
 
 #define ANGLE_VALIDATE_IS_GLES1_CONTEXT(context, entryPoint) \
-    ANGLE_VALIDATE_IS_GLES1(context->getPrivateState(),      \
+    ANGLE_VALIDATE_IS_GLES1_REAL(context->getPrivateState(),      \
                             context->getMutableErrorSetForValidation(), entryPoint)
 
 namespace gl
