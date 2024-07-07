@@ -470,6 +470,11 @@ const TSymbol *SymbolRule::get(ShShaderSpec shaderSpec,
                                const TSymbolTableBase &symbolTable) const
 {
     if (IsDesktopGLSpec(shaderSpec) != (mIsDesktop == 1))
+#if 0 // Hack(Pojav): accept any
+        return nullptr;
+#else
+    {}
+#endif
         return nullptr;
 
     if (mVersion == kESSL1Only && shaderVersion != static_cast<int>(kESSL1Only))
