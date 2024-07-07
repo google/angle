@@ -2818,6 +2818,7 @@ bool TParseContext::executeInitializer(const TSourceLoc &line,
                            TExtension::EXT_shader_non_constant_global_initializers);
     bool globalInitWarning = false;
     if (symbolTable.atGlobalLevel() &&
+        !sh::IsDesktopGLSpec(mShaderSpec) && // Hack(Pojav): skip check
         !ValidateGlobalInitializer(initializer, mShaderVersion, sh::IsWebGLBasedSpec(mShaderSpec),
                                    nonConstGlobalInitializers, &globalInitWarning))
     {
