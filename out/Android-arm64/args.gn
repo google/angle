@@ -28,7 +28,7 @@ angle_enable_gl_desktop_frontend = true
 angle_enable_swiftshader = false
 
 # Disable all shader translator targets except desktop GL (for Vulkan)
-#angle_enable_wgpu = true
+angle_enable_essl = false
 angle_enable_glsl = true
 angle_enable_hlsl = true
 #angle_enable_vksl = true
