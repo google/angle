@@ -480,8 +480,8 @@ const TSymbol *SymbolRule::get(ShShaderSpec shaderSpec,
     //if (mVersion == kESSL1Only && shaderVersion != static_cast<int>(kESSL1Only))
     //    return nullptr;
 
-    if (mVersion > shaderVersion)
-        return nullptr;
+    //if (mVersion > shaderVersion)
+    //    return nullptr;
 
     if (!CheckShaderType(static_cast<Shader>(mShaders), shaderType))
         return nullptr;
