@@ -125,7 +125,7 @@ class SymbolRule
 
     uint16_t mIsDesktop : 1;
     uint16_t mIsVar : 1;
-    //uint16_t mVersion : 14;
+    uint16_t mVersion : 14;
     uint8_t mShaders;
     uint8_t mExtensionIndex;
     SymbolOrVar mSymbolOrVar;
@@ -138,7 +138,7 @@ constexpr SymbolRule::SymbolRule(Spec spec,
                                  const TSymbol *symbol)
     : mIsDesktop(spec == Spec::GLSL ? 1u : 0u),
       mIsVar(0u),
-      //mVersion(static_cast<uint16_t>(version)),
+      mVersion(static_cast<uint16_t>(version)),
       mShaders(static_cast<uint8_t>(shaders)),
       mExtensionIndex(extensionIndex),
       mSymbolOrVar(symbol)
@@ -151,7 +151,7 @@ constexpr SymbolRule::SymbolRule(Spec spec,
                                  VarPointer resourceVar)
     : mIsDesktop(spec == Spec::GLSL ? 1u : 0u),
       mIsVar(1u),
-      //mVersion(static_cast<uint16_t>(version)),
+      mVersion(static_cast<uint16_t>(version)),
       mShaders(static_cast<uint8_t>(shaders)),
       mExtensionIndex(extensionIndex),
       mSymbolOrVar(resourceVar)
