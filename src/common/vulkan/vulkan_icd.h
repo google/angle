@@ -20,6 +20,11 @@ namespace angle
 namespace vk
 {
 
+// The minimum version of Vulkan that ANGLE requires.  If an instance or device below this version
+// is encountered, initialization will skip the device if possible, or if no other suitable device
+// is available then initialization will fail.
+constexpr uint32_t kMinimumVulkanAPIVersion = VK_API_VERSION_1_1;
+
 enum class ICD
 {
     Default,

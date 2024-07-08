@@ -91,9 +91,7 @@ constexpr uint32_t kPipelineCacheVersion = 2;
 
 // Update the pipeline cache every this many swaps.
 constexpr uint32_t kPipelineCacheVkUpdatePeriod = 60;
-// The minimum version of Vulkan that ANGLE requires.  If an instance or device below this version
-// is encountered, initialization will fail.
-constexpr uint32_t kMinimumVulkanAPIVersion = VK_API_VERSION_1_1;
+
 // Per the Vulkan specification, ANGLE must indicate the highest version of Vulkan functionality
 // that it uses.  The Vulkan validation layers will issue messages for any core functionality that
 // requires a higher version.
@@ -1864,7 +1862,7 @@ angle::Result Renderer::initialize(vk::Context *context,
         }
     }
 
-    if (mInstanceVersion < kMinimumVulkanAPIVersion)
+    if (mInstanceVersion < angle::vk::kMinimumVulkanAPIVersion)
     {
         WARN() << "ANGLE Requires a minimum Vulkan instance version of 1.1";
         ANGLE_VK_TRY(context, VK_ERROR_INCOMPATIBLE_DRIVER);
@@ -1991,7 +1989,7 @@ angle::Result Renderer::initialize(vk::Context *context,
     // the highest it's allowed to use.
     mDeviceVersion = std::min(mPhysicalDeviceProperties.apiVersion, highestApiVersion);
 
-    if (mDeviceVersion < kMinimumVulkanAPIVersion)
+    if (mDeviceVersion < angle::vk::kMinimumVulkanAPIVersion)
     {
         WARN() << "ANGLE Requires a minimum Vulkan device version of 1.1";
         ANGLE_VK_TRY(context, VK_ERROR_INCOMPATIBLE_DRIVER);

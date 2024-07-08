@@ -235,6 +235,14 @@ void ChoosePhysicalDevice(PFN_vkGetPhysicalDeviceProperties pGetPhysicalDevicePr
     for (const VkPhysicalDevice &physicalDevice : physicalDevices)
     {
         pGetPhysicalDeviceProperties(physicalDevice, physicalDevicePropertiesOut);
+
+        if (physicalDevicePropertiesOut->apiVersion < kMinimumVulkanAPIVersion)
+        {
+            // Skip any devices that don't support our minimum API version. This
+            // takes precedence over all other considerations.
+            continue;
+        }
+
         if (filter(*physicalDevicePropertiesOut))
         {
             *physicalDeviceOut = physicalDevice;
@@ -273,6 +281,14 @@ void ChoosePhysicalDevice(PFN_vkGetPhysicalDeviceProperties pGetPhysicalDevicePr
     for (const VkPhysicalDevice &physicalDevice : physicalDevices)
     {
         pGetPhysicalDeviceProperties(physicalDevice, physicalDevicePropertiesOut);
+
+        if (physicalDevicePropertiesOut->apiVersion < kMinimumVulkanAPIVersion)
+        {
+            // Skip any devices that don't support our minimum API version. This
+            // takes precedence over all other considerations.
+            continue;
+        }
+
         // If discrete GPU exists, uses it by default.
         if (physicalDevicePropertiesOut->deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
         {
