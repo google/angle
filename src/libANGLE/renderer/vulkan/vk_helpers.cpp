@@ -1733,16 +1733,6 @@ void CommandBufferHelperCommon::updateImageLayoutAndBarrier(Context *context,
     }
 }
 
-void CommandBufferHelperCommon::retainImage(Context *context, ImageHelper *image)
-{
-    image->setQueueSerial(mQueueSerial);
-
-    if (context->getRenderer()->getFeatures().useVkEventForImageBarrier.enabled)
-    {
-        image->setCurrentRefCountedEvent(context, mRefCountedEvents);
-    }
-}
-
 template <typename CommandBufferT>
 void CommandBufferHelperCommon::flushSetEventsImpl(Context *context, CommandBufferT *commandBuffer)
 {
@@ -1851,7 +1841,11 @@ void OutsideRenderPassCommandBufferHelper::imageRead(ContextVk *contextVk,
         // Usually an image can only used by a RenderPassCommands or OutsideRenderPassCommands
         // because the layout will be different, except with image sampled from compute shader. In
         // this case, the renderPassCommands' read will override the outsideRenderPassCommands'
-        retainImage(contextVk, image);
+        retainImage(image);
+        if (contextVk->getRenderer()->getFeatures().useVkEventForImageBarrier.enabled)
+        {
+            image->setCurrentRefCountedEvent(contextVk, mRefCountedEvents);
+        }
     }
 }
 
@@ -1865,7 +1859,18 @@ void OutsideRenderPassCommandBufferHelper::imageWrite(ContextVk *contextVk,
 {
     imageWriteImpl(contextVk, level, layerStart, layerCount, aspectFlags, imageLayout,
                    BarrierType::Event, image);
-    retainImage(contextVk, image);
+    retainImage(image);
+    if (contextVk->getRenderer()->getFeatures().useVkEventForImageBarrier.enabled)
+    {
+        image->setCurrentRefCountedEvent(contextVk, mRefCountedEvents);
+    }
+}
+
+void OutsideRenderPassCommandBufferHelper::retainImage(ImageHelper *image)
+{
+    // We want explicit control on when VkEvent is used for outsideRPCommands to minimize the
+    // overhead, so do not setEvent here.
+    image->setQueueSerial(mQueueSerial);
 }
 
 void OutsideRenderPassCommandBufferHelper::trackImageWithEvent(Context *context, ImageHelper *image)
@@ -2235,6 +2240,16 @@ void RenderPassCommandBufferHelper::fragmentShadingRateImageRead(ImageHelper *im
 
     image->resetRenderPassUsageFlags();
     image->setRenderPassUsageFlag(RenderPassUsage::FragmentShadingRateReadOnlyAttachment);
+}
+
+void RenderPassCommandBufferHelper::retainImage(Context *context, ImageHelper *image)
+{
+    image->setQueueSerial(mQueueSerial);
+
+    if (context->getRenderer()->getFeatures().useVkEventForImageBarrier.enabled)
+    {
+        image->setCurrentRefCountedEvent(context, mRefCountedEvents);
+    }
 }
 
 void RenderPassCommandBufferHelper::onColorAccess(PackedAttachmentIndex packedAttachmentIndex,
