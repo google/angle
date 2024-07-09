@@ -508,6 +508,12 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
      "with storeOp VK_ATTACHMENT_STORE_OP_STORE. Access info (usage: "
      "SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
      "SYNC_FRAGMENT_SHADER_SHADER_"},
+    // http://anglebug.com/352094384
+    {
+        "SYNC-HAZARD-WRITE-AFTER-WRITE",
+        "Hazard WRITE_AFTER_WRITE for VkImageView",
+        "Access info (usage: SYNC_ACCESS_INDEX_NONE, prior_usage: SYNC_IMAGE_LAYOUT_TRANSITION, ",
+    },
 };
 
 // Messages that shouldn't be generated if storeOp=NONE is supported, otherwise they are expected.
