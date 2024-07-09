@@ -2699,6 +2699,8 @@ class ImageHelper final : public Resource, public angle::Subject
                                       GLuint *inputDepthPitch,
                                       GLuint *inputSkipBytes);
 
+    void onRenderPassAttach(const QueueSerial &queueSerial);
+
     // Mark a given subresource as written to.  The subresource is identified by [levelStart,
     // levelStart + levelCount) and [layerStart, layerStart + layerCount).
     void onWrite(gl::LevelIndex levelStart,

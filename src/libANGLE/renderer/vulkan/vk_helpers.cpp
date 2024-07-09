@@ -2179,14 +2179,14 @@ void RenderPassCommandBufferHelper::colorImagesDraw(gl::LevelIndex level,
 {
     ASSERT(packedAttachmentIndex < mColorAttachmentsCount);
 
-    image->setQueueSerial(mQueueSerial);
+    image->onRenderPassAttach(mQueueSerial);
 
     mColorAttachments[packedAttachmentIndex].init(image, imageSiblingSerial, level, layerStart,
                                                   layerCount, VK_IMAGE_ASPECT_COLOR_BIT);
 
     if (resolveImage)
     {
-        resolveImage->setQueueSerial(mQueueSerial);
+        resolveImage->onRenderPassAttach(mQueueSerial);
         mColorResolveAttachments[packedAttachmentIndex].init(resolveImage, imageSiblingSerial,
                                                              level, layerStart, layerCount,
                                                              VK_IMAGE_ASPECT_COLOR_BIT);
@@ -2206,7 +2206,7 @@ void RenderPassCommandBufferHelper::depthStencilImagesDraw(gl::LevelIndex level,
     // Because depthStencil buffer's read/write property can change while we build renderpass, we
     // defer the image layout changes until endRenderPass time or when images going away so that we
     // only insert layout change barrier once.
-    image->setQueueSerial(mQueueSerial);
+    image->onRenderPassAttach(mQueueSerial);
 
     mDepthAttachment.init(image, imageSiblingSerial, level, layerStart, layerCount,
                           VK_IMAGE_ASPECT_DEPTH_BIT);
@@ -2218,7 +2218,7 @@ void RenderPassCommandBufferHelper::depthStencilImagesDraw(gl::LevelIndex level,
         // Note that the resolve depth/stencil image has the same level/layer index as the
         // depth/stencil image as currently it can only ever come from
         // multisampled-render-to-texture renderbuffers.
-        resolveImage->setQueueSerial(mQueueSerial);
+        resolveImage->onRenderPassAttach(mQueueSerial);
 
         mDepthResolveAttachment.init(resolveImage, imageSiblingSerial, level, layerStart,
                                      layerCount, VK_IMAGE_ASPECT_DEPTH_BIT);
@@ -2232,7 +2232,7 @@ void RenderPassCommandBufferHelper::fragmentShadingRateImageRead(ImageHelper *im
     ASSERT(image && image->valid());
     ASSERT(!usesImage(*image));
 
-    image->setQueueSerial(mQueueSerial);
+    image->onRenderPassAttach(mQueueSerial);
 
     // Initialize RenderPassAttachment for fragment shading rate attachment.
     mFragmentShadingRateAtachment.init(image, {}, gl::LevelIndex(0), 0, 1,
@@ -8671,6 +8671,11 @@ angle::Result ImageHelper::CalculateBufferInfo(ContextVk *contextVk,
                                                inputSkipBytes));
 
     return angle::Result::Continue;
+}
+
+void ImageHelper::onRenderPassAttach(const QueueSerial &queueSerial)
+{
+    setQueueSerial(queueSerial);
 }
 
 void ImageHelper::onWrite(gl::LevelIndex levelStart,
