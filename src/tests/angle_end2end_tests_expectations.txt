@@ -123,6 +123,30 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 42266866 WIN INTEL OPENGL : GLSLTest_ES3.LargeInterfaceBlockArray/* = SKIP
 42266866 WIN INTEL OPENGL : GLSLTest_ES3.LargeInterfaceBlockNestedArray/* = SKIP
 
+// Failures on Intel Alder Lake S UHD Graphics 770 (8086:4680-31.0.101.5333)
+352085732 WIN INTEL OPENGL : GeometryShaderTest.LayeredFramebufferClear2DArrayColor/* = SKIP
+352085732 WIN INTEL OPENGL : GeometryShaderTest.LayeredFramebufferClear3DColor/* = SKIP
+352085732 WIN INTEL OPENGL : GeometryShaderTest.LayeredFramebufferPreRenderClear2DArrayColor/* = SKIP
+352085732 WIN INTEL OPENGL : GeometryShaderTest.LayeredFramebufferPreRenderClear3DColor/* = SKIP
+352085732 WIN INTEL OPENGL : RobustResourceInitTestES31.Multisample2DTextureArray/* = SKIP
+352085732 WIN INTEL OPENGL : SRGBTextureTest.SRGBDecodeTextureParameter/* = SKIP
+352085732 WIN INTEL OPENGL : UniformBufferTest.DrawThenUpdateThenDraw/* = SKIP
+352085732 WIN INTEL D3D9 : TextureBorderClampTest.Redefinition/* = SKIP
+352085732 WIN INTEL D3D9 : TextureBorderClampTest.TextureBorderClampUnorm8/* = SKIP
+352085732 WIN INTEL D3D11 : SimpleStateChangeTest.DrawWithTextureTexSubImageThenDrawAgain/* = SKIP
+352085732 WIN INTEL D3D11 : SimpleStateChangeTest.UpdateTextureInUse/* = SKIP
+352085732 WIN INTEL VULKAN : MultiviewOcclusionQueryTest.OcclusionQueryOnlyLeftVisible/* = SKIP
+352085732 WIN INTEL VULKAN : MultiviewOcclusionQueryTest.OcclusionQueryOnlyRightVisible/* = SKIP
+352085732 WIN INTEL VULKAN : OcclusionQueriesTest.ClearNotCounted/* = SKIP
+352085732 WIN INTEL VULKAN : OcclusionQueriesTest.EmptyQueryAfterCompletedQuery/* = SKIP
+352085732 WIN INTEL VULKAN : OcclusionQueriesTest.EmptyQueryAfterCompletedQueryInterleaved/* = SKIP
+352085732 WIN INTEL VULKAN : OcclusionQueriesTest.FramebufferBindingChange/* = SKIP
+352085732 WIN INTEL VULKAN : OcclusionQueriesTest.IsNotOccluded/* = SKIP
+352085732 WIN INTEL VULKAN : OcclusionQueriesTest.MultiContext/* = SKIP
+352085732 WIN INTEL VULKAN : OcclusionQueriesTest.MultiQueries/* = SKIP
+352085732 WIN INTEL VULKAN : PixelLocalStorageTest.*/ES3_Vulkan_EmulatePixelLocalStorage_NoSupportsShaderFramebufferFetch_NoSupportsFragmentShaderPixelInterlock = SKIP
+352085732 WIN INTEL VULKAN : PixelLocalStorageTestES31.DrawStateReset/ES3_1_Vulkan_EmulatePixelLocalStorage_NoSupportsShaderFramebufferFetch_NoSupportsFragmentShaderPixelInterlock = SKIP
+
 // Linux
 42264596 LINUX INTEL VULKAN : SimpleStateChangeTestES31.DrawThenUpdateUBOThenDrawThenDrawIndexed/* = SKIP
 // Crashes when compiling the shader

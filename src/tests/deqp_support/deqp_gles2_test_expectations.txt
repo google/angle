@@ -77,6 +77,11 @@
 // Only fails in D3D11 32-bit.
 42260413 D3D11 : dEQP-GLES2.functional.clipping.triangle_vertex.clip_three.clip_pos_x_pos_y_pos_z_and_neg_x_pos_y_pos_z_and_neg_x_neg_y_neg_z = FAIL
 
+// D3D11 Intel UHD 770 driver 31.0.101.5333
+352085732 D3D11 INTEL : dEQP-GLES2.functional.color_clear.scissored_rgb = FAIL
+352085732 D3D11 INTEL : dEQP-GLES2.functional.color_clear.scissored_rgba = FAIL
+352085732 D3D11 INTEL : dEQP-GLES2.functional.color_clear.short_scissored_rgb = FAIL
+
 // D3D11 AMD
 42261052 D3D11 AMD : dEQP-GLES2.functional.texture.size.cube.64x64_l8 = FAIL
 42261052 D3D11 AMD : dEQP-GLES2.functional.texture.size.cube.64x64_rgb888 = FAIL
