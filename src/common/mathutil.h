@@ -175,37 +175,6 @@ inline unsigned int unorm(float x)
     }
 }
 
-inline bool supportsSSE2()
-{
-#if defined(ANGLE_USE_SSE)
-    static bool checked  = false;
-    static bool supports = false;
-
-    if (checked)
-    {
-        return supports;
-    }
-
-#    if defined(ANGLE_PLATFORM_WINDOWS) && !defined(_M_ARM) && !defined(_M_ARM64)
-    {
-        int info[4];
-        __cpuid(info, 0);
-
-        if (info[0] >= 1)
-        {
-            __cpuid(info, 1);
-
-            supports = (info[3] >> 26) & 1;
-        }
-    }
-#    endif  // defined(ANGLE_PLATFORM_WINDOWS) && !defined(_M_ARM) && !defined(_M_ARM64)
-    checked = true;
-    return supports;
-#else  // defined(ANGLE_USE_SSE)
-    return false;
-#endif
-}
-
 template <typename destType, typename sourceType>
 destType bitCast(const sourceType &source)
 {
