@@ -106,16 +106,6 @@
 #    define FAR
 #endif
 
-#if defined(_MSC_VER) && !defined(_M_ARM) && !defined(_M_ARM64)
-#    include <intrin.h>
-#    define ANGLE_USE_SSE
-#elif defined(__GNUC__) && (defined(__x86_64__) || defined(__i386__))
-#    include <x86intrin.h>
-#    if __SSE__
-#        define ANGLE_USE_SSE
-#    endif
-#endif
-
 // Mips and arm devices need to include stddef for size_t.
 #if defined(__mips__) || defined(__arm__) || defined(__aarch64__) || defined(__riscv)
 #    include <stddef.h>

@@ -50,27 +50,27 @@ GLColor SliceFormatColor(GLenum format, GLColor full)
     }
 }
 
-GLColor16UI SliceFormatColor16UI(GLenum format, GLColor16UI full)
+GLColor16 SliceFormatColor16(GLenum format, GLColor16 full)
 {
     switch (format)
     {
         case GL_RED:
-            return GLColor16UI(full.R, 0, 0, 0xFFFF);
+            return GLColor16(full.R, 0, 0, 0xFFFF);
         case GL_RG:
-            return GLColor16UI(full.R, full.G, 0, 0xFFFF);
+            return GLColor16(full.R, full.G, 0, 0xFFFF);
         case GL_RGB:
-            return GLColor16UI(full.R, full.G, full.B, 0xFFFF);
+            return GLColor16(full.R, full.G, full.B, 0xFFFF);
         case GL_RGBA:
             return full;
         case GL_LUMINANCE:
-            return GLColor16UI(full.R, full.R, full.R, 0xFFFF);
+            return GLColor16(full.R, full.R, full.R, 0xFFFF);
         case GL_ALPHA:
-            return GLColor16UI(0, 0, 0, full.R);
+            return GLColor16(0, 0, 0, full.R);
         case GL_LUMINANCE_ALPHA:
-            return GLColor16UI(full.R, full.R, full.R, full.G);
+            return GLColor16(full.R, full.R, full.R, full.G);
         default:
             EXPECT_TRUE(false);
-            return GLColor16UI(0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF);
+            return GLColor16(0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF);
     }
 }
 
@@ -9319,8 +9319,6 @@ class Texture2DNorm16TestES3 : public Texture2DTestES3
 
     void testNorm16Texture(GLint internalformat, GLenum format, GLenum type)
     {
-        // TODO(http://anglebug.com/40096653) Fails on Win Intel OpenGL driver
-        ANGLE_SKIP_TEST_IF(IsIntel() && IsOpenGL());
         ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_norm16"));
 
         GLushort pixelValue  = (type == GL_SHORT) ? 0x7FFF : 0x6A35;
@@ -9337,8 +9335,7 @@ class Texture2DNorm16TestES3 : public Texture2DTestES3
             bool isSubImage = i == 1;
             SCOPED_TRACE("is subimage:" + std::to_string(isSubImage));
             glBindTexture(GL_TEXTURE_2D, mTextures[0]);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16_EXT, 1, 1, 0, GL_RGBA, GL_UNSIGNED_SHORT,
-                         nullptr);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
             glBindTexture(GL_TEXTURE_2D, mTextures[1]);
             if (isSubImage)
@@ -9375,7 +9372,7 @@ class Texture2DNorm16TestES3 : public Texture2DTestES3
                                                       GLint packSkipPixels,
                                                       GLint packSkipRows,
                                                       GLenum type,
-                                                      GLColor16UI color)
+                                                      GLColor16 color)
     {
         // PACK modes debugging
         GLint s = 2;  // single component size in bytes, UNSIGNED_SHORT -> 2 in our case
@@ -9453,8 +9450,8 @@ class Texture2DNorm16TestES3 : public Texture2DTestES3
 
         GLushort pixelValue  = 0x6A35;
         GLushort imageData[] = {pixelValue, pixelValue, pixelValue, pixelValue};
-        GLColor16UI color    = SliceFormatColor16UI(
-            format, GLColor16UI(pixelValue, pixelValue, pixelValue, pixelValue));
+        GLColor16 color =
+            SliceFormatColor16(format, GLColor16(pixelValue, pixelValue, pixelValue, pixelValue));
         // Size of drawing viewport
         constexpr GLint width = 8, height = 8;
 
@@ -9546,16 +9543,16 @@ class Texture2DNorm16TestES3 : public Texture2DTestES3
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        EXPECT_PIXEL_16UI_COLOR(
-            0, 0, SliceFormatColor16UI(format, GLColor16UI(0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF)));
+        EXPECT_PIXEL_COLOR16_NEAR(
+            0, 0, SliceFormatColor16(format, GLColor16(0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF)), 0);
 
         glBindTexture(GL_TEXTURE_2D, mTextures[1]);
         glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, 1, 1);
 
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[1],
                                0);
-        EXPECT_PIXEL_16UI_COLOR(
-            0, 0, SliceFormatColor16UI(format, GLColor16UI(0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF)));
+        EXPECT_PIXEL_COLOR16_NEAR(
+            0, 0, SliceFormatColor16(format, GLColor16(0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF)), 0);
 
         ASSERT_GL_NO_ERROR();
 

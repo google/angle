@@ -2145,8 +2145,7 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
 {
     vk::Renderer *renderer = contextVk->getRenderer();
 
-    SwapchainImage &image               = mSwapchainImages[mCurrentSwapchainImageIndex];
-    vk::Framebuffer &currentFramebuffer = chooseFramebuffer();
+    SwapchainImage &image = mSwapchainImages[mCurrentSwapchainImageIndex];
 
     // Make sure deferred clears are applied, if any.
     if (mColorImageMS.valid())
@@ -2178,19 +2177,18 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
     // swapchain image. MSAA resolve and overlay will insert another renderpass which disqualifies
     // the optimization.
     bool imageResolved = false;
-    if (currentFramebuffer.valid() &&
-        contextVk->hasStartedRenderPassWithSwapchainFramebuffer(currentFramebuffer))
+    if (contextVk->hasStartedRenderPassWithDefaultFramebuffer())
     {
         ANGLE_TRY(contextVk->optimizeRenderPassForPresent(&image.imageViews, image.image.get(),
                                                           &mColorImageMS, mSwapchainPresentMode,
                                                           &imageResolved));
     }
 
-    // Because the color attachment defers layout changes until endRenderPass time, we must call
-    // finalize the layout transition in the renderpass before we insert layout change to
-    // ImageLayout::Present bellow.
-    contextVk->finalizeImageLayout(image.image.get(), {});
-    contextVk->finalizeImageLayout(&mColorImageMS, {});
+    // End the render pass before issuing the layout change to ImageLayout::Present below.  The
+    // layouts are determined at the end of the render pass, and until they are finalized the image
+    // is not aware of what layout it will be.
+    ANGLE_TRY(contextVk->flushCommandsAndEndRenderPassWithoutSubmit(
+        RenderPassClosureReason::EGLSwapBuffers));
 
     vk::OutsideRenderPassCommandBufferHelper *commandBufferHelper;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper({}, &commandBufferHelper));
@@ -2218,28 +2216,35 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
         mColorImageMS.resolve(image.image.get(), resolveRegion,
                               &commandBufferHelper->getCommandBuffer());
 
-        contextVk->trackImagesWithOutsideRenderPassEvent(&mColorImageMS, image.image.get());
         contextVk->getPerfCounters().swapchainResolveOutsideSubpass++;
-    }
-
-    if (renderer->getFeatures().supportsPresentation.enabled)
-    {
-        // This does nothing if it's already in the requested layout
-        image.image->recordReadBarrier(contextVk, VK_IMAGE_ASPECT_COLOR_BIT,
-                                       vk::ImageLayout::Present, commandBufferHelper);
     }
 
     // The overlay is drawn after this.  This ensures that drawing the overlay does not interfere
     // with other functionality, especially counters used to validate said functionality.
     const bool shouldDrawOverlay = overlayHasEnabledWidget(contextVk);
 
+    if (renderer->getFeatures().supportsPresentation.enabled && !shouldDrawOverlay)
+    {
+        // This does nothing if it's already in the requested layout
+        image.image->recordReadBarrier(contextVk, VK_IMAGE_ASPECT_COLOR_BIT,
+                                       vk::ImageLayout::Present, commandBufferHelper);
+    }
+
     ANGLE_TRY(contextVk->flushImpl(shouldDrawOverlay ? nullptr : &presentSemaphore, nullptr,
-                                   RenderPassClosureReason::EGLSwapBuffers));
+                                   RenderPassClosureReason::AlreadySpecifiedElsewhere));
 
     if (shouldDrawOverlay)
     {
         updateOverlay(contextVk);
         ANGLE_TRY(drawOverlay(contextVk, &image));
+
+        if (renderer->getFeatures().supportsPresentation.enabled)
+        {
+            ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper({}, &commandBufferHelper));
+            image.image->recordReadBarrier(contextVk, VK_IMAGE_ASPECT_COLOR_BIT,
+                                           vk::ImageLayout::Present, commandBufferHelper);
+        }
+
         ANGLE_TRY(contextVk->flushImpl(&presentSemaphore, nullptr,
                                        RenderPassClosureReason::AlreadySpecifiedElsewhere));
     }
@@ -2981,9 +2986,11 @@ EGLint WindowSurfaceVk::getSwapBehavior() const
 
 angle::Result WindowSurfaceVk::getCurrentFramebuffer(ContextVk *contextVk,
                                                      FramebufferFetchMode fetchMode,
-                                                     const vk::RenderPass &compatibleRenderPass,
+                                                     const vk::RenderPass *compatibleRenderPass,
                                                      vk::Framebuffer *framebufferOut)
 {
+    ASSERT(!contextVk->getFeatures().preferDynamicRendering.enabled);
+
     // FramebufferVk dirty-bit processing should ensure that a new image was acquired.
     ASSERT(!needsAcquireImageOrProcessResult());
 
@@ -3029,7 +3036,7 @@ angle::Result WindowSurfaceVk::getCurrentFramebuffer(ContextVk *contextVk,
     VkFramebufferCreateInfo framebufferInfo = {};
     framebufferInfo.sType                   = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
     framebufferInfo.flags                   = 0;
-    framebufferInfo.renderPass              = compatibleRenderPass.getHandle();
+    framebufferInfo.renderPass              = compatibleRenderPass->getHandle();
     framebufferInfo.attachmentCount         = attachmentCount;
     framebufferInfo.pAttachments            = imageViews.data();
     framebufferInfo.width                   = static_cast<uint32_t>(rotatedExtents.width);

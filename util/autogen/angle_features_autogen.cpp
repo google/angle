@@ -173,6 +173,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::ForceDepthAttachmentInitOnClear, "forceDepthAttachmentInitOnClear"},
     {Feature::ForceDisableFullScreenExclusive, "forceDisableFullScreenExclusive"},
     {Feature::ForceFallbackFormat, "forceFallbackFormat"},
+    {Feature::ForceFlushAfterDrawcallUsingShadowmap, "forceFlushAfterDrawcallUsingShadowmap"},
     {Feature::ForceFragmentShaderPrecisionHighpToMediump, "forceFragmentShaderPrecisionHighpToMediump"},
     {Feature::ForceGlErrorChecking, "forceGlErrorChecking"},
     {Feature::ForceInitShaderVariables, "forceInitShaderVariables"},

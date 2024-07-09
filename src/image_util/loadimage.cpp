@@ -12,6 +12,44 @@
 #include "common/platform.h"
 #include "image_util/imageformats.h"
 
+#if defined(ANGLE_PLATFORM_WINDOWS) && !defined(_M_ARM) && !defined(_M_ARM64)
+#    if defined(_MSC_VER)
+#        include <intrin.h>
+#        define ANGLE_LOADIMAGE_USE_SSE
+#    elif defined(__GNUC__) && (defined(__x86_64__) || defined(__i386__))
+#        include <x86intrin.h>
+#        if __SSE__
+#            define ANGLE_LOADIMAGE_USE_SSE
+#        endif
+#    endif
+#endif
+
+#if defined(ANGLE_LOADIMAGE_USE_SSE)
+inline bool supportsSSE2()
+{
+    static bool checked  = false;
+    static bool supports = false;
+
+    if (checked)
+    {
+        return supports;
+    }
+
+    int info[4];
+    __cpuid(info, 0);
+
+    if (info[0] >= 1)
+    {
+        __cpuid(info, 1);
+
+        supports = (info[3] >> 26) & 1;
+    }
+
+    checked = true;
+    return supports;
+}
+#endif
+
 namespace angle
 {
 ImageLoadContext::ImageLoadContext()                              = default;
@@ -29,8 +67,8 @@ void LoadA8ToRGBA8(const ImageLoadContext &context,
                    size_t outputRowPitch,
                    size_t outputDepthPitch)
 {
-#if defined(ANGLE_USE_SSE)
-    if (gl::supportsSSE2())
+#if defined(ANGLE_LOADIMAGE_USE_SSE)
+    if (supportsSSE2())
     {
         __m128i zeroWide = _mm_setzero_si128();
 
@@ -617,8 +655,8 @@ void LoadRGBA8ToBGRA8(const ImageLoadContext &context,
                       size_t outputRowPitch,
                       size_t outputDepthPitch)
 {
-#if defined(ANGLE_USE_SSE)
-    if (gl::supportsSSE2())
+#if defined(ANGLE_LOADIMAGE_USE_SSE)
+    if (supportsSSE2())
     {
         __m128i brMask = _mm_set1_epi32(0x00ff00ff);
 
