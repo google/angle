@@ -4462,8 +4462,11 @@ angle::Result UtilsVk::drawOverlay(ContextVk *contextVk,
     // Overlay is always drawn as the last render pass before present.  Automatically move the
     // layout to PresentSrc.
     contextVk->onColorDraw(gl::LevelIndex(0), 0, 1, dst, nullptr, {}, vk::PackedAttachmentIndex(0));
-    contextVk->getStartedRenderPassCommands().setImageOptimizeForPresent(dst);
-    contextVk->finalizeImageLayout(dst, {});
+    if (contextVk->getFeatures().supportsPresentation.enabled)
+    {
+        contextVk->getStartedRenderPassCommands().setImageOptimizeForPresent(dst);
+        contextVk->finalizeImageLayout(dst, {});
+    }
 
     // Close the render pass for this temporary framebuffer.
     return contextVk->flushCommandsAndEndRenderPass(

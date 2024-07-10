@@ -4551,7 +4551,7 @@ angle::Result ContextVk::optimizeRenderPassForPresent(vk::ImageViewHelper *color
     }
 
     // Use finalLayout instead of extra barrier for layout change to present
-    if (colorImage != nullptr)
+    if (colorImage != nullptr && getFeatures().supportsPresentation.enabled)
     {
         mRenderPassCommands->setImageOptimizeForPresent(colorImage);
     }

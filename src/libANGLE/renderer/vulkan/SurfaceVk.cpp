@@ -2219,16 +2219,16 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
         contextVk->getPerfCounters().swapchainResolveOutsideSubpass++;
     }
 
-    if (renderer->getFeatures().supportsPresentation.enabled)
+    // The overlay is drawn after this.  This ensures that drawing the overlay does not interfere
+    // with other functionality, especially counters used to validate said functionality.
+    const bool shouldDrawOverlay = overlayHasEnabledWidget(contextVk);
+
+    if (renderer->getFeatures().supportsPresentation.enabled && !shouldDrawOverlay)
     {
         // This does nothing if it's already in the requested layout
         image.image->recordReadBarrier(contextVk, VK_IMAGE_ASPECT_COLOR_BIT,
                                        vk::ImageLayout::Present, commandBufferHelper);
     }
-
-    // The overlay is drawn after this.  This ensures that drawing the overlay does not interfere
-    // with other functionality, especially counters used to validate said functionality.
-    const bool shouldDrawOverlay = overlayHasEnabledWidget(contextVk);
 
     ANGLE_TRY(contextVk->flushImpl(shouldDrawOverlay ? nullptr : &presentSemaphore, nullptr,
                                    RenderPassClosureReason::EGLSwapBuffers));
@@ -2237,6 +2237,14 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
     {
         updateOverlay(contextVk);
         ANGLE_TRY(drawOverlay(contextVk, &image));
+
+        if (renderer->getFeatures().supportsPresentation.enabled)
+        {
+            ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper({}, &commandBufferHelper));
+            image.image->recordReadBarrier(contextVk, VK_IMAGE_ASPECT_COLOR_BIT,
+                                           vk::ImageLayout::Present, commandBufferHelper);
+        }
+
         ANGLE_TRY(contextVk->flushImpl(&presentSemaphore, nullptr,
                                        RenderPassClosureReason::AlreadySpecifiedElsewhere));
     }
