@@ -2941,10 +2941,13 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk,
         contextVk->getFeatures().supportsImagelessFramebuffer.enabled && mBackbuffer == nullptr
             ? vk::ImagelessFramebuffer::Yes
             : vk::ImagelessFramebuffer::No;
+    const vk::RenderPassSource source = mBackbuffer == nullptr
+                                            ? vk::RenderPassSource::FramebufferObject
+                                            : vk::RenderPassSource::DefaultFramebuffer;
 
     framebufferOut->setFramebuffer(std::move(framebufferHandle), std::move(unpackedAttachments),
                                    framebufferWidth, framebufferHeight, framebufferLayers,
-                                   imagelessFramebuffer);
+                                   imagelessFramebuffer, source);
 
     return angle::Result::Continue;
 }

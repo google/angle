@@ -640,14 +640,13 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         return mRenderPassCommands->started() &&
                mRenderPassCommands->getQueueSerial() == queueSerial;
     }
-    bool hasStartedRenderPassWithSwapchainFramebuffer(const vk::Framebuffer &framebuffer) const
+    bool hasStartedRenderPassWithDefaultFramebuffer() const
     {
         // WindowSurfaceVk caches its own framebuffers and guarantees that render passes are not
         // kept open between frames (including when a swapchain is recreated and framebuffer handles
-        // change).  It is therefore safe to verify an open render pass by the framebuffer handle
-        return mRenderPassCommands->started() &&
-               mRenderPassCommands->getFramebuffer().getFramebuffer().getHandle() ==
-                   framebuffer.getHandle();
+        // change).  It is therefore safe to verify an open render pass just by checking if it
+        // originated from the default framebuffer.
+        return mRenderPassCommands->started() && mRenderPassCommands->isDefault();
     }
 
     bool isRenderPassStartedAndUsesBuffer(const vk::BufferHelper &buffer) const

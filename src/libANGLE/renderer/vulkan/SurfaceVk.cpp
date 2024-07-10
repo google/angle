@@ -2145,8 +2145,7 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
 {
     vk::Renderer *renderer = contextVk->getRenderer();
 
-    SwapchainImage &image               = mSwapchainImages[mCurrentSwapchainImageIndex];
-    vk::Framebuffer &currentFramebuffer = chooseFramebuffer();
+    SwapchainImage &image = mSwapchainImages[mCurrentSwapchainImageIndex];
 
     // Make sure deferred clears are applied, if any.
     if (mColorImageMS.valid())
@@ -2178,8 +2177,7 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
     // swapchain image. MSAA resolve and overlay will insert another renderpass which disqualifies
     // the optimization.
     bool imageResolved = false;
-    if (currentFramebuffer.valid() &&
-        contextVk->hasStartedRenderPassWithSwapchainFramebuffer(currentFramebuffer))
+    if (contextVk->hasStartedRenderPassWithDefaultFramebuffer())
     {
         ANGLE_TRY(contextVk->optimizeRenderPassForPresent(&image.imageViews, image.image.get(),
                                                           &mColorImageMS, mSwapchainPresentMode,

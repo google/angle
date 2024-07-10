@@ -2403,7 +2403,8 @@ angle::Result UtilsVk::startRenderPass(ContextVk *contextVk,
     vk::RenderPassFramebuffer renderPassFramebuffer;
     renderPassFramebuffer.setFramebuffer(std::move(framebufferHandle), {imageView->getHandle()},
                                          framebufferInfo.width, framebufferInfo.height,
-                                         framebufferInfo.layers, vk::ImagelessFramebuffer::No);
+                                         framebufferInfo.layers, vk::ImagelessFramebuffer::No,
+                                         vk::RenderPassSource::InternalUtils);
 
     vk::AttachmentOpsArray renderPassAttachmentOps;
     vk::PackedClearValuesArray clearValues;

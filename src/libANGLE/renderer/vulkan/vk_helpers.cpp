@@ -1987,6 +1987,7 @@ void RenderPassFramebuffer::reset()
     mInitialFramebuffer.release();
     mImageViews.clear();
     mIsImageless = false;
+    mIsDefault   = false;
 }
 
 void RenderPassFramebuffer::addResolveAttachment(size_t viewIndex, VkImageView view)
