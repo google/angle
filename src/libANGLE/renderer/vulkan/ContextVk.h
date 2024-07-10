@@ -506,8 +506,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         return angle::Result::Continue;
     }
 
-    RenderPassCache &getRenderPassCache() { return mRenderPassCache; }
-
     bool emulateSeamfulCubeMapSampling() const { return mEmulateSeamfulCubeMapSampling; }
 
     const gl::Debug &getDebug() const { return mState.getDebug(); }
@@ -1599,6 +1597,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     vk::GarbageObjects mCurrentGarbage;
 
     RenderPassCache mRenderPassCache;
+    // Used with dynamic rendering as it doesn't use render passes.
+    vk::RenderPass mNullRenderPass;
 
     vk::OutsideRenderPassCommandBufferHelper *mOutsideRenderPassCommands;
     vk::RenderPassCommandBufferHelper *mRenderPassCommands;

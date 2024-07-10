@@ -109,6 +109,23 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
         },
     },
     {
+        ImageLayout::ColorWriteAndInput,
+        ImageMemoryBarrierData{
+            "ColorWriteAndInput",
+            VK_IMAGE_LAYOUT_RENDERING_LOCAL_READ_KHR,
+            VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+            VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
+            // Transition to: all reads and writes must happen after barrier.
+            VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+            // Transition from: all writes must finish before barrier.
+            VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+            ResourceAccess::ReadWrite,
+            PipelineStage::ColorAttachmentOutput,
+            EventStage::ColorAttachmentOutput,
+            PipelineStageGroup::FragmentOnly,
+        },
+    },
+    {
         ImageLayout::MSRTTEmulationColorUnresolveAndResolve,
         ImageMemoryBarrierData{
             "MSRTTEmulationColorUnresolveAndResolve",
@@ -2136,7 +2153,8 @@ RenderPassCommandBufferHelper::RenderPassCommandBufferHelper()
       mPreviousSubpassesCmdCount(0),
       mDepthStencilAttachmentIndex(kAttachmentIndexInvalid),
       mColorAttachmentsCount(0),
-      mImageOptimizeForPresent(nullptr)
+      mImageOptimizeForPresent(nullptr),
+      mImageOptimizeForPresentOriginalLayout(ImageLayout::Undefined)
 {}
 
 RenderPassCommandBufferHelper::~RenderPassCommandBufferHelper() {}
@@ -2177,15 +2195,16 @@ angle::Result RenderPassCommandBufferHelper::reset(
 
     mFragmentShadingRateAtachment.reset();
 
-    mRenderPassStarted                 = false;
-    mValidTransformFeedbackBufferCount = 0;
-    mRebindTransformFeedbackBuffers    = false;
-    mHasShaderStorageOutput            = false;
-    mHasGLMemoryBarrierIssued          = false;
-    mPreviousSubpassesCmdCount         = 0;
-    mColorAttachmentsCount             = PackedAttachmentCount(0);
-    mDepthStencilAttachmentIndex       = kAttachmentIndexInvalid;
-    mImageOptimizeForPresent           = nullptr;
+    mRenderPassStarted                     = false;
+    mValidTransformFeedbackBufferCount     = 0;
+    mRebindTransformFeedbackBuffers        = false;
+    mHasShaderStorageOutput                = false;
+    mHasGLMemoryBarrierIssued              = false;
+    mPreviousSubpassesCmdCount             = 0;
+    mColorAttachmentsCount                 = PackedAttachmentCount(0);
+    mDepthStencilAttachmentIndex           = kAttachmentIndexInvalid;
+    mImageOptimizeForPresent               = nullptr;
+    mImageOptimizeForPresentOriginalLayout = ImageLayout::Undefined;
 
     ASSERT(CheckSubpassCommandBufferCount(getSubpassCommandBufferCount()));
 
@@ -2427,6 +2446,14 @@ void RenderPassCommandBufferHelper::finalizeColorImageLayout(
             isResolveImage && mRenderPassDesc.getColorUnresolveAttachmentMask().any();
         imageLayout = hasUnresolve ? ImageLayout::MSRTTEmulationColorUnresolveAndResolve
                                    : ImageLayout::ColorWrite;
+        if (context->getFeatures().preferDynamicRendering.enabled &&
+            mRenderPassDesc.hasFramebufferFetch())
+        {
+            // Note MSRTT emulation is not implemented with dynamic rendering.
+            ASSERT(imageLayout == ImageLayout::ColorWrite);
+            imageLayout = ImageLayout::ColorWriteAndInput;
+        }
+
         updateImageLayoutAndBarrier(context, image, VK_IMAGE_ASPECT_COLOR_BIT, imageLayout,
                                     BarrierType::Event);
     }
@@ -2436,24 +2463,37 @@ void RenderPassCommandBufferHelper::finalizeColorImageLayout(
         mAttachmentOps.setLayouts(packedAttachmentIndex, imageLayout, imageLayout);
     }
 
+    // Dynamic rendering does not have implicit layout transitions at render pass boundaries.  This
+    // optimization is instead done by recording the necessary transition after the render pass
+    // directly on the primary command buffer.
     if (mImageOptimizeForPresent == image)
     {
         ASSERT(isDefault());
         ASSERT(context->getFeatures().supportsPresentation.enabled);
         ASSERT(packedAttachmentIndex == kAttachmentIndexZero);
-        // Use finalLayout instead of extra barrier for layout change to present
+
+        // Use finalLayout instead of extra barrier for layout change to present.  For dynamic
+        // rendering, this is not possible and is done when the render pass is flushed.  However,
+        // because this function is expected to finalize the image layout, we still have to pretend
+        // the image is in the present layout already.
+        mImageOptimizeForPresentOriginalLayout = mImageOptimizeForPresent->getCurrentImageLayout();
         mImageOptimizeForPresent->setCurrentImageLayout(ImageLayout::Present);
-        if (isResolveImage)
+
+        if (!context->getFeatures().preferDynamicRendering.enabled)
         {
-            SetBitField(mAttachmentOps[packedAttachmentIndex].finalResolveLayout,
-                        mImageOptimizeForPresent->getCurrentImageLayout());
+            if (isResolveImage)
+            {
+                SetBitField(mAttachmentOps[packedAttachmentIndex].finalResolveLayout,
+                            mImageOptimizeForPresent->getCurrentImageLayout());
+            }
+            else
+            {
+                SetBitField(mAttachmentOps[packedAttachmentIndex].finalLayout,
+                            mImageOptimizeForPresent->getCurrentImageLayout());
+            }
+            mImageOptimizeForPresent               = nullptr;
+            mImageOptimizeForPresentOriginalLayout = ImageLayout::Undefined;
         }
-        else
-        {
-            SetBitField(mAttachmentOps[packedAttachmentIndex].finalLayout,
-                        mImageOptimizeForPresent->getCurrentImageLayout());
-        }
-        mImageOptimizeForPresent = nullptr;
     }
 
     if (isResolveImage)
@@ -2829,6 +2869,14 @@ void RenderPassCommandBufferHelper::collectRefCountedEventsGarbage(
     }
 }
 
+void RenderPassCommandBufferHelper::updatePerfCountersForDynamicRenderingInstance(
+    Context *context,
+    angle::VulkanPerfCounters *countersOut)
+{
+    mRenderPassDesc.updatePerfCounters(context, mFramebuffer.getUnpackedImageViews(),
+                                       mAttachmentOps, countersOut);
+}
+
 angle::Result RenderPassCommandBufferHelper::beginRenderPass(
     ContextVk *contextVk,
     RenderPassFramebuffer &&framebuffer,
@@ -2861,9 +2909,13 @@ angle::Result RenderPassCommandBufferHelper::beginRenderPass(
 
 angle::Result RenderPassCommandBufferHelper::beginRenderPassCommandBuffer(ContextVk *contextVk)
 {
-    VkCommandBufferInheritanceInfo inheritanceInfo = {};
+    VkCommandBufferInheritanceInfo inheritanceInfo;
+    VkCommandBufferInheritanceRenderingInfo renderingInfo;
+    gl::DrawBuffersArray<VkFormat> colorFormatStorage;
+
     ANGLE_TRY(RenderPassCommandBuffer::InitializeRenderPassInheritanceInfo(
-        contextVk, mFramebuffer.getFramebuffer(), mRenderPassDesc, &inheritanceInfo));
+        contextVk, mFramebuffer.getFramebuffer(), mRenderPassDesc, &inheritanceInfo, &renderingInfo,
+        &colorFormatStorage));
     inheritanceInfo.subpass = mCurrentSubpassCommandBufferIndex;
 
     return getCommandBuffer().begin(contextVk, inheritanceInfo);
@@ -2918,6 +2970,8 @@ angle::Result RenderPassCommandBufferHelper::endRenderPassCommandBuffer(ContextV
 angle::Result RenderPassCommandBufferHelper::nextSubpass(ContextVk *contextVk,
                                                          RenderPassCommandBuffer **commandBufferOut)
 {
+    ASSERT(!contextVk->getFeatures().preferDynamicRendering.enabled);
+
     if (ExecutesInline())
     {
         // When using ANGLE secondary command buffers, the commands are inline and are executed on
@@ -3033,47 +3087,72 @@ angle::Result RenderPassCommandBufferHelper::flushToPrimary(Context *context,
     // Commands that are added to primary before beginRenderPass command
     executeBarriers(context->getRenderer(), commandsState);
 
-    VkRenderPassBeginInfo beginInfo = {};
-    beginInfo.sType                 = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-    beginInfo.renderPass            = renderPass.getHandle();
-    beginInfo.framebuffer =
-        framebufferOverride ? framebufferOverride : mFramebuffer.getFramebuffer().getHandle();
-    beginInfo.renderArea.offset.x      = static_cast<uint32_t>(mRenderArea.x);
-    beginInfo.renderArea.offset.y      = static_cast<uint32_t>(mRenderArea.y);
-    beginInfo.renderArea.extent.width  = static_cast<uint32_t>(mRenderArea.width);
-    beginInfo.renderArea.extent.height = static_cast<uint32_t>(mRenderArea.height);
-    beginInfo.clearValueCount = static_cast<uint32_t>(mRenderPassDesc.clearableAttachmentCount());
-    beginInfo.pClearValues    = mClearValues.data();
-
-    // With imageless framebuffers, the attachments should be also added to beginInfo.
-    VkRenderPassAttachmentBeginInfo attachmentBeginInfo = {};
-    if (mFramebuffer.isImageless())
-    {
-        mFramebuffer.packResolveViewsForRenderPassBegin(&attachmentBeginInfo);
-        AddToPNextChain(&beginInfo, &attachmentBeginInfo);
-
-        // If nullColorAttachmentWithExternalFormatResolve is true, there will be no color
-        // attachment even though mRenderPassDesc indicates so.
-        ASSERT((mRenderPassDesc.hasYUVResolveAttachment() &&
-                context->getRenderer()->nullColorAttachmentWithExternalFormatResolve()) ||
-               attachmentBeginInfo.attachmentCount == mRenderPassDesc.attachmentCount());
-    }
-
-    // Run commands inside the RenderPass.
     constexpr VkSubpassContents kSubpassContents =
         ExecutesInline() ? VK_SUBPASS_CONTENTS_INLINE
                          : VK_SUBPASS_CONTENTS_SECONDARY_COMMAND_BUFFERS;
 
-    primary.beginRenderPass(beginInfo, kSubpassContents);
+    if (!renderPass.valid())
+    {
+        mRenderPassDesc.beginRendering(context, &primary, mRenderArea, kSubpassContents,
+                                       mFramebuffer.getUnpackedImageViews(), mAttachmentOps,
+                                       mClearValues, mFramebuffer.getLayers());
+    }
+    else
+    {
+        // With imageless framebuffers, the attachments should be also added to beginInfo.
+        VkRenderPassAttachmentBeginInfo attachmentBeginInfo = {};
+        if (mFramebuffer.isImageless())
+        {
+            mFramebuffer.packResolveViewsForRenderPassBegin(&attachmentBeginInfo);
+
+            // If nullColorAttachmentWithExternalFormatResolve is true, there will be no color
+            // attachment even though mRenderPassDesc indicates so.
+            ASSERT((mRenderPassDesc.hasYUVResolveAttachment() &&
+                    context->getRenderer()->nullColorAttachmentWithExternalFormatResolve()) ||
+                   attachmentBeginInfo.attachmentCount == mRenderPassDesc.attachmentCount());
+        }
+
+        mRenderPassDesc.beginRenderPass(
+            context, &primary, renderPass,
+            framebufferOverride ? framebufferOverride : mFramebuffer.getFramebuffer().getHandle(),
+            mRenderArea, kSubpassContents, mClearValues,
+            mFramebuffer.isImageless() ? &attachmentBeginInfo : nullptr);
+    }
+
+    // Run commands inside the RenderPass.
     for (uint32_t subpass = 0; subpass < getSubpassCommandBufferCount(); ++subpass)
     {
         if (subpass > 0)
         {
+            ASSERT(!context->getFeatures().preferDynamicRendering.enabled);
             primary.nextSubpass(kSubpassContents);
         }
         mCommandBuffers[subpass].executeCommands(&primary);
     }
-    primary.endRenderPass();
+
+    if (!renderPass.valid())
+    {
+        primary.endRendering();
+
+        if (mImageOptimizeForPresent != nullptr)
+        {
+            // finalizeColorImageLayout forces layout to Present.  If this is not the case, that
+            // code was not run (so mImageOptimizeForPresentOriginalLayout is invalid).
+            ASSERT(mImageOptimizeForPresent->getCurrentImageLayout() == ImageLayout::Present);
+
+            // Restore the original layout of the image and do the real transition after the render
+            // pass ends.
+            mImageOptimizeForPresent->setCurrentImageLayout(mImageOptimizeForPresentOriginalLayout);
+            mImageOptimizeForPresent->recordWriteBarrierOneOff(context, ImageLayout::Present,
+                                                               &primary, nullptr);
+            mImageOptimizeForPresent               = nullptr;
+            mImageOptimizeForPresentOriginalLayout = ImageLayout::Undefined;
+        }
+    }
+    else
+    {
+        primary.endRenderPass();
+    }
 
     // Now issue VkCmdSetEvents to primary command buffer
     executeSetEvents(context, &primary);
@@ -7268,7 +7347,11 @@ void ImageHelper::barrierImpl(Context *context,
            !mCurrentEvent.valid());
 
     // Release the ANI semaphore to caller to add to the command submission.
-    *acquireNextImageSemaphoreOut = mAcquireNextImageSemaphore.release();
+    ASSERT(acquireNextImageSemaphoreOut != nullptr || !mAcquireNextImageSemaphore.valid());
+    if (acquireNextImageSemaphoreOut != nullptr)
+    {
+        *acquireNextImageSemaphoreOut = mAcquireNextImageSemaphore.release();
+    }
 
     if (mCurrentLayout == ImageLayout::SharedPresent)
     {

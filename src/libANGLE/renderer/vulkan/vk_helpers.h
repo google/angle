@@ -101,6 +101,8 @@ enum class ImageLayout
 
     // Color (Write):
     ColorWrite,
+    // Used only with dynamic rendering, because it needs a different VkImageLayout
+    ColorWriteAndInput,
     MSRTTEmulationColorUnresolveAndResolve,
 
     // Depth (Write), Stencil (Write)
@@ -1384,9 +1386,6 @@ class CommandBufferHelperCommon : angle::NonCopyable
         mAcquireNextImageSemaphore.setHandle(semaphore);
     }
 
-    // Dumping the command stream is disabled by default.
-    static constexpr bool kEnableCommandStreamDiagnostics = false;
-
   protected:
     CommandBufferHelperCommon();
     ~CommandBufferHelperCommon();
@@ -1617,7 +1616,8 @@ class RenderPassFramebuffer : angle::NonCopyable
 
     void reset();
 
-    void setFramebuffer(Framebuffer &&initialFramebuffer,
+    void setFramebuffer(Context *context,
+                        Framebuffer &&initialFramebuffer,
                         FramebufferAttachmentsVector<VkImageView> &&imageViews,
                         uint32_t width,
                         uint32_t height,
@@ -1625,7 +1625,8 @@ class RenderPassFramebuffer : angle::NonCopyable
                         ImagelessFramebuffer imagelessFramebuffer,
                         RenderPassSource source)
     {
-        ASSERT(initialFramebuffer.valid());
+        // Framebuffers are mutually exclusive with dynamic rendering.
+        ASSERT(initialFramebuffer.valid() != context->getFeatures().preferDynamicRendering.enabled);
         mInitialFramebuffer = std::move(initialFramebuffer);
         mImageViews         = std::move(imageViews);
         mWidth              = width;
@@ -1639,6 +1640,7 @@ class RenderPassFramebuffer : angle::NonCopyable
     bool isDefault() const { return mIsDefault; }
     const Framebuffer &getFramebuffer() const { return mInitialFramebuffer; }
     bool needsNewFramebufferWithResolveAttachments() const { return !mInitialFramebuffer.valid(); }
+    uint32_t getLayers() const { return mLayers; }
 
     // Helpers to determine if a resolve attachment already exists
     bool hasColorResolveAttachment(size_t colorIndexGL)
@@ -1671,6 +1673,12 @@ class RenderPassFramebuffer : angle::NonCopyable
 
     // Prepare for rendering using the initial imageless framebuffer.
     void packResolveViewsForRenderPassBegin(VkRenderPassAttachmentBeginInfo *beginInfoOut);
+
+    // For use with dynamic rendering.
+    const FramebufferAttachmentsVector<VkImageView> &getUnpackedImageViews() const
+    {
+        return mImageViews;
+    }
 
     // Packs views in a contiguous list.
     //
@@ -1937,6 +1945,9 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
 
     void collectRefCountedEventsGarbage(RefCountedEventsGarbageRecycler *garbageRecycler);
 
+    void updatePerfCountersForDynamicRenderingInstance(Context *context,
+                                                       angle::VulkanPerfCounters *countersOut);
+
     bool isDefault() const { return mFramebuffer.isDefault(); }
 
   private:
@@ -2022,6 +2033,7 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     // This is last renderpass before present and this is the image will be presented. We can use
     // final layout of the renderpass to transition it to the presentable layout
     ImageHelper *mImageOptimizeForPresent;
+    ImageLayout mImageOptimizeForPresentOriginalLayout;
 
     friend class CommandBufferHelperCommon;
 };
@@ -2582,9 +2594,11 @@ class ImageHelper final : public Resource, public angle::Subject
                                   PrimaryCommandBuffer *commandBuffer,
                                   VkSemaphore *acquireNextImageSemaphoreOut)
     {
-        // Since we are doing an out of order one off submission, there shouldn't be any pending
-        // setEvent.
-        ASSERT(!mCurrentEvent.valid());
+        if (mCurrentEvent.valid())
+        {
+            mCurrentEvent.release(context->getRenderer());
+        }
+
         barrierImpl(context, getAspectFlags(), newLayout, mCurrentDeviceQueueIndex, nullptr,
                     commandBuffer, acquireNextImageSemaphoreOut);
     }

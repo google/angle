@@ -542,6 +542,9 @@ class ProgramExecutableVk::WarmUpGraphicsTask : public WarmUpTaskCommon
         // Release reference to shared renderpass. If this is the last reference -
         // 1. merge ProgramExecutableVk's pipeline cache into the Renderer's cache
         // 2. cleanup temporary renderpass
+        //
+        // Note: with dynamic rendering, |mCompatibleRenderPass| holds a VK_NULL_HANDLE, and it's
+        // just used as a ref count for this purpose.
         const bool isLastWarmUpTask = mCompatibleRenderPass->getAndReleaseRef() == 1;
         if (isLastWarmUpTask)
         {
@@ -1049,8 +1052,11 @@ angle::Result ProgramExecutableVk::prepareForWarmUpPipelineCache(
     vk::AttachmentOpsArray ops;
     RenderPassCache::InitializeOpsForCompatibleRenderPass(
         mWarmUpGraphicsPipelineDesc.getRenderPassDesc(), &ops);
-    ANGLE_TRY(RenderPassCache::MakeRenderPass(
-        context, mWarmUpGraphicsPipelineDesc.getRenderPassDesc(), ops, renderPassOut, nullptr));
+    if (!context->getFeatures().preferDynamicRendering.enabled)
+    {
+        ANGLE_TRY(RenderPassCache::MakeRenderPass(
+            context, mWarmUpGraphicsPipelineDesc.getRenderPassDesc(), ops, renderPassOut, nullptr));
+    }
 
     *graphicsPipelineDescOut = &mWarmUpGraphicsPipelineDesc;
 
@@ -1648,8 +1654,7 @@ angle::Result ProgramExecutableVk::createGraphicsPipeline(
 
     // Pull in a compatible RenderPass.
     const vk::RenderPass *compatibleRenderPass = nullptr;
-    ANGLE_TRY(contextVk->getRenderPassCache().getCompatibleRenderPass(
-        contextVk, desc.getRenderPassDesc(), &compatibleRenderPass));
+    ANGLE_TRY(contextVk->getCompatibleRenderPass(desc.getRenderPassDesc(), &compatibleRenderPass));
 
     ANGLE_TRY(initProgramThenCreateGraphicsPipeline(
         contextVk, transformOptions, pipelineSubset, pipelineCache, source, desc,

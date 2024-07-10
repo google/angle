@@ -296,6 +296,33 @@ constexpr const char *kSkippedMessagesWithRenderPassObjectsAndVulkanSCB[] = {
     "VUID-vkCmdExecuteCommands-pCommandBuffers-00099",
 };
 
+// VVL bugs with dynamic rendering
+constexpr const char *kSkippedMessagesWithDynamicRendering[] = {
+    // https://anglebug.com/42266678
+    // VVL bugs with rasterizer discard:
+    // https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/7858
+    "VUID-vkCmdDraw-dynamicRenderingUnusedAttachments-08914",
+    "VUID-vkCmdDraw-dynamicRenderingUnusedAttachments-08917",
+    "VUID-vkCmdDrawIndexed-dynamicRenderingUnusedAttachments-08914",
+    "VUID-vkCmdDrawIndexed-dynamicRenderingUnusedAttachments-08917",
+    "VUID-vkCmdDraw-pDepthAttachment-08964",
+    "VUID-vkCmdDraw-pStencilAttachment-08965",
+    "VUID-vkCmdDrawIndexed-pDepthAttachment-08964",
+    "VUID-vkCmdDrawIndexed-pStencilAttachment-08965",
+    "VUID-vkCmdDraw-None-07843",
+    "VUID-vkCmdDraw-None-07844",
+    "VUID-vkCmdDraw-None-07847",
+    "VUID-vkCmdDrawIndexed-None-07843",
+    "VUID-vkCmdDrawIndexed-None-07844",
+    "VUID-vkCmdDrawIndexed-None-07847",
+    "VUID-vkCmdDraw-multisampledRenderToSingleSampled-07285",
+    "VUID-vkCmdDraw-multisampledRenderToSingleSampled-07286",
+    "VUID-vkCmdDraw-multisampledRenderToSingleSampled-07287",
+    "VUID-vkCmdDrawIndexed-multisampledRenderToSingleSampled-07285",
+    "VUID-vkCmdDrawIndexed-multisampledRenderToSingleSampled-07286",
+    "VUID-vkCmdDrawIndexed-multisampledRenderToSingleSampled-07287",
+};
+
 // Some syncval errors are resolved in the presence of the NONE load or store render pass ops.  For
 // those, ANGLE makes no further attempt to resolve them and expects vendor support for the
 // extensions instead.  The list of skipped messages is split based on this support.
@@ -3783,6 +3810,13 @@ void Renderer::initializeValidationMessageSuppressions()
                 ArraySize(kSkippedMessagesWithRenderPassObjectsAndVulkanSCB));
     }
 
+    if (getFeatures().preferDynamicRendering.enabled)
+    {
+        mSkippedValidationMessages.insert(
+            mSkippedValidationMessages.end(), kSkippedMessagesWithDynamicRendering,
+            kSkippedMessagesWithDynamicRendering + ArraySize(kSkippedMessagesWithDynamicRendering));
+    }
+
     // Build the list of syncval errors that are currently expected and should be skipped.
     mSkippedSyncvalMessages.insert(mSkippedSyncvalMessages.end(), kSkippedSyncvalMessages,
                                    kSkippedSyncvalMessages + ArraySize(kSkippedSyncvalMessages));
@@ -5205,8 +5239,25 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         &mFeatures, supportsDynamicRenderingLocalRead,
         mDynamicRenderingLocalReadFeatures.dynamicRenderingLocalRead == VK_TRUE);
 
-    // Dynamic rendering usage is not yet implemented.
-    ANGLE_FEATURE_CONDITION(&mFeatures, preferDynamicRendering, false);
+    // Using dynamic rendering when VK_KHR_dynamic_rendering_local_read is available, because that's
+    // needed for framebuffer fetch, MSRTT and advanced blend emulation.
+    //
+    // VK_EXT_legacy_dithering needs to be at version 2 and VK_KHR_maintenance5 to be usable with
+    // dynamic rendering.  If only version 1 is exposed, it's not sacrificied for dynamic rendering
+    // and render pass objects are continued to be used.
+    //
+    // Emulation of GL_EXT_multisampled_render_to_texture is not possible with dynamic rendering.
+    // That support is also not sacrificed for dynamic rendering.
+    const bool hasLegacyDitheringV1 =
+        mFeatures.supportsLegacyDithering.enabled &&
+        (mLegacyDitheringVersion < 2 || !mFeatures.supportsMaintenance5.enabled);
+    const bool emulatesMultisampledRenderToTexture =
+        mFeatures.enableMultisampledRenderToTexture.enabled &&
+        !mFeatures.supportsMultisampledRenderToSingleSampled.enabled;
+    ANGLE_FEATURE_CONDITION(&mFeatures, preferDynamicRendering,
+                            mFeatures.supportsDynamicRendering.enabled &&
+                                mFeatures.supportsDynamicRenderingLocalRead.enabled &&
+                                !hasLegacyDitheringV1 && !emulatesMultisampledRenderToTexture);
 
     // Disable memory report feature overrides if extension is not supported.
     if ((mFeatures.logMemoryReportCallbacks.enabled || mFeatures.logMemoryReportStats.enabled) &&

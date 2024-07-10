@@ -2999,6 +2999,8 @@ angle::Result WindowSurfaceVk::getCurrentFramebuffer(ContextVk *contextVk,
                                                      const vk::RenderPass &compatibleRenderPass,
                                                      vk::Framebuffer *framebufferOut)
 {
+    ASSERT(!contextVk->getFeatures().preferDynamicRendering.enabled);
+
     // FramebufferVk dirty-bit processing should ensure that a new image was acquired.
     ASSERT(!needsAcquireImageOrProcessResult());
 
