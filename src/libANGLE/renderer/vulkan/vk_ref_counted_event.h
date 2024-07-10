@@ -51,7 +51,56 @@ constexpr VkPipelineStageFlags kFragmentAndAttachmentPipelineStageFlags =
     VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT |
     VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
 
-using FragmentStageAccessHistory = angle::BitSet8<8>;
+// We group VK_PIPELINE_STAGE_*_BITs into different groups. The expectation is that execution within
+// Fragment/PreFragment/Compute will not overlap. This information is used to optimize the usage of
+// VkEvent where we try to not use it when we know that it will not provide benefits over
+// pipelineBarriers.
+enum class PipelineStageGroup : uint8_t
+{
+    Other,
+    PreFragmentOnly,
+    FragmentOnly,
+    ComputeOnly,
+
+    InvalidEnum,
+    EnumCount = InvalidEnum,
+};
+
+class PipelineStageAccessHeuristic final
+{
+  public:
+    constexpr PipelineStageAccessHeuristic() = default;
+    constexpr PipelineStageAccessHeuristic(PipelineStageGroup pipelineStageGroup)
+    {
+        for (size_t i = 0; i < kHeuristicWindowSize; i++)
+        {
+            mHeuristicBits <<= kPipelineStageGroupBitShift;
+            mHeuristicBits |= ToUnderlying(pipelineStageGroup);
+        }
+    }
+    void onAccess(PipelineStageGroup pipelineStageGroup)
+    {
+        mHeuristicBits <<= kPipelineStageGroupBitShift;
+        mHeuristicBits |= ToUnderlying(pipelineStageGroup);
+    }
+    constexpr bool operator==(const PipelineStageAccessHeuristic &other) const
+    {
+        return mHeuristicBits == other.mHeuristicBits;
+    }
+
+  private:
+    static constexpr size_t kPipelineStageGroupBitShift = 2;
+    static_assert(ToUnderlying(PipelineStageGroup::EnumCount) <=
+                  (1 << kPipelineStageGroupBitShift));
+    static constexpr size_t kHeuristicWindowSize = 8;
+    angle::BitSet16<kHeuristicWindowSize * kPipelineStageGroupBitShift> mHeuristicBits;
+};
+static constexpr PipelineStageAccessHeuristic kPipelineStageAccessFragmentOnly =
+    PipelineStageAccessHeuristic(PipelineStageGroup::FragmentOnly);
+static constexpr PipelineStageAccessHeuristic kPipelineStageAccessComputeOnly =
+    PipelineStageAccessHeuristic(PipelineStageGroup::ComputeOnly);
+static constexpr PipelineStageAccessHeuristic kPipelineStageAccessPreFragmentOnly =
+    PipelineStageAccessHeuristic(PipelineStageGroup::PreFragmentOnly);
 
 // Enum for predefined VkPipelineStageFlags set that VkEvent will be using. Because VkEvent has
 // strict rules that waitEvent and setEvent must have matching VkPipelineStageFlags, it is desirable
