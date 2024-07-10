@@ -479,7 +479,7 @@ class CommandQueue : angle::NonCopyable
     angle::Result flushRenderPassCommands(Context *context,
                                           ProtectionType protectionType,
                                           egl::ContextPriority priority,
-                                          const RenderPass *renderPass,
+                                          const RenderPass &renderPass,
                                           VkFramebuffer framebufferOverride,
                                           RenderPassCommandBufferHelper **renderPassCommands);
 
@@ -624,7 +624,7 @@ class CommandProcessor : public Context
         Context *context,
         ProtectionType protectionType,
         egl::ContextPriority priority,
-        const RenderPass *renderPass,
+        const RenderPass &renderPass,
         VkFramebuffer framebufferOverride,
         RenderPassCommandBufferHelper **renderPassCommands);
 

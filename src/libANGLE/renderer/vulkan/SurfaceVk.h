@@ -340,7 +340,7 @@ class WindowSurfaceVk : public SurfaceVk
 
     angle::Result getCurrentFramebuffer(ContextVk *context,
                                         FramebufferFetchMode fetchMode,
-                                        const vk::RenderPass *compatibleRenderPass,
+                                        const vk::RenderPass &compatibleRenderPass,
                                         vk::Framebuffer *framebufferOut);
 
     VkSurfaceTransformFlagBitsKHR getPreTransform() const

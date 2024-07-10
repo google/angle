@@ -1901,11 +1901,8 @@ angle::Result UtilsVk::setupGraphicsProgramWithLayout(
 
     // Pull in a compatible RenderPass.
     const vk::RenderPass *compatibleRenderPass = nullptr;
-    if (!contextVk->getFeatures().preferDynamicRendering.enabled)
-    {
-        ANGLE_TRY(contextVk->getRenderPassCache().getCompatibleRenderPass(
-            contextVk, pipelineDesc->getRenderPassDesc(), &compatibleRenderPass));
-    }
+    ANGLE_TRY(contextVk->getRenderPassCache().getCompatibleRenderPass(
+        contextVk, pipelineDesc->getRenderPassDesc(), &compatibleRenderPass));
 
     const vk::GraphicsPipelineDesc *descPtr;
     vk::PipelineHelper *helper;
@@ -1913,7 +1910,7 @@ angle::Result UtilsVk::setupGraphicsProgramWithLayout(
     if (!programAndPipelines->pipelines.getPipeline(*pipelineDesc, &descPtr, &helper))
     {
         ANGLE_TRY(programAndPipelines->program.createGraphicsPipeline(
-            contextVk, &programAndPipelines->pipelines, &pipelineCache, compatibleRenderPass,
+            contextVk, &programAndPipelines->pipelines, &pipelineCache, *compatibleRenderPass,
             pipelineLayout, PipelineSource::Utils, *pipelineDesc, {}, &descPtr, &helper));
     }
 
@@ -2382,42 +2379,31 @@ angle::Result UtilsVk::startRenderPass(ContextVk *contextVk,
                                        const gl::Rectangle &renderArea,
                                        vk::RenderPassCommandBuffer **commandBufferOut)
 {
+    const vk::RenderPass *compatibleRenderPass = nullptr;
+    ANGLE_TRY(contextVk->getCompatibleRenderPass(renderPassDesc, &compatibleRenderPass));
+
+    VkFramebufferCreateInfo framebufferInfo = {};
+
+    // Minimize the framebuffer coverage to only cover up to the render area.
+    framebufferInfo.sType           = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+    framebufferInfo.flags           = 0;
+    framebufferInfo.renderPass      = compatibleRenderPass->getHandle();
+    framebufferInfo.attachmentCount = 1;
+    framebufferInfo.pAttachments    = imageView->ptr();
+    framebufferInfo.width           = renderArea.x + renderArea.width;
+    framebufferInfo.height          = renderArea.y + renderArea.height;
+    framebufferInfo.layers          = 1;
+
     vk::Framebuffer framebuffer;
+    ANGLE_VK_TRY(contextVk, framebuffer.init(contextVk->getDevice(), framebufferInfo));
+
     vk::Framebuffer framebufferHandle;
+    framebufferHandle.setHandle(framebuffer.getHandle());
+
     vk::RenderPassFramebuffer renderPassFramebuffer;
-
-    const uint32_t framebufferWidth    = renderArea.x + renderArea.width;
-    const uint32_t framebufferHeight   = renderArea.y + renderArea.height;
-    const uint32_t framebufferLayers   = 1;
-    vk::ImagelessFramebuffer imageless = vk::ImagelessFramebuffer::Yes;
-
-    if (!contextVk->getFeatures().preferDynamicRendering.enabled)
-    {
-        imageless = vk::ImagelessFramebuffer::No;
-
-        const vk::RenderPass *compatibleRenderPass = nullptr;
-        ANGLE_TRY(contextVk->getCompatibleRenderPass(renderPassDesc, &compatibleRenderPass));
-
-        VkFramebufferCreateInfo framebufferInfo = {};
-
-        // Minimize the framebuffer coverage to only cover up to the render area.
-        framebufferInfo.sType           = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-        framebufferInfo.flags           = 0;
-        framebufferInfo.renderPass      = compatibleRenderPass->getHandle();
-        framebufferInfo.attachmentCount = 1;
-        framebufferInfo.pAttachments    = imageView->ptr();
-        framebufferInfo.width           = framebufferWidth;
-        framebufferInfo.height          = framebufferHeight;
-        framebufferInfo.layers          = framebufferLayers;
-
-        ANGLE_VK_TRY(contextVk, framebuffer.init(contextVk->getDevice(), framebufferInfo));
-
-        framebufferHandle.setHandle(framebuffer.getHandle());
-    }
-
-    renderPassFramebuffer.setFramebuffer(contextVk, std::move(framebufferHandle),
-                                         {imageView->getHandle()}, framebufferWidth,
-                                         framebufferHeight, framebufferLayers, imageless);
+    renderPassFramebuffer.setFramebuffer(std::move(framebufferHandle), {imageView->getHandle()},
+                                         framebufferInfo.width, framebufferInfo.height,
+                                         framebufferInfo.layers, vk::ImagelessFramebuffer::No);
 
     vk::AttachmentOpsArray renderPassAttachmentOps;
     vk::PackedClearValuesArray clearValues;
@@ -4475,12 +4461,8 @@ angle::Result UtilsVk::drawOverlay(ContextVk *contextVk,
     // Overlay is always drawn as the last render pass before present.  Automatically move the
     // layout to PresentSrc.
     contextVk->onColorDraw(gl::LevelIndex(0), 0, 1, dst, nullptr, {}, vk::PackedAttachmentIndex(0));
-    if (contextVk->getFeatures().supportsPresentation.enabled &&
-        !contextVk->getFeatures().preferDynamicRendering.enabled)
-    {
-        contextVk->getStartedRenderPassCommands().setImageOptimizeForPresent(dst);
-        contextVk->finalizeImageLayout(dst, {});
-    }
+    contextVk->getStartedRenderPassCommands().setImageOptimizeForPresent(dst);
+    contextVk->finalizeImageLayout(dst, {});
 
     // Close the render pass for this temporary framebuffer.
     return contextVk->flushCommandsAndEndRenderPass(
