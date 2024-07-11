@@ -1091,11 +1091,23 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 42264006 GLES : ClipCullDistanceTest.ClipDistanceInteractWithGeometryShader/* = SKIP
 42264006 GLES : ClipCullDistanceTest.CullDistanceInteractWithGeometryShader/* = SKIP
 
-// ReadPixels clamps Red and Red-Green 16-bit snorm
-// color values to [0, 1] when using GL_RGBA format
-// As of June 2023, the driver issue has been fixed
-40096882 NVIDIA GLES : FramebufferTest_ES3.RenderSnorm16* = SKIP
-40096882 NVIDIA GLES : FramebufferTest_ES3.BlitReversedSnorm8/* = SKIP
+// Confirmed driver bug
+352963103 NVIDIA GLES : FramebufferTest_ES3.RenderSnorm16/* = SKIP
+352963103 NVIDIA GLES : FramebufferTest_ES3.BlitReversedSnorm8/* = SKIP
+352963103 NVIDIA GLES : ReadPixelsTextureNorm16PBOTest.R16_SNORM_RGBA/* = SKIP
+352963103 NVIDIA GLES : ReadPixelsTextureNorm16PBOTest.RG16_SNORM_RGBA/* = SKIP
+
+// Incorrect CPU conversions
+352963106 D3D11 : ReadPixelsTextureNorm16PBOTest.R16_SNORM_RGBA/* = SKIP
+352963106 D3D11 : ReadPixelsTextureNorm16PBOTest.RG16_SNORM_RGBA/* = SKIP
+352963106 VULKAN : ReadPixelsTextureNorm16PBOTest.R16_SNORM_RGBA/* = SKIP
+352963106 VULKAN : ReadPixelsTextureNorm16PBOTest.RG16_SNORM_RGBA/* = SKIP
+
+// Unimplemented
+352700368 METAL : ReadPixelsTextureNorm16PBOTest.* = SKIP
+
+352584420 GLES : ReadPixelsTextureNorm16PBOTest.R16_RGBA/* = SKIP
+352584420 GLES : ReadPixelsTextureNorm16PBOTest.RG16_RGBA/* = SKIP
 
 // D3D needs a workaround to follow OpenGL rules
 42266528 D3D9 : DepthWriteTest.Test/ES2_D3D9__DepthRangeReduced_Clipped_VertexDepthInsideClipVolume_FragmentDepthBetweenZeroAndNearPlane_* = SKIP
