@@ -12,6 +12,7 @@
 
 #include <Availability.h>
 #include <TargetConditionals.h>
+#include <stdio.h>
 
 #include "common/MemoryBuffer.h"
 #include "common/string_utils.h"
@@ -968,8 +969,10 @@ std::string CompileShaderLibraryToFile(const std::string &source,
     }
     // Save the source.
     {
-        angle::SaveFileHelper saveFileHelper(metalFileName.value());
-        saveFileHelper << source;
+        FILE *fp = fopen(metalFileName.value().c_str(), "wb");
+        ASSERT(fp);
+        fwrite(source.c_str(), sizeof(char), metalFileName.value().length(), fp);
+        fclose(fp);
     }
 
     // metal -> air

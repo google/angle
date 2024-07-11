@@ -23,7 +23,6 @@
 #include <climits>
 #include <cstdarg>
 #include <cstddef>
-#include <fstream>
 #include <mutex>
 #include <set>
 #include <sstream>
@@ -88,30 +87,6 @@ class NonCopyable
 };
 
 extern const uintptr_t DirtyPointer;
-
-struct SaveFileHelper
-{
-  public:
-    // We always use ios::binary to avoid inconsistent line endings when captured on Linux vs Win.
-    SaveFileHelper(const std::string &filePathIn);
-    ~SaveFileHelper();
-
-    template <typename T>
-    SaveFileHelper &operator<<(const T &value)
-    {
-        mOfs << value;
-        checkError();
-        return *this;
-    }
-
-    void write(const uint8_t *data, size_t size);
-
-  private:
-    void checkError();
-
-    std::ofstream mOfs;
-    std::string mFilePath;
-};
 
 // AMD_performance_monitor helpers.
 constexpr char kPerfMonitorExtensionName[] = "GL_AMD_performance_monitor";

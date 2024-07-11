@@ -13,6 +13,7 @@
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
 #include <EGL/eglext.h>
+#include <fstream>
 
 #include "common/debug.h"
 #include "common/platform.h"

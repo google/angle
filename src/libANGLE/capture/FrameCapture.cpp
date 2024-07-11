@@ -1000,6 +1000,43 @@ std::string GetBinaryDataFilePath(bool compression, const std::string &captureLa
     return fnameStream.str();
 }
 
+struct SaveFileHelper
+{
+  public:
+    // We always use ios::binary to avoid inconsistent line endings when captured on Linux vs Win.
+    SaveFileHelper(const std::string &filePathIn)
+        : mOfs(filePathIn, std::ios::binary | std::ios::out), mFilePath(filePathIn)
+    {
+        if (!mOfs.is_open())
+        {
+            FATAL() << "Could not open " << filePathIn;
+        }
+    }
+    ~SaveFileHelper() { printf("Saved '%s'.\n", mFilePath.c_str()); }
+
+    template <typename T>
+    SaveFileHelper &operator<<(const T &value)
+    {
+        mOfs << value;
+        if (mOfs.bad())
+        {
+            FATAL() << "Error writing to " << mFilePath;
+        }
+        return *this;
+    }
+
+    void write(const uint8_t *data, size_t size)
+    {
+        mOfs.write(reinterpret_cast<const char *>(data), size);
+    }
+
+  private:
+    void checkError();
+
+    std::ofstream mOfs;
+    std::string mFilePath;
+};
+
 void SaveBinaryData(bool compression,
                     const std::string &outDir,
                     gl::ContextID contextId,
