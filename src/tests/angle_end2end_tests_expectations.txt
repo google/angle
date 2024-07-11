@@ -328,6 +328,9 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 // skip it as the failure is likely a driver bug.
 40096747 PIXEL4ORXL GLES : CopyTexImageTestES3.CopyTexSubImageFromTexture3D/ES3_OpenGLES_EmulateCopyTexImage2D = SKIP
 
+// Confirmed driver bug
+352496176 PIXEL4ORXL GLES : CopyTexImageTestES3.CopyTexSubImage3DFromTexture3D/* = SKIP
+
 // Skipped because intel macs use a GPU family that doesn't support swizzle
 40096719 MAC METAL INTEL : DXT1CompressedTextureTest.DXT1Alpha/* = SKIP
 
