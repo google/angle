@@ -341,7 +341,7 @@ class StdMTLBLockLayoutEncoderFactory : public gl::CustomBlockLayoutEncoderFacto
 };
 }  // anonymous namespace
 
-angle::Result CreateMslShaderLib(ContextMtl *context,
+angle::Result CreateMslShaderLib(mtl::Context *context,
                                  gl::InfoLog &infoLog,
                                  mtl::TranslatedShaderInfo *translatedMslInfo,
                                  const std::map<std::string, std::string> &substitutionMacros)
