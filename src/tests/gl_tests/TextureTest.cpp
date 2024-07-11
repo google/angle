@@ -990,6 +990,12 @@ class TextureCubeTestES3 : public TextureCubeTest
     TextureCubeTestES3() {}
 };
 
+class TextureCubeTestES32 : public TextureCubeTest
+{
+  protected:
+    TextureCubeTestES32() {}
+};
+
 class SamplerArrayTest : public TexCoordDrawTest
 {
   protected:
@@ -11343,6 +11349,242 @@ TEST_P(TextureCubeTestES3, IncompatibleLayerABThenCompatibleLayerABSingleLevel)
     }
 }
 
+// Tests defining a cube map array texture using glTexImage3D().
+TEST_P(TextureCubeTestES32, ValidateCubeMapArrayTexImage)
+{
+    GLTexture cubeMapArrayTexture;
+    glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, cubeMapArrayTexture);
+
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, GL_RGBA, 256, 256, 24, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_RGBA, 128, 128, 24, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 2, GL_RGBA, 64, 64, 24, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 3, GL_RGBA, 32, 32, 24, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 4, GL_RGBA, 16, 16, 24, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 5, GL_RGBA, 8, 8, 24, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 6, GL_RGBA, 4, 4, 24, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 7, GL_RGBA, 2, 2, 24, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 8, GL_RGBA, 1, 1, 24, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Tests defining a cube map array texture using glTexStorage3D() and filling all levels using
+// glTexSubImage3D().
+TEST_P(TextureCubeTestES32, ValidateCubeMapArrayTexStorage)
+{
+    GLTexture cubeMapArrayTexture;
+    std::vector<GLColor> cubeMapArrayData(256 * 256 * 24, GLColor::red);
+    glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, cubeMapArrayTexture);
+
+    glTexStorage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 9, GL_RGBA8, 256, 256, 24);
+    glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0, 0, 256, 256, 24, GL_RGBA, GL_UNSIGNED_BYTE,
+                    cubeMapArrayData.data());
+    glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, 0, 0, 0, 128, 128, 24, GL_RGBA, GL_UNSIGNED_BYTE,
+                    cubeMapArrayData.data());
+    glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 2, 0, 0, 0, 64, 64, 24, GL_RGBA, GL_UNSIGNED_BYTE,
+                    cubeMapArrayData.data());
+    glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 3, 0, 0, 0, 32, 32, 24, GL_RGBA, GL_UNSIGNED_BYTE,
+                    cubeMapArrayData.data());
+    glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 4, 0, 0, 0, 16, 16, 24, GL_RGBA, GL_UNSIGNED_BYTE,
+                    cubeMapArrayData.data());
+    glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 5, 0, 0, 0, 8, 8, 24, GL_RGBA, GL_UNSIGNED_BYTE,
+                    cubeMapArrayData.data());
+    glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 6, 0, 0, 0, 4, 4, 24, GL_RGBA, GL_UNSIGNED_BYTE,
+                    cubeMapArrayData.data());
+    glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 7, 0, 0, 0, 2, 2, 24, GL_RGBA, GL_UNSIGNED_BYTE,
+                    cubeMapArrayData.data());
+    glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 8, 0, 0, 0, 1, 1, 24, GL_RGBA, GL_UNSIGNED_BYTE,
+                    cubeMapArrayData.data());
+    EXPECT_GL_NO_ERROR();
+}
+
+// Tests defining a single-level cube map array texture and modifying a part of it with unequal
+// width and height and a depth that is not a multiple of 6.
+TEST_P(TextureCubeTestES32, ValidateCubeMapArrayTexStorageModifyPartially)
+{
+    GLTexture cubeMapArrayTexture;
+    glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, cubeMapArrayTexture);
+
+    std::vector<GLColor> cubeMapArrayData(256 * 256 * 6, GLColor::red);
+    glTexStorage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_RGBA8, 256, 256, 6);
+    glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0, 0, 256, 100, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                    cubeMapArrayData.data());
+    EXPECT_GL_NO_ERROR();
+}
+
+// Tests TexSubImage3D with cube map arrays using dims beyond the size limit.
+TEST_P(TextureCubeTestES32, ValidateCubeMapArrayTexSubImageGreaterThanSizeLimit)
+{
+    GLTexture cubeMapArrayTexture;
+    glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, cubeMapArrayTexture);
+
+    GLint max3DTextureSize = -1;
+    glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &max3DTextureSize);
+    EXPECT_GT(max3DTextureSize, 0);
+
+    GLint maxCubeTextureSize = -1;
+    glGetIntegerv(GL_MAX_CUBE_MAP_TEXTURE_SIZE, &maxCubeTextureSize);
+    EXPECT_GT(maxCubeTextureSize, 0);
+
+    GLint maxSizeLimit = std::min(maxCubeTextureSize, max3DTextureSize);
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, GL_RGBA, maxSizeLimit, maxSizeLimit, 6, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    // TexSubImage3D can take unequal values for width and height for cube map arrays. However, they
+    // should stay below the size limit.
+    glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0, 0, maxSizeLimit + 1, maxSizeLimit, 6,
+                    GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::green);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0, 0, maxSizeLimit, maxSizeLimit + 1, 6,
+                    GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::green);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+}
+
+// Tests invalid dim/level input for TexImage3D with cube map arrays.
+TEST_P(TextureCubeTestES32, ValidateCubeMapArrayTexImageInvalidInputs)
+{
+    GLTexture cubeMapArrayTexture;
+    glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, cubeMapArrayTexture);
+
+    // Negative level and dimensions are not accepted.
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, -1, GL_RGBA, 256, 256, 6, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, GL_RGBA, -1, 256, 6, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, GL_RGBA, 256, -1, 6, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, GL_RGBA, 256, 256, -6, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    // As the number of layer-faces, depth should be a multiple of 6, unless it is partially being
+    // modified (via TexSubImage).
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, GL_RGBA, 256, 256, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    // Width and height should be equal, unless it is partially being modified (via TexSubImage).
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, GL_RGBA, 256, 100, 6, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    // Width and height should not exceed the maximum cube map texture size for that mip level.
+    GLint maxCubeTextureSize = -1;
+    glGetIntegerv(GL_MAX_CUBE_MAP_TEXTURE_SIZE, &maxCubeTextureSize);
+    EXPECT_GT(maxCubeTextureSize, 0);
+
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, GL_RGBA, maxCubeTextureSize + 1, maxCubeTextureSize,
+                 6, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, GL_RGBA, maxCubeTextureSize, maxCubeTextureSize + 1,
+                 6, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, GL_RGBA, maxCubeTextureSize + 1,
+                 maxCubeTextureSize + 1, 6, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_RGBA, maxCubeTextureSize / 2 + 1,
+                 maxCubeTextureSize / 2 + 1, 6, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 2, GL_RGBA, maxCubeTextureSize / 4 + 1,
+                 maxCubeTextureSize / 4 + 1, 6, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    // Width and height and depth should not exceed the maximum 3D texture size.
+    GLint max3DTextureSize = -1;
+    glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &max3DTextureSize);
+    EXPECT_GT(max3DTextureSize, 0);
+
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, GL_RGBA, 256, 256, max3DTextureSize + 1, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, GL_RGBA, max3DTextureSize + 1, max3DTextureSize + 1,
+                 6, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_RGBA, max3DTextureSize / 2 + 1,
+                 max3DTextureSize / 2 + 1, 6, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 2, GL_RGBA, max3DTextureSize / 4 + 1,
+                 max3DTextureSize / 4 + 1, 6, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+}
+
+// Tests invalid dim/level input for TexStorage3D with cube map arrays.
+TEST_P(TextureCubeTestES32, ValidateCubeMapArrayTexStorageInvalidInputs)
+{
+    GLTexture cubeMapArrayTexture;
+    glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, cubeMapArrayTexture);
+
+    // Negative level and dimensions are not accepted.
+    glTexStorage3D(GL_TEXTURE_CUBE_MAP_ARRAY, -1, GL_RGBA8, 256, 256, 6);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glTexStorage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_RGBA8, -1, 256, 6);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glTexStorage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_RGBA8, 256, -1, 6);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glTexStorage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_RGBA8, 256, 256, -6);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    // As the number of layer-faces, depth should be a multiple of 6.
+    glTexStorage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_RGBA8, 256, 256, 1);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    // Width and height should be equal.
+    glTexStorage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_RGBA8, 256, 100, 6);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    // Width and height should not exceed the maximum cube map texture size.
+    GLint maxCubeTextureSize = -1;
+    glGetIntegerv(GL_MAX_CUBE_MAP_TEXTURE_SIZE, &maxCubeTextureSize);
+    EXPECT_GT(maxCubeTextureSize, 0);
+
+    glTexStorage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_RGBA8, maxCubeTextureSize + 1,
+                   maxCubeTextureSize + 1, 6);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    // Width and height and depth should not exceed the maximum 3D texture size.
+    GLint max3DTextureSize = -1;
+    glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &max3DTextureSize);
+    EXPECT_GT(max3DTextureSize, 0);
+
+    glTexStorage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_RGBA8, max3DTextureSize + 1,
+                   max3DTextureSize + 1, 6);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glTexStorage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_RGBA8, 256, 256, max3DTextureSize + 1);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    // Level count must not exceed log2(max(width, height)) + 1.
+    GLint maxLevelCount256 = 1 + static_cast<GLint>(std::log2(256));
+    glTexStorage3D(GL_TEXTURE_CUBE_MAP_ARRAY, maxLevelCount256 + 1, GL_RGBA8, 256, 256, 6);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
 // Verify that using negative texture base level and max level generates GL_INVALID_VALUE.
 TEST_P(Texture2DTestES3, NegativeTextureBaseLevelAndMaxLevel)
 {
@@ -14946,6 +15188,9 @@ ANGLE_INSTANTIATE_TEST_ES2(Texture2DFloatTestES2);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureCubeTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(TextureCubeTestES3);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureCubeTestES32);
+ANGLE_INSTANTIATE_TEST_ES32(TextureCubeTestES32);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DIntegerTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(Texture2DIntegerTestES3);
