@@ -208,11 +208,12 @@ declare_args() {
   angle_enable_cl_passthrough = angle_enable_cl
 
   # Disable WGPU backend.
-  # Currently disabled on Android, Fuschia, WinUWP, and Win MSVC.
+  # Currently disabled on Android, Fuschia, WinUWP, and Win MSVC. X11 required on Linux.
   # anglebug.com/42266968
   angle_enable_wgpu =
       !is_official_build && !(is_android || is_fuchsia || angle_is_winuwp) &&
-      (!is_win || is_clang) && defined(angle_dawn_dir)
+      (!is_win || is_clang) && (!is_linux || angle_use_x11) &&
+      defined(angle_dawn_dir)
 }
 
 declare_args() {
