@@ -14,6 +14,7 @@
 
 #include "angle_gl.h"
 #include "anglebase/no_destructor.h"
+#include "common/hash_containers.h"
 #include "compiler/translator/Compiler.h"
 #include "compiler/translator/util.h"
 

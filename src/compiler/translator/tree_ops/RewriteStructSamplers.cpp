@@ -8,6 +8,7 @@
 
 #include "compiler/translator/tree_ops/RewriteStructSamplers.h"
 
+#include "common/hash_containers.h"
 #include "compiler/translator/ImmutableStringBuilder.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"

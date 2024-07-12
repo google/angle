@@ -6,6 +6,8 @@
 
 #include "compiler/translator/wgsl/TranslatorWGSL.h"
 
+#include <iostream>
+
 #include "GLSLANG/ShaderLang.h"
 #include "common/log_utils.h"
 #include "compiler/translator/BaseTypes.h"
