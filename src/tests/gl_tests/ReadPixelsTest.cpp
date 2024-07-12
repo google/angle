@@ -1240,16 +1240,6 @@ TEST_P(ReadPixelsErrorTest, ReadBufferIsNone)
 }
 
 // The test verifies that glReadPixels generates a GL_INVALID_OPERATION
-// error when reading unsigned 16-bit color buffers using incompatible types.
-TEST_P(ReadPixelsErrorTest, ColorBufferNorm16)
-{
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_norm16"));
-
-    testUnsupportedTypeConversions({GL_R16_EXT, GL_RG16_EXT, GL_RGBA16_EXT},
-                                   {GL_UNSIGNED_BYTE, GL_BYTE, GL_SHORT});
-}
-
-// The test verifies that glReadPixels generates a GL_INVALID_OPERATION
 // error when reading signed 8-bit color buffers using incompatible types.
 TEST_P(ReadPixelsErrorTest, ColorBufferSnorm8)
 {

@@ -193,8 +193,7 @@ bool ValidReadPixelsFormatType(const Context *context,
             switch (format)
             {
                 case GL_RGBA:
-                    // Type conversions are not allowed for norm16 color buffer formats
-                    return (type == GL_UNSIGNED_BYTE && info->type != GL_UNSIGNED_SHORT) ||
+                    return type == GL_UNSIGNED_BYTE ||
                            (context->getExtensions().textureNorm16EXT &&
                             type == GL_UNSIGNED_SHORT && info->type == GL_UNSIGNED_SHORT);
                 case GL_BGRA_EXT:
