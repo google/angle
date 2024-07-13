@@ -49,9 +49,7 @@ class VulkanSecondaryCommandBuffer : public priv::CommandBuffer
         ContextVk *contextVk,
         const Framebuffer &framebuffer,
         const RenderPassDesc &renderPassDesc,
-        VkCommandBufferInheritanceInfo *inheritanceInfoOut,
-        VkCommandBufferInheritanceRenderingInfo *renderingInfoOut,
-        gl::DrawBuffersArray<VkFormat> *colorFormatStorageOut);
+        VkCommandBufferInheritanceInfo *inheritanceInfoOut);
 
     angle::Result initialize(Context *context,
                              SecondaryCommandPool *pool,

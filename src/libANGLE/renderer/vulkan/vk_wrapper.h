@@ -948,13 +948,13 @@ ANGLE_INLINE void CommandBuffer::beginRendering(const VkRenderingInfo &beginInfo
 
 ANGLE_INLINE void CommandBuffer::endRenderPass()
 {
-    ASSERT(mHandle != VK_NULL_HANDLE);
+    ASSERT(valid());
     vkCmdEndRenderPass(mHandle);
 }
 
 ANGLE_INLINE void CommandBuffer::endRendering()
 {
-    ASSERT(mHandle != VK_NULL_HANDLE);
+    ASSERT(valid());
     vkCmdEndRenderingKHR(mHandle);
 }
 

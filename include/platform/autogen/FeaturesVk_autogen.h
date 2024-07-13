@@ -1472,6 +1472,13 @@ struct FeaturesVk : FeatureSetBase
         &members, "http://anglebug.com/42267038"
     };
 
+    FeatureInfo preferCachedNoncoherentForDynamicStreamBufferUsage = {
+        "preferCachedNoncoherentForDynamicStreamBufferUsage",
+        FeatureCategory::VulkanFeatures,
+        "Prefer host cached + non-coherent memory for buffers with dynamic/stream usage.",
+        &members, "https://issuetracker.google.com/347601787"
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

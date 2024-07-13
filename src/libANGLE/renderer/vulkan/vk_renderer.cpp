@@ -13,6 +13,7 @@
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
 #include <EGL/eglext.h>
+#include <fstream>
 
 #include "common/debug.h"
 #include "common/platform.h"
@@ -297,33 +298,6 @@ constexpr const char *kSkippedMessagesWithRenderPassObjectsAndVulkanSCB[] = {
     "VUID-vkCmdExecuteCommands-pCommandBuffers-00099",
 };
 
-// VVL bugs with dynamic rendering
-constexpr const char *kSkippedMessagesWithDynamicRendering[] = {
-    // https://anglebug.com/42266678
-    // VVL bugs with rasterizer discard:
-    // https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/7858
-    "VUID-vkCmdDraw-dynamicRenderingUnusedAttachments-08914",
-    "VUID-vkCmdDraw-dynamicRenderingUnusedAttachments-08917",
-    "VUID-vkCmdDrawIndexed-dynamicRenderingUnusedAttachments-08914",
-    "VUID-vkCmdDrawIndexed-dynamicRenderingUnusedAttachments-08917",
-    "VUID-vkCmdDraw-pDepthAttachment-08964",
-    "VUID-vkCmdDraw-pStencilAttachment-08965",
-    "VUID-vkCmdDrawIndexed-pDepthAttachment-08964",
-    "VUID-vkCmdDrawIndexed-pStencilAttachment-08965",
-    "VUID-vkCmdDraw-None-07843",
-    "VUID-vkCmdDraw-None-07844",
-    "VUID-vkCmdDraw-None-07847",
-    "VUID-vkCmdDrawIndexed-None-07843",
-    "VUID-vkCmdDrawIndexed-None-07844",
-    "VUID-vkCmdDrawIndexed-None-07847",
-    "VUID-vkCmdDraw-multisampledRenderToSingleSampled-07285",
-    "VUID-vkCmdDraw-multisampledRenderToSingleSampled-07286",
-    "VUID-vkCmdDraw-multisampledRenderToSingleSampled-07287",
-    "VUID-vkCmdDrawIndexed-multisampledRenderToSingleSampled-07285",
-    "VUID-vkCmdDrawIndexed-multisampledRenderToSingleSampled-07286",
-    "VUID-vkCmdDrawIndexed-multisampledRenderToSingleSampled-07287",
-};
-
 // Some syncval errors are resolved in the presence of the NONE load or store render pass ops.  For
 // those, ANGLE makes no further attempt to resolve them and expects vendor support for the
 // extensions instead.  The list of skipped messages is split based on this support.
@@ -508,6 +482,12 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
      "with storeOp VK_ATTACHMENT_STORE_OP_STORE. Access info (usage: "
      "SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
      "SYNC_FRAGMENT_SHADER_SHADER_"},
+    // http://anglebug.com/352094384
+    {
+        "SYNC-HAZARD-WRITE-AFTER-WRITE",
+        "Hazard WRITE_AFTER_WRITE for VkImageView",
+        "Access info (usage: SYNC_ACCESS_INDEX_NONE, prior_usage: SYNC_IMAGE_LAYOUT_TRANSITION, ",
+    },
 };
 
 // Messages that shouldn't be generated if storeOp=NONE is supported, otherwise they are expected.
@@ -527,12 +507,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithoutStoreOpNone[] 
         "SYNC-HAZARD-WRITE-AFTER-READ",
         "VK_ATTACHMENT_STORE_OP_STORE. Access info (usage: "
         "SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE",
-        "usage: SYNC_FRAGMENT_SHADER_SHADER_",
-    },
-    {
-        "SYNC-HAZARD-WRITE-AFTER-READ",
-        "VK_ATTACHMENT_STORE_OP_STORE. Access info "
-        "(usage: SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE",
         "usage: SYNC_FRAGMENT_SHADER_SHADER_",
     },
     {
@@ -562,32 +536,12 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithoutLoadStoreOpNon
     },
     // http://anglebug.com/42264926
     // http://anglebug.com/42265079
-    {
-        "SYNC-HAZARD-WRITE-AFTER-WRITE",
-        "with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info (usage: "
-        "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
-        "SYNC_IMAGE_LAYOUT_TRANSITION",
-    },
-    {
-        "SYNC-HAZARD-WRITE-AFTER-WRITE",
-        "with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info "
-        "(usage: "
-        "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE",
-    },
     // http://anglebug.com/42264496
     {
         "SYNC-HAZARD-WRITE-AFTER-WRITE",
         "with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info "
         "(usage: "
-        "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
-        "SYNC_IMAGE_LAYOUT_TRANSITION",
-    },
-    {
-        "SYNC-HAZARD-WRITE-AFTER-WRITE",
-        "with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info "
-        "(usage: "
-        "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
-        "SYNC_IMAGE_LAYOUT_TRANSITION",
+        "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE",
     },
 };
 
@@ -3831,13 +3785,6 @@ void Renderer::initializeValidationMessageSuppressions()
                 ArraySize(kSkippedMessagesWithRenderPassObjectsAndVulkanSCB));
     }
 
-    if (getFeatures().preferDynamicRendering.enabled)
-    {
-        mSkippedValidationMessages.insert(
-            mSkippedValidationMessages.end(), kSkippedMessagesWithDynamicRendering,
-            kSkippedMessagesWithDynamicRendering + ArraySize(kSkippedMessagesWithDynamicRendering));
-    }
-
     // Build the list of syncval errors that are currently expected and should be skipped.
     mSkippedSyncvalMessages.insert(mSkippedSyncvalMessages.end(), kSkippedSyncvalMessages,
                                    kSkippedSyncvalMessages + ArraySize(kSkippedSyncvalMessages));
@@ -4663,6 +4610,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         (isQualcommProprietary && qualcommDriverVersion < QualcommDriverVersion(512, 513, 0)) ||
             isARM || isPowerVR || isSwiftShader);
 
+    ANGLE_FEATURE_CONDITION(&mFeatures, preferCachedNoncoherentForDynamicStreamBufferUsage,
+                            IsMeteorLake(mPhysicalDeviceProperties.deviceID));
+
     // The compute shader used to generate mipmaps needs -
     // 1. subgroup quad operations in compute shader stage.
     // 2. subgroup operations that can use extended types.
@@ -5243,7 +5193,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsExternalFormatResolve, false);
 #endif
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, useVkEventForImageBarrier, false);
+    ANGLE_FEATURE_CONDITION(&mFeatures, useVkEventForImageBarrier, true);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsMaintenance5,
                             mMaintenance5Features.maintenance5 == VK_TRUE);
@@ -5254,25 +5204,8 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         &mFeatures, supportsDynamicRenderingLocalRead,
         mDynamicRenderingLocalReadFeatures.dynamicRenderingLocalRead == VK_TRUE);
 
-    // Using dynamic rendering when VK_KHR_dynamic_rendering_local_read is available, because that's
-    // needed for framebuffer fetch, MSRTT and advanced blend emulation.
-    //
-    // VK_EXT_legacy_dithering needs to be at version 2 and VK_KHR_maintenance5 to be usable with
-    // dynamic rendering.  If only version 1 is exposed, it's not sacrificied for dynamic rendering
-    // and render pass objects are continued to be used.
-    //
-    // Emulation of GL_EXT_multisampled_render_to_texture is not possible with dynamic rendering.
-    // That support is also not sacrificed for dynamic rendering.
-    const bool hasLegacyDitheringV1 =
-        mFeatures.supportsLegacyDithering.enabled &&
-        (mLegacyDitheringVersion < 2 || !mFeatures.supportsMaintenance5.enabled);
-    const bool emulatesMultisampledRenderToTexture =
-        mFeatures.enableMultisampledRenderToTexture.enabled &&
-        !mFeatures.supportsMultisampledRenderToSingleSampled.enabled;
-    ANGLE_FEATURE_CONDITION(&mFeatures, preferDynamicRendering,
-                            mFeatures.supportsDynamicRendering.enabled &&
-                                mFeatures.supportsDynamicRenderingLocalRead.enabled &&
-                                !hasLegacyDitheringV1 && !emulatesMultisampledRenderToTexture);
+    // Dynamic rendering usage is not yet implemented.
+    ANGLE_FEATURE_CONDITION(&mFeatures, preferDynamicRendering, false);
 
     // Disable memory report feature overrides if extension is not supported.
     if ((mFeatures.logMemoryReportCallbacks.enabled || mFeatures.logMemoryReportStats.enabled) &&
@@ -6005,7 +5938,7 @@ angle::Result Renderer::flushRenderPassCommands(
     vk::Context *context,
     vk::ProtectionType protectionType,
     egl::ContextPriority priority,
-    const vk::RenderPass *renderPass,
+    const vk::RenderPass &renderPass,
     VkFramebuffer framebufferOverride,
     vk::RenderPassCommandBufferHelper **renderPassCommands)
 {

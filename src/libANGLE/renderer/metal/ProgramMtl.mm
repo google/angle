@@ -45,13 +45,13 @@ class Std140BlockLayoutEncoderFactory : public gl::CustomBlockLayoutEncoderFacto
     sh::BlockLayoutEncoder *makeEncoder() override { return new sh::Std140BlockEncoder(); }
 };
 
-class CompileMslTask final : public LinkSubTask
+class CompileMslTask final : public mtl::Context, public LinkSubTask
 {
   public:
-    CompileMslTask(ContextMtl *context,
+    CompileMslTask(DisplayMtl *displayMtl,
                    mtl::TranslatedShaderInfo *translatedMslInfo,
                    const std::map<std::string, std::string> &substitutionMacros)
-        : mContext(context),
+        : mtl::Context(displayMtl),
           mTranslatedMslInfo(translatedMslInfo),
           mSubstitutionMacros(substitutionMacros)
     {}
@@ -59,7 +59,7 @@ class CompileMslTask final : public LinkSubTask
 
     void operator()() override
     {
-        mResult = CreateMslShaderLib(mContext, mInfoLog, mTranslatedMslInfo, mSubstitutionMacros);
+        mResult = CreateMslShaderLib(this, mInfoLog, mTranslatedMslInfo, mSubstitutionMacros);
     }
 
     angle::Result getResult(const gl::Context *context, gl::InfoLog &infoLog) override
@@ -69,25 +69,69 @@ class CompileMslTask final : public LinkSubTask
             infoLog << mInfoLog.str();
         }
 
+        // Forward any errors
+        if (mErrorCode != GL_NO_ERROR)
+        {
+            mtl::GetImpl(context)->handleError(mErrorCode, mErrorMessage, mErrorFile,
+                                               mErrorFunction, mErrorLine);
+            return angle::Result::Stop;
+        }
+
         return mResult;
     }
 
+    // override mtl::ErrorHandler
+    void handleError(GLenum glErrorCode,
+                     const char *message,
+                     const char *file,
+                     const char *function,
+                     unsigned int line) override
+    {
+        mErrorCode     = glErrorCode;
+        mErrorMessage  = message;
+        mErrorFile     = file;
+        mErrorFunction = function;
+        mErrorLine     = line;
+    }
+
+    void handleError(NSError *error,
+                     const char *message,
+                     const char *file,
+                     const char *function,
+                     unsigned int line) override
+    {
+        if (!error)
+        {
+            return;
+        }
+
+        mErrorCode     = GL_INVALID_OPERATION;
+        mErrorMessage  = message;
+        mErrorFile     = file;
+        mErrorFunction = function;
+        mErrorLine     = line;
+    }
+
   private:
-    // TODO: remove this, inherit from mtl::Context and ensure thread-safety.
-    // http://anglebug.com/41488637
-    ContextMtl *mContext;
     gl::InfoLog mInfoLog;
     mtl::TranslatedShaderInfo *mTranslatedMslInfo;
     std::map<std::string, std::string> mSubstitutionMacros;
     angle::Result mResult = angle::Result::Continue;
+
+    // Error handling
+    GLenum mErrorCode          = GL_NO_ERROR;
+    const char *mErrorMessage  = nullptr;
+    const char *mErrorFile     = nullptr;
+    const char *mErrorFunction = nullptr;
+    unsigned int mErrorLine    = 0;
 };
 }  // namespace
 
-class ProgramMtl::LinkTaskMtl final : public LinkTask
+class ProgramMtl::LinkTaskMtl final : public mtl::Context, public LinkTask
 {
   public:
-    LinkTaskMtl(const gl::Context *context, ProgramMtl *program)
-        : mContext(context), mProgram(program)
+    LinkTaskMtl(DisplayMtl *displayMtl, ProgramMtl *program)
+        : mtl::Context(displayMtl), mProgram(program)
     {}
     ~LinkTaskMtl() override = default;
 
@@ -99,21 +143,65 @@ class ProgramMtl::LinkTaskMtl final : public LinkTask
         ASSERT(linkSubTasksOut && linkSubTasksOut->empty());
         ASSERT(postLinkSubTasksOut && postLinkSubTasksOut->empty());
 
-        mResult = mProgram->linkJobImpl(mContext, resources, linkSubTasksOut);
+        mResult = mProgram->linkJobImpl(this, resources, linkSubTasksOut);
         return;
     }
 
     angle::Result getResult(const gl::Context *context, gl::InfoLog &infoLog) override
     {
+        // Forward any errors
+        if (mErrorCode != GL_NO_ERROR)
+        {
+            mtl::GetImpl(context)->handleError(mErrorCode, mErrorMessage, mErrorFile,
+                                               mErrorFunction, mErrorLine);
+            return angle::Result::Stop;
+        }
+
         return mResult;
     }
 
+    // override mtl::ErrorHandler
+    void handleError(GLenum glErrorCode,
+                     const char *message,
+                     const char *file,
+                     const char *function,
+                     unsigned int line) override
+    {
+        mErrorCode     = glErrorCode;
+        mErrorMessage  = message;
+        mErrorFile     = file;
+        mErrorFunction = function;
+        mErrorLine     = line;
+    }
+
+    void handleError(NSError *error,
+                     const char *message,
+                     const char *file,
+                     const char *function,
+                     unsigned int line) override
+    {
+        if (!error)
+        {
+            return;
+        }
+
+        mErrorCode     = GL_INVALID_OPERATION;
+        mErrorMessage  = message;
+        mErrorFile     = file;
+        mErrorFunction = function;
+        mErrorLine     = line;
+    }
+
   private:
-    // TODO: remove this, inherit from mtl::Context and ensure thread-safety.
-    // http://anglebug.com/41488637
-    const gl::Context *mContext;
     ProgramMtl *mProgram;
     angle::Result mResult = angle::Result::Continue;
+
+    // Error handling
+    GLenum mErrorCode          = GL_NO_ERROR;
+    const char *mErrorMessage  = nullptr;
+    const char *mErrorFile     = nullptr;
+    const char *mErrorFunction = nullptr;
+    unsigned int mErrorLine    = 0;
 };
 
 class ProgramMtl::LoadTaskMtl final : public LinkTask
@@ -184,7 +272,7 @@ angle::Result ProgramMtl::load(const gl::Context *context,
     // TODO: parallelize the above too.  http://anglebug.com/41488637
     std::vector<std::shared_ptr<LinkSubTask>> subTasks;
 
-    ANGLE_TRY(compileMslShaderLibs(context, &subTasks));
+    ANGLE_TRY(compileMslShaderLibs(contextMtl, &subTasks));
 
     *loadTaskOut = std::shared_ptr<LinkTask>(new LoadTaskMtl(std::move(subTasks)));
     *resultOut   = egl::CacheGetResult::Success;
@@ -220,28 +308,29 @@ void ProgramMtl::prepareForLink(const gl::ShaderMap<ShaderImpl *> &shaders)
 
 angle::Result ProgramMtl::link(const gl::Context *context, std::shared_ptr<LinkTask> *linkTaskOut)
 {
-    *linkTaskOut = std::shared_ptr<LinkTask>(new LinkTaskMtl(context, this));
+    DisplayMtl *displayMtl = mtl::GetImpl(context)->getDisplay();
+
+    *linkTaskOut = std::shared_ptr<LinkTask>(new LinkTaskMtl(displayMtl, this));
     return angle::Result::Continue;
 }
 
-angle::Result ProgramMtl::linkJobImpl(const gl::Context *context,
+angle::Result ProgramMtl::linkJobImpl(mtl::Context *context,
                                       const gl::ProgramLinkedResources &resources,
                                       std::vector<std::shared_ptr<LinkSubTask>> *subTasksOut)
 {
-    ContextMtl *contextMtl              = mtl::GetImpl(context);
     ProgramExecutableMtl *executableMtl = getExecutable();
 
     // Link resources before calling GetShaderSource to make sure they are ready for the set/binding
     // assignment done in that function.
     linkResources(resources);
 
-    ANGLE_TRY(executableMtl->initDefaultUniformBlocks(contextMtl, mState.getAttachedShaders()));
+    ANGLE_TRY(executableMtl->initDefaultUniformBlocks(context, mState.getAttachedShaders()));
     executableMtl->linkUpdateHasFlatAttributes(mState.getAttachedShader(gl::ShaderType::Vertex));
 
     gl::ShaderMap<std::string> shaderSources;
     mtl::MSLGetShaderSource(mState, resources, &shaderSources);
 
-    ANGLE_TRY(mtl::MTLGetMSL(contextMtl->getDisplay()->getFeatures(), mState.getExecutable(),
+    ANGLE_TRY(mtl::MTLGetMSL(context->getDisplay()->getFeatures(), mState.getExecutable(),
                              shaderSources, mAttachedShaders,
                              &executableMtl->mMslShaderTranslateInfo));
     executableMtl->mMslXfbOnlyVertexShaderInfo =
@@ -251,26 +340,24 @@ angle::Result ProgramMtl::linkJobImpl(const gl::Context *context,
 }
 
 angle::Result ProgramMtl::compileMslShaderLibs(
-    const gl::Context *context,
+    mtl::Context *context,
     std::vector<std::shared_ptr<LinkSubTask>> *subTasksOut)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ProgramMtl::compileMslShaderLibs");
     gl::InfoLog &infoLog = mState.getExecutable().getInfoLog();
 
-    ContextMtl *contextMtl              = mtl::GetImpl(context);
+    DisplayMtl *displayMtl              = context->getDisplay();
     ProgramExecutableMtl *executableMtl = getExecutable();
-    bool asyncCompile =
-        contextMtl->getDisplay()->getFeatures().enableParallelMtlLibraryCompilation.enabled;
-    mtl::LibraryCache &libraryCache = contextMtl->getDisplay()->getLibraryCache();
+    bool asyncCompile = displayMtl->getFeatures().enableParallelMtlLibraryCompilation.enabled;
+    mtl::LibraryCache &libraryCache = displayMtl->getLibraryCache();
 
     for (gl::ShaderType shaderType : gl::kAllGLES2ShaderTypes)
     {
         mtl::TranslatedShaderInfo *translateInfo =
             &executableMtl->mMslShaderTranslateInfo[shaderType];
         std::map<std::string, std::string> macros = GetDefaultSubstitutionDictionary();
-        const bool disableFastMath =
-            contextMtl->getDisplay()->getFeatures().intelDisableFastMath.enabled ||
-            translateInfo->hasIsnanOrIsinf;
+        const bool disableFastMath = displayMtl->getFeatures().intelDisableFastMath.enabled ||
+                                     translateInfo->hasIsnanOrIsinf;
         const bool usesInvariance = translateInfo->hasInvariant;
 
         // Check if the shader is already in the cache and use it instead of spawning a new thread
@@ -281,11 +368,11 @@ angle::Result ProgramMtl::compileMslShaderLibs(
         {
             if (asyncCompile)
             {
-                subTasksOut->emplace_back(new CompileMslTask(contextMtl, translateInfo, macros));
+                subTasksOut->emplace_back(new CompileMslTask(displayMtl, translateInfo, macros));
             }
             else
             {
-                ANGLE_TRY(CreateMslShaderLib(contextMtl, infoLog, translateInfo, macros));
+                ANGLE_TRY(CreateMslShaderLib(context, infoLog, translateInfo, macros));
             }
         }
     }

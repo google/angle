@@ -146,8 +146,7 @@ struct CombinedPrintToStringParamName
         ES2_VULKAN_SWIFTSHADER().enable(Feature::EnableParallelCompileAndLink),                    \
         ES2_VULKAN_SWIFTSHADER()                                                                   \
             .enable(Feature::EnableParallelCompileAndLink)                                         \
-            .enable(Feature::AsyncCommandQueue)                                                    \
-            .disable(Feature::SupportsGraphicsPipelineLibrary)
+            .enable(Feature::AsyncCommandQueue)
 
 #define ANGLE_ALL_TEST_PLATFORMS_ES3                                                   \
     ANGLE_TEST_PLATFORMS_ES3_SYSTEM_EGL                                                \
@@ -156,8 +155,7 @@ struct CombinedPrintToStringParamName
         ES3_VULKAN().enable(Feature::EnableParallelCompileAndLink),                    \
         ES3_VULKAN_SWIFTSHADER()                                                       \
             .enable(Feature::EnableParallelCompileAndLink)                             \
-            .enable(Feature::AsyncCommandQueue)                                        \
-            .disable(Feature::SupportsGraphicsPipelineLibrary)
+            .enable(Feature::AsyncCommandQueue)
 
 #define ANGLE_ALL_TEST_PLATFORMS_ES31                                                       \
     ANGLE_TEST_PLATFORMS_ES31_SYSTEM_EGL                                                    \
@@ -165,8 +163,7 @@ struct CombinedPrintToStringParamName
         ES31_VULKAN().enable(Feature::AsyncCommandQueue),                                   \
         ES31_VULKAN_SWIFTSHADER()                                                           \
             .enable(Feature::EnableParallelCompileAndLink)                                  \
-            .enable(Feature::AsyncCommandQueue)                                             \
-            .disable(Feature::SupportsGraphicsPipelineLibrary)
+            .enable(Feature::AsyncCommandQueue)
 
 #define ANGLE_ALL_TEST_PLATFORMS_ES32                                \
     ANGLE_TEST_PLATFORMS_ES32_SYSTEM_EGL                             \

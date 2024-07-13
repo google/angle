@@ -646,8 +646,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         // kept open between frames (including when a swapchain is recreated and framebuffer handles
         // change).  It is therefore safe to verify an open render pass just by checking if it
         // originated from the default framebuffer.
-        return mRenderPassCommands->started() &&
-               mRenderPassCommands->getSource() == vk::RenderPassSource::DefaultFramebuffer;
+        return mRenderPassCommands->started() && mRenderPassCommands->isDefault();
     }
 
     bool isRenderPassStartedAndUsesBuffer(const vk::BufferHelper &buffer) const

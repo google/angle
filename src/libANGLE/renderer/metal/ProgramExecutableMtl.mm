@@ -341,7 +341,7 @@ class StdMTLBLockLayoutEncoderFactory : public gl::CustomBlockLayoutEncoderFacto
 };
 }  // anonymous namespace
 
-angle::Result CreateMslShaderLib(ContextMtl *context,
+angle::Result CreateMslShaderLib(mtl::Context *context,
                                  gl::InfoLog &infoLog,
                                  mtl::TranslatedShaderInfo *translatedMslInfo,
                                  const std::map<std::string, std::string> &substitutionMacros)
@@ -357,8 +357,8 @@ angle::Result CreateMslShaderLib(ContextMtl *context,
             translatedMslInfo->hasIsnanOrIsinf;
         const bool usesInvariance       = translatedMslInfo->hasInvariant;
         translatedMslInfo->metalLibrary = libraryCache.getOrCompileShaderLibrary(
-            context, translatedMslInfo->metalShaderSource, substitutionMacros, disableFastMath,
-            usesInvariance, &err);
+            context->getDisplay(), translatedMslInfo->metalShaderSource, substitutionMacros,
+            disableFastMath, usesInvariance, &err);
         if (err && !translatedMslInfo->metalLibrary)
         {
             std::ostringstream ss;
