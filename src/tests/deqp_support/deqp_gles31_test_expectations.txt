@@ -488,3 +488,7 @@ b/328156792 PINEAPPLE VULKAN : dEQP-GLES31.functional.synchronization.in* = SKIP
 b/328156792 PINEAPPLE VULKAN : dEQP-GLES31.functional.texture.border_clamp.* = SKIP
 b/328156792 PINEAPPLE VULKAN : dEQP-GLES31.functional.texture.*cube_array* = SKIP
 b/328156792 PINEAPPLE VULKAN : dEQP-GLES31.functional.texture.gather.basic.cube* = SKIP
+
+// ~10% flaky specifically on Pixel 6, both ANGLE and native, only these but not other comp_swap tests
+352610491 PIXEL6 : dEQP-GLES31.functional.image_load_store.2d.atomic.comp_swap_r32i_return_value = SKIP
+352610491 PIXEL6 : dEQP-GLES31.functional.image_load_store.2d.atomic.comp_swap_r32ui_return_value = SKIP
