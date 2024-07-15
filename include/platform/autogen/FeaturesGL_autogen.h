@@ -770,6 +770,13 @@ struct FeaturesGL : FeatureSetBase
         &members, "http://skbug.com/9491 https://github.com/flutter/flutter/issues/47164 https://github.com/flutter/flutter/issues/47804"
     };
 
+    FeatureInfo disableBlendEquationAdvanced = {
+        "disableBlendEquationAdvanced",
+        FeatureCategory::OpenGLWorkarounds,
+        "Disable GL_KHR_blend_equation_advanced due to various driver issues.",
+        &members, "https://anglebug.com/42267098"
+    };
+
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

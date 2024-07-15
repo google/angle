@@ -2163,15 +2163,17 @@ void GenerateCaps(const FunctionsGL *functions,
                                      functions->hasGLESExtension("GL_QCOM_tiled_rendering");
 
     extensions->blendEquationAdvancedKHR =
-        functions->hasGLExtension("GL_NV_blend_equation_advanced") ||
-        functions->hasGLExtension("GL_KHR_blend_equation_advanced") ||
-        functions->isAtLeastGLES(gl::Version(3, 2)) ||
-        functions->hasGLESExtension("GL_KHR_blend_equation_advanced");
+        !features.disableBlendEquationAdvanced.enabled &&
+        (functions->hasGLExtension("GL_NV_blend_equation_advanced") ||
+         functions->hasGLExtension("GL_KHR_blend_equation_advanced") ||
+         functions->isAtLeastGLES(gl::Version(3, 2)) ||
+         functions->hasGLESExtension("GL_KHR_blend_equation_advanced"));
     extensions->blendEquationAdvancedCoherentKHR =
-        functions->hasGLExtension("GL_NV_blend_equation_advanced_coherent") ||
-        functions->hasGLExtension("GL_KHR_blend_equation_advanced_coherent") ||
-        functions->isAtLeastGLES(gl::Version(3, 2)) ||
-        functions->hasGLESExtension("GL_KHR_blend_equation_advanced_coherent");
+        !features.disableBlendEquationAdvanced.enabled &&
+        (functions->hasGLExtension("GL_NV_blend_equation_advanced_coherent") ||
+         functions->hasGLExtension("GL_KHR_blend_equation_advanced_coherent") ||
+         functions->isAtLeastGLES(gl::Version(3, 2)) ||
+         functions->hasGLESExtension("GL_KHR_blend_equation_advanced_coherent"));
 
     // PVRTC1 textures must be squares on Apple platforms.
     if (IsApple())
@@ -2713,6 +2715,12 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // http://skbug.com/9491: Nexus5 produces rendering artifacts when we use QCOM_tiled_rendering.
     ANGLE_FEATURE_CONDITION(features, disableTiledRendering,
                             missingTilingEntryPoints || IsAdreno3xx(functions));
+
+    // Intel desktop GL drivers fail many Skia blend tests.
+    // Block on older Qualcomm and ARM, following Skia's blocklists.
+    ANGLE_FEATURE_CONDITION(
+        features, disableBlendEquationAdvanced,
+        (isIntel && IsWindows()) || IsAdreno4xx(functions) || IsAdreno5xx(functions) || isMali);
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)
