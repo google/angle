@@ -15,6 +15,10 @@
 #    include <sanitizer/lsan_interface.h>
 #endif  // defined(ANGLE_WITH_LSAN)
 
+#if defined(ANGLE_WITH_MSAN)
+#    include <sanitizer/msan_interface.h>
+#endif  // defined(ANGLE_WITH_MSAN)
+
 #include <climits>
 #include <cstdarg>
 #include <cstddef>
