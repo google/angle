@@ -2443,11 +2443,16 @@ void RenderPassCommandBufferHelper::finalizeColorImageLayout(
         ASSERT(packedAttachmentIndex == kAttachmentIndexZero);
         // Use finalLayout instead of extra barrier for layout change to present
         mImageOptimizeForPresent->setCurrentImageLayout(ImageLayout::Present);
-        // TODO(syoussefi):  We currently don't store the layout of the resolve attachments, so once
-        // multisampled backbuffers are optimized to use resolve attachments, this information needs
-        // to be stored somewhere.  http://anglebug.com/42265625
-        SetBitField(mAttachmentOps[packedAttachmentIndex].finalLayout,
-                    mImageOptimizeForPresent->getCurrentImageLayout());
+        if (isResolveImage)
+        {
+            SetBitField(mAttachmentOps[packedAttachmentIndex].finalResolveLayout,
+                        mImageOptimizeForPresent->getCurrentImageLayout());
+        }
+        else
+        {
+            SetBitField(mAttachmentOps[packedAttachmentIndex].finalLayout,
+                        mImageOptimizeForPresent->getCurrentImageLayout());
+        }
         mImageOptimizeForPresent = nullptr;
     }
 
@@ -2602,11 +2607,11 @@ void RenderPassCommandBufferHelper::finalizeDepthStencilResolveImageLayout(Conte
     const PackedAttachmentOpsDesc &dsOps = mAttachmentOps[mDepthStencilAttachmentIndex];
 
     // If the image is being written to, mark its contents defined.
-    if (!dsOps.isInvalidated)
+    if (!dsOps.isInvalidated && mRenderPassDesc.hasDepthResolveAttachment())
     {
         mDepthResolveAttachment.restoreContent();
     }
-    if (!dsOps.isStencilInvalidated)
+    if (!dsOps.isStencilInvalidated && mRenderPassDesc.hasStencilResolveAttachment())
     {
         mStencilResolveAttachment.restoreContent();
     }
@@ -3077,14 +3082,34 @@ angle::Result RenderPassCommandBufferHelper::flushToPrimary(Context *context,
     return reset(context, &commandsState->secondaryCommands);
 }
 
-void RenderPassCommandBufferHelper::addColorResolveAttachment(size_t colorIndexGL, VkImageView view)
+void RenderPassCommandBufferHelper::addColorResolveAttachment(size_t colorIndexGL,
+                                                              ImageHelper *image,
+                                                              VkImageView view,
+                                                              gl::LevelIndex level,
+                                                              uint32_t layerStart,
+                                                              uint32_t layerCount,
+                                                              UniqueSerial imageSiblingSerial)
 {
     mFramebuffer.addColorResolveAttachment(colorIndexGL, view);
     mRenderPassDesc.packColorResolveAttachment(colorIndexGL);
+
+    PackedAttachmentIndex packedAttachmentIndex =
+        mRenderPassDesc.getPackedColorAttachmentIndex(colorIndexGL);
+    ASSERT(mColorResolveAttachments[packedAttachmentIndex].getImage() == nullptr);
+
+    image->onRenderPassAttach(mQueueSerial);
+    mColorResolveAttachments[packedAttachmentIndex].init(
+        image, imageSiblingSerial, level, layerStart, layerCount, VK_IMAGE_ASPECT_COLOR_BIT);
 }
 
-void RenderPassCommandBufferHelper::addDepthStencilResolveAttachment(VkImageView view,
-                                                                     VkImageAspectFlags aspects)
+void RenderPassCommandBufferHelper::addDepthStencilResolveAttachment(
+    ImageHelper *image,
+    VkImageView view,
+    VkImageAspectFlags aspects,
+    gl::LevelIndex level,
+    uint32_t layerStart,
+    uint32_t layerCount,
+    UniqueSerial imageSiblingSerial)
 {
     mFramebuffer.addDepthStencilResolveAttachment(view);
     if ((aspects & VK_IMAGE_ASPECT_DEPTH_BIT) != 0)
@@ -3095,6 +3120,12 @@ void RenderPassCommandBufferHelper::addDepthStencilResolveAttachment(VkImageView
     {
         mRenderPassDesc.packStencilResolveAttachment();
     }
+
+    image->onRenderPassAttach(mQueueSerial);
+    mDepthResolveAttachment.init(image, imageSiblingSerial, level, layerStart, layerCount,
+                                 VK_IMAGE_ASPECT_DEPTH_BIT);
+    mStencilResolveAttachment.init(image, imageSiblingSerial, level, layerStart, layerCount,
+                                   VK_IMAGE_ASPECT_STENCIL_BIT);
 }
 
 void RenderPassCommandBufferHelper::resumeTransformFeedback()

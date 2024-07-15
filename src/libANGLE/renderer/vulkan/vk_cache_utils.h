@@ -132,6 +132,8 @@ template <typename T>
 using FramebufferNonResolveAttachmentArray = std::array<T, kMaxFramebufferNonResolveAttachments>;
 using FramebufferNonResolveAttachmentMask  = angle::BitSet16<kMaxFramebufferNonResolveAttachments>;
 
+class PackedAttachmentIndex;
+
 class alignas(4) RenderPassDesc final
 {
   public:
@@ -166,6 +168,8 @@ class alignas(4) RenderPassDesc final
     void packDepthUnresolveAttachment();
     void packStencilUnresolveAttachment();
     void removeDepthStencilUnresolveAttachment();
+
+    PackedAttachmentIndex getPackedColorAttachmentIndex(size_t colorIndexGL);
 
     void setWriteControlMode(gl::SrgbWriteControlMode mode);
 
@@ -356,12 +360,11 @@ struct PackedAttachmentOpsDesc final
     // placed at the beginning of that enum.
     uint16_t initialLayout : 5;
     uint16_t finalLayout : 5;
-    uint16_t padding2 : 6;
+    uint16_t finalResolveLayout : 5;
+    uint16_t padding2 : 1;
 };
 
 static_assert(sizeof(PackedAttachmentOpsDesc) == 4, "Size check failed");
-
-class PackedAttachmentIndex;
 
 class AttachmentOpsArray final
 {

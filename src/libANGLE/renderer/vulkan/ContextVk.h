@@ -548,6 +548,18 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         mRenderPassCommands->colorImagesDraw(level, layerStart, layerCount, image, resolveImage,
                                              imageSiblingSerial, packedAttachmentIndex);
     }
+    void onColorResolve(gl::LevelIndex level,
+                        uint32_t layerStart,
+                        uint32_t layerCount,
+                        vk::ImageHelper *image,
+                        VkImageView view,
+                        UniqueSerial imageSiblingSerial,
+                        size_t colorIndexGL)
+    {
+        ASSERT(mRenderPassCommands->started());
+        mRenderPassCommands->addColorResolveAttachment(colorIndexGL, image, view, level, layerStart,
+                                                       layerCount, imageSiblingSerial);
+    }
     void onDepthStencilDraw(gl::LevelIndex level,
                             uint32_t layerStart,
                             uint32_t layerCount,
@@ -558,6 +570,18 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         ASSERT(mRenderPassCommands->started());
         mRenderPassCommands->depthStencilImagesDraw(level, layerStart, layerCount, image,
                                                     resolveImage, imageSiblingSerial);
+    }
+    void onDepthStencilResolve(gl::LevelIndex level,
+                               uint32_t layerStart,
+                               uint32_t layerCount,
+                               VkImageAspectFlags aspects,
+                               vk::ImageHelper *image,
+                               VkImageView view,
+                               UniqueSerial imageSiblingSerial)
+    {
+        ASSERT(mRenderPassCommands->started());
+        mRenderPassCommands->addDepthStencilResolveAttachment(
+            image, view, aspects, level, layerStart, layerCount, imageSiblingSerial);
     }
 
     void onFragmentShadingRateRead(vk::ImageHelper *image)
