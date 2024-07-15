@@ -6100,7 +6100,7 @@
       {
         "args": [
           "--use-angle=d3d11",
-          "--max-processes=1"
+          "--max-processes=2"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -6123,7 +6123,7 @@
       {
         "args": [
           "--gtest_filter=-*Vulkan_SwiftShader*",
-          "--max-processes=1"
+          "--max-processes=2"
         ],
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
@@ -6138,7 +6138,7 @@
             "pool": "chromium.tests.gpu"
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
-          "shards": 4
+          "shards": 3
         },
         "test": "angle_end2end_tests",
         "test_id_prefix": "ninja://src/tests:angle_end2end_tests/",

@@ -16,7 +16,7 @@
       # anglebug.com/352528974 suspecting OOM caused by multiprocess
       'win10-x64-exp-intel': {
         'args': [
-          '--max-processes=1',
+          '--max-processes=2',
         ],
       },
     },
@@ -26,10 +26,10 @@
       # anglebug.com/352528974 suspecting OOM caused by multiprocess
       'win10-x64-exp-intel': {
         'args': [
-          '--max-processes=1',
+          '--max-processes=2',
         ],
         'swarming': {
-          'shards': 4,
+          'shards': 3,
         },
       },
       # anglebug.com/40644897 suspecting device lost caused by multiprocess
