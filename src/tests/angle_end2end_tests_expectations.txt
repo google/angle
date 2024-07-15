@@ -1097,12 +1097,6 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 352963103 NVIDIA GLES : ReadPixelsTextureNorm16PBOTest.R16_SNORM_RGBA/* = SKIP
 352963103 NVIDIA GLES : ReadPixelsTextureNorm16PBOTest.RG16_SNORM_RGBA/* = SKIP
 
-// Incorrect CPU conversions
-352963106 D3D11 : ReadPixelsTextureNorm16PBOTest.R16_SNORM_RGBA/* = SKIP
-352963106 D3D11 : ReadPixelsTextureNorm16PBOTest.RG16_SNORM_RGBA/* = SKIP
-352963106 VULKAN : ReadPixelsTextureNorm16PBOTest.R16_SNORM_RGBA/* = SKIP
-352963106 VULKAN : ReadPixelsTextureNorm16PBOTest.RG16_SNORM_RGBA/* = SKIP
-
 // Unimplemented
 352700368 METAL : ReadPixelsTextureNorm16PBOTest.* = SKIP
 

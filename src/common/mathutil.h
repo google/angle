@@ -545,17 +545,31 @@ inline float normalizedToFloat(T input)
     }
 }
 
+template <typename T, typename R>
+inline R roundToNearest(T input)
+{
+    static_assert(std::is_floating_point<T>::value);
+    static_assert(std::numeric_limits<R>::is_integer);
+#if defined(__aarch64__) || defined(_M_ARM64)
+    // On armv8, std::round is compiled to a dedicated round-to-nearest instruction
+    return static_cast<R>(std::round(input));
+#else
+    return static_cast<R>(input + std::copysign(static_cast<T>(0.5f), input));
+#endif
+}
+
 template <typename T>
 inline T floatToNormalized(float input)
 {
     if constexpr (sizeof(T) > 2)
     {
         // float has only a 23 bit mantissa, so we need to do the calculation in double precision
-        return static_cast<T>(std::numeric_limits<T>::max() * static_cast<double>(input) + 0.5);
+        return roundToNearest<double, T>(std::numeric_limits<T>::max() *
+                                         static_cast<double>(input));
     }
     else
     {
-        return static_cast<T>(std::numeric_limits<T>::max() * input + 0.5f);
+        return roundToNearest<float, T>(std::numeric_limits<T>::max() * input);
     }
 }
 
@@ -563,15 +577,18 @@ template <unsigned int outputBitCount, typename T>
 inline T floatToNormalized(float input)
 {
     static_assert(outputBitCount < (sizeof(T) * 8), "T must have more bits than outputBitCount.");
+    static_assert(outputBitCount > (std::is_unsigned<T>::value ? 0 : 1),
+                  "outputBitCount must be at least 1 not counting the sign bit.");
+    constexpr unsigned int bits = std::is_unsigned<T>::value ? outputBitCount : outputBitCount - 1;
 
-    if (outputBitCount > 23)
+    if (bits > 23)
     {
         // float has only a 23 bit mantissa, so we need to do the calculation in double precision
-        return static_cast<T>(((1 << outputBitCount) - 1) * static_cast<double>(input) + 0.5);
+        return roundToNearest<double, T>(((1 << bits) - 1) * static_cast<double>(input));
     }
     else
     {
-        return static_cast<T>(((1 << outputBitCount) - 1) * input + 0.5f);
+        return roundToNearest<float, T>(((1 << bits) - 1) * input);
     }
 }
 
