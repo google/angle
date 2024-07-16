@@ -1098,9 +1098,6 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 352963103 NVIDIA GLES : ReadPixelsTextureNorm16PBOTest.R16_SNORM_RGBA/* = SKIP
 352963103 NVIDIA GLES : ReadPixelsTextureNorm16PBOTest.RG16_SNORM_RGBA/* = SKIP
 
-// Unimplemented
-352700368 METAL : ReadPixelsTextureNorm16PBOTest.* = SKIP
-
 352584420 GLES : ReadPixelsTextureNorm16PBOTest.R16_RGBA/* = SKIP
 352584420 GLES : ReadPixelsTextureNorm16PBOTest.RG16_RGBA/* = SKIP
 
