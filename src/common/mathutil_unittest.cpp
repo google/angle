@@ -551,6 +551,32 @@ TEST(MathUtilTest, sRGB)
     }
 }
 
+// Test roundToNearest with boundary values
+TEST(MathUtilTest, RoundToNearest)
+{
+    EXPECT_EQ((roundToNearest<float, uint8_t>(0.00000000f)), 0u);
+    EXPECT_EQ((roundToNearest<float, uint8_t>(0.49999997f)), 0u);
+    EXPECT_EQ((roundToNearest<float, uint8_t>(0.50000000f)), 1u);
+
+    EXPECT_EQ((roundToNearest<float, int8_t>(-0.50000000f)), -1);
+    EXPECT_EQ((roundToNearest<float, int8_t>(-0.49999997f)), 0);
+    EXPECT_EQ((roundToNearest<float, int8_t>(-0.00000000f)), 0);
+    EXPECT_EQ((roundToNearest<float, int8_t>(+0.00000000f)), 0);
+    EXPECT_EQ((roundToNearest<float, int8_t>(+0.49999997f)), 0);
+    EXPECT_EQ((roundToNearest<float, int8_t>(+0.50000000f)), +1);
+
+    EXPECT_EQ((roundToNearest<double, uint8_t>(0.00000000000000000)), 0u);
+    EXPECT_EQ((roundToNearest<double, uint8_t>(0.49999999999999994)), 0u);
+    EXPECT_EQ((roundToNearest<double, uint8_t>(0.50000000000000000)), 1u);
+
+    EXPECT_EQ((roundToNearest<double, int8_t>(-0.50000000000000000)), -1);
+    EXPECT_EQ((roundToNearest<double, int8_t>(-0.49999999999999994)), 0);
+    EXPECT_EQ((roundToNearest<double, int8_t>(-0.00000000000000000)), 0);
+    EXPECT_EQ((roundToNearest<double, int8_t>(+0.00000000000000000)), 0);
+    EXPECT_EQ((roundToNearest<double, int8_t>(+0.49999999999999994)), 0);
+    EXPECT_EQ((roundToNearest<double, int8_t>(+0.50000000000000000)), +1);
+}
+
 // Test floatToNormalized conversions with uint8_t
 TEST(MathUtilTest, FloatToNormalizedUnorm8)
 {
