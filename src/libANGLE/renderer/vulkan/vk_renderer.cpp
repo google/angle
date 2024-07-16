@@ -5191,7 +5191,10 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsExternalFormatResolve, false);
 #endif
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, useVkEventForImageBarrier, true);
+    // VkEvent has much bigger overhead. Until we know that it helps desktop GPUs, we restrict it to
+    // TBRs. Also enabled for SwiftShader so that we get more test coverage in bots.
+    ANGLE_FEATURE_CONDITION(&mFeatures, useVkEventForImageBarrier,
+                            isTileBasedRenderer || isSwiftShader);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsMaintenance5,
                             mMaintenance5Features.maintenance5 == VK_TRUE);
