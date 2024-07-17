@@ -1242,17 +1242,6 @@ void MaybeResetResources(gl::ContextID contextID,
                     }
                 }
             }
-
-            // Restore buffer bindings as seen during MEC
-            std::vector<CallCapture> &bufferBindingCalls = resourceTracker->getBufferBindingCalls();
-            for (CallCapture &call : bufferBindingCalls)
-            {
-                out << "    ";
-                WriteCppReplayForCall(call, replayWriter, out, header, binaryData,
-                                      maxResourceIDBufferSize);
-                out << ";\n";
-            }
-
             break;
         }
         case ResourceIDType::Framebuffer:
@@ -1766,6 +1755,41 @@ void MaybeResetContextState(ReplayWriter &replayWriter,
                 out << ";\n";
             }
         }
+    }
+
+    // Reset buffer bindings that weren't bound at the beginning
+    for (const gl::BufferBinding &dirtyBufferBinding : stateResetHelper.getDirtyBufferBindings())
+    {
+        // Check to see if dirty binding was part of starting set
+        bool dirtyStartingBinding = false;
+        for (const BufferBindingPair &startingBufferBinding :
+             stateResetHelper.getStartingBufferBindings())
+        {
+            gl::BufferBinding startingBinding = startingBufferBinding.first;
+            if (startingBinding == dirtyBufferBinding)
+            {
+                dirtyStartingBinding = true;
+            }
+        }
+
+        // If the dirty binding was not part of starting bindings, clear it
+        if (!dirtyStartingBinding)
+        {
+            out << "    ";
+            WriteCppReplayForCall(
+                CaptureBindBuffer(context->getState(), true, dirtyBufferBinding, {0}), replayWriter,
+                out, header, binaryData, maxResourceIDBufferSize);
+            out << ";\n";
+        }
+    }
+
+    // Restore starting buffer bindings to initial state
+    std::vector<CallCapture> &bufferBindingCalls = resourceTracker->getBufferBindingCalls();
+    for (CallCapture &call : bufferBindingCalls)
+    {
+        out << "    ";
+        WriteCppReplayForCall(call, replayWriter, out, header, binaryData, maxResourceIDBufferSize);
+        out << ";\n";
     }
 
     // Restore texture bindings to initial state
@@ -4028,6 +4052,7 @@ void CaptureBufferBindingResetCalls(const gl::State &replayState,
                                     gl::BufferBinding binding,
                                     gl::BufferID id)
 {
+    // Track the calls to reset it
     std::vector<CallCapture> &bufferBindingCalls = resourceTracker->getBufferBindingCalls();
     Capture(&bufferBindingCalls, CaptureBindBuffer(replayState, true, binding, id));
 }
@@ -5134,6 +5159,9 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         if (bufferID.value != 0)
         {
             CaptureBufferBindingResetCalls(replayState, resourceTracker, binding, bufferID);
+
+            // Track this as a starting binding
+            resetHelper.setStartingBufferBinding(binding, bufferID);
         }
     }
 
@@ -7706,6 +7734,25 @@ void FrameCaptureShared::maybeCapturePreCallUpdates(
 
         case EntryPoint::GLBindBuffer:
             maybeGenResourceOnBind<gl::BufferID>(context, call);
+            if (isCaptureActive())
+            {
+                gl::BufferBinding binding =
+                    call.params.getParam("targetPacked", ParamType::TBufferBinding, 0)
+                        .value.BufferBindingVal;
+
+                context->getFrameCapture()->getStateResetHelper().setBufferBindingDirty(binding);
+            }
+            break;
+
+        case EntryPoint::GLBindBufferBase:
+        case EntryPoint::GLBindBufferRange:
+        case EntryPoint::GLBindBuffersBase:
+        case EntryPoint::GLBindBuffersRange:
+            if (isCaptureActive())
+            {
+                WARN() << "Indexed buffer binding changed during capture, Reset doesn't handle it "
+                          "yet.";
+            }
             break;
 
         case EntryPoint::GLDeleteProgramPipelines:
