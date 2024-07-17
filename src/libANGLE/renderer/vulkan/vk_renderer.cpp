@@ -1552,7 +1552,9 @@ void Renderer::onDestroy(vk::Context *context)
         oneOffCommandPool.destroy(mDevice);
     }
 
+    mPipelineCacheInitialized = false;
     mPipelineCache.destroy(mDevice);
+
     mSamplerCache.destroy(this);
     mYuvConversionCache.destroy(this);
     mVkFormatDescriptorCountMap.clear();
