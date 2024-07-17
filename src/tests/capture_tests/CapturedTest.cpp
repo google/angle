@@ -432,6 +432,11 @@ void CapturedTest::frame4()
     GLuint nonExistentTexture = 777;
     glBindTexture(nonExistentBinding, nonExistentTexture);
     glGetError();
+
+    // Another unrelated change
+    // Bind a PIXEL_UNPACK_BUFFER buffer so it gets cleared in Reset
+    GLBuffer unpackBuffer;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, unpackBuffer);
 }
 
 // Test captured by capture_tests.py

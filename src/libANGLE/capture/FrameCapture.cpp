@@ -1137,7 +1137,8 @@ void DeleteResourcesInReset(std::stringstream &out,
 }
 
 // TODO (http://anglebug.com/42263204): Reset more state on frame loop
-void MaybeResetResources(gl::ContextID contextID,
+void MaybeResetResources(egl::Display *display,
+                         gl::ContextID contextID,
                          ResourceIDType resourceIDType,
                          ReplayWriter &replayWriter,
                          std::stringstream &out,
@@ -1428,6 +1429,25 @@ void MaybeResetResources(gl::ContextID contextID,
 
             // If any of our starting textures were modified during the run, restore their contents
             ResourceSet &texturesToRestore = trackedTextures.getResourcesToRestore();
+
+            // Do some setup if we have any textures to restore
+            if (texturesToRestore.size() != 0)
+            {
+                // We need to unbind PIXEL_UNPACK_BUFFER before restoring textures
+                // The correct binding will be restored in context state reset
+                gl::Context *context = display->getContext(contextID);
+                if (context->getState().getTargetBuffer(gl::BufferBinding::PixelUnpack))
+                {
+                    out << "    // Clearing PIXEL_UNPACK_BUFFER binding for texture restore\n";
+                    out << "    ";
+                    WriteCppReplayForCall(CaptureBindBuffer(context->getState(), true,
+                                                            gl::BufferBinding::PixelUnpack, {0}),
+                                          replayWriter, out, header, binaryData,
+                                          maxResourceIDBufferSize);
+                    out << ";\n";
+                }
+            }
+
             for (GLuint id : texturesToRestore)
             {
                 // Emit their restore calls
@@ -9738,9 +9758,9 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
                     continue;
                 }
                 // Use current context for shared reset
-                MaybeResetResources(context->id(), resourceType, mReplayWriter, bodyStream,
-                                    headerStream, &mResourceTracker, &mBinaryData, anyResourceReset,
-                                    &mResourceIDBufferSize);
+                MaybeResetResources(context->getDisplay(), context->id(), resourceType,
+                                    mReplayWriter, bodyStream, headerStream, &mResourceTracker,
+                                    &mBinaryData, anyResourceReset, &mResourceIDBufferSize);
             }
 
             // Reset opaque type objects that don't have IDs, so are not ResourceIDTypes.
@@ -9782,9 +9802,9 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
                     {
                         continue;
                     }
-                    MaybeResetResources(contextID, resourceType, mReplayWriter, resetStream,
-                                        headerStream, &mResourceTracker, &mBinaryData,
-                                        anyResourceReset, &mResourceIDBufferSize);
+                    MaybeResetResources(context->getDisplay(), contextID, resourceType,
+                                        mReplayWriter, resetStream, headerStream, &mResourceTracker,
+                                        &mBinaryData, anyResourceReset, &mResourceIDBufferSize);
                 }
 
                 // Only call eglMakeCurrent if anything was actually reset in the function and the
