@@ -4252,7 +4252,7 @@ TEST_P(FramebufferTest_ES31, ClearWithColorMasksRGB5A1)
     glDisable(GL_DITHER);
 
     // Attach textures with internal format GL_RGB5_A1 to each framebuffer color attachment
-    GLTexture textures[maxDrawBuffers];
+    std::vector<GLTexture> textures(maxDrawBuffers);
     std::vector<unsigned char> pixelData(kSize * kSize * 4, 255);
     for (int i = 0; i < maxDrawBuffers; ++i)
     {
