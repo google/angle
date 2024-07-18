@@ -1101,7 +1101,6 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 352584420 GLES : ReadPixelsTextureNorm16PBOTest.R16_RGBA/* = SKIP
 352584420 GLES : ReadPixelsTextureNorm16PBOTest.RG16_RGBA/* = SKIP
 
-354005999 VULKAN : ReadPixelsPBOTest.SmallRowLength/* = SKIP
 354109768 MAC AMD OPENGL : ReadPixelsPBOTest.SmallRowLength/* = SKIP
 
 // D3D needs a workaround to follow OpenGL rules

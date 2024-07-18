@@ -3113,9 +3113,11 @@ class ImageHelper final : public Resource, public angle::Subject
                                       void *pixels);
 
     bool canCopyWithTransformForReadPixels(const PackPixelsParams &packPixelsParams,
+                                           const VkExtent3D &srcExtent,
                                            const angle::Format *readFormat,
                                            ptrdiff_t pixelsOffset);
     bool canCopyWithComputeForReadPixels(const PackPixelsParams &packPixelsParams,
+                                         const VkExtent3D &srcExtent,
                                          const angle::Format *readFormat,
                                          ptrdiff_t pixelsOffset);
 
