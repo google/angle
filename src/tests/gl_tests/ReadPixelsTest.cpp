@@ -322,6 +322,8 @@ class ReadPixelsPBOTest : public ReadPixelsPBONVTest
         mFBOWidth  = fboWidth;
         mFBOHeight = fboHeight;
 
+        mPBOBufferSize = bufferSize;
+
         ASSERT_GL_NO_ERROR();
     }
 };
@@ -657,6 +659,50 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(1, 0, GLColor::green);
     EXPECT_PIXEL_COLOR_EQ(2, 0, GLColor::green);
     EXPECT_PIXEL_COLOR_EQ(3, 0, GLColor::green);
+}
+
+// Test PBO readback with row length smaller than area width.
+TEST_P(ReadPixelsPBOTest, SmallRowLength)
+{
+    constexpr int kSize = 2;
+    Reset(kSize * kSize * 4, kSize, kSize);
+    std::vector<GLColor> texData(kSize * kSize);
+    texData[0] = GLColor::red;
+    texData[1] = GLColor::green;
+    texData[2] = GLColor::blue;
+    texData[3] = GLColor::white;
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kSize, kSize, GL_RGBA, GL_UNSIGNED_BYTE,
+                    texData.data());
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, mPBO);
+    std::vector<GLColor> bufData(kSize * kSize, GLColor::black);
+    glBufferData(GL_PIXEL_PACK_BUFFER, mPBOBufferSize, bufData.data(), GL_STATIC_DRAW);
+
+    glPixelStorei(GL_PACK_ROW_LENGTH, 1);
+    glReadPixels(0, 0, kSize, kSize, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    void *mappedPtr = glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, mPBOBufferSize, GL_MAP_READ_BIT);
+    ASSERT_NE(nullptr, mappedPtr);
+    ASSERT_GL_NO_ERROR();
+
+    // TODO(anglebug.com/354005999)
+    // Metal compute path may produce flaky results
+    // Suppressed until a fallback is implemented
+    if (!IsMetal())
+    {
+        GLColor *colorPtr = static_cast<GLColor *>(mappedPtr);
+        EXPECT_EQ(colorPtr[0], GLColor::red);
+        EXPECT_EQ(colorPtr[1], GLColor::blue);
+        EXPECT_EQ(colorPtr[2], GLColor::white);
+        EXPECT_EQ(colorPtr[3], GLColor::black);
+    }
+    ASSERT_TRUE(glUnmapBuffer(GL_PIXEL_PACK_BUFFER));
+    ASSERT_GL_NO_ERROR();
 }
 
 class ReadPixelsPBODrawTest : public ReadPixelsPBOTest
