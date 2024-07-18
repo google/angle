@@ -140,7 +140,7 @@ if (angle_use_vulkan_null_display) {
   ]
 }
 
-if (is_linux || is_chromeos) {
+if (is_linux || is_chromeos || angle_android_dma_buf) {
   vulkan_backend_sources += [
     "linux/DeviceVkLinux.cpp",
     "linux/DeviceVkLinux.h",
@@ -161,7 +161,7 @@ if (is_linux || is_chromeos) {
   ]
 }
 
-if (is_android) {
+if (is_android && !angle_android_dma_buf) {
   vulkan_backend_sources += [
     "android/AHBFunctions.cpp",
     "android/AHBFunctions.h",

@@ -1009,6 +1009,10 @@ config("libANGLE_config") {
                              # are not enabled.
   }
 
+  if (angle_android_dma_buf) {
+    defines += [ "ANGLE_ANDROID_DMA_BUF" ]
+  }
+
   if (is_android && (angle_enable_gl || angle_enable_vulkan)) {
     # In API level 26 ANativeWindow APIs were moved from libandroid.so
     # into a separate library, libnativewindow.so

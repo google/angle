@@ -30,6 +30,10 @@ declare_args() {
 
   # Enable Desktop GL frontend support.
   angle_enable_gl_desktop_frontend = false
+
+  # Enable DMA-BUF support, enable Vulkan based display and disable Android
+  # Framework integration in Android builds.
+  angle_android_dma_buf = false
 }
 
 declare_args() {
@@ -71,7 +75,8 @@ if (angle_has_build) {
     angle_use_x11 = ozone_platform_x11 && !is_ggp && (is_linux || is_chromeos)
     angle_use_wayland =
         ozone_platform_wayland && !is_ggp && is_linux && !is_castos
-    angle_use_vulkan_display = (is_linux || is_chromeos) && !is_ggp
+    angle_use_vulkan_display = ((is_linux || is_chromeos) && !is_ggp) ||
+                               (is_android && angle_android_dma_buf)
   }
 } else {
   declare_args() {
@@ -92,7 +97,8 @@ if (angle_has_build) {
   }
 
   declare_args() {
-    angle_use_vulkan_display = (is_linux || is_chromeos) && !is_ggp
+    angle_use_vulkan_display = ((is_linux || is_chromeos) && !is_ggp) ||
+                               (is_android && angle_android_dma_buf)
   }
 }
 
