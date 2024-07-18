@@ -4800,7 +4800,8 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
                             IsAndroid() && !mFeatures.supportsLegacyDithering.enabled);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, adjustClearColorPrecision,
-                            IsAndroid() && mFeatures.supportsLegacyDithering.enabled && isARM);
+                            IsAndroid() && mFeatures.supportsLegacyDithering.enabled && isARM &&
+                                armDriverVersion < ARMDriverVersion(50, 0, 0));
 
     // http://anglebug.com/42265365
     // On ARM hardware, framebuffer-fetch-like behavior on Vulkan is already coherent, so we can
