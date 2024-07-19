@@ -43,7 +43,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': 'b5eaffbef1cb4b5532d7c9aa7b6a7d281ba1244e',
+  'chromium_revision': '06c75e7c6658b43b9e04f2c33e6b5ea53df24c30',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -88,7 +88,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': '29445d0e3f4de0f20d4894506716584e9d604e04',
+  'catapult_revision': '786400210fedd9bc76cf29ffe4439980626b2f27',
 
   # the commit queue can handle CLs rolling Fuchsia sdk
   # and whatever else without interference from each other.
@@ -130,7 +130,7 @@ vars = {
   # reclient CIPD package
   'reclient_package': 'infra/rbe/client/',
   # reclient CIPD package version
-  'reclient_version': 're_client_version:0.148.0.41b09b51-gomaip',
+  'reclient_version': 're_client_version:0.150.1.d9707319-gomaip',
 
   # siso CIPD package version.
   'siso_version': 'git_revision:b41f9eaf44dfdaec51ab2d7089aaa4cb6d9e7f5e',
@@ -421,7 +421,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': Var('chromium_git') + '/chromium/src/build.git@ad2f859fc3b655b9a69157d7f82478ac5f3902bf',
+    'url': Var('chromium_git') + '/chromium/src/build.git@9ad8e1f7a198ab3281b90f68670e9aee917334e9',
     'condition': 'not build_with_chromium',
   },
 
@@ -480,7 +480,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@b42459f242805025762ad82e3db45f569a6cd974',
+    'url': '{chromium_git}/chromium/src/testing@3f18920b3ce2244daba06a9fad0a42764fe0e2f7',
     'condition': 'not build_with_chromium',
   },
 
@@ -662,7 +662,7 @@ deps = {
   },
 
   'third_party/depot_tools': {
-    'url': Var('chromium_git') + '/chromium/tools/depot_tools.git@b4102e43a02805cf7bcb100446d27caef1b4e51d',
+    'url': Var('chromium_git') + '/chromium/tools/depot_tools.git@1c81122f695a406fa7d113f5c67c8bde7ba3c873',
     'condition': 'not build_with_chromium',
   },
 
@@ -796,7 +796,7 @@ deps = {
   },
 
   'third_party/markupsafe': {
-    'url': Var('chromium_git') + '/chromium/src/third_party/markupsafe@e582d7f0edb9d67499b0f5abd6ae5550e91da7f2',
+    'url': Var('chromium_git') + '/chromium/src/third_party/markupsafe@6638e9b0a79afc2ff7edd9e84b518fe7d5d5fea9',
     'condition': 'not build_with_chromium',
   },
 
@@ -920,7 +920,7 @@ deps = {
   },
 
   'third_party/six': {
-    'url': Var('chromium_git') + '/chromium/src/third_party/six@32c68ae5c1fa363e3e86d56a59d230c445f018ac',
+    'url': Var('chromium_git') + '/chromium/src/third_party/six@580980eb7d380150995b82cd18e1254ab5eff77f',
     'condition': 'checkout_android and not build_with_chromium',
   },
 
@@ -1015,12 +1015,12 @@ deps = {
   },
 
   'tools/android': {
-    'url': Var('chromium_git') + '/chromium/src/tools/android@b9d53fb8e5108c4ad8e3a5a553066be6be9b1520',
+    'url': Var('chromium_git') + '/chromium/src/tools/android@03072f076e147441bb50ae3f60f3444cc71f9fa2',
     'condition': 'checkout_android and not build_with_chromium',
   },
 
   'tools/clang': {
-    'url': Var('chromium_git') + '/chromium/src/tools/clang.git@a5953b107df1aa821e0f9e890cd3ba1afa180e37',
+    'url': Var('chromium_git') + '/chromium/src/tools/clang.git@3eba5f340c4e1ab378f598860bc4dcc59c365227',
     'condition': 'not build_with_chromium',
   },
 
@@ -1066,7 +1066,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': Var('chromium_git') + '/chromium/src/tools/perf@88e2a478eecdbc85edfc1302390e9667690f9be1',
+    'url': Var('chromium_git') + '/chromium/src/tools/perf@f6e1f7aa050f824a607f613b71996bb6a6fc64f2',
     'condition': 'not build_with_chromium',
   },
 
@@ -1125,7 +1125,7 @@ deps = {
   },
 
   'tools/valgrind': {
-    'url': Var('chromium_git') + '/chromium/src/tools/valgrind@e10259da244f75e52a681371f679d9ec095ff62a',
+    'url': Var('chromium_git') + '/chromium/src/tools/valgrind@f9f02d66abacbb6b1bf00573b7426ec6dc767b38',
     'condition': 'not build_with_chromium',
   },
 
