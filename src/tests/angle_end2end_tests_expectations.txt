@@ -1144,8 +1144,8 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 42266567 PIXEL4ORXL VULKAN : SampleVariablesTest.SamplePosition/* = SKIP
 
 // Invalid gl_SampleMaskIn value when sample qualifier is present
-40096890 LINUX INTEL : SampleMultisampleInterpolationTest.SampleMaskInPerSample/* = SKIP
-40096890 LINUX INTEL : SampleMultisampleInterpolationTest.SampleMaskInPerSampleNoPerspective/* = SKIP
+40096890 LINUX INTEL OPENGL : SampleMultisampleInterpolationTest.SampleMaskInPerSample/* = SKIP
+40096890 LINUX INTEL OPENGL : SampleMultisampleInterpolationTest.SampleMaskInPerSampleNoPerspective/* = SKIP
 
 // bits 24..31 from glClearValueuiv value don't work on Intel Metal.
 42266265 MAC INTEL METAL : PixelLocalStorageTest.ClearValues_r32/* = SKIP
@@ -1202,8 +1202,6 @@ b/267953710 GALAXYS22 VULKAN : RobustBufferAccessBehaviorTest.BufferDataWithIncr
 b/267953710 GALAXYS22 VULKAN : RobustBufferAccessBehaviorTest.D3D11StateSynchronizationOrderBug/* = SKIP
 b/267953710 GALAXYS22 VULKAN : RobustBufferAccessBehaviorTest.DrawElementsIndexOutOfRangeWithDynamicDraw/* = SKIP
 b/267953710 GALAXYS22 VULKAN : RobustBufferAccessBehaviorTest.DrawElementsIndexOutOfRangeWithStaticDraw/* = SKIP
-b/267953710 GALAXYS22 VULKAN : SampleMultisampleInterpolationTest.SampleMaskInPerSample/* = SKIP
-b/267953710 GALAXYS22 VULKAN : SampleMultisampleInterpolationTest.SampleMaskInPerSampleNoPerspective/* = SKIP
 b/267953710 GALAXYS22 VULKAN : SampleVariablesTest.SampleID/* = SKIP
 b/267953710 GALAXYS22 VULKAN : SampleVariablesTest.SamplePosition/* = SKIP
 b/267953710 GALAXYS22 VULKAN : SimpleStateChangeTestES31.TransformFeedbackThenReadWithCompute/* = SKIP
