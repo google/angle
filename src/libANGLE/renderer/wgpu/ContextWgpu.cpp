@@ -42,6 +42,15 @@ constexpr angle::PackedEnumMap<webgpu::RenderPassClosureReason, const char *>
     kRenderPassClosureReason = {{
         {webgpu::RenderPassClosureReason::NewRenderPass,
          "Render pass closed due to starting a new render pass"},
+        {webgpu::RenderPassClosureReason::FramebufferBindingChange,
+         "Render pass closed due to framebuffer binding change"},
+        {webgpu::RenderPassClosureReason::FramebufferInternalChange,
+         "Render pass closed due to framebuffer internal change"},
+        {webgpu::RenderPassClosureReason::GLFlush, "Render pass closed due to glFlush"},
+        {webgpu::RenderPassClosureReason::GLFinish, "Render pass closed due to glFinish"},
+        {webgpu::RenderPassClosureReason::EGLSwapBuffers,
+         "Render pass closed due to eglSwapBuffers"},
+        {webgpu::RenderPassClosureReason::GLReadPixels, "Render pass closed due to glReadPixels"},
     }};
 
 }  // namespace
@@ -105,6 +114,10 @@ ContextWgpu::ContextWgpu(const gl::State &state, gl::ErrorSet *errorSet, Display
         mPLSOptions.type             = ShPixelLocalStorageType::FramebufferFetch;
         mPLSOptions.fragmentSyncType = ShFragmentSynchronizationType::Automatic;
     }
+
+    mNewRenderPassDirtyBits = DirtyBits{
+        DIRTY_BIT_RENDER_PIPELINE_BINDING,  // The pipeline needs to be bound for each renderpass
+    };
 }
 
 ContextWgpu::~ContextWgpu() {}
@@ -120,8 +133,32 @@ angle::Result ContextWgpu::initialize(const angle::ImageLoadContext &imageLoadCo
     return angle::Result::Continue;
 }
 
+angle::Result ContextWgpu::onFramebufferChange(FramebufferWgpu *framebufferWgpu,
+                                               gl::Command command)
+{
+    // If internal framebuffer state changes, always end the render pass
+    ANGLE_TRY(endRenderPass(webgpu::RenderPassClosureReason::FramebufferInternalChange));
+
+    return angle::Result::Continue;
+}
+
 angle::Result ContextWgpu::flush(const gl::Context *context)
 {
+    return flush(webgpu::RenderPassClosureReason::GLFlush);
+}
+
+angle::Result ContextWgpu::flush(webgpu::RenderPassClosureReason closureReason)
+{
+    ANGLE_TRY(endRenderPass(closureReason));
+
+    if (mCurrentCommandEncoder)
+    {
+        wgpu::CommandBuffer commandBuffer = mCurrentCommandEncoder.Finish();
+        mCurrentCommandEncoder            = nullptr;
+
+        getQueue().Submit(1, &commandBuffer);
+    }
+
     return angle::Result::Continue;
 }
 
@@ -152,6 +189,13 @@ void ContextWgpu::setDepthStencilFormat(wgpu::TextureFormat format)
 
 angle::Result ContextWgpu::finish(const gl::Context *context)
 {
+    ANGLE_TRY(flush(webgpu::RenderPassClosureReason::GLFinish));
+
+    wgpu::Future onWorkSubmittedFuture = getQueue().OnSubmittedWorkDone(
+        wgpu::CallbackMode::WaitAnyOnly, [](wgpu::QueueWorkDoneStatus status) {});
+    wgpu::WaitStatus status = getInstance().WaitAny(onWorkSubmittedFuture, -1);
+    ASSERT(!webgpu::IsWgpuError(status));
+
     return angle::Result::Continue;
 }
 
@@ -173,7 +217,7 @@ angle::Result ContextWgpu::drawArrays(const gl::Context *context,
 
     ANGLE_TRY(
         setupDraw(context, mode, first, count, 1, gl::DrawElementsType::InvalidEnum, nullptr));
-    // TODO: draw
+    mCommandBuffer.draw(static_cast<uint32_t>(count), 1, static_cast<uint32_t>(first), 0);
     return angle::Result::Continue;
 }
 
@@ -196,7 +240,8 @@ angle::Result ContextWgpu::drawArraysInstanced(const gl::Context *context,
 
     ANGLE_TRY(setupDraw(context, mode, first, count, instanceCount,
                         gl::DrawElementsType::InvalidEnum, nullptr));
-    // TODO: draw
+    mCommandBuffer.draw(static_cast<uint32_t>(count), static_cast<uint32_t>(instanceCount),
+                        static_cast<uint32_t>(first), 0);
     return angle::Result::Continue;
 }
 
@@ -220,7 +265,8 @@ angle::Result ContextWgpu::drawArraysInstancedBaseInstance(const gl::Context *co
 
     ANGLE_TRY(setupDraw(context, mode, first, count, instanceCount,
                         gl::DrawElementsType::InvalidEnum, nullptr));
-    // TODO: draw
+    mCommandBuffer.draw(static_cast<uint32_t>(count), static_cast<uint32_t>(instanceCount),
+                        static_cast<uint32_t>(first), baseInstance);
     return angle::Result::Continue;
 }
 
@@ -526,6 +572,8 @@ angle::Result ContextWgpu::syncState(const gl::Context *context,
                     webgpu::GetImpl(context->getState().getDrawFramebuffer());
                 setColorAttachmentFormats(framebufferWgpu->getCurrentColorAttachmentFormats());
                 setDepthStencilFormat(framebufferWgpu->getCurrentDepthStencilAttachmentFormat());
+
+                ANGLE_TRY(endRenderPass(webgpu::RenderPassClosureReason::FramebufferBindingChange));
             }
             break;
             case gl::state::DIRTY_BIT_READ_FRAMEBUFFER_BINDING:
@@ -547,7 +595,17 @@ angle::Result ContextWgpu::syncState(const gl::Context *context,
             case gl::state::DIRTY_BIT_BLEND_EQUATIONS:
                 break;
             case gl::state::DIRTY_BIT_COLOR_MASK:
-                break;
+            {
+                const gl::BlendStateExt &blendStateExt = mState.getBlendStateExt();
+                for (size_t i = 0; i < blendStateExt.getDrawBufferCount(); i++)
+                {
+                    bool r, g, b, a;
+                    blendStateExt.getColorMaskIndexed(i, &r, &g, &b, &a);
+                    mRenderPipelineDesc.setColorWriteMask(i, r, g, b, a);
+                }
+                invalidateCurrentRenderPipeline();
+            }
+            break;
             case gl::state::DIRTY_BIT_SAMPLE_ALPHA_TO_COVERAGE_ENABLED:
                 break;
             case gl::state::DIRTY_BIT_SAMPLE_COVERAGE_ENABLED:
@@ -873,29 +931,36 @@ void ContextWgpu::handleError(GLenum errorCode,
 
 angle::Result ContextWgpu::startRenderPass(const wgpu::RenderPassDescriptor &desc)
 {
-    mCurrentCommandEncoder = getDevice().CreateCommandEncoder(nullptr);
-    mCurrentRenderPass     = mCurrentCommandEncoder.BeginRenderPass(&desc);
-    return angle::Result::Continue;
-}
-
-angle::Result ContextWgpu::endRenderPass(webgpu::RenderPassClosureReason closure_reason)
-{
-    if (!mCurrentRenderPass)
+    if (!mCurrentCommandEncoder)
     {
-        return angle::Result::Continue;
+        mCurrentCommandEncoder = getDevice().CreateCommandEncoder(nullptr);
     }
-    const char *reasonText = kRenderPassClosureReason[closure_reason];
-    INFO() << reasonText;
-    mCurrentRenderPass.End();
-    mCurrentRenderPass = nullptr;
+
+    mCurrentRenderPass = mCurrentCommandEncoder.BeginRenderPass(&desc);
+    mDirtyBits |= mNewRenderPassDirtyBits;
+
     return angle::Result::Continue;
 }
 
-angle::Result ContextWgpu::flush()
+angle::Result ContextWgpu::endRenderPass(webgpu::RenderPassClosureReason closureReason)
 {
-    wgpu::CommandBuffer command_buffer = mCurrentCommandEncoder.Finish();
-    getQueue().Submit(1, &command_buffer);
-    mCurrentCommandEncoder = nullptr;
+    if (mCurrentRenderPass)
+    {
+        const char *reasonText = kRenderPassClosureReason[closureReason];
+        INFO() << reasonText;
+
+        if (mCommandBuffer.hasCommands())
+        {
+            mCommandBuffer.recordCommands(mCurrentRenderPass);
+            mCommandBuffer.clear();
+        }
+
+        mCurrentRenderPass.End();
+        mCurrentRenderPass = nullptr;
+    }
+
+    mDirtyBits.set(DIRTY_BIT_RENDER_PASS);
+
     return angle::Result::Continue;
 }
 
@@ -933,7 +998,15 @@ angle::Result ContextWgpu::setupDraw(const gl::Context *context,
             switch (dirtyBit)
             {
                 case DIRTY_BIT_RENDER_PIPELINE_DESC:
-                    ANGLE_TRY(createRenderPipeline());
+                    ANGLE_TRY(handleDirtyRenderPipelineDesc(&dirtyBitIter));
+                    break;
+
+                case DIRTY_BIT_RENDER_PASS:
+                    ANGLE_TRY(handleDirtyRenderPass(&dirtyBitIter));
+                    break;
+
+                case DIRTY_BIT_RENDER_PIPELINE_BINDING:
+                    ANGLE_TRY(handleDirtyRenderPipelineBinding(&dirtyBitIter));
                     break;
 
                 default:
@@ -948,14 +1021,34 @@ angle::Result ContextWgpu::setupDraw(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result ContextWgpu::createRenderPipeline()
+angle::Result ContextWgpu::handleDirtyRenderPipelineDesc(DirtyBits::Iterator *dirtyBitsIterator)
 {
     ASSERT(mState.getProgramExecutable() != nullptr);
     ProgramExecutableWgpu *executable = webgpu::GetImpl(mState.getProgramExecutable());
     ASSERT(executable);
 
+    wgpu::RenderPipeline previousPipeline = std::move(mCurrentGraphicsPipeline);
     ANGLE_TRY(executable->getRenderPipeline(this, mRenderPipelineDesc, &mCurrentGraphicsPipeline));
+    if (mCurrentGraphicsPipeline != previousPipeline)
+    {
+        dirtyBitsIterator->setLaterBit(DIRTY_BIT_RENDER_PIPELINE_BINDING);
+    }
 
+    return angle::Result::Continue;
+}
+
+angle::Result ContextWgpu::handleDirtyRenderPipelineBinding(DirtyBits::Iterator *dirtyBitsIterator)
+{
+    ASSERT(mCurrentGraphicsPipeline);
+    mCommandBuffer.setPipeline(mCurrentGraphicsPipeline);
+    return angle::Result::Continue;
+}
+
+angle::Result ContextWgpu::handleDirtyRenderPass(DirtyBits::Iterator *dirtyBitsIterator)
+{
+    FramebufferWgpu *drawFramebufferWgpu = webgpu::GetImpl(mState.getDrawFramebuffer());
+    ANGLE_TRY(drawFramebufferWgpu->startNewRenderPass(this));
+    dirtyBitsIterator->setLaterBits(mNewRenderPassDirtyBits);
     return angle::Result::Continue;
 }
 

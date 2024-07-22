@@ -92,6 +92,8 @@ class FramebufferWgpu : public FramebufferImpl
 
     angle::Result flushDeferredClears(ContextWgpu *contextWgpu);
 
+    angle::Result startNewRenderPass(ContextWgpu *contextWgpu);
+
     const gl::DrawBuffersArray<wgpu::TextureFormat> &getCurrentColorAttachmentFormats() const
     {
         return mCurrentColorAttachmentFormats;

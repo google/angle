@@ -229,6 +229,14 @@ wgpu::CullMode GetCullMode(gl::CullFaceMode mode, bool cullFaceEnabled)
     }
 }
 
+wgpu::ColorWriteMask GetColorWriteMask(bool r, bool g, bool b, bool a)
+{
+    return (r ? wgpu::ColorWriteMask::Red : wgpu::ColorWriteMask::None) |
+           (g ? wgpu::ColorWriteMask::Green : wgpu::ColorWriteMask::None) |
+           (b ? wgpu::ColorWriteMask::Blue : wgpu::ColorWriteMask::None) |
+           (a ? wgpu::ColorWriteMask::Alpha : wgpu::ColorWriteMask::None);
+}
+
 wgpu::TextureDimension getWgpuTextureDimension(gl::TextureType glTextureType)
 {
     wgpu::TextureDimension dimension = {};

@@ -176,7 +176,7 @@ void WindowSurfaceWgpu::destroy(const egl::Display *display)
 
 egl::Error WindowSurfaceWgpu::swap(const gl::Context *context)
 {
-    return angle::ResultToEGL(swapImpl(context->getDisplay()));
+    return angle::ResultToEGL(swapImpl(context));
 }
 
 egl::Error WindowSurfaceWgpu::bindTexImage(const gl::Context *context,
@@ -286,8 +286,13 @@ angle::Result WindowSurfaceWgpu::initializeImpl(const egl::Display *display)
     return angle::Result::Continue;
 }
 
-angle::Result WindowSurfaceWgpu::swapImpl(const egl::Display *display)
+angle::Result WindowSurfaceWgpu::swapImpl(const gl::Context *context)
 {
+    const egl::Display *display = context->getDisplay();
+    ContextWgpu *contextWgpu    = webgpu::GetImpl(context);
+
+    ANGLE_TRY(contextWgpu->flush(webgpu::RenderPassClosureReason::EGLSwapBuffers));
+
     mSwapChain.Present();
 
     ANGLE_TRY(getCurrentWindowSize(display, &mCurrentSwapChainSize));

@@ -48,6 +48,8 @@ wgpu_backend_sources = [
   "TransformFeedbackWgpu.h",
   "VertexArrayWgpu.cpp",
   "VertexArrayWgpu.h",
+  "wgpu_command_buffer.cpp",
+  "wgpu_command_buffer.h",
   "wgpu_format_table_autogen.cpp",
   "wgpu_format_utils.cpp",
   "wgpu_format_utils.h",

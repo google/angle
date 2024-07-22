@@ -101,6 +101,12 @@ void RenderPipelineDesc::setCullMode(gl::CullFaceMode cullMode, bool cullFaceEna
     SetBitField(mPrimitiveState.cullMode, gl_wgpu::GetCullMode(cullMode, cullFaceEnabled));
 }
 
+void RenderPipelineDesc::setColorWriteMask(size_t colorIndex, bool r, bool g, bool b, bool a)
+{
+    PackedColorTargetState &colorTarget = mColorTargetStates[colorIndex];
+    SetBitField(colorTarget.writeMask, gl_wgpu::GetColorWriteMask(r, g, b, a));
+}
+
 bool RenderPipelineDesc::setColorAttachmentFormat(size_t colorIndex, wgpu::TextureFormat format)
 {
     if (mColorTargetStates[colorIndex].format == static_cast<uint8_t>(format))

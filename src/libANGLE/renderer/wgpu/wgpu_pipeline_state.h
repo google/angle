@@ -131,6 +131,7 @@ class RenderPipelineDesc final
 
     void setFrontFace(GLenum frontFace);
     void setCullMode(gl::CullFaceMode cullMode, bool cullFaceEnabled);
+    void setColorWriteMask(size_t colorIndex, bool r, bool g, bool b, bool a);
 
     bool setColorAttachmentFormat(size_t colorIndex, wgpu::TextureFormat format);
     bool setDepthStencilAttachmentFormat(wgpu::TextureFormat format);

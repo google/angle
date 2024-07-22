@@ -121,7 +121,7 @@ class WindowSurfaceWgpu : public SurfaceWgpu
   private:
     angle::Result initializeImpl(const egl::Display *display);
 
-    angle::Result swapImpl(const egl::Display *display);
+    angle::Result swapImpl(const gl::Context *context);
 
     angle::Result updateCurrentTexture(const egl::Display *display);
 
