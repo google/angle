@@ -3302,14 +3302,6 @@ class ImageViewHelper final : angle::NonCopyable
     {
         return getValidReadViewImpl(mPerLevelRangeSRGBReadImageViews);
     }
-    const ImageView &getLinearFetchImageView() const
-    {
-        return getValidReadViewImpl(mPerLevelRangeLinearFetchImageViews);
-    }
-    const ImageView &getSRGBFetchImageView() const
-    {
-        return getValidReadViewImpl(mPerLevelRangeSRGBFetchImageViews);
-    }
     const ImageView &getLinearCopyImageView() const
     {
         return getValidReadViewImpl(mPerLevelRangeLinearCopyImageViews);
@@ -3327,12 +3319,6 @@ class ImageViewHelper final : angle::NonCopyable
     {
         return mLinearColorspace ? getReadViewImpl(mPerLevelRangeLinearReadImageViews)
                                  : getReadViewImpl(mPerLevelRangeSRGBReadImageViews);
-    }
-
-    const ImageView &getFetchImageView() const
-    {
-        return mLinearColorspace ? getReadViewImpl(mPerLevelRangeLinearFetchImageViews)
-                                 : getReadViewImpl(mPerLevelRangeSRGBFetchImageViews);
     }
 
     const ImageView &getCopyImageView() const
@@ -3362,21 +3348,6 @@ class ImageViewHelper final : angle::NonCopyable
         return mCurrentBaseMaxLevelHash < mPerLevelRangeStencilReadImageViews.size()
                    ? mPerLevelRangeStencilReadImageViews[mCurrentBaseMaxLevelHash].valid()
                    : false;
-    }
-
-    bool hasFetchImageView() const
-    {
-        if ((mLinearColorspace &&
-             mCurrentBaseMaxLevelHash < mPerLevelRangeLinearFetchImageViews.size()) ||
-            (!mLinearColorspace &&
-             mCurrentBaseMaxLevelHash < mPerLevelRangeSRGBFetchImageViews.size()))
-        {
-            return getFetchImageView().valid();
-        }
-        else
-        {
-            return false;
-        }
     }
 
     bool hasCopyImageView() const
@@ -3467,11 +3438,6 @@ class ImageViewHelper final : angle::NonCopyable
         return mLinearColorspace ? getReadViewImpl(mPerLevelRangeLinearReadImageViews)
                                  : getReadViewImpl(mPerLevelRangeSRGBReadImageViews);
     }
-    ImageView &getFetchImageView()
-    {
-        return mLinearColorspace ? getReadViewImpl(mPerLevelRangeLinearFetchImageViews)
-                                 : getReadViewImpl(mPerLevelRangeSRGBFetchImageViews);
-    }
     ImageView &getCopyImageView()
     {
         return mLinearColorspace ? getReadViewImpl(mPerLevelRangeLinearCopyImageViews)
@@ -3537,8 +3503,6 @@ class ImageViewHelper final : angle::NonCopyable
     // Read views (one per [base, max] level range)
     ImageViewVector mPerLevelRangeLinearReadImageViews;
     ImageViewVector mPerLevelRangeSRGBReadImageViews;
-    ImageViewVector mPerLevelRangeLinearFetchImageViews;
-    ImageViewVector mPerLevelRangeSRGBFetchImageViews;
     ImageViewVector mPerLevelRangeLinearCopyImageViews;
     ImageViewVector mPerLevelRangeSRGBCopyImageViews;
     ImageViewVector mPerLevelRangeStencilReadImageViews;

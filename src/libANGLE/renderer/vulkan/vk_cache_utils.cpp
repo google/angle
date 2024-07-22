@@ -6336,7 +6336,6 @@ angle::Result DescriptorSetDescBuilder::updateFullActiveTextures(
     const gl::ProgramExecutable &executable,
     const gl::ActiveTextureArray<TextureVk *> &textures,
     const gl::SamplerBindingVector &samplers,
-    bool emulateSeamfulCubeMapSampling,
     PipelineType pipelineType,
     const SharedDescriptorSetCacheKey &sharedCacheKey)
 {
@@ -6414,26 +6413,10 @@ angle::Result DescriptorSetDescBuilder::updateFullActiveTextures(
 
                 mHandles[infoIndex].sampler = samplerHelper.get().getHandle();
 
-                // __samplerExternal2DY2YEXT cannot be used with
-                // emulateSeamfulCubeMapSampling because that's only enabled in GLES == 2.
-                // Use the read image view here anyway.
-                if (emulateSeamfulCubeMapSampling && !isSamplerExternalY2Y)
-                {
-                    // If emulating seamful cube mapping, use the fetch image view.  This is
-                    // basically the same image view as read, except it's a 2DArray view for
-                    // cube maps.
-                    const ImageView &imageView =
-                        textureVk->getFetchImageView(context, samplerState.getSRGBDecode(),
-                                                     samplerUniform.isTexelFetchStaticUse());
-                    mHandles[infoIndex].imageView = imageView.getHandle();
-                }
-                else
-                {
-                    const ImageView &imageView = textureVk->getReadImageView(
-                        context, samplerState.getSRGBDecode(),
-                        samplerUniform.isTexelFetchStaticUse(), isSamplerExternalY2Y);
-                    mHandles[infoIndex].imageView = imageView.getHandle();
-                }
+                const ImageView &imageView = textureVk->getReadImageView(
+                    context, samplerState.getSRGBDecode(), samplerUniform.isTexelFetchStaticUse(),
+                    isSamplerExternalY2Y);
+                mHandles[infoIndex].imageView = imageView.getHandle();
             }
         }
     }

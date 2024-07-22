@@ -1913,7 +1913,6 @@ class DescriptorSetDescBuilder final
                                            const gl::ProgramExecutable &executable,
                                            const gl::ActiveTextureArray<TextureVk *> &textures,
                                            const gl::SamplerBindingVector &samplers,
-                                           bool emulateSeamfulCubeMapSampling,
                                            PipelineType pipelineType,
                                            const SharedDescriptorSetCacheKey &sharedCacheKey);
 

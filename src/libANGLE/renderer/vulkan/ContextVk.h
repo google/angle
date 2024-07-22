@@ -506,8 +506,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         return angle::Result::Continue;
     }
 
-    bool emulateSeamfulCubeMapSampling() const { return mEmulateSeamfulCubeMapSampling; }
-
     const gl::Debug &getDebug() const { return mState.getDebug(); }
     const gl::OverlayType *getOverlay() const { return mState.getOverlay(); }
 
@@ -1551,9 +1549,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // If any host-visible buffer is written by the GPU since last submission, a barrier is inserted
     // at the end of the command buffer to make that write available to the host.
     bool mIsAnyHostVisibleBufferWritten;
-
-    // Whether this context should do seamful cube map sampling emulation.
-    bool mEmulateSeamfulCubeMapSampling;
 
     // This info is used in the descriptor update step.
     gl::ActiveTextureArray<TextureVk *> mActiveTextures;

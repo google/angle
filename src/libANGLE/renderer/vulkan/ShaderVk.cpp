@@ -70,11 +70,6 @@ std::shared_ptr<ShaderTranslateTask> ShaderVk::compile(const gl::Context *contex
         options->addAdvancedBlendEquationsEmulation = true;
     }
 
-    if (contextVk->emulateSeamfulCubeMapSampling())
-    {
-        options->emulateSeamfulCubeMapSampling = true;
-    }
-
     if (!contextVk->getFeatures().enablePrecisionQualifiers.enabled)
     {
         options->ignorePrecisionQualifiers = true;

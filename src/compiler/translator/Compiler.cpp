@@ -922,7 +922,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     // anglebug.com/42265954: The ESSL spec has a bug with images as function arguments. The
     // recommended workaround is to inline functions that accept image arguments.
     if (mShaderVersion >= 310 && !MonomorphizeUnsupportedFunctions(
-                                     this, root, &mSymbolTable, compileOptions,
+                                     this, root, &mSymbolTable,
                                      UnsupportedFunctionArgsBitSet{UnsupportedFunctionArgs::Image}))
     {
         return false;

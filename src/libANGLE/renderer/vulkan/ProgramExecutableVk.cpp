@@ -1978,7 +1978,6 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(
     vk::Context *context,
     const gl::ActiveTextureArray<TextureVk *> &textures,
     const gl::SamplerBindingVector &samplers,
-    bool emulateSeamfulCubeMapSampling,
     PipelineType pipelineType,
     UpdateDescriptorSetsBuilder *updateBuilder,
     vk::CommandBufferHelperCommon *commandBufferHelper,
@@ -1999,7 +1998,7 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(
         // Cache miss. A new cache entry has been created.
         ANGLE_TRY(fullDesc.updateFullActiveTextures(
             context, mVariableInfoMap, mTextureWriteDescriptorDescs, *mExecutable, textures,
-            samplers, emulateSeamfulCubeMapSampling, pipelineType, newSharedCacheKey));
+            samplers, pipelineType, newSharedCacheKey));
         fullDesc.updateDescriptorSet(context->getRenderer(), mTextureWriteDescriptorDescs,
                                      updateBuilder, mDescriptorSets[DescriptorSetIndex::Texture]);
     }

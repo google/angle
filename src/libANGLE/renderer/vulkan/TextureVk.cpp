@@ -3431,27 +3431,6 @@ const vk::ImageView &TextureVk::getReadImageView(vk::Context *context,
     return imageViews.getLinearReadImageView();
 }
 
-const vk::ImageView &TextureVk::getFetchImageView(vk::Context *context,
-                                                  GLenum srgbDecode,
-                                                  bool texelFetchStaticUse) const
-{
-    ASSERT(mImage->valid());
-
-    const vk::ImageViewHelper &imageViews = getImageViews();
-
-    // We don't currently support fetch for depth/stencil cube map textures.
-    ASSERT(!imageViews.hasStencilReadImageView() || !imageViews.hasFetchImageView());
-
-    if (shouldDecodeSRGB(context, srgbDecode, texelFetchStaticUse))
-    {
-        return (imageViews.hasFetchImageView() ? imageViews.getSRGBFetchImageView()
-                                               : imageViews.getSRGBReadImageView());
-    }
-
-    return (imageViews.hasFetchImageView() ? imageViews.getLinearFetchImageView()
-                                           : imageViews.getLinearReadImageView());
-}
-
 const vk::ImageView &TextureVk::getCopyImageView() const
 {
     ASSERT(mImage->valid());

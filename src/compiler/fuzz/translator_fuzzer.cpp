@@ -115,10 +115,10 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     }
     if (!IsOutputSPIRV(shaderOutput))
     {
-        hasUnsupportedOptions =
-            hasUnsupportedOptions || options.emulateSeamfulCubeMapSampling ||
-            options.useSpecializationConstant || options.addVulkanXfbEmulationSupportCode ||
-            options.roundOutputAfterDithering || options.addAdvancedBlendEquationsEmulation;
+        hasUnsupportedOptions = hasUnsupportedOptions || options.useSpecializationConstant ||
+                                options.addVulkanXfbEmulationSupportCode ||
+                                options.roundOutputAfterDithering ||
+                                options.addAdvancedBlendEquationsEmulation;
     }
     if (!IsOutputHLSL(shaderOutput))
     {

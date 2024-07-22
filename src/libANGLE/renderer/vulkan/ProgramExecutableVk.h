@@ -235,7 +235,6 @@ class ProgramExecutableVk : public ProgramExecutableImpl
     angle::Result updateTexturesDescriptorSet(vk::Context *context,
                                               const gl::ActiveTextureArray<TextureVk *> &textures,
                                               const gl::SamplerBindingVector &samplers,
-                                              bool emulateSeamfulCubeMapSampling,
                                               PipelineType pipelineType,
                                               UpdateDescriptorSetsBuilder *updateBuilder,
                                               vk::CommandBufferHelperCommon *commandBufferHelper,
