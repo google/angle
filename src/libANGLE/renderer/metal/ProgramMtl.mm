@@ -45,13 +45,13 @@ class Std140BlockLayoutEncoderFactory : public gl::CustomBlockLayoutEncoderFacto
     sh::BlockLayoutEncoder *makeEncoder() override { return new sh::Std140BlockEncoder(); }
 };
 
-class CompileMslTask final : public mtl::Context, public LinkSubTask
+class CompileMslTask final : public LinkSubTask
 {
   public:
-    CompileMslTask(DisplayMtl *displayMtl,
+    CompileMslTask(mtl::Context *context,
                    mtl::TranslatedShaderInfo *translatedMslInfo,
                    const std::map<std::string, std::string> &substitutionMacros)
-        : mtl::Context(displayMtl),
+        : mContext(context),
           mTranslatedMslInfo(translatedMslInfo),
           mSubstitutionMacros(substitutionMacros)
     {}
@@ -59,7 +59,7 @@ class CompileMslTask final : public mtl::Context, public LinkSubTask
 
     void operator()() override
     {
-        mResult = CreateMslShaderLib(this, mInfoLog, mTranslatedMslInfo, mSubstitutionMacros);
+        mResult = CreateMslShaderLib(mContext, mInfoLog, mTranslatedMslInfo, mSubstitutionMacros);
     }
 
     angle::Result getResult(const gl::Context *context, gl::InfoLog &infoLog) override
@@ -69,61 +69,15 @@ class CompileMslTask final : public mtl::Context, public LinkSubTask
             infoLog << mInfoLog.str();
         }
 
-        // Forward any errors
-        if (mErrorCode != GL_NO_ERROR)
-        {
-            mtl::GetImpl(context)->handleError(mErrorCode, mErrorMessage, mErrorFile,
-                                               mErrorFunction, mErrorLine);
-            return angle::Result::Stop;
-        }
-
         return mResult;
     }
 
-    // override mtl::ErrorHandler
-    void handleError(GLenum glErrorCode,
-                     const char *message,
-                     const char *file,
-                     const char *function,
-                     unsigned int line) override
-    {
-        mErrorCode     = glErrorCode;
-        mErrorMessage  = message;
-        mErrorFile     = file;
-        mErrorFunction = function;
-        mErrorLine     = line;
-    }
-
-    void handleError(NSError *error,
-                     const char *message,
-                     const char *file,
-                     const char *function,
-                     unsigned int line) override
-    {
-        if (!error)
-        {
-            return;
-        }
-
-        mErrorCode     = GL_INVALID_OPERATION;
-        mErrorMessage  = message;
-        mErrorFile     = file;
-        mErrorFunction = function;
-        mErrorLine     = line;
-    }
-
   private:
+    mtl::Context *mContext;
     gl::InfoLog mInfoLog;
     mtl::TranslatedShaderInfo *mTranslatedMslInfo;
     std::map<std::string, std::string> mSubstitutionMacros;
     angle::Result mResult = angle::Result::Continue;
-
-    // Error handling
-    GLenum mErrorCode          = GL_NO_ERROR;
-    const char *mErrorMessage  = nullptr;
-    const char *mErrorFile     = nullptr;
-    const char *mErrorFunction = nullptr;
-    unsigned int mErrorLine    = 0;
 };
 }  // namespace
 
@@ -368,7 +322,7 @@ angle::Result ProgramMtl::compileMslShaderLibs(
         {
             if (asyncCompile)
             {
-                subTasksOut->emplace_back(new CompileMslTask(displayMtl, translateInfo, macros));
+                subTasksOut->emplace_back(new CompileMslTask(context, translateInfo, macros));
             }
             else
             {
