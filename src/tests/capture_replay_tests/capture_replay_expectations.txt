@@ -233,24 +233,12 @@
 # Multiple tests, failures and timeout
 42264614 LINUX : VulkanExternalImageTest.UninitializedOnGLImport* = SKIP_FOR_CAPTURE
 
-# CreateEGLSync(gEGLDisplay, 12537, (nil), 1);
-42264614 LINUX : EGLSyncTest.EglClientWaitSync/* = COMPILE_FAIL
-
 # error: duplicate case value '1'
 42264614 : EGLSyncTest.GlobalFenceSync/* = COMPILE_FAIL
-
-# glGetPerfMonitorCountersAMD(0, (GLint *)gReadBuffer, (GLint *)gReadBuffer, 0, (nil));
-42264614 LINUX : Texture2DMemoryTestES3.TextureDataInLoop* = COMPILE_FAIL
-
-# glGetPerfMonitorCountersAMD(0, (GLint *)gReadBuffer, (GLint *)gReadBuffer, 0, (nil));
-42264614 LINUX : UniformBufferMemoryTest.BufferDataInLoopManyTimes/* = COMPILE_FAIL
 
 # VVL error
 42264614 LINUX : VulkanExternalImageTestES31.UninitializedOnGLImportAndStorageWrite/* = SKIP_FOR_CAPTURE
 
-# Flaky crashes
-42264614 LINUX : BufferStorageTestES3.PageSharingBuffers/* = SKIP_FOR_CAPTURE
-
-# CoherentBufferTracker deadlocks
+# CoherentBufferTracker deadlocks and flaky crashes
 42266529 LINUX : BufferDataTestES3.* = SKIP_FOR_CAPTURE
 42266529 LINUX : BufferStorageTestES3.* = SKIP_FOR_CAPTURE
