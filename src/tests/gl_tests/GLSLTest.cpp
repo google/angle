@@ -9013,6 +9013,53 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that an switch over a constant with mismatching cases works.
+TEST_P(GLSLTest_ES3, SwitchWithConstantExpr)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+out vec4 color;
+
+void main()
+{
+    float r = 0.;
+    float g = 1.;
+    float b = 0.;
+
+    switch(10)
+    {
+        case 44:
+            r = 0.5;
+        case 50:
+            break;
+    }
+
+    switch(20)
+    {
+        case 198:
+            g = 0.5;
+        default:
+            g -= 1.;
+            break;
+    }
+
+    switch(30)
+    {
+        default:
+            b = 0.5;
+        case 4:
+            b += 0.5;
+            break;
+    }
+
+    color = vec4(r, g, b, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+}
+
 // Test that a constant struct inside an expression is handled correctly.
 TEST_P(GLSLTest_ES3, ConstStructInsideExpression)
 {
