@@ -336,10 +336,12 @@ PrivateState::PrivateState(const EGLenum clientType,
                            bool bindGeneratesResourceCHROMIUM,
                            bool clientArraysEnabled,
                            bool robustResourceInit,
-                           bool programBinaryCacheEnabled)
+                           bool programBinaryCacheEnabled,
+                           bool isExternal)
     : mClientType(clientType),
       mProfileMask(profileMask),
       mClientVersion(clientVersion),
+      mIsExternal(isExternal),
       mDepthClearValue(0),
       mStencilClearValue(0),
       mScissorTest(false),
@@ -2205,7 +2207,8 @@ State::State(const State *shareContextState,
              bool programBinaryCacheEnabled,
              EGLenum contextPriority,
              bool hasRobustAccess,
-             bool hasProtectedContent)
+             bool hasProtectedContent,
+             bool isExternal)
     : mID({gIDCounter++}),
       mContextPriority(contextPriority),
       mHasRobustAccess(hasRobustAccess),
@@ -2245,7 +2248,8 @@ State::State(const State *shareContextState,
                     bindGeneratesResourceCHROMIUM,
                     clientArraysEnabled,
                     robustResourceInit,
-                    programBinaryCacheEnabled)
+                    programBinaryCacheEnabled,
+                    isExternal)
 {}
 
 State::~State() {}
