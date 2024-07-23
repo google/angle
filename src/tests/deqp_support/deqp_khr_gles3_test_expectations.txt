@@ -125,3 +125,5 @@ b/332383430 PIXEL6 VULKAN : KHR-GLES3.texture_lod_bias.texture_lod_bias_all = FA
 353358652 VULKAN : KHR-GLES3.cull_distance.functional_test_item_6_primitive_mode_lines_max_culldist* = FAIL
 353358652 VULKAN : KHR-GLES3.cull_distance.functional_test_item_6_primitive_mode_points_max_culldist* = FAIL
 353358652 VULKAN : KHR-GLES3.cull_distance.functional_test_item_6_primitive_mode_triangles_max_culldist* = FAIL
+
+355292302 : KHR-GLES3.api.coverage* = FAIL
