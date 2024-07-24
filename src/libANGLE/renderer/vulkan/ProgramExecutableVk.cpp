@@ -399,6 +399,14 @@ void SetUniformMatrixfv(const gl::ProgramExecutable *executable,
         defaultUniformBlocksDirty->set(shaderType);
     }
 }
+
+vk::GraphicsPipelineSubset GetWarmUpSubset(const angle::FeaturesVk &features)
+{
+    // Only build the shaders subset of the pipeline if VK_EXT_graphics_pipeline_library is
+    // supported.
+    return features.supportsGraphicsPipelineLibrary.enabled ? vk::GraphicsPipelineSubset::Shaders
+                                                            : vk::GraphicsPipelineSubset::Complete;
+}
 }  // namespace
 
 class ProgramExecutableVk::WarmUpTaskCommon : public vk::Context, public LinkSubTask
@@ -935,10 +943,11 @@ angle::Result ProgramExecutableVk::getPipelineCacheWarmUpTasks(
     vk::Renderer *renderer,
     vk::PipelineRobustness pipelineRobustness,
     vk::PipelineProtectedAccess pipelineProtectedAccess,
-    vk::GraphicsPipelineSubset subset,
     std::vector<std::shared_ptr<LinkSubTask>> *postLinkSubTasksOut)
 {
     ASSERT(!postLinkSubTasksOut || postLinkSubTasksOut->empty());
+
+    const vk::GraphicsPipelineSubset subset = GetWarmUpSubset(renderer->getFeatures());
 
     bool isCompute                                        = false;
     angle::FixedVector<bool, 2> surfaceRotationVariations = {false};
@@ -1189,10 +1198,7 @@ void ProgramExecutableVk::waitForGraphicsPostLinkTasks(
         return;
     }
 
-    const vk::GraphicsPipelineSubset subset =
-        contextVk->getFeatures().supportsGraphicsPipelineLibrary.enabled
-            ? vk::GraphicsPipelineSubset::Shaders
-            : vk::GraphicsPipelineSubset::Complete;
+    const vk::GraphicsPipelineSubset subset = GetWarmUpSubset(contextVk->getFeatures());
 
     if (!mWarmUpGraphicsPipelineDesc.keyEqual(currentGraphicsPipelineDesc, subset))
     {

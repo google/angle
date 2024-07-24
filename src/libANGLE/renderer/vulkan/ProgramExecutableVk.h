@@ -334,17 +334,15 @@ class ProgramExecutableVk : public ProgramExecutableImpl
 
     angle::Result warmUpPipelineCache(vk::Renderer *renderer,
                                       vk::PipelineRobustness pipelineRobustness,
-                                      vk::PipelineProtectedAccess pipelineProtectedAccess,
-                                      vk::GraphicsPipelineSubset subset)
+                                      vk::PipelineProtectedAccess pipelineProtectedAccess)
     {
         return getPipelineCacheWarmUpTasks(renderer, pipelineRobustness, pipelineProtectedAccess,
-                                           subset, nullptr);
+                                           nullptr);
     }
     angle::Result getPipelineCacheWarmUpTasks(
         vk::Renderer *renderer,
         vk::PipelineRobustness pipelineRobustness,
         vk::PipelineProtectedAccess pipelineProtectedAccess,
-        vk::GraphicsPipelineSubset subset,
         std::vector<std::shared_ptr<LinkSubTask>> *postLinkSubTasksOut);
 
     void waitForPostLinkTasks(const gl::Context *context) override
