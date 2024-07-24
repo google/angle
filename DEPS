@@ -1080,6 +1080,11 @@ deps = {
     'condition': 'checkout_android and not build_with_chromium',
   },
 
+  'tools/rust': {
+    'url': Var('chromium_git') + '/chromium/src/tools/rust.git@402380629f9854b05753084c0867c6c6804f3979',
+    'condition': 'not build_with_chromium',
+  },
+
   'tools/skia_goldctl/linux': {
       'packages': [
         {
@@ -5503,6 +5508,13 @@ hooks = [
     'name': 'clang',
     'pattern': '.',
     'action': ['python3', 'tools/clang/scripts/update.py'],
+    'condition': 'not build_with_chromium',
+  },
+
+  {
+    'name': 'rust',
+    'pattern': '.',
+    'action': ['python3', 'tools/rust/update_rust.py'],
     'condition': 'not build_with_chromium',
   },
 
