@@ -128,16 +128,18 @@ angle::Result OffscreenSurfaceWgpu::initializeImpl(const egl::Display *display)
 
     if (config->renderTargetFormat != GL_NONE)
     {
-        ASSERT(config->renderTargetFormat == GL_RGBA8);
-        wgpu::TextureDescriptor desc = mColorAttachment.texture.createTextureDescriptor(
+        const webgpu::Format &webgpuFormat = displayWgpu->getFormat(config->renderTargetFormat);
+        wgpu::TextureDescriptor desc       = mColorAttachment.texture.createTextureDescriptor(
             kSurfaceTextureUsage, wgpu::TextureDimension::e2D,
             {static_cast<uint32_t>(mWidth), static_cast<uint32_t>(mHeight), 1},
-            wgpu::TextureFormat::RGBA8Unorm, 1, 1);
+            webgpuFormat.getActualWgpuTextureFormat(), 1, 1);
 
         constexpr uint32_t level = 0;
         constexpr uint32_t layer = 0;
 
-        ANGLE_TRY(mColorAttachment.texture.initImage(device, gl::LevelIndex(level), desc));
+        ANGLE_TRY(mColorAttachment.texture.initImage(webgpuFormat.getIntendedFormatID(),
+                                                     webgpuFormat.getActualImageFormatID(), device,
+                                                     gl::LevelIndex(level), desc));
 
         wgpu::TextureView view;
         ANGLE_TRY(mColorAttachment.texture.createTextureView(gl::LevelIndex(level), layer, view));

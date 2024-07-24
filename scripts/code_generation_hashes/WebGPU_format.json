@@ -6,7 +6,7 @@
   "src/libANGLE/renderer/wgpu/gen_wgpu_format_table.py":
     "5ec5376c04a7c2cfce02a82fe87dc1d9",
   "src/libANGLE/renderer/wgpu/wgpu_format_map.json":
-    "37ca3fe3064c0adad7cf937dda390bf4",
+    "af56c5e97b61b2a6610075b6c7132b7e",
   "src/libANGLE/renderer/wgpu/wgpu_format_table_autogen.cpp":
-    "ce5c19714c5912592bcda82c8932074a"
+    "e2dfcc4e8faf1889b6eba2d72d75c369"
 }

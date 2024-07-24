@@ -15,6 +15,7 @@
 
 #include "libANGLE/renderer/DisplayImpl.h"
 #include "libANGLE/renderer/ShareGroupImpl.h"
+#include "libANGLE/renderer/wgpu/wgpu_format_utils.h"
 
 namespace rx
 {
@@ -97,6 +98,11 @@ class DisplayWgpu : public DisplayImpl
 
     std::map<EGLNativeWindowType, wgpu::Surface> &getSurfaceCache() { return mSurfaceCache; }
 
+    const webgpu::Format &getFormat(GLenum internalFormat) const
+    {
+        return mFormatTable[internalFormat];
+    }
+
   private:
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;
@@ -114,6 +120,8 @@ class DisplayWgpu : public DisplayImpl
     // ANGLE tests re-create EGL surfaces for the same window each test. As a workaround, cache the
     // wgpu::Surface created for each window for the lifetime of the display.
     std::map<EGLNativeWindowType, wgpu::Surface> mSurfaceCache;
+
+    webgpu::FormatTable mFormatTable;
 };
 
 }  // namespace rx

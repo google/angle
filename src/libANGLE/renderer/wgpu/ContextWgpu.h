@@ -16,6 +16,7 @@
 #include "libANGLE/renderer/ContextImpl.h"
 #include "libANGLE/renderer/wgpu/DisplayWgpu.h"
 #include "libANGLE/renderer/wgpu/wgpu_command_buffer.h"
+#include "libANGLE/renderer/wgpu/wgpu_format_utils.h"
 #include "libANGLE/renderer/wgpu/wgpu_pipeline_state.h"
 #include "libANGLE/renderer/wgpu/wgpu_utils.h"
 
@@ -265,6 +266,10 @@ class ContextWgpu : public ContextImpl
     wgpu::Queue &getQueue() { return mDisplay->getQueue(); }
     wgpu::Instance &getInstance() { return mDisplay->getInstance(); }
     angle::ImageLoadContext &getImageLoadContext() { return mImageLoadContext; }
+    const webgpu::Format &getFormat(GLenum internalFormat) const
+    {
+        return mDisplay->getFormat(internalFormat);
+    }
     angle::Result startRenderPass(const wgpu::RenderPassDescriptor &desc);
     angle::Result endRenderPass(webgpu::RenderPassClosureReason closureReason);
 

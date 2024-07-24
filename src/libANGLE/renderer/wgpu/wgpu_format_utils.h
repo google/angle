@@ -90,6 +90,7 @@ class Format final : private angle::NonCopyable
     }
 
   private:
+    friend class FormatTable;
     // This is an auto-generated method in vk_format_table_autogen.cpp.
     void initialize(const angle::Format &intendedAngleFormat);
 
@@ -109,6 +110,33 @@ class Format final : private angle::NonCopyable
 
     bool mVertexLoadRequiresConversion;
     bool mIsRenderable;
+};
+
+bool operator==(const Format &lhs, const Format &rhs);
+bool operator!=(const Format &lhs, const Format &rhs);
+
+class FormatTable final : angle::NonCopyable
+{
+  public:
+    FormatTable();
+    ~FormatTable();
+
+    void initialize();
+
+    ANGLE_INLINE const Format &operator[](GLenum internalFormat) const
+    {
+        angle::FormatID formatID = angle::Format::InternalFormatToID(internalFormat);
+        return mFormatData[static_cast<size_t>(formatID)];
+    }
+
+    ANGLE_INLINE const Format &operator[](angle::FormatID formatID) const
+    {
+        return mFormatData[static_cast<size_t>(formatID)];
+    }
+
+  private:
+    // The table data is indexed by angle::FormatID.
+    std::array<Format, angle::kNumANGLEFormats> mFormatData;
 };
 }  // namespace webgpu
 }  // namespace rx

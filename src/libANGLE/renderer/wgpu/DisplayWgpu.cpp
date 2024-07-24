@@ -35,6 +35,7 @@ egl::Error DisplayWgpu::initialize(egl::Display *display)
         return create_device_err;
     }
     mQueue = mDevice.GetQueue();
+    mFormatTable.initialize();
     return egl::NoError();
 }
 

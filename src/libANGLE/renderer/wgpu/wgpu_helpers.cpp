@@ -32,18 +32,18 @@ wgpu::TextureDescriptor TextureDescriptorFromTexture(const wgpu::Texture &textur
 }
 }  // namespace
 
-ImageHelper::ImageHelper()
-{
-    // TODO: support more TextureFormats.
-    mViewFormats.push_back(wgpu::TextureFormat::RGBA8Unorm);
-}
+ImageHelper::ImageHelper() {}
 
 ImageHelper::~ImageHelper() {}
 
-angle::Result ImageHelper::initImage(wgpu::Device &device,
+angle::Result ImageHelper::initImage(angle::FormatID intendedFormatID,
+                                     angle::FormatID actualFormatID,
+                                     wgpu::Device &device,
                                      gl::LevelIndex firstAllocatedLevel,
                                      wgpu::TextureDescriptor textureDescriptor)
 {
+    mIntendedFormatID    = intendedFormatID;
+    mActualFormatID      = actualFormatID;
     mTextureDescriptor   = textureDescriptor;
     mFirstAllocatedLevel = firstAllocatedLevel;
     mTexture             = device.CreateTexture(&mTextureDescriptor);
@@ -135,12 +135,13 @@ wgpu::TextureDescriptor ImageHelper::createTextureDescriptor(wgpu::TextureUsage 
     textureDescriptor.format                  = format;
     textureDescriptor.mipLevelCount           = mipLevelCount;
     textureDescriptor.sampleCount             = sampleCount;
-    textureDescriptor.viewFormatCount         = mViewFormats.size();
-    textureDescriptor.viewFormats = reinterpret_cast<wgpu::TextureFormat *>(mViewFormats.data());
+    textureDescriptor.viewFormatCount         = 0;
     return textureDescriptor;
 }
 
 angle::Result ImageHelper::stageTextureUpload(ContextWgpu *contextWgpu,
+                                              const webgpu::Format &webgpuFormat,
+                                              GLenum type,
                                               const gl::Extents &glExtents,
                                               GLuint inputRowPitch,
                                               GLuint inputDepthPitch,
@@ -160,7 +161,7 @@ angle::Result ImageHelper::stageTextureUpload(ContextWgpu *contextWgpu,
     BufferHelper bufferHelper;
     wgpu::BufferUsage usage = wgpu::BufferUsage::CopySrc | wgpu::BufferUsage::CopyDst;
     ANGLE_TRY(bufferHelper.initBuffer(device, allocationSize, usage, MapAtCreation::Yes));
-    LoadImageFunctionInfo loadFunctionInfo = {angle::LoadToNative<GLubyte, 4>, false};
+    LoadImageFunctionInfo loadFunctionInfo = webgpuFormat.getTextureLoadFunction(type);
     uint8_t *data                          = bufferHelper.getMapWritePointer(0, allocationSize);
     loadFunctionInfo.loadFunction(contextWgpu->getImageLoadContext(), glExtents.width,
                                   glExtents.height, glExtents.depth, pixels, inputRowPitch,
@@ -174,25 +175,22 @@ angle::Result ImageHelper::stageTextureUpload(ContextWgpu *contextWgpu,
     imageCopyBuffer.layout = textureDataLayout;
     imageCopyBuffer.buffer = bufferHelper.getBuffer();
     SubresourceUpdate subresourceUpdate(UpdateSource::Texture, levelGL, imageCopyBuffer);
-    mSubresourceQueue.push_back(subresourceUpdate);
+    mSubresourceQueue.emplace_back(std::move(subresourceUpdate));
     return angle::Result::Continue;
 }
 
 void ImageHelper::stageClear(gl::LevelIndex targetLevel, ClearValues clearValues)
 {
     SubresourceUpdate subresourceUpdate(UpdateSource::Clear, targetLevel, clearValues);
-    mSubresourceQueue.push_back(subresourceUpdate);
+    mSubresourceQueue.emplace_back(std::move(subresourceUpdate));
 }
 
 void ImageHelper::removeStagedUpdates(gl::LevelIndex levelToRemove)
 {
-    for (auto it = mSubresourceQueue.begin(); it != mSubresourceQueue.end(); it++)
-    {
-        if (it->updateSource == UpdateSource::Texture && it->targetLevel == levelToRemove)
-        {
-            mSubresourceQueue.erase(it);
-        }
-    }
+    std::erase_if(mSubresourceQueue, [levelToRemove](const SubresourceUpdate &subUpdate) {
+        return subUpdate.updateSource == UpdateSource::Texture &&
+               subUpdate.targetLevel == levelToRemove;
+    });
 }
 
 void ImageHelper::resetImage()
