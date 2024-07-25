@@ -41,6 +41,7 @@
 #include "compiler/translator/tree_ops/InitializeVariables.h"
 #include "compiler/translator/tree_ops/MonomorphizeUnsupportedFunctions.h"
 #include "compiler/translator/tree_ops/PruneEmptyCases.h"
+#include "compiler/translator/tree_ops/PruneInfiniteLoops.h"
 #include "compiler/translator/tree_ops/PruneNoOps.h"
 #include "compiler/translator/tree_ops/RemoveArrayLengthMethod.h"
 #include "compiler/translator/tree_ops/RemoveDynamicIndexing.h"
@@ -1043,6 +1044,15 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     if (!SeparateDeclarations(*this, *root))
     {
         return false;
+    }
+
+    // Attempt to reject shaders with infinite loops in WebGL contexts.
+    if (IsWebGLBasedSpec(mShaderSpec))
+    {
+        if (!PruneInfiniteLoops(this, root, &mSymbolTable))
+        {
+            return false;
+        }
     }
 
     if (compileOptions.rescopeGlobalVariables)
