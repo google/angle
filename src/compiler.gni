@@ -155,6 +155,8 @@ angle_translator_sources = [
   "src/compiler/translator/tree_ops/PreTransformTextureCubeGradDerivatives.h",
   "src/compiler/translator/tree_ops/PruneEmptyCases.cpp",
   "src/compiler/translator/tree_ops/PruneEmptyCases.h",
+  "src/compiler/translator/tree_ops/PruneInfiniteLoops.cpp",
+  "src/compiler/translator/tree_ops/PruneInfiniteLoops.h",
   "src/compiler/translator/tree_ops/PruneNoOps.cpp",
   "src/compiler/translator/tree_ops/PruneNoOps.h",
   "src/compiler/translator/tree_ops/RecordConstantPrecision.cpp",

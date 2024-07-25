@@ -9060,6 +9060,110 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
 }
 
+// Test that basic infinite loops are pruned in WebGL
+TEST_P(WebGL2GLSLTest, BasicInfiniteLoop)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+uniform uint zero;
+out vec4 color;
+
+bool globalConstantVariable = true;
+
+float f()
+{
+    // Should not be pruned
+    while (true)
+    {
+        // Should not be pruned
+        for (int i = 0; true; ++i)
+        {
+            if (zero < 10u)
+            {
+                switch (zero)
+                {
+                    case 0u:
+                        // Loops should be pruned because of this `return`.
+                        return 0.7;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+}
+
+void main()
+{
+    float r = 0.;
+    float g = 1.;
+    float b = 0.;
+
+    bool localConstantVariable = true;
+    bool localVariable = true;
+
+    // Should be pruned
+    while (true)
+    {
+        r += 0.1;
+        if (r > 0.)
+        {
+            continue;
+        }
+    }
+
+    if (zero != 0u)
+    {
+        localVariable = false;
+    }
+
+    // Should be pruned
+    while (localConstantVariable)
+    {
+        g -= 0.1;
+    }
+
+    // Should not be pruned
+    while (localConstantVariable)
+    {
+        b += 0.3;
+
+        if (g > 0.4) { break; }
+    }
+
+    // Should be pruned
+    for (; globalConstantVariable; )
+    {
+        g -= 0.1;
+
+        switch (zero)
+        {
+            case 0u:
+                r = 0.4;
+                break;
+            default:
+                r = 0.2;
+                break;
+        }
+    }
+
+    // Should not be pruned
+    while (localVariable)
+    {
+        b += 0.2;
+        localVariable = !localVariable;
+    }
+
+    r = f();
+
+    color = vec4(r, g, b, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_NEAR(0, 0, 178, 255, 127, 255, 1);
+}
+
 // Test that a constant struct inside an expression is handled correctly.
 TEST_P(GLSLTest_ES3, ConstStructInsideExpression)
 {
