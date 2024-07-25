@@ -43,7 +43,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '834617e372fd337104559ac67a5ee775c89ff806',
+  'chromium_revision': '99513aa4b41c0d6a0cbbcb9b04d1202781e5f4d8',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -421,7 +421,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': Var('chromium_git') + '/chromium/src/build.git@9a62bcfa010568c600b3fe3a56710dc953a1b4af',
+    'url': Var('chromium_git') + '/chromium/src/build.git@35253acb1164c8fad32a348a06d06829673e9aa6',
     'condition': 'not build_with_chromium',
   },
 
@@ -480,7 +480,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@9bcf8df7569bcdcf073035772bbd1932e0aa77af',
+    'url': '{chromium_git}/chromium/src/testing@417cb6c72d7bcc48b899f535bf589da3d9a2a320',
     'condition': 'not build_with_chromium',
   },
 
@@ -1015,12 +1015,12 @@ deps = {
   },
 
   'tools/android': {
-    'url': Var('chromium_git') + '/chromium/src/tools/android@4ecf6edf92f75a486837f495e3324d4bb13692f9',
+    'url': Var('chromium_git') + '/chromium/src/tools/android@f2b45179485fdf156339c9662562d7b5d7b37fde',
     'condition': 'checkout_android and not build_with_chromium',
   },
 
   'tools/clang': {
-    'url': Var('chromium_git') + '/chromium/src/tools/clang.git@2f3ab4339edbf023b6bd27d91e976dd566464037',
+    'url': Var('chromium_git') + '/chromium/src/tools/clang.git@f6b4d995d2a935b41b6d824b15de8a0dfd2eaf5f',
     'condition': 'not build_with_chromium',
   },
 
@@ -1066,7 +1066,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': Var('chromium_git') + '/chromium/src/tools/perf@117d61e33fb9cd45d34f949a4d76f35b98896f88',
+    'url': Var('chromium_git') + '/chromium/src/tools/perf@fc8f1176dddb704d6b17a9662b11769192edfd11',
     'condition': 'not build_with_chromium',
   },
 
