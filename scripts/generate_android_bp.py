@@ -193,7 +193,6 @@ def gn_sources_to_blueprint_sources(sources):
 
 target_blockist = [
     '//build/config:shared_library_deps',
-    '//third_party/vulkan-validation-layers/src:vulkan_clean_old_validation_layer_objects',
     '//third_party/zlib:zlib',
     '//third_party/zlib/google:compression_utils_portable',
 ]
