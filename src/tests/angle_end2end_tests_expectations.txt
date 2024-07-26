@@ -926,7 +926,7 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 42265148 MAC INTEL OPENGL : DrawTextureTest.CorrectNdcForOddViewportDimensions/* = SKIP
 
 // Indexed indirect draw offset bug
-42265912 D3D11 : DrawBaseInstanceTest.DrawElementsInstancedBaseInstance/ES3_D3D11__DynamicDraw* = SKIP
+42265912 D3D11 : DrawBaseInstanceTest.DrawElementsInstancedBaseInstance/ES3_D3D11_*__DynamicDraw* = SKIP
 
 // ASAN flakes with Vulkan / SwiftShader / AsyncCommandQueue
 42265368 ASAN VULKAN SWIFTSHADER : ComputeShaderTest.*/ES3_1_Vulkan_SwiftShader_AsyncCommandQueue* = SKIP
