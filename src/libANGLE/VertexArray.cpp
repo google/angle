@@ -29,7 +29,7 @@ bool IsElementArrayBufferSubjectIndex(angle::SubjectIndex subjectIndex)
 VertexArrayState::VertexArrayState(VertexArray *vertexArray,
                                    size_t maxAttribs,
                                    size_t maxAttribBindings)
-    : mId(vertexArray->id()), mElementArrayBuffer(vertexArray, kElementArrayBufferIndex)
+    : mElementArrayBuffer(vertexArray, kElementArrayBufferIndex)
 {
     ASSERT(maxAttribs <= maxAttribBindings);
 
@@ -102,11 +102,6 @@ void VertexArrayState::updateCachedMutableOrNonPersistentArrayBuffers(size_t ind
         buffer.get() &&
         (!buffer->isImmutable() || (buffer->getAccessFlags() & GL_MAP_PERSISTENT_BIT_EXT) == 0);
     mCachedMutableOrImpersistentArrayBuffers.set(index, isMutableOrImpersistentArrayBuffer);
-}
-
-bool VertexArrayState::isDefault() const
-{
-    return mId.value == 0;
 }
 
 // VertexArray implementation.
@@ -208,7 +203,7 @@ bool VertexArray::detachBuffer(const Context *context, BufferID bufferID)
             mArrayBufferObserverBindings[bindingIndex].reset();
             mState.mBufferBindingMask.reset(bindingIndex);
 
-            if (context->getClientVersion() >= ES_3_1 && !mState.isDefault())
+            if (context->getClientVersion() >= ES_3_1)
             {
                 setDirtyBindingBit(bindingIndex, DIRTY_BINDING_BUFFER);
             }
@@ -443,7 +438,7 @@ void VertexArray::setVertexAttribBinding(const Context *context,
     }
 
     // In ES 3.0 contexts, the binding cannot change, hence the code below is unreachable.
-    ASSERT(context->getClientVersion() >= ES_3_1 && !mState.isDefault());
+    ASSERT(context->getClientVersion() >= ES_3_1);
 
     mState.setAttribBinding(context, attribIndex, bindingIndex);
 
@@ -588,12 +583,6 @@ ANGLE_INLINE void VertexArray::setVertexAttribPointerImpl(const Context *context
     // attribute dirty. This notifies the Vulkan back-end to update all its caches.
     const VertexBinding &binding = mState.mVertexBindings[attribIndex];
     if ((boundBuffer == nullptr) != (binding.getBuffer().get() == nullptr))
-    {
-        attribDirty = true;
-    }
-
-    // If using client arrays and the pointer changes, set the attribute as dirty
-    if (boundBuffer == nullptr && attrib.pointer != pointer)
     {
         attribDirty = true;
     }

@@ -145,15 +145,9 @@ BufferImpl *ContextGL::createBuffer(const gl::BufferState &state)
 
 VertexArrayImpl *ContextGL::createVertexArray(const gl::VertexArrayState &data)
 {
-    const FunctionsGL *functions      = getFunctions();
     const angle::FeaturesGL &features = getFeaturesGL();
 
-    // Use the shared default vertex array when forced to for workarounds
-    // (syncAllVertexArraysToDefault) or for the frontend default vertex array so that client data
-    // can be used directly
-    if (features.syncAllVertexArraysToDefault.enabled ||
-        (features.syncDefaultVertexArraysToDefault.enabled && data.isDefault() &&
-         mState.areClientArraysEnabled()))
+    if (features.syncVertexArraysToDefault.enabled)
     {
         StateManagerGL *stateManager = getStateManager();
 
@@ -162,6 +156,8 @@ VertexArrayImpl *ContextGL::createVertexArray(const gl::VertexArrayState &data)
     }
     else
     {
+        const FunctionsGL *functions = getFunctions();
+
         GLuint vao = 0;
         functions->genVertexArrays(1, &vao);
         return new VertexArrayGL(data, vao);

@@ -1416,7 +1416,7 @@ void GenerateCaps(const FunctionsGL *functions,
     }
 
     if (!nativegl::SupportsVertexArrayObjects(functions) ||
-        features.syncAllVertexArraysToDefault.enabled)
+        features.syncVertexArraysToDefault.enabled)
     {
         // ES 3.1 vertex bindings are not emulated on the default vertex array
         LimitVersion(maxSupportedESVersion, gl::Version(3, 0));
@@ -2558,12 +2558,8 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // now.
     ANGLE_FEATURE_CONDITION(features, shiftInstancedArrayDataWithOffset,
                             IsApple() && IsIntel(vendor) && !IsHaswell(device));
-    ANGLE_FEATURE_CONDITION(features, syncAllVertexArraysToDefault,
+    ANGLE_FEATURE_CONDITION(features, syncVertexArraysToDefault,
                             !nativegl::SupportsVertexArrayObjects(functions));
-
-    // NVIDIA OpenGL ES emulated profile cannot handle client arrays
-    ANGLE_FEATURE_CONDITION(features, syncDefaultVertexArraysToDefault,
-                            nativegl::CanUseDefaultVertexArrayObject(functions) && !isNvidia);
 
     // http://crbug.com/1181193
     // On desktop Linux/AMD when using the amdgpu drivers, the precise kernel and DRM version are
@@ -2786,12 +2782,6 @@ bool SupportsVertexArrayObjects(const FunctionsGL *functions)
 bool CanUseDefaultVertexArrayObject(const FunctionsGL *functions)
 {
     return (functions->profile & GL_CONTEXT_CORE_PROFILE_BIT) == 0;
-}
-
-bool CanUseClientSideArrays(const FunctionsGL *functions, GLuint vao)
-{
-    // Can use client arrays on GLES or GL compatability profile only on the default VAO
-    return CanUseDefaultVertexArrayObject(functions) && vao == 0;
 }
 
 bool SupportsCompute(const FunctionsGL *functions)

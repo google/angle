@@ -527,18 +527,11 @@ struct FeaturesGL : FeatureSetBase
         &members, "http://crbug.com/1144207"
     };
 
-    FeatureInfo syncAllVertexArraysToDefault = {
-        "syncAllVertexArraysToDefault",
+    FeatureInfo syncVertexArraysToDefault = {
+        "syncVertexArraysToDefault",
         FeatureCategory::OpenGLWorkarounds,
         "Only use the default VAO because of missing support or driver bugs",
         &members, "http://anglebug.com/40096758"
-    };
-
-    FeatureInfo syncDefaultVertexArraysToDefault = {
-        "syncDefaultVertexArraysToDefault",
-        FeatureCategory::OpenGLWorkarounds,
-        "Sync all frontend vertex array objects to the driver default vertex array",
-        &members, "http://anglebug.com/355034686"
     };
 
     FeatureInfo sanitizeAMDGPURendererString = {
