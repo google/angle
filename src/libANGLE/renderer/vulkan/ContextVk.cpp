@@ -1853,7 +1853,7 @@ bool ContextVk::renderPassUsesStorageResources() const
     const gl::ProgramExecutable *executable = mState.getProgramExecutable();
     ASSERT(executable);
 
-    if (!hasActiveRenderPass())
+    if (!mRenderPassCommands->started())
     {
         return false;
     }

@@ -3095,6 +3095,9 @@ void main()
     glInvalidateFramebuffer(GL_DRAW_FRAMEBUFFER, 1, &invalidateAttachment);
     EXPECT_GL_NO_ERROR();
 
+    // Issue a memory barrier before writing to the image again.
+    glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+
     // Write to it with a compute shader
     glDispatchCompute(1, 1, 1);
     EXPECT_GL_NO_ERROR();
@@ -3158,6 +3161,9 @@ void main()
     GLenum invalidateAttachment = GL_COLOR_ATTACHMENT0;
     glInvalidateFramebuffer(GL_DRAW_FRAMEBUFFER, 1, &invalidateAttachment);
     EXPECT_GL_NO_ERROR();
+
+    // Issue a memory barrier before writing to the image again.
+    glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
     // Write to it with a compute shader
     glDispatchCompute(1, 1, 1);
@@ -5278,6 +5284,79 @@ TEST_P(SimpleStateChangeTestComputeES31, DispatchImageTextureAThenTextureBThenTe
     glMemoryBarrier(GL_FRAMEBUFFER_BARRIER_BIT);
     EXPECT_PIXEL_RECT_EQ(0, 0, 2, 2, GLColor::cyan);
     ASSERT_GL_NO_ERROR();
+}
+
+// Tests that glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT) after draw works, where the render
+// pass is marked as closed.
+TEST_P(SimpleStateChangeTestES31, DrawThenChangeFBOThenStorageWrite)
+{
+    // Create a framebuffer for the purpose of switching FBOs
+    GLTexture clearColor;
+    glBindTexture(GL_TEXTURE_2D, clearColor);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 1, 1);
+
+    GLFramebuffer clearFBO;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, clearFBO);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, clearColor, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_DRAW_FRAMEBUFFER);
+    EXPECT_GL_NO_ERROR();
+
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1) in;
+layout (rgba8, binding = 1) writeonly uniform highp image2D dstImage;
+void main()
+{
+    imageStore(dstImage, ivec2(gl_GlobalInvocationID.xy), vec4(0.0f, 1.0f, 1.0f, 1.0f));
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+    glUseProgram(program);
+    EXPECT_GL_NO_ERROR();
+
+    // Create the framebuffer texture
+    GLTexture renderTarget;
+    glBindTexture(GL_TEXTURE_2D, renderTarget);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 1, 1);
+    glBindImageTexture(1, renderTarget, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA8);
+
+    // Write to the texture with compute once.  In the Vulkan backend, this will make sure the image
+    // is already created with STORAGE usage and avoids recreate later.
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_FRAMEBUFFER_BARRIER_BIT);
+
+    // Create the framebuffer for this texture
+    GLFramebuffer drawFBO;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, renderTarget,
+                           0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_DRAW_FRAMEBUFFER);
+    EXPECT_GL_NO_ERROR();
+
+    // Draw to this framebuffer to start a render pass
+    ANGLE_GL_PROGRAM(drawProgram, essl31_shaders::vs::Simple(), essl31_shaders::fs::Red());
+    drawQuad(drawProgram, essl31_shaders::PositionAttrib(), 0.5f);
+
+    // Change framebuffers and do a clear, making sure the old render pass is marked as closed.  In
+    // the Vulkan backend, the clear is stashed, so the render pass is kept in the hopes of reviving
+    // it later.
+
+    glBindFramebuffer(GL_FRAMEBUFFER, clearFBO);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Issue a memory barrier before writing to the original image again.
+    glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+
+    // Write to it with a compute shader
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_FRAMEBUFFER_BARRIER_BIT);
+
+    // Bind the original framebuffer and verify that the compute shader wrote the correct value.
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, drawFBO);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
 }
 
 // Copied from SimpleStateChangeTestComputeES31::DeleteImageTextureInUse
