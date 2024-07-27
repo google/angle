@@ -1336,6 +1336,14 @@ struct FeaturesVk : FeatureSetBase
         &members, "http://anglebug.com/8503"
     };
 
+    FeatureInfo wrapSwitchInIfTrue = {
+        "wrapSwitchInIfTrue",
+        FeatureCategory::VulkanWorkarounds,
+        "On some drivers, nested switch statements are mishandled which can be worked around "
+        "by wrapping them in if(true)",
+        &members, "http://crbug.com/350528343"
+    };
+
     FeatureInfo disableDepthStencilResolveThroughAttachment = {
         "disableDepthStencilResolveThroughAttachment",
         FeatureCategory::VulkanWorkarounds,
