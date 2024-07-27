@@ -1465,6 +1465,15 @@
             "issue": "http://anglebug.com/41493495"
         },
         {
+            "name": "wrap_switch_in_if_true",
+            "category": "Workarounds",
+            "description": [
+                "On some drivers, nested switch statements are mishandled which can be worked around ",
+                "by wrapping them in if(true)"
+            ],
+            "issue": "http://crbug.com/350528343"
+        },
+        {
             "name": "disable_depth_stencil_resolve_through_attachment",
             "category": "Workarounds",
             "description": [
