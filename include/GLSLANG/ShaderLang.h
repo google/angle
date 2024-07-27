@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 353
+#define ANGLE_SH_VERSION 354
 
 enum ShShaderSpec
 {
@@ -352,6 +352,9 @@ struct ShCompileOptions
     // backend, as is done after samplers are moved out of structs.  Can likely be made to work on
     // the other backends as well.
     uint64_t emulateSeamfulCubeMapSampling : 1;
+
+    // Workaround for a driver bug with nested switches.
+    uint64_t wrapSwitchInIfTrue : 1;
 
     // This flag controls how to translate WEBGL_video_texture sampling function.
     uint64_t takeVideoTextureAsExternalOES : 1;
