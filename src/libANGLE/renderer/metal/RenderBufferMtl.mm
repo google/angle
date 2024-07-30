@@ -87,11 +87,9 @@ angle::Result RenderbufferMtl::setStorageImpl(const gl::Context *context,
                 // This format must supports implicit resolve
                 ASSERT(mFormat.getCaps().resolve);
 
-                ANGLE_TRY(mtl::Texture::Make2DMSTexture(
+                ANGLE_TRY(mtl::Texture::MakeMemoryLess2DMSTexture(
                     contextMtl, mFormat, static_cast<uint32_t>(width),
-                    static_cast<uint32_t>(height), actualSamples,
-                    /* renderTargetOnly */ true,
-                    /* allowFormatView */ mFormat.hasDepthAndStencilBits(), &mImplicitMSTexture));
+                    static_cast<uint32_t>(height), actualSamples, &mImplicitMSTexture));
             }
         }
         else
@@ -124,12 +122,6 @@ angle::Result RenderbufferMtl::setStorageImpl(const gl::Context *context,
 
             ANGLE_TRY(mtl::InitializeTextureContents(context, mTexture, mFormat,
                                                      mtl::ImageNativeIndex(index, 0)));
-            if (mImplicitMSTexture)
-            {
-                ANGLE_TRY(mtl::InitializeTextureContents(
-                    context, mImplicitMSTexture, mFormat,
-                    mtl::ImageNativeIndex(gl::ImageIndex::Make2DMultisample(), 0)));
-            }
         }  // if (emulatedChannels)
         bool isDepthStencil = mFormat.hasDepthOrStencilBits();
         if (isDepthStencil)
@@ -145,12 +137,6 @@ angle::Result RenderbufferMtl::setStorageImpl(const gl::Context *context,
             }
             ANGLE_TRY(mtl::InitializeDepthStencilTextureContentsGPU(
                 context, mTexture, mFormat, mtl::ImageNativeIndex(index, 0)));
-            if (mImplicitMSTexture)
-            {
-                ANGLE_TRY(mtl::InitializeDepthStencilTextureContentsGPU(
-                    context, mImplicitMSTexture, mFormat,
-                    mtl::ImageNativeIndex(gl::ImageIndex::Make2DMultisample(), 0)));
-            }
         }
     }
 

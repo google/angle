@@ -1375,10 +1375,8 @@ angle::Result TextureMtl::getRenderTarget(ContextMtl *context,
         if (!msTexture)
         {
             const gl::ImageDesc &desc = mState.getImageDesc(imageIndex);
-            ANGLE_TRY(mtl::Texture::Make2DMSTexture(
-                context, mFormat, desc.size.width, desc.size.height, implicitSamples,
-                /* renderTargetOnly */ true,
-                /* allowFormatView */ mFormat.hasDepthAndStencilBits(), &msTexture));
+            ANGLE_TRY(mtl::Texture::MakeMemoryLess2DMSTexture(
+                context, mFormat, desc.size.width, desc.size.height, implicitSamples, &msTexture));
         }
         rtt.setImplicitMSTexture(msTexture);
     }

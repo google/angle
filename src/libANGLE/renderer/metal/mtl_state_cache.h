@@ -321,6 +321,11 @@ struct RenderPassAttachmentDesc
 
     ANGLE_INLINE bool hasImplicitMSTexture() const { return implicitMSTexture.get(); }
 
+    const TextureRef &getImplicitMSTextureIfAvailOrTexture() const
+    {
+        return hasImplicitMSTexture() ? implicitMSTexture : texture;
+    }
+
     TextureRef texture;
     // Implicit multisample texture that will be rendered into and discarded at the end of
     // a render pass. Its result will be resolved into normal texture above.
