@@ -670,7 +670,7 @@ void CommandQueue::onCommandBufferCompleted(id<MTLCommandBuffer> buf,
     mCompletedBufferSerialCv.notify_all();
 }
 
-uint64_t CommandQueue::getNextRenderEncoderSerial()
+uint64_t CommandQueue::getNextRenderPassEncoderSerial()
 {
     return ++mRenderEncoderCounter;
 }
@@ -1319,9 +1319,7 @@ void RenderCommandEncoderStates::reset()
 // RenderCommandEncoder implemtation
 RenderCommandEncoder::RenderCommandEncoder(CommandBuffer *cmdBuffer,
                                            const OcclusionQueryPool &queryPool)
-    : CommandEncoder(cmdBuffer, RENDER),
-      mOcclusionQueryPool(queryPool),
-      mSerial(cmdBuffer->cmdQueue().getNextRenderEncoderSerial())
+    : CommandEncoder(cmdBuffer, RENDER), mOcclusionQueryPool(queryPool)
 {
     ANGLE_MTL_OBJC_SCOPE
     {
@@ -1632,6 +1630,7 @@ RenderCommandEncoder &RenderCommandEncoder::restart(const RenderPassDesc &desc,
         return *this;
     }
 
+    mSerial                   = cmdBuffer().cmdQueue().getNextRenderPassEncoderSerial();
     mRenderPassDesc           = desc;
     mRecording                = true;
     mHasDrawCalls             = false;
