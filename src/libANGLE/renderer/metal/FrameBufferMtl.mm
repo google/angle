@@ -924,6 +924,9 @@ mtl::RenderCommandEncoder *FramebufferMtl::ensureRenderPassStarted(const gl::Con
 
     mtl::RenderCommandEncoder *encoder = contextMtl->getRenderPassCommandEncoder(desc);
 
+    // TODO(http://anglebug.com/42261786): implement EXT_multisampled_render_to_texture's unresolve
+    // step for loading resolve texture into the multisampled texture.
+
     if (mRenderPassCleanStart)
     {
         // After a clean start we should reset the loadOp to MTLLoadActionLoad in case this render

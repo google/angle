@@ -631,7 +631,7 @@
                 "writable": "false",
                 "blendable": "false",
                 "multisample": "true",
-                "resolve": "false",
+                "resolve": "supportStencilAutoResolve",
                 "colorRenderable": "false",
                 "depthRenderable": "true"
             },

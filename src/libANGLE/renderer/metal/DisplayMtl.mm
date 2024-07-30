@@ -983,19 +983,11 @@ void DisplayMtl::initializeExtensions() const
     // regular 2D textures with Metal, and causes other problems such as
     // breaking the SPIR-V Metal compiler.
 
-    // TODO(anglebug.com/42264909): figure out why WebGL drawing buffer
-    // creation fails on macOS when the Metal backend advertises the
-    // EXT_multisampled_render_to_texture extension.
-    // TODO(anglebug.com/42261786): Metal doesn't implement render to texture
-    // correctly. A texture (if used as a color attachment for a framebuffer)
-    // is always created with sample count == 1, which results in creation of a
-    // render pipeline with the same value. Moreover, if there is a more
-    // sophisticated case and a framebuffer also has a stencil/depth attachment,
-    // it will result in creation of a render pipeline with those attachment's
-    // sample count, but the texture that was used as a color attachment, will
-    // still remain with sample count 1. That results in Metal validation error
-    // if enabled.
-    mNativeExtensions.multisampledRenderToTextureEXT = false;
+    mNativeExtensions.multisampledRenderToTextureEXT =
+        (supportsAppleGPUFamily(1) ||
+         mFeatures.enableMultisampledRenderToTextureOnNonTilers.enabled) &&
+        mFeatures.hasShaderStencilOutput.enabled && mFeatures.hasDepthAutoResolve.enabled &&
+        mFeatures.hasStencilAutoResolve.enabled;
 
     // Enable EXT_blend_minmax
     mNativeExtensions.blendMinmaxEXT = true;
@@ -1357,13 +1349,6 @@ void DisplayMtl::initializeFeatures()
     // Apple-specific pre-transform for explicit cubemap derivatives
     ANGLE_FEATURE_CONDITION((&mFeatures), preTransformTextureCubeGradDerivatives,
                             supportsAppleGPUFamily(1));
-
-    // On tile-based GPUs, always resolving MSAA render buffers to single-sampled
-    // is preferred. Because it would save bandwidth by avoiding the cost of storing the MSAA
-    // textures to memory. Traditional desktop GPUs almost always store MSAA textures to memory
-    // anyway, so this feature would have no benefit besides adding additional resolve step and
-    // memory overhead of the hidden single-sampled textures.
-    ANGLE_FEATURE_CONDITION((&mFeatures), alwaysResolveMultisampleRenderBuffers, isARM);
 
     // Metal compiler optimizations may remove infinite loops causing crashes later in shader
     // execution. http://crbug.com/1513738

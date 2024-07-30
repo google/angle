@@ -1477,5 +1477,12 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 42263645 : GLSLTest.VerifyMaxFragmentUniformVectors* = TIMEOUT
 42264781 : MultithreadingTest* = TIMEOUT
 
+// Metal backend doesn't support different sized attachments.
+42261786 METAL : MultisampledRenderToTextureES3Test.MultipleLevelsMultisampleMRTDraw2DColor/* = SKIP
+// Mixing different sample count for rendering to the same texture is currently not supported in
+// Metal backend.
+42261786 METAL : MultisampledRenderToTextureTest.DrawNonMultisampledThenMultisampled/* = SKIP
+42261786 METAL : MultisampledRenderToTextureTest.DrawMultisampledDifferentSamples/* = SKIP
+
 // Please do not add expectations below this line,
 // so that TIMEOUT expectations above don't override more precise SKIP expectations

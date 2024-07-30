@@ -3807,8 +3807,9 @@ void FormatTable::initNativeFormatCapsAutogen(const DisplayMtl *display)
                   /** colorRenderable*/ true, /** depthRenderable*/ false);
 
     setFormatCaps(MTLPixelFormatStencil8, /** filterable*/ false, /** writable*/ false,
-                  /** blendable*/ false, /** multisample*/ true, /** resolve*/ false,
-                  /** colorRenderable*/ false, /** depthRenderable*/ true);
+                  /** blendable*/ false, /** multisample*/ true,
+                  /** resolve*/ supportStencilAutoResolve, /** colorRenderable*/ false,
+                  /** depthRenderable*/ true);
 
 #if TARGET_OS_OSX || TARGET_OS_MACCATALYST
     setFormatCaps(MTLPixelFormatBC1_RGBA, /** filterable*/ true, /** writable*/ false,
