@@ -947,7 +947,7 @@ angle::Result ContextWgpu::endRenderPass(webgpu::RenderPassClosureReason closure
     if (mCurrentRenderPass)
     {
         const char *reasonText = kRenderPassClosureReason[closureReason];
-        INFO() << reasonText;
+        ASSERT(reasonText);
 
         if (mCommandBuffer.hasCommands())
         {
