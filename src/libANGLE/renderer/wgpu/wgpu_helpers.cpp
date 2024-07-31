@@ -232,21 +232,22 @@ angle::Result ImageHelper::getReadPixelsParams(rx::ContextWgpu *contextWgpu,
 angle::Result ImageHelper::readPixels(rx::ContextWgpu *contextWgpu,
                                       const gl::Rectangle &area,
                                       const rx::PackPixelsParams &packPixelsParams,
-                                      const angle::Format &aspectFormat,
                                       void *pixels)
 {
     wgpu::Device device          = contextWgpu->getDisplay()->getDevice();
     wgpu::CommandEncoder encoder = device.CreateCommandEncoder();
     wgpu::Queue queue            = contextWgpu->getDisplay()->getQueue();
-    BufferHelper bufferHelper;
+
+    const angle::Format &actualFormat = angle::Format::Get(mActualFormatID);
     uint32_t textureBytesPerRow =
-        roundUp(aspectFormat.pixelBytes * area.width, kCopyBufferAlignment);
+        roundUp(actualFormat.pixelBytes * area.width, kCopyBufferAlignment);
     wgpu::TextureDataLayout textureDataLayout;
     textureDataLayout.bytesPerRow  = textureBytesPerRow;
     textureDataLayout.rowsPerImage = area.height;
 
     size_t allocationSize = textureBytesPerRow * area.height;
 
+    BufferHelper bufferHelper;
     ANGLE_TRY(bufferHelper.initBuffer(device, allocationSize,
                                       wgpu::BufferUsage::MapRead | wgpu::BufferUsage::CopyDst,
                                       MapAtCreation::No));
@@ -273,7 +274,7 @@ angle::Result ImageHelper::readPixels(rx::ContextWgpu *contextWgpu,
 
     ANGLE_TRY(bufferHelper.mapImmediate(contextWgpu, wgpu::MapMode::Read, 0, allocationSize));
     const uint8_t *readPixelBuffer = bufferHelper.getMapReadPointer(0, allocationSize);
-    PackPixels(packPixelsParams, aspectFormat, textureBytesPerRow, readPixelBuffer,
+    PackPixels(packPixelsParams, actualFormat, textureBytesPerRow, readPixelBuffer,
                static_cast<uint8_t *>(pixels));
     return angle::Result::Continue;
 }

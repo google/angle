@@ -124,7 +124,6 @@ class ImageHelper
     angle::Result readPixels(rx::ContextWgpu *contextWgpu,
                              const gl::Rectangle &area,
                              const rx::PackPixelsParams &packPixelsParams,
-                             const angle::Format &aspectFormat,
                              void *pixels);
 
     angle::Result createTextureView(gl::LevelIndex targetLevel,

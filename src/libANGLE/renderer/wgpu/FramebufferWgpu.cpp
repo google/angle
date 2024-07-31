@@ -260,15 +260,13 @@ angle::Result FramebufferWgpu::readPixels(const gl::Context *context,
 
     GLuint outputSkipBytes = 0;
     PackPixelsParams params;
-    const angle::Format &angleFormat = GetFormatFromFormatType(format, type);
     ANGLE_TRY(webgpu::ImageHelper::getReadPixelsParams(contextWgpu, pack, packBuffer, format, type,
                                                        origArea, clippedArea, &params,
                                                        &outputSkipBytes));
 
-    RenderTargetWgpu *renderTarget = getReadPixelsRenderTarget(angleFormat);
-    ANGLE_TRY(
-        renderTarget->getImage()->readPixels(contextWgpu, params.area, params, angleFormat,
-                                             static_cast<uint8_t *>(pixels) + outputSkipBytes));
+    webgpu::ImageHelper *sourceImageHelper = getReadPixelsRenderTarget()->getImage();
+    ANGLE_TRY(sourceImageHelper->readPixels(contextWgpu, params.area, params,
+                                            static_cast<uint8_t *>(pixels) + outputSkipBytes));
 
     return angle::Result::Continue;
 }
@@ -401,12 +399,8 @@ angle::Result FramebufferWgpu::getSamplePosition(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-RenderTargetWgpu *FramebufferWgpu::getReadPixelsRenderTarget(const angle::Format &format) const
+RenderTargetWgpu *FramebufferWgpu::getReadPixelsRenderTarget() const
 {
-    if (format.hasDepthOrStencilBits())
-    {
-        return mRenderTargetCache.getDepthStencil();
-    }
     return mRenderTargetCache.getColorRead(mState);
 }
 
