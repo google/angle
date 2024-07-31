@@ -91,6 +91,8 @@ class DisplayWgpu : public DisplayImpl
 
     void populateFeatureList(angle::FeatureList *features) override {}
 
+    angle::NativeWindowSystem getWindowSystem() const override;
+
     wgpu::Adapter &getAdapter() { return mAdapter; }
     wgpu::Device &getDevice() { return mDevice; }
     wgpu::Queue &getQueue() { return mQueue; }

@@ -12,6 +12,7 @@
 #include <dawn/dawn_proc.h>
 
 #include "common/debug.h"
+#include "common/platform.h"
 
 #include "libANGLE/Display.h"
 #include "libANGLE/renderer/wgpu/ContextWgpu.h"
@@ -214,6 +215,19 @@ StreamProducerImpl *DisplayWgpu::createStreamProducerD3DTexture(
 ShareGroupImpl *DisplayWgpu::createShareGroup(const egl::ShareGroupState &state)
 {
     return new ShareGroupWgpu(state);
+}
+
+angle::NativeWindowSystem DisplayWgpu::getWindowSystem() const
+{
+#if defined(ANGLE_PLATFORM_LINUX)
+#    if defined(ANGLE_USE_X11)
+    return angle::NativeWindowSystem::X11;
+#    elif defined(ANGLE_USE_WAYLAND)
+    return angle::NativeWindowSystem::Wayland;
+#    endif
+#else
+    return angle::NativeWindowSystem::Other;
+#endif
 }
 
 void DisplayWgpu::generateExtensions(egl::DisplayExtensions *outExtensions) const
