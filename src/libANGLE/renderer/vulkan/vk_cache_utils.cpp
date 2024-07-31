@@ -532,6 +532,8 @@ void DeriveRenderingInfo(Renderer *renderer,
                 VK_IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR;
             infoOut->fragmentShadingRateInfo.shadingRateAttachmentTexelSize =
                 renderer->getMaxFragmentShadingRateAttachmentTexelSize();
+
+            AddToPNextChain(&infoOut->renderingInfo, &infoOut->fragmentShadingRateInfo);
         }
     }
 }
@@ -2707,6 +2709,7 @@ angle::Result InitializePipelineFromLibraries(Context *context,
                                               const vk::PipelineHelper &vertexInputPipeline,
                                               const vk::PipelineHelper &shadersPipeline,
                                               const vk::PipelineHelper &fragmentOutputPipeline,
+                                              const vk::GraphicsPipelineDesc &desc,
                                               Pipeline *pipelineOut,
                                               CacheLookUpFeedback *feedbackOut)
 {
@@ -2714,6 +2717,11 @@ angle::Result InitializePipelineFromLibraries(Context *context,
     VkGraphicsPipelineCreateInfo createInfo = {};
     createInfo.sType                        = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
     createInfo.layout                       = pipelineLayout.getHandle();
+
+    if (context->getFeatures().preferDynamicRendering.enabled && desc.getRenderPassFoveation())
+    {
+        createInfo.flags |= VK_PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR;
+    }
 
     const std::array<VkPipeline, 3> pipelines = {
         vertexInputPipeline.getPipeline().getHandle(),
@@ -7905,7 +7913,7 @@ angle::Result GraphicsPipelineCache<Hash>::linkLibraries(
 
     ANGLE_TRY(vk::InitializePipelineFromLibraries(
         context, pipelineCache, pipelineLayout, *vertexInputPipeline, *shadersPipeline,
-        *fragmentOutputPipeline, &newPipeline, &feedback));
+        *fragmentOutputPipeline, desc, &newPipeline, &feedback));
 
     addToCache(PipelineSource::DrawLinked, desc, std::move(newPipeline), feedback, descPtrOut,
                pipelineOut);
