@@ -7359,9 +7359,12 @@ angle::Result ContextVk::initBufferForVertexConversion(vk::BufferHelper *bufferH
 {
     if (bufferHelper->valid())
     {
-        // If size is big enough and it is idle, then just reuse the existing buffer.
+        // If size is big enough and it is idle, then just reuse the existing buffer. Or if current
+        // render pass uses the buffer, try to allocate a new one to avoid breaking the render pass.
         if (size <= bufferHelper->getSize() &&
-            (hostVisibility == vk::MemoryHostVisibility::Visible) == bufferHelper->isHostVisible())
+            (hostVisibility == vk::MemoryHostVisibility::Visible) ==
+                bufferHelper->isHostVisible() &&
+            !isRenderPassStartedAndUsesBuffer(*bufferHelper))
         {
             if (mRenderer->hasResourceUseFinished(bufferHelper->getResourceUse()))
             {
