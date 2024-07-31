@@ -52,8 +52,12 @@ angle::Result ImageHelper::initImage(angle::FormatID intendedFormatID,
     return angle::Result::Continue;
 }
 
-angle::Result ImageHelper::initExternal(wgpu::Texture externalTexture)
+angle::Result ImageHelper::initExternal(angle::FormatID intendedFormatID,
+                                        angle::FormatID actualFormatID,
+                                        wgpu::Texture externalTexture)
 {
+    mIntendedFormatID    = intendedFormatID;
+    mActualFormatID      = actualFormatID;
     mTextureDescriptor   = TextureDescriptorFromTexture(externalTexture);
     mFirstAllocatedLevel = gl::LevelIndex(0);
     mTexture             = externalTexture;
