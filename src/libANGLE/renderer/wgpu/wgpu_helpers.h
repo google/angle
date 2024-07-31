@@ -196,10 +196,12 @@ class BufferHelper : public angle::NonCopyable
     bool canMapForWrite() const;
 
     wgpu::Buffer &getBuffer();
-    uint64_t size() const;
+    uint64_t requestedSize() const;
+    uint64_t actualSize() const;
 
   private:
     wgpu::Buffer mBuffer;
+    size_t mRequestedSize = 0;
 
     std::optional<BufferMapState> mMappedState;
 };
