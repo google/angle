@@ -105,8 +105,61 @@ bool FrameCaptureDeviceScope()
 #endif
 }
 
+// Ensure that .gputrace files have RW permissions for the user or, if a
+// directory, RWX permissions for the user.
+ANGLE_APPLE_UNUSED
+static inline void FixGPUTracePathPermissions(NSString *path, bool isDir)
+{
+    // Ensure we're only change permissions on files in a gputrace bundle.
+    if (![path containsString:@".gputrace"])
+    {
+        return;
+    }
+
+    NSError *error = nil;
+    NSDictionary<NSFileAttributeKey, id> *attributes =
+        [NSFileManager.defaultManager attributesOfItemAtPath:path error:&error];
+    NSNumber *oldPerms = static_cast<NSNumber *>(attributes[NSFilePosixPermissions]);
+    if (!oldPerms)
+    {
+        NSString *msg =
+            attributes ? @"NSFilePosixPermissions unavailable" : error.localizedDescription;
+        NSLog(@"Unable to read permissions for %@ (%@)", path, msg);
+        return;
+    }
+
+    NSUInteger newPerms = oldPerms.unsignedIntegerValue | S_IRUSR | S_IWUSR;
+    if (isDir)
+    {
+        newPerms |= S_IXUSR;
+    }
+
+    if (![NSFileManager.defaultManager setAttributes:@{
+            NSFilePosixPermissions : @(newPerms)
+        }
+                                        ofItemAtPath:path
+                                               error:&error])
+    {
+        NSLog(@"Unable to set permissions=%3lo for %@ (%@)", static_cast<unsigned long>(newPerms),
+              path, error.localizedDescription);
+    }
+}
+
+ANGLE_APPLE_UNUSED
+static inline void FixGPUTraceBundlePermissions(NSString *bundlePath)
+{
+    FixGPUTracePathPermissions(bundlePath, true);
+    for (NSString *file in [NSFileManager.defaultManager enumeratorAtPath:bundlePath])
+    {
+        FixGPUTracePathPermissions([NSString pathWithComponents:@[ bundlePath, file ]], false);
+    }
+}
+
 ANGLE_APPLE_UNUSED
 std::atomic<size_t> gFrameCaptured(0);
+
+ANGLE_APPLE_UNUSED
+NSString *gFrameCapturePath;
 
 ANGLE_APPLE_UNUSED
 void StartFrameCapture(id<MTLDevice> metalDevice, id<MTLCommandQueue> metalCmdQueue)
@@ -141,14 +194,14 @@ void StartFrameCapture(id<MTLDevice> metalDevice, id<MTLCommandQueue> metalCmdQu
         auto captureDescriptor = mtl::adoptObjCObj([[MTLCaptureDescriptor alloc] init]);
         captureDescriptor.get().captureObject = metalDevice;
         const std::string filePath            = GetMetalCaptureFile();
+        NSString *frameCapturePath            = nil;
         if (filePath != "")
         {
-            const std::string numberedPath =
-                filePath + std::to_string(gFrameCaptured - 1) + ".gputrace";
+            frameCapturePath =
+                [NSString stringWithFormat:@"%s%zu.gputrace", filePath.c_str(), gFrameCaptured - 1];
             captureDescriptor.get().destination = MTLCaptureDestinationGPUTraceDocument;
-            captureDescriptor.get().outputURL =
-                [NSURL fileURLWithPath:[NSString stringWithUTF8String:numberedPath.c_str()]
-                           isDirectory:false];
+            captureDescriptor.get().outputURL   = [NSURL fileURLWithPath:frameCapturePath
+                                                           isDirectory:false];
         }
         else
         {
@@ -157,7 +210,12 @@ void StartFrameCapture(id<MTLDevice> metalDevice, id<MTLCommandQueue> metalCmdQu
         }
 
         NSError *error;
-        if (![captureManager startCaptureWithDescriptor:captureDescriptor.get() error:&error])
+        if ([captureManager startCaptureWithDescriptor:captureDescriptor.get() error:&error])
+        {
+            ASSERT(!gFrameCapturePath);
+            gFrameCapturePath = frameCapturePath;
+        }
+        else
         {
             NSLog(@"Failed to start capture, error %@", error);
         }
@@ -194,6 +252,12 @@ void StopFrameCapture()
     if (captureManager.isCapturing)
     {
         [captureManager stopCapture];
+        if (gFrameCapturePath)
+        {
+            FixGPUTraceBundlePermissions(gFrameCapturePath);
+            [gFrameCapturePath ANGLE_MTL_RELEASE];
+            gFrameCapturePath = nil;
+        }
     }
 #endif
 }
