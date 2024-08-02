@@ -144,7 +144,14 @@ class ClearValuesArray final
     gl::AttachmentsMask mEnabled;
 };
 
-void EnsureCapsInitialized(const wgpu::Device &device, gl::Caps *nativeCaps);
+void GenerateCaps(const wgpu::Device &device,
+                  gl::Caps *glCaps,
+                  gl::TextureCapsMap *glTextureCapsMap,
+                  gl::Extensions *glExtensions,
+                  gl::Limitations *glLimitations,
+                  egl::Caps *eglCaps,
+                  egl::DisplayExtensions *eglExtensions,
+                  gl::Version *maxSupportedESVersion);
 
 DisplayWgpu *GetDisplay(const gl::Context *context);
 wgpu::Device GetDevice(const gl::Context *context);
