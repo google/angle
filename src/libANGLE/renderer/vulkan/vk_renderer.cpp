@@ -5266,6 +5266,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
                                 mFeatures.supportsDynamicRenderingLocalRead.enabled &&
                                 !hasLegacyDitheringV1 && !emulatesMultisampledRenderToTexture);
 
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsSynchronization2,
+                            mSynchronization2Features.synchronization2 == VK_TRUE);
+
     // Disable memory report feature overrides if extension is not supported.
     if ((mFeatures.logMemoryReportCallbacks.enabled || mFeatures.logMemoryReportStats.enabled) &&
         !mMemoryReportFeatures.deviceMemoryReport)
