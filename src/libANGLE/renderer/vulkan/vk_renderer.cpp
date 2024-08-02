@@ -3700,8 +3700,9 @@ angle::Result Renderer::createDeviceAndQueue(vk::Context *context, uint32_t queu
     mDefaultUniformBufferSize = std::min(
         mDefaultUniformBufferSize, getPhysicalDeviceProperties().limits.maxUniformBufferRange);
 
-    // Initialize the vulkan pipeline cache.
-    ANGLE_TRY(ensurePipelineCacheInitialized(context));
+    // Vulkan pipeline cache will be initialized lazily in ensurePipelineCacheInitialized() method.
+    ASSERT(!mPipelineCacheInitialized);
+    ASSERT(!mPipelineCache.valid());
 
     // Track the set of supported pipeline stages.  This is used when issuing image layout
     // transitions that cover many stages (such as AllGraphicsReadOnly) to mask out unsupported
