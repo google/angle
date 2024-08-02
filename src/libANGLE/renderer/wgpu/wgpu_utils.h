@@ -195,6 +195,9 @@ wgpu::CullMode GetCullMode(gl::CullFaceMode mode, bool cullFaceEnabled);
 wgpu::ColorWriteMask GetColorWriteMask(bool r, bool g, bool b, bool a);
 }  // namespace gl_wgpu
 
+// Number of reserved binding slots to implement the default uniform block
+constexpr uint32_t kReservedPerStageDefaultUniformSlotCount = 0;
+
 }  // namespace rx
 
 #define ANGLE_WGPU_WRAPPER_OBJECTS_X(PROC) PROC(RenderPipeline)
