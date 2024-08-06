@@ -440,7 +440,7 @@ Texture::Texture(ContextMtl *context,
             {
                 supportsMemoryless = context->getDisplay()->supportsAppleGPUFamily(1);
             }
-
+#endif
             if (supportsMemoryless)
             {
                 desc.resourceOptions = MTLResourceStorageModeMemoryless;
@@ -449,7 +449,7 @@ Texture::Texture(ContextMtl *context,
             {
                 desc.resourceOptions = MTLResourceStorageModePrivate;
             }
-#endif
+
             // Regardless of whether MTLResourceStorageModeMemoryless is used or not, we disable
             // Load/Store on this texture.
             mShouldNotLoadStore = true;
