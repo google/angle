@@ -12602,14 +12602,12 @@ void BufferViewHelper::init(Renderer *renderer, VkDeviceSize offset, VkDeviceSiz
     mInitialized = true;
 }
 
-void BufferViewHelper::release(ContextVk *contextVk)
+void BufferViewHelper::release(Renderer *renderer)
 {
     if (!mInitialized)
     {
         return;
     }
-
-    contextVk->flushDescriptorSetUpdates();
 
     GarbageObjects garbage;
 
@@ -12623,7 +12621,6 @@ void BufferViewHelper::release(ContextVk *contextVk)
 
     if (!garbage.empty())
     {
-        Renderer *renderer = contextVk->getRenderer();
         renderer->collectGarbage(mUse, std::move(garbage));
         // Update image view serial.
         mViewSerial = renderer->getResourceSerialFactory().generateImageOrBufferViewSerial();
@@ -12634,6 +12631,17 @@ void BufferViewHelper::release(ContextVk *contextVk)
     mOffset      = 0;
     mSize        = 0;
     mInitialized = false;
+}
+
+void BufferViewHelper::release(ContextVk *contextVk)
+{
+    if (!mInitialized)
+    {
+        return;
+    }
+
+    contextVk->flushDescriptorSetUpdates();
+    return release(contextVk->getRenderer());
 }
 
 void BufferViewHelper::destroy(VkDevice device)

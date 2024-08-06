@@ -3735,6 +3735,7 @@ class BufferViewHelper final : public Resource
     void init(Renderer *renderer, VkDeviceSize offset, VkDeviceSize size);
     bool isInitialized() const { return mInitialized; }
     void release(ContextVk *contextVk);
+    void release(Renderer *renderer);
     void destroy(VkDevice device);
 
     angle::Result getView(Context *context,
