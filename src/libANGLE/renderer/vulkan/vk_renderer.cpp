@@ -5441,6 +5441,11 @@ angle::Result Renderer::syncPipelineCacheVk(vk::Context *context,
                                             vk::GlobalOps *globalOps,
                                             const gl::Context *contextGL)
 {
+    // Skip syncing until pipeline cache is initialized.
+    if (!mPipelineCacheInitialized)
+    {
+        return angle::Result::Continue;
+    }
     ASSERT(mPipelineCache.valid());
 
     if (!mFeatures.syncMonolithicPipelinesToBlobCache.enabled)
@@ -5454,6 +5459,17 @@ angle::Result Renderer::syncPipelineCacheVk(vk::Context *context,
     }
 
     mPipelineCacheVkUpdateTimeout = kPipelineCacheVkUpdatePeriod;
+
+    ContextVk *contextVk = vk::GetImpl(contextGL);
+
+    // Use worker thread pool to complete compression.
+    // If the last task hasn't been finished, skip the syncing.
+    if (mCompressEvent && !mCompressEvent->isReady())
+    {
+        ANGLE_PERF_WARNING(contextVk->getDebug(), GL_DEBUG_SEVERITY_LOW,
+                           "Skip syncing pipeline cache data when the last task is not ready.");
+        return angle::Result::Continue;
+    }
 
     size_t pipelineCacheSize = 0;
     ANGLE_TRY(getPipelineCacheSize(context, &pipelineCacheSize));
@@ -5469,17 +5485,6 @@ angle::Result Renderer::syncPipelineCacheVk(vk::Context *context,
     if (pipelineCacheSize < kPipelineCacheHeaderSize)
     {
         // No pipeline cache data to read, so return
-        return angle::Result::Continue;
-    }
-
-    ContextVk *contextVk = vk::GetImpl(contextGL);
-
-    // Use worker thread pool to complete compression.
-    // If the last task hasn't been finished, skip the syncing.
-    if (mCompressEvent && !mCompressEvent->isReady())
-    {
-        ANGLE_PERF_WARNING(contextVk->getDebug(), GL_DEBUG_SEVERITY_LOW,
-                           "Skip syncing pipeline cache data when the last task is not ready.");
         return angle::Result::Continue;
     }
 
