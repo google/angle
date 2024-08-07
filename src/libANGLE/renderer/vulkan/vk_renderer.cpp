@@ -1945,14 +1945,14 @@ angle::Result Renderer::initialize(vk::Context *context,
     const VkBool32 setting_check_shaders = IsAndroid() ? VK_FALSE : VK_TRUE;
     // http://b/316013423 Disable QueueSubmit Synchronization Validation. Lots of failures and some
     // test timeout due to https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/7285
-    const VkBool32 setting_sync_queue_submit = VK_FALSE;
-    const VkLayerSettingEXT layerSettings[]  = {
+    const VkBool32 setting_syncval_submit_time_validation = VK_FALSE;
+    const VkLayerSettingEXT layerSettings[]               = {
         {name, "validate_core", VK_LAYER_SETTING_TYPE_BOOL32_EXT, 1, &setting_validate_core},
         {name, "validate_sync", VK_LAYER_SETTING_TYPE_BOOL32_EXT, 1, &setting_validate_sync},
         {name, "thread_safety", VK_LAYER_SETTING_TYPE_BOOL32_EXT, 1, &setting_thread_safety},
         {name, "check_shaders", VK_LAYER_SETTING_TYPE_BOOL32_EXT, 1, &setting_check_shaders},
-        {name, "sync_queue_submit", VK_LAYER_SETTING_TYPE_BOOL32_EXT, 1,
-          &setting_sync_queue_submit},
+        {name, "syncval_submit_time_validation", VK_LAYER_SETTING_TYPE_BOOL32_EXT, 1,
+                       &setting_syncval_submit_time_validation},
     };
     VkLayerSettingsCreateInfoEXT layerSettingsCreateInfo = {
         VK_STRUCTURE_TYPE_LAYER_SETTINGS_CREATE_INFO_EXT, nullptr,
