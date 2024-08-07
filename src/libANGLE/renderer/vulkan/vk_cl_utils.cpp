@@ -8,6 +8,7 @@
 //
 
 #include "libANGLE/renderer/vulkan/vk_cl_utils.h"
+#include "vulkan/vulkan_core.h"
 
 namespace rx
 {
@@ -103,7 +104,8 @@ VkBufferUsageFlags GetBufferUsageFlags(cl::MemFlags memFlags)
     // The buffer usage flags don't particularly affect the buffer in any known drivers, use all the
     // bits that ANGLE needs.
     return VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT |
-           VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
+           VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_BUFFER_BIT |
+           VK_BUFFER_USAGE_UNIFORM_TEXEL_BUFFER_BIT | VK_BUFFER_USAGE_STORAGE_TEXEL_BUFFER_BIT;
 }
 
 }  // namespace cl_vk

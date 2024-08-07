@@ -10,6 +10,7 @@
 #include "libANGLE/renderer/vulkan/vk_cl_utils.h"
 #include "libANGLE/renderer/vulkan/vk_renderer.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
+#include "libANGLE/renderer/vulkan/vk_wrapper.h"
 
 #include "libANGLE/renderer/CLMemoryImpl.h"
 #include "libANGLE/renderer/Format.h"
@@ -398,13 +399,23 @@ CLImageVk::CLImageVk(const cl::Image &image)
       mAngleFormat(CLImageFormatToAngleFormat(image.getFormat())),
       mStagingBufferInitialized(false),
       mImageViewType(cl_vk::GetImageViewType(image.getDescriptor().type))
-{}
+{
+    if (image.getParent())
+    {
+        mParent = &image.getParent()->getImpl<CLMemoryVk>();
+    }
+}
 
 CLImageVk::~CLImageVk()
 {
     if (isMapped())
     {
         unmap();
+    }
+
+    if (mBufferViews.isInitialized())
+    {
+        mBufferViews.release(mContext->getRenderer());
     }
 
     mImage.destroy(mRenderer);
@@ -415,8 +426,32 @@ CLImageVk::~CLImageVk()
     }
 }
 
+angle::Result CLImageVk::createFromBuffer()
+{
+    ASSERT(mParent);
+    ASSERT(IsBufferType(getParentType()));
+
+    // initialize the buffer views
+    mBufferViews.init(mContext->getRenderer(), 0, getSize());
+
+    return angle::Result::Continue;
+}
+
 angle::Result CLImageVk::create(void *hostPtr)
 {
+    if (mParent)
+    {
+        if (getType() == cl::MemObjectType::Image1D_Buffer)
+        {
+            return createFromBuffer();
+        }
+        else
+        {
+            UNIMPLEMENTED();
+            ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+        }
+    }
+
     ANGLE_CL_IMPL_TRY_ERROR(mImage.initStaging(mContext, false, mRenderer->getMemoryProperties(),
                                                getVkImageType(getDescriptor()), mExtent,
                                                mAngleFormat, mAngleFormat, VK_SAMPLE_COUNT_1_BIT,
@@ -724,6 +759,12 @@ angle::Result CLImageVk::mapImpl()
 {
     ASSERT(!isMapped());
 
+    if (mParent)
+    {
+        ANGLE_TRY(mParent->map(mMappedMemory, getOffset()));
+        return angle::Result::Continue;
+    }
+
     ASSERT(isStagingBufferInitialized());
     ANGLE_TRY(getStagingBuffer().map(mContext, &mMappedMemory));
 
@@ -731,7 +772,10 @@ angle::Result CLImageVk::mapImpl()
 }
 void CLImageVk::unmapImpl()
 {
-    getStagingBuffer().unmap(mContext->getRenderer());
+    if (!mParent)
+    {
+        getStagingBuffer().unmap(mContext->getRenderer());
+    }
     mMappedMemory = nullptr;
 }
 
@@ -743,6 +787,51 @@ size_t CLImageVk::getRowPitch() const
 size_t CLImageVk::getSlicePitch() const
 {
     return getFrontendObject().getSliceSize();
+}
+
+template <>
+CLBufferVk *CLImageVk::getParent<CLBufferVk>() const
+{
+    if (mParent)
+    {
+        ASSERT(cl::IsBufferType(getParentType()));
+        return static_cast<CLBufferVk *>(mParent);
+    }
+    return nullptr;
+}
+
+template <>
+CLImageVk *CLImageVk::getParent<CLImageVk>() const
+{
+    if (mParent)
+    {
+        ASSERT(cl::IsImageType(getParentType()));
+        return static_cast<CLImageVk *>(mParent);
+    }
+    return nullptr;
+}
+
+cl::MemObjectType CLImageVk::getParentType() const
+{
+    if (mParent)
+    {
+        return mParent->getType();
+    }
+    return cl::MemObjectType::InvalidEnum;
+}
+
+angle::Result CLImageVk::getBufferView(const vk::BufferView **viewOut)
+{
+    if (!mBufferViews.isInitialized())
+    {
+        ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+    }
+
+    CLBufferVk *parent = getParent<CLBufferVk>();
+
+    return mBufferViews.getView(
+        mContext, parent->getBuffer(), parent->getOffset(),
+        mContext->getRenderer()->getFormat(CLImageFormatToAngleFormat(getFormat())), viewOut);
 }
 
 }  // namespace rx

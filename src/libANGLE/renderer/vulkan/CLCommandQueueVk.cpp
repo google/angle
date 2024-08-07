@@ -1402,11 +1402,38 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
                 writeDescriptorSet.dstBinding = arg.descriptorBinding;
                 break;
             }
+            case NonSemanticClspvReflectionArgumentUniformTexelBuffer:
+            case NonSemanticClspvReflectionArgumentStorageTexelBuffer:
+            {
+                cl::Memory *clMem = cl::Image::Cast(*static_cast<const cl_mem *>(arg.handle));
+                CLImageVk &vkMem  = clMem->getImpl<CLImageVk>();
+
+                ANGLE_TRY(addMemoryDependencies(clMem));
+
+                VkBufferView &bufferView           = kernelArgDescSetBuilder.allocBufferView();
+                const vk::BufferView *vkBufferView = nullptr;
+                ANGLE_TRY(vkMem.getBufferView(&vkBufferView));
+                bufferView = vkBufferView->getHandle();
+
+                VkWriteDescriptorSet &writeDescriptorSet =
+                    kernelArgDescSetBuilder.allocWriteDescriptorSet();
+                writeDescriptorSet.descriptorCount = 1;
+                writeDescriptorSet.descriptorType =
+                    arg.type == NonSemanticClspvReflectionArgumentStorageTexelBuffer
+                        ? VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER
+                        : VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER;
+                writeDescriptorSet.pImageInfo = nullptr;
+                writeDescriptorSet.sType      = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+                writeDescriptorSet.dstSet =
+                    kernelVk.getDescriptorSet(DescriptorSetIndex::KernelArguments);
+                writeDescriptorSet.dstBinding       = arg.descriptorBinding;
+                writeDescriptorSet.pTexelBufferView = &bufferView;
+
+                break;
+            }
             case NonSemanticClspvReflectionArgumentPodUniform:
             case NonSemanticClspvReflectionArgumentPointerUniform:
             case NonSemanticClspvReflectionArgumentPodStorageBuffer:
-            case NonSemanticClspvReflectionArgumentUniformTexelBuffer:
-            case NonSemanticClspvReflectionArgumentStorageTexelBuffer:
             case NonSemanticClspvReflectionArgumentPointerPushConstant:
             default:
             {

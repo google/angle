@@ -87,6 +87,12 @@ angle::Result CLKernelVk::init()
             case NonSemanticClspvReflectionArgumentSampler:
                 descType = VK_DESCRIPTOR_TYPE_SAMPLER;
                 break;
+            case NonSemanticClspvReflectionArgumentStorageTexelBuffer:
+                descType = VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER;
+                break;
+            case NonSemanticClspvReflectionArgumentUniformTexelBuffer:
+                descType = VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER;
+                break;
             default:
                 continue;
         }

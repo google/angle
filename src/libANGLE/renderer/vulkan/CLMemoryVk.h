@@ -14,10 +14,13 @@
 #include "libANGLE/renderer/vulkan/cl_types.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
 
+#include "libANGLE/renderer/CLMemoryImpl.h"
+
 #include "libANGLE/CLBuffer.h"
 #include "libANGLE/CLImage.h"
 #include "libANGLE/CLMemory.h"
 
+#include "libANGLE/renderer/vulkan/vk_wrapper.h"
 #include "vulkan/vulkan_core.h"
 
 namespace rx
@@ -134,15 +137,20 @@ class CLImageVk : public CLMemoryVk
     {
         return reinterpret_cast<const cl::Image &>(mMemory);
     }
-    cl_image_format getFormat() { return getFrontendObject().getFormat(); }
-    cl::ImageDescriptor getDescriptor() { return getFrontendObject().getDescriptor(); }
-    size_t getElementSize() { return getFrontendObject().getElementSize(); }
-    size_t getArraySize() { return getFrontendObject().getArraySize(); }
+    cl_image_format getFormat() const { return getFrontendObject().getFormat(); }
+    cl::ImageDescriptor getDescriptor() const { return getFrontendObject().getDescriptor(); }
+    size_t getElementSize() const { return getFrontendObject().getElementSize(); }
+    size_t getArraySize() const { return getFrontendObject().getArraySize(); }
     size_t getSize() const override { return mMemory.getSize(); }
     size_t getRowPitch() const;
     size_t getSlicePitch() const;
 
+    cl::MemObjectType getParentType() const;
+    template <typename T>
+    T *getParent() const;
+
     angle::Result create(void *hostPtr);
+    angle::Result createFromBuffer();
 
     bool isCurrentlyInUse() const override;
     bool containsHostMemExtension();
@@ -173,6 +181,8 @@ class CLImageVk : public CLMemoryVk
                                                          cl::MemObjectType copyToType,
                                                          ImageCopyWith imageCopy);
 
+    angle::Result getBufferView(const vk::BufferView **viewOut);
+
   private:
     angle::Result initImageViewImpl();
 
@@ -189,6 +199,10 @@ class CLImageVk : public CLMemoryVk
     bool mStagingBufferInitialized;
     vk::ImageView mImageView;
     VkImageViewType mImageViewType;
+
+    // Images created from buffer create texel buffer views. BufferViewHelper contain the view
+    // corresponding to the attached buffer.
+    vk::BufferViewHelper mBufferViews;
 };
 
 }  // namespace rx
