@@ -83,6 +83,9 @@ void GenerateCaps(const wgpu::Device &device,
                   egl::DisplayExtensions *eglExtensions,
                   gl::Version *maxSupportedESVersion)
 {
+    // WebGPU does not support separate front/back stencil masks.
+    glLimitations->noSeparateStencilRefsAndMasks = true;
+
     wgpu::Limits limitsWgpu;
     {
         wgpu::SupportedLimits supportedLimits;
@@ -442,6 +445,58 @@ wgpu::TextureDimension getWgpuTextureDimension(gl::TextureType glTextureType)
             break;
     }
     return dimension;
+}
+
+wgpu::CompareFunction getCompareFunc(const GLenum glCompareFunc)
+{
+    switch (glCompareFunc)
+    {
+        case GL_NEVER:
+            return wgpu::CompareFunction::Never;
+        case GL_LESS:
+            return wgpu::CompareFunction::Less;
+        case GL_EQUAL:
+            return wgpu::CompareFunction::Equal;
+        case GL_LEQUAL:
+            return wgpu::CompareFunction::LessEqual;
+        case GL_GREATER:
+            return wgpu::CompareFunction::Greater;
+        case GL_NOTEQUAL:
+            return wgpu::CompareFunction::NotEqual;
+        case GL_GEQUAL:
+            return wgpu::CompareFunction::GreaterEqual;
+        case GL_ALWAYS:
+            return wgpu::CompareFunction::Always;
+        default:
+            UNREACHABLE();
+            return wgpu::CompareFunction::Always;
+    }
+}
+
+wgpu::StencilOperation getStencilOp(const GLenum glStencilOp)
+{
+    switch (glStencilOp)
+    {
+        case GL_KEEP:
+            return wgpu::StencilOperation::Keep;
+        case GL_ZERO:
+            return wgpu::StencilOperation::Zero;
+        case GL_REPLACE:
+            return wgpu::StencilOperation::Replace;
+        case GL_INCR:
+            return wgpu::StencilOperation::IncrementClamp;
+        case GL_DECR:
+            return wgpu::StencilOperation::DecrementClamp;
+        case GL_INCR_WRAP:
+            return wgpu::StencilOperation::IncrementWrap;
+        case GL_DECR_WRAP:
+            return wgpu::StencilOperation::DecrementWrap;
+        case GL_INVERT:
+            return wgpu::StencilOperation::Invert;
+        default:
+            UNREACHABLE();
+            return wgpu::StencilOperation::Keep;
+    }
 }
 }  // namespace gl_wgpu
 }  // namespace rx
