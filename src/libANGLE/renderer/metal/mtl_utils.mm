@@ -1548,9 +1548,10 @@ bool DeviceHasMaximumRenderTargetSize(id<MTLDevice> device)
 
 bool SupportsAppleGPUFamily(id<MTLDevice> device, uint8_t appleFamily)
 {
-#if (__MAC_OS_X_VERSION_MAX_ALLOWED >= 101500 || __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000) || \
-    (__TV_OS_VERSION_MAX_ALLOWED >= 130000)
     // If device supports [MTLDevice supportsFamily:], then use it.
+#if (TARGET_OS_OSX && __MAC_OS_X_VERSION_MAX_ALLOWED >= 101500) ||  \
+    (TARGET_OS_IOS && __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000) || \
+    (TARGET_OS_TV && __TV_OS_VERSION_MAX_ALLOWED >= 130000) || TARGET_OS_WATCH || TARGET_OS_VISION
     if (ANGLE_APPLE_AVAILABLE_XCI(10.15, 13.1, 13))
     {
         MTLGPUFamily family;
@@ -1571,21 +1572,15 @@ bool SupportsAppleGPUFamily(id<MTLDevice> device, uint8_t appleFamily)
             case 5:
                 family = MTLGPUFamilyApple5;
                 break;
-#    if TARGET_OS_IOS || (TARGET_OS_OSX && __MAC_OS_X_VERSION_MAX_ALLOWED >= 110000)
+#    if !TARGET_OS_OSX || __MAC_OS_X_VERSION_MAX_ALLOWED >= 110000
             case 6:
                 family = MTLGPUFamilyApple6;
                 break;
+#        if (TARGET_OS_IOS && __IPHONE_OS_VERSION_MAX_ALLOWED >= 140000) || \
+            (TARGET_OS_TV && __TV_OS_VERSION_MAX_ALLOWED >= 140000) ||      \
+            (!TARGET_OS_IOS && !TARGET_OS_TV)
             case 7:
                 family = MTLGPUFamilyApple7;
-                break;
-#        if __MAC_OS_X_VERSION_MAX_ALLOWED >= 130000 || __IPHONE_OS_VERSION_MAX_ALLOWED >= 150000
-            case 8:
-                family = MTLGPUFamilyApple8;
-                break;
-#        endif
-#        if __MAC_OS_X_VERSION_MAX_ALLOWED >= 140000 || __IPHONE_OS_VERSION_MAX_ALLOWED >= 170000
-            case 9:
-                family = MTLGPUFamilyApple9;
                 break;
 #        endif
 #    endif
@@ -1593,48 +1588,45 @@ bool SupportsAppleGPUFamily(id<MTLDevice> device, uint8_t appleFamily)
                 return false;
         }
         return [device supportsFamily:family];
-    }   // Metal 2.2
-#endif  // __IPHONE_OS_VERSION_MAX_ALLOWED
+    }
+#endif
 
-#if (!TARGET_OS_IOS && !TARGET_OS_TV) || TARGET_OS_MACCATALYST || \
-    (TARGET_OS_IOS && defined(__IPHONE_16_0) && __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_16_0)
-    return false;
-#else
     // If device doesn't support [MTLDevice supportsFamily:], then use
-    // [MTLDevice supportsFeatureSet:].
-    MTLFeatureSet featureSet;
+    // [MTLDevice supportsFeatureSet:]. Only compiled for deployment targets
+    // that need support for older devices.
+#if TARGET_OS_IOS && __IPHONE_OS_VERSION_MIN_REQUIRED < 130000
     switch (appleFamily)
     {
-#    if TARGET_OS_IOS
         case 1:
-            featureSet = MTLFeatureSet_iOS_GPUFamily1_v1;
-            break;
+            return [device supportsFeatureSet:MTLFeatureSet_iOS_GPUFamily1_v1];
         case 2:
-            featureSet = MTLFeatureSet_iOS_GPUFamily2_v1;
-            break;
+            return [device supportsFeatureSet:MTLFeatureSet_iOS_GPUFamily2_v1];
         case 3:
-            featureSet = MTLFeatureSet_iOS_GPUFamily3_v1;
-            break;
+            return [device supportsFeatureSet:MTLFeatureSet_iOS_GPUFamily3_v1];
         case 4:
-            featureSet = MTLFeatureSet_iOS_GPUFamily4_v1;
-            break;
-#        if __IPHONE_OS_VERSION_MAX_ALLOWED >= 120000
+            return [device supportsFeatureSet:MTLFeatureSet_iOS_GPUFamily4_v1];
+#    if __IPHONE_OS_VERSION_MAX_ALLOWED >= 120000
         case 5:
-            featureSet = MTLFeatureSet_iOS_GPUFamily5_v1;
+            return [device supportsFeatureSet:MTLFeatureSet_iOS_GPUFamily5_v1];
+#    endif
+        default:
             break;
-#        endif  // __IPHONE_OS_VERSION_MAX_ALLOWED
-#    elif TARGET_OS_TV
+    }
+#elif TARGET_OS_TV && __TV_OS_VERSION_MIN_REQUIRED < 130000
+    switch (appleFamily)
+    {
         case 1:
         case 2:
-            featureSet = MTLFeatureSet_tvOS_GPUFamily1_v1;
-            break;
-#    endif  // TARGET_OS_IOS
+            return [device supportsFeatureSet:MTLFeatureSet_tvOS_GPUFamily1_v1];
+#    if __TV_OS_VERSION_MAX_ALLOWED >= 120000
+        case 3:
+            return [device supportsFeatureSet:MTLFeatureSet_tvOS_GPUFamily2_v1];
+#    endif
         default:
-            return false;
+            break;
     }
-
-    return [device supportsFeatureSet:featureSet];
-#endif      // TARGET_OS_IOS || TARGET_OS_TV
+#endif
+    return false;
 }
 
 bool SupportsMacGPUFamily(id<MTLDevice> device, uint8_t macFamily)
