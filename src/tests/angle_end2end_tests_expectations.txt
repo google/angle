@@ -1104,6 +1104,7 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 352584420 GLES : ReadPixelsTextureNorm16PBOTest.RG16_RGBA/* = SKIP
 
 354109768 MAC AMD OPENGL : ReadPixelsPBOTest.SmallRowLength/* = SKIP
+358407353 LINUX INTEL OPENGL : ReadPixelsPBOTest.SmallRowLength/* = SKIP
 
 // D3D needs a workaround to follow OpenGL rules
 42266528 D3D9 : DepthWriteTest.Test/ES2_D3D9__DepthRangeReduced_Clipped_VertexDepthInsideClipVolume_FragmentDepthBetweenZeroAndNearPlane_* = SKIP
