@@ -52,10 +52,6 @@ Context::PropArray ParseContextProperties(const cl_context_properties *propertie
         propArray.reserve(propIt - properties);
         propArray.insert(propArray.cend(), properties, propIt);
     }
-    if (platform == nullptr)
-    {
-        platform = Platform::GetDefault();
-    }
     return propArray;
 }
 
@@ -233,16 +229,23 @@ cl_context Platform::CreateContext(const cl_context_properties *properties,
                                    ContextErrorCB notify,
                                    void *userData)
 {
-    Platform *platform           = nullptr;
-    bool userSync                = false;
-    Context::PropArray propArray = ParseContextProperties(properties, platform, userSync);
-    ASSERT(platform != nullptr);
     DevicePtrs devs;
     devs.reserve(numDevices);
     while (numDevices-- != 0u)
     {
         devs.emplace_back(&(*devices++)->cast<Device>());
     }
+
+    Platform *platform           = nullptr;
+    bool userSync                = false;
+    Context::PropArray propArray = ParseContextProperties(properties, platform, userSync);
+    if (platform == nullptr)
+    {
+        // All devices in the list have already been validated at this point to contain the same
+        // platform - just use/select the first device's platform.
+        platform = &devs.front()->getPlatform();
+    }
+
     return Object::Create<Context>(*platform, std::move(propArray), std::move(devs), notify,
                                    userData, userSync);
 }
@@ -255,7 +258,13 @@ cl_context Platform::CreateContextFromType(const cl_context_properties *properti
     Platform *platform           = nullptr;
     bool userSync                = false;
     Context::PropArray propArray = ParseContextProperties(properties, platform, userSync);
-    ASSERT(platform != nullptr);
+
+    // Choose default platform if user does not specify in the context properties field
+    if (platform == nullptr)
+    {
+        platform = Platform::GetDefault();
+    }
+
     return Object::Create<Context>(*platform, std::move(propArray), deviceType, notify, userData,
                                    userSync);
 }
