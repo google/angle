@@ -1435,6 +1435,7 @@ angle::Result OneOffCommandPool::getCommandBuffer(vk::Context *context,
             {
                 createInfo.flags |= VK_COMMAND_POOL_CREATE_PROTECTED_BIT;
             }
+            createInfo.queueFamilyIndex = context->getRenderer()->getQueueFamilyIndex();
             ANGLE_VK_TRY(context, mCommandPool.init(context->getDevice(), createInfo));
         }
 
