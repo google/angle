@@ -1070,7 +1070,7 @@ void CompressAndStorePipelineCacheVk(VkPhysicalDeviceProperties physicalDevicePr
     uint32_t compressedDataCRC = 0;
     if (kEnableCRCForPipelineCache)
     {
-        compressedDataCRC = angle::GenerateCrc(compressedData.data(), compressedData.size());
+        compressedDataCRC = angle::GenerateCRC32(compressedData.data(), compressedData.size());
     }
 
     for (size_t chunkIndex = 0; chunkIndex < numChunks; ++chunkIndex)
@@ -1247,7 +1247,7 @@ angle::Result GetAndDecompressPipelineCacheVk(VkPhysicalDeviceProperties physica
     if (kEnableCRCForPipelineCache)
     {
         uint32_t computedCompressedDataCRC =
-            angle::GenerateCrc(compressedData.data(), compressedSize);
+            angle::GenerateCRC32(compressedData.data(), compressedSize);
         if (computedCompressedDataCRC != compressedDataCRC)
         {
             if (compressedDataCRC == 0)
