@@ -7378,8 +7378,8 @@ angle::Result ContextVk::initBufferForVertexConversion(ConversionBuffer *convers
         bufferHelper->release(mRenderer);
     }
 
-    //  Mark buffer dirty if we have to reallocate the buffer.
-    conversionBuffer->setDirty();
+    //  Mark entire buffer dirty if we have to reallocate the buffer.
+    conversionBuffer->setEntireBufferDirty();
 
     uint32_t memoryTypeIndex = mRenderer->getVertexConversionBufferMemoryTypeIndex(hostVisibility);
     size_t alignment         = static_cast<size_t>(mRenderer->getVertexConversionBufferAlignment());

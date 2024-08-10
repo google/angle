@@ -281,9 +281,10 @@ ConversionBuffer::ConversionBuffer(vk::Renderer *renderer,
                                    size_t initialSize,
                                    size_t alignment,
                                    bool hostVisible)
-    : mDirty(true)
+    : mEntireBufferDirty(true)
 {
     mData = std::make_unique<vk::BufferHelper>();
+    mDirtyRange.invalidate();
 }
 
 ConversionBuffer::~ConversionBuffer()
@@ -316,10 +317,10 @@ BufferVk::BufferVk(const gl::BufferState &state)
       mIsStagingBufferMapped(false),
       mHasValidData(false),
       mIsMappedForWrite(false),
-      mUsageType(BufferUsageType::Static),
-      mMappedOffset(0),
-      mMappedLength(0)
-{}
+      mUsageType(BufferUsageType::Static)
+{
+    mMappedRange.invalidate();
+}
 
 BufferVk::~BufferVk() {}
 
@@ -691,8 +692,7 @@ angle::Result BufferVk::mapRangeImpl(ContextVk *contextVk,
     // Record map call parameters in case this call is from angle internal (the access/offset/length
     // will be inconsistent from mState).
     mIsMappedForWrite = (access & GL_MAP_WRITE_BIT) != 0;
-    mMappedOffset     = offset;
-    mMappedLength     = length;
+    mMappedRange      = RangeDeviceSize(offset, offset + length);
 
     uint8_t **mapPtrBytes = reinterpret_cast<uint8_t **>(mapPtr);
     bool hostVisible      = mBuffer.isHostVisible();
@@ -802,7 +802,7 @@ angle::Result BufferVk::unmapImpl(ContextVk *contextVk)
         // The buffer is device local or optimization of small range map.
         if (mIsMappedForWrite)
         {
-            ANGLE_TRY(flushStagingBuffer(contextVk, mMappedOffset, mMappedLength));
+            ANGLE_TRY(flushStagingBuffer(contextVk, mMappedRange.low(), mMappedRange.length()));
         }
 
         mIsStagingBufferMapped = false;
@@ -820,13 +820,12 @@ angle::Result BufferVk::unmapImpl(ContextVk *contextVk)
 
     if (mIsMappedForWrite)
     {
-        dataUpdated();
+        dataRangeUpdated(mMappedRange);
     }
 
     // Reset the mapping parameters
     mIsMappedForWrite = false;
-    mMappedOffset     = 0;
-    mMappedLength     = 0;
+    mMappedRange.invalidate();
 
     return angle::Result::Continue;
 }
@@ -1160,7 +1159,7 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
     }
 
     // Update conversions
-    dataUpdated();
+    dataRangeUpdated(RangeDeviceSize(updateOffset, updateOffset + updateSize));
 
     return angle::Result::Continue;
 }
@@ -1182,11 +1181,21 @@ VertexConversionBuffer *BufferVk::getVertexConversionBuffer(
     return &mVertexConversionBuffers.back();
 }
 
+void BufferVk::dataRangeUpdated(const RangeDeviceSize &range)
+{
+    for (VertexConversionBuffer &buffer : mVertexConversionBuffers)
+    {
+        buffer.addDirtyBufferRange(range);
+    }
+    // Now we have valid data
+    mHasValidData = true;
+}
+
 void BufferVk::dataUpdated()
 {
     for (VertexConversionBuffer &buffer : mVertexConversionBuffers)
     {
-        buffer.setDirty();
+        buffer.setEntireBufferDirty();
     }
     // Now we have valid data
     mHasValidData = true;
