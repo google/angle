@@ -14,7 +14,7 @@
 static int original_argc;
 static char **original_argv;
 
-int main(int argc, char **argv);
+extern "C" int main(int argc, char **argv);
 
 @interface AngleUtilAppDelegate : UIResponder <UIApplicationDelegate>
 
@@ -49,7 +49,7 @@ int main(int argc, char **argv);
 
 @end
 
-int ios_main(int argc, char **argv)
+extern "C" int ios_main(int argc, char **argv)
 {
     original_argc = argc;
     original_argv = argv;
