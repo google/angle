@@ -448,6 +448,14 @@
             "issue": "http://anglebug.com/42263158"
         },
         {
+            "name": "supports_shader_int8",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_KHR_shader_float16_int8 extension ",
+                "and has the shaderInt8 feature"
+            ]
+        },
+        {
             "name": "allow_GenerateMipmap_with_compute",
             "category": "Features",
             "description": [

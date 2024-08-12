@@ -4646,6 +4646,8 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsShaderFloat16,
                             mShaderFloat16Int8Features.shaderFloat16 == VK_TRUE);
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsShaderInt8,
+                            mShaderFloat16Int8Features.shaderInt8 == VK_TRUE);
 
     // Prefer driver uniforms over specialization constants in the following:
     //
