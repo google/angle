@@ -38,8 +38,10 @@ class ConversionBuffer
     ConversionBuffer(ConversionBuffer &&other);
 
     bool dirty() const { return mEntireBufferDirty || !mDirtyRange.empty(); }
+    bool isEntireBufferDirty() const { return mEntireBufferDirty; }
     void setEntireBufferDirty() { mEntireBufferDirty = true; }
     void addDirtyBufferRange(const RangeDeviceSize &range) { mDirtyRange.merge(range); }
+    const RangeDeviceSize &getDirtyBufferRange() const { return mDirtyRange; }
     void clearDirty()
     {
         mEntireBufferDirty = false;
