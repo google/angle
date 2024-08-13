@@ -432,6 +432,13 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo supportsShaderFloat64 = {
+        "supportsShaderFloat64",
+        FeatureCategory::VulkanFeatures,
+        "VkDevice supports the shaderFloat64 bit of VkPhysicalDeviceFeatures",
+        &members,
+    };
+
     FeatureInfo allowGenerateMipmapWithCompute = {
         "allowGenerateMipmapWithCompute",
         FeatureCategory::VulkanFeatures,

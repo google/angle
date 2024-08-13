@@ -369,6 +369,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SupportsSampler2dViewOf3d, "supportsSampler2dViewOf3d"},
     {Feature::SupportsSamplerMirrorClampToEdge, "supportsSamplerMirrorClampToEdge"},
     {Feature::SupportsShaderFloat16, "supportsShaderFloat16"},
+    {Feature::SupportsShaderFloat64, "supportsShaderFloat64"},
     {Feature::SupportsShaderFramebufferFetch, "supportsShaderFramebufferFetch"},
     {Feature::SupportsShaderFramebufferFetchEXT, "supportsShaderFramebufferFetchEXT"},
     {Feature::SupportsShaderFramebufferFetchNonCoherent, "supportsShaderFramebufferFetchNonCoherent"},

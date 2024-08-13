@@ -3620,6 +3620,9 @@ angle::Result Renderer::setupDevice(vk::Context *context,
     mEnabledFeatures.features.shaderInt16 = mPhysicalDeviceFeatures.shaderInt16;
     // Used to support 64bit-integers in shader code
     mEnabledFeatures.features.shaderInt64 = mPhysicalDeviceFeatures.shaderInt64;
+    // Used to support 64bit-floats in shader code
+    mEnabledFeatures.features.shaderFloat64 =
+        mFeatures.supportsShaderFloat64.enabled && mPhysicalDeviceFeatures.shaderFloat64;
 
     if (!vk::OutsideRenderPassCommandBuffer::ExecutesInline() ||
         !vk::RenderPassCommandBuffer::ExecutesInline())
@@ -4648,6 +4651,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
                             mShaderFloat16Int8Features.shaderFloat16 == VK_TRUE);
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsShaderInt8,
                             mShaderFloat16Int8Features.shaderInt8 == VK_TRUE);
+
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsShaderFloat64,
+                            mPhysicalDeviceFeatures.shaderFloat64 == VK_TRUE);
 
     // Prefer driver uniforms over specialization constants in the following:
     //

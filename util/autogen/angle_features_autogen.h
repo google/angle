@@ -369,6 +369,7 @@ enum class Feature
     SupportsSampler2dViewOf3d,
     SupportsSamplerMirrorClampToEdge,
     SupportsShaderFloat16,
+    SupportsShaderFloat64,
     SupportsShaderFramebufferFetch,
     SupportsShaderFramebufferFetchEXT,
     SupportsShaderFramebufferFetchNonCoherent,
