@@ -8,6 +8,7 @@
 #include "libANGLE/renderer/vulkan/CLProgramVk.h"
 #include "libANGLE/renderer/vulkan/CLContextVk.h"
 #include "libANGLE/renderer/vulkan/CLDeviceVk.h"
+#include "libANGLE/renderer/vulkan/clspv_utils.h"
 
 #include "libANGLE/CLContext.h"
 #include "libANGLE/CLKernel.h"
@@ -228,9 +229,6 @@ std::string ProcessBuildOptions(const std::vector<std::string> &optionTokens,
         default:
             break;
     }
-
-    // Other internal Clspv compiler flags that are needed/required
-    processedOptions += " --long-vector";
 
     return processedOptions;
 }
@@ -779,10 +777,8 @@ bool CLProgramVk::buildInternal(const cl::DevicePtrs &devices,
         const cl::RefPointer<cl::Device> &device = devices.at(i);
         DeviceProgramData &deviceProgramData     = mAssociatedDevicePrograms[device->getNative()];
 
-        cl_uint addressBits;
-        ANGLE_CL_IMPL_TRY(
-            device->getInfo(cl::DeviceInfo::AddressBits, sizeof(cl_uint), &addressBits, nullptr));
-        processedOptions += addressBits == 64 ? " -arch=spir64" : " -arch=spir";
+        // add clspv compiler options based on device features
+        processedOptions += ClspvGetCompilerOptions(&device->getImpl<CLDeviceVk>());
 
         if (buildType != BuildType::BINARY)
         {
