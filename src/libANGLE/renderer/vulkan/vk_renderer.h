@@ -34,6 +34,7 @@
 #include "libANGLE/renderer/vulkan/vk_internal_shaders_autogen.h"
 #include "libANGLE/renderer/vulkan/vk_mem_alloc_wrapper.h"
 #include "libANGLE/renderer/vulkan/vk_resource.h"
+#include "vulkan/vulkan_core.h"
 
 namespace angle
 {
@@ -963,6 +964,7 @@ class Renderer : angle::NonCopyable
     VkPhysicalDevice16BitStorageFeatures m16BitStorageFeatures;
     VkPhysicalDeviceSynchronization2Features mSynchronization2Features;
     VkPhysicalDeviceVariablePointersFeatures mVariablePointersFeatures;
+    VkPhysicalDeviceFloatControlsProperties mFloatControlProperties;
 
     uint32_t mLegacyDitheringVersion = 0;
 
