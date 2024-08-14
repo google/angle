@@ -253,6 +253,7 @@ vars = {
   'checkout_angle_restricted_trace_google_maps': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_grand_mountain_adventure': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_grimvalor': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_gwent_witcher_card_game': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_happy_color': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_harry_potter_hogwarts_mystery': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_hay_day': 'checkout_angle_restricted_traces',
@@ -2148,6 +2149,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_grimvalor',
+  },
+  'src/tests/restricted_traces/gwent_witcher_card_game': {
+      'packages': [
+        {
+            'package': 'angle/traces/gwent_witcher_card_game',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_gwent_witcher_card_game',
   },
   'src/tests/restricted_traces/happy_color': {
       'packages': [
