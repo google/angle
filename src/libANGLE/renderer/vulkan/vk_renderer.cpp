@@ -269,6 +269,11 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdDraw-None-06550",
     // https://anglebug.com/345304850
     "WARNING-Shader-OutputNotConsumed",
+    // https://crbug.com/359904720
+    "VUID-vkCmdDraw-Input-07939",
+    "VUID-vkCmdDrawIndexed-Input-07939",
+    "VUID-vkCmdDrawIndexedIndirect-Input-07939",
+    "VUID-vkCmdDrawIndirect-Input-07939",
 };
 
 // Validation messages that should be ignored only when VK_EXT_primitive_topology_list_restart is
