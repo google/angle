@@ -293,12 +293,12 @@ ConversionBuffer::~ConversionBuffer()
 
 ConversionBuffer::ConversionBuffer(ConversionBuffer &&other) = default;
 
-// BufferVk::VertexConversionBuffer implementation.
-BufferVk::VertexConversionBuffer::VertexConversionBuffer(vk::Renderer *renderer,
-                                                         angle::FormatID formatIDIn,
-                                                         GLuint strideIn,
-                                                         size_t offsetIn,
-                                                         bool hostVisible)
+// VertexConversionBuffer implementation.
+VertexConversionBuffer::VertexConversionBuffer(vk::Renderer *renderer,
+                                               angle::FormatID formatIDIn,
+                                               GLuint strideIn,
+                                               size_t offsetIn,
+                                               bool hostVisible)
     : ConversionBuffer(renderer,
                        vk::kVertexBufferUsageFlags,
                        kConvertedArrayBufferInitialSize,
@@ -309,9 +309,9 @@ BufferVk::VertexConversionBuffer::VertexConversionBuffer(vk::Renderer *renderer,
       offset(offsetIn)
 {}
 
-BufferVk::VertexConversionBuffer::VertexConversionBuffer(VertexConversionBuffer &&other) = default;
+VertexConversionBuffer::VertexConversionBuffer(VertexConversionBuffer &&other) = default;
 
-BufferVk::VertexConversionBuffer::~VertexConversionBuffer() = default;
+VertexConversionBuffer::~VertexConversionBuffer() = default;
 
 // BufferVk implementation.
 BufferVk::BufferVk(const gl::BufferState &state)

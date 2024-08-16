@@ -36,6 +36,23 @@ struct ConversionBuffer
     std::unique_ptr<vk::BufferHelper> data;
 };
 
+struct VertexConversionBuffer : public ConversionBuffer
+{
+    VertexConversionBuffer(vk::Renderer *renderer,
+                           angle::FormatID formatIDIn,
+                           GLuint strideIn,
+                           size_t offsetIn,
+                           bool hostVisible);
+    ~VertexConversionBuffer();
+
+    VertexConversionBuffer(VertexConversionBuffer &&other);
+
+    // The conversion is identified by the triple of {format, stride, offset}.
+    angle::FormatID formatID;
+    GLuint stride;
+    size_t offset;
+};
+
 enum class BufferUpdateType
 {
     StorageRedefined,
@@ -200,23 +217,6 @@ class BufferVk : public BufferImpl
                                BufferUsageType usageType,
                                VkMemoryPropertyFlags memoryPropertyFlags,
                                size_t size) const;
-
-    struct VertexConversionBuffer : public ConversionBuffer
-    {
-        VertexConversionBuffer(vk::Renderer *renderer,
-                               angle::FormatID formatIDIn,
-                               GLuint strideIn,
-                               size_t offsetIn,
-                               bool hostVisible);
-        ~VertexConversionBuffer();
-
-        VertexConversionBuffer(VertexConversionBuffer &&other);
-
-        // The conversion is identified by the triple of {format, stride, offset}.
-        angle::FormatID formatID;
-        GLuint stride;
-        size_t offset;
-    };
 
     vk::BufferHelper mBuffer;
 
