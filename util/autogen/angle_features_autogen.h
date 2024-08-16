@@ -126,6 +126,7 @@ enum class Feature
     EmulateCopyTexImage2D,
     EmulateCopyTexImage2DFromRenderbuffers,
     EmulateDithering,
+    EmulateDontCareLoadWithRandomClear,
     EmulatedPrerotation180,
     EmulatedPrerotation270,
     EmulatedPrerotation90,

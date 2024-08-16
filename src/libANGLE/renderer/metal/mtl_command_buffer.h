@@ -403,7 +403,9 @@ struct RenderCommandEncoderStates
 class RenderCommandEncoder final : public CommandEncoder
 {
   public:
-    RenderCommandEncoder(CommandBuffer *cmdBuffer, const OcclusionQueryPool &queryPool);
+    RenderCommandEncoder(CommandBuffer *cmdBuffer,
+                         const OcclusionQueryPool &queryPool,
+                         bool emulateDontCareLoadOpWithRandomClear);
     ~RenderCommandEncoder() override;
 
     // override CommandEncoder
@@ -633,6 +635,8 @@ class RenderCommandEncoder final : public CommandEncoder
 
     bool mPipelineStateSet = false;
     uint64_t mSerial       = 0;
+
+    const bool mEmulateDontCareLoadOpWithRandomClear;
 };
 
 class BlitCommandEncoder final : public CommandEncoder

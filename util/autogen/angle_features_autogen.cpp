@@ -126,6 +126,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::EmulateCopyTexImage2D, "emulateCopyTexImage2D"},
     {Feature::EmulateCopyTexImage2DFromRenderbuffers, "emulateCopyTexImage2DFromRenderbuffers"},
     {Feature::EmulateDithering, "emulateDithering"},
+    {Feature::EmulateDontCareLoadWithRandomClear, "emulateDontCareLoadWithRandomClear"},
     {Feature::EmulatedPrerotation180, "emulatedPrerotation180"},
     {Feature::EmulatedPrerotation270, "emulatedPrerotation270"},
     {Feature::EmulatedPrerotation90, "emulatedPrerotation90"},
