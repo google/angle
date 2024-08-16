@@ -574,9 +574,9 @@ class Renderer : angle::NonCopyable
     }
     size_t getStagingBufferAlignment() const { return mStagingBufferAlignment; }
 
-    uint32_t getVertexConversionBufferMemoryTypeIndex(vk::MemoryHostVisibility hostVisibility) const
+    uint32_t getVertexConversionBufferMemoryTypeIndex(MemoryHostVisibility hostVisibility) const
     {
-        return hostVisibility == vk::MemoryHostVisibility::Visible
+        return hostVisibility == MemoryHostVisibility::Visible
                    ? mHostVisibleVertexConversionBufferMemoryTypeIndex
                    : mDeviceLocalVertexConversionBufferMemoryTypeIndex;
     }
