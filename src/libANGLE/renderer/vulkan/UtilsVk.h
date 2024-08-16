@@ -28,6 +28,7 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_UTILSVK_H_
 #define LIBANGLE_RENDERER_VULKAN_UTILSVK_H_
 
+#include "libANGLE/renderer/vulkan/BufferVk.h"
 #include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
 #include "libANGLE/renderer/vulkan/vk_internal_shaders_autogen.h"
@@ -229,9 +230,9 @@ class UtilsVk : angle::NonCopyable
     angle::Result convertLineLoopIndexIndirectBuffer(
         ContextVk *contextVk,
         vk::BufferHelper *srcIndirectBuffer,
+        vk::BufferHelper *srcIndexBuffer,
         vk::BufferHelper *dstIndirectBuffer,
         vk::BufferHelper *dstIndexBuffer,
-        vk::BufferHelper *srcIndexBuffer,
         const ConvertLineLoopIndexIndirectParameters &params);
 
     angle::Result convertLineLoopArrayIndirectBuffer(
@@ -775,8 +776,8 @@ class LineLoopHelper final : angle::NonCopyable
     }
 
   private:
-    vk::BufferHelper mDynamicIndexBuffer;
-    vk::BufferHelper mDynamicIndirectBuffer;
+    ConversionBuffer mDynamicIndexBuffer;
+    ConversionBuffer mDynamicIndirectBuffer;
 };
 }  // namespace rx
 

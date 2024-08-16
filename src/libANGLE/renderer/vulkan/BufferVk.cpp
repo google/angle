@@ -281,32 +281,26 @@ ConversionBuffer::ConversionBuffer(vk::Renderer *renderer,
                                    size_t initialSize,
                                    size_t alignment,
                                    bool hostVisible)
-    : dirty(true)
+    : mDirty(true)
 {
-    data = std::make_unique<vk::BufferHelper>();
+    mData = std::make_unique<vk::BufferHelper>();
 }
 
 ConversionBuffer::~ConversionBuffer()
 {
-    ASSERT(!data || !data->valid());
+    ASSERT(!mData || !mData->valid());
 }
 
 ConversionBuffer::ConversionBuffer(ConversionBuffer &&other) = default;
 
 // VertexConversionBuffer implementation.
-VertexConversionBuffer::VertexConversionBuffer(vk::Renderer *renderer,
-                                               angle::FormatID formatIDIn,
-                                               GLuint strideIn,
-                                               size_t offsetIn,
-                                               bool hostVisible)
+VertexConversionBuffer::VertexConversionBuffer(vk::Renderer *renderer, const CacheKey &cacheKey)
     : ConversionBuffer(renderer,
                        vk::kVertexBufferUsageFlags,
                        kConvertedArrayBufferInitialSize,
                        vk::kVertexBufferAlignment,
-                       hostVisible),
-      formatID(formatIDIn),
-      stride(strideIn),
-      offset(offsetIn)
+                       cacheKey.hostVisible),
+      mCacheKey(cacheKey)
 {}
 
 VertexConversionBuffer::VertexConversionBuffer(VertexConversionBuffer &&other) = default;
@@ -350,7 +344,7 @@ angle::Result BufferVk::release(ContextVk *contextVk)
 
     for (ConversionBuffer &buffer : mVertexConversionBuffers)
     {
-        buffer.data->release(renderer);
+        buffer.release(renderer);
     }
     mVertexConversionBuffers.clear();
 
@@ -1171,22 +1165,20 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
-ConversionBuffer *BufferVk::getVertexConversionBuffer(vk::Renderer *renderer,
-                                                      angle::FormatID formatID,
-                                                      GLuint stride,
-                                                      size_t offset,
-                                                      bool hostVisible)
+VertexConversionBuffer *BufferVk::getVertexConversionBuffer(
+    vk::Renderer *renderer,
+    const VertexConversionBuffer::CacheKey &cacheKey)
 {
     for (VertexConversionBuffer &buffer : mVertexConversionBuffers)
     {
-        if (buffer.formatID == formatID && buffer.stride == stride && buffer.offset == offset)
+        if (buffer.match(cacheKey))
         {
-            ASSERT(buffer.data && buffer.data->valid());
+            ASSERT(buffer.valid());
             return &buffer;
         }
     }
 
-    mVertexConversionBuffers.emplace_back(renderer, formatID, stride, offset, hostVisible);
+    mVertexConversionBuffers.emplace_back(renderer, cacheKey);
     return &mVertexConversionBuffers.back();
 }
 
@@ -1194,7 +1186,7 @@ void BufferVk::dataUpdated()
 {
     for (VertexConversionBuffer &buffer : mVertexConversionBuffers)
     {
-        buffer.dirty = true;
+        buffer.setDirty();
     }
     // Now we have valid data
     mHasValidData = true;

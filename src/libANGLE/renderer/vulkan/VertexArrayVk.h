@@ -17,9 +17,6 @@
 
 namespace rx
 {
-class BufferVk;
-struct ConversionBuffer;
-
 enum class BufferBindingDirty
 {
     No,
@@ -171,16 +168,14 @@ class VertexArrayVk : public VertexArrayImpl
                                          const gl::VertexBinding &binding,
                                          size_t attribIndex,
                                          const vk::Format &vertexFormat,
-                                         ConversionBuffer *conversion,
-                                         GLuint relativeOffset,
+                                         VertexConversionBuffer *conversion,
                                          bool compressed);
     angle::Result convertVertexBufferCPU(ContextVk *contextVk,
                                          BufferVk *srcBuffer,
                                          const gl::VertexBinding &binding,
                                          size_t attribIndex,
                                          const vk::Format &vertexFormat,
-                                         ConversionBuffer *conversion,
-                                         GLuint relativeOffset,
+                                         VertexConversionBuffer *conversion,
                                          bool compress);
 
     angle::Result syncDirtyAttrib(ContextVk *contextVk,
@@ -206,9 +201,9 @@ class VertexArrayVk : public VertexArrayImpl
     // Cached element array buffers for improving performance.
     vk::BufferHelperQueue mCachedStreamIndexBuffers;
 
-    vk::BufferHelper mStreamedIndexData;
-    vk::BufferHelper mTranslatedByteIndexData;
-    vk::BufferHelper mTranslatedByteIndirectData;
+    ConversionBuffer mStreamedIndexData;
+    ConversionBuffer mTranslatedByteIndexData;
+    ConversionBuffer mTranslatedByteIndirectData;
 
     LineLoopHelper mLineLoopHelper;
     Optional<GLint> mLineLoopBufferFirstIndex;

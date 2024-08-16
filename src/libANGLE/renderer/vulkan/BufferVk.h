@@ -18,8 +18,10 @@
 namespace rx
 {
 // Conversion buffers hold translated index and vertex data.
-struct ConversionBuffer
+class ConversionBuffer
 {
+  public:
+    ConversionBuffer() : mDirty(true) { mData = std::make_unique<vk::BufferHelper>(); }
     ConversionBuffer(vk::Renderer *renderer,
                      VkBufferUsageFlags usageFlags,
                      size_t initialSize,
@@ -29,28 +31,50 @@ struct ConversionBuffer
 
     ConversionBuffer(ConversionBuffer &&other);
 
+    bool dirty() const { return mDirty; }
+    void setDirty() { mDirty = true; }
+    void clearDirty() { mDirty = false; }
+
+    bool valid() const { return mData && mData->valid(); }
+    vk::BufferHelper *getBuffer() const { return mData.get(); }
+    void release(vk::Renderer *renderer) { mData->release(renderer); }
+    void destroy(vk::Renderer *renderer) { mData->destroy(renderer); }
+
+  private:
     // One state value determines if we need to re-stream vertex data.
-    bool dirty;
+    bool mDirty;
 
     // Where the conversion data is stored.
-    std::unique_ptr<vk::BufferHelper> data;
+    std::unique_ptr<vk::BufferHelper> mData;
 };
 
-struct VertexConversionBuffer : public ConversionBuffer
+class VertexConversionBuffer : public ConversionBuffer
 {
-    VertexConversionBuffer(vk::Renderer *renderer,
-                           angle::FormatID formatIDIn,
-                           GLuint strideIn,
-                           size_t offsetIn,
-                           bool hostVisible);
+  public:
+    struct CacheKey final
+    {
+        angle::FormatID formatID;
+        GLuint stride;
+        size_t offset;
+        bool hostVisible;
+    };
+
+    VertexConversionBuffer(vk::Renderer *renderer, const CacheKey &cacheKey);
     ~VertexConversionBuffer();
 
     VertexConversionBuffer(VertexConversionBuffer &&other);
 
+    bool match(const CacheKey &cacheKey) const
+    {
+        return mCacheKey.formatID == cacheKey.formatID && mCacheKey.stride == cacheKey.stride &&
+               mCacheKey.offset == cacheKey.offset && mCacheKey.hostVisible == cacheKey.hostVisible;
+    }
+
+    const CacheKey &getCacheKey() const { return mCacheKey; }
+
+  private:
     // The conversion is identified by the triple of {format, stride, offset}.
-    angle::FormatID formatID;
-    GLuint stride;
-    size_t offset;
+    CacheKey mCacheKey;
 };
 
 enum class BufferUpdateType
@@ -152,11 +176,9 @@ class BufferVk : public BufferImpl
                                     GLbitfield access,
                                     void **mapPtr);
 
-    ConversionBuffer *getVertexConversionBuffer(vk::Renderer *renderer,
-                                                angle::FormatID formatID,
-                                                GLuint stride,
-                                                size_t offset,
-                                                bool hostVisible);
+    VertexConversionBuffer *getVertexConversionBuffer(
+        vk::Renderer *renderer,
+        const VertexConversionBuffer::CacheKey &cacheKey);
 
   private:
     angle::Result updateBuffer(ContextVk *contextVk,
