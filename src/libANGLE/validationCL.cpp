@@ -751,13 +751,21 @@ cl_int ValidateCreateContextFromType(const cl_context_properties *properties,
                                                                    void *user_data),
                                      const void *user_data)
 {
-    const Platform *platform = nullptr;
-    ANGLE_VALIDATE(ValidateContextProperties(properties, platform));
-
     // CL_INVALID_DEVICE_TYPE if device_type is not a valid value.
     if (!Device::IsValidType(device_type))
     {
         return CL_INVALID_DEVICE_TYPE;
+    }
+
+    const Platform *platform = nullptr;
+    ANGLE_VALIDATE(ValidateContextProperties(properties, platform));
+    if (platform == nullptr)
+    {
+        platform = Platform::GetDefault();
+        if (platform == nullptr)
+        {
+            return CL_INVALID_PLATFORM;
+        }
     }
 
     if (!platform->hasDeviceType(device_type))
