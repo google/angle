@@ -379,19 +379,7 @@ inline void UseResourceCmd(id<MTLRenderCommandEncoder> encoder, IntermediateComm
     id<MTLResource> resource = stream->fetch<id<MTLResource>>();
     MTLResourceUsage usage   = stream->fetch<MTLResourceUsage>();
     mtl::RenderStages stages = stream->fetch<mtl::RenderStages>();
-    ANGLE_UNUSED_VARIABLE(stages);
-#if defined(__IPHONE_13_0) || defined(__MAC_10_15)
-    if (ANGLE_APPLE_AVAILABLE_XCI(10.15, 13.1, 13.0))
-    {
-        [encoder useResource:resource usage:usage stages:stages];
-    }
-    else
-#endif
-    {
-        ANGLE_APPLE_ALLOW_DEPRECATED_BEGIN
-        [encoder useResource:resource usage:usage];
-        ANGLE_APPLE_ALLOW_DEPRECATED_END
-    }
+    [encoder useResource:resource usage:usage stages:stages];
     [resource ANGLE_MTL_RELEASE];
 }
 
