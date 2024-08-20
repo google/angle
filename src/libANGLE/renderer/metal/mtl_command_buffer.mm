@@ -1004,7 +1004,6 @@ void CommandBuffer::popDebugGroup()
     }
 }
 
-#if ANGLE_MTL_EVENT_AVAILABLE
 uint64_t CommandBuffer::queueEventSignal(id<MTLEvent> event, uint64_t value)
 {
     std::lock_guard<std::mutex> lg(mLock);
@@ -1037,7 +1036,6 @@ void CommandBuffer::serverWaitEvent(id<MTLEvent> event, uint64_t value)
     setPendingEvents();
     [get() encodeWaitForEvent:event value:value];
 }
-#endif  // ANGLE_MTL_EVENT_AVAILABLE
 
 /** private use only */
 void CommandBuffer::set(id<MTLCommandBuffer> metalBuffer)
@@ -1153,22 +1151,18 @@ void CommandBuffer::forceEndingAllEncoders()
 
 void CommandBuffer::setPendingEvents()
 {
-#if ANGLE_MTL_EVENT_AVAILABLE
     for (const PendingEvent &eventEntry : mPendingSignalEvents)
     {
         setEventImpl(eventEntry.event, eventEntry.signalValue);
     }
     mPendingSignalEvents.clear();
-#endif
 }
 
-#if ANGLE_MTL_EVENT_AVAILABLE
 void CommandBuffer::setEventImpl(id<MTLEvent> event, uint64_t value)
 {
     ASSERT(!getPendingCommandEncoder());
     [get() encodeSignalEvent:event value:value];
 }
-#endif  // #if ANGLE_MTL_EVENT_AVAILABLE
 
 void CommandBuffer::pushDebugGroupImpl(const std::string &marker)
 {

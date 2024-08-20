@@ -2402,7 +2402,6 @@ void ContextMtl::onTransformFeedbackInactive(const gl::Context *context, Transfo
     endEncoding(true);
 }
 
-#if ANGLE_MTL_EVENT_AVAILABLE
 uint64_t ContextMtl::queueEventSignal(id<MTLEvent> event, uint64_t value)
 {
     ensureCommandBufferReady();
@@ -2422,7 +2421,6 @@ void ContextMtl::serverWaitEvent(id<MTLEvent> event, uint64_t value)
 
     mCmdBuffer.serverWaitEvent(event, value);
 }
-#endif
 
 void ContextMtl::updateProgramExecutable(const gl::Context *context)
 {

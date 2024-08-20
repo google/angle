@@ -172,9 +172,7 @@ void DisplayMtl::terminate()
     mCmdQueue.reset();
     mDefaultShaders = nil;
     mMetalDevice    = nil;
-#if ANGLE_MTL_EVENT_AVAILABLE
     mSharedEventListener = nil;
-#endif
     mCapsInitialized = false;
 
     mMetalDeviceVendorId = 0;
@@ -1526,7 +1524,6 @@ bool DisplayMtl::isSimulator() const
     return TARGET_OS_SIMULATOR;
 }
 
-#if ANGLE_MTL_EVENT_AVAILABLE
 mtl::AutoObjCObj<MTLSharedEventListener> DisplayMtl::getOrCreateSharedEventListener()
 {
     if (!mSharedEventListener)
@@ -1539,6 +1536,5 @@ mtl::AutoObjCObj<MTLSharedEventListener> DisplayMtl::getOrCreateSharedEventListe
     }
     return mSharedEventListener;
 }
-#endif
 
 }  // namespace rx

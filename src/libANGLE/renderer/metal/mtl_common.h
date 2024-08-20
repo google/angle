@@ -400,13 +400,6 @@ inline AutoObjCObj<U> adoptObjCObj(U *NS_RELEASES_ARGUMENT src)
 #endif
 }
 
-// NOTE: SharedEvent is only declared on iOS 12.0+ or mac 10.14+
-#if defined(__IPHONE_12_0) || defined(__MAC_10_14)
-#    define ANGLE_MTL_EVENT_AVAILABLE 1
-#else
-#    define ANGLE_MTL_EVENT_AVAILABLE 0
-#endif
-
 // The native image index used by Metal back-end,  the image index uses native mipmap level instead
 // of "virtual" level modified by OpenGL's base level.
 using MipmapNativeLevel = gl::LevelIndexWrapper<uint32_t>;
