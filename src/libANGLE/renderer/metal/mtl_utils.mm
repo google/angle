@@ -683,7 +683,7 @@ angle::Result InitializeDepthStencilTextureContentsGPU(const gl::Context *contex
         rtMTL.toRenderPassAttachmentDesc(&rpDesc.stencilAttachment);
         rpDesc.stencilAttachment.loadAction = MTLLoadActionClear;
     }
-    rpDesc.sampleCount = texture->samples();
+    rpDesc.rasterSampleCount = texture->samples();
 
     // End current render pass
     contextMtl->endEncoding(true);
@@ -1662,9 +1662,7 @@ NSUInteger ComputeTotalSizeUsedForMTLRenderPipelineDescriptor(
     const mtl::ContextDevice &device)
 {
     NSUInteger currentRenderTargetSize = 0;
-    ANGLE_APPLE_ALLOW_DEPRECATED_BEGIN
-    bool isMsaa = descriptor.sampleCount > 1;
-    ANGLE_APPLE_ALLOW_DEPRECATED_END
+    bool isMsaa                        = descriptor.rasterSampleCount > 1;
     for (NSUInteger i = 0; i < GetMaxNumberOfRenderTargetsForDevice(device); i++)
     {
         MTLRenderPipelineColorAttachmentDescriptor *color = descriptor.colorAttachments[i];

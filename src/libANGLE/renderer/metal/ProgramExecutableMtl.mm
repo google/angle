@@ -913,7 +913,7 @@ angle::Result ProgramExecutableMtl::setupDraw(const gl::Context *glContext,
         mCurrentShaderVariants[gl::ShaderType::Vertex] =
             &mVertexShaderVariants[pipelineDesc.rasterizationType];
 
-        const bool multisampledRendering = pipelineDesc.outputDescriptor.sampleCount > 1;
+        const bool multisampledRendering = pipelineDesc.outputDescriptor.rasterSampleCount > 1;
         const bool allowFragDepthWrite =
             pipelineDesc.outputDescriptor.depthAttachmentPixelFormat != 0;
         mCurrentShaderVariants[gl::ShaderType::Fragment] =
@@ -996,7 +996,8 @@ angle::Result ProgramExecutableMtl::getSpecializedShader(
     {
         // For fragment shader, we need to create 4 variants,
         // combining multisampled rendering and depth write enabled states.
-        const bool multisampledRendering = renderPipelineDesc.outputDescriptor.sampleCount > 1;
+        const bool multisampledRendering =
+            renderPipelineDesc.outputDescriptor.rasterSampleCount > 1;
         const bool allowFragDepthWrite =
             renderPipelineDesc.outputDescriptor.depthAttachmentPixelFormat != 0;
         shaderVariant = &mFragmentShaderVariants[PipelineParametersToFragmentShaderVariantIndex(

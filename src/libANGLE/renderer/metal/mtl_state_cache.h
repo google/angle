@@ -221,7 +221,7 @@ struct RenderPipelineOutputDesc
     uint16_t stencilAttachmentPixelFormat : 16;
 
     uint8_t numColorAttachments;
-    uint8_t sampleCount;
+    uint8_t rasterSampleCount;
 };
 
 enum class RenderPipelineRasterization : uint32_t
@@ -395,7 +395,7 @@ struct RenderPassDesc
     inline bool operator!=(const RenderPassDesc &other) const { return !(*this == other); }
 
     uint32_t numColorAttachments = 0;
-    uint32_t sampleCount         = 1;
+    uint32_t rasterSampleCount   = 1;
     uint32_t defaultWidth        = 0;
     uint32_t defaultHeight       = 0;
 };

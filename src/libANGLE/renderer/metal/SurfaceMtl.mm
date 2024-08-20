@@ -263,7 +263,7 @@ angle::Result SurfaceMtl::initializeContents(const gl::Context *context,
 
     // Use loadAction=clear
     mtl::RenderPassDesc rpDesc;
-    rpDesc.sampleCount = mColorTexture->samples();
+    rpDesc.rasterSampleCount = mColorTexture->samples();
 
     switch (binding)
     {

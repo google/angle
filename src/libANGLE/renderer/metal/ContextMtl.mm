@@ -2001,7 +2001,7 @@ mtl::RenderCommandEncoder *ContextMtl::getTextureRenderCommandEncoder(
     rpDesc.colorAttachments[0].level        = index.getNativeLevel();
     rpDesc.colorAttachments[0].sliceOrDepth = index.hasLayer() ? index.getLayerIndex() : 0;
     rpDesc.numColorAttachments              = 1;
-    rpDesc.sampleCount                      = textureTarget->samples();
+    rpDesc.rasterSampleCount                = textureTarget->samples();
 
     return getRenderPassCommandEncoder(rpDesc);
 }
@@ -2016,7 +2016,7 @@ mtl::RenderCommandEncoder *ContextMtl::getRenderTargetCommandEncoderWithClear(
     mtl::RenderPassDesc rpDesc;
     renderTarget.toRenderPassAttachmentDesc(&rpDesc.colorAttachments[0]);
     rpDesc.numColorAttachments = 1;
-    rpDesc.sampleCount         = renderTarget.getRenderSamples();
+    rpDesc.rasterSampleCount   = renderTarget.getRenderSamples();
 
     if (clearColor.valid())
     {
@@ -2975,7 +2975,7 @@ angle::Result ContextMtl::checkIfPipelineChanged(const gl::Context *context,
         mRenderPipelineDesc.inputPrimitiveTopology = topologyClass;
         mRenderPipelineDesc.alphaToCoverageEnabled =
             mState.isSampleAlphaToCoverageEnabled() &&
-            mRenderPipelineDesc.outputDescriptor.sampleCount > 1 &&
+            mRenderPipelineDesc.outputDescriptor.rasterSampleCount > 1 &&
             !getDisplay()->getFeatures().emulateAlphaToCoverage.enabled;
 
         mRenderPipelineDesc.outputDescriptor.updateEnabledDrawBuffers(
