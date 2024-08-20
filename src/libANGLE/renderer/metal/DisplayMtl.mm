@@ -236,7 +236,7 @@ DeviceImpl *DisplayMtl::createDevice()
 mtl::AutoObjCPtr<id<MTLDevice>> DisplayMtl::getMetalDeviceMatchingAttribute(
     const egl::AttributeMap &attribs)
 {
-#if defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_MACCATALYST)
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
     auto deviceList = mtl::adoptObjCObj(MTLCopyAllDevices());
 
     EGLAttrib high = attribs.get(EGL_PLATFORM_ANGLE_DEVICE_ID_HIGH_ANGLE, 0);

@@ -471,7 +471,7 @@ egl::Error WindowSurfaceMtl::initialize(const egl::Display *display)
         mMetalLayer.get().pixelFormat     = mColorFormat.metalFormat;
         mMetalLayer.get().framebufferOnly = NO;  // Support blitting and glReadPixels
 
-#if ANGLE_PLATFORM_MACOS || ANGLE_PLATFORM_MACCATALYST
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
         // Autoresize with parent layer.
         mMetalLayer.get().autoresizingMask = kCALayerWidthSizable | kCALayerHeightSizable;
 #endif
@@ -498,7 +498,7 @@ egl::Error WindowSurfaceMtl::swap(const gl::Context *context)
 
 void WindowSurfaceMtl::setSwapInterval(EGLint interval)
 {
-#if ANGLE_PLATFORM_MACOS || ANGLE_PLATFORM_MACCATALYST
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
     mMetalLayer.get().displaySyncEnabled = interval != 0;
 #endif
 }
@@ -616,7 +616,7 @@ bool WindowSurfaceMtl::checkIfLayerResized(const gl::Context *context)
             // Parent layer's content scale has changed, update Metal layer's scale factor.
             mMetalLayer.get().contentsScale = mLayer.contentsScale;
         }
-#if !ANGLE_PLATFORM_MACOS && !ANGLE_PLATFORM_MACCATALYST
+#if !TARGET_OS_OSX && !TARGET_OS_MACCATALYST
         // Only macOS supports autoresizing mask. Thus, the metal layer has to be manually
         // updated.
         if (!CGRectEqualToRect(mMetalLayer.get().bounds, mLayer.bounds))

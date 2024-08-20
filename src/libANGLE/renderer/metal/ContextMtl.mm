@@ -1893,7 +1893,7 @@ void ContextMtl::flushCommandBufferIfNeeded()
 {
     if (mRenderPassesSinceFlush >= mtl::kMaxRenderPassesPerCommandBuffer)
     {
-#if defined(ANGLE_PLATFORM_MACOS)
+#if TARGET_OS_OSX
         // Ensure that we don't accumulate too many unflushed render passes. Don't wait until they
         // are submitted, other components handle backpressure so don't create uneccessary CPU/GPU
         // synchronization.
