@@ -389,15 +389,7 @@ inline void MemoryBarrierCmd(id<MTLRenderCommandEncoder> encoder, IntermediateCo
     mtl::RenderStages scope  = stream->fetch<mtl::BarrierScope>();
     mtl::RenderStages after  = stream->fetch<mtl::RenderStages>();
     mtl::RenderStages before = stream->fetch<mtl::RenderStages>();
-    ANGLE_UNUSED_VARIABLE(scope);
-    ANGLE_UNUSED_VARIABLE(after);
-    ANGLE_UNUSED_VARIABLE(before);
-#if defined(__MAC_10_14) && (TARGET_OS_OSX || TARGET_OS_MACCATALYST)
-    if (ANGLE_APPLE_AVAILABLE_XC(10.14, 13.1))
-    {
-        [encoder memoryBarrierWithScope:scope afterStages:after beforeStages:before];
-    }
-#endif
+    [encoder memoryBarrierWithScope:scope afterStages:after beforeStages:before];
 }
 
 inline void MemoryBarrierWithResourceCmd(id<MTLRenderCommandEncoder> encoder,
@@ -406,17 +398,7 @@ inline void MemoryBarrierWithResourceCmd(id<MTLRenderCommandEncoder> encoder,
     id<MTLResource> resource = stream->fetch<id<MTLResource>>();
     mtl::RenderStages after  = stream->fetch<mtl::RenderStages>();
     mtl::RenderStages before = stream->fetch<mtl::RenderStages>();
-    ANGLE_UNUSED_VARIABLE(after);
-    ANGLE_UNUSED_VARIABLE(before);
-#if defined(__MAC_10_14) && (TARGET_OS_OSX || TARGET_OS_MACCATALYST)
-    if (ANGLE_APPLE_AVAILABLE_XC(10.14, 13.1))
-    {
-        [encoder memoryBarrierWithResources:&resource
-                                      count:1
-                                afterStages:after
-                               beforeStages:before];
-    }
-#endif
+    [encoder memoryBarrierWithResources:&resource count:1 afterStages:after beforeStages:before];
     [resource ANGLE_MTL_RELEASE];
 }
 
@@ -2733,11 +2715,7 @@ ComputeCommandEncoder &ComputeCommandEncoder::dispatch(const MTLSize &threadGrou
 ComputeCommandEncoder &ComputeCommandEncoder::dispatchNonUniform(const MTLSize &threadsPerGrid,
                                                                  const MTLSize &threadsPerGroup)
 {
-#if TARGET_OS_TV
-    UNREACHABLE();
-#else
     [get() dispatchThreads:threadsPerGrid threadsPerThreadgroup:threadsPerGroup];
-#endif
     return *this;
 }
 }  // namespace mtl
