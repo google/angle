@@ -205,15 +205,12 @@ uint64_t GetGpuIDFromDisplayID(uint32_t displayID)
 {
     // First attempt to use query the registryID from a Metal device before falling back to CGL.
     // This avoids loading the OpenGL framework when possible.
-    if (@available(macOS 10.13, *))
+    id<MTLDevice> device = CGDirectDisplayCopyCurrentMetalDevice(displayID);
+    if (device)
     {
-        id<MTLDevice> device = CGDirectDisplayCopyCurrentMetalDevice(displayID);
-        if (device)
-        {
-            uint64_t registryId = [device registryID];
-            [device release];
-            return registryId;
-        }
+        uint64_t registryId = [device registryID];
+        [device release];
+        return registryId;
     }
 #if ANGLE_ENABLE_CGL
     return GetGpuIDFromOpenGLDisplayMask(CGDisplayIDToOpenGLDisplayMask(displayID));
@@ -228,49 +225,41 @@ uint64_t GetGpuIDFromDisplayID(uint32_t displayID)
 // Used with permission.
 uint64_t GetGpuIDFromOpenGLDisplayMask(uint32_t displayMask)
 {
-    if (@available(macOS 10.13, *))
+    GLint numRenderers              = 0;
+    CGLRendererInfoObj rendererInfo = nullptr;
+    CGLError error = CGLQueryRendererInfo(displayMask, &rendererInfo, &numRenderers);
+    if (!numRenderers || !rendererInfo || error != kCGLNoError)
+        return 0;
+
+    // The 0th renderer should not be the software renderer.
+    GLint isAccelerated;
+    error = CGLDescribeRenderer(rendererInfo, 0, kCGLRPAccelerated, &isAccelerated);
+    if (!isAccelerated || error != kCGLNoError)
     {
-        constexpr CGLRendererProperty kCGLRPRegistryIDLow  = static_cast<CGLRendererProperty>(140);
-        constexpr CGLRendererProperty kCGLRPRegistryIDHigh = static_cast<CGLRendererProperty>(141);
-
-        GLint numRenderers              = 0;
-        CGLRendererInfoObj rendererInfo = nullptr;
-        CGLError error = CGLQueryRendererInfo(displayMask, &rendererInfo, &numRenderers);
-        if (!numRenderers || !rendererInfo || error != kCGLNoError)
-            return 0;
-
-        // The 0th renderer should not be the software renderer.
-        GLint isAccelerated;
-        error = CGLDescribeRenderer(rendererInfo, 0, kCGLRPAccelerated, &isAccelerated);
-        if (!isAccelerated || error != kCGLNoError)
-        {
-            CGLDestroyRendererInfo(rendererInfo);
-            return 0;
-        }
-
-        GLint gpuIDLow  = 0;
-        GLint gpuIDHigh = 0;
-
-        error = CGLDescribeRenderer(rendererInfo, 0, kCGLRPRegistryIDLow, &gpuIDLow);
-        if (error != kCGLNoError)
-        {
-            CGLDestroyRendererInfo(rendererInfo);
-            return 0;
-        }
-
-        error = CGLDescribeRenderer(rendererInfo, 0, kCGLRPRegistryIDHigh, &gpuIDHigh);
-        if (error != kCGLNoError)
-        {
-            CGLDestroyRendererInfo(rendererInfo);
-            return 0;
-        }
-
         CGLDestroyRendererInfo(rendererInfo);
-        return (static_cast<uint64_t>(static_cast<uint32_t>(gpuIDHigh)) << 32) |
-               static_cast<uint64_t>(static_cast<uint32_t>(gpuIDLow));
+        return 0;
     }
 
-    return 0;
+    GLint gpuIDLow  = 0;
+    GLint gpuIDHigh = 0;
+
+    error = CGLDescribeRenderer(rendererInfo, 0, kCGLRPRegistryIDLow, &gpuIDLow);
+    if (error != kCGLNoError)
+    {
+        CGLDestroyRendererInfo(rendererInfo);
+        return 0;
+    }
+
+    error = CGLDescribeRenderer(rendererInfo, 0, kCGLRPRegistryIDHigh, &gpuIDHigh);
+    if (error != kCGLNoError)
+    {
+        CGLDestroyRendererInfo(rendererInfo);
+        return 0;
+    }
+
+    CGLDestroyRendererInfo(rendererInfo);
+    return (static_cast<uint64_t>(static_cast<uint32_t>(gpuIDHigh)) << 32) |
+           static_cast<uint64_t>(static_cast<uint32_t>(gpuIDLow));
 }
 #endif
 
@@ -283,49 +272,42 @@ VendorID GetVendorIDFromMetalDeviceRegistryID(uint64_t registryID)
     const mach_port_t mainPort = kIOMainPortDefault;
 #endif
 
-#if defined(ANGLE_PLATFORM_MACOS)
-    // On macOS, the following code is only supported since 10.13.
-    if (@available(macOS 10.13, *))
-#endif
+    // Get a matching dictionary for the IOGraphicsAccelerator2
+    CFMutableDictionaryRef matchingDict = IORegistryEntryIDMatching(registryID);
+    if (matchingDict == nullptr)
     {
-        // Get a matching dictionary for the IOGraphicsAccelerator2
-        CFMutableDictionaryRef matchingDict = IORegistryEntryIDMatching(registryID);
-        if (matchingDict == nullptr)
-        {
-            return 0;
-        }
-
-        // IOServiceGetMatchingService will consume the reference on the matching dictionary,
-        // so we don't need to release the dictionary.
-        io_registry_entry_t acceleratorEntry = IOServiceGetMatchingService(mainPort, matchingDict);
-        if (acceleratorEntry == IO_OBJECT_NULL)
-        {
-            return 0;
-        }
-
-        // Get the parent entry that will be the IOPCIDevice
-        io_registry_entry_t deviceEntry = IO_OBJECT_NULL;
-        if (IORegistryEntryGetParentEntry(acceleratorEntry, kIOServicePlane, &deviceEntry) !=
-                kIOReturnSuccess ||
-            deviceEntry == IO_OBJECT_NULL)
-        {
-            IOObjectRelease(acceleratorEntry);
-            return 0;
-        }
-
-        IOObjectRelease(acceleratorEntry);
-
-        uint32_t vendorId;
-        if (!GetEntryProperty(deviceEntry, CFSTR("vendor-id"), &vendorId))
-        {
-            vendorId = 0;
-        }
-
-        IOObjectRelease(deviceEntry);
-
-        return vendorId;
+        return 0;
     }
-    return 0;
+
+    // IOServiceGetMatchingService will consume the reference on the matching dictionary,
+    // so we don't need to release the dictionary.
+    io_registry_entry_t acceleratorEntry = IOServiceGetMatchingService(mainPort, matchingDict);
+    if (acceleratorEntry == IO_OBJECT_NULL)
+    {
+        return 0;
+    }
+
+    // Get the parent entry that will be the IOPCIDevice
+    io_registry_entry_t deviceEntry = IO_OBJECT_NULL;
+    if (IORegistryEntryGetParentEntry(acceleratorEntry, kIOServicePlane, &deviceEntry) !=
+            kIOReturnSuccess ||
+        deviceEntry == IO_OBJECT_NULL)
+    {
+        IOObjectRelease(acceleratorEntry);
+        return 0;
+    }
+
+    IOObjectRelease(acceleratorEntry);
+
+    uint32_t vendorId;
+    if (!GetEntryProperty(deviceEntry, CFSTR("vendor-id"), &vendorId))
+    {
+        vendorId = 0;
+    }
+
+    IOObjectRelease(deviceEntry);
+
+    return vendorId;
 }
 
 bool GetSystemInfo_mac(SystemInfo *info)
@@ -353,10 +335,7 @@ bool GetSystemInfo_mac(SystemInfo *info)
 
     // Then override the activeGPUIndex field of info to reflect the current
     // GPU instead of the non-intel GPU
-    if (@available(macOS 10.13, *))
-    {
-        ForceGPUSwitchIndex(info);
-    }
+    ForceGPUSwitchIndex(info);
 
     // Figure out whether this is a dual-GPU system.
     //
