@@ -432,16 +432,7 @@ Texture::Texture(ContextMtl *context,
 
         if (memoryLess)
         {
-            bool supportsMemoryless = false;
-#if (TARGET_OS_IOS || TARGET_OS_TV) && !TARGET_OS_MACCATALYST
-            supportsMemoryless = true;
-#else
-            if (ANGLE_APPLE_AVAILABLE_XC(11.0, 14.1))
-            {
-                supportsMemoryless = context->getDisplay()->supportsAppleGPUFamily(1);
-            }
-#endif
-            if (supportsMemoryless)
+            if (context->getDisplay()->supportsAppleGPUFamily(1))
             {
                 desc.resourceOptions = MTLResourceStorageModeMemoryless;
             }
