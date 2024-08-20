@@ -1414,31 +1414,19 @@ bool DisplayMtl::supportsMetal2_2() const
 
 bool DisplayMtl::supports32BitFloatFiltering() const
 {
-#if ((TARGET_OS_OSX && __MAC_OS_X_VERSION_MAX_ALLOWED >= 110000) ||  \
-     (TARGET_OS_IOS && __IPHONE_OS_VERSION_MAX_ALLOWED >= 140000) || \
-     (TARGET_OS_TV && __TV_OS_VERSION_MAX_ALLOWED >= 160000) || TARGET_OS_VISION)
-    if (@available(macOS 11.0, macCatalyst 14.0, iOS 14.0, tvOS 16.0, *))
+    if (@available(macOS 11.0, *))
     {
         return [mMetalDevice supports32BitFloatFiltering];
     }
-#endif
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
     return true;  // Always true on old macOS
-#else
-    return false;  // Always false everywhere else
-#endif
 }
 
 bool DisplayMtl::supportsBCTextureCompression() const
 {
-#if ((TARGET_OS_OSX && __MAC_OS_X_VERSION_MAX_ALLOWED >= 110000) ||  \
-     (TARGET_OS_IOS && __IPHONE_OS_VERSION_MAX_ALLOWED >= 160400) || \
-     (TARGET_OS_TV && __TV_OS_VERSION_MAX_ALLOWED >= 160400) || TARGET_OS_VISION)
-    if (@available(macOS 11.0, macCatalyst 16.4, iOS 16.4, tvOS 16.4, *))
+    if (@available(macOS 11.0, macCatalyst 16.4, iOS 16.4, *))
     {
         return [mMetalDevice supportsBCTextureCompression];
     }
-#endif
 #if TARGET_OS_OSX || TARGET_OS_MACCATALYST
     return true;  // Always true on old macOS
 #else
