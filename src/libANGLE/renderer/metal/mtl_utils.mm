@@ -1387,7 +1387,6 @@ MTLIndexType GetIndexType(gl::DrawElementsType type)
     }
 }
 
-#if ANGLE_MTL_SWIZZLE_AVAILABLE
 MTLTextureSwizzle GetTextureSwizzle(GLenum swizzle)
 {
     switch (swizzle)
@@ -1409,7 +1408,6 @@ MTLTextureSwizzle GetTextureSwizzle(GLenum swizzle)
             return MTLTextureSwizzleZero;
     }
 }
-#endif
 
 MTLColorWriteMask GetEmulatedColorWriteMask(const mtl::Format &mtlFormat, bool *isEmulatedOut)
 {

@@ -886,7 +886,7 @@ class TextureMtl::NativeTextureWrapperWithViewSupport : public NativeTextureWrap
     mtl::TextureRef createMipsSwizzleView(GLuint glLevel,
                                           uint32_t levels,
                                           MTLPixelFormat format,
-                                          const mtl::TextureSwizzleChannels &swizzle)
+                                          const MTLTextureSwizzleChannels &swizzle)
     {
         return mNativeTexture->createMipsSwizzleView(getNativeLevel(glLevel), levels, format,
                                                      swizzle);
@@ -1902,7 +1902,6 @@ angle::Result TextureMtl::bindToShader(const gl::Context *context,
 
     if (!mSwizzleStencilSamplingView)
     {
-#if ANGLE_MTL_SWIZZLE_AVAILABLE
         ContextMtl *contextMtl             = mtl::GetImpl(context);
         const angle::FeaturesMtl &features = contextMtl->getDisplay()->getFeatures();
 
@@ -1948,7 +1947,6 @@ angle::Result TextureMtl::bindToShader(const gl::Context *context,
                 format, swizzle);
         }
         else
-#endif  // ANGLE_MTL_SWIZZLE_AVAILABLE
         {
             mSwizzleStencilSamplingView = mState.isStencilMode()
                                               ? mViewFromBaseToMaxLevel->getStencilView()
