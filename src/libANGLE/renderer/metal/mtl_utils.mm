@@ -1195,10 +1195,8 @@ MTLSamplerAddressMode GetSamplerAddressMode(GLenum wrap)
     {
         case GL_CLAMP_TO_EDGE:
             return MTLSamplerAddressModeClampToEdge;
-#if !ANGLE_PLATFORM_WATCHOS
         case GL_MIRROR_CLAMP_TO_EDGE_EXT:
             return MTLSamplerAddressModeMirrorClampToEdge;
-#endif
         case GL_REPEAT:
             return MTLSamplerAddressModeRepeat;
         case GL_MIRRORED_REPEAT:

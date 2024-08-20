@@ -951,13 +951,7 @@ void DisplayMtl::initializeExtensions() const
     mNativeExtensions.stencilTexturingANGLE         = true;
     mNativeExtensions.copyTextureCHROMIUM           = true;
     mNativeExtensions.copyCompressedTextureCHROMIUM = false;
-
-#if !ANGLE_PLATFORM_WATCHOS
-    if (@available(iOS 14.0, macOS 10.11, macCatalyst 14.0, tvOS 16.0, *))
-    {
-        mNativeExtensions.textureMirrorClampToEdgeEXT = true;
-    }
-#endif
+    mNativeExtensions.textureMirrorClampToEdgeEXT   = true;
 
     if (ANGLE_APPLE_AVAILABLE_XCI(10.11, 13.1, 11.0))
     {
