@@ -807,10 +807,7 @@ uint32_t GetDeviceVendorId(id<MTLDevice> metalDevice)
 {
     uint32_t vendorId = 0;
 #if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-    if (ANGLE_APPLE_AVAILABLE_XC(10.13, 13.1))
-    {
-        vendorId = GetDeviceVendorIdFromIOKit(metalDevice);
-    }
+    vendorId = GetDeviceVendorIdFromIOKit(metalDevice);
 #endif
     if (!vendorId)
     {
