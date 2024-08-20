@@ -224,21 +224,6 @@ struct RenderPipelineOutputDesc
     uint8_t sampleCount;
 };
 
-// Some SDK levels don't declare MTLPrimitiveTopologyClass. Needs to do compile time check here:
-#if !(TARGET_OS_OSX || TARGET_OS_MACCATALYST) && \
-    (!defined(__IPHONE_12_0) || ANGLE_IOS_DEPLOY_TARGET < __IPHONE_12_0)
-#    define ANGLE_MTL_PRIMITIVE_TOPOLOGY_CLASS_AVAILABLE 0
-using PrimitiveTopologyClass                                     = uint32_t;
-constexpr PrimitiveTopologyClass kPrimitiveTopologyClassTriangle = 0;
-constexpr PrimitiveTopologyClass kPrimitiveTopologyClassPoint    = 0;
-#else
-#    define ANGLE_MTL_PRIMITIVE_TOPOLOGY_CLASS_AVAILABLE 1
-using PrimitiveTopologyClass = MTLPrimitiveTopologyClass;
-constexpr PrimitiveTopologyClass kPrimitiveTopologyClassTriangle =
-    MTLPrimitiveTopologyClassTriangle;
-constexpr PrimitiveTopologyClass kPrimitiveTopologyClassPoint = MTLPrimitiveTopologyClassPoint;
-#endif
-
 enum class RenderPipelineRasterization : uint32_t
 {
     // This flag is used for vertex shader not writing any stage output (e.g gl_Position).
@@ -281,7 +266,7 @@ struct alignas(4) RenderPipelineDesc
 
     RenderPipelineOutputDesc outputDescriptor;
 
-    // Use uint8_t instead of PrimitiveTopologyClass to compact space.
+    // Use uint8_t instead of MTLPrimitiveTopologyClass to compact space.
     uint8_t inputPrimitiveTopology : 2;
 
     bool alphaToCoverageEnabled : 1;

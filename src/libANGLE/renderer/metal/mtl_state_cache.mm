@@ -669,9 +669,7 @@ AutoObjCPtr<MTLRenderPipelineDescriptor *> RenderPipelineDesc::createMetalDesc(
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), outputDescriptor, sampleCount);
     ANGLE_APPLE_ALLOW_DEPRECATED_END
 
-#if ANGLE_MTL_PRIMITIVE_TOPOLOGY_CLASS_AVAILABLE
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), *this, inputPrimitiveTopology);
-#endif
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), *this, alphaToCoverageEnabled);
 
     // rasterizationEnabled will be true for both EmulatedDiscard & Enabled.

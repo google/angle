@@ -1343,19 +1343,12 @@ MTLWinding GetFrontfaceWinding(GLenum frontFaceMode, bool invert)
     }
 }
 
-#if ANGLE_MTL_PRIMITIVE_TOPOLOGY_CLASS_AVAILABLE
-PrimitiveTopologyClass GetPrimitiveTopologyClass(gl::PrimitiveMode mode)
+MTLPrimitiveTopologyClass GetPrimitiveTopologyClass(gl::PrimitiveMode mode)
 {
     // NOTE(hqle): Support layered renderring in future.
     // In non-layered rendering mode, unspecified is enough.
     return MTLPrimitiveTopologyClassUnspecified;
 }
-#else  // ANGLE_MTL_PRIMITIVE_TOPOLOGY_CLASS_AVAILABLE
-PrimitiveTopologyClass GetPrimitiveTopologyClass(gl::PrimitiveMode mode)
-{
-    return kPrimitiveTopologyClassTriangle;
-}
-#endif
 
 MTLPrimitiveType GetPrimitiveType(gl::PrimitiveMode mode)
 {

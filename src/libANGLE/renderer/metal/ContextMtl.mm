@@ -2939,7 +2939,7 @@ angle::Result ContextMtl::checkIfPipelineChanged(const gl::Context *context,
                                                  bool *isPipelineDescChanged)
 {
     ASSERT(mRenderEncoder.valid());
-    mtl::PrimitiveTopologyClass topologyClass = mtl::GetPrimitiveTopologyClass(primitiveMode);
+    MTLPrimitiveTopologyClass topologyClass = mtl::GetPrimitiveTopologyClass(primitiveMode);
 
     bool rppChange = mDirtyBits.test(DIRTY_BIT_RENDER_PIPELINE) ||
                      topologyClass != mRenderPipelineDesc.inputPrimitiveTopology;

@@ -165,7 +165,7 @@ MTLStencilOperation GetStencilOp(GLenum op);
 
 MTLWinding GetFrontfaceWinding(GLenum frontFaceMode, bool invert);
 
-PrimitiveTopologyClass GetPrimitiveTopologyClass(gl::PrimitiveMode mode);
+MTLPrimitiveTopologyClass GetPrimitiveTopologyClass(gl::PrimitiveMode mode);
 MTLPrimitiveType GetPrimitiveType(gl::PrimitiveMode mode);
 MTLIndexType GetIndexType(gl::DrawElementsType type);
 

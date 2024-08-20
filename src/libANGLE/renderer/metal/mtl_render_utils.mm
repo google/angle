@@ -575,7 +575,7 @@ RenderPipelineDesc GetComputingVertexShaderOnlyRenderPipelineDesc(RenderCommandE
 
     renderPassDesc.populateRenderPipelineOutputDesc(&pipelineDesc.outputDescriptor);
     pipelineDesc.rasterizationType      = RenderPipelineRasterization::Disabled;
-    pipelineDesc.inputPrimitiveTopology = kPrimitiveTopologyClassPoint;
+    pipelineDesc.inputPrimitiveTopology = MTLPrimitiveTopologyClassPoint;
 
     return pipelineDesc;
 }
@@ -1190,7 +1190,7 @@ angle::Result ClearUtils::getClearRenderPipelineState(
     renderPassDesc.populateRenderPipelineOutputDesc(clearWriteMaskArray,
                                                     &pipelineDesc.outputDescriptor);
 
-    pipelineDesc.inputPrimitiveTopology = kPrimitiveTopologyClassTriangle;
+    pipelineDesc.inputPrimitiveTopology = MTLPrimitiveTopologyClassTriangle;
 
     ANGLE_TRY(ensureShadersInitialized(contextMtl, renderPassDesc.numColorAttachments));
 
@@ -1373,7 +1373,7 @@ angle::Result ColorBlitUtils::getColorBlitRenderPipelineState(
     // Disable blit for some outputs that are not enabled
     pipelineDesc.outputDescriptor.updateEnabledDrawBuffers(params.enabledBuffers);
 
-    pipelineDesc.inputPrimitiveTopology = kPrimitiveTopologyClassTriangle;
+    pipelineDesc.inputPrimitiveTopology = MTLPrimitiveTopologyClassTriangle;
 
     ShaderKey key;
     key.numColorAttachments   = renderPassDesc.numColorAttachments;
@@ -1575,7 +1575,7 @@ angle::Result DepthStencilBlitUtils::getDepthStencilBlitRenderPipelineState(
     // Disable all color outputs
     pipelineDesc.outputDescriptor.updateEnabledDrawBuffers(gl::DrawBufferMask());
 
-    pipelineDesc.inputPrimitiveTopology = kPrimitiveTopologyClassTriangle;
+    pipelineDesc.inputPrimitiveTopology = MTLPrimitiveTopologyClassTriangle;
 
     AutoObjCPtr<id<MTLFunction>> *fragmentShader = nullptr;
     int depthTextureType                         = GetShaderTextureType(params.src);
