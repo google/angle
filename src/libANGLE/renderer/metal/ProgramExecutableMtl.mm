@@ -1277,7 +1277,7 @@ angle::Result ProgramExecutableMtl::updateUniformBuffers(
 
         // Remove any other stages other than vertex and fragment.
         uint32_t stages = mArgumentBufferRenderStageUsages[bufferIndex] &
-                          (mtl::kRenderStageVertex | mtl::kRenderStageFragment);
+                          (MTLRenderStageVertex | MTLRenderStageFragment);
 
         if (stages == 0)
         {
@@ -1285,7 +1285,7 @@ angle::Result ProgramExecutableMtl::updateUniformBuffers(
         }
 
         cmdEncoder->useResource(mLegalizedOffsetedUniformBuffers[bufferIndex].first,
-                                MTLResourceUsageRead, static_cast<mtl::RenderStages>(stages));
+                                MTLResourceUsageRead, static_cast<MTLRenderStages>(stages));
     }
 
     return angle::Result::Continue;
@@ -1426,8 +1426,8 @@ angle::Result ProgramExecutableMtl::encodeUniformBuffersInfoArgumentBuffer(
                                                     offset:argumentBufferOffset];
 
     constexpr gl::ShaderMap<MTLRenderStages> kShaderStageMap = {
-        {gl::ShaderType::Vertex, mtl::kRenderStageVertex},
-        {gl::ShaderType::Fragment, mtl::kRenderStageFragment},
+        {gl::ShaderType::Vertex, MTLRenderStageVertex},
+        {gl::ShaderType::Fragment, MTLRenderStageFragment},
     };
 
     auto mtlRenderStage = kShaderStageMap[shaderType];

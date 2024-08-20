@@ -540,15 +540,15 @@ class RenderCommandEncoder final : public CommandEncoder
 
     RenderCommandEncoder &useResource(const BufferRef &resource,
                                       MTLResourceUsage usage,
-                                      mtl::RenderStages states);
+                                      MTLRenderStages stages);
 
-    RenderCommandEncoder &memoryBarrier(mtl::BarrierScope,
-                                        mtl::RenderStages after,
-                                        mtl::RenderStages before);
+    RenderCommandEncoder &memoryBarrier(MTLBarrierScope scope,
+                                        MTLRenderStages after,
+                                        MTLRenderStages before);
 
     RenderCommandEncoder &memoryBarrierWithResource(const BufferRef &resource,
-                                                    mtl::RenderStages after,
-                                                    mtl::RenderStages before);
+                                                    MTLRenderStages after,
+                                                    MTLRenderStages before);
 
     RenderCommandEncoder &setColorStoreAction(MTLStoreAction action, uint32_t colorAttachmentIndex);
     // Set store action for every color attachment.

@@ -379,16 +379,16 @@ inline void UseResourceCmd(id<MTLRenderCommandEncoder> encoder, IntermediateComm
 {
     id<MTLResource> resource = stream->fetch<id<MTLResource>>();
     MTLResourceUsage usage   = stream->fetch<MTLResourceUsage>();
-    mtl::RenderStages stages = stream->fetch<mtl::RenderStages>();
+    MTLRenderStages stages   = stream->fetch<MTLRenderStages>();
     [encoder useResource:resource usage:usage stages:stages];
     [resource ANGLE_MTL_RELEASE];
 }
 
 inline void MemoryBarrierCmd(id<MTLRenderCommandEncoder> encoder, IntermediateCommandStream *stream)
 {
-    mtl::RenderStages scope  = stream->fetch<mtl::BarrierScope>();
-    mtl::RenderStages after  = stream->fetch<mtl::RenderStages>();
-    mtl::RenderStages before = stream->fetch<mtl::RenderStages>();
+    MTLBarrierScope scope  = stream->fetch<MTLBarrierScope>();
+    MTLRenderStages after  = stream->fetch<MTLRenderStages>();
+    MTLRenderStages before = stream->fetch<MTLRenderStages>();
     [encoder memoryBarrierWithScope:scope afterStages:after beforeStages:before];
 }
 
@@ -396,8 +396,8 @@ inline void MemoryBarrierWithResourceCmd(id<MTLRenderCommandEncoder> encoder,
                                          IntermediateCommandStream *stream)
 {
     id<MTLResource> resource = stream->fetch<id<MTLResource>>();
-    mtl::RenderStages after  = stream->fetch<mtl::RenderStages>();
-    mtl::RenderStages before = stream->fetch<mtl::RenderStages>();
+    MTLRenderStages after    = stream->fetch<MTLRenderStages>();
+    MTLRenderStages before   = stream->fetch<MTLRenderStages>();
     [encoder memoryBarrierWithResources:&resource count:1 afterStages:after beforeStages:before];
     [resource ANGLE_MTL_RELEASE];
 }
@@ -2191,7 +2191,7 @@ RenderCommandEncoder &RenderCommandEncoder::setVisibilityResultMode(MTLVisibilit
 
 RenderCommandEncoder &RenderCommandEncoder::useResource(const BufferRef &resource,
                                                         MTLResourceUsage usage,
-                                                        mtl::RenderStages states)
+                                                        MTLRenderStages stages)
 {
     if (!resource)
     {
@@ -2203,22 +2203,22 @@ RenderCommandEncoder &RenderCommandEncoder::useResource(const BufferRef &resourc
     mCommands.push(CmdType::UseResource)
         .push([resource->get() ANGLE_MTL_RETAIN])
         .push(usage)
-        .push(states);
+        .push(stages);
 
     return *this;
 }
 
-RenderCommandEncoder &RenderCommandEncoder::memoryBarrier(mtl::BarrierScope scope,
-                                                          mtl::RenderStages after,
-                                                          mtl::RenderStages before)
+RenderCommandEncoder &RenderCommandEncoder::memoryBarrier(MTLBarrierScope scope,
+                                                          MTLRenderStages after,
+                                                          MTLRenderStages before)
 {
     mCommands.push(CmdType::MemoryBarrier).push(scope).push(after).push(before);
     return *this;
 }
 
 RenderCommandEncoder &RenderCommandEncoder::memoryBarrierWithResource(const BufferRef &resource,
-                                                                      mtl::RenderStages after,
-                                                                      mtl::RenderStages before)
+                                                                      MTLRenderStages after,
+                                                                      MTLRenderStages before)
 {
     if (!resource)
     {

@@ -2721,7 +2721,8 @@ angle::Result VertexFormatConversionUtils::convertVertexFormatToFloatVS(
 
     cmdEncoder->draw(MTLPrimitiveTypePoint, 0, params.vertexCount);
 
-    cmdEncoder->memoryBarrierWithResource(params.dstBuffer, kRenderStageVertex, kRenderStageVertex);
+    cmdEncoder->memoryBarrierWithResource(params.dstBuffer, MTLRenderStageVertex,
+                                          MTLRenderStageVertex);
 
     // Invalidate current context's state.
     // NOTE(hqle): Consider invalidating only affected states.
@@ -2800,7 +2801,8 @@ angle::Result VertexFormatConversionUtils::expandVertexFormatComponentsVS(
 
     cmdEncoder->draw(MTLPrimitiveTypePoint, 0, params.vertexCount);
 
-    cmdEncoder->memoryBarrierWithResource(params.dstBuffer, kRenderStageVertex, kRenderStageVertex);
+    cmdEncoder->memoryBarrierWithResource(params.dstBuffer, MTLRenderStageVertex,
+                                          MTLRenderStageVertex);
 
     // Invalidate current context's state.
     // NOTE(hqle): Consider invalidating only affected states.

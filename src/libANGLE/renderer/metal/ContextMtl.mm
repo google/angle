@@ -1630,18 +1630,21 @@ angle::Result ContextMtl::memoryBarrier(const gl::Context *context, GLbitfield b
         UNIMPLEMENTED();
         return angle::Result::Stop;
     }
-    mtl::BarrierScope scope;
+    MTLBarrierScope scope;
     switch (barriers)
     {
         case GL_ALL_BARRIER_BITS:
             scope = MTLBarrierScopeTextures | MTLBarrierScopeBuffers;
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
             if (getDisplay()->hasFragmentMemoryBarriers())
             {
-                scope |= mtl::kBarrierScopeRenderTargets;
+                scope |= MTLBarrierScopeRenderTargets;
             }
+#endif
             break;
         case GL_SHADER_IMAGE_ACCESS_BARRIER_BIT:
             scope = MTLBarrierScopeTextures;
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
             if (getDisplay()->hasFragmentMemoryBarriers())
             {
                 // SHADER_IMAGE_ACCESS_BARRIER_BIT (and SHADER_STORAGE_BARRIER_BIT) require that all
@@ -1652,8 +1655,9 @@ angle::Result ContextMtl::memoryBarrier(const gl::Context *context, GLbitfield b
                 // NOTE: Apple Silicon doesn't support MTLBarrierScopeRenderTargets. This seems to
                 // work anyway though, and on that hardware we use programmable blending for pixel
                 // local storage instead of read_write textures anyway.
-                scope |= mtl::kBarrierScopeRenderTargets;
+                scope |= MTLBarrierScopeRenderTargets;
             }
+#endif
             break;
         default:
             UNIMPLEMENTED();
@@ -1661,7 +1665,7 @@ angle::Result ContextMtl::memoryBarrier(const gl::Context *context, GLbitfield b
     }
     // The GL API doesn't provide a distinction between different shader stages.
     // ES 3.0 doesn't have compute.
-    mtl::RenderStages stages = MTLRenderStageVertex;
+    MTLRenderStages stages = MTLRenderStageVertex;
     if (getDisplay()->hasFragmentMemoryBarriers())
     {
         stages |= MTLRenderStageFragment;
