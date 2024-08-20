@@ -267,7 +267,6 @@ enum class Feature
     RemoveDynamicIndexingOfSwizzledVector,
     RemoveInvariantAndCentroidForESSL3,
     RequireGpuFamily2,
-    RequireMsl21,
     RescopeGlobalVariables,
     ResetTexImage2DBaseLevel,
     ResyncDepthRangeOnClipControl,
