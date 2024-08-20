@@ -952,14 +952,12 @@ AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
         auto options     = [[[MTLCompileOptions alloc] init] ANGLE_MTL_AUTORELEASE];
 
         // Mark all positions in VS with attribute invariant as non-optimizable
-        bool canPerserveInvariance = false;
-#if defined(__MAC_11_0) || defined(__IPHONE_14_0) || defined(__TVOS_14_0)
-        if (ANGLE_APPLE_AVAILABLE_XCI(11.0, 14.0, 14.0))
+        bool canPreserveInvariance = false;
+        if (@available(macOS 11.0, *))
         {
-            canPerserveInvariance      = true;
+            canPreserveInvariance      = true;
             options.preserveInvariance = usesInvariance;
         }
-#endif
 
         // If either:
         //   - fastmath is force-disabled
@@ -974,7 +972,7 @@ AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
         {
             options.fastMathEnabled = false;
         }
-        else if (usesInvariance && !canPerserveInvariance)
+        else if (usesInvariance && !canPreserveInvariance)
         {
             options.fastMathEnabled = false;
         }
