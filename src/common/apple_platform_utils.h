@@ -67,11 +67,14 @@ namespace angle
 {
 bool IsMetalRendererAvailable();
 
+#if defined(ANGLE_PLATFORM_MACOS) || defined(ANGLE_PLATFORM_MACCATALYST)
 bool GetMacosMachineModel(std::string *outMachineModel);
 bool ParseMacMachineModel(const std::string &identifier,
                           std::string *type,
                           int32_t *major,
                           int32_t *minor);
+#endif
+
 }  // namespace angle
 
 #endif
