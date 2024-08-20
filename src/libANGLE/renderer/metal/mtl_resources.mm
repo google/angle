@@ -510,10 +510,10 @@ Texture::Texture(ContextMtl *context,
             desc.usage |= MTLTextureUsageRenderTarget;
         }
 
-#if (TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH) && !TARGET_OS_MACCATALYST
-        desc.resourceOptions = MTLResourceStorageModeShared;
-#else
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
         desc.resourceOptions = MTLResourceStorageModeManaged;
+#else
+        desc.resourceOptions = MTLResourceStorageModeShared;
 #endif
 
         if (!renderTargetOnly)
