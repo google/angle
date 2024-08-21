@@ -288,6 +288,8 @@ class BufferVk : public BufferImpl
                                VkMemoryPropertyFlags memoryPropertyFlags,
                                size_t size) const;
 
+    void releaseConversionBuffers(vk::Renderer *renderer);
+
     vk::BufferHelper mBuffer;
 
     // If not null, this is the external memory pointer passed from client API.

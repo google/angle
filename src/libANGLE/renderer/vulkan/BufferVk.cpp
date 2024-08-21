@@ -331,6 +331,15 @@ void BufferVk::destroy(const gl::Context *context)
     (void)release(contextVk);
 }
 
+void BufferVk::releaseConversionBuffers(vk::Renderer *renderer)
+{
+    for (ConversionBuffer &buffer : mVertexConversionBuffers)
+    {
+        buffer.release(renderer);
+    }
+    mVertexConversionBuffers.clear();
+}
+
 angle::Result BufferVk::release(ContextVk *contextVk)
 {
     vk::Renderer *renderer = contextVk->getRenderer();
@@ -343,11 +352,7 @@ angle::Result BufferVk::release(ContextVk *contextVk)
         mStagingBuffer.release(renderer);
     }
 
-    for (ConversionBuffer &buffer : mVertexConversionBuffers)
-    {
-        buffer.release(renderer);
-    }
-    mVertexConversionBuffers.clear();
+    releaseConversionBuffers(renderer);
 
     return angle::Result::Continue;
 }
@@ -455,6 +460,14 @@ angle::Result BufferVk::setDataWithMemoryType(const gl::Context *context,
     {
         // Nothing to do.
         return angle::Result::Continue;
+    }
+
+    if (!mVertexConversionBuffers.empty())
+    {
+        for (ConversionBuffer &buffer : mVertexConversionBuffers)
+        {
+            buffer.clearDirty();
+        }
     }
 
     const BufferUsageType usageType = GetBufferUsageType(usage);
