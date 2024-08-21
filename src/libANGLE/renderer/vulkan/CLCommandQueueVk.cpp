@@ -720,6 +720,17 @@ angle::Result CLCommandQueueVk::enqueueUnmapMemObject(const cl::Memory &memory,
                                         ImageBufferCopyDirection::ToImage));
         ANGLE_TRY(finishInternal());
     }
+
+    if (memoryType == CL_MEM_OBJECT_BUFFER)
+    {
+        CLBufferVk &bufferVk = memory.getImpl<CLBufferVk>();
+        if (memory.getFlags().intersects(CL_MEM_USE_HOST_PTR))
+        {
+            // Transfer user's hostptr data back to BufferVk allocation
+            ANGLE_TRY(bufferVk.copyFrom(memory.getHostPtr(), 0, bufferVk.getSize()));
+        }
+    }
+
     memory.getImpl<CLMemoryVk>().unmap();
 
     ANGLE_TRY(createEvent(eventCreateFunc, true));
