@@ -18,6 +18,12 @@
 #    include "common/gl/cgl/FunctionsCGL.h"
 #endif
 
+#if !defined(__MAC_OS_X_VERSION_MIN_REQUIRED) || __MAC_OS_X_VERSION_MIN_REQUIRED >= 120000
+#    define HAVE_MAIN_PORT_DEFAULT 1
+#else
+#    define HAVE_MAIN_PORT_DEFAULT 0
+#endif
+
 namespace angle
 {
 
@@ -54,11 +60,6 @@ bool GetEntryProperty(io_registry_entry_t entry, CFStringRef name, uint32_t *val
 // Gathers the vendor and device IDs for GPUs listed in the IORegistry.
 void GetIORegistryDevices(std::vector<GPUDeviceInfo> *devices)
 {
-#if TARGET_OS_OSX && __MAC_OS_X_VERSION_MIN_REQUIRED < 120000
-    const mach_port_t mainPort = kIOMasterPortDefault;
-#else
-    const mach_port_t mainPort = kIOMainPortDefault;
-#endif
     constexpr uint32_t kNumServices         = 2;
     const char *kServiceNames[kNumServices] = {"IOGraphicsAccelerator2", "AGXAccelerator"};
     const bool kServiceIsGraphicsAccelerator2[kNumServices] = {true, false};
@@ -68,6 +69,14 @@ void GetIORegistryDevices(std::vector<GPUDeviceInfo> *devices)
         CFMutableDictionaryRef matchDictionary = IOServiceMatching(kServiceNames[i]);
 
         io_iterator_t entryIterator;
+#if HAVE_MAIN_PORT_DEFAULT
+        const mach_port_t mainPort = kIOMainPortDefault;
+#else
+#    pragma clang diagnostic push
+#    pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        const mach_port_t mainPort = kIOMasterPortDefault;
+#    pragma clang diagnostic pop
+#endif
         if (IOServiceGetMatchingServices(mainPort, matchDictionary, &entryIterator) !=
             kIOReturnSuccess)
         {
@@ -148,12 +157,6 @@ void GetIORegistryDevices(std::vector<GPUDeviceInfo> *devices)
 
 void ForceGPUSwitchIndex(SystemInfo *info)
 {
-#if TARGET_OS_OSX && __MAC_OS_X_VERSION_MIN_REQUIRED < 120000
-    const mach_port_t mainPort = kIOMasterPortDefault;
-#else
-    const mach_port_t mainPort = kIOMainPortDefault;
-#endif
-
     // Early-out if on a single-GPU system
     if (info->gpus.size() < 2)
     {
@@ -169,6 +172,14 @@ void ForceGPUSwitchIndex(SystemInfo *info)
         return;
 
     CFMutableDictionaryRef matchDictionary = IORegistryEntryIDMatching(gpuID);
+#if HAVE_MAIN_PORT_DEFAULT
+    const mach_port_t mainPort = kIOMainPortDefault;
+#else
+#    pragma clang diagnostic push
+#    pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    const mach_port_t mainPort = kIOMasterPortDefault;
+#    pragma clang diagnostic pop
+#endif
     io_service_t gpuEntry = IOServiceGetMatchingService(mainPort, matchDictionary);
 
     if (gpuEntry == IO_OBJECT_NULL)
@@ -277,12 +288,6 @@ uint64_t GetGpuIDFromOpenGLDisplayMask(uint32_t displayMask)
 // Get VendorID from metal device's registry ID
 VendorID GetVendorIDFromMetalDeviceRegistryID(uint64_t registryID)
 {
-#if TARGET_OS_OSX && __MAC_OS_X_VERSION_MIN_REQUIRED < 120000
-    const mach_port_t mainPort = kIOMasterPortDefault;
-#else
-    const mach_port_t mainPort = kIOMainPortDefault;
-#endif
-
 #if defined(ANGLE_PLATFORM_MACOS)
     // On macOS, the following code is only supported since 10.13.
     if (@available(macOS 10.13, *))
@@ -297,6 +302,14 @@ VendorID GetVendorIDFromMetalDeviceRegistryID(uint64_t registryID)
 
         // IOServiceGetMatchingService will consume the reference on the matching dictionary,
         // so we don't need to release the dictionary.
+#if HAVE_MAIN_PORT_DEFAULT
+        const mach_port_t mainPort = kIOMainPortDefault;
+#else
+#    pragma clang diagnostic push
+#    pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        const mach_port_t mainPort = kIOMasterPortDefault;
+#    pragma clang diagnostic pop
+#endif
         io_registry_entry_t acceleratorEntry = IOServiceGetMatchingService(mainPort, matchingDict);
         if (acceleratorEntry == IO_OBJECT_NULL)
         {
