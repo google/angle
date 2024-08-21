@@ -549,6 +549,7 @@ if (build_angle_trace_tests) {
     # If this flag is set, we want to build the trace libraries independent of the APK, i.e. not packaged.
     # We're doing this for size reasons - the APK is too large if you include all the traces.
     if (restricted_traces_outside_of_apk) {
+      defines = [ "ANGLE_TRACE_EXTERNAL_BINARIES" ]
       deps += [ "$angle_root/util:angle_trace_loader" ]
     } else {
       deps += [

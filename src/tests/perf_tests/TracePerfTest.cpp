@@ -20,6 +20,10 @@
 #include "util/png_utils.h"
 #include "util/test_utils.h"
 
+#if defined(ANGLE_PLATFORM_ANDROID)
+#    include "util/android/AndroidWindow.h"
+#endif
+
 #include <rapidjson/document.h>
 #include <rapidjson/istreamwrapper.h>
 
@@ -1900,9 +1904,14 @@ void TracePerfTest::initializeBenchmark()
         return;
     }
 
+    std::string baseDir = "";
+#if defined(ANGLE_TRACE_EXTERNAL_BINARIES)
+    baseDir += AndroidWindow::GetApplicationDirectory() + "/angle_traces/";
+#endif
+
     if (gTraceInterpreter)
     {
-        mTraceReplay.reset(new TraceLibrary("angle_trace_interpreter", traceInfo));
+        mTraceReplay.reset(new TraceLibrary("angle_trace_interpreter", traceInfo, baseDir));
         if (strcmp(gTraceInterpreter, "gz") == 0)
         {
             std::string traceGzPath = FindTraceGzPath(traceInfo.name);
@@ -1919,7 +1928,7 @@ void TracePerfTest::initializeBenchmark()
         std::stringstream traceNameStr;
         traceNameStr << "angle_restricted_traces_" << traceInfo.name;
         std::string traceName = traceNameStr.str();
-        mTraceReplay.reset(new TraceLibrary(traceNameStr.str(), traceInfo));
+        mTraceReplay.reset(new TraceLibrary(traceNameStr.str(), traceInfo, baseDir));
     }
 
     LoadTraceEGL(TraceLoadProc);
@@ -2718,7 +2727,7 @@ void RegisterTraceTests()
     char rootTracePath[kMaxPath] = {};
     if (!FindRootTraceTestDataPath(rootTracePath, kMaxPath))
     {
-        ERR() << "Unable to find trace folder.";
+        ERR() << "Unable to find trace folder " << rootTracePath;
         return;
     }
 
