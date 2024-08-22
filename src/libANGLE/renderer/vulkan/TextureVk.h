@@ -432,6 +432,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     angle::Result clearSubImageImpl(const gl::Context *context,
                                     GLint level,
                                     const gl::Box &clearArea,
+                                    vk::ClearTextureMode clearMode,
                                     GLenum format,
                                     GLenum type,
                                     const uint8_t *data);

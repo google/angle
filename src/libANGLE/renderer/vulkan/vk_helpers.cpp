@@ -9085,6 +9085,7 @@ void ImageHelper::restoreSubresourceContentImpl(gl::LevelIndex level,
 
 angle::Result ImageHelper::stagePartialClear(ContextVk *contextVk,
                                              const gl::Box &clearArea,
+                                             const ClearTextureMode clearMode,
                                              gl::TextureType textureType,
                                              uint32_t levelIndex,
                                              uint32_t layerIndex,
@@ -9148,9 +9149,24 @@ angle::Result ImageHelper::stagePartialClear(ContextVk *contextVk,
         aspectFlags |= formatInfo.stencilBits > 0 ? VK_IMAGE_ASPECT_STENCIL_BIT : 0;
     }
 
-    appendSubresourceUpdate(gl::LevelIndex(levelIndex),
-                            SubresourceUpdate(aspectFlags, clearValue, textureType, levelIndex,
-                                              layerIndex, layerCount, clearArea));
+    if (clearMode == ClearTextureMode::FullClear)
+    {
+        bool useLayerAsDepth = textureType == gl::TextureType::CubeMap ||
+                               textureType == gl::TextureType::CubeMapArray ||
+                               textureType == gl::TextureType::_2DArray ||
+                               textureType == gl::TextureType::_2DMultisampleArray;
+        const gl::ImageIndex index = gl::ImageIndex::MakeFromType(
+            textureType, levelIndex, 0, useLayerAsDepth ? clearArea.depth : 1);
+
+        appendSubresourceUpdate(gl::LevelIndex(levelIndex),
+                                SubresourceUpdate(aspectFlags, clearValue, index));
+    }
+    else
+    {
+        appendSubresourceUpdate(gl::LevelIndex(levelIndex),
+                                SubresourceUpdate(aspectFlags, clearValue, textureType, levelIndex,
+                                                  layerIndex, layerCount, clearArea));
+    }
     return angle::Result::Continue;
 }
 
@@ -9972,6 +9988,7 @@ angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
                     clear(renderer, update.data.clear.aspectFlags, update.data.clear.value,
                           updateMipLevelVk, updateBaseLayer, updateLayerCount,
                           &commandBuffer->getCommandBuffer());
+                    contextVk->getPerfCounters().fullImageClears++;
                     // Remember the latest operation is a clear call.
                     mCurrentSingleClearValue = update.data.clear;
 

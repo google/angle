@@ -845,10 +845,8 @@ angle::Result TextureVk::clearImage(const gl::Context *context,
         area.depth = 6;
     }
 
-    // TODO(http://anglebug.com/42266869): This function can be staged as a Clear update, which
-    // means it can be picked up as LOAD_OP_CLEAR (similar to FramebufferVk::clearImpl()), improving
-    // the performance.
-    return clearSubImageImpl(context, level, area, format, type, data);
+    return clearSubImageImpl(context, level, area, vk::ClearTextureMode::FullClear, format, type,
+                             data);
 }
 
 angle::Result TextureVk::clearSubImage(const gl::Context *context,
@@ -858,12 +856,26 @@ angle::Result TextureVk::clearSubImage(const gl::Context *context,
                                        GLenum type,
                                        const uint8_t *data)
 {
-    return clearSubImageImpl(context, level, area, format, type, data);
+    bool isCubeMap = mState.getType() == gl::TextureType::CubeMap;
+    gl::TextureTarget textureTarget =
+        isCubeMap ? gl::kCubeMapTextureTargetMin : gl::TextureTypeToTarget(mState.getType(), 0);
+    gl::Extents extents   = mState.getImageDesc(textureTarget, level).size;
+    int depthForFullClear = isCubeMap ? 6 : extents.depth;
+
+    vk::ClearTextureMode clearMode = vk::ClearTextureMode::PartialClear;
+    if (extents.width == area.width && extents.height == area.height &&
+        depthForFullClear == area.depth)
+    {
+        clearMode = vk::ClearTextureMode::FullClear;
+    }
+
+    return clearSubImageImpl(context, level, area, clearMode, format, type, data);
 }
 
 angle::Result TextureVk::clearSubImageImpl(const gl::Context *context,
                                            GLint level,
                                            const gl::Box &clearArea,
+                                           vk::ClearTextureMode clearMode,
                                            GLenum format,
                                            GLenum type,
                                            const uint8_t *data)
@@ -893,13 +905,18 @@ angle::Result TextureVk::clearSubImageImpl(const gl::Context *context,
         vkFormat.getActualImageFormatID(getRequiredImageAccess());
     bool usesBufferForClear = false;
 
-    if (actualFormatID == vkFormat.getActualRenderableImageFormatID())
+    VkFormatFeatureFlags renderableCheckFlag =
+        clearMode == vk::ClearTextureMode::FullClear ? VK_FORMAT_FEATURE_TRANSFER_DST_BIT
+        : formatInfo.isDepthOrStencil() ? VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT
+                                        : VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
+    if (vk::FormatHasNecessaryFeature(contextVk->getRenderer(), actualFormatID, getTilingMode(),
+                                      renderableCheckFlag))
     {
         uint32_t baseLayer  = useLayerAsDepth ? clearArea.z : 0;
         uint32_t layerCount = useLayerAsDepth ? clearArea.depth : 1;
-        ANGLE_TRY(mImage->stagePartialClear(contextVk, clearArea, mState.getType(), level,
-                                            baseLayer, layerCount, type, formatInfo, vkFormat,
-                                            getRequiredImageAccess(), data));
+        ANGLE_TRY(mImage->stagePartialClear(contextVk, clearArea, clearMode, mState.getType(),
+                                            level, baseLayer, layerCount, type, formatInfo,
+                                            vkFormat, getRequiredImageAccess(), data));
     }
     else
     {
