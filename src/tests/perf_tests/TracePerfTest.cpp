@@ -1805,6 +1805,15 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         addIntegerPrerequisite(GL_MAX_TEXTURE_SIZE, 11016);
     }
 
+    if (traceNameIs("passmark_simple"))
+    {
+        if (isIntelLinuxNative)
+        {
+            skipTest("https://anglebug.com/42267118 fails on newer OS/driver");
+        }
+        addExtensionPrerequisite("GL_OES_framebuffer_object");
+    }
+
     if (IsGalaxyS22())
     {
         if (traceNameIs("cod_mobile") || traceNameIs("dota_underlords") ||
