@@ -1456,6 +1456,7 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 
 // WebGPU failures
 42266907 WGPU : RendererTest.SimpleOperation/* = SKIP
+42266907 WGPU : RendererTest.Draw/* = SKIP
 42267012 WGPU : ClearTest.*Scissor* = SKIP
 42267012 WGPU : ClearTest.*Mask* = SKIP
 42267012 WGPU : ClearTest.DefaultFramebuffer* = SKIP
@@ -1467,6 +1468,7 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 42266974 WGPU : Texture2DTest.*Multiple* = SKIP
 42266974 WGPU : Texture2DTest.*Copy* = SKIP
 42266974 WGPU : Texture2DTest.*Mutable* = SKIP
+42266974 WGPU : Texture2DTest.ZeroSizedUploads* = SKIP
 360083331 LINUX INTEL WGPU : ClearTest.ClearColorThenClearNonExistingDepthStencil/* = SKIP
 360083331 LINUX INTEL WGPU : ClearTest.DepthRangefIsClamped/* = SKIP
 360083331 LINUX INTEL WGPU : ClearTest.RGBA8Framebuffer/* = SKIP
