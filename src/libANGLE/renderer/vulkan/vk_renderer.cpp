@@ -151,7 +151,8 @@ bool IsXclipse()
     }
 
     // Improve this when more Xclipse devices are available
-    return strstr(modelName.c_str(), "SM-S901B") != nullptr;
+    return strstr(modelName.c_str(), "SM-S901B") != nullptr ||
+           strstr(modelName.c_str(), "SM-S926B") != nullptr;
 }
 
 bool StrLess(const char *a, const char *b)
