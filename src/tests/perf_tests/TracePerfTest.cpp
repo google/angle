@@ -1547,6 +1547,11 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
             skipTest("http://anglebug.com/42266193 Renders incorrectly on Nvidia Windows");
         }
 
+        if (isNVIDIALinuxANGLE)
+        {
+            skipTest("https://anglebug.com/362728695 Renders incorrectly on Linux/NVIDIA");
+        }
+
         addExtensionPrerequisite("GL_EXT_texture_buffer");
         addExtensionPrerequisite("GL_EXT_texture_cube_map_array");
     }
