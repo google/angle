@@ -43,7 +43,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': 'eaaa9b6d35f9368d1bb858e35552e58567230e47',
+  'chromium_revision': '28739f6b546acfd4a7f567e6dd36836ee699d085',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -424,7 +424,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': Var('chromium_git') + '/chromium/src/build.git@5597e471cbcca05a200429cb743709206914332b',
+    'url': Var('chromium_git') + '/chromium/src/build.git@130d8fcbd05c7b2b76f2342bd01e608672a43bc8',
     'condition': 'not build_with_chromium',
   },
 
@@ -483,7 +483,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@b26c792ed537183f3d877d5e1a565e3b26c0d123',
+    'url': '{chromium_git}/chromium/src/testing@7ff01c14969b28846bf631bf2a0618198f6bdf06',
     'condition': 'not build_with_chromium',
   },
 
@@ -556,7 +556,7 @@ deps = {
       'packages': [
           {
                'package': 'chromium/third_party/android_build_tools/lint',
-               'version': 'lUNkrgd8i-8yn5XP5j3GBmtw_wbbcLVe4ZcxMsgP03cC',
+               'version': '_59t93168d3PRj-YGCRI2tpo3QS8aFxVg7Bto7U3P34C',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -567,7 +567,7 @@ deps = {
       'packages': [
           {
                'package': 'chromium/third_party/android_build_tools/manifest_merger',
-               'version': 'VOU97ku-mZhXrQUHZ4fQMJVmlvMZcKInINigQJyvQQAC',
+               'version': 'w5qlHnh4N-npyopimuBuiIXfv4oa58ItAdUWXjAlVYAC',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -1091,7 +1091,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': Var('chromium_git') + '/chromium/src/tools/perf@ea8afb2073b6dabde54ca89143cbece80a923b6a',
+    'url': Var('chromium_git') + '/chromium/src/tools/perf@12708c50f7b168504fd2d275ffb8b2e8fd630186',
     'condition': 'not build_with_chromium',
   },
 
