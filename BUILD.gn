@@ -1151,7 +1151,7 @@ angle_source_set("libANGLE_no_vulkan") {
   }
 
   # Enable extra Chromium style warnings for libANGLE.
-  if (is_clang && angle_has_build) {
+  if (is_clang && angle_has_build && !is_nacl) {
     suppressed_configs -= [ "//build/config/clang:find_bad_constructs" ]
   }
 
