@@ -37,6 +37,13 @@ class SurfaceVk : public SurfaceImpl, public angle::ObserverInterface, public vk
     // We monitor the staging buffer for changes. This handles staged data from outside this class.
     void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
 
+    // width and height can change with client window resizing
+    EGLint getWidth() const override;
+    EGLint getHeight() const override;
+
+    EGLint mWidth;
+    EGLint mHeight;
+
     RenderTargetVk mColorRenderTarget;
     RenderTargetVk mDepthStencilRenderTarget;
 };
@@ -67,10 +74,6 @@ class OffscreenSurfaceVk : public SurfaceVk
     egl::Error getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR *sbc) override;
     egl::Error getMscRate(EGLint *numerator, EGLint *denominator) override;
     void setSwapInterval(EGLint interval) override;
-
-    // width and height can change with client window resizing
-    EGLint getWidth() const override;
-    EGLint getHeight() const override;
 
     EGLint isPostSubBufferSupported() const override;
     EGLint getSwapBehavior() const override;
@@ -116,9 +119,6 @@ class OffscreenSurfaceVk : public SurfaceVk
     };
 
     virtual angle::Result initializeImpl(DisplayVk *displayVk);
-
-    EGLint mWidth;
-    EGLint mHeight;
 
     AttachmentImage mColorAttachment;
     AttachmentImage mDepthStencilAttachment;
@@ -312,11 +312,6 @@ class WindowSurfaceVk : public SurfaceVk
     egl::Error getMscRate(EGLint *numerator, EGLint *denominator) override;
     void setSwapInterval(EGLint interval) override;
 
-    // width and height can change with client window resizing
-    EGLint getWidth() const override;
-    EGLint getHeight() const override;
-    EGLint getRotatedWidth() const;
-    EGLint getRotatedHeight() const;
     // Note: windows cannot be resized on Android.  The approach requires
     // calling vkGetPhysicalDeviceSurfaceCapabilitiesKHR.  However, that is
     // expensive; and there are troublesome timing issues for other parts of

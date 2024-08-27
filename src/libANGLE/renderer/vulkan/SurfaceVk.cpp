@@ -535,7 +535,11 @@ bool AreAllFencesSignaled(VkDevice device, const std::vector<vk::Fence> &fences)
 }
 }  // namespace
 
-SurfaceVk::SurfaceVk(const egl::SurfaceState &surfaceState) : SurfaceImpl(surfaceState) {}
+SurfaceVk::SurfaceVk(const egl::SurfaceState &surfaceState)
+    : SurfaceImpl(surfaceState),
+      mWidth(mState.attributes.getAsInt(EGL_WIDTH, 0)),
+      mHeight(mState.attributes.getAsInt(EGL_HEIGHT, 0))
+{}
 
 SurfaceVk::~SurfaceVk() {}
 
@@ -573,6 +577,16 @@ void SurfaceVk::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMe
 {
     // Forward the notification to parent class that the staging buffer changed.
     onStateChange(angle::SubjectMessage::SubjectChanged);
+}
+
+EGLint SurfaceVk::getWidth() const
+{
+    return mWidth;
+}
+
+EGLint SurfaceVk::getHeight() const
+{
+    return mHeight;
 }
 
 OffscreenSurfaceVk::AttachmentImage::AttachmentImage(SurfaceVk *surfaceVk)
@@ -622,8 +636,6 @@ void OffscreenSurfaceVk::AttachmentImage::destroy(const egl::Display *display)
 OffscreenSurfaceVk::OffscreenSurfaceVk(const egl::SurfaceState &surfaceState,
                                        vk::Renderer *renderer)
     : SurfaceVk(surfaceState),
-      mWidth(mState.attributes.getAsInt(EGL_WIDTH, 0)),
-      mHeight(mState.attributes.getAsInt(EGL_HEIGHT, 0)),
       mColorAttachment(this),
       mDepthStencilAttachment(this)
 {
@@ -748,16 +760,6 @@ egl::Error OffscreenSurfaceVk::getMscRate(EGLint * /*numerator*/, EGLint * /*den
 }
 
 void OffscreenSurfaceVk::setSwapInterval(EGLint /*interval*/) {}
-
-EGLint OffscreenSurfaceVk::getWidth() const
-{
-    return mWidth;
-}
-
-EGLint OffscreenSurfaceVk::getHeight() const
-{
-    return mHeight;
-}
 
 EGLint OffscreenSurfaceVk::isPostSubBufferSupported() const
 {
@@ -1716,6 +1718,8 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     ANGLE_VK_TRY(context, vkCreateSwapchainKHR(device, &swapchainInfo, nullptr, &newSwapChain));
     mSwapchain            = newSwapChain;
     mSwapchainPresentMode = mDesiredSwapchainPresentMode;
+    mWidth                = extents.width;
+    mHeight               = extents.height;
 
     // If frame timestamp was enabled for the surface, [re]enable it when [re]creating the swapchain
     if (renderer->getFeatures().supportsTimestampSurfaceAttribute.enabled &&
@@ -2898,26 +2902,6 @@ void WindowSurfaceVk::setSwapInterval(EGLint interval)
 
     // On the next swap, if the desired present mode is different from the current one, the
     // swapchain will be recreated.
-}
-
-EGLint WindowSurfaceVk::getWidth() const
-{
-    return static_cast<EGLint>(mColorRenderTarget.getExtents().width);
-}
-
-EGLint WindowSurfaceVk::getRotatedWidth() const
-{
-    return static_cast<EGLint>(mColorRenderTarget.getRotatedExtents().width);
-}
-
-EGLint WindowSurfaceVk::getHeight() const
-{
-    return static_cast<EGLint>(mColorRenderTarget.getExtents().height);
-}
-
-EGLint WindowSurfaceVk::getRotatedHeight() const
-{
-    return static_cast<EGLint>(mColorRenderTarget.getRotatedExtents().height);
 }
 
 egl::Error WindowSurfaceVk::getUserWidth(const egl::Display *display, EGLint *value) const
