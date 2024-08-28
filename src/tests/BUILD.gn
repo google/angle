@@ -350,6 +350,139 @@ if (is_win || is_linux || is_chromeos || is_android || is_fuchsia || is_apple) {
   }
 }
 
+if (angle_enable_cl_testing) {
+  copy("opencl_icd") {
+    sources = [ "$angle_root/src/tests/cl_support/ancle.icd" ]
+    outputs = [ "$root_out_dir/$angle_data_dir/{{source_file_part}}" ]
+  }
+
+  template("angle_oclcts_test") {
+    angle_test("angle_oclcts_${target_name}") {
+      testonly = true
+      sources = [ "$angle_root/src/tests/cl_support/angle_oclcts_gtest.cpp" ]
+
+      deps = [
+        "$angle_root:angle_common",
+        "$angle_root:cl_includes",
+        "$angle_root/third_party/OpenCL-CTS/gn:test_common",
+        "$angle_root/third_party/OpenCL-CTS/gn/${invoker.group}:${invoker.suite}",
+        "$angle_root/third_party/OpenCL-ICD-Loader:opencl_icd_loader",
+        "//third_party/googletest:gtest",
+      ]
+      defines = [
+        "CL_TARGET_OPENCL_VERSION=300",
+        "ANGLE_CL_SUITE_NAME=\"${invoker.suite}\"",
+      ]
+      if (!is_android) {
+        defines += [ "ANGLE_OPENCL_ICD_PATH=\"$angle_data_dir\"" ]
+      }
+      cflags = [
+        "-Wno-deprecated-declarations",
+        "-Wno-#warnings",
+        "-Wno-format",
+        "-Wno-vla-cxx-extension",
+        "-Wno-deprecated-volatile",
+        "-Wno-c++11-narrowing",
+      ]
+      include_dirs = [
+        "$angle_root/third_party/OpenCL-CTS/src/test_common",
+        "$angle_root/third_party/OpenCL-CTS/src/test_common/autotest",
+        "$angle_root/third_party/OpenCL-CTS/src/test_common/harness",
+        "$angle_root/third_party/OpenCL-CTS/src/test_common/miniz",
+        "$angle_root/third_party/OpenCL-CTS/src/test_conformance/",
+        "$angle_root/third_party/OpenCL-CTS/",
+        "$angle_root/src/tests/",
+      ]
+      configs += [ "${angle_root}:libANGLE_config" ]
+
+      deps += [
+        ":angle_common_test_utils_static",
+        "$angle_root:angle_static",
+      ]
+      data = [
+        "$angle_root/src/tests/cl_support/openclcts_expectations.txt",
+        "$angle_root/src/tests/cl_support/openclcts_mustpass.txt",
+      ]
+
+      data_deps += [ ":opencl_icd" ]
+    }
+  }
+
+  oclcts_targets = [
+    "SVM svm",
+    "allocations allocations",
+    "api api",
+    "atomics atomics",
+    "basic basic",
+    "buffers buffers",
+    "c11_atomics c11_atomics",
+    "commonfns commonfns",
+    "compiler compiler",
+    "computeinfo computeinfo",
+    "contractions contractions",
+    "conversions conversions",
+    "device_execution device_execution",
+    "device_partition device_partition",
+    "device_timer device_timer",
+    "events events",
+    "extensions/cl_ext_cxx_for_opencl cl_ext_cxx_for_opencl",
+    "extensions/cl_khr_command_buffer cl_khr_command_buffer",
+    "extensions/cl_khr_semaphore cl_khr_semaphore",
+    "generic_address_space generic_address_space",
+    "geometrics geometrics",
+    "half half",
+    "images/clCopyImage cl_copy_images",
+    "images/clFillImage cl_fill_images",
+    "images/clGetInfo cl_get_info",
+    "images/clReadWriteImage cl_read_write_images",
+    "images/kernel_image_methods kernel_image_methods",
+    "images/kernel_read_write image_streams",
+    "images/samplerlessReads samplerless_reads",
+    "integer_ops integer_ops",
+    "math_brute_force bruteforce",
+    "mem_host_flags mem_host_flags",
+    "multiple_device_context multiples",
+    "non_uniform_work_group non_uniform_work_group",
+    "pipes pipes",
+    "printf printf",
+    "profiling profiling",
+    "relationals relationals",
+    "select select",
+    "spir spir",
+    "spirv_new spirv_new",
+
+    # CTS build error, fixed in https://github.com/KhronosGroup/OpenCL-CTS/pull/1906
+    #"subgroups subgroups",
+    "thread_dimensions thread_dimensions",
+    "vectors vectors",
+    "workgroups workgroups",
+  ]
+
+  foreach(_group_and_suite_joined, oclcts_targets) {
+    _group_and_suite = []
+    _group_and_suite = string_split(_group_and_suite_joined)
+    _group = _group_and_suite[0]
+    _suite = _group_and_suite[1]
+
+    angle_oclcts_test(_suite) {
+      group = _group
+      suite = _suite
+    }
+  }
+
+  group("angle_openclcts") {
+    testonly = true
+    deps = []
+    foreach(_group_and_suite_joined, oclcts_targets) {
+      _group_and_suite = []
+      _group_and_suite = string_split(_group_and_suite_joined)
+      _suite = _group_and_suite[1]
+
+      deps += [ ":angle_oclcts_${_suite}" ]
+    }
+  }
+}
+
 if (is_win || is_linux || is_chromeos || is_android || is_fuchsia || is_apple) {
   import("angle_white_box_tests.gni")
 
@@ -1876,6 +2009,9 @@ group("angle_tests") {
     ":angle_system_info_test",
     ":angle_unittests",
   ]
+  if (angle_enable_cl_testing) {
+    deps += [ ":angle_openclcts" ]
+  }
   if (build_angle_perftests) {
     deps += [ ":angle_perftests" ]
   }
