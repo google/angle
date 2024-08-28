@@ -2671,6 +2671,8 @@ void TracePerfTest::saveScreenshot(const std::string &screenshotName)
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
+    glFinish();
+
     glReadPixels(0, 0, mTestParams.windowWidth, mTestParams.windowHeight, GL_RGBA, GL_UNSIGNED_BYTE,
                  pixelData.data());
 
