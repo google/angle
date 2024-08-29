@@ -1940,8 +1940,8 @@ void WindowSurfaceVk::releaseSwapchainImages(ContextVk *contextVk)
 {
     vk::Renderer *renderer = contextVk->getRenderer();
 
-    mColorRenderTarget.release(contextVk);
-    mDepthStencilRenderTarget.release(contextVk);
+    mColorRenderTarget.releaseImageAndViews(contextVk);
+    mDepthStencilRenderTarget.releaseImageAndViews(contextVk);
 
     if (mDepthStencilImage.valid())
     {
