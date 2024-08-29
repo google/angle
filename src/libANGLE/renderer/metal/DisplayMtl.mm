@@ -1245,7 +1245,7 @@ void DisplayMtl::initializeFeatures()
                             isOSX || isCatalyst || supportsAppleGPUFamily(4));
 
     ANGLE_FEATURE_CONDITION((&mFeatures), allowSeparateDepthStencilBuffers,
-                            !isOSX && !isCatalyst && !isSimulator);
+                            supportsAppleGPUFamily(1) && !isSimulator);
     ANGLE_FEATURE_CONDITION((&mFeatures), emulateTransformFeedback, true);
 
     ANGLE_FEATURE_CONDITION((&mFeatures), intelExplicitBoolCastWorkaround,
