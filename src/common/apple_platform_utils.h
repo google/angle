@@ -13,22 +13,6 @@
 
 #include <string>
 
-// These are macros for substitution of Apple specific directive @available:
-
-#if TARGET_OS_MACCATALYST
-// ANGLE_APPLE_AVAILABLE_XCI: check if either of the 3 platforms (OSX/Catalyst/iOS) min verions is
-// available:
-#    define ANGLE_APPLE_AVAILABLE_XCI(macVer, macCatalystVer, iOSVer) \
-        @available(macOS macVer, macCatalyst macCatalystVer, iOS iOSVer, *)
-#else
-#    define ANGLE_APPLE_AVAILABLE_XCI(macVer, macCatalystVer, iOSVer) \
-        ANGLE_APPLE_AVAILABLE_XI(macVer, iOSVer)
-#endif
-
-// ANGLE_APPLE_AVAILABLE_XI: check if either of the 2 platforms (OSX/iOS) min verions is available:
-#define ANGLE_APPLE_AVAILABLE_XI(macVer, iOSVer) \
-    @available(macOS macVer, iOS iOSVer, tvOS iOSVer, *)
-
 #if defined(__ARM_ARCH)
 #    define ANGLE_APPLE_IS_ARM (__ARM_ARCH != 0)
 #else
