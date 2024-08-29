@@ -275,10 +275,6 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdDrawIndexed-Input-07939",
     "VUID-vkCmdDrawIndexedIndirect-Input-07939",
     "VUID-vkCmdDrawIndirect-Input-07939",
-    // https://anglebug.com/361600662
-    "VUID-RuntimeSpirv-OpEntryPoint-08743",
-    "VUID-RuntimeSpirv-OpEntryPoint-07754",
-    "VUID-RuntimeSpirv-maintenance4-06817",
     // https://anglebug.com/362545033
     // VVL bug: https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/8458
     "VUID-vkCmdDraw-None-02721",
