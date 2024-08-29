@@ -1662,6 +1662,8 @@ bool ValidateImportSemaphoreFdEXT(const Context *context,
                                   HandleType handleTypePacked,
                                   GLint fd);
 
+// GL_EXT_separate_depth_stencil
+
 // GL_EXT_separate_shader_objects
 bool ValidateActiveShaderProgramEXT(const Context *context,
                                     angle::EntryPoint entryPoint,
