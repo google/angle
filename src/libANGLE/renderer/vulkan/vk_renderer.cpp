@@ -280,8 +280,8 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-RuntimeSpirv-OpEntryPoint-07754",
     "VUID-RuntimeSpirv-maintenance4-06817",
     // https://anglebug.com/362545033
+    // VVL bug: https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/8458
     "VUID-vkCmdDraw-None-02721",
-    "VUID-RuntimeSpirv-Location-06272",
 };
 
 // Validation messages that should be ignored only when VK_EXT_primitive_topology_list_restart is
