@@ -667,7 +667,7 @@ egl::Error EGLSyncVk::clientWait(const egl::Display *display,
 
     bool flush = (flags & EGL_SYNC_FLUSH_COMMANDS_BIT_KHR) != 0;
 
-    ContextVk *contextVk = context ? vk::GetImpl(context) : nullptr;
+    ContextVk *contextVk = context != nullptr && flush ? vk::GetImpl(context) : nullptr;
     if (mSyncHelper->clientWait(vk::GetImpl(display), contextVk, flush,
                                 static_cast<uint64_t>(timeout), MapVkResultToEglint,
                                 outResult) == angle::Result::Stop)
