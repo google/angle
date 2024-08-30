@@ -298,8 +298,26 @@ class CLCommandQueueVk : public CLCommandQueueImpl
     bool mNeedPrintfHandling;
     const angle::HashMap<uint32_t, ClspvPrintfInfo> *mPrintfInfos;
 
-    // List of buffer refs that need host syncing
-    cl::MemoryPtrs mHostBufferUpdateList;
+    // Host buffer transferring utility
+    struct HostTransferConfig
+    {
+        cl_command_type type{0};
+        size_t size            = 0;
+        size_t offset          = 0;
+        void *dstHostPtr       = nullptr;
+        const void *srcHostPtr = nullptr;
+        cl::MemOffsets origin;
+        cl::Coordinate region;
+    };
+    struct HostTransferEntry
+    {
+        HostTransferConfig transferConfig;
+        cl::MemoryPtr transferBufferHandle;
+    };
+    using HostTransferEntries = std::vector<HostTransferEntry>;
+    HostTransferEntries mHostTransferList;
+    angle::Result addToHostTransferList(CLBufferVk *srcBuffer, HostTransferConfig transferEntry);
+    angle::Result addToHostTransferList(CLImageVk *srcImage, HostTransferConfig transferEntry);
 };
 
 }  // namespace rx

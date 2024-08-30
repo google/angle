@@ -135,57 +135,25 @@ angle::Result CLCommandQueueVk::enqueueReadBuffer(const cl::Buffer &buffer,
     std::scoped_lock<std::mutex> sl(mCommandQueueMutex);
 
     ANGLE_TRY(processWaitlist(waitEvents));
+    CLBufferVk *bufferVk = &buffer.getImpl<CLBufferVk>();
 
     if (blocking)
     {
         ANGLE_TRY(finishInternal());
-        auto bufferVk = &buffer.getImpl<CLBufferVk>();
         ANGLE_TRY(bufferVk->copyTo(ptr, offset, size));
-
-        ANGLE_TRY(createEvent(eventCreateFunc, true));
     }
     else
     {
-        CLBufferVk &bufferVk = buffer.getImpl<CLBufferVk>();
-
-        // Reached transfer buffer creation limit/heuristic, finish this current batch
-        if (mHostBufferUpdateList.size() >= kMaxHostBufferUpdateListSize)
-        {
-            ANGLE_TRY(finishInternal());
-        }
-
-        // Create a transfer buffer and push it in update list
-        mHostBufferUpdateList.emplace_back(
-            cl::Buffer::Cast(this->mContext->getFrontendObject().createBuffer(
-                nullptr, cl::MemFlags{buffer.getFlags().get() | CL_MEM_USE_HOST_PTR},
-                buffer.getSize(), ptr)));
-        if (mHostBufferUpdateList.back() == nullptr)
-        {
-            ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
-        }
-        CLBufferVk &transferBufferVk = mHostBufferUpdateList.back()->getImpl<CLBufferVk>();
-        // Release initialization reference, lifetime controlled by RefPointer.
-        mHostBufferUpdateList.back()->release();
-
-        const VkBufferCopy copyRegion = {offset, offset, size};
-
-        // We need an execution barrier if buffer can be written to by kernel
-        if (!mComputePassCommands->getCommandBuffer().empty() && bufferVk.isWritable())
-        {
-            VkMemoryBarrier memoryBarrier = {
-                VK_STRUCTURE_TYPE_MEMORY_BARRIER, nullptr, VK_ACCESS_SHADER_WRITE_BIT,
-                VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT};
-            mComputePassCommands->getCommandBuffer().pipelineBarrier(
-                VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, 0, 1,
-                &memoryBarrier, 0, nullptr, 0, nullptr);
-        }
-
-        mComputePassCommands->getCommandBuffer().copyBuffer(
-            bufferVk.getBuffer().getBuffer(), transferBufferVk.getBuffer().getBuffer(), 1,
-            &copyRegion);
-
-        ANGLE_TRY(createEvent(eventCreateFunc, false));
+        // Stage a transfer routine
+        HostTransferConfig transferConfig;
+        transferConfig.type       = CL_COMMAND_READ_BUFFER;
+        transferConfig.offset     = offset;
+        transferConfig.size       = size;
+        transferConfig.dstHostPtr = ptr;
+        ANGLE_TRY(addToHostTransferList(bufferVk, transferConfig));
     }
+
+    ANGLE_TRY(createEvent(eventCreateFunc, blocking));
 
     return angle::Result::Continue;
 }
@@ -447,6 +415,108 @@ angle::Result CLCommandQueueVk::copyImageToFromBuffer(CLImageVk &imageVk,
     return angle::Result::Continue;
 }
 
+angle::Result CLCommandQueueVk::addToHostTransferList(
+    CLBufferVk *srcBuffer,
+    CLCommandQueueVk::HostTransferConfig transferConfig)
+{
+    // TODO(aannestrand): Flush here if we reach some max-transfer-buffer heuristic
+    // http://anglebug.com/377545840
+
+    cl::Memory *transferBufferHandle =
+        cl::Buffer::Cast(this->mContext->getFrontendObject().createBuffer(
+            nullptr, cl::MemFlags{CL_MEM_READ_WRITE}, srcBuffer->getSize(), nullptr));
+    if (transferBufferHandle == nullptr)
+    {
+        ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+    }
+    HostTransferEntry transferEntry{transferConfig, cl::MemoryPtr{transferBufferHandle}};
+    mHostTransferList.emplace_back(transferEntry);
+
+    // Release initialization reference, lifetime controlled by RefPointer.
+    mHostTransferList.back().transferBufferHandle->release();
+
+    // We need an execution barrier if buffer can be written to by kernel
+    if (!mComputePassCommands->getCommandBuffer().empty() && srcBuffer->isWritable())
+    {
+        // TODO(aannestrand): Look into combining these kernel execution barriers
+        // http://anglebug.com/377545840
+        VkMemoryBarrier memoryBarrier = {VK_STRUCTURE_TYPE_MEMORY_BARRIER, nullptr,
+                                         VK_ACCESS_SHADER_WRITE_BIT,
+                                         VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT};
+        mComputePassCommands->getCommandBuffer().pipelineBarrier(
+            VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, 0, 1,
+            &memoryBarrier, 0, nullptr, 0, nullptr);
+    }
+
+    // Enqueue blit/transfer cmd
+    VkPipelineStageFlags srcStageMask = {};
+    VkPipelineStageFlags dstStageMask = {};
+    VkMemoryBarrier memBarrier        = {};
+    memBarrier.sType                  = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
+    CLBufferVk &transferBufferHandleVk =
+        mHostTransferList.back().transferBufferHandle->getImpl<CLBufferVk>();
+    switch (transferConfig.type)
+    {
+        case CL_COMMAND_READ_BUFFER:
+        {
+            VkBufferCopy copyRegion = {transferConfig.offset, transferConfig.offset,
+                                       transferConfig.size};
+            copyRegion.srcOffset += srcBuffer->getOffset();
+            copyRegion.dstOffset += transferBufferHandleVk.getOffset();
+            mComputePassCommands->getCommandBuffer().copyBuffer(
+                srcBuffer->getBuffer().getBuffer(), transferBufferHandleVk.getBuffer().getBuffer(),
+                1, &copyRegion);
+
+            srcStageMask             = VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
+            dstStageMask             = VK_PIPELINE_STAGE_HOST_BIT;
+            memBarrier.srcAccessMask = VK_ACCESS_MEMORY_WRITE_BIT;
+            memBarrier.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+            break;
+        }
+        default:
+            UNIMPLEMENTED();
+            break;
+    }
+
+    // TODO(aannestrand): Look into combining these transfer barriers
+    // http://anglebug.com/377545840
+    mComputePassCommands->getCommandBuffer().pipelineBarrier(srcStageMask, dstStageMask, 0, 1,
+                                                             &memBarrier, 0, nullptr, 0, nullptr);
+
+    return angle::Result::Continue;
+}
+
+angle::Result CLCommandQueueVk::addToHostTransferList(
+    CLImageVk *srcImage,
+    CLCommandQueueVk::HostTransferConfig transferConfig)
+{
+    // TODO(aannestrand): Flush here if we reach some max-transfer-buffer heuristic
+    // http://anglebug.com/377545840
+
+    cl::Memory *transferBufferHandle =
+        cl::Buffer::Cast(this->mContext->getFrontendObject().createBuffer(
+            nullptr, cl::MemFlags{CL_MEM_READ_WRITE}, srcImage->getSize(), nullptr));
+    if (transferBufferHandle == nullptr)
+    {
+        ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+    }
+
+    HostTransferEntry transferEntry{transferConfig, cl::MemoryPtr{transferBufferHandle}};
+    mHostTransferList.emplace_back(transferEntry);
+
+    // Release initialization reference, lifetime controlled by RefPointer.
+    mHostTransferList.back().transferBufferHandle->release();
+
+    // Enqueue blit
+    CLBufferVk &transferBufferHandleVk =
+        mHostTransferList.back().transferBufferHandle->getImpl<CLBufferVk>();
+    ANGLE_TRY(copyImageToFromBuffer(*srcImage, transferBufferHandleVk.getBuffer(),
+                                    transferConfig.origin, transferConfig.region, 0,
+                                    ImageBufferCopyDirection::ToBuffer));
+
+    return angle::Result::Continue;
+}
+
 angle::Result CLCommandQueueVk::enqueueReadImage(const cl::Image &image,
                                                  bool blocking,
                                                  const cl::MemOffsets &origin,
@@ -478,34 +548,16 @@ angle::Result CLCommandQueueVk::enqueueReadImage(const cl::Image &image,
     else
     {
         // Create a transfer buffer and push it in update list
-        mHostBufferUpdateList.emplace_back(
-            cl::Buffer::Cast(this->mContext->getFrontendObject().createBuffer(
-                nullptr, cl::MemFlags{image.getFlags().get() | CL_MEM_USE_HOST_PTR},
-                image.getSize(), ptr)));
-        if (mHostBufferUpdateList.back() == nullptr)
-        {
-            ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
-        }
-        CLBufferVk &transferBufferVk = mHostBufferUpdateList.back()->getImpl<CLBufferVk>();
-        // Release initialization reference, lifetime controlled by RefPointer.
-        mHostBufferUpdateList.back()->release();
-
-        // We need an execution barrier if buffer can be written to by kernel
-        if (!mComputePassCommands->getCommandBuffer().empty() && imageVk.isWritable())
-        {
-            VkMemoryBarrier memoryBarrier = {
-                VK_STRUCTURE_TYPE_MEMORY_BARRIER, nullptr, VK_ACCESS_SHADER_WRITE_BIT,
-                VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT};
-            mComputePassCommands->getCommandBuffer().pipelineBarrier(
-                VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, 0, 1,
-                &memoryBarrier, 0, nullptr, 0, nullptr);
-        }
-
-        ANGLE_TRY(copyImageToFromBuffer(imageVk, transferBufferVk.getBuffer(), origin, region, 0,
-                                        ImageBufferCopyDirection::ToBuffer));
+        HostTransferConfig transferConfig;
+        transferConfig.type       = CL_COMMAND_READ_IMAGE;
+        transferConfig.size       = size;
+        transferConfig.dstHostPtr = ptr;
+        transferConfig.origin     = origin;
+        transferConfig.region     = region;
+        ANGLE_TRY(addToHostTransferList(&imageVk, transferConfig));
     }
 
-    ANGLE_TRY(createEvent(eventCreateFunc, true));
+    ANGLE_TRY(createEvent(eventCreateFunc, blocking));
 
     return angle::Result::Continue;
 }
@@ -955,14 +1007,27 @@ angle::Result CLCommandQueueVk::finish()
 
 angle::Result CLCommandQueueVk::syncHostBuffers()
 {
-    for (const cl::MemoryPtr &memoryPtr : mHostBufferUpdateList)
+    if (!mHostTransferList.empty())
     {
-        ASSERT(memoryPtr->getHostPtr() != nullptr);
-        CLBufferVk &bufferVk = memoryPtr->getImpl<CLBufferVk>();
-        ANGLE_TRY(
-            bufferVk.copyTo(memoryPtr->getHostPtr(), memoryPtr->getOffset(), memoryPtr->getSize()));
+        for (const HostTransferEntry &hostTransferEntry : mHostTransferList)
+        {
+            const HostTransferConfig &transferConfig = hostTransferEntry.transferConfig;
+            CLBufferVk &transferBufferVk =
+                hostTransferEntry.transferBufferHandle->getImpl<CLBufferVk>();
+            switch (hostTransferEntry.transferConfig.type)
+            {
+                case CL_COMMAND_READ_BUFFER:
+                case CL_COMMAND_READ_IMAGE:
+                    ANGLE_TRY(transferBufferVk.copyTo(transferConfig.dstHostPtr,
+                                                      transferConfig.offset, transferConfig.size));
+                    break;
+                default:
+                    UNIMPLEMENTED();
+                    break;
+            }
+        }
     }
-    mHostBufferUpdateList.clear();
+    mHostTransferList.clear();
 
     return angle::Result::Continue;
 }
