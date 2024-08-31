@@ -125,6 +125,7 @@ class CLBufferVk : public CLMemoryVk
     angle::Result getRect(const cl::BufferRect &srcRect,
                           const cl::BufferRect &outRect,
                           void *outData);
+    std::vector<VkBufferCopy> rectCopyRegions(const cl::BufferRect &bufferRect);
 
     bool isCurrentlyInUse() const override;
     size_t getSize() const override { return mMemory.getSize(); }

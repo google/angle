@@ -318,6 +318,22 @@ angle::Result CLBufferVk::getRect(const cl::BufferRect &srcRect,
     return angle::Result::Continue;
 }
 
+std::vector<VkBufferCopy> CLBufferVk::rectCopyRegions(const cl::BufferRect &bufferRect)
+{
+    std::vector<VkBufferCopy> copyRegions;
+    for (unsigned int slice = 0; slice < bufferRect.mSize.depth; slice++)
+    {
+        for (unsigned int row = 0; row < bufferRect.mSize.height; row++)
+        {
+            VkBufferCopy copyRegion = {};
+            copyRegion.size         = bufferRect.mSize.width * bufferRect.mElementSize;
+            copyRegion.srcOffset = copyRegion.dstOffset = bufferRect.getRowOffset(slice, row);
+            copyRegions.push_back(copyRegion);
+        }
+    }
+    return copyRegions;
+}
+
 // offset is for mapped pointer
 angle::Result CLBufferVk::setDataImpl(const uint8_t *data, size_t size, size_t offset)
 {

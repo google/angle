@@ -58,6 +58,9 @@ namespace
 
 struct HostTransferConfig
 {
+    HostTransferConfig()
+        : srcRect(cl::Offset{}, cl::Extents{}, 0, 0, 0), dstRect(cl::Offset{}, cl::Extents{}, 0, 0)
+    {}
     cl_command_type type{0};
     size_t size            = 0;
     size_t offset          = 0;
@@ -68,6 +71,8 @@ struct HostTransferConfig
     size_t elementSize     = 0;
     cl::MemOffsets origin;
     cl::Coordinate region;
+    cl::BufferRect srcRect;
+    cl::BufferRect dstRect;
 };
 struct HostTransferEntry
 {
@@ -401,7 +406,7 @@ class CLCommandQueueVk : public CLCommandQueueImpl
     bool mNeedPrintfHandling;
     const angle::HashMap<uint32_t, ClspvPrintfInfo> *mPrintfInfos;
 
-    // Host buffer transferring utility
+    // Host buffer transferring routines
     angle::Result addToHostTransferList(CLBufferVk *srcBuffer, HostTransferConfig transferEntry);
     angle::Result addToHostTransferList(CLImageVk *srcImage, HostTransferConfig transferEntry);
 
