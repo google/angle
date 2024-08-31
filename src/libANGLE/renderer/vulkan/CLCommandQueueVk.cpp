@@ -385,8 +385,6 @@ angle::Result CLCommandQueueVk::enqueueWriteBufferRect(const cl::Buffer &buffer,
     ANGLE_TRY(processWaitlist(waitEvents));
     auto bufferVk = &buffer.getImpl<CLBufferVk>();
 
-    ANGLE_TRY(finishInternal());
-
     cl::BufferRect bufferRect{cl::Offset{bufferOrigin.x, bufferOrigin.y, bufferOrigin.z},
                               cl::Extents{region.x, region.y, region.z}, bufferRowPitch,
                               bufferSlicePitch, 1};
@@ -395,9 +393,25 @@ angle::Result CLCommandQueueVk::enqueueWriteBufferRect(const cl::Buffer &buffer,
                            cl::Extents{region.x, region.y, region.z}, hostRowPitch, hostSlicePitch,
                            1};
 
-    ANGLE_TRY(bufferVk->setRect(ptr, ptrRect, bufferRect));
+    if (blocking)
+    {
+        ANGLE_TRY(finishInternal());
+        ANGLE_TRY(bufferVk->setRect(ptr, ptrRect, bufferRect));
+    }
+    else
+    {
+        // Stage a transfer routine
+        HostTransferConfig config;
+        config.type       = CL_COMMAND_WRITE_BUFFER_RECT;
+        config.srcRect    = ptrRect;
+        config.dstRect    = bufferRect;
+        config.srcHostPtr = ptr;
+        config.size       = bufferVk->getSize();
+        ANGLE_TRY(addToHostTransferList(bufferVk, config));
+    }
 
-    ANGLE_TRY(createEvent(eventCreateFunc, cl::ExecutionStatus::Complete));
+    ANGLE_TRY(createEvent(eventCreateFunc,
+                          blocking ? cl::ExecutionStatus::Complete : cl::ExecutionStatus::Queued));
     return angle::Result::Continue;
 }
 
@@ -673,6 +687,27 @@ angle::Result CLCommandQueueVk::addToHostTransferList(CLBufferVk *srcBuffer,
                 transferBufferHandleVk.getBuffer().getBuffer(), srcBuffer->getBuffer().getBuffer(),
                 1, &copyRegion);
 
+            srcStageMask             = VK_PIPELINE_STAGE_TRANSFER_BIT;
+            dstStageMask             = VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
+            memBarrier.srcAccessMask = VK_ACCESS_MEMORY_WRITE_BIT;
+            memBarrier.dstAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+            break;
+        }
+        case CL_COMMAND_WRITE_BUFFER_RECT:
+        {
+            ANGLE_TRY(transferBufferHandleVk.setRect(
+                transferConfig.srcHostPtr, transferConfig.srcRect, transferConfig.dstRect));
+            for (VkBufferCopy &copyRegion :
+                 transferBufferHandleVk.rectCopyRegions(transferConfig.dstRect))
+            {
+                copyRegion.srcOffset += transferBufferHandleVk.getOffset();
+                copyRegion.dstOffset += srcBuffer->getOffset();
+                mComputePassCommands->getCommandBuffer().copyBuffer(
+                    transferBufferHandleVk.getBuffer().getBuffer(),
+                    srcBuffer->getBuffer().getBuffer(), 1, &copyRegion);
+            }
+
+            // Config transfer barrier
             srcStageMask             = VK_PIPELINE_STAGE_TRANSFER_BIT;
             dstStageMask             = VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
             memBarrier.srcAccessMask = VK_ACCESS_MEMORY_WRITE_BIT;
@@ -1324,6 +1359,10 @@ angle::Result CLCommandQueueVk::syncHostBuffers(HostTransferEntries &hostTransfe
                 hostTransferEntry.transferBufferHandle->getImpl<CLBufferVk>();
             switch (hostTransferEntry.transferConfig.type)
             {
+                case CL_COMMAND_WRITE_BUFFER:
+                case CL_COMMAND_WRITE_BUFFER_RECT:
+                    // Nothing left to do here
+                    break;
                 case CL_COMMAND_READ_BUFFER:
                 case CL_COMMAND_READ_IMAGE:
                     if (transferConfig.rowPitch == 0 && transferConfig.slicePitch == 0)
