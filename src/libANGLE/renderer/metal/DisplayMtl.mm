@@ -1363,11 +1363,15 @@ bool DisplayMtl::supportsEitherGPUFamily(uint8_t iOSFamily, uint8_t macFamily) c
 
 bool DisplayMtl::supports32BitFloatFiltering() const
 {
+#if !TARGET_OS_WATCH
     if (@available(macOS 11.0, *))
     {
         return [mMetalDevice supports32BitFloatFiltering];
     }
     return true;  // Always true on old macOS
+#else
+    return false;
+#endif
 }
 
 bool DisplayMtl::supportsBCTextureCompression() const
