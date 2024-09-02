@@ -1876,20 +1876,12 @@ void ContextMtl::flushCommandBuffer(mtl::CommandBufferFinishOperation operation)
 
 void ContextMtl::flushCommandBufferIfNeeded()
 {
-    if (mRenderPassesSinceFlush >= mtl::kMaxRenderPassesPerCommandBuffer)
+    if (mRenderPassesSinceFlush >= mtl::kMaxRenderPassesPerCommandBuffer ||
+        mCmdBuffer.needsFlushForDrawCallLimits())
     {
-#if TARGET_OS_OSX
         // Ensure that we don't accumulate too many unflushed render passes. Don't wait until they
         // are submitted, other components handle backpressure so don't create uneccessary CPU/GPU
         // synchronization.
-        flushCommandBuffer(mtl::NoWait);
-#else
-        // WaitUntilScheduled is used on iOS to avoid regressing untested devices.
-        flushCommandBuffer(mtl::WaitUntilScheduled);
-#endif
-    }
-    else if (mCmdBuffer.needsFlushForDrawCallLimits())
-    {
         flushCommandBuffer(mtl::NoWait);
     }
 }
