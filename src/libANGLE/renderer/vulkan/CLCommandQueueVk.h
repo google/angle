@@ -270,6 +270,9 @@ class CLCommandQueueVk : public CLCommandQueueImpl
 
     bool hasUserEventDependency() const;
 
+    angle::Result insertBarrier();
+    angle::Result addMemoryDependencies(cl::Memory *clMem);
+
     CLContextVk *mContext;
     const CLDeviceVk *mDevice;
     cl::Memory *mPrintfBuffer;
