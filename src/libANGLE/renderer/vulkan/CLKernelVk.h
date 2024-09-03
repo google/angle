@@ -67,6 +67,16 @@ class CLKernelVk : public CLKernelImpl
 {
   public:
     using Ptr = std::unique_ptr<CLKernelVk>;
+
+    struct KernelSpecConstant
+    {
+        uint32_t ID;
+        uint32_t data;
+    };
+    // Setting a reasonable initial value
+    // https://registry.khronos.org/OpenCL/specs/3.0-unified/html/OpenCL_API.html#CL_DEVICE_MAX_PARAMETER_SIZE
+    using KernelSpecConstants = angle::FastVector<KernelSpecConstant, 128>;
+
     CLKernelVk(const cl::Kernel &kernel,
                std::string &name,
                std::string &attributes,
@@ -100,6 +110,7 @@ class CLKernelVk : public CLKernelImpl
     CLKernelArguments mArgs;
     vk::ShaderProgramHelper mShaderProgramHelper;
     vk::ComputePipelineCache mComputePipelineCache;
+    KernelSpecConstants mSpecConstants;
     vk::AtomicBindingPointer<vk::PipelineLayout> mPipelineLayout;
     vk::DescriptorSetLayoutPointerArray mDescriptorSetLayouts{};
 };

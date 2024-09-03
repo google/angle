@@ -55,6 +55,13 @@ angle::Result CLKernelVk::setArg(cl_uint argIndex, size_t argSize, const void *a
     {
         arg.handle     = const_cast<void *>(argValue);
         arg.handleSize = argSize;
+
+        if (arg.type == NonSemanticClspvReflectionArgumentWorkgroup)
+        {
+            mSpecConstants.push_back(
+                KernelSpecConstant{.ID   = arg.workgroupSpecId,
+                                   .data = static_cast<uint32_t>(argSize / arg.workgroupSize)});
+        }
     }
 
     return angle::Result::Continue;
@@ -190,6 +197,14 @@ angle::Result CLKernelVk::getOrCreateComputePipeline(vk::PipelineCacheAccess *pi
             .constantID = devProgramData->reflectionData.specConstantIDs[specConstantUsed],
             .offset     = constantDataOffset,
             .size       = sizeof(uint32_t)});
+        constantDataOffset += sizeof(uint32_t);
+    }
+    // Populate kernel specialization constants (if any)
+    for (const auto &specConstant : mSpecConstants)
+    {
+        specConstantData.push_back(specConstant.data);
+        mapEntries.push_back(VkSpecializationMapEntry{
+            .constantID = specConstant.ID, .offset = constantDataOffset, .size = sizeof(uint32_t)});
         constantDataOffset += sizeof(uint32_t);
     }
     VkSpecializationInfo computeSpecializationInfo{
