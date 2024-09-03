@@ -55,6 +55,9 @@
 # Fails because of unsupported combined depth/stencil GetImage.
 42263287 : DepthStencilTest.DepthOnlyEmulatedWithPacked/* = FAIL
 
+# Provoking vertex
+463966221 : ProvokingVertexTest.* = FAIL
+
 # ES3
 42264706 : BlitFramebufferTest.BlitDepthStencilPixelByPixel/* = NOT_RUN
 42264706 : GLSLTest_ES3.UnsuccessfulRelinkWithBindAttribLocation/* = NOT_RUN
