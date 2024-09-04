@@ -26,7 +26,7 @@ class ConversionBuffer
     ConversionBuffer() : mEntireBufferDirty(true)
     {
         mData = std::make_unique<vk::BufferHelper>();
-        mDirtyRange.invalidate();
+        mDirtyRanges.reserve(32);
     }
     ConversionBuffer(vk::Renderer *renderer,
                      VkBufferUsageFlags usageFlags,
@@ -37,15 +37,15 @@ class ConversionBuffer
 
     ConversionBuffer(ConversionBuffer &&other);
 
-    bool dirty() const { return mEntireBufferDirty || !mDirtyRange.empty(); }
+    bool dirty() const { return mEntireBufferDirty || !mDirtyRanges.empty(); }
     bool isEntireBufferDirty() const { return mEntireBufferDirty; }
     void setEntireBufferDirty() { mEntireBufferDirty = true; }
-    void addDirtyBufferRange(const RangeDeviceSize &range) { mDirtyRange.merge(range); }
-    const RangeDeviceSize &getDirtyBufferRange() const { return mDirtyRange; }
+    void addDirtyBufferRange(const RangeDeviceSize &range) { mDirtyRanges.emplace_back(range); }
+    const std::vector<RangeDeviceSize> &getDirtyBufferRanges() const { return mDirtyRanges; }
     void clearDirty()
     {
         mEntireBufferDirty = false;
-        mDirtyRange.invalidate();
+        mDirtyRanges.clear();
     }
 
     bool valid() const { return mData && mData->valid(); }
@@ -59,7 +59,7 @@ class ConversionBuffer
     // true. If mEntireBufferDirty is false, mDirtyRange is the ranges of data that has been
     // modified. Note that there is no guarantee that ranges will not overlap.
     bool mEntireBufferDirty;
-    RangeDeviceSize mDirtyRange;
+    std::vector<RangeDeviceSize> mDirtyRanges;
 
     // Where the conversion data is stored.
     std::unique_ptr<vk::BufferHelper> mData;

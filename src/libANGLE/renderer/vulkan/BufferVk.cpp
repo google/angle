@@ -284,12 +284,13 @@ ConversionBuffer::ConversionBuffer(vk::Renderer *renderer,
     : mEntireBufferDirty(true)
 {
     mData = std::make_unique<vk::BufferHelper>();
-    mDirtyRange.invalidate();
+    mDirtyRanges.reserve(32);
 }
 
 ConversionBuffer::~ConversionBuffer()
 {
     ASSERT(!mData || !mData->valid());
+    mDirtyRanges.clear();
 }
 
 ConversionBuffer::ConversionBuffer(ConversionBuffer &&other) = default;
