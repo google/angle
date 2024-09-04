@@ -1635,6 +1635,22 @@ struct FeaturesVk : FeatureSetBase
         &members, "https://anglebug.com/42263322"
     };
 
+    FeatureInfo hasBlobCacheThatEvictsOldItemsFirst = {
+        "hasBlobCacheThatEvictsOldItemsFirst",
+        FeatureCategory::VulkanFeatures,
+        "Whether platform blob cache evicts old items first (has LRU). "
+        "This is also true if cache evicts more old items than required when storing a new item.",
+        &members, "https://anglebug.com/42263322"
+    };
+
+    FeatureInfo verifyPipelineCacheInBlobCache = {
+        "verifyPipelineCacheInBlobCache",
+        FeatureCategory::VulkanFeatures,
+        "Wether need to perform verification of stored PipelineCacheVk data chunks or not. "
+        "Relevant, when blob cache does not evict old items first (no LRU) or evicts more old items than required when storing a new item.",
+        &members, "https://anglebug.com/42263322"
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

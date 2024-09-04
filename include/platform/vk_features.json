@@ -1793,6 +1793,24 @@
                 "Whether to use empty blobs or 1-sized blobs to erase old PipelineCacheVk data from the blob cache."
             ],
             "issue": "https://anglebug.com/42263322"
+        },
+        {
+            "name": "has_blob_cache_that_evicts_old_items_first",
+            "category": "Features",
+            "description": [
+                "Whether platform blob cache evicts old items first (has LRU). ",
+                "This is also true if cache evicts more old items than required when storing a new item."
+            ],
+            "issue": "https://anglebug.com/42263322"
+        },
+        {
+            "name": "verify_pipeline_cache_in_blob_cache",
+            "category": "Features",
+            "description": [
+                "Wether need to perform verification of stored PipelineCacheVk data chunks or not. ",
+                "Relevant, when blob cache does not evict old items first (no LRU) or evicts more old items than required when storing a new item."
+            ],
+            "issue": "https://anglebug.com/42263322"
         }
     ]
 }
