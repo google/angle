@@ -1982,7 +1982,8 @@ angle::Result Renderer::initialize(vk::Context *context,
         volkLoadInstance(mInstance);
 #endif  // defined(ANGLE_SHARED_LIBVULKAN)
 
-        initInstanceExtensionEntryPoints();
+        // For promoted extensions, initialize their entry points from the core version.
+        initializeInstanceExtensionEntryPointsFromCore();
     }
 
     if (mEnableDebugUtils)
@@ -3505,33 +3506,6 @@ angle::Result Renderer::enableDeviceExtensions(vk::Context *context,
     return angle::Result::Continue;
 }
 
-void Renderer::initInstanceExtensionEntryPoints()
-{
-#if !defined(ANGLE_SHARED_LIBVULKAN)
-    // Instance entry points
-    if (mFeatures.supportsExternalSemaphoreFd.enabled ||
-        mFeatures.supportsExternalSemaphoreFuchsia.enabled)
-    {
-        InitExternalSemaphoreFdFunctions(mInstance);
-    }
-
-    if (mFeatures.supportsExternalFenceFd.enabled)
-    {
-        InitExternalFenceFdFunctions(mInstance);
-    }
-
-#    if defined(ANGLE_PLATFORM_ANDROID)
-    if (mFeatures.supportsAndroidHardwareBuffer.enabled)
-    {
-        InitExternalMemoryHardwareBufferANDROIDFunctions(mInstance);
-    }
-#    endif
-#endif
-
-    // For promoted extensions, initialize their entry points from the core version.
-    initializeInstanceExtensionEntryPointsFromCore();
-}
-
 void Renderer::initDeviceExtensionEntryPoints()
 {
 #if !defined(ANGLE_SHARED_LIBVULKAN)
@@ -3567,6 +3541,23 @@ void Renderer::initDeviceExtensionEntryPoints()
     {
         InitDynamicRenderingLocalReadFunctions(mDevice);
     }
+    if (mFeatures.supportsExternalSemaphoreFd.enabled ||
+        mFeatures.supportsExternalSemaphoreFuchsia.enabled)
+    {
+        InitExternalSemaphoreFdFunctions(mDevice);
+    }
+
+    if (mFeatures.supportsExternalFenceFd.enabled)
+    {
+        InitExternalFenceFdFunctions(mDevice);
+    }
+
+#    if defined(ANGLE_PLATFORM_ANDROID)
+    if (mFeatures.supportsAndroidHardwareBuffer.enabled)
+    {
+        InitExternalMemoryHardwareBufferANDROIDFunctions(mDevice);
+    }
+#    endif
     // Extensions promoted to Vulkan 1.2
     {
         if (mFeatures.supportsHostQueryReset.enabled)
