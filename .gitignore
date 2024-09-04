@@ -98,7 +98,7 @@
 /third_party/spirv-headers/src
 /third_party/spirv-tools/src
 /third_party/SwiftShader
-/third_party/turbine/*.jar
+/third_party/turbine/cipd
 /third_party/VK-GL-CTS/src
 /third_party/vulkan-deps
 /third_party/vulkan-headers/src
