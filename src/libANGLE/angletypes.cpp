@@ -1094,7 +1094,7 @@ bool CompressBlob(const size_t cacheSize, const uint8_t *cacheData, MemoryBuffer
 
     // Trim to actual size.
     ASSERT(actualCompressedSize <= expectedCompressedSize);
-    compressedData->trim(actualCompressedSize);
+    compressedData->setSize(actualCompressedSize);
 
     return true;
 }
@@ -1141,7 +1141,7 @@ bool DecompressBlob(const uint8_t *compressedData,
 
     // Trim to actual size.
     ASSERT(destLen <= uncompressedSize);
-    uncompressedData->trim(destLen);
+    uncompressedData->setSize(destLen);
 
     return true;
 }

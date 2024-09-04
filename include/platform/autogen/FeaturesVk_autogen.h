@@ -1621,6 +1621,20 @@ struct FeaturesVk : FeatureSetBase
         &members, "https://issuetracker.google.com/311022968"
     };
 
+    FeatureInfo useDualPipelineBlobCacheSlots = {
+        "useDualPipelineBlobCacheSlots",
+        FeatureCategory::VulkanFeatures,
+        "Wether to use single or dual slots to store PipelineCacheVk data into the blob cache.",
+        &members, "https://anglebug.com/42263322"
+    };
+
+    FeatureInfo useEmptyBlobsToEraseOldPipelineCacheFromBlobCache = {
+        "useEmptyBlobsToEraseOldPipelineCacheFromBlobCache",
+        FeatureCategory::VulkanFeatures,
+        "Whether to use empty blobs or 1-sized blobs to erase old PipelineCacheVk data from the blob cache.",
+        &members, "https://anglebug.com/42263322"
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

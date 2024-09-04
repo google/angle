@@ -426,6 +426,8 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::UseDepthCompareOpDynamicState, "useDepthCompareOpDynamicState"},
     {Feature::UseDepthTestEnableDynamicState, "useDepthTestEnableDynamicState"},
     {Feature::UseDepthWriteEnableDynamicState, "useDepthWriteEnableDynamicState"},
+    {Feature::UseDualPipelineBlobCacheSlots, "useDualPipelineBlobCacheSlots"},
+    {Feature::UseEmptyBlobsToEraseOldPipelineCacheFromBlobCache, "useEmptyBlobsToEraseOldPipelineCacheFromBlobCache"},
     {Feature::UseFrontFaceDynamicState, "useFrontFaceDynamicState"},
     {Feature::UseIntermediateTextureForGenerateMipmap, "useIntermediateTextureForGenerateMipmap"},
     {Feature::UseMultipleDescriptorsForExternalFormats, "useMultipleDescriptorsForExternalFormats"},

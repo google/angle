@@ -1777,6 +1777,22 @@
                 "allow create double buffer swapchain for fifo present mode"
             ],
             "issue": "https://issuetracker.google.com/311022968"
+        },
+        {
+            "name": "use_dual_pipeline_blob_cache_slots",
+            "category": "Features",
+            "description": [
+                "Wether to use single or dual slots to store PipelineCacheVk data into the blob cache."
+            ],
+            "issue": "https://anglebug.com/42263322"
+        },
+        {
+            "name": "use_empty_blobs_to_erase_old_pipeline_cache_from_blob_cache",
+            "category": "Features",
+            "description": [
+                "Whether to use empty blobs or 1-sized blobs to erase old PipelineCacheVk data from the blob cache."
+            ],
+            "issue": "https://anglebug.com/42263322"
         }
     ]
 }
