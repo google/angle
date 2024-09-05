@@ -303,6 +303,12 @@ struct CombinedPrintToStringParamName
                                                                              ##__VA_ARGS__}; \
     INSTANTIATE_TEST_SUITE_P(                                                                \
         , testName, testing::Combine(ANGLE_INSTANTIATE_TEST_PLATFORMS(testName), combine1), print)
+#define ANGLE_INSTANTIATE_TEST_COMBINE_2(testName, print, combine1, combine2, first, ...)    \
+    const std::remove_reference<decltype(first)>::type testName##params[] = {first,          \
+                                                                             ##__VA_ARGS__}; \
+    INSTANTIATE_TEST_SUITE_P(                                                                \
+        , testName,                                                                          \
+        testing::Combine(ANGLE_INSTANTIATE_TEST_PLATFORMS(testName), combine1, combine2), print)
 #define ANGLE_INSTANTIATE_TEST_COMBINE_3(testName, print, combine1, combine2, combine3, first, \
                                          ...)                                                  \
     const std::remove_reference<decltype(first)>::type testName##params[] = {first,            \
