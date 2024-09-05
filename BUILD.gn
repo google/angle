@@ -128,6 +128,13 @@ if (angle_build_all) {
   }
 }
 
+if (build_angle_end2end_tests_aosp) {
+  group("angle_end2end_tests_aosp") {
+    testonly = true
+    deps = [ "src/tests:angle_end2end_tests" ]
+  }
+}
+
 import("src/angle_program_serialize_data_version.gni")
 import("src/compiler.gni")
 import("src/libGLESv2.gni")
@@ -1695,7 +1702,7 @@ angle_executable("angle_shader_translator") {
   }
 }
 
-if (angle_standalone || build_with_chromium) {
+if (angle_standalone || build_with_chromium || build_angle_end2end_tests_aosp) {
   config("angle_feature_support_config") {
     include_dirs = [
       "include",

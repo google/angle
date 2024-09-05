@@ -78,6 +78,11 @@ function generate_Android_bp_file() {
 
             # rapidJSON is used for ANGLE's frame capture (among other things), which is unnecessary for AOSP builds.
             "angle_has_rapidjson = false"
+
+            # end2end tests
+            "build_angle_end2end_tests_aosp = true"
+            "build_angle_trace_tests = false"
+            "angle_test_enable_system_egl = true"
         )
 
         if [[ "$1" == "--enableApiTrace" ]]; then
