@@ -401,7 +401,8 @@ def get_min_reqs(args, traces):
         #       then run_test_suite runs with all extensions enabled by default.
         def run_test_suite_with_exts(exts):
             additional_args = default_args.copy()
-            additional_args += ['--request-extensions', ' '.join(exts)]
+            if len(exts) > 0:
+                additional_args += ['--request-extensions', ' '.join(exts)]
 
             try:
                 run_test_suite(args, trace_binary, trace, max_steps, additional_args, env)
