@@ -628,7 +628,6 @@ angle::Result BufferVk::mapRange(const gl::Context *context,
                                  GLbitfield access,
                                  void **mapPtr)
 {
-    ANGLE_TRACE_EVENT0("gpu.angle", "BufferVk::mapRange");
     return mapRangeImpl(vk::GetImpl(context), offset, length, access, mapPtr);
 }
 
