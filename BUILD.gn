@@ -1773,7 +1773,8 @@ if (is_android && symbol_level != 0 &&
       }
     }
 
-    if (angle_enable_vulkan_api_dump_layer) {
+    if (angle_enable_vulkan_api_dump_layer &&
+        current_toolchain == default_toolchain) {
       sources += [ "$root_out_dir/libVkLayer_lunarg_api_dump$shlib_extension" ]
     }
 
@@ -1791,7 +1792,8 @@ if (is_android && symbol_level != 0 &&
       }
     }
 
-    if (angle_enable_vulkan_api_dump_layer) {
+    if (angle_enable_vulkan_api_dump_layer &&
+        current_toolchain == default_toolchain) {
       deps += [ "$angle_lunarg_vulkantools_dir:VkLayer_lunarg_api_dump" ]
     }
 
