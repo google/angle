@@ -691,7 +691,8 @@ def get_angle_android_dma_buf_flag_config(build_info):
 def get_blueprint_targets_from_build_info(build_info: BuildInfo) -> List[Tuple[str, dict]]:
     targets_to_write = collections.OrderedDict()
     for abi in ABI_TARGETS:
-        for root_target in ROOT_TARGETS + [END2END_TEST_TARGET, DMA_BUF_TARGET]:
+        # TODO(b/279980674): re-add END2END_TEST_TARGET
+        for root_target in ROOT_TARGETS + [DMA_BUF_TARGET]:
             targets_to_write.update(get_gn_target_dependencies(abi, root_target, build_info))
 
     generated_targets = []
