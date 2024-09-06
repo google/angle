@@ -734,6 +734,20 @@ class Range
         }
     }
 
+    bool intersectsOrContinuous(const Range<T> &other) const
+    {
+        ASSERT(!empty());
+        ASSERT(!other.empty());
+        if (mLow <= other.mLow)
+        {
+            return mHigh >= other.mLow;
+        }
+        else
+        {
+            return mLow <= other.mHigh;
+        }
+    }
+
     void merge(const Range<T> &other)
     {
         if (mLow > other.mLow)
