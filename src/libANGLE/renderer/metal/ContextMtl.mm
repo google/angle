@@ -1861,12 +1861,12 @@ void ContextMtl::endEncoding(bool forceSaveRenderPassContent)
 
 void ContextMtl::flushCommandBuffer(mtl::CommandBufferFinishOperation operation)
 {
+    mRenderPassesSinceFlush = 0;
     if (mCmdBuffer.ready())
     {
         endEncoding(true);
         mCmdBuffer.commit(operation);
         mBufferManager.incrementNumCommandBufferCommits();
-        mRenderPassesSinceFlush = 0;
     }
     else
     {
