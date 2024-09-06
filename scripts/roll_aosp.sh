@@ -187,7 +187,8 @@ unsupported_third_party_deps=(
    "third_party/android_build_tools"
    "third_party/android_sdk"
    "third_party/android_toolchain"
-   "third_party/jdk"
+   "third_party/jdk/current"  # subdirs only to keep third_party/jdk/BUILD.gn (not pulled by gclient as it comes from ANGLE repo)
+   "third_party/jdk/extras"
    "third_party/llvm-build"
    "third_party/rust-toolchain"
    "third_party/zlib"  # Replaced by Android's zlib
