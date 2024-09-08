@@ -1181,7 +1181,7 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
 
     if (traceNameIs("hill_climb_racing") || traceNameIs("dead_trigger_2") ||
         traceNameIs("disney_mirrorverse") || traceNameIs("cut_the_rope") ||
-        traceNameIs("geometry_dash"))
+        traceNameIs("geometry_dash") || traceNameIs("critical_ops"))
     {
         if (IsAndroid() && (IsPixel4() || IsPixel4XL()) && !mParams->isANGLE())
         {
@@ -1823,6 +1823,14 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         if (isIntelLinuxNative)
         {
             skipTest("b/362801312 eglCreateContext fails on Mesa 23.2.1");
+        }
+    }
+
+    if (traceNameIs("critical_ops"))
+    {
+        if (isNVIDIALinuxANGLE || isNVIDIAWinANGLE)
+        {
+            skipTest("https://anglebug.com/365524876 Renders incorrectly on Nvidia");
         }
     }
 

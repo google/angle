@@ -207,6 +207,7 @@ vars = {
   'checkout_angle_restricted_trace_command_and_conquer_rivals': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_cookie_run_kingdom': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_cookie_run_oven_break': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_critical_ops': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_csr2_drag_racing': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_cut_the_rope': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_darkness_rises': 'checkout_angle_restricted_traces',
@@ -1692,6 +1693,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_cookie_run_oven_break',
+  },
+  'src/tests/restricted_traces/critical_ops': {
+      'packages': [
+        {
+            'package': 'angle/traces/critical_ops',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_critical_ops',
   },
   'src/tests/restricted_traces/csr2_drag_racing': {
       'packages': [
