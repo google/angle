@@ -110,6 +110,8 @@ constexpr int kTextureZOffsetAttributeIndex = 1;
 constexpr size_t kCubeFaceCount             = 6;
 
 constexpr int AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM  = 1;
+constexpr int AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM  = 2;
+constexpr int AHARDWAREBUFFER_FORMAT_R8G8B8_UNORM    = 3;
 constexpr int AHARDWAREBUFFER_FORMAT_D24_UNORM       = 0x31;
 constexpr int AHARDWAREBUFFER_FORMAT_Y8Cr8Cb8_420_SP = 0x11;
 constexpr int AHARDWAREBUFFER_FORMAT_Y8Cb8Cr8_420    = 0x23;
@@ -1238,6 +1240,15 @@ void main()
     bool hasAndroidHardwareBufferSupport() const
     {
 #if defined(ANGLE_AHARDWARE_BUFFER_SUPPORT)
+        return true;
+#else
+        return false;
+#endif
+    }
+
+    bool hasAhbLockPlanesSupport() const
+    {
+#if defined(ANGLE_AHARDWARE_BUFFER_LOCK_PLANES_SUPPORT)
         return true;
 #else
         return false;
@@ -2405,14 +2416,12 @@ TEST_P(ImageTest, SourceAHBTarget2DEarlyDelete)
 // Testing source AHB EGL image, target 2D texture
 TEST_P(ImageTest, SourceAHBTarget2D)
 {
-    ANGLE_SKIP_TEST_IF(!IsAndroid());
     SourceAHBTarget2D_helper(kDefaultAttribs);
 }
 
 // Testing source AHB EGL image with colorspace, target 2D texture
 TEST_P(ImageTest, SourceAHBTarget2D_Colorspace)
 {
-    ANGLE_SKIP_TEST_IF(!IsAndroid());
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_sRGB"));
     ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
     SourceAHBTarget2D_helper(kColorspaceAttribs);
@@ -2424,6 +2433,7 @@ void ImageTest::SourceAHBTarget2D_helper(const EGLint *attribs)
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     // Create the Image
     AHardwareBuffer *source;
@@ -2450,8 +2460,6 @@ TEST_P(ImageTest, SourceAHBTarget2DExternalCycleThroughYuvSourcesNoData)
 {
     // http://issuetracker.google.com/175021871
     ANGLE_SKIP_TEST_IF(IsPixel2() || IsPixel2XL());
-
-    ANGLE_SKIP_TEST_IF(!IsAndroid());
 
     EGLWindow *window = getEGLWindow();
 
@@ -2532,12 +2540,11 @@ TEST_P(ImageTest, SourceAHBTarget2DExternalCycleThroughRgbAndYuvSources)
     // http://issuetracker.google.com/175021871
     ANGLE_SKIP_TEST_IF(IsPixel2() || IsPixel2XL());
 
-    ANGLE_SKIP_TEST_IF(!IsAndroid());
-
     EGLWindow *window = getEGLWindow();
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     ANGLE_SKIP_TEST_IF(!isAndroidHardwareBufferConfigurationSupported(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM, kDefaultAHBUsage));
@@ -2607,12 +2614,11 @@ TEST_P(ImageTest, SourceAHBTarget2DExternalCycleThroughRgbAndYuvTargets)
     // http://issuetracker.google.com/175021871
     ANGLE_SKIP_TEST_IF(IsPixel2() || IsPixel2XL());
 
-    ANGLE_SKIP_TEST_IF(!IsAndroid());
-
     EGLWindow *window = getEGLWindow();
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     // Create RGBA Image
     GLubyte rgbaColor[4] = {0, 0, 255, 255};
@@ -2691,8 +2697,6 @@ TEST_P(ImageTest, SourceAHBTarget2DExternalCycleThroughYuvTargetsNoData)
     // http://issuetracker.google.com/175021871
     ANGLE_SKIP_TEST_IF(IsPixel2() || IsPixel2XL());
 
-    ANGLE_SKIP_TEST_IF(!IsAndroid());
-
     EGLWindow *window = getEGLWindow();
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
@@ -2764,12 +2768,11 @@ TEST_P(ImageTest, SourceAHBTarget2DExternalCycleThroughYuvTargetsNoData)
 // Testing source AHB EGL image, target 2D texture retaining initial data.
 TEST_P(ImageTest, SourceAHBTarget2DRetainInitialData)
 {
-    ANGLE_SKIP_TEST_IF(!IsAndroid());
-
     EGLWindow *window = getEGLWindow();
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     GLubyte data[4] = {0, 255, 0, 255};
 
@@ -2853,14 +2856,12 @@ TEST_P(ImageTest, SourceAHBTarget2DMSRTTInteraction)
 // Testing source AHB EGL image, target 2D array texture
 TEST_P(ImageTest, SourceAHBTarget2DArray)
 {
-    ANGLE_SKIP_TEST_IF(!IsAndroid());
     SourceAHBTarget2DArray_helper(kDefaultAttribs);
 }
 
 // Testing source AHB EGL image with colorspace, target 2D array texture
 TEST_P(ImageTest, SourceAHBTarget2DArray_Colorspace)
 {
-    ANGLE_SKIP_TEST_IF(!IsAndroid());
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_sRGB"));
     ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
     SourceAHBTarget2DArray_helper(kColorspaceAttribs);
@@ -2873,6 +2874,7 @@ void ImageTest::SourceAHBTarget2DArray_helper(const EGLint *attribs)
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt() ||
                        !hasEglImageArrayExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     // Create the Image
     AHardwareBuffer *source;
@@ -2897,14 +2899,12 @@ void ImageTest::SourceAHBTarget2DArray_helper(const EGLint *attribs)
 // Testing source AHB EGL image, target external texture
 TEST_P(ImageTest, SourceAHBTargetExternal)
 {
-    ANGLE_SKIP_TEST_IF(!IsAndroid());
     SourceAHBTargetExternal_helper(kDefaultAttribs);
 }
 
 // Testing source AHB EGL image with colorspace, target external texture
 TEST_P(ImageTest, SourceAHBTargetExternal_Colorspace)
 {
-    ANGLE_SKIP_TEST_IF(!IsAndroid());
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_sRGB"));
     ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
     SourceAHBTargetExternal_helper(kColorspaceAttribs);
@@ -2915,6 +2915,7 @@ void ImageTest::SourceAHBTargetExternal_helper(const EGLint *attribs)
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt() || !hasExternalExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     // Ozone only supports external target for images created with EGL_EXT_image_dma_buf_import
     ANGLE_SKIP_TEST_IF(IsOzone());
@@ -2942,7 +2943,6 @@ void ImageTest::SourceAHBTargetExternal_helper(const EGLint *attribs)
 // Testing source AHB EGL image, target external ESSL3 texture
 TEST_P(ImageTestES3, SourceAHBTargetExternalESSL3)
 {
-    ANGLE_SKIP_TEST_IF(!IsAndroid());
     SourceAHBTargetExternalESSL3_helper(kDefaultAttribs);
 }
 
@@ -3200,16 +3200,13 @@ void main()
 // Test sampling from a YUV AHB with a regular external sampler and pre-initialized data
 TEST_P(ImageTest, SourceYUVAHBTargetExternalRGBSampleInitData)
 {
-#ifndef ANGLE_AHARDWARE_BUFFER_LOCK_PLANES_SUPPORT
-    std::cout << "Test skipped: !ANGLE_AHARDWARE_BUFFER_LOCK_PLANES_SUPPORT." << std::endl;
-    return;
-#else
     EGLWindow *window = getEGLWindow();
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
     // http://issuetracker.google.com/175021871
     ANGLE_SKIP_TEST_IF(IsPixel2() || IsPixel2XL());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     // 3 planes of data
     GLubyte dataY[4]  = {7, 51, 197, 231};
@@ -3237,7 +3234,6 @@ TEST_P(ImageTest, SourceYUVAHBTargetExternalRGBSampleInitData)
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);
     destroyAndroidHardwareBuffer(source);
-#endif
 }
 
 // Test sampling from a YUV AHB with a regular external sampler without data. This gives coverage of
@@ -3282,14 +3278,11 @@ TEST_P(ImageTest, SourceYUVAHBTargetExternalRGBSampleNoData)
 // Test sampling from a YUV AHB using EXT_yuv_target
 TEST_P(ImageTestES3, SourceYUVAHBTargetExternalYUVSample)
 {
-#ifndef ANGLE_AHARDWARE_BUFFER_LOCK_PLANES_SUPPORT
-    std::cout << "Test skipped: !ANGLE_AHARDWARE_BUFFER_LOCK_PLANES_SUPPORT." << std::endl;
-    return;
-#else
     EGLWindow *window = getEGLWindow();
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt() || !hasYUVTargetExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     // 3 planes of data
     GLubyte dataY[4]  = {7, 51, 197, 231};
@@ -3317,19 +3310,15 @@ TEST_P(ImageTestES3, SourceYUVAHBTargetExternalYUVSample)
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);
     destroyAndroidHardwareBuffer(source);
-#endif
 }
 
 TEST_P(ImageTestES3, SourceYUVAHBTargetExternalYUVSampleLinearFiltering)
 {
-#ifndef ANGLE_AHARDWARE_BUFFER_LOCK_PLANES_SUPPORT
-    std::cout << "Test skipped: !ANGLE_AHARDWARE_BUFFER_LOCK_PLANES_SUPPORT." << std::endl;
-    return;
-#else
     EGLWindow *window = getEGLWindow();
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     ANGLE_SKIP_TEST_IF(!isAndroidHardwareBufferConfigurationSupported(
         2, 4, 1, AHARDWAREBUFFER_FORMAT_YV12, kDefaultAHBYUVUsage));
@@ -3394,20 +3383,16 @@ TEST_P(ImageTestES3, SourceYUVAHBTargetExternalYUVSampleLinearFiltering)
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), ahbImage);
     destroyAndroidHardwareBuffer(ahbSource);
-#endif
 }
 
 // Test rendering to a YUV AHB using EXT_yuv_target
 TEST_P(ImageTestES3, RenderToYUVAHB)
 {
-#ifndef ANGLE_AHARDWARE_BUFFER_LOCK_PLANES_SUPPORT
-    std::cout << "Test skipped: !ANGLE_AHARDWARE_BUFFER_LOCK_PLANES_SUPPORT." << std::endl;
-    return;
-#else
     EGLWindow *window = getEGLWindow();
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt() || !hasYUVTargetExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     // 3 planes of data, initialize to all zeroes
     GLubyte dataY[4]  = {0, 0, 0, 0};
@@ -3463,7 +3448,6 @@ TEST_P(ImageTestES3, RenderToYUVAHB)
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);
     destroyAndroidHardwareBuffer(source);
-#endif
 }
 
 // Test clearing to a YUV AHB using EXT_yuv_target
@@ -3509,7 +3493,6 @@ TEST_P(ImageTestES3, ClearYUVAHB)
     destroyAndroidHardwareBuffer(source);
 }
 
-#if defined(ANGLE_AHARDWARE_BUFFER_SUPPORT)
 // Test glClear on FBO with AHB attachment is applied to the AHB image before we read back
 TEST_P(ImageTestES3, AHBClearAppliedBeforeReadBack)
 {
@@ -3517,6 +3500,7 @@ TEST_P(ImageTestES3, AHBClearAppliedBeforeReadBack)
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     const GLubyte kRed[]   = {255, 0, 0, 255};
     const GLubyte kBlack[] = {0, 0, 0, 0};
@@ -3556,6 +3540,7 @@ TEST_P(ImageTestES3, AHBTwiceClearAppliedBeforeReadBack)
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     const GLubyte kRed[]   = {255, 0, 0, 255};
     const GLubyte kBlack[] = {0, 0, 0, 0};
@@ -3598,6 +3583,7 @@ TEST_P(ImageTestES3, AHBClearAndDetachBeforeReadback)
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     const GLubyte kRed[]   = {255, 0, 0, 255};
     const GLubyte kBlack[] = {0, 0, 0, 0};
@@ -3641,6 +3627,7 @@ TEST_P(ImageTestES3, AHBClearAndAttachAnotherTextureBeforeReadback)
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     const GLubyte kRed[]   = {255, 0, 0, 255};
     const GLubyte kBlack[] = {0, 0, 0, 0};
@@ -3688,6 +3675,7 @@ TEST_P(ImageTestES3, AHBClearAndSwitchToDefaultFBOBeforeReadBack)
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     const GLubyte kRed[]   = {255, 0, 0, 255};
     const GLubyte kBlack[] = {0, 0, 0, 0};
@@ -3730,6 +3718,7 @@ TEST_P(ImageTestES3, AHBClearWithGLClientWaitSyncBeforeReadBack)
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     const GLubyte kRed[]   = {255, 0, 0, 255};
     const GLubyte kBlack[] = {0, 0, 0, 0};
@@ -3768,10 +3757,10 @@ TEST_P(ImageTestES3, AHBClearWithGLClientWaitSyncBeforeReadBack)
 // Test glDraw + glFlush on FBO with AHB attachment are applied to the AHB image before we read back
 TEST_P(ImageTestES3, AHBDrawFlushAppliedBeforeReadBack)
 {
-    ANGLE_SKIP_TEST_IF(!kHasAHBFrontBufferUsageSupport);
-
     EGLWindow *window = getEGLWindow();
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport() || !kHasAHBFrontBufferUsageSupport);
 
     // Create a GLTexture backed by the AHB.
     AHardwareBuffer *ahb;
@@ -3816,10 +3805,10 @@ TEST_P(ImageTestES3, AHBDrawFlushAppliedBeforeReadBack)
 // image before detaching the AHB image from FBO
 TEST_P(ImageTestES3, AHBDrawFlushAndDetachBeforeReadBack)
 {
-    ANGLE_SKIP_TEST_IF(!kHasAHBFrontBufferUsageSupport);
-
     EGLWindow *window = getEGLWindow();
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport() || !kHasAHBFrontBufferUsageSupport);
 
     // Create a GLTexture backed by the AHB.
     AHardwareBuffer *ahb;
@@ -3868,10 +3857,10 @@ TEST_P(ImageTestES3, AHBDrawFlushAndDetachBeforeReadBack)
 // image before implicitly unbinding the AHB image from FBO
 TEST_P(ImageTestES3, AHBDrawFlushAndAttachAnotherTextureBeforeReadBack)
 {
-    ANGLE_SKIP_TEST_IF(!kHasAHBFrontBufferUsageSupport);
-
     EGLWindow *window = getEGLWindow();
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport() || !kHasAHBFrontBufferUsageSupport);
 
     // Create a GLTexture backed by the AHB.
     AHardwareBuffer *ahb;
@@ -3924,10 +3913,10 @@ TEST_P(ImageTestES3, AHBDrawFlushAndAttachAnotherTextureBeforeReadBack)
 // image before switching to the default FBO
 TEST_P(ImageTestES3, AHBDrawFlushAndSwitchToDefaultFBOBeforeReadBack)
 {
-    ANGLE_SKIP_TEST_IF(!kHasAHBFrontBufferUsageSupport);
-
     EGLWindow *window = getEGLWindow();
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport() || !kHasAHBFrontBufferUsageSupport);
 
     // Create a GLTexture backed by the AHB.
     AHardwareBuffer *ahb;
@@ -3976,9 +3965,9 @@ TEST_P(ImageTestES3, AHBDrawFlushAndSwitchToDefaultFBOBeforeReadBack)
 TEST_P(ImageTestES3, AHBTextureSwizzleParameters)
 {
     EGLWindow *window = getEGLWindow();
-
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     // Create the Image
     AHardwareBuffer *ahb;
@@ -4008,9 +3997,9 @@ TEST_P(ImageTestES3, AHBTextureSwizzleParameters)
 TEST_P(ImageTestES3, RGBXAHBImportPreservesData)
 {
     EGLWindow *window = getEGLWindow();
-
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     // Create the Image
     AHardwareBuffer *ahb;
@@ -4037,6 +4026,7 @@ TEST_P(ImageTestES3, RGBXAHBImportPreservesData_Colorspace)
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     const GLubyte kRed50SRGB[]   = {188, 0, 0, 255};
     const GLubyte kRed50Linear[] = {128, 0, 0, 255};
@@ -4066,7 +4056,7 @@ TEST_P(ImageTestES3, RGBXAHBUploadDownload)
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
-    ANGLE_SKIP_TEST_IF(!hasRGBXInternalFormatExt());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport() || !hasRGBXInternalFormatExt());
 
     const size_t kWidth  = 32;
     const size_t kHeight = 32;
@@ -4150,6 +4140,7 @@ TEST_P(ImageTestES3, RGBAAHBUploadData)
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     const GLubyte kGarbage[]     = {123, 123, 123, 123};
     const GLubyte kRed50Linear[] = {128, 0, 0, 127};
@@ -4184,6 +4175,7 @@ TEST_P(ImageTestES3, RGBAAHBUploadDataColorspace)
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     const GLubyte kGarbage[]     = {123, 123, 123, 123};
     const GLubyte kRed50SRGB[]   = {188, 0, 0, 128};
@@ -4219,6 +4211,7 @@ TEST_P(ImageTestES3, RGBXAHBUploadData)
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     const GLubyte kGarbage[]     = {123, 123, 123, 123};
     const GLubyte kRed50Linear[] = {128, 0, 0, 255};
@@ -4253,6 +4246,7 @@ TEST_P(ImageTestES3, RGBXAHBUploadDataColorspace)
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     const GLubyte kGarbage[]     = {123, 123, 123, 123};
     const GLubyte kRed50SRGB[]   = {188, 0, 0, 255};
@@ -4288,6 +4282,7 @@ TEST_P(ImageTestES3, RGBAHBUploadDataColorspace)
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
     ANGLE_SKIP_TEST_IF(!isAndroidHardwareBufferConfigurationSupported(
         1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8_UNORM, kDefaultAHBUsage));
 
@@ -4325,6 +4320,7 @@ TEST_P(ImageTestES3, RGBXAHBImportNoFramebufferUsage)
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     // Create the Image
     AHardwareBuffer *ahb;
@@ -4352,6 +4348,7 @@ TEST_P(ImageTestES3, RGBXAHBImportMultipleLayers)
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     // Limit the test to singke layer for now. writeAHBData is assuming alignment between layers
     // being 4096 which may not true on some GPUs. There is no API to retrieve such alignment from
@@ -4398,6 +4395,7 @@ TEST_P(ImageTestES3, RGBXAHBImportThenReadPixels)
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     // Create the Image
     AHardwareBuffer *ahb;
@@ -4435,6 +4433,7 @@ TEST_P(ImageTestES3, RGBXAHBImportThenClear)
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     // Create the Image
     AHardwareBuffer *ahb;
@@ -4477,6 +4476,7 @@ TEST_P(ImageTestES3, RGBXAHBImportThenClearThenDraw)
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     // Create the Image
     AHardwareBuffer *ahb;
@@ -4535,6 +4535,7 @@ TEST_P(ImageTestES3, RGBXAHBImportThenUpload)
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     const GLubyte kInitColor[] = {132, 55, 219, 12, 132, 55, 219, 12};
 
@@ -4573,6 +4574,7 @@ TEST_P(ImageTestES3, IncompleteRGBXAHBImportThenUploadThenEnd)
 {
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     const GLubyte kInitColor[] = {132, 55, 219, 12, 132, 55, 219, 12};
 
@@ -4605,6 +4607,7 @@ TEST_P(ImageTestES3, RGBXAHBImportOcclusionQueryNotCounted)
 
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     GLQueryEXT query;
     glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_EXT, query);
@@ -4661,6 +4664,7 @@ TEST_P(ImageTestES3, AHBImportReleaseStress)
 {
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     // Counters only available on Vulkan.
     ANGLE_SKIP_TEST_IF(!IsVulkan());
@@ -4703,8 +4707,6 @@ TEST_P(ImageTestES3, AHBImportReleaseStress)
     EXPECT_LE(getPerfCounters().pendingSubmissionGarbageObjects,
               initialPendingSubmissionGarbageObjects + 10);
 }
-
-#endif  // defined(ANGLE_AHARDWARE_BUFFER_SUPPORT)
 
 // Test validatin of using EXT_yuv_target
 TEST_P(ImageTestES3, YUVValidation)
@@ -4838,7 +4840,6 @@ TEST_P(ImageTestES3, YUVValidation)
 // Testing source AHB EGL image with colorspace, target external ESSL3 texture
 TEST_P(ImageTestES3, SourceAHBTargetExternalESSL3_Colorspace)
 {
-    ANGLE_SKIP_TEST_IF(!IsAndroid());
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_sRGB"));
     ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
     SourceAHBTargetExternalESSL3_helper(kColorspaceAttribs);
@@ -4850,6 +4851,7 @@ void ImageTest::SourceAHBTargetExternalESSL3_helper(const EGLint *attribs)
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt() ||
                        !hasExternalESSL3Ext());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     // Create the Image
     AHardwareBuffer *source;
@@ -4876,7 +4878,6 @@ TEST_P(ImageTestES3, SourceAHBArrayTarget2DArray)
 {
     EGLWindow *window = getEGLWindow();
 
-    ANGLE_SKIP_TEST_IF(!IsAndroid());
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt() ||
                        !hasEglImageArrayExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
@@ -4886,7 +4887,7 @@ TEST_P(ImageTestES3, SourceAHBArrayTarget2DArray)
     ANGLE_SKIP_TEST_IF(!isAndroidHardwareBufferConfigurationSupported(
         1, 1, kDepth, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM, kDefaultAHBUsage));
 
-    // Create the Image
+    // Create the Image without data so we don't need ANGLE_AHARDWARE_BUFFER_LOCK_PLANES_SUPPORT
     AHardwareBuffer *source;
     EGLImageKHR image;
     createEGLImageAndroidHardwareBufferSource(1, 1, kDepth, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM,
@@ -4918,7 +4919,6 @@ TEST_P(ImageTestES3, SourceAHBCubeTargetCube)
 {
     EGLWindow *window = getEGLWindow();
 
-    ANGLE_SKIP_TEST_IF(!IsAndroid());
     ANGLE_SKIP_TEST_IF(!hasEglImageStorageExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
 
@@ -4926,7 +4926,7 @@ TEST_P(ImageTestES3, SourceAHBCubeTargetCube)
         1, 1, kCubeFaceCount, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM,
         kDefaultAHBUsage | kAHBUsageGPUCubeMap));
 
-    // Create the Image
+    // Create the Image without data so we don't need ANGLE_AHARDWARE_BUFFER_LOCK_PLANES_SUPPORT
     AHardwareBuffer *source;
     EGLImageKHR image;
     createEGLImageAndroidHardwareBufferSource(
@@ -4962,7 +4962,6 @@ TEST_P(ImageTestES31, SourceAHBCubeArrayTargetCubeArray)
 {
     EGLWindow *window = getEGLWindow();
 
-    ANGLE_SKIP_TEST_IF(!IsAndroid());
     ANGLE_SKIP_TEST_IF(!(getClientMajorVersion() >= 3 && getClientMinorVersion() >= 1));
     ANGLE_SKIP_TEST_IF(!hasEglImageStorageExt() ||
                        !IsGLExtensionEnabled("GL_EXT_texture_cube_map_array"));
@@ -4973,7 +4972,7 @@ TEST_P(ImageTestES31, SourceAHBCubeArrayTargetCubeArray)
         1, 1, kDepth, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM,
         kDefaultAHBUsage | kAHBUsageGPUCubeMap));
 
-    // Create the Image
+    // Create the Image without data so we don't need ANGLE_AHARDWARE_BUFFER_LOCK_PLANES_SUPPORT
     AHardwareBuffer *source;
     EGLImageKHR image;
     createEGLImageAndroidHardwareBufferSource(1, 1, kDepth, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM,
@@ -5012,7 +5011,6 @@ TEST_P(ImageTestES3, SourceAHBMipTarget2DMip)
 {
     EGLWindow *window = getEGLWindow();
 
-    ANGLE_SKIP_TEST_IF(!IsAndroid());
     ANGLE_SKIP_TEST_IF(!hasEglImageStorageExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
 
@@ -5020,7 +5018,7 @@ TEST_P(ImageTestES3, SourceAHBMipTarget2DMip)
         2, 2, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM,
         kDefaultAHBUsage | kAHBUsageGPUMipMapComplete));
 
-    // Create the Image
+    // Create the Image without data so we don't need ANGLE_AHARDWARE_BUFFER_LOCK_PLANES_SUPPORT
     AHardwareBuffer *source;
     EGLImageKHR image;
     createEGLImageAndroidHardwareBufferSource(2, 2, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM,
@@ -5061,7 +5059,6 @@ TEST_P(ImageTestES3, SourceAHBMipTarget2DMipGenerateMipmap)
 {
     EGLWindow *window = getEGLWindow();
 
-    ANGLE_SKIP_TEST_IF(!IsAndroid());
     ANGLE_SKIP_TEST_IF(!hasEglImageStorageExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
 
@@ -5069,7 +5066,7 @@ TEST_P(ImageTestES3, SourceAHBMipTarget2DMipGenerateMipmap)
         2, 2, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM,
         kDefaultAHBUsage | kAHBUsageGPUMipMapComplete));
 
-    // Create the Image
+    // Create the Image without data so we don't need ANGLE_AHARDWARE_BUFFER_LOCK_PLANES_SUPPORT
     AHardwareBuffer *source;
     EGLImageKHR image;
     createEGLImageAndroidHardwareBufferSource(2, 2, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM,
@@ -5114,6 +5111,7 @@ TEST_P(ImageTest, SourceAHBTarget2DDepth)
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     GLint level             = 0;
     GLsizei width           = 1;
@@ -5228,7 +5226,6 @@ void ImageTest::Source2DTargetRenderbuffer_helper(const EGLint *attribs)
 // where source native client buffer is created using EGL_ANDROID_create_native_client_buffer API
 TEST_P(ImageTest, SourceNativeClientBufferTargetExternal)
 {
-    ANGLE_SKIP_TEST_IF(!IsAndroid());
     SourceNativeClientBufferTargetExternal_helper(kDefaultAttribs);
 }
 
@@ -5236,7 +5233,6 @@ TEST_P(ImageTest, SourceNativeClientBufferTargetExternal)
 // where source native client buffer is created using EGL_ANDROID_create_native_client_buffer API
 TEST_P(ImageTest, SourceNativeClientBufferTargetExternal_Colorspace)
 {
-    ANGLE_SKIP_TEST_IF(!IsAndroid());
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
     ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
     SourceNativeClientBufferTargetExternal_helper(kColorspaceAttribs);
@@ -5248,6 +5244,7 @@ void ImageTest::SourceNativeClientBufferTargetExternal_helper(const EGLint *attr
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     // Create an Image backed by a native client buffer allocated using
     // EGL_ANDROID_create_native_client_buffer API
@@ -5270,7 +5267,6 @@ void ImageTest::SourceNativeClientBufferTargetExternal_helper(const EGLint *attr
 // where source native client buffer is created using EGL_ANDROID_create_native_client_buffer API
 TEST_P(ImageTest, SourceNativeClientBufferTargetRenderbuffer)
 {
-    ANGLE_SKIP_TEST_IF(!IsAndroid());
     SourceNativeClientBufferTargetRenderbuffer_helper(kDefaultAttribs);
 }
 
@@ -5278,7 +5274,6 @@ TEST_P(ImageTest, SourceNativeClientBufferTargetRenderbuffer)
 // where source native client buffer is created using EGL_ANDROID_create_native_client_buffer API
 TEST_P(ImageTest, SourceNativeClientBufferTargetRenderbuffer_Colorspace)
 {
-    ANGLE_SKIP_TEST_IF(!IsAndroid());
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
     ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
     SourceNativeClientBufferTargetRenderbuffer_helper(kColorspaceAttribs);
@@ -5290,6 +5285,7 @@ void ImageTest::SourceNativeClientBufferTargetRenderbuffer_helper(const EGLint *
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     // Create an Image backed by a native client buffer allocated using
     // EGL_ANDROID_create_native_client_buffer API
@@ -6314,9 +6310,9 @@ TEST_P(ImageTest, AHBUpdatedExternalTexture)
 {
     EGLWindow *window = getEGLWindow();
 
-    ANGLE_SKIP_TEST_IF(!IsAndroid());
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     GLubyte originalData[4]      = {255, 0, 255, 255};
     GLubyte updateData[4]        = {0, 255, 0, 255};
@@ -6521,9 +6517,9 @@ TEST_P(ImageTest, AppTraceExternalTextureWithAHBUseCase)
 {
     EGLWindow *window = getEGLWindow();
 
-    ANGLE_SKIP_TEST_IF(!IsAndroid());
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
 
     GLubyte data[4] = {7, 51, 197, 231};
 
@@ -6583,9 +6579,9 @@ TEST_P(ImageTest, AppTraceExternalTextureWithAHBUseCase)
 // Thread 0 creates the AHB and binds it to a texture, thread 1 uses it without synchronization.
 TEST_P(ImageTest, MultithreadedAHBImportAndUseAsTexture)
 {
-    ANGLE_SKIP_TEST_IF(!IsAndroid());
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
     ANGLE_SKIP_TEST_IF(!platformSupportsMultithreading());
 
     EGLWindow *window = getEGLWindow();
@@ -6684,9 +6680,9 @@ TEST_P(ImageTest, MultithreadedAHBImportAndUseAsTexture)
 // synchronization.
 TEST_P(ImageTest, MultithreadedAHBImportAndUseAsRenderbuffer)
 {
-    ANGLE_SKIP_TEST_IF(!IsAndroid());
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !hasRenderbufferExt());
     ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
     ANGLE_SKIP_TEST_IF(!platformSupportsMultithreading());
 
     EGLWindow *window = getEGLWindow();
