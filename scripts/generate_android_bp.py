@@ -431,7 +431,6 @@ def library_target_to_blueprint(target, build_info):
 
         bp['defaults'].append('angle_common_library_cflags')
 
-        bp['sdk_version'] = MIN_SDK_VERSION
         bp['stl'] = STL
         if target in ROOT_TARGETS:
             bp['defaults'].append('angle_vendor_cc_defaults')
