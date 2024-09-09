@@ -1880,29 +1880,29 @@ angle::Result OutsideRenderPassCommandBufferHelper::reset(
     return initializeCommandBuffer(context);
 }
 
-void OutsideRenderPassCommandBufferHelper::imageRead(ContextVk *contextVk,
+void OutsideRenderPassCommandBufferHelper::imageRead(Context *context,
                                                      VkImageAspectFlags aspectFlags,
                                                      ImageLayout imageLayout,
                                                      ImageHelper *image)
 {
-    if (contextVk->isRenderPassStartedAndUsesImage(*image))
+    if (image->getResourceUse() >= mQueueSerial)
     {
         // If image is already used by renderPass, it may already set the event to renderPass's
         // event. In this case we already lost the previous event to wait for, thus use pipeline
         // barrier instead of event
-        imageReadImpl(contextVk, aspectFlags, imageLayout, BarrierType::Pipeline, image);
+        imageReadImpl(context, aspectFlags, imageLayout, BarrierType::Pipeline, image);
     }
     else
     {
-        imageReadImpl(contextVk, aspectFlags, imageLayout, BarrierType::Event, image);
+        imageReadImpl(context, aspectFlags, imageLayout, BarrierType::Event, image);
         // Usually an image can only used by a RenderPassCommands or OutsideRenderPassCommands
         // because the layout will be different, except with image sampled from compute shader. In
         // this case, the renderPassCommands' read will override the outsideRenderPassCommands'
-        retainImageWithEvent(contextVk, image);
+        retainImageWithEvent(context, image);
     }
 }
 
-void OutsideRenderPassCommandBufferHelper::imageWrite(ContextVk *contextVk,
+void OutsideRenderPassCommandBufferHelper::imageWrite(Context *context,
                                                       gl::LevelIndex level,
                                                       uint32_t layerStart,
                                                       uint32_t layerCount,
@@ -1910,9 +1910,9 @@ void OutsideRenderPassCommandBufferHelper::imageWrite(ContextVk *contextVk,
                                                       ImageLayout imageLayout,
                                                       ImageHelper *image)
 {
-    imageWriteImpl(contextVk, level, layerStart, layerCount, aspectFlags, imageLayout,
+    imageWriteImpl(context, level, layerStart, layerCount, aspectFlags, imageLayout,
                    BarrierType::Event, image);
-    retainImageWithEvent(contextVk, image);
+    retainImageWithEvent(context, image);
 }
 
 void OutsideRenderPassCommandBufferHelper::retainImage(ImageHelper *image)

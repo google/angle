@@ -1535,11 +1535,11 @@ class OutsideRenderPassCommandBufferHelper final : public CommandBufferHelperCom
     void markClosed() { mCommandBuffer.close(); }
 #endif
 
-    void imageRead(ContextVk *contextVk,
+    void imageRead(Context *context,
                    VkImageAspectFlags aspectFlags,
                    ImageLayout imageLayout,
                    ImageHelper *image);
-    void imageWrite(ContextVk *contextVk,
+    void imageWrite(Context *context,
                     gl::LevelIndex level,
                     uint32_t layerStart,
                     uint32_t layerCount,
