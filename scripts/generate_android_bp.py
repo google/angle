@@ -570,8 +570,6 @@ def action_target_to_blueprint(abi, target, build_info):
 
     bp['cmd'] = ' '.join(cmd)
 
-    bp['sdk_version'] = MIN_SDK_VERSION
-
     return blueprint_type, bp
 
 
