@@ -108,6 +108,16 @@ void RenderPipelineDesc::setColorWriteMask(size_t colorIndex, bool r, bool g, bo
     SetBitField(colorTarget.writeMask, gl_wgpu::GetColorWriteMask(r, g, b, a));
 }
 
+bool RenderPipelineDesc::setVertexAttributes(const gl::AttribArray<PackedVertexAttribute> &attribs)
+{
+    if (!memcmp(&mVertexAttributes, &attribs, sizeof(mVertexAttributes)))
+    {
+        return false;
+    }
+    memcpy(&mVertexAttributes, &attribs, sizeof(mVertexAttributes));
+    return true;
+}
+
 bool RenderPipelineDesc::setColorAttachmentFormat(size_t colorIndex, wgpu::TextureFormat format)
 {
     if (mColorTargetStates[colorIndex].format == static_cast<uint8_t>(format))
