@@ -102,9 +102,6 @@ angle::Result CLContextVk::createBuffer(const cl::Buffer &buffer,
 }
 
 angle::Result CLContextVk::createImage(const cl::Image &image,
-                                       cl::MemFlags flags,
-                                       const cl_image_format &format,
-                                       const cl::ImageDescriptor &desc,
                                        void *hostPtr,
                                        CLMemoryImpl::Ptr *imageOut)
 {
