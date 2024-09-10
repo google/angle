@@ -324,6 +324,7 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mMaxUniformBufferBindings(resources.MaxUniformBufferBindings),
       mMaxVertexAttribs(resources.MaxVertexAttribs),
       mMaxAtomicCounterBindings(resources.MaxAtomicCounterBindings),
+      mMaxAtomicCounterBufferSize(resources.MaxAtomicCounterBufferSize),
       mMaxShaderStorageBufferBindings(resources.MaxShaderStorageBufferBindings),
       mDeclaringFunction(false),
       mGeometryShaderInputPrimitiveType(EptUndefined),
@@ -3255,6 +3256,26 @@ void TParseContext::checkAtomicCounterOffsetAlignment(const TSourceLoc &location
     }
 }
 
+void TParseContext::checkAtomicCounterOffsetLimit(const TSourceLoc &location, const TType &type)
+{
+    TLayoutQualifier layoutQualifier = type.getLayoutQualifier();
+
+    if (layoutQualifier.offset >= mMaxAtomicCounterBufferSize)
+    {
+        error(location, "Offset must not exceed the maximum atomic counter buffer size",
+              "atomic counter");
+    }
+}
+
+void TParseContext::checkAtomicCounterOffsetIsValid(bool forceAppend,
+                                                    const TSourceLoc &loc,
+                                                    TType *type)
+{
+    checkAtomicCounterOffsetDoesNotOverlap(forceAppend, loc, type);
+    checkAtomicCounterOffsetAlignment(loc, *type);
+    checkAtomicCounterOffsetLimit(loc, *type);
+}
+
 void TParseContext::checkGeometryShaderInputAndSetArraySize(const TSourceLoc &location,
                                                             const ImmutableString &token,
                                                             TType *type)
@@ -3462,9 +3483,7 @@ TIntermDeclaration *TParseContext::parseSingleDeclaration(
 
         if (IsAtomicCounter(type->getBasicType()))
         {
-            checkAtomicCounterOffsetDoesNotOverlap(false, identifierOrTypeLocation, type);
-
-            checkAtomicCounterOffsetAlignment(identifierOrTypeLocation, *type);
+            checkAtomicCounterOffsetIsValid(false, identifierOrTypeLocation, type);
         }
 
         TVariable *variable = nullptr;
@@ -3514,9 +3533,7 @@ TIntermDeclaration *TParseContext::parseSingleArrayDeclaration(
 
     if (IsAtomicCounter(arrayType->getBasicType()))
     {
-        checkAtomicCounterOffsetDoesNotOverlap(false, identifierLocation, arrayType);
-
-        checkAtomicCounterOffsetAlignment(identifierLocation, *arrayType);
+        checkAtomicCounterOffsetIsValid(false, identifierLocation, arrayType);
     }
 
     adjustRedeclaredBuiltInType(identifierLocation, identifier, arrayType);
@@ -3693,9 +3710,7 @@ void TParseContext::parseDeclarator(TPublicType &publicType,
 
     if (IsAtomicCounter(type->getBasicType()))
     {
-        checkAtomicCounterOffsetDoesNotOverlap(true, identifierLocation, type);
-
-        checkAtomicCounterOffsetAlignment(identifierLocation, *type);
+        checkAtomicCounterOffsetIsValid(true, identifierLocation, type);
     }
 
     adjustRedeclaredBuiltInType(identifierLocation, identifier, type);

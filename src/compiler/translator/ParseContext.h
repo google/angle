@@ -588,10 +588,13 @@ class TParseContext : angle::NonCopyable
                                            TLayoutImageInternalFormat internalFormat);
     void checkMemoryQualifierIsNotSpecified(const TMemoryQualifier &memoryQualifier,
                                             const TSourceLoc &location);
+
+    void checkAtomicCounterOffsetIsValid(bool forceAppend, const TSourceLoc &loc, TType *type);
     void checkAtomicCounterOffsetDoesNotOverlap(bool forceAppend,
                                                 const TSourceLoc &loc,
                                                 TType *type);
     void checkAtomicCounterOffsetAlignment(const TSourceLoc &location, const TType &type);
+    void checkAtomicCounterOffsetLimit(const TSourceLoc &location, const TType &type);
 
     void checkIndexIsNotSpecified(const TSourceLoc &location, int index);
     void checkBindingIsValid(const TSourceLoc &identifierLocation, const TType &type);
@@ -795,6 +798,7 @@ class TParseContext : angle::NonCopyable
     int mMaxUniformBufferBindings;
     int mMaxVertexAttribs;
     int mMaxAtomicCounterBindings;
+    int mMaxAtomicCounterBufferSize;
     int mMaxShaderStorageBufferBindings;
 
     // keeps track whether we are declaring / defining a function

@@ -1994,6 +1994,26 @@ void main(){
     glDeleteShader(shader);
 }
 
+// Verify that using maximum size as atomic counter offset results in compilation failure.
+TEST_P(GLSLTest_ES31, CompileWithMaxAtomicCounterOffsetFails)
+{
+    GLint maxSize;
+    glGetIntegerv(GL_MAX_ATOMIC_COUNTER_BUFFER_SIZE, &maxSize);
+
+    std::ostringstream srcStream;
+    srcStream << "#version 310 es\n"
+              << "layout(location = 0) out uvec4 color;\n"
+              << "layout(binding = 0, offset = " << maxSize << ") uniform atomic_uint a_counter;\n"
+              << "void main() {\n"
+              << "color = uvec4(atomicCounterIncrement(a_counter)); \n"
+              << "}";
+    std::string fsStream = srcStream.str();
+    const char *strFS    = fsStream.c_str();
+
+    GLuint shader = CompileShader(GL_FRAGMENT_SHADER, strFS);
+    EXPECT_EQ(0u, shader);
+}
+
 // Verify that functions without return statements still compile
 TEST_P(GLSLTest, MissingReturnFloat)
 {
