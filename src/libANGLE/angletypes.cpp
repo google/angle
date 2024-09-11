@@ -1148,9 +1148,18 @@ bool DecompressBlob(const uint8_t *compressedData,
 
 uint32_t GenerateCRC32(const uint8_t *data, size_t size)
 {
+    return UpdateCRC32(InitCRC32(), data, size);
+}
+
+uint32_t InitCRC32()
+{
     // To get required initial value for the crc, need to pass nullptr into buf.
-    const uLong initialValue = crc32_z(0u, nullptr, 0u);
-    return static_cast<uint32_t>(crc32_z(initialValue, data, size));
+    return static_cast<uint32_t>(crc32_z(0u, nullptr, 0u));
+}
+
+uint32_t UpdateCRC32(uint32_t prevCrc32, const uint8_t *data, size_t size)
+{
+    return static_cast<uint32_t>(crc32_z(static_cast<uLong>(prevCrc32), data, size));
 }
 
 UnlockedTailCall::UnlockedTailCall() = default;
