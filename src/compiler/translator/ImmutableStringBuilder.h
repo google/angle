@@ -10,6 +10,8 @@
 #ifndef COMPILER_TRANSLATOR_IMMUTABLESTRINGBUILDER_H_
 #define COMPILER_TRANSLATOR_IMMUTABLESTRINGBUILDER_H_
 
+#include <cstring>
+
 #include "compiler/translator/ImmutableString.h"
 
 namespace sh
@@ -84,7 +86,7 @@ inline size_t GetArgLength(const ImmutableString &str)
 
 inline size_t GetArgLength(const char *str)
 {
-    return std::strlen(str);
+    return strlen(str);
 }
 
 inline size_t GetArgsTotalSize()
