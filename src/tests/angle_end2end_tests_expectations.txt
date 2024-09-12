@@ -902,6 +902,7 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 
 // Simulator does not support compare functions in the sampler state
 365066518 IOS METAL : ShadowSamplerFunctionTexture2DTest.Test/* = SKIP
+365066518 IOS METAL : ShadowSamplerFunctionTexture2DArrayTest.Test/* = SKIP
 
 // D3D11 backend does not support LOD options with shadow samplers
 365066518 D3D11 : ShadowSamplerFunctionTexture2DTest.Test/*__TextureBias_Mipmapped = SKIP
@@ -916,18 +917,24 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 365066518 D3D11 : ShadowSamplerFunctionTexture2DTest.Test/*__TextureProjLodOffset_Mipmapped = SKIP
 365066518 D3D11 : ShadowSamplerFunctionTexture2DTest.Test/*__TextureProjGrad_Mipmapped = SKIP
 365066518 D3D11 : ShadowSamplerFunctionTexture2DTest.Test/*__TextureProjGradOffset_Mipmapped = SKIP
+365066518 D3D11 : ShadowSamplerFunctionTexture2DArrayTest.Test/*__TextureGrad_Mipmapped = SKIP
+365066518 D3D11 : ShadowSamplerFunctionTexture2DArrayTest.Test/*__TextureGradOffset_Mipmapped = SKIP
 
 // Metal on AMD does not support shadow samplers with explicit derivatives
 365066518 MAC METAL AMD : ShadowSamplerFunctionTexture2DTest.Test/*__TextureGrad_* = SKIP
 365066518 MAC METAL AMD : ShadowSamplerFunctionTexture2DTest.Test/*__TextureGradOffset_* = SKIP
 365066518 MAC METAL AMD : ShadowSamplerFunctionTexture2DTest.Test/*__TextureProjGrad_* = SKIP
 365066518 MAC METAL AMD : ShadowSamplerFunctionTexture2DTest.Test/*__TextureProjGradOffset_* = SKIP
+365066518 MAC METAL AMD : ShadowSamplerFunctionTexture2DArrayTest.Test/*__TextureGrad_* = SKIP
+365066518 MAC METAL AMD : ShadowSamplerFunctionTexture2DArrayTest.Test/*__TextureGradOffset_* = SKIP
 
 // Intel macOS OpenGL drivers incorrectly apply explicit derivatives to shadow samplers
 365066518 MAC OPENGL INTEL : ShadowSamplerFunctionTexture2DTest.Test/*__TextureGrad_* = SKIP
 365066518 MAC OPENGL INTEL : ShadowSamplerFunctionTexture2DTest.Test/*__TextureGradOffset_* = SKIP
 365066518 MAC OPENGL INTEL : ShadowSamplerFunctionTexture2DTest.Test/*__TextureProjGrad_* = SKIP
 365066518 MAC OPENGL INTEL : ShadowSamplerFunctionTexture2DTest.Test/*__TextureProjGradOffset_* = SKIP
+365066518 MAC OPENGL INTEL : ShadowSamplerFunctionTexture2DArrayTest.Test/*__TextureGrad_* = SKIP
+365066518 MAC OPENGL INTEL : ShadowSamplerFunctionTexture2DArrayTest.Test/*__TextureGradOffset_* = SKIP
 
 // Some drivers incorrectly apply LOD and bias options when an offset is used
 365066518 PIXEL4ORXL GLES : ShadowSamplerFunctionTexture2DTest.Test/*__TextureLodOffset_Mipmapped = SKIP
@@ -942,6 +949,8 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 365066518 PIXEL6 VULKAN : ShadowSamplerFunctionTexture2DTest.Test/*__TextureGradOffset_NonMipmapped = SKIP
 365066518 PIXEL6 VULKAN : ShadowSamplerFunctionTexture2DTest.Test/*__TextureProjGrad_NonMipmapped = SKIP
 365066518 PIXEL6 VULKAN : ShadowSamplerFunctionTexture2DTest.Test/*__TextureProjGradOffset_NonMipmapped = SKIP
+365066518 PIXEL6 VULKAN : ShadowSamplerFunctionTexture2DArrayTest.Test/*__TextureGrad_NonMipmapped = SKIP
+365066518 PIXEL6 VULKAN : ShadowSamplerFunctionTexture2DArrayTest.Test/*__TextureGradOffset_NonMipmapped = SKIP
 
 // Test is disabled as it only pertains to desktop GLSL
 42264721 : GLSLTest_ES31.InterpolateAtWithSwizzle/* = SKIP
