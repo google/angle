@@ -9,6 +9,7 @@
 
 #include <dawn/webgpu_cpp.h>
 #include <stdint.h>
+#include <climits>
 
 #include "libANGLE/Caps.h"
 #include "libANGLE/Error.h"
@@ -161,6 +162,8 @@ struct ClearValues
 {
     wgpu::Color clearColor;
     uint32_t depthSlice;
+    float depthValue;
+    uint32_t stencilValue;
 };
 
 class ClearValuesArray final
@@ -172,7 +175,8 @@ class ClearValuesArray final
     ClearValuesArray(const ClearValuesArray &other);
     ClearValuesArray &operator=(const ClearValuesArray &rhs);
 
-    void store(uint32_t index, ClearValues clearValues);
+    void store(uint32_t index, const ClearValues &clearValues);
+
     gl::DrawBufferMask getColorMask() const;
     void reset()
     {
@@ -184,12 +188,27 @@ class ClearValuesArray final
         mValues[index] = {};
         mEnabled.reset(index);
     }
+    void resetDepth()
+    {
+        mValues[kUnpackedDepthIndex] = {};
+        mEnabled.reset(kUnpackedDepthIndex);
+    }
+    void resetStencil()
+    {
+        mValues[kUnpackedStencilIndex] = {};
+        mEnabled.reset(kUnpackedStencilIndex);
+    }
     const ClearValues &operator[](size_t index) const { return mValues[index]; }
 
     bool empty() const { return mEnabled.none(); }
     bool any() const { return mEnabled.any(); }
 
     bool test(size_t index) const { return mEnabled.test(index); }
+
+    float getDepthValue() const { return mValues[kUnpackedDepthIndex].depthValue; }
+    uint32_t getStencilValue() const { return mValues[kUnpackedStencilIndex].stencilValue; }
+    bool hasDepth() const { return mEnabled.test(kUnpackedDepthIndex); }
+    bool hasStencil() const { return mEnabled.test(kUnpackedStencilIndex); }
 
   private:
     gl::AttachmentArray<ClearValues> mValues;
@@ -211,6 +230,12 @@ wgpu::Instance GetInstance(const gl::Context *context);
 wgpu::RenderPassColorAttachment CreateNewClearColorAttachment(wgpu::Color clearValue,
                                                               uint32_t depthSlice,
                                                               wgpu::TextureView textureView);
+wgpu::RenderPassDepthStencilAttachment CreateNewDepthStencilAttachment(
+    float depthClearValue,
+    uint32_t stencilClearValue,
+    wgpu::TextureView textureView,
+    bool hasDepthValue   = false,
+    bool hasStencilValue = false);
 
 bool IsWgpuError(wgpu::WaitStatus waitStatus);
 bool IsWgpuError(WGPUBufferMapAsyncStatus mapBufferStatus);

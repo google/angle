@@ -32,6 +32,11 @@ class SurfaceWgpu : public SurfaceImpl
         webgpu::ImageHelper texture;
         RenderTargetWgpu renderTarget;
     };
+    angle::Result createDepthStencilAttachment(uint32_t width,
+                                               uint32_t height,
+                                               const webgpu::Format &webgpuFormat,
+                                               wgpu::Device &device,
+                                               AttachmentImage *outDepthStencilAttachment);
 };
 
 class OffscreenSurfaceWgpu : public SurfaceWgpu

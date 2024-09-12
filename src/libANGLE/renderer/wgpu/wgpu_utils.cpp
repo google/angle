@@ -48,6 +48,36 @@ wgpu::RenderPassColorAttachment CreateNewClearColorAttachment(wgpu::Color clearV
     return colorAttachment;
 }
 
+wgpu::RenderPassDepthStencilAttachment CreateNewDepthStencilAttachment(
+    float depthClearValue,
+    uint32_t stencilClearValue,
+    wgpu::TextureView textureView,
+    bool hasDepthValue,
+    bool hasStencilValue)
+{
+    wgpu::RenderPassDepthStencilAttachment depthStencilAttachment;
+    depthStencilAttachment.view = textureView;
+    // WebGPU requires that depth/stencil attachments have a load op if the correlated ReadOnly
+    // value is set to false, so we make sure to set the value here to to support cases where only a
+    // depth or stencil mask is set.
+    depthStencilAttachment.depthReadOnly   = !hasDepthValue;
+    depthStencilAttachment.stencilReadOnly = !hasStencilValue;
+    if (hasDepthValue)
+    {
+        depthStencilAttachment.depthLoadOp     = wgpu::LoadOp::Clear;
+        depthStencilAttachment.depthStoreOp    = wgpu::StoreOp::Store;
+        depthStencilAttachment.depthClearValue = depthClearValue;
+    }
+    if (hasStencilValue)
+    {
+        depthStencilAttachment.stencilLoadOp     = wgpu::LoadOp::Clear;
+        depthStencilAttachment.stencilStoreOp    = wgpu::StoreOp::Store;
+        depthStencilAttachment.stencilClearValue = stencilClearValue;
+    }
+
+    return depthStencilAttachment;
+}
+
 bool IsWgpuError(wgpu::WaitStatus waitStatus)
 {
     return waitStatus != wgpu::WaitStatus::Success;
@@ -64,7 +94,7 @@ ClearValuesArray::~ClearValuesArray() = default;
 ClearValuesArray::ClearValuesArray(const ClearValuesArray &other)          = default;
 ClearValuesArray &ClearValuesArray::operator=(const ClearValuesArray &rhs) = default;
 
-void ClearValuesArray::store(uint32_t index, ClearValues clearValues)
+void ClearValuesArray::store(uint32_t index, const ClearValues &clearValues)
 {
     mValues[index] = clearValues;
     mEnabled.set(index);
