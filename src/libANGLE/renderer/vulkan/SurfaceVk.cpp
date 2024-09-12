@@ -3041,8 +3041,7 @@ angle::Result WindowSurfaceVk::getCurrentFramebuffer(ContextVk *contextVk,
     {
         const vk::ImageView *imageView = nullptr;
         ANGLE_TRY(swapchainImage.imageViews.getLevelLayerDrawImageView(
-            contextVk, *swapchainImage.image, vk::LevelIndex(0), 0,
-            gl::SrgbWriteControlMode::Default, &imageView));
+            contextVk, *swapchainImage.image, vk::LevelIndex(0), 0, &imageView));
         imageViews[0] = imageView->getHandle();
     }
 
@@ -3145,9 +3144,8 @@ angle::Result WindowSurfaceVk::drawOverlay(ContextVk *contextVk, SwapchainImage 
 
     // Draw overlay
     const vk::ImageView *imageView = nullptr;
-    ANGLE_TRY(image->imageViews.getLevelLayerDrawImageView(
-        contextVk, *image->image, vk::LevelIndex(0), 0, gl::SrgbWriteControlMode::Default,
-        &imageView));
+    ANGLE_TRY(image->imageViews.getLevelLayerDrawImageView(contextVk, *image->image,
+                                                           vk::LevelIndex(0), 0, &imageView));
     ANGLE_TRY(overlayVk->onPresent(contextVk, image->image.get(), imageView,
                                    Is90DegreeRotation(getPreTransform())));
 

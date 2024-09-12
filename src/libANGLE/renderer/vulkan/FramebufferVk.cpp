@@ -1586,18 +1586,14 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
                 {
                     ANGLE_TRY(depthStencilImage->initLayerImageView(
                         contextVk, textureType, VK_IMAGE_ASPECT_DEPTH_BIT, gl::SwizzleState(),
-                        &depthView.get(), levelIndex, 1, layerIndex, 1,
-                        gl::SrgbWriteControlMode::Default, gl::YuvSamplingMode::Default,
-                        vk::ImageHelper::kDefaultImageViewUsageFlags));
+                        &depthView.get(), levelIndex, 1, layerIndex, 1));
                 }
 
                 if (blitStencilBuffer)
                 {
                     ANGLE_TRY(depthStencilImage->initLayerImageView(
                         contextVk, textureType, VK_IMAGE_ASPECT_STENCIL_BIT, gl::SwizzleState(),
-                        &stencilView.get(), levelIndex, 1, layerIndex, 1,
-                        gl::SrgbWriteControlMode::Default, gl::YuvSamplingMode::Default,
-                        vk::ImageHelper::kDefaultImageViewUsageFlags));
+                        &stencilView.get(), levelIndex, 1, layerIndex, 1));
                 }
 
                 // If shader stencil export is not possible, defer stencil blit/resolve to another
@@ -1944,9 +1940,8 @@ angle::Result FramebufferVk::updateFoveationState(ContextVk *contextVk,
                                                       foveatedAttachmentSize));
         ASSERT(mFragmentShadingRateImage.valid());
 
-        serial = mFragmentShadingRateImageView.getSubresourceSerial(
-            gl::LevelIndex(0), 1, 0, vk::LayerMode::All, vk::SrgbDecodeMode::SkipDecode,
-            gl::SrgbOverride::Default);
+        serial = mFragmentShadingRateImageView.getSubresourceSerial(gl::LevelIndex(0), 1, 0,
+                                                                    vk::LayerMode::All);
     }
 
     // Update state after the possible failure point.

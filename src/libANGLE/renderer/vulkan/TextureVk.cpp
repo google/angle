@@ -1666,9 +1666,7 @@ angle::Result TextureVk::copySubImageImplWithDraw(ContextVk *contextVk,
             vk::ImageView stagingView;
             ANGLE_TRY(stagingImage->get().initLayerImageView(
                 contextVk, stagingTextureType, VK_IMAGE_ASPECT_COLOR_BIT, gl::SwizzleState(),
-                &stagingView, vk::LevelIndex(0), 1, layerIndex, 1,
-                gl::SrgbWriteControlMode::Default, gl::YuvSamplingMode::Default,
-                vk::ImageHelper::kDefaultImageViewUsageFlags));
+                &stagingView, vk::LevelIndex(0), 1, layerIndex, 1));
 
             ANGLE_TRY(utilsVk.copyImage(contextVk, &stagingImage->get(), &stagingView, srcImage,
                                         srcView, params));
@@ -2271,9 +2269,8 @@ angle::Result TextureVk::generateMipmapsWithCompute(ContextVk *contextVk)
             const vk::ImageView *srcView                         = nullptr;
             UtilsVk::GenerateMipmapDestLevelViews destLevelViews = {};
 
-            ANGLE_TRY(getImageViews().getLevelLayerDrawImageView(
-                contextVk, *mImage, srcLevelVk, layer, gl::SrgbWriteControlMode::Default,
-                &srcView));
+            ANGLE_TRY(getImageViews().getLevelLayerDrawImageView(contextVk, *mImage, srcLevelVk,
+                                                                 layer, &srcView));
 
             vk::LevelIndex dstLevelCount = maxGenerateLevels;
             for (vk::LevelIndex levelVk(0); levelVk < maxGenerateLevels; ++levelVk)
@@ -2288,8 +2285,7 @@ angle::Result TextureVk::generateMipmapsWithCompute(ContextVk *contextVk)
                 }
 
                 ANGLE_TRY(getImageViews().getLevelLayerDrawImageView(
-                    contextVk, *mImage, dstLevelVk, layer, gl::SrgbWriteControlMode::Default,
-                    &destLevelViews[levelVk.get()]));
+                    contextVk, *mImage, dstLevelVk, layer, &destLevelViews[levelVk.get()]));
             }
 
             // If the image has fewer than maximum levels, fill the last views with a unused view.
@@ -3492,8 +3488,8 @@ angle::Result TextureVk::getLevelLayerImageView(vk::Context *context,
     vk::LevelIndex levelVk = mImage->toVkLevel(levelGL);
     uint32_t nativeLayer   = getNativeImageLayer(static_cast<uint32_t>(layer));
 
-    return getImageViews().getLevelLayerDrawImageView(
-        context, *mImage, levelVk, nativeLayer, gl::SrgbWriteControlMode::Default, imageViewOut);
+    return getImageViews().getLevelLayerDrawImageView(context, *mImage, levelVk, nativeLayer,
+                                                      imageViewOut);
 }
 
 angle::Result TextureVk::getStorageImageView(vk::Context *context,
@@ -4134,8 +4130,8 @@ vk::ImageOrBufferViewSubresourceSerial TextureVk::getImageViewSubresourceSerialI
             ? gl::SrgbOverride::SRGB
             : gl::SrgbOverride::Default;
 
-    return getImageViews().getSubresourceSerial(baseLevel, levelCount, 0, vk::LayerMode::All,
-                                                srgbDecodeMode, srgbOverrideMode);
+    return getImageViews().getSubresourceSerialWithSrgbModeOverrides(
+        baseLevel, levelCount, 0, vk::LayerMode::All, srgbDecodeMode, srgbOverrideMode);
 }
 
 vk::ImageOrBufferViewSubresourceSerial TextureVk::getBufferViewSerial() const
@@ -4153,9 +4149,7 @@ vk::ImageOrBufferViewSubresourceSerial TextureVk::getStorageImageViewSerial(
     gl::LevelIndex baseLevel(
         getNativeImageLevel(gl::LevelIndex(static_cast<uint32_t>(binding.level))));
 
-    return getImageViews().getSubresourceSerial(baseLevel, 1, nativeLayer, layerMode,
-                                                vk::SrgbDecodeMode::SkipDecode,
-                                                gl::SrgbOverride::Default);
+    return getImageViews().getSubresourceSerial(baseLevel, 1, nativeLayer, layerMode);
 }
 
 uint32_t TextureVk::getImageViewLayerCount() const

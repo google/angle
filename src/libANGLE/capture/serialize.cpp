@@ -73,7 +73,6 @@ const char *SrgbOverrideToString(gl::SrgbOverride value)
     {
         ENUM_TO_STRING(gl::SrgbOverride, Default);
         ENUM_TO_STRING(gl::SrgbOverride, SRGB);
-        ENUM_TO_STRING(gl::SrgbOverride, Linear);
         default:
             return "invalid";
     }

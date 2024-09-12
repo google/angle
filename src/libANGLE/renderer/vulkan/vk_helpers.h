@@ -2165,10 +2165,40 @@ class ImageHelper final : public Resource, public angle::Subject
                                      LevelIndex baseMipLevelVk,
                                      uint32_t levelCount,
                                      uint32_t baseArrayLayer,
-                                     uint32_t layerCount,
-                                     gl::SrgbWriteControlMode srgbWriteControlMode,
-                                     gl::YuvSamplingMode yuvSamplingMode,
-                                     VkImageUsageFlags imageUsageFlags) const;
+                                     uint32_t layerCount) const;
+    angle::Result initLayerImageViewWithUsage(Context *context,
+                                              gl::TextureType textureType,
+                                              VkImageAspectFlags aspectMask,
+                                              const gl::SwizzleState &swizzleMap,
+                                              ImageView *imageViewOut,
+                                              LevelIndex baseMipLevelVk,
+                                              uint32_t levelCount,
+                                              uint32_t baseArrayLayer,
+                                              uint32_t layerCount,
+                                              VkImageUsageFlags imageUsageFlags) const;
+    angle::Result initLayerImageViewWithSrgbWriteControlMode(
+        Context *context,
+        gl::TextureType textureType,
+        VkImageAspectFlags aspectMask,
+        const gl::SwizzleState &swizzleMap,
+        ImageView *imageViewOut,
+        LevelIndex baseMipLevelVk,
+        uint32_t levelCount,
+        uint32_t baseArrayLayer,
+        uint32_t layerCount,
+        gl::SrgbWriteControlMode mode,
+        VkImageUsageFlags imageUsageFlags) const;
+    angle::Result initLayerImageViewWithYuvModeOverride(Context *context,
+                                                        gl::TextureType textureType,
+                                                        VkImageAspectFlags aspectMask,
+                                                        const gl::SwizzleState &swizzleMap,
+                                                        ImageView *imageViewOut,
+                                                        LevelIndex baseMipLevelVk,
+                                                        uint32_t levelCount,
+                                                        uint32_t baseArrayLayer,
+                                                        uint32_t layerCount,
+                                                        gl::YuvSamplingMode yuvSamplingMode,
+                                                        VkImageUsageFlags imageUsageFlags) const;
     angle::Result initReinterpretedLayerImageView(Context *context,
                                                   gl::TextureType textureType,
                                                   VkImageAspectFlags aspectMask,
@@ -2180,14 +2210,6 @@ class ImageHelper final : public Resource, public angle::Subject
                                                   uint32_t layerCount,
                                                   VkImageUsageFlags imageUsageFlags,
                                                   angle::FormatID imageViewFormat) const;
-    angle::Result initImageView(Context *context,
-                                gl::TextureType textureType,
-                                VkImageAspectFlags aspectMask,
-                                const gl::SwizzleState &swizzleMap,
-                                ImageView *imageViewOut,
-                                LevelIndex baseMipLevelVk,
-                                uint32_t levelCount,
-                                VkImageUsageFlags imageUsageFlags);
     // Create a 2D[Array] for staging purposes.  Used by:
     //
     // - TextureVk::copySubImageImplWithDraw
@@ -3397,14 +3419,25 @@ class ImageViewHelper final : angle::NonCopyable
                                              const ImageHelper &image,
                                              LevelIndex levelVk,
                                              uint32_t layer,
-                                             gl::SrgbWriteControlMode mode,
                                              const ImageView **imageViewOut);
+    // Creates a draw view with srgb write control mode override for a single layer of the level.
+    angle::Result getLevelLayerDrawImageViewWithSrgbWriteControlMode(
+        Context *context,
+        const ImageHelper &image,
+        LevelIndex levelVk,
+        uint32_t layer,
+        gl::SrgbWriteControlMode mode,
+        const ImageView **imageViewOut);
 
     // Creates a fragment shading rate view.
     angle::Result initFragmentShadingRateView(ContextVk *contextVk, ImageHelper *image);
 
     // Return unique Serial for an imageView.
-    ImageOrBufferViewSubresourceSerial getSubresourceSerial(
+    ImageOrBufferViewSubresourceSerial getSubresourceSerial(gl::LevelIndex levelGL,
+                                                            uint32_t levelCount,
+                                                            uint32_t layer,
+                                                            LayerMode layerMode) const;
+    ImageOrBufferViewSubresourceSerial getSubresourceSerialWithSrgbModeOverrides(
         gl::LevelIndex levelGL,
         uint32_t levelCount,
         uint32_t layer,
