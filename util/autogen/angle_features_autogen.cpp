@@ -245,6 +245,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::PreferCpuForBuffersubdata, "preferCpuForBuffersubdata"},
     {Feature::PreferCPUForBufferSubData, "preferCPUForBufferSubData"},
     {Feature::PreferDeviceLocalMemoryHostVisible, "preferDeviceLocalMemoryHostVisible"},
+    {Feature::PreferDoubleBufferSwapchainOnFifoMode, "preferDoubleBufferSwapchainOnFifoMode"},
     {Feature::PreferDrawClearOverVkCmdClearAttachments, "preferDrawClearOverVkCmdClearAttachments"},
     {Feature::PreferDriverUniformOverSpecConst, "preferDriverUniformOverSpecConst"},
     {Feature::PreferDynamicRendering, "preferDynamicRendering"},

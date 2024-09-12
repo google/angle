@@ -245,6 +245,7 @@ enum class Feature
     PreferCpuForBuffersubdata,
     PreferCPUForBufferSubData,
     PreferDeviceLocalMemoryHostVisible,
+    PreferDoubleBufferSwapchainOnFifoMode,
     PreferDrawClearOverVkCmdClearAttachments,
     PreferDriverUniformOverSpecConst,
     PreferDynamicRendering,

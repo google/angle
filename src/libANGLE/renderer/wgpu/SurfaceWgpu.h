@@ -46,7 +46,7 @@ class OffscreenSurfaceWgpu : public SurfaceWgpu
                             gl::Texture *texture,
                             EGLint buffer) override;
     egl::Error releaseTexImage(const gl::Context *context, EGLint buffer) override;
-    void setSwapInterval(EGLint interval) override;
+    void setSwapInterval(const egl::Display *display, EGLint interval) override;
 
     // width and height can change with client window resizing
     EGLint getWidth() const override;
@@ -92,7 +92,7 @@ class WindowSurfaceWgpu : public SurfaceWgpu
                             gl::Texture *texture,
                             EGLint buffer) override;
     egl::Error releaseTexImage(const gl::Context *context, EGLint buffer) override;
-    void setSwapInterval(EGLint interval) override;
+    void setSwapInterval(const egl::Display *display, EGLint interval) override;
 
     // width and height can change with client window resizing
     EGLint getWidth() const override;

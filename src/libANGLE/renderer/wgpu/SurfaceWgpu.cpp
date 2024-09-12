@@ -60,7 +60,7 @@ egl::Error OffscreenSurfaceWgpu::releaseTexImage(const gl::Context *context, EGL
     return egl::NoError();
 }
 
-void OffscreenSurfaceWgpu::setSwapInterval(EGLint interval) {}
+void OffscreenSurfaceWgpu::setSwapInterval(const egl::Display *display, EGLint interval) {}
 
 EGLint OffscreenSurfaceWgpu::getWidth() const
 {
@@ -195,7 +195,7 @@ egl::Error WindowSurfaceWgpu::releaseTexImage(const gl::Context *context, EGLint
     return egl::NoError();
 }
 
-void WindowSurfaceWgpu::setSwapInterval(EGLint interval)
+void WindowSurfaceWgpu::setSwapInterval(const egl::Display *display, EGLint interval)
 {
     UNIMPLEMENTED();
 }

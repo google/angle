@@ -108,7 +108,9 @@ vk::PresentMode GetDesiredPresentMode(const std::vector<vk::PresentMode> &presen
     return vk::PresentMode::FifoKHR;
 }
 
-uint32_t GetMinImageCount(const VkSurfaceCapabilitiesKHR &surfaceCaps)
+uint32_t GetMinImageCount(vk::Renderer *renderer,
+                          const VkSurfaceCapabilitiesKHR &surfaceCaps,
+                          vk::PresentMode presentMode)
 {
     // - On mailbox, we need at least three images; one is being displayed to the user until the
     //   next v-sync, and the application alternatingly renders to the other two, one being
@@ -118,10 +120,16 @@ uint32_t GetMinImageCount(const VkSurfaceCapabilitiesKHR &surfaceCaps)
     // - On fifo, we use at least three images.  Triple-buffering allows us to present an image,
     //   have one in the queue, and record in another.  Note: on certain configurations (windows +
     //   nvidia + windowed mode), we could get away with a smaller number.
-    //
-    // For simplicity, we always allocate at least three images.
-    uint32_t minImageCount = std::max(3u, surfaceCaps.minImageCount);
 
+    // For simplicity, we always allocate at least three images, unless double buffer FIFO is
+    // specifically preferred.
+    const uint32_t imageCount =
+        renderer->getFeatures().preferDoubleBufferSwapchainOnFifoMode.enabled &&
+                presentMode == vk::PresentMode::FifoKHR
+            ? 0x2u
+            : 0x3u;
+
+    uint32_t minImageCount = std::max(imageCount, surfaceCaps.minImageCount);
     // Make sure we don't exceed maxImageCount.
     if (surfaceCaps.maxImageCount > 0 && minImageCount > surfaceCaps.maxImageCount)
     {
@@ -759,7 +767,7 @@ egl::Error OffscreenSurfaceVk::getMscRate(EGLint * /*numerator*/, EGLint * /*den
     return egl::EglBadAccess();
 }
 
-void OffscreenSurfaceVk::setSwapInterval(EGLint /*interval*/) {}
+void OffscreenSurfaceVk::setSwapInterval(const egl::Display *display, EGLint /*interval*/) {}
 
 EGLint OffscreenSurfaceVk::isPostSubBufferSupported() const
 {
@@ -1353,7 +1361,7 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk, bool *anyMat
 
     // Select appropriate present mode based on vsync parameter. Default to 1 (FIFO), though it
     // will get clamped to the min/max values specified at display creation time.
-    setSwapInterval(mState.getPreferredSwapInterval());
+    setSwapInterval(displayVk, mState.getPreferredSwapInterval());
 
     if (!updateColorSpace(displayVk))
     {
@@ -1687,7 +1695,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
         // mode imageCount here. Otherwise we may get into
         // VUID-VkSwapchainCreateInfoKHR-presentMode-02839.
         mSurfaceCaps                = surfaceCaps2.surfaceCapabilities;
-        mMinImageCount              = GetMinImageCount(mSurfaceCaps);
+        mMinImageCount = GetMinImageCount(renderer, mSurfaceCaps, mDesiredSwapchainPresentMode);
         swapchainInfo.minImageCount = mMinImageCount;
     }
 
@@ -1899,7 +1907,8 @@ angle::Result WindowSurfaceVk::checkForOutOfDateSwapchain(ContextVk *contextVk,
     if (contextVk->getRenderer()->getFeatures().perFrameWindowSizeQuery.enabled)
     {
         // On Android, rotation can cause the minImageCount to change
-        uint32_t minImageCount = GetMinImageCount(mSurfaceCaps);
+        uint32_t minImageCount =
+            GetMinImageCount(contextVk->getRenderer(), mSurfaceCaps, mDesiredSwapchainPresentMode);
         if (mMinImageCount != minImageCount)
         {
             presentOutOfDate = true;
@@ -2883,7 +2892,7 @@ egl::Error WindowSurfaceVk::getMscRate(EGLint * /*numerator*/, EGLint * /*denomi
     return egl::EglBadAccess();
 }
 
-void WindowSurfaceVk::setSwapInterval(EGLint interval)
+void WindowSurfaceVk::setSwapInterval(DisplayVk *displayVk, EGLint interval)
 {
     // Don't let setSwapInterval change presentation mode if using SHARED present.
     if (isSharedPresentMode())
@@ -2901,10 +2910,17 @@ void WindowSurfaceVk::setSwapInterval(EGLint interval)
     mDesiredSwapchainPresentMode = GetDesiredPresentMode(mPresentModes, interval);
 
     // minImageCount may vary based on the Present Mode
-    mMinImageCount = GetMinImageCount(mSurfaceCaps);
+    mMinImageCount =
+        GetMinImageCount(displayVk->getRenderer(), mSurfaceCaps, mDesiredSwapchainPresentMode);
 
     // On the next swap, if the desired present mode is different from the current one, the
     // swapchain will be recreated.
+}
+
+void WindowSurfaceVk::setSwapInterval(const egl::Display *display, EGLint interval)
+{
+    DisplayVk *displayVk = vk::GetImpl(display);
+    setSwapInterval(displayVk, interval);
 }
 
 egl::Error WindowSurfaceVk::getUserWidth(const egl::Display *display, EGLint *value) const

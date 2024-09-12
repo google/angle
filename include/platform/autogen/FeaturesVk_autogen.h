@@ -1614,6 +1614,13 @@ struct FeaturesVk : FeatureSetBase
         &members, "https://anglebug.com/360031000"
     };
 
+    FeatureInfo preferDoubleBufferSwapchainOnFifoMode = {
+        "preferDoubleBufferSwapchainOnFifoMode",
+        FeatureCategory::VulkanFeatures,
+        "allow create double buffer swapchain for fifo present mode",
+        &members, "https://issuetracker.google.com/311022968"
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

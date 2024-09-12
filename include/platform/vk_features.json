@@ -1769,6 +1769,14 @@
                 "VkDevice supports SignedZeroInfNanPreserve execution mode for 64-bit floating point from VK_KHR_shader_float_controls extension"
             ],
             "issue": "https://anglebug.com/360031000"
+        },
+        {
+            "name": "prefer_double_buffer_swapchain_on_fifo_mode",
+            "category": "Features",
+            "description": [
+                "allow create double buffer swapchain for fifo present mode"
+            ],
+            "issue": "https://issuetracker.google.com/311022968"
         }
     ]
 }
