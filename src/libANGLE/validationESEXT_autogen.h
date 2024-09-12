@@ -2036,6 +2036,8 @@ bool ValidateTexBufferRangeEXT(const Context *context,
 
 // GL_EXT_texture_sRGB_decode
 
+// GL_EXT_texture_shadow_lod
+
 // GL_EXT_texture_storage
 bool ValidateTexStorage1DEXT(const Context *context,
                              angle::EntryPoint entryPoint,

@@ -203,6 +203,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_EXT_texture_norm16"] = enableableExtension(&Extensions::textureNorm16EXT);
         map["GL_OES_texture_npot"] = enableableExtension(&Extensions::textureNpotOES);
         map["GL_EXT_texture_rg"] = enableableExtension(&Extensions::textureRgEXT);
+        map["GL_EXT_texture_shadow_lod"] = enableableExtension(&Extensions::textureShadowLodEXT);
         map["GL_EXT_texture_sRGB_decode"] = esOnlyExtension(&Extensions::textureSRGBDecodeEXT);
         map["GL_EXT_texture_sRGB_R8"] = enableableExtension(&Extensions::textureSRGBR8EXT);
         map["GL_EXT_texture_sRGB_RG8"] = enableableExtension(&Extensions::textureSRGBRG8EXT);

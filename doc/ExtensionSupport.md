@@ -187,6 +187,7 @@ using data from registry_xml.py and gl.xml.
 | [GL_EXT_texture_norm16](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_texture_norm16.txt) |  | &#x2714; |  | &#x2714; |  |  |  |
 | [GL_OES_texture_npot](https://khronos.org/registry/OpenGL/extensions/OES/OES_texture_npot.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_EXT_texture_rg](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_texture_rg.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
+| [GL_EXT_texture_shadow_lod](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_texture_shadow_lod.txt) |  |  |  |  |  |  |  |
 | [GL_EXT_texture_sRGB_decode](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_texture_sRGB_decode.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_EXT_texture_sRGB_R8](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_texture_sRGB_R8.txt) | &#x2714; |  | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_EXT_texture_sRGB_RG8](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_texture_sRGB_RG8.txt) |  |  |  |  | &#x2714; | &#x2714; | &#x2714; |

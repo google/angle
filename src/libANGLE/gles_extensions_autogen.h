@@ -575,6 +575,9 @@ struct Extensions
     // GL_EXT_texture_rg
     bool textureRgEXT = false;
 
+    // GL_EXT_texture_shadow_lod
+    bool textureShadowLodEXT = false;
+
     // GL_EXT_texture_sRGB_decode
     bool textureSRGBDecodeEXT = false;
 

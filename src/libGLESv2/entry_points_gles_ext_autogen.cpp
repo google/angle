@@ -9871,6 +9871,8 @@ void GL_APIENTRY GL_TexBufferRangeEXT(GLenum target,
 
 // GL_EXT_texture_sRGB_decode
 
+// GL_EXT_texture_shadow_lod
+
 // GL_EXT_texture_storage
 void GL_APIENTRY GL_TexStorage1DEXT(GLenum target,
                                     GLsizei levels,
