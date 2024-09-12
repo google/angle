@@ -958,6 +958,10 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 365066518 PIXEL6 VULKAN : ShadowSamplerFunctionTexture2DArrayTest.Test/*__TextureGradOffset_NonMipmapped = SKIP
 365066518 PIXEL6 VULKAN : ShadowSamplerFunctionTextureCubeTest.Test/*__TextureGrad_NonMipmapped = SKIP
 
+// Some drivers may ignore LOD and bias parameters for cube map array shadow samplers
+365066518 PIXEL4ORXL VULKAN : ShadowSamplerFunctionTextureCubeArrayTest.Test/*__TextureBias_Mipmapped = SKIP
+365066518 PIXEL4ORXL VULKAN : ShadowSamplerFunctionTextureCubeArrayTest.Test/*__TextureLod_Mipmapped = SKIP
+
 // Test is disabled as it only pertains to desktop GLSL
 42264721 : GLSLTest_ES31.InterpolateAtWithSwizzle/* = SKIP
 

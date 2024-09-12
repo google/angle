@@ -406,6 +406,9 @@ void Renderer::ensureCapsInitialized() const
     mNativeExtensions.textureMirrorClampToEdgeEXT =
         getFeatures().supportsSamplerMirrorClampToEdge.enabled;
 
+    // Enable EXT_texture_shadow_lod
+    mNativeExtensions.textureShadowLodEXT = true;
+
     // Enable EXT_multi_draw_indirect
     mNativeExtensions.multiDrawIndirectEXT = true;
 

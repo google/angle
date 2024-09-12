@@ -3481,6 +3481,12 @@ spirv::IdRef OutputSPIRVTraverser::createImageTextureBuiltIn(TIntermOperator *no
                     biasIndex = 2;
                 }
             }
+            else if (function->getParamCount() == 4 &&
+                     samplerBasicType == EbtSamplerCubeArrayShadow)
+            {
+                compareIndex = 2;
+                biasIndex    = 3;
+            }
             break;
 
         case EOpTexture2DProj:
@@ -3520,8 +3526,17 @@ spirv::IdRef OutputSPIRVTraverser::createImageTextureBuiltIn(TIntermOperator *no
         case EOpTextureCubeLodEXTFS:
         case EOpTextureLod:
 
-            ASSERT(function->getParamCount() == 3);
-            lodIndex = 2;
+            if (samplerBasicType == EbtSamplerCubeArrayShadow)
+            {
+                ASSERT(function->getParamCount() == 4);
+                compareIndex = 2;
+                lodIndex     = 3;
+            }
+            else
+            {
+                ASSERT(function->getParamCount() == 3);
+                lodIndex = 2;
+            }
             break;
 
         case EOpTexture2DProjLod:

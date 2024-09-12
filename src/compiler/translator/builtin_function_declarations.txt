@@ -549,6 +549,11 @@ GROUP BEGIN Texture {"queryFunction": true}
       gvec4 textureLod(gsamplerCube, vec3, float);
       gvec4 textureLod(gsampler2DArray, vec3, float);
       float textureLod(sampler2DShadow, vec3, float);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "essl_extension": "EXT_texture_shadow_lod", "glsl_extension": "EXT_texture_shadow_lod"}
+      float textureLod(samplerCubeShadow, vec4, float);
+      float textureLod(sampler2DArrayShadow, vec4, float);
+    DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "essl_extension": "EXT_texture_shadow_lod", "glsl_extension": "EXT_texture_shadow_lod"}
+      float textureLod(samplerCubeArrayShadow, vec4, float, float);
     DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS"}
       gvec4 textureLod(gsampler1D, float, float);
       float textureLod(sampler1DShadow, vec3, float);
@@ -698,6 +703,8 @@ GROUP BEGIN Texture {"queryFunction": true}
       float texture(sampler2DShadow, vec3, float);
       float texture(samplerCubeShadow, vec4, float);
       float textureProj(sampler2DShadow, vec4, float);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "essl_extension": "EXT_texture_shadow_lod", "glsl_extension": "EXT_texture_shadow_lod"}
+      float texture(sampler2DArrayShadow, vec4, float);
     DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS"}
       gvec4 texture(gsampler1D, float, float);
       float texture(sampler1DShadow, vec3, float);
@@ -711,6 +718,8 @@ GROUP BEGIN Texture {"queryFunction": true}
       gvec4 texture(gsamplerCubeArray, vec4, float);
     DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "essl_extension": "OES_texture_cube_map_array, EXT_texture_cube_map_array", "suffix": "Ext"}
       gvec4 texture(gsamplerCubeArray, vec4, float);
+    DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "glsl_level": "GLSL4_BUILTINS", "essl_extension": "EXT_texture_shadow_lod", "glsl_extension": "EXT_texture_shadow_lod"}
+      float texture(samplerCubeArrayShadow, vec4, float, float);
     DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "essl_extension": "OES_EGL_image_external_essl3"}
       vec4 texture(samplerExternalOES, vec2, float);
       vec4 textureProj(samplerExternalOES, vec3, float);
@@ -744,6 +753,8 @@ GROUP BEGIN Texture {"queryFunction": true}
       gvec4 textureOffset(gsampler3D, vec3, ivec3);
       float textureOffset(sampler2DShadow, vec3, ivec2);
       gvec4 textureOffset(gsampler2DArray, vec3, ivec2);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL4_2_BUILTINS", "essl_extension": "EXT_texture_shadow_lod"}
+      float textureOffset(sampler2DArrayShadow, vec4, ivec2);
     DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS"}
       gvec4 textureOffset(gsampler1D, float, int);
     DEFAULT METADATA {"glsl_level": "GLSL1_4_BUILTINS"}
@@ -774,6 +785,8 @@ GROUP BEGIN Texture {"queryFunction": true}
       gvec4 textureLodOffset(gsampler3D, vec3, float, ivec3);
       float textureLodOffset(sampler2DShadow, vec3, float, ivec2);
       gvec4 textureLodOffset(gsampler2DArray, vec3, float, ivec2);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "essl_extension": "EXT_texture_shadow_lod", "glsl_extension": "EXT_texture_shadow_lod"}
+      float textureLodOffset(sampler2DArrayShadow, vec4, float, ivec2);
     DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS"}
       gvec4 textureLodOffset(gsampler1D, float, float, int);
       float textureLodOffset(sampler1DShadow, vec3, float, int);
@@ -835,6 +848,8 @@ GROUP BEGIN Texture {"queryFunction": true}
       gvec4 textureOffset(gsampler3D, vec3, ivec3, float);
       float textureOffset(sampler2DShadow, vec3, ivec2, float);
       gvec4 textureOffset(gsampler2DArray, vec3, ivec2, float);
+    DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "glsl_level": "GLSL1_3_BUILTINS", "essl_extension": "EXT_texture_shadow_lod", "glsl_extension": "EXT_texture_shadow_lod"}
+      float textureOffset(sampler2DArrayShadow, vec4, ivec2, float);
     DEFAULT METADATA {"glsl_level": "GLSL1_3_BUILTINS"}
       gvec4 textureOffset(gsampler1D, float, int, float);
       float textureOffset(sampler1DShadow, vec3, int, float);

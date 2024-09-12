@@ -106,6 +106,9 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state, egl::Disp
     mResources.OES_texture_cube_map_array = extensions.textureCubeMapArrayOES;
     mResources.EXT_texture_cube_map_array = extensions.textureCubeMapArrayEXT;
 
+    // EXT_texture_shadow_lod
+    mResources.EXT_texture_shadow_lod = extensions.textureShadowLodEXT;
+
     // EXT_shadow_samplers
     mResources.EXT_shadow_samplers = extensions.shadowSamplersEXT;
 

@@ -20,6 +20,7 @@
 42266035 SWIFTSHADER : KHR-GL46.draw_indirect.* = SKIP
 42266035 SWIFTSHADER : KHR-GL46.explicit_uniform_location.* = SKIP
 42266035 SWIFTSHADER : KHR-GL46.exposed_extensions.validate_extensions = SKIP
+42266035 SWIFTSHADER : KHR-GL46.ext_texture_shadow_lod.* = SKIP
 42266035 SWIFTSHADER : KHR-GL46.geometry_shader.* = SKIP
 42266035 SWIFTSHADER : KHR-GL46.get_texture_sub_image.* = SKIP
 42266035 SWIFTSHADER : KHR-GL46.glsl_noperspective.functionaltest = SKIP

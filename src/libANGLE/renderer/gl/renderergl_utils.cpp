@@ -1603,6 +1603,8 @@ void GenerateCaps(const FunctionsGL *functions,
          functions->hasGLExtension("GL_ATI_texture_mirror_once") ||
          functions->hasGLESExtension("GL_EXT_texture_mirror_clamp_to_edge"));
 
+    extensions->textureShadowLodEXT = functions->hasExtension("GL_EXT_texture_shadow_lod");
+
     extensions->multiDrawIndirectEXT = true;
     extensions->instancedArraysANGLE = functions->isAtLeastGL(gl::Version(3, 1)) ||
                                        (functions->hasGLExtension("GL_ARB_instanced_arrays") &&

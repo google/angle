@@ -23,7 +23,7 @@ namespace sh
 using Resources = ShBuiltInResources;
 using TableBase = TSymbolTableBase;
 
-const int TSymbolTable::kLastBuiltInId = 3095;
+const int TSymbolTable::kLastBuiltInId = 3101;
 
 namespace BuiltInName
 {
@@ -2177,13 +2177,13 @@ constexpr const TVariable *p00f10B[2]       = {&BuiltInVariable::kpt00f, &BuiltI
 constexpr const TVariable *p00f20B00B10Dx4[4] = {&BuiltInVariable::kpt00f, &BuiltInVariable::kpt20B,
                                                  &BuiltInVariable::kpt00B,
                                                  &BuiltInVariable::kpt10Dx4};
-constexpr const TVariable *p00f30B00B[3]      = {&BuiltInVariable::kpt00f, &BuiltInVariable::kpt30B,
-                                                 &BuiltInVariable::kpt00B};
+constexpr const TVariable *p00f30B00B10D[4]   = {&BuiltInVariable::kpt00f, &BuiltInVariable::kpt30B,
+                                                 &BuiltInVariable::kpt00B, &BuiltInVariable::kpt10D};
 constexpr const TVariable *p00f30B10B10B10D[5] = {
     &BuiltInVariable::kpt00f, &BuiltInVariable::kpt30B, &BuiltInVariable::kpt10B,
     &BuiltInVariable::kpt10B, &BuiltInVariable::kpt10D};
-constexpr const TVariable *p00f30B10D[3] = {&BuiltInVariable::kpt00f, &BuiltInVariable::kpt30B,
-                                            &BuiltInVariable::kpt10D};
+constexpr const TVariable *p00f30B10D00B[4] = {&BuiltInVariable::kpt00f, &BuiltInVariable::kpt30B,
+                                               &BuiltInVariable::kpt10D, &BuiltInVariable::kpt00B};
 constexpr const TVariable *p00g00B00B00B00D[5] = {
     &BuiltInVariable::kpt00g, &BuiltInVariable::kpt00B, &BuiltInVariable::kpt00B,
     &BuiltInVariable::kpt00B, &BuiltInVariable::kpt00D};
@@ -2240,8 +2240,8 @@ constexpr const TVariable *p00k30B20B20B[4] = {&BuiltInVariable::kpt00k, &BuiltI
                                                &BuiltInVariable::kpt20B, &BuiltInVariable::kpt20B};
 constexpr const TVariable *p00l00D[2]       = {&BuiltInVariable::kpt00l, &BuiltInVariable::kpt00D};
 constexpr const TVariable *p00l20B[2]       = {&BuiltInVariable::kpt00l, &BuiltInVariable::kpt20B};
-constexpr const TVariable *p00l30B00B[3]    = {&BuiltInVariable::kpt00l, &BuiltInVariable::kpt30B,
-                                               &BuiltInVariable::kpt00B};
+constexpr const TVariable *p00l30B00B00B[4] = {&BuiltInVariable::kpt00l, &BuiltInVariable::kpt30B,
+                                               &BuiltInVariable::kpt00B, &BuiltInVariable::kpt00B};
 constexpr const TVariable *p00m00B[2]       = {&BuiltInVariable::kpt00m, &BuiltInVariable::kpt00B};
 constexpr const TVariable *p00m00D[2]       = {&BuiltInVariable::kpt00m, &BuiltInVariable::kpt00D};
 constexpr const TVariable *p00m20B00B00B00D[5] = {
@@ -8743,7 +8743,7 @@ constexpr const TFunction texture_00e30B(BuiltInId::texture_SamplerCubeShadow1_F
 constexpr const TFunction texture_00f30B(BuiltInId::texture_Sampler2DArrayShadow1_Float4,
                                          BuiltInName::texture,
                                          std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-                                         BuiltInParameters::p00f30B00B,
+                                         BuiltInParameters::p00f30B00B10D,
                                          2,
                                          StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
                                          EOpTexture,
@@ -8872,7 +8872,7 @@ constexpr const TFunction texture_00l30B00B(
     BuiltInId::texture_SamplerCubeArrayShadow1_Float4_Float1,
     BuiltInName::texture,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00l30B00B,
+    BuiltInParameters::p00l30B00B00B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTexture,
@@ -8912,7 +8912,7 @@ constexpr const TFunction textureExt_00l30B00B(
     BuiltInName::textureExt,
     std::array<TExtension, 2u>{
         {TExtension::OES_texture_cube_map_array, TExtension::EXT_texture_cube_map_array}},
-    BuiltInParameters::p00l30B00B,
+    BuiltInParameters::p00l30B00B00B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTexture,
@@ -9308,6 +9308,33 @@ constexpr const TFunction textureLod_00d20B00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p00d20B00B10D,
     3,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
+    EOpTextureLod,
+    true);
+constexpr const TFunction textureLod_00e30B00B(
+    BuiltInId::textureLod_SamplerCubeShadow1_Float4_Float1,
+    BuiltInName::textureLod,
+    std::array<TExtension, 1u>{{TExtension::EXT_texture_shadow_lod}},
+    BuiltInParameters::p00e30B00B,
+    3,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
+    EOpTextureLod,
+    true);
+constexpr const TFunction textureLod_00f30B00B(
+    BuiltInId::textureLod_Sampler2DArrayShadow1_Float4_Float1,
+    BuiltInName::textureLod,
+    std::array<TExtension, 1u>{{TExtension::EXT_texture_shadow_lod}},
+    BuiltInParameters::p00f30B00B10D,
+    3,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
+    EOpTextureLod,
+    true);
+constexpr const TFunction textureLod_00l30B00B00B(
+    BuiltInId::textureLod_SamplerCubeArrayShadow1_Float4_Float1_Float1,
+    BuiltInName::textureLod,
+    std::array<TExtension, 1u>{{TExtension::EXT_texture_shadow_lod}},
+    BuiltInParameters::p00l30B00B00B,
+    4,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureLod,
     true);
@@ -11450,6 +11477,15 @@ constexpr const TFunction textureProj_00d30B00B(
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureProjBias,
     true);
+constexpr const TFunction texture_00f30B00B(
+    BuiltInId::texture_Sampler2DArrayShadow1_Float4_Float1,
+    BuiltInName::texture,
+    std::array<TExtension, 1u>{{TExtension::EXT_texture_shadow_lod}},
+    BuiltInParameters::p00f30B00B10D,
+    3,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
+    EOpTextureBias,
+    true);
 constexpr const TFunction texture_00g00B00B(
     BuiltInId::texture_Sampler1D1_Float1_Float1,
     BuiltInName::texture,
@@ -11518,15 +11554,6 @@ constexpr const TFunction texture_00i20B00B(
     BuiltInName::texture,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p00i20B00B00B00D,
-    3,
-    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    EOpTextureBias,
-    true);
-constexpr const TFunction texture_00f30B00B(
-    BuiltInId::texture_Sampler2DArrayShadow1_Float4_Float1,
-    BuiltInName::texture,
-    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00f30B00B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureBias,
@@ -11649,6 +11676,15 @@ constexpr const TFunction textureExt_00x30B00B(
     BuiltInParameters::p00x30B00B,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpTextureBias,
+    true);
+constexpr const TFunction texture_00l30B00B00B(
+    BuiltInId::texture_SamplerCubeArrayShadow1_Float4_Float1_Float1,
+    BuiltInName::texture,
+    std::array<TExtension, 1u>{{TExtension::EXT_texture_shadow_lod}},
+    BuiltInParameters::p00l30B00B00B,
+    4,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureBias,
     true);
 constexpr const TFunction texture_00M10B00B(
@@ -12038,6 +12074,15 @@ constexpr const TFunction textureOffset_00a20B10D(
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureOffset,
     true);
+constexpr const TFunction textureOffset_00f30B10D(
+    BuiltInId::textureOffset_Sampler2DArrayShadow1_Float4_Int2,
+    BuiltInName::textureOffset,
+    std::array<TExtension, 1u>{{TExtension::EXT_texture_shadow_lod}},
+    BuiltInParameters::p00f30B10D00B,
+    3,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
+    EOpTextureOffset,
+    true);
 constexpr const TFunction textureOffset_00g00B00D(
     BuiltInId::textureOffset_Sampler1D1_Float1_Int1,
     BuiltInName::textureOffset,
@@ -12142,15 +12187,6 @@ constexpr const TFunction textureOffset_00i20B00D(
     BuiltInName::textureOffset,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p00i20B00D00B,
-    3,
-    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
-    EOpTextureOffset,
-    true);
-constexpr const TFunction textureOffset_00f30B10D(
-    BuiltInId::textureOffset_Sampler2DArrayShadow1_Float4_Int2,
-    BuiltInName::textureOffset,
-    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00f30B10D,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureOffset,
@@ -12459,6 +12495,15 @@ constexpr const TFunction textureLodOffset_00a20B00B10D(
     BuiltInParameters::p00a20B00B10D,
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpTextureLodOffset,
+    true);
+constexpr const TFunction textureLodOffset_00f30B00B10D(
+    BuiltInId::textureLodOffset_Sampler2DArrayShadow1_Float4_Float1_Int2,
+    BuiltInName::textureLodOffset,
+    std::array<TExtension, 1u>{{TExtension::EXT_texture_shadow_lod}},
+    BuiltInParameters::p00f30B00B10D,
+    4,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpTextureLodOffset,
     true);
 constexpr const TFunction textureLodOffset_00g00B00B00D(
@@ -13361,6 +13406,15 @@ constexpr const TFunction textureOffset_00a20B10D00B(
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureOffsetBias,
     true);
+constexpr const TFunction textureOffset_00f30B10D00B(
+    BuiltInId::textureOffset_Sampler2DArrayShadow1_Float4_Int2_Float1,
+    BuiltInName::textureOffset,
+    std::array<TExtension, 1u>{{TExtension::EXT_texture_shadow_lod}},
+    BuiltInParameters::p00f30B10D00B,
+    4,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
+    EOpTextureOffsetBias,
+    true);
 constexpr const TFunction textureOffset_00g00B00D00B(
     BuiltInId::textureOffset_Sampler1D1_Float1_Int1_Float1,
     BuiltInName::textureOffset,
@@ -13806,7 +13860,7 @@ constexpr const TFunction textureGather_00l30B00B(
     BuiltInId::textureGather_SamplerCubeArrayShadow1_Float4_Float1,
     BuiltInName::textureGather,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00l30B00B,
+    BuiltInParameters::p00l30B00B00B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGather,
@@ -13876,7 +13930,7 @@ constexpr const TFunction textureGatherExt_00l30B00B(
     BuiltInName::textureGatherExt,
     std::array<TExtension, 2u>{
         {TExtension::OES_texture_cube_map_array, TExtension::EXT_texture_cube_map_array}},
-    BuiltInParameters::p00l30B00B,
+    BuiltInParameters::p00l30B00B00B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGather,
@@ -28426,6 +28480,18 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureLod_00a20B00B),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&textureLod_00d20B00B),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureLod_00d20B00B),
+    Rule::Get<Spec::ESSL, 300, Shader::ALL, EXT_INDEX(EXT_texture_shadow_lod)>(
+        &textureLod_00e30B00B),
+    Rule::Get<Spec::GLSL, 130, Shader::ALL, EXT_INDEX(EXT_texture_shadow_lod)>(
+        &textureLod_00e30B00B),
+    Rule::Get<Spec::ESSL, 300, Shader::ALL, EXT_INDEX(EXT_texture_shadow_lod)>(
+        &textureLod_00f30B00B),
+    Rule::Get<Spec::GLSL, 130, Shader::ALL, EXT_INDEX(EXT_texture_shadow_lod)>(
+        &textureLod_00f30B00B),
+    Rule::Get<Spec::ESSL, 310, Shader::ALL, EXT_INDEX(EXT_texture_shadow_lod)>(
+        &textureLod_00l30B00B00B),
+    Rule::Get<Spec::GLSL, 400, Shader::ALL, EXT_INDEX(EXT_texture_shadow_lod)>(
+        &textureLod_00l30B00B00B),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureLod_00g00B00B),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureLod_00o00B00B),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureLod_00t00B00B),
@@ -28825,6 +28891,11 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&texture_00e30B00B),
     Rule::Get<Spec::ESSL, 300, Shader::FRAGMENT, 0>(&textureProj_00d30B00B),
     Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&textureProj_00d30B00B),
+    Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&texture_00f30B00B),
+    Rule::Get<Spec::ESSL, 300, Shader::FRAGMENT, EXT_INDEX(EXT_texture_shadow_lod)>(
+        &texture_00f30B00B),
+    Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, EXT_INDEX(EXT_texture_shadow_lod)>(
+        &texture_00f30B00B),
     Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&texture_00g00B00B),
     Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&texture_00o00B00B),
     Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&texture_00t00B00B),
@@ -28833,7 +28904,6 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&texture_00p20B00B),
     Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&texture_00u20B00B),
     Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&texture_00i20B00B),
-    Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&texture_00f30B00B),
     Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&textureProj_00g10B00B),
     Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&textureProj_00o10B00B),
     Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&textureProj_00t10B00B),
@@ -28859,6 +28929,10 @@ constexpr SymbolRule kRules[] = {
         &textureExt_00x30B00B),
     Rule::Get<Spec::ESSL, 310, Shader::FRAGMENT, EXT_INDEX(EXT_texture_cube_map_array)>(
         &textureExt_00x30B00B),
+    Rule::Get<Spec::ESSL, 310, Shader::FRAGMENT, EXT_INDEX(EXT_texture_shadow_lod)>(
+        &texture_00l30B00B00B),
+    Rule::Get<Spec::GLSL, 400, Shader::FRAGMENT, EXT_INDEX(EXT_texture_shadow_lod)>(
+        &texture_00l30B00B00B),
     Rule::Get<Spec::ESSL, 300, Shader::FRAGMENT, EXT_INDEX(OES_EGL_image_external_essl3)>(
         &texture_00M10B00B),
     Rule::Get<Spec::ESSL, 300, Shader::FRAGMENT, EXT_INDEX(OES_EGL_image_external_essl3)>(
@@ -28915,6 +28989,9 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureOffset_00U20B10D),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&textureOffset_00a20B10D),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureOffset_00a20B10D),
+    Rule::Get<Spec::GLSL, 430, Shader::ALL, 0>(&textureOffset_00f30B10D),
+    Rule::Get<Spec::ESSL, 300, Shader::ALL, EXT_INDEX(EXT_texture_shadow_lod)>(
+        &textureOffset_00f30B10D),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureOffset_00g00B00D),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureOffset_00o00B00D),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureOffset_00t00B00D),
@@ -28927,7 +29004,6 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureOffset_00p10B00D),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureOffset_00u10B00D),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureOffset_00i20B00D),
-    Rule::Get<Spec::GLSL, 430, Shader::ALL, 0>(&textureOffset_00f30B10D),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&textureProjOffset_00I20B10D),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureProjOffset_00I20B10D),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&textureProjOffset_00R20B10D),
@@ -28982,6 +29058,10 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureLodOffset_00U20B00B10D),
     Rule::Get<Spec::ESSL, 300, Shader::ALL, 0>(&textureLodOffset_00a20B00B10D),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureLodOffset_00a20B00B10D),
+    Rule::Get<Spec::ESSL, 300, Shader::ALL, EXT_INDEX(EXT_texture_shadow_lod)>(
+        &textureLodOffset_00f30B00B10D),
+    Rule::Get<Spec::GLSL, 130, Shader::ALL, EXT_INDEX(EXT_texture_shadow_lod)>(
+        &textureLodOffset_00f30B00B10D),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureLodOffset_00g00B00B00D),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureLodOffset_00o00B00B00D),
     Rule::Get<Spec::GLSL, 130, Shader::ALL, 0>(&textureLodOffset_00t00B00B00D),
@@ -29132,6 +29212,10 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&textureOffset_00U20B10D00B),
     Rule::Get<Spec::ESSL, 300, Shader::FRAGMENT, 0>(&textureOffset_00a20B10D00B),
     Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&textureOffset_00a20B10D00B),
+    Rule::Get<Spec::ESSL, 300, Shader::FRAGMENT, EXT_INDEX(EXT_texture_shadow_lod)>(
+        &textureOffset_00f30B10D00B),
+    Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, EXT_INDEX(EXT_texture_shadow_lod)>(
+        &textureOffset_00f30B10D00B),
     Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&textureOffset_00g00B00D00B),
     Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&textureOffset_00o00B00D00B),
     Rule::Get<Spec::GLSL, 130, Shader::FRAGMENT, 0>(&textureOffset_00t00B00D00B),
@@ -33444,6 +33528,9 @@ constexpr const char *kMangledNames[] = {"radians(00B",
                                          "textureLod(00U20B00B",
                                          "textureLod(00a20B00B",
                                          "textureLod(00d20B00B",
+                                         "textureLod(00e30B00B",
+                                         "textureLod(00f30B00B",
+                                         "textureLod(00l30B00B00B",
                                          "textureLod(00g00B00B",
                                          "textureLod(00o00B00B",
                                          "textureLod(00t00B00B",
@@ -33654,6 +33741,7 @@ constexpr const char *kMangledNames[] = {"radians(00B",
                                          "texture(00d20B00B",
                                          "texture(00e30B00B",
                                          "textureProj(00d30B00B",
+                                         "texture(00f30B00B",
                                          "texture(00g00B00B",
                                          "texture(00o00B00B",
                                          "texture(00t00B00B",
@@ -33662,7 +33750,6 @@ constexpr const char *kMangledNames[] = {"radians(00B",
                                          "texture(00p20B00B",
                                          "texture(00u20B00B",
                                          "texture(00i20B00B",
-                                         "texture(00f30B00B",
                                          "textureProj(00g10B00B",
                                          "textureProj(00o10B00B",
                                          "textureProj(00t10B00B",
@@ -33673,6 +33760,7 @@ constexpr const char *kMangledNames[] = {"radians(00B",
                                          "texture(00k30B00B",
                                          "texture(00s30B00B",
                                          "texture(00x30B00B",
+                                         "texture(00l30B00B00B",
                                          "texture(00M10B00B",
                                          "textureProj(00M20B00B",
                                          "textureProj(00M30B00B",
@@ -33716,6 +33804,7 @@ constexpr const char *kMangledNames[] = {"radians(00B",
                                          "textureOffset(00L20B10D",
                                          "textureOffset(00U20B10D",
                                          "textureOffset(00a20B10D",
+                                         "textureOffset(00f30B10D",
                                          "textureOffset(00g00B00D",
                                          "textureOffset(00o00B00D",
                                          "textureOffset(00t00B00D",
@@ -33728,7 +33817,6 @@ constexpr const char *kMangledNames[] = {"radians(00B",
                                          "textureOffset(00p10B00D",
                                          "textureOffset(00u10B00D",
                                          "textureOffset(00i20B00D",
-                                         "textureOffset(00f30B10D",
                                          "textureProjOffset(00I20B10D",
                                          "textureProjOffset(00R20B10D",
                                          "textureProjOffset(00X20B10D",
@@ -33763,6 +33851,7 @@ constexpr const char *kMangledNames[] = {"radians(00B",
                                          "textureLodOffset(00L20B00B10D",
                                          "textureLodOffset(00U20B00B10D",
                                          "textureLodOffset(00a20B00B10D",
+                                         "textureLodOffset(00f30B00B10D",
                                          "textureLodOffset(00g00B00B00D",
                                          "textureLodOffset(00o00B00B00D",
                                          "textureLodOffset(00t00B00B00D",
@@ -33863,6 +33952,7 @@ constexpr const char *kMangledNames[] = {"radians(00B",
                                          "textureOffset(00L20B10D00B",
                                          "textureOffset(00U20B10D00B",
                                          "textureOffset(00a20B10D00B",
+                                         "textureOffset(00f30B10D00B",
                                          "textureOffset(00g00B00D00B",
                                          "textureOffset(00o00B00D00B",
                                          "textureOffset(00t00B00D00B",
@@ -35651,1450 +35741,1456 @@ constexpr uint16_t kMangledOffsets[] = {
     1309,  // textureLod_00U20B00B
     1311,  // textureLod_00a20B00B
     1313,  // textureLod_00d20B00B
-    1315,  // textureLod_00g00B00B
-    1316,  // textureLod_00o00B00B
-    1317,  // textureLod_00t00B00B
-    1318,  // textureLod_00m20B00B
-    1319,  // textureLod_00h10B00B
-    1320,  // textureLod_00p10B00B
-    1321,  // textureLod_00u10B00B
-    1322,  // textureLod_00i20B00B
-    1323,  // textureLod_00k30B00B
-    1327,  // textureLod_00s30B00B
-    1331,  // textureLod_00x30B00B
-    1335,  // textureSize_00I00D
-    1337,  // textureSize_00R00D
-    1339,  // textureSize_00X00D
-    1341,  // textureSize_00J00D
-    1343,  // textureSize_00S00D
-    1345,  // textureSize_00Y00D
-    1347,  // textureSize_00K00D
-    1349,  // textureSize_00T00D
-    1351,  // textureSize_00Z00D
-    1353,  // textureSize_00L00D
-    1355,  // textureSize_00U00D
-    1357,  // textureSize_00a00D
-    1359,  // textureSize_00d00D
-    1361,  // textureSize_00e00D
-    1363,  // textureSize_00f00D
-    1365,  // textureSize_00g00D
-    1366,  // textureSize_00o00D
-    1367,  // textureSize_00t00D
-    1368,  // textureSize_00m00D
-    1369,  // textureSize_00k00D
-    1373,  // textureSize_00s00D
-    1377,  // textureSize_00x00D
-    1381,  // textureSize_00l00D
-    1385,  // textureSize_00O
-    1386,  // textureSize_00q
-    1387,  // textureSize_00v
-    1388,  // textureSize_00n
-    1389,  // textureSize_00h00D
-    1390,  // textureSize_00p00D
-    1391,  // textureSize_00u00D
-    1392,  // textureSize_00i00D
-    1393,  // textureSize_00j
-    1397,  // textureSize_00r
-    1401,  // textureSize_00w
-    1405,  // textureSize_00P
-    1408,  // textureSize_00V
-    1411,  // textureSize_00b
-    1414,  // textureSize_00Q
-    1417,  // textureSize_00W
-    1420,  // textureSize_00c
-    1423,  // textureSize_00M00D
-    1424,  // textureSize_00N00D
-    1425,  // textureProjLod_00I20B00B
-    1427,  // textureProjLod_00R20B00B
-    1429,  // textureProjLod_00X20B00B
-    1431,  // textureProjLod_00I30B00B
-    1433,  // textureProjLod_00R30B00B
-    1435,  // textureProjLod_00X30B00B
-    1437,  // textureProjLod_00J30B00B
-    1439,  // textureProjLod_00S30B00B
-    1441,  // textureProjLod_00Y30B00B
-    1443,  // textureProjLod_00d30B00B
-    1445,  // textureProjLod_00g10B00B
-    1446,  // textureProjLod_00o10B00B
-    1447,  // textureProjLod_00t10B00B
-    1448,  // textureProjLod_00g30B00B
-    1449,  // textureProjLod_00o30B00B
-    1450,  // textureProjLod_00t30B00B
-    1451,  // textureProjLod_00m30B00B
-    1452,  // texelFetch_00I10D00D
-    1454,  // texelFetch_00R10D00D
-    1456,  // texelFetch_00X10D00D
-    1458,  // texelFetch_00J20D00D
-    1460,  // texelFetch_00S20D00D
-    1462,  // texelFetch_00Y20D00D
-    1464,  // texelFetch_00L20D00D
-    1466,  // texelFetch_00U20D00D
-    1468,  // texelFetch_00a20D00D
-    1470,  // texelFetch_00g00D00D
-    1471,  // texelFetch_00o00D00D
-    1472,  // texelFetch_00t00D00D
-    1473,  // texelFetch_00O10D
-    1474,  // texelFetch_00q10D
-    1475,  // texelFetch_00v10D
-    1476,  // texelFetch_00h10D00D
-    1477,  // texelFetch_00p10D00D
-    1478,  // texelFetch_00u10D00D
-    1479,  // texelFetch_00j00D
-    1483,  // texelFetch_00r00D
-    1487,  // texelFetch_00w00D
-    1491,  // texelFetch_00P10D00D
-    1494,  // texelFetch_00V10D00D
-    1497,  // texelFetch_00b10D00D
-    1500,  // texelFetch_00Q20D00D
-    1503,  // texelFetch_00W20D00D
-    1506,  // texelFetch_00c20D00D
-    1509,  // texelFetch_00M10D00D
-    1510,  // texelFetch_00N10D00D
-    1511,  // textureGrad_00I10B10B10B
-    1513,  // textureGrad_00R10B10B10B
-    1515,  // textureGrad_00X10B10B10B
-    1517,  // textureGrad_00J20B20B20B
-    1519,  // textureGrad_00S20B20B20B
-    1521,  // textureGrad_00Y20B20B20B
-    1523,  // textureGrad_00K20B20B20B
-    1525,  // textureGrad_00T20B20B20B
-    1527,  // textureGrad_00Z20B20B20B
-    1529,  // textureGrad_00I00B00B00B
-    1530,  // textureGrad_00R00B00B00B
-    1531,  // textureGrad_00X00B00B00B
-    1532,  // textureGrad_00O10B10B10B
-    1533,  // textureGrad_00q10B10B10B
-    1534,  // textureGrad_00v10B10B10B
-    1535,  // textureGrad_00n20B10B10B
-    1536,  // textureGrad_00d20B10B10B
-    1538,  // textureGrad_00e30B20B20B
-    1540,  // textureGrad_00L20B10B10B
-    1542,  // textureGrad_00U20B10B10B
-    1544,  // textureGrad_00a20B10B10B
-    1546,  // textureGrad_00f30B10B10B
-    1548,  // textureGrad_00m20B00B00B
-    1549,  // textureGrad_00h10B00B00B
-    1550,  // textureGrad_00p10B00B00B
-    1551,  // textureGrad_00u10B00B00B
-    1552,  // textureGrad_00i20B00B00B
-    1553,  // textureGrad_00k30B20B20B
-    1557,  // textureGrad_00s30B20B20B
-    1561,  // textureGrad_00x30B20B20B
-    1565,  // textureProjGrad_00I20B10B10B
-    1567,  // textureProjGrad_00R20B10B10B
-    1569,  // textureProjGrad_00X20B10B10B
-    1571,  // textureProjGrad_00I30B10B10B
-    1573,  // textureProjGrad_00R30B10B10B
-    1575,  // textureProjGrad_00X30B10B10B
-    1577,  // textureProjGrad_00J30B20B20B
-    1579,  // textureProjGrad_00S30B20B20B
-    1581,  // textureProjGrad_00Y30B20B20B
-    1583,  // textureProjGrad_00d30B10B10B
-    1585,  // textureProjGrad_00g10B00B00B
-    1586,  // textureProjGrad_00o10B00B00B
-    1587,  // textureProjGrad_00t10B00B00B
-    1588,  // textureProjGrad_00g30B00B00B
-    1589,  // textureProjGrad_00o30B00B00B
-    1590,  // textureProjGrad_00t30B00B00B
-    1591,  // textureProjGrad_00m30B00B00B
-    1592,  // textureProjGrad_00O20B10B10B
-    1593,  // textureProjGrad_00q20B10B10B
-    1594,  // textureProjGrad_00v20B10B10B
-    1595,  // textureProjGrad_00O30B10B10B
-    1596,  // textureProjGrad_00q30B10B10B
-    1597,  // textureProjGrad_00v30B10B10B
-    1598,  // textureProjGrad_00n30B10B10B
-    1599,  // textureQueryLevels_00g
-    1600,  // textureQueryLevels_00o
-    1601,  // textureQueryLevels_00t
-    1602,  // textureQueryLevels_00I
-    1603,  // textureQueryLevels_00R
-    1604,  // textureQueryLevels_00X
-    1605,  // textureQueryLevels_00J
-    1606,  // textureQueryLevels_00S
-    1607,  // textureQueryLevels_00Y
-    1608,  // textureQueryLevels_00K
-    1609,  // textureQueryLevels_00T
-    1610,  // textureQueryLevels_00Z
-    1611,  // textureQueryLevels_00h
-    1612,  // textureQueryLevels_00p
-    1613,  // textureQueryLevels_00u
-    1614,  // textureQueryLevels_00L
-    1615,  // textureQueryLevels_00U
-    1616,  // textureQueryLevels_00a
-    1617,  // textureQueryLevels_00k
-    1618,  // textureQueryLevels_00s
-    1619,  // textureQueryLevels_00x
-    1620,  // textureQueryLevels_00m
-    1621,  // textureQueryLevels_00d
-    1622,  // textureQueryLevels_00e
-    1623,  // textureQueryLevels_00i
-    1624,  // textureQueryLevels_00f
-    1625,  // textureQueryLevels_00l
-    1626,  // textureSamples_00P
-    1627,  // textureSamples_00V
-    1628,  // textureSamples_00b
-    1629,  // textureSamples_00Q
-    1630,  // textureSamples_00W
-    1631,  // textureSamples_00c
-    1632,  // texture_00I10B00B
-    1634,  // texture_00R10B00B
-    1636,  // texture_00X10B00B
-    1638,  // texture_00J20B00B
-    1640,  // texture_00S20B00B
-    1642,  // texture_00Y20B00B
-    1644,  // texture_00K20B00B
-    1646,  // texture_00T20B00B
-    1648,  // texture_00Z20B00B
-    1650,  // texture_00L20B00B
-    1652,  // texture_00U20B00B
-    1654,  // texture_00a20B00B
-    1656,  // textureProj_00I20B00B
-    1658,  // textureProj_00R20B00B
-    1660,  // textureProj_00X20B00B
-    1662,  // textureProj_00I30B00B
-    1664,  // textureProj_00R30B00B
-    1666,  // textureProj_00X30B00B
-    1668,  // textureProj_00J30B00B
-    1670,  // textureProj_00S30B00B
-    1672,  // textureProj_00Y30B00B
-    1674,  // texture_00d20B00B
-    1676,  // texture_00e30B00B
-    1678,  // textureProj_00d30B00B
-    1680,  // texture_00g00B00B
-    1681,  // texture_00o00B00B
-    1682,  // texture_00t00B00B
-    1683,  // texture_00m20B00B
-    1684,  // texture_00h20B00B
-    1685,  // texture_00p20B00B
-    1686,  // texture_00u20B00B
-    1687,  // texture_00i20B00B
-    1688,  // texture_00f30B00B
-    1689,  // textureProj_00g10B00B
-    1690,  // textureProj_00o10B00B
-    1691,  // textureProj_00t10B00B
-    1692,  // textureProj_00g30B00B
-    1693,  // textureProj_00o30B00B
-    1694,  // textureProj_00t30B00B
-    1695,  // textureProj_00m30B00B
-    1696,  // texture_00k30B00B
-    1700,  // texture_00s30B00B
-    1704,  // texture_00x30B00B
-    1708,  // texture_00M10B00B
-    1709,  // textureProj_00M20B00B
-    1710,  // textureProj_00M30B00B
-    1711,  // texture_00N10B00B
-    1712,  // textureProj_00N20B00B
-    1713,  // textureProj_00N30B00B
-    1714,  // textureQueryLod_00g00B
-    1715,  // textureQueryLod_00o00B
-    1716,  // textureQueryLod_00t00B
-    1717,  // textureQueryLod_00I10B
-    1718,  // textureQueryLod_00R10B
-    1719,  // textureQueryLod_00X10B
-    1720,  // textureQueryLod_00J20B
-    1721,  // textureQueryLod_00S20B
-    1722,  // textureQueryLod_00Y20B
-    1723,  // textureQueryLod_00K20B
-    1724,  // textureQueryLod_00T20B
-    1725,  // textureQueryLod_00Z20B
-    1726,  // textureQueryLod_00h00B
-    1727,  // textureQueryLod_00p00B
-    1728,  // textureQueryLod_00u00B
-    1729,  // textureQueryLod_00L10B
-    1730,  // textureQueryLod_00U10B
-    1731,  // textureQueryLod_00a10B
-    1732,  // textureQueryLod_00k20B
-    1733,  // textureQueryLod_00s20B
-    1734,  // textureQueryLod_00x20B
-    1735,  // textureQueryLod_00m00B
-    1736,  // textureQueryLod_00d10B
-    1737,  // textureQueryLod_00e20B
-    1738,  // textureQueryLod_00i00B
-    1739,  // textureQueryLod_00f10B
-    1740,  // textureQueryLod_00l20B
-    1741,  // textureOffset_00I10B10D
-    1743,  // textureOffset_00R10B10D
-    1745,  // textureOffset_00X10B10D
-    1747,  // textureOffset_00J20B20D
-    1749,  // textureOffset_00S20B20D
-    1751,  // textureOffset_00Y20B20D
-    1753,  // textureOffset_00d20B10D
-    1755,  // textureOffset_00L20B10D
-    1757,  // textureOffset_00U20B10D
-    1759,  // textureOffset_00a20B10D
-    1761,  // textureOffset_00g00B00D
-    1762,  // textureOffset_00o00B00D
-    1763,  // textureOffset_00t00B00D
-    1764,  // textureOffset_00O10B10D
-    1765,  // textureOffset_00q10B10D
-    1766,  // textureOffset_00v10B10D
-    1767,  // textureOffset_00n20B10D
-    1768,  // textureOffset_00m20B00D
-    1769,  // textureOffset_00h10B00D
-    1770,  // textureOffset_00p10B00D
-    1771,  // textureOffset_00u10B00D
-    1772,  // textureOffset_00i20B00D
-    1773,  // textureOffset_00f30B10D
-    1774,  // textureProjOffset_00I20B10D
-    1776,  // textureProjOffset_00R20B10D
-    1778,  // textureProjOffset_00X20B10D
-    1780,  // textureProjOffset_00I30B10D
-    1782,  // textureProjOffset_00R30B10D
-    1784,  // textureProjOffset_00X30B10D
-    1786,  // textureProjOffset_00J30B20D
-    1788,  // textureProjOffset_00S30B20D
-    1790,  // textureProjOffset_00Y30B20D
-    1792,  // textureProjOffset_00d30B10D
-    1794,  // textureProjOffset_00g10B00D
-    1795,  // textureProjOffset_00o10B00D
-    1796,  // textureProjOffset_00t10B00D
-    1797,  // textureProjOffset_00g30B00D
-    1798,  // textureProjOffset_00o30B00D
-    1799,  // textureProjOffset_00t30B00D
-    1800,  // textureProjOffset_00O20B10D
-    1801,  // textureProjOffset_00q20B10D
-    1802,  // textureProjOffset_00v20B10D
-    1803,  // textureProjOffset_00O30B10D
-    1804,  // textureProjOffset_00q30B10D
-    1805,  // textureProjOffset_00v30B10D
-    1806,  // textureProjOffset_00n30B10D
-    1807,  // textureProjOffset_00m30B00D
-    1808,  // textureLodOffset_00I10B00B10D
-    1810,  // textureLodOffset_00R10B00B10D
-    1812,  // textureLodOffset_00X10B00B10D
-    1814,  // textureLodOffset_00J20B00B20D
-    1816,  // textureLodOffset_00S20B00B20D
-    1818,  // textureLodOffset_00Y20B00B20D
-    1820,  // textureLodOffset_00d20B00B10D
-    1822,  // textureLodOffset_00L20B00B10D
-    1824,  // textureLodOffset_00U20B00B10D
-    1826,  // textureLodOffset_00a20B00B10D
-    1828,  // textureLodOffset_00g00B00B00D
-    1829,  // textureLodOffset_00o00B00B00D
-    1830,  // textureLodOffset_00t00B00B00D
-    1831,  // textureLodOffset_00m20B00B00D
-    1832,  // textureLodOffset_00h10B00B00D
-    1833,  // textureLodOffset_00p10B00B00D
-    1834,  // textureLodOffset_00u10B00B00D
-    1835,  // textureLodOffset_00i20B00B00D
-    1836,  // textureProjLodOffset_00I20B00B10D
-    1838,  // textureProjLodOffset_00R20B00B10D
-    1840,  // textureProjLodOffset_00X20B00B10D
-    1842,  // textureProjLodOffset_00I30B00B10D
-    1844,  // textureProjLodOffset_00R30B00B10D
-    1846,  // textureProjLodOffset_00X30B00B10D
-    1848,  // textureProjLodOffset_00J30B00B20D
-    1850,  // textureProjLodOffset_00S30B00B20D
-    1852,  // textureProjLodOffset_00Y30B00B20D
-    1854,  // textureProjLodOffset_00d30B00B10D
-    1856,  // textureProjLodOffset_00g10B00B00D
-    1857,  // textureProjLodOffset_00o10B00B00D
-    1858,  // textureProjLodOffset_00t10B00B00D
-    1859,  // textureProjLodOffset_00g30B00B00D
-    1860,  // textureProjLodOffset_00o30B00B00D
-    1861,  // textureProjLodOffset_00t30B00B00D
-    1862,  // textureProjLodOffset_00m30B00B00D
-    1863,  // texelFetchOffset_00I10D00D10D
-    1865,  // texelFetchOffset_00R10D00D10D
-    1867,  // texelFetchOffset_00X10D00D10D
-    1869,  // texelFetchOffset_00J20D00D20D
-    1871,  // texelFetchOffset_00S20D00D20D
-    1873,  // texelFetchOffset_00Y20D00D20D
-    1875,  // texelFetchOffset_00L20D00D10D
-    1877,  // texelFetchOffset_00U20D00D10D
-    1879,  // texelFetchOffset_00a20D00D10D
-    1881,  // texelFetchOffset_00g00D00D00D
-    1882,  // texelFetchOffset_00o00D00D00D
-    1883,  // texelFetchOffset_00t00D00D00D
-    1884,  // texelFetchOffset_00O10D10D
-    1885,  // texelFetchOffset_00q10D10D
-    1886,  // texelFetchOffset_00v10D10D
-    1887,  // texelFetchOffset_00h10D00D00D
-    1888,  // texelFetchOffset_00p10D00D00D
-    1889,  // texelFetchOffset_00u10D00D00D
-    1890,  // textureGradOffset_00I10B10B10B10D
-    1892,  // textureGradOffset_00R10B10B10B10D
-    1894,  // textureGradOffset_00X10B10B10B10D
-    1896,  // textureGradOffset_00J20B20B20B20D
-    1898,  // textureGradOffset_00S20B20B20B20D
-    1900,  // textureGradOffset_00Y20B20B20B20D
-    1902,  // textureGradOffset_00d20B10B10B10D
-    1904,  // textureGradOffset_00L20B10B10B10D
-    1906,  // textureGradOffset_00U20B10B10B10D
-    1908,  // textureGradOffset_00a20B10B10B10D
-    1910,  // textureGradOffset_00f30B10B10B10D
-    1912,  // textureGradOffset_00g00B00B00B00D
-    1913,  // textureGradOffset_00o00B00B00B00D
-    1914,  // textureGradOffset_00t00B00B00B00D
-    1915,  // textureGradOffset_00O10B10B10B10D
-    1916,  // textureGradOffset_00q10B10B10B10D
-    1917,  // textureGradOffset_00v10B10B10B10D
-    1918,  // textureGradOffset_00n20B10B10B10D
-    1919,  // textureGradOffset_00m20B00B00B00D
-    1920,  // textureGradOffset_00h10B00B00B00D
-    1921,  // textureGradOffset_00p10B00B00B00D
-    1922,  // textureGradOffset_00u10B00B00B00D
-    1923,  // textureGradOffset_00i20B00B00B00D
-    1924,  // textureProjGradOffset_00I20B10B10B10D
-    1926,  // textureProjGradOffset_00R20B10B10B10D
-    1928,  // textureProjGradOffset_00X20B10B10B10D
-    1930,  // textureProjGradOffset_00I30B10B10B10D
-    1932,  // textureProjGradOffset_00R30B10B10B10D
-    1934,  // textureProjGradOffset_00X30B10B10B10D
-    1936,  // textureProjGradOffset_00J30B20B20B20D
-    1938,  // textureProjGradOffset_00S30B20B20B20D
-    1940,  // textureProjGradOffset_00Y30B20B20B20D
-    1942,  // textureProjGradOffset_00d30B10B10B10D
-    1944,  // textureProjGradOffset_00g10B00B00B00D
-    1945,  // textureProjGradOffset_00o10B00B00B00D
-    1946,  // textureProjGradOffset_00t10B00B00B00D
-    1947,  // textureProjGradOffset_00g30B00B00B00D
-    1948,  // textureProjGradOffset_00o30B00B00B00D
-    1949,  // textureProjGradOffset_00t30B00B00B00D
-    1950,  // textureProjGradOffset_00O20B10B10B10D
-    1951,  // textureProjGradOffset_00q20B10B10B10D
-    1952,  // textureProjGradOffset_00v20B10B10B10D
-    1953,  // textureProjGradOffset_00O30B10B10B10D
-    1954,  // textureProjGradOffset_00q30B10B10B10D
-    1955,  // textureProjGradOffset_00v30B10B10B10D
-    1956,  // textureProjGradOffset_00n30B10B10B10D
-    1957,  // textureProjGradOffset_00m30B00B00B00D
-    1958,  // textureOffset_00I10B10D00B
-    1960,  // textureOffset_00R10B10D00B
-    1962,  // textureOffset_00X10B10D00B
-    1964,  // textureOffset_00J20B20D00B
-    1966,  // textureOffset_00S20B20D00B
-    1968,  // textureOffset_00Y20B20D00B
-    1970,  // textureOffset_00d20B10D00B
-    1972,  // textureOffset_00L20B10D00B
-    1974,  // textureOffset_00U20B10D00B
-    1976,  // textureOffset_00a20B10D00B
-    1978,  // textureOffset_00g00B00D00B
-    1979,  // textureOffset_00o00B00D00B
-    1980,  // textureOffset_00t00B00D00B
-    1981,  // textureOffset_00m20B00D00B
-    1982,  // textureOffset_00h10B00D00B
-    1983,  // textureOffset_00p10B00D00B
-    1984,  // textureOffset_00u10B00D00B
-    1985,  // textureOffset_00i20B00D00B
-    1986,  // textureProjOffset_00I20B10D00B
-    1988,  // textureProjOffset_00R20B10D00B
-    1990,  // textureProjOffset_00X20B10D00B
-    1992,  // textureProjOffset_00I30B10D00B
-    1994,  // textureProjOffset_00R30B10D00B
-    1996,  // textureProjOffset_00X30B10D00B
-    1998,  // textureProjOffset_00J30B20D00B
-    2000,  // textureProjOffset_00S30B20D00B
-    2002,  // textureProjOffset_00Y30B20D00B
-    2004,  // textureProjOffset_00d30B10D00B
-    2006,  // textureProjOffset_00g10B00D00B
-    2007,  // textureProjOffset_00o10B00D00B
-    2008,  // textureProjOffset_00t10B00D00B
-    2009,  // textureProjOffset_00g30B00D00B
-    2010,  // textureProjOffset_00o30B00D00B
-    2011,  // textureProjOffset_00t30B00D00B
-    2012,  // textureProjOffset_00m30B00D00B
-    2013,  // textureGather_00I10B
-    2015,  // textureGather_00R10B
-    2017,  // textureGather_00X10B
-    2019,  // textureGather_00I10B00D
-    2021,  // textureGather_00R10B00D
-    2023,  // textureGather_00X10B00D
-    2025,  // textureGather_00L20B
-    2027,  // textureGather_00U20B
-    2029,  // textureGather_00a20B
-    2031,  // textureGather_00L20B00D
-    2033,  // textureGather_00U20B00D
-    2035,  // textureGather_00a20B00D
-    2037,  // textureGather_00K20B
-    2039,  // textureGather_00T20B
-    2041,  // textureGather_00Z20B
-    2043,  // textureGather_00K20B00D
-    2045,  // textureGather_00T20B00D
-    2047,  // textureGather_00Z20B00D
-    2049,  // textureGather_00k30B
-    2053,  // textureGather_00s30B
-    2057,  // textureGather_00x30B
-    2061,  // textureGather_00k30B00D
-    2065,  // textureGather_00s30B00D
-    2069,  // textureGather_00x30B00D
-    2073,  // textureGather_00l30B00B
-    2077,  // textureGather_00O20B
-    2078,  // textureGather_00q20B
-    2079,  // textureGather_00v20B
-    2080,  // textureGather_00O20B00D
-    2081,  // textureGather_00q20B00D
-    2082,  // textureGather_00v20B00D
-    2083,  // textureGather_00n10B00B
-    2084,  // textureGather_00d10B
-    2085,  // textureGather_00d10B00B
-    2087,  // textureGather_00f20B
-    2088,  // textureGather_00f20B00B
-    2090,  // textureGather_00e20B
-    2091,  // textureGather_00e20B00B
-    2093,  // textureGatherOffset_00I10B10D
-    2095,  // textureGatherOffset_00R10B10D
-    2097,  // textureGatherOffset_00X10B10D
-    2099,  // textureGatherOffset_00L20B10D
-    2101,  // textureGatherOffset_00U20B10D
-    2103,  // textureGatherOffset_00a20B10D
-    2105,  // textureGatherOffset_00d10B00B10D
-    2107,  // textureGatherOffset_00f20B00B10D
-    2109,  // textureGatherOffset_00O10B10D
-    2110,  // textureGatherOffset_00q10B10D
-    2111,  // textureGatherOffset_00v10B10D
-    2112,  // textureGatherOffset_00n10B00B10D
-    2113,  // textureGatherOffset_00I10B10D00D
-    2115,  // textureGatherOffset_00R10B10D00D
-    2117,  // textureGatherOffset_00X10B10D00D
-    2119,  // textureGatherOffset_00L20B10D00D
-    2121,  // textureGatherOffset_00U20B10D00D
-    2123,  // textureGatherOffset_00a20B10D00D
-    2125,  // textureGatherOffset_00O10B10D00D
-    2126,  // textureGatherOffset_00q10B10D00D
-    2127,  // textureGatherOffset_00v10B10D00D
-    2128,  // textureGatherOffsets_00I10B10Dx4
-    2132,  // textureGatherOffsets_00R10B10Dx4
-    2136,  // textureGatherOffsets_00X10B10Dx4
-    2140,  // textureGatherOffsets_00L20B10Dx4
-    2144,  // textureGatherOffsets_00U20B10Dx4
-    2148,  // textureGatherOffsets_00a20B10Dx4
-    2152,  // textureGatherOffsets_00d10B00B10Dx4
-    2156,  // textureGatherOffsets_00f20B00B10Dx4
-    2160,  // textureGatherOffsets_00O10B10Dx4
-    2161,  // textureGatherOffsets_00q10B10Dx4
-    2162,  // textureGatherOffsets_00v10B10Dx4
-    2163,  // textureGatherOffsets_00n10B00B10Dx4
-    2164,  // textureGatherOffsets_00I10B10Dx400D
-    2168,  // textureGatherOffsets_00R10B10Dx400D
-    2172,  // textureGatherOffsets_00X10B10Dx400D
-    2176,  // textureGatherOffsets_00L20B10Dx400D
-    2180,  // textureGatherOffsets_00U20B10Dx400D
-    2184,  // textureGatherOffsets_00a20B10Dx400D
-    2188,  // textureGatherOffsets_00O10B10Dx400D
-    2189,  // textureGatherOffsets_00q10B10Dx400D
-    2190,  // textureGatherOffsets_00v10B10Dx400D
-    2191,  // rgb_2_yuv_20B00H
-    2192,  // yuv_2_rgb_20B00H
-    2193,  // dFdx_00B
-    2196,  // dFdx_10B
-    2199,  // dFdx_20B
-    2202,  // dFdx_30B
-    2205,  // dFdy_00B
-    2208,  // dFdy_10B
-    2211,  // dFdy_20B
-    2214,  // dFdy_30B
-    2217,  // fwidth_00B
-    2220,  // fwidth_10B
-    2223,  // fwidth_20B
-    2226,  // fwidth_30B
-    2229,  // dFdxFine_00B
-    2230,  // dFdxFine_10B
-    2231,  // dFdxFine_20B
-    2232,  // dFdxFine_30B
-    2233,  // dFdyFine_00B
-    2234,  // dFdyFine_10B
-    2235,  // dFdyFine_20B
-    2236,  // dFdyFine_30B
-    2237,  // dFdxCoarse_00B
-    2238,  // dFdxCoarse_10B
-    2239,  // dFdxCoarse_20B
-    2240,  // dFdxCoarse_30B
-    2241,  // dFdyCoarse_00B
-    2242,  // dFdyCoarse_10B
-    2243,  // dFdyCoarse_20B
-    2244,  // dFdyCoarse_30B
-    2245,  // fwidthFine_00B
-    2246,  // fwidthFine_10B
-    2247,  // fwidthFine_20B
-    2248,  // fwidthFine_30B
-    2249,  // fwidthCoarse_00B
-    2250,  // fwidthCoarse_10B
-    2251,  // fwidthCoarse_20B
-    2252,  // fwidthCoarse_30B
-    2253,  // interpolateAtCentroid_00B
-    2256,  // interpolateAtCentroid_10B
-    2259,  // interpolateAtCentroid_20B
-    2262,  // interpolateAtCentroid_30B
-    2265,  // interpolateAtSample_00B00D
-    2268,  // interpolateAtSample_10B00D
-    2271,  // interpolateAtSample_20B00D
-    2274,  // interpolateAtSample_30B00D
-    2277,  // interpolateAtOffset_00B10B
-    2280,  // interpolateAtOffset_10B10B
-    2283,  // interpolateAtOffset_20B10B
-    2286,  // interpolateAtOffset_30B10B
-    2289,  // atomicCounter_00G
-    2291,  // atomicCounterIncrement_00G
-    2293,  // atomicCounterDecrement_00G
-    2295,  // atomicCounterAdd_00G00E
-    2296,  // atomicCounterSubtract_00G00E
-    2297,  // atomicCounterMin_00G00E
-    2298,  // atomicCounterMax_00G00E
-    2299,  // atomicCounterAnd_00G00E
-    2300,  // atomicCounterOr_00G00E
-    2301,  // atomicCounterXor_00G00E
-    2302,  // atomicCounterExchange_00G00E
-    2303,  // atomicCounterCompSwap_00G00E00E
-    2304,  // atomicAdd_00E00E
-    2306,  // atomicAdd_00D00D
-    2308,  // atomicMin_00E00E
-    2310,  // atomicMin_00D00D
-    2312,  // atomicMax_00E00E
-    2314,  // atomicMax_00D00D
-    2316,  // atomicAnd_00E00E
-    2318,  // atomicAnd_00D00D
-    2320,  // atomicOr_00E00E
-    2322,  // atomicOr_00D00D
-    2324,  // atomicXor_00E00E
-    2326,  // atomicXor_00D00D
-    2328,  // atomicExchange_00E00E
-    2330,  // atomicExchange_00D00D
-    2332,  // atomicCompSwap_00E00E00E
-    2334,  // atomicCompSwap_00D00D00D
-    2336,  // imageSize_00z
-    2338,  // imageSize_01K
-    2340,  // imageSize_01V
-    2342,  // imageSize_01A
-    2344,  // imageSize_01L
-    2346,  // imageSize_01W
-    2348,  // imageSize_01B
-    2350,  // imageSize_01M
-    2352,  // imageSize_01X
-    2354,  // imageSize_01C
-    2356,  // imageSize_01N
-    2358,  // imageSize_01Y
-    2360,  // imageSize_01H
-    2364,  // imageSize_01S
-    2368,  // imageSize_01d
-    2372,  // imageSize_01J
-    2376,  // imageSize_01U
-    2380,  // imageSize_01f
-    2384,  // imageSize_01D
-    2385,  // imageSize_01O
-    2386,  // imageSize_01Z
-    2387,  // imageSize_01I
-    2388,  // imageSize_01T
-    2389,  // imageSize_01e
-    2390,  // imageSize_01E
-    2391,  // imageSize_01P
-    2392,  // imageSize_01a
-    2393,  // imageSize_01F
-    2394,  // imageSize_01Q
-    2395,  // imageSize_01b
-    2396,  // imageSize_01G
-    2397,  // imageSize_01R
-    2398,  // imageSize_01c
-    2399,  // imageSamples_01F
-    2400,  // imageSamples_01Q
-    2401,  // imageSamples_01b
-    2402,  // imageSamples_01G
-    2403,  // imageSamples_01R
-    2404,  // imageSamples_01c
-    2405,  // imageStore_00z10D30B
-    2407,  // imageStore_01K10D30D
-    2409,  // imageStore_01V10D30E
-    2411,  // imageStore_01A20D30B
-    2413,  // imageStore_01L20D30D
-    2415,  // imageStore_01W20D30E
-    2417,  // imageStore_01B20D30B
-    2419,  // imageStore_01M20D30D
-    2421,  // imageStore_01X20D30E
-    2423,  // imageStore_01C20D30B
-    2425,  // imageStore_01N20D30D
-    2427,  // imageStore_01Y20D30E
-    2429,  // imageStore_01H20D30B
-    2433,  // imageStore_01S20D30D
-    2437,  // imageStore_01d20D30E
-    2441,  // imageStore_01J00D30B
-    2445,  // imageStore_01U00D30D
-    2449,  // imageStore_01f00D30E
-    2453,  // imageStore_01D00D30B
-    2454,  // imageStore_01O00D30D
-    2455,  // imageStore_01Z00D30E
-    2456,  // imageStore_01E10D30B
-    2457,  // imageStore_01P10D30D
-    2458,  // imageStore_01a10D30E
-    2459,  // imageStore_01I10D30B
-    2460,  // imageStore_01T10D30D
-    2461,  // imageStore_01e10D30E
-    2462,  // imageStore_01F10D00D30B
-    2463,  // imageStore_01Q10D00D30D
-    2464,  // imageStore_01b10D00D30E
-    2465,  // imageStore_01G20D00D30B
-    2466,  // imageStore_01R20D00D30D
-    2467,  // imageStore_01c20D00D30E
-    2468,  // imageLoad_00z10D
-    2470,  // imageLoad_01K10D
-    2472,  // imageLoad_01V10D
-    2474,  // imageLoad_01A20D
-    2476,  // imageLoad_01L20D
-    2478,  // imageLoad_01W20D
-    2480,  // imageLoad_01B20D
-    2482,  // imageLoad_01M20D
-    2484,  // imageLoad_01X20D
-    2486,  // imageLoad_01C20D
-    2488,  // imageLoad_01N20D
-    2490,  // imageLoad_01Y20D
-    2492,  // imageLoad_01H20D
-    2496,  // imageLoad_01S20D
-    2500,  // imageLoad_01d20D
-    2504,  // imageLoad_01J00D
-    2508,  // imageLoad_01U00D
-    2512,  // imageLoad_01f00D
-    2516,  // imageLoad_01D00D
-    2517,  // imageLoad_01O00D
-    2518,  // imageLoad_01Z00D
-    2519,  // imageLoad_01E10D
-    2520,  // imageLoad_01P10D
-    2521,  // imageLoad_01a10D
-    2522,  // imageLoad_01I10D
-    2523,  // imageLoad_01T10D
-    2524,  // imageLoad_01e10D
-    2525,  // imageLoad_01F10D00D
-    2526,  // imageLoad_01Q10D00D
-    2527,  // imageLoad_01b10D00D
-    2528,  // imageLoad_01G20D00D
-    2529,  // imageLoad_01R20D00D
-    2530,  // imageLoad_01c20D00D
-    2531,  // imageAtomicAdd_00z10D00E
-    2534,  // imageAtomicAdd_01K10D00E
-    2537,  // imageAtomicAdd_01V10D00E
-    2540,  // imageAtomicAdd_01A20D00E
-    2543,  // imageAtomicAdd_01L20D00E
-    2546,  // imageAtomicAdd_01W20D00E
-    2549,  // imageAtomicAdd_01C20D00E
-    2552,  // imageAtomicAdd_01N20D00E
-    2555,  // imageAtomicAdd_01Y20D00E
-    2558,  // imageAtomicAdd_01J00D00E
-    2561,  // imageAtomicAdd_01U00D00E
-    2564,  // imageAtomicAdd_01f00D00E
-    2567,  // imageAtomicAdd_01B20D00E
-    2570,  // imageAtomicAdd_01M20D00E
-    2573,  // imageAtomicAdd_01X20D00E
-    2576,  // imageAtomicAdd_01H20D00E
-    2579,  // imageAtomicAdd_01S20D00E
-    2582,  // imageAtomicAdd_01d20D00E
-    2585,  // imageAtomicAdd_01D00D00E
-    2588,  // imageAtomicAdd_01O00D00E
-    2591,  // imageAtomicAdd_01Z00D00E
-    2594,  // imageAtomicAdd_01E10D00E
-    2597,  // imageAtomicAdd_01P10D00E
-    2600,  // imageAtomicAdd_01a10D00E
-    2603,  // imageAtomicAdd_01I10D00E
-    2606,  // imageAtomicAdd_01T10D00E
-    2609,  // imageAtomicAdd_01e10D00E
-    2612,  // imageAtomicAdd_01F10D00D00E
-    2615,  // imageAtomicAdd_01Q10D00D00E
-    2618,  // imageAtomicAdd_01b10D00D00E
-    2621,  // imageAtomicAdd_01G20D00D00E
-    2624,  // imageAtomicAdd_01R20D00D00E
-    2627,  // imageAtomicAdd_01c20D00D00E
-    2630,  // imageAtomicAdd_00z10D00D
-    2633,  // imageAtomicAdd_01K10D00D
-    2636,  // imageAtomicAdd_01V10D00D
-    2639,  // imageAtomicAdd_01A20D00D
-    2642,  // imageAtomicAdd_01L20D00D
-    2645,  // imageAtomicAdd_01W20D00D
-    2648,  // imageAtomicAdd_01C20D00D
-    2651,  // imageAtomicAdd_01N20D00D
-    2654,  // imageAtomicAdd_01Y20D00D
-    2657,  // imageAtomicAdd_01J00D00D
-    2660,  // imageAtomicAdd_01U00D00D
-    2663,  // imageAtomicAdd_01f00D00D
-    2666,  // imageAtomicAdd_01B20D00D
-    2669,  // imageAtomicAdd_01M20D00D
-    2672,  // imageAtomicAdd_01X20D00D
-    2675,  // imageAtomicAdd_01H20D00D
-    2678,  // imageAtomicAdd_01S20D00D
-    2681,  // imageAtomicAdd_01d20D00D
-    2684,  // imageAtomicAdd_01D00D00D
-    2687,  // imageAtomicAdd_01O00D00D
-    2690,  // imageAtomicAdd_01Z00D00D
-    2693,  // imageAtomicAdd_01E10D00D
-    2696,  // imageAtomicAdd_01P10D00D
-    2699,  // imageAtomicAdd_01a10D00D
-    2702,  // imageAtomicAdd_01I10D00D
-    2705,  // imageAtomicAdd_01T10D00D
-    2708,  // imageAtomicAdd_01e10D00D
-    2711,  // imageAtomicAdd_01F10D00D00D
-    2714,  // imageAtomicAdd_01Q10D00D00D
-    2717,  // imageAtomicAdd_01b10D00D00D
-    2720,  // imageAtomicAdd_01G20D00D00D
-    2723,  // imageAtomicAdd_01R20D00D00D
-    2726,  // imageAtomicAdd_01c20D00D00D
-    2729,  // imageAtomicMin_00z10D00E
-    2732,  // imageAtomicMin_01K10D00E
-    2735,  // imageAtomicMin_01V10D00E
-    2738,  // imageAtomicMin_01A20D00E
-    2741,  // imageAtomicMin_01L20D00E
-    2744,  // imageAtomicMin_01W20D00E
-    2747,  // imageAtomicMin_01C20D00E
-    2750,  // imageAtomicMin_01N20D00E
-    2753,  // imageAtomicMin_01Y20D00E
-    2756,  // imageAtomicMin_01J00D00E
-    2759,  // imageAtomicMin_01U00D00E
-    2762,  // imageAtomicMin_01f00D00E
-    2765,  // imageAtomicMin_01B20D00E
-    2768,  // imageAtomicMin_01M20D00E
-    2771,  // imageAtomicMin_01X20D00E
-    2774,  // imageAtomicMin_01H20D00E
-    2777,  // imageAtomicMin_01S20D00E
-    2780,  // imageAtomicMin_01d20D00E
-    2783,  // imageAtomicMin_01D00D00E
-    2786,  // imageAtomicMin_01O00D00E
-    2789,  // imageAtomicMin_01Z00D00E
-    2792,  // imageAtomicMin_01E10D00E
-    2795,  // imageAtomicMin_01P10D00E
-    2798,  // imageAtomicMin_01a10D00E
-    2801,  // imageAtomicMin_01I10D00E
-    2804,  // imageAtomicMin_01T10D00E
-    2807,  // imageAtomicMin_01e10D00E
-    2810,  // imageAtomicMin_01F10D00D00E
-    2813,  // imageAtomicMin_01Q10D00D00E
-    2816,  // imageAtomicMin_01b10D00D00E
-    2819,  // imageAtomicMin_01G20D00D00E
-    2822,  // imageAtomicMin_01R20D00D00E
-    2825,  // imageAtomicMin_01c20D00D00E
-    2828,  // imageAtomicMin_00z10D00D
-    2831,  // imageAtomicMin_01K10D00D
-    2834,  // imageAtomicMin_01V10D00D
-    2837,  // imageAtomicMin_01A20D00D
-    2840,  // imageAtomicMin_01L20D00D
-    2843,  // imageAtomicMin_01W20D00D
-    2846,  // imageAtomicMin_01C20D00D
-    2849,  // imageAtomicMin_01N20D00D
-    2852,  // imageAtomicMin_01Y20D00D
-    2855,  // imageAtomicMin_01J00D00D
-    2858,  // imageAtomicMin_01U00D00D
-    2861,  // imageAtomicMin_01f00D00D
-    2864,  // imageAtomicMin_01B20D00D
-    2867,  // imageAtomicMin_01M20D00D
-    2870,  // imageAtomicMin_01X20D00D
-    2873,  // imageAtomicMin_01H20D00D
-    2876,  // imageAtomicMin_01S20D00D
-    2879,  // imageAtomicMin_01d20D00D
-    2882,  // imageAtomicMin_01D00D00D
-    2885,  // imageAtomicMin_01O00D00D
-    2888,  // imageAtomicMin_01Z00D00D
-    2891,  // imageAtomicMin_01E10D00D
-    2894,  // imageAtomicMin_01P10D00D
-    2897,  // imageAtomicMin_01a10D00D
-    2900,  // imageAtomicMin_01I10D00D
-    2903,  // imageAtomicMin_01T10D00D
-    2906,  // imageAtomicMin_01e10D00D
-    2909,  // imageAtomicMin_01F10D00D00D
-    2912,  // imageAtomicMin_01Q10D00D00D
-    2915,  // imageAtomicMin_01b10D00D00D
-    2918,  // imageAtomicMin_01G20D00D00D
-    2921,  // imageAtomicMin_01R20D00D00D
-    2924,  // imageAtomicMin_01c20D00D00D
-    2927,  // imageAtomicMax_00z10D00E
-    2930,  // imageAtomicMax_01K10D00E
-    2933,  // imageAtomicMax_01V10D00E
-    2936,  // imageAtomicMax_01A20D00E
-    2939,  // imageAtomicMax_01L20D00E
-    2942,  // imageAtomicMax_01W20D00E
-    2945,  // imageAtomicMax_01C20D00E
-    2948,  // imageAtomicMax_01N20D00E
-    2951,  // imageAtomicMax_01Y20D00E
-    2954,  // imageAtomicMax_01J00D00E
-    2957,  // imageAtomicMax_01U00D00E
-    2960,  // imageAtomicMax_01f00D00E
-    2963,  // imageAtomicMax_01B20D00E
-    2966,  // imageAtomicMax_01M20D00E
-    2969,  // imageAtomicMax_01X20D00E
-    2972,  // imageAtomicMax_01H20D00E
-    2975,  // imageAtomicMax_01S20D00E
-    2978,  // imageAtomicMax_01d20D00E
-    2981,  // imageAtomicMax_01D00D00E
-    2984,  // imageAtomicMax_01O00D00E
-    2987,  // imageAtomicMax_01Z00D00E
-    2990,  // imageAtomicMax_01E10D00E
-    2993,  // imageAtomicMax_01P10D00E
-    2996,  // imageAtomicMax_01a10D00E
-    2999,  // imageAtomicMax_01I10D00E
-    3002,  // imageAtomicMax_01T10D00E
-    3005,  // imageAtomicMax_01e10D00E
-    3008,  // imageAtomicMax_01F10D00D00E
-    3011,  // imageAtomicMax_01Q10D00D00E
-    3014,  // imageAtomicMax_01b10D00D00E
-    3017,  // imageAtomicMax_01G20D00D00E
-    3020,  // imageAtomicMax_01R20D00D00E
-    3023,  // imageAtomicMax_01c20D00D00E
-    3026,  // imageAtomicMax_00z10D00D
-    3029,  // imageAtomicMax_01K10D00D
-    3032,  // imageAtomicMax_01V10D00D
-    3035,  // imageAtomicMax_01A20D00D
-    3038,  // imageAtomicMax_01L20D00D
-    3041,  // imageAtomicMax_01W20D00D
-    3044,  // imageAtomicMax_01C20D00D
-    3047,  // imageAtomicMax_01N20D00D
-    3050,  // imageAtomicMax_01Y20D00D
-    3053,  // imageAtomicMax_01J00D00D
-    3056,  // imageAtomicMax_01U00D00D
-    3059,  // imageAtomicMax_01f00D00D
-    3062,  // imageAtomicMax_01B20D00D
-    3065,  // imageAtomicMax_01M20D00D
-    3068,  // imageAtomicMax_01X20D00D
-    3071,  // imageAtomicMax_01H20D00D
-    3074,  // imageAtomicMax_01S20D00D
-    3077,  // imageAtomicMax_01d20D00D
-    3080,  // imageAtomicMax_01D00D00D
-    3083,  // imageAtomicMax_01O00D00D
-    3086,  // imageAtomicMax_01Z00D00D
-    3089,  // imageAtomicMax_01E10D00D
-    3092,  // imageAtomicMax_01P10D00D
-    3095,  // imageAtomicMax_01a10D00D
-    3098,  // imageAtomicMax_01I10D00D
-    3101,  // imageAtomicMax_01T10D00D
-    3104,  // imageAtomicMax_01e10D00D
-    3107,  // imageAtomicMax_01F10D00D00D
-    3110,  // imageAtomicMax_01Q10D00D00D
-    3113,  // imageAtomicMax_01b10D00D00D
-    3116,  // imageAtomicMax_01G20D00D00D
-    3119,  // imageAtomicMax_01R20D00D00D
-    3122,  // imageAtomicMax_01c20D00D00D
-    3125,  // imageAtomicAnd_00z10D00E
-    3128,  // imageAtomicAnd_01K10D00E
-    3131,  // imageAtomicAnd_01V10D00E
-    3134,  // imageAtomicAnd_01A20D00E
-    3137,  // imageAtomicAnd_01L20D00E
-    3140,  // imageAtomicAnd_01W20D00E
-    3143,  // imageAtomicAnd_01C20D00E
-    3146,  // imageAtomicAnd_01N20D00E
-    3149,  // imageAtomicAnd_01Y20D00E
-    3152,  // imageAtomicAnd_01J00D00E
-    3155,  // imageAtomicAnd_01U00D00E
-    3158,  // imageAtomicAnd_01f00D00E
-    3161,  // imageAtomicAnd_01B20D00E
-    3164,  // imageAtomicAnd_01M20D00E
-    3167,  // imageAtomicAnd_01X20D00E
-    3170,  // imageAtomicAnd_01H20D00E
-    3173,  // imageAtomicAnd_01S20D00E
-    3176,  // imageAtomicAnd_01d20D00E
-    3179,  // imageAtomicAnd_01D00D00E
-    3182,  // imageAtomicAnd_01O00D00E
-    3185,  // imageAtomicAnd_01Z00D00E
-    3188,  // imageAtomicAnd_01E10D00E
-    3191,  // imageAtomicAnd_01P10D00E
-    3194,  // imageAtomicAnd_01a10D00E
-    3197,  // imageAtomicAnd_01I10D00E
-    3200,  // imageAtomicAnd_01T10D00E
-    3203,  // imageAtomicAnd_01e10D00E
-    3206,  // imageAtomicAnd_01F10D00D00E
-    3209,  // imageAtomicAnd_01Q10D00D00E
-    3212,  // imageAtomicAnd_01b10D00D00E
-    3215,  // imageAtomicAnd_01G20D00D00E
-    3218,  // imageAtomicAnd_01R20D00D00E
-    3221,  // imageAtomicAnd_01c20D00D00E
-    3224,  // imageAtomicAnd_00z10D00D
-    3227,  // imageAtomicAnd_01K10D00D
-    3230,  // imageAtomicAnd_01V10D00D
-    3233,  // imageAtomicAnd_01A20D00D
-    3236,  // imageAtomicAnd_01L20D00D
-    3239,  // imageAtomicAnd_01W20D00D
-    3242,  // imageAtomicAnd_01C20D00D
-    3245,  // imageAtomicAnd_01N20D00D
-    3248,  // imageAtomicAnd_01Y20D00D
-    3251,  // imageAtomicAnd_01J00D00D
-    3254,  // imageAtomicAnd_01U00D00D
-    3257,  // imageAtomicAnd_01f00D00D
-    3260,  // imageAtomicAnd_01B20D00D
-    3263,  // imageAtomicAnd_01M20D00D
-    3266,  // imageAtomicAnd_01X20D00D
-    3269,  // imageAtomicAnd_01H20D00D
-    3272,  // imageAtomicAnd_01S20D00D
-    3275,  // imageAtomicAnd_01d20D00D
-    3278,  // imageAtomicAnd_01D00D00D
-    3281,  // imageAtomicAnd_01O00D00D
-    3284,  // imageAtomicAnd_01Z00D00D
-    3287,  // imageAtomicAnd_01E10D00D
-    3290,  // imageAtomicAnd_01P10D00D
-    3293,  // imageAtomicAnd_01a10D00D
-    3296,  // imageAtomicAnd_01I10D00D
-    3299,  // imageAtomicAnd_01T10D00D
-    3302,  // imageAtomicAnd_01e10D00D
-    3305,  // imageAtomicAnd_01F10D00D00D
-    3308,  // imageAtomicAnd_01Q10D00D00D
-    3311,  // imageAtomicAnd_01b10D00D00D
-    3314,  // imageAtomicAnd_01G20D00D00D
-    3317,  // imageAtomicAnd_01R20D00D00D
-    3320,  // imageAtomicAnd_01c20D00D00D
-    3323,  // imageAtomicOr_00z10D00E
-    3326,  // imageAtomicOr_01K10D00E
-    3329,  // imageAtomicOr_01V10D00E
-    3332,  // imageAtomicOr_01A20D00E
-    3335,  // imageAtomicOr_01L20D00E
-    3338,  // imageAtomicOr_01W20D00E
-    3341,  // imageAtomicOr_01C20D00E
-    3344,  // imageAtomicOr_01N20D00E
-    3347,  // imageAtomicOr_01Y20D00E
-    3350,  // imageAtomicOr_01J00D00E
-    3353,  // imageAtomicOr_01U00D00E
-    3356,  // imageAtomicOr_01f00D00E
-    3359,  // imageAtomicOr_01B20D00E
-    3362,  // imageAtomicOr_01M20D00E
-    3365,  // imageAtomicOr_01X20D00E
-    3368,  // imageAtomicOr_01H20D00E
-    3371,  // imageAtomicOr_01S20D00E
-    3374,  // imageAtomicOr_01d20D00E
-    3377,  // imageAtomicOr_01D00D00E
-    3380,  // imageAtomicOr_01O00D00E
-    3383,  // imageAtomicOr_01Z00D00E
-    3386,  // imageAtomicOr_01E10D00E
-    3389,  // imageAtomicOr_01P10D00E
-    3392,  // imageAtomicOr_01a10D00E
-    3395,  // imageAtomicOr_01I10D00E
-    3398,  // imageAtomicOr_01T10D00E
-    3401,  // imageAtomicOr_01e10D00E
-    3404,  // imageAtomicOr_01F10D00D00E
-    3407,  // imageAtomicOr_01Q10D00D00E
-    3410,  // imageAtomicOr_01b10D00D00E
-    3413,  // imageAtomicOr_01G20D00D00E
-    3416,  // imageAtomicOr_01R20D00D00E
-    3419,  // imageAtomicOr_01c20D00D00E
-    3422,  // imageAtomicOr_00z10D00D
-    3425,  // imageAtomicOr_01K10D00D
-    3428,  // imageAtomicOr_01V10D00D
-    3431,  // imageAtomicOr_01A20D00D
-    3434,  // imageAtomicOr_01L20D00D
-    3437,  // imageAtomicOr_01W20D00D
-    3440,  // imageAtomicOr_01C20D00D
-    3443,  // imageAtomicOr_01N20D00D
-    3446,  // imageAtomicOr_01Y20D00D
-    3449,  // imageAtomicOr_01J00D00D
-    3452,  // imageAtomicOr_01U00D00D
-    3455,  // imageAtomicOr_01f00D00D
-    3458,  // imageAtomicOr_01B20D00D
-    3461,  // imageAtomicOr_01M20D00D
-    3464,  // imageAtomicOr_01X20D00D
-    3467,  // imageAtomicOr_01H20D00D
-    3470,  // imageAtomicOr_01S20D00D
-    3473,  // imageAtomicOr_01d20D00D
-    3476,  // imageAtomicOr_01D00D00D
-    3479,  // imageAtomicOr_01O00D00D
-    3482,  // imageAtomicOr_01Z00D00D
-    3485,  // imageAtomicOr_01E10D00D
-    3488,  // imageAtomicOr_01P10D00D
-    3491,  // imageAtomicOr_01a10D00D
-    3494,  // imageAtomicOr_01I10D00D
-    3497,  // imageAtomicOr_01T10D00D
-    3500,  // imageAtomicOr_01e10D00D
-    3503,  // imageAtomicOr_01F10D00D00D
-    3506,  // imageAtomicOr_01Q10D00D00D
-    3509,  // imageAtomicOr_01b10D00D00D
-    3512,  // imageAtomicOr_01G20D00D00D
-    3515,  // imageAtomicOr_01R20D00D00D
-    3518,  // imageAtomicOr_01c20D00D00D
-    3521,  // imageAtomicXor_00z10D00E
-    3524,  // imageAtomicXor_01K10D00E
-    3527,  // imageAtomicXor_01V10D00E
-    3530,  // imageAtomicXor_01A20D00E
-    3533,  // imageAtomicXor_01L20D00E
-    3536,  // imageAtomicXor_01W20D00E
-    3539,  // imageAtomicXor_01C20D00E
-    3542,  // imageAtomicXor_01N20D00E
-    3545,  // imageAtomicXor_01Y20D00E
-    3548,  // imageAtomicXor_01J00D00E
-    3551,  // imageAtomicXor_01U00D00E
-    3554,  // imageAtomicXor_01f00D00E
-    3557,  // imageAtomicXor_01B20D00E
-    3560,  // imageAtomicXor_01M20D00E
-    3563,  // imageAtomicXor_01X20D00E
-    3566,  // imageAtomicXor_01H20D00E
-    3569,  // imageAtomicXor_01S20D00E
-    3572,  // imageAtomicXor_01d20D00E
-    3575,  // imageAtomicXor_01D00D00E
-    3578,  // imageAtomicXor_01O00D00E
-    3581,  // imageAtomicXor_01Z00D00E
-    3584,  // imageAtomicXor_01E10D00E
-    3587,  // imageAtomicXor_01P10D00E
-    3590,  // imageAtomicXor_01a10D00E
-    3593,  // imageAtomicXor_01I10D00E
-    3596,  // imageAtomicXor_01T10D00E
-    3599,  // imageAtomicXor_01e10D00E
-    3602,  // imageAtomicXor_01F10D00D00E
-    3605,  // imageAtomicXor_01Q10D00D00E
-    3608,  // imageAtomicXor_01b10D00D00E
-    3611,  // imageAtomicXor_01G20D00D00E
-    3614,  // imageAtomicXor_01R20D00D00E
-    3617,  // imageAtomicXor_01c20D00D00E
-    3620,  // imageAtomicXor_00z10D00D
-    3623,  // imageAtomicXor_01K10D00D
-    3626,  // imageAtomicXor_01V10D00D
-    3629,  // imageAtomicXor_01A20D00D
-    3632,  // imageAtomicXor_01L20D00D
-    3635,  // imageAtomicXor_01W20D00D
-    3638,  // imageAtomicXor_01C20D00D
-    3641,  // imageAtomicXor_01N20D00D
-    3644,  // imageAtomicXor_01Y20D00D
-    3647,  // imageAtomicXor_01J00D00D
-    3650,  // imageAtomicXor_01U00D00D
-    3653,  // imageAtomicXor_01f00D00D
-    3656,  // imageAtomicXor_01B20D00D
-    3659,  // imageAtomicXor_01M20D00D
-    3662,  // imageAtomicXor_01X20D00D
-    3665,  // imageAtomicXor_01H20D00D
-    3668,  // imageAtomicXor_01S20D00D
-    3671,  // imageAtomicXor_01d20D00D
-    3674,  // imageAtomicXor_01D00D00D
-    3677,  // imageAtomicXor_01O00D00D
-    3680,  // imageAtomicXor_01Z00D00D
-    3683,  // imageAtomicXor_01E10D00D
-    3686,  // imageAtomicXor_01P10D00D
-    3689,  // imageAtomicXor_01a10D00D
-    3692,  // imageAtomicXor_01I10D00D
-    3695,  // imageAtomicXor_01T10D00D
-    3698,  // imageAtomicXor_01e10D00D
-    3701,  // imageAtomicXor_01F10D00D00D
-    3704,  // imageAtomicXor_01Q10D00D00D
-    3707,  // imageAtomicXor_01b10D00D00D
-    3710,  // imageAtomicXor_01G20D00D00D
-    3713,  // imageAtomicXor_01R20D00D00D
-    3716,  // imageAtomicXor_01c20D00D00D
-    3719,  // imageAtomicExchange_00z10D00E
-    3722,  // imageAtomicExchange_01K10D00E
-    3725,  // imageAtomicExchange_01V10D00E
-    3728,  // imageAtomicExchange_01A20D00E
-    3731,  // imageAtomicExchange_01L20D00E
-    3734,  // imageAtomicExchange_01W20D00E
-    3737,  // imageAtomicExchange_01C20D00E
-    3740,  // imageAtomicExchange_01N20D00E
-    3743,  // imageAtomicExchange_01Y20D00E
-    3746,  // imageAtomicExchange_01J00D00E
-    3749,  // imageAtomicExchange_01U00D00E
-    3752,  // imageAtomicExchange_01f00D00E
-    3755,  // imageAtomicExchange_01B20D00E
-    3758,  // imageAtomicExchange_01M20D00E
-    3761,  // imageAtomicExchange_01X20D00E
-    3764,  // imageAtomicExchange_01H20D00E
-    3767,  // imageAtomicExchange_01S20D00E
-    3770,  // imageAtomicExchange_01d20D00E
-    3773,  // imageAtomicExchange_01D00D00E
-    3776,  // imageAtomicExchange_01O00D00E
-    3779,  // imageAtomicExchange_01Z00D00E
-    3782,  // imageAtomicExchange_01E10D00E
-    3785,  // imageAtomicExchange_01P10D00E
-    3788,  // imageAtomicExchange_01a10D00E
-    3791,  // imageAtomicExchange_01I10D00E
-    3794,  // imageAtomicExchange_01T10D00E
-    3797,  // imageAtomicExchange_01e10D00E
-    3800,  // imageAtomicExchange_01F10D00D00E
-    3803,  // imageAtomicExchange_01Q10D00D00E
-    3806,  // imageAtomicExchange_01b10D00D00E
-    3809,  // imageAtomicExchange_01G20D00D00E
-    3812,  // imageAtomicExchange_01R20D00D00E
-    3815,  // imageAtomicExchange_01c20D00D00E
-    3818,  // imageAtomicExchange_00z10D00D
-    3821,  // imageAtomicExchange_01K10D00D
-    3824,  // imageAtomicExchange_01V10D00D
-    3827,  // imageAtomicExchange_01A20D00D
-    3830,  // imageAtomicExchange_01L20D00D
-    3833,  // imageAtomicExchange_01W20D00D
-    3836,  // imageAtomicExchange_01C20D00D
-    3839,  // imageAtomicExchange_01N20D00D
-    3842,  // imageAtomicExchange_01Y20D00D
-    3845,  // imageAtomicExchange_01J00D00D
-    3848,  // imageAtomicExchange_01U00D00D
-    3851,  // imageAtomicExchange_01f00D00D
-    3854,  // imageAtomicExchange_01B20D00D
-    3857,  // imageAtomicExchange_01M20D00D
-    3860,  // imageAtomicExchange_01X20D00D
-    3863,  // imageAtomicExchange_01H20D00D
-    3866,  // imageAtomicExchange_01S20D00D
-    3869,  // imageAtomicExchange_01d20D00D
-    3872,  // imageAtomicExchange_01D00D00D
-    3875,  // imageAtomicExchange_01O00D00D
-    3878,  // imageAtomicExchange_01Z00D00D
-    3881,  // imageAtomicExchange_01E10D00D
-    3884,  // imageAtomicExchange_01P10D00D
-    3887,  // imageAtomicExchange_01a10D00D
-    3890,  // imageAtomicExchange_01I10D00D
-    3893,  // imageAtomicExchange_01T10D00D
-    3896,  // imageAtomicExchange_01e10D00D
-    3899,  // imageAtomicExchange_01F10D00D00D
-    3902,  // imageAtomicExchange_01Q10D00D00D
-    3905,  // imageAtomicExchange_01b10D00D00D
-    3908,  // imageAtomicExchange_01G20D00D00D
-    3911,  // imageAtomicExchange_01R20D00D00D
-    3914,  // imageAtomicExchange_01c20D00D00D
-    3917,  // imageAtomicExchange_00z10D00B
-    3920,  // imageAtomicExchange_01K10D00B
-    3923,  // imageAtomicExchange_01V10D00B
-    3926,  // imageAtomicExchange_01A20D00B
-    3929,  // imageAtomicExchange_01L20D00B
-    3932,  // imageAtomicExchange_01W20D00B
-    3935,  // imageAtomicExchange_01C20D00B
-    3938,  // imageAtomicExchange_01N20D00B
-    3941,  // imageAtomicExchange_01Y20D00B
-    3944,  // imageAtomicExchange_01J00D00B
-    3947,  // imageAtomicExchange_01U00D00B
-    3950,  // imageAtomicExchange_01f00D00B
-    3953,  // imageAtomicExchange_01B20D00B
-    3956,  // imageAtomicExchange_01M20D00B
-    3959,  // imageAtomicExchange_01X20D00B
-    3962,  // imageAtomicExchange_01H20D00B
-    3965,  // imageAtomicExchange_01S20D00B
-    3968,  // imageAtomicExchange_01d20D00B
-    3971,  // imageAtomicExchange_01D00D00B
-    3974,  // imageAtomicExchange_01O00D00B
-    3977,  // imageAtomicExchange_01Z00D00B
-    3980,  // imageAtomicExchange_01E10D00B
-    3983,  // imageAtomicExchange_01P10D00B
-    3986,  // imageAtomicExchange_01a10D00B
-    3989,  // imageAtomicExchange_01I10D00B
-    3992,  // imageAtomicExchange_01T10D00B
-    3995,  // imageAtomicExchange_01e10D00B
-    3998,  // imageAtomicExchange_01F10D00D00B
-    4001,  // imageAtomicExchange_01Q10D00D00B
-    4004,  // imageAtomicExchange_01b10D00D00B
-    4007,  // imageAtomicExchange_01G20D00D00B
-    4010,  // imageAtomicExchange_01R20D00D00B
-    4013,  // imageAtomicExchange_01c20D00D00B
-    4016,  // imageAtomicCompSwap_00z10D00E00E
-    4019,  // imageAtomicCompSwap_01K10D00E00E
-    4022,  // imageAtomicCompSwap_01V10D00E00E
-    4025,  // imageAtomicCompSwap_01A20D00E00E
-    4028,  // imageAtomicCompSwap_01L20D00E00E
-    4031,  // imageAtomicCompSwap_01W20D00E00E
-    4034,  // imageAtomicCompSwap_01C20D00E00E
-    4037,  // imageAtomicCompSwap_01N20D00E00E
-    4040,  // imageAtomicCompSwap_01Y20D00E00E
-    4043,  // imageAtomicCompSwap_01J00D00E00E
-    4046,  // imageAtomicCompSwap_01U00D00E00E
-    4049,  // imageAtomicCompSwap_01f00D00E00E
-    4052,  // imageAtomicCompSwap_01B20D00E00E
-    4055,  // imageAtomicCompSwap_01M20D00E00E
-    4058,  // imageAtomicCompSwap_01X20D00E00E
-    4061,  // imageAtomicCompSwap_01H20D00E00E
-    4064,  // imageAtomicCompSwap_01S20D00E00E
-    4067,  // imageAtomicCompSwap_01d20D00E00E
-    4070,  // imageAtomicCompSwap_01D00D00E00E
-    4073,  // imageAtomicCompSwap_01O00D00E00E
-    4076,  // imageAtomicCompSwap_01Z00D00E00E
-    4079,  // imageAtomicCompSwap_01E10D00E00E
-    4082,  // imageAtomicCompSwap_01P10D00E00E
-    4085,  // imageAtomicCompSwap_01a10D00E00E
-    4088,  // imageAtomicCompSwap_01I10D00E00E
-    4091,  // imageAtomicCompSwap_01T10D00E00E
-    4094,  // imageAtomicCompSwap_01e10D00E00E
-    4097,  // imageAtomicCompSwap_01F10D00D00E00E
-    4100,  // imageAtomicCompSwap_01Q10D00D00E00E
-    4103,  // imageAtomicCompSwap_01b10D00D00E00E
-    4106,  // imageAtomicCompSwap_01G20D00D00E00E
-    4109,  // imageAtomicCompSwap_01R20D00D00E00E
-    4112,  // imageAtomicCompSwap_01c20D00D00E00E
-    4115,  // imageAtomicCompSwap_00z10D00D00D
-    4118,  // imageAtomicCompSwap_01K10D00D00D
-    4121,  // imageAtomicCompSwap_01V10D00D00D
-    4124,  // imageAtomicCompSwap_01A20D00D00D
-    4127,  // imageAtomicCompSwap_01L20D00D00D
-    4130,  // imageAtomicCompSwap_01W20D00D00D
-    4133,  // imageAtomicCompSwap_01C20D00D00D
-    4136,  // imageAtomicCompSwap_01N20D00D00D
-    4139,  // imageAtomicCompSwap_01Y20D00D00D
-    4142,  // imageAtomicCompSwap_01J00D00D00D
-    4145,  // imageAtomicCompSwap_01U00D00D00D
-    4148,  // imageAtomicCompSwap_01f00D00D00D
-    4151,  // imageAtomicCompSwap_01B20D00D00D
-    4154,  // imageAtomicCompSwap_01M20D00D00D
-    4157,  // imageAtomicCompSwap_01X20D00D00D
-    4160,  // imageAtomicCompSwap_01H20D00D00D
-    4163,  // imageAtomicCompSwap_01S20D00D00D
-    4166,  // imageAtomicCompSwap_01d20D00D00D
-    4169,  // imageAtomicCompSwap_01D00D00D00D
-    4172,  // imageAtomicCompSwap_01O00D00D00D
-    4175,  // imageAtomicCompSwap_01Z00D00D00D
-    4178,  // imageAtomicCompSwap_01E10D00D00D
-    4181,  // imageAtomicCompSwap_01P10D00D00D
-    4184,  // imageAtomicCompSwap_01a10D00D00D
-    4187,  // imageAtomicCompSwap_01I10D00D00D
-    4190,  // imageAtomicCompSwap_01T10D00D00D
-    4193,  // imageAtomicCompSwap_01e10D00D00D
-    4196,  // imageAtomicCompSwap_01F10D00D00D00D
-    4199,  // imageAtomicCompSwap_01Q10D00D00D00D
-    4202,  // imageAtomicCompSwap_01b10D00D00D00D
-    4205,  // imageAtomicCompSwap_01G20D00D00D00D
-    4208,  // imageAtomicCompSwap_01R20D00D00D00D
-    4211,  // imageAtomicCompSwap_01c20D00D00D00D
-    4214,  // pixelLocalLoadANGLE_01g
-    4215,  // pixelLocalLoadANGLE_01h
-    4216,  // pixelLocalLoadANGLE_01i
-    4217,  // pixelLocalStoreANGLE_01g30B
-    4218,  // pixelLocalStoreANGLE_01h30D
-    4219,  // pixelLocalStoreANGLE_01i30E
-    4220,  // beginInvocationInterlockNV_
-    4221,  // endInvocationInterlockNV_
-    4222,  // beginFragmentShaderOrderingINTEL_
-    4223,  // beginInvocationInterlockARB_
-    4224,  // endInvocationInterlockARB_
-    4225,  // noise1_00B
-    4226,  // noise1_10B
-    4227,  // noise1_20B
-    4228,  // noise1_30B
-    4229,  // noise2_00B
-    4230,  // noise2_10B
-    4231,  // noise2_20B
-    4232,  // noise2_30B
-    4233,  // noise3_00B
-    4234,  // noise3_10B
-    4235,  // noise3_20B
-    4236,  // noise3_30B
-    4237,  // noise4_00B
-    4238,  // noise4_10B
-    4239,  // noise4_20B
-    4240,  // noise4_30B
-    4241,  // memoryBarrier_
-    4243,  // memoryBarrierAtomicCounter_
-    4245,  // memoryBarrierBuffer_
-    4247,  // memoryBarrierImage_
-    4249,  // barrier_
-    4254,  // memoryBarrierShared_
-    4256,  // groupMemoryBarrier_
-    4258,  // EmitVertex_
-    4262,  // EndPrimitive_
-    4266,  // EmitStreamVertex_00D
-    4267,  // EndStreamPrimitive_00D
-    4268,  // subpassLoad_01j
-    4270,  // subpassLoad_01k
-    4272,  // subpassLoad_01l
-    4274,  // subpassLoad_01m00D
-    4276,  // subpassLoad_01n00D
-    4278,  // subpassLoad_01o00D
-    4280,  // anyInvocation_00F
-    4281,  // allInvocations_00F
-    4282,  // allInvocationsEqual_00F
-    4283,  // numSamples_
-    4284,  // samplePosition_00E
-    4285,  // interpolateAtCenter_00B
-    4286,  // interpolateAtCenter_10B
-    4287,  // interpolateAtCenter_20B
-    4288,  // interpolateAtCenter_30B
-    4289,  // saturate_00B
-    4290,  // saturate_10B
-    4291,  // saturate_20B
-    4292,  // saturate_30B
-    4293,  // gl_DepthRangeParameters
-    4295,  // gl_DepthRange
-    4297,  // gl_NumSamples
-    4300,  // gl_MaxVertexAttribs
-    4302,  // gl_MaxVertexUniformVectors
-    4304,  // gl_MaxVertexTextureImageUnits
-    4306,  // gl_MaxCombinedTextureImageUnits
-    4308,  // gl_MaxTextureImageUnits
-    4310,  // gl_MaxFragmentUniformVectors
-    4312,  // gl_MaxVaryingVectors
-    4314,  // gl_MaxDrawBuffers
-    4316,  // gl_MaxDualSourceDrawBuffersEXT
-    4317,  // gl_MaxVertexOutputVectors
-    4319,  // gl_MaxFragmentInputVectors
-    4321,  // gl_MinProgramTexelOffset
-    4323,  // gl_MaxProgramTexelOffset
-    4325,  // gl_MaxImageUnits
-    4327,  // gl_MaxVertexImageUniforms
-    4329,  // gl_MaxFragmentImageUniforms
-    4331,  // gl_MaxComputeImageUniforms
-    4333,  // gl_MaxCombinedImageUniforms
-    4335,  // gl_MaxCombinedShaderOutputResources
-    4337,  // gl_MaxComputeWorkGroupCount
-    4339,  // gl_MaxComputeWorkGroupSize
-    4341,  // gl_MaxComputeUniformComponents
-    4343,  // gl_MaxComputeTextureImageUnits
-    4345,  // gl_MaxComputeAtomicCounters
-    4347,  // gl_MaxComputeAtomicCounterBuffers
-    4349,  // gl_MaxVertexAtomicCounters
-    4351,  // gl_MaxFragmentAtomicCounters
-    4353,  // gl_MaxCombinedAtomicCounters
-    4355,  // gl_MaxAtomicCounterBindings
-    4357,  // gl_MaxVertexAtomicCounterBuffers
-    4359,  // gl_MaxFragmentAtomicCounterBuffers
-    4361,  // gl_MaxCombinedAtomicCounterBuffers
-    4363,  // gl_MaxAtomicCounterBufferSize
-    4365,  // gl_MaxGeometryInputComponents
-    4369,  // gl_MaxGeometryOutputComponents
-    4373,  // gl_MaxGeometryImageUniforms
-    4377,  // gl_MaxGeometryTextureImageUnits
-    4381,  // gl_MaxGeometryOutputVertices
-    4385,  // gl_MaxGeometryTotalOutputComponents
-    4389,  // gl_MaxGeometryUniformComponents
-    4393,  // gl_MaxGeometryAtomicCounters
-    4397,  // gl_MaxGeometryAtomicCounterBuffers
-    4401,  // gl_MaxTessControlInputComponents
-    4405,  // gl_MaxTessControlOutputComponents
-    4409,  // gl_MaxTessControlTextureImageUnits
-    4413,  // gl_MaxTessControlUniformComponents
-    4417,  // gl_MaxTessControlTotalOutputComponents
-    4421,  // gl_MaxTessControlImageUniforms
-    4425,  // gl_MaxTessControlAtomicCounters
-    4429,  // gl_MaxTessControlAtomicCounterBuffers
-    4433,  // gl_MaxTessPatchComponents
-    4437,  // gl_MaxPatchVertices
-    4441,  // gl_MaxTessGenLevel
-    4445,  // gl_MaxTessEvaluationInputComponents
-    4449,  // gl_MaxTessEvaluationOutputComponents
-    4453,  // gl_MaxTessEvaluationTextureImageUnits
-    4457,  // gl_MaxTessEvaluationUniformComponents
-    4461,  // gl_MaxTessEvaluationImageUniforms
-    4465,  // gl_MaxTessEvaluationAtomicCounters
-    4469,  // gl_MaxTessEvaluationAtomicCounterBuffers
-    4473,  // gl_MaxSamples
-    4476,  // gl_MaxClipDistances
-    4479,  // gl_MaxCullDistances
-    4481,  // gl_MaxCombinedClipAndCullDistances
-    4483,  // gl_FragCoord
-    4487,  // gl_FrontFacing
-    4489,  // gl_PointCoord
-    4491,  // gl_FragColor
-    4493,  // gl_FragData
-    4495,  // gl_FragDepth
-    4497,  // gl_HelperInvocation
-    4499,  // gl_SecondaryFragColorEXT
-    4500,  // gl_SecondaryFragDataEXT
-    4501,  // gl_FragDepthEXT
-    4502,  // gl_LastFragData
-    4505,  // gl_LastFragColor
-    4506,  // gl_LastFragColorARM
-    4507,  // gl_PrimitiveID
-    4523,  // gl_Layer
-    4531,  // gl_SampleID
-    4534,  // gl_SamplePosition
-    4537,  // gl_SampleMaskIn
-    4540,  // gl_SampleMask
-    4543,  // gl_Position
-    4557,  // gl_PointSize
-    4561,  // gl_InstanceID
-    4563,  // Empty
-    4563,  // gl_VertexID
-    4565,  // Empty
-    4565,  // Empty
-    4565,  // gl_DrawID
-    4566,  // gl_BaseVertex
-    4567,  // gl_BaseInstance
-    4568,  // angle_BaseVertex
-    4569,  // angle_BaseInstance
-    4570,  // gl_ClipDistance
-    4573,  // gl_NumWorkGroups
-    4575,  // gl_WorkGroupSize
-    4577,  // gl_WorkGroupID
-    4579,  // gl_LocalInvocationID
-    4581,  // gl_GlobalInvocationID
-    4583,  // gl_LocalInvocationIndex
-    4585,  // gl_PrimitiveIDIn
-    4589,  // gl_InvocationID
-    4597,  // gl_PerVertex
-    4609,  // gl_in
-    4621,  // gl_PatchVerticesIn
-    4629,  // gl_TessLevelOuter
-    4637,  // gl_TessLevelInner
-    4645,  // gl_out
-    4653,  // gl_BoundingBox
-    4657,  // gl_BoundingBoxEXT
-    4661,  // gl_BoundingBoxOES
-    4665,  // gl_TessCoord
-    4667,  // gl_ViewID_OVR
-    4668,  // gl_CullDistance
+    1315,  // textureLod_00e30B00B
+    1317,  // textureLod_00f30B00B
+    1319,  // textureLod_00l30B00B00B
+    1321,  // textureLod_00g00B00B
+    1322,  // textureLod_00o00B00B
+    1323,  // textureLod_00t00B00B
+    1324,  // textureLod_00m20B00B
+    1325,  // textureLod_00h10B00B
+    1326,  // textureLod_00p10B00B
+    1327,  // textureLod_00u10B00B
+    1328,  // textureLod_00i20B00B
+    1329,  // textureLod_00k30B00B
+    1333,  // textureLod_00s30B00B
+    1337,  // textureLod_00x30B00B
+    1341,  // textureSize_00I00D
+    1343,  // textureSize_00R00D
+    1345,  // textureSize_00X00D
+    1347,  // textureSize_00J00D
+    1349,  // textureSize_00S00D
+    1351,  // textureSize_00Y00D
+    1353,  // textureSize_00K00D
+    1355,  // textureSize_00T00D
+    1357,  // textureSize_00Z00D
+    1359,  // textureSize_00L00D
+    1361,  // textureSize_00U00D
+    1363,  // textureSize_00a00D
+    1365,  // textureSize_00d00D
+    1367,  // textureSize_00e00D
+    1369,  // textureSize_00f00D
+    1371,  // textureSize_00g00D
+    1372,  // textureSize_00o00D
+    1373,  // textureSize_00t00D
+    1374,  // textureSize_00m00D
+    1375,  // textureSize_00k00D
+    1379,  // textureSize_00s00D
+    1383,  // textureSize_00x00D
+    1387,  // textureSize_00l00D
+    1391,  // textureSize_00O
+    1392,  // textureSize_00q
+    1393,  // textureSize_00v
+    1394,  // textureSize_00n
+    1395,  // textureSize_00h00D
+    1396,  // textureSize_00p00D
+    1397,  // textureSize_00u00D
+    1398,  // textureSize_00i00D
+    1399,  // textureSize_00j
+    1403,  // textureSize_00r
+    1407,  // textureSize_00w
+    1411,  // textureSize_00P
+    1414,  // textureSize_00V
+    1417,  // textureSize_00b
+    1420,  // textureSize_00Q
+    1423,  // textureSize_00W
+    1426,  // textureSize_00c
+    1429,  // textureSize_00M00D
+    1430,  // textureSize_00N00D
+    1431,  // textureProjLod_00I20B00B
+    1433,  // textureProjLod_00R20B00B
+    1435,  // textureProjLod_00X20B00B
+    1437,  // textureProjLod_00I30B00B
+    1439,  // textureProjLod_00R30B00B
+    1441,  // textureProjLod_00X30B00B
+    1443,  // textureProjLod_00J30B00B
+    1445,  // textureProjLod_00S30B00B
+    1447,  // textureProjLod_00Y30B00B
+    1449,  // textureProjLod_00d30B00B
+    1451,  // textureProjLod_00g10B00B
+    1452,  // textureProjLod_00o10B00B
+    1453,  // textureProjLod_00t10B00B
+    1454,  // textureProjLod_00g30B00B
+    1455,  // textureProjLod_00o30B00B
+    1456,  // textureProjLod_00t30B00B
+    1457,  // textureProjLod_00m30B00B
+    1458,  // texelFetch_00I10D00D
+    1460,  // texelFetch_00R10D00D
+    1462,  // texelFetch_00X10D00D
+    1464,  // texelFetch_00J20D00D
+    1466,  // texelFetch_00S20D00D
+    1468,  // texelFetch_00Y20D00D
+    1470,  // texelFetch_00L20D00D
+    1472,  // texelFetch_00U20D00D
+    1474,  // texelFetch_00a20D00D
+    1476,  // texelFetch_00g00D00D
+    1477,  // texelFetch_00o00D00D
+    1478,  // texelFetch_00t00D00D
+    1479,  // texelFetch_00O10D
+    1480,  // texelFetch_00q10D
+    1481,  // texelFetch_00v10D
+    1482,  // texelFetch_00h10D00D
+    1483,  // texelFetch_00p10D00D
+    1484,  // texelFetch_00u10D00D
+    1485,  // texelFetch_00j00D
+    1489,  // texelFetch_00r00D
+    1493,  // texelFetch_00w00D
+    1497,  // texelFetch_00P10D00D
+    1500,  // texelFetch_00V10D00D
+    1503,  // texelFetch_00b10D00D
+    1506,  // texelFetch_00Q20D00D
+    1509,  // texelFetch_00W20D00D
+    1512,  // texelFetch_00c20D00D
+    1515,  // texelFetch_00M10D00D
+    1516,  // texelFetch_00N10D00D
+    1517,  // textureGrad_00I10B10B10B
+    1519,  // textureGrad_00R10B10B10B
+    1521,  // textureGrad_00X10B10B10B
+    1523,  // textureGrad_00J20B20B20B
+    1525,  // textureGrad_00S20B20B20B
+    1527,  // textureGrad_00Y20B20B20B
+    1529,  // textureGrad_00K20B20B20B
+    1531,  // textureGrad_00T20B20B20B
+    1533,  // textureGrad_00Z20B20B20B
+    1535,  // textureGrad_00I00B00B00B
+    1536,  // textureGrad_00R00B00B00B
+    1537,  // textureGrad_00X00B00B00B
+    1538,  // textureGrad_00O10B10B10B
+    1539,  // textureGrad_00q10B10B10B
+    1540,  // textureGrad_00v10B10B10B
+    1541,  // textureGrad_00n20B10B10B
+    1542,  // textureGrad_00d20B10B10B
+    1544,  // textureGrad_00e30B20B20B
+    1546,  // textureGrad_00L20B10B10B
+    1548,  // textureGrad_00U20B10B10B
+    1550,  // textureGrad_00a20B10B10B
+    1552,  // textureGrad_00f30B10B10B
+    1554,  // textureGrad_00m20B00B00B
+    1555,  // textureGrad_00h10B00B00B
+    1556,  // textureGrad_00p10B00B00B
+    1557,  // textureGrad_00u10B00B00B
+    1558,  // textureGrad_00i20B00B00B
+    1559,  // textureGrad_00k30B20B20B
+    1563,  // textureGrad_00s30B20B20B
+    1567,  // textureGrad_00x30B20B20B
+    1571,  // textureProjGrad_00I20B10B10B
+    1573,  // textureProjGrad_00R20B10B10B
+    1575,  // textureProjGrad_00X20B10B10B
+    1577,  // textureProjGrad_00I30B10B10B
+    1579,  // textureProjGrad_00R30B10B10B
+    1581,  // textureProjGrad_00X30B10B10B
+    1583,  // textureProjGrad_00J30B20B20B
+    1585,  // textureProjGrad_00S30B20B20B
+    1587,  // textureProjGrad_00Y30B20B20B
+    1589,  // textureProjGrad_00d30B10B10B
+    1591,  // textureProjGrad_00g10B00B00B
+    1592,  // textureProjGrad_00o10B00B00B
+    1593,  // textureProjGrad_00t10B00B00B
+    1594,  // textureProjGrad_00g30B00B00B
+    1595,  // textureProjGrad_00o30B00B00B
+    1596,  // textureProjGrad_00t30B00B00B
+    1597,  // textureProjGrad_00m30B00B00B
+    1598,  // textureProjGrad_00O20B10B10B
+    1599,  // textureProjGrad_00q20B10B10B
+    1600,  // textureProjGrad_00v20B10B10B
+    1601,  // textureProjGrad_00O30B10B10B
+    1602,  // textureProjGrad_00q30B10B10B
+    1603,  // textureProjGrad_00v30B10B10B
+    1604,  // textureProjGrad_00n30B10B10B
+    1605,  // textureQueryLevels_00g
+    1606,  // textureQueryLevels_00o
+    1607,  // textureQueryLevels_00t
+    1608,  // textureQueryLevels_00I
+    1609,  // textureQueryLevels_00R
+    1610,  // textureQueryLevels_00X
+    1611,  // textureQueryLevels_00J
+    1612,  // textureQueryLevels_00S
+    1613,  // textureQueryLevels_00Y
+    1614,  // textureQueryLevels_00K
+    1615,  // textureQueryLevels_00T
+    1616,  // textureQueryLevels_00Z
+    1617,  // textureQueryLevels_00h
+    1618,  // textureQueryLevels_00p
+    1619,  // textureQueryLevels_00u
+    1620,  // textureQueryLevels_00L
+    1621,  // textureQueryLevels_00U
+    1622,  // textureQueryLevels_00a
+    1623,  // textureQueryLevels_00k
+    1624,  // textureQueryLevels_00s
+    1625,  // textureQueryLevels_00x
+    1626,  // textureQueryLevels_00m
+    1627,  // textureQueryLevels_00d
+    1628,  // textureQueryLevels_00e
+    1629,  // textureQueryLevels_00i
+    1630,  // textureQueryLevels_00f
+    1631,  // textureQueryLevels_00l
+    1632,  // textureSamples_00P
+    1633,  // textureSamples_00V
+    1634,  // textureSamples_00b
+    1635,  // textureSamples_00Q
+    1636,  // textureSamples_00W
+    1637,  // textureSamples_00c
+    1638,  // texture_00I10B00B
+    1640,  // texture_00R10B00B
+    1642,  // texture_00X10B00B
+    1644,  // texture_00J20B00B
+    1646,  // texture_00S20B00B
+    1648,  // texture_00Y20B00B
+    1650,  // texture_00K20B00B
+    1652,  // texture_00T20B00B
+    1654,  // texture_00Z20B00B
+    1656,  // texture_00L20B00B
+    1658,  // texture_00U20B00B
+    1660,  // texture_00a20B00B
+    1662,  // textureProj_00I20B00B
+    1664,  // textureProj_00R20B00B
+    1666,  // textureProj_00X20B00B
+    1668,  // textureProj_00I30B00B
+    1670,  // textureProj_00R30B00B
+    1672,  // textureProj_00X30B00B
+    1674,  // textureProj_00J30B00B
+    1676,  // textureProj_00S30B00B
+    1678,  // textureProj_00Y30B00B
+    1680,  // texture_00d20B00B
+    1682,  // texture_00e30B00B
+    1684,  // textureProj_00d30B00B
+    1686,  // texture_00f30B00B
+    1689,  // texture_00g00B00B
+    1690,  // texture_00o00B00B
+    1691,  // texture_00t00B00B
+    1692,  // texture_00m20B00B
+    1693,  // texture_00h20B00B
+    1694,  // texture_00p20B00B
+    1695,  // texture_00u20B00B
+    1696,  // texture_00i20B00B
+    1697,  // textureProj_00g10B00B
+    1698,  // textureProj_00o10B00B
+    1699,  // textureProj_00t10B00B
+    1700,  // textureProj_00g30B00B
+    1701,  // textureProj_00o30B00B
+    1702,  // textureProj_00t30B00B
+    1703,  // textureProj_00m30B00B
+    1704,  // texture_00k30B00B
+    1708,  // texture_00s30B00B
+    1712,  // texture_00x30B00B
+    1716,  // texture_00l30B00B00B
+    1718,  // texture_00M10B00B
+    1719,  // textureProj_00M20B00B
+    1720,  // textureProj_00M30B00B
+    1721,  // texture_00N10B00B
+    1722,  // textureProj_00N20B00B
+    1723,  // textureProj_00N30B00B
+    1724,  // textureQueryLod_00g00B
+    1725,  // textureQueryLod_00o00B
+    1726,  // textureQueryLod_00t00B
+    1727,  // textureQueryLod_00I10B
+    1728,  // textureQueryLod_00R10B
+    1729,  // textureQueryLod_00X10B
+    1730,  // textureQueryLod_00J20B
+    1731,  // textureQueryLod_00S20B
+    1732,  // textureQueryLod_00Y20B
+    1733,  // textureQueryLod_00K20B
+    1734,  // textureQueryLod_00T20B
+    1735,  // textureQueryLod_00Z20B
+    1736,  // textureQueryLod_00h00B
+    1737,  // textureQueryLod_00p00B
+    1738,  // textureQueryLod_00u00B
+    1739,  // textureQueryLod_00L10B
+    1740,  // textureQueryLod_00U10B
+    1741,  // textureQueryLod_00a10B
+    1742,  // textureQueryLod_00k20B
+    1743,  // textureQueryLod_00s20B
+    1744,  // textureQueryLod_00x20B
+    1745,  // textureQueryLod_00m00B
+    1746,  // textureQueryLod_00d10B
+    1747,  // textureQueryLod_00e20B
+    1748,  // textureQueryLod_00i00B
+    1749,  // textureQueryLod_00f10B
+    1750,  // textureQueryLod_00l20B
+    1751,  // textureOffset_00I10B10D
+    1753,  // textureOffset_00R10B10D
+    1755,  // textureOffset_00X10B10D
+    1757,  // textureOffset_00J20B20D
+    1759,  // textureOffset_00S20B20D
+    1761,  // textureOffset_00Y20B20D
+    1763,  // textureOffset_00d20B10D
+    1765,  // textureOffset_00L20B10D
+    1767,  // textureOffset_00U20B10D
+    1769,  // textureOffset_00a20B10D
+    1771,  // textureOffset_00f30B10D
+    1773,  // textureOffset_00g00B00D
+    1774,  // textureOffset_00o00B00D
+    1775,  // textureOffset_00t00B00D
+    1776,  // textureOffset_00O10B10D
+    1777,  // textureOffset_00q10B10D
+    1778,  // textureOffset_00v10B10D
+    1779,  // textureOffset_00n20B10D
+    1780,  // textureOffset_00m20B00D
+    1781,  // textureOffset_00h10B00D
+    1782,  // textureOffset_00p10B00D
+    1783,  // textureOffset_00u10B00D
+    1784,  // textureOffset_00i20B00D
+    1785,  // textureProjOffset_00I20B10D
+    1787,  // textureProjOffset_00R20B10D
+    1789,  // textureProjOffset_00X20B10D
+    1791,  // textureProjOffset_00I30B10D
+    1793,  // textureProjOffset_00R30B10D
+    1795,  // textureProjOffset_00X30B10D
+    1797,  // textureProjOffset_00J30B20D
+    1799,  // textureProjOffset_00S30B20D
+    1801,  // textureProjOffset_00Y30B20D
+    1803,  // textureProjOffset_00d30B10D
+    1805,  // textureProjOffset_00g10B00D
+    1806,  // textureProjOffset_00o10B00D
+    1807,  // textureProjOffset_00t10B00D
+    1808,  // textureProjOffset_00g30B00D
+    1809,  // textureProjOffset_00o30B00D
+    1810,  // textureProjOffset_00t30B00D
+    1811,  // textureProjOffset_00O20B10D
+    1812,  // textureProjOffset_00q20B10D
+    1813,  // textureProjOffset_00v20B10D
+    1814,  // textureProjOffset_00O30B10D
+    1815,  // textureProjOffset_00q30B10D
+    1816,  // textureProjOffset_00v30B10D
+    1817,  // textureProjOffset_00n30B10D
+    1818,  // textureProjOffset_00m30B00D
+    1819,  // textureLodOffset_00I10B00B10D
+    1821,  // textureLodOffset_00R10B00B10D
+    1823,  // textureLodOffset_00X10B00B10D
+    1825,  // textureLodOffset_00J20B00B20D
+    1827,  // textureLodOffset_00S20B00B20D
+    1829,  // textureLodOffset_00Y20B00B20D
+    1831,  // textureLodOffset_00d20B00B10D
+    1833,  // textureLodOffset_00L20B00B10D
+    1835,  // textureLodOffset_00U20B00B10D
+    1837,  // textureLodOffset_00a20B00B10D
+    1839,  // textureLodOffset_00f30B00B10D
+    1841,  // textureLodOffset_00g00B00B00D
+    1842,  // textureLodOffset_00o00B00B00D
+    1843,  // textureLodOffset_00t00B00B00D
+    1844,  // textureLodOffset_00m20B00B00D
+    1845,  // textureLodOffset_00h10B00B00D
+    1846,  // textureLodOffset_00p10B00B00D
+    1847,  // textureLodOffset_00u10B00B00D
+    1848,  // textureLodOffset_00i20B00B00D
+    1849,  // textureProjLodOffset_00I20B00B10D
+    1851,  // textureProjLodOffset_00R20B00B10D
+    1853,  // textureProjLodOffset_00X20B00B10D
+    1855,  // textureProjLodOffset_00I30B00B10D
+    1857,  // textureProjLodOffset_00R30B00B10D
+    1859,  // textureProjLodOffset_00X30B00B10D
+    1861,  // textureProjLodOffset_00J30B00B20D
+    1863,  // textureProjLodOffset_00S30B00B20D
+    1865,  // textureProjLodOffset_00Y30B00B20D
+    1867,  // textureProjLodOffset_00d30B00B10D
+    1869,  // textureProjLodOffset_00g10B00B00D
+    1870,  // textureProjLodOffset_00o10B00B00D
+    1871,  // textureProjLodOffset_00t10B00B00D
+    1872,  // textureProjLodOffset_00g30B00B00D
+    1873,  // textureProjLodOffset_00o30B00B00D
+    1874,  // textureProjLodOffset_00t30B00B00D
+    1875,  // textureProjLodOffset_00m30B00B00D
+    1876,  // texelFetchOffset_00I10D00D10D
+    1878,  // texelFetchOffset_00R10D00D10D
+    1880,  // texelFetchOffset_00X10D00D10D
+    1882,  // texelFetchOffset_00J20D00D20D
+    1884,  // texelFetchOffset_00S20D00D20D
+    1886,  // texelFetchOffset_00Y20D00D20D
+    1888,  // texelFetchOffset_00L20D00D10D
+    1890,  // texelFetchOffset_00U20D00D10D
+    1892,  // texelFetchOffset_00a20D00D10D
+    1894,  // texelFetchOffset_00g00D00D00D
+    1895,  // texelFetchOffset_00o00D00D00D
+    1896,  // texelFetchOffset_00t00D00D00D
+    1897,  // texelFetchOffset_00O10D10D
+    1898,  // texelFetchOffset_00q10D10D
+    1899,  // texelFetchOffset_00v10D10D
+    1900,  // texelFetchOffset_00h10D00D00D
+    1901,  // texelFetchOffset_00p10D00D00D
+    1902,  // texelFetchOffset_00u10D00D00D
+    1903,  // textureGradOffset_00I10B10B10B10D
+    1905,  // textureGradOffset_00R10B10B10B10D
+    1907,  // textureGradOffset_00X10B10B10B10D
+    1909,  // textureGradOffset_00J20B20B20B20D
+    1911,  // textureGradOffset_00S20B20B20B20D
+    1913,  // textureGradOffset_00Y20B20B20B20D
+    1915,  // textureGradOffset_00d20B10B10B10D
+    1917,  // textureGradOffset_00L20B10B10B10D
+    1919,  // textureGradOffset_00U20B10B10B10D
+    1921,  // textureGradOffset_00a20B10B10B10D
+    1923,  // textureGradOffset_00f30B10B10B10D
+    1925,  // textureGradOffset_00g00B00B00B00D
+    1926,  // textureGradOffset_00o00B00B00B00D
+    1927,  // textureGradOffset_00t00B00B00B00D
+    1928,  // textureGradOffset_00O10B10B10B10D
+    1929,  // textureGradOffset_00q10B10B10B10D
+    1930,  // textureGradOffset_00v10B10B10B10D
+    1931,  // textureGradOffset_00n20B10B10B10D
+    1932,  // textureGradOffset_00m20B00B00B00D
+    1933,  // textureGradOffset_00h10B00B00B00D
+    1934,  // textureGradOffset_00p10B00B00B00D
+    1935,  // textureGradOffset_00u10B00B00B00D
+    1936,  // textureGradOffset_00i20B00B00B00D
+    1937,  // textureProjGradOffset_00I20B10B10B10D
+    1939,  // textureProjGradOffset_00R20B10B10B10D
+    1941,  // textureProjGradOffset_00X20B10B10B10D
+    1943,  // textureProjGradOffset_00I30B10B10B10D
+    1945,  // textureProjGradOffset_00R30B10B10B10D
+    1947,  // textureProjGradOffset_00X30B10B10B10D
+    1949,  // textureProjGradOffset_00J30B20B20B20D
+    1951,  // textureProjGradOffset_00S30B20B20B20D
+    1953,  // textureProjGradOffset_00Y30B20B20B20D
+    1955,  // textureProjGradOffset_00d30B10B10B10D
+    1957,  // textureProjGradOffset_00g10B00B00B00D
+    1958,  // textureProjGradOffset_00o10B00B00B00D
+    1959,  // textureProjGradOffset_00t10B00B00B00D
+    1960,  // textureProjGradOffset_00g30B00B00B00D
+    1961,  // textureProjGradOffset_00o30B00B00B00D
+    1962,  // textureProjGradOffset_00t30B00B00B00D
+    1963,  // textureProjGradOffset_00O20B10B10B10D
+    1964,  // textureProjGradOffset_00q20B10B10B10D
+    1965,  // textureProjGradOffset_00v20B10B10B10D
+    1966,  // textureProjGradOffset_00O30B10B10B10D
+    1967,  // textureProjGradOffset_00q30B10B10B10D
+    1968,  // textureProjGradOffset_00v30B10B10B10D
+    1969,  // textureProjGradOffset_00n30B10B10B10D
+    1970,  // textureProjGradOffset_00m30B00B00B00D
+    1971,  // textureOffset_00I10B10D00B
+    1973,  // textureOffset_00R10B10D00B
+    1975,  // textureOffset_00X10B10D00B
+    1977,  // textureOffset_00J20B20D00B
+    1979,  // textureOffset_00S20B20D00B
+    1981,  // textureOffset_00Y20B20D00B
+    1983,  // textureOffset_00d20B10D00B
+    1985,  // textureOffset_00L20B10D00B
+    1987,  // textureOffset_00U20B10D00B
+    1989,  // textureOffset_00a20B10D00B
+    1991,  // textureOffset_00f30B10D00B
+    1993,  // textureOffset_00g00B00D00B
+    1994,  // textureOffset_00o00B00D00B
+    1995,  // textureOffset_00t00B00D00B
+    1996,  // textureOffset_00m20B00D00B
+    1997,  // textureOffset_00h10B00D00B
+    1998,  // textureOffset_00p10B00D00B
+    1999,  // textureOffset_00u10B00D00B
+    2000,  // textureOffset_00i20B00D00B
+    2001,  // textureProjOffset_00I20B10D00B
+    2003,  // textureProjOffset_00R20B10D00B
+    2005,  // textureProjOffset_00X20B10D00B
+    2007,  // textureProjOffset_00I30B10D00B
+    2009,  // textureProjOffset_00R30B10D00B
+    2011,  // textureProjOffset_00X30B10D00B
+    2013,  // textureProjOffset_00J30B20D00B
+    2015,  // textureProjOffset_00S30B20D00B
+    2017,  // textureProjOffset_00Y30B20D00B
+    2019,  // textureProjOffset_00d30B10D00B
+    2021,  // textureProjOffset_00g10B00D00B
+    2022,  // textureProjOffset_00o10B00D00B
+    2023,  // textureProjOffset_00t10B00D00B
+    2024,  // textureProjOffset_00g30B00D00B
+    2025,  // textureProjOffset_00o30B00D00B
+    2026,  // textureProjOffset_00t30B00D00B
+    2027,  // textureProjOffset_00m30B00D00B
+    2028,  // textureGather_00I10B
+    2030,  // textureGather_00R10B
+    2032,  // textureGather_00X10B
+    2034,  // textureGather_00I10B00D
+    2036,  // textureGather_00R10B00D
+    2038,  // textureGather_00X10B00D
+    2040,  // textureGather_00L20B
+    2042,  // textureGather_00U20B
+    2044,  // textureGather_00a20B
+    2046,  // textureGather_00L20B00D
+    2048,  // textureGather_00U20B00D
+    2050,  // textureGather_00a20B00D
+    2052,  // textureGather_00K20B
+    2054,  // textureGather_00T20B
+    2056,  // textureGather_00Z20B
+    2058,  // textureGather_00K20B00D
+    2060,  // textureGather_00T20B00D
+    2062,  // textureGather_00Z20B00D
+    2064,  // textureGather_00k30B
+    2068,  // textureGather_00s30B
+    2072,  // textureGather_00x30B
+    2076,  // textureGather_00k30B00D
+    2080,  // textureGather_00s30B00D
+    2084,  // textureGather_00x30B00D
+    2088,  // textureGather_00l30B00B
+    2092,  // textureGather_00O20B
+    2093,  // textureGather_00q20B
+    2094,  // textureGather_00v20B
+    2095,  // textureGather_00O20B00D
+    2096,  // textureGather_00q20B00D
+    2097,  // textureGather_00v20B00D
+    2098,  // textureGather_00n10B00B
+    2099,  // textureGather_00d10B
+    2100,  // textureGather_00d10B00B
+    2102,  // textureGather_00f20B
+    2103,  // textureGather_00f20B00B
+    2105,  // textureGather_00e20B
+    2106,  // textureGather_00e20B00B
+    2108,  // textureGatherOffset_00I10B10D
+    2110,  // textureGatherOffset_00R10B10D
+    2112,  // textureGatherOffset_00X10B10D
+    2114,  // textureGatherOffset_00L20B10D
+    2116,  // textureGatherOffset_00U20B10D
+    2118,  // textureGatherOffset_00a20B10D
+    2120,  // textureGatherOffset_00d10B00B10D
+    2122,  // textureGatherOffset_00f20B00B10D
+    2124,  // textureGatherOffset_00O10B10D
+    2125,  // textureGatherOffset_00q10B10D
+    2126,  // textureGatherOffset_00v10B10D
+    2127,  // textureGatherOffset_00n10B00B10D
+    2128,  // textureGatherOffset_00I10B10D00D
+    2130,  // textureGatherOffset_00R10B10D00D
+    2132,  // textureGatherOffset_00X10B10D00D
+    2134,  // textureGatherOffset_00L20B10D00D
+    2136,  // textureGatherOffset_00U20B10D00D
+    2138,  // textureGatherOffset_00a20B10D00D
+    2140,  // textureGatherOffset_00O10B10D00D
+    2141,  // textureGatherOffset_00q10B10D00D
+    2142,  // textureGatherOffset_00v10B10D00D
+    2143,  // textureGatherOffsets_00I10B10Dx4
+    2147,  // textureGatherOffsets_00R10B10Dx4
+    2151,  // textureGatherOffsets_00X10B10Dx4
+    2155,  // textureGatherOffsets_00L20B10Dx4
+    2159,  // textureGatherOffsets_00U20B10Dx4
+    2163,  // textureGatherOffsets_00a20B10Dx4
+    2167,  // textureGatherOffsets_00d10B00B10Dx4
+    2171,  // textureGatherOffsets_00f20B00B10Dx4
+    2175,  // textureGatherOffsets_00O10B10Dx4
+    2176,  // textureGatherOffsets_00q10B10Dx4
+    2177,  // textureGatherOffsets_00v10B10Dx4
+    2178,  // textureGatherOffsets_00n10B00B10Dx4
+    2179,  // textureGatherOffsets_00I10B10Dx400D
+    2183,  // textureGatherOffsets_00R10B10Dx400D
+    2187,  // textureGatherOffsets_00X10B10Dx400D
+    2191,  // textureGatherOffsets_00L20B10Dx400D
+    2195,  // textureGatherOffsets_00U20B10Dx400D
+    2199,  // textureGatherOffsets_00a20B10Dx400D
+    2203,  // textureGatherOffsets_00O10B10Dx400D
+    2204,  // textureGatherOffsets_00q10B10Dx400D
+    2205,  // textureGatherOffsets_00v10B10Dx400D
+    2206,  // rgb_2_yuv_20B00H
+    2207,  // yuv_2_rgb_20B00H
+    2208,  // dFdx_00B
+    2211,  // dFdx_10B
+    2214,  // dFdx_20B
+    2217,  // dFdx_30B
+    2220,  // dFdy_00B
+    2223,  // dFdy_10B
+    2226,  // dFdy_20B
+    2229,  // dFdy_30B
+    2232,  // fwidth_00B
+    2235,  // fwidth_10B
+    2238,  // fwidth_20B
+    2241,  // fwidth_30B
+    2244,  // dFdxFine_00B
+    2245,  // dFdxFine_10B
+    2246,  // dFdxFine_20B
+    2247,  // dFdxFine_30B
+    2248,  // dFdyFine_00B
+    2249,  // dFdyFine_10B
+    2250,  // dFdyFine_20B
+    2251,  // dFdyFine_30B
+    2252,  // dFdxCoarse_00B
+    2253,  // dFdxCoarse_10B
+    2254,  // dFdxCoarse_20B
+    2255,  // dFdxCoarse_30B
+    2256,  // dFdyCoarse_00B
+    2257,  // dFdyCoarse_10B
+    2258,  // dFdyCoarse_20B
+    2259,  // dFdyCoarse_30B
+    2260,  // fwidthFine_00B
+    2261,  // fwidthFine_10B
+    2262,  // fwidthFine_20B
+    2263,  // fwidthFine_30B
+    2264,  // fwidthCoarse_00B
+    2265,  // fwidthCoarse_10B
+    2266,  // fwidthCoarse_20B
+    2267,  // fwidthCoarse_30B
+    2268,  // interpolateAtCentroid_00B
+    2271,  // interpolateAtCentroid_10B
+    2274,  // interpolateAtCentroid_20B
+    2277,  // interpolateAtCentroid_30B
+    2280,  // interpolateAtSample_00B00D
+    2283,  // interpolateAtSample_10B00D
+    2286,  // interpolateAtSample_20B00D
+    2289,  // interpolateAtSample_30B00D
+    2292,  // interpolateAtOffset_00B10B
+    2295,  // interpolateAtOffset_10B10B
+    2298,  // interpolateAtOffset_20B10B
+    2301,  // interpolateAtOffset_30B10B
+    2304,  // atomicCounter_00G
+    2306,  // atomicCounterIncrement_00G
+    2308,  // atomicCounterDecrement_00G
+    2310,  // atomicCounterAdd_00G00E
+    2311,  // atomicCounterSubtract_00G00E
+    2312,  // atomicCounterMin_00G00E
+    2313,  // atomicCounterMax_00G00E
+    2314,  // atomicCounterAnd_00G00E
+    2315,  // atomicCounterOr_00G00E
+    2316,  // atomicCounterXor_00G00E
+    2317,  // atomicCounterExchange_00G00E
+    2318,  // atomicCounterCompSwap_00G00E00E
+    2319,  // atomicAdd_00E00E
+    2321,  // atomicAdd_00D00D
+    2323,  // atomicMin_00E00E
+    2325,  // atomicMin_00D00D
+    2327,  // atomicMax_00E00E
+    2329,  // atomicMax_00D00D
+    2331,  // atomicAnd_00E00E
+    2333,  // atomicAnd_00D00D
+    2335,  // atomicOr_00E00E
+    2337,  // atomicOr_00D00D
+    2339,  // atomicXor_00E00E
+    2341,  // atomicXor_00D00D
+    2343,  // atomicExchange_00E00E
+    2345,  // atomicExchange_00D00D
+    2347,  // atomicCompSwap_00E00E00E
+    2349,  // atomicCompSwap_00D00D00D
+    2351,  // imageSize_00z
+    2353,  // imageSize_01K
+    2355,  // imageSize_01V
+    2357,  // imageSize_01A
+    2359,  // imageSize_01L
+    2361,  // imageSize_01W
+    2363,  // imageSize_01B
+    2365,  // imageSize_01M
+    2367,  // imageSize_01X
+    2369,  // imageSize_01C
+    2371,  // imageSize_01N
+    2373,  // imageSize_01Y
+    2375,  // imageSize_01H
+    2379,  // imageSize_01S
+    2383,  // imageSize_01d
+    2387,  // imageSize_01J
+    2391,  // imageSize_01U
+    2395,  // imageSize_01f
+    2399,  // imageSize_01D
+    2400,  // imageSize_01O
+    2401,  // imageSize_01Z
+    2402,  // imageSize_01I
+    2403,  // imageSize_01T
+    2404,  // imageSize_01e
+    2405,  // imageSize_01E
+    2406,  // imageSize_01P
+    2407,  // imageSize_01a
+    2408,  // imageSize_01F
+    2409,  // imageSize_01Q
+    2410,  // imageSize_01b
+    2411,  // imageSize_01G
+    2412,  // imageSize_01R
+    2413,  // imageSize_01c
+    2414,  // imageSamples_01F
+    2415,  // imageSamples_01Q
+    2416,  // imageSamples_01b
+    2417,  // imageSamples_01G
+    2418,  // imageSamples_01R
+    2419,  // imageSamples_01c
+    2420,  // imageStore_00z10D30B
+    2422,  // imageStore_01K10D30D
+    2424,  // imageStore_01V10D30E
+    2426,  // imageStore_01A20D30B
+    2428,  // imageStore_01L20D30D
+    2430,  // imageStore_01W20D30E
+    2432,  // imageStore_01B20D30B
+    2434,  // imageStore_01M20D30D
+    2436,  // imageStore_01X20D30E
+    2438,  // imageStore_01C20D30B
+    2440,  // imageStore_01N20D30D
+    2442,  // imageStore_01Y20D30E
+    2444,  // imageStore_01H20D30B
+    2448,  // imageStore_01S20D30D
+    2452,  // imageStore_01d20D30E
+    2456,  // imageStore_01J00D30B
+    2460,  // imageStore_01U00D30D
+    2464,  // imageStore_01f00D30E
+    2468,  // imageStore_01D00D30B
+    2469,  // imageStore_01O00D30D
+    2470,  // imageStore_01Z00D30E
+    2471,  // imageStore_01E10D30B
+    2472,  // imageStore_01P10D30D
+    2473,  // imageStore_01a10D30E
+    2474,  // imageStore_01I10D30B
+    2475,  // imageStore_01T10D30D
+    2476,  // imageStore_01e10D30E
+    2477,  // imageStore_01F10D00D30B
+    2478,  // imageStore_01Q10D00D30D
+    2479,  // imageStore_01b10D00D30E
+    2480,  // imageStore_01G20D00D30B
+    2481,  // imageStore_01R20D00D30D
+    2482,  // imageStore_01c20D00D30E
+    2483,  // imageLoad_00z10D
+    2485,  // imageLoad_01K10D
+    2487,  // imageLoad_01V10D
+    2489,  // imageLoad_01A20D
+    2491,  // imageLoad_01L20D
+    2493,  // imageLoad_01W20D
+    2495,  // imageLoad_01B20D
+    2497,  // imageLoad_01M20D
+    2499,  // imageLoad_01X20D
+    2501,  // imageLoad_01C20D
+    2503,  // imageLoad_01N20D
+    2505,  // imageLoad_01Y20D
+    2507,  // imageLoad_01H20D
+    2511,  // imageLoad_01S20D
+    2515,  // imageLoad_01d20D
+    2519,  // imageLoad_01J00D
+    2523,  // imageLoad_01U00D
+    2527,  // imageLoad_01f00D
+    2531,  // imageLoad_01D00D
+    2532,  // imageLoad_01O00D
+    2533,  // imageLoad_01Z00D
+    2534,  // imageLoad_01E10D
+    2535,  // imageLoad_01P10D
+    2536,  // imageLoad_01a10D
+    2537,  // imageLoad_01I10D
+    2538,  // imageLoad_01T10D
+    2539,  // imageLoad_01e10D
+    2540,  // imageLoad_01F10D00D
+    2541,  // imageLoad_01Q10D00D
+    2542,  // imageLoad_01b10D00D
+    2543,  // imageLoad_01G20D00D
+    2544,  // imageLoad_01R20D00D
+    2545,  // imageLoad_01c20D00D
+    2546,  // imageAtomicAdd_00z10D00E
+    2549,  // imageAtomicAdd_01K10D00E
+    2552,  // imageAtomicAdd_01V10D00E
+    2555,  // imageAtomicAdd_01A20D00E
+    2558,  // imageAtomicAdd_01L20D00E
+    2561,  // imageAtomicAdd_01W20D00E
+    2564,  // imageAtomicAdd_01C20D00E
+    2567,  // imageAtomicAdd_01N20D00E
+    2570,  // imageAtomicAdd_01Y20D00E
+    2573,  // imageAtomicAdd_01J00D00E
+    2576,  // imageAtomicAdd_01U00D00E
+    2579,  // imageAtomicAdd_01f00D00E
+    2582,  // imageAtomicAdd_01B20D00E
+    2585,  // imageAtomicAdd_01M20D00E
+    2588,  // imageAtomicAdd_01X20D00E
+    2591,  // imageAtomicAdd_01H20D00E
+    2594,  // imageAtomicAdd_01S20D00E
+    2597,  // imageAtomicAdd_01d20D00E
+    2600,  // imageAtomicAdd_01D00D00E
+    2603,  // imageAtomicAdd_01O00D00E
+    2606,  // imageAtomicAdd_01Z00D00E
+    2609,  // imageAtomicAdd_01E10D00E
+    2612,  // imageAtomicAdd_01P10D00E
+    2615,  // imageAtomicAdd_01a10D00E
+    2618,  // imageAtomicAdd_01I10D00E
+    2621,  // imageAtomicAdd_01T10D00E
+    2624,  // imageAtomicAdd_01e10D00E
+    2627,  // imageAtomicAdd_01F10D00D00E
+    2630,  // imageAtomicAdd_01Q10D00D00E
+    2633,  // imageAtomicAdd_01b10D00D00E
+    2636,  // imageAtomicAdd_01G20D00D00E
+    2639,  // imageAtomicAdd_01R20D00D00E
+    2642,  // imageAtomicAdd_01c20D00D00E
+    2645,  // imageAtomicAdd_00z10D00D
+    2648,  // imageAtomicAdd_01K10D00D
+    2651,  // imageAtomicAdd_01V10D00D
+    2654,  // imageAtomicAdd_01A20D00D
+    2657,  // imageAtomicAdd_01L20D00D
+    2660,  // imageAtomicAdd_01W20D00D
+    2663,  // imageAtomicAdd_01C20D00D
+    2666,  // imageAtomicAdd_01N20D00D
+    2669,  // imageAtomicAdd_01Y20D00D
+    2672,  // imageAtomicAdd_01J00D00D
+    2675,  // imageAtomicAdd_01U00D00D
+    2678,  // imageAtomicAdd_01f00D00D
+    2681,  // imageAtomicAdd_01B20D00D
+    2684,  // imageAtomicAdd_01M20D00D
+    2687,  // imageAtomicAdd_01X20D00D
+    2690,  // imageAtomicAdd_01H20D00D
+    2693,  // imageAtomicAdd_01S20D00D
+    2696,  // imageAtomicAdd_01d20D00D
+    2699,  // imageAtomicAdd_01D00D00D
+    2702,  // imageAtomicAdd_01O00D00D
+    2705,  // imageAtomicAdd_01Z00D00D
+    2708,  // imageAtomicAdd_01E10D00D
+    2711,  // imageAtomicAdd_01P10D00D
+    2714,  // imageAtomicAdd_01a10D00D
+    2717,  // imageAtomicAdd_01I10D00D
+    2720,  // imageAtomicAdd_01T10D00D
+    2723,  // imageAtomicAdd_01e10D00D
+    2726,  // imageAtomicAdd_01F10D00D00D
+    2729,  // imageAtomicAdd_01Q10D00D00D
+    2732,  // imageAtomicAdd_01b10D00D00D
+    2735,  // imageAtomicAdd_01G20D00D00D
+    2738,  // imageAtomicAdd_01R20D00D00D
+    2741,  // imageAtomicAdd_01c20D00D00D
+    2744,  // imageAtomicMin_00z10D00E
+    2747,  // imageAtomicMin_01K10D00E
+    2750,  // imageAtomicMin_01V10D00E
+    2753,  // imageAtomicMin_01A20D00E
+    2756,  // imageAtomicMin_01L20D00E
+    2759,  // imageAtomicMin_01W20D00E
+    2762,  // imageAtomicMin_01C20D00E
+    2765,  // imageAtomicMin_01N20D00E
+    2768,  // imageAtomicMin_01Y20D00E
+    2771,  // imageAtomicMin_01J00D00E
+    2774,  // imageAtomicMin_01U00D00E
+    2777,  // imageAtomicMin_01f00D00E
+    2780,  // imageAtomicMin_01B20D00E
+    2783,  // imageAtomicMin_01M20D00E
+    2786,  // imageAtomicMin_01X20D00E
+    2789,  // imageAtomicMin_01H20D00E
+    2792,  // imageAtomicMin_01S20D00E
+    2795,  // imageAtomicMin_01d20D00E
+    2798,  // imageAtomicMin_01D00D00E
+    2801,  // imageAtomicMin_01O00D00E
+    2804,  // imageAtomicMin_01Z00D00E
+    2807,  // imageAtomicMin_01E10D00E
+    2810,  // imageAtomicMin_01P10D00E
+    2813,  // imageAtomicMin_01a10D00E
+    2816,  // imageAtomicMin_01I10D00E
+    2819,  // imageAtomicMin_01T10D00E
+    2822,  // imageAtomicMin_01e10D00E
+    2825,  // imageAtomicMin_01F10D00D00E
+    2828,  // imageAtomicMin_01Q10D00D00E
+    2831,  // imageAtomicMin_01b10D00D00E
+    2834,  // imageAtomicMin_01G20D00D00E
+    2837,  // imageAtomicMin_01R20D00D00E
+    2840,  // imageAtomicMin_01c20D00D00E
+    2843,  // imageAtomicMin_00z10D00D
+    2846,  // imageAtomicMin_01K10D00D
+    2849,  // imageAtomicMin_01V10D00D
+    2852,  // imageAtomicMin_01A20D00D
+    2855,  // imageAtomicMin_01L20D00D
+    2858,  // imageAtomicMin_01W20D00D
+    2861,  // imageAtomicMin_01C20D00D
+    2864,  // imageAtomicMin_01N20D00D
+    2867,  // imageAtomicMin_01Y20D00D
+    2870,  // imageAtomicMin_01J00D00D
+    2873,  // imageAtomicMin_01U00D00D
+    2876,  // imageAtomicMin_01f00D00D
+    2879,  // imageAtomicMin_01B20D00D
+    2882,  // imageAtomicMin_01M20D00D
+    2885,  // imageAtomicMin_01X20D00D
+    2888,  // imageAtomicMin_01H20D00D
+    2891,  // imageAtomicMin_01S20D00D
+    2894,  // imageAtomicMin_01d20D00D
+    2897,  // imageAtomicMin_01D00D00D
+    2900,  // imageAtomicMin_01O00D00D
+    2903,  // imageAtomicMin_01Z00D00D
+    2906,  // imageAtomicMin_01E10D00D
+    2909,  // imageAtomicMin_01P10D00D
+    2912,  // imageAtomicMin_01a10D00D
+    2915,  // imageAtomicMin_01I10D00D
+    2918,  // imageAtomicMin_01T10D00D
+    2921,  // imageAtomicMin_01e10D00D
+    2924,  // imageAtomicMin_01F10D00D00D
+    2927,  // imageAtomicMin_01Q10D00D00D
+    2930,  // imageAtomicMin_01b10D00D00D
+    2933,  // imageAtomicMin_01G20D00D00D
+    2936,  // imageAtomicMin_01R20D00D00D
+    2939,  // imageAtomicMin_01c20D00D00D
+    2942,  // imageAtomicMax_00z10D00E
+    2945,  // imageAtomicMax_01K10D00E
+    2948,  // imageAtomicMax_01V10D00E
+    2951,  // imageAtomicMax_01A20D00E
+    2954,  // imageAtomicMax_01L20D00E
+    2957,  // imageAtomicMax_01W20D00E
+    2960,  // imageAtomicMax_01C20D00E
+    2963,  // imageAtomicMax_01N20D00E
+    2966,  // imageAtomicMax_01Y20D00E
+    2969,  // imageAtomicMax_01J00D00E
+    2972,  // imageAtomicMax_01U00D00E
+    2975,  // imageAtomicMax_01f00D00E
+    2978,  // imageAtomicMax_01B20D00E
+    2981,  // imageAtomicMax_01M20D00E
+    2984,  // imageAtomicMax_01X20D00E
+    2987,  // imageAtomicMax_01H20D00E
+    2990,  // imageAtomicMax_01S20D00E
+    2993,  // imageAtomicMax_01d20D00E
+    2996,  // imageAtomicMax_01D00D00E
+    2999,  // imageAtomicMax_01O00D00E
+    3002,  // imageAtomicMax_01Z00D00E
+    3005,  // imageAtomicMax_01E10D00E
+    3008,  // imageAtomicMax_01P10D00E
+    3011,  // imageAtomicMax_01a10D00E
+    3014,  // imageAtomicMax_01I10D00E
+    3017,  // imageAtomicMax_01T10D00E
+    3020,  // imageAtomicMax_01e10D00E
+    3023,  // imageAtomicMax_01F10D00D00E
+    3026,  // imageAtomicMax_01Q10D00D00E
+    3029,  // imageAtomicMax_01b10D00D00E
+    3032,  // imageAtomicMax_01G20D00D00E
+    3035,  // imageAtomicMax_01R20D00D00E
+    3038,  // imageAtomicMax_01c20D00D00E
+    3041,  // imageAtomicMax_00z10D00D
+    3044,  // imageAtomicMax_01K10D00D
+    3047,  // imageAtomicMax_01V10D00D
+    3050,  // imageAtomicMax_01A20D00D
+    3053,  // imageAtomicMax_01L20D00D
+    3056,  // imageAtomicMax_01W20D00D
+    3059,  // imageAtomicMax_01C20D00D
+    3062,  // imageAtomicMax_01N20D00D
+    3065,  // imageAtomicMax_01Y20D00D
+    3068,  // imageAtomicMax_01J00D00D
+    3071,  // imageAtomicMax_01U00D00D
+    3074,  // imageAtomicMax_01f00D00D
+    3077,  // imageAtomicMax_01B20D00D
+    3080,  // imageAtomicMax_01M20D00D
+    3083,  // imageAtomicMax_01X20D00D
+    3086,  // imageAtomicMax_01H20D00D
+    3089,  // imageAtomicMax_01S20D00D
+    3092,  // imageAtomicMax_01d20D00D
+    3095,  // imageAtomicMax_01D00D00D
+    3098,  // imageAtomicMax_01O00D00D
+    3101,  // imageAtomicMax_01Z00D00D
+    3104,  // imageAtomicMax_01E10D00D
+    3107,  // imageAtomicMax_01P10D00D
+    3110,  // imageAtomicMax_01a10D00D
+    3113,  // imageAtomicMax_01I10D00D
+    3116,  // imageAtomicMax_01T10D00D
+    3119,  // imageAtomicMax_01e10D00D
+    3122,  // imageAtomicMax_01F10D00D00D
+    3125,  // imageAtomicMax_01Q10D00D00D
+    3128,  // imageAtomicMax_01b10D00D00D
+    3131,  // imageAtomicMax_01G20D00D00D
+    3134,  // imageAtomicMax_01R20D00D00D
+    3137,  // imageAtomicMax_01c20D00D00D
+    3140,  // imageAtomicAnd_00z10D00E
+    3143,  // imageAtomicAnd_01K10D00E
+    3146,  // imageAtomicAnd_01V10D00E
+    3149,  // imageAtomicAnd_01A20D00E
+    3152,  // imageAtomicAnd_01L20D00E
+    3155,  // imageAtomicAnd_01W20D00E
+    3158,  // imageAtomicAnd_01C20D00E
+    3161,  // imageAtomicAnd_01N20D00E
+    3164,  // imageAtomicAnd_01Y20D00E
+    3167,  // imageAtomicAnd_01J00D00E
+    3170,  // imageAtomicAnd_01U00D00E
+    3173,  // imageAtomicAnd_01f00D00E
+    3176,  // imageAtomicAnd_01B20D00E
+    3179,  // imageAtomicAnd_01M20D00E
+    3182,  // imageAtomicAnd_01X20D00E
+    3185,  // imageAtomicAnd_01H20D00E
+    3188,  // imageAtomicAnd_01S20D00E
+    3191,  // imageAtomicAnd_01d20D00E
+    3194,  // imageAtomicAnd_01D00D00E
+    3197,  // imageAtomicAnd_01O00D00E
+    3200,  // imageAtomicAnd_01Z00D00E
+    3203,  // imageAtomicAnd_01E10D00E
+    3206,  // imageAtomicAnd_01P10D00E
+    3209,  // imageAtomicAnd_01a10D00E
+    3212,  // imageAtomicAnd_01I10D00E
+    3215,  // imageAtomicAnd_01T10D00E
+    3218,  // imageAtomicAnd_01e10D00E
+    3221,  // imageAtomicAnd_01F10D00D00E
+    3224,  // imageAtomicAnd_01Q10D00D00E
+    3227,  // imageAtomicAnd_01b10D00D00E
+    3230,  // imageAtomicAnd_01G20D00D00E
+    3233,  // imageAtomicAnd_01R20D00D00E
+    3236,  // imageAtomicAnd_01c20D00D00E
+    3239,  // imageAtomicAnd_00z10D00D
+    3242,  // imageAtomicAnd_01K10D00D
+    3245,  // imageAtomicAnd_01V10D00D
+    3248,  // imageAtomicAnd_01A20D00D
+    3251,  // imageAtomicAnd_01L20D00D
+    3254,  // imageAtomicAnd_01W20D00D
+    3257,  // imageAtomicAnd_01C20D00D
+    3260,  // imageAtomicAnd_01N20D00D
+    3263,  // imageAtomicAnd_01Y20D00D
+    3266,  // imageAtomicAnd_01J00D00D
+    3269,  // imageAtomicAnd_01U00D00D
+    3272,  // imageAtomicAnd_01f00D00D
+    3275,  // imageAtomicAnd_01B20D00D
+    3278,  // imageAtomicAnd_01M20D00D
+    3281,  // imageAtomicAnd_01X20D00D
+    3284,  // imageAtomicAnd_01H20D00D
+    3287,  // imageAtomicAnd_01S20D00D
+    3290,  // imageAtomicAnd_01d20D00D
+    3293,  // imageAtomicAnd_01D00D00D
+    3296,  // imageAtomicAnd_01O00D00D
+    3299,  // imageAtomicAnd_01Z00D00D
+    3302,  // imageAtomicAnd_01E10D00D
+    3305,  // imageAtomicAnd_01P10D00D
+    3308,  // imageAtomicAnd_01a10D00D
+    3311,  // imageAtomicAnd_01I10D00D
+    3314,  // imageAtomicAnd_01T10D00D
+    3317,  // imageAtomicAnd_01e10D00D
+    3320,  // imageAtomicAnd_01F10D00D00D
+    3323,  // imageAtomicAnd_01Q10D00D00D
+    3326,  // imageAtomicAnd_01b10D00D00D
+    3329,  // imageAtomicAnd_01G20D00D00D
+    3332,  // imageAtomicAnd_01R20D00D00D
+    3335,  // imageAtomicAnd_01c20D00D00D
+    3338,  // imageAtomicOr_00z10D00E
+    3341,  // imageAtomicOr_01K10D00E
+    3344,  // imageAtomicOr_01V10D00E
+    3347,  // imageAtomicOr_01A20D00E
+    3350,  // imageAtomicOr_01L20D00E
+    3353,  // imageAtomicOr_01W20D00E
+    3356,  // imageAtomicOr_01C20D00E
+    3359,  // imageAtomicOr_01N20D00E
+    3362,  // imageAtomicOr_01Y20D00E
+    3365,  // imageAtomicOr_01J00D00E
+    3368,  // imageAtomicOr_01U00D00E
+    3371,  // imageAtomicOr_01f00D00E
+    3374,  // imageAtomicOr_01B20D00E
+    3377,  // imageAtomicOr_01M20D00E
+    3380,  // imageAtomicOr_01X20D00E
+    3383,  // imageAtomicOr_01H20D00E
+    3386,  // imageAtomicOr_01S20D00E
+    3389,  // imageAtomicOr_01d20D00E
+    3392,  // imageAtomicOr_01D00D00E
+    3395,  // imageAtomicOr_01O00D00E
+    3398,  // imageAtomicOr_01Z00D00E
+    3401,  // imageAtomicOr_01E10D00E
+    3404,  // imageAtomicOr_01P10D00E
+    3407,  // imageAtomicOr_01a10D00E
+    3410,  // imageAtomicOr_01I10D00E
+    3413,  // imageAtomicOr_01T10D00E
+    3416,  // imageAtomicOr_01e10D00E
+    3419,  // imageAtomicOr_01F10D00D00E
+    3422,  // imageAtomicOr_01Q10D00D00E
+    3425,  // imageAtomicOr_01b10D00D00E
+    3428,  // imageAtomicOr_01G20D00D00E
+    3431,  // imageAtomicOr_01R20D00D00E
+    3434,  // imageAtomicOr_01c20D00D00E
+    3437,  // imageAtomicOr_00z10D00D
+    3440,  // imageAtomicOr_01K10D00D
+    3443,  // imageAtomicOr_01V10D00D
+    3446,  // imageAtomicOr_01A20D00D
+    3449,  // imageAtomicOr_01L20D00D
+    3452,  // imageAtomicOr_01W20D00D
+    3455,  // imageAtomicOr_01C20D00D
+    3458,  // imageAtomicOr_01N20D00D
+    3461,  // imageAtomicOr_01Y20D00D
+    3464,  // imageAtomicOr_01J00D00D
+    3467,  // imageAtomicOr_01U00D00D
+    3470,  // imageAtomicOr_01f00D00D
+    3473,  // imageAtomicOr_01B20D00D
+    3476,  // imageAtomicOr_01M20D00D
+    3479,  // imageAtomicOr_01X20D00D
+    3482,  // imageAtomicOr_01H20D00D
+    3485,  // imageAtomicOr_01S20D00D
+    3488,  // imageAtomicOr_01d20D00D
+    3491,  // imageAtomicOr_01D00D00D
+    3494,  // imageAtomicOr_01O00D00D
+    3497,  // imageAtomicOr_01Z00D00D
+    3500,  // imageAtomicOr_01E10D00D
+    3503,  // imageAtomicOr_01P10D00D
+    3506,  // imageAtomicOr_01a10D00D
+    3509,  // imageAtomicOr_01I10D00D
+    3512,  // imageAtomicOr_01T10D00D
+    3515,  // imageAtomicOr_01e10D00D
+    3518,  // imageAtomicOr_01F10D00D00D
+    3521,  // imageAtomicOr_01Q10D00D00D
+    3524,  // imageAtomicOr_01b10D00D00D
+    3527,  // imageAtomicOr_01G20D00D00D
+    3530,  // imageAtomicOr_01R20D00D00D
+    3533,  // imageAtomicOr_01c20D00D00D
+    3536,  // imageAtomicXor_00z10D00E
+    3539,  // imageAtomicXor_01K10D00E
+    3542,  // imageAtomicXor_01V10D00E
+    3545,  // imageAtomicXor_01A20D00E
+    3548,  // imageAtomicXor_01L20D00E
+    3551,  // imageAtomicXor_01W20D00E
+    3554,  // imageAtomicXor_01C20D00E
+    3557,  // imageAtomicXor_01N20D00E
+    3560,  // imageAtomicXor_01Y20D00E
+    3563,  // imageAtomicXor_01J00D00E
+    3566,  // imageAtomicXor_01U00D00E
+    3569,  // imageAtomicXor_01f00D00E
+    3572,  // imageAtomicXor_01B20D00E
+    3575,  // imageAtomicXor_01M20D00E
+    3578,  // imageAtomicXor_01X20D00E
+    3581,  // imageAtomicXor_01H20D00E
+    3584,  // imageAtomicXor_01S20D00E
+    3587,  // imageAtomicXor_01d20D00E
+    3590,  // imageAtomicXor_01D00D00E
+    3593,  // imageAtomicXor_01O00D00E
+    3596,  // imageAtomicXor_01Z00D00E
+    3599,  // imageAtomicXor_01E10D00E
+    3602,  // imageAtomicXor_01P10D00E
+    3605,  // imageAtomicXor_01a10D00E
+    3608,  // imageAtomicXor_01I10D00E
+    3611,  // imageAtomicXor_01T10D00E
+    3614,  // imageAtomicXor_01e10D00E
+    3617,  // imageAtomicXor_01F10D00D00E
+    3620,  // imageAtomicXor_01Q10D00D00E
+    3623,  // imageAtomicXor_01b10D00D00E
+    3626,  // imageAtomicXor_01G20D00D00E
+    3629,  // imageAtomicXor_01R20D00D00E
+    3632,  // imageAtomicXor_01c20D00D00E
+    3635,  // imageAtomicXor_00z10D00D
+    3638,  // imageAtomicXor_01K10D00D
+    3641,  // imageAtomicXor_01V10D00D
+    3644,  // imageAtomicXor_01A20D00D
+    3647,  // imageAtomicXor_01L20D00D
+    3650,  // imageAtomicXor_01W20D00D
+    3653,  // imageAtomicXor_01C20D00D
+    3656,  // imageAtomicXor_01N20D00D
+    3659,  // imageAtomicXor_01Y20D00D
+    3662,  // imageAtomicXor_01J00D00D
+    3665,  // imageAtomicXor_01U00D00D
+    3668,  // imageAtomicXor_01f00D00D
+    3671,  // imageAtomicXor_01B20D00D
+    3674,  // imageAtomicXor_01M20D00D
+    3677,  // imageAtomicXor_01X20D00D
+    3680,  // imageAtomicXor_01H20D00D
+    3683,  // imageAtomicXor_01S20D00D
+    3686,  // imageAtomicXor_01d20D00D
+    3689,  // imageAtomicXor_01D00D00D
+    3692,  // imageAtomicXor_01O00D00D
+    3695,  // imageAtomicXor_01Z00D00D
+    3698,  // imageAtomicXor_01E10D00D
+    3701,  // imageAtomicXor_01P10D00D
+    3704,  // imageAtomicXor_01a10D00D
+    3707,  // imageAtomicXor_01I10D00D
+    3710,  // imageAtomicXor_01T10D00D
+    3713,  // imageAtomicXor_01e10D00D
+    3716,  // imageAtomicXor_01F10D00D00D
+    3719,  // imageAtomicXor_01Q10D00D00D
+    3722,  // imageAtomicXor_01b10D00D00D
+    3725,  // imageAtomicXor_01G20D00D00D
+    3728,  // imageAtomicXor_01R20D00D00D
+    3731,  // imageAtomicXor_01c20D00D00D
+    3734,  // imageAtomicExchange_00z10D00E
+    3737,  // imageAtomicExchange_01K10D00E
+    3740,  // imageAtomicExchange_01V10D00E
+    3743,  // imageAtomicExchange_01A20D00E
+    3746,  // imageAtomicExchange_01L20D00E
+    3749,  // imageAtomicExchange_01W20D00E
+    3752,  // imageAtomicExchange_01C20D00E
+    3755,  // imageAtomicExchange_01N20D00E
+    3758,  // imageAtomicExchange_01Y20D00E
+    3761,  // imageAtomicExchange_01J00D00E
+    3764,  // imageAtomicExchange_01U00D00E
+    3767,  // imageAtomicExchange_01f00D00E
+    3770,  // imageAtomicExchange_01B20D00E
+    3773,  // imageAtomicExchange_01M20D00E
+    3776,  // imageAtomicExchange_01X20D00E
+    3779,  // imageAtomicExchange_01H20D00E
+    3782,  // imageAtomicExchange_01S20D00E
+    3785,  // imageAtomicExchange_01d20D00E
+    3788,  // imageAtomicExchange_01D00D00E
+    3791,  // imageAtomicExchange_01O00D00E
+    3794,  // imageAtomicExchange_01Z00D00E
+    3797,  // imageAtomicExchange_01E10D00E
+    3800,  // imageAtomicExchange_01P10D00E
+    3803,  // imageAtomicExchange_01a10D00E
+    3806,  // imageAtomicExchange_01I10D00E
+    3809,  // imageAtomicExchange_01T10D00E
+    3812,  // imageAtomicExchange_01e10D00E
+    3815,  // imageAtomicExchange_01F10D00D00E
+    3818,  // imageAtomicExchange_01Q10D00D00E
+    3821,  // imageAtomicExchange_01b10D00D00E
+    3824,  // imageAtomicExchange_01G20D00D00E
+    3827,  // imageAtomicExchange_01R20D00D00E
+    3830,  // imageAtomicExchange_01c20D00D00E
+    3833,  // imageAtomicExchange_00z10D00D
+    3836,  // imageAtomicExchange_01K10D00D
+    3839,  // imageAtomicExchange_01V10D00D
+    3842,  // imageAtomicExchange_01A20D00D
+    3845,  // imageAtomicExchange_01L20D00D
+    3848,  // imageAtomicExchange_01W20D00D
+    3851,  // imageAtomicExchange_01C20D00D
+    3854,  // imageAtomicExchange_01N20D00D
+    3857,  // imageAtomicExchange_01Y20D00D
+    3860,  // imageAtomicExchange_01J00D00D
+    3863,  // imageAtomicExchange_01U00D00D
+    3866,  // imageAtomicExchange_01f00D00D
+    3869,  // imageAtomicExchange_01B20D00D
+    3872,  // imageAtomicExchange_01M20D00D
+    3875,  // imageAtomicExchange_01X20D00D
+    3878,  // imageAtomicExchange_01H20D00D
+    3881,  // imageAtomicExchange_01S20D00D
+    3884,  // imageAtomicExchange_01d20D00D
+    3887,  // imageAtomicExchange_01D00D00D
+    3890,  // imageAtomicExchange_01O00D00D
+    3893,  // imageAtomicExchange_01Z00D00D
+    3896,  // imageAtomicExchange_01E10D00D
+    3899,  // imageAtomicExchange_01P10D00D
+    3902,  // imageAtomicExchange_01a10D00D
+    3905,  // imageAtomicExchange_01I10D00D
+    3908,  // imageAtomicExchange_01T10D00D
+    3911,  // imageAtomicExchange_01e10D00D
+    3914,  // imageAtomicExchange_01F10D00D00D
+    3917,  // imageAtomicExchange_01Q10D00D00D
+    3920,  // imageAtomicExchange_01b10D00D00D
+    3923,  // imageAtomicExchange_01G20D00D00D
+    3926,  // imageAtomicExchange_01R20D00D00D
+    3929,  // imageAtomicExchange_01c20D00D00D
+    3932,  // imageAtomicExchange_00z10D00B
+    3935,  // imageAtomicExchange_01K10D00B
+    3938,  // imageAtomicExchange_01V10D00B
+    3941,  // imageAtomicExchange_01A20D00B
+    3944,  // imageAtomicExchange_01L20D00B
+    3947,  // imageAtomicExchange_01W20D00B
+    3950,  // imageAtomicExchange_01C20D00B
+    3953,  // imageAtomicExchange_01N20D00B
+    3956,  // imageAtomicExchange_01Y20D00B
+    3959,  // imageAtomicExchange_01J00D00B
+    3962,  // imageAtomicExchange_01U00D00B
+    3965,  // imageAtomicExchange_01f00D00B
+    3968,  // imageAtomicExchange_01B20D00B
+    3971,  // imageAtomicExchange_01M20D00B
+    3974,  // imageAtomicExchange_01X20D00B
+    3977,  // imageAtomicExchange_01H20D00B
+    3980,  // imageAtomicExchange_01S20D00B
+    3983,  // imageAtomicExchange_01d20D00B
+    3986,  // imageAtomicExchange_01D00D00B
+    3989,  // imageAtomicExchange_01O00D00B
+    3992,  // imageAtomicExchange_01Z00D00B
+    3995,  // imageAtomicExchange_01E10D00B
+    3998,  // imageAtomicExchange_01P10D00B
+    4001,  // imageAtomicExchange_01a10D00B
+    4004,  // imageAtomicExchange_01I10D00B
+    4007,  // imageAtomicExchange_01T10D00B
+    4010,  // imageAtomicExchange_01e10D00B
+    4013,  // imageAtomicExchange_01F10D00D00B
+    4016,  // imageAtomicExchange_01Q10D00D00B
+    4019,  // imageAtomicExchange_01b10D00D00B
+    4022,  // imageAtomicExchange_01G20D00D00B
+    4025,  // imageAtomicExchange_01R20D00D00B
+    4028,  // imageAtomicExchange_01c20D00D00B
+    4031,  // imageAtomicCompSwap_00z10D00E00E
+    4034,  // imageAtomicCompSwap_01K10D00E00E
+    4037,  // imageAtomicCompSwap_01V10D00E00E
+    4040,  // imageAtomicCompSwap_01A20D00E00E
+    4043,  // imageAtomicCompSwap_01L20D00E00E
+    4046,  // imageAtomicCompSwap_01W20D00E00E
+    4049,  // imageAtomicCompSwap_01C20D00E00E
+    4052,  // imageAtomicCompSwap_01N20D00E00E
+    4055,  // imageAtomicCompSwap_01Y20D00E00E
+    4058,  // imageAtomicCompSwap_01J00D00E00E
+    4061,  // imageAtomicCompSwap_01U00D00E00E
+    4064,  // imageAtomicCompSwap_01f00D00E00E
+    4067,  // imageAtomicCompSwap_01B20D00E00E
+    4070,  // imageAtomicCompSwap_01M20D00E00E
+    4073,  // imageAtomicCompSwap_01X20D00E00E
+    4076,  // imageAtomicCompSwap_01H20D00E00E
+    4079,  // imageAtomicCompSwap_01S20D00E00E
+    4082,  // imageAtomicCompSwap_01d20D00E00E
+    4085,  // imageAtomicCompSwap_01D00D00E00E
+    4088,  // imageAtomicCompSwap_01O00D00E00E
+    4091,  // imageAtomicCompSwap_01Z00D00E00E
+    4094,  // imageAtomicCompSwap_01E10D00E00E
+    4097,  // imageAtomicCompSwap_01P10D00E00E
+    4100,  // imageAtomicCompSwap_01a10D00E00E
+    4103,  // imageAtomicCompSwap_01I10D00E00E
+    4106,  // imageAtomicCompSwap_01T10D00E00E
+    4109,  // imageAtomicCompSwap_01e10D00E00E
+    4112,  // imageAtomicCompSwap_01F10D00D00E00E
+    4115,  // imageAtomicCompSwap_01Q10D00D00E00E
+    4118,  // imageAtomicCompSwap_01b10D00D00E00E
+    4121,  // imageAtomicCompSwap_01G20D00D00E00E
+    4124,  // imageAtomicCompSwap_01R20D00D00E00E
+    4127,  // imageAtomicCompSwap_01c20D00D00E00E
+    4130,  // imageAtomicCompSwap_00z10D00D00D
+    4133,  // imageAtomicCompSwap_01K10D00D00D
+    4136,  // imageAtomicCompSwap_01V10D00D00D
+    4139,  // imageAtomicCompSwap_01A20D00D00D
+    4142,  // imageAtomicCompSwap_01L20D00D00D
+    4145,  // imageAtomicCompSwap_01W20D00D00D
+    4148,  // imageAtomicCompSwap_01C20D00D00D
+    4151,  // imageAtomicCompSwap_01N20D00D00D
+    4154,  // imageAtomicCompSwap_01Y20D00D00D
+    4157,  // imageAtomicCompSwap_01J00D00D00D
+    4160,  // imageAtomicCompSwap_01U00D00D00D
+    4163,  // imageAtomicCompSwap_01f00D00D00D
+    4166,  // imageAtomicCompSwap_01B20D00D00D
+    4169,  // imageAtomicCompSwap_01M20D00D00D
+    4172,  // imageAtomicCompSwap_01X20D00D00D
+    4175,  // imageAtomicCompSwap_01H20D00D00D
+    4178,  // imageAtomicCompSwap_01S20D00D00D
+    4181,  // imageAtomicCompSwap_01d20D00D00D
+    4184,  // imageAtomicCompSwap_01D00D00D00D
+    4187,  // imageAtomicCompSwap_01O00D00D00D
+    4190,  // imageAtomicCompSwap_01Z00D00D00D
+    4193,  // imageAtomicCompSwap_01E10D00D00D
+    4196,  // imageAtomicCompSwap_01P10D00D00D
+    4199,  // imageAtomicCompSwap_01a10D00D00D
+    4202,  // imageAtomicCompSwap_01I10D00D00D
+    4205,  // imageAtomicCompSwap_01T10D00D00D
+    4208,  // imageAtomicCompSwap_01e10D00D00D
+    4211,  // imageAtomicCompSwap_01F10D00D00D00D
+    4214,  // imageAtomicCompSwap_01Q10D00D00D00D
+    4217,  // imageAtomicCompSwap_01b10D00D00D00D
+    4220,  // imageAtomicCompSwap_01G20D00D00D00D
+    4223,  // imageAtomicCompSwap_01R20D00D00D00D
+    4226,  // imageAtomicCompSwap_01c20D00D00D00D
+    4229,  // pixelLocalLoadANGLE_01g
+    4230,  // pixelLocalLoadANGLE_01h
+    4231,  // pixelLocalLoadANGLE_01i
+    4232,  // pixelLocalStoreANGLE_01g30B
+    4233,  // pixelLocalStoreANGLE_01h30D
+    4234,  // pixelLocalStoreANGLE_01i30E
+    4235,  // beginInvocationInterlockNV_
+    4236,  // endInvocationInterlockNV_
+    4237,  // beginFragmentShaderOrderingINTEL_
+    4238,  // beginInvocationInterlockARB_
+    4239,  // endInvocationInterlockARB_
+    4240,  // noise1_00B
+    4241,  // noise1_10B
+    4242,  // noise1_20B
+    4243,  // noise1_30B
+    4244,  // noise2_00B
+    4245,  // noise2_10B
+    4246,  // noise2_20B
+    4247,  // noise2_30B
+    4248,  // noise3_00B
+    4249,  // noise3_10B
+    4250,  // noise3_20B
+    4251,  // noise3_30B
+    4252,  // noise4_00B
+    4253,  // noise4_10B
+    4254,  // noise4_20B
+    4255,  // noise4_30B
+    4256,  // memoryBarrier_
+    4258,  // memoryBarrierAtomicCounter_
+    4260,  // memoryBarrierBuffer_
+    4262,  // memoryBarrierImage_
+    4264,  // barrier_
+    4269,  // memoryBarrierShared_
+    4271,  // groupMemoryBarrier_
+    4273,  // EmitVertex_
+    4277,  // EndPrimitive_
+    4281,  // EmitStreamVertex_00D
+    4282,  // EndStreamPrimitive_00D
+    4283,  // subpassLoad_01j
+    4285,  // subpassLoad_01k
+    4287,  // subpassLoad_01l
+    4289,  // subpassLoad_01m00D
+    4291,  // subpassLoad_01n00D
+    4293,  // subpassLoad_01o00D
+    4295,  // anyInvocation_00F
+    4296,  // allInvocations_00F
+    4297,  // allInvocationsEqual_00F
+    4298,  // numSamples_
+    4299,  // samplePosition_00E
+    4300,  // interpolateAtCenter_00B
+    4301,  // interpolateAtCenter_10B
+    4302,  // interpolateAtCenter_20B
+    4303,  // interpolateAtCenter_30B
+    4304,  // saturate_00B
+    4305,  // saturate_10B
+    4306,  // saturate_20B
+    4307,  // saturate_30B
+    4308,  // gl_DepthRangeParameters
+    4310,  // gl_DepthRange
+    4312,  // gl_NumSamples
+    4315,  // gl_MaxVertexAttribs
+    4317,  // gl_MaxVertexUniformVectors
+    4319,  // gl_MaxVertexTextureImageUnits
+    4321,  // gl_MaxCombinedTextureImageUnits
+    4323,  // gl_MaxTextureImageUnits
+    4325,  // gl_MaxFragmentUniformVectors
+    4327,  // gl_MaxVaryingVectors
+    4329,  // gl_MaxDrawBuffers
+    4331,  // gl_MaxDualSourceDrawBuffersEXT
+    4332,  // gl_MaxVertexOutputVectors
+    4334,  // gl_MaxFragmentInputVectors
+    4336,  // gl_MinProgramTexelOffset
+    4338,  // gl_MaxProgramTexelOffset
+    4340,  // gl_MaxImageUnits
+    4342,  // gl_MaxVertexImageUniforms
+    4344,  // gl_MaxFragmentImageUniforms
+    4346,  // gl_MaxComputeImageUniforms
+    4348,  // gl_MaxCombinedImageUniforms
+    4350,  // gl_MaxCombinedShaderOutputResources
+    4352,  // gl_MaxComputeWorkGroupCount
+    4354,  // gl_MaxComputeWorkGroupSize
+    4356,  // gl_MaxComputeUniformComponents
+    4358,  // gl_MaxComputeTextureImageUnits
+    4360,  // gl_MaxComputeAtomicCounters
+    4362,  // gl_MaxComputeAtomicCounterBuffers
+    4364,  // gl_MaxVertexAtomicCounters
+    4366,  // gl_MaxFragmentAtomicCounters
+    4368,  // gl_MaxCombinedAtomicCounters
+    4370,  // gl_MaxAtomicCounterBindings
+    4372,  // gl_MaxVertexAtomicCounterBuffers
+    4374,  // gl_MaxFragmentAtomicCounterBuffers
+    4376,  // gl_MaxCombinedAtomicCounterBuffers
+    4378,  // gl_MaxAtomicCounterBufferSize
+    4380,  // gl_MaxGeometryInputComponents
+    4384,  // gl_MaxGeometryOutputComponents
+    4388,  // gl_MaxGeometryImageUniforms
+    4392,  // gl_MaxGeometryTextureImageUnits
+    4396,  // gl_MaxGeometryOutputVertices
+    4400,  // gl_MaxGeometryTotalOutputComponents
+    4404,  // gl_MaxGeometryUniformComponents
+    4408,  // gl_MaxGeometryAtomicCounters
+    4412,  // gl_MaxGeometryAtomicCounterBuffers
+    4416,  // gl_MaxTessControlInputComponents
+    4420,  // gl_MaxTessControlOutputComponents
+    4424,  // gl_MaxTessControlTextureImageUnits
+    4428,  // gl_MaxTessControlUniformComponents
+    4432,  // gl_MaxTessControlTotalOutputComponents
+    4436,  // gl_MaxTessControlImageUniforms
+    4440,  // gl_MaxTessControlAtomicCounters
+    4444,  // gl_MaxTessControlAtomicCounterBuffers
+    4448,  // gl_MaxTessPatchComponents
+    4452,  // gl_MaxPatchVertices
+    4456,  // gl_MaxTessGenLevel
+    4460,  // gl_MaxTessEvaluationInputComponents
+    4464,  // gl_MaxTessEvaluationOutputComponents
+    4468,  // gl_MaxTessEvaluationTextureImageUnits
+    4472,  // gl_MaxTessEvaluationUniformComponents
+    4476,  // gl_MaxTessEvaluationImageUniforms
+    4480,  // gl_MaxTessEvaluationAtomicCounters
+    4484,  // gl_MaxTessEvaluationAtomicCounterBuffers
+    4488,  // gl_MaxSamples
+    4491,  // gl_MaxClipDistances
+    4494,  // gl_MaxCullDistances
+    4496,  // gl_MaxCombinedClipAndCullDistances
+    4498,  // gl_FragCoord
+    4502,  // gl_FrontFacing
+    4504,  // gl_PointCoord
+    4506,  // gl_FragColor
+    4508,  // gl_FragData
+    4510,  // gl_FragDepth
+    4512,  // gl_HelperInvocation
+    4514,  // gl_SecondaryFragColorEXT
+    4515,  // gl_SecondaryFragDataEXT
+    4516,  // gl_FragDepthEXT
+    4517,  // gl_LastFragData
+    4520,  // gl_LastFragColor
+    4521,  // gl_LastFragColorARM
+    4522,  // gl_PrimitiveID
+    4538,  // gl_Layer
+    4546,  // gl_SampleID
+    4549,  // gl_SamplePosition
+    4552,  // gl_SampleMaskIn
+    4555,  // gl_SampleMask
+    4558,  // gl_Position
+    4572,  // gl_PointSize
+    4576,  // gl_InstanceID
+    4578,  // Empty
+    4578,  // gl_VertexID
+    4580,  // Empty
+    4580,  // Empty
+    4580,  // gl_DrawID
+    4581,  // gl_BaseVertex
+    4582,  // gl_BaseInstance
+    4583,  // angle_BaseVertex
+    4584,  // angle_BaseInstance
+    4585,  // gl_ClipDistance
+    4588,  // gl_NumWorkGroups
+    4590,  // gl_WorkGroupSize
+    4592,  // gl_WorkGroupID
+    4594,  // gl_LocalInvocationID
+    4596,  // gl_GlobalInvocationID
+    4598,  // gl_LocalInvocationIndex
+    4600,  // gl_PrimitiveIDIn
+    4604,  // gl_InvocationID
+    4612,  // gl_PerVertex
+    4624,  // gl_in
+    4636,  // gl_PatchVerticesIn
+    4644,  // gl_TessLevelOuter
+    4652,  // gl_TessLevelInner
+    4660,  // gl_out
+    4668,  // gl_BoundingBox
+    4672,  // gl_BoundingBoxEXT
+    4676,  // gl_BoundingBoxOES
+    4680,  // gl_TessCoord
+    4682,  // gl_ViewID_OVR
+    4683,  // gl_CullDistance
 };
 
 using Ext = TExtension;
@@ -38877,7 +38973,7 @@ namespace
 {
 uint16_t GetNextRuleIndex(uint32_t nameHash)
 {
-    if (nameHash == 2204 - 1)
+    if (nameHash == 2210 - 1)
         return ArraySize(BuiltInArray::kRules);
     return BuiltInArray::kMangledOffsets[nameHash + 1];
 }
@@ -38889,7 +38985,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
         return nullptr;
 
     uint32_t nameHash = name.mangledNameHash();
-    if (nameHash >= 2204)
+    if (nameHash >= 2210)
         return nullptr;
 
     const char *actualName = BuiltInArray::kMangledNames[nameHash];
