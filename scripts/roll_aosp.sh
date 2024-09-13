@@ -80,9 +80,9 @@ function generate_Android_bp_file() {
             "angle_has_rapidjson = false"
 
             # TODO(b/279980674): re-enable end2end tests
-            # "build_angle_end2end_tests_aosp = true"
-            # "build_angle_trace_tests = false"
-            # "angle_test_enable_system_egl = true"
+            "build_angle_end2end_tests_aosp = true"
+            "build_angle_trace_tests = false"
+            "angle_test_enable_system_egl = true"
         )
 
         if [[ "$1" == "--enableApiTrace" ]]; then
