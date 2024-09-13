@@ -712,6 +712,28 @@ def get_blueprint_targets_from_build_info(build_info: BuildInfo) -> List[Tuple[s
     return generated_targets
 
 
+def handle_angle_non_conformant_extensions_and_versions(
+    generated_targets: List[Tuple[str, dict]],
+    blueprint_targets: List[dict],
+):
+    """Replace the non conformant cflags with a separate cc_defaults.
+
+    The downstream can custom the cflags easier.
+    """
+    non_conform_cflag = '-DANGLE_EXPOSE_NON_CONFORMANT_EXTENSIONS_AND_VERSIONS'
+    non_conform_defaults = 'angle_non_conformant_extensions_and_versions_cflags'
+
+    blueprint_targets.append(('cc_defaults', {
+        'name': non_conform_defaults,
+        'cflags': [non_conform_cflag],
+    }))
+
+    for _, bp in generated_targets:
+        if 'cflags' in bp and non_conform_cflag in bp['cflags']:
+            bp['cflags'] = list(set(bp['cflags']) - {non_conform_cflag})
+            bp['defaults'].append(non_conform_defaults)
+
+
 def main():
     parser = argparse.ArgumentParser(
         description='Generate Android blueprints from gn descriptions.')
@@ -757,6 +779,10 @@ def main():
         }))
 
     generated_targets = get_blueprint_targets_from_build_info(build_info)
+
+    # Will modify generated_targets and blueprint_targets in-place to handle the
+    # angle_expose_non_conformant_extensions_and_versions gn argument.
+    handle_angle_non_conformant_extensions_and_versions(generated_targets, blueprint_targets)
 
     # Move cflags that are repeated in each target to cc_defaults
     all_cflags = [set(bp['cflags']) for _, bp in generated_targets if 'cflags' in bp]
