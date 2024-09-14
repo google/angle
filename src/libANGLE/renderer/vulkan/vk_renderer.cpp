@@ -276,8 +276,6 @@ constexpr const char *kSkippedMessages[] = {
     // https://anglebug.com/362545033
     // VVL bug: https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/8458
     "VUID-vkCmdDraw-None-02721",
-    // https://anglebug.com/365580001
-    "VUID-vkCmdDrawIndexed-Input-08734",
 };
 
 // Validation messages that should be ignored only when VK_EXT_primitive_topology_list_restart is
