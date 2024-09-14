@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 359
+#define ANGLE_SH_VERSION 360
 
 enum ShShaderSpec
 {
@@ -453,6 +453,9 @@ struct ShCompileOptions
     // - Shader contains easy-to-detect infinite loops
     //
     uint64_t rejectWebglShadersWithUndefinedBehavior : 1;
+
+    // Emulate r32f image with an r32ui image
+    uint64_t emulateR32fImageAtomicExchange : 1;
 
     ShCompileOptionsMetal metal;
     ShPixelLocalStorageOptions pls;

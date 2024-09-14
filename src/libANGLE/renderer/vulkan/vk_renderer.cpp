@@ -2295,6 +2295,7 @@ angle::Result Renderer::initializeMemoryAllocator(vk::Context *context)
 // - VK_ANDROID_external_format_resolve:               externalFormatResolve (feature)
 // - VK_EXT_vertex_input_dynamic_state:                vertexInputDynamicState (feature)
 // - VK_KHR_dynamic_rendering_local_read:              dynamicRenderingLocalRead (feature)
+// - VK_EXT_shader_atomic_float                        shaderImageFloat32Atomics (feature)
 //
 void Renderer::appendDeviceExtensionFeaturesNotPromoted(
     const vk::ExtensionNameList &deviceExtensionNames,
@@ -2405,6 +2406,11 @@ void Renderer::appendDeviceExtensionFeaturesNotPromoted(
                             deviceExtensionNames))
     {
         vk::AddToPNextChain(deviceFeatures, &mRasterizationOrderAttachmentAccessFeatures);
+    }
+
+    if (ExtensionFound(VK_EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME, deviceExtensionNames))
+    {
+        vk::AddToPNextChain(deviceFeatures, &mShaderAtomicFloatFeatures);
     }
 
     if (ExtensionFound(VK_EXT_SWAPCHAIN_MAINTENANCE_1_EXTENSION_NAME, deviceExtensionNames))
@@ -2801,6 +2807,10 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
     mMaintenance5Features       = {};
     mMaintenance5Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MAINTENANCE_5_FEATURES_KHR;
 
+    mShaderAtomicFloatFeatures = {};
+    mShaderAtomicFloatFeatures.sType =
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_ATOMIC_FLOAT_FEATURES_EXT;
+
     mSwapchainMaintenance1Features = {};
     mSwapchainMaintenance1Features.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SWAPCHAIN_MAINTENANCE_1_FEATURES_EXT;
@@ -2912,6 +2922,7 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
     mPipelineRobustnessFeatures.pNext                 = nullptr;
     mPipelineProtectedAccessFeatures.pNext            = nullptr;
     mRasterizationOrderAttachmentAccessFeatures.pNext = nullptr;
+    mShaderAtomicFloatFeatures.pNext                  = nullptr;
     mMaintenance5Features.pNext                       = nullptr;
     mSwapchainMaintenance1Features.pNext              = nullptr;
     mDitheringFeatures.pNext                          = nullptr;
@@ -3176,6 +3187,13 @@ void Renderer::enableDeviceExtensionsNotPromoted(const vk::ExtensionNameList &de
                 VK_ARM_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_EXTENSION_NAME);
         }
         vk::AddToPNextChain(&mEnabledFeatures, &mRasterizationOrderAttachmentAccessFeatures);
+    }
+
+    if (!mFeatures.emulateR32fImageAtomicExchange.enabled)
+    {
+        ASSERT(ExtensionFound(VK_EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME, deviceExtensionNames));
+        mEnabledDeviceExtensions.push_back(VK_EXT_SHADER_ATOMIC_FLOAT_EXTENSION_NAME);
+        vk::AddToPNextChain(&mEnabledFeatures, &mShaderAtomicFloatFeatures);
     }
 
     if (mFeatures.supportsImage2dViewOf3d.enabled)
@@ -4810,9 +4828,10 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         &mFeatures, preferDrawClearOverVkCmdClearAttachments,
         isQualcommProprietary && qualcommDriverVersion < QualcommDriverVersion(512, 762, 12));
 
-    // r32f image emulation is done unconditionally so VK_FORMAT_FEATURE_STORAGE_*_ATOMIC_BIT is not
-    // required.
-    ANGLE_FEATURE_CONDITION(&mFeatures, emulateR32fImageAtomicExchange, true);
+    // R32F imageAtomicExchange emulation is done if shaderImageFloat32Atomics feature is not
+    // supported.
+    ANGLE_FEATURE_CONDITION(&mFeatures, emulateR32fImageAtomicExchange,
+                            mShaderAtomicFloatFeatures.shaderImageFloat32Atomics != VK_TRUE);
 
     // Whether non-conformant configurations and extensions should be exposed.
     ANGLE_FEATURE_CONDITION(&mFeatures, exposeNonConformantExtensionsAndVersions,

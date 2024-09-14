@@ -20613,7 +20613,7 @@ constexpr const TFunction imageAtomicExchange_00z10D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p00z10D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01K10D00B(
@@ -20622,7 +20622,7 @@ constexpr const TFunction imageAtomicExchange_01K10D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01K10D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01V10D00B(
@@ -20631,7 +20631,7 @@ constexpr const TFunction imageAtomicExchange_01V10D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01V10D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01A20D00B(
@@ -20640,7 +20640,7 @@ constexpr const TFunction imageAtomicExchange_01A20D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01A20D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01L20D00B(
@@ -20649,7 +20649,7 @@ constexpr const TFunction imageAtomicExchange_01L20D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01L20D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01W20D00B(
@@ -20658,7 +20658,7 @@ constexpr const TFunction imageAtomicExchange_01W20D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01W20D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01C20D00B(
@@ -20667,7 +20667,7 @@ constexpr const TFunction imageAtomicExchange_01C20D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01C20D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01N20D00B(
@@ -20676,7 +20676,7 @@ constexpr const TFunction imageAtomicExchange_01N20D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01N20D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01Y20D00B(
@@ -20685,7 +20685,7 @@ constexpr const TFunction imageAtomicExchange_01Y20D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01Y20D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01J00D00B(
@@ -20694,7 +20694,7 @@ constexpr const TFunction imageAtomicExchange_01J00D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01J00D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01U00D00B(
@@ -20703,7 +20703,7 @@ constexpr const TFunction imageAtomicExchange_01U00D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01U00D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01f00D00B(
@@ -20712,7 +20712,7 @@ constexpr const TFunction imageAtomicExchange_01f00D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01f00D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01B20D00B(
@@ -20721,7 +20721,7 @@ constexpr const TFunction imageAtomicExchange_01B20D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01B20D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01M20D00B(
@@ -20730,7 +20730,7 @@ constexpr const TFunction imageAtomicExchange_01M20D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01M20D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01X20D00B(
@@ -20739,7 +20739,7 @@ constexpr const TFunction imageAtomicExchange_01X20D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01X20D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01H20D00B(
@@ -20748,7 +20748,7 @@ constexpr const TFunction imageAtomicExchange_01H20D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01H20D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01S20D00B(
@@ -20757,7 +20757,7 @@ constexpr const TFunction imageAtomicExchange_01S20D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01S20D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01d20D00B(
@@ -20766,7 +20766,7 @@ constexpr const TFunction imageAtomicExchange_01d20D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01d20D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01D00D00B(
@@ -20775,7 +20775,7 @@ constexpr const TFunction imageAtomicExchange_01D00D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01D00D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01O00D00B(
@@ -20784,7 +20784,7 @@ constexpr const TFunction imageAtomicExchange_01O00D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01O00D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01Z00D00B(
@@ -20793,7 +20793,7 @@ constexpr const TFunction imageAtomicExchange_01Z00D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01Z00D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01E10D00B(
@@ -20802,7 +20802,7 @@ constexpr const TFunction imageAtomicExchange_01E10D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01E10D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01P10D00B(
@@ -20811,7 +20811,7 @@ constexpr const TFunction imageAtomicExchange_01P10D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01P10D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01a10D00B(
@@ -20820,7 +20820,7 @@ constexpr const TFunction imageAtomicExchange_01a10D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01a10D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01I10D00B(
@@ -20829,7 +20829,7 @@ constexpr const TFunction imageAtomicExchange_01I10D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01I10D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01T10D00B(
@@ -20838,7 +20838,7 @@ constexpr const TFunction imageAtomicExchange_01T10D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01T10D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01e10D00B(
@@ -20847,7 +20847,7 @@ constexpr const TFunction imageAtomicExchange_01e10D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01e10D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01F10D00D00B(
@@ -20856,7 +20856,7 @@ constexpr const TFunction imageAtomicExchange_01F10D00D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01F10D00D00B,
     4,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01Q10D00D00B(
@@ -20865,7 +20865,7 @@ constexpr const TFunction imageAtomicExchange_01Q10D00D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01Q10D00D00B,
     4,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01b10D00D00B(
@@ -20874,7 +20874,7 @@ constexpr const TFunction imageAtomicExchange_01b10D00D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01b10D00D00B,
     4,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01G20D00D00B(
@@ -20883,7 +20883,7 @@ constexpr const TFunction imageAtomicExchange_01G20D00D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01G20D00D00B,
     4,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01R20D00D00B(
@@ -20892,7 +20892,7 @@ constexpr const TFunction imageAtomicExchange_01R20D00D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01R20D00D00B,
     4,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchange_01c20D00D00B(
@@ -20901,7 +20901,7 @@ constexpr const TFunction imageAtomicExchange_01c20D00D00B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p01c20D00D00B,
     4,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicCompSwap_00z10D00E00E(
@@ -25662,7 +25662,7 @@ constexpr const TFunction imageAtomicExchangeExt_00z10D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p00z10D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01K10D00B(
@@ -25671,7 +25671,7 @@ constexpr const TFunction imageAtomicExchangeExt_01K10D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01K10D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01V10D00B(
@@ -25680,7 +25680,7 @@ constexpr const TFunction imageAtomicExchangeExt_01V10D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01V10D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01A20D00B(
@@ -25689,7 +25689,7 @@ constexpr const TFunction imageAtomicExchangeExt_01A20D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01A20D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01L20D00B(
@@ -25698,7 +25698,7 @@ constexpr const TFunction imageAtomicExchangeExt_01L20D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01L20D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01W20D00B(
@@ -25707,7 +25707,7 @@ constexpr const TFunction imageAtomicExchangeExt_01W20D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01W20D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01C20D00B(
@@ -25716,7 +25716,7 @@ constexpr const TFunction imageAtomicExchangeExt_01C20D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01C20D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01N20D00B(
@@ -25725,7 +25725,7 @@ constexpr const TFunction imageAtomicExchangeExt_01N20D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01N20D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01Y20D00B(
@@ -25734,7 +25734,7 @@ constexpr const TFunction imageAtomicExchangeExt_01Y20D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01Y20D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01J00D00B(
@@ -25743,7 +25743,7 @@ constexpr const TFunction imageAtomicExchangeExt_01J00D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01J00D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01U00D00B(
@@ -25752,7 +25752,7 @@ constexpr const TFunction imageAtomicExchangeExt_01U00D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01U00D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01f00D00B(
@@ -25761,7 +25761,7 @@ constexpr const TFunction imageAtomicExchangeExt_01f00D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01f00D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01B20D00B(
@@ -25770,7 +25770,7 @@ constexpr const TFunction imageAtomicExchangeExt_01B20D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01B20D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01M20D00B(
@@ -25779,7 +25779,7 @@ constexpr const TFunction imageAtomicExchangeExt_01M20D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01M20D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01X20D00B(
@@ -25788,7 +25788,7 @@ constexpr const TFunction imageAtomicExchangeExt_01X20D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01X20D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01H20D00B(
@@ -25797,7 +25797,7 @@ constexpr const TFunction imageAtomicExchangeExt_01H20D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01H20D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01S20D00B(
@@ -25806,7 +25806,7 @@ constexpr const TFunction imageAtomicExchangeExt_01S20D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01S20D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01d20D00B(
@@ -25815,7 +25815,7 @@ constexpr const TFunction imageAtomicExchangeExt_01d20D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01d20D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01D00D00B(
@@ -25824,7 +25824,7 @@ constexpr const TFunction imageAtomicExchangeExt_01D00D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01D00D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01O00D00B(
@@ -25833,7 +25833,7 @@ constexpr const TFunction imageAtomicExchangeExt_01O00D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01O00D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01Z00D00B(
@@ -25842,7 +25842,7 @@ constexpr const TFunction imageAtomicExchangeExt_01Z00D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01Z00D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01E10D00B(
@@ -25851,7 +25851,7 @@ constexpr const TFunction imageAtomicExchangeExt_01E10D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01E10D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01P10D00B(
@@ -25860,7 +25860,7 @@ constexpr const TFunction imageAtomicExchangeExt_01P10D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01P10D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01a10D00B(
@@ -25869,7 +25869,7 @@ constexpr const TFunction imageAtomicExchangeExt_01a10D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01a10D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01I10D00B(
@@ -25878,7 +25878,7 @@ constexpr const TFunction imageAtomicExchangeExt_01I10D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01I10D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01T10D00B(
@@ -25887,7 +25887,7 @@ constexpr const TFunction imageAtomicExchangeExt_01T10D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01T10D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01e10D00B(
@@ -25896,7 +25896,7 @@ constexpr const TFunction imageAtomicExchangeExt_01e10D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01e10D00B,
     3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01F10D00D00B(
@@ -25905,7 +25905,7 @@ constexpr const TFunction imageAtomicExchangeExt_01F10D00D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01F10D00D00B,
     4,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01Q10D00D00B(
@@ -25914,7 +25914,7 @@ constexpr const TFunction imageAtomicExchangeExt_01Q10D00D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01Q10D00D00B,
     4,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01b10D00D00B(
@@ -25923,7 +25923,7 @@ constexpr const TFunction imageAtomicExchangeExt_01b10D00D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01b10D00D00B,
     4,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01G20D00D00B(
@@ -25932,7 +25932,7 @@ constexpr const TFunction imageAtomicExchangeExt_01G20D00D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01G20D00D00B,
     4,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01R20D00D00B(
@@ -25941,7 +25941,7 @@ constexpr const TFunction imageAtomicExchangeExt_01R20D00D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01R20D00D00B,
     4,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicExchangeExt_01c20D00D00B(
@@ -25950,7 +25950,7 @@ constexpr const TFunction imageAtomicExchangeExt_01c20D00D00B(
     std::array<TExtension, 1u>{{TExtension::OES_shader_image_atomic}},
     BuiltInParameters::p01c20D00D00B,
     4,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 1, 1>(),
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 1, 1>(),
     EOpImageAtomicExchange,
     false);
 constexpr const TFunction imageAtomicCompSwapExt_00z10D00E00E(

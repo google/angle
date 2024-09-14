@@ -1113,7 +1113,7 @@ GROUP BEGIN Image {"queryFunction": true}
         uint imageAtomicExchange(IMAGE_PARAMS, uint);
         int imageAtomicExchange(IMAGE_PARAMS, int);
       DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS", "glsl_level": "GLSL4_5_BUILTINS", "hasSideEffects": true}
-        int imageAtomicExchange(IMAGE_PARAMS, float);
+        float imageAtomicExchange(IMAGE_PARAMS, float);
       DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS", "glsl_level": "GLSL4_2_BUILTINS", "hasSideEffects": true}
         uint imageAtomicCompSwap(IMAGE_PARAMS, uint, uint);
         int imageAtomicCompSwap(IMAGE_PARAMS, int, int);
@@ -1132,7 +1132,7 @@ GROUP BEGIN Image {"queryFunction": true}
         int imageAtomicXor(readonly writeonly IMAGE_PARAMS, int);
         uint imageAtomicExchange(readonly writeonly IMAGE_PARAMS, uint);
         int imageAtomicExchange(readonly writeonly IMAGE_PARAMS, int);
-        int imageAtomicExchange(readonly writeonly IMAGE_PARAMS, float);
+        float imageAtomicExchange(readonly writeonly IMAGE_PARAMS, float);
         uint imageAtomicCompSwap(readonly writeonly IMAGE_PARAMS, uint, uint);
         int imageAtomicCompSwap(readonly writeonly IMAGE_PARAMS, int, int);
   GROUP END Atomic
