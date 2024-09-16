@@ -1304,7 +1304,7 @@ void ContextVk::onDestroy(const gl::Context *context)
     // Must retire all Vulkan secondary command buffers before destroying the pools.
     if ((!vk::OutsideRenderPassCommandBuffer::ExecutesInline() ||
          !vk::RenderPassCommandBuffer::ExecutesInline()) &&
-        mRenderer->isAsyncCommandBufferResetEnabled())
+        mRenderer->isAsyncCommandBufferResetAndGarbageCleanupEnabled())
     {
         // This will also reset Primary command buffers which is REQUIRED on some buggy Vulkan
         // implementations.

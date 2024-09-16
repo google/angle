@@ -48,7 +48,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::AlwaysUseSharedStorageModeForBuffers, "alwaysUseSharedStorageModeForBuffers"},
     {Feature::AlwaysUseStagedBufferUpdates, "alwaysUseStagedBufferUpdates"},
     {Feature::AppendAliasedMemoryDecorations, "appendAliasedMemoryDecorations"},
-    {Feature::AsyncCommandBufferReset, "asyncCommandBufferReset"},
+    {Feature::AsyncCommandBufferResetAndGarbageCleanup, "asyncCommandBufferResetAndGarbageCleanup"},
     {Feature::AsyncCommandQueue, "asyncCommandQueue"},
     {Feature::Avoid1BitAlphaTextureFormats, "avoid1BitAlphaTextureFormats"},
     {Feature::AvoidBindFragDataLocation, "avoidBindFragDataLocation"},

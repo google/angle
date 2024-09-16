@@ -4713,7 +4713,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // Currently disabled by default: http://anglebug.com/42262955
     ANGLE_FEATURE_CONDITION(&mFeatures, asyncCommandQueue, false);
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, asyncCommandBufferReset, true);
+    ANGLE_FEATURE_CONDITION(&mFeatures, asyncCommandBufferResetAndGarbageCleanup, true);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsYUVSamplerConversion,
                             mSamplerYcbcrConversionFeatures.samplerYcbcrConversion != VK_FALSE);

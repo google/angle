@@ -1229,10 +1229,10 @@ struct FeaturesVk : FeatureSetBase
         &members, "https://issuetracker.google.com/253522366"
     };
 
-    FeatureInfo asyncCommandBufferReset = {
-        "asyncCommandBufferReset",
+    FeatureInfo asyncCommandBufferResetAndGarbageCleanup = {
+        "asyncCommandBufferResetAndGarbageCleanup",
         FeatureCategory::VulkanFeatures,
-        "Reset command buffer in async thread.",
+        "Reset command buffer and cleanup garbage in async thread.",
         &members, "https://issuetracker.google.com/255411748"
     };
 
