@@ -66,7 +66,11 @@ struct HostTransferConfig
     size_t size            = 0;
     size_t offset          = 0;
     void *dstHostPtr       = nullptr;
+
+    // Source host pointer that can contain data/pattern/etc
     const void *srcHostPtr = nullptr;
+
+    size_t patternSize     = 0;
     size_t rowPitch        = 0;
     size_t slicePitch      = 0;
     size_t elementSize     = 0;

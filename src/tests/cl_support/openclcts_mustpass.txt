@@ -128,6 +128,7 @@ buffers.mem_copy_host_flags
 buffers.mem_alloc_ref_flags
 buffers.buffer_read_long
 buffers.buffer_write_char
+buffers.buffer_fill_char
 profiling.copy_array_to_image
 multiples.context_four_contexts_same_device
 cl_copy_images.1D
