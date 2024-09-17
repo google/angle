@@ -361,7 +361,7 @@ struct ANGLE_Output_Annotated {
   @location(0) gl_FragColor_ : vec4<f32>,
 };
 
-var<uniform> _uu_color : vec4<f32>;
+var<private> _uu_color : vec4<f32>;
 
 fn _umain()
 {

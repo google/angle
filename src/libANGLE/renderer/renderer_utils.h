@@ -43,6 +43,11 @@ class AttributeMap;
 struct DisplayState;
 }  // namespace egl
 
+namespace sh
+{
+struct BlockMemberInfo;
+}
+
 namespace rx
 {
 class ContextImpl;
@@ -267,6 +272,63 @@ void GetMatrixUniform(GLenum type, GLfloat *dataOut, const GLfloat *source, bool
 
 template <typename NonFloatT>
 void GetMatrixUniform(GLenum type, NonFloatT *dataOut, const NonFloatT *source, bool transpose);
+
+// Contains a CPU-side buffer and its data layout, used as a shadow buffer for default uniform
+// blocks in VK and WGPU backends.
+struct BufferAndLayout final : private angle::NonCopyable
+{
+    BufferAndLayout();
+    ~BufferAndLayout();
+
+    // Shadow copies of the shader uniform data.
+    angle::MemoryBuffer uniformData;
+
+    // Tells us where to write on a call to a setUniform method. They are arranged in uniform
+    // location order.
+    std::vector<sh::BlockMemberInfo> uniformLayout;
+};
+
+template <typename T>
+void UpdateBufferWithLayout(GLsizei count,
+                            uint32_t arrayIndex,
+                            int componentCount,
+                            const T *v,
+                            const sh::BlockMemberInfo &layoutInfo,
+                            angle::MemoryBuffer *uniformData);
+
+template <typename T>
+void ReadFromBufferWithLayout(int componentCount,
+                              uint32_t arrayIndex,
+                              T *dst,
+                              const sh::BlockMemberInfo &layoutInfo,
+                              const angle::MemoryBuffer *uniformData);
+
+using DefaultUniformBlockMap = gl::ShaderMap<std::shared_ptr<BufferAndLayout>>;
+
+template <typename T>
+void SetUniform(const gl::ProgramExecutable *executable,
+                GLint location,
+                GLsizei count,
+                const T *v,
+                GLenum entryPointType,
+                DefaultUniformBlockMap *defaultUniformBlocks,
+                gl::ShaderBitSet *defaultUniformBlocksDirty);
+
+template <int cols, int rows>
+void SetUniformMatrixfv(const gl::ProgramExecutable *executable,
+                        GLint location,
+                        GLsizei count,
+                        GLboolean transpose,
+                        const GLfloat *value,
+                        DefaultUniformBlockMap *defaultUniformBlocks,
+                        gl::ShaderBitSet *defaultUniformBlocksDirty);
+
+template <typename T>
+void GetUniform(const gl::ProgramExecutable *executable,
+                GLint location,
+                T *v,
+                GLenum entryPointType,
+                const DefaultUniformBlockMap *defaultUniformBlocks);
 
 const angle::Format &GetFormatFromFormatType(GLenum format, GLenum type);
 

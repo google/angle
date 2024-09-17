@@ -1526,9 +1526,9 @@ void OutputWGSLTraverser::emitVariableDeclaration(const VarDecl &decl,
         // TODO(anglebug.com/42267100): <workgroup> or <storage>?
         if (decl.type.getQualifier() == EvqUniform)
         {
-            // TODO(anglebug.com/42267100): uniform requires complex alignment of structs and
-            // arrays, as well as @group() and @binding() annotations.
-            mSink << "<uniform>";
+            // TODO(anglebug.com/42267100): don't output uniforms here, do it in a pre-pass.
+            // Temporarily declare as a shader-private variable so shaders compile.
+            mSink << "<private>";
         }
         else if (evdConfig.isGlobalScope)
         {
