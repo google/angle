@@ -233,6 +233,12 @@ constexpr const char *kSkippedMessages[] = {
     // VVL bug: https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/7858
     "VUID-vkCmdDraw-None-08608",
     "VUID-vkCmdDrawIndexed-None-08608",
+    "VUID-vkCmdDraw-None-07843",
+    "VUID-vkCmdDrawIndexed-None-07843",
+    "VUID-vkCmdDraw-None-07844",
+    "VUID-vkCmdDrawIndexed-None-07844",
+    "VUID-vkCmdDraw-None-07847",
+    "VUID-vkCmdDrawIndexed-None-07847",
     // Invalid feedback loop caused by the application
     "VUID-vkCmdDraw-None-09000",
     "VUID-vkCmdDrawIndexed-None-09000",
