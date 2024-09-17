@@ -59,6 +59,20 @@ DEFAULT_LOG_LEVEL = 'info'
 Result = namedtuple('Result', ['stdout', 'stderr', 'time'])
 
 
+class _global(object):
+    current_user = None
+    storage_dir = None
+    cache_dir = None
+
+
+def init():
+    _global.current_user = run_adb_command('shell am get-current-user').stdout.strip()
+    _global.storage_dir = '/data/user/' + _global.current_user + '/com.android.angle.test/files'
+    _global.cache_dir = '/data/user_de/' + _global.current_user + '/com.android.angle.test/cach'
+    logging.debug('Running with user %s, storage %s, cache %s', _global.current_user,
+                  _global.storage_dir, _global.cache_dir)
+
+
 def run_command(args):
     logging.debug('Running %s' % args)
 
@@ -110,12 +124,12 @@ def run_async_adb_command(args):
 
 
 def cleanup():
-    run_adb_command('shell rm -f /sdcard/Download/out.txt /sdcard/Download/gpumem.txt')
+    run_adb_command('shell rm -f ' + _global.storage_dir + '/out.txt ' + _global.storage_dir +
+                    '/gpumem.txt')
 
 
 def clear_blob_cache():
-    run_adb_command(
-        'shell run-as com.android.angle.test rm -rf /data/user_de/0/com.android.angle.test/cache')
+    run_adb_command('shell run-as com.android.angle.test rm -rf ' + _global.cache_dir)
 
 
 def select_device(device_arg):
@@ -193,7 +207,7 @@ def run_trace(trace, args):
     # Note the 0.25 below is the delay (in seconds) between memory checks
     if args.memory:
         run_adb_command('push gpumem.sh /data/local/tmp')
-        memory_command = 'shell sh /data/local/tmp/gpumem.sh 0.25'
+        memory_command = 'shell sh /data/local/tmp/gpumem.sh 0.25 ' + _global.storage_dir
         memory_process = run_async_adb_command(memory_command)
 
     flags = [
@@ -211,22 +225,24 @@ def run_trace(trace, args):
     # Build a command that can be run directly over ADB, for example:
     r'''
 adb shell am instrument -w \
-    -e org.chromium.native_test.NativeTestInstrumentationTestRunner.StdoutFile /sdcard/Download/out.txt \
+    -e org.chromium.native_test.NativeTestInstrumentationTestRunner.StdoutFile /data/user/0/com.android.angle.test/files/out.txt \
     -e org.chromium.native_test.NativeTest.CommandLineFlags \
-    "--gtest_filter=TraceTest.empires_and_puzzles\ --use-angle=vulkan\ --screenshot-dir\ /sdcard\ --screenshot-frame\ 2\ --max-steps-performed\ 2\ --no-warmup" \
+    "--gtest_filter=TraceTest.empires_and_puzzles\ --use-angle=vulkan\ --screenshot-dir\ /data/user/0/com.android.angle.test/files\ --screenshot-frame\ 2\ --max-steps-performed\ 2\ --no-warmup" \
     -e org.chromium.native_test.NativeTestInstrumentationTestRunner.ShardNanoTimeout "1000000000000000000" \
     -e org.chromium.native_test.NativeTestInstrumentationTestRunner.NativeTestActivity com.android.angle.test.AngleUnitTestActivity \
     com.android.angle.test/org.chromium.build.gtest_apk.NativeTestInstrumentationTestRunner
     '''
     adb_command = r'''
 shell am instrument -w \
-    -e org.chromium.native_test.NativeTestInstrumentationTestRunner.StdoutFile /sdcard/Download/out.txt \
+    -e org.chromium.native_test.NativeTestInstrumentationTestRunner.StdoutFile {storage}/out.txt \
     -e org.chromium.native_test.NativeTest.CommandLineFlags "{flags}" \
     -e org.chromium.native_test.NativeTestInstrumentationTestRunner.ShardNanoTimeout "1000000000000000000" \
     -e org.chromium.native_test.NativeTestInstrumentationTestRunner.NativeTestActivity \
     com.android.angle.test.AngleUnitTestActivity \
     com.android.angle.test/org.chromium.build.gtest_apk.NativeTestInstrumentationTestRunner
-    '''.format(flags=r'\ '.join(flags)).strip()  # Note: space escaped due to subprocess shell=True
+    '''.format(
+        flags=r'\ '.join(flags),
+        storage=_global.storage_dir).strip()  # Note: space escaped due to subprocess shell=True
 
     result = run_adb_command(adb_command)
 
@@ -239,7 +255,8 @@ shell am instrument -w \
 
 def get_test_time():
     # Pull the results from the device and parse
-    result = run_adb_command('shell cat /sdcard/Download/out.txt | grep -v Error | grep -v Frame')
+    result = run_adb_command('shell cat ' + _global.storage_dir +
+                             '/out.txt | grep -v Error | grep -v Frame')
 
     measured_time = None
 
@@ -270,7 +287,7 @@ def get_test_time():
 
 def get_gpu_memory(trace_duration):
     # Pull the results from the device and parse
-    result = run_adb_command('shell cat /sdcard/Download/gpumem.txt | awk "NF"')
+    result = run_adb_command('shell cat ' + _global.storage_dir + '/gpumem.txt | awk "NF"')
 
     # The gpumem script grabs snapshots of memory per process
     # Output looks like this, repeated once per sleep_duration of the test:
@@ -338,7 +355,7 @@ def get_gpu_memory(trace_duration):
 
 def get_proc_memory():
     # Pull the results from the device and parse
-    result = run_adb_command('shell cat /sdcard/Download/out.txt')
+    result = run_adb_command('shell cat ' + _global.storage_dir + '/out.txt')
     memory_median = ''
     memory_max = ''
 
@@ -359,7 +376,7 @@ def get_proc_memory():
 
 def get_gpu_time():
     # Pull the results from the device and parse
-    result = run_adb_command('shell cat /sdcard/Download/out.txt')
+    result = run_adb_command('shell cat ' + _global.storage_dir + '/out.txt')
     gpu_time = '0'
 
     for line in result.stdout.splitlines():
@@ -375,7 +392,7 @@ def get_gpu_time():
 
 def get_cpu_time():
     # Pull the results from the device and parse
-    result = run_adb_command('shell cat /sdcard/Download/out.txt')
+    result = run_adb_command('shell cat ' + _global.storage_dir + '/out.txt')
     cpu_time = '0'
 
     for line in result.stdout.splitlines():
@@ -391,7 +408,8 @@ def get_cpu_time():
 
 def get_frame_count():
     # Pull the results from the device and parse
-    result = run_adb_command('shell cat /sdcard/Download/out.txt | grep -v Error | grep -v Frame')
+    result = run_adb_command('shell cat ' + _global.storage_dir +
+                             '/out.txt | grep -v Error | grep -v Frame')
 
     frame_count = 0
 
@@ -671,6 +689,9 @@ def main():
     logging.basicConfig(level=args.log.upper())
 
     run_adb_command('root')
+
+    # Determine some starting parameters
+    init()
 
     try:
         if args.custom_throttling_temp:
