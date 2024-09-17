@@ -2507,7 +2507,7 @@ angle::Result UtilsVk::startRenderPass(ContextVk *contextVk,
 
     vk::AttachmentOpsArray renderPassAttachmentOps;
     vk::PackedClearValuesArray clearValues;
-    clearValues.store(vk::kAttachmentIndexZero, VK_IMAGE_ASPECT_COLOR_BIT, {});
+    clearValues.storeColor(vk::kAttachmentIndexZero, {});
 
     renderPassAttachmentOps.initWithLoadStore(vk::kAttachmentIndexZero, vk::ImageLayout::ColorWrite,
                                               vk::ImageLayout::ColorWrite);

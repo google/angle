@@ -3418,8 +3418,7 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         if (mDeferredClears.test(colorIndexGL))
         {
             renderPassAttachmentOps.setOps(colorIndexVk, vk::RenderPassLoadOp::Clear, storeOp);
-            packedClearValues.store(colorIndexVk, VK_IMAGE_ASPECT_COLOR_BIT,
-                                    mDeferredClears[colorIndexGL]);
+            packedClearValues.storeColor(colorIndexVk, mDeferredClears[colorIndexGL]);
             mDeferredClears.reset(colorIndexGL);
         }
         else
@@ -3429,8 +3428,7 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
                                                     : vk::RenderPassLoadOp::DontCare;
 
             renderPassAttachmentOps.setOps(colorIndexVk, loadOp, storeOp);
-            packedClearValues.store(colorIndexVk, VK_IMAGE_ASPECT_COLOR_BIT,
-                                    kUninitializedClearValue);
+            packedClearValues.storeColor(colorIndexVk, kUninitializedClearValue);
         }
         renderPassAttachmentOps.setStencilOps(colorIndexVk, vk::RenderPassLoadOp::DontCare,
                                               vk::RenderPassStoreOp::DontCare);
@@ -3518,15 +3516,12 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
                 mDeferredClears.reset(vk::kUnpackedStencilIndex);
             }
 
-            // Note the aspect is only depth here. That's intentional.
-            packedClearValues.store(depthStencilAttachmentIndex, VK_IMAGE_ASPECT_DEPTH_BIT,
-                                    clearValue);
+            packedClearValues.storeDepthStencil(depthStencilAttachmentIndex, clearValue);
         }
         else
         {
-            // Note the aspect is only depth here. That's intentional.
-            packedClearValues.store(depthStencilAttachmentIndex, VK_IMAGE_ASPECT_DEPTH_BIT,
-                                    kUninitializedClearValue);
+            packedClearValues.storeDepthStencil(depthStencilAttachmentIndex,
+                                                kUninitializedClearValue);
         }
 
         const angle::Format &format = depthStencilRenderTarget->getImageIntendedFormat();
@@ -3566,11 +3561,9 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
                 {
                     stencilLoadOp = vk::RenderPassLoadOp::Clear;
 
-                    // Note the aspect is only depth here. That's intentional.
                     VkClearValue clearValue = packedClearValues[depthStencilAttachmentIndex];
                     clearValue.depthStencil.stencil = 0;
-                    packedClearValues.store(depthStencilAttachmentIndex, VK_IMAGE_ASPECT_DEPTH_BIT,
-                                            clearValue);
+                    packedClearValues.storeDepthStencil(depthStencilAttachmentIndex, clearValue);
                 }
             }
 
