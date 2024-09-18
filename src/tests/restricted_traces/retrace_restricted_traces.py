@@ -22,10 +22,9 @@ import sys
 import tempfile
 import time
 
+from difflib import unified_diff
 from gen_restricted_traces import read_json as read_json, write_json as write_json
 from pathlib import Path
-
-from gen_restricted_traces import read_json as read_json
 
 SCRIPT_DIR = str(pathlib.Path(__file__).resolve().parent)
 PY_UTILS = str(pathlib.Path(SCRIPT_DIR) / '..' / 'py_utils')
@@ -395,6 +394,7 @@ def get_min_reqs(args, traces):
         print(f"Finding requirements for {trace}")
         extensions = []
         json_data = load_trace_json(trace)
+        original_json_data = json.dumps(json_data, sort_keys=True, indent=4)
         max_steps = get_num_frames(json_data)
 
         # exts: a list of extensions to use with run_test_suite. If empty,
@@ -513,6 +513,16 @@ def get_min_reqs(args, traces):
 
             json_data['RequiredExtensions'] = recurse_reqs
             save_trace_json(trace, json_data)
+
+            # Output json file diff
+            min_reqs_json_data = json.dumps(json_data, sort_keys=True, indent=4)
+            if original_json_data == min_reqs_json_data:
+                print(f"\nNo changes made to {trace}.json")
+            else:
+                json_diff = unified_diff(
+                    original_json_data.splitlines(), min_reqs_json_data.splitlines(), lineterm='')
+                print(f"\nGet Min Requirements modifications to {trace}.json:")
+                print('\n'.join(list(json_diff)))
         except BaseException as e:
             restore_trace()
             raise e
