@@ -529,8 +529,8 @@ template <typename LargerInt>
 GLint LimitToInt(const LargerInt physicalDeviceValue)
 {
     static_assert(sizeof(LargerInt) >= sizeof(int32_t), "Incorrect usage of LimitToInt");
-    return static_cast<GLint>(std::min(
-        physicalDeviceValue, static_cast<LargerInt>(std::numeric_limits<int32_t>::max() / 2 + 1)));
+    return static_cast<GLint>(
+        std::min(physicalDeviceValue, static_cast<LargerInt>(std::numeric_limits<int32_t>::max())));
 }
 
 bool TextureHasAnyRedefinedLevels(const gl::CubeFaceArray<gl::TexLevelMask> &redefinedLevels);
