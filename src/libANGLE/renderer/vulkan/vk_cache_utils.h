@@ -40,6 +40,7 @@ class UpdateDescriptorSetsBuilder;
 // - Set 1 contains all textures (including texture buffers).
 // - Set 2 contains all other shader resources, such as uniform and storage blocks, atomic counter
 //   buffers, images and image buffers.
+// - Set 3 reserved for OpenCL
 
 enum class DescriptorSetIndex : uint32_t
 {
@@ -48,7 +49,13 @@ enum class DescriptorSetIndex : uint32_t
     Texture        = 1,         // Textures set index
     ShaderResource = 2,         // Other shader resources set index
 
-    InvalidEnum = 3,
+    // CL specific naming for set indices
+    LiteralSampler  = 0,
+    KernelArguments = 1,
+    ModuleConstants = 2,
+    Printf          = 3,
+
+    InvalidEnum = 4,
     EnumCount   = InvalidEnum,
 };
 
