@@ -413,14 +413,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
         "Access info (usage: SYNC_COMPUTE_SHADER_SHADER_STORAGE_WRITE, prior_usage: "
         "SYNC_VERTEX_ATTRIBUTE_INPUT_VERTEX_ATTRIBUTE_READ",
     },
-    // From: MultisampledRenderToTextureES3Test.TransformFeedbackTest. http://anglebug.com/42265220
-    {
-        "SYNC-HAZARD-WRITE-AFTER-WRITE",
-        "write_barriers: "
-        "SYNC_TRANSFORM_FEEDBACK_EXT_TRANSFORM_FEEDBACK_COUNTER_READ_EXT|SYNC_TRANSFORM_FEEDBACK_"
-        "EXT_"
-        "TRANSFORM_FEEDBACK_COUNTER_WRITE_EXT",
-    },
     // http://anglebug.com/42266506 (VkNonDispatchableHandle on x86 bots)
     {
         "SYNC-HAZARD-READ-AFTER-WRITE",
@@ -431,26 +423,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
         "SYNC-HAZARD-READ-AFTER-WRITE",
         "Hazard READ_AFTER_WRITE for VkNonDispatchableHandle",
         "usage: SYNC_VERTEX_SHADER_SHADER_STORAGE_READ",
-    },
-    // From: TraceTest.manhattan_31 with SwiftShader. These failures appears related to
-    // dynamic uniform buffers. The failures are gone if I force mUniformBufferDescriptorType to
-    // VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER. My guess is that syncval is not doing a fine grain enough
-    // range tracking with dynamic uniform buffers. http://anglebug.com/42265220
-    {
-        "SYNC-HAZARD-WRITE-AFTER-READ",
-        "usage: SYNC_VERTEX_SHADER_UNIFORM_READ",
-    },
-    {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
-        "usage: SYNC_VERTEX_SHADER_UNIFORM_READ",
-    },
-    {
-        "SYNC-HAZARD-WRITE-AFTER-READ",
-        "type: VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC",
-    },
-    {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
-        "type: VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC",
     },
     // Coherent framebuffer fetch is enabled on some platforms that are known a priori to have the
     // needed behavior, even though this is not specified in the Vulkan spec.  These generate
