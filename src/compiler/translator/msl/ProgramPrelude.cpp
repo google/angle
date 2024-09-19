@@ -176,12 +176,12 @@ class ProgramPrelude : public TIntermTraverser
     void castMatrix();
     void functionConstants();
     void textureEnv();
-    void texelFetch2D();
-    void texelFetch3D();
-    void texelFetch2DArray();
-    void texelFetchOffset2D();
-    void texelFetchOffset3D();
-    void texelFetchOffset2DArray();
+    void texelFetch_2D();
+    void texelFetch_3D();
+    void texelFetch_2DArray();
+    void texelFetchOffset_2D();
+    void texelFetchOffset_3D();
+    void texelFetchOffset_2DArray();
     void texture_2D();
     void texture_3D();
     void texture_Cube();
@@ -216,71 +216,71 @@ class ProgramPrelude : public TIntermTraverser
     void textureCubeGradEXT();
     void textureCubeLod();
     void textureCubeLodEXT();
-    void textureGrad2D();
-    void textureGrad3D();
-    void textureGradCube();
-    void textureGrad2DArray();
-    void textureGrad2DShadow();
-    void textureGradCubeShadow();
-    void textureGrad2DArrayShadow();
-    void textureGradOffset2D();
-    void textureGradOffset3D();
-    void textureGradOffset2DArray();
-    void textureGradOffset2DShadow();
-    void textureGradOffset2DArrayShadow();
-    void textureLod2D();
-    void textureLod3D();
-    void textureLodCube();
-    void textureLod2DArray();
-    void textureLod2DShadow();
-    void textureLodOffset2D();
-    void textureLodOffset3D();
-    void textureLodOffset2DArray();
-    void textureLodOffset2DShadow();
-    void textureOffset2D();
-    void textureOffset3D();
-    void textureOffset2DArray();
-    void textureOffset2DShadow();
-    void textureOffsetBias2D();
-    void textureOffsetBias3D();
-    void textureOffsetBias2DArray();
-    void textureOffsetBias2DShadow();
-    void textureProj2D_float3();
-    void textureProj2D_float4();
-    void textureProj2DShadow();
-    void textureProj3D();
-    void textureProjBias2D_float3();
-    void textureProjBias2D_float4();
-    void textureProjBias2DShadow();
-    void textureProjBias3D();
-    void textureProjGrad2D_float3();
-    void textureProjGrad2D_float4();
-    void textureProjGrad2DShadow();
-    void textureProjGrad3D();
-    void textureProjGradOffset2D_float3();
-    void textureProjGradOffset2D_float4();
-    void textureProjGradOffset2DShadow();
-    void textureProjGradOffset3D();
-    void textureProjLod2D_float3();
-    void textureProjLod2D_float4();
-    void textureProjLod2DShadow();
-    void textureProjLod3D();
-    void textureProjLodOffset2D_float3();
-    void textureProjLodOffset2D_float4();
-    void textureProjLodOffset2DShadow();
-    void textureProjLodOffset3D();
-    void textureProjOffset2D_float3();
-    void textureProjOffset2D_float4();
-    void textureProjOffset2DShadow();
-    void textureProjOffset3D();
-    void textureProjOffsetBias2D_float3();
-    void textureProjOffsetBias2D_float4();
-    void textureProjOffsetBias2DShadow();
-    void textureProjOffsetBias3D();
-    void textureSize2D();
-    void textureSize3D();
-    void textureSize2DArray();
-    void textureSize2DArrayShadow();
+    void textureGrad_2D();
+    void textureGrad_3D();
+    void textureGrad_Cube();
+    void textureGrad_2DArray();
+    void textureGrad_2DShadow();
+    void textureGrad_CubeShadow();
+    void textureGrad_2DArrayShadow();
+    void textureGradOffset_2D();
+    void textureGradOffset_3D();
+    void textureGradOffset_2DArray();
+    void textureGradOffset_2DShadow();
+    void textureGradOffset_2DArrayShadow();
+    void textureLod_2D();
+    void textureLod_3D();
+    void textureLod_Cube();
+    void textureLod_2DArray();
+    void textureLod_2DShadow();
+    void textureLodOffset_2D();
+    void textureLodOffset_3D();
+    void textureLodOffset_2DArray();
+    void textureLodOffset_2DShadow();
+    void textureOffset_2D();
+    void textureOffset_3D();
+    void textureOffset_2DArray();
+    void textureOffset_2DShadow();
+    void textureOffsetBias_2D();
+    void textureOffsetBias_3D();
+    void textureOffsetBias_2DArray();
+    void textureOffsetBias_2DShadow();
+    void textureProj_2D_float3();
+    void textureProj_2D_float4();
+    void textureProj_2DShadow();
+    void textureProj_3D();
+    void textureProjBias_2D_float3();
+    void textureProjBias_2D_float4();
+    void textureProjBias_2DShadow();
+    void textureProjBias_3D();
+    void textureProjGrad_2D_float3();
+    void textureProjGrad_2D_float4();
+    void textureProjGrad_2DShadow();
+    void textureProjGrad_3D();
+    void textureProjGradOffset_2D_float3();
+    void textureProjGradOffset_2D_float4();
+    void textureProjGradOffset_2DShadow();
+    void textureProjGradOffset_3D();
+    void textureProjLod_2D_float3();
+    void textureProjLod_2D_float4();
+    void textureProjLod_2DShadow();
+    void textureProjLod_3D();
+    void textureProjLodOffset_2D_float3();
+    void textureProjLodOffset_2D_float4();
+    void textureProjLodOffset_2DShadow();
+    void textureProjLodOffset_3D();
+    void textureProjOffset_2D_float3();
+    void textureProjOffset_2D_float4();
+    void textureProjOffset_2DShadow();
+    void textureProjOffset_3D();
+    void textureProjOffsetBias_2D_float3();
+    void textureProjOffsetBias_2D_float4();
+    void textureProjOffsetBias_2DShadow();
+    void textureProjOffsetBias_3D();
+    void textureSize_2D();
+    void textureSize_3D();
+    void textureSize_2DArray();
+    void textureSize_2DArrayShadow();
     void imageLoad();
     void imageStore();
     void memoryBarrierImage();
@@ -1331,7 +1331,7 @@ constant bool ANGLEWriteHelperSampleMask    [[function_constant(ANGLE_WRITE_HELP
 #define ANGLE_ALPHA0
 )")
 
-PROGRAM_PRELUDE_DECLARE(texelFetch2D,
+PROGRAM_PRELUDE_DECLARE(texelFetch_2D,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_texelFetch(
@@ -1344,7 +1344,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_texelFetch(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(texelFetch3D,
+PROGRAM_PRELUDE_DECLARE(texelFetch_3D,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_texelFetch(
@@ -1357,7 +1357,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_texelFetch(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(texelFetch2DArray,
+PROGRAM_PRELUDE_DECLARE(texelFetch_2DArray,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_texelFetch(
@@ -1370,7 +1370,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_texelFetch(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(texelFetchOffset2D,
+PROGRAM_PRELUDE_DECLARE(texelFetchOffset_2D,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_texelFetchOffset(
@@ -1384,7 +1384,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_texelFetchOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(texelFetchOffset3D,
+PROGRAM_PRELUDE_DECLARE(texelFetchOffset_3D,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_texelFetchOffset(
@@ -1398,7 +1398,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_texelFetchOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(texelFetchOffset2DArray,
+PROGRAM_PRELUDE_DECLARE(texelFetchOffset_2DArray,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_texelFetchOffset(
@@ -1837,7 +1837,7 @@ PROGRAM_PRELUDE_DECLARE(textureCubeLodEXT,
 )",
                         textureCubeLod())
 
-PROGRAM_PRELUDE_DECLARE(textureGrad2D,
+PROGRAM_PRELUDE_DECLARE(textureGrad_2D,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureGrad(
@@ -1851,7 +1851,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureGrad(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureGrad3D,
+PROGRAM_PRELUDE_DECLARE(textureGrad_3D,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureGrad(
@@ -1865,7 +1865,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureGrad(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureGradCube,
+PROGRAM_PRELUDE_DECLARE(textureGrad_Cube,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureGrad(
@@ -1879,7 +1879,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureGrad(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureGrad2DArray,
+PROGRAM_PRELUDE_DECLARE(textureGrad_2DArray,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureGrad(
@@ -1893,7 +1893,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureGrad(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureGrad2DShadow,
+PROGRAM_PRELUDE_DECLARE(textureGrad_2DShadow,
                         R"(
 ANGLE_ALWAYS_INLINE auto ANGLE_textureGrad(
     thread ANGLE_TextureEnv<metal::depth2d<float>> &env,
@@ -1916,7 +1916,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureGrad(
                         functionConstants(),
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureGrad2DArrayShadow,
+PROGRAM_PRELUDE_DECLARE(textureGrad_2DArrayShadow,
                         R"(
 ANGLE_ALWAYS_INLINE auto ANGLE_textureGrad(
     thread ANGLE_TextureEnv<metal::depth2d_array<float>> &env,
@@ -1939,7 +1939,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureGrad(
                         functionConstants(),
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureGradCubeShadow,
+PROGRAM_PRELUDE_DECLARE(textureGrad_CubeShadow,
                         R"(
 ANGLE_ALWAYS_INLINE auto ANGLE_textureGrad(
     thread ANGLE_TextureEnv<metal::depthcube<float>> &env,
@@ -1962,7 +1962,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureGrad(
                         functionConstants(),
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureGradOffset2D,
+PROGRAM_PRELUDE_DECLARE(textureGradOffset_2D,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureGradOffset(
@@ -1977,7 +1977,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureGradOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureGradOffset3D,
+PROGRAM_PRELUDE_DECLARE(textureGradOffset_3D,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureGradOffset(
@@ -1992,7 +1992,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureGradOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureGradOffset2DArray,
+PROGRAM_PRELUDE_DECLARE(textureGradOffset_2DArray,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureGradOffset(
@@ -2007,7 +2007,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureGradOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureGradOffset2DShadow,
+PROGRAM_PRELUDE_DECLARE(textureGradOffset_2DShadow,
                         R"(
 ANGLE_ALWAYS_INLINE auto ANGLE_textureGradOffset(
     thread ANGLE_TextureEnv<metal::depth2d<float>> &env,
@@ -2031,7 +2031,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureGradOffset(
                         functionConstants(),
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureGradOffset2DArrayShadow,
+PROGRAM_PRELUDE_DECLARE(textureGradOffset_2DArrayShadow,
                         R"(
 ANGLE_ALWAYS_INLINE auto ANGLE_textureGradOffset(
     thread ANGLE_TextureEnv<metal::depth2d_array<float>> &env,
@@ -2055,7 +2055,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureGradOffset(
                         functionConstants(),
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureLod2D,
+PROGRAM_PRELUDE_DECLARE(textureLod_2D,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureLod(
@@ -2068,7 +2068,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureLod(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureLod3D,
+PROGRAM_PRELUDE_DECLARE(textureLod_3D,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureLod(
@@ -2081,7 +2081,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureLod(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureLodCube,
+PROGRAM_PRELUDE_DECLARE(textureLod_Cube,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureLod(
@@ -2094,7 +2094,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureLod(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureLod2DShadow,
+PROGRAM_PRELUDE_DECLARE(textureLod_2DShadow,
                         R"(
 ANGLE_ALWAYS_INLINE auto ANGLE_textureLod(
     thread ANGLE_TextureEnv<metal::depth2d<float>> &env,
@@ -2116,7 +2116,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureLod(
                         functionConstants(),
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureLod2DArray,
+PROGRAM_PRELUDE_DECLARE(textureLod_2DArray,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureLod(
@@ -2129,7 +2129,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureLod(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureLodOffset2D,
+PROGRAM_PRELUDE_DECLARE(textureLodOffset_2D,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureLodOffset(
@@ -2143,7 +2143,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureLodOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureLodOffset3D,
+PROGRAM_PRELUDE_DECLARE(textureLodOffset_3D,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureLodOffset(
@@ -2157,7 +2157,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureLodOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureLodOffset2DShadow,
+PROGRAM_PRELUDE_DECLARE(textureLodOffset_2DShadow,
                         R"(
 ANGLE_ALWAYS_INLINE auto ANGLE_textureLodOffset(
     thread ANGLE_TextureEnv<metal::depth2d<float>> &env,
@@ -2180,7 +2180,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureLodOffset(
                         functionConstants(),
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureLodOffset2DArray,
+PROGRAM_PRELUDE_DECLARE(textureLodOffset_2DArray,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureLodOffset(
@@ -2194,7 +2194,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureLodOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureOffset2D,
+PROGRAM_PRELUDE_DECLARE(textureOffset_2D,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset(
@@ -2207,7 +2207,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureOffsetBias2D,
+PROGRAM_PRELUDE_DECLARE(textureOffsetBias_2D,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset(
@@ -2221,7 +2221,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureOffset2DArray,
+PROGRAM_PRELUDE_DECLARE(textureOffset_2DArray,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset(
@@ -2234,7 +2234,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureOffsetBias2DArray,
+PROGRAM_PRELUDE_DECLARE(textureOffsetBias_2DArray,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset(
@@ -2248,7 +2248,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureOffset3D,
+PROGRAM_PRELUDE_DECLARE(textureOffset_3D,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset(
@@ -2261,7 +2261,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureOffsetBias3D,
+PROGRAM_PRELUDE_DECLARE(textureOffsetBias_3D,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset(
@@ -2275,7 +2275,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureOffset2DShadow,
+PROGRAM_PRELUDE_DECLARE(textureOffset_2DShadow,
                         R"(
 ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset(
     thread ANGLE_TextureEnv<metal::depth2d<float>> &env,
@@ -2287,7 +2287,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureOffsetBias2DShadow,
+PROGRAM_PRELUDE_DECLARE(textureOffsetBias_2DShadow,
                         R"(
 ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset(
     thread ANGLE_TextureEnv<metal::depth2d<float>> &env,
@@ -2304,7 +2304,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProj2D_float3,
+PROGRAM_PRELUDE_DECLARE(textureProj_2D_float3,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProj(
@@ -2316,7 +2316,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProj(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProjBias2D_float3,
+PROGRAM_PRELUDE_DECLARE(textureProjBias_2D_float3,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProj(
@@ -2329,7 +2329,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProj(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProj2D_float4,
+PROGRAM_PRELUDE_DECLARE(textureProj_2D_float4,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProj(
@@ -2341,7 +2341,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProj(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProjBias2D_float4,
+PROGRAM_PRELUDE_DECLARE(textureProjBias_2D_float4,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProj(
@@ -2354,7 +2354,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProj(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProj3D,
+PROGRAM_PRELUDE_DECLARE(textureProj_3D,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProj(
@@ -2366,7 +2366,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProj(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProjBias3D,
+PROGRAM_PRELUDE_DECLARE(textureProjBias_3D,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProj(
@@ -2379,7 +2379,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProj(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProj2DShadow,
+PROGRAM_PRELUDE_DECLARE(textureProj_2DShadow,
                         R"(
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProj(
     thread ANGLE_TextureEnv<metal::depth2d<float>> &env,
@@ -2390,7 +2390,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProj(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProjBias2DShadow,
+PROGRAM_PRELUDE_DECLARE(textureProjBias_2DShadow,
                         R"(
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProj(
     thread ANGLE_TextureEnv<metal::depth2d<float>> &env,
@@ -2406,7 +2406,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProj(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProjGrad2D_float3,
+PROGRAM_PRELUDE_DECLARE(textureProjGrad_2D_float3,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProjGrad(
@@ -2420,7 +2420,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjGrad(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProjGrad2D_float4,
+PROGRAM_PRELUDE_DECLARE(textureProjGrad_2D_float4,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProjGrad(
@@ -2434,7 +2434,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjGrad(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProjGrad2DShadow,
+PROGRAM_PRELUDE_DECLARE(textureProjGrad_2DShadow,
                         R"(
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProjGrad(
     thread ANGLE_TextureEnv<metal::depth2d<float>> &env,
@@ -2457,7 +2457,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjGrad(
                         functionConstants(),
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProjGrad3D,
+PROGRAM_PRELUDE_DECLARE(textureProjGrad_3D,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProjGrad(
@@ -2471,7 +2471,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjGrad(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProjGradOffset2D_float3,
+PROGRAM_PRELUDE_DECLARE(textureProjGradOffset_2D_float3,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProjGradOffset(
@@ -2486,7 +2486,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjGradOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProjGradOffset2D_float4,
+PROGRAM_PRELUDE_DECLARE(textureProjGradOffset_2D_float4,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProjGradOffset(
@@ -2501,7 +2501,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjGradOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProjGradOffset2DShadow,
+PROGRAM_PRELUDE_DECLARE(textureProjGradOffset_2DShadow,
                         R"(
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProjGradOffset(
     thread ANGLE_TextureEnv<metal::depth2d<float>> &env,
@@ -2525,7 +2525,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjGradOffset(
                         functionConstants(),
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProjGradOffset3D,
+PROGRAM_PRELUDE_DECLARE(textureProjGradOffset_3D,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProjGradOffset(
@@ -2540,7 +2540,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjGradOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProjLod2D_float3,
+PROGRAM_PRELUDE_DECLARE(textureProjLod_2D_float3,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProjLod(
@@ -2553,7 +2553,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjLod(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProjLod2D_float4,
+PROGRAM_PRELUDE_DECLARE(textureProjLod_2D_float4,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProjLod(
@@ -2566,7 +2566,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjLod(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProjLod2DShadow,
+PROGRAM_PRELUDE_DECLARE(textureProjLod_2DShadow,
                         R"(
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProjLod(
     thread ANGLE_TextureEnv<metal::depth2d<float>> &env,
@@ -2588,7 +2588,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjLod(
                         functionConstants(),
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProjLod3D,
+PROGRAM_PRELUDE_DECLARE(textureProjLod_3D,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProjLod(
@@ -2601,7 +2601,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjLod(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProjLodOffset2D_float3,
+PROGRAM_PRELUDE_DECLARE(textureProjLodOffset_2D_float3,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProjLodOffset(
@@ -2615,7 +2615,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjLodOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProjLodOffset2D_float4,
+PROGRAM_PRELUDE_DECLARE(textureProjLodOffset_2D_float4,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProjLodOffset(
@@ -2629,7 +2629,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjLodOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProjLodOffset2DShadow,
+PROGRAM_PRELUDE_DECLARE(textureProjLodOffset_2DShadow,
                         R"(
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProjLodOffset(
     thread ANGLE_TextureEnv<metal::depth2d<float>> &env,
@@ -2652,7 +2652,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjLodOffset(
                         functionConstants(),
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProjLodOffset3D,
+PROGRAM_PRELUDE_DECLARE(textureProjLodOffset_3D,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProjLodOffset(
@@ -2666,7 +2666,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjLodOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProjOffset2D_float3,
+PROGRAM_PRELUDE_DECLARE(textureProjOffset_2D_float3,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProjOffset(
@@ -2679,7 +2679,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProjOffsetBias2D_float3,
+PROGRAM_PRELUDE_DECLARE(textureProjOffsetBias_2D_float3,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProjOffset(
@@ -2693,7 +2693,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProjOffset2D_float4,
+PROGRAM_PRELUDE_DECLARE(textureProjOffset_2D_float4,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProjOffset(
@@ -2706,7 +2706,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProjOffsetBias2D_float4,
+PROGRAM_PRELUDE_DECLARE(textureProjOffsetBias_2D_float4,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProjOffset(
@@ -2720,7 +2720,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProjOffset3D,
+PROGRAM_PRELUDE_DECLARE(textureProjOffset_3D,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProjOffset(
@@ -2733,7 +2733,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProjOffsetBias3D,
+PROGRAM_PRELUDE_DECLARE(textureProjOffsetBias_3D,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProjOffset(
@@ -2747,7 +2747,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProjOffset2DShadow,
+PROGRAM_PRELUDE_DECLARE(textureProjOffset_2DShadow,
                         R"(
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProjOffset(
     thread ANGLE_TextureEnv<metal::depth2d<float>> &env,
@@ -2759,7 +2759,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureProjOffsetBias2DShadow,
+PROGRAM_PRELUDE_DECLARE(textureProjOffsetBias_2DShadow,
                         R"(
 ANGLE_ALWAYS_INLINE auto ANGLE_textureProjOffset(
     thread ANGLE_TextureEnv<metal::depth2d<float>> &env,
@@ -2776,7 +2776,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjOffset(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureSize2D,
+PROGRAM_PRELUDE_DECLARE(textureSize_2D,
                         R"(
 template <typename Texture>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureSize(
@@ -2788,7 +2788,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureSize(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureSize3D,
+PROGRAM_PRELUDE_DECLARE(textureSize_3D,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureSize(
@@ -2800,7 +2800,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureSize(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureSize2DArray,
+PROGRAM_PRELUDE_DECLARE(textureSize_2DArray,
                         R"(
 template <typename T>
 ANGLE_ALWAYS_INLINE auto ANGLE_textureSize(
@@ -2812,7 +2812,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureSize(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureSize2DArrayShadow,
+PROGRAM_PRELUDE_DECLARE(textureSize_2DArrayShadow,
                         R"(
 ANGLE_ALWAYS_INLINE auto ANGLE_textureSize(
     thread ANGLE_TextureEnv<metal::depth2d_array<float>> &env,
@@ -2975,15 +2975,15 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
             case EbtSampler2D:
             case EbtISampler2D:
             case EbtUSampler2D:
-                return pp.texelFetch2D();
+                return pp.texelFetch_2D();
             case EbtSampler3D:
             case EbtISampler3D:
             case EbtUSampler3D:
-                return pp.texelFetch3D();
+                return pp.texelFetch_3D();
             case EbtSampler2DArray:
             case EbtISampler2DArray:
             case EbtUSampler2DArray:
-                return pp.texelFetch2DArray();
+                return pp.texelFetch_2DArray();
             default:
                 UNREACHABLE();
         }
@@ -2994,15 +2994,15 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
             case EbtSampler2D:
             case EbtISampler2D:
             case EbtUSampler2D:
-                return pp.texelFetchOffset2D();
+                return pp.texelFetchOffset_2D();
             case EbtSampler3D:
             case EbtISampler3D:
             case EbtUSampler3D:
-                return pp.texelFetchOffset3D();
+                return pp.texelFetchOffset_3D();
             case EbtSampler2DArray:
             case EbtISampler2DArray:
             case EbtUSampler2DArray:
-                return pp.texelFetchOffset2DArray();
+                return pp.texelFetchOffset_2DArray();
             default:
                 UNREACHABLE();
         }
@@ -3109,25 +3109,25 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
             case EbtSampler2D:
             case EbtISampler2D:
             case EbtUSampler2D:
-                return pp.textureGrad2D();
+                return pp.textureGrad_2D();
             case EbtSampler3D:
             case EbtISampler3D:
             case EbtUSampler3D:
-                return pp.textureGrad3D();
+                return pp.textureGrad_3D();
             case EbtSamplerCube:
             case EbtISamplerCube:
             case EbtUSamplerCube:
-                return pp.textureGradCube();
+                return pp.textureGrad_Cube();
             case EbtSampler2DArray:
             case EbtISampler2DArray:
             case EbtUSampler2DArray:
-                return pp.textureGrad2DArray();
+                return pp.textureGrad_2DArray();
             case EbtSampler2DShadow:
-                return pp.textureGrad2DShadow();
+                return pp.textureGrad_2DShadow();
             case EbtSamplerCubeShadow:
-                return pp.textureGradCubeShadow();
+                return pp.textureGrad_CubeShadow();
             case EbtSampler2DArrayShadow:
-                return pp.textureGrad2DArrayShadow();
+                return pp.textureGrad_2DArrayShadow();
             default:
                 UNREACHABLE();
         }
@@ -3138,19 +3138,19 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
             case EbtSampler2D:
             case EbtISampler2D:
             case EbtUSampler2D:
-                return pp.textureGradOffset2D();
+                return pp.textureGradOffset_2D();
             case EbtSampler3D:
             case EbtISampler3D:
             case EbtUSampler3D:
-                return pp.textureGradOffset3D();
+                return pp.textureGradOffset_3D();
             case EbtSampler2DArray:
             case EbtISampler2DArray:
             case EbtUSampler2DArray:
-                return pp.textureGradOffset2DArray();
+                return pp.textureGradOffset_2DArray();
             case EbtSampler2DShadow:
-                return pp.textureGradOffset2DShadow();
+                return pp.textureGradOffset_2DShadow();
             case EbtSampler2DArrayShadow:
-                return pp.textureGradOffset2DArrayShadow();
+                return pp.textureGradOffset_2DArrayShadow();
             default:
                 UNREACHABLE();
         }
@@ -3161,21 +3161,21 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
             case EbtSampler2D:
             case EbtISampler2D:
             case EbtUSampler2D:
-                return pp.textureLod2D();
+                return pp.textureLod_2D();
             case EbtSampler3D:
             case EbtISampler3D:
             case EbtUSampler3D:
-                return pp.textureLod3D();
+                return pp.textureLod_3D();
             case EbtSamplerCube:
             case EbtISamplerCube:
             case EbtUSamplerCube:
-                return pp.textureLodCube();
+                return pp.textureLod_Cube();
             case EbtSampler2DArray:
             case EbtISampler2DArray:
             case EbtUSampler2DArray:
-                return pp.textureLod2DArray();
+                return pp.textureLod_2DArray();
             case EbtSampler2DShadow:
-                return pp.textureLod2DShadow();
+                return pp.textureLod_2DShadow();
             default:
                 UNREACHABLE();
         }
@@ -3186,17 +3186,17 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
             case EbtSampler2D:
             case EbtISampler2D:
             case EbtUSampler2D:
-                return pp.textureLodOffset2D();
+                return pp.textureLodOffset_2D();
             case EbtSampler3D:
             case EbtISampler3D:
             case EbtUSampler3D:
-                return pp.textureLodOffset3D();
+                return pp.textureLodOffset_3D();
             case EbtSampler2DArray:
             case EbtISampler2DArray:
             case EbtUSampler2DArray:
-                return pp.textureLodOffset2DArray();
+                return pp.textureLodOffset_2DArray();
             case EbtSampler2DShadow:
-                return pp.textureLodOffset2DShadow();
+                return pp.textureLodOffset_2DShadow();
             default:
                 UNREACHABLE();
         }
@@ -3208,17 +3208,17 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
             case EbtSampler2D:
             case EbtISampler2D:
             case EbtUSampler2D:
-                return bias ? pp.textureOffsetBias2D() : pp.textureOffset2D();
+                return bias ? pp.textureOffsetBias_2D() : pp.textureOffset_2D();
             case EbtSampler3D:
             case EbtISampler3D:
             case EbtUSampler3D:
-                return bias ? pp.textureOffsetBias3D() : pp.textureOffset3D();
+                return bias ? pp.textureOffsetBias_3D() : pp.textureOffset_3D();
             case EbtSampler2DArray:
             case EbtISampler2DArray:
             case EbtUSampler2DArray:
-                return bias ? pp.textureOffsetBias2DArray() : pp.textureOffset2DArray();
+                return bias ? pp.textureOffsetBias_2DArray() : pp.textureOffset_2DArray();
             case EbtSampler2DShadow:
-                return bias ? pp.textureOffsetBias2DShadow() : pp.textureOffset2DShadow();
+                return bias ? pp.textureOffsetBias_2DShadow() : pp.textureOffset_2DShadow();
             default:
                 UNREACHABLE();
         }
@@ -3231,14 +3231,14 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
             case EbtISampler2D:
             case EbtUSampler2D:
                 return func.getParam(1)->getType().getNominalSize() == 4
-                           ? (bias ? pp.textureProjBias2D_float4() : pp.textureProj2D_float4())
-                           : (bias ? pp.textureProjBias2D_float3() : pp.textureProj2D_float3());
+                           ? (bias ? pp.textureProjBias_2D_float4() : pp.textureProj_2D_float4())
+                           : (bias ? pp.textureProjBias_2D_float3() : pp.textureProj_2D_float3());
             case EbtSampler3D:
             case EbtISampler3D:
             case EbtUSampler3D:
-                return bias ? pp.textureProjBias3D() : pp.textureProj3D();
+                return bias ? pp.textureProjBias_3D() : pp.textureProj_3D();
             case EbtSampler2DShadow:
-                return bias ? pp.textureProjBias2DShadow() : pp.textureProj2DShadow();
+                return bias ? pp.textureProjBias_2DShadow() : pp.textureProj_2DShadow();
             default:
                 UNREACHABLE();
         }
@@ -3250,14 +3250,14 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
             case EbtISampler2D:
             case EbtUSampler2D:
                 return func.getParam(1)->getType().getNominalSize() == 4
-                           ? pp.textureProjGrad2D_float4()
-                           : pp.textureProjGrad2D_float3();
+                           ? pp.textureProjGrad_2D_float4()
+                           : pp.textureProjGrad_2D_float3();
             case EbtSampler3D:
             case EbtISampler3D:
             case EbtUSampler3D:
-                return pp.textureProjGrad3D();
+                return pp.textureProjGrad_3D();
             case EbtSampler2DShadow:
-                return pp.textureProjGrad2DShadow();
+                return pp.textureProjGrad_2DShadow();
             default:
                 UNREACHABLE();
         }
@@ -3269,14 +3269,14 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
             case EbtISampler2D:
             case EbtUSampler2D:
                 return func.getParam(1)->getType().getNominalSize() == 4
-                           ? pp.textureProjGradOffset2D_float4()
-                           : pp.textureProjGradOffset2D_float3();
+                           ? pp.textureProjGradOffset_2D_float4()
+                           : pp.textureProjGradOffset_2D_float3();
             case EbtSampler3D:
             case EbtISampler3D:
             case EbtUSampler3D:
-                return pp.textureProjGradOffset3D();
+                return pp.textureProjGradOffset_3D();
             case EbtSampler2DShadow:
-                return pp.textureProjGradOffset2DShadow();
+                return pp.textureProjGradOffset_2DShadow();
             default:
                 UNREACHABLE();
         }
@@ -3288,14 +3288,14 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
             case EbtISampler2D:
             case EbtUSampler2D:
                 return func.getParam(1)->getType().getNominalSize() == 4
-                           ? pp.textureProjLod2D_float4()
-                           : pp.textureProjLod2D_float3();
+                           ? pp.textureProjLod_2D_float4()
+                           : pp.textureProjLod_2D_float3();
             case EbtSampler3D:
             case EbtISampler3D:
             case EbtUSampler3D:
-                return pp.textureProjLod3D();
+                return pp.textureProjLod_3D();
             case EbtSampler2DShadow:
-                return pp.textureProjLod2DShadow();
+                return pp.textureProjLod_2DShadow();
             default:
                 UNREACHABLE();
         }
@@ -3307,14 +3307,14 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
             case EbtISampler2D:
             case EbtUSampler2D:
                 return func.getParam(1)->getType().getNominalSize() == 4
-                           ? pp.textureProjLodOffset2D_float4()
-                           : pp.textureProjLodOffset2D_float3();
+                           ? pp.textureProjLodOffset_2D_float4()
+                           : pp.textureProjLodOffset_2D_float3();
             case EbtSampler3D:
             case EbtISampler3D:
             case EbtUSampler3D:
-                return pp.textureProjLodOffset3D();
+                return pp.textureProjLodOffset_3D();
             case EbtSampler2DShadow:
-                return pp.textureProjLodOffset2DShadow();
+                return pp.textureProjLodOffset_2DShadow();
             default:
                 UNREACHABLE();
         }
@@ -3327,16 +3327,16 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
             case EbtISampler2D:
             case EbtUSampler2D:
                 return func.getParam(1)->getType().getNominalSize() == 4
-                           ? (bias ? pp.textureProjOffsetBias2D_float4()
-                                   : pp.textureProjOffset2D_float4())
-                           : (bias ? pp.textureProjOffsetBias2D_float3()
-                                   : pp.textureProjOffset2D_float3());
+                           ? (bias ? pp.textureProjOffsetBias_2D_float4()
+                                   : pp.textureProjOffset_2D_float4())
+                           : (bias ? pp.textureProjOffsetBias_2D_float3()
+                                   : pp.textureProjOffset_2D_float3());
             case EbtSampler3D:
             case EbtISampler3D:
             case EbtUSampler3D:
-                return bias ? pp.textureProjOffsetBias3D() : pp.textureProjOffset3D();
+                return bias ? pp.textureProjOffsetBias_3D() : pp.textureProjOffset_3D();
             case EbtSampler2DShadow:
-                return bias ? pp.textureProjOffsetBias2DShadow() : pp.textureProjOffset2DShadow();
+                return bias ? pp.textureProjOffsetBias_2DShadow() : pp.textureProjOffset_2DShadow();
             default:
                 UNREACHABLE();
         }
@@ -3347,16 +3347,16 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
             case EbtSampler3D:
             case EbtISampler3D:
             case EbtUSampler3D:
-                return pp.textureSize3D();
+                return pp.textureSize_3D();
             case EbtSampler2DArray:
             case EbtISampler2DArray:
             case EbtUSampler2DArray:
-                return pp.textureSize2DArray();
+                return pp.textureSize_2DArray();
             case EbtSampler2DArrayShadow:
-                return pp.textureSize2DArrayShadow();
+                return pp.textureSize_2DArrayShadow();
             default:
                 // Same wrapper for 2D, 2D Shadow, Cube, and Cube Shadow
-                return pp.textureSize2D();
+                return pp.textureSize_2D();
         }
     });
     putBuiltIn("imageLoad", EMIT_METHOD(imageLoad));
