@@ -282,7 +282,10 @@ class ContextWgpu : public ContextImpl
     void setColorAttachmentFormat(size_t colorIndex, wgpu::TextureFormat format);
     void setColorAttachmentFormats(const gl::DrawBuffersArray<wgpu::TextureFormat> &formats);
     void setDepthStencilFormat(wgpu::TextureFormat format);
-    void setVertexAttributes(const gl::AttribArray<webgpu::PackedVertexAttribute> &attribs);
+    void setVertexAttribute(size_t attribIndex, webgpu::PackedVertexAttribute newAttrib);
+
+    void invalidateVertexBuffer(size_t slot);
+    void invalidateVertexBuffers();
 
   private:
     // Dirty bits.
@@ -296,6 +299,8 @@ class ContextWgpu : public ContextImpl
         DIRTY_BIT_RENDER_PIPELINE_BINDING,
         DIRTY_BIT_VIEWPORT,
         DIRTY_BIT_SCISSOR,
+
+        DIRTY_BIT_VERTEX_BUFFERS,
 
         DIRTY_BIT_MAX,
     };
@@ -311,6 +316,7 @@ class ContextWgpu : public ContextImpl
     using DirtyBits = angle::BitSet<DIRTY_BIT_MAX>;
 
     DirtyBits mDirtyBits;
+    gl::AttributesMask mDirtyVertexBuffers;
 
     DirtyBits mNewRenderPassDirtyBits;
 
@@ -337,6 +343,8 @@ class ContextWgpu : public ContextImpl
     angle::Result handleDirtyRenderPipelineBinding(DirtyBits::Iterator *dirtyBitsIterator);
     angle::Result handleDirtyViewport(DirtyBits::Iterator *dirtyBitsIterator);
     angle::Result handleDirtyScissor(DirtyBits::Iterator *dirtyBitsIterator);
+    angle::Result handleDirtyVertexBuffers(const gl::AttributesMask &slots,
+                                           DirtyBits::Iterator *dirtyBitsIterator);
 
     angle::Result handleDirtyRenderPass(DirtyBits::Iterator *dirtyBitsIterator);
 
@@ -351,6 +359,7 @@ class ContextWgpu : public ContextImpl
 
     webgpu::RenderPipelineDesc mRenderPipelineDesc;
     wgpu::RenderPipeline mCurrentGraphicsPipeline;
+    gl::AttributesMask mCurrentRenderPipelineAllAttributes;
 };
 
 }  // namespace rx

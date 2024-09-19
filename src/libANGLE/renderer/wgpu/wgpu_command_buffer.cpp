@@ -87,6 +87,13 @@ void CommandBuffer::setViewport(float x,
     mHasSetViewportCommand = true;
 }
 
+void CommandBuffer::setVertexBuffer(uint32_t slot, wgpu::Buffer buffer)
+{
+    SetVertexBufferCommand *setVertexBufferCommand = initCommand<CommandID::SetVertexBuffer>();
+    setVertexBufferCommand->slot                   = slot;
+    setVertexBufferCommand->buffer = GetReferencedObject(mReferencedBuffers, buffer);
+}
+
 void CommandBuffer::clear()
 {
     mCommandCount = 0;
@@ -105,6 +112,7 @@ void CommandBuffer::clear()
     mCurrentCommandBlock = 0;
 
     mReferencedRenderPipelines.clear();
+    mReferencedBuffers.clear();
 }
 
 void CommandBuffer::recordCommands(wgpu::RenderPassEncoder encoder)
@@ -162,6 +170,15 @@ void CommandBuffer::recordCommands(wgpu::RenderPassEncoder encoder)
                     encoder.SetViewport(setViewportCommand.x, setViewportCommand.y,
                                         setViewportCommand.width, setViewportCommand.height,
                                         setViewportCommand.minDepth, setViewportCommand.maxDepth);
+                    break;
+                }
+
+                case CommandID::SetVertexBuffer:
+                {
+                    const SetVertexBufferCommand &setVertexBufferCommand =
+                        GetCommandAndIterate<CommandID::SetVertexBuffer>(&currentCommand);
+                    encoder.SetVertexBuffer(setVertexBufferCommand.slot,
+                                            *setVertexBufferCommand.buffer);
                     break;
                 }
 

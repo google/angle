@@ -192,7 +192,7 @@ class BufferHelper : public angle::NonCopyable
     BufferHelper();
     ~BufferHelper();
 
-    bool valid() const { return mBuffer != nullptr; }
+    bool valid() const { return mBuffer.operator bool(); }
     void reset();
 
     angle::Result initBuffer(wgpu::Device device,

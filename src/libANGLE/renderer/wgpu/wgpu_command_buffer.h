@@ -159,7 +159,13 @@ struct SetStencilReferenceCommand
 
 struct SetVertexBufferCommand
 {
-    uint64_t pad;
+    uint32_t slot;
+    uint32_t pad0;
+    union
+    {
+        const wgpu::Buffer *buffer;
+        uint64_t pad1;  // Pad to 64 bits on 32-bit systems
+    };
 };
 
 struct SetViewportCommand
@@ -210,6 +216,7 @@ class CommandBuffer
     void setPipeline(wgpu::RenderPipeline pipeline);
     void setScissorRect(uint32_t x, uint32_t y, uint32_t width, uint32_t height);
     void setViewport(float x, float y, float width, float height, float minDepth, float maxDepth);
+    void setVertexBuffer(uint32_t slot, wgpu::Buffer buffer);
 
     void clear();
 
@@ -261,6 +268,7 @@ class CommandBuffer
     // std::unordered_set required because it does not move elements and stored command reference
     // addresses in the set
     std::unordered_set<wgpu::RenderPipeline> mReferencedRenderPipelines;
+    std::unordered_set<wgpu::Buffer> mReferencedBuffers;
 
     void nextCommandBlock();
 

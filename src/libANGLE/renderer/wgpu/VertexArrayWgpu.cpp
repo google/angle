@@ -28,7 +28,8 @@ angle::Result VertexArrayWgpu::syncState(const gl::Context *context,
 
     const std::vector<gl::VertexAttribute> &attribs = mState.getVertexAttributes();
     const std::vector<gl::VertexBinding> &bindings  = mState.getVertexBindings();
-    bool syncedAttribs                              = false;
+
+    gl::AttributesMask syncedAttributes;
 
     for (auto iter = dirtyBits.begin(), endIter = dirtyBits.end(); iter != endIter; ++iter)
     {
@@ -36,7 +37,11 @@ angle::Result VertexArrayWgpu::syncState(const gl::Context *context,
         switch (dirtyBit)
         {
             case gl::VertexArray::DIRTY_BIT_LOST_OBSERVATION:
+                break;
+
             case gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER:
+                break;
+
             case gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER_DATA:
                 break;
 
@@ -45,7 +50,7 @@ angle::Result VertexArrayWgpu::syncState(const gl::Context *context,
         ANGLE_TRY(syncDirtyAttrib(contextWgpu, attribs[INDEX],                    \
                                   bindings[attribs[INDEX].bindingIndex], INDEX)); \
         (*attribBits)[INDEX].reset();                                             \
-        syncedAttribs = true;                                                     \
+        syncedAttributes.set(INDEX);                                              \
         break;
 
                 ANGLE_VERTEX_INDEX_CASES(ANGLE_VERTEX_DIRTY_ATTRIB_FUNC)
@@ -55,7 +60,7 @@ angle::Result VertexArrayWgpu::syncState(const gl::Context *context,
         ANGLE_TRY(syncDirtyAttrib(contextWgpu, attribs[INDEX],                    \
                                   bindings[attribs[INDEX].bindingIndex], INDEX)); \
         (*bindingBits)[INDEX].reset();                                            \
-        syncedAttribs = true;                                                     \
+        syncedAttributes.set(INDEX);                                              \
         break;
 
                 ANGLE_VERTEX_INDEX_CASES(ANGLE_VERTEX_DIRTY_BINDING_FUNC)
@@ -64,7 +69,7 @@ angle::Result VertexArrayWgpu::syncState(const gl::Context *context,
     case gl::VertexArray::DIRTY_BIT_BUFFER_DATA_0 + INDEX:                        \
         ANGLE_TRY(syncDirtyAttrib(contextWgpu, attribs[INDEX],                    \
                                   bindings[attribs[INDEX].bindingIndex], INDEX)); \
-        syncedAttribs = true;                                                     \
+        syncedAttributes.set(INDEX);                                              \
         break;
 
                 ANGLE_VERTEX_INDEX_CASES(ANGLE_VERTEX_DIRTY_BUFFER_DATA_FUNC)
@@ -73,9 +78,10 @@ angle::Result VertexArrayWgpu::syncState(const gl::Context *context,
         }
     }
 
-    if (syncedAttribs)
+    for (size_t syncedAttribIndex : syncedAttributes)
     {
-        contextWgpu->setVertexAttributes(mCurrentAttribs);
+        contextWgpu->setVertexAttribute(syncedAttribIndex, mCurrentAttribs[syncedAttribIndex]);
+        contextWgpu->invalidateVertexBuffer(syncedAttribIndex);
     }
     return angle::Result::Continue;
 }
@@ -87,27 +93,33 @@ angle::Result VertexArrayWgpu::syncDirtyAttrib(ContextWgpu *contextWgpu,
 {
     if (attrib.enabled)
     {
+        SetBitField(mCurrentAttribs[attribIndex].enabled, true);
         const webgpu::Format &webgpuFormat =
             contextWgpu->getFormat(attrib.format->glInternalFormat);
         SetBitField(mCurrentAttribs[attribIndex].format, webgpuFormat.getActualWgpuVertexFormat());
-        gl::Buffer *bufferGl                 = binding.getBuffer().get();
-        mCurrentAttribs[attribIndex].enabled = true;
         SetBitField(mCurrentAttribs[attribIndex].shaderLocation, attribIndex);
         SetBitField(mCurrentAttribs[attribIndex].stride, binding.getStride());
+
+        gl::Buffer *bufferGl = binding.getBuffer().get();
         if (bufferGl && bufferGl->getSize() > 0)
         {
             SetBitField(mCurrentAttribs[attribIndex].offset,
                         reinterpret_cast<uintptr_t>(attrib.pointer));
+            BufferWgpu *bufferWgpu            = webgpu::GetImpl(bufferGl);
+            mCurrentArrayBuffers[attribIndex] = &(bufferWgpu->getBuffer());
         }
         else
         {
             SetBitField(mCurrentAttribs[attribIndex].offset, binding.getOffset());
+            mCurrentArrayBuffers[attribIndex] = nullptr;
         }
     }
     else
     {
-        memset(&mCurrentAttribs[attribIndex], 0, sizeof(mCurrentAttribs[attribIndex]));
+        memset(&mCurrentAttribs[attribIndex], 0, sizeof(webgpu::PackedVertexAttribute));
+        mCurrentArrayBuffers[attribIndex] = nullptr;
     }
+
     return angle::Result::Continue;
 }
 
