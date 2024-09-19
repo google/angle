@@ -232,12 +232,11 @@ class ProgramPrelude : public TIntermTraverser
     void textureGradOffset2DArray();
     void textureGradOffset2DShadow();
     void textureGradOffset2DArrayShadow();
-    void textureLod();
-    void textureLod_generic_float2();
-    void textureLod_generic_float3();
-    void textureLod_depth2d_float3();
-    void textureLod_texture2darray_float3();
-    void textureLod_texture2darray_float4();
+    void textureLod2D();
+    void textureLod3D();
+    void textureLodCube();
+    void textureLod2DArray();
+    void textureLod2DShadow();
     void textureLodOffset2D();
     void textureLodOffset3D();
     void textureLodOffset2DArray();
@@ -2114,89 +2113,79 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureGradOffset(
                         functionConstants(),
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureLod,
+PROGRAM_PRELUDE_DECLARE(textureLod2D,
                         R"(
-#define ANGLE_textureLod(env, ...) ANGLE_textureLod_impl(*env.texture, *env.sampler, __VA_ARGS__)
+template <typename T>
+ANGLE_ALWAYS_INLINE auto ANGLE_textureLod(
+    thread ANGLE_TextureEnv<metal::texture2d<T>> &env,
+    metal::float2 const coord,
+    float const level)
+{
+    return env.texture->sample(*env.sampler, coord, metal::level(level));
+}
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureLod_generic_float2,
-                        R"(
-template <typename Texture>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureLod_impl(
-    thread Texture &texture,
-    thread metal::sampler const &sampler,
-    metal::float2 const coord,
-    float level)
-{
-    return texture.sample(sampler, coord, metal::level(level));
-}
-)",
-                        textureLod())
-
-PROGRAM_PRELUDE_DECLARE(textureLod_generic_float3,
-                        R"(
-template <typename Texture>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureLod_impl(
-    thread Texture &texture,
-    thread metal::sampler const &sampler,
-    metal::float3 const coord,
-    float level)
-{
-    return texture.sample(sampler, coord, metal::level(level));
-}
-)",
-                        textureLod())
-
-PROGRAM_PRELUDE_DECLARE(textureLod_depth2d_float3,
+PROGRAM_PRELUDE_DECLARE(textureLod3D,
                         R"(
 template <typename T>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureLod_impl(
-    thread metal::depth2d<T> &texture,
-    thread metal::sampler const &sampler,
+ANGLE_ALWAYS_INLINE auto ANGLE_textureLod(
+    thread ANGLE_TextureEnv<metal::texture3d<T>> &env,
     metal::float3 const coord,
-    float level)
+    float const level)
 {
+    return env.texture->sample(*env.sampler, coord, metal::level(level));
+}
+)",
+                        textureEnv())
+
+PROGRAM_PRELUDE_DECLARE(textureLodCube,
+                        R"(
+template <typename T>
+ANGLE_ALWAYS_INLINE auto ANGLE_textureLod(
+    thread ANGLE_TextureEnv<metal::texturecube<T>> &env,
+    metal::float3 const coord,
+    float const level)
+{
+    return env.texture->sample(*env.sampler, coord, metal::level(level));
+}
+)",
+                        textureEnv())
+
+PROGRAM_PRELUDE_DECLARE(textureLod2DShadow,
+                        R"(
+ANGLE_ALWAYS_INLINE auto ANGLE_textureLod(
+    thread ANGLE_TextureEnv<metal::depth2d<float>> &env,
+    metal::float3 const coord,
+    float const level)
+{
+#if defined(__METAL_IOS__) || (__METAL_VERSION__ >= 230)
     if (ANGLEUseSampleCompareLod)
     {
-        return static_cast<T>(texture.sample_compare(sampler, coord.xy, coord.z, metal::level(level)));
+        return env.texture->sample_compare(*env.sampler, coord.xy, coord.z, metal::level(level));
     }
     else
+#endif
     {
-        return static_cast<T>(texture.sample(sampler, coord.xy, metal::level(level)) > coord.z);
+        return static_cast<float>(env.texture->sample(*env.sampler, coord.xy, metal::level(level)) > coord.z);
     }
 }
 )",
                         functionConstants(),
-                        textureLod())
+                        textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureLod_texture2darray_float3,
+PROGRAM_PRELUDE_DECLARE(textureLod2DArray,
                         R"(
 template <typename T>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureLod_impl(
-    thread metal::texture2d_array<T> &texture,
-    thread metal::sampler const &sampler,
+ANGLE_ALWAYS_INLINE auto ANGLE_textureLod(
+    thread ANGLE_TextureEnv<metal::texture2d_array<T>> &env,
     metal::float3 const coord,
-    float level)
+    float const level)
 {
-    return texture.sample(sampler, coord.xy, uint32_t(metal::round(coord.z)), metal::level(level));
+    return env.texture->sample(*env.sampler, coord.xy, uint32_t(metal::round(coord.z)), metal::level(level));
 }
 )",
-                        textureLod())
-
-PROGRAM_PRELUDE_DECLARE(textureLod_texture2darray_float4,
-                        R"(
-template <typename T>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureLod_impl(
-    thread metal::texture2d_array<T> &texture,
-    thread metal::sampler const &sampler,
-    metal::float4 const coord,
-    float level)
-{
-    return texture.sample(sampler, coord.xyz, uint32_t(metal::round(coord.w)), metal::level(level));
-}
-)",
-                        textureLod())
+                        textureEnv())
 
 PROGRAM_PRELUDE_DECLARE(textureLodOffset2D,
                         R"(
@@ -3293,38 +3282,29 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
         }
     });
     putBuiltIn("textureLod", [](ProgramPrelude &pp, const TFunction &func) {
-        const ImmutableString textureName =
-            GetTextureTypeName(func.getParam(0)->getType().getBasicType()).rawName();
-        const TType &coord          = func.getParam(1)->getType();
-        const TBasicType coordBasic = coord.getBasicType();
-        const uint8_t coordN        = coord.getNominalSize();
-        if (textureName.beginsWith("metal::depth2d<"))
+        switch (func.getParam(0)->getType().getBasicType())
         {
-            if (coordBasic == TBasicType::EbtFloat && coordN == 3)
-            {
-                return pp.textureLod_depth2d_float3();
-            }
+            case EbtSampler2D:
+            case EbtISampler2D:
+            case EbtUSampler2D:
+                return pp.textureLod2D();
+            case EbtSampler3D:
+            case EbtISampler3D:
+            case EbtUSampler3D:
+                return pp.textureLod3D();
+            case EbtSamplerCube:
+            case EbtISamplerCube:
+            case EbtUSamplerCube:
+                return pp.textureLodCube();
+            case EbtSampler2DArray:
+            case EbtISampler2DArray:
+            case EbtUSampler2DArray:
+                return pp.textureLod2DArray();
+            case EbtSampler2DShadow:
+                return pp.textureLod2DShadow();
+            default:
+                UNREACHABLE();
         }
-        if (textureName.beginsWith("metal::texture2d_array<"))
-        {
-            if (coordBasic == TBasicType::EbtFloat && coordN == 3)
-            {
-                return pp.textureLod_texture2darray_float3();
-            }
-            if (coordBasic == TBasicType::EbtFloat && coordN == 4)
-            {
-                return pp.textureLod_texture2darray_float4();
-            }
-        }
-        if (coordBasic == TBasicType::EbtFloat && coordN == 2)
-        {
-            return pp.textureLod_generic_float2();
-        }
-        if (coordBasic == TBasicType::EbtFloat && coordN == 3)
-        {
-            return pp.textureLod_generic_float3();
-        }
-        UNIMPLEMENTED();
     });
     putBuiltIn("textureLodOffset", [](ProgramPrelude &pp, const TFunction &func) {
         switch (func.getParam(0)->getType().getBasicType())
