@@ -7023,6 +7023,12 @@ VkResult PipelineCacheAccess::createComputePipeline(vk::Context *context,
     return pipelineOut->initCompute(context->getDevice(), createInfo, *mPipelineCache);
 }
 
+VkResult PipelineCacheAccess::getCacheData(vk::Context *context, size_t *cacheSize, void *cacheData)
+{
+    std::unique_lock<angle::SimpleMutex> lock = getLock();
+    return mPipelineCache->getCacheData(context->getDevice(), cacheSize, cacheData);
+}
+
 void PipelineCacheAccess::merge(Renderer *renderer, const vk::PipelineCache &pipelineCache)
 {
     ASSERT(isThreadSafe());

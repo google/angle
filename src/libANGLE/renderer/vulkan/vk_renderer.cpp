@@ -5662,7 +5662,8 @@ angle::Result Renderer::getPipelineCache(vk::Context *context,
     ANGLE_TRY(ensurePipelineCacheInitialized(context));
 
     angle::SimpleMutex *pipelineCacheMutex =
-        (context->getFeatures().mergeProgramPipelineCachesToGlobalCache.enabled)
+        context->getFeatures().mergeProgramPipelineCachesToGlobalCache.enabled ||
+                context->getFeatures().preferMonolithicPipelinesOverLibraries.enabled
             ? &mPipelineCacheMutex
             : nullptr;
 
@@ -5738,7 +5739,9 @@ void Renderer::initializeFrontendFeatures(angle::FrontendFeatures *features) con
 
 angle::Result Renderer::getPipelineCacheSize(vk::Context *context, size_t *pipelineCacheSizeOut)
 {
-    ANGLE_VK_TRY(context, mPipelineCache.getCacheData(mDevice, pipelineCacheSizeOut, nullptr));
+    vk::PipelineCacheAccess globalCache;
+    ANGLE_TRY(getPipelineCache(context, &globalCache));
+    ANGLE_VK_TRY(context, globalCache.getCacheData(context, pipelineCacheSizeOut, nullptr));
     return angle::Result::Continue;
 }
 
@@ -5795,9 +5798,12 @@ angle::Result Renderer::syncPipelineCacheVk(vk::Context *context,
 
     std::vector<uint8_t> pipelineCacheData(pipelineCacheSize);
 
+    vk::PipelineCacheAccess globalCache;
+    ANGLE_TRY(getPipelineCache(context, &globalCache));
+
     size_t oldPipelineCacheSize = pipelineCacheSize;
     VkResult result =
-        mPipelineCache.getCacheData(mDevice, &pipelineCacheSize, pipelineCacheData.data());
+        globalCache.getCacheData(context, &pipelineCacheSize, pipelineCacheData.data());
     // We don't need all of the cache data, so just make sure we at least got the header
     // Vulkan Spec 9.6. Pipeline Cache
     // https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/chap9.html#pipelines-cache
