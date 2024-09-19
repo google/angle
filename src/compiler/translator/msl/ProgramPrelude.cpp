@@ -177,8 +177,12 @@ class ProgramPrelude : public TIntermTraverser
     void functionConstants();
     void gradient();
     void textureEnv();
-    void texelFetch();
-    void texelFetchOffset();
+    void texelFetch2D();
+    void texelFetch3D();
+    void texelFetch2DArray();
+    void texelFetchOffset2D();
+    void texelFetchOffset3D();
+    void texelFetchOffset2DArray();
     void texture();
     void texture_generic_float2();
     void texture_generic_float2_float();
@@ -257,7 +261,10 @@ class ProgramPrelude : public TIntermTraverser
     void textureProjLod_texture3d_float4();
     void textureProjLodOffset();
     void textureProjOffset();
-    void textureSize();
+    void textureSize2D();
+    void textureSize3D();
+    void textureSize2DArray();
+    void textureSize2DArrayShadow();
     void imageLoad();
     void imageStore();
     void memoryBarrierImage();
@@ -1321,71 +1328,83 @@ constant bool ANGLEWriteHelperSampleMask    [[function_constant(ANGLE_WRITE_HELP
 #define ANGLE_ALPHA0
 )")
 
-PROGRAM_PRELUDE_DECLARE(texelFetch,
+PROGRAM_PRELUDE_DECLARE(texelFetch2D,
                         R"(
-#define ANGLE_texelFetch(env, ...) ANGLE_texelFetch_impl(*env.texture, __VA_ARGS__)
-
-template <typename Texture>
-ANGLE_ALWAYS_INLINE auto ANGLE_texelFetch_impl(
-    thread Texture &texture,
-    metal::int2 const coord,
-    uint32_t level)
-{
-    return texture.read(uint2(coord), level);
-}
-
-template <typename Texture>
-ANGLE_ALWAYS_INLINE auto ANGLE_texelFetch_impl(
-    thread Texture &texture,
-    metal::int3 const coord,
-    uint32_t level)
-{
-    return texture.read(uint3(coord), level);
-}
-
 template <typename T>
-ANGLE_ALWAYS_INLINE auto ANGLE_texelFetch_impl(
-    thread metal::texture2d_array<T> &texture,
-    metal::int3 const coord,
-    uint32_t level)
+ANGLE_ALWAYS_INLINE auto ANGLE_texelFetch(
+    thread ANGLE_TextureEnv<metal::texture2d<T>> &env,
+    metal::int2 const coord,
+    int const level)
 {
-    return texture.read(uint2(coord.xy), uint32_t(coord.z), level);
+    return env.texture->read(uint2(coord), uint32_t(level));
 }
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(texelFetchOffset,
+PROGRAM_PRELUDE_DECLARE(texelFetch3D,
                         R"(
-#define ANGLE_texelFetchOffset(env, ...) ANGLE_texelFetchOffset_impl(*env.texture, __VA_ARGS__)
+template <typename T>
+ANGLE_ALWAYS_INLINE auto ANGLE_texelFetch(
+    thread ANGLE_TextureEnv<metal::texture3d<T>> &env,
+    metal::int3 const coord,
+    int const level)
+{
+    return env.texture->read(uint3(coord), uint32_t(level));
+}
+)",
+                        textureEnv())
 
-template <typename Texture>
-ANGLE_ALWAYS_INLINE auto ANGLE_texelFetchOffset_impl(
-    thread Texture &texture,
+PROGRAM_PRELUDE_DECLARE(texelFetch2DArray,
+                        R"(
+template <typename T>
+ANGLE_ALWAYS_INLINE auto ANGLE_texelFetch(
+    thread ANGLE_TextureEnv<metal::texture2d_array<T>> &env,
+    metal::int3 const coord,
+    int const level)
+{
+    return env.texture->read(uint2(coord.xy), uint32_t(coord.z), uint32_t(level));
+}
+)",
+                        textureEnv())
+
+PROGRAM_PRELUDE_DECLARE(texelFetchOffset2D,
+                        R"(
+template <typename T>
+ANGLE_ALWAYS_INLINE auto ANGLE_texelFetchOffset(
+    thread ANGLE_TextureEnv<metal::texture2d<T>> &env,
     metal::int2 const coord,
-    uint32_t level,
+    int const level,
     metal::int2 const offset)
 {
-    return texture.read(uint2(coord + offset), level);
+    return env.texture->read(uint2(coord + offset), uint32_t(level));
 }
+)",
+                        textureEnv())
 
-template <typename Texture>
-ANGLE_ALWAYS_INLINE auto ANGLE_texelFetchOffset_impl(
-    thread Texture &texture,
+PROGRAM_PRELUDE_DECLARE(texelFetchOffset3D,
+                        R"(
+template <typename T>
+ANGLE_ALWAYS_INLINE auto ANGLE_texelFetchOffset(
+    thread ANGLE_TextureEnv<metal::texture3d<T>> &env,
     metal::int3 const coord,
-    uint32_t level,
+    int const level,
     metal::int3 const offset)
 {
-    return texture.read(uint3(coord + offset), level);
+    return env.texture->read(uint3(coord + offset), uint32_t(level));
 }
+)",
+                        textureEnv())
 
+PROGRAM_PRELUDE_DECLARE(texelFetchOffset2DArray,
+                        R"(
 template <typename T>
-ANGLE_ALWAYS_INLINE auto ANGLE_texelFetchOffset_impl(
-    thread metal::texture2d_array<T> &texture,
+ANGLE_ALWAYS_INLINE auto ANGLE_texelFetchOffset(
+    thread ANGLE_TextureEnv<metal::texture2d_array<T>> &env,
     metal::int3 const coord,
-    uint32_t level,
+    int const level,
     metal::int2 const offset)
 {
-    return texture.read(uint2(coord.xy + offset), uint32_t(coord.z), level);
+    return env.texture->read(uint2(coord.xy + offset), uint32_t(coord.z), uint32_t(level));
 }
 )",
                         textureEnv())
@@ -2762,40 +2781,49 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjOffset_impl(
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureSize,
+PROGRAM_PRELUDE_DECLARE(textureSize2D,
                         R"(
-#define ANGLE_textureSize(env, ...) ANGLE_textureSize_impl(*env.texture, __VA_ARGS__)
-
 template <typename Texture>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureSize_impl(
-    thread Texture &texture,
-    int level)
+ANGLE_ALWAYS_INLINE auto ANGLE_textureSize(
+    thread ANGLE_TextureEnv<Texture> &env,
+    int const level)
 {
-    return int2(texture.get_width(uint32_t(level)), texture.get_height(uint32_t(level)));
+    return int2(env.texture->get_width(uint32_t(level)), env.texture->get_height(uint32_t(level)));
 }
+)",
+                        textureEnv())
 
+PROGRAM_PRELUDE_DECLARE(textureSize3D,
+                        R"(
 template <typename T>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureSize_impl(
-    thread metal::texture3d<T> &texture,
-    int level)
+ANGLE_ALWAYS_INLINE auto ANGLE_textureSize(
+    thread ANGLE_TextureEnv<metal::texture3d<T>> &env,
+    int const level)
 {
-    return int3(texture.get_width(uint32_t(level)), texture.get_height(uint32_t(level)), texture.get_depth(uint32_t(level)));
+    return int3(env.texture->get_width(uint32_t(level)), env.texture->get_height(uint32_t(level)), env.texture->get_depth(uint32_t(level)));
 }
+)",
+                        textureEnv())
 
+PROGRAM_PRELUDE_DECLARE(textureSize2DArray,
+                        R"(
 template <typename T>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureSize_impl(
-    thread metal::depth2d_array<T> &texture,
-    int level)
+ANGLE_ALWAYS_INLINE auto ANGLE_textureSize(
+    thread ANGLE_TextureEnv<metal::texture2d_array<T>> &env,
+    int const level)
 {
-    return int3(texture.get_width(uint32_t(level)), texture.get_height(uint32_t(level)), texture.get_array_size());
+    return int3(env.texture->get_width(uint32_t(level)), env.texture->get_height(uint32_t(level)), env.texture->get_array_size());
 }
+)",
+                        textureEnv())
 
-template <typename T>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureSize_impl(
-    thread metal::texture2d_array<T> &texture,
-    int level)
+PROGRAM_PRELUDE_DECLARE(textureSize2DArrayShadow,
+                        R"(
+ANGLE_ALWAYS_INLINE auto ANGLE_textureSize(
+    thread ANGLE_TextureEnv<metal::depth2d_array<float>> &env,
+    int const level)
 {
-    return int3(texture.get_width(uint32_t(level)), texture.get_height(uint32_t(level)), texture.get_array_size());
+    return int3(env.texture->get_width(uint32_t(level)), env.texture->get_height(uint32_t(level)), env.texture->get_array_size());
 }
 )",
                         textureEnv())
@@ -2946,8 +2974,44 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
     putAngle("out", EMIT_METHOD(out));
     putAngle("swizzle_ref", EMIT_METHOD(swizzleRef));
 
-    putBuiltIn("texelFetch", EMIT_METHOD(texelFetch));
-    putBuiltIn("texelFetchOffset", EMIT_METHOD(texelFetchOffset));
+    putBuiltIn("texelFetch", [](ProgramPrelude &pp, const TFunction &func) {
+        switch (func.getParam(0)->getType().getBasicType())
+        {
+            case EbtSampler2D:
+            case EbtISampler2D:
+            case EbtUSampler2D:
+                return pp.texelFetch2D();
+            case EbtSampler3D:
+            case EbtISampler3D:
+            case EbtUSampler3D:
+                return pp.texelFetch3D();
+            case EbtSampler2DArray:
+            case EbtISampler2DArray:
+            case EbtUSampler2DArray:
+                return pp.texelFetch2DArray();
+            default:
+                UNREACHABLE();
+        }
+    });
+    putBuiltIn("texelFetchOffset", [](ProgramPrelude &pp, const TFunction &func) {
+        switch (func.getParam(0)->getType().getBasicType())
+        {
+            case EbtSampler2D:
+            case EbtISampler2D:
+            case EbtUSampler2D:
+                return pp.texelFetchOffset2D();
+            case EbtSampler3D:
+            case EbtISampler3D:
+            case EbtUSampler3D:
+                return pp.texelFetchOffset3D();
+            case EbtSampler2DArray:
+            case EbtISampler2DArray:
+            case EbtUSampler2DArray:
+                return pp.texelFetchOffset2DArray();
+            default:
+                UNREACHABLE();
+        }
+    });
     putBuiltIn("texture", [](ProgramPrelude &pp, const TFunction &func) {
         const ImmutableString textureName =
             GetTextureTypeName(func.getParam(0)->getType().getBasicType()).rawName();
@@ -3324,7 +3388,24 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
     });
     putBuiltIn("textureProjLodOffset", EMIT_METHOD(textureProjLodOffset));
     putBuiltIn("textureProjOffset", EMIT_METHOD(textureProjOffset));
-    putBuiltIn("textureSize", EMIT_METHOD(textureSize));
+    putBuiltIn("textureSize", [](ProgramPrelude &pp, const TFunction &func) {
+        switch (func.getParam(0)->getType().getBasicType())
+        {
+            case EbtSampler3D:
+            case EbtISampler3D:
+            case EbtUSampler3D:
+                return pp.textureSize3D();
+            case EbtSampler2DArray:
+            case EbtISampler2DArray:
+            case EbtUSampler2DArray:
+                return pp.textureSize2DArray();
+            case EbtSampler2DArrayShadow:
+                return pp.textureSize2DArrayShadow();
+            default:
+                // Same wrapper for 2D, 2D Shadow, Cube, and Cube Shadow
+                return pp.textureSize2D();
+        }
+    });
     putBuiltIn("imageLoad", EMIT_METHOD(imageLoad));
     putBuiltIn("imageStore", EMIT_METHOD(imageStore));
     putBuiltIn("memoryBarrierImage", EMIT_METHOD(memoryBarrierImage));
