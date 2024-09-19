@@ -898,27 +898,6 @@ Display *Display::GetDisplayFromDevice(Device *device, const AttributeMap &attri
     return display;
 }
 
-// static
-Display::EglDisplaySet Display::GetEglDisplaySet()
-{
-    Display::EglDisplaySet displays;
-
-    ANGLEPlatformDisplayMap *anglePlatformDisplays   = GetANGLEPlatformDisplayMap();
-    DevicePlatformDisplayMap *devicePlatformDisplays = GetDevicePlatformDisplayMap();
-
-    for (auto anglePlatformDisplayMapEntry : *anglePlatformDisplays)
-    {
-        displays.insert(anglePlatformDisplayMapEntry.second);
-    }
-
-    for (auto devicePlatformDisplayMapEntry : *devicePlatformDisplays)
-    {
-        displays.insert(devicePlatformDisplayMapEntry.second);
-    }
-
-    return displays;
-}
-
 Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDevice)
     : mState(displayId),
       mImplementation(nullptr),

@@ -144,7 +144,6 @@ class Display final : public LabeledObject,
     static Display *GetExistingDisplayFromNativeDisplay(EGLNativeDisplayType nativeDisplay);
 
     using EglDisplaySet = angle::HashSet<Display *>;
-    static EglDisplaySet GetEglDisplaySet();
 
     static const ClientExtensions &GetClientExtensions();
     static const std::string &GetClientExtensionString();
