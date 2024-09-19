@@ -2176,6 +2176,7 @@ GenMetalTraverser::FuncToName GenMetalTraverser::BuildFuncToName()
     putAngle("texture2DProjLodEXT");
     putAngle("texture3D");
     putAngle("texture3DLod");
+    putAngle("texture3DProj");
     putAngle("texture3DProjLod");
     putAngle("textureCube");
     putAngle("textureCubeGradEXT");
