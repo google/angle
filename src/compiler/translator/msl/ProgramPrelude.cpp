@@ -241,8 +241,18 @@ class ProgramPrelude : public TIntermTraverser
     void textureLod_depth2d_float3();
     void textureLod_texture2darray_float3();
     void textureLod_texture2darray_float4();
-    void textureLodOffset();
-    void textureOffset();
+    void textureLodOffset2D();
+    void textureLodOffset3D();
+    void textureLodOffset2DArray();
+    void textureLodOffset2DShadow();
+    void textureOffset2D();
+    void textureOffset3D();
+    void textureOffset2DArray();
+    void textureOffset2DShadow();
+    void textureOffsetBias2D();
+    void textureOffsetBias3D();
+    void textureOffsetBias2DArray();
+    void textureOffsetBias2DShadow();
     void textureProj2D_float3();
     void textureProj2D_float4();
     void textureProj2DShadow();
@@ -2233,161 +2243,177 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureLod_impl(
 )",
                         textureLod())
 
-PROGRAM_PRELUDE_DECLARE(textureLodOffset,
+PROGRAM_PRELUDE_DECLARE(textureLodOffset2D,
                         R"(
-#define ANGLE_textureLodOffset(env, ...) ANGLE_textureLodOffset_impl(*env.texture, *env.sampler, __VA_ARGS__)
-
-template <typename Texture>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureLodOffset_impl(
-    thread Texture &texture,
-    thread metal::sampler const &sampler,
+template <typename T>
+ANGLE_ALWAYS_INLINE auto ANGLE_textureLodOffset(
+    thread ANGLE_TextureEnv<metal::texture2d<T>> &env,
     metal::float2 const coord,
-    float level,
+    float const level,
     metal::int2 const offset)
 {
-    return texture.sample(sampler, coord, metal::level(level), offset);
+    return env.texture->sample(*env.sampler, coord, metal::level(level), offset);
 }
+)",
+                        textureEnv())
 
-template <typename Texture>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureLodOffset_impl(
-    thread Texture &texture,
-    thread metal::sampler const &sampler,
+PROGRAM_PRELUDE_DECLARE(textureLodOffset3D,
+                        R"(
+template <typename T>
+ANGLE_ALWAYS_INLINE auto ANGLE_textureLodOffset(
+    thread ANGLE_TextureEnv<metal::texture3d<T>> &env,
     metal::float3 const coord,
-    float level,
+    float const level,
     metal::int3 const offset)
 {
-    return texture.sample(sampler, coord, metal::level(level), offset);
+    return env.texture->sample(*env.sampler, coord, metal::level(level), offset);
 }
+)",
+                        textureEnv())
 
-template <typename T>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureLodOffset_impl(
-    thread metal::depth2d<T> &texture,
-    thread metal::sampler const &sampler,
+PROGRAM_PRELUDE_DECLARE(textureLodOffset2DShadow,
+                        R"(
+ANGLE_ALWAYS_INLINE auto ANGLE_textureLodOffset(
+    thread ANGLE_TextureEnv<metal::depth2d<float>> &env,
     metal::float3 const coord,
-    float level,
+    float const level,
     int2 const offset)
 {
+#if defined(__METAL_IOS__) || (__METAL_VERSION__ >= 230)
     if (ANGLEUseSampleCompareLod)
     {
-        return static_cast<T>(texture.sample_compare(sampler, coord.xy, coord.z, metal::level(level), offset));
+        return env.texture->sample_compare(*env.sampler, coord.xy, coord.z, metal::level(level), offset);
     }
     else
+#endif
     {
-        return static_cast<T>(texture.sample(sampler, coord.xy, metal::level(level), offset) > coord.z);
+        return static_cast<float>(env.texture->sample(*env.sampler, coord.xy, metal::level(level), offset) > coord.z);
     }
-}
-
-template <typename T>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureLodOffset_impl(
-    thread metal::texture2d_array<T> &texture,
-    thread metal::sampler const &sampler,
-    metal::float3 const coord,
-    float level,
-    metal::int2 const offset)
-{
-    return texture.sample(sampler, coord.xy, uint32_t(metal::round(coord.z)), metal::level(level), offset);
-}
-
-template <typename T>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureLodOffset_impl(
-    thread metal::texture2d_array<T> &texture,
-    thread metal::sampler const &sampler,
-    metal::float4 const coord,
-    float level,
-    metal::int3 const offset)
-{
-    return texture.sample(sampler, coord.xyz, uint32_t(metal::round(coord.w)), metal::level(level), offset);
 }
 )",
                         functionConstants(),
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureOffset,
+PROGRAM_PRELUDE_DECLARE(textureLodOffset2DArray,
                         R"(
-#define ANGLE_textureOffset(env, ...) ANGLE_textureOffset_impl(*env.texture, *env.sampler, __VA_ARGS__)
+template <typename T>
+ANGLE_ALWAYS_INLINE auto ANGLE_textureLodOffset(
+    thread ANGLE_TextureEnv<metal::texture2d_array<T>> &env,
+    metal::float3 const coord,
+    float const level,
+    metal::int2 const offset)
+{
+    return env.texture->sample(*env.sampler, coord.xy, uint32_t(metal::round(coord.z)), metal::level(level), offset);
+}
+)",
+                        textureEnv())
 
-template <typename Texture>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset_impl(
-    thread Texture &texture,
-    thread metal::sampler const &sampler,
+PROGRAM_PRELUDE_DECLARE(textureOffset2D,
+                        R"(
+template <typename T>
+ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset(
+    thread ANGLE_TextureEnv<metal::texture2d<T>> &env,
     metal::float2 const coord,
     metal::int2 const offset)
 {
-    return texture.sample(sampler, coord, offset);
+    return env.texture->sample(*env.sampler, coord, offset);
 }
+)",
+                        textureEnv())
 
-template <typename Texture>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset_impl(
-    thread Texture &texture,
-    thread metal::sampler const &sampler,
+PROGRAM_PRELUDE_DECLARE(textureOffsetBias2D,
+                        R"(
+template <typename T>
+ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset(
+    thread ANGLE_TextureEnv<metal::texture2d<T>> &env,
     metal::float2 const coord,
     metal::int2 const offset,
-    float bias)
+    float const bias)
 {
-    return texture.sample(sampler, coord, metal::bias(bias), offset);
+    return env.texture->sample(*env.sampler, coord, metal::bias(bias), offset);
 }
+)",
+                        textureEnv())
 
-template <typename Texture>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset_impl(
-    thread Texture &texture,
-    thread metal::sampler const &sampler,
+PROGRAM_PRELUDE_DECLARE(textureOffset2DArray,
+                        R"(
+template <typename T>
+ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset(
+    thread ANGLE_TextureEnv<metal::texture2d_array<T>> &env,
     metal::float3 const coord,
     metal::int2 const offset)
 {
-    return texture.sample(sampler, coord.xy, uint32_t(metal::round(coord.z)), offset);
+    return env.texture->sample(*env.sampler, coord.xy, uint32_t(metal::round(coord.z)), offset);
 }
+)",
+                        textureEnv())
 
-template <typename Texture>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset_impl(
-    thread Texture &texture,
-    thread metal::sampler const &sampler,
+PROGRAM_PRELUDE_DECLARE(textureOffsetBias2DArray,
+                        R"(
+template <typename T>
+ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset(
+    thread ANGLE_TextureEnv<metal::texture2d_array<T>> &env,
     metal::float3 const coord,
     metal::int2 const offset,
-    float bias)
+    float const bias)
 {
-    return texture.sample(sampler, coord.xy, uint32_t(metal::round(coord.z)), metal::bias(bias), offset);
+    return env.texture->sample(*env.sampler, coord.xy, uint32_t(metal::round(coord.z)), metal::bias(bias), offset);
 }
+)",
+                        textureEnv())
 
-template <typename Texture>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset_impl(
-    thread Texture &texture,
-    thread metal::sampler const &sampler,
+PROGRAM_PRELUDE_DECLARE(textureOffset3D,
+                        R"(
+template <typename T>
+ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset(
+    thread ANGLE_TextureEnv<metal::texture3d<T>> &env,
     metal::float3 const coord,
     metal::int3 const offset)
 {
-    return texture.sample(sampler, coord, offset);
+    return env.texture->sample(*env.sampler, coord, offset);
 }
+)",
+                        textureEnv())
 
-template <typename Texture>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset_impl(
-    thread Texture &texture,
-    thread metal::sampler const &sampler,
+PROGRAM_PRELUDE_DECLARE(textureOffsetBias3D,
+                        R"(
+template <typename T>
+ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset(
+    thread ANGLE_TextureEnv<metal::texture3d<T>> &env,
     metal::float3 const coord,
     metal::int3 const offset,
-    float bias)
+    float const bias)
 {
-    return texture.sample(sampler, coord, metal::bias(bias), offset);
+    return env.texture->sample(*env.sampler, coord, metal::bias(bias), offset);
 }
+)",
+                        textureEnv())
 
-template <typename T>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset_impl(
-    thread metal::depth2d<T> &texture,
-    thread metal::sampler const &sampler,
+PROGRAM_PRELUDE_DECLARE(textureOffset2DShadow,
+                        R"(
+ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset(
+    thread ANGLE_TextureEnv<metal::depth2d<float>> &env,
     metal::float3 const coord,
     metal::int2 const offset)
 {
-    return texture.sample_compare(sampler, coord.xy, coord.z, offset);
+    return env.texture->sample_compare(*env.sampler, coord.xy, coord.z, offset);
 }
+)",
+                        textureEnv())
 
-template <typename T>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset_impl(
-    thread metal::depth2d<T> &texture,
-    thread metal::sampler const &sampler,
+PROGRAM_PRELUDE_DECLARE(textureOffsetBias2DShadow,
+                        R"(
+ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset(
+    thread ANGLE_TextureEnv<metal::depth2d<float>> &env,
     metal::float3 const coord,
     metal::int2 const offset,
-    float bias)
+    float const bias)
 {
-    return texture.sample_compare(sampler, coord.xy, coord.z, metal::bias(bias), offset);
+#if defined(__METAL_IOS__) || (__METAL_VERSION__ >= 230)
+    return env.texture->sample_compare(*env.sampler, coord.xy, coord.z, metal::bias(bias), offset);
+#else
+    return env.texture->sample_compare(*env.sampler, coord.xy, coord.z, offset);
+#endif
 }
 )",
                         textureEnv())
@@ -3372,8 +3398,49 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
         }
         UNIMPLEMENTED();
     });
-    putBuiltIn("textureLodOffset", EMIT_METHOD(textureLodOffset));
-    putBuiltIn("textureOffset", EMIT_METHOD(textureOffset));
+    putBuiltIn("textureLodOffset", [](ProgramPrelude &pp, const TFunction &func) {
+        switch (func.getParam(0)->getType().getBasicType())
+        {
+            case EbtSampler2D:
+            case EbtISampler2D:
+            case EbtUSampler2D:
+                return pp.textureLodOffset2D();
+            case EbtSampler3D:
+            case EbtISampler3D:
+            case EbtUSampler3D:
+                return pp.textureLodOffset3D();
+            case EbtSampler2DArray:
+            case EbtISampler2DArray:
+            case EbtUSampler2DArray:
+                return pp.textureLodOffset2DArray();
+            case EbtSampler2DShadow:
+                return pp.textureLodOffset2DShadow();
+            default:
+                UNREACHABLE();
+        }
+    });
+    putBuiltIn("textureOffset", [](ProgramPrelude &pp, const TFunction &func) {
+        const bool bias = func.getParamCount() == 4;
+        switch (func.getParam(0)->getType().getBasicType())
+        {
+            case EbtSampler2D:
+            case EbtISampler2D:
+            case EbtUSampler2D:
+                return bias ? pp.textureOffsetBias2D() : pp.textureOffset2D();
+            case EbtSampler3D:
+            case EbtISampler3D:
+            case EbtUSampler3D:
+                return bias ? pp.textureOffsetBias3D() : pp.textureOffset3D();
+            case EbtSampler2DArray:
+            case EbtISampler2DArray:
+            case EbtUSampler2DArray:
+                return bias ? pp.textureOffsetBias2DArray() : pp.textureOffset2DArray();
+            case EbtSampler2DShadow:
+                return bias ? pp.textureOffsetBias2DShadow() : pp.textureOffset2DShadow();
+            default:
+                UNREACHABLE();
+        }
+    });
     putBuiltIn("textureProj", [](ProgramPrelude &pp, const TFunction &func) {
         const bool bias = func.getParamCount() == 3;
         switch (func.getParam(0)->getType().getBasicType())
