@@ -227,14 +227,11 @@ class ProgramPrelude : public TIntermTraverser
     void textureGrad_depth2darray_float4_float2_float2();
     void textureGrad_depthcube_float4_float3_float3();
     void textureGrad_texturecube_float3_float3_float3();
-    void textureGradOffset();
-    void textureGradOffset_generic_floatN_floatN_floatN_intN();
-    void textureGradOffset_generic_float3_float2_float2_int2();
-    void textureGradOffset_generic_float4_float2_float2_int2();
-    void textureGradOffset_depth2d_float3_float2_float2_int2();
-    void textureGradOffset_depth2darray_float4_float2_float2_int2();
-    void textureGradOffset_depthcube_float4_float3_float3_int3();
-    void textureGradOffset_texturecube_float3_float3_float3_int3();
+    void textureGradOffset2D();
+    void textureGradOffset3D();
+    void textureGradOffset2DArray();
+    void textureGradOffset2DShadow();
+    void textureGradOffset2DArrayShadow();
     void textureLod();
     void textureLod_generic_float2();
     void textureLod_generic_float3();
@@ -2024,140 +2021,98 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureGrad_impl(
 )",
                         textureGrad())
 
-PROGRAM_PRELUDE_DECLARE(textureGradOffset,
+PROGRAM_PRELUDE_DECLARE(textureGradOffset2D,
                         R"(
-#define ANGLE_textureGradOffset(env, ...) ANGLE_textureGradOffset_impl(*env.texture, *env.sampler, __VA_ARGS__)
+template <typename T>
+ANGLE_ALWAYS_INLINE auto ANGLE_textureGradOffset(
+    thread ANGLE_TextureEnv<metal::texture2d<T>> &env,
+    metal::float2 const coord,
+    metal::float2 const dPdx,
+    metal::float2 const dPdy,
+    int2 const offset)
+{
+    return env.texture->sample(*env.sampler, coord, metal::gradient2d(dPdx, dPdy), offset);
+}
 )",
                         textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureGradOffset_generic_floatN_floatN_floatN_intN,
-                        R"(
-template <typename Texture, int N>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureGradOffset_impl(
-    thread Texture &texture,
-    thread metal::sampler const &sampler,
-    metal::vec<float, N> const coord,
-    metal::vec<float, N> const dPdx,
-    metal::vec<float, N> const dPdy,
-    metal::vec<int, N> const offset)
-{
-    return texture.sample(sampler, coord, ANGLE_gradient<N>(dPdx, dPdy), offset);
-}
-)",
-                        gradient(),
-                        textureGradOffset())
-
-PROGRAM_PRELUDE_DECLARE(textureGradOffset_generic_float3_float2_float2_int2,
-                        R"(
-template <typename Texture>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureGradOffset_impl(
-    thread Texture &texture,
-    thread metal::sampler const &sampler,
-    metal::float3 const coord,
-    metal::float2 const dPdx,
-    metal::float2 const dPdy,
-    metal::int2 const offset)
-{
-    return texture.sample(sampler, coord.xy, uint32_t(metal::round(coord.z)), metal::gradient2d(dPdx, dPdy), offset);
-}
-)",
-                        textureGradOffset())
-
-PROGRAM_PRELUDE_DECLARE(textureGradOffset_generic_float4_float2_float2_int2,
-                        R"(
-template <typename Texture>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureGradOffset_impl(
-    thread Texture &texture,
-    thread metal::sampler const &sampler,
-    metal::float4 const coord,
-    metal::float2 const dPdx,
-    metal::float2 const dPdy,
-    metal::int2 const offset)
-{
-    return texture.sample(sampler, coord.xy, uint32_t(metal::round(coord.z)), metal::gradient2d(dPdx, dPdy), offset);
-}
-)",
-                        textureGradOffset())
-
-PROGRAM_PRELUDE_DECLARE(textureGradOffset_depth2d_float3_float2_float2_int2,
+PROGRAM_PRELUDE_DECLARE(textureGradOffset3D,
                         R"(
 template <typename T>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureGradOffset_impl(
-    thread metal::depth2d<T> &texture,
-    thread metal::sampler const &sampler,
+ANGLE_ALWAYS_INLINE auto ANGLE_textureGradOffset(
+    thread ANGLE_TextureEnv<metal::texture3d<T>> &env,
+    metal::float3 const coord,
+    metal::float3 const dPdx,
+    metal::float3 const dPdy,
+    int3 const offset)
+{
+    return env.texture->sample(*env.sampler, coord, metal::gradient3d(dPdx, dPdy), offset);
+}
+)",
+                        textureEnv())
+
+PROGRAM_PRELUDE_DECLARE(textureGradOffset2DArray,
+                        R"(
+template <typename T>
+ANGLE_ALWAYS_INLINE auto ANGLE_textureGradOffset(
+    thread ANGLE_TextureEnv<metal::texture2d_array<T>> &env,
     metal::float3 const coord,
     metal::float2 const dPdx,
     metal::float2 const dPdy,
     metal::int2 const offset)
 {
+    return env.texture->sample(*env.sampler, coord.xy, uint32_t(metal::round(coord.z)), metal::gradient2d(dPdx, dPdy), offset);
+}
+)",
+                        textureEnv())
+
+PROGRAM_PRELUDE_DECLARE(textureGradOffset2DShadow,
+                        R"(
+ANGLE_ALWAYS_INLINE auto ANGLE_textureGradOffset(
+    thread ANGLE_TextureEnv<metal::depth2d<float>> &env,
+    metal::float3 const coord,
+    metal::float2 const dPdx,
+    metal::float2 const dPdy,
+    metal::int2 const offset)
+{
+#if defined(__METAL_IOS__) || (__METAL_VERSION__ >= 230)
     if (ANGLEUseSampleCompareGradient)
     {
-        return static_cast<T>(texture.sample_compare(sampler, coord.xy, coord.z, metal::gradient2d(dPdx, dPdy), offset));
+        return env.texture->sample_compare(*env.sampler, coord.xy, coord.z, metal::gradient2d(dPdx, dPdy), offset);
     }
     else
+#endif
     {
-        return static_cast<T>(texture.sample(sampler, coord.xy, metal::gradient2d(dPdx, dPdy), offset) > coord.z);
+        return static_cast<float>(env.texture->sample(*env.sampler, coord.xy, metal::gradient2d(dPdx, dPdy), offset) > coord.z);
     }
 }
 )",
                         functionConstants(),
-                        textureGradOffset())
+                        textureEnv())
 
-PROGRAM_PRELUDE_DECLARE(textureGradOffset_depth2darray_float4_float2_float2_int2,
+PROGRAM_PRELUDE_DECLARE(textureGradOffset2DArrayShadow,
                         R"(
-template <typename T>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureGradOffset_impl(
-    thread metal::depth2d_array<T> &texture,
-    thread metal::sampler const &sampler,
+ANGLE_ALWAYS_INLINE auto ANGLE_textureGradOffset(
+    thread ANGLE_TextureEnv<metal::depth2d_array<float>> &env,
     metal::float4 const coord,
     metal::float2 const dPdx,
     metal::float2 const dPdy,
     metal::int2 const offset)
 {
+#if defined(__METAL_IOS__) || (__METAL_VERSION__ >= 230)
     if (ANGLEUseSampleCompareGradient)
     {
-        return static_cast<T>(texture.sample_compare(sampler, coord.xy, uint32_t(metal::round(coord.z)), coord.w, metal::gradient2d(dPdx, dPdy), offset));
+        return env.texture->sample_compare(*env.sampler, coord.xy, uint32_t(metal::round(coord.z)), coord.w, metal::gradient2d(dPdx, dPdy), offset);
     }
     else
+#endif
     {
-        return static_cast<T>(texture.sample(sampler, coord.xy, uint32_t(metal::round(coord.z)), metal::gradient2d(dPdx, dPdy), offset) > coord.w);
+        return static_cast<float>(env.texture->sample(*env.sampler, coord.xy, uint32_t(metal::round(coord.z)), metal::gradient2d(dPdx, dPdy), offset) > coord.w);
     }
 }
 )",
                         functionConstants(),
-                        textureGradOffset())
-
-PROGRAM_PRELUDE_DECLARE(textureGradOffset_depthcube_float4_float3_float3_int3,
-                        R"(
-template <typename T>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureGradOffset_impl(
-    thread metal::depthcube<T> &texture,
-    thread metal::sampler const &sampler,
-    metal::float4 const coord,
-    metal::float3 const dPdx,
-    metal::float3 const dPdy,
-    metal::int3 const offset)
-{
-    return texture.sample_compare(sampler, coord.xyz, coord.w, metal::gradientcube(dPdx, dPdy), offset);
-}
-)",
-                        textureGradOffset())
-
-PROGRAM_PRELUDE_DECLARE(textureGradOffset_texturecube_float3_float3_float3_int3,
-                        R"(
-template <typename T>
-ANGLE_ALWAYS_INLINE auto ANGLE_textureGradOffset_impl(
-    thread metal::texturecube<T> &texture,
-    thread metal::sampler const &sampler,
-    metal::float3 const coord,
-    metal::float3 const dPdx,
-    metal::float3 const dPdy,
-    metal::int3 const offset)
-{
-    return texture.sample(sampler, coord, metal::gradientcube(dPdx, dPdy), offset);
-}
-)",
-                        textureGradOffset())
+                        textureEnv())
 
 PROGRAM_PRELUDE_DECLARE(textureLod,
                         R"(
@@ -3315,54 +3270,27 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
         UNIMPLEMENTED();
     });
     putBuiltIn("textureGradOffset", [](ProgramPrelude &pp, const TFunction &func) {
-        const ImmutableString textureName =
-            GetTextureTypeName(func.getParam(0)->getType().getBasicType()).rawName();
-        const TType &coord          = func.getParam(1)->getType();
-        const TBasicType coordBasic = coord.getBasicType();
-        const uint8_t coordN        = coord.getNominalSize();
-        const TType &dPdx           = func.getParam(2)->getType();
-        const uint8_t dPdxN         = dPdx.getNominalSize();
-        if (textureName.beginsWith("metal::depth2d<"))
+        switch (func.getParam(0)->getType().getBasicType())
         {
-            if (coordBasic == TBasicType::EbtFloat && coordN == 3 && dPdxN == 2)
-            {
-                return pp.textureGradOffset_depth2d_float3_float2_float2_int2();
-            }
+            case EbtSampler2D:
+            case EbtISampler2D:
+            case EbtUSampler2D:
+                return pp.textureGradOffset2D();
+            case EbtSampler3D:
+            case EbtISampler3D:
+            case EbtUSampler3D:
+                return pp.textureGradOffset3D();
+            case EbtSampler2DArray:
+            case EbtISampler2DArray:
+            case EbtUSampler2DArray:
+                return pp.textureGradOffset2DArray();
+            case EbtSampler2DShadow:
+                return pp.textureGradOffset2DShadow();
+            case EbtSampler2DArrayShadow:
+                return pp.textureGradOffset2DArrayShadow();
+            default:
+                UNREACHABLE();
         }
-        if (textureName.beginsWith("metal::depth2d_array<"))
-        {
-            if (coordBasic == TBasicType::EbtFloat && coordN == 4 && dPdxN == 2)
-            {
-                return pp.textureGradOffset_depth2darray_float4_float2_float2_int2();
-            }
-        }
-        if (textureName.beginsWith("metal::depthcube<"))
-        {
-            if (coordBasic == TBasicType::EbtFloat && coordN == 4 && dPdxN == 3)
-            {
-                return pp.textureGradOffset_depthcube_float4_float3_float3_int3();
-            }
-        }
-        if (textureName.beginsWith("metal::texturecube<"))
-        {
-            if (coordBasic == TBasicType::EbtFloat && coordN == 3 && dPdxN == 3)
-            {
-                return pp.textureGradOffset_texturecube_float3_float3_float3_int3();
-            }
-        }
-        if (coordBasic == TBasicType::EbtFloat && coordN == 3 && dPdxN == 2)
-        {
-            return pp.textureGradOffset_generic_float3_float2_float2_int2();
-        }
-        if (coordBasic == TBasicType::EbtFloat && coordN == 4 && dPdxN == 2)
-        {
-            return pp.textureGradOffset_generic_float4_float2_float2_int2();
-        }
-        if (coordBasic == TBasicType::EbtFloat && coordN == dPdxN)
-        {
-            return pp.textureGradOffset_generic_floatN_floatN_floatN_intN();
-        }
-        UNIMPLEMENTED();
     });
     putBuiltIn("textureLod", [](ProgramPrelude &pp, const TFunction &func) {
         const ImmutableString textureName =
