@@ -2166,9 +2166,6 @@ GenMetalTraverser::FuncToName GenMetalTraverser::BuildFuncToName()
     putAngle("texelFetch");
     putAngle("texelFetchOffset");
     putAngle("texture");
-    putAngle("texture1D");
-    putAngle("texture1DLod");
-    putAngle("texture1DProjLod");
     putAngle("texture2D");
     putAngle("texture2DGradEXT");
     putAngle("texture2DLod");
@@ -2177,8 +2174,6 @@ GenMetalTraverser::FuncToName GenMetalTraverser::BuildFuncToName()
     putAngle("texture2DProjGradEXT");
     putAngle("texture2DProjLod");
     putAngle("texture2DProjLodEXT");
-    putAngle("texture2DRect");
-    putAngle("texture2DRectProj");
     putAngle("texture3D");
     putAngle("texture3DLod");
     putAngle("texture3DProjLod");
@@ -2186,7 +2181,6 @@ GenMetalTraverser::FuncToName GenMetalTraverser::BuildFuncToName()
     putAngle("textureCubeGradEXT");
     putAngle("textureCubeLod");
     putAngle("textureCubeLodEXT");
-    putAngle("textureCubeProjLod");
     putAngle("textureGrad");
     putAngle("textureGradOffset");
     putAngle("textureLod");
