@@ -10,6 +10,7 @@
 
 #include "libANGLE/renderer/vulkan/CLPlatformVk.h"
 #include "libANGLE/renderer/vulkan/cl_types.h"
+#include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
 #include "libANGLE/renderer/CLContextImpl.h"
@@ -90,8 +91,15 @@ class CLContextVk : public CLContextImpl, public vk::Context
 
     cl::Context &getFrontendObject() { return const_cast<cl::Context &>(mContext); }
 
+    DescriptorSetLayoutCache *getDescriptorSetLayoutCache() { return &mDescriptorSetLayoutCache; }
+    PipelineLayoutCache *getPipelineLayoutCache() { return &mPipelineLayoutCache; }
+
   private:
     void handleDeviceLost() const;
+
+    // Caches for DescriptorSetLayout and PipelineLayout
+    DescriptorSetLayoutCache mDescriptorSetLayoutCache;
+    PipelineLayoutCache mPipelineLayoutCache;
 
     // Have the CL Context keep tabs on associated CL objects
     struct Mutable

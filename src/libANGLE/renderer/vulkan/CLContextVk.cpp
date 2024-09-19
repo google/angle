@@ -30,7 +30,11 @@ CLContextVk::CLContextVk(const cl::Context &context, const cl::DevicePtrs device
     mDeviceQueueIndex = mRenderer->getDefaultDeviceQueueIndex();
 }
 
-CLContextVk::~CLContextVk() = default;
+CLContextVk::~CLContextVk()
+{
+    mDescriptorSetLayoutCache.destroy(getRenderer());
+    mPipelineLayoutCache.destroy(getRenderer());
+}
 
 void CLContextVk::handleError(VkResult errorCode,
                               const char *file,

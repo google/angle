@@ -397,8 +397,6 @@ CLProgramVk::~CLProgramVk()
     mPoolBinding.reset();
     mShader.get().destroy(mContext->getDevice());
     mMetaDescriptorPool.destroy(mContext->getRenderer());
-    mDescSetLayoutCache.destroy(mContext->getRenderer());
-    mPipelineLayoutCache.destroy(mContext->getRenderer());
 }
 
 angle::Result CLProgramVk::build(const cl::DevicePtrs &devices,
@@ -696,7 +694,7 @@ angle::Result CLProgramVk::createKernel(const cl::Kernel &kernel,
 
     // Get descriptor set layout from cache (creates if missed)
     ANGLE_CL_IMPL_TRY_ERROR(
-        mDescSetLayoutCache.getDescriptorSetLayout(
+        mContext->getDescriptorSetLayoutCache()->getDescriptorSetLayout(
             mContext, descriptorSetLayoutDesc,
             &kernelImpl->getDescriptorSetLayouts()[DescriptorSetIndex::ShaderResource]),
         CL_INVALID_OPERATION);
@@ -706,16 +704,17 @@ angle::Result CLProgramVk::createKernel(const cl::Kernel &kernel,
     pipelineLayoutDesc.updateDescriptorSetLayout(DescriptorSetIndex::ShaderResource,
                                                  descriptorSetLayoutDesc);
     pipelineLayoutDesc.updatePushConstantRange(pcRange.stageFlags, pcRange.offset, pcRange.size);
-    ANGLE_CL_IMPL_TRY_ERROR(mPipelineLayoutCache.getPipelineLayout(
+    ANGLE_CL_IMPL_TRY_ERROR(mContext->getPipelineLayoutCache()->getPipelineLayout(
                                 mContext, pipelineLayoutDesc, kernelImpl->getDescriptorSetLayouts(),
                                 &kernelImpl->getPipelineLayout()),
                             CL_INVALID_OPERATION);
 
     // Setup descriptor pool
-    ANGLE_CL_IMPL_TRY_ERROR(mMetaDescriptorPool.bindCachedDescriptorPool(
-                                mContext, descriptorSetLayoutDesc, 1, &mDescSetLayoutCache,
-                                &mDescriptorPools[DescriptorSetIndex::ShaderResource]),
-                            CL_INVALID_OPERATION);
+    ANGLE_CL_IMPL_TRY_ERROR(
+        mMetaDescriptorPool.bindCachedDescriptorPool(
+            mContext, descriptorSetLayoutDesc, 1, mContext->getDescriptorSetLayoutCache(),
+            &mDescriptorPools[DescriptorSetIndex::ShaderResource]),
+        CL_INVALID_OPERATION);
 
     *kernelOut = std::move(kernelImpl);
 

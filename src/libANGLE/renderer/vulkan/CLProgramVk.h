@@ -272,9 +272,7 @@ class CLProgramVk : public CLProgramImpl
     std::string mProgramOpts;
     vk::RefCounted<vk::ShaderModule> mShader;
     DevicePrograms mAssociatedDevicePrograms;
-    PipelineLayoutCache mPipelineLayoutCache;
     vk::MetaDescriptorPool mMetaDescriptorPool;
-    DescriptorSetLayoutCache mDescSetLayoutCache;
     vk::DescriptorSetArray<vk::DescriptorPoolPointer> mDescriptorPools;
     vk::RefCountedDescriptorPoolBinding mPoolBinding;
     angle::SimpleMutex mProgramMutex;
