@@ -261,20 +261,37 @@ class CLProgramVk : public CLProgramImpl
                        const LinkProgramsList &LinkProgramsList);
     angle::spirv::Blob stripReflection(const DeviceProgramData *deviceProgramData);
 
-    angle::Result allocateDescriptorSet(const vk::DescriptorSetLayout &descriptorSetLayout,
+    angle::Result allocateDescriptorSet(const DescriptorSetIndex setIndex,
+                                        const vk::DescriptorSetLayout &descriptorSetLayout,
+                                        vk::CommandBufferHelperCommon *commandBuffer,
                                         VkDescriptorSet *descriptorSetOut);
 
     // Sets the status for given associated device programs
     void setBuildStatus(const cl::DevicePtrs &devices, cl_build_status status);
+
+    vk::RefCountedDescriptorPoolBinding &getDescriptorPoolBinding(DescriptorSetIndex index)
+    {
+        return mDescriptorPoolBindings[index];
+    }
+
+    vk::MetaDescriptorPool &getMetaDescriptorPool(DescriptorSetIndex index)
+    {
+        return mMetaDescriptorPools[index];
+    }
+
+    vk::DescriptorPoolPointer &getDescriptorPoolPointer(DescriptorSetIndex index)
+    {
+        return mDescriptorPools[index];
+    }
 
   private:
     CLContextVk *mContext;
     std::string mProgramOpts;
     vk::RefCounted<vk::ShaderModule> mShader;
     DevicePrograms mAssociatedDevicePrograms;
-    vk::MetaDescriptorPool mMetaDescriptorPool;
+    vk::DescriptorSetArray<vk::MetaDescriptorPool> mMetaDescriptorPools;
     vk::DescriptorSetArray<vk::DescriptorPoolPointer> mDescriptorPools;
-    vk::RefCountedDescriptorPoolBinding mPoolBinding;
+    vk::DescriptorSetArray<vk::RefCountedDescriptorPoolBinding> mDescriptorPoolBindings;
     angle::SimpleMutex mProgramMutex;
 };
 

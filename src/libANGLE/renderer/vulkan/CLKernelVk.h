@@ -14,6 +14,7 @@
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
 #include "libANGLE/renderer/CLKernelImpl.h"
+#include "vulkan/vulkan_core.h"
 
 namespace rx
 {
@@ -83,6 +84,8 @@ class CLKernelVk : public CLKernelImpl
                CLKernelArguments &args);
     ~CLKernelVk() override;
 
+    angle::Result init();
+
     angle::Result setArg(cl_uint argIndex, size_t argSize, const void *argValue) override;
 
     angle::Result createInfo(CLKernelImpl::Info *infoOut) const override;
@@ -100,6 +103,27 @@ class CLKernelVk : public CLKernelImpl
                                              vk::PipelineHelper **pipelineOut,
                                              cl::WorkgroupCount *workgroupCountOut);
 
+    const vk::DescriptorSetLayoutDesc &getDescriptorSetLayoutDesc(DescriptorSetIndex index) const
+    {
+        return mDescriptorSetLayoutDescs[index];
+    }
+    const vk::DescriptorSetLayoutDesc &getKernelArgDescriptorSetDesc() const
+    {
+        return getDescriptorSetLayoutDesc(DescriptorSetIndex::KernelArguments);
+    }
+    const vk::DescriptorSetLayoutDesc &getLiteralSamplerDescriptorSetDesc() const
+    {
+        return getDescriptorSetLayoutDesc(DescriptorSetIndex::LiteralSampler);
+    }
+    const vk::DescriptorSetLayoutDesc &getPrintfDescriptorSetDesc() const
+    {
+        return getDescriptorSetLayoutDesc(DescriptorSetIndex::Printf);
+    }
+
+    const vk::PipelineLayoutDesc &getPipelineLayoutDesc() { return mPipelineLayoutDesc; }
+
+    VkDescriptorSet &getDescriptorSet(DescriptorSetIndex index) { return mDescriptorSets[index]; }
+
   private:
     static constexpr std::array<size_t, 3> kEmptyWorkgroupSize = {0, 0, 0};
 
@@ -113,6 +137,11 @@ class CLKernelVk : public CLKernelImpl
     KernelSpecConstants mSpecConstants;
     vk::AtomicBindingPointer<vk::PipelineLayout> mPipelineLayout;
     vk::DescriptorSetLayoutPointerArray mDescriptorSetLayouts{};
+
+    vk::DescriptorSetArray<VkDescriptorSet> mDescriptorSets;
+
+    vk::DescriptorSetArray<vk::DescriptorSetLayoutDesc> mDescriptorSetLayoutDescs;
+    vk::PipelineLayoutDesc mPipelineLayoutDesc;
 };
 
 }  // namespace rx

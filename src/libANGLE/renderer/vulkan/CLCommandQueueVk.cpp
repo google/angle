@@ -5,6 +5,8 @@
 //
 // CLCommandQueueVk.cpp: Implements the class methods for CLCommandQueueVk.
 
+#include "common/PackedEnums.h"
+
 #include "libANGLE/renderer/vulkan/CLCommandQueueVk.h"
 #include "libANGLE/renderer/vulkan/CLContextVk.h"
 #include "libANGLE/renderer/vulkan/CLDeviceVk.h"
@@ -12,7 +14,9 @@
 #include "libANGLE/renderer/vulkan/CLMemoryVk.h"
 #include "libANGLE/renderer/vulkan/CLProgramVk.h"
 #include "libANGLE/renderer/vulkan/cl_types.h"
+#include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 #include "libANGLE/renderer/vulkan/vk_renderer.h"
+#include "libANGLE/renderer/vulkan/vk_wrapper.h"
 
 #include "libANGLE/CLBuffer.h"
 #include "libANGLE/CLCommandQueue.h"
@@ -419,6 +423,10 @@ angle::Result CLCommandQueueVk::enqueueNDRangeKernel(const cl::Kernel &kernel,
     vk::PipelineHelper *pipelineHelper = nullptr;
     CLKernelVk &kernelImpl             = kernel.getImpl<CLKernelVk>();
 
+    // Here, we create-update-bind the kernel's descriptor set, put push-constants in cmd
+    // buffer, capture kernel resources, and handle kernel execution dependencies
+    ANGLE_TRY(processKernelResources(kernelImpl, ndrange, workgroupCount));
+
     // Fetch or create compute pipeline (if we miss in cache)
     ANGLE_CL_IMPL_TRY_ERROR(mContext->getRenderer()->getPipelineCache(mContext, &pipelineCache),
                             CL_OUT_OF_RESOURCES);
@@ -426,10 +434,6 @@ angle::Result CLCommandQueueVk::enqueueNDRangeKernel(const cl::Kernel &kernel,
         &pipelineCache, ndrange, mCommandQueue.getDevice(), &pipelineHelper, &workgroupCount));
 
     mComputePassCommands->retainResource(pipelineHelper);
-
-    // Here, we create-update-bind the kernel's descriptor set, put push-constants in cmd
-    // buffer, capture kernel resources, and handle kernel execution dependencies
-    ANGLE_TRY(processKernelResources(kernelImpl, ndrange, workgroupCount));
 
     mComputePassCommands->getCommandBuffer().bindComputePipeline(pipelineHelper->getPipeline());
     mComputePassCommands->getCommandBuffer().dispatch(workgroupCount[0], workgroupCount[1],
@@ -589,11 +593,41 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
         kernelVk.getProgram()->getDeviceProgramData(mCommandQueue.getDevice().getNative());
     ASSERT(devProgramData != nullptr);
 
-    // Allocate descriptor set
-    VkDescriptorSet descriptorSet{VK_NULL_HANDLE};
-    ANGLE_TRY(kernelVk.getProgram()->allocateDescriptorSet(
-        kernelVk.getDescriptorSetLayouts()[DescriptorSetIndex::ShaderResource].get(),
-        &descriptorSet));
+    // Set the descriptor set layouts and allocate descriptor sets
+    // The descriptor set layouts are setup in the order of their appearance, as Vulkan requires
+    // them to point to valid handles.
+    angle::EnumIterator<DescriptorSetIndex> layoutIndex(DescriptorSetIndex::LiteralSampler);
+    for (DescriptorSetIndex index : angle::AllEnums<DescriptorSetIndex>())
+    {
+        if (!kernelVk.getDescriptorSetLayoutDesc(index).empty())
+        {
+            // Setup the descriptor layout
+            ANGLE_CL_IMPL_TRY_ERROR(mContext->getDescriptorSetLayoutCache()->getDescriptorSetLayout(
+                                        mContext, kernelVk.getDescriptorSetLayoutDesc(index),
+                                        &kernelVk.getDescriptorSetLayouts()[*layoutIndex]),
+                                    CL_INVALID_OPERATION);
+
+            ANGLE_CL_IMPL_TRY_ERROR(
+                kernelVk.getProgram()->getMetaDescriptorPool(index).bindCachedDescriptorPool(
+                    mContext, kernelVk.getDescriptorSetLayoutDesc(index), 1,
+                    mContext->getDescriptorSetLayoutCache(),
+                    &kernelVk.getProgram()->getDescriptorPoolPointer(index)),
+                CL_INVALID_OPERATION);
+
+            // Allocate descriptor set
+            ANGLE_TRY(kernelVk.getProgram()->allocateDescriptorSet(
+                index, kernelVk.getDescriptorSetLayouts()[*layoutIndex].get(), mComputePassCommands,
+                &kernelVk.getDescriptorSet(index)));
+
+            ++layoutIndex;
+        }
+    }
+
+    // Setup the pipeline layout
+    ANGLE_CL_IMPL_TRY_ERROR(mContext->getPipelineLayoutCache()->getPipelineLayout(
+                                mContext, kernelVk.getPipelineLayoutDesc(),
+                                kernelVk.getDescriptorSetLayouts(), &kernelVk.getPipelineLayout()),
+                            CL_INVALID_OPERATION);
 
     // Push global offset data
     const VkPushConstantRange *globalOffsetRange = devProgramData->getGlobalOffsetRange();
@@ -706,7 +740,8 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
                         : VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
                 writeDescriptorSet.pBufferInfo = &bufferInfo;
                 writeDescriptorSet.sType       = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-                writeDescriptorSet.dstSet      = descriptorSet;
+                writeDescriptorSet.dstSet =
+                    kernelVk.getDescriptorSet(DescriptorSetIndex::KernelArguments);
                 writeDescriptorSet.dstBinding  = arg.descriptorBinding;
                 break;
             }
@@ -749,7 +784,8 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
 
     mComputePassCommands->getCommandBuffer().bindDescriptorSets(
         kernelVk.getPipelineLayout().get(), VK_PIPELINE_BIND_POINT_COMPUTE,
-        DescriptorSetIndex::Internal, 1, &descriptorSet, 0, nullptr);
+        DescriptorSetIndex::Internal, 1,
+        &kernelVk.getDescriptorSet(DescriptorSetIndex::KernelArguments), 0, nullptr);
 
     return angle::Result::Continue;
 }
