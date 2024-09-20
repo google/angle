@@ -2112,6 +2112,7 @@ void TracePerfTest::drawBenchmark()
     beginInternalTraceEvent(frameName);
 
     startGpuTimer();
+    atraceCounter("TraceFrameIndex", mCurrentFrame);
     mTraceReplay->replayFrame(mCurrentFrame);
     stopGpuTimer();
 
