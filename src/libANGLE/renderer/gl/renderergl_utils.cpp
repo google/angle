@@ -1692,27 +1692,7 @@ void GenerateCaps(const FunctionsGL *functions,
                                         functions->hasGLExtension("GL_ARB_stencil_texturing") ||
                                         functions->isAtLeastGLES(gl::Version(3, 1));
 
-    // ANGLE_shader_pixel_local_storage.
-    if (features.supportsShaderPixelLocalStorageEXT.enabled &&
-        functions->isAtLeastGLES(gl::Version(3, 1)))
-    {
-        // We can support PLS natively, including memoryless planes, in tiled memory.
-        // (EXT_shader_pixel_local_storage doesn't have a mechanism to preserve more than one plane
-        // of data, so we can only use this backend if we also have ES3.1 shader images.)
-        //
-        // MAX_SHADER_PIXEL_LOCAL_STORAGE_FAST_SIZE_EXT has a minimum value of 16, which gives 4
-        // planes. Only a non-conformant backend driver would have < 16.
-        caps->maxShaderPixelLocalStorageFastSizeEXT =
-            QuerySingleGLInt(functions, GL_MAX_SHADER_PIXEL_LOCAL_STORAGE_FAST_SIZE_EXT);
-        if (caps->maxShaderPixelLocalStorageFastSizeEXT >= 16)
-        {
-            extensions->shaderPixelLocalStorageANGLE         = true;
-            extensions->shaderPixelLocalStorageCoherentANGLE = true;
-            plsOptions->type             = ShPixelLocalStorageType::PixelLocalStorageEXT;
-            plsOptions->fragmentSyncType = ShFragmentSynchronizationType::Automatic;
-        }
-    }
-    else if (features.supportsShaderFramebufferFetchEXT.enabled)
+    if (features.supportsShaderFramebufferFetchEXT.enabled)
     {
         // We can support PLS natively, probably in tiled memory.
         extensions->shaderPixelLocalStorageANGLE         = true;
@@ -2661,10 +2641,6 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     ANGLE_FEATURE_CONDITION(
         features, supportsShaderFramebufferFetchNonCoherentEXT,
         functions->hasGLESExtension("GL_EXT_shader_framebuffer_fetch_non_coherent"));
-
-    // EXT_shader_pixel_local_storage
-    ANGLE_FEATURE_CONDITION(features, supportsShaderPixelLocalStorageEXT,
-                            functions->hasGLESExtension("GL_EXT_shader_pixel_local_storage"));
 
     // https://crbug.com/1356053
     ANGLE_FEATURE_CONDITION(features, bindCompleteFramebufferForTimerQueries, isMali);

@@ -153,14 +153,6 @@ constexpr state::ExtendedDirtyBits kReadInvalidateExtendedDirtyBits{};
 constexpr state::DirtyBits kDrawInvalidateDirtyBits{state::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING};
 constexpr state::ExtendedDirtyBits kDrawInvalidateExtendedDirtyBits{};
 
-// The implementation's internal load/store programs for EXT_shader_pixel_pixel_local_storage
-// only need the draw framebuffer to be synced. The remaining state is managed internally.
-constexpr state::DirtyBits kPixelLocalStorageEXTEnableDisableDirtyBits{
-    state::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING};
-constexpr state::ExtendedDirtyBits kPixelLocalStorageEXTEnableDisableExtendedDirtyBits{};
-constexpr state::DirtyObjects kPixelLocalStorageEXTEnableDisableDirtyObjects{
-    state::DIRTY_OBJECT_DRAW_FRAMEBUFFER};
-
 constexpr state::DirtyBits kTilingDirtyBits{state::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING};
 constexpr state::ExtendedDirtyBits kTilingExtendedDirtyBits{};
 constexpr state::DirtyObjects kTilingDirtyObjects{state::DIRTY_OBJECT_DRAW_FRAMEBUFFER};
@@ -829,8 +821,6 @@ void Context::initializeDefaultResources()
     mComputeDirtyObjects |= kComputeDirtyObjectsBase;
     mCopyImageDirtyBits |= kCopyImageDirtyBitsBase;
     mCopyImageDirtyObjects |= kCopyImageDirtyObjectsBase;
-    mPixelLocalStorageEXTEnableDisableDirtyObjects |=
-        kPixelLocalStorageEXTEnableDisableDirtyObjects;
 
     mOverlay.init();
 }
@@ -4368,17 +4358,6 @@ void Context::initCaps()
                         maxDrawableAttachments - 1;
                 }
                 caps->maxCombinedDrawBuffersAndPixelLocalStoragePlanes = maxDrawableAttachments;
-                break;
-
-            case ShPixelLocalStorageType::PixelLocalStorageEXT:
-                caps->maxPixelLocalStoragePlanes = caps->maxShaderPixelLocalStorageFastSizeEXT / 4;
-                ASSERT(caps->maxPixelLocalStoragePlanes >= 4);
-                ANGLE_LIMIT_CAP(caps->maxPixelLocalStoragePlanes,
-                                IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES);
-                // EXT_shader_pixel_local_storage doesn't support rendering to color attachments.
-                caps->maxColorAttachmentsWithActivePixelLocalStorage = 0;
-                caps->maxCombinedDrawBuffersAndPixelLocalStoragePlanes =
-                    caps->maxPixelLocalStoragePlanes;
                 break;
 
             case ShPixelLocalStorageType::NotSupported:
@@ -9906,29 +9885,6 @@ void Context::selectPerfMonitorCounters(GLuint monitor,
 const angle::PerfMonitorCounterGroups &Context::getPerfMonitorCounterGroups() const
 {
     return mImplementation->getPerfMonitorCounters();
-}
-
-void Context::drawPixelLocalStorageEXTEnable(GLsizei n,
-                                             const PixelLocalStoragePlane planes[],
-                                             const GLenum loadops[])
-{
-    ASSERT(mImplementation->getNativePixelLocalStorageOptions().type ==
-           ShPixelLocalStorageType::PixelLocalStorageEXT);
-    ANGLE_CONTEXT_TRY(syncState(kPixelLocalStorageEXTEnableDisableDirtyBits,
-                                kPixelLocalStorageEXTEnableDisableExtendedDirtyBits,
-                                mPixelLocalStorageEXTEnableDisableDirtyObjects, Command::Draw));
-    ANGLE_CONTEXT_TRY(mImplementation->drawPixelLocalStorageEXTEnable(this, n, planes, loadops));
-}
-
-void Context::drawPixelLocalStorageEXTDisable(const PixelLocalStoragePlane planes[],
-                                              const GLenum storeops[])
-{
-    ASSERT(mImplementation->getNativePixelLocalStorageOptions().type ==
-           ShPixelLocalStorageType::PixelLocalStorageEXT);
-    ANGLE_CONTEXT_TRY(syncState(kPixelLocalStorageEXTEnableDisableDirtyBits,
-                                kPixelLocalStorageEXTEnableDisableExtendedDirtyBits,
-                                mPixelLocalStorageEXTEnableDisableDirtyObjects, Command::Draw));
-    ANGLE_CONTEXT_TRY(mImplementation->drawPixelLocalStorageEXTDisable(this, planes, storeops));
 }
 
 void Context::framebufferFoveationConfig(FramebufferID framebufferPacked,
