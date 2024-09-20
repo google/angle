@@ -89,7 +89,9 @@ angle::Result CLCommandQueueVk::init()
 
 CLCommandQueueVk::~CLCommandQueueVk()
 {
+    ASSERT(mComputePassCommands->empty());
     ASSERT(!mNeedPrintfHandling);
+
     if (mPrintfBuffer)
     {
         mPrintfBuffer->release();
@@ -752,7 +754,7 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
                 writeDescriptorSet.sType       = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
                 writeDescriptorSet.dstSet =
                     kernelVk.getDescriptorSet(DescriptorSetIndex::KernelArguments);
-                writeDescriptorSet.dstBinding  = arg.descriptorBinding;
+                writeDescriptorSet.dstBinding = arg.descriptorBinding;
                 break;
             }
             case NonSemanticClspvReflectionArgumentPodPushConstant:
