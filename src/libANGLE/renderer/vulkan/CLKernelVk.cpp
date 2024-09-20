@@ -88,6 +88,14 @@ angle::Result CLKernelVk::init()
                                            VK_SHADER_STAGE_COMPUTE_BIT, nullptr);
     }
 
+    if (usesPrintf())
+    {
+        mDescriptorSetLayoutDescs[DescriptorSetIndex::Printf].addBinding(
+            mProgram->getDeviceProgramData(mName.c_str())
+                ->reflectionData.printfBufferStorage.binding,
+            VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr);
+    }
+
     // Get pipeline layout from cache (creates if missed)
     // A given kernel need not have resulted in use of all the descriptor sets. Unless the
     // graphicsPipelineLibrary extension is supported, the pipeline layout need all the descriptor
@@ -282,6 +290,12 @@ angle::Result CLKernelVk::getOrCreateComputePipeline(vk::PipelineCacheAccess *pi
         mContext, &mComputePipelineCache, pipelineCache, getPipelineLayout().get(),
         vk::ComputePipelineOptions{}, PipelineSource::Draw, pipelineOut, mName.c_str(),
         &computeSpecializationInfo);
+}
+
+bool CLKernelVk::usesPrintf() const
+{
+    return mProgram->getDeviceProgramData(mName.c_str())->getKernelFlags(mName) &
+           NonSemanticClspvReflectionMayUsePrintf;
 }
 
 }  // namespace rx

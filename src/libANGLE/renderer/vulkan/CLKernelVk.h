@@ -124,6 +124,8 @@ class CLKernelVk : public CLKernelImpl
 
     VkDescriptorSet &getDescriptorSet(DescriptorSetIndex index) { return mDescriptorSets[index]; }
 
+    bool usesPrintf() const;
+
   private:
     static constexpr std::array<size_t, 3> kEmptyWorkgroupSize = {0, 0, 0};
 

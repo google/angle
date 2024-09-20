@@ -6,6 +6,7 @@
 // CLProgramVk.cpp: Implements the class methods for CLProgramVk.
 
 #include "libANGLE/renderer/vulkan/CLProgramVk.h"
+#include "common/log_utils.h"
 #include "libANGLE/renderer/vulkan/CLContextVk.h"
 #include "libANGLE/renderer/vulkan/CLDeviceVk.h"
 #include "libANGLE/renderer/vulkan/clspv_utils.h"
@@ -207,6 +208,40 @@ spv_result_t ParseReflection(CLProgramVk::SpvReflectionData &reflectionData,
                     reflectionData.specConstantsUsed[SpecConstantType::GlobalOffsetY] = true;
                     reflectionData.specConstantsUsed[SpecConstantType::GlobalOffsetZ] = true;
                     break;
+                case NonSemanticClspvReflectionPrintfInfo:
+                {
+                    // Info on the format string used in the builtin printf call in kernel
+                    uint32_t printfID        = reflectionData.spvIntLookup[spvInstr.words[5]];
+                    std::string formatString = reflectionData.spvStrLookup[spvInstr.words[6]];
+                    reflectionData.printfInfoMap[printfID].id              = printfID;
+                    reflectionData.printfInfoMap[printfID].formatSpecifier = formatString;
+                    for (int i = 6; i < spvInstr.num_operands; i++)
+                    {
+                        uint16_t offset = spvInstr.operands[i].offset;
+                        size_t size     = reflectionData.spvIntLookup[spvInstr.words[offset]];
+                        reflectionData.printfInfoMap[printfID].argSizes.push_back(
+                            static_cast<uint32_t>(size));
+                    }
+
+                    break;
+                }
+                case NonSemanticClspvReflectionPrintfBufferStorageBuffer:
+                {
+                    // Info about the printf storage buffer that contains the formatted content
+                    uint32_t set     = reflectionData.spvIntLookup[spvInstr.words[5]];
+                    uint32_t binding = reflectionData.spvIntLookup[spvInstr.words[6]];
+                    uint32_t size    = reflectionData.spvIntLookup[spvInstr.words[7]];
+                    reflectionData.printfBufferStorage = {set, binding, 0, size};
+                    break;
+                }
+                case NonSemanticClspvReflectionPrintfBufferPointerPushConstant:
+                {
+                    ERR() << "Shouldn't be here. Support of printf builtin function is enabled "
+                             "through "
+                             "PrintfBufferStorageBuffer. Check optins passed down to clspv";
+                    UNREACHABLE();
+                    return SPV_UNSUPPORTED;
+                }
                 default:
                     break;
             }
@@ -958,6 +993,17 @@ void CLProgramVk::setBuildStatus(const cl::DevicePtrs &devices, cl_build_status 
         DeviceProgramData &deviceProgram = mAssociatedDevicePrograms.at(device->getNative());
         deviceProgram.buildStatus        = status;
     }
+}
+
+const angle::HashMap<uint32_t, ClspvPrintfInfo> *CLProgramVk::getPrintfDescriptors(
+    const std::string &kernelName) const
+{
+    const DeviceProgramData *deviceProgram = getDeviceProgramData(kernelName.c_str());
+    if (deviceProgram)
+    {
+        return &deviceProgram->reflectionData.printfInfoMap;
+    }
+    return nullptr;
 }
 
 }  // namespace rx

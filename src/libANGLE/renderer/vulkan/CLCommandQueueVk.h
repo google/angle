@@ -18,6 +18,7 @@
 #include "libANGLE/renderer/vulkan/DisplayVk.h"
 #include "libANGLE/renderer/vulkan/ShareGroupVk.h"
 #include "libANGLE/renderer/vulkan/cl_types.h"
+#include "libANGLE/renderer/vulkan/clspv_utils.h"
 #include "libANGLE/renderer/vulkan/vk_command_buffer_utils.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
 #include "libANGLE/renderer/vulkan/vk_resource.h"
@@ -28,6 +29,8 @@
 
 namespace rx
 {
+
+static constexpr size_t kPrintfBufferSize = 1024 * 1024;
 
 class CLCommandQueueVk : public CLCommandQueueImpl
 {
@@ -225,6 +228,8 @@ class CLCommandQueueVk : public CLCommandQueueImpl
 
     CLPlatformVk *getPlatform() { return mContext->getPlatform(); }
 
+    cl_mem getOrCreatePrintfBuffer();
+
   private:
     static constexpr size_t kMaxDependencyTrackerSize    = 64;
     static constexpr size_t kMaxHostBufferUpdateListSize = 16;
@@ -253,8 +258,11 @@ class CLCommandQueueVk : public CLCommandQueueImpl
         return angle::Result::Continue;
     }
 
+    angle::Result processPrintfBuffer();
+
     CLContextVk *mContext;
     const CLDeviceVk *mDevice;
+    cl::Memory *mPrintfBuffer;
 
     vk::SecondaryCommandPools mCommandPool;
     vk::OutsideRenderPassCommandBufferHelper *mComputePassCommands;
@@ -279,6 +287,10 @@ class CLCommandQueueVk : public CLCommandQueueImpl
 
     // Check to see if flush/finish can be skipped
     bool mHasAnyCommandsPendingSubmission;
+
+    // printf handling
+    bool mNeedPrintfHandling;
+    const angle::HashMap<uint32_t, ClspvPrintfInfo> *mPrintfInfos;
 
     // List of buffer refs that need host syncing
     cl::MemoryPtrs mHostBufferUpdateList;
