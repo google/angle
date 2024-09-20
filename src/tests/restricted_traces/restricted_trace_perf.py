@@ -790,34 +790,134 @@ def run_traces(args):
     proc_mem_medians = defaultdict(dict)
     proc_mem_peaks = defaultdict(dict)
 
-    for renderer in renderers:
+    # Organize the data for writing out
+    rows = defaultdict(dict)
 
-        if renderer == "native":
-            # Force the settings to native
-            run_adb_command('shell settings put global angle_debug_package org.chromium.angle')
-            run_adb_command(
-                'shell settings put global angle_gl_driver_selection_pkgs com.android.angle.test')
-            run_adb_command('shell settings put global angle_gl_driver_selection_values native')
-        elif renderer == "vulkan":
-            # Force the settings to ANGLE
-            run_adb_command('shell settings put global angle_debug_package org.chromium.angle')
-            run_adb_command(
-                'shell settings put global angle_gl_driver_selection_pkgs com.android.angle.test')
-            run_adb_command('shell settings put global angle_gl_driver_selection_values angle')
-        elif renderer == "default":
-            logging.info('Deleting Android settings for forcing selection of GLES driver, ' +
-                         'allowing system to load the default')
-            run_adb_command('shell settings delete global angle_debug_package')
-            run_adb_command('shell settings delete global angle_gl_driver_selection_pkgs')
-            run_adb_command('shell settings delete global angle_gl_driver_selection_values')
-        else:
-            logging.error('Unsupported renderer {}'.format(renderer))
-            exit()
+    def populate_row(rows, name, results):
+        if len(rows[name]) == 0:
+            rows[name] = defaultdict(list)
+        for renderer, wtimes in results.items():
+            average, variance = drop_high_low_and_average(wtimes)
+            rows[name][renderer].append(average)
+            rows[name][renderer].append(variance)
+
+    # Generate the SUMMARY output
+    summary_file = open("summary." + args.output_tag + ".csv", 'w', newline='')
+    summary_writer = csv.writer(summary_file)
+
+    android_version = run_adb_command('shell getprop ro.build.fingerprint').stdout.strip()
+    angle_version = run_command('git rev-parse HEAD').stdout.strip()
+    origin_main_version = run_command('git rev-parse origin/main').stdout.strip()
+    if origin_main_version != angle_version:
+        angle_version += ' (origin/main %s)' % origin_main_version
+    # test_time = run_command('date \"+%Y%m%d\"').stdout.read().strip()
+
+    summary_writer.writerow([
+        "\"Android: " + android_version + "\n" + "ANGLE: " + angle_version + "\n" +
+        #  "Date: " + test_time + "\n" +
+        "Source: " + raw_data_filename + "\n" + "Args: " + logged_args() + "\""
+    ])
+
+    trace_number = 0
+
+    if (len(renderers) == 1) and (renderers[0] != "both"):
+        renderer_name = renderers[0]
+        summary_writer.writerow([
+            "#", "\"Trace\"", f"\"{renderer_name}\nwall\ntime\nper\nframe\n(ms)\"",
+            f"\"{renderer_name}\nwall\ntime\nvariance\"",
+            f"\"{renderer_name}\nGPU\ntime\nper\nframe\n(ms)\"",
+            f"\"{renderer_name}\nGPU\ntime\nvariance\"",
+            f"\"{renderer_name}\nCPU\ntime\nper\nframe\n(ms)\"",
+            f"\"{renderer_name}\nCPU\ntime\nvariance\"", f"\"{renderer_name}\nGPU\npower\n(W)\"",
+            f"\"{renderer_name}\nGPU\npower\nvariance\"", f"\"{renderer_name}\nCPU\npower\n(W)\"",
+            f"\"{renderer_name}\nCPU\npower\nvariance\"", f"\"{renderer_name}\nGPU\nmem\n(B)\"",
+            f"\"{renderer_name}\nGPU\nmem\nvariance\"",
+            f"\"{renderer_name}\npeak\nGPU\nmem\n(B)\"",
+            f"\"{renderer_name}\npeak\nGPU\nmem\nvariance\"",
+            f"\"{renderer_name}\nprocess\nmem\n(B)\"",
+            f"\"{renderer_name}\nprocess\nmem\nvariance\"",
+            f"\"{renderer_name}\npeak\nprocess\nmem\n(B)\"",
+            f"\"{renderer_name}\npeak\nprocess\nmem\nvariance\""
+        ])
+    else:
+        summary_writer.writerow([
+            "#", "\"Trace\"", "\"Native\nwall\ntime\nper\nframe\n(ms)\"",
+            "\"Native\nwall\ntime\nvariance\"", "\"ANGLE\nwall\ntime\nper\nframe\n(ms)\"",
+            "\"ANGLE\nwall\ntime\nvariance\"", "\"wall\ntime\ncompare\"",
+            "\"Native\nGPU\ntime\nper\nframe\n(ms)\"", "\"Native\nGPU\ntime\nvariance\"",
+            "\"ANGLE\nGPU\ntime\nper\nframe\n(ms)\"", "\"ANGLE\nGPU\ntime\nvariance\"",
+            "\"GPU\ntime\ncompare\"", "\"Native\nCPU\ntime\nper\nframe\n(ms)\"",
+            "\"Native\nCPU\ntime\nvariance\"", "\"ANGLE\nCPU\ntime\nper\nframe\n(ms)\"",
+            "\"ANGLE\nCPU\ntime\nvariance\"", "\"CPU\ntime\ncompare\"",
+            "\"Native\nGPU\npower\n(W)\"", "\"Native\nGPU\npower\nvariance\"",
+            "\"ANGLE\nGPU\npower\n(W)\"", "\"ANGLE\nGPU\npower\nvariance\"",
+            "\"GPU\npower\ncompare\"", "\"Native\nCPU\npower\n(W)\"",
+            "\"Native\nCPU\npower\nvariance\"", "\"ANGLE\nCPU\npower\n(W)\"",
+            "\"ANGLE\nCPU\npower\nvariance\"", "\"CPU\npower\ncompare\"",
+            "\"Native\nGPU\nmem\n(B)\"", "\"Native\nGPU\nmem\nvariance\"",
+            "\"ANGLE\nGPU\nmem\n(B)\"", "\"ANGLE\nGPU\nmem\nvariance\"", "\"GPU\nmem\ncompare\"",
+            "\"Native\npeak\nGPU\nmem\n(B)\"", "\"Native\npeak\nGPU\nmem\nvariance\"",
+            "\"ANGLE\npeak\nGPU\nmem\n(B)\"", "\"ANGLE\npeak\nGPU\nmem\nvariance\"",
+            "\"GPU\npeak\nmem\ncompare\"", "\"Native\nprocess\nmem\n(B)\"",
+            "\"Native\nprocess\nmem\nvariance\"", "\"ANGLE\nprocess\nmem\n(B)\"",
+            "\"ANGLE\nprocess\nmem\nvariance\"", "\"process\nmem\ncompare\"",
+            "\"Native\npeak\nprocess\nmem\n(B)\"", "\"Native\npeak\nprocess\nmem\nvariance\"",
+            "\"ANGLE\npeak\nprocess\nmem\n(B)\"", "\"ANGLE\npeak\nprocess\nmem\nvariance\"",
+            "\"process\npeak\nmem\ncompare\""
+        ])
+
+    for trace in fnmatch.filter(traces, args.filter):
+
+        print(
+            "\nStarting run for %s loopcount %i with %s at %s\n" %
+            (trace, int(args.loop_count), renderers, datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+
+        # Start with clean data containers for each trace
+        rows.clear()
+        wall_times.clear()
+        gpu_times.clear()
+        cpu_times.clear()
+        gpu_powers.clear()
+        cpu_powers.clear()
+        gpu_mem_sustaineds.clear()
+        gpu_mem_peaks.clear()
+        proc_mem_medians.clear()
+        proc_mem_peaks.clear()
 
         for i in range(int(args.loop_count)):
-            print("\nStarting run %i with %s at %s\n" %
-                  (i + 1, renderer, datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
-            for trace in fnmatch.filter(traces, args.filter):
+
+            for renderer in renderers:
+
+                if renderer == "native":
+                    # Force the settings to native
+                    run_adb_command(
+                        'shell settings put global angle_debug_package org.chromium.angle')
+                    run_adb_command(
+                        'shell settings put global angle_gl_driver_selection_pkgs com.android.angle.test'
+                    )
+                    run_adb_command(
+                        'shell settings put global angle_gl_driver_selection_values native')
+                elif renderer == "vulkan":
+                    # Force the settings to ANGLE
+                    run_adb_command(
+                        'shell settings put global angle_debug_package org.chromium.angle')
+                    run_adb_command(
+                        'shell settings put global angle_gl_driver_selection_pkgs com.android.angle.test'
+                    )
+                    run_adb_command(
+                        'shell settings put global angle_gl_driver_selection_values angle')
+                elif renderer == "default":
+                    logging.info(
+                        'Deleting Android settings for forcing selection of GLES driver, ' +
+                        'allowing system to load the default')
+                    run_adb_command('shell settings delete global angle_debug_package')
+                    run_adb_command('shell settings delete global angle_gl_driver_selection_pkgs')
+                    run_adb_command(
+                        'shell settings delete global angle_gl_driver_selection_values')
+                else:
+                    logging.error('Unsupported renderer {}'.format(renderer))
+                    exit()
+
                 # Remove any previous perf results
                 cleanup()
                 # Clear blob cache to avoid post-warmup cache eviction b/298028816
@@ -938,204 +1038,131 @@ def run_traces(args):
                 if args.min_battery_level:
                     sleep_until_battery_level(args.min_battery_level)
 
-    # Organize the data for writing out
-    rows = defaultdict(dict)
+            print()  # New line for readability
 
-    def populate_row(rows, name, results):
-        if len(rows[name]) == 0:
-            rows[name] = defaultdict(list)
-        for renderer, wtimes in results.items():
-            average, variance = drop_high_low_and_average(wtimes)
-            rows[name][renderer].append(average)
-            rows[name][renderer].append(variance)
+        for name, results in wall_times.items():
+            populate_row(rows, name, results)
 
-    for name, results in wall_times.items():
-        populate_row(rows, name, results)
+        for name, results in gpu_times.items():
+            populate_row(rows, name, results)
 
-    for name, results in gpu_times.items():
-        populate_row(rows, name, results)
+        for name, results in cpu_times.items():
+            populate_row(rows, name, results)
 
-    for name, results in cpu_times.items():
-        populate_row(rows, name, results)
+        for name, results in gpu_powers.items():
+            populate_row(rows, name, results)
 
-    for name, results in gpu_powers.items():
-        populate_row(rows, name, results)
+        for name, results in cpu_powers.items():
+            populate_row(rows, name, results)
 
-    for name, results in cpu_powers.items():
-        populate_row(rows, name, results)
+        for name, results in gpu_mem_sustaineds.items():
+            populate_row(rows, name, results)
 
-    for name, results in gpu_mem_sustaineds.items():
-        populate_row(rows, name, results)
+        for name, results in gpu_mem_peaks.items():
+            populate_row(rows, name, results)
 
-    for name, results in gpu_mem_peaks.items():
-        populate_row(rows, name, results)
+        for name, results in proc_mem_medians.items():
+            populate_row(rows, name, results)
 
-    for name, results in proc_mem_medians.items():
-        populate_row(rows, name, results)
+        for name, results in proc_mem_peaks.items():
+            populate_row(rows, name, results)
 
-    for name, results in proc_mem_peaks.items():
-        populate_row(rows, name, results)
-
-    # Generate the SUMMARY output
-    summary_file = open("summary." + args.output_tag + ".csv", 'w', newline='')
-    summary_writer = csv.writer(summary_file)
-
-    android_version = run_adb_command('shell getprop ro.build.fingerprint').stdout.strip()
-    angle_version = run_command('git rev-parse HEAD').stdout.strip()
-    origin_main_version = run_command('git rev-parse origin/main').stdout.strip()
-    if origin_main_version != angle_version:
-        angle_version += ' (origin/main %s)' % origin_main_version
-    # test_time = run_command('date \"+%Y%m%d\"').stdout.read().strip()
-
-    summary_writer.writerow([
-        "\"Android: " + android_version + "\n" + "ANGLE: " + angle_version + "\n" +
-        #  "Date: " + test_time + "\n" +
-        "Source: " + raw_data_filename + "\n" + "Args: " + logged_args() + "\""
-    ])
-
-    # Write the summary file
-    trace_number = 0
-
-    if (len(renderers) == 1) and (renderers[0] != "both"):
-        renderer_name = renderers[0]
-        summary_writer.writerow([
-            "#", "\"Trace\"", f"\"{renderer_name}\nwall\ntime\nper\nframe\n(ms)\"",
-            f"\"{renderer_name}\nwall\ntime\nvariance\"",
-            f"\"{renderer_name}\nGPU\ntime\nper\nframe\n(ms)\"",
-            f"\"{renderer_name}\nGPU\ntime\nvariance\"",
-            f"\"{renderer_name}\nCPU\ntime\nper\nframe\n(ms)\"",
-            f"\"{renderer_name}\nCPU\ntime\nvariance\"", f"\"{renderer_name}\nGPU\npower\n(W)\"",
-            f"\"{renderer_name}\nGPU\npower\nvariance\"", f"\"{renderer_name}\nCPU\npower\n(W)\"",
-            f"\"{renderer_name}\nCPU\npower\nvariance\"", f"\"{renderer_name}\nGPU\nmem\n(B)\"",
-            f"\"{renderer_name}\nGPU\nmem\nvariance\"",
-            f"\"{renderer_name}\npeak\nGPU\nmem\n(B)\"",
-            f"\"{renderer_name}\npeak\nGPU\nmem\nvariance\"",
-            f"\"{renderer_name}\nprocess\nmem\n(B)\"",
-            f"\"{renderer_name}\nprocess\nmem\nvariance\"",
-            f"\"{renderer_name}\npeak\nprocess\nmem\n(B)\"",
-            f"\"{renderer_name}\npeak\nprocess\nmem\nvariance\""
-        ])
-
-        for name, data in rows.items():
-            trace_number += 1
-            summary_writer.writerow([
-                trace_number,
-                name,
-                # wall_time
-                "%.3f" % data[renderer_name][0],
-                percent(data[renderer_name][1]),
-                # GPU time
-                "%.3f" % data[renderer_name][2],
-                percent(data[renderer_name][3]),
-                # CPU time
-                "%.3f" % data[renderer_name][4],
-                percent(data[renderer_name][5]),
-                # GPU power
-                "%.3f" % data[renderer_name][6],
-                percent(data[renderer_name][7]),
-                # CPU power
-                "%.3f" % data[renderer_name][8],
-                percent(data[renderer_name][9]),
-                # GPU mem
-                int(data[renderer_name][10]),
-                percent(data[renderer_name][11]),
-                # GPU peak mem
-                int(data[renderer_name][12]),
-                percent(data[renderer_name][13]),
-                # process mem
-                int(data[renderer_name][14]),
-                percent(data[renderer_name][15]),
-                # process peak mem
-                int(data[renderer_name][16]),
-                percent(data[renderer_name][17]),
-            ])
-    else:
-        summary_writer.writerow([
-            "#", "\"Trace\"", "\"Native\nwall\ntime\nper\nframe\n(ms)\"",
-            "\"Native\nwall\ntime\nvariance\"", "\"ANGLE\nwall\ntime\nper\nframe\n(ms)\"",
-            "\"ANGLE\nwall\ntime\nvariance\"", "\"wall\ntime\ncompare\"",
-            "\"Native\nGPU\ntime\nper\nframe\n(ms)\"", "\"Native\nGPU\ntime\nvariance\"",
-            "\"ANGLE\nGPU\ntime\nper\nframe\n(ms)\"", "\"ANGLE\nGPU\ntime\nvariance\"",
-            "\"GPU\ntime\ncompare\"", "\"Native\nCPU\ntime\nper\nframe\n(ms)\"",
-            "\"Native\nCPU\ntime\nvariance\"", "\"ANGLE\nCPU\ntime\nper\nframe\n(ms)\"",
-            "\"ANGLE\nCPU\ntime\nvariance\"", "\"CPU\ntime\ncompare\"",
-            "\"Native\nGPU\npower\n(W)\"", "\"Native\nGPU\npower\nvariance\"",
-            "\"ANGLE\nGPU\npower\n(W)\"", "\"ANGLE\nGPU\npower\nvariance\"",
-            "\"GPU\npower\ncompare\"", "\"Native\nCPU\npower\n(W)\"",
-            "\"Native\nCPU\npower\nvariance\"", "\"ANGLE\nCPU\npower\n(W)\"",
-            "\"ANGLE\nCPU\npower\nvariance\"", "\"CPU\npower\ncompare\"",
-            "\"Native\nGPU\nmem\n(B)\"", "\"Native\nGPU\nmem\nvariance\"",
-            "\"ANGLE\nGPU\nmem\n(B)\"", "\"ANGLE\nGPU\nmem\nvariance\"", "\"GPU\nmem\ncompare\"",
-            "\"Native\npeak\nGPU\nmem\n(B)\"", "\"Native\npeak\nGPU\nmem\nvariance\"",
-            "\"ANGLE\npeak\nGPU\nmem\n(B)\"", "\"ANGLE\npeak\nGPU\nmem\nvariance\"",
-            "\"GPU\npeak\nmem\ncompare\"", "\"Native\nprocess\nmem\n(B)\"",
-            "\"Native\nprocess\nmem\nvariance\"", "\"ANGLE\nprocess\nmem\n(B)\"",
-            "\"ANGLE\nprocess\nmem\nvariance\"", "\"process\nmem\ncompare\"",
-            "\"Native\npeak\nprocess\nmem\n(B)\"", "\"Native\npeak\nprocess\nmem\nvariance\"",
-            "\"ANGLE\npeak\nprocess\nmem\n(B)\"", "\"ANGLE\npeak\nprocess\nmem\nvariance\"",
-            "\"process\npeak\nmem\ncompare\""
-        ])
-
-        for name, data in rows.items():
-            trace_number += 1
-            summary_writer.writerow([
-                trace_number,
-                name,
-                # wall_time
-                "%.3f" % data["native"][0],
-                percent(data["native"][1]),
-                "%.3f" % data["vulkan"][0],
-                percent(data["vulkan"][1]),
-                percent(safe_divide(data["native"][0], data["vulkan"][0])),
-                # GPU time
-                "%.3f" % data["native"][2],
-                percent(data["native"][3]),
-                "%.3f" % data["vulkan"][2],
-                percent(data["vulkan"][3]),
-                percent(safe_divide(data["native"][2], data["vulkan"][2])),
-                # CPU time
-                "%.3f" % data["native"][4],
-                percent(data["native"][5]),
-                "%.3f" % data["vulkan"][4],
-                percent(data["vulkan"][5]),
-                percent(safe_divide(data["native"][4], data["vulkan"][4])),
-                # GPU power
-                "%.3f" % data["native"][6],
-                percent(data["native"][7]),
-                "%.3f" % data["vulkan"][6],
-                percent(data["vulkan"][7]),
-                percent(safe_divide(data["native"][6], data["vulkan"][6])),
-                # CPU power
-                "%.3f" % data["native"][8],
-                percent(data["native"][9]),
-                "%.3f" % data["vulkan"][8],
-                percent(data["vulkan"][9]),
-                percent(safe_divide(data["native"][8], data["vulkan"][8])),
-                # GPU mem
-                int(data["native"][10]),
-                percent(data["native"][11]),
-                int(data["vulkan"][10]),
-                percent(data["vulkan"][11]),
-                percent(safe_divide(data["native"][10], data["vulkan"][10])),
-                # GPU peak mem
-                int(data["native"][12]),
-                percent(data["native"][13]),
-                int(data["vulkan"][12]),
-                percent(data["vulkan"][13]),
-                percent(safe_divide(data["native"][12], data["vulkan"][12])),
-                # process mem
-                int(data["native"][14]),
-                percent(data["native"][15]),
-                int(data["vulkan"][14]),
-                percent(data["vulkan"][15]),
-                percent(safe_divide(data["native"][14], data["vulkan"][14])),
-                # process peak mem
-                int(data["native"][16]),
-                percent(data["native"][17]),
-                int(data["vulkan"][16]),
-                percent(data["vulkan"][17]),
-                percent(safe_divide(data["native"][16], data["vulkan"][16]))
-            ])
+        if (len(renderers) == 1) and (renderers[0] != "both"):
+            renderer_name = renderers[0]
+            for name, data in rows.items():
+                trace_number += 1
+                summary_writer.writerow([
+                    trace_number,
+                    name,
+                    # wall_time
+                    "%.3f" % data[renderer_name][0],
+                    percent(data[renderer_name][1]),
+                    # GPU time
+                    "%.3f" % data[renderer_name][2],
+                    percent(data[renderer_name][3]),
+                    # CPU time
+                    "%.3f" % data[renderer_name][4],
+                    percent(data[renderer_name][5]),
+                    # GPU power
+                    "%.3f" % data[renderer_name][6],
+                    percent(data[renderer_name][7]),
+                    # CPU power
+                    "%.3f" % data[renderer_name][8],
+                    percent(data[renderer_name][9]),
+                    # GPU mem
+                    int(data[renderer_name][10]),
+                    percent(data[renderer_name][11]),
+                    # GPU peak mem
+                    int(data[renderer_name][12]),
+                    percent(data[renderer_name][13]),
+                    # process mem
+                    int(data[renderer_name][14]),
+                    percent(data[renderer_name][15]),
+                    # process peak mem
+                    int(data[renderer_name][16]),
+                    percent(data[renderer_name][17]),
+                ])
+        else:
+            for name, data in rows.items():
+                trace_number += 1
+                summary_writer.writerow([
+                    trace_number,
+                    name,
+                    # wall_time
+                    "%.3f" % data["native"][0],
+                    percent(data["native"][1]),
+                    "%.3f" % data["vulkan"][0],
+                    percent(data["vulkan"][1]),
+                    percent(safe_divide(data["native"][0], data["vulkan"][0])),
+                    # GPU time
+                    "%.3f" % data["native"][2],
+                    percent(data["native"][3]),
+                    "%.3f" % data["vulkan"][2],
+                    percent(data["vulkan"][3]),
+                    percent(safe_divide(data["native"][2], data["vulkan"][2])),
+                    # CPU time
+                    "%.3f" % data["native"][4],
+                    percent(data["native"][5]),
+                    "%.3f" % data["vulkan"][4],
+                    percent(data["vulkan"][5]),
+                    percent(safe_divide(data["native"][4], data["vulkan"][4])),
+                    # GPU power
+                    "%.3f" % data["native"][6],
+                    percent(data["native"][7]),
+                    "%.3f" % data["vulkan"][6],
+                    percent(data["vulkan"][7]),
+                    percent(safe_divide(data["native"][6], data["vulkan"][6])),
+                    # CPU power
+                    "%.3f" % data["native"][8],
+                    percent(data["native"][9]),
+                    "%.3f" % data["vulkan"][8],
+                    percent(data["vulkan"][9]),
+                    percent(safe_divide(data["native"][8], data["vulkan"][8])),
+                    # GPU mem
+                    int(data["native"][10]),
+                    percent(data["native"][11]),
+                    int(data["vulkan"][10]),
+                    percent(data["vulkan"][11]),
+                    percent(safe_divide(data["native"][10], data["vulkan"][10])),
+                    # GPU peak mem
+                    int(data["native"][12]),
+                    percent(data["native"][13]),
+                    int(data["vulkan"][12]),
+                    percent(data["vulkan"][13]),
+                    percent(safe_divide(data["native"][12], data["vulkan"][12])),
+                    # process mem
+                    int(data["native"][14]),
+                    percent(data["native"][15]),
+                    int(data["vulkan"][14]),
+                    percent(data["vulkan"][15]),
+                    percent(safe_divide(data["native"][14], data["vulkan"][14])),
+                    # process peak mem
+                    int(data["native"][16]),
+                    percent(data["native"][17]),
+                    int(data["vulkan"][16]),
+                    percent(data["vulkan"][17]),
+                    percent(safe_divide(data["native"][16], data["vulkan"][16]))
+                ])
 
 
 if __name__ == '__main__':
