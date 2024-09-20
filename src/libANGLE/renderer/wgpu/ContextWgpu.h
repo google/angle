@@ -286,6 +286,7 @@ class ContextWgpu : public ContextImpl
 
     void invalidateVertexBuffer(size_t slot);
     void invalidateVertexBuffers();
+    void invalidateIndexBuffer();
 
   private:
     // Dirty bits.
@@ -301,6 +302,7 @@ class ContextWgpu : public ContextImpl
         DIRTY_BIT_SCISSOR,
 
         DIRTY_BIT_VERTEX_BUFFERS,
+        DIRTY_BIT_INDEX_BUFFER,
 
         DIRTY_BIT_MAX,
     };
@@ -325,19 +327,14 @@ class ContextWgpu : public ContextImpl
         mDirtyBits.set(DIRTY_BIT_RENDER_PIPELINE_DESC);
     }
 
-    angle::Result setupIndexedDraw(const gl::Context *context,
-                                   gl::PrimitiveMode mode,
-                                   GLsizei indexCount,
-                                   GLsizei instanceCount,
-                                   gl::DrawElementsType indexType,
-                                   const void *indices);
     angle::Result setupDraw(const gl::Context *context,
                             gl::PrimitiveMode mode,
                             GLint firstVertexOrInvalid,
                             GLsizei vertexOrIndexCount,
                             GLsizei instanceCount,
                             gl::DrawElementsType indexTypeOrInvalid,
-                            const void *indices);
+                            const void *indices,
+                            uint32_t *outFirstIndex);
 
     angle::Result handleDirtyRenderPipelineDesc(DirtyBits::Iterator *dirtyBitsIterator);
     angle::Result handleDirtyRenderPipelineBinding(DirtyBits::Iterator *dirtyBitsIterator);
@@ -345,6 +342,8 @@ class ContextWgpu : public ContextImpl
     angle::Result handleDirtyScissor(DirtyBits::Iterator *dirtyBitsIterator);
     angle::Result handleDirtyVertexBuffers(const gl::AttributesMask &slots,
                                            DirtyBits::Iterator *dirtyBitsIterator);
+    angle::Result handleDirtyIndexBuffer(gl::DrawElementsType indexType,
+                                         DirtyBits::Iterator *dirtyBitsIterator);
 
     angle::Result handleDirtyRenderPass(DirtyBits::Iterator *dirtyBitsIterator);
 
@@ -360,6 +359,8 @@ class ContextWgpu : public ContextImpl
     webgpu::RenderPipelineDesc mRenderPipelineDesc;
     wgpu::RenderPipeline mCurrentGraphicsPipeline;
     gl::AttributesMask mCurrentRenderPipelineAllAttributes;
+
+    gl::DrawElementsType mCurrentIndexBufferType = gl::DrawElementsType::InvalidEnum;
 };
 
 }  // namespace rx

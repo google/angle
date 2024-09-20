@@ -40,6 +40,8 @@ angle::Result VertexArrayWgpu::syncState(const gl::Context *context,
                 break;
 
             case gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER:
+                ANGLE_TRY(syncDirtyElementArrayBuffer(contextWgpu));
+                contextWgpu->invalidateIndexBuffer();
                 break;
 
             case gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER_DATA:
@@ -86,6 +88,33 @@ angle::Result VertexArrayWgpu::syncState(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+angle::Result VertexArrayWgpu::syncClientArrays(const gl::Context *context,
+                                                const gl::AttributesMask &activeAttributesMask,
+                                                GLint first,
+                                                GLsizei count,
+                                                gl::DrawElementsType drawElementsTypeOrInvalid,
+                                                const void *indices,
+                                                GLsizei instanceCount,
+                                                bool primitiveRestartEnabled,
+                                                const void **adjustedIndicesPtr)
+{
+    gl::AttributesMask clientAttributesToSync =
+        mState.getClientMemoryAttribsMask() & activeAttributesMask;
+    if (clientAttributesToSync.any())
+    {
+        UNIMPLEMENTED();
+    }
+
+    if (drawElementsTypeOrInvalid != gl::DrawElementsType::InvalidEnum &&
+        !mState.getElementArrayBuffer())
+    {
+        UNIMPLEMENTED();
+    }
+
+    *adjustedIndicesPtr = indices;
+    return angle::Result::Continue;
+}
+
 angle::Result VertexArrayWgpu::syncDirtyAttrib(ContextWgpu *contextWgpu,
                                                const gl::VertexAttribute &attrib,
                                                const gl::VertexBinding &binding,
@@ -118,6 +147,22 @@ angle::Result VertexArrayWgpu::syncDirtyAttrib(ContextWgpu *contextWgpu,
     {
         memset(&mCurrentAttribs[attribIndex], 0, sizeof(webgpu::PackedVertexAttribute));
         mCurrentArrayBuffers[attribIndex] = nullptr;
+    }
+
+    return angle::Result::Continue;
+}
+
+angle::Result VertexArrayWgpu::syncDirtyElementArrayBuffer(ContextWgpu *contextWgpu)
+{
+    gl::Buffer *bufferGl = mState.getElementArrayBuffer();
+    if (bufferGl)
+    {
+        BufferWgpu *buffer  = webgpu::GetImpl(bufferGl);
+        mCurrentIndexBuffer = &buffer->getBuffer();
+    }
+    else
+    {
+        mCurrentIndexBuffer = nullptr;
     }
 
     return angle::Result::Continue;

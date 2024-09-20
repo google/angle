@@ -581,5 +581,19 @@ wgpu::StencilOperation getStencilOp(const GLenum glStencilOp)
             return wgpu::StencilOperation::Keep;
     }
 }
+
+uint32_t GetFirstIndexForDrawCall(gl::DrawElementsType indexType, const void *indices)
+{
+    const size_t indexSize                = gl::GetDrawElementsTypeSize(indexType);
+    const uintptr_t indexBufferByteOffset = reinterpret_cast<uintptr_t>(indices);
+    if (indexBufferByteOffset % indexSize != 0)
+    {
+        // WebGPU only allows offsetting index buffers by multiples of the index size
+        UNIMPLEMENTED();
+    }
+
+    return static_cast<uint32_t>(indexBufferByteOffset / indexSize);
+}
+
 }  // namespace gl_wgpu
 }  // namespace rx

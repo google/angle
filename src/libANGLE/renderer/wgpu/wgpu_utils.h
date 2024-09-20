@@ -273,6 +273,8 @@ wgpu::ColorWriteMask GetColorWriteMask(bool r, bool g, bool b, bool a);
 
 wgpu::CompareFunction getCompareFunc(const GLenum glCompareFunc);
 wgpu::StencilOperation getStencilOp(const GLenum glStencilOp);
+
+uint32_t GetFirstIndexForDrawCall(gl::DrawElementsType indexType, const void *indices);
 }  // namespace gl_wgpu
 
 // Number of reserved binding slots to implement the default uniform block
