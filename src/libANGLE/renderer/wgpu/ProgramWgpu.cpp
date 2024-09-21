@@ -224,12 +224,19 @@ class LinkTaskWgpu : public LinkTask
 
         // The default uniform block's CPU buffer needs to be allocated and the layout calculated,
         // now that the list of uniforms is known.
-        ASSERT(initDefaultUniformBlocks() == angle::Result::Continue);
+        angle::Result initUniformBlocksResult = initDefaultUniformBlocks();
+        if (IsError(initUniformBlocksResult))
+        {
+            mLinkResult = initUniformBlocksResult;
+            return;
+        }
+
+        mLinkResult = angle::Result::Continue;
     }
 
     angle::Result getResult(const gl::Context *context, gl::InfoLog &infoLog) override
     {
-        return angle::Result::Continue;
+        return mLinkResult;
     }
 
   private:
@@ -319,6 +326,7 @@ class LinkTaskWgpu : public LinkTask
     wgpu::Device mDevice;
     ProgramWgpu *mProgram = nullptr;
     const gl::ProgramExecutable *mExecutable;
+    angle::Result mLinkResult = angle::Result::Stop;
 };
 }  // anonymous namespace
 
