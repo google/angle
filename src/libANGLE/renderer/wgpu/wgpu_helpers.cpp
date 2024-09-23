@@ -311,6 +311,13 @@ angle::Result ImageHelper::readPixels(rx::ContextWgpu *contextWgpu,
                                       const rx::PackPixelsParams &packPixelsParams,
                                       void *pixels)
 {
+    if (mActualFormatID == angle::FormatID::NONE)
+    {
+        // Unimplemented texture format
+        UNIMPLEMENTED();
+        return angle::Result::Stop;
+    }
+
     wgpu::Device device          = contextWgpu->getDisplay()->getDevice();
     wgpu::CommandEncoder encoder = device.CreateCommandEncoder();
     wgpu::Queue queue            = contextWgpu->getDisplay()->getQueue();
