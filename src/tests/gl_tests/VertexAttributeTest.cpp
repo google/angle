@@ -355,7 +355,7 @@ class VertexAttributeTest : public ANGLETest<>
             "void main(void)\n"
             "{\n"
             "    gl_Position = position;\n"
-            "    vec4 threshold = max(abs(expected) * 0.01, 1.0 / 64.0);\n"
+            "    vec4 threshold = max(abs(expected) * 0.01, vec4(1.0 / 64.0));\n"
             "    color = vec4(lessThanEqual(abs(test - expected), threshold));\n"
             "}\n";
 
@@ -1843,7 +1843,7 @@ TEST_P(VertexAttributeTest, DrawArraysWithDisabledAttribute)
         "void main(void)\n"
         "{\n"
         "    gl_Position = position;\n"
-        "    vec4 threshold = max(abs(expected + disabled) * 0.005, 1.0 / 64.0);\n"
+        "    vec4 threshold = max(abs(expected + disabled) * 0.005, vec4(1.0 / 64.0));\n"
         "    color = vec4(lessThanEqual(abs(test - expected), threshold));\n"
         "}\n";
 

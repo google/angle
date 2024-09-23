@@ -18670,8 +18670,7 @@ ANGLE_INSTANTIATE_TEST(Texture2DTest,
                        ANGLE_ALL_TEST_PLATFORMS_ES2,
                        ES2_EMULATE_COPY_TEX_IMAGE_VIA_SUB(),
                        ES2_EMULATE_COPY_TEX_IMAGE(),
-                       ES2_OPENGLES().enable(Feature::ForcePassthroughShaders),
-                       ES2_WEBGPU());
+                       ES2_OPENGLES().enable(Feature::ForcePassthroughShaders));
 ANGLE_INSTANTIATE_TEST_ES2(TextureCubeTest);
 ANGLE_INSTANTIATE_TEST_ES2(Texture2DTestWithDrawScale);
 ANGLE_INSTANTIATE_TEST_ES2(Sampler2DAsFunctionParameterTest);

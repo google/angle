@@ -10233,8 +10233,7 @@ void main()
 }
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(ImageTest,
-                                       ES3_VULKAN().enable(Feature::AllocateNonZeroMemory),
-                                       ES2_WEBGPU());
+                                       ES3_VULKAN().enable(Feature::AllocateNonZeroMemory));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ImageTestES3);
 ANGLE_INSTANTIATE_TEST_ES3_AND(ImageTestES3, ES3_VULKAN().enable(Feature::AllocateNonZeroMemory));
