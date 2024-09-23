@@ -292,8 +292,6 @@ class Framebuffer final : public angle::ObserverInterface,
     bool hasExternalTextureAttachment() const;
     bool hasYUVAttachment() const;
 
-    bool usingExtendedDrawBuffers() const;
-
     // This method calls checkStatus.
     int getSamples(const Context *context) const;
     int getReadBufferResourceSamples(const Context *context) const;

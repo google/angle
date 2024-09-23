@@ -1273,19 +1273,6 @@ bool Framebuffer::hasYUVAttachment() const
     return mState.hasYUVAttachment();
 }
 
-bool Framebuffer::usingExtendedDrawBuffers() const
-{
-    for (size_t drawbufferIdx = 1; drawbufferIdx < mState.mDrawBufferStates.size(); ++drawbufferIdx)
-    {
-        if (getDrawBuffer(drawbufferIdx) != nullptr)
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 void Framebuffer::invalidateCompletenessCache()
 {
     if (!isDefault())
