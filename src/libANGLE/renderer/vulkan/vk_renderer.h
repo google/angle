@@ -247,7 +247,13 @@ class Renderer : angle::NonCopyable
 
     const vk::Format &getFormat(angle::FormatID formatID) const { return mFormatTable[formatID]; }
 
-    angle::Result getPipelineCacheSize(vk::Context *context, size_t *pipelineCacheSizeOut);
+    // Get the pipeline cache data after retrieving the size, but only if the size is increased
+    // since last query.  This function should be called with the |mPipelineCacheMutex| lock already
+    // held.
+    angle::Result getLockedPipelineCacheDataIfNew(vk::Context *context,
+                                                  size_t *pipelineCacheSizeOut,
+                                                  size_t lastSyncSize,
+                                                  std::vector<uint8_t> *pipelineCacheDataOut);
     angle::Result syncPipelineCacheVk(vk::Context *context,
                                       vk::GlobalOps *globalOps,
                                       const gl::Context *contextGL);
