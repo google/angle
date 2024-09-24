@@ -5429,10 +5429,12 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // graphicsPipelineLibraryFastLinking allows them to quickly produce working pipelines, but it
     // is typically not as efficient as complete pipelines.
     //
-    // This optimization is disabled on the Intel/windows driver due to driver bugs.
+    // This optimization is disabled on the Intel/windows driver before 31.0.101.5379 due to driver
+    // bugs.
     ANGLE_FEATURE_CONDITION(
         &mFeatures, preferMonolithicPipelinesOverLibraries,
-        mFeatures.supportsGraphicsPipelineLibrary.enabled && !(IsWindows() && isIntel));
+        mFeatures.supportsGraphicsPipelineLibrary.enabled &&
+            !(IsWindows() && isIntel && intelDriverVersion < IntelDriverVersion(101, 5379)));
 
     // Whether the pipeline caches should merge into the global pipeline cache.  This should only be
     // enabled on platforms if:
