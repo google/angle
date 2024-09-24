@@ -266,25 +266,17 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     angle::Result ensureImageInitialized(ContextVk *contextVk, ImageMipLevels mipLevels);
 
     vk::ImageOrBufferViewSubresourceSerial getImageViewSubresourceSerial(
-        const gl::SamplerState &samplerState,
-        bool staticTexelFetchAccess) const
+        const gl::SamplerState &samplerState) const
     {
-        ASSERT(mImage != nullptr);
-        gl::SrgbDecode srgbDecode = (samplerState.getSRGBDecode() == GL_SKIP_DECODE_EXT)
-                                        ? gl::SrgbDecode::Skip
-                                        : gl::SrgbDecode::Default;
-        mImageView.updateSrgbDecode(*mImage, srgbDecode);
-        mImageView.updateStaticTexelFetch(*mImage, staticTexelFetchAccess);
-
-        if (mImageView.getColorspaceForRead() == vk::ImageViewColorspace::SRGB)
+        if (samplerState.getSRGBDecode() == GL_DECODE_EXT)
         {
-            ASSERT(getImageViewSubresourceSerialImpl(vk::ImageViewColorspace::SRGB) ==
+            ASSERT(getImageViewSubresourceSerialImpl(GL_DECODE_EXT) ==
                    mCachedImageViewSubresourceSerialSRGBDecode);
             return mCachedImageViewSubresourceSerialSRGBDecode;
         }
         else
         {
-            ASSERT(getImageViewSubresourceSerialImpl(vk::ImageViewColorspace::Linear) ==
+            ASSERT(getImageViewSubresourceSerialImpl(GL_SKIP_DECODE_EXT) ==
                    mCachedImageViewSubresourceSerialSkipDecode);
             return mCachedImageViewSubresourceSerialSkipDecode;
         }
@@ -325,20 +317,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
         return mState.getSRGBOverride() != gl::SrgbOverride::Default;
     }
 
-    angle::Result updateSrgbDecodeState(ContextVk *contextVk, const gl::SamplerState &samplerState)
-    {
-        ASSERT(mImage != nullptr && mImage->valid());
-        gl::SrgbDecode srgbDecode = (samplerState.getSRGBDecode() == GL_SKIP_DECODE_EXT)
-                                        ? gl::SrgbDecode::Skip
-                                        : gl::SrgbDecode::Default;
-        mImageView.updateSrgbDecode(*mImage, srgbDecode);
-        if (mImageView.hasColorspaceOverrideForRead(*mImage))
-        {
-            ANGLE_TRY(ensureMutable(contextVk));
-        }
-        return angle::Result::Continue;
-    }
-
+    angle::Result ensureMutable(ContextVk *contextVk);
     angle::Result ensureRenderable(ContextVk *contextVk, TextureUpdateResult *updateResultOut);
 
     bool getAndResetImmutableSamplerDirtyState()
@@ -595,8 +574,10 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                                                     : VK_IMAGE_TILING_OPTIMAL;
     }
 
-    angle::Result ensureMutable(ContextVk *contextVk);
     angle::Result refreshImageViews(ContextVk *contextVk);
+    bool shouldDecodeSRGB(vk::Context *contextVk,
+                          GLenum srgbDecode,
+                          bool texelFetchStaticUse) const;
     void initImageUsageFlags(ContextVk *contextVk, angle::FormatID actualFormatID);
     void handleImmutableSamplerTransition(const vk::ImageHelper *previousImage,
                                           const vk::ImageHelper *nextImage);
@@ -606,7 +587,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     void stageSelfAsSubresourceUpdates(ContextVk *contextVk);
 
     vk::ImageOrBufferViewSubresourceSerial getImageViewSubresourceSerialImpl(
-        vk::ImageViewColorspace colorspace) const;
+        GLenum srgbDecode) const;
 
     void updateCachedImageViewSerials();
 

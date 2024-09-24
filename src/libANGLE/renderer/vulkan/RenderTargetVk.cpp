@@ -183,6 +183,7 @@ const vk::ImageHelper &RenderTargetVk::getResolveImageForRenderPass() const
 
 angle::Result RenderTargetVk::getImageViewImpl(vk::Context *context,
                                                const vk::ImageHelper &image,
+                                               gl::SrgbWriteControlMode mode,
                                                vk::ImageViewHelper *imageViews,
                                                const vk::ImageView **imageViewOut) const
 {
@@ -190,20 +191,21 @@ angle::Result RenderTargetVk::getImageViewImpl(vk::Context *context,
     vk::LevelIndex levelVk = image.toVkLevel(getLevelIndexForImage(image));
     if (mLayerCount == 1)
     {
-        return imageViews->getLevelLayerDrawImageView(context, image, levelVk, mLayerIndex,
-                                                      imageViewOut);
+        return imageViews->getLevelLayerDrawImageViewWithSrgbWriteControlMode(
+            context, image, levelVk, mLayerIndex, mode, imageViewOut);
     }
 
     // Layered render targets view the whole level or a handful of layers in case of multiview.
     return imageViews->getLevelDrawImageView(context, image, levelVk, mLayerIndex, mLayerCount,
-                                             imageViewOut);
+                                             mode, imageViewOut);
 }
 
 angle::Result RenderTargetVk::getImageView(vk::Context *context,
                                            const vk::ImageView **imageViewOut) const
 {
     ASSERT(mImage);
-    return getImageViewImpl(context, *mImage, mImageViews, imageViewOut);
+    return getImageViewImpl(context, *mImage, gl::SrgbWriteControlMode::Default, mImageViews,
+                            imageViewOut);
 }
 
 angle::Result RenderTargetVk::getImageViewWithColorspace(vk::Context *context,
@@ -211,15 +213,15 @@ angle::Result RenderTargetVk::getImageViewWithColorspace(vk::Context *context,
                                                          const vk::ImageView **imageViewOut) const
 {
     ASSERT(mImage);
-    mImageViews->updateSrgbWiteControlMode(*mImage, mode);
-    return getImageViewImpl(context, *mImage, mImageViews, imageViewOut);
+    return getImageViewImpl(context, *mImage, mode, mImageViews, imageViewOut);
 }
 
 angle::Result RenderTargetVk::getResolveImageView(vk::Context *context,
                                                   const vk::ImageView **imageViewOut) const
 {
     ASSERT(mResolveImage);
-    return getImageViewImpl(context, *mResolveImage, mResolveImageViews, imageViewOut);
+    return getImageViewImpl(context, *mResolveImage, gl::SrgbWriteControlMode::Default,
+                            mResolveImageViews, imageViewOut);
 }
 
 bool RenderTargetVk::isResolveImageOwnerOfData() const

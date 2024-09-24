@@ -196,16 +196,10 @@ angle::Result RenderbufferVk::setStorageEGLImageTarget(const gl::Context *contex
     mImageObserverBinding.bind(mImage);
     mImageViews.init(renderer);
 
-    // Update ImageViewHelper's colorspace related state
-    EGLenum imageColorspaceAttribute = image->getColorspaceAttribute();
-    if (imageColorspaceAttribute != EGL_GL_COLORSPACE_DEFAULT_EXT)
-    {
-        egl::ImageColorspace imageColorspace =
-            (imageColorspaceAttribute == EGL_GL_COLORSPACE_SRGB_KHR) ? egl::ImageColorspace::SRGB
-                                                                     : egl::ImageColorspace::Linear;
-        ASSERT(mImage != nullptr);
-        mImageViews.updateEglImageColorspace(*mImage, imageColorspace);
-    }
+    const vk::Format &vkFormat = renderer->getFormat(image->getFormat().info->sizedInternalFormat);
+    const angle::Format &textureFormat = vkFormat.getActualRenderableImageFormat();
+
+    VkImageAspectFlags aspect = vk::GetFormatAspectFlags(textureFormat);
 
     // Transfer the image to this queue if needed
     if (mImage->isQueueFamilyChangeNeccesary(contextVk->getDeviceQueueIndex()))
@@ -214,12 +208,6 @@ angle::Result RenderbufferVk::setStorageEGLImageTarget(const gl::Context *contex
         vk::CommandBufferAccess access;
         access.onExternalAcquireRelease(mImage);
         ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
-
-        const vk::Format &vkFormat =
-            renderer->getFormat(image->getFormat().info->sizedInternalFormat);
-        const angle::Format &textureFormat = vkFormat.getActualRenderableImageFormat();
-        VkImageAspectFlags aspect          = vk::GetFormatAspectFlags(textureFormat);
-
         mImage->changeLayoutAndQueue(contextVk, aspect, vk::ImageLayout::ColorWrite,
                                      contextVk->getDeviceQueueIndex(), commandBuffer);
 

@@ -3868,17 +3868,11 @@ angle::Result UtilsVk::copyImageToBuffer(ContextVk *contextVk,
         textureType = gl::TextureType::_2D;
     }
 
-    // Don't decode to linear colorspace when copying an image
-    angle::FormatID imageFormat = src->getActualFormatID();
-    angle::FormatID linearFormat =
-        src->getActualFormat().isSRGB ? ConvertToLinear(imageFormat) : imageFormat;
-    ASSERT(linearFormat != angle::FormatID::NONE);
-
     vk::DeviceScoped<vk::ImageView> srcView(contextVk->getDevice());
-    ANGLE_TRY(src->initReinterpretedLayerImageView(
+    ANGLE_TRY(src->initLayerImageViewWithSrgbWriteControlMode(
         contextVk, textureType, src->getAspectFlags(), swizzle, &srcView.get(), params.srcMip, 1,
-        textureType == gl::TextureType::_2D ? params.srcLayer : 0, 1, VK_IMAGE_USAGE_SAMPLED_BIT,
-        linearFormat));
+        textureType == gl::TextureType::_2D ? params.srcLayer : 0, 1,
+        gl::SrgbWriteControlMode::Linear, VK_IMAGE_USAGE_SAMPLED_BIT));
 
     vk::CommandBufferAccess access;
     access.onImageComputeShaderRead(src->getAspectFlags(), src);

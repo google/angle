@@ -538,7 +538,6 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
     gl::DrawBuffersArray<VkClearColorValue> adjustedClearColorValues;
     const gl::DrawBufferMask colorAttachmentMask = mState.getColorAttachmentsMask();
     const auto &colorRenderTargets               = mRenderTargetCache.getColors();
-    bool anyAttachmentWithColorspaceOverride     = false;
     for (size_t colorIndexGL = 0; colorIndexGL < colorAttachmentMask.size(); ++colorIndexGL)
     {
         if (colorAttachmentMask[colorIndexGL])
@@ -559,12 +558,6 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
                 adjustedClearColorValues[colorIndexGL].float32[0] = clearColorValue.float32[2];
                 adjustedClearColorValues[colorIndexGL].float32[1] = clearColorValue.float32[0];
                 adjustedClearColorValues[colorIndexGL].float32[2] = clearColorValue.float32[1];
-            }
-            else if (colorRenderTarget->hasColorspaceOverrideForWrite())
-            {
-                // If a rendertarget has colorspace overrides, we need to clear with a draw
-                // to make sure the colorspace override is honored.
-                anyAttachmentWithColorspaceOverride = true;
             }
             else if (contextVk->getRenderer()->getFeatures().adjustClearColorPrecision.enabled)
             {
@@ -609,8 +602,7 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
                                                     mActiveColorComponentMasksForClear;
     const bool maskedClearStencil = clearStencil && stencilMask != 0xFF;
 
-    bool clearColorWithDraw =
-        clearColor && (maskedClearColor || scissoredClear || anyAttachmentWithColorspaceOverride);
+    bool clearColorWithDraw   = clearColor && (maskedClearColor || scissoredClear);
     bool clearDepthWithDraw   = clearDepth && scissoredClear;
     bool clearStencilWithDraw = clearStencil && (maskedClearStencil || scissoredClear);
 
@@ -761,7 +753,7 @@ angle::Result FramebufferVk::clearImpl(const gl::Context *context,
     // revert to vkCmdClearAttachments.  This is not currently deemed necessary.
     if (((clearColorBuffers.any() && !mEmulatedAlphaAttachmentMask.any() && !maskedClearColor) ||
          clearDepthWithDraw || (clearStencilWithDraw && !maskedClearStencil)) &&
-        !preferDrawOverClearAttachments && !anyAttachmentWithColorspaceOverride)
+        !preferDrawOverClearAttachments)
     {
         if (!contextVk->hasActiveRenderPass())
         {
@@ -1368,9 +1360,9 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         bool canBlitWithCommand =
             !isColorResolve && noClip && (noFlip || !disableFlippingBlitWithCommand) &&
             HasSrcBlitFeature(renderer, readRenderTarget) && rotation == SurfaceRotation::Identity;
-        // If we need to reinterpret the colorspace of read RenderTarget
-        // then the blit must be done through a shader
-        bool reinterpretsColorspace    = readRenderTarget->hasColorspaceOverrideForRead();
+        // If we need to reinterpret the colorspace then the blit must be done through a shader
+        bool reinterpretsColorspace =
+            mCurrentFramebufferDesc.getWriteControlMode() != gl::SrgbWriteControlMode::Default;
         bool areChannelsBlitCompatible = true;
         bool areFormatsIdentical       = true;
         for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
@@ -1383,10 +1375,6 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
                 AreSrcAndDstColorChannelsBlitCompatible(readRenderTarget, drawRenderTarget);
             areFormatsIdentical = areFormatsIdentical &&
                                   AreSrcAndDstFormatsIdentical(readRenderTarget, drawRenderTarget);
-            // If we need to reinterpret the colorspace of the draw RenderTarget
-            // then the blit must be done through a shader
-            reinterpretsColorspace =
-                reinterpretsColorspace || drawRenderTarget->hasColorspaceOverrideForWrite();
         }
 
         // Now that all flipping is done, adjust the offsets for resolve and prerotation
@@ -2292,19 +2280,6 @@ angle::Result FramebufferVk::updateColorAttachment(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-void FramebufferVk::updateColorAttachmentColorspace(gl::SrgbWriteControlMode srgbWriteControlMode)
-{
-    // Update colorspace of color attachments.
-    const auto &colorRenderTargets               = mRenderTargetCache.getColors();
-    const gl::DrawBufferMask colorAttachmentMask = mState.getColorAttachmentsMask();
-    for (size_t colorIndexGL : colorAttachmentMask)
-    {
-        RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
-        ASSERT(colorRenderTarget);
-        colorRenderTarget->updateWriteColorspace(srgbWriteControlMode);
-    }
-}
-
 angle::Result FramebufferVk::updateDepthStencilAttachment(const gl::Context *context)
 {
     ANGLE_TRY(mRenderTargetCache.updateDepthStencilRenderTarget(context, mState));
@@ -2422,8 +2397,9 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
     gl::DrawBufferMask dirtyColorAttachments;
     bool dirtyDepthStencilAttachment = false;
 
-    bool shouldUpdateColorMaskAndBlend = false;
-    bool shouldUpdateLayerCount        = false;
+    bool shouldUpdateColorMaskAndBlend    = false;
+    bool shouldUpdateLayerCount           = false;
+    bool shouldUpdateSrgbWriteControlMode = false;
 
     // Cache new foveation state, if any
     const gl::FoveationState *newFoveationState = nullptr;
@@ -2459,6 +2435,7 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
                 releaseCurrentFramebuffer(contextVk);
                 break;
             case gl::Framebuffer::DIRTY_BIT_FRAMEBUFFER_SRGB_WRITE_CONTROL_MODE:
+                shouldUpdateSrgbWriteControlMode = true;
                 break;
             case gl::Framebuffer::DIRTY_BIT_DEFAULT_LAYERS:
                 shouldUpdateLayerCount = true;
@@ -2517,12 +2494,15 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
         }
     }
 
-    // A shared attachment's colospace could have been modified in another context, update
-    // colorspace of all attachments to reflect current context's colorspace.
-    gl::SrgbWriteControlMode srgbWriteControlMode = mState.getWriteControlMode();
-    updateColorAttachmentColorspace(srgbWriteControlMode);
-    // Update current framebuffer descriptor to reflect the new state.
-    mCurrentFramebufferDesc.setWriteControlMode(srgbWriteControlMode);
+    if (shouldUpdateSrgbWriteControlMode)
+    {
+        // Framebuffer colorspace state has been modified, so refresh the current framebuffer
+        // descriptor to reflect the new state.
+        gl::SrgbWriteControlMode newSrgbWriteControlMode = mState.getWriteControlMode();
+        mCurrentFramebufferDesc.setWriteControlMode(newSrgbWriteControlMode);
+        // mRenderPassDesc will be updated later in updateRenderPassDesc() in case if
+        // mCurrentFramebufferDesc was changed.
+    }
 
     if (shouldUpdateColorMaskAndBlend)
     {
@@ -2629,16 +2609,8 @@ void FramebufferVk::updateRenderPassDesc(ContextVk *contextVk)
             }
             else
             {
-                // Account for attachments with colorspace override
-                angle::FormatID actualFormat =
-                    colorRenderTarget->getImageForRenderPass().getActualFormatID();
-                if (colorRenderTarget->hasColorspaceOverrideForWrite())
-                {
-                    actualFormat =
-                        colorRenderTarget->getColorspaceOverrideFormatForWrite(actualFormat);
-                }
-
-                mRenderPassDesc.packColorAttachment(colorIndexGL, actualFormat);
+                mRenderPassDesc.packColorAttachment(
+                    colorIndexGL, colorRenderTarget->getImageForRenderPass().getActualFormatID());
                 // Add the resolve attachment, if any.
                 if (colorRenderTarget->hasResolveAttachment())
                 {
