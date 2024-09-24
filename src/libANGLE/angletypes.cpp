@@ -167,7 +167,7 @@ bool DepthStencilState::isDepthMaskedOut() const
 
 bool DepthStencilState::isStencilMaskedOut() const
 {
-    return (stencilMask & stencilWritemask) == 0;
+    return stencilWritemask == 0;
 }
 
 bool DepthStencilState::isStencilNoOp() const
@@ -178,7 +178,7 @@ bool DepthStencilState::isStencilNoOp() const
 
 bool DepthStencilState::isStencilBackNoOp() const
 {
-    const bool isStencilBackMaskedOut = (stencilBackMask & stencilBackWritemask) == 0;
+    const bool isStencilBackMaskedOut = stencilBackWritemask == 0;
     return isStencilBackMaskedOut ||
            IsStencilNoOp(stencilBackFunc, stencilBackFail, stencilBackPassDepthFail,
                          stencilBackPassDepthPass);

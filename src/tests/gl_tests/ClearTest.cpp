@@ -1426,6 +1426,53 @@ TEST_P(ClearTestES3, MaskedClearBufferBug)
     EXPECT_PIXEL_NEAR(0, 0, 0, 127, 255, 255, 1);
 }
 
+// Test that stencil clears works if reference and write mask have no common bits.  The write mask
+// is the only thing that dictates which bits should be written to, and this is a regression test
+// for a bug where the clear was no-oped if the (reference & writemask) == 0 instead of just
+// writemask == 0.
+TEST_P(ClearTestES3, ClearStencilWithNonOverlappingWriteMaskAndReferenceBits)
+{
+    constexpr uint32_t kSize = 16;
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mFBOs[0]);
+
+    GLTexture textures;
+    GLRenderbuffer depthStencil;
+
+    glBindTexture(GL_TEXTURE_2D, textures);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures, 0);
+
+    glBindRenderbuffer(GL_RENDERBUFFER, depthStencil);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, kSize, kSize);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              depthStencil);
+    // Initialize the stencil buffer.
+    glClearDepthf(0);
+    glClearStencil(0xEC);
+
+    glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    verifyStencil(0xEC, kSize);
+
+    // Clear the color buffer again to make sure there are no stale data.
+    glClearColor(0.25, 0.5, 0.75, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_NEAR(0, 0, 63, 127, 191, 255, 1.0);
+
+    // Set the stencil write mask to 0xF0
+    glStencilMask(0xF0);
+
+    // Set the stencil reference to 0x0F.  It shouldn't matter
+    glStencilFunc(GL_EQUAL, 0x55, 0x0F);
+    glStencilOp(GL_INCR, GL_INCR, GL_INCR);
+
+    // Clear stencil again.  Only the top four bits should be written.
+    const GLint kStencilClearValue = 0x59;
+    glClearBufferiv(GL_STENCIL, 0, &kStencilClearValue);
+    verifyStencil(0x5C, kSize);
+}
+
+// Regression test for a serial tracking bug.
 TEST_P(ClearTestES3, BadFBOSerialBug)
 {
     // First make a simple framebuffer, and clear it to green

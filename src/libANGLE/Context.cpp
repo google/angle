@@ -4708,7 +4708,7 @@ void Context::clear(GLbitfield mask)
 
     // If depth write is disabled, don't attempt to clear depth.
     if (mState.getDrawFramebuffer()->getDepthAttachment() == nullptr ||
-        !mState.getDepthStencilState().depthMask)
+        mState.getDepthStencilState().isDepthMaskedOut())
     {
         mask &= ~GL_DEPTH_BUFFER_BIT;
     }
