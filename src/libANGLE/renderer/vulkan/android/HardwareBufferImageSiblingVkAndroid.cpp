@@ -177,6 +177,14 @@ egl::Error HardwareBufferImageSiblingVkAndroid::ValidateHardwareBuffer(
         return egl::EglBadParameter() << "Failed to query AHardwareBuffer properties";
     }
 
+    int width       = 0;
+    int height      = 0;
+    int depth       = 0;
+    int pixelFormat = 0;
+    uint64_t usage  = 0;
+    angle::android::GetANativeWindowBufferProperties(windowBuffer, &width, &height, &depth,
+                                                     &pixelFormat, &usage);
+
     if (bufferFormatProperties.format == VK_FORMAT_UNDEFINED)
     {
         ASSERT(bufferFormatProperties.externalFormat != 0);
@@ -191,7 +199,11 @@ egl::Error HardwareBufferImageSiblingVkAndroid::ValidateHardwareBuffer(
     else
     {
         angle::FormatID formatID = vk::GetFormatIDFromVkFormat(bufferFormatProperties.format);
-        if (!HasFullTextureFormatSupport(renderer, formatID))
+        const bool hasNecessaryFormatSupport =
+            (usage & AHARDWAREBUFFER_USAGE_GPU_FRAMEBUFFER) != 0
+                ? HasFullTextureFormatSupport(renderer, formatID)
+                : HasNonRenderableTextureFormatSupport(renderer, formatID);
+        if (!hasNecessaryFormatSupport)
         {
             return egl::EglBadParameter()
                    << "AHardwareBuffer format " << bufferFormatProperties.format
@@ -201,13 +213,6 @@ egl::Error HardwareBufferImageSiblingVkAndroid::ValidateHardwareBuffer(
 
     if (attribs.getAsInt(EGL_PROTECTED_CONTENT_EXT, EGL_FALSE) == EGL_TRUE)
     {
-        int width       = 0;
-        int height      = 0;
-        int depth       = 0;
-        int pixelFormat = 0;
-        uint64_t usage  = 0;
-        angle::android::GetANativeWindowBufferProperties(windowBuffer, &width, &height, &depth,
-                                                         &pixelFormat, &usage);
         if ((usage & AHARDWAREBUFFER_USAGE_PROTECTED_CONTENT) == 0)
         {
             return egl::EglBadAccess()
