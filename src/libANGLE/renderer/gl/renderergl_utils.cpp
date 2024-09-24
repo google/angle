@@ -3040,6 +3040,14 @@ void ClearErrors(const FunctionsGL *functions,
     {
         INFO() << "Preexisting GL error " << gl::FmtHex(error) << " as of " << file << ", "
                << function << ":" << line << ". ";
+
+        // Skip GL_CONTEXT_LOST errors, they will be generated continuously and result in an
+        // infinite loop.
+        if (error == GL_CONTEXT_LOST)
+        {
+            return;
+        }
+
         error = functions->getError();
     }
 }
