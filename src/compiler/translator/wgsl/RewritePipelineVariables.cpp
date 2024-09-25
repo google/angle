@@ -27,7 +27,7 @@
 #include "compiler/translator/tree_util/FindMain.h"
 #include "compiler/translator/tree_util/ReplaceVariable.h"
 #include "compiler/translator/util.h"
-#include "compiler/translator/wgsl/WriteTypeName.h"
+#include "compiler/translator/wgsl/Utils.h"
 
 namespace sh
 {
@@ -189,22 +189,6 @@ ImmutableString CreateNameToReplaceBuiltin(ImmutableString glslBuiltinName)
     ImmutableStringBuilder newName(glslBuiltinName.length() + 1);
     newName << glslBuiltinName << '_';
     return newName;
-}
-
-using GlobalVars = TMap<ImmutableString, TIntermDeclaration *>;
-
-GlobalVars FindGlobalVars(TIntermBlock &root)
-{
-    GlobalVars globals;
-    for (TIntermNode *node : *root.getSequence())
-    {
-        if (TIntermDeclaration *declNode = node->getAsDeclarationNode())
-        {
-            Declaration decl = ViewDeclaration(*declNode);
-            globals.insert({decl.symbol.variable().name(), declNode});
-        }
-    }
-    return globals;
 }
 
 }  // namespace
@@ -395,8 +379,7 @@ bool RewritePipelineVarOutputBuilder::GenerateMainFunctionAndIOStructs(
     TIntermBlock &root,
     RewritePipelineVarOutput &outVarReplacements)
 {
-
-    GlobalVars globalVars = FindGlobalVars(root);
+    GlobalVars globalVars = FindGlobalVars(&root);
 
     if (!RewritePipelineVarOutputBuilder::GeneratePipelineStructStrings(
             &outVarReplacements.mInputBlock, &outVarReplacements.mAngleInputVars,

@@ -26,8 +26,9 @@
 #include "compiler/translator/tree_util/IntermNode_util.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
 #include "compiler/translator/tree_util/RunAtTheEndOfShader.h"
+#include "compiler/translator/wgsl/OutputUniformBlocks.h"
 #include "compiler/translator/wgsl/RewritePipelineVariables.h"
-#include "compiler/translator/wgsl/WriteTypeName.h"
+#include "compiler/translator/wgsl/Utils.h"
 
 namespace sh
 {
@@ -43,6 +44,12 @@ struct VarDecl
     const ImmutableString &symbolName;
     const TType &type;
 };
+
+bool IsDefaultUniform(const TType &type)
+{
+    return type.getQualifier() == EvqUniform && type.getInterfaceBlock() == nullptr &&
+           !IsOpaqueType(type.getBasicType());
+}
 
 // When emitting a list of statements, this determines whether a semicolon follows the statement.
 bool RequiresSemicolonTerminator(TIntermNode &node)
@@ -255,6 +262,11 @@ void OutputWGSLTraverser::visitSymbol(TIntermSymbol *symbolNode)
         else if (mRewritePipelineVarOutput->IsOutputVar(var.uniqueId()))
         {
             mSink << kBuiltinOutputStructName << "." << var.name();
+        }
+        // Accesses of basic uniforms need to be converted to struct accesses.
+        else if (IsDefaultUniform(type))
+        {
+            mSink << kDefaultUniformBlockVarName << "." << var.name();
         }
         else
         {
@@ -1498,6 +1510,12 @@ void OutputWGSLTraverser::emitVariableDeclaration(const VarDecl &decl,
 {
     const TBasicType basicType = decl.type.getBasicType();
 
+    if (decl.type.getQualifier() == EvqUniform)
+    {
+        // Uniforms are declared in a pre-pass, and don't need to be outputted here.
+        return;
+    }
+
     if (basicType == TBasicType::EbtStruct && decl.type.isStructSpecifier() &&
         !evdConfig.disableStructSpecifier)
     {
@@ -1524,13 +1542,7 @@ void OutputWGSLTraverser::emitVariableDeclaration(const VarDecl &decl,
         // readability, and the GLSL compiler constant folds most (all?) the consts anyway.
         mSink << "var";
         // TODO(anglebug.com/42267100): <workgroup> or <storage>?
-        if (decl.type.getQualifier() == EvqUniform)
-        {
-            // TODO(anglebug.com/42267100): don't output uniforms here, do it in a pre-pass.
-            // Temporarily declare as a shader-private variable so shaders compile.
-            mSink << "<private>";
-        }
-        else if (evdConfig.isGlobalScope)
+        if (evdConfig.isGlobalScope)
         {
             mSink << "<private>";
         }
@@ -1794,6 +1806,11 @@ bool TranslatorWGSL::translate(TIntermBlock *root,
     TInfoSinkBase &sink = getInfoSink().obj;
     // Start writing the output structs that will be referred to by the `traverser`'s output.'
     if (!rewritePipelineVarOutput.OutputStructs(sink))
+    {
+        return false;
+    }
+
+    if (!OutputUniformBlocks(this, root))
     {
         return false;
     }
