@@ -3006,6 +3006,14 @@ TEST_P(ClearTestES3, ClearStencilZeroFirstByteMask)
     glClear(GL_STENCIL_BUFFER_BIT);
 }
 
+// Same test as ClearStencilZeroFirstByteMask, but using glClearBufferiv.
+TEST_P(ClearTestES3, ClearBufferStencilZeroFirstByteMask)
+{
+    glStencilMask(0xe7d6a900);
+    const GLint kStencilClearValue = 0x55;
+    glClearBufferiv(GL_STENCIL, 0, &kStencilClearValue);
+}
+
 // Test that mid render pass clear after draw sets the render pass size correctly.
 TEST_P(ClearTestES3, ScissoredDrawThenFullClear)
 {

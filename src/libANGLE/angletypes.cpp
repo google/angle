@@ -21,6 +21,12 @@ namespace gl
 {
 namespace
 {
+bool IsStencilWriteMaskedOut(GLuint stencilWritemask, GLuint framebufferStencilSize)
+{
+    const GLuint framebufferMask = angle::BitMask<GLuint>(framebufferStencilSize);
+    return (stencilWritemask & framebufferMask) == 0;
+}
+
 bool IsStencilNoOp(GLenum stencilFunc,
                    GLenum stencilFail,
                    GLenum stencilPassDepthFail,
@@ -165,21 +171,20 @@ bool DepthStencilState::isDepthMaskedOut() const
     return !depthMask;
 }
 
-bool DepthStencilState::isStencilMaskedOut() const
+bool DepthStencilState::isStencilMaskedOut(GLuint framebufferStencilSize) const
 {
-    return stencilWritemask == 0;
+    return IsStencilWriteMaskedOut(stencilWritemask, framebufferStencilSize);
 }
 
-bool DepthStencilState::isStencilNoOp() const
+bool DepthStencilState::isStencilNoOp(GLuint framebufferStencilSize) const
 {
-    return isStencilMaskedOut() ||
+    return isStencilMaskedOut(framebufferStencilSize) ||
            IsStencilNoOp(stencilFunc, stencilFail, stencilPassDepthFail, stencilPassDepthPass);
 }
 
-bool DepthStencilState::isStencilBackNoOp() const
+bool DepthStencilState::isStencilBackNoOp(GLuint framebufferStencilSize) const
 {
-    const bool isStencilBackMaskedOut = stencilBackWritemask == 0;
-    return isStencilBackMaskedOut ||
+    return IsStencilWriteMaskedOut(stencilBackWritemask, framebufferStencilSize) ||
            IsStencilNoOp(stencilBackFunc, stencilBackFail, stencilBackPassDepthFail,
                          stencilBackPassDepthPass);
 }

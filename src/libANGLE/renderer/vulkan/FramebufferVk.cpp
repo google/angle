@@ -2217,7 +2217,7 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
             if (invalidateStencilBuffer)
             {
                 contextVk->getStartedRenderPassCommands().invalidateRenderPassStencilAttachment(
-                    dsState, invalidateArea);
+                    dsState, mState.getStencilBitCount(), invalidateArea);
             }
         }
     }

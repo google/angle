@@ -217,7 +217,7 @@ egl::Error HardwareBufferImageSiblingVkAndroid::ValidateHardwareBuffer(
         {
             return egl::EglBadAccess()
                    << "EGL_PROTECTED_CONTENT_EXT attribute does not match protected state "
-                      "of EGLCleintBuffer.";
+                      "of EGLClientBuffer.";
         }
     }
 

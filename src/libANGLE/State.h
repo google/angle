@@ -334,10 +334,11 @@ class PrivateState : angle::NonCopyable
 
     // Stencil state maniupulation
     bool isStencilTestEnabled() const { return mDepthStencil.stencilTest; }
-    bool isStencilWriteEnabled() const
+    bool isStencilWriteEnabled(GLuint framebufferStencilSize) const
     {
         return mDepthStencil.stencilTest &&
-               !(mDepthStencil.isStencilNoOp() && mDepthStencil.isStencilBackNoOp());
+               !(mDepthStencil.isStencilNoOp(framebufferStencilSize) &&
+                 mDepthStencil.isStencilBackNoOp(framebufferStencilSize));
     }
     void setStencilTest(bool enabled);
     void setStencilParams(GLenum stencilFunc, GLint stencilRef, GLuint stencilMask);
@@ -1305,7 +1306,10 @@ class State : angle::NonCopyable
     {
         return mPrivateState.isBlendAdvancedCoherentEnabled();
     }
-    bool isStencilWriteEnabled() const { return mPrivateState.isStencilWriteEnabled(); }
+    bool isStencilWriteEnabled(GLuint framebufferStencilSize) const
+    {
+        return mPrivateState.isStencilWriteEnabled(framebufferStencilSize);
+    }
     GLint getStencilRef() const { return mPrivateState.getStencilRef(); }
     GLint getStencilBackRef() const { return mPrivateState.getStencilBackRef(); }
     PolygonMode getPolygonMode() const { return mPrivateState.getPolygonMode(); }

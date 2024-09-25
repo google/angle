@@ -1833,6 +1833,7 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     void invalidateRenderPassDepthAttachment(const gl::DepthStencilState &dsState,
                                              const gl::Rectangle &invalidateArea);
     void invalidateRenderPassStencilAttachment(const gl::DepthStencilState &dsState,
+                                               GLuint framebufferStencilSize,
                                                const gl::Rectangle &invalidateArea);
 
     void updateRenderPassColorClear(PackedAttachmentIndex colorIndexVk,
