@@ -1834,6 +1834,14 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         }
     }
 
+    if (traceNameIs("dota_underlords"))
+    {
+        if (isNVIDIALinuxANGLE)
+        {
+            skipTest("https://anglebug.com/369533074 Flaky on Linux Nvidia");
+        }
+    }
+
     if (IsGalaxyS22())
     {
         if (traceNameIs("cod_mobile") || traceNameIs("dota_underlords") ||
