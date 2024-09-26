@@ -100,9 +100,9 @@ class TParseContext : angle::NonCopyable
 
     int getNumViews() const { return mNumViews; }
 
-    const std::map<int, TLayoutImageInternalFormat> &pixelLocalStorageBindings() const
+    const std::map<int, ShPixelLocalStorageFormat> &pixelLocalStorageFormats() const
     {
-        return mPLSBindings;
+        return mPLSFormats;
     }
 
     void enterFunctionDeclaration() { mDeclaringFunction = true; }
@@ -733,7 +733,7 @@ class TParseContext : angle::NonCopyable
     };
 
     // Generates an error if any pixel local storage uniforms have been declared (more specifically,
-    // if mPLSBindings is not empty).
+    // if mPLSFormats is not empty).
     //
     // If no pixel local storage uniforms have been declared, and if the PLS extension is enabled,
     // saves the potential error to mPLSPotentialErrors in case we encounter a PLS uniform later.
@@ -798,6 +798,7 @@ class TParseContext : angle::NonCopyable
     int mMaxAtomicCounterBindings;
     int mMaxAtomicCounterBufferSize;
     int mMaxShaderStorageBufferBindings;
+    int mMaxPixelLocalStoragePlanes;
 
     // keeps track whether we are declaring / defining a function
     bool mDeclaringFunction;
@@ -809,7 +810,7 @@ class TParseContext : angle::NonCopyable
     std::map<int, AtomicCounterBindingState> mAtomicCounterBindingStates;
 
     // Track the format of each pixel local storage binding.
-    std::map<int, TLayoutImageInternalFormat> mPLSBindings;
+    std::map<int, ShPixelLocalStorageFormat> mPLSFormats;
 
     // Potential errors to generate immediately upon encountering a pixel local storage uniform.
     std::vector<std::tuple<const TSourceLoc, PLSIllegalOperations>> mPLSPotentialErrors;

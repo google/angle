@@ -180,6 +180,25 @@ constexpr bool IsValidWithPixelLocalStorage(TLayoutImageInternalFormat internalF
     }
 }
 
+constexpr ShPixelLocalStorageFormat ImageFormatToPLSFormat(TLayoutImageInternalFormat format)
+{
+    switch (format)
+    {
+        default:
+            return ShPixelLocalStorageFormat::NotPLS;
+        case EiifRGBA8:
+            return ShPixelLocalStorageFormat::RGBA8;
+        case EiifRGBA8I:
+            return ShPixelLocalStorageFormat::RGBA8I;
+        case EiifRGBA8UI:
+            return ShPixelLocalStorageFormat::RGBA8UI;
+        case EiifR32F:
+            return ShPixelLocalStorageFormat::R32F;
+        case EiifR32UI:
+            return ShPixelLocalStorageFormat::R32UI;
+    }
+}
+
 bool UsesDerivatives(TIntermAggregate *functionCall)
 {
     const TOperator op = functionCall->getOp();
@@ -312,6 +331,7 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mMaxAtomicCounterBindings(resources.MaxAtomicCounterBindings),
       mMaxAtomicCounterBufferSize(resources.MaxAtomicCounterBufferSize),
       mMaxShaderStorageBufferBindings(resources.MaxShaderStorageBufferBindings),
+      mMaxPixelLocalStoragePlanes(resources.MaxPixelLocalStoragePlanes),
       mDeclaringFunction(false),
       mGeometryShaderInputPrimitiveType(EptUndefined),
       mGeometryShaderOutputPrimitiveType(EptUndefined),
@@ -471,7 +491,7 @@ void TParseContext::errorIfPLSDeclared(const TSourceLoc &loc, PLSIllegalOperatio
     {
         return;
     }
-    if (mPLSBindings.empty())
+    if (mPLSFormats.empty())
     {
         // No pixel local storage uniforms have been declared yet. Remember this potential error in
         // case PLS gets declared later.
@@ -2315,19 +2335,21 @@ void TParseContext::checkPixelLocalStorageBindingIsValid(const TSourceLoc &locat
         error(location, "pixel local storage requires a binding index", "layout qualifier");
     }
     // TODO(anglebug.com/40096838):
-    // else if (binding >= GL_MAX_LOCAL_STORAGE_PLANES_ANGLE)
-    // {
-    // }
-    else if (mPLSBindings.find(layoutQualifier.binding) != mPLSBindings.end())
+    else if (layoutQualifier.binding >= mMaxPixelLocalStoragePlanes)
+    {
+        error(location, "pixel local storage binding out of range", "layout qualifier");
+    }
+    else if (mPLSFormats.find(layoutQualifier.binding) != mPLSFormats.end())
     {
         error(location, "duplicate pixel local storage binding index",
               std::to_string(layoutQualifier.binding).c_str());
     }
     else
     {
-        mPLSBindings[layoutQualifier.binding] = layoutQualifier.imageInternalFormat;
-        // "mPLSBindings" is how we know whether pixel local storage uniforms have been declared, so
-        // flush the queue of potential errors once mPLSBindings isn't empty.
+        mPLSFormats[layoutQualifier.binding] =
+            ImageFormatToPLSFormat(layoutQualifier.imageInternalFormat);
+        // "mPLSFormats" is how we know whether any pixel local storage uniforms have been declared,
+        // so flush the queue of potential errors once mPLSFormats isn't empty.
         if (!mPLSPotentialErrors.empty())
         {
             for (const auto &[loc, op] : mPLSPotentialErrors)
