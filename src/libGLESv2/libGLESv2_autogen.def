@@ -481,6 +481,10 @@ EXPORTS
     glMultiDrawArraysInstancedBaseInstanceANGLE
     glMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE
 
+    ; GL_ANGLE_blob_cache
+    glBlobCacheCallbacksANGLE
+    glGetPointervANGLE
+
     ; GL_ANGLE_client_arrays
 
     ; GL_ANGLE_clip_cull_distance

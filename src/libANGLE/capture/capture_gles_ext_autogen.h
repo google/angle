@@ -118,6 +118,17 @@ angle::CallCapture CaptureMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(
     const GLuint *baseInstances,
     GLsizei drawcount);
 
+// GL_ANGLE_blob_cache
+angle::CallCapture CaptureBlobCacheCallbacksANGLE(const State &glState,
+                                                  bool isCallValid,
+                                                  GLSETBLOBPROCANGLE set,
+                                                  GLGETBLOBPROCANGLE get,
+                                                  const void *userParam);
+angle::CallCapture CaptureGetPointervANGLE(const State &glState,
+                                           bool isCallValid,
+                                           GLenum pname,
+                                           void **params);
+
 // GL_ANGLE_client_arrays
 
 // GL_ANGLE_clip_cull_distance
@@ -3103,6 +3114,17 @@ void CaptureMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE_baseInstances(
     const GLuint *baseInstances,
     GLsizei drawcount,
     angle::ParamCapture *paramCapture);
+void CaptureBlobCacheCallbacksANGLE_userParam(const State &glState,
+                                              bool isCallValid,
+                                              GLSETBLOBPROCANGLE set,
+                                              GLGETBLOBPROCANGLE get,
+                                              const void *userParam,
+                                              angle::ParamCapture *paramCapture);
+void CaptureGetPointervANGLE_params(const State &glState,
+                                    bool isCallValid,
+                                    GLenum pname,
+                                    void **params,
+                                    angle::ParamCapture *paramCapture);
 void CaptureGetTexImageANGLE_pixels(const State &glState,
                                     bool isCallValid,
                                     TextureTarget targetPacked,

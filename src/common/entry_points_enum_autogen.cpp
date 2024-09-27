@@ -584,6 +584,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glBlitFramebufferANGLE";
         case EntryPoint::GLBlitFramebufferNV:
             return "glBlitFramebufferNV";
+        case EntryPoint::GLBlobCacheCallbacksANGLE:
+            return "glBlobCacheCallbacksANGLE";
         case EntryPoint::GLBufferData:
             return "glBufferData";
         case EntryPoint::GLBufferStorageEXT:
@@ -1158,6 +1160,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glGetPerfMonitorGroupsAMD";
         case EntryPoint::GLGetPointerv:
             return "glGetPointerv";
+        case EntryPoint::GLGetPointervANGLE:
+            return "glGetPointervANGLE";
         case EntryPoint::GLGetPointervKHR:
             return "glGetPointervKHR";
         case EntryPoint::GLGetPointervRobustANGLERobustANGLE:

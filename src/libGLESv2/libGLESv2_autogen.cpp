@@ -2841,6 +2841,19 @@ glMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
         mode, counts, type, indices, instanceCounts, baseVertices, baseInstances, drawcount);
 }
 
+// GL_ANGLE_blob_cache
+void GL_APIENTRY glBlobCacheCallbacksANGLE(GLSETBLOBPROCANGLE set,
+                                           GLGETBLOBPROCANGLE get,
+                                           const void *userParam)
+{
+    return GL_BlobCacheCallbacksANGLE(set, get, userParam);
+}
+
+void GL_APIENTRY glGetPointervANGLE(GLenum pname, void **params)
+{
+    return GL_GetPointervANGLE(pname, params);
+}
+
 // GL_ANGLE_client_arrays
 
 // GL_ANGLE_clip_cull_distance

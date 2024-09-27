@@ -222,6 +222,14 @@ void WriteParamCaptureReplay(std::ostream &os, const CallCapture &call, const Pa
             WriteParamValueReplay<ParamType::TGLDEBUGPROCKHR>(os, call,
                                                               param.value.GLDEBUGPROCKHRVal);
             break;
+        case ParamType::TGLGETBLOBPROCANGLE:
+            WriteParamValueReplay<ParamType::TGLGETBLOBPROCANGLE>(
+                os, call, param.value.GLGETBLOBPROCANGLEVal);
+            break;
+        case ParamType::TGLSETBLOBPROCANGLE:
+            WriteParamValueReplay<ParamType::TGLSETBLOBPROCANGLE>(
+                os, call, param.value.GLSETBLOBPROCANGLEVal);
+            break;
         case ParamType::TGLbitfield:
             WriteParamValueReplay<ParamType::TGLbitfield>(os, call, param.value.GLbitfieldVal);
             break;
@@ -727,6 +735,10 @@ const char *ParamTypeToString(ParamType paramType)
             return "GLDEBUGPROC";
         case ParamType::TGLDEBUGPROCKHR:
             return "GLDEBUGPROCKHR";
+        case ParamType::TGLGETBLOBPROCANGLE:
+            return "GLGETBLOBPROCANGLE";
+        case ParamType::TGLSETBLOBPROCANGLE:
+            return "GLSETBLOBPROCANGLE";
         case ParamType::TGLbitfield:
             return "GLbitfield";
         case ParamType::TGLboolean:

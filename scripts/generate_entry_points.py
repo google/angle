@@ -137,6 +137,7 @@ PLS_ALLOW_WILDCARDS = [
 CONTEXT_PRIVATE_LIST = [
     'glActiveTexture',
     'glBlendColor',
+    'glBlobCacheCallbacksANGLE',
     'glClearColor',
     'glClearDepthf',
     'glClearStencil',
@@ -1001,8 +1002,10 @@ FORMAT_DICT = {
     "GLenum": "%s",
     "GLfixed": "0x%X",
     "GLfloat": "%f",
+    "GLGETBLOBPROCANGLE": POINTER_FORMAT,
     "GLint": "%d",
     "GLintptr": UNSIGNED_LONG_LONG_FORMAT,
+    "GLSETBLOBPROCANGLE": POINTER_FORMAT,
     "GLshort": "%d",
     "GLsizei": "%d",
     "GLsizeiptr": UNSIGNED_LONG_LONG_FORMAT,

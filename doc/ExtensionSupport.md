@@ -215,6 +215,7 @@ using data from registry_xml.py and gl.xml.
 | [GL_ANGLE_base_vertex_base_instance_shader_builtin](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/extensions/ANGLE_base_vertex_base_instance_shader_builtin.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_CHROMIUM_bind_generates_resource](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/extensions/CHROMIUM_bind_generates_resource.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_CHROMIUM_bind_uniform_location](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/extensions/CHROMIUM_bind_uniform_location.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
+| [GL_ANGLE_blob_cache](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/extensions/ANGLE_blob_cache.txt) |  |  |  |  |  |  |  |
 | [GL_ANGLE_client_arrays](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/extensions/ANGLE_client_arrays.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_ANGLE_clip_cull_distance](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/extensions/ANGLE_clip_cull_distance.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |  |
 | [GL_CHROMIUM_color_buffer_float_rgb](https://chromium.googlesource.com/angle/angle/+/refs/heads/main/extensions/CHROMIUM_color_buffer_float_rgb.txt) |  |  |  |  |  |  |  |

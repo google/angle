@@ -90,6 +90,12 @@ GL_MultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
                                                          const GLuint *baseInstances,
                                                          GLsizei drawcount);
 
+// GL_ANGLE_blob_cache
+ANGLE_EXPORT void GL_APIENTRY GL_BlobCacheCallbacksANGLE(GLSETBLOBPROCANGLE set,
+                                                         GLGETBLOBPROCANGLE get,
+                                                         const void *userParam);
+ANGLE_EXPORT void GL_APIENTRY GL_GetPointervANGLE(GLenum pname, void **params);
+
 // GL_ANGLE_client_arrays
 
 // GL_ANGLE_clip_cull_distance

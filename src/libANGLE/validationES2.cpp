@@ -6500,6 +6500,25 @@ bool ValidateRenderbufferStorageMultisampleEXT(const Context *context,
     return true;
 }
 
+bool ValidateBlobCacheCallbacksANGLE(const Context *context,
+                                     angle::EntryPoint entryPoint,
+                                     GLSETBLOBPROCANGLE set,
+                                     GLGETBLOBPROCANGLE get,
+                                     const void *userParam)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool ValidateGetPointervANGLE(const Context *context,
+                              angle::EntryPoint entryPoint,
+                              GLenum pname,
+                              void *const *params)
+{
+    UNIMPLEMENTED();
+    return false;
+}
+
 void RecordBindTextureTypeError(const Context *context,
                                 angle::EntryPoint entryPoint,
                                 TextureType target)

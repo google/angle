@@ -547,6 +547,65 @@ GL_MultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
 
+// GL_ANGLE_blob_cache
+void GL_APIENTRY GL_BlobCacheCallbacksANGLE(GLSETBLOBPROCANGLE set,
+                                            GLGETBLOBPROCANGLE get,
+                                            const void *userParam)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLBlobCacheCallbacksANGLE,
+          "context = %d, set = 0x%016" PRIxPTR ", get = 0x%016" PRIxPTR
+          ", userParam = 0x%016" PRIxPTR "",
+          CID(context), (uintptr_t)set, (uintptr_t)get, (uintptr_t)userParam);
+
+    if (context)
+    {
+        SCOPED_SHARE_CONTEXT_LOCK(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
+                                                context->getMutableErrorSetForValidation(),
+                                                angle::EntryPoint::GLBlobCacheCallbacksANGLE) &&
+              ValidateBlobCacheCallbacksANGLE(context, angle::EntryPoint::GLBlobCacheCallbacksANGLE,
+                                              set, get, userParam)));
+        if (isCallValid)
+        {
+            context->blobCacheCallbacks(set, get, userParam);
+        }
+        ANGLE_CAPTURE_GL(BlobCacheCallbacksANGLE, isCallValid, context, set, get, userParam);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+}
+
+void GL_APIENTRY GL_GetPointervANGLE(GLenum pname, void **params)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLGetPointervANGLE, "context = %d, pname = %s, params = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLESEnum::AllEnums, pname), (uintptr_t)params);
+
+    if (context)
+    {
+        SCOPED_SHARE_CONTEXT_LOCK(context);
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateGetPointervANGLE(context, angle::EntryPoint::GLGetPointervANGLE,
+                                                     pname, params));
+        if (isCallValid)
+        {
+            context->getPointerv(pname, params);
+        }
+        ANGLE_CAPTURE_GL(GetPointervANGLE, isCallValid, context, pname, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+}
+
 // GL_ANGLE_client_arrays
 
 // GL_ANGLE_clip_cull_distance
