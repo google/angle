@@ -392,7 +392,10 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
             // If not renderable, don't burn a slot on it.
             vkFormat = &renderer->getFormat(angle::FormatID::NONE);
         }
+    }
 
+    if (isExternal || imageFormat.isYUV)
+    {
         // Note from Vulkan spec: Since GL_OES_EGL_image_external does not require the same sampling
         // and conversion calculations as Vulkan does, achieving identical results between APIs may
         // not be possible on some implementations.
@@ -411,12 +414,12 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
                 : vk::YcbcrLinearFilterSupport::Unsupported;
 
         conversionDesc.update(
-            renderer, bufferFormatProperties.externalFormat,
+            renderer, isExternal ? bufferFormatProperties.externalFormat : 0,
             bufferFormatProperties.suggestedYcbcrModel, bufferFormatProperties.suggestedYcbcrRange,
             bufferFormatProperties.suggestedXChromaOffset,
             bufferFormatProperties.suggestedYChromaOffset, vk::kDefaultYCbCrChromaFilter,
-            bufferFormatProperties.samplerYcbcrConversionComponents, angle::FormatID::NONE,
-            linearFilterSupported);
+            bufferFormatProperties.samplerYcbcrConversionComponents,
+            isExternal ? angle::FormatID::NONE : imageFormat.id, linearFilterSupported);
     }
 
     const gl::TextureType textureType = AhbDescUsageToTextureType(ahbDescription, layerCount);
