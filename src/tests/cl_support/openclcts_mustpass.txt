@@ -127,3 +127,4 @@ buffers.mem_alloc_ref_flags
 buffers.buffer_read_long
 buffers.buffer_write_char
 profiling.copy_array_to_image
+multiples.context_four_contexts_same_device
