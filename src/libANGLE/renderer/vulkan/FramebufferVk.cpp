@@ -1365,6 +1365,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
             mCurrentFramebufferDesc.getWriteControlMode() != gl::SrgbWriteControlMode::Default;
         bool areChannelsBlitCompatible = true;
         bool areFormatsIdentical       = true;
+        bool colorAttachmentAlreadyInUse = false;
         for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
         {
             RenderTargetVk *drawRenderTarget = mRenderTargetCache.getColors()[colorIndexGL];
@@ -1375,6 +1376,12 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
                 AreSrcAndDstColorChannelsBlitCompatible(readRenderTarget, drawRenderTarget);
             areFormatsIdentical = areFormatsIdentical &&
                                   AreSrcAndDstFormatsIdentical(readRenderTarget, drawRenderTarget);
+
+            // If any color attachment of the draw framebuffer was already in use in the currently
+            // started renderpass, don't reuse the renderpass for blit.
+            colorAttachmentAlreadyInUse =
+                colorAttachmentAlreadyInUse || contextVk->isRenderPassStartedAndUsesImage(
+                                                   drawRenderTarget->getImageForRenderPass());
         }
 
         // Now that all flipping is done, adjust the offsets for resolve and prerotation
@@ -1412,12 +1419,6 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
             // renderer), so there's no chance for the resolve attachment to take advantage of the
             // data already being present in the tile.
 
-            // glBlitFramebuffer() needs to copy the read color attachment to all enabled
-            // attachments in the draw framebuffer, but Vulkan requires a 1:1 relationship for
-            // multisample attachments to resolve attachments in the render pass subpass.  Due to
-            // this, we currently only support using resolve attachments when there is a single draw
-            // attachment enabled.
-            //
             // Additionally, when resolving with a resolve attachment, the src and destination
             // offsets must match, the render area must match the resolve area, and there should be
             // no flipping or rotation.  Fortunately, in GLES the blit source and destination areas
@@ -1427,7 +1428,8 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
             bool canResolveWithSubpass = mState.getEnabledDrawBuffers().count() == 1 &&
                                          mCurrentFramebufferDesc.getLayerCount() == 1 &&
                                          contextVk->hasStartedRenderPassWithQueueSerial(
-                                             srcFramebufferVk->getLastRenderPassQueueSerial());
+                                             srcFramebufferVk->getLastRenderPassQueueSerial()) &&
+                                         !colorAttachmentAlreadyInUse;
 
             if (canResolveWithSubpass)
             {
@@ -1522,6 +1524,8 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
                 areChannelsBlitCompatible && mCurrentFramebufferDesc.getLayerCount() == 1 &&
                 contextVk->hasStartedRenderPassWithQueueSerial(
                     srcFramebufferVk->getLastRenderPassQueueSerial()) &&
+                !contextVk->isRenderPassStartedAndUsesImage(
+                    drawRenderTarget->getImageForRenderPass()) &&
                 noFlip && rotation == SurfaceRotation::Identity;
 
             if (canResolveWithSubpass)

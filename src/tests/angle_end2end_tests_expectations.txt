@@ -1580,13 +1580,19 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 // EGL_experimental_present_path_angle D3D11 failure
 347060511 D3D11 : EGLPresentPathD3D11.ClientBufferPresentPathFast/* = SKIP
 
+// Metal backend doesn't support different sized attachments.
+42261786 METAL : MultisampledRenderToTextureES3Test.MultipleLevelsMultisampleMRTDraw2DColor/* = SKIP
+
+// Test mirroring skqp#UnitTest_DMSAA_dst_read
+40644776 MAC METAL               : Texture2DTestES3.UnitTest_DMSAA_dst_read/* = SKIP
+40644776 WIN INTEL D3D11         : Texture2DTestES3.UnitTest_DMSAA_dst_read/* = SKIP
+40644776 WIN NVIDIA D3D11        : Texture2DTestES3.UnitTest_DMSAA_dst_read/* = SKIP
+40644776 ANDROID PIXEL4ORXL GLES : Texture2DTestES3.UnitTest_DMSAA_dst_read/* = SKIP
+
 // Slow tests, should appear last in this file
 42263645 : GLSLTest.VerifyMaxVertexUniformVectors* = TIMEOUT
 42263645 : GLSLTest.VerifyMaxFragmentUniformVectors* = TIMEOUT
 42264781 : MultithreadingTest* = TIMEOUT
-
-// Metal backend doesn't support different sized attachments.
-42261786 METAL : MultisampledRenderToTextureES3Test.MultipleLevelsMultisampleMRTDraw2DColor/* = SKIP
 
 // Please do not add expectations below this line,
 // so that TIMEOUT expectations above don't override more precise SKIP expectations
