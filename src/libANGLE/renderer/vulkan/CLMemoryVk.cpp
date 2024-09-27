@@ -5,13 +5,13 @@
 //
 // CLMemoryVk.cpp: Implements the class methods for CLMemoryVk.
 
-#include "libANGLE/renderer/vulkan/CLMemoryVk.h"
 #include <cstdint>
-#include "common/aligned_memory.h"
-#include "libANGLE/Error.h"
+
 #include "libANGLE/renderer/vulkan/CLContextVk.h"
+#include "libANGLE/renderer/vulkan/CLMemoryVk.h"
 #include "libANGLE/renderer/vulkan/vk_renderer.h"
 
+#include "libANGLE/renderer/CLMemoryImpl.h"
 #include "libANGLE/renderer/Format.h"
 #include "libANGLE/renderer/FormatID_autogen.h"
 
@@ -19,6 +19,7 @@
 #include "libANGLE/CLContext.h"
 #include "libANGLE/CLImage.h"
 #include "libANGLE/CLMemory.h"
+#include "libANGLE/Error.h"
 #include "libANGLE/cl_utils.h"
 
 namespace rx
@@ -36,15 +37,6 @@ CLMemoryVk::CLMemoryVk(const cl::Memory &memory)
 CLMemoryVk::~CLMemoryVk()
 {
     mContext->mAssociatedObjects->mMemories.erase(mMemory.getNative());
-}
-
-angle::Result CLMemoryVk::createSubBuffer(const cl::Buffer &buffer,
-                                          cl::MemFlags flags,
-                                          size_t size,
-                                          CLMemoryImpl::Ptr *subBufferOut)
-{
-    UNIMPLEMENTED();
-    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
 }
 
 VkBufferUsageFlags CLMemoryVk::getVkUsageFlags()
@@ -119,6 +111,25 @@ angle::Result CLMemoryVk::copyFrom(const void *src, size_t srcOffset, size_t siz
     return angle::Result::Continue;
 }
 
+// Create a sub-buffer from the given buffer object
+angle::Result CLMemoryVk::createSubBuffer(const cl::Buffer &buffer,
+                                          cl::MemFlags flags,
+                                          size_t size,
+                                          CLMemoryImpl::Ptr *subBufferOut)
+{
+    ASSERT(buffer.isSubBuffer());
+
+    CLBufferVk *bufferVk = new CLBufferVk(buffer);
+    if (!bufferVk)
+    {
+        ANGLE_CL_RETURN_ERROR(CL_OUT_OF_HOST_MEMORY);
+    }
+    ANGLE_TRY(bufferVk->create(nullptr));
+    *subBufferOut = CLMemoryImpl::Ptr(bufferVk);
+
+    return angle::Result::Continue;
+}
+
 CLBufferVk::CLBufferVk(const cl::Buffer &buffer) : CLMemoryVk(buffer)
 {
     if (buffer.isSubBuffer())
@@ -141,13 +152,13 @@ CLBufferVk::~CLBufferVk()
     mBuffer.destroy(mRenderer);
 }
 
-angle::Result CLBufferVk::createSubBuffer(const cl::Buffer &buffer,
-                                          cl::MemFlags flags,
-                                          size_t size,
-                                          CLMemoryImpl::Ptr *subBufferOut)
+vk::BufferHelper &CLBufferVk::getBuffer()
 {
-    UNIMPLEMENTED();
-    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+    if (isSubBuffer())
+    {
+        return getParent()->getBuffer();
+    }
+    return mBuffer;
 }
 
 angle::Result CLBufferVk::create(void *hostPtr)
@@ -177,7 +188,7 @@ angle::Result CLBufferVk::mapImpl()
 
     if (isSubBuffer())
     {
-        ANGLE_TRY(mParent->map(mMappedMemory, static_cast<size_t>(mBuffer.getOffset())));
+        ANGLE_TRY(mParent->map(mMappedMemory, getOffset()));
         return angle::Result::Continue;
     }
     ANGLE_TRY(mBuffer.map(mContext, &mMappedMemory));
