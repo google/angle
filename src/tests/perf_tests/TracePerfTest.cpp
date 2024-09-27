@@ -929,17 +929,6 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
 
     if (traceNameIs("cod_mobile"))
     {
-        // TODO: http://anglebug.com/42263541 Vulkan: GL_EXT_color_buffer_float not supported on
-        // Pixel 2 The COD:Mobile trace uses a framebuffer attachment with:
-        //   format = GL_RGB
-        //   type = GL_UNSIGNED_INT_10F_11F_11F_REV
-        // That combination is only renderable if GL_EXT_color_buffer_float is supported.
-        // It happens to not be supported on Pixel 2's Vulkan driver.
-        addExtensionPrerequisite("GL_EXT_color_buffer_float");
-
-        // TODO: http://anglebug.com/40096702 This extension is missing on older Intel drivers.
-        addExtensionPrerequisite("GL_OES_EGL_image_external");
-
         if (isIntelWin)
         {
             skipTest("http://anglebug.com/42265065 Flaky on Intel/windows");
