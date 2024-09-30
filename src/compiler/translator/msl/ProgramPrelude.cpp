@@ -1313,15 +1313,13 @@ struct ANGLE_TextureEnv
 PROGRAM_PRELUDE_DECLARE(functionConstants,
                         R"(
 #define ANGLE_SAMPLE_COMPARE_GRADIENT_INDEX   0
-#define ANGLE_SAMPLE_COMPARE_LOD_INDEX        1
-#define ANGLE_RASTERIZATION_DISCARD_INDEX     2
-#define ANGLE_MULTISAMPLED_RENDERING_INDEX    3
-#define ANGLE_DEPTH_WRITE_ENABLED_INDEX       4
-#define ANGLE_EMULATE_ALPHA_TO_COVERAGE_INDEX 5
-#define ANGLE_WRITE_HELPER_SAMPLE_MASK_INDEX  6
+#define ANGLE_RASTERIZATION_DISCARD_INDEX     1
+#define ANGLE_MULTISAMPLED_RENDERING_INDEX    2
+#define ANGLE_DEPTH_WRITE_ENABLED_INDEX       3
+#define ANGLE_EMULATE_ALPHA_TO_COVERAGE_INDEX 4
+#define ANGLE_WRITE_HELPER_SAMPLE_MASK_INDEX  5
 
 constant bool ANGLEUseSampleCompareGradient [[function_constant(ANGLE_SAMPLE_COMPARE_GRADIENT_INDEX)]];
-constant bool ANGLEUseSampleCompareLod      [[function_constant(ANGLE_SAMPLE_COMPARE_LOD_INDEX)]];
 constant bool ANGLERasterizerDisabled       [[function_constant(ANGLE_RASTERIZATION_DISCARD_INDEX)]];
 constant bool ANGLEMultisampledRendering    [[function_constant(ANGLE_MULTISAMPLED_RENDERING_INDEX)]];
 constant bool ANGLEDepthWriteEnabled        [[function_constant(ANGLE_DEPTH_WRITE_ENABLED_INDEX)]];
@@ -2102,18 +2100,12 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureLod(
     float const level)
 {
 #if defined(__METAL_IOS__) || (__METAL_VERSION__ >= 230)
-    if (ANGLEUseSampleCompareLod)
-    {
-        return env.texture->sample_compare(*env.sampler, coord.xy, coord.z, metal::level(level));
-    }
-    else
+    return env.texture->sample_compare(*env.sampler, coord.xy, coord.z, metal::level(level));
+#else
+    return env.texture->sample_compare(*env.sampler, coord.xy, coord.z, metal::level(0));
 #endif
-    {
-        return static_cast<float>(env.texture->sample(*env.sampler, coord.xy, metal::level(level)) > coord.z);
-    }
 }
 )",
-                        functionConstants(),
                         textureEnv())
 
 PROGRAM_PRELUDE_DECLARE(textureLod_2DArray,
@@ -2166,18 +2158,12 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureLodOffset(
     int2 const offset)
 {
 #if defined(__METAL_IOS__) || (__METAL_VERSION__ >= 230)
-    if (ANGLEUseSampleCompareLod)
-    {
-        return env.texture->sample_compare(*env.sampler, coord.xy, coord.z, metal::level(level), offset);
-    }
-    else
+    return env.texture->sample_compare(*env.sampler, coord.xy, coord.z, metal::level(level), offset);
+#else
+    return env.texture->sample_compare(*env.sampler, coord.xy, coord.z, metal::level(0), offset);
 #endif
-    {
-        return static_cast<float>(env.texture->sample(*env.sampler, coord.xy, metal::level(level), offset) > coord.z);
-    }
 }
 )",
-                        functionConstants(),
                         textureEnv())
 
 PROGRAM_PRELUDE_DECLARE(textureLodOffset_2DArray,
@@ -2574,18 +2560,12 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjLod(
     float const level)
 {
 #if defined(__METAL_IOS__) || (__METAL_VERSION__ >= 230)
-    if (ANGLEUseSampleCompareLod)
-    {
-        return env.texture->sample_compare(*env.sampler, coord.xy/coord.w, coord.z/coord.w, metal::level(level));
-    }
-    else
+    return env.texture->sample_compare(*env.sampler, coord.xy/coord.w, coord.z/coord.w, metal::level(level));
+#else
+    return env.texture->sample_compare(*env.sampler, coord.xy/coord.w, coord.z/coord.w, metal::level(0));
 #endif
-    {
-        return static_cast<float>(env.texture->sample(*env.sampler, coord.xy/coord.w, metal::level(level)) > coord.z/coord.w);
-    }
 }
 )",
-                        functionConstants(),
                         textureEnv())
 
 PROGRAM_PRELUDE_DECLARE(textureProjLod_3D,
@@ -2638,18 +2618,12 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjLodOffset(
     int2 const offset)
 {
 #if defined(__METAL_IOS__) || (__METAL_VERSION__ >= 230)
-    if (ANGLEUseSampleCompareLod)
-    {
-        return env.texture->sample_compare(*env.sampler, coord.xy/coord.w, coord.z/coord.w, metal::level(level), offset);
-    }
-    else
+    return env.texture->sample_compare(*env.sampler, coord.xy/coord.w, coord.z/coord.w, metal::level(level), offset);
+#else
+    return env.texture->sample_compare(*env.sampler, coord.xy/coord.w, coord.z/coord.w, metal::level(0), offset);
 #endif
-    {
-        return static_cast<float>(env.texture->sample(*env.sampler, coord.xy/coord.w, metal::level(level), offset) > coord.z/coord.w);
-    }
 }
 )",
-                        functionConstants(),
                         textureEnv())
 
 PROGRAM_PRELUDE_DECLARE(textureProjLodOffset_3D,

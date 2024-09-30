@@ -36,7 +36,6 @@ enum class Feature
     AllowRenderpassWithoutAttachment,
     AllowRuntimeSamplerCompareMode,
     AllowSamplerCompareGradient,
-    AllowSamplerCompareLod,
     AllowSeparateDepthStencilBuffers,
     AllowTranslateUniformBlockToStructuredBuffer,
     AlwaysCallUseProgramAfterLink,

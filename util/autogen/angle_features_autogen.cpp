@@ -36,7 +36,6 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::AllowRenderpassWithoutAttachment, "allowRenderpassWithoutAttachment"},
     {Feature::AllowRuntimeSamplerCompareMode, "allowRuntimeSamplerCompareMode"},
     {Feature::AllowSamplerCompareGradient, "allowSamplerCompareGradient"},
-    {Feature::AllowSamplerCompareLod, "allowSamplerCompareLod"},
     {Feature::AllowSeparateDepthStencilBuffers, "allowSeparateDepthStencilBuffers"},
     {Feature::AllowTranslateUniformBlockToStructuredBuffer, "allowTranslateUniformBlockToStructuredBuffer"},
     {Feature::AlwaysCallUseProgramAfterLink, "alwaysCallUseProgramAfterLink"},
