@@ -2177,18 +2177,6 @@ class ImageHelper final : public Resource, public angle::Subject
                                               uint32_t baseArrayLayer,
                                               uint32_t layerCount,
                                               VkImageUsageFlags imageUsageFlags) const;
-    angle::Result initLayerImageViewWithSrgbWriteControlMode(
-        Context *context,
-        gl::TextureType textureType,
-        VkImageAspectFlags aspectMask,
-        const gl::SwizzleState &swizzleMap,
-        ImageView *imageViewOut,
-        LevelIndex baseMipLevelVk,
-        uint32_t levelCount,
-        uint32_t baseArrayLayer,
-        uint32_t layerCount,
-        gl::SrgbWriteControlMode mode,
-        VkImageUsageFlags imageUsageFlags) const;
     angle::Result initLayerImageViewWithYuvModeOverride(Context *context,
                                                         gl::TextureType textureType,
                                                         VkImageAspectFlags aspectMask,
@@ -3453,7 +3441,6 @@ class ImageViewHelper final : angle::NonCopyable
                                         LevelIndex levelVk,
                                         uint32_t layer,
                                         uint32_t layerCount,
-                                        gl::SrgbWriteControlMode mode,
                                         const ImageView **imageViewOut);
 
     // Creates a draw view with a single layer of the level.
@@ -3462,14 +3449,6 @@ class ImageViewHelper final : angle::NonCopyable
                                              LevelIndex levelVk,
                                              uint32_t layer,
                                              const ImageView **imageViewOut);
-    // Creates a draw view with srgb write control mode override for a single layer of the level.
-    angle::Result getLevelLayerDrawImageViewWithSrgbWriteControlMode(
-        Context *context,
-        const ImageHelper &image,
-        LevelIndex levelVk,
-        uint32_t layer,
-        gl::SrgbWriteControlMode mode,
-        const ImageView **imageViewOut);
 
     // Creates a fragment shading rate view.
     angle::Result initFragmentShadingRateView(ContextVk *contextVk, ImageHelper *image);
@@ -3488,6 +3467,10 @@ class ImageViewHelper final : angle::NonCopyable
         LayerMode layerMode,
         ImageViewColorspace readColorspace) const;
 
+    ImageSubresourceRange getSubresourceDrawRange(gl::LevelIndex level,
+                                                  uint32_t layer,
+                                                  LayerMode layerMode) const;
+
     bool isImageViewGarbageEmpty() const;
 
     void release(Renderer *renderer, const ResourceUse &use);
@@ -3502,6 +3485,16 @@ class ImageViewHelper final : angle::NonCopyable
                (image.getActualFormat().isSRGB &&
                 mReadColorspace == vk::ImageViewColorspace::Linear);
     }
+
+    bool hasColorspaceOverrideForWrite(const ImageHelper &image) const
+    {
+        ASSERT(image.valid());
+        return (!image.getActualFormat().isSRGB &&
+                mWriteColorspace == vk::ImageViewColorspace::SRGB) ||
+               (image.getActualFormat().isSRGB &&
+                mWriteColorspace == vk::ImageViewColorspace::Linear);
+    }
+    angle::FormatID getColorspaceOverrideFormatForWrite(angle::FormatID format) const;
     void updateStaticTexelFetch(const ImageHelper &image, bool staticTexelFetchAccess) const
     {
         if (mColorspaceState.hasStaticTexelFetchAccess != staticTexelFetchAccess)
@@ -3523,6 +3516,15 @@ class ImageViewHelper final : angle::NonCopyable
         if (mColorspaceState.srgbOverride != srgbOverride)
         {
             mColorspaceState.srgbOverride = srgbOverride;
+            updateColorspace(image);
+        }
+    }
+    void updateSrgbWiteControlMode(const ImageHelper &image,
+                                   gl::SrgbWriteControlMode srgbWriteControl) const
+    {
+        if (mColorspaceState.srgbWriteControl != srgbWriteControl)
+        {
+            mColorspaceState.srgbWriteControl = srgbWriteControl;
             updateColorspace(image);
         }
     }
@@ -3572,6 +3574,13 @@ class ImageViewHelper final : angle::NonCopyable
         return imageViewVector[mCurrentBaseMaxLevelHash];
     }
 
+    angle::Result getLevelLayerDrawImageViewImpl(Context *context,
+                                                 const ImageHelper &image,
+                                                 LevelIndex levelVk,
+                                                 uint32_t layer,
+                                                 uint32_t layerCount,
+                                                 ImageView *imageViewOut);
+
     // Creates views with multiple layers and levels.
     angle::Result initReadViewsImpl(ContextVk *contextVk,
                                     gl::TextureType viewType,
@@ -3607,6 +3616,7 @@ class ImageViewHelper final : angle::NonCopyable
     uint8_t mCurrentBaseMaxLevelHash;
 
     mutable ImageViewColorspace mReadColorspace;
+    mutable ImageViewColorspace mWriteColorspace;
     mutable angle::ColorspaceState mColorspaceState;
 
     // Read views (one per [base, max] level range)
@@ -3632,12 +3642,6 @@ class ImageViewHelper final : angle::NonCopyable
     // Serial for the image view set. getSubresourceSerial combines it with subresource info.
     ImageOrBufferViewSerial mImageViewSerial;
 };
-
-ImageSubresourceRange MakeImageSubresourceDrawRange(gl::LevelIndex level,
-                                                    uint32_t layer,
-                                                    LayerMode layerMode,
-                                                    gl::SrgbWriteControlMode srgbWriteControlMode,
-                                                    ImageViewColorspace readColorspace);
 
 class BufferViewHelper final : public Resource
 {

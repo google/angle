@@ -564,7 +564,6 @@ void main()
                                           size_t height,
                                           GLenum internalFormat,
                                           const EGLint *attribs,
-                                          const GLubyte data[4],
                                           GLRenderbuffer &sourceRenderbuffer,
                                           EGLImageKHR *outSourceImage)
     {
@@ -572,17 +571,6 @@ void main()
         glBindRenderbuffer(GL_RENDERBUFFER, sourceRenderbuffer);
         glRenderbufferStorage(GL_RENDERBUFFER, internalFormat, static_cast<GLsizei>(width),
                               static_cast<GLsizei>(height));
-
-        // Create a framebuffer and clear it to set the data
-        GLFramebuffer framebuffer;
-        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
-                                  sourceRenderbuffer);
-
-        glClearColor(data[0] / 255.0f, data[1] / 255.0f, data[2] / 255.0f, data[3] / 255.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        ASSERT_GL_NO_ERROR();
 
         // Create an image from the source renderbuffer
         EGLWindow *window = getEGLWindow();
@@ -1059,10 +1047,35 @@ void main()
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
                                   renderbuffer);
 
-        // Expect that the rendered quad's color is the same as the reference color with a tolerance
-        // of 1
+        // Expect renderbuffer to match referenceColor with a tolerance of 1.
         EXPECT_PIXEL_NEAR(0, 0, referenceColor[0], referenceColor[1], referenceColor[2],
                           referenceColor[3], 1);
+    }
+
+    void verifyResultsRenderbufferWithClearAndDraw(GLuint texture,
+                                                   GLuint renderbuffer,
+                                                   GLubyte clearColor[4],
+                                                   GLubyte referenceColor[4])
+    {
+        // Bind the renderbuffer to a framebuffer
+        GLFramebuffer framebuffer;
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                                  renderbuffer);
+
+        // Clear the renderbuffer with the clear color
+        glClearColor(clearColor[0] / 255.0f, clearColor[1] / 255.0f, clearColor[2] / 255.0f,
+                     clearColor[3] / 255.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        // Expect renderbuffer to match referenceColor with a tolerance of 1.
+        EXPECT_PIXEL_NEAR(0, 0, referenceColor[0], referenceColor[1], referenceColor[2],
+                          referenceColor[3], 1);
+
+        // Sample source texture and draw onto renderbuffer and expect rendered quad's color
+        // is the same as the reference color with a tolerance of 1
+        verifyResultsTexture(texture, referenceColor, GL_TEXTURE_2D, mTextureProgram,
+                             mTextureUniformLocation);
     }
 
     enum class AHBVerifyRegion
@@ -5172,9 +5185,6 @@ TEST_P(ImageTest, Source2DTargetRenderbuffer_Colorspace)
 {
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
     ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
-    // Need to add support for VK_KHR_image_format_list to Renderbuffer:
-    // http://anglebug.com/40644776
-    ANGLE_SKIP_TEST_IF(IsVulkan());
     Source2DTargetRenderbuffer_helper(kColorspaceAttribs);
 }
 
@@ -5184,19 +5194,29 @@ void ImageTest::Source2DTargetRenderbuffer_helper(const EGLint *attribs)
     EGLWindow *window = getEGLWindow();
     ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
 
-    // Create the Image
-    GLTexture source;
-    EGLImageKHR image;
-    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs, kLinearColor, source,
-                                  &image);
+    // Create sampling texture
+    GLTexture sampleTexture;
+    glBindTexture(GL_TEXTURE_2D, sampleTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, kLinearColor);
+    // Disable mipmapping
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
 
-    // Create the target
-    GLRenderbuffer target;
-    createEGLImageTargetRenderbuffer(image, target);
+    // Create the attachment texture and image
+    GLTexture attachmentTexture;
+    EGLImageKHR image;
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs, nullptr,
+                                  attachmentTexture, &image);
+
+    // Create the renderbuffer
+    GLRenderbuffer renderbuffer;
+    createEGLImageTargetRenderbuffer(image, renderbuffer);
 
     // Verify that the render buffer has the expected color
-    verifyResultsRenderbuffer(target,
-                              getExpected2DColorForAttribList(attribs, EglImageUsage::Rendering));
+    verifyResultsRenderbufferWithClearAndDraw(
+        sampleTexture, renderbuffer, kLinearColor,
+        getExpected2DColorForAttribList(attribs, EglImageUsage::Rendering));
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);
@@ -5256,9 +5276,6 @@ TEST_P(ImageTest, SourceNativeClientBufferTargetRenderbuffer_Colorspace)
 {
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
     ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
-    // Need to add support for VK_KHR_image_format_list to Renderbuffer:
-    // http://anglebug.com/40644776
-    ANGLE_SKIP_TEST_IF(IsVulkan());
     SourceNativeClientBufferTargetRenderbuffer_helper(kColorspaceAttribs);
 }
 
@@ -5274,7 +5291,7 @@ void ImageTest::SourceNativeClientBufferTargetRenderbuffer_helper(const EGLint *
     // EGL_ANDROID_create_native_client_buffer API
     EGLImageKHR image = EGL_NO_IMAGE_KHR;
     createEGLImageANWBClientBufferSource(1, 1, 1, kNativeClientBufferAttribs_RGBA8_Renderbuffer,
-                                         attribs, {{kLinearColor, 4}}, &image);
+                                         attribs, {{kSrgbColor, 4}}, &image);
     // We are locking AHB to initialize AHB with data. The lock is allowed to fail, and may fail if
     // driver decided to allocate with framebuffer compression enabled.
     ANGLE_SKIP_TEST_IF(image == EGL_NO_IMAGE_KHR);
@@ -5282,6 +5299,15 @@ void ImageTest::SourceNativeClientBufferTargetRenderbuffer_helper(const EGLint *
     // Create the target
     GLRenderbuffer target;
     createEGLImageTargetRenderbuffer(image, target);
+
+    // Create a framebuffer with renderbuffer attachment and clear it
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, target);
+    glClearColor(kLinearColor[0] / 255.0f, kLinearColor[1] / 255.0f, kLinearColor[2] / 255.0f,
+                 kLinearColor[3] / 255.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
 
     // Verify that the render buffer has the expected color
     verifyResultsRenderbuffer(target,
@@ -5410,9 +5436,6 @@ TEST_P(ImageTest, SourceCubeTargetRenderbuffer_Colorspace)
 {
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
     ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
-    // Need to add support for VK_KHR_image_format_list to Renderbuffer:
-    // http://anglebug.com/40644776
-    ANGLE_SKIP_TEST_IF(IsVulkan());
     SourceCubeTargetRenderbuffer_helper(kColorspaceAttribs);
 }
 
@@ -5430,12 +5453,22 @@ void ImageTest::SourceCubeTargetRenderbuffer_helper(const EGLint *attribs)
         GLTexture source;
         EGLImageKHR image;
         createEGLImageCubemapTextureSource(
-            1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs, reinterpret_cast<uint8_t *>(kLinearColorCube),
+            1, 1, GL_RGBA, GL_UNSIGNED_BYTE, attribs, reinterpret_cast<uint8_t *>(kSrgbColorCube),
             sizeof(GLubyte) * 4, EGL_GL_TEXTURE_CUBE_MAP_POSITIVE_X_KHR + faceIdx, source, &image);
 
         // Create the target
         GLRenderbuffer target;
         createEGLImageTargetRenderbuffer(image, target);
+
+        // Create a framebuffer with renderbuffer attachment and clear it
+        GLFramebuffer framebuffer;
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, target);
+        glClearColor(
+            kLinearColorCube[faceIdx * 4 + 0] / 255.0f, kLinearColorCube[faceIdx * 4 + 1] / 255.0f,
+            kLinearColorCube[faceIdx * 4 + 2] / 255.0f, kLinearColorCube[faceIdx * 4 + 3] / 255.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        ASSERT_GL_NO_ERROR();
 
         // Verify that the render buffer has the expected color
         verifyResultsRenderbuffer(target, &getExpectedCubeColorForAttribList(
@@ -5582,9 +5615,6 @@ TEST_P(ImageTest, Source3DTargetRenderbuffer_Colorspace)
 {
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
     ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
-    // Need to add support for VK_KHR_image_format_list to Renderbuffer:
-    // http://anglebug.com/40644776
-    ANGLE_SKIP_TEST_IF(IsVulkan());
     Source3DTargetRenderbuffer_helper(colorspace3DAttribs);
 }
 
@@ -5609,12 +5639,22 @@ void ImageTest::Source3DTargetRenderbuffer_helper(EGLint *attribs)
         EGLImageKHR image;
 
         attribs[kTextureZOffsetAttributeIndex] = static_cast<EGLint>(layer);
-        createEGLImage3DTextureSource(1, 1, depth, GL_RGBA, GL_UNSIGNED_BYTE, attribs,
-                                      kLinearColor3D, source, &image);
+        createEGLImage3DTextureSource(1, 1, depth, GL_RGBA, GL_UNSIGNED_BYTE, attribs, kSrgbColor3D,
+                                      source, &image);
 
         // Create the target
         GLRenderbuffer target;
         createEGLImageTargetRenderbuffer(image, target);
+
+        // Create a framebuffer with renderbuffer attachment and clear it
+        GLFramebuffer framebuffer;
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, target);
+        glClearColor(kLinearColor3D[layer * 4 + 0] / 255.0f, kLinearColor3D[layer * 4 + 1] / 255.0f,
+                     kLinearColor3D[layer * 4 + 2] / 255.0f,
+                     kLinearColor3D[layer * 4 + 3] / 255.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        ASSERT_GL_NO_ERROR();
 
         // Verify that the render buffer has the expected color
         verifyResultsRenderbuffer(
@@ -5736,7 +5776,16 @@ void ImageTest::SourceRenderbufferTargetTexture_helper(const EGLint *attribs)
     // Create the Image
     GLRenderbuffer source;
     EGLImageKHR image;
-    createEGLImageRenderbufferSource(1, 1, GL_RGBA8_OES, attribs, kSrgbColor, source, &image);
+    createEGLImageRenderbufferSource(1, 1, GL_RGBA8_OES, attribs, source, &image);
+
+    // Create a framebuffer with renderbuffer attachment and clear it
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, source);
+    glClearColor(kSrgbColor[0] / 255.0f, kSrgbColor[1] / 255.0f, kSrgbColor[2] / 255.0f,
+                 kSrgbColor[3] / 255.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
 
     // Create the target
     GLTexture target;
@@ -5772,7 +5821,16 @@ void ImageTest::SourceRenderbufferTargetTextureExternal_helper(const EGLint *att
     // Create the Image
     GLRenderbuffer source;
     EGLImageKHR image;
-    createEGLImageRenderbufferSource(1, 1, GL_RGBA8_OES, attribs, kSrgbColor, source, &image);
+    createEGLImageRenderbufferSource(1, 1, GL_RGBA8_OES, attribs, source, &image);
+
+    // Create a framebuffer with renderbuffer attachment and clear it
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, source);
+    glClearColor(kSrgbColor[0] / 255.0f, kSrgbColor[1] / 255.0f, kSrgbColor[2] / 255.0f,
+                 kSrgbColor[3] / 255.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
 
     // Create the target
     GLTexture target;
@@ -5806,7 +5864,16 @@ void ImageTest::SourceRenderbufferTargetTextureExternalESSL3_helper(const EGLint
     // Create the Image
     GLRenderbuffer source;
     EGLImageKHR image;
-    createEGLImageRenderbufferSource(1, 1, GL_RGBA8_OES, attribs, kSrgbColor, source, &image);
+    createEGLImageRenderbufferSource(1, 1, GL_RGBA8_OES, attribs, source, &image);
+
+    // Create a framebuffer with renderbuffer attachment and clear it
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, source);
+    glClearColor(kSrgbColor[0] / 255.0f, kSrgbColor[1] / 255.0f, kSrgbColor[2] / 255.0f,
+                 kSrgbColor[3] / 255.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
 
     // Create the target
     GLTexture target;
@@ -5828,9 +5895,6 @@ TEST_P(ImageTest, SourceRenderbufferTargetRenderbuffer_Colorspace)
 {
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_sRGB"));
     ANGLE_SKIP_TEST_IF(!hasImageGLColorspaceExt());
-    // Need to add support for VK_KHR_image_format_list to Renderbuffer:
-    // http://anglebug.com/40644776
-    ANGLE_SKIP_TEST_IF(IsVulkan());
     SourceRenderbufferTargetRenderbuffer_helper(kColorspaceAttribs);
 }
 
@@ -5842,11 +5906,20 @@ void ImageTest::SourceRenderbufferTargetRenderbuffer_helper(const EGLint *attrib
     // Create the Image
     GLRenderbuffer source;
     EGLImageKHR image;
-    createEGLImageRenderbufferSource(1, 1, GL_RGBA8_OES, attribs, kLinearColor, source, &image);
+    createEGLImageRenderbufferSource(1, 1, GL_RGBA8_OES, attribs, source, &image);
 
     // Create the target
     GLRenderbuffer target;
     createEGLImageTargetRenderbuffer(image, target);
+
+    // Create a framebuffer with renderbuffer attachment and clear it
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, target);
+    glClearColor(kLinearColor[0] / 255.0f, kLinearColor[1] / 255.0f, kLinearColor[2] / 255.0f,
+                 kLinearColor[3] / 255.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
 
     // Verify that the render buffer has the expected color
     verifyResultsRenderbuffer(target,

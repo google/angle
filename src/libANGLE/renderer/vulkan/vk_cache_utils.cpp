@@ -357,18 +357,6 @@ void DeriveRenderingInfo(Renderer *renderer,
 
         angle::FormatID attachmentFormatID = desc[colorIndexGL];
         ASSERT(attachmentFormatID != angle::FormatID::NONE);
-
-        // If this render pass uses EXT_srgb_write_control, we need to override the format to its
-        // linear counterpart. Formats that cannot be reinterpreted are exempt from this
-        // requirement.
-        angle::FormatID linearFormat = rx::ConvertToLinear(attachmentFormatID);
-        if (linearFormat != angle::FormatID::NONE)
-        {
-            if (desc.getSRGBWriteControlMode() == gl::SrgbWriteControlMode::Linear)
-            {
-                attachmentFormatID = linearFormat;
-            }
-        }
         VkFormat attachmentFormat = GetVkFormatFromFormatID(attachmentFormatID);
 
         const bool isYUVExternalFormat = vk::IsYUVExternalFormat(attachmentFormatID);
@@ -7480,16 +7468,6 @@ angle::Result RenderPassCache::MakeRenderPass(vk::Context *context,
 
         angle::FormatID attachmentFormatID = desc[colorIndexGL];
         ASSERT(attachmentFormatID != angle::FormatID::NONE);
-
-        // If this render pass uses EXT_srgb_write_control, we need to override the format to its
-        // linear counterpart. Formats that cannot be reinterpreted are exempt from this
-        // requirement.
-        angle::FormatID linearFormat = rx::ConvertToLinear(attachmentFormatID);
-        if (linearFormat != angle::FormatID::NONE &&
-            desc.getSRGBWriteControlMode() == gl::SrgbWriteControlMode::Linear)
-        {
-            attachmentFormatID = linearFormat;
-        }
 
         bool isYUVExternalFormat = vk::IsYUVExternalFormat(attachmentFormatID);
         if (isYUVExternalFormat && renderer->nullColorAttachmentWithExternalFormatResolve())

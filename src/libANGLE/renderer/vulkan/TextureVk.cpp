@@ -3157,9 +3157,9 @@ RenderTargetVk *TextureVk::getMultiLayerRenderTarget(ContextVk *contextVk,
                                                      GLuint layerIndex,
                                                      GLuint layerCount)
 {
-    vk::ImageSubresourceRange range = vk::MakeImageSubresourceDrawRange(
-        level, layerIndex, vk::GetLayerMode(*mImage, layerCount), gl::SrgbWriteControlMode::Default,
-        mImageView.getColorspaceForRead());
+    vk::ImageViewHelper *imageViews = &getImageViews();
+    vk::ImageSubresourceRange range = imageViews->getSubresourceDrawRange(
+        level, layerIndex, vk::GetLayerMode(*mImage, layerCount));
 
     auto iter = mMultiLayerRenderTargets.find(range);
     if (iter != mMultiLayerRenderTargets.end())
@@ -3175,9 +3175,8 @@ RenderTargetVk *TextureVk::getMultiLayerRenderTarget(ContextVk *contextVk,
         rt = std::make_unique<RenderTargetVk>();
     }
 
-    rt->init(mImage, &getImageViews(), nullptr, nullptr, mImageSiblingSerial,
-             getNativeImageLevel(level), getNativeImageLayer(layerIndex), layerCount,
-             RenderTargetTransience::Default);
+    rt->init(mImage, imageViews, nullptr, nullptr, mImageSiblingSerial, getNativeImageLevel(level),
+             getNativeImageLayer(layerIndex), layerCount, RenderTargetTransience::Default);
 
     return rt.get();
 }

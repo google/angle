@@ -1606,10 +1606,10 @@ struct ImageSubresourceRange
     // which is usually 1, except for multiview in which case it can be up to
     // gl::IMPLEMENTATION_MAX_2D_ARRAY_TEXTURE_LAYERS.
     uint32_t layerMode : 3;
-    // For draw views: Values from gl::SrgbWriteControlMode.
-    uint32_t srgbMode : 1;
     // For reads: Values are either ImageViewColorspace::Linear or ImageViewColorspace::SRGB
     uint32_t readColorspace : 1;
+    // For writes: Values are either ImageViewColorspace::Linear or ImageViewColorspace::SRGB
+    uint32_t writeColorspace : 1;
 
     static_assert(gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS < (1 << 5),
                   "Not enough bits for level count");
@@ -1625,7 +1625,7 @@ inline bool operator==(const ImageSubresourceRange &a, const ImageSubresourceRan
 {
     return a.level == b.level && a.levelCount == b.levelCount && a.layer == b.layer &&
            a.layerMode == b.layerMode && a.readColorspace == b.readColorspace &&
-           a.srgbMode == b.srgbMode;
+           a.writeColorspace == b.writeColorspace;
 }
 
 constexpr ImageSubresourceRange kInvalidImageSubresourceRange = {0, 0, 0, 0, 0, 0};
