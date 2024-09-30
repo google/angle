@@ -977,7 +977,7 @@ deps = {
   },
 
   'third_party/vulkan-deps': {
-    'url': Var('chromium_git') + '/vulkan-deps@4c709b68a2c61a03cecbf60fbb9518ab76e1c39a',
+    'url': Var('chromium_git') + '/vulkan-deps@223523f05dc03140b40cf71915f74311207c3a6e',
     'condition': 'not build_with_chromium',
   },
 
@@ -987,7 +987,7 @@ deps = {
   },
 
   'third_party/lunarg-vulkantools/src': {
-    'url': '{chromium_git}/external/github.com/LunarG/VulkanTools@74bbd88af4c48ac1244be6bc4e579e0aa34797a4',
+    'url': '{chromium_git}/external/github.com/LunarG/VulkanTools@b2b32340f481d2c024e96a39aa26b7391684e554',
     'condition': 'not build_with_chromium',
   },
 
@@ -1002,7 +1002,7 @@ deps = {
   },
 
   'third_party/spirv-tools/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Tools@b1ad37b175940db03ee4e1fee9a14cc349281ec1',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Tools@d9c1aee6a609c6d6ec1caab4def80720c44bd08d',
     'condition': 'not build_with_chromium',
   },
 
@@ -1012,12 +1012,12 @@ deps = {
   },
 
   'third_party/vulkan-loader/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Loader@4eaa6df4250693b4a2b654ca2464b25a299d94fe',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Loader@56dd9f2344a7be1d218a54549a4a5e39c1e85073',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/vulkan-tools/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Tools@05e068941b49277189d0bbcdc5f722724eb3c5a3',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Tools@2020cec4111c87d85b167d583180b839f0c736c5',
     'condition': 'not build_with_chromium',
   },
 
@@ -1027,7 +1027,7 @@ deps = {
   },
 
   'third_party/vulkan-validation-layers/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@699302d21c532c091e3e6a98f0bb6697668d79f7',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@8bb1ad96a6204dd85b4af293eddc76a6f6ea3a54',
     'condition': 'not build_with_chromium',
   },
 
