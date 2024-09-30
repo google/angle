@@ -195,6 +195,7 @@ class ProgramPrelude : public TIntermTraverser
     void textureBias_2DArray();
     void textureBias_2DShadow();
     void textureBias_CubeShadow();
+    void textureBias_2DArrayShadow();
     void texture2D();
     void texture2DBias();
     void texture2DGradEXT();
@@ -233,18 +234,23 @@ class ProgramPrelude : public TIntermTraverser
     void textureLod_Cube();
     void textureLod_2DArray();
     void textureLod_2DShadow();
+    void textureLod_CubeShadow();
+    void textureLod_2DArrayShadow();
     void textureLodOffset_2D();
     void textureLodOffset_3D();
     void textureLodOffset_2DArray();
     void textureLodOffset_2DShadow();
+    void textureLodOffset_2DArrayShadow();
     void textureOffset_2D();
     void textureOffset_3D();
     void textureOffset_2DArray();
     void textureOffset_2DShadow();
+    void textureOffset_2DArrayShadow();
     void textureOffsetBias_2D();
     void textureOffsetBias_3D();
     void textureOffsetBias_2DArray();
     void textureOffsetBias_2DShadow();
+    void textureOffsetBias_2DArrayShadow();
     void textureProj_2D_float3();
     void textureProj_2D_float4();
     void textureProj_2DShadow();
@@ -1548,6 +1554,22 @@ ANGLE_ALWAYS_INLINE auto ANGLE_texture(
 )",
                         textureEnv())
 
+PROGRAM_PRELUDE_DECLARE(textureBias_2DArrayShadow,
+                        R"(
+ANGLE_ALWAYS_INLINE auto ANGLE_texture(
+    thread ANGLE_TextureEnv<metal::depth2d_array<float>> &env,
+    metal::float4 const coord,
+    float const bias)
+{
+#if defined(__METAL_IOS__) || (__METAL_VERSION__ >= 230)
+    return env.texture->sample_compare(*env.sampler, coord.xy, uint32_t(metal::round(coord.z)), coord.w, metal::bias(bias));
+#else
+    return env.texture->sample_compare(*env.sampler, coord.xy, uint32_t(metal::round(coord.z)), coord.w);
+#endif
+}
+)",
+                        textureEnv())
+
 PROGRAM_PRELUDE_DECLARE(texture_CubeShadow,
                         R"(
 ANGLE_ALWAYS_INLINE auto ANGLE_texture(
@@ -2121,6 +2143,38 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureLod(
 )",
                         textureEnv())
 
+PROGRAM_PRELUDE_DECLARE(textureLod_CubeShadow,
+                        R"(
+ANGLE_ALWAYS_INLINE auto ANGLE_textureLod(
+    thread ANGLE_TextureEnv<metal::depthcube<float>> &env,
+    metal::float4 const coord,
+    float const level)
+{
+#if defined(__METAL_IOS__) || (__METAL_VERSION__ >= 230)
+    return env.texture->sample_compare(*env.sampler, coord.xyz, coord.w, metal::level(level));
+#else
+    return env.texture->sample_compare(*env.sampler, coord.xyz, coord.w, metal::level(0));
+#endif
+}
+)",
+                        textureEnv())
+
+PROGRAM_PRELUDE_DECLARE(textureLod_2DArrayShadow,
+                        R"(
+ANGLE_ALWAYS_INLINE auto ANGLE_textureLod(
+    thread ANGLE_TextureEnv<metal::depth2d_array<float>> &env,
+    metal::float4 const coord,
+    float const level)
+{
+#if defined(__METAL_IOS__) || (__METAL_VERSION__ >= 230)
+    return env.texture->sample_compare(*env.sampler, coord.xy, uint32_t(metal::round(coord.z)), coord.w, metal::level(level));
+#else
+    return env.texture->sample_compare(*env.sampler, coord.xy, uint32_t(metal::round(coord.z)), coord.w, metal::level(0));
+#endif
+}
+)",
+                        textureEnv())
+
 PROGRAM_PRELUDE_DECLARE(textureLodOffset_2D,
                         R"(
 template <typename T>
@@ -2176,6 +2230,23 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureLodOffset(
     metal::int2 const offset)
 {
     return env.texture->sample(*env.sampler, coord.xy, uint32_t(metal::round(coord.z)), metal::level(level), offset);
+}
+)",
+                        textureEnv())
+
+PROGRAM_PRELUDE_DECLARE(textureLodOffset_2DArrayShadow,
+                        R"(
+ANGLE_ALWAYS_INLINE auto ANGLE_textureLodOffset(
+    thread ANGLE_TextureEnv<metal::depth2d_array<float>> &env,
+    metal::float4 const coord,
+    float const level,
+    metal::int2 const offset)
+{
+#if defined(__METAL_IOS__) || (__METAL_VERSION__ >= 230)
+    return env.texture->sample_compare(*env.sampler, coord.xy, uint32_t(metal::round(coord.z)), coord.w, metal::level(level), offset);
+#else
+    return env.texture->sample_compare(*env.sampler, coord.xy, uint32_t(metal::round(coord.z)), coord.w, metal::level(0), offset);
+#endif
 }
 )",
                         textureEnv())
@@ -2285,6 +2356,35 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset(
     return env.texture->sample_compare(*env.sampler, coord.xy, coord.z, metal::bias(bias), offset);
 #else
     return env.texture->sample_compare(*env.sampler, coord.xy, coord.z, offset);
+#endif
+}
+)",
+                        textureEnv())
+
+PROGRAM_PRELUDE_DECLARE(textureOffset_2DArrayShadow,
+                        R"(
+ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset(
+    thread ANGLE_TextureEnv<metal::depth2d_array<float>> &env,
+    metal::float4 const coord,
+    metal::int2 const offset)
+{
+    return env.texture->sample_compare(*env.sampler, coord.xy, uint32_t(metal::round(coord.z)), coord.w, offset);
+}
+)",
+                        textureEnv())
+
+PROGRAM_PRELUDE_DECLARE(textureOffsetBias_2DArrayShadow,
+                        R"(
+ANGLE_ALWAYS_INLINE auto ANGLE_textureOffset(
+    thread ANGLE_TextureEnv<metal::depth2d_array<float>> &env,
+    metal::float4 const coord,
+    metal::int2 const offset,
+    float const bias)
+{
+#if defined(__METAL_IOS__) || (__METAL_VERSION__ >= 230)
+    return env.texture->sample_compare(*env.sampler, coord.xy, uint32_t(metal::round(coord.z)), coord.w, metal::bias(bias), offset);
+#else
+    return env.texture->sample_compare(*env.sampler, coord.xy, uint32_t(metal::round(coord.z)), coord.w, offset);
 #endif
 }
 )",
@@ -3006,7 +3106,7 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
             case EbtSamplerCubeShadow:
                 return bias ? pp.textureBias_CubeShadow() : pp.texture_CubeShadow();
             case EbtSampler2DArrayShadow:
-                return pp.texture_2DArrayShadow();
+                return bias ? pp.textureBias_2DArrayShadow() : pp.texture_2DArrayShadow();
             default:
                 UNREACHABLE();
         }
@@ -3150,6 +3250,10 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
                 return pp.textureLod_2DArray();
             case EbtSampler2DShadow:
                 return pp.textureLod_2DShadow();
+            case EbtSamplerCubeShadow:
+                return pp.textureLod_CubeShadow();
+            case EbtSampler2DArrayShadow:
+                return pp.textureLod_2DArrayShadow();
             default:
                 UNREACHABLE();
         }
@@ -3171,6 +3275,8 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
                 return pp.textureLodOffset_2DArray();
             case EbtSampler2DShadow:
                 return pp.textureLodOffset_2DShadow();
+            case EbtSampler2DArrayShadow:
+                return pp.textureLodOffset_2DArrayShadow();
             default:
                 UNREACHABLE();
         }
@@ -3193,6 +3299,9 @@ ProgramPrelude::FuncToEmitter ProgramPrelude::BuildFuncToEmitter()
                 return bias ? pp.textureOffsetBias_2DArray() : pp.textureOffset_2DArray();
             case EbtSampler2DShadow:
                 return bias ? pp.textureOffsetBias_2DShadow() : pp.textureOffset_2DShadow();
+            case EbtSampler2DArrayShadow:
+                return bias ? pp.textureOffsetBias_2DArrayShadow()
+                            : pp.textureOffset_2DArrayShadow();
             default:
                 UNREACHABLE();
         }

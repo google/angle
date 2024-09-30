@@ -990,6 +990,8 @@ void DisplayMtl::initializeExtensions() const
 
     mNativeExtensions.texture3DOES = true;
 
+    mNativeExtensions.textureShadowLodEXT = true;
+
     mNativeExtensions.sampleVariablesOES = true;
 
     if (@available(macOS 11.0, *))
