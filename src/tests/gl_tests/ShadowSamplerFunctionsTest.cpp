@@ -861,13 +861,24 @@ TEST_P(ShadowSamplerFunctionTextureCubeTest, Test)
     glClearColor(1.0, 0.0, 1.0, 1.0);
 
     // First sample the texture directly for easier debugging
-    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_COMPARE_MODE, GL_NONE);
-    setupProgramCube(function, false);
-    ASSERT_GL_NO_ERROR();
+    // This step is skipped on Apple GPUs when the PreTransformTextureCubeGradDerivatives feature
+    // is disabled for testing because native cubemap sampling with explicit derivatives does not
+    // work on that platform without this feature.
+    // Since the AllowSamplerCompareGradient feature is also disabled in this case, the next steps,
+    // which use shadow samplers, rely on emulation and thus they are not affected.
+    const auto &disabledFeatures = std::get<0>(GetParam()).eglParameters.disabledFeatureOverrides;
+    if (!IsAppleGPU() ||
+        std::find(disabledFeatures.begin(), disabledFeatures.end(),
+                  Feature::PreTransformTextureCubeGradDerivatives) == disabledFeatures.end())
+    {
+        glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_COMPARE_MODE, GL_NONE);
+        setupProgramCube(function, false);
+        ASSERT_GL_NO_ERROR();
 
-    glClear(GL_COLOR_BUFFER_BIT);
-    drawQuad(mPrg, essl3_shaders::PositionAttrib(), 0.0f);
-    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(expectedSample * 255.0, 0, 0, 255), 1);
+        glClear(GL_COLOR_BUFFER_BIT);
+        drawQuad(mPrg, essl3_shaders::PositionAttrib(), 0.0f);
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(expectedSample * 255.0, 0, 0, 255), 1);
+    }
 
     // Try shadow samplers
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
@@ -1043,21 +1054,30 @@ ANGLE_INSTANTIATE_TEST_COMBINE_2(ShadowSamplerFunctionTexture2DTest,
                                  ShadowSamplerFunctionVariationsTestPrint,
                                  testing::ValuesIn(kTexture2DFunctionTypes),
                                  testing::Bool(),
-                                 ANGLE_ALL_TEST_PLATFORMS_ES3);
+                                 ANGLE_ALL_TEST_PLATFORMS_ES3,
+                                 ES3_METAL()
+                                     .disable(Feature::AllowSamplerCompareGradient)
+                                     .disable(Feature::PreTransformTextureCubeGradDerivatives));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ShadowSamplerFunctionTexture2DArrayTest);
 ANGLE_INSTANTIATE_TEST_COMBINE_2(ShadowSamplerFunctionTexture2DArrayTest,
                                  ShadowSamplerFunctionVariationsTestPrint,
                                  testing::ValuesIn(kTexture2DArrayFunctionTypes),
                                  testing::Bool(),
-                                 ANGLE_ALL_TEST_PLATFORMS_ES3);
+                                 ANGLE_ALL_TEST_PLATFORMS_ES3,
+                                 ES3_METAL()
+                                     .disable(Feature::AllowSamplerCompareGradient)
+                                     .disable(Feature::PreTransformTextureCubeGradDerivatives));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ShadowSamplerFunctionTextureCubeTest);
 ANGLE_INSTANTIATE_TEST_COMBINE_2(ShadowSamplerFunctionTextureCubeTest,
                                  ShadowSamplerFunctionVariationsTestPrint,
                                  testing::ValuesIn(kTextureCubeFunctionTypes),
                                  testing::Bool(),
-                                 ANGLE_ALL_TEST_PLATFORMS_ES3);
+                                 ANGLE_ALL_TEST_PLATFORMS_ES3,
+                                 ES3_METAL()
+                                     .disable(Feature::AllowSamplerCompareGradient)
+                                     .disable(Feature::PreTransformTextureCubeGradDerivatives));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ShadowSamplerFunctionTextureCubeArrayTest);
 ANGLE_INSTANTIATE_TEST_COMBINE_2(ShadowSamplerFunctionTextureCubeArrayTest,

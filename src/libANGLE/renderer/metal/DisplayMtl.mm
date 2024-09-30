@@ -1208,11 +1208,12 @@ void DisplayMtl::initializeFeatures()
     ANGLE_FEATURE_CONDITION((&mFeatures), allowMultisampleStoreAndResolve,
                             supportsEitherGPUFamily(3, 1));
 
+    // Apple2 does not support comparison functions in MTLSamplerState
     ANGLE_FEATURE_CONDITION((&mFeatures), allowRuntimeSamplerCompareMode,
                             supportsEitherGPUFamily(3, 1));
-    // AMD does not support sample_compare_grad
-    ANGLE_FEATURE_CONDITION((&mFeatures), allowSamplerCompareGradient,
-                            supportsEitherGPUFamily(3, 1) && !isAMD());
+
+    // AMD does not support sample_compare with gradients
+    ANGLE_FEATURE_CONDITION((&mFeatures), allowSamplerCompareGradient, !isAMD());
 
     // http://anglebug.com/40644746
     // Stencil blit shader is not compiled on Intel & NVIDIA, need investigation.
@@ -1309,6 +1310,11 @@ void DisplayMtl::initializeFeatures()
     // Apple-specific pre-transform for explicit cubemap derivatives
     ANGLE_FEATURE_CONDITION((&mFeatures), preTransformTextureCubeGradDerivatives,
                             supportsAppleGPUFamily(1));
+
+    // Apple-specific cubemap derivative transformation is not compatible with
+    // the textureGrad shadow sampler emulation. The latter is used only on AMD.
+    ASSERT(!mFeatures.preTransformTextureCubeGradDerivatives.enabled ||
+           mFeatures.allowSamplerCompareGradient.enabled);
 
     // Metal compiler optimizations may remove infinite loops causing crashes later in shader
     // execution. http://crbug.com/1513738
