@@ -3420,6 +3420,15 @@ void State::getPointerv(const Context *context, GLenum pname, void **params) con
                                           context->vertexArrayIndex(ParamToVertexArrayType(pname))),
                                       GL_VERTEX_ATTRIB_ARRAY_POINTER, params);
             return;
+        case GL_BLOB_CACHE_GET_FUNCTION_ANGLE:
+            *params = reinterpret_cast<void *>(getBlobCacheCallbacks().getFunction);
+            break;
+        case GL_BLOB_CACHE_SET_FUNCTION_ANGLE:
+            *params = reinterpret_cast<void *>(getBlobCacheCallbacks().setFunction);
+            break;
+        case GL_BLOB_CACHE_USER_PARAM_ANGLE:
+            *params = const_cast<void *>(getBlobCacheCallbacks().userParam);
+            break;
         default:
             UNREACHABLE();
             break;

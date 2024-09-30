@@ -1014,6 +1014,14 @@ ANGLE_INLINE DrawBufferMask GetIntOrUnsignedIntDrawBufferMask(ComponentTypeMask 
         static_cast<uint8_t>((mask.bits() >> kMaxComponentTypeMaskIndex) ^ mask.bits()));
 }
 
+// GL_ANGLE_blob_cache state
+struct BlobCacheCallbacks
+{
+    GLSETBLOBPROCANGLE setFunction = nullptr;
+    GLGETBLOBPROCANGLE getFunction = nullptr;
+    const void *userParam          = nullptr;
+};
+
 enum class RenderToTextureImageIndex
 {
     // The default image of the texture, where data is expected to be.

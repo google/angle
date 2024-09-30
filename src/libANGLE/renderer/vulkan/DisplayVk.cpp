@@ -657,12 +657,12 @@ void DisplayVk::populateFeatureList(angle::FeatureList *features)
 // vk::GlobalOps
 void DisplayVk::putBlob(const angle::BlobCacheKey &key, const angle::MemoryBuffer &value)
 {
-    getBlobCache()->putApplication(key, value);
+    getBlobCache()->putApplication(nullptr, key, value);
 }
 
 bool DisplayVk::getBlob(const angle::BlobCacheKey &key, angle::BlobCacheValue *valueOut)
 {
-    return getBlobCache()->get(&mScratchBuffer, key, valueOut);
+    return getBlobCache()->get(nullptr, &mScratchBuffer, key, valueOut);
 }
 
 std::shared_ptr<angle::WaitableEvent> DisplayVk::postMultiThreadWorkerTask(

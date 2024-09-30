@@ -565,6 +565,10 @@ class PrivateState : angle::NonCopyable
     const Debug &getDebug() const { return mDebug; }
     Debug &getDebug() { return mDebug; }
 
+    // GL_ANGLE_blob_cache
+    const BlobCacheCallbacks &getBlobCacheCallbacks() const { return mBlobCacheCallbacks; }
+    BlobCacheCallbacks &getBlobCacheCallbacks() { return mBlobCacheCallbacks; }
+
     // Generic state toggle & query
     void setEnableFeature(GLenum feature, bool enabled);
     void setEnableFeatureIndexed(GLenum feature, bool enabled, GLuint index);
@@ -743,6 +747,9 @@ class PrivateState : angle::NonCopyable
     const bool mProgramBinaryCacheEnabled;
 
     Debug mDebug;
+
+    // ANGLE_blob_cache
+    BlobCacheCallbacks mBlobCacheCallbacks;
 
     state::DirtyBits mDirtyBits;
     state::ExtendedDirtyBits mExtendedDirtyBits;
@@ -1423,6 +1430,11 @@ class State : angle::NonCopyable
     bool isPerfMonitorActive() const { return mPrivateState.isPerfMonitorActive(); }
     const Debug &getDebug() const { return mPrivateState.getDebug(); }
     Debug &getDebug() { return mPrivateState.getDebug(); }
+    const BlobCacheCallbacks &getBlobCacheCallbacks() const
+    {
+        return mPrivateState.getBlobCacheCallbacks();
+    }
+    BlobCacheCallbacks &getBlobCacheCallbacks() { return mPrivateState.getBlobCacheCallbacks(); }
     bool getEnableFeature(GLenum feature) const { return mPrivateState.getEnableFeature(feature); }
     bool getEnableFeatureIndexed(GLenum feature, GLuint index) const
     {

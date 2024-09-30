@@ -825,6 +825,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     // Ends the currently active pixel local storage session with GL_STORE_OP_STORE on all planes.
     void endPixelLocalStorageWithStoreOpsStore();
 
+    bool areBlobCacheFuncsSet() const;
+
   private:
     void initializeDefaultResources();
     void releaseSharedObjects();
