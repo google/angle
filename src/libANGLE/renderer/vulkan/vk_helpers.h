@@ -3322,11 +3322,12 @@ static_assert(gl::IMPLEMENTATION_ANGLE_MULTIVIEW_MAX_VIEWS == 4, "Update LayerMo
 
 LayerMode GetLayerMode(const vk::ImageHelper &image, uint32_t layerCount);
 
-// Sampler decode mode indicating if an attachment needs to be decoded in linear colorspace or sRGB
-enum class SrgbDecodeMode
+// The colorspace of image views derived from angle::ColorspaceState
+enum class ImageViewColorspace
 {
-    SkipDecode,
-    SrgbDecode
+    Invalid = 0,
+    Linear,
+    SRGB,
 };
 
 class ImageViewHelper final : angle::NonCopyable
@@ -3362,14 +3363,16 @@ class ImageViewHelper final : angle::NonCopyable
 
     const ImageView &getReadImageView() const
     {
-        return mLinearColorspace ? getReadViewImpl(mPerLevelRangeLinearReadImageViews)
-                                 : getReadViewImpl(mPerLevelRangeSRGBReadImageViews);
+        return mReadColorspace == ImageViewColorspace::Linear
+                   ? getReadViewImpl(mPerLevelRangeLinearReadImageViews)
+                   : getReadViewImpl(mPerLevelRangeSRGBReadImageViews);
     }
 
     const ImageView &getCopyImageView() const
     {
-        return mLinearColorspace ? getReadViewImpl(mPerLevelRangeLinearCopyImageViews)
-                                 : getReadViewImpl(mPerLevelRangeSRGBCopyImageViews);
+        return mReadColorspace == ImageViewColorspace::Linear
+                   ? getReadViewImpl(mPerLevelRangeLinearCopyImageViews)
+                   : getReadViewImpl(mPerLevelRangeSRGBCopyImageViews);
     }
 
     ImageView &getSamplerExternal2DY2YEXTImageView()
@@ -3397,9 +3400,9 @@ class ImageViewHelper final : angle::NonCopyable
 
     bool hasCopyImageView() const
     {
-        if ((mLinearColorspace &&
+        if ((mReadColorspace == ImageViewColorspace::Linear &&
              mCurrentBaseMaxLevelHash < mPerLevelRangeLinearCopyImageViews.size()) ||
-            (!mLinearColorspace &&
+            (mReadColorspace == ImageViewColorspace::SRGB &&
              mCurrentBaseMaxLevelHash < mPerLevelRangeSRGBCopyImageViews.size()))
         {
             return getCopyImageView().valid();
@@ -3476,28 +3479,75 @@ class ImageViewHelper final : angle::NonCopyable
                                                             uint32_t levelCount,
                                                             uint32_t layer,
                                                             LayerMode layerMode) const;
-    ImageOrBufferViewSubresourceSerial getSubresourceSerialWithSrgbModeOverrides(
+
+    // Return unique Serial for an imageView for a specific colorspace.
+    ImageOrBufferViewSubresourceSerial getSubresourceSerialForColorspace(
         gl::LevelIndex levelGL,
         uint32_t levelCount,
         uint32_t layer,
         LayerMode layerMode,
-        SrgbDecodeMode srgbDecodeMode,
-        gl::SrgbOverride srgbOverrideMode) const;
+        ImageViewColorspace readColorspace) const;
 
     bool isImageViewGarbageEmpty() const;
 
     void release(Renderer *renderer, const ResourceUse &use);
 
+    // Helpers for colorspace state
+    ImageViewColorspace getColorspaceForRead() const { return mReadColorspace; }
+    bool hasColorspaceOverrideForRead(const ImageHelper &image) const
+    {
+        ASSERT(image.valid());
+        return (!image.getActualFormat().isSRGB &&
+                mReadColorspace == vk::ImageViewColorspace::SRGB) ||
+               (image.getActualFormat().isSRGB &&
+                mReadColorspace == vk::ImageViewColorspace::Linear);
+    }
+    void updateStaticTexelFetch(const ImageHelper &image, bool staticTexelFetchAccess) const
+    {
+        if (mColorspaceState.hasStaticTexelFetchAccess != staticTexelFetchAccess)
+        {
+            mColorspaceState.hasStaticTexelFetchAccess = staticTexelFetchAccess;
+            updateColorspace(image);
+        }
+    }
+    void updateSrgbDecode(const ImageHelper &image, gl::SrgbDecode srgbDecode) const
+    {
+        if (mColorspaceState.srgbDecode != srgbDecode)
+        {
+            mColorspaceState.srgbDecode = srgbDecode;
+            updateColorspace(image);
+        }
+    }
+    void updateSrgbOverride(const ImageHelper &image, gl::SrgbOverride srgbOverride) const
+    {
+        if (mColorspaceState.srgbOverride != srgbOverride)
+        {
+            mColorspaceState.srgbOverride = srgbOverride;
+            updateColorspace(image);
+        }
+    }
+    void updateEglImageColorspace(const ImageHelper &image,
+                                  egl::ImageColorspace eglImageColorspace) const
+    {
+        if (mColorspaceState.eglImageColorspace != eglImageColorspace)
+        {
+            mColorspaceState.eglImageColorspace = eglImageColorspace;
+            updateColorspace(image);
+        }
+    }
+
   private:
     ImageView &getReadImageView()
     {
-        return mLinearColorspace ? getReadViewImpl(mPerLevelRangeLinearReadImageViews)
-                                 : getReadViewImpl(mPerLevelRangeSRGBReadImageViews);
+        return mReadColorspace == ImageViewColorspace::Linear
+                   ? getReadViewImpl(mPerLevelRangeLinearReadImageViews)
+                   : getReadViewImpl(mPerLevelRangeSRGBReadImageViews);
     }
     ImageView &getCopyImageView()
     {
-        return mLinearColorspace ? getReadViewImpl(mPerLevelRangeLinearCopyImageViews)
-                                 : getReadViewImpl(mPerLevelRangeSRGBCopyImageViews);
+        return mReadColorspace == ImageViewColorspace::Linear
+                   ? getReadViewImpl(mPerLevelRangeLinearCopyImageViews)
+                   : getReadViewImpl(mPerLevelRangeSRGBCopyImageViews);
     }
 
     // Used by public get*ImageView() methods to do proper assert based on vector size and validity
@@ -3534,17 +3584,19 @@ class ImageViewHelper final : angle::NonCopyable
                                     uint32_t layerCount,
                                     VkImageUsageFlags imageUsageFlags);
 
-    // Create SRGB-reinterpreted read views
-    angle::Result initSRGBReadViewsImpl(ContextVk *contextVk,
-                                        gl::TextureType viewType,
-                                        const ImageHelper &image,
-                                        const gl::SwizzleState &formatSwizzle,
-                                        const gl::SwizzleState &readSwizzle,
-                                        LevelIndex baseLevel,
-                                        uint32_t levelCount,
-                                        uint32_t baseLayer,
-                                        uint32_t layerCount,
-                                        VkImageUsageFlags imageUsageFlags);
+    // Create linear and srgb read views
+    angle::Result initLinearAndSrgbReadViewsImpl(ContextVk *contextVk,
+                                                 gl::TextureType viewType,
+                                                 const ImageHelper &image,
+                                                 const gl::SwizzleState &formatSwizzle,
+                                                 const gl::SwizzleState &readSwizzle,
+                                                 LevelIndex baseLevel,
+                                                 uint32_t levelCount,
+                                                 uint32_t baseLayer,
+                                                 uint32_t layerCount,
+                                                 VkImageUsageFlags imageUsageFlags);
+
+    void updateColorspace(const ImageHelper &image) const;
 
     // For applications that frequently switch a texture's base/max level, and make no other changes
     // to the texture, keep track of the currently-used base and max levels, and keep one "read
@@ -3554,7 +3606,8 @@ class ImageViewHelper final : angle::NonCopyable
                   "Not enough bits in mCurrentBaseMaxLevelHash");
     uint8_t mCurrentBaseMaxLevelHash;
 
-    bool mLinearColorspace;
+    mutable ImageViewColorspace mReadColorspace;
+    mutable angle::ColorspaceState mColorspaceState;
 
     // Read views (one per [base, max] level range)
     ImageViewVector mPerLevelRangeLinearReadImageViews;
@@ -3580,16 +3633,11 @@ class ImageViewHelper final : angle::NonCopyable
     ImageOrBufferViewSerial mImageViewSerial;
 };
 
-ImageSubresourceRange MakeImageSubresourceReadRange(gl::LevelIndex level,
-                                                    uint32_t levelCount,
-                                                    uint32_t layer,
-                                                    LayerMode layerMode,
-                                                    SrgbDecodeMode srgbDecodeMode,
-                                                    gl::SrgbOverride srgbOverrideMode);
 ImageSubresourceRange MakeImageSubresourceDrawRange(gl::LevelIndex level,
                                                     uint32_t layer,
                                                     LayerMode layerMode,
-                                                    gl::SrgbWriteControlMode srgbWriteControlMode);
+                                                    gl::SrgbWriteControlMode srgbWriteControlMode,
+                                                    ImageViewColorspace readColorspace);
 
 class BufferViewHelper final : public Resource
 {

@@ -2030,6 +2030,17 @@ angle::Result TextureVk::setEGLImageTarget(const gl::Context *context,
     setImageHelper(contextVk, imageVk->getImage(), imageVk->getImageTextureType(),
                    imageVk->getImageLevel().get(), imageVk->getImageLayer(), false, siblingSerial);
 
+    // Update ImageViewHelper's colorspace related state
+    EGLenum imageColorspaceAttribute = image->getColorspaceAttribute();
+    if (imageColorspaceAttribute != EGL_GL_COLORSPACE_DEFAULT_EXT)
+    {
+        egl::ImageColorspace imageColorspace =
+            (imageColorspaceAttribute == EGL_GL_COLORSPACE_SRGB_KHR) ? egl::ImageColorspace::SRGB
+                                                                     : egl::ImageColorspace::Linear;
+        ASSERT(mImage != nullptr);
+        mImageView.updateEglImageColorspace(*mImage, imageColorspace);
+    }
+
     ANGLE_TRY(initImageViews(contextVk, getImageViewLevelCount()));
 
     return angle::Result::Continue;
@@ -3146,9 +3157,9 @@ RenderTargetVk *TextureVk::getMultiLayerRenderTarget(ContextVk *contextVk,
                                                      GLuint layerIndex,
                                                      GLuint layerCount)
 {
-    vk::ImageSubresourceRange range =
-        vk::MakeImageSubresourceDrawRange(level, layerIndex, vk::GetLayerMode(*mImage, layerCount),
-                                          gl::SrgbWriteControlMode::Default);
+    vk::ImageSubresourceRange range = vk::MakeImageSubresourceDrawRange(
+        level, layerIndex, vk::GetLayerMode(*mImage, layerCount), gl::SrgbWriteControlMode::Default,
+        mImageView.getColorspaceForRead());
 
     auto iter = mMultiLayerRenderTargets.find(range);
     if (iter != mMultiLayerRenderTargets.end())
@@ -3498,11 +3509,20 @@ angle::Result TextureVk::syncState(const gl::Context *context,
         ANGLE_TRY(refreshImageViews(contextVk));
     }
 
-    if (!renderer->getFeatures().supportsImageFormatList.enabled &&
-        (localBits.test(gl::Texture::DIRTY_BIT_SRGB_OVERRIDE) ||
-         localBits.test(gl::Texture::DIRTY_BIT_SRGB_DECODE)))
+    if (localBits.test(gl::Texture::DIRTY_BIT_SRGB_OVERRIDE) ||
+        localBits.test(gl::Texture::DIRTY_BIT_SRGB_DECODE))
     {
-        ANGLE_TRY(refreshImageViews(contextVk));
+        ASSERT(mImage != nullptr);
+        gl::SrgbDecode srgbDecode = (mState.getSamplerState().getSRGBDecode() == GL_SKIP_DECODE_EXT)
+                                        ? gl::SrgbDecode::Skip
+                                        : gl::SrgbDecode::Default;
+        mImageView.updateSrgbDecode(*mImage, srgbDecode);
+        mImageView.updateSrgbOverride(*mImage, mState.getSRGBOverride());
+
+        if (!renderer->getFeatures().supportsImageFormatList.enabled)
+        {
+            ANGLE_TRY(refreshImageViews(contextVk));
+        }
     }
 
     vk::SamplerDesc samplerDesc(contextVk, mState.getSamplerState(), mState.isStencilMode(),
@@ -3567,36 +3587,6 @@ void TextureVk::releaseOwnershipOfImage(const gl::Context *context)
     releaseAndDeleteImageAndViews(contextVk);
 }
 
-bool TextureVk::shouldDecodeSRGB(vk::Context *context,
-                                 GLenum srgbDecode,
-                                 bool texelFetchStaticUse) const
-{
-    // By default, we decode SRGB images.
-    const vk::Format &format = getBaseLevelFormat(context->getRenderer());
-    bool decodeSRGB          = format.getActualImageFormat(getRequiredImageAccess()).isSRGB;
-
-    // If the SRGB override is enabled, we also decode SRGB.
-    if (isSRGBOverrideEnabled() &&
-        IsOverridableLinearFormat(format.getActualImageFormatID(getRequiredImageAccess())))
-    {
-        decodeSRGB = true;
-    }
-
-    // The decode step is optionally disabled by the skip decode setting, except for texelFetch:
-    //
-    // "The conversion of sRGB color space components to linear color space is always applied if the
-    // TEXTURE_SRGB_DECODE_EXT parameter is DECODE_EXT. Table X.1 describes whether the conversion
-    // is skipped if the TEXTURE_SRGB_DECODE_EXT parameter is SKIP_DECODE_EXT, depending on the
-    // function used for the access, whether the access occurs through a bindless sampler, and
-    // whether the texture is statically accessed elsewhere with a texelFetch function."
-    if (srgbDecode == GL_SKIP_DECODE_EXT && !texelFetchStaticUse)
-    {
-        decodeSRGB = false;
-    }
-
-    return decodeSRGB;
-}
-
 const vk::ImageView &TextureVk::getReadImageView(vk::Context *context,
                                                  GLenum srgbDecode,
                                                  bool texelFetchStaticUse,
@@ -3616,14 +3606,15 @@ const vk::ImageView &TextureVk::getReadImageView(vk::Context *context,
         ASSERT(imageViews.getSamplerExternal2DY2YEXTImageView().valid());
         return imageViews.getSamplerExternal2DY2YEXTImageView();
     }
-    else if (shouldDecodeSRGB(context, srgbDecode, texelFetchStaticUse))
-    {
-        ASSERT(imageViews.getSRGBReadImageView().valid());
-        return imageViews.getSRGBReadImageView();
-    }
 
-    ASSERT(imageViews.getLinearReadImageView().valid());
-    return imageViews.getLinearReadImageView();
+    ASSERT(mImage != nullptr && mImage->valid());
+    gl::SrgbDecode decode =
+        (srgbDecode == GL_DECODE_EXT) ? gl::SrgbDecode::Default : gl::SrgbDecode::Skip;
+    imageViews.updateSrgbDecode(*mImage, decode);
+    imageViews.updateStaticTexelFetch(*mImage, texelFetchStaticUse);
+
+    ASSERT(imageViews.getReadImageView().valid());
+    return imageViews.getReadImageView();
 }
 
 const vk::ImageView &TextureVk::getCopyImageView() const
@@ -3894,6 +3885,8 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
 
     ANGLE_TRY(updateTextureLabel(contextVk));
 
+    // Update create flags with mImage's create flags
+    mImageCreateFlags |= mImage->getCreateFlags();
     mRequiresMutableStorage = (mImageCreateFlags & VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT) != 0;
 
     VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
@@ -4280,23 +4273,14 @@ void TextureVk::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMe
 }
 
 vk::ImageOrBufferViewSubresourceSerial TextureVk::getImageViewSubresourceSerialImpl(
-    GLenum srgbDecode) const
+    vk::ImageViewColorspace colorspace) const
 {
     gl::LevelIndex baseLevel(mState.getEffectiveBaseLevel());
     // getMipmapMaxLevel will clamp to the max level if it is smaller than the number of mips.
     uint32_t levelCount = gl::LevelIndex(mState.getMipmapMaxLevel()) - baseLevel + 1;
 
-    const angle::Format &angleFormat  = mImage->getActualFormat();
-    vk::SrgbDecodeMode srgbDecodeMode = (angleFormat.isSRGB && (srgbDecode == GL_DECODE_EXT))
-                                            ? vk::SrgbDecodeMode::SrgbDecode
-                                            : vk::SrgbDecodeMode::SkipDecode;
-    gl::SrgbOverride srgbOverrideMode =
-        (!angleFormat.isSRGB && (mState.getSRGBOverride() == gl::SrgbOverride::SRGB))
-            ? gl::SrgbOverride::SRGB
-            : gl::SrgbOverride::Default;
-
-    return getImageViews().getSubresourceSerialWithSrgbModeOverrides(
-        baseLevel, levelCount, 0, vk::LayerMode::All, srgbDecodeMode, srgbOverrideMode);
+    return getImageViews().getSubresourceSerialForColorspace(baseLevel, levelCount, 0,
+                                                             vk::LayerMode::All, colorspace);
 }
 
 vk::ImageOrBufferViewSubresourceSerial TextureVk::getBufferViewSerial() const
@@ -4556,8 +4540,9 @@ void TextureVk::stageSelfAsSubresourceUpdates(ContextVk *contextVk)
 
 void TextureVk::updateCachedImageViewSerials()
 {
-    mCachedImageViewSubresourceSerialSRGBDecode = getImageViewSubresourceSerialImpl(GL_DECODE_EXT);
+    mCachedImageViewSubresourceSerialSRGBDecode =
+        getImageViewSubresourceSerialImpl(vk::ImageViewColorspace::SRGB);
     mCachedImageViewSubresourceSerialSkipDecode =
-        getImageViewSubresourceSerialImpl(GL_SKIP_DECODE_EXT);
+        getImageViewSubresourceSerialImpl(vk::ImageViewColorspace::Linear);
 }
 }  // namespace rx
