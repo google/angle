@@ -30,22 +30,6 @@ constexpr vk::UseDebugLayers kUseDebugLayers = vk::UseDebugLayers::YesIfAvailabl
 #else
 constexpr vk::UseDebugLayers kUseDebugLayers = vk::UseDebugLayers::No;
 #endif
-
-std::string CreateExtensionString(const NameVersionVector &extList)
-{
-    std::string extensions;
-    for (const cl_name_version &ext : extList)
-    {
-        extensions += ext.name;
-        extensions += ' ';
-    }
-    if (!extensions.empty())
-    {
-        extensions.pop_back();
-    }
-    return extensions;
-}
-
 }  // namespace
 
 angle::Result CLPlatformVk::initBackendRenderer()
@@ -78,17 +62,17 @@ CLPlatformVk::~CLPlatformVk()
 CLPlatformImpl::Info CLPlatformVk::createInfo() const
 {
     NameVersionVector extList = {
-        cl_name_version{CL_MAKE_VERSION(3, 0, 0), "cl_khr_icd"},
-        cl_name_version{CL_MAKE_VERSION(3, 0, 0), "cl_khr_extended_versioning"}};
+        cl_name_version{CL_MAKE_VERSION(1, 0, 0), "cl_khr_icd"},
+        cl_name_version{CL_MAKE_VERSION(1, 0, 0), "cl_khr_extended_versioning"}};
 
     Info info;
     info.name.assign("ANGLE Vulkan");
     info.profile.assign("FULL_PROFILE");
     info.versionStr.assign(GetVersionString());
     info.hostTimerRes          = 0u;
-    info.extensionsWithVersion = std::move(extList);
     info.version               = GetVersion();
-    info.initializeExtensions(CreateExtensionString(extList));
+
+    info.initializeVersionedExtensions(std::move(extList));
     return info;
 }
 
