@@ -284,8 +284,7 @@ egl::Error DisplayWgpu::createWgpuDevice()
 
     mAdapter = adapterResult.adapter;
 
-    std::vector<wgpu::FeatureName> requiredFeatures;
-    requiredFeatures.push_back(wgpu::FeatureName::SurfaceCapabilities);
+    std::vector<wgpu::FeatureName> requiredFeatures;  // empty for now
 
     wgpu::DeviceDescriptor deviceDesc;
     deviceDesc.requiredFeatureCount = requiredFeatures.size();
