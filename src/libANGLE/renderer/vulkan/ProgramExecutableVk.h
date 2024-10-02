@@ -96,8 +96,6 @@ class ProgramInfo final : angle::NonCopyable
     gl::ShaderMap<vk::RefCounted<vk::ShaderModule>> mShaders;
 };
 
-// Performance and resource counters.
-using DescriptorSetCountList   = angle::PackedEnumMap<DescriptorSetIndex, uint32_t>;
 using ImmutableSamplerIndexMap = angle::HashMap<vk::YcbcrConversionDesc, uint32_t>;
 
 class ProgramExecutableVk : public ProgramExecutableImpl
