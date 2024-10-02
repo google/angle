@@ -37,6 +37,13 @@
 42265238 OPENGL : SimpleStateChangeTestES3.RespecifyBufferAfterBeginTransformFeedback/* = SKIP
 42265238 GLES : SimpleStateChangeTestES3.RespecifyBufferAfterBeginTransformFeedback/* = SKIP
 
+// Accessing an enabled but invalid vertex attribute.
+359729255 OPENGL : VertexAttributeTest.VertexAttribPointerCopyBufferFromInvalid* = SKIP
+359729255 GLES : VertexAttributeTest.VertexAttribPointerCopyBufferFromInvalid* = SKIP
+359729255 D3D9 : VertexAttributeTest.VertexAttribPointerCopyBufferFromInvalid* = SKIP
+359729255 D3D11 : VertexAttributeTest.VertexAttribPointerCopyBufferFromInvalid* = SKIP
+359729255 METAL : VertexAttributeTest.VertexAttribPointerCopyBufferFromInvalid* = SKIP
+
 // Shared context failing on OpenGL and D3D11
 42266326 OPENGL : MultithreadingTest.CreateMultiSharedContextAndDraw/* = SKIP
 42266326 GLES : MultithreadingTest.CreateMultiSharedContextAndDraw/* = SKIP
