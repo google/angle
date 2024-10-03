@@ -23,7 +23,7 @@
 #include "compiler/translator/SymbolUniqueId.h"
 #include "compiler/translator/Types.h"
 #include "compiler/translator/tree_ops/SeparateCompoundStructDeclarations.h"
-#include "compiler/translator/tree_util/BuiltIn_complete_autogen.h"
+#include "compiler/translator/tree_util/BuiltIn_autogen.h"
 #include "compiler/translator/tree_util/FindMain.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
@@ -876,9 +876,6 @@ const char *GetOperatorString(TOperator op,
         case TOperator::EOpImulExtended:
         case TOperator::EOpEmitVertex:
         case TOperator::EOpEndPrimitive:
-        case TOperator::EOpFtransform:
-        case TOperator::EOpPackDouble2x32:
-        case TOperator::EOpUnpackDouble2x32:
         case TOperator::EOpArrayLength:
             UNIMPLEMENTED();
             return "TOperator_TODO";

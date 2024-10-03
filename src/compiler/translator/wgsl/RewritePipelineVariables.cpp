@@ -23,7 +23,7 @@
 #include "compiler/translator/Symbol.h"
 #include "compiler/translator/SymbolUniqueId.h"
 #include "compiler/translator/Types.h"
-#include "compiler/translator/tree_util/BuiltIn_complete_autogen.h"
+#include "compiler/translator/tree_util/BuiltIn_autogen.h"
 #include "compiler/translator/tree_util/FindMain.h"
 #include "compiler/translator/tree_util/ReplaceVariable.h"
 #include "compiler/translator/util.h"

@@ -329,18 +329,14 @@ ANGLE_INLINE void ActiveTexturesCache::set(size_t textureIndex, Texture *texture
     mTextures[textureIndex] = texture;
 }
 
-PrivateState::PrivateState(const EGLenum clientType,
-                           const Version &clientVersion,
-                           EGLint profileMask,
+PrivateState::PrivateState(const Version &clientVersion,
                            bool debug,
                            bool bindGeneratesResourceCHROMIUM,
                            bool clientArraysEnabled,
                            bool robustResourceInit,
                            bool programBinaryCacheEnabled,
                            bool isExternal)
-    : mClientType(clientType),
-      mProfileMask(profileMask),
-      mClientVersion(clientVersion),
+    : mClientVersion(clientVersion),
       mIsExternal(isExternal),
       mDepthClearValue(0),
       mStencilClearValue(0),
@@ -473,9 +469,7 @@ void PrivateState::initialize(Context *context)
     mNoUnclampedBlendColor = context->getLimitations().noUnclampedBlendColor;
 
     // GLES1 emulation: Initialize state for GLES1 if version applies
-    // TODO(http://anglebug.com/42262402): When on desktop client only do this in compatibility
-    // profile
-    if (context->getClientVersion() < Version(2, 0) || mClientType == EGL_OPENGL_API)
+    if (context->getClientVersion() < Version(2, 0))
     {
         mGLES1State.initialize(context, this);
     }
@@ -2197,9 +2191,7 @@ State::State(const State *shareContextState,
              SemaphoreManager *shareSemaphores,
              egl::ContextMutex *contextMutex,
              const OverlayType *overlay,
-             const EGLenum clientType,
              const Version &clientVersion,
-             EGLint profileMask,
              bool debug,
              bool bindGeneratesResourceCHROMIUM,
              bool clientArraysEnabled,
@@ -2241,9 +2233,7 @@ State::State(const State *shareContextState,
       mDisplayTextureShareGroup(shareTextures != nullptr),
       mMaxShaderCompilerThreads(std::numeric_limits<GLuint>::max()),
       mOverlay(overlay),
-      mPrivateState(clientType,
-                    clientVersion,
-                    profileMask,
+      mPrivateState(clientVersion,
                     debug,
                     bindGeneratesResourceCHROMIUM,
                     clientArraysEnabled,

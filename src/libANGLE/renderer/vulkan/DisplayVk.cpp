@@ -436,11 +436,6 @@ gl::Version DisplayVk::getMaxConformantESVersion() const
     return mRenderer->getMaxConformantESVersion();
 }
 
-Optional<gl::Version> DisplayVk::getMaxSupportedDesktopVersion() const
-{
-    return gl::Version{4, 6};
-}
-
 egl::Error DisplayVk::validateImageClientBuffer(const gl::Context *context,
                                                 EGLenum target,
                                                 EGLClientBuffer clientBuffer,

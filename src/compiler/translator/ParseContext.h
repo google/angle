@@ -38,7 +38,6 @@ class TParseContext : angle::NonCopyable
                   sh::GLenum type,
                   ShShaderSpec spec,
                   const ShCompileOptions &options,
-                  bool checksPrecErrors,
                   TDiagnostics *diagnostics,
                   const ShBuiltInResources &resources,
                   ShShaderOutput outputType);
@@ -755,8 +754,6 @@ class TParseContext : angle::NonCopyable
     const TType
         *mCurrentFunctionType;    // the return type of the function that's currently being parsed
     bool mFunctionReturnsValue;   // true if a non-void function has a return
-    bool mChecksPrecisionErrors;  // true if an error will be generated when a variable is declared
-                                  // without precision, explicit or implicit.
     bool mFragmentPrecisionHighOnESSL1;  // true if highp precision is supported when compiling
                                          // ESSL1.
     bool mEarlyFragmentTestsSpecified;   // true if layout(early_fragment_tests) in; is specified.

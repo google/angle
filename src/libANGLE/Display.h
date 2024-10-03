@@ -178,7 +178,6 @@ class Display final : public LabeledObject,
 
     Error createContext(const Config *configuration,
                         gl::Context *shareContext,
-                        const EGLenum clientType,
                         const AttributeMap &attribs,
                         gl::Context **outContext);
 

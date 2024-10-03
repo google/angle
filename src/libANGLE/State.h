@@ -220,9 +220,7 @@ using DirtyObjects = angle::BitSet<DIRTY_OBJECT_MAX>;
 class PrivateState : angle::NonCopyable
 {
   public:
-    PrivateState(const EGLenum clientType,
-                 const Version &clientVersion,
-                 EGLint profileMask,
+    PrivateState(const Version &clientVersion,
                  bool debug,
                  bool bindGeneratesResourceCHROMIUM,
                  bool clientArraysEnabled,
@@ -236,8 +234,6 @@ class PrivateState : angle::NonCopyable
 
     void reset();
 
-    EGLenum getClientType() const { return mClientType; }
-    EGLint getProfileMask() const { return mProfileMask; }
     const Version &getClientVersion() const { return mClientVersion; }
     GLint getClientMajorVersion() const { return mClientVersion.major; }
     GLint getClientMinorVersion() const { return mClientVersion.minor; }
@@ -612,8 +608,6 @@ class PrivateState : angle::NonCopyable
     bool hasConstantColor(GLenum sourceRGB, GLenum destRGB) const;
     bool hasConstantAlpha(GLenum sourceRGB, GLenum destRGB) const;
 
-    const EGLenum mClientType;
-    const EGLint mProfileMask;
     const Version mClientVersion;
 
     // Caps to use for validation
@@ -766,9 +760,7 @@ class State : angle::NonCopyable
           SemaphoreManager *shareSemaphores,
           egl::ContextMutex *contextMutex,
           const OverlayType *overlay,
-          const EGLenum clientType,
           const Version &clientVersion,
-          EGLint profileMask,
           bool debug,
           bool bindGeneratesResourceCHROMIUM,
           bool clientArraysEnabled,
@@ -785,8 +777,6 @@ class State : angle::NonCopyable
 
     // Getters
     ContextID getContextID() const { return mID; }
-    EGLenum getClientType() const { return mPrivateState.getClientType(); }
-    EGLint getProfileMask() const { return mPrivateState.getProfileMask(); }
     EGLenum getContextPriority() const { return mContextPriority; }
     bool hasRobustAccess() const { return mHasRobustAccess; }
     bool hasProtectedContent() const { return mHasProtectedContent; }

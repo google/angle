@@ -193,14 +193,8 @@ bool UsesDerivatives(TIntermAggregate *functionCall)
         case EOpTexture2D:
         case EOpTexture2DProj:
         case EOpTextureCube:
-        case EOpTexture1D:
-        case EOpTexture1DProj:
         case EOpTexture3D:
         case EOpTexture3DProj:
-        case EOpShadow1D:
-        case EOpShadow1DProj:
-        case EOpShadow2D:
-        case EOpShadow2DProj:
         case EOpShadow2DEXT:
         case EOpShadow2DProjEXT:
         // TextureFirstVersionsBias
@@ -209,20 +203,12 @@ bool UsesDerivatives(TIntermAggregate *functionCall)
         case EOpTextureCubeBias:
         case EOpTexture3DBias:
         case EOpTexture3DProjBias:
-        case EOpTexture1DBias:
-        case EOpTexture1DProjBias:
-        case EOpShadow1DBias:
-        case EOpShadow1DProjBias:
-        case EOpShadow2DBias:
-        case EOpShadow2DProjBias:
         // TextureNoBias
         case EOpTexture:
         case EOpTextureProj:
         // TextureBias
         case EOpTextureBias:
         case EOpTextureProjBias:
-        // TextureQueryLod
-        case EOpTextureQueryLod:
         // TextureOffsetNoBias
         case EOpTextureOffset:
         case EOpTextureProjOffset:
@@ -273,7 +259,6 @@ TParseContext::TParseContext(TSymbolTable &symt,
                              sh::GLenum type,
                              ShShaderSpec spec,
                              const ShCompileOptions &options,
-                             bool checksPrecErrors,
                              TDiagnostics *diagnostics,
                              const ShBuiltInResources &resources,
                              ShShaderOutput outputType)
@@ -289,7 +274,6 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mSwitchNestingLevel(0),
       mCurrentFunctionType(nullptr),
       mFunctionReturnsValue(false),
-      mChecksPrecisionErrors(checksPrecErrors),
       mFragmentPrecisionHighOnESSL1(false),
       mEarlyFragmentTestsSpecified(false),
       mHasDiscard(false),
@@ -584,9 +568,6 @@ void TParseContext::checkPrecisionSpecified(const TSourceLoc &line,
                                             TPrecision precision,
                                             TBasicType type)
 {
-    if (!mChecksPrecisionErrors)
-        return;
-
     if (precision != EbpUndefined && !SupportsPrecision(type))
     {
         error(line, "illegal type for precision qualifier", getBasicString(type));
@@ -6265,8 +6246,7 @@ TStorageQualifierWrapper *TParseContext::parseInQualifier(const TSourceLoc &loc)
     {
         case GL_VERTEX_SHADER:
         {
-            if (mShaderVersion < 300 && !anyMultiviewExtensionAvailable() &&
-                !IsDesktopGLSpec(mShaderSpec))
+            if (mShaderVersion < 300 && !anyMultiviewExtensionAvailable())
             {
                 error(loc, "storage qualifier supported in GLSL ES 3.00 and above only", "in");
             }
@@ -6274,7 +6254,7 @@ TStorageQualifierWrapper *TParseContext::parseInQualifier(const TSourceLoc &loc)
         }
         case GL_FRAGMENT_SHADER:
         {
-            if (mShaderVersion < 300 && !IsDesktopGLSpec(mShaderSpec))
+            if (mShaderVersion < 300)
             {
                 error(loc, "storage qualifier supported in GLSL ES 3.00 and above only", "in");
             }
@@ -6314,7 +6294,7 @@ TStorageQualifierWrapper *TParseContext::parseOutQualifier(const TSourceLoc &loc
     {
         case GL_VERTEX_SHADER:
         {
-            if (mShaderVersion < 300 && !IsDesktopGLSpec(mShaderSpec))
+            if (mShaderVersion < 300)
             {
                 error(loc, "storage qualifier supported in GLSL ES 3.00 and above only", "out");
             }
@@ -6322,7 +6302,7 @@ TStorageQualifierWrapper *TParseContext::parseOutQualifier(const TSourceLoc &loc
         }
         case GL_FRAGMENT_SHADER:
         {
-            if (mShaderVersion < 300 && !IsDesktopGLSpec(mShaderSpec))
+            if (mShaderVersion < 300)
             {
                 error(loc, "storage qualifier supported in GLSL ES 3.00 and above only", "out");
             }
@@ -6357,7 +6337,7 @@ TStorageQualifierWrapper *TParseContext::parseInOutQualifier(const TSourceLoc &l
 {
     if (!declaringFunction())
     {
-        if (mShaderVersion < 300 && !IsDesktopGLSpec(mShaderSpec))
+        if (mShaderVersion < 300)
         {
             error(loc, "storage qualifier supported in GLSL ES 3.00 and above only", "inout");
         }
@@ -6952,11 +6932,8 @@ bool TParseContext::binaryOpCommonCheck(TOperator op,
             break;
     }
 
-    ImplicitTypeConversion conversion = GetConversion(left->getBasicType(), right->getBasicType());
-
-    // Implicit type casting only supported for GL shaders
-    if (!isBitShift && conversion != ImplicitTypeConversion::Same &&
-        (!IsDesktopGLSpec(mShaderSpec) || !IsValidImplicitConversion(conversion, op)))
+    // Implicit type casting is not allowed in ESSL.
+    if (!isBitShift && left->getBasicType() != right->getBasicType())
     {
         return false;
     }
@@ -7775,13 +7752,6 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCallImpl(TFunctionLookup *
         // global scope.
         const TSymbol *symbol = symbolTable.findGlobal(fnCall->getMangledName());
 
-        if (symbol == nullptr && IsDesktopGLSpec(mShaderSpec))
-        {
-            // If using Desktop GL spec, need to check for implicit conversion
-            symbol = symbolTable.findGlobalWithConversion(
-                fnCall->getMangledNamesForImplicitConversions());
-        }
-
         if (symbol != nullptr)
         {
             // A user-defined function - could be an overloaded built-in as well.
@@ -7796,13 +7766,6 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCallImpl(TFunctionLookup *
         }
 
         symbol = symbolTable.findBuiltIn(fnCall->getMangledName(), mShaderVersion);
-
-        if (symbol == nullptr && IsDesktopGLSpec(mShaderSpec))
-        {
-            // If using Desktop GL spec, need to check for implicit conversion
-            symbol = symbolTable.findBuiltInWithConversion(
-                fnCall->getMangledNamesForImplicitConversions(), mShaderVersion);
-        }
 
         if (symbol != nullptr)
         {

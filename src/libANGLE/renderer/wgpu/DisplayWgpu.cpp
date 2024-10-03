@@ -148,11 +148,6 @@ gl::Version DisplayWgpu::getMaxSupportedESVersion() const
     return mMaxSupportedClientVersion;
 }
 
-Optional<gl::Version> DisplayWgpu::getMaxSupportedDesktopVersion() const
-{
-    return Optional<gl::Version>::Invalid();
-}
-
 gl::Version DisplayWgpu::getMaxConformantESVersion() const
 {
     return mMaxSupportedClientVersion;

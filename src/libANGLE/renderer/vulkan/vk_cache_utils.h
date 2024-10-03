@@ -449,10 +449,7 @@ struct PackedAttribDesc final
 {
     uint8_t format;
     uint8_t divisor;
-
-    // Desktop drivers support
     uint16_t offset : kAttributeOffsetMaxBits;
-
     uint16_t compressed : 1;
 };
 

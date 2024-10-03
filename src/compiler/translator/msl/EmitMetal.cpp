@@ -694,9 +694,6 @@ static const char *GetOperatorString(TOperator op,
         case TOperator::EOpAtomicCompSwap:
         case TOperator::EOpEmitVertex:
         case TOperator::EOpEndPrimitive:
-        case TOperator::EOpFtransform:
-        case TOperator::EOpPackDouble2x32:
-        case TOperator::EOpUnpackDouble2x32:
         case TOperator::EOpArrayLength:
             UNIMPLEMENTED();
             return "TOperator_TODO";

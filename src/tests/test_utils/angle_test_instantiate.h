@@ -175,8 +175,6 @@ struct CombinedPrintToStringParamName
             .enable(Feature::AsyncCommandQueue)                      \
             .enable(Feature::EnableParallelCompileAndLink)
 
-#define ANGLE_ALL_TEST_PLATFORMS_GL32_CORE GL32_CORE_VULKAN(), GL32_CORE_VULKAN_SWIFTSHADER()
-
 #define ANGLE_ALL_TEST_PLATFORMS_NULL ES2_NULL(), ES3_NULL(), ES31_NULL()
 
 // Instantiate the test once for each GLES1 platform
@@ -227,18 +225,6 @@ struct CombinedPrintToStringParamName
 #define ANGLE_INSTANTIATE_TEST_ES32_AND(testName, ...)                                          \
     const PlatformParameters testName##params[] = {ANGLE_ALL_TEST_PLATFORMS_ES32, __VA_ARGS__}; \
     INSTANTIATE_TEST_SUITE_P(, testName, ANGLE_INSTANTIATE_TEST_PLATFORMS(testName),            \
-                             testing::PrintToStringParamName())
-
-// Instantiate the test once for each desktop GL 3.2 core platform
-#define ANGLE_INSTANTIATE_TEST_GL32_CORE(testName)                                      \
-    const PlatformParameters testName##params[] = {ANGLE_ALL_TEST_PLATFORMS_GL32_CORE}; \
-    INSTANTIATE_TEST_SUITE_P(, testName, ANGLE_INSTANTIATE_TEST_PLATFORMS(testName),    \
-                             testing::PrintToStringParamName())
-
-#define ANGLE_INSTANTIATE_TEST_GL32_CORE_AND(testName, ...)                            \
-    const PlatformParameters testName##params[] = {ANGLE_ALL_TEST_PLATFORMS_GL32_CORE, \
-                                                   __VA_ARGS__};                       \
-    INSTANTIATE_TEST_SUITE_P(, testName, ANGLE_INSTANTIATE_TEST_PLATFORMS(testName),   \
                              testing::PrintToStringParamName())
 
 // Multiple ES Version macros

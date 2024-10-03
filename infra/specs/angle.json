@@ -5190,30 +5190,6 @@
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
-        "name": "angle_deqp_gl46_tests",
-        "swarming": {
-          "containment_type": "AUTO",
-          "dimensions": {
-            "cpu": "x86-64",
-            "gpu": "none",
-            "os": "Ubuntu-22.04",
-            "pool": "chromium.tests.gpu"
-          },
-          "hard_timeout": 900,
-          "io_timeout": 900,
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
-        },
-        "test": "angle_deqp_gl46_tests",
-        "test_id_prefix": "ninja://src/tests:angle_deqp_gl46_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
-        "args": [
-          "--use-angle=swiftshader"
-        ],
-        "merge": {
-          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
-        },
         "name": "angle_deqp_gles2_tests",
         "swarming": {
           "containment_type": "AUTO",
@@ -5737,30 +5713,6 @@
         },
         "test": "angle_deqp_egl_tests",
         "test_id_prefix": "ninja://src/tests:angle_deqp_egl_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
-        "args": [
-          "--use-angle=swiftshader"
-        ],
-        "merge": {
-          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
-        },
-        "name": "angle_deqp_gl46_tests",
-        "swarming": {
-          "containment_type": "AUTO",
-          "dimensions": {
-            "cpu": "x86-64",
-            "gpu": "none",
-            "os": "Ubuntu-22.04",
-            "pool": "chromium.tests.gpu"
-          },
-          "hard_timeout": 900,
-          "io_timeout": 900,
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
-        },
-        "test": "angle_deqp_gl46_tests",
-        "test_id_prefix": "ninja://src/tests:angle_deqp_gl46_tests/",
         "use_isolated_scripts_api": true
       },
       {
@@ -9142,30 +9094,6 @@
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
-        "name": "angle_deqp_gl46_tests",
-        "swarming": {
-          "containment_type": "AUTO",
-          "dimensions": {
-            "cpu": "x86-64",
-            "gpu": "none",
-            "os": "Windows-10",
-            "pool": "chromium.tests.gpu"
-          },
-          "hard_timeout": 900,
-          "io_timeout": 900,
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
-        },
-        "test": "angle_deqp_gl46_tests",
-        "test_id_prefix": "ninja://src/tests:angle_deqp_gl46_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
-        "args": [
-          "--use-angle=swiftshader"
-        ],
-        "merge": {
-          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
-        },
         "name": "angle_deqp_gles2_tests",
         "swarming": {
           "containment_type": "AUTO",
@@ -9741,30 +9669,6 @@
         },
         "test": "angle_deqp_egl_tests",
         "test_id_prefix": "ninja://src/tests:angle_deqp_egl_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
-        "args": [
-          "--use-angle=swiftshader"
-        ],
-        "merge": {
-          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
-        },
-        "name": "angle_deqp_gl46_tests",
-        "swarming": {
-          "containment_type": "AUTO",
-          "dimensions": {
-            "cpu": "x86-64",
-            "gpu": "none",
-            "os": "Windows-10",
-            "pool": "chromium.tests.gpu"
-          },
-          "hard_timeout": 900,
-          "io_timeout": 900,
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
-        },
-        "test": "angle_deqp_gl46_tests",
-        "test_id_prefix": "ninja://src/tests:angle_deqp_gl46_tests/",
         "use_isolated_scripts_api": true
       },
       {

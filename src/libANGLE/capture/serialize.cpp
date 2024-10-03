@@ -538,7 +538,6 @@ void SerializeResourceID(JsonSerializer *json, const char *name, const ResourceT
 void SerializeContextState(JsonSerializer *json, const gl::State &state)
 {
     GroupScope group(json, "ContextState");
-    json->addScalar("ClientType", state.getClientType());
     json->addScalar("Priority", state.getContextPriority());
     json->addScalar("Major", state.getClientMajorVersion());
     json->addScalar("Minor", state.getClientMinorVersion());

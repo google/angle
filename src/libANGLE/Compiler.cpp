@@ -331,24 +331,9 @@ void Compiler::putInstance(ShCompilerInstance &&instance)
 
 ShShaderSpec Compiler::SelectShaderSpec(const State &state)
 {
-    const EGLenum clientType = state.getClientType();
-    const EGLint profileMask = state.getProfileMask();
     const GLint majorVersion = state.getClientMajorVersion();
     const GLint minorVersion = state.getClientMinorVersion();
     bool isWebGL             = state.isWebGL();
-
-    // For Desktop GL
-    if (clientType == EGL_OPENGL_API)
-    {
-        if ((profileMask & EGL_CONTEXT_OPENGL_CORE_PROFILE_BIT) != 0)
-        {
-            return SH_GL_CORE_SPEC;
-        }
-        else
-        {
-            return SH_GL_COMPATIBILITY_SPEC;
-        }
-    }
 
     if (majorVersion >= 3)
     {

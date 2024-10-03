@@ -436,13 +436,8 @@ unsupported_enum_group_names = {
 }
 
 # Versions (major, minor). Note that GLES intentionally places 1.0 last.
-DESKTOP_GL_VERSIONS = [(1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (2, 0), (2, 1), (3, 0),
-                       (3, 1), (3, 2), (3, 3), (4, 0), (4, 1), (4, 2), (4, 3), (4, 4), (4, 5),
-                       (4, 6)]
 GLES_VERSIONS = [(2, 0), (3, 0), (3, 1), (3, 2), (1, 0)]
 EGL_VERSIONS = [(1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5)]
-WGL_VERSIONS = [(1, 0)]
-GLX_VERSIONS = [(1, 0), (1, 1), (1, 2), (1, 3), (1, 4)]
 CL_VERSIONS = [(1, 0), (1, 1), (1, 2), (2, 0), (2, 1), (2, 2), (3, 0)]
 
 
