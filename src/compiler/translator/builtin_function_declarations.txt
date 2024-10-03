@@ -618,7 +618,7 @@ GROUP BEGIN Texture {"queryFunction": true}
       GROUP END Offsets
   GROUP END Gather
 
-  GROUP BEGIN QueryLod
+  GROUP BEGIN QueryLod {"shader_type": "FRAGMENT"}
     DEFAULT METADATA {"essl_level": "ESSL3_BUILTINS", "essl_extension": "EXT_texture_query_lod"}
       vec2 textureQueryLOD(gsampler2D, vec2);
       vec2 textureQueryLOD(gsampler3D, vec3);
