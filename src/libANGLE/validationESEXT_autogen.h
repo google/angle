@@ -2041,6 +2041,8 @@ bool ValidateTexBufferRangeEXT(const Context *context,
 
 // GL_EXT_texture_norm16
 
+// GL_EXT_texture_query_lod
+
 // GL_EXT_texture_rg
 
 // GL_EXT_texture_sRGB_R8

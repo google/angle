@@ -9924,6 +9924,8 @@ void GL_APIENTRY GL_TexBufferRangeEXT(GLenum target,
 
 // GL_EXT_texture_norm16
 
+// GL_EXT_texture_query_lod
+
 // GL_EXT_texture_rg
 
 // GL_EXT_texture_sRGB_R8

@@ -575,6 +575,9 @@ struct Extensions
     // GL_OES_texture_npot
     bool textureNpotOES = false;
 
+    // GL_EXT_texture_query_lod
+    bool textureQueryLodEXT = false;
+
     // GL_EXT_texture_rg
     bool textureRgEXT = false;
 

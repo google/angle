@@ -156,6 +156,7 @@ gles_requestable_extensions = [
     "GL_EXT_texture_format_BGRA8888",
     "GL_EXT_texture_mirror_clamp_to_edge",
     "GL_EXT_texture_norm16",
+    "GL_EXT_texture_query_lod",
     "GL_EXT_texture_rg",
     "GL_EXT_texture_shadow_lod",
     "GL_EXT_texture_sRGB_R8",
