@@ -215,6 +215,8 @@ bool UsesDerivatives(TIntermAggregate *functionCall)
         // TextureOffsetBias
         case EOpTextureOffsetBias:
         case EOpTextureProjOffsetBias:
+        // TextureQueryLod
+        case EOpTextureQueryLOD:
             return true;
         default:
             return false;

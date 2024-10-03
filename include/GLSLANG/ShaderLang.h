@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 365
+#define ANGLE_SH_VERSION 366
 
 enum ShShaderSpec
 {
@@ -522,6 +522,7 @@ struct ShBuiltInResources
     int APPLE_clip_distance;
     int OES_texture_cube_map_array;
     int EXT_texture_cube_map_array;
+    int EXT_texture_query_lod;
     int EXT_texture_shadow_lod;
     int EXT_shadow_samplers;
     int OES_shader_multisample_interpolation;

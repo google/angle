@@ -1451,6 +1451,7 @@ void TCompiler::setResourceString()
         << ":APPLE_clip_distance:" << mResources.APPLE_clip_distance
         << ":OES_texture_cube_map_array:" << mResources.OES_texture_cube_map_array
         << ":EXT_texture_cube_map_array:" << mResources.EXT_texture_cube_map_array
+        << ":EXT_texture_query_lod:" << mResources.EXT_texture_query_lod
         << ":EXT_texture_shadow_lod:" << mResources.EXT_texture_shadow_lod
         << ":EXT_shadow_samplers:" << mResources.EXT_shadow_samplers
         << ":OES_shader_multisample_interpolation:" << mResources.OES_shader_multisample_interpolation
