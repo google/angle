@@ -2645,7 +2645,7 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // https://crbug.com/1356053
     ANGLE_FEATURE_CONDITION(features, bindCompleteFramebufferForTimerQueries, isMali);
 
-    // https://crbug.com/1434317
+    // https://crbug.com/40264674
     ANGLE_FEATURE_CONDITION(features, disableClipControl, IsMaliG72OrG76OrG51(functions));
 
     // https://anglebug.com/42266811
@@ -2665,10 +2665,11 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // http://anglebug.com/42266610
     ANGLE_FEATURE_CONDITION(features, disableBaseInstanceVertex, IsMaliValhall(functions));
 
-    // http://crbug.com/1420130
-    ANGLE_FEATURE_CONDITION(features, scalarizeVecAndMatConstructorArgs, isMali);
+    // Mali: http://crbug.com/40063287
+    // Nvidia: http://crbug.com/328015191
+    ANGLE_FEATURE_CONDITION(features, scalarizeVecAndMatConstructorArgs, isMali || isNvidia);
 
-    // http://crbug.com/1456243
+    // http://crbug.com/40066076
     ANGLE_FEATURE_CONDITION(features, ensureNonEmptyBufferIsBoundForDraw, IsApple() || IsAndroid());
 
     // https://anglebug.com/42266857
