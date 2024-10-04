@@ -6041,18 +6041,18 @@ void WriteDescriptorDescs::updateDynamicDescriptorsCount()
     }
 }
 
-void WriteDescriptorDescs::streamOut(std::ostream &ostr) const
+std::ostream &operator<<(std::ostream &os, const WriteDescriptorDescs &desc)
 {
-    ostr << mDescs.size() << " write descriptor descs:\n";
-
-    for (uint32_t index = 0; index < mDescs.size(); ++index)
+    os << " WriteDescriptorDescs[" << desc.size() << "]:";
+    for (uint32_t index = 0; index < desc.size(); ++index)
     {
-        const WriteDescriptorDesc &writeDesc = mDescs[index];
-        ostr << static_cast<int>(writeDesc.binding) << ": "
-             << static_cast<int>(writeDesc.descriptorCount) << " "
-             << kDescriptorTypeNameMap[writeDesc.descriptorType] << " descriptors: ";
-        ostr << "\n";
+        const WriteDescriptorDesc &writeDesc = desc[index];
+        os << static_cast<int>(writeDesc.binding) << ": "
+           << static_cast<int>(writeDesc.descriptorCount) << ": "
+           << kDescriptorTypeNameMap[writeDesc.descriptorType] << ": "
+           << writeDesc.descriptorInfoIndex;
     }
+    return os;
 }
 
 // DescriptorSetDesc implementation.
@@ -6149,17 +6149,16 @@ void DescriptorSetDesc::updateDescriptorSet(Renderer *renderer,
     }
 }
 
-void DescriptorSetDesc::streamOut(std::ostream &ostr) const
+std::ostream &operator<<(std::ostream &os, const DescriptorSetDesc &desc)
 {
-    ostr << mDescriptorInfos.size() << " descriptor descs:\n";
-
-    for (uint32_t index = 0; index < mDescriptorInfos.size(); ++index)
+    os << " desc[" << desc.size() << "]:";
+    for (uint32_t index = 0; index < desc.size(); ++index)
     {
-        const DescriptorInfoDesc &infoDesc = mDescriptorInfos[index];
-        ostr << "{" << infoDesc.imageLayoutOrRange << ", " << infoDesc.imageSubresourceRange << ", "
-             << infoDesc.imageViewSerialOrOffset << ", " << infoDesc.samplerOrBufferSerial << "}";
-        ostr << "\n";
+        const DescriptorInfoDesc &infoDesc = desc.getInfoDesc(index);
+        os << "{" << infoDesc.samplerOrBufferSerial << ", " << infoDesc.imageViewSerialOrOffset
+           << ", " << infoDesc.imageLayoutOrRange << ", " << infoDesc.imageSubresourceRange << "}";
     }
+    return os;
 }
 
 // DescriptorSetDescBuilder implementation.
