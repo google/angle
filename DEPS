@@ -398,6 +398,7 @@ vars = {
   'checkout_angle_restricted_trace_the_gardens_between': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_the_sims_mobile': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_the_witcher_monster_slayer': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_thief_puzzle': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_thimbleweed_park': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_tmnt_shredders_revenge': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_toca_life_world': 'checkout_angle_restricted_traces',
@@ -3610,6 +3611,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_the_witcher_monster_slayer',
+  },
+  'src/tests/restricted_traces/thief_puzzle': {
+      'packages': [
+        {
+            'package': 'angle/traces/thief_puzzle',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_thief_puzzle',
   },
   'src/tests/restricted_traces/thimbleweed_park': {
       'packages': [
