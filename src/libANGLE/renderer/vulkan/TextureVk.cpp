@@ -4343,6 +4343,10 @@ angle::Result TextureVk::refreshImageViews(ContextVk *contextVk)
         vk::Renderer *renderer = contextVk->getRenderer();
         imageView.release(renderer, mImage->getResourceUse());
 
+        // Since view has changed, some descriptorSet cache maybe obsolete. SO proactively release
+        // cache.
+        mDescriptorSetCacheManager.releaseKeys(renderer);
+
         for (auto &renderTargets : mSingleLayerRenderTargets)
         {
             for (RenderTargetVector &renderTargetLevels : renderTargets)
