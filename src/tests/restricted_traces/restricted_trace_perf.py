@@ -543,7 +543,15 @@ def collect_power(done_event, test_fixedtime, results):
 
 def get_thermal_info():
     out = run_adb_command('shell dumpsys android.hardware.thermal.IThermal/default').stdout
-    result = [l for l in out.splitlines() if ('VIRTUAL-SKIN' in l and 'ThrottlingStatus:' in l)]
+    result = []
+    for line in out.splitlines():
+        if 'ThrottlingStatus:' in line:
+            name = re.search('Name: ([^ ]*)', line).group(1)
+            if ('VIRTUAL-SKIN' in name and
+                    '-CHARGE-' not in name and  # only supposed to affect charging speed
+                    '-MODEL-' not in name):  # different units and not used for throttling
+                result.append(line)
+
     if not result:
         logging.error('Unexpected dumpsys IThermal response:\n%s', out)
         raise RuntimeError('Unexpected dumpsys IThermal response, logged above')
@@ -557,8 +565,7 @@ def set_vendor_thermal_control(disabled=None):
         while waiting:
             waiting = False
             for line in get_thermal_info():
-                is_charge = 'VIRTUAL-SKIN-CHARGE-' in line  # Only supposed to affect charging speed
-                if 'ThrottlingStatus: NONE' not in line and not is_charge:
+                if 'ThrottlingStatus: NONE' not in line:
                     logging.info('Waiting for vendor throttling to finish: %s', line.strip())
                     time.sleep(10)
                     waiting = True
@@ -572,7 +579,7 @@ def sleep_until_temps_below(limit_temp):
     while waiting:
         waiting = False
         for line in get_thermal_info():
-            v = float(line.split('CurrentValue:')[1].strip().split(' ')[0])
+            v = float(re.search('CurrentValue: ([^ ]*)', line).group(1))
             if v > limit_temp:
                 logging.info('Waiting for device temps below %.1f: %s', limit_temp, line.strip())
                 time.sleep(5)
