@@ -2134,9 +2134,18 @@ class SharedCacheKeyManager
     void assertAllEntriesDestroyed();
 
   private:
+    size_t updateEmptySlotBits();
+
     // Tracks an array of cache keys with refcounting. Note this owns one refcount of
     // SharedCacheKeyT object.
-    std::vector<SharedCacheKeyT> mSharedCacheKeys;
+    std::deque<SharedCacheKeyT> mSharedCacheKeys;
+
+    // To speed up searching for available slot in the mSharedCacheKeys, we use bitset to track
+    // available (i.e, empty) slot
+    static constexpr size_t kInvalidSlot  = -1;
+    static constexpr size_t kSlotBitCount = 64;
+    using SlotBitMask                     = angle::BitSet64<kSlotBitCount>;
+    std::vector<SlotBitMask> mEmptySlotBits;
 };
 
 using FramebufferCacheManager   = SharedCacheKeyManager<SharedFramebufferCacheKey>;

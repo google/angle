@@ -2672,6 +2672,10 @@ void DumpPipelineCacheGraph(
 }
 
 // Used by SharedCacheKeyManager
+void MakeEmptyCachedObject(SharedFramebufferCacheKey *cacheKeyOut)
+{
+    *cacheKeyOut = std::make_shared<FramebufferDescPointer>();
+}
 void ReleaseCachedObject(ContextVk *contextVk, const FramebufferDesc &desc)
 {
     contextVk->getShareGroup()->getFramebufferCache().erase(contextVk, desc);
@@ -2681,6 +2685,10 @@ void ReleaseCachedObject(Renderer *renderer, const FramebufferDesc &desc)
     UNREACHABLE();
 }
 
+void MakeEmptyCachedObject(SharedDescriptorSetCacheKey *cacheKeyOut)
+{
+    *cacheKeyOut = std::make_shared<DescriptorSetAndPoolPointer>();
+}
 void ReleaseCachedObject(ContextVk *contextVk, const DescriptorSetDescAndPool &descAndPool)
 {
     UNREACHABLE();
@@ -6896,23 +6904,78 @@ void DescriptorSetDescBuilder::updateDescriptorSet(Renderer *renderer,
 
 // SharedCacheKeyManager implementation.
 template <class SharedCacheKeyT>
-void SharedCacheKeyManager<SharedCacheKeyT>::addKey(const SharedCacheKeyT &key)
+size_t SharedCacheKeyManager<SharedCacheKeyT>::updateEmptySlotBits()
 {
-    // If there is invalid key in the array, use it instead of keep expanding the array
-    for (SharedCacheKeyT &sharedCacheKey : mSharedCacheKeys)
+    ASSERT(mSharedCacheKeys.size() == mEmptySlotBits.size() * kSlotBitCount);
+    size_t emptySlot = kInvalidSlot;
+    for (size_t slot = 0; slot < mSharedCacheKeys.size(); ++slot)
     {
+        SharedCacheKeyT &sharedCacheKey = mSharedCacheKeys[slot];
         if (*sharedCacheKey.get() == nullptr)
         {
-            sharedCacheKey = key;
-            return;
+            mEmptySlotBits[slot / kSlotBitCount].set(slot % kSlotBitCount);
+            emptySlot = slot;
         }
     }
+    return emptySlot;
+}
+
+template <class SharedCacheKeyT>
+void SharedCacheKeyManager<SharedCacheKeyT>::addKey(const SharedCacheKeyT &key)
+{
+    // Search for available slots and use that if any
+    size_t slot = 0;
+    for (SlotBitMask &emptyBits : mEmptySlotBits)
+    {
+        if (emptyBits.any())
+        {
+            slot += emptyBits.first();
+            SharedCacheKeyT &sharedCacheKey = mSharedCacheKeys[slot];
+            ASSERT(*sharedCacheKey.get() == nullptr);
+            sharedCacheKey = key;
+            emptyBits.reset(slot % kSlotBitCount);
+            return;
+        }
+        slot += kSlotBitCount;
+    }
+
+    // Some cached entries may have been released. Try to update and use any available slot if any.
+    slot = updateEmptySlotBits();
+    if (slot != kInvalidSlot)
+    {
+        SharedCacheKeyT &sharedCacheKey = mSharedCacheKeys[slot];
+        ASSERT(*sharedCacheKey.get() == nullptr);
+        sharedCacheKey         = key;
+        SlotBitMask &emptyBits = mEmptySlotBits[slot / kSlotBitCount];
+        emptyBits.reset(slot % kSlotBitCount);
+        return;
+    }
+
+    // No slot available, expand mSharedCacheKeys
+    ASSERT(mSharedCacheKeys.size() == mEmptySlotBits.size() * kSlotBitCount);
+    if (!mEmptySlotBits.empty())
+    {
+        // On first insertion, let std::vector allocate a single entry for minimal memory overhead,
+        // since this is the most common usage case. If that exceeds, reserve a larger chunk to
+        // avoid storage reallocation for efficiency (enough storage enough for 512 cache entries).
+        mEmptySlotBits.reserve(8);
+    }
+    mEmptySlotBits.emplace_back(0xFFFFFFFE);
     mSharedCacheKeys.emplace_back(key);
+    while (mSharedCacheKeys.size() < mEmptySlotBits.size() * kSlotBitCount)
+    {
+        mSharedCacheKeys.emplace_back();
+        SharedCacheKeyT &sharedCacheKey = mSharedCacheKeys.back();
+        // Insert an empty cache key so that sharedCacheKey will not be null.
+        MakeEmptyCachedObject(&sharedCacheKey);
+        ASSERT(*sharedCacheKey.get() == nullptr);
+    }
 }
 
 template <class SharedCacheKeyT>
 void SharedCacheKeyManager<SharedCacheKeyT>::releaseKeys(ContextVk *contextVk)
 {
+    ASSERT(mSharedCacheKeys.size() == mEmptySlotBits.size() * kSlotBitCount);
     for (SharedCacheKeyT &sharedCacheKey : mSharedCacheKeys)
     {
         if (*sharedCacheKey.get() != nullptr)
@@ -6924,11 +6987,13 @@ void SharedCacheKeyManager<SharedCacheKeyT>::releaseKeys(ContextVk *contextVk)
         }
     }
     mSharedCacheKeys.clear();
+    mEmptySlotBits.clear();
 }
 
 template <class SharedCacheKeyT>
 void SharedCacheKeyManager<SharedCacheKeyT>::releaseKeys(Renderer *renderer)
 {
+    ASSERT(mSharedCacheKeys.size() == mEmptySlotBits.size() * kSlotBitCount);
     for (SharedCacheKeyT &sharedCacheKey : mSharedCacheKeys)
     {
         if (*sharedCacheKey.get() != nullptr)
@@ -6940,11 +7005,13 @@ void SharedCacheKeyManager<SharedCacheKeyT>::releaseKeys(Renderer *renderer)
         }
     }
     mSharedCacheKeys.clear();
+    mEmptySlotBits.clear();
 }
 
 template <class SharedCacheKeyT>
 void SharedCacheKeyManager<SharedCacheKeyT>::destroyKeys(Renderer *renderer)
 {
+    ASSERT(mSharedCacheKeys.size() == mEmptySlotBits.size() * kSlotBitCount);
     for (SharedCacheKeyT &sharedCacheKey : mSharedCacheKeys)
     {
         // destroy the cache key
@@ -6956,6 +7023,7 @@ void SharedCacheKeyManager<SharedCacheKeyT>::destroyKeys(Renderer *renderer)
         }
     }
     mSharedCacheKeys.clear();
+    mEmptySlotBits.clear();
 }
 
 template <class SharedCacheKeyT>
@@ -6964,6 +7032,7 @@ void SharedCacheKeyManager<SharedCacheKeyT>::clear()
     // Caller must have already freed all caches
     assertAllEntriesDestroyed();
     mSharedCacheKeys.clear();
+    mEmptySlotBits.clear();
 }
 
 template <class SharedCacheKeyT>
