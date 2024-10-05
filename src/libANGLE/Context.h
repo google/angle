@@ -863,6 +863,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     egl::Error unsetDefaultFramebuffer();
 
     void initRendererString();
+    void initVendorString();
     void initVersionStrings();
     void initExtensionStrings();
 
@@ -926,6 +927,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     TransformFeedbackMap mTransformFeedbackMap;
     HandleAllocator mTransformFeedbackHandleAllocator;
 
+    const char *mVendorString;
     const char *mVersionString;
     const char *mShadingLanguageString;
     const char *mRendererString;
