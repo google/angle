@@ -356,6 +356,7 @@ def _run_tests(args, tests, extra_flags, env, screenshot_dir, results, test_resu
 
         if args.isolated_script_test_filter:
             traces = angle_test_util.FilterTests(traces, args.isolated_script_test_filter)
+            assert traces, 'Test filter did not match any tests'
 
         if angle_test_util.IsAndroid():
             # On Android, screen orientation changes between traces can result in small pixel diffs
