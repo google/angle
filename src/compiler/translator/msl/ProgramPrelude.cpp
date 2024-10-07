@@ -110,10 +110,6 @@ class ProgramPrelude : public TIntermTraverser
     void transform_feedback_guard();
 
     void enable_if();
-    void scalar_of();
-    void is_scalar();
-    void is_vector();
-    void is_matrix();
     void addressof();
     void distanceScalar();
     void faceforwardScalar();
@@ -137,9 +133,7 @@ class ProgramPrelude : public TIntermTraverser
     void subMatrixScalar();
     void subScalarMatrix();
     void divMatrixScalar();
-    void divMatrixScalarFast();
     void divMatrixScalarAssign();
-    void divMatrixScalarAssignFast();
     void divScalarMatrix();
     void componentWiseDivide();
     void componentWiseDivideAssign();
@@ -336,89 +330,6 @@ struct ANGLE_enable_if<true, T>
 template <bool B>
 using ANGLE_enable_if_t = typename ANGLE_enable_if<B>::type;
 )")
-
-PROGRAM_PRELUDE_DECLARE(scalar_of, R"(
-template <typename T>
-struct ANGLE_scalar_of
-{
-    using type = T;
-};
-template <typename T>
-using ANGLE_scalar_of_t = typename ANGLE_scalar_of<T>::type;
-)")
-
-PROGRAM_PRELUDE_DECLARE(is_scalar, R"(
-template <typename T>
-struct ANGLE_is_scalar {};
-#define ANGLE_DEFINE_SCALAR(scalar) \
-    template <> struct ANGLE_is_scalar<scalar> { enum { value = true }; }
-ANGLE_DEFINE_SCALAR(bool);
-ANGLE_DEFINE_SCALAR(char);
-ANGLE_DEFINE_SCALAR(short);
-ANGLE_DEFINE_SCALAR(int);
-ANGLE_DEFINE_SCALAR(uchar);
-ANGLE_DEFINE_SCALAR(ushort);
-ANGLE_DEFINE_SCALAR(uint);
-ANGLE_DEFINE_SCALAR(half);
-ANGLE_DEFINE_SCALAR(float);
-)")
-
-PROGRAM_PRELUDE_DECLARE(is_vector,
-                        R"(
-template <typename T>
-struct ANGLE_is_vector
-{
-    enum { value = false };
-};
-#define ANGLE_DEFINE_VECTOR(scalar) \
-    template <> struct ANGLE_is_vector<metal::scalar ## 2> { enum { value = true }; }; \
-    template <> struct ANGLE_is_vector<metal::scalar ## 3> { enum { value = true }; }; \
-    template <> struct ANGLE_is_vector<metal::scalar ## 4> { enum { value = true }; }; \
-    template <> struct ANGLE_scalar_of<metal::scalar ## 2> { using type = scalar; }; \
-    template <> struct ANGLE_scalar_of<metal::scalar ## 3> { using type = scalar; }; \
-    template <> struct ANGLE_scalar_of<metal::scalar ## 4> { using type = scalar; }
-ANGLE_DEFINE_VECTOR(bool);
-ANGLE_DEFINE_VECTOR(char);
-ANGLE_DEFINE_VECTOR(short);
-ANGLE_DEFINE_VECTOR(int);
-ANGLE_DEFINE_VECTOR(uchar);
-ANGLE_DEFINE_VECTOR(ushort);
-ANGLE_DEFINE_VECTOR(uint);
-ANGLE_DEFINE_VECTOR(half);
-ANGLE_DEFINE_VECTOR(float);
-)",
-                        scalar_of())
-
-PROGRAM_PRELUDE_DECLARE(is_matrix,
-                        R"(
-template <typename T>
-struct ANGLE_is_matrix
-{
-    enum { value = false };
-};
-#define ANGLE_DEFINE_MATRIX(scalar) \
-    template <> struct ANGLE_is_matrix<metal::scalar ## 2x2> { enum { value = true }; }; \
-    template <> struct ANGLE_is_matrix<metal::scalar ## 2x3> { enum { value = true }; }; \
-    template <> struct ANGLE_is_matrix<metal::scalar ## 2x4> { enum { value = true }; }; \
-    template <> struct ANGLE_is_matrix<metal::scalar ## 3x2> { enum { value = true }; }; \
-    template <> struct ANGLE_is_matrix<metal::scalar ## 3x3> { enum { value = true }; }; \
-    template <> struct ANGLE_is_matrix<metal::scalar ## 3x4> { enum { value = true }; }; \
-    template <> struct ANGLE_is_matrix<metal::scalar ## 4x2> { enum { value = true }; }; \
-    template <> struct ANGLE_is_matrix<metal::scalar ## 4x3> { enum { value = true }; }; \
-    template <> struct ANGLE_is_matrix<metal::scalar ## 4x4> { enum { value = true }; }; \
-    template <> struct ANGLE_scalar_of<metal::scalar ## 2x2> { using type = scalar; }; \
-    template <> struct ANGLE_scalar_of<metal::scalar ## 2x3> { using type = scalar; }; \
-    template <> struct ANGLE_scalar_of<metal::scalar ## 2x4> { using type = scalar; }; \
-    template <> struct ANGLE_scalar_of<metal::scalar ## 3x2> { using type = scalar; }; \
-    template <> struct ANGLE_scalar_of<metal::scalar ## 3x3> { using type = scalar; }; \
-    template <> struct ANGLE_scalar_of<metal::scalar ## 3x4> { using type = scalar; }; \
-    template <> struct ANGLE_scalar_of<metal::scalar ## 4x2> { using type = scalar; }; \
-    template <> struct ANGLE_scalar_of<metal::scalar ## 4x3> { using type = scalar; }; \
-    template <> struct ANGLE_scalar_of<metal::scalar ## 4x4> { using type = scalar; }
-ANGLE_DEFINE_MATRIX(half);
-ANGLE_DEFINE_MATRIX(float);
-)",
-                        scalar_of())
 
 PROGRAM_PRELUDE_DECLARE(addressof,
                         R"(
@@ -692,20 +603,6 @@ ANGLE_ALWAYS_INLINE metal::matrix<T, Cols, Rows> operator-(T x, metal::matrix<T,
 }
 )")
 
-PROGRAM_PRELUDE_DECLARE(divMatrixScalarAssignFast,
-                        R"(
-template <typename T, int Cols, int Rows>
-ANGLE_ALWAYS_INLINE thread metal::matrix<T, Cols, Rows> &operator/=(thread metal::matrix<T, Cols, Rows> &m, T x)
-{
-    x = T(1) / x;
-    for (size_t col = 0; col < Cols; ++col)
-    {
-        m[col] *= x;
-    }
-    return m;
-}
-)")
-
 PROGRAM_PRELUDE_DECLARE(divMatrixScalarAssign,
                         R"(
 template <typename T, int Cols, int Rows>
@@ -718,19 +615,6 @@ ANGLE_ALWAYS_INLINE thread metal::matrix<T, Cols, Rows> &operator/=(thread metal
     return m;
 }
 )")
-
-PROGRAM_PRELUDE_DECLARE(divMatrixScalarFast,
-                        R"(
-#if __METAL_VERSION__ <= 220
-template <typename T, int Cols, int Rows>
-ANGLE_ALWAYS_INLINE metal::matrix<T, Cols, Rows> operator/(metal::matrix<T, Cols, Rows> m, T x)
-{
-    m /= x;
-    return m;
-}
-#endif
-)",
-                        divMatrixScalarAssignFast())
 
 PROGRAM_PRELUDE_DECLARE(divMatrixScalar,
                         R"(
