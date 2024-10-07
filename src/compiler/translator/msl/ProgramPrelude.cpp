@@ -65,12 +65,7 @@ class ProgramPrelude : public TIntermTraverser
                 break;
         }
 
-#if 1
-        mOut << "#define ANGLE_tensor metal::array\n";
         mOut << "#pragma clang diagnostic ignored \"-Wunused-value\"\n";
-#else
-        tensor();
-#endif
     }
 
   private:
@@ -146,7 +141,6 @@ class ProgramPrelude : public TIntermTraverser
     void divMatrixScalarAssign();
     void divMatrixScalarAssignFast();
     void divScalarMatrix();
-    void tensor();
     void componentWiseDivide();
     void componentWiseDivideAssign();
     void componentWiseMultiply();
@@ -1269,42 +1263,6 @@ ANGLE_ALWAYS_INLINE metal::matrix<T, C1, R1> ANGLE_cast(metal::matrix<T, C2, R2>
 )",
                         enable_if(),
                         castVector())
-
-PROGRAM_PRELUDE_DECLARE(tensor, R"(
-template <typename T, size_t... DS>
-struct ANGLE_tensor_traits;
-template <typename T, size_t D>
-struct ANGLE_tensor_traits<T, D>
-{
-    enum : size_t { outer_dim = D };
-    using inner_type = T;
-    using outer_type = inner_type[D];
-};
-template <typename T, size_t D, size_t... DS>
-struct ANGLE_tensor_traits<T, D, DS...>
-{
-    enum : size_t { outer_dim = D };
-    using inner_type = typename ANGLE_tensor_traits<T, DS...>::outer_type;
-    using outer_type = inner_type[D];
-};
-template <size_t D, typename value_type_, typename inner_type_>
-struct ANGLE_tensor_impl
-{
-    enum : size_t { outer_dim = D };
-    using value_type = value_type_;
-    using inner_type = inner_type_;
-    using outer_type = inner_type[D];
-    outer_type _data;
-    ANGLE_ALWAYS_INLINE size_t size() const { return outer_dim; }
-    ANGLE_ALWAYS_INLINE inner_type &operator[](size_t i) { return _data[i]; }
-    ANGLE_ALWAYS_INLINE const inner_type &operator[](size_t i) const { return _data[i]; }
-};
-template <typename T, size_t... DS>
-using ANGLE_tensor = ANGLE_tensor_impl<
-    ANGLE_tensor_traits<T, DS...>::outer_dim,
-    T,
-    typename ANGLE_tensor_traits<T, DS...>::inner_type>;
-)")
 
 PROGRAM_PRELUDE_DECLARE(textureEnv,
                         R"(
