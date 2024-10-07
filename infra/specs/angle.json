@@ -2826,7 +2826,7 @@
           "dimensions": {
             "display_attached": "1",
             "gpu": "8086:9bc5-23.2.1",
-            "os": "Ubuntu-22.04.4",
+            "os": "Ubuntu-22.04.5",
             "pool": "chromium.tests.gpu"
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
@@ -2850,7 +2850,7 @@
           "dimensions": {
             "display_attached": "1",
             "gpu": "8086:9bc5-23.2.1",
-            "os": "Ubuntu-22.04.4",
+            "os": "Ubuntu-22.04.5",
             "pool": "chromium.tests.gpu"
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
@@ -2875,7 +2875,7 @@
           "dimensions": {
             "display_attached": "1",
             "gpu": "8086:9bc5-23.2.1",
-            "os": "Ubuntu-22.04.4",
+            "os": "Ubuntu-22.04.5",
             "pool": "chromium.tests.gpu"
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
@@ -2897,7 +2897,7 @@
           "dimensions": {
             "display_attached": "1",
             "gpu": "8086:9bc5-23.2.1",
-            "os": "Ubuntu-22.04.4",
+            "os": "Ubuntu-22.04.5",
             "pool": "chromium.tests.gpu"
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
@@ -2919,7 +2919,7 @@
           "dimensions": {
             "display_attached": "1",
             "gpu": "8086:9bc5-23.2.1",
-            "os": "Ubuntu-22.04.4",
+            "os": "Ubuntu-22.04.5",
             "pool": "chromium.tests.gpu"
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
@@ -2943,7 +2943,7 @@
           "dimensions": {
             "display_attached": "1",
             "gpu": "8086:9bc5-23.2.1",
-            "os": "Ubuntu-22.04.4",
+            "os": "Ubuntu-22.04.5",
             "pool": "chromium.tests.gpu"
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
@@ -2969,7 +2969,7 @@
           "dimensions": {
             "display_attached": "1",
             "gpu": "8086:9bc5-23.2.1",
-            "os": "Ubuntu-22.04.4",
+            "os": "Ubuntu-22.04.5",
             "pool": "chromium.tests.gpu"
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
@@ -3001,7 +3001,7 @@
           "dimensions": {
             "display_attached": "1",
             "gpu": "8086:9bc5-23.2.1",
-            "os": "Ubuntu-22.04.4",
+            "os": "Ubuntu-22.04.5",
             "pool": "chromium.tests.gpu"
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
@@ -3030,7 +3030,7 @@
           "dimensions": {
             "display_attached": "1",
             "gpu": "8086:9bc5-23.2.1",
-            "os": "Ubuntu-22.04.4",
+            "os": "Ubuntu-22.04.5",
             "pool": "chromium.tests.gpu"
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
@@ -3058,7 +3058,7 @@
           "dimensions": {
             "display_attached": "1",
             "gpu": "8086:9bc5-23.2.1",
-            "os": "Ubuntu-22.04.4",
+            "os": "Ubuntu-22.04.5",
             "pool": "chromium.tests.gpu"
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
@@ -3087,7 +3087,7 @@
           "dimensions": {
             "display_attached": "1",
             "gpu": "8086:9bc5-23.2.1",
-            "os": "Ubuntu-22.04.4",
+            "os": "Ubuntu-22.04.5",
             "pool": "chromium.tests.gpu"
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
@@ -3908,7 +3908,7 @@
           "containment_type": "AUTO",
           "dimensions": {
             "gpu": "8086:9bc5-20.0.8|8086:9bc5-23.2.1",
-            "os": "Ubuntu-18.04.6|Ubuntu-22.04.4",
+            "os": "Ubuntu-18.04.6|Ubuntu-22.04",
             "pool": "chromium.tests.gpu"
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
@@ -3931,7 +3931,7 @@
           "containment_type": "AUTO",
           "dimensions": {
             "gpu": "8086:9bc5-20.0.8|8086:9bc5-23.2.1",
-            "os": "Ubuntu-18.04.6|Ubuntu-22.04.4",
+            "os": "Ubuntu-18.04.6|Ubuntu-22.04",
             "pool": "chromium.tests.gpu"
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
@@ -3955,7 +3955,7 @@
           "containment_type": "AUTO",
           "dimensions": {
             "gpu": "8086:9bc5-20.0.8|8086:9bc5-23.2.1",
-            "os": "Ubuntu-18.04.6|Ubuntu-22.04.4",
+            "os": "Ubuntu-18.04.6|Ubuntu-22.04",
             "pool": "chromium.tests.gpu"
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
@@ -3976,7 +3976,7 @@
           "containment_type": "AUTO",
           "dimensions": {
             "gpu": "8086:9bc5-20.0.8|8086:9bc5-23.2.1",
-            "os": "Ubuntu-18.04.6|Ubuntu-22.04.4",
+            "os": "Ubuntu-18.04.6|Ubuntu-22.04",
             "pool": "chromium.tests.gpu"
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
@@ -3997,7 +3997,7 @@
           "containment_type": "AUTO",
           "dimensions": {
             "gpu": "8086:9bc5-20.0.8|8086:9bc5-23.2.1",
-            "os": "Ubuntu-18.04.6|Ubuntu-22.04.4",
+            "os": "Ubuntu-18.04.6|Ubuntu-22.04",
             "pool": "chromium.tests.gpu"
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
@@ -4020,7 +4020,7 @@
           "containment_type": "AUTO",
           "dimensions": {
             "gpu": "8086:9bc5-20.0.8|8086:9bc5-23.2.1",
-            "os": "Ubuntu-18.04.6|Ubuntu-22.04.4",
+            "os": "Ubuntu-18.04.6|Ubuntu-22.04",
             "pool": "chromium.tests.gpu"
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
@@ -4045,7 +4045,7 @@
           "containment_type": "AUTO",
           "dimensions": {
             "gpu": "8086:9bc5-20.0.8|8086:9bc5-23.2.1",
-            "os": "Ubuntu-18.04.6|Ubuntu-22.04.4",
+            "os": "Ubuntu-18.04.6|Ubuntu-22.04",
             "pool": "chromium.tests.gpu"
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
@@ -4076,7 +4076,7 @@
           "containment_type": "AUTO",
           "dimensions": {
             "gpu": "8086:9bc5-20.0.8|8086:9bc5-23.2.1",
-            "os": "Ubuntu-18.04.6|Ubuntu-22.04.4",
+            "os": "Ubuntu-18.04.6|Ubuntu-22.04",
             "pool": "chromium.tests.gpu"
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
@@ -4104,7 +4104,7 @@
           "containment_type": "AUTO",
           "dimensions": {
             "gpu": "8086:9bc5-20.0.8|8086:9bc5-23.2.1",
-            "os": "Ubuntu-18.04.6|Ubuntu-22.04.4",
+            "os": "Ubuntu-18.04.6|Ubuntu-22.04",
             "pool": "chromium.tests.gpu"
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
@@ -4131,7 +4131,7 @@
           "containment_type": "AUTO",
           "dimensions": {
             "gpu": "8086:9bc5-20.0.8|8086:9bc5-23.2.1",
-            "os": "Ubuntu-18.04.6|Ubuntu-22.04.4",
+            "os": "Ubuntu-18.04.6|Ubuntu-22.04",
             "pool": "chromium.tests.gpu"
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
@@ -4159,7 +4159,7 @@
           "containment_type": "AUTO",
           "dimensions": {
             "gpu": "8086:9bc5-20.0.8|8086:9bc5-23.2.1",
-            "os": "Ubuntu-18.04.6|Ubuntu-22.04.4",
+            "os": "Ubuntu-18.04.6|Ubuntu-22.04",
             "pool": "chromium.tests.gpu"
           },
           "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
@@ -4187,7 +4187,7 @@
           "containment_type": "AUTO",
           "dimensions": {
             "gpu": "8086:9bc5-20.0.8|8086:9bc5-23.2.1",
-            "os": "Ubuntu-18.04.6|Ubuntu-22.04.4",
+            "os": "Ubuntu-18.04.6|Ubuntu-22.04",
             "pool": "chromium.tests.gpu"
           },
           "hard_timeout": 7200,
@@ -4215,7 +4215,7 @@
           "containment_type": "AUTO",
           "dimensions": {
             "gpu": "8086:9bc5-20.0.8|8086:9bc5-23.2.1",
-            "os": "Ubuntu-18.04.6|Ubuntu-22.04.4",
+            "os": "Ubuntu-18.04.6|Ubuntu-22.04",
             "pool": "chromium.tests.gpu"
           },
           "hard_timeout": 7200,
@@ -4243,7 +4243,7 @@
           "containment_type": "AUTO",
           "dimensions": {
             "gpu": "8086:9bc5-20.0.8|8086:9bc5-23.2.1",
-            "os": "Ubuntu-18.04.6|Ubuntu-22.04.4",
+            "os": "Ubuntu-18.04.6|Ubuntu-22.04",
             "pool": "chromium.tests.gpu"
           },
           "hard_timeout": 7200,
@@ -6435,7 +6435,7 @@
           "dimensions": {
             "cpu": "x86-64",
             "display_attached": "1",
-            "gpu": "1002:67ef",
+            "gpu": "1002:67ef|1002:7340",
             "hidpi": "1",
             "os": "Mac-14.4.1",
             "pool": "chromium.tests.gpu"
@@ -6459,7 +6459,7 @@
           "dimensions": {
             "cpu": "x86-64",
             "display_attached": "1",
-            "gpu": "1002:67ef",
+            "gpu": "1002:67ef|1002:7340",
             "hidpi": "1",
             "os": "Mac-14.4.1",
             "pool": "chromium.tests.gpu"
@@ -6484,7 +6484,7 @@
           "dimensions": {
             "cpu": "x86-64",
             "display_attached": "1",
-            "gpu": "1002:67ef",
+            "gpu": "1002:67ef|1002:7340",
             "hidpi": "1",
             "os": "Mac-14.4.1",
             "pool": "chromium.tests.gpu"
@@ -6509,7 +6509,7 @@
           "dimensions": {
             "cpu": "x86-64",
             "display_attached": "1",
-            "gpu": "1002:67ef",
+            "gpu": "1002:67ef|1002:7340",
             "hidpi": "1",
             "os": "Mac-14.4.1",
             "pool": "chromium.tests.gpu"
@@ -6533,7 +6533,7 @@
           "dimensions": {
             "cpu": "x86-64",
             "display_attached": "1",
-            "gpu": "1002:67ef",
+            "gpu": "1002:67ef|1002:7340",
             "hidpi": "1",
             "os": "Mac-14.4.1",
             "pool": "chromium.tests.gpu"
@@ -6558,7 +6558,7 @@
           "dimensions": {
             "cpu": "x86-64",
             "display_attached": "1",
-            "gpu": "1002:67ef",
+            "gpu": "1002:67ef|1002:7340",
             "hidpi": "1",
             "os": "Mac-14.4.1",
             "pool": "chromium.tests.gpu"
@@ -6584,7 +6584,7 @@
           "dimensions": {
             "cpu": "x86-64",
             "display_attached": "1",
-            "gpu": "1002:67ef",
+            "gpu": "1002:67ef|1002:7340",
             "hidpi": "1",
             "os": "Mac-14.4.1",
             "pool": "chromium.tests.gpu"
@@ -6610,7 +6610,7 @@
           "dimensions": {
             "cpu": "x86-64",
             "display_attached": "1",
-            "gpu": "1002:67ef",
+            "gpu": "1002:67ef|1002:7340",
             "hidpi": "1",
             "os": "Mac-14.4.1",
             "pool": "chromium.tests.gpu"
@@ -6632,7 +6632,7 @@
           "dimensions": {
             "cpu": "x86-64",
             "display_attached": "1",
-            "gpu": "1002:67ef",
+            "gpu": "1002:67ef|1002:7340",
             "hidpi": "1",
             "os": "Mac-14.4.1",
             "pool": "chromium.tests.gpu"
