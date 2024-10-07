@@ -1425,6 +1425,10 @@ angle::Result VertexArrayVk::handleLineLoop(ContextVk *contextVk,
         mLineLoopBufferFirstIndex = firstVertex;
         mLineLoopBufferLastIndex  = lastVertex;
     }
+    else
+    {
+        *indexBufferOut = mLineLoopHelper.getCurrentIndexBuffer();
+    }
     *indexCountOut = vertexOrIndexCount + 1;
 
     return angle::Result::Continue;

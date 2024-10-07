@@ -794,6 +794,8 @@ class LineLoopHelper final : angle::NonCopyable
     void release(ContextVk *contextVk);
     void destroy(vk::Renderer *renderer);
 
+    vk::BufferHelper *getCurrentIndexBuffer() { return mDynamicIndexBuffer.getBuffer(); }
+
     static void Draw(uint32_t count,
                      uint32_t baseVertex,
                      vk::RenderPassCommandBuffer *commandBuffer)
