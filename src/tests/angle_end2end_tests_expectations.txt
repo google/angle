@@ -166,6 +166,7 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 // New failures when upgrading to Ubuntu 22/newer driver.
 362545033 LINUX NVIDIA VULKAN : EGLBufferAgeTest.SingleBuffer/* = SKIP
 362545033 LINUX NVIDIA VULKAN : GLSLTest.NestedPowStatements/* = SKIP
+362486580 LINUX NVIDIA VULKAN : SixteenBppTextureTestES3.RGB5A1UploadRGBA8/* = SKIP
 362545033 LINUX NVIDIA VULKAN : VulkanPerformanceCounterTest.PipelineCacheIsRestoredWithProgramBinary/* = SKIP
 362545033 LINUX NVIDIA VULKAN : VulkanPerformanceCounterTest.PipelineCacheIsRestoredWithProgramBinaryTwice/* = SKIP
 362545033 LINUX NVIDIA VULKAN : VulkanPerformanceCounterTest.PipelineCacheIsWarmedUpAtLinkTime/* = SKIP
