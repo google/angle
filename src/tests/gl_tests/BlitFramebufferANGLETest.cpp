@@ -1202,6 +1202,7 @@ TEST_P(BlitFramebufferANGLETest, BlitDifferentSizes)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test that blit with missing attachments is ignored.
 TEST_P(BlitFramebufferANGLETest, BlitWithMissingAttachments)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_framebuffer_blit"));
@@ -1217,26 +1218,34 @@ TEST_P(BlitFramebufferANGLETest, BlitWithMissingAttachments)
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    // generate INVALID_OPERATION if the read FBO has no depth attachment
+    // No error if the read FBO has no depth attachment
     glBlitFramebufferANGLE(0, 0, getWindowWidth(), getWindowHeight(), 0, 0, getWindowWidth(),
                            getWindowHeight(), GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT,
                            GL_NEAREST);
+    EXPECT_GL_NO_ERROR();
 
-    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
-
-    // generate INVALID_OPERATION if the read FBO has no stencil attachment
+    // No error if the read FBO has no stencil attachment
     glBlitFramebufferANGLE(0, 0, getWindowWidth(), getWindowHeight(), 0, 0, getWindowWidth(),
                            getWindowHeight(), GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT,
                            GL_NEAREST);
+    EXPECT_GL_NO_ERROR();
 
-    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    // No error if we read from a missing color attachment.  Create a temp attachment as
+    // attachment1, then remove attachment 0.
+    //
+    // The same could be done with glReadBuffer, which requires ES3 (this test runs on ES2).
+    GLTexture tempColor;
+    glBindTexture(GL_TEXTURE_2D, tempColor);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(), 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, tempColor, 0);
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_READ_FRAMEBUFFER);
+    EXPECT_GL_NO_ERROR();
 
-    // generate INVALID_OPERATION if we read from a missing color attachment
-    glReadBuffer(GL_COLOR_ATTACHMENT1);
     glBlitFramebufferANGLE(0, 0, getWindowWidth(), getWindowHeight(), 0, 0, getWindowWidth(),
                            getWindowHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
-
-    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_NO_ERROR();
 }
 
 TEST_P(BlitFramebufferANGLETest, BlitStencil)

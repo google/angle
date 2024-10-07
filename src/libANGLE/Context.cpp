@@ -4638,22 +4638,28 @@ void Context::blitFramebuffer(GLint srcX0,
     }
 
     Framebuffer *drawFramebuffer = mState.getDrawFramebuffer();
+    Framebuffer *readFramebuffer = mState.getReadFramebuffer();
     ASSERT(drawFramebuffer);
+    ASSERT(readFramebuffer);
 
     // Note that blitting is called against draw framebuffer.
     // See the code in gl::Context::blitFramebuffer.
-    if ((mask & GL_COLOR_BUFFER_BIT) && !drawFramebuffer->hasEnabledDrawBuffer())
+    if ((mask & GL_COLOR_BUFFER_BIT) && (!drawFramebuffer->hasEnabledDrawBuffer() ||
+                                         readFramebuffer->getReadColorAttachment() == nullptr))
     {
         mask &= ~GL_COLOR_BUFFER_BIT;
     }
 
     if ((mask & GL_STENCIL_BUFFER_BIT) &&
-        drawFramebuffer->getState().getStencilAttachment() == nullptr)
+        (drawFramebuffer->getState().getStencilAttachment() == nullptr ||
+         readFramebuffer->getState().getStencilAttachment() == nullptr))
     {
         mask &= ~GL_STENCIL_BUFFER_BIT;
     }
 
-    if ((mask & GL_DEPTH_BUFFER_BIT) && drawFramebuffer->getState().getDepthAttachment() == nullptr)
+    if ((mask & GL_DEPTH_BUFFER_BIT) &&
+        (drawFramebuffer->getState().getDepthAttachment() == nullptr ||
+         readFramebuffer->getState().getDepthAttachment() == nullptr))
     {
         mask &= ~GL_DEPTH_BUFFER_BIT;
     }
