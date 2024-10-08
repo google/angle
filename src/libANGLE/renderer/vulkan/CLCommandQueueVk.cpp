@@ -841,8 +841,21 @@ angle::Result CLCommandQueueVk::enqueueMigrateMemObjects(const cl::MemoryPtrs &m
                                                          const cl::EventPtrs &waitEvents,
                                                          CLEventImpl::CreateFunc *eventCreateFunc)
 {
-    UNIMPLEMENTED();
-    ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+    std::scoped_lock<std::mutex> sl(mCommandQueueMutex);
+
+    ANGLE_TRY(processWaitlist(waitEvents));
+
+    if (mCommandQueue.getContext().getDevices().size() > 1)
+    {
+        // TODO(aannestrand): Later implement support to allow migration of mem objects across
+        // different devices. http://anglebug.com/377942759
+        UNIMPLEMENTED();
+        ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+    }
+
+    ANGLE_TRY(createEvent(eventCreateFunc, true));
+
+    return angle::Result::Continue;
 }
 
 angle::Result CLCommandQueueVk::enqueueNDRangeKernel(const cl::Kernel &kernel,
