@@ -194,6 +194,7 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     resources->EXT_shader_framebuffer_fetch_non_coherent      = 0;
     resources->NV_shader_framebuffer_fetch                    = 0;
     resources->ARM_shader_framebuffer_fetch                   = 0;
+    resources->ARM_shader_framebuffer_fetch_depth_stencil     = 0;
     resources->OVR_multiview                                  = 0;
     resources->OVR_multiview2                                 = 0;
     resources->EXT_YUV_target                                 = 0;

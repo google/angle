@@ -27,6 +27,7 @@
     OP(APPLE_clip_distance,                            100, 320) \
     OP(ARB_texture_rectangle,                          100, 320) \
     OP(ARM_shader_framebuffer_fetch,                   100, 320) \
+    OP(ARM_shader_framebuffer_fetch_depth_stencil,     100, 320) \
     OP(EXT_blend_func_extended,                        100, 320) \
     OP(EXT_clip_cull_distance,                         300, 320) \
     OP(EXT_conservative_depth,                         300, 320) \

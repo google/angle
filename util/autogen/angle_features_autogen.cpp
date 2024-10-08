@@ -384,6 +384,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SupportsShaderFloat16, "supportsShaderFloat16"},
     {Feature::SupportsShaderFloat64, "supportsShaderFloat64"},
     {Feature::SupportsShaderFramebufferFetch, "supportsShaderFramebufferFetch"},
+    {Feature::SupportsShaderFramebufferFetchDepthStencil, "supportsShaderFramebufferFetchDepthStencil"},
     {Feature::SupportsShaderFramebufferFetchEXT, "supportsShaderFramebufferFetchEXT"},
     {Feature::SupportsShaderFramebufferFetchNonCoherent, "supportsShaderFramebufferFetchNonCoherent"},
     {Feature::SupportsShaderFramebufferFetchNonCoherentEXT, "supportsShaderFramebufferFetchNonCoherentEXT"},

@@ -142,6 +142,10 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state, egl::Disp
     // GL_ARM_shader_framebuffer_fetch
     mResources.ARM_shader_framebuffer_fetch = extensions.shaderFramebufferFetchARM;
 
+    // GL_ARM_shader_framebuffer_fetch_depth_stencil
+    mResources.ARM_shader_framebuffer_fetch_depth_stencil =
+        extensions.shaderFramebufferFetchDepthStencilARM;
+
     // GLSL ES 3.0 constants
     mResources.MaxVertexOutputVectors  = caps.maxVertexOutputComponents / 4;
     mResources.MaxFragmentInputVectors = caps.maxFragmentInputComponents / 4;

@@ -85,6 +85,10 @@ void InitExtensionBehavior(const ShBuiltInResources &resources, TExtensionBehavi
     {
         extBehavior[TExtension::ARM_shader_framebuffer_fetch] = EBhUndefined;
     }
+    if (resources.ARM_shader_framebuffer_fetch_depth_stencil)
+    {
+        extBehavior[TExtension::ARM_shader_framebuffer_fetch_depth_stencil] = EBhUndefined;
+    }
     if (resources.OVR_multiview)
     {
         extBehavior[TExtension::OVR_multiview] = EBhUndefined;

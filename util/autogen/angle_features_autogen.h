@@ -384,6 +384,7 @@ enum class Feature
     SupportsShaderFloat16,
     SupportsShaderFloat64,
     SupportsShaderFramebufferFetch,
+    SupportsShaderFramebufferFetchDepthStencil,
     SupportsShaderFramebufferFetchEXT,
     SupportsShaderFramebufferFetchNonCoherent,
     SupportsShaderFramebufferFetchNonCoherentEXT,

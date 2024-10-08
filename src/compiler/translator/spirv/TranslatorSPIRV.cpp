@@ -656,6 +656,8 @@ bool HasFramebufferFetch(const TExtensionBehavior &extBehavior,
     return IsExtensionEnabled(extBehavior, TExtension::EXT_shader_framebuffer_fetch) ||
            IsExtensionEnabled(extBehavior, TExtension::EXT_shader_framebuffer_fetch_non_coherent) ||
            IsExtensionEnabled(extBehavior, TExtension::ARM_shader_framebuffer_fetch) ||
+           IsExtensionEnabled(extBehavior,
+                              TExtension::ARM_shader_framebuffer_fetch_depth_stencil) ||
            IsExtensionEnabled(extBehavior, TExtension::NV_shader_framebuffer_fetch) ||
            (compileOptions.pls.type == ShPixelLocalStorageType::FramebufferFetch &&
             IsExtensionEnabled(extBehavior, TExtension::ANGLE_shader_pixel_local_storage));

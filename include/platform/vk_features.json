@@ -791,6 +791,13 @@
             ]
         },
         {
+            "name": "supports_shader_framebuffer_fetch_depth_stencil",
+            "category": "Features",
+            "description": [
+                "Whether the Vulkan backend supports coherent depth/stencil framebuffer fetch"
+            ]
+        },
+        {
             "name": "permanently_switch_to_framebuffer_fetch_mode",
             "category": "Features",
             "description": [

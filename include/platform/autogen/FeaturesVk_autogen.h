@@ -739,6 +739,13 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo supportsShaderFramebufferFetchDepthStencil = {
+        "supportsShaderFramebufferFetchDepthStencil",
+        FeatureCategory::VulkanFeatures,
+        "Whether the Vulkan backend supports coherent depth/stencil framebuffer fetch",
+        &members,
+    };
+
     FeatureInfo permanentlySwitchToFramebufferFetchMode = {
         "permanentlySwitchToFramebufferFetchMode",
         FeatureCategory::VulkanFeatures,
