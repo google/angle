@@ -3506,16 +3506,17 @@ TEST_P(FramebufferFetchES31, BasicTokenUsage_ARM)
     // glIsEnabled(GL_FRAGMENT_SHADER_FRAMEBUFFER_FETCH_MRT_ARM);
     // EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
-    // Ensure GL_FRAGMENT_SHADER_FRAMEBUFFER_FETCH_MRT_ARM returns false
+    // Ensure GL_FRAGMENT_SHADER_FRAMEBUFFER_FETCH_MRT_ARM returns consistent values
     glGetBooleanv(GL_FRAGMENT_SHADER_FRAMEBUFFER_FETCH_MRT_ARM,
                   &isFragmentShaderFramebufferFetchMrtBool);
-    EXPECT_GL_FALSE(isFragmentShaderFramebufferFetchMrtBool);
     glGetIntegerv(GL_FRAGMENT_SHADER_FRAMEBUFFER_FETCH_MRT_ARM,
                   &isFragmentShaderFramebufferFetchMrtInt);
-    ASSERT_EQ(isFragmentShaderFramebufferFetchMrtInt, 0);
+    ASSERT_EQ(isFragmentShaderFramebufferFetchMrtInt,
+              static_cast<GLint>(isFragmentShaderFramebufferFetchMrtBool));
     glGetFloatv(GL_FRAGMENT_SHADER_FRAMEBUFFER_FETCH_MRT_ARM,
                 &isFragmentShaderFramebufferFetchMrtFloat);
-    ASSERT_EQ(isFragmentShaderFramebufferFetchMrtFloat, 0.0);
+    ASSERT_EQ(isFragmentShaderFramebufferFetchMrtFloat,
+              static_cast<GLfloat>(isFragmentShaderFramebufferFetchMrtBool));
 
     ASSERT_GL_NO_ERROR();
 }
@@ -3589,6 +3590,12 @@ TEST_P(FramebufferFetchES31, MultipleRenderTarget_Both_FragData)
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ARM_shader_framebuffer_fetch"));
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_draw_buffers"));
+
+    GLboolean isFragmentShaderFramebufferFetchMrt = false;
+    glGetBooleanv(GL_FRAGMENT_SHADER_FRAMEBUFFER_FETCH_MRT_ARM,
+                  &isFragmentShaderFramebufferFetchMrt);
+    ANGLE_SKIP_TEST_IF(!isFragmentShaderFramebufferFetchMrt);
+
     setWhichExtension(BOTH);
 
     GLProgram program;
@@ -3606,6 +3613,12 @@ TEST_P(FramebufferFetchES31, MultipleRenderTarget_Both_FragData_Complex)
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ARM_shader_framebuffer_fetch"));
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_draw_buffers"));
+
+    GLboolean isFragmentShaderFramebufferFetchMrt = false;
+    glGetBooleanv(GL_FRAGMENT_SHADER_FRAMEBUFFER_FETCH_MRT_ARM,
+                  &isFragmentShaderFramebufferFetchMrt);
+    ANGLE_SKIP_TEST_IF(!isFragmentShaderFramebufferFetchMrt);
+
     setWhichExtension(BOTH);
 
     GLProgram program;
@@ -3622,6 +3635,12 @@ TEST_P(FramebufferFetchES31, MultipleRenderTarget_Both_Complex)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ARM_shader_framebuffer_fetch"));
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+
+    GLboolean isFragmentShaderFramebufferFetchMrt = false;
+    glGetBooleanv(GL_FRAGMENT_SHADER_FRAMEBUFFER_FETCH_MRT_ARM,
+                  &isFragmentShaderFramebufferFetchMrt);
+    ANGLE_SKIP_TEST_IF(!isFragmentShaderFramebufferFetchMrt);
+
     setWhichExtension(BOTH);
 
     GLProgram program;

@@ -999,6 +999,9 @@ void Renderer::ensureCapsInitialized() const
         mNativeExtensions.shaderFramebufferFetchEXT =
             mNativeCaps.maxDrawBuffers >= gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
         mNativeExtensions.shaderFramebufferFetchARM = mNativeExtensions.shaderFramebufferFetchEXT;
+        // ANGLE correctly maps gl_LastFragColorARM to input attachment 0 and has no problem with
+        // MRT.
+        mNativeCaps.fragmentShaderFramebufferFetchMRT = true;
     }
 
     if (getFeatures().supportsShaderFramebufferFetchNonCoherent.enabled)
