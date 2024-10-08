@@ -32,6 +32,8 @@
 #define SRC_RESOURCE_NAME texture3D
 #elif SrcIsYUV
 #define SRC_RESOURCE_NAME sampler2D
+#elif SrcIs2DMS
+#define SRC_RESOURCE_NAME texture2DMS
 #else
 #error "Not all source types are accounted for"
 #endif
@@ -55,6 +57,7 @@ layout(push_constant) uniform PushConstants {
     ivec2 dstOffset;
     int srcMip;
     int srcLayer;
+    int srcSampleCount;
     // Whether x and/or y need to be flipped
     bool flipX;
     bool flipY;
@@ -140,6 +143,13 @@ void main()
 #elif SrcIsYUV
     SrcType srcValue = texture(
         src, vec2(params.srcOffset + srcSubImageCoords) / textureSize(src, 0), params.srcMip);
+#elif SrcIs2DMS
+    SrcType srcValue = SrcType(0);
+    for (int i = 0; i < params.srcSampleCount; i++)
+    {
+        srcValue += texelFetch(src, ivec2(params.srcOffset + srcSubImageCoords), i);
+    }
+    srcValue /= params.srcSampleCount;
 #else
 #error "Not all source types are accounted for"
 #endif

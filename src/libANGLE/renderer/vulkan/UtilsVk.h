@@ -164,6 +164,7 @@ class UtilsVk : angle::NonCopyable
         int dstOffset[2];
         int srcMip;
         int srcLayer;
+        int srcSampleCount;
         int srcHeight;
         gl::LevelIndex dstMip;
         int dstLayer;
@@ -431,6 +432,7 @@ class UtilsVk : angle::NonCopyable
         int32_t dstOffset[2]            = {};
         int32_t srcMip                  = 0;
         int32_t srcLayer                = 0;
+        int32_t srcSampleCount          = 0;
         uint32_t flipX                  = 0;
         uint32_t flipY                  = 0;
         uint32_t premultiplyAlpha       = 0;
