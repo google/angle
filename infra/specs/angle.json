@@ -6522,7 +6522,8 @@
       },
       {
         "args": [
-          "--use-angle=webgpu"
+          "--use-angle=webgpu",
+          "--flaky-retries=2"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -6748,7 +6749,8 @@
       },
       {
         "args": [
-          "--use-angle=webgpu"
+          "--use-angle=webgpu",
+          "--flaky-retries=2"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -6966,7 +6968,8 @@
       },
       {
         "args": [
-          "--use-angle=webgpu"
+          "--use-angle=webgpu",
+          "--flaky-retries=2"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -7175,7 +7178,8 @@
       },
       {
         "args": [
-          "--use-angle=webgpu"
+          "--use-angle=webgpu",
+          "--flaky-retries=2"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
