@@ -425,6 +425,9 @@ struct Extensions
     // GL_EXT_shader_framebuffer_fetch
     bool shaderFramebufferFetchEXT = false;
 
+    // GL_ARM_shader_framebuffer_fetch_depth_stencil
+    bool shaderFramebufferFetchDepthStencilARM = false;
+
     // GL_EXT_shader_framebuffer_fetch_non_coherent
     bool shaderFramebufferFetchNonCoherentEXT = false;
 
