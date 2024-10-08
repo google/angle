@@ -982,12 +982,12 @@ deps = {
   },
 
   'third_party/vulkan-deps': {
-    'url': Var('chromium_git') + '/vulkan-deps@dd729cf1f807e2b317a527900734dc528e6c4c19',
+    'url': Var('chromium_git') + '/vulkan-deps@a7919b0e1d20eb80bba3ed76b61a139ef49667d1',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/glslang/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/glslang@f69d2768e534132e8626c4817c80e95464dcda8e',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/glslang@9d00d6d6cad638bebc7cd852b1e6e1244de42679',
     'condition': 'not build_with_chromium',
   },
 
@@ -1007,7 +1007,7 @@ deps = {
   },
 
   'third_party/spirv-tools/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Tools@ada92f84927350c8f3567a06e23e4ff2b04f6810',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Tools@4310fd4edae21d711ab31f5183704ad320329419',
     'condition': 'not build_with_chromium',
   },
 
@@ -1017,12 +1017,12 @@ deps = {
   },
 
   'third_party/vulkan-loader/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Loader@8bdce6d842ca9f9bd0a4119963b0eb10693f5b23',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Loader@bd1c8ea9c6ac51e4c3a6ddb9d602bb204678eb5f',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/vulkan-tools/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Tools@6991ccb68890681b1a3e0f56acd8f53b20ad1e79',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Tools@c9a5acda16dc2759457dc856b5d7df00ac5bf4a2',
     'condition': 'not build_with_chromium',
   },
 
@@ -1032,7 +1032,7 @@ deps = {
   },
 
   'third_party/vulkan-validation-layers/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@9d084cf28b2f32ef2a43a53801c7d4bf53d8fa2c',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@65b79bac615ec1c47ab61a02d55a3bba871b56b9',
     'condition': 'not build_with_chromium',
   },
 
