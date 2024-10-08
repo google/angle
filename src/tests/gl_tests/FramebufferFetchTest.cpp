@@ -2300,6 +2300,106 @@ TEST_P(FramebufferFetchES31, ProgramPipeline_NonCoherent)
                         getFragmentShader(GLSL310_1ATTACHMENT));
 }
 
+// Verify that sample shading is automatically enabled when framebuffer fetch is used with
+// multisampling.
+TEST_P(FramebufferFetchES31, MultiSampled)
+{
+    const bool is_coherent = IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch");
+    ANGLE_SKIP_TEST_IF(!is_coherent &&
+                       !IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_sample_variables"));
+
+    // Create a single-sampled framebuffer as the resolve target
+    GLRenderbuffer resolve;
+    glBindRenderbuffer(GL_RENDERBUFFER, resolve);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, kViewportWidth, kViewportHeight);
+    GLFramebuffer resolveFbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, resolveFbo);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, resolve);
+
+    // Create a multisampled framebuffer
+    GLRenderbuffer rbo;
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_RGBA8, kViewportWidth, kViewportHeight);
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo);
+
+    // Initialize every sample differently with per-sample shading.
+    constexpr char kPrimeFS[] = R"(#version 310 es
+#extension GL_OES_sample_variables : require
+out highp vec4 color;
+void main (void)
+{
+    switch (gl_SampleID)
+    {
+    case 0:
+        color = vec4(1.0, 0.9, 0.8, 0.7);
+        break;
+    case 1:
+        color = vec4(0.0, 0.1, 0.2, 0.3);
+        break;
+    case 2:
+        color = vec4(0.5, 0.25, 0.75, 1.0);
+        break;
+    default:
+        color = vec4(0.4, 0.6, 0.2, 0.8);
+        break;
+    }
+})";
+    ANGLE_GL_PROGRAM(prime, essl31_shaders::vs::Passthrough(), kPrimeFS);
+    glViewport(0, 0, kViewportWidth, kViewportHeight);
+    drawQuad(prime, essl31_shaders::PositionAttrib(), 0.0f);
+
+    // Break the render pass to make sure sample shading is not left enabled by accident.
+    // The expected value is the average of the values set by the shader.
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, resolveFbo);
+    glBlitFramebuffer(0, 0, kViewportWidth, kViewportHeight, 0, 0, kViewportWidth, kViewportHeight,
+                      GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, resolveFbo);
+    EXPECT_PIXEL_NEAR(0, 0, 121, 118, 124, 178, 1);
+    ASSERT_GL_NO_ERROR();
+
+    // Use framebuffer fetch to read the value of each sample, and store the square of that value.
+    // Because square is non-linear, applied to the average value it would produce a different
+    // result compared with it being applied to individual samples and then averaged.  The test thus
+    // ensures that framebuffer fetch on a multisampled framebuffer implicitly enables sample
+    // shading.
+    std::ostringstream fs;
+    fs << "#version 310 es\n";
+    if (is_coherent)
+    {
+        fs << "#extension GL_EXT_shader_framebuffer_fetch : require\n";
+    }
+    else
+    {
+        fs << "#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require\n";
+    }
+    fs << R"(inout highp vec4 color;
+void main (void)
+{
+    color *= color;
+})";
+
+    ANGLE_GL_PROGRAM(square, essl31_shaders::vs::Passthrough(), fs.str().c_str());
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    drawQuad(square, essl31_shaders::PositionAttrib(), 0.0f);
+
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, resolveFbo);
+    glBlitFramebuffer(0, 0, kViewportWidth, kViewportHeight, 0, 0, kViewportWidth, kViewportHeight,
+                      GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, resolveFbo);
+
+    // Verify that the result is average(square(samples)) and not square(average(samples)).
+    EXPECT_PIXEL_NEAR(0, 0, 90, 79, 82, 141, 1);
+
+    // For debugging purposes, the following would be true if framebuffer fetch _didn't_ implicitly
+    // enable sample shading.
+    // EXPECT_PIXEL_NEAR(0, 0, 57, 54, 60, 125, 1);
+
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test combination of inout and samplers.
 TEST_P(FramebufferFetchES31, UniformUsageCombinations)
 {

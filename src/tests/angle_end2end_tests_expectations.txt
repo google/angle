@@ -544,6 +544,8 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 42267082 PIXEL4ORXL GLES : EXTBlendFuncExtendedDrawTestES3.MultipleDrawBuffersAPI/* = SKIP
 42267082 PIXEL4ORXL GLES : EXTBlendFuncExtendedTestES3.FragmentOutputLocationsPartiallyAutomatic/* = SKIP
 
+372269602 PIXEL4ORXL GLES : FramebufferFetchES31.MultiSampled/* = SKIP
+
 42262087 PIXEL4ORXL VULKAN : ClearTestES3.MaskedClearBufferBug/* = SKIP
 42262087 PIXEL4ORXL VULKAN : DrawBuffersWebGL2Test.TwoProgramsWithDifferentOutputsAndClear/* = SKIP
 42264480 PIXEL4ORXL VULKAN : TransformFeedbackTestES32.PrimitivesWrittenAndGenerated/* = SKIP
