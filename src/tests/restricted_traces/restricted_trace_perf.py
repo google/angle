@@ -941,6 +941,7 @@ def run_traces(args):
                         'Deleting Android settings for forcing selection of GLES driver, ' +
                         'allowing system to load the default')
                     run_adb_command('shell settings delete global angle_debug_package')
+                    run_adb_command('shell settings delete global angle_gl_driver_all_angle')
                     run_adb_command('shell settings delete global angle_gl_driver_selection_pkgs')
                     run_adb_command(
                         'shell settings delete global angle_gl_driver_selection_values')
