@@ -2276,6 +2276,26 @@ static bool ValidateLabelLength(const Context *context,
     return true;
 }
 
+bool ValidateObjectLabelBase(const Context *context,
+                             angle::EntryPoint entryPoint,
+                             GLenum identifier,
+                             GLuint name,
+                             GLsizei length,
+                             const GLchar *label)
+{
+    if (!ValidateObjectIdentifierAndName(context, entryPoint, identifier, name))
+    {
+        return false;
+    }
+
+    if (!ValidateLabelLength(context, entryPoint, length, label))
+    {
+        return false;
+    }
+
+    return true;
+}
+
 bool ValidateObjectLabelKHR(const Context *context,
                             angle::EntryPoint entryPoint,
                             GLenum identifier,
@@ -2289,12 +2309,29 @@ bool ValidateObjectLabelKHR(const Context *context,
         return false;
     }
 
-    if (!ValidateObjectIdentifierAndName(context, entryPoint, identifier, name))
+    if (!ValidateObjectLabelBase(context, entryPoint, identifier, name, length, label))
     {
         return false;
     }
 
-    if (!ValidateLabelLength(context, entryPoint, length, label))
+    return true;
+}
+
+bool ValidateGetObjectLabelBase(const Context *context,
+                                angle::EntryPoint entryPoint,
+                                GLenum identifier,
+                                GLuint name,
+                                GLsizei bufSize,
+                                const GLsizei *length,
+                                const GLchar *label)
+{
+    if (bufSize < 0)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeBufferSize);
+        return false;
+    }
+
+    if (!ValidateObjectIdentifierAndName(context, entryPoint, identifier, name))
     {
         return false;
     }
@@ -2316,13 +2353,7 @@ bool ValidateGetObjectLabelKHR(const Context *context,
         return false;
     }
 
-    if (bufSize < 0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeBufferSize);
-        return false;
-    }
-
-    if (!ValidateObjectIdentifierAndName(context, entryPoint, identifier, name))
+    if (!ValidateGetObjectLabelBase(context, entryPoint, identifier, name, bufSize, length, label))
     {
         return false;
     }
@@ -2343,6 +2374,25 @@ static bool ValidateObjectPtrName(const Context *context,
     return true;
 }
 
+bool ValidateObjectPtrLabelBase(const Context *context,
+                                angle::EntryPoint entryPoint,
+                                const void *ptr,
+                                GLsizei length,
+                                const GLchar *label)
+{
+    if (!ValidateObjectPtrName(context, entryPoint, ptr))
+    {
+        return false;
+    }
+
+    if (!ValidateLabelLength(context, entryPoint, length, label))
+    {
+        return false;
+    }
+
+    return true;
+}
+
 bool ValidateObjectPtrLabelKHR(const Context *context,
                                angle::EntryPoint entryPoint,
                                const void *ptr,
@@ -2355,12 +2405,28 @@ bool ValidateObjectPtrLabelKHR(const Context *context,
         return false;
     }
 
-    if (!ValidateObjectPtrName(context, entryPoint, ptr))
+    if (!ValidateObjectPtrLabelBase(context, entryPoint, ptr, length, label))
     {
         return false;
     }
 
-    if (!ValidateLabelLength(context, entryPoint, length, label))
+    return true;
+}
+
+bool ValidateGetObjectPtrLabelBase(const Context *context,
+                                   angle::EntryPoint entryPoint,
+                                   const void *ptr,
+                                   GLsizei bufSize,
+                                   const GLsizei *length,
+                                   const GLchar *label)
+{
+    if (bufSize < 0)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeBufferSize);
+        return false;
+    }
+
+    if (!ValidateObjectPtrName(context, entryPoint, ptr))
     {
         return false;
     }
@@ -2381,13 +2447,7 @@ bool ValidateGetObjectPtrLabelKHR(const Context *context,
         return false;
     }
 
-    if (bufSize < 0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeBufferSize);
-        return false;
-    }
-
-    if (!ValidateObjectPtrName(context, entryPoint, ptr))
+    if (!ValidateGetObjectPtrLabelBase(context, entryPoint, ptr, bufSize, length, label))
     {
         return false;
     }
