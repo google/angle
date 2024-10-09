@@ -367,7 +367,6 @@ class DynamicDescriptorPool final : angle::NonCopyable
                                         VkDescriptorSet *descriptorSetOut);
 
     angle::Result getOrAllocateDescriptorSet(Context *context,
-                                             CommandBufferHelperCommon *commandBufferHelper,
                                              const DescriptorSetDesc &desc,
                                              const DescriptorSetLayout &descriptorSetLayout,
                                              RefCountedDescriptorPoolBinding *bindingOut,

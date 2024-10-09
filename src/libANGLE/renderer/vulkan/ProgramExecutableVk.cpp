@@ -1750,9 +1750,8 @@ angle::Result ProgramExecutableVk::getOrAllocateDescriptorSet(
     vk::SharedDescriptorSetCacheKey *newSharedCacheKeyOut)
 {
     ANGLE_TRY(mDescriptorPools[setIndex].get().getOrAllocateDescriptorSet(
-        context, commandBufferHelper, descriptorSetDesc.getDesc(),
-        mDescriptorSetLayouts[setIndex].get(), &mDescriptorPoolBindings[setIndex],
-        &mDescriptorSets[setIndex], newSharedCacheKeyOut));
+        context, descriptorSetDesc.getDesc(), mDescriptorSetLayouts[setIndex].get(),
+        &mDescriptorPoolBindings[setIndex], &mDescriptorSets[setIndex], newSharedCacheKeyOut));
     ASSERT(mDescriptorSets[setIndex] != VK_NULL_HANDLE);
 
     if (*newSharedCacheKeyOut != nullptr)
@@ -1761,10 +1760,7 @@ angle::Result ProgramExecutableVk::getOrAllocateDescriptorSet(
         descriptorSetDesc.updateDescriptorSet(context->getRenderer(), writeDescriptorDescs,
                                               updateBuilder, mDescriptorSets[setIndex]);
     }
-    else
-    {
-        commandBufferHelper->retainResource(&mDescriptorPoolBindings[setIndex].get());
-    }
+    commandBufferHelper->retainResource(&mDescriptorPoolBindings[setIndex].get());
 
     return angle::Result::Continue;
 }
@@ -1826,8 +1822,7 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(
 {
     vk::SharedDescriptorSetCacheKey newSharedCacheKey;
     ANGLE_TRY(mDescriptorPools[DescriptorSetIndex::Texture].get().getOrAllocateDescriptorSet(
-        context, commandBufferHelper, texturesDesc,
-        mDescriptorSetLayouts[DescriptorSetIndex::Texture].get(),
+        context, texturesDesc, mDescriptorSetLayouts[DescriptorSetIndex::Texture].get(),
         &mDescriptorPoolBindings[DescriptorSetIndex::Texture],
         &mDescriptorSets[DescriptorSetIndex::Texture], &newSharedCacheKey));
     ASSERT(mDescriptorSets[DescriptorSetIndex::Texture] != VK_NULL_HANDLE);
@@ -1843,11 +1838,8 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(
         fullDesc.updateDescriptorSet(context->getRenderer(), mTextureWriteDescriptorDescs,
                                      updateBuilder, mDescriptorSets[DescriptorSetIndex::Texture]);
     }
-    else
-    {
-        commandBufferHelper->retainResource(
-            &mDescriptorPoolBindings[DescriptorSetIndex::Texture].get());
-    }
+    commandBufferHelper->retainResource(
+        &mDescriptorPoolBindings[DescriptorSetIndex::Texture].get());
 
     return angle::Result::Continue;
 }

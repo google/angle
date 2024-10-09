@@ -4368,7 +4368,6 @@ angle::Result DynamicDescriptorPool::allocateDescriptorSet(
 
 angle::Result DynamicDescriptorPool::getOrAllocateDescriptorSet(
     Context *context,
-    CommandBufferHelperCommon *commandBufferHelper,
     const DescriptorSetDesc &desc,
     const DescriptorSetLayout &descriptorSetLayout,
     RefCountedDescriptorPoolBinding *bindingOut,
@@ -4386,8 +4385,6 @@ angle::Result DynamicDescriptorPool::getOrAllocateDescriptorSet(
     }
 
     ANGLE_TRY(allocateDescriptorSet(context, descriptorSetLayout, bindingOut, descriptorSetOut));
-    // The pool is still in use every time a new descriptor set is allocated from it.
-    commandBufferHelper->retainResource(&bindingOut->get());
     ++context->getPerfCounters().descriptorSetAllocations;
 
     mDescriptorSetCache.insertDescriptorSet(desc, *descriptorSetOut, bindingOut->getRefCounted());
