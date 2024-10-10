@@ -507,6 +507,7 @@ void DeriveRenderingInfo(Renderer *renderer,
             infoOut->msrtss.multisampledRenderToSingleSampledEnable = true;
             infoOut->msrtss.rasterizationSamples                    = gl_vk::GetSamples(
                 desc.samples(), renderer->getFeatures().limitSampleCountTo2.enabled);
+            AddToPNextChain(&infoOut->renderingInfo, &infoOut->msrtss);
         }
 
         // Fragment shading rate attachment, if any
