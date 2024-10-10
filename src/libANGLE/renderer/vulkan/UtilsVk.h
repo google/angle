@@ -656,6 +656,7 @@ class UtilsVk : angle::NonCopyable
                                   const gl::Rectangle &renderArea,
                                   const VkImageAspectFlags aspectFlags,
                                   const VkClearValue *clearValue,
+                                  vk::RenderPassSource renderPassSource,
                                   vk::RenderPassCommandBuffer **commandBufferOut);
 
     // Set up descriptor set and call dispatch.

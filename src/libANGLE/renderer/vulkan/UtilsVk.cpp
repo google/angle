@@ -2308,7 +2308,8 @@ angle::Result UtilsVk::clearTexture(ContextVk *contextVk,
         isDepthOrStencil ? vk::ImageLayout::DepthWriteStencilWrite : vk::ImageLayout::ColorWrite;
 
     ANGLE_TRY(startRenderPass(contextVk, dst, &destView.get(), renderPassDesc, renderArea,
-                              params.aspectFlags, &params.clearValue, &commandBuffer));
+                              params.aspectFlags, &params.clearValue,
+                              vk::RenderPassSource::InternalUtils, &commandBuffer));
 
     // If the format contains both depth and stencil, the barrier aspect mask for the image should
     // include both bits.
@@ -2526,6 +2527,7 @@ angle::Result UtilsVk::startRenderPass(ContextVk *contextVk,
                                        const gl::Rectangle &renderArea,
                                        const VkImageAspectFlags aspectFlags,
                                        const VkClearValue *clearValue,
+                                       vk::RenderPassSource renderPassSource,
                                        vk::RenderPassCommandBuffer **commandBufferOut)
 {
     ASSERT(aspectFlags == VK_IMAGE_ASPECT_COLOR_BIT ||
@@ -2568,7 +2570,7 @@ angle::Result UtilsVk::startRenderPass(ContextVk *contextVk,
 
     renderPassFramebuffer.setFramebuffer(
         contextVk, std::move(framebufferHandle), {imageView->getHandle()}, framebufferWidth,
-        framebufferHeight, framebufferLayers, imageless, vk::RenderPassSource::InternalUtils);
+        framebufferHeight, framebufferLayers, imageless, renderPassSource);
 
     // If a clear value has been provided, the load op is set to clear.
     vk::AttachmentOpsArray renderPassAttachmentOps;
@@ -2818,7 +2820,8 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
 
     vk::RenderPassCommandBuffer *commandBuffer;
     ANGLE_TRY(startRenderPass(contextVk, dst, &destView.get(), renderPassDesc, renderArea,
-                              VK_IMAGE_ASPECT_COLOR_BIT, nullptr, &commandBuffer));
+                              VK_IMAGE_ASPECT_COLOR_BIT, nullptr,
+                              vk::RenderPassSource::InternalUtils, &commandBuffer));
 
     UpdateColorAccess(contextVk, MakeColorBufferMask(0), MakeColorBufferMask(0));
 
@@ -3517,7 +3520,8 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
 
     vk::RenderPassCommandBuffer *commandBuffer;
     ANGLE_TRY(startRenderPass(contextVk, dst, destView, renderPassDesc, renderArea,
-                              VK_IMAGE_ASPECT_COLOR_BIT, nullptr, &commandBuffer));
+                              VK_IMAGE_ASPECT_COLOR_BIT, nullptr,
+                              vk::RenderPassSource::InternalUtils, &commandBuffer));
 
     VkDescriptorSet descriptorSet;
     if (isYUV)
@@ -4552,7 +4556,8 @@ angle::Result UtilsVk::drawOverlay(ContextVk *contextVk,
     // swapchain.
     vk::RenderPassCommandBuffer *commandBuffer;
     ANGLE_TRY(startRenderPass(contextVk, dst, destView, renderPassDesc, renderArea,
-                              VK_IMAGE_ASPECT_COLOR_BIT, nullptr, &commandBuffer));
+                              VK_IMAGE_ASPECT_COLOR_BIT, nullptr,
+                              vk::RenderPassSource::DefaultFramebuffer, &commandBuffer));
 
     vk::RenderPassCommandBufferHelper *commandBufferHelper =
         &contextVk->getStartedRenderPassCommands();
