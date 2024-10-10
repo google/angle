@@ -462,6 +462,8 @@ spv::StorageClass GetStorageClass(const ShCompileOptions &compileOptions,
         case EvqViewIDOVR:
         case EvqLayerIn:
         case EvqLastFragColor:
+        case EvqLastFragDepth:
+        case EvqLastFragStencil:
             return spv::StorageClassInput;
 
         case EvqPosition:

@@ -1422,6 +1422,8 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
         case EvqFragDepth:
         case EvqLastFragData:
         case EvqLastFragColor:
+        case EvqLastFragDepth:
+        case EvqLastFragStencil:
             symbolType = SymbolType::BuiltIn;
             break;
         default:
@@ -1487,9 +1489,11 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
             return false;
         }
     }
-    else if (identifier.beginsWith("gl_LastFragColorARM"))
+    else if (identifier.beginsWith("gl_LastFragColorARM") ||
+             identifier.beginsWith("gl_LastFragDepthARM") ||
+             identifier.beginsWith("gl_LastFragStencilARM"))
     {
-        // gl_LastFragColorARM may be redeclared with a new precision qualifier
+        // gl_LastFrag{Color,Depth,Stencil}ARM may be redeclared with a new precision qualifier
         if (const TSymbol *builtInSymbol = symbolTable.findBuiltIn(identifier, mShaderVersion))
         {
             needsReservedCheck = !checkCanUseOneOfExtensions(line, builtInSymbol->extensions());
@@ -2734,6 +2738,14 @@ void TParseContext::adjustRedeclaredBuiltInType(const TSourceLoc &line,
     else if (identifier == "gl_LastFragColorARM")
     {
         type->setQualifier(EvqLastFragColor);
+    }
+    else if (identifier == "gl_LastFragDepthARM")
+    {
+        type->setQualifier(EvqLastFragDepth);
+    }
+    else if (identifier == "gl_LastFragStencilARM")
+    {
+        type->setQualifier(EvqLastFragStencil);
     }
     else if (identifier == "gl_Position")
     {

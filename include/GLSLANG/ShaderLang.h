@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 364
+#define ANGLE_SH_VERSION 365
 
 enum ShShaderSpec
 {
@@ -956,6 +956,8 @@ enum class MetadataFlags
     HasInputAttachment0,
     // Flag for attachment i is HasInputAttachment0 + i
     HasInputAttachment7 = HasInputAttachment0 + 7,
+    HasDepthInputAttachment,
+    HasStencilInputAttachment,
     // Applicable to geometry shaders
     HasValidGeometryShaderInputPrimitiveType,
     HasValidGeometryShaderOutputPrimitiveType,
@@ -1110,8 +1112,8 @@ enum ReservedIds
     // Input attachments used for framebuffer fetch and advanced blend emulation
     kIdInputAttachment0,
     kIdInputAttachment7 = kIdInputAttachment0 + 7,
-    kIdInputDepthAttachment,
-    kIdInputStencilAttachment,
+    kIdDepthInputAttachment,
+    kIdStencilInputAttachment,
 
     kIdFirstUnreserved,
 };
