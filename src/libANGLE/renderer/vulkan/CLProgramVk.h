@@ -51,6 +51,8 @@ class CLProgramVk : public CLProgramImpl
         angle::PackedEnumMap<SpecConstantType, uint32_t> specConstantIDs;
         angle::PackedEnumBitSet<SpecConstantType, uint32_t> specConstantsUsed;
         CLKernelArgsMap kernelArgsMap;
+        angle::HashMap<std::string, CLKernelArgument> kernelArgMap;
+        angle::HashSet<uint32_t> kernelIDs;
         ClspvPrintfBufferStorage printfBufferStorage;
         angle::HashMap<uint32_t, ClspvPrintfInfo> printfInfoMap;
     };

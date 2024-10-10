@@ -68,7 +68,19 @@ spv_result_t ParseReflection(CLProgramVk::SpvReflectionData &reflectionData,
                         reflectionData.spvStrLookup[spvInstr.words[9]];
 
                     // Save kernel name to reflection table for later use/lookup in parser routine
+                    reflectionData.kernelIDs.insert(spvInstr.words[2]);
                     reflectionData.spvStrLookup[spvInstr.words[2]] = std::string(functionName);
+
+                    // If we already parsed some args ahead of time, populate them now
+                    if (reflectionData.kernelArgMap.contains(functionName))
+                    {
+                        for (const auto &arg : reflectionData.kernelArgMap)
+                        {
+                            uint32_t ordinal = arg.second.ordinal;
+                            reflectionData.kernelArgsMap[functionName].at(ordinal) =
+                                std::move(arg.second);
+                        }
+                    }
                     break;
                 }
                 case NonSemanticClspvReflectionArgumentInfo:
@@ -110,9 +122,6 @@ spv_result_t ParseReflection(CLProgramVk::SpvReflectionData &reflectionData,
                         kernelArg.info.accessQualifier  = kernelArgInfo.accessQualifier;
                         kernelArg.info.typeQualifier    = kernelArgInfo.typeQualifier;
                     }
-                    CLKernelArguments &kernelArgs =
-                        reflectionData
-                            .kernelArgsMap[reflectionData.spvStrLookup[spvInstr.words[5]]];
                     kernelArg.type    = spvInstr.words[4];
                     kernelArg.used    = true;
                     kernelArg.ordinal = reflectionData.spvIntLookup[spvInstr.words[6]];
@@ -121,10 +130,21 @@ spv_result_t ParseReflection(CLProgramVk::SpvReflectionData &reflectionData,
                     kernelArg.op5     = reflectionData.spvIntLookup[spvInstr.words[9]];
                     kernelArg.op6     = reflectionData.spvIntLookup[spvInstr.words[10]];
 
-                    if (!kernelArgs.empty())
+                    if (reflectionData.kernelIDs.contains(spvInstr.words[5]))
                     {
+                        CLKernelArguments &kernelArgs =
+                            reflectionData
+                                .kernelArgsMap[reflectionData.spvStrLookup[spvInstr.words[5]]];
                         kernelArgs.at(kernelArg.ordinal) = std::move(kernelArg);
                     }
+                    else
+                    {
+                        // Reflection kernel not yet parsed, place in temp storage for now
+                        reflectionData
+                            .kernelArgMap[reflectionData.spvStrLookup[spvInstr.words[5]]] =
+                            std::move(kernelArg);
+                    }
+
                     break;
                 }
                 case NonSemanticClspvReflectionArgumentUniform:
@@ -147,15 +167,27 @@ spv_result_t ParseReflection(CLProgramVk::SpvReflectionData &reflectionData,
                         kernelArg.info.accessQualifier  = kernelArgInfo.accessQualifier;
                         kernelArg.info.typeQualifier    = kernelArgInfo.typeQualifier;
                     }
-                    CLKernelArguments &kernelArgs =
-                        reflectionData
-                            .kernelArgsMap[reflectionData.spvStrLookup[spvInstr.words[5]]];
+
                     kernelArg.type    = spvInstr.words[4];
                     kernelArg.used    = true;
                     kernelArg.ordinal = reflectionData.spvIntLookup[spvInstr.words[6]];
                     kernelArg.op3     = reflectionData.spvIntLookup[spvInstr.words[7]];
                     kernelArg.op4     = reflectionData.spvIntLookup[spvInstr.words[8]];
-                    kernelArgs.at(kernelArg.ordinal) = std::move(kernelArg);
+
+                    if (reflectionData.kernelIDs.contains(spvInstr.words[5]))
+                    {
+                        CLKernelArguments &kernelArgs =
+                            reflectionData
+                                .kernelArgsMap[reflectionData.spvStrLookup[spvInstr.words[5]]];
+                        kernelArgs.at(kernelArg.ordinal) = std::move(kernelArg);
+                    }
+                    else
+                    {
+                        // Reflection kernel not yet parsed, place in temp storage for now
+                        reflectionData
+                            .kernelArgMap[reflectionData.spvStrLookup[spvInstr.words[5]]] =
+                            std::move(kernelArg);
+                    }
                     break;
                 }
                 case NonSemanticClspvReflectionPushConstantGlobalSize:
