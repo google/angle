@@ -2768,6 +2768,12 @@ bool ShouldDumpPipelineCacheGraph(Context *context)
 }
 }  // anonymous namespace
 
+FramebufferFetchMode GetProgramFramebufferFetchMode(const gl::ProgramExecutable *executable)
+{
+    const bool hasFramebufferFetch = executable != nullptr && executable->usesFramebufferFetch();
+    return hasFramebufferFetch ? vk::FramebufferFetchMode::Color : vk::FramebufferFetchMode::None;
+}
+
 GraphicsPipelineTransitionBits GetGraphicsPipelineTransitionBitsMask(GraphicsPipelineSubset subset)
 {
     switch (subset)
@@ -4740,9 +4746,19 @@ void GraphicsPipelineDesc::updateNonZeroStencilWriteMaskWorkaround(
 }
 
 void GraphicsPipelineDesc::updateRenderPassDesc(GraphicsPipelineTransitionBits *transition,
-                                                const RenderPassDesc &renderPassDesc)
+                                                const angle::FeaturesVk &features,
+                                                const RenderPassDesc &renderPassDesc,
+                                                FramebufferFetchMode framebufferFetchMode)
 {
     setRenderPassDesc(renderPassDesc);
+
+    // Framebuffer fetch mode is an inherent property of the executable.  With dynamic rendering, it
+    // is not tracked in the framebuffer's render pass desc (the source of |renderPassDesc|), and is
+    // overriden at this point.
+    if (features.preferDynamicRendering.enabled)
+    {
+        setRenderPassFramebufferFetchMode(framebufferFetchMode);
+    }
 
     // The RenderPass is a special case where it spans multiple bits but has no member.
     constexpr size_t kFirstBit =
@@ -4759,9 +4775,10 @@ void GraphicsPipelineDesc::setRenderPassSampleCount(GLint samples)
     mSharedNonVertexInput.renderPass.setSamples(samples);
 }
 
-void GraphicsPipelineDesc::setRenderPassFramebufferFetchMode(bool hasFramebufferFetch)
+void GraphicsPipelineDesc::setRenderPassFramebufferFetchMode(
+    FramebufferFetchMode framebufferFetchMode)
 {
-    mSharedNonVertexInput.renderPass.setFramebufferFetchMode(hasFramebufferFetch);
+    mSharedNonVertexInput.renderPass.setFramebufferFetchMode(framebufferFetchMode);
 }
 
 void GraphicsPipelineDesc::setRenderPassColorAttachmentFormat(size_t colorIndexGL,

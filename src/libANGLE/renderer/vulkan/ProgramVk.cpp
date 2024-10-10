@@ -112,8 +112,10 @@ class LinkTaskVk final : public vk::Context, public LinkTask
         // the share group use this program, they will lazily switch to this mode.
         //
         // This is purely an optimization (to avoid creating and later releasing) non-framebuffer
-        // fetch render passes.
-        if (contextVk->getFeatures().permanentlySwitchToFramebufferFetchMode.enabled &&
+        // fetch render passes.  The optimization is unnecessary for and does not apply to dynamic
+        // rendering.
+        if (!contextVk->getFeatures().preferDynamicRendering.enabled &&
+            contextVk->getFeatures().permanentlySwitchToFramebufferFetchMode.enabled &&
             mExecutable->usesFramebufferFetch())
         {
             ANGLE_TRY(contextVk->switchToFramebufferFetchMode(true));

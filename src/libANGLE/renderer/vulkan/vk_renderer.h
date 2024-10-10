@@ -370,7 +370,7 @@ class Renderer : angle::NonCopyable
         return mSkippedSyncvalMessages;
     }
 
-    void onFramebufferFetchUsed();
+    void onFramebufferFetchUse() { mIsFramebufferFetchUsed = true; }
     bool isFramebufferFetchUsed() const { return mIsFramebufferFetchUsed; }
 
     uint64_t getMaxFenceWaitTimeNs() const;

@@ -2674,9 +2674,10 @@ void FramebufferVk::updateRenderPassDesc(ContextVk *contextVk)
         }
     }
 
-    if (contextVk->isInFramebufferFetchMode())
+    if (!contextVk->getFeatures().preferDynamicRendering.enabled &&
+        contextVk->isInFramebufferFetchMode())
     {
-        mRenderPassDesc.setFramebufferFetchMode(true);
+        mRenderPassDesc.setFramebufferFetchMode(vk::FramebufferFetchMode::Color);
     }
 
     if (contextVk->getFeatures().enableMultisampledRenderToTexture.enabled)
@@ -3012,8 +3013,8 @@ angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk,
             // If there is a backbuffer, query the framebuffer from WindowSurfaceVk instead.
             ANGLE_TRY(mBackbuffer->getCurrentFramebuffer(
                 contextVk,
-                mRenderPassDesc.hasFramebufferFetch() ? FramebufferFetchMode::Enabled
-                                                      : FramebufferFetchMode::Disabled,
+                mRenderPassDesc.hasFramebufferFetch() ? vk::FramebufferFetchMode::Color
+                                                      : vk::FramebufferFetchMode::None,
                 *compatibleRenderPass, &framebufferHandle));
         }
     }
@@ -3832,6 +3833,10 @@ angle::Result FramebufferVk::flushDeferredClears(ContextVk *contextVk)
 
 void FramebufferVk::switchToFramebufferFetchMode(ContextVk *contextVk, bool hasFramebufferFetch)
 {
+    // Framebuffer fetch use by the shader does not affect the framebuffer object in any way with
+    // dynamic rendering.
+    ASSERT(!contextVk->getFeatures().preferDynamicRendering.enabled);
+
     // The switch happens once, and is permanent.
     if (mCurrentFramebufferDesc.hasFramebufferFetch() == hasFramebufferFetch)
     {
@@ -3840,22 +3845,9 @@ void FramebufferVk::switchToFramebufferFetchMode(ContextVk *contextVk, bool hasF
 
     mCurrentFramebufferDesc.setFramebufferFetchMode(hasFramebufferFetch);
 
-    mRenderPassDesc.setFramebufferFetchMode(hasFramebufferFetch);
+    mRenderPassDesc.setFramebufferFetchMode(hasFramebufferFetch ? vk::FramebufferFetchMode::Color
+                                                                : vk::FramebufferFetchMode::None);
     contextVk->onDrawFramebufferRenderPassDescChange(this, nullptr);
-
-    if (contextVk->getFeatures().preferDynamicRendering.enabled)
-    {
-        // Note: with dynamic rendering, |onDrawFramebufferRenderPassDescChange| is really
-        // unnecessary, but is called for simplicity.  The downside is unnecessary recreation of
-        // pipelines, which is mitigated by |permanentlySwitchToFramebufferFetchMode| which is
-        // automatically enabled with |preferDynamicRendering|.
-        //
-        // If |onDrawFramebufferRenderPassDescChange| is to be optimized away, care must be taken
-        // as GraphicsPipelineDesc::mRenderPassDesc::mHasFramebufferFetch can get out of sync with
-        // FramebufferDesc::mHasFramebufferFetch, and
-        // RenderPassCommandBufferHelper::mRenderPassDesc::mHasFramebufferFetch.
-        return;
-    }
 
     // Make sure framebuffer is recreated.
     releaseCurrentFramebuffer(contextVk);

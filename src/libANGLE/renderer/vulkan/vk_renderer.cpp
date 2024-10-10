@@ -5160,13 +5160,6 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // https://issuetracker.google.com/issues/340665604
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsShaderFramebufferFetchNonCoherent, isSwiftShader);
 
-    // On tile-based renderers, breaking the render pass is costly.  Changing into and out of
-    // framebuffer fetch causes the render pass to break so that the layout of the color attachments
-    // can be adjusted.  On such hardware, the switch to framebuffer fetch mode is made permanent so
-    // such render pass breaks don't happen.
-    ANGLE_FEATURE_CONDITION(&mFeatures, permanentlySwitchToFramebufferFetchMode,
-                            isTileBasedRenderer);
-
     // Support EGL_KHR_lock_surface3 extension.
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsLockSurfaceExtension, IsAndroid());
 
@@ -5673,6 +5666,16 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
                                 !hasLegacyDitheringV1 && !emulatesMultisampledRenderToTexture &&
                                 !isARM);
 
+    // On tile-based renderers, breaking the render pass is costly.  Changing into and out of
+    // framebuffer fetch causes the render pass to break so that the layout of the color attachments
+    // can be adjusted.  On such hardware, the switch to framebuffer fetch mode is made permanent so
+    // such render pass breaks don't happen.
+    //
+    // This only applies to legacy render passes; with dynamic rendering there is no render pass
+    // break when switching framebuffer fetch usage.
+    ANGLE_FEATURE_CONDITION(&mFeatures, permanentlySwitchToFramebufferFetchMode,
+                            isTileBasedRenderer && !mFeatures.preferDynamicRendering.enabled);
+
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsSynchronization2,
                             mSynchronization2Features.synchronization2 == VK_TRUE);
 
@@ -6167,11 +6170,6 @@ void Renderer::onNewValidationMessage(const std::string &message)
 {
     mLastValidationMessage = message;
     ++mValidationMessageCount;
-}
-
-void Renderer::onFramebufferFetchUsed()
-{
-    mIsFramebufferFetchUsed = true;
 }
 
 std::string Renderer::getAndClearLastValidationMessage(uint32_t *countSinceLastClear)

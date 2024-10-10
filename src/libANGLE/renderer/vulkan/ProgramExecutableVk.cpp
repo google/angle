@@ -100,7 +100,8 @@ void SetupDefaultPipelineState(const vk::Context *context,
     // Set render pass state, affecting both complete and shaders-only pipelines.
     graphicsPipelineDescOut->setTopology(mode);
     graphicsPipelineDescOut->setRenderPassSampleCount(1);
-    graphicsPipelineDescOut->setRenderPassFramebufferFetchMode(glExecutable.usesFramebufferFetch());
+    graphicsPipelineDescOut->setRenderPassFramebufferFetchMode(
+        vk::GetProgramFramebufferFetchMode(&glExecutable));
 
     const std::vector<gl::ProgramOutput> &outputVariables    = glExecutable.getOutputVariables();
     const std::vector<gl::VariableLocation> &outputLocations = glExecutable.getOutputLocations();

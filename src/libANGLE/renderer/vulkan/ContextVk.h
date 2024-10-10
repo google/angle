@@ -801,7 +801,11 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // feature is enabled, this is done on first encounter of framebuffer fetch, and makes the
     // context use framebuffer-fetch-enabled render passes from here on.
     angle::Result switchToFramebufferFetchMode(bool hasFramebufferFetch);
-    bool isInFramebufferFetchMode() const { return mIsInFramebufferFetchMode; }
+    bool isInFramebufferFetchMode() const
+    {
+        ASSERT(!getFeatures().preferDynamicRendering.enabled);
+        return mIsInFramebufferFetchMode;
+    }
 
     const angle::PerfMonitorCounterGroups &getPerfMonitorCounters() override;
 
@@ -1422,6 +1426,12 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     void updateDither();
 
+    // For dynamic rendering only, mark the current render pass as being in framebuffer fetch mode.
+    // In this mode, the FramebufferVk object and its render pass description are unaffected by
+    // framebuffer fetch use, and the context needs to just configure the command buffer for
+    // framebuffer fetch.
+    void onFramebufferFetchUse();
+
     // When the useNonZeroStencilWriteMaskStaticState workaround is enabled, the static state for
     // stencil should be non-zero despite the state being dynamic.  This is done when:
     //
@@ -1665,6 +1675,10 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // framebuffer fetch could happen in any render pass.  This incurs a potential cost due to usage
     // of the GENERAL layout instead of COLOR_ATTACHMENT_OPTIMAL, but has definite benefits of
     // avoiding render pass breaks when a framebuffer fetch program is used mid render pass.
+    //
+    // This only applies to legacy render passes (i.e. when dynamic rendering is NOT used).  In the
+    // case of dynamic rendering, every render pass starts with the assumption of not needing input
+    // attachments and switches later if it needs to with no penalty.
     bool mIsInFramebufferFetchMode;
 
     // True if current started render pass is allowed to reactivate.
