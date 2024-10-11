@@ -279,7 +279,7 @@ class CLProgramVk : public CLProgramImpl
     angle::Result allocateDescriptorSet(const DescriptorSetIndex setIndex,
                                         const vk::DescriptorSetLayout &descriptorSetLayout,
                                         vk::CommandBufferHelperCommon *commandBuffer,
-                                        VkDescriptorSet *descriptorSetOut);
+                                        vk::DescriptorSetPointer *descriptorSetOut);
 
     // Sets the status for given associated device programs
     void setBuildStatus(const cl::DevicePtrs &devices, cl_build_status status);

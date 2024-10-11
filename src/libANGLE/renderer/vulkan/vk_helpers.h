@@ -261,27 +261,49 @@ class DynamicBuffer : angle::NonCopyable
 };
 
 // Class DescriptorSetHelper. This is a wrapper of VkDescriptorSet with GPU resource use tracking.
+using RefCountedDescriptorPool = RefCounted<DescriptorPoolHelper>;
 class DescriptorSetHelper final : public Resource
 {
   public:
-    DescriptorSetHelper(const VkDescriptorSet &descriptorSet) { mDescriptorSet = descriptorSet; }
-    DescriptorSetHelper(const ResourceUse &use, const VkDescriptorSet &descriptorSet)
+    DescriptorSetHelper() : mDescriptorSet(VK_NULL_HANDLE), mPool(nullptr) {}
+    DescriptorSetHelper(const VkDescriptorSet &descriptorSet, RefCountedDescriptorPool *pool)
+        : mDescriptorSet(descriptorSet), mPool(pool)
+    {}
+    DescriptorSetHelper(const ResourceUse &use,
+                        const VkDescriptorSet &descriptorSet,
+                        RefCountedDescriptorPool *pool)
+        : mDescriptorSet(descriptorSet), mPool(pool)
     {
-        mUse           = use;
-        mDescriptorSet = descriptorSet;
+        mUse = use;
     }
-    DescriptorSetHelper(DescriptorSetHelper &&other) : Resource(std::move(other))
+    DescriptorSetHelper(DescriptorSetHelper &&other)
+        : Resource(std::move(other)), mDescriptorSet(other.mDescriptorSet), mPool(other.mPool)
     {
-        mDescriptorSet       = other.mDescriptorSet;
         other.mDescriptorSet = VK_NULL_HANDLE;
+        other.mPool          = nullptr;
     }
 
+    ~DescriptorSetHelper() override
+    {
+        ASSERT(mDescriptorSet == VK_NULL_HANDLE);
+        ASSERT(!mPool);
+    }
+
+    void destroy();
+
     VkDescriptorSet getDescriptorSet() const { return mDescriptorSet; }
+    RefCountedDescriptorPool *getPool() const { return mPool; }
+
+    bool valid() const { return mDescriptorSet != VK_NULL_HANDLE; }
 
   private:
     VkDescriptorSet mDescriptorSet;
+    // So that DescriptorPoolHelper::resetGarbage can clear mPool weak pointer here
+    friend class DescriptorPoolHelper;
+    RefCountedDescriptorPool *mPool;
 };
-using DescriptorSetList = std::deque<DescriptorSetHelper>;
+using DescriptorSetPointer = SharedPtr<DescriptorSetHelper>;
+using DescriptorSetList    = std::deque<DescriptorSetPointer>;
 
 // Uses DescriptorPool to allocate descriptor sets as needed. If a descriptor pool becomes full, we
 // allocate new pools internally as needed. Renderer takes care of the lifetime of the discarded
@@ -310,10 +332,13 @@ class DescriptorPoolHelper final : public Resource
 
     bool allocateDescriptorSet(Context *context,
                                const DescriptorSetLayout &descriptorSetLayout,
-                               VkDescriptorSet *descriptorSetsOut);
+                               RefCountedDescriptorPool *refCountedPool,
+                               DescriptorSetPointer *descriptorSetOut);
 
-    void addGarbage(DescriptorSetHelper &&garbage)
+    void addGarbage(DescriptorSetPointer &&garbage)
     {
+        ASSERT(garbage.unique());
+        mUse.merge(garbage->getResourceUse());
         mValidDescriptorSets--;
         mDescriptorSetGarbageList.emplace_back(std::move(garbage));
     }
@@ -325,8 +350,16 @@ class DescriptorPoolHelper final : public Resource
     bool hasValidDescriptorSet() const { return mValidDescriptorSets != 0; }
 
   private:
+    bool allocateVkDescriptorSet(Context *context,
+                                 const DescriptorSetLayout &descriptorSetLayout,
+                                 VkDescriptorSet *descriptorSetOut);
+
+    bool recycleGarbage(Renderer *renderer, DescriptorSetPointer *descriptorSetOut);
+
+    void resetGarbage();
+
     // Track the number of descriptorSets allocated out of this pool that are valid. DescriptorSets
-    // that have been allocated but in the mDescriptorSetGarbageList is considered as inactive.
+    // that have been allocated but in the mDescriptorSetGarbageList is considered as invalid.
     uint32_t mValidDescriptorSets;
     // Track the number of remaining descriptorSets in the pool that can be allocated.
     uint32_t mFreeDescriptorSets;
@@ -369,14 +402,12 @@ class DynamicDescriptorPool final : angle::NonCopyable
     // By convention, sets are indexed according to the constants in vk_cache_utils.h.
     angle::Result allocateDescriptorSet(Context *context,
                                         const DescriptorSetLayout &descriptorSetLayout,
-                                        DescriptorPoolPointer *poolOut,
-                                        VkDescriptorSet *descriptorSetOut);
+                                        DescriptorSetPointer *descriptorSetOut);
 
     angle::Result getOrAllocateDescriptorSet(Context *context,
                                              const DescriptorSetDesc &desc,
                                              const DescriptorSetLayout &descriptorSetLayout,
-                                             DescriptorPoolPointer *poolOut,
-                                             VkDescriptorSet *descriptorSetOut,
+                                             DescriptorSetPointer *descriptorSetOut,
                                              SharedDescriptorSetCacheKey *sharedCacheKeyOut);
 
     void releaseCachedDescriptorSet(Renderer *renderer, const DescriptorSetDesc &desc);
@@ -394,7 +425,7 @@ class DynamicDescriptorPool final : angle::NonCopyable
     }
 
     // Release the pool if it is no longer been used and contains no valid descriptorSet.
-    void checkAndReleaseUnusedPool(Renderer *renderer, RefCountedDescriptorPoolHelper *pool);
+    void checkAndReleaseUnusedPool(Renderer *renderer, RefCountedDescriptorPool *pool);
 
     // For testing only!
     static uint32_t GetMaxSetsPerPoolForTesting();
@@ -417,7 +448,7 @@ class DynamicDescriptorPool final : angle::NonCopyable
     VkDescriptorSetLayout mCachedDescriptorSetLayout;
     // Tracks cache for descriptorSet. Note that cached DescriptorSet can be reuse even if it is GPU
     // busy.
-    DescriptorSetCache mDescriptorSetCache;
+    DescriptorSetCache<DescriptorSetPointer> mDescriptorSetCache;
     // Statistics for the cache.
     CacheStats mCacheStats;
 };
