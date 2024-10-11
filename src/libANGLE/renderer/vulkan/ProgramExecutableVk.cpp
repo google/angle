@@ -1163,6 +1163,26 @@ void ProgramExecutableVk::addInputAttachmentDescriptorSetDesc(vk::Context *conte
         return;
     }
 
+    if (mExecutable->usesDepthFramebufferFetch())
+    {
+        const uint32_t depthBinding =
+            mVariableInfoMap
+                .getVariableById(gl::ShaderType::Fragment, sh::vk::spirv::kIdDepthInputAttachment)
+                .binding;
+        descOut->addBinding(depthBinding, VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1,
+                            VK_SHADER_STAGE_FRAGMENT_BIT, nullptr);
+    }
+
+    if (mExecutable->usesStencilFramebufferFetch())
+    {
+        const uint32_t stencilBinding =
+            mVariableInfoMap
+                .getVariableById(gl::ShaderType::Fragment, sh::vk::spirv::kIdStencilInputAttachment)
+                .binding;
+        descOut->addBinding(stencilBinding, VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1,
+                            VK_SHADER_STAGE_FRAGMENT_BIT, nullptr);
+    }
+
     if (!mExecutable->usesColorFramebufferFetch())
     {
         return;
@@ -1176,8 +1196,9 @@ void ProgramExecutableVk::addInputAttachmentDescriptorSetDesc(vk::Context *conte
 
     uint32_t baseBinding = baseInfo.binding - firstInputAttachment;
 
-    const uint32_t maxInputAttachmentCount = context->getRenderer()->getMaxInputAttachmentCount();
-    for (uint32_t colorIndex = 0; colorIndex < maxInputAttachmentCount; ++colorIndex)
+    const uint32_t maxColorInputAttachmentCount =
+        context->getRenderer()->getMaxColorInputAttachmentCount();
+    for (uint32_t colorIndex = 0; colorIndex < maxColorInputAttachmentCount; ++colorIndex)
     {
         descOut->addBinding(baseBinding, VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1,
                             VK_SHADER_STAGE_FRAGMENT_BIT, nullptr);
@@ -1344,7 +1365,9 @@ ProgramTransformOptions ProgramExecutableVk::getTransformOptions(
         contextVk->getFeatures().emulateTransformFeedback.enabled &&
         !contextVk->getState().isTransformFeedbackActiveUnpaused();
     FramebufferVk *drawFrameBuffer = vk::GetImpl(contextVk->getState().getDrawFramebuffer());
-    const bool hasFramebufferFetch = mExecutable->usesColorFramebufferFetch();
+    const bool hasFramebufferFetch = mExecutable->usesColorFramebufferFetch() ||
+                                     mExecutable->usesDepthFramebufferFetch() ||
+                                     mExecutable->usesStencilFramebufferFetch();
     const bool isMultisampled      = drawFrameBuffer->getSamples() > 1;
     transformOptions.multiSampleFramebufferFetch = hasFramebufferFetch && isMultisampled;
     transformOptions.enableSampleShading =

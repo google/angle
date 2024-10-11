@@ -564,9 +564,17 @@ void AttachPipelineRenderingInfo(Context *context,
     {
         *inputLocationsOut       = {};
         inputLocationsOut->sType = VK_STRUCTURE_TYPE_RENDERING_INPUT_ATTACHMENT_INDEX_INFO_KHR;
-        inputLocationsOut->colorAttachmentCount = renderingInfo.renderingInfo.colorAttachmentCount;
-        inputLocationsOut->pColorAttachmentInputIndices =
-            renderingInfo.colorAttachmentLocations.data();
+        if (desc.hasColorFramebufferFetch())
+        {
+            inputLocationsOut->colorAttachmentCount =
+                renderingInfo.renderingInfo.colorAttachmentCount;
+            inputLocationsOut->pColorAttachmentInputIndices =
+                renderingInfo.colorAttachmentLocations.data();
+        }
+        // Note: for depth/stencil, there is no need to explicitly set |pDepthInputAttachmentIndex|,
+        // |pStencilInputAttachmentIndex|.  When NULL, they automatically map to input attachments
+        // without a |InputAttachmentIndex| decoration, which is exactly how ANGLE produces its
+        // SPIR-V.
 
         AddToPNextChain(createInfoOut, inputLocationsOut);
     }
@@ -1678,6 +1686,7 @@ enum class PipelineState
     RenderPassViewCount,
     RenderPassSrgbWriteControl,
     RenderPassHasColorFramebufferFetch,
+    RenderPassHasDepthStencilFramebufferFetch,
     RenderPassIsRenderToTexture,
     RenderPassResolveDepth,
     RenderPassResolveStencil,
@@ -1837,6 +1846,8 @@ using PipelineStateBitSet   = angle::BitSetArray<angle::EnumSize<PipelineState>(
             static_cast<uint32_t>(renderPass.getSRGBWriteControlMode());
         (*valuesOut)[PipelineState::RenderPassHasColorFramebufferFetch] =
             renderPass.hasColorFramebufferFetch();
+        (*valuesOut)[PipelineState::RenderPassHasDepthStencilFramebufferFetch] =
+            renderPass.hasDepthStencilFramebufferFetch();
         (*valuesOut)[PipelineState::RenderPassIsRenderToTexture] = renderPass.isRenderToTexture();
         (*valuesOut)[PipelineState::RenderPassResolveDepth] =
             renderPass.hasDepthResolveAttachment();
@@ -1991,6 +2002,8 @@ PipelineState GetPipelineState(size_t stateIndex, bool *isRangedOut, size_t *sub
         {PipelineState::RenderPassViewCount, "rp_views"},
         {PipelineState::RenderPassSrgbWriteControl, "rp_srgb"},
         {PipelineState::RenderPassHasColorFramebufferFetch, "rp_has_color_framebuffer_fetch"},
+        {PipelineState::RenderPassHasDepthStencilFramebufferFetch,
+         "rp_has_depth_stencil_framebuffer_fetch"},
         {PipelineState::RenderPassIsRenderToTexture, "rp_is_msrtt"},
         {PipelineState::RenderPassResolveDepth, "rp_resolve_depth"},
         {PipelineState::RenderPassResolveStencil, "rp_resolve_stencil"},
@@ -2058,6 +2071,7 @@ PipelineState GetPipelineState(size_t stateIndex, bool *isRangedOut, size_t *sub
         case PipelineState::VertexAttribCompressed:
         case PipelineState::RenderPassSrgbWriteControl:
         case PipelineState::RenderPassHasColorFramebufferFetch:
+        case PipelineState::RenderPassHasDepthStencilFramebufferFetch:
         case PipelineState::RenderPassIsRenderToTexture:
         case PipelineState::RenderPassResolveDepth:
         case PipelineState::RenderPassResolveStencil:
@@ -2479,6 +2493,7 @@ PipelineState GetPipelineState(size_t stateIndex, bool *isRangedOut, size_t *sub
         {PipelineState::RenderPassViewCount, 0},
         {PipelineState::RenderPassSrgbWriteControl, 0},
         {PipelineState::RenderPassHasColorFramebufferFetch, 0},
+        {PipelineState::RenderPassHasDepthStencilFramebufferFetch, 0},
         {PipelineState::RenderPassIsRenderToTexture, 0},
         {PipelineState::RenderPassResolveDepth, 0},
         {PipelineState::RenderPassResolveStencil, 0},
@@ -2769,9 +2784,24 @@ bool ShouldDumpPipelineCacheGraph(Context *context)
 
 FramebufferFetchMode GetProgramFramebufferFetchMode(const gl::ProgramExecutable *executable)
 {
-    const bool hasFramebufferFetch =
-        executable != nullptr && executable->usesColorFramebufferFetch();
-    return hasFramebufferFetch ? vk::FramebufferFetchMode::Color : vk::FramebufferFetchMode::None;
+    if (executable == nullptr)
+    {
+        return FramebufferFetchMode::None;
+    }
+
+    const bool hasColorFramebufferFetch = executable->usesColorFramebufferFetch();
+    const bool hasDepthStencilFramebufferFetch =
+        executable->usesDepthFramebufferFetch() || executable->usesStencilFramebufferFetch();
+
+    if (hasDepthStencilFramebufferFetch)
+    {
+        return hasColorFramebufferFetch ? FramebufferFetchMode::ColorAndDepthStencil
+                                        : FramebufferFetchMode::DepthStencil;
+    }
+    else
+    {
+        return hasColorFramebufferFetch ? FramebufferFetchMode::Color : FramebufferFetchMode::None;
+    }
 }
 
 GraphicsPipelineTransitionBits GetGraphicsPipelineTransitionBitsMask(GraphicsPipelineSubset subset)
@@ -3965,6 +3995,13 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
     stateOut->depthStencilState.minDepthBounds = 0;
     stateOut->depthStencilState.maxDepthBounds = 0;
 
+    if (getRenderPassDepthStencilFramebufferFetchMode())
+    {
+        stateOut->depthStencilState.flags |=
+            VK_PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT |
+            VK_PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT;
+    }
+
     // tessellation State
     if (tessControlPointer.valid() && tessEvaluationPointer.valid())
     {
@@ -4083,17 +4120,10 @@ void GraphicsPipelineDesc::initializePipelineFragmentOutputState(
             mSharedNonVertexInput.renderPass.getColorUnresolveAttachmentMask().count());
     }
 
-    // Specify rasterization order for color when available and there is
-    // framebuffer fetch.  This allows implementation of coherent framebuffer
-    // fetch / advanced blend.
-    //
-    // We can do better by setting the bit only when there is coherent
-    // framebuffer fetch, but hasRenderPassColorFramebufferFetch does not
-    // distinguish coherent / non-coherent yet.  Also, once an app uses
-    // framebufer fetch, we treat all render passes as if they use framebuffer
-    // fetch.  This check is not very effective.
+    // Specify rasterization order for color when available and there is framebuffer fetch.  This
+    // allows implementation of coherent framebuffer fetch / advanced blend.
     if (context->getFeatures().supportsRasterizationOrderAttachmentAccess.enabled &&
-        hasRenderPassColorFramebufferFetch())
+        getRenderPassColorFramebufferFetchMode())
     {
         stateOut->blendState.flags |=
             VK_PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_EXT;
@@ -5962,22 +5992,40 @@ void WriteDescriptorDescs::updateInputAttachments(
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
     FramebufferVk *framebufferVk)
 {
+    if (executable.usesDepthFramebufferFetch())
+    {
+        const uint32_t depthBinding =
+            variableInfoMap
+                .getVariableById(gl::ShaderType::Fragment, sh::vk::spirv::kIdDepthInputAttachment)
+                .binding;
+        updateWriteDesc(depthBinding, VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1);
+    }
+
+    if (executable.usesStencilFramebufferFetch())
+    {
+        const uint32_t stencilBinding =
+            variableInfoMap
+                .getVariableById(gl::ShaderType::Fragment, sh::vk::spirv::kIdStencilInputAttachment)
+                .binding;
+        updateWriteDesc(stencilBinding, VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1);
+    }
+
     if (!executable.usesColorFramebufferFetch())
     {
         return;
     }
 
-    const uint32_t firstInputAttachment =
+    const uint32_t firstColorInputAttachment =
         static_cast<uint32_t>(executable.getFragmentInoutIndices().first());
 
-    const ShaderInterfaceVariableInfo &baseInfo = variableInfoMap.getVariableById(
-        gl::ShaderType::Fragment, sh::vk::spirv::kIdInputAttachment0 + firstInputAttachment);
+    const ShaderInterfaceVariableInfo &baseColorInfo = variableInfoMap.getVariableById(
+        gl::ShaderType::Fragment, sh::vk::spirv::kIdInputAttachment0 + firstColorInputAttachment);
 
-    const uint32_t baseBinding = baseInfo.binding - firstInputAttachment;
+    const uint32_t baseColorBinding = baseColorInfo.binding - firstColorInputAttachment;
 
     for (size_t colorIndex : framebufferVk->getState().getColorAttachmentsMask())
     {
-        uint32_t binding = baseBinding + static_cast<uint32_t>(colorIndex);
+        uint32_t binding = baseColorBinding + static_cast<uint32_t>(colorIndex);
         updateWriteDesc(binding, VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1);
     }
 }
@@ -6935,49 +6983,104 @@ angle::Result DescriptorSetDescBuilder::updateInputAttachments(
     FramebufferVk *framebufferVk,
     const WriteDescriptorDescs &writeDescriptorDescs)
 {
+    // Note: Depth/stencil input attachments are only supported in ANGLE when using
+    // VK_KHR_dynamic_rendering_local_read, so the layout is chosen to be the one specifically made
+    // for that extension.
+    if (executable.usesDepthFramebufferFetch() || executable.usesStencilFramebufferFetch())
+    {
+        RenderTargetVk *renderTargetVk = framebufferVk->getDepthStencilRenderTarget();
+        ASSERT(context->getFeatures().preferDynamicRendering.enabled);
+
+        const ImageOrBufferViewSubresourceSerial serial =
+            renderTargetVk->getDrawSubresourceSerial();
+        const VkImageAspectFlags aspects = renderTargetVk->getImageForRenderPass().getAspectFlags();
+
+        if (executable.usesDepthFramebufferFetch() && (aspects & VK_IMAGE_ASPECT_DEPTH_BIT) != 0)
+        {
+            const vk::ImageView *imageView = nullptr;
+            ANGLE_TRY(renderTargetVk->getDepthOrStencilImageView(context, VK_IMAGE_ASPECT_DEPTH_BIT,
+                                                                 &imageView));
+
+            const uint32_t depthBinding =
+                variableInfoMap
+                    .getVariableById(gl::ShaderType::Fragment,
+                                     sh::vk::spirv::kIdDepthInputAttachment)
+                    .binding;
+            updateInputAttachment(context, depthBinding, ImageLayout::DepthStencilWriteAndInput,
+                                  imageView, serial, writeDescriptorDescs);
+        }
+
+        if (executable.usesStencilFramebufferFetch() &&
+            (aspects & VK_IMAGE_ASPECT_STENCIL_BIT) != 0)
+        {
+            const vk::ImageView *imageView = nullptr;
+            ANGLE_TRY(renderTargetVk->getDepthOrStencilImageView(
+                context, VK_IMAGE_ASPECT_STENCIL_BIT, &imageView));
+
+            const uint32_t stencilBinding =
+                variableInfoMap
+                    .getVariableById(gl::ShaderType::Fragment,
+                                     sh::vk::spirv::kIdStencilInputAttachment)
+                    .binding;
+            updateInputAttachment(context, stencilBinding, ImageLayout::DepthStencilWriteAndInput,
+                                  imageView, serial, writeDescriptorDescs);
+        }
+    }
+
     if (!executable.usesColorFramebufferFetch())
     {
         return angle::Result::Continue;
     }
 
-    const uint32_t firstInputAttachment =
+    const uint32_t firstColorInputAttachment =
         static_cast<uint32_t>(executable.getFragmentInoutIndices().first());
 
-    const ShaderInterfaceVariableInfo &baseInfo = variableInfoMap.getVariableById(
-        gl::ShaderType::Fragment, sh::vk::spirv::kIdInputAttachment0 + firstInputAttachment);
+    const ShaderInterfaceVariableInfo &baseColorInfo = variableInfoMap.getVariableById(
+        gl::ShaderType::Fragment, sh::vk::spirv::kIdInputAttachment0 + firstColorInputAttachment);
 
-    const uint32_t baseBinding = baseInfo.binding - firstInputAttachment;
+    const uint32_t baseColorBinding = baseColorInfo.binding - firstColorInputAttachment;
 
     for (size_t colorIndex : framebufferVk->getState().getColorAttachmentsMask())
     {
-        uint32_t binding = baseBinding + static_cast<uint32_t>(colorIndex);
-
+        uint32_t binding               = baseColorBinding + static_cast<uint32_t>(colorIndex);
         RenderTargetVk *renderTargetVk = framebufferVk->getColorDrawRenderTarget(colorIndex);
+
         const vk::ImageView *imageView = nullptr;
-
         ANGLE_TRY(renderTargetVk->getImageView(context, &imageView));
-
-        uint32_t infoIndex = writeDescriptorDescs[binding].descriptorInfoIndex;
-
-        DescriptorInfoDesc &infoDesc = mDesc.getInfoDesc(infoIndex);
+        const ImageOrBufferViewSubresourceSerial serial =
+            renderTargetVk->getDrawSubresourceSerial();
 
         // We just need any layout that represents GENERAL for render pass objects.  With dynamic
         // rendering, there's a specific layout.
-        //
-        // The serial is also not totally precise.
-        ImageOrBufferViewSubresourceSerial serial = renderTargetVk->getDrawSubresourceSerial();
-        SetBitField(infoDesc.imageLayoutOrRange,
-                    context->getFeatures().preferDynamicRendering.enabled
-                        ? ImageLayout::ColorWriteAndInput
-                        : ImageLayout::FragmentShaderWrite);
-        infoDesc.imageViewSerialOrOffset = serial.viewSerial.getValue();
-        memcpy(&infoDesc.imageSubresourceRange, &serial.subresource, sizeof(uint32_t));
-        infoDesc.samplerOrBufferSerial = 0;
-
-        mHandles[infoIndex].imageView = imageView->getHandle();
+        updateInputAttachment(context, binding,
+                              context->getFeatures().preferDynamicRendering.enabled
+                                  ? ImageLayout::ColorWriteAndInput
+                                  : ImageLayout::FragmentShaderWrite,
+                              imageView, serial, writeDescriptorDescs);
     }
 
     return angle::Result::Continue;
+}
+
+void DescriptorSetDescBuilder::updateInputAttachment(
+    Context *context,
+    uint32_t binding,
+    ImageLayout layout,
+    const vk::ImageView *imageView,
+    ImageOrBufferViewSubresourceSerial serial,
+    const WriteDescriptorDescs &writeDescriptorDescs)
+{
+    uint32_t infoIndex = writeDescriptorDescs[binding].descriptorInfoIndex;
+
+    DescriptorInfoDesc &infoDesc = mDesc.getInfoDesc(infoIndex);
+
+    // The serial is not totally precise.
+    SetBitField(infoDesc.imageLayoutOrRange, layout);
+    infoDesc.imageViewSerialOrOffset = serial.viewSerial.getValue();
+    memcpy(&infoDesc.imageSubresourceRange, &serial.subresource, sizeof(uint32_t));
+    infoDesc.samplerOrBufferSerial = 0;
+
+    mHandles[infoIndex].imageView = imageView->getHandle();
 }
 
 void DescriptorSetDescBuilder::updateDescriptorSet(Renderer *renderer,
@@ -7505,6 +7608,7 @@ angle::Result RenderPassCache::MakeRenderPass(vk::Context *context,
                                                           nullptr, VK_ATTACHMENT_UNUSED,
                                                           VK_IMAGE_LAYOUT_UNDEFINED, 0};
 
+    ASSERT(!desc.hasDepthStencilFramebufferFetch());
     const bool needInputAttachments = desc.hasColorFramebufferFetch();
     const bool isRenderToTextureThroughExtension =
         desc.isRenderToTexture() &&

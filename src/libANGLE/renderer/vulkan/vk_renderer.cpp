@@ -1725,7 +1725,7 @@ Renderer::Renderer()
       mCurrentQueueFamilyIndex(std::numeric_limits<uint32_t>::max()),
       mMaxVertexAttribDivisor(1),
       mMaxVertexAttribStride(0),
-      mMaxInputAttachmentCount(0),
+      mMaxColorInputAttachmentCount(0),
       mDefaultUniformBufferSize(kPreferredDefaultUniformBufferSize),
       mDevice(VK_NULL_HANDLE),
       mDeviceLost(false),
@@ -2522,6 +2522,10 @@ angle::Result Renderer::initializeMemoryAllocator(vk::Context *context)
 // - VK_EXT_pipeline_protected_access:                 pipelineProtectedAccess (feature)
 // - VK_EXT_rasterization_order_attachment_access or
 //   VK_ARM_rasterization_order_attachment_access:     rasterizationOrderColorAttachmentAccess
+//                                                                                   (feature)
+//                                                     rasterizationOrderDepthAttachmentAccess
+//                                                                                   (feature)
+//                                                     rasterizationOrderStencilAttachmentAccess
 //                                                                                   (feature)
 // - VK_EXT_swapchain_maintenance1:                    swapchainMaintenance1 (feature)
 // - VK_EXT_legacy_dithering:                          supportsLegacyDithering (feature)
@@ -5093,16 +5097,20 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // natively anyway.
     ANGLE_FEATURE_CONDITION(&mFeatures, overrideSurfaceFormatRGB8ToRGBA8, true);
 
-    // We set
+    // We set the following when there is color framebuffer fetch:
     //
     // - VK_PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_EXT
     // - VK_SUBPASS_DESCRIPTION_RASTERIZATION_ORDER_ATTACHMENT_COLOR_ACCESS_BIT_EXT
     //
-    // when this feature is supported and there is framebuffer fetch.  But the
-    // check for framebuffer fetch is not accurate enough and those bits can
-    // have great impact on Qualcomm (it only affects the open source driver
-    // because the proprietary driver does not expose the extension).  Let's
-    // disable it on Qualcomm.
+    // and the following with depth/stencil framebuffer fetch:
+    //
+    // - VK_PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_DEPTH_ACCESS_BIT_EXT
+    // -
+    // VK_PIPELINE_DEPTH_STENCIL_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_STENCIL_ACCESS_BIT_EXT
+    //
+    // But the check for framebuffer fetch is not accurate enough and those bits can have great
+    // impact on Qualcomm (it only affects the open source driver because the proprietary driver
+    // does not expose the extension).  Let's disable it on Qualcomm.
     //
     // https://issuetracker.google.com/issues/255837430
     ANGLE_FEATURE_CONDITION(
@@ -5671,6 +5679,21 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // break when switching framebuffer fetch usage.
     ANGLE_FEATURE_CONDITION(&mFeatures, permanentlySwitchToFramebufferFetchMode,
                             isTileBasedRenderer && !mFeatures.preferDynamicRendering.enabled);
+
+    // Vulkan supports depth/stencil input attachments same as it does with color.
+    // GL_ARM_shader_framebuffer_fetch_depth_stencil requires coherent behavior however, so this
+    // extension is exposed only where coherent framebuffer fetch is available.
+    //
+    // Additionally, the implementation assumes VK_KHR_dynamic_rendering_local_read to avoid
+    // complications with VkRenderPass objects.
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsShaderFramebufferFetchDepthStencil,
+        mFeatures.supportsShaderFramebufferFetch.enabled &&
+            mRasterizationOrderAttachmentAccessFeatures.rasterizationOrderDepthAttachmentAccess ==
+                VK_TRUE &&
+            mRasterizationOrderAttachmentAccessFeatures.rasterizationOrderStencilAttachmentAccess ==
+                VK_TRUE &&
+            mFeatures.preferDynamicRendering.enabled);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsSynchronization2,
                             mSynchronization2Features.synchronization2 == VK_TRUE);

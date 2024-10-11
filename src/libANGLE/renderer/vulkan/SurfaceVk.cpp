@@ -159,11 +159,16 @@ bool Is90DegreeRotation(VkSurfaceTransformFlagsKHR transform)
     return ((transform & k90DegreeRotationVariants) != 0);
 }
 
-bool NeedsInputAttachmentUsage(const angle::FeaturesVk &features)
+bool ColorNeedsInputAttachmentUsage(const angle::FeaturesVk &features)
 {
     return features.supportsShaderFramebufferFetch.enabled ||
            features.supportsShaderFramebufferFetchNonCoherent.enabled ||
            features.emulateAdvancedBlendEquations.enabled;
+}
+
+bool DepthStencilNeedsInputAttachmentUsage(const angle::FeaturesVk &features)
+{
+    return features.supportsShaderFramebufferFetchDepthStencil.enabled;
 }
 
 angle::Result InitImageHelper(DisplayVk *displayVk,
@@ -182,7 +187,11 @@ angle::Result InitImageHelper(DisplayVk *displayVk,
 
     vk::Renderer *renderer = displayVk->getRenderer();
     // If shaders may be fetching from this, we need this image to be an input
-    if (NeedsInputAttachmentUsage(renderer->getFeatures()))
+    const bool isColorAndNeedsInputUsage =
+        !isDepthOrStencilFormat && ColorNeedsInputAttachmentUsage(renderer->getFeatures());
+    const bool isDepthStencilAndNeedsInputUsage =
+        isDepthOrStencilFormat && DepthStencilNeedsInputAttachmentUsage(renderer->getFeatures());
+    if (isColorAndNeedsInputUsage || isDepthStencilAndNeedsInputUsage)
     {
         usage |= VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
     }
@@ -1593,7 +1602,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     VkImageUsageFlags imageUsageFlags = kSurfaceVkColorImageUsageFlags;
 
     // If shaders may be fetching from this, we need this image to be an input
-    if (NeedsInputAttachmentUsage(renderer->getFeatures()))
+    if (ColorNeedsInputAttachmentUsage(renderer->getFeatures()))
     {
         imageUsageFlags |= VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
     }
@@ -1769,7 +1778,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     if (samples > 1)
     {
         VkImageUsageFlags usage = kSurfaceVkColorImageUsageFlags;
-        if (NeedsInputAttachmentUsage(renderer->getFeatures()))
+        if (ColorNeedsInputAttachmentUsage(renderer->getFeatures()))
         {
             usage |= VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
         }
@@ -1818,7 +1827,11 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     {
         const vk::Format &dsFormat = renderer->getFormat(mState.config->depthStencilFormat);
 
-        const VkImageUsageFlags dsUsage = kSurfaceVkDepthStencilImageUsageFlags;
+        VkImageUsageFlags dsUsage = kSurfaceVkDepthStencilImageUsageFlags;
+        if (DepthStencilNeedsInputAttachmentUsage(renderer->getFeatures()))
+        {
+            dsUsage |= VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
+        }
 
         ANGLE_TRY(mDepthStencilImage.init(context, gl::TextureType::_2D, vkExtents, dsFormat,
                                           samples, dsUsage, gl::LevelIndex(0), 1, 1, robustInit,

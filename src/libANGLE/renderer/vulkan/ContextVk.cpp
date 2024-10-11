@@ -270,7 +270,7 @@ EventName GetTraceEventName(const char *title, uint64_t counter)
 vk::ResourceAccess GetColorAccess(const gl::State &state,
                                   const gl::FramebufferState &framebufferState,
                                   const gl::DrawBufferMask &emulatedAlphaMask,
-                                  bool hasFramebufferFetch,
+                                  const gl::ProgramExecutable *executable,
                                   size_t colorIndexGL)
 {
     // No access if draw buffer is disabled altogether
@@ -295,6 +295,8 @@ vk::ResourceAccess GetColorAccess(const gl::State &state,
 
     if (isOutputMasked)
     {
+        const bool hasFramebufferFetch =
+            executable ? executable->usesColorFramebufferFetch() : false;
         return hasFramebufferFetch ? vk::ResourceAccess::ReadOnly : vk::ResourceAccess::Unused;
     }
 
@@ -302,6 +304,7 @@ vk::ResourceAccess GetColorAccess(const gl::State &state,
 }
 
 vk::ResourceAccess GetDepthAccess(const gl::DepthStencilState &dsState,
+                                  const gl::ProgramExecutable *executable,
                                   UpdateDepthFeedbackLoopReason reason)
 {
     // Skip if depth/stencil not actually accessed.
@@ -319,8 +322,12 @@ vk::ResourceAccess GetDepthAccess(const gl::DepthStencilState &dsState,
 
     if (dsState.isDepthMaskedOut())
     {
+        const bool hasFramebufferFetch =
+            executable ? executable->usesDepthFramebufferFetch() : false;
+
         // If depthFunc is GL_ALWAYS or GL_NEVER, we do not need to load depth value.
-        return (dsState.depthFunc == GL_ALWAYS || dsState.depthFunc == GL_NEVER)
+        return (dsState.depthFunc == GL_ALWAYS || dsState.depthFunc == GL_NEVER) &&
+                       !hasFramebufferFetch
                    ? vk::ResourceAccess::Unused
                    : vk::ResourceAccess::ReadOnly;
     }
@@ -330,6 +337,7 @@ vk::ResourceAccess GetDepthAccess(const gl::DepthStencilState &dsState,
 
 vk::ResourceAccess GetStencilAccess(const gl::DepthStencilState &dsState,
                                     GLuint framebufferStencilSize,
+                                    const gl::ProgramExecutable *executable,
                                     UpdateDepthFeedbackLoopReason reason)
 {
     // Skip if depth/stencil not actually accessed.
@@ -345,8 +353,10 @@ vk::ResourceAccess GetStencilAccess(const gl::DepthStencilState &dsState,
         return vk::ResourceAccess::Unused;
     }
 
+    const bool hasFramebufferFetch = executable ? executable->usesStencilFramebufferFetch() : false;
+
     return dsState.isStencilNoOp(framebufferStencilSize) &&
-                   dsState.isStencilBackNoOp(framebufferStencilSize)
+                   dsState.isStencilBackNoOp(framebufferStencilSize) && !hasFramebufferFetch
                ? vk::ResourceAccess::ReadOnly
                : vk::ResourceAccess::ReadWrite;
 }
@@ -2329,10 +2339,11 @@ angle::Result ContextVk::switchOutReadOnlyDepthStencilMode(
         return angle::Result::Continue;
     }
 
+    const gl::ProgramExecutable *executable = mState.getProgramExecutable();
     const gl::DepthStencilState &dsState = mState.getDepthStencilState();
-    vk::ResourceAccess depthAccess       = GetDepthAccess(dsState, depthReason);
-    vk::ResourceAccess stencilAccess =
-        GetStencilAccess(dsState, mState.getDrawFramebuffer()->getStencilBitCount(), stencilReason);
+    vk::ResourceAccess depthAccess          = GetDepthAccess(dsState, executable, depthReason);
+    vk::ResourceAccess stencilAccess        = GetStencilAccess(
+        dsState, mState.getDrawFramebuffer()->getStencilBitCount(), executable, stencilReason);
 
     if ((HasResourceWriteAccess(depthAccess) &&
          mDepthStencilAttachmentFlags[vk::RenderPassUsage::DepthReadOnlyAttachment]) ||
@@ -2453,12 +2464,20 @@ angle::Result ContextVk::handleDirtyGraphicsRenderPass(DirtyBits::Iterator *dirt
     // - When the program binding changes (see |invalidateProgramExecutableHelper|)
     if (getFeatures().preferDynamicRendering.enabled)
     {
-        if (mState.getProgramExecutable()->usesColorFramebufferFetch())
+        vk::FramebufferFetchMode framebufferFetchMode =
+            vk::GetProgramFramebufferFetchMode(mState.getProgramExecutable());
+        if (framebufferFetchMode != vk::FramebufferFetchMode::None)
         {
             // Note: this function sets a dirty bit through onColorAccessChange() not through
             // |dirtyBitsIterator|, but that dirty bit is always set on new render passes, so it
             // won't be missed.
-            onFramebufferFetchUse();
+            onFramebufferFetchUse(framebufferFetchMode);
+        }
+        else
+        {
+            // Reset framebuffer fetch mode.  Note that |onFramebufferFetchUse| _accumulates_
+            // framebuffer fetch mode.
+            mRenderPassCommands->setFramebufferFetchMode(vk::FramebufferFetchMode::None);
         }
     }
 
@@ -2482,7 +2501,7 @@ angle::Result ContextVk::handleDirtyGraphicsColorAccess(DirtyBits::Iterator *dir
         {
             vk::ResourceAccess colorAccess = GetColorAccess(
                 mState, framebufferState, drawFramebufferVk->getEmulatedAlphaAttachmentMask(),
-                executable->usesColorFramebufferFetch(), colorIndexGL);
+                executable, colorIndexGL);
             mRenderPassCommands->onColorAccess(colorIndexVk, colorAccess);
         }
         ++colorIndexVk;
@@ -2502,10 +2521,12 @@ angle::Result ContextVk::handleDirtyGraphicsDepthStencilAccess(
     }
 
     // Update depth/stencil attachment accesses
+    const gl::ProgramExecutable *executable = mState.getProgramExecutable();
     const gl::DepthStencilState &dsState = mState.getDepthStencilState();
-    vk::ResourceAccess depthAccess = GetDepthAccess(dsState, UpdateDepthFeedbackLoopReason::Draw);
+    vk::ResourceAccess depthAccess =
+        GetDepthAccess(dsState, executable, UpdateDepthFeedbackLoopReason::Draw);
     vk::ResourceAccess stencilAccess =
-        GetStencilAccess(dsState, mState.getDrawFramebuffer()->getStencilBitCount(),
+        GetStencilAccess(dsState, mState.getDrawFramebuffer()->getStencilBitCount(), executable,
                          UpdateDepthFeedbackLoopReason::Draw);
     mRenderPassCommands->onDepthAccess(depthAccess);
     mRenderPassCommands->onStencilAccess(stencilAccess);
@@ -2831,7 +2852,9 @@ angle::Result ContextVk::handleDirtyShaderResourcesImpl(CommandBufferHelperT *co
     const bool hasStorageBuffers       = executable->hasStorageBuffers();
     const bool hasAtomicCounterBuffers = executable->hasAtomicCounterBuffers();
     const bool hasUniformBuffers       = executable->hasUniformBuffers();
-    const bool hasFramebufferFetch     = executable->usesColorFramebufferFetch();
+    const bool hasFramebufferFetch     = executable->usesColorFramebufferFetch() ||
+                                     executable->usesDepthFramebufferFetch() ||
+                                     executable->usesStencilFramebufferFetch();
 
     if (!hasUniformBuffers && !hasStorageBuffers && !hasAtomicCounterBuffers && !hasImages &&
         !hasFramebufferFetch)
@@ -5436,11 +5459,12 @@ angle::Result ContextVk::invalidateProgramExecutableHelper(const gl::Context *co
 
             if (framebufferFetchMode != vk::FramebufferFetchMode::None)
             {
-                onFramebufferFetchUse();
+                onFramebufferFetchUse(framebufferFetchMode);
             }
         }
         else
         {
+            ASSERT(!FramebufferFetchModeHasDepthStencil(framebufferFetchMode));
             const bool hasColorFramebufferFetch =
                 framebufferFetchMode != vk::FramebufferFetchMode::None;
             if (mIsInColorFramebufferFetchMode != hasColorFramebufferFetch)
@@ -5465,7 +5489,7 @@ angle::Result ContextVk::invalidateProgramExecutableHelper(const gl::Context *co
             // DIRTY_BIT_COLOR_ACCESS. This means we will not call
             // handleDirtyGraphicsColorAccess that updates the access value of
             // framebuffer color attachment from unused to readonly. This makes the
-            // color attachment continue using LoadOpNone, and the second program
+            // color attachment to continue using LoadOpNone, and the second program
             // will not be able to read the value in the color attachment.
             if (getFeatures().permanentlySwitchToFramebufferFetchMode.enabled &&
                 hasColorFramebufferFetch)
@@ -6368,7 +6392,8 @@ angle::Result ContextVk::invalidateCurrentShaderResources(gl::Command command)
     const bool hasUniformBuffers = executable->hasUniformBuffers();
 
     if (hasUniformBuffers || hasStorageBuffers || hasImages ||
-        executable->usesColorFramebufferFetch())
+        executable->usesColorFramebufferFetch() || executable->usesDepthFramebufferFetch() ||
+        executable->usesStencilFramebufferFetch())
     {
         mGraphicsDirtyBits |= kResourcesAndDescSetDirtyBits;
         mComputeDirtyBits |= kResourcesAndDescSetDirtyBits;
@@ -9039,20 +9064,35 @@ angle::Result ContextVk::switchToColorFramebufferFetchMode(bool hasColorFramebuf
     return angle::Result::Continue;
 }
 
-void ContextVk::onFramebufferFetchUse()
+void ContextVk::onFramebufferFetchUse(vk::FramebufferFetchMode framebufferFetchMode)
 {
     ASSERT(getFeatures().preferDynamicRendering.enabled);
 
     if (mRenderPassCommands->started())
     {
-        mRenderPassCommands->setFramebufferFetchMode();
+        // Accumulate framebuffer fetch mode to allow multiple draw calls in the same render pass
+        // where some use color framebuffer fetch and some depth/stencil
+        const vk::FramebufferFetchMode mergedMode = vk::FramebufferFetchModeMerge(
+            mRenderPassCommands->getRenderPassDesc().framebufferFetchMode(), framebufferFetchMode);
+
+        mRenderPassCommands->setFramebufferFetchMode(mergedMode);
 
         // When framebuffer fetch is enabled, attachments can be read from even if output is
         // masked, so update their access.
-        onColorAccessChange();
+        if (FramebufferFetchModeHasColor(framebufferFetchMode))
+        {
+            onColorAccessChange();
+        }
+        if (FramebufferFetchModeHasDepthStencil(framebufferFetchMode))
+        {
+            onDepthStencilAccessChange();
+        }
     }
 
-    mRenderer->onColorFramebufferFetchUse();
+    if (FramebufferFetchModeHasColor(framebufferFetchMode))
+    {
+        mRenderer->onColorFramebufferFetchUse();
+    }
 }
 
 ANGLE_INLINE angle::Result ContextVk::allocateQueueSerialIndex()

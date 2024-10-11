@@ -107,6 +107,12 @@ enum class ImageLayout
 
     // Depth (Write), Stencil (Write)
     DepthWriteStencilWrite,
+    // Used only with dynamic rendering, because it needs a different VkImageLayout.  For
+    // simplicity, depth/stencil attachments when used as input attachments don't attempt to
+    // distinguish read-only aspects.  That's only useful for supporting feedback loops, but if an
+    // application is reading depth or stencil through an input attachment, it's safe to assume they
+    // wouldn't be accessing the other aspect through a sampler!
+    DepthStencilWriteAndInput,
 
     // Depth (Write), Stencil (Read)
     DepthWriteStencilRead,
@@ -1944,9 +1950,9 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     const RenderPassDesc &getRenderPassDesc() const { return mRenderPassDesc; }
     const AttachmentOpsArray &getAttachmentOps() const { return mAttachmentOps; }
 
-    void setFramebufferFetchMode()
+    void setFramebufferFetchMode(FramebufferFetchMode framebufferFetchMode)
     {
-        mRenderPassDesc.setFramebufferFetchMode(FramebufferFetchMode::Color);
+        mRenderPassDesc.setFramebufferFetchMode(framebufferFetchMode);
     }
 
     void setImageOptimizeForPresent(ImageHelper *image) { mImageOptimizeForPresent = image; }

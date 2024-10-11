@@ -793,6 +793,8 @@ void ProgramExecutable::reset()
     mPod.hasDiscard              = false;
     mPod.enablesPerSampleShading = false;
     mPod.hasYUVOutput            = false;
+    mPod.hasDepthInputAttachment   = false;
+    mPod.hasStencilInputAttachment = false;
 
     mPod.advancedBlendEquations.reset();
 

@@ -2697,6 +2697,18 @@ TIntermTyped *TParseContext::parseVariableIdentifier(const TSourceLoc &location,
     }
     else
     {
+        // gl_LastFragDepthARM and gl_LastFragStencilARM cannot be accessed if early_fragment_tests
+        // is specified.
+        if ((variableType.getQualifier() == EvqLastFragDepth ||
+             variableType.getQualifier() == EvqLastFragStencil) &&
+            isEarlyFragmentTestsSpecified())
+        {
+            error(location,
+                  "gl_LastFragDepthARM and gl_LastFragStencilARM cannot be accessed because "
+                  "early_fragment_tests is specified",
+                  name);
+        }
+
         node = new TIntermSymbol(variable);
     }
     ASSERT(node != nullptr);

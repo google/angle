@@ -261,7 +261,7 @@ class Renderer : angle::NonCopyable
     const angle::FeaturesVk &getFeatures() const { return mFeatures; }
     uint32_t getMaxVertexAttribDivisor() const { return mMaxVertexAttribDivisor; }
     VkDeviceSize getMaxVertexAttribStride() const { return mMaxVertexAttribStride; }
-    uint32_t getMaxInputAttachmentCount() const { return mMaxInputAttachmentCount; }
+    uint32_t getMaxColorInputAttachmentCount() const { return mMaxColorInputAttachmentCount; }
 
     uint32_t getDefaultUniformBufferSize() const { return mDefaultUniformBufferSize; }
 
@@ -918,7 +918,7 @@ class Renderer : angle::NonCopyable
     uint32_t mCurrentQueueFamilyIndex;
     uint32_t mMaxVertexAttribDivisor;
     VkDeviceSize mMaxVertexAttribStride;
-    mutable uint32_t mMaxInputAttachmentCount;
+    mutable uint32_t mMaxColorInputAttachmentCount;
     uint32_t mDefaultUniformBufferSize;
     VkDevice mDevice;
     VkDeviceSize mMaxCopyBytesUsingCPUWhenPreservingBufferData;

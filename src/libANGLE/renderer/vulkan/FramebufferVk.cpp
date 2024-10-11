@@ -2945,6 +2945,7 @@ angle::Result FramebufferVk::createNewFramebuffer(
 angle::Result FramebufferVk::getFramebuffer(ContextVk *contextVk,
                                             vk::RenderPassFramebuffer *framebufferOut)
 {
+    ASSERT(!mRenderPassDesc.hasDepthStencilFramebufferFetch());
     ASSERT(mCurrentFramebufferDesc.hasColorFramebufferFetch() ==
            mRenderPassDesc.hasColorFramebufferFetch());
 

@@ -1433,7 +1433,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // In this mode, the FramebufferVk object and its render pass description are unaffected by
     // framebuffer fetch use, and the context needs to just configure the command buffer for
     // framebuffer fetch.
-    void onFramebufferFetchUse();
+    void onFramebufferFetchUse(vk::FramebufferFetchMode framebufferFetchMode);
 
     // When the useNonZeroStencilWriteMaskStaticState workaround is enabled, the static state for
     // stencil should be non-zero despite the state being dynamic.  This is done when:
@@ -1676,6 +1676,9 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // This only applies to legacy render passes (i.e. when dynamic rendering is NOT used).  In the
     // case of dynamic rendering, every render pass starts with the assumption of not needing input
     // attachments and switches later if it needs to with no penalty.
+    //
+    // Note that depth/stencil framebuffer fetch does not need this sort of tracking because it is
+    // only enabled with dynamic rendering.
     bool mIsInColorFramebufferFetchMode;
 
     // True if current started render pass is allowed to reactivate.
