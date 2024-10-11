@@ -618,7 +618,7 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
                 kernelVk.getProgram()->getMetaDescriptorPool(index).bindCachedDescriptorPool(
                     mContext, kernelVk.getDescriptorSetLayoutDesc(index), 1,
                     mContext->getDescriptorSetLayoutCache(),
-                    &kernelVk.getProgram()->getDescriptorPoolPointer(index)),
+                    &kernelVk.getProgram()->getDynamicDescriptorPoolPointer(index)),
                 CL_INVALID_OPERATION);
 
             // Allocate descriptor set

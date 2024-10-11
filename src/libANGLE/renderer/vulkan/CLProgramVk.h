@@ -294,9 +294,9 @@ class CLProgramVk : public CLProgramImpl
         return mMetaDescriptorPools[index];
     }
 
-    vk::DescriptorPoolPointer &getDescriptorPoolPointer(DescriptorSetIndex index)
+    vk::DynamicDescriptorPoolPointer &getDynamicDescriptorPoolPointer(DescriptorSetIndex index)
     {
-        return mDescriptorPools[index];
+        return mDynamicDescriptorPools[index];
     }
 
     const angle::HashMap<uint32_t, ClspvPrintfInfo> *getPrintfDescriptors(
@@ -308,7 +308,7 @@ class CLProgramVk : public CLProgramImpl
     vk::RefCounted<vk::ShaderModule> mShader;
     DevicePrograms mAssociatedDevicePrograms;
     vk::DescriptorSetArray<vk::MetaDescriptorPool> mMetaDescriptorPools;
-    vk::DescriptorSetArray<vk::DescriptorPoolPointer> mDescriptorPools;
+    vk::DescriptorSetArray<vk::DynamicDescriptorPoolPointer> mDynamicDescriptorPools;
     vk::DescriptorSetArray<vk::RefCountedDescriptorPoolBinding> mDescriptorPoolBindings;
     angle::SimpleMutex mProgramMutex;
 };
