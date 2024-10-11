@@ -622,10 +622,7 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
                 CL_INVALID_OPERATION);
 
             // Allocate descriptor set
-            ANGLE_TRY(kernelVk.getProgram()->allocateDescriptorSet(
-                index, kernelVk.getDescriptorSetLayouts()[*layoutIndex].get(), mComputePassCommands,
-                &kernelVk.getDescriptorSet(index)));
-
+            ANGLE_TRY(kernelVk.allocateDescriptorSet(index, layoutIndex, mComputePassCommands));
             ++layoutIndex;
         }
     }
@@ -820,9 +817,10 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
                 updateDescriptorSetsBuilders[index].flushDescriptorSetUpdates(
                     mContext->getRenderer()->getDevice());
 
+            VkDescriptorSet descriptorSet = kernelVk.getDescriptorSet(index);
             mComputePassCommands->getCommandBuffer().bindDescriptorSets(
                 kernelVk.getPipelineLayout().get(), VK_PIPELINE_BIND_POINT_COMPUTE,
-                *descriptorSetIndex, 1, &kernelVk.getDescriptorSet(index), 0, nullptr);
+                *descriptorSetIndex, 1, &descriptorSet, 0, nullptr);
 
             ++descriptorSetIndex;
         }
