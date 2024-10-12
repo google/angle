@@ -604,7 +604,7 @@ DebugMessageReport ShouldReportDebugMessage(Renderer *renderer,
     }
 
     // Then check with syncval messages:
-    const bool isFramebufferFetchUsed = renderer->isFramebufferFetchUsed();
+    const bool isColorFramebufferFetchUsed = renderer->isColorFramebufferFetchUsed();
 
     for (const vk::SkippedSyncvalMessage &msg : renderer->getSkippedSyncvalMessages())
     {
@@ -626,8 +626,8 @@ DebugMessageReport ShouldReportDebugMessage(Renderer *renderer,
         const bool hasRasterizationOrderExtension =
             renderer->getFeatures().supportsRasterizationOrderAttachmentAccess.enabled &&
             kSyncValSupportsRasterizationOrderExtension;
-        if (msg.isDueToNonConformantCoherentFramebufferFetch &&
-            (!isFramebufferFetchUsed || hasRasterizationOrderExtension))
+        if (msg.isDueToNonConformantCoherentColorFramebufferFetch &&
+            (!isColorFramebufferFetchUsed || hasRasterizationOrderExtension))
         {
             return DebugMessageReport::Print;
         }

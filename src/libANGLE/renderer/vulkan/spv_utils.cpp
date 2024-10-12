@@ -679,7 +679,7 @@ void AssignInputAttachmentBindings(const SpvSourceOptions &options,
                                    ShaderInterfaceVariableInfoMap *variableInfoMapOut)
 {
     if (!programExecutable.hasLinkedShaderStage(gl::ShaderType::Fragment) ||
-        !programExecutable.usesFramebufferFetch())
+        !programExecutable.usesColorFramebufferFetch())
     {
         return;
     }

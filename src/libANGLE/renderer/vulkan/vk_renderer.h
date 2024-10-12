@@ -58,7 +58,7 @@ struct SkippedSyncvalMessage
     const char *messageId;
     const char *messageContents1;
     const char *messageContents2                      = "";
-    bool isDueToNonConformantCoherentFramebufferFetch = false;
+    bool isDueToNonConformantCoherentColorFramebufferFetch = false;
 };
 
 class ImageMemorySuballocator : angle::NonCopyable
@@ -370,8 +370,8 @@ class Renderer : angle::NonCopyable
         return mSkippedSyncvalMessages;
     }
 
-    void onFramebufferFetchUse() { mIsFramebufferFetchUsed = true; }
-    bool isFramebufferFetchUsed() const { return mIsFramebufferFetchUsed; }
+    void onColorFramebufferFetchUse() { mIsColorFramebufferFetchUsed = true; }
+    bool isColorFramebufferFetchUsed() const { return mIsColorFramebufferFetchUsed; }
 
     uint64_t getMaxFenceWaitTimeNs() const;
 
@@ -1046,7 +1046,7 @@ class Renderer : angle::NonCopyable
 
     // Whether framebuffer fetch has been used, for the purposes of more accurate syncval error
     // filtering.
-    bool mIsFramebufferFetchUsed;
+    bool mIsColorFramebufferFetchUsed;
 
     // How close to VkPhysicalDeviceLimits::maxMemoryAllocationCount we allow ourselves to get
     static constexpr double kPercentMaxMemoryAllocationCount = 0.3;

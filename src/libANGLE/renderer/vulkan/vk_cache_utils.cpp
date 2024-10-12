@@ -560,7 +560,7 @@ void AttachPipelineRenderingInfo(Context *context,
     AddToPNextChain(createInfoOut, attachmentLocationsOut);
 
     // Note: VkRenderingInputAttachmentIndexInfoKHR only affects the fragment stage subset.
-    if (desc.hasFramebufferFetch() && GraphicsPipelineHasShaders(subset))
+    if (desc.hasColorFramebufferFetch() && GraphicsPipelineHasShaders(subset))
     {
         *inputLocationsOut       = {};
         inputLocationsOut->sType = VK_STRUCTURE_TYPE_RENDERING_INPUT_ATTACHMENT_INDEX_INFO_KHR;
@@ -1678,7 +1678,7 @@ enum class PipelineState
     RenderPassColorAttachmentRange,
     RenderPassViewCount,
     RenderPassSrgbWriteControl,
-    RenderPassHasFramebufferFetch,
+    RenderPassHasColorFramebufferFetch,
     RenderPassIsRenderToTexture,
     RenderPassResolveDepth,
     RenderPassResolveStencil,
@@ -1836,8 +1836,8 @@ using PipelineStateBitSet   = angle::BitSetArray<angle::EnumSize<PipelineState>(
         (*valuesOut)[PipelineState::RenderPassViewCount] = renderPass.viewCount();
         (*valuesOut)[PipelineState::RenderPassSrgbWriteControl] =
             static_cast<uint32_t>(renderPass.getSRGBWriteControlMode());
-        (*valuesOut)[PipelineState::RenderPassHasFramebufferFetch] =
-            renderPass.hasFramebufferFetch();
+        (*valuesOut)[PipelineState::RenderPassHasColorFramebufferFetch] =
+            renderPass.hasColorFramebufferFetch();
         (*valuesOut)[PipelineState::RenderPassIsRenderToTexture] = renderPass.isRenderToTexture();
         (*valuesOut)[PipelineState::RenderPassResolveDepth] =
             renderPass.hasDepthResolveAttachment();
@@ -1991,7 +1991,7 @@ PipelineState GetPipelineState(size_t stateIndex, bool *isRangedOut, size_t *sub
         {PipelineState::RenderPassColorAttachmentRange, "rp_color_range"},
         {PipelineState::RenderPassViewCount, "rp_views"},
         {PipelineState::RenderPassSrgbWriteControl, "rp_srgb"},
-        {PipelineState::RenderPassHasFramebufferFetch, "rp_has_framebuffer_fetch"},
+        {PipelineState::RenderPassHasColorFramebufferFetch, "rp_has_color_framebuffer_fetch"},
         {PipelineState::RenderPassIsRenderToTexture, "rp_is_msrtt"},
         {PipelineState::RenderPassResolveDepth, "rp_resolve_depth"},
         {PipelineState::RenderPassResolveStencil, "rp_resolve_stencil"},
@@ -2058,7 +2058,7 @@ PipelineState GetPipelineState(size_t stateIndex, bool *isRangedOut, size_t *sub
         // its name specified, as it being enabled would be implied.
         case PipelineState::VertexAttribCompressed:
         case PipelineState::RenderPassSrgbWriteControl:
-        case PipelineState::RenderPassHasFramebufferFetch:
+        case PipelineState::RenderPassHasColorFramebufferFetch:
         case PipelineState::RenderPassIsRenderToTexture:
         case PipelineState::RenderPassResolveDepth:
         case PipelineState::RenderPassResolveStencil:
@@ -2479,7 +2479,7 @@ PipelineState GetPipelineState(size_t stateIndex, bool *isRangedOut, size_t *sub
         {PipelineState::RenderPassColorAttachmentRange, 0},
         {PipelineState::RenderPassViewCount, 0},
         {PipelineState::RenderPassSrgbWriteControl, 0},
-        {PipelineState::RenderPassHasFramebufferFetch, 0},
+        {PipelineState::RenderPassHasColorFramebufferFetch, 0},
         {PipelineState::RenderPassIsRenderToTexture, 0},
         {PipelineState::RenderPassResolveDepth, 0},
         {PipelineState::RenderPassResolveStencil, 0},
@@ -2770,7 +2770,8 @@ bool ShouldDumpPipelineCacheGraph(Context *context)
 
 FramebufferFetchMode GetProgramFramebufferFetchMode(const gl::ProgramExecutable *executable)
 {
-    const bool hasFramebufferFetch = executable != nullptr && executable->usesFramebufferFetch();
+    const bool hasFramebufferFetch =
+        executable != nullptr && executable->usesColorFramebufferFetch();
     return hasFramebufferFetch ? vk::FramebufferFetchMode::Color : vk::FramebufferFetchMode::None;
 }
 
@@ -3038,7 +3039,7 @@ void RenderPassDesc::beginRendering(
 
     primary->setRenderingAttachmentLocations(&attachmentLocations);
 
-    if (hasFramebufferFetch())
+    if (hasColorFramebufferFetch())
     {
         VkRenderingInputAttachmentIndexInfoKHR inputLocations = {};
         inputLocations.sType = VK_STRUCTURE_TYPE_RENDERING_INPUT_ATTACHMENT_INDEX_INFO_KHR;
@@ -4087,12 +4088,12 @@ void GraphicsPipelineDesc::initializePipelineFragmentOutputState(
     // fetch / advanced blend.
     //
     // We can do better by setting the bit only when there is coherent
-    // framebuffer fetch, but getRenderPassFramebufferFetchMode does not
+    // framebuffer fetch, but hasRenderPassColorFramebufferFetch does not
     // distinguish coherent / non-coherent yet.  Also, once an app uses
     // framebufer fetch, we treat all render passes as if they use framebuffer
     // fetch.  This check is not very effective.
     if (context->getFeatures().supportsRasterizationOrderAttachmentAccess.enabled &&
-        getRenderPassFramebufferFetchMode())
+        hasRenderPassColorFramebufferFetch())
     {
         stateOut->blendState.flags |=
             VK_PIPELINE_COLOR_BLEND_STATE_CREATE_RASTERIZATION_ORDER_ATTACHMENT_ACCESS_BIT_EXT;
@@ -5326,14 +5327,14 @@ bool FramebufferDesc::hasFragmentShadingRateAttachment() const
 size_t FramebufferDesc::hash() const
 {
     return angle::ComputeGenericHash(&mSerials, sizeof(mSerials[0]) * mMaxIndex) ^
-           mHasFramebufferFetch << 26 ^ mIsRenderToTexture << 25 ^ mLayerCount << 16 ^
+           mHasColorFramebufferFetch << 26 ^ mIsRenderToTexture << 25 ^ mLayerCount << 16 ^
            mUnresolveAttachmentMask;
 }
 
 void FramebufferDesc::reset()
 {
     mMaxIndex                = 0;
-    mHasFramebufferFetch     = false;
+    mHasColorFramebufferFetch = false;
     mLayerCount              = 0;
     mSrgbWriteControlMode    = 0;
     mUnresolveAttachmentMask = 0;
@@ -5345,7 +5346,7 @@ bool FramebufferDesc::operator==(const FramebufferDesc &other) const
 {
     if (mMaxIndex != other.mMaxIndex || mLayerCount != other.mLayerCount ||
         mUnresolveAttachmentMask != other.mUnresolveAttachmentMask ||
-        mHasFramebufferFetch != other.mHasFramebufferFetch ||
+        mHasColorFramebufferFetch != other.mHasColorFramebufferFetch ||
         mSrgbWriteControlMode != other.mSrgbWriteControlMode ||
         mIsRenderToTexture != other.mIsRenderToTexture)
     {
@@ -5379,9 +5380,9 @@ void FramebufferDesc::updateLayerCount(uint32_t layerCount)
     SetBitField(mLayerCount, layerCount);
 }
 
-void FramebufferDesc::setFramebufferFetchMode(bool hasFramebufferFetch)
+void FramebufferDesc::setColorFramebufferFetchMode(bool hasColorFramebufferFetch)
 {
-    SetBitField(mHasFramebufferFetch, hasFramebufferFetch);
+    SetBitField(mHasColorFramebufferFetch, hasColorFramebufferFetch);
 }
 
 void FramebufferDesc::updateRenderToTexture(bool isRenderToTexture)
@@ -5961,7 +5962,7 @@ void WriteDescriptorDescs::updateInputAttachments(
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
     FramebufferVk *framebufferVk)
 {
-    if (!executable.usesFramebufferFetch())
+    if (!executable.usesColorFramebufferFetch())
     {
         return;
     }
@@ -6855,7 +6856,7 @@ angle::Result DescriptorSetDescBuilder::updateInputAttachments(
     FramebufferVk *framebufferVk,
     const WriteDescriptorDescs &writeDescriptorDescs)
 {
-    if (!executable.usesFramebufferFetch())
+    if (!executable.usesColorFramebufferFetch())
     {
         return angle::Result::Continue;
     }
@@ -7425,7 +7426,7 @@ angle::Result RenderPassCache::MakeRenderPass(vk::Context *context,
                                                           nullptr, VK_ATTACHMENT_UNUSED,
                                                           VK_IMAGE_LAYOUT_UNDEFINED, 0};
 
-    const bool needInputAttachments = desc.hasFramebufferFetch();
+    const bool needInputAttachments = desc.hasColorFramebufferFetch();
     const bool isRenderToTextureThroughExtension =
         desc.isRenderToTexture() &&
         renderer->getFeatures().supportsMultisampledRenderToSingleSampled.enabled;
@@ -7736,7 +7737,7 @@ angle::Result RenderPassCache::MakeRenderPass(vk::Context *context,
     // there is framebuffer fetch.  This is required when the corresponding
     // flag is set on the pipeline.
     if (renderer->getFeatures().supportsRasterizationOrderAttachmentAccess.enabled &&
-        desc.hasFramebufferFetch())
+        desc.hasColorFramebufferFetch())
     {
         for (VkSubpassDescription2 &subpass : subpassDesc)
         {

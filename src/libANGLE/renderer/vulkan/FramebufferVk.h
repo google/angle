@@ -124,7 +124,7 @@ class FramebufferVk : public FramebufferImpl
     bool hasDeferredClears() const { return !mDeferredClears.empty(); }
     angle::Result flushDeferredClears(ContextVk *contextVk);
 
-    void switchToFramebufferFetchMode(ContextVk *contextVk, bool hasFramebufferFetch);
+    void switchToColorFramebufferFetchMode(ContextVk *contextVk, bool hasColorFramebufferFetch);
 
     bool updateLegacyDither(ContextVk *contextVk);
 

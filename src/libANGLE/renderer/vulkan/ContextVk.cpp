@@ -897,7 +897,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
       mPrimaryBufferEventCounter(0),
       mHasDeferredFlush(false),
       mHasAnyCommandsPendingSubmission(false),
-      mIsInFramebufferFetchMode(false),
+      mIsInColorFramebufferFetchMode(false),
       mAllowRenderPassToReactivate(true),
       mTotalBufferToImageCopySize(0),
       mEstimatedPendingImageGarbageSize(0),
@@ -2435,7 +2435,7 @@ angle::Result ContextVk::handleDirtyGraphicsRenderPass(DirtyBits::Iterator *dirt
     // - When the program binding changes (see |invalidateProgramExecutableHelper|)
     if (getFeatures().preferDynamicRendering.enabled)
     {
-        if (mState.getProgramExecutable()->usesFramebufferFetch())
+        if (mState.getProgramExecutable()->usesColorFramebufferFetch())
         {
             // Note: this function sets a dirty bit through onColorAccessChange() not through
             // |dirtyBitsIterator|, but that dirty bit is always set on new render passes, so it
@@ -2464,7 +2464,7 @@ angle::Result ContextVk::handleDirtyGraphicsColorAccess(DirtyBits::Iterator *dir
         {
             vk::ResourceAccess colorAccess = GetColorAccess(
                 mState, framebufferState, drawFramebufferVk->getEmulatedAlphaAttachmentMask(),
-                executable->usesFramebufferFetch(), colorIndexGL);
+                executable->usesColorFramebufferFetch(), colorIndexGL);
             mRenderPassCommands->onColorAccess(colorIndexVk, colorAccess);
         }
         ++colorIndexVk;
@@ -2818,7 +2818,7 @@ angle::Result ContextVk::handleDirtyShaderResourcesImpl(CommandBufferHelperT *co
     const bool hasStorageBuffers       = executable->hasStorageBuffers();
     const bool hasAtomicCounterBuffers = executable->hasAtomicCounterBuffers();
     const bool hasUniformBuffers       = executable->hasUniformBuffers();
-    const bool hasFramebufferFetch     = executable->usesFramebufferFetch();
+    const bool hasFramebufferFetch     = executable->usesColorFramebufferFetch();
 
     if (!hasUniformBuffers && !hasStorageBuffers && !hasAtomicCounterBuffers && !hasImages &&
         !hasFramebufferFetch)
@@ -5428,13 +5428,14 @@ angle::Result ContextVk::invalidateProgramExecutableHelper(const gl::Context *co
         }
         else
         {
-            const bool hasFramebufferFetch = framebufferFetchMode != vk::FramebufferFetchMode::None;
-            if (mIsInFramebufferFetchMode != hasFramebufferFetch)
+            const bool hasColorFramebufferFetch =
+                framebufferFetchMode != vk::FramebufferFetchMode::None;
+            if (mIsInColorFramebufferFetchMode != hasColorFramebufferFetch)
             {
-                ASSERT(getDrawFramebuffer()->getRenderPassDesc().hasFramebufferFetch() ==
-                       mIsInFramebufferFetchMode);
+                ASSERT(getDrawFramebuffer()->getRenderPassDesc().hasColorFramebufferFetch() ==
+                       mIsInColorFramebufferFetchMode);
 
-                ANGLE_TRY(switchToFramebufferFetchMode(hasFramebufferFetch));
+                ANGLE_TRY(switchToColorFramebufferFetchMode(hasColorFramebufferFetch));
 
                 // When framebuffer fetch is enabled, attachments can be read from even if output is
                 // masked, so update their access.
@@ -5442,7 +5443,7 @@ angle::Result ContextVk::invalidateProgramExecutableHelper(const gl::Context *co
             }
 
             // If permanentlySwitchToFramebufferFetchMode is enabled,
-            // mIsInFramebufferFetchMode will remain true throughout the entire time.
+            // mIsInColorFramebufferFetchMode will remain true throughout the entire time.
             // If we switch from a program that doesn't use framebuffer fetch and doesn't
             // read/write to the framebuffer color attachment, to a
             // program that uses framebuffer fetch and needs to read from the framebuffer
@@ -5454,7 +5455,7 @@ angle::Result ContextVk::invalidateProgramExecutableHelper(const gl::Context *co
             // color attachment continue using LoadOpNone, and the second program
             // will not be able to read the value in the color attachment.
             if (getFeatures().permanentlySwitchToFramebufferFetchMode.enabled &&
-                hasFramebufferFetch)
+                hasColorFramebufferFetch)
             {
                 onColorAccessChange();
             }
@@ -5777,8 +5778,8 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 if (!getFeatures().preferDynamicRendering.enabled)
                 {
                     // The framebuffer may not be in sync with usage of framebuffer fetch programs.
-                    drawFramebufferVk->switchToFramebufferFetchMode(this,
-                                                                    mIsInFramebufferFetchMode);
+                    drawFramebufferVk->switchToColorFramebufferFetchMode(
+                        this, mIsInColorFramebufferFetchMode);
                 }
 
                 onDrawFramebufferRenderPassDescChange(drawFramebufferVk, nullptr);
@@ -6353,7 +6354,8 @@ angle::Result ContextVk::invalidateCurrentShaderResources(gl::Command command)
         executable->hasStorageBuffers() || executable->hasAtomicCounterBuffers();
     const bool hasUniformBuffers = executable->hasUniformBuffers();
 
-    if (hasUniformBuffers || hasStorageBuffers || hasImages || executable->usesFramebufferFetch())
+    if (hasUniformBuffers || hasStorageBuffers || hasImages ||
+        executable->usesColorFramebufferFetch())
     {
         mGraphicsDirtyBits |= kResourcesAndDescSetDirtyBits;
         mComputeDirtyBits |= kResourcesAndDescSetDirtyBits;
@@ -8977,18 +8979,19 @@ const angle::PerfMonitorCounterGroups &ContextVk::getPerfMonitorCounters()
     return mPerfMonitorCounters;
 }
 
-angle::Result ContextVk::switchToFramebufferFetchMode(bool hasFramebufferFetch)
+angle::Result ContextVk::switchToColorFramebufferFetchMode(bool hasColorFramebufferFetch)
 {
     ASSERT(!getFeatures().preferDynamicRendering.enabled);
 
     // If framebuffer fetch is permanent, make sure we never switch out of it.
-    if (getFeatures().permanentlySwitchToFramebufferFetchMode.enabled && mIsInFramebufferFetchMode)
+    if (getFeatures().permanentlySwitchToFramebufferFetchMode.enabled &&
+        mIsInColorFramebufferFetchMode)
     {
         return angle::Result::Continue;
     }
 
-    ASSERT(mIsInFramebufferFetchMode != hasFramebufferFetch);
-    mIsInFramebufferFetchMode = hasFramebufferFetch;
+    ASSERT(mIsInColorFramebufferFetchMode != hasColorFramebufferFetch);
+    mIsInColorFramebufferFetchMode = hasColorFramebufferFetch;
 
     // If a render pass is already open, close it.
     if (mRenderPassCommands->started())
@@ -9001,7 +9004,8 @@ angle::Result ContextVk::switchToFramebufferFetchMode(bool hasFramebufferFetch)
     // will switch when bound.
     if (mState.getDrawFramebuffer() != nullptr)
     {
-        getDrawFramebuffer()->switchToFramebufferFetchMode(this, mIsInFramebufferFetchMode);
+        getDrawFramebuffer()->switchToColorFramebufferFetchMode(this,
+                                                                mIsInColorFramebufferFetchMode);
     }
 
     // Clear the render pass cache; all render passes will be incompatible from now on with the
@@ -9011,7 +9015,7 @@ angle::Result ContextVk::switchToFramebufferFetchMode(bool hasFramebufferFetch)
         mRenderPassCache.clear(this);
     }
 
-    mRenderer->onFramebufferFetchUse();
+    mRenderer->onColorFramebufferFetchUse();
 
     return angle::Result::Continue;
 }
@@ -9029,7 +9033,7 @@ void ContextVk::onFramebufferFetchUse()
         onColorAccessChange();
     }
 
-    mRenderer->onFramebufferFetchUse();
+    mRenderer->onColorFramebufferFetchUse();
 }
 
 ANGLE_INLINE angle::Result ContextVk::allocateQueueSerialIndex()

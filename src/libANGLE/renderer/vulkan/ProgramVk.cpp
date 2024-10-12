@@ -116,9 +116,9 @@ class LinkTaskVk final : public vk::Context, public LinkTask
         // rendering.
         if (!contextVk->getFeatures().preferDynamicRendering.enabled &&
             contextVk->getFeatures().permanentlySwitchToFramebufferFetchMode.enabled &&
-            mExecutable->usesFramebufferFetch())
+            mExecutable->usesColorFramebufferFetch())
         {
-            ANGLE_TRY(contextVk->switchToFramebufferFetchMode(true));
+            ANGLE_TRY(contextVk->switchToColorFramebufferFetchMode(true));
         }
 
         // Forward any errors

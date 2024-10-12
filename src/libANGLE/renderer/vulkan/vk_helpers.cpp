@@ -2470,7 +2470,7 @@ void RenderPassCommandBufferHelper::finalizeColorImageLayout(
         imageLayout = hasUnresolve ? ImageLayout::MSRTTEmulationColorUnresolveAndResolve
                                    : ImageLayout::ColorWrite;
         if (context->getFeatures().preferDynamicRendering.enabled &&
-            mRenderPassDesc.hasFramebufferFetch())
+            mRenderPassDesc.hasColorFramebufferFetch())
         {
             // Note MSRTT emulation is not implemented with dynamic rendering.
             ASSERT(imageLayout == ImageLayout::ColorWrite);
