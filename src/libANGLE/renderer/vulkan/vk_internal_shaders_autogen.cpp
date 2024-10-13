@@ -158,24 +158,8 @@ namespace
 #include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000028.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000029.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.0000002A.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000030.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000031.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000032.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000034.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000035.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000036.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000038.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000039.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.0000003A.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000040.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000041.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000042.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000044.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000045.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000046.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000048.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.00000049.inc"
-#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.0000004A.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopyFloat.frag.00000000.inc"
+#include "libANGLE/renderer/vulkan/shaders/gen/ImageCopyFloat.frag.00000001.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/OverlayDraw.frag.00000000.inc"
 #include "libANGLE/renderer/vulkan/shaders/gen/OverlayDraw.vert.00000000.inc"
 
@@ -374,38 +358,10 @@ constexpr CompressedShaderBlob kImageCopy_frag_shaders[] = {
     {kImageCopy_frag_00000028, sizeof(kImageCopy_frag_00000028)},
     {kImageCopy_frag_00000029, sizeof(kImageCopy_frag_00000029)},
     {kImageCopy_frag_0000002A, sizeof(kImageCopy_frag_0000002A)},
-    {nullptr, 0},  // 0x0000002B
-    {nullptr, 0},  // 0x0000002C
-    {nullptr, 0},  // 0x0000002D
-    {nullptr, 0},  // 0x0000002E
-    {nullptr, 0},  // 0x0000002F
-    {kImageCopy_frag_00000030, sizeof(kImageCopy_frag_00000030)},
-    {kImageCopy_frag_00000031, sizeof(kImageCopy_frag_00000031)},
-    {kImageCopy_frag_00000032, sizeof(kImageCopy_frag_00000032)},
-    {nullptr, 0},  // 0x00000033
-    {kImageCopy_frag_00000034, sizeof(kImageCopy_frag_00000034)},
-    {kImageCopy_frag_00000035, sizeof(kImageCopy_frag_00000035)},
-    {kImageCopy_frag_00000036, sizeof(kImageCopy_frag_00000036)},
-    {nullptr, 0},  // 0x00000037
-    {kImageCopy_frag_00000038, sizeof(kImageCopy_frag_00000038)},
-    {kImageCopy_frag_00000039, sizeof(kImageCopy_frag_00000039)},
-    {kImageCopy_frag_0000003A, sizeof(kImageCopy_frag_0000003A)},
-    {nullptr, 0},  // 0x0000003B
-    {nullptr, 0},  // 0x0000003C
-    {nullptr, 0},  // 0x0000003D
-    {nullptr, 0},  // 0x0000003E
-    {nullptr, 0},  // 0x0000003F
-    {kImageCopy_frag_00000040, sizeof(kImageCopy_frag_00000040)},
-    {kImageCopy_frag_00000041, sizeof(kImageCopy_frag_00000041)},
-    {kImageCopy_frag_00000042, sizeof(kImageCopy_frag_00000042)},
-    {nullptr, 0},  // 0x00000043
-    {kImageCopy_frag_00000044, sizeof(kImageCopy_frag_00000044)},
-    {kImageCopy_frag_00000045, sizeof(kImageCopy_frag_00000045)},
-    {kImageCopy_frag_00000046, sizeof(kImageCopy_frag_00000046)},
-    {nullptr, 0},  // 0x00000047
-    {kImageCopy_frag_00000048, sizeof(kImageCopy_frag_00000048)},
-    {kImageCopy_frag_00000049, sizeof(kImageCopy_frag_00000049)},
-    {kImageCopy_frag_0000004A, sizeof(kImageCopy_frag_0000004A)},
+};
+constexpr CompressedShaderBlob kImageCopyFloat_frag_shaders[] = {
+    {kImageCopyFloat_frag_00000000, sizeof(kImageCopyFloat_frag_00000000)},
+    {kImageCopyFloat_frag_00000001, sizeof(kImageCopyFloat_frag_00000001)},
 };
 constexpr CompressedShaderBlob kOverlayDraw_frag_shaders[] = {
     {kOverlayDraw_frag_00000000, sizeof(kOverlayDraw_frag_00000000)},
@@ -516,6 +472,10 @@ void ShaderLibrary::destroy(VkDevice device)
         shader.get().destroy(device);
     }
     for (RefCounted<ShaderModule> &shader : mImageCopy_frag_shaders)
+    {
+        shader.get().destroy(device);
+    }
+    for (RefCounted<ShaderModule> &shader : mImageCopyFloat_frag_shaders)
     {
         shader.get().destroy(device);
     }
@@ -654,6 +614,14 @@ angle::Result ShaderLibrary::getImageCopy_frag(Context *context,
 {
     return GetShader(context, mImageCopy_frag_shaders, kImageCopy_frag_shaders,
                      ArraySize(kImageCopy_frag_shaders), shaderFlags, shaderOut);
+}
+
+angle::Result ShaderLibrary::getImageCopyFloat_frag(Context *context,
+                                                    uint32_t shaderFlags,
+                                                    RefCounted<ShaderModule> **shaderOut)
+{
+    return GetShader(context, mImageCopyFloat_frag_shaders, kImageCopyFloat_frag_shaders,
+                     ArraySize(kImageCopyFloat_frag_shaders), shaderFlags, shaderOut);
 }
 
 angle::Result ShaderLibrary::getOverlayDraw_frag(Context *context,

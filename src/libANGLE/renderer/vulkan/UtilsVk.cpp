@@ -24,6 +24,7 @@ namespace rx
 namespace ConvertVertex_comp                = vk::InternalShader::ConvertVertex_comp;
 namespace ImageClear_frag                   = vk::InternalShader::ImageClear_frag;
 namespace ImageCopy_frag                    = vk::InternalShader::ImageCopy_frag;
+namespace ImageCopyFloat_frag               = vk::InternalShader::ImageCopyFloat_frag;
 namespace CopyImageToBuffer_comp            = vk::InternalShader::CopyImageToBuffer_comp;
 namespace BlitResolve_frag                  = vk::InternalShader::BlitResolve_frag;
 namespace Blit3DSrc_frag                    = vk::InternalShader::Blit3DSrc_frag;
@@ -223,8 +224,8 @@ uint32_t GetImageCopyFlags(const angle::Format &srcIntendedFormat,
 
     flags |= GetFormatFlags(srcIntendedFormat, ImageCopy_frag::kSrcIsSint,
                             ImageCopy_frag::kSrcIsUint, ImageCopy_frag::kSrcIsFloat);
-    flags |= GetFormatFlags(dstIntendedFormat, ImageCopy_frag::kDestIsSint,
-                            ImageCopy_frag::kDestIsUint, ImageCopy_frag::kDestIsFloat);
+    flags |= GetFormatFlags(dstIntendedFormat, ImageCopy_frag::kDstIsSint,
+                            ImageCopy_frag::kDstIsUint, ImageCopy_frag::kDstIsFloat);
 
     return flags;
 }
@@ -1383,14 +1384,13 @@ void UtilsVk::destroy(ContextVk *contextVk)
         programAndPipelines.program.destroy(renderer);
         programAndPipelines.pipelines.destroy(contextVk);
     }
+    mImageCopyFloat.program.destroy(renderer);
+    mImageCopyFloat.pipelines.destroy(contextVk);
     for (auto &iter : mImageCopyWithSampler)
     {
-        for (auto &subIter : iter)
-        {
-            GraphicsShaderProgramAndPipelines &programAndPipelines = subIter.second;
-            programAndPipelines.program.destroy(renderer);
-            programAndPipelines.pipelines.destroy(contextVk);
-        }
+        GraphicsShaderProgramAndPipelines &programAndPipelines = iter.second;
+        programAndPipelines.program.destroy(renderer);
+        programAndPipelines.pipelines.destroy(contextVk);
     }
     for (ComputeShaderProgramAndPipelines &programAndPipelines : mCopyImageToBuffer)
     {
@@ -3388,7 +3388,8 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
     const angle::Format &srcIntendedFormat = src->getIntendedFormat();
     const angle::Format &dstIntendedFormat = dst->getIntendedFormat();
 
-    bool isYUV = src->getYcbcrConversionDesc().valid();
+    const bool isYUV             = src->getYcbcrConversionDesc().valid();
+    const bool isSrcMultisampled = params.srcSampleCount > 1;
 
     vk::SamplerDesc samplerDesc;
     if (isYUV)
@@ -3474,29 +3475,6 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
             break;
     }
 
-    uint32_t flags = GetImageCopyFlags(srcIntendedFormat, dstIntendedFormat);
-    if (isYUV)
-    {
-        ASSERT(src->getType() == VK_IMAGE_TYPE_2D);
-        flags |= ImageCopy_frag::kSrcIsYUV;
-    }
-    else if (src->getType() == VK_IMAGE_TYPE_3D)
-    {
-        flags |= ImageCopy_frag::kSrcIs3D;
-    }
-    else if (src->getLayerCount() > 1)
-    {
-        flags |= ImageCopy_frag::kSrcIs2DArray;
-    }
-    else if (params.srcSampleCount > 1)
-    {
-        flags |= ImageCopy_frag::kSrcIs2DMS;
-    }
-    else
-    {
-        flags |= ImageCopy_frag::kSrcIs2D;
-    }
-
     vk::RenderPassDesc renderPassDesc;
     renderPassDesc.setSamples(dst->getSamples());
     renderPassDesc.packColorAttachment(0, dst->getActualFormatID());
@@ -3564,17 +3542,43 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
     vk::RefCounted<vk::ShaderModule> *vertexShader   = nullptr;
     vk::RefCounted<vk::ShaderModule> *fragmentShader = nullptr;
     ANGLE_TRY(shaderLibrary.getFullScreenTri_vert(contextVk, 0, &vertexShader));
-    ANGLE_TRY(shaderLibrary.getImageCopy_frag(contextVk, flags, &fragmentShader));
 
     if (isYUV)
     {
+        ASSERT(src->getType() == VK_IMAGE_TYPE_2D);
+        ANGLE_TRY(shaderLibrary.getImageCopyFloat_frag(contextVk, ImageCopyFloat_frag::kSrcIsYUV,
+                                                       &fragmentShader));
         ANGLE_TRY(setupGraphicsProgramWithLayout(
             contextVk, mImageCopyWithSamplerPipelineLayouts[samplerDesc].get(), vertexShader,
-            fragmentShader, &mImageCopyWithSampler[flags][samplerDesc], &pipelineDesc,
-            descriptorSet, &shaderParams, sizeof(shaderParams), commandBuffer));
+            fragmentShader, &mImageCopyWithSampler[samplerDesc], &pipelineDesc, descriptorSet,
+            &shaderParams, sizeof(shaderParams), commandBuffer));
+    }
+    else if (isSrcMultisampled)
+    {
+        ANGLE_TRY(shaderLibrary.getImageCopyFloat_frag(contextVk, ImageCopyFloat_frag::kSrcIs2DMS,
+                                                       &fragmentShader));
+        ANGLE_TRY(setupGraphicsProgram(contextVk, Function::ImageCopy, vertexShader, fragmentShader,
+                                       &mImageCopyFloat, &pipelineDesc, descriptorSet,
+                                       &shaderParams, sizeof(shaderParams), commandBuffer));
     }
     else
     {
+        uint32_t flags = GetImageCopyFlags(srcIntendedFormat, dstIntendedFormat);
+        if (src->getType() == VK_IMAGE_TYPE_3D)
+        {
+            flags |= ImageCopy_frag::kSrcIs3D;
+        }
+        else if (src->getLayerCount() > 1)
+        {
+            flags |= ImageCopy_frag::kSrcIs2DArray;
+        }
+        else
+        {
+            ASSERT(src->getType() == VK_IMAGE_TYPE_2D);
+            flags |= ImageCopy_frag::kSrcIs2D;
+        }
+
+        ANGLE_TRY(shaderLibrary.getImageCopy_frag(contextVk, flags, &fragmentShader));
         ANGLE_TRY(setupGraphicsProgram(contextVk, Function::ImageCopy, vertexShader, fragmentShader,
                                        &mImageCopy[flags], &pipelineDesc, descriptorSet,
                                        &shaderParams, sizeof(shaderParams), commandBuffer));

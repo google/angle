@@ -721,8 +721,8 @@ class UtilsVk : angle::NonCopyable
     GraphicsShaderProgramAndPipelines mImageClearVSOnly;
     GraphicsShaderProgramAndPipelines mImageClear[vk::InternalShader::ImageClear_frag::kArrayLen];
     GraphicsShaderProgramAndPipelines mImageCopy[vk::InternalShader::ImageCopy_frag::kArrayLen];
-    std::unordered_map<vk::SamplerDesc, GraphicsShaderProgramAndPipelines>
-        mImageCopyWithSampler[vk::InternalShader::ImageCopy_frag::kArrayLen];
+    GraphicsShaderProgramAndPipelines mImageCopyFloat;
+    std::unordered_map<vk::SamplerDesc, GraphicsShaderProgramAndPipelines> mImageCopyWithSampler;
     ComputeShaderProgramAndPipelines
         mCopyImageToBuffer[vk::InternalShader::CopyImageToBuffer_comp::kArrayLen];
     GraphicsShaderProgramAndPipelines mBlitResolve[vk::InternalShader::BlitResolve_frag::kArrayLen];
