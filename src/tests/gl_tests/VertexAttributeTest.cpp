@@ -4317,9 +4317,6 @@ TEST_P(VertexAttributeTest, AliasingVectorAttribLocations)
     // http://anglebug.com/42262131
     ANGLE_SKIP_TEST_IF(IsD3D());
 
-    // TODO(anglebug.com/42264029): iOS GLSL compiler rejects attribute aliasing.
-    ANGLE_SKIP_TEST_IF(IsIOS() && IsOpenGLES());
-
     // This test needs 10 total attributes. All backends support this except some old Android
     // devices.
     GLint maxVertexAttribs = 0;
@@ -4482,9 +4479,6 @@ TEST_P(VertexAttributeTest, AliasingMatrixAttribLocations)
 
     // http://anglebug.com/42262131
     ANGLE_SKIP_TEST_IF(IsD3D());
-
-    // TODO(anglebug.com/42264029): iOS GLSL compiler rejects attribute aliasing.
-    ANGLE_SKIP_TEST_IF(IsIOS() && IsOpenGLES());
 
     // This test needs 16 total attributes. All backends support this except some old Android
     // devices.
@@ -4722,9 +4716,6 @@ TEST_P(VertexAttributeTest, AliasingVectorAttribLocationsDifferingPrecisions)
 
     // http://anglebug.com/42262131
     ANGLE_SKIP_TEST_IF(IsD3D());
-
-    // TODO(anglebug.com/42264029): iOS GLSL compiler rejects attribute aliasing.
-    ANGLE_SKIP_TEST_IF(IsIOS() && IsOpenGLES());
 
     constexpr char kVS[] = R"(attribute vec4 position;
 // aliasing attributes.
@@ -5335,9 +5326,6 @@ TEST_P(VertexAttributeTest, AliasingAttribNaming)
     // http://anglebug.com/42262131
     ANGLE_SKIP_TEST_IF(IsD3D());
 
-    // TODO(anglebug.com/42264029): iOS GLSL compiler rejects attribute aliasing.
-    ANGLE_SKIP_TEST_IF(IsIOS() && IsOpenGLES());
-
     // This test needs 16 total attributes. All backends support this except some old Android
     // devices.
     GLint maxVertexAttribs = 0;
@@ -5478,9 +5466,6 @@ TEST_P(VertexAttributeTestES3, AttribNaming)
 
     // http://anglebug.com/42262131
     ANGLE_SKIP_TEST_IF(IsD3D());
-
-    // TODO(anglebug.com/42264029): iOS GLSL compiler rejects attribute aliasing.
-    ANGLE_SKIP_TEST_IF(IsIOS() && IsOpenGLES());
 
     // This test needs roughly 16 total attributes. All backends support this except some old
     // Android devices.
