@@ -143,7 +143,8 @@ TextureState::TextureState(TextureType type)
       mInitState(InitState::Initialized),
       mCachedSamplerFormat(SamplerFormat::InvalidEnum),
       mCachedSamplerCompareMode(GL_NONE),
-      mCachedSamplerFormatValid(false)
+      mCachedSamplerFormatValid(false),
+      mCompressionFixedRate(GL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT)
 {}
 
 TextureState::~TextureState() {}
@@ -1832,6 +1833,64 @@ angle::Result Texture::setStorageExternalMemory(Context *context,
     signalDirtyStorage(InitState::Initialized);
 
     return angle::Result::Continue;
+}
+
+angle::Result Texture::setStorageAttribs(Context *context,
+                                         TextureType type,
+                                         GLsizei levels,
+                                         GLenum internalFormat,
+                                         const Extents &size,
+                                         const GLint *attribList)
+{
+    ASSERT(type == mState.mType);
+
+    // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
+    ANGLE_TRY(releaseTexImageInternal(context));
+
+    egl::RefCountObjectReleaser<egl::Image> releaseImage;
+    ANGLE_TRY(orphanImages(context, &releaseImage));
+
+    mState.mImmutableFormat = true;
+    mState.mImmutableLevels = static_cast<GLuint>(levels);
+    mState.clearImageDescs();
+    InitState initState = DetermineInitState(context, nullptr, nullptr);
+    mState.setImageDescChain(0, static_cast<GLuint>(levels - 1), size, Format(internalFormat),
+                             initState);
+
+    if (nullptr != attribList && GL_SURFACE_COMPRESSION_EXT == *attribList)
+    {
+        attribList++;
+        if (nullptr != attribList && GL_NONE != *attribList)
+        {
+            mState.mCompressionFixedRate = *attribList;
+        }
+    }
+
+    ANGLE_TRY(mTexture->setStorageAttribs(context, type, levels, internalFormat, size, attribList));
+
+    // Changing the texture to immutable can trigger a change in the base and max levels:
+    // GLES 3.0.4 section 3.8.10 pg 158:
+    // "For immutable-format textures, levelbase is clamped to the range[0;levels],levelmax is then
+    // clamped to the range[levelbase;levels].
+    mDirtyBits.set(DIRTY_BIT_BASE_LEVEL);
+    mDirtyBits.set(DIRTY_BIT_MAX_LEVEL);
+
+    signalDirtyStorage(initState);
+
+    return angle::Result::Continue;
+}
+
+GLint Texture::getImageCompressionRate(const Context *context) const
+{
+    return mTexture->getImageCompressionRate(context);
+}
+
+GLint Texture::getFormatSupportedCompressionRates(const Context *context,
+                                                  GLenum internalformat,
+                                                  GLsizei bufSize,
+                                                  GLint *rates) const
+{
+    return mTexture->getFormatSupportedCompressionRates(context, internalformat, bufSize, rates);
 }
 
 angle::Result Texture::generateMipmap(Context *context)

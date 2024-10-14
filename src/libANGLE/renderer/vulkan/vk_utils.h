@@ -1519,6 +1519,12 @@ GLuint GetMaxSampleCount(VkSampleCountFlags sampleCounts);
 GLuint GetSampleCount(VkSampleCountFlags supportedCounts, GLuint requestedCount);
 
 gl::LevelIndex GetLevelIndex(vk::LevelIndex levelVk, gl::LevelIndex baseLevel);
+
+GLenum ConvertVkFixedRateToGLFixedRate(const VkImageCompressionFixedRateFlagsEXT vkCompressionRate);
+GLint convertCompressionFlagsToGLFixedRates(
+    VkImageCompressionFixedRateFlagsEXT imageCompressionFixedRateFlags,
+    GLsizei bufSize,
+    GLint *rates);
 }  // namespace vk_gl
 
 enum class RenderPassClosureReason

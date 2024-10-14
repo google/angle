@@ -165,6 +165,32 @@ GLint TextureImpl::getLevelMemorySize(gl::TextureTarget target, GLint level)
     return 0;
 }
 
+angle::Result TextureImpl::setStorageAttribs(const gl::Context *context,
+                                             gl::TextureType type,
+                                             size_t levels,
+                                             GLint internalformat,
+                                             const gl::Extents &size,
+                                             const GLint *attribList)
+{
+    UNREACHABLE();
+    return angle::Result::Stop;
+}
+
+GLint TextureImpl::getImageCompressionRate(const gl::Context *context)
+{
+    UNREACHABLE();
+    return 0;
+}
+
+GLint TextureImpl::getFormatSupportedCompressionRates(const gl::Context *context,
+                                                      GLenum internalformat,
+                                                      GLsizei bufSize,
+                                                      GLint *rates)
+{
+    UNREACHABLE();
+    return 0;
+}
+
 GLint TextureImpl::getNativeID() const
 {
     UNREACHABLE();

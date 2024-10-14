@@ -1520,6 +1520,17 @@ bool ValidateBindImageTexture(const Context *context,
                                    kTextureIsNeitherImmutableNorTextureBuffer);
             return false;
         }
+
+        if (context->getExtensions().textureStorageCompressionEXT &&
+            tex->getType() != gl::TextureType::Buffer)
+        {
+            if (tex->getImageCompressionRate(context) != GL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT)
+            {
+                ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE,
+                                       kTextureFixedCompressedNotSupportBindImageTexture);
+                return false;
+            }
+        }
     }
 
     return true;

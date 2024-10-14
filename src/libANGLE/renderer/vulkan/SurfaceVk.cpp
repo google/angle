@@ -213,7 +213,7 @@ angle::Result InitImageHelper(DisplayVk *displayVk,
         displayVk, gl::TextureType::_2D, extents, vkFormat.getIntendedFormatID(),
         renderableFormatId, samples, usage, imageCreateFlags, vk::ImageLayout::Undefined, nullptr,
         gl::LevelIndex(0), 1, 1, isRobustResourceInitEnabled, hasProtectedContent,
-        vk::YcbcrConversionDesc{}));
+        vk::YcbcrConversionDesc{}, nullptr));
 
     return angle::Result::Continue;
 }

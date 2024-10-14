@@ -6132,7 +6132,8 @@ angle::Result ImageHelper::init(Context *context,
                         kVkImageCreateFlagsNone, ImageLayout::Undefined, nullptr, firstLevel,
                         mipLevels, layerCount, isRobustResourceInitEnabled, hasProtectedContent,
                         deriveConversionDesc(context, format.getActualRenderableImageFormatID(),
-                                             format.getIntendedFormatID()));
+                                             format.getIntendedFormatID()),
+                        nullptr);
 }
 
 angle::Result ImageHelper::initFromCreateInfo(Context *context,
@@ -6215,7 +6216,7 @@ angle::Result ImageHelper::initMSAASwapchain(Context *context,
                            format.getActualRenderableImageFormatID(), samples, usage,
                            kVkImageCreateFlagsNone, ImageLayout::Undefined, nullptr, firstLevel,
                            mipLevels, layerCount, isRobustResourceInitEnabled, hasProtectedContent,
-                           YcbcrConversionDesc{}));
+                           YcbcrConversionDesc{}, nullptr));
     if (rotatedAspectRatio)
     {
         std::swap(mExtents.width, mExtents.height);
@@ -6239,7 +6240,8 @@ angle::Result ImageHelper::initExternal(Context *context,
                                         uint32_t layerCount,
                                         bool isRobustResourceInitEnabled,
                                         bool hasProtectedContent,
-                                        YcbcrConversionDesc conversionDesc)
+                                        YcbcrConversionDesc conversionDesc,
+                                        const void *compressionControl)
 {
     ASSERT(!valid());
     ASSERT(!IsAnySubresourceContentDefined(mContentDefined));
@@ -6277,9 +6279,9 @@ angle::Result ImageHelper::initExternal(Context *context,
 
     if (externalImageCreateInfo == nullptr)
     {
-        imageCreateInfoPNext =
-            DeriveCreateInfoPNext(context, actualFormatID, nullptr, &imageFormatListInfoStorage,
-                                  &imageListFormatsStorage, &mCreateFlags);
+        imageCreateInfoPNext = DeriveCreateInfoPNext(context, actualFormatID, compressionControl,
+                                                     &imageFormatListInfoStorage,
+                                                     &imageListFormatsStorage, &mCreateFlags);
     }
     else
     {
@@ -6409,11 +6411,13 @@ bool ImageHelper::FormatSupportsUsage(Renderer *renderer,
                                       VkImageTiling tilingMode,
                                       VkImageUsageFlags usageFlags,
                                       VkImageCreateFlags createFlags,
+                                      void *formatInfoPNext,
                                       void *propertiesPNext,
                                       const FormatSupportCheck formatSupportCheck)
 {
     VkPhysicalDeviceImageFormatInfo2 imageFormatInfo = {};
     imageFormatInfo.sType  = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2;
+    imageFormatInfo.pNext  = formatInfoPNext;
     imageFormatInfo.format = format;
     imageFormatInfo.type   = imageType;
     imageFormatInfo.tiling = tilingMode;
@@ -7173,7 +7177,7 @@ angle::Result ImageHelper::initImplicitMultisampledRenderToTexture(
                            samples, kMultisampledUsageFlags, kMultisampledCreateFlags,
                            ImageLayout::Undefined, nullptr, resolveImage.getFirstAllocatedLevel(),
                            kLevelCount, resolveImage.getLayerCount(), isRobustResourceInitEnabled,
-                           hasProtectedContent, YcbcrConversionDesc{}));
+                           hasProtectedContent, YcbcrConversionDesc{}, nullptr));
 
     // Remove the emulated format clear from the multisampled image if any.  There is one already
     // staged on the resolve image if needed.
@@ -11953,6 +11957,39 @@ VkColorComponentFlags ImageHelper::getEmulatedChannelsMask() const
            (textureFmt.redBits != 0));
 
     return emulatedChannelsMask;
+}
+
+bool ImageHelper::getCompressionFixedRate(VkImageCompressionControlEXT *compressionInfo,
+                                          VkImageCompressionFixedRateFlagsEXT *compressionRates,
+                                          GLenum glCompressionRate) const
+{
+    bool rtn = true;
+    ASSERT(compressionInfo->sType == VK_STRUCTURE_TYPE_IMAGE_COMPRESSION_CONTROL_EXT);
+    compressionInfo->compressionControlPlaneCount = 1;
+
+    if (glCompressionRate == GL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT)
+    {
+        compressionInfo->flags = VK_IMAGE_COMPRESSION_DISABLED_EXT;
+    }
+    else if (glCompressionRate == GL_SURFACE_COMPRESSION_FIXED_RATE_DEFAULT_EXT)
+    {
+        compressionInfo->flags = VK_IMAGE_COMPRESSION_FIXED_RATE_DEFAULT_EXT;
+    }
+    else if (glCompressionRate >= GL_SURFACE_COMPRESSION_FIXED_RATE_1BPC_EXT &&
+             glCompressionRate <= GL_SURFACE_COMPRESSION_FIXED_RATE_12BPC_EXT)
+    {
+        int offset             = glCompressionRate - GL_SURFACE_COMPRESSION_FIXED_RATE_1BPC_EXT;
+        compressionInfo->flags = VK_IMAGE_COMPRESSION_FIXED_RATE_EXPLICIT_EXT;
+        *compressionRates      = 1u << offset;
+        compressionInfo->pFixedRateFlags = compressionRates;
+    }
+    else
+    {
+        // Invalid value
+        rtn = false;
+    }
+
+    return rtn;
 }
 
 LayerMode GetLayerMode(const vk::ImageHelper &image, uint32_t layerCount)

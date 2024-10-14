@@ -4667,6 +4667,35 @@ bool ValidateStartTilingQCOM(const Context *context,
     return true;
 }
 
+bool ValidateTexStorageAttribs(const GLint *attrib_list)
+{
+    if (nullptr != attrib_list && GL_NONE != *attrib_list)
+    {
+        attrib_list++;
+        if (nullptr == attrib_list)
+        {
+            return false;
+        }
+
+        if (*attrib_list == GL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT ||
+            *attrib_list == GL_SURFACE_COMPRESSION_FIXED_RATE_DEFAULT_EXT)
+        {
+            return true;
+        }
+        else if (*attrib_list >= GL_SURFACE_COMPRESSION_FIXED_RATE_1BPC_EXT &&
+                 *attrib_list <= GL_SURFACE_COMPRESSION_FIXED_RATE_12BPC_EXT)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 bool ValidateTexStorageAttribs2DEXT(const Context *context,
                                     angle::EntryPoint entryPoint,
                                     GLenum target,
@@ -4676,22 +4705,31 @@ bool ValidateTexStorageAttribs2DEXT(const Context *context,
                                     GLsizei height,
                                     const GLint *attrib_list)
 {
+    gl::TextureType targetType = FromGLenum<TextureType>(target);
+    if (!context->getExtensions().textureStorageCompressionEXT)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    if (ValidateTexStorageAttribs(attrib_list) == false)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidAttribList);
+    }
+
+    if (context->getClientMajorVersion() < 3)
+    {
+        return ValidateES2TexStorageParametersBase(context, entryPoint, targetType, levels,
+                                                   internalformat, width, height);
+    }
+
+    if (context->getClientMajorVersion() >= 3)
+    {
+        return ValidateES3TexStorage2DParameters(context, entryPoint, targetType, levels,
+                                                 internalformat, width, height, 1);
+    }
+
     return true;
-
-    // if (!context->getExtensions().textureStorageCompressionEXT)
-    // {
-    //     ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-    //     return false;
-    // }
-
-    // if (context->getClientMajorVersion() >= 3)
-    // {
-    //     return ValidateES2TexStorageParametersBase(context, entryPoint, target, levels,
-    //                                                internalformat, width, height);
-    // }
-
-    // UNIMPLEMENTED();
-    // return false;
 }
 
 bool ValidateTexStorageAttribs3DEXT(const Context *context,
@@ -4704,14 +4742,31 @@ bool ValidateTexStorageAttribs3DEXT(const Context *context,
                                     GLsizei depth,
                                     const GLint *attrib_list)
 {
+    gl::TextureType targetType = FromGLenum<TextureType>(target);
     if (!context->getExtensions().textureStorageCompressionEXT)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
     }
 
-    UNIMPLEMENTED();
-    return false;
+    if (ValidateTexStorageAttribs(attrib_list) == false)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidAttribList);
+    }
+
+    if (context->getClientMajorVersion() < 3)
+    {
+        return ValidateES2TexStorageParametersBase(context, entryPoint, targetType, levels,
+                                                   internalformat, width, height);
+    }
+
+    if (context->getClientMajorVersion() >= 3)
+    {
+        return ValidateES3TexStorage3DParameters(context, entryPoint, targetType, levels,
+                                                 internalformat, width, height, depth);
+    }
+
+    return true;
 }
 
 }  // namespace gl

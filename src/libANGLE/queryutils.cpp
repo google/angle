@@ -388,6 +388,10 @@ void QueryTexParameterBase(const Context *context,
         case GL_TEXTURE_FOVEATED_NUM_FOCAL_POINTS_QUERY_QCOM:
             *params = CastFromGLintStateValue<ParamType>(pname, texture->getNumFocalPoints());
             break;
+        case GL_SURFACE_COMPRESSION_EXT:
+            *params = CastFromGLintStateValue<ParamType>(pname,
+                                                         texture->getImageCompressionRate(context));
+            break;
         default:
             UNREACHABLE();
             break;
@@ -1730,7 +1734,13 @@ void QueryActiveUniformBlockiv(const Program *program,
                            std::numeric_limits<GLsizei>::max(), nullptr, params);
 }
 
-void QueryInternalFormativ(const TextureCaps &format, GLenum pname, GLsizei bufSize, GLint *params)
+void QueryInternalFormativ(const Context *context,
+                           const Texture *texture,
+                           GLenum internalformat,
+                           const TextureCaps &format,
+                           GLenum pname,
+                           GLsizei bufSize,
+                           GLint *params)
 {
     switch (pname)
     {
@@ -1751,6 +1761,22 @@ void QueryInternalFormativ(const TextureCaps &format, GLenum pname, GLsizei bufS
             }
         }
         break;
+
+        case GL_NUM_SURFACE_COMPRESSION_FIXED_RATES_EXT:
+            if (texture != nullptr)
+            {
+                *params = texture->getFormatSupportedCompressionRates(context, internalformat,
+                                                                      bufSize, nullptr);
+            }
+            break;
+
+        case GL_SURFACE_COMPRESSION_EXT:
+            if (texture != nullptr)
+            {
+                texture->getFormatSupportedCompressionRates(context, internalformat, bufSize,
+                                                            params);
+            }
+            break;
 
         default:
             UNREACHABLE();

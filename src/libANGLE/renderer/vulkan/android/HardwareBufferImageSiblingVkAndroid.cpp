@@ -430,11 +430,12 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
         displayVk, vkFormat->getActualRenderableImageFormatID(), &externalMemoryImageCreateInfo,
         &imageFormatListInfoStorage, &imageListFormatsStorage, &imageCreateFlags);
 
-    ANGLE_TRY(mImage->initExternal(
-        displayVk, textureType, vkExtents, vkFormat->getIntendedFormatID(),
-        vkFormat->getActualRenderableImageFormatID(), 1, usage, imageCreateFlags,
-        vk::ImageLayout::ExternalPreInitialized, imageCreateInfoPNext, gl::LevelIndex(0),
-        mLevelCount, layerCount, robustInitEnabled, hasProtectedContent(), conversionDesc));
+    ANGLE_TRY(
+        mImage->initExternal(displayVk, textureType, vkExtents, vkFormat->getIntendedFormatID(),
+                             vkFormat->getActualRenderableImageFormatID(), 1, usage,
+                             imageCreateFlags, vk::ImageLayout::ExternalPreInitialized,
+                             imageCreateInfoPNext, gl::LevelIndex(0), mLevelCount, layerCount,
+                             robustInitEnabled, hasProtectedContent(), conversionDesc, nullptr));
 
     VkImportAndroidHardwareBufferInfoANDROID importHardwareBufferInfo = {};
     importHardwareBufferInfo.sType  = VK_STRUCTURE_TYPE_IMPORT_ANDROID_HARDWARE_BUFFER_INFO_ANDROID;

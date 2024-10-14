@@ -191,6 +191,13 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                                         const gl::Extents &size,
                                         bool fixedSampleLocations) override;
 
+    angle::Result setStorageAttribs(const gl::Context *context,
+                                    gl::TextureType type,
+                                    size_t levels,
+                                    GLint internalFormat,
+                                    const gl::Extents &size,
+                                    const GLint *attribList) override;
+
     angle::Result initializeContents(const gl::Context *context,
                                      GLenum binding,
                                      const gl::ImageIndex &imageIndex) override;
@@ -357,6 +364,12 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     // Check if the texture is consistently specified. Used for flushing mutable textures.
     bool isMutableTextureConsistentlySpecifiedForFlush();
     bool isMipImageDescDefined(gl::TextureTarget textureTarget, size_t level);
+
+    GLint getImageCompressionRate(const gl::Context *context) override;
+    GLint getFormatSupportedCompressionRates(const gl::Context *context,
+                                             GLenum internalformat,
+                                             GLsizei bufSize,
+                                             GLint *rates) override;
 
   private:
     // Transform an image index from the frontend into one that can be used on the backing
@@ -618,6 +631,15 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     bool isCompressedFormatEmulated(const gl::Context *context,
                                     const gl::TextureTarget target,
                                     GLint level);
+
+    angle::Result setStorageImpl(ContextVk *contextVk,
+                                 gl::TextureType type,
+                                 const vk::Format &format);
+
+    GLint getFormatSupportedCompressionRatesImpl(vk::Renderer *renderer,
+                                                 const vk::Format &format,
+                                                 GLsizei bufSize,
+                                                 GLint *rates);
 
     bool mOwnsImage;
     // Generated from ImageVk if EGLImage target, or from throw-away generator if Surface target.

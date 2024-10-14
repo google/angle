@@ -8056,8 +8056,14 @@ void Context::getInternalformativ(GLenum target,
                                   GLsizei bufSize,
                                   GLint *params)
 {
+    Texture *texture    = nullptr;
+    TextureType textype = FromGLenum<TextureType>(target);
+    if (textype != TextureType::InvalidEnum)
+    {
+        texture = getTextureByType(textype);
+    }
     const TextureCaps &formatCaps = mState.getTextureCap(internalformat);
-    QueryInternalFormativ(formatCaps, pname, bufSize, params);
+    QueryInternalFormativ(this, texture, internalformat, formatCaps, pname, bufSize, params);
 }
 
 void Context::getInternalformativRobust(GLenum target,
@@ -9975,9 +9981,13 @@ void Context::texStorageAttribs2D(GLenum target,
                                   GLenum internalFormat,
                                   GLsizei width,
                                   GLsizei height,
-                                  const GLint *attrib_list)
+                                  const GLint *attribList)
 {
-    UNIMPLEMENTED();
+    Extents size(width, height, 1);
+    TextureType textype = FromGLenum<TextureType>(target);
+    Texture *texture    = getTextureByType(textype);
+    ANGLE_CONTEXT_TRY(
+        texture->setStorageAttribs(this, textype, levels, internalFormat, size, attribList));
 }
 
 void Context::texStorageAttribs3D(GLenum target,
@@ -9986,9 +9996,13 @@ void Context::texStorageAttribs3D(GLenum target,
                                   GLsizei width,
                                   GLsizei height,
                                   GLsizei depth,
-                                  const GLint *attrib_list)
+                                  const GLint *attribList)
 {
-    UNIMPLEMENTED();
+    Extents size(width, height, depth);
+    TextureType textype = FromGLenum<TextureType>(target);
+    Texture *texture    = getTextureByType(textype);
+    ANGLE_CONTEXT_TRY(
+        texture->setStorageAttribs(this, textype, levels, internalFormat, size, attribList));
 }
 
 // ErrorSet implementation.
