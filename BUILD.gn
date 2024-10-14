@@ -709,9 +709,7 @@ angle_static_library("angle_gpu_info_util") {
       "CoreFoundation.framework",
       "CoreGraphics.framework",
     ]
-    if (angle_enable_eagl) {
-      frameworks += [ "OpenGLES.framework" ]
-    } else if (angle_enable_cgl) {
+    if (angle_enable_cgl) {
       frameworks += [ "OpenGL.framework" ]
     }
     if (is_mac || angle_enable_cgl) {
