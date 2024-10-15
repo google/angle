@@ -1861,6 +1861,64 @@ TEST_P(BlitFramebufferTest, BlitMultisampleStencilToDefault)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test blit multisampled framebuffer to MRT framebuffer
+TEST_P(BlitFramebufferTest, BlitMultisampledFramebufferToMRT)
+{
+    // https://issues.angleproject.org/issues/361369302
+
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    // Prepare multisampled framebuffer to blit from.
+    GLRenderbuffer multiSampleColorbuf;
+    glBindRenderbuffer(GL_RENDERBUFFER, multiSampleColorbuf);
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_RGBA8, getWindowWidth(),
+                                     getWindowHeight());
+
+    GLFramebuffer multiSampleFramebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, multiSampleFramebuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                              multiSampleColorbuf);
+    glCheckFramebufferStatus(GL_FRAMEBUFFER);
+
+    ANGLE_GL_PROGRAM(drawRed, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
+    drawQuad(drawRed, essl3_shaders::PositionAttrib(), 0.8f);
+    EXPECT_GL_NO_ERROR();
+
+    // Prepare mrt framebuffer with two attachments to blit to.
+    GLFramebuffer MRTFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, MRTFBO);
+    GLTexture MRTColorBuffer0;
+    GLTexture MRTColorBuffer1;
+    glBindTexture(GL_TEXTURE_2D, MRTColorBuffer0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, getWindowWidth(), getWindowHeight(), 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, MRTColorBuffer0, 0);
+    glBindTexture(GL_TEXTURE_2D, MRTColorBuffer1);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, getWindowWidth(), getWindowHeight(), 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, MRTColorBuffer1, 0);
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, multiSampleFramebuffer);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, MRTFBO);
+
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    GLenum drawBuffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+    glDrawBuffers(2, drawBuffers);
+
+    glBlitFramebuffer(0, 0, getWindowWidth(), getWindowHeight(), 0, 0, getWindowWidth(),
+                      getWindowHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    EXPECT_GL_NO_ERROR();
+
+    // Check results
+    glBindFramebuffer(GL_FRAMEBUFFER, MRTFBO);
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::red);
+
+    glReadBuffer(GL_COLOR_ATTACHMENT1);
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::red);
+}
+
 // Tests clearing a multisampled depth buffer.
 TEST_P(BlitFramebufferTest, MultisampleDepthClear)
 {

@@ -3921,7 +3921,8 @@ class CommandBufferAccess : angle::NonCopyable
     using ReadBuffers           = angle::FixedVector<CommandBufferBufferAccess, 2>;
     using WriteBuffers          = angle::FixedVector<CommandBufferBufferAccess, 2>;
     using ReadImages            = angle::FixedVector<CommandBufferImageAccess, 2>;
-    using WriteImages           = angle::FixedVector<CommandBufferImageSubresourceAccess, 1>;
+    using WriteImages           = angle::FixedVector<CommandBufferImageSubresourceAccess,
+                                                     gl::IMPLEMENTATION_MAX_DRAW_BUFFERS>;
     using ReadImageSubresources = angle::FixedVector<CommandBufferImageSubresourceAccess, 1>;
 
     using ExternalAcquireReleaseBuffers =
