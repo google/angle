@@ -1592,13 +1592,6 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 // Metal backend doesn't support different sized attachments.
 42261786 METAL : MultisampledRenderToTextureES3Test.MultipleLevelsMultisampleMRTDraw2DColor/* = SKIP
 
-// Test mirroring skqp#UnitTest_DMSAA_dst_read
-40644776 MAC METAL               : Texture2DTestES3.UnitTest_DMSAA_dst_read/* = SKIP
-40644776 WIN INTEL D3D11         : Texture2DTestES3.UnitTest_DMSAA_dst_read/* = SKIP
-40644776 WIN NVIDIA D3D11        : Texture2DTestES3.UnitTest_DMSAA_dst_read/* = SKIP
-40644776 ANDROID PIXEL4ORXL GLES : Texture2DTestES3.UnitTest_DMSAA_dst_read/* = SKIP
-40644776 IOS                     : Texture2DTestES3.UnitTest_DMSAA_dst_read/* = SKIP
-
 // EGLImage colorspace renderbuffer failures on NVIDIA, INTEL and ANDROID
 40644776 D3D11                : ImageTest.SourceRenderbufferTargetTexture* = SKIP
 40644776 D3D11                : ImageTestES3.SourceRenderbufferTargetTextureExternalESSL3* = SKIP
