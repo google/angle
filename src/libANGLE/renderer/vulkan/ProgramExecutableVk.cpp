@@ -1754,15 +1754,28 @@ angle::Result ProgramExecutableVk::getOrAllocateDescriptorSet(
     DescriptorSetIndex setIndex,
     vk::SharedDescriptorSetCacheKey *newSharedCacheKeyOut)
 {
-    ANGLE_TRY(mDynamicDescriptorPools[setIndex]->getOrAllocateDescriptorSet(
-        context, descriptorSetDesc.getDesc(), mDescriptorSetLayouts[setIndex].get(),
-        &mDescriptorSets[setIndex], newSharedCacheKeyOut));
-    ASSERT(mDescriptorSets[setIndex]);
-    mDescriptorPools[setIndex] = mDescriptorSets[setIndex]->getPool();
-
-    if (*newSharedCacheKeyOut != nullptr)
+    if (context->getFeatures().descriptorSetCache.enabled)
     {
-        // Cache miss. A new cache entry has been created.
+        ANGLE_TRY(mDynamicDescriptorPools[setIndex]->getOrAllocateDescriptorSet(
+            context, descriptorSetDesc.getDesc(), mDescriptorSetLayouts[setIndex].get(),
+            &mDescriptorSets[setIndex], newSharedCacheKeyOut));
+        ASSERT(mDescriptorSets[setIndex]);
+        mDescriptorPools[setIndex] = mDescriptorSets[setIndex]->getPool();
+
+        if (*newSharedCacheKeyOut != nullptr)
+        {
+            // Cache miss. A new cache entry has been created.
+            descriptorSetDesc.updateDescriptorSet(context->getRenderer(), writeDescriptorDescs,
+                                                  updateBuilder,
+                                                  mDescriptorSets[setIndex]->getDescriptorSet());
+        }
+    }
+    else
+    {
+        ANGLE_TRY(mDynamicDescriptorPools[setIndex]->allocateDescriptorSet(
+            context, mDescriptorSetLayouts[setIndex].get(), &mDescriptorSets[setIndex]));
+        ASSERT(mDescriptorSets[setIndex]);
+        mDescriptorPools[setIndex] = mDescriptorSets[setIndex]->getPool();
         descriptorSetDesc.updateDescriptorSet(context->getRenderer(), writeDescriptorDescs,
                                               updateBuilder,
                                               mDescriptorSets[setIndex]->getDescriptorSet());
@@ -1833,22 +1846,40 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(
     // avoid calling vkAllocateDesctiporSets each texture update.
     vk::DescriptorSetDescBuilder descriptorBuilder;
 
-    vk::SharedDescriptorSetCacheKey newSharedCacheKey;
-
-    descriptorBuilder.updatePreCacheActiveTextures(context, *mExecutable, textures, samplers);
-
-    ANGLE_TRY(mDynamicDescriptorPools[DescriptorSetIndex::Texture]->getOrAllocateDescriptorSet(
-        context, descriptorBuilder.getDesc(),
-        mDescriptorSetLayouts[DescriptorSetIndex::Texture].get(),
-        &mDescriptorSets[DescriptorSetIndex::Texture], &newSharedCacheKey));
-    ASSERT(mDescriptorSets[DescriptorSetIndex::Texture]);
-
-    if (newSharedCacheKey != nullptr)
+    if (context->getFeatures().descriptorSetCache.enabled)
     {
-        // Cache miss. A new cache entry has been created.
-        ANGLE_TRY(descriptorBuilder.updateActiveTexturesForCacheMiss(
+        vk::SharedDescriptorSetCacheKey newSharedCacheKey;
+
+        descriptorBuilder.updatePreCacheActiveTextures(context, *mExecutable, textures, samplers);
+
+        ANGLE_TRY(mDynamicDescriptorPools[DescriptorSetIndex::Texture]->getOrAllocateDescriptorSet(
+            context, descriptorBuilder.getDesc(),
+            mDescriptorSetLayouts[DescriptorSetIndex::Texture].get(),
+            &mDescriptorSets[DescriptorSetIndex::Texture], &newSharedCacheKey));
+        ASSERT(mDescriptorSets[DescriptorSetIndex::Texture]);
+
+        if (newSharedCacheKey != nullptr)
+        {
+            // Cache miss. A new cache entry has been created.
+            ANGLE_TRY(descriptorBuilder.updateActiveTexturesForCacheMiss(
+                context, mVariableInfoMap, mTextureWriteDescriptorDescs, *mExecutable, textures,
+                samplers, pipelineType, newSharedCacheKey));
+
+            descriptorBuilder.updateDescriptorSet(
+                context->getRenderer(), mTextureWriteDescriptorDescs, updateBuilder,
+                mDescriptorSets[DescriptorSetIndex::Texture]->getDescriptorSet());
+        }
+    }
+    else
+    {
+        ANGLE_TRY(mDynamicDescriptorPools[DescriptorSetIndex::Texture]->allocateDescriptorSet(
+            context, mDescriptorSetLayouts[DescriptorSetIndex::Texture].get(),
+            &mDescriptorSets[DescriptorSetIndex::Texture]));
+        ASSERT(mDescriptorSets[DescriptorSetIndex::Texture]);
+
+        ANGLE_TRY(descriptorBuilder.updateFullActiveTextures(
             context, mVariableInfoMap, mTextureWriteDescriptorDescs, *mExecutable, textures,
-            samplers, pipelineType, newSharedCacheKey));
+            samplers, pipelineType));
 
         descriptorBuilder.updateDescriptorSet(
             context->getRenderer(), mTextureWriteDescriptorDescs, updateBuilder,

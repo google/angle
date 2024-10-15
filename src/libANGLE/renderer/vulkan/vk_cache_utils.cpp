@@ -6363,6 +6363,8 @@ angle::Result DescriptorSetDescBuilder::updateActiveTexturesForCacheMiss(
     PipelineType pipelineType,
     const SharedDescriptorSetCacheKey &sharedCacheKey)
 {
+    // This is only used when cache is enabled.
+    ASSERT(context->getFeatures().descriptorSetCache.enabled);
     const std::vector<gl::SamplerBinding> &samplerBindings = executable.getSamplerBindings();
     const std::vector<GLuint> &samplerBoundTextureUnits = executable.getSamplerBoundTextureUnits();
     const std::vector<gl::LinkedUniform> &uniforms      = executable.getUniforms();
@@ -6437,13 +6439,16 @@ angle::Result DescriptorSetDescBuilder::updateFullActiveTextures(
     const gl::ProgramExecutable &executable,
     const gl::ActiveTextureArray<TextureVk *> &textures,
     const gl::SamplerBindingVector &samplers,
-    PipelineType pipelineType,
-    const SharedDescriptorSetCacheKey &sharedCacheKey)
+    PipelineType pipelineType)
 {
+    // This is only used when cache is disabled.
+    ASSERT(!context->getFeatures().descriptorSetCache.enabled);
     const std::vector<gl::SamplerBinding> &samplerBindings = executable.getSamplerBindings();
     const std::vector<GLuint> &samplerBoundTextureUnits = executable.getSamplerBoundTextureUnits();
     const std::vector<gl::LinkedUniform> &uniforms      = executable.getUniforms();
     const gl::ActiveTextureTypeArray &textureTypes      = executable.getActiveSamplerTypes();
+
+    resize(writeDescriptorDescs.getTotalDescriptorCount());
 
     for (uint32_t samplerIndex = 0; samplerIndex < samplerBindings.size(); ++samplerIndex)
     {
@@ -6482,8 +6487,6 @@ angle::Result DescriptorSetDescBuilder::updateFullActiveTextures(
                 infoDesc.samplerOrBufferSerial   = 0;
                 infoDesc.imageSubresourceRange   = 0;
 
-                textureVk->onNewDescriptorSet(sharedCacheKey);
-
                 const BufferView *view = nullptr;
                 ANGLE_TRY(textureVk->getBufferViewAndRecordUse(context, nullptr, &samplerBinding,
                                                                false, &view));
@@ -6503,8 +6506,6 @@ angle::Result DescriptorSetDescBuilder::updateFullActiveTextures(
                 ImageOrBufferViewSubresourceSerial imageViewSerial =
                     textureVk->getImageViewSubresourceSerial(
                         samplerState, samplerUniform.isTexelFetchStaticUse());
-
-                textureVk->onNewDescriptorSet(sharedCacheKey);
 
                 ImageLayout imageLayout = textureVk->getImage().getCurrentImageLayout();
                 SetBitField(infoDesc.imageLayoutOrRange, imageLayout);

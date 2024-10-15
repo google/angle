@@ -77,6 +77,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::CorruptProgramBinaryForTesting, "corruptProgramBinaryForTesting"},
     {Feature::DecodeEncodeSRGBForGenerateMipmap, "decodeEncodeSRGBForGenerateMipmap"},
     {Feature::DepthStencilBlitExtraCopy, "depthStencilBlitExtraCopy"},
+    {Feature::DescriptorSetCache, "descriptorSetCache"},
     {Feature::DisableAnisotropicFiltering, "disableAnisotropicFiltering"},
     {Feature::DisableB5G6R5Support, "disableB5G6R5Support"},
     {Feature::DisableBaseInstanceVertex, "disableBaseInstanceVertex"},
