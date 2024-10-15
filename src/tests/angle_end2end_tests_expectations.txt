@@ -993,6 +993,7 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 
 371987004 MAC INTEL OPENGL : BlitFramebufferANGLETest.BlitWithMissingAttachments/* = SKIP
 371987004 MAC NVIDIA OPENGL : BlitFramebufferANGLETest.BlitWithMissingAttachments/* = SKIP
+371987004 IOS OPENGL : BlitFramebufferANGLETest.BlitWithMissingAttachments/* = SKIP
 371987004 WIN D3D9 : BlitFramebufferANGLETest.BlitWithMissingAttachments/* = SKIP
 
 // Indexed indirect draw offset bug
@@ -1589,6 +1590,7 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 40644776 WIN INTEL D3D11         : Texture2DTestES3.UnitTest_DMSAA_dst_read/* = SKIP
 40644776 WIN NVIDIA D3D11        : Texture2DTestES3.UnitTest_DMSAA_dst_read/* = SKIP
 40644776 ANDROID PIXEL4ORXL GLES : Texture2DTestES3.UnitTest_DMSAA_dst_read/* = SKIP
+40644776 IOS                     : Texture2DTestES3.UnitTest_DMSAA_dst_read/* = SKIP
 
 // EGLImage colorspace renderbuffer failures on NVIDIA, INTEL and ANDROID
 40644776 D3D11                : ImageTest.SourceRenderbufferTargetTexture* = SKIP
