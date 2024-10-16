@@ -284,9 +284,9 @@ class CLProgramVk : public CLProgramImpl
     // Sets the status for given associated device programs
     void setBuildStatus(const cl::DevicePtrs &devices, cl_build_status status);
 
-    vk::RefCountedDescriptorPoolBinding &getDescriptorPoolBinding(DescriptorSetIndex index)
+    vk::DescriptorPoolPointer &getDescriptorPoolPointer(DescriptorSetIndex index)
     {
-        return mDescriptorPoolBindings[index];
+        return mDescriptorPools[index];
     }
 
     vk::MetaDescriptorPool &getMetaDescriptorPool(DescriptorSetIndex index)
@@ -309,7 +309,7 @@ class CLProgramVk : public CLProgramImpl
     DevicePrograms mAssociatedDevicePrograms;
     vk::DescriptorSetArray<vk::MetaDescriptorPool> mMetaDescriptorPools;
     vk::DescriptorSetArray<vk::DynamicDescriptorPoolPointer> mDynamicDescriptorPools;
-    vk::DescriptorSetArray<vk::RefCountedDescriptorPoolBinding> mDescriptorPoolBindings;
+    vk::DescriptorSetArray<vk::DescriptorPoolPointer> mDescriptorPools;
     angle::SimpleMutex mProgramMutex;
 };
 

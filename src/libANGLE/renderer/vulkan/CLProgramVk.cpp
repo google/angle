@@ -431,9 +431,9 @@ CLProgramVk::~CLProgramVk()
     {
         pool.reset();
     }
-    for (vk::RefCountedDescriptorPoolBinding &binding : mDescriptorPoolBindings)
+    for (vk::DescriptorPoolPointer &pool : mDescriptorPools)
     {
-        binding.reset();
+        pool.reset();
     }
     mShader.get().destroy(mContext->getDevice());
     for (DescriptorSetIndex index : angle::AllEnums<DescriptorSetIndex>())
@@ -973,12 +973,12 @@ angle::Result CLProgramVk::allocateDescriptorSet(const DescriptorSetIndex setInd
 {
     if (mDynamicDescriptorPools[setIndex])
     {
-        ANGLE_CL_IMPL_TRY_ERROR(mDynamicDescriptorPools[setIndex]->allocateDescriptorSet(
-                                    mContext, descriptorSetLayout,
-                                    &mDescriptorPoolBindings[setIndex], descriptorSetOut),
-                                CL_INVALID_OPERATION);
+        ANGLE_CL_IMPL_TRY_ERROR(
+            mDynamicDescriptorPools[setIndex]->allocateDescriptorSet(
+                mContext, descriptorSetLayout, &mDescriptorPools[setIndex], descriptorSetOut),
+            CL_INVALID_OPERATION);
 
-        commandBuffer->retainResource(&mDescriptorPoolBindings[setIndex].get());
+        commandBuffer->retainResource(mDescriptorPools[setIndex].get());
     }
     return angle::Result::Continue;
 }

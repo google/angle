@@ -519,7 +519,7 @@ class ProgramExecutableVk : public ProgramExecutableImpl
     // Descriptor sets and pools for shader resources for this program.
     vk::DescriptorSetArray<VkDescriptorSet> mDescriptorSets;
     vk::DescriptorSetArray<vk::DynamicDescriptorPoolPointer> mDynamicDescriptorPools;
-    vk::DescriptorSetArray<vk::RefCountedDescriptorPoolBinding> mDescriptorPoolBindings;
+    vk::DescriptorSetArray<vk::DescriptorPoolPointer> mDescriptorPools;
     vk::BufferSerial mCurrentDefaultUniformBufferSerial;
 
     // We keep a reference to the pipeline and descriptor set layouts. This ensures they don't get

@@ -302,6 +302,9 @@ class DescriptorPoolHelper final : public Resource
     angle::Result init(Context *context,
                        const std::vector<VkDescriptorPoolSize> &poolSizesIn,
                        uint32_t maxSets);
+    // This only get called by SharedPtr. Nothing to do here since we explictly destroy/release pool
+    // before we reach here.
+    void destroy() { ASSERT(!valid()); }
     void destroy(Renderer *renderer);
     void release(Renderer *renderer);
 
@@ -336,8 +339,7 @@ class DescriptorPoolHelper final : public Resource
     // Manages the texture descriptor set cache that allocated from this pool
     vk::DescriptorSetCacheManager mDescriptorSetCacheManager;
 };
-
-using RefCountedDescriptorPoolBinding = BindingPointer<DescriptorPoolHelper>;
+using DescriptorPoolPointer = SharedPtr<DescriptorPoolHelper>;
 
 class DynamicDescriptorPool final : angle::NonCopyable
 {
@@ -367,13 +369,13 @@ class DynamicDescriptorPool final : angle::NonCopyable
     // By convention, sets are indexed according to the constants in vk_cache_utils.h.
     angle::Result allocateDescriptorSet(Context *context,
                                         const DescriptorSetLayout &descriptorSetLayout,
-                                        RefCountedDescriptorPoolBinding *bindingOut,
+                                        DescriptorPoolPointer *poolOut,
                                         VkDescriptorSet *descriptorSetOut);
 
     angle::Result getOrAllocateDescriptorSet(Context *context,
                                              const DescriptorSetDesc &desc,
                                              const DescriptorSetLayout &descriptorSetLayout,
-                                             RefCountedDescriptorPoolBinding *bindingOut,
+                                             DescriptorPoolPointer *poolOut,
                                              VkDescriptorSet *descriptorSetOut,
                                              SharedDescriptorSetCacheKey *sharedCacheKeyOut);
 
@@ -407,7 +409,7 @@ class DynamicDescriptorPool final : angle::NonCopyable
     static uint32_t mMaxSetsPerPool;
     static uint32_t mMaxSetsPerPoolMultiplier;
     size_t mCurrentPoolIndex;
-    std::vector<std::unique_ptr<RefCountedDescriptorPoolHelper>> mDescriptorPools;
+    std::vector<DescriptorPoolPointer> mDescriptorPools;
     std::vector<VkDescriptorPoolSize> mPoolSizes;
     // This cached handle is used for verifying the layout being used to allocate descriptor sets
     // from the pool matches the layout that the pool was created for, to ensure that the free

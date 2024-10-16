@@ -861,6 +861,13 @@ class SharedPtr final
         mRefCounted = new RefCountedStorage(std::move(object));
         mRefCounted->addRef();
     }
+    SharedPtr(RefCountedStorage *refCountedStorage) : mRefCounted(refCountedStorage)
+    {
+        if (mRefCounted)
+        {
+            mRefCounted->addRef();
+        }
+    }
     ~SharedPtr() { reset(); }
 
     SharedPtr(const SharedPtr &other) : mRefCounted(nullptr) { *this = other; }
@@ -923,6 +930,8 @@ class SharedPtr final
         return mRefCounted->getRefCount() == 1;
     }
 
+    RefCountedStorage *getRefCountedStorage() const { return mRefCounted; }
+
   private:
     void releaseRef()
     {
@@ -937,6 +946,12 @@ class SharedPtr final
 
     RefCountedStorage *mRefCounted;
 };
+template <typename T>
+SharedPtr<T> MakeShared()
+{
+    RefCounted<T> *newRefCountedObject = new RefCounted<T>();
+    return SharedPtr<T>(newRefCountedObject);
+}
 
 // Helper class to share ref-counted Vulkan objects.  Requires that T have a destroy method
 // that takes a VkDevice and returns void.
