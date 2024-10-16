@@ -1463,6 +1463,20 @@ angle::Result CLCommandQueueVk::createEvent(CLEventImpl::CreateFunc *createFunc,
 
             if (blocking)
             {
+                // Submission finished at this point, just set event to complete
+                if (IsError(eventVk->setStatusAndExecuteCallback(CL_COMPLETE)))
+                {
+                    ANGLE_CL_SET_ERROR(CL_OUT_OF_RESOURCES);
+                }
+            }
+            else if (mCommandQueue.getProperties().intersects(CL_QUEUE_PROFILING_ENABLE))
+            {
+                // We also block for profiling so that we get timestamps per-command
+                if (IsError(mCommandQueue.getImpl<CLCommandQueueVk>().finish()))
+                {
+                    ANGLE_CL_SET_ERROR(CL_OUT_OF_RESOURCES);
+                }
+                // Submission finished at this point, just set event to complete
                 if (IsError(eventVk->setStatusAndExecuteCallback(CL_COMPLETE)))
                 {
                     ANGLE_CL_SET_ERROR(CL_OUT_OF_RESOURCES);
@@ -1473,14 +1487,6 @@ angle::Result CLCommandQueueVk::createEvent(CLEventImpl::CreateFunc *createFunc,
                 eventVk->setQueueSerial(mComputePassCommands->getQueueSerial());
                 // Save a reference to this event
                 mAssociatedEvents.push_back(cl::EventPtr{&eventVk->getFrontendObject()});
-
-                if (mCommandQueue.getProperties().intersects(CL_QUEUE_PROFILING_ENABLE))
-                {
-                    if (IsError(mCommandQueue.getImpl<CLCommandQueueVk>().flush()))
-                    {
-                        ANGLE_CL_SET_ERROR(CL_OUT_OF_RESOURCES);
-                    }
-                }
             }
 
             return CLEventImpl::Ptr(eventVk);
