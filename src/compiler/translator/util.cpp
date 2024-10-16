@@ -776,6 +776,11 @@ bool IsFragmentOutput(TQualifier qualifier)
     }
 }
 
+bool IsOutputNULL(ShShaderOutput output)
+{
+    return output == SH_NULL_OUTPUT;
+}
+
 bool IsOutputESSL(ShShaderOutput output)
 {
     return output == SH_ESSL_OUTPUT;

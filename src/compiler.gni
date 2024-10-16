@@ -126,6 +126,7 @@ angle_translator_sources = [
   "src/compiler/translator/length_limits.h",
   "src/compiler/translator/msl/DriverUniformMetal.h",
   "src/compiler/translator/msl/TranslatorMSL.h",
+  "src/compiler/translator/null/TranslatorNULL.h",
   "src/compiler/translator/spirv/TranslatorSPIRV.h",
   "src/compiler/translator/tree_ops/ClampFragDepth.cpp",
   "src/compiler/translator/tree_ops/ClampFragDepth.h",
