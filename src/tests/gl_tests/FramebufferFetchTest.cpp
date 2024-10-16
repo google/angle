@@ -2400,6 +2400,69 @@ void main (void)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test recovering a supposedly closed render pass that used framebuffer fetch..
+TEST_P(FramebufferFetchES31, ReopenRenderPass)
+{
+    const bool is_coherent = IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch");
+    ANGLE_SKIP_TEST_IF(!is_coherent &&
+                       !IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_sample_variables"));
+
+    // Create two framebuffers
+    GLRenderbuffer color[2];
+    GLFramebuffer fbo[2];
+    for (uint32_t i = 0; i < 2; ++i)
+    {
+        glBindRenderbuffer(GL_RENDERBUFFER, color[i]);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, kViewportWidth, kViewportHeight);
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo[i]);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, color[i]);
+    }
+
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
+    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Use a framebuffer fetch program.
+    std::ostringstream fs;
+    fs << "#version 310 es\n";
+    if (is_coherent)
+    {
+        fs << "#extension GL_EXT_shader_framebuffer_fetch : require\n";
+    }
+    else
+    {
+        fs << "#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require\n";
+    }
+    fs << R"(inout highp vec4 color;
+void main (void)
+{
+    color += vec4(0.25, 0.125, 0.5, 0.0);
+})";
+
+    ANGLE_GL_PROGRAM(ff, essl31_shaders::vs::Passthrough(), fs.str().c_str());
+    drawQuad(ff, essl31_shaders::PositionAttrib(), 0.0f);
+
+    // Switch to another framebuffer and do a clear.  In the Vulkan backend, the previous render
+    // pass stays around.
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo[1]);
+    glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Switch back to the original framebuffer and do a non-framebuffer fetch draw
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo[0]);
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(kViewportWidth / 2, kViewportHeight / 2, kViewportWidth - kViewportWidth / 2,
+              kViewportHeight - kViewportHeight / 2);
+    drawQuad(drawRed, essl31_shaders::PositionAttrib(), 0.0f);
+
+    // Verify the results
+    EXPECT_PIXEL_NEAR(0, 0, 191, 159, 255, 255, 1);
+    EXPECT_PIXEL_COLOR_EQ(kViewportWidth - 1, kViewportHeight - 1, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test combination of inout and samplers.
 TEST_P(FramebufferFetchES31, UniformUsageCombinations)
 {

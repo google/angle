@@ -2401,7 +2401,17 @@ angle::Result ContextVk::handleDirtyGraphicsRenderPass(DirtyBits::Iterator *dirt
         mRenderPassCommandBuffer = &mRenderPassCommands->getCommandBuffer();
         ASSERT(!drawFramebufferVk->hasDeferredClears());
         ASSERT(hasActiveRenderPass());
-        ASSERT(drawFramebufferVk->getRenderPassDesc() == mRenderPassCommands->getRenderPassDesc());
+
+        vk::RenderPassDesc framebufferRenderPassDesc = drawFramebufferVk->getRenderPassDesc();
+        if (getFeatures().preferDynamicRendering.enabled)
+        {
+            // With dynamic rendering, drawFramebufferVk's render pass desc does not track
+            // framebuffer fetch mode.  For the purposes of the following ASSERT, assume they are
+            // the same.
+            framebufferRenderPassDesc.setFramebufferFetchMode(
+                mRenderPassCommands->getRenderPassDesc().framebufferFetchMode());
+        }
+        ASSERT(framebufferRenderPassDesc == mRenderPassCommands->getRenderPassDesc());
 
         return angle::Result::Continue;
     }
