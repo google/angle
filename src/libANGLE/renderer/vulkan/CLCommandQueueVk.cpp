@@ -932,7 +932,7 @@ angle::Result CLCommandQueueVk::createEvent(CLEventImpl::CreateFunc *createFunc)
             // Save a reference to this event
             mAssociatedEvents.push_back(cl::EventPtr{&eventVk->getFrontendObject()});
 
-            if (mCommandQueue.getProperties().isSet(CL_QUEUE_PROFILING_ENABLE))
+            if (mCommandQueue.getProperties().intersects(CL_QUEUE_PROFILING_ENABLE))
             {
                 if (IsError(mCommandQueue.getImpl<CLCommandQueueVk>().flush()))
                 {

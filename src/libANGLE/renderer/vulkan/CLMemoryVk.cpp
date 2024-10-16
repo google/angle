@@ -47,11 +47,11 @@ VkBufferUsageFlags CLMemoryVk::getVkUsageFlags()
     VkBufferUsageFlags usageFlags =
         VK_BUFFER_USAGE_TRANSFER_SRC_BIT | VK_BUFFER_USAGE_TRANSFER_DST_BIT;
 
-    if (mMemory.getFlags().isSet(CL_MEM_WRITE_ONLY))
+    if (mMemory.getFlags().intersects(CL_MEM_WRITE_ONLY))
     {
         usageFlags |= VK_BUFFER_USAGE_STORAGE_BUFFER_BIT;
     }
-    else if (mMemory.getFlags().isSet(CL_MEM_READ_ONLY))
+    else if (mMemory.getFlags().intersects(CL_MEM_READ_ONLY))
     {
         usageFlags |= VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
     }
@@ -68,8 +68,8 @@ VkMemoryPropertyFlags CLMemoryVk::getVkMemPropertyFlags()
     // TODO: http://anglebug.com/42267018
     VkMemoryPropertyFlags propFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
 
-    if (mMemory.getFlags().isSet(CL_MEM_USE_HOST_PTR | CL_MEM_ALLOC_HOST_PTR |
-                                 CL_MEM_COPY_HOST_PTR))
+    if (mMemory.getFlags().intersects(CL_MEM_USE_HOST_PTR | CL_MEM_ALLOC_HOST_PTR |
+                                      CL_MEM_COPY_HOST_PTR))
     {
         propFlags |= VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
     }
@@ -156,7 +156,7 @@ angle::Result CLBufferVk::create(void *hostPtr)
         {
             ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
         }
-        if (mMemory.getFlags().isSet(CL_MEM_USE_HOST_PTR | CL_MEM_COPY_HOST_PTR))
+        if (mMemory.getFlags().intersects(CL_MEM_USE_HOST_PTR | CL_MEM_COPY_HOST_PTR))
         {
             ASSERT(hostPtr);
             ANGLE_CL_IMPL_TRY_ERROR(setDataImpl(static_cast<uint8_t *>(hostPtr), getSize(), 0),

@@ -305,12 +305,12 @@ inline CommandQueueProperties CommandQueue::getProperties() const
 
 inline bool CommandQueue::isOnHost() const
 {
-    return mProperties->isNotSet(CL_QUEUE_ON_DEVICE);
+    return mProperties->excludes(CL_QUEUE_ON_DEVICE);
 }
 
 inline bool CommandQueue::isOnDevice() const
 {
-    return mProperties->isSet(CL_QUEUE_ON_DEVICE);
+    return mProperties->intersects(CL_QUEUE_ON_DEVICE);
 }
 
 inline bool CommandQueue::hasSize() const

@@ -209,7 +209,7 @@ angle::Result CLContextVk::linkProgram(const cl::Program &program,
             // Should be valid at this point
             ASSERT(deviceProgramData != nullptr);
 
-            if (libraryOrObject.isSet(deviceProgramData->binaryType))
+            if (libraryOrObject.intersects(deviceProgramData->binaryType))
             {
                 linkPrograms.push_back(deviceProgramData);
             }
