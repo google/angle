@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 366
+#define ANGLE_SH_VERSION 367
 
 enum ShShaderSpec
 {
@@ -44,35 +44,38 @@ enum ShShaderSpec
 
 enum ShShaderOutput
 {
+    // NULL output for testing.
+    SH_NULL_OUTPUT,
+
     // ESSL output only supported in some configurations.
-    SH_ESSL_OUTPUT = 0x8B45,
+    SH_ESSL_OUTPUT,
 
     // GLSL output only supported in some configurations.
-    SH_GLSL_COMPATIBILITY_OUTPUT = 0x8B46,
+    SH_GLSL_COMPATIBILITY_OUTPUT,
     // Note: GL introduced core profiles in 1.5.
-    SH_GLSL_130_OUTPUT      = 0x8B47,
-    SH_GLSL_140_OUTPUT      = 0x8B80,
-    SH_GLSL_150_CORE_OUTPUT = 0x8B81,
-    SH_GLSL_330_CORE_OUTPUT = 0x8B82,
-    SH_GLSL_400_CORE_OUTPUT = 0x8B83,
-    SH_GLSL_410_CORE_OUTPUT = 0x8B84,
-    SH_GLSL_420_CORE_OUTPUT = 0x8B85,
-    SH_GLSL_430_CORE_OUTPUT = 0x8B86,
-    SH_GLSL_440_CORE_OUTPUT = 0x8B87,
-    SH_GLSL_450_CORE_OUTPUT = 0x8B88,
+    SH_GLSL_130_OUTPUT,
+    SH_GLSL_140_OUTPUT,
+    SH_GLSL_150_CORE_OUTPUT,
+    SH_GLSL_330_CORE_OUTPUT,
+    SH_GLSL_400_CORE_OUTPUT,
+    SH_GLSL_410_CORE_OUTPUT,
+    SH_GLSL_420_CORE_OUTPUT,
+    SH_GLSL_430_CORE_OUTPUT,
+    SH_GLSL_440_CORE_OUTPUT,
+    SH_GLSL_450_CORE_OUTPUT,
 
     // Prefer using these to specify HLSL output type:
-    SH_HLSL_3_0_OUTPUT       = 0x8B48,  // D3D 9
-    SH_HLSL_4_1_OUTPUT       = 0x8B49,  // D3D 11
+    SH_HLSL_3_0_OUTPUT,  // D3D 9
+    SH_HLSL_4_1_OUTPUT,  // D3D 11
 
     // Output SPIR-V for the Vulkan backend.
-    SH_SPIRV_VULKAN_OUTPUT = 0x8B4B,
+    SH_SPIRV_VULKAN_OUTPUT,
 
     // Output for MSL
-    SH_MSL_METAL_OUTPUT = 0x8B4D,
+    SH_MSL_METAL_OUTPUT,
 
     // Output for WGSL
-    SH_WGSL_OUTPUT = 0x8B4E,
+    SH_WGSL_OUTPUT,
 };
 
 struct ShCompileOptionsMetal
