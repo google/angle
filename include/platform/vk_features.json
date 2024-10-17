@@ -1866,6 +1866,13 @@
                 "Enable support for GL_APPLE_clip_distance extension"
             ],
             "issue": "https://anglebug.com/386749841"
+        },
+        {
+            "name": "supports_uniform_buffer_standard_layout",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_KHR_uniform_buffer_standard_layout and has UniformBufferStandardLayout feature"
+            ]
         }
     ]
 }

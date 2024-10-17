@@ -412,6 +412,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SupportsTimelineSemaphore, "supportsTimelineSemaphore"},
     {Feature::SupportsTimestampSurfaceAttribute, "supportsTimestampSurfaceAttribute"},
     {Feature::SupportsTransformFeedbackExtension, "supportsTransformFeedbackExtension"},
+    {Feature::SupportsUniformBufferStandardLayout, "supportsUniformBufferStandardLayout"},
     {Feature::SupportsVertexInputDynamicState, "supportsVertexInputDynamicState"},
     {Feature::SupportsYUVSamplerConversion, "supportsYUVSamplerConversion"},
     {Feature::SupportsYuvTarget, "supportsYuvTarget"},
