@@ -588,6 +588,8 @@ void ProgramExecutableVk::resetLayout(ContextVk *contextVk)
 
     for (vk::DescriptorPoolPointer &pool : mDescriptorPools)
     {
+        // pool should remain invalid if cache is disabled
+        ASSERT(contextVk->getFeatures().descriptorSetCache.enabled || !pool);
         pool.reset();
     }
 
@@ -1792,19 +1794,20 @@ angle::Result ProgramExecutableVk::getOrAllocateDescriptorSet(
                                                   updateBuilder,
                                                   mDescriptorSets[setIndex]->getDescriptorSet());
         }
+
+        commandBufferHelper->retainResource(mDescriptorPools[setIndex].get());
     }
     else
     {
         ANGLE_TRY(mDynamicDescriptorPools[setIndex]->allocateDescriptorSet(
             context, mDescriptorSetLayouts[setIndex].get(), &mDescriptorSets[setIndex]));
         ASSERT(mDescriptorSets[setIndex]);
-        mDescriptorPools[setIndex] = mDescriptorSets[setIndex]->getPool();
+
         descriptorSetDesc.updateDescriptorSet(context->getRenderer(), writeDescriptorDescs,
                                               updateBuilder,
                                               mDescriptorSets[setIndex]->getDescriptorSet());
     }
     commandBufferHelper->retainResource(mDescriptorSets[setIndex].get());
-    commandBufferHelper->retainResource(mDescriptorPools[setIndex].get());
 
     return angle::Result::Continue;
 }
@@ -1880,6 +1883,8 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(
             mDescriptorSetLayouts[DescriptorSetIndex::Texture].get(),
             &mDescriptorSets[DescriptorSetIndex::Texture], &newSharedCacheKey));
         ASSERT(mDescriptorSets[DescriptorSetIndex::Texture]);
+        mDescriptorPools[DescriptorSetIndex::Texture] =
+            mDescriptorSets[DescriptorSetIndex::Texture]->getPool();
 
         if (newSharedCacheKey != nullptr)
         {
@@ -1892,6 +1897,8 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(
                 context->getRenderer(), mTextureWriteDescriptorDescs, updateBuilder,
                 mDescriptorSets[DescriptorSetIndex::Texture]->getDescriptorSet());
         }
+
+        commandBufferHelper->retainResource(mDescriptorPools[DescriptorSetIndex::Texture].get());
     }
     else
     {
@@ -1909,10 +1916,7 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(
             mDescriptorSets[DescriptorSetIndex::Texture]->getDescriptorSet());
     }
 
-    mDescriptorPools[DescriptorSetIndex::Texture] =
-        mDescriptorSets[DescriptorSetIndex::Texture]->getPool();
     commandBufferHelper->retainResource(mDescriptorSets[DescriptorSetIndex::Texture].get());
-    commandBufferHelper->retainResource(mDescriptorPools[DescriptorSetIndex::Texture].get());
 
     return angle::Result::Continue;
 }
