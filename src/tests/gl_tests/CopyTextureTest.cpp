@@ -2794,10 +2794,10 @@ TEST_P(CopyTextureTestES3, CopyImageSubDataToEGLImage)
     EXPECT_GL_NO_ERROR();
 
     // Check the results
+    glBindTexture(GL_TEXTURE_2D, texture);
     GLFramebuffer framebuffer;
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_EXTERNAL_OES,
-                           mTextures[0], 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
     EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
 
     EXPECT_PIXEL_RECT_EQ(0, 0, 4, 4, GLColor::green);

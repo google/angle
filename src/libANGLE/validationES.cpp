@@ -3274,6 +3274,7 @@ bool ValidateCopyImageSubDataTarget(const Context *context,
         case GL_TEXTURE_2D_ARRAY:
         case GL_TEXTURE_CUBE_MAP:
         case GL_TEXTURE_CUBE_MAP_ARRAY_EXT:
+        case GL_TEXTURE_EXTERNAL_OES:
         {
             TextureID texture = PackParam<TextureID>(name);
             if (!context->isTexture(texture))
@@ -3319,6 +3320,7 @@ bool ValidateCopyImageSubDataLevel(const Context *context,
         case GL_TEXTURE_2D_ARRAY:
         case GL_TEXTURE_CUBE_MAP:
         case GL_TEXTURE_CUBE_MAP_ARRAY_EXT:
+        case GL_TEXTURE_EXTERNAL_OES:
         {
             if (!ValidMipLevel(context, PackParam<TextureType>(target), level))
             {
@@ -3447,6 +3449,7 @@ const InternalFormat &GetTargetFormatInfo(const Context *context,
         case GL_TEXTURE_2D_ARRAY:
         case GL_TEXTURE_CUBE_MAP:
         case GL_TEXTURE_CUBE_MAP_ARRAY_EXT:
+        case GL_TEXTURE_EXTERNAL_OES:
         {
             Texture *texture          = context->getTexture(PackParam<TextureID>(name));
             GLenum textureTargetToUse = target;

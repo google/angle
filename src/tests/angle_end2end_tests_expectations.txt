@@ -29,9 +29,6 @@
 42266349 VULKAN : MultithreadingTestES3.UnsynchronizedTextureReads2/* = SKIP
 // Incorrectly handled pretty much in all backends
 42266871 : CopyTexImageTestES3.RedefineSameLevel/* = SKIP
-// GL_TEXTURE_EXTERNAL_OES is not supported in CopyImageSubData Currently
-361372990 : CopyTextureTestES3.CopyImageSubDataToEGLImage/* = SKIP
-361372990 : CopyTextureTestES3.CopyImageSubDataFromEGLImage/* = SKIP
 // Currently fails on WebGPU as it's not fully implemented yet.
 
 // Fails AST validation
