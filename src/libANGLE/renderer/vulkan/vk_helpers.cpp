@@ -4436,9 +4436,10 @@ angle::Result DynamicDescriptorPool::allocateDescriptorSet(
     ASSERT(descriptorSetLayout.getHandle() == mCachedDescriptorSetLayout);
 
     // First try to allocate from the same pool
+    RefCountedDescriptorPool *refCountedPool = nullptr;
     if (*descriptorSetOut)
     {
-        RefCountedDescriptorPool *refCountedPool = (*descriptorSetOut)->getPool();
+        refCountedPool = (*descriptorSetOut)->getPool();
         if (refCountedPool->get().allocateDescriptorSet(context, descriptorSetLayout,
                                                         refCountedPool, descriptorSetOut))
         {
@@ -4448,6 +4449,7 @@ angle::Result DynamicDescriptorPool::allocateDescriptorSet(
 
     // Next try to allocate from mCurrentPoolIndex pool
     if (mDescriptorPools[mCurrentPoolIndex] &&
+        mDescriptorPools[mCurrentPoolIndex].getRefCountedStorage() != refCountedPool &&
         mDescriptorPools[mCurrentPoolIndex]->allocateDescriptorSet(
             context, descriptorSetLayout,
             mDescriptorPools[mCurrentPoolIndex].getRefCountedStorage(), descriptorSetOut))
@@ -4455,14 +4457,18 @@ angle::Result DynamicDescriptorPool::allocateDescriptorSet(
         return angle::Result::Continue;
     }
 
-    // Next try all existing pools
-    for (DescriptorPoolPointer &pool : mDescriptorPools)
+    // Next try all other existing pools
+    for (size_t poolIndex = 0; poolIndex < mDescriptorPools.size(); ++poolIndex)
     {
+        DescriptorPoolPointer &pool = mDescriptorPools[poolIndex];
         if (!pool)
         {
             continue;
         }
-
+        if (pool.getRefCountedStorage() == refCountedPool || poolIndex == mCurrentPoolIndex)
+        {
+            continue;
+        }
         if (pool->allocateDescriptorSet(context, descriptorSetLayout, pool.getRefCountedStorage(),
                                         descriptorSetOut))
         {
@@ -4513,6 +4519,7 @@ angle::Result DynamicDescriptorPool::getOrAllocateDescriptorSet(
 angle::Result DynamicDescriptorPool::allocateNewPool(Context *context)
 {
     Renderer *renderer = context->getRenderer();
+
     // Eviction logic: Before we allocate a new pool, check to see if there is any existing pool is
     // not bound to program and is GPU compete. We destroy one pool in exchange for allocate a new
     // pool to keep total descriptorPool count under control.
