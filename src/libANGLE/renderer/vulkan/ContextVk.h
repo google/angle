@@ -1578,12 +1578,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // This info is used in the descriptor update step.
     gl::ActiveTextureArray<TextureVk *> mActiveTextures;
 
-    // We use textureSerial to optimize texture binding updates. Each permutation of a
-    // {VkImage/VkSampler} generates a unique serial. These object ids are combined to form a unique
-    // signature for each descriptor set. This allows us to keep a cache of descriptor sets and
-    // avoid calling vkAllocateDesctiporSets each texture update.
-    vk::DescriptorSetDesc mActiveTexturesDesc;
-
     vk::DescriptorSetDescBuilder mShaderBuffersDescriptorDesc;
     // The WriteDescriptorDescs from ProgramExecutableVk with InputAttachment update.
     vk::WriteDescriptorDescs mShaderBufferWriteDescriptorDescs;

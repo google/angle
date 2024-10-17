@@ -6271,16 +6271,17 @@ void DescriptorSetDescBuilder::updateUniformsAndXfb(
     }
 }
 
-void UpdatePreCacheActiveTextures(const gl::ProgramExecutable &executable,
-                                  const std::vector<gl::SamplerBinding> &samplerBindings,
-                                  const gl::ActiveTextureMask &activeTextures,
-                                  const gl::ActiveTextureArray<TextureVk *> &textures,
-                                  const gl::SamplerBindingVector &samplers,
-                                  DescriptorSetDesc *desc)
+void DescriptorSetDescBuilder::updatePreCacheActiveTextures(
+    Context *context,
+    const gl::ProgramExecutable &executable,
+    const gl::ActiveTextureArray<TextureVk *> &textures,
+    const gl::SamplerBindingVector &samplers)
 {
+    const std::vector<gl::SamplerBinding> &samplerBindings = executable.getSamplerBindings();
+    const gl::ActiveTextureMask &activeTextures            = executable.getActiveSamplersMask();
     const ProgramExecutableVk *executableVk = vk::GetImpl(&executable);
 
-    desc->resize(executableVk->getTextureWriteDescriptorDescs().getTotalDescriptorCount());
+    resize(executableVk->getTextureWriteDescriptorDescs().getTotalDescriptorCount());
     const WriteDescriptorDescs &writeDescriptorDescs =
         executableVk->getTextureWriteDescriptorDescs();
 
@@ -6315,7 +6316,7 @@ void UpdatePreCacheActiveTextures(const gl::ProgramExecutable &executable,
 
             uint32_t infoIndex = writeDescriptorDescs[info.binding].descriptorInfoIndex +
                                  arrayElement + samplerUniform.getOuterArrayOffset();
-            DescriptorInfoDesc &infoDesc = desc->getInfoDesc(infoIndex);
+            DescriptorInfoDesc &infoDesc = mDesc.getInfoDesc(infoIndex);
 
             if (textureVk->getState().getType() == gl::TextureType::Buffer)
             {
@@ -6350,6 +6351,83 @@ void UpdatePreCacheActiveTextures(const gl::ProgramExecutable &executable,
             }
         }
     }
+}
+
+angle::Result DescriptorSetDescBuilder::updateActiveTexturesForCacheMiss(
+    Context *context,
+    const ShaderInterfaceVariableInfoMap &variableInfoMap,
+    const WriteDescriptorDescs &writeDescriptorDescs,
+    const gl::ProgramExecutable &executable,
+    const gl::ActiveTextureArray<TextureVk *> &textures,
+    const gl::SamplerBindingVector &samplers,
+    PipelineType pipelineType,
+    const SharedDescriptorSetCacheKey &sharedCacheKey)
+{
+    const std::vector<gl::SamplerBinding> &samplerBindings = executable.getSamplerBindings();
+    const std::vector<GLuint> &samplerBoundTextureUnits = executable.getSamplerBoundTextureUnits();
+    const std::vector<gl::LinkedUniform> &uniforms      = executable.getUniforms();
+    const gl::ActiveTextureTypeArray &textureTypes      = executable.getActiveSamplerTypes();
+
+    for (uint32_t samplerIndex = 0; samplerIndex < samplerBindings.size(); ++samplerIndex)
+    {
+        const gl::SamplerBinding &samplerBinding = samplerBindings[samplerIndex];
+        uint32_t uniformIndex = executable.getUniformIndexFromSamplerIndex(samplerIndex);
+        const gl::LinkedUniform &samplerUniform = uniforms[uniformIndex];
+
+        if (samplerUniform.activeShaders().none())
+        {
+            continue;
+        }
+
+        const gl::ShaderType firstShaderType = samplerUniform.getFirstActiveShaderType();
+        const ShaderInterfaceVariableInfo &info =
+            variableInfoMap.getVariableById(firstShaderType, samplerUniform.getId(firstShaderType));
+
+        uint32_t arraySize        = static_cast<uint32_t>(samplerBinding.textureUnitsCount);
+        bool isSamplerExternalY2Y = samplerBinding.samplerType == GL_SAMPLER_EXTERNAL_2D_Y2Y_EXT;
+
+        for (uint32_t arrayElement = 0; arrayElement < arraySize; ++arrayElement)
+        {
+            GLuint textureUnit =
+                samplerBinding.getTextureUnit(samplerBoundTextureUnits, arrayElement);
+            TextureVk *textureVk = textures[textureUnit];
+
+            uint32_t infoIndex = writeDescriptorDescs[info.binding].descriptorInfoIndex +
+                                 arrayElement + samplerUniform.getOuterArrayOffset();
+
+            if (textureTypes[textureUnit] == gl::TextureType::Buffer)
+            {
+                textureVk->onNewDescriptorSet(sharedCacheKey);
+
+                const BufferView *view = nullptr;
+                ANGLE_TRY(textureVk->getBufferViewAndRecordUse(context, nullptr, &samplerBinding,
+                                                               false, &view));
+                mHandles[infoIndex].bufferView = view->getHandle();
+            }
+            else
+            {
+                gl::Sampler *sampler       = samplers[textureUnit].get();
+                const SamplerVk *samplerVk = sampler ? vk::GetImpl(sampler) : nullptr;
+
+                const SamplerHelper &samplerHelper =
+                    samplerVk ? samplerVk->getSampler()
+                              : textureVk->getSampler(isSamplerExternalY2Y);
+                const gl::SamplerState &samplerState =
+                    sampler ? sampler->getSamplerState() : textureVk->getState().getSamplerState();
+
+                textureVk->onNewDescriptorSet(sharedCacheKey);
+
+                mHandles[infoIndex].sampler = samplerHelper.get().getHandle();
+
+                const ImageView &imageView = textureVk->getReadImageView(
+                    context, samplerState.getSRGBDecode(), samplerUniform.isTexelFetchStaticUse(),
+                    isSamplerExternalY2Y);
+                mHandles[infoIndex].imageView = imageView.getHandle();
+            }
+        }
+    }
+
+    return angle::Result::Continue;
 }
 
 angle::Result DescriptorSetDescBuilder::updateFullActiveTextures(

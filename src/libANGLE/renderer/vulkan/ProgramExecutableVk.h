@@ -219,8 +219,7 @@ class ProgramExecutableVk : public ProgramExecutableImpl
                                               const gl::SamplerBindingVector &samplers,
                                               PipelineType pipelineType,
                                               UpdateDescriptorSetsBuilder *updateBuilder,
-                                              vk::CommandBufferHelperCommon *commandBufferHelper,
-                                              const vk::DescriptorSetDesc &texturesDesc);
+                                              vk::CommandBufferHelperCommon *commandBufferHelper);
 
     angle::Result updateShaderResourcesDescriptorSet(
         vk::Context *context,
