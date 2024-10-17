@@ -196,6 +196,12 @@ CLDeviceImpl::Info CLDeviceVk::createInfo(cl::DeviceType type) const
     };
     info.initializeVersionedExtensions(std::move(versionedExtensionList));
 
+    if (!mRenderer->getFeatures().supportsUniformBufferStandardLayout.enabled)
+    {
+        ERR() << "VK_KHR_uniform_buffer_standard_layout extension support is needed to properly "
+                 "support uniform buffers. Otherwise, you must disable OpenCL.";
+    }
+
     return info;
 }
 

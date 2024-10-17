@@ -361,6 +361,11 @@ std::string ClspvGetCompilerOptions(const CLDeviceVk *device)
         options += " --no-16bit-storage=pushconstant";
     }
 
+    if (rendererVk->getFeatures().supportsUniformBufferStandardLayout.enabled)
+    {
+        options += " --std430-ubo-layout";
+    }
+
     return options;
 }
 
