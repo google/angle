@@ -3533,41 +3533,45 @@ void ContextVk::syncObjectPerfCounters(const angle::VulkanPerfCounters &commandQ
 
     // Share group descriptor set allocations and caching stats.
     memset(mVulkanCacheStats.data(), 0, sizeof(CacheStats) * mVulkanCacheStats.size());
-
-    mShareGroupVk->getMetaDescriptorPools()[DescriptorSetIndex::UniformsAndXfb]
-        .accumulateDescriptorCacheStats(VulkanCacheType::UniformsAndXfbDescriptors, this);
-    mShareGroupVk->getMetaDescriptorPools()[DescriptorSetIndex::Texture]
-        .accumulateDescriptorCacheStats(VulkanCacheType::TextureDescriptors, this);
-    mShareGroupVk->getMetaDescriptorPools()[DescriptorSetIndex::ShaderResource]
-        .accumulateDescriptorCacheStats(VulkanCacheType::ShaderResourcesDescriptors, this);
-
-    const CacheStats &uniCacheStats = mVulkanCacheStats[VulkanCacheType::UniformsAndXfbDescriptors];
-    mPerfCounters.uniformsAndXfbDescriptorSetCacheHits      = uniCacheStats.getHitCount();
-    mPerfCounters.uniformsAndXfbDescriptorSetCacheMisses    = uniCacheStats.getMissCount();
-    mPerfCounters.uniformsAndXfbDescriptorSetCacheTotalSize = uniCacheStats.getSize();
-
-    const CacheStats &texCacheStats = mVulkanCacheStats[VulkanCacheType::TextureDescriptors];
-    mPerfCounters.textureDescriptorSetCacheHits      = texCacheStats.getHitCount();
-    mPerfCounters.textureDescriptorSetCacheMisses    = texCacheStats.getMissCount();
-    mPerfCounters.textureDescriptorSetCacheTotalSize = texCacheStats.getSize();
-
-    const CacheStats &resCacheStats =
-        mVulkanCacheStats[VulkanCacheType::ShaderResourcesDescriptors];
-    mPerfCounters.shaderResourcesDescriptorSetCacheHits      = resCacheStats.getHitCount();
-    mPerfCounters.shaderResourcesDescriptorSetCacheMisses    = resCacheStats.getMissCount();
-    mPerfCounters.shaderResourcesDescriptorSetCacheTotalSize = resCacheStats.getSize();
-
-    mPerfCounters.descriptorSetCacheTotalSize =
-        uniCacheStats.getSize() + texCacheStats.getSize() + resCacheStats.getSize() +
-        mVulkanCacheStats[VulkanCacheType::DriverUniformsDescriptors].getSize();
-
-    mPerfCounters.descriptorSetCacheKeySizeBytes = 0;
-
-    for (DescriptorSetIndex descriptorSetIndex : angle::AllEnums<DescriptorSetIndex>())
+    if (getFeatures().descriptorSetCache.enabled)
     {
-        vk::MetaDescriptorPool &descriptorPool =
-            mShareGroupVk->getMetaDescriptorPools()[descriptorSetIndex];
-        mPerfCounters.descriptorSetCacheKeySizeBytes += descriptorPool.getTotalCacheKeySizeBytes();
+        mShareGroupVk->getMetaDescriptorPools()[DescriptorSetIndex::UniformsAndXfb]
+            .accumulateDescriptorCacheStats(VulkanCacheType::UniformsAndXfbDescriptors, this);
+        mShareGroupVk->getMetaDescriptorPools()[DescriptorSetIndex::Texture]
+            .accumulateDescriptorCacheStats(VulkanCacheType::TextureDescriptors, this);
+        mShareGroupVk->getMetaDescriptorPools()[DescriptorSetIndex::ShaderResource]
+            .accumulateDescriptorCacheStats(VulkanCacheType::ShaderResourcesDescriptors, this);
+
+        const CacheStats &uniCacheStats =
+            mVulkanCacheStats[VulkanCacheType::UniformsAndXfbDescriptors];
+        mPerfCounters.uniformsAndXfbDescriptorSetCacheHits      = uniCacheStats.getHitCount();
+        mPerfCounters.uniformsAndXfbDescriptorSetCacheMisses    = uniCacheStats.getMissCount();
+        mPerfCounters.uniformsAndXfbDescriptorSetCacheTotalSize = uniCacheStats.getSize();
+
+        const CacheStats &texCacheStats = mVulkanCacheStats[VulkanCacheType::TextureDescriptors];
+        mPerfCounters.textureDescriptorSetCacheHits      = texCacheStats.getHitCount();
+        mPerfCounters.textureDescriptorSetCacheMisses    = texCacheStats.getMissCount();
+        mPerfCounters.textureDescriptorSetCacheTotalSize = texCacheStats.getSize();
+
+        const CacheStats &resCacheStats =
+            mVulkanCacheStats[VulkanCacheType::ShaderResourcesDescriptors];
+        mPerfCounters.shaderResourcesDescriptorSetCacheHits      = resCacheStats.getHitCount();
+        mPerfCounters.shaderResourcesDescriptorSetCacheMisses    = resCacheStats.getMissCount();
+        mPerfCounters.shaderResourcesDescriptorSetCacheTotalSize = resCacheStats.getSize();
+
+        mPerfCounters.descriptorSetCacheTotalSize =
+            uniCacheStats.getSize() + texCacheStats.getSize() + resCacheStats.getSize() +
+            mVulkanCacheStats[VulkanCacheType::DriverUniformsDescriptors].getSize();
+
+        mPerfCounters.descriptorSetCacheKeySizeBytes = 0;
+
+        for (DescriptorSetIndex descriptorSetIndex : angle::AllEnums<DescriptorSetIndex>())
+        {
+            vk::MetaDescriptorPool &descriptorPool =
+                mShareGroupVk->getMetaDescriptorPools()[descriptorSetIndex];
+            mPerfCounters.descriptorSetCacheKeySizeBytes +=
+                descriptorPool.getTotalCacheKeySizeBytes();
+        }
     }
 
     // Update perf counters from the renderer as well
