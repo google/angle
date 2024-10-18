@@ -862,6 +862,57 @@ void DestroyImageViews(ImageViewVector *imageViewVector, VkDevice device)
     imageViewVector->clear();
 }
 
+void ReleaseLayerLevelImageViews(LayerLevelImageViewVector *imageViewVector,
+                                 GarbageObjects *garbage)
+{
+    for (ImageViewVector &layerViews : *imageViewVector)
+    {
+        for (ImageView &imageView : layerViews)
+        {
+            if (imageView.valid())
+            {
+                garbage->emplace_back(GetGarbage(&imageView));
+            }
+        }
+    }
+    imageViewVector->clear();
+}
+
+void DestroyLayerLevelImageViews(LayerLevelImageViewVector *imageViewVector, VkDevice device)
+{
+    for (ImageViewVector &layerViews : *imageViewVector)
+    {
+        for (ImageView &imageView : layerViews)
+        {
+            imageView.destroy(device);
+        }
+    }
+    imageViewVector->clear();
+}
+
+void ReleaseSubresourceImageViews(SubresourceImageViewMap *imageViews, GarbageObjects *garbage)
+{
+    for (auto &iter : *imageViews)
+    {
+        std::unique_ptr<ImageView> &imageView = iter.second;
+        if (imageView->valid())
+        {
+            garbage->emplace_back(GetGarbage(imageView.get()));
+        }
+    }
+    imageViews->clear();
+}
+
+void DestroySubresourceImageViews(SubresourceImageViewMap *imageViews, VkDevice device)
+{
+    for (auto &iter : *imageViews)
+    {
+        std::unique_ptr<ImageView> &imageView = iter.second;
+        imageView->destroy(device);
+    }
+    imageViews->clear();
+}
+
 ImageView *GetLevelImageView(ImageViewVector *imageViews, LevelIndex levelVk, uint32_t levelCount)
 {
     // Lazily allocate the storage for image views. We allocate the full level count because we
@@ -11611,6 +11662,12 @@ ImageViewHelper::ImageViewHelper(ImageViewHelper &&other)
     std::swap(mLayerLevelDrawImageViews, other.mLayerLevelDrawImageViews);
     std::swap(mLayerLevelDrawImageViewsLinear, other.mLayerLevelDrawImageViewsLinear);
     std::swap(mSubresourceDrawImageViews, other.mSubresourceDrawImageViews);
+
+    std::swap(mLayerLevelDepthOnlyImageViews, other.mLayerLevelDepthOnlyImageViews);
+    std::swap(mLayerLevelStencilOnlyImageViews, other.mLayerLevelStencilOnlyImageViews);
+    std::swap(mSubresourceDepthOnlyImageViews, other.mSubresourceDepthOnlyImageViews);
+    std::swap(mSubresourceStencilOnlyImageViews, other.mSubresourceStencilOnlyImageViews);
+
     std::swap(mLevelStorageImageViews, other.mLevelStorageImageViews);
     std::swap(mLayerLevelStorageImageViews, other.mLayerLevelStorageImageViews);
     std::swap(mFragmentShadingRateImageView, other.mFragmentShadingRateImageView);
@@ -11644,51 +11701,19 @@ void ImageViewHelper::release(Renderer *renderer, const ResourceUse &use)
     ReleaseImageViews(&mPerLevelRangeSamplerExternal2DY2YEXTImageViews, &garbage);
 
     // Release the draw views
-    for (ImageViewVector &layerViews : mLayerLevelDrawImageViews)
-    {
-        for (ImageView &imageView : layerViews)
-        {
-            if (imageView.valid())
-            {
-                garbage.emplace_back(GetGarbage(&imageView));
-            }
-        }
-    }
-    mLayerLevelDrawImageViews.clear();
-    for (ImageViewVector &layerViews : mLayerLevelDrawImageViewsLinear)
-    {
-        for (ImageView &imageView : layerViews)
-        {
-            if (imageView.valid())
-            {
-                garbage.emplace_back(GetGarbage(&imageView));
-            }
-        }
-    }
-    mLayerLevelDrawImageViewsLinear.clear();
-    for (auto &iter : mSubresourceDrawImageViews)
-    {
-        std::unique_ptr<ImageView> &imageView = iter.second;
-        if (imageView->valid())
-        {
-            garbage.emplace_back(GetGarbage(imageView.get()));
-        }
-    }
-    mSubresourceDrawImageViews.clear();
+    ReleaseLayerLevelImageViews(&mLayerLevelDrawImageViews, &garbage);
+    ReleaseLayerLevelImageViews(&mLayerLevelDrawImageViewsLinear, &garbage);
+    ReleaseSubresourceImageViews(&mSubresourceDrawImageViews, &garbage);
+
+    // Release the depth-xor-stencil input views
+    ReleaseLayerLevelImageViews(&mLayerLevelDepthOnlyImageViews, &garbage);
+    ReleaseLayerLevelImageViews(&mLayerLevelStencilOnlyImageViews, &garbage);
+    ReleaseSubresourceImageViews(&mSubresourceDepthOnlyImageViews, &garbage);
+    ReleaseSubresourceImageViews(&mSubresourceStencilOnlyImageViews, &garbage);
 
     // Release the storage views
     ReleaseImageViews(&mLevelStorageImageViews, &garbage);
-    for (ImageViewVector &layerViews : mLayerLevelStorageImageViews)
-    {
-        for (ImageView &imageView : layerViews)
-        {
-            if (imageView.valid())
-            {
-                garbage.emplace_back(GetGarbage(&imageView));
-            }
-        }
-    }
-    mLayerLevelStorageImageViews.clear();
+    ReleaseLayerLevelImageViews(&mLayerLevelStorageImageViews, &garbage);
 
     // Release fragment shading rate view
     if (mFragmentShadingRateImageView.valid())
@@ -11713,7 +11738,9 @@ bool ImageViewHelper::isImageViewGarbageEmpty() const
            mPerLevelRangeStencilReadImageViews.empty() &&
            mPerLevelRangeSamplerExternal2DY2YEXTImageViews.empty() &&
            mLayerLevelDrawImageViews.empty() && mLayerLevelDrawImageViewsLinear.empty() &&
-           mSubresourceDrawImageViews.empty() && mLayerLevelStorageImageViews.empty();
+           mSubresourceDrawImageViews.empty() && mLayerLevelDepthOnlyImageViews.empty() &&
+           mLayerLevelStencilOnlyImageViews.empty() && mSubresourceDepthOnlyImageViews.empty() &&
+           mSubresourceStencilOnlyImageViews.empty() && mLayerLevelStorageImageViews.empty();
 }
 
 void ImageViewHelper::destroy(VkDevice device)
@@ -11732,39 +11759,19 @@ void ImageViewHelper::destroy(VkDevice device)
     DestroyImageViews(&mPerLevelRangeSamplerExternal2DY2YEXTImageViews, device);
 
     // Release the draw views
-    for (ImageViewVector &layerViews : mLayerLevelDrawImageViews)
-    {
-        for (ImageView &imageView : layerViews)
-        {
-            imageView.destroy(device);
-        }
-    }
-    mLayerLevelDrawImageViews.clear();
-    for (ImageViewVector &layerViews : mLayerLevelDrawImageViewsLinear)
-    {
-        for (ImageView &imageView : layerViews)
-        {
-            imageView.destroy(device);
-        }
-    }
-    mLayerLevelDrawImageViewsLinear.clear();
-    for (auto &iter : mSubresourceDrawImageViews)
-    {
-        std::unique_ptr<ImageView> &imageView = iter.second;
-        imageView->destroy(device);
-    }
-    mSubresourceDrawImageViews.clear();
+    DestroyLayerLevelImageViews(&mLayerLevelDrawImageViews, device);
+    DestroyLayerLevelImageViews(&mLayerLevelDrawImageViewsLinear, device);
+    DestroySubresourceImageViews(&mSubresourceDrawImageViews, device);
+
+    // Release the depth-xor-stencil input views
+    DestroyLayerLevelImageViews(&mLayerLevelDepthOnlyImageViews, device);
+    DestroyLayerLevelImageViews(&mLayerLevelStencilOnlyImageViews, device);
+    DestroySubresourceImageViews(&mSubresourceDepthOnlyImageViews, device);
+    DestroySubresourceImageViews(&mSubresourceStencilOnlyImageViews, device);
 
     // Release the storage views
     DestroyImageViews(&mLevelStorageImageViews, device);
-    for (ImageViewVector &layerViews : mLayerLevelStorageImageViews)
-    {
-        for (ImageView &imageView : layerViews)
-        {
-            imageView.destroy(device);
-        }
-    }
-    mLayerLevelStorageImageViews.clear();
+    DestroyLayerLevelImageViews(&mLayerLevelStorageImageViews, device);
 
     // Destroy fragment shading rate view
     mFragmentShadingRateImageView.destroy(device);
@@ -12137,6 +12144,86 @@ angle::Result ImageViewHelper::getLevelLayerDrawImageView(Context *context,
     }
 
     return getLevelLayerDrawImageViewImpl(context, image, levelVk, layer, 1, imageView);
+}
+
+angle::Result ImageViewHelper::getLevelDepthOrStencilImageView(Context *context,
+                                                               const ImageHelper &image,
+                                                               LevelIndex levelVk,
+                                                               uint32_t layer,
+                                                               uint32_t layerCount,
+                                                               VkImageAspectFlagBits aspect,
+                                                               const ImageView **imageViewOut)
+{
+    ASSERT(image.valid());
+    ASSERT(mImageViewSerial.valid());
+    ASSERT((image.getAspectFlags() & aspect) != 0);
+
+    ImageSubresourceRange range = MakeImageSubresourceDrawRange(
+        image.toGLLevel(levelVk), layer, GetLayerMode(image, layerCount),
+        ImageViewColorspace::Linear, ImageViewColorspace::Linear);
+
+    SubresourceImageViewMap &imageViews = aspect == VK_IMAGE_ASPECT_DEPTH_BIT
+                                              ? mSubresourceDepthOnlyImageViews
+                                              : mSubresourceStencilOnlyImageViews;
+
+    std::unique_ptr<ImageView> &view = imageViews[range];
+    if (view)
+    {
+        *imageViewOut = view.get();
+        return angle::Result::Continue;
+    }
+
+    view          = std::make_unique<ImageView>();
+    *imageViewOut = view.get();
+
+    return getLevelLayerDepthOrStencilImageViewImpl(context, image, levelVk, layer, layerCount,
+                                                    aspect, view.get());
+}
+
+angle::Result ImageViewHelper::getLevelLayerDepthOrStencilImageView(Context *context,
+                                                                    const ImageHelper &image,
+                                                                    LevelIndex levelVk,
+                                                                    uint32_t layer,
+                                                                    VkImageAspectFlagBits aspect,
+                                                                    const ImageView **imageViewOut)
+{
+    ASSERT(image.valid());
+    ASSERT(mImageViewSerial.valid());
+    ASSERT((image.getAspectFlags() & aspect) != 0);
+
+    LayerLevelImageViewVector &imageViews = aspect == VK_IMAGE_ASPECT_DEPTH_BIT
+                                                ? mLayerLevelDepthOnlyImageViews
+                                                : mLayerLevelStencilOnlyImageViews;
+
+    // Lazily allocate the storage for image views
+    ImageView *imageView = GetLevelLayerImageView(
+        &imageViews, levelVk, layer, image.getLevelCount(), GetImageLayerCountForView(image));
+    *imageViewOut = imageView;
+
+    if (imageView->valid())
+    {
+        return angle::Result::Continue;
+    }
+
+    return getLevelLayerDepthOrStencilImageViewImpl(context, image, levelVk, layer, 1, aspect,
+                                                    imageView);
+}
+
+angle::Result ImageViewHelper::getLevelLayerDepthOrStencilImageViewImpl(
+    Context *context,
+    const ImageHelper &image,
+    LevelIndex levelVk,
+    uint32_t layer,
+    uint32_t layerCount,
+    VkImageAspectFlagBits aspect,
+    ImageView *imageViewOut)
+{
+    // Note that these views are specifically made to be used as input attachments, and
+    // therefore don't have swizzle.
+    return image.initReinterpretedLayerImageView(
+        context, Get2DTextureType(layerCount, image.getSamples()), aspect, gl::SwizzleState(),
+        imageViewOut, levelVk, 1, layer, layerCount, vk::ImageHelper::kDefaultImageViewUsageFlags,
+        image.getActualFormatID());
 }
 
 angle::Result ImageViewHelper::initFragmentShadingRateView(ContextVk *contextVk, ImageHelper *image)

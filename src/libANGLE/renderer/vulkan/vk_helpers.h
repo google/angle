@@ -3299,6 +3299,8 @@ using ImageViewVector = std::vector<ImageView>;
 // A vector of vector of image views.  Primary index is layer, secondary index is level.
 using LayerLevelImageViewVector = std::vector<ImageViewVector>;
 
+using SubresourceImageViewMap = angle::HashMap<ImageSubresourceRange, std::unique_ptr<ImageView>>;
+
 // Address mode for layers: only possible to access either all layers, or up to
 // IMPLEMENTATION_ANGLE_MULTIVIEW_MAX_VIEWS layers.  This enum uses 0 for all layers and the rest of
 // the values conveniently alias the number of layers.
@@ -3454,6 +3456,23 @@ class ImageViewHelper final : angle::NonCopyable
                                              uint32_t layer,
                                              const ImageView **imageViewOut);
 
+    // Creates a depth-xor-stencil view with a range of layers of the level.
+    angle::Result getLevelDepthOrStencilImageView(Context *context,
+                                                  const ImageHelper &image,
+                                                  LevelIndex levelVk,
+                                                  uint32_t layer,
+                                                  uint32_t layerCount,
+                                                  VkImageAspectFlagBits aspect,
+                                                  const ImageView **imageViewOut);
+
+    // Creates a  depth-xor-stencil view with a single layer of the level.
+    angle::Result getLevelLayerDepthOrStencilImageView(Context *context,
+                                                       const ImageHelper &image,
+                                                       LevelIndex levelVk,
+                                                       uint32_t layer,
+                                                       VkImageAspectFlagBits aspect,
+                                                       const ImageView **imageViewOut);
+
     // Creates a fragment shading rate view.
     angle::Result initFragmentShadingRateView(ContextVk *contextVk, ImageHelper *image);
 
@@ -3584,6 +3603,13 @@ class ImageViewHelper final : angle::NonCopyable
                                                  uint32_t layer,
                                                  uint32_t layerCount,
                                                  ImageView *imageViewOut);
+    angle::Result getLevelLayerDepthOrStencilImageViewImpl(Context *context,
+                                                           const ImageHelper &image,
+                                                           LevelIndex levelVk,
+                                                           uint32_t layer,
+                                                           uint32_t layerCount,
+                                                           VkImageAspectFlagBits aspect,
+                                                           ImageView *imageViewOut);
 
     // Creates views with multiple layers and levels.
     angle::Result initReadViewsImpl(ContextVk *contextVk,
@@ -3634,7 +3660,13 @@ class ImageViewHelper final : angle::NonCopyable
     // Draw views
     LayerLevelImageViewVector mLayerLevelDrawImageViews;
     LayerLevelImageViewVector mLayerLevelDrawImageViewsLinear;
-    angle::HashMap<ImageSubresourceRange, std::unique_ptr<ImageView>> mSubresourceDrawImageViews;
+    SubresourceImageViewMap mSubresourceDrawImageViews;
+
+    // Depth- or stencil-only input attachment views
+    LayerLevelImageViewVector mLayerLevelDepthOnlyImageViews;
+    LayerLevelImageViewVector mLayerLevelStencilOnlyImageViews;
+    SubresourceImageViewMap mSubresourceDepthOnlyImageViews;
+    SubresourceImageViewMap mSubresourceStencilOnlyImageViews;
 
     // Storage views
     ImageViewVector mLevelStorageImageViews;

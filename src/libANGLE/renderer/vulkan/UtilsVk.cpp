@@ -4239,9 +4239,6 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
     gl::DrawBuffersArray<vk::ImageHelper *> colorSrc         = {};
     gl::DrawBuffersArray<const vk::ImageView *> colorSrcView = {};
 
-    vk::DeviceScoped<vk::ImageView> depthView(contextVk->getDevice());
-    vk::DeviceScoped<vk::ImageView> stencilView(contextVk->getDevice());
-
     const vk::ImageView *depthSrcView   = nullptr;
     const vk::ImageView *stencilSrcView = nullptr;
 
@@ -4270,31 +4267,16 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
         ASSERT(depthStencilRenderTarget->hasResolveAttachment());
         ASSERT(depthStencilRenderTarget->isImageTransient());
 
-        vk::ImageHelper *depthStencilSrc =
-            &depthStencilRenderTarget->getResolveImageForRenderPass();
-
-        // The resolved depth/stencil image is necessarily single-sampled.
-        ASSERT(depthStencilSrc->getSamples() == 1);
-        gl::TextureType textureType = vk::Get2DTextureType(depthStencilSrc->getLayerCount(), 1);
-
-        const vk::LevelIndex levelIndex =
-            depthStencilSrc->toVkLevel(depthStencilRenderTarget->getLevelIndex());
-        const uint32_t layerIndex = depthStencilRenderTarget->getLayerIndex();
-
         if (params.unresolveDepth)
         {
-            ANGLE_TRY(depthStencilSrc->initLayerImageView(
-                contextVk, textureType, VK_IMAGE_ASPECT_DEPTH_BIT, gl::SwizzleState(),
-                &depthView.get(), levelIndex, 1, layerIndex, 1));
-            depthSrcView = &depthView.get();
+            ANGLE_TRY(depthStencilRenderTarget->getResolveDepthOrStencilImageView(
+                contextVk, VK_IMAGE_ASPECT_DEPTH_BIT, &depthSrcView));
         }
 
         if (params.unresolveStencil)
         {
-            ANGLE_TRY(depthStencilSrc->initLayerImageView(
-                contextVk, textureType, VK_IMAGE_ASPECT_STENCIL_BIT, gl::SwizzleState(),
-                &stencilView.get(), levelIndex, 1, layerIndex, 1));
-            stencilSrcView = &stencilView.get();
+            ANGLE_TRY(depthStencilRenderTarget->getResolveDepthOrStencilImageView(
+                contextVk, VK_IMAGE_ASPECT_STENCIL_BIT, &stencilSrcView));
         }
     }
 
@@ -4502,13 +4484,6 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
             commandBuffer->draw(3, 0);
         }
     }
-
-    // Release temporary views
-    vk::ImageView depthViewObject   = depthView.release();
-    vk::ImageView stencilViewObject = stencilView.release();
-
-    contextVk->addGarbage(&depthViewObject);
-    contextVk->addGarbage(&stencilViewObject);
 
     return angle::Result::Continue;
 }

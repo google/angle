@@ -1591,28 +1591,20 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
                 AdjustBlitResolveParametersForPreRotation(rotation, srcFramebufferRotation,
                                                           &params);
 
-                // Create depth- and stencil-only views for reading.
-                vk::DeviceScoped<vk::ImageView> depthView(contextVk->getDevice());
-                vk::DeviceScoped<vk::ImageView> stencilView(contextVk->getDevice());
-
-                vk::LevelIndex levelIndex =
-                    depthStencilImage->toVkLevel(readRenderTarget->getLevelIndex());
-                uint32_t layerIndex         = readRenderTarget->getLayerIndex();
-                gl::TextureType textureType = vk::Get2DTextureType(
-                    depthStencilImage->getLayerCount(), depthStencilImage->getSamples());
+                // Get depth- and stencil-only views for reading.
+                const vk::ImageView *depthView   = nullptr;
+                const vk::ImageView *stencilView = nullptr;
 
                 if (blitDepthBuffer)
                 {
-                    ANGLE_TRY(depthStencilImage->initLayerImageView(
-                        contextVk, textureType, VK_IMAGE_ASPECT_DEPTH_BIT, gl::SwizzleState(),
-                        &depthView.get(), levelIndex, 1, layerIndex, 1));
+                    ANGLE_TRY(readRenderTarget->getDepthOrStencilImageViewForCopy(
+                        contextVk, VK_IMAGE_ASPECT_DEPTH_BIT, &depthView));
                 }
 
                 if (blitStencilBuffer)
                 {
-                    ANGLE_TRY(depthStencilImage->initLayerImageView(
-                        contextVk, textureType, VK_IMAGE_ASPECT_STENCIL_BIT, gl::SwizzleState(),
-                        &stencilView.get(), levelIndex, 1, layerIndex, 1));
+                    ANGLE_TRY(readRenderTarget->getDepthOrStencilImageViewForCopy(
+                        contextVk, VK_IMAGE_ASPECT_STENCIL_BIT, &stencilView));
                 }
 
                 // If shader stencil export is not possible, defer stencil blit/resolve to another
@@ -1623,12 +1615,9 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
                 // Blit depth. If shader stencil export is present, blit stencil as well.
                 if (blitDepthBuffer || (blitStencilBuffer && hasShaderStencilExport))
                 {
-                    const vk::ImageView *depth = blitDepthBuffer ? &depthView.get() : nullptr;
-                    const vk::ImageView *stencil =
-                        blitStencilBuffer && hasShaderStencilExport ? &stencilView.get() : nullptr;
-
-                    ANGLE_TRY(utilsVk.depthStencilBlitResolve(contextVk, this, depthStencilImage,
-                                                              depth, stencil, params));
+                    ANGLE_TRY(utilsVk.depthStencilBlitResolve(
+                        contextVk, this, depthStencilImage, depthView,
+                        hasShaderStencilExport ? stencilView : nullptr, params));
                 }
 
                 // If shader stencil export is not present, blit stencil through a different path.
@@ -1639,14 +1628,8 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
                         "Inefficient BlitFramebuffer operation on the stencil aspect "
                         "due to lack of shader stencil export support");
                     ANGLE_TRY(utilsVk.stencilBlitResolveNoShaderExport(
-                        contextVk, this, depthStencilImage, &stencilView.get(), params));
+                        contextVk, this, depthStencilImage, stencilView, params));
                 }
-
-                vk::ImageView depthViewObject   = depthView.release();
-                vk::ImageView stencilViewObject = stencilView.release();
-
-                contextVk->addGarbage(&depthViewObject);
-                contextVk->addGarbage(&stencilViewObject);
             }
         }
     }
