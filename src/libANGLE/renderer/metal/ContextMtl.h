@@ -533,6 +533,8 @@ class ContextMtl : public ContextImpl, public mtl::Context
 
     angle::Result startOcclusionQueryInRenderPass(QueryMtl *query, bool clearOldValue);
 
+    angle::Result checkCommandBufferError();
+
     // Dirty bits.
     enum DirtyBitType : size_t
     {

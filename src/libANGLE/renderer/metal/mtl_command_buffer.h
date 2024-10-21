@@ -55,6 +55,19 @@ class AtomicSerial : angle::NonCopyable
     std::atomic<uint64_t> mValue{0};
 };
 
+class AtomicCommandBufferError : angle::NonCopyable
+{
+  public:
+    void store(MTLCommandBufferError value) { mValue.store(value, std::memory_order_release); }
+    MTLCommandBufferError pop()
+    {
+        return mValue.exchange(MTLCommandBufferErrorNone, std::memory_order_acq_rel);
+    }
+
+  private:
+    std::atomic<MTLCommandBufferError> mValue{MTLCommandBufferErrorNone};
+};
+
 class CommandQueue final : public WrappedObject<id<MTLCommandQueue>>, angle::NonCopyable
 {
   public:
@@ -103,6 +116,7 @@ class CommandQueue final : public WrappedObject<id<MTLCommandQueue>>, angle::Non
     void setActiveTimeElapsedEntry(uint64_t id);
     bool isTimeElapsedEntryComplete(uint64_t id);
     double getTimeElapsedEntryInSeconds(uint64_t id);
+    MTLCommandBufferError popCmdBufferError() { return mCmdBufferError.pop(); }
 
   private:
     void onCommandBufferCompleted(id<MTLCommandBuffer> buf,
@@ -141,6 +155,8 @@ class CommandQueue final : public WrappedObject<id<MTLCommandQueue>>, angle::Non
 
     mutable std::mutex mLock;
     mutable std::condition_variable mCompletedBufferSerialCv;
+
+    AtomicCommandBufferError mCmdBufferError;
 
     void addCommandBufferToTimeElapsedEntry(std::lock_guard<std::mutex> &lg, uint64_t id);
     void recordCommandBufferTimeElapsed(std::lock_guard<std::mutex> &lg,
