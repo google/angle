@@ -154,6 +154,9 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 352085732 WIN INTEL VULKAN : OcclusionQueriesTest.MultiQueries/* = SKIP
 373818282 WIN INTEL OPENGL : ClearTest.ChangeFramebufferAttachmentFromRGBAtoRGB/* = SKIP
 
+// Intel/windows does not ignore gl_Layer for non-layered framebuffers
+374790899 WIN INTEL OPENGL : GeometryShaderTest.GLLayerIneffectiveWithoutLayeredFramebuffer/* = SKIP
+
 // Linux
 42264596 LINUX INTEL VULKAN : SimpleStateChangeTestES31.DrawThenUpdateUBOThenDrawThenDrawIndexed/* = SKIP
 // Crashes when compiling the shader
@@ -180,6 +183,8 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 362545033 LINUX NVIDIA VULKAN : VulkanPerformanceCounterTest_SingleBuffer.SwapBuffersAfterFlushIgnored/* = SKIP
 362545033 LINUX NVIDIA OPENGL : PointSpriteTest.TrianglesNotTreatedAsPointSprites/* = SKIP
 362545033 LINUX NVIDIA OPENGL : TextureCubeTestES3.SpecifyAndSampleFromBaseLevel1/* = SKIP
+// Intel/mesa does not ignore gl_Layer for non-layered framebuffers
+374790899 LINUX INTEL OPENGL : GeometryShaderTest.GLLayerIneffectiveWithoutLayeredFramebuffer/* = SKIP
 
 // Nvidia
 42264645 NVIDIA OPENGL : GLSLTestLoops.DoWhileContinue/* = SKIP
@@ -207,6 +212,9 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 42262474 NVIDIA OPENGL : GLSLTest_ES31.TernaryOnMatricesInDifferentBlockStorages/* = SKIP
 42262474 NVIDIA GLES : GLSLTest_ES31.TernaryOnStructsInDifferentBlockStorages/* = SKIP
 42262474 NVIDIA GLES : GLSLTest_ES31.TernaryOnMatricesInDifferentBlockStorages/* = SKIP
+// Nvidia does not ignore gl_Layer for non-layered framebuffers
+374790899 NVIDIA OPENGL : GeometryShaderTest.GLLayerIneffectiveWithoutLayeredFramebuffer/* = SKIP
+374790899 NVIDIA GLES : GeometryShaderTest.GLLayerIneffectiveWithoutLayeredFramebuffer/* = SKIP
 
 // Nvidia Vulkan
 42265709 NVIDIA VULKAN : GLSLTest_ES31.TessellationControlShaderMatrixCopyBug/* = SKIP
@@ -557,6 +565,9 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 42267082 PIXEL4ORXL GLES : EXTBlendFuncExtendedTestES3.FragmentOutputLocationsPartiallyAutomatic/* = SKIP
 
 372269602 PIXEL4ORXL GLES : FramebufferFetchES31.MultiSampled/* = SKIP
+
+// Qualcomm on Pixel4 does not ignore gl_Layer for non-layered framebuffers
+374790899 PIXEL4ORXL GLES : GeometryShaderTest.GLLayerIneffectiveWithoutLayeredFramebuffer/* = SKIP
 
 42262087 PIXEL4ORXL VULKAN : ClearTestES3.MaskedClearBufferBug/* = SKIP
 42262087 PIXEL4ORXL VULKAN : DrawBuffersWebGL2Test.TwoProgramsWithDifferentOutputsAndClear/* = SKIP

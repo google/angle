@@ -7074,6 +7074,7 @@ angle::Result ContextVk::handleDirtyGraphicsDriverUniforms(DirtyBits::Iterator *
     const float depthRangeNear = mState.getNearPlane();
     const float depthRangeFar  = mState.getFarPlane();
     const uint32_t numSamples  = drawFramebufferVk->getSamples();
+    const uint32_t isLayered   = drawFramebufferVk->getLayerCount() > 1;
 
     uint32_t advancedBlendEquation = 0;
     if (getFeatures().emulateAdvancedBlendEquations.enabled && mState.isBlendEnabled())
@@ -7107,7 +7108,8 @@ angle::Result ContextVk::handleDirtyGraphicsDriverUniforms(DirtyBits::Iterator *
         swapXY | advancedBlendEquation << sh::vk::kDriverUniformsMiscAdvancedBlendEquationOffset |
         numSamples << sh::vk::kDriverUniformsMiscSampleCountOffset |
         enabledClipDistances << sh::vk::kDriverUniformsMiscEnabledClipPlanesOffset |
-        transformDepth << sh::vk::kDriverUniformsMiscTransformDepthOffset;
+        transformDepth << sh::vk::kDriverUniformsMiscTransformDepthOffset |
+        isLayered << sh::vk::kDriverUniformsMiscLayeredFramebufferOffset;
 
     // Copy and flush to the device.
     *driverUniforms = {

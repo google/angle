@@ -29,6 +29,7 @@
 #include "compiler/translator/tree_ops/RewriteDfdy.h"
 #include "compiler/translator/tree_ops/RewriteStructSamplers.h"
 #include "compiler/translator/tree_ops/SeparateStructFromUniformDeclarations.h"
+#include "compiler/translator/tree_ops/spirv/ClampGLLayer.h"
 #include "compiler/translator/tree_ops/spirv/EmulateAdvancedBlendEquations.h"
 #include "compiler/translator/tree_ops/spirv/EmulateDithering.h"
 #include "compiler/translator/tree_ops/spirv/EmulateFragColorData.h"
@@ -1203,6 +1204,10 @@ bool TranslatorSPIRV::translateImpl(TIntermBlock *root,
         }
 
         case gl::ShaderType::Geometry:
+            if (!ClampGLLayer(this, root, &getSymbolTable(), driverUniforms))
+            {
+                return false;
+            }
             break;
 
         case gl::ShaderType::TessControl:

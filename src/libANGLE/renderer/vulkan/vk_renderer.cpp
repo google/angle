@@ -189,6 +189,10 @@ constexpr const char *kSkippedMessages[] = {
     // http://anglebug.com/42266825
     "Undefined-Value-ShaderOutputNotConsumed",
     "Undefined-Value-ShaderInputNotProduced",
+    // ANGLE sets gl_Layer when the framebuffer is not layered, but VVL does not see that.  When
+    // layered, if gl_Layer is out of bounds, the results are undefined in both GL and Vulkan.
+    // http://anglebug.com/372390039
+    "Undefined-Layer-Written",
     // http://anglebug.com/42263850
     "VUID-vkCmdDraw-magFilter-04553",
     "VUID-vkCmdDrawIndexed-magFilter-04553",

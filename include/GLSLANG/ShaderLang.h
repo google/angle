@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 367
+#define ANGLE_SH_VERSION 368
 
 enum ShShaderSpec
 {
@@ -1130,7 +1130,8 @@ enum ReservedIds
 // - 8 bits for enabled clip planes
 // - 1 bit for whether depth should be transformed to Vulkan clip space
 // - 1 bit for whether alpha to coverage is enabled
-// - 10 bits unused
+// - 1 bit for whether the framebuffer is layered
+// - 9 bits unused
 constexpr uint32_t kDriverUniformsMiscSwapXYMask                  = 0x1;
 constexpr uint32_t kDriverUniformsMiscAdvancedBlendEquationOffset = 1;
 constexpr uint32_t kDriverUniformsMiscAdvancedBlendEquationMask   = 0x1F;
@@ -1142,6 +1143,8 @@ constexpr uint32_t kDriverUniformsMiscTransformDepthOffset        = 20;
 constexpr uint32_t kDriverUniformsMiscTransformDepthMask          = 0x1;
 constexpr uint32_t kDriverUniformsMiscAlphaToCoverageOffset       = 21;
 constexpr uint32_t kDriverUniformsMiscAlphaToCoverageMask         = 0x1;
+constexpr uint32_t kDriverUniformsMiscLayeredFramebufferOffset    = 22;
+constexpr uint32_t kDriverUniformsMiscLayeredFramebufferMask      = 0x1;
 }  // namespace vk
 
 namespace mtl

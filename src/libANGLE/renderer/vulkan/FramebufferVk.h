@@ -105,6 +105,7 @@ class FramebufferVk : public FramebufferImpl
     // Returns render area with deferred clears in consideration. When deferred clear is used
     // in the render pass, the render area must cover the whole framebuffer.
     gl::Rectangle getRenderArea(ContextVk *contextVk) const;
+    uint32_t getLayerCount() const { return mCurrentFramebufferDesc.getLayerCount(); }
 
     const gl::DrawBufferMask &getEmulatedAlphaAttachmentMask() const;
     RenderTargetVk *getColorDrawRenderTarget(size_t colorIndexGL) const;
