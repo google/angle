@@ -4497,6 +4497,30 @@ TEST_P(GLSLTest_ES31, FindMSBAndFindLSBCornerCases)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that reading from a swizzled vector that is dynamically indexed succeeds.
+TEST_P(GLSLTest_ES3, ReadFromDynamicIndexingOfSwizzledVector)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+
+uniform int index;
+uniform vec4 data;
+
+out vec4 color;
+void main() {
+    color = vec4(vec4(data.x, data.y, data.z, data.w).zyxw[index], 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+
+    GLint dataLoc = glGetUniformLocation(program, "data");
+    glUniform4f(dataLoc, 0.2, 0.4, 0.6, 0.8);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+
+    EXPECT_PIXEL_NEAR(0, 0, 153, 0, 0, 255, 1);
+}
+
 // Test that writing into a swizzled vector that is dynamically indexed succeeds.
 TEST_P(GLSLTest_ES3, WriteIntoDynamicIndexingOfSwizzledVector)
 {
