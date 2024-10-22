@@ -29,6 +29,8 @@
 42266349 VULKAN : MultithreadingTestES3.UnsynchronizedTextureReads2/* = SKIP
 // Incorrectly handled pretty much in all backends
 42266871 : CopyTexImageTestES3.RedefineSameLevel/* = SKIP
+// Fails in Android with EGL_BAD_ALLOC
+374797737 : EGLSurfaceTest.CreateMultiWindowsSurfaceNoDestroy/* = SKIP
 // Currently fails on WebGPU as it's not fully implemented yet.
 
 // Fails AST validation
