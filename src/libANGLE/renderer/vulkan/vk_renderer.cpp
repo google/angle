@@ -2733,18 +2733,26 @@ void Renderer::appendDeviceExtensionFeaturesPromotedTo11(
     vk::AddToPNextChain(deviceProperties, &mSubgroupProperties);
     vk::AddToPNextChain(deviceFeatures, &mProtectedMemoryFeatures);
 
-    // VK_KHR_sampler_ycbcr_conversion
-    vk::AddToPNextChain(deviceFeatures, &mSamplerYcbcrConversionFeatures);
+    if (ExtensionFound(VK_KHR_SAMPLER_YCBCR_CONVERSION_EXTENSION_NAME, deviceExtensionNames))
+    {
+        vk::AddToPNextChain(deviceFeatures, &mSamplerYcbcrConversionFeatures);
+    }
 
-    // VK_KHR_multiview
-    vk::AddToPNextChain(deviceFeatures, &mMultiviewFeatures);
-    vk::AddToPNextChain(deviceProperties, &mMultiviewProperties);
+    if (ExtensionFound(VK_KHR_MULTIVIEW_EXTENSION_NAME, deviceExtensionNames))
+    {
+        vk::AddToPNextChain(deviceFeatures, &mMultiviewFeatures);
+        vk::AddToPNextChain(deviceProperties, &mMultiviewProperties);
+    }
 
-    // VK_KHR_16bit_storage
-    vk::AddToPNextChain(deviceFeatures, &m16BitStorageFeatures);
+    if (ExtensionFound(VK_KHR_16BIT_STORAGE_EXTENSION_NAME, deviceExtensionNames))
+    {
+        vk::AddToPNextChain(deviceFeatures, &m16BitStorageFeatures);
+    }
 
-    // VK_KHR_variable_pointers
-    vk::AddToPNextChain(deviceFeatures, &mVariablePointersFeatures);
+    if (ExtensionFound(VK_KHR_VARIABLE_POINTERS_EXTENSION_NAME, deviceExtensionNames))
+    {
+        vk::AddToPNextChain(deviceFeatures, &mVariablePointersFeatures);
+    }
 }
 
 // The following features and properties used by ANGLE have been promoted to Vulkan 1.2:
