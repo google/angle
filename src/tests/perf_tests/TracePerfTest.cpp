@@ -2024,8 +2024,9 @@ void TracePerfTest::initializeBenchmark()
 
             // Hard-code RGBA8/D24S8. This should be specified in the trace info.
             glBindTexture(GL_TEXTURE_2D, mOffscreenTextures[i]);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWindowWidth, mWindowHeight, 0, GL_RGBA,
-                         GL_UNSIGNED_BYTE, nullptr);
+            glTexImage2D(GL_TEXTURE_2D, 0,
+                         mParams->colorSpace == EGL_GL_COLORSPACE_SRGB ? GL_SRGB8_ALPHA8 : GL_RGBA,
+                         mWindowWidth, mWindowHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
             framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
                                  mOffscreenTextures[i], 0);
