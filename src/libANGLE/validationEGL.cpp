@@ -390,6 +390,72 @@ bool ValidateConfigAttributeValue(const ValidationContext *val,
             }
             break;
 
+        case EGL_CONFIG_CAVEAT:
+            switch (value)
+            {
+                case EGL_DONT_CARE:
+                case EGL_NONE:
+                case EGL_SLOW_CONFIG:
+                case EGL_NON_CONFORMANT_CONFIG:
+                    break;
+                default:
+                    val->setError(EGL_BAD_ATTRIBUTE, "EGL_CONFIG_CAVEAT invalid attribute: 0x%X",
+                                  static_cast<uint32_t>(value));
+                    return false;
+            }
+            break;
+
+        case EGL_SURFACE_TYPE:
+        {
+            if (value == EGL_DONT_CARE)
+            {
+                break;
+            }
+
+            EGLint kValidSurfaceTypeFlags =
+                (EGL_WINDOW_BIT | EGL_PIXMAP_BIT | EGL_PBUFFER_BIT |
+                 EGL_MULTISAMPLE_RESOLVE_BOX_BIT | EGL_SWAP_BEHAVIOR_PRESERVED_BIT |
+                 EGL_VG_COLORSPACE_LINEAR_BIT | EGL_VG_ALPHA_FORMAT_PRE_BIT);
+
+            if (display->getExtensions().mutableRenderBufferKHR)
+            {
+                kValidSurfaceTypeFlags |= EGL_MUTABLE_RENDER_BUFFER_BIT_KHR;
+            }
+            if (display->getExtensions().lockSurface3KHR)
+            {
+                kValidSurfaceTypeFlags |= EGL_LOCK_SURFACE_BIT_KHR;
+            }
+
+            if ((value & ~kValidSurfaceTypeFlags) != 0)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE, "EGL_SURFACE_TYPE invalid attribute: 0x%X",
+                              static_cast<uint32_t>(value));
+                return false;
+            }
+            break;
+        }
+
+        case EGL_CONFORMANT:
+        case EGL_RENDERABLE_TYPE:
+        {
+            if (value == EGL_DONT_CARE)
+            {
+                break;
+            }
+            constexpr EGLint kValidAPITypeFlags =
+                (EGL_OPENGL_BIT | EGL_OPENGL_ES_BIT | EGL_OPENGL_ES2_BIT | EGL_OPENVG_BIT |
+                 EGL_OPENGL_ES3_BIT_KHR);
+            if ((value & ~kValidAPITypeFlags) != 0)
+            {
+                val->setError(
+                    EGL_BAD_ATTRIBUTE, "%s invalid attribute: 0x%X",
+                    attribute == EGL_CONFORMANT ? "EGL_CONFORMANT" : "EGL_RENDERABLE_TYPE",
+                    static_cast<uint32_t>(value));
+                return false;
+            }
+            break;
+        }
+
         default:
             break;
     }
@@ -1312,6 +1378,27 @@ bool ValidateSurfaceBadAccess(const ValidationContext *val,
     return true;
 }
 
+bool ValidateSyncAttribute(const ValidationContext *val,
+                           const Display *display,
+                           EGLAttrib attribute)
+{
+    switch (attribute)
+    {
+        case EGL_SYNC_CONDITION:
+        case EGL_SYNC_NATIVE_FENCE_FD_ANDROID:
+        case EGL_SYNC_METAL_SHARED_EVENT_OBJECT_ANGLE:
+        case EGL_SYNC_METAL_SHARED_EVENT_SIGNAL_VALUE_LO_ANGLE:
+        case EGL_SYNC_METAL_SHARED_EVENT_SIGNAL_VALUE_HI_ANGLE:
+            break;
+
+        default:
+            val->setError(EGL_BAD_ATTRIBUTE, "Unknown attribute: 0x%04" PRIxPTR "X", attribute);
+            return false;
+    }
+
+    return true;
+}
+
 bool ValidateCreateSyncBase(const ValidationContext *val,
                             const Display *display,
                             EGLenum type,
@@ -1319,8 +1406,7 @@ bool ValidateCreateSyncBase(const ValidationContext *val,
                             bool isExt)
 {
     ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
-
-    attribs.initializeWithoutValidation();
+    ANGLE_VALIDATION_TRY(attribs.validate(val, display, ValidateSyncAttribute));
 
     gl::Context *currentContext  = val->eglThread->getContext();
     egl::Display *currentDisplay = currentContext ? currentContext->getDisplay() : nullptr;
@@ -2124,6 +2210,16 @@ bool ValidateCreatePbufferSurfaceAttributeValue(const ValidationContext *val,
             break;
 
         case EGL_LARGEST_PBUFFER:
+        case EGL_MIPMAP_TEXTURE:
+            switch (value)
+            {
+                case EGL_TRUE:
+                case EGL_FALSE:
+                    break;
+                default:
+                    val->setError(EGL_BAD_ATTRIBUTE);
+                    return false;
+            }
             break;
 
         case EGL_TEXTURE_FORMAT:
@@ -2149,9 +2245,6 @@ bool ValidateCreatePbufferSurfaceAttributeValue(const ValidationContext *val,
                     val->setError(EGL_BAD_ATTRIBUTE);
                     return false;
             }
-            break;
-
-        case EGL_MIPMAP_TEXTURE:
             break;
 
         case EGL_VG_COLORSPACE:
@@ -2862,6 +2955,16 @@ bool ValidateCreatePbufferSurface(const ValidationContext *val,
 
     EGLint width  = static_cast<EGLint>(attributes.get(EGL_WIDTH, 0));
     EGLint height = static_cast<EGLint>(attributes.get(EGL_HEIGHT, 0));
+
+    EGLBoolean isLargestPbuffer =
+        static_cast<EGLBoolean>(attributes.get(EGL_LARGEST_PBUFFER, EGL_FALSE));
+
+    if (!isLargestPbuffer && (width > config->maxPBufferWidth || height > config->maxPBufferHeight))
+    {
+        val->setError(EGL_BAD_ATTRIBUTE);
+        return false;
+    }
+
     if (textureFormat != EGL_NO_TEXTURE && !caps.textureNPOT &&
         (!gl::isPow2(width) || !gl::isPow2(height)))
     {
