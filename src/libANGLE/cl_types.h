@@ -113,7 +113,7 @@ struct ImageDescriptor
         {
             height = 1;
         }
-        if (type == MemObjectType::Image3D)
+        if (type == MemObjectType::Image2D)
         {
             depth = 1;
         }
