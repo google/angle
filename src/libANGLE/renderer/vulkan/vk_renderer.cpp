@@ -2736,27 +2736,11 @@ void Renderer::appendDeviceExtensionFeaturesPromotedTo11(
 {
     vk::AddToPNextChain(deviceProperties, &mSubgroupProperties);
     vk::AddToPNextChain(deviceFeatures, &mProtectedMemoryFeatures);
-
-    if (ExtensionFound(VK_KHR_SAMPLER_YCBCR_CONVERSION_EXTENSION_NAME, deviceExtensionNames))
-    {
-        vk::AddToPNextChain(deviceFeatures, &mSamplerYcbcrConversionFeatures);
-    }
-
-    if (ExtensionFound(VK_KHR_MULTIVIEW_EXTENSION_NAME, deviceExtensionNames))
-    {
-        vk::AddToPNextChain(deviceFeatures, &mMultiviewFeatures);
-        vk::AddToPNextChain(deviceProperties, &mMultiviewProperties);
-    }
-
-    if (ExtensionFound(VK_KHR_16BIT_STORAGE_EXTENSION_NAME, deviceExtensionNames))
-    {
-        vk::AddToPNextChain(deviceFeatures, &m16BitStorageFeatures);
-    }
-
-    if (ExtensionFound(VK_KHR_VARIABLE_POINTERS_EXTENSION_NAME, deviceExtensionNames))
-    {
-        vk::AddToPNextChain(deviceFeatures, &mVariablePointersFeatures);
-    }
+    vk::AddToPNextChain(deviceFeatures, &mSamplerYcbcrConversionFeatures);
+    vk::AddToPNextChain(deviceFeatures, &mMultiviewFeatures);
+    vk::AddToPNextChain(deviceProperties, &mMultiviewProperties);
+    vk::AddToPNextChain(deviceFeatures, &m16BitStorageFeatures);
+    vk::AddToPNextChain(deviceFeatures, &mVariablePointersFeatures);
 }
 
 // The following features and properties used by ANGLE have been promoted to Vulkan 1.2:
@@ -3551,15 +3535,10 @@ void Renderer::enableDeviceExtensionsPromotedTo11(const vk::ExtensionNameList &d
         mFeatures.supports16BitUniformAndStorageBuffer.enabled ||
         mFeatures.supports16BitPushConstant.enabled || mFeatures.supports16BitInputOutput.enabled)
     {
-        mEnabledDeviceExtensions.push_back(VK_KHR_16BIT_STORAGE_EXTENSION_NAME);
         vk::AddToPNextChain(&mEnabledFeatures, &m16BitStorageFeatures);
     }
 
-    if (ExtensionFound(VK_KHR_VARIABLE_POINTERS_EXTENSION_NAME, deviceExtensionNames))
-    {
-        mEnabledDeviceExtensions.push_back(VK_KHR_VARIABLE_POINTERS_EXTENSION_NAME);
-        vk::AddToPNextChain(&mEnabledFeatures, &mVariablePointersFeatures);
-    }
+    vk::AddToPNextChain(&mEnabledFeatures, &mVariablePointersFeatures);
 }
 
 // See comment above appendDeviceExtensionFeaturesPromotedTo12.  Additional extensions are enabled
