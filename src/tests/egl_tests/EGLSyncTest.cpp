@@ -720,4 +720,24 @@ TEST_P(EGLSyncTest, DISABLED_LeakSyncToDisplayDestruction)
     EXPECT_NE(sync, EGL_NO_SYNC_KHR);
 }
 
+// Test the validation errors for bad parameters for eglCreateSyncKHR
+TEST_P(EGLSyncTest, NegativeValidationBadAttributes)
+{
+    EGLDisplay display = getEGLWindow()->getDisplay();
+    EGLSyncKHR sync;
+    const EGLint invalidCreateSyncAttributeList[][3] = {
+        {EGL_SYNC_CONDITION_KHR, EGL_NONE, 0},
+        {EGL_SYNC_CONDITION_KHR, EGL_RENDERABLE_TYPE, EGL_NONE},
+        {EGL_SYNC_CONDITION_KHR, EGL_SYNC_PRIOR_COMMANDS_COMPLETE_KHR, EGL_RENDERABLE_TYPE},
+    };
+
+    for (size_t i = 0; i < 3; i++)
+    {
+        sync = eglCreateSyncKHR(display, EGL_SYNC_FENCE_KHR, &invalidCreateSyncAttributeList[i][0]);
+
+        ASSERT_EQ(sync, EGL_NO_SYNC_KHR);
+        ASSERT_EGL_ERROR(EGL_BAD_ATTRIBUTE);
+    }
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(EGLSyncTest);
