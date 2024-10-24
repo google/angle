@@ -1484,19 +1484,26 @@ angle::Result ContextVk::initialize(const angle::ImageLoadContext &imageLoadCont
     return angle::Result::Continue;
 }
 
-angle::Result ContextVk::flush(const gl::Context *context)
+bool ContextVk::isSingleBufferedWindowCurrent() const
 {
-    // Skip the flush if there's nothing recorded.
-    //
+    return (mCurrentWindowSurface != nullptr && mCurrentWindowSurface->isSharedPresentMode());
+}
+
+bool ContextVk::hasSomethingToFlush() const
+{
     // Don't skip flushes for single-buffered windows with staged updates. It is expected that a
     // flush call on a single-buffered window ensures any pending updates reach the screen.
-    const bool isSingleBufferedWindow =
-        mCurrentWindowSurface != nullptr && mCurrentWindowSurface->isSharedPresentMode();
     const bool isSingleBufferedWindowWithStagedUpdates =
-        isSingleBufferedWindow && mCurrentWindowSurface->hasStagedUpdates();
+        isSingleBufferedWindowCurrent() && mCurrentWindowSurface->hasStagedUpdates();
 
-    if (!mHasAnyCommandsPendingSubmission && !hasActiveRenderPass() &&
-        mOutsideRenderPassCommands->empty() && !isSingleBufferedWindowWithStagedUpdates)
+    return (mHasAnyCommandsPendingSubmission || hasActiveRenderPass() ||
+            !mOutsideRenderPassCommands->empty() || isSingleBufferedWindowWithStagedUpdates);
+}
+
+angle::Result ContextVk::flush(const gl::Context *context)
+{
+    // Skip if there's nothing to flush.
+    if (!hasSomethingToFlush())
     {
         return angle::Result::Continue;
     }
@@ -1508,6 +1515,7 @@ angle::Result ContextVk::flush(const gl::Context *context)
     //    usage flags are expected to behave similar to a single-buffered window
     FramebufferVk *drawFramebufferVk = getDrawFramebuffer();
     ASSERT(drawFramebufferVk == vk::GetImpl(mState.getDrawFramebuffer()));
+    const bool isSingleBufferedWindow = isSingleBufferedWindowCurrent();
     const bool frontBufferRenderingEnabled =
         isSingleBufferedWindow || drawFramebufferVk->hasFrontBufferUsage();
 
@@ -1529,14 +1537,14 @@ angle::Result ContextVk::flush(const gl::Context *context)
 angle::Result ContextVk::finish(const gl::Context *context)
 {
     if (mRenderer->getFeatures().swapbuffersOnFlushOrFinishWithSingleBuffer.enabled &&
-        (mCurrentWindowSurface != nullptr) && mCurrentWindowSurface->isSharedPresentMode())
+        isSingleBufferedWindowCurrent() && hasSomethingToFlush())
     {
         ANGLE_TRY(mCurrentWindowSurface->onSharedPresentContextFlush(context));
+        // While call above performs implicit flush, don't skip |finishImpl| below, since we still
+        // need to wait for submitted commands.
     }
-    else
-    {
-        ANGLE_TRY(finishImpl(RenderPassClosureReason::GLFinish));
-    }
+
+    ANGLE_TRY(finishImpl(RenderPassClosureReason::GLFinish));
 
     syncObjectPerfCounters(mRenderer->getCommandQueuePerfCounters());
     return angle::Result::Continue;
