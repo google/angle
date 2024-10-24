@@ -2159,13 +2159,13 @@ TEST_P(EGLSingleBufferTest, OnSetSurfaceAttrib)
     EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, surface, surface, context));
     ASSERT_EGL_SUCCESS() << "eglMakeCurrent failed.";
 
-    if (eglSurfaceAttrib(mDisplay, surface, EGL_RENDER_BUFFER, EGL_SINGLE_BUFFER))
-    {
-        // Transition into EGL_SINGLE_BUFFER mode.
-        glClearColor(1.0, 1.0, 1.0, 1.0);
-        glClear(GL_COLOR_BUFFER_BIT);
-        EXPECT_EGL_TRUE(eglSwapBuffers(mDisplay, surface));
+    EXPECT_EGL_TRUE(eglSurfaceAttrib(mDisplay, surface, EGL_RENDER_BUFFER, EGL_SINGLE_BUFFER));
 
+    // Transition into EGL_SINGLE_BUFFER mode.
+    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    if (eglSwapBuffers(mDisplay, surface))
+    {
         EGLint actualRenderbuffer;
         EXPECT_EGL_TRUE(eglQueryContext(mDisplay, context, EGL_RENDER_BUFFER, &actualRenderbuffer));
         EXPECT_EGL_TRUE(actualRenderbuffer == EGL_SINGLE_BUFFER);
@@ -2342,13 +2342,13 @@ TEST_P(EGLSingleBufferTest, SharedPresentBarrier)
     EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, surface, surface, context));
     ASSERT_EGL_SUCCESS() << "eglMakeCurrent failed.";
 
-    if (eglSurfaceAttrib(mDisplay, surface, EGL_RENDER_BUFFER, EGL_SINGLE_BUFFER))
-    {
-        // Transition into EGL_SINGLE_BUFFER mode.
-        glClearColor(1.0, 1.0, 1.0, 1.0);
-        glClear(GL_COLOR_BUFFER_BIT);
-        EXPECT_EGL_TRUE(eglSwapBuffers(mDisplay, surface));
+    EXPECT_EGL_TRUE(eglSurfaceAttrib(mDisplay, surface, EGL_RENDER_BUFFER, EGL_SINGLE_BUFFER));
 
+    // Transition into EGL_SINGLE_BUFFER mode.
+    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    if (eglSwapBuffers(mDisplay, surface))
+    {
         EGLint actualRenderbuffer;
         EXPECT_EGL_TRUE(eglQueryContext(mDisplay, context, EGL_RENDER_BUFFER, &actualRenderbuffer));
         EXPECT_EGL_TRUE(actualRenderbuffer == EGL_SINGLE_BUFFER);
@@ -2405,10 +2405,9 @@ TEST_P(EGLSingleBufferTest, ScissoredClear)
     EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, surface, surface, context));
     ASSERT_EGL_SUCCESS() << "eglMakeCurrent failed.";
 
-    if (eglSurfaceAttrib(mDisplay, surface, EGL_RENDER_BUFFER, EGL_SINGLE_BUFFER))
+    EXPECT_EGL_TRUE(eglSurfaceAttrib(mDisplay, surface, EGL_RENDER_BUFFER, EGL_SINGLE_BUFFER));
+    if (eglSwapBuffers(mDisplay, surface))
     {
-        eglSwapBuffers(mDisplay, surface);
-
         glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         glFlush();
@@ -2460,10 +2459,9 @@ TEST_P(EGLSingleBufferTest, ScissoredDraw)
     EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, surface, surface, context));
     ASSERT_EGL_SUCCESS() << "eglMakeCurrent failed.";
 
-    if (eglSurfaceAttrib(mDisplay, surface, EGL_RENDER_BUFFER, EGL_SINGLE_BUFFER))
+    EXPECT_EGL_TRUE(eglSurfaceAttrib(mDisplay, surface, EGL_RENDER_BUFFER, EGL_SINGLE_BUFFER));
+    if (eglSwapBuffers(mDisplay, surface))
     {
-        eglSwapBuffers(mDisplay, surface);
-
         glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         glFlush();
@@ -2531,11 +2529,10 @@ TEST_P(EGLSingleBufferTest, WaitOneOffSubmission)
     EGLint age = 0;
     EXPECT_EGL_TRUE(eglQuerySurface(mDisplay, surface, EGL_BUFFER_AGE_EXT, &age));
 
-    if (eglSurfaceAttrib(mDisplay, surface, EGL_RENDER_BUFFER, EGL_SINGLE_BUFFER))
+    EXPECT_EGL_TRUE(eglSurfaceAttrib(mDisplay, surface, EGL_RENDER_BUFFER, EGL_SINGLE_BUFFER));
+    // Transition into EGL_SINGLE_BUFFER mode.
+    if (eglSwapBuffers(mDisplay, surface))
     {
-        // Transition into EGL_SINGLE_BUFFER mode.
-        EXPECT_EGL_TRUE(eglSwapBuffers(mDisplay, surface));
-
         // Submit heavy work to the GPU before querying the buffer age.
         std::thread([this, context2, pbufferSurface]() {
             EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, pbufferSurface, pbufferSurface, context2));
@@ -2600,10 +2597,9 @@ TEST_P(EGLSingleBufferTest, AcquireImageFromSwapImpl)
     EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, surface, surface, context));
     ASSERT_EGL_SUCCESS() << "eglMakeCurrent failed.";
 
-    if (eglSurfaceAttrib(mDisplay, surface, EGL_RENDER_BUFFER, EGL_SINGLE_BUFFER))
+    EXPECT_EGL_TRUE(eglSurfaceAttrib(mDisplay, surface, EGL_RENDER_BUFFER, EGL_SINGLE_BUFFER));
+    if (eglSwapBuffers(mDisplay, surface))
     {
-        eglSwapBuffers(mDisplay, surface);
-
         ANGLE_GL_PROGRAM(greenProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
 
         // Draw into the single buffered surface.
@@ -2678,13 +2674,13 @@ TEST_P(EGLAndroidAutoRefreshTest, Basic)
     EXPECT_EGL_TRUE(
         eglSurfaceAttrib(mDisplay, surface, EGL_FRONT_BUFFER_AUTO_REFRESH_ANDROID, EGL_TRUE));
 
-    if (eglSurfaceAttrib(mDisplay, surface, EGL_RENDER_BUFFER, EGL_SINGLE_BUFFER))
-    {
-        // Transition into EGL_SINGLE_BUFFER mode.
-        glClearColor(1.0, 1.0, 1.0, 1.0);
-        glClear(GL_COLOR_BUFFER_BIT);
-        EXPECT_EGL_TRUE(eglSwapBuffers(mDisplay, surface));
+    EXPECT_EGL_TRUE(eglSurfaceAttrib(mDisplay, surface, EGL_RENDER_BUFFER, EGL_SINGLE_BUFFER));
 
+    // Transition into EGL_SINGLE_BUFFER mode.
+    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    if (eglSwapBuffers(mDisplay, surface))
+    {
         EGLint actualRenderbuffer;
         EXPECT_EGL_TRUE(eglQueryContext(mDisplay, context, EGL_RENDER_BUFFER, &actualRenderbuffer));
         EXPECT_EGL_TRUE(actualRenderbuffer == EGL_SINGLE_BUFFER);
@@ -3148,6 +3144,65 @@ TEST_P(EGLSurfaceTest, CreateMultiWindowsSurfaceNoDestroy)
         ASSERT_EGL_SUCCESS();
         mOtherWindows.push_back(w);
     }
+}
+
+// Test that querying EGL_RENDER_BUFFER of surface and context returns correct value.
+// Context's render buffer should only change once eglSwapBuffers is called.
+TEST_P(EGLSurfaceTest, QueryRenderBuffer)
+{
+    ANGLE_SKIP_TEST_IF(!IsEGLDisplayExtensionEnabled(mDisplay, "EGL_KHR_mutable_render_buffer"));
+    ANGLE_SKIP_TEST_IF(!IsAndroid());
+
+    const EGLint configAttributes[] = {EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT, EGL_SURFACE_TYPE,
+                                       EGL_WINDOW_BIT | EGL_MUTABLE_RENDER_BUFFER_BIT_KHR,
+                                       EGL_NONE};
+
+    initializeDisplay();
+    ANGLE_SKIP_TEST_IF(EGLWindow::FindEGLConfig(mDisplay, configAttributes, &mConfig) == EGL_FALSE);
+
+    // Create window surface and make current
+    mWindowSurface =
+        eglCreateWindowSurface(mDisplay, mConfig, mOSWindow->getNativeWindow(), nullptr);
+    ASSERT_EGL_SUCCESS();
+    ASSERT_NE(EGL_NO_SURFACE, mWindowSurface);
+
+    initializeMainContext();
+    EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext));
+    ASSERT_EGL_SUCCESS();
+
+    // Set to single buffer mode and query the value
+    ASSERT_EGL_TRUE(
+        eglSurfaceAttrib(mDisplay, mWindowSurface, EGL_RENDER_BUFFER, EGL_SINGLE_BUFFER));
+
+    EGLint queryRenderBuffer;
+    ASSERT_EGL_TRUE(
+        eglQuerySurface(mDisplay, mWindowSurface, EGL_RENDER_BUFFER, &queryRenderBuffer));
+    ASSERT_EGL_SUCCESS();
+    ASSERT_EQ(queryRenderBuffer, EGL_SINGLE_BUFFER);
+
+    ASSERT_EGL_TRUE(eglQueryContext(mDisplay, mContext, EGL_RENDER_BUFFER, &queryRenderBuffer));
+    ASSERT_EGL_SUCCESS();
+    ASSERT_EQ(queryRenderBuffer, EGL_BACK_BUFFER);
+
+    // Swap buffers and then query the value
+    ASSERT_EGL_TRUE(eglSwapBuffers(mDisplay, mWindowSurface));
+    ASSERT_EGL_SUCCESS();
+
+    ASSERT_EGL_TRUE(
+        eglQuerySurface(mDisplay, mWindowSurface, EGL_RENDER_BUFFER, &queryRenderBuffer));
+    ASSERT_EGL_SUCCESS();
+    ASSERT_EQ(queryRenderBuffer, EGL_SINGLE_BUFFER);
+
+    ASSERT_EGL_TRUE(eglQueryContext(mDisplay, mContext, EGL_RENDER_BUFFER, &queryRenderBuffer));
+    ASSERT_EGL_SUCCESS();
+    ASSERT_EQ(queryRenderBuffer, EGL_SINGLE_BUFFER);
+
+    ASSERT_EGL_TRUE(eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
+    ASSERT_EGL_TRUE(eglDestroySurface(mDisplay, mWindowSurface));
+    mWindowSurface = EGL_NO_SURFACE;
+    ASSERT_EGL_TRUE(eglDestroyContext(mDisplay, mContext));
+    mContext = EGL_NO_CONTEXT;
+    ASSERT_EGL_SUCCESS();
 }
 
 }  // anonymous namespace

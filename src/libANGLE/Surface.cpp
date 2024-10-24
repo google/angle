@@ -94,6 +94,7 @@ Surface::Surface(EGLint surfaceType,
       // FIXME: Determine actual pixel aspect ratio
       mPixelAspectRatio(static_cast<EGLint>(1.0 * EGL_DISPLAY_SCALING)),
       mRenderBuffer(EGL_BACK_BUFFER),
+      mRequestedRenderBuffer(EGL_BACK_BUFFER),
       mOrientation(0),
       mTexture(nullptr),
       mColorFormat(config->renderTargetFormat),
@@ -117,12 +118,14 @@ Surface::Surface(EGLint surfaceType,
 
     if (mType == EGL_PIXMAP_BIT)
     {
-        mRenderBuffer = EGL_SINGLE_BUFFER;
+        mRenderBuffer          = EGL_SINGLE_BUFFER;
+        mRequestedRenderBuffer = EGL_SINGLE_BUFFER;
     }
 
     if (mType == EGL_WINDOW_BIT)
     {
-        mRenderBuffer = mState.attributes.getAsInt(EGL_RENDER_BUFFER, EGL_BACK_BUFFER);
+        mRenderBuffer          = mState.attributes.getAsInt(EGL_RENDER_BUFFER, EGL_BACK_BUFFER);
+        mRequestedRenderBuffer = mRenderBuffer;
     }
 
     mGLColorspace =
@@ -334,6 +337,7 @@ Error Surface::swap(gl::Context *context)
 
     context->getState().getOverlay()->onSwap();
 
+    ANGLE_TRY(setRenderBufferWhileSwap(context));
     ANGLE_TRY(mImplementation->swap(context));
     postSwap(context);
     return NoError();
@@ -346,6 +350,7 @@ Error Surface::swapWithDamage(gl::Context *context, const EGLint *rects, EGLint 
 
     context->getState().getOverlay()->onSwap();
 
+    ANGLE_TRY(setRenderBufferWhileSwap(context));
     ANGLE_TRY(mImplementation->swapWithDamage(context, rects, n_rects));
     postSwap(context);
     return NoError();
@@ -358,6 +363,7 @@ Error Surface::swapWithFrameToken(gl::Context *context, EGLFrameTokenANGLE frame
 
     context->getState().getOverlay()->onSwap();
 
+    ANGLE_TRY(setRenderBufferWhileSwap(context));
     ANGLE_TRY(mImplementation->swapWithFrameToken(context, frameToken));
     postSwap(context);
     return NoError();
@@ -376,6 +382,7 @@ Error Surface::postSubBuffer(const gl::Context *context,
 
     context->getState().getOverlay()->onSwap();
 
+    ANGLE_TRY(setRenderBufferWhileSwap(context));
     ANGLE_TRY(mImplementation->postSubBuffer(context, x, y, width, height));
     postSwap(context);
     return NoError();
@@ -447,6 +454,11 @@ EGLint Surface::getPixelAspectRatio() const
 EGLenum Surface::getRenderBuffer() const
 {
     return mRenderBuffer;
+}
+
+EGLenum Surface::getRequestedRenderBuffer() const
+{
+    return mRequestedRenderBuffer;
 }
 
 EGLenum Surface::getSwapBehavior() const
@@ -777,6 +789,22 @@ Error Surface::setRenderBuffer(EGLint renderBuffer)
 {
     ANGLE_TRY(mImplementation->setRenderBuffer(renderBuffer));
     mRenderBuffer = renderBuffer;
+    return NoError();
+}
+
+void Surface::setRequestedRenderBuffer(EGLint requestedRenderBuffer)
+{
+    mRequestedRenderBuffer = requestedRenderBuffer;
+}
+
+Error Surface::setRenderBufferWhileSwap(const gl::Context *context)
+{
+    if ((mRenderBuffer != mRequestedRenderBuffer) &&
+        context->getDisplay()->getExtensions().mutableRenderBufferKHR &&
+        (getConfig()->surfaceType & EGL_MUTABLE_RENDER_BUFFER_BIT_KHR))
+    {
+        ANGLE_TRY(setRenderBuffer(mRequestedRenderBuffer));
+    }
     return NoError();
 }
 

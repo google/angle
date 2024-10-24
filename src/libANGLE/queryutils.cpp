@@ -4702,7 +4702,14 @@ egl::Error QuerySurfaceAttrib(const Display *display,
             *value = surface->getPixelAspectRatio();
             break;
         case EGL_RENDER_BUFFER:
-            *value = surface->getRenderBuffer();
+            if (surface->getType() == EGL_WINDOW_BIT)
+            {
+                *value = surface->getRequestedRenderBuffer();
+            }
+            else
+            {
+                *value = surface->getRenderBuffer();
+            }
             break;
         case EGL_SWAP_BEHAVIOR:
             *value = surface->getSwapBehavior();
@@ -4853,7 +4860,8 @@ egl::Error SetSurfaceAttrib(Surface *surface, EGLint attribute, EGLint value)
         case EGL_FRONT_BUFFER_AUTO_REFRESH_ANDROID:
             return surface->setAutoRefreshEnabled(value != EGL_FALSE);
         case EGL_RENDER_BUFFER:
-            return surface->setRenderBuffer(value);
+            surface->setRequestedRenderBuffer(value);
+            break;
         default:
             UNREACHABLE();
             break;
