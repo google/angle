@@ -921,3 +921,10 @@ TEST_F(MSLVertexOutputTest, VertexIDIvecNoCrash)
 void main(){ivec2 xy=ivec2((+gl_VertexID));gl_Position=vec4((xy), 0,1);})";
     compile(kShader);
 }
+
+TEST_F(MSLVertexOutputTest, StructEqualityNoCrash)
+{
+    const char kShader[] = R"(#version 300 es
+struct S{mediump vec2 i;};S a,b;void main(){if (a==b){}})";
+    compile(kShader);
+}

@@ -19998,6 +19998,122 @@ Foo foo(float bar)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that vec equality works.
+TEST_P(GLSLTest, VecEquality)
+{
+    const char kFragmentShader[] = R"(precision mediump float;
+uniform vec4 u;
+void main()
+{
+    gl_FragColor = vec4(0, 0, 0, 1);
+    vec4 a = vec4(1.0, 2.0, 3.0, 4.0);
+    if (a == u)
+        gl_FragColor.g = 1.0;
+
+    vec4 b = vec4(1.0) + u;
+    if (b == u)
+        gl_FragColor.r = 1.0;
+}
+)";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFragmentShader);
+    glUseProgram(program);
+    GLint u = glGetUniformLocation(program, "u");
+    glUniform4f(u, 1, 2, 3, 4);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test that mat equality works.
+TEST_P(GLSLTest, MatEquality)
+{
+    const char kFragmentShader[] = R"(precision mediump float;
+uniform vec4 u;
+void main()
+{
+    gl_FragColor = vec4(0, 0, 0, 1);
+    mat4 a = mat4(1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4);
+    if (a == mat4(u, u, u, u))
+        gl_FragColor.g = 1.0;
+    mat4 b = mat4(1.0);
+    if (b == mat4(u, u, u, u))
+        gl_FragColor.r = 1.0;
+}
+)";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFragmentShader);
+    glUseProgram(program);
+    GLint u = glGetUniformLocation(program, "u");
+    glUniform4f(u, 1, 2, 3, 4);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test that struct equality works.
+TEST_P(GLSLTest, StructEquality)
+{
+    const char kFragmentShader[] = R"(precision mediump float;
+uniform vec4 u;
+struct A {
+    vec4 i;
+};
+void main()
+{
+    gl_FragColor = vec4(0, 0, 0, 1);
+    A a, b;
+    a.i = vec4(1,2,3,4);
+    b.i = u;
+    if (a == b)
+        gl_FragColor.g = 1.0;
+    b.i = vec4(1.0);
+    if (a == b)
+        gl_FragColor.r = 1.0;
+}
+)";
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFragmentShader);
+    glUseProgram(program);
+    GLint u = glGetUniformLocation(program, "u");
+    glUniform4f(u, 1, 2, 3, 4);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test that nested struct equality works.
+TEST_P(GLSLTest, NestedStructEquality)
+{
+    const char kFragmentShader[] = R"(precision mediump float;
+uniform vec4 u;
+struct A {
+    vec4 i;
+};
+struct B {
+    A a;
+};
+void main()
+{
+    gl_FragColor = vec4(0, 0, 0, 1);
+    B a, b;
+    a.a.i = vec4(1,2,3,4);
+    b.a.i = u;
+    if (a == b)
+        gl_FragColor.g = 1.0;
+    b.a.i = vec4(1.0);
+    if (a == b)
+        gl_FragColor.r = 1.0;
+}
+)";
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFragmentShader);
+    glUseProgram(program);
+    GLint u = glGetUniformLocation(program, "u");
+    glUniform4f(u, 1, 2, 3, 4);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Test that double underscores user defined name is allowed
 TEST_P(GLSLTest_ES3, DoubleUnderscoresName)
 {
