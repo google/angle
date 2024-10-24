@@ -94,6 +94,7 @@ Surface::Surface(EGLint surfaceType,
       // FIXME: Determine actual pixel aspect ratio
       mPixelAspectRatio(static_cast<EGLint>(1.0 * EGL_DISPLAY_SCALING)),
       mRenderBuffer(EGL_BACK_BUFFER),
+      mRequestedRenderBuffer(EGL_BACK_BUFFER),
       mOrientation(0),
       mTexture(nullptr),
       mColorFormat(config->renderTargetFormat),
@@ -117,12 +118,14 @@ Surface::Surface(EGLint surfaceType,
 
     if (mType == EGL_PIXMAP_BIT)
     {
-        mRenderBuffer = EGL_SINGLE_BUFFER;
+        mRenderBuffer          = EGL_SINGLE_BUFFER;
+        mRequestedRenderBuffer = EGL_SINGLE_BUFFER;
     }
 
     if (mType == EGL_WINDOW_BIT)
     {
-        mRenderBuffer = mState.attributes.getAsInt(EGL_RENDER_BUFFER, EGL_BACK_BUFFER);
+        mRenderBuffer          = mState.attributes.getAsInt(EGL_RENDER_BUFFER, EGL_BACK_BUFFER);
+        mRequestedRenderBuffer = mRenderBuffer;
     }
 
     mGLColorspace =
@@ -194,6 +197,14 @@ void Surface::postSwap(const gl::Context *context)
     mBufferAgeQueriedSinceLastSwap = false;
 
     mIsDamageRegionSet = false;
+
+    if ((mRenderBuffer != mRequestedRenderBuffer) &&
+        context->getDisplay()->getExtensions().mutableRenderBufferKHR &&
+        (getConfig()->surfaceType & EGL_MUTABLE_RENDER_BUFFER_BIT_KHR))
+    {
+        Error err = setRenderBuffer(mRequestedRenderBuffer);
+        ASSERT(!err.isError());
+    }
 }
 
 Error Surface::initialize(const Display *display)
@@ -447,6 +458,11 @@ EGLint Surface::getPixelAspectRatio() const
 EGLenum Surface::getRenderBuffer() const
 {
     return mRenderBuffer;
+}
+
+EGLenum Surface::getRequestedRenderBuffer() const
+{
+    return mRequestedRenderBuffer;
 }
 
 EGLenum Surface::getSwapBehavior() const
@@ -778,6 +794,11 @@ Error Surface::setRenderBuffer(EGLint renderBuffer)
     ANGLE_TRY(mImplementation->setRenderBuffer(renderBuffer));
     mRenderBuffer = renderBuffer;
     return NoError();
+}
+
+void Surface::setRequestedRenderBuffer(EGLint requestedRenderBuffer)
+{
+    mRequestedRenderBuffer = requestedRenderBuffer;
 }
 
 bool Surface::isLocked() const
