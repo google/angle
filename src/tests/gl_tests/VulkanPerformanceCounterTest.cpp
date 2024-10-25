@@ -5691,7 +5691,7 @@ void main()
     }
 
     ASSERT_GL_NO_ERROR();
-    if (getPerfCounters().descriptorSetCacheTotalSize > 0)
+    if (isFeatureEnabled(Feature::DescriptorSetCache))
     {
         EXPECT_GT(expectedShaderResourcesCacheMisses, 0u);
     }
@@ -5708,7 +5708,7 @@ void main()
 
     EXPECT_EQ(expectedData, actualData);
 
-    if (getPerfCounters().descriptorSetCacheTotalSize > 0)
+    if (isFeatureEnabled(Feature::DescriptorSetCache))
     {
         // Check for unnecessary descriptor set allocations.
         uint64_t actualShaderResourcesCacheMisses =
@@ -6246,8 +6246,8 @@ TEST_P(VulkanPerformanceCounterTest, UniformUpdatesHitDescriptorSetCache)
     ASSERT_GL_NO_ERROR();
 
     uint64_t expectedCacheMisses = getPerfCounters().uniformsAndXfbDescriptorSetCacheMisses;
-    GLint expectedAllocations    = getPerfCounters().descriptorSetAllocations;
-    if (getPerfCounters().descriptorSetCacheTotalSize > 0)
+    GLint allocationsBefore      = getPerfCounters().descriptorSetAllocations;
+    if (isFeatureEnabled(Feature::DescriptorSetCache))
     {
         EXPECT_GT(expectedCacheMisses, 0u);
     }
@@ -6266,7 +6266,7 @@ TEST_P(VulkanPerformanceCounterTest, UniformUpdatesHitDescriptorSetCache)
 
     ASSERT_GL_NO_ERROR();
 
-    if (getPerfCounters().descriptorSetCacheTotalSize > 0)
+    if (isFeatureEnabled(Feature::DescriptorSetCache))
     {
         uint64_t actualCacheMisses = getPerfCounters().uniformsAndXfbDescriptorSetCacheMisses;
         EXPECT_EQ(expectedCacheMisses, actualCacheMisses);
@@ -6274,9 +6274,12 @@ TEST_P(VulkanPerformanceCounterTest, UniformUpdatesHitDescriptorSetCache)
     else
     {
         // If cache is disabled, we still expect descriptorSets to be reused instead of keep
-        // allocating new descriptorSets.
-        GLint actualAllocations = getPerfCounters().descriptorSetAllocations;
-        EXPECT_EQ(expectedAllocations, actualAllocations);
+        // allocating new descriptorSets. The underline reuse logic is implementation detail (as of
+        // now it will not reuse util the pool is full), but we expect it will not increasing for
+        // every iteration.
+        GLint descriptorSetAllocationsIncrease =
+            getPerfCounters().descriptorSetAllocations - allocationsBefore;
+        EXPECT_GE(kIterations - 1, descriptorSetAllocationsIncrease);
     }
 }
 
@@ -7431,7 +7434,7 @@ TEST_P(VulkanPerformanceCounterTest, TextureDescriptorsAreShared)
     ASSERT_GL_NO_ERROR();
 
     GLuint expectedCacheMisses = getPerfCounters().textureDescriptorSetCacheMisses;
-    if (getPerfCounters().descriptorSetCacheTotalSize > 0)
+    if (isFeatureEnabled(Feature::DescriptorSetCache))
     {
         EXPECT_GT(expectedCacheMisses, 0u);
     }
@@ -7445,7 +7448,7 @@ TEST_P(VulkanPerformanceCounterTest, TextureDescriptorsAreShared)
 
     ASSERT_GL_NO_ERROR();
 
-    if (getPerfCounters().descriptorSetCacheTotalSize > 0)
+    if (isFeatureEnabled(Feature::DescriptorSetCache))
     {
         GLuint actualCacheMisses = getPerfCounters().textureDescriptorSetCacheMisses;
         EXPECT_EQ(expectedCacheMisses, actualCacheMisses);
@@ -7502,7 +7505,7 @@ void main() {
 
     GLuint expectedCacheMisses = getPerfCounters().shaderResourcesDescriptorSetCacheMisses;
     GLuint totalAllocationsAtFirstProgram = getPerfCounters().descriptorSetAllocations;
-    if (getPerfCounters().descriptorSetCacheTotalSize > 0)
+    if (isFeatureEnabled(Feature::DescriptorSetCache))
     {
         EXPECT_GT(expectedCacheMisses, 0u);
     }
@@ -7516,7 +7519,7 @@ void main() {
 
     ASSERT_GL_NO_ERROR();
 
-    if (getPerfCounters().descriptorSetCacheTotalSize > 0)
+    if (isFeatureEnabled(Feature::DescriptorSetCache))
     {
         GLuint actualCacheMisses = getPerfCounters().shaderResourcesDescriptorSetCacheMisses;
         EXPECT_EQ(expectedCacheMisses, actualCacheMisses);
@@ -7850,13 +7853,13 @@ TEST_P(VulkanPerformanceCounterTest, Source2DAndRepeatedlyRespecifyTarget2DWithS
             descriptorSetAllocationsBefore = getPerfCounters().descriptorSetAllocations;
         }
     }
-    GLint descriptorSetAllocationsIncrease =
+    size_t descriptorSetAllocationsIncrease =
         getPerfCounters().descriptorSetAllocations - descriptorSetAllocationsBefore;
     GLint textureDescriptorSetCacheTotalSizeIncrease =
         getPerfCounters().textureDescriptorSetCacheTotalSize -
         textureDescriptorSetCacheTotalSizeBefore;
 
-    if (getPerfCounters().descriptorSetCacheTotalSize > 0)
+    if (isFeatureEnabled(Feature::DescriptorSetCache))
     {
         // We don't expect descriptorSet cache to keep growing
         EXPECT_EQ(1, textureDescriptorSetCacheTotalSizeIncrease);
@@ -7864,8 +7867,10 @@ TEST_P(VulkanPerformanceCounterTest, Source2DAndRepeatedlyRespecifyTarget2DWithS
     else
     {
         // Because we call EXPECT_PIXEL_NEAR which will wait for draw to finish, we don't expect
-        // descriptorSet allocation to keep growing
-        EXPECT_EQ(1, descriptorSetAllocationsIncrease);
+        // descriptorSet allocation to keep growing. The underline reuse logic is implementation
+        // detail (as of now it will not reuse util the pool is full), but we expect it will not
+        // increasing for every iteration.
+        EXPECT_GE(kMaxLoop - 1, descriptorSetAllocationsIncrease);
     }
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);

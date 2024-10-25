@@ -5785,7 +5785,8 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsSynchronization2,
                             mSynchronization2Features.synchronization2 == VK_TRUE);
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, descriptorSetCache, true);
+    // Disable descriptorSet cache for SwiftShader to ensure the code path gets tested.
+    ANGLE_FEATURE_CONDITION(&mFeatures, descriptorSetCache, !isSwiftShader);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsImageCompressionControl,
                             mImageCompressionControlFeatures.imageCompressionControl == VK_TRUE);
