@@ -7521,7 +7521,7 @@ void main()
 color = tex_color;
 })";
 
-    constexpr GLint kBufferSize = 32;
+    constexpr GLint kBufferSize = 4;
     GLubyte texData[]           = {0u, 255u, 0u, 255u};
 
     GLTexture texture;
