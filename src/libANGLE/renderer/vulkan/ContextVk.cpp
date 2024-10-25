@@ -8372,6 +8372,7 @@ angle::Result ContextVk::flushOutsideRenderPassCommands()
     {
         return angle::Result::Continue;
     }
+    ASSERT(mOutsideRenderPassCommands->getQueueSerial().valid());
 
     addOverlayUsedBuffersCount(mOutsideRenderPassCommands);
 
@@ -8408,9 +8409,12 @@ angle::Result ContextVk::flushOutsideRenderPassCommands()
 
     if (mRenderPassCommands->started() && mOutsideRenderPassSerialFactory.empty())
     {
-        ANGLE_VK_PERF_WARNING(
-            this, GL_DEBUG_SEVERITY_HIGH,
+        ANGLE_PERF_WARNING(
+            getDebug(), GL_DEBUG_SEVERITY_HIGH,
             "Running out of reserved outsideRenderPass queueSerial. ending renderPass now.");
+        // flushCommandsAndEndRenderPass will end up call back into this function again. We must
+        // ensure mOutsideRenderPassCommands is empty so that it can early out.
+        ASSERT(mOutsideRenderPassCommands->empty());
         // We used up all reserved serials. In order to maintain serial order (outsideRenderPass
         // must be smaller than render pass), we also endRenderPass here as well. This is not
         // expected to happen often in real world usage.
