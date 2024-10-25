@@ -716,7 +716,7 @@ void DisplayMtl::ensureCapsInitialized() const
     // https://developer.apple.com/metal/Metal-Feature-Set-Tables.pdf
     mNativeCaps.maxElementIndex  = std::numeric_limits<GLuint>::max() - 1;
     mNativeCaps.max3DTextureSize = 2048;
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST || TARGET_OS_SIMULATOR
     mNativeCaps.max2DTextureSize = 16384;
     // On macOS exclude [[position]] from maxVaryingVectors.
     mNativeCaps.maxVaryingVectors         = 31 - 1;
