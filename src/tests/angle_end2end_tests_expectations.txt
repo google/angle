@@ -1531,8 +1531,10 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 40644776 MAC NVIDIA OPENGL    : SRGBTextureTestES3.SRGBDecodeTexelFetch* = SKIP
 40644776 ANDROID PIXEL6       : ImageTest.SourceRenderbufferTargetTexture* = SKIP
 40644776 ANDROID PIXEL6       : ImageTestES3.SourceRenderbufferTargetTextureExternalESSL3* = SKIP
+40644776 ANDROID PIXEL6       : ImageTestES3.SourceAHBTarget2DGenerateMipmap* = SKIP
 40644776 ANDROID PIXEL4ORXL   : ImageTest.SourceRenderbufferTargetTexture* = SKIP
 40644776 ANDROID PIXEL4ORXL   : ImageTestES3.SourceRenderbufferTargetTextureExternalESSL3* = SKIP
+40644776 ANDROID PIXEL4ORXL   : ImageTestES3.SourceAHBTarget2DGenerateMipmap* = SKIP
 40644776 ANDROID PIXEL4ORXL   : Texture3DCopy.UnsignedByteFormats/* = SKIP
 40644776 ANDROID PIXEL4ORXL   : Texture3DCopy.UnsizedFormats/* = SKIP
 

@@ -2570,6 +2570,15 @@ angle::Result TextureVk::generateMipmap(const gl::Context *context)
     vk::LevelIndex maxLevel  = mImage->toVkLevel(gl::LevelIndex(mState.getMipmapMaxLevel()));
     ASSERT(maxLevel != vk::LevelIndex(0));
 
+    if (getImageViews().hasColorspaceOverrideForWrite(*mImage))
+    {
+        angle::FormatID actualFormatID =
+            getImageViews().getColorspaceOverrideFormatForWrite(mImage->getActualFormatID());
+        return contextVk->getUtils().generateMipmapWithDraw(
+            contextVk, mImage, actualFormatID,
+            gl::IsMipmapFiltered(mState.getSamplerState().getMinFilter()));
+    }
+
     // If it's possible to generate mipmap in compute, that would give the best possible
     // performance on some hardware.
     if (CanGenerateMipmapWithCompute(renderer, mImage->getType(), mImage->getActualFormatID(),

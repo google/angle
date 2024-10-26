@@ -3961,6 +3961,16 @@ class CommandBufferAccess : angle::NonCopyable
         onImageWrite(writeLevelStart, writeLevelCount, writeLayerStart, writeLayerCount,
                      aspectFlags, ImageLayout::TransferSrcDst, image);
     }
+    void onImageDrawMipmapGenerationWrite(gl::LevelIndex levelStart,
+                                          uint32_t levelCount,
+                                          uint32_t layerStart,
+                                          uint32_t layerCount,
+                                          VkImageAspectFlags aspectFlags,
+                                          ImageHelper *image)
+    {
+        onImageWrite(levelStart, levelCount, layerStart, layerCount, aspectFlags,
+                     ImageLayout::ColorWrite, image);
+    }
     void onImageComputeShaderRead(VkImageAspectFlags aspectFlags, ImageHelper *image)
     {
         onImageRead(aspectFlags, ImageLayout::ComputeShaderReadOnly, image);
