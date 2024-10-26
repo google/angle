@@ -1314,7 +1314,7 @@ void ProgramExecutableVk::initializeWriteDescriptorDesc(vk::Context *context)
 
     mDefaultUniformAndXfbWriteDescriptorDescs.reset();
     if (mExecutable->hasTransformFeedbackOutput() &&
-        context->getRenderer()->getFeatures().emulateTransformFeedback.enabled)
+        context->getFeatures().emulateTransformFeedback.enabled)
     {
         // Update mDefaultUniformAndXfbWriteDescriptorDescs for the emulation code path.
         mDefaultUniformAndXfbWriteDescriptorDescs.updateDefaultUniform(

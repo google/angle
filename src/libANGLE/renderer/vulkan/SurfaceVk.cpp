@@ -1518,8 +1518,7 @@ angle::Result WindowSurfaceVk::recreateSwapchain(ContextVk *contextVk, const gl:
 
     // On Android, vkCreateSwapchainKHR destroys lastSwapchain, which is incorrect.  Wait idle in
     // that case as a workaround.
-    if (lastSwapchain &&
-        contextVk->getRenderer()->getFeatures().waitIdleBeforeSwapchainRecreation.enabled)
+    if (lastSwapchain && contextVk->getFeatures().waitIdleBeforeSwapchainRecreation.enabled)
     {
         mUse.merge(contextVk->getSubmittedResourceUse());
         ANGLE_TRY(finish(contextVk));
@@ -1904,8 +1903,7 @@ angle::Result WindowSurfaceVk::checkForOutOfDateSwapchain(ContextVk *contextVk,
     presentOutOfDate = presentOutOfDate || swapIntervalChanged;
 
     // If there's no change, early out.
-    if (!contextVk->getRenderer()->getFeatures().perFrameWindowSizeQuery.enabled &&
-        !presentOutOfDate)
+    if (!contextVk->getFeatures().perFrameWindowSizeQuery.enabled && !presentOutOfDate)
     {
         return angle::Result::Continue;
     }
@@ -1913,7 +1911,7 @@ angle::Result WindowSurfaceVk::checkForOutOfDateSwapchain(ContextVk *contextVk,
     // Get the latest surface capabilities.
     ANGLE_TRY(queryAndAdjustSurfaceCaps(contextVk, &mSurfaceCaps));
 
-    if (contextVk->getRenderer()->getFeatures().perFrameWindowSizeQuery.enabled)
+    if (contextVk->getFeatures().perFrameWindowSizeQuery.enabled)
     {
         // On Android, rotation can cause the minImageCount to change
         uint32_t minImageCount =

@@ -675,10 +675,9 @@ void UnpackDepthStencilResolveAttachmentDesc(vk::Context *context,
     ASSERT(angleFormat.stencilBits > 0 || stencilInfo.isInvalidated);
 
     const bool supportsLoadStoreOpNone =
-        context->getRenderer()->getFeatures().supportsRenderPassLoadStoreOpNone.enabled;
+        context->getFeatures().supportsRenderPassLoadStoreOpNone.enabled;
     const bool supportsStoreOpNone =
-        supportsLoadStoreOpNone ||
-        context->getRenderer()->getFeatures().supportsRenderPassStoreOpNone.enabled;
+        supportsLoadStoreOpNone || context->getFeatures().supportsRenderPassStoreOpNone.enabled;
 
     const VkAttachmentLoadOp preserveLoadOp =
         supportsLoadStoreOpNone ? VK_ATTACHMENT_LOAD_OP_NONE_EXT : VK_ATTACHMENT_LOAD_OP_LOAD;
@@ -3326,7 +3325,7 @@ void GraphicsPipelineDesc::initDefaults(const Context *context,
         SetBitField(mVertexInput.inputAssembly.bits.topology, VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST);
         mVertexInput.inputAssembly.bits.primitiveRestartEnable = 0;
         mVertexInput.inputAssembly.bits.useVertexInputBindingStrideDynamicState =
-            context->getRenderer()->useVertexInputBindingStrideDynamicState();
+            context->getFeatures().useVertexInputBindingStrideDynamicState.enabled;
         mVertexInput.inputAssembly.bits.useVertexInputDynamicState =
             context->getFeatures().supportsVertexInputDynamicState.enabled;
         mVertexInput.inputAssembly.bits.padding = 0;
@@ -3747,7 +3746,7 @@ void GraphicsPipelineDesc::initializePipelineVertexInputState(
         // If using dynamic state for stride, the value for stride is unconditionally 0 here.
         // |ContextVk::handleDirtyGraphicsVertexBuffers| implements the same fix when setting stride
         // dynamically.
-        ASSERT(!context->getRenderer()->useVertexInputBindingStrideDynamicState() ||
+        ASSERT(!context->getFeatures().useVertexInputBindingStrideDynamicState.enabled ||
                bindingDesc.stride == 0);
 
         // Get the corresponding VkFormat for the attrib's format.
@@ -3788,11 +3787,12 @@ void GraphicsPipelineDesc::initializePipelineVertexInputState(
         static_cast<VkBool32>(inputAssembly.bits.primitiveRestartEnable);
 
     // Dynamic state
-    if (context->getRenderer()->useVertexInputBindingStrideDynamicState() && vertexAttribCount > 0)
+    if (context->getFeatures().useVertexInputBindingStrideDynamicState.enabled &&
+        vertexAttribCount > 0)
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_VERTEX_INPUT_BINDING_STRIDE);
     }
-    if (context->getRenderer()->usePrimitiveRestartEnableDynamicState())
+    if (context->getFeatures().usePrimitiveRestartEnableDynamicState.enabled)
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_PRIMITIVE_RESTART_ENABLE);
     }
@@ -3990,39 +3990,39 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
     dynamicStateListOut->push_back(VK_DYNAMIC_STATE_STENCIL_COMPARE_MASK);
     dynamicStateListOut->push_back(VK_DYNAMIC_STATE_STENCIL_WRITE_MASK);
     dynamicStateListOut->push_back(VK_DYNAMIC_STATE_STENCIL_REFERENCE);
-    if (context->getRenderer()->useCullModeDynamicState())
+    if (context->getFeatures().useCullModeDynamicState.enabled)
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_CULL_MODE_EXT);
     }
-    if (context->getRenderer()->useFrontFaceDynamicState())
+    if (context->getFeatures().useFrontFaceDynamicState.enabled)
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_FRONT_FACE_EXT);
     }
-    if (context->getRenderer()->useDepthTestEnableDynamicState())
+    if (context->getFeatures().useDepthTestEnableDynamicState.enabled)
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_DEPTH_TEST_ENABLE);
     }
-    if (context->getRenderer()->useDepthWriteEnableDynamicState())
+    if (context->getFeatures().useDepthWriteEnableDynamicState.enabled)
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_DEPTH_WRITE_ENABLE);
     }
-    if (context->getRenderer()->useDepthCompareOpDynamicState())
+    if (context->getFeatures().useDepthCompareOpDynamicState.enabled)
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_DEPTH_COMPARE_OP);
     }
-    if (context->getRenderer()->useStencilTestEnableDynamicState())
+    if (context->getFeatures().useStencilTestEnableDynamicState.enabled)
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_STENCIL_TEST_ENABLE);
     }
-    if (context->getRenderer()->useStencilOpDynamicState())
+    if (context->getFeatures().useStencilOpDynamicState.enabled)
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_STENCIL_OP);
     }
-    if (context->getRenderer()->useRasterizerDiscardEnableDynamicState())
+    if (context->getFeatures().useRasterizerDiscardEnableDynamicState.enabled)
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_RASTERIZER_DISCARD_ENABLE);
     }
-    if (context->getRenderer()->useDepthBiasEnableDynamicState())
+    if (context->getFeatures().useDepthBiasEnableDynamicState.enabled)
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_DEPTH_BIAS_ENABLE);
     }
@@ -4167,7 +4167,7 @@ void GraphicsPipelineDesc::initializePipelineFragmentOutputState(
 
     // Dynamic state
     dynamicStateListOut->push_back(VK_DYNAMIC_STATE_BLEND_CONSTANTS);
-    if (context->getRenderer()->useLogicOpDynamicState())
+    if (context->getFeatures().supportsLogicOpDynamicState.enabled)
     {
         dynamicStateListOut->push_back(VK_DYNAMIC_STATE_LOGIC_OP_EXT);
     }
@@ -4204,7 +4204,7 @@ void GraphicsPipelineDesc::updateVertexInput(ContextVk *contextVk,
                   "Adjust transition bits");
     transition->set(kBit);
 
-    if (!contextVk->getRenderer()->useVertexInputBindingStrideDynamicState())
+    if (!contextVk->getFeatures().useVertexInputBindingStrideDynamicState.enabled)
     {
         SetBitField(mVertexInput.vertex.strides[attribIndex], stride);
         transition->set(ANGLE_GET_INDEXED_TRANSITION_BIT(
@@ -5720,7 +5720,7 @@ angle::Result SamplerDesc::init(ContextVk *contextVk, Sampler *sampler) const
     VkSamplerYcbcrConversionInfo samplerYcbcrConversionInfo = {};
     if (mYcbcrConversionDesc.valid())
     {
-        ASSERT((contextVk->getRenderer()->getFeatures().supportsYUVSamplerConversion.enabled));
+        ASSERT((contextVk->getFeatures().supportsYUVSamplerConversion.enabled));
         samplerYcbcrConversionInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO;
         samplerYcbcrConversionInfo.pNext = nullptr;
         ANGLE_TRY(contextVk->getRenderer()->getYuvConversionCache().getSamplerYcbcrConversion(
@@ -5740,7 +5740,7 @@ angle::Result SamplerDesc::init(ContextVk *contextVk, Sampler *sampler) const
         createInfo.addressModeV == VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER ||
         createInfo.addressModeW == VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER)
     {
-        ASSERT((contextVk->getRenderer()->getFeatures().supportsCustomBorderColor.enabled));
+        ASSERT((contextVk->getFeatures().supportsCustomBorderColor.enabled));
         customBorderColorInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CUSTOM_BORDER_COLOR_CREATE_INFO_EXT;
 
         customBorderColorInfo.customBorderColor.float32[0] = mBorderColor.red;
@@ -6262,7 +6262,7 @@ void DescriptorSetDescBuilder::updateUniformsAndXfb(
         }
 
         if (transformFeedbackVk && shaderType == gl::ShaderType::Vertex &&
-            context->getRenderer()->getFeatures().emulateTransformFeedback.enabled)
+            context->getFeatures().emulateTransformFeedback.enabled)
         {
             transformFeedbackVk->updateTransformFeedbackDescriptorDesc(
                 context, executable, variableInfoMap, writeDescriptorDescs, emptyBuffer,
