@@ -2038,6 +2038,14 @@
                 "VkDevice supports VK_EXT_global_priority_query"
             ],
             "issue": "https://anglebug.com/397474813"
+        },
+        {
+            "name": "supports_buffer_device_address",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_KHR_buffer_device_address and uses ",
+                "physical storage buffers instead of storage buffers"
+            ]
         }
     ]
 }

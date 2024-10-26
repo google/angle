@@ -314,6 +314,7 @@ enum class Feature
     SupportsBindMemory2,
     SupportsBlendOperationAdvanced,
     SupportsBlendOperationAdvancedCoherent,
+    SupportsBufferDeviceAddress,
     SupportsClipCullDistanceInGSAndTS,
     SupportsColorWriteEnable,
     SupportsComputeTranscodeEtcToBc,
