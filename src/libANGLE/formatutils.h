@@ -76,8 +76,32 @@ ANGLE_INLINE GLenum GetNonLinearFormat(const GLenum format)
             return GL_RGBA16F;
         case GL_RGB10_A2_EXT:
             return GL_RGB10_A2_EXT;
+        case GL_SRGB8:
+        case GL_SRGB8_ALPHA8:
+        case GL_SRGB_ALPHA_EXT:
+        case GL_SRGB_EXT:
+            return format;
         default:
             return GL_NONE;
+    }
+}
+
+ANGLE_INLINE GLenum GetLinearFormat(const GLenum format)
+{
+    switch (format)
+    {
+        case GL_BGRA8_SRGB_ANGLEX:
+            return GL_BGRA8_EXT;
+        case GL_SRGB8_ALPHA8:
+            return GL_RGBA8;
+        case GL_SRGB8:
+            return GL_RGB8;
+        case GL_BGRX8_SRGB_ANGLEX:
+            return GL_BGRX8_ANGLEX;
+        case GL_RGBX8_SRGB_ANGLEX:
+            return GL_RGBX8_ANGLE;
+        default:
+            return format;
     }
 }
 
@@ -90,6 +114,8 @@ ANGLE_INLINE bool ColorspaceFormatOverride(const EGLenum colorspace, GLenum *ren
         case EGL_GL_COLORSPACE_SCRGB_LINEAR_EXT:       // linear colorspace no translation needed
         case EGL_GL_COLORSPACE_BT2020_LINEAR_EXT:      // linear colorspace no translation needed
         case EGL_GL_COLORSPACE_DISPLAY_P3_LINEAR_EXT:  // linear colorspace no translation needed
+            *rendertargetformat = GetLinearFormat(*rendertargetformat);
+            return true;
         case EGL_GL_COLORSPACE_DISPLAY_P3_PASSTHROUGH_EXT:  // App, not the HW, will specify the
                                                             // transfer function
         case EGL_GL_COLORSPACE_SCRGB_EXT:  // App, not the HW, will specify the transfer function
