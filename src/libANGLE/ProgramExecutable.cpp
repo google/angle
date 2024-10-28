@@ -2997,7 +2997,7 @@ void ProgramExecutable::updateSamplerUniform(Context *context,
 {
     ASSERT(isSamplerUniformIndex(locationInfo.index));
     GLuint samplerIndex                    = getSamplerIndexFromUniformIndex(locationInfo.index);
-    SamplerBinding &samplerBinding         = mSamplerBindings[samplerIndex];
+    const SamplerBinding &samplerBinding   = mSamplerBindings[samplerIndex];
     std::vector<GLuint> &boundTextureUnits = mSamplerBoundTextureUnits;
 
     if (locationInfo.arrayIndex >= samplerBinding.textureUnitsCount)
