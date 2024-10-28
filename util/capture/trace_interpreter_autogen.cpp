@@ -6363,6 +6363,11 @@ CallCapture ParseCallCapture(const Token &nameToken,
         ParamBuffer params = ParseParameters<decltype(SetFramebufferID)>(paramTokens, strings);
         return CallCapture("SetFramebufferID", std::move(params));
     }
+    if (strcmp(nameToken, "SetFramebufferID2") == 0)
+    {
+        ParamBuffer params = ParseParameters<decltype(SetFramebufferID2)>(paramTokens, strings);
+        return CallCapture("SetFramebufferID2", std::move(params));
+    }
     if (strcmp(nameToken, "SetRenderbufferID") == 0)
     {
         ParamBuffer params = ParseParameters<decltype(SetRenderbufferID)>(paramTokens, strings);
@@ -6415,6 +6420,11 @@ CallCapture ParseCallCapture(const Token &nameToken,
     {
         ParamBuffer params = ParseParameters<decltype(UpdateFramebufferID)>(paramTokens, strings);
         return CallCapture("UpdateFramebufferID", std::move(params));
+    }
+    if (strcmp(nameToken, "UpdateFramebufferID2") == 0)
+    {
+        ParamBuffer params = ParseParameters<decltype(UpdateFramebufferID2)>(paramTokens, strings);
+        return CallCapture("UpdateFramebufferID2", std::move(params));
     }
     if (strcmp(nameToken, "UpdateMemoryObjectID") == 0)
     {
@@ -6705,6 +6715,11 @@ void ReplayCustomFunctionCall(const CallCapture &call, const TraceFunctionMap &c
         DispatchCallCapture(SetFramebufferID, captures);
         return;
     }
+    if (call.customFunctionName == "SetFramebufferID2")
+    {
+        DispatchCallCapture(SetFramebufferID2, captures);
+        return;
+    }
     if (call.customFunctionName == "SetRenderbufferID")
     {
         DispatchCallCapture(SetRenderbufferID, captures);
@@ -6753,6 +6768,11 @@ void ReplayCustomFunctionCall(const CallCapture &call, const TraceFunctionMap &c
     if (call.customFunctionName == "UpdateFramebufferID")
     {
         DispatchCallCapture(UpdateFramebufferID, captures);
+        return;
+    }
+    if (call.customFunctionName == "UpdateFramebufferID2")
+    {
+        DispatchCallCapture(UpdateFramebufferID2, captures);
         return;
     }
     if (call.customFunctionName == "UpdateMemoryObjectID")
