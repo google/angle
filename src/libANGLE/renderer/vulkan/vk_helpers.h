@@ -1172,6 +1172,8 @@ class BufferHelper : public ReadWriteResource
 
     void fillWithPattern(const void *pattern, size_t patternSize, size_t offset, size_t size);
 
+    VkDeviceAddress getDeviceAddress(Context *context);
+
     // Special handling for VertexArray code so that we can create a dedicated VkBuffer for the
     // sub-range of memory of the actual buffer data size that user requested (i.e, excluding extra
     // paddings that we added for alignment, which will not get zero filled).

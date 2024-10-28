@@ -157,6 +157,9 @@ extern PFN_vkGetMemoryFdPropertiesKHR vkGetMemoryFdPropertiesKHR;
 // VK_EXT_external_memory_host
 extern PFN_vkGetMemoryHostPointerPropertiesEXT vkGetMemoryHostPointerPropertiesEXT;
 
+// VK_KHR_buffer_device_address
+extern PFN_vkGetBufferDeviceAddressKHR vkGetBufferDeviceAddressKHR;
+
 }  // namespace rx
 
 #endif  // ANGLE_SHARED_LIBVULKAN

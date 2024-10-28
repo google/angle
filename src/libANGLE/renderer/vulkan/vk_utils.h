@@ -1469,6 +1469,9 @@ void InitExternalMemoryFdFunctions(VkDevice device);
 // VK_EXT_external_memory_host
 void InitExternalMemoryHostFunctions(VkDevice device);
 
+// VK_KHR_buffer_device_address
+void InitBufferDeviceAddressFunctions(VkDevice device);
+
 #endif  // !defined(ANGLE_SHARED_LIBVULKAN)
 
 // Promoted to Vulkan 1.1

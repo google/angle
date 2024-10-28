@@ -4227,6 +4227,10 @@ void Renderer::initDeviceExtensionEntryPoints()
         {
             InitRenderPass2KHRFunctions(mDevice);
         }
+        if (mFeatures.supportsBufferDeviceAddress.enabled)
+        {
+            InitBufferDeviceAddressFunctions(mDevice);
+        }
     }
     // Extensions promoted to Vulkan 1.3
     {

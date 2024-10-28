@@ -1150,6 +1150,9 @@ PFN_vkGetMemoryFdPropertiesKHR vkGetMemoryFdPropertiesKHR = nullptr;
 // VK_EXT_external_memory_host
 PFN_vkGetMemoryHostPointerPropertiesEXT vkGetMemoryHostPointerPropertiesEXT = nullptr;
 
+// VK_KHR_buffer_device_address
+PFN_vkGetBufferDeviceAddressKHR vkGetBufferDeviceAddressKHR = nullptr;
+
 void InitDebugUtilsEXTFunctions(VkInstance instance)
 {
     GET_INSTANCE_FUNC(vkCreateDebugUtilsMessengerEXT);
@@ -1320,6 +1323,11 @@ void InitExternalMemoryFdFunctions(VkDevice device)
 void InitExternalMemoryHostFunctions(VkDevice device)
 {
     GET_DEVICE_FUNC(vkGetMemoryHostPointerPropertiesEXT);
+}
+
+void InitBufferDeviceAddressFunctions(VkDevice device)
+{
+    GET_DEVICE_FUNC(vkGetBufferDeviceAddressKHR);
 }
 
 #    undef GET_INSTANCE_FUNC

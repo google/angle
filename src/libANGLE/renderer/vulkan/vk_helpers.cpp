@@ -51,6 +51,12 @@ constexpr VkClearDepthStencilValue kRobustInitDepthStencilValue = {1.0f, 0};
 constexpr VkImageAspectFlags kDepthStencilAspects =
     VK_IMAGE_ASPECT_STENCIL_BIT | VK_IMAGE_ASPECT_DEPTH_BIT;
 
+// A flag that is used to allow to fetch raw GPU pointer to a buffer and can be used when
+// supportsBufferDeviceAddress is enabled
+constexpr VkMemoryAllocateFlagsInfo kMemoryAllocateDeviceAddressFlags = {
+    VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_FLAGS_INFO, nullptr, VK_MEMORY_ALLOCATE_DEVICE_ADDRESS_BIT,
+    0};
+
 // Information useful for buffer related barriers
 struct BufferMemoryBarrierData
 {
@@ -4041,9 +4047,14 @@ VkResult BufferPool::allocateNewBuffer(ErrorContext *context, VkDeviceSize sizeI
     VkMemoryPropertyFlags memoryPropertyFlagsOut;
     VkDeviceSize sizeOut;
     uint32_t memoryTypeIndex;
-    VK_RESULT_TRY(AllocateBufferMemory(context, MemoryAllocationType::Buffer, memoryPropertyFlags,
-                                       &memoryPropertyFlagsOut, nullptr, &buffer.get(),
-                                       &memoryTypeIndex, &deviceMemory.get(), &sizeOut));
+
+    const void *extraAllocationInfoPtr = context->getFeatures().supportsBufferDeviceAddress.enabled
+                                             ? &kMemoryAllocateDeviceAddressFlags
+                                             : nullptr;
+
+    VK_RESULT_TRY(AllocateBufferMemory(
+        context, MemoryAllocationType::Buffer, memoryPropertyFlags, &memoryPropertyFlagsOut,
+        extraAllocationInfoPtr, &buffer.get(), &memoryTypeIndex, &deviceMemory.get(), &sizeOut));
     ASSERT(sizeOut >= mSize);
 
     // Allocate bufferBlock
@@ -4103,9 +4114,16 @@ VkResult BufferPool::allocateBuffer(ErrorContext *context,
         VkMemoryPropertyFlags memoryPropertyFlagsOut;
         VkDeviceSize sizeOut;
         uint32_t memoryTypeIndex;
-        VK_RESULT_TRY(AllocateBufferMemory(
-            context, MemoryAllocationType::Buffer, memoryPropertyFlags, &memoryPropertyFlagsOut,
-            nullptr, &buffer.get(), &memoryTypeIndex, &deviceMemory.get(), &sizeOut));
+
+        const void *extraAllocationInfoPtr =
+            context->getFeatures().supportsBufferDeviceAddress.enabled
+                ? &kMemoryAllocateDeviceAddressFlags
+                : nullptr;
+
+        VK_RESULT_TRY(AllocateBufferMemory(context, MemoryAllocationType::Buffer,
+                                           memoryPropertyFlags, &memoryPropertyFlagsOut,
+                                           extraAllocationInfoPtr, &buffer.get(), &memoryTypeIndex,
+                                           &deviceMemory.get(), &sizeOut));
         ASSERT(sizeOut >= alignedSize);
 
         suballocation->initWithEntireBuffer(context, buffer.get(), MemoryAllocationType::Buffer,
@@ -5481,10 +5499,16 @@ angle::Result BufferHelper::init(ErrorContext *context,
     DeviceScoped<DeviceMemory> deviceMemory(renderer->getDevice());
     VkDeviceSize sizeOut;
     uint32_t bufferMemoryTypeIndex;
-    ANGLE_VK_TRY(context,
-                 AllocateBufferMemory(context, MemoryAllocationType::Buffer, memoryPropertyFlagsOut,
-                                      &memoryPropertyFlagsOut, nullptr, &buffer.get(),
-                                      &bufferMemoryTypeIndex, &deviceMemory.get(), &sizeOut));
+
+    const void *extraAllocationInfoPtr = context->getFeatures().supportsBufferDeviceAddress.enabled
+                                             ? &kMemoryAllocateDeviceAddressFlags
+                                             : nullptr;
+
+    ANGLE_VK_TRY(context, AllocateBufferMemory(
+                              context, MemoryAllocationType::Buffer, memoryPropertyFlagsOut,
+                              &memoryPropertyFlagsOut, extraAllocationInfoPtr, &buffer.get(),
+                              &bufferMemoryTypeIndex, &deviceMemory.get(), &sizeOut));
+
     ASSERT(sizeOut >= createInfo->size);
 
     mSuballocation.initWithEntireBuffer(context, buffer.get(), MemoryAllocationType::Buffer,
@@ -6222,6 +6246,20 @@ void BufferHelper::fillWithPattern(const void *pattern,
     }
     std::memcpy(buffer + patternSize, buffer, remaining);
     return;
+}
+
+VkDeviceAddress BufferHelper::getDeviceAddress(Context *context)
+{
+    ASSERT(context->getFeatures().supportsBufferDeviceAddress.enabled);
+    ASSERT(valid());
+
+    VkBufferDeviceAddressInfo info{};
+    info.buffer     = getBuffer().getHandle();
+    info.sType      = VK_STRUCTURE_TYPE_BUFFER_DEVICE_ADDRESS_INFO;
+    info.pNext      = NULL;
+    VkDevice device = context->getDevice();
+
+    return vkGetBufferDeviceAddressKHR(device, &info);
 }
 
 // Used for ImageHelper non-zero memory allocation when useVmaForImageSuballocation is disabled.
@@ -7083,9 +7121,14 @@ VkResult ImageHelper::initMemory(ErrorContext *context,
     }
     else
     {
-        VK_RESULT_TRY(AllocateImageMemory(context, mMemoryAllocationType, flags, flagsOut, nullptr,
-                                          &mImage, &mMemoryTypeIndex, &mDeviceMemory,
-                                          &mAllocationSize));
+        const void *extraAllocationInfoPtr =
+            context->getFeatures().supportsBufferDeviceAddress.enabled
+                ? &kMemoryAllocateDeviceAddressFlags
+                : nullptr;
+
+        VK_RESULT_TRY(AllocateImageMemory(context, mMemoryAllocationType, flags, flagsOut,
+                                          extraAllocationInfoPtr, &mImage, &mMemoryTypeIndex,
+                                          &mDeviceMemory, &mAllocationSize));
     }
 
     mCurrentDeviceQueueIndex = context->getDeviceQueueIndex();
