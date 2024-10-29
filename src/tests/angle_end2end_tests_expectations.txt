@@ -721,6 +721,7 @@ b/346650202 PIXEL4ORXL : GeometryShaderTest.CreateAndAttachGeometryShaderOES/* =
 378404997 PIXEL4ORXL VULKAN : FramebufferFetchES31.DrawFetchBlitDrawFetch_*/* = SKIP
 378404997 PIXEL4ORXL VULKAN : FramebufferFetchES31.MultipleRenderTarget_*_*Complex/* = SKIP
 378404997 PIXEL4ORXL VULKAN : FramebufferFetchES31.DrawNonFetchDrawFetchWithDifferentPrograms_*/* = SKIP
+383157197 PIXEL4ORXL VULKAN : LineLoopPrimitiveRestartXfbTest.OneVertexBeforeRestartIndex/* = SKIP
 
 // Pixel 6 expectations.
 40096826 PIXEL6 VULKAN : BlitFramebufferTest.OOBWrite/* = SKIP
