@@ -7946,6 +7946,60 @@ TEST_P(VulkanPerformanceCounterTest_ES31, DestroyAtomicCounterBufferAlsoDestroyD
     EXPECT_LT(DescriptorSetCacheTotalSizeIncrease, 2);
 }
 
+// Regression test for a bug in the Vulkan backend, where a perf warning added after
+// serials for outside render pass commands were exhausted led to an assertion failure.
+// http://issuetracker.google.com/375661776
+TEST_P(VulkanPerformanceCounterTest_ES31, RunOutOfReservedOutsideRenderPassSerial)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
+
+    uint64_t expectedRenderPassCount = getPerfCounters().renderPasses + 1;
+
+    // Step 1: Draw to start a render pass.
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+
+    // Step 2: Switch to fbo and clear it to set mRenderPassCommandBuffer to null,
+    // but keep the render pass open.
+    GLTexture fbTexture;
+    glBindTexture(GL_TEXTURE_2D, fbTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fbTexture, 0);
+
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Step 3: Run > kMaxReservedOutsideRenderPassQueueSerials compute with glMemoryBarrier
+    // to trigger the "Running out of reserved outsideRenderPass queueSerial" path.
+    constexpr char kCSSource[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(std140, binding=0) buffer buf {
+vec4 outData;
+};
+void main()
+{
+outData = vec4(1.0, 1.0, 1.0, 1.0);
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(csProgram, kCSSource);
+    glUseProgram(csProgram);
+
+    GLBuffer ssbo;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssbo);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, 16, nullptr, GL_STREAM_DRAW);
+
+    for (int i = 0; i < 100; i++)
+    {
+        glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+        glDispatchCompute(1, 1, 1);
+    }
+    EXPECT_GL_NO_ERROR();
+
+    uint64_t actualRenderPassCount = getPerfCounters().renderPasses;
+    EXPECT_EQ(expectedRenderPassCount, actualRenderPassCount);
+}
+
 // Test that post-render-pass-to-swapchain glFenceSync followed by eglSwapBuffers incurs only a
 // single submission.
 TEST_P(VulkanPerformanceCounterTest, FenceThenSwapBuffers)
