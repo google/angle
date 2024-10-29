@@ -1898,13 +1898,9 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(
             &mDescriptorSets[DescriptorSetIndex::Texture]));
         ASSERT(mDescriptorSets[DescriptorSetIndex::Texture]);
 
-        ANGLE_TRY(descriptorBuilder.updateFullActiveTextures(
-            context, mVariableInfoMap, mTextureWriteDescriptorDescs, *mExecutable, textures,
-            samplers, pipelineType));
-
-        descriptorBuilder.updateDescriptorSet(
-            context->getRenderer(), mTextureWriteDescriptorDescs, updateBuilder,
-            mDescriptorSets[DescriptorSetIndex::Texture]->getDescriptorSet());
+        ANGLE_TRY(UpdateFullActiveTexturesDescriptorSet(
+            context, mVariableInfoMap, mTextureWriteDescriptorDescs, updateBuilder, *mExecutable,
+            textures, samplers, mDescriptorSets[DescriptorSetIndex::Texture]->getDescriptorSet()));
     }
 
     return angle::Result::Continue;
