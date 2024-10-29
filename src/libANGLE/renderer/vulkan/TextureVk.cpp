@@ -3609,8 +3609,7 @@ void TextureVk::releaseOwnershipOfImage(const gl::Context *context)
     releaseAndDeleteImageAndViews(contextVk);
 }
 
-const vk::ImageView &TextureVk::getReadImageView(vk::Context *context,
-                                                 GLenum srgbDecode,
+const vk::ImageView &TextureVk::getReadImageView(GLenum srgbDecode,
                                                  bool texelFetchStaticUse,
                                                  bool samplerExternal2DY2YEXT) const
 {
@@ -3717,11 +3716,11 @@ vk::BufferHelper *TextureVk::getPossiblyEmulatedTextureBuffer(vk::Context *conte
     return &bufferVk->getBuffer();
 }
 
-angle::Result TextureVk::getBufferViewAndRecordUse(vk::Context *context,
-                                                   const vk::Format *imageUniformFormat,
-                                                   const gl::SamplerBinding *samplerBinding,
-                                                   bool isImage,
-                                                   const vk::BufferView **viewOut)
+angle::Result TextureVk::getBufferView(vk::Context *context,
+                                       const vk::Format *imageUniformFormat,
+                                       const gl::SamplerBinding *samplerBinding,
+                                       bool isImage,
+                                       const vk::BufferView **viewOut)
 {
     vk::Renderer *renderer = context->getRenderer();
 
