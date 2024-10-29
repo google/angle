@@ -69,8 +69,8 @@ CLPlatformImpl::Info CLPlatformVk::createInfo() const
     info.name.assign("ANGLE Vulkan");
     info.profile.assign("FULL_PROFILE");
     info.versionStr.assign(GetVersionString());
-    info.hostTimerRes          = 0u;
-    info.version               = GetVersion();
+    info.hostTimerRes = 0u;
+    info.version      = GetVersion();
 
     info.initializeVersionedExtensions(std::move(extList));
     return info;
@@ -132,7 +132,7 @@ angle::Result CLPlatformVk::createContextFromType(cl::Context &context,
     {
         ANGLE_CL_RETURN_ERROR(CL_DEVICE_NOT_FOUND);
     }
-    else if (deviceType.intersects(CL_DEVICE_TYPE_GPU))
+    else if (deviceType.intersects(CL_DEVICE_TYPE_GPU | CL_DEVICE_TYPE_DEFAULT))
     {
         switch (vkPhysicalDeviceType)
         {
