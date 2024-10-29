@@ -6,19 +6,18 @@
 // CLDeviceVk.cpp: Implements the class methods for CLDeviceVk.
 
 #include "libANGLE/renderer/vulkan/CLDeviceVk.h"
-#include "libANGLE/renderer/vulkan/CLPlatformVk.h"
+#include "libANGLE/renderer/vulkan/clspv_utils.h"
 #include "libANGLE/renderer/vulkan/vk_renderer.h"
 
 #include "libANGLE/renderer/cl_types.h"
 
-#include "libANGLE/Display.h"
 #include "libANGLE/cl_utils.h"
 
 namespace rx
 {
 
 CLDeviceVk::CLDeviceVk(const cl::Device &device, vk::Renderer *renderer)
-    : CLDeviceImpl(device), mRenderer(renderer)
+    : CLDeviceImpl(device), mRenderer(renderer), mSpirvVersion(ClspvGetSpirvVersion(renderer))
 {
     const VkPhysicalDeviceProperties &props = mRenderer->getPhysicalDeviceProperties();
 

@@ -7,6 +7,7 @@
 //
 
 #include "libANGLE/renderer/vulkan/clspv_utils.h"
+#include "common/log_utils.h"
 #include "libANGLE/renderer/vulkan/CLDeviceVk.h"
 
 #include <mutex>
@@ -283,6 +284,24 @@ void ProcessPrintfStatement(unsigned char *&data,
     std::printf("%s", printfOutput.c_str());
 }
 
+std::string GetSpvVersionAsClspvString(spv_target_env spvVersion)
+{
+    switch (spvVersion)
+    {
+        default:
+        case SPV_ENV_VULKAN_1_0:
+            return "1.0";
+        case SPV_ENV_VULKAN_1_1:
+            return "1.3";
+        case SPV_ENV_VULKAN_1_1_SPIRV_1_4:
+            return "1.4";
+        case SPV_ENV_VULKAN_1_2:
+            return "1.5";
+        case SPV_ENV_VULKAN_1_3:
+            return "1.6";
+    }
+}
+
 }  // namespace
 
 // Process the data recorded into printf storage buffer along with the info in printfino descriptor
@@ -327,6 +346,9 @@ std::string ClspvGetCompilerOptions(const CLDeviceVk *device)
         ASSERT(false);
     }
     options += addressBits == 64 ? " -arch=spir64" : " -arch=spir";
+
+    // select SPIR-V version target
+    options += " --spv-version=" + GetSpvVersionAsClspvString(device->getSpirvVersion());
 
     // Other internal Clspv compiler flags that are needed/required
     options += " --long-vector";
@@ -385,6 +407,36 @@ ClspvError ClspvCompileSource(const size_t programCount,
 
     return clspvCompileFromSourcesString(programCount, programSizes, programs, options,
                                          outputBinary, outputBinarySize, outputLog);
+}
+
+spv_target_env ClspvGetSpirvVersion(const vk::Renderer *renderer)
+{
+    uint32_t vulkanApiVersion = renderer->getDeviceVersion();
+    if (vulkanApiVersion < VK_API_VERSION_1_1)
+    {
+        // Minimum supported Vulkan version is 1.1 by Angle
+        UNREACHABLE();
+        return SPV_ENV_MAX;
+    }
+    else if (vulkanApiVersion < VK_API_VERSION_1_2)
+    {
+        // TODO: Might be worthwhile to make Vulkan 1.3 as minimum requirement
+        // http://anglebug.com/383824579
+        if (renderer->getFeatures().supportsSPIRV14.enabled)
+        {
+            return SPV_ENV_VULKAN_1_1_SPIRV_1_4;
+        }
+        return SPV_ENV_VULKAN_1_1;
+    }
+    else if (vulkanApiVersion < VK_API_VERSION_1_3)
+    {
+        return SPV_ENV_VULKAN_1_2;
+    }
+    else
+    {
+        // return the latest supported version
+        return SPV_ENV_VULKAN_1_3;
+    }
 }
 
 }  // namespace rx

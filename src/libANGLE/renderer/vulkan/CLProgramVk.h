@@ -28,8 +28,6 @@
 
 #include "vulkan/vulkan_core.h"
 
-#include "spirv-tools/libspirv.h"
-
 #include "spirv/unified1/NonSemanticClspvReflection.h"
 
 namespace rx
@@ -116,6 +114,7 @@ class CLProgramVk : public CLProgramImpl
         VkPushConstantRange pushConstRange{};
         cl_build_status buildStatus{CL_BUILD_NONE};
         cl_program_binary_type binaryType{CL_PROGRAM_BINARY_TYPE_NONE};
+        spv_target_env spirvVersion;
 
         size_t numKernels() const { return reflectionData.kernelArgsMap.size(); }
 

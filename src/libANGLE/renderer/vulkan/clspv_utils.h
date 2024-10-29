@@ -15,6 +15,7 @@
 #include <libANGLE/renderer/vulkan/CLDeviceVk.h>
 
 #include "clspv/Compiler.h"
+#include "spirv-tools/libspirv.h"
 
 namespace rx
 {
@@ -48,6 +49,9 @@ ClspvError ClspvCompileSource(const size_t programCount,
                               char **outputBinary,
                               size_t *outputBinarySize,
                               char **outputLog);
+
+spv_target_env ClspvGetSpirvVersion(const vk::Renderer *renderer);
+
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_VULKAN_CLSPV_UTILS_H_

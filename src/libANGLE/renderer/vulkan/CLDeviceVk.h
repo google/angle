@@ -8,13 +8,12 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_CLDEVICEVK_H_
 #define LIBANGLE_RENDERER_VULKAN_CLDEVICEVK_H_
 
-#include "libANGLE/renderer/vulkan/DisplayVk.h"
 #include "libANGLE/renderer/vulkan/cl_types.h"
 #include "libANGLE/renderer/vulkan/vk_renderer.h"
 
 #include "libANGLE/renderer/CLDeviceImpl.h"
 
-#include "libANGLE/Display.h"
+#include "spirv-tools/libspirv.h"
 
 namespace rx
 {
@@ -42,8 +41,11 @@ class CLDeviceVk : public CLDeviceImpl
     // Returns runtime-selected LWS value
     cl::WorkgroupSize selectWorkGroupSize(const cl::NDRange &ndrange) const;
 
+    spv_target_env getSpirvVersion() const { return mSpirvVersion; }
+
   private:
     vk::Renderer *mRenderer;
+    spv_target_env mSpirvVersion;
     angle::HashMap<cl::DeviceInfo, cl_uint> mInfoUInt;
     angle::HashMap<cl::DeviceInfo, cl_ulong> mInfoULong;
     angle::HashMap<cl::DeviceInfo, size_t> mInfoSizeT;

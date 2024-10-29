@@ -7,7 +7,6 @@
 
 #include "libANGLE/renderer/vulkan/CLProgramVk.h"
 #include "libANGLE/renderer/vulkan/CLContextVk.h"
-#include "libANGLE/renderer/vulkan/CLDeviceVk.h"
 #include "libANGLE/renderer/vulkan/clspv_utils.h"
 #include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
@@ -372,7 +371,8 @@ angle::Result CLProgramVk::init()
     // The devices associated with the program object are the devices associated with context
     for (const cl::DevicePtr &device : devices)
     {
-        mAssociatedDevicePrograms[device->getNative()] = DeviceProgramData{};
+        DeviceProgramData deviceProgramData{};
+        mAssociatedDevicePrograms[device->getNative()] = std::move(deviceProgramData);
     }
 
     return angle::Result::Continue;
@@ -443,6 +443,7 @@ angle::Result CLProgramVk::init(const size_t *lengths,
 
         // Add device binary to program
         DeviceProgramData deviceBinary;
+        deviceBinary.spirvVersion = device->getImpl<CLDeviceVk>().getSpirvVersion();
         deviceBinary.binaryType  = binaryHeader->binaryType;
         deviceBinary.buildStatus = binaryHeader->buildStatus;
         switch (deviceBinary.binaryType)
@@ -834,6 +835,7 @@ bool CLProgramVk::buildInternal(const cl::DevicePtrs &devices,
     {
         const cl::RefPointer<cl::Device> &device = devices.at(i);
         DeviceProgramData &deviceProgramData     = mAssociatedDevicePrograms[device->getNative()];
+        deviceProgramData.spirvVersion           = device->getImpl<CLDeviceVk>().getSpirvVersion();
 
         // add clspv compiler options based on device features
         processedOptions += ClspvGetCompilerOptions(&device->getImpl<CLDeviceVk>());
@@ -930,7 +932,7 @@ bool CLProgramVk::buildInternal(const cl::DevicePtrs &devices,
         // the shader module
         if (deviceProgramData.binaryType == CL_PROGRAM_BINARY_TYPE_EXECUTABLE)
         {
-            spvtools::SpirvTools spvTool(SPV_ENV_UNIVERSAL_1_5);
+            spvtools::SpirvTools spvTool(deviceProgramData.spirvVersion);
             bool parseRet = spvTool.Parse(
                 deviceProgramData.binary,
                 [](const spv_endianness_t endianess, const spv_parsed_header_t &instruction) {
@@ -1013,7 +1015,7 @@ bool CLProgramVk::buildInternal(const cl::DevicePtrs &devices,
 angle::spirv::Blob CLProgramVk::stripReflection(const DeviceProgramData *deviceProgramData)
 {
     angle::spirv::Blob binaryStripped;
-    spvtools::Optimizer opt(SPV_ENV_UNIVERSAL_1_5);
+    spvtools::Optimizer opt(deviceProgramData->spirvVersion);
     opt.RegisterPass(spvtools::CreateStripReflectInfoPass());
     spvtools::OptimizerOptions optOptions;
     optOptions.set_run_validator(false);
