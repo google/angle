@@ -16,7 +16,6 @@ Pixel 6 (ARM based) specific script that measures the following for each restric
 Setup:
 
   autoninja -C out/<config> angle_trace_perf_tests angle_apks
-  adb install -r --force-queryable ./out/<config>/apks/AngleLibraries.apk
   adb install -r out/<config>/angle_trace_tests_apk/angle_trace_tests-debug.apk
   (cd out/<config>; ../../src/tests/run_angle_android_test.py angle_trace_tests \
    --verbose --local-output --verbose-logging --max-steps-performed 1 --log=debug)
@@ -55,6 +54,7 @@ from psutil import process_iter
 DEFAULT_TEST_DIR = '.'
 DEFAULT_TEST_JSON = 'restricted_traces.json'
 DEFAULT_LOG_LEVEL = 'info'
+DEFAULT_ANGLE_PACKAGE = 'com.android.angle.test'
 
 Result = namedtuple('Result', ['stdout', 'stderr', 'time'])
 
@@ -68,7 +68,7 @@ class _global(object):
 def init():
     _global.current_user = run_adb_command('shell am get-current-user').stdout.strip()
     _global.storage_dir = '/data/user/' + _global.current_user + '/com.android.angle.test/files'
-    _global.cache_dir = '/data/user_de/' + _global.current_user + '/com.android.angle.test/cach'
+    _global.cache_dir = '/data/user_de/' + _global.current_user + '/com.android.angle.test/cache'
     logging.debug('Running with user %s, storage %s, cache %s', _global.current_user,
                   _global.storage_dir, _global.cache_dir)
 
@@ -549,7 +549,7 @@ def get_thermal_info():
             name = re.search('Name: ([^ ]*)', line).group(1)
             if ('VIRTUAL-SKIN' in name and
                     '-CHARGE-' not in name and  # only supposed to affect charging speed
-                    '-MODEL-' not in name):  # different units and not used for throttling
+                    'MODEL' not in name.split('-')):  # different units and not used for throttling
                 result.append(line)
 
     if not result:
@@ -701,6 +701,12 @@ def main():
         '--min-battery-level',
         help='Sleep between tests if battery level drops below this value (off by default)',
         type=int)
+    parser.add_argument(
+        '--angle-package',
+        help='Where to load ANGLE libraries from. This will load from the test APK by default, ' +
+        'but you can point to any APK that contains ANGLE. Specify \'system\' to use libraries ' +
+        'already on the device',
+        default=DEFAULT_ANGLE_PACKAGE)
 
     group = parser.add_mutually_exclusive_group()
     group.add_argument(
@@ -921,16 +927,12 @@ def run_traces(args):
                 if renderer == "native":
                     # Force the settings to native
                     run_adb_command(
-                        'shell settings put global angle_debug_package org.chromium.angle')
-                    run_adb_command(
                         'shell settings put global angle_gl_driver_selection_pkgs com.android.angle.test'
                     )
                     run_adb_command(
                         'shell settings put global angle_gl_driver_selection_values native')
                 elif renderer == "vulkan":
                     # Force the settings to ANGLE
-                    run_adb_command(
-                        'shell settings put global angle_debug_package org.chromium.angle')
                     run_adb_command(
                         'shell settings put global angle_gl_driver_selection_pkgs com.android.angle.test'
                     )
@@ -948,6 +950,14 @@ def run_traces(args):
                 else:
                     logging.error('Unsupported renderer {}'.format(renderer))
                     exit()
+
+                if args.angle_package == 'system':
+                    # Clear the debug package so ANGLE will be loaded from /system/lib64
+                    run_adb_command('shell settings delete global angle_debug_package')
+                else:
+                    # Otherwise, load ANGLE from the specified APK
+                    run_adb_command('shell settings put global angle_debug_package ' +
+                                    args.angle_package)
 
                 # Remove any previous perf results
                 cleanup()
