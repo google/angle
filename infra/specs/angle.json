@@ -5146,54 +5146,6 @@
       },
       {
         "args": [
-          "--use-angle=swiftshader"
-        ],
-        "merge": {
-          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
-        },
-        "name": "angle_deqp_khr_noctx_gles32_tests",
-        "swarming": {
-          "containment_type": "AUTO",
-          "dimensions": {
-            "cpu": "x86-64",
-            "gpu": "none",
-            "os": "Ubuntu-22.04",
-            "pool": "chromium.tests.gpu"
-          },
-          "hard_timeout": 900,
-          "io_timeout": 900,
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
-        },
-        "test": "angle_deqp_khr_noctx_gles32_tests",
-        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_noctx_gles32_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
-        "args": [
-          "--use-angle=swiftshader"
-        ],
-        "merge": {
-          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
-        },
-        "name": "angle_deqp_khr_single_gles32_tests",
-        "swarming": {
-          "containment_type": "AUTO",
-          "dimensions": {
-            "cpu": "x86-64",
-            "gpu": "none",
-            "os": "Ubuntu-22.04",
-            "pool": "chromium.tests.gpu"
-          },
-          "hard_timeout": 900,
-          "io_timeout": 900,
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
-        },
-        "test": "angle_deqp_khr_single_gles32_tests",
-        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_single_gles32_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
-        "args": [
           "--gtest_filter=*Vulkan_SwiftShader*"
         ],
         "merge": {
@@ -5631,54 +5583,6 @@
       },
       {
         "args": [
-          "--use-angle=swiftshader"
-        ],
-        "merge": {
-          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
-        },
-        "name": "angle_deqp_khr_noctx_gles32_tests",
-        "swarming": {
-          "containment_type": "AUTO",
-          "dimensions": {
-            "cpu": "x86-64",
-            "gpu": "none",
-            "os": "Ubuntu-22.04",
-            "pool": "chromium.tests.gpu"
-          },
-          "hard_timeout": 900,
-          "io_timeout": 900,
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
-        },
-        "test": "angle_deqp_khr_noctx_gles32_tests",
-        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_noctx_gles32_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
-        "args": [
-          "--use-angle=swiftshader"
-        ],
-        "merge": {
-          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
-        },
-        "name": "angle_deqp_khr_single_gles32_tests",
-        "swarming": {
-          "containment_type": "AUTO",
-          "dimensions": {
-            "cpu": "x86-64",
-            "gpu": "none",
-            "os": "Ubuntu-22.04",
-            "pool": "chromium.tests.gpu"
-          },
-          "hard_timeout": 900,
-          "io_timeout": 900,
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
-        },
-        "test": "angle_deqp_khr_single_gles32_tests",
-        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_single_gles32_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
-        "args": [
           "--gtest_filter=*Vulkan_SwiftShader*"
         ],
         "merge": {
@@ -5908,54 +5812,6 @@
         },
         "test": "angle_deqp_khr_noctx_gles2_tests",
         "test_id_prefix": "ninja://src/tests:angle_deqp_khr_noctx_gles2_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
-        "args": [
-          "--use-angle=swiftshader"
-        ],
-        "merge": {
-          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
-        },
-        "name": "angle_deqp_khr_noctx_gles32_tests",
-        "swarming": {
-          "containment_type": "AUTO",
-          "dimensions": {
-            "cpu": "x86-64",
-            "gpu": "none",
-            "os": "Ubuntu-22.04",
-            "pool": "chromium.tests.gpu"
-          },
-          "hard_timeout": 900,
-          "io_timeout": 900,
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
-        },
-        "test": "angle_deqp_khr_noctx_gles32_tests",
-        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_noctx_gles32_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
-        "args": [
-          "--use-angle=swiftshader"
-        ],
-        "merge": {
-          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
-        },
-        "name": "angle_deqp_khr_single_gles32_tests",
-        "swarming": {
-          "containment_type": "AUTO",
-          "dimensions": {
-            "cpu": "x86-64",
-            "gpu": "none",
-            "os": "Ubuntu-22.04",
-            "pool": "chromium.tests.gpu"
-          },
-          "hard_timeout": 900,
-          "io_timeout": 900,
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
-        },
-        "test": "angle_deqp_khr_single_gles32_tests",
-        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_single_gles32_tests/",
         "use_isolated_scripts_api": true
       },
       {
@@ -8961,54 +8817,6 @@
       },
       {
         "args": [
-          "--use-angle=swiftshader"
-        ],
-        "merge": {
-          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
-        },
-        "name": "angle_deqp_khr_noctx_gles32_tests",
-        "swarming": {
-          "containment_type": "AUTO",
-          "dimensions": {
-            "cpu": "x86-64",
-            "gpu": "none",
-            "os": "Windows-10",
-            "pool": "chromium.tests.gpu"
-          },
-          "hard_timeout": 900,
-          "io_timeout": 900,
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
-        },
-        "test": "angle_deqp_khr_noctx_gles32_tests",
-        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_noctx_gles32_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
-        "args": [
-          "--use-angle=swiftshader"
-        ],
-        "merge": {
-          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
-        },
-        "name": "angle_deqp_khr_single_gles32_tests",
-        "swarming": {
-          "containment_type": "AUTO",
-          "dimensions": {
-            "cpu": "x86-64",
-            "gpu": "none",
-            "os": "Windows-10",
-            "pool": "chromium.tests.gpu"
-          },
-          "hard_timeout": 900,
-          "io_timeout": 900,
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
-        },
-        "test": "angle_deqp_khr_single_gles32_tests",
-        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_single_gles32_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
-        "args": [
           "--gtest_filter=*Vulkan_SwiftShader*"
         ],
         "merge": {
@@ -9541,54 +9349,6 @@
         },
         "test": "angle_deqp_khr_noctx_gles2_tests",
         "test_id_prefix": "ninja://src/tests:angle_deqp_khr_noctx_gles2_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
-        "args": [
-          "--use-angle=swiftshader"
-        ],
-        "merge": {
-          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
-        },
-        "name": "angle_deqp_khr_noctx_gles32_tests",
-        "swarming": {
-          "containment_type": "AUTO",
-          "dimensions": {
-            "cpu": "x86-64",
-            "gpu": "none",
-            "os": "Windows-10",
-            "pool": "chromium.tests.gpu"
-          },
-          "hard_timeout": 900,
-          "io_timeout": 900,
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
-        },
-        "test": "angle_deqp_khr_noctx_gles32_tests",
-        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_noctx_gles32_tests/",
-        "use_isolated_scripts_api": true
-      },
-      {
-        "args": [
-          "--use-angle=swiftshader"
-        ],
-        "merge": {
-          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
-        },
-        "name": "angle_deqp_khr_single_gles32_tests",
-        "swarming": {
-          "containment_type": "AUTO",
-          "dimensions": {
-            "cpu": "x86-64",
-            "gpu": "none",
-            "os": "Windows-10",
-            "pool": "chromium.tests.gpu"
-          },
-          "hard_timeout": 900,
-          "io_timeout": 900,
-          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
-        },
-        "test": "angle_deqp_khr_single_gles32_tests",
-        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_single_gles32_tests/",
         "use_isolated_scripts_api": true
       },
       {
