@@ -426,12 +426,7 @@ void ValidateAST::visitBuiltInFunction(TIntermOperator *node, const TFunction *f
         return;
     }
 
-    ImmutableStringBuilder opValueBuilder(16);
-    opValueBuilder << "op: ";
-    opValueBuilder.appendDecimal(op);
-
-    ImmutableString opValue = opValueBuilder;
-
+    ImmutableString opValue = BuildConcatenatedImmutableString("op: ", op);
     if (function == nullptr)
     {
         mDiagnostics->error(node->getLine(),
