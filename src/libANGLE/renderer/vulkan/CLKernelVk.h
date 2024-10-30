@@ -137,6 +137,7 @@ class CLKernelVk : public CLKernelImpl
     cl::MemoryPtr getPodBuffer() { return mPodBuffer; }
 
     bool usesPrintf() const;
+    bool usesPrintfBufferPointerPushConstant() const;
 
     angle::Result allocateDescriptorSet(
         DescriptorSetIndex index,

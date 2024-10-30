@@ -191,7 +191,7 @@ angle::Result CLKernelVk::init()
                 nullptr, cl::MemFlags(CL_MEM_READ_ONLY), podBufferSize, nullptr)));
     }
 
-    if (usesPrintf())
+    if (usesPrintf() && !usesPrintfBufferPointerPushConstant())
     {
         mDescriptorSetLayoutDescs[DescriptorSetIndex::Printf].addBinding(
             deviceProgramData->reflectionData.printfBufferStorage.binding,
@@ -420,6 +420,13 @@ bool CLKernelVk::usesPrintf() const
 {
     return mProgram->getDeviceProgramData(mName.c_str())->getKernelFlags(mName) &
            NonSemanticClspvReflectionMayUsePrintf;
+}
+
+bool CLKernelVk::usesPrintfBufferPointerPushConstant() const
+{
+    return mProgram->getDeviceProgramData(mName.c_str())
+        ->reflectionData.pushConstants.contains(
+            NonSemanticClspvReflectionPrintfBufferPointerPushConstant);
 }
 
 angle::Result CLKernelVk::initializeDescriptorPools()

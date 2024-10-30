@@ -280,11 +280,10 @@ spv_result_t ParseReflection(CLProgramVk::SpvReflectionData &reflectionData,
                 }
                 case NonSemanticClspvReflectionPrintfBufferPointerPushConstant:
                 {
-                    ERR() << "Shouldn't be here. Support of printf builtin function is enabled "
-                             "through "
-                             "PrintfBufferStorageBuffer. Check optins passed down to clspv";
-                    UNREACHABLE();
-                    return SPV_UNSUPPORTED;
+                    uint32_t pcOffset = reflectionData.spvIntLookup[spvInstr.words[5]];
+                    reflectionData.pushConstants[spvInstr.words[4]] = {
+                        .stageFlags = 0, .offset = pcOffset, .size = CHAR_BIT};
+                    break;
                 }
                 case NonSemanticClspvReflectionNormalizedSamplerMaskPushConstant:
                 case NonSemanticClspvReflectionImageArgumentInfoChannelOrderPushConstant:

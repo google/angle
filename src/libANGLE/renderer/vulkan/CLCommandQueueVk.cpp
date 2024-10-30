@@ -1996,20 +1996,35 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk)
         // The spec calls out *The first 4 bytes of the buffer should be zero-initialized.*
         memset(mapPointer, 0, 4);
 
-        auto &bufferInfo  = printfDescSetBuilder.allocDescriptorBufferInfo();
-        bufferInfo.range  = clMem->getSize();
-        bufferInfo.offset = clMem->getOffset();
-        bufferInfo.buffer = vkMem.getBuffer().getBuffer().getHandle();
+        if (kernelVk.usesPrintfBufferPointerPushConstant())
+        {
+            const VkPushConstantRange *pushConstantRangePtr =
+                &devProgramData->reflectionData.pushConstants.at(
+                    NonSemanticClspvReflectionPrintfBufferPointerPushConstant);
+            uint64_t devAddr = vkMem.getBuffer().getDeviceAddress(mContext) + vkMem.getOffset();
+            // Push printf push-constant to command buffer
+            mComputePassCommands->getCommandBuffer().pushConstants(
+                kernelVk.getPipelineLayout(), VK_SHADER_STAGE_COMPUTE_BIT,
+                pushConstantRangePtr->offset, pushConstantRangePtr->size, &devAddr);
+        }
+        else
+        {
+            auto &bufferInfo  = printfDescSetBuilder.allocDescriptorBufferInfo();
+            bufferInfo.range  = clMem->getSize();
+            bufferInfo.offset = clMem->getOffset();
+            bufferInfo.buffer = vkMem.getBuffer().getBuffer().getHandle();
 
-        auto &writeDescriptorSet           = printfDescSetBuilder.allocWriteDescriptorSet();
-        writeDescriptorSet.descriptorCount = 1;
-        writeDescriptorSet.descriptorType  = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
-        writeDescriptorSet.pBufferInfo     = &bufferInfo;
-        writeDescriptorSet.sType           = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        writeDescriptorSet.dstSet          = kernelVk.getDescriptorSet(DescriptorSetIndex::Printf);
-        writeDescriptorSet.dstBinding      = kernelVk.getProgram()
-                                            ->getDeviceProgramData(kernelVk.getKernelName().c_str())
-                                            ->reflectionData.printfBufferStorage.binding;
+            auto &writeDescriptorSet           = printfDescSetBuilder.allocWriteDescriptorSet();
+            writeDescriptorSet.descriptorCount = 1;
+            writeDescriptorSet.descriptorType  = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+            writeDescriptorSet.pBufferInfo     = &bufferInfo;
+            writeDescriptorSet.sType           = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+            writeDescriptorSet.dstSet = kernelVk.getDescriptorSet(DescriptorSetIndex::Printf);
+            writeDescriptorSet.dstBinding =
+                kernelVk.getProgram()
+                    ->getDeviceProgramData(kernelVk.getKernelName().c_str())
+                    ->reflectionData.printfBufferStorage.binding;
+        }
 
         mNeedPrintfHandling = true;
         mPrintfInfos        = kernelVk.getProgram()->getPrintfDescriptors(kernelVk.getKernelName());
