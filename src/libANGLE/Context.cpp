@@ -477,51 +477,16 @@ bool CanSupportAEP(const gl::Version &version, const gl::Extensions &extensions)
     // * EXT_texture_buffer
     // * EXT_texture_cube_map_array
     // * EXT_texture_sRGB_decode
-    std::pair<const char *, bool> requirements[] = {
-        {"version >= ES_3_1", version >= ES_3_1},
-        {"extensions.debugKHR", extensions.debugKHR},
-        {"extensions.textureCompressionAstcLdrKHR", extensions.textureCompressionAstcLdrKHR},
-        {"extensions.blendEquationAdvancedKHR", extensions.blendEquationAdvancedKHR},
-        {"extensions.sampleShadingOES", extensions.sampleShadingOES},
-        {"extensions.sampleVariablesOES", extensions.sampleVariablesOES},
-        {"extensions.shaderImageAtomicOES", extensions.shaderImageAtomicOES},
-        {"extensions.shaderMultisampleInterpolationOES",
-         extensions.shaderMultisampleInterpolationOES},
-        {"extensions.textureStencil8OES", extensions.textureStencil8OES},
-        {"extensions.textureStorageMultisample2dArrayOES",
-         extensions.textureStorageMultisample2dArrayOES},
-        {"extensions.copyImageEXT", extensions.copyImageEXT},
-        {"extensions.drawBuffersIndexedEXT", extensions.drawBuffersIndexedEXT},
-        {"extensions.geometryShaderEXT", extensions.geometryShaderEXT},
-        {"extensions.gpuShader5EXT", extensions.gpuShader5EXT},
-        {"extensions.primitiveBoundingBoxEXT", extensions.primitiveBoundingBoxEXT},
-        {"extensions.shaderIoBlocksEXT", extensions.shaderIoBlocksEXT},
-        {"extensions.tessellationShaderEXT", extensions.tessellationShaderEXT},
-        {"extensions.textureBorderClampEXT", extensions.textureBorderClampEXT},
-        {"extensions.textureBufferEXT", extensions.textureBufferEXT},
-        {"extensions.textureCubeMapArrayEXT", extensions.textureCubeMapArrayEXT},
-        {"extensions.textureSRGBDecodeEXT", extensions.textureSRGBDecodeEXT},
-    };
-
-    bool result = true;
-    for (const auto &req : requirements)
-    {
-        result = result && req.second;
-    }
-
-    if (!result)
-    {
-        INFO() << "CanSupportAEP() check failed for missing the following requirements:\n";
-        for (const auto &req : requirements)
-        {
-            if (!req.second)
-            {
-                INFO() << "- " << req.first << "\n";
-            }
-        }
-    }
-
-    return result;
+    return (version >= ES_3_1 && extensions.debugKHR && extensions.textureCompressionAstcLdrKHR &&
+            extensions.blendEquationAdvancedKHR && extensions.sampleShadingOES &&
+            extensions.sampleVariablesOES && extensions.shaderImageAtomicOES &&
+            extensions.shaderMultisampleInterpolationOES && extensions.textureStencil8OES &&
+            extensions.textureStorageMultisample2dArrayOES && extensions.copyImageEXT &&
+            extensions.drawBuffersIndexedEXT && extensions.geometryShaderEXT &&
+            extensions.gpuShader5EXT && extensions.primitiveBoundingBoxEXT &&
+            extensions.shaderIoBlocksEXT && extensions.tessellationShaderEXT &&
+            extensions.textureBorderClampEXT && extensions.textureBufferEXT &&
+            extensions.textureCubeMapArrayEXT && extensions.textureSRGBDecodeEXT);
 }
 }  // anonymous namespace
 
