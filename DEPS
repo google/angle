@@ -831,6 +831,11 @@ deps = {
     'condition': 'not build_with_chromium',
   },
 
+  'third_party/llvm-libc/src': {
+    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libc.git@98ed09318387deb45282ca1c92a384499860b76a',
+    'condition': 'not build_with_chromium',
+  },
+
   'third_party/libunwind/src': {
     'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libunwind.git@59d05179e3b1ba5534f9829b7d47b36ccc3da357',
     'condition': 'not build_with_chromium',
