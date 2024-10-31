@@ -574,6 +574,7 @@ if (build_angle_trace_tests) {
       "$angle_root/scripts/process_angle_perf_results.py",
       "$angle_root/src/tests/py_utils/angle_metrics.py",
       "$angle_root/src/tests/py_utils/angle_path_util.py",
+      "$angle_root/src/tests/restricted_traces/restricted_trace_perf.py",
       "$angle_root/src/tests/run_perf_tests.py",
     ]
 
