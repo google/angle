@@ -257,8 +257,6 @@ angle::Result UpdateFullTexturesDescriptorSet(vk::Context *context,
                                               const gl::SamplerBindingVector &samplers,
                                               VkDescriptorSet descriptorSet)
 {
-    // This is only used when cache is disabled.
-    ASSERT(!context->getFeatures().descriptorSetCache.enabled);
     vk::Renderer *renderer                                 = context->getRenderer();
     const std::vector<gl::SamplerBinding> &samplerBindings = executable.getSamplerBindings();
     const std::vector<GLuint> &samplerBoundTextureUnits = executable.getSamplerBoundTextureUnits();
@@ -1966,16 +1964,15 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(
     PipelineType pipelineType,
     UpdateDescriptorSetsBuilder *updateBuilder)
 {
-    // We use textureSerial to optimize texture binding updates. Each permutation of a
-    // {VkImage/VkSampler} generates a unique serial. These object ids are combined to form a unique
-    // signature for each descriptor set. This allows us to keep a cache of descriptor sets and
-    // avoid calling vkAllocateDesctiporSets each texture update.
-    vk::DescriptorSetDescBuilder descriptorBuilder;
-
     if (context->getFeatures().descriptorSetCache.enabled)
     {
         vk::SharedDescriptorSetCacheKey newSharedCacheKey;
 
+        // We use textureSerial to optimize texture binding updates. Each permutation of a
+        // {VkImage/VkSampler} generates a unique serial. These object ids are combined to form a
+        // unique signature for each descriptor set. This allows us to keep a cache of descriptor
+        // sets and avoid calling vkAllocateDesctiporSets each texture update.
+        vk::DescriptorSetDescBuilder descriptorBuilder;
         descriptorBuilder.updatePreCacheActiveTextures(context, *mExecutable, textures, samplers);
 
         ANGLE_TRY(mDynamicDescriptorPools[DescriptorSetIndex::Texture]->getOrAllocateDescriptorSet(
@@ -1988,14 +1985,17 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(
 
         if (newSharedCacheKey != nullptr)
         {
-            // Cache miss. A new cache entry has been created.
-            ANGLE_TRY(descriptorBuilder.updateActiveTexturesForCacheMiss(
-                context, mVariableInfoMap, mTextureWriteDescriptorDescs, *mExecutable, textures,
-                samplers, newSharedCacheKey));
+            ANGLE_TRY(UpdateFullTexturesDescriptorSet(
+                context, mVariableInfoMap, mTextureWriteDescriptorDescs, updateBuilder,
+                *mExecutable, textures, samplers,
+                mDescriptorSets[DescriptorSetIndex::Texture]->getDescriptorSet()));
 
-            descriptorBuilder.updateDescriptorSet(
-                context->getRenderer(), mTextureWriteDescriptorDescs, updateBuilder,
-                mDescriptorSets[DescriptorSetIndex::Texture]->getDescriptorSet());
+            const gl::ActiveTextureMask &activeTextureMask = mExecutable->getActiveSamplersMask();
+            for (size_t textureUnit : activeTextureMask)
+            {
+                ASSERT(textures[textureUnit] != nullptr);
+                textures[textureUnit]->onNewDescriptorSet(newSharedCacheKey);
+            }
         }
     }
     else
