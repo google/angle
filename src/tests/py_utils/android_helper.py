@@ -106,7 +106,6 @@ def _InitializeAndroid(apk_path):
     _Global.traces_outside_of_apk = interpreter_so_lib not in apk_so_libs
 
     if logging.getLogger().isEnabledFor(logging.DEBUG):
-        logging.debug(_AdbShell('dumpsys nfc | grep mScreenState || true').decode())
         logging.debug(_AdbShell('df -h').decode())
 
 
@@ -148,7 +147,7 @@ def _Run(cmd):
 
 
 @functools.lru_cache()
-def _FindAdb():
+def FindAdb():
     platform_tools = (
         pathlib.Path(angle_path_util.ANGLE_ROOT_DIR) / 'third_party' / 'android_sdk' / 'public' /
         'platform-tools')
@@ -159,11 +158,11 @@ def _FindAdb():
 
 
 def _AdbRun(args):
-    return _Run([_FindAdb()] + args)
+    return _Run([FindAdb()] + args)
 
 
 def _AdbShell(cmd):
-    return _Run([_FindAdb(), 'shell', cmd])
+    return _Run([FindAdb(), 'shell', cmd])
 
 
 def _GetAdbRoot(shell_id, su_path):
