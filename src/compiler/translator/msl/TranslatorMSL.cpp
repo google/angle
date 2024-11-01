@@ -783,20 +783,18 @@ void AddFragDepthEXTDeclaration(TCompiler &compiler, TIntermBlock &root, TSymbol
 
     TIntermBlock *assignBlock = new TIntermBlock();
     size_t index              = FindMainIndex(root);
-    TIntermSymbol *arraySym   = new TIntermSymbol(clipDistanceVar);
     TType *type = new TType(EbtFloat, EbpHigh, fragment ? EvqFragmentIn : EvqVertexOut, 1, 1);
-    for (uint8_t i = 0; i < compiler->getClipDistanceArraySize(); i++)
+    for (int i = 0; i < compiler->getClipDistanceArraySize(); i++)
     {
-        std::stringstream name;
-        name << "ClipDistance_" << static_cast<int>(i);
-        TIntermSymbol *varyingSym = new TIntermSymbol(new TVariable(
-            symbolTable, ImmutableString(name.str()), type, SymbolType::AngleInternal));
-
+        TVariable *varyingVar =
+            new TVariable(symbolTable, BuildConcatenatedImmutableString("ClipDistance_", i), type,
+                          SymbolType::AngleInternal);
         TIntermDeclaration *varyingDecl = new TIntermDeclaration();
-        varyingDecl->appendDeclarator(varyingSym->deepCopy());
+        varyingDecl->appendDeclarator(new TIntermSymbol(varyingVar));
         root->insertStatement(index++, varyingDecl);
-
-        TIntermTyped *arrayAccess = new TIntermBinary(EOpIndexDirect, arraySym, CreateIndexNode(i));
+        TIntermSymbol *varyingSym = new TIntermSymbol(varyingVar);
+        TIntermTyped *arrayAccess = new TIntermBinary(
+            EOpIndexDirect, new TIntermSymbol(clipDistanceVar), CreateIndexNode(i));
         assignBlock->appendStatement(new TIntermBinary(
             EOpAssign, fragment ? arrayAccess : varyingSym, fragment ? varyingSym : arrayAccess));
     }

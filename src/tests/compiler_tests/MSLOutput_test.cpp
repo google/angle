@@ -1023,3 +1023,12 @@ precision highp float;
 in float i; out vec4 c; void main() { c = vec4(interpolateAtOffset(i, vec2(i))); })";
     compile(kShader);
 }
+
+TEST_F(MSLVertexOutputTest, ClipCullDistanceNoCrash)
+{
+    getResources()->ANGLE_clip_cull_distance = 1;
+    const char kShader[]                     = R"(#version 300 es
+#extension GL_ANGLE_clip_cull_distance : require
+void main() { gl_Position = vec4(0.0, 0.0, 0.0, 1.0); gl_ClipDistance[1] = 1.0;})";
+    compile(kShader);
+}
