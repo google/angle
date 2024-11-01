@@ -1013,3 +1013,13 @@ TEST_F(MSLOutputTest, StructAndVarDeclarationSeparationNoCrash3)
  void main(){struct S1{mediump vec4 v;}l;struct S2{S1 s1;}s2;s2=s2,l=l,1;})";
     compile(kShader);
 }
+
+TEST_F(MSLOutputTest, MultisampleInterpolationNoCrash)
+{
+    getResources()->OES_shader_multisample_interpolation = 1;
+    const char kShader[]                                 = R"(#version 300 es
+#extension GL_OES_shader_multisample_interpolation : require
+precision highp float;
+in float i; out vec4 c; void main() { c = vec4(interpolateAtOffset(i, vec2(i))); })";
+    compile(kShader);
+}
