@@ -43,7 +43,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '601f829c49351cfea863cffbf1c18e4e7204b203',
+  'chromium_revision': '69b5e685119d2edbea70c35df1b1e8eb765ca8a4',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -441,7 +441,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': Var('chromium_git') + '/chromium/src/build.git@43a2115b4e2ecabfc002919263b35e535e05a9dc',
+    'url': Var('chromium_git') + '/chromium/src/build.git@679ccfd7d2a602df786fc46c718935c53eb8fce3',
     'condition': 'not build_with_chromium',
   },
 
@@ -500,7 +500,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@cda399271a1689a6fdbc2d2f3d76e7ce8f8ceec9',
+    'url': '{chromium_git}/chromium/src/testing@10d0c29aa1b8028a2ff44d3a77568d215cadadeb',
     'condition': 'not build_with_chromium',
   },
 
@@ -979,7 +979,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/turbine',
-              'version': 'YDjqj5VA9_8SsjmFf_gJG3tSTb6BdOLqQnr8SabZmFEC',
+              'version': '1iVaPZ0ts_R6ymFUftgOKVE50dXSx6duVZEOP891WCMC',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
