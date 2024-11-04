@@ -122,8 +122,19 @@ def RunWithChromiumTestRunner():
     return exit_code
 
 
+def CheckDeviceScreenState():
+    screen_state = subprocess.check_output(
+        [android_helper.FindAdb(), 'shell',
+         'dumpsys deviceidle | grep mScreen || true']).decode().split()
+    expected_screen_state = ['mScreenOn=true', 'mScreenLocked=false']
+    if not set(expected_screen_state).issubset(screen_state):
+        raise Exception('Unexpected device screen state: %s; expected: %s' %
+                        (screen_state, expected_screen_state))
+
+
 def main():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument('-h', '--help', action='store_true')
     parser.add_argument('test_type', choices=['gtest'])
     parser.add_argument('--output-directory', required=True)
     parser.add_argument('--wrapper-script-args')
@@ -137,18 +148,16 @@ def main():
 
     args, extra_args = parser.parse_known_args()
 
-    screen_state = subprocess.check_output(
-        [android_helper.FindAdb(), 'shell',
-         'dumpsys deviceidle | grep mScreen || true']).decode().split()
-    expected_screen_state = ['mScreenOn=true', 'mScreenLocked=false']
-    if not set(expected_screen_state).issubset(screen_state):
-        raise Exception('Unexpected device screen state: %s; expected: %s' %
-                        (screen_state, expected_screen_state))
+    if not args.help:
+        CheckDeviceScreenState()
 
     if args.angle_test_runner or args.suite == 'angle_trace_tests':
-        return RunWithAngleTestRunner(args, extra_args)
+        if args.help:
+            parser.print_help()
+        else:
+            return RunWithAngleTestRunner(args, extra_args)
     else:
-        # Chromium runner parses args by itself
+        # Chromium runner parses args by itself, including --help
         return RunWithChromiumTestRunner()
 
 
