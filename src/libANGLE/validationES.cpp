@@ -3855,6 +3855,15 @@ bool ValidateCopyImageSubDataBase(const Context *context,
         return false;
     }
 
+    // From EXT_copy_image: INVALID_OPERATION is generated if the source and destination formats
+    // are not compatible, if one image is compressed and the other is uncompressed and the block
+    // size of compressed image is not equal to the texel size of the compressed image.
+    if (!ValidateCopyFormatCompatible(srcFormatInfo, dstFormatInfo))
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kIncompatibleTextures);
+        return false;
+    }
+
     if (!ValidateCopyImageSubDataTargetRegion(context, entryPoint, srcName, srcTarget, srcLevel,
                                               srcX, srcY, srcZ, srcWidth, srcHeight, &srcSamples))
     {
@@ -3909,15 +3918,6 @@ bool ValidateCopyImageSubDataBase(const Context *context,
     if (dstFormatInfo.compressed && !fillsEntireMip &&
         !ValidateCompressedRegion(context, entryPoint, dstFormatInfo, dstWidth, dstHeight))
     {
-        return false;
-    }
-
-    // From EXT_copy_image: INVALID_OPERATION is generated if the source and destination formats
-    // are not compatible, if one image is compressed and the other is uncompressed and the block
-    // size of compressed image is not equal to the texel size of the compressed image.
-    if (!ValidateCopyFormatCompatible(srcFormatInfo, dstFormatInfo))
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kIncompatibleTextures);
         return false;
     }
 
