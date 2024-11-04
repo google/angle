@@ -130,7 +130,7 @@ def _EnsureTestSuite(suite_name):
     assert IsAndroid()
 
     if _Global.current_suite != suite_name:
-        _PrepareTestSuite(suite_name)
+        PrepareTestSuite(suite_name)
         _Global.current_suite = suite_name
 
 
@@ -319,7 +319,7 @@ def _CheckSameApkInstalled(apk_path):
     return False
 
 
-def _PrepareTestSuite(suite_name):
+def PrepareTestSuite(suite_name):
     apk_path = _ApkPath(suite_name)
 
     if _CheckSameApkInstalled(apk_path):

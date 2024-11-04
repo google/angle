@@ -16,13 +16,14 @@ Pixel 6 (ARM based) specific script that measures the following for each restric
 Setup:
 
   autoninja -C out/<config> angle_trace_perf_tests angle_apks
-  adb install -r out/<config>/angle_trace_tests_apk/angle_trace_tests-debug.apk
-  (cd out/<config>; ../../src/tests/run_angle_android_test.py angle_trace_tests \
-   --verbose --local-output --verbose-logging --max-steps-performed 1 --log=debug)
 
 Recommended command to run:
 
-  python3 restricted_trace_perf.py --fixedtime 10 --power --output-tag android.$(date '+%Y%m%d') --loop-count 5
+  out/<config>/restricted_trace_perf --fixedtime 10 --power --memory --output-tag android.$(date '+%Y%m%d') --loop-count 5
+
+Alternatively, you can pass the build directory and run from anywhere:
+
+  python3 restricted_trace_perf.py --fixedtime 10 --power --output-tag android.$(date '+%Y%m%d') --loop-count 5 --build-dir ../../../out/<config>
 
 - This will run through all the traces 5 times with the native driver, then 5 times with vulkan (via ANGLE)
 - 10 second run time with one warmup loop
@@ -33,6 +34,7 @@ Of the 5 runs, the high and low for each data point will be dropped, average of 
 '''
 
 import argparse
+import contextlib
 import copy
 import csv
 import fcntl
@@ -40,6 +42,7 @@ import fnmatch
 import json
 import logging
 import os
+import pathlib
 import re
 import statistics
 import subprocess
@@ -51,8 +54,14 @@ from collections import defaultdict, namedtuple
 from datetime import datetime
 from psutil import process_iter
 
+PY_UTILS = str(pathlib.Path(__file__).resolve().parents[1] / 'py_utils')
+if PY_UTILS not in sys.path:
+    os.stat(PY_UTILS) and sys.path.insert(0, PY_UTILS)
+import android_helper
+import angle_path_util
+import angle_test_util
+
 DEFAULT_TEST_DIR = '.'
-DEFAULT_TEST_JSON = 'restricted_traces.json'
 DEFAULT_LOG_LEVEL = 'info'
 DEFAULT_ANGLE_PACKAGE = 'com.android.angle.test'
 
@@ -198,6 +207,24 @@ def get_trace_width(mode):
         width += 10
 
     return width
+
+
+# This function changes to the target directory, then 'yield' passes execution to the inner part of
+# the 'with' block that invoked it. The 'finally' block is executed at the end of the 'with' block,
+# including when exceptions are raised.
+@contextlib.contextmanager
+def run_from_dir(dir):
+    # If not set, just run the command and return
+    if not dir:
+        yield
+        return
+    # Otherwise, change directories
+    cwd = os.getcwd()
+    os.chdir(dir)
+    try:
+        yield
+    finally:
+        os.chdir(cwd)
 
 
 def run_trace(trace, args):
@@ -719,10 +746,16 @@ def main():
         help='Whether to run the trace in offscreen mode',
         action='store_true',
         default=False)
+    parser.add_argument(
+        '--build-dir',
+        help='Where to find the APK on the host, i.e. out/Android. If unset, it is assumed you ' +
+        'are running from the build dir already, or are using the wrapper script ' +
+        'out/<config>/restricted_trace_perf.',
+        default='')
 
     args = parser.parse_args()
 
-    logging.basicConfig(level=args.log.upper())
+    angle_test_util.SetupLogging(args.log.upper())
 
     run_adb_command('root')
 
@@ -753,7 +786,9 @@ def logged_args():
 
 def run_traces(args):
     # Load trace names
-    with open(os.path.join(DEFAULT_TEST_DIR, DEFAULT_TEST_JSON)) as f:
+    test_json = os.path.join(angle_path_util.ANGLE_ROOT_DIR, 'src', 'tests', 'restricted_traces',
+                             'restricted_traces.json')
+    with open(os.path.join(DEFAULT_TEST_DIR, test_json)) as f:
         traces = json.loads(f.read())
 
     # Have to split the 'trace version' thing up
@@ -902,11 +937,18 @@ def run_traces(args):
             "\"process\npeak\nmem\ncompare\""
         ])
 
+    with run_from_dir(args.build_dir):
+        android_helper.Initialize("angle_trace_tests")
+        android_helper.PrepareTestSuite("angle_trace_tests")
+
     for trace in fnmatch.filter(traces, args.filter):
 
         print(
             "\nStarting run for %s loopcount %i with %s at %s\n" %
             (trace, int(args.loop_count), renderers, datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
+
+        with run_from_dir(args.build_dir):
+            android_helper.PrepareRestrictedTraces([trace])
 
         # Start with clean data containers for each trace
         rows.clear()

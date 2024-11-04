@@ -439,9 +439,7 @@ out/AndroidPerformance/angle_trace_tests --gtest_filter=TraceTest.${TRACE_NAME} 
 
 Then run the `restricted_trace_perf.py` script to gather frame times and memory:
 ```
-pushd src/tests/restricted_traces
-vpython3 restricted_trace_perf.py --fixedtime 10 --sleep 10 --power --output-tag ${TRACE_NAME}.before --loop-count 5 --renderer vulkan --filter ${TRACE_NAME}
-popd
+out/AndroidPerformance/restricted_trace_perf --fixedtime 10 --sleep 10 --power --output-tag ${TRACE_NAME}.before --loop-count 5 --renderer vulkan --filter ${TRACE_NAME}
 ```
 
 You should get output like this:
@@ -479,9 +477,7 @@ out/AndroidPerformance/angle_trace_tests --gtest_filter=TraceTest.${TRACE_NAME} 
 
 And collect performance data:
 ```
-pushd src/tests/restricted_traces
-vpython3 restricted_trace_perf.py --fixedtime 10 --sleep 10 --power --output-tag ${TRACE_NAME}.after --loop-count 5 --renderer vulkan --filter ${TRACE_NAME}
-popd
+out/AndroidPerformance/restricted_trace_perf --fixedtime 10 --sleep 10 --power --output-tag ${TRACE_NAME}.after --loop-count 5 --renderer vulkan --filter ${TRACE_NAME}
 ```
 
 Verify using a spreadsheet that the values are relatively the same.
