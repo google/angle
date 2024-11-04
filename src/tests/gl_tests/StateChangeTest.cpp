@@ -11086,6 +11086,36 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+// Tests value change for MinSampleShadingOES.
+TEST_P(StateChangeTestES31, MinSampleShadingOES)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_sample_shading"));
+    ASSERT_TRUE(IsGLExtensionEnabled("GL_OES_sample_variables"));
+
+    GLfloat value = 0.0f;
+    glEnable(GL_SAMPLE_SHADING_OES);
+    EXPECT_GL_TRUE(glIsEnabled(GL_SAMPLE_SHADING_OES));
+    glGetFloatv(GL_MIN_SAMPLE_SHADING_VALUE_OES, &value);
+    ASSERT_EQ(value, 0);  // initial value should be 0.
+
+    glDisable(GL_SAMPLE_SHADING_OES);
+    glGetFloatv(GL_MIN_SAMPLE_SHADING_VALUE_OES, &value);
+    ASSERT_EQ(value, 0);
+
+    glMinSampleShadingOES(0.5);
+    EXPECT_GL_FALSE(glIsEnabled(GL_SAMPLE_SHADING_OES));
+    glGetFloatv(GL_MIN_SAMPLE_SHADING_VALUE_OES, &value);
+    ASSERT_EQ(value, 0.5);
+
+    glMinSampleShadingOES(1.5);
+    glGetFloatv(GL_MIN_SAMPLE_SHADING_VALUE_OES, &value);
+    ASSERT_EQ(value, 1);  // clamped to 1.
+
+    glMinSampleShadingOES(-0.5);
+    glGetFloatv(GL_MIN_SAMPLE_SHADING_VALUE_OES, &value);
+    ASSERT_EQ(value, 0);  // clamped to 0.
+}
+
 // Tests state changes with uniform block binding.
 TEST_P(StateChangeTestES3, UniformBlockBinding)
 {

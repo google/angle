@@ -1023,7 +1023,6 @@ void PrivateState::setSampleShading(bool enabled)
     if (mIsSampleShadingEnabled != enabled)
     {
         mIsSampleShadingEnabled = enabled;
-        mMinSampleShading       = (enabled) ? 1.0f : mMinSampleShading;
         mDirtyBits.set(state::DIRTY_BIT_SAMPLE_SHADING);
     }
 }
