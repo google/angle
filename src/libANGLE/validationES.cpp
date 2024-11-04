@@ -1110,10 +1110,6 @@ bool ValidMipLevel(const Context *context, TextureType type, GLint level)
     {
         case TextureType::_2D:
         case TextureType::_2DArray:
-        case TextureType::_2DMultisample:
-        case TextureType::_2DMultisampleArray:
-            // TODO(http://anglebug.com/42261478): It's a bit unclear what the "maximum allowable
-            // level-of-detail" for multisample textures should be. Could maybe make it zero.
             maxDimension = caps.max2DTextureSize;
             break;
 
@@ -1126,6 +1122,8 @@ bool ValidMipLevel(const Context *context, TextureType type, GLint level)
         case TextureType::Rectangle:
         case TextureType::VideoImage:
         case TextureType::Buffer:
+        case TextureType::_2DMultisample:
+        case TextureType::_2DMultisampleArray:
             return level == 0;
 
         case TextureType::_3D:
