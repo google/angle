@@ -3,6 +3,10 @@
 # found in the LICENSE file.
 import("../../gni/angle.gni")
 
+declare_args() {
+  angle_enable_tracegz = false
+}
+
 template("angle_trace") {
   angle_shared_library(target_name) {
     testonly = true
@@ -79,14 +83,16 @@ template("angle_trace_libs") {
       _target = "${target_name}_$_trace"
     }
 
-    _gen_target = "gen${target_name}_$_trace"
-    action(_gen_target) {
-      script = "//scripts/tracegz.py"
-      args = [
-        _trace,
-        rebase_path(_trace_dir, root_build_dir),
-      ]
-      outputs = [ "$root_gen_dir/tracegz_$_trace.gz" ]
+    if (angle_enable_tracegz) {
+      _gen_tracegz_target = "gen${target_name}_$_trace"
+      action(_gen_tracegz_target) {
+        script = "//scripts/tracegz.py"
+        args = [
+          _trace,
+          rebase_path(_trace_dir, root_build_dir),
+        ]
+        outputs = [ "$root_gen_dir/tracegz_$_trace.gz" ]
+      }
     }
 
     angle_trace(_target) {
@@ -95,10 +101,12 @@ template("angle_trace_libs") {
       data = [
         "$_trace_dir/$_trace.json",
         "$_trace_dir/$_trace.angledata.gz",
-        "$root_gen_dir/tracegz_$_trace.gz",
       ]
 
-      deps = [ ":$_gen_target" ]
+      if (angle_enable_tracegz) {
+        deps = [ ":$_gen_tracegz_target" ]
+        data += [ "$root_gen_dir/tracegz_$_trace.gz" ]
+      }
 
       if (invoker.short_names) {
         output_name = _trace

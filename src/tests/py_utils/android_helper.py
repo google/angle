@@ -420,7 +420,8 @@ def PrepareRestrictedTraces(traces):
             _PushLibToAppDir(lib_name)
 
         tracegz = 'gen/tracegz_' + trace + '.gz'
-        _Push(tracegz, tracegz)
+        if os.path.exists(tracegz):  # Requires angle_enable_tracegz
+            _Push(tracegz, tracegz)
 
     # Push one additional file when running outside the APK
     if _Global.traces_outside_of_apk:
