@@ -1318,7 +1318,7 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
 
     if (traceNameIs("mini_world"))
     {
-        if (IsQualcomm() && mParams->isVulkan())
+        if ((IsPixel4() || IsPixel4XL()) && mParams->isVulkan())
         {
             skipTest(
                 "TODO: http://anglebug.com/42264956 Vulkan Test failure on Pixel4XL due to vulkan "
