@@ -9793,7 +9793,7 @@ void Context::getPerfMonitorCounterData(GLuint monitor,
         case GL_PERFMON_RESULT_AMD:
         {
             PerfMonitorTriplet *resultsOut = reinterpret_cast<PerfMonitorTriplet *>(data);
-            GLsizei maxResults             = dataSize / (3 * sizeof(GLuint));
+            GLsizei maxResults             = dataSize / sizeof(PerfMonitorTriplet);
             GLsizei resultCount            = 0;
             for (size_t groupIndex = 0;
                  groupIndex < perfMonitorGroups.size() && resultCount < maxResults; ++groupIndex)
