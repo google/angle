@@ -2339,7 +2339,7 @@ class ImageHelper final : public Resource, public angle::Subject
     void deriveImageViewFormatFromCreateInfoPNext(VkImageCreateInfo &imageInfo,
                                                   ImageFormats &formatOut);
 
-    // Release the underlining VkImage object for garbage collection.
+    // Release the underlying VkImage object for garbage collection.
     void releaseImage(Renderer *renderer);
     // Similar to releaseImage, but also notify all contexts in the same share group to stop
     // accessing to it.
@@ -2358,7 +2358,7 @@ class ImageHelper final : public Resource, public angle::Subject
     // True if image contains both depth & stencil aspects
     bool isCombinedDepthStencilFormat() const;
     void destroy(Renderer *renderer);
-    void release(Renderer *renderer) { destroy(renderer); }
+    void release(Renderer *renderer) { releaseImage(renderer); }
 
     void init2DWeakReference(Context *context,
                              VkImage handle,
