@@ -585,6 +585,9 @@ bool TOutputTraverser::visitCase(Visit visit, TIntermCase *node)
 
 void TOutputTraverser::visitConstantUnion(TIntermConstantUnion *node)
 {
+    OutputTreeText(mOut, node, getCurrentIndentDepth());
+    mOut << "Constant union" << " (" << node->getType() << ")" << "\n";
+    ++mIndentDepth;
     size_t size = node->getType().getObjectSize();
 
     for (size_t i = 0; i < size; i++)
@@ -624,6 +627,7 @@ void TOutputTraverser::visitConstantUnion(TIntermConstantUnion *node)
                 break;
         }
     }
+    --mIndentDepth;
 }
 
 bool TOutputTraverser::visitLoop(Visit visit, TIntermLoop *node)
