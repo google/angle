@@ -215,6 +215,7 @@ class ProgramExecutableVk : public ProgramExecutableImpl
         vk::DescriptorSetArray<vk::MetaDescriptorPool> *metaDescriptorPools);
 
     angle::Result updateTexturesDescriptorSet(vk::Context *context,
+                                              uint32_t currentFrame,
                                               const gl::ActiveTextureArray<TextureVk *> &textures,
                                               const gl::SamplerBindingVector &samplers,
                                               PipelineType pipelineType,
@@ -222,6 +223,7 @@ class ProgramExecutableVk : public ProgramExecutableImpl
 
     angle::Result updateShaderResourcesDescriptorSet(
         vk::Context *context,
+        uint32_t currentFrame,
         UpdateDescriptorSetsBuilder *updateBuilder,
         const vk::WriteDescriptorDescs &writeDescriptorDescs,
         const vk::DescriptorSetDescBuilder &shaderResourcesDesc,
@@ -229,6 +231,7 @@ class ProgramExecutableVk : public ProgramExecutableImpl
 
     angle::Result updateUniformsAndXfbDescriptorSet(
         vk::Context *context,
+        uint32_t currentFrame,
         UpdateDescriptorSetsBuilder *updateBuilder,
         const vk::WriteDescriptorDescs &writeDescriptorDescs,
         vk::BufferHelper *defaultUniformBuffer,
@@ -237,6 +240,7 @@ class ProgramExecutableVk : public ProgramExecutableImpl
 
     template <typename CommandBufferT>
     angle::Result bindDescriptorSets(vk::Context *context,
+                                     uint32_t currentFrame,
                                      vk::CommandBufferHelperCommon *commandBufferHelper,
                                      CommandBufferT *commandBuffer,
                                      PipelineType pipelineType);
@@ -300,6 +304,7 @@ class ProgramExecutableVk : public ProgramExecutableImpl
 
     void setAllDefaultUniformsDirty();
     angle::Result updateUniforms(vk::Context *context,
+                                 uint32_t currentFrame,
                                  UpdateDescriptorSetsBuilder *updateBuilder,
                                  vk::BufferHelper *emptyBuffer,
                                  vk::DynamicBuffer *defaultUniformStorage,
@@ -495,6 +500,7 @@ class ProgramExecutableVk : public ProgramExecutableImpl
     void waitForPostLinkTasksImpl(ContextVk *contextVk);
 
     angle::Result getOrAllocateDescriptorSet(vk::Context *context,
+                                             uint32_t currentFrame,
                                              UpdateDescriptorSetsBuilder *updateBuilder,
                                              const vk::DescriptorSetDescBuilder &descriptorSetDesc,
                                              const vk::WriteDescriptorDescs &writeDescriptorDescs,
@@ -513,7 +519,6 @@ class ProgramExecutableVk : public ProgramExecutableImpl
     // Descriptor sets and pools for shader resources for this program.
     vk::DescriptorSetArray<vk::DescriptorSetPointer> mDescriptorSets;
     vk::DescriptorSetArray<vk::DynamicDescriptorPoolPointer> mDynamicDescriptorPools;
-    vk::DescriptorSetArray<vk::DescriptorPoolPointer> mDescriptorPools;
     vk::BufferSerial mCurrentDefaultUniformBufferSerial;
 
     // We keep a reference to the pipeline and descriptor set layouts. This ensures they don't get

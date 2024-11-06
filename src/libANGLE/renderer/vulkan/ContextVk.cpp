@@ -2656,7 +2656,7 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(
     {
         ProgramExecutableVk *executableVk = vk::GetImpl(executable);
         ANGLE_TRY(executableVk->updateTexturesDescriptorSet(
-            this, mActiveTextures, mState.getSamplers(), pipelineType,
+            this, getCurrentFrameCount(), mActiveTextures, mState.getSamplers(), pipelineType,
             mShareGroupVk->getUpdateDescriptorSetsBuilder()));
     }
 
@@ -2948,8 +2948,8 @@ angle::Result ContextVk::handleDirtyShaderResourcesImpl(CommandBufferHelperT *co
 
     vk::SharedDescriptorSetCacheKey newSharedCacheKey;
     ANGLE_TRY(executableVk->updateShaderResourcesDescriptorSet(
-        this, mShareGroupVk->getUpdateDescriptorSetsBuilder(), mShaderBufferWriteDescriptorDescs,
-        mShaderBuffersDescriptorDesc, &newSharedCacheKey));
+        this, getCurrentFrameCount(), mShareGroupVk->getUpdateDescriptorSetsBuilder(),
+        mShaderBufferWriteDescriptorDescs, mShaderBuffersDescriptorDesc, &newSharedCacheKey));
 
     if (newSharedCacheKey)
     {
@@ -3005,8 +3005,8 @@ angle::Result ContextVk::handleDirtyUniformBuffersImpl(CommandBufferT *commandBu
 
     vk::SharedDescriptorSetCacheKey newSharedCacheKey;
     ANGLE_TRY(executableVk->updateShaderResourcesDescriptorSet(
-        this, mShareGroupVk->getUpdateDescriptorSetsBuilder(), mShaderBufferWriteDescriptorDescs,
-        mShaderBuffersDescriptorDesc, &newSharedCacheKey));
+        this, getCurrentFrameCount(), mShareGroupVk->getUpdateDescriptorSetsBuilder(),
+        mShaderBufferWriteDescriptorDescs, mShaderBuffersDescriptorDesc, &newSharedCacheKey));
 
     if (newSharedCacheKey)
     {
@@ -3074,8 +3074,8 @@ angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersEmulation(
 
     vk::SharedDescriptorSetCacheKey newSharedCacheKey;
     ANGLE_TRY(executableVk->updateUniformsAndXfbDescriptorSet(
-        this, mShareGroupVk->getUpdateDescriptorSetsBuilder(), writeDescriptorDescs,
-        currentUniformBuffer, &uniformsAndXfbDesc, &newSharedCacheKey));
+        this, getCurrentFrameCount(), mShareGroupVk->getUpdateDescriptorSetsBuilder(),
+        writeDescriptorDescs, currentUniformBuffer, &uniformsAndXfbDesc, &newSharedCacheKey));
 
     if (newSharedCacheKey)
     {
@@ -3202,8 +3202,9 @@ angle::Result ContextVk::handleDirtyUniformsImpl(DirtyBits::Iterator *dirtyBitsI
     TransformFeedbackVk *transformFeedbackVk =
         vk::SafeGetImpl(mState.getCurrentTransformFeedback());
     ANGLE_TRY(executableVk->updateUniforms(
-        this, mShareGroupVk->getUpdateDescriptorSetsBuilder(), &mEmptyBuffer,
-        &mDefaultUniformStorage, mState.isTransformFeedbackActiveUnpaused(), transformFeedbackVk));
+        this, getCurrentFrameCount(), mShareGroupVk->getUpdateDescriptorSetsBuilder(),
+        &mEmptyBuffer, &mDefaultUniformStorage, mState.isTransformFeedbackActiveUnpaused(),
+        transformFeedbackVk));
 
     return angle::Result::Continue;
 }
@@ -3538,7 +3539,7 @@ angle::Result ContextVk::handleDirtyDescriptorSetsImpl(CommandBufferHelperT *com
     }
 
     ProgramExecutableVk *executableVk = vk::GetImpl(mState.getProgramExecutable());
-    return executableVk->bindDescriptorSets(this, commandBufferHelper,
+    return executableVk->bindDescriptorSets(this, getCurrentFrameCount(), commandBufferHelper,
                                             &commandBufferHelper->getCommandBuffer(), pipelineType);
 }
 

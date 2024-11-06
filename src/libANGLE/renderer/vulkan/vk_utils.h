@@ -945,6 +945,8 @@ class SharedPtr final
 
     bool owner_equal(const SharedPtr<T> &other) const { return mRefCounted == other.mRefCounted; }
 
+    uint32_t getRefCount() const { return mRefCounted->getRefCount(); }
+
   private:
     void releaseRef()
     {

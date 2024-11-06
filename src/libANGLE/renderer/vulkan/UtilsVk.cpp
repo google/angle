@@ -4928,8 +4928,6 @@ angle::Result UtilsVk::allocateDescriptorSetWithLayout(
 
     // Retain the individual descriptorSet to the command buffer.
     commandBufferHelper->retainResource(descriptorSet.get());
-    // Since the eviction is relying on the pool's mUse, we need to update pool's mUse here.
-    commandBufferHelper->retainResource(descriptorSet->getPool().get());
 
     *descriptorSetOut = descriptorSet->getDescriptorSet();
 
