@@ -116,7 +116,8 @@ CLDeviceVk::CLDeviceVk(const cl::Device &device, vk::Renderer *renderer)
 
         // TODO(aannestrand) Update these hardcoded platform/device queries
         // http://anglebug.com/42266935
-        {cl::DeviceInfo::AddressBits, 32},
+        {cl::DeviceInfo::AddressBits,
+         mRenderer->getFeatures().supportsBufferDeviceAddress.enabled ? 64 : 32},
         {cl::DeviceInfo::EndianLittle, CL_TRUE},
         {cl::DeviceInfo::LocalMemType, CL_LOCAL},
         // TODO (http://anglebug.com/379669750) Vulkan reports a big sampler count number, we dont

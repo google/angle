@@ -1908,8 +1908,39 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk)
                 }
                 break;
             }
-            case NonSemanticClspvReflectionArgumentPointerUniform:
             case NonSemanticClspvReflectionArgumentPointerPushConstant:
+            {
+                unsigned char *argPushConstOrigin =
+                    &(kernelVk.getPodArgumentPushConstantsData()[arg.pushConstOffset]);
+                if (static_cast<const cl_mem>(arg.handle) == NULL)
+                {
+                    // If the argument is a buffer object, the arg_value pointer can be NULL or
+                    // point to a NULL value in which case a NULL value will be used as the value
+                    // for the argument declared as a pointer to global or constant memory in the
+                    // kernel.
+                    uint64_t null = 0;
+                    std::memcpy(argPushConstOrigin, &null, arg.handleSize);
+                }
+                else
+                {
+                    cl::Memory *clMem = cl::Buffer::Cast(static_cast<const cl_mem>(arg.handle));
+                    CLBufferVk &vkMem = clMem->getImpl<CLBufferVk>();
+
+                    ANGLE_TRY(addMemoryDependencies(&arg));
+
+                    uint64_t devAddr =
+                        vkMem.getBuffer().getDeviceAddress(mContext) + vkMem.getOffset();
+                    std::memcpy(argPushConstOrigin, &devAddr, arg.handleSize);
+                }
+
+                mComputePassCommands->getCommandBuffer().pushConstants(
+                    kernelVk.getPipelineLayout(), VK_SHADER_STAGE_COMPUTE_BIT,
+                    roundDownPow2(arg.pushConstOffset, 4u), roundUpPow2(arg.pushConstantSize, 4u),
+                    argPushConstOrigin);
+
+                break;
+            }
+            case NonSemanticClspvReflectionArgumentPointerUniform:
             default:
             {
                 UNIMPLEMENTED();

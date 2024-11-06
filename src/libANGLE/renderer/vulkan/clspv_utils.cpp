@@ -421,6 +421,11 @@ std::string ClspvGetCompilerOptions(const CLDeviceVk *device)
         ASSERT(false);
     }
     options += addressBits == 64 ? " -arch=spir64" : " -arch=spir";
+    if (rendererVk->getFeatures().supportsBufferDeviceAddress.enabled)
+    {
+        ASSERT(addressBits == 64);
+        options += " -physical-storage-buffers ";
+    }
 
     // select SPIR-V version target
     options += " --spv-version=" + GetSpvVersionAsClspvString(device->getSpirvVersion());

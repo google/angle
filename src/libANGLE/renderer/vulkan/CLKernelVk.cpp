@@ -152,6 +152,7 @@ angle::Result CLKernelVk::init()
                 break;
             }
             case NonSemanticClspvReflectionArgumentPodPushConstant:
+            case NonSemanticClspvReflectionArgumentPointerPushConstant:
                 // Get existing push constant range and see if we need to update
                 if (arg.pushConstOffset + arg.pushConstantSize > pcRange.offset + pcRange.size)
                 {
@@ -258,6 +259,7 @@ angle::Result CLKernelVk::setArg(cl_uint argIndex, size_t argSize, const void *a
             case NonSemanticClspvReflectionArgumentSampledImage:
             case NonSemanticClspvReflectionArgumentUniformTexelBuffer:
             case NonSemanticClspvReflectionArgumentStorageTexelBuffer:
+            case NonSemanticClspvReflectionArgumentPointerPushConstant:
                 ASSERT(argSize == sizeof(cl_mem *));
                 arg.handle     = *static_cast<const cl_mem *>(argValue);
                 arg.handleSize = argSize;

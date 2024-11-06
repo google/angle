@@ -160,7 +160,8 @@ CLMemoryVk::~CLMemoryVk()
 
 VkBufferUsageFlags CLMemoryVk::getVkUsageFlags()
 {
-    return cl_vk::GetBufferUsageFlags(mMemory.getFlags());
+    return cl_vk::GetBufferUsageFlags(mMemory.getFlags(),
+                                      mContext->getFeatures().supportsBufferDeviceAddress.enabled);
 }
 
 VkMemoryPropertyFlags CLMemoryVk::getVkMemPropertyFlags()
