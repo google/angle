@@ -1400,6 +1400,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo supportsImageCompressionControl = {
+        "supportsImageCompressionControl",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

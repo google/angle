@@ -905,6 +905,7 @@ class Renderer : angle::NonCopyable
     VkPhysicalDeviceHostImageCopyPropertiesEXT mHostImageCopyProperties;
     std::vector<VkImageLayout> mHostImageCopySrcLayoutsStorage;
     std::vector<VkImageLayout> mHostImageCopyDstLayoutsStorage;
+    VkPhysicalDeviceImageCompressionControlFeaturesEXT mImageCompressionControlFeatures;
 #if defined(ANGLE_PLATFORM_ANDROID)
     VkPhysicalDeviceExternalFormatResolveFeaturesANDROID mExternalFormatResolveFeatures;
     VkPhysicalDeviceExternalFormatResolvePropertiesANDROID mExternalFormatResolveProperties;
