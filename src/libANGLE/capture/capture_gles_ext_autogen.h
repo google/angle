@@ -2075,6 +2075,25 @@ angle::CallCapture CaptureTexStorage3DEXT(const State &glState,
                                           GLsizei height,
                                           GLsizei depth);
 
+// GL_EXT_texture_storage_compression
+angle::CallCapture CaptureTexStorageAttribs2DEXT(const State &glState,
+                                                 bool isCallValid,
+                                                 GLenum target,
+                                                 GLsizei levels,
+                                                 GLenum internalformat,
+                                                 GLsizei width,
+                                                 GLsizei height,
+                                                 const GLint *attrib_list);
+angle::CallCapture CaptureTexStorageAttribs3DEXT(const State &glState,
+                                                 bool isCallValid,
+                                                 GLenum target,
+                                                 GLsizei levels,
+                                                 GLenum internalformat,
+                                                 GLsizei width,
+                                                 GLsizei height,
+                                                 GLsizei depth,
+                                                 const GLint *attrib_list);
+
 // GL_EXT_texture_type_2_10_10_10_REV
 
 // GL_EXT_unpack_subimage
@@ -5085,6 +5104,25 @@ void CaptureTexParameterIuivEXT_params(const State &glState,
                                        GLenum pname,
                                        const GLuint *params,
                                        angle::ParamCapture *paramCapture);
+void CaptureTexStorageAttribs2DEXT_attrib_list(const State &glState,
+                                               bool isCallValid,
+                                               GLenum target,
+                                               GLsizei levels,
+                                               GLenum internalformat,
+                                               GLsizei width,
+                                               GLsizei height,
+                                               const GLint *attrib_list,
+                                               angle::ParamCapture *paramCapture);
+void CaptureTexStorageAttribs3DEXT_attrib_list(const State &glState,
+                                               bool isCallValid,
+                                               GLenum target,
+                                               GLsizei levels,
+                                               GLenum internalformat,
+                                               GLsizei width,
+                                               GLsizei height,
+                                               GLsizei depth,
+                                               const GLint *attrib_list,
+                                               angle::ParamCapture *paramCapture);
 void CaptureDebugMessageCallbackKHR_userParam(const State &glState,
                                               bool isCallValid,
                                               GLDEBUGPROCKHR callback,

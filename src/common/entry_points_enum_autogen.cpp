@@ -1986,6 +1986,10 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glTexStorage3DMultisample";
         case EntryPoint::GLTexStorage3DMultisampleOES:
             return "glTexStorage3DMultisampleOES";
+        case EntryPoint::GLTexStorageAttribs2DEXT:
+            return "glTexStorageAttribs2DEXT";
+        case EntryPoint::GLTexStorageAttribs3DEXT:
+            return "glTexStorageAttribs3DEXT";
         case EntryPoint::GLTexStorageMem2DEXT:
             return "glTexStorageMem2DEXT";
         case EntryPoint::GLTexStorageMem2DMultisampleEXT:

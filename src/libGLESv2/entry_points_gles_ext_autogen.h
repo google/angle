@@ -1430,6 +1430,21 @@ ANGLE_EXPORT void GL_APIENTRY GL_TexStorage3DEXT(GLenum target,
                                                  GLsizei height,
                                                  GLsizei depth);
 
+// GL_EXT_texture_storage_compression
+ANGLE_EXPORT void GL_APIENTRY GL_TexStorageAttribs2DEXT(GLenum target,
+                                                        GLsizei levels,
+                                                        GLenum internalformat,
+                                                        GLsizei width,
+                                                        GLsizei height,
+                                                        const GLint *attrib_list);
+ANGLE_EXPORT void GL_APIENTRY GL_TexStorageAttribs3DEXT(GLenum target,
+                                                        GLsizei levels,
+                                                        GLenum internalformat,
+                                                        GLsizei width,
+                                                        GLsizei height,
+                                                        GLsizei depth,
+                                                        const GLint *attrib_list);
+
 // GL_EXT_texture_type_2_10_10_10_REV
 
 // GL_EXT_unpack_subimage

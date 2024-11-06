@@ -10048,6 +10048,90 @@ void GL_APIENTRY GL_TexStorage3DEXT(GLenum target,
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
 
+// GL_EXT_texture_storage_compression
+void GL_APIENTRY GL_TexStorageAttribs2DEXT(GLenum target,
+                                           GLsizei levels,
+                                           GLenum internalformat,
+                                           GLsizei width,
+                                           GLsizei height,
+                                           const GLint *attrib_list)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLTexStorageAttribs2DEXT,
+          "context = %d, target = %s, levels = %d, internalformat = %s, width = %d, height = %d, "
+          "attrib_list = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLESEnum::TextureTarget, target), levels,
+          GLenumToString(GLESEnum::SizedInternalFormat, internalformat), width, height,
+          (uintptr_t)attrib_list);
+
+    if (context)
+    {
+        SCOPED_SHARE_CONTEXT_LOCK(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
+                                                context->getMutableErrorSetForValidation(),
+                                                angle::EntryPoint::GLTexStorageAttribs2DEXT) &&
+              ValidateTexStorageAttribs2DEXT(context, angle::EntryPoint::GLTexStorageAttribs2DEXT,
+                                             target, levels, internalformat, width, height,
+                                             attrib_list)));
+        if (isCallValid)
+        {
+            context->texStorageAttribs2D(target, levels, internalformat, width, height,
+                                         attrib_list);
+        }
+        ANGLE_CAPTURE_GL(TexStorageAttribs2DEXT, isCallValid, context, target, levels,
+                         internalformat, width, height, attrib_list);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+}
+
+void GL_APIENTRY GL_TexStorageAttribs3DEXT(GLenum target,
+                                           GLsizei levels,
+                                           GLenum internalformat,
+                                           GLsizei width,
+                                           GLsizei height,
+                                           GLsizei depth,
+                                           const GLint *attrib_list)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLTexStorageAttribs3DEXT,
+          "context = %d, target = %s, levels = %d, internalformat = %s, width = %d, height = %d, "
+          "depth = %d, attrib_list = 0x%016" PRIxPTR "",
+          CID(context), GLenumToString(GLESEnum::TextureTarget, target), levels,
+          GLenumToString(GLESEnum::SizedInternalFormat, internalformat), width, height, depth,
+          (uintptr_t)attrib_list);
+
+    if (context)
+    {
+        SCOPED_SHARE_CONTEXT_LOCK(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
+                                                context->getMutableErrorSetForValidation(),
+                                                angle::EntryPoint::GLTexStorageAttribs3DEXT) &&
+              ValidateTexStorageAttribs3DEXT(context, angle::EntryPoint::GLTexStorageAttribs3DEXT,
+                                             target, levels, internalformat, width, height, depth,
+                                             attrib_list)));
+        if (isCallValid)
+        {
+            context->texStorageAttribs3D(target, levels, internalformat, width, height, depth,
+                                         attrib_list);
+        }
+        ANGLE_CAPTURE_GL(TexStorageAttribs3DEXT, isCallValid, context, target, levels,
+                         internalformat, width, height, depth, attrib_list);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+}
+
 // GL_EXT_texture_type_2_10_10_10_REV
 
 // GL_EXT_unpack_subimage

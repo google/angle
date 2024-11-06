@@ -997,6 +997,10 @@ EXPORTS
     glTexStorage2DEXT
     glTexStorage3DEXT
 
+    ; GL_EXT_texture_storage_compression
+    glTexStorageAttribs2DEXT
+    glTexStorageAttribs3DEXT
+
     ; GL_EXT_texture_type_2_10_10_10_REV
 
     ; GL_EXT_unpack_subimage

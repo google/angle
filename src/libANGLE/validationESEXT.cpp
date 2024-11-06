@@ -4667,4 +4667,51 @@ bool ValidateStartTilingQCOM(const Context *context,
     return true;
 }
 
+bool ValidateTexStorageAttribs2DEXT(const Context *context,
+                                    angle::EntryPoint entryPoint,
+                                    GLenum target,
+                                    GLsizei levels,
+                                    GLenum internalformat,
+                                    GLsizei width,
+                                    GLsizei height,
+                                    const GLint *attrib_list)
+{
+    return true;
+
+    // if (!context->getExtensions().textureStorageCompressionEXT)
+    // {
+    //     ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
+    //     return false;
+    // }
+
+    // if (context->getClientMajorVersion() >= 3)
+    // {
+    //     return ValidateES2TexStorageParametersBase(context, entryPoint, target, levels,
+    //                                                internalformat, width, height);
+    // }
+
+    // UNIMPLEMENTED();
+    // return false;
+}
+
+bool ValidateTexStorageAttribs3DEXT(const Context *context,
+                                    angle::EntryPoint entryPoint,
+                                    GLenum target,
+                                    GLsizei levels,
+                                    GLenum internalformat,
+                                    GLsizei width,
+                                    GLsizei height,
+                                    GLsizei depth,
+                                    const GLint *attrib_list)
+{
+    if (!context->getExtensions().textureStorageCompressionEXT)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    UNIMPLEMENTED();
+    return false;
+}
+
 }  // namespace gl

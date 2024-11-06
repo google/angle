@@ -766,6 +766,8 @@ ANGLE_UTIL_EXPORT PFNGLTEXBUFFERRANGEEXTPROC l_glTexBufferRangeEXT;
 ANGLE_UTIL_EXPORT PFNGLTEXSTORAGE1DEXTPROC l_glTexStorage1DEXT;
 ANGLE_UTIL_EXPORT PFNGLTEXSTORAGE2DEXTPROC l_glTexStorage2DEXT;
 ANGLE_UTIL_EXPORT PFNGLTEXSTORAGE3DEXTPROC l_glTexStorage3DEXT;
+ANGLE_UTIL_EXPORT PFNGLTEXSTORAGEATTRIBS2DEXTPROC l_glTexStorageAttribs2DEXT;
+ANGLE_UTIL_EXPORT PFNGLTEXSTORAGEATTRIBS3DEXTPROC l_glTexStorageAttribs3DEXT;
 ANGLE_UTIL_EXPORT PFNGLBLENDBARRIERKHRPROC l_glBlendBarrierKHR;
 ANGLE_UTIL_EXPORT PFNGLDEBUGMESSAGECALLBACKKHRPROC l_glDebugMessageCallbackKHR;
 ANGLE_UTIL_EXPORT PFNGLDEBUGMESSAGECONTROLKHRPROC l_glDebugMessageControlKHR;
@@ -2108,6 +2110,10 @@ void LoadUtilGLES(LoadProc loadProc)
     l_glTexStorage1DEXT = reinterpret_cast<PFNGLTEXSTORAGE1DEXTPROC>(loadProc("glTexStorage1DEXT"));
     l_glTexStorage2DEXT = reinterpret_cast<PFNGLTEXSTORAGE2DEXTPROC>(loadProc("glTexStorage2DEXT"));
     l_glTexStorage3DEXT = reinterpret_cast<PFNGLTEXSTORAGE3DEXTPROC>(loadProc("glTexStorage3DEXT"));
+    l_glTexStorageAttribs2DEXT =
+        reinterpret_cast<PFNGLTEXSTORAGEATTRIBS2DEXTPROC>(loadProc("glTexStorageAttribs2DEXT"));
+    l_glTexStorageAttribs3DEXT =
+        reinterpret_cast<PFNGLTEXSTORAGEATTRIBS3DEXTPROC>(loadProc("glTexStorageAttribs3DEXT"));
     l_glBlendBarrierKHR = reinterpret_cast<PFNGLBLENDBARRIERKHRPROC>(loadProc("glBlendBarrierKHR"));
     l_glDebugMessageCallbackKHR =
         reinterpret_cast<PFNGLDEBUGMESSAGECALLBACKKHRPROC>(loadProc("glDebugMessageCallbackKHR"));

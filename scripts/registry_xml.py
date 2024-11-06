@@ -162,6 +162,7 @@ gles_requestable_extensions = [
     "GL_EXT_texture_sRGB_R8",
     "GL_EXT_texture_sRGB_RG8",
     "GL_EXT_texture_storage",
+    "GL_EXT_texture_storage_compression",
     "GL_EXT_texture_type_2_10_10_10_REV",
     "GL_EXT_unpack_subimage",
     "GL_EXT_YUV_target",

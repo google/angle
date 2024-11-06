@@ -211,6 +211,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_EXT_texture_sRGB_RG8"] = enableableExtension(&Extensions::textureSRGBRG8EXT);
         map["GL_OES_texture_stencil8"] = enableableExtension(&Extensions::textureStencil8OES);
         map["GL_EXT_texture_storage"] = enableableExtension(&Extensions::textureStorageEXT);
+        map["GL_EXT_texture_storage_compression"] = enableableExtension(&Extensions::textureStorageCompressionEXT);
         map["GL_OES_texture_storage_multisample_2d_array"] = enableableExtension(&Extensions::textureStorageMultisample2dArrayOES);
         map["GL_EXT_texture_type_2_10_10_10_REV"] = enableableExtension(&Extensions::textureType2101010REVEXT);
         map["GL_ANGLE_texture_usage"] = enableableExtension(&Extensions::textureUsageANGLE);

@@ -166,6 +166,7 @@ enum class GLESEnum
     SyncStatus,
     TangentPointerTypeEXT,
     TexCoordPointerType,
+    TexStorageAttribs,
     TextureCompareMode,
     TextureCoordName,
     TextureEnvMode,

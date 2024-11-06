@@ -5695,6 +5695,20 @@ CallCapture ParseCallCapture(const Token &nameToken,
                 paramTokens, strings);
         return CallCapture(EntryPoint::GLTexStorage3DMultisampleOES, std::move(params));
     }
+    if (strcmp(nameToken, "glTexStorageAttribs2DEXT") == 0)
+    {
+        ParamBuffer params =
+            ParseParameters<std::remove_pointer<PFNGLTEXSTORAGEATTRIBS2DEXTPROC>::type>(paramTokens,
+                                                                                        strings);
+        return CallCapture(EntryPoint::GLTexStorageAttribs2DEXT, std::move(params));
+    }
+    if (strcmp(nameToken, "glTexStorageAttribs3DEXT") == 0)
+    {
+        ParamBuffer params =
+            ParseParameters<std::remove_pointer<PFNGLTEXSTORAGEATTRIBS3DEXTPROC>::type>(paramTokens,
+                                                                                        strings);
+        return CallCapture(EntryPoint::GLTexStorageAttribs3DEXT, std::move(params));
+    }
     if (strcmp(nameToken, "glTexStorageMem2DEXT") == 0)
     {
         ParamBuffer params =

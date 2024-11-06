@@ -5153,6 +5153,29 @@ void GL_APIENTRY glTexStorage3DEXT(GLenum target,
     return GL_TexStorage3DEXT(target, levels, internalformat, width, height, depth);
 }
 
+// GL_EXT_texture_storage_compression
+void GL_APIENTRY glTexStorageAttribs2DEXT(GLenum target,
+                                          GLsizei levels,
+                                          GLenum internalformat,
+                                          GLsizei width,
+                                          GLsizei height,
+                                          const GLint *attrib_list)
+{
+    return GL_TexStorageAttribs2DEXT(target, levels, internalformat, width, height, attrib_list);
+}
+
+void GL_APIENTRY glTexStorageAttribs3DEXT(GLenum target,
+                                          GLsizei levels,
+                                          GLenum internalformat,
+                                          GLsizei width,
+                                          GLsizei height,
+                                          GLsizei depth,
+                                          const GLint *attrib_list)
+{
+    return GL_TexStorageAttribs3DEXT(target, levels, internalformat, width, height, depth,
+                                     attrib_list);
+}
+
 // GL_EXT_texture_type_2_10_10_10_REV
 
 // GL_EXT_unpack_subimage

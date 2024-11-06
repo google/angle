@@ -2124,6 +2124,8 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                     return "GL_FRAGMENT_SHADER_FRAMEBUFFER_FETCH_MRT_ARM";
                 case 0x8F69:
                     return "GL_TEXTURE_ASTC_DECODE_PRECISION_EXT";
+                case 0x8F6E:
+                    return "GL_NUM_SURFACE_COMPRESSION_FIXED_RATES_EXT";
                 case 0x8F94:
                     return "GL_R8_SNORM";
                 case 0x8F95:
@@ -2816,6 +2818,36 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                     return "GL_SHADER_BINARY_ANGLE";
                 case 0x96BE:
                     return "GL_PROGRAM_BINARY_READY_ANGLE";
+                case 0x96C0:
+                    return "GL_SURFACE_COMPRESSION_EXT";
+                case 0x96C1:
+                    return "GL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT";
+                case 0x96C2:
+                    return "GL_SURFACE_COMPRESSION_FIXED_RATE_DEFAULT_EXT";
+                case 0x96C4:
+                    return "GL_SURFACE_COMPRESSION_FIXED_RATE_1BPC_EXT";
+                case 0x96C5:
+                    return "GL_SURFACE_COMPRESSION_FIXED_RATE_2BPC_EXT";
+                case 0x96C6:
+                    return "GL_SURFACE_COMPRESSION_FIXED_RATE_3BPC_EXT";
+                case 0x96C7:
+                    return "GL_SURFACE_COMPRESSION_FIXED_RATE_4BPC_EXT";
+                case 0x96C8:
+                    return "GL_SURFACE_COMPRESSION_FIXED_RATE_5BPC_EXT";
+                case 0x96C9:
+                    return "GL_SURFACE_COMPRESSION_FIXED_RATE_6BPC_EXT";
+                case 0x96CA:
+                    return "GL_SURFACE_COMPRESSION_FIXED_RATE_7BPC_EXT";
+                case 0x96CB:
+                    return "GL_SURFACE_COMPRESSION_FIXED_RATE_8BPC_EXT";
+                case 0x96CC:
+                    return "GL_SURFACE_COMPRESSION_FIXED_RATE_9BPC_EXT";
+                case 0x96CD:
+                    return "GL_SURFACE_COMPRESSION_FIXED_RATE_10BPC_EXT";
+                case 0x96CE:
+                    return "GL_SURFACE_COMPRESSION_FIXED_RATE_11BPC_EXT";
+                case 0x96CF:
+                    return "GL_SURFACE_COMPRESSION_FIXED_RATE_12BPC_EXT";
                 case 0x96E0:
                     return "GL_MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE";
                 case 0x96E1:
@@ -5281,6 +5313,8 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                     return "GL_NORMAL_MAP_OES";
                 case 0x8512:
                     return "GL_REFLECTION_MAP_OES";
+                case 0x96C0:
+                    return "GL_SURFACE_COMPRESSION_EXT";
                 default:
                     return UnknownEnumToString(value);
             }
@@ -5732,6 +5766,8 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                     return "GL_GENERATE_MIPMAP";
                 case 0x86A1:
                     return "GL_TEXTURE_COMPRESSED";
+                case 0x8F6E:
+                    return "GL_NUM_SURFACE_COMPRESSION_FIXED_RATES_EXT";
                 case 0x90C7:
                     return "GL_IMAGE_FORMAT_COMPATIBILITY_TYPE";
                 case 0x9380:
@@ -7497,6 +7533,45 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                     return "GL_INT";
                 case 0x1406:
                     return "GL_FLOAT";
+                default:
+                    return UnknownEnumToString(value);
+            }
+        }
+
+        case GLESEnum::TexStorageAttribs:
+        {
+            switch (value)
+            {
+                case 0x96C0:
+                    return "GL_SURFACE_COMPRESSION_EXT";
+                case 0x96C1:
+                    return "GL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT";
+                case 0x96C2:
+                    return "GL_SURFACE_COMPRESSION_FIXED_RATE_DEFAULT_EXT";
+                case 0x96C4:
+                    return "GL_SURFACE_COMPRESSION_FIXED_RATE_1BPC_EXT";
+                case 0x96C5:
+                    return "GL_SURFACE_COMPRESSION_FIXED_RATE_2BPC_EXT";
+                case 0x96C6:
+                    return "GL_SURFACE_COMPRESSION_FIXED_RATE_3BPC_EXT";
+                case 0x96C7:
+                    return "GL_SURFACE_COMPRESSION_FIXED_RATE_4BPC_EXT";
+                case 0x96C8:
+                    return "GL_SURFACE_COMPRESSION_FIXED_RATE_5BPC_EXT";
+                case 0x96C9:
+                    return "GL_SURFACE_COMPRESSION_FIXED_RATE_6BPC_EXT";
+                case 0x96CA:
+                    return "GL_SURFACE_COMPRESSION_FIXED_RATE_7BPC_EXT";
+                case 0x96CB:
+                    return "GL_SURFACE_COMPRESSION_FIXED_RATE_8BPC_EXT";
+                case 0x96CC:
+                    return "GL_SURFACE_COMPRESSION_FIXED_RATE_9BPC_EXT";
+                case 0x96CD:
+                    return "GL_SURFACE_COMPRESSION_FIXED_RATE_10BPC_EXT";
+                case 0x96CE:
+                    return "GL_SURFACE_COMPRESSION_FIXED_RATE_11BPC_EXT";
+                case 0x96CF:
+                    return "GL_SURFACE_COMPRESSION_FIXED_RATE_12BPC_EXT";
                 default:
                     return UnknownEnumToString(value);
             }

@@ -999,6 +999,8 @@ enum class EntryPoint
     GLTexStorage3DEXT,
     GLTexStorage3DMultisample,
     GLTexStorage3DMultisampleOES,
+    GLTexStorageAttribs2DEXT,
+    GLTexStorageAttribs3DEXT,
     GLTexStorageMem2DEXT,
     GLTexStorageMem2DMultisampleEXT,
     GLTexStorageMem3DEXT,

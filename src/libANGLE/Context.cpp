@@ -10062,6 +10062,27 @@ void Context::blobCacheCallbacks(GLSETBLOBPROCANGLE set,
     mState.getBlobCacheCallbacks() = {set, get, userParam};
 }
 
+void Context::texStorageAttribs2D(GLenum target,
+                                  GLsizei levels,
+                                  GLenum internalFormat,
+                                  GLsizei width,
+                                  GLsizei height,
+                                  const GLint *attrib_list)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::texStorageAttribs3D(GLenum target,
+                                  GLsizei levels,
+                                  GLenum internalFormat,
+                                  GLsizei width,
+                                  GLsizei height,
+                                  GLsizei depth,
+                                  const GLint *attrib_list)
+{
+    UNIMPLEMENTED();
+}
+
 // ErrorSet implementation.
 ErrorSet::ErrorSet(Debug *debug,
                    const angle::FrontendFeatures &frontendFeatures,

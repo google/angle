@@ -2076,6 +2076,25 @@ bool ValidateTexStorage3DEXT(const Context *context,
                              GLsizei height,
                              GLsizei depth);
 
+// GL_EXT_texture_storage_compression
+bool ValidateTexStorageAttribs2DEXT(const Context *context,
+                                    angle::EntryPoint entryPoint,
+                                    GLenum target,
+                                    GLsizei levels,
+                                    GLenum internalformat,
+                                    GLsizei width,
+                                    GLsizei height,
+                                    const GLint *attrib_list);
+bool ValidateTexStorageAttribs3DEXT(const Context *context,
+                                    angle::EntryPoint entryPoint,
+                                    GLenum target,
+                                    GLsizei levels,
+                                    GLenum internalformat,
+                                    GLsizei width,
+                                    GLsizei height,
+                                    GLsizei depth,
+                                    const GLint *attrib_list);
+
 // GL_EXT_texture_type_2_10_10_10_REV
 
 // GL_EXT_unpack_subimage

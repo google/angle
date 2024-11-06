@@ -599,6 +599,9 @@ struct Extensions
     // GL_EXT_texture_storage
     bool textureStorageEXT = false;
 
+    // GL_EXT_texture_storage_compression
+    bool textureStorageCompressionEXT = false;
+
     // GL_OES_texture_storage_multisample_2d_array
     bool textureStorageMultisample2dArrayOES = false;
 

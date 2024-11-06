@@ -9269,6 +9269,84 @@ CallCapture CaptureTexStorage3DEXT(const State &glState,
     return CallCapture(angle::EntryPoint::GLTexStorage3DEXT, std::move(paramBuffer));
 }
 
+CallCapture CaptureTexStorageAttribs2DEXT(const State &glState,
+                                          bool isCallValid,
+                                          GLenum target,
+                                          GLsizei levels,
+                                          GLenum internalformat,
+                                          GLsizei width,
+                                          GLsizei height,
+                                          const GLint *attrib_list)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addEnumParam("target", GLESEnum::TextureTarget, ParamType::TGLenum, target);
+    paramBuffer.addValueParam("levels", ParamType::TGLsizei, levels);
+    paramBuffer.addEnumParam("internalformat", GLESEnum::SizedInternalFormat, ParamType::TGLenum,
+                             internalformat);
+    paramBuffer.addValueParam("width", ParamType::TGLsizei, width);
+    paramBuffer.addValueParam("height", ParamType::TGLsizei, height);
+
+    if (isCallValid)
+    {
+        ParamCapture attrib_listParam("attrib_list", ParamType::TGLintConstPointer);
+        InitParamValue(ParamType::TGLintConstPointer, attrib_list, &attrib_listParam.value);
+        CaptureTexStorageAttribs2DEXT_attrib_list(glState, isCallValid, target, levels,
+                                                  internalformat, width, height, attrib_list,
+                                                  &attrib_listParam);
+        paramBuffer.addParam(std::move(attrib_listParam));
+    }
+    else
+    {
+        ParamCapture attrib_listParam("attrib_list", ParamType::TGLintConstPointer);
+        InitParamValue(ParamType::TGLintConstPointer, static_cast<const GLint *>(nullptr),
+                       &attrib_listParam.value);
+        paramBuffer.addParam(std::move(attrib_listParam));
+    }
+
+    return CallCapture(angle::EntryPoint::GLTexStorageAttribs2DEXT, std::move(paramBuffer));
+}
+
+CallCapture CaptureTexStorageAttribs3DEXT(const State &glState,
+                                          bool isCallValid,
+                                          GLenum target,
+                                          GLsizei levels,
+                                          GLenum internalformat,
+                                          GLsizei width,
+                                          GLsizei height,
+                                          GLsizei depth,
+                                          const GLint *attrib_list)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addEnumParam("target", GLESEnum::TextureTarget, ParamType::TGLenum, target);
+    paramBuffer.addValueParam("levels", ParamType::TGLsizei, levels);
+    paramBuffer.addEnumParam("internalformat", GLESEnum::SizedInternalFormat, ParamType::TGLenum,
+                             internalformat);
+    paramBuffer.addValueParam("width", ParamType::TGLsizei, width);
+    paramBuffer.addValueParam("height", ParamType::TGLsizei, height);
+    paramBuffer.addValueParam("depth", ParamType::TGLsizei, depth);
+
+    if (isCallValid)
+    {
+        ParamCapture attrib_listParam("attrib_list", ParamType::TGLintConstPointer);
+        InitParamValue(ParamType::TGLintConstPointer, attrib_list, &attrib_listParam.value);
+        CaptureTexStorageAttribs3DEXT_attrib_list(glState, isCallValid, target, levels,
+                                                  internalformat, width, height, depth, attrib_list,
+                                                  &attrib_listParam);
+        paramBuffer.addParam(std::move(attrib_listParam));
+    }
+    else
+    {
+        ParamCapture attrib_listParam("attrib_list", ParamType::TGLintConstPointer);
+        InitParamValue(ParamType::TGLintConstPointer, static_cast<const GLint *>(nullptr),
+                       &attrib_listParam.value);
+        paramBuffer.addParam(std::move(attrib_listParam));
+    }
+
+    return CallCapture(angle::EntryPoint::GLTexStorageAttribs3DEXT, std::move(paramBuffer));
+}
+
 CallCapture CaptureBlendBarrierKHR(const State &glState, bool isCallValid)
 {
     ParamBuffer paramBuffer;

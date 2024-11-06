@@ -195,6 +195,7 @@ using data from registry_xml.py and gl.xml.
 | [GL_EXT_texture_sRGB_RG8](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_texture_sRGB_RG8.txt) |  |  |  |  | &#x2714; | &#x2714; | &#x2714; |
 | [GL_OES_texture_stencil8](https://khronos.org/registry/OpenGL/extensions/OES/OES_texture_stencil8.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_EXT_texture_storage](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_texture_storage.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
+| [GL_EXT_texture_storage_compression](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_texture_storage_compression.txt) |  |  |  |  |  |  |  |
 | [GL_OES_texture_storage_multisample_2d_array](https://khronos.org/registry/OpenGL/extensions/OES/OES_texture_storage_multisample_2d_array.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_EXT_texture_type_2_10_10_10_REV](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_texture_type_2_10_10_10_REV.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_ANGLE_texture_usage](https://khronos.org/registry/OpenGL/extensions/ANGLE/ANGLE_texture_usage.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |

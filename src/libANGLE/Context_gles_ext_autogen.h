@@ -250,6 +250,11 @@
     /* GL_EXT_texture_shadow_lod */                                                                \
     /* GL_EXT_texture_storage */                                                                   \
     void texStorage1D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width);        \
+    /* GL_EXT_texture_storage_compression */                                                       \
+    void texStorageAttribs2D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width,  \
+                             GLsizei height, const GLint *attrib_list);                            \
+    void texStorageAttribs3D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width,  \
+                             GLsizei height, GLsizei depth, const GLint *attrib_list);             \
     /* GL_EXT_texture_type_2_10_10_10_REV */                                                       \
     /* GL_EXT_unpack_subimage */                                                                   \
     /* GL_IMG_texture_compression_pvrtc */                                                         \

@@ -4503,4 +4503,31 @@ void CaptureFramebufferFoveationConfigQCOM_providedFeatures(const State &glState
 {
     UNIMPLEMENTED();
 }
+
+void CaptureTexStorageAttribs2DEXT_attrib_list(const State &glState,
+                                               bool isCallValid,
+                                               GLenum target,
+                                               GLsizei levels,
+                                               GLenum internalformat,
+                                               GLsizei width,
+                                               GLsizei height,
+                                               const GLint *attrib_list,
+                                               angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
+
+void CaptureTexStorageAttribs3DEXT_attrib_list(const State &glState,
+                                               bool isCallValid,
+                                               GLenum target,
+                                               GLsizei levels,
+                                               GLenum internalformat,
+                                               GLsizei width,
+                                               GLsizei height,
+                                               GLsizei depth,
+                                               const GLint *attrib_list,
+                                               angle::ParamCapture *paramCapture)
+{
+    UNIMPLEMENTED();
+}
 }  // namespace gl
