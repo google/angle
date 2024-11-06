@@ -31,7 +31,7 @@ class CLEventVk : public CLEventImpl, public vk::Resource
     ~CLEventVk() override;
 
     cl_int getCommandType() const { return mEvent.getCommandType(); }
-    bool isUserEvent() const { return getCommandType() == CL_COMMAND_USER; }
+    bool isUserEvent() const { return mEvent.isUserEvent(); }
     cl::Event &getFrontendObject() { return const_cast<cl::Event &>(mEvent); }
 
     angle::Result getCommandExecutionStatus(cl_int &executionStatus) override;

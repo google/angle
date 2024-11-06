@@ -13,9 +13,10 @@
 #include "libANGLE/renderer/vulkan/cl_types.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
 
-#include "libANGLE/renderer/CLMemoryImpl.h"
-
+#include "libANGLE/CLBuffer.h"
+#include "libANGLE/CLImage.h"
 #include "libANGLE/CLMemory.h"
+
 #include "vulkan/vulkan_core.h"
 
 namespace rx
@@ -89,6 +90,7 @@ class CLBufferVk : public CLMemoryVk
 
     vk::BufferHelper &getBuffer();
     CLBufferVk *getParent() { return static_cast<CLBufferVk *>(mParent); }
+    const cl::Buffer &getFrontendObject() { return reinterpret_cast<const cl::Buffer &>(mMemory); }
 
     angle::Result create(void *hostPtr);
     angle::Result createStagingBuffer(size_t size);
@@ -125,6 +127,7 @@ class CLImageVk : public CLMemoryVk
 
     vk::ImageHelper &getImage() { return mImage; }
     vk::BufferHelper &getStagingBuffer() { return mStagingBuffer; }
+    const cl::Image &getFrontendObject() { return reinterpret_cast<const cl::Image &>(mMemory); }
 
     angle::Result create(void *hostPtr);
 

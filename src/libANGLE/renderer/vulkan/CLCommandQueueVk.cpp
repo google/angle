@@ -1730,4 +1730,10 @@ cl_mem CLCommandQueueVk::getOrCreatePrintfBuffer()
     return mPrintfBuffer;
 }
 
+bool CLCommandQueueVk::hasUserEventDependency() const
+{
+    return std::any_of(mDependantEvents.begin(), mDependantEvents.end(),
+                       [](const cl::EventPtr event) { return event->isUserEvent(); });
+}
+
 }  // namespace rx
