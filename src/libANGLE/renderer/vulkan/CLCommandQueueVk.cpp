@@ -1989,6 +1989,32 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk)
         writeDescriptorSet.pBufferInfo     = &bufferInfo;
     }
 
+    // Create Module Constant Data Buffer
+    if (devProgramData->reflectionData.pushConstants.contains(
+            NonSemanticClspvReflectionConstantDataPointerPushConstant))
+    {
+        cl::MemoryPtr clMem =
+            kernelVk.getProgram()->getOrCreateModuleConstantDataBuffer(kernelVk.getKernelName());
+        CLBufferVk &vkMem = clMem->getImpl<CLBufferVk>();
+        uint64_t devAddr  = vkMem.getBuffer().getDeviceAddress(mContext) + vkMem.getOffset();
+
+        if (clMem->getFlags().intersects(CL_MEM_READ_WRITE | CL_MEM_WRITE_ONLY))
+        {
+            ANGLE_TRY(addMemoryDependencies(clMem.get(), MemoryHandleAccess::Writeable));
+        }
+        else
+        {
+            ANGLE_TRY(addMemoryDependencies(clMem.get(), MemoryHandleAccess::ReadOnly));
+        }
+
+        const VkPushConstantRange *pushConstantRangePtr =
+            &devProgramData->reflectionData.pushConstants.at(
+                NonSemanticClspvReflectionConstantDataPointerPushConstant);
+        mComputePassCommands->getCommandBuffer().pushConstants(
+            kernelVk.getPipelineLayout(), VK_SHADER_STAGE_COMPUTE_BIT, pushConstantRangePtr->offset,
+            pushConstantRangePtr->size, &devAddr);
+    }
+
     // process the printf storage buffer
     if (kernelVk.usesPrintf())
     {

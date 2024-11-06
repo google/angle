@@ -542,6 +542,16 @@ std::string ClspvGetCompilerOptions(const CLDeviceVk *device)
         featureMacros.push_back("__opencl_c_read_write_images");
     }
 
+    if (rendererVk->getFeatures().supportsBufferDeviceAddress.enabled)
+    {
+        // It is for generating ConstantDataStorageBuffer without -physical-storage-buffers,
+        // ConstantDataPointerPushConstant with -physical-storage-buffers
+        // TODO: this flag is only on in case of supportsBufferDeviceAddress.enabled
+        // until ConstantDataStorageBuffer will be implemented.
+        // http://anglebug.com/442950569
+        options += " -module-constants-in-storage-buffer";
+    }
+
     if (rendererVk->getEnabledFeatures().features.shaderInt64)
     {
         featureMacros.push_back("__opencl_c_int64");

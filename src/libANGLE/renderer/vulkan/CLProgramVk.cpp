@@ -11,6 +11,7 @@
 #endif
 
 #include "libANGLE/renderer/vulkan/CLProgramVk.h"
+#include "libANGLE/CLBuffer.h"
 #include "libANGLE/renderer/vulkan/CLContextVk.h"
 #include "libANGLE/renderer/vulkan/clspv_utils.h"
 #include "libANGLE/renderer/vulkan/vk_cache_utils.h"
@@ -252,6 +253,35 @@ spv_result_t ParseReflection(CLProgramVk::SpvReflectionData &reflectionData,
                     reflectionData.specConstantsUsed[SpecConstantType::GlobalOffsetY] = true;
                     reflectionData.specConstantsUsed[SpecConstantType::GlobalOffsetZ] = true;
                     break;
+                case NonSemanticClspvReflectionConstantDataPointerPushConstant:
+                {
+                    std::string data = reflectionData.spvStrLookup[spvInstr.words[7]];
+
+                    // Data must be an OpString that encodes the hexbytes of the constant data.
+                    // https://github.khronos.org/SPIRV-Registry/nonsemantic/NonSemantic.ClspvReflection.html
+                    // Each byte of binary data is represented by two hexadecimal digits, so the
+                    // number of digits must be even
+                    ASSERT(data.size() % 2 == 0);
+
+                    reflectionData.constantDataBufferInfo.bufferData =
+                        angle::HexStringToUintVector(data);
+
+                    uint32_t set      = 0;
+                    uint32_t binding  = 0;
+                    uint32_t pcOffset = 0;
+                    pcOffset          = reflectionData.spvIntLookup[spvInstr.words[5]];
+
+                    // Add push constant
+                    reflectionData.pushConstants[spvInstr.words[4]] = {
+                        .stageFlags = 0, .offset = pcOffset, .size = CHAR_BIT};
+
+                    // Set constant data buffer
+                    reflectionData.constantDataBufferInfo.set      = set;
+                    reflectionData.constantDataBufferInfo.binding  = binding;
+                    reflectionData.constantDataBufferInfo.pcOffset = pcOffset;
+
+                    break;
+                }
                 case NonSemanticClspvReflectionPrintfInfo:
                 {
                     // Info on the format string used in the builtin printf call in kernel
@@ -389,7 +419,8 @@ void CLAsyncBuildTask::operator()()
 CLProgramVk::CLProgramVk(const cl::Program &program)
     : CLProgramImpl(program),
       mContext(&program.getContext().getImpl<CLContextVk>()),
-      mAsyncBuildEvent(std::make_shared<angle::WaitableEventDone>())
+      mAsyncBuildEvent(std::make_shared<angle::WaitableEventDone>()),
+      mModuleConstantDataBuffer(nullptr)
 {}
 
 angle::Result CLProgramVk::init()
@@ -505,7 +536,13 @@ angle::Result CLProgramVk::init(const size_t *lengths,
     return angle::Result::Continue;
 }
 
-CLProgramVk::~CLProgramVk() {}
+CLProgramVk::~CLProgramVk()
+{
+    if (mModuleConstantDataBuffer)
+    {
+        mModuleConstantDataBuffer.release();
+    }
+}
 
 angle::Result CLProgramVk::build(const cl::DevicePtrs &devices,
                                  const char *options,
@@ -839,6 +876,30 @@ const CLProgramVk::DeviceProgramData *CLProgramVk::getDeviceProgramData(
     WARN() << "Kernel name (" << kernelName << ") is not associated with program (" << this
            << ") !";
     return nullptr;
+}
+
+cl::MemoryPtr CLProgramVk::getOrCreateModuleConstantDataBuffer(const std::string &kernelName)
+{
+    const DeviceProgramData *devProgram = getDeviceProgramData(kernelName.c_str());
+    ASSERT(devProgram);
+    const std::vector<uint8_t> &initData =
+        devProgram->reflectionData.constantDataBufferInfo.bufferData;
+    void *initDataPtr = reinterpret_cast<void *>(const_cast<uint8_t *>(initData.data()));
+
+    if (!mModuleConstantDataBuffer)
+    {
+        mModuleConstantDataBuffer =
+            cl::MemoryPtr(cl::Buffer::Cast(this->mContext->getFrontendObject().createBuffer(
+                nullptr, cl::MemFlags(CL_MEM_USE_HOST_PTR), initData.size(), initDataPtr)));
+        // Release initialization reference, lifetime controlled by RefPointer.
+        mModuleConstantDataBuffer->release();
+    }
+    else
+    {
+        // reading that this buffer is already present and is sufficient to hold initData
+        ASSERT(mModuleConstantDataBuffer->getSize() == initData.size());
+    }
+    return mModuleConstantDataBuffer;
 }
 
 bool CLProgramVk::buildInternal(const cl::DevicePtrs &devices,
