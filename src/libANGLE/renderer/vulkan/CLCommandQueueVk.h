@@ -11,6 +11,7 @@
 
 #include <vector>
 
+#include "common/PackedCLEnums_autogen.h"
 #include "libANGLE/renderer/vulkan/CLContextVk.h"
 #include "libANGLE/renderer/vulkan/CLEventVk.h"
 #include "libANGLE/renderer/vulkan/CLKernelVk.h"
@@ -247,7 +248,8 @@ class CLCommandQueueVk : public CLCommandQueueImpl
     angle::Result syncHostBuffers();
     angle::Result flushComputePassCommands();
     angle::Result processWaitlist(const cl::EventPtrs &waitEvents);
-    angle::Result createEvent(CLEventImpl::CreateFunc *createFunc, bool blocking);
+    angle::Result createEvent(CLEventImpl::CreateFunc *createFunc,
+                              cl::ExecutionStatus initialStatus);
 
     angle::Result onResourceAccess(const vk::CommandBufferAccess &access);
     angle::Result getCommandBuffer(const vk::CommandBufferAccess &access,

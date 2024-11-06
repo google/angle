@@ -141,6 +141,8 @@ angle::Result CLCommandQueueVk::enqueueReadBuffer(const cl::Buffer &buffer,
     {
         ANGLE_TRY(finishInternal());
         ANGLE_TRY(bufferVk->copyTo(ptr, offset, size));
+
+        ANGLE_TRY(createEvent(eventCreateFunc, cl::ExecutionStatus::Complete));
     }
     else
     {
@@ -151,9 +153,9 @@ angle::Result CLCommandQueueVk::enqueueReadBuffer(const cl::Buffer &buffer,
         transferConfig.size       = size;
         transferConfig.dstHostPtr = ptr;
         ANGLE_TRY(addToHostTransferList(bufferVk, transferConfig));
-    }
 
-    ANGLE_TRY(createEvent(eventCreateFunc, blocking));
+        ANGLE_TRY(createEvent(eventCreateFunc, cl::ExecutionStatus::Queued));
+    }
 
     return angle::Result::Continue;
 }
@@ -177,7 +179,7 @@ angle::Result CLCommandQueueVk::enqueueWriteBuffer(const cl::Buffer &buffer,
         ANGLE_TRY(finishInternal());
     }
 
-    ANGLE_TRY(createEvent(eventCreateFunc, true));
+    ANGLE_TRY(createEvent(eventCreateFunc, cl::ExecutionStatus::Complete));
 
     return angle::Result::Continue;
 }
@@ -260,7 +262,7 @@ angle::Result CLCommandQueueVk::enqueueCopyBuffer(const cl::Buffer &srcBuffer,
     commandBuffer->copyBuffer(srcBufferVk->getBuffer().getBuffer(),
                               dstBufferVk->getBuffer().getBuffer(), 1, &copyRegion);
 
-    ANGLE_TRY(createEvent(eventCreateFunc, false));
+    ANGLE_TRY(createEvent(eventCreateFunc, cl::ExecutionStatus::Queued));
 
     return angle::Result::Continue;
 }
@@ -301,7 +303,7 @@ angle::Result CLCommandQueueVk::enqueueFillBuffer(const cl::Buffer &buffer,
 
     ANGLE_TRY(bufferVk->fillWithPattern(pattern, patternSize, offset, size));
 
-    ANGLE_TRY(createEvent(eventCreateFunc, true));
+    ANGLE_TRY(createEvent(eventCreateFunc, cl::ExecutionStatus::Complete));
 
     return angle::Result::Continue;
 }
@@ -319,11 +321,11 @@ angle::Result CLCommandQueueVk::enqueueMapBuffer(const cl::Buffer &buffer,
 
     ANGLE_TRY(processWaitlist(waitEvents));
 
-    bool eventComplete = false;
+    cl::ExecutionStatus eventComplete = cl::ExecutionStatus::Queued;
     if (blocking || !eventCreateFunc)
     {
         ANGLE_TRY(finishInternal());
-        eventComplete = true;
+        eventComplete = cl::ExecutionStatus::Complete;
     }
 
     CLBufferVk *bufferVk = &buffer.getImpl<CLBufferVk>();
@@ -333,7 +335,7 @@ angle::Result CLCommandQueueVk::enqueueMapBuffer(const cl::Buffer &buffer,
         ANGLE_TRY(finishInternal());
         mapPointer = static_cast<uint8_t *>(buffer.getHostPtr()) + offset;
         ANGLE_TRY(bufferVk->copyTo(mapPointer, offset, size));
-        eventComplete = true;
+        eventComplete = cl::ExecutionStatus::Complete;
     }
     else
     {
@@ -343,7 +345,7 @@ angle::Result CLCommandQueueVk::enqueueMapBuffer(const cl::Buffer &buffer,
 
     if (bufferVk->isCurrentlyInUse())
     {
-        eventComplete = false;
+        eventComplete = cl::ExecutionStatus::Queued;
     }
     ANGLE_TRY(createEvent(eventCreateFunc, eventComplete));
 
@@ -544,6 +546,8 @@ angle::Result CLCommandQueueVk::enqueueReadImage(const cl::Image &image,
                                         ImageBufferCopyDirection::ToBuffer));
         ANGLE_TRY(finishInternal());
         ANGLE_TRY(imageVk.copyStagingTo(ptr, 0, size));
+
+        ANGLE_TRY(createEvent(eventCreateFunc, cl::ExecutionStatus::Complete));
     }
     else
     {
@@ -555,9 +559,9 @@ angle::Result CLCommandQueueVk::enqueueReadImage(const cl::Image &image,
         transferConfig.origin     = origin;
         transferConfig.region     = region;
         ANGLE_TRY(addToHostTransferList(&imageVk, transferConfig));
-    }
 
-    ANGLE_TRY(createEvent(eventCreateFunc, blocking));
+        ANGLE_TRY(createEvent(eventCreateFunc, cl::ExecutionStatus::Queued));
+    }
 
     return angle::Result::Continue;
 }
@@ -577,6 +581,7 @@ angle::Result CLCommandQueueVk::enqueueWriteImage(const cl::Image &image,
 
     CLImageVk &imageVk = image.getImpl<CLImageVk>();
     size_t size        = (region.x * region.y * region.z * imageVk.getElementSize());
+    cl::ExecutionStatus eventInitialState = cl::ExecutionStatus::Queued;
     if (imageVk.isStagingBufferInitialized() == false)
     {
         ANGLE_TRY(imageVk.createStagingBuffer(imageVk.getSize()));
@@ -589,9 +594,10 @@ angle::Result CLCommandQueueVk::enqueueWriteImage(const cl::Image &image,
     if (blocking)
     {
         ANGLE_TRY(finishInternal());
+        eventInitialState = cl::ExecutionStatus::Complete;
     }
 
-    ANGLE_TRY(createEvent(eventCreateFunc, blocking));
+    ANGLE_TRY(createEvent(eventCreateFunc, eventInitialState));
 
     return angle::Result::Continue;
 }
@@ -652,7 +658,7 @@ angle::Result CLCommandQueueVk::enqueueCopyImage(const cl::Image &srcImage,
         srcImageVk->getImage().getImage(), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
         dstImageVk->getImage().getImage(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &copyRegion);
 
-    ANGLE_TRY(createEvent(eventCreateFunc, false));
+    ANGLE_TRY(createEvent(eventCreateFunc, cl::ExecutionStatus::Queued));
 
     return angle::Result::Continue;
 }
@@ -685,7 +691,7 @@ angle::Result CLCommandQueueVk::enqueueCopyImageToBuffer(const cl::Image &srcIma
     ANGLE_TRY(copyImageToFromBuffer(srcImageVk, dstBufferVk.getBuffer(), srcOrigin, region,
                                     dstOffset, ImageBufferCopyDirection::ToBuffer));
 
-    ANGLE_TRY(createEvent(eventCreateFunc, false));
+    ANGLE_TRY(createEvent(eventCreateFunc, cl::ExecutionStatus::Queued));
 
     return angle::Result::Continue;
 }
@@ -707,7 +713,7 @@ angle::Result CLCommandQueueVk::enqueueCopyBufferToImage(const cl::Buffer &srcBu
     ANGLE_TRY(copyImageToFromBuffer(dstImageVk, srcBufferVk.getBuffer(), dstOrigin, region,
                                     srcOffset, ImageBufferCopyDirection::ToImage));
 
-    ANGLE_TRY(createEvent(eventCreateFunc, false));
+    ANGLE_TRY(createEvent(eventCreateFunc, cl::ExecutionStatus::Queued));
 
     return angle::Result::Continue;
 }
@@ -782,7 +788,7 @@ angle::Result CLCommandQueueVk::enqueueMapImage(const cl::Image &image,
             break;
     }
 
-    ANGLE_TRY(createEvent(eventCreateFunc, true));
+    ANGLE_TRY(createEvent(eventCreateFunc, cl::ExecutionStatus::Complete));
 
     return angle::Result::Continue;
 }
@@ -796,11 +802,11 @@ angle::Result CLCommandQueueVk::enqueueUnmapMemObject(const cl::Memory &memory,
 
     ANGLE_TRY(processWaitlist(waitEvents));
 
-    bool eventComplete = false;
+    cl::ExecutionStatus eventComplete = cl::ExecutionStatus::Queued;
     if (!eventCreateFunc)
     {
         ANGLE_TRY(finishInternal());
-        eventComplete = true;
+        eventComplete = cl::ExecutionStatus::Complete;
     }
 
     if (memory.getType() == cl::MemObjectType::Buffer)
@@ -810,7 +816,7 @@ angle::Result CLCommandQueueVk::enqueueUnmapMemObject(const cl::Memory &memory,
         {
             ANGLE_TRY(finishInternal());
             ANGLE_TRY(bufferVk.copyFrom(memory.getHostPtr(), 0, bufferVk.getSize()));
-            eventComplete = true;
+            eventComplete = cl::ExecutionStatus::Complete;
         }
     }
     else if (memory.getType() != cl::MemObjectType::Pipe)
@@ -822,7 +828,7 @@ angle::Result CLCommandQueueVk::enqueueUnmapMemObject(const cl::Memory &memory,
                                         {extent.width, extent.height, extent.depth}, 0,
                                         ImageBufferCopyDirection::ToImage));
         ANGLE_TRY(finishInternal());
-        eventComplete = true;
+        eventComplete = cl::ExecutionStatus::Complete;
     }
     else
     {
@@ -853,7 +859,7 @@ angle::Result CLCommandQueueVk::enqueueMigrateMemObjects(const cl::MemoryPtrs &m
         ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
     }
 
-    ANGLE_TRY(createEvent(eventCreateFunc, true));
+    ANGLE_TRY(createEvent(eventCreateFunc, cl::ExecutionStatus::Complete));
 
     return angle::Result::Continue;
 }
@@ -888,7 +894,7 @@ angle::Result CLCommandQueueVk::enqueueNDRangeKernel(const cl::Kernel &kernel,
     mComputePassCommands->getCommandBuffer().dispatch(workgroupCount[0], workgroupCount[1],
                                                       workgroupCount[2]);
 
-    ANGLE_TRY(createEvent(eventCreateFunc, false));
+    ANGLE_TRY(createEvent(eventCreateFunc, cl::ExecutionStatus::Queued));
 
     return angle::Result::Continue;
 }
@@ -921,7 +927,7 @@ angle::Result CLCommandQueueVk::enqueueMarkerWithWaitList(const cl::EventPtrs &w
     std::scoped_lock<std::mutex> sl(mCommandQueueMutex);
 
     ANGLE_TRY(processWaitlist(waitEvents));
-    ANGLE_TRY(createEvent(eventCreateFunc, false));
+    ANGLE_TRY(createEvent(eventCreateFunc, cl::ExecutionStatus::Queued));
 
     return angle::Result::Continue;
 }
@@ -939,7 +945,7 @@ angle::Result CLCommandQueueVk::enqueueMarker(CLEventImpl::CreateFunc &eventCrea
         VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, 0, 1,
         &memoryBarrier, 0, nullptr, 0, nullptr);
 
-    ANGLE_TRY(createEvent(&eventCreateFunc, false));
+    ANGLE_TRY(createEvent(&eventCreateFunc, cl::ExecutionStatus::Queued));
 
     return angle::Result::Continue;
 }
@@ -975,7 +981,7 @@ angle::Result CLCommandQueueVk::enqueueBarrierWithWaitList(const cl::EventPtrs &
         ANGLE_TRY(processWaitlist(waitEvents));
     }
 
-    ANGLE_TRY(createEvent(eventCreateFunc, false));
+    ANGLE_TRY(createEvent(eventCreateFunc, cl::ExecutionStatus::Queued));
 
     return angle::Result::Continue;
 }
@@ -1448,11 +1454,12 @@ angle::Result CLCommandQueueVk::submitCommands()
     return angle::Result::Continue;
 }
 
-angle::Result CLCommandQueueVk::createEvent(CLEventImpl::CreateFunc *createFunc, bool blocking)
+angle::Result CLCommandQueueVk::createEvent(CLEventImpl::CreateFunc *createFunc,
+                                            cl::ExecutionStatus initialStatus)
 {
     if (createFunc != nullptr)
     {
-        *createFunc = [this, blocking](const cl::Event &event) {
+        *createFunc = [this, initialStatus](const cl::Event &event) {
             auto eventVk = new (std::nothrow) CLEventVk(event);
             if (eventVk == nullptr)
             {
@@ -1461,10 +1468,10 @@ angle::Result CLCommandQueueVk::createEvent(CLEventImpl::CreateFunc *createFunc,
                 return CLEventImpl::Ptr(nullptr);
             }
 
-            if (blocking)
+            if (initialStatus == cl::ExecutionStatus::Complete)
             {
                 // Submission finished at this point, just set event to complete
-                if (IsError(eventVk->setStatusAndExecuteCallback(CL_COMPLETE)))
+                if (IsError(eventVk->setStatusAndExecuteCallback(cl::ToCLenum(initialStatus))))
                 {
                     ANGLE_CL_SET_ERROR(CL_OUT_OF_RESOURCES);
                 }
