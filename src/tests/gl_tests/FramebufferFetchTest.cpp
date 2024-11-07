@@ -4344,6 +4344,41 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+// Tests that accessing gl_LastFragDepthARM or gl_LastFragStencilARM without attached depth or
+// stencil attachments produces undefined results without generating an error.
+TEST_P(FramebufferFetchES31, DrawWithoutDepthAndStencil)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ARM_shader_framebuffer_fetch_depth_stencil"));
+
+    const char kFS[] = R"(#version 310 es
+#extension GL_ARM_shader_framebuffer_fetch_depth_stencil : require
+
+highp out vec4 color;
+
+void main()
+{
+    bool correct = gl_LastFragStencilARM == 0x3C;
+    color = vec4(correct, gl_LastFragDepthARM, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(mProgram, essl31_shaders::vs::Passthrough(), kFS);
+    glUseProgram(mProgram);
+    EXPECT_GL_NO_ERROR();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    EXPECT_GL_NO_ERROR();
+
+    GLRenderbuffer renderbuffer;
+    glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, getWindowWidth(), getWindowHeight());
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, renderbuffer);
+    EXPECT_GL_NO_ERROR();
+
+    drawQuad(mProgram, essl31_shaders::PositionAttrib(), 0.0f);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Test that depth and stencil framebuffer fetch works with pbuffers
 TEST_P(FramebufferFetchES31, DepthStencilPbuffer)
 {
