@@ -1947,6 +1947,37 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk)
                 break;
             }
             case NonSemanticClspvReflectionArgumentPointerUniform:
+            {
+                ASSERT(kernelVk.getPodBuffer()->getSize() >= arg.handleSize + arg.podUniformOffset);
+                if (static_cast<const cl_mem>(arg.handle) == NULL)
+                {
+                    // If the argument is a buffer object, the arg_value pointer can be NULL or
+                    // point to a NULL value in which case a NULL value will be used as the value
+                    // for the argument declared as a pointer to global or constant memory in the
+                    // kernel.
+                    uint64_t null = 0;
+                    ANGLE_TRY(kernelVk.getPodBuffer()->getImpl<CLBufferVk>().copyFrom(
+                        &null, arg.podStorageBufferOffset, arg.handleSize));
+                }
+                else
+                {
+                    cl::Memory *clMem = cl::Buffer::Cast(static_cast<const cl_mem>(arg.handle));
+                    CLBufferVk &vkMem = clMem->getImpl<CLBufferVk>();
+                    ANGLE_TRY(addMemoryDependencies(&arg));
+                    uint64_t devAddr =
+                        vkMem.getBuffer().getDeviceAddress(mContext) + vkMem.getOffset();
+                    ANGLE_TRY(kernelVk.getPodBuffer()->getImpl<CLBufferVk>().copyFrom(
+                        &devAddr, arg.podStorageBufferOffset, arg.handleSize));
+                }
+
+                if (!podBufferPresent)
+                {
+                    podBufferPresent  = true;
+                    podBinding        = arg.descriptorBinding;
+                    podDescriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+                }
+                break;
+            }
             default:
             {
                 UNIMPLEMENTED();

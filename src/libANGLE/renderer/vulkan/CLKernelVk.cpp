@@ -133,11 +133,11 @@ angle::Result CLKernelVk::init()
                 descType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
                 break;
             case NonSemanticClspvReflectionArgumentUniform:
-            case NonSemanticClspvReflectionArgumentPointerUniform:
                 descType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
                 break;
             case NonSemanticClspvReflectionArgumentPodUniform:
             case NonSemanticClspvReflectionArgumentPodStorageBuffer:
+            case NonSemanticClspvReflectionArgumentPointerUniform:
             {
                 uint32_t newPodBufferSize = arg.podStorageBufferOffset + arg.podStorageBufferSize;
                 podBufferSize = newPodBufferSize > podBufferSize ? newPodBufferSize : podBufferSize;
@@ -145,9 +145,9 @@ angle::Result CLKernelVk::init()
                 {
                     continue;
                 }
-                descType = arg.type == NonSemanticClspvReflectionArgumentPodUniform
-                               ? VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER
-                               : VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+                descType = arg.type == NonSemanticClspvReflectionArgumentPodStorageBuffer
+                               ? VK_DESCRIPTOR_TYPE_STORAGE_BUFFER
+                               : VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
                 podFound = true;
                 break;
             }
@@ -260,6 +260,7 @@ angle::Result CLKernelVk::setArg(cl_uint argIndex, size_t argSize, const void *a
             case NonSemanticClspvReflectionArgumentUniformTexelBuffer:
             case NonSemanticClspvReflectionArgumentStorageTexelBuffer:
             case NonSemanticClspvReflectionArgumentPointerPushConstant:
+            case NonSemanticClspvReflectionArgumentPointerUniform:
                 ASSERT(argSize == sizeof(cl_mem *));
                 arg.handle     = *static_cast<const cl_mem *>(argValue);
                 arg.handleSize = argSize;
