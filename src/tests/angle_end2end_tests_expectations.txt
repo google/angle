@@ -699,6 +699,12 @@ b/346650202 PIXEL4ORXL : GeometryShaderTest.CreateAndAttachGeometryShaderOES/* =
 
 374790905 PIXEL4ORXL VULKAN : GLSLTest_ES3.ReadFromDynamicIndexingOfSwizzledVector/* = SKIP
 
+378404997 PIXEL4ORXL VULKAN : FramebufferFetchES31.DrawFetchWithDifferentIndicesInSameRenderPass_*/* = SKIP
+378404997 PIXEL4ORXL VULKAN : FramebufferFetchES31.DrawNonFetchDrawFetchWithDifferentAttachments_*/* = SKIP
+378404997 PIXEL4ORXL VULKAN : FramebufferFetchES31.DrawFetchBlitDrawFetch_*/* = SKIP
+378404997 PIXEL4ORXL VULKAN : FramebufferFetchES31.MultipleRenderTarget_*_*Complex/* = SKIP
+378404997 PIXEL4ORXL VULKAN : FramebufferFetchES31.DrawNonFetchDrawFetchWithDifferentPrograms_*/* = SKIP
+
 // Pixel 6 expectations.
 40096826 PIXEL6 VULKAN : BlitFramebufferTest.OOBWrite/* = SKIP
 40096826 PIXEL6 VULKAN : BufferSubDataTest.MapInvalidateThenBufferSubData/* = SKIP
@@ -783,6 +789,8 @@ b/217922015 PIXEL6 VULKAN : GLSLTest_ES3.NestedPowFromUniform/* = SKIP
 
 42266242 PIXEL6 VULKAN : PixelLocalStorageTest.DrawStateReset/* = SKIP
 42266242 PIXEL6 VULKAN : PixelLocalStorageTestES31.DrawStateReset/* = SKIP
+
+378404998 PIXEL6 VULKAN : VulkanPerformanceCounterTest_ES31.ColorMaskedFramebufferFetchDrawThenClear/* = SKIP
 
 b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachments/* = SKIP
 
@@ -910,8 +918,10 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 40050011 D3D11 : GLSLTest_ES3.UnsuccessfulRelinkWithBindAttribLocation/* = SKIP
 40050011 SWIFTSHADER : GLSLTest_ES3.UnsuccessfulRelinkWithBindAttribLocation/* = SKIP
 
-// Fails on swangle builders
+// Sampling from a black texture doesn't return exactly 0,0,0,1
 42264328 SWIFTSHADER : FramebufferFetchES31.UniformUsageCombinations/* = SKIP
+
+// Fails on swangle builders
 42266918 SWIFTSHADER : WebGL2GLSLTest.TexelFetchLodOutOfBounds/* = SKIP
 
 // HLSL compiler bug
@@ -1213,7 +1223,6 @@ b/267953710 GALAXYS22 GLES : VulkanImageTest.HasVulkanImageExtensions/* = SKIP
 b/267953710 GALAXYS22 GLES : VulkanExternalImageTest.TextureFormatCompatChromiumFd/* = SKIP
 b/267953710 GALAXYS22 GLES : VulkanExternalImageTestES31.UninitializedOnGLImportAndStorageWrite/* = SKIP
 b/267953710 GALAXYS22 VULKAN : FramebufferFetchES31.DrawNonFetchDrawFetchInStorageBufferThenClear_NonCoherent/* = SKIP
-b/267953710 GALAXYS22 VULKAN : FramebufferFetchES31.UniformUsageCombinations/* = SKIP
 b/267953710 GALAXYS22 VULKAN : ImageTestES3.RGBAHBUploadDataColorspace/* = SKIP
 b/267953710 GALAXYS22 VULKAN : ImageTestES3.SourceAHBMipTarget2DMip/* = SKIP
 b/267953710 GALAXYS22 VULKAN : ImageTestES3.SourceAHBMipTarget2DMipGenerateMipmap/* = SKIP

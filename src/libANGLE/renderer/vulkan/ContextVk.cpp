@@ -1127,6 +1127,14 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
     mGraphicsDirtyBits = mNewGraphicsCommandBufferDirtyBits;
     mComputeDirtyBits  = mNewComputeCommandBufferDirtyBits;
 
+    // If coherent framebuffer fetch is emulated, a barrier is implicitly issued between draw calls
+    // that use framebuffer fetch.  As such, the corresponding dirty bit shouldn't be cleared until
+    // a program without framebuffer fetch is used.
+    if (mRenderer->isCoherentColorFramebufferFetchEmulated())
+    {
+        mPersistentGraphicsDirtyBits.set(DIRTY_BIT_FRAMEBUFFER_FETCH_BARRIER);
+    }
+
     FillWithNullptr(&mActiveImages);
 
     // The following dirty bits don't affect the program pipeline:
@@ -1620,7 +1628,10 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
                 (this->*mGraphicsDirtyBitHandlers[*dirtyBitIter])(&dirtyBitIter, dirtyBitMask));
         }
 
-        mGraphicsDirtyBits &= ~dirtyBitMask;
+        // Reset the processed dirty bits, except for those that are expected to persist between
+        // draw calls (such as the framebuffer fetch barrier which needs to be issued again and
+        // again).
+        mGraphicsDirtyBits &= (~dirtyBitMask | mPersistentGraphicsDirtyBits);
     }
 
     // Render pass must be always available at this point.
@@ -5450,6 +5461,8 @@ angle::Result ContextVk::invalidateProgramExecutableHelper(const gl::Context *co
 
         const vk::FramebufferFetchMode framebufferFetchMode =
             vk::GetProgramFramebufferFetchMode(executable);
+        const bool hasColorFramebufferFetch =
+            framebufferFetchMode != vk::FramebufferFetchMode::None;
         if (getFeatures().preferDynamicRendering.enabled)
         {
             // Update the framebuffer fetch mode on the pipeline desc directly.  This is an inherent
@@ -5468,8 +5481,6 @@ angle::Result ContextVk::invalidateProgramExecutableHelper(const gl::Context *co
         else
         {
             ASSERT(!FramebufferFetchModeHasDepthStencil(framebufferFetchMode));
-            const bool hasColorFramebufferFetch =
-                framebufferFetchMode != vk::FramebufferFetchMode::None;
             if (mIsInColorFramebufferFetchMode != hasColorFramebufferFetch)
             {
                 ASSERT(getDrawFramebuffer()->getRenderPassDesc().hasColorFramebufferFetch() ==
@@ -5499,6 +5510,16 @@ angle::Result ContextVk::invalidateProgramExecutableHelper(const gl::Context *co
             {
                 onColorAccessChange();
             }
+        }
+
+        // If framebuffer fetch is exposed but is internally non-coherent, make sure a framebuffer
+        // fetch barrier is issued before each draw call as long as a program with framebuffer fetch
+        // is used.  If the application would have correctly used non-coherent framebuffer fetch, it
+        // would have been optimal _not_ to expose the coherent extension.  However, lots of
+        // Android applications expect coherent framebuffer fetch to be available.
+        if (mRenderer->isCoherentColorFramebufferFetchEmulated())
+        {
+            mGraphicsDirtyBits.set(DIRTY_BIT_FRAMEBUFFER_FETCH_BARRIER, hasColorFramebufferFetch);
         }
 
         updateStencilWriteWorkaround();

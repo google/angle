@@ -593,8 +593,7 @@ void Renderer::ensureCapsInitialized() const
 
     mNativeExtensions.blendEquationAdvancedCoherentKHR =
         mFeatures.supportsBlendOperationAdvancedCoherent.enabled ||
-        (mFeatures.emulateAdvancedBlendEquations.enabled &&
-         mFeatures.supportsShaderFramebufferFetch.enabled);
+        (mFeatures.emulateAdvancedBlendEquations.enabled && mIsColorFramebufferFetchCoherent);
 
     // Enable EXT_unpack_subimage
     mNativeExtensions.unpackSubimageEXT = true;
@@ -995,7 +994,7 @@ void Renderer::ensureCapsInitialized() const
     if (getFeatures().supportsShaderFramebufferFetch.enabled)
     {
         mNativeExtensions.shaderFramebufferFetchEXT = true;
-        mNativeExtensions.shaderFramebufferFetchARM = mNativeExtensions.shaderFramebufferFetchEXT;
+        mNativeExtensions.shaderFramebufferFetchARM = true;
         // ANGLE correctly maps gl_LastFragColorARM to input attachment 0 and has no problem with
         // MRT.
         mNativeCaps.fragmentShaderFramebufferFetchMRT = true;
@@ -1294,7 +1293,7 @@ void Renderer::ensureCapsInitialized() const
 
     // GL_ANGLE_shader_pixel_local_storage
     mNativeExtensions.shaderPixelLocalStorageANGLE = true;
-    if (getFeatures().supportsShaderFramebufferFetch.enabled)
+    if (getFeatures().supportsShaderFramebufferFetch.enabled && mIsColorFramebufferFetchCoherent)
     {
         mNativeExtensions.shaderPixelLocalStorageCoherentANGLE = true;
         mNativePLSOptions.type             = ShPixelLocalStorageType::FramebufferFetch;

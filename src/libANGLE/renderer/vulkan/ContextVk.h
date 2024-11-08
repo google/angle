@@ -1526,6 +1526,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     DirtyBits mNewGraphicsCommandBufferDirtyBits;
     DirtyBits mNewComputeCommandBufferDirtyBits;
     DirtyBits mDynamicStateDirtyBits;
+    DirtyBits mPersistentGraphicsDirtyBits;
     static constexpr DirtyBits kColorAccessChangeDirtyBits{DIRTY_BIT_COLOR_ACCESS};
     static constexpr DirtyBits kDepthStencilAccessChangeDirtyBits{
         DIRTY_BIT_READ_ONLY_DEPTH_FEEDBACK_LOOP_MODE, DIRTY_BIT_DEPTH_STENCIL_ACCESS};

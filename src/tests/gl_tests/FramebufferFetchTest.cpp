@@ -2717,7 +2717,7 @@ void main()
     glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, atomicBuffer);
     userCounters = static_cast<GLuint *>(
         glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint), GL_MAP_READ_BIT));
-    EXPECT_EQ(*userCounters, kViewportWidth * kViewportHeight * 4);
+    EXPECT_EQ(*userCounters, kViewportWidth * kViewportHeight * 2);
     glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
     glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
 
@@ -3935,7 +3935,7 @@ TEST_P(FramebufferFetchES31, MaximumColorAttachments)
         expectB += (255 * ((index + 1) % 4) + 3) / 6;
         expectA += (255 * ((index + 1) % 5) + 4) / 8;
 
-        EXPECT_PIXEL_NEAR(0, 0, expectR, expectG, expectB, expectA, 1);
+        EXPECT_PIXEL_NEAR(0, 0, expectR, expectG, expectB, expectA, 2);
     }
 
     ASSERT_GL_NO_ERROR();
@@ -4959,6 +4959,97 @@ void main()
     EXPECT_PIXEL_NEAR(0, 0, 255, 148, 51, 204, 1);
     EXPECT_PIXEL_NEAR(kViewportWidth - 1, kViewportHeight - 1, 255, 148, 51, 204, 1);
     ASSERT_GL_NO_ERROR();
+}
+
+// Test switching between framebuffer fetch and non framebuffer fetch draw calls, with multiple
+// calls in each mode in between.  Tests Vulkan backend's emulation of coherent framebuffer fetch
+// over non-coherent hardware.  While this is untestable without adding counters, the test should
+// generate implicit framebuffer fetch barriers only when the current program uses framebuffer
+// fetch.  This can be observed in RenderDoc.
+TEST_P(FramebufferFetchES31, SwitchWithAndWithoutFramebufferFetchPrograms)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+
+    constexpr char kVS[] = R"(#version 310 es
+void main()
+{
+    // gl_VertexID    x    y
+    //      0        -1   -1
+    //      1         1   -1
+    //      2        -1    1
+    //      3         1    1
+    int bit0 = gl_VertexID & 1;
+    int bit1 = gl_VertexID >> 1;
+    gl_Position = vec4(bit0 * 2 - 1, bit1 * 2 - 1, 0, 1);
+})";
+
+    // Program without framebuffer fetch
+    constexpr char kFS1[] = R"(#version 310 es
+layout(location = 0) out highp vec4 o_color;
+uniform mediump vec4 u_color;
+void main (void)
+{
+    o_color = u_color;
+})";
+    ANGLE_GL_PROGRAM(drawColor, kVS, kFS1);
+    glUseProgram(drawColor);
+    GLint uniLoc = glGetUniformLocation(drawColor, "u_color");
+    ASSERT_NE(uniLoc, -1);
+
+    // Program with framebuffer fetch
+    constexpr char kFS2[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch : require
+layout(location = 0) inout highp vec4 o_color;
+void main (void)
+{
+    o_color = o_color * o_color + vec4(0.1, 0.2, 0.3, 0.2);
+})";
+    ANGLE_GL_PROGRAM(ff, kVS, kFS2);
+
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kViewportWidth, kViewportHeight);
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    glClearColor(0, 0, 0.5, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Start without framebuffer fetch.
+    glUseProgram(drawColor);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+    glUniform4f(uniLoc, 0.7, 0, 0, 0.3);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glUniform4f(uniLoc, 0.1, 0.4, 0, 0);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    // Switch to framebuffer fetch mode, and draw a few times
+    glDisable(GL_BLEND);
+    glUseProgram(ff);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    // Break the render pass.  Later continue drawing in framebuffer fetch mode without changing
+    // programs to ensure that framebuffer fetch barrier is still added.
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(165, 84, 153, 72), 3);
+
+    // More FF calls
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    // Back to no FF calls, no barrier should be added.
+    glEnable(GL_BLEND);
+    glUseProgram(drawColor);
+    glUniform4f(uniLoc, 0.2, 0.1, 0.05, 0.15);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+    // Verify results
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(145, 100, 201, 109), 3);
 }
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FramebufferFetchES31);

@@ -287,8 +287,9 @@ constexpr const char *kNoListRestartSkippedMessages[] = {
     "VUID-VkPipelineInputAssemblyStateCreateInfo-topology-06252",
 };
 
-// Validation messages that should be ignored only when ES 3.2 is enabled on certain test platforms.
-constexpr const char *kExposeES32ForTestingSkippedMessages[] = {
+// Validation messages that should be ignored only when exposeNonConformantExtensionsAndVersions is
+// enabled on certain test platforms.
+constexpr const char *kExposeNonConformantSkippedMessages[] = {
     // http://issuetracker.google.com/376899587
     "VUID-VkSwapchainCreateInfoKHR-presentMode-01427",
 };
@@ -1744,6 +1745,8 @@ Renderer::Renderer()
       mPipelineCacheSizeAtLastSync(0),
       mPipelineCacheInitialized(false),
       mValidationMessageCount(0),
+      mIsColorFramebufferFetchCoherent(false),
+      mIsColorFramebufferFetchUsed(false),
       mCommandProcessor(this, &mCommandQueue),
       mSupportedBufferWritePipelineStageMask(0),
       mSupportedVulkanShaderStageMask(0),
@@ -4128,8 +4131,8 @@ void Renderer::initializeValidationMessageSuppressions()
     if (getFeatures().exposeES32ForTesting.enabled)
     {
         mSkippedValidationMessages.insert(
-            mSkippedValidationMessages.end(), kExposeES32ForTestingSkippedMessages,
-            kExposeES32ForTestingSkippedMessages + ArraySize(kExposeES32ForTestingSkippedMessages));
+            mSkippedValidationMessages.end(), kExposeNonConformantSkippedMessages,
+            kExposeNonConformantSkippedMessages + ArraySize(kExposeNonConformantSkippedMessages));
     }
 
     if (getFeatures().useVkEventForImageBarrier.enabled &&
@@ -5167,19 +5170,32 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
                             IsAndroid() && mFeatures.supportsLegacyDithering.enabled && isARM &&
                                 armDriverVersion < ARMDriverVersion(50, 0, 0));
 
-    // http://anglebug.com/42265365
-    // On ARM hardware, framebuffer-fetch-like behavior on Vulkan is already coherent, so we can
-    // expose the coherent version of the GL extension despite unofficial Vulkan support.
-    ANGLE_FEATURE_CONDITION(
-        &mFeatures, supportsShaderFramebufferFetch,
-        (IsAndroid() && isARM) || mFeatures.supportsRasterizationOrderAttachmentAccess.enabled);
+    // ANGLE always exposes framebuffer fetch because too many apps assume it's there.  See comments
+    // on |mIsColorFramebufferFetchCoherent| for details.  Non-coherent framebuffer fetch is always
+    // supported by Vulkan.
+    //
+    // Without exposeNonConformantExtensionsAndVersions, this feature is disable on Intel/windows
+    // due to lack of input attachment support for swapchain images, and Intel/mesa before mesa
+    // 22.0 for the same reason.  Without VK_GOOGLE_surfaceless_query, there is no way to
+    // automatically deduce this support.
+    //
+    // http://issuetracker.google.com/376899587
+    // Advanced blend emulation depends on this functionaly, lack of which prevents support for
+    // ES 3.2; exposeNonConformantExtensionsAndVersions is used to force this.
+    const bool isMesaAtLeast22_0_0 = mesaVersion.major >= 22;
+    const bool supportsFramebufferFetchInSurface =
+        IsAndroid() || !isIntel || (isIntel && IsLinux() && isMesaAtLeast22_0_0) ||
+        mFeatures.exposeNonConformantExtensionsAndVersions.enabled;
 
-    // Important games are not checking supported extensions properly, and are confusing the
-    // GL_EXT_shader_framebuffer_fetch_non_coherent as the GL_EXT_shader_framebuffer_fetch
-    // extension.  Therefore, don't enable the extension on Android by default.
-    // https://issuetracker.google.com/issues/186643966
-    // https://issuetracker.google.com/issues/340665604
-    ANGLE_FEATURE_CONDITION(&mFeatures, supportsShaderFramebufferFetchNonCoherent, isSwiftShader);
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsShaderFramebufferFetch,
+                            supportsFramebufferFetchInSurface);
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsShaderFramebufferFetchNonCoherent,
+                            supportsFramebufferFetchInSurface);
+
+    // On ARM hardware, framebuffer-fetch-like behavior on Vulkan is known to be coherent even
+    // without the Vulkan extension.
+    mIsColorFramebufferFetchCoherent =
+        isARM || mFeatures.supportsRasterizationOrderAttachmentAccess.enabled;
 
     // Support EGL_KHR_lock_surface3 extension.
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsLockSurfaceExtension, IsAndroid());
@@ -5192,22 +5208,10 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, roundOutputAfterDithering, isQualcomm);
 
     // GL_KHR_blend_equation_advanced is emulated when the equivalent Vulkan extension is not
-    // usable.  Additionally, the following platforms don't support INPUT_ATTACHMENT usage for the
-    // swapchain, so they are excluded:
-    //
-    // - Intel on windows
-    // - Intel on Linux before mesa 22.0
-    //
-    // Without VK_GOOGLE_surfaceless_query, there is no way to automatically deduce this support.
-    // http://issuetracker.google.com/376899587
-    // This feature currently prevents Windows/Intel from supporting ES 3.2.
-    const bool isMesaAtLeast22_0_0 = mesaVersion.major >= 22;
+    // usable.
     ANGLE_FEATURE_CONDITION(
         &mFeatures, emulateAdvancedBlendEquations,
-        !mFeatures.supportsBlendOperationAdvanced.enabled &&
-            (IsAndroid() || !isIntel || (isIntel && IsLinux() && isMesaAtLeast22_0_0) ||
-             (isIntel && IsWindows() &&
-              mFeatures.exposeNonConformantExtensionsAndVersions.enabled)));
+        !mFeatures.supportsBlendOperationAdvanced.enabled && supportsFramebufferFetchInSurface);
 
     // GL_KHR_blend_equation_advanced_coherent ensures that the blending operations are performed in
     // API primitive order.
