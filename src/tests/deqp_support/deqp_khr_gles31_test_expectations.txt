@@ -25,6 +25,7 @@
 42264111 VULKAN NVIDIA : KHR-GLES31.core.geometry_shader.limits.max_invocations = FAIL
 345312771 VULKAN NVIDIA : KHR-GLES31.core.tessellation_shader.tessellation_shader_tessellation.gl_InvocationID_PatchVerticesIn_PrimitiveID = FAIL
 345312771 VULKAN WIN NVIDIA : KHR-GLES31.core.tessellation_shader.tessellation_control_to_tessellation_evaluation.gl_PatchVerticesIn = FAIL
+377993076 VULKAN WIN NVIDIA : KHR-GLES31.core.tessellation_shader.single.primitive_coverage = SKIP
 
 // XFB array elements capture:
 // These tests only fail with VK_EXT_transform_feedback
