@@ -627,3 +627,161 @@ TEST_F(ParseTest, BuiltinFunctionReferenceIsError)
     EXPECT_TRUE(foundErrorInIntermediateTree());
     EXPECT_TRUE(foundInIntermediateTree("'sin' : undeclared identifier"));
 }
+
+// Tests that unsized array parameters fail.
+TEST_F(ParseTest, UnsizedArrayParameterIsError)
+{
+    mShaderSpec          = SH_WEBGL2_SPEC;
+    const char kShader[] = R"(#version 300 es
+int f(int a[], int i) {
+    return i;
+}
+void main() { }
+)";
+    EXPECT_FALSE(compile(kShader));
+    EXPECT_TRUE(foundErrorInIntermediateTree());
+    EXPECT_TRUE(foundInIntermediateTree("'a' : function parameter array must specify a size"));
+}
+
+// Tests that unsized array parameters fail.
+TEST_F(ParseTest, UnsizedArrayParameterIsError2)
+{
+    mShaderSpec          = SH_GLES3_1_SPEC;
+    const char kShader[] = R"(#version 310 es
+int f(int []a[1], int i) {
+    return i;
+}
+void main() { }
+)";
+    EXPECT_FALSE(compile(kShader));
+    EXPECT_TRUE(foundErrorInIntermediateTree());
+    EXPECT_TRUE(foundInIntermediateTree("'a' : function parameter array must specify a size"));
+}
+
+// Tests that unnamed, unsized array parameters fail with same error message as named ones.
+TEST_F(ParseTest, UnnamedUnsizedArrayParameterIsError)
+{
+    mShaderSpec          = SH_WEBGL2_SPEC;
+    const char kShader[] = R"(#version 300 es
+int f(int[], int i) {
+    return i;
+}
+void main() { }
+)";
+    EXPECT_FALSE(compile(kShader));
+    EXPECT_TRUE(foundErrorInIntermediateTree());
+    EXPECT_TRUE(foundInIntermediateTree("'' : function parameter array must specify a size"));
+}
+
+// Tests that different array notatinos [1]a[2], a[1][2] etc work in parameters.
+TEST_F(ParseTest, ArrayParameterVariants)
+{
+    mShaderSpec          = SH_GLES3_1_SPEC;
+    const char kShader[] = R"(#version 310 es
+int f(int[1][2] a) {
+    return a[0][0];
+}
+int g(int a[1][2]) {
+    return a[0][0];
+}
+int h(int[1]a[2]) {
+    return a[0][0];
+}
+void main() { 
+    int[1][2] a;
+    int b[1][2];
+    int x1 = f(a);
+    int x2 = f(b);
+    int x3 = g(a);
+    int x4 = g(b);
+
+    int[1] c[2];
+    int d[2][1];
+    int y1 = h(c);
+    int y2 = h(d);
+}
+)";
+    EXPECT_TRUE(compile(kShader));
+}
+
+// Tests that parameters parse the [1]a[2] notation in correct order.
+TEST_F(ParseTest, ArrayParameterVariantsMismatchIsError2)
+{
+    mShaderSpec          = SH_GLES3_1_SPEC;
+    const char kShader[] = R"(#version 310 es
+int f(int[1]a[2]) {
+    return a[0][0];
+}
+void main() { 
+    int[1][2] a;
+    int x = f(a);
+}
+)";
+    EXPECT_FALSE(compile(kShader));
+    EXPECT_TRUE(foundErrorInIntermediateTree());
+    EXPECT_TRUE(foundInIntermediateTree("'f' : no matching overloaded function found"));
+}
+
+// Tests that specifying a struct in a function parameter is a parse error.
+TEST_F(ParseTest, StructSpecificationFunctionParameterIsError)
+{
+    mShaderSpec          = SH_WEBGL2_SPEC;
+    const char kShader[] = R"(#version 300 es
+precision highp float;
+float f(struct S {float f;} a) {
+    return a.f;
+}
+void main() { })";
+    EXPECT_FALSE(compile(kShader));
+    EXPECT_TRUE(foundErrorInIntermediateTree());
+    EXPECT_TRUE(
+        foundInIntermediateTree("'a' : Function parameter type cannot be a structure definition"));
+}
+
+// Tests that specifying a struct in a function parameter is the same parse error as with named one.
+TEST_F(ParseTest, StructSpecificationUnnamedFunctionParameterIsError)
+{
+    mShaderSpec          = SH_WEBGL2_SPEC;
+    const char kShader[] = R"(#version 300 es
+precision highp float;
+float f(struct S {float f;}) {
+    return a.f;
+}
+void main() { })";
+    EXPECT_FALSE(compile(kShader));
+    EXPECT_TRUE(foundErrorInIntermediateTree());
+    EXPECT_TRUE(
+        foundInIntermediateTree("'' : Function parameter type cannot be a structure definition"));
+}
+
+// Tests that specifying a struct in a function parameter is the same parse error as with named one.
+TEST_F(ParseTest, UnnamedStructSpecificationUnnamedFunctionParameterIsError)
+{
+    mShaderSpec          = SH_WEBGL2_SPEC;
+    const char kShader[] = R"(#version 300 es
+precision highp float;
+float f(struct {float f;}) {
+    return a.f;
+}
+void main() { })";
+    EXPECT_FALSE(compile(kShader));
+    EXPECT_TRUE(foundErrorInIntermediateTree());
+    EXPECT_TRUE(
+        foundInIntermediateTree("'' : Function parameter type cannot be a structure definition"));
+}
+
+// Tests that specifying a struct in a function parameter is the same parse error as with named one.
+TEST_F(ParseTest, UnnamedStructSpecificationFunctionParameterIsError)
+{
+    mShaderSpec          = SH_WEBGL2_SPEC;
+    const char kShader[] = R"(#version 300 es
+precision highp float;
+float f(struct {float f;} d) {
+    return a.f;
+}
+void main() { })";
+    EXPECT_FALSE(compile(kShader));
+    EXPECT_TRUE(foundErrorInIntermediateTree());
+    EXPECT_TRUE(
+        foundInIntermediateTree("'d' : Function parameter type cannot be a structure definition"));
+}
