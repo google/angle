@@ -794,7 +794,7 @@
           '-v',
           '--shard-timeout=500',
         ],
-        'linux-args': [
+        'linux_args': [
           '--no-xvfb',
         ],
         'merge': {
@@ -814,7 +814,7 @@
           '-v',
           '--shard-timeout=500',
         ],
-        'linux-args': [
+        'linux_args': [
           '--no-xvfb',
         ],
         'merge': {
@@ -834,7 +834,7 @@
           '-v',
           '--shard-timeout=500',
         ],
-        'linux-args': [
+        'linux_args': [
           '--no-xvfb',
         ],
         'merge': {
@@ -1514,6 +1514,9 @@
       'angle_deqp_khr_gles31_vulkan_gtests',
       'angle_deqp_khr_gles32_vulkan_gtests',
       'angle_deqp_khr_gles3_vulkan_gtests',
+      'angle_deqp_khr_noctx_gles2_vulkan_gtests',
+      'angle_deqp_khr_noctx_gles32_vulkan_gtests',
+      'angle_deqp_khr_single_gles32_vulkan_gtests',
       'angle_end2end_gtests',
       'angle_gles1_conformance_gtests',
       'angle_unit_gtests',

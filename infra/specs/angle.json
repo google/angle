@@ -426,9 +426,6 @@
           "-v",
           "--shard-timeout=500"
         ],
-        "linux-args": [
-          "--no-xvfb"
-        ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -455,9 +452,6 @@
           "-v",
           "--shard-timeout=500"
         ],
-        "linux-args": [
-          "--no-xvfb"
-        ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -483,9 +477,6 @@
           "--use-angle=vulkan",
           "-v",
           "--shard-timeout=500"
-        ],
-        "linux-args": [
-          "--no-xvfb"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -1029,9 +1020,6 @@
           "-v",
           "--shard-timeout=500"
         ],
-        "linux-args": [
-          "--no-xvfb"
-        ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -1057,9 +1045,6 @@
           "-v",
           "--shard-timeout=500"
         ],
-        "linux-args": [
-          "--no-xvfb"
-        ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -1084,9 +1069,6 @@
           "--use-angle=vulkan",
           "-v",
           "--shard-timeout=500"
-        ],
-        "linux-args": [
-          "--no-xvfb"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -1680,9 +1662,6 @@
           "-v",
           "--shard-timeout=500"
         ],
-        "linux-args": [
-          "--no-xvfb"
-        ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -1708,9 +1687,6 @@
           "-v",
           "--shard-timeout=500"
         ],
-        "linux-args": [
-          "--no-xvfb"
-        ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -1735,9 +1711,6 @@
           "--use-angle=vulkan",
           "-v",
           "--shard-timeout=500"
-        ],
-        "linux-args": [
-          "--no-xvfb"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -2489,9 +2462,6 @@
           "-v",
           "--shard-timeout=500"
         ],
-        "linux-args": [
-          "--no-xvfb"
-        ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -2517,9 +2487,6 @@
           "-v",
           "--shard-timeout=500"
         ],
-        "linux-args": [
-          "--no-xvfb"
-        ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -2544,9 +2511,6 @@
           "--use-angle=vulkan",
           "-v",
           "--shard-timeout=500"
-        ],
-        "linux-args": [
-          "--no-xvfb"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -3315,6 +3279,72 @@
         },
         "test": "angle_deqp_khr_gles3_tests",
         "test_id_prefix": "ninja://src/tests:angle_deqp_khr_gles3_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "--use-angle=vulkan",
+          "--no-xvfb"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "name": "angle_deqp_khr_noctx_gles2_vulkan_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "gpu": "10de:2184-535.183.01",
+            "os": "Ubuntu-22.04",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_deqp_khr_noctx_gles2_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_noctx_gles2_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "--use-angle=vulkan",
+          "--no-xvfb"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "name": "angle_deqp_khr_noctx_gles32_vulkan_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "gpu": "10de:2184-535.183.01",
+            "os": "Ubuntu-22.04",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_deqp_khr_noctx_gles32_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_noctx_gles32_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "--use-angle=vulkan",
+          "--no-xvfb"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "name": "angle_deqp_khr_single_gles32_vulkan_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "gpu": "10de:2184-535.183.01",
+            "os": "Ubuntu-22.04",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_deqp_khr_single_gles32_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_single_gles32_tests/",
         "use_isolated_scripts_api": true
       },
       {
@@ -4436,6 +4466,72 @@
         },
         "test": "angle_deqp_khr_gles3_tests",
         "test_id_prefix": "ninja://src/tests:angle_deqp_khr_gles3_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "--use-angle=vulkan",
+          "--no-xvfb"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "name": "angle_deqp_khr_noctx_gles2_vulkan_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "gpu": "10de:2184-440.100",
+            "os": "Ubuntu-18.04.5|Ubuntu-18.04.6",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_deqp_khr_noctx_gles2_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_noctx_gles2_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "--use-angle=vulkan",
+          "--no-xvfb"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "name": "angle_deqp_khr_noctx_gles32_vulkan_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "gpu": "10de:2184-440.100",
+            "os": "Ubuntu-18.04.5|Ubuntu-18.04.6",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_deqp_khr_noctx_gles32_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_noctx_gles32_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "--use-angle=vulkan",
+          "--no-xvfb"
+        ],
+        "merge": {
+          "script": "//scripts/angle_deqp_test_merge.py"
+        },
+        "name": "angle_deqp_khr_single_gles32_vulkan_tests",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "gpu": "10de:2184-440.100",
+            "os": "Ubuntu-18.04.5|Ubuntu-18.04.6",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_deqp_khr_single_gles32_tests",
+        "test_id_prefix": "ninja://src/tests:angle_deqp_khr_single_gles32_tests/",
         "use_isolated_scripts_api": true
       },
       {
@@ -8035,9 +8131,6 @@
         "args": [
           "--use-angle=vulkan"
         ],
-        "linux-args": [
-          "--no-xvfb"
-        ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -8060,9 +8153,6 @@
         "args": [
           "--use-angle=vulkan"
         ],
-        "linux-args": [
-          "--no-xvfb"
-        ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
         },
@@ -8084,9 +8174,6 @@
       {
         "args": [
           "--use-angle=vulkan"
-        ],
-        "linux-args": [
-          "--no-xvfb"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
