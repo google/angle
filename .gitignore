@@ -114,6 +114,8 @@
 /tools/clang
 /tools/flex-bison/linux/bison
 /tools/flex-bison/linux/flex
+/tools/flex-bison/mac/bison
+/tools/flex-bison/mac/flex
 /tools/flex-bison/windows/bison.exe
 /tools/flex-bison/windows/flex.exe
 /tools/flex-bison/windows/m4.exe
