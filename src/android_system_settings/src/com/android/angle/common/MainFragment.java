@@ -107,7 +107,7 @@ public class MainFragment extends PreferenceFragmentCompat implements OnSharedPr
 
         getActivity().registerReceiver(mRefreshReceiver,
                 new IntentFilter(
-                        getContext().getString(R.string.intent_angle_for_android_toast_message)));
+                        getContext().getString(R.string.intent_angle_for_android_toast_message)), Context.RECEIVER_EXPORTED);
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(
                 listener);
         updatePreferences();
