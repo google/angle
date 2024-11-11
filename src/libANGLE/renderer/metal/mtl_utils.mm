@@ -920,7 +920,7 @@ AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
         result = adoptObjCObj([metalDevice newLibraryWithSource:nsSource.get()
                                                         options:options.get()
                                                           error:&nsError]);
-        if (angle::GetEnvironmentVar(kANGLEPrintMSLEnv)[0] == '1')
+        if (angle::GetBoolEnvironmentVar(kANGLEPrintMSLEnv))
         {
             NSLog(@"%@\n", nsSource.get());
         }

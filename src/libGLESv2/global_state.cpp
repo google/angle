@@ -298,7 +298,7 @@ extern "C" BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID)
     switch (reason)
     {
         case DLL_PROCESS_ATTACH:
-            if (angle::GetEnvironmentVar("ANGLE_WAIT_FOR_DEBUGGER") == "1")
+            if (angle::GetBoolEnvironmentVar("ANGLE_WAIT_FOR_DEBUGGER"))
             {
                 WaitForDebugger(instance);
             }
