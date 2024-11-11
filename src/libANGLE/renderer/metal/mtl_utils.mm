@@ -926,8 +926,7 @@ AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
         }
         *errorOut = std::move(nsError);
 
-        double endTime = platform->currentTime(platform);
-        int us         = static_cast<int>((endTime - startTime) * 1000'000.0);
+        int us = static_cast<int>((platform->currentTime(platform) - startTime) * 1e6);
         ANGLE_HISTOGRAM_COUNTS("GPU.ANGLE.MetalShaderCompilationTimeUs", us);
     }
     return result;
