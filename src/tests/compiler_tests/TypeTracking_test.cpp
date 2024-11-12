@@ -92,7 +92,7 @@ TEST_F(TypeTrackingTest, FunctionPrototype)
         "}\n";
     compile(shaderString);
     ASSERT_FALSE(foundErrorInIntermediateTree());
-    ASSERT_TRUE(foundInIntermediateTree("Function Prototype: fun"));
+    ASSERT_TRUE(foundInIntermediateTree("Function Prototype: 'fun'"));
 }
 
 TEST_F(TypeTrackingTest, BuiltInFunctionResultPrecision)
@@ -680,7 +680,7 @@ void main()
 0:3:   Declaration
 0:3:     'o' (out highp 4-component vector of float)
 0:6:   Declaration
-0:? :     ''(symbol id 3010) (structure 's2' (specifier))
+0:? :     '' (structure 's2' (specifier))
 0:10:   Declaration
 0:10:     initialize first child with second child (const structure 's1' (specifier))
 0:10:       's11' (const structure 's1' (specifier))
@@ -705,20 +705,20 @@ void main()
 0:10:           0.0 (const float)
 0:10:           5.0 (const float)
 0:11:   Function Definition:
-0:11:     Function Prototype: f (structure 's1')
-0:11:       parameter: s (in structure 's1')
+0:11:     Function Prototype: 'f' (structure 's1')
+0:11:       parameter: 's' (in structure 's1')
 0:12:     Code block
 0:13:       Branch: Return with expression
 0:13:           's' (in structure 's1')
 0:15:   Function Definition:
-0:15:     Function Prototype: main (void)
+0:15:     Function Prototype: 'main' (void)
 0:16:     Code block
 0:17:       If test
 0:17:         Condition
 0:17:           Compare Equal (bool)
-0:17:             Call a user-defined function: f (structure 's1')
+0:17:             Call a function: 'f' (structure 's1')
 0:17:               's11' (const structure 's1' (specifier))
-0:17:             Call a user-defined function: f (structure 's1')
+0:17:             Call a function: 'f' (structure 's1')
 0:17:               's11' (const structure 's1' (specifier))
 0:17:         true case
 0:18:           Code block
@@ -756,7 +756,7 @@ void main()
 0:3:   Declaration
 0:3:     'o' (out highp 4-component vector of float)
 0:4:   Function Definition:
-0:4:     Function Prototype: main (void)
+0:4:     Function Prototype: 'main' (void)
 0:5:     Code block
 0:8:       Declaration
 0:8:         initialize first child with second child (structure 's2' (specifier))
@@ -802,6 +802,59 @@ void main()
 0:15:                 1.0 (const float)
 0:15:                 1.0 (const float)
 0:15:                 1.0 (const float)
+)";
+    compile(kShader);
+    EXPECT_EQ(kExpected, getOutput());
+}
+
+// Test showing that prototypes get the function definition variable names.
+// Tests that when unnamed variables must be initialized, the variables get internal names.
+TEST_F(TypeTrackingTest, VariableNamesInPrototypesUnnamedOut)
+{
+    const char kShader[]   = R"(#version 300 es
+precision highp float;
+out vec4 o;
+void f(out float, out float);
+void main()
+{
+    o = vec4(0.5);
+    f(o.r, o.g);    
+}
+void f(out float r, out float)
+{
+    r = 1.0;
+}
+)";
+    const char kExpected[] = R"(0:2: Code block
+0:3:   Declaration
+0:3:     'o' (out highp 4-component vector of float)
+0:4:   Function Prototype: 'f' (void)
+0:4:     parameter: 'r' (out highp float)
+0:4:     parameter: '' (out highp float)
+0:5:   Function Definition:
+0:5:     Function Prototype: 'main' (void)
+0:6:     Code block
+0:7:       move second child to first child (highp 4-component vector of float)
+0:7:         'o' (out highp 4-component vector of float)
+0:7:         Constant union (const highp 4-component vector of float)
+0:7:           0.5 (const float)
+0:7:           0.5 (const float)
+0:7:           0.5 (const float)
+0:7:           0.5 (const float)
+0:8:       Call a function: 'f' (void)
+0:8:         vector swizzle (x) (highp float)
+0:8:           'o' (out highp 4-component vector of float)
+0:8:         vector swizzle (y) (highp float)
+0:8:           'o' (out highp 4-component vector of float)
+0:10:   Function Definition:
+0:10:     Function Prototype: 'f' (void)
+0:10:       parameter: 'r' (out highp float)
+0:10:       parameter: '' (out highp float)
+0:11:     Code block
+0:12:       move second child to first child (highp float)
+0:12:         'r' (out highp float)
+0:12:         Constant union (const highp float)
+0:12:           1.0 (const float)
 )";
     compile(kShader);
     EXPECT_EQ(kExpected, getOutput());
