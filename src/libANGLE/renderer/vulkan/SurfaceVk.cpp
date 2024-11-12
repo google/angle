@@ -492,38 +492,22 @@ void AcquireNextImageUnlocked(VkDevice device,
                               VkSwapchainKHR swapchain,
                               impl::ImageAcquireOperation *acquire)
 {
-    ASSERT(acquire->needToAcquireNextSwapchainImage);
+    ASSERT(acquire->state == impl::ImageAcquireState::NeedToAcquire);
 
     impl::UnlockedAcquireData *data     = &acquire->unlockedAcquireData;
     impl::UnlockedAcquireResult *result = &acquire->unlockedAcquireResult;
 
-    result->result     = VK_SUCCESS;
     result->imageIndex = std::numeric_limits<uint32_t>::max();
 
     // Get a semaphore to signal.
     result->acquireSemaphore = data->acquireImageSemaphores.front().getHandle();
 
     // Try to acquire an image.
-    if (result->result == VK_SUCCESS)
-    {
-        result->result =
-            vkAcquireNextImageKHR(device, swapchain, UINT64_MAX, result->acquireSemaphore,
-                                  VK_NULL_HANDLE, &result->imageIndex);
-    }
+    result->result = vkAcquireNextImageKHR(device, swapchain, UINT64_MAX, result->acquireSemaphore,
+                                           VK_NULL_HANDLE, &result->imageIndex);
 
     // Result processing will be done later in the same thread.
-
-    // Indicate that acquire is no longer needed.
-    acquire->needToAcquireNextSwapchainImage = false;
-}
-
-// Checks whether a call to AcquireNextImageUnlocked has been made whose result is pending
-// processing.  This function MUST only be called from a thread where Surface is current.
-bool NeedToProcessAcquireNextImageResult(const impl::UnlockedAcquireResult &result)
-{
-    // AcquireNextImageUnlocked always creates a new acquire semaphore, use that as indication
-    // that there's something to process.
-    return result.acquireSemaphore != VK_NULL_HANDLE;
+    acquire->state = impl::ImageAcquireState::NeedToProcessResult;
 }
 
 bool AreAllFencesSignaled(VkDevice device, const std::vector<vk::Fence> &fences)
@@ -1022,11 +1006,12 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
     (void)renderer->waitForPresentToBeSubmitted(&mSwapchainStatus);
     (void)finish(displayVk);
 
-    if (!needsAcquireImageOrProcessResult() && !mSwapchainImages.empty())
+    if (mAcquireOperation.state == impl::ImageAcquireState::Ready)
     {
         // swapchain image doesn't own ANI semaphore. Release ANI semaphore from image so that it
         // can destroy cleanly without hitting assertion..
         // Only single swapchain image may have semaphore associated.
+        ASSERT(!mSwapchainImages.empty());
         ASSERT(mCurrentSwapchainImageIndex < mSwapchainImages.size());
         mSwapchainImages[mCurrentSwapchainImageIndex].image->resetAcquireNextImageSemaphore();
     }
@@ -1408,7 +1393,7 @@ angle::Result WindowSurfaceVk::getAttachmentRenderTarget(const gl::Context *cont
                                                          GLsizei samples,
                                                          FramebufferAttachmentRenderTarget **rtOut)
 {
-    if (needsAcquireImageOrProcessResult())
+    if (mAcquireOperation.state != impl::ImageAcquireState::Ready)
     {
         // Acquire the next image (previously deferred) before it is drawn to or read from.
         ContextVk *contextVk = vk::GetImpl(context);
@@ -1420,6 +1405,7 @@ angle::Result WindowSurfaceVk::getAttachmentRenderTarget(const gl::Context *cont
 
 angle::Result WindowSurfaceVk::recreateSwapchain(ContextVk *contextVk, const gl::Extents &extents)
 {
+    ASSERT(mAcquireOperation.state != impl::ImageAcquireState::Ready);
     ASSERT(!mSwapchainStatus.isPending);
 
     // If no present operation has been done on the new swapchain, it can be destroyed right away.
@@ -1563,6 +1549,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::createSwapchain");
 
+    ASSERT(mAcquireOperation.state != impl::ImageAcquireState::Ready);
     ASSERT(mSwapchain == VK_NULL_HANDLE);
 
     vk::Renderer *renderer = context->getRenderer();
@@ -1832,7 +1819,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     }
 
     // Need to acquire a new image before the swapchain can be used.
-    mAcquireOperation.needToAcquireNextSwapchainImage = true;
+    mAcquireOperation.state = impl::ImageAcquireState::NeedToAcquire;
 
     return angle::Result::Continue;
 }
@@ -1893,6 +1880,8 @@ angle::Result WindowSurfaceVk::queryAndAdjustSurfaceCaps(ContextVk *contextVk,
 angle::Result WindowSurfaceVk::checkForOutOfDateSwapchain(ContextVk *contextVk,
                                                           bool presentOutOfDate)
 {
+    ASSERT(mAcquireOperation.state != impl::ImageAcquireState::Ready);
+
     bool swapIntervalChanged =
         !IsCompatiblePresentMode(mDesiredSwapchainPresentMode, mCompatiblePresentModes.data(),
                                  mCompatiblePresentModes.size());
@@ -2039,7 +2028,7 @@ egl::Error WindowSurfaceVk::prepareSwap(const gl::Context *context)
 {
     // Image is only required to be acquired here in case of a blocking present modes (FIFO).
     // However, we will acquire the image in any case, for simplicity and possibly for performance.
-    if (!mAcquireOperation.needToAcquireNextSwapchainImage)
+    if (mAcquireOperation.state != impl::ImageAcquireState::NeedToAcquire)
     {
         return egl::NoError();
     }
@@ -2068,7 +2057,7 @@ egl::Error WindowSurfaceVk::prepareSwap(const gl::Context *context)
     // Call vkAcquireNextImageKHR without holding the share group and global locks.
     // The following are accessed by this function:
     //
-    // - mAcquireOperation.needToAcquireNextSwapchainImage
+    // - mAcquireOperation.state
     // - Contents of mAcquireOperation.unlockedAcquireData and
     //   mAcquireOperation.unlockedAcquireResult
     // - context->getDevice(), which doesn't need external synchronization
@@ -2276,8 +2265,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
                                        const void *pNextChain,
                                        bool *presentOutOfDate)
 {
-    ASSERT(!mAcquireOperation.needToAcquireNextSwapchainImage);
-    ASSERT(!NeedToProcessAcquireNextImageResult(mAcquireOperation.unlockedAcquireResult));
+    ASSERT(mAcquireOperation.state == impl::ImageAcquireState::Ready);
 
     ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::present");
     vk::Renderer *renderer = contextVk->getRenderer();
@@ -2556,7 +2544,7 @@ angle::Result WindowSurfaceVk::swapImpl(const gl::Context *context,
     // previous vkAcquireNextImageKHR failed.
     // Note: this method may be called from |onSharedPresentContextFlush|, therefore can't assume
     // that image is always acquired at this point.
-    if (needsAcquireImageOrProcessResult())
+    if (mAcquireOperation.state != impl::ImageAcquireState::Ready)
     {
         ANGLE_TRY(doDeferredAcquireNextImage(context, false));
     }
@@ -2564,12 +2552,10 @@ angle::Result WindowSurfaceVk::swapImpl(const gl::Context *context,
     bool presentOutOfDate = false;
     ANGLE_TRY(present(contextVk, rects, n_rects, pNextChain, &presentOutOfDate));
 
-    if (!presentOutOfDate)
-    {
-        // Defer acquiring the next swapchain image since the swapchain is not out-of-date.
-        deferAcquireNextImage();
-    }
-    else
+    // Defer acquiring the next swapchain image regardless if the swapchain is out-of-date or not.
+    deferAcquireNextImage();
+
+    if (presentOutOfDate)
     {
         // Immediately try to acquire the next image, which will recognize the out-of-date
         // swapchain (potentially because of a rotation change), and recreate it.
@@ -2587,7 +2573,7 @@ angle::Result WindowSurfaceVk::onSharedPresentContextFlush(const gl::Context *co
 
 bool WindowSurfaceVk::hasStagedUpdates() const
 {
-    return !needsAcquireImageOrProcessResult() &&
+    return mAcquireOperation.state == impl::ImageAcquireState::Ready &&
            mSwapchainImages[mCurrentSwapchainImageIndex].image->hasStagedUpdatesInAllocatedLevels();
 }
 
@@ -2599,7 +2585,9 @@ void WindowSurfaceVk::setTimestampsEnabled(bool enabled)
 
 void WindowSurfaceVk::deferAcquireNextImage()
 {
-    mAcquireOperation.needToAcquireNextSwapchainImage = true;
+    ASSERT(mAcquireOperation.state == impl::ImageAcquireState::Ready);
+
+    mAcquireOperation.state = impl::ImageAcquireState::NeedToAcquire;
 
     // Set gl::Framebuffer::DIRTY_BIT_COLOR_BUFFER_CONTENTS_0 via subject-observer message-passing
     // to the front-end Surface, Framebuffer, and Context classes.  The DIRTY_BIT_COLOR_ATTACHMENT_0
@@ -2614,7 +2602,7 @@ void WindowSurfaceVk::deferAcquireNextImage()
 angle::Result WindowSurfaceVk::prepareForAcquireNextSwapchainImage(const gl::Context *context,
                                                                    bool presentOutOfDate)
 {
-    ASSERT(!NeedToProcessAcquireNextImageResult(mAcquireOperation.unlockedAcquireResult));
+    ASSERT(mAcquireOperation.state == impl::ImageAcquireState::NeedToAcquire);
 
     ContextVk *contextVk   = vk::GetImpl(context);
     vk::Renderer *renderer = contextVk->getRenderer();
@@ -2636,9 +2624,12 @@ angle::Result WindowSurfaceVk::prepareForAcquireNextSwapchainImage(const gl::Con
 angle::Result WindowSurfaceVk::doDeferredAcquireNextImage(const gl::Context *context,
                                                           bool presentOutOfDate)
 {
+    ASSERT(mAcquireOperation.state == impl::ImageAcquireState::NeedToAcquire ||
+           (mAcquireOperation.state == impl::ImageAcquireState::NeedToProcessResult &&
+            !presentOutOfDate));
     // prepareForAcquireNextSwapchainImage() may recreate Swapchain even if there is an image
     // acquired. Avoid this, by skipping the prepare call.
-    if (!NeedToProcessAcquireNextImageResult(mAcquireOperation.unlockedAcquireResult))
+    if (mAcquireOperation.state == impl::ImageAcquireState::NeedToAcquire)
     {
         ANGLE_TRY(prepareForAcquireNextSwapchainImage(context, presentOutOfDate));
     }
@@ -2648,6 +2639,8 @@ angle::Result WindowSurfaceVk::doDeferredAcquireNextImage(const gl::Context *con
 angle::Result WindowSurfaceVk::doDeferredAcquireNextImageWithUsableSwapchain(
     const gl::Context *context)
 {
+    ASSERT(mAcquireOperation.state != impl::ImageAcquireState::Ready);
+
     ContextVk *contextVk = vk::GetImpl(context);
 
     {
@@ -2723,11 +2716,13 @@ bool WindowSurfaceVk::skipAcquireNextSwapchainImageForSharedPresentMode() const
 // the return value won't be VK_SUBOPTIMAL_KHR.
 VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::Context *context)
 {
+    ASSERT(mAcquireOperation.state != impl::ImageAcquireState::Ready);
+
     VkDevice device = context->getDevice();
 
     if (skipAcquireNextSwapchainImageForSharedPresentMode())
     {
-        ASSERT(!NeedToProcessAcquireNextImageResult(mAcquireOperation.unlockedAcquireResult));
+        ASSERT(mAcquireOperation.state == impl::ImageAcquireState::NeedToAcquire);
         // This will check for OUT_OF_DATE when in single image mode. and prevent
         // re-AcquireNextImage.
         VkResult result = vkGetSwapchainStatusKHR(device, mSwapchain);
@@ -2735,38 +2730,34 @@ VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::Context *context)
         {
             return result;
         }
-        // Note that an acquire is no longer needed.
-        mAcquireOperation.needToAcquireNextSwapchainImage = false;
+        // Note that an acquire and result processing is no longer needed.
+        mAcquireOperation.state = impl::ImageAcquireState::Ready;
         return VK_SUCCESS;
     }
 
     // If calling vkAcquireNextImageKHR is necessary, do so first.
-    if (mAcquireOperation.needToAcquireNextSwapchainImage)
+    if (mAcquireOperation.state == impl::ImageAcquireState::NeedToAcquire)
     {
         AcquireNextImageUnlocked(context->getDevice(), mSwapchain, &mAcquireOperation);
     }
 
-    // If the result of vkAcquireNextImageKHR is not yet processed, do so now.
-    if (NeedToProcessAcquireNextImageResult(mAcquireOperation.unlockedAcquireResult))
-    {
-        return postProcessUnlockedAcquire(context);
-    }
-
-    return VK_SUCCESS;
+    // After the above call result is alway ready for processing.
+    return postProcessUnlockedAcquire(context);
 }
 
 VkResult WindowSurfaceVk::postProcessUnlockedAcquire(vk::Context *context)
 {
+    ASSERT(mAcquireOperation.state == impl::ImageAcquireState::NeedToProcessResult);
+
     const VkResult result = mAcquireOperation.unlockedAcquireResult.result;
-    const VkSemaphore acquireImageSemaphore =
-        mAcquireOperation.unlockedAcquireResult.acquireSemaphore;
-    mAcquireOperation.unlockedAcquireResult.acquireSemaphore = VK_NULL_HANDLE;
 
     // VK_SUBOPTIMAL_KHR is ok since we still have an Image that can be presented successfully
     if (ANGLE_UNLIKELY(result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR))
     {
-        // vkAcquireNextImageKHR still needs to be called after swapchain recreation:
-        mAcquireOperation.needToAcquireNextSwapchainImage = true;
+        // Skip processing the result on failure.  Acquire operation will be allowed again after
+        // possible swapchain recreation caused by this failure.  In case if there will be no
+        // recreation, error will be returned to an app and result will be processed again in the
+        // possible next EGL/GLES call (where swapchain will be recreated).
         return result;
     }
 
@@ -2774,6 +2765,9 @@ VkResult WindowSurfaceVk::postProcessUnlockedAcquire(vk::Context *context)
     ASSERT(!isSharedPresentMode() || mCurrentSwapchainImageIndex == 0);
 
     SwapchainImage &image = mSwapchainImages[mCurrentSwapchainImageIndex];
+
+    const VkSemaphore acquireImageSemaphore =
+        mAcquireOperation.unlockedAcquireResult.acquireSemaphore;
 
     // Let Image keep the ani semaphore so that it can add to the semaphore wait list if it is
     // being used. Image's barrier code will move the semaphore into CommandBufferHelper object
@@ -2836,17 +2830,10 @@ VkResult WindowSurfaceVk::postProcessUnlockedAcquire(vk::Context *context)
         onStateChange(angle::SubjectMessage::SwapchainImageChanged);
     }
 
-    ASSERT(!needsAcquireImageOrProcessResult());
+    // Note that an acquire and result processing is no longer needed.
+    mAcquireOperation.state = impl::ImageAcquireState::Ready;
 
     return VK_SUCCESS;
-}
-
-bool WindowSurfaceVk::needsAcquireImageOrProcessResult() const
-{
-    // Go down the acquireNextSwapchainImage() path if either vkAcquireNextImageKHR needs to be
-    // called, or its results processed
-    return mAcquireOperation.needToAcquireNextSwapchainImage ||
-           NeedToProcessAcquireNextImageResult(mAcquireOperation.unlockedAcquireResult);
 }
 
 egl::Error WindowSurfaceVk::postSubBuffer(const gl::Context *context,
@@ -3004,7 +2991,7 @@ angle::Result WindowSurfaceVk::getCurrentFramebuffer(ContextVk *contextVk,
     ASSERT(!contextVk->getFeatures().preferDynamicRendering.enabled);
 
     // FramebufferVk dirty-bit processing should ensure that a new image was acquired.
-    ASSERT(!needsAcquireImageOrProcessResult());
+    ASSERT(mAcquireOperation.state == impl::ImageAcquireState::Ready);
 
     // Track the new fetch mode
     mFramebufferFetchMode = fetchMode;
@@ -3066,7 +3053,7 @@ angle::Result WindowSurfaceVk::initializeContents(const gl::Context *context,
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
-    if (needsAcquireImageOrProcessResult())
+    if (mAcquireOperation.state != impl::ImageAcquireState::Ready)
     {
         // Acquire the next image (previously deferred).  Some tests (e.g.
         // GenerateMipmapWithRedefineBenchmark.Run/vulkan_webgl) cause this path to be taken,
@@ -3195,11 +3182,14 @@ egl::Error WindowSurfaceVk::getBufferAge(const gl::Context *context, EGLint *age
     }
 
     // Image must be already acquired in the |prepareSwap| call.
-    ASSERT(!mAcquireOperation.needToAcquireNextSwapchainImage);
+    ASSERT(mAcquireOperation.state != impl::ImageAcquireState::NeedToAcquire);
 
     // If the result of vkAcquireNextImageKHR is not yet processed, do so now.
-    if (NeedToProcessAcquireNextImageResult(mAcquireOperation.unlockedAcquireResult))
+    if (mAcquireOperation.state == impl::ImageAcquireState::NeedToProcessResult)
     {
+        // In case of shared present mode |doDeferredAcquireNextImageWithUsableSwapchain| must be
+        // already called in the |prepareSwap| call.
+        ASSERT(!isSharedPresentMode());
         // Using this method and not |postProcessUnlockedAcquire|, in order to handle possible
         // VK_ERROR_OUT_OF_DATE_KHR error and recreate the swapchain, instead of failing.
         egl::Error result =

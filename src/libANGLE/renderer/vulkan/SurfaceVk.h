@@ -203,6 +203,13 @@ struct SwapchainImage : angle::NonCopyable
     uint64_t frameNumber = 0;
 };
 
+enum class ImageAcquireState
+{
+    Ready,
+    NeedToAcquire,
+    NeedToProcessResult,
+};
+
 // Associated data for a call to vkAcquireNextImageKHR without necessarily holding the share group
 // and global locks but ONLY from a thread where Surface is current.
 struct UnlockedAcquireData : angle::NonCopyable
@@ -245,8 +252,8 @@ struct UnlockedAcquireResult : angle::NonCopyable
 
 struct ImageAcquireOperation : angle::NonCopyable
 {
-    // True when acquiring the next image is deferred.
-    bool needToAcquireNextSwapchainImage = false;
+    // Initially image needs to be acquired.
+    ImageAcquireState state = ImageAcquireState::NeedToAcquire;
 
     // No synchronization is necessary when making the vkAcquireNextImageKHR call since it is ONLY
     // possible on a thread where Surface is current.
@@ -410,8 +417,6 @@ class WindowSurfaceVk : public SurfaceVk
     VkResult acquireNextSwapchainImage(vk::Context *context);
     // Process the result of vkAcquireNextImageKHR.
     VkResult postProcessUnlockedAcquire(vk::Context *context);
-    // Whether vkAcquireNextImageKHR needs to be called or its results processed
-    bool needsAcquireImageOrProcessResult() const;
     // This method is called when a swapchain image is presented.  It schedules
     // acquireNextSwapchainImage() to be called later.
     void deferAcquireNextImage();
