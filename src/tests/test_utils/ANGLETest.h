@@ -487,6 +487,12 @@ class ANGLETestBase
                             bool useVertexBuffer,
                             float layer);
 
+    // The layer parameter chooses the 2DArray texture layer to sample from.
+    void draw2DArrayTexturedQuad(GLfloat positionAttribZ,
+                                 GLfloat positionAttribXYScale,
+                                 bool useVertexBuffer,
+                                 float layer);
+
     void setWindowWidth(int width);
     void setWindowHeight(int height);
     void setConfigRedBits(int bits);
@@ -532,6 +538,9 @@ class ANGLETestBase
 
     // Has a float uniform "u_layer" to choose the 3D texture layer.
     GLuint get3DTexturedQuadProgram();
+
+    // Has a float uniform "u_layer" to choose the 2DArray texture layer.
+    GLuint get2DArrayTexturedQuadProgram();
 
     class [[nodiscard]] ScopedIgnorePlatformMessages : angle::NonCopyable
     {
@@ -609,6 +618,7 @@ class ANGLETestBase
     // Used for texture rendering.
     GLuint m2DTexturedQuadProgram;
     GLuint m3DTexturedQuadProgram;
+    GLuint m2DArrayTexturedQuadProgram;
 
     bool mDeferContextInit;
     bool mAlwaysForceNewDisplay;

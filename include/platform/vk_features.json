@@ -1833,7 +1833,7 @@
             "description": [
                 "Whether cache the individual descriptorSet or not."
             ],
-            "issue": "angleproject:372268711"
+            "issue": "https://anglebug.com/372268711"
         },
         {
             "name": "supports_image_compression_control",
@@ -1842,6 +1842,14 @@
                 "VkDevice supports VK_EXT_image_compression_control"
             ],
             "issue": "https://anglebug.com/352364583"
+        },
+        {
+            "name": "supports_astc_sliced_3d",
+            "category": "Features",
+            "description": [
+                "Enable use of sliced_3d"
+            ],
+            "issue": "https://anglebug.com/378507964"
         }
     ]
 }

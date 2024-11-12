@@ -494,6 +494,7 @@ ANGLETestBase::ANGLETestBase(const PlatformParameters &params)
       mQuadIndexBuffer(0),
       m2DTexturedQuadProgram(0),
       m3DTexturedQuadProgram(0),
+      m2DArrayTexturedQuadProgram(0),
       mDeferContextInit(false),
       mAlwaysForceNewDisplay(ShouldAlwaysForceNewDisplay(params)),
       mForceNewDisplay(mAlwaysForceNewDisplay),
@@ -622,6 +623,10 @@ ANGLETestBase::~ANGLETestBase()
     if (m3DTexturedQuadProgram)
     {
         glDeleteProgram(m3DTexturedQuadProgram);
+    }
+    if (m2DArrayTexturedQuadProgram)
+    {
+        glDeleteProgram(m2DArrayTexturedQuadProgram);
     }
 
     if (!mSetUpCalled)
@@ -1273,6 +1278,40 @@ void main()
     return m3DTexturedQuadProgram;
 }
 
+GLuint ANGLETestBase::get2DArrayTexturedQuadProgram()
+{
+    if (m2DArrayTexturedQuadProgram)
+    {
+        return m2DArrayTexturedQuadProgram;
+    }
+
+    constexpr char kVS[] = R"(#version 300 es
+in vec2 position;
+out vec2 texCoord;
+void main()
+{
+    gl_Position = vec4(position, 0, 1);
+    texCoord = position * 0.5 + vec2(0.5);
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+
+in vec2 texCoord;
+out vec4 my_FragColor;
+
+uniform highp sampler2DArray tex;
+uniform float u_layer;
+
+void main()
+{
+    my_FragColor = texture(tex, vec3(texCoord, u_layer));
+})";
+
+    m2DArrayTexturedQuadProgram = CompileProgram(kVS, kFS);
+    return m2DArrayTexturedQuadProgram;
+}
+
 void ANGLETestBase::draw2DTexturedQuad(GLfloat positionAttribZ,
                                        GLfloat positionAttribXYScale,
                                        bool useVertexBuffer)
@@ -1288,6 +1327,29 @@ void ANGLETestBase::draw3DTexturedQuad(GLfloat positionAttribZ,
                                        float layer)
 {
     GLuint program = get3DTexturedQuadProgram();
+    ASSERT_NE(0u, program);
+    GLint activeProgram = 0;
+    glGetIntegerv(GL_CURRENT_PROGRAM, &activeProgram);
+    if (static_cast<GLuint>(activeProgram) != program)
+    {
+        glUseProgram(program);
+    }
+    glUniform1f(glGetUniformLocation(program, "u_layer"), layer);
+
+    drawQuad(program, "position", positionAttribZ, positionAttribXYScale, useVertexBuffer);
+
+    if (static_cast<GLuint>(activeProgram) != program)
+    {
+        glUseProgram(static_cast<GLuint>(activeProgram));
+    }
+}
+
+void ANGLETestBase::draw2DArrayTexturedQuad(GLfloat positionAttribZ,
+                                            GLfloat positionAttribXYScale,
+                                            bool useVertexBuffer,
+                                            float layer)
+{
+    GLuint program = get2DArrayTexturedQuadProgram();
     ASSERT_NE(0u, program);
     GLint activeProgram = 0;
     glGetIntegerv(GL_CURRENT_PROGRAM, &activeProgram);
