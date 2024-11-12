@@ -876,33 +876,51 @@ static MTLLanguageVersion GetUserSetOrHighestMSLVersion(const MTLLanguageVersion
 
 AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
     id<MTLDevice> metalDevice,
-    std::string_view source,
+    const std::string &source,
+    const std::map<std::string, std::string> &substitutionMacros,
+    bool disableFastMath,
+    bool usesInvariance,
+    AutoObjCPtr<NSError *> *error)
+{
+    return CreateShaderLibrary(metalDevice, source.c_str(), source.size(), substitutionMacros,
+                               disableFastMath, usesInvariance, error);
+}
+
+AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(id<MTLDevice> metalDevice,
+                                                const std::string &source,
+                                                AutoObjCPtr<NSError *> *error)
+{
+    // Use fast math, but conservatively assume the shader uses invariance.
+    return CreateShaderLibrary(metalDevice, source.c_str(), source.size(), {}, false, true, error);
+}
+
+AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
+    id<MTLDevice> metalDevice,
+    const char *source,
+    size_t sourceLen,
     const std::map<std::string, std::string> &substitutionMacros,
     bool disableFastMath,
     bool usesInvariance,
     AutoObjCPtr<NSError *> *errorOut)
 {
-    AutoObjCPtr<id<MTLLibrary>> result;
     ANGLE_MTL_OBJC_SCOPE
     {
         NSError *nsError = nil;
-        AutoObjCPtr nsSource =
-            adoptObjCObj([[NSString alloc] initWithBytesNoCopy:const_cast<char *>(source.data())
-                                                        length:source.length()
-                                                      encoding:NSUTF8StringEncoding
-                                                  freeWhenDone:NO]);
-        AutoObjCPtr options = adoptObjCObj([[MTLCompileOptions alloc] init]);
+        auto nsSource    = [[NSString alloc] initWithBytesNoCopy:const_cast<char *>(source)
+                                                       length:sourceLen
+                                                     encoding:NSUTF8StringEncoding
+                                                 freeWhenDone:NO];
+        auto options     = [[[MTLCompileOptions alloc] init] ANGLE_MTL_AUTORELEASE];
 
         // Mark all positions in VS with attribute invariant as non-optimizable
-        options.get().preserveInvariance = usesInvariance;
+        options.preserveInvariance = usesInvariance;
 
         if (disableFastMath)
         {
-            options.get().fastMathEnabled = false;
+            options.fastMathEnabled = false;
         }
 
-        options.get().languageVersion =
-            GetUserSetOrHighestMSLVersion(options.get().languageVersion);
+        options.languageVersion = GetUserSetOrHighestMSLVersion(options.languageVersion);
 
         if (!substitutionMacros.empty())
         {
@@ -911,26 +929,26 @@ AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
             {
                 [macroDict setObject:@(macro.second.c_str()) forKey:@(macro.first.c_str())];
             }
-            options.get().preprocessorMacros = macroDict;
+            options.preprocessorMacros = macroDict;
         }
 
         auto *platform   = ANGLEPlatformCurrent();
         double startTime = platform->currentTime(platform);
 
-        result = adoptObjCObj([metalDevice newLibraryWithSource:nsSource.get()
-                                                        options:options.get()
-                                                          error:&nsError]);
+        auto library = [metalDevice newLibraryWithSource:nsSource options:options error:&nsError];
         if (angle::GetBoolEnvironmentVar(kANGLEPrintMSLEnv))
         {
-            NSLog(@"%@\n", nsSource.get());
+            NSLog(@"%@\n", nsSource);
         }
+        [nsSource ANGLE_MTL_AUTORELEASE];
         *errorOut = std::move(nsError);
 
         double endTime = platform->currentTime(platform);
         int us         = static_cast<int>((endTime - startTime) * 1000'000.0);
         ANGLE_HISTOGRAM_COUNTS("GPU.ANGLE.MetalShaderCompilationTimeUs", us);
+
+        return library;
     }
-    return result;
 }
 
 std::string CompileShaderLibraryToFile(const std::string &source,
@@ -1011,41 +1029,53 @@ std::string CompileShaderLibraryToFile(const std::string &source,
     return metallibFileName.value();
 }
 
-AutoObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromBinary(id<MTLDevice> metalDevice,
-                                                          const uint8_t *data,
-                                                          size_t length,
-                                                          AutoObjCPtr<NSError *> *errorOut)
+AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(id<MTLDevice> metalDevice,
+                                                const char *source,
+                                                size_t sourceLen,
+                                                AutoObjCPtr<NSError *> *errorOut)
 {
-    AutoObjCPtr<id<MTLLibrary>> result;
     ANGLE_MTL_OBJC_SCOPE
     {
+        auto nsSource = [[NSString alloc] initWithBytesNoCopy:const_cast<char *>(source)
+                                                       length:sourceLen
+                                                     encoding:NSUTF8StringEncoding
+                                                 freeWhenDone:NO];
+        auto options  = [[[MTLCompileOptions alloc] init] ANGLE_MTL_AUTORELEASE];
+
         NSError *nsError = nil;
-        AutoObjCPtr binaryData = adoptObjCObj(
-            dispatch_data_create(data, length, nullptr, DISPATCH_DATA_DESTRUCTOR_DEFAULT));
-        result    = adoptObjCObj([metalDevice newLibraryWithData:binaryData.get() error:&nsError]);
+        auto library = [metalDevice newLibraryWithSource:nsSource options:options error:&nsError];
+
+        [nsSource ANGLE_MTL_AUTORELEASE];
+
         *errorOut = std::move(nsError);
+
+        return [library ANGLE_MTL_AUTORELEASE];
     }
-    return result;
 }
 
-AutoObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromStaticBinary(id<MTLDevice> metalDevice,
-                                                                const uint8_t *data,
-                                                                size_t length,
-                                                                AutoObjCPtr<NSError *> *errorOut)
+AutoObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromBinary(id<MTLDevice> metalDevice,
+                                                          const uint8_t *binarySource,
+                                                          size_t binarySourceLen,
+                                                          AutoObjCPtr<NSError *> *errorOut)
 {
-    AutoObjCPtr<id<MTLLibrary>> result;
     ANGLE_MTL_OBJC_SCOPE
     {
         NSError *nsError = nil;
-        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
-        AutoObjCPtr binaryData = adoptObjCObj(dispatch_data_create(data, length, queue,
-                                                                   ^{
-                                                                   }));
-        result    = adoptObjCObj([metalDevice newLibraryWithData:binaryData.get() error:&nsError]);
+        auto shaderSourceData =
+            dispatch_data_create(binarySource, binarySourceLen, dispatch_get_main_queue(),
+                                 ^{
+                                 });
+
+        auto library = [metalDevice newLibraryWithData:shaderSourceData error:&nsError];
+
+        dispatch_release(shaderSourceData);
+
         *errorOut = std::move(nsError);
+
+        return [library ANGLE_MTL_AUTORELEASE];
     }
-    return result;
 }
+
 MTLTextureType GetTextureType(gl::TextureType glType)
 {
     switch (glType)

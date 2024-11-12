@@ -14,11 +14,9 @@
 #import <Metal/Metal.h>
 
 #include "angle_gl.h"
-#include "common/MemoryBuffer.h"
 #include "common/PackedEnums.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Texture.h"
-#include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/metal/mtl_format_utils.h"
 #include "libANGLE/renderer/metal/mtl_resources.h"
 #include "libANGLE/renderer/metal/mtl_state_cache.h"
@@ -101,21 +99,34 @@ uint32_t GetDeviceVendorId(id<MTLDevice> metalDevice);
 
 AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
     id<MTLDevice> metalDevice,
-    std::string_view source,
+    const std::string &source,
     const std::map<std::string, std::string> &substitutionDictionary,
     bool disableFastMath,
     bool usesInvariance,
     AutoObjCPtr<NSError *> *error);
 
-AutoObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromBinary(id<MTLDevice> metalDevice,
-                                                          const uint8_t *data,
-                                                          size_t length,
-                                                          AutoObjCPtr<NSError *> *error);
+AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(id<MTLDevice> metalDevice,
+                                                const std::string &source,
+                                                AutoObjCPtr<NSError *> *error);
 
-AutoObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromStaticBinary(id<MTLDevice> metalDevice,
-                                                                const uint8_t *data,
-                                                                size_t length,
-                                                                AutoObjCPtr<NSError *> *error);
+AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
+    id<MTLDevice> metalDevice,
+    const char *source,
+    size_t sourceLen,
+    const std::map<std::string, std::string> &substitutionDictionary,
+    bool disableFastMath,
+    bool usesInvariance,
+    AutoObjCPtr<NSError *> *error);
+
+AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(id<MTLDevice> metalDevice,
+                                                const char *source,
+                                                size_t sourceLen,
+                                                AutoObjCPtr<NSError *> *error);
+
+AutoObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromBinary(id<MTLDevice> metalDevice,
+                                                          const uint8_t *binarySource,
+                                                          size_t binarySourceLen,
+                                                          AutoObjCPtr<NSError *> *error);
 
 // Compiles a shader library into a metallib file, returning the path to it.
 std::string CompileShaderLibraryToFile(const std::string &source,
