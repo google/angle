@@ -56,6 +56,7 @@ set_defaults("angle_trace_libs") {
 }
 
 template("angle_trace_libs") {
+  _trace_list = []
   _trace_targets = []
   _trace_lib_files = []
 
@@ -67,6 +68,7 @@ template("angle_trace_libs") {
     _trace_and_version_arr = []
     _trace_and_version_arr = string_split(_trace_and_version)
     _trace = _trace_and_version_arr[0]
+    _trace_list += [ _trace ]
     if (defined(invoker.trace_dir)) {
       _trace_dir = invoker.trace_dir
     } else {
@@ -137,5 +139,12 @@ template("angle_trace_libs") {
       data =
           _trace_lib_files + [ "${root_out_dir}/libangle_trace_interpreter.so" ]
     }
+  }
+
+  group("gen_trace_list_json") {
+    _output_json_path = "$root_gen_dir/trace_list.json"
+    write_file(_output_json_path, _trace_list, "json")
+
+    data = [ _output_json_path ]
   }
 }

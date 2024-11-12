@@ -786,14 +786,9 @@ def logged_args():
 
 def run_traces(args):
     # Load trace names
-    test_json = os.path.join(angle_path_util.ANGLE_ROOT_DIR, 'src', 'tests', 'restricted_traces',
-                             'restricted_traces.json')
+    test_json = os.path.join(args.build_dir, 'gen/trace_list.json')
     with open(os.path.join(DEFAULT_TEST_DIR, test_json)) as f:
         traces = json.loads(f.read())
-
-    # Have to split the 'trace version' thing up
-    trace_and_version = traces['traces']
-    traces = [i.split(' ',)[0] for i in trace_and_version]
 
     failures = []
 

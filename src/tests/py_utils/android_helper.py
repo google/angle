@@ -232,7 +232,7 @@ def _MakeTar(path, patterns):
 def _AddRestrictedTracesJson():
     _MakeTar(_Global.external_storage + 't.tar', [
         '../../src/tests/restricted_traces/*/*.json',
-        '../../src/tests/restricted_traces/restricted_traces.json'
+        'gen/trace_list.json',
     ])
     _AdbShell('r=' + _Global.external_storage + '; tar -xf $r/t.tar -C $r/ && rm $r/t.tar')
 

@@ -678,6 +678,7 @@ if (build_angle_trace_tests) {
       "$angle_root:angle_compression",
       "$angle_root/util:angle_frame_capture_test_utils",
       "$angle_root/util:angle_png_utils",
+      "restricted_traces:gen_trace_list_json",
     ]
 
     # If this flag is set, we want to build the trace libraries independent of the APK, i.e. not packaged.
