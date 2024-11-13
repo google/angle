@@ -1843,6 +1843,14 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         }
     }
 
+    if (traceNameIs("solar_smash"))
+    {
+        if (isIntelWinANGLE)
+        {
+            skipTest("https://issuetracker.google.com/378900717 Nondeterministic on Windows Intel");
+        }
+    }
+
     if (IsGalaxyS22())
     {
         if (traceNameIs("cod_mobile") || traceNameIs("dota_underlords") ||
