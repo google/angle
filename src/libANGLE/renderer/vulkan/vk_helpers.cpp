@@ -8776,7 +8776,7 @@ angle::Result ImageHelper::updateSubresourceOnHost(Context *context,
     // The image should be unused by the GPU.
     if (!renderer->hasResourceUseFinished(getResourceUse()))
     {
-        ANGLE_TRY(renderer->checkCompletedCommands(context));
+        ANGLE_TRY(renderer->checkCompletedCommandsAndCleanup(context));
         if (!renderer->hasResourceUseFinished(getResourceUse()))
         {
             return angle::Result::Continue;

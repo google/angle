@@ -260,7 +260,24 @@ angle::Result SyncHelper::getStatus(Context *context, ContextVk *contextVk, bool
     {
         // Check completed commands once before returning, perhaps the serial is actually already
         // finished.
-        ANGLE_TRY(renderer->checkCompletedCommands(context));
+        // We don't call checkCompletedCommandsAndCleanup() to cleanup finished commands immediately
+        // if isAsyncCommandBufferResetAndGarbageCleanupEnabled feature is turned off.
+        // Because when isAsyncCommandBufferResetAndGarbageCleanupEnabled feature is turned off,
+        // vkResetCommandBuffer() is called in cleanup step, and it must take the
+        // CommandPoolAccess::mCmdPoolMutex lock, see details in
+        // CommandPoolAccess::retireFinishedCommands. This means the cleanup step can
+        // be blocked by command buffer recording if another thread calls
+        // CommandPoolAccess::flushRenderPassCommands(), which is against EGL spec when
+        // eglClientWaitSync() should return immediately with timeout == 0.
+        if (renderer->isAsyncCommandBufferResetAndGarbageCleanupEnabled())
+        {
+            ANGLE_TRY(renderer->checkCompletedCommandsAndCleanup(context));
+        }
+        else
+        {
+            ANGLE_TRY(renderer->checkCompletedCommands(context));
+        }
+
         *signaledOut = renderer->hasResourceUseFinished(mUse);
     }
     return angle::Result::Continue;

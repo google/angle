@@ -475,6 +475,8 @@ class Renderer : angle::NonCopyable
                                                             uint64_t timeout,
                                                             VkResult *result);
     angle::Result checkCompletedCommands(vk::Context *context);
+
+    angle::Result checkCompletedCommandsAndCleanup(vk::Context *context);
     angle::Result retireFinishedCommands(vk::Context *context);
 
     angle::Result flushWaitSemaphores(vk::ProtectionType protectionType,
@@ -1165,6 +1167,11 @@ ANGLE_INLINE void Renderer::requestAsyncCommandsAndGarbageCleanup(vk::Context *c
 }
 
 ANGLE_INLINE angle::Result Renderer::checkCompletedCommands(vk::Context *context)
+{
+    return mCommandQueue.checkCompletedCommands(context);
+}
+
+ANGLE_INLINE angle::Result Renderer::checkCompletedCommandsAndCleanup(vk::Context *context)
 {
     return mCommandQueue.checkAndCleanupCompletedCommands(context);
 }

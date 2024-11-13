@@ -514,7 +514,7 @@ angle::Result QueryVk::getResult(const gl::Context *context, bool wait)
         // recently. Do that now and see if the query is still busy.  If the application is
         // looping until the query results become available, there wouldn't be any forward
         // progress without this.
-        ANGLE_TRY(renderer->checkCompletedCommands(contextVk));
+        ANGLE_TRY(renderer->checkCompletedCommandsAndCleanup(contextVk));
 
         if (isCurrentlyInUse(renderer))
         {

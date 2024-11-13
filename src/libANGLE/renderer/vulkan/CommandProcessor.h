@@ -258,6 +258,7 @@ class CommandProcessorTask
 };
 using CommandProcessorTaskQueue = angle::FixedQueue<CommandProcessorTask>;
 
+class CommandPoolAccess;
 struct CommandBatch final : angle::NonCopyable
 {
     CommandBatch();
@@ -279,6 +280,8 @@ struct CommandBatch final : angle::NonCopyable
 
     PrimaryCommandBuffer primaryCommands;
     SecondaryCommandBufferCollector secondaryCommands;
+    CommandPoolAccess *commandPoolAccess;  // reference to CommandPoolAccess that is responsible for
+                                           // deleting primaryCommands with a lock
     SharedFence fence;
     SharedExternalFence externalFence;
     QueueSerial queueSerial;
@@ -362,6 +365,83 @@ class DeviceQueueMap final
         uint32_t index;
     };
     angle::PackedEnumMap<egl::ContextPriority, QueueAndIndex> mQueueAndIndices;
+};
+
+class CommandPoolAccess : angle::NonCopyable
+{
+  public:
+    CommandPoolAccess();
+    ~CommandPoolAccess();
+    angle::Result initCommandPool(Context *context,
+                                  ProtectionType protectionType,
+                                  const uint32_t queueFamilyIndex);
+    void handleDeviceLost(VkDevice device, PrimaryCommandBuffer *primaryCommands) const;
+    void destroy(VkDevice device);
+    void destroyPrimaryCommandBuffer(VkDevice device, PrimaryCommandBuffer *primaryCommands) const;
+    angle::Result flushOutsideRPCommands(Context *context,
+                                         ProtectionType protectionType,
+                                         egl::ContextPriority priority,
+                                         OutsideRenderPassCommandBufferHelper **outsideRPCommands);
+    angle::Result flushRenderPassCommands(Context *context,
+                                          const ProtectionType &protectionType,
+                                          const egl::ContextPriority &priority,
+                                          const RenderPass &renderPass,
+                                          VkFramebuffer framebufferOverride,
+                                          RenderPassCommandBufferHelper **renderPassCommands);
+
+    void flushWaitSemaphores(ProtectionType protectionType,
+                             egl::ContextPriority priority,
+                             std::vector<VkSemaphore> &&waitSemaphores,
+                             std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks);
+
+    angle::Result retireFinishedCommands(Context *context,
+                                         const ProtectionType protectionType,
+                                         PrimaryCommandBuffer *primaryCommands);
+
+    angle::Result getCommandsAndWaitSemaphores(
+        Context *context,
+        ProtectionType protectionType,
+        egl::ContextPriority priority,
+        CommandBatch *batchOut,
+        std::vector<VkSemaphore> *waitSemaphoresOut,
+        std::vector<VkPipelineStageFlags> *waitSemaphoreStageMasksOut);
+
+  private:
+    angle::Result ensurePrimaryCommandBufferValidLocked(Context *context,
+                                                        const ProtectionType &protectionType,
+                                                        const egl::ContextPriority &priority)
+    {
+        CommandsState &state = mCommandsStateMap[priority][protectionType];
+        if (state.primaryCommands.valid())
+        {
+            return angle::Result::Continue;
+        }
+        ANGLE_TRY(mPrimaryCommandPoolMap[protectionType].allocate(context, &state.primaryCommands));
+        VkCommandBufferBeginInfo beginInfo = {};
+        beginInfo.sType                    = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+        beginInfo.flags                    = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+        beginInfo.pInheritanceInfo         = nullptr;
+        ANGLE_VK_TRY(context, state.primaryCommands.begin(beginInfo));
+        return angle::Result::Continue;
+    }
+
+    // This mutex ensures vulkan command pool is externally synchronized.
+    // This means no two threads are operating on command buffers allocated from
+    // the same command pool at the same time. The operations that this mutex
+    // protect include:
+    // 1) recording commands on any command buffers allocated from the same command pool
+    // 2) allocate, free, reset command buffers from the same command pool.
+    // 3) any operations on the command pool itself
+    mutable angle::SimpleMutex mCmdPoolMutex;
+
+    using PrimaryCommandPoolMap = angle::PackedEnumMap<ProtectionType, PersistentCommandPool>;
+    using CommandsStateMap =
+        angle::PackedEnumMap<egl::ContextPriority,
+                             angle::PackedEnumMap<ProtectionType, CommandsState>>;
+
+    CommandsStateMap mCommandsStateMap;
+    // Keeps a free list of reusable primary command buffers.
+    PrimaryCommandPoolMap mPrimaryCommandPoolMap;
 };
 
 // Note all public APIs of CommandQueue class must be thread safe.
@@ -468,20 +548,36 @@ class CommandQueue : angle::NonCopyable
         return angle::Result::Continue;
     }
 
-    void flushWaitSemaphores(ProtectionType protectionType,
-                             egl::ContextPriority priority,
-                             std::vector<VkSemaphore> &&waitSemaphores,
-                             std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks);
-    angle::Result flushOutsideRPCommands(Context *context,
-                                         ProtectionType protectionType,
-                                         egl::ContextPriority priority,
-                                         OutsideRenderPassCommandBufferHelper **outsideRPCommands);
-    angle::Result flushRenderPassCommands(Context *context,
-                                          ProtectionType protectionType,
-                                          egl::ContextPriority priority,
-                                          const RenderPass &renderPass,
-                                          VkFramebuffer framebufferOverride,
-                                          RenderPassCommandBufferHelper **renderPassCommands);
+    ANGLE_INLINE void flushWaitSemaphores(
+        ProtectionType protectionType,
+        egl::ContextPriority priority,
+        std::vector<VkSemaphore> &&waitSemaphores,
+        std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks)
+    {
+        return mCommandPoolAccess.flushWaitSemaphores(protectionType, priority,
+                                                      std::move(waitSemaphores),
+                                                      std::move(waitSemaphoreStageMasks));
+    }
+    ANGLE_INLINE angle::Result flushOutsideRPCommands(
+        Context *context,
+        ProtectionType protectionType,
+        egl::ContextPriority priority,
+        OutsideRenderPassCommandBufferHelper **outsideRPCommands)
+    {
+        return mCommandPoolAccess.flushOutsideRPCommands(context, protectionType, priority,
+                                                         outsideRPCommands);
+    }
+    ANGLE_INLINE angle::Result flushRenderPassCommands(
+        Context *context,
+        ProtectionType protectionType,
+        const egl::ContextPriority &priority,
+        const RenderPass &renderPass,
+        VkFramebuffer framebufferOverride,
+        RenderPassCommandBufferHelper **renderPassCommands)
+    {
+        return mCommandPoolAccess.flushRenderPassCommands(
+            context, protectionType, priority, renderPass, framebufferOverride, renderPassCommands);
+    }
 
     const angle::VulkanPerfCounters getPerfCounters() const;
     void resetPerFramePerfCounters();
@@ -506,9 +602,9 @@ class CommandQueue : angle::NonCopyable
   private:
     // Check the first command buffer in mInFlightCommands and update mLastCompletedSerials if
     // finished
-    angle::Result checkOneCommandBatch(Context *context, bool *finished);
+    angle::Result checkOneCommandBatchLocked(Context *context, bool *finished);
     // Similar to checkOneCommandBatch, except we will wait for it to finish
-    angle::Result finishOneCommandBatchAndCleanupImpl(Context *context, uint64_t timeout);
+    angle::Result finishOneCommandBatchAndCleanupImplLocked(Context *context, uint64_t timeout);
     // Walk mFinishedCommands, reset and recycle all command buffers.
     angle::Result retireFinishedCommandsLocked(Context *context);
     // Walk mInFlightCommands, check and update mLastCompletedSerials for all commands that are
@@ -522,20 +618,7 @@ class CommandQueue : angle::NonCopyable
                               DeviceScoped<CommandBatch> &commandBatch,
                               const QueueSerial &submitQueueSerial);
 
-    angle::Result ensurePrimaryCommandBufferValid(Context *context,
-                                                  ProtectionType protectionType,
-                                                  egl::ContextPriority priority);
-
-    using CommandsStateMap =
-        angle::PackedEnumMap<egl::ContextPriority,
-                             angle::PackedEnumMap<ProtectionType, CommandsState>>;
-    using PrimaryCommandPoolMap = angle::PackedEnumMap<ProtectionType, PersistentCommandPool>;
-
-    angle::Result initCommandPool(Context *context, ProtectionType protectionType)
-    {
-        PersistentCommandPool &commandPool = mPrimaryCommandPoolMap[protectionType];
-        return commandPool.init(context, protectionType, mQueueMap.getQueueFamilyIndex());
-    }
+    CommandPoolAccess mCommandPoolAccess;
 
     // Protect multi-thread access to mInFlightCommands.pop and ensure ordering of submission.
     mutable angle::SimpleMutex mMutex;
@@ -543,13 +626,11 @@ class CommandQueue : angle::NonCopyable
     // so that we can release mMutex while doing potential lengthy vkQueueSubmit and vkQueuePresent
     // call.
     angle::SimpleMutex mQueueSubmitMutex;
+
     CommandBatchQueue mInFlightCommands;
     // Temporary storage for finished command batches that should be reset.
     CommandBatchQueue mFinishedCommandBatches;
 
-    CommandsStateMap mCommandsStateMap;
-    // Keeps a free list of reusable primary command buffers.
-    PrimaryCommandPoolMap mPrimaryCommandPoolMap;
 
     // Queue serial management.
     AtomicQueueSerialFixedArray mLastSubmittedSerials;
