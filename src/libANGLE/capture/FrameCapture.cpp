@@ -5513,9 +5513,13 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         }
     }
 
+    // Capture Queries
+    const gl::QueryMap &queryMap = context->getQueriesForCapture();
+
     // Create existing queries. Note that queries may be genned and not yet started. In that
     // case the queries will exist in the query map as nullptr entries.
-    const gl::QueryMap &queryMap = context->getQueriesForCapture();
+    // If any queries are active between frames, we want to defer creation and do them last,
+    // otherwise you'll get GL errors about starting a query while one is already active.
     for (gl::QueryMap::Iterator queryIter = gl::UnsafeResourceMapIter(queryMap).beginWithNull(),
                                 endIter   = gl::UnsafeResourceMapIter(queryMap).endWithNull();
          queryIter != endIter; ++queryIter)
@@ -5531,14 +5535,27 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         {
             gl::QueryType queryType = query->getType();
 
+            // Defer active queries until we've created them all
+            if (IsQueryActive(apiState, queryID))
+            {
+                continue;
+            }
+
             // Begin the query to generate the object
             cap(CaptureBeginQuery(replayState, true, queryType, queryID));
 
             // End the query if it was not active
-            if (!IsQueryActive(apiState, queryID))
-            {
-                cap(CaptureEndQuery(replayState, true, queryType));
-            }
+            cap(CaptureEndQuery(replayState, true, queryType));
+        }
+    }
+
+    const gl::ActiveQueryMap &activeQueries = apiState.getActiveQueriesForCapture();
+    for (const auto &activeQueryIter : activeQueries)
+    {
+        const gl::Query *activeQuery = activeQueryIter.get();
+        if (activeQuery)
+        {
+            cap(CaptureBeginQuery(replayState, true, activeQuery->getType(), activeQuery->id()));
         }
     }
 
