@@ -1936,6 +1936,7 @@ TEST_P(VulkanPerformanceCounterTest_ES31, MultisampleDepthStencilResolve)
 
     ASSERT_GL_NO_ERROR();
 }
+
 // Ensures a read-only depth-stencil feedback loop works in a single RenderPass.
 TEST_P(VulkanPerformanceCounterTest, ReadOnlyDepthStencilFeedbackLoopUsesSingleRenderPass)
 {
@@ -2052,6 +2053,7 @@ TEST_P(VulkanPerformanceCounterTest, ClearColorBufferAndReadOnlyDepthStencilUses
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
     ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
     glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_ALWAYS);
     glDepthMask(GL_TRUE);
     glUseProgram(redProgram);
     glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -2074,6 +2076,7 @@ TEST_P(VulkanPerformanceCounterTest, ClearColorBufferAndReadOnlyDepthStencilUses
     // Now set up the read-only feedback loop.
     glDepthMask(GL_FALSE);
     glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
     glBindTexture(GL_TEXTURE_2D, depthTexture);
     glUseProgram(texProgram);
     glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -2101,6 +2104,80 @@ TEST_P(VulkanPerformanceCounterTest, ClearColorBufferAndReadOnlyDepthStencilUses
     glDepthMask(GL_TRUE);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     ASSERT_GL_NO_ERROR();
+}
+
+// Similar scenario as in ClearColorBufferAndReadOnlyDepthStencilUsesSingleRenderPass based on
+// Manhattan, but involving queries that end up marking a render pass for closure.  This results in
+// the switch to read-only depth/stencil mode to flush the render pass twice.
+TEST_P(VulkanPerformanceCounterTest,
+       QueryThenClearColorBufferAndReadOnlyDepthStencilUsesSingleRenderPass)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
+
+    constexpr GLsizei kSize = 4;
+
+    ANGLE_GL_PROGRAM(redProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    ANGLE_GL_PROGRAM(texProgram, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+
+    setupQuadVertexBuffer(0.5f, 1.0f);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(0);
+
+    // Set up a depth texture and framebuffer.
+    GLTexture depthTexture;
+    glBindTexture(GL_TEXTURE_2D, depthTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, kSize, kSize, 0, GL_DEPTH_COMPONENT,
+                 GL_UNSIGNED_INT, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    // Issue a draw call that writes to the depth image.  At the same time, end a query after the
+    // draw call.  The end of query can mark the render pass for closure.
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_ALWAYS);
+    glDepthMask(GL_TRUE);
+    glUseProgram(redProgram);
+    GLQuery query;
+    glBeginQuery(GL_ANY_SAMPLES_PASSED, query);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glEndQuery(GL_ANY_SAMPLES_PASSED);
+    ASSERT_GL_NO_ERROR();
+
+    // Add a color texture to the FBO.  This changes the render pass such that glClear isn't
+    // translated to vkCmdClearAttachments (which it would, if the color attachment was added
+    // earlier).
+    GLTexture colorTexture;
+    glBindTexture(GL_TEXTURE_2D, colorTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Expect rpCount+1, depth(Clears+0, Loads+1, LoadNones+0, Stores+1, StoreNones+0),
+    angle::VulkanPerfCounters expected;
+    setExpectedCountersForDepthOps(getPerfCounters(), 1, 0, 0, 0, 1, 0, &expected);
+
+    // First clear the color buffer.  This leads to a deferred clear.
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Now set up the read-only feedback loop and issue a draw call.  The clear and draw should be
+    // done in the same render pass.
+    glDepthMask(GL_FALSE);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+    glBindTexture(GL_TEXTURE_2D, depthTexture);
+    glUseProgram(texProgram);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_EQ(expected.renderPasses, getPerfCounters().renderPasses);
+    EXPECT_DEPTH_OP_COUNTERS(getPerfCounters(), expected);
 }
 
 // Ensures an actual depth feedback loop (i.e, render and sample from same texture which is

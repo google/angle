@@ -123,6 +123,8 @@ class FramebufferVk : public FramebufferImpl
     angle::Result getFramebuffer(ContextVk *contextVk, vk::RenderPassFramebuffer *framebufferOut);
 
     bool hasDeferredClears() const { return !mDeferredClears.empty(); }
+    bool hasDeferredDepthClear() const { return mDeferredClears.testDepth(); }
+    bool hasDeferredStencilClear() const { return mDeferredClears.testStencil(); }
     angle::Result flushDeferredClears(ContextVk *contextVk);
 
     void switchToColorFramebufferFetchMode(ContextVk *contextVk, bool hasColorFramebufferFetch);

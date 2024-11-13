@@ -8731,8 +8731,17 @@ angle::Result ContextVk::switchToReadOnlyDepthStencilMode(gl::Texture *texture,
         return angle::Result::Continue;
     }
 
-    // Special handling for deferred clears.
-    ANGLE_TRY(drawFramebuffer->flushDeferredClears(this));
+    // If the aspect that's switching to read-only has a pending clear, it can't be done in the same
+    // render pass (as the clear is a write operation).  In that case, flush the deferred clears in
+    // a separate (empty) render pass first.
+    if ((!isStencilTexture && drawFramebuffer->hasDeferredDepthClear()) ||
+        (isStencilTexture && drawFramebuffer->hasDeferredStencilClear()))
+    {
+        ANGLE_TRY(drawFramebuffer->flushDeferredClears(this));
+    }
+
+    // If the render pass needs closing, mark it as such.  Note that a write to depth/stencil may be
+    // pending through a deferred clear.
     if (hasActiveRenderPass())
     {
         const vk::RenderPassUsage readOnlyAttachmentUsage =
@@ -8740,26 +8749,21 @@ angle::Result ContextVk::switchToReadOnlyDepthStencilMode(gl::Texture *texture,
                              : vk::RenderPassUsage::DepthReadOnlyAttachment;
         TextureVk *textureVk = vk::GetImpl(texture);
 
-        // If render pass not yet writing to depthStencil attachment, no need to flush.
-        if (!textureVk->getImage().hasRenderPassUsageFlag(readOnlyAttachmentUsage) &&
-            getStartedRenderPassCommands().hasDepthStencilWriteOrClear())
+        if (!textureVk->getImage().hasRenderPassUsageFlag(readOnlyAttachmentUsage))
         {
-            // Break the render pass to enter read-only depth/stencil feedback loop; the previous
-            // usage was not read-only and will use a non-read-only layout.
-            ANGLE_TRY(flushCommandsAndEndRenderPass(
-                RenderPassClosureReason::DepthStencilUseInFeedbackLoop));
-        }
-        else
-        {
-            if (isStencilTexture)
+            // If the render pass has written to this aspect, it needs to be closed.
+            if ((!isStencilTexture && getStartedRenderPassCommands().hasDepthWriteOrClear()) ||
+                (isStencilTexture && getStartedRenderPassCommands().hasStencilWriteOrClear()))
             {
-                mRenderPassCommands->updateStencilReadOnlyMode(mDepthStencilAttachmentFlags);
-            }
-            else
-            {
-                mRenderPassCommands->updateDepthReadOnlyMode(mDepthStencilAttachmentFlags);
+                onRenderPassFinished(RenderPassClosureReason::DepthStencilUseInFeedbackLoop);
+
+                // Don't let the render pass reactivate.
+                mAllowRenderPassToReactivate = false;
             }
         }
+
+        // Make sure to update the current render pass's tracking of read-only depth/stencil mode.
+        mGraphicsDirtyBits.set(DIRTY_BIT_DEPTH_STENCIL_ACCESS);
     }
 
     return angle::Result::Continue;

@@ -1953,11 +1953,6 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
                    VK_ATTACHMENT_LOAD_OP_CLEAR;
     }
 
-    bool hasDepthStencilWriteOrClear() const
-    {
-        return hasDepthWriteOrClear() || hasStencilWriteOrClear();
-    }
-
     const RenderPassDesc &getRenderPassDesc() const { return mRenderPassDesc; }
     const AttachmentOpsArray &getAttachmentOps() const { return mAttachmentOps; }
 
