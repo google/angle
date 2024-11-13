@@ -4796,17 +4796,21 @@ void CaptureShareGroupMidExecutionSetup(
         {
             frameCaptureShared->setDeferredLinkProgram(id);
 
-            // Deferred attachment of shaders is not yet supported
-            ASSERT(program->getAttachedShadersCount());
-
-            // AttachShader calls will be generated at shader-handling time
-            for (gl::ShaderType shaderType : gl::AllShaderTypes())
+            if (program->getAttachedShadersCount() > 0)
             {
-                gl::Shader *shader = program->getAttachedShader(shaderType);
-                if (shader != nullptr)
+                // AttachShader calls will be generated at shader-handling time
+                for (gl::ShaderType shaderType : gl::AllShaderTypes())
                 {
-                    deferredAttachCalls[shader->getHandle()].push_back(id);
+                    gl::Shader *shader = program->getAttachedShader(shaderType);
+                    if (shader != nullptr)
+                    {
+                        deferredAttachCalls[shader->getHandle()].push_back(id);
+                    }
                 }
+            }
+            else
+            {
+                WARN() << "Deferred attachment of shaders is not yet supported";
             }
         }
 
