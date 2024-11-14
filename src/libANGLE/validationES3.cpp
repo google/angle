@@ -3335,11 +3335,8 @@ bool ValidateIndexedStateQuery(const Context *context,
             }
             break;
         case GL_SAMPLE_MASK_VALUE:
-            if (context->getClientVersion() < ES_3_1)
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kEnumRequiresGLES31);
-                return false;
-            }
+            ASSERT(context->getClientVersion() >= ES_3_1 ||
+                   context->getExtensions().textureMultisampleANGLE);
             if (index >= static_cast<GLuint>(caps.maxSampleMaskWords))
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidSampleMaskNumber);

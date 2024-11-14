@@ -565,6 +565,7 @@ TEST_P(TextureMultisampleTest, SampleMaskToggling)
     EXPECT_FALSE(enabled);
 }
 
+// Test setting and querying sample mask value
 TEST_P(TextureMultisampleTest, SampleMaski)
 {
     ANGLE_SKIP_TEST_IF(lessThanES31MultisampleExtNotSupported());
@@ -574,9 +575,13 @@ TEST_P(TextureMultisampleTest, SampleMaski)
     sampleMaski(maxSampleMaskWords - 1, 0x1);
     ASSERT_GL_NO_ERROR();
 
-    glGetIntegerv(GL_MAX_SAMPLE_MASK_WORDS, &maxSampleMaskWords);
     sampleMaski(maxSampleMaskWords, 0x1);
     ASSERT_GL_ERROR(GL_INVALID_VALUE);
+
+    GLint sampleMaskValue = 0;
+    glGetIntegeri_v(GL_SAMPLE_MASK_VALUE, 0, &sampleMaskValue);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(sampleMaskValue, 0x1);
 }
 
 TEST_P(TextureMultisampleTest, ResolveToDefaultFramebuffer)
@@ -693,6 +698,10 @@ TEST_P(NegativeTextureMultisampleTest, Negative)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
     glSampleMaski(maxSampleMaskWords - 1, 0x1);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    GLint sampleMaskValue = 0;
+    glGetIntegeri_v(GL_SAMPLE_MASK_VALUE, 0, &sampleMaskValue);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
 }
 
 // Tests that GL_TEXTURE_2D_MULTISAMPLE_ARRAY is not supported in GetInternalformativ when the

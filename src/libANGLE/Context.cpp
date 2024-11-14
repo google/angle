@@ -9189,6 +9189,20 @@ bool Context::getIndexedQueryParameterInfo(GLenum target,
         }
     }
 
+    if (getClientVersion() >= Version(3, 1) || getExtensions().textureMultisampleANGLE)
+    {
+        static_assert(GL_SAMPLE_MASK_VALUE_ANGLE == GL_SAMPLE_MASK_VALUE);
+        switch (target)
+        {
+            case GL_SAMPLE_MASK_VALUE:
+            {
+                *type      = GL_INT;
+                *numParams = 1;
+                return true;
+            }
+        }
+    }
+
     if (mSupportedExtensions.drawBuffersIndexedAny())
     {
         switch (target)
@@ -9234,7 +9248,6 @@ bool Context::getIndexedQueryParameterInfo(GLenum target,
         case GL_VERTEX_BINDING_DIVISOR:
         case GL_VERTEX_BINDING_OFFSET:
         case GL_VERTEX_BINDING_STRIDE:
-        case GL_SAMPLE_MASK_VALUE:
         case GL_IMAGE_BINDING_NAME:
         case GL_IMAGE_BINDING_LEVEL:
         case GL_IMAGE_BINDING_LAYER:
