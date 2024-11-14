@@ -37,7 +37,7 @@ class TextureUpload
 class ShareGroupVk : public ShareGroupImpl
 {
   public:
-    ShareGroupVk(const egl::ShareGroupState &state);
+    ShareGroupVk(const egl::ShareGroupState &state, vk::Renderer *renderer);
     void onDestroy(const egl::Display *display) override;
 
     void onContextAdd() override;
@@ -60,12 +60,11 @@ class ShareGroupVk : public ShareGroupImpl
     // Used to flush the mutable textures more often.
     angle::Result onMutableTextureUpload(ContextVk *contextVk, TextureVk *newTexture);
 
-    vk::BufferPool *getDefaultBufferPool(vk::Renderer *renderer,
-                                         VkDeviceSize size,
+    vk::BufferPool *getDefaultBufferPool(VkDeviceSize size,
                                          uint32_t memoryTypeIndex,
                                          BufferUsageType usageType);
-    void pruneDefaultBufferPools(vk::Renderer *renderer);
-    bool isDueForBufferPoolPrune(vk::Renderer *renderer);
+    void pruneDefaultBufferPools();
+    bool isDueForBufferPoolPrune();
 
     void calculateTotalBufferCount(size_t *bufferCount, VkDeviceSize *totalSize) const;
     void logBufferPools() const;
@@ -100,22 +99,21 @@ class ShareGroupVk : public ShareGroupImpl
     {
         return &mRefCountedEventsGarbageRecycler;
     }
-    void cleanupRefCountedEventGarbage(vk::Renderer *renderer)
-    {
-        mRefCountedEventsGarbageRecycler.cleanup(renderer);
-    }
-    void cleanupExcessiveRefCountedEventGarbage(vk::Renderer *renderer)
+    void cleanupRefCountedEventGarbage() { mRefCountedEventsGarbageRecycler.cleanup(mRenderer); }
+    void cleanupExcessiveRefCountedEventGarbage()
     {
         // TODO: b/336844257 needs tune.
         constexpr size_t kExcessiveGarbageCountThreshold = 256;
         if (mRefCountedEventsGarbageRecycler.getGarbageCount() > kExcessiveGarbageCountThreshold)
         {
-            mRefCountedEventsGarbageRecycler.cleanup(renderer);
+            mRefCountedEventsGarbageRecycler.cleanup(mRenderer);
         }
     }
 
   private:
     angle::Result updateContextsPriority(ContextVk *contextVk, egl::ContextPriority newPriority);
+
+    vk::Renderer *mRenderer;
 
     // VkFramebuffer caches
     FramebufferCache mFramebufferCache;

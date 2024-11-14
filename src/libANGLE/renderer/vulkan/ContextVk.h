@@ -780,7 +780,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                          uint32_t memoryTypeIndex,
                                          BufferUsageType usageType)
     {
-        return mShareGroupVk->getDefaultBufferPool(mRenderer, size, memoryTypeIndex, usageType);
+        return mShareGroupVk->getDefaultBufferPool(size, memoryTypeIndex, usageType);
     }
 
     angle::Result allocateStreamedVertexBuffer(size_t attribIndex,

@@ -1287,7 +1287,7 @@ void ContextVk::onDestroy(const gl::Context *context)
 
     VkDevice device = getDevice();
 
-    mShareGroupVk->cleanupRefCountedEventGarbage(mRenderer);
+    mShareGroupVk->cleanupRefCountedEventGarbage();
 
     mDefaultUniformStorage.release(mRenderer);
     mEmptyBuffer.release(mRenderer);
@@ -3758,7 +3758,7 @@ angle::Result ContextVk::submitCommands(const vk::Semaphore *signalSemaphore,
     mRenderer->cleanupPendingSubmissionGarbage();
     // In case of big amount of render/submission within one frame, if we accumulate excessive
     // amount of garbage, also trigger the cleanup.
-    mShareGroupVk->cleanupExcessiveRefCountedEventGarbage(mRenderer);
+    mShareGroupVk->cleanupExcessiveRefCountedEventGarbage();
 
     mComputeDirtyBits |= mNewComputeCommandBufferDirtyBits;
 
@@ -7842,12 +7842,12 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore,
                          renderPassClosureReason == RenderPassClosureReason::EGLSwapBuffers;
     if (frameBoundary)
     {
-        if (mShareGroupVk->isDueForBufferPoolPrune(mRenderer))
+        if (mShareGroupVk->isDueForBufferPoolPrune())
         {
-            mShareGroupVk->pruneDefaultBufferPools(mRenderer);
+            mShareGroupVk->pruneDefaultBufferPools();
         }
         // Always clean up grabage and destroy the excessive free list at frame boundary.
-        mShareGroupVk->cleanupRefCountedEventGarbage(mRenderer);
+        mShareGroupVk->cleanupRefCountedEventGarbage();
     }
 
     // Since we just flushed, deferred flush is no longer deferred.
