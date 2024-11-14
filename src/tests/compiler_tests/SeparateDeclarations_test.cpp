@@ -40,6 +40,17 @@ class SeparateCompoundStructDeclarations : public MatchOutputCodeTest
     }
 };
 
+class SeparateStructFunctionDeclarations : public MatchOutputCodeTest
+{
+  public:
+    SeparateStructFunctionDeclarations() : MatchOutputCodeTest(GL_FRAGMENT_SHADER, SH_ESSL_OUTPUT)
+    {
+        ShCompileOptions defaultCompileOptions = {};
+        defaultCompileOptions.validateAST      = true;
+        setDefaultCompileOptions(defaultCompileOptions);
+    }
+};
+
 TEST_F(SeparateDeclarations, Arrays)
 {
     const char kShader[]   = R"(#version 300 es
@@ -321,6 +332,54 @@ void main(){
   {
     (_uo = vec4(1.0, 1.0, 1.0, 1.0));
   }
+}
+)";
+    compile(kShader);
+    EXPECT_EQ(kExpected, outputCode(SH_ESSL_OUTPUT));
+}
+
+TEST_F(SeparateStructFunctionDeclarations, StructInStruct)
+{
+    const char kShader[]   = R"(#version 300 es
+struct S {
+  int f;
+};
+struct S2 { S h; } o()
+{
+  return S2(S(1));
+}
+void main() {
+  S2 s2 = o();
+})";
+    const char kExpected[] = R"(#version 300 es
+struct _uS {
+  mediump int _uf;
+};
+struct _uS2 {
+  _uS _uh;
+};
+_uS2 _uo(){
+  return _uS2(_uS(1));
+}
+void main(){
+  _uS2 _us2 = _uo();
+}
+)";
+    compile(kShader);
+    EXPECT_EQ(kExpected, outputCode(SH_ESSL_OUTPUT));
+}
+
+TEST_F(SeparateStructFunctionDeclarations, StructInAnonymousStruct)
+{
+    const char kShader[]   = R"(#version 300 es
+struct S {
+  int f;
+};
+struct { S h; } o();
+void main() {
+})";
+    const char kExpected[] = R"(#version 300 es
+void main(){
 }
 )";
     compile(kShader);

@@ -785,3 +785,11 @@ void main() { })";
     EXPECT_TRUE(
         foundInIntermediateTree("'d' : Function parameter type cannot be a structure definition"));
 }
+
+TEST_F(ParseTest, SeparateStructStructSpecificationFunctionNoCrash)
+{
+    mCompileOptions.validateAST = 1;
+    const char kShader[] =
+        R"(struct S{int f;};struct S2{S h;} o() { return S2(S(1)); } void main(){ S2 s2 = o(); })";
+    EXPECT_TRUE(compile(kShader));
+}

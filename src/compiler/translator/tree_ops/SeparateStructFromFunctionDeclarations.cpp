@@ -27,10 +27,10 @@ class SeparateStructFromFunctionDeclarationsTraverser : public TIntermRebuild
     PreResult visitFunctionPrototypePre(TIntermFunctionPrototype &node) override
     {
         const TFunction *function = node.getFunction();
-        if (mFunctionsToReplace.count(function) > 0)
+        auto it                   = mFunctionsToReplace.find(function);
+        if (it != mFunctionsToReplace.end())
         {
-            TIntermFunctionPrototype *newFuncProto =
-                new TIntermFunctionPrototype(mFunctionsToReplace[function]);
+            TIntermFunctionPrototype *newFuncProto = new TIntermFunctionPrototype(it->second);
             return newFuncProto;
         }
         else if (node.getType().isStructSpecifier())
@@ -46,9 +46,6 @@ class SeparateStructFromFunctionDeclarationsTraverser : public TIntermRebuild
 
             TVariable *structVar = new TVariable(&mSymbolTable, ImmutableString(""),
                                                  new TType(structure, true), SymbolType::Empty);
-            ASSERT(!mStructDeclarations.empty());
-            mStructDeclarations.back().push_back(new TIntermDeclaration({structVar}));
-
             TType *returnType = new TType(structure, false);
             if (oldType.isArray())
             {
@@ -61,59 +58,37 @@ class SeparateStructFromFunctionDeclarationsTraverser : public TIntermRebuild
 
             const TFunction *newFunc     = cloneFunctionAndChangeReturnType(oldFunc, returnType);
             mFunctionsToReplace[oldFunc] = newFunc;
-
-            return new TIntermFunctionPrototype(newFunc);
+            if (getParentNode()->getAsFunctionDefinition() != nullptr)
+            {
+                mStructDeclaration = new TIntermDeclaration({structVar});
+                return new TIntermFunctionPrototype(newFunc);
+            }
+            return PreResult::Multi(
+                {new TIntermDeclaration({structVar}), new TIntermFunctionPrototype(newFunc)});
         }
 
+        return node;
+    }
+
+    PostResult visitFunctionDefinitionPost(TIntermFunctionDefinition &node) override
+    {
+        if (mStructDeclaration)
+        {
+            return PostResult::Multi({std::exchange(mStructDeclaration, nullptr), &node});
+        }
         return node;
     }
 
     PreResult visitAggregatePre(TIntermAggregate &node) override
     {
         const TFunction *function = node.getFunction();
-        if (mFunctionsToReplace.count(function) > 0)
+        auto it                   = mFunctionsToReplace.find(function);
+        if (it != mFunctionsToReplace.end())
         {
-            TIntermAggregate *replacementNode = TIntermAggregate::CreateFunctionCall(
-                *mFunctionsToReplace[function], node.getSequence());
+            TIntermAggregate *replacementNode =
+                TIntermAggregate::CreateFunctionCall(*it->second, node.getSequence());
 
             return PreResult(replacementNode, VisitBits::Children);
-        }
-
-        return node;
-    }
-
-    PreResult visitBlockPre(TIntermBlock &node) override
-    {
-        mStructDeclarations.push_back({});
-        return node;
-    }
-
-    PostResult visitBlockPost(TIntermBlock &node) override
-    {
-        ASSERT(!mStructDeclarations.empty());
-
-        std::vector<TIntermDeclaration *> declarations = mStructDeclarations.back();
-        mStructDeclarations.pop_back();
-
-        if (!declarations.empty())
-        {
-            TIntermBlock *blockWithStructDeclarations = new TIntermBlock();
-            if (node.isTreeRoot())
-            {
-                blockWithStructDeclarations->setIsTreeRoot();
-            }
-
-            for (TIntermDeclaration *structDecl : declarations)
-            {
-                blockWithStructDeclarations->appendStatement(structDecl);
-            }
-
-            for (TIntermNode *statement : *node.getSequence())
-            {
-                blockWithStructDeclarations->appendStatement(statement);
-            }
-
-            return blockWithStructDeclarations;
         }
 
         return node;
@@ -151,9 +126,7 @@ class SeparateStructFromFunctionDeclarationsTraverser : public TIntermRebuild
 
     using FunctionReplacement = angle::HashMap<const TFunction *, const TFunction *>;
     FunctionReplacement mFunctionsToReplace;
-
-    // Stack of struct declarations to insert per block
-    std::vector<std::vector<TIntermDeclaration *>> mStructDeclarations;
+    TIntermDeclaration *mStructDeclaration = nullptr;
 };
 
 }  // anonymous namespace
