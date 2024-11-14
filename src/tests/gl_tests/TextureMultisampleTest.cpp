@@ -534,6 +534,37 @@ TEST_P(TextureMultisampleTest, SimpleTexelFetch)
     }
 }
 
+// Test toggling sample mask
+TEST_P(TextureMultisampleTest, SampleMaskToggling)
+{
+    ANGLE_SKIP_TEST_IF(lessThanES31MultisampleExtNotSupported());
+
+    GLboolean enabled = false;
+
+    EXPECT_FALSE(glIsEnabled(GL_SAMPLE_MASK));
+    EXPECT_GL_NO_ERROR();
+
+    glEnable(GL_SAMPLE_MASK);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_TRUE(glIsEnabled(GL_SAMPLE_MASK));
+    EXPECT_GL_NO_ERROR();
+
+    glGetBooleanv(GL_SAMPLE_MASK, &enabled);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_TRUE(enabled);
+
+    glDisable(GL_SAMPLE_MASK);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_FALSE(glIsEnabled(GL_SAMPLE_MASK));
+    EXPECT_GL_NO_ERROR();
+
+    glGetBooleanv(GL_SAMPLE_MASK, &enabled);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_FALSE(enabled);
+}
+
 TEST_P(TextureMultisampleTest, SampleMaski)
 {
     ANGLE_SKIP_TEST_IF(lessThanES31MultisampleExtNotSupported());
@@ -592,6 +623,20 @@ TEST_P(NegativeTextureMultisampleTest, Negative)
 {
     // The extension must have been disabled in test init.
     ASSERT_FALSE(IsGLExtensionEnabled("GL_ANGLE_texture_multisample"));
+
+    glEnable(GL_SAMPLE_MASK);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    EXPECT_FALSE(glIsEnabled(GL_SAMPLE_MASK));
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    GLboolean enabled = false;
+    glGetBooleanv(GL_SAMPLE_MASK, &enabled);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+    EXPECT_FALSE(enabled);
+
+    glDisable(GL_SAMPLE_MASK);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
     GLint maxSamples = 0;
     glGetInternalformativ(GL_TEXTURE_2D_MULTISAMPLE, GL_R8, GL_SAMPLES, 1, &maxSamples);

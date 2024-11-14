@@ -650,7 +650,8 @@ bool ValidCap(const PrivateState &state, ErrorSet *errors, GLenum cap, bool quer
             return state.getExtensions().sRGBWriteControlEXT;
 
         case GL_SAMPLE_MASK:
-            return state.getClientVersion() >= Version(3, 1);
+            return state.getClientVersion() >= Version(3, 1) ||
+                   state.getExtensions().textureMultisampleANGLE;
 
         case GL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
             return queryOnly && state.getExtensions().robustResourceInitializationANGLE;

@@ -4016,15 +4016,26 @@ bool GetQueryParameterInfo(const State &glState,
         }
     }
 
-    if (extensions.textureMultisampleANGLE)
+    if (glState.getClientVersion() >= Version(3, 1) || extensions.textureMultisampleANGLE)
     {
+        static_assert(GL_SAMPLE_MASK_ANGLE == GL_SAMPLE_MASK);
+        static_assert(GL_MAX_SAMPLE_MASK_WORDS_ANGLE == GL_MAX_SAMPLE_MASK_WORDS);
+        static_assert(GL_MAX_COLOR_TEXTURE_SAMPLES_ANGLE == GL_MAX_COLOR_TEXTURE_SAMPLES);
+        static_assert(GL_MAX_DEPTH_TEXTURE_SAMPLES_ANGLE == GL_MAX_DEPTH_TEXTURE_SAMPLES);
+        static_assert(GL_MAX_INTEGER_SAMPLES_ANGLE == GL_MAX_INTEGER_SAMPLES);
+        static_assert(GL_TEXTURE_BINDING_2D_MULTISAMPLE_ANGLE == GL_TEXTURE_BINDING_2D_MULTISAMPLE);
+
         switch (pname)
         {
-            case GL_MAX_COLOR_TEXTURE_SAMPLES_ANGLE:
-            case GL_MAX_INTEGER_SAMPLES_ANGLE:
-            case GL_MAX_DEPTH_TEXTURE_SAMPLES_ANGLE:
-            case GL_TEXTURE_BINDING_2D_MULTISAMPLE_ANGLE:
+            case GL_SAMPLE_MASK:
+                *type      = GL_BOOL;
+                *numParams = 1;
+                return true;
             case GL_MAX_SAMPLE_MASK_WORDS:
+            case GL_MAX_COLOR_TEXTURE_SAMPLES:
+            case GL_MAX_DEPTH_TEXTURE_SAMPLES:
+            case GL_MAX_INTEGER_SAMPLES:
+            case GL_TEXTURE_BINDING_2D_MULTISAMPLE:
                 *type      = GL_INT;
                 *numParams = 1;
                 return true;
@@ -4084,10 +4095,6 @@ bool GetQueryParameterInfo(const State &glState,
         case GL_MAX_FRAMEBUFFER_WIDTH:
         case GL_MAX_FRAMEBUFFER_HEIGHT:
         case GL_MAX_FRAMEBUFFER_SAMPLES:
-        case GL_MAX_SAMPLE_MASK_WORDS:
-        case GL_MAX_COLOR_TEXTURE_SAMPLES:
-        case GL_MAX_DEPTH_TEXTURE_SAMPLES:
-        case GL_MAX_INTEGER_SAMPLES:
         case GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET:
         case GL_MAX_VERTEX_ATTRIB_BINDINGS:
         case GL_MAX_VERTEX_ATTRIB_STRIDE:
@@ -4123,7 +4130,6 @@ bool GetQueryParameterInfo(const State &glState,
         case GL_MAX_COMBINED_SHADER_STORAGE_BLOCKS:
         case GL_SHADER_STORAGE_BUFFER_BINDING:
         case GL_SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT:
-        case GL_TEXTURE_BINDING_2D_MULTISAMPLE:
         case GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY:
         case GL_PROGRAM_PIPELINE_BINDING:
             *type      = GL_INT;
@@ -4133,7 +4139,6 @@ bool GetQueryParameterInfo(const State &glState,
             *type      = GL_INT_64_ANGLEX;
             *numParams = 1;
             return true;
-        case GL_SAMPLE_MASK:
         case GL_SAMPLE_SHADING:
             *type      = GL_BOOL;
             *numParams = 1;
