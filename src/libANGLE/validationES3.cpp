@@ -3248,11 +3248,8 @@ bool ValidateIndexedStateQuery(const Context *context,
         case GL_BLEND_EQUATION_RGB:
         case GL_BLEND_EQUATION_ALPHA:
         case GL_COLOR_WRITEMASK:
-            if (!context->getExtensions().drawBuffersIndexedAny())
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kDrawBuffersIndexedExtensionNotAvailable);
-                return false;
-            }
+            ASSERT(context->getClientVersion() >= ES_3_2 ||
+                   context->getExtensions().drawBuffersIndexedAny());
             if (index >= static_cast<GLuint>(caps.maxDrawBuffers))
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kIndexExceedsMaxDrawBuffer);
@@ -3281,6 +3278,7 @@ bool ValidateIndexedStateQuery(const Context *context,
 
         case GL_MAX_COMPUTE_WORK_GROUP_SIZE:
         case GL_MAX_COMPUTE_WORK_GROUP_COUNT:
+            ASSERT(context->getClientVersion() >= ES_3_1);
             if (index >= 3u)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kIndexExceedsMaxWorkgroupDimensions);
@@ -3291,11 +3289,7 @@ bool ValidateIndexedStateQuery(const Context *context,
         case GL_ATOMIC_COUNTER_BUFFER_START:
         case GL_ATOMIC_COUNTER_BUFFER_SIZE:
         case GL_ATOMIC_COUNTER_BUFFER_BINDING:
-            if (context->getClientVersion() < ES_3_1)
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kEnumRequiresGLES31);
-                return false;
-            }
+            ASSERT(context->getClientVersion() >= ES_3_1);
             if (index >= static_cast<GLuint>(caps.maxAtomicCounterBufferBindings))
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE,
@@ -3307,11 +3301,7 @@ bool ValidateIndexedStateQuery(const Context *context,
         case GL_SHADER_STORAGE_BUFFER_START:
         case GL_SHADER_STORAGE_BUFFER_SIZE:
         case GL_SHADER_STORAGE_BUFFER_BINDING:
-            if (context->getClientVersion() < ES_3_1)
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kEnumRequiresGLES31);
-                return false;
-            }
+            ASSERT(context->getClientVersion() >= ES_3_1);
             if (index >= static_cast<GLuint>(caps.maxShaderStorageBufferBindings))
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kExceedsMaxShaderStorageBufferBindings);
@@ -3323,11 +3313,7 @@ bool ValidateIndexedStateQuery(const Context *context,
         case GL_VERTEX_BINDING_DIVISOR:
         case GL_VERTEX_BINDING_OFFSET:
         case GL_VERTEX_BINDING_STRIDE:
-            if (context->getClientVersion() < ES_3_1)
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kEnumRequiresGLES31);
-                return false;
-            }
+            ASSERT(context->getClientVersion() >= ES_3_1);
             if (index >= static_cast<GLuint>(caps.maxVertexAttribBindings))
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kExceedsMaxVertexAttribBindings);
@@ -3349,11 +3335,7 @@ bool ValidateIndexedStateQuery(const Context *context,
         case GL_IMAGE_BINDING_LAYER:
         case GL_IMAGE_BINDING_ACCESS:
         case GL_IMAGE_BINDING_FORMAT:
-            if (context->getClientVersion() < ES_3_1)
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kEnumRequiresGLES31);
-                return false;
-            }
+            ASSERT(context->getClientVersion() >= ES_3_1);
             if (index >= static_cast<GLuint>(caps.maxImageUnits))
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kExceedsMaxImageUnits);
@@ -3361,7 +3343,7 @@ bool ValidateIndexedStateQuery(const Context *context,
             }
             break;
         default:
-            ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
+            UNREACHABLE();
             return false;
     }
 

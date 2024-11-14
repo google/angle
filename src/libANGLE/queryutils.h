@@ -258,6 +258,11 @@ bool GetQueryParameterInfo(const State &glState,
                            GLenum *type,
                            unsigned int *numParams);
 
+bool GetIndexedQueryParameterInfo(const State &glState,
+                                  GLenum target,
+                                  GLenum *type,
+                                  unsigned int *numParams);
+
 void QueryProgramPipelineiv(const Context *context,
                             ProgramPipeline *programPipeline,
                             GLenum pname,

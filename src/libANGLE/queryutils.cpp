@@ -4216,6 +4216,119 @@ bool GetQueryParameterInfo(const State &glState,
     return false;
 }
 
+bool GetIndexedQueryParameterInfo(const State &glState,
+                                  GLenum target,
+                                  GLenum *type,
+                                  unsigned int *numParams)
+{
+    const Extensions &extensions = glState.getExtensions();
+    const Version &clientVersion = glState.getClientVersion();
+
+    ASSERT(clientVersion >= ES_3_0);
+
+    switch (target)
+    {
+        case GL_TRANSFORM_FEEDBACK_BUFFER_BINDING:
+        case GL_UNIFORM_BUFFER_BINDING:
+        {
+            *type      = GL_INT;
+            *numParams = 1;
+            return true;
+        }
+        case GL_TRANSFORM_FEEDBACK_BUFFER_START:
+        case GL_TRANSFORM_FEEDBACK_BUFFER_SIZE:
+        case GL_UNIFORM_BUFFER_START:
+        case GL_UNIFORM_BUFFER_SIZE:
+        {
+            *type      = GL_INT_64_ANGLEX;
+            *numParams = 1;
+            return true;
+        }
+    }
+
+    if (clientVersion >= ES_3_1 || extensions.textureMultisampleANGLE)
+    {
+        static_assert(GL_SAMPLE_MASK_VALUE_ANGLE == GL_SAMPLE_MASK_VALUE);
+        switch (target)
+        {
+            case GL_SAMPLE_MASK_VALUE:
+            {
+                *type      = GL_INT;
+                *numParams = 1;
+                return true;
+            }
+        }
+    }
+
+    if (clientVersion >= ES_3_2 || extensions.drawBuffersIndexedAny())
+    {
+        switch (target)
+        {
+            case GL_BLEND_SRC_RGB:
+            case GL_BLEND_SRC_ALPHA:
+            case GL_BLEND_DST_RGB:
+            case GL_BLEND_DST_ALPHA:
+            case GL_BLEND_EQUATION_RGB:
+            case GL_BLEND_EQUATION_ALPHA:
+            {
+                *type      = GL_INT;
+                *numParams = 1;
+                return true;
+            }
+            case GL_COLOR_WRITEMASK:
+            {
+                *type      = GL_BOOL;
+                *numParams = 4;
+                return true;
+            }
+        }
+    }
+
+    if (clientVersion < ES_3_1)
+    {
+        return false;
+    }
+
+    switch (target)
+    {
+        case GL_IMAGE_BINDING_LAYERED:
+        {
+            *type      = GL_BOOL;
+            *numParams = 1;
+            return true;
+        }
+        case GL_MAX_COMPUTE_WORK_GROUP_COUNT:
+        case GL_MAX_COMPUTE_WORK_GROUP_SIZE:
+        case GL_ATOMIC_COUNTER_BUFFER_BINDING:
+        case GL_SHADER_STORAGE_BUFFER_BINDING:
+        case GL_VERTEX_BINDING_BUFFER:
+        case GL_VERTEX_BINDING_DIVISOR:
+        case GL_VERTEX_BINDING_OFFSET:
+        case GL_VERTEX_BINDING_STRIDE:
+        case GL_IMAGE_BINDING_NAME:
+        case GL_IMAGE_BINDING_LEVEL:
+        case GL_IMAGE_BINDING_LAYER:
+        case GL_IMAGE_BINDING_ACCESS:
+        case GL_IMAGE_BINDING_FORMAT:
+        {
+            *type      = GL_INT;
+            *numParams = 1;
+            return true;
+        }
+        case GL_ATOMIC_COUNTER_BUFFER_START:
+        case GL_ATOMIC_COUNTER_BUFFER_SIZE:
+        case GL_SHADER_STORAGE_BUFFER_START:
+        case GL_SHADER_STORAGE_BUFFER_SIZE:
+        {
+            *type      = GL_INT_64_ANGLEX;
+            *numParams = 1;
+            return true;
+        }
+    }
+
+    return false;
+}
+
 void QueryProgramPipelineiv(const Context *context,
                             ProgramPipeline *programPipeline,
                             GLenum pname,
