@@ -450,19 +450,28 @@ TEST_P(TextureMultisampleTest, GetTexLevelParameter)
     ASSERT_GL_NO_ERROR();
 }
 
-// The value of sample position should be equal to standard pattern on D3D.
+// The value of sample position should be equal to standard pattern on non-OpenGL backends.
 TEST_P(TextureMultisampleTest, CheckSamplePositions)
 {
-    ANGLE_SKIP_TEST_IF(!IsD3D11());
+    ANGLE_SKIP_TEST_IF(lessThanES31MultisampleExtNotSupported());
 
-    GLsizei maxSamples = 0;
-    glGetIntegerv(GL_MAX_SAMPLES, &maxSamples);
+    // OpenGL does not guarantee sample positions.
+    ANGLE_SKIP_TEST_IF(IsOpenGL());
+
+    GLint numSampleCounts = 0;
+    glGetInternalformativ(GL_TEXTURE_2D_MULTISAMPLE, GL_RGBA8, GL_NUM_SAMPLE_COUNTS, 1,
+                          &numSampleCounts);
+    ASSERT_GT(numSampleCounts, 0);
+
+    std::vector<GLint> sampleCounts(numSampleCounts);
+    glGetInternalformativ(GL_TEXTURE_2D_MULTISAMPLE, GL_RGBA8, GL_SAMPLES, numSampleCounts,
+                          sampleCounts.data());
 
     GLfloat samplePosition[2];
 
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mFramebuffer);
 
-    for (int sampleCount = 1; sampleCount <= maxSamples; sampleCount++)
+    for (const GLint sampleCount : sampleCounts)
     {
         GLTexture texture;
         size_t indexKey = static_cast<size_t>(ceil(log2(sampleCount)));
