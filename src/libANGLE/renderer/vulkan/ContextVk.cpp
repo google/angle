@@ -1549,13 +1549,22 @@ angle::Result ContextVk::flush(const gl::Context *context)
         return mCurrentWindowSurface->onSharedPresentContextFlush(context);
     }
 
-    return flushImpl(nullptr, nullptr, RenderPassClosureReason::GLFlush);
+    ANGLE_TRY(flushImpl(nullptr, nullptr, RenderPassClosureReason::GLFlush));
+
+    if (!mCurrentWindowSurface || isSingleBufferedWindow)
+    {
+        ANGLE_TRY(onFramebufferBoundary(context));
+    }
+
+    return angle::Result::Continue;
 }
 
 angle::Result ContextVk::finish(const gl::Context *context)
 {
+    const bool singleBufferedFlush = isSingleBufferedWindowCurrent() && hasSomethingToFlush();
+
     if (mRenderer->getFeatures().swapbuffersOnFlushOrFinishWithSingleBuffer.enabled &&
-        isSingleBufferedWindowCurrent() && hasSomethingToFlush())
+        singleBufferedFlush)
     {
         ANGLE_TRY(mCurrentWindowSurface->onSharedPresentContextFlush(context));
         // While call above performs implicit flush, don't skip |finishImpl| below, since we still
@@ -1565,7 +1574,19 @@ angle::Result ContextVk::finish(const gl::Context *context)
     ANGLE_TRY(finishImpl(RenderPassClosureReason::GLFinish));
 
     syncObjectPerfCounters(mRenderer->getCommandQueuePerfCounters());
+
+    if (!mCurrentWindowSurface || singleBufferedFlush)
+    {
+        ANGLE_TRY(onFramebufferBoundary(context));
+    }
+
     return angle::Result::Continue;
+}
+
+angle::Result ContextVk::onFramebufferBoundary(const gl::Context *contextGL)
+{
+    mShareGroupVk->onFramebufferBoundary();
+    return mRenderer->syncPipelineCacheVk(this, mRenderer->getGlobalOps(), contextGL);
 }
 
 angle::Result ContextVk::setupDraw(const gl::Context *context,
@@ -7833,21 +7854,6 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore,
         EventName eventName = GetTraceEventName("Primary", ++mPrimaryBufferEventCounter);
         ANGLE_TRY(traceGpuEvent(&mOutsideRenderPassCommands->getCommandBuffer(),
                                 TRACE_EVENT_PHASE_BEGIN, eventName));
-    }
-
-    // Try to detect frame boundary for both on screen and offscreen usage by detecting
-    // fush/finish/swap.
-    bool frameBoundary = renderPassClosureReason == RenderPassClosureReason::GLFlush ||
-                         renderPassClosureReason == RenderPassClosureReason::GLFinish ||
-                         renderPassClosureReason == RenderPassClosureReason::EGLSwapBuffers;
-    if (frameBoundary)
-    {
-        if (mShareGroupVk->isDueForBufferPoolPrune())
-        {
-            mShareGroupVk->pruneDefaultBufferPools();
-        }
-        // Always clean up grabage and destroy the excessive free list at frame boundary.
-        mShareGroupVk->cleanupRefCountedEventGarbage();
     }
 
     // Since we just flushed, deferred flush is no longer deferred.

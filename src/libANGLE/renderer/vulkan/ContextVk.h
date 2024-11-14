@@ -901,6 +901,10 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     bool hasExcessPendingGarbage() const;
 
+    angle::Result onFramebufferBoundary(const gl::Context *contextGL);
+
+    uint32_t getCurrentFrameCount() const { return mShareGroupVk->getCurrentFrameCount(); }
+
   private:
     // Dirty bits.
     enum DirtyBitType : size_t

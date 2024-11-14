@@ -2595,10 +2595,7 @@ angle::Result WindowSurfaceVk::swapImpl(const gl::Context *context,
         ANGLE_TRY(doDeferredAcquireNextImage(context, presentOutOfDate));
     }
 
-    vk::Renderer *renderer = contextVk->getRenderer();
-    ANGLE_TRY(renderer->syncPipelineCacheVk(contextVk, renderer->getGlobalOps(), context));
-
-    return angle::Result::Continue;
+    return contextVk->onFramebufferBoundary(context);
 }
 
 angle::Result WindowSurfaceVk::onSharedPresentContextFlush(const gl::Context *context)

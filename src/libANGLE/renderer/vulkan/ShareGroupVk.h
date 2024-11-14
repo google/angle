@@ -63,8 +63,6 @@ class ShareGroupVk : public ShareGroupImpl
     vk::BufferPool *getDefaultBufferPool(VkDeviceSize size,
                                          uint32_t memoryTypeIndex,
                                          BufferUsageType usageType);
-    void pruneDefaultBufferPools();
-    bool isDueForBufferPoolPrune();
 
     void calculateTotalBufferCount(size_t *bufferCount, VkDeviceSize *totalSize) const;
     void logBufferPools() const;
@@ -110,10 +108,19 @@ class ShareGroupVk : public ShareGroupImpl
         }
     }
 
+    void onFramebufferBoundary();
+    uint32_t getCurrentFrameCount() const { return mCurrentFrameCount; }
+
   private:
     angle::Result updateContextsPriority(ContextVk *contextVk, egl::ContextPriority newPriority);
 
+    void pruneDefaultBufferPools();
+    bool isDueForBufferPoolPrune();
+
     vk::Renderer *mRenderer;
+
+    // Tracks the total number of frames rendered.
+    uint32_t mCurrentFrameCount;
 
     // VkFramebuffer caches
     FramebufferCache mFramebufferCache;

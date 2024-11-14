@@ -63,6 +63,7 @@ bool ValidateIdenticalPriority(const egl::ContextMap &contexts, egl::ContextPrio
 ShareGroupVk::ShareGroupVk(const egl::ShareGroupState &state, vk::Renderer *renderer)
     : ShareGroupImpl(state),
       mRenderer(renderer),
+      mCurrentFrameCount(0),
       mContextsPriority(egl::ContextPriority::InvalidEnum),
       mIsContextsPriorityLocked(false),
       mLastMonolithicPipelineJobTime(0)
@@ -284,6 +285,19 @@ void TextureUpload::onTextureRelease(TextureVk *textureVk)
     {
         resetPrevTexture();
     }
+}
+
+void ShareGroupVk::onFramebufferBoundary()
+{
+    if (isDueForBufferPoolPrune())
+    {
+        pruneDefaultBufferPools();
+    }
+
+    // Always clean up event garbage and destroy the excessive free list at frame boundary.
+    cleanupRefCountedEventGarbage();
+
+    mCurrentFrameCount++;
 }
 
 vk::BufferPool *ShareGroupVk::getDefaultBufferPool(VkDeviceSize size,
