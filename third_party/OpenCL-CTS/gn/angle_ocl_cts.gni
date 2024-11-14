@@ -4,7 +4,7 @@
 
 import("//gni/angle.gni")
 
-template("ocl_cts_binary") {
+template("ocl_cts_source_set") {
   angle_source_set(target_name) {
     cflags = [
       "-Wno-deprecated-declarations",
