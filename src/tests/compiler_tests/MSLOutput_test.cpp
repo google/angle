@@ -1032,3 +1032,9 @@ TEST_F(MSLVertexOutputTest, ClipCullDistanceNoCrash)
 void main() { gl_Position = vec4(0.0, 0.0, 0.0, 1.0); gl_ClipDistance[1] = 1.0;})";
     compile(kShader);
 }
+
+TEST_F(MSLOutputTest, UnnamedOutParameterNoCrash)
+{
+    const char kShader[] = R"(void f(out int){}void main(){int a;f(a);})";
+    compile(kShader);
+}

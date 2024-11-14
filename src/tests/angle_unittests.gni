@@ -117,6 +117,7 @@ angle_unittests_compiler_tests_sources = [
   "compiler_tests/GlFragDataNotModified_test.cpp",
   "compiler_tests/ImmutableString_test.cpp",
   "compiler_tests/InitOutputVariables_test.cpp",
+  "compiler_tests/InitializeUninitializedLocals_test.cpp",
   "compiler_tests/IntermNode_test.cpp",
   "compiler_tests/KHR_blend_equation_advanced_test.cpp",
   "compiler_tests/NV_draw_buffers_test.cpp",

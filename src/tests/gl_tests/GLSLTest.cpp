@@ -6670,7 +6670,7 @@ struct S { float a; };
 
 out vec4 color;
 
-float f(out vec2 o1, out S o2[2], out float o3[3])
+float f(out float, out vec2 o1, out S o2[2], out float o3[3])
 {
     float uninitialized_local;
 
@@ -6686,14 +6686,15 @@ float f(out vec2 o1, out S o2[2], out float o3[3])
 
 void main()
 {
+    float v0 = 345.;
     vec2 v1 = vec2(123., 234.);
     S v2[2] = S[2](S(-1111.), S(55.));
     float v3[3] = float[3](20., 30., 40.);
-    float v4 = f(v1, v2, v3);
+    float v4 = f(v0, v1, v2, v3);
 
     // Everything should be 0 now except for v2[0].a and v3[1] which should be 1.0 and 0.5
     // respectively.
-    color = vec4(v1.x + v2[0].a + v3[0],  // 1.0
+    color = vec4(v0 + v1.x + v2[0].a + v3[0],  // 1.0
                  v1.y + v2[1].a + v3[1],  // 0.5
                  v3[2] + v4,              // 0
                  1.0);
