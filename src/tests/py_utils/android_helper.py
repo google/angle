@@ -10,6 +10,7 @@ import json
 import logging
 import os
 import pathlib
+import platform
 import posixpath
 import random
 import re
@@ -19,6 +20,7 @@ import tarfile
 import tempfile
 import threading
 import time
+import zipfile
 
 import angle_path_util
 
@@ -45,18 +47,6 @@ class _Global(object):
 
 def _ApkPath(suite_name):
     return os.path.join('%s_apk' % suite_name, '%s-debug.apk' % suite_name)
-
-
-@functools.lru_cache()
-def _FindAapt():
-    build_tools = (
-        pathlib.Path(angle_path_util.ANGLE_ROOT_DIR) / 'third_party' / 'android_sdk' / 'public' /
-        'build-tools')
-    latest_build_tools = sorted(build_tools.iterdir())[-1]
-    aapt = str(latest_build_tools / 'aapt')
-    aapt_info = subprocess.check_output([aapt, 'version']).decode()
-    logging.info('aapt version: %s', aapt_info.strip())
-    return aapt
 
 
 def _RemovePrefix(str, prefix):
@@ -99,8 +89,9 @@ def _InitializeAndroid(apk_path):
     logging.debug('Temp dir: %s', _Global.temp_dir)
     logging.debug('External storage: %s', _Global.external_storage)
 
-    apk_files = subprocess.check_output([_FindAapt(), 'list', apk_path]).decode().split()
-    apk_so_libs = [posixpath.basename(f) for f in apk_files if f.endswith('.so')]
+    with zipfile.ZipFile(apk_path) as zf:
+        apk_so_libs = [posixpath.basename(f) for f in zf.namelist() if f.endswith('.so')]
+
     # When traces are outside of the apk this lib is also outside
     interpreter_so_lib = 'libangle_trace_interpreter.so'
     _Global.traces_outside_of_apk = interpreter_so_lib not in apk_so_libs
@@ -148,10 +139,14 @@ def _Run(cmd):
 
 @functools.lru_cache()
 def FindAdb():
-    platform_tools = (
-        pathlib.Path(angle_path_util.ANGLE_ROOT_DIR) / 'third_party' / 'android_sdk' / 'public' /
-        'platform-tools')
-    adb = str(platform_tools / 'adb') if platform_tools.exists() else 'adb'
+    if platform.system() == 'Windows':
+        adb = 'adb.exe'  # from PATH
+    else:
+        platform_tools = (
+            pathlib.Path(angle_path_util.ANGLE_ROOT_DIR) / 'third_party' / 'android_sdk' /
+            'public' / 'platform-tools')
+        adb = str(platform_tools / 'adb') if platform_tools.exists() else 'adb'
+
     adb_info = ', '.join(subprocess.check_output([adb, '--version']).decode().strip().split('\n'))
     logging.info('adb --version: %s', adb_info)
     return adb
@@ -162,7 +157,10 @@ def _AdbRun(args):
 
 
 def _AdbShell(cmd):
-    return _Run([FindAdb(), 'shell', cmd])
+    output = _Run([FindAdb(), 'shell', cmd])
+    if platform.system() == 'Windows':
+        return output.replace(b'\r\n', b'\n')
+    return output
 
 
 def _GetAdbRoot(shell_id, su_path):
