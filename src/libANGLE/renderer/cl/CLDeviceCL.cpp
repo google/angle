@@ -115,13 +115,6 @@ CLDeviceImpl::Info CLDeviceCL::createInfo(cl::DeviceType type) const
         extensionStr.append(" cl_khr_depth_images cl_khr_image2d_from_buffer");
     }
 
-    // Limit version number to supported version
-    if (info.versionStr[7] != '1')
-    {
-        info.versionStr[7] = '1';
-        info.versionStr[9] = '2';
-    }
-
     info.version = ExtractCLVersion(info.versionStr);
     if (info.version == 0u)
     {

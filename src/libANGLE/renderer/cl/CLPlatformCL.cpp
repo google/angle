@@ -149,13 +149,6 @@ CLPlatformImpl::Info CLPlatformCL::createInfo() const
         extensionStr.append(" cl_khr_depth_images cl_khr_image2d_from_buffer");
     }
 
-    // Limit version number to supported version
-    if (info.versionStr[7] != '1')
-    {
-        info.versionStr[7] = '1';
-        info.versionStr[9] = '2';
-    }
-
     const cl_version version = ExtractCLVersion(info.versionStr);
     if (version == 0u)
     {
