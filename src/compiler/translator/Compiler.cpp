@@ -50,7 +50,6 @@
 #include "compiler/translator/tree_ops/RescopeGlobalVariables.h"
 #include "compiler/translator/tree_ops/RewritePixelLocalStorage.h"
 #include "compiler/translator/tree_ops/SeparateDeclarations.h"
-#include "compiler/translator/tree_ops/SeparateStructFromFunctionDeclarations.h"
 #include "compiler/translator/tree_ops/SimplifyLoopConditions.h"
 #include "compiler/translator/tree_ops/SplitSequenceOperator.h"
 #include "compiler/translator/tree_ops/glsl/RegenerateStructNames.h"
@@ -878,11 +877,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         !DeferGlobalInitializers(this, root, initializeLocalsAndGlobals, canUseLoopsToInitialize,
                                  highPrecisionSupported, forceDeferNonConstGlobalInitializers,
                                  &mSymbolTable))
-    {
-        return false;
-    }
-
-    if (!SeparateStructFromFunctionDeclarations(*this, *root))
     {
         return false;
     }
