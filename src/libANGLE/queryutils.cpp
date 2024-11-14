@@ -3723,7 +3723,6 @@ bool GetQueryParameterInfo(const State &glState,
             *numParams = 1;
             return true;
         case GL_MAX_SAMPLES:
-        {
             static_assert(GL_MAX_SAMPLES_ANGLE == GL_MAX_SAMPLES,
                           "GL_MAX_SAMPLES_ANGLE not equal to GL_MAX_SAMPLES");
             if ((clientMajorVersion < 3) && !(extensions.framebufferMultisampleANGLE ||
@@ -3734,16 +3733,14 @@ bool GetQueryParameterInfo(const State &glState,
             *type      = GL_INT;
             *numParams = 1;
             return true;
-
-            case GL_FRAGMENT_SHADER_DERIVATIVE_HINT:
-                if ((clientMajorVersion < 3) && !extensions.standardDerivativesOES)
-                {
-                    return false;
-                }
-                *type      = GL_INT;
-                *numParams = 1;
-                return true;
-        }
+        case GL_FRAGMENT_SHADER_DERIVATIVE_HINT:
+            if ((clientMajorVersion < 3) && !extensions.standardDerivativesOES)
+            {
+                return false;
+            }
+            *type      = GL_INT;
+            *numParams = 1;
+            return true;
         case GL_TEXTURE_BINDING_3D:
             if ((clientMajorVersion < 3) && !extensions.texture3DOES)
             {
