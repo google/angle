@@ -5705,6 +5705,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     //
     // Use of dynamic rendering is disabled on older ARM drivers due to driver bugs
     // (http://issuetracker.google.com/356051947).
+    //
+    // Use of dynamic rendering on PowerVR devices is disabled for performance reasons
+    // (http://issuetracker.google.com/372273294).
     const bool hasLegacyDitheringV1 =
         mFeatures.supportsLegacyDithering.enabled &&
         (mLegacyDitheringVersion < 2 || !mFeatures.supportsMaintenance5.enabled);
@@ -5715,7 +5718,8 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
                             mFeatures.supportsDynamicRendering.enabled &&
                                 mFeatures.supportsDynamicRenderingLocalRead.enabled &&
                                 !hasLegacyDitheringV1 && !emulatesMultisampledRenderToTexture &&
-                                !(isARM && armDriverVersion < ARMDriverVersion(52, 0, 0)));
+                                !(isARM && armDriverVersion < ARMDriverVersion(52, 0, 0)) &&
+                                !isPowerVR);
 
     // On tile-based renderers, breaking the render pass is costly.  Changing into and out of
     // framebuffer fetch causes the render pass to break so that the layout of the color attachments
