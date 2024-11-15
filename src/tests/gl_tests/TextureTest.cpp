@@ -6560,6 +6560,38 @@ TEST_P(Texture2DTestES3, DrawWithLevelsOutsideRangeWithInconsistentDimensions)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
 }
 
+// Depth/Stencil textures cannot be 3D.
+TEST_P(Texture3DTestES3, DepthStencil3DDisallowed)
+{
+    const std::array<std::tuple<GLenum, GLenum, GLenum>, 6> testConfigs = {
+        std::make_tuple(GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT),
+        std::make_tuple(GL_DEPTH_COMPONENT24, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT),
+        std::make_tuple(GL_DEPTH_COMPONENT32F, GL_DEPTH_COMPONENT, GL_FLOAT),
+        std::make_tuple(GL_DEPTH32F_STENCIL8, GL_DEPTH_STENCIL, GL_FLOAT_32_UNSIGNED_INT_24_8_REV),
+        std::make_tuple(GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8),
+        std::make_tuple(GL_STENCIL_INDEX8, GL_STENCIL_INDEX, GL_UNSIGNED_BYTE)};
+
+    for (auto testConfig : testConfigs)
+    {
+        const GLenum internalformat = std::get<0>(testConfig);
+        const GLenum format         = std::get<1>(testConfig);
+        const GLenum type           = std::get<2>(testConfig);
+
+        if (internalformat == GL_STENCIL_INDEX8 && !IsGLExtensionEnabled("GL_OES_texture_stencil8"))
+        {
+            continue;
+        }
+
+        GLTexture depthTexture;
+        glBindTexture(GL_TEXTURE_3D, depthTexture);
+        glTexImage3D(GL_TEXTURE_3D, 0, internalformat, 16, 16, 16, 0, format, type, nullptr);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+        glTexStorage3D(GL_TEXTURE_3D, 2, internalformat, 16, 16, 16);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    }
+}
+
 // Test that drawing works correctly when levels outside the BASE_LEVEL/MAX_LEVEL range do not
 // have images defined.
 TEST_P(Texture3DTestES3, DrawWithLevelsOutsideRangeUndefined)

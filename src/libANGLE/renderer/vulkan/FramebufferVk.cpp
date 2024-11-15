@@ -3821,12 +3821,8 @@ angle::Result FramebufferVk::flushDepthStencilDeferredClear(ContextVk *contextVk
     RenderTargetVk *renderTarget = getDepthStencilRenderTarget();
     vk::ImageHelper &image       = renderTarget->getImageForCopy();
 
-    // If the image is a 3D depth/stencil texture, it can't be cleared with
-    // vkCmdClearDepthStencilImage, fall back to clearing with the render pass.
-    if (renderTarget->is3DImage())
-    {
-        return flushDeferredClears(contextVk);
-    }
+    // Depth/stencil attachments cannot be 3D.
+    ASSERT(!renderTarget->is3DImage());
 
     vk::CommandBufferAccess access;
     access.onImageTransferWrite(renderTarget->getLevelIndex(), 1, renderTarget->getLayerIndex(), 1,

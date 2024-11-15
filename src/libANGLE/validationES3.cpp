@@ -337,7 +337,10 @@ bool ValidateTexImageFormatCombination(const Context *context,
     // texture image specification commands only if target is TEXTURE_2D, TEXTURE_2D_ARRAY, or
     // TEXTURE_CUBE_MAP.Using these formats in conjunction with any other target will result in an
     // INVALID_OPERATION error.
-    if (target == TextureType::_3D && (format == GL_DEPTH_COMPONENT || format == GL_DEPTH_STENCIL))
+    //
+    // Similar language exists in OES_texture_stencil8.
+    if (target == TextureType::_3D &&
+        (format == GL_DEPTH_COMPONENT || format == GL_DEPTH_STENCIL || format == GL_STENCIL_INDEX))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, k3DDepthStencil);
         return false;
@@ -1523,6 +1526,19 @@ bool ValidateES3TexStorageParametersFormat(const Context *context,
             ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidCompressedImageSize);
             return false;
         }
+    }
+
+    // From the ES 3.0 spec section 3.8.3:
+    // Textures with a base internal format of DEPTH_COMPONENT or DEPTH_STENCIL are supported by
+    // texture image specification commands only if target is TEXTURE_2D, TEXTURE_2D_ARRAY, or
+    // TEXTURE_CUBE_MAP.Using these formats in conjunction with any other target will result in an
+    // INVALID_OPERATION error.
+    //
+    // Similar language exists in OES_texture_stencil8.
+    if (target == TextureType::_3D && formatInfo.isDepthOrStencil())
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, k3DDepthStencil);
+        return false;
     }
 
     return true;
