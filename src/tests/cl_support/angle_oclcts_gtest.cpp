@@ -336,7 +336,6 @@ int main(int argc, char **argv)
     // TODO: Fix TestSuite so that it "consumes" the args that it picks up, leaving any that is not
     // recognized.  The left over should then be passed to `ANGLE_oclcts_main` in `TestBody`.
     // http://anglebug.com/372722560
-    angle::TestSuite testSuite(&argc, argv);
-    RegisterCLCTSTests();
-    testSuite.run();
+    angle::TestSuite testSuite(&argc, argv, RegisterCLCTSTests);
+    return testSuite.run();
 }

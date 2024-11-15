@@ -14,7 +14,6 @@ basic.vload_private
 basic.explicit_s2v
 basic.host_numeric_constants
 basic.kernel_limit_constants
-basic.vector_creation
 basic.vec_type_hint
 basic.local_linear_id
 api.get_platform_info

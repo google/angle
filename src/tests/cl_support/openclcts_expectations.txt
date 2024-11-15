@@ -3,3 +3,5 @@
 // found in the LICENSE file.
 
 // See README.md for format.
+
+380411632 VULKAN : api.binary_create = SKIP

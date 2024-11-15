@@ -404,7 +404,12 @@ if (angle_enable_cl_testing) {
         "$angle_root/src/tests/cl_support/openclcts_mustpass.txt",
       ]
 
-      data_deps += [ ":opencl_icd" ]
+      data_deps += [
+        ":opencl_icd",
+        "$angle_root:libEGL",
+        "$angle_root:libGLESv2",
+        "$angle_root/src/libOpenCL:angle_cl",
+      ]
     }
   }
 

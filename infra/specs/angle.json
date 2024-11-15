@@ -3401,6 +3401,132 @@
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
         },
+        "name": "angle_oclcts_api",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "gpu": "10de:2184-535.183.01",
+            "os": "Ubuntu-22.04",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_oclcts_api",
+        "test_id_prefix": "ninja://src/tests:angle_oclcts_api/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "--no-xvfb"
+        ],
+        "merge": {
+          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "name": "angle_oclcts_basic",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "gpu": "10de:2184-535.183.01",
+            "os": "Ubuntu-22.04",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_oclcts_basic",
+        "test_id_prefix": "ninja://src/tests:angle_oclcts_basic/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "--no-xvfb"
+        ],
+        "merge": {
+          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "name": "angle_oclcts_buffers",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "gpu": "10de:2184-535.183.01",
+            "os": "Ubuntu-22.04",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_oclcts_buffers",
+        "test_id_prefix": "ninja://src/tests:angle_oclcts_buffers/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "--no-xvfb"
+        ],
+        "merge": {
+          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "name": "angle_oclcts_compiler",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "gpu": "10de:2184-535.183.01",
+            "os": "Ubuntu-22.04",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_oclcts_compiler",
+        "test_id_prefix": "ninja://src/tests:angle_oclcts_compiler/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "--no-xvfb"
+        ],
+        "merge": {
+          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "name": "angle_oclcts_events",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "gpu": "10de:2184-535.183.01",
+            "os": "Ubuntu-22.04",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_oclcts_events",
+        "test_id_prefix": "ninja://src/tests:angle_oclcts_events/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "--no-xvfb"
+        ],
+        "merge": {
+          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "name": "angle_oclcts_profiling",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "gpu": "10de:2184-535.183.01",
+            "os": "Ubuntu-22.04",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_oclcts_profiling",
+        "test_id_prefix": "ninja://src/tests:angle_oclcts_profiling/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "--no-xvfb"
+        ],
+        "merge": {
+          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
         "name": "angle_unittests",
         "swarming": {
           "containment_type": "AUTO",
@@ -4579,6 +4705,132 @@
         },
         "test": "angle_gles1_conformance_tests",
         "test_id_prefix": "ninja://src/tests:angle_gles1_conformance_tests/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "--no-xvfb"
+        ],
+        "merge": {
+          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "name": "angle_oclcts_api",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "gpu": "10de:2184-440.100",
+            "os": "Ubuntu-18.04.5|Ubuntu-18.04.6",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_oclcts_api",
+        "test_id_prefix": "ninja://src/tests:angle_oclcts_api/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "--no-xvfb"
+        ],
+        "merge": {
+          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "name": "angle_oclcts_basic",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "gpu": "10de:2184-440.100",
+            "os": "Ubuntu-18.04.5|Ubuntu-18.04.6",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_oclcts_basic",
+        "test_id_prefix": "ninja://src/tests:angle_oclcts_basic/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "--no-xvfb"
+        ],
+        "merge": {
+          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "name": "angle_oclcts_buffers",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "gpu": "10de:2184-440.100",
+            "os": "Ubuntu-18.04.5|Ubuntu-18.04.6",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_oclcts_buffers",
+        "test_id_prefix": "ninja://src/tests:angle_oclcts_buffers/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "--no-xvfb"
+        ],
+        "merge": {
+          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "name": "angle_oclcts_compiler",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "gpu": "10de:2184-440.100",
+            "os": "Ubuntu-18.04.5|Ubuntu-18.04.6",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_oclcts_compiler",
+        "test_id_prefix": "ninja://src/tests:angle_oclcts_compiler/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "--no-xvfb"
+        ],
+        "merge": {
+          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "name": "angle_oclcts_events",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "gpu": "10de:2184-440.100",
+            "os": "Ubuntu-18.04.5|Ubuntu-18.04.6",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_oclcts_events",
+        "test_id_prefix": "ninja://src/tests:angle_oclcts_events/",
+        "use_isolated_scripts_api": true
+      },
+      {
+        "args": [
+          "--no-xvfb"
+        ],
+        "merge": {
+          "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
+        },
+        "name": "angle_oclcts_profiling",
+        "swarming": {
+          "containment_type": "AUTO",
+          "dimensions": {
+            "gpu": "10de:2184-440.100",
+            "os": "Ubuntu-18.04.5|Ubuntu-18.04.6",
+            "pool": "chromium.tests.gpu"
+          },
+          "service_account": "chromium-tester@chops-service-accounts.iam.gserviceaccount.com"
+        },
+        "test": "angle_oclcts_profiling",
+        "test_id_prefix": "ninja://src/tests:angle_oclcts_profiling/",
         "use_isolated_scripts_api": true
       },
       {

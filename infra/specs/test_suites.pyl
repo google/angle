@@ -20,6 +20,60 @@
       },
     },
 
+    'angle_cl_api_gtests': {
+      'angle_oclcts_api': {
+        'linux_args': [
+          '--no-xvfb',
+        ],
+        'use_isolated_scripts_api': True,
+      },
+    },
+
+    'angle_cl_basic_gtests': {
+      'angle_oclcts_basic': {
+        'linux_args': [
+          '--no-xvfb',
+        ],
+        'use_isolated_scripts_api': True,
+      },
+    },
+
+    'angle_cl_buffers_gtests': {
+      'angle_oclcts_buffers': {
+        'linux_args': [
+          '--no-xvfb',
+        ],
+        'use_isolated_scripts_api': True,
+      },
+    },
+
+    'angle_cl_compiler_gtests': {
+      'angle_oclcts_compiler': {
+        'linux_args': [
+          '--no-xvfb',
+        ],
+        'use_isolated_scripts_api': True,
+      },
+    },
+
+    'angle_cl_events_gtests': {
+      'angle_oclcts_events': {
+        'linux_args': [
+          '--no-xvfb',
+        ],
+        'use_isolated_scripts_api': True,
+      },
+    },
+
+    'angle_cl_profiling_gtests': {
+      'angle_oclcts_profiling': {
+        'linux_args': [
+          '--no-xvfb',
+        ],
+        'use_isolated_scripts_api': True,
+      },
+    },
+
     'angle_deqp_egl_d3d11_gtests': {
       'angle_deqp_egl_d3d11_tests': {
         'args': [
@@ -1521,6 +1575,12 @@
       'angle_gles1_conformance_gtests',
       'angle_unit_gtests',
       'angle_white_box_gtests',
+      'angle_cl_api_gtests',
+      'angle_cl_basic_gtests',
+      'angle_cl_buffers_gtests',
+      'angle_cl_compiler_gtests',
+      'angle_cl_events_gtests',
+      'angle_cl_profiling_gtests',
     ],
 
     'mac_amd_and_intel_gtests': [
