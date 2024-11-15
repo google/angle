@@ -125,7 +125,8 @@ class FramebufferVk : public FramebufferImpl
     bool hasDeferredClears() const { return !mDeferredClears.empty(); }
     bool hasDeferredDepthClear() const { return mDeferredClears.testDepth(); }
     bool hasDeferredStencilClear() const { return mDeferredClears.testStencil(); }
-    angle::Result flushDeferredClears(ContextVk *contextVk);
+    angle::Result flushDepthStencilDeferredClear(ContextVk *contextVk,
+                                                 VkImageAspectFlagBits aspect);
 
     void switchToColorFramebufferFetchMode(ContextVk *contextVk, bool hasColorFramebufferFetch);
 
@@ -242,6 +243,7 @@ class FramebufferVk : public FramebufferImpl
     void restageDeferredClears(ContextVk *contextVk);
     void restageDeferredClearsForReadFramebuffer(ContextVk *contextVk);
     void restageDeferredClearsImpl(ContextVk *contextVk);
+    angle::Result flushDeferredClears(ContextVk *contextVk);
     void clearWithCommand(ContextVk *contextVk,
                           const gl::Rectangle &scissoredRenderArea,
                           ClearWithCommand behavior,

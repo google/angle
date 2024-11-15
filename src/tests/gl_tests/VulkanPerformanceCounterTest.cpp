@@ -2180,6 +2180,69 @@ TEST_P(VulkanPerformanceCounterTest,
     EXPECT_DEPTH_OP_COUNTERS(getPerfCounters(), expected);
 }
 
+// Make sure depth/stencil clears followed by a switch to read-only mode still lets the color clears
+// use loadOp=CLEAR optimally.
+TEST_P(VulkanPerformanceCounterTest, SwitchToReadOnlyDepthStencilLeavesOtherAspectsOptimal)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
+
+    constexpr GLsizei kSize = 4;
+
+    ANGLE_GL_PROGRAM(texProgram, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+
+    setupQuadVertexBuffer(0.5f, 1.0f);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(0);
+
+    // Set up a framebuffer.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    GLTexture depthTexture;
+    glBindTexture(GL_TEXTURE_2D, depthTexture);
+    glTexStorage2D(GL_TEXTURE_2D, 2, GL_DEPTH24_STENCIL8, kSize * 2, kSize * 2);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depthTexture,
+                           1);
+
+    GLTexture colorTexture;
+    glBindTexture(GL_TEXTURE_2D, colorTexture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kSize, kSize);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    // Expect rpCount+1, color(Clears+1, Loads+0, LoadNones+0, Stores+1, StoreNones+0)
+    // depth(Clears+0, Loads+1, LoadNones+0, Stores+0, StoreNones+1),
+    // stencil(Clears+1, Loads+0, LoadNones+0, Stores+1, StoreNones+0)
+    angle::VulkanPerfCounters expected;
+    setExpectedCountersForColorOps(getPerfCounters(), 0, 1, 0, 0, 1, 0, &expected);
+    setExpectedCountersForDepthOps(getPerfCounters(), 1, 0, 1, 0, 0, 1, &expected);
+    setExpectedCountersForStencilOps(getPerfCounters(), 1, 0, 0, 1, 0, &expected);
+
+    // Clear all aspects.
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    // Then issue a draw call where the depth aspect is in feedback loop.  Depth should be cleared
+    // before the render pass, but the color and stencil clears should still be optimized as loadOp.
+    glDepthMask(GL_FALSE);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+    glBindTexture(GL_TEXTURE_2D, depthTexture);
+    glUseProgram(texProgram);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+
+    glFinish();
+
+    EXPECT_EQ(expected.renderPasses, getPerfCounters().renderPasses);
+    EXPECT_COLOR_OP_COUNTERS(getPerfCounters(), expected);
+    EXPECT_DEPTH_OP_COUNTERS(getPerfCounters(), expected);
+    EXPECT_STENCIL_OP_COUNTERS(getPerfCounters(), expected);
+}
+
 // Ensures an actual depth feedback loop (i.e, render and sample from same texture which is
 // undefined behavior according to spec) works in a single RenderPass. This is adoptted from usage
 // pattern from gangstar_vegas.

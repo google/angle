@@ -8732,12 +8732,14 @@ angle::Result ContextVk::switchToReadOnlyDepthStencilMode(gl::Texture *texture,
     }
 
     // If the aspect that's switching to read-only has a pending clear, it can't be done in the same
-    // render pass (as the clear is a write operation).  In that case, flush the deferred clears in
-    // a separate (empty) render pass first.
+    // render pass (as the clear is a write operation).  In that case, flush the deferred clears for
+    // the aspect that is turning read-only first.  The other deferred clears (such as color) can
+    // stay deferred.
     if ((!isStencilTexture && drawFramebuffer->hasDeferredDepthClear()) ||
         (isStencilTexture && drawFramebuffer->hasDeferredStencilClear()))
     {
-        ANGLE_TRY(drawFramebuffer->flushDeferredClears(this));
+        ANGLE_TRY(drawFramebuffer->flushDepthStencilDeferredClear(
+            this, isStencilTexture ? VK_IMAGE_ASPECT_STENCIL_BIT : VK_IMAGE_ASPECT_DEPTH_BIT));
     }
 
     // If the render pass needs closing, mark it as such.  Note that a write to depth/stencil may be
