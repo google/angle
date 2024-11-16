@@ -1255,6 +1255,9 @@ b/267953710 GALAXYS22 VULKAN : VulkanPerformanceCounterTest.PipelineCacheIsWarme
 b/267953710 GALAXYS22 VULKAN : VulkanPerformanceCounterTest_ES31.ColorMaskedFramebufferFetchDrawThenClear/* = SKIP
 372059358 GALAXYS22 VULKAN : MultisampleTestES3.CopyTexImage2DFromMsaaDefaultFbo/* = SKIP
 40644776 GALAXYS22 VULKAN : ImageTestES3.SourceAHBTarget2DGenerateMipmap* = SKIP
+377923479 GALAXYS22 VULKAN : FramebufferFetchES31.DrawNonFetchDrawFetchInStorageBufferThenClear_ARM/* = SKIP
+377923479 GALAXYS22 VULKAN : FramebufferFetchES31.DrawNonFetchDrawFetchInStorageBufferThenClear_Coherent/* = SKIP
+377923479 GALAXYS22 VULKAN : FramebufferFetchES31.MultiSampled/* = SKIP
 
 // Samsung Galaxy Qualcomm crashes and failures (perhaps with other non-Pixel Qualcomm as well):
 42266622 GALAXYQUALCOMM VULKAN : BlitFramebufferTest.BlitStencilScissoredScaled/* = SKIP
