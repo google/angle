@@ -994,6 +994,10 @@ deqp_khr_common_sources = [
   "$deqp_path/external/openglcts/modules/common/glcTextureLodBiasTests.hpp",
   "$deqp_path/external/openglcts/modules/common/glcTextureRepeatModeTests.cpp",
   "$deqp_path/external/openglcts/modules/common/glcTextureRepeatModeTests.hpp",
+  "$deqp_path/external/openglcts/modules/common/glcTextureStencil8Tests.cpp",
+  "$deqp_path/external/openglcts/modules/common/glcTextureStencil8Tests.hpp",
+  "$deqp_path/external/openglcts/modules/common/glcTextureStorageTests.cpp",
+  "$deqp_path/external/openglcts/modules/common/glcTextureStorageTests.hpp",
   "$deqp_path/external/openglcts/modules/common/glcTransformFeedbackTests.cpp",
   "$deqp_path/external/openglcts/modules/common/glcTransformFeedbackTests.hpp",
   "$deqp_path/external/openglcts/modules/common/glcUniformBlockCase.cpp",
@@ -1072,6 +1076,8 @@ deqp_khr_test_module_headers = [
 deqp_khr_gl_sources = [
   "$deqp_path/external/openglcts/modules/gl/gl3cCommonBugsTests.cpp",
   "$deqp_path/external/openglcts/modules/gl/gl3cCommonBugsTests.hpp",
+  "$deqp_path/external/openglcts/modules/gl/gl3cDrawBuffers.cpp",
+  "$deqp_path/external/openglcts/modules/gl/gl3cDrawBuffers.hpp",
   "$deqp_path/external/openglcts/modules/gl/gl3cGLSLnoperspectiveTests.cpp",
   "$deqp_path/external/openglcts/modules/gl/gl3cGLSLnoperspectiveTests.hpp",
   "$deqp_path/external/openglcts/modules/gl/gl3cGPUShader5Tests.cpp",
@@ -1502,6 +1508,7 @@ deqp_framework_debase_sources = [
 ]
 
 deqp_framework_delibs_sources = [
+  "$deqp_path/framework/delibs/deimage/deARGB.h",
   "$deqp_path/framework/delibs/deimage/deImage.c",
   "$deqp_path/framework/delibs/deimage/deTarga.c",
   "$deqp_path/framework/delibs/depool/deMemPool.c",
@@ -1515,6 +1522,8 @@ deqp_framework_delibs_sources = [
   "$deqp_path/framework/delibs/depool/dePoolStringBuilder.c",
   "$deqp_path/framework/delibs/depool/dePoolTest.c",
   "$deqp_path/framework/delibs/destream/deFileStream.c",
+  "$deqp_path/framework/delibs/destream/deInStream.h",
+  "$deqp_path/framework/delibs/destream/deOutStream.h",
   "$deqp_path/framework/delibs/destream/deRingbuffer.c",
   "$deqp_path/framework/delibs/destream/deStreamCpyThread.c",
   "$deqp_path/framework/delibs/destream/deThreadStream.c",
