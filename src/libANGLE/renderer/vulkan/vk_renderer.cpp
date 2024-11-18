@@ -5212,8 +5212,15 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
 
     // On ARM hardware, framebuffer-fetch-like behavior on Vulkan is known to be coherent even
     // without the Vulkan extension.
+    //
+    // On IMG hardware, similarly framebuffer-fetch-like behavior on Vulkan is known to be coherent,
+    // but the Vulkan extension cannot be exposed.  This is because the Vulkan extension guarantees
+    // coherence when accessing all samples of a pixel from any other sample, but IMG hardware is
+    // _not_ coherent in that case.  This is not a problem for GLES because the invocation for each
+    // sample can only access values for the same sample by reading "the current color value",
+    // unlike Vulkan-GLSL's |subpassLoad()| which takes a sample index.
     mIsColorFramebufferFetchCoherent =
-        isARM || mFeatures.supportsRasterizationOrderAttachmentAccess.enabled;
+        isARM || isPowerVR || mFeatures.supportsRasterizationOrderAttachmentAccess.enabled;
 
     // Support EGL_KHR_lock_surface3 extension.
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsLockSurfaceExtension, IsAndroid());
