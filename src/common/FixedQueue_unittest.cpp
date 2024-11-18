@@ -160,6 +160,10 @@ TEST(FixedQueue, ConcurrentPushPop)
             {
                 std::this_thread::sleep_for(std::chrono::microseconds(1));
             }
+            if (enqueueThreadFinished)
+            {
+                break;
+            }
 
             EXPECT_EQ(expectedValue, q.front());
             // test pop
@@ -225,8 +229,7 @@ TEST(FixedQueue, ConcurrentPushPopWithResize)
 
             q.push(value);
             value++;
-        } while (difftime(std::time(nullptr), t1) < timeOut && value < kMaxLoop &&
-                 !dequeueThreadFinished);
+        } while (difftime(std::time(nullptr), t1) < timeOut && value < kMaxLoop);
         enqueueThreadFinished = true;
     });
 
@@ -272,8 +275,7 @@ TEST(FixedQueue, ConcurrentPushPopWithResize)
             // test pop
             q.pop();
             expectedValue++;
-        } while (difftime(std::time(nullptr), t1) < timeOut && expectedValue < kMaxLoop &&
-                 !enqueueThreadFinished);
+        } while (difftime(std::time(nullptr), t1) < timeOut && expectedValue < kMaxLoop);
         dequeueThreadFinished = true;
     });
 
