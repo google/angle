@@ -78,6 +78,7 @@ per-file third_party/protobuf=*
 per-file third_party/Python-Markdown=*
 per-file third_party/rapidjson/src=*
 per-file third_party/requests/src=*
+per-file third_party/rust=*
 per-file third_party/six=*
 per-file third_party/spirv-cross/src=*
 per-file third_party/spirv-headers/src=*

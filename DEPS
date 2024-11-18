@@ -956,6 +956,11 @@ deps = {
     'condition': 'checkout_android and not build_with_chromium',
   },
 
+  'third_party/rust': {
+    'url': Var('chromium_git') + '/chromium/src/third_party/rust@4baa094abc8bd42396bd0d39e3388cd56c37d002',
+    'condition': 'not build_with_chromium',
+  },
+
   'third_party/siso/cipd': {
     'packages': [
       {

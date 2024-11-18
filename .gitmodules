@@ -180,6 +180,10 @@
 	path = third_party/requests/src
 	url = https://chromium.googlesource.com/external/github.com/kennethreitz/requests
 	gclient-condition = checkout_android and not build_with_chromium
+[submodule "third_party/rust"]
+	path = third_party/rust
+	url = https://chromium.googlesource.com/chromium/src/third_party/rust
+	gclient-condition = not build_with_chromium
 [submodule "third_party/six"]
 	path = third_party/six
 	url = https://chromium.googlesource.com/chromium/src/third_party/six

@@ -82,6 +82,7 @@ ANGLE_CHROMIUM_DEPS = [
     'third_party/r8/cipd',
     'third_party/r8/d8/cipd',
     'third_party/requests/src',
+    'third_party/rust',
     'third_party/siso/cipd',
     'third_party/six',
     'third_party/turbine/cipd',
