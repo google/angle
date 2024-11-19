@@ -1955,7 +1955,7 @@ Error Display::destroyContext(Thread *thread, gl::Context *context)
 
         // Make the context current, so we can release resources belong to the context, and then
         // when context is released from the current, it will be destroyed.
-        // TODO(http://www.anglebug.com/42264840): Don't require a Context to be current in order to
+        // TODO(http://anglebug.com/42264840): Don't require a Context to be current in order to
         // destroy it.
         ANGLE_TRY(makeCurrent(thread, currentContext, nullptr, nullptr, context));
         ANGLE_TRY(
