@@ -4699,7 +4699,7 @@ egl::Error SetSurfaceAttrib(Surface *surface, EGLint attribute, EGLint value)
             surface->setTimestampsEnabled(value != EGL_FALSE);
             break;
         case EGL_FRONT_BUFFER_AUTO_REFRESH_ANDROID:
-            return surface->setAutoRefreshEnabled(value == EGL_TRUE);
+            return surface->setAutoRefreshEnabled(value != EGL_FALSE);
         case EGL_RENDER_BUFFER:
             return surface->setRenderBuffer(value);
         default:

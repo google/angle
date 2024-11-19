@@ -5510,7 +5510,23 @@ bool ValidateSurfaceAttrib(const ValidationContext *val,
             break;
 
         case EGL_FRONT_BUFFER_AUTO_REFRESH_ANDROID:
-            ASSERT(value == EGL_TRUE || value == EGL_FALSE);
+            if (!display->getExtensions().frontBufferAutoRefreshANDROID)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "EGL_FRONT_BUFFER_AUTO_REFRESH_ANDROID cannot be used without "
+                              "EGL_ANDROID_front_buffer_auto_refresh support.");
+                return false;
+            }
+            switch (value)
+            {
+                case EGL_TRUE:
+                case EGL_FALSE:
+                    break;
+
+                default:
+                    val->setError(EGL_BAD_ATTRIBUTE, "Invalid value.");
+                    return false;
+            }
             break;
 
         case EGL_RENDER_BUFFER:

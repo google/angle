@@ -534,8 +534,9 @@ void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
         outExtensions->glColorspace && getFeatures().supportsImageFormatList.enabled;
 
 #if defined(ANGLE_PLATFORM_ANDROID)
-    outExtensions->getNativeClientBufferANDROID = true;
-    outExtensions->framebufferTargetANDROID     = true;
+    outExtensions->getNativeClientBufferANDROID  = true;
+    outExtensions->framebufferTargetANDROID      = true;
+    outExtensions->frontBufferAutoRefreshANDROID = true;
 #endif  // defined(ANGLE_PLATFORM_ANDROID)
 
     // EGL_EXT_image_dma_buf_import is only exposed if EGL_EXT_image_dma_buf_import_modifiers can

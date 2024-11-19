@@ -2649,6 +2649,8 @@ TEST_P(EGLSingleBufferTest, AcquireImageFromSwapImpl)
 // EGL_FRONT_BUFFER_AUTO_REFRESH_ANDROID does not disable auto refresh
 TEST_P(EGLAndroidAutoRefreshTest, Basic)
 {
+    ANGLE_SKIP_TEST_IF(
+        !IsEGLDisplayExtensionEnabled(mDisplay, "EGL_ANDROID_front_buffer_auto_refresh"));
     ANGLE_SKIP_TEST_IF(!IsEGLDisplayExtensionEnabled(mDisplay, "EGL_KHR_mutable_render_buffer"));
     ANGLE_SKIP_TEST_IF(!IsAndroid());
 
