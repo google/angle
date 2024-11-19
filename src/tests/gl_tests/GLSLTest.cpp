@@ -17789,7 +17789,43 @@ void main() {
     gl_FragColor = sampleConstSampler(samp);
 }
 )";
-    CompileShader(GL_FRAGMENT_SHADER, kFS);
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+    GLTexture texture;
+    GLColor expected = MakeGLColor(32, 64, 96, 255);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, expected.data());
+    GLint u = glGetUniformLocation(program, "samp");
+    EXPECT_NE(u, -1);
+    glUniform1i(u, 0);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, expected);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Make sure const sampler parameters work.
+TEST_P(GLSLTest, ConstInSamplerParameter)
+{
+    constexpr char kFS[] = R"(precision mediump float;
+uniform sampler2D u;
+vec4 sampleConstSampler(const in sampler2D s) {
+    return texture2D(s, vec2(0));
+}
+void main() {
+    gl_FragColor = sampleConstSampler(u);
+}
+)";
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+    GLTexture texture;
+    GLColor expected = MakeGLColor(32, 64, 96, 255);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, expected.data());
+    GLint u = glGetUniformLocation(program, "u");
+    EXPECT_NE(u, -1);
+    glUniform1i(u, 0);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, expected);
     ASSERT_GL_NO_ERROR();
 }
 
@@ -17812,7 +17848,17 @@ void main() {
     gl_FragColor = sampleConstSampler(samp);
 }
 )";
-    CompileShader(GL_FRAGMENT_SHADER, kFS);
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+    GLTexture texture;
+    GLColor expected = MakeGLColor(32, 64, 96, 255);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, expected.data());
+    GLint u = glGetUniformLocation(program, "samp");
+    EXPECT_NE(u, -1);
+    glUniform1i(u, 0);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, expected);
     ASSERT_GL_NO_ERROR();
 }
 

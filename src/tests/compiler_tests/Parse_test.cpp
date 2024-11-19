@@ -827,3 +827,26 @@ void f(out float r, out float)
     compile(kShader);
     EXPECT_EQ(kExpected, intermediateTree());
 }
+
+TEST_F(ParseTest, ConstInSamplerParamNoCrash)
+{
+    mCompileOptions.validateAST = 1;
+    const char kShader[]        = R"(void n(const in sampler2D){2;} void main(){})";
+    EXPECT_TRUE(compile(kShader));
+}
+
+TEST_F(ParseTest, ConstSamplerParamNoCrash)
+{
+    mCompileOptions.validateAST = 1;
+    const char kShader[]        = R"(void n(const sampler2D){2;} void main(){})";
+    EXPECT_TRUE(compile(kShader));
+}
+
+TEST_F(ParseTest, InConstSamplerParamIsError)
+{
+    mCompileOptions.validateAST = 1;
+    const char kShader[]        = R"(void n(in const sampler2D){2;} void main(){})";
+    EXPECT_FALSE(compile(kShader));
+    EXPECT_TRUE(foundErrorInIntermediateTree());
+    EXPECT_TRUE(foundInIntermediateTree("'const' : invalid parameter qualifier"));
+}
