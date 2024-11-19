@@ -3171,33 +3171,30 @@ angle::Result WindowSurfaceVk::drawOverlay(ContextVk *contextVk, SwapchainImage 
 
 egl::Error WindowSurfaceVk::setAutoRefreshEnabled(bool enabled)
 {
-    if (enabled && !supportsPresentMode(vk::PresentMode::SharedContinuousRefreshKHR))
+    // Auto refresh is only applicable in shared present mode
+    if (!isSharedPresentModeDesired())
     {
-        return egl::EglBadMatch();
+        return egl::NoError();
     }
 
     vk::PresentMode newDesiredSwapchainPresentMode =
         enabled ? vk::PresentMode::SharedContinuousRefreshKHR
                 : vk::PresentMode::SharedDemandRefreshKHR;
-    // Auto refresh is only applicable in shared present mode
-    if (isSharedPresentModeDesired() &&
-        (mDesiredSwapchainPresentMode != newDesiredSwapchainPresentMode))
-    {
-        // In cases where the user switches to single buffer and have yet to call eglSwapBuffer,
-        // enabling/disabling auto refresh should only change mDesiredSwapchainPresentMode as we
-        // have not yet actually switched to single buffer mode.
-        mDesiredSwapchainPresentMode = newDesiredSwapchainPresentMode;
 
-        // If auto refresh is updated and we are already in single buffer mode we may need to
-        // recreate swapchain. We need the deferAcquireNextImage() call as unlike setRenderBuffer(),
-        // the user does not have to call eglSwapBuffers after setting the auto refresh attribute
-        if (isSharedPresentMode() &&
-            !IsCompatiblePresentMode(mDesiredSwapchainPresentMode, mCompatiblePresentModes.data(),
-                                     mCompatiblePresentModes.size()))
-        {
-            deferAcquireNextImage();
-        }
+    // We only expose EGL_ANDROID_front_buffer_auto_refresh extension on Android with supported
+    // VK_EXT_swapchain_maintenance1 extension, where present modes expected to be compatible.
+    if (!IsCompatiblePresentMode(newDesiredSwapchainPresentMode, mCompatiblePresentModes.data(),
+                                 mCompatiblePresentModes.size()))
+    {
+        // This should not happen, unless some specific Android platform requires swapchain
+        // recreation for these present modes, in which case EGL_ANDROID_front_buffer_auto_refresh
+        // should not be exposed or this code should be updated to support this scenario.
+        return egl::EglBadMatch();
     }
+
+    // Simply change mDesiredSwapchainPresentMode regardless if we are already in single buffer mode
+    // or not, since compatible present modes does not require swapchain recreation.
+    mDesiredSwapchainPresentMode = newDesiredSwapchainPresentMode;
 
     return egl::NoError();
 }

@@ -534,9 +534,15 @@ void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
         outExtensions->glColorspace && getFeatures().supportsImageFormatList.enabled;
 
 #if defined(ANGLE_PLATFORM_ANDROID)
-    outExtensions->getNativeClientBufferANDROID  = true;
-    outExtensions->framebufferTargetANDROID      = true;
-    outExtensions->frontBufferAutoRefreshANDROID = true;
+    outExtensions->getNativeClientBufferANDROID = true;
+    outExtensions->framebufferTargetANDROID     = true;
+
+    // Only expose EGL_ANDROID_front_buffer_auto_refresh on Android and when Vulkan supports
+    // VK_EXT_swapchain_maintenance1 (supportsSwapchainMaintenance1 feature), since we know that
+    // VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR and VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR
+    // are compatible on Android (does not require swapchain recreation).
+    outExtensions->frontBufferAutoRefreshANDROID =
+        getFeatures().supportsSwapchainMaintenance1.enabled;
 #endif  // defined(ANGLE_PLATFORM_ANDROID)
 
     // EGL_EXT_image_dma_buf_import is only exposed if EGL_EXT_image_dma_buf_import_modifiers can
