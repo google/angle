@@ -269,7 +269,7 @@ TIntermTyped &sh::SubVector(TIntermTyped &vectorNode, int begin, int end)
     TVector<int> offsets(static_cast<size_t>(end - begin));
     std::iota(offsets.begin(), offsets.end(), begin);
     TIntermSwizzle *swizzle = new TIntermSwizzle(vectorNode.deepCopy(), offsets);
-    return *swizzle;
+    return *swizzle->fold(nullptr);  // Swizzles must always be folded to prevent double swizzles.
 }
 
 bool sh::IsScalarBasicType(const TType &type)

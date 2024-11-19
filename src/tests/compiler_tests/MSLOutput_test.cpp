@@ -20,17 +20,21 @@ class MSLOutputTestBase : public MatchOutputCodeTest
   public:
     MSLOutputTestBase(GLenum shaderType) : MatchOutputCodeTest(shaderType, SH_MSL_METAL_OUTPUT)
     {
-        ShCompileOptions defaultCompileOptions = {};
+        setDefaultCompileOptions(defaultOptions());
+    }
+    static ShCompileOptions defaultOptions()
+    {
+        ShCompileOptions options = {};
         // Default options that are forced for MSL output.
-        defaultCompileOptions.rescopeGlobalVariables             = true;
-        defaultCompileOptions.simplifyLoopConditions             = true;
-        defaultCompileOptions.initializeUninitializedLocals      = true;
-        defaultCompileOptions.separateCompoundStructDeclarations = true;
+        options.rescopeGlobalVariables             = true;
+        options.simplifyLoopConditions             = true;
+        options.initializeUninitializedLocals      = true;
+        options.separateCompoundStructDeclarations = true;
         // The tests also test that validation succeeds. This should be also the
         // default forced option, but currently MSL backend does not generate
         // valid trees. Once validateAST is forced, move to above hunk.
-        defaultCompileOptions.validateAST = true;
-        setDefaultCompileOptions(defaultCompileOptions);
+        options.validateAST = true;
+        return options;
     }
 };
 
@@ -1037,4 +1041,14 @@ TEST_F(MSLOutputTest, UnnamedOutParameterNoCrash)
 {
     const char kShader[] = R"(void f(out int){}void main(){int a;f(a);})";
     compile(kShader);
+}
+
+TEST_F(MSLOutputTest, ExplicitBoolCastsNoCrash)
+{
+    ShCompileOptions options     = defaultOptions();
+    options.addExplicitBoolCasts = 1;
+    const char kShader[]         = R"(
+precision mediump float;
+void main(){vec2 c;bvec2 U=bvec2(c.xx);if (U.x) gl_FragColor = vec4(1);})";
+    compile(kShader, options);
 }
