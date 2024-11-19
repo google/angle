@@ -1539,6 +1539,12 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         {
             skipTest("https://anglebug.com/342545097 fails on Mesa 23.2.1");
         }
+
+        if (isIntelWinANGLE)
+        {
+            skipTest("https://anglebug.com/379886383 times out on Windows Intel");
+        }
+
         addExtensionPrerequisite("GL_ANDROID_extension_pack_es31a");
     }
 
