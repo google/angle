@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-#include "compiler/translator/msl/Name.h"
+#include "compiler/translator/Name.h"
 #include "common/debug.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
 

@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#ifndef COMPILER_TRANSLATOR_MSL_NAME_H_
-#define COMPILER_TRANSLATOR_MSL_NAME_H_
+#ifndef COMPILER_TRANSLATOR_NAME_H_
+#define COMPILER_TRANSLATOR_NAME_H_
 
 #include "compiler/translator/ImmutableString.h"
 #include "compiler/translator/InfoSink.h"

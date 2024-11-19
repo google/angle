@@ -12,10 +12,15 @@
 
 #include "compiler/translator/ImmutableString.h"
 
-std::ostream &operator<<(std::ostream &os, const sh::ImmutableString &str)
+namespace sh
+{
+
+std::ostream &operator<<(std::ostream &os, const ImmutableString &str)
 {
     return os.write(str.data(), str.length());
 }
+
+}  // namespace sh
 
 #if defined(_MSC_VER)
 #    pragma warning(disable : 4309)  // truncation of constant value

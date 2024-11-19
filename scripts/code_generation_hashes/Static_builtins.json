@@ -1,6 +1,6 @@
 {
   "src/compiler/translator/ImmutableString_autogen.cpp":
-    "f134d4cf1a3815a558f358b35e91934d",
+    "aa5791d78395d37c360b37287fda4982",
   "src/compiler/translator/Operator_autogen.h":
     "41096b767b263dd73172a0f0cbead070",
   "src/compiler/translator/SymbolTable_autogen.cpp":
@@ -12,7 +12,7 @@
   "src/compiler/translator/builtin_variables.json":
     "e1995c9828b7943e47dc2846c2d071c0",
   "src/compiler/translator/gen_builtin_symbols.py":
-    "2ff8378b52a875ba00e0134b51f017a3",
+    "c9d46e6222ed3595f46954ea48419b2c",
   "src/compiler/translator/tree_util/BuiltIn_autogen.h":
     "427aed0586c4ac38de9bb63b9c263bed",
   "src/tests/compiler_tests/ImmutableString_test_autogen.cpp":

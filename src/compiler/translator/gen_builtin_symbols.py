@@ -42,9 +42,13 @@ template_immutablestring_cpp = """// GENERATED FILE - DO NOT EDIT.
 
 #include "compiler/translator/ImmutableString.h"
 
-std::ostream &operator<<(std::ostream &os, const sh::ImmutableString &str)
+namespace sh {{
+
+std::ostream &operator<<(std::ostream &os, const ImmutableString &str)
 {{
     return os.write(str.data(), str.length());
+}}
+
 }}
 
 #if defined(_MSC_VER)

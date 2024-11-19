@@ -338,6 +338,35 @@ void main(){
     EXPECT_EQ(kExpected, outputCode(SH_ESSL_OUTPUT));
 }
 
+// Test that struct name validation takes into account that intenal symbol namespace
+// is different to user namespace. The test should be kept in sync so that struct sbbf is the same
+// textual symbol as what the anonymous struct gets.
+TEST_F(SeparateCompoundStructDeclarations, InternalSymbolNoCrash)
+{
+    const char kShader[] = R"(
+precision highp float;
+struct { vec4 e; } g;
+struct sbbf { vec4 f; };
+void main(){
+  sbbf s;
+  gl_FragColor = g.e + s.f;
+})";
+    compile(kShader);
+    const char kExpected[] = R"(struct sbbf {
+  highp vec4 _ue;
+};
+sbbf _ug;
+struct _usbbf {
+  highp vec4 _uf;
+};
+void main(){
+  _usbbf _us;
+  (gl_FragColor = (_ug._ue + _us._uf));
+}
+)";
+    EXPECT_EQ(kExpected, outputCode(SH_ESSL_OUTPUT));
+}
+
 TEST_F(SeparateStructFunctionDeclarations, StructInStruct)
 {
     const char kShader[]   = R"(#version 300 es

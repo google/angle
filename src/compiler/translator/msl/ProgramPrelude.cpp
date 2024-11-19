@@ -7,9 +7,9 @@
 #include <cctype>
 
 #include "compiler/translator/InfoSink.h"
+#include "compiler/translator/Name.h"
 #include "compiler/translator/Symbol.h"
 #include "compiler/translator/msl/AstHelpers.h"
-#include "compiler/translator/msl/Name.h"
 #include "compiler/translator/msl/ProgramPrelude.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
 #include "compiler/translator/util.h"

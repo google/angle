@@ -11,7 +11,7 @@
 #include <variant>
 #include "common/string_utils.h"
 #include "common/utilities.h"
-#include "compiler/translator/msl/Name.h"
+#include "compiler/translator/Name.h"
 #include "compiler/translator/msl/TranslatorMSL.h"
 #include "libANGLE/renderer/metal/ContextMtl.h"
 #include "libANGLE/renderer/metal/ShaderMtl.h"

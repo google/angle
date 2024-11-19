@@ -9,6 +9,7 @@
 #include "common/utilities.h"
 #include "compiler/translator/Diagnostics.h"
 #include "compiler/translator/ImmutableStringBuilder.h"
+#include "compiler/translator/Name.h"
 #include "compiler/translator/Symbol.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
 #include "compiler/translator/tree_util/SpecializationConstant.h"
@@ -71,8 +72,7 @@ class ValidateAST : public TIntermTraverser
     void scope(Visit visit);
     bool isVariableDeclared(const TVariable *variable);
     bool variableNeedsDeclaration(const TVariable *variable);
-    const TFieldListCollection *getStructOrInterfaceBlock(const TType &type,
-                                                          ImmutableString *typeNameOut);
+    const TFieldListCollection *getStructOrInterfaceBlock(const TType &type, Name *typeNameOut);
 
     void expectNonNullChildren(Visit visit, TIntermNode *node, size_t least_count);
 
@@ -115,7 +115,7 @@ class ValidateAST : public TIntermTraverser
     bool mPrecisionFailed = false;
 
     // For validateStructUsage:
-    std::vector<std::map<ImmutableString, const TFieldListCollection *>> mStructsAndBlocksByName;
+    std::vector<std::map<Name, const TFieldListCollection *>> mStructsAndBlocksByName;
     std::set<const TFunction *> mStructUsageProcessedFunctions;
     bool mStructUsageFailed = false;
 
@@ -310,7 +310,7 @@ void ValidateAST::visitStructOrInterfaceBlockDeclaration(const TType &type,
     }
 
     // Make sure the structure or interface block is not doubly defined.
-    ImmutableString typeName("");
+    Name typeName;
     const TFieldListCollection *namedStructOrBlock = getStructOrInterfaceBlock(type, &typeName);
 
     // Recurse the fields of the structure or interface block and check members of structure type.
@@ -339,24 +339,25 @@ void ValidateAST::visitStructOrInterfaceBlockDeclaration(const TType &type,
         if (type.getStruct() == nullptr)
         {
             // Allow interfaces to be doubly-defined.
-            std::string name(typeName.data());
+            ImmutableString rawName = typeName.rawName();
 
             if (IsShaderIn(type.getQualifier()))
             {
-                typeName = ImmutableString(name + "<input>");
+                rawName = BuildConcatenatedImmutableString(rawName, "<input>");
             }
             else if (IsShaderOut(type.getQualifier()))
             {
-                typeName = ImmutableString(name + "<output>");
+                rawName = BuildConcatenatedImmutableString(rawName, "<output>");
             }
             else if (IsStorageBuffer(type.getQualifier()))
             {
-                typeName = ImmutableString(name + "<buffer>");
+                rawName = BuildConcatenatedImmutableString(rawName, "<buffer>");
             }
             else if (type.getQualifier() == EvqUniform)
             {
-                typeName = ImmutableString(name + "<uniform>");
+                rawName = BuildConcatenatedImmutableString(rawName, "<uniform>");
             }
+            typeName = Name(rawName, typeName.symbolType());
         }
 
         if (mStructsAndBlocksByName.back().find(typeName) != mStructsAndBlocksByName.back().end())
@@ -364,7 +365,7 @@ void ValidateAST::visitStructOrInterfaceBlockDeclaration(const TType &type,
             mDiagnostics->error(location,
                                 "Found redeclaration of struct or interface block with the same "
                                 "name in the same scope <validateStructUsage>",
-                                typeName.data());
+                                typeName.rawName().data());
             mStructUsageFailed = true;
         }
         else
@@ -385,12 +386,12 @@ void ValidateAST::visitStructUsage(const TType &type, const TSourceLoc &location
     // Make sure the structure being referenced has the same pointer as the closest (in scope)
     // definition.
     const TStructure *structure     = type.getStruct();
-    const ImmutableString &typeName = structure->name();
+    const Name typeName(*structure);
 
     bool foundDeclaration = false;
     for (size_t scopeIndex = mStructsAndBlocksByName.size(); scopeIndex > 0; --scopeIndex)
     {
-        const std::map<ImmutableString, const TFieldListCollection *> &scopeDecls =
+        const std::map<Name, const TFieldListCollection *> &scopeDecls =
             mStructsAndBlocksByName[scopeIndex - 1];
 
         auto iter = scopeDecls.find(typeName);
@@ -403,7 +404,7 @@ void ValidateAST::visitStructUsage(const TType &type, const TSourceLoc &location
                 mDiagnostics->error(location,
                                     "Found reference to struct or interface block with doubly "
                                     "created type <validateStructUsage>",
-                                    typeName.data());
+                                    typeName.rawName().data());
                 mStructUsageFailed = true;
             }
 
@@ -416,7 +417,7 @@ void ValidateAST::visitStructUsage(const TType &type, const TSourceLoc &location
         mDiagnostics->error(location,
                             "Found reference to struct or interface block with no declaration "
                             "<validateStructUsage>",
-                            typeName.data());
+                            typeName.rawName().data());
         mStructUsageFailed = true;
     }
 }
@@ -718,7 +719,7 @@ bool ValidateAST::variableNeedsDeclaration(const TVariable *variable)
 }
 
 const TFieldListCollection *ValidateAST::getStructOrInterfaceBlock(const TType &type,
-                                                                   ImmutableString *typeNameOut)
+                                                                   Name *typeNameOut)
 {
     const TStructure *structure           = type.getStruct();
     const TInterfaceBlock *interfaceBlock = type.getInterfaceBlock();
@@ -730,12 +731,12 @@ const TFieldListCollection *ValidateAST::getStructOrInterfaceBlock(const TType &
     if (structure != nullptr && structure->symbolType() != SymbolType::Empty)
     {
         structOrBlock = structure;
-        *typeNameOut  = structure->name();
+        *typeNameOut  = Name(*structure);
     }
     else if (interfaceBlock != nullptr)
     {
         structOrBlock = interfaceBlock;
-        *typeNameOut  = interfaceBlock->name();
+        *typeNameOut  = Name(*interfaceBlock);
     }
 
     return structOrBlock;
