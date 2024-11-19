@@ -2431,7 +2431,7 @@ angle::Result TextureVk::generateMipmapsWithCompute(ContextVk *contextVk)
     samplerState.setWrapT(GL_CLAMP_TO_EDGE);
     samplerState.setWrapR(GL_CLAMP_TO_EDGE);
 
-    vk::BindingPointer<vk::SamplerHelper> sampler;
+    vk::SharedSamplerPtr sampler;
     vk::SamplerDesc samplerDesc(contextVk, samplerState, false, nullptr,
                                 static_cast<angle::FormatID>(0));
     ANGLE_TRY(renderer->getSamplerCache().getSampler(contextVk, samplerDesc, &sampler));
@@ -2500,8 +2500,8 @@ angle::Result TextureVk::generateMipmapsWithCompute(ContextVk *contextVk)
             params.srcLevel                          = srcLevelVk.get();
             params.dstLevelCount                     = dstLevelCount.get();
 
-            ANGLE_TRY(contextVk->getUtils().generateMipmap(
-                contextVk, mImage, srcView, mImage, destLevelViews, sampler.get().get(), params));
+            ANGLE_TRY(contextVk->getUtils().generateMipmap(contextVk, mImage, srcView, mImage,
+                                                           destLevelViews, sampler->get(), params));
         }
     }
 
@@ -3522,12 +3522,12 @@ angle::Result TextureVk::syncState(const gl::Context *context,
         }
     }
 
-    if (localBits.none() && mSampler.valid())
+    if (localBits.none() && mSampler)
     {
         return angle::Result::Continue;
     }
 
-    if (mSampler.valid())
+    if (mSampler)
     {
         resetSampler();
     }

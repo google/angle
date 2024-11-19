@@ -1278,7 +1278,7 @@ class SamplerDesc final
 {
   public:
     SamplerDesc();
-    SamplerDesc(ContextVk *contextVk,
+    SamplerDesc(Context *context,
                 const gl::SamplerState &samplerState,
                 bool stencilMode,
                 const YcbcrConversionDesc *ycbcrConversionDesc,
@@ -1288,7 +1288,7 @@ class SamplerDesc final
     SamplerDesc(const SamplerDesc &other);
     SamplerDesc &operator=(const SamplerDesc &rhs);
 
-    void update(ContextVk *contextVk,
+    void update(Renderer *renderer,
                 const gl::SamplerState &samplerState,
                 bool stencilMode,
                 const YcbcrConversionDesc *ycbcrConversionDesc,
@@ -2121,15 +2121,18 @@ CreateSharedFramebufferCacheKey(const FramebufferDesc &desc)
 class SamplerHelper final : angle::NonCopyable
 {
   public:
-    SamplerHelper(vk::Context *context);
-    ~SamplerHelper();
+    SamplerHelper() = default;
+    ~SamplerHelper() { ASSERT(!valid()); }
 
     explicit SamplerHelper(SamplerHelper &&samplerHelper);
     SamplerHelper &operator=(SamplerHelper &&rhs);
 
+    angle::Result init(Context *context, const VkSamplerCreateInfo &createInfo);
+    angle::Result init(ContextVk *contextVk, const SamplerDesc &desc);
+    void destroy(VkDevice device) { mSampler.destroy(device); }
+    void destroy() { ASSERT(!valid()); }
     bool valid() const { return mSampler.valid(); }
     const Sampler &get() const { return mSampler; }
-    Sampler &get() { return mSampler; }
     SamplerSerial getSamplerSerial() const { return mSamplerSerial; }
 
   private:
@@ -2137,8 +2140,7 @@ class SamplerHelper final : angle::NonCopyable
     SamplerSerial mSamplerSerial;
 };
 
-using RefCountedSampler = RefCounted<SamplerHelper>;
-using SamplerBinding    = BindingPointer<SamplerHelper>;
+using SharedSamplerPtr = SharedPtr<SamplerHelper>;
 
 class RenderPassHelper final : angle::NonCopyable
 {
@@ -2719,10 +2721,10 @@ class SamplerCache final : public HasCacheStats<VulkanCacheType::Sampler>
 
     angle::Result getSampler(ContextVk *contextVk,
                              const vk::SamplerDesc &desc,
-                             vk::SamplerBinding *samplerOut);
+                             vk::SharedSamplerPtr *samplerOut);
 
   private:
-    std::unordered_map<vk::SamplerDesc, vk::RefCountedSampler> mPayload;
+    std::unordered_map<vk::SamplerDesc, vk::SharedSamplerPtr> mPayload;
 };
 
 // YuvConversion Cache

@@ -127,8 +127,8 @@ CLSamplerVk::CLSamplerVk(const cl::Sampler &sampler)
     : CLSamplerImpl(sampler),
       mContext(&sampler.getContext().getImpl<CLContextVk>()),
       mRenderer(mContext->getRenderer()),
-      mSamplerHelper(mContext),
-      mSamplerHelperNormalized(mContext)
+      mSamplerHelper(),
+      mSamplerHelperNormalized()
 {
     VkSamplerAddressMode addressMode = getVkAddressMode();
     VkFilter filter                  = getVkFilter();
@@ -159,17 +159,16 @@ CLSamplerVk::CLSamplerVk(const cl::Sampler &sampler)
 
 CLSamplerVk::~CLSamplerVk()
 {
-    mSamplerHelper.get().destroy(mContext->getDevice());
+    mSamplerHelper.destroy(mContext->getDevice());
     if (mSamplerHelperNormalized.valid())
     {
-        mSamplerHelperNormalized.get().destroy(mContext->getDevice());
+        mSamplerHelperNormalized.destroy(mContext->getDevice());
     }
 }
 
 angle::Result CLSamplerVk::create()
 {
-    ANGLE_VK_TRY(mContext,
-                 mSamplerHelper.get().init(mContext->getDevice(), mDefaultSamplerCreateInfo));
+    ANGLE_TRY(mSamplerHelper.init(mContext, mDefaultSamplerCreateInfo));
 
     return angle::Result::Continue;
 }
@@ -179,8 +178,7 @@ angle::Result CLSamplerVk::createNormalized()
     if (mSamplerHelperNormalized.valid())
     {
         mDefaultSamplerCreateInfo.unnormalizedCoordinates = false;
-        ANGLE_VK_TRY(mContext, mSamplerHelperNormalized.get().init(mContext->getDevice(),
-                                                                   mDefaultSamplerCreateInfo));
+        ANGLE_TRY(mSamplerHelperNormalized.init(mContext, mDefaultSamplerCreateInfo));
     }
 
     return angle::Result::Continue;

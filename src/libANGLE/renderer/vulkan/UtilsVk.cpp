@@ -1652,13 +1652,13 @@ angle::Result UtilsVk::ensureImageCopyResourcesInitializedWithSampler(
         return angle::Result::Continue;
     }
 
-    vk::SamplerBinding sampler;
+    vk::SharedSamplerPtr sampler;
     ANGLE_TRY(
         contextVk->getRenderer()->getSamplerCache().getSampler(contextVk, samplerDesc, &sampler));
 
     vk::DescriptorSetLayoutDesc descriptorSetDesc;
     descriptorSetDesc.addBinding(0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1,
-                                 VK_SHADER_STAGE_FRAGMENT_BIT, &sampler.get().get());
+                                 VK_SHADER_STAGE_FRAGMENT_BIT, &sampler->get());
 
     ANGLE_TRY(contextVk->getDescriptorSetLayoutCache().getDescriptorSetLayout(
         contextVk, descriptorSetDesc,

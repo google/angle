@@ -248,11 +248,11 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     {
         if (isSamplerExternalY2Y)
         {
-            ASSERT(mY2YSampler.valid());
-            return mY2YSampler.get();
+            ASSERT(mY2YSampler->valid());
+            return *mY2YSampler.get();
         }
-        ASSERT(mSampler.valid());
-        return mSampler.get();
+        ASSERT(mSampler->valid());
+        return *mSampler.get();
     }
 
     void resetSampler()
@@ -687,10 +687,10 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
 
     // |mSampler| contains the relevant Vulkan sampler states representing the OpenGL Texture
     // sampling states for the Texture.
-    vk::SamplerBinding mSampler;
+    vk::SharedSamplerPtr mSampler;
     // |mY2YSampler| contains a version of mSampler that is meant for use with
     // __samplerExternal2DY2YEXT (i.e., skipping conversion of YUV to RGB).
-    vk::SamplerBinding mY2YSampler;
+    vk::SharedSamplerPtr mY2YSampler;
 
     // The created vkImage usage flag.
     VkImageUsageFlags mImageUsageFlags;
