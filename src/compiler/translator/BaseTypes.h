@@ -150,10 +150,7 @@ enum TBasicType
     EbtSubpassInput = EbtGuardSubpassInputBegin,
     EbtISubpassInput,
     EbtUSubpassInput,
-    EbtSubpassInputMS,
-    EbtISubpassInputMS,
-    EbtUSubpassInputMS,
-    EbtGuardSubpassInputEnd = EbtUSubpassInputMS,
+    EbtGuardSubpassInputEnd = EbtUSubpassInput,
 
     EbtLastSimpleType = EbtGuardSubpassInputEnd,
 

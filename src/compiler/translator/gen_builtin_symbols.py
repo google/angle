@@ -633,9 +633,6 @@ basic_types_enumeration = [
     'SubpassInput',
     'ISubpassInput',
     'USubpassInput',
-    'SubpassInputMS',
-    'ISubpassInputMS',
-    'USubpassInputMS',
 ]
 
 id_counter = 0

@@ -848,7 +848,6 @@ GROUP END GS
 GROUP BEGIN SubpassInput
   DEFAULT METADATA {"essl_level": "ESSL_INTERNAL_BACKEND_BUILTINS"}
     gvec4 subpassLoad(gsubpassInput);
-    gvec4 subpassLoad(gsubpassInputMS, int);
 GROUP END SubpassInput
 
 // MSL fragment functions

@@ -154,12 +154,6 @@ const char *getBasicString(TBasicType t)
             return "isubpassInput";
         case EbtUSubpassInput:
             return "usubpassInput";
-        case EbtSubpassInputMS:
-            return "subpassInputMS";
-        case EbtISubpassInputMS:
-            return "isubpassInputMS";
-        case EbtUSubpassInputMS:
-            return "usubpassInputMS";
         default:
             UNREACHABLE();
             return "unknown type";

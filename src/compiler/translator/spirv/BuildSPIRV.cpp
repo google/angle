@@ -1147,7 +1147,6 @@ void SPIRVBuilder::getImageTypeParameters(TBasicType type,
             break;
         case EbtSampler2DMS:
         case EbtImage2DMS:
-        case EbtSubpassInputMS:
             isMultisampled = true;
             break;
         case EbtSampler2DMSArray:
@@ -1176,7 +1175,6 @@ void SPIRVBuilder::getImageTypeParameters(TBasicType type,
             break;
         case EbtISampler2DMS:
         case EbtIImage2DMS:
-        case EbtISubpassInputMS:
             sampledType    = EbtInt;
             isMultisampled = true;
             break;
@@ -1200,7 +1198,6 @@ void SPIRVBuilder::getImageTypeParameters(TBasicType type,
             break;
         case EbtUSampler2DMS:
         case EbtUImage2DMS:
-        case EbtUSubpassInputMS:
             sampledType    = EbtUInt;
             isMultisampled = true;
             break;
