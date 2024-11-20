@@ -554,7 +554,6 @@ template_rule = """Rule::Get<{version}, {shaders}, {extension}>({symbol_or_var})
 basic_types_enumeration = [
     'Void',
     'Float',
-    'Double',
     'Int',
     'UInt',
     'Bool',
@@ -1059,7 +1058,6 @@ class TType:
             'float': 'Float',
             'int': 'Int',
             'uint': 'UInt',
-            'double': 'Double',
             'bool': 'Bool',
             'void': 'Void',
             'atomic_uint': 'AtomicCounter',
@@ -1071,14 +1069,7 @@ class TType:
 
         type_obj = {}
 
-        basic_type_prefix_map = {
-            '': 'Float',
-            'i': 'Int',
-            'u': 'UInt',
-            'd': 'Double',
-            'b': 'Bool',
-            'v': 'Void'
-        }
+        basic_type_prefix_map = {'': 'Float', 'i': 'Int', 'u': 'UInt', 'b': 'Bool', 'v': 'Void'}
 
         vec_re = re.compile(r'^([iudb]?)vec([234]?)((\[[234]\])?)$')
         vec_match = vec_re.match(glsl_header_type)

@@ -2333,7 +2333,7 @@ spirv::IdRef OutputSPIRVTraverser::visitOperator(TIntermOperator *node, spirv::I
 
     const TType &firstOperandType = firstChild->getType();
     const TBasicType basicType    = firstOperandType.getBasicType();
-    const bool isFloat            = basicType == EbtFloat || basicType == EbtDouble;
+    const bool isFloat            = basicType == EbtFloat;
     const bool isUnsigned         = basicType == EbtUInt;
     const bool isBool             = basicType == EbtBool;
     // Whether this is a pre/post increment/decrement operator.
@@ -4484,7 +4484,7 @@ void OutputSPIRVTraverser::createCompareImpl(TOperator op,
                                              spirv::IdRefList *intermediateResultsOut)
 {
     const TBasicType basicType = operandType.getBasicType();
-    const bool isFloat         = basicType == EbtFloat || basicType == EbtDouble;
+    const bool isFloat         = basicType == EbtFloat;
     const bool isBool          = basicType == EbtBool;
 
     WriteBinaryOp writeBinaryOp = nullptr;

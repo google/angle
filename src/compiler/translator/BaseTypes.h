@@ -54,7 +54,6 @@ enum TBasicType
 {
     EbtVoid,
     EbtFloat,
-    EbtDouble,
     EbtInt,
     EbtUInt,
     EbtBool,

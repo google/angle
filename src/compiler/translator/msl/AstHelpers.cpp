@@ -295,7 +295,6 @@ bool sh::HasScalarBasicType(TBasicType type)
     switch (type)
     {
         case TBasicType::EbtFloat:
-        case TBasicType::EbtDouble:
         case TBasicType::EbtInt:
         case TBasicType::EbtUInt:
         case TBasicType::EbtBool:
@@ -413,7 +412,6 @@ TIntermTyped &sh::CoerceSimple(TBasicType toBasicType,
             switch (fromBasicType)
             {
                 case TBasicType::EbtFloat:
-                case TBasicType::EbtDouble:
                 case TBasicType::EbtInt:
                 case TBasicType::EbtUInt:
                 {
@@ -466,7 +464,6 @@ TIntermTyped &sh::CoerceSimple(const TType &toType,
             switch (fromBasicType)
             {
                 case TBasicType::EbtFloat:
-                case TBasicType::EbtDouble:
                 case TBasicType::EbtInt:
                 case TBasicType::EbtUInt:
                 {
