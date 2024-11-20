@@ -565,7 +565,9 @@ class TParseContext : angle::NonCopyable
     void checkCanBeDeclaredWithoutInitializer(const TSourceLoc &line,
                                               const ImmutableString &identifier,
                                               TType *type);
-
+    void checkDeclarationIsValidArraySize(const TSourceLoc &line,
+                                          const ImmutableString &identifier,
+                                          TType *type);
     bool checkIsValidTypeAndQualifierForArray(const TSourceLoc &indexLocation,
                                               const TPublicType &elementType);
     // Done for all atomic counter declarations, whether empty or not.

@@ -1400,24 +1400,23 @@ void TParseContext::checkCanBeDeclaredWithoutInitializer(const TSourceLoc &line,
             error(line, "variables with qualifier 'const' must be initialized", identifier);
         }
     }
+}
+
+void TParseContext::checkDeclarationIsValidArraySize(const TSourceLoc &line,
+                                                     const ImmutableString &identifier,
+                                                     TType *type)
+{
 
     // Implicitly declared arrays are only allowed with tessellation or geometry shader inputs
-    if (type->isArray() &&
+    if (type->isUnsizedArray() &&
         ((mShaderType != GL_TESS_CONTROL_SHADER && mShaderType != GL_TESS_EVALUATION_SHADER &&
           mShaderType != GL_GEOMETRY_SHADER) ||
          (mShaderType == GL_GEOMETRY_SHADER && type->getQualifier() == EvqGeometryOut)))
     {
-        const TSpan<const unsigned int> &arraySizes = type->getArraySizes();
-        for (unsigned int size : arraySizes)
-        {
-            if (size == 0)
-            {
-                error(line,
-                      "implicitly sized arrays only allowed for tessellation shaders "
-                      "or geometry shader inputs",
-                      identifier);
-            }
-        }
+        error(line,
+              "implicitly sized arrays only allowed for tessellation shaders "
+              "or geometry shader inputs",
+              identifier);
     }
 }
 
@@ -3508,6 +3507,7 @@ TIntermDeclaration *TParseContext::parseSingleDeclaration(
         nonEmptyDeclarationErrorCheck(publicType, identifierOrTypeLocation);
 
         checkCanBeDeclaredWithoutInitializer(identifierOrTypeLocation, identifier, type);
+        checkDeclarationIsValidArraySize(identifierOrTypeLocation, identifier, type);
 
         if (IsAtomicCounter(type->getBasicType()))
         {
@@ -3558,6 +3558,7 @@ TIntermDeclaration *TParseContext::parseSingleArrayDeclaration(
     checkTessellationShaderUnsizedArraysAndSetSize(indexLocation, identifier, arrayType);
 
     checkCanBeDeclaredWithoutInitializer(identifierLocation, identifier, arrayType);
+    checkDeclarationIsValidArraySize(identifierLocation, identifier, arrayType);
 
     if (IsAtomicCounter(arrayType->getBasicType()))
     {
@@ -3735,6 +3736,7 @@ void TParseContext::parseDeclarator(TPublicType &publicType,
     checkTessellationShaderUnsizedArraysAndSetSize(identifierLocation, identifier, type);
 
     checkCanBeDeclaredWithoutInitializer(identifierLocation, identifier, type);
+    checkDeclarationIsValidArraySize(identifierLocation, identifier, type);
 
     if (IsAtomicCounter(type->getBasicType()))
     {
@@ -3778,6 +3780,7 @@ void TParseContext::parseArrayDeclarator(TPublicType &elementType,
         checkTessellationShaderUnsizedArraysAndSetSize(identifierLocation, identifier, arrayType);
 
         checkCanBeDeclaredWithoutInitializer(identifierLocation, identifier, arrayType);
+        checkDeclarationIsValidArraySize(identifierLocation, identifier, arrayType);
 
         if (IsAtomicCounter(arrayType->getBasicType()))
         {
@@ -5202,10 +5205,10 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
     if (arraySizes)
     {
         interfaceBlockType->makeArrays(*arraySizes);
-
         checkGeometryShaderInputAndSetArraySize(instanceLine, instanceName, interfaceBlockType);
         checkTessellationShaderUnsizedArraysAndSetSize(instanceLine, instanceName,
                                                        interfaceBlockType);
+        checkDeclarationIsValidArraySize(instanceLine, instanceName, interfaceBlockType);
     }
 
     // The instance variable gets created to refer to the interface block type from the AST

@@ -850,3 +850,36 @@ TEST_F(ParseTest, InConstSamplerParamIsError)
     EXPECT_TRUE(foundErrorInIntermediateTree());
     EXPECT_TRUE(foundInIntermediateTree("'const' : invalid parameter qualifier"));
 }
+
+TEST_F(ParseTest, UniformBlockInstanceUnsizedArrayIsError)
+{
+    const char kShader[] = R"(#version 300 es
+precision mediump float;out vec4 o;uniform a{float r;}u[];void main(){o=vec4(u[0].r+u[1].r+u[1].r);})";
+    EXPECT_FALSE(compile(kShader));
+    EXPECT_TRUE(foundErrorInIntermediateTree());
+    EXPECT_TRUE(
+        foundInIntermediateTree("'u' : implicitly sized arrays only allowed for tessellation "
+                                "shaders or geometry shader inputs"));
+}
+
+TEST_F(ParseTest, InputBlockInstanceUnsizedArrayIsError)
+{
+    const char kShader[] = R"(#version 300 es
+precision mediump float;out vec4 o;in a{float r;}i[];void main(){o=vec4(i[0].r+i[1].r+i[1].r);})";
+    EXPECT_FALSE(compile(kShader));
+    EXPECT_TRUE(foundErrorInIntermediateTree());
+    EXPECT_TRUE(
+        foundInIntermediateTree("'i' : implicitly sized arrays only allowed for tessellation "
+                                "shaders or geometry shader inputs"));
+}
+
+TEST_F(ParseTest, OutputBlockInstanceUnsizedArrayIsError)
+{
+    const char kShader[] = R"(#version 300 es
+precision mediump float;out a{float r;}o[];void main(){o[0].r=1.0; o[1].r=2.0;})";
+    EXPECT_FALSE(compile(kShader));
+    EXPECT_TRUE(foundErrorInIntermediateTree());
+    EXPECT_TRUE(
+        foundInIntermediateTree("'o' : implicitly sized arrays only allowed for tessellation "
+                                "shaders or geometry shader inputs"));
+}
