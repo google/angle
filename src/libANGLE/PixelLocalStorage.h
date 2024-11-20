@@ -12,14 +12,13 @@
 #define LIBANGLE_PIXEL_LOCAL_STORAGE_H_
 
 #include "GLSLANG/ShaderLang.h"
-#include "angle_gl.h"
+#include "libANGLE/Caps.h"
 #include "libANGLE/ImageIndex.h"
 #include "libANGLE/angletypes.h"
 
 namespace gl
 {
 
-struct Caps;
 class Context;
 class Texture;
 
@@ -166,6 +165,15 @@ class PixelLocalStorage
     void barrier(Context *);
     void interrupt(Context *);
     void restore(Context *);
+
+    // While pixel local storage is active, the draw buffers on and after
+    // 'FirstOverriddenDrawBuffer' are blocked from the client and reserved for internal use by PLS.
+    static GLint FirstOverriddenDrawBuffer(const Caps &caps, GLuint numActivePlanes)
+    {
+        ASSERT(numActivePlanes > 0);
+        return std::min(caps.maxColorAttachmentsWithActivePixelLocalStorage,
+                        caps.maxCombinedDrawBuffersAndPixelLocalStoragePlanes - numActivePlanes);
+    }
 
   protected:
     PixelLocalStorage(const ShPixelLocalStorageOptions &, const Caps &);

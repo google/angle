@@ -4804,6 +4804,13 @@ bool Context::noopClearBuffer(GLenum buffer, GLint drawbuffer) const
 {
     Framebuffer *framebufferObject = mState.getDrawFramebuffer();
 
+    if (buffer == GL_COLOR && getPrivateState().isActivelyOverriddenPLSDrawBuffer(drawbuffer))
+    {
+        // If pixel local storage is active and currently overriding the drawbuffer, do nothing.
+        // From the client's perspective, there is effectively no buffer bound.
+        return true;
+    }
+
     return !IsClearBufferEnabled(framebufferObject->getState(), buffer, drawbuffer) ||
            mState.isRasterizerDiscardEnabled() ||
            isClearBufferMaskedOut(buffer, drawbuffer, framebufferObject->getStencilBitCount());

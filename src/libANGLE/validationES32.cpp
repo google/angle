@@ -63,11 +63,6 @@ bool ValidateBlendEquationSeparatei(const PrivateState &state,
                                     GLenum modeRGB,
                                     GLenum modeAlpha)
 {
-    if (!ValidateDrawBufferIndexIfActivePLS(state, errors, entryPoint, buf, "buf"))
-    {
-        return false;
-    }
-
     if (buf >= static_cast<GLuint>(state.getCaps().maxDrawBuffers))
     {
         errors->validationError(entryPoint, GL_INVALID_VALUE, kExceedsMaxDrawBuffers);
@@ -89,11 +84,6 @@ bool ValidateBlendEquationi(const PrivateState &state,
                             GLuint buf,
                             GLenum mode)
 {
-    if (!ValidateDrawBufferIndexIfActivePLS(state, errors, entryPoint, buf, "buf"))
-    {
-        return false;
-    }
-
     if (buf >= static_cast<GLuint>(state.getCaps().maxDrawBuffers))
     {
         errors->validationError(entryPoint, GL_INVALID_VALUE, kExceedsMaxDrawBuffers);
@@ -118,11 +108,6 @@ bool ValidateBlendFuncSeparatei(const PrivateState &state,
                                 GLenum srcAlpha,
                                 GLenum dstAlpha)
 {
-    if (!ValidateDrawBufferIndexIfActivePLS(state, errors, entryPoint, buf, "buf"))
-    {
-        return false;
-    }
-
     if (buf >= static_cast<GLuint>(state.getCaps().maxDrawBuffers))
     {
         errors->validationError(entryPoint, GL_INVALID_VALUE, kExceedsMaxDrawBuffers);
@@ -145,11 +130,6 @@ bool ValidateBlendFunci(const PrivateState &state,
                         GLenum src,
                         GLenum dst)
 {
-    if (!ValidateDrawBufferIndexIfActivePLS(state, errors, entryPoint, buf, "buf"))
-    {
-        return false;
-    }
-
     if (buf >= static_cast<GLuint>(state.getCaps().maxDrawBuffers))
     {
         errors->validationError(entryPoint, GL_INVALID_VALUE, kExceedsMaxDrawBuffers);
@@ -174,11 +154,6 @@ bool ValidateColorMaski(const PrivateState &state,
                         GLboolean b,
                         GLboolean a)
 {
-    if (!ValidateDrawBufferIndexIfActivePLS(state, errors, entryPoint, buf, "buf"))
-    {
-        return false;
-    }
-
     if (buf >= static_cast<GLuint>(state.getCaps().maxDrawBuffers))
     {
         errors->validationError(entryPoint, GL_INVALID_VALUE, kIndexExceedsMaxDrawBuffer);
@@ -261,11 +236,6 @@ bool ValidateDisablei(const PrivateState &state,
         if (IsIndexedCapBannedWithActivePLS(target))
         {
             errors->validationErrorF(entryPoint, GL_INVALID_OPERATION, kPLSCapNotAllowed, target);
-            return false;
-        }
-        if (target == GL_BLEND &&
-            !ValidateDrawBufferIndexIfActivePLS(state, errors, entryPoint, index, "index"))
-        {
             return false;
         }
     }
@@ -352,11 +322,6 @@ bool ValidateEnablei(const PrivateState &state,
         if (IsIndexedCapBannedWithActivePLS(target))
         {
             errors->validationErrorF(entryPoint, GL_INVALID_OPERATION, kPLSCapNotAllowed, target);
-            return false;
-        }
-        if (target == GL_BLEND &&
-            !ValidateDrawBufferIndexIfActivePLS(state, errors, entryPoint, index, "index"))
-        {
             return false;
         }
     }

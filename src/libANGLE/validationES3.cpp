@@ -2399,12 +2399,6 @@ bool ValidateClearBufferiv(const Context *context,
     switch (buffer)
     {
         case GL_COLOR:
-            if (!ValidateDrawBufferIndexIfActivePLS(context->getPrivateState(),
-                                                    context->getMutableErrorSetForValidation(),
-                                                    entryPoint, drawbuffer, "drawbuffer"))
-            {
-                return false;
-            }
             if (drawbuffer < 0 || drawbuffer >= context->getCaps().maxDrawBuffers)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kIndexExceedsMaxDrawBuffer);
@@ -2460,12 +2454,6 @@ bool ValidateClearBufferuiv(const Context *context,
     switch (buffer)
     {
         case GL_COLOR:
-            if (!ValidateDrawBufferIndexIfActivePLS(context->getPrivateState(),
-                                                    context->getMutableErrorSetForValidation(),
-                                                    entryPoint, drawbuffer, "drawbuffer"))
-            {
-                return false;
-            }
             if (drawbuffer < 0 || drawbuffer >= context->getCaps().maxDrawBuffers)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kIndexExceedsMaxDrawBuffer);
@@ -2513,12 +2501,6 @@ bool ValidateClearBufferfv(const Context *context,
     switch (buffer)
     {
         case GL_COLOR:
-            if (!ValidateDrawBufferIndexIfActivePLS(context->getPrivateState(),
-                                                    context->getMutableErrorSetForValidation(),
-                                                    entryPoint, drawbuffer, "drawbuffer"))
-            {
-                return false;
-            }
             if (drawbuffer < 0 || drawbuffer >= context->getCaps().maxDrawBuffers)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kIndexExceedsMaxDrawBuffer);
@@ -5207,37 +5189,5 @@ bool ValidateSampleMaskiANGLE(const PrivateState &state,
     }
 
     return ValidateSampleMaskiBase(state, errors, entryPoint, maskNumber, mask);
-}
-
-bool ValidateDrawBufferIndexIfActivePLS(const PrivateState &state,
-                                        ErrorSet *errors,
-                                        angle::EntryPoint entryPoint,
-                                        GLuint drawBufferIdx,
-                                        const char *argumentName)
-{
-    int numPLSPlanes = state.getPixelLocalStorageActivePlanes();
-    if (numPLSPlanes != 0)
-    {
-        // INVALID_OPERATION is generated ... if any of the following are true:
-        //
-        //   <drawBufferIdx> >= MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE_ANGLE
-        //   <drawBufferIdx> >= (MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE -
-        //                       ACTIVE_PIXEL_LOCAL_STORAGE_PLANES_ANGLE)
-        //
-        if (drawBufferIdx >= state.getCaps().maxColorAttachmentsWithActivePixelLocalStorage)
-        {
-            errors->validationErrorF(entryPoint, GL_INVALID_OPERATION,
-                                     kPLSDrawBufferExceedsAttachmentLimit, argumentName);
-            return false;
-        }
-        if (drawBufferIdx >=
-            state.getCaps().maxCombinedDrawBuffersAndPixelLocalStoragePlanes - numPLSPlanes)
-        {
-            errors->validationErrorF(entryPoint, GL_INVALID_OPERATION,
-                                     kPLSDrawBufferExceedsCombinedAttachmentLimit, argumentName);
-            return false;
-        }
-    }
-    return true;
 }
 }  // namespace gl

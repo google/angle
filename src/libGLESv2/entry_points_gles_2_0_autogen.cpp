@@ -264,14 +264,10 @@ void GL_APIENTRY GL_BlendEquation(GLenum mode)
 
     if (context)
     {
-        bool isCallValid =
-            (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLBlendEquation) &&
-              ValidateBlendEquation(context->getPrivateState(),
-                                    context->getMutableErrorSetForValidation(),
-                                    angle::EntryPoint::GLBlendEquation, mode)));
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateBlendEquation(context->getPrivateState(),
+                                                  context->getMutableErrorSetForValidation(),
+                                                  angle::EntryPoint::GLBlendEquation, mode));
         if (isCallValid)
         {
             ContextPrivateBlendEquation(context->getMutablePrivateState(),
@@ -297,12 +293,9 @@ void GL_APIENTRY GL_BlendEquationSeparate(GLenum modeRGB, GLenum modeAlpha)
     {
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLBlendEquationSeparate) &&
-              ValidateBlendEquationSeparate(
-                  context->getPrivateState(), context->getMutableErrorSetForValidation(),
-                  angle::EntryPoint::GLBlendEquationSeparate, modeRGB, modeAlpha)));
+             ValidateBlendEquationSeparate(
+                 context->getPrivateState(), context->getMutableErrorSetForValidation(),
+                 angle::EntryPoint::GLBlendEquationSeparate, modeRGB, modeAlpha));
         if (isCallValid)
         {
             ContextPrivateBlendEquationSeparate(context->getMutablePrivateState(),
@@ -327,14 +320,10 @@ void GL_APIENTRY GL_BlendFunc(GLenum sfactor, GLenum dfactor)
 
     if (context)
     {
-        bool isCallValid =
-            (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLBlendFunc) &&
-              ValidateBlendFunc(context->getPrivateState(),
-                                context->getMutableErrorSetForValidation(),
-                                angle::EntryPoint::GLBlendFunc, sfactor, dfactor)));
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateBlendFunc(context->getPrivateState(),
+                                              context->getMutableErrorSetForValidation(),
+                                              angle::EntryPoint::GLBlendFunc, sfactor, dfactor));
         if (isCallValid)
         {
             ContextPrivateBlendFunc(context->getMutablePrivateState(),
@@ -366,13 +355,10 @@ void GL_APIENTRY GL_BlendFuncSeparate(GLenum sfactorRGB,
     {
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLBlendFuncSeparate) &&
-              ValidateBlendFuncSeparate(context->getPrivateState(),
-                                        context->getMutableErrorSetForValidation(),
-                                        angle::EntryPoint::GLBlendFuncSeparate, sfactorRGB,
-                                        dfactorRGB, sfactorAlpha, dfactorAlpha)));
+             ValidateBlendFuncSeparate(context->getPrivateState(),
+                                       context->getMutableErrorSetForValidation(),
+                                       angle::EntryPoint::GLBlendFuncSeparate, sfactorRGB,
+                                       dfactorRGB, sfactorAlpha, dfactorAlpha));
         if (isCallValid)
         {
             ContextPrivateBlendFuncSeparate(context->getMutablePrivateState(),
@@ -609,12 +595,9 @@ void GL_APIENTRY GL_ColorMask(GLboolean red, GLboolean green, GLboolean blue, GL
     {
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLColorMask) &&
-              ValidateColorMask(context->getPrivateState(),
-                                context->getMutableErrorSetForValidation(),
-                                angle::EntryPoint::GLColorMask, red, green, blue, alpha)));
+             ValidateColorMask(context->getPrivateState(),
+                               context->getMutableErrorSetForValidation(),
+                               angle::EntryPoint::GLColorMask, red, green, blue, alpha));
         if (isCallValid)
         {
             ContextPrivateColorMask(context->getMutablePrivateState(),
