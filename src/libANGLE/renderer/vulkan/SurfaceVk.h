@@ -204,12 +204,9 @@ struct SwapchainImage : angle::NonCopyable
 };
 
 // Associated data for a call to vkAcquireNextImageKHR without necessarily holding the share group
-// lock.
-struct UnlockedTryAcquireData : angle::NonCopyable
+// and global locks but ONLY from a thread where Surface is current.
+struct UnlockedAcquireData : angle::NonCopyable
 {
-    // A mutex to protect against concurrent attempts to call vkAcquireNextImageKHR.
-    angle::SimpleMutex mutex;
-
     // Given that the CPU is throttled after a number of swaps, there is an upper bound to the
     // number of semaphores that are used to acquire swapchain images, and that is
     // kSwapHistorySize+1:
@@ -234,10 +231,9 @@ struct UnlockedTryAcquireData : angle::NonCopyable
     angle::CircularBuffer<vk::Semaphore, impl::kSwapHistorySize + 1> acquireImageSemaphores;
 };
 
-struct UnlockedTryAcquireResult : angle::NonCopyable
+struct UnlockedAcquireResult : angle::NonCopyable
 {
-    // The result of the call to vkAcquireNextImageKHR.  This result is processed later under the
-    // share group lock.
+    // The result of the call to vkAcquireNextImageKHR.
     VkResult result = VK_SUCCESS;
 
     // Semaphore to signal.
@@ -249,24 +245,13 @@ struct UnlockedTryAcquireResult : angle::NonCopyable
 
 struct ImageAcquireOperation : angle::NonCopyable
 {
-    ImageAcquireOperation();
-
     // True when acquiring the next image is deferred.
-    std::atomic<bool> needToAcquireNextSwapchainImage;
+    bool needToAcquireNextSwapchainImage = false;
 
-    // Data used to call vkAcquireNextImageKHR without necessarily holding the share group lock.
-    // The result of this operation can be found in mAcquireOperation.unlockedTryAcquireResult,
-    // which is processed once the share group lock is taken in the future.
-    //
-    // |unlockedTryAcquireData::mutex| is necessary to hold when making the vkAcquireNextImageKHR
-    // call as multiple contexts in the share group may end up provoking it (only one may be calling
-    // it without the share group lock though, the one calling eglPrepareSwapBuffersANGLE).  During
-    // processing of the results however (for example in the following eglSwapBuffers call, or if
-    // called during a GL call, immediately afterwards), the contents of |unlockedTryAcquireResult|
-    // can be accessed without |unlockedTryAcquireData::mutex| because the share group lock is
-    // already taken, and no thread can be attempting an unlocked vkAcquireNextImageKHR.
-    UnlockedTryAcquireData unlockedTryAcquireData;
-    UnlockedTryAcquireResult unlockedTryAcquireResult;
+    // No synchronization is necessary when making the vkAcquireNextImageKHR call since it is ONLY
+    // possible on a thread where Surface is current.
+    UnlockedAcquireData unlockedAcquireData;
+    UnlockedAcquireResult unlockedAcquireResult;
 };
 }  // namespace impl
 
@@ -423,9 +408,8 @@ class WindowSurfaceVk : public SurfaceVk
     // when the swapchain is initially created and when present() finds the swapchain out of date.
     // Otherwise, it is scheduled to be called later by deferAcquireNextImage().
     VkResult acquireNextSwapchainImage(vk::Context *context);
-    // Process the result of vkAcquireNextImageKHR, which may have been done previously without
-    // holding a lock.
-    VkResult postProcessUnlockedTryAcquire(vk::Context *context);
+    // Process the result of vkAcquireNextImageKHR.
+    VkResult postProcessUnlockedAcquire(vk::Context *context);
     // Whether vkAcquireNextImageKHR needs to be called or its results processed
     bool needsAcquireImageOrProcessResult() const;
     // This method is called when a swapchain image is presented.  It schedules
