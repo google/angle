@@ -4447,7 +4447,7 @@ void DynamicDescriptorPool::destroy(Renderer *renderer)
     // Destroy LRU list and SharedDescriptorSetCacheKey.
     for (auto it = mLRUList.begin(); it != mLRUList.end();)
     {
-        *(it->sharedCacheKey).get() = nullptr;
+        (it->sharedCacheKey)->destroy();
         it                          = mLRUList.erase(it);
     }
     ASSERT(mLRUList.empty());
@@ -4521,7 +4521,7 @@ bool DynamicDescriptorPool::evictStaleDescriptorSets(Renderer *renderer,
                 break;
             }
             // Evict it from the cache and remove it from LRU list.
-            bool removed = mDescriptorSetCache.eraseDescriptorSet((*it->sharedCacheKey)->mDesc);
+            bool removed = mDescriptorSetCache.eraseDescriptorSet(it->sharedCacheKey->getDesc());
             ASSERT(removed);
 
             // Note that erase it from LRU list will "destroy" descriptorSet. Since we
@@ -4602,7 +4602,7 @@ angle::Result DynamicDescriptorPool::getOrAllocateDescriptorSet(
     if (mDescriptorSetCache.getDescriptorSet(desc, &listIterator))
     {
         *descriptorSetOut     = listIterator->descriptorSet;
-        *newSharedCacheKeyOut = nullptr;
+        (*newSharedCacheKeyOut).reset();
         // Move it to the front of the LRU list.
         mLRUList.splice(mLRUList.begin(), mLRUList, listIterator);
         mCacheStats.hit();

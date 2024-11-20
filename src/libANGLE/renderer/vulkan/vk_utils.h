@@ -710,6 +710,9 @@ class RefCounted : angle::NonCopyable
 {
   public:
     RefCounted() : mRefCount(0) {}
+    template <class... Args>
+    explicit RefCounted(Args &&...args) : mRefCount(0), mObject(std::forward<Args>(args)...)
+    {}
     explicit RefCounted(T &&newObject) : mRefCount(0), mObject(std::move(newObject)) {}
     ~RefCounted() { ASSERT(mRefCount == 0 && !mObject.valid()); }
 
@@ -879,10 +882,11 @@ class SharedPtr final
 
     SharedPtr(SharedPtr &&other) : mRefCounted(nullptr) { *this = std::move(other); }
 
-    static SharedPtr<T> MakeShared()
+    template <class... Args>
+    static SharedPtr<T> MakeShared(Args &&...args)
     {
         SharedPtr<T> newObject;
-        newObject.mRefCounted = new RefCountedStorage;
+        newObject.mRefCounted = new RefCountedStorage(std::forward<Args>(args)...);
         newObject.mRefCounted->addRef();
         return newObject;
     }

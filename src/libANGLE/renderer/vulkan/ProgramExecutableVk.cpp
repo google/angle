@@ -1887,8 +1887,9 @@ angle::Result ProgramExecutableVk::getOrAllocateDescriptorSet(
             newSharedCacheKeyOut));
         ASSERT(mDescriptorSets[setIndex]);
 
-        if (*newSharedCacheKeyOut != nullptr)
+        if (*newSharedCacheKeyOut)
         {
+            ASSERT((*newSharedCacheKeyOut)->valid());
             // Cache miss. A new cache entry has been created.
             descriptorSetDesc.updateDescriptorSet(renderer, writeDescriptorDescs, updateBuilder,
                                                   mDescriptorSets[setIndex]->getDescriptorSet());
@@ -1917,7 +1918,7 @@ angle::Result ProgramExecutableVk::updateShaderResourcesDescriptorSet(
 {
     if (!mDynamicDescriptorPools[DescriptorSetIndex::ShaderResource])
     {
-        *newSharedCacheKeyOut = nullptr;
+        (*newSharedCacheKeyOut).reset();
         return angle::Result::Continue;
     }
 
@@ -1978,8 +1979,9 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(
             &mDescriptorSets[DescriptorSetIndex::Texture], &newSharedCacheKey));
         ASSERT(mDescriptorSets[DescriptorSetIndex::Texture]);
 
-        if (newSharedCacheKey != nullptr)
+        if (newSharedCacheKey)
         {
+            ASSERT(newSharedCacheKey->valid());
             ANGLE_TRY(UpdateFullTexturesDescriptorSet(
                 context, mVariableInfoMap, mTextureWriteDescriptorDescs, updateBuilder,
                 *mExecutable, textures, samplers,
