@@ -389,6 +389,10 @@ def get_min_reqs(args, traces):
     extension_deny_list = [
         'GL_ANGLE_shader_pixel_local_storage', 'GL_ANGLE_shader_pixel_local_storage_coherent'
     ]
+    # List of extensions which de facto imply others. The implied extensions are removed
+    # from the RequiredExtensions list for wider platform support: http://anglebug.com/380026310
+    implied_extension_filter = [("GL_OES_compressed_ETC1_RGB8_texture",
+                                 "GL_EXT_compressed_ETC1_RGB8_sub_texture")]
     default_args = ["--no-warmup"]
 
     skipped_traces = []
@@ -515,6 +519,10 @@ def get_min_reqs(args, traces):
                     return left_reqs + right_reqs
 
             recurse_reqs = recurse_run([], extensions, 0)
+            # Handle extensions which de facto imply others
+            for extension in implied_extension_filter:
+                if extension[0] in recurse_reqs:
+                    recurse_reqs.remove(extension[1])
 
             json_data['RequiredExtensions'] = recurse_reqs
             save_trace_json(trace, json_data)
