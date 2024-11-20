@@ -416,8 +416,8 @@ angle::Result SyncHelperNativeFence::initializeWithFd(ContextVk *contextVk, int 
       with the newly created sync object.
     */
     // Flush current pending set of commands providing the fence...
-    ANGLE_TRY(contextVk->flushImpl(nullptr, &mExternalFence,
-                                   RenderPassClosureReason::SyncObjectWithFdInit));
+    ANGLE_TRY(contextVk->flushAndSubmitCommands(nullptr, &mExternalFence,
+                                                RenderPassClosureReason::SyncObjectWithFdInit));
     QueueSerial submitSerial = contextVk->getLastSubmittedQueueSerial();
 
     // exportFd is exporting VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT_KHR type handle which
@@ -455,8 +455,8 @@ angle::Result SyncHelperNativeFence::prepareForClientWait(Context *context,
 
     if (flushCommands && contextVk)
     {
-        ANGLE_TRY(
-            contextVk->flushImpl(nullptr, nullptr, RenderPassClosureReason::SyncObjectClientWait));
+        ANGLE_TRY(contextVk->flushAndSubmitCommands(nullptr, nullptr,
+                                                    RenderPassClosureReason::SyncObjectClientWait));
     }
 
     *resultOut = VK_INCOMPLETE;
