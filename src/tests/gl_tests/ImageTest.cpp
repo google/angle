@@ -401,6 +401,8 @@ void main()
         glDeleteProgram(mTextureExternalESSL3Program);
         glClearColor(0, 0, 0, 0);
         glClear(GL_COLOR_BUFFER_BIT);
+
+        ASSERT_GL_NO_ERROR();
     }
 
     // 1) For tests that sample from EGLImages with colorspace override -
