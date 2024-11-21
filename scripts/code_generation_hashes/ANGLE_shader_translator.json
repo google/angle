@@ -18,9 +18,9 @@
   "tools/flex-bison/linux/flex.sha1":
     "621fc8947f2114812fb7a2c9df71bdcf",
   "tools/flex-bison/mac/bison.sha1":
-    "5bc38d2bf76ed35f1b9b83a59230da4d",
+    "820f02a921eaf3e176727a3ad17deaa6",
   "tools/flex-bison/mac/flex.sha1":
-    "f2af0409983fbb4306a1175ea8b50049",
+    "15c8ecfaac6ec510ea5118cdbcf27fdd",
   "tools/flex-bison/windows/bison.exe.sha1":
     "fd6d2461a2c256179faca7f5f142e689",
   "tools/flex-bison/windows/flex.exe.sha1":

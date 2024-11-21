@@ -5459,13 +5459,13 @@ hooks = [
   {
     'name': 'mac_flex_bison',
     'pattern': '.',
-    'condition': 'checkout_mac and not build_with_chromium and False', # Remove `and false` once the bucket exists.
+    'condition': 'checkout_mac and not build_with_chromium',
     'action': [ 'python3',
                 'third_party/depot_tools/download_from_google_storage.py',
                 '--no_resume',
                 '--platform=darwin*',
                 '--no_auth',
-                '--bucket', 'angle-flex-bison-mac',
+                '--bucket', 'angle-flex-bison',
                 '-d', 'tools/flex-bison/mac/',
     ],
   },
