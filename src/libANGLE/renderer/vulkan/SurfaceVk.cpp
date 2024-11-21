@@ -493,6 +493,7 @@ void AcquireNextImageUnlocked(VkDevice device,
                               impl::ImageAcquireOperation *acquire)
 {
     ASSERT(acquire->state == impl::ImageAcquireState::NeedToAcquire);
+    ASSERT(swapchain != VK_NULL_HANDLE);
 
     impl::UnlockedAcquireData *data     = &acquire->unlockedAcquireData;
     impl::UnlockedAcquireResult *result = &acquire->unlockedAcquireResult;
@@ -965,6 +966,7 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState, EGLNativ
       mSurface(VK_NULL_HANDLE),
       mSupportsProtectedSwapchain(false),
       mSwapchain(VK_NULL_HANDLE),
+      mLastSwapchain(VK_NULL_HANDLE),
       mSwapchainPresentMode(vk::PresentMode::FifoKHR),
       mDesiredSwapchainPresentMode(vk::PresentMode::FifoKHR),
       mMinImageCount(0),
@@ -993,6 +995,7 @@ WindowSurfaceVk::~WindowSurfaceVk()
 {
     ASSERT(mSurface == VK_NULL_HANDLE);
     ASSERT(mSwapchain == VK_NULL_HANDLE);
+    ASSERT(mLastSwapchain == VK_NULL_HANDLE);
 }
 
 void WindowSurfaceVk::destroy(const egl::Display *display)
@@ -1033,10 +1036,12 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
 
     destroySwapChainImages(displayVk);
 
-    if (mSwapchain)
+    ASSERT(mSwapchain == mLastSwapchain || mSwapchain == VK_NULL_HANDLE);
+    if (mLastSwapchain != VK_NULL_HANDLE)
     {
-        vkDestroySwapchainKHR(device, mSwapchain, nullptr);
-        mSwapchain = VK_NULL_HANDLE;
+        vkDestroySwapchainKHR(device, mLastSwapchain, nullptr);
+        mSwapchain     = VK_NULL_HANDLE;
+        mLastSwapchain = VK_NULL_HANDLE;
     }
 
     for (vk::Semaphore &semaphore : mAcquireOperation.unlockedAcquireData.acquireImageSemaphores)
@@ -1371,7 +1376,7 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk, bool *anyMat
         mDesiredSwapchainPresentMode              = GetDesiredPresentMode(presentModes, 0);
     }
 
-    ANGLE_TRY(createSwapChain(displayVk, extents, VK_NULL_HANDLE));
+    ANGLE_TRY(createSwapChain(displayVk, extents));
 
     // Create the semaphores that will be used for vkAcquireNextImageKHR.
     for (vk::Semaphore &semaphore : mAcquireOperation.unlockedAcquireData.acquireImageSemaphores)
@@ -1403,10 +1408,10 @@ angle::Result WindowSurfaceVk::getAttachmentRenderTarget(const gl::Context *cont
     return SurfaceVk::getAttachmentRenderTarget(context, binding, imageIndex, samples, rtOut);
 }
 
-angle::Result WindowSurfaceVk::recreateSwapchain(ContextVk *contextVk, const gl::Extents &extents)
+angle::Result WindowSurfaceVk::collectOldSwapchain(ContextVk *contextVk, VkSwapchainKHR swapchain)
 {
-    ASSERT(mAcquireOperation.state != impl::ImageAcquireState::Ready);
-    ASSERT(!mSwapchainStatus.isPending);
+    ASSERT(swapchain != VK_NULL_HANDLE);
+    ASSERT(swapchain != mLastSwapchain);
 
     // If no present operation has been done on the new swapchain, it can be destroyed right away.
     // This means that a new swapchain was created, but before any of its images were presented,
@@ -1416,12 +1421,12 @@ angle::Result WindowSurfaceVk::recreateSwapchain(ContextVk *contextVk, const gl:
     // scheduled for destruction.
     //
     // The old(er) swapchains still need to be kept to be scheduled for destruction.
-    VkSwapchainKHR swapchainToDestroy = VK_NULL_HANDLE;
 
     if (mPresentHistory.empty())
     {
         // Destroy the current (never-used) swapchain.
-        swapchainToDestroy = mSwapchain;
+        vkDestroySwapchainKHR(contextVk->getDevice(), swapchain, nullptr);
+        return angle::Result::Continue;
     }
 
     // Place all present operation into mOldSwapchains. That gets scheduled for destruction when the
@@ -1429,11 +1434,8 @@ angle::Result WindowSurfaceVk::recreateSwapchain(ContextVk *contextVk, const gl:
     // signaled (when VK_EXT_swapchain_maintenance1 is supported).
     SwapchainCleanupData cleanupData;
 
-    // If the swapchain is not being immediately destroyed, schedule it for destruction.
-    if (swapchainToDestroy == VK_NULL_HANDLE)
-    {
-        cleanupData.swapchain = mSwapchain;
-    }
+    // Schedule the swapchain for destruction.
+    cleanupData.swapchain = swapchain;
 
     for (impl::ImagePresentOperation &presentOperation : mPresentHistory)
     {
@@ -1455,6 +1457,15 @@ angle::Result WindowSurfaceVk::recreateSwapchain(ContextVk *contextVk, const gl:
     }
     mPresentHistory.clear();
 
+    // Add new item now, before below calls that may fail.
+    mOldSwapchains.emplace_back(std::move(cleanupData));
+
+    // Try to cleanup old swapchains first, before checking the kMaxOldSwapchains limit.
+    if (contextVk->getFeatures().supportsSwapchainMaintenance1.enabled)
+    {
+        ANGLE_TRY(cleanUpOldSwapchains(contextVk));
+    }
+
     // If too many old swapchains have accumulated, wait idle and destroy them.  This is to prevent
     // failures due to too many swapchains allocated.
     //
@@ -1475,15 +1486,18 @@ angle::Result WindowSurfaceVk::recreateSwapchain(ContextVk *contextVk, const gl:
         mOldSwapchains.clear();
     }
 
-    if (cleanupData.swapchain != VK_NULL_HANDLE || !cleanupData.fences.empty() ||
-        !cleanupData.semaphores.empty())
-    {
-        mOldSwapchains.emplace_back(std::move(cleanupData));
-    }
+    return angle::Result::Continue;
+}
 
-    // Recreate the swapchain based on the most recent one.
-    VkSwapchainKHR lastSwapchain = mSwapchain;
-    mSwapchain                   = VK_NULL_HANDLE;
+angle::Result WindowSurfaceVk::recreateSwapchain(ContextVk *contextVk, const gl::Extents &extents)
+{
+    ASSERT(mAcquireOperation.state != impl::ImageAcquireState::Ready);
+    ASSERT(!mSwapchainStatus.isPending);
+
+    // Invalidate the current swapchain while keep the last handle to create the new swapchain.
+    // mSwapchain may be already NULL if this is a repeated call (after a previous failure).
+    ASSERT(mSwapchain == mLastSwapchain || mSwapchain == VK_NULL_HANDLE);
+    mSwapchain = VK_NULL_HANDLE;
 
     releaseSwapchainImages(contextVk);
 
@@ -1496,22 +1510,28 @@ angle::Result WindowSurfaceVk::recreateSwapchain(ContextVk *contextVk, const gl:
         std::swap(swapchainExtents.width, swapchainExtents.height);
     }
 
-    // On Android, vkCreateSwapchainKHR destroys lastSwapchain, which is incorrect.  Wait idle in
+    // On Android, vkCreateSwapchainKHR destroys mLastSwapchain, which is incorrect.  Wait idle in
     // that case as a workaround.
-    if (lastSwapchain && contextVk->getFeatures().waitIdleBeforeSwapchainRecreation.enabled)
+    if (mLastSwapchain != VK_NULL_HANDLE &&
+        contextVk->getFeatures().waitIdleBeforeSwapchainRecreation.enabled)
     {
         mUse.merge(contextVk->getSubmittedResourceUse());
         ANGLE_TRY(finish(contextVk));
     }
-    angle::Result result = createSwapChain(contextVk, swapchainExtents, lastSwapchain);
+
+    // Save the handle since it is going to be updated in the createSwapChain call below.
+    VkSwapchainKHR oldSwapchain = mLastSwapchain;
+
+    angle::Result result = createSwapChain(contextVk, swapchainExtents);
 
     // Notify the parent classes of the surface's new state.
     onStateChange(angle::SubjectMessage::SurfaceChanged);
 
-    // If the most recent swapchain was never used, destroy it right now.
-    if (swapchainToDestroy)
+    // oldSwapchain was retired in the createSwapChain call above and can be collected.
+    if (oldSwapchain != VK_NULL_HANDLE && oldSwapchain != mLastSwapchain)
     {
-        vkDestroySwapchainKHR(contextVk->getDevice(), swapchainToDestroy, nullptr);
+        ASSERT(mLastSwapchain == mSwapchain);
+        ANGLE_TRY(collectOldSwapchain(contextVk, oldSwapchain));
     }
 
     return result;
@@ -1543,9 +1563,7 @@ angle::Result WindowSurfaceVk::resizeSwapchainImages(vk::Context *context, uint3
     return angle::Result::Continue;
 }
 
-angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
-                                               const gl::Extents &extents,
-                                               VkSwapchainKHR lastSwapchain)
+angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context, const gl::Extents &extents)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::createSwapchain");
 
@@ -1598,7 +1616,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     swapchainInfo.compositeAlpha        = mCompositeAlpha;
     swapchainInfo.presentMode = vk::ConvertPresentModeToVkPresentMode(mDesiredSwapchainPresentMode);
     swapchainInfo.clipped     = VK_TRUE;
-    swapchainInfo.oldSwapchain = lastSwapchain;
+    swapchainInfo.oldSwapchain = mLastSwapchain;
 
 #if defined(ANGLE_PLATFORM_WINDOWS)
     // On some AMD drivers we need to explicitly enable the extension and set
@@ -1707,11 +1725,15 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
         mCompatiblePresentModes[0] = swapchainInfo.presentMode;
     }
 
+    // Old swapchain is retired regardless if the below call fails or not.
+    mLastSwapchain = VK_NULL_HANDLE;
+
     // TODO: Once EGL_SWAP_BEHAVIOR_PRESERVED_BIT is supported, the contents of the old swapchain
     // need to carry over to the new one.  http://anglebug.com/42261637
     VkSwapchainKHR newSwapChain = VK_NULL_HANDLE;
     ANGLE_VK_TRY(context, vkCreateSwapchainKHR(device, &swapchainInfo, nullptr, &newSwapChain));
     mSwapchain            = newSwapChain;
+    mLastSwapchain        = newSwapChain;
     mSwapchainPresentMode = mDesiredSwapchainPresentMode;
     mWidth                = extents.width;
     mHeight               = extents.height;
@@ -1877,18 +1899,18 @@ angle::Result WindowSurfaceVk::queryAndAdjustSurfaceCaps(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
-angle::Result WindowSurfaceVk::checkForOutOfDateSwapchain(ContextVk *contextVk,
-                                                          bool presentOutOfDate)
+angle::Result WindowSurfaceVk::checkForOutOfDateSwapchain(ContextVk *contextVk, bool forceRecreate)
 {
     ASSERT(mAcquireOperation.state != impl::ImageAcquireState::Ready);
 
-    bool swapIntervalChanged =
+    bool presentModeIncompatible =
         !IsCompatiblePresentMode(mDesiredSwapchainPresentMode, mCompatiblePresentModes.data(),
                                  mCompatiblePresentModes.size());
-    presentOutOfDate = presentOutOfDate || swapIntervalChanged;
+    bool swapchainMissing = (mSwapchain == VK_NULL_HANDLE);
+    bool needRecreate     = forceRecreate || presentModeIncompatible || swapchainMissing;
 
     // If there's no change, early out.
-    if (!contextVk->getFeatures().perFrameWindowSizeQuery.enabled && !presentOutOfDate)
+    if (!contextVk->getFeatures().perFrameWindowSizeQuery.enabled && !needRecreate)
     {
         return angle::Result::Continue;
     }
@@ -1903,24 +1925,24 @@ angle::Result WindowSurfaceVk::checkForOutOfDateSwapchain(ContextVk *contextVk,
             GetMinImageCount(contextVk->getRenderer(), mSurfaceCaps, mDesiredSwapchainPresentMode);
         if (mMinImageCount != minImageCount)
         {
-            presentOutOfDate = true;
+            needRecreate     = true;
             mMinImageCount   = minImageCount;
         }
 
-        if (!presentOutOfDate)
+        if (!needRecreate)
         {
             // This device generates neither VK_ERROR_OUT_OF_DATE_KHR nor VK_SUBOPTIMAL_KHR.  Check
             // for whether the size and/or rotation have changed since the swapchain was created.
             uint32_t swapchainWidth  = getWidth();
             uint32_t swapchainHeight = getHeight();
-            presentOutOfDate         = mSurfaceCaps.currentTransform != mPreTransform ||
-                               mSurfaceCaps.currentExtent.width != swapchainWidth ||
-                               mSurfaceCaps.currentExtent.height != swapchainHeight;
+            needRecreate             = mSurfaceCaps.currentTransform != mPreTransform ||
+                           mSurfaceCaps.currentExtent.width != swapchainWidth ||
+                           mSurfaceCaps.currentExtent.height != swapchainHeight;
         }
     }
 
     // If anything has changed, recreate the swapchain.
-    if (!presentOutOfDate)
+    if (!needRecreate)
     {
         return angle::Result::Continue;
     }
@@ -2266,6 +2288,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
                                        bool *presentOutOfDate)
 {
     ASSERT(mAcquireOperation.state == impl::ImageAcquireState::Ready);
+    ASSERT(mSwapchain != VK_NULL_HANDLE);
 
     ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::present");
     vk::Renderer *renderer = contextVk->getRenderer();
@@ -2600,7 +2623,7 @@ void WindowSurfaceVk::deferAcquireNextImage()
 }
 
 angle::Result WindowSurfaceVk::prepareForAcquireNextSwapchainImage(const gl::Context *context,
-                                                                   bool presentOutOfDate)
+                                                                   bool forceSwapchainRecreate)
 {
     ASSERT(mAcquireOperation.state == impl::ImageAcquireState::NeedToAcquire);
 
@@ -2615,23 +2638,25 @@ angle::Result WindowSurfaceVk::prepareForAcquireNextSwapchainImage(const gl::Con
 
         // Now that we have the result from the last present need to determine if it's out of date
         // or not.
+        bool presentOutOfDate = false;
         ANGLE_TRY(computePresentOutOfDate(contextVk, result, &presentOutOfDate));
+        forceSwapchainRecreate = forceSwapchainRecreate || presentOutOfDate;
     }
 
-    return checkForOutOfDateSwapchain(contextVk, presentOutOfDate);
+    return checkForOutOfDateSwapchain(contextVk, forceSwapchainRecreate);
 }
 
 angle::Result WindowSurfaceVk::doDeferredAcquireNextImage(const gl::Context *context,
-                                                          bool presentOutOfDate)
+                                                          bool forceSwapchainRecreate)
 {
     ASSERT(mAcquireOperation.state == impl::ImageAcquireState::NeedToAcquire ||
            (mAcquireOperation.state == impl::ImageAcquireState::NeedToProcessResult &&
-            !presentOutOfDate));
+            !forceSwapchainRecreate));
     // prepareForAcquireNextSwapchainImage() may recreate Swapchain even if there is an image
     // acquired. Avoid this, by skipping the prepare call.
     if (mAcquireOperation.state == impl::ImageAcquireState::NeedToAcquire)
     {
-        ANGLE_TRY(prepareForAcquireNextSwapchainImage(context, presentOutOfDate));
+        ANGLE_TRY(prepareForAcquireNextSwapchainImage(context, forceSwapchainRecreate));
     }
     return doDeferredAcquireNextImageWithUsableSwapchain(context);
 }
@@ -2723,6 +2748,7 @@ VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::Context *context)
     if (skipAcquireNextSwapchainImageForSharedPresentMode())
     {
         ASSERT(mAcquireOperation.state == impl::ImageAcquireState::NeedToAcquire);
+        ASSERT(mSwapchain != VK_NULL_HANDLE);
         // This will check for OUT_OF_DATE when in single image mode. and prevent
         // re-AcquireNextImage.
         VkResult result = vkGetSwapchainStatusKHR(device, mSwapchain);
@@ -2760,6 +2786,9 @@ VkResult WindowSurfaceVk::postProcessUnlockedAcquire(vk::Context *context)
         // possible next EGL/GLES call (where swapchain will be recreated).
         return result;
     }
+
+    // Swapchain must be valid if acquire result is success (but may be NULL if error).
+    ASSERT(mSwapchain != VK_NULL_HANDLE);
 
     mCurrentSwapchainImageIndex = mAcquireOperation.unlockedAcquireResult.imageIndex;
     ASSERT(!isSharedPresentMode() || mCurrentSwapchainImageIndex == 0);
