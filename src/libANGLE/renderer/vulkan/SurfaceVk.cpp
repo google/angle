@@ -1717,17 +1717,15 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     }
 
     VkSwapchainPresentModesCreateInfoEXT compatibleModesInfo = {};
-    if (renderer->getFeatures().supportsSwapchainMaintenance1.enabled)
+    if (renderer->getFeatures().supportsSwapchainMaintenance1.enabled &&
+        mCompatiblePresentModes.size() > 1)
     {
-        if (mCompatiblePresentModes.size() > 1)
-        {
-            compatibleModesInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODES_CREATE_INFO_EXT;
-            compatibleModesInfo.presentModeCount =
-                static_cast<uint32_t>(mCompatiblePresentModes.size());
-            compatibleModesInfo.pPresentModes = mCompatiblePresentModes.data();
+        compatibleModesInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODES_CREATE_INFO_EXT;
+        compatibleModesInfo.presentModeCount =
+            static_cast<uint32_t>(mCompatiblePresentModes.size());
+        compatibleModesInfo.pPresentModes = mCompatiblePresentModes.data();
 
-            vk::AddToPNextChain(&swapchainInfo, &compatibleModesInfo);
-        }
+        vk::AddToPNextChain(&swapchainInfo, &compatibleModesInfo);
     }
     else
     {
