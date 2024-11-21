@@ -601,7 +601,7 @@ def RunReplayTestsInParallel(args, replay_build_dir, replay_tests, expected_resu
 
         if rc != 0:
             if expected_to_pass:
-                logging.error('Replay failed.\nTest: %s\nStdout:\n%s\n', test, p.stdout.decode())
+                logging.error('Replay failed.\nTest: %s\nStdout:\n%s\n', test, stdout)
                 replay_failed = True
             else:
                 logging.info('Ignoring replay failure due to expectation: %s [expected %s]', test,
