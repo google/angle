@@ -795,8 +795,8 @@ angle::Result FramebufferMtl::getSamplePosition(const gl::Context *context,
                                                 size_t index,
                                                 GLfloat *xy) const
 {
-    UNIMPLEMENTED();
-    return angle::Result::Stop;
+    rx::GetSamplePosition(getSamples(), index, xy);
+    return angle::Result::Continue;
 }
 
 angle::Result FramebufferMtl::prepareForUse(const gl::Context *context) const

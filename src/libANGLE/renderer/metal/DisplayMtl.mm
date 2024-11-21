@@ -796,10 +796,10 @@ void DisplayMtl::ensureCapsInitialized() const
 
     // MSAA
     mNativeCaps.maxSamples             = mFormatTable.getMaxSamples();
-    mNativeCaps.maxSampleMaskWords     = 0;
+    mNativeCaps.maxSampleMaskWords     = 1;
     mNativeCaps.maxColorTextureSamples = mNativeCaps.maxSamples;
     mNativeCaps.maxDepthTextureSamples = mNativeCaps.maxSamples;
-    mNativeCaps.maxIntegerSamples      = 1;
+    mNativeCaps.maxIntegerSamples      = mNativeCaps.maxSamples;
 
     mNativeCaps.maxVertexAttributes           = mtl::kMaxVertexAttribs;
     mNativeCaps.maxVertexAttribBindings       = mtl::kMaxVertexAttribs;
@@ -991,6 +991,11 @@ void DisplayMtl::initializeExtensions() const
     mNativeExtensions.texture3DOES = true;
 
     mNativeExtensions.textureShadowLodEXT = true;
+
+    if ([mMetalDevice areProgrammableSamplePositionsSupported])
+    {
+        mNativeExtensions.textureMultisampleANGLE = true;
+    }
 
     mNativeExtensions.sampleVariablesOES = true;
 

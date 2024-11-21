@@ -124,6 +124,13 @@ class TextureMtl : public TextureImpl
                                            GLbitfield usageFlags,
                                            const void *imageCreateInfoPNext) override;
 
+    angle::Result setStorageMultisample(const gl::Context *context,
+                                        gl::TextureType type,
+                                        GLsizei samples,
+                                        GLint internalFormat,
+                                        const gl::Extents &size,
+                                        bool fixedSampleLocations) override;
+
     angle::Result setEGLImageTarget(const gl::Context *context,
                                     gl::TextureType type,
                                     egl::Image *image) override;
@@ -149,13 +156,6 @@ class TextureMtl : public TextureImpl
     angle::Result syncState(const gl::Context *context,
                             const gl::Texture::DirtyBits &dirtyBits,
                             gl::Command source) override;
-
-    angle::Result setStorageMultisample(const gl::Context *context,
-                                        gl::TextureType type,
-                                        GLsizei samples,
-                                        GLint internalformat,
-                                        const gl::Extents &size,
-                                        bool fixedSampleLocations) override;
 
     angle::Result initializeContents(const gl::Context *context,
                                      GLenum binding,
@@ -189,6 +189,7 @@ class TextureMtl : public TextureImpl
     angle::Result createNativeStorage(const gl::Context *context,
                                       gl::TextureType type,
                                       GLuint mips,
+                                      GLuint samples,
                                       const gl::Extents &size);
     angle::Result onBaseMaxLevelsChanged(const gl::Context *context);
     angle::Result ensureSamplerStateCreated(const gl::Context *context);
@@ -210,10 +211,10 @@ class TextureMtl : public TextureImpl
                                   RenderTargetMtl **renderTargetOut);
     mtl::TextureRef &getImplicitMSTexture(const gl::ImageIndex &imageIndex);
 
-    // If levels = 0, this function will create full mipmaps texture.
     angle::Result setStorageImpl(const gl::Context *context,
                                  gl::TextureType type,
-                                 size_t levels,
+                                 GLuint mips,
+                                 GLuint samples,
                                  const mtl::Format &mtlFormat,
                                  const gl::Extents &size);
 

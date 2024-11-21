@@ -1205,13 +1205,9 @@ angle::Result ContextMtl::syncState(const gl::Context *context,
                 break;
             case gl::state::DIRTY_BIT_SAMPLE_COVERAGE_ENABLED:
             case gl::state::DIRTY_BIT_SAMPLE_COVERAGE:
-                invalidateDriverUniforms();
-                break;
             case gl::state::DIRTY_BIT_SAMPLE_MASK_ENABLED:
-                // NOTE(hqle): 3.1 MSAA support
-                break;
             case gl::state::DIRTY_BIT_SAMPLE_MASK:
-                // NOTE(hqle): 3.1 MSAA support
+                invalidateDriverUniforms();
                 break;
             case gl::state::DIRTY_BIT_DEPTH_TEST_ENABLED:
                 mDepthStencilDesc.updateDepthTestEnabled(glState.getDepthStencilState());
@@ -2837,6 +2833,12 @@ angle::Result ContextMtl::handleDirtyDriverUniforms(const gl::Context *context,
     else
     {
         mDriverUniforms.coverageMask = 0xFFFFFFFFu;
+    }
+
+    // Sample mask
+    if (mState.isSampleMaskEnabled())
+    {
+        mDriverUniforms.coverageMask &= mState.getSampleMaskWord(0);
     }
 
     ANGLE_TRY(

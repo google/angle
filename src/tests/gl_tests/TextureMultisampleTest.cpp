@@ -593,6 +593,86 @@ TEST_P(TextureMultisampleTest, SampleMaski)
     EXPECT_EQ(sampleMaskValue, 0x1);
 }
 
+// Test MS rendering with known per-sample values and a global sample mask
+TEST_P(TextureMultisampleTest, MaskedDrawWithSampleID)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_texture_multisample"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_OES_sample_variables"));
+
+    ANGLE_GL_PROGRAM(fetchProgram, essl3_shaders::vs::Passthrough(),
+                     multisampleTextureFragmentShader());
+    glUseProgram(fetchProgram);
+    const GLint sampleLocation = glGetUniformLocation(fetchProgram, "sampleNum");
+    ASSERT_GE(sampleLocation, 0);
+
+    const char kFSDraw[] = R"(#version 300 es
+#extension GL_OES_sample_variables : require
+precision mediump float;
+out vec4 color;
+
+void main() {
+    switch (gl_SampleID) {
+        case 0: color = vec4(1.0, 0.0, 0.0, 1.0); break;
+        case 1: color = vec4(0.0, 1.0, 0.0, 1.0); break;
+        case 2: color = vec4(0.0, 0.0, 1.0, 1.0); break;
+        case 3: color = vec4(1.0, 1.0, 1.0, 1.0); break;
+        default: color = vec4(0.0); break;
+    }
+})";
+    ANGLE_GL_PROGRAM(drawProgram, essl3_shaders::vs::Simple(), kFSDraw);
+
+    const GLsizei kSize    = 64;
+    const GLsizei kSamples = 4;
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ANGLE, mTexture);
+    glTexStorage2DMultisampleANGLE(GL_TEXTURE_2D_MULTISAMPLE_ANGLE, kSamples, GL_RGBA8, kSize,
+                                   kSize, GL_TRUE);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mFramebuffer);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                           GL_TEXTURE_2D_MULTISAMPLE_ANGLE, mTexture, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_DRAW_FRAMEBUFFER);
+
+    glEnable(GL_SAMPLE_MASK);
+    glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
+    glViewport(0, 0, kSize, kSize);
+    ASSERT_GL_NO_ERROR();
+
+    for (size_t mask = 0; mask < 16; ++mask)
+    {
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mFramebuffer);
+
+        // Clear the MS texture to magenta with zero sample mask, it must not affect clear ops
+        glSampleMaskiANGLE(0, 0);
+        glClear(GL_COLOR_BUFFER_BIT);
+        ASSERT_GL_NO_ERROR();
+
+        // Draw to the MS texture with a sample mask
+        glSampleMaskiANGLE(0, mask);
+        drawQuad(drawProgram, essl3_shaders::PositionAttrib(), 0.0f);
+        ASSERT_GL_NO_ERROR();
+
+        // Check all four samples
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+        glUniform1i(sampleLocation, 0);
+        drawQuad(fetchProgram, essl3_shaders::PositionAttrib(), 0.0f);
+        EXPECT_PIXEL_COLOR_EQ(kSize / 2, kSize / 2, (mask & 1) ? GLColor::red : GLColor::magenta)
+            << "mask: " << mask;
+        glUniform1i(sampleLocation, 1);
+        drawQuad(fetchProgram, essl3_shaders::PositionAttrib(), 0.0f);
+        EXPECT_PIXEL_COLOR_EQ(kSize / 2, kSize / 2, (mask & 2) ? GLColor::green : GLColor::magenta)
+            << "mask: " << mask;
+        glUniform1i(sampleLocation, 2);
+        drawQuad(fetchProgram, essl3_shaders::PositionAttrib(), 0.0f);
+        EXPECT_PIXEL_COLOR_EQ(kSize / 2, kSize / 2, (mask & 4) ? GLColor::blue : GLColor::magenta)
+            << "mask: " << mask;
+        glUniform1i(sampleLocation, 3);
+        drawQuad(fetchProgram, essl3_shaders::PositionAttrib(), 0.0f);
+        EXPECT_PIXEL_COLOR_EQ(kSize / 2, kSize / 2, (mask & 8) ? GLColor::white : GLColor::magenta)
+            << "mask: " << mask;
+    }
+}
+
 TEST_P(TextureMultisampleTest, ResolveToDefaultFramebuffer)
 {
     ANGLE_SKIP_TEST_IF(lessThanES31MultisampleExtNotSupported());
