@@ -912,9 +912,13 @@ TEST_P(EGLSurfaceTest, SwapWithoutAnyDraw)
     initializeMainContext();
     ASSERT_NE(mWindowSurface, EGL_NO_SURFACE);
 
+    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
+    ASSERT_EGL_SUCCESS();
+
     for (int i = 0; i < 10; ++i)
     {
         eglSwapBuffers(mDisplay, mWindowSurface);
+        ASSERT_EGL_SUCCESS();
     }
 }
 
