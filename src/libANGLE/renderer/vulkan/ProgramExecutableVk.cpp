@@ -1387,7 +1387,7 @@ angle::Result ProgramExecutableVk::addTextureDescriptorSetDesc(
             }
             else
             {
-                VkFormat vkFormat = image.getActualVkFormat();
+                VkFormat vkFormat = image.getActualVkFormat(renderer);
                 ASSERT(vkFormat != 0);
                 ANGLE_TRY(renderer->getFormatDescriptorCountForVkFormat(context, vkFormat,
                                                                         &formatDescriptorCount));
@@ -1470,7 +1470,7 @@ ProgramTransformOptions ProgramExecutableVk::getTransformOptions(
     const bool hasFramebufferFetch = mExecutable->usesColorFramebufferFetch() ||
                                      mExecutable->usesDepthFramebufferFetch() ||
                                      mExecutable->usesStencilFramebufferFetch();
-    const bool isMultisampled      = drawFrameBuffer->getSamples() > 1;
+    const bool isMultisampled                    = drawFrameBuffer->getSamples() > 1;
     transformOptions.multiSampleFramebufferFetch = hasFramebufferFetch && isMultisampled;
     transformOptions.enableSampleShading =
         contextVk->getState().isSampleShadingEnabled() && isMultisampled;

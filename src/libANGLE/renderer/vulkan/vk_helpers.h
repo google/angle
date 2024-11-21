@@ -2438,10 +2438,10 @@ class ImageHelper final : public Resource, public angle::Subject
         ASSERT(valid());
         return mActualFormatID;
     }
-    VkFormat getActualVkFormat() const
+    VkFormat getActualVkFormat(const Renderer *renderer) const
     {
         ASSERT(valid());
-        return GetVkFormatFromFormatID(mActualFormatID);
+        return GetVkFormatFromFormatID(renderer, mActualFormatID);
     }
     const angle::Format &getActualFormat() const
     {

@@ -357,7 +357,7 @@ void DeriveRenderingInfo(Renderer *renderer,
 
         angle::FormatID attachmentFormatID = desc[colorIndexGL];
         ASSERT(attachmentFormatID != angle::FormatID::NONE);
-        VkFormat attachmentFormat = GetVkFormatFromFormatID(attachmentFormatID);
+        VkFormat attachmentFormat = GetVkFormatFromFormatID(renderer, attachmentFormatID);
 
         const bool isYUVExternalFormat = vk::IsYUVExternalFormat(attachmentFormatID);
 #if defined(ANGLE_PLATFORM_ANDROID)
@@ -428,7 +428,7 @@ void DeriveRenderingInfo(Renderer *renderer,
         const angle::FormatID attachmentFormatID = desc[depthStencilIndexGL];
         ASSERT(attachmentFormatID != angle::FormatID::NONE);
         const angle::Format &angleFormat = angle::Format::Get(attachmentFormatID);
-        const VkFormat attachmentFormat  = GetVkFormatFromFormatID(attachmentFormatID);
+        const VkFormat attachmentFormat  = GetVkFormatFromFormatID(renderer, attachmentFormatID);
 
         infoOut->depthAttachmentFormat =
             angleFormat.depthBits == 0 ? VK_FORMAT_UNDEFINED : attachmentFormat;
@@ -608,7 +608,7 @@ void UnpackAttachmentDesc(Renderer *renderer,
 {
     *desc         = {};
     desc->sType   = VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2;
-    desc->format  = GetVkFormatFromFormatID(formatID);
+    desc->format  = GetVkFormatFromFormatID(renderer, formatID);
     desc->samples = gl_vk::GetSamples(samples, renderer->getFeatures().limitSampleCountTo2.enabled);
     desc->loadOp  = ConvertRenderPassLoadOpToVkLoadOp(static_cast<RenderPassLoadOp>(ops.loadOp));
     desc->storeOp =
@@ -640,7 +640,7 @@ void UnpackColorResolveAttachmentDesc(Renderer *renderer,
 {
     *desc        = {};
     desc->sType  = VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2;
-    desc->format = GetVkFormatFromFormatID(formatID);
+    desc->format = GetVkFormatFromFormatID(renderer, formatID);
 
     // This function is for color resolve attachments.
     const angle::Format &angleFormat = angle::Format::Get(formatID);
@@ -670,9 +670,10 @@ void UnpackDepthStencilResolveAttachmentDesc(vk::Context *context,
                                              const AttachmentInfo &depthInfo,
                                              const AttachmentInfo &stencilInfo)
 {
-    *desc        = {};
-    desc->sType  = VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2;
-    desc->format = GetVkFormatFromFormatID(formatID);
+    vk::Renderer *renderer = context->getRenderer();
+    *desc                  = {};
+    desc->sType            = VK_STRUCTURE_TYPE_ATTACHMENT_DESCRIPTION_2;
+    desc->format           = GetVkFormatFromFormatID(renderer, formatID);
 
     // This function is for depth/stencil resolve attachment.
     const angle::Format &angleFormat = angle::Format::Get(formatID);
@@ -3665,10 +3666,11 @@ VkFormat GraphicsPipelineDesc::getPipelineVertexInputStateFormat(
     const gl::ComponentType programAttribType,
     uint32_t attribIndex)
 {
+    vk::Renderer *renderer = context->getRenderer();
     // Get the corresponding VkFormat for the attrib's format.
-    const Format &format                = context->getRenderer()->getFormat(formatID);
+    const Format &format                = renderer->getFormat(formatID);
     const angle::Format &intendedFormat = format.getIntendedFormat();
-    VkFormat vkFormat                   = format.getActualBufferVkFormat(compressed);
+    VkFormat vkFormat                   = format.getActualBufferVkFormat(renderer, compressed);
 
     const gl::ComponentType attribType = GetVertexAttributeComponentType(
         intendedFormat.isPureInt(), intendedFormat.vertexAttribType);
@@ -3680,31 +3682,28 @@ VkFormat GraphicsPipelineDesc::getPipelineVertexInputStateFormat(
         {
             angle::FormatID patchFormatID =
                 patchVertexAttribComponentType(formatID, programAttribType);
-            vkFormat = context->getRenderer()
-                           ->getFormat(patchFormatID)
-                           .getActualBufferVkFormat(compressed);
+            vkFormat =
+                renderer->getFormat(patchFormatID).getActualBufferVkFormat(renderer, compressed);
         }
         else
         {
             // When converting from an unsigned to a signed format or vice versa, attempt to
             // match the bit width.
             angle::FormatID convertedFormatID = gl::ConvertFormatSignedness(intendedFormat);
-            const Format &convertedFormat = context->getRenderer()->getFormat(convertedFormatID);
+            const Format &convertedFormat     = renderer->getFormat(convertedFormatID);
             ASSERT(intendedFormat.channelCount == convertedFormat.getIntendedFormat().channelCount);
             ASSERT(intendedFormat.redBits == convertedFormat.getIntendedFormat().redBits);
             ASSERT(intendedFormat.greenBits == convertedFormat.getIntendedFormat().greenBits);
             ASSERT(intendedFormat.blueBits == convertedFormat.getIntendedFormat().blueBits);
             ASSERT(intendedFormat.alphaBits == convertedFormat.getIntendedFormat().alphaBits);
 
-            vkFormat = convertedFormat.getActualBufferVkFormat(compressed);
+            vkFormat = convertedFormat.getActualBufferVkFormat(renderer, compressed);
         }
-        const Format &origFormat =
-            context->getRenderer()->getFormat(GetFormatIDFromVkFormat(origVkFormat));
-        const Format &patchFormat =
-            context->getRenderer()->getFormat(GetFormatIDFromVkFormat(vkFormat));
+        const Format &origFormat  = renderer->getFormat(GetFormatIDFromVkFormat(origVkFormat));
+        const Format &patchFormat = renderer->getFormat(GetFormatIDFromVkFormat(vkFormat));
         ASSERT(origFormat.getIntendedFormat().pixelBytes ==
                patchFormat.getIntendedFormat().pixelBytes);
-        ASSERT(context->getRenderer()->getNativeExtensions().relaxedVertexAttributeTypeANGLE);
+        ASSERT(renderer->getNativeExtensions().relaxedVertexAttributeTypeANGLE);
     }
 
     return vkFormat;
@@ -5336,12 +5335,12 @@ size_t FramebufferDesc::hash() const
 
 void FramebufferDesc::reset()
 {
-    mMaxIndex                = 0;
+    mMaxIndex                 = 0;
     mHasColorFramebufferFetch = false;
-    mLayerCount              = 0;
-    mSrgbWriteControlMode    = 0;
-    mUnresolveAttachmentMask = 0;
-    mIsRenderToTexture       = 0;
+    mLayerCount               = 0;
+    mSrgbWriteControlMode     = 0;
+    mUnresolveAttachmentMask  = 0;
+    mIsRenderToTexture        = 0;
     // An empty FramebufferDesc is still a valid desc. It becomes invalid when it is explicitly
     // destroyed or released by SharedFramebufferCacheKey.
     mIsValid = 1;
@@ -5468,9 +5467,9 @@ void YcbcrConversionDesc::update(Renderer *renderer,
     SetBitField(mIsExternalFormat, (externalFormat) ? 1 : 0);
     SetBitField(mLinearFilterSupported,
                 linearFilterSupported == YcbcrLinearFilterSupport::Supported);
-    mExternalOrVkFormat = (externalFormat)
-                              ? externalFormat
-                              : vkFormat.getActualImageVkFormat(vk::ImageAccess::SampleOnly);
+    mExternalOrVkFormat =
+        (externalFormat) ? externalFormat
+                         : vkFormat.getActualImageVkFormat(renderer, vk::ImageAccess::SampleOnly);
 
     updateChromaFilter(renderer, chromaFilter);
 
@@ -6339,7 +6338,7 @@ void DescriptorSetDescBuilder::updatePreCacheActiveTextures(
 {
     const std::vector<gl::SamplerBinding> &samplerBindings = executable.getSamplerBindings();
     const gl::ActiveTextureMask &activeTextures            = executable.getActiveSamplersMask();
-    const ProgramExecutableVk *executableVk = vk::GetImpl(&executable);
+    const ProgramExecutableVk *executableVk                = vk::GetImpl(&executable);
 
     resize(executableVk->getTextureWriteDescriptorDescs().getTotalDescriptorCount());
     const WriteDescriptorDescs &writeDescriptorDescs =
@@ -7541,7 +7540,7 @@ angle::Result RenderPassCache::MakeRenderPass(vk::Context *context,
         else
         {
             attachmentDescs[attachmentCount.get()].format =
-                vk::GetVkFormatFromFormatID(attachmentFormatID);
+                vk::GetVkFormatFromFormatID(renderer, attachmentFormatID);
         }
         ASSERT(attachmentDescs[attachmentCount.get()].format != VK_FORMAT_UNDEFINED);
 

@@ -2071,7 +2071,8 @@ GLint TextureVk::getFormatSupportedCompressionRatesImpl(vk::Renderer *renderer,
         compressionProp.sType = VK_STRUCTURE_TYPE_IMAGE_COMPRESSION_PROPERTIES_EXT;
 
         if (vk::ImageHelper::FormatSupportsUsage(
-                renderer, vk::GetVkFormatFromFormatID(format.getActualRenderableImageFormatID()),
+                renderer,
+                vk::GetVkFormatFromFormatID(renderer, format.getActualRenderableImageFormatID()),
                 VK_IMAGE_TYPE_2D, VK_IMAGE_TILING_OPTIMAL,
                 VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT |
                     VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
@@ -3930,9 +3931,10 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
     mImageCreateFlags |=
         vk::GetMinimalImageCreateFlags(renderer, mState.getType(), mImageUsageFlags);
 
-    const VkFormat actualImageFormat = rx::vk::GetVkFormatFromFormatID(actualImageFormatID);
-    const VkImageType imageType      = gl_vk::GetImageType(mState.getType());
-    const VkImageTiling imageTiling  = mImage->getTilingMode();
+    const VkFormat actualImageFormat =
+        rx::vk::GetVkFormatFromFormatID(renderer, actualImageFormatID);
+    const VkImageType imageType     = gl_vk::GetImageType(mState.getType());
+    const VkImageTiling imageTiling = mImage->getTilingMode();
 
     // The MSRTSS bit is included in the create flag for all textures if the feature flag
     // corresponding to its preference is enabled. Otherwise, it is enabled for a texture if it is
@@ -3950,8 +3952,8 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
             mImageCreateFlags | VK_IMAGE_CREATE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_BIT_EXT;
         bool isActualFormatSRGB             = angle::Format::Get(actualImageFormatID).isSRGB;
         const VkFormat additionalViewFormat = rx::vk::GetVkFormatFromFormatID(
-            isActualFormatSRGB ? ConvertToLinear(actualImageFormatID)
-                               : ConvertToSRGB(actualImageFormatID));
+            renderer, isActualFormatSRGB ? ConvertToLinear(actualImageFormatID)
+                                         : ConvertToSRGB(actualImageFormatID));
         const bool isAdditionalFormatValid = additionalViewFormat != VK_FORMAT_UNDEFINED;
 
         // If the texture has already been bound to an MSRTT framebuffer, lack of support should

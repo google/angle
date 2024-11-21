@@ -57,7 +57,7 @@ struct SkippedSyncvalMessage
 {
     const char *messageId;
     const char *messageContents1;
-    const char *messageContents2                      = "";
+    const char *messageContents2                           = "";
     bool isDueToNonConformantCoherentColorFramebufferFetch = false;
 };
 
@@ -906,6 +906,7 @@ class Renderer : angle::NonCopyable
     VkPhysicalDeviceTimelineSemaphoreFeaturesKHR mTimelineSemaphoreFeatures;
     VkPhysicalDeviceHostImageCopyFeaturesEXT mHostImageCopyFeatures;
     VkPhysicalDeviceHostImageCopyPropertiesEXT mHostImageCopyProperties;
+    VkPhysicalDeviceTextureCompressionASTCHDRFeaturesEXT mTextureCompressionASTCHDRFeatures;
     std::vector<VkImageLayout> mHostImageCopySrcLayoutsStorage;
     std::vector<VkImageLayout> mHostImageCopyDstLayoutsStorage;
     VkPhysicalDeviceImageCompressionControlFeaturesEXT mImageCompressionControlFeatures;

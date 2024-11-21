@@ -407,6 +407,7 @@ enum class Feature
     SupportsSurfaceProtectedSwapchains,
     SupportsSwapchainMaintenance1,
     SupportsSynchronization2,
+    SupportsTextureCompressionAstcHdr,
     SupportsTimelineSemaphore,
     SupportsTimestampSurfaceAttribute,
     SupportsTransformFeedbackExtension,

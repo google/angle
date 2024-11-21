@@ -1412,6 +1412,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo supportsTextureCompressionAstcHdr = {
+        "supportsTextureCompressionAstcHdr",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

@@ -42,7 +42,8 @@ egl::ConfigSet DisplayVkHeadless::generateConfigs()
 
     for (GLenum glFormat : kDesiredColorFormats)
     {
-        VkFormat vkFormat = mRenderer->getFormat(glFormat).getActualRenderableImageVkFormat();
+        VkFormat vkFormat =
+            mRenderer->getFormat(glFormat).getActualRenderableImageVkFormat(mRenderer);
         ASSERT(vkFormat != VK_FORMAT_UNDEFINED);
 
         angle::FormatID actualFormatID = vk::GetFormatIDFromVkFormat(vkFormat);

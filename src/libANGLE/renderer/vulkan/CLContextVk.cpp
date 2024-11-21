@@ -149,7 +149,8 @@ VkFormat CLContextVk::getVkFormatFromCL(cl_image_format format)
         default:
             return VK_FORMAT_UNDEFINED;
     }
-    return getPlatform()->getRenderer()->getFormat(formatID).getActualRenderableImageVkFormat();
+    return getPlatform()->getRenderer()->getFormat(formatID).getActualRenderableImageVkFormat(
+        getPlatform()->getRenderer());
 }
 
 angle::Result CLContextVk::getSupportedImageFormats(cl::MemFlags flags,

@@ -496,7 +496,7 @@ angle::Result CLImageVk::initImageViewImpl()
     viewInfo.sType                 = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
     viewInfo.flags                 = 0;
     viewInfo.image                 = getImage().getImage().getHandle();
-    viewInfo.format                = getImage().getActualVkFormat();
+    viewInfo.format                = getImage().getActualVkFormat(mContext->getRenderer());
     viewInfo.viewType              = mImageViewType;
 
     viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;

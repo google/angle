@@ -624,9 +624,7 @@ void OffscreenSurfaceVk::AttachmentImage::destroy(const egl::Display *display)
 
 OffscreenSurfaceVk::OffscreenSurfaceVk(const egl::SurfaceState &surfaceState,
                                        vk::Renderer *renderer)
-    : SurfaceVk(surfaceState),
-      mColorAttachment(this),
-      mDepthStencilAttachment(this)
+    : SurfaceVk(surfaceState), mColorAttachment(this), mDepthStencilAttachment(this)
 {
     mColorRenderTarget.init(&mColorAttachment.image, &mColorAttachment.imageViews, nullptr, nullptr,
                             {}, gl::LevelIndex(0), 0, 1, RenderTargetTransience::Default);
@@ -1144,7 +1142,7 @@ bool WindowSurfaceVk::updateColorSpace(DisplayVk *displayVk)
 {
     vk::Renderer *renderer = displayVk->getRenderer();
 
-    VkFormat vkFormat = vk::GetVkFormatFromFormatID(getActualFormatID(renderer));
+    VkFormat vkFormat = vk::GetVkFormatFromFormatID(renderer, getActualFormatID(renderer));
 
     EGLenum eglColorSpaceEnum =
         static_cast<EGLenum>(mState.attributes.get(EGL_GL_COLORSPACE, EGL_NONE));
@@ -1600,9 +1598,9 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context, const gl::E
     VkSwapchainCreateInfoKHR swapchainInfo = {};
     swapchainInfo.sType                    = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
     swapchainInfo.flags = mState.hasProtectedContent() ? VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR : 0;
-    swapchainInfo.surface         = mSurface;
-    swapchainInfo.minImageCount   = mMinImageCount;
-    swapchainInfo.imageFormat     = vk::GetVkFormatFromFormatID(getActualFormatID(renderer));
+    swapchainInfo.surface = mSurface;
+    swapchainInfo.minImageCount = mMinImageCount;
+    swapchainInfo.imageFormat = vk::GetVkFormatFromFormatID(renderer, getActualFormatID(renderer));
     swapchainInfo.imageColorSpace = mSurfaceColorSpace;
     // Note: Vulkan doesn't allow 0-width/height swapchains.
     swapchainInfo.imageExtent.width     = std::max(rotatedExtents.width, 1);
@@ -1701,7 +1699,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context, const gl::E
         // image counts returned when VkSurfacePresentModeEXT is not provided.". Use the per present
         // mode imageCount here. Otherwise we may get into
         // VUID-VkSwapchainCreateInfoKHR-presentMode-02839.
-        mSurfaceCaps                = surfaceCaps2.surfaceCapabilities;
+        mSurfaceCaps   = surfaceCaps2.surfaceCapabilities;
         mMinImageCount = GetMinImageCount(renderer, mSurfaceCaps, mDesiredSwapchainPresentMode);
         swapchainInfo.minImageCount = mMinImageCount;
     }

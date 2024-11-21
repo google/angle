@@ -1850,6 +1850,14 @@
                 "Enable use of sliced_3d"
             ],
             "issue": "https://anglebug.com/378507964"
+        },
+        {
+            "name": "supports_texture_compression_astc_hdr",
+            "category": "Features",
+            "description": [
+                "VkDevice supports VK_EXT_texture_compression_astc_hdr extension"
+            ],
+            "issue": "https://anglebug.com/379186304"
         }
     ]
 }
