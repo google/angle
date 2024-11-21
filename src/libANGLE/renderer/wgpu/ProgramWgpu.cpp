@@ -253,7 +253,11 @@ class LinkTaskWgpu : public LinkTask
         initDefaultUniformLayoutMapping(&layoutMap);
 
         // All uniform initializations are complete, now resize the buffers accordingly and return
-        return executableWgpu->resizeUniformBlockMemory(requiredBufferSize);
+        ANGLE_TRY(executableWgpu->resizeUniformBlockMemory(requiredBufferSize));
+
+        executableWgpu->markDefaultUniformsDirty();
+
+        return angle::Result::Continue;
     }
 
     void generateUniformLayoutMapping(gl::ShaderMap<sh::BlockLayoutMap> *layoutMapOut,

@@ -101,6 +101,8 @@ angle::Result ProgramExecutableWgpu::updateUniformsAndGetBindGroup(ContextWgpu *
         bindGroupDesc.entries    = bindings.data();
         mDefaultBindGroup        = contextWgpu->getDevice().CreateBindGroup(&bindGroupDesc);
     }
+
+    ASSERT(mDefaultBindGroup);
     *outBindGroup = mDefaultBindGroup;
 
     return angle::Result::Continue;
@@ -152,6 +154,12 @@ angle::Result ProgramExecutableWgpu::resizeUniformBlockMemory(
     }
 
     return angle::Result::Continue;
+}
+
+void ProgramExecutableWgpu::markDefaultUniformsDirty()
+{
+    // Mark all linked stages as having dirty default uniforms
+    mDefaultUniformBlocksDirty = getExecutable()->getLinkedShaderStages();
 }
 
 void ProgramExecutableWgpu::setUniform1fv(GLint location, GLsizei count, const GLfloat *v)

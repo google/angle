@@ -41,6 +41,7 @@ class ProgramExecutableWgpu : public ProgramExecutableImpl
         return mDefaultUniformBlocks[shaderType];
     }
 
+    void markDefaultUniformsDirty();
     bool checkDirtyUniforms() { return mDefaultUniformBlocksDirty.any(); }
 
     void setUniform1fv(GLint location, GLsizei count, const GLfloat *v) override;
