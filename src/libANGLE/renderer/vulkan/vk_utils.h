@@ -619,11 +619,6 @@ VkResult AllocateBufferMemoryWithRequirements(Context *context,
                                               uint32_t *memoryTypeIndexOut,
                                               DeviceMemory *deviceMemoryOut);
 
-angle::Result InitShaderModule(Context *context,
-                               ShaderModule *shaderModule,
-                               const uint32_t *shaderCode,
-                               size_t shaderCodeSize);
-
 gl::TextureType Get2DTextureType(uint32_t layerCount, GLint samples);
 
 enum class RecordingMode
@@ -1196,8 +1191,13 @@ ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 template <typename T>
 using SpecializationConstantMap = angle::PackedEnumMap<sh::vk::SpecializationConstantId, T>;
 
-using ShaderModulePointer = BindingPointer<ShaderModule>;
-using ShaderModuleMap     = gl::ShaderMap<ShaderModulePointer>;
+using ShaderModulePtr = SharedPtr<ShaderModule>;
+using ShaderModuleMap = gl::ShaderMap<ShaderModulePtr>;
+
+angle::Result InitShaderModule(Context *context,
+                               ShaderModulePtr *shaderModulePtr,
+                               const uint32_t *shaderCode,
+                               size_t shaderCodeSize);
 
 void MakeDebugUtilsLabel(GLenum source, const char *marker, VkDebugUtilsLabelEXT *label);
 

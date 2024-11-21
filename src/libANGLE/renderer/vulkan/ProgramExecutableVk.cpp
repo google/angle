@@ -624,11 +624,10 @@ angle::Result ProgramInfo::initProgram(vk::Context *context,
 
     ANGLE_TRY(
         SpvTransformSpirvCode(options, variableInfoMap, originalSpirvBlob, &transformedSpirvBlob));
-    ANGLE_TRY(vk::InitShaderModule(context, &mShaders[shaderType].get(),
-                                   transformedSpirvBlob.data(),
+    ANGLE_TRY(vk::InitShaderModule(context, &mShaders[shaderType], transformedSpirvBlob.data(),
                                    transformedSpirvBlob.size() * sizeof(uint32_t)));
 
-    mProgramHelper.setShader(shaderType, &mShaders[shaderType]);
+    mProgramHelper.setShader(shaderType, mShaders[shaderType]);
 
     return angle::Result::Continue;
 }
@@ -637,9 +636,13 @@ void ProgramInfo::release(ContextVk *contextVk)
 {
     mProgramHelper.release(contextVk);
 
-    for (vk::RefCounted<vk::ShaderModule> &shader : mShaders)
+    for (vk::ShaderModulePtr &shader : mShaders)
     {
-        shader.get().destroy(contextVk->getDevice());
+        if (shader)
+        {
+            shader->destroy(contextVk->getDevice());
+        }
+        shader.reset();
     }
 }
 

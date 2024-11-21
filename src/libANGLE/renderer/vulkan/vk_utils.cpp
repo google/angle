@@ -616,17 +616,22 @@ VkResult AllocateBufferMemoryWithRequirements(Context *context,
 }
 
 angle::Result InitShaderModule(Context *context,
-                               ShaderModule *shaderModule,
+                               ShaderModulePtr *shaderModulePtr,
                                const uint32_t *shaderCode,
                                size_t shaderCodeSize)
 {
+    ASSERT(!(*shaderModulePtr));
     VkShaderModuleCreateInfo createInfo = {};
     createInfo.sType                    = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
     createInfo.flags                    = 0;
     createInfo.codeSize                 = shaderCodeSize;
     createInfo.pCode                    = shaderCode;
 
-    ANGLE_VK_TRY(context, shaderModule->init(context->getDevice(), createInfo));
+    ShaderModulePtr newShaderModule = ShaderModulePtr::MakeShared();
+    ANGLE_VK_TRY(context, newShaderModule->init(context->getDevice(), createInfo));
+
+    *shaderModulePtr = std::move(newShaderModule);
+
     return angle::Result::Continue;
 }
 

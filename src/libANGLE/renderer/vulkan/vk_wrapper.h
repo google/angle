@@ -600,6 +600,8 @@ class ShaderModule final : public WrappedObject<ShaderModule, VkShaderModule>
   public:
     ShaderModule() = default;
     void destroy(VkDevice device);
+    // Somebody must have called destroy(device) explicitly already
+    void destroy() { ASSERT(!valid()); }
 
     VkResult init(VkDevice device, const VkShaderModuleCreateInfo &createInfo);
 };

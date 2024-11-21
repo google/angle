@@ -3828,7 +3828,7 @@ class ShaderProgramHelper : angle::NonCopyable
     void destroy(Renderer *renderer);
     void release(ContextVk *contextVk);
 
-    void setShader(gl::ShaderType shaderType, RefCounted<ShaderModule> *shader);
+    void setShader(gl::ShaderType shaderType, const ShaderModulePtr &shader);
 
     // Create a graphics pipeline and place it in the cache.  Must not be called if the pipeline
     // exists in cache.

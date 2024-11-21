@@ -93,7 +93,7 @@ class ProgramInfo final : angle::NonCopyable
 
   private:
     vk::ShaderProgramHelper mProgramHelper;
-    gl::ShaderMap<vk::RefCounted<vk::ShaderModule>> mShaders;
+    vk::ShaderModuleMap mShaders;
 };
 
 using ImmutableSamplerIndexMap = angle::HashMap<vk::YcbcrConversionDesc, uint32_t>;

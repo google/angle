@@ -481,7 +481,10 @@ CLProgramVk::~CLProgramVk()
     {
         pool.reset();
     }
-    mShader.get().destroy(mContext->getDevice());
+    if (mShader)
+    {
+        mShader->destroy(mContext->getDevice());
+    }
     for (DescriptorSetIndex index : angle::AllEnums<DescriptorSetIndex>())
     {
         mMetaDescriptorPools[index].destroy(mContext->getRenderer());
@@ -955,10 +958,11 @@ bool CLProgramVk::buildInternal(const cl::DevicePtrs &devices,
                 return false;
             }
 
-            if (mShader.get().valid())
+            if (mShader)
             {
                 // User is recompiling program, we need to recreate the shader module
-                mShader.get().destroy(mContext->getDevice());
+                mShader->destroy(mContext->getDevice());
+                mShader.reset();
             }
             // Strip SPIR-V binary if Vk implementation does not support non-semantic info
             angle::spirv::Blob spvBlob =
@@ -966,7 +970,7 @@ bool CLProgramVk::buildInternal(const cl::DevicePtrs &devices,
                     ? stripReflection(&deviceProgramData)
                     : deviceProgramData.binary;
             ASSERT(!spvBlob.empty());
-            if (IsError(vk::InitShaderModule(mContext, &mShader.get(), spvBlob.data(),
+            if (IsError(vk::InitShaderModule(mContext, &mShader, spvBlob.data(),
                                              spvBlob.size() * sizeof(uint32_t))))
             {
                 ERR() << "Failed to init Vulkan Shader Module!";

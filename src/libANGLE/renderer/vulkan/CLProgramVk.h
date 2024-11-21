@@ -331,7 +331,7 @@ class CLProgramVk : public CLProgramImpl
     const DeviceProgramData *getDeviceProgramData(const char *kernelName) const;
     const DeviceProgramData *getDeviceProgramData(const _cl_device_id *device) const;
     CLPlatformVk *getPlatform() { return mContext->getPlatform(); }
-    vk::RefCounted<vk::ShaderModule> *getShaderModule() { return &mShader; }
+    const vk::ShaderModulePtr &getShaderModule() const { return mShader; }
 
     bool buildInternal(const cl::DevicePtrs &devices,
                        std::string options,
@@ -364,7 +364,7 @@ class CLProgramVk : public CLProgramImpl
   private:
     CLContextVk *mContext;
     std::string mProgramOpts;
-    vk::RefCounted<vk::ShaderModule> mShader;
+    vk::ShaderModulePtr mShader;
     DevicePrograms mAssociatedDevicePrograms;
     vk::DescriptorSetArray<vk::MetaDescriptorPool> mMetaDescriptorPools;
     vk::DescriptorSetArray<vk::DynamicDescriptorPoolPointer> mDynamicDescriptorPools;

@@ -12848,12 +12848,12 @@ ShaderProgramHelper::~ShaderProgramHelper() = default;
 
 bool ShaderProgramHelper::valid(const gl::ShaderType shaderType) const
 {
-    return mShaders[shaderType].valid();
+    return mShaders[shaderType];
 }
 
 void ShaderProgramHelper::destroy(Renderer *renderer)
 {
-    for (BindingPointer<ShaderModule> &shader : mShaders)
+    for (ShaderModulePtr &shader : mShaders)
     {
         shader.reset();
     }
@@ -12861,17 +12861,18 @@ void ShaderProgramHelper::destroy(Renderer *renderer)
 
 void ShaderProgramHelper::release(ContextVk *contextVk)
 {
-    for (BindingPointer<ShaderModule> &shader : mShaders)
+    for (ShaderModulePtr &shader : mShaders)
     {
         shader.reset();
     }
 }
 
-void ShaderProgramHelper::setShader(gl::ShaderType shaderType, RefCounted<ShaderModule> *shader)
+void ShaderProgramHelper::setShader(gl::ShaderType shaderType, const ShaderModulePtr &shader)
 {
     // The shaders must be set once and are not expected to change.
-    ASSERT(!mShaders[shaderType].valid());
-    mShaders[shaderType].set(shader);
+    ASSERT(!mShaders[shaderType]);
+    ASSERT(shader && shader->valid());
+    mShaders[shaderType] = shader;
 }
 
 void ShaderProgramHelper::createMonolithicPipelineCreationTask(
@@ -12914,7 +12915,7 @@ angle::Result ShaderProgramHelper::getOrCreateComputePipeline(
     shaderStage.sType               = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
     shaderStage.flags               = 0;
     shaderStage.stage               = VK_SHADER_STAGE_COMPUTE_BIT;
-    shaderStage.module              = mShaders[gl::ShaderType::Compute].get().getHandle();
+    shaderStage.module              = mShaders[gl::ShaderType::Compute]->getHandle();
     shaderStage.pName               = shaderName ? shaderName : "main";
     shaderStage.pSpecializationInfo = specializationInfo;
 

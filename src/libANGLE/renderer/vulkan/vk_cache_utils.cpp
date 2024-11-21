@@ -3816,7 +3816,7 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
                                  &stateOut->specializationInfo);
 
     // Vertex shader is always expected to be present.
-    const ShaderModule &vertexModule = shaders[gl::ShaderType::Vertex].get();
+    const ShaderModule &vertexModule = *shaders[gl::ShaderType::Vertex];
     ASSERT(vertexModule.valid());
     VkPipelineShaderStageCreateInfo vertexStage = {};
     SetPipelineShaderStageInfo(VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
@@ -3824,10 +3824,10 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
                                stateOut->specializationInfo, &vertexStage);
     stateOut->shaderStages.push_back(vertexStage);
 
-    const ShaderModulePointer &tessControlPointer = shaders[gl::ShaderType::TessControl];
-    if (tessControlPointer.valid())
+    const ShaderModulePtr &tessControlPointer = shaders[gl::ShaderType::TessControl];
+    if (tessControlPointer)
     {
-        const ShaderModule &tessControlModule            = tessControlPointer.get();
+        const ShaderModule &tessControlModule            = *tessControlPointer;
         VkPipelineShaderStageCreateInfo tessControlStage = {};
         SetPipelineShaderStageInfo(VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
                                    VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT,
@@ -3836,10 +3836,10 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
         stateOut->shaderStages.push_back(tessControlStage);
     }
 
-    const ShaderModulePointer &tessEvaluationPointer = shaders[gl::ShaderType::TessEvaluation];
-    if (tessEvaluationPointer.valid())
+    const ShaderModulePtr &tessEvaluationPointer = shaders[gl::ShaderType::TessEvaluation];
+    if (tessEvaluationPointer)
     {
-        const ShaderModule &tessEvaluationModule            = tessEvaluationPointer.get();
+        const ShaderModule &tessEvaluationModule            = *tessEvaluationPointer;
         VkPipelineShaderStageCreateInfo tessEvaluationStage = {};
         SetPipelineShaderStageInfo(VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
                                    VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT,
@@ -3848,10 +3848,10 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
         stateOut->shaderStages.push_back(tessEvaluationStage);
     }
 
-    const ShaderModulePointer &geometryPointer = shaders[gl::ShaderType::Geometry];
-    if (geometryPointer.valid())
+    const ShaderModulePtr &geometryPointer = shaders[gl::ShaderType::Geometry];
+    if (geometryPointer)
     {
-        const ShaderModule &geometryModule            = geometryPointer.get();
+        const ShaderModule &geometryModule            = *geometryPointer;
         VkPipelineShaderStageCreateInfo geometryStage = {};
         SetPipelineShaderStageInfo(VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
                                    VK_SHADER_STAGE_GEOMETRY_BIT, geometryModule.getHandle(),
@@ -3860,10 +3860,10 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
     }
 
     // Fragment shader is optional.
-    const ShaderModulePointer &fragmentPointer = shaders[gl::ShaderType::Fragment];
-    if (fragmentPointer.valid() && !mShaders.shaders.bits.rasterizerDiscardEnable)
+    const ShaderModulePtr &fragmentPointer = shaders[gl::ShaderType::Fragment];
+    if (fragmentPointer && !mShaders.shaders.bits.rasterizerDiscardEnable)
     {
-        const ShaderModule &fragmentModule            = fragmentPointer.get();
+        const ShaderModule &fragmentModule            = *fragmentPointer;
         VkPipelineShaderStageCreateInfo fragmentStage = {};
         SetPipelineShaderStageInfo(VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
                                    VK_SHADER_STAGE_FRAGMENT_BIT, fragmentModule.getHandle(),
@@ -3976,7 +3976,7 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
     }
 
     // tessellation State
-    if (tessControlPointer.valid() && tessEvaluationPointer.valid())
+    if (tessControlPointer && tessEvaluationPointer)
     {
         stateOut->domainOriginState.sType =
             VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_DOMAIN_ORIGIN_STATE_CREATE_INFO;
