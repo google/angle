@@ -187,10 +187,10 @@ void main()
         }
     }
 
-    GLuint mProgram;
-    GLint mTextureUniformLocation;
+    GLuint mProgram               = 0;
+    GLint mTextureUniformLocation = 0;
 
-    GLuint mTexture;
+    GLuint mTexture = 0;
 
     struct swizzlePermutation
     {

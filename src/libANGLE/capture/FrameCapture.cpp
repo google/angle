@@ -1109,6 +1109,8 @@ void WriteInitReplayCall(bool compression,
 
     for (ResourceIDType resourceID : AllEnums<ResourceIDType>())
     {
+        // Sanity check for catching e.g. uninitialized memory reads like b/380296979
+        ASSERT(maxIDs[resourceID] < 1000000);
         out << ", " << maxIDs[resourceID];
     }
 
