@@ -1167,6 +1167,13 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
 
     if (traceNameIs("aztec_ruins"))
     {
+        if (isIntelWinANGLE)
+        {
+            skipTest(
+                "TODO: http://anglebug.com/353690308 Non-deterministic image on UHD770 "
+                "31.0.101.5333");
+        }
+
         addExtensionPrerequisite("GL_KHR_texture_compression_astc_ldr");
     }
 
@@ -1490,6 +1497,13 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
 
     if (traceNameIs("aztec_ruins_high"))
     {
+        if (isIntelWinANGLE)
+        {
+            skipTest(
+                "TODO: http://anglebug.com/353690308 Non-deterministic image on UHD770 "
+                "31.0.101.5333");
+        }
+
         addExtensionPrerequisite("GL_KHR_texture_compression_astc_ldr");
     }
 
