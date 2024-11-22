@@ -412,6 +412,9 @@ class ANGLETestBase
         return mCurrentParams->eglParameters.debugLayersEnabled != EGL_FALSE;
     }
 
+    void *operator new(size_t size);
+    void operator delete(void *ptr);
+
   protected:
     void ANGLETestSetUp();
     void ANGLETestPreTearDown();

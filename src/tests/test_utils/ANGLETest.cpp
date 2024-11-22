@@ -472,6 +472,20 @@ testing::AssertionResult AssertEGLEnumsEqual(const char *lhsExpr,
     }
 }
 
+void *ANGLETestBase::operator new(size_t size)
+{
+    void *ptr = malloc(size ? size : size + 1);
+    // Initialize integer primitives to large positive values to avoid tests relying
+    // on the assumption that primitives (e.g. GLuint) would be zero-initialized.
+    memset(ptr, 0x7f, size);
+    return ptr;
+}
+
+void ANGLETestBase::operator delete(void *ptr)
+{
+    free(ptr);
+}
+
 ANGLETestBase::ANGLETestBase(const PlatformParameters &params)
     : mWidth(16),
       mHeight(16),
