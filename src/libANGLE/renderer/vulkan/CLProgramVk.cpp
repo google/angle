@@ -361,7 +361,7 @@ void CLAsyncBuildTask::operator()()
 CLProgramVk::CLProgramVk(const cl::Program &program)
     : CLProgramImpl(program),
       mContext(&program.getContext().getImpl<CLContextVk>()),
-      mAsyncBuildEvent(nullptr)
+      mAsyncBuildEvent(std::make_shared<angle::WaitableEventDone>())
 {}
 
 angle::Result CLProgramVk::init()
@@ -374,8 +374,6 @@ angle::Result CLProgramVk::init()
     {
         mAssociatedDevicePrograms[device->getNative()] = DeviceProgramData{};
     }
-
-    mAsyncBuildEvent = std::make_shared<angle::WaitableEventDone>();
 
     return angle::Result::Continue;
 }
