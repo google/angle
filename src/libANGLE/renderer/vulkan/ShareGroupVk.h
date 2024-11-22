@@ -64,6 +64,8 @@ class ShareGroupVk : public ShareGroupImpl
                                          uint32_t memoryTypeIndex,
                                          BufferUsageType usageType);
 
+    void pruneDefaultBufferPools();
+
     void calculateTotalBufferCount(size_t *bufferCount, VkDeviceSize *totalSize) const;
     void logBufferPools() const;
 
@@ -114,7 +116,6 @@ class ShareGroupVk : public ShareGroupImpl
   private:
     angle::Result updateContextsPriority(ContextVk *contextVk, egl::ContextPriority newPriority);
 
-    void pruneDefaultBufferPools();
     bool isDueForBufferPoolPrune();
 
     vk::Renderer *mRenderer;
