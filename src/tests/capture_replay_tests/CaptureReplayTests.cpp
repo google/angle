@@ -15,6 +15,7 @@
 #include "util/EGLWindow.h"
 #include "util/OSWindow.h"
 #include "util/shader_utils.h"
+#include "util/test_utils.h"
 
 #if defined(ANGLE_PLATFORM_ANDROID)
 #    include "util/android/AndroidWindow.h"
@@ -444,6 +445,9 @@ int main(int argc, char **argv)
         printf("Usage: capture_replay_tests {trace_label}\n");
         return -1;
     }
+    angle::CrashCallback crashCallback = []() {};
+    angle::InitCrashHandler(&crashCallback);
+
     CaptureReplayTests app;
     return app.run(argv[1]);
 }

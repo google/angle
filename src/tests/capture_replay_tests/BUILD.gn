@@ -36,6 +36,7 @@ angle_executable("capture_replay_tests") {
   deps = [
     "$angle_root:angle_compression",
     "$angle_root/util:angle_frame_capture_test_utils",
+    "$angle_root/util:angle_test_utils",
     "$angle_root/util:angle_trace_loader",
     "$angle_root/util:angle_util",
   ]
