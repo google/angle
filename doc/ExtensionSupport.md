@@ -125,6 +125,7 @@ using data from registry_xml.py and gl.xml.
 | [GL_QCOM_render_shared_exponent](https://khronos.org/registry/OpenGL/extensions/QCOM/QCOM_render_shared_exponent.txt) |  |  |  |  |  |  |  |
 | [GL_EXT_render_snorm](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_render_snorm.txt) |  |  |  |  |  |  |  |
 | [GL_OES_rgb8_rgba8](https://khronos.org/registry/OpenGL/extensions/OES/OES_rgb8_rgba8.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
+| [GL_ARM_rgba8](https://khronos.org/registry/OpenGL/extensions/ARM/ARM_rgba8.txt) |  |  |  |  |  |  |  |
 | [GL_KHR_robust_buffer_access_behavior](https://khronos.org/registry/OpenGL/extensions/KHR/KHR_robust_buffer_access_behavior.txt) |  |  |  |  |  |  |  |
 | [GL_EXT_robustness](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_robustness.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_KHR_robustness](https://khronos.org/registry/OpenGL/extensions/KHR/KHR_robustness.txt) |  |  |  |  |  |  |  |

@@ -1024,6 +1024,8 @@ bool ValidateReleaseTexturesANGLE(const Context *context,
 
 // GL_ARB_sync
 
+// GL_ARM_rgba8
+
 // GL_ARM_shader_framebuffer_fetch
 
 // GL_ARM_shader_framebuffer_fetch_depth_stencil

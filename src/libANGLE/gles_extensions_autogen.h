@@ -389,6 +389,9 @@ struct Extensions
     // GL_OES_rgb8_rgba8
     bool rgb8Rgba8OES = false;
 
+    // GL_ARM_rgba8
+    bool rgba8ARM = false;
+
     // GL_KHR_robust_buffer_access_behavior
     bool robustBufferAccessBehaviorKHR = false;
 
