@@ -70,6 +70,7 @@ class RenderPassCommandBufferHelper;
 class PackedClearValuesArray;
 class AttachmentOpsArray;
 
+using PipelineLayoutPtr                = AtomicSharedPtr<PipelineLayout>;
 using RefCountedDescriptorSetLayout    = AtomicRefCounted<DescriptorSetLayout>;
 using RefCountedPipelineLayout         = AtomicRefCounted<PipelineLayout>;
 using RefCountedSamplerYcbcrConversion = RefCounted<SamplerYcbcrConversion>;
@@ -2731,15 +2732,14 @@ class PipelineLayoutCache final : public HasCacheStats<VulkanCacheType::Pipeline
 
     void destroy(vk::Renderer *renderer);
 
-    angle::Result getPipelineLayout(
-        vk::Context *context,
-        const vk::PipelineLayoutDesc &desc,
-        const vk::DescriptorSetLayoutPointerArray &descriptorSetLayouts,
-        vk::AtomicBindingPointer<vk::PipelineLayout> *pipelineLayoutOut);
+    angle::Result getPipelineLayout(vk::Context *context,
+                                    const vk::PipelineLayoutDesc &desc,
+                                    const vk::DescriptorSetLayoutPointerArray &descriptorSetLayouts,
+                                    vk::PipelineLayoutPtr *pipelineLayoutOut);
 
   private:
     mutable angle::SimpleMutex mMutex;
-    std::unordered_map<vk::PipelineLayoutDesc, vk::RefCountedPipelineLayout> mPayload;
+    std::unordered_map<vk::PipelineLayoutDesc, vk::PipelineLayoutPtr> mPayload;
 };
 
 class SamplerCache final : public HasCacheStats<VulkanCacheType::Sampler>

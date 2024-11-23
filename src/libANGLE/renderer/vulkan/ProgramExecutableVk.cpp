@@ -672,11 +672,10 @@ void ProgramExecutableVk::destroy(const gl::Context *context)
 
 void ProgramExecutableVk::resetLayout(ContextVk *contextVk)
 {
-    if (!mPipelineLayout.valid())
+    if (!mPipelineLayout)
     {
         ASSERT(mValidGraphicsPermutations.none());
         ASSERT(mValidComputePermutations.none());
-
         return;
     }
 

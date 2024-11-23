@@ -8240,8 +8240,8 @@ void PipelineLayoutCache::destroy(vk::Renderer *renderer)
 
     for (auto &item : mPayload)
     {
-        vk::RefCountedPipelineLayout &layout = item.second;
-        layout.get().destroy(device);
+        vk::PipelineLayoutPtr &layout = item.second;
+        layout->destroy(device);
     }
 
     mPayload.clear();
@@ -8251,7 +8251,7 @@ angle::Result PipelineLayoutCache::getPipelineLayout(
     vk::Context *context,
     const vk::PipelineLayoutDesc &desc,
     const vk::DescriptorSetLayoutPointerArray &descriptorSetLayouts,
-    vk::AtomicBindingPointer<vk::PipelineLayout> *pipelineLayoutOut)
+    vk::PipelineLayoutPtr *pipelineLayoutOut)
 {
     // Note: this function may be called without holding the share group lock.
     std::unique_lock<angle::SimpleMutex> lock(mMutex);
@@ -8259,8 +8259,7 @@ angle::Result PipelineLayoutCache::getPipelineLayout(
     auto iter = mPayload.find(desc);
     if (iter != mPayload.end())
     {
-        vk::RefCountedPipelineLayout &layout = iter->second;
-        pipelineLayoutOut->set(&layout);
+        *pipelineLayoutOut = iter->second;
         mCacheStats.hit();
         return angle::Result::Continue;
     }
@@ -8296,12 +8295,11 @@ angle::Result PipelineLayoutCache::getPipelineLayout(
         createInfo.pPushConstantRanges    = &pushConstantRange;
     }
 
-    vk::PipelineLayout newLayout;
-    ANGLE_VK_TRY(context, newLayout.init(context->getDevice(), createInfo));
+    vk::PipelineLayoutPtr newLayout = vk::PipelineLayoutPtr::MakeShared();
+    ANGLE_VK_TRY(context, newLayout->init(context->getDevice(), createInfo));
 
-    auto insertedItem                            = mPayload.emplace(desc, std::move(newLayout));
-    vk::RefCountedPipelineLayout &insertedLayout = insertedItem.first->second;
-    pipelineLayoutOut->set(&insertedLayout);
+    *pipelineLayoutOut = newLayout;
+    mPayload.emplace(desc, std::move(newLayout));
 
     return angle::Result::Continue;
 }

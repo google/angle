@@ -611,6 +611,8 @@ class PipelineLayout final : public WrappedObject<PipelineLayout, VkPipelineLayo
   public:
     PipelineLayout() = default;
     void destroy(VkDevice device);
+    // Owner must explicitly call destroy(device) before last reference count goes away.
+    void destroy() { ASSERT(!valid()); }
 
     VkResult init(VkDevice device, const VkPipelineLayoutCreateInfo &createInfo);
 };

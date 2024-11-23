@@ -744,6 +744,7 @@ class RefCounted : angle::NonCopyable
 
     bool isReferenced() const { return mRefCount != 0; }
     uint32_t getRefCount() const { return mRefCount; }
+    bool isLastReferenceCount() const { return mRefCount == 1; }
 
     T &get() { return mObject; }
     const T &get() const { return mObject; }
@@ -793,6 +794,9 @@ class AtomicRefCounted : angle::NonCopyable
     // Warning: method does not perform any synchronization.  See `releaseRef()` for details.
     // Method may be only used after external synchronization.
     bool isReferenced() const { return mRefCount.load(std::memory_order_relaxed) != 0; }
+
+    // This is used by SharedPtr::unique, so needs strong ordering.
+    bool isLastReferenceCount() const { return mRefCount.load(std::memory_order_acquire) == 1; }
 
     T &get() { return mObject; }
     const T &get() const { return mObject; }
@@ -849,12 +853,10 @@ using AtomicBindingPointer = BindingPointer<T, AtomicRefCounted<T>>;
 // environment.
 template <typename>
 class WeakPtr;
-template <typename T>
+template <typename T, class RefCountedStorage = RefCounted<T>>
 class SharedPtr final
 {
   public:
-    using RefCountedStorage = RefCounted<T>;
-
     SharedPtr() : mRefCounted(nullptr) {}
     SharedPtr(T &&object)
     {
@@ -878,9 +880,9 @@ class SharedPtr final
     SharedPtr(SharedPtr &&other) : mRefCounted(nullptr) { *this = std::move(other); }
 
     template <class... Args>
-    static SharedPtr<T> MakeShared(Args &&...args)
+    static SharedPtr<T, RefCountedStorage> MakeShared(Args &&...args)
     {
-        SharedPtr<T> newObject;
+        SharedPtr<T, RefCountedStorage> newObject;
         newObject.mRefCounted = new RefCountedStorage(std::forward<Args>(args)...);
         newObject.mRefCounted->addRef();
         return newObject;
@@ -939,7 +941,7 @@ class SharedPtr final
     bool unique() const
     {
         ASSERT(mRefCounted != nullptr);
-        return mRefCounted->getRefCount() == 1;
+        return mRefCounted->isLastReferenceCount();
     }
 
     bool owner_equal(const SharedPtr<T> &other) const { return mRefCounted == other.mRefCounted; }
@@ -950,8 +952,8 @@ class SharedPtr final
     void releaseRef()
     {
         ASSERT(mRefCounted != nullptr);
-        mRefCounted->releaseRef();
-        if (!mRefCounted->isReferenced())
+        unsigned int refCount = mRefCounted->getAndReleaseRef();
+        if (refCount == 1)
         {
             mRefCounted->get().destroy();
             SafeDelete(mRefCounted);
@@ -961,6 +963,9 @@ class SharedPtr final
     friend class WeakPtr<T>;
     RefCountedStorage *mRefCounted;
 };
+
+template <typename T>
+using AtomicSharedPtr = SharedPtr<T, AtomicRefCounted<T>>;
 
 // This is intended to have same interface as std::weak_ptr
 template <typename T>

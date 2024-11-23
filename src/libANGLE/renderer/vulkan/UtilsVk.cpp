@@ -1531,7 +1531,7 @@ angle::Result UtilsVk::ensureResourcesInitialized(ContextVk *contextVk,
 
 angle::Result UtilsVk::ensureConvertIndexResourcesInitialized(ContextVk *contextVk)
 {
-    if (mPipelineLayouts[Function::ConvertIndexBuffer].valid())
+    if (mPipelineLayouts[Function::ConvertIndexBuffer])
     {
         return angle::Result::Continue;
     }
@@ -1547,7 +1547,7 @@ angle::Result UtilsVk::ensureConvertIndexResourcesInitialized(ContextVk *context
 
 angle::Result UtilsVk::ensureConvertIndexIndirectResourcesInitialized(ContextVk *contextVk)
 {
-    if (mPipelineLayouts[Function::ConvertIndexIndirectBuffer].valid())
+    if (mPipelineLayouts[Function::ConvertIndexIndirectBuffer])
     {
         return angle::Result::Continue;
     }
@@ -1566,7 +1566,7 @@ angle::Result UtilsVk::ensureConvertIndexIndirectResourcesInitialized(ContextVk 
 
 angle::Result UtilsVk::ensureConvertIndexIndirectLineLoopResourcesInitialized(ContextVk *contextVk)
 {
-    if (mPipelineLayouts[Function::ConvertIndexIndirectLineLoopBuffer].valid())
+    if (mPipelineLayouts[Function::ConvertIndexIndirectLineLoopBuffer])
     {
         return angle::Result::Continue;
     }
@@ -1585,7 +1585,7 @@ angle::Result UtilsVk::ensureConvertIndexIndirectLineLoopResourcesInitialized(Co
 
 angle::Result UtilsVk::ensureConvertIndirectLineLoopResourcesInitialized(ContextVk *contextVk)
 {
-    if (mPipelineLayouts[Function::ConvertIndirectLineLoopBuffer].valid())
+    if (mPipelineLayouts[Function::ConvertIndirectLineLoopBuffer])
     {
         return angle::Result::Continue;
     }
@@ -1603,7 +1603,7 @@ angle::Result UtilsVk::ensureConvertIndirectLineLoopResourcesInitialized(Context
 
 angle::Result UtilsVk::ensureConvertVertexResourcesInitialized(ContextVk *contextVk)
 {
-    if (mPipelineLayouts[Function::ConvertVertexBuffer].valid())
+    if (mPipelineLayouts[Function::ConvertVertexBuffer])
     {
         return angle::Result::Continue;
     }
@@ -1619,7 +1619,7 @@ angle::Result UtilsVk::ensureConvertVertexResourcesInitialized(ContextVk *contex
 
 angle::Result UtilsVk::ensureImageClearResourcesInitialized(ContextVk *contextVk)
 {
-    if (mPipelineLayouts[Function::ImageClear].valid())
+    if (mPipelineLayouts[Function::ImageClear])
     {
         return angle::Result::Continue;
     }
@@ -1631,7 +1631,7 @@ angle::Result UtilsVk::ensureImageClearResourcesInitialized(ContextVk *contextVk
 
 angle::Result UtilsVk::ensureImageCopyResourcesInitialized(ContextVk *contextVk)
 {
-    if (mPipelineLayouts[Function::ImageCopy].valid())
+    if (mPipelineLayouts[Function::ImageCopy])
     {
         return angle::Result::Continue;
     }
@@ -1648,7 +1648,7 @@ angle::Result UtilsVk::ensureImageCopyResourcesInitializedWithSampler(
     ContextVk *contextVk,
     const vk::SamplerDesc &samplerDesc)
 {
-    if (mImageCopyWithSamplerPipelineLayouts[samplerDesc].valid())
+    if (mImageCopyWithSamplerPipelineLayouts[samplerDesc])
     {
         return angle::Result::Continue;
     }
@@ -1688,7 +1688,7 @@ angle::Result UtilsVk::ensureImageCopyResourcesInitializedWithSampler(
 
 angle::Result UtilsVk::ensureCopyImageToBufferResourcesInitialized(ContextVk *contextVk)
 {
-    if (mPipelineLayouts[Function::CopyImageToBuffer].valid())
+    if (mPipelineLayouts[Function::CopyImageToBuffer])
     {
         return angle::Result::Continue;
     }
@@ -1704,7 +1704,7 @@ angle::Result UtilsVk::ensureCopyImageToBufferResourcesInitialized(ContextVk *co
 
 angle::Result UtilsVk::ensureBlitResolveResourcesInitialized(ContextVk *contextVk)
 {
-    if (!mPipelineLayouts[Function::BlitResolve].valid())
+    if (!mPipelineLayouts[Function::BlitResolve])
     {
         VkDescriptorPoolSize setSizes[3] = {
             {VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, 1},
@@ -1721,7 +1721,7 @@ angle::Result UtilsVk::ensureBlitResolveResourcesInitialized(ContextVk *contextV
 
 angle::Result UtilsVk::ensureBlitResolveStencilNoExportResourcesInitialized(ContextVk *contextVk)
 {
-    if (!mPipelineLayouts[Function::BlitResolveStencilNoExport].valid())
+    if (!mPipelineLayouts[Function::BlitResolveStencilNoExport])
     {
         VkDescriptorPoolSize setSizes[3] = {
             {VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1},
@@ -1739,7 +1739,7 @@ angle::Result UtilsVk::ensureBlitResolveStencilNoExportResourcesInitialized(Cont
 
 angle::Result UtilsVk::ensureExportStencilResourcesInitialized(ContextVk *contextVk)
 {
-    if (mPipelineLayouts[Function::ExportStencil].valid())
+    if (mPipelineLayouts[Function::ExportStencil])
     {
         return angle::Result::Continue;
     }
@@ -1754,7 +1754,7 @@ angle::Result UtilsVk::ensureExportStencilResourcesInitialized(ContextVk *contex
 
 angle::Result UtilsVk::ensureOverlayDrawResourcesInitialized(ContextVk *contextVk)
 {
-    if (!mPipelineLayouts[Function::OverlayDraw].valid())
+    if (!mPipelineLayouts[Function::OverlayDraw])
     {
         VkDescriptorPoolSize setSizes[3] = {
             {VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, 1},
@@ -1771,7 +1771,7 @@ angle::Result UtilsVk::ensureOverlayDrawResourcesInitialized(ContextVk *contextV
 
 angle::Result UtilsVk::ensureGenerateMipmapResourcesInitialized(ContextVk *contextVk)
 {
-    if (mPipelineLayouts[Function::GenerateMipmap].valid())
+    if (mPipelineLayouts[Function::GenerateMipmap])
     {
         return angle::Result::Continue;
     }
@@ -1787,7 +1787,7 @@ angle::Result UtilsVk::ensureGenerateMipmapResourcesInitialized(ContextVk *conte
 
 angle::Result UtilsVk::ensureTransCodeEtcToBcResourcesInitialized(ContextVk *contextVk)
 {
-    if (mPipelineLayouts[Function::TransCodeEtcToBc].valid())
+    if (mPipelineLayouts[Function::TransCodeEtcToBc])
     {
         return angle::Result::Continue;
     }
@@ -1808,7 +1808,7 @@ angle::Result UtilsVk::ensureUnresolveResourcesInitialized(ContextVk *contextVk,
                static_cast<uint32_t>(Function::Unresolve1Attachment) ==
            attachmentCount - 1);
 
-    if (mPipelineLayouts[function].valid())
+    if (mPipelineLayouts[function])
     {
         return angle::Result::Continue;
     }
@@ -1887,7 +1887,7 @@ angle::Result UtilsVk::setupComputeProgram(
 
     ASSERT(function >= Function::ComputeStartIndex);
 
-    const vk::AtomicBindingPointer<vk::PipelineLayout> &pipelineLayout = mPipelineLayouts[function];
+    const vk::PipelineLayoutPtr &pipelineLayout = mPipelineLayouts[function];
 
     if (!programAndPipelines->program.valid(gl::ShaderType::Compute))
     {
@@ -1898,7 +1898,7 @@ angle::Result UtilsVk::setupComputeProgram(
     vk::PipelineCacheAccess pipelineCache;
     ANGLE_TRY(renderer->getPipelineCache(contextVk, &pipelineCache));
     ANGLE_TRY(programAndPipelines->program.getOrCreateComputePipeline(
-        contextVk, &programAndPipelines->pipelines, &pipelineCache, pipelineLayout.get(),
+        contextVk, &programAndPipelines->pipelines, &pipelineCache, *pipelineLayout,
         vk::GetComputePipelineOptions(contextVk->pipelineRobustness(),
                                       contextVk->pipelineProtectedAccess()),
         PipelineSource::Utils, &pipeline, nullptr, nullptr));
@@ -1911,7 +1911,7 @@ angle::Result UtilsVk::setupComputeProgram(
 
     if (descriptorSet != VK_NULL_HANDLE)
     {
-        commandBuffer->bindDescriptorSets(pipelineLayout.get(), VK_PIPELINE_BIND_POINT_COMPUTE,
+        commandBuffer->bindDescriptorSets(*pipelineLayout, VK_PIPELINE_BIND_POINT_COMPUTE,
                                           DescriptorSetIndex::Internal, 1, &descriptorSet, 0,
                                           nullptr);
         contextVk->invalidateComputeDescriptorSet(DescriptorSetIndex::Internal);
@@ -1919,7 +1919,7 @@ angle::Result UtilsVk::setupComputeProgram(
 
     if (pushConstants)
     {
-        commandBuffer->pushConstants(pipelineLayout.get(), VK_SHADER_STAGE_COMPUTE_BIT, 0,
+        commandBuffer->pushConstants(*pipelineLayout, VK_SHADER_STAGE_COMPUTE_BIT, 0,
                                      static_cast<uint32_t>(pushConstantsSize), pushConstants);
     }
 
@@ -2006,7 +2006,7 @@ angle::Result UtilsVk::setupGraphicsProgram(ContextVk *contextVk,
     ASSERT(function < Function::ComputeStartIndex);
 
     return setupGraphicsProgramWithLayout(
-        contextVk, mPipelineLayouts[function].get(), vsShader, fsShader, programAndPipelines,
+        contextVk, *mPipelineLayouts[function], vsShader, fsShader, programAndPipelines,
         pipelineDesc, descriptorSet, pushConstants, pushConstantsSize, commandBuffer);
 }
 
@@ -2507,7 +2507,7 @@ angle::Result UtilsVk::convertVertexBufferImpl(
             constants.srcOffset   = static_cast<uint32_t>(offsetAndVertexCount.srcOffset);
             constants.dstOffset   = static_cast<uint32_t>(offsetAndVertexCount.dstOffset);
 
-            commandBuffer->pushConstants(mPipelineLayouts[Function::ConvertVertexBuffer].get(),
+            commandBuffer->pushConstants(*mPipelineLayouts[Function::ConvertVertexBuffer],
                                          VK_SHADER_STAGE_COMPUTE_BIT, 0, sizeof(constants),
                                          &constants);
             // Since multiple compute dispatch all convert from the same srcBuffer and write to the
@@ -3549,7 +3549,7 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
         ANGLE_TRY(shaderLibrary.getImageCopyFloat_frag(contextVk, ImageCopyFloat_frag::kSrcIsYUV,
                                                        &fragmentShader));
         ANGLE_TRY(setupGraphicsProgramWithLayout(
-            contextVk, mImageCopyWithSamplerPipelineLayouts[samplerDesc].get(), vertexShader,
+            contextVk, *mImageCopyWithSamplerPipelineLayouts[samplerDesc], vertexShader,
             fragmentShader, &mImageCopyWithSampler[samplerDesc], &pipelineDesc, descriptorSet,
             &shaderParams, sizeof(shaderParams), commandBuffer));
     }
@@ -4690,7 +4690,7 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
             shaderParams.bit = bit;
 
             commandBuffer->pushConstants(
-                mPipelineLayouts[Function::ExportStencil].get(), VK_SHADER_STAGE_FRAGMENT_BIT, 0,
+                *mPipelineLayouts[Function::ExportStencil], VK_SHADER_STAGE_FRAGMENT_BIT, 0,
                 /*static_cast<uint32_t>*/ (sizeof(shaderParams)), &shaderParams);
 
             commandBuffer->draw(3, 0);
@@ -4827,7 +4827,7 @@ angle::Result UtilsVk::drawOverlay(ContextVk *contextVk,
     if (params.graphWidgetCount > 0)
     {
         shaderParams.isText = false;
-        commandBuffer->pushConstants(mPipelineLayouts[Function::OverlayDraw].get(),
+        commandBuffer->pushConstants(*mPipelineLayouts[Function::OverlayDraw],
                                      VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0,
                                      sizeof(shaderParams), &shaderParams);
         commandBuffer->drawInstanced(4, params.graphWidgetCount, 0);
@@ -4836,7 +4836,7 @@ angle::Result UtilsVk::drawOverlay(ContextVk *contextVk,
     if (params.textWidgetCount > 0)
     {
         shaderParams.isText = true;
-        commandBuffer->pushConstants(mPipelineLayouts[Function::OverlayDraw].get(),
+        commandBuffer->pushConstants(*mPipelineLayouts[Function::OverlayDraw],
                                      VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT, 0,
                                      sizeof(shaderParams), &shaderParams);
         commandBuffer->drawInstanced(4, params.textWidgetCount, 0);

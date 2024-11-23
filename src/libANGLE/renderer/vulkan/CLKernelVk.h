@@ -93,7 +93,13 @@ class CLKernelVk : public CLKernelImpl
     CLProgramVk *getProgram() { return mProgram; }
     const std::string &getKernelName() { return mName; }
     const CLKernelArguments &getArgs() { return mArgs; }
-    vk::AtomicBindingPointer<vk::PipelineLayout> &getPipelineLayout() { return mPipelineLayout; }
+    angle::Result initPipelineLayout()
+    {
+        PipelineLayoutCache *pipelineLayoutCache = mContext->getPipelineLayoutCache();
+        return pipelineLayoutCache->getPipelineLayout(mContext, mPipelineLayoutDesc,
+                                                      mDescriptorSetLayouts, &mPipelineLayout);
+    }
+    const vk::PipelineLayout &getPipelineLayout() const { return *mPipelineLayout; }
     vk::DescriptorSetLayoutPointerArray &getDescriptorSetLayouts() { return mDescriptorSetLayouts; }
     cl::Kernel &getFrontendObject() { return const_cast<cl::Kernel &>(mKernel); }
 
@@ -151,7 +157,7 @@ class CLKernelVk : public CLKernelImpl
     vk::ShaderProgramHelper mShaderProgramHelper;
     vk::ComputePipelineCache mComputePipelineCache;
     KernelSpecConstants mSpecConstants;
-    vk::AtomicBindingPointer<vk::PipelineLayout> mPipelineLayout;
+    vk::PipelineLayoutPtr mPipelineLayout;
     vk::DescriptorSetLayoutPointerArray mDescriptorSetLayouts{};
 
     vk::DescriptorSetArray<vk::DescriptorSetPointer> mDescriptorSets;

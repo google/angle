@@ -203,7 +203,7 @@ class ProgramExecutableVk : public ProgramExecutableImpl
                                              vk::PipelineProtectedAccess pipelineProtectedAccess,
                                              vk::PipelineHelper **pipelineOut);
 
-    const vk::PipelineLayout &getPipelineLayout() const { return mPipelineLayout.get(); }
+    const vk::PipelineLayout &getPipelineLayout() const { return *mPipelineLayout; }
     void resetLayout(ContextVk *contextVk);
     angle::Result createPipelineLayout(vk::Context *context,
                                        PipelineLayoutCache *pipelineLayoutCache,
@@ -525,7 +525,7 @@ class ProgramExecutableVk : public ProgramExecutableImpl
     // deleted while this program is in use.
     uint32_t mImmutableSamplersMaxDescriptorCount;
     ImmutableSamplerIndexMap mImmutableSamplerIndexMap;
-    vk::AtomicBindingPointer<vk::PipelineLayout> mPipelineLayout;
+    vk::PipelineLayoutPtr mPipelineLayout;
     vk::DescriptorSetLayoutPointerArray mDescriptorSetLayouts;
 
     // A set of dynamic offsets used with vkCmdBindDescriptorSets for the default uniform buffers.

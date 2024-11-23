@@ -314,7 +314,7 @@ angle::Result CLKernelVk::getOrCreateComputePipeline(vk::PipelineCacheAccess *pi
 
     // Now get or create (on compute pipeline cache miss) compute pipeline and return it
     return mShaderProgramHelper.getOrCreateComputePipeline(
-        mContext, &mComputePipelineCache, pipelineCache, getPipelineLayout().get(),
+        mContext, &mComputePipelineCache, pipelineCache, getPipelineLayout(),
         vk::ComputePipelineOptions{}, PipelineSource::Draw, pipelineOut, mName.c_str(),
         &computeSpecializationInfo);
 }

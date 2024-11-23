@@ -704,13 +704,12 @@ class UtilsVk : angle::NonCopyable
         VkDescriptorSet *descriptorSetOut);
 
     angle::PackedEnumMap<Function, vk::DescriptorSetLayoutPointerArray> mDescriptorSetLayouts;
-    angle::PackedEnumMap<Function, vk::AtomicBindingPointer<vk::PipelineLayout>> mPipelineLayouts;
+    angle::PackedEnumMap<Function, vk::PipelineLayoutPtr> mPipelineLayouts;
     angle::PackedEnumMap<Function, vk::DynamicDescriptorPool> mDescriptorPools;
 
     std::unordered_map<vk::SamplerDesc, vk::DescriptorSetLayoutPointerArray>
         mImageCopyWithSamplerDescriptorSetLayouts;
-    std::unordered_map<vk::SamplerDesc, vk::AtomicBindingPointer<vk::PipelineLayout>>
-        mImageCopyWithSamplerPipelineLayouts;
+    std::unordered_map<vk::SamplerDesc, vk::PipelineLayoutPtr> mImageCopyWithSamplerPipelineLayouts;
     std::unordered_map<vk::SamplerDesc, vk::DynamicDescriptorPool>
         mImageCopyWithSamplerDescriptorPools;
 

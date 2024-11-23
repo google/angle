@@ -1191,18 +1191,15 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
     }
 
     // Setup the pipeline layout
-    ANGLE_CL_IMPL_TRY_ERROR(mContext->getPipelineLayoutCache()->getPipelineLayout(
-                                mContext, kernelVk.getPipelineLayoutDesc(),
-                                kernelVk.getDescriptorSetLayouts(), &kernelVk.getPipelineLayout()),
-                            CL_INVALID_OPERATION);
+    ANGLE_CL_IMPL_TRY_ERROR(kernelVk.initPipelineLayout(), CL_INVALID_OPERATION);
 
     // Push global offset data
     const VkPushConstantRange *globalOffsetRange = devProgramData->getGlobalOffsetRange();
     if (globalOffsetRange != nullptr)
     {
         mComputePassCommands->getCommandBuffer().pushConstants(
-            kernelVk.getPipelineLayout().get(), VK_SHADER_STAGE_COMPUTE_BIT,
-            globalOffsetRange->offset, globalOffsetRange->size, ndrange.globalWorkOffset.data());
+            kernelVk.getPipelineLayout(), VK_SHADER_STAGE_COMPUTE_BIT, globalOffsetRange->offset,
+            globalOffsetRange->size, ndrange.globalWorkOffset.data());
     }
 
     // Push global size data
@@ -1210,8 +1207,8 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
     if (globalSizeRange != nullptr)
     {
         mComputePassCommands->getCommandBuffer().pushConstants(
-            kernelVk.getPipelineLayout().get(), VK_SHADER_STAGE_COMPUTE_BIT,
-            globalSizeRange->offset, globalSizeRange->size, ndrange.globalWorkSize.data());
+            kernelVk.getPipelineLayout(), VK_SHADER_STAGE_COMPUTE_BIT, globalSizeRange->offset,
+            globalSizeRange->size, ndrange.globalWorkSize.data());
     }
 
     // Push region offset data.
@@ -1222,8 +1219,8 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
         // offset for NDR in uniform cases. Update this when non-uniform batches are supported.
         // https://github.com/google/clspv/blob/main/docs/OpenCLCOnVulkan.md#module-scope-push-constants
         mComputePassCommands->getCommandBuffer().pushConstants(
-            kernelVk.getPipelineLayout().get(), VK_SHADER_STAGE_COMPUTE_BIT,
-            regionOffsetRange->offset, regionOffsetRange->size, ndrange.globalWorkOffset.data());
+            kernelVk.getPipelineLayout(), VK_SHADER_STAGE_COMPUTE_BIT, regionOffsetRange->offset,
+            regionOffsetRange->size, ndrange.globalWorkOffset.data());
     }
 
     // Push region group offset data.
@@ -1236,7 +1233,7 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
         // https://github.com/google/clspv/blob/main/docs/OpenCLCOnVulkan.md#module-scope-push-constants
         uint32_t regionGroupOffsets[3] = {0, 0, 0};
         mComputePassCommands->getCommandBuffer().pushConstants(
-            kernelVk.getPipelineLayout().get(), VK_SHADER_STAGE_COMPUTE_BIT,
+            kernelVk.getPipelineLayout(), VK_SHADER_STAGE_COMPUTE_BIT,
             regionGroupOffsetRange->offset, regionGroupOffsetRange->size, &regionGroupOffsets);
     }
 
@@ -1245,7 +1242,7 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
     if (enqueuedLocalSizeRange != nullptr)
     {
         mComputePassCommands->getCommandBuffer().pushConstants(
-            kernelVk.getPipelineLayout().get(), VK_SHADER_STAGE_COMPUTE_BIT,
+            kernelVk.getPipelineLayout(), VK_SHADER_STAGE_COMPUTE_BIT,
             enqueuedLocalSizeRange->offset, enqueuedLocalSizeRange->size,
             ndrange.localWorkSize.data());
     }
@@ -1257,8 +1254,8 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
     {
         uint32_t numWorkgroups[3] = {workgroupCount[0], workgroupCount[1], workgroupCount[2]};
         mComputePassCommands->getCommandBuffer().pushConstants(
-            kernelVk.getPipelineLayout().get(), VK_SHADER_STAGE_COMPUTE_BIT,
-            numWorkgroupsRange->offset, numWorkgroupsRange->size, &numWorkgroups);
+            kernelVk.getPipelineLayout(), VK_SHADER_STAGE_COMPUTE_BIT, numWorkgroupsRange->offset,
+            numWorkgroupsRange->size, &numWorkgroups);
     }
 
     // Retain kernel object until we finish executing it later
@@ -1311,7 +1308,7 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
                     roundUpPow2(arg.pushConstOffset + arg.pushConstantSize, 4u) - offset;
                 ASSERT(offset + size <= kernelVk.getPodArgumentsData().size());
                 mComputePassCommands->getCommandBuffer().pushConstants(
-                    kernelVk.getPipelineLayout().get(), VK_SHADER_STAGE_COMPUTE_BIT, offset, size,
+                    kernelVk.getPipelineLayout(), VK_SHADER_STAGE_COMPUTE_BIT, offset, size,
                     &kernelVk.getPodArgumentsData()[offset]);
                 break;
             }
@@ -1345,7 +1342,7 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
                     }
                     uint32_t mask = vkSampler.getSamplerMask();
                     mComputePassCommands->getCommandBuffer().pushConstants(
-                        kernelVk.getPipelineLayout().get(), VK_SHADER_STAGE_COMPUTE_BIT,
+                        kernelVk.getPipelineLayout(), VK_SHADER_STAGE_COMPUTE_BIT,
                         samplerMaskRange->offset, samplerMaskRange->size, &mask);
                 }
                 break;
@@ -1364,7 +1361,7 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
                 if (imageDataChannelOrderRange != nullptr)
                 {
                     mComputePassCommands->getCommandBuffer().pushConstants(
-                        kernelVk.getPipelineLayout().get(), VK_SHADER_STAGE_COMPUTE_BIT,
+                        kernelVk.getPipelineLayout(), VK_SHADER_STAGE_COMPUTE_BIT,
                         imageDataChannelOrderRange->offset, imageDataChannelOrderRange->size,
                         &imageFormat.image_channel_order);
                 }
@@ -1374,7 +1371,7 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
                 if (imageDataChannelDataTypeRange != nullptr)
                 {
                     mComputePassCommands->getCommandBuffer().pushConstants(
-                        kernelVk.getPipelineLayout().get(), VK_SHADER_STAGE_COMPUTE_BIT,
+                        kernelVk.getPipelineLayout(), VK_SHADER_STAGE_COMPUTE_BIT,
                         imageDataChannelDataTypeRange->offset, imageDataChannelDataTypeRange->size,
                         &imageFormat.image_channel_data_type);
                 }
@@ -1486,8 +1483,8 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
 
             VkDescriptorSet descriptorSet = kernelVk.getDescriptorSet(index);
             mComputePassCommands->getCommandBuffer().bindDescriptorSets(
-                kernelVk.getPipelineLayout().get(), VK_PIPELINE_BIND_POINT_COMPUTE,
-                *descriptorSetIndex, 1, &descriptorSet, 0, nullptr);
+                kernelVk.getPipelineLayout(), VK_PIPELINE_BIND_POINT_COMPUTE, *descriptorSetIndex,
+                1, &descriptorSet, 0, nullptr);
 
             ++descriptorSetIndex;
         }
