@@ -70,10 +70,8 @@ class RenderPassCommandBufferHelper;
 class PackedClearValuesArray;
 class AttachmentOpsArray;
 
-using PipelineLayoutPtr                = AtomicSharedPtr<PipelineLayout>;
-using RefCountedDescriptorSetLayout    = AtomicRefCounted<DescriptorSetLayout>;
-using RefCountedPipelineLayout         = AtomicRefCounted<PipelineLayout>;
-using RefCountedSamplerYcbcrConversion = RefCounted<SamplerYcbcrConversion>;
+using PipelineLayoutPtr      = AtomicSharedPtr<PipelineLayout>;
+using DescriptorSetLayoutPtr = AtomicSharedPtr<DescriptorSetLayout>;
 
 // Packed Vk resource descriptions.
 // Most Vk types use many more bits than required to represent the underlying data.
@@ -1167,8 +1165,7 @@ static_assert(sizeof(PackedPushConstantRange) == sizeof(uint32_t), "Unexpected S
 
 template <typename T>
 using DescriptorSetArray = angle::PackedEnumMap<DescriptorSetIndex, T>;
-using DescriptorSetLayoutPointerArray =
-    DescriptorSetArray<AtomicBindingPointer<DescriptorSetLayout>>;
+using DescriptorSetLayoutPointerArray = DescriptorSetArray<DescriptorSetLayoutPtr>;
 
 class PipelineLayoutDesc final
 {
@@ -2709,10 +2706,9 @@ class DescriptorSetLayoutCache final : angle::NonCopyable
 
     void destroy(vk::Renderer *renderer);
 
-    angle::Result getDescriptorSetLayout(
-        vk::Context *context,
-        const vk::DescriptorSetLayoutDesc &desc,
-        vk::AtomicBindingPointer<vk::DescriptorSetLayout> *descriptorSetLayoutOut);
+    angle::Result getDescriptorSetLayout(vk::Context *context,
+                                         const vk::DescriptorSetLayoutDesc &desc,
+                                         vk::DescriptorSetLayoutPtr *descriptorSetLayoutOut);
 
     // Helpers for white box tests
     size_t getCacheHitCount() const { return mCacheStats.getHitCount(); }
@@ -2720,7 +2716,7 @@ class DescriptorSetLayoutCache final : angle::NonCopyable
 
   private:
     mutable angle::SimpleMutex mMutex;
-    std::unordered_map<vk::DescriptorSetLayoutDesc, vk::RefCountedDescriptorSetLayout> mPayload;
+    std::unordered_map<vk::DescriptorSetLayoutDesc, vk::DescriptorSetLayoutPtr> mPayload;
     CacheStats mCacheStats;
 };
 

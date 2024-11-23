@@ -1750,8 +1750,7 @@ Renderer::Renderer()
       mCommandProcessor(this, &mCommandQueue),
       mSupportedBufferWritePipelineStageMask(0),
       mSupportedVulkanShaderStageMask(0),
-      mMemoryAllocationTracker(MemoryAllocationTracker(this)),
-      mPlaceHolderDescriptorSetLayout(nullptr)
+      mMemoryAllocationTracker(MemoryAllocationTracker(this))
 {
     VkFormatProperties invalid = {0, 0, kInvalidFormatFeatureFlags};
     mFormatProperties.fill(invalid);
@@ -1788,11 +1787,11 @@ void Renderer::onDestroy(vk::Context *context)
         handleDeviceLost();
     }
 
-    if (mPlaceHolderDescriptorSetLayout && mPlaceHolderDescriptorSetLayout->get().valid())
+    if (mPlaceHolderDescriptorSetLayout)
     {
-        ASSERT(!mPlaceHolderDescriptorSetLayout->isReferenced());
-        mPlaceHolderDescriptorSetLayout->get().destroy(getDevice());
-        SafeDelete(mPlaceHolderDescriptorSetLayout);
+        ASSERT(mPlaceHolderDescriptorSetLayout.unique());
+        mPlaceHolderDescriptorSetLayout->destroy(getDevice());
+        mPlaceHolderDescriptorSetLayout.reset();
     }
 
     mCommandProcessor.destroy(context);
@@ -2349,18 +2348,16 @@ angle::Result Renderer::initialize(vk::Context *context,
     }
 
     // Initialize place holder descriptor set layout for empty DescriptorSetLayoutDesc
-    ASSERT(mPlaceHolderDescriptorSetLayout == nullptr);
+    ASSERT(!mPlaceHolderDescriptorSetLayout);
     VkDescriptorSetLayoutCreateInfo createInfo = {};
     createInfo.sType        = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
     createInfo.flags        = 0;
     createInfo.bindingCount = 0;
     createInfo.pBindings    = nullptr;
 
-    vk::DescriptorSetLayout newLayout;
-    ANGLE_VK_TRY(context, newLayout.init(context->getDevice(), createInfo));
-
-    mPlaceHolderDescriptorSetLayout = new vk::RefCountedDescriptorSetLayout(std::move(newLayout));
-    ASSERT(mPlaceHolderDescriptorSetLayout && mPlaceHolderDescriptorSetLayout->get().valid());
+    mPlaceHolderDescriptorSetLayout = vk::DescriptorSetLayoutPtr::MakeShared();
+    ANGLE_VK_TRY(context, mPlaceHolderDescriptorSetLayout->init(context->getDevice(), createInfo));
+    ASSERT(mPlaceHolderDescriptorSetLayout->valid());
 
     return angle::Result::Continue;
 }

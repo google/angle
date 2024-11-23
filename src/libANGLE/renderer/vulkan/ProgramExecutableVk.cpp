@@ -1884,9 +1884,8 @@ angle::Result ProgramExecutableVk::getOrAllocateDescriptorSet(
     if (renderer->getFeatures().descriptorSetCache.enabled)
     {
         ANGLE_TRY(mDynamicDescriptorPools[setIndex]->getOrAllocateDescriptorSet(
-            context, currentFrame, descriptorSetDesc.getDesc(),
-            mDescriptorSetLayouts[setIndex].get(), &mDescriptorSets[setIndex],
-            newSharedCacheKeyOut));
+            context, currentFrame, descriptorSetDesc.getDesc(), *mDescriptorSetLayouts[setIndex],
+            &mDescriptorSets[setIndex], newSharedCacheKeyOut));
         ASSERT(mDescriptorSets[setIndex]);
 
         if (*newSharedCacheKeyOut)
@@ -1900,7 +1899,7 @@ angle::Result ProgramExecutableVk::getOrAllocateDescriptorSet(
     else
     {
         ANGLE_TRY(mDynamicDescriptorPools[setIndex]->allocateDescriptorSet(
-            context, mDescriptorSetLayouts[setIndex].get(), &mDescriptorSets[setIndex]));
+            context, *mDescriptorSetLayouts[setIndex], &mDescriptorSets[setIndex]));
         ASSERT(mDescriptorSets[setIndex]);
 
         descriptorSetDesc.updateDescriptorSet(renderer, writeDescriptorDescs, updateBuilder,
@@ -1977,7 +1976,7 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(
 
         ANGLE_TRY(mDynamicDescriptorPools[DescriptorSetIndex::Texture]->getOrAllocateDescriptorSet(
             context, currentFrame, descriptorBuilder.getDesc(),
-            mDescriptorSetLayouts[DescriptorSetIndex::Texture].get(),
+            *mDescriptorSetLayouts[DescriptorSetIndex::Texture],
             &mDescriptorSets[DescriptorSetIndex::Texture], &newSharedCacheKey));
         ASSERT(mDescriptorSets[DescriptorSetIndex::Texture]);
 
@@ -2000,7 +1999,7 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(
     else
     {
         ANGLE_TRY(mDynamicDescriptorPools[DescriptorSetIndex::Texture]->allocateDescriptorSet(
-            context, mDescriptorSetLayouts[DescriptorSetIndex::Texture].get(),
+            context, *mDescriptorSetLayouts[DescriptorSetIndex::Texture],
             &mDescriptorSets[DescriptorSetIndex::Texture]));
         ASSERT(mDescriptorSets[DescriptorSetIndex::Texture]);
 

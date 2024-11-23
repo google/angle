@@ -717,9 +717,10 @@ class Renderer : angle::NonCopyable
 
     std::thread::id getCommandProcessorThreadId() const { return mCommandProcessor.getThreadId(); }
 
-    vk::RefCountedDescriptorSetLayout *getDescriptorLayoutForEmptyDesc()
+    const vk::DescriptorSetLayoutPtr &getEmptyDescriptorLayout() const
     {
-        ASSERT(mPlaceHolderDescriptorSetLayout && mPlaceHolderDescriptorSetLayout->get().valid());
+        ASSERT(mPlaceHolderDescriptorSetLayout);
+        ASSERT(mPlaceHolderDescriptorSetLayout->valid());
         return mPlaceHolderDescriptorSetLayout;
     }
 
@@ -1089,7 +1090,7 @@ class Renderer : angle::NonCopyable
     std::string mPipelineCacheGraphDumpPath;
 
     // A placeholder descriptor set layout handle for layouts with no bindings.
-    vk::RefCountedDescriptorSetLayout *mPlaceHolderDescriptorSetLayout;
+    vk::DescriptorSetLayoutPtr mPlaceHolderDescriptorSetLayout;
 };
 
 ANGLE_INLINE Serial Renderer::generateQueueSerial(SerialIndex index)

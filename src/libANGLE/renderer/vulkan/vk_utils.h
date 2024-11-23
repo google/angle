@@ -794,6 +794,7 @@ class AtomicRefCounted : angle::NonCopyable
     // Warning: method does not perform any synchronization.  See `releaseRef()` for details.
     // Method may be only used after external synchronization.
     bool isReferenced() const { return mRefCount.load(std::memory_order_relaxed) != 0; }
+    uint32_t getRefCount() const { return mRefCount.load(std::memory_order_relaxed); }
 
     // This is used by SharedPtr::unique, so needs strong ordering.
     bool isLastReferenceCount() const { return mRefCount.load(std::memory_order_acquire) == 1; }

@@ -13103,12 +13103,12 @@ angle::Result MetaDescriptorPool::bindCachedDescriptorPool(
         return angle::Result::Continue;
     }
 
-    AtomicBindingPointer<DescriptorSetLayout> descriptorSetLayout;
+    DescriptorSetLayoutPtr descriptorSetLayout;
     ANGLE_TRY(descriptorSetLayoutCache->getDescriptorSetLayout(context, descriptorSetLayoutDesc,
                                                                &descriptorSetLayout));
 
     DynamicDescriptorPool newDescriptorPool;
-    ANGLE_TRY(InitDynamicDescriptorPool(context, descriptorSetLayoutDesc, descriptorSetLayout.get(),
+    ANGLE_TRY(InitDynamicDescriptorPool(context, descriptorSetLayoutDesc, *descriptorSetLayout,
                                         descriptorCountMultiplier, &newDescriptorPool));
 
     ASSERT(newDescriptorPool.valid());

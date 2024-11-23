@@ -8171,9 +8171,9 @@ void DescriptorSetLayoutCache::destroy(vk::Renderer *renderer)
 
     for (auto &item : mPayload)
     {
-        vk::RefCountedDescriptorSetLayout &layout = item.second;
-        ASSERT(!layout.isReferenced());
-        layout.get().destroy(device);
+        vk::DescriptorSetLayoutPtr &layout = item.second;
+        ASSERT(layout.unique());
+        layout->destroy(device);
     }
 
     mPayload.clear();
@@ -8182,7 +8182,7 @@ void DescriptorSetLayoutCache::destroy(vk::Renderer *renderer)
 angle::Result DescriptorSetLayoutCache::getDescriptorSetLayout(
     vk::Context *context,
     const vk::DescriptorSetLayoutDesc &desc,
-    vk::AtomicBindingPointer<vk::DescriptorSetLayout> *descriptorSetLayoutOut)
+    vk::DescriptorSetLayoutPtr *descriptorSetLayoutOut)
 {
     // Note: this function may be called without holding the share group lock.
     std::unique_lock<angle::SimpleMutex> lock(mMutex);
@@ -8190,8 +8190,7 @@ angle::Result DescriptorSetLayoutCache::getDescriptorSetLayout(
     auto iter = mPayload.find(desc);
     if (iter != mPayload.end())
     {
-        vk::RefCountedDescriptorSetLayout &layout = iter->second;
-        descriptorSetLayoutOut->set(&layout);
+        *descriptorSetLayoutOut = iter->second;
         mCacheStats.hit();
         return angle::Result::Continue;
     }
@@ -8199,7 +8198,7 @@ angle::Result DescriptorSetLayoutCache::getDescriptorSetLayout(
     // If DescriptorSetLayoutDesc is empty, reuse placeholder descriptor set layout handle
     if (desc.empty())
     {
-        descriptorSetLayoutOut->set(context->getRenderer()->getDescriptorLayoutForEmptyDesc());
+        *descriptorSetLayoutOut = context->getRenderer()->getEmptyDescriptorLayout();
         return angle::Result::Continue;
     }
 
@@ -8214,12 +8213,11 @@ angle::Result DescriptorSetLayoutCache::getDescriptorSetLayout(
     createInfo.bindingCount = static_cast<uint32_t>(bindingVector.size());
     createInfo.pBindings    = bindingVector.data();
 
-    vk::DescriptorSetLayout newLayout;
-    ANGLE_VK_TRY(context, newLayout.init(context->getDevice(), createInfo));
+    vk::DescriptorSetLayoutPtr newLayout = vk::DescriptorSetLayoutPtr::MakeShared();
+    ANGLE_VK_TRY(context, newLayout->init(context->getDevice(), createInfo));
 
-    auto insertedItem = mPayload.emplace(desc, std::move(newLayout));
-    vk::RefCountedDescriptorSetLayout &insertedLayout = insertedItem.first->second;
-    descriptorSetLayoutOut->set(&insertedLayout);
+    *descriptorSetLayoutOut = newLayout;
+    mPayload.emplace(desc, std::move(newLayout));
 
     return angle::Result::Continue;
 }
@@ -8267,11 +8265,11 @@ angle::Result PipelineLayoutCache::getPipelineLayout(
     mCacheStats.missAndIncrementSize();
     // Note this does not handle gaps in descriptor set layouts gracefully.
     angle::FixedVector<VkDescriptorSetLayout, vk::kMaxDescriptorSetLayouts> setLayoutHandles;
-    for (const vk::AtomicBindingPointer<vk::DescriptorSetLayout> &layoutPtr : descriptorSetLayouts)
+    for (const vk::DescriptorSetLayoutPtr &layoutPtr : descriptorSetLayouts)
     {
-        if (layoutPtr.valid())
+        if (layoutPtr)
         {
-            VkDescriptorSetLayout setLayout = layoutPtr.get().getHandle();
+            VkDescriptorSetLayout setLayout = layoutPtr->getHandle();
             ASSERT(setLayout != VK_NULL_HANDLE);
             setLayoutHandles.push_back(setLayout);
         }

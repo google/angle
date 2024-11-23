@@ -1509,7 +1509,7 @@ angle::Result UtilsVk::ensureResourcesInitialized(ContextVk *contextVk,
     {
         ANGLE_TRY(mDescriptorPools[function].init(
             contextVk, descriptorPoolSizes.data(), descriptorPoolSizes.size(),
-            mDescriptorSetLayouts[function][DescriptorSetIndex::Internal].get()));
+            *mDescriptorSetLayouts[function][DescriptorSetIndex::Internal]));
     }
 
     // Corresponding pipeline layouts:
@@ -1671,8 +1671,7 @@ angle::Result UtilsVk::ensureImageCopyResourcesInitializedWithSampler(
     };
     ANGLE_TRY(mImageCopyWithSamplerDescriptorPools[samplerDesc].init(
         contextVk, setSizes, 1,
-        mImageCopyWithSamplerDescriptorSetLayouts[samplerDesc][DescriptorSetIndex::Internal]
-            .get()));
+        *mImageCopyWithSamplerDescriptorSetLayouts[samplerDesc][DescriptorSetIndex::Internal]));
 
     vk::PipelineLayoutDesc pipelineLayoutDesc;
     pipelineLayoutDesc.updateDescriptorSetLayout(DescriptorSetIndex::Internal, descriptorSetDesc);
@@ -4943,7 +4942,7 @@ angle::Result UtilsVk::allocateDescriptorSet(ContextVk *contextVk,
 {
     return allocateDescriptorSetWithLayout(
         contextVk, commandBufferHelper, mDescriptorPools[function],
-        mDescriptorSetLayouts[function][DescriptorSetIndex::Internal].get(), descriptorSetOut);
+        *mDescriptorSetLayouts[function][DescriptorSetIndex::Internal], descriptorSetOut);
 }
 
 angle::Result UtilsVk::allocateDescriptorSetForImageCopyWithSampler(
@@ -4954,7 +4953,7 @@ angle::Result UtilsVk::allocateDescriptorSetForImageCopyWithSampler(
 {
     return allocateDescriptorSetWithLayout(
         contextVk, commandBufferHelper, mImageCopyWithSamplerDescriptorPools[samplerDesc],
-        mImageCopyWithSamplerDescriptorSetLayouts[samplerDesc][DescriptorSetIndex::Internal].get(),
+        *mImageCopyWithSamplerDescriptorSetLayouts[samplerDesc][DescriptorSetIndex::Internal],
         descriptorSetOut);
 }
 

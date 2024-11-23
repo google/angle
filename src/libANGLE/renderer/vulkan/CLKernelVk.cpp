@@ -330,7 +330,7 @@ angle::Result CLKernelVk::allocateDescriptorSet(
     angle::EnumIterator<DescriptorSetIndex> layoutIndex,
     vk::OutsideRenderPassCommandBufferHelper *computePassCommands)
 {
-    return mProgram->allocateDescriptorSet(index, mDescriptorSetLayouts[*layoutIndex].get(),
+    return mProgram->allocateDescriptorSet(index, *mDescriptorSetLayouts[*layoutIndex],
                                            computePassCommands, &mDescriptorSets[index]);
 }
 }  // namespace rx

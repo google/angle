@@ -169,7 +169,7 @@ TEST_P(VulkanDescriptorSetLayoutDescTest, Basic)
 
     angle::Result result;
     rx::ContextVk *contextVk = hackANGLE();
-    rx::vk::AtomicBindingPointer<rx::vk::DescriptorSetLayout> descriptorSetLayout;
+    rx::vk::DescriptorSetLayoutPtr descriptorSetLayout;
 
     mDescriptorSetLayoutDesc = {};
     addBindings(bindingsPattern1, &mDescriptorSetLayoutDesc);
