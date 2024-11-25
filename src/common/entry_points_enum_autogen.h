@@ -280,6 +280,7 @@ enum class EntryPoint
     GLBlendBarrierKHR,
     GLBlendColor,
     GLBlendEquation,
+    GLBlendEquationOES,
     GLBlendEquationSeparate,
     GLBlendEquationSeparatei,
     GLBlendEquationSeparateiEXT,

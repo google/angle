@@ -158,6 +158,9 @@ void ReplayTraceFunctionCall(const CallCapture &call, const TraceFunctionMap &cu
         case angle::EntryPoint::GLBlendEquation:
             glBlendEquation(captures[0].value.GLenumVal);
             break;
+        case angle::EntryPoint::GLBlendEquationOES:
+            glBlendEquationOES(captures[0].value.GLenumVal);
+            break;
         case angle::EntryPoint::GLBlendEquationSeparate:
             glBlendEquationSeparate(captures[0].value.GLenumVal, captures[1].value.GLenumVal);
             break;

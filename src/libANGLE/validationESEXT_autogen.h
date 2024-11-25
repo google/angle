@@ -2310,6 +2310,12 @@ bool ValidateEGLImageTargetTexture2DOES(const Context *context,
 
 // GL_OES_EGL_image_external_essl3
 
+// GL_OES_blend_subtract
+bool ValidateBlendEquationOES(const PrivateState &state,
+                              ErrorSet *errors,
+                              angle::EntryPoint entryPoint,
+                              GLenum mode);
+
 // GL_OES_compressed_ETC1_RGB8_texture
 
 // GL_OES_compressed_paletted_texture
@@ -2828,6 +2834,8 @@ bool ValidateTexGenxvOES(const Context *context,
 // GL_OES_texture_half_float
 
 // GL_OES_texture_half_float_linear
+
+// GL_OES_texture_mirrored_repeat
 
 // GL_OES_texture_npot
 

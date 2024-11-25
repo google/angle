@@ -883,6 +883,7 @@ ANGLE_TRACE_LOADER_EXPORT PFNGLTEXTUREFOVEATIONPARAMETERSQCOMPROC
     t_glTextureFoveationParametersQCOM;
 ANGLE_TRACE_LOADER_EXPORT PFNGLENDTILINGQCOMPROC t_glEndTilingQCOM;
 ANGLE_TRACE_LOADER_EXPORT PFNGLSTARTTILINGQCOMPROC t_glStartTilingQCOM;
+ANGLE_TRACE_LOADER_EXPORT PFNGLBLENDEQUATIONOESPROC t_glBlendEquationOES;
 ANGLE_TRACE_LOADER_EXPORT PFNGLDRAWTEXFOESPROC t_glDrawTexfOES;
 ANGLE_TRACE_LOADER_EXPORT PFNGLDRAWTEXFVOESPROC t_glDrawTexfvOES;
 ANGLE_TRACE_LOADER_EXPORT PFNGLDRAWTEXIOESPROC t_glDrawTexiOES;
@@ -2286,14 +2287,16 @@ void LoadTraceGLES(LoadProc loadProc)
         loadProc("glTextureFoveationParametersQCOM"));
     t_glEndTilingQCOM   = reinterpret_cast<PFNGLENDTILINGQCOMPROC>(loadProc("glEndTilingQCOM"));
     t_glStartTilingQCOM = reinterpret_cast<PFNGLSTARTTILINGQCOMPROC>(loadProc("glStartTilingQCOM"));
-    t_glDrawTexfOES     = reinterpret_cast<PFNGLDRAWTEXFOESPROC>(loadProc("glDrawTexfOES"));
-    t_glDrawTexfvOES    = reinterpret_cast<PFNGLDRAWTEXFVOESPROC>(loadProc("glDrawTexfvOES"));
-    t_glDrawTexiOES     = reinterpret_cast<PFNGLDRAWTEXIOESPROC>(loadProc("glDrawTexiOES"));
-    t_glDrawTexivOES    = reinterpret_cast<PFNGLDRAWTEXIVOESPROC>(loadProc("glDrawTexivOES"));
-    t_glDrawTexsOES     = reinterpret_cast<PFNGLDRAWTEXSOESPROC>(loadProc("glDrawTexsOES"));
-    t_glDrawTexsvOES    = reinterpret_cast<PFNGLDRAWTEXSVOESPROC>(loadProc("glDrawTexsvOES"));
-    t_glDrawTexxOES     = reinterpret_cast<PFNGLDRAWTEXXOESPROC>(loadProc("glDrawTexxOES"));
-    t_glDrawTexxvOES    = reinterpret_cast<PFNGLDRAWTEXXVOESPROC>(loadProc("glDrawTexxvOES"));
+    t_glBlendEquationOES =
+        reinterpret_cast<PFNGLBLENDEQUATIONOESPROC>(loadProc("glBlendEquationOES"));
+    t_glDrawTexfOES  = reinterpret_cast<PFNGLDRAWTEXFOESPROC>(loadProc("glDrawTexfOES"));
+    t_glDrawTexfvOES = reinterpret_cast<PFNGLDRAWTEXFVOESPROC>(loadProc("glDrawTexfvOES"));
+    t_glDrawTexiOES  = reinterpret_cast<PFNGLDRAWTEXIOESPROC>(loadProc("glDrawTexiOES"));
+    t_glDrawTexivOES = reinterpret_cast<PFNGLDRAWTEXIVOESPROC>(loadProc("glDrawTexivOES"));
+    t_glDrawTexsOES  = reinterpret_cast<PFNGLDRAWTEXSOESPROC>(loadProc("glDrawTexsOES"));
+    t_glDrawTexsvOES = reinterpret_cast<PFNGLDRAWTEXSVOESPROC>(loadProc("glDrawTexsvOES"));
+    t_glDrawTexxOES  = reinterpret_cast<PFNGLDRAWTEXXOESPROC>(loadProc("glDrawTexxOES"));
+    t_glDrawTexxvOES = reinterpret_cast<PFNGLDRAWTEXXVOESPROC>(loadProc("glDrawTexxvOES"));
     t_glBindFramebufferOES =
         reinterpret_cast<PFNGLBINDFRAMEBUFFEROESPROC>(loadProc("glBindFramebufferOES"));
     t_glBindRenderbufferOES =

@@ -992,6 +992,12 @@ CallCapture ParseCallCapture(const Token &nameToken,
             paramTokens, strings);
         return CallCapture(EntryPoint::GLBlendEquation, std::move(params));
     }
+    if (strcmp(nameToken, "glBlendEquationOES") == 0)
+    {
+        ParamBuffer params = ParseParameters<std::remove_pointer<PFNGLBLENDEQUATIONOESPROC>::type>(
+            paramTokens, strings);
+        return CallCapture(EntryPoint::GLBlendEquationOES, std::move(params));
+    }
     if (strcmp(nameToken, "glBlendEquationSeparate") == 0)
     {
         ParamBuffer params =

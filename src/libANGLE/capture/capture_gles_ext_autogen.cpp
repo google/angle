@@ -10237,6 +10237,15 @@ CallCapture CaptureEGLImageTargetTexture2DOES(const State &glState,
     return CallCapture(angle::EntryPoint::GLEGLImageTargetTexture2DOES, std::move(paramBuffer));
 }
 
+CallCapture CaptureBlendEquationOES(const State &glState, bool isCallValid, GLenum mode)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addEnumParam("mode", GLESEnum::BlendEquationModeEXT, ParamType::TGLenum, mode);
+
+    return CallCapture(angle::EntryPoint::GLBlendEquationOES, std::move(paramBuffer));
+}
+
 CallCapture CaptureCopyImageSubDataOES(const State &glState,
                                        bool isCallValid,
                                        GLuint srcName,

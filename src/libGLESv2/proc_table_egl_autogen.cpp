@@ -181,6 +181,7 @@ const ProcEntry g_procTable[] = {
     {"glBlendBarrierKHR", P(GL_BlendBarrierKHR)},
     {"glBlendColor", P(GL_BlendColor)},
     {"glBlendEquation", P(GL_BlendEquation)},
+    {"glBlendEquationOES", P(GL_BlendEquationOES)},
     {"glBlendEquationSeparate", P(GL_BlendEquationSeparate)},
     {"glBlendEquationSeparatei", P(GL_BlendEquationSeparatei)},
     {"glBlendEquationSeparateiEXT", P(GL_BlendEquationSeparateiEXT)},

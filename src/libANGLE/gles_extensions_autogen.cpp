@@ -284,6 +284,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
 
         // GLES 1.0 and 1.1 extension strings
         // ----------------------------------
+        map["GL_OES_blend_subtract"] = enableableExtension(&Extensions::blendSubtractOES);
         map["GL_OES_draw_texture"] = enableableExtension(&Extensions::drawTextureOES);
         map["GL_OES_framebuffer_object"] = enableableExtension(&Extensions::framebufferObjectOES);
         map["GL_OES_matrix_palette"] = enableableExtension(&Extensions::matrixPaletteOES);
@@ -291,6 +292,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_point_sprite"] = enableableExtension(&Extensions::pointSpriteOES);
         map["GL_OES_query_matrix"] = enableableExtension(&Extensions::queryMatrixOES);
         map["GL_OES_texture_cube_map"] = enableableExtension(&Extensions::textureCubeMapOES);
+        map["GL_OES_texture_mirrored_repeat"] = enableableExtension(&Extensions::textureMirroredRepeatOES);
         // clang-format on
 
 #if defined(ANGLE_ENABLE_ASSERTS)

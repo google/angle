@@ -806,6 +806,9 @@ struct Extensions
     // GLES 1.0 and 1.1 extensions
     // ---------------------------
 
+    // GL_OES_blend_subtract
+    bool blendSubtractOES = false;
+
     // GL_OES_draw_texture
     bool drawTextureOES = false;
 
@@ -826,6 +829,9 @@ struct Extensions
 
     // GL_OES_texture_cube_map
     bool textureCubeMapOES = false;
+
+    // GL_OES_texture_mirrored_repeat
+    bool textureMirroredRepeatOES = false;
 };
 }  // namespace gl
 

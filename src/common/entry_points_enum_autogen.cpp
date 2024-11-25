@@ -548,6 +548,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glBlendColor";
         case EntryPoint::GLBlendEquation:
             return "glBlendEquation";
+        case EntryPoint::GLBlendEquationOES:
+            return "glBlendEquationOES";
         case EntryPoint::GLBlendEquationSeparate:
             return "glBlendEquationSeparate";
         case EntryPoint::GLBlendEquationSeparatei:

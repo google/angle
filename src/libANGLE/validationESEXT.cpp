@@ -939,6 +939,29 @@ bool ValidateReadnPixelsKHR(const Context *context,
                                   nullptr, nullptr, nullptr, data);
 }
 
+bool ValidateBlendEquationOES(const PrivateState &state,
+                              ErrorSet *errors,
+                              angle::EntryPoint entryPoint,
+                              GLenum mode)
+{
+    if (!state.getExtensions().blendSubtractOES)
+    {
+        errors->validationError(entryPoint, GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    switch (mode)
+    {
+        case GL_FUNC_ADD_OES:
+        case GL_FUNC_SUBTRACT_OES:
+        case GL_FUNC_REVERSE_SUBTRACT_OES:
+            return true;
+        default:
+            errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidBlendEquation);
+            return false;
+    }
+}
+
 bool ValidateBlendEquationSeparateiEXT(const PrivateState &state,
                                        ErrorSet *errors,
                                        angle::EntryPoint entryPoint,

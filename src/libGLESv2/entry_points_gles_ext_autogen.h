@@ -1597,6 +1597,9 @@ ANGLE_EXPORT void GL_APIENTRY GL_EGLImageTargetTexture2DOES(GLenum target, GLegl
 
 // GL_OES_EGL_image_external_essl3
 
+// GL_OES_blend_subtract
+ANGLE_EXPORT void GL_APIENTRY GL_BlendEquationOES(GLenum mode);
+
 // GL_OES_compressed_ETC1_RGB8_texture
 
 // GL_OES_compressed_paletted_texture
@@ -1900,6 +1903,8 @@ ANGLE_EXPORT void GL_APIENTRY GL_TexGenxvOES(GLenum coord, GLenum pname, const G
 // GL_OES_texture_half_float
 
 // GL_OES_texture_half_float_linear
+
+// GL_OES_texture_mirrored_repeat
 
 // GL_OES_texture_npot
 

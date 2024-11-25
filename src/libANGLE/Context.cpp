@@ -3688,8 +3688,10 @@ Extensions Context::generateSupportedExtensions() const
     if (getClientVersion() < ES_2_0)
     {
         // Default extensions for GLES1
+        supportedExtensions.blendSubtractOES         = true;
         supportedExtensions.pointSizeArrayOES        = true;
         supportedExtensions.textureCubeMapOES        = true;
+        supportedExtensions.textureMirroredRepeatOES = true;
         supportedExtensions.pointSpriteOES           = true;
         supportedExtensions.drawTextureOES           = true;
         supportedExtensions.framebufferObjectOES     = true;
