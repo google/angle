@@ -777,28 +777,29 @@ bool ValidTextureTarget(const Context *context, TextureType type)
             return context->getExtensions().textureRectangleANGLE;
 
         case TextureType::_3D:
-            return ((context->getClientMajorVersion() >= 3) ||
-                    context->getExtensions().texture3DOES);
+            return context->getClientVersion() >= ES_3_0 || context->getExtensions().texture3DOES;
 
         case TextureType::_2DArray:
-            return (context->getClientMajorVersion() >= 3);
+            return context->getClientVersion() >= ES_3_0;
 
         case TextureType::_2DMultisample:
-            return (context->getClientVersion() >= Version(3, 1) ||
-                    context->getExtensions().textureMultisampleANGLE);
+            return context->getClientVersion() >= ES_3_1 ||
+                   context->getExtensions().textureMultisampleANGLE;
+
         case TextureType::_2DMultisampleArray:
-            return context->getExtensions().textureStorageMultisample2dArrayOES;
+            return context->getClientVersion() >= ES_3_2 ||
+                   context->getExtensions().textureStorageMultisample2dArrayOES;
 
         case TextureType::CubeMapArray:
-            return (context->getClientVersion() >= Version(3, 2) ||
-                    context->getExtensions().textureCubeMapArrayAny());
+            return context->getClientVersion() >= ES_3_2 ||
+                   context->getExtensions().textureCubeMapArrayAny();
 
         case TextureType::VideoImage:
             return context->getExtensions().videoTextureWEBGL;
 
         case TextureType::Buffer:
-            return (context->getClientVersion() >= Version(3, 2) ||
-                    context->getExtensions().textureBufferAny());
+            return context->getClientVersion() >= ES_3_2 ||
+                   context->getExtensions().textureBufferAny();
 
         default:
             return false;
@@ -1055,21 +1056,26 @@ bool ValidTexLevelDestinationTarget(const Context *context, TextureType type)
     switch (type)
     {
         case TextureType::_2D:
-        case TextureType::_2DArray:
-        case TextureType::_2DMultisample:
         case TextureType::CubeMap:
-        case TextureType::_3D:
             return true;
+        case TextureType::_2DArray:
+            return context->getClientVersion() >= ES_3_0;
+        case TextureType::_2DMultisample:
+            return context->getClientVersion() >= ES_3_1 ||
+                   context->getExtensions().textureMultisampleANGLE;
+        case TextureType::_2DMultisampleArray:
+            return context->getClientVersion() >= ES_3_2 ||
+                   context->getExtensions().textureStorageMultisample2dArrayOES;
+        case TextureType::_3D:
+            return context->getClientVersion() >= ES_3_0 || context->getExtensions().texture3DOES;
         case TextureType::CubeMapArray:
-            return (context->getClientVersion() >= Version(3, 2) ||
-                    context->getExtensions().textureCubeMapArrayAny());
+            return context->getClientVersion() >= ES_3_2 ||
+                   context->getExtensions().textureCubeMapArrayAny();
         case TextureType::Rectangle:
             return context->getExtensions().textureRectangleANGLE;
-        case TextureType::_2DMultisampleArray:
-            return context->getExtensions().textureStorageMultisample2dArrayOES;
         case TextureType::Buffer:
-            return (context->getClientVersion() >= Version(3, 2) ||
-                    context->getExtensions().textureBufferAny());
+            return context->getClientVersion() >= ES_3_2 ||
+                   context->getExtensions().textureBufferAny();
         default:
             return false;
     }
@@ -8626,11 +8632,8 @@ bool ValidateGetTexLevelParameterBase(const Context *context,
         return false;
     }
 
-    if (context->getTextureByType(type) == nullptr)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kTextureNotBound);
-        return false;
-    }
+    // If type is valid, the texture object must exist
+    ASSERT(context->getTextureByType(type) != nullptr);
 
     if (!ValidMipLevel(context, type, level))
     {
@@ -8655,10 +8658,25 @@ bool ValidateGetTexLevelParameterBase(const Context *context,
         case GL_TEXTURE_INTERNAL_FORMAT:
         case GL_TEXTURE_WIDTH:
         case GL_TEXTURE_HEIGHT:
+        case GL_TEXTURE_COMPRESSED:
+            break;
+
         case GL_TEXTURE_DEPTH:
+            if (context->getClientVersion() < ES_3_0 && !context->getExtensions().texture3DOES)
+            {
+                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kEnumNotSupported);
+                return false;
+            }
+            break;
+
         case GL_TEXTURE_SAMPLES:
         case GL_TEXTURE_FIXED_SAMPLE_LOCATIONS:
-        case GL_TEXTURE_COMPRESSED:
+            if (context->getClientVersion() < ES_3_1 &&
+                !context->getExtensions().textureMultisampleANGLE)
+            {
+                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kMultisampleTextureExtensionOrES31Required);
+                return false;
+            }
             break;
 
         case GL_RESOURCE_INITIALIZED_ANGLE:
