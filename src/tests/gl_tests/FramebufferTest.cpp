@@ -364,6 +364,58 @@ TEST_P(FramebufferFormatsTest, ReadDrawCompleteness)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
+// Test that a renderbuffer with RGBA8 format works as expected.
+TEST_P(FramebufferFormatsTest, RGBA8Renderbuffer)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ARM_rgba8"));
+    GLRenderbuffer rbo;
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 16, 16);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo);
+
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    ASSERT_GL_NO_ERROR();
+
+    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
+
+// Test that a framebuffer can be attached to an RGB8 and an RGBA8 renderbuffer and work.
+TEST_P(FramebufferFormatsTest, RGB8AndRGBA8Renderbuffers)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_rgb8_rgba8"));
+    GLRenderbuffer rbo1;
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo1);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGB8, 16, 16);
+
+    GLRenderbuffer rbo2;
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo2);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 16, 16);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo1);
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    ASSERT_GL_NO_ERROR();
+
+    glClearColor(1.0, 1.0, 1.0, 0.1);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo2);
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    ASSERT_GL_NO_ERROR();
+
+    glClearColor(1.0, 0.0, 0.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
 // Test that a renderbuffer with RGB565 format works as expected. This test is intended for some
 // back-end having no support for native RGB565 renderbuffer and thus having to emulate using RGBA
 // format.
