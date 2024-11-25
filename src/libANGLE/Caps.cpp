@@ -266,6 +266,31 @@ static bool DetermineRGBA8TextureSupport(const TextureCapsMap &textureCaps)
     return GetFormatSupport(textureCaps, requiredFormats, false, false, false, true, false);
 }
 
+// Checks for GL_OES_required_internalformat support
+static bool DetermineRequiredInternalFormatTextureSupport(const TextureCapsMap &textureCaps)
+{
+    constexpr GLenum requiredTexturingFormats[] = {
+        GL_ALPHA8_OES,
+        GL_LUMINANCE8_OES,
+        GL_LUMINANCE8_ALPHA8_OES,
+        GL_LUMINANCE4_ALPHA4_OES,
+        GL_RGB565_OES,
+        GL_RGB8_OES,
+        GL_RGBA4_OES,
+        GL_RGB5_A1_OES,
+        GL_RGBA8_OES,
+    };
+
+    constexpr GLenum requiredRenderingFormats[] = {
+        GL_RGB565_OES, GL_RGB8_OES, GL_RGBA4_OES, GL_RGB5_A1_OES, GL_RGBA8_OES,
+    };
+
+    return GetFormatSupport(textureCaps, requiredTexturingFormats, true, false, false, false,
+                            false) &&
+           GetFormatSupport(textureCaps, requiredRenderingFormats, false, false, false, true,
+                            false);
+}
+
 // Checks for GL_OES_rgb8_rgba8 support
 static bool DetermineRGB8TextureSupport(const TextureCapsMap &textureCaps)
 {
@@ -414,7 +439,7 @@ static bool DetermineTextureFormat2101010Support(const TextureCapsMap &textureCa
     // GL_EXT_texture_type_2_10_10_10_REV specifies both RGBA and RGB support.
     constexpr GLenum requiredFormats[] = {
         GL_RGB10_A2,
-        GL_RGB10_UNORM_ANGLEX,
+        GL_RGB10_EXT,
     };
 
     return GetFormatSupport(textureCaps, requiredFormats, true, true, false, false, false);
@@ -890,6 +915,7 @@ void Extensions::setTextureExtensionSupport(const TextureCapsMap &textureCaps)
     readDepthNV              = DetermineReadDepthSupport(textureCaps);
     readStencilNV            = DetermineReadStencilSupport(textureCaps);
     depthBufferFloat2NV      = DetermineDepthBufferFloat2Support(textureCaps);
+    requiredInternalformatOES = DetermineRequiredInternalFormatTextureSupport(textureCaps);
     textureFormatBGRA8888EXT = DetermineBGRA8TextureSupport(textureCaps);
     readFormatBgraEXT        = DetermineBGRAReadFormatSupport(textureCaps);
     textureHalfFloatOES      = DetermineHalfFloatTextureSupport(textureCaps);

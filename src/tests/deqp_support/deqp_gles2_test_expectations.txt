@@ -117,6 +117,9 @@
 42260115 D3D11 : dEQP-GLES2.functional.shaders.invariance.highp.loop_2 = FAIL
 42260115 D3D11 : dEQP-GLES2.functional.shaders.invariance.mediump.loop_2 = FAIL
 
+// D3D11's depth component 32 does not have enough precision
+364069034 D3D11 : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.depth_component32 = FAIL
+
 // OpenGL desktop back-end failures
 42260603 OPENGL : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.srgb8_alpha8 = FAIL
 42260603 OPENGL : dEQP-GLES2.functional.fbo.completeness.renderable.texture.stencil.srgb8_alpha8 = FAIL

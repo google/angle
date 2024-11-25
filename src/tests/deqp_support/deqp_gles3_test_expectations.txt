@@ -89,6 +89,9 @@
 42262131 D3D11 : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond* = FAIL
 42262131 D3D11 : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond* = FAIL
 
+// D3D11's depth component 32 does not have enough precision
+364069034 D3D11 : dEQP-GLES3.functional.fbo.completeness.renderable.texture.depth.depth_component32 = FAIL
+
 // Windows and Linux failures
 42260101 LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.* = FAIL
 

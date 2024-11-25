@@ -1215,6 +1215,13 @@ void Format::initialize(Renderer *renderer, const angle::Format &angleFormat)
 
             break;
 
+        case angle::FormatID::L4A4_UNORM:
+            mIntendedGLFormat              = GL_LUMINANCE4_ALPHA4_OES;
+            mActualSampleOnlyImageFormatID = angle::FormatID::R8G8_UNORM;
+            mImageInitializerFunction      = nullptr;
+
+            break;
+
         case angle::FormatID::L8A8_UNORM:
             mIntendedGLFormat              = GL_LUMINANCE8_ALPHA8_EXT;
             mActualSampleOnlyImageFormatID = angle::FormatID::R8G8_UNORM;
@@ -1422,7 +1429,7 @@ void Format::initialize(Renderer *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R10G10B10X2_UNORM:
-            mIntendedGLFormat              = GL_RGB10_UNORM_ANGLEX;
+            mIntendedGLFormat              = GL_RGB10_EXT;
             mActualSampleOnlyImageFormatID = angle::FormatID::R10G10B10A2_UNORM;
             mImageInitializerFunction      = nullptr;
             mActualBufferFormatID          = angle::FormatID::NONE;

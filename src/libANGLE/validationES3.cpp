@@ -360,8 +360,42 @@ bool ValidateTexImageFormatCombination(const Context *context,
     {
         if (!ValidES3FormatCombination(format, type, internalFormat))
         {
-            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidFormatCombination);
-            return false;
+            bool extensionFormatsAllowed = false;
+            switch (internalFormat)
+            {
+                case GL_LUMINANCE4_ALPHA4_OES:
+                    if (context->getExtensions().requiredInternalformatOES &&
+                        type == GL_UNSIGNED_BYTE && format == GL_LUMINANCE_ALPHA)
+                    {
+                        extensionFormatsAllowed = true;
+                    }
+                    break;
+                case GL_DEPTH_COMPONENT32_OES:
+                    if ((context->getExtensions().requiredInternalformatOES &&
+                         context->getExtensions().depth32OES) &&
+                        type == GL_UNSIGNED_INT && format == GL_DEPTH_COMPONENT)
+                    {
+                        extensionFormatsAllowed = true;
+                    }
+                    break;
+                case GL_RGB10_EXT:
+                case GL_RGB8_OES:
+                case GL_RGB565_OES:
+                    if (context->getExtensions().requiredInternalformatOES &&
+                        context->getExtensions().textureType2101010REVEXT &&
+                        type == GL_UNSIGNED_INT_2_10_10_10_REV_EXT && format == GL_RGB)
+                    {
+                        extensionFormatsAllowed = true;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            if (!extensionFormatsAllowed)
+            {
+                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidFormatCombination);
+                return false;
+            }
         }
     }
 

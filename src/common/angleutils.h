@@ -400,9 +400,6 @@ inline bool IsLittleEndian()
 #define GL_RGB10_A2_SSCALED_ANGLEX 0x6AEC
 #define GL_RGB10_A2_USCALED_ANGLEX 0x6AED
 
-// EXT_texture_type_2_10_10_10_REV
-#define GL_RGB10_UNORM_ANGLEX 0x6AEE
-
 // These are fake formats for OES_vertex_type_10_10_10_2
 #define GL_A2_RGB10_UNORM_ANGLEX 0x6AEF
 #define GL_A2_RGB10_SNORM_ANGLEX 0x6AF0

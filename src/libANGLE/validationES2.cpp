@@ -501,6 +501,7 @@ bool ValidateES2CopyTexImageParameters(const Context *context,
         switch (internalformat)
         {
             case GL_ALPHA:
+            case GL_ALPHA8_OES:
                 if (colorbufferFormat != GL_ALPHA8_EXT && colorbufferFormat != GL_RGBA4 &&
                     colorbufferFormat != GL_RGB5_A1 && colorbufferFormat != GL_BGRA8_EXT &&
                     colorbufferFormat != GL_RGBA8_OES && colorbufferFormat != GL_BGR5_A1_ANGLEX &&
@@ -511,6 +512,7 @@ bool ValidateES2CopyTexImageParameters(const Context *context,
                 }
                 break;
             case GL_LUMINANCE:
+            case GL_LUMINANCE8_OES:
             case GL_RED_EXT:
                 if (colorbufferFormat != GL_R8_EXT && colorbufferFormat != GL_RG8_EXT &&
                     colorbufferFormat != GL_RGB565 && colorbufferFormat != GL_RGB8_OES &&
@@ -537,6 +539,8 @@ bool ValidateES2CopyTexImageParameters(const Context *context,
                 }
                 break;
             case GL_RGB:
+            case GL_RGB565_OES:
+            case GL_RGB8_OES:
                 if (colorbufferFormat != GL_RGB565 && colorbufferFormat != GL_RGB8_OES &&
                     colorbufferFormat != GL_RGBA4 && colorbufferFormat != GL_RGB5_A1 &&
                     colorbufferFormat != GL_BGRA8_EXT && colorbufferFormat != GL_RGBA8_OES &&
@@ -549,8 +553,13 @@ bool ValidateES2CopyTexImageParameters(const Context *context,
                 }
                 break;
             case GL_LUMINANCE_ALPHA:
+            case GL_LUMINANCE4_ALPHA4_OES:
+            case GL_LUMINANCE8_ALPHA8_OES:
             case GL_RGBA:
             case GL_BGRA_EXT:
+            case GL_RGBA4_OES:
+            case GL_RGB5_A1_OES:
+            case GL_RGBA8_OES:
                 if (colorbufferFormat != GL_RGBA4 && colorbufferFormat != GL_RGB5_A1 &&
                     colorbufferFormat != GL_BGRA8_EXT && colorbufferFormat != GL_RGBA8_OES &&
                     colorbufferFormat != GL_BGR5_A1_ANGLEX && colorbufferFormat != GL_RGBA16F &&
@@ -1421,6 +1430,135 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                         return false;
                     }
                     break;
+                // Valid sized internal format for GL_OES_required_internalformat.
+                case GL_ALPHA8_OES:
+                    if (context->getExtensions().requiredInternalformatOES &&
+                        type == GL_UNSIGNED_BYTE && format == GL_ALPHA)
+                    {
+                        nonEqualFormatsAllowed = true;
+                    }
+                    break;
+
+                case GL_LUMINANCE8_OES:
+                    if (context->getExtensions().requiredInternalformatOES &&
+                        type == GL_UNSIGNED_BYTE && format == GL_LUMINANCE)
+                    {
+                        nonEqualFormatsAllowed = true;
+                    }
+                    break;
+
+                case GL_LUMINANCE4_ALPHA4_OES:
+                    if (context->getExtensions().requiredInternalformatOES &&
+                        type == GL_UNSIGNED_BYTE && format == GL_LUMINANCE_ALPHA)
+                    {
+                        nonEqualFormatsAllowed = true;
+                    }
+                    break;
+
+                case GL_LUMINANCE8_ALPHA8_OES:
+                    if (context->getExtensions().requiredInternalformatOES &&
+                        type == GL_UNSIGNED_BYTE && format == GL_LUMINANCE_ALPHA)
+                    {
+                        nonEqualFormatsAllowed = true;
+                    }
+                    break;
+
+                case GL_RGB565_OES:
+                    if (context->getExtensions().requiredInternalformatOES &&
+                        (type == GL_UNSIGNED_BYTE || type == GL_UNSIGNED_SHORT_5_6_5) &&
+                        format == GL_RGB)
+                    {
+                        nonEqualFormatsAllowed = true;
+                    }
+                    if (context->getExtensions().requiredInternalformatOES &&
+                        context->getExtensions().textureType2101010REVEXT &&
+                        GL_UNSIGNED_INT_2_10_10_10_REV_EXT && format == GL_RGB)
+                    {
+                        nonEqualFormatsAllowed = true;
+                    }
+                    break;
+
+                case GL_RGB8_OES:
+                    if (context->getExtensions().requiredInternalformatOES &&
+                        type == GL_UNSIGNED_BYTE && format == GL_RGB)
+                    {
+                        nonEqualFormatsAllowed = true;
+                    }
+                    if (context->getExtensions().requiredInternalformatOES &&
+                        context->getExtensions().textureType2101010REVEXT &&
+                        GL_UNSIGNED_INT_2_10_10_10_REV_EXT && format == GL_RGB)
+                    {
+                        nonEqualFormatsAllowed = true;
+                    }
+                    break;
+
+                case GL_RGBA4_OES:
+                    if (context->getExtensions().requiredInternalformatOES &&
+                        (type == GL_UNSIGNED_BYTE || type == GL_UNSIGNED_SHORT_4_4_4_4) &&
+                        format == GL_RGBA)
+                    {
+                        nonEqualFormatsAllowed = true;
+                    }
+                    break;
+
+                case GL_RGB5_A1:
+                    if (context->getExtensions().requiredInternalformatOES &&
+                        (type == GL_UNSIGNED_BYTE || type == GL_UNSIGNED_SHORT_5_5_5_1) &&
+                        format == GL_RGBA)
+                    {
+                        nonEqualFormatsAllowed = true;
+                    }
+                    if (context->getExtensions().requiredInternalformatOES &&
+                        context->getExtensions().textureType2101010REVEXT &&
+                        type == GL_UNSIGNED_INT_2_10_10_10_REV_EXT && format == GL_RGBA)
+                    {
+                        nonEqualFormatsAllowed = true;
+                    }
+                    break;
+
+                case GL_RGBA8_OES:
+                    if (context->getExtensions().requiredInternalformatOES &&
+                        type == GL_UNSIGNED_BYTE && format == GL_RGBA)
+                    {
+                        nonEqualFormatsAllowed = true;
+                    }
+                    break;
+
+                case GL_DEPTH_COMPONENT16_OES:
+                    if (context->getExtensions().requiredInternalformatOES &&
+                        (type == GL_UNSIGNED_SHORT || type == GL_UNSIGNED_INT) &&
+                        format == GL_DEPTH_COMPONENT)
+                    {
+                        nonEqualFormatsAllowed = true;
+                    }
+                    break;
+
+                case GL_DEPTH_COMPONENT24_OES:
+                    if ((context->getExtensions().requiredInternalformatOES &&
+                         context->getExtensions().depth24OES) &&
+                        type == GL_UNSIGNED_INT && format == GL_DEPTH_COMPONENT)
+                    {
+                        nonEqualFormatsAllowed = true;
+                    }
+                    break;
+
+                case GL_DEPTH_COMPONENT32_OES:
+                    if ((context->getExtensions().requiredInternalformatOES &&
+                         context->getExtensions().depth32OES) &&
+                        type == GL_UNSIGNED_INT && format == GL_DEPTH_COMPONENT)
+                    {
+                        nonEqualFormatsAllowed = true;
+                    }
+                    break;
+
+                case GL_DEPTH24_STENCIL8_OES:
+                    if ((context->getExtensions().requiredInternalformatOES &&
+                         context->getExtensions().packedDepthStencilOES) &&
+                        type == GL_UNSIGNED_INT_24_8_OES && format == GL_DEPTH_STENCIL_OES)
+                    {
+                        nonEqualFormatsAllowed = true;
+                    }
+                    break;
 
                 case GL_RED:
                 case GL_RG:
@@ -1454,15 +1592,6 @@ bool ValidateES2TexImageParametersBase(const Context *context,
                     }
 
                     nonEqualFormatsAllowed = true;
-
-                    break;
-
-                case GL_RGB5_A1:
-                    if (context->getExtensions().textureType2101010REVEXT &&
-                        type == GL_UNSIGNED_INT_2_10_10_10_REV_EXT && format == GL_RGBA)
-                    {
-                        nonEqualFormatsAllowed = true;
-                    }
 
                     break;
 

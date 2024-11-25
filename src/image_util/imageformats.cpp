@@ -124,6 +124,27 @@ void A8L8::average(A8L8 *dst, const A8L8 *src1, const A8L8 *src2)
                        (*(uint16_t *)src1 & *(uint16_t *)src2);
 }
 
+void L4A4::readColor(gl::ColorF *dst, const L4A4 *src)
+{
+    const float lum = gl::normalizedToFloat<4>(src->L);
+    dst->red        = lum;
+    dst->green      = lum;
+    dst->blue       = lum;
+    dst->alpha      = gl::normalizedToFloat<4>(src->A);
+}
+
+void L4A4::writeColor(L4A4 *dst, const gl::ColorF *src)
+{
+    dst->L = gl::floatToNormalized<4, uint8_t>(src->red);
+    dst->A = gl::floatToNormalized<4, uint8_t>(src->alpha);
+}
+
+void L4A4::average(L4A4 *dst, const L4A4 *src1, const L4A4 *src2)
+{
+    dst->L = gl::average(src1->L, src2->L);
+    dst->A = gl::average(src1->A, src2->A);
+}
+
 void R8G8::readColor(gl::ColorUI *dst, const R8G8 *src)
 {
     dst->red   = src->R;
