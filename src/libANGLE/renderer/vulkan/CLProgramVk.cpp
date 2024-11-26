@@ -49,6 +49,10 @@ spv_result_t ParseReflection(CLProgramVk::SpvReflectionData &reflectionData,
         // --- Clspv specific parsing for below cases ---
         case spv::OpExtInst:
         {
+            if (spvInstr.ext_inst_type != SPV_EXT_INST_TYPE_NONSEMANTIC_CLSPVREFLECTION)
+            {
+                break;
+            }
             switch (spvInstr.words[4])
             {
                 case NonSemanticClspvReflectionKernel:
