@@ -70,16 +70,27 @@ bool TranslatorESSL::translate(TIntermBlock *root,
     TInfoSinkBase &sink = getInfoSink().obj;
 
     int shaderVer = getShaderVersion();  // Frontend shader version.
-    if ((shaderVer > 100 &&
-         (getResources().EXT_clip_cull_distance || getResources().ANGLE_clip_cull_distance ||
-          getResources().NV_shader_noperspective_interpolation ||
-          getResources().OES_shader_multisample_interpolation)) ||
-        (hasPixelLocalStorageUniforms() &&
-         compileOptions.pls.type == ShPixelLocalStorageType::ImageLoadStore))
+    if (shaderVer == 300)
     {
-        // The backend translator emits interface blocks or shader image code.
-        // Use a minimum version of 310.
-        shaderVer = std::max(shaderVer, 310);
+        // Although all these extensions are defined for ESSL 3.00,
+        // some drivers may support the required functionality only
+        // with ESSL 3.10.
+        const bool hasExtensionsThatMayRequireES31 =
+            getResources().EXT_clip_cull_distance || getResources().ANGLE_clip_cull_distance ||
+            getResources().NV_shader_noperspective_interpolation ||
+            getResources().OES_shader_multisample_interpolation ||
+            getResources().ANGLE_texture_multisample;
+
+        // When PLS is implemented with shader images,
+        // ESSL 3.10 output is required.
+        const bool usesShaderImagesForPLS =
+            hasPixelLocalStorageUniforms() &&
+            compileOptions.pls.type == ShPixelLocalStorageType::ImageLoadStore;
+
+        if (hasExtensionsThatMayRequireES31 || usesShaderImagesForPLS)
+        {
+            shaderVer = 310;
+        }
     }
     if (shaderVer > 100)
     {
@@ -307,6 +318,11 @@ void TranslatorESSL::writeExtensionBehavior(const ShCompileOptions &compileOptio
             {
                 sink << "#extension GL_EXT_shader_framebuffer_fetch_non_coherent : "
                      << GetBehaviorString(iter->second) << "\n";
+                continue;
+            }
+            else if (iter->first == TExtension::ANGLE_texture_multisample)
+            {
+                // Don't emit anything. This functionality is core in ESSL 3.10.
                 continue;
             }
             else if (iter->first == TExtension::WEBGL_video_texture)

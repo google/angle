@@ -1794,7 +1794,8 @@ void GenerateCaps(const FunctionsGL *functions,
                                             (extensions->multiviewOVR || extensions->multiview2OVR);
 
     extensions->textureMultisampleANGLE = functions->isAtLeastGL(gl::Version(3, 2)) ||
-                                          functions->hasGLExtension("GL_ARB_texture_multisample");
+                                          functions->hasGLExtension("GL_ARB_texture_multisample") ||
+                                          functions->isAtLeastGLES(gl::Version(3, 1));
 
     extensions->textureSRGBDecodeEXT = functions->hasGLExtension("GL_EXT_texture_sRGB_decode") ||
                                        functions->hasGLESExtension("GL_EXT_texture_sRGB_decode");
