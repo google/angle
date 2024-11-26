@@ -858,13 +858,14 @@ template <typename T, class RefCountedStorage = RefCounted<T>>
 class SharedPtr final
 {
   public:
-    SharedPtr() : mRefCounted(nullptr) {}
-    SharedPtr(T &&object)
+    SharedPtr() : mRefCounted(nullptr), mDevice(VK_NULL_HANDLE) {}
+    SharedPtr(VkDevice device, T &&object) : mDevice(device)
     {
         mRefCounted = new RefCountedStorage(std::move(object));
         mRefCounted->addRef();
     }
-    SharedPtr(const WeakPtr<T> &other) : mRefCounted(other.mRefCounted)
+    SharedPtr(VkDevice device, const WeakPtr<T> &other)
+        : mRefCounted(other.mRefCounted), mDevice(device)
     {
         if (mRefCounted)
         {
@@ -876,16 +877,23 @@ class SharedPtr final
     }
     ~SharedPtr() { reset(); }
 
-    SharedPtr(const SharedPtr &other) : mRefCounted(nullptr) { *this = other; }
+    SharedPtr(const SharedPtr &other) : mRefCounted(nullptr), mDevice(VK_NULL_HANDLE)
+    {
+        *this = other;
+    }
 
-    SharedPtr(SharedPtr &&other) : mRefCounted(nullptr) { *this = std::move(other); }
+    SharedPtr(SharedPtr &&other) : mRefCounted(nullptr), mDevice(VK_NULL_HANDLE)
+    {
+        *this = std::move(other);
+    }
 
     template <class... Args>
-    static SharedPtr<T, RefCountedStorage> MakeShared(Args &&...args)
+    static SharedPtr<T, RefCountedStorage> MakeShared(VkDevice device, Args &&...args)
     {
         SharedPtr<T, RefCountedStorage> newObject;
         newObject.mRefCounted = new RefCountedStorage(std::forward<Args>(args)...);
         newObject.mRefCounted->addRef();
+        newObject.mDevice = device;
         return newObject;
     }
 
@@ -895,6 +903,7 @@ class SharedPtr final
         {
             releaseRef();
             mRefCounted = nullptr;
+            mDevice     = VK_NULL_HANDLE;
         }
     }
 
@@ -905,7 +914,9 @@ class SharedPtr final
             releaseRef();
         }
         mRefCounted       = other.mRefCounted;
+        mDevice           = other.mDevice;
         other.mRefCounted = nullptr;
+        other.mDevice     = VK_NULL_HANDLE;
         return *this;
     }
 
@@ -916,6 +927,7 @@ class SharedPtr final
             releaseRef();
         }
         mRefCounted = other.mRefCounted;
+        mDevice     = other.mDevice;
         if (mRefCounted)
         {
             mRefCounted->addRef();
@@ -956,13 +968,14 @@ class SharedPtr final
         unsigned int refCount = mRefCounted->getAndReleaseRef();
         if (refCount == 1)
         {
-            mRefCounted->get().destroy();
+            mRefCounted->get().destroy(mDevice);
             SafeDelete(mRefCounted);
         }
     }
 
     friend class WeakPtr<T>;
     RefCountedStorage *mRefCounted;
+    VkDevice mDevice;
 };
 
 template <typename T>
@@ -977,7 +990,7 @@ class WeakPtr final
 
     WeakPtr() : mRefCounted(nullptr) {}
 
-    WeakPtr(const SharedPtr<T> &other) { mRefCounted = other.mRefCounted; }
+    WeakPtr(const SharedPtr<T> &other) : mRefCounted(other.mRefCounted) {}
 
     void reset() { mRefCounted = nullptr; }
 

@@ -1325,7 +1325,7 @@ void UtilsVk::destroy(ContextVk *contextVk)
             descriptorSetLayout.reset();
         }
         mPipelineLayouts[f].reset();
-        mDescriptorPools[f].destroy(renderer);
+        mDescriptorPools[f].destroy(device);
     }
 
     for (auto &item : mImageCopyWithSamplerPipelineLayouts)
@@ -1337,7 +1337,7 @@ void UtilsVk::destroy(ContextVk *contextVk)
             descriptorSetLayout.reset();
         }
         mImageCopyWithSamplerPipelineLayouts[samplerDesc].reset();
-        mImageCopyWithSamplerDescriptorPools[samplerDesc].destroy(renderer);
+        mImageCopyWithSamplerDescriptorPools[samplerDesc].destroy(device);
     }
 
     for (ComputeShaderProgramAndPipelines &programAndPipelines : mConvertIndex)

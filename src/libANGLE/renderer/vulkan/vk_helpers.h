@@ -300,7 +300,7 @@ class DescriptorSetHelper final : public Resource
         ASSERT(!mPool);
     }
 
-    void destroy();
+    void destroy(VkDevice device);
 
     VkDescriptorSet getDescriptorSet() const { return mDescriptorSet; }
     DescriptorPoolWeakPointer &getPool() { return mPool; }
@@ -341,10 +341,7 @@ class DescriptorPoolHelper final : angle::NonCopyable
     angle::Result init(Context *context,
                        const std::vector<VkDescriptorPoolSize> &poolSizesIn,
                        uint32_t maxSets);
-    // This only get called by SharedPtr. Nothing to do here since we explictly destroy/release pool
-    // before we reach here.
-    void destroy() { ASSERT(!valid()); }
-    void destroy(Renderer *renderer);
+    void destroy(VkDevice device);
 
     bool allocateDescriptorSet(Context *context,
                                const DescriptorSetLayout &descriptorSetLayout,
@@ -365,7 +362,7 @@ class DescriptorPoolHelper final : angle::NonCopyable
     }
     bool recycleFromGarbage(Renderer *renderer, DescriptorSetPointer *descriptorSetOut);
     void destroyGarbage();
-    void cleanupPendingGarbage(Renderer *renderer);
+    void cleanupPendingGarbage();
 
     bool hasValidDescriptorSet() const { return mValidDescriptorSets != 0; }
     bool canDestroy() const { return mValidDescriptorSets == 0 && mPendingGarbageList.empty(); }
@@ -374,6 +371,8 @@ class DescriptorPoolHelper final : angle::NonCopyable
     bool allocateVkDescriptorSet(Context *context,
                                  const DescriptorSetLayout &descriptorSetLayout,
                                  VkDescriptorSet *descriptorSetOut);
+
+    Renderer *mRenderer;
 
     // The initial number of descriptorSets when the pool is created. This should equal to
     // mValidDescriptorSets+mGarbageList.size()+mFreeDescriptorSets.
@@ -410,11 +409,8 @@ class DynamicDescriptorPool final : angle::NonCopyable
                        const VkDescriptorPoolSize *setSizes,
                        size_t setSizeCount,
                        const DescriptorSetLayout &descriptorSetLayout);
-    void destroy(Renderer *renderer);
-    // Used only by SharedPtr. Since MetaDescriptorPool always keep the last refCount and it
-    // explicitly calls destroy(renderer) before last refcount goes away, we should just do
-    // assertion here.
-    void destroy() { ASSERT(!valid()); }
+
+    void destroy(VkDevice device);
 
     bool valid() const { return !mDescriptorPools.empty(); }
 

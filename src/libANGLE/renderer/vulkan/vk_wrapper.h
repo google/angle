@@ -600,8 +600,6 @@ class ShaderModule final : public WrappedObject<ShaderModule, VkShaderModule>
   public:
     ShaderModule() = default;
     void destroy(VkDevice device);
-    // Somebody must have called destroy(device) explicitly already
-    void destroy() { ASSERT(!valid()); }
 
     VkResult init(VkDevice device, const VkShaderModuleCreateInfo &createInfo);
 };
@@ -611,8 +609,6 @@ class PipelineLayout final : public WrappedObject<PipelineLayout, VkPipelineLayo
   public:
     PipelineLayout() = default;
     void destroy(VkDevice device);
-    // Owner must explicitly call destroy(device) before last reference count goes away.
-    void destroy() { ASSERT(!valid()); }
 
     VkResult init(VkDevice device, const VkPipelineLayoutCreateInfo &createInfo);
 };
@@ -633,8 +629,6 @@ class DescriptorSetLayout final : public WrappedObject<DescriptorSetLayout, VkDe
   public:
     DescriptorSetLayout() = default;
     void destroy(VkDevice device);
-    // Owner must explicitly call destroy(device) before last reference count goes away.
-    void destroy() { ASSERT(!valid()); }
 
     VkResult init(VkDevice device, const VkDescriptorSetLayoutCreateInfo &createInfo);
 };

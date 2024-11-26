@@ -2678,14 +2678,14 @@ void DumpPipelineCacheGraph(
 // Used by SharedCacheKeyManager
 void MakeInvalidCachedObject(SharedFramebufferCacheKey *cacheKeyOut)
 {
-    *cacheKeyOut = SharedFramebufferCacheKey::MakeShared();
+    *cacheKeyOut = SharedFramebufferCacheKey::MakeShared(VK_NULL_HANDLE);
     // So that it will mark as invalid.
-    (*cacheKeyOut)->destroy();
+    (*cacheKeyOut)->destroy(VK_NULL_HANDLE);
 }
 
 void MakeInvalidCachedObject(SharedDescriptorSetCacheKey *cacheKeyOut)
 {
-    *cacheKeyOut = SharedDescriptorSetCacheKey::MakeShared();
+    *cacheKeyOut = SharedDescriptorSetCacheKey::MakeShared(VK_NULL_HANDLE);
 }
 
 angle::Result InitializePipelineFromLibraries(Context *context,
@@ -8212,7 +8212,8 @@ angle::Result DescriptorSetLayoutCache::getDescriptorSetLayout(
     createInfo.bindingCount = static_cast<uint32_t>(bindingVector.size());
     createInfo.pBindings    = bindingVector.data();
 
-    vk::DescriptorSetLayoutPtr newLayout = vk::DescriptorSetLayoutPtr::MakeShared();
+    vk::DescriptorSetLayoutPtr newLayout =
+        vk::DescriptorSetLayoutPtr::MakeShared(context->getDevice());
     ANGLE_VK_TRY(context, newLayout->init(context->getDevice(), createInfo));
 
     *descriptorSetLayoutOut = newLayout;
@@ -8292,7 +8293,7 @@ angle::Result PipelineLayoutCache::getPipelineLayout(
         createInfo.pPushConstantRanges    = &pushConstantRange;
     }
 
-    vk::PipelineLayoutPtr newLayout = vk::PipelineLayoutPtr::MakeShared();
+    vk::PipelineLayoutPtr newLayout = vk::PipelineLayoutPtr::MakeShared(context->getDevice());
     ANGLE_VK_TRY(context, newLayout->init(context->getDevice(), createInfo));
 
     *pipelineLayoutOut = newLayout;
@@ -8409,7 +8410,7 @@ angle::Result SamplerCache::getSampler(ContextVk *contextVk,
     }
 
     mCacheStats.missAndIncrementSize();
-    vk::SharedSamplerPtr newSampler = vk::SharedSamplerPtr::MakeShared();
+    vk::SharedSamplerPtr newSampler = vk::SharedSamplerPtr::MakeShared(contextVk->getDevice());
     ANGLE_TRY(newSampler->init(contextVk, desc));
 
     (*samplerOut) = newSampler;

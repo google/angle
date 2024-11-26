@@ -2356,7 +2356,7 @@ angle::Result Renderer::initialize(vk::Context *context,
     createInfo.bindingCount = 0;
     createInfo.pBindings    = nullptr;
 
-    mPlaceHolderDescriptorSetLayout = vk::DescriptorSetLayoutPtr::MakeShared();
+    mPlaceHolderDescriptorSetLayout = vk::DescriptorSetLayoutPtr::MakeShared(context->getDevice());
     ANGLE_VK_TRY(context, mPlaceHolderDescriptorSetLayout->init(context->getDevice(), createInfo));
     ASSERT(mPlaceHolderDescriptorSetLayout->valid());
 

@@ -627,7 +627,7 @@ angle::Result InitShaderModule(Context *context,
     createInfo.codeSize                 = shaderCodeSize;
     createInfo.pCode                    = shaderCode;
 
-    ShaderModulePtr newShaderModule = ShaderModulePtr::MakeShared();
+    ShaderModulePtr newShaderModule = ShaderModulePtr::MakeShared(context->getDevice());
     ANGLE_VK_TRY(context, newShaderModule->init(context->getDevice(), createInfo));
 
     *shaderModulePtr = std::move(newShaderModule);

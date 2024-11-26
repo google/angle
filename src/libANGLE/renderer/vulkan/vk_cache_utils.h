@@ -1874,7 +1874,7 @@ class DescriptorSetDescAndPool final
         other.mPool = nullptr;
     }
     ~DescriptorSetDescAndPool() { ASSERT(!valid()); }
-    void destroy() { mPool = nullptr; }
+    void destroy(VkDevice /*device*/) { mPool = nullptr; }
 
     void destroyCachedObject(Renderer *renderer);
     void releaseCachedObject(ContextVk *contextVk) { UNREACHABLE(); }
@@ -1898,7 +1898,7 @@ using SharedDescriptorSetCacheKey = SharedPtr<DescriptorSetDescAndPool>;
 ANGLE_INLINE const SharedDescriptorSetCacheKey
 CreateSharedDescriptorSetCacheKey(const DescriptorSetDesc &desc, DynamicDescriptorPool *pool)
 {
-    return SharedDescriptorSetCacheKey::MakeShared(desc, pool);
+    return SharedDescriptorSetCacheKey::MakeShared(VK_NULL_HANDLE, desc, pool);
 }
 
 constexpr VkDescriptorType kStorageBufferDescriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
@@ -2091,7 +2091,7 @@ class FramebufferDesc
     bool hasFragmentShadingRateAttachment() const;
 
     // Used by SharedFramebufferCacheKey
-    void destroy() { SetBitField(mIsValid, 0); }
+    void destroy(VkDevice /*device*/) { SetBitField(mIsValid, 0); }
     void destroyCachedObject(Renderer *renderer);
     void releaseCachedObject(Renderer *renderer) { UNREACHABLE(); }
     void releaseCachedObject(ContextVk *contextVk);
@@ -2142,7 +2142,7 @@ using SharedFramebufferCacheKey = SharedPtr<FramebufferDesc>;
 ANGLE_INLINE const SharedFramebufferCacheKey
 CreateSharedFramebufferCacheKey(const FramebufferDesc &desc)
 {
-    return SharedFramebufferCacheKey::MakeShared(desc);
+    return SharedFramebufferCacheKey::MakeShared(VK_NULL_HANDLE, desc);
 }
 
 // The SamplerHelper allows a Sampler to be coupled with a serial.

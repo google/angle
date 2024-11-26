@@ -4226,7 +4226,7 @@ void BufferPool::addStats(std::ostringstream *out) const
 }
 
 // DescriptorSetHelper implementation.
-void DescriptorSetHelper::destroy()
+void DescriptorSetHelper::destroy(VkDevice device)
 {
     if (valid())
     {
@@ -4234,7 +4234,9 @@ void DescriptorSetHelper::destroy()
         // don't call vkFreeDescriptorSets. We always add to garbage list so that it can be
         // recycled. Since we dont actually know if it is GPU completed, we always just add to the
         // pending garbage list assuming the worst case.
-        mPool->addPendingGarbage(std::move(*this));
+        DescriptorPoolPointer pool(device, mPool);
+        DescriptorSetPointer garbage(device, std::move(*this));
+        pool->addPendingGarbage(std::move(garbage));
         ASSERT(!valid());
     }
 }
@@ -4285,15 +4287,17 @@ angle::Result DescriptorPoolHelper::init(Context *context,
 
     ANGLE_VK_TRY(context, mDescriptorPool.init(renderer->getDevice(), descriptorPoolInfo));
 
+    mRenderer = renderer;
+
     return angle::Result::Continue;
 }
 
-void DescriptorPoolHelper::destroy(Renderer *renderer)
+void DescriptorPoolHelper::destroy(VkDevice device)
 {
     ASSERT(mValidDescriptorSets == 0);
     ASSERT(mPendingGarbageList.empty());
     ASSERT(mFinishedGarbageList.empty());
-    mDescriptorPool.destroy(renderer->getDevice());
+    mDescriptorPool.destroy(device);
 }
 
 bool DescriptorPoolHelper::allocateVkDescriptorSet(Context *context,
@@ -4321,12 +4325,12 @@ bool DescriptorPoolHelper::allocateVkDescriptorSet(Context *context,
     return false;
 }
 
-void DescriptorPoolHelper::cleanupPendingGarbage(Renderer *renderer)
+void DescriptorPoolHelper::cleanupPendingGarbage()
 {
     while (!mPendingGarbageList.empty())
     {
         DescriptorSetPointer &garbage = mPendingGarbageList.front();
-        if (!renderer->hasResourceUseFinished(garbage->getResourceUse()))
+        if (!mRenderer->hasResourceUseFinished(garbage->getResourceUse()))
         {
             break;
         }
@@ -4340,7 +4344,7 @@ bool DescriptorPoolHelper::recycleFromGarbage(Renderer *renderer,
 {
     if (mFinishedGarbageList.empty())
     {
-        cleanupPendingGarbage(renderer);
+        cleanupPendingGarbage();
     }
 
     if (!mFinishedGarbageList.empty())
@@ -4365,7 +4369,7 @@ bool DescriptorPoolHelper::allocateDescriptorSet(Context *context,
     if (allocateVkDescriptorSet(context, descriptorSetLayout, &descriptorSet))
     {
         DescriptorSetHelper helper = DescriptorSetHelper(descriptorSet, pool);
-        *descriptorSetOut          = std::move(helper);
+        *descriptorSetOut          = DescriptorSetPointer(context->getDevice(), std::move(helper));
         return true;
     }
     return false;
@@ -4431,7 +4435,7 @@ angle::Result DynamicDescriptorPool::init(Context *context,
     mPoolSizes.assign(setSizes, setSizes + setSizeCount);
     mCachedDescriptorSetLayout = descriptorSetLayout.getHandle();
 
-    DescriptorPoolPointer newPool = DescriptorPoolPointer::MakeShared();
+    DescriptorPoolPointer newPool = DescriptorPoolPointer::MakeShared(context->getDevice());
     ANGLE_TRY(newPool->init(context, mPoolSizes, mMaxSetsPerPool));
 
     mDescriptorPools.emplace_back(std::move(newPool));
@@ -4439,7 +4443,7 @@ angle::Result DynamicDescriptorPool::init(Context *context,
     return angle::Result::Continue;
 }
 
-void DynamicDescriptorPool::destroy(Renderer *renderer)
+void DynamicDescriptorPool::destroy(VkDevice device)
 {
     // Destroy cache
     mDescriptorSetCache.clear();
@@ -4447,17 +4451,17 @@ void DynamicDescriptorPool::destroy(Renderer *renderer)
     // Destroy LRU list and SharedDescriptorSetCacheKey.
     for (auto it = mLRUList.begin(); it != mLRUList.end();)
     {
-        (it->sharedCacheKey)->destroy();
+        (it->sharedCacheKey)->destroy(device);
         it = mLRUList.erase(it);
     }
     ASSERT(mLRUList.empty());
 
     for (DescriptorPoolPointer &pool : mDescriptorPools)
     {
-        pool->cleanupPendingGarbage(renderer);
+        pool->cleanupPendingGarbage();
         pool->destroyGarbage();
         ASSERT(pool.unique());
-        pool->destroy(renderer);
+        pool->destroy(device);
     }
     mDescriptorPools.clear();
 
@@ -4664,7 +4668,7 @@ angle::Result DynamicDescriptorPool::allocateNewPool(Context *context)
     {
         mMaxSetsPerPool *= mMaxSetsPerPoolMultiplier;
     }
-    DescriptorPoolPointer newPool = DescriptorPoolPointer::MakeShared();
+    DescriptorPoolPointer newPool = DescriptorPoolPointer::MakeShared(context->getDevice());
     ANGLE_TRY(newPool->init(context, mPoolSizes, mMaxSetsPerPool));
     mDescriptorPools.emplace_back(std::move(newPool));
 
@@ -4734,7 +4738,7 @@ void DynamicDescriptorPool::destroyUnusedPool(Renderer *renderer,
         {
             ASSERT(pool->valid());
             pool->destroyGarbage();
-            pool->destroy(renderer);
+            pool->destroy(renderer->getDevice());
             it = mDescriptorPools.erase(it);
             return;
         }
@@ -4746,7 +4750,7 @@ void DynamicDescriptorPool::checkAndDestroyUnusedPool(Renderer *renderer)
     ASSERT(renderer->getFeatures().descriptorSetCache.enabled);
     for (auto pool : mDescriptorPools)
     {
-        pool->cleanupPendingGarbage(renderer);
+        pool->cleanupPendingGarbage();
     }
 
     // We always keep at least one pool around.
@@ -4761,7 +4765,7 @@ void DynamicDescriptorPool::checkAndDestroyUnusedPool(Renderer *renderer)
         if ((*it)->canDestroy())
         {
             (*it)->destroyGarbage();
-            (*it)->destroy(renderer);
+            (*it)->destroy(renderer->getDevice());
             it = mDescriptorPools.erase(it);
         }
         else
@@ -13119,7 +13123,7 @@ void MetaDescriptorPool::destroy(Renderer *renderer)
     {
         DynamicDescriptorPoolPointer &pool = iter.second;
         ASSERT(pool.unique());
-        pool->destroy(renderer);
+        pool->destroy(renderer->getDevice());
     }
 
     mPayload.clear();
@@ -13154,7 +13158,8 @@ angle::Result MetaDescriptorPool::bindCachedDescriptorPool(
                                         descriptorCountMultiplier, &newDescriptorPool));
 
     ASSERT(newDescriptorPool.valid());
-    DynamicDescriptorPoolPointer newDynamicDescriptorPoolPtr(std::move(newDescriptorPool));
+    DynamicDescriptorPoolPointer newDynamicDescriptorPoolPtr(context->getDevice(),
+                                                             std::move(newDescriptorPool));
     mPayload.emplace(descriptorSetLayoutDesc, newDynamicDescriptorPoolPtr);
     *dynamicDescriptorPoolOut = std::move(newDynamicDescriptorPoolPtr);
 
