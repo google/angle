@@ -2667,6 +2667,18 @@ Error Display::queryDmaBufModifiers(EGLint format,
     return NoError();
 }
 
+Error Display::querySupportedCompressionRates(const Config *configuration,
+                                              const AttributeMap &attributes,
+                                              EGLint *rates,
+                                              EGLint rate_size,
+                                              EGLint *num_rates) const
+{
+    ANGLE_TRY(mImplementation->querySupportedCompressionRates(configuration, attributes, rates,
+                                                              rate_size, num_rates));
+
+    return NoError();
+}
+
 angle::ImageLoadContext Display::getImageLoadContext() const
 {
     angle::ImageLoadContext imageLoadContext;

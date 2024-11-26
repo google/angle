@@ -110,6 +110,12 @@ class DisplayVk : public DisplayImpl, public vk::Context, public vk::GlobalOps
                                                 VkFormat format,
                                                 VkColorSpaceKHR colorspace) const;
 
+    egl::Error querySupportedCompressionRates(const egl::Config *configuration,
+                                              const egl::AttributeMap &attributes,
+                                              EGLint *rates,
+                                              EGLint rate_size,
+                                              EGLint *num_rates) const override;
+
   protected:
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
 

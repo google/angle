@@ -1372,6 +1372,30 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk, bool *anyMat
         mDesiredSwapchainPresentMode              = GetDesiredPresentMode(presentModes, 0);
     }
 
+    mCompressionFlags    = VK_IMAGE_COMPRESSION_DISABLED_EXT;
+    mFixedRateFlags      = 0;
+    VkFormat imageFormat = vk::GetVkFormatFromFormatID(renderer, getActualFormatID(renderer));
+    EGLenum surfaceCompressionRate = static_cast<EGLenum>(mState.attributes.get(
+        EGL_SURFACE_COMPRESSION_EXT, EGL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT));
+    bool useFixedRateCompression =
+        (surfaceCompressionRate != EGL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT);
+    bool fixedRateDefault =
+        (surfaceCompressionRate == EGL_SURFACE_COMPRESSION_FIXED_RATE_DEFAULT_EXT);
+    if (useFixedRateCompression)
+    {
+        ASSERT(renderer->getFeatures().supportsImageCompressionControl.enabled);
+        ASSERT(renderer->getFeatures().supportsImageCompressionControlSwapchain.enabled);
+        if (imageFormat == VK_FORMAT_R8G8B8A8_UNORM || imageFormat == VK_FORMAT_R8_UNORM ||
+            imageFormat == VK_FORMAT_R5G6B5_UNORM_PACK16 ||
+            imageFormat == VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16)
+        {
+            mCompressionFlags = fixedRateDefault ? VK_IMAGE_COMPRESSION_FIXED_RATE_DEFAULT_EXT
+                                                 : VK_IMAGE_COMPRESSION_FIXED_RATE_EXPLICIT_EXT;
+            mFixedRateFlags   = gl_vk::ConvertEGLFixedRateToVkFixedRate(surfaceCompressionRate,
+                                                                        getActualFormatID(renderer));
+        }
+    }
+
     ANGLE_TRY(createSwapChain(displayVk, extents));
 
     // Create the semaphores that will be used for vkAcquireNextImageKHR.
@@ -1612,6 +1636,16 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context, const gl::E
     swapchainInfo.presentMode = vk::ConvertPresentModeToVkPresentMode(mDesiredSwapchainPresentMode);
     swapchainInfo.clipped     = VK_TRUE;
     swapchainInfo.oldSwapchain = mLastSwapchain;
+
+    VkImageCompressionControlEXT compressionInfo = {};
+    compressionInfo.sType                        = VK_STRUCTURE_TYPE_IMAGE_COMPRESSION_CONTROL_EXT;
+    compressionInfo.flags                        = mCompressionFlags;
+    compressionInfo.compressionControlPlaneCount = 1;
+    compressionInfo.pFixedRateFlags              = &mFixedRateFlags;
+    if (mCompressionFlags != VK_IMAGE_COMPRESSION_DISABLED_EXT)
+    {
+        vk::AddToPNextChain(&swapchainInfo, &compressionInfo);
+    }
 
 #if defined(ANGLE_PLATFORM_WINDOWS)
     // On some AMD drivers we need to explicitly enable the extension and set
@@ -3320,6 +3354,35 @@ egl::Error WindowSurfaceVk::detachFromFramebuffer(const gl::Context *context,
     ASSERT(framebufferVk->getBackbuffer() == this);
     framebufferVk->setBackbuffer(nullptr);
     return egl::NoError();
+}
+
+EGLint WindowSurfaceVk::getCompressionRate(const egl::Display *display) const
+{
+    ASSERT(!mSwapchainImages.empty());
+
+    DisplayVk *displayVk   = vk::GetImpl(display);
+    vk::Renderer *renderer = displayVk->getRenderer();
+
+    ASSERT(renderer->getFeatures().supportsImageCompressionControl.enabled);
+    ASSERT(renderer->getFeatures().supportsImageCompressionControlSwapchain.enabled);
+
+    VkImageSubresource2EXT imageSubresource2      = {};
+    imageSubresource2.sType                       = VK_STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_EXT;
+    imageSubresource2.imageSubresource.aspectMask = mSwapchainImages[0].image->getAspectFlags();
+    VkImageCompressionPropertiesEXT compressionProperties = {};
+    compressionProperties.sType = VK_STRUCTURE_TYPE_IMAGE_COMPRESSION_PROPERTIES_EXT;
+
+    VkSubresourceLayout2EXT subresourceLayout = {};
+    subresourceLayout.sType                   = VK_STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_EXT;
+    subresourceLayout.pNext                   = &compressionProperties;
+
+    vkGetImageSubresourceLayout2EXT(displayVk->getDevice(),
+                                    mSwapchainImages[0].image->getImage().getHandle(),
+                                    &imageSubresource2, &subresourceLayout);
+
+    std::vector<EGLint> eglFixedRates = vk_gl::ConvertCompressionFlagsToEGLFixedRate(
+        compressionProperties.imageCompressionFixedRateFlags, 1);
+    return eglFixedRates.empty() ? EGL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT : eglFixedRates[0];
 }
 
 }  // namespace rx

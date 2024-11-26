@@ -369,6 +369,8 @@ class WindowSurfaceVk : public SurfaceVk
 
     void setTimestampsEnabled(bool enabled) override;
 
+    EGLint getCompressionRate(const egl::Display *display) const override;
+
   protected:
     angle::Result swapImpl(const gl::Context *context,
                            const EGLint *rects,
@@ -468,6 +470,8 @@ class WindowSurfaceVk : public SurfaceVk
     VkSurfaceTransformFlagBitsKHR mEmulatedPreTransform;
     VkCompositeAlphaFlagBitsKHR mCompositeAlpha;
     VkColorSpaceKHR mSurfaceColorSpace;
+    VkImageCompressionFlagBitsEXT mCompressionFlags;
+    VkImageCompressionFixedRateFlagsEXT mFixedRateFlags;
 
     // Present modes that are compatible with the current mode.  If mDesiredSwapchainPresentMode is
     // in this list, mode switch can happen without the need to recreate the swapchain.

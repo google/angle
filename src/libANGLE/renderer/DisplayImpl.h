@@ -127,6 +127,12 @@ class DisplayImpl : public EGLImplFactory, public angle::Subject
                                             EGLBoolean *external_only,
                                             EGLint *num_modifiers);
 
+    virtual egl::Error querySupportedCompressionRates(const egl::Config *configuration,
+                                                      const egl::AttributeMap &attributes,
+                                                      EGLint *rates,
+                                                      EGLint rate_size,
+                                                      EGLint *num_rates) const;
+
   protected:
     const egl::DisplayState &mState;
 

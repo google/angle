@@ -2358,6 +2358,198 @@ bool ValidateSync(const ValidationContext *val, const Display *display, SyncID s
     return true;
 }
 
+bool ValidateCreateWindowSurfaceAttributes(const ValidationContext *val,
+                                           const Display *display,
+                                           const Config *config,
+                                           const AttributeMap &attributes)
+{
+    const DisplayExtensions &displayExtensions = display->getExtensions();
+    for (const auto &attributeIter : attributes)
+    {
+        EGLAttrib attribute = attributeIter.first;
+        EGLAttrib value     = attributeIter.second;
+
+        switch (attribute)
+        {
+            case EGL_RENDER_BUFFER:
+                switch (value)
+                {
+                    case EGL_BACK_BUFFER:
+                        break;
+                    case EGL_SINGLE_BUFFER:
+                        break;
+                    default:
+                        val->setError(EGL_BAD_ATTRIBUTE);
+                        return false;
+                }
+                break;
+
+            case EGL_POST_SUB_BUFFER_SUPPORTED_NV:
+                if (!displayExtensions.postSubBuffer)
+                {
+                    val->setError(EGL_BAD_ATTRIBUTE);
+                    return false;
+                }
+                break;
+
+            case EGL_WIDTH:
+            case EGL_HEIGHT:
+                if (!displayExtensions.windowFixedSize)
+                {
+                    val->setError(EGL_BAD_ATTRIBUTE);
+                    return false;
+                }
+                if (value < 0)
+                {
+                    val->setError(EGL_BAD_PARAMETER);
+                    return false;
+                }
+                break;
+
+            case EGL_FIXED_SIZE_ANGLE:
+                if (!displayExtensions.windowFixedSize)
+                {
+                    val->setError(EGL_BAD_ATTRIBUTE);
+                    return false;
+                }
+                break;
+
+            case EGL_SURFACE_ORIENTATION_ANGLE:
+                if (!displayExtensions.surfaceOrientation)
+                {
+                    val->setError(EGL_BAD_ATTRIBUTE,
+                                  "EGL_ANGLE_surface_orientation is not enabled.");
+                    return false;
+                }
+                break;
+
+            case EGL_VG_COLORSPACE:
+                if (value != EGL_VG_COLORSPACE_sRGB)
+                {
+                    val->setError(EGL_BAD_MATCH);
+                    return false;
+                }
+                break;
+
+            case EGL_GL_COLORSPACE:
+                ANGLE_VALIDATION_TRY(ValidateColorspaceAttribute(val, displayExtensions, value));
+                break;
+
+            case EGL_VG_ALPHA_FORMAT:
+                val->setError(EGL_BAD_MATCH);
+                return false;
+
+            case EGL_DIRECT_COMPOSITION_ANGLE:
+                if (!displayExtensions.directComposition)
+                {
+                    val->setError(EGL_BAD_ATTRIBUTE);
+                    return false;
+                }
+                break;
+
+            case EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
+                if (!display->getExtensions().robustResourceInitializationANGLE)
+                {
+                    val->setError(EGL_BAD_ATTRIBUTE,
+                                  "Attribute EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE "
+                                  "requires EGL_ANGLE_robust_resource_initialization.");
+                    return false;
+                }
+                if (value != EGL_TRUE && value != EGL_FALSE)
+                {
+                    val->setError(EGL_BAD_ATTRIBUTE,
+                                  "EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE must be "
+                                  "either EGL_TRUE or EGL_FALSE.");
+                    return false;
+                }
+                break;
+
+            case EGL_GGP_STREAM_DESCRIPTOR_ANGLE:
+                if (!display->getExtensions().ggpStreamDescriptor)
+                {
+                    val->setError(EGL_BAD_ATTRIBUTE,
+                                  "EGL_GGP_STREAM_DESCRIPTOR_ANGLE requires "
+                                  "EGL_ANGLE_ggp_stream_descriptor.");
+                    return false;
+                }
+                break;
+
+            case EGL_PROTECTED_CONTENT_EXT:
+                if (!displayExtensions.protectedContentEXT)
+                {
+                    val->setError(EGL_BAD_ATTRIBUTE,
+                                  "Attribute EGL_PROTECTED_CONTEXT_EXT requires "
+                                  "extension EGL_EXT_protected_content.");
+                    return false;
+                }
+                if (value != EGL_TRUE && value != EGL_FALSE)
+                {
+                    val->setError(EGL_BAD_ATTRIBUTE,
+                                  "EGL_PROTECTED_CONTENT_EXT must "
+                                  "be either EGL_TRUE or EGL_FALSE.");
+                    return false;
+                }
+                break;
+
+            case EGL_SWAP_INTERVAL_ANGLE:
+                if (!displayExtensions.createSurfaceSwapIntervalANGLE)
+                {
+                    val->setError(EGL_BAD_ATTRIBUTE,
+                                  "Attribute EGL_SWAP_INTERVAL_ANGLE requires "
+                                  "extension EGL_ANGLE_create_surface_swap_interval.");
+                    return false;
+                }
+                if (value < config->minSwapInterval || value > config->maxSwapInterval)
+                {
+                    val->setError(EGL_BAD_ATTRIBUTE,
+                                  "EGL_SWAP_INTERVAL_ANGLE must "
+                                  "be within the EGLConfig min and max swap intervals.");
+                    return false;
+                }
+                break;
+
+            case EGL_SURFACE_COMPRESSION_EXT:
+                if (!displayExtensions.surfaceCompressionEXT)
+                {
+                    val->setError(EGL_BAD_ATTRIBUTE,
+                                  "Attribute EGL_SURFACE_COMPRESSION_EXT requires "
+                                  "extension EGL_EXT_surface_compression.");
+                    return false;
+                }
+
+                switch (value)
+                {
+                    case EGL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT:
+                    case EGL_SURFACE_COMPRESSION_FIXED_RATE_DEFAULT_EXT:
+                    case EGL_SURFACE_COMPRESSION_FIXED_RATE_1BPC_EXT:
+                    case EGL_SURFACE_COMPRESSION_FIXED_RATE_2BPC_EXT:
+                    case EGL_SURFACE_COMPRESSION_FIXED_RATE_3BPC_EXT:
+                    case EGL_SURFACE_COMPRESSION_FIXED_RATE_4BPC_EXT:
+                    case EGL_SURFACE_COMPRESSION_FIXED_RATE_5BPC_EXT:
+                    case EGL_SURFACE_COMPRESSION_FIXED_RATE_6BPC_EXT:
+                    case EGL_SURFACE_COMPRESSION_FIXED_RATE_7BPC_EXT:
+                    case EGL_SURFACE_COMPRESSION_FIXED_RATE_8BPC_EXT:
+                    case EGL_SURFACE_COMPRESSION_FIXED_RATE_9BPC_EXT:
+                    case EGL_SURFACE_COMPRESSION_FIXED_RATE_10BPC_EXT:
+                    case EGL_SURFACE_COMPRESSION_FIXED_RATE_11BPC_EXT:
+                    case EGL_SURFACE_COMPRESSION_FIXED_RATE_12BPC_EXT:
+                        break;
+                    default:
+                        val->setError(EGL_BAD_ATTRIBUTE);
+                        return false;
+                }
+
+                break;
+
+            default:
+                val->setError(EGL_BAD_ATTRIBUTE);
+                return false;
+        }
+    }
+
+    return true;
+}
+
 const Thread *GetThreadIfValid(const Thread *thread)
 {
     // Threads should always be valid
@@ -2613,159 +2805,9 @@ bool ValidateCreateWindowSurface(const ValidationContext *val,
         return false;
     }
 
-    const DisplayExtensions &displayExtensions = display->getExtensions();
-
     attributes.initializeWithoutValidation();
 
-    for (const auto &attributeIter : attributes)
-    {
-        EGLAttrib attribute = attributeIter.first;
-        EGLAttrib value     = attributeIter.second;
-
-        switch (attribute)
-        {
-            case EGL_RENDER_BUFFER:
-                switch (value)
-                {
-                    case EGL_BACK_BUFFER:
-                        break;
-                    case EGL_SINGLE_BUFFER:
-                        break;
-                    default:
-                        val->setError(EGL_BAD_ATTRIBUTE);
-                        return false;
-                }
-                break;
-
-            case EGL_POST_SUB_BUFFER_SUPPORTED_NV:
-                if (!displayExtensions.postSubBuffer)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE);
-                    return false;
-                }
-                break;
-
-            case EGL_WIDTH:
-            case EGL_HEIGHT:
-                if (!displayExtensions.windowFixedSize)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE);
-                    return false;
-                }
-                if (value < 0)
-                {
-                    val->setError(EGL_BAD_PARAMETER);
-                    return false;
-                }
-                break;
-
-            case EGL_FIXED_SIZE_ANGLE:
-                if (!displayExtensions.windowFixedSize)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE);
-                    return false;
-                }
-                break;
-
-            case EGL_SURFACE_ORIENTATION_ANGLE:
-                if (!displayExtensions.surfaceOrientation)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "EGL_ANGLE_surface_orientation is not enabled.");
-                    return false;
-                }
-                break;
-
-            case EGL_VG_COLORSPACE:
-                if (value != EGL_VG_COLORSPACE_sRGB)
-                {
-                    val->setError(EGL_BAD_MATCH);
-                    return false;
-                }
-                break;
-
-            case EGL_GL_COLORSPACE:
-                ANGLE_VALIDATION_TRY(ValidateColorspaceAttribute(val, displayExtensions, value));
-                break;
-
-            case EGL_VG_ALPHA_FORMAT:
-                val->setError(EGL_BAD_MATCH);
-                return false;
-
-            case EGL_DIRECT_COMPOSITION_ANGLE:
-                if (!displayExtensions.directComposition)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE);
-                    return false;
-                }
-                break;
-
-            case EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
-                if (!display->getExtensions().robustResourceInitializationANGLE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "Attribute EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE "
-                                  "requires EGL_ANGLE_robust_resource_initialization.");
-                    return false;
-                }
-                if (value != EGL_TRUE && value != EGL_FALSE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE must be "
-                                  "either EGL_TRUE or EGL_FALSE.");
-                    return false;
-                }
-                break;
-
-            case EGL_GGP_STREAM_DESCRIPTOR_ANGLE:
-                if (!display->getExtensions().ggpStreamDescriptor)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "EGL_GGP_STREAM_DESCRIPTOR_ANGLE requires "
-                                  "EGL_ANGLE_ggp_stream_descriptor.");
-                    return false;
-                }
-                break;
-
-            case EGL_PROTECTED_CONTENT_EXT:
-                if (!displayExtensions.protectedContentEXT)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "Attribute EGL_PROTECTED_CONTEXT_EXT requires "
-                                  "extension EGL_EXT_protected_content.");
-                    return false;
-                }
-                if (value != EGL_TRUE && value != EGL_FALSE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "EGL_PROTECTED_CONTENT_EXT must "
-                                  "be either EGL_TRUE or EGL_FALSE.");
-                    return false;
-                }
-                break;
-
-            case EGL_SWAP_INTERVAL_ANGLE:
-                if (!displayExtensions.createSurfaceSwapIntervalANGLE)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "Attribute EGL_SWAP_INTERVAL_ANGLE requires "
-                                  "extension EGL_ANGLE_create_surface_swap_interval.");
-                    return false;
-                }
-                if (value < config->minSwapInterval || value > config->maxSwapInterval)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "EGL_SWAP_INTERVAL_ANGLE must "
-                                  "be within the EGLConfig min and max swap intervals.");
-                    return false;
-                }
-                break;
-
-            default:
-                val->setError(EGL_BAD_ATTRIBUTE);
-                return false;
-        }
-    }
+    ANGLE_VALIDATION_TRY(ValidateCreateWindowSurfaceAttributes(val, display, config, attributes));
 
     if (Display::hasExistingWindowSurface(window))
     {
@@ -5302,7 +5344,37 @@ bool ValidateQuerySupportedCompressionRatesEXT(const ValidationContext *val,
                                                EGLint rate_size,
                                                const EGLint *num_rates)
 {
-    UNIMPLEMENTED();
+    const AttributeMap &attributes = PackParam<const AttributeMap &>((const EGLint *)attrib_list);
+
+    ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
+    if (!display->getExtensions().surfaceCompressionEXT)
+    {
+        val->setError(EGL_BAD_ACCESS, "EGL_EXT_surface_compression not supported");
+        return false;
+    }
+
+    ANGLE_VALIDATION_TRY(ValidateConfig(val, display, config));
+    attributes.initializeWithoutValidation();
+    ANGLE_VALIDATION_TRY(ValidateCreateWindowSurfaceAttributes(val, display, config, attributes));
+
+    if (rate_size < 0)
+    {
+        val->setError(EGL_BAD_PARAMETER, "rate_size cannot be negative.");
+        return false;
+    }
+
+    if (rate_size > 0 && rates == nullptr)
+    {
+        val->setError(EGL_BAD_PARAMETER, "rates cannot be null when rate_size greater than 0.");
+        return false;
+    }
+
+    if (num_rates == nullptr)
+    {
+        val->setError(EGL_BAD_PARAMETER, "num_rates cannot be null");
+        return false;
+    }
+
     return true;
 }
 
@@ -5718,6 +5790,14 @@ bool ValidateQuerySurface(const ValidationContext *val,
             if (!display->getExtensions().protectedContentEXT)
             {
                 val->setError(EGL_BAD_ATTRIBUTE, "EGL_EXT_protected_content not supported");
+                return false;
+            }
+            break;
+
+        case EGL_SURFACE_COMPRESSION_EXT:
+            if (!display->getExtensions().surfaceCompressionEXT)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE, "EGL_EXT_surface_compression not supported");
                 return false;
             }
             break;

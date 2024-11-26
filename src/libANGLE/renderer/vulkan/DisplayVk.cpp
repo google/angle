@@ -23,6 +23,7 @@
 #include "libANGLE/renderer/vulkan/SyncVk.h"
 #include "libANGLE/renderer/vulkan/TextureVk.h"
 #include "libANGLE/renderer/vulkan/VkImageImageSiblingVk.h"
+#include "libANGLE/renderer/vulkan/vk_helpers.h"
 #include "libANGLE/renderer/vulkan/vk_renderer.h"
 
 namespace rx
@@ -610,6 +611,9 @@ void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
             isColorspaceSupported(VK_COLOR_SPACE_HDR10_ST2084_EXT);
         outExtensions->glColorspaceBt2020Hlg = isColorspaceSupported(VK_COLOR_SPACE_HDR10_HLG_EXT);
     }
+
+    outExtensions->surfaceCompressionEXT =
+        getFeatures().supportsImageCompressionControlSwapchain.enabled;
 }
 
 void DisplayVk::generateCaps(egl::Caps *outCaps) const
@@ -676,4 +680,70 @@ void DisplayVk::notifyDeviceLost()
 {
     mState.notifyDeviceLost();
 }
+
+egl::Error DisplayVk::querySupportedCompressionRates(const egl::Config *configuration,
+                                                     const egl::AttributeMap &attributes,
+                                                     EGLint *rates,
+                                                     EGLint rate_size,
+                                                     EGLint *num_rates) const
+{
+    ASSERT(mRenderer->getFeatures().supportsImageCompressionControl.enabled);
+    ASSERT(mRenderer->getFeatures().supportsImageCompressionControlSwapchain.enabled);
+
+    if (rate_size == 0 || rates == nullptr)
+    {
+        *num_rates = 0;
+        return egl::NoError();
+    }
+
+    const vk::Format &format = mRenderer->getFormat(configuration->renderTargetFormat);
+
+    VkImageCompressionControlEXT compressionInfo = {};
+    compressionInfo.sType                        = VK_STRUCTURE_TYPE_IMAGE_COMPRESSION_CONTROL_EXT;
+    compressionInfo.flags                        = VK_IMAGE_COMPRESSION_FIXED_RATE_DEFAULT_EXT;
+    compressionInfo.compressionControlPlaneCount = 1;
+
+    VkPhysicalDeviceImageFormatInfo2 imageFormatInfo = {};
+    imageFormatInfo.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2;
+    imageFormatInfo.pNext = &compressionInfo;
+    imageFormatInfo.format =
+        vk::GetVkFormatFromFormatID(mRenderer, format.getActualRenderableImageFormatID());
+    imageFormatInfo.type   = VK_IMAGE_TYPE_2D;
+    imageFormatInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+    imageFormatInfo.usage  = VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT |
+                            VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT |
+                            VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
+
+    VkImageCompressionPropertiesEXT compressionProperties = {};
+    compressionProperties.sType = VK_STRUCTURE_TYPE_IMAGE_COMPRESSION_PROPERTIES_EXT;
+
+    VkImageFormatProperties2 imageFormatProperties2 = {};
+    imageFormatProperties2.sType                    = VK_STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2;
+    imageFormatProperties2.pNext                    = &compressionProperties;
+
+    VkResult result = vkGetPhysicalDeviceImageFormatProperties2(
+        mRenderer->getPhysicalDevice(), &imageFormatInfo, &imageFormatProperties2);
+
+    if (result == VK_ERROR_FORMAT_NOT_SUPPORTED)
+    {
+        *num_rates = 0;
+        return egl::NoError();
+    }
+    else if (result == VK_ERROR_OUT_OF_HOST_MEMORY || result == VK_ERROR_OUT_OF_DEVICE_MEMORY)
+    {
+        return egl::EglBadAlloc();
+    }
+    else if (result != VK_SUCCESS)
+    {
+        return egl::EglBadAccess();
+    }
+
+    std::vector<EGLint> eglFixedRates = vk_gl::ConvertCompressionFlagsToEGLFixedRate(
+        compressionProperties.imageCompressionFixedRateFlags, static_cast<size_t>(rate_size));
+    std::copy(eglFixedRates.begin(), eglFixedRates.end(), rates);
+    *num_rates = static_cast<EGLint>(eglFixedRates.size());
+
+    return egl::NoError();
+}
+
 }  // namespace rx

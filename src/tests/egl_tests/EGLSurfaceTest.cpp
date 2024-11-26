@@ -3205,6 +3205,105 @@ TEST_P(EGLSurfaceTest, QueryRenderBuffer)
     ASSERT_EGL_SUCCESS();
 }
 
+// Test that new API eglQuerySupportedCompressionRatesEXT could work, and
+// validation for the API should also work. If any rate can be queried, then use
+// that rate to create window surface. Query the surface's compression rate
+// should get the expected rate, and a simple draw should succeed on the surface.
+TEST_P(EGLSurfaceTest, SurfaceFixedRateCompression)
+{
+    initializeDisplay();
+    ANGLE_SKIP_TEST_IF(!IsEGLDisplayExtensionEnabled(mDisplay, "EGL_EXT_surface_compression"));
+    // Initialize an RGBA8 window and pbuffer surface
+    constexpr EGLint kSurfaceAttributes[] = {EGL_RED_SIZE,
+                                             8,
+                                             EGL_GREEN_SIZE,
+                                             8,
+                                             EGL_BLUE_SIZE,
+                                             8,
+                                             EGL_ALPHA_SIZE,
+                                             8,
+                                             EGL_SURFACE_TYPE,
+                                             EGL_WINDOW_BIT,
+                                             EGL_RENDERABLE_TYPE,
+                                             EGL_OPENGL_ES2_BIT,
+                                             EGL_NONE};
+    EGLint configCount                    = 0;
+    EGLint numRates                       = 0;
+    EXPECT_EGL_TRUE(eglChooseConfig(mDisplay, kSurfaceAttributes, &mConfig, 1, &configCount));
+    ASSERT_NE(configCount, 0);
+    ASSERT_NE(mConfig, nullptr);
+    // Fail, invalid display
+    EXPECT_EGL_FALSE(eglQuerySupportedCompressionRatesEXT(EGL_NO_DISPLAY, mConfig, nullptr, nullptr,
+                                                          0, &numRates));
+    ASSERT_EGL_ERROR(EGL_BAD_DISPLAY);
+    // Fail, rate_size < 0
+    EXPECT_EGL_FALSE(
+        eglQuerySupportedCompressionRatesEXT(mDisplay, mConfig, nullptr, nullptr, -1, &numRates));
+    ASSERT_EGL_ERROR(EGL_BAD_PARAMETER);
+    // Fail, pointer rates is nullptr
+    EXPECT_EGL_FALSE(
+        eglQuerySupportedCompressionRatesEXT(mDisplay, mConfig, nullptr, nullptr, 1, &numRates));
+    ASSERT_EGL_ERROR(EGL_BAD_PARAMETER);
+    // Fail, return num_rates is nullptr
+    EXPECT_EGL_FALSE(
+        eglQuerySupportedCompressionRatesEXT(mDisplay, mConfig, nullptr, nullptr, 0, nullptr));
+    ASSERT_EGL_ERROR(EGL_BAD_PARAMETER);
+    EGLint rates[3];
+    // Success, actual values of rates are depended on each platform
+    EXPECT_EGL_TRUE(
+        eglQuerySupportedCompressionRatesEXT(mDisplay, mConfig, NULL, rates, 3, &numRates));
+    ASSERT_EGL_SUCCESS();
+
+    if (numRates > 0 && rates[0] != EGL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT)
+    {
+        // If any rate can be queried, then use that rate to create window surface and test
+        std::vector<EGLint> winSurfaceAttribs;
+        winSurfaceAttribs.push_back(EGL_SURFACE_COMPRESSION_EXT);
+        winSurfaceAttribs.push_back(rates[0]);
+        // Create window surface using the selected rate.
+        initializeWindowSurfaceWithAttribs(mConfig, winSurfaceAttribs, EGL_SUCCESS);
+        ASSERT_EGL_SUCCESS();
+        ASSERT_NE(mWindowSurface, EGL_NO_SURFACE);
+        EGLint selectedRate;
+        ASSERT_EGL_TRUE(
+            eglQuerySurface(mDisplay, mWindowSurface, EGL_SURFACE_COMPRESSION_EXT, &selectedRate));
+        ASSERT_EGL_SUCCESS();
+        ASSERT_EQ(selectedRate, rates[0]);
+        initializeMainContext();
+        EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext));
+        ASSERT_EGL_SUCCESS();
+        // Make sure the surface works. Draw red and verify.
+        ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+        glUseProgram(program);
+        drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+        ASSERT_EGL_TRUE(eglSwapBuffers(mDisplay, mWindowSurface));
+
+        EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, nullptr, nullptr, mContext));
+        EXPECT_EGL_TRUE(eglDestroySurface(mDisplay, mWindowSurface));
+        mWindowSurface = EGL_NO_SURFACE;
+
+        // Create another surface using default rate.
+        winSurfaceAttribs.back() = EGL_SURFACE_COMPRESSION_FIXED_RATE_DEFAULT_EXT;
+        initializeWindowSurfaceWithAttribs(mConfig, winSurfaceAttribs, EGL_SUCCESS);
+        ASSERT_EGL_SUCCESS();
+        ASSERT_NE(mWindowSurface, EGL_NO_SURFACE);
+        selectedRate = EGL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT;
+        ASSERT_EGL_TRUE(
+            eglQuerySurface(mDisplay, mWindowSurface, EGL_SURFACE_COMPRESSION_EXT, &selectedRate));
+        ASSERT_EGL_SUCCESS();
+        ASSERT_NE(selectedRate, EGL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT);
+        EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext));
+        ASSERT_EGL_SUCCESS();
+        // Make sure the surface works. Draw red and verify.
+        drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+        ASSERT_EGL_TRUE(eglSwapBuffers(mDisplay, mWindowSurface));
+    }
+}
+
 }  // anonymous namespace
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLSingleBufferTest);

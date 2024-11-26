@@ -890,6 +890,11 @@ EGLAttribKHR Surface::getBitmapPointer() const
     return static_cast<EGLAttribKHR>((intptr_t)mLockBufferPtr);
 }
 
+EGLint Surface::getCompressionRate(const egl::Display *display) const
+{
+    return mImplementation->getCompressionRate(display);
+}
+
 egl::Error Surface::lockSurfaceKHR(const egl::Display *display, const AttributeMap &attributes)
 {
     EGLint lockBufferUsageHint = attributes.getAsInt(

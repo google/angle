@@ -1094,7 +1094,17 @@ EGLBoolean QuerySupportedCompressionRatesEXT(Thread *thread,
                                              EGLint rate_size,
                                              EGLint *num_rates)
 {
-    UNIMPLEMENTED();
+    ANGLE_EGL_TRY_PREPARE_FOR_CALL_RETURN(thread, display->prepareForCall(),
+                                          "eglQuerySupportedCompressionRatesEXT",
+                                          GetDisplayIfValid(display), EGL_FALSE);
+
+    const AttributeMap &attributes = PackParam<const AttributeMap &>((const EGLint *)attrib_list);
+    ANGLE_EGL_TRY_RETURN(thread,
+                         display->querySupportedCompressionRates(configPacked, attributes, rates,
+                                                                 rate_size, num_rates),
+                         "eglQuerySupportedCompressionRatesEXT", GetDisplayIfValid(display),
+                         EGL_FALSE);
+    thread->setSuccess();
     return EGL_TRUE;
 }
 

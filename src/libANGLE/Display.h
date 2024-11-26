@@ -313,6 +313,12 @@ class Display final : public LabeledObject,
                                EGLBoolean *external_only,
                                EGLint *num_modifiers);
 
+    Error querySupportedCompressionRates(const Config *configuration,
+                                         const AttributeMap &attributes,
+                                         EGLint *rates,
+                                         EGLint rate_size,
+                                         EGLint *num_rates) const;
+
     std::shared_ptr<angle::WorkerThreadPool> getSingleThreadPool() const
     {
         return mState.singleThreadPool;

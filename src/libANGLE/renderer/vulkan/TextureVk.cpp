@@ -2050,7 +2050,7 @@ GLint TextureVk::getImageCompressionRate(const gl::Context *context)
 
     GLint compressionRate;
     // For an existing image, should only report one compression rate
-    vk_gl::convertCompressionFlagsToGLFixedRates(
+    vk_gl::ConvertCompressionFlagsToGLFixedRates(
         compressionProperties.imageCompressionFixedRateFlags, 1, &compressionRate);
     return compressionRate;
 }
@@ -2082,7 +2082,7 @@ GLint TextureVk::getFormatSupportedCompressionRatesImpl(vk::Renderer *renderer,
             if ((compressionProp.imageCompressionFlags &
                  VK_IMAGE_COMPRESSION_FIXED_RATE_EXPLICIT_EXT) != 0)
             {
-                return vk_gl::convertCompressionFlagsToGLFixedRates(
+                return vk_gl::ConvertCompressionFlagsToGLFixedRates(
                     compressionProp.imageCompressionFixedRateFlags, bufSize, rates);
             }
         }
