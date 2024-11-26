@@ -1641,6 +1641,53 @@ EGLDisplay EGLAPIENTRY EGL_GetPlatformDisplayEXT(EGLenum platform,
     return returnValue;
 }
 
+// EGL_EXT_surface_compression
+EGLBoolean EGLAPIENTRY EGL_QuerySupportedCompressionRatesEXT(EGLDisplay dpy,
+                                                             EGLConfig config,
+                                                             const EGLAttrib *attrib_list,
+                                                             EGLint *rates,
+                                                             EGLint rate_size,
+                                                             EGLint *num_rates)
+{
+
+    Thread *thread = egl::GetCurrentThread();
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+    EGLBoolean returnValue;
+    {
+        ANGLE_SCOPED_GLOBAL_LOCK();
+        EGL_EVENT(QuerySupportedCompressionRatesEXT,
+                  "dpy = 0x%016" PRIxPTR ", config = 0x%016" PRIxPTR
+                  ", attrib_list = 0x%016" PRIxPTR ", rates = 0x%016" PRIxPTR
+                  ", rate_size = %d, num_rates = 0x%016" PRIxPTR "",
+                  (uintptr_t)dpy, (uintptr_t)config, (uintptr_t)attrib_list, (uintptr_t)rates,
+                  rate_size, (uintptr_t)num_rates);
+
+        egl::Display *dpyPacked   = PackParam<egl::Display *>(dpy);
+        egl::Config *configPacked = PackParam<egl::Config *>(config);
+
+        {
+            ANGLE_EGL_SCOPED_CONTEXT_LOCK(QuerySupportedCompressionRatesEXT, thread, dpyPacked);
+            if (IsEGLValidationEnabled())
+            {
+                ANGLE_EGL_VALIDATE(thread, QuerySupportedCompressionRatesEXT,
+                                   GetDisplayIfValid(dpyPacked), EGLBoolean, dpyPacked,
+                                   configPacked, attrib_list, rates, rate_size, num_rates);
+            }
+            else
+            {
+            }
+
+            returnValue = QuerySupportedCompressionRatesEXT(
+                thread, dpyPacked, configPacked, attrib_list, rates, rate_size, num_rates);
+        }
+
+        ANGLE_CAPTURE_EGL(QuerySupportedCompressionRatesEXT, true, thread, dpyPacked, configPacked,
+                          attrib_list, rates, rate_size, num_rates, returnValue);
+    }
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+    return returnValue;
+}
+
 // EGL_KHR_debug
 EGLint EGLAPIENTRY EGL_DebugMessageControlKHR(EGLDEBUGPROCKHR callback,
                                               const EGLAttrib *attrib_list)

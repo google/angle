@@ -98,6 +98,7 @@ PFNEGLQUERYDMABUFMODIFIERSEXTPROC l_EGL_QueryDmaBufModifiersEXT;
 PFNEGLCREATEPLATFORMPIXMAPSURFACEEXTPROC l_EGL_CreatePlatformPixmapSurfaceEXT;
 PFNEGLCREATEPLATFORMWINDOWSURFACEEXTPROC l_EGL_CreatePlatformWindowSurfaceEXT;
 PFNEGLGETPLATFORMDISPLAYEXTPROC l_EGL_GetPlatformDisplayEXT;
+PFNEGLQUERYSUPPORTEDCOMPRESSIONRATESEXTPROC l_EGL_QuerySupportedCompressionRatesEXT;
 PFNEGLDEBUGMESSAGECONTROLKHRPROC l_EGL_DebugMessageControlKHR;
 PFNEGLLABELOBJECTKHRPROC l_EGL_LabelObjectKHR;
 PFNEGLQUERYDEBUGKHRPROC l_EGL_QueryDebugKHR;
@@ -280,6 +281,9 @@ void LoadLibEGL_EGL(LoadProc loadProc)
             loadProc("EGL_CreatePlatformWindowSurfaceEXT"));
     l_EGL_GetPlatformDisplayEXT =
         reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(loadProc("EGL_GetPlatformDisplayEXT"));
+    l_EGL_QuerySupportedCompressionRatesEXT =
+        reinterpret_cast<PFNEGLQUERYSUPPORTEDCOMPRESSIONRATESEXTPROC>(
+            loadProc("EGL_QuerySupportedCompressionRatesEXT"));
     l_EGL_DebugMessageControlKHR =
         reinterpret_cast<PFNEGLDEBUGMESSAGECONTROLKHRPROC>(loadProc("EGL_DebugMessageControlKHR"));
     l_EGL_LabelObjectKHR =

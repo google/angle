@@ -5294,6 +5294,18 @@ bool ValidateProgramCacheGetAttribANGLE(const ValidationContext *val,
     return true;
 }
 
+bool ValidateQuerySupportedCompressionRatesEXT(const ValidationContext *val,
+                                               const Display *display,
+                                               const Config *config,
+                                               const EGLAttrib *attrib_list,
+                                               const EGLint *rates,
+                                               EGLint rate_size,
+                                               const EGLint *num_rates)
+{
+    UNIMPLEMENTED();
+    return true;
+}
+
 bool ValidateProgramCacheQueryANGLE(const ValidationContext *val,
                                     const Display *display,
                                     EGLint index,

@@ -412,6 +412,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "eglQueryString";
         case EntryPoint::EGLQueryStringiANGLE:
             return "eglQueryStringiANGLE";
+        case EntryPoint::EGLQuerySupportedCompressionRatesEXT:
+            return "eglQuerySupportedCompressionRatesEXT";
         case EntryPoint::EGLQuerySurface:
             return "eglQuerySurface";
         case EntryPoint::EGLQuerySurface64KHR:

@@ -152,6 +152,9 @@ EXPORTS
     eglCreatePlatformWindowSurfaceEXT
     eglGetPlatformDisplayEXT
 
+    ; EGL_EXT_surface_compression
+    eglQuerySupportedCompressionRatesEXT
+
     ; EGL_KHR_debug
     eglDebugMessageControlKHR
     eglLabelObjectKHR

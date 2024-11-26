@@ -733,6 +733,19 @@ EGLDisplay EGLAPIENTRY eglGetPlatformDisplayEXT(EGLenum platform,
     return EGL_GetPlatformDisplayEXT(platform, native_display, attrib_list);
 }
 
+// EGL_EXT_surface_compression
+EGLBoolean EGLAPIENTRY eglQuerySupportedCompressionRatesEXT(EGLDisplay dpy,
+                                                            EGLConfig config,
+                                                            const EGLAttrib *attrib_list,
+                                                            EGLint *rates,
+                                                            EGLint rate_size,
+                                                            EGLint *num_rates)
+{
+    EnsureEGLLoaded();
+    return EGL_QuerySupportedCompressionRatesEXT(dpy, config, attrib_list, rates, rate_size,
+                                                 num_rates);
+}
+
 // EGL_KHR_debug
 EGLint EGLAPIENTRY eglDebugMessageControlKHR(EGLDEBUGPROCKHR callback, const EGLAttrib *attrib_list)
 {

@@ -585,6 +585,13 @@ ANGLE_INLINE ScopedContextMutexLock GetContextLock_GetPlatformDisplayEXT(Thread 
     return {};
 }
 
+// EGL_EXT_surface_compression
+ANGLE_INLINE ScopedContextMutexLock
+GetContextLock_QuerySupportedCompressionRatesEXT(Thread *thread, egl::Display *dpyPacked)
+{
+    return {};
+}
+
 // EGL_KHR_debug
 ANGLE_INLINE ScopedContextMutexLock GetContextLock_DebugMessageControlKHR(Thread *thread)
 {

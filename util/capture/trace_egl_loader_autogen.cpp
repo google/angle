@@ -106,6 +106,8 @@ ANGLE_TRACE_LOADER_EXPORT PFNEGLCREATEPLATFORMPIXMAPSURFACEEXTPROC
 ANGLE_TRACE_LOADER_EXPORT PFNEGLCREATEPLATFORMWINDOWSURFACEEXTPROC
     t_eglCreatePlatformWindowSurfaceEXT;
 ANGLE_TRACE_LOADER_EXPORT PFNEGLGETPLATFORMDISPLAYEXTPROC t_eglGetPlatformDisplayEXT;
+ANGLE_TRACE_LOADER_EXPORT PFNEGLQUERYSUPPORTEDCOMPRESSIONRATESEXTPROC
+    t_eglQuerySupportedCompressionRatesEXT;
 ANGLE_TRACE_LOADER_EXPORT PFNEGLDEBUGMESSAGECONTROLKHRPROC t_eglDebugMessageControlKHR;
 ANGLE_TRACE_LOADER_EXPORT PFNEGLLABELOBJECTKHRPROC t_eglLabelObjectKHR;
 ANGLE_TRACE_LOADER_EXPORT PFNEGLQUERYDEBUGKHRPROC t_eglQueryDebugKHR;
@@ -286,6 +288,9 @@ void LoadTraceEGL(LoadProc loadProc)
             loadProc("eglCreatePlatformWindowSurfaceEXT"));
     t_eglGetPlatformDisplayEXT =
         reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(loadProc("eglGetPlatformDisplayEXT"));
+    t_eglQuerySupportedCompressionRatesEXT =
+        reinterpret_cast<PFNEGLQUERYSUPPORTEDCOMPRESSIONRATESEXTPROC>(
+            loadProc("eglQuerySupportedCompressionRatesEXT"));
     t_eglDebugMessageControlKHR =
         reinterpret_cast<PFNEGLDEBUGMESSAGECONTROLKHRPROC>(loadProc("eglDebugMessageControlKHR"));
     t_eglLabelObjectKHR = reinterpret_cast<PFNEGLLABELOBJECTKHRPROC>(loadProc("eglLabelObjectKHR"));

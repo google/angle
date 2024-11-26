@@ -212,6 +212,7 @@ enum class EntryPoint
     EGLQueryStreamu64KHR,
     EGLQueryString,
     EGLQueryStringiANGLE,
+    EGLQuerySupportedCompressionRatesEXT,
     EGLQuerySurface,
     EGLQuerySurface64KHR,
     EGLQuerySurfacePointerANGLE,

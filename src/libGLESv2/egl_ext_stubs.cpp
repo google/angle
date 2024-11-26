@@ -1086,4 +1086,16 @@ void SetValidationEnabledANGLE(Thread *thread, EGLBoolean validationState)
     thread->setSuccess();
 }
 
+EGLBoolean QuerySupportedCompressionRatesEXT(Thread *thread,
+                                             egl::Display *display,
+                                             egl::Config *configPacked,
+                                             const EGLAttrib *attrib_list,
+                                             EGLint *rates,
+                                             EGLint rate_size,
+                                             EGLint *num_rates)
+{
+    UNIMPLEMENTED();
+    return EGL_TRUE;
+}
+
 }  // namespace egl

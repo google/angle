@@ -113,6 +113,7 @@ const ProcEntry g_procTable[] = {
     {"eglQueryStreamu64KHR", P(EGL_QueryStreamu64KHR)},
     {"eglQueryString", P(EGL_QueryString)},
     {"eglQueryStringiANGLE", P(EGL_QueryStringiANGLE)},
+    {"eglQuerySupportedCompressionRatesEXT", P(EGL_QuerySupportedCompressionRatesEXT)},
     {"eglQuerySurface", P(EGL_QuerySurface)},
     {"eglQuerySurface64KHR", P(EGL_QuerySurface64KHR)},
     {"eglQuerySurfacePointerANGLE", P(EGL_QuerySurfacePointerANGLE)},

@@ -222,6 +222,10 @@ ScopedContextMutexLock GetContextLock_CreatePlatformWindowSurfaceEXT(Thread *thr
                                                                      egl::Display *dpyPacked);
 ScopedContextMutexLock GetContextLock_GetPlatformDisplayEXT(Thread *thread);
 
+// EGL_EXT_surface_compression
+ScopedContextMutexLock GetContextLock_QuerySupportedCompressionRatesEXT(Thread *thread,
+                                                                        egl::Display *dpyPacked);
+
 // EGL_KHR_debug
 ScopedContextMutexLock GetContextLock_DebugMessageControlKHR(Thread *thread);
 ScopedContextMutexLock GetContextLock_LabelObjectKHR(Thread *thread, egl::Display *displayPacked);

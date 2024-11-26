@@ -378,6 +378,7 @@ supported_egl_extensions = [
     "EGL_EXT_platform_base",
     "EGL_EXT_platform_device",
     "EGL_EXT_protected_content",
+    "EGL_EXT_surface_compression",
     "EGL_IMG_context_priority",
     "EGL_KHR_debug",
     "EGL_KHR_fence_sync",

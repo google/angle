@@ -390,6 +390,15 @@ bool ValidateGetPlatformDisplayEXT(const ValidationContext *val,
                                    const void *native_display,
                                    const AttributeMap &attrib_listPacked);
 
+// EGL_EXT_surface_compression
+bool ValidateQuerySupportedCompressionRatesEXT(const ValidationContext *val,
+                                               const egl::Display *dpyPacked,
+                                               const egl::Config *configPacked,
+                                               const EGLAttrib *attrib_list,
+                                               const EGLint *rates,
+                                               EGLint rate_size,
+                                               const EGLint *num_rates);
+
 // EGL_KHR_debug
 bool ValidateDebugMessageControlKHR(const ValidationContext *val,
                                     EGLDEBUGPROCKHR callback,

@@ -550,6 +550,13 @@ CallCapture ParseCallCapture(const Token &nameToken,
                                                                                     strings);
         return CallCapture(EntryPoint::EGLQueryStringiANGLE, std::move(params));
     }
+    if (strcmp(nameToken, "eglQuerySupportedCompressionRatesEXT") == 0)
+    {
+        ParamBuffer params =
+            ParseParameters<std::remove_pointer<PFNEGLQUERYSUPPORTEDCOMPRESSIONRATESEXTPROC>::type>(
+                paramTokens, strings);
+        return CallCapture(EntryPoint::EGLQuerySupportedCompressionRatesEXT, std::move(params));
+    }
     if (strcmp(nameToken, "eglQuerySurface") == 0)
     {
         ParamBuffer params = ParseParameters<std::remove_pointer<PFNEGLQUERYSURFACEPROC>::type>(

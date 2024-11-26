@@ -191,6 +191,15 @@ ANGLE_EXPORT EGLDisplay EGLAPIENTRY EGL_GetPlatformDisplayEXT(EGLenum platform,
                                                               void *native_display,
                                                               const EGLint *attrib_list);
 
+// EGL_EXT_surface_compression
+ANGLE_EXPORT EGLBoolean EGLAPIENTRY
+EGL_QuerySupportedCompressionRatesEXT(EGLDisplay dpy,
+                                      EGLConfig config,
+                                      const EGLAttrib *attrib_list,
+                                      EGLint *rates,
+                                      EGLint rate_size,
+                                      EGLint *num_rates);
+
 // EGL_KHR_debug
 ANGLE_EXPORT EGLint EGLAPIENTRY EGL_DebugMessageControlKHR(EGLDEBUGPROCKHR callback,
                                                            const EGLAttrib *attrib_list);
