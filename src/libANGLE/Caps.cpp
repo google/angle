@@ -992,6 +992,11 @@ Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensi
 {
     Caps caps;
 
+    // EXT_draw_buffers. Set to 1 even if the extension is not present. Framebuffer and blend state
+    // depends on this being > 0.
+    caps.maxDrawBuffers      = 1;
+    caps.maxColorAttachments = 1;
+
     // GLES1 emulation (Minimums taken from Table 6.20 / 6.22 (ES 1.1 spec))
     if (clientVersion < Version(2, 0))
     {
@@ -1149,7 +1154,7 @@ Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensi
         // Table 20.45
         caps.maxComputeWorkGroupCount                        = {{65535, 65535, 65535}};
         caps.maxComputeWorkGroupSize                         = {{128, 128, 64}};
-        caps.maxComputeWorkGroupInvocations                  = 12;
+        caps.maxComputeWorkGroupInvocations                  = 128;
         caps.maxShaderUniformBlocks[ShaderType::Compute]     = limits::kMinimumShaderUniformBlocks;
         caps.maxShaderTextureImageUnits[ShaderType::Compute] = 16;
         caps.maxComputeSharedMemorySize                      = 16384;
