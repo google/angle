@@ -1492,6 +1492,8 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 // WebGPU failures
 42266907 WGPU : RendererTest.SimpleOperation/* = SKIP
 42266907 WGPU : RendererTest.Draw/* = SKIP
+// BasicUniformUsage tests fail too frequently with WGPU
+376553328 LINUX INTEL WGPU : BasicUniformUsageTest.* = SKIP
 42267012 WGPU : ClearTest.*Scissor* = SKIP
 42267012 WGPU : ClearTest.*Mask* = SKIP
 42267012 WGPU : ClearTest.DefaultFramebuffer* = SKIP
