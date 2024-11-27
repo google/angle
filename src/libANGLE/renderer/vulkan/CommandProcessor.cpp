@@ -1649,6 +1649,16 @@ angle::Result CommandQueue::queueSubmit(Context *context,
         ANGLE_TRY(finishOneCommandBatchLocked(context, renderer->getMaxFenceWaitTimeNs()));
     }
     ASSERT(!mInFlightCommands.full());
+    // Also ensure that all mInFlightCommands may be moved into the mFinishedCommandBatches without
+    // need of the releaseFinishedCommandsLocked() call.
+    const size_t numAllCommands = mInFlightCommands.size() + mFinishedCommandBatches.size();
+    ASSERT(numAllCommands <= mFinishedCommandBatches.capacity());
+    if (numAllCommands == mFinishedCommandBatches.capacity())
+    {
+        ANGLE_TRY(releaseFinishedCommandsLocked(context));
+    }
+    ASSERT(mInFlightCommands.size() + mFinishedCommandBatches.size() <
+           mFinishedCommandBatches.capacity());
     // Release the dequeue lock while doing potentially lengthy vkQueueSubmit call.
     // Note: after this point, you can not reference anything that required mMutex lock.
     dequeueLock.unlock();
@@ -1772,16 +1782,7 @@ angle::Result CommandQueue::checkOneCommandBatchLocked(Context *context, bool *f
         ANGLE_VK_TRY(context, status);
     }
 
-    // Finished.
-    mLastCompletedSerials.setQueueSerial(batch.getQueueSerial());
-
-    // Move command batch to mFinishedCommandBatches.
-    if (mFinishedCommandBatches.full())
-    {
-        ANGLE_TRY(releaseFinishedCommandsLocked(context));
-    }
-    mFinishedCommandBatches.push(std::move(batch));
-    mInFlightCommands.pop();
+    onCommandBatchFinishedLocked(std::move(batch));
     *finished = true;
 
     return angle::Result::Continue;
@@ -1798,16 +1799,23 @@ angle::Result CommandQueue::finishOneCommandBatchLocked(Context *context, uint64
         ANGLE_VK_TRY(context, status);
     }
 
-    mLastCompletedSerials.setQueueSerial(batch.getQueueSerial());
-    // Move command batch to mFinishedCommandBatches.
-    if (mFinishedCommandBatches.full())
-    {
-        ANGLE_TRY(releaseFinishedCommandsLocked(context));
-    }
-    mFinishedCommandBatches.push(std::move(batch));
-    mInFlightCommands.pop();
+    onCommandBatchFinishedLocked(std::move(batch));
 
     return angle::Result::Continue;
+}
+
+void CommandQueue::onCommandBatchFinishedLocked(CommandBatch &&batch)
+{
+    // This must not happen, since we always leave space in the queue during queueSubmit.
+    ASSERT(!mFinishedCommandBatches.full());
+    ASSERT(&batch == &mInFlightCommands.front());
+
+    // Finished.
+    mLastCompletedSerials.setQueueSerial(batch.getQueueSerial());
+
+    // Move command batch to mFinishedCommandBatches.
+    mFinishedCommandBatches.push(std::move(batch));
+    mInFlightCommands.pop();
 }
 
 angle::Result CommandQueue::releaseFinishedCommandsLocked(Context *context)

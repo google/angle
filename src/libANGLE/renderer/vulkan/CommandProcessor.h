@@ -34,6 +34,7 @@ using SharedExternalFence = std::shared_ptr<ExternalFence>;
 constexpr size_t kMaxCommandProcessorTasksLimit = 16u;
 constexpr size_t kInFlightCommandsLimit         = 50u;
 constexpr size_t kMaxFinishedCommandsLimit      = 64u;
+static_assert(kInFlightCommandsLimit <= kMaxFinishedCommandsLimit);
 
 enum class SubmitPolicy
 {
@@ -616,6 +617,7 @@ class CommandQueue : angle::NonCopyable
     angle::Result checkOneCommandBatchLocked(Context *context, bool *finished);
     // Similar to checkOneCommandBatch, except we will wait for it to finish
     angle::Result finishOneCommandBatchLocked(Context *context, uint64_t timeout);
+    void onCommandBatchFinishedLocked(CommandBatch &&batch);
     // Walk mFinishedCommands, reset and recycle all command buffers.
     angle::Result releaseFinishedCommandsLocked(Context *context);
     // Walk mInFlightCommands, check and update mLastCompletedSerials for all commands that are
