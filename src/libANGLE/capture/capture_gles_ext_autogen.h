@@ -1096,6 +1096,8 @@ angle::CallCapture CaptureEGLImageTargetTextureStorageEXT(const State &glState,
                                                           egl::ImageID imagePacked,
                                                           const GLint *attrib_list);
 
+// GL_EXT_EGL_image_storage_compression
+
 // GL_EXT_YUV_target
 
 // GL_EXT_base_instance

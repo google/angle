@@ -90,6 +90,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_EGL_image_external_essl3"] = enableableExtension(&Extensions::EGLImageExternalEssl3OES);
         map["GL_EXT_EGL_image_external_wrap_modes"] = enableableExtension(&Extensions::EGLImageExternalWrapModesEXT);
         map["GL_EXT_EGL_image_storage"] = enableableExtension(&Extensions::EGLImageStorageEXT);
+        map["GL_EXT_EGL_image_storage_compression"] = enableableExtension(&Extensions::EGLImageStorageCompressionEXT);
         map["GL_NV_EGL_stream_consumer_external"] = enableableExtension(&Extensions::EGLStreamConsumerExternalNV);
         map["GL_OES_EGL_sync"] = esOnlyExtension(&Extensions::EGLSyncOES);
         map["GL_OES_element_index_uint"] = enableableExtension(&Extensions::elementIndexUintOES);

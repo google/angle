@@ -85,6 +85,7 @@
                                   const GLint *attrib_list);                                       \
     void eGLImageTargetTextureStorage(GLuint texture, egl::ImageID imagePacked,                    \
                                       const GLint *attrib_list);                                   \
+    /* GL_EXT_EGL_image_storage_compression */                                                     \
     /* GL_EXT_YUV_target */                                                                        \
     /* GL_EXT_base_instance */                                                                     \
     void drawArraysInstancedBaseInstance(PrimitiveMode modePacked, GLint first, GLsizei count,     \

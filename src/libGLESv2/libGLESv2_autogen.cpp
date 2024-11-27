@@ -4051,6 +4051,8 @@ void GL_APIENTRY glEGLImageTargetTextureStorageEXT(GLuint texture,
     return GL_EGLImageTargetTextureStorageEXT(texture, image, attrib_list);
 }
 
+// GL_EXT_EGL_image_storage_compression
+
 // GL_EXT_YUV_target
 
 // GL_EXT_base_instance

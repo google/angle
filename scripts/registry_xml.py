@@ -112,6 +112,7 @@ gles_requestable_extensions = [
     "GL_EXT_EGL_image_array",
     "GL_EXT_EGL_image_external_wrap_modes",
     "GL_EXT_EGL_image_storage",
+    "GL_EXT_EGL_image_storage_compression",
     "GL_EXT_external_buffer",
     "GL_EXT_float_blend",
     "GL_EXT_frag_depth",

@@ -236,6 +236,9 @@ struct Extensions
     // GL_EXT_EGL_image_storage
     bool EGLImageStorageEXT = false;
 
+    // GL_EXT_EGL_image_storage_compression
+    bool EGLImageStorageCompressionEXT = false;
+
     // GL_NV_EGL_stream_consumer_external
     bool EGLStreamConsumerExternalNV = false;
 

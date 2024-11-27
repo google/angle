@@ -5110,6 +5110,8 @@ void GL_APIENTRY GL_EGLImageTargetTextureStorageEXT(GLuint texture,
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
 
+// GL_EXT_EGL_image_storage_compression
+
 // GL_EXT_YUV_target
 
 // GL_EXT_base_instance

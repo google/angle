@@ -814,6 +814,8 @@ ANGLE_EXPORT void GL_APIENTRY GL_EGLImageTargetTextureStorageEXT(GLuint texture,
                                                                  GLeglImageOES image,
                                                                  const GLint *attrib_list);
 
+// GL_EXT_EGL_image_storage_compression
+
 // GL_EXT_YUV_target
 
 // GL_EXT_base_instance
