@@ -456,17 +456,29 @@ angle::Result CLCommandQueueVk::copyImageToFromBuffer(CLImageVk &imageVk,
         ANGLE_TRY(insertBarrier());
     }
 
+    VkMemoryBarrier memBarrier = {};
+    memBarrier.sType           = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
+    memBarrier.srcAccessMask   = VK_ACCESS_MEMORY_WRITE_BIT;
+    memBarrier.dstAccessMask   = VK_ACCESS_MEMORY_READ_BIT;
     if (direction == ImageBufferCopyDirection::ToBuffer)
     {
         commandBuffer->copyImageToBuffer(imageVk.getImage().getImage(),
                                          VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
                                          buffer.getBuffer().getHandle(), 1, &copyRegion);
+
+        mComputePassCommands->getCommandBuffer().pipelineBarrier(
+            VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, VK_PIPELINE_STAGE_HOST_BIT, 0, 1, &memBarrier, 0,
+            nullptr, 0, nullptr);
     }
     else
     {
         commandBuffer->copyBufferToImage(buffer.getBuffer().getHandle(),
                                          imageVk.getImage().getImage(),
                                          VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &copyRegion);
+
+        mComputePassCommands->getCommandBuffer().pipelineBarrier(
+            VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, 0, 1, &memBarrier,
+            0, nullptr, 0, nullptr);
     }
 
     return angle::Result::Continue;
