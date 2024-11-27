@@ -3075,65 +3075,6 @@ TEST_P(EGLSurfaceTest, CreateMultiWindowsSurfaceNoDestroy)
     }
 }
 
-// Test that querying EGL_RENDER_BUFFER of surface and context returns correct value.
-// Context's render buffer should only change once eglSwapBuffers is called.
-TEST_P(EGLSurfaceTest, QueryRenderBuffer)
-{
-    ANGLE_SKIP_TEST_IF(!IsEGLDisplayExtensionEnabled(mDisplay, "EGL_KHR_mutable_render_buffer"));
-    ANGLE_SKIP_TEST_IF(!IsAndroid());
-
-    const EGLint configAttributes[] = {EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT, EGL_SURFACE_TYPE,
-                                       EGL_WINDOW_BIT | EGL_MUTABLE_RENDER_BUFFER_BIT_KHR,
-                                       EGL_NONE};
-
-    initializeDisplay();
-    ANGLE_SKIP_TEST_IF(EGLWindow::FindEGLConfig(mDisplay, configAttributes, &mConfig) == EGL_FALSE);
-
-    // Create window surface and make current
-    mWindowSurface =
-        eglCreateWindowSurface(mDisplay, mConfig, mOSWindow->getNativeWindow(), nullptr);
-    ASSERT_EGL_SUCCESS();
-    ASSERT_NE(EGL_NO_SURFACE, mWindowSurface);
-
-    initializeMainContext();
-    EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext));
-    ASSERT_EGL_SUCCESS();
-
-    // Set to single buffer mode and query the value
-    ASSERT_EGL_TRUE(
-        eglSurfaceAttrib(mDisplay, mWindowSurface, EGL_RENDER_BUFFER, EGL_SINGLE_BUFFER));
-
-    EGLint queryRenderBuffer;
-    ASSERT_EGL_TRUE(
-        eglQuerySurface(mDisplay, mWindowSurface, EGL_RENDER_BUFFER, &queryRenderBuffer));
-    ASSERT_EGL_SUCCESS();
-    ASSERT_EQ(queryRenderBuffer, EGL_SINGLE_BUFFER);
-
-    ASSERT_EGL_TRUE(eglQueryContext(mDisplay, mContext, EGL_RENDER_BUFFER, &queryRenderBuffer));
-    ASSERT_EGL_SUCCESS();
-    ASSERT_EQ(queryRenderBuffer, EGL_BACK_BUFFER);
-
-    // Swap buffers and then query the value
-    ASSERT_EGL_TRUE(eglSwapBuffers(mDisplay, mWindowSurface));
-    ASSERT_EGL_SUCCESS();
-
-    ASSERT_EGL_TRUE(
-        eglQuerySurface(mDisplay, mWindowSurface, EGL_RENDER_BUFFER, &queryRenderBuffer));
-    ASSERT_EGL_SUCCESS();
-    ASSERT_EQ(queryRenderBuffer, EGL_SINGLE_BUFFER);
-
-    ASSERT_EGL_TRUE(eglQueryContext(mDisplay, mContext, EGL_RENDER_BUFFER, &queryRenderBuffer));
-    ASSERT_EGL_SUCCESS();
-    ASSERT_EQ(queryRenderBuffer, EGL_SINGLE_BUFFER);
-
-    ASSERT_EGL_TRUE(eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
-    ASSERT_EGL_TRUE(eglDestroySurface(mDisplay, mWindowSurface));
-    mWindowSurface = EGL_NO_SURFACE;
-    ASSERT_EGL_TRUE(eglDestroyContext(mDisplay, mContext));
-    mContext = EGL_NO_CONTEXT;
-    ASSERT_EGL_SUCCESS();
-}
-
 }  // anonymous namespace
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLSingleBufferTest);
