@@ -478,7 +478,7 @@ class Renderer : angle::NonCopyable
     angle::Result checkCompletedCommands(vk::Context *context);
 
     angle::Result checkCompletedCommandsAndCleanup(vk::Context *context);
-    angle::Result retireFinishedCommands(vk::Context *context);
+    angle::Result releaseFinishedCommands(vk::Context *context);
 
     angle::Result flushWaitSemaphores(vk::ProtectionType protectionType,
                                       egl::ContextPriority priority,
@@ -1180,9 +1180,9 @@ ANGLE_INLINE angle::Result Renderer::checkCompletedCommandsAndCleanup(vk::Contex
     return mCommandQueue.checkAndCleanupCompletedCommands(context);
 }
 
-ANGLE_INLINE angle::Result Renderer::retireFinishedCommands(vk::Context *context)
+ANGLE_INLINE angle::Result Renderer::releaseFinishedCommands(vk::Context *context)
 {
-    return mCommandQueue.retireFinishedCommands(context);
+    return mCommandQueue.releaseFinishedCommands(context);
 }
 
 template <typename ArgT, typename... ArgsT>

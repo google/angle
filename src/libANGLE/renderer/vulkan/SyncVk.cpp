@@ -265,7 +265,7 @@ angle::Result SyncHelper::getStatus(Context *context, ContextVk *contextVk, bool
         // Because when isAsyncCommandBufferResetAndGarbageCleanupEnabled feature is turned off,
         // vkResetCommandBuffer() is called in cleanup step, and it must take the
         // CommandPoolAccess::mCmdPoolMutex lock, see details in
-        // CommandPoolAccess::retireFinishedCommands. This means the cleanup step can
+        // CommandPoolAccess::collectPrimaryCommandBuffer. This means the cleanup step can
         // be blocked by command buffer recording if another thread calls
         // CommandPoolAccess::flushRenderPassCommands(), which is against EGL spec when
         // eglClientWaitSync() should return immediately with timeout == 0.

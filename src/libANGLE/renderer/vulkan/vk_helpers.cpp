@@ -3571,7 +3571,7 @@ void SecondaryCommandBufferCollector::collectCommandBuffer(
     mCollectedCommandBuffers.emplace_back(std::move(commandBuffer));
 }
 
-void SecondaryCommandBufferCollector::retireCommandBuffers()
+void SecondaryCommandBufferCollector::releaseCommandBuffers()
 {
     // Note: we currently free the command buffers individually, but we could potentially reset the
     // entire command pool.  https://issuetracker.google.com/issues/166793850
