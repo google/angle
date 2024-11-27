@@ -1329,8 +1329,8 @@ angle::Result CommandQueue::postSubmitCheck(Context *context)
         while (suballocationGarbageSize > kMaxBufferSuballocationGarbageSize &&
                mInFlightCommands.size() > 1)
         {
-            ANGLE_TRY(finishOneCommandBatchAndCleanupImplLocked(context,
-                                                                renderer->getMaxFenceWaitTimeNs()));
+            ANGLE_TRY(finishOneCommandBatchAndCleanupLocked(
+                context, renderer->getMaxFenceWaitTimeNs(), nullptr));
             suballocationGarbageSize = renderer->getSuballocationGarbageSize();
         }
     }
@@ -1606,9 +1606,10 @@ angle::Result CommandQueue::queueSubmit(Context *context,
     // off-screen scenarios.
     if (mInFlightCommands.full())
     {
-        ANGLE_TRY(
-            finishOneCommandBatchAndCleanupImplLocked(context, renderer->getMaxFenceWaitTimeNs()));
+        ANGLE_TRY(finishOneCommandBatchAndCleanupLocked(context, renderer->getMaxFenceWaitTimeNs(),
+                                                        nullptr));
     }
+    ASSERT(!mInFlightCommands.full());
     // Release the dequeue lock while doing potentially lengthy vkQueueSubmit call.
     // Note: after this point, you can not reference anything that required mMutex lock.
     dequeueLock.unlock();
@@ -1716,41 +1717,33 @@ angle::Result CommandQueue::checkOneCommandBatchLocked(Context *context, bool *f
     return angle::Result::Continue;
 }
 
-angle::Result CommandQueue::finishOneCommandBatchAndCleanup(Context *context,
-                                                            uint64_t timeout,
-                                                            bool *anyFinished)
+angle::Result CommandQueue::finishOneCommandBatchAndCleanupLocked(Context *context,
+                                                                  uint64_t timeout,
+                                                                  bool *anyBatchCleaned)
 {
-    std::lock_guard<angle::SimpleMutex> lock(mMutex);
-
-    // If there are in-flight submissions in the queue, they can be finished.
-    *anyFinished = false;
     if (!mInFlightCommands.empty())
     {
-        ANGLE_TRY(finishOneCommandBatchAndCleanupImplLocked(context, timeout));
-        *anyFinished = true;
-    }
-    return angle::Result::Continue;
-}
+        CommandBatch &batch = mInFlightCommands.front();
+        if (batch.hasFence())
+        {
+            VkResult status = batch.waitFence(context->getDevice(), timeout);
+            ANGLE_VK_TRY(context, status);
+        }
 
-angle::Result CommandQueue::finishOneCommandBatchAndCleanupImplLocked(Context *context,
-                                                                      uint64_t timeout)
-{
-    ASSERT(!mInFlightCommands.empty());
-    CommandBatch &batch = mInFlightCommands.front();
-    if (batch.hasFence())
-    {
-        VkResult status = batch.waitFence(context->getDevice(), timeout);
-        ANGLE_VK_TRY(context, status);
+        mLastCompletedSerials.setQueueSerial(batch.queueSerial);
+        // Move command batch to mFinishedCommandBatches.
+        if (mFinishedCommandBatches.full())
+        {
+            ANGLE_TRY(retireFinishedCommandsLocked(context));
+        }
+        mFinishedCommandBatches.push(std::move(batch));
+        mInFlightCommands.pop();
     }
 
-    mLastCompletedSerials.setQueueSerial(batch.queueSerial);
-    // Move command batch to mFinishedCommandBatches.
-    if (mFinishedCommandBatches.full())
+    if (anyBatchCleaned != nullptr)
     {
-        ANGLE_TRY(retireFinishedCommandsLocked(context));
+        *anyBatchCleaned = !mFinishedCommandBatches.empty();
     }
-    mFinishedCommandBatches.push(std::move(batch));
-    mInFlightCommands.pop();
 
     // Immediately clean up finished batches.
     ANGLE_TRY(retireFinishedCommandsLocked(context));

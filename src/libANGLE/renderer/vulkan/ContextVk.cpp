@@ -7297,24 +7297,23 @@ angle::Result ContextVk::initBufferAllocation(vk::BufferHelper *bufferHelper,
 
     // If memory allocation fails, it is possible to retry the allocation after waiting for
     // submitted commands to finish and cleaning the garbage.
-    bool anyBatchCleaned             = false;
-    uint32_t batchesWaitedAndCleaned = 0;
+    bool anyBatchCleaned     = false;
+    bool someCommandsCleaned = false;
     do
     {
         ANGLE_TRY(mRenderer->finishOneCommandBatchAndCleanup(this, &anyBatchCleaned));
         if (anyBatchCleaned)
         {
-            batchesWaitedAndCleaned++;
+            someCommandsCleaned = true;
             result = bufferHelper->initSuballocation(this, memoryTypeIndex, allocationSize,
                                                      alignment, bufferUsageType, pool);
         }
     } while (result != VK_SUCCESS && anyBatchCleaned);
 
-    if (batchesWaitedAndCleaned > 0)
+    if (someCommandsCleaned)
     {
-        INFO() << "Initial allocation failed. Waited for " << batchesWaitedAndCleaned
-               << " commands to finish and free garbage | Allocation result: "
-               << ((result == VK_SUCCESS) ? "SUCCESS" : "FAIL");
+        INFO() << "Initial allocation failed. Cleaned some commands to free garbage "
+               << "| Allocation result: " << ((result == VK_SUCCESS) ? "SUCCESS" : "FAIL");
     }
 
     // If memory allocation fails, it is possible retry after flushing the context and cleaning all
@@ -7383,25 +7382,24 @@ angle::Result ContextVk::initImageAllocation(vk::ImageHelper *imageHelper,
 
     // If memory allocation fails, it is possible to retry the allocation after waiting for
     // submitted commands to finish and cleaning the garbage.
-    bool anyBatchCleaned             = false;
-    uint32_t batchesWaitedAndCleaned = 0;
+    bool anyBatchCleaned     = false;
+    bool someCommandsCleaned = false;
     do
     {
         ANGLE_TRY(mRenderer->finishOneCommandBatchAndCleanup(this, &anyBatchCleaned));
         if (anyBatchCleaned)
         {
-            batchesWaitedAndCleaned++;
+            someCommandsCleaned = true;
             result = imageHelper->initMemory(this, memoryProperties, flags, oomExcludedFlags,
                                              &memoryRequirements, allocateDedicatedMemory,
                                              allocationType, &outputFlags, &outputSize);
         }
     } while (result != VK_SUCCESS && anyBatchCleaned);
 
-    if (batchesWaitedAndCleaned > 0)
+    if (someCommandsCleaned)
     {
-        INFO() << "Initial allocation failed. Waited for " << batchesWaitedAndCleaned
-               << " commands to finish and free garbage | Allocation result: "
-               << ((result == VK_SUCCESS) ? "SUCCESS" : "FAIL");
+        INFO() << "Initial allocation failed. Cleaned some commands to free garbage "
+               << "| Allocation result: " << ((result == VK_SUCCESS) ? "SUCCESS" : "FAIL");
     }
 
     // If memory allocation fails, it is possible retry after flushing the context and cleaning all
