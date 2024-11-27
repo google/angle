@@ -1148,8 +1148,8 @@ Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensi
         caps.maxShaderAtomicCounters[ShaderType::Fragment]       = 0;
         caps.maxShaderImageUniforms[ShaderType::Fragment]        = 0;
         caps.maxShaderStorageBlocks[ShaderType::Fragment]        = 0;
-        caps.minProgramTextureGatherOffset                       = 0;
-        caps.maxProgramTextureGatherOffset                       = 0;
+        caps.minProgramTextureGatherOffset                       = caps.minProgramTexelOffset;
+        caps.maxProgramTextureGatherOffset                       = caps.maxProgramTexelOffset;
 
         // Table 20.45
         caps.maxComputeWorkGroupCount                        = {{65535, 65535, 65535}};
