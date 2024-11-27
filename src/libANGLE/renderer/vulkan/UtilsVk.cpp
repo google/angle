@@ -1446,11 +1446,6 @@ void UtilsVk::destroy(ContextVk *contextVk)
     }
     mUnresolve.clear();
 
-    for (auto &shaderIter : mUnresolveFragShaders)
-    {
-        vk::ShaderModulePtr &shader = shaderIter.second;
-        shader->destroy(device);
-    }
     mUnresolveFragShaders.clear();
 
     mPointSampler.destroy(device);

@@ -439,7 +439,7 @@ class Renderer : angle::NonCopyable
     SamplerYcbcrConversionCache &getYuvConversionCache() { return mYuvConversionCache; }
 
     void onAllocateHandle(vk::HandleType handleType);
-    void onDeallocateHandle(vk::HandleType handleType);
+    void onDeallocateHandle(vk::HandleType handleType, uint32_t count);
 
     bool getEnableValidationLayers() const { return mEnableValidationLayers; }
 

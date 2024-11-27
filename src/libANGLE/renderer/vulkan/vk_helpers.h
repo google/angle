@@ -3886,7 +3886,7 @@ class ActiveHandleCounter final : angle::NonCopyable
         mAllocatedCounts[handleType]++;
     }
 
-    void onDeallocate(HandleType handleType) { mActiveCounts[handleType]--; }
+    void onDeallocate(HandleType handleType, uint32_t count) { mActiveCounts[handleType] -= count; }
 
     uint32_t getActive(HandleType handleType) const { return mActiveCounts[handleType]; }
     uint32_t getAllocated(HandleType handleType) const { return mAllocatedCounts[handleType]; }

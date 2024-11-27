@@ -638,10 +638,6 @@ void ProgramInfo::release(ContextVk *contextVk)
 
     for (vk::ShaderModulePtr &shader : mShaders)
     {
-        if (shader)
-        {
-            shader->destroy(contextVk->getDevice());
-        }
         shader.reset();
     }
 }

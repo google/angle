@@ -481,10 +481,6 @@ CLProgramVk::~CLProgramVk()
     {
         pool.reset();
     }
-    if (mShader)
-    {
-        mShader->destroy(mContext->getDevice());
-    }
     for (DescriptorSetIndex index : angle::AllEnums<DescriptorSetIndex>())
     {
         mMetaDescriptorPools[index].destroy(mContext->getRenderer());
@@ -960,8 +956,6 @@ bool CLProgramVk::buildInternal(const cl::DevicePtrs &devices,
 
             if (mShader)
             {
-                // User is recompiling program, we need to recreate the shader module
-                mShader->destroy(mContext->getDevice());
                 mShader.reset();
             }
             // Strip SPIR-V binary if Vk implementation does not support non-semantic info

@@ -1791,7 +1791,6 @@ void Renderer::onDestroy(vk::Context *context)
     if (mPlaceHolderDescriptorSetLayout)
     {
         ASSERT(mPlaceHolderDescriptorSetLayout.unique());
-        mPlaceHolderDescriptorSetLayout->destroy(getDevice());
         mPlaceHolderDescriptorSetLayout.reset();
     }
 
@@ -6733,10 +6732,10 @@ void Renderer::onAllocateHandle(vk::HandleType handleType)
     mActiveHandleCounts.onAllocate(handleType);
 }
 
-void Renderer::onDeallocateHandle(vk::HandleType handleType)
+void Renderer::onDeallocateHandle(vk::HandleType handleType, uint32_t count)
 {
     std::unique_lock<angle::SimpleMutex> localLock(mActiveHandleCountsMutex);
-    mActiveHandleCounts.onDeallocate(handleType);
+    mActiveHandleCounts.onDeallocate(handleType, count);
 }
 
 VkDeviceSize Renderer::getPreferedBufferBlockSize(uint32_t memoryTypeIndex) const

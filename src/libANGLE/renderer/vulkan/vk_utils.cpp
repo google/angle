@@ -754,7 +754,7 @@ void GarbageObject::destroy(Renderer *renderer)
             break;
     }
 
-    renderer->onDeallocateHandle(mHandleType);
+    renderer->onDeallocateHandle(mHandleType, 1);
 }
 
 void MakeDebugUtilsLabel(GLenum source, const char *marker, VkDebugUtilsLabelEXT *label)

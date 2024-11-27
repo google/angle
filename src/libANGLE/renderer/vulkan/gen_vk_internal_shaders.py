@@ -114,7 +114,6 @@ ShaderLibrary::~ShaderLibrary()
 
 void ShaderLibrary::destroy(VkDevice device)
 {{
-    {shader_destroy_calls}
 }}
 
 {shader_get_functions_cpp}
@@ -673,16 +672,6 @@ def get_get_function_cpp(shader_and_variation):
     return definition
 
 
-def get_destroy_call(shader_and_variation):
-    shader_file = shader_and_variation.shader_file
-
-    table_name = get_variation_table_name(shader_file, 'm')
-
-    destroy = 'for (ShaderModulePtr &shader : %s)\n' % table_name
-    destroy += '{\nif(shader)\n{shader->destroy(device);\n}\n}'
-    return destroy
-
-
 def shader_path(shader):
     return '"%s"' % slash(shader)
 
@@ -777,8 +766,6 @@ def main():
         includes = "\n".join([gen_shader_include(shader) for shader in output_shaders])
         shader_tables_cpp = '\n'.join(
             [get_shader_table_cpp(s) for s in input_shaders_and_variations])
-        shader_destroy_calls = '\n'.join(
-            [get_destroy_call(s) for s in input_shaders_and_variations])
         shader_get_functions_cpp = '\n'.join(
             [get_get_function_cpp(s) for s in input_shaders_and_variations])
 
@@ -788,7 +775,6 @@ def main():
             input_file_name='shaders/src/*',
             internal_shader_includes=includes,
             shader_tables_cpp=shader_tables_cpp,
-            shader_destroy_calls=shader_destroy_calls,
             shader_get_functions_cpp=shader_get_functions_cpp)
         outfile.write(outcode)
         outfile.close()

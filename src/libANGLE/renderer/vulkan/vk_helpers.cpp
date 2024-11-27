@@ -4461,7 +4461,6 @@ void DynamicDescriptorPool::destroy(VkDevice device)
         pool->cleanupPendingGarbage();
         pool->destroyGarbage();
         ASSERT(pool.unique());
-        pool->destroy(device);
     }
     mDescriptorPools.clear();
 
@@ -4738,7 +4737,7 @@ void DynamicDescriptorPool::destroyUnusedPool(Renderer *renderer,
         {
             ASSERT(pool->valid());
             pool->destroyGarbage();
-            pool->destroy(renderer->getDevice());
+            ASSERT((*it).unique());
             it = mDescriptorPools.erase(it);
             return;
         }
@@ -4765,7 +4764,7 @@ void DynamicDescriptorPool::checkAndDestroyUnusedPool(Renderer *renderer)
         if ((*it)->canDestroy())
         {
             (*it)->destroyGarbage();
-            (*it)->destroy(renderer->getDevice());
+            ASSERT((*it).unique());
             it = mDescriptorPools.erase(it);
         }
         else
@@ -13123,9 +13122,7 @@ void MetaDescriptorPool::destroy(Renderer *renderer)
     {
         DynamicDescriptorPoolPointer &pool = iter.second;
         ASSERT(pool.unique());
-        pool->destroy(renderer->getDevice());
     }
-
     mPayload.clear();
 }
 
