@@ -4778,9 +4778,6 @@ void GL_APIENTRY GL_SampleMaskiANGLE(GLuint maskNumber, GLbitfield mask)
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
 
-// GetTexLevelParameterfvANGLE is already defined.
-
-// GetTexLevelParameterivANGLE is already defined.
 
 // GL_ANGLE_texture_usage
 

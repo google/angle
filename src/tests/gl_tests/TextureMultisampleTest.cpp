@@ -65,9 +65,6 @@ class TextureMultisampleTest : public ANGLETest<>
                                GLsizei height,
                                GLboolean fixedsamplelocations);
 
-    void getTexLevelParameterfv(GLenum target, GLint level, GLenum pname, GLfloat *params);
-    void getTexLevelParameteriv(GLenum target, GLint level, GLenum pname, GLint *params);
-
     void getMultisamplefv(GLenum pname, GLuint index, GLfloat *val);
     void sampleMaski(GLuint maskNumber, GLbitfield mask);
 
@@ -222,38 +219,6 @@ void TextureMultisampleTest::texStorageMultisample(GLenum target,
     {
         glTexStorage2DMultisample(target, samples, internalformat, width, height,
                                   fixedsamplelocations);
-    }
-}
-
-void TextureMultisampleTest::getTexLevelParameterfv(GLenum target,
-                                                    GLint level,
-                                                    GLenum pname,
-                                                    GLfloat *params)
-{
-    if (getClientMajorVersion() <= 3 && getClientMinorVersion() < 1 &&
-        EnsureGLExtensionEnabled("GL_ANGLE_texture_multisample"))
-    {
-        glGetTexLevelParameterfvANGLE(target, level, pname, params);
-    }
-    else
-    {
-        glGetTexLevelParameterfv(target, level, pname, params);
-    }
-}
-
-void TextureMultisampleTest::getTexLevelParameteriv(GLenum target,
-                                                    GLint level,
-                                                    GLenum pname,
-                                                    GLint *params)
-{
-    if (getClientMajorVersion() <= 3 && getClientMinorVersion() < 1 &&
-        EnsureGLExtensionEnabled("GL_ANGLE_texture_multisample"))
-    {
-        glGetTexLevelParameterivANGLE(target, level, pname, params);
-    }
-    else
-    {
-        glGetTexLevelParameteriv(target, level, pname, params);
     }
 }
 
@@ -441,22 +406,23 @@ TEST_P(TextureMultisampleTest, MaxDepthTextureSamplesValid)
     ASSERT_GL_NO_ERROR();
 }
 
-// Tests that getTexLevelParameter is supported by ES 3.1 or ES 3.0 and ANGLE_texture_multisample
+// Tests that multisample parameters are accepted by ES 3.1 or ES 3.0 and ANGLE_texture_multisample
 TEST_P(TextureMultisampleTest, GetTexLevelParameter)
 {
     ANGLE_SKIP_TEST_IF(lessThanES31MultisampleExtNotSupported());
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_get_tex_level_parameter"));
 
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, mTexture);
     texStorageMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA8, 1, 1, GL_TRUE);
     ASSERT_GL_NO_ERROR();
 
     GLfloat levelSamples = 0;
-    getTexLevelParameterfv(GL_TEXTURE_2D_MULTISAMPLE, 0, GL_TEXTURE_SAMPLES, &levelSamples);
+    glGetTexLevelParameterfvANGLE(GL_TEXTURE_2D_MULTISAMPLE, 0, GL_TEXTURE_SAMPLES, &levelSamples);
     EXPECT_EQ(levelSamples, 4);
 
     GLint fixedSampleLocation = false;
-    getTexLevelParameteriv(GL_TEXTURE_2D_MULTISAMPLE, 0, GL_TEXTURE_FIXED_SAMPLE_LOCATIONS,
-                           &fixedSampleLocation);
+    glGetTexLevelParameterivANGLE(GL_TEXTURE_2D_MULTISAMPLE, 0, GL_TEXTURE_FIXED_SAMPLE_LOCATIONS,
+                                  &fixedSampleLocation);
     EXPECT_EQ(fixedSampleLocation, 1);
 
     ASSERT_GL_NO_ERROR();
@@ -772,19 +738,18 @@ TEST_P(NegativeTextureMultisampleTest, Negative)
     glGetTexParameteriv(GL_TEXTURE_2D_MULTISAMPLE, GL_TEXTURE_IMMUTABLE_FORMAT, &params);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
-    GLfloat levelSamples = 0;
-    glGetTexLevelParameterfvANGLE(GL_TEXTURE_2D_MULTISAMPLE, 0, GL_TEXTURE_SAMPLES, &levelSamples);
-    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
-    glGetTexLevelParameterfv(GL_TEXTURE_2D_MULTISAMPLE, 0, GL_TEXTURE_SAMPLES, &levelSamples);
-    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    if (EnsureGLExtensionEnabled("GL_ANGLE_get_tex_level_parameter"))
+    {
+        GLfloat levelSamples = 0;
+        glGetTexLevelParameterfvANGLE(GL_TEXTURE_2D_MULTISAMPLE, 0, GL_TEXTURE_SAMPLES,
+                                      &levelSamples);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
-    GLint fixedSampleLocation = false;
-    glGetTexLevelParameterivANGLE(GL_TEXTURE_2D_MULTISAMPLE, 0, GL_TEXTURE_FIXED_SAMPLE_LOCATIONS,
-                                  &fixedSampleLocation);
-    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
-    glGetTexLevelParameteriv(GL_TEXTURE_2D_MULTISAMPLE, 0, GL_TEXTURE_FIXED_SAMPLE_LOCATIONS,
-                             &fixedSampleLocation);
-    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+        GLint fixedSampleLocation = false;
+        glGetTexLevelParameterivANGLE(GL_TEXTURE_2D_MULTISAMPLE, 0,
+                                      GL_TEXTURE_FIXED_SAMPLE_LOCATIONS, &fixedSampleLocation);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+    }
 
     GLfloat samplePosition[2];
     glGetMultisamplefvANGLE(GL_SAMPLE_POSITION, 0, samplePosition);

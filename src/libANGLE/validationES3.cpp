@@ -5163,12 +5163,9 @@ bool ValidateGetTexLevelParameterfvANGLE(const Context *context,
                                          GLenum pname,
                                          const GLfloat *params)
 {
-    if (!context->getExtensions().textureMultisampleANGLE &&
-        !context->getExtensions().getTexLevelParameterANGLE)
+    if (!context->getExtensions().getTexLevelParameterANGLE)
     {
-        ANGLE_VALIDATION_ERROR(
-            GL_INVALID_OPERATION,
-            kMultisampleTextureExtensionOrGetTexLevelParameterExtensionOrES31Required);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
     }
 
@@ -5182,12 +5179,9 @@ bool ValidateGetTexLevelParameterivANGLE(const Context *context,
                                          GLenum pname,
                                          const GLint *params)
 {
-    if (!context->getExtensions().textureMultisampleANGLE &&
-        !context->getExtensions().getTexLevelParameterANGLE)
+    if (!context->getExtensions().getTexLevelParameterANGLE)
     {
-        ANGLE_VALIDATION_ERROR(
-            GL_INVALID_OPERATION,
-            kMultisampleTextureExtensionOrGetTexLevelParameterExtensionOrES31Required);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
     }
 
