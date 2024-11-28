@@ -384,3 +384,69 @@ fn wgslMain() -> ANGLE_Output_Annotated
     compile(shaderString);
     EXPECT_TRUE(foundInCode(outputString.c_str()));
 }
+
+TEST_F(WGSLOutputTest, UniformsWithNestedStructs)
+{
+    const std::string &shaderString =
+        R"(precision mediump float;
+struct NestedUniforms {
+    float x;
+};
+struct Uniforms {
+    NestedUniforms a;
+    float b;
+    float c;
+    float[5] d;
+    float e;
+};
+uniform Uniforms unis;
+void main() {
+    gl_FragColor = vec4(unis.a.x, unis.b, unis.c, 1.0);
+})";
+    const std::string &outputString =
+        R"(Output_Global {
+  gl_FragColor_ : vec4<f32>,
+};
+
+var<private> ANGLE_output_global : ANGLE_Output_Global;
+
+struct ANGLE_Output_Annotated {
+  @location(0) gl_FragColor_ : vec4<f32>,
+};
+
+struct ANGLE_DefaultUniformBlock {
+  unis : _uUniforms,
+};
+
+@group(0) @binding(1) var<uniform> ANGLE_defaultUniformBlock : ANGLE_DefaultUniformBlock;
+struct _uNestedUniforms
+{
+  @align(16) _ux : f32,
+};
+
+struct _uUniforms
+{
+  @align(16) _ua : _uNestedUniforms,
+  @align(16) _ub : f32,
+  _uc : f32,
+  @align(16) _ud : array<f32, 5>,
+  _ue : f32,
+};
+
+;
+
+fn _umain()
+{
+  (ANGLE_output_global.gl_FragColor_) = (vec4<f32>(((ANGLE_defaultUniformBlock.unis)._ua)._ux, (ANGLE_defaultUniformBlock.unis)._ub, (ANGLE_defaultUniformBlock.unis)._uc, 1.0f));
+}
+@fragment
+fn wgslMain() -> ANGLE_Output_Annotated
+{
+  _umain();
+  var ANGLE_output_annotated : ANGLE_Output_Annotated;
+  ANGLE_output_annotated.gl_FragColor_ = ANGLE_output_global.gl_FragColor_;
+  return ANGLE_output_annotated;
+})";
+    compile(shaderString);
+    EXPECT_TRUE(foundInCode(outputString.c_str()));
+}
