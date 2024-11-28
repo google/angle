@@ -736,12 +736,16 @@ void Context::initializeDefaultResources()
             new Texture(mImplementation.get(), {0}, TextureType::_2DMultisample);
         mZeroTextures[TextureType::_2DMultisample].set(this, zeroTexture2DMultisample);
     }
-    if (getClientVersion() >= Version(3, 1))
+    if (getClientVersion() >= Version(3, 2) ||
+        mSupportedExtensions.textureStorageMultisample2dArrayOES)
     {
         Texture *zeroTexture2DMultisampleArray =
             new Texture(mImplementation.get(), {0}, TextureType::_2DMultisampleArray);
         mZeroTextures[TextureType::_2DMultisampleArray].set(this, zeroTexture2DMultisampleArray);
+    }
 
+    if (getClientVersion() >= Version(3, 1))
+    {
         for (int i = 0; i < mState.getCaps().maxAtomicCounterBufferBindings; i++)
         {
             bindBufferRange(BufferBinding::AtomicCounter, i, {0}, 0, 0);

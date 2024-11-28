@@ -862,6 +862,15 @@ bool ValidateTexStorage2DMultisampleBase(const Context *context,
                                          GLsizei width,
                                          GLsizei height);
 
+bool ValidateTexStorage3DMultisampleBase(const Context *context,
+                                         angle::EntryPoint entryPoint,
+                                         TextureType target,
+                                         GLsizei samples,
+                                         GLenum internalformat,
+                                         GLsizei width,
+                                         GLsizei height,
+                                         GLsizei depth);
+
 bool ValidateGetTexLevelParameterBase(const Context *context,
                                       angle::EntryPoint entryPoint,
                                       TextureTarget target,

@@ -3092,14 +3092,7 @@ bool ValidateStateQuery(const Context *context,
         case GL_TEXTURE_BINDING_3D:
         case GL_TEXTURE_BINDING_2D_ARRAY:
         case GL_TEXTURE_BINDING_2D_MULTISAMPLE:
-            break;
-
         case GL_TEXTURE_BINDING_2D_MULTISAMPLE_ARRAY:
-            if (!context->getExtensions().textureStorageMultisample2dArrayOES)
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kMultisampleArrayExtensionRequired);
-                return false;
-            }
             break;
 
         case GL_TEXTURE_BINDING_RECTANGLE_ANGLE:
@@ -8464,10 +8457,11 @@ bool ValidateGetInternalFormativBase(const Context *context,
                 return false;
             }
             break;
-        case GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES:
-            if (!context->getExtensions().textureStorageMultisample2dArrayOES)
+        case GL_TEXTURE_2D_MULTISAMPLE_ARRAY:
+            if (context->getClientVersion() < ES_3_2 &&
+                !context->getExtensions().textureStorageMultisample2dArrayOES)
             {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kMultisampleArrayExtensionRequired);
+                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kMultisampleArrayExtensionOrES32Required);
                 return false;
             }
             break;
@@ -8642,6 +8636,37 @@ bool ValidateTexStorage2DMultisampleBase(const Context *context,
     }
 
     return ValidateTexStorageMultisample(context, entryPoint, target, samples, internalFormat,
+                                         width, height);
+}
+
+bool ValidateTexStorage3DMultisampleBase(const Context *context,
+                                         angle::EntryPoint entryPoint,
+                                         TextureType target,
+                                         GLsizei samples,
+                                         GLenum internalformat,
+                                         GLsizei width,
+                                         GLsizei height,
+                                         GLsizei depth)
+{
+    if (target != TextureType::_2DMultisampleArray)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidTarget);
+        return false;
+    }
+
+    if (width < 1 || height < 1 || depth < 1)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kTextureSizeTooSmall);
+        return false;
+    }
+
+    if (depth > context->getCaps().maxArrayTextureLayers)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kTextureDepthOutOfRange);
+        return false;
+    }
+
+    return ValidateTexStorageMultisample(context, entryPoint, target, samples, internalformat,
                                          width, height);
 }
 

@@ -819,7 +819,13 @@ bool ValidateTexStorage3DMultisample(const Context *context,
                                      GLsizei depth,
                                      GLboolean fixedsamplelocations)
 {
-    return true;
+    if (context->getClientVersion() < ES_3_2)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES32Required);
+        return false;
+    }
+    return ValidateTexStorage3DMultisampleBase(context, entryPoint, targetPacked, samples,
+                                               internalformat, width, height, depth);
 }
 
 }  // namespace gl

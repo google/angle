@@ -3257,6 +3257,27 @@ bool ValidatePrimitiveBoundingBoxOES(const PrivateState &state,
     return true;
 }
 
+// GL_OES_texture_storage_multisample_2d_array
+bool ValidateTexStorage3DMultisampleOES(const Context *context,
+                                        angle::EntryPoint entryPoint,
+                                        TextureType target,
+                                        GLsizei samples,
+                                        GLenum internalformat,
+                                        GLsizei width,
+                                        GLsizei height,
+                                        GLsizei depth,
+                                        GLboolean fixedsamplelocations)
+{
+    if (!context->getExtensions().textureStorageMultisample2dArrayOES)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateTexStorage3DMultisampleBase(context, entryPoint, target, samples, internalformat,
+                                               width, height, depth);
+}
+
 // GL_EXT_separate_shader_objects
 bool ValidateActiveShaderProgramEXT(const Context *context,
                                     angle::EntryPoint entryPoint,

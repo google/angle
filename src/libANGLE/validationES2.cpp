@@ -6612,8 +6612,9 @@ void RecordBindTextureTypeError(const Context *context,
             break;
 
         case TextureType::_2DMultisampleArray:
-            ASSERT(!context->getExtensions().textureStorageMultisample2dArrayOES);
-            ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kMultisampleArrayExtensionRequired);
+            ASSERT(context->getClientVersion() < Version(3, 2) &&
+                   !context->getExtensions().textureStorageMultisample2dArrayOES);
+            ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kMultisampleArrayExtensionOrES32Required);
             break;
 
         case TextureType::External:

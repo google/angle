@@ -2328,11 +2328,13 @@ void State::initialize(Context *context)
         mSamplerTextures[TextureType::_2DMultisample].resize(
             getCaps().maxCombinedTextureImageUnits);
     }
-    if (clientVersion >= Version(3, 1))
+    if (clientVersion >= Version(3, 2) || nativeExtensions.textureStorageMultisample2dArrayOES)
     {
         mSamplerTextures[TextureType::_2DMultisampleArray].resize(
             getCaps().maxCombinedTextureImageUnits);
-
+    }
+    if (clientVersion >= Version(3, 1))
+    {
         mAtomicCounterBuffers.resize(getCaps().maxAtomicCounterBufferBindings);
         mShaderStorageBuffers.resize(getCaps().maxShaderStorageBufferBindings);
     }
