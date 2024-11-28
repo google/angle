@@ -6,6 +6,7 @@
 
 // GetTexLevelParameterTest.cpp : Tests of the GL_ANGLE_get_tex_level_parameter extension.
 
+#include "common/gl_enum_utils.h"
 #include "test_utils/ANGLETest.h"
 
 #include "test_utils/gl_raii.h"
@@ -276,6 +277,87 @@ TEST_P(GetTexLevelParameterTest, Queries)
             EXPECT_GL_NO_ERROR();
             EXPECT_TRUE(fixedLocations);
         }
+    }
+}
+
+// Test level validation
+TEST_P(GetTexLevelParameterTest, Levels)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_get_tex_level_parameter"));
+
+    const auto getMaxLevel = [](GLenum type, int *level) {
+        int tmp = 0;
+        glGetIntegerv(type, &tmp);
+        ASSERT_GL_NO_ERROR();
+        ASSERT_GT(tmp, 0);
+        *level = gl::log2(tmp);
+    };
+
+    int maxLevel2D   = 0;
+    int maxLevel3D   = 0;
+    int maxLevelCube = 0;
+    getMaxLevel(GL_MAX_TEXTURE_SIZE, &maxLevel2D);
+    getMaxLevel(GL_MAX_CUBE_MAP_TEXTURE_SIZE, &maxLevelCube);
+    if (getClientMajorVersion() >= 3)
+    {
+        getMaxLevel(GL_MAX_3D_TEXTURE_SIZE, &maxLevel3D);
+    }
+
+    const auto test = [](GLenum target, int maxValid) {
+        GLint result = 0;
+        glGetTexLevelParameterivANGLE(target, 0, GL_TEXTURE_WIDTH, &result);
+        EXPECT_GL_NO_ERROR() << "Target " << gl::GLenumToString(gl::GLESEnum::TextureTarget, target)
+                             << " Level " << 0;
+        glGetTexLevelParameterivANGLE(target, maxValid, GL_TEXTURE_WIDTH, &result);
+        EXPECT_GL_NO_ERROR() << "Target " << gl::GLenumToString(gl::GLESEnum::TextureTarget, target)
+                             << " Level " << maxValid;
+        glGetTexLevelParameterivANGLE(target, -1, GL_TEXTURE_WIDTH, &result);
+        EXPECT_GL_ERROR(GL_INVALID_VALUE)
+            << "Target " << gl::GLenumToString(gl::GLESEnum::TextureTarget, target) << " Level "
+            << -1;
+        glGetTexLevelParameterivANGLE(target, maxValid + 1, GL_TEXTURE_WIDTH, &result);
+        EXPECT_GL_ERROR(GL_INVALID_VALUE)
+            << "Target " << gl::GLenumToString(gl::GLESEnum::TextureTarget, target) << " Level "
+            << (maxValid + 1);
+    };
+
+    test(GL_TEXTURE_2D, maxLevel2D);
+    test(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, maxLevelCube);
+
+    if (getClientMajorVersion() >= 3)
+    {
+        test(GL_TEXTURE_2D_ARRAY, maxLevel2D);
+    }
+
+    if (getClientMajorVersion() >= 3 || EnsureGLExtensionEnabled("GL_OES_texture_3d"))
+    {
+        test(GL_TEXTURE_3D, maxLevel3D);
+    }
+
+    if ((getClientMajorVersion() >= 3 && getClientMinorVersion() >= 1) ||
+        EnsureGLExtensionEnabled("GL_ANGLE_texture_multisample"))
+    {
+        test(GL_TEXTURE_2D_MULTISAMPLE, 0);
+    }
+
+    if ((getClientMajorVersion() >= 3 && getClientMinorVersion() >= 2) ||
+        EnsureGLExtensionEnabled("GL_OES_texture_storage_multisample_2d_array"))
+    {
+        test(GL_TEXTURE_2D_MULTISAMPLE_ARRAY, 0);
+    }
+
+    if ((getClientMajorVersion() >= 3 && getClientMinorVersion() >= 2) ||
+        (EnsureGLExtensionEnabled("GL_EXT_texture_buffer") ||
+         EnsureGLExtensionEnabled("GL_OES_texture_buffer")))
+    {
+        test(GL_TEXTURE_BUFFER, 0);
+    }
+
+    if ((getClientMajorVersion() >= 3 && getClientMinorVersion() >= 2) ||
+        (EnsureGLExtensionEnabled("GL_EXT_texture_cube_map_array") ||
+         EnsureGLExtensionEnabled("GL_OES_texture_cube_map_array")))
+    {
+        test(GL_TEXTURE_CUBE_MAP_ARRAY, maxLevelCube);
     }
 }
 
