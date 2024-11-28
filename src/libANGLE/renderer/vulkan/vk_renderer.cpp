@@ -5331,10 +5331,14 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     //
     // On ARM drivers prior to r48, |vkCmdBindVertexBuffers2| applies strides to the wrong index,
     // according to the errata: https://developer.arm.com/documentation/SDEN-3735689/0100/?lang=en
+    //
+    // On Qualcomm drivers, this feature has a bug, unknown up to which version.
+    // http://anglebug.com/381384988
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsVertexInputDynamicState,
                             mVertexInputDynamicStateFeatures.vertexInputDynamicState == VK_TRUE &&
                                 !(IsWindows() && isIntel) &&
-                                !(isARM && armDriverVersion < ARMDriverVersion(48, 0, 0)));
+                                !(isARM && armDriverVersion < ARMDriverVersion(48, 0, 0)) &&
+                                !isQualcommProprietary);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsExtendedDynamicState,
                             mExtendedDynamicStateFeatures.extendedDynamicState == VK_TRUE &&
