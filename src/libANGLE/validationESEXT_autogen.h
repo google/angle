@@ -2623,6 +2623,8 @@ bool ValidateQueryMatrixxOES(const Context *context,
                              const GLfixed *mantissa,
                              const GLint *exponent);
 
+// GL_OES_required_internalformat
+
 // GL_OES_rgb8_rgba8
 
 // GL_OES_sample_shading

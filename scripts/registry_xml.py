@@ -210,6 +210,7 @@ gles_requestable_extensions = [
     "GL_OES_get_program_binary",
     "GL_OES_gpu_shader5",
     "GL_OES_mapbuffer",
+    "GL_OES_required_internalformat",
     "GL_OES_rgb8_rgba8",
     "GL_OES_sample_shading",
     "GL_OES_sample_variables",
