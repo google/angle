@@ -1090,7 +1090,7 @@ bool Framebuffer::detachMatchingAttachment(Context *context,
             // currently bound draw framebuffer object, and pixel local storage is active, then it
             // is as if EndPixelLocalStorageANGLE() had been called with
             // <n>=PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE and <storeops> of STORE_OP_STORE_ANGLE.
-            context->endPixelLocalStorageWithStoreOpsStore();
+            context->endPixelLocalStorageImplicit();
         }
         // We go through resetAttachment to make sure that all the required bookkeeping will be done
         // such as updating enabled draw buffer state.

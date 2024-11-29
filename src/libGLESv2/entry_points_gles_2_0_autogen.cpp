@@ -153,13 +153,9 @@ void GL_APIENTRY GL_BindFramebuffer(GLenum target, GLuint framebuffer)
     {
         FramebufferID framebufferPacked = PackParam<FramebufferID>(framebuffer);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLBindFramebuffer) &&
-              ValidateBindFramebuffer(context, angle::EntryPoint::GLBindFramebuffer, target,
-                                      framebufferPacked)));
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateBindFramebuffer(context, angle::EntryPoint::GLBindFramebuffer,
+                                                    target, framebufferPacked));
         if (isCallValid)
         {
             context->bindFramebuffer(target, framebufferPacked);
@@ -1448,14 +1444,10 @@ void GL_APIENTRY GL_FramebufferRenderbuffer(GLenum target,
     {
         RenderbufferID renderbufferPacked = PackParam<RenderbufferID>(renderbuffer);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLFramebufferRenderbuffer) &&
-              ValidateFramebufferRenderbuffer(context, angle::EntryPoint::GLFramebufferRenderbuffer,
-                                              target, attachment, renderbuffertarget,
-                                              renderbufferPacked)));
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateFramebufferRenderbuffer(
+                                context, angle::EntryPoint::GLFramebufferRenderbuffer, target,
+                                attachment, renderbuffertarget, renderbufferPacked));
         if (isCallValid)
         {
             context->framebufferRenderbuffer(target, attachment, renderbuffertarget,
@@ -1490,14 +1482,10 @@ void GL_APIENTRY GL_FramebufferTexture2D(GLenum target,
         TextureTarget textargetPacked = PackParam<TextureTarget>(textarget);
         TextureID texturePacked       = PackParam<TextureID>(texture);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLFramebufferTexture2D) &&
-              ValidateFramebufferTexture2D(context, angle::EntryPoint::GLFramebufferTexture2D,
-                                           target, attachment, textargetPacked, texturePacked,
-                                           level)));
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateFramebufferTexture2D(
+                                context, angle::EntryPoint::GLFramebufferTexture2D, target,
+                                attachment, textargetPacked, texturePacked, level));
         if (isCallValid)
         {
             context->framebufferTexture2D(target, attachment, textargetPacked, texturePacked,

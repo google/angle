@@ -4164,12 +4164,9 @@ void GL_APIENTRY GL_FramebufferMemorylessPixelLocalStorageANGLE(GLint plane, GLe
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(
-                  context->getPrivateState(), context->getMutableErrorSetForValidation(),
-                  angle::EntryPoint::GLFramebufferMemorylessPixelLocalStorageANGLE) &&
-              ValidateFramebufferMemorylessPixelLocalStorageANGLE(
-                  context, angle::EntryPoint::GLFramebufferMemorylessPixelLocalStorageANGLE, plane,
-                  internalformat)));
+             ValidateFramebufferMemorylessPixelLocalStorageANGLE(
+                 context, angle::EntryPoint::GLFramebufferMemorylessPixelLocalStorageANGLE, plane,
+                 internalformat));
         if (isCallValid)
         {
             context->framebufferMemorylessPixelLocalStorage(plane, internalformat);
@@ -4201,12 +4198,9 @@ void GL_APIENTRY GL_FramebufferTexturePixelLocalStorageANGLE(GLint plane,
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(
-                  context->getPrivateState(), context->getMutableErrorSetForValidation(),
-                  angle::EntryPoint::GLFramebufferTexturePixelLocalStorageANGLE) &&
-              ValidateFramebufferTexturePixelLocalStorageANGLE(
-                  context, angle::EntryPoint::GLFramebufferTexturePixelLocalStorageANGLE, plane,
-                  backingtexturePacked, level, layer)));
+             ValidateFramebufferTexturePixelLocalStorageANGLE(
+                 context, angle::EntryPoint::GLFramebufferTexturePixelLocalStorageANGLE, plane,
+                 backingtexturePacked, level, layer));
         if (isCallValid)
         {
             context->framebufferTexturePixelLocalStorage(plane, backingtexturePacked, level, layer);
@@ -6831,11 +6825,8 @@ void GL_APIENTRY GL_FramebufferTextureEXT(GLenum target,
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLFramebufferTextureEXT) &&
-              ValidateFramebufferTextureEXT(context, angle::EntryPoint::GLFramebufferTextureEXT,
-                                            target, attachment, texturePacked, level)));
+             ValidateFramebufferTextureEXT(context, angle::EntryPoint::GLFramebufferTextureEXT,
+                                           target, attachment, texturePacked, level));
         if (isCallValid)
         {
             context->framebufferTexture(target, attachment, texturePacked, level);
@@ -7618,12 +7609,9 @@ void GL_APIENTRY GL_FramebufferTexture2DMultisampleEXT(GLenum target,
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(
-                  context->getPrivateState(), context->getMutableErrorSetForValidation(),
-                  angle::EntryPoint::GLFramebufferTexture2DMultisampleEXT) &&
-              ValidateFramebufferTexture2DMultisampleEXT(
-                  context, angle::EntryPoint::GLFramebufferTexture2DMultisampleEXT, target,
-                  attachment, textargetPacked, texturePacked, level, samples)));
+             ValidateFramebufferTexture2DMultisampleEXT(
+                 context, angle::EntryPoint::GLFramebufferTexture2DMultisampleEXT, target,
+                 attachment, textargetPacked, texturePacked, level, samples));
         if (isCallValid)
         {
             context->framebufferTexture2DMultisample(target, attachment, textargetPacked,
@@ -11046,11 +11034,8 @@ void GL_APIENTRY GL_FramebufferParameteriMESA(GLenum target, GLenum pname, GLint
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLFramebufferParameteriMESA) &&
-              ValidateFramebufferParameteriMESA(
-                  context, angle::EntryPoint::GLFramebufferParameteriMESA, target, pname, param)));
+             ValidateFramebufferParameteriMESA(
+                 context, angle::EntryPoint::GLFramebufferParameteriMESA, target, pname, param));
         if (isCallValid)
         {
             context->framebufferParameteriMESA(target, pname, param);
@@ -12637,11 +12622,8 @@ void GL_APIENTRY GL_FramebufferTextureOES(GLenum target,
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLFramebufferTextureOES) &&
-              ValidateFramebufferTextureOES(context, angle::EntryPoint::GLFramebufferTextureOES,
-                                            target, attachment, texturePacked, level)));
+             ValidateFramebufferTextureOES(context, angle::EntryPoint::GLFramebufferTextureOES,
+                                           target, attachment, texturePacked, level));
         if (isCallValid)
         {
             context->framebufferTexture(target, attachment, texturePacked, level);
@@ -13303,14 +13285,10 @@ void GL_APIENTRY GL_FramebufferTexture3DOES(GLenum target,
         TextureTarget textargetPacked = PackParam<TextureTarget>(textarget);
         TextureID texturePacked       = PackParam<TextureID>(texture);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLFramebufferTexture3DOES) &&
-              ValidateFramebufferTexture3DOES(context, angle::EntryPoint::GLFramebufferTexture3DOES,
-                                              target, attachment, textargetPacked, texturePacked,
-                                              level, zoffset)));
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateFramebufferTexture3DOES(
+                                context, angle::EntryPoint::GLFramebufferTexture3DOES, target,
+                                attachment, textargetPacked, texturePacked, level, zoffset));
         if (isCallValid)
         {
             context->framebufferTexture3D(target, attachment, textargetPacked, texturePacked, level,
@@ -14194,14 +14172,10 @@ void GL_APIENTRY GL_FramebufferTextureMultiviewOVR(GLenum target,
     {
         TextureID texturePacked = PackParam<TextureID>(texture);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(
-                  context->getPrivateState(), context->getMutableErrorSetForValidation(),
-                  angle::EntryPoint::GLFramebufferTextureMultiviewOVR) &&
-              ValidateFramebufferTextureMultiviewOVR(
-                  context, angle::EntryPoint::GLFramebufferTextureMultiviewOVR, target, attachment,
-                  texturePacked, level, baseViewIndex, numViews)));
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateFramebufferTextureMultiviewOVR(
+                                context, angle::EntryPoint::GLFramebufferTextureMultiviewOVR,
+                                target, attachment, texturePacked, level, baseViewIndex, numViews));
         if (isCallValid)
         {
             context->framebufferTextureMultiview(target, attachment, texturePacked, level,

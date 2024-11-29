@@ -4,7 +4,6 @@
 // found in the LICENSE file.
 //
 
-#include <regex>
 #include <sstream>
 #include <string>
 #include "test_utils/ANGLETest.h"
@@ -97,6 +96,20 @@ using namespace angle;
             plane, GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE, 4, nullptr, valuei.data()); \
         memcpy(value.data(), valuei.data(), sizeof(value));                                   \
         EXPECT_EQ(value, expected);                                                           \
+    }
+
+#define EXPECT_FRAMEBUFFER_PARAMETER_INT_MESA(target, pname, expectedValue) \
+    {                                                                       \
+        GLint value = 0xbaadc0de;                                           \
+        glGetFramebufferParameterivMESA(target, pname, &value);             \
+        EXPECT_EQ(value, static_cast<GLint>(expectedValue));                \
+    }
+
+#define EXPECT_FRAMEBUFFER_PARAMETER_INT(target, pname, expectedValue) \
+    {                                                                  \
+        GLint value = 0xbaadc0de;                                      \
+        glGetFramebufferParameteriv(target, pname, &value);            \
+        EXPECT_EQ(value, static_cast<GLint>(expectedValue));           \
     }
 
 #define EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(framebuffer, attachment, value)                    \
@@ -582,6 +595,9 @@ class PixelLocalStorageTest : public ANGLETest<>
     // Implemented as a class members so we can run the test on ES3 and ES31 both.
     void doStateRestorationTest();
     void doDrawStateTest();
+    void doImplicitDisablesTest_Framebuffer();
+    void doImplicitDisablesTest_TextureAttachments();
+    void doImplicitDisablesTest_RenderbufferAttachments();
 
     GLint MAX_PIXEL_LOCAL_STORAGE_PLANES                           = 0;
     GLint MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE    = 0;
@@ -2321,6 +2337,315 @@ void PixelLocalStorageTest::doDrawStateTest()
     ASSERT_GL_NO_ERROR();
 }
 
+#define SETUP_IMPLICIT_DISABLES_TEST(framebufferTarget)                                        \
+    GLFramebuffer fbo, readFBO;                                                                \
+    glBindFramebuffer(framebufferTarget, fbo);                                                 \
+                                                                                               \
+    PLSTestTexture tex0(GL_RGBA8);                                                             \
+    PLSTestTexture tex1(GL_RGBA8);                                                             \
+    PLSTestTexture tex2(GL_RGBA8);                                                             \
+    PLSTestTexture tex3(GL_RGBA8);                                                             \
+    glFramebufferTexturePixelLocalStorageANGLE(0, tex0, 0, 0);                                 \
+    glFramebufferTexturePixelLocalStorageANGLE(1, tex1, 0, 0);                                 \
+    glFramebufferTexturePixelLocalStorageANGLE(2, tex2, 0, 0);                                 \
+    glFramebufferTexturePixelLocalStorageANGLE(3, tex3, 0, 0);                                 \
+    GLenum loadOps[4]  = {GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE, \
+                          GL_LOAD_OP_ZERO_ANGLE};                                              \
+    GLenum storeOps[4] = {GL_STORE_OP_STORE_ANGLE, GL_STORE_OP_STORE_ANGLE, GL_DONT_CARE,      \
+                          GL_DONT_CARE};                                                       \
+                                                                                               \
+    glDrawBuffers(0, nullptr);                                                                 \
+                                                                                               \
+    EXPECT_GL_NO_ERROR()
+
+#define CHECK_PLS_ENABLED() \
+    EXPECT_GL_NO_ERROR();   \
+    EXPECT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 4)
+
+#define CHECK_PLS_DISABLED() \
+    EXPECT_GL_NO_ERROR();    \
+    EXPECT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0)
+
+#define BEGIN_PLS()                            \
+    glBeginPixelLocalStorageANGLE(4, loadOps); \
+    CHECK_PLS_ENABLED()
+
+#define CHECK_ENDS_PLS(cmd) \
+    BEGIN_PLS();            \
+    cmd;                    \
+    CHECK_PLS_DISABLED()
+
+#define CHECK_DOES_NOT_END_PLS(cmd)           \
+    BEGIN_PLS();                              \
+    cmd;                                      \
+    CHECK_PLS_ENABLED();                      \
+    glEndPixelLocalStorageANGLE(4, storeOps); \
+    CHECK_PLS_DISABLED()
+
+#define CHECK_DOES_NOT_END_PLS_WITH_READ_FBO(cmd)    \
+    BEGIN_PLS();                                     \
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, readFBO); \
+    cmd;                                             \
+    CHECK_PLS_ENABLED();                             \
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);     \
+    CHECK_PLS_ENABLED();                             \
+    glEndPixelLocalStorageANGLE(4, storeOps);        \
+    CHECK_PLS_DISABLED()
+
+void PixelLocalStorageTest::doImplicitDisablesTest_Framebuffer()
+{
+    SETUP_IMPLICIT_DISABLES_TEST(GL_DRAW_FRAMEBUFFER);
+
+    // Binding a READ_FRAMEBUFFER does not end PLS.
+    CHECK_DOES_NOT_END_PLS(glBindFramebuffer(GL_READ_FRAMEBUFFER, 0));
+    EXPECT_GL_INTEGER(GL_READ_FRAMEBUFFER_BINDING, 0);
+    EXPECT_GL_INTEGER(GL_DRAW_FRAMEBUFFER_BINDING, fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    // Binding the same framebuffer still ends PLS.
+    CHECK_ENDS_PLS(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo));
+    EXPECT_GL_INTEGER(GL_DRAW_FRAMEBUFFER_BINDING, fbo);
+    EXPECT_GL_INTEGER(GL_READ_FRAMEBUFFER_BINDING, fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    CHECK_ENDS_PLS(glBindFramebuffer(GL_FRAMEBUFFER, fbo));
+    EXPECT_GL_INTEGER(GL_DRAW_FRAMEBUFFER_BINDING, fbo);
+    EXPECT_GL_INTEGER(GL_READ_FRAMEBUFFER_BINDING, fbo);
+    CHECK_ENDS_PLS(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0));
+    EXPECT_GL_INTEGER(GL_DRAW_FRAMEBUFFER_BINDING, 0);
+    EXPECT_GL_INTEGER(GL_READ_FRAMEBUFFER_BINDING, fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    CHECK_ENDS_PLS(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+    EXPECT_GL_INTEGER(GL_DRAW_FRAMEBUFFER_BINDING, 0);
+    EXPECT_GL_INTEGER(GL_READ_FRAMEBUFFER_BINDING, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    CHECK_ENDS_PLS(glFramebufferMemorylessPixelLocalStorageANGLE(3, GL_RGBA8));
+    GLuint tex3ID = tex3;
+    CHECK_DOES_NOT_END_PLS(glDeleteTextures(1, &tex3ID));
+
+    CHECK_ENDS_PLS(glDrawBuffers(1, GLenumArray({GL_COLOR_ATTACHMENT0})));
+    glDrawBuffers(0, nullptr);
+
+    CHECK_ENDS_PLS(glDrawBuffers(0, nullptr));
+
+    if (EnsureGLExtensionEnabled("GL_MESA_framebuffer_flip_y"))
+    {
+        CHECK_ENDS_PLS(
+            glFramebufferParameteriMESA(GL_FRAMEBUFFER, GL_FRAMEBUFFER_FLIP_Y_MESA, GL_TRUE));
+        EXPECT_FRAMEBUFFER_PARAMETER_INT_MESA(GL_FRAMEBUFFER, GL_FRAMEBUFFER_FLIP_Y_MESA, GL_TRUE);
+        glFramebufferParameteriMESA(GL_FRAMEBUFFER, GL_FRAMEBUFFER_FLIP_Y_MESA, GL_FALSE);
+        CHECK_ENDS_PLS(
+            glFramebufferParameteriMESA(GL_DRAW_FRAMEBUFFER, GL_FRAMEBUFFER_FLIP_Y_MESA, GL_TRUE));
+        EXPECT_FRAMEBUFFER_PARAMETER_INT_MESA(GL_DRAW_FRAMEBUFFER, GL_FRAMEBUFFER_FLIP_Y_MESA,
+                                              GL_TRUE);
+        glFramebufferParameteriMESA(GL_DRAW_FRAMEBUFFER, GL_FRAMEBUFFER_FLIP_Y_MESA, GL_FALSE);
+        CHECK_ENDS_PLS(
+            glFramebufferParameteriMESA(GL_READ_FRAMEBUFFER, GL_FRAMEBUFFER_FLIP_Y_MESA, GL_TRUE));
+        EXPECT_FRAMEBUFFER_PARAMETER_INT_MESA(GL_READ_FRAMEBUFFER, GL_FRAMEBUFFER_FLIP_Y_MESA,
+                                              GL_TRUE);
+        glFramebufferParameteriMESA(GL_READ_FRAMEBUFFER, GL_FRAMEBUFFER_FLIP_Y_MESA, GL_FALSE);
+        CHECK_DOES_NOT_END_PLS_WITH_READ_FBO(
+            glFramebufferParameteriMESA(GL_READ_FRAMEBUFFER, GL_FRAMEBUFFER_FLIP_Y_MESA, GL_TRUE));
+    }
+
+    if (isContextVersionAtLeast(3, 1))
+    {
+        CHECK_ENDS_PLS(glFramebufferParameteri(GL_FRAMEBUFFER, GL_FRAMEBUFFER_DEFAULT_WIDTH, 23));
+        EXPECT_FRAMEBUFFER_PARAMETER_INT(GL_FRAMEBUFFER, GL_FRAMEBUFFER_DEFAULT_WIDTH, 23);
+        glFramebufferParameteri(GL_FRAMEBUFFER, GL_FRAMEBUFFER_DEFAULT_WIDTH, 0);
+        CHECK_ENDS_PLS(
+            glFramebufferParameteri(GL_DRAW_FRAMEBUFFER, GL_FRAMEBUFFER_DEFAULT_WIDTH, 24));
+        EXPECT_FRAMEBUFFER_PARAMETER_INT(GL_DRAW_FRAMEBUFFER, GL_FRAMEBUFFER_DEFAULT_WIDTH, 24);
+        glFramebufferParameteri(GL_DRAW_FRAMEBUFFER, GL_FRAMEBUFFER_DEFAULT_WIDTH, 0);
+        CHECK_ENDS_PLS(
+            glFramebufferParameteri(GL_READ_FRAMEBUFFER, GL_FRAMEBUFFER_DEFAULT_WIDTH, 25));
+        EXPECT_FRAMEBUFFER_PARAMETER_INT(GL_READ_FRAMEBUFFER, GL_FRAMEBUFFER_DEFAULT_WIDTH, 25);
+        glFramebufferParameteri(GL_READ_FRAMEBUFFER, GL_FRAMEBUFFER_DEFAULT_WIDTH, 0);
+        CHECK_DOES_NOT_END_PLS_WITH_READ_FBO(
+            glFramebufferParameteri(GL_READ_FRAMEBUFFER, GL_FRAMEBUFFER_DEFAULT_WIDTH, 23));
+    }
+
+    glFramebufferMemorylessPixelLocalStorageANGLE(2, GL_RGBA8);
+    CHECK_ENDS_PLS(glFramebufferTexturePixelLocalStorageANGLE(2, tex2, 0, 0););
+    EXPECT_PLS_INTEGER(2, GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, tex2);
+
+    GLuint tex2ID = tex2;
+    CHECK_ENDS_PLS(glDeleteTextures(1, &tex2ID));
+    EXPECT_PLS_INTEGER(2, GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, 0);
+    glFramebufferMemorylessPixelLocalStorageANGLE(2, GL_RGBA8);
+
+    GLuint fboID = fbo;
+    CHECK_ENDS_PLS(glDeleteFramebuffers(1, &fboID));
+}
+
+void PixelLocalStorageTest::doImplicitDisablesTest_TextureAttachments()
+{
+    SETUP_IMPLICIT_DISABLES_TEST(GL_FRAMEBUFFER);
+
+    GLTexture tex2D;
+    glBindTexture(GL_TEXTURE_2D, tex2D);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, W, H, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    CHECK_ENDS_PLS(
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex2D, 0));
+    EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex2D);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+    CHECK_ENDS_PLS(
+        glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex2D, 0));
+    EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex2D);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+    CHECK_ENDS_PLS(
+        glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex2D, 0));
+    EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex2D);
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+    CHECK_DOES_NOT_END_PLS_WITH_READ_FBO(
+        glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex2D, 0));
+
+    GLTexture tex2DArray;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, tex2DArray);
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, W, H, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    CHECK_ENDS_PLS(
+        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex2DArray, 0, 0));
+    EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex2DArray);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+    CHECK_ENDS_PLS(
+        glFramebufferTextureLayer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex2DArray, 0, 0));
+    EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex2DArray);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+    CHECK_ENDS_PLS(
+        glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex2DArray, 0, 0));
+    EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex2DArray);
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+    CHECK_DOES_NOT_END_PLS_WITH_READ_FBO(
+        glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex2DArray, 0, 0));
+
+    GLTexture tex3d;
+    glBindTexture(GL_TEXTURE_3D, tex3d);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA, W, H, 10, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    CHECK_ENDS_PLS(glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex3d, 0, 0));
+    EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex3d);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+    CHECK_ENDS_PLS(
+        glFramebufferTextureLayer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex3d, 0, 0));
+    EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex3d);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+    CHECK_ENDS_PLS(
+        glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex3d, 0, 0));
+    EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex3d);
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+    CHECK_DOES_NOT_END_PLS_WITH_READ_FBO(
+        glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex3d, 0, 0));
+
+    if (EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"))
+    {
+        PLSTestTexture texMSAA(GL_RGBA8);
+        CHECK_ENDS_PLS(glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                                            GL_TEXTURE_2D, texMSAA, 0, 4));
+        EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texMSAA);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+        CHECK_ENDS_PLS(glFramebufferTexture2DMultisampleEXT(
+            GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texMSAA, 0, 4));
+        EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texMSAA);
+        glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+        CHECK_ENDS_PLS(glFramebufferTexture2DMultisampleEXT(
+            GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texMSAA, 0, 4));
+        EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texMSAA);
+        glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+        CHECK_DOES_NOT_END_PLS_WITH_READ_FBO(glFramebufferTexture2DMultisampleEXT(
+            GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texMSAA, 0, 4));
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+        ASSERT_GL_NO_ERROR();
+    }
+
+    if (EnsureGLExtensionEnabled("GL_OVR_multiview2"))
+    {
+        CHECK_ENDS_PLS(glFramebufferTextureMultiviewOVR(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                                        tex2DArray, 0, 0, 1));
+        EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex2DArray);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+        CHECK_ENDS_PLS(glFramebufferTextureMultiviewOVR(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                                        tex2DArray, 0, 0, 1));
+        EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex2DArray);
+        glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+        CHECK_ENDS_PLS(glFramebufferTextureMultiviewOVR(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                                        tex2DArray, 0, 0, 1));
+        EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex2DArray);
+        glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+        CHECK_DOES_NOT_END_PLS_WITH_READ_FBO(glFramebufferTextureMultiviewOVR(
+            GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex2DArray, 0, 0, 1));
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+    }
+
+    if (EnsureGLExtensionEnabled("GL_OES_texture_3D"))
+    {
+        CHECK_ENDS_PLS(glFramebufferTexture3DOES(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                                 GL_TEXTURE_3D, tex3d, 0, 0));
+        EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex3d);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+        CHECK_ENDS_PLS(glFramebufferTexture3DOES(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                                 GL_TEXTURE_3D, tex3d, 0, 0));
+        EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex3d);
+        glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+        CHECK_ENDS_PLS(glFramebufferTexture3DOES(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                                 GL_TEXTURE_3D, tex3d, 0, 0));
+        EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex3d);
+        glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, 0, 0);
+        CHECK_DOES_NOT_END_PLS_WITH_READ_FBO(glFramebufferTexture3DOES(
+            GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_3D, tex3d, 0, 0));
+    }
+}
+
+void PixelLocalStorageTest::doImplicitDisablesTest_RenderbufferAttachments()
+{
+    SETUP_IMPLICIT_DISABLES_TEST(GL_FRAMEBUFFER);
+
+    GLuint colorBuffer;
+    glGenRenderbuffers(1, &colorBuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, colorBuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, W, H);
+    CHECK_ENDS_PLS(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                                             colorBuffer));
+    EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, colorBuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, 0);
+    CHECK_ENDS_PLS(glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                             GL_RENDERBUFFER, colorBuffer));
+    EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, colorBuffer);
+    glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, 0);
+    CHECK_ENDS_PLS(glFramebufferRenderbuffer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                             GL_RENDERBUFFER, colorBuffer));
+    EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, colorBuffer);
+    glFramebufferRenderbuffer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, 0);
+    CHECK_DOES_NOT_END_PLS_WITH_READ_FBO(glFramebufferRenderbuffer(
+        GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorBuffer));
+
+    GLuint depthStencilBuffer;
+    glGenRenderbuffers(1, &depthStencilBuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, depthStencilBuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, W, H);
+    CHECK_ENDS_PLS(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
+                                             GL_RENDERBUFFER, depthStencilBuffer));
+    EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
+                                       depthStencilBuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, 0);
+    CHECK_ENDS_PLS(glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
+                                             GL_RENDERBUFFER, depthStencilBuffer));
+    EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
+                                       depthStencilBuffer);
+    glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, 0);
+    CHECK_ENDS_PLS(glFramebufferRenderbuffer(GL_READ_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
+                                             GL_RENDERBUFFER, depthStencilBuffer));
+    EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(GL_READ_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
+                                       depthStencilBuffer);
+    glFramebufferRenderbuffer(GL_READ_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, 0);
+    CHECK_DOES_NOT_END_PLS_WITH_READ_FBO(glFramebufferRenderbuffer(
+        GL_READ_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthStencilBuffer));
+}
+
+#undef CHECK_DOES_NOT_END_PLS_WITH_READ_FBO
+#undef CHECK_DOES_NOT_END_PLS
+#undef BEGIN_PLS
+#undef CHECK_PLS_DISABLED
+#undef CHECK_PLS_ENABLED
+#undef CHECK_ENDS_PLS
+
 // Check that draw state does not affect PLS loads and stores, particularly for
 // EXT_shader_pixel_local_storage, where they are implemented as fullscreen draws.
 TEST_P(PixelLocalStorageTest, DrawStateReset)
@@ -2580,6 +2905,32 @@ TEST_P(PixelLocalStorageTest, BlendColorMaskAndClear)
     }
 
     ASSERT_GL_NO_ERROR();
+}
+
+// Check that changing framebuffer state implicitly disable pixel local storage.
+TEST_P(PixelLocalStorageTest, ImplicitDisables_Framebuffer)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+
+    doImplicitDisablesTest_Framebuffer();
+}
+
+// Check that changing framebuffer texture attachments implicitly disable pixel
+// local storage.
+TEST_P(PixelLocalStorageTest, ImplicitDisables_TextureAttachments)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+
+    doImplicitDisablesTest_TextureAttachments();
+}
+
+// Check that changing framebuffer renderbuffer attachments implicitly disable
+// pixel local storage.
+TEST_P(PixelLocalStorageTest, ImplicitDisables_RenderbufferAttachments)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+
+    doImplicitDisablesTest_RenderbufferAttachments();
 }
 
 // Check that PLS and EXT_shader_framebuffer_fetch can be used together.
@@ -3401,6 +3752,32 @@ TEST_P(PixelLocalStorageTestES31, DrawStateReset)
     doDrawStateTest();
 }
 
+// Check that changing framebuffer state implicitly disable pixel local storage.
+TEST_P(PixelLocalStorageTestES31, ImplicitDisables_Framebuffer)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+
+    doImplicitDisablesTest_Framebuffer();
+}
+
+// Check that changing framebuffer texture attachments implicitly disable pixel
+// local storage.
+TEST_P(PixelLocalStorageTestES31, ImplicitDisables_TextureAttachments)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+
+    doImplicitDisablesTest_TextureAttachments();
+}
+
+// Check that changing framebuffer renderbuffer attachments implicitly disable
+// pixel local storage.
+TEST_P(PixelLocalStorageTestES31, ImplicitDisables_RenderbufferAttachments)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+
+    doImplicitDisablesTest_RenderbufferAttachments();
+}
+
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(PixelLocalStorageTestES31);
 PLS_INSTANTIATE_RENDERING_TEST_ES31(PixelLocalStorageTestES31);
 
@@ -3732,20 +4109,6 @@ TEST_P(PixelLocalStorageValidationTest, FramebufferMemorylessPixelLocalStorageAN
     glFramebufferPixelLocalStorageRestoreANGLE();
     EXPECT_PLS_INTEGER(0, GL_PIXEL_LOCAL_FORMAT_ANGLE, GL_RGBA8I);
 
-    // INVALID_OPERATION is generated if PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE is nonzero.
-    {
-        PLSTestTexture tmp(GL_RGBA8);
-        glFramebufferTexturePixelLocalStorageANGLE(1, tmp, 0, 0);
-        glBeginPixelLocalStorageANGLE(2, GLenumArray({GL_DONT_CARE, GL_DONT_CARE}));
-        glFramebufferMemorylessPixelLocalStorageANGLE(3, GL_R32UI);
-        EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
-        EXPECT_GL_SINGLE_ERROR_MSG("Operation not permitted while pixel local storage is active.");
-        // The store operation is ignored if its plane is memoryless or disabled.
-        glEndPixelLocalStorageANGLE(
-            2, GLenumArray({GL_STORE_OP_STORE_ANGLE, GL_STORE_OP_STORE_ANGLE}));
-        glFramebufferTexturePixelLocalStorageANGLE(1, 0, 0, 0);
-    }
-
     // INVALID_VALUE is generated if <plane> < 0 or <plane> >= MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE.
     glFramebufferMemorylessPixelLocalStorageANGLE(-1, GL_R32UI);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_VALUE);
@@ -3882,19 +4245,6 @@ TEST_P(PixelLocalStorageValidationTest, FramebufferTexturePixelLocalStorageANGLE
     EXPECT_GL_SINGLE_ERROR_MSG("Pixel local storage on the draw framebuffer is interrupted.");
     glFramebufferPixelLocalStorageRestoreANGLE();
     EXPECT_PLS_INTEGER(1, GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, tex);
-
-    // INVALID_OPERATION is generated if PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE is nonzero.
-    {
-        PLSTestTexture tmp(GL_RGBA8);
-        glFramebufferTexturePixelLocalStorageANGLE(0, tex, 0, 0);
-        glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_DONT_CARE}));
-        glFramebufferTexturePixelLocalStorageANGLE(1, tmp, 0, 0);
-        EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
-        EXPECT_GL_SINGLE_ERROR_MSG("Operation not permitted while pixel local storage is active.");
-        // The store operation is ignored if its plane is memoryless or disabled.
-        glEndPixelLocalStorageANGLE(1, GLenumArray({GL_DONT_CARE}));
-        glFramebufferTexturePixelLocalStorageANGLE(0, 0, 0, 0);
-    }
 
     // INVALID_VALUE is generated if <plane> < 0 or <plane> >= MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE.
     glFramebufferTexturePixelLocalStorageANGLE(-1, tex, 1, 0);
@@ -5377,8 +5727,6 @@ TEST_P(PixelLocalStorageValidationTest, BannedCommands)
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr));
     EXPECT_BANNED_DEFAULT_MSG(glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, 0, 0));
     EXPECT_BANNED_DEFAULT_MSG(glBlitFramebuffer(0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
-    EXPECT_BANNED_DEFAULT_MSG(glBindFramebuffer(GL_FRAMEBUFFER, 0));
-    EXPECT_BANNED_DEFAULT_MSG(glDrawBuffers(0, nullptr));
 
     // INVALID_OPERATION is generated by Enable(), Disable() if <cap> is not one of: CULL_FACE,
     // DEPTH_CLAMP_EXT, DEPTH_TEST, POLYGON_OFFSET_POINT_NV, POLYGON_OFFSET_LINE_NV,

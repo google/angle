@@ -789,10 +789,7 @@ void GL_APIENTRY GL_DrawBuffers(GLsizei n, const GLenum *bufs)
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLDrawBuffers) &&
-              ValidateDrawBuffers(context, angle::EntryPoint::GLDrawBuffers, n, bufs)));
+             ValidateDrawBuffers(context, angle::EntryPoint::GLDrawBuffers, n, bufs));
         if (isCallValid)
         {
             context->drawBuffers(n, bufs);
@@ -1023,11 +1020,8 @@ void GL_APIENTRY GL_FramebufferTextureLayer(GLenum target,
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLFramebufferTextureLayer) &&
-              ValidateFramebufferTextureLayer(context, angle::EntryPoint::GLFramebufferTextureLayer,
-                                              target, attachment, texturePacked, level, layer)));
+             ValidateFramebufferTextureLayer(context, angle::EntryPoint::GLFramebufferTextureLayer,
+                                             target, attachment, texturePacked, level, layer));
         if (isCallValid)
         {
             context->framebufferTextureLayer(target, attachment, texturePacked, level, layer);

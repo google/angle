@@ -363,11 +363,8 @@ void GL_APIENTRY GL_FramebufferParameteri(GLenum target, GLenum pname, GLint par
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLFramebufferParameteri) &&
-              ValidateFramebufferParameteri(context, angle::EntryPoint::GLFramebufferParameteri,
-                                            target, pname, param)));
+             ValidateFramebufferParameteri(context, angle::EntryPoint::GLFramebufferParameteri,
+                                           target, pname, param));
         if (isCallValid)
         {
             context->framebufferParameteri(target, pname, param);

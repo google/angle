@@ -546,11 +546,8 @@ void GL_APIENTRY GL_FramebufferTexture(GLenum target,
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLFramebufferTexture) &&
-              ValidateFramebufferTexture(context, angle::EntryPoint::GLFramebufferTexture, target,
-                                         attachment, texturePacked, level)));
+             ValidateFramebufferTexture(context, angle::EntryPoint::GLFramebufferTexture, target,
+                                        attachment, texturePacked, level));
         if (isCallValid)
         {
             context->framebufferTexture(target, attachment, texturePacked, level);

@@ -161,7 +161,7 @@ class PixelLocalStorage
     void setClearValuei(GLint plane, const GLint val[4]) { mPlanes[plane].setClearValuei(val); }
     void setClearValueui(GLint plane, const GLuint val[4]) { mPlanes[plane].setClearValueui(val); }
     void begin(Context *, GLsizei n, const GLenum loadops[]);
-    void end(Context *, const GLenum storeops[]);
+    void end(Context *, GLsizei n, const GLenum storeops[]);
     void barrier(Context *);
     void interrupt(Context *);
     void restore(Context *);
@@ -188,7 +188,7 @@ class PixelLocalStorage
 
     // ANGLE_shader_pixel_local_storage API.
     virtual void onBegin(Context *, GLsizei n, const GLenum loadops[], Extents plsSize) = 0;
-    virtual void onEnd(Context *, const GLenum storeops[])                              = 0;
+    virtual void onEnd(Context *, GLsizei n, const GLenum storeops[])                   = 0;
     virtual void onBarrier(Context *)                                                   = 0;
 
     const ShPixelLocalStorageOptions mPLSOptions;

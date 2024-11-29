@@ -556,11 +556,10 @@ void PixelLocalStorage::begin(Context *context, GLsizei n, const GLenum loadops[
     onBegin(context, n, loadops, plsExtents);
 }
 
-void PixelLocalStorage::end(Context *context, const GLenum storeops[])
+void PixelLocalStorage::end(Context *context, GLsizei n, const GLenum storeops[])
 {
-    onEnd(context, storeops);
+    onEnd(context, n, storeops);
 
-    GLsizei n = context->getState().getPixelLocalStorageActivePlanes();
     for (GLsizei i = 0; i < n; ++i)
     {
         mPlanes[i].markActive(false);
@@ -580,9 +579,9 @@ void PixelLocalStorage::interrupt(Context *context)
         mActivePlanesAtInterrupt = context->getState().getPixelLocalStorageActivePlanes();
         ASSERT(0 <= mActivePlanesAtInterrupt &&
                mActivePlanesAtInterrupt <= IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES);
-        if (mActivePlanesAtInterrupt >= 1)
+        if (mActivePlanesAtInterrupt != 0)
         {
-            context->endPixelLocalStorageWithStoreOpsStore();
+            context->endPixelLocalStorageImplicit();
         }
     }
     ++mInterruptCount;
@@ -782,10 +781,8 @@ class PixelLocalStorageImageLoadStore : public PixelLocalStorage
         context->memoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
     }
 
-    void onEnd(Context *context, const GLenum storeops[]) override
+    void onEnd(Context *context, GLsizei n, const GLenum storeops[]) override
     {
-        GLsizei n = context->getState().getPixelLocalStorageActivePlanes();
-
         // Restore the image bindings. Since glBindImageTexture and any commands that modify
         // textures are banned while PLS is active, these will all still be alive and valid.
         ASSERT(mSavedImageBindings.size() == static_cast<size_t>(n));
@@ -937,9 +934,8 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
         }
     }
 
-    void onEnd(Context *context, const GLenum storeops[]) override
+    void onEnd(Context *context, GLsizei n, const GLenum storeops[]) override
     {
-        GLsizei n        = context->getState().getPixelLocalStorageActivePlanes();
         const Caps &caps = context->getCaps();
 
         // Invalidate the non-preserved PLS attachments.

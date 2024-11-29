@@ -2315,7 +2315,7 @@ bool ValidateFramebufferMemorylessPixelLocalStorageANGLE(const Context *context,
                                                          GLint plane,
                                                          GLenum internalformat)
 {
-    if (!ValidatePLSCommon(context, entryPoint, plane, PLSExpectedStatus::Inactive))
+    if (!ValidatePLSCommon(context, entryPoint, plane, PLSExpectedStatus::Any))
     {
         return false;
     }
@@ -2340,7 +2340,7 @@ bool ValidateFramebufferTexturePixelLocalStorageANGLE(const Context *context,
                                                       GLint level,
                                                       GLint layer)
 {
-    if (!ValidatePLSCommon(context, entryPoint, plane, PLSExpectedStatus::Inactive))
+    if (!ValidatePLSCommon(context, entryPoint, plane, PLSExpectedStatus::Any))
     {
         return false;
     }
