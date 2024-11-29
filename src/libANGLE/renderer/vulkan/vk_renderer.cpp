@@ -274,7 +274,6 @@ constexpr const char *kSkippedMessages[] = {
     "Undefined-Value-ShaderFragmentOutputMismatch",
     // https://anglebug.com/336652255
     "VUID-vkCmdDraw-None-09600",
-    "UNASSIGNED-CoreValidation-DrawState-InvalidImageLayout",
     // https://issuetracker.google.com/336847261
     "VUID-VkImageCreateInfo-pNext-02397",
     "VUID-vkCmdDraw-None-06550",
