@@ -1923,7 +1923,7 @@ void D16::WriteDepthStencil(D16 *dst, const DepthStencil *src)
 
 void D24X8::ReadDepthStencil(DepthStencil *dst, const D24X8 *src)
 {
-    dst->depth = gl::normalizedToFloat<24>(src->D & 0x00ffffff);
+    dst->depth = gl::normalizedToFloat<24>(src->D);
 }
 
 void D24X8::WriteDepthStencil(D24X8 *dst, const DepthStencil *src)
