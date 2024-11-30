@@ -1254,7 +1254,7 @@ cl_int CL_API_CALL clEnqueueUnmapMemObject(cl_command_queue command_queue,
     ANGLE_CL_VALIDATE_ERROR(EnqueueUnmapMemObject, command_queue, memobj, mapped_ptr,
                             num_events_in_wait_list, event_wait_list, event);
 
-    cl::gClErrorTls    = CL_SUCCESS;
+    cl::gClErrorTls = CL_SUCCESS;
     cl_int returnValue = EnqueueUnmapMemObject(command_queue, memobj, mapped_ptr,
                                                num_events_in_wait_list, event_wait_list, event);
     ANGLE_CAPTURE_CL(EnqueueUnmapMemObject, true, command_queue, memobj, mapped_ptr,

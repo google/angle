@@ -255,13 +255,14 @@ void GL_APIENTRY GL_BlitFramebuffer(GLint srcX0,
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
+        if (context->getState().getPixelLocalStorageActivePlanes() != 0)
+        {
+            context->endPixelLocalStorageImplicit();
+        }
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLBlitFramebuffer) &&
-              ValidateBlitFramebuffer(context, angle::EntryPoint::GLBlitFramebuffer, srcX0, srcY0,
-                                      srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter)));
+             ValidateBlitFramebuffer(context, angle::EntryPoint::GLBlitFramebuffer, srcX0, srcY0,
+                                     srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter));
         if (isCallValid)
         {
             context->blitFramebuffer(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask,
@@ -586,14 +587,14 @@ void GL_APIENTRY GL_CopyTexSubImage3D(GLenum target,
     {
         TextureTarget targetPacked = PackParam<TextureTarget>(target);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLCopyTexSubImage3D) &&
-              ValidateCopyTexSubImage3D(context, angle::EntryPoint::GLCopyTexSubImage3D,
-                                        targetPacked, level, xoffset, yoffset, zoffset, x, y, width,
-                                        height)));
+        if (context->getState().getPixelLocalStorageActivePlanes() != 0)
+        {
+            context->endPixelLocalStorageImplicit();
+        }
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateCopyTexSubImage3D(
+                                context, angle::EntryPoint::GLCopyTexSubImage3D, targetPacked,
+                                level, xoffset, yoffset, zoffset, x, y, width, height));
         if (isCallValid)
         {
             context->copyTexSubImage3D(targetPacked, level, xoffset, yoffset, zoffset, x, y, width,
@@ -788,6 +789,10 @@ void GL_APIENTRY GL_DrawBuffers(GLsizei n, const GLenum *bufs)
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
+        if (context->getState().getPixelLocalStorageActivePlanes() != 0)
+        {
+            context->endPixelLocalStorageImplicit();
+        }
         bool isCallValid =
             (context->skipValidation() ||
              ValidateDrawBuffers(context, angle::EntryPoint::GLDrawBuffers, n, bufs));
@@ -1019,6 +1024,10 @@ void GL_APIENTRY GL_FramebufferTextureLayer(GLenum target,
     {
         TextureID texturePacked = PackParam<TextureID>(texture);
         SCOPED_SHARE_CONTEXT_LOCK(context);
+        if (context->getState().getPixelLocalStorageActivePlanes() != 0)
+        {
+            context->endPixelLocalStorageImplicit();
+        }
         bool isCallValid =
             (context->skipValidation() ||
              ValidateFramebufferTextureLayer(context, angle::EntryPoint::GLFramebufferTextureLayer,
@@ -2272,12 +2281,8 @@ void GL_APIENTRY GL_ReadBuffer(GLenum src)
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLReadBuffer) &&
-              ValidateReadBuffer(context, angle::EntryPoint::GLReadBuffer, src)));
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateReadBuffer(context, angle::EntryPoint::GLReadBuffer, src));
         if (isCallValid)
         {
             context->readBuffer(src);

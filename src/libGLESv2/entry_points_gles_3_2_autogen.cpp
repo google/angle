@@ -545,6 +545,10 @@ void GL_APIENTRY GL_FramebufferTexture(GLenum target,
     {
         TextureID texturePacked = PackParam<TextureID>(texture);
         SCOPED_SHARE_CONTEXT_LOCK(context);
+        if (context->getState().getPixelLocalStorageActivePlanes() != 0)
+        {
+            context->endPixelLocalStorageImplicit();
+        }
         bool isCallValid =
             (context->skipValidation() ||
              ValidateFramebufferTexture(context, angle::EntryPoint::GLFramebufferTexture, target,

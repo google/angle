@@ -656,6 +656,7 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 
 42266150 PIXEL4ORXL VULKAN : PixelLocalStorageTest.MaxCombinedDrawBuffersAndPLSPlanes/* = SKIP
 42266150 PIXEL4ORXL VULKAN : PixelLocalStorageTest.BlendColorMaskAndClear/* = SKIP
+42266150 PIXEL4ORXL VULKAN : PixelLocalStorageTest.CopyTexSubImage/* = SKIP
 42266151 PIXEL4ORXL VULKAN : PixelLocalStorageTest.MipMapLevels/* = SKIP
 42266242 PIXEL4ORXL VULKAN : PixelLocalStorageTest.DrawStateReset/* = SKIP
 42266242 PIXEL4ORXL VULKAN : PixelLocalStorageTestES31.DrawStateReset/* = SKIP

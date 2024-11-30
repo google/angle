@@ -362,6 +362,10 @@ void GL_APIENTRY GL_FramebufferParameteri(GLenum target, GLenum pname, GLint par
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
+        if (context->getState().getPixelLocalStorageActivePlanes() != 0)
+        {
+            context->endPixelLocalStorageImplicit();
+        }
         bool isCallValid =
             (context->skipValidation() ||
              ValidateFramebufferParameteri(context, angle::EntryPoint::GLFramebufferParameteri,

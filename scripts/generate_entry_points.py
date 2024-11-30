@@ -71,6 +71,7 @@ PLS_ALLOW_LIST = {
     "BlendEquationSeparate",
     "BlendFunc",
     "BlendFuncSeparate",
+    "BlitFramebuffer",
     "BufferData",
     "BufferSubData",
     "CheckFramebufferStatus",
@@ -97,6 +98,8 @@ PLS_ALLOW_LIST = {
     "MapBufferRange",
     "PixelLocalStorageBarrierANGLE",
     "ProvokingVertexANGLE",
+    "ReadBuffer",
+    "ReadPixels",
     "Scissor",
     "StencilFunc",
     "StencilFuncSeparate",
@@ -116,6 +119,8 @@ PLS_ALLOW_WILDCARDS = [
     "BlendFunci*",
     "ClearBuffer*",
     "ColorMaski*",
+    "CopyTexImage*",
+    "CopyTexSubImage*",
     "DebugMessageCallback*",
     "DebugMessageControl*",
     "DebugMessageInsert*",
@@ -140,6 +145,23 @@ PLS_ALLOW_WILDCARDS = [
     "TexParameter*",
     "Uniform*",
     "VertexAttrib*",
+]
+
+# These entry points implicitly disable pixel local storage (if active) before running and before
+# validation.
+PLS_DISABLE_LIST = {
+    "glBlitFramebuffer",
+    "glBindFramebuffer",
+    "glCopyTexImage2D",
+    "glDrawBuffers",
+    "glFramebufferMemorylessPixelLocalStorageANGLE",
+    "glFramebufferRenderbuffer",
+    "glReadPixels",
+}
+PLS_DISABLE_WILDCARDS = [
+    "glCopyTexSubImage*",
+    "glFramebufferParameter*",
+    "glFramebufferTexture*",
 ]
 
 # These are the entry points which purely set state in the current context with
@@ -365,7 +387,7 @@ void GL_APIENTRY GL_{name}({params})
 
     if ({valid_context_check})
     {{{packed_gl_enum_conversions}
-        {context_lock}
+        {context_lock}{implicit_pls_disable}
         bool isCallValid = (context->skipValidation() || {validation_expression});
         if (isCallValid)
         {{
@@ -1685,6 +1707,11 @@ def is_allowed_with_active_pixel_local_storage(name):
         [fnmatch.fnmatchcase(name, entry) for entry in PLS_ALLOW_WILDCARDS])
 
 
+def is_implicit_pls_disable_command(name):
+    return name in PLS_DISABLE_LIST or any(
+        [fnmatch.fnmatchcase(name, entry) for entry in PLS_DISABLE_WILDCARDS])
+
+
 def is_context_private_state_command(api, name):
     name = strip_suffix(api, name)
     return name in CONTEXT_PRIVATE_LIST or any(
@@ -2097,6 +2124,8 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
             get_egl_entry_point_labeled_object(ep_to_object, cmd_name, params, packed_enums),
         "context_lock":
             get_context_lock(api, cmd_name),
+        "implicit_pls_disable":
+            get_implicit_pls_disable(cmd_name),
         "preamble":
             get_preamble(api, cmd_name, params),
         "epilog":
@@ -3332,6 +3361,16 @@ def get_prepare_swap_buffers_call(api, cmd_name, params):
         prepareCall = "if (attribute == EGL_BUFFER_AGE_EXT) {" + prepareCall + "}"
 
     return prepareCall
+
+
+def get_implicit_pls_disable(cmd_name):
+    if not is_implicit_pls_disable_command(cmd_name):
+        return ""
+
+    return "if (context->getState().getPixelLocalStorageActivePlanes() != 0)" \
+           "{"                                                                \
+               "context->endPixelLocalStorageImplicit();"                     \
+           "}"
 
 
 def get_preamble(api, cmd_name, params):
