@@ -157,8 +157,21 @@ egl::Error HardwareBufferImageSiblingVkAndroid::ValidateHardwareBuffer(
 {
     struct ANativeWindowBuffer *windowBuffer =
         angle::android::ClientBufferToANativeWindowBuffer(buffer);
-    struct AHardwareBuffer *hardwareBuffer =
-        angle::android::ANativeWindowBufferToAHardwareBuffer(windowBuffer);
+    struct AHardwareBuffer *hardwareBuffer = nullptr;
+    if (windowBuffer != nullptr)
+    {
+        hardwareBuffer = angle::android::ANativeWindowBufferToAHardwareBuffer(windowBuffer);
+        if (hardwareBuffer == nullptr)
+        {
+            return egl::EglBadParameter()
+                   << "Failed to obtain hardware buffer through given window buffer.";
+        }
+    }
+    else
+    {
+        return egl::EglBadParameter()
+               << "Failed to obtain Window buffer through given client buffer handler.";
+    }
 
     VkAndroidHardwareBufferFormatPropertiesANDROID bufferFormatProperties = {};
     bufferFormatProperties.sType =
