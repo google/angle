@@ -353,6 +353,7 @@ TEMPLATE_ENTRY_POINT_DECL = """{angle_export}{return_type} {export_def} {name}({
 TEMPLATE_GLES_ENTRY_POINT_NO_RETURN = """\
 void GL_APIENTRY GL_{name}({params})
 {{
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = {context_getter};
     {event_comment}EVENT(context, GL{name}, "context = %d{comma_if_needed}{format_params}", CID(context){comma_if_needed}{pass_params});
 
@@ -377,6 +378,7 @@ void GL_APIENTRY GL_{name}({params})
 TEMPLATE_GLES_CONTEXT_PRIVATE_ENTRY_POINT_NO_RETURN = """\
 void GL_APIENTRY GL_{name}({params})
 {{
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = {context_getter};
     {event_comment}EVENT(context, GL{name}, "context = %d{comma_if_needed}{format_params}", CID(context){comma_if_needed}{pass_params});
 
@@ -400,6 +402,7 @@ void GL_APIENTRY GL_{name}({params})
 TEMPLATE_GLES_ENTRY_POINT_WITH_RETURN = """\
 {return_type} GL_APIENTRY GL_{name}({params})
 {{
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = {context_getter};
     {event_comment}EVENT(context, GL{name}, "context = %d{comma_if_needed}{format_params}", CID(context){comma_if_needed}{pass_params});
 
@@ -431,6 +434,7 @@ TEMPLATE_GLES_ENTRY_POINT_WITH_RETURN = """\
 TEMPLATE_GLES_CONTEXT_PRIVATE_ENTRY_POINT_WITH_RETURN = """\
 {return_type} GL_APIENTRY GL_{name}({params})
 {{
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = {context_getter};
     {event_comment}EVENT(context, GL{name}, "context = %d{comma_if_needed}{format_params}", CID(context){comma_if_needed}{pass_params});
 
@@ -463,6 +467,7 @@ void EGLAPIENTRY EGL_{name}({params})
 {{
     {preamble}
     Thread *thread = egl::GetCurrentThread();
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     {{
         ANGLE_SCOPED_GLOBAL_LOCK();
         EGL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
@@ -494,6 +499,7 @@ TEMPLATE_EGL_ENTRY_POINT_WITH_RETURN = """\
 {{
     {preamble}
     Thread *thread = egl::GetCurrentThread();
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     {return_type} returnValue;
     {{
         {egl_lock}
@@ -527,6 +533,7 @@ TEMPLATE_EGL_ENTRY_POINT_WITH_RETURN_NO_LOCKS = """\
 {{
     {preamble}
     Thread *thread = egl::GetCurrentThread();
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     {return_type} returnValue;
 
     EGL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
@@ -3171,11 +3178,14 @@ def get_unlocked_tail_call(api, cmd_name):
     #   eglGetCompositorTimingANDROID, eglGetFrameTimestampsANDROID -> Calls
     #   native EGL function in tail call
     #
+    # - glFlush, glFinish -> May perform the CPU throttling from the implicit swap buffers call when
+    #   the current Window Surface is in the single buffer mode.
+    #
     if (cmd_name in [
             'eglDestroySurface', 'eglMakeCurrent', 'eglReleaseThread', 'eglCreateWindowSurface',
             'eglCreatePlatformWindowSurface', 'eglCreatePlatformWindowSurfaceEXT',
             'eglPrepareSwapBuffersANGLE', 'eglSwapBuffersWithFrameTokenANGLE', 'glFinishFenceNV',
-            'glCompileShader', 'glLinkProgram', 'glShaderBinary'
+            'glCompileShader', 'glLinkProgram', 'glShaderBinary', 'glFlush', 'glFinish'
     ] or cmd_name.startswith('glTexImage2D') or cmd_name.startswith('glTexImage3D') or
             cmd_name.startswith('glTexSubImage2D') or cmd_name.startswith('glTexSubImage3D') or
             cmd_name.startswith('glCompressedTexImage2D') or
