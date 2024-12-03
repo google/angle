@@ -33,6 +33,8 @@
 374797737 : EGLSurfaceTest.CreateMultiWindowsSurfaceNoDestroy/* = SKIP
 // Currently fails on WebGPU as it's not fully implemented yet.
 
+381742474 : ShaderStorageBufferTest31.ExceedMaxShaderStorageBlockSize/* = SKIP
+
 // ES 3.2 tests are skipped on SwS.
 376899587 VULKAN SWIFTSHADER : */ES3_2* = SKIP
 
