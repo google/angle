@@ -48,6 +48,8 @@ constexpr char kImageGLColorspaceExt[]           = "EGL_EXT_image_gl_colorspace"
 constexpr char kEGLImageArrayExt[]               = "GL_EXT_EGL_image_array";
 constexpr char kEGLAndroidImageNativeBufferExt[] = "EGL_ANDROID_image_native_buffer";
 constexpr char kEGLImageStorageExt[]             = "GL_EXT_EGL_image_storage";
+constexpr char kEGLImageStorageCompressionExt[]  = "GL_EXT_EGL_image_storage_compression";
+constexpr char kTextureStorageCompressionExt[]   = "GL_EXT_texture_storage_compression";
 constexpr EGLint kDefaultAttribs[]               = {
     EGL_IMAGE_PRESERVED,
     EGL_TRUE,
@@ -455,6 +457,37 @@ void main()
                    : (srgbColorspace ? kSrgbColorCube : kLinearColorCube);
     }
 
+    void createEGLImage2DTextureStorage(size_t width,
+                                        size_t height,
+                                        GLenum format,
+                                        const GLint *attribs,
+                                        GLTexture &sourceTexture,
+                                        EGLImageKHR *outSourceImage)
+    {
+
+        glBindTexture(GL_TEXTURE_2D, sourceTexture);
+        glTexStorageAttribs2DEXT(GL_TEXTURE_2D, 1, format, static_cast<GLsizei>(width),
+                                 static_cast<GLsizei>(height), attribs);
+
+        ASSERT_GL_NO_ERROR();
+        // Disable mipmapping
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        ASSERT_GL_NO_ERROR();
+
+        // Create an image from the source texture
+        EGLWindow *window = getEGLWindow();
+
+        EGLImageKHR image =
+            eglCreateImageKHR(window->getDisplay(), window->getContext(), EGL_GL_TEXTURE_2D_KHR,
+                              reinterpretHelper<EGLClientBuffer>(sourceTexture), nullptr);
+
+        ASSERT_EGL_SUCCESS();
+
+        *outSourceImage = image;
+    }
+
     void createEGLImage2DTextureSource(size_t width,
                                        size_t height,
                                        GLenum format,
@@ -627,11 +660,14 @@ void main()
 
     void createEGLImageTargetTextureStorage(EGLImageKHR image,
                                             GLenum targetType,
-                                            GLuint targetTexture)
+                                            GLuint targetTexture,
+                                            const GLint *attribs)
     {
         // Create a target texture from the image
         glBindTexture(targetType, targetTexture);
-        glEGLImageTargetTexStorageEXT(targetType, image, nullptr);
+        glEGLImageTargetTexStorageEXT(targetType, image, attribs);
+
+        ASSERT_GL_NO_ERROR();
 
         // Disable mipmapping
         glTexParameteri(targetType, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -944,6 +980,10 @@ void main()
     void SourceRenderbufferTargetTexture_helper(const EGLint *attribs);
     void SourceRenderbufferTargetTextureExternal_helper(const EGLint *attribs);
     void SourceRenderbufferTargetRenderbuffer_helper(const EGLint *attribs);
+    void FixedRatedCompressionBasicHelper(const GLint *attribs);
+    void FixedRatedCompressionImageAttribCheck(EGLImageKHR image,
+                                               const GLint *attribs,
+                                               const GLint expectResult);
     void SourceRenderbufferTargetTextureExternalESSL3_helper(const EGLint *attribs);
     void ImageStorageGenerateMipmap_helper(const EGLint *attribs,
                                            const GLsizei width,
@@ -1250,6 +1290,16 @@ void main()
     }
 
     bool hasEglImageStorageExt() const { return IsGLExtensionEnabled(kEGLImageStorageExt); }
+
+    bool hasEglImageStorageCompressionExt() const
+    {
+        return IsGLExtensionEnabled(kEGLImageStorageCompressionExt);
+    }
+
+    bool hasTextureStorageCompressionExt() const
+    {
+        return IsGLExtensionEnabled(kTextureStorageCompressionExt);
+    }
 
     bool hasAndroidHardwareBufferSupport() const
     {
@@ -2435,7 +2485,7 @@ TEST_P(ImageTestES3, Source2DTarget2DStorageOrphan)
 
     // Create the target
     GLTexture target;
-    createEGLImageTargetTextureStorage(image, GL_TEXTURE_2D, target);
+    createEGLImageTargetTextureStorage(image, GL_TEXTURE_2D, target, nullptr);
 
     // Expect that the target texture has the same color as the source texture
     verifyResults2D(target, kLinearColor);
@@ -5195,7 +5245,7 @@ TEST_P(ImageTestES3, SourceAHBCubeTargetCube)
 
     // Create a texture target to bind the egl image
     GLTexture target;
-    createEGLImageTargetTextureStorage(image, GL_TEXTURE_CUBE_MAP, target);
+    createEGLImageTargetTextureStorage(image, GL_TEXTURE_CUBE_MAP, target, nullptr);
 
     // Upload texture data
     for (size_t faceIdx = 0; faceIdx < kCubeFaceCount; faceIdx++)
@@ -5241,7 +5291,7 @@ TEST_P(ImageTestES31, SourceAHBCubeArrayTargetCubeArray)
 
     // Create a texture target to bind the egl image
     GLTexture target;
-    createEGLImageTargetTextureStorage(image, GL_TEXTURE_CUBE_MAP_ARRAY, target);
+    createEGLImageTargetTextureStorage(image, GL_TEXTURE_CUBE_MAP_ARRAY, target, nullptr);
 
     // Upload texture data
     for (size_t faceIdx = 0; faceIdx < kCubeFaceCount; faceIdx++)
@@ -5287,7 +5337,7 @@ TEST_P(ImageTestES3, SourceAHBMipTarget2DMip)
 
     // Create a texture target to bind the egl image
     GLTexture target;
-    createEGLImageTargetTextureStorage(image, GL_TEXTURE_2D, target);
+    createEGLImageTargetTextureStorage(image, GL_TEXTURE_2D, target, nullptr);
 
     // Upload texture data
     // Set Mip level 0 to one color
@@ -5335,7 +5385,7 @@ TEST_P(ImageTestES3, SourceAHBMipTarget2DMipGenerateMipmap)
 
     // Create a texture target to bind the egl image
     GLTexture target;
-    createEGLImageTargetTextureStorage(image, GL_TEXTURE_2D, target);
+    createEGLImageTargetTextureStorage(image, GL_TEXTURE_2D, target, nullptr);
 
     // Upload texture data
     // Set Mip level 0 to one color
@@ -6187,6 +6237,121 @@ void ImageTest::SourceRenderbufferTargetRenderbuffer_helper(const EGLint *attrib
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);
+}
+
+void ImageTest::FixedRatedCompressionBasicHelper(const GLint *attribs)
+{
+    constexpr size_t width  = 16;
+    constexpr size_t height = 16;
+    GLTexture textureSource;
+    EGLImageKHR image;
+    EGLWindow *window = getEGLWindow();
+    createEGLImage2DTextureStorage(width, height, GL_RGBA8, attribs, textureSource, &image);
+
+    GLTexture textureAttachment;
+    createEGLImageTargetTextureStorage(image, GL_TEXTURE_2D, textureAttachment, attribs);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    ASSERT_GL_NO_ERROR();
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureAttachment,
+                           0);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0);
+    EXPECT_PIXEL_RECT_EQ(0, 0, width, height, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+    eglDestroyImageKHR(window->getDisplay(), image);
+}
+
+// Test basic usage of extension GL_EXT_EGL_image_storage_compression
+TEST_P(ImageTest, FixedRatedCompressionBasic)
+{
+    ANGLE_SKIP_TEST_IF(!hasEglImageStorageExt() || !hasEglImageStorageCompressionExt());
+    ANGLE_SKIP_TEST_IF(!hasTextureStorageCompressionExt());
+    constexpr GLint kAttribList[3][3] = {
+        {GL_NONE, GL_NONE, GL_NONE},
+        {GL_SURFACE_COMPRESSION_EXT, GL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT, GL_NONE},
+        {GL_SURFACE_COMPRESSION_EXT, GL_SURFACE_COMPRESSION_FIXED_RATE_DEFAULT_EXT, GL_NONE},
+    };
+    for (const GLint *attribs : kAttribList)
+    {
+        FixedRatedCompressionBasicHelper(attribs);
+    }
+}
+
+void ImageTest::FixedRatedCompressionImageAttribCheck(EGLImageKHR image,
+                                                      const GLint *attribs,
+                                                      const GLint expectResult)
+{
+    GLTexture textureAttachment;
+    // Create a target texture from the image
+    glBindTexture(GL_TEXTURE_2D, textureAttachment);
+    glEGLImageTargetTexStorageEXT(GL_TEXTURE_2D, image, attribs);
+    ASSERT_GL_ERROR(expectResult);
+}
+
+// Test whether the result is expected when the attributes mismatched with source
+TEST_P(ImageTest, FixedRatedCompressionMixedAttrib)
+{
+    ANGLE_SKIP_TEST_IF(!hasEglImageStorageExt() || !hasEglImageStorageCompressionExt());
+    ANGLE_SKIP_TEST_IF(!hasTextureStorageCompressionExt());
+    constexpr size_t width                 = 16;
+    constexpr size_t height                = 16;
+    EGLWindow *window                      = getEGLWindow();
+    constexpr GLint textureAttribList[][3] = {
+        {GL_NONE, GL_NONE, GL_NONE},
+        {GL_SURFACE_COMPRESSION_EXT, GL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT, GL_NONE},
+        {GL_SURFACE_COMPRESSION_EXT, GL_SURFACE_COMPRESSION_FIXED_RATE_DEFAULT_EXT, GL_NONE},
+    };
+    constexpr GLint imageAttribList[][3] = {
+        {GL_NONE, GL_NONE, GL_NONE},
+        {GL_SURFACE_COMPRESSION_EXT, GL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT, GL_NONE},
+    };
+
+    constexpr GLint invalidImageAttribList[][3] = {
+        {GL_SURFACE_COMPRESSION_EXT, GL_SURFACE_COMPRESSION_EXT, GL_NONE},
+        {GL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT, GL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT,
+         GL_NONE},
+    };
+
+    for (const GLint *textureAttribs : textureAttribList)
+    {
+        GLTexture textureSource;
+        EGLImageKHR image;
+        bool isFixRatedCompressed;
+        createEGLImage2DTextureStorage(width, height, GL_RGBA8, textureAttribs, textureSource,
+                                       &image);
+        /* Query compression rate */
+        GLint compressRate = GL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT;
+        glGetTexParameteriv(GL_TEXTURE_2D, GL_SURFACE_COMPRESSION_EXT, &compressRate);
+        ASSERT_GL_NO_ERROR();
+        isFixRatedCompressed = (compressRate == GL_SURFACE_COMPRESSION_FIXED_RATE_DEFAULT_EXT ||
+                                (compressRate >= GL_SURFACE_COMPRESSION_FIXED_RATE_1BPC_EXT &&
+                                 compressRate <= GL_SURFACE_COMPRESSION_FIXED_RATE_12BPC_EXT));
+
+        for (const GLint *attribs : imageAttribList)
+        {
+            if (isFixRatedCompressed && attribs[0] == GL_SURFACE_COMPRESSION_EXT &&
+                attribs[1] == GL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT)
+            {
+                FixedRatedCompressionImageAttribCheck(image, attribs, GL_INVALID_OPERATION);
+            }
+            else
+            {
+                FixedRatedCompressionImageAttribCheck(image, attribs, GL_NO_ERROR);
+            }
+        }
+
+        for (const GLint *attribs : invalidImageAttribList)
+        {
+            FixedRatedCompressionImageAttribCheck(image, attribs, GL_INVALID_VALUE);
+        }
+
+        eglDestroyImageKHR(window->getDisplay(), image);
+    }
 }
 
 // Delete the source texture and EGL image.  The image targets should still have the same data

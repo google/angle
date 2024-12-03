@@ -4096,11 +4096,34 @@ bool ValidateEGLImageTargetTexStorageEXT(const Context *context,
         return false;
     }
 
-    // attrib list validation
-    if (attrib_list != nullptr && attrib_list[0] != GL_NONE)
+    if (attrib_list != nullptr)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kAttributeListNotNull);
-        return false;
+        for (const GLint *attrib = attrib_list; attrib[0] != GL_NONE; attrib += 2)
+        {
+            switch (attrib[0])
+            {
+                case GL_SURFACE_COMPRESSION_EXT:
+                    switch (attrib[1])
+                    {
+                        case GL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT:
+                            if (imageObject->isFixedRatedCompression(context))
+                            {
+                                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kAttributeNotMatch);
+                                return false;
+                            }
+                            break;
+                        case GL_SURFACE_COMPRESSION_FIXED_RATE_DEFAULT_EXT:
+                            break;
+                        default:
+                            ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kAttributeNotValid);
+                            return false;
+                    }
+                    break;
+                default:
+                    ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kAttributeNotValid);
+                    return false;
+            }
+        }
     }
 
     GLsizei levelCount    = imageObject->getLevelCount();

@@ -153,6 +153,33 @@ egl::Error ImageVk::exportVkImage(void *vkImage, void *vkImageCreateInfo)
     return egl::NoError();
 }
 
+bool ImageVk::isFixedRatedCompression(const gl::Context *context)
+{
+    ContextVk *contextVk   = vk::GetImpl(context);
+    vk::Renderer *renderer = contextVk->getRenderer();
+
+    ASSERT(mImage != nullptr && mImage->valid());
+    ASSERT(renderer->getFeatures().supportsImageCompressionControl.enabled);
+
+    VkImageSubresource2EXT imageSubresource2      = {};
+    imageSubresource2.sType                       = VK_STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_EXT;
+    imageSubresource2.imageSubresource.aspectMask = mImage->getAspectFlags();
+
+    VkImageCompressionPropertiesEXT compressionProperties = {};
+    compressionProperties.sType               = VK_STRUCTURE_TYPE_IMAGE_COMPRESSION_PROPERTIES_EXT;
+    VkSubresourceLayout2EXT subresourceLayout = {};
+    subresourceLayout.sType                   = VK_STRUCTURE_TYPE_SUBRESOURCE_LAYOUT_2_EXT;
+    subresourceLayout.pNext                   = &compressionProperties;
+
+    vkGetImageSubresourceLayout2EXT(renderer->getDevice(), mImage->getImage().getHandle(),
+                                    &imageSubresource2, &subresourceLayout);
+
+    return compressionProperties.imageCompressionFixedRateFlags >
+                   VK_IMAGE_COMPRESSION_FIXED_RATE_NONE_EXT
+               ? true
+               : false;
+}
+
 gl::TextureType ImageVk::getImageTextureType() const
 {
     return mState.imageIndex.getType();

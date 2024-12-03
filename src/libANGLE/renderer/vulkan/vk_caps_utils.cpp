@@ -1383,6 +1383,8 @@ void Renderer::ensureCapsInitialized() const
 
     mNativeExtensions.textureStorageCompressionEXT =
         mFeatures.supportsImageCompressionControl.enabled;
+    mNativeExtensions.EGLImageStorageCompressionEXT =
+        mFeatures.supportsImageCompressionControl.enabled;
 
     // Log any missing extensions required for GLES 3.2.
     LogMissingExtensionsForGLES32(mNativeExtensions);

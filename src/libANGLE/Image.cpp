@@ -496,6 +496,11 @@ bool Image::hasProtectedContent() const
     return mState.hasProtectedContent;
 }
 
+bool Image::isFixedRatedCompression(const gl::Context *context) const
+{
+    return mImplementation->isFixedRatedCompression(context);
+}
+
 rx::ImageImpl *Image::getImplementation() const
 {
     return mImplementation;
