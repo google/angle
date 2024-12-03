@@ -249,8 +249,9 @@ void RefCountedEventRecycler::resetEvents(Context *context,
     }
 }
 
-void RefCountedEventRecycler::cleanupResettingEvents(Renderer *renderer)
+size_t RefCountedEventRecycler::cleanupResettingEvents(Renderer *renderer)
 {
+    size_t eventsReleased = 0;
     std::lock_guard<angle::SimpleMutex> lock(mMutex);
     while (!mResettingQueue.empty())
     {
@@ -258,12 +259,14 @@ void RefCountedEventRecycler::cleanupResettingEvents(Renderer *renderer)
         if (released)
         {
             mResettingQueue.pop();
+            ++eventsReleased;
         }
         else
         {
             break;
         }
     }
+    return eventsReleased;
 }
 
 bool RefCountedEventRecycler::fetchEventsToReuse(RefCountedEventCollector *eventsToReuseOut)

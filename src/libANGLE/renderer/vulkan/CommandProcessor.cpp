@@ -719,7 +719,7 @@ angle::Result CommandProcessor::processTasksImpl(bool *exitThread)
             {
                 ANGLE_TRY(mCommandQueue->retireFinishedCommands(this));
             }
-            mRenderer->cleanupGarbage();
+            mRenderer->cleanupGarbage(nullptr);
         }
     }
     *exitThread = true;
@@ -833,7 +833,7 @@ angle::Result CommandProcessor::waitForAllWorkToBeSubmitted(Context *context)
     if (mRenderer->isAsyncCommandBufferResetAndGarbageCleanupEnabled())
     {
         ANGLE_TRY(mCommandQueue->retireFinishedCommands(context));
-        mRenderer->cleanupGarbage();
+        mRenderer->cleanupGarbage(nullptr);
     }
 
     mNeedCommandsAndGarbageCleanup = false;
@@ -1319,20 +1319,20 @@ angle::Result CommandQueue::postSubmitCheck(Context *context)
     ANGLE_TRY(checkAndCleanupCompletedCommands(context));
 
     VkDeviceSize suballocationGarbageSize = renderer->getSuballocationGarbageSize();
-    if (suballocationGarbageSize > kMaxBufferSuballocationGarbageSize)
+    while (suballocationGarbageSize > kMaxBufferSuballocationGarbageSize)
     {
         // CPU should be throttled to avoid accumulating too much memory garbage waiting to be
         // destroyed. This is important to keep peak memory usage at check when game launched and a
         // lot of staging buffers used for textures upload and then gets released. But if there is
         // only one command buffer in flight, we do not wait here to ensure we keep GPU busy.
-        std::unique_lock<angle::SimpleMutex> lock(mMutex);
-        while (suballocationGarbageSize > kMaxBufferSuballocationGarbageSize &&
-               mInFlightCommands.size() > 1)
+        constexpr size_t kMinInFlightBatchesToKeep = 1;
+        bool anyGarbageCleaned                     = false;
+        ANGLE_TRY(cleanupSomeGarbage(context, kMinInFlightBatchesToKeep, &anyGarbageCleaned));
+        if (!anyGarbageCleaned)
         {
-            ANGLE_TRY(finishOneCommandBatchAndCleanupLocked(
-                context, renderer->getMaxFenceWaitTimeNs(), nullptr));
-            suballocationGarbageSize = renderer->getSuballocationGarbageSize();
+            break;
         }
+        suballocationGarbageSize = renderer->getSuballocationGarbageSize();
     }
 
     if (kOutputVmaStatsString)
@@ -1606,8 +1606,7 @@ angle::Result CommandQueue::queueSubmit(Context *context,
     // off-screen scenarios.
     if (mInFlightCommands.full())
     {
-        ANGLE_TRY(finishOneCommandBatchAndCleanupLocked(context, renderer->getMaxFenceWaitTimeNs(),
-                                                        nullptr));
+        ANGLE_TRY(finishOneCommandBatchLocked(context, renderer->getMaxFenceWaitTimeNs()));
     }
     ASSERT(!mInFlightCommands.full());
     // Release the dequeue lock while doing potentially lengthy vkQueueSubmit call.
@@ -1679,7 +1678,38 @@ angle::Result CommandQueue::retireFinishedCommandsAndCleanupGarbage(Context *con
     {
         // Do immediate command buffer reset and garbage cleanup
         ANGLE_TRY(retireFinishedCommands(context));
-        renderer->cleanupGarbage();
+        renderer->cleanupGarbage(nullptr);
+    }
+
+    return angle::Result::Continue;
+}
+
+angle::Result CommandQueue::cleanupSomeGarbage(Context *context,
+                                               size_t minInFlightBatchesToKeep,
+                                               bool *anyGarbageCleanedOut)
+{
+    vk::Renderer *renderer = context->getRenderer();
+
+    bool anyGarbageCleaned = false;
+
+    renderer->cleanupGarbage(&anyGarbageCleaned);
+
+    while (!anyGarbageCleaned)
+    {
+        {
+            std::lock_guard<angle::SimpleMutex> lock(mMutex);
+            if (mInFlightCommands.size() <= minInFlightBatchesToKeep)
+            {
+                break;
+            }
+            ANGLE_TRY(finishOneCommandBatchLocked(context, renderer->getMaxFenceWaitTimeNs()));
+        }
+        renderer->cleanupGarbage(&anyGarbageCleaned);
+    }
+
+    if (anyGarbageCleanedOut != nullptr)
+    {
+        *anyGarbageCleanedOut = anyGarbageCleaned;
     }
 
     return angle::Result::Continue;
@@ -1717,37 +1747,25 @@ angle::Result CommandQueue::checkOneCommandBatchLocked(Context *context, bool *f
     return angle::Result::Continue;
 }
 
-angle::Result CommandQueue::finishOneCommandBatchAndCleanupLocked(Context *context,
-                                                                  uint64_t timeout,
-                                                                  bool *anyBatchCleaned)
+angle::Result CommandQueue::finishOneCommandBatchLocked(Context *context, uint64_t timeout)
 {
-    if (!mInFlightCommands.empty())
-    {
-        CommandBatch &batch = mInFlightCommands.front();
-        if (batch.hasFence())
-        {
-            VkResult status = batch.waitFence(context->getDevice(), timeout);
-            ANGLE_VK_TRY(context, status);
-        }
+    ASSERT(!mInFlightCommands.empty());
 
-        mLastCompletedSerials.setQueueSerial(batch.queueSerial);
-        // Move command batch to mFinishedCommandBatches.
-        if (mFinishedCommandBatches.full())
-        {
-            ANGLE_TRY(retireFinishedCommandsLocked(context));
-        }
-        mFinishedCommandBatches.push(std::move(batch));
-        mInFlightCommands.pop();
+    CommandBatch &batch = mInFlightCommands.front();
+    if (batch.hasFence())
+    {
+        VkResult status = batch.waitFence(context->getDevice(), timeout);
+        ANGLE_VK_TRY(context, status);
     }
 
-    if (anyBatchCleaned != nullptr)
+    mLastCompletedSerials.setQueueSerial(batch.queueSerial);
+    // Move command batch to mFinishedCommandBatches.
+    if (mFinishedCommandBatches.full())
     {
-        *anyBatchCleaned = !mFinishedCommandBatches.empty();
+        ANGLE_TRY(retireFinishedCommandsLocked(context));
     }
-
-    // Immediately clean up finished batches.
-    ANGLE_TRY(retireFinishedCommandsLocked(context));
-    context->getRenderer()->cleanupGarbage();
+    mFinishedCommandBatches.push(std::move(batch));
+    mInFlightCommands.pop();
 
     return angle::Result::Continue;
 }

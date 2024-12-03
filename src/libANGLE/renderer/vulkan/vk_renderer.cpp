@@ -1802,7 +1802,7 @@ void Renderer::onDestroy(vk::Context *context)
     mCommandQueue.destroy(context);
 
     // mCommandQueue.destroy should already set "last completed" serials to infinite.
-    cleanupGarbage();
+    cleanupGarbage(nullptr);
     ASSERT(!hasSharedGarbage());
     ASSERT(mOrphanedBufferBlockList.empty());
 
@@ -6270,17 +6270,27 @@ bool Renderer::haveSameFormatFeatureBits(angle::FormatID formatID1, angle::Forma
            hasImageFormatFeatureBits(formatID2, fmt1OptimalFeatureBits);
 }
 
-void Renderer::cleanupGarbage()
+void Renderer::cleanupGarbage(bool *anyGarbageCleanedOut)
 {
+    bool anyCleaned = false;
+
     // Clean up general garbage
-    mSharedGarbageList.cleanupSubmittedGarbage(this);
+    anyCleaned = (mSharedGarbageList.cleanupSubmittedGarbage(this) > 0) || anyCleaned;
+
     // Clean up suballocation garbages
-    mSuballocationGarbageList.cleanupSubmittedGarbage(this);
+    anyCleaned = (mSuballocationGarbageList.cleanupSubmittedGarbage(this) > 0) || anyCleaned;
+
     // Note: do this after clean up mSuballocationGarbageList so that we will have more chances to
     // find orphaned blocks being empty.
-    mOrphanedBufferBlockList.pruneEmptyBufferBlocks(this);
+    anyCleaned = (mOrphanedBufferBlockList.pruneEmptyBufferBlocks(this) > 0) || anyCleaned;
+
     // Clean up RefCountedEvent that are done resetting
-    mRefCountedEventRecycler.cleanupResettingEvents(this);
+    anyCleaned = (mRefCountedEventRecycler.cleanupResettingEvents(this) > 0) || anyCleaned;
+
+    if (anyGarbageCleanedOut != nullptr)
+    {
+        *anyGarbageCleanedOut = anyCleaned;
+    }
 }
 
 void Renderer::cleanupPendingSubmissionGarbage()
@@ -6779,10 +6789,9 @@ void Renderer::releaseQueueSerialIndex(SerialIndex index)
     mQueueSerialIndexAllocator.release(index);
 }
 
-angle::Result Renderer::finishOneCommandBatchAndCleanup(vk::Context *context, bool *anyBatchCleaned)
+angle::Result Renderer::cleanupSomeGarbage(Context *context, bool *anyGarbageCleanedOut)
 {
-    return mCommandQueue.finishOneCommandBatchAndCleanup(context, getMaxFenceWaitTimeNs(),
-                                                         anyBatchCleaned);
+    return mCommandQueue.cleanupSomeGarbage(context, 0, anyGarbageCleanedOut);
 }
 
 // static

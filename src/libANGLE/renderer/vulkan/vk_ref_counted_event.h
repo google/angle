@@ -345,7 +345,8 @@ class RefCountedEventRecycler final
                      PrimaryCommandBuffer *commandbuffer);
 
     // Clean up the resetting event list and move completed events to the toReuse list.
-    void cleanupResettingEvents(Renderer *renderer);
+    // Number of events released is returned.
+    size_t cleanupResettingEvents(Renderer *renderer);
 
     // Fetch a list of events that are ready to be reused. Returns true if eventsToReuseOut is
     // returned.

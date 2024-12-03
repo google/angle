@@ -236,7 +236,7 @@ class SharedGarbageList final : angle::NonCopyable
     void resetDestroyedGarbageSize() { mTotalGarbageDestroyed = 0; }
 
     // Number of bytes destroyed is returned.
-    void cleanupSubmittedGarbage(Renderer *renderer)
+    VkDeviceSize cleanupSubmittedGarbage(Renderer *renderer)
     {
         std::unique_lock<angle::SimpleMutex> lock(mSubmittedQueueDequeueMutex);
         VkDeviceSize bytesDestroyed = 0;
@@ -253,6 +253,7 @@ class SharedGarbageList final : angle::NonCopyable
         }
         mTotalSubmittedGarbageBytes -= bytesDestroyed;
         mTotalGarbageDestroyed += bytesDestroyed;
+        return bytesDestroyed;
     }
 
     // Check if pending garbage is still pending submission. If not, move them to the garbage list.

@@ -141,8 +141,10 @@ class BufferBlockGarbageList final : angle::NonCopyable
         mBufferBlockQueue.push(bufferBlock);
     }
 
-    void pruneEmptyBufferBlocks(Renderer *renderer)
+    // Number of buffer blocks destroyed is returned.
+    size_t pruneEmptyBufferBlocks(Renderer *renderer)
     {
+        size_t blocksDestroyed = 0;
         if (!mBufferBlockQueue.empty())
         {
             std::unique_lock<angle::SimpleMutex> lock(mMutex);
@@ -154,6 +156,7 @@ class BufferBlockGarbageList final : angle::NonCopyable
                 if (block->isEmpty())
                 {
                     block->destroy(renderer);
+                    ++blocksDestroyed;
                 }
                 else
                 {
@@ -161,6 +164,7 @@ class BufferBlockGarbageList final : angle::NonCopyable
                 }
             }
         }
+        return blocksDestroyed;
     }
 
     bool empty() const { return mBufferBlockQueue.empty(); }

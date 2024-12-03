@@ -4156,7 +4156,7 @@ void ContextVk::clearAllGarbage()
     // The VMA virtual allocator code has assertion to ensure all sub-ranges are freed before
     // virtual block gets freed. We need to ensure all completed garbage objects are actually freed
     // to avoid hitting that assertion.
-    mRenderer->cleanupGarbage();
+    mRenderer->cleanupGarbage(nullptr);
 
     for (vk::GarbageObject &garbage : mCurrentGarbage)
     {
@@ -7295,25 +7295,25 @@ angle::Result ContextVk::initBufferAllocation(vk::BufferHelper *bufferHelper,
     bool shouldTryFallback = (result == VK_ERROR_OUT_OF_DEVICE_MEMORY);
     ANGLE_VK_CHECK(this, shouldTryFallback, result);
 
-    // If memory allocation fails, it is possible to retry the allocation after waiting for
-    // submitted commands to finish and cleaning the garbage.
-    bool anyBatchCleaned     = false;
-    bool someCommandsCleaned = false;
+    // If memory allocation fails, it is possible to retry the allocation after cleaning the garbage
+    // and waiting for submitted commands to finish if necessary.
+    bool anyGarbageCleaned  = false;
+    bool someGarbageCleaned = false;
     do
     {
-        ANGLE_TRY(mRenderer->finishOneCommandBatchAndCleanup(this, &anyBatchCleaned));
-        if (anyBatchCleaned)
+        ANGLE_TRY(mRenderer->cleanupSomeGarbage(this, &anyGarbageCleaned));
+        if (anyGarbageCleaned)
         {
-            someCommandsCleaned = true;
+            someGarbageCleaned = true;
             result = bufferHelper->initSuballocation(this, memoryTypeIndex, allocationSize,
                                                      alignment, bufferUsageType, pool);
         }
-    } while (result != VK_SUCCESS && anyBatchCleaned);
+    } while (result != VK_SUCCESS && anyGarbageCleaned);
 
-    if (someCommandsCleaned)
+    if (someGarbageCleaned)
     {
-        INFO() << "Initial allocation failed. Cleaned some commands to free garbage "
-               << "| Allocation result: " << ((result == VK_SUCCESS) ? "SUCCESS" : "FAIL");
+        INFO() << "Initial allocation failed. Cleaned some garbage | Allocation result: "
+               << ((result == VK_SUCCESS) ? "SUCCESS" : "FAIL");
     }
 
     // If memory allocation fails, it is possible retry after flushing the context and cleaning all
@@ -7380,26 +7380,26 @@ angle::Result ContextVk::initImageAllocation(vk::ImageHelper *imageHelper,
     bool shouldTryFallback = (result == VK_ERROR_OUT_OF_DEVICE_MEMORY);
     ANGLE_VK_CHECK(this, shouldTryFallback, result);
 
-    // If memory allocation fails, it is possible to retry the allocation after waiting for
-    // submitted commands to finish and cleaning the garbage.
-    bool anyBatchCleaned     = false;
-    bool someCommandsCleaned = false;
+    // If memory allocation fails, it is possible to retry the allocation after cleaning the garbage
+    // and waiting for submitted commands to finish if necessary.
+    bool anyGarbageCleaned  = false;
+    bool someGarbageCleaned = false;
     do
     {
-        ANGLE_TRY(mRenderer->finishOneCommandBatchAndCleanup(this, &anyBatchCleaned));
-        if (anyBatchCleaned)
+        ANGLE_TRY(mRenderer->cleanupSomeGarbage(this, &anyGarbageCleaned));
+        if (anyGarbageCleaned)
         {
-            someCommandsCleaned = true;
+            someGarbageCleaned = true;
             result = imageHelper->initMemory(this, memoryProperties, flags, oomExcludedFlags,
                                              &memoryRequirements, allocateDedicatedMemory,
                                              allocationType, &outputFlags, &outputSize);
         }
-    } while (result != VK_SUCCESS && anyBatchCleaned);
+    } while (result != VK_SUCCESS && anyGarbageCleaned);
 
-    if (someCommandsCleaned)
+    if (someGarbageCleaned)
     {
-        INFO() << "Initial allocation failed. Cleaned some commands to free garbage "
-               << "| Allocation result: " << ((result == VK_SUCCESS) ? "SUCCESS" : "FAIL");
+        INFO() << "Initial allocation failed. Cleaned some garbage | Allocation result: "
+               << ((result == VK_SUCCESS) ? "SUCCESS" : "FAIL");
     }
 
     // If memory allocation fails, it is possible retry after flushing the context and cleaning all

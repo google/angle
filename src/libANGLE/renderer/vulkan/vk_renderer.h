@@ -452,7 +452,7 @@ class Renderer : angle::NonCopyable
 
     bool haveSameFormatFeatureBits(angle::FormatID formatID1, angle::FormatID formatID2) const;
 
-    void cleanupGarbage();
+    void cleanupGarbage(bool *anyGarbageCleanedOut);
     void cleanupPendingSubmissionGarbage();
 
     angle::Result submitCommands(vk::Context *context,
@@ -688,9 +688,9 @@ class Renderer : angle::NonCopyable
 
     void requestAsyncCommandsAndGarbageCleanup(vk::Context *context);
 
-    // Try to finish a command batch from the queue and free garbage memory in the event of an OOM
+    // Cleanup garbage and finish command batches from the queue if necessary in the event of an OOM
     // error.
-    angle::Result finishOneCommandBatchAndCleanup(vk::Context *context, bool *anyBatchCleaned);
+    angle::Result cleanupSomeGarbage(Context *context, bool *anyGarbageCleanedOut);
 
     // Static function to get Vulkan object type name.
     static const char *GetVulkanObjectTypeName(VkObjectType type);
