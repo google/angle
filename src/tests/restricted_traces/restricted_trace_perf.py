@@ -37,7 +37,6 @@ import argparse
 import contextlib
 import copy
 import csv
-import fcntl
 import fnmatch
 import json
 import logging
@@ -52,7 +51,6 @@ import time
 
 from collections import defaultdict, namedtuple
 from datetime import datetime
-from psutil import process_iter
 
 PY_UTILS = str(pathlib.Path(__file__).resolve().parents[1] / 'py_utils')
 if PY_UTILS not in sys.path:
@@ -642,6 +640,15 @@ def drop_high_low_and_average(values):
     return float(average), float(variance)
 
 
+def get_angle_version():
+    angle_version = android_helper._Run('git rev-parse HEAD'.split(' ')).decode().strip()
+    origin_main_version = android_helper._Run(
+        'git rev-parse origin/main'.split(' ')).decode().strip()
+    if origin_main_version != angle_version:
+        angle_version += ' (origin/main %s)' % origin_main_version
+    return angle_version
+
+
 def safe_divide(x, y):
     if y == 0:
         return 0
@@ -693,6 +700,7 @@ def main():
         action='store_true',
         default=False)
     parser.add_argument('--output-tag', help='Tag for output files.', required=True)
+    parser.add_argument('--angle-version', help='Specify ANGLE version string.', default='')
     parser.add_argument(
         '--loop-count', help='How many times to loop through the traces', default=5)
     parser.add_argument(
@@ -856,11 +864,7 @@ def run_traces(args):
     summary_writer = csv.writer(summary_file)
 
     android_version = run_adb_shell_command('getprop ro.build.fingerprint').strip()
-    angle_version = android_helper._Run('git rev-parse HEAD'.split(' ')).decode().strip()
-    origin_main_version = android_helper._Run(
-        'git rev-parse origin/main'.split(' ')).decode().strip()
-    if origin_main_version != angle_version:
-        angle_version += ' (origin/main %s)' % origin_main_version
+    angle_version = args.angle_version or get_angle_version()
     # test_time = run_command('date \"+%Y%m%d\"').stdout.read().strip()
 
     summary_writer.writerow([
