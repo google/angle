@@ -128,3 +128,6 @@ buffers.buffer_read_long
 buffers.buffer_write_char
 profiling.copy_array_to_image
 multiples.context_four_contexts_same_device
+cl_copy_images.1D
+cl_fill_images.2D
+cl_get_info.2D

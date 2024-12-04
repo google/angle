@@ -43,6 +43,18 @@
     "label": "//src/tests:angle_oclcts_buffers",
     "type": "windowed_test_launcher",
   },
+  "angle_oclcts_cl_copy_images": {
+    "label": "//src/tests:angle_oclcts_cl_copy_images",
+    "type": "windowed_test_launcher",
+  },
+  "angle_oclcts_cl_fill_images": {
+    "label": "//src/tests:angle_oclcts_cl_fill_images",
+    "type": "windowed_test_launcher",
+  },
+  "angle_oclcts_cl_get_info": {
+    "label": "//src/tests:angle_oclcts_cl_get_info",
+    "type": "windowed_test_launcher",
+  },
   "angle_oclcts_compiler": {
     "label": "//src/tests:angle_oclcts_compiler",
     "type": "windowed_test_launcher",

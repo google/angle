@@ -194,6 +194,26 @@ bool IsBufferType(cl::MemObjectType type)
     return type == cl::MemObjectType::Buffer;
 }
 
+bool IsArrayType(cl::MemObjectType type)
+{
+    return (type == cl::MemObjectType::Image1D_Array || type == cl::MemObjectType::Image2D_Array);
+}
+
+bool Is3DImage(cl::MemObjectType type)
+{
+    return (type == cl::MemObjectType::Image3D);
+}
+
+bool Is2DImage(cl::MemObjectType type)
+{
+    return (type == cl::MemObjectType::Image2D || type == cl::MemObjectType::Image2D_Array);
+}
+
+bool Is1DImage(cl::MemObjectType type)
+{
+    return (type >= cl::MemObjectType::Image1D && type <= cl::MemObjectType::Image1D_Buffer);
+}
+
 cl::Extents GetExtentFromDescriptor(cl::ImageDescriptor desc)
 {
     cl::Extents extent{};

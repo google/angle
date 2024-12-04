@@ -196,9 +196,10 @@ struct ImageDescriptor
         if (type == MemObjectType::Image1D || type == MemObjectType::Image1D_Array ||
             type == MemObjectType::Image1D_Buffer)
         {
+            depth  = 1;
             height = 1;
         }
-        if (type == MemObjectType::Image2D)
+        if (type == MemObjectType::Image2D || type == MemObjectType::Image2D_Array)
         {
             depth = 1;
         }
