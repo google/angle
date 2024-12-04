@@ -6,7 +6,7 @@
   "src/tests/deqp_support/deqp_data_autogen.gni":
     "ee142f516fad1d6aa58ac8dc4b01ef32",
   "third_party/VK-GL-CTS/src/CMakeLists.txt":
-    "85828a5cc5cca0919b04f93c17b95371",
+    "141ae0b2942bbaa81c049dfee48d7334",
   "third_party/VK-GL-CTS/src/execserver/CMakeLists.txt":
     "38aa187592e6ef9a331fc1ea313fc68d",
   "third_party/VK-GL-CTS/src/executor/CMakeLists.txt":
@@ -126,7 +126,7 @@
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/shaderrender/CMakeLists.txt":
     "aed26ad8bba3ae469bde60b6fccc5d4e",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/sparse_resources/CMakeLists.txt":
-    "ae83011d90bad766859edff890a8deb0",
+    "965e2b61b0d71a751dedafc771f9a6b2",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/spirv_assembly/CMakeLists.txt":
     "ce6706cc64bf343e7cf5a89d2f08a7aa",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/ssbo/CMakeLists.txt":
