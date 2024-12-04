@@ -791,13 +791,33 @@ class AtomicRefCounted : angle::NonCopyable
         return mRefCount.fetch_sub(1, std::memory_order_acq_rel);
     }
 
+    // Making decisions based on reference count is not thread safe, so it should not used in
+    // release build.
+#if defined(ANGLE_ENABLE_ASSERTS)
     // Warning: method does not perform any synchronization.  See `releaseRef()` for details.
     // Method may be only used after external synchronization.
     bool isReferenced() const { return mRefCount.load(std::memory_order_relaxed) != 0; }
     uint32_t getRefCount() const { return mRefCount.load(std::memory_order_relaxed); }
-
     // This is used by SharedPtr::unique, so needs strong ordering.
     bool isLastReferenceCount() const { return mRefCount.load(std::memory_order_acquire) == 1; }
+#else
+    // Compiler still compile but should never actually produce code.
+    bool isReferenced() const
+    {
+        UNREACHABLE();
+        return false;
+    }
+    uint32_t getRefCount() const
+    {
+        UNREACHABLE();
+        return 0;
+    }
+    bool isLastReferenceCount() const
+    {
+        UNREACHABLE();
+        return false;
+    }
+#endif
 
     T &get() { return mObject; }
     const T &get() const { return mObject; }
@@ -806,49 +826,6 @@ class AtomicRefCounted : angle::NonCopyable
     std::atomic_uint mRefCount;
     T mObject;
 };
-
-template <typename T, typename RC = RefCounted<T>>
-class BindingPointer final : angle::NonCopyable
-{
-  public:
-    BindingPointer() = default;
-    ~BindingPointer() { reset(); }
-
-    BindingPointer(BindingPointer &&other) : mRefCounted(other.mRefCounted)
-    {
-        other.mRefCounted = nullptr;
-    }
-
-    void set(RC *refCounted)
-    {
-        if (mRefCounted)
-        {
-            mRefCounted->releaseRef();
-        }
-
-        mRefCounted = refCounted;
-
-        if (mRefCounted)
-        {
-            mRefCounted->addRef();
-        }
-    }
-
-    void reset() { set(nullptr); }
-
-    T &get() { return mRefCounted->get(); }
-    const T &get() const { return mRefCounted->get(); }
-
-    bool valid() const { return mRefCounted != nullptr; }
-
-    RC *getRefCounted() { return mRefCounted; }
-
-  private:
-    RC *mRefCounted = nullptr;
-};
-
-template <typename T>
-using AtomicBindingPointer = BindingPointer<T, AtomicRefCounted<T>>;
 
 // This is intended to have same interface as std::shared_ptr except this must used in thread safe
 // environment.
