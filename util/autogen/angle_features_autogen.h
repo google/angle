@@ -349,6 +349,7 @@ enum class Feature
     SupportsHostQueryReset,
     SupportsImage2dViewOf3d,
     SupportsImageCompressionControl,
+    SupportsImageCompressionControlSwapchain,
     SupportsImageCubeArray,
     SupportsImageFormatList,
     SupportsImagelessFramebuffer,

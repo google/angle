@@ -1418,6 +1418,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo supportsImageCompressionControlSwapchain = {
+        "supportsImageCompressionControlSwapchain",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

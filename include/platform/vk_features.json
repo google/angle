@@ -1858,6 +1858,14 @@
                 "VkDevice supports VK_EXT_texture_compression_astc_hdr extension"
             ],
             "issue": "https://anglebug.com/379186304"
+        },
+        {
+            "name": "supports_image_compression_control_swapchain",
+            "category": "Features",
+            "description": [
+                "VkDevice supports VK_EXT_image_compression_control_swapchain"
+            ],
+            "issue": "https://anglebug.com/375496226"
         }
     ]
 }
