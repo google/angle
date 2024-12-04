@@ -1887,9 +1887,9 @@ angle::Result ContextVk::setupLineLoopDraw(const gl::Context *context,
 
 angle::Result ContextVk::setupDispatch(const gl::Context *context)
 {
-    // Note: numerous tests miss a glMemoryBarrier call between the initial texture data upload and
-    // the dispatch call.  Flush the outside render pass command buffer as a workaround.
-    // TODO: Remove this and fix tests.  http://anglebug.com/42263639
+    // TODO: We don't currently check if this flush is necessary.  It serves to make sure the
+    // barriers issued during dirty bit handling aren't reordered too early.
+    // http://anglebug.com/382090958
     ANGLE_TRY(flushOutsideRenderPassCommands());
 
     ProgramExecutableVk *executableVk = vk::GetImpl(mState.getProgramExecutable());
