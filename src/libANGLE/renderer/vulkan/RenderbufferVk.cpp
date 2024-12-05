@@ -402,8 +402,8 @@ angle::Result RenderbufferVk::getRenderbufferImage(const gl::Context *context,
 
 angle::Result RenderbufferVk::ensureImageInitialized(const gl::Context *context)
 {
-    ANGLE_TRY(setStorage(context, mState.getFormat().info->internalFormat, mState.getWidth(),
-                         mState.getHeight()));
+    ANGLE_TRY(setStorageImpl(context, mState.getSamples(), mState.getFormat().info->internalFormat,
+                             mState.getWidth(), mState.getHeight(), mState.getMultisamplingMode()));
 
     return mImage->flushAllStagedUpdates(vk::GetImpl(context));
 }
