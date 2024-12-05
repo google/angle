@@ -42,6 +42,7 @@ const char *gUseANGLE              = nullptr;
 const char *gUseGL                 = nullptr;
 bool gOffscreen                    = false;
 bool gVsync                        = false;
+int gFpsLimit                      = 0;
 bool gRunToKeyFrame                = false;
 int gFixedTestTime                 = 0;
 int gFixedTestTimeWithWarmup       = 0;
@@ -83,6 +84,7 @@ bool TraceTestArg(int *argc, char **argv, int argIndex)
            ParseFlag("--minimize-gpu-work", argc, argv, argIndex, &gMinimizeGPUWork) ||
            ParseCStringArg("--trace-interpreter", argc, argv, argIndex, &gTraceInterpreter) ||
            ParseIntArg("--screenshot-frame", argc, argv, argIndex, &gScreenshotFrame) ||
+           ParseIntArg("--fps-limit", argc, argv, argIndex, &gFpsLimit) ||
            ParseCStringArgWithHandling("--render-test-output-dir", argc, argv, argIndex,
                                        &gRenderTestOutputDir, ArgHandling::Preserve) ||
            ParseCStringArg("--screenshot-dir", argc, argv, argIndex, &gScreenshotDir) ||
