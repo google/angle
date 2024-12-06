@@ -1212,6 +1212,7 @@ angle::Result CommandPoolAccess::getCommandsAndWaitSemaphores(
 CommandQueue::CommandQueue()
     : mInFlightCommands(kInFlightCommandsLimit),
       mFinishedCommandBatches(kMaxFinishedCommandsLimit),
+      mNumAllCommands(0),
       mPerfCounters{}
 {}
 
@@ -1219,8 +1220,9 @@ CommandQueue::~CommandQueue() = default;
 
 void CommandQueue::destroy(Context *context)
 {
-    std::lock_guard<angle::SimpleMutex> cmdQueueSubmitlock(mQueueSubmitMutex);
-    std::lock_guard<angle::SimpleMutex> cmdQueueResourcelock(mMutex);
+    std::lock_guard<angle::SimpleMutex> queueSubmitLock(mQueueSubmitMutex);
+    std::lock_guard<angle::SimpleMutex> cmdCompleteLock(mCmdCompleteMutex);
+    std::lock_guard<angle::SimpleMutex> cmdReleaseLock(mCmdReleaseMutex);
 
     mQueueMap.destroy();
 
@@ -1233,6 +1235,7 @@ void CommandQueue::destroy(Context *context)
 
     ASSERT(mInFlightCommands.empty());
     ASSERT(mFinishedCommandBatches.empty());
+    ASSERT(mNumAllCommands == 0);
 }
 
 angle::Result CommandQueue::init(Context *context,
@@ -1240,7 +1243,10 @@ angle::Result CommandQueue::init(Context *context,
                                  bool enableProtectedContent,
                                  uint32_t queueCount)
 {
-    std::lock_guard<angle::SimpleMutex> lock(mMutex);
+    std::lock_guard<angle::SimpleMutex> queueSubmitLock(mQueueSubmitMutex);
+    std::lock_guard<angle::SimpleMutex> cmdCompleteLock(mCmdCompleteMutex);
+    std::lock_guard<angle::SimpleMutex> cmdReleaseLock(mCmdReleaseMutex);
+
     // In case Renderer gets re-initialized, we can't rely on constructor to do initialization.
     mLastSubmittedSerials.fill(kZeroSerial);
     mLastCompletedSerials.fill(kZeroSerial);
@@ -1262,9 +1268,10 @@ void CommandQueue::handleDeviceLost(Renderer *renderer)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandQueue::handleDeviceLost");
     VkDevice device = renderer->getDevice();
-    // Hold both locks while clean up mInFlightCommands.
-    std::lock_guard<angle::SimpleMutex> enqueuelock(mQueueSubmitMutex);
-    std::lock_guard<angle::SimpleMutex> dequeuelock(mMutex);
+    // Hold all locks while clean up mInFlightCommands.
+    std::lock_guard<angle::SimpleMutex> queueSubmitLock(mQueueSubmitMutex);
+    std::lock_guard<angle::SimpleMutex> cmdCompleteLock(mCmdCompleteMutex);
+    std::lock_guard<angle::SimpleMutex> cmdReleaseLock(mCmdReleaseMutex);
 
     while (!mInFlightCommands.empty())
     {
@@ -1278,7 +1285,7 @@ void CommandQueue::handleDeviceLost(Renderer *renderer)
         }
         mLastCompletedSerials.setQueueSerial(batch.getQueueSerial());
         batch.destroy(device);
-        mInFlightCommands.pop();
+        popInFlightBatchLocked();
     }
 }
 
@@ -1320,7 +1327,7 @@ angle::Result CommandQueue::finishResourceUse(Context *context,
 {
     VkDevice device = context->getDevice();
     {
-        std::unique_lock<angle::SimpleMutex> lock(mMutex);
+        std::unique_lock<angle::SimpleMutex> lock(mCmdCompleteMutex);
         while (!mInFlightCommands.empty() && !hasResourceUseFinished(use))
         {
             bool finished;
@@ -1384,7 +1391,7 @@ angle::Result CommandQueue::waitForResourceUseToFinishWithUserTimeout(Context *c
     VkDevice device      = context->getDevice();
     size_t finishedCount = 0;
     {
-        std::unique_lock<angle::SimpleMutex> lock(mMutex);
+        std::unique_lock<angle::SimpleMutex> lock(mCmdCompleteMutex);
         *result = hasResourceUseFinished(use) ? VK_SUCCESS : VK_NOT_READY;
         while (!mInFlightCommands.empty() && !hasResourceUseFinished(use))
         {
@@ -1564,7 +1571,7 @@ angle::Result CommandQueue::queueSubmitLocked(Context *context,
     // off-screen scenarios.
     if (mInFlightCommands.full())
     {
-        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        std::lock_guard<angle::SimpleMutex> lock(mCmdCompleteMutex);
         // Check once more inside the lock in case other thread already finished some/all commands.
         if (mInFlightCommands.full())
         {
@@ -1576,16 +1583,14 @@ angle::Result CommandQueue::queueSubmitLocked(Context *context,
 
     // Also ensure that all mInFlightCommands may be moved into the mFinishedCommandBatches without
     // need of the releaseFinishedCommandsLocked() call.
-    const size_t numAllCommands = mInFlightCommands.size() + mFinishedCommandBatches.size();
-    ASSERT(numAllCommands <= mFinishedCommandBatches.capacity());
-    if (numAllCommands == mFinishedCommandBatches.capacity())
+    ASSERT(mNumAllCommands <= mFinishedCommandBatches.capacity());
+    if (mNumAllCommands == mFinishedCommandBatches.capacity())
     {
-        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        std::lock_guard<angle::SimpleMutex> lock(mCmdReleaseMutex);
         ANGLE_TRY(releaseFinishedCommandsLocked(context));
     }
-    // Assert will succeed since new batch is pushed only in this method below.
-    ASSERT(mInFlightCommands.size() + mFinishedCommandBatches.size() <
-           mFinishedCommandBatches.capacity());
+    // Assert will succeed since mNumAllCommands is incremented only in this method below.
+    ASSERT(mNumAllCommands < mFinishedCommandBatches.capacity());
 
     if (submitInfo.sType == VK_STRUCTURE_TYPE_SUBMIT_INFO)
     {
@@ -1611,7 +1616,7 @@ angle::Result CommandQueue::queueSubmitLocked(Context *context,
         }
     }
 
-    mInFlightCommands.push(commandBatch.release());
+    pushInFlightBatchLocked(commandBatch.release());
 
     // This must set last so that when this submission appears submitted, it actually already
     // submitted and enqueued to mInFlightCommands.
@@ -1671,7 +1676,7 @@ angle::Result CommandQueue::cleanupSomeGarbage(Context *context,
     while (!anyGarbageCleaned)
     {
         {
-            std::lock_guard<angle::SimpleMutex> lock(mMutex);
+            std::lock_guard<angle::SimpleMutex> lock(mCmdCompleteMutex);
             if (mInFlightCommands.size() <= minInFlightBatchesToKeep)
             {
                 break;
@@ -1730,16 +1735,11 @@ angle::Result CommandQueue::finishOneCommandBatchLocked(Context *context, uint64
 
 void CommandQueue::onCommandBatchFinishedLocked(CommandBatch &&batch)
 {
-    // This must not happen, since we always leave space in the queue during queueSubmitLocked.
-    ASSERT(!mFinishedCommandBatches.full());
-    ASSERT(&batch == &mInFlightCommands.front());
-
     // Finished.
     mLastCompletedSerials.setQueueSerial(batch.getQueueSerial());
 
     // Move command batch to mFinishedCommandBatches.
-    mFinishedCommandBatches.push(std::move(batch));
-    mInFlightCommands.pop();
+    moveInFlightBatchToFinishedQueueLocked(std::move(batch));
 }
 
 angle::Result CommandQueue::releaseFinishedCommandsLocked(Context *context)
@@ -1751,7 +1751,7 @@ angle::Result CommandQueue::releaseFinishedCommandsLocked(Context *context)
         CommandBatch &batch = mFinishedCommandBatches.front();
         ASSERT(batch.getQueueSerial() <= mLastCompletedSerials);
         ANGLE_TRY(batch.release(context));
-        mFinishedCommandBatches.pop();
+        popFinishedBatchLocked();
     }
 
     return angle::Result::Continue;
@@ -1769,6 +1769,40 @@ angle::Result CommandQueue::checkCompletedCommandsLocked(Context *context)
         }
     }
     return angle::Result::Continue;
+}
+
+void CommandQueue::pushInFlightBatchLocked(CommandBatch &&batch)
+{
+    // Need to increment before the push to prevent possible decrement from 0.
+    ++mNumAllCommands;
+    mInFlightCommands.push(std::move(batch));
+}
+
+void CommandQueue::moveInFlightBatchToFinishedQueueLocked(CommandBatch &&batch)
+{
+    // This must not happen, since we always leave space in the queue during queueSubmitLocked.
+    ASSERT(!mFinishedCommandBatches.full());
+    ASSERT(&batch == &mInFlightCommands.front());
+
+    mFinishedCommandBatches.push(std::move(batch));
+    mInFlightCommands.pop();
+    // No mNumAllCommands update since batch was simply moved to the other queue.
+}
+
+void CommandQueue::popFinishedBatchLocked()
+{
+    mFinishedCommandBatches.pop();
+    // Need to decrement after the pop to prevent possible push over the limit.
+    ASSERT(mNumAllCommands > 0);
+    --mNumAllCommands;
+}
+
+void CommandQueue::popInFlightBatchLocked()
+{
+    mInFlightCommands.pop();
+    // Need to decrement after the pop to prevent possible push over the limit.
+    ASSERT(mNumAllCommands > 0);
+    --mNumAllCommands;
 }
 
 // QueuePriorities:

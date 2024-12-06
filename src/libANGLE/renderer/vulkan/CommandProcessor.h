@@ -526,7 +526,7 @@ class CommandQueue : angle::NonCopyable
 
     angle::Result checkCompletedCommands(Context *context)
     {
-        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        std::lock_guard<angle::SimpleMutex> lock(mCmdCompleteMutex);
         return checkCompletedCommandsLocked(context);
     }
 
@@ -583,7 +583,7 @@ class CommandQueue : angle::NonCopyable
     angle::Result releaseFinishedCommandsAndCleanupGarbage(Context *context);
     angle::Result releaseFinishedCommands(Context *context)
     {
-        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        std::lock_guard<angle::SimpleMutex> lock(mCmdReleaseMutex);
         return releaseFinishedCommandsLocked(context);
     }
     angle::Result postSubmitCheck(Context *context);
@@ -614,18 +614,31 @@ class CommandQueue : angle::NonCopyable
                                     DeviceScoped<CommandBatch> &commandBatch,
                                     const QueueSerial &submitQueueSerial);
 
+    void pushInFlightBatchLocked(CommandBatch &&batch);
+    void moveInFlightBatchToFinishedQueueLocked(CommandBatch &&batch);
+    void popFinishedBatchLocked();
+    void popInFlightBatchLocked();
+
     CommandPoolAccess mCommandPoolAccess;
 
     // Warning: Mutexes must be locked in the order as declared below.
     // Protect multi-thread access to mInFlightCommands.push/back and ensure ordering of submission.
     // Also protects mPerfCounters.
     mutable angle::SimpleMutex mQueueSubmitMutex;
-    // Protect multi-thread access to mInFlightCommands.pop/front and mFinishedCommandBatches.
-    angle::SimpleMutex mMutex;
+    // Protect multi-thread access to mInFlightCommands.pop/front and
+    // mFinishedCommandBatches.push/back.
+    angle::SimpleMutex mCmdCompleteMutex;
+    // Protect multi-thread access to mFinishedCommandBatches.pop/front.
+    angle::SimpleMutex mCmdReleaseMutex;
 
     CommandBatchQueue mInFlightCommands;
     // Temporary storage for finished command batches that should be reset.
     CommandBatchQueue mFinishedCommandBatches;
+
+    // Combined number of batches in mInFlightCommands and mFinishedCommandBatches queues.
+    // Used instead of calculating the sum because doing this is not thread safe and will require
+    // the mCmdCompleteMutex lock.
+    std::atomic_size_t mNumAllCommands;
 
     // Queue serial management.
     AtomicQueueSerialFixedArray mLastSubmittedSerials;
