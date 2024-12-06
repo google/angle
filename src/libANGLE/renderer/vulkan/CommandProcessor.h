@@ -608,26 +608,24 @@ class CommandQueue : angle::NonCopyable
     // finished
     angle::Result checkCompletedCommandsLocked(Context *context);
 
-    angle::Result queueSubmit(Context *context,
-                              std::unique_lock<angle::SimpleMutex> &&dequeueLock,
-                              egl::ContextPriority contextPriority,
-                              const VkSubmitInfo &submitInfo,
-                              DeviceScoped<CommandBatch> &commandBatch,
-                              const QueueSerial &submitQueueSerial);
+    angle::Result queueSubmitLocked(Context *context,
+                                    egl::ContextPriority contextPriority,
+                                    const VkSubmitInfo &submitInfo,
+                                    DeviceScoped<CommandBatch> &commandBatch,
+                                    const QueueSerial &submitQueueSerial);
 
     CommandPoolAccess mCommandPoolAccess;
 
-    // Protect multi-thread access to mInFlightCommands.pop and ensure ordering of submission.
-    mutable angle::SimpleMutex mMutex;
-    // Protect multi-thread access to mInFlightCommands.push as well as does lock relay for mMutex
-    // so that we can release mMutex while doing potential lengthy vkQueueSubmit and vkQueuePresent
-    // call.
-    angle::SimpleMutex mQueueSubmitMutex;
+    // Warning: Mutexes must be locked in the order as declared below.
+    // Protect multi-thread access to mInFlightCommands.push/back and ensure ordering of submission.
+    // Also protects mPerfCounters.
+    mutable angle::SimpleMutex mQueueSubmitMutex;
+    // Protect multi-thread access to mInFlightCommands.pop/front and mFinishedCommandBatches.
+    angle::SimpleMutex mMutex;
 
     CommandBatchQueue mInFlightCommands;
     // Temporary storage for finished command batches that should be reset.
     CommandBatchQueue mFinishedCommandBatches;
-
 
     // Queue serial management.
     AtomicQueueSerialFixedArray mLastSubmittedSerials;

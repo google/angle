@@ -1219,8 +1219,8 @@ CommandQueue::~CommandQueue() = default;
 
 void CommandQueue::destroy(Context *context)
 {
-    std::lock_guard<angle::SimpleMutex> cmdQueueResourcelock(mMutex);
     std::lock_guard<angle::SimpleMutex> cmdQueueSubmitlock(mQueueSubmitMutex);
+    std::lock_guard<angle::SimpleMutex> cmdQueueResourcelock(mMutex);
 
     mQueueMap.destroy();
 
@@ -1263,8 +1263,8 @@ void CommandQueue::handleDeviceLost(Renderer *renderer)
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandQueue::handleDeviceLost");
     VkDevice device = renderer->getDevice();
     // Hold both locks while clean up mInFlightCommands.
-    std::lock_guard<angle::SimpleMutex> dequeuelock(mMutex);
     std::lock_guard<angle::SimpleMutex> enqueuelock(mQueueSubmitMutex);
+    std::lock_guard<angle::SimpleMutex> dequeuelock(mMutex);
 
     while (!mInFlightCommands.empty())
     {
@@ -1357,7 +1357,7 @@ angle::Result CommandQueue::waitIdle(Context *context, uint64_t timeout)
     // Fill the local variable with lock
     ResourceUse use;
     {
-        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        std::lock_guard<angle::SimpleMutex> lock(mQueueSubmitMutex);
         if (mInFlightCommands.empty())
         {
             return angle::Result::Continue;
@@ -1443,7 +1443,7 @@ angle::Result CommandQueue::submitCommands(Context *context,
                                            const QueueSerial &submitQueueSerial)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandQueue::submitCommands");
-    std::unique_lock<angle::SimpleMutex> lock(mMutex);
+    std::lock_guard<angle::SimpleMutex> lock(mQueueSubmitMutex);
     Renderer *renderer = context->getRenderer();
     VkDevice device    = renderer->getDevice();
 
@@ -1456,7 +1456,6 @@ angle::Result CommandQueue::submitCommands(Context *context,
     batch.setQueueSerial(submitQueueSerial);
     batch.setProtectionType(protectionType);
 
-    // Move to local copy of vectors since queueSubmit will release the lock.
     std::vector<VkSemaphore> waitSemaphores;
     std::vector<VkPipelineStageFlags> waitSemaphoreStageMasks;
 
@@ -1499,9 +1498,7 @@ angle::Result CommandQueue::submitCommands(Context *context,
         ++mPerfCounters.vkQueueSubmitCallsPerFrame;
     }
 
-    // Note queueSubmit will release the lock.
-    return queueSubmit(context, std::move(lock), priority, submitInfo, scopedBatch,
-                       submitQueueSerial);
+    return queueSubmitLocked(context, priority, submitInfo, scopedBatch, submitQueueSerial);
 }
 
 angle::Result CommandQueue::queueSubmitOneOff(Context *context,
@@ -1513,7 +1510,7 @@ angle::Result CommandQueue::queueSubmitOneOff(Context *context,
                                               SubmitPolicy submitPolicy,
                                               const QueueSerial &submitQueueSerial)
 {
-    std::unique_lock<angle::SimpleMutex> lock(mMutex);
+    std::unique_lock<angle::SimpleMutex> lock(mQueueSubmitMutex);
     DeviceScoped<CommandBatch> scopedBatch(context->getDevice());
     CommandBatch &batch  = scopedBatch.get();
     batch.setQueueSerial(submitQueueSerial);
@@ -1551,46 +1548,44 @@ angle::Result CommandQueue::queueSubmitOneOff(Context *context,
     ++mPerfCounters.vkQueueSubmitCallsTotal;
     ++mPerfCounters.vkQueueSubmitCallsPerFrame;
 
-    // Note queueSubmit will release the lock.
-    return queueSubmit(context, std::move(lock), contextPriority, submitInfo, scopedBatch,
-                       submitQueueSerial);
+    return queueSubmitLocked(context, contextPriority, submitInfo, scopedBatch, submitQueueSerial);
 }
 
-angle::Result CommandQueue::queueSubmit(Context *context,
-                                        std::unique_lock<angle::SimpleMutex> &&dequeueLock,
-                                        egl::ContextPriority contextPriority,
-                                        const VkSubmitInfo &submitInfo,
-                                        DeviceScoped<CommandBatch> &commandBatch,
-                                        const QueueSerial &submitQueueSerial)
+angle::Result CommandQueue::queueSubmitLocked(Context *context,
+                                              egl::ContextPriority contextPriority,
+                                              const VkSubmitInfo &submitInfo,
+                                              DeviceScoped<CommandBatch> &commandBatch,
+                                              const QueueSerial &submitQueueSerial)
 {
-    ANGLE_TRACE_EVENT0("gpu.angle", "CommandQueue::queueSubmit");
+    ANGLE_TRACE_EVENT0("gpu.angle", "CommandQueue::queueSubmitLocked");
     Renderer *renderer = context->getRenderer();
 
-    // Lock relay to ensure the ordering of submission strictly follow the context's submission
-    // order. This lock relay (first take mMutex and then mQueueSubmitMutex, and then release
-    // mMutex) ensures we always have a lock covering the entire call which ensures the strict
-    // submission order.
-    std::lock_guard<angle::SimpleMutex> queueSubmitLock(mQueueSubmitMutex);
     // CPU should be throttled to avoid mInFlightCommands from growing too fast. Important for
     // off-screen scenarios.
     if (mInFlightCommands.full())
     {
-        ANGLE_TRY(finishOneCommandBatchLocked(context, renderer->getMaxFenceWaitTimeNs()));
+        std::lock_guard<angle::SimpleMutex> lock(mMutex);
+        // Check once more inside the lock in case other thread already finished some/all commands.
+        if (mInFlightCommands.full())
+        {
+            ANGLE_TRY(finishOneCommandBatchLocked(context, renderer->getMaxFenceWaitTimeNs()));
+        }
     }
+    // Assert will succeed since new batch is pushed only in this method below.
     ASSERT(!mInFlightCommands.full());
+
     // Also ensure that all mInFlightCommands may be moved into the mFinishedCommandBatches without
     // need of the releaseFinishedCommandsLocked() call.
     const size_t numAllCommands = mInFlightCommands.size() + mFinishedCommandBatches.size();
     ASSERT(numAllCommands <= mFinishedCommandBatches.capacity());
     if (numAllCommands == mFinishedCommandBatches.capacity())
     {
+        std::lock_guard<angle::SimpleMutex> lock(mMutex);
         ANGLE_TRY(releaseFinishedCommandsLocked(context));
     }
+    // Assert will succeed since new batch is pushed only in this method below.
     ASSERT(mInFlightCommands.size() + mFinishedCommandBatches.size() <
            mFinishedCommandBatches.capacity());
-    // Release the dequeue lock while doing potentially lengthy vkQueueSubmit call.
-    // Note: after this point, you can not reference anything that required mMutex lock.
-    dequeueLock.unlock();
 
     if (submitInfo.sType == VK_STRUCTURE_TYPE_SUBMIT_INFO)
     {
@@ -1628,20 +1623,20 @@ void CommandQueue::queuePresent(egl::ContextPriority contextPriority,
                                 const VkPresentInfoKHR &presentInfo,
                                 SwapchainStatus *swapchainStatus)
 {
-    std::lock_guard<angle::SimpleMutex> queueSubmitLock(mQueueSubmitMutex);
+    std::lock_guard<angle::SimpleMutex> lock(mQueueSubmitMutex);
     VkQueue queue                      = getQueue(contextPriority);
     swapchainStatus->lastPresentResult = vkQueuePresentKHR(queue, &presentInfo);
 }
 
 const angle::VulkanPerfCounters CommandQueue::getPerfCounters() const
 {
-    std::lock_guard<angle::SimpleMutex> lock(mMutex);
+    std::lock_guard<angle::SimpleMutex> lock(mQueueSubmitMutex);
     return mPerfCounters;
 }
 
 void CommandQueue::resetPerFramePerfCounters()
 {
-    std::lock_guard<angle::SimpleMutex> lock(mMutex);
+    std::lock_guard<angle::SimpleMutex> lock(mQueueSubmitMutex);
     mPerfCounters.commandQueueSubmitCallsPerFrame = 0;
     mPerfCounters.vkQueueSubmitCallsPerFrame      = 0;
 }
@@ -1735,7 +1730,7 @@ angle::Result CommandQueue::finishOneCommandBatchLocked(Context *context, uint64
 
 void CommandQueue::onCommandBatchFinishedLocked(CommandBatch &&batch)
 {
-    // This must not happen, since we always leave space in the queue during queueSubmit.
+    // This must not happen, since we always leave space in the queue during queueSubmitLocked.
     ASSERT(!mFinishedCommandBatches.full());
     ASSERT(&batch == &mInFlightCommands.front());
 
