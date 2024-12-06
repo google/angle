@@ -50,44 +50,6 @@ struct Error
     uint32_t line;
 };
 
-class FenceRecycler;
-// This is a RAII class manages refcounted vkfence object with auto-release and recycling.
-class SharedFence final
-{
-  public:
-    SharedFence();
-    SharedFence(const SharedFence &other);
-    SharedFence(SharedFence &&other);
-    ~SharedFence();
-    // Copy assignment will add reference count to the underlying object
-    SharedFence &operator=(const SharedFence &other);
-    // Move assignment will move reference count from other to this object
-    SharedFence &operator=(SharedFence &&other);
-
-    // Initialize it with a new vkFence either from recycler or create a new one.
-    VkResult init(VkDevice device, FenceRecycler *recycler);
-    // Destroy it immediately (will not recycle).
-    void destroy(VkDevice device);
-    // Release the vkFence (to recycler)
-    void release();
-    // Return true if the underlying VkFence is valid
-    operator bool() const;
-    const Fence &get() const
-    {
-        ASSERT(mRefCountedFence != nullptr && mRefCountedFence->isReferenced());
-        return mRefCountedFence->get();
-    }
-
-    // The following three APIs can call without lock. Since fence is refcounted and this object has
-    // a refcount to VkFence, No one is able to come in and destroy the VkFence.
-    VkResult getStatus(VkDevice device) const;
-    VkResult wait(VkDevice device, uint64_t timeout) const;
-
-  private:
-    RefCounted<Fence> *mRefCountedFence;
-    FenceRecycler *mRecycler;
-};
-
 class FenceRecycler
 {
   public:
@@ -100,8 +62,30 @@ class FenceRecycler
 
   private:
     angle::SimpleMutex mMutex;
-    Recycler<Fence> mRecyler;
+    Recycler<Fence> mRecycler;
 };
+
+class RecyclableFence final : angle::NonCopyable
+{
+  public:
+    RecyclableFence();
+    ~RecyclableFence();
+
+    VkResult init(VkDevice device, FenceRecycler *recycler);
+    // Returns fence back to the recycler if it is still attached, destroys the fence otherwise.
+    // Do NOT call directly when object is controlled by a shared pointer.
+    void destroy(VkDevice device);
+    void detachRecycler() { mRecycler = nullptr; }
+
+    bool valid() const { return mFence.valid(); }
+    const Fence &get() const { return mFence; }
+
+  private:
+    Fence mFence;
+    FenceRecycler *mRecycler;
+};
+
+using SharedFence = AtomicSharedPtr<RecyclableFence>;
 
 struct SwapchainStatus
 {
@@ -723,13 +707,12 @@ class CommandProcessor : public Context
         RenderPassCommandBufferHelper **renderPassCommands);
 
     // Wait until the desired serial has been submitted.
-    angle::Result waitForQueueSerialToBeSubmitted(vk::Context *context,
-                                                  const QueueSerial &queueSerial)
+    angle::Result waitForQueueSerialToBeSubmitted(Context *context, const QueueSerial &queueSerial)
     {
         const ResourceUse use(queueSerial);
         return waitForResourceUseToBeSubmitted(context, use);
     }
-    angle::Result waitForResourceUseToBeSubmitted(vk::Context *context, const ResourceUse &use);
+    angle::Result waitForResourceUseToBeSubmitted(Context *context, const ResourceUse &use);
     // Wait for worker thread to submit all outstanding work.
     angle::Result waitForAllWorkToBeSubmitted(Context *context);
     // Wait for enqueued present to be submitted.

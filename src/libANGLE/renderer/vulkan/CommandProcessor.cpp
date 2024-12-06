@@ -69,154 +69,71 @@ void GetDeviceQueue(VkDevice device,
 }
 }  // namespace
 
-// SharedFence implementation
-SharedFence::SharedFence() : mRefCountedFence(nullptr), mRecycler(nullptr) {}
-SharedFence::SharedFence(const SharedFence &other)
-    : mRefCountedFence(other.mRefCountedFence), mRecycler(other.mRecycler)
+// RecyclableFence implementation
+RecyclableFence::RecyclableFence() : mRecycler(nullptr) {}
+
+RecyclableFence::~RecyclableFence()
 {
-    if (mRefCountedFence != nullptr)
-    {
-        mRefCountedFence->addRef();
-    }
-}
-SharedFence::SharedFence(SharedFence &&other)
-    : mRefCountedFence(other.mRefCountedFence), mRecycler(other.mRecycler)
-{
-    other.mRecycler        = nullptr;
-    other.mRefCountedFence = nullptr;
+    ASSERT(!valid());
 }
 
-SharedFence::~SharedFence()
+VkResult RecyclableFence::init(VkDevice device, FenceRecycler *recycler)
 {
-    release();
-}
-
-VkResult SharedFence::init(VkDevice device, FenceRecycler *recycler)
-{
-    ASSERT(mRecycler == nullptr && mRefCountedFence == nullptr);
-    Fence fence;
+    ASSERT(!valid());
+    ASSERT(mRecycler == nullptr);
 
     // First try to fetch from recycler. If that failed, try to create a new VkFence
-    recycler->fetch(device, &fence);
-    if (!fence.valid())
+    recycler->fetch(device, &mFence);
+    if (!valid())
     {
         VkFenceCreateInfo fenceCreateInfo = {};
         fenceCreateInfo.sType             = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
         fenceCreateInfo.flags             = 0;
-        VkResult result                   = fence.init(device, fenceCreateInfo);
+        VkResult result                   = mFence.init(device, fenceCreateInfo);
         if (result != VK_SUCCESS)
         {
+            ASSERT(!valid());
             return result;
         }
+        ASSERT(valid());
     }
 
-    // Create a new refcounted object to hold onto VkFence
-    mRefCountedFence = new RefCounted<Fence>(std::move(fence));
-    mRefCountedFence->addRef();
     mRecycler = recycler;
 
     return VK_SUCCESS;
 }
 
-SharedFence &SharedFence::operator=(const SharedFence &other)
+void RecyclableFence::destroy(VkDevice device)
 {
-    release();
-
-    mRecycler = other.mRecycler;
-    if (other.mRefCountedFence != nullptr)
+    if (valid())
     {
-        mRefCountedFence = other.mRefCountedFence;
-        mRefCountedFence->addRef();
-    }
-    return *this;
-}
-
-SharedFence &SharedFence::operator=(SharedFence &&other)
-{
-    release();
-    mRecycler              = other.mRecycler;
-    mRefCountedFence       = other.mRefCountedFence;
-    other.mRecycler        = nullptr;
-    other.mRefCountedFence = nullptr;
-    return *this;
-}
-
-void SharedFence::destroy(VkDevice device)
-{
-    if (mRefCountedFence != nullptr)
-    {
-        mRefCountedFence->releaseRef();
-        if (!mRefCountedFence->isReferenced())
+        if (mRecycler != nullptr)
         {
-            mRefCountedFence->get().destroy(device);
-            SafeDelete(mRefCountedFence);
+            mRecycler->recycle(std::move(mFence));
         }
         else
         {
-            mRefCountedFence = nullptr;
+            // Recycler was detached - destroy the fence.
+            mFence.destroy(device);
         }
-        mRecycler = nullptr;
+        ASSERT(!valid());
     }
-}
-
-void SharedFence::release()
-{
-    if (mRefCountedFence != nullptr)
-    {
-        mRefCountedFence->releaseRef();
-        if (!mRefCountedFence->isReferenced())
-        {
-            mRecycler->recycle(std::move(mRefCountedFence->get()));
-            ASSERT(!mRefCountedFence->get().valid());
-            SafeDelete(mRefCountedFence);
-        }
-        else
-        {
-            mRefCountedFence = nullptr;
-        }
-        mRecycler = nullptr;
-    }
-}
-
-SharedFence::operator bool() const
-{
-    ASSERT(mRefCountedFence == nullptr || mRefCountedFence->isReferenced());
-    return mRefCountedFence != nullptr;
-}
-
-VkResult SharedFence::getStatus(VkDevice device) const
-{
-    if (mRefCountedFence != nullptr)
-    {
-        return mRefCountedFence->get().getStatus(device);
-    }
-    return VK_SUCCESS;
-}
-
-VkResult SharedFence::wait(VkDevice device, uint64_t timeout) const
-{
-    if (mRefCountedFence != nullptr)
-    {
-        ANGLE_TRACE_EVENT0("gpu.angle", "SharedFence::wait");
-        return mRefCountedFence->get().wait(device, timeout);
-    }
-    return VK_SUCCESS;
 }
 
 // FenceRecycler implementation
 void FenceRecycler::destroy(Context *context)
 {
     std::lock_guard<angle::SimpleMutex> lock(mMutex);
-    mRecyler.destroy(context->getDevice());
+    mRecycler.destroy(context->getDevice());
 }
 
 void FenceRecycler::fetch(VkDevice device, Fence *fenceOut)
 {
     ASSERT(fenceOut != nullptr && !fenceOut->valid());
     std::lock_guard<angle::SimpleMutex> lock(mMutex);
-    if (!mRecyler.empty())
+    if (!mRecycler.empty())
     {
-        mRecyler.fetch(fenceOut);
+        mRecycler.fetch(fenceOut);
         fenceOut->reset(device);
     }
 }
@@ -224,7 +141,7 @@ void FenceRecycler::fetch(VkDevice device, Fence *fenceOut)
 void FenceRecycler::recycle(Fence &&fence)
 {
     std::lock_guard<angle::SimpleMutex> lock(mMutex);
-    mRecyler.recycle(std::move(fence));
+    mRecycler.recycle(std::move(fence));
 }
 
 // CommandProcessorTask implementation
@@ -487,7 +404,11 @@ void CommandBatch::destroy(VkDevice device)
         mCommandPoolAccess->destroyPrimaryCommandBuffer(device, &mPrimaryCommands);
     }
     mSecondaryCommands.releaseCommandBuffers();
-    mFence.destroy(device);
+    if (mFence)
+    {
+        mFence->detachRecycler();
+        mFence.reset();
+    }
     mExternalFence.reset();
     // Do not clean other members to catch invalid reuse attempt with ASSERTs.
 }
@@ -501,7 +422,7 @@ angle::Result CommandBatch::release(Context *context)
                                                                   &mPrimaryCommands));
     }
     mSecondaryCommands.releaseCommandBuffers();
-    mFence.release();
+    mFence.reset();
     mExternalFence.reset();
     // Do not clean other members to catch invalid reuse attempt with ASSERTs.
     return angle::Result::Continue;
@@ -542,7 +463,14 @@ void CommandBatch::setSecondaryCommands(SecondaryCommandBufferCollector &&second
 VkResult CommandBatch::initFence(VkDevice device, FenceRecycler *recycler)
 {
     ASSERT(!hasFence());
-    return mFence.init(device, recycler);
+    auto fence            = SharedFence::MakeShared(device);
+    const VkResult result = fence->init(device, recycler);
+    if (result == VK_SUCCESS)
+    {
+        ASSERT(fence->valid());
+        mFence = std::move(fence);
+    }
+    return result;
 }
 
 void CommandBatch::setExternalFence(SharedExternalFence &&externalFence)
@@ -570,25 +498,26 @@ const SharedExternalFence &CommandBatch::getExternalFence()
 bool CommandBatch::hasFence() const
 {
     ASSERT(!mExternalFence || !mFence);
+    ASSERT(!mFence || mFence->valid());
     return mFence || mExternalFence;
 }
 
 VkFence CommandBatch::getFenceHandle() const
 {
     ASSERT(hasFence());
-    return mFence ? mFence.get().getHandle() : mExternalFence->getHandle();
+    return mFence ? mFence->get().getHandle() : mExternalFence->getHandle();
 }
 
 VkResult CommandBatch::getFenceStatus(VkDevice device) const
 {
     ASSERT(hasFence());
-    return mFence ? mFence.getStatus(device) : mExternalFence->getStatus(device);
+    return mFence ? mFence->get().getStatus(device) : mExternalFence->getStatus(device);
 }
 
 VkResult CommandBatch::waitFence(VkDevice device, uint64_t timeout) const
 {
     ASSERT(hasFence());
-    return mFence ? mFence.wait(device, timeout) : mExternalFence->wait(device, timeout);
+    return mFence ? mFence->get().wait(device, timeout) : mExternalFence->wait(device, timeout);
 }
 
 VkResult CommandBatch::waitFenceUnlocked(VkDevice device,
@@ -603,7 +532,7 @@ VkResult CommandBatch::waitFenceUnlocked(VkDevice device,
     {
         const SharedFence localFenceToWaitOn = mFence;
         lock->unlock();
-        status = localFenceToWaitOn.wait(device, timeout);
+        status = localFenceToWaitOn->get().wait(device, timeout);
         lock->lock();
     }
     else
@@ -639,7 +568,7 @@ void CommandProcessor::handleError(VkResult errorCode,
     mErrors.emplace(error);
 }
 
-CommandProcessor::CommandProcessor(vk::Renderer *renderer, CommandQueue *commandQueue)
+CommandProcessor::CommandProcessor(Renderer *renderer, CommandQueue *commandQueue)
     : Context(renderer),
       mTaskQueue(kMaxCommandProcessorTasksLimit),
       mCommandQueue(commandQueue),
@@ -928,7 +857,7 @@ void CommandProcessor::destroy(Context *context)
     }
 }
 
-void CommandProcessor::handleDeviceLost(vk::Renderer *renderer)
+void CommandProcessor::handleDeviceLost(Renderer *renderer)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandProcessor::handleDeviceLost");
     // Take mTaskEnqueueMutex lock so that no one is able to add more work to the queue while we
@@ -1329,7 +1258,7 @@ angle::Result CommandQueue::init(Context *context,
     return angle::Result::Continue;
 }
 
-void CommandQueue::handleDeviceLost(vk::Renderer *renderer)
+void CommandQueue::handleDeviceLost(Renderer *renderer)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandQueue::handleDeviceLost");
     VkDevice device = renderer->getDevice();
@@ -1355,7 +1284,7 @@ void CommandQueue::handleDeviceLost(vk::Renderer *renderer)
 
 angle::Result CommandQueue::postSubmitCheck(Context *context)
 {
-    vk::Renderer *renderer = context->getRenderer();
+    Renderer *renderer = context->getRenderer();
 
     // Update mLastCompletedQueueSerial immediately in case any command has been finished.
     ANGLE_TRY(checkAndCleanupCompletedCommands(context));
@@ -1419,14 +1348,14 @@ angle::Result CommandQueue::finishQueueSerial(Context *context,
                                               const QueueSerial &queueSerial,
                                               uint64_t timeout)
 {
-    vk::ResourceUse use(queueSerial);
+    ResourceUse use(queueSerial);
     return finishResourceUse(context, use, timeout);
 }
 
 angle::Result CommandQueue::waitIdle(Context *context, uint64_t timeout)
 {
     // Fill the local variable with lock
-    vk::ResourceUse use;
+    ResourceUse use;
     {
         std::lock_guard<angle::SimpleMutex> lock(mMutex);
         if (mInFlightCommands.empty())
@@ -1492,7 +1421,7 @@ angle::Result CommandQueue::waitForResourceUseToFinishWithUserTimeout(Context *c
     return angle::Result::Continue;
 }
 
-bool CommandQueue::isBusy(vk::Renderer *renderer) const
+bool CommandQueue::isBusy(Renderer *renderer) const
 {
     // No lock is needed here since we are accessing atomic variables only.
     size_t maxIndex = renderer->getLargestQueueSerialIndexEverAllocated();
@@ -1515,8 +1444,8 @@ angle::Result CommandQueue::submitCommands(Context *context,
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandQueue::submitCommands");
     std::unique_lock<angle::SimpleMutex> lock(mMutex);
-    vk::Renderer *renderer = context->getRenderer();
-    VkDevice device        = renderer->getDevice();
+    Renderer *renderer = context->getRenderer();
+    VkDevice device    = renderer->getDevice();
 
     ++mPerfCounters.commandQueueSubmitCallsTotal;
     ++mPerfCounters.commandQueueSubmitCallsPerFrame;
@@ -1635,7 +1564,7 @@ angle::Result CommandQueue::queueSubmit(Context *context,
                                         const QueueSerial &submitQueueSerial)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandQueue::queueSubmit");
-    vk::Renderer *renderer = context->getRenderer();
+    Renderer *renderer = context->getRenderer();
 
     // Lock relay to ensure the ordering of submission strictly follow the context's submission
     // order. This lock relay (first take mMutex and then mQueueSubmitMutex, and then release
@@ -1719,7 +1648,7 @@ void CommandQueue::resetPerFramePerfCounters()
 
 angle::Result CommandQueue::releaseFinishedCommandsAndCleanupGarbage(Context *context)
 {
-    vk::Renderer *renderer = context->getRenderer();
+    Renderer *renderer = context->getRenderer();
     if (renderer->isAsyncCommandBufferResetAndGarbageCleanupEnabled())
     {
         renderer->requestAsyncCommandsAndGarbageCleanup(context);
@@ -1738,7 +1667,7 @@ angle::Result CommandQueue::cleanupSomeGarbage(Context *context,
                                                size_t minInFlightBatchesToKeep,
                                                bool *anyGarbageCleanedOut)
 {
-    vk::Renderer *renderer = context->getRenderer();
+    Renderer *renderer = context->getRenderer();
 
     bool anyGarbageCleaned = false;
 
