@@ -692,7 +692,7 @@ class PixelLocalStorageImageLoadStore : public PixelLocalStorage
             // to a PLS plane and attaching it to the draw framebuffer. Enabling this workaround on
             // any other platform would yield incorrect results.
             // This flag is set to true iff the framebuffer has an attachment 0 and it is enabled.
-            mHadColorAttachment0 = framebuffer->getDrawBufferMask().test(0);
+            mHadColorAttachment0 = framebuffer->getColorAttachment(0) != nullptr;
             if (!mHadColorAttachment0)
             {
                 // Indexed color masks are always available on Metal.

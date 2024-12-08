@@ -76,6 +76,8 @@ PLS_ALLOW_LIST = {
     "BufferData",
     "BufferSubData",
     "CheckFramebufferStatus",
+    "Clear",
+    "ClearColor",
     "ClipControlEXT",
     "ColorMask",
     "CullFace",

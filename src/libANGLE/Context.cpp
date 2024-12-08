@@ -527,6 +527,53 @@ bool CanSupportAEP(const gl::Version &version, const gl::Extensions &extensions)
 
     return result;
 }
+
+// Temporarily turns off draw buffers being used for pixel local storage, and only if the PLS
+// implementation is framebuffer fetch.
+//
+// NOTE: This is a little nonstandard because the glDrawBuffers entrypoint is supposed to disable
+// PLS, but since we only call it when the implementation is
+// ShPixelLocalStorageType::FramebufferFetch, it's not a problem.
+class ScopedPLSFramebufferFetchDrawBuffersDisable
+{
+  public:
+    ScopedPLSFramebufferFetchDrawBuffersDisable(Context *context) : mContext(context)
+    {
+        GLsizei nonPLSDrawBufferCount;
+        if (mContext->getImplementation()->getNativePixelLocalStorageOptions().type ==
+                ShPixelLocalStorageType::FramebufferFetch &&
+            mContext->getPrivateState().hasActivelyOverriddenPLSDrawBuffers(&nonPLSDrawBufferCount))
+        {
+            // Turn off the PLS draw buffers.
+            mHasPLSDrawBuffersWithFramebufferFetch = true;
+            Framebuffer *drawFramebuffer           = mContext->getState().getDrawFramebuffer();
+            // PLS isn't supported on the default framebuffer.
+            ASSERT(!drawFramebuffer->isDefault());
+            const DrawBuffersVector<GLenum> &drawBuffers = drawFramebuffer->getDrawBufferStates();
+            ASSERT(drawBuffers.size() <= std::size(mOriginalDrawBufferState));
+            std::copy(drawBuffers.begin(), drawBuffers.end(), mOriginalDrawBufferState.data());
+            mOriginalDrawBufferCount = static_cast<GLsizei>(drawBuffers.size());
+            // Turn off all non-PLS draw buffers.
+            mContext->drawBuffers(std::min(mOriginalDrawBufferCount, nonPLSDrawBufferCount),
+                                  mOriginalDrawBufferState.data());
+        }
+    }
+
+    ~ScopedPLSFramebufferFetchDrawBuffersDisable()
+    {
+        if (mHasPLSDrawBuffersWithFramebufferFetch)
+        {
+            // Restore the PLS draw buffers.
+            mContext->drawBuffers(mOriginalDrawBufferCount, mOriginalDrawBufferState.data());
+        }
+    }
+
+  private:
+    Context *const mContext;
+    bool mHasPLSDrawBuffersWithFramebufferFetch = false;
+    std::array<GLenum, IMPLEMENTATION_MAX_DRAW_BUFFERS> mOriginalDrawBufferState;
+    GLsizei mOriginalDrawBufferCount;
+};
 }  // anonymous namespace
 
 #if defined(ANGLE_PLATFORM_APPLE)
@@ -4768,6 +4815,10 @@ void Context::clear(GLbitfield mask)
     {
         return;
     }
+
+    // If we have active PLS using framebuffer fetch, disable those draw buffers so we don't clear
+    // the pixel local store.
+    ScopedPLSFramebufferFetchDrawBuffersDisable scopedPLSFramebufferFetchDrawBuffersDisable(this);
 
     // Remove clear bits that are ineffective. An effective clear changes at least one fragment. If
     // color/depth/stencil masks make the clear ineffective we skip it altogether.

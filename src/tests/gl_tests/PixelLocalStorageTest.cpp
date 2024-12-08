@@ -112,12 +112,36 @@ using namespace angle;
         EXPECT_EQ(value, static_cast<GLint>(expectedValue));           \
     }
 
+#define EXPECT_FRAMEBUFFER_ATTACHMENT_TYPE(framebuffer, attachment, value)                    \
+    {                                                                                         \
+        GLint attachmentType = 1234567890;                                                    \
+        glGetFramebufferAttachmentParameteriv(                                                \
+            framebuffer, attachment, GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE, &attachmentType); \
+        EXPECT_EQ(attachmentType, static_cast<GLint>(value));                                 \
+    }
+
 #define EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(framebuffer, attachment, value)                    \
     {                                                                                         \
-        GLint attachmentName = 0xbaadc0de;                                                    \
+        GLint attachmentName = 1234567890;                                                    \
         glGetFramebufferAttachmentParameteriv(                                                \
             framebuffer, attachment, GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME, &attachmentName); \
         EXPECT_EQ(attachmentName, static_cast<GLint>(value));                                 \
+    }
+
+#define EXPECT_FRAMEBUFFER_ATTACHMENT_LEVEL(framebuffer, attachment, value)                      \
+    {                                                                                            \
+        GLint attachmentLevel = 1234567890;                                                      \
+        glGetFramebufferAttachmentParameteriv(                                                   \
+            framebuffer, attachment, GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL, &attachmentLevel); \
+        EXPECT_EQ(attachmentLevel, static_cast<GLint>(value));                                   \
+    }
+
+#define EXPECT_FRAMEBUFFER_ATTACHMENT_LAYER(framebuffer, attachment, value)                      \
+    {                                                                                            \
+        GLint attachmentLayer = 1234567890;                                                      \
+        glGetFramebufferAttachmentParameteriv(                                                   \
+            framebuffer, attachment, GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER, &attachmentLayer); \
+        EXPECT_EQ(attachmentLayer, static_cast<GLint>(value));                                   \
     }
 
 #define EXPECT_GL_COLOR_MASK(r, g, b, a)                         \
@@ -207,6 +231,7 @@ class PLSTestTexture
         }
     }
     operator GLuint() const { return mID; }
+    GLuint id() const { return mID; }
 
   private:
     PLSTestTexture &operator=(const PLSTestTexture &) = delete;
@@ -3145,6 +3170,208 @@ TEST_P(PixelLocalStorageTest, RasterizerDiscard)
     glEndPixelLocalStorageANGLE(1, GLenumArray({GL_STORE_OP_STORE_ANGLE}));
     attachTexture2DToScratchFBO(tex);
     EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::red);
+}
+
+// Check that glClear does not clear PLS planes.
+TEST_P(PixelLocalStorageTest, ClearWithActivePLS)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+
+    PLSTestTexture pls0(GL_RGBA8);
+    PLSTestTexture pls1(GL_RGBA8);
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexturePixelLocalStorageANGLE(0, pls0, 0, 0);
+    glFramebufferTexturePixelLocalStorageANGLE(1, pls1, 0, 0);
+
+    constexpr static int NUM_PLANES = 2;
+    int maxColorAttachmentsWith2PLSPlanes =
+        std::min(MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES - 2,
+                 MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE);
+    int numColorAttachments = std::min(maxColorAttachmentsWith2PLSPlanes, 2);
+
+    PLSTestTexture colorAttachment0(GL_RGBA8);
+    PLSTestTexture colorAttachment1(GL_RGBA8);
+
+    for (int colorAttachmentMask = 0; colorAttachmentMask < (1 << numColorAttachments);
+         ++colorAttachmentMask)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        if (numColorAttachments >= 2)
+        {
+            glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D,
+                                   colorAttachment1, 0);
+        }
+        if (numColorAttachments >= 1)
+        {
+            glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                   colorAttachment0, 0);
+        }
+
+        // Clear color attachments.
+        glDrawBuffers(2, GLenumArray({GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1}));
+        if (numColorAttachments >= 2)
+        {
+            float green[4] = {0, 1, 0, 1};
+            glClearBufferfv(GL_COLOR, 1, green);
+            glReadBuffer(GL_COLOR_ATTACHMENT1);
+            EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::green);
+        }
+        if (numColorAttachments >= 1)
+        {
+            float red[4] = {1, 0, 0, 1};
+            glClearBufferfv(GL_COLOR, 0, red);
+            glReadBuffer(GL_COLOR_ATTACHMENT0);
+            EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::red);
+        }
+
+        // Only enable draw buffers that are in colorAttachmentMask.
+        GLenum drawBuffers[2];
+        for (int i = 0; i < 2; ++i)
+        {
+            drawBuffers[i] = (colorAttachmentMask & (1 << i)) ? GL_COLOR_ATTACHMENT0 + i : GL_NONE;
+        }
+        glDrawBuffers(2, drawBuffers);
+
+        glFramebufferPixelLocalClearValuefvANGLE(0, ClearF(0, 0, 1, 1));
+        glFramebufferPixelLocalClearValuefvANGLE(1, ClearF(0, 1, 1, 1));
+        glBeginPixelLocalStorageANGLE(
+            NUM_PLANES, GLenumArray({GL_LOAD_OP_CLEAR_ANGLE, GL_LOAD_OP_CLEAR_ANGLE}));
+        EXPECT_GL_NO_ERROR();
+        EXPECT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, NUM_PLANES);
+
+        glClearColor(1, 1, 1, 1);
+        glEnable(GL_SCISSOR_TEST);
+        glScissor(0, 0, 10, H);
+        if (numColorAttachments != 0)
+        {
+            glClear(GL_COLOR_BUFFER_BIT);
+            EXPECT_GL_NO_ERROR();
+        }
+        glDisable(GL_SCISSOR_TEST);
+        EXPECT_GL_NO_ERROR();
+
+        glEndPixelLocalStorageANGLE(
+            NUM_PLANES, GLenumArray({GL_STORE_OP_STORE_ANGLE, GL_STORE_OP_STORE_ANGLE}));
+
+        // Make sure glClear worked on the enabled color attachments, and did not clear the disabled
+        // ones.
+        if (numColorAttachments >= 2)
+        {
+            glReadBuffer(GL_COLOR_ATTACHMENT1);
+            EXPECT_PIXEL_RECT_EQ(0, 0, 10, H,
+                                 (colorAttachmentMask & 2) ? GLColor::white : GLColor::green);
+            EXPECT_PIXEL_RECT_EQ(10, 0, W - 10, H, GLColor::green);
+        }
+        if (numColorAttachments >= 1)
+        {
+            glReadBuffer(GL_COLOR_ATTACHMENT0);
+            EXPECT_PIXEL_RECT_EQ(0, 0, 10, H,
+                                 (colorAttachmentMask & 1) ? GLColor::white : GLColor::red);
+            EXPECT_PIXEL_RECT_EQ(10, 0, W - 10, H, GLColor::red);
+        }
+
+        // Make sure glClear did not touch the PLS planes.
+        attachTexture2DToScratchFBO(pls0);
+        EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::blue);
+
+        attachTexture2DToScratchFBO(pls1);
+        EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::cyan);
+
+        // Clear to check that the draw buffers were properly restored after we cleared with PLS
+        // active.
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glClearColor(0, 0, 0, 1);
+        glEnable(GL_SCISSOR_TEST);
+        glScissor(0, 0, 10, H);
+        if (numColorAttachments >= 1)
+        {
+            glClear(GL_COLOR_BUFFER_BIT);
+        }
+        glDisable(GL_SCISSOR_TEST);
+        EXPECT_GL_NO_ERROR();
+
+        // Make sure glClear worked on the enabled color attachments, and did not clear the disabled
+        // ones.
+        if (numColorAttachments >= 2)
+        {
+            glReadBuffer(GL_COLOR_ATTACHMENT1);
+            EXPECT_PIXEL_RECT_EQ(0, 0, 10, H,
+                                 (colorAttachmentMask & 2) ? GLColor::black : GLColor::green);
+            EXPECT_PIXEL_RECT_EQ(10, 0, W - 10, H, GLColor::green);
+        }
+        if (numColorAttachments >= 1)
+        {
+            glReadBuffer(GL_COLOR_ATTACHMENT0);
+            EXPECT_PIXEL_RECT_EQ(0, 0, 10, H,
+                                 (colorAttachmentMask & 1) ? GLColor::black : GLColor::red);
+            EXPECT_PIXEL_RECT_EQ(10, 0, W - 10, H, GLColor::red);
+        }
+
+        // Make sure glClear still did not touch the PLS planes.
+        attachTexture2DToScratchFBO(pls0);
+        EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::blue);
+
+        attachTexture2DToScratchFBO(pls1);
+        EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::cyan);
+        EXPECT_GL_NO_ERROR();
+    }
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Check the Intel-Mac workaround for GL_COLOR_ATTACHMENT0. On this platform, it has been necessary
+// in the past to attach a texture on GL_COLOR_ATTACHMENT0 when rendering PLS only to storage
+// textures.
+//
+// Check that:
+//   1) Needed workarounds are applied and PLS draws correctly.
+//   2) The workarounds do not affect GL state after PLS ends.
+//
+TEST_P(PixelLocalStorageTest, ColorAttachment0Workaround)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+    ANGLE_SKIP_TEST_IF(MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE < 2);
+    ANGLE_SKIP_TEST_IF(MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES < 3);
+
+    mProgram.compile(R"(
+        layout(binding=0, rgba8) uniform lowp pixelLocalANGLE tex;
+        void main()
+        {
+            pixelLocalStoreANGLE(tex, pixelLocalLoadANGLE(tex) + vec4(0, 1, 0, 1));
+        })");
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    PLSTestTexture pls(GL_RGBA8);
+    glFramebufferTexturePixelLocalStorageANGLE(0, pls, 0, 0);
+    glFramebufferPixelLocalClearValuefvANGLE(0, ClearF(1, 0, 0, 1));
+
+    GLTexture attachment0;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, attachment0);
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 2, GL_RGBA8, W * 2, H * 2, 3);
+
+    // Use PLS with:
+    //   1) GL_COLOR_ATTACHMENT0 attached.
+    //   2) drawbuffer 0 disabled.
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, attachment0, 1, 2);
+    glDrawBuffers(1, GLenumArray({GL_NONE}));
+    glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_LOAD_OP_CLEAR_ANGLE}));
+    mProgram.drawBoxes({{{FULLSCREEN}}});
+    glEndPixelLocalStorageANGLE(1, GLenumArray({GL_STORE_OP_STORE_ANGLE}));
+    EXPECT_GL_NO_ERROR();
+
+    // Ensure our workaround didn't change the COLOR_ATTACHMENT0 binding.
+    EXPECT_FRAMEBUFFER_ATTACHMENT_TYPE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE);
+    EXPECT_FRAMEBUFFER_ATTACHMENT_NAME(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, attachment0);
+    EXPECT_FRAMEBUFFER_ATTACHMENT_LEVEL(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, 1);
+    EXPECT_FRAMEBUFFER_ATTACHMENT_LAYER(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, 2);
+    EXPECT_GL_NO_ERROR();
+
+    attachTexture2DToScratchFBO(pls);
+    EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::yellow);
+
     ASSERT_GL_NO_ERROR();
 }
 
@@ -6781,6 +7008,97 @@ TEST_P(PixelLocalStorageValidationTest, InvalidateFramebufferDuringPLS)
     {
         glDiscardFramebufferEXT(GL_FRAMEBUFFER, 0, nullptr);
         EXPECT_GL_NO_ERROR();
+    }
+
+    ASSERT_GL_NO_ERROR();
+}
+
+// Check that glClear with active PLS doesn't accidentally turn off draw buffers when there is no
+// color attachment.
+TEST_P(PixelLocalStorageValidationTest, ClearDuringPLSDoesntAffectDrawBuffers)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+
+    PLSTestTexture pls0(GL_RGBA8);
+    PLSTestTexture pls1(GL_RGBA8);
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexturePixelLocalStorageANGLE(0, pls0, 0, 0);
+    glFramebufferTexturePixelLocalStorageANGLE(1, pls1, 0, 0);
+
+    constexpr static int NUM_PLANES = 2;
+    int maxColorAttachmentsWith2PLSPlanes =
+        std::min(MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES - 2,
+                 MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE);
+    int numColorAttachments = std::min(maxColorAttachmentsWith2PLSPlanes, 2);
+
+    PLSTestTexture colorAttachment0(GL_RGBA8);
+    PLSTestTexture colorAttachment1(GL_RGBA8);
+
+    for (int colorAttachmentMask = 0; colorAttachmentMask < (1 << numColorAttachments);
+         ++colorAttachmentMask)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        if (numColorAttachments >= 2)
+        {
+            glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D,
+                                   colorAttachment1, 0);
+        }
+        if (numColorAttachments >= 1)
+        {
+            glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                   colorAttachment0, 0);
+        }
+
+        // Only enable draw buffers that are in colorAttachmentMask.
+        GLenum drawBuffers[2];
+        for (int i = 0; i < 2; ++i)
+        {
+            drawBuffers[i] = (colorAttachmentMask & (1 << i)) ? GL_COLOR_ATTACHMENT0 + i : GL_NONE;
+        }
+        glDrawBuffers(2, drawBuffers);
+
+        if (colorAttachmentMask != 0 && colorAttachmentMask != 3)
+        {
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+            glDrawBuffers(2, GLenumArray({GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1}));
+            if (numColorAttachments >= 2)
+            {
+                glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                       (colorAttachmentMask & 2) ? colorAttachment1.id() : 0, 0);
+            }
+            if (numColorAttachments >= 1)
+            {
+                glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D,
+                                       (colorAttachmentMask & 1) ? colorAttachment0.id() : 0, 0);
+            }
+
+            glBeginPixelLocalStorageANGLE(
+                NUM_PLANES, GLenumArray({GL_LOAD_OP_CLEAR_ANGLE, GL_LOAD_OP_CLEAR_ANGLE}));
+            EXPECT_GL_NO_ERROR();
+            EXPECT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, NUM_PLANES);
+            EXPECT_GL_INTEGER(GL_DRAW_BUFFER1,
+                              numColorAttachments >= 2 ? GL_COLOR_ATTACHMENT1 : GL_NONE);
+            EXPECT_GL_INTEGER(GL_DRAW_BUFFER0,
+                              numColorAttachments >= 1 ? GL_COLOR_ATTACHMENT0 : GL_NONE);
+
+            // Check that glClear doesn't turn off any draw buffers. We have to do this check now
+            // because glEndPixelLocalStorageANGLE restores them anyway.
+            glClear(GL_COLOR_BUFFER_BIT);
+            EXPECT_GL_INTEGER(GL_DRAW_BUFFER1,
+                              numColorAttachments >= 2 ? GL_COLOR_ATTACHMENT1 : GL_NONE);
+            EXPECT_GL_INTEGER(GL_DRAW_BUFFER0,
+                              numColorAttachments >= 1 ? GL_COLOR_ATTACHMENT0 : GL_NONE);
+
+            glEndPixelLocalStorageANGLE(
+                NUM_PLANES, GLenumArray({GL_STORE_OP_STORE_ANGLE, GL_STORE_OP_STORE_ANGLE}));
+
+            // Make sure the draw buffers stuck after disabling PLS.
+            EXPECT_GL_INTEGER(GL_DRAW_BUFFER1,
+                              numColorAttachments >= 2 ? GL_COLOR_ATTACHMENT1 : GL_NONE);
+            EXPECT_GL_INTEGER(GL_DRAW_BUFFER0,
+                              numColorAttachments >= 1 ? GL_COLOR_ATTACHMENT0 : GL_NONE);
+        }
     }
 
     ASSERT_GL_NO_ERROR();

@@ -655,6 +655,7 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 
 42266150 PIXEL4ORXL VULKAN : PixelLocalStorageTest.MaxCombinedDrawBuffersAndPLSPlanes/* = SKIP
 42266150 PIXEL4ORXL VULKAN : PixelLocalStorageTest.BlendColorMaskAndClear/* = SKIP
+42266150 PIXEL4ORXL VULKAN : PixelLocalStorageTest.ClearWithActivePLS/* = SKIP
 42266150 PIXEL4ORXL VULKAN : PixelLocalStorageTest.CopyTexSubImage/* = SKIP
 42266151 PIXEL4ORXL VULKAN : PixelLocalStorageTest.MipMapLevels/* = SKIP
 42266242 PIXEL4ORXL VULKAN : PixelLocalStorageTest.DrawStateReset/* = SKIP
@@ -960,6 +961,9 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 
 // Metal internal compiler error
 42265076 MAC AMD METAL : ProgramBinaryES3Test.SaveAndLoadDetachedShaders/* = SKIP
+
+// Issue with the ANGLE workaround for a driver bug.
+402810076 MAC AMD METAL : PixelLocalStorageTest.ColorAttachment0Workaround/* = SKIP
 
 // GLES1 failures introduced during ubershader optimization
 42265148 MAC INTEL OPENGL : BootAnimationTest.DefaultBootAnimation/* = SKIP

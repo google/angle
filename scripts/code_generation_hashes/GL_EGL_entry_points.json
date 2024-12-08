@@ -6,7 +6,7 @@
   "scripts/entry_point_packed_gl_enums.json":
     "57a3a729fd25032bc336f4b6a55bc238",
   "scripts/generate_entry_points.py":
-    "c5636b04081fd5ed4b02cd48f252a334",
+    "68ecce77ae59027cf944b997c3733213",
   "scripts/gl_angle_ext.xml":
     "ef111314bcf6e8c9cdc1a391080f1d80",
   "scripts/registry_xml.py":
@@ -112,7 +112,7 @@
   "src/libGLESv2/entry_points_gles_1_0_autogen.h":
     "1d3aef77845a416497070985a8e9cb31",
   "src/libGLESv2/entry_points_gles_2_0_autogen.cpp":
-    "a3facb4fb7453d04cae2f06cee0b56b0",
+    "9c644b4479e4989481f1109a22a0847e",
   "src/libGLESv2/entry_points_gles_2_0_autogen.h":
     "691c60c2dfed9beca68aa1f32aa2c71b",
   "src/libGLESv2/entry_points_gles_3_0_autogen.cpp":
