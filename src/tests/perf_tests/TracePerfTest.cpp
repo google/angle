@@ -2863,8 +2863,31 @@ void TracePerfTest::saveScreenshot(const std::string &screenshotName)
 
     glFinish();
 
+    // Backup the current pixel pack state
+    GLint originalPackRowLength;
+    GLint originalPackSkipRows;
+    GLint originalPackSkipPixels;
+    GLint originalPackAlignment;
+
+    glGetIntegerv(GL_PACK_ROW_LENGTH, &originalPackRowLength);
+    glGetIntegerv(GL_PACK_SKIP_ROWS, &originalPackSkipRows);
+    glGetIntegerv(GL_PACK_SKIP_PIXELS, &originalPackSkipPixels);
+    glGetIntegerv(GL_PACK_ALIGNMENT, &originalPackAlignment);
+
+    // Set default pixel pack parameters (per ES 3.2 Table 16.1)
+    glPixelStorei(GL_PACK_ROW_LENGTH, 0);
+    glPixelStorei(GL_PACK_SKIP_ROWS, 0);
+    glPixelStorei(GL_PACK_SKIP_PIXELS, 0);
+    glPixelStorei(GL_PACK_ALIGNMENT, 4);
+
     glReadPixels(0, 0, mTestParams.windowWidth, mTestParams.windowHeight, GL_RGBA, GL_UNSIGNED_BYTE,
                  pixelData.data());
+
+    // Restore the original pixel pack state
+    glPixelStorei(GL_PACK_ROW_LENGTH, originalPackRowLength);
+    glPixelStorei(GL_PACK_SKIP_ROWS, originalPackSkipRows);
+    glPixelStorei(GL_PACK_SKIP_PIXELS, originalPackSkipPixels);
+    glPixelStorei(GL_PACK_ALIGNMENT, originalPackAlignment);
 
     // Convert to RGB and flip y.
     std::vector<uint8_t> rgbData(pixelCount * 3);
