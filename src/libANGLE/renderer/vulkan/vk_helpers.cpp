@@ -2575,7 +2575,21 @@ void RenderPassCommandBufferHelper::finalizeColorImageLayout(
         mImageOptimizeForPresent->setCurrentImageLayout(context->getRenderer(),
                                                         ImageLayout::Present);
 
-        if (!context->getFeatures().preferDynamicRendering.enabled)
+        if (context->getFeatures().preferDynamicRendering.enabled)
+        {
+            if (context->getRenderer()->isAsyncCommandQueueEnabled())
+            {
+                // When dynamic rendering is enabled, image layout change will be issued at
+                // flushToPrimary() time. If async command queue is also enabled, that
+                // flushToPrimary will be on separate thread which causes problems for
+                // RefCountedEvent which is not thread safe. There is no real safety issue here
+                // since you will not expect anyone else try to use this image, but it will trigger
+                // assertion in RefCountedEvent::releaseImpl. We just force to pipelineBarrier for
+                // that final layout transition here to avoid assertion.
+                mImageOptimizeForPresent->releaseCurrentRefCountedEvent(context);
+            }
+        }
+        else
         {
             if (isResolveImage)
             {
