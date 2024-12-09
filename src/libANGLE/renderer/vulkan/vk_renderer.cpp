@@ -229,6 +229,7 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-VkBufferViewCreateInfo-format-08779",
     // https://anglebug.com/42266639
     "VUID-VkVertexInputBindingDivisorDescriptionKHR-divisor-01870",
+    "VUID-VkVertexInputBindingDivisorDescription-divisor-01870",
     // https://anglebug.com/42266675
     "VUID-VkGraphicsPipelineCreateInfo-topology-08773",
     // https://anglebug.com/42265766
@@ -279,6 +280,8 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdDraw-None-06550",
     // https://anglebug.com/345304850
     "WARNING-Shader-OutputNotConsumed",
+    // https://anglebug.com/383311444
+    "VUID-vkCmdDraw-None-09462",
 };
 
 // Validation messages that should be ignored only when VK_EXT_primitive_topology_list_restart is
