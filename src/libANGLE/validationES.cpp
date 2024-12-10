@@ -7474,7 +7474,7 @@ bool ValidatePixelPack(const Context *context,
 
     if (bufSize >= 0)
     {
-        if (pixelPackBuffer == nullptr && static_cast<size_t>(bufSize) < endByte)
+        if (static_cast<size_t>(bufSize) < endByte)
         {
             ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInsufficientBufferSize);
             return false;
