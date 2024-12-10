@@ -4642,6 +4642,13 @@ void QueryContextAttrib(const gl::Context *context, EGLint attribute, EGLint *va
         case EGL_PROTECTED_CONTENT_EXT:
             *value = context->getState().hasProtectedContent();
             break;
+        case EGL_CONTEXT_MEMORY_USAGE_ANGLE:
+        {
+            uint64_t memory = context->getMemoryUsage();
+            value[0]        = static_cast<GLint>(memory & 0xffffffff);
+            value[1]        = static_cast<GLint>(memory >> 32);
+        }
+        break;
         default:
             UNREACHABLE();
             break;

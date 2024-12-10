@@ -444,6 +444,11 @@ EGLAPI void EGLAPIENTRY eglSetValidationEnabledANGLE(EGLBoolean validationState)
 #endif
 #endif /* EGL_ANGLE_no_error */
 
+#ifndef EGL_ANGLE_memory_usage_report
+#define EGL_ANGLE_memory_usage_report 1
+#define EGL_CONTEXT_MEMORY_USAGE_ANGLE 0x3462
+#endif /* EGL_ANGLE_memory_usage_report */
+
 // clang-format on
 
 #endif  // INCLUDE_EGL_EGLEXT_ANGLE_

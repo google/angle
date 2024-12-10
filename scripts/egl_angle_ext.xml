@@ -529,6 +529,11 @@
                 <command name="eglSetValidationEnabledANGLE"/>
             </require>
         </extension>
+        <extension name="EGL_ANGLE_memory_usage_report" supported="egl">
+            <require>
+                <enum name="EGL_CONTEXT_MEMORY_USAGE_ANGLE"/>
+            </require>
+        </extension>
     </extensions>
 
     <!-- SECTION: EGL enumerant (token) definitions. -->

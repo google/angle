@@ -5776,6 +5776,16 @@ bool ValidateQueryContext(const ValidationContext *val,
             }
             break;
 
+        case EGL_CONTEXT_MEMORY_USAGE_ANGLE:
+            if (!display->getExtensions().memoryUsageReportANGLE)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "Attribute EGL_CONTEXT_MEMORY_USAGE_ANGLE requires "
+                              "EGL_ANGLE_memory_usage_report.");
+                return false;
+            }
+            break;
+
         default:
             val->setError(EGL_BAD_ATTRIBUTE, "Invalid context attribute: 0x%04X", attribute);
             return false;

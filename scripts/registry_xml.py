@@ -346,6 +346,7 @@ supported_egl_extensions = [
     "EGL_ANGLE_external_context_and_surface",
     "EGL_ANGLE_feature_control",
     "EGL_ANGLE_ggp_stream_descriptor",
+    "EGL_ANGLE_memory_usage_report",
     "EGL_ANGLE_metal_create_context_ownership_identity",
     "EGL_ANGLE_metal_shared_event_sync",
     "EGL_ANGLE_no_error",

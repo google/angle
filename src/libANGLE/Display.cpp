@@ -2264,6 +2264,9 @@ void Display::initDisplayExtensions()
     // All backends support specific context versions
     mDisplayExtensions.createContextBackwardsCompatible = true;
 
+    // EGL_ANGLE_memory_usage_report is implemented on front end.
+    mDisplayExtensions.memoryUsageReportANGLE = true;
+
     mDisplayExtensionString = GenerateExtensionsString(mDisplayExtensions);
 }
 

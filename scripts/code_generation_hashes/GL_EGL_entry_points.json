@@ -1,6 +1,6 @@
 {
   "scripts/egl_angle_ext.xml":
-    "b3bef068d5c832d52adf78047a22b467",
+    "0a03416ded6719c24d8198f58f8ad0c6",
   "scripts/entry_point_packed_egl_enums.json":
     "a72ae855c6b403912103b519139951a1",
   "scripts/entry_point_packed_gl_enums.json":
@@ -10,7 +10,7 @@
   "scripts/gl_angle_ext.xml":
     "ef111314bcf6e8c9cdc1a391080f1d80",
   "scripts/registry_xml.py":
-    "d5aa8e863f9ba75df0ee589cfb05189a",
+    "0a4a8297242bf7c000e7349cf6934822",
   "src/common/entry_points_enum_autogen.cpp":
     "fdf900943a9f51164bd1134d14e0ecb0",
   "src/common/entry_points_enum_autogen.h":

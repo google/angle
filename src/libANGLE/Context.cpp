@@ -10097,6 +10097,17 @@ void Context::texStorageAttribs3D(GLenum target,
         texture->setStorageAttribs(this, textype, levels, internalFormat, size, attribList));
 }
 
+size_t Context::getMemoryUsage() const
+{
+    size_t memoryUsage = 0;
+
+    memoryUsage += mState.mBufferManager->getTotalMemorySize();
+    memoryUsage += mState.mRenderbufferManager->getTotalMemorySize();
+    memoryUsage += mState.mTextureManager->getTotalMemorySize();
+
+    return memoryUsage;
+}
+
 // ErrorSet implementation.
 ErrorSet::ErrorSet(Debug *debug,
                    const angle::FrontendFeatures &frontendFeatures,

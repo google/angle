@@ -827,6 +827,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     bool areBlobCacheFuncsSet() const;
 
+    size_t getMemoryUsage() const;
+
   private:
     void initializeDefaultResources();
     void releaseSharedObjects();
