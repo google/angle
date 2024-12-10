@@ -6,7 +6,7 @@
   "src/tests/deqp_support/deqp_data_autogen.gni":
     "ee142f516fad1d6aa58ac8dc4b01ef32",
   "third_party/VK-GL-CTS/src/CMakeLists.txt":
-    "141ae0b2942bbaa81c049dfee48d7334",
+    "38662e86e1228794a3883c5409422456",
   "third_party/VK-GL-CTS/src/execserver/CMakeLists.txt":
     "38aa187592e6ef9a331fc1ea313fc68d",
   "third_party/VK-GL-CTS/src/executor/CMakeLists.txt":
@@ -45,6 +45,10 @@
     "3dcd5a676779022e768aaa35e286757d",
   "third_party/VK-GL-CTS/src/external/spirv-tools/CMakeLists.txt":
     "cca8b4b984c40afb9880d177d53623a1",
+  "third_party/VK-GL-CTS/src/external/video_generator/CMakeLists.txt":
+    "72cbf91bf77673ed6af486ba371d186a",
+  "third_party/VK-GL-CTS/src/external/vk-video-samples/CMakeLists.txt":
+    "aa653441a7ad71ee278dccd76e66e8e2",
   "third_party/VK-GL-CTS/src/external/vulkan-validationlayers/CMakeLists.txt":
     "0e910d92ced28115d4c7995daa81d464",
   "third_party/VK-GL-CTS/src/external/vulkancts/framework/vulkan/CMakeLists.txt":
@@ -146,11 +150,11 @@
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/util/CMakeLists.txt":
     "0ada8dd61fde51afc6c1313002489cc4",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/video/CMakeLists.txt":
-    "88931b3f83a7a85a129c6a06eafefc4a",
+    "1d57751c722ec6543bf8bf2f5594a632",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/wsi/CMakeLists.txt":
     "4b9b02f3fab98243826e777c3e71e340",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/ycbcr/CMakeLists.txt":
-    "917e47da48c8e5be8cbbf2b76b8d1955",
+    "74c13265acc58f025f8428179a668eaf",
   "third_party/VK-GL-CTS/src/external/vulkancts/vkscpc/CMakeLists.txt":
     "b1e0a3495cabd10a8020bf0aa2635ee1",
   "third_party/VK-GL-CTS/src/external/vulkancts/vkscserver/CMakeLists.txt":
