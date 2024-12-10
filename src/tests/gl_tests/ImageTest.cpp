@@ -3737,6 +3737,11 @@ TEST_P(ImageTestES3, RenderToYUVAHB)
     glUseProgram(mRenderYUVProgram);
     glUniform4f(mRenderYUVUniformLocation, drawColor[0] / 255.0f, drawColor[1] / 255.0f,
                 drawColor[2] / 255.0f, drawColor[3] / 255.0f);
+
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
+    drawQuad(mRenderYUVProgram, "position", 0.0f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
     drawQuad(mRenderYUVProgram, "position", 0.0f);
     ASSERT_GL_NO_ERROR();
 
