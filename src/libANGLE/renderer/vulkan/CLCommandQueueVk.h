@@ -319,7 +319,7 @@ class CLCommandQueueVk : public CLCommandQueueImpl
     CLPlatformVk *getPlatform() { return mContext->getPlatform(); }
     CLContextVk *getContext() { return mContext; }
 
-    cl_mem getOrCreatePrintfBuffer();
+    cl::MemoryPtr getOrCreatePrintfBuffer();
 
     angle::Result finishQueueSerial(const QueueSerial queueSerial);
 

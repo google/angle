@@ -110,6 +110,7 @@ angle::Result DispatchWorkThread::notify(QueueSerial queueSerial)
     ASSERT(queueSerial.getIndex() == mQueueSerialIndex);
 
     // QueueSerials are always received in order, its either same or greater than last one
+    std::unique_lock<std::mutex> ul(mThreadMutex);
     if (!mQueueSerials.empty())
     {
         QueueSerial &lastSerial = mQueueSerials.back();
@@ -124,7 +125,6 @@ angle::Result DispatchWorkThread::notify(QueueSerial queueSerial)
     size_t numIterations = 0;
     while (mQueueSerials.full() && numIterations < kTimeoutCheckIterations)
     {
-        std::unique_lock<std::mutex> ul(mThreadMutex);
         mHasEmptySlot.wait_for(ul, std::chrono::milliseconds(kSleepInMS),
                                [this]() { return !mQueueSerials.full(); });
         numIterations++;
@@ -146,19 +146,18 @@ angle::Result DispatchWorkThread::finishLoop()
 
     while (true)
     {
-        {
-            std::unique_lock<std::mutex> ul(mThreadMutex);
-            mHasWorkSubmitted.wait(ul,
-                                   [this]() { return !mQueueSerials.empty() || mIsTerminating; });
-        }
+        std::unique_lock<std::mutex> ul(mThreadMutex);
+        mHasWorkSubmitted.wait(ul, [this]() { return !mQueueSerials.empty() || mIsTerminating; });
 
         while (!mQueueSerials.empty())
         {
             QueueSerial queueSerial = mQueueSerials.front();
             mQueueSerials.pop();
             mHasEmptySlot.notify_one();
+            ul.unlock();
             // finish the work associated with the queue serial
             ANGLE_TRY(mCommandQueue->finishQueueSerial(queueSerial));
+            ul.lock();
         }
 
         if (mIsTerminating)
@@ -223,7 +222,10 @@ CLCommandQueueVk::~CLCommandQueueVk()
 
     if (mPrintfBuffer)
     {
-        mPrintfBuffer->release();
+        // The lifetime of printf buffer is scoped to command queue, release and destroy.
+        const bool wasLastUser = mPrintfBuffer->release();
+        ASSERT(wasLastUser);
+        delete mPrintfBuffer;
     }
 
     VkDevice vkDevice = mContext->getDevice();
@@ -1459,16 +1461,11 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
                                         mContext, kernelVk.getDescriptorSetLayoutDesc(index),
                                         &kernelVk.getDescriptorSetLayouts()[*layoutIndex]),
                                     CL_INVALID_OPERATION);
-
-            ANGLE_CL_IMPL_TRY_ERROR(
-                kernelVk.getProgram()->getMetaDescriptorPool(index).bindCachedDescriptorPool(
-                    mContext, kernelVk.getDescriptorSetLayoutDesc(index), 1,
-                    mContext->getDescriptorSetLayoutCache(),
-                    &kernelVk.getProgram()->getDynamicDescriptorPoolPointer(index)),
-                CL_INVALID_OPERATION);
+            ASSERT(kernelVk.getDescriptorSetLayouts()[*layoutIndex]->valid());
 
             // Allocate descriptor set
-            ANGLE_TRY(kernelVk.allocateDescriptorSet(index, layoutIndex, mComputePassCommands));
+            ANGLE_TRY(mContext->allocateDescriptorSet(&kernelVk, index, layoutIndex,
+                                                      mComputePassCommands));
             ++layoutIndex;
         }
     }
@@ -1730,7 +1727,7 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
         UpdateDescriptorSetsBuilder &printfDescSetBuilder =
             updateDescriptorSetsBuilders[DescriptorSetIndex::Printf];
 
-        cl::Memory *clMem   = cl::Buffer::Cast(getOrCreatePrintfBuffer());
+        cl::MemoryPtr clMem = getOrCreatePrintfBuffer();
         CLBufferVk &vkMem   = clMem->getImpl<CLBufferVk>();
         uint8_t *mapPointer = nullptr;
         ANGLE_TRY(vkMem.map(mapPointer, 0));
@@ -1872,7 +1869,8 @@ angle::Result CLCommandQueueVk::createEvent(CLEventImpl::CreateFunc *createFunc,
 {
     if (createFunc != nullptr)
     {
-        *createFunc = [this, initialStatus](const cl::Event &event) {
+        *createFunc = [this, initialStatus, queueSerial = mComputePassCommands->getQueueSerial()](
+                          const cl::Event &event) {
             auto eventVk = new (std::nothrow) CLEventVk(event);
             if (eventVk == nullptr)
             {
@@ -1904,11 +1902,10 @@ angle::Result CLCommandQueueVk::createEvent(CLEventImpl::CreateFunc *createFunc,
             }
             else
             {
-                QueueSerial currentQueueSerial = mComputePassCommands->getQueueSerial();
-                eventVk->setQueueSerial(currentQueueSerial);
+                eventVk->setQueueSerial(queueSerial);
                 // Save a reference to this event to set event transitions
-                mCommandsStateMap[currentQueueSerial].events.emplace_back(
-                    &eventVk->getFrontendObject());
+                std::lock_guard<std::mutex> lock(mCommandQueueMutex);
+                mCommandsStateMap[queueSerial].events.emplace_back(&eventVk->getFrontendObject());
             }
 
             return CLEventImpl::Ptr(eventVk);
@@ -2088,7 +2085,7 @@ angle::Result CLCommandQueueVk::processPrintfBuffer()
     ASSERT(mNeedPrintfHandling);
     ASSERT(mPrintfInfos);
 
-    cl::Memory *clMem = cl::Buffer::Cast(getOrCreatePrintfBuffer());
+    cl::MemoryPtr clMem = getOrCreatePrintfBuffer();
     CLBufferVk &vkMem = clMem->getImpl<CLBufferVk>();
 
     unsigned char *data = nullptr;
@@ -2101,14 +2098,14 @@ angle::Result CLCommandQueueVk::processPrintfBuffer()
 
 // A single CL buffer is setup for every command queue of size kPrintfBufferSize. This can be
 // expanded later, if more storage is needed.
-cl_mem CLCommandQueueVk::getOrCreatePrintfBuffer()
+cl::MemoryPtr CLCommandQueueVk::getOrCreatePrintfBuffer()
 {
     if (!mPrintfBuffer)
     {
         mPrintfBuffer = cl::Buffer::Cast(mContext->getFrontendObject().createBuffer(
             nullptr, cl::MemFlags(CL_MEM_READ_WRITE), kPrintfBufferSize, nullptr));
     }
-    return mPrintfBuffer;
+    return cl::MemoryPtr(mPrintfBuffer);
 }
 
 bool CLCommandQueueVk::hasUserEventDependency() const

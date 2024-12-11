@@ -113,7 +113,7 @@ class CLBufferVk : public CLMemoryVk
                                   size_t offset,
                                   size_t size)
     {
-        getBuffer().fillWithPattern(pattern, patternSize, offset, size);
+        getBuffer().fillWithPattern(pattern, patternSize, getOffset() + offset, size);
         return angle::Result::Continue;
     }
 

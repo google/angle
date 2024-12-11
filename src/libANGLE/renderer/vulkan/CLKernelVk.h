@@ -145,6 +145,9 @@ class CLKernelVk : public CLKernelImpl
   private:
     static constexpr std::array<size_t, 3> kEmptyWorkgroupSize = {0, 0, 0};
 
+    // Initialize the descriptor pools for this kernel resources
+    angle::Result initializeDescriptorPools();
+
     CLProgramVk *mProgram;
     CLContextVk *mContext;
     std::string mName;
@@ -157,10 +160,14 @@ class CLKernelVk : public CLKernelImpl
     vk::ShaderProgramHelper mShaderProgramHelper;
     vk::ComputePipelineCache mComputePipelineCache;
     KernelSpecConstants mSpecConstants;
+
+    // Pipeline and DescriptorSetLayout Shared pointers
     vk::PipelineLayoutPtr mPipelineLayout;
     vk::DescriptorSetLayoutPointerArray mDescriptorSetLayouts{};
 
+    // DescriptorSet and DescriptorPool shared pointers for this kernel resources
     vk::DescriptorSetArray<vk::DescriptorSetPointer> mDescriptorSets;
+    vk::DescriptorSetArray<vk::DynamicDescriptorPoolPointer> mDynamicDescriptorPools;
 
     vk::DescriptorSetArray<vk::DescriptorSetLayoutDesc> mDescriptorSetLayoutDescs;
     vk::PipelineLayoutDesc mPipelineLayoutDesc;

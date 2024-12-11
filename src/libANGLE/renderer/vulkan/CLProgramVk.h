@@ -340,23 +340,8 @@ class CLProgramVk : public CLProgramImpl
                        const LinkProgramsList &LinkProgramsList);
     angle::spirv::Blob stripReflection(const DeviceProgramData *deviceProgramData);
 
-    angle::Result allocateDescriptorSet(const DescriptorSetIndex setIndex,
-                                        const vk::DescriptorSetLayout &descriptorSetLayout,
-                                        vk::CommandBufferHelperCommon *commandBuffer,
-                                        vk::DescriptorSetPointer *descriptorSetOut);
-
     // Sets the status for given associated device programs
     void setBuildStatus(const cl::DevicePtrs &devices, cl_build_status status);
-
-    vk::MetaDescriptorPool &getMetaDescriptorPool(DescriptorSetIndex index)
-    {
-        return mMetaDescriptorPools[index];
-    }
-
-    vk::DynamicDescriptorPoolPointer &getDynamicDescriptorPoolPointer(DescriptorSetIndex index)
-    {
-        return mDynamicDescriptorPools[index];
-    }
 
     const angle::HashMap<uint32_t, ClspvPrintfInfo> *getPrintfDescriptors(
         const std::string &kernelName) const;
@@ -366,8 +351,6 @@ class CLProgramVk : public CLProgramImpl
     std::string mProgramOpts;
     vk::ShaderModulePtr mShader;
     DevicePrograms mAssociatedDevicePrograms;
-    vk::DescriptorSetArray<vk::MetaDescriptorPool> mMetaDescriptorPools;
-    vk::DescriptorSetArray<vk::DynamicDescriptorPoolPointer> mDynamicDescriptorPools;
     angle::SimpleMutex mProgramMutex;
 
     std::shared_ptr<angle::WaitableEvent> mAsyncBuildEvent;

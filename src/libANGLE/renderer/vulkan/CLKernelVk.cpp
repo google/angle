@@ -39,12 +39,6 @@ CLKernelVk::CLKernelVk(const cl::Kernel &kernel,
 
 CLKernelVk::~CLKernelVk()
 {
-    for (auto &dsLayouts : mDescriptorSetLayouts)
-    {
-        dsLayouts.reset();
-    }
-
-    mPipelineLayout.reset();
     for (auto &pipelineHelper : mComputePipelineCache)
     {
         pipelineHelper.destroy(mContext->getDevice());
@@ -135,7 +129,9 @@ angle::Result CLKernelVk::init()
 
     mPipelineLayoutDesc.updatePushConstantRange(pcRange.stageFlags, pcRange.offset, pcRange.size);
 
-    return angle::Result::Continue;
+    // initialize the descriptor pools
+    // descriptor pools are setup as per their indices
+    return initializeDescriptorPools();
 }
 
 angle::Result CLKernelVk::setArg(cl_uint argIndex, size_t argSize, const void *argValue)
@@ -325,12 +321,44 @@ bool CLKernelVk::usesPrintf() const
            NonSemanticClspvReflectionMayUsePrintf;
 }
 
+angle::Result CLKernelVk::initializeDescriptorPools()
+{
+    for (DescriptorSetIndex index : angle::AllEnums<DescriptorSetIndex>())
+    {
+        if (!mDescriptorSetLayoutDescs[index].empty())
+        {
+            ANGLE_TRY(mContext->getMetaDescriptorPool().bindCachedDescriptorPool(
+                mContext, mDescriptorSetLayoutDescs[index], 1,
+                mContext->getDescriptorSetLayoutCache(), &mDynamicDescriptorPools[index]));
+        }
+    }
+    return angle::Result::Continue;
+}
+
 angle::Result CLKernelVk::allocateDescriptorSet(
     DescriptorSetIndex index,
     angle::EnumIterator<DescriptorSetIndex> layoutIndex,
     vk::OutsideRenderPassCommandBufferHelper *computePassCommands)
 {
-    return mProgram->allocateDescriptorSet(index, *mDescriptorSetLayouts[*layoutIndex],
-                                           computePassCommands, &mDescriptorSets[index]);
+    if (mDescriptorSets[index] && mDescriptorSets[index]->valid())
+    {
+        if (mDescriptorSets[index]->usedByCommandBuffer(computePassCommands->getQueueSerial()))
+        {
+            mDescriptorSets[index].reset();
+        }
+        else
+        {
+            return angle::Result::Continue;
+        }
+    }
+
+    if (mDynamicDescriptorPools[index]->valid())
+    {
+        ANGLE_TRY(mDynamicDescriptorPools[index]->allocateDescriptorSet(
+            mContext, *mDescriptorSetLayouts[*layoutIndex], &mDescriptorSets[index]));
+        computePassCommands->retainResource(mDescriptorSets[index].get());
+    }
+
+    return angle::Result::Continue;
 }
 }  // namespace rx
