@@ -3595,19 +3595,16 @@ GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(PixelLocalStorageTest);
             .disable(Feature::SupportsShaderFramebufferFetchEXT)                          \
             .disable(Feature::SupportsShaderFramebufferFetchNonCoherentEXT),              \
         PLATFORM(API, VULKAN) /* Vulkan coherent. */                                      \
-            .enable(Feature::AsyncCommandQueue)                                           \
             .enable(Feature::EmulatePixelLocalStorage),                                   \
         PLATFORM(API, VULKAN) /* Vulkan noncoherent. */                                   \
             .disable(Feature::SupportsShaderFramebufferFetch)                             \
             .disable(Feature::SupportsFragmentShaderPixelInterlock)                       \
             .enable(Feature::EmulatePixelLocalStorage),                                   \
         PLATFORM(API, VULKAN_SWIFTSHADER) /* Swiftshader coherent (framebuffer fetch). */ \
-            .enable(Feature::AsyncCommandQueue)                                           \
             .enable(Feature::EmulatePixelLocalStorage),                                   \
         PLATFORM(API, VULKAN_SWIFTSHADER) /* Swiftshader noncoherent. */                  \
             .disable(Feature::SupportsShaderFramebufferFetch)                             \
             .disable(Feature::SupportsFragmentShaderPixelInterlock)                       \
-            .enable(Feature::AsyncCommandQueue)                                           \
             .enable(Feature::EmulatePixelLocalStorage),                                   \
         PLATFORM(API, VULKAN_SWIFTSHADER) /* Test PLS not having access to                \
                                              glEnablei/glDisablei/glColorMaski. */        \

@@ -8375,12 +8375,9 @@ TEST_P(VulkanPerformanceCounterTest,
     ASSERT_GL_NO_ERROR();
 }
 
-class VulkanPerformanceCounterTest_AsyncCQ : public VulkanPerformanceCounterTest
-{};
-
-// Tests that submitting the outside command buffer during flushing staged updates and
-// "asyncCommandQueue" enabled, properly updates old command buffer with the new one.
-TEST_P(VulkanPerformanceCounterTest_AsyncCQ, SubmittingOutsideCommandBufferAssertIsOpen)
+// Regression test for a bug where submitting the outside command buffer during flushing staged
+// updates did not properly update the command buffer state.
+TEST_P(VulkanPerformanceCounterTest, SubmittingOutsideCommandBufferAssertIsOpen)
 {
     // If VK_EXT_host_image_copy is used, uploads will all be done on the CPU and there would be no
     // submissions.
@@ -8395,10 +8392,9 @@ TEST_P(VulkanPerformanceCounterTest_AsyncCQ, SubmittingOutsideCommandBufferAsser
     ASSERT_NE(-1, textureLoc);
     glUniform1i(textureLoc, 0);
 
-    // This loop shouls update texture with multiple staged updates. When kMaxBufferToImageCopySize
+    // This loop should update texture with multiple staged updates. When kMaxBufferToImageCopySize
     // threshold reached, outside command buffer will be submitted in the middle of staged updates
-    // flushing. If "asyncCommandQueue" enabled and bug present, old command buffer will not be
-    // replaced by a new one, casing "ASSERT(mIsOpen)" or UB in release.
+    // flushing.
     constexpr GLsizei kMaxOutsideRPCommandsSubmitCount = 10;
     constexpr GLsizei kTexDim                          = 1024;
     constexpr GLint kMaxSubOffset                      = 10;
@@ -8449,17 +8445,11 @@ GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(VulkanPerformanceCounterTest_MSAA)
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_MSAA,
                        ES3_VULKAN(),
                        ES3_VULKAN_SWIFTSHADER(),
-                       ES3_VULKAN_SWIFTSHADER().enable(Feature::AsyncCommandQueue),
                        ES3_VULKAN().enable(Feature::EmulatedPrerotation90),
                        ES3_VULKAN().enable(Feature::EmulatedPrerotation180),
                        ES3_VULKAN().enable(Feature::EmulatedPrerotation270));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(VulkanPerformanceCounterTest_SingleBuffer);
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_SingleBuffer, ES3_VULKAN());
-
-GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(VulkanPerformanceCounterTest_AsyncCQ);
-ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest_AsyncCQ,
-                       ES3_VULKAN(),
-                       ES3_VULKAN().enable(Feature::AsyncCommandQueue));
 
 }  // anonymous namespace

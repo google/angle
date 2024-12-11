@@ -423,22 +423,6 @@
             "issue": "http://anglebug.com/42265353"
         },
         {
-            "name": "async_command_queue",
-            "category": "Features",
-            "description": [
-                "Use CommandQueue worker thread to dispatch work to GPU."
-            ],
-            "issue": "http://anglebug.com/42262955"
-        },
-        {
-            "name": "slow_async_command_queue_for_testing",
-            "category": "Workarounds",
-            "description": [
-                "Artificially slow down async command queue for threading testing"
-            ],
-            "issue": "https://anglebug.com/40644850"
-        },
-        {
             "name": "supports_shader_float16",
             "category": "Features",
             "description": [

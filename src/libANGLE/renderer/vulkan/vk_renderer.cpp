@@ -1755,7 +1755,7 @@ Renderer::Renderer()
       mValidationMessageCount(0),
       mIsColorFramebufferFetchCoherent(false),
       mIsColorFramebufferFetchUsed(false),
-      mCommandProcessor(this, &mCommandQueue),
+      mCleanUpThread(this, &mCommandQueue),
       mSupportedBufferWritePipelineStageMask(0),
       mSupportedVulkanShaderStageMask(0),
       mMemoryAllocationTracker(MemoryAllocationTracker(this))
@@ -1801,7 +1801,7 @@ void Renderer::onDestroy(vk::Context *context)
         mPlaceHolderDescriptorSetLayout.reset();
     }
 
-    mCommandProcessor.destroy(context);
+    mCleanUpThread.destroy(context);
     mCommandQueue.destroy(context);
 
     // mCommandQueue.destroy should already set "last completed" serials to infinite.
@@ -4082,7 +4082,7 @@ angle::Result Renderer::createDeviceAndQueue(vk::Context *context, uint32_t queu
     initDeviceExtensionEntryPoints();
 
     ANGLE_TRY(mCommandQueue.init(context, queueFamily, enableProtectedContent, queueCount));
-    ANGLE_TRY(mCommandProcessor.init());
+    ANGLE_TRY(mCleanUpThread.init());
 
     if (mFeatures.forceMaxUniformBufferSize16KB.enabled)
     {
@@ -5021,9 +5021,6 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // by a clear to retain valid values in said extra channels.
     ANGLE_FEATURE_CONDITION(&mFeatures, preferSkippingInvalidateForEmulatedFormats,
                             isImmediateModeRenderer);
-
-    // Currently disabled by default: http://anglebug.com/42262955
-    ANGLE_FEATURE_CONDITION(&mFeatures, asyncCommandQueue, false);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, asyncCommandBufferResetAndGarbageCleanup, true);
 
@@ -6169,7 +6166,6 @@ angle::Result Renderer::queueSubmitOneOff(vk::Context *context,
                                           egl::ContextPriority priority,
                                           VkSemaphore waitSemaphore,
                                           VkPipelineStageFlags waitSemaphoreStageMasks,
-                                          vk::SubmitPolicy submitPolicy,
                                           QueueSerial *queueSerialOut)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "Renderer::queueSubmitOneOff");
@@ -6179,18 +6175,9 @@ angle::Result Renderer::queueSubmitOneOff(vk::Context *context,
     ANGLE_TRY(allocateScopedQueueSerialIndex(&index));
     QueueSerial submitQueueSerial(index.get(), generateQueueSerial(index.get()));
 
-    if (isAsyncCommandQueueEnabled())
-    {
-        ANGLE_TRY(mCommandProcessor.enqueueSubmitOneOffCommands(
-            context, protectionType, priority, primary.getHandle(), waitSemaphore,
-            waitSemaphoreStageMasks, submitPolicy, submitQueueSerial));
-    }
-    else
-    {
-        ANGLE_TRY(mCommandQueue.queueSubmitOneOff(
-            context, protectionType, priority, primary.getHandle(), waitSemaphore,
-            waitSemaphoreStageMasks, submitPolicy, submitQueueSerial));
-    }
+    ANGLE_TRY(mCommandQueue.queueSubmitOneOff(context, protectionType, priority,
+                                              primary.getHandle(), waitSemaphore,
+                                              waitSemaphoreStageMasks, submitQueueSerial));
 
     *queueSerialOut = submitQueueSerial;
     if (primary.valid())
@@ -6210,22 +6197,9 @@ angle::Result Renderer::queueSubmitWaitSemaphore(vk::Context *context,
                                                  VkPipelineStageFlags waitSemaphoreStageMasks,
                                                  QueueSerial submitQueueSerial)
 {
-    if (isAsyncCommandQueueEnabled())
-    {
-        ANGLE_TRY(mCommandProcessor.enqueueSubmitOneOffCommands(
-            context, vk::ProtectionType::Unprotected, priority, VK_NULL_HANDLE,
-            waitSemaphore.getHandle(), waitSemaphoreStageMasks, vk::SubmitPolicy::AllowDeferred,
-            submitQueueSerial));
-    }
-    else
-    {
-        ANGLE_TRY(mCommandQueue.queueSubmitOneOff(
-            context, vk::ProtectionType::Unprotected, priority, VK_NULL_HANDLE,
-            waitSemaphore.getHandle(), waitSemaphoreStageMasks, vk::SubmitPolicy::AllowDeferred,
-            submitQueueSerial));
-    }
-
-    return angle::Result::Continue;
+    return mCommandQueue.queueSubmitOneOff(context, vk::ProtectionType::Unprotected, priority,
+                                           VK_NULL_HANDLE, waitSemaphore.getHandle(),
+                                           waitSemaphoreStageMasks, submitQueueSerial);
 }
 
 template <VkFormatFeatureFlags VkFormatProperties::*features>
@@ -6460,18 +6434,9 @@ angle::Result Renderer::submitCommands(vk::Context *context,
         externalFenceCopy = *externalFence;
     }
 
-    if (isAsyncCommandQueueEnabled())
-    {
-        ANGLE_TRY(mCommandProcessor.enqueueSubmitCommands(
-            context, protectionType, contextPriority, signalVkSemaphore,
-            std::move(externalFenceCopy), submitQueueSerial));
-    }
-    else
-    {
-        ANGLE_TRY(mCommandQueue.submitCommands(context, protectionType, contextPriority,
-                                               signalVkSemaphore, std::move(externalFenceCopy),
-                                               submitQueueSerial));
-    }
+    ANGLE_TRY(mCommandQueue.submitCommands(context, protectionType, contextPriority,
+                                           signalVkSemaphore, std::move(externalFenceCopy),
+                                           submitQueueSerial));
 
     ANGLE_TRY(mCommandQueue.postSubmitCheck(context));
 
@@ -6521,32 +6486,17 @@ angle::Result Renderer::submitPriorityDependency(vk::Context *context,
 
 void Renderer::handleDeviceLost()
 {
-    if (isAsyncCommandQueueEnabled())
-    {
-        mCommandProcessor.handleDeviceLost(this);
-    }
-    else
-    {
-        mCommandQueue.handleDeviceLost(this);
-    }
+    mCommandQueue.handleDeviceLost(this);
 }
 
 angle::Result Renderer::finishResourceUse(vk::Context *context, const vk::ResourceUse &use)
 {
-    if (isAsyncCommandQueueEnabled())
-    {
-        ANGLE_TRY(mCommandProcessor.waitForResourceUseToBeSubmitted(context, use));
-    }
     return mCommandQueue.finishResourceUse(context, use, getMaxFenceWaitTimeNs());
 }
 
 angle::Result Renderer::finishQueueSerial(vk::Context *context, const QueueSerial &queueSerial)
 {
     ASSERT(queueSerial.valid());
-    if (isAsyncCommandQueueEnabled())
-    {
-        ANGLE_TRY(mCommandProcessor.waitForQueueSerialToBeSubmitted(context, queueSerial));
-    }
     return mCommandQueue.finishQueueSerial(context, queueSerial, getMaxFenceWaitTimeNs());
 }
 
@@ -6556,10 +6506,6 @@ angle::Result Renderer::waitForResourceUseToFinishWithUserTimeout(vk::Context *c
                                                                   VkResult *result)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "Renderer::waitForResourceUseToFinishWithUserTimeout");
-    if (isAsyncCommandQueueEnabled())
-    {
-        ANGLE_TRY(mCommandProcessor.waitForResourceUseToBeSubmitted(context, use));
-    }
     return mCommandQueue.waitForResourceUseToFinishWithUserTimeout(context, use, timeout, result);
 }
 
@@ -6570,17 +6516,8 @@ angle::Result Renderer::flushWaitSemaphores(
     std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "Renderer::flushWaitSemaphores");
-    if (isAsyncCommandQueueEnabled())
-    {
-        ANGLE_TRY(mCommandProcessor.enqueueFlushWaitSemaphores(protectionType, priority,
-                                                               std::move(waitSemaphores),
-                                                               std::move(waitSemaphoreStageMasks)));
-    }
-    else
-    {
-        mCommandQueue.flushWaitSemaphores(protectionType, priority, std::move(waitSemaphores),
-                                          std::move(waitSemaphoreStageMasks));
-    }
+    mCommandQueue.flushWaitSemaphores(protectionType, priority, std::move(waitSemaphores),
+                                      std::move(waitSemaphoreStageMasks));
 
     return angle::Result::Continue;
 }
@@ -6594,20 +6531,8 @@ angle::Result Renderer::flushRenderPassCommands(
     vk::RenderPassCommandBufferHelper **renderPassCommands)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "Renderer::flushRenderPassCommands");
-    if (isAsyncCommandQueueEnabled())
-    {
-        ANGLE_TRY(mCommandProcessor.enqueueFlushRenderPassCommands(
-            context, protectionType, priority, renderPass, framebufferOverride,
-            renderPassCommands));
-    }
-    else
-    {
-        ANGLE_TRY(mCommandQueue.flushRenderPassCommands(context, protectionType, priority,
-                                                        renderPass, framebufferOverride,
-                                                        renderPassCommands));
-    }
-
-    return angle::Result::Continue;
+    return mCommandQueue.flushRenderPassCommands(context, protectionType, priority, renderPass,
+                                                 framebufferOverride, renderPassCommands);
 }
 
 angle::Result Renderer::flushOutsideRPCommands(
@@ -6617,41 +6542,22 @@ angle::Result Renderer::flushOutsideRPCommands(
     vk::OutsideRenderPassCommandBufferHelper **outsideRPCommands)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "Renderer::flushOutsideRPCommands");
-    if (isAsyncCommandQueueEnabled())
-    {
-        ANGLE_TRY(mCommandProcessor.enqueueFlushOutsideRPCommands(context, protectionType, priority,
-                                                                  outsideRPCommands));
-    }
-    else
-    {
-        ANGLE_TRY(mCommandQueue.flushOutsideRPCommands(context, protectionType, priority,
-                                                       outsideRPCommands));
-    }
-
-    return angle::Result::Continue;
+    return mCommandQueue.flushOutsideRPCommands(context, protectionType, priority,
+                                                outsideRPCommands);
 }
 
-void Renderer::queuePresent(vk::Context *context,
-                            egl::ContextPriority priority,
-                            const VkPresentInfoKHR &presentInfo,
-                            vk::SwapchainStatus *swapchainStatus)
+VkResult Renderer::queuePresent(vk::Context *context,
+                                egl::ContextPriority priority,
+                                const VkPresentInfoKHR &presentInfo)
 {
-    if (isAsyncCommandQueueEnabled())
-    {
-        mCommandProcessor.enqueuePresent(priority, presentInfo, swapchainStatus);
-        // lastPresentResult should always VK_SUCCESS when isPending is true
-        ASSERT(!swapchainStatus->isPending || swapchainStatus->lastPresentResult == VK_SUCCESS);
-    }
-    else
-    {
-        mCommandQueue.queuePresent(priority, presentInfo, swapchainStatus);
-        ASSERT(!swapchainStatus->isPending);
-    }
+    VkResult result = mCommandQueue.queuePresent(priority, presentInfo);
 
     if (getFeatures().logMemoryReportStats.enabled)
     {
         mMemoryReport.logMemoryReportStats();
     }
+
+    return result;
 }
 
 template <typename CommandBufferHelperT, typename RecyclerT>

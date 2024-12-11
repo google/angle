@@ -5,7 +5,6 @@
 // See deqp_support/README.md for format.
 
 // Thread sanitizer skips.
-42265241 TSAN : *_AsyncCommandQueue* = SKIP
 42265300 TSAN : MultithreadingTest.MultiContextDrawWithSwapBuffers/* = SKIP
 42265633 TSAN : InstancingTestES3.LargeDivisor/* = SKIP
 42266467 TSAN : MultithreadingTest.CreateMultiSharedContextAndDraw/* = SKIP
@@ -276,7 +275,6 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 42265060 LINUX INTEL VULKAN : TransformFeedbackTest.EndWithDifferentProgram/* = SKIP
 42265438 WIN INTEL VULKAN : BlitFramebufferTestES31.PartialResolve/* = SKIP
 42265767 INTEL VULKAN : StateChangeTestES3.PolygonOffset/* = SKIP
-42265934 WIN INTEL VULKAN : TextureSampleShadingTest.Basic/ES3_1_Vulkan_AsyncCommandQueue = SKIP
 40644885 LINUX INTEL VULKAN : EGLBufferAgeTest.QueryBufferAge/* = SKIP
 // Failures on Intel Comet Lake S UHD Graphics 630 (8086:9bc5-31.0.101.2111)
 40644894 WIN INTEL VULKAN : ImageTest.ANGLEExtensionAvailability/* = SKIP
@@ -289,8 +287,6 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 40644895 WIN INTEL VULKAN : RobustBufferAccessBehaviorTest.DynamicBuffer/* = SKIP
 40644895 WIN INTEL VULKAN : RobustBufferAccessBehaviorTest.InterleavedAttributes/* = SKIP
 40644895 WIN INTEL VULKAN : Texture2DTestES3.NonZeroBaseEmulatedClear/* = SKIP
-40644895 WIN INTEL VULKAN : TextureBorderClampIntegerTestES3.TextureBorderClampIntegerUnsigned/ES3_Vulkan_AsyncCommandQueue = SKIP
-40644895 WIN INTEL VULKAN : VertexAttributeCachingTest.BufferMulticachingWithOneUnchangedAttrib/ES3_Vulkan_AsyncCommandQueue = SKIP
 40644895 WIN INTEL VULKAN : VulkanPerformanceCounterTest.PipelineCacheIsRestoredWithProgramBinary/* = SKIP
 40644895 WIN INTEL VULKAN : VulkanPerformanceCounterTest.PipelineCacheIsRestoredWithProgramBinaryTwice/* = SKIP
 40644895 WIN INTEL VULKAN : VulkanPerformanceCounterTest.PipelineCacheIsWarmedUpAtLinkTime/* = SKIP
@@ -967,10 +963,6 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 // Indexed indirect draw offset bug
 42265912 D3D11 : DrawBaseInstanceTest.DrawElementsInstancedBaseInstance/ES3_D3D11_*__DynamicDraw* = SKIP
 
-// ASAN flakes with Vulkan / SwiftShader / AsyncCommandQueue
-42265368 ASAN VULKAN SWIFTSHADER : ComputeShaderTest.*/ES3_1_Vulkan_SwiftShader_AsyncCommandQueue* = SKIP
-42265368 SWIFTSHADER : TransformFeedbackTest.SpanMultipleRenderPasses/*AsyncCommandQueue* = SKIP
-
 42265586 SWIFTSHADER : TransformFeedbackTest.BaseInstance/* = SKIP
 42265586 PIXEL4ORXL VULKAN : TransformFeedbackTest.BaseInstance/* = SKIP
 42265586 VULKAN : TransformFeedbackTest.BaseInstance/ES3_Vulkan_NoSupportsTransformFeedbackExtension* = SKIP
@@ -980,17 +972,10 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 42265442 ASAN WIN VULKAN SWIFTSHADER : MultithreadingTest.MultiContextDrawWithSwapBuffers/* = SKIP
 42265635 ASAN WIN VULKAN SWIFTSHADER : GeometryShaderTest.LayeredFramebufferMidRenderClear3DColor/* = SKIP
 42265737 ASAN WIN VULKAN SWIFTSHADER : MemoryBarrierBufferTest.VertexAtrribArrayBitWriteThenVertexRead/ES3_1_Vulkan_SwiftShader* = SKIP
-42265738 ASAN WIN VULKAN SWIFTSHADER : TimerQueriesTest.TimeElapsed/*_Vulkan_SwiftShader_AsyncCommandQueue* = SKIP
 42266738 ASAN WIN VULKAN SWIFTSHADER : *EnableParallelCompileAndLink* = SKIP
 
 // Regression after a buffer change.
 42265374 INTEL VULKAN LINUX : Texture2DTest.TexStorageWithPBOMiddlePixelDifferent/* = SKIP
-
-// Flaky Generally on AsyncCommandQueue.
-42266015 VULKAN : TimerQueriesTest.TimeElapsed/*_AsyncCommandQueue* = SKIP
-42266015 VULKAN : TimerQueriesTest.Timestamp/*_AsyncCommandQueue* = SKIP
-// Rare flakes on win-x86
-377503738 WIN VULKAN : Texture2DMemoryTestES3.TextureDataInLoopManyTimes/*SwiftShader*_AsyncCommandQueue* = SKIP
 
 // Cubemap sampling with explicit derivatives
 42262458 PIXEL4ORXL VULKAN : CubeMapTextureTest.SampleCoordinateTransformGrad/* = SKIP
@@ -1024,10 +1009,6 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 42265501 NVIDIA GLES : GLSLTest.SwizzledChainedAssignIncrement/* = SKIP
 
 42265557 : VulkanPerformanceCounterTest.DepthStencilInvalidateDrawDisable/* = SKIP
-
-// Flaking due to threading usage of the queue.  EGL_ANGLE_device_vulkan and asyncCommandQueue are incompatible.
-42265678 : VulkanImageTest.*/*AsyncCommandQueue* = SKIP
-42265678 : VulkanMemoryTest.*/*AsyncCommandQueue* = SKIP
 
 // Causes incompatible error in GL back-end.
 42265690 OPENGL : TransformFeedbackTest.DrawAfterDeletingPausedBuffer/* = SKIP
@@ -1319,7 +1300,6 @@ b/267953710 GALAXYS22 VULKAN : VulkanPerformanceCounterTest_ES31.ColorMaskedFram
 // Samsung GalaxyS23 crashes and failures:
 42266598 GALAXYS23 VULKAN : EGLBlobCacheTest.ThreadSafety/* = SKIP
 42266598 GALAXYS23 VULKAN : EGLQueryContextTest.NotInitialized/* = SKIP
-42266598 GALAXYS23 VULKAN : FramebufferTest_ES3.AttachmentsWithUnequalDimensions/ES3_Vulkan_AsyncCommandQueue = SKIP
 42266598 GALAXYS23 VULKAN : GLSLTest_ES31.ArrayOfArrayOfSamplerDynamicIndexEXT/* = SKIP
 42266598 GALAXYS23 VULKAN : GLSLTest_ES31.ArrayOfArrayOfSamplerDynamicIndexOES/* = SKIP
 42266598 GALAXYS23 VULKAN : GLSLTest_ES31.ArrayOfArrayOfSamplerInStructDynamicIndex/* = SKIP

@@ -575,17 +575,13 @@ bool IsConfigAllowlisted(const SystemInfo &systemInfo, const PlatformParameters 
     {
         ASSERT(param.driver == GLESDriverType::AngleEGL);
 
-        // Currently we support the OpenGL and Vulkan back-ends on Linux.
+        // Currently we support the OpenGL, Vulkan and WebGPU back-ends on Linux.
         switch (param.getRenderer())
         {
             case EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE:
-                return true;
             case EGL_PLATFORM_ANGLE_TYPE_WEBGPU_ANGLE:
-                return true;
             case EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE:
-                // http://issuetracker.google.com/173004081
-                return !IsIntel() || !param.isEnableRequested(Feature::AsyncCommandQueue) ||
-                       param.isDisableRequested(Feature::AsyncCommandQueue);
+                return true;
             default:
                 return false;
         }

@@ -2083,15 +2083,7 @@ angle::Result OutsideRenderPassCommandBufferHelper::flushToPrimary(Context *cont
     // Commands that are added to primary before beginRenderPass command
     executeBarriers(renderer, commandsState);
 
-    // When using Vulkan secondary command buffers and "asyncCommandQueue" is enabled, command
-    // buffer MUST be already ended in the detachCommandPool() (called in the CommandProcessor).
-    // After the detach, nothing is written to the buffer (the barriers above are written directly
-    // to the primary buffer).
-    // Note: RenderPass Command Buffers are explicitly ended in the endRenderPass().
-    if (ExecutesInline() || !renderer->isAsyncCommandQueueEnabled())
-    {
-        ANGLE_TRY(endCommandBuffer(context));
-    }
+    ANGLE_TRY(endCommandBuffer(context));
     ASSERT(mIsCommandBufferEnded);
     mCommandBuffer.executeCommands(&commandsState->primaryCommands);
 
@@ -2575,21 +2567,7 @@ void RenderPassCommandBufferHelper::finalizeColorImageLayout(
         mImageOptimizeForPresent->setCurrentImageLayout(context->getRenderer(),
                                                         ImageLayout::Present);
 
-        if (context->getFeatures().preferDynamicRendering.enabled)
-        {
-            if (context->getRenderer()->isAsyncCommandQueueEnabled())
-            {
-                // When dynamic rendering is enabled, image layout change will be issued at
-                // flushToPrimary() time. If async command queue is also enabled, that
-                // flushToPrimary will be on separate thread which causes problems for
-                // RefCountedEvent which is not thread safe. There is no real safety issue here
-                // since you will not expect anyone else try to use this image, but it will trigger
-                // assertion in RefCountedEvent::releaseImpl. We just force to pipelineBarrier for
-                // that final layout transition here to avoid assertion.
-                mImageOptimizeForPresent->releaseCurrentRefCountedEvent(context);
-            }
-        }
-        else
+        if (!context->getFeatures().preferDynamicRendering.enabled)
         {
             if (isResolveImage)
             {
@@ -5592,10 +5570,9 @@ angle::Result BufferHelper::initializeNonZeroMemory(Context *context,
         ANGLE_VK_TRY(context, commandBuffer.end());
 
         QueueSerial queueSerial;
-        ANGLE_TRY(renderer->queueSubmitOneOff(context, std::move(commandBuffer),
-                                              ProtectionType::Unprotected,
-                                              egl::ContextPriority::Medium, VK_NULL_HANDLE, 0,
-                                              vk::SubmitPolicy::AllowDeferred, &queueSerial));
+        ANGLE_TRY(renderer->queueSubmitOneOff(
+            context, std::move(commandBuffer), ProtectionType::Unprotected,
+            egl::ContextPriority::Medium, VK_NULL_HANDLE, 0, &queueSerial));
 
         stagingBuffer.collectGarbage(renderer, queueSerial);
         // Update both ResourceUse objects, since mReadOnlyUse tracks when the buffer can be
@@ -6208,10 +6185,10 @@ angle::Result ImageHelper::copyToBufferOneOff(Context *context,
     ANGLE_VK_TRY(context, commandBuffer.end());
 
     QueueSerial submitQueueSerial;
-    ANGLE_TRY(renderer->queueSubmitOneOff(
-        context, std::move(commandBuffer), ProtectionType::Unprotected,
-        egl::ContextPriority::Medium, acquireNextImageSemaphore,
-        kSwapchainAcquireImageWaitStageFlags, SubmitPolicy::AllowDeferred, &submitQueueSerial));
+    ANGLE_TRY(
+        renderer->queueSubmitOneOff(context, std::move(commandBuffer), ProtectionType::Unprotected,
+                                    egl::ContextPriority::Medium, acquireNextImageSemaphore,
+                                    kSwapchainAcquireImageWaitStageFlags, &submitQueueSerial));
 
     return renderer->finishQueueSerial(context, submitQueueSerial);
 }
@@ -6718,7 +6695,7 @@ angle::Result ImageHelper::initializeNonZeroMemory(Context *context,
     QueueSerial queueSerial;
     ANGLE_TRY(renderer->queueSubmitOneOff(context, std::move(commandBuffer), protectionType,
                                           egl::ContextPriority::Medium, VK_NULL_HANDLE, 0,
-                                          vk::SubmitPolicy::AllowDeferred, &queueSerial));
+                                          &queueSerial));
 
     if (isCompressedFormat)
     {
@@ -10893,7 +10870,7 @@ angle::Result ImageHelper::copySurfaceImageToBuffer(DisplayVk *displayVk,
     ANGLE_TRY(renderer->queueSubmitOneOff(
         displayVk, std::move(primaryCommandBuffer), ProtectionType::Unprotected,
         egl::ContextPriority::Medium, acquireNextImageSemaphore,
-        kSwapchainAcquireImageWaitStageFlags, vk::SubmitPolicy::AllowDeferred, &submitQueueSerial));
+        kSwapchainAcquireImageWaitStageFlags, &submitQueueSerial));
 
     return renderer->finishQueueSerial(displayVk, submitQueueSerial);
 }
@@ -10945,7 +10922,7 @@ angle::Result ImageHelper::copyBufferToSurfaceImage(DisplayVk *displayVk,
     ANGLE_TRY(renderer->queueSubmitOneOff(
         displayVk, std::move(commandBuffer), ProtectionType::Unprotected,
         egl::ContextPriority::Medium, acquireNextImageSemaphore,
-        kSwapchainAcquireImageWaitStageFlags, vk::SubmitPolicy::AllowDeferred, &submitQueueSerial));
+        kSwapchainAcquireImageWaitStageFlags, &submitQueueSerial));
 
     return renderer->finishQueueSerial(displayVk, submitQueueSerial);
 }

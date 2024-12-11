@@ -1390,8 +1390,7 @@ constexpr uint32_t kInfiniteCmdCount = 0xFFFFFFFF;
 // CommandBufferHelperCommon and derivatives OutsideRenderPassCommandBufferHelper and
 // RenderPassCommandBufferHelper wrap the outside/inside render pass secondary command buffers,
 // together with other information such as barriers to issue before the command buffer, tracking of
-// resource usages, etc.  When the asyncCommandQueue feature is enabled, objects of these classes
-// are handed off to the worker thread to be executed on the primary command buffer.
+// resource usages, etc.
 class CommandBufferHelperCommon : angle::NonCopyable
 {
   public:

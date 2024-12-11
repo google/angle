@@ -40,7 +40,6 @@ class SecondaryCommandPool final : angle::NonCopyable
     angle::Result allocate(Context *context, VulkanSecondaryCommandBuffer *buffer);
 
     // Single threaded - use external synchronization.
-    // Example threads: any Context thread or "asyncCommandQueue" thread.
     void collect(VulkanSecondaryCommandBuffer *buffer);
 
   private:

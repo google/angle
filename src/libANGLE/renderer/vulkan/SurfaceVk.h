@@ -461,7 +461,6 @@ class WindowSurfaceVk : public SurfaceVk
 
     VkSwapchainKHR mSwapchain;      // Current swapchain (same as last created or NULL)
     VkSwapchainKHR mLastSwapchain;  // Last created non retired swapchain (or NULL if retired)
-    vk::SwapchainStatus mSwapchainStatus;
     // Cached information used to recreate swapchains.
     vk::PresentMode mSwapchainPresentMode;         // Current swapchain mode
     vk::PresentMode mDesiredSwapchainPresentMode;  // Desired mode set through setSwapInterval()

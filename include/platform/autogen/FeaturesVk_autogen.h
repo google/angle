@@ -338,18 +338,6 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
-    FeatureInfo asyncCommandQueue = {
-        "asyncCommandQueue",
-        FeatureCategory::VulkanFeatures,
-        &members,
-    };
-
-    FeatureInfo slowAsyncCommandQueueForTesting = {
-        "slowAsyncCommandQueueForTesting",
-        FeatureCategory::VulkanWorkarounds,
-        &members,
-    };
-
     FeatureInfo supportsShaderFloat16 = {
         "supportsShaderFloat16",
         FeatureCategory::VulkanFeatures,

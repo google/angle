@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 // CommandProcessor.cpp:
-//    Implements the class methods for CommandProcessor.
+//    Implements the class methods for CommandQueue.
 //
 
 #include "libANGLE/renderer/vulkan/CommandProcessor.h"
@@ -142,234 +142,6 @@ void FenceRecycler::recycle(Fence &&fence)
 {
     std::lock_guard<angle::SimpleMutex> lock(mMutex);
     mRecycler.recycle(std::move(fence));
-}
-
-// CommandProcessorTask implementation
-void CommandProcessorTask::initTask()
-{
-    mTask                           = CustomTask::Invalid;
-    mOutsideRenderPassCommandBuffer = nullptr;
-    mRenderPassCommandBuffer        = nullptr;
-    mSemaphore                      = VK_NULL_HANDLE;
-    mOneOffWaitSemaphore            = VK_NULL_HANDLE;
-    mOneOffWaitSemaphoreStageMask   = 0;
-    mPresentInfo                    = {};
-    mPresentInfo.pResults           = nullptr;
-    mPresentInfo.pSwapchains        = nullptr;
-    mPresentInfo.pImageIndices      = nullptr;
-    mPresentInfo.pNext              = nullptr;
-    mPresentInfo.pWaitSemaphores    = nullptr;
-    mPresentFence                   = VK_NULL_HANDLE;
-    mSwapchainStatus                = nullptr;
-    mOneOffCommandBuffer            = VK_NULL_HANDLE;
-    mPriority                       = egl::ContextPriority::Medium;
-    mProtectionType                 = ProtectionType::InvalidEnum;
-}
-
-void CommandProcessorTask::initFlushWaitSemaphores(
-    ProtectionType protectionType,
-    egl::ContextPriority priority,
-    std::vector<VkSemaphore> &&waitSemaphores,
-    std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks)
-{
-    mTask                    = CustomTask::FlushWaitSemaphores;
-    mPriority                = priority;
-    mProtectionType          = protectionType;
-    mWaitSemaphores          = std::move(waitSemaphores);
-    mWaitSemaphoreStageMasks = std::move(waitSemaphoreStageMasks);
-}
-
-void CommandProcessorTask::initOutsideRenderPassProcessCommands(
-    ProtectionType protectionType,
-    egl::ContextPriority priority,
-    OutsideRenderPassCommandBufferHelper *commandBuffer)
-{
-    mTask                           = CustomTask::ProcessOutsideRenderPassCommands;
-    mOutsideRenderPassCommandBuffer = commandBuffer;
-    mPriority                       = priority;
-    mProtectionType                 = protectionType;
-}
-
-void CommandProcessorTask::initRenderPassProcessCommands(
-    ProtectionType protectionType,
-    egl::ContextPriority priority,
-    RenderPassCommandBufferHelper *commandBuffer,
-    const RenderPass *renderPass,
-    VkFramebuffer framebufferOverride)
-{
-    mTask                    = CustomTask::ProcessRenderPassCommands;
-    mRenderPassCommandBuffer = commandBuffer;
-    mPriority                = priority;
-    mProtectionType          = protectionType;
-
-    mRenderPass.setHandle(renderPass->getHandle());
-    mFramebufferOverride = framebufferOverride;
-}
-
-void CommandProcessorTask::copyPresentInfo(const VkPresentInfoKHR &other)
-{
-    if (other.sType == 0)
-    {
-        return;
-    }
-
-    mPresentInfo.sType = other.sType;
-    mPresentInfo.pNext = nullptr;
-
-    if (other.swapchainCount > 0)
-    {
-        ASSERT(other.swapchainCount == 1);
-        mPresentInfo.swapchainCount = 1;
-        mSwapchain                  = other.pSwapchains[0];
-        mPresentInfo.pSwapchains    = &mSwapchain;
-        mImageIndex                 = other.pImageIndices[0];
-        mPresentInfo.pImageIndices  = &mImageIndex;
-    }
-
-    if (other.waitSemaphoreCount > 0)
-    {
-        ASSERT(other.waitSemaphoreCount == 1);
-        mPresentInfo.waitSemaphoreCount = 1;
-        mWaitSemaphore                  = other.pWaitSemaphores[0];
-        mPresentInfo.pWaitSemaphores    = &mWaitSemaphore;
-    }
-
-    mPresentInfo.pResults = other.pResults;
-
-    void *pNext = const_cast<void *>(other.pNext);
-    while (pNext != nullptr)
-    {
-        VkStructureType sType = *reinterpret_cast<VkStructureType *>(pNext);
-        switch (sType)
-        {
-            case VK_STRUCTURE_TYPE_PRESENT_REGIONS_KHR:
-            {
-                const VkPresentRegionsKHR *presentRegions =
-                    reinterpret_cast<VkPresentRegionsKHR *>(pNext);
-                mPresentRegion = *presentRegions->pRegions;
-                mRects.resize(mPresentRegion.rectangleCount);
-                for (uint32_t i = 0; i < mPresentRegion.rectangleCount; i++)
-                {
-                    mRects[i] = presentRegions->pRegions->pRectangles[i];
-                }
-                mPresentRegion.pRectangles = mRects.data();
-
-                mPresentRegions.sType          = VK_STRUCTURE_TYPE_PRESENT_REGIONS_KHR;
-                mPresentRegions.pNext          = nullptr;
-                mPresentRegions.swapchainCount = 1;
-                mPresentRegions.pRegions       = &mPresentRegion;
-                AddToPNextChain(&mPresentInfo, &mPresentRegions);
-                pNext = const_cast<void *>(presentRegions->pNext);
-                break;
-            }
-            case VK_STRUCTURE_TYPE_SWAPCHAIN_PRESENT_FENCE_INFO_EXT:
-            {
-                const VkSwapchainPresentFenceInfoEXT *presentFenceInfo =
-                    reinterpret_cast<VkSwapchainPresentFenceInfoEXT *>(pNext);
-                ASSERT(presentFenceInfo->swapchainCount == 1);
-                mPresentFence = presentFenceInfo->pFences[0];
-
-                mPresentFenceInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_PRESENT_FENCE_INFO_EXT;
-                mPresentFenceInfo.pNext = nullptr;
-                mPresentFenceInfo.swapchainCount = 1;
-                mPresentFenceInfo.pFences        = &mPresentFence;
-                AddToPNextChain(&mPresentInfo, &mPresentFenceInfo);
-                pNext = const_cast<void *>(presentFenceInfo->pNext);
-                break;
-            }
-            case VK_STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODE_INFO_EXT:
-            {
-                const VkSwapchainPresentModeInfoEXT *presentModeInfo =
-                    reinterpret_cast<VkSwapchainPresentModeInfoEXT *>(pNext);
-                ASSERT(presentModeInfo->swapchainCount == 1);
-                mPresentMode = presentModeInfo->pPresentModes[0];
-
-                mPresentModeInfo.sType          = VK_STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODE_INFO_EXT;
-                mPresentModeInfo.pNext          = nullptr;
-                mPresentModeInfo.swapchainCount = 1;
-                mPresentModeInfo.pPresentModes  = &mPresentMode;
-                AddToPNextChain(&mPresentInfo, &mPresentModeInfo);
-                pNext = const_cast<void *>(presentModeInfo->pNext);
-                break;
-            }
-            default:
-                ERR() << "Unknown sType: " << sType << " in VkPresentInfoKHR.pNext chain";
-                UNREACHABLE();
-                break;
-        }
-    }
-}
-
-void CommandProcessorTask::initPresent(egl::ContextPriority priority,
-                                       const VkPresentInfoKHR &presentInfo,
-                                       SwapchainStatus *swapchainStatus)
-{
-    mTask            = CustomTask::Present;
-    mPriority        = priority;
-    mSwapchainStatus = swapchainStatus;
-    copyPresentInfo(presentInfo);
-}
-
-void CommandProcessorTask::initFlushAndQueueSubmit(VkSemaphore semaphore,
-                                                   SharedExternalFence &&externalFence,
-                                                   ProtectionType protectionType,
-                                                   egl::ContextPriority priority,
-                                                   const QueueSerial &submitQueueSerial)
-{
-    mTask              = CustomTask::FlushAndQueueSubmit;
-    mSemaphore         = semaphore;
-    mExternalFence     = std::move(externalFence);
-    mPriority          = priority;
-    mProtectionType    = protectionType;
-    mSubmitQueueSerial = submitQueueSerial;
-}
-
-void CommandProcessorTask::initOneOffQueueSubmit(VkCommandBuffer commandBufferHandle,
-                                                 ProtectionType protectionType,
-                                                 egl::ContextPriority priority,
-                                                 VkSemaphore waitSemaphore,
-                                                 VkPipelineStageFlags waitSemaphoreStageMask,
-                                                 const QueueSerial &submitQueueSerial)
-{
-    mTask                         = CustomTask::OneOffQueueSubmit;
-    mOneOffCommandBuffer          = commandBufferHandle;
-    mOneOffWaitSemaphore          = waitSemaphore;
-    mOneOffWaitSemaphoreStageMask = waitSemaphoreStageMask;
-    mPriority                     = priority;
-    mProtectionType               = protectionType;
-    mSubmitQueueSerial            = submitQueueSerial;
-}
-
-CommandProcessorTask &CommandProcessorTask::operator=(CommandProcessorTask &&rhs)
-{
-    if (this == &rhs)
-    {
-        return *this;
-    }
-
-    std::swap(mRenderPass, rhs.mRenderPass);
-    std::swap(mFramebufferOverride, rhs.mFramebufferOverride);
-    std::swap(mOutsideRenderPassCommandBuffer, rhs.mOutsideRenderPassCommandBuffer);
-    std::swap(mRenderPassCommandBuffer, rhs.mRenderPassCommandBuffer);
-    std::swap(mTask, rhs.mTask);
-    std::swap(mWaitSemaphores, rhs.mWaitSemaphores);
-    std::swap(mWaitSemaphoreStageMasks, rhs.mWaitSemaphoreStageMasks);
-    std::swap(mSemaphore, rhs.mSemaphore);
-    std::swap(mExternalFence, rhs.mExternalFence);
-    std::swap(mOneOffWaitSemaphore, rhs.mOneOffWaitSemaphore);
-    std::swap(mOneOffWaitSemaphoreStageMask, rhs.mOneOffWaitSemaphoreStageMask);
-    std::swap(mSubmitQueueSerial, rhs.mSubmitQueueSerial);
-    std::swap(mPriority, rhs.mPriority);
-    std::swap(mProtectionType, rhs.mProtectionType);
-    std::swap(mOneOffCommandBuffer, rhs.mOneOffCommandBuffer);
-
-    copyPresentInfo(rhs.mPresentInfo);
-    std::swap(mSwapchainStatus, rhs.mSwapchainStatus);
-
-    // clear rhs now that everything has moved.
-    rhs.initTask();
-
-    return *this;
 }
 
 // CommandBatch implementation.
@@ -545,11 +317,11 @@ VkResult CommandBatch::waitFenceUnlocked(VkDevice device,
     return status;
 }
 
-// CommandProcessor implementation.
-void CommandProcessor::handleError(VkResult errorCode,
-                                   const char *file,
-                                   const char *function,
-                                   unsigned int line)
+// CleanUpThread implementation.
+void CleanUpThread::handleError(VkResult errorCode,
+                                const char *file,
+                                const char *function,
+                                unsigned int line)
 {
     ASSERT(errorCode != VK_SUCCESS);
 
@@ -560,7 +332,7 @@ void CommandProcessor::handleError(VkResult errorCode,
     if (errorCode == VK_ERROR_DEVICE_LOST)
     {
         WARN() << errorStream.str();
-        handleDeviceLost(mRenderer);
+        mCommandQueue->handleDeviceLost(mRenderer);
     }
 
     std::lock_guard<angle::SimpleMutex> queueLock(mErrorMutex);
@@ -568,23 +340,17 @@ void CommandProcessor::handleError(VkResult errorCode,
     mErrors.emplace(error);
 }
 
-CommandProcessor::CommandProcessor(Renderer *renderer, CommandQueue *commandQueue)
+CleanUpThread::CleanUpThread(Renderer *renderer, CommandQueue *commandQueue)
     : Context(renderer),
-      mTaskQueue(kMaxCommandProcessorTasksLimit),
       mCommandQueue(commandQueue),
       mTaskThreadShouldExit(false),
-      mNeedCommandsAndGarbageCleanup(false)
+      mNeedCleanUp(false)
 {
-    std::lock_guard<angle::SimpleMutex> queueLock(mErrorMutex);
-    while (!mErrors.empty())
-    {
-        mErrors.pop();
-    }
 }
 
-CommandProcessor::~CommandProcessor() = default;
+CleanUpThread::~CleanUpThread() = default;
 
-angle::Result CommandProcessor::checkAndPopPendingError(Context *errorHandlingContext)
+angle::Result CleanUpThread::checkAndPopPendingError(Context *errorHandlingContext)
 {
     std::lock_guard<angle::SimpleMutex> queueLock(mErrorMutex);
     if (mErrors.empty())
@@ -601,107 +367,47 @@ angle::Result CommandProcessor::checkAndPopPendingError(Context *errorHandlingCo
     return angle::Result::Stop;
 }
 
-angle::Result CommandProcessor::queueCommand(CommandProcessorTask &&task)
+void CleanUpThread::requestCleanUp()
 {
-    ANGLE_TRACE_EVENT0("gpu.angle", "CommandProcessor::queueCommand");
-    // Take mTaskEnqueueMutex lock. If task queue is full, try to drain one.
-    std::unique_lock<std::mutex> enqueueLock(mTaskEnqueueMutex);
-    if (mTaskQueue.full())
-    {
-        std::lock_guard<angle::SimpleMutex> dequeueLock(mTaskDequeueMutex);
-        // Check mTasks again in case someone just drained the mTasks.
-        if (mTaskQueue.full())
-        {
-            CommandProcessorTask frontTask(std::move(mTaskQueue.front()));
-            mTaskQueue.pop();
-            ANGLE_TRY(processTask(&frontTask));
-        }
-    }
-    mTaskQueue.push(std::move(task));
-    mWorkAvailableCondition.notify_one();
-
-    return angle::Result::Continue;
-}
-
-void CommandProcessor::requestCommandsAndGarbageCleanup()
-{
-    if (!mNeedCommandsAndGarbageCleanup.exchange(true))
+    if (!mNeedCleanUp.exchange(true))
     {
         // request clean up in async thread
-        std::unique_lock<std::mutex> enqueueLock(mTaskEnqueueMutex);
+        std::unique_lock<std::mutex> enqueueLock(mMutex);
         mWorkAvailableCondition.notify_one();
     }
 }
 
-void CommandProcessor::processTasks()
+void CleanUpThread::processTasks()
 {
-    angle::SetCurrentThreadName("ANGLE-Submit");
+    angle::SetCurrentThreadName("ANGLE-GarbageCleanup");
 
     while (true)
     {
         bool exitThread      = false;
-        angle::Result result = processTasksImpl(&exitThread);
+        (void)processTasksImpl(&exitThread);
         if (exitThread)
         {
             // We are doing a controlled exit of the thread, break out of the while loop.
             break;
         }
-        if (result != angle::Result::Continue)
-        {
-            // TODO: https://issuetracker.google.com/issues/170311829 - follow-up on error handling
-            // ContextVk::commandProcessorSyncErrorsAndQueueCommand and WindowSurfaceVk::destroy
-            // do error processing, is anything required here? Don't think so, mostly need to
-            // continue the worker thread until it's been told to exit.
-            UNREACHABLE();
-        }
     }
 }
 
-angle::Result CommandProcessor::processTasksImpl(bool *exitThread)
+angle::Result CleanUpThread::processTasksImpl(bool *exitThread)
 {
     while (true)
     {
-        std::unique_lock<std::mutex> enqueueLock(mTaskEnqueueMutex);
-        if (mTaskQueue.empty())
+        std::unique_lock<std::mutex> lock(mMutex);
+        mWorkAvailableCondition.wait(lock,
+                                     [this] { return mTaskThreadShouldExit || mNeedCleanUp; });
+
+        if (mTaskThreadShouldExit)
         {
-            if (mTaskThreadShouldExit)
-            {
-                break;
-            }
-
-            // Only wake if notified and command queue is not empty
-            mWorkAvailableCondition.wait(enqueueLock, [this] {
-                return !mTaskQueue.empty() || mTaskThreadShouldExit ||
-                       mNeedCommandsAndGarbageCleanup;
-            });
+            break;
         }
-        // Do submission with mTaskEnqueueMutex unlocked so that we still allow enqueue while we
-        // process work.
-        enqueueLock.unlock();
+        lock.unlock();
 
-        // Take submission lock to ensure the submission is in the same order as we received.
-        std::lock_guard<angle::SimpleMutex> dequeueLock(mTaskDequeueMutex);
-        if (!mTaskQueue.empty())
-        {
-            CommandProcessorTask task(std::move(mTaskQueue.front()));
-            mTaskQueue.pop();
-
-            // Artificially make the task take longer to catch threading issues.
-            if (getFeatures().slowAsyncCommandQueueForTesting.enabled)
-            {
-                constexpr double kSlowdownTime = 0.005;
-
-                double startTime = angle::GetCurrentSystemTime();
-                while (angle::GetCurrentSystemTime() - startTime < kSlowdownTime)
-                {
-                    // Busy waiting
-                }
-            }
-
-            ANGLE_TRY(processTask(&task));
-        }
-
-        if (mNeedCommandsAndGarbageCleanup.exchange(false))
+        if (mNeedCleanUp.exchange(false))
         {
             // Always check completed commands again in case anything new has been finished.
             ANGLE_TRY(mCommandQueue->checkCompletedCommands(this));
@@ -719,358 +425,34 @@ angle::Result CommandProcessor::processTasksImpl(bool *exitThread)
     return angle::Result::Continue;
 }
 
-angle::Result CommandProcessor::processTask(CommandProcessorTask *task)
+angle::Result CleanUpThread::init()
 {
-    switch (task->getTaskCommand())
-    {
-        case CustomTask::FlushAndQueueSubmit:
-        {
-            ANGLE_TRACE_EVENT0("gpu.angle", "processTask::FlushAndQueueSubmit");
-            // End command buffer
-
-            // Call submitCommands()
-            ANGLE_TRY(mCommandQueue->submitCommands(
-                this, task->getProtectionType(), task->getPriority(), task->getSemaphore(),
-                std::move(task->getExternalFence()), task->getSubmitQueueSerial()));
-            mNeedCommandsAndGarbageCleanup = true;
-            break;
-        }
-        case CustomTask::OneOffQueueSubmit:
-        {
-            ANGLE_TRACE_EVENT0("gpu.angle", "processTask::OneOffQueueSubmit");
-
-            ANGLE_TRY(mCommandQueue->queueSubmitOneOff(
-                this, task->getProtectionType(), task->getPriority(),
-                task->getOneOffCommandBuffer(), task->getOneOffWaitSemaphore(),
-                task->getOneOffWaitSemaphoreStageMask(), SubmitPolicy::EnsureSubmitted,
-                task->getSubmitQueueSerial()));
-            mNeedCommandsAndGarbageCleanup = true;
-            break;
-        }
-        case CustomTask::Present:
-        {
-            // Do not access task->getSwapchainStatus() after this call because it is marked as no
-            // longer pending, and so may get deleted or clobbered by another thread.
-            VkResult result =
-                present(task->getPriority(), task->getPresentInfo(), task->getSwapchainStatus());
-
-            // We get to ignore these as they are not fatal
-            if (result != VK_ERROR_OUT_OF_DATE_KHR && result != VK_SUBOPTIMAL_KHR &&
-                result != VK_SUCCESS)
-            {
-                // Save the error so that we can handle it.
-                // Don't leave processing loop, don't consider errors from present to be fatal.
-                // TODO: https://issuetracker.google.com/issues/170329600 - This needs to improve to
-                // properly parallelize present
-                handleError(result, __FILE__, __FUNCTION__, __LINE__);
-            }
-            break;
-        }
-        case CustomTask::FlushWaitSemaphores:
-        {
-            mCommandQueue->flushWaitSemaphores(task->getProtectionType(), task->getPriority(),
-                                               std::move(task->getWaitSemaphores()),
-                                               std::move(task->getWaitSemaphoreStageMasks()));
-            break;
-        }
-        case CustomTask::ProcessOutsideRenderPassCommands:
-        {
-            OutsideRenderPassCommandBufferHelper *commandBuffer =
-                task->getOutsideRenderPassCommandBuffer();
-            ANGLE_TRY(mCommandQueue->flushOutsideRPCommands(this, task->getProtectionType(),
-                                                            task->getPriority(), &commandBuffer));
-
-            OutsideRenderPassCommandBufferHelper *originalCommandBuffer =
-                task->getOutsideRenderPassCommandBuffer();
-            mRenderer->recycleOutsideRenderPassCommandBufferHelper(&originalCommandBuffer);
-            break;
-        }
-        case CustomTask::ProcessRenderPassCommands:
-        {
-            RenderPassCommandBufferHelper *commandBuffer = task->getRenderPassCommandBuffer();
-            ANGLE_TRY(mCommandQueue->flushRenderPassCommands(
-                this, task->getProtectionType(), task->getPriority(), task->getRenderPass(),
-                task->getFramebufferOverride(), &commandBuffer));
-
-            RenderPassCommandBufferHelper *originalCommandBuffer =
-                task->getRenderPassCommandBuffer();
-            mRenderer->recycleRenderPassCommandBufferHelper(&originalCommandBuffer);
-            break;
-        }
-        default:
-            UNREACHABLE();
-            break;
-    }
+    mTaskThread = std::thread(&CleanUpThread::processTasks, this);
 
     return angle::Result::Continue;
 }
 
-angle::Result CommandProcessor::waitForAllWorkToBeSubmitted(Context *context)
-{
-    ANGLE_TRACE_EVENT0("gpu.angle", "CommandProcessor::waitForAllWorkToBeSubmitted");
-    // Take mWorkerMutex lock so that no one is able to enqueue more work while we drain it
-    // and handle device lost.
-    std::lock_guard<std::mutex> enqueueLock(mTaskEnqueueMutex);
-    std::lock_guard<angle::SimpleMutex> dequeueLock(mTaskDequeueMutex);
-    // Sync any errors to the context
-    // Do this inside the mutex to prevent new errors adding to the list.
-    ANGLE_TRY(checkAndPopPendingError(context));
-
-    while (!mTaskQueue.empty())
-    {
-        CommandProcessorTask task(std::move(mTaskQueue.front()));
-        mTaskQueue.pop();
-        ANGLE_TRY(processTask(&task));
-    }
-
-    if (mRenderer->isAsyncCommandBufferResetAndGarbageCleanupEnabled())
-    {
-        ANGLE_TRY(mCommandQueue->releaseFinishedCommands(context));
-        mRenderer->cleanupGarbage(nullptr);
-    }
-
-    mNeedCommandsAndGarbageCleanup = false;
-
-    return angle::Result::Continue;
-}
-
-angle::Result CommandProcessor::init()
-{
-    mTaskThread = std::thread(&CommandProcessor::processTasks, this);
-
-    return angle::Result::Continue;
-}
-
-void CommandProcessor::destroy(Context *context)
+void CleanUpThread::destroy(Context *context)
 {
     {
         // Request to terminate the worker thread
-        std::lock_guard<std::mutex> enqueueLock(mTaskEnqueueMutex);
+        std::lock_guard<std::mutex> lock(mMutex);
         mTaskThreadShouldExit = true;
+        mNeedCleanUp          = false;
         mWorkAvailableCondition.notify_one();
     }
 
-    (void)waitForAllWorkToBeSubmitted(context);
+    // Perform any lingering clean up right away.
+    if (mRenderer->isAsyncCommandBufferResetAndGarbageCleanupEnabled())
+    {
+        (void)mCommandQueue->releaseFinishedCommands(context);
+        mRenderer->cleanupGarbage(nullptr);
+    }
+
     if (mTaskThread.joinable())
     {
         mTaskThread.join();
     }
-}
-
-void CommandProcessor::handleDeviceLost(Renderer *renderer)
-{
-    ANGLE_TRACE_EVENT0("gpu.angle", "CommandProcessor::handleDeviceLost");
-    // Take mTaskEnqueueMutex lock so that no one is able to add more work to the queue while we
-    // drain it and handle device lost.
-    std::lock_guard<std::mutex> enqueueLock(mTaskEnqueueMutex);
-    (void)waitForAllWorkToBeSubmitted(this);
-    // Worker thread is idle and command queue is empty so good to continue
-    mCommandQueue->handleDeviceLost(renderer);
-}
-
-VkResult CommandProcessor::present(egl::ContextPriority priority,
-                                   const VkPresentInfoKHR &presentInfo,
-                                   SwapchainStatus *swapchainStatus)
-{
-    ANGLE_TRACE_EVENT0("gpu.angle", "vkQueuePresentKHR");
-    // Verify that we are presenting one and only one swapchain
-    ASSERT(presentInfo.swapchainCount == 1);
-    ASSERT(presentInfo.pResults == nullptr);
-
-    mCommandQueue->queuePresent(priority, presentInfo, swapchainStatus);
-    const VkResult result = swapchainStatus->lastPresentResult;
-
-    // Always make sure update isPending after status has been updated.
-    // Can't access swapchainStatus after this assignment because it is marked as no longer pending,
-    // and so may get deleted or clobbered by another thread.
-    ASSERT(swapchainStatus->isPending);
-    swapchainStatus->isPending = false;
-
-    return result;
-}
-
-angle::Result CommandProcessor::enqueueSubmitCommands(Context *context,
-                                                      ProtectionType protectionType,
-                                                      egl::ContextPriority priority,
-                                                      VkSemaphore signalSemaphore,
-                                                      SharedExternalFence &&externalFence,
-                                                      const QueueSerial &submitQueueSerial)
-{
-    ANGLE_TRY(checkAndPopPendingError(context));
-
-    CommandProcessorTask task;
-    task.initFlushAndQueueSubmit(signalSemaphore, std::move(externalFence), protectionType,
-                                 priority, submitQueueSerial);
-
-    ANGLE_TRY(queueCommand(std::move(task)));
-
-    mLastEnqueuedSerials.setQueueSerial(submitQueueSerial);
-
-    return angle::Result::Continue;
-}
-
-angle::Result CommandProcessor::enqueueSubmitOneOffCommands(
-    Context *context,
-    ProtectionType protectionType,
-    egl::ContextPriority contextPriority,
-    VkCommandBuffer commandBufferHandle,
-    VkSemaphore waitSemaphore,
-    VkPipelineStageFlags waitSemaphoreStageMask,
-    SubmitPolicy submitPolicy,
-    const QueueSerial &submitQueueSerial)
-{
-    ANGLE_TRY(checkAndPopPendingError(context));
-
-    CommandProcessorTask task;
-    task.initOneOffQueueSubmit(commandBufferHandle, protectionType, contextPriority, waitSemaphore,
-                               waitSemaphoreStageMask, submitQueueSerial);
-    ANGLE_TRY(queueCommand(std::move(task)));
-
-    mLastEnqueuedSerials.setQueueSerial(submitQueueSerial);
-
-    if (submitPolicy == SubmitPolicy::EnsureSubmitted)
-    {
-        // Caller has synchronization requirement to have work in GPU pipe when returning from this
-        // function.
-        ANGLE_TRY(waitForQueueSerialToBeSubmitted(context, submitQueueSerial));
-    }
-
-    return angle::Result::Continue;
-}
-
-void CommandProcessor::enqueuePresent(egl::ContextPriority contextPriority,
-                                      const VkPresentInfoKHR &presentInfo,
-                                      SwapchainStatus *swapchainStatus)
-{
-    ASSERT(!swapchainStatus->isPending);
-    swapchainStatus->isPending = true;
-    // Always return with VK_SUCCESS initially. When we call acquireNextImage we'll check the
-    // return code again. This allows the app to continue working until we really need to know
-    // the return code from present.
-    swapchainStatus->lastPresentResult = VK_SUCCESS;
-
-    CommandProcessorTask task;
-    task.initPresent(contextPriority, presentInfo, swapchainStatus);
-    (void)queueCommand(std::move(task));
-}
-
-angle::Result CommandProcessor::enqueueFlushWaitSemaphores(
-    ProtectionType protectionType,
-    egl::ContextPriority priority,
-    std::vector<VkSemaphore> &&waitSemaphores,
-    std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks)
-{
-    CommandProcessorTask task;
-    task.initFlushWaitSemaphores(protectionType, priority, std::move(waitSemaphores),
-                                 std::move(waitSemaphoreStageMasks));
-    ANGLE_TRY(queueCommand(std::move(task)));
-
-    return angle::Result::Continue;
-}
-
-angle::Result CommandProcessor::enqueueFlushOutsideRPCommands(
-    Context *context,
-    ProtectionType protectionType,
-    egl::ContextPriority priority,
-    OutsideRenderPassCommandBufferHelper **outsideRPCommands)
-{
-    ANGLE_TRY(checkAndPopPendingError(context));
-
-    (*outsideRPCommands)->markClosed();
-
-    SecondaryCommandPool *commandPool = nullptr;
-    ANGLE_TRY((*outsideRPCommands)->detachCommandPool(context, &commandPool));
-
-    // Detach functions are only used for ring buffer allocators.
-    SecondaryCommandMemoryAllocator *allocator = (*outsideRPCommands)->detachAllocator();
-
-    CommandProcessorTask task;
-    task.initOutsideRenderPassProcessCommands(protectionType, priority, *outsideRPCommands);
-    ANGLE_TRY(queueCommand(std::move(task)));
-
-    ANGLE_TRY(mRenderer->getOutsideRenderPassCommandBufferHelper(context, commandPool, allocator,
-                                                                 outsideRPCommands));
-
-    return angle::Result::Continue;
-}
-
-angle::Result CommandProcessor::enqueueFlushRenderPassCommands(
-    Context *context,
-    ProtectionType protectionType,
-    egl::ContextPriority priority,
-    const RenderPass &renderPass,
-    VkFramebuffer framebufferOverride,
-    RenderPassCommandBufferHelper **renderPassCommands)
-{
-    ANGLE_TRY(checkAndPopPendingError(context));
-
-    (*renderPassCommands)->markClosed();
-
-    SecondaryCommandPool *commandPool = nullptr;
-    (*renderPassCommands)->detachCommandPool(&commandPool);
-
-    // Detach functions are only used for ring buffer allocators.
-    SecondaryCommandMemoryAllocator *allocator = (*renderPassCommands)->detachAllocator();
-
-    CommandProcessorTask task;
-    task.initRenderPassProcessCommands(protectionType, priority, *renderPassCommands, &renderPass,
-                                       framebufferOverride);
-    ANGLE_TRY(queueCommand(std::move(task)));
-
-    ANGLE_TRY(mRenderer->getRenderPassCommandBufferHelper(context, commandPool, allocator,
-                                                          renderPassCommands));
-
-    return angle::Result::Continue;
-}
-
-angle::Result CommandProcessor::waitForResourceUseToBeSubmitted(Context *context,
-                                                                const ResourceUse &use)
-{
-    if (mCommandQueue->hasResourceUseSubmitted(use))
-    {
-        ANGLE_TRY(checkAndPopPendingError(context));
-    }
-    else
-    {
-        // We do not hold mTaskEnqueueMutex lock, so that we still allow other context to enqueue
-        // work while we are processing them.
-        std::lock_guard<angle::SimpleMutex> dequeueLock(mTaskDequeueMutex);
-
-        // Do this inside the mutex to prevent new errors adding to the list.
-        ANGLE_TRY(checkAndPopPendingError(context));
-
-        size_t maxTaskCount = mTaskQueue.size();
-        size_t taskCount    = 0;
-        while (taskCount < maxTaskCount && !mCommandQueue->hasResourceUseSubmitted(use))
-        {
-            CommandProcessorTask task(std::move(mTaskQueue.front()));
-            mTaskQueue.pop();
-            ANGLE_TRY(processTask(&task));
-            taskCount++;
-        }
-    }
-    return angle::Result::Continue;
-}
-
-angle::Result CommandProcessor::waitForPresentToBeSubmitted(SwapchainStatus *swapchainStatus)
-{
-    if (!swapchainStatus->isPending)
-    {
-        return angle::Result::Continue;
-    }
-
-    std::lock_guard<angle::SimpleMutex> dequeueLock(mTaskDequeueMutex);
-    size_t maxTaskCount = mTaskQueue.size();
-    size_t taskCount    = 0;
-    while (taskCount < maxTaskCount && swapchainStatus->isPending)
-    {
-        CommandProcessorTask task(std::move(mTaskQueue.front()));
-        mTaskQueue.pop();
-        ANGLE_TRY(processTask(&task));
-        taskCount++;
-    }
-    ASSERT(!swapchainStatus->isPending);
-    return angle::Result::Continue;
 }
 
 CommandPoolAccess::CommandPoolAccess()  = default;
@@ -1514,7 +896,6 @@ angle::Result CommandQueue::queueSubmitOneOff(Context *context,
                                               VkCommandBuffer commandBufferHandle,
                                               VkSemaphore waitSemaphore,
                                               VkPipelineStageFlags waitSemaphoreStageMask,
-                                              SubmitPolicy submitPolicy,
                                               const QueueSerial &submitQueueSerial)
 {
     std::unique_lock<angle::SimpleMutex> lock(mQueueSubmitMutex);
@@ -1624,13 +1005,12 @@ angle::Result CommandQueue::queueSubmitLocked(Context *context,
     return angle::Result::Continue;
 }
 
-void CommandQueue::queuePresent(egl::ContextPriority contextPriority,
-                                const VkPresentInfoKHR &presentInfo,
-                                SwapchainStatus *swapchainStatus)
+VkResult CommandQueue::queuePresent(egl::ContextPriority contextPriority,
+                                    const VkPresentInfoKHR &presentInfo)
 {
     std::lock_guard<angle::SimpleMutex> lock(mQueueSubmitMutex);
     VkQueue queue                      = getQueue(contextPriority);
-    swapchainStatus->lastPresentResult = vkQueuePresentKHR(queue, &presentInfo);
+    return vkQueuePresentKHR(queue, &presentInfo);
 }
 
 const angle::VulkanPerfCounters CommandQueue::getPerfCounters() const

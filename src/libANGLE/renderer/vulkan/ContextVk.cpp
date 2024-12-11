@@ -3935,8 +3935,7 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
         // vkEvent's are externally synchronized, therefore need work to be submitted before calling
         // vkGetEventStatus
         ANGLE_TRY(mRenderer->queueSubmitOneOff(this, std::move(commandBuffer), getProtectionType(),
-                                               mContextPriority, VK_NULL_HANDLE, 0,
-                                               vk::SubmitPolicy::EnsureSubmitted, &submitSerial));
+                                               mContextPriority, VK_NULL_HANDLE, 0, &submitSerial));
 
         // Track it with the submitSerial.
         timestampQuery.setQueueSerial(submitSerial);
@@ -6977,9 +6976,8 @@ angle::Result ContextVk::releaseTextures(const gl::Context *context,
             vk::ConvertImageLayoutToGLImageLayout(image.getCurrentImageLayout());
     }
 
-    ANGLE_TRY(flushAndSubmitCommands(nullptr, nullptr,
-                                     RenderPassClosureReason::ImageUseThenReleaseToExternal));
-    return mRenderer->waitForResourceUseToBeSubmittedToDevice(this, mSubmittedResourceUse);
+    return flushAndSubmitCommands(nullptr, nullptr,
+                                  RenderPassClosureReason::ImageUseThenReleaseToExternal);
 }
 
 vk::DynamicQueryPool *ContextVk::getQueryPool(gl::QueryType queryType)
@@ -7972,7 +7970,7 @@ angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
     QueueSerial submitQueueSerial;
     ANGLE_TRY(mRenderer->queueSubmitOneOff(this, std::move(commandBuffer), getProtectionType(),
                                            mContextPriority, VK_NULL_HANDLE, 0,
-                                           vk::SubmitPolicy::AllowDeferred, &submitQueueSerial));
+                                           &submitQueueSerial));
     // Track it with the submitSerial.
     timestampQuery.setQueueSerial(submitQueueSerial);
 

@@ -986,7 +986,6 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState, EGLNativ
                                    {}, gl::LevelIndex(0), 0, 1, RenderTargetTransience::Default);
     mDepthStencilImageBinding.bind(&mDepthStencilImage);
     mColorImageMSBinding.bind(&mColorImageMS);
-    mSwapchainStatus.isPending = false;
 }
 
 WindowSurfaceVk::~WindowSurfaceVk()
@@ -1004,7 +1003,6 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
     VkInstance instance    = renderer->getInstance();
 
     // flush the pipe.
-    (void)renderer->waitForPresentToBeSubmitted(&mSwapchainStatus);
     (void)finish(displayVk);
 
     if (mAcquireOperation.state == impl::ImageAcquireState::Ready)
@@ -1490,7 +1488,6 @@ angle::Result WindowSurfaceVk::collectOldSwapchain(ContextVk *contextVk, VkSwapc
 angle::Result WindowSurfaceVk::recreateSwapchain(ContextVk *contextVk, const gl::Extents &extents)
 {
     ASSERT(mAcquireOperation.state != impl::ImageAcquireState::Ready);
-    ASSERT(!mSwapchainStatus.isPending);
 
     // Invalidate the current swapchain while keep the last handle to create the new swapchain.
     // mSwapchain may be already NULL if this is a repeated call (after a previous failure).
@@ -2387,7 +2384,8 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
                 .image->getAcquireNextImageSemaphore()
                 .valid());
 
-    renderer->queuePresent(contextVk, contextVk->getPriority(), presentInfo, &mSwapchainStatus);
+    VkResult presentResult =
+        renderer->queuePresent(contextVk, contextVk->getPriority(), presentInfo);
 
     // EGL_EXT_buffer_age
     // 4) What is the buffer age of a single buffered surface?
@@ -2419,8 +2417,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
         mPresentHistory.back().oldSwapchains = std::move(mOldSwapchains);
     }
 
-    ANGLE_TRY(
-        computePresentOutOfDate(contextVk, mSwapchainStatus.lastPresentResult, presentOutOfDate));
+    ANGLE_TRY(computePresentOutOfDate(contextVk, presentResult, presentOutOfDate));
 
     // Now apply CPU throttle if needed
     ANGLE_TRY(throttleCPU(contextVk, swapSerial));
@@ -2626,21 +2623,6 @@ angle::Result WindowSurfaceVk::prepareForAcquireNextSwapchainImage(const gl::Con
     ASSERT(mAcquireOperation.state == impl::ImageAcquireState::NeedToAcquire);
 
     ContextVk *contextVk   = vk::GetImpl(context);
-    vk::Renderer *renderer = contextVk->getRenderer();
-
-    // TODO(jmadill): Expose in CommandQueueInterface, or manage in CommandQueue. b/172704839
-    if (renderer->isAsyncCommandQueueEnabled())
-    {
-        ANGLE_TRY(renderer->waitForPresentToBeSubmitted(&mSwapchainStatus));
-        VkResult result = mSwapchainStatus.lastPresentResult;
-
-        // Now that we have the result from the last present need to determine if it's out of date
-        // or not.
-        bool presentOutOfDate = false;
-        ANGLE_TRY(computePresentOutOfDate(contextVk, result, &presentOutOfDate));
-        forceSwapchainRecreate = forceSwapchainRecreate || presentOutOfDate;
-    }
-
     return checkForOutOfDateSwapchain(contextVk, forceSwapchainRecreate);
 }
 
@@ -2829,7 +2811,6 @@ VkResult WindowSurfaceVk::postProcessUnlockedAcquire(vk::Context *context)
             if (renderer->queueSubmitOneOff(context, std::move(primaryCommandBuffer),
                                             protectionType, egl::ContextPriority::Medium, semaphore,
                                             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
-                                            vk::SubmitPolicy::EnsureSubmitted,
                                             &queueSerial) != angle::Result::Continue)
             {
                 mDesiredSwapchainPresentMode = vk::PresentMode::FifoKHR;
