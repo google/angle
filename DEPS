@@ -224,6 +224,7 @@ vars = {
   'checkout_angle_restricted_trace_diablo_immortal': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_disney_mirrorverse': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_disney_tsum_tsum': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_dont_starve': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_dota_underlords': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_downwell': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_dr_driving': 'checkout_angle_restricted_traces',
@@ -1906,6 +1907,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_disney_tsum_tsum',
+  },
+  'src/tests/restricted_traces/dont_starve': {
+      'packages': [
+        {
+            'package': 'angle/traces/dont_starve',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_dont_starve',
   },
   'src/tests/restricted_traces/dota_underlords': {
       'packages': [
