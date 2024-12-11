@@ -2493,31 +2493,6 @@ angle::Result ContextVk::handleDirtyGraphicsRenderPass(DirtyBits::Iterator *dirt
         ANGLE_TRY(handleDirtyGraphicsPipelineDesc(dirtyBitsIterator, dirtyBitMask));
     }
 
-    // For dynamic rendering, the FramebufferVk's render pass desc does not track whether
-    // framebuffer fetch is in use.  In that case, ContextVk updates the command buffer's (and
-    // graphics pipeline's) render pass desc only:
-    //
-    // - When the render pass starts
-    // - When the program binding changes (see |invalidateProgramExecutableHelper|)
-    if (getFeatures().preferDynamicRendering.enabled)
-    {
-        vk::FramebufferFetchMode framebufferFetchMode =
-            vk::GetProgramFramebufferFetchMode(mState.getProgramExecutable());
-        if (framebufferFetchMode != vk::FramebufferFetchMode::None)
-        {
-            // Note: this function sets a dirty bit through onColorAccessChange() not through
-            // |dirtyBitsIterator|, but that dirty bit is always set on new render passes, so it
-            // won't be missed.
-            onFramebufferFetchUse(framebufferFetchMode);
-        }
-        else
-        {
-            // Reset framebuffer fetch mode.  Note that |onFramebufferFetchUse| _accumulates_
-            // framebuffer fetch mode.
-            mRenderPassCommands->setFramebufferFetchMode(vk::FramebufferFetchMode::None);
-        }
-    }
-
     return angle::Result::Continue;
 }
 
@@ -8090,6 +8065,32 @@ angle::Result ContextVk::startRenderPass(gl::Rectangle renderArea,
 
     ANGLE_TRY(drawFramebufferVk->startNewRenderPass(this, renderArea, &mRenderPassCommandBuffer,
                                                     renderPassDescChangedOut));
+
+    // For dynamic rendering, the FramebufferVk's render pass desc does not track whether
+    // framebuffer fetch is in use.  In that case, ContextVk updates the command buffer's (and
+    // graphics pipeline's) render pass desc only:
+    //
+    // - When the render pass starts
+    // - When the program binding changes (see |invalidateProgramExecutableHelper|)
+    if (getFeatures().preferDynamicRendering.enabled)
+    {
+        vk::FramebufferFetchMode framebufferFetchMode =
+            vk::GetProgramFramebufferFetchMode(mState.getProgramExecutable());
+        fprintf(stderr, "Started new RP, ff mode: %x\n", (int)framebufferFetchMode);
+        if (framebufferFetchMode != vk::FramebufferFetchMode::None)
+        {
+            // Note: this function sets a dirty bit through onColorAccessChange() not through
+            // |dirtyBitsIterator|, but that dirty bit is always set on new render passes, so it
+            // won't be missed.
+            onFramebufferFetchUse(framebufferFetchMode);
+        }
+        else
+        {
+            // Reset framebuffer fetch mode.  Note that |onFramebufferFetchUse| _accumulates_
+            // framebuffer fetch mode.
+            mRenderPassCommands->setFramebufferFetchMode(vk::FramebufferFetchMode::None);
+        }
+    }
 
     // Make sure the render pass is not restarted if it is started by UtilsVk (as opposed to
     // setupDraw(), which clears this bit automatically).

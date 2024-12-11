@@ -2501,13 +2501,12 @@ void main (void)
     ASSERT_GL_NO_ERROR();
 }
 
-// Test recovering a supposedly closed render pass that used framebuffer fetch..
+// Test recovering a supposedly closed render pass that used framebuffer fetch.
 TEST_P(FramebufferFetchES31, ReopenRenderPass)
 {
-    const bool is_coherent = IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch");
-    ANGLE_SKIP_TEST_IF(!is_coherent &&
+    const bool isCoherent = IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch");
+    ANGLE_SKIP_TEST_IF(!isCoherent &&
                        !IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_sample_variables"));
 
     // Create two framebuffers
     GLRenderbuffer color[2];
@@ -2527,7 +2526,7 @@ TEST_P(FramebufferFetchES31, ReopenRenderPass)
     // Use a framebuffer fetch program.
     std::ostringstream fs;
     fs << "#version 310 es\n";
-    if (is_coherent)
+    if (isCoherent)
     {
         fs << "#extension GL_EXT_shader_framebuffer_fetch : require\n";
     }
@@ -2561,6 +2560,164 @@ void main (void)
     // Verify the results
     EXPECT_PIXEL_NEAR(0, 0, 191, 159, 255, 255, 1);
     EXPECT_PIXEL_COLOR_EQ(kViewportWidth - 1, kViewportHeight - 1, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test opening a render pass with a scissored clear
+TEST_P(FramebufferFetchES31, StartWithScissoredClear)
+{
+    const bool isCoherent = IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch");
+    ANGLE_SKIP_TEST_IF(!isCoherent &&
+                       !IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
+
+    constexpr char kVS[] = R"(#version 310 es
+void main()
+{
+    vec2 pos = vec2(0.0);
+    switch (gl_VertexID) {
+        case 0: pos = vec2(-1.0, -1.0); break;
+        case 1: pos = vec2(3.0, -1.0); break;
+        case 2: pos = vec2(-1.0, 3.0); break;
+    };
+    gl_Position = vec4(pos, 0.0, 1.0);
+})";
+
+    std::ostringstream fs;
+    fs << "#version 310 es\n";
+    if (isCoherent)
+    {
+        fs << "#extension GL_EXT_shader_framebuffer_fetch : require\n";
+    }
+    else
+    {
+        fs << "#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require\n";
+    }
+    fs << R"(inout highp vec4 color;
+void main (void)
+{
+    color += vec4(0.25, 0.125, 0.5, 0.0);
+})";
+
+    ANGLE_GL_PROGRAM(ff, kVS, fs.str().c_str());
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    GLRenderbuffer color;
+    glBindRenderbuffer(GL_RENDERBUFFER, color);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, kViewportWidth, kViewportHeight);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, color);
+
+    // Draw once for the program to be processed, so the draw after clear would not have executable
+    // related dirty bits.
+    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glUseProgram(ff);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Clear value (0.5, 0.5, 0.5, 1.0f) + shader's addition (0.25, 0.125, 0.5, 0.0)
+    EXPECT_PIXEL_NEAR(0, 0, 191, 159, 255, 255, 1);
+
+    // Start rendering with a scissored clear, then do a draw call
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(0, 0, kViewportWidth / 2, kViewportHeight / 2);
+
+    glClearColor(0.125f, 0.75f, 0.25f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    if (!isCoherent)
+    {
+        glFramebufferFetchBarrierEXT();
+    }
+
+    // Don't use drawQuad, as it reinstalls the program, adding additional dirty bits.
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Verify the results
+    // Clear value (0.125, 0.75, 0.25, 1.0f) + shader's addition (0.25, 0.125, 0.5, 0.0)
+    EXPECT_PIXEL_NEAR(0, 0, 96, 223, 191, 255, 1);
+    // The rest of the image should be left untouched due to scissor
+    EXPECT_PIXEL_NEAR(kViewportWidth - 1, kViewportHeight - 1, 191, 159, 255, 255, 1);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test opening a render pass with a masked clear
+TEST_P(FramebufferFetchES31, StartWithMaskedClear)
+{
+    const bool isCoherent = IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch");
+    ANGLE_SKIP_TEST_IF(!isCoherent &&
+                       !IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
+
+    constexpr char kVS[] = R"(#version 310 es
+void main()
+{
+    vec2 pos = vec2(0.0);
+    switch (gl_VertexID) {
+        case 0: pos = vec2(-1.0, -1.0); break;
+        case 1: pos = vec2(3.0, -1.0); break;
+        case 2: pos = vec2(-1.0, 3.0); break;
+    };
+    gl_Position = vec4(pos, 0.0, 1.0);
+})";
+
+    std::ostringstream fs;
+    fs << "#version 310 es\n";
+    if (isCoherent)
+    {
+        fs << "#extension GL_EXT_shader_framebuffer_fetch : require\n";
+    }
+    else
+    {
+        fs << "#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require\n";
+    }
+    fs << R"(inout highp vec4 color;
+void main (void)
+{
+    color += vec4(0.25, 0.125, 0.5, 0.0);
+})";
+
+    ANGLE_GL_PROGRAM(ff, kVS, fs.str().c_str());
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    GLRenderbuffer color;
+    glBindRenderbuffer(GL_RENDERBUFFER, color);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, kViewportWidth, kViewportHeight);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, color);
+
+    // Draw once for the program to be processed, so the draw after clear would not have executable
+    // related dirty bits.
+    glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glUseProgram(ff);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Clear value (0.5, 0.5, 0.5, 1.0f) + shader's addition (0.25, 0.125, 0.5, 0.0)
+    EXPECT_PIXEL_NEAR(0, 0, 191, 159, 255, 255, 1);
+
+    // Start rendering with a scissored clear, then do a draw call
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(0, 0, kViewportWidth / 2, kViewportHeight / 2);
+
+    glClearColor(0.125f, 0.75f, 0.25f, 1.0f);
+    glColorMask(GL_TRUE, GL_FALSE, GL_FALSE, GL_TRUE);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+
+    if (!isCoherent)
+    {
+        glFramebufferFetchBarrierEXT();
+    }
+
+    // Don't use drawQuad, as it reinstalls the program, adding additional dirty bits.
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    // Verify the results
+    // Clear value (0.125, 0.75, 0.25, 1.0f) + shader's addition (0.25, 0.125, 0.5, 0.0)
+    EXPECT_PIXEL_NEAR(0, 0, 96, 191, 255, 255, 1);
+    // The rest of the image should be left untouched due to scissor
+    EXPECT_PIXEL_NEAR(kViewportWidth - 1, kViewportHeight - 1, 191, 159, 255, 255, 1);
     ASSERT_GL_NO_ERROR();
 }
 
