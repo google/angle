@@ -6001,22 +6001,27 @@ void WriteDescriptorDescs::updateInputAttachments(
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
     FramebufferVk *framebufferVk)
 {
-    if (executable.usesDepthFramebufferFetch())
+    if (framebufferVk->getDepthStencilRenderTarget() != nullptr)
     {
-        const uint32_t depthBinding =
-            variableInfoMap
-                .getVariableById(gl::ShaderType::Fragment, sh::vk::spirv::kIdDepthInputAttachment)
-                .binding;
-        updateWriteDesc(depthBinding, VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1);
-    }
+        if (executable.usesDepthFramebufferFetch())
+        {
+            const uint32_t depthBinding =
+                variableInfoMap
+                    .getVariableById(gl::ShaderType::Fragment,
+                                     sh::vk::spirv::kIdDepthInputAttachment)
+                    .binding;
+            updateWriteDesc(depthBinding, VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1);
+        }
 
-    if (executable.usesStencilFramebufferFetch())
-    {
-        const uint32_t stencilBinding =
-            variableInfoMap
-                .getVariableById(gl::ShaderType::Fragment, sh::vk::spirv::kIdStencilInputAttachment)
-                .binding;
-        updateWriteDesc(stencilBinding, VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1);
+        if (executable.usesStencilFramebufferFetch())
+        {
+            const uint32_t stencilBinding =
+                variableInfoMap
+                    .getVariableById(gl::ShaderType::Fragment,
+                                     sh::vk::spirv::kIdStencilInputAttachment)
+                    .binding;
+            updateWriteDesc(stencilBinding, VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1);
+        }
     }
 
     if (!executable.usesColorFramebufferFetch())
@@ -6840,39 +6845,45 @@ angle::Result DescriptorSetDescBuilder::updateInputAttachments(
         RenderTargetVk *renderTargetVk = framebufferVk->getDepthStencilRenderTarget();
         ASSERT(context->getFeatures().preferDynamicRendering.enabled);
 
-        const ImageOrBufferViewSubresourceSerial serial =
-            renderTargetVk->getDrawSubresourceSerial();
-        const VkImageAspectFlags aspects = renderTargetVk->getImageForRenderPass().getAspectFlags();
-
-        if (executable.usesDepthFramebufferFetch() && (aspects & VK_IMAGE_ASPECT_DEPTH_BIT) != 0)
+        if (renderTargetVk != nullptr)
         {
-            const vk::ImageView *imageView = nullptr;
-            ANGLE_TRY(renderTargetVk->getDepthOrStencilImageView(context, VK_IMAGE_ASPECT_DEPTH_BIT,
-                                                                 &imageView));
+            const ImageOrBufferViewSubresourceSerial serial =
+                renderTargetVk->getDrawSubresourceSerial();
+            const VkImageAspectFlags aspects =
+                renderTargetVk->getImageForRenderPass().getAspectFlags();
 
-            const uint32_t depthBinding =
-                variableInfoMap
-                    .getVariableById(gl::ShaderType::Fragment,
-                                     sh::vk::spirv::kIdDepthInputAttachment)
-                    .binding;
-            updateInputAttachment(context, depthBinding, ImageLayout::DepthStencilWriteAndInput,
-                                  imageView, serial, writeDescriptorDescs);
-        }
+            if (executable.usesDepthFramebufferFetch() &&
+                (aspects & VK_IMAGE_ASPECT_DEPTH_BIT) != 0)
+            {
+                const vk::ImageView *imageView = nullptr;
+                ANGLE_TRY(renderTargetVk->getDepthOrStencilImageView(
+                    context, VK_IMAGE_ASPECT_DEPTH_BIT, &imageView));
 
-        if (executable.usesStencilFramebufferFetch() &&
-            (aspects & VK_IMAGE_ASPECT_STENCIL_BIT) != 0)
-        {
-            const vk::ImageView *imageView = nullptr;
-            ANGLE_TRY(renderTargetVk->getDepthOrStencilImageView(
-                context, VK_IMAGE_ASPECT_STENCIL_BIT, &imageView));
+                const uint32_t depthBinding =
+                    variableInfoMap
+                        .getVariableById(gl::ShaderType::Fragment,
+                                         sh::vk::spirv::kIdDepthInputAttachment)
+                        .binding;
+                updateInputAttachment(context, depthBinding, ImageLayout::DepthStencilWriteAndInput,
+                                      imageView, serial, writeDescriptorDescs);
+            }
 
-            const uint32_t stencilBinding =
-                variableInfoMap
-                    .getVariableById(gl::ShaderType::Fragment,
-                                     sh::vk::spirv::kIdStencilInputAttachment)
-                    .binding;
-            updateInputAttachment(context, stencilBinding, ImageLayout::DepthStencilWriteAndInput,
-                                  imageView, serial, writeDescriptorDescs);
+            if (executable.usesStencilFramebufferFetch() &&
+                (aspects & VK_IMAGE_ASPECT_STENCIL_BIT) != 0)
+            {
+                const vk::ImageView *imageView = nullptr;
+                ANGLE_TRY(renderTargetVk->getDepthOrStencilImageView(
+                    context, VK_IMAGE_ASPECT_STENCIL_BIT, &imageView));
+
+                const uint32_t stencilBinding =
+                    variableInfoMap
+                        .getVariableById(gl::ShaderType::Fragment,
+                                         sh::vk::spirv::kIdStencilInputAttachment)
+                        .binding;
+                updateInputAttachment(context, stencilBinding,
+                                      ImageLayout::DepthStencilWriteAndInput, imageView, serial,
+                                      writeDescriptorDescs);
+            }
         }
     }
 
