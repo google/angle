@@ -3,11 +3,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// CommandProcessor.cpp:
+// CommandQueue.cpp:
 //    Implements the class methods for CommandQueue.
 //
 
-#include "libANGLE/renderer/vulkan/CommandProcessor.h"
+#include "libANGLE/renderer/vulkan/CommandQueue.h"
 #include "common/system_utils.h"
 #include "libANGLE/renderer/vulkan/SyncVk.h"
 #include "libANGLE/renderer/vulkan/vk_renderer.h"
@@ -345,8 +345,7 @@ CleanUpThread::CleanUpThread(Renderer *renderer, CommandQueue *commandQueue)
       mCommandQueue(commandQueue),
       mTaskThreadShouldExit(false),
       mNeedCleanUp(false)
-{
-}
+{}
 
 CleanUpThread::~CleanUpThread() = default;
 
@@ -383,7 +382,7 @@ void CleanUpThread::processTasks()
 
     while (true)
     {
-        bool exitThread      = false;
+        bool exitThread = false;
         (void)processTasksImpl(&exitThread);
         if (exitThread)
         {
@@ -900,7 +899,7 @@ angle::Result CommandQueue::queueSubmitOneOff(Context *context,
 {
     std::unique_lock<angle::SimpleMutex> lock(mQueueSubmitMutex);
     DeviceScoped<CommandBatch> scopedBatch(context->getDevice());
-    CommandBatch &batch  = scopedBatch.get();
+    CommandBatch &batch = scopedBatch.get();
     batch.setQueueSerial(submitQueueSerial);
     batch.setProtectionType(protectionType);
 
@@ -1009,7 +1008,7 @@ VkResult CommandQueue::queuePresent(egl::ContextPriority contextPriority,
                                     const VkPresentInfoKHR &presentInfo)
 {
     std::lock_guard<angle::SimpleMutex> lock(mQueueSubmitMutex);
-    VkQueue queue                      = getQueue(contextPriority);
+    VkQueue queue = getQueue(contextPriority);
     return vkQueuePresentKHR(queue, &presentInfo);
 }
 

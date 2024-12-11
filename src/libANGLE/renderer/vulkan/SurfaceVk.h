@@ -14,7 +14,6 @@
 #include "common/SimpleMutex.h"
 #include "common/vulkan/vk_headers.h"
 #include "libANGLE/renderer/SurfaceImpl.h"
-#include "libANGLE/renderer/vulkan/CommandProcessor.h"
 #include "libANGLE/renderer/vulkan/RenderTargetVk.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
 

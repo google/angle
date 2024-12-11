@@ -3,12 +3,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// CommandProcessor.h:
+// CommandQueue.h:
 //    A class to process and submit Vulkan command buffers.
 //
 
-#ifndef LIBANGLE_RENDERER_VULKAN_COMMAND_PROCESSOR_H_
-#define LIBANGLE_RENDERER_VULKAN_COMMAND_PROCESSOR_H_
+#ifndef LIBANGLE_RENDERER_VULKAN_COMMAND_Queue_H_
+#define LIBANGLE_RENDERER_VULKAN_COMMAND_Queue_H_
 
 #include <condition_variable>
 #include <mutex>
@@ -28,8 +28,8 @@ namespace vk
 class ExternalFence;
 using SharedExternalFence = std::shared_ptr<ExternalFence>;
 
-constexpr size_t kInFlightCommandsLimit         = 50u;
-constexpr size_t kMaxFinishedCommandsLimit      = 64u;
+constexpr size_t kInFlightCommandsLimit    = 50u;
+constexpr size_t kMaxFinishedCommandsLimit = 64u;
 static_assert(kInFlightCommandsLimit <= kMaxFinishedCommandsLimit);
 
 struct Error
@@ -516,11 +516,11 @@ class CleanUpThread : public Context
     }
     angle::Result checkAndPopPendingError(Context *errorHandlingContext);
 
-    // Entry point for command processor thread, calls processTasksImpl to do the
+    // Entry point for clean up thread, calls processTasksImpl to do the
     // work. called by Renderer::initializeDevice on main thread
     void processTasks();
 
-    // Command processor thread, called by processTasks. The loop waits for work to
+    // Clean up thread, called by processTasks. The loop waits for work to
     // be submitted from a separate thread.
     angle::Result processTasksImpl(bool *exitThread);
 
@@ -540,4 +540,4 @@ class CleanUpThread : public Context
 
 }  // namespace rx
 
-#endif  // LIBANGLE_RENDERER_VULKAN_COMMAND_PROCESSOR_H_
+#endif  // LIBANGLE_RENDERER_VULKAN_COMMAND_QUEUE_H_

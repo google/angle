@@ -24,7 +24,7 @@
 #include "common/vulkan/vk_headers.h"
 #include "common/vulkan/vulkan_icd.h"
 #include "libANGLE/Caps.h"
-#include "libANGLE/renderer/vulkan/CommandProcessor.h"
+#include "libANGLE/renderer/vulkan/CommandQueue.h"
 #include "libANGLE/renderer/vulkan/DebugAnnotatorVk.h"
 #include "libANGLE/renderer/vulkan/MemoryTracking.h"
 #include "libANGLE/renderer/vulkan/QueryVk.h"
