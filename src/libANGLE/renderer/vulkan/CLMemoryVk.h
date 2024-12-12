@@ -100,6 +100,13 @@ class CLBufferVk : public CLMemoryVk
 
     angle::Result create(void *hostPtr);
     angle::Result createStagingBuffer(size_t size);
+    angle::Result copyToWithPitch(void *hostPtr,
+                                  size_t srcOffset,
+                                  size_t size,
+                                  size_t rowPitch,
+                                  size_t slicePitch,
+                                  cl::Coordinate region,
+                                  const size_t elementSize);
 
     angle::Result fillWithPattern(const void *pattern,
                                   size_t patternSize,

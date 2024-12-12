@@ -213,6 +213,41 @@ angle::Result CLBufferVk::create(void *hostPtr)
     return angle::Result::Continue;
 }
 
+angle::Result CLBufferVk::copyToWithPitch(void *hostPtr,
+                                          size_t srcOffset,
+                                          size_t size,
+                                          size_t rowPitch,
+                                          size_t slicePitch,
+                                          cl::Coordinate region,
+                                          const size_t elementSize)
+{
+    uint8_t *ptrInBase  = nullptr;
+    uint8_t *ptrOutBase = nullptr;
+    cl::BufferRect stagingBufferRect{
+        {static_cast<int>(0), static_cast<int>(0), static_cast<int>(0)},
+        {region.x, region.y, region.z},
+        0,
+        0,
+        elementSize};
+
+    ptrOutBase = static_cast<uint8_t *>(hostPtr);
+    ANGLE_TRY(getBuffer().map(mContext, &ptrInBase));
+
+    for (size_t slice = 0; slice < region.z; slice++)
+    {
+        for (size_t row = 0; row < region.y; row++)
+        {
+            size_t stagingBufferOffset = stagingBufferRect.getRowOffset(slice, row);
+            size_t hostPtrOffset       = (slice * slicePitch + row * rowPitch);
+            uint8_t *dst               = ptrOutBase + hostPtrOffset;
+            uint8_t *src               = ptrInBase + stagingBufferOffset;
+            memcpy(dst, src, region.x * elementSize);
+        }
+    }
+    getBuffer().unmap(mContext->getRenderer());
+    return angle::Result::Continue;
+}
+
 angle::Result CLBufferVk::mapImpl()
 {
     ASSERT(!isMapped());
@@ -406,7 +441,7 @@ angle::Result CLImageVk::copyStagingToFromWithPitch(void *hostPtr,
 {
     uint8_t *ptrInBase  = nullptr;
     uint8_t *ptrOutBase = nullptr;
-    cl::BufferBox stagingBufferBox{{}, {region.x, region.y, region.z}, 0, 0, getElementSize()};
+    cl::BufferRect stagingBufferRect{{}, {region.x, region.y, region.z}, 0, 0, getElementSize()};
 
     if (copyStagingTo == StagingBufferCopyDirection::ToHost)
     {
@@ -422,7 +457,7 @@ angle::Result CLImageVk::copyStagingToFromWithPitch(void *hostPtr,
     {
         for (size_t row = 0; row < region.y; row++)
         {
-            size_t stagingBufferOffset = stagingBufferBox.getRowOffset(slice, row);
+            size_t stagingBufferOffset = stagingBufferRect.getRowOffset(slice, row);
             size_t hostPtrOffset       = (slice * slicePitch + row * rowPitch);
             uint8_t *dst               = (copyStagingTo == StagingBufferCopyDirection::ToHost)
                                              ? ptrOutBase + hostPtrOffset
@@ -689,15 +724,15 @@ void CLImageVk::fillImageWithColor(const cl::MemOffsets &origin,
                                    PixelColor *packedColor)
 {
     size_t elementSize = getElementSize();
-    cl::BufferBox stagingBufferBox{
+    cl::BufferRect stagingBufferRect{
         {}, {mExtent.width, mExtent.height, mExtent.depth}, 0, 0, elementSize};
-    uint8_t *ptrBase = imagePtr + (origin.z * stagingBufferBox.getSlicePitch()) +
-                       (origin.y * stagingBufferBox.getRowPitch()) + (origin.x * elementSize);
+    uint8_t *ptrBase = imagePtr + (origin.z * stagingBufferRect.getSlicePitch()) +
+                       (origin.y * stagingBufferRect.getRowPitch()) + (origin.x * elementSize);
     for (size_t slice = 0; slice < region.z; slice++)
     {
         for (size_t row = 0; row < region.y; row++)
         {
-            size_t stagingBufferOffset = stagingBufferBox.getRowOffset(slice, row);
+            size_t stagingBufferOffset = stagingBufferRect.getRowOffset(slice, row);
             uint8_t *pixelPtr          = ptrBase + stagingBufferOffset;
             for (size_t x = 0; x < region.x; x++)
             {

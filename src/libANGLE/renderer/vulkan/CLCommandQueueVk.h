@@ -63,6 +63,9 @@ struct HostTransferConfig
     size_t offset          = 0;
     void *dstHostPtr       = nullptr;
     const void *srcHostPtr = nullptr;
+    size_t rowPitch        = 0;
+    size_t slicePitch      = 0;
+    size_t elementSize     = 0;
     cl::MemOffsets origin;
     cl::Coordinate region;
 };

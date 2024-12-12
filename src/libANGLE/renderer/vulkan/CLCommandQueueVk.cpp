@@ -765,11 +765,14 @@ angle::Result CLCommandQueueVk::enqueueReadImage(const cl::Image &image,
     {
         // Create a transfer buffer and push it in update list
         HostTransferConfig transferConfig;
-        transferConfig.type       = CL_COMMAND_READ_IMAGE;
-        transferConfig.size       = size;
-        transferConfig.dstHostPtr = ptr;
-        transferConfig.origin     = origin;
-        transferConfig.region     = region;
+        transferConfig.type        = CL_COMMAND_READ_IMAGE;
+        transferConfig.size        = size;
+        transferConfig.dstHostPtr  = ptr;
+        transferConfig.origin      = origin;
+        transferConfig.region      = region;
+        transferConfig.rowPitch    = rowPitch;
+        transferConfig.slicePitch  = slicePitch;
+        transferConfig.elementSize = imageVk.getElementSize();
         ANGLE_TRY(addToHostTransferList(&imageVk, transferConfig));
 
         ANGLE_TRY(createEvent(eventCreateFunc, cl::ExecutionStatus::Queued));
@@ -986,7 +989,10 @@ angle::Result CLCommandQueueVk::enqueueMapImage(const cl::Image &image,
     ANGLE_TRY(copyImageToFromBuffer(*imageVk, imageVk->getStagingBuffer(), cl::kMemOffsetsZero,
                                     {extent.width, extent.height, extent.depth}, 0,
                                     ImageBufferCopyDirection::ToBuffer));
-    ANGLE_TRY(finishInternal());
+    if (blocking)
+    {
+        ANGLE_TRY(finishInternal());
+    }
 
     uint8_t *mapPointer = nullptr;
     size_t elementSize  = imageVk->getElementSize();
@@ -1287,8 +1293,18 @@ angle::Result CLCommandQueueVk::syncHostBuffers(HostTransferEntries &hostTransfe
             {
                 case CL_COMMAND_READ_BUFFER:
                 case CL_COMMAND_READ_IMAGE:
-                    ANGLE_TRY(transferBufferVk.copyTo(transferConfig.dstHostPtr,
-                                                      transferConfig.offset, transferConfig.size));
+                    if (transferConfig.rowPitch == 0 && transferConfig.slicePitch == 0)
+                    {
+                        ANGLE_TRY(transferBufferVk.copyTo(
+                            transferConfig.dstHostPtr, transferConfig.offset, transferConfig.size));
+                    }
+                    else
+                    {
+                        ANGLE_TRY(transferBufferVk.copyToWithPitch(
+                            transferConfig.dstHostPtr, transferConfig.offset, transferConfig.size,
+                            transferConfig.rowPitch, transferConfig.slicePitch,
+                            transferConfig.region, transferConfig.elementSize));
+                    }
                     break;
                 default:
                     UNIMPLEMENTED();
