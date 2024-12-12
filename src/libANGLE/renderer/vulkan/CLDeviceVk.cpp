@@ -206,6 +206,22 @@ CLDeviceImpl::Info CLDeviceVk::createInfo(cl::DeviceType type) const
                  "support uniform buffers. Otherwise, you must disable OpenCL.";
     }
 
+    // Populate supported features
+    if (info.imageSupport)
+    {
+        info.OpenCL_C_Features.push_back(
+            cl_name_version{.version = CL_MAKE_VERSION(3, 0, 0), .name = "__opencl_c_images"});
+        info.OpenCL_C_Features.push_back(cl_name_version{.version = CL_MAKE_VERSION(3, 0, 0),
+                                                         .name    = "__opencl_c_3d_image_writes"});
+        info.OpenCL_C_Features.push_back(cl_name_version{.version = CL_MAKE_VERSION(3, 0, 0),
+                                                         .name = "__opencl_c_read_write_images"});
+    }
+    if (mRenderer->getEnabledFeatures().features.shaderInt64)
+    {
+        info.OpenCL_C_Features.push_back(
+            cl_name_version{.version = CL_MAKE_VERSION(3, 0, 0), .name = "__opencl_c_int64"});
+    }
+
     return info;
 }
 

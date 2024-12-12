@@ -10,6 +10,7 @@
 #include "common/log_utils.h"
 #include "libANGLE/renderer/vulkan/CLDeviceVk.h"
 
+#include "libANGLE/CLDevice.h"
 #include "libANGLE/renderer/driver_utils.h"
 
 #include <mutex>
@@ -349,6 +350,7 @@ std::string ClspvGetCompilerOptions(const CLDeviceVk *device)
     ASSERT(device && device->getRenderer());
     const vk::Renderer *rendererVk = device->getRenderer();
     std::string options{""};
+    std::vector<std::string> featureMacros;
 
     cl_uint addressBits;
     if (IsError(device->getInfoUInt(cl::DeviceInfo::AddressBits, &addressBits)))
@@ -392,6 +394,7 @@ std::string ClspvGetCompilerOptions(const CLDeviceVk *device)
     options += " --long-vector";
     options += " --global-offset";
     options += " --enable-printf";
+    options += " --cl-kernel-arg-info";
 
     // 8 bit storage buffer support
     if (!rendererVk->getFeatures().supports8BitStorageBuffer.enabled)
@@ -432,6 +435,58 @@ std::string ClspvGetCompilerOptions(const CLDeviceVk *device)
         nativeBuiltins += builtin + ",";
     }
     options += " --use-native-builtins=" + nativeBuiltins;
+    std::vector<std::string> rteModes;
+    if (rendererVk->getFeatures().supportsRoundingModeRteFp32.enabled)
+    {
+        rteModes.push_back("32");
+    }
+    if (rendererVk->getFeatures().supportsShaderFloat16.enabled)
+    {
+        options += " --fp16";
+        if (rendererVk->getFeatures().supportsRoundingModeRteFp16.enabled)
+        {
+            rteModes.push_back("16");
+        }
+    }
+    if (rendererVk->getFeatures().supportsShaderFloat64.enabled)
+    {
+        options += " --fp64";
+        featureMacros.push_back("__opencl_c_fp64");
+        if (rendererVk->getFeatures().supportsRoundingModeRteFp64.enabled)
+        {
+            rteModes.push_back("64");
+        }
+    }
+    else
+    {
+        options += " --fp64=0";
+    }
+
+    if (device->getFrontendObject().getInfo().imageSupport)
+    {
+        featureMacros.push_back("__opencl_c_images");
+        featureMacros.push_back("__opencl_c_3d_image_writes");
+        featureMacros.push_back("__opencl_c_read_write_images");
+    }
+
+    if (rendererVk->getEnabledFeatures().features.shaderInt64)
+    {
+        featureMacros.push_back("__opencl_c_int64");
+    }
+
+    if (!rteModes.empty())
+    {
+        options += " --rounding-mode-rte=";
+        options += std::reduce(std::next(rteModes.begin()), rteModes.end(), rteModes[0],
+                               [](const auto a, const auto b) { return a + "," + b; });
+    }
+    if (!featureMacros.empty())
+    {
+        options += " --enable-feature-macros=";
+        options +=
+            std::reduce(std::next(featureMacros.begin()), featureMacros.end(), featureMacros[0],
+                        [](const std::string a, const std::string b) { return a + "," + b; });
+    }
 
     return options;
 }
