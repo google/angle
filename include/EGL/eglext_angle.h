@@ -105,6 +105,13 @@
 #define EGL_PLATFORM_VULKAN_DISPLAY_MODE_HEADLESS_ANGLE 0x34A5
 #endif /* EGL_ANGLE_platform_angle_vulkan */
 
+#ifndef EGL_ANGLE_platform_angle_vulkan_device_uuid
+#define EGL_ANGLE_platform_angle_vulkan_device_uuid 1
+#define EGL_PLATFORM_ANGLE_VULKAN_DEVICE_UUID_ANGLE 0x34F0
+#define EGL_PLATFORM_ANGLE_VULKAN_DRIVER_UUID_ANGLE 0x34F1
+#define EGL_PLATFORM_ANGLE_VULKAN_DRIVER_ID_ANGLE 0x34F2
+#endif /* EGL_ANGLE_platform_angle_vulkan_device_uuid */
+
 #ifndef EGL_ANGLE_platform_angle_metal
 #define EGL_ANGLE_platform_angle_metal 1
 #define EGL_PLATFORM_ANGLE_TYPE_METAL_ANGLE 0x3489

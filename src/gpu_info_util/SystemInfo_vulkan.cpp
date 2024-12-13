@@ -194,6 +194,8 @@ bool GetSystemInfoVulkanWithICD(SystemInfo *info, vk::ICD preferredICD)
     const bool enableValidationLayers = false;
     vk::ScopedVkLoaderEnvironment scopedEnvironment(enableValidationLayers, preferredICD);
 
+    static_assert(sizeof(GPUDeviceInfo::deviceUUID) == VK_UUID_SIZE);
+
     // This implementation builds on top of the Vulkan API, but cannot assume the existence of the
     // Vulkan library.  ANGLE can be installed on versions of Android as old as Ice Cream Sandwich.
     // Therefore, we need to use dlopen()/dlsym() in order to see if Vulkan is installed on the
@@ -234,9 +236,13 @@ bool GetSystemInfoVulkanWithICD(SystemInfo *info, vk::ICD preferredICD)
         VkPhysicalDeviceDriverProperties driverProperties = {};
         driverProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES;
 
+        VkPhysicalDeviceIDProperties deviceIDProperties = {};
+        deviceIDProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ID_PROPERTIES;
+        deviceIDProperties.pNext = &driverProperties;
+
         VkPhysicalDeviceProperties2 properties2 = {};
         properties2.sType                       = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
-        properties2.pNext                       = &driverProperties;
+        properties2.pNext                       = &deviceIDProperties;
 
         VkPhysicalDeviceProperties &properties = properties2.properties;
         pfnGetPhysicalDeviceProperties(physicalDevices[i], &properties);
@@ -252,6 +258,9 @@ bool GetSystemInfoVulkanWithICD(SystemInfo *info, vk::ICD preferredICD)
         GPUDeviceInfo &gpu = info->gpus[i];
         gpu.vendorId       = properties.vendorID;
         gpu.deviceId       = properties.deviceID;
+        memcpy(gpu.deviceUUID, deviceIDProperties.deviceUUID, VK_UUID_SIZE);
+        memcpy(gpu.driverUUID, deviceIDProperties.driverUUID, VK_UUID_SIZE);
+
         // Need to parse/re-format properties.driverVersion.
         //
         // TODO(ianelliott): Determine the formatting used for each vendor
