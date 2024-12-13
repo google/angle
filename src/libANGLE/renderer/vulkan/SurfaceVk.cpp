@@ -1549,7 +1549,6 @@ angle::Result WindowSurfaceVk::recreateSwapchain(ContextVk *contextVk, const gl:
     // oldSwapchain was retired in the createSwapChain call above and can be collected.
     if (oldSwapchain != VK_NULL_HANDLE && oldSwapchain != mLastSwapchain)
     {
-        ASSERT(mLastSwapchain == mSwapchain);
         ANGLE_TRY(collectOldSwapchain(contextVk, oldSwapchain));
     }
 
@@ -1761,7 +1760,6 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context, const gl::E
     // need to carry over to the new one.  http://anglebug.com/42261637
     VkSwapchainKHR newSwapChain = VK_NULL_HANDLE;
     ANGLE_VK_TRY(context, vkCreateSwapchainKHR(device, &swapchainInfo, nullptr, &newSwapChain));
-    mSwapchain            = newSwapChain;
     mLastSwapchain        = newSwapChain;
     mSwapchainPresentMode = mDesiredSwapchainPresentMode;
     mWidth                = extents.width;
@@ -1775,16 +1773,16 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context, const gl::E
         // appropriate ANativeWindow API that enables frame timestamps.
         uint32_t count = 0;
         ANGLE_VK_TRY(context,
-                     vkGetPastPresentationTimingGOOGLE(device, mSwapchain, &count, nullptr));
+                     vkGetPastPresentationTimingGOOGLE(device, newSwapChain, &count, nullptr));
     }
 
     // Initialize the swapchain image views.
     uint32_t imageCount = 0;
-    ANGLE_VK_TRY(context, vkGetSwapchainImagesKHR(device, mSwapchain, &imageCount, nullptr));
+    ANGLE_VK_TRY(context, vkGetSwapchainImagesKHR(device, newSwapChain, &imageCount, nullptr));
 
     std::vector<VkImage> swapchainImages(imageCount);
-    ANGLE_VK_TRY(context,
-                 vkGetSwapchainImagesKHR(device, mSwapchain, &imageCount, swapchainImages.data()));
+    ANGLE_VK_TRY(context, vkGetSwapchainImagesKHR(device, newSwapChain, &imageCount,
+                                                  swapchainImages.data()));
 
     // If multisampling is enabled, create a multisampled image which gets resolved just prior to
     // present.
@@ -1869,6 +1867,8 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context, const gl::E
         // We will need to pass depth/stencil image views to the RenderTargetVk in the future.
     }
 
+    // Assign swapchain after all initialization is finished.
+    mSwapchain = newSwapChain;
     // Need to acquire a new image before the swapchain can be used.
     mAcquireOperation.state = impl::ImageAcquireState::NeedToAcquire;
 
