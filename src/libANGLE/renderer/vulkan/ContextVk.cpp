@@ -8083,7 +8083,6 @@ angle::Result ContextVk::startRenderPass(gl::Rectangle renderArea,
     {
         vk::FramebufferFetchMode framebufferFetchMode =
             vk::GetProgramFramebufferFetchMode(mState.getProgramExecutable());
-        fprintf(stderr, "Started new RP, ff mode: %x\n", (int)framebufferFetchMode);
         if (framebufferFetchMode != vk::FramebufferFetchMode::None)
         {
             // Note: this function sets a dirty bit through onColorAccessChange() not through
