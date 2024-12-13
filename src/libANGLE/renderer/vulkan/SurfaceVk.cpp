@@ -1872,6 +1872,8 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context, const gl::E
     // Need to acquire a new image before the swapchain can be used.
     mAcquireOperation.state = impl::ImageAcquireState::NeedToAcquire;
 
+    context->getPerfCounters().swapchainCreate++;
+
     return angle::Result::Continue;
 }
 
@@ -1964,6 +1966,16 @@ angle::Result WindowSurfaceVk::checkForOutOfDateSwapchain(ContextVk *contextVk, 
             // for whether the size and/or rotation have changed since the swapchain was created.
             uint32_t swapchainWidth  = getWidth();
             uint32_t swapchainHeight = getHeight();
+
+            // getWidth() and getHeight() are swapped for 90 degree and 270 degree emulated
+            // preTransform, we should swap them back before comparing with surface properties
+            // to avoid a size mismatch and unnecessary swapchain recreation
+
+            if (Is90DegreeRotation(mEmulatedPreTransform))
+            {
+                std::swap(swapchainWidth, swapchainHeight);
+            }
+
             needRecreate             = mSurfaceCaps.currentTransform != mPreTransform ||
                            mSurfaceCaps.currentExtent.width != swapchainWidth ||
                            mSurfaceCaps.currentExtent.height != swapchainHeight;
