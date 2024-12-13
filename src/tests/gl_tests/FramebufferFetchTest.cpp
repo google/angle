@@ -5950,6 +5950,209 @@ void main (void)
     EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(145, 100, 201, 109), 3);
 }
 
+// Test that declaring inout variables but only ever writing to them works.
+TEST_P(FramebufferFetchES31, WriteOnlyInOutVariable)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+
+    constexpr char kVS[] = R"(#version 310 es
+in highp vec4 position;
+void main (void)
+{
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch : require
+
+layout(location = 0) inout highp vec4 color;
+
+void main (void)
+{
+    color = vec4(1, 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glClearColor(0, 1, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(program, "position", 0);
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::red);
+}
+
+// Test that declaring inout variables but only ever writing to them works.  This test writes to
+// different channels of the variable separately.
+TEST_P(FramebufferFetchES31, WriteOnlyInOutVariableSplit)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+
+    constexpr char kVS[] = R"(#version 310 es
+in highp vec4 position;
+void main (void)
+{
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch : require
+
+layout(location = 0) inout highp vec4 color;
+
+void main (void)
+{
+    color.xz = vec2(1, 0);
+    color.wy = vec2(1, 1);
+    return;
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glClearColor(0, 0, 1, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(program, "position", 0);
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::yellow);
+}
+
+// Verify that partial writes to an |inout| variable don't make ANGLE consider it as an |out|
+// variable.
+TEST_P(FramebufferFetchES31, WriteOnlyInOutVariablePartial)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+
+    constexpr char kVS[] = R"(#version 310 es
+in highp vec4 position;
+void main (void)
+{
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch : require
+
+layout(location = 0) inout highp vec4 color;
+
+void main (void)
+{
+    color.x = 1.;
+    color.wy = vec2(1, 0);
+    return;
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glClearColor(0, 0, 1, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(program, "position", 0);
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::magenta);
+}
+
+// Verify that conditional writes to an |inout| variable don't make ANGLE consider it as an |out|
+// variable.
+TEST_P(FramebufferFetchES31, WriteOnlyInOutVariableConditional)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+
+    constexpr char kVS[] = R"(#version 310 es
+in highp vec4 position;
+void main (void)
+{
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch : require
+
+layout(location = 0) inout highp vec4 color;
+
+void main (void)
+{
+    if (gl_FragCoord.x < 8.)
+    {
+        color.yz = vec2(1, 0);
+    }
+    color.x = 1.;
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glClearColor(0, 0, 1, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(program, "position", 0);
+    EXPECT_PIXEL_RECT_EQ(0, 0, 8, getWindowHeight(), GLColor::yellow);
+    EXPECT_PIXEL_RECT_EQ(8, 0, getWindowWidth() - 8, getWindowHeight(), GLColor::magenta);
+}
+
+// Verify that early out from main stops write-only |inout| variables from turning into |out|
+// variables.
+TEST_P(FramebufferFetchES31, WriteOnlyInOutVariableEarlyReturn)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+
+    constexpr char kVS[] = R"(#version 310 es
+in highp vec4 position;
+void main (void)
+{
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch : require
+
+layout(location = 0) inout highp vec4 color;
+
+void main (void)
+{
+    if (gl_FragCoord.x < 8.)
+    {
+        return;
+    }
+    color.x = 1.;
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glClearColor(0, 0, 1, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(program, "position", 0);
+    EXPECT_PIXEL_RECT_EQ(0, 0, 8, getWindowHeight(), GLColor::blue);
+    EXPECT_PIXEL_RECT_EQ(8, 0, getWindowWidth() - 8, getWindowHeight(), GLColor::magenta);
+}
+
+// Verify that discard in the shader stops write-only |inout| variables from turning into |out|
+// variables.
+TEST_P(FramebufferFetchES31, WriteOnlyInOutVariableDiscard)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+
+    constexpr char kVS[] = R"(#version 310 es
+in highp vec4 position;
+void main (void)
+{
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch : require
+
+layout(location = 0) inout highp vec4 color;
+
+void f()
+{
+    if (gl_FragCoord.x < 8.)
+    {
+        discard;
+    }
+}
+
+void main (void)
+{
+    f();
+    color.x = 1.;
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glClearColor(0, 0, 1, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(program, "position", 0);
+    EXPECT_PIXEL_RECT_EQ(0, 0, 8, getWindowHeight(), GLColor::blue);
+    EXPECT_PIXEL_RECT_EQ(8, 0, getWindowWidth() - 8, getWindowHeight(), GLColor::magenta);
+}
+
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FramebufferFetchES31);
 ANGLE_INSTANTIATE_TEST_ES31_AND(FramebufferFetchES31,
                                 ES31_VULKAN().disable(Feature::SupportsSPIRV14));

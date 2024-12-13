@@ -590,6 +590,10 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 42266687 PIXEL4ORXL GLES : GLSLTest_ES3.ComplexConstructor/* = SKIP
 42266774 PIXEL4ORXL GLES : MultithreadingTestES3.SimultaneousUploadAndDraw/* = SKIP
 42266774 PIXEL4ORXL VULKAN : MultithreadingTestES3.SimultaneousUploadAndDraw/* = SKIP
+384314370 PIXEL4ORXL GLES : FramebufferFetchES31.WriteOnlyInOutVariableConditional/* = SKIP
+384314370 PIXEL4ORXL GLES : FramebufferFetchES31.WriteOnlyInOutVariableDiscard/* = SKIP
+384314370 PIXEL4ORXL GLES : FramebufferFetchES31.WriteOnlyInOutVariableEarlyReturn/* = SKIP
+384314370 PIXEL4ORXL GLES : FramebufferFetchES31.WriteOnlyInOutVariablePartial/* = SKIP
 
 42267082 PIXEL4ORXL GLES : BlobCacheTest.FragmentOutputLocationKey/* = SKIP
 42267082 PIXEL4ORXL GLES : EGLBlobCacheTest.FragmentOutputLocationKey/* = SKIP
