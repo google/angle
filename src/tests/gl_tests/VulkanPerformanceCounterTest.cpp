@@ -8435,6 +8435,32 @@ TEST_P(VulkanPerformanceCounterTest, SubmittingOutsideCommandBufferAssertIsOpen)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Verifies that clear followed by eglSwapBuffers() on multisampled FBO does not result
+// extra resolve pass, if the surface is double-buffered and when the egl swap behavior
+// is EGL_BUFFER_DESTROYED
+TEST_P(VulkanPerformanceCounterTest_MSAA, SwapAfterClearOnMultisampledFBOShouldNotResolve)
+{
+    // Skip test if
+    // 1) the EGL Surface is single-buffered or
+    // 2) the EGL_SWAP_BEHAVIOR is EGL_BUFFER_PRESERVED
+    EGLint renderBufferType;
+    eglQuerySurface(getEGLWindow()->getDisplay(), getEGLWindow()->getSurface(), EGL_RENDER_BUFFER,
+                    &renderBufferType);
+    EGLint swapBehavior;
+    eglQuerySurface(getEGLWindow()->getDisplay(), getEGLWindow()->getSurface(), EGL_SWAP_BEHAVIOR,
+                    &swapBehavior);
+    ANGLE_SKIP_TEST_IF(
+        !(renderBufferType == EGL_BACK_BUFFER && swapBehavior == EGL_BUFFER_DESTROYED));
+
+    uint32_t expectedResolvesSubpass = getPerfCounters().swapchainResolveInSubpass;
+    uint32_t expectedResolvesOutside = getPerfCounters().swapchainResolveOutsideSubpass;
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    swapBuffers();
+    EXPECT_EQ(getPerfCounters().swapchainResolveInSubpass, expectedResolvesSubpass);
+    EXPECT_EQ(getPerfCounters().swapchainResolveOutsideSubpass, expectedResolvesOutside);
+}
+
 // Test that swapchain does not get necessary recreation with 90 or 270 emulated pre-rotation
 TEST_P(VulkanPerformanceCounterTest_Prerotation, swapchainCreateCounterTest)
 {
