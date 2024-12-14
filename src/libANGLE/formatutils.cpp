@@ -566,14 +566,9 @@ GLuint InternalFormat::getEGLConfigBufferSize() const
 
 Format::Format(GLenum internalFormat) : Format(GetSizedInternalFormatInfo(internalFormat)) {}
 
-Format::Format(const InternalFormat &internalFormat) : info(&internalFormat) {}
-
 Format::Format(GLenum internalFormat, GLenum type)
     : info(&GetInternalFormatInfo(internalFormat, type))
 {}
-
-Format::Format(const Format &other)            = default;
-Format &Format::operator=(const Format &other) = default;
 
 bool Format::valid() const
 {

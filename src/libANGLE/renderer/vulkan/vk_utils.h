@@ -1436,7 +1436,11 @@ GLenum CalculateGenerateMipmapFilter(ContextVk *contextVk, angle::FormatID forma
 
 namespace gl_vk
 {
-VkRect2D GetRect(const gl::Rectangle &source);
+inline VkRect2D GetRect(const gl::Rectangle &source)
+{
+    return {{source.x, source.y},
+            {static_cast<uint32_t>(source.width), static_cast<uint32_t>(source.height)}};
+}
 VkFilter GetFilter(const GLenum filter);
 VkSamplerMipmapMode GetSamplerMipmapMode(const GLenum filter);
 VkSamplerAddressMode GetSamplerAddressMode(const GLenum wrap);

@@ -1306,12 +1306,6 @@ VkSamplerAddressMode GetSamplerAddressMode(const GLenum wrap)
     }
 }
 
-VkRect2D GetRect(const gl::Rectangle &source)
-{
-    return {{source.x, source.y},
-            {static_cast<uint32_t>(source.width), static_cast<uint32_t>(source.height)}};
-}
-
 VkPrimitiveTopology GetPrimitiveTopology(gl::PrimitiveMode mode)
 {
     switch (mode)

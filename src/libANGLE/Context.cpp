@@ -10415,22 +10415,6 @@ void StateCache::updateVertexElementLimitsImpl(Context *context)
     }
 }
 
-void StateCache::updateBasicDrawStatesError()
-{
-    mCachedBasicDrawStatesErrorString = kInvalidPointer;
-    mCachedBasicDrawStatesErrorCode   = GL_NO_ERROR;
-}
-
-void StateCache::updateProgramPipelineError()
-{
-    mCachedProgramPipelineError = kInvalidPointer;
-}
-
-void StateCache::updateBasicDrawElementsError()
-{
-    mCachedBasicDrawElementsError = kInvalidPointer;
-}
-
 intptr_t StateCache::getBasicDrawStatesErrorImpl(const Context *context,
                                                  const PrivateStateCache *privateStateCache) const
 {

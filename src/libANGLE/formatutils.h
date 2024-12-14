@@ -302,11 +302,12 @@ struct Format
     explicit Format(GLenum internalFormat);
 
     // Sized or unsized types.
-    explicit Format(const InternalFormat &internalFormat);
+    explicit Format(const InternalFormat &internalFormat) : info(&internalFormat) {}
+
     Format(GLenum internalFormat, GLenum type);
 
-    Format(const Format &other);
-    Format &operator=(const Format &other);
+    Format(const Format &other)            = default;
+    Format &operator=(const Format &other) = default;
 
     bool valid() const;
 

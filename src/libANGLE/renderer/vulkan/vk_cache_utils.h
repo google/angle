@@ -462,8 +462,11 @@ class AttachmentOpsArray final
     AttachmentOpsArray(const AttachmentOpsArray &other);
     AttachmentOpsArray &operator=(const AttachmentOpsArray &other);
 
-    const PackedAttachmentOpsDesc &operator[](PackedAttachmentIndex index) const;
-    PackedAttachmentOpsDesc &operator[](PackedAttachmentIndex index);
+    const PackedAttachmentOpsDesc &operator[](PackedAttachmentIndex index) const
+    {
+        return mOps[index.get()];
+    }
+    PackedAttachmentOpsDesc &operator[](PackedAttachmentIndex index) { return mOps[index.get()]; }
 
     // Initialize an attachment op with all load and store operations.
     void initWithLoadStore(PackedAttachmentIndex index,

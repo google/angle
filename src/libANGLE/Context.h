@@ -388,9 +388,13 @@ class StateCache final : angle::NonCopyable
     void updateValidDrawModes(Context *context);
     void updateValidBindTextureTypes(Context *context);
     void updateValidDrawElementsTypes(Context *context);
-    void updateBasicDrawStatesError();
-    void updateProgramPipelineError();
-    void updateBasicDrawElementsError();
+    void updateBasicDrawStatesError()
+    {
+        mCachedBasicDrawStatesErrorString = kInvalidPointer;
+        mCachedBasicDrawStatesErrorCode   = GL_NO_ERROR;
+    }
+    void updateProgramPipelineError() { mCachedProgramPipelineError = kInvalidPointer; }
+    void updateBasicDrawElementsError() { mCachedBasicDrawElementsError = kInvalidPointer; }
     void updateTransformFeedbackActiveUnpaused(Context *context);
     void updateVertexAttribTypesValidation(Context *context);
     void updateActiveShaderStorageBufferIndices(Context *context);

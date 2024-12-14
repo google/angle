@@ -824,7 +824,10 @@ class State : angle::NonCopyable
 
     // Texture binding & active texture unit manipulation
     void setSamplerTexture(const Context *context, TextureType type, Texture *texture);
-    Texture *getTargetTexture(TextureType type) const;
+    Texture *getTargetTexture(TextureType type) const
+    {
+        return getSamplerTexture(getActiveSampler(), type);
+    }
 
     Texture *getSamplerTexture(unsigned int sampler, TextureType type) const
     {

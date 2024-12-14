@@ -2575,11 +2575,6 @@ void State::setSamplerTexture(const Context *context, TextureType type, Texture 
     mDirtyBits.set(state::DIRTY_BIT_TEXTURE_BINDINGS);
 }
 
-Texture *State::getTargetTexture(TextureType type) const
-{
-    return getSamplerTexture(getActiveSampler(), type);
-}
-
 TextureID State::getSamplerTextureId(unsigned int sampler, TextureType type) const
 {
     ASSERT(sampler < mSamplerTextures[type].size());

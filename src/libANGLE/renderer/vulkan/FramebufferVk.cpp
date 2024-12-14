@@ -992,11 +992,6 @@ angle::Result FramebufferVk::readPixels(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-RenderTargetVk *FramebufferVk::getDepthStencilRenderTarget() const
-{
-    return mRenderTargetCache.getDepthStencil();
-}
-
 RenderTargetVk *FramebufferVk::getColorDrawRenderTarget(size_t colorIndexGL) const
 {
     RenderTargetVk *renderTarget = mRenderTargetCache.getColorDraw(mState, colorIndexGL);
@@ -3732,14 +3727,6 @@ gl::Extents FramebufferVk::getReadImageExtents() const
 {
     RenderTargetVk *readRenderTarget = mRenderTargetCache.getColorRead(mState);
     return readRenderTarget->getExtents();
-}
-
-// Return the framebuffer's non-rotated render area.  This is a gl::Rectangle that is based on the
-// dimensions of the framebuffer, IS NOT rotated, and IS NOT y-flipped
-gl::Rectangle FramebufferVk::getNonRotatedCompleteRenderArea() const
-{
-    const gl::Box &dimensions = mState.getDimensions();
-    return gl::Rectangle(0, 0, dimensions.width, dimensions.height);
 }
 
 // Return the framebuffer's rotated render area.  This is a gl::Rectangle that is based on the

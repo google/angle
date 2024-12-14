@@ -4827,16 +4827,6 @@ AttachmentOpsArray &AttachmentOpsArray::operator=(const AttachmentOpsArray &othe
     return *this;
 }
 
-const PackedAttachmentOpsDesc &AttachmentOpsArray::operator[](PackedAttachmentIndex index) const
-{
-    return mOps[index.get()];
-}
-
-PackedAttachmentOpsDesc &AttachmentOpsArray::operator[](PackedAttachmentIndex index)
-{
-    return mOps[index.get()];
-}
-
 void AttachmentOpsArray::initWithLoadStore(PackedAttachmentIndex index,
                                            ImageLayout initialLayout,
                                            ImageLayout finalLayout)
