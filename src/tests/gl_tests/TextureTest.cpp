@@ -471,6 +471,17 @@ class Texture2DTestES3 : public Texture2DTest
     void testCopyImageDepthStencil(const APIExtensionVersion usedExtension);
 };
 
+class MultisampleTexture2DTestES31 : public Texture2DTest
+{
+  protected:
+    MultisampleTexture2DTestES31() : Texture2DTest() {}
+
+    void testCopyMultisampleImage(const APIExtensionVersion usedExtension,
+                                  const GLenum internalFormat);
+    void testCopyMultisampleArrayImage(const APIExtensionVersion usedExtension,
+                                       const GLenum internalFormat);
+};
+
 class Texture2DMemoryTestES3 : public Texture2DTestES3
 {
   protected:
@@ -6148,6 +6159,162 @@ void Texture2DTestES3::testCopyImage(const APIExtensionVersion usedExtension)
     EXPECT_PIXEL_RECT_EQ(0, 0, 2, 4, GLColor::red);
 }
 
+void MultisampleTexture2DTestES31::testCopyMultisampleImage(const APIExtensionVersion usedExtension,
+                                                            const GLenum internalFormat)
+{
+    ASSERT(usedExtension == APIExtensionVersion::EXT || usedExtension == APIExtensionVersion::OES);
+
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+
+    GLTexture srcTexture;
+    GLTexture destTexture;
+    const GLenum target = GL_TEXTURE_2D_MULTISAMPLE;
+
+    GLint maxSamples = 0;
+    glGetInternalformativ(target, internalFormat, GL_SAMPLES, 1, &maxSamples);
+    EXPECT_GL_NO_ERROR();
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(target, destTexture);
+    glTexStorage2DMultisample(target, maxSamples, internalFormat, 4, 4, false);
+    EXPECT_GL_NO_ERROR();
+
+    glBindTexture(target, srcTexture);
+    glTexStorage2DMultisample(target, maxSamples, internalFormat, 4, 4, false);
+    EXPECT_GL_NO_ERROR();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, target, srcTexture, 0);
+    EXPECT_GL_NO_ERROR();
+
+    // Draw red into the source texture
+    glViewport(0, 0, 4, 4);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    glBindTexture(target, 0);
+
+    // Copy
+    if (usedExtension == APIExtensionVersion::OES)
+    {
+        glCopyImageSubDataOES(srcTexture, target, 0, 0, 0, 0, destTexture, target, 0, 0, 0, 0, 4, 4,
+                              1);
+    }
+    else
+    {
+        glCopyImageSubDataEXT(srcTexture, target, 0, 0, 0, 0, destTexture, target, 0, 0, 0, 0, 4, 4,
+                              1);
+    }
+    EXPECT_GL_NO_ERROR();
+
+    // Resolve the target texture
+    GLTexture resolveTexture;
+    glBindTexture(GL_TEXTURE_2D, resolveTexture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, internalFormat, 4, 4);
+
+    GLFramebuffer resolveFbo;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, resolveFbo);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, resolveTexture,
+                           0);
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, target, destTexture, 0);
+    ASSERT_GL_NO_ERROR();
+    glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    glBlitFramebuffer(0, 0, 4, 4, 0, 0, 4, 4, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, resolveFbo);
+    EXPECT_PIXEL_RECT_EQ(0, 0, 4, 4, GLColor::red);
+}
+
+void MultisampleTexture2DTestES31::testCopyMultisampleArrayImage(
+    const APIExtensionVersion usedExtension,
+    const GLenum internalFormat)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_storage_multisample_2d_array"));
+
+    ASSERT(usedExtension == APIExtensionVersion::EXT || usedExtension == APIExtensionVersion::OES);
+
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+
+    GLTexture srcTexture;
+    GLTexture destTexture;
+
+    GLint maxSamples = 0;
+    glGetInternalformativ(GL_TEXTURE_2D_MULTISAMPLE, internalFormat, GL_SAMPLES, 1, &maxSamples);
+    EXPECT_GL_NO_ERROR();
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, destTexture);
+    glTexStorage3DMultisampleOES(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, maxSamples, internalFormat, 4,
+                                 4, 3, false);
+    EXPECT_GL_NO_ERROR();
+
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, srcTexture);
+    glTexStorage3DMultisampleOES(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, maxSamples, internalFormat, 4,
+                                 4, 3, false);
+    EXPECT_GL_NO_ERROR();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, srcTexture, 0, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Draw red into the source texture layer 1
+    glViewport(0, 0, 4, 4);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, 0);
+
+    // Copy
+    if (usedExtension == APIExtensionVersion::OES)
+    {
+        glCopyImageSubDataOES(srcTexture, GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, 0, 0, 0, 1,
+                              destTexture, GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, 0, 0, 0, 2, 4, 4,
+                              1);
+    }
+    else
+    {
+        glCopyImageSubDataEXT(srcTexture, GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, 0, 0, 0, 1,
+                              destTexture, GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES, 0, 0, 0, 2, 4, 4,
+                              1);
+    }
+    EXPECT_GL_NO_ERROR();
+
+    // Resolve the target texture
+    GLTexture resolveTexture;
+    glBindTexture(GL_TEXTURE_2D, resolveTexture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, internalFormat, 4, 4);
+
+    GLFramebuffer resolveFbo;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, resolveFbo);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, resolveTexture,
+                           0);
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+    glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, destTexture, 0, 2);
+    ASSERT_GL_NO_ERROR();
+    glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    glBlitFramebuffer(0, 0, 4, 4, 0, 0, 4, 4, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_FRAMEBUFFER, resolveFbo);
+    EXPECT_PIXEL_RECT_EQ(0, 0, 4, 4, GLColor::red);
+}
+
 // Test basic GL_EXT_copy_image copy without any bound textures
 TEST_P(Texture2DTestES3, CopyImageEXT)
 {
@@ -6558,6 +6725,46 @@ TEST_P(Texture2DTestES3, DrawWithLevelsOutsideRangeWithInconsistentDimensions)
     drawQuad(mProgram, "position", 0.5f);
 
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
+}
+
+// Test glCopyImageSubDataEXT with GL_TEXTURE_2D_MULTISAMPLE,
+// RGBA8->RGBA8 copy
+// RGB8->RGB8 copy
+TEST_P(MultisampleTexture2DTestES31, CopyMultisampleImageEXT)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_copy_image"));
+    testCopyMultisampleImage(APIExtensionVersion::EXT, GL_RGBA8);
+    testCopyMultisampleImage(APIExtensionVersion::EXT, GL_RGB8);
+}
+
+// Test glCopyImageSubDataOES with GL_TEXTURE_2D_MULTISAMPLE,
+// RGBA8->RGBA8 copy
+// RGB8->RGB8 copy
+TEST_P(MultisampleTexture2DTestES31, CopyMultisampleImageOES)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_copy_image"));
+    testCopyMultisampleImage(APIExtensionVersion::OES, GL_RGBA8);
+    testCopyMultisampleImage(APIExtensionVersion::OES, GL_RGB8);
+}
+
+// Test glCopyImageSubDataEXT with GL_TEXTURE_2D_MULTISAMPLE_ARRAY,
+// RGBA8->RGBA8 copy
+// RGB8->RGB8 copy
+TEST_P(MultisampleTexture2DTestES31, CopyMultisampleArrayImageEXT)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_copy_image"));
+    testCopyMultisampleArrayImage(APIExtensionVersion::EXT, GL_RGBA8);
+    testCopyMultisampleArrayImage(APIExtensionVersion::EXT, GL_RGB8);
+}
+
+// Test glCopyImageSubDataOES with GL_TEXTURE_2D_MULTISAMPLE_ARRAY,
+// RGBA8->RGBA8 copy
+// RGB8->RGB8 copy
+TEST_P(MultisampleTexture2DTestES31, CopyMultisampleArrayImageOES)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_copy_image"));
+    testCopyMultisampleArrayImage(APIExtensionVersion::OES, GL_RGBA8);
+    testCopyMultisampleArrayImage(APIExtensionVersion::OES, GL_RGB8);
 }
 
 // Depth/Stencil textures cannot be 3D.
@@ -15756,5 +15963,8 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DDepthStencilTestES3,
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(RGBTextureBufferTestES31);
 ANGLE_INSTANTIATE_TEST_ES31(RGBTextureBufferTestES31);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MultisampleTexture2DTestES31);
+ANGLE_INSTANTIATE_TEST_ES31(MultisampleTexture2DTestES31);
 
 }  // anonymous namespace
