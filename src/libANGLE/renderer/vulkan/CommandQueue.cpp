@@ -378,7 +378,7 @@ void CleanUpThread::requestCleanUp()
 
 void CleanUpThread::processTasks()
 {
-    angle::SetCurrentThreadName("ANGLE-GarbageCleanup");
+    angle::SetCurrentThreadName("ANGLE-GC");
 
     while (true)
     {

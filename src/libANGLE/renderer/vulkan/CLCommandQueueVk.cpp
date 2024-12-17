@@ -142,7 +142,7 @@ angle::Result DispatchWorkThread::notify(QueueSerial queueSerial)
 
 angle::Result DispatchWorkThread::finishLoop()
 {
-    angle::SetCurrentThreadName("ANGLE-CLCommandQueueVk DispatchWorkThread");
+    angle::SetCurrentThreadName("ANGLE-CL-CQD");
 
     while (true)
     {
