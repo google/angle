@@ -115,6 +115,7 @@ struct ANGLE_Output_Annotated {
   @builtin(frag_depth) gl_FragDepth_ : f32,
 };
 
+
 ;
 
 struct _uFoo
@@ -366,6 +367,7 @@ struct ANGLE_DefaultUniformBlock {
 };
 
 @group(0) @binding(1) var<uniform> ANGLE_defaultUniformBlock : ANGLE_DefaultUniformBlock;
+
 ;
 
 fn _umain()
@@ -388,7 +390,8 @@ fn wgslMain() -> ANGLE_Output_Annotated
 TEST_F(WGSLOutputTest, UniformsWithNestedStructs)
 {
     const std::string &shaderString =
-        R"(precision mediump float;
+        R"(#version 300 es
+precision mediump float;
 struct NestedUniforms {
     float x;
 };
@@ -398,20 +401,24 @@ struct Uniforms {
     float c;
     float[5] d;
     float e;
+    vec3 f[7];
+    float[5] g;
 };
 uniform Uniforms unis;
+out vec4 fragColor;
 void main() {
-    gl_FragColor = vec4(unis.a.x, unis.b, unis.c, 1.0);
+    fragColor = vec4(unis.a.x, unis.b, unis.c, 1.0);
+    fragColor += vec4(unis.d[2], unis.e, unis.f[0][2], (unis.e > 0.5 ? unis.d : unis.g)[1]);
 })";
     const std::string &outputString =
-        R"(Output_Global {
-  gl_FragColor_ : vec4<f32>,
+        R"(struct ANGLE_Output_Global {
+  fragColor : vec4<f32>,
 };
 
 var<private> ANGLE_output_global : ANGLE_Output_Global;
 
 struct ANGLE_Output_Annotated {
-  @location(0) gl_FragColor_ : vec4<f32>,
+  @location(@@@@@@) fragColor : vec4<f32>,
 };
 
 struct ANGLE_DefaultUniformBlock {
@@ -419,6 +426,19 @@ struct ANGLE_DefaultUniformBlock {
 };
 
 @group(0) @binding(1) var<uniform> ANGLE_defaultUniformBlock : ANGLE_DefaultUniformBlock;
+
+struct ANGLE_wrapped_float
+{
+  @align(16) elem : f32
+};
+fn ANGLE_Convert_ANGLE_wrapped_float_ElementsTo_float_Elements(wrappedArr : array<ANGLE_wrapped_float, 5>) -> array<f32, 5>
+{
+  var retVal : array<f32, 5>;
+  for (var i : u32 = 0; i < 5; i++) {;
+    retVal[i] = wrappedArr[i].elem;
+  }
+  return retVal;
+}
 struct _uNestedUniforms
 {
   @align(16) _ux : f32,
@@ -429,24 +449,29 @@ struct _uUniforms
   @align(16) _ua : _uNestedUniforms,
   @align(16) _ub : f32,
   _uc : f32,
-  @align(16) _ud : array<f32, 5>,
+  @align(16) _ud : array<ANGLE_wrapped_float, 5>,
   _ue : f32,
+  @align(16) _uf : array<vec3<f32>, 7>,
+  @align(16) _ug : array<ANGLE_wrapped_float, 5>,
 };
 
+;
 ;
 
 fn _umain()
 {
-  (ANGLE_output_global.gl_FragColor_) = (vec4<f32>(((ANGLE_defaultUniformBlock.unis)._ua)._ux, (ANGLE_defaultUniformBlock.unis)._ub, (ANGLE_defaultUniformBlock.unis)._uc, 1.0f));
+  (ANGLE_output_global.fragColor) = (vec4<f32>(((ANGLE_defaultUniformBlock.unis)._ua)._ux, (ANGLE_defaultUniformBlock.unis)._ub, (ANGLE_defaultUniformBlock.unis)._uc, 1.0f));
+  (ANGLE_output_global.fragColor) += (vec4<f32>((ANGLE_Convert_ANGLE_wrapped_float_ElementsTo_float_Elements((ANGLE_defaultUniformBlock.unis)._ud))[2i], (ANGLE_defaultUniformBlock.unis)._ue, (((ANGLE_defaultUniformBlock.unis)._uf)[0i])[2i], (select((ANGLE_Convert_ANGLE_wrapped_float_ElementsTo_float_Elements((ANGLE_defaultUniformBlock.unis)._ug)), (ANGLE_Convert_ANGLE_wrapped_float_ElementsTo_float_Elements((ANGLE_defaultUniformBlock.unis)._ud)), (((ANGLE_defaultUniformBlock.unis)._ue) > (0.5f))))[1i]));
 }
 @fragment
 fn wgslMain() -> ANGLE_Output_Annotated
 {
   _umain();
   var ANGLE_output_annotated : ANGLE_Output_Annotated;
-  ANGLE_output_annotated.gl_FragColor_ = ANGLE_output_global.gl_FragColor_;
+  ANGLE_output_annotated.fragColor = ANGLE_output_global.fragColor;
   return ANGLE_output_annotated;
-})";
+}
+)";
     compile(shaderString);
     EXPECT_TRUE(foundInCode(outputString.c_str()));
 }

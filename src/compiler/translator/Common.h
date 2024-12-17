@@ -142,6 +142,20 @@ class TMap : public std::map<K, D, CMP, pool_allocator<std::pair<const K, D>>>
     {}
 };
 
+template <class K, class CMP = std::less<K>>
+class TSet : public std::set<K, CMP, pool_allocator<K>>
+{
+  public:
+    POOL_ALLOCATOR_NEW_DELETE
+    typedef pool_allocator<K> tAllocator;
+
+    TSet() : std::set<K, CMP, tAllocator>() {}
+    // use correct two-stage name lookup supported in gcc 3.4 and above
+    TSet(const tAllocator &a)
+        : std::set<K, CMP, tAllocator>(std::map<K, CMP, tAllocator>::key_compare(), a)
+    {}
+};
+
 // Basic implementation of C++20's span for use with pool-allocated containers (TVector) or static
 // arrays.  This is used by the array sizes member of TType to allow arrayed types to be
 // constexpr-constructed.

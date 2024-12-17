@@ -11,6 +11,7 @@
 #include "common/utilities.h"
 #include "compiler/translator/BaseTypes.h"
 #include "compiler/translator/Compiler.h"
+#include "compiler/translator/ImmutableStringBuilder.h"
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/SymbolUniqueId.h"
@@ -87,6 +88,59 @@ bool RecordUniformBlockMetadata(TIntermBlock *root, UniformBlockMetadata &outMet
     return true;
 }
 
+bool OutputUniformWrapperStructsAndConversions(
+    TInfoSinkBase &output,
+    const WGSLGenerationMetadataForUniforms &wgslGenerationMetadataForUniforms)
+{
+    for (const TType &type : wgslGenerationMetadataForUniforms.arrayElementTypesInUniforms)
+    {
+        // Structs don't need wrapper structs.
+        ASSERT(type.getStruct() == nullptr);
+        // Multidimensional arrays not currently supported in uniforms
+        ASSERT(!type.isArray());
+
+        output << "struct " << MakeUniformWrapperStructName(&type) << "\n{\n";
+        output << "  @align(16) " << kWrappedStructFieldName << " : ";
+        WriteWgslType(output, type, {});
+        output << "\n};\n";
+    }
+
+    for (const TType &type :
+         wgslGenerationMetadataForUniforms.arrayElementTypesThatNeedUnwrappingConversions)
+    {
+        // Should be a subset of the types that have had wrapper structs generated above, otherwise
+        // it's impossible to unwrap them!
+        TType innerType = type;
+        innerType.toArrayElementType();
+        ASSERT(wgslGenerationMetadataForUniforms.arrayElementTypesInUniforms.count(innerType) != 0);
+
+        // This could take ptr<uniform, typeName>, with the unrestricted_pointer_parameters
+        // extension. This is probably fine.
+        output << "fn " << MakeUnwrappingArrayConversionFunctionName(&type) << "(wrappedArr : ";
+        WriteWgslType(output, type, {WgslAddressSpace::Uniform});
+        output << ") -> ";
+        WriteWgslType(output, type, {WgslAddressSpace::NonUniform});
+        output << "\n{\n";
+        output << "  var retVal : ";
+        WriteWgslType(output, type, {WgslAddressSpace::NonUniform});
+        output << ";\n";
+        output << "  for (var i : u32 = 0; i < " << type.getOutermostArraySize() << "; i++) {;\n";
+        output << "    retVal[i] = wrappedArr[i]." << kWrappedStructFieldName << ";\n";
+        output << "  }\n";
+        output << "  return retVal;\n";
+        output << "}\n";
+    }
+
+    return true;
+}
+
+ImmutableString MakeUnwrappingArrayConversionFunctionName(const TType *type)
+{
+    return BuildConcatenatedImmutableString("ANGLE_Convert_", MakeUniformWrapperStructName(type),
+                                            "_ElementsTo_", type->getBuiltInTypeNameString(),
+                                            "_Elements");
+}
+
 bool OutputUniformBlocks(TCompiler *compiler, TIntermBlock *root)
 {
     // TODO(anglebug.com/42267100): This should eventually just be handled the same way as a regular
@@ -130,7 +184,7 @@ bool OutputUniformBlocks(TCompiler *compiler, TIntermBlock *root)
 
         TIntermDeclaration *declNode = globalVars.find(shaderVar.name)->second;
         const TVariable *astVar      = &ViewDeclaration(*declNode).symbol.variable();
-        WriteWgslType(output, astVar->getType());
+        WriteWgslType(output, astVar->getType(), {WgslAddressSpace::Uniform});
 
         output << ",\n";
     }

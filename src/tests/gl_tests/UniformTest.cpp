@@ -6,6 +6,7 @@
 
 #include "test_utils/ANGLETest.h"
 
+#include "test_utils/angle_test_configs.h"
 #include "test_utils/angle_test_instantiate.h"
 #include "test_utils/gl_raii.h"
 #include "util/gles_loader_autogen.h"
@@ -536,6 +537,7 @@ void main() {
     GLuint program = CompileProgram(essl1_shaders::vs::Simple(), kFragShader);
     ASSERT_NE(program, 0u);
     glUseProgram(program);
+
     GLint uniformNestedXLocation = glGetUniformLocation(program, "unis.nested.x");
     ASSERT_NE(uniformNestedXLocation, -1);
     GLint uniformBLocation = glGetUniformLocation(program, "unis.b");
@@ -611,6 +613,229 @@ void main() {
     drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    glDeleteProgram(program);
+}
+
+// Tests that arrays in uniforms function corectly. In particular, WGSL requires arrays in uniforms
+// to have a stride a multiple of 16, but some arrays (e.g. vec2[N] or float[N]) will not
+// automatically have stride 16 and need special handling.
+TEST_P(SimpleUniformUsageTest, ArraysInUniforms)
+{
+    constexpr char kFragShader[] = R"(
+precision mediump float;
+struct NestedUniforms {
+    vec2 x[5];
+};
+struct Uniforms {
+    NestedUniforms a;
+    float b;
+    float c;
+    float[5] d;
+    float e;
+    vec3 f[7];
+};
+uniform Uniforms unis;
+void main() {
+    gl_FragColor = vec4(unis.a.x[2].x, unis.d[1], unis.e, 1.0);
+    gl_FragColor += vec4(unis.f[2], 0.0);
+})";
+
+    GLuint program = CompileProgram(essl1_shaders::vs::Simple(), kFragShader);
+    ASSERT_NE(program, 0u);
+    glUseProgram(program);
+
+    GLint uniformAXLocation = glGetUniformLocation(program, "unis.a.x[2]");
+    ASSERT_NE(uniformAXLocation, -1);
+    GLint uniformDLocation = glGetUniformLocation(program, "unis.d[1]");
+    ASSERT_NE(uniformDLocation, -1);
+    GLint uniformELocation = glGetUniformLocation(program, "unis.e");
+    ASSERT_NE(uniformELocation, -1);
+    GLint uniformFLocation = glGetUniformLocation(program, "unis.f[2]");
+    ASSERT_NE(uniformFLocation, -1);
+
+    // Set to red
+    glUniform2f(uniformAXLocation, 1.0f, 0.0);
+    glUniform1f(uniformDLocation, 0.0f);
+    glUniform1f(uniformELocation, 0.0f);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Set to green
+    glUniform2f(uniformAXLocation, 0.0f, 0.0f);
+    glUniform1f(uniformDLocation, 1.0f);
+    glUniform1f(uniformELocation, 0.0f);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Set to blue
+    glUniform2f(uniformAXLocation, 0.0f, 0.0f);
+    glUniform1f(uniformDLocation, 0.0f);
+    glUniform1f(uniformELocation, 1.0f);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    // Set to red
+    glUniform1f(uniformELocation, 0.0f);
+    glUniform3f(uniformFLocation, 1.0f, 0.0f, 0.0f);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    glDeleteProgram(program);
+}
+
+using SimpleUniformUsageTestES3 = SimpleUniformUsageTest;
+
+// Tests that making a copy of a struct of uniforms functions correctly.
+TEST_P(SimpleUniformUsageTestES3, CopyOfUniformsWithArrays)
+{
+    constexpr char kFragShader[] = R"(#version 300 es
+precision mediump float;
+struct NestedUniforms {
+    vec2 x[5];
+};
+struct Uniforms {
+    NestedUniforms a;
+    float b;
+    float c;
+    float[5] d;
+    float e;
+    vec3 f[7];
+};
+uniform Uniforms unis;
+out vec4 fragColor;
+void main() {
+    Uniforms copy = unis;
+    fragColor = vec4(copy.a.x[2].x, copy.d[1], copy.e, 1.0);
+    fragColor += vec4(copy.f[2], 0.0);
+})";
+
+    GLuint program = CompileProgram(essl3_shaders::vs::Simple(), kFragShader);
+    ASSERT_NE(program, 0u);
+    glUseProgram(program);
+
+    GLint uniformAXLocation = glGetUniformLocation(program, "unis.a.x[2]");
+    ASSERT_NE(uniformAXLocation, -1);
+    GLint uniformDLocation = glGetUniformLocation(program, "unis.d[1]");
+    ASSERT_NE(uniformDLocation, -1);
+    GLint uniformELocation = glGetUniformLocation(program, "unis.e");
+    ASSERT_NE(uniformELocation, -1);
+    GLint uniformFLocation = glGetUniformLocation(program, "unis.f[2]");
+    ASSERT_NE(uniformFLocation, -1);
+
+    // Set to red
+    glUniform2f(uniformAXLocation, 1.0f, 0.0);
+    glUniform1f(uniformDLocation, 0.0f);
+    glUniform1f(uniformELocation, 0.0f);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Set to green
+    glUniform2f(uniformAXLocation, 0.0f, 0.0f);
+    glUniform1f(uniformDLocation, 1.0f);
+    glUniform1f(uniformELocation, 0.0f);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Set to blue
+    glUniform2f(uniformAXLocation, 0.0f, 0.0f);
+    glUniform1f(uniformDLocation, 0.0f);
+    glUniform1f(uniformELocation, 1.0f);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    // Set to red
+    glUniform1f(uniformELocation, 0.0f);
+    glUniform3f(uniformFLocation, 1.0f, 0.0f, 0.0f);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    glDeleteProgram(program);
+}
+
+// Tests that ternaries function correctly when retrieving an array element from a uniform.
+TEST_P(SimpleUniformUsageTestES3, TernarySelectAnArrayElement)
+{
+
+    // TODO(anglebug.com/42267100): should eventually have a test (for WGSL) where the array is
+    // select by the ternary, and then the element is selected (`(unis.a > 0.5 ? unis.b :
+    // unis.c)[1]`). It doesn't work right now because ternaries are implemented incorrectly in the
+    // translator (translated as select()).
+    constexpr char kFragShader[] = R"(#version 300 es
+precision mediump float;
+struct NestedUniforms {
+    vec2 x[5];
+};
+struct Uniforms {
+    float a;
+    float b[2];
+    float c[2];
+};
+uniform Uniforms unis;
+out vec4 fragColor;
+void main() {
+    fragColor = vec4((unis.a > 0.5 ? unis.b[1] : unis.c[1]),
+                     (unis.a > 0.5 ? unis.c[1] : unis.b[1]),
+                     0.0, 1.0);
+})";
+
+    GLuint program = CompileProgram(essl3_shaders::vs::Simple(), kFragShader);
+    ASSERT_NE(program, 0u);
+    glUseProgram(program);
+
+    GLint uniformALocation = glGetUniformLocation(program, "unis.a");
+    ASSERT_NE(uniformALocation, -1);
+    GLint uniformBLocation = glGetUniformLocation(program, "unis.b[1]");
+    ASSERT_NE(uniformBLocation, -1);
+    GLint uniformCLocation = glGetUniformLocation(program, "unis.c[1]");
+    ASSERT_NE(uniformCLocation, -1);
+
+    // Set to red
+    glUniform1f(uniformALocation, 1.0f);
+    glUniform1f(uniformBLocation, 1.0f);
+    glUniform1f(uniformCLocation, 0.0f);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Flip unis.a to set to green
+    glUniform1f(uniformALocation, 0.0f);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Set to red by flipping unis.b[1] and unis.c[1].
+    glUniform1f(uniformBLocation, 0.0f);
+    glUniform1f(uniformCLocation, 1.0f);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Flip unis.a to set to green
+    glUniform1f(uniformALocation, 1.0f);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 
     glDeleteProgram(program);
 }
@@ -1897,6 +2122,7 @@ ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(BasicUniformUsageTest, ES2_WEBGPU());
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(UniformTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(UniformTestES3);
+ANGLE_INSTANTIATE_TEST_ES3_AND(SimpleUniformUsageTestES3, ES3_WEBGPU());
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(UniformTestES31);
 ANGLE_INSTANTIATE_TEST_ES31(UniformTestES31);

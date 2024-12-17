@@ -352,7 +352,7 @@ class RewritePipelineVarOutputBuilder
 
             // E.g. `_uuserVar : i32,`.
             TStringStream typeStream;
-            WriteWgslType(typeStream, astVar->getType());
+            WriteWgslType(typeStream, astVar->getType(), {});
             TString type = typeStream.str();
             ImmutableString globalStructVar =
                 BuildConcatenatedImmutableString(userVarName, " : ", type.c_str(), ",");
@@ -411,11 +411,11 @@ bool RewritePipelineVarOutputBuilder::GenerateMainFunctionAndIOStructs(
 RewritePipelineVarOutput::RewritePipelineVarOutput(sh::GLenum shaderType) : mShaderType(shaderType)
 {}
 
-bool RewritePipelineVarOutput::IsInputVar(TSymbolUniqueId angleInputVar)
+bool RewritePipelineVarOutput::IsInputVar(TSymbolUniqueId angleInputVar) const
 {
     return mAngleInputVars.count(angleInputVar.get()) > 0;
 }
-bool RewritePipelineVarOutput::IsOutputVar(TSymbolUniqueId angleOutputVar)
+bool RewritePipelineVarOutput::IsOutputVar(TSymbolUniqueId angleOutputVar) const
 {
     return mAngleOutputVars.count(angleOutputVar.get()) > 0;
 }
