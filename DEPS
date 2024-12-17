@@ -359,6 +359,7 @@ vars = {
   'checkout_angle_restricted_trace_respawnables': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_retro_bowl': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_return_to_monkey_island': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_riptide_gp2': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_rise_of_empires': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_rise_of_kingdoms': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_romancing_saga': 'checkout_angle_restricted_traces',
@@ -3257,6 +3258,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_return_to_monkey_island',
+  },
+  'src/tests/restricted_traces/riptide_gp2': {
+      'packages': [
+        {
+            'package': 'angle/traces/riptide_gp2',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_riptide_gp2',
   },
   'src/tests/restricted_traces/rise_of_empires': {
       'packages': [
