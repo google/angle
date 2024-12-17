@@ -1259,6 +1259,8 @@ b/267953710 GALAXYS22 VULKAN : VulkanPerformanceCounterTest_ES31.ColorMaskedFram
 377923479 GALAXYS22 VULKAN : FramebufferFetchES31.DrawNonFetchDrawFetchInStorageBufferThenClear_Coherent/* = SKIP
 377923479 GALAXYS22 VULKAN : FramebufferFetchES31.MultiSampled/* = SKIP
 380475003 GALAXYS22 VULKAN : TextureMultisampleTest.MaskedDrawWithSampleID/* = SKIP
+384799391 GALAXYS22 VULKAN : EGLContextSharingTestNoFixture.EglTerminateMultiThreaded/* = SKIP
+384799391 GALAXYS22 VULKAN : EGLContextSharingTestNoFixture.EglDestoryContextManyTimesSameContext/* = SKIP
 
 // Samsung Galaxy Qualcomm crashes and failures (perhaps with other non-Pixel Qualcomm as well):
 42266622 GALAXYQUALCOMM VULKAN : BlitFramebufferTest.BlitStencilScissoredScaled/* = SKIP
