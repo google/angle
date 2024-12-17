@@ -437,7 +437,9 @@ class CommandQueue : angle::NonCopyable
     // finished
     angle::Result checkOneCommandBatchLocked(Context *context, bool *finished);
     // Similar to checkOneCommandBatch, except we will wait for it to finish
-    angle::Result finishOneCommandBatchLocked(Context *context, uint64_t timeout);
+    angle::Result finishOneCommandBatch(Context *context,
+                                        uint64_t timeout,
+                                        std::unique_lock<angle::SimpleMutex> *lock);
     void onCommandBatchFinishedLocked(CommandBatch &&batch);
     // Walk mFinishedCommands, reset and recycle all command buffers.
     angle::Result releaseFinishedCommandsLocked(Context *context);

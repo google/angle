@@ -951,11 +951,11 @@ angle::Result CommandQueue::queueSubmitLocked(Context *context,
     // off-screen scenarios.
     if (mInFlightCommands.full())
     {
-        std::lock_guard<angle::SimpleMutex> lock(mCmdCompleteMutex);
+        std::unique_lock<angle::SimpleMutex> lock(mCmdCompleteMutex);
         // Check once more inside the lock in case other thread already finished some/all commands.
         if (mInFlightCommands.full())
         {
-            ANGLE_TRY(finishOneCommandBatchLocked(context, renderer->getMaxFenceWaitTimeNs()));
+            ANGLE_TRY(finishOneCommandBatch(context, renderer->getMaxFenceWaitTimeNs(), &lock));
         }
     }
     // Assert will succeed since new batch is pushed only in this method below.
@@ -1055,12 +1055,12 @@ angle::Result CommandQueue::cleanupSomeGarbage(Context *context,
     while (!anyGarbageCleaned)
     {
         {
-            std::lock_guard<angle::SimpleMutex> lock(mCmdCompleteMutex);
+            std::unique_lock<angle::SimpleMutex> lock(mCmdCompleteMutex);
             if (mInFlightCommands.size() <= minInFlightBatchesToKeep)
             {
                 break;
             }
-            ANGLE_TRY(finishOneCommandBatchLocked(context, renderer->getMaxFenceWaitTimeNs()));
+            ANGLE_TRY(finishOneCommandBatch(context, renderer->getMaxFenceWaitTimeNs(), &lock));
         }
         renderer->cleanupGarbage(&anyGarbageCleaned);
     }
@@ -1096,18 +1096,27 @@ angle::Result CommandQueue::checkOneCommandBatchLocked(Context *context, bool *f
     return angle::Result::Continue;
 }
 
-angle::Result CommandQueue::finishOneCommandBatchLocked(Context *context, uint64_t timeout)
+angle::Result CommandQueue::finishOneCommandBatch(Context *context,
+                                                  uint64_t timeout,
+                                                  std::unique_lock<angle::SimpleMutex> *lock)
 {
     ASSERT(!mInFlightCommands.empty());
+    ASSERT(lock->owns_lock());
 
     CommandBatch &batch = mInFlightCommands.front();
+    // Save queue serial since the batch may be destroyed during possible unlocked fence wait.
+    const QueueSerial batchSerial = batch.getQueueSerial();
     if (batch.hasFence())
     {
-        VkResult status = batch.waitFence(context->getDevice(), timeout);
+        VkResult status = batch.waitFenceUnlocked(context->getDevice(), timeout, lock);
         ANGLE_VK_TRY(context, status);
     }
 
-    onCommandBatchFinishedLocked(std::move(batch));
+    // Other thread might already finish the batch, in that case do not touch the |batch| reference.
+    if (!hasQueueSerialFinished(batchSerial))
+    {
+        onCommandBatchFinishedLocked(std::move(batch));
+    }
 
     return angle::Result::Continue;
 }
