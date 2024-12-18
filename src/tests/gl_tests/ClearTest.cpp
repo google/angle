@@ -3892,6 +3892,27 @@ TEST_P(ClearTextureEXTTest, Clear2DRGB8Snorm)
     EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::green);
 }
 
+// Test clearing a corner of a 2D RGB8 Snorm texture with GL_EXT_clear_texture.
+TEST_P(ClearTextureEXTTest, Clear2DRGB8SnormCorner)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_clear_texture"));
+
+    // Create a 4x4 texture with no data.
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8_SNORM, 4, 4, 0, GL_RGB, GL_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    // Clear one corner of the texture.
+    GLint colorGreenRGBSnorm = 0x007F00;
+    glClearTexSubImageEXT(tex, 0, 0, 0, 0, 2, 2, 1, GL_RGB, GL_BYTE, &colorGreenRGBSnorm);
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth() / 2, getWindowHeight() / 2, GLColor::green);
+}
+
 // Test basic functionality of clearing 2D textures with GL_EXT_clear_texture using nullptr.
 TEST_P(ClearTextureEXTTest, Clear2DWithNull)
 {

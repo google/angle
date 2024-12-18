@@ -939,6 +939,8 @@ angle::Result TextureVk::clearSubImageImpl(const gl::Context *context,
 
         std::vector<uint8_t> clearBuffer(clearBufferSize, 0);
         ASSERT(clearBufferSize % pixelSize == 0);
+
+        // The pixels in the temporary buffer are tightly packed.
         if (data != nullptr)
         {
             for (GLuint i = 0; i < clearBufferSize; i += pixelSize)
@@ -946,6 +948,8 @@ angle::Result TextureVk::clearSubImageImpl(const gl::Context *context,
                 memcpy(&clearBuffer[i], pixelValue.data(), pixelSize);
             }
         }
+        gl::PixelUnpackState pixelUnpackState = {};
+        pixelUnpackState.alignment            = 1;
 
         if (isCubeMap)
         {
@@ -960,10 +964,9 @@ angle::Result TextureVk::clearSubImageImpl(const gl::Context *context,
                 ANGLE_TRY(mImage->stageSubresourceUpdate(
                     contextVk, getNativeImageIndex(index),
                     gl::Extents(clearArea.width, clearArea.height, 1),
-                    gl::Offset(clearArea.x, clearArea.y, 0), formatInfo,
-                    contextVk->getState().getUnpackState(), type, clearBuffer.data(), vkFormat,
-                    getRequiredImageAccess(), vk::ApplyImageUpdate::Defer,
-                    &updateAppliedImmediately));
+                    gl::Offset(clearArea.x, clearArea.y, 0), formatInfo, pixelUnpackState, type,
+                    clearBuffer.data(), vkFormat, getRequiredImageAccess(),
+                    vk::ApplyImageUpdate::Defer, &updateAppliedImmediately));
                 ASSERT(!updateAppliedImmediately);
             }
         }
@@ -977,9 +980,9 @@ angle::Result TextureVk::clearSubImageImpl(const gl::Context *context,
             ANGLE_TRY(mImage->stageSubresourceUpdate(
                 contextVk, getNativeImageIndex(index),
                 gl::Extents(clearArea.width, clearArea.height, clearArea.depth),
-                gl::Offset(clearArea.x, clearArea.y, clearArea.z), formatInfo,
-                contextVk->getState().getUnpackState(), type, clearBuffer.data(), vkFormat,
-                getRequiredImageAccess(), vk::ApplyImageUpdate::Defer, &updateAppliedImmediately));
+                gl::Offset(clearArea.x, clearArea.y, clearArea.z), formatInfo, pixelUnpackState,
+                type, clearBuffer.data(), vkFormat, getRequiredImageAccess(),
+                vk::ApplyImageUpdate::Defer, &updateAppliedImmediately));
             ASSERT(!updateAppliedImmediately);
         }
     }
