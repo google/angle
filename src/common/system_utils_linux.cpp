@@ -9,6 +9,7 @@
 #include "common/debug.h"
 #include "system_utils.h"
 
+#include <string.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/types.h>
