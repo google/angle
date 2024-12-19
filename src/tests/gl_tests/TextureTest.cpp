@@ -11642,6 +11642,33 @@ TEST_P(TextureCubeTestES3, IncompatibleLayerABThenCompatibleLayerABSingleLevel)
     }
 }
 
+// Test that the maximum texture layer can allocate enough memory.
+TEST_P(TextureCubeTestES32, MaxArrayTextureLayersVerify)
+{
+    GLint maxTextureLayers = 0;
+    GLTexture texture;
+
+    glBindTexture(GL_TEXTURE_2D_ARRAY, texture);
+    ASSERT_GL_NO_ERROR();
+
+    glGetIntegerv(GL_MAX_ARRAY_TEXTURE_LAYERS, &maxTextureLayers);
+    ASSERT_GL_NO_ERROR();
+
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, 256, 256, maxTextureLayers, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, 256, 256, maxTextureLayers + 1, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, 256, 256, maxTextureLayers);
+    ASSERT_GL_NO_ERROR();
+
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, 256, 256, maxTextureLayers + 1);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+}
+
 // Tests defining a cube map array texture using glTexImage3D().
 TEST_P(TextureCubeTestES32, ValidateCubeMapArrayTexImage)
 {
