@@ -2881,12 +2881,13 @@ VkResult WindowSurfaceVk::postProcessUnlockedAcquire(vk::Context *context)
     {
         ASSERT(image.image->valid() &&
                image.image->getCurrentImageLayout() != vk::ImageLayout::SharedPresent);
-        rx::vk::Renderer *renderer = context->getRenderer();
-        rx::vk::PrimaryCommandBuffer primaryCommandBuffer;
+        vk::Renderer *renderer = context->getRenderer();
+        vk::ScopedPrimaryCommandBuffer scopedCommandBuffer(renderer->getDevice());
         auto protectionType = vk::ConvertProtectionBoolToType(mState.hasProtectedContent());
-        if (renderer->getCommandBufferOneOff(context, protectionType, &primaryCommandBuffer) ==
+        if (renderer->getCommandBufferOneOff(context, protectionType, &scopedCommandBuffer) ==
             angle::Result::Continue)
         {
+            vk::PrimaryCommandBuffer &primaryCommandBuffer = scopedCommandBuffer.get();
             VkSemaphore semaphore;
             // Note return errors is early exit may leave new Image and Swapchain in unknown state.
             image.image->recordWriteBarrierOneOff(context, vk::ImageLayout::SharedPresent,
@@ -2898,8 +2899,8 @@ VkResult WindowSurfaceVk::postProcessUnlockedAcquire(vk::Context *context)
                 return VK_ERROR_OUT_OF_DATE_KHR;
             }
             QueueSerial queueSerial;
-            if (renderer->queueSubmitOneOff(context, std::move(primaryCommandBuffer),
-                                            protectionType, egl::ContextPriority::Medium, semaphore,
+            if (renderer->queueSubmitOneOff(context, std::move(scopedCommandBuffer), protectionType,
+                                            egl::ContextPriority::Medium, semaphore,
                                             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
                                             &queueSerial) != angle::Result::Continue)
             {

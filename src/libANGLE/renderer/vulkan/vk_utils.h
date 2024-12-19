@@ -633,7 +633,8 @@ template <typename T>
 class [[nodiscard]] DeviceScoped final : angle::NonCopyable
 {
   public:
-    DeviceScoped(VkDevice device) : mDevice(device) {}
+    explicit DeviceScoped(VkDevice device) : mDevice(device) {}
+    DeviceScoped(DeviceScoped &&other) : mDevice(other.mDevice), mVar(std::move(other.mVar)) {}
     ~DeviceScoped() { mVar.destroy(mDevice); }
 
     const T &get() const { return mVar; }

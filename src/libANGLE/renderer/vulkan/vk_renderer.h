@@ -119,7 +119,7 @@ class OneOffCommandPool : angle::NonCopyable
     OneOffCommandPool();
     void init(vk::ProtectionType protectionType);
     angle::Result getCommandBuffer(vk::Context *context,
-                                   vk::PrimaryCommandBuffer *commandBufferOut);
+                                   vk::ScopedPrimaryCommandBuffer *commandBufferOut);
     void releaseCommandBuffer(const QueueSerial &submitQueueSerial,
                               vk::PrimaryCommandBuffer &&primary);
     void destroy(VkDevice device);
@@ -307,7 +307,7 @@ class Renderer : angle::NonCopyable
     // This command buffer should be submitted immediately via queueSubmitOneOff.
     angle::Result getCommandBufferOneOff(vk::Context *context,
                                          vk::ProtectionType protectionType,
-                                         vk::PrimaryCommandBuffer *commandBufferOut)
+                                         vk::ScopedPrimaryCommandBuffer *commandBufferOut)
     {
         return mOneOffCommandPoolMap[protectionType].getCommandBuffer(context, commandBufferOut);
     }
@@ -315,7 +315,7 @@ class Renderer : angle::NonCopyable
     // Fire off a single command buffer immediately with default priority.
     // Command buffer must be allocated with getCommandBufferOneOff and is reclaimed.
     angle::Result queueSubmitOneOff(vk::Context *context,
-                                    vk::PrimaryCommandBuffer &&primary,
+                                    vk::ScopedPrimaryCommandBuffer &&scopedCommandBuffer,
                                     vk::ProtectionType protectionType,
                                     egl::ContextPriority priority,
                                     VkSemaphore waitSemaphore,

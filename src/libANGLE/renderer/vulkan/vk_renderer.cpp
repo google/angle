@@ -1672,16 +1672,18 @@ void OneOffCommandPool::destroy(VkDevice device)
 }
 
 angle::Result OneOffCommandPool::getCommandBuffer(vk::Context *context,
-                                                  vk::PrimaryCommandBuffer *commandBufferOut)
+                                                  vk::ScopedPrimaryCommandBuffer *commandBufferOut)
 {
     std::unique_lock<angle::SimpleMutex> lock(mMutex);
 
     if (!mPendingCommands.empty() &&
         context->getRenderer()->hasResourceUseFinished(mPendingCommands.front().use))
     {
-        *commandBufferOut = std::move(mPendingCommands.front().commandBuffer);
+        commandBufferOut->assign(std::move(lock),
+                                 std::move(mPendingCommands.front().commandBuffer));
         mPendingCommands.pop_front();
-        ANGLE_VK_TRY(context, commandBufferOut->reset());
+        // No need to explicitly call reset() on |commandBufferOut|, since the begin() call below
+        // will do it implicitly.
     }
     else
     {
@@ -1707,14 +1709,16 @@ angle::Result OneOffCommandPool::getCommandBuffer(vk::Context *context,
         allocInfo.commandBufferCount          = 1;
         allocInfo.commandPool                 = mCommandPool.getHandle();
 
-        ANGLE_VK_TRY(context, commandBufferOut->init(context->getDevice(), allocInfo));
+        PrimaryCommandBuffer newCommandBuffer;
+        ANGLE_VK_TRY(context, newCommandBuffer.init(context->getDevice(), allocInfo));
+        commandBufferOut->assign(std::move(lock), std::move(newCommandBuffer));
     }
 
     VkCommandBufferBeginInfo beginInfo = {};
     beginInfo.sType                    = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     beginInfo.flags                    = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
     beginInfo.pInheritanceInfo         = nullptr;
-    ANGLE_VK_TRY(context, commandBufferOut->begin(beginInfo));
+    ANGLE_VK_TRY(context, commandBufferOut->get().begin(beginInfo));
 
     return angle::Result::Continue;
 }
@@ -6201,7 +6205,7 @@ void Renderer::outputVmaStatString()
 }
 
 angle::Result Renderer::queueSubmitOneOff(vk::Context *context,
-                                          vk::PrimaryCommandBuffer &&primary,
+                                          vk::ScopedPrimaryCommandBuffer &&scopedCommandBuffer,
                                           vk::ProtectionType protectionType,
                                           egl::ContextPriority priority,
                                           VkSemaphore waitSemaphore,
@@ -6209,6 +6213,9 @@ angle::Result Renderer::queueSubmitOneOff(vk::Context *context,
                                           QueueSerial *queueSerialOut)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "Renderer::queueSubmitOneOff");
+    DeviceScoped<PrimaryCommandBuffer> commandBuffer = scopedCommandBuffer.unlockAndRelease();
+    PrimaryCommandBuffer &primary                    = commandBuffer.get();
+
     // Allocate a one off SerialIndex and generate a QueueSerial and then use it and release the
     // index.
     vk::ScopedQueueSerialIndex index;

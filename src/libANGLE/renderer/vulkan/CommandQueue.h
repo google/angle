@@ -543,6 +543,43 @@ class CleanUpThread : public Context
     std::condition_variable mWorkAvailableCondition;
     std::atomic<bool> mNeedCleanUp;
 };
+
+// Provides access to the PrimaryCommandBuffer while also locking the corresponding CommandPool
+class [[nodiscard]] ScopedPrimaryCommandBuffer final
+{
+  public:
+    explicit ScopedPrimaryCommandBuffer(VkDevice device) : mCommandBuffer(device) {}
+
+    void assign(std::unique_lock<angle::SimpleMutex> &&poolLock,
+                PrimaryCommandBuffer &&commandBuffer)
+    {
+        ASSERT(poolLock.owns_lock());
+        ASSERT(commandBuffer.valid());
+        ASSERT(mPoolLock.mutex() == nullptr);
+        ASSERT(!mCommandBuffer.get().valid());
+        mPoolLock            = std::move(poolLock);
+        mCommandBuffer.get() = std::move(commandBuffer);
+    }
+
+    PrimaryCommandBuffer &get()
+    {
+        ASSERT(mPoolLock.owns_lock());
+        ASSERT(mCommandBuffer.get().valid());
+        return mCommandBuffer.get();
+    }
+
+    DeviceScoped<PrimaryCommandBuffer> unlockAndRelease()
+    {
+        ASSERT(mCommandBuffer.get().valid() && mPoolLock.owns_lock() ||
+               !mCommandBuffer.get().valid() && mPoolLock.mutex() == nullptr);
+        mPoolLock = {};
+        return std::move(mCommandBuffer);
+    }
+
+  private:
+    std::unique_lock<angle::SimpleMutex> mPoolLock;
+    DeviceScoped<PrimaryCommandBuffer> mCommandBuffer;
+};
 }  // namespace vk
 
 }  // namespace rx

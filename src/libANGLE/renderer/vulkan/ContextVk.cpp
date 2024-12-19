@@ -3923,10 +3923,11 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
         ANGLE_VK_TRY(this, gpuDone.get().reset(device));
 
         // Record the command buffer
-        vk::DeviceScoped<vk::PrimaryCommandBuffer> commandBatch(device);
-        vk::PrimaryCommandBuffer &commandBuffer = commandBatch.get();
+        vk::ScopedPrimaryCommandBuffer scopedCommandBuffer(device);
 
-        ANGLE_TRY(mRenderer->getCommandBufferOneOff(this, getProtectionType(), &commandBuffer));
+        ANGLE_TRY(
+            mRenderer->getCommandBufferOneOff(this, getProtectionType(), &scopedCommandBuffer));
+        vk::PrimaryCommandBuffer &commandBuffer = scopedCommandBuffer.get();
 
         commandBuffer.setEvent(gpuReady.get().getHandle(), VK_PIPELINE_STAGE_ALL_GRAPHICS_BIT);
         commandBuffer.waitEvents(1, cpuReady.get().ptr(), VK_PIPELINE_STAGE_HOST_BIT,
@@ -3941,8 +3942,9 @@ angle::Result ContextVk::synchronizeCpuGpuTime()
         QueueSerial submitSerial;
         // vkEvent's are externally synchronized, therefore need work to be submitted before calling
         // vkGetEventStatus
-        ANGLE_TRY(mRenderer->queueSubmitOneOff(this, std::move(commandBuffer), getProtectionType(),
-                                               mContextPriority, VK_NULL_HANDLE, 0, &submitSerial));
+        ANGLE_TRY(mRenderer->queueSubmitOneOff(this, std::move(scopedCommandBuffer),
+                                               getProtectionType(), mContextPriority,
+                                               VK_NULL_HANDLE, 0, &submitSerial));
 
         // Track it with the submitSerial.
         timestampQuery.setQueueSerial(submitSerial);
@@ -7973,17 +7975,17 @@ angle::Result ContextVk::getTimestamp(uint64_t *timestampOut)
     ANGLE_TRY(timestampQueryPool.get().allocateQuery(this, &timestampQuery, 1));
 
     // Record the command buffer
-    vk::DeviceScoped<vk::PrimaryCommandBuffer> commandBatch(device);
-    vk::PrimaryCommandBuffer &commandBuffer = commandBatch.get();
+    vk::ScopedPrimaryCommandBuffer scopedCommandBuffer(device);
 
-    ANGLE_TRY(mRenderer->getCommandBufferOneOff(this, getProtectionType(), &commandBuffer));
+    ANGLE_TRY(mRenderer->getCommandBufferOneOff(this, getProtectionType(), &scopedCommandBuffer));
+    vk::PrimaryCommandBuffer &commandBuffer = scopedCommandBuffer.get();
 
     timestampQuery.writeTimestampToPrimary(this, &commandBuffer);
     ANGLE_VK_TRY(this, commandBuffer.end());
 
     QueueSerial submitQueueSerial;
-    ANGLE_TRY(mRenderer->queueSubmitOneOff(this, std::move(commandBuffer), getProtectionType(),
-                                           mContextPriority, VK_NULL_HANDLE, 0,
+    ANGLE_TRY(mRenderer->queueSubmitOneOff(this, std::move(scopedCommandBuffer),
+                                           getProtectionType(), mContextPriority, VK_NULL_HANDLE, 0,
                                            &submitQueueSerial));
     // Track it with the submitSerial.
     timestampQuery.setQueueSerial(submitQueueSerial);

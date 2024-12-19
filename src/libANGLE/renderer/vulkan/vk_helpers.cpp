@@ -5555,15 +5555,16 @@ angle::Result BufferHelper::initializeNonZeroMemory(Context *context,
         StagingBuffer stagingBuffer;
         ANGLE_TRY(stagingBuffer.init(context, size, StagingUsage::Both));
 
-        PrimaryCommandBuffer commandBuffer;
-        ANGLE_TRY(
-            renderer->getCommandBufferOneOff(context, ProtectionType::Unprotected, &commandBuffer));
-
         // Queue a DMA copy.
         VkBufferCopy copyRegion = {};
         copyRegion.srcOffset    = 0;
         copyRegion.dstOffset    = getOffset();
         copyRegion.size         = size;
+
+        ScopedPrimaryCommandBuffer scopedCommandBuffer(renderer->getDevice());
+        ANGLE_TRY(renderer->getCommandBufferOneOff(context, ProtectionType::Unprotected,
+                                                   &scopedCommandBuffer));
+        PrimaryCommandBuffer &commandBuffer = scopedCommandBuffer.get();
 
         commandBuffer.copyBuffer(stagingBuffer.getBuffer(), getBuffer(), 1, &copyRegion);
 
@@ -5571,7 +5572,7 @@ angle::Result BufferHelper::initializeNonZeroMemory(Context *context,
 
         QueueSerial queueSerial;
         ANGLE_TRY(renderer->queueSubmitOneOff(
-            context, std::move(commandBuffer), ProtectionType::Unprotected,
+            context, std::move(scopedCommandBuffer), ProtectionType::Unprotected,
             egl::ContextPriority::Medium, VK_NULL_HANDLE, 0, &queueSerial));
 
         stagingBuffer.collectGarbage(renderer, queueSerial);
@@ -6172,9 +6173,10 @@ angle::Result ImageHelper::copyToBufferOneOff(Context *context,
                                               VkBufferImageCopy copyRegion)
 {
     Renderer *renderer = context->getRenderer();
-    PrimaryCommandBuffer commandBuffer;
-    ANGLE_TRY(
-        renderer->getCommandBufferOneOff(context, ProtectionType::Unprotected, &commandBuffer));
+    ScopedPrimaryCommandBuffer scopedCommandBuffer(renderer->getDevice());
+    ANGLE_TRY(renderer->getCommandBufferOneOff(context, ProtectionType::Unprotected,
+                                               &scopedCommandBuffer));
+    PrimaryCommandBuffer &commandBuffer = scopedCommandBuffer.get();
 
     VkSemaphore acquireNextImageSemaphore;
     barrierImpl(context, getAspectFlags(), ImageLayout::TransferDst,
@@ -6185,10 +6187,10 @@ angle::Result ImageHelper::copyToBufferOneOff(Context *context,
     ANGLE_VK_TRY(context, commandBuffer.end());
 
     QueueSerial submitQueueSerial;
-    ANGLE_TRY(
-        renderer->queueSubmitOneOff(context, std::move(commandBuffer), ProtectionType::Unprotected,
-                                    egl::ContextPriority::Medium, acquireNextImageSemaphore,
-                                    kSwapchainAcquireImageWaitStageFlags, &submitQueueSerial));
+    ANGLE_TRY(renderer->queueSubmitOneOff(
+        context, std::move(scopedCommandBuffer), ProtectionType::Unprotected,
+        egl::ContextPriority::Medium, acquireNextImageSemaphore,
+        kSwapchainAcquireImageWaitStageFlags, &submitQueueSerial));
 
     return renderer->finishQueueSerial(context, submitQueueSerial);
 }
@@ -6605,9 +6607,10 @@ angle::Result ImageHelper::initializeNonZeroMemory(Context *context,
     // setEvent.
     ASSERT(!mCurrentEvent.valid());
 
-    PrimaryCommandBuffer commandBuffer;
+    ScopedPrimaryCommandBuffer scopedCommandBuffer(renderer->getDevice());
     auto protectionType = ConvertProtectionBoolToType(hasProtectedContent);
-    ANGLE_TRY(renderer->getCommandBufferOneOff(context, protectionType, &commandBuffer));
+    ANGLE_TRY(renderer->getCommandBufferOneOff(context, protectionType, &scopedCommandBuffer));
+    PrimaryCommandBuffer &commandBuffer = scopedCommandBuffer.get();
 
     // Queue a DMA copy.
     VkSemaphore acquireNextImageSemaphore;
@@ -6693,7 +6696,7 @@ angle::Result ImageHelper::initializeNonZeroMemory(Context *context,
     ANGLE_VK_TRY(context, commandBuffer.end());
 
     QueueSerial queueSerial;
-    ANGLE_TRY(renderer->queueSubmitOneOff(context, std::move(commandBuffer), protectionType,
+    ANGLE_TRY(renderer->queueSubmitOneOff(context, std::move(scopedCommandBuffer), protectionType,
                                           egl::ContextPriority::Medium, VK_NULL_HANDLE, 0,
                                           &queueSerial));
 
@@ -10856,11 +10859,12 @@ angle::Result ImageHelper::copySurfaceImageToBuffer(DisplayVk *displayVk,
 
     // We may have a valid event here but we do not have a collector to collect it. Release the
     // event here to force pipelineBarrier.
-    mCurrentEvent.release(displayVk->getRenderer());
+    mCurrentEvent.release(renderer);
 
-    PrimaryCommandBuffer primaryCommandBuffer;
+    ScopedPrimaryCommandBuffer scopedCommandBuffer(renderer->getDevice());
     ANGLE_TRY(renderer->getCommandBufferOneOff(displayVk, ProtectionType::Unprotected,
-                                               &primaryCommandBuffer));
+                                               &scopedCommandBuffer));
+    PrimaryCommandBuffer &primaryCommandBuffer = scopedCommandBuffer.get();
 
     VkSemaphore acquireNextImageSemaphore;
     barrierImpl(displayVk, getAspectFlags(), ImageLayout::TransferSrc,
@@ -10873,7 +10877,7 @@ angle::Result ImageHelper::copySurfaceImageToBuffer(DisplayVk *displayVk,
 
     QueueSerial submitQueueSerial;
     ANGLE_TRY(renderer->queueSubmitOneOff(
-        displayVk, std::move(primaryCommandBuffer), ProtectionType::Unprotected,
+        displayVk, std::move(scopedCommandBuffer), ProtectionType::Unprotected,
         egl::ContextPriority::Medium, acquireNextImageSemaphore,
         kSwapchainAcquireImageWaitStageFlags, &submitQueueSerial));
 
@@ -10910,9 +10914,10 @@ angle::Result ImageHelper::copyBufferToSurfaceImage(DisplayVk *displayVk,
     // event here to force pipelineBarrier.
     mCurrentEvent.release(displayVk->getRenderer());
 
-    PrimaryCommandBuffer commandBuffer;
-    ANGLE_TRY(
-        renderer->getCommandBufferOneOff(displayVk, ProtectionType::Unprotected, &commandBuffer));
+    ScopedPrimaryCommandBuffer scopedCommandBuffer(renderer->getDevice());
+    ANGLE_TRY(renderer->getCommandBufferOneOff(displayVk, ProtectionType::Unprotected,
+                                               &scopedCommandBuffer));
+    PrimaryCommandBuffer &commandBuffer = scopedCommandBuffer.get();
 
     VkSemaphore acquireNextImageSemaphore;
     barrierImpl(displayVk, getAspectFlags(), ImageLayout::TransferDst,
@@ -10925,7 +10930,7 @@ angle::Result ImageHelper::copyBufferToSurfaceImage(DisplayVk *displayVk,
 
     QueueSerial submitQueueSerial;
     ANGLE_TRY(renderer->queueSubmitOneOff(
-        displayVk, std::move(commandBuffer), ProtectionType::Unprotected,
+        displayVk, std::move(scopedCommandBuffer), ProtectionType::Unprotected,
         egl::ContextPriority::Medium, acquireNextImageSemaphore,
         kSwapchainAcquireImageWaitStageFlags, &submitQueueSerial));
 

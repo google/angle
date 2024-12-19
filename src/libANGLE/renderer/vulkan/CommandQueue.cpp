@@ -492,8 +492,8 @@ void CommandPoolAccess::destroyPrimaryCommandBuffer(VkDevice device,
                                                     PrimaryCommandBuffer *primaryCommands) const
 {
     ASSERT(primaryCommands->valid());
-    std::lock_guard<angle::SimpleMutex> lock(mCmdPoolMutex);
 
+    // Does not require a pool mutex lock.
     primaryCommands->destroy(device);
 }
 
