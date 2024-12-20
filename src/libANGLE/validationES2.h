@@ -24,6 +24,31 @@ ANGLE_INLINE bool ValidateDrawArrays(const Context *context,
     return ValidateDrawArraysCommon(context, entryPoint, mode, first, count, 1);
 }
 
+ANGLE_INLINE bool ValidateUniform1f(const Context *context,
+                                    angle::EntryPoint entryPoint,
+                                    UniformLocation location,
+                                    GLfloat x)
+{
+    return ValidateUniform(context, entryPoint, GL_FLOAT, location, 1);
+}
+
+ANGLE_INLINE bool ValidateUniform1fv(const Context *context,
+                                     angle::EntryPoint entryPoint,
+                                     UniformLocation location,
+                                     GLsizei count,
+                                     const GLfloat *v)
+{
+    return ValidateUniform(context, entryPoint, GL_FLOAT, location, count);
+}
+
+ANGLE_INLINE bool ValidateUniform1i(const Context *context,
+                                    angle::EntryPoint entryPoint,
+                                    UniformLocation location,
+                                    GLint x)
+{
+    return ValidateUniform1iv(context, entryPoint, location, 1, &x);
+}
+
 ANGLE_INLINE bool ValidateUniform2f(const Context *context,
                                     angle::EntryPoint entryPoint,
                                     UniformLocation location,
@@ -31,6 +56,111 @@ ANGLE_INLINE bool ValidateUniform2f(const Context *context,
                                     GLfloat y)
 {
     return ValidateUniform(context, entryPoint, GL_FLOAT_VEC2, location, 1);
+}
+
+ANGLE_INLINE bool ValidateUniform2fv(const Context *context,
+                                     angle::EntryPoint entryPoint,
+                                     UniformLocation location,
+                                     GLsizei count,
+                                     const GLfloat *v)
+{
+    return ValidateUniform(context, entryPoint, GL_FLOAT_VEC2, location, count);
+}
+
+ANGLE_INLINE bool ValidateUniform2i(const Context *context,
+                                    angle::EntryPoint entryPoint,
+                                    UniformLocation location,
+                                    GLint x,
+                                    GLint y)
+{
+    return ValidateUniform(context, entryPoint, GL_INT_VEC2, location, 1);
+}
+
+ANGLE_INLINE bool ValidateUniform2iv(const Context *context,
+                                     angle::EntryPoint entryPoint,
+                                     UniformLocation location,
+                                     GLsizei count,
+                                     const GLint *v)
+{
+    return ValidateUniform(context, entryPoint, GL_INT_VEC2, location, count);
+}
+
+ANGLE_INLINE bool ValidateUniform3f(const Context *context,
+                                    angle::EntryPoint entryPoint,
+                                    UniformLocation location,
+                                    GLfloat x,
+                                    GLfloat y,
+                                    GLfloat z)
+{
+    return ValidateUniform(context, entryPoint, GL_FLOAT_VEC3, location, 1);
+}
+
+ANGLE_INLINE bool ValidateUniform3fv(const Context *context,
+                                     angle::EntryPoint entryPoint,
+                                     UniformLocation location,
+                                     GLsizei count,
+                                     const GLfloat *v)
+{
+    return ValidateUniform(context, entryPoint, GL_FLOAT_VEC3, location, count);
+}
+
+ANGLE_INLINE bool ValidateUniform3i(const Context *context,
+                                    angle::EntryPoint entryPoint,
+                                    UniformLocation location,
+                                    GLint x,
+                                    GLint y,
+                                    GLint z)
+{
+    return ValidateUniform(context, entryPoint, GL_INT_VEC3, location, 1);
+}
+
+ANGLE_INLINE bool ValidateUniform3iv(const Context *context,
+                                     angle::EntryPoint entryPoint,
+                                     UniformLocation location,
+                                     GLsizei count,
+                                     const GLint *v)
+{
+    return ValidateUniform(context, entryPoint, GL_INT_VEC3, location, count);
+}
+
+ANGLE_INLINE bool ValidateUniform4f(const Context *context,
+                                    angle::EntryPoint entryPoint,
+                                    UniformLocation location,
+                                    GLfloat x,
+                                    GLfloat y,
+                                    GLfloat z,
+                                    GLfloat w)
+{
+    return ValidateUniform(context, entryPoint, GL_FLOAT_VEC4, location, 1);
+}
+
+ANGLE_INLINE bool ValidateUniform4fv(const Context *context,
+                                     angle::EntryPoint entryPoint,
+                                     UniformLocation location,
+                                     GLsizei count,
+                                     const GLfloat *v)
+{
+    return ValidateUniform(context, entryPoint, GL_FLOAT_VEC4, location, count);
+}
+
+ANGLE_INLINE bool ValidateUniform4i(const Context *context,
+                                    angle::EntryPoint entryPoint,
+                                    UniformLocation location,
+                                    GLint x,
+                                    GLint y,
+                                    GLint z,
+                                    GLint w)
+{
+    return ValidateUniform(context, entryPoint, GL_INT_VEC4, location, 1);
+}
+
+ANGLE_INLINE bool ValidateUniform4iv(const Context *context,
+                                     angle::EntryPoint entryPoint,
+                                     UniformLocation location,
+                                     GLsizei count,
+                                     const GLint *v)
+{
+    return ValidateUniform(context, entryPoint, GL_INT_VEC4, location, count);
 }
 
 ANGLE_INLINE bool ValidateBindBuffer(const Context *context,

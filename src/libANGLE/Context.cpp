@@ -7438,19 +7438,15 @@ void Context::shaderSource(ShaderProgramID shader,
     shaderObject->setSource(this, count, string, length);
 }
 
-Program *Context::getActiveLinkedProgram() const
+Program *Context::getActiveLinkedProgramPPO() const
 {
-    Program *program = mState.getLinkedProgram(this);
-    if (!program)
+    ProgramPipeline *programPipelineObject = mState.getProgramPipeline();
+    if (programPipelineObject)
     {
-        ProgramPipeline *programPipelineObject = mState.getProgramPipeline();
-        if (programPipelineObject)
-        {
-            program = programPipelineObject->getLinkedActiveShaderProgram(this);
-        }
+        return programPipelineObject->getLinkedActiveShaderProgram(this);
     }
 
-    return program;
+    return nullptr;
 }
 
 void Context::uniform1f(UniformLocation location, GLfloat x)
