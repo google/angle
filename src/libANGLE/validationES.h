@@ -1154,15 +1154,22 @@ ANGLE_INLINE bool ValidateDrawElementsCommon(const Context *context,
 
     ASSERT(isPow2(GetDrawElementsTypeSize(type)) && GetDrawElementsTypeSize(type) > 0);
 
-    if (context->isWebGL())
-    {
-        GLuint typeBytes = GetDrawElementsTypeSize(type);
+    const State &state         = context->getState();
+    const VertexArray *vao     = state.getVertexArray();
+    Buffer *elementArrayBuffer = vao->getElementArrayBuffer();
+    GLuint typeBytes           = GetDrawElementsTypeSize(type);
 
+    if (elementArrayBuffer != nullptr)
+    {
         if ((reinterpret_cast<uintptr_t>(indices) & static_cast<uintptr_t>(typeBytes - 1)) != 0)
         {
-            // [WebGL 1.0] Section 6.4 Buffer Offset and Stride Requirements
+            // [WebGL 1.0] Section 6.4 Buffer Offset and Stride Requirements:
             // The offset arguments to drawElements and [...], must be a multiple of the size of the
             // data type passed to the call, or an INVALID_OPERATION error is generated.
+            // [GLES 3.2] Section 6.3:
+            // Clients must align data elements consistently with the requirements of the
+            // client platform, with an additional base-level requirement that an offset within a
+            // buffer to a datum comprising N basic machine units be a multiple of N.
             ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, err::kOffsetMustBeMultipleOfType);
             return false;
         }
@@ -1193,10 +1200,6 @@ ANGLE_INLINE bool ValidateDrawElementsCommon(const Context *context,
     {
         return false;
     }
-
-    const State &state         = context->getState();
-    const VertexArray *vao     = state.getVertexArray();
-    Buffer *elementArrayBuffer = vao->getElementArrayBuffer();
 
     if (!elementArrayBuffer)
     {
