@@ -7126,6 +7126,32 @@ bool ValidateQueryDmaBufModifiersEXT(ValidationContext const *val,
     return true;
 }
 
+bool ValidateLockVulkanQueueANGLE(const ValidationContext *val, const egl::Display *display)
+{
+    ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
+
+    if (!display->getDevice()->getExtensions().deviceVulkan)
+    {
+        val->setError(EGL_BAD_ACCESS, "EGL_ANGLE_device_vulkan not supported");
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateUnlockVulkanQueueANGLE(const ValidationContext *val, const egl::Display *display)
+{
+    ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
+
+    if (!display->getDevice()->getExtensions().deviceVulkan)
+    {
+        val->setError(EGL_BAD_ACCESS, "EGL_ANGLE_device_vulkan not supported");
+        return false;
+    }
+
+    return true;
+}
+
 bool ValidateAcquireExternalContextANGLE(const ValidationContext *val,
                                          const egl::Display *display,
                                          SurfaceID drawAndReadPacked)

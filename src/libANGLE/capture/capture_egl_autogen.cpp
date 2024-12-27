@@ -1064,6 +1064,28 @@ CallCapture CaptureReleaseDeviceANGLE(egl::Thread *thread,
     return CallCapture(angle::EntryPoint::EGLReleaseDeviceANGLE, std::move(paramBuffer));
 }
 
+CallCapture CaptureLockVulkanQueueANGLE(egl::Thread *thread,
+                                        bool isCallValid,
+                                        egl::Display *dpyPacked)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
+
+    return CallCapture(angle::EntryPoint::EGLLockVulkanQueueANGLE, std::move(paramBuffer));
+}
+
+CallCapture CaptureUnlockVulkanQueueANGLE(egl::Thread *thread,
+                                          bool isCallValid,
+                                          egl::Display *dpyPacked)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
+
+    return CallCapture(angle::EntryPoint::EGLUnlockVulkanQueueANGLE, std::move(paramBuffer));
+}
+
 CallCapture CaptureAcquireExternalContextANGLE(egl::Thread *thread,
                                                bool isCallValid,
                                                egl::Display *dpyPacked,

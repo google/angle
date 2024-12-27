@@ -297,6 +297,12 @@ class Renderer : angle::NonCopyable
     }
 
     VkQueue getQueue(egl::ContextPriority priority) { return mCommandQueue.getQueue(priority); }
+    // Helpers to implement the functionality of EGL_ANGLE_device_vulkan
+    void lockVulkanQueueForExternalAccess() { mCommandQueue.lockVulkanQueueForExternalAccess(); }
+    void unlockVulkanQueueForExternalAccess()
+    {
+        mCommandQueue.unlockVulkanQueueForExternalAccess();
+    }
 
     // This command buffer should be submitted immediately via queueSubmitOneOff.
     angle::Result getCommandBufferOneOff(vk::Context *context,

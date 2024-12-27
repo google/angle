@@ -299,6 +299,9 @@ class Display final : public LabeledObject,
     angle::SimpleMutex &getDisplayGlobalMutex() { return mDisplayGlobalMutex; }
     angle::SimpleMutex &getProgramCacheMutex() { return mProgramCacheMutex; }
 
+    void lockVulkanQueue();
+    void unlockVulkanQueue();
+
     gl::MemoryShaderCache *getMemoryShaderCache() { return &mMemoryShaderCache; }
 
     // Installs LoggingAnnotator as the global DebugAnnotator, for back-ends that do not implement

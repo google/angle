@@ -478,6 +478,61 @@ EGLBoolean EGLAPIENTRY EGL_ReleaseDeviceANGLE(EGLDeviceEXT device)
     return returnValue;
 }
 
+// EGL_ANGLE_device_vulkan
+void EGLAPIENTRY EGL_LockVulkanQueueANGLE(EGLDisplay dpy)
+{
+
+    Thread *thread = egl::GetCurrentThread();
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+
+    EGL_EVENT(LockVulkanQueueANGLE, "dpy = 0x%016" PRIxPTR "", (uintptr_t)dpy);
+
+    egl::Display *dpyPacked = PackParam<egl::Display *>(dpy);
+
+    {
+        if (IsEGLValidationEnabled())
+        {
+            ANGLE_EGL_VALIDATE_VOID(thread, LockVulkanQueueANGLE, GetDisplayIfValid(dpyPacked),
+                                    dpyPacked);
+        }
+        else
+        {
+        }
+
+        LockVulkanQueueANGLE(thread, dpyPacked);
+    }
+
+    ANGLE_CAPTURE_EGL(LockVulkanQueueANGLE, true, thread, dpyPacked);
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+}
+
+void EGLAPIENTRY EGL_UnlockVulkanQueueANGLE(EGLDisplay dpy)
+{
+
+    Thread *thread = egl::GetCurrentThread();
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+
+    EGL_EVENT(UnlockVulkanQueueANGLE, "dpy = 0x%016" PRIxPTR "", (uintptr_t)dpy);
+
+    egl::Display *dpyPacked = PackParam<egl::Display *>(dpy);
+
+    {
+        if (IsEGLValidationEnabled())
+        {
+            ANGLE_EGL_VALIDATE_VOID(thread, UnlockVulkanQueueANGLE, GetDisplayIfValid(dpyPacked),
+                                    dpyPacked);
+        }
+        else
+        {
+        }
+
+        UnlockVulkanQueueANGLE(thread, dpyPacked);
+    }
+
+    ANGLE_CAPTURE_EGL(UnlockVulkanQueueANGLE, true, thread, dpyPacked);
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+}
+
 // EGL_ANGLE_external_context_and_surface
 void EGLAPIENTRY EGL_AcquireExternalContextANGLE(EGLDisplay dpy, EGLSurface drawAndRead)
 {

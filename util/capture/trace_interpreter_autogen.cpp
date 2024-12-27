@@ -410,6 +410,13 @@ CallCapture ParseCallCapture(const Token &nameToken,
             paramTokens, strings);
         return CallCapture(EntryPoint::EGLLockSurfaceKHR, std::move(params));
     }
+    if (strcmp(nameToken, "eglLockVulkanQueueANGLE") == 0)
+    {
+        ParamBuffer params =
+            ParseParameters<std::remove_pointer<PFNEGLLOCKVULKANQUEUEANGLEPROC>::type>(paramTokens,
+                                                                                       strings);
+        return CallCapture(EntryPoint::EGLLockVulkanQueueANGLE, std::move(params));
+    }
     if (strcmp(nameToken, "eglMakeCurrent") == 0)
     {
         ParamBuffer params =
@@ -729,6 +736,13 @@ CallCapture ParseCallCapture(const Token &nameToken,
         ParamBuffer params = ParseParameters<std::remove_pointer<PFNEGLUNLOCKSURFACEKHRPROC>::type>(
             paramTokens, strings);
         return CallCapture(EntryPoint::EGLUnlockSurfaceKHR, std::move(params));
+    }
+    if (strcmp(nameToken, "eglUnlockVulkanQueueANGLE") == 0)
+    {
+        ParamBuffer params =
+            ParseParameters<std::remove_pointer<PFNEGLUNLOCKVULKANQUEUEANGLEPROC>::type>(
+                paramTokens, strings);
+        return CallCapture(EntryPoint::EGLUnlockVulkanQueueANGLE, std::move(params));
     }
     if (strcmp(nameToken, "eglWaitClient") == 0)
     {

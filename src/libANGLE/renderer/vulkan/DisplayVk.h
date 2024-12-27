@@ -110,6 +110,9 @@ class DisplayVk : public DisplayImpl, public vk::Context, public vk::GlobalOps
                                                 VkFormat format,
                                                 VkColorSpaceKHR colorspace) const;
 
+    void lockVulkanQueue() override;
+    void unlockVulkanQueue() override;
+
     egl::Error querySupportedCompressionRates(const egl::Config *configuration,
                                               const egl::AttributeMap &attributes,
                                               EGLint *rates,

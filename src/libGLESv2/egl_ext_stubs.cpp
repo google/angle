@@ -675,6 +675,22 @@ EGLBoolean SwapBuffersWithDamageKHR(Thread *thread,
     return EGL_TRUE;
 }
 
+void LockVulkanQueueANGLE(Thread *thread, egl::Display *display)
+{
+    ANGLE_EGL_TRY_PREPARE_FOR_CALL(thread, display->prepareForCall(), "eglLockVulkanQueueANGLE",
+                                   GetDisplayIfValid(display));
+    display->lockVulkanQueue();
+    thread->setSuccess();
+}
+
+void UnlockVulkanQueueANGLE(Thread *thread, egl::Display *display)
+{
+    ANGLE_EGL_TRY_PREPARE_FOR_CALL(thread, display->prepareForCall(), "eglUnlockVulkanQueueANGLE",
+                                   GetDisplayIfValid(display));
+    display->unlockVulkanQueue();
+    thread->setSuccess();
+}
+
 EGLBoolean PrepareSwapBuffersANGLE(Thread *thread, Display *display, SurfaceID surfaceID)
 {
     Surface *eglSurface = display->getSurface(surfaceID);

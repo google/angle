@@ -500,6 +500,35 @@ void EGLAPIENTRY EGL_{name}({params})
 }}
 """
 
+TEMPLATE_EGL_ENTRY_POINT_NO_RETURN_NO_LOCKS = """\
+void EGLAPIENTRY EGL_{name}({params})
+{{
+    {preamble}
+    Thread *thread = egl::GetCurrentThread();
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+
+    EGL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
+
+    {packed_gl_enum_conversions}
+
+    {{
+        if (IsEGLValidationEnabled())
+        {{
+            ANGLE_EGL_VALIDATE_VOID(thread, {name}, {labeled_object}, {internal_params});
+        }}
+        else
+        {{
+            {attrib_map_init}
+        }}
+
+        {name}(thread{comma_if_needed}{internal_params});
+    }}
+
+    ANGLE_CAPTURE_EGL({name}, true, {egl_capture_params});
+    {epilog}
+}}
+"""
+
 TEMPLATE_EGL_ENTRY_POINT_WITH_RETURN = """\
 {return_type} EGLAPIENTRY EGL_{name}({params})
 {{
@@ -1603,7 +1632,8 @@ def is_context_private_state_command(api, name):
 
 def is_lockless_egl_entry_point(cmd_name):
     if cmd_name in [
-            "eglGetError", "eglGetCurrentContext", "eglGetCurrentSurface", "eglGetCurrentDisplay"
+            "eglGetError", "eglGetCurrentContext", "eglGetCurrentSurface", "eglGetCurrentDisplay",
+            "eglLockVulkanQueueANGLE", "eglUnlockVulkanQueueANGLE"
     ]:
         return True
     return False
@@ -1877,7 +1907,10 @@ def get_packed_enums(api, cmd_packed_gl_enums, cmd_name, packed_param_types, par
 def get_def_template(api, cmd_name, return_type, has_errcode_ret):
     if return_type == "void":
         if api == apis.EGL:
-            return TEMPLATE_EGL_ENTRY_POINT_NO_RETURN
+            if is_lockless_egl_entry_point(cmd_name):
+                return TEMPLATE_EGL_ENTRY_POINT_NO_RETURN_NO_LOCKS
+            else:
+                return TEMPLATE_EGL_ENTRY_POINT_NO_RETURN
         elif api == apis.CL:
             return TEMPLATE_CL_ENTRY_POINT_NO_RETURN
         elif is_context_private_state_command(api, cmd_name):

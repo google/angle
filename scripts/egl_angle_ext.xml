@@ -103,6 +103,14 @@
             <param><ptype>EGLFrameTokenANGLE</ptype> <name>frametoken</name></param>
         </command>
         <command>
+            <proto><ptype>void</ptype> <name>eglLockVulkanQueueANGLE</name></proto>
+            <param><ptype>EGLDisplay</ptype> <name>dpy</name></param>
+        </command>
+        <command>
+            <proto><ptype>void</ptype> <name>eglUnlockVulkanQueueANGLE</name></proto>
+            <param><ptype>EGLDisplay</ptype> <name>dpy</name></param>
+        </command>
+        <command>
             <proto><ptype>EGLBoolean</ptype> <name>eglPrepareSwapBuffersANGLE</name></proto>
             <param><ptype>EGLDisplay</ptype> <name>dpy</name></param>
             <param><ptype>EGLSurface</ptype> <name>surface</name></param>
@@ -331,6 +339,8 @@
                 <enum name="EGL_VULKAN_QUEUE_ANGLE"/>
                 <enum name="EGL_VULKAN_QUEUE_FAMILIY_INDEX_ANGLE"/>
                 <enum name="EGL_VULKAN_GET_INSTANCE_PROC_ADDR"/>
+                <command name="eglLockVulkanQueueANGLE"/>
+                <command name="eglUnlockVulkanQueueANGLE"/>
             </require>
         </extension>
         <extension name="EGL_ANGLE_direct_composition" supported="egl">

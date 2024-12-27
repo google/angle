@@ -303,6 +303,11 @@ class CommandQueue : angle::NonCopyable
     }
 
     VkQueue getQueue(egl::ContextPriority priority) const { return mQueueMap.getQueue(priority); }
+    // The following are used to implement EGL_ANGLE_device_vulkan, and are called by the
+    // application when it wants to access the VkQueue previously retrieved from ANGLE.  Do not call
+    // these for synchronization within ANGLE.
+    void lockVulkanQueueForExternalAccess() { mQueueSubmitMutex.lock(); }
+    void unlockVulkanQueueForExternalAccess() { mQueueSubmitMutex.unlock(); }
 
     Serial getLastSubmittedSerial(SerialIndex index) const { return mLastSubmittedSerials[index]; }
 

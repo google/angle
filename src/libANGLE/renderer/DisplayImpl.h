@@ -117,6 +117,9 @@ class DisplayImpl : public EGLImplFactory, public angle::Subject
 
     virtual egl::Error waitUntilWorkScheduled();
 
+    virtual void lockVulkanQueue() { UNREACHABLE(); }
+    virtual void unlockVulkanQueue() { UNREACHABLE(); }
+
     virtual angle::NativeWindowSystem getWindowSystem() const;
 
     virtual bool supportsDmaBufFormat(EGLint format) const;

@@ -14,7 +14,7 @@
 #include "common/debug.h"
 #include "common/system_utils.h"
 #include "common/vulkan/vulkan_icd.h"
-#include "test_utils/ANGLETest.h"
+#include "util/util_gl.h"
 #include "vulkan/vulkan_core.h"
 
 namespace angle
@@ -149,6 +149,23 @@ void ImageMemoryBarrier(VkCommandBuffer commandBuffer,
 }
 
 }  // namespace
+
+void VulkanQueueMutex::init(EGLDisplay dpy)
+{
+    display = dpy;
+}
+
+void VulkanQueueMutex::lock()
+{
+    eglLockVulkanQueueANGLE(display);
+    ASSERT_EGL_SUCCESS();
+}
+
+void VulkanQueueMutex::unlock()
+{
+    eglUnlockVulkanQueueANGLE(display);
+    ASSERT_EGL_SUCCESS();
+}
 
 VulkanHelper::VulkanHelper() {}
 
@@ -406,6 +423,8 @@ void VulkanHelper::initializeFromANGLE()
     EXPECT_EGL_TRUE(eglQueryDeviceAttribEXT(device, EGL_VULKAN_QUEUE_ANGLE, &result));
     mGraphicsQueue = reinterpret_cast<VkQueue>(result);
     EXPECT_NE(mGraphicsQueue, static_cast<VkQueue>(VK_NULL_HANDLE));
+
+    mGraphicsQueueMutex.init(display);
 
     EXPECT_EGL_TRUE(eglQueryDeviceAttribEXT(device, EGL_VULKAN_QUEUE_FAMILIY_INDEX_ANGLE, &result));
     mGraphicsQueueFamilyIndex = static_cast<uint32_t>(result);
@@ -930,6 +949,7 @@ void VulkanHelper::releaseImageAndSignalSemaphore(VkImage image,
     };
     constexpr uint32_t submitCount = std::extent<decltype(submits)>();
 
+    std::unique_lock<VulkanQueueMutex> queueLock = getGraphicsQueueLock();
     const VkFence fence = VK_NULL_HANDLE;
     result              = vkQueueSubmit(mGraphicsQueue, submitCount, submits, fence);
     ASSERT(result == VK_SUCCESS);
@@ -959,6 +979,7 @@ void VulkanHelper::signalSemaphore(VkSemaphore semaphore)
     };
     constexpr uint32_t submitCount = std::extent<decltype(submits)>();
 
+    std::unique_lock<VulkanQueueMutex> queueLock = getGraphicsQueueLock();
     const VkFence fence = VK_NULL_HANDLE;
     result              = vkQueueSubmit(mGraphicsQueue, submitCount, submits, fence);
     ASSERT(result == VK_SUCCESS);
@@ -1025,6 +1046,7 @@ void VulkanHelper::waitSemaphoreAndAcquireImage(VkImage image,
     };
     constexpr uint32_t submitCount = std::extent<decltype(submits)>();
 
+    std::unique_lock<VulkanQueueMutex> queueLock = getGraphicsQueueLock();
     const VkFence fence = VK_NULL_HANDLE;
     result              = vkQueueSubmit(mGraphicsQueue, submitCount, submits, fence);
     ASSERT(result == VK_SUCCESS);
@@ -1185,12 +1207,15 @@ void VulkanHelper::readPixels(VkImage srcImage,
     };
     constexpr uint32_t submitCount = std::extent<decltype(submits)>();
 
-    const VkFence fence = VK_NULL_HANDLE;
-    result              = vkQueueSubmit(mGraphicsQueue, submitCount, submits, fence);
-    ASSERT(result == VK_SUCCESS);
+    {
+        std::unique_lock<VulkanQueueMutex> queueLock = getGraphicsQueueLock();
+        const VkFence fence                          = VK_NULL_HANDLE;
+        result = vkQueueSubmit(mGraphicsQueue, submitCount, submits, fence);
+        ASSERT(result == VK_SUCCESS);
 
-    result = vkQueueWaitIdle(mGraphicsQueue);
-    ASSERT(result == VK_SUCCESS);
+        result = vkQueueWaitIdle(mGraphicsQueue);
+        ASSERT(result == VK_SUCCESS);
+    }
 
     vkFreeCommandBuffers(mDevice, mCommandPool, commandBufferCount, commandBuffers);
 
@@ -1402,12 +1427,15 @@ void VulkanHelper::writePixels(VkImage dstImage,
     };
     constexpr uint32_t submitCount = std::extent<decltype(submits)>();
 
-    const VkFence fence = VK_NULL_HANDLE;
-    result              = vkQueueSubmit(mGraphicsQueue, submitCount, submits, fence);
-    ASSERT(result == VK_SUCCESS);
+    {
+        std::unique_lock<VulkanQueueMutex> queueLock = getGraphicsQueueLock();
+        const VkFence fence                          = VK_NULL_HANDLE;
+        result = vkQueueSubmit(mGraphicsQueue, submitCount, submits, fence);
+        ASSERT(result == VK_SUCCESS);
 
-    result = vkQueueWaitIdle(mGraphicsQueue);
-    ASSERT(result == VK_SUCCESS);
+        result = vkQueueWaitIdle(mGraphicsQueue);
+        ASSERT(result == VK_SUCCESS);
+    }
 
     vkFreeCommandBuffers(mDevice, mCommandPool, commandBufferCount, commandBuffers);
     vkDestroyBuffer(mDevice, stagingBuffer, nullptr);

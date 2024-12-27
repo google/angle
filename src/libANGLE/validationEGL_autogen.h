@@ -232,6 +232,10 @@ bool ValidateCreateDeviceANGLE(const ValidationContext *val,
                                const EGLAttrib *attrib_list);
 bool ValidateReleaseDeviceANGLE(const ValidationContext *val, const egl::Device *devicePacked);
 
+// EGL_ANGLE_device_vulkan
+bool ValidateLockVulkanQueueANGLE(const ValidationContext *val, const egl::Display *dpyPacked);
+bool ValidateUnlockVulkanQueueANGLE(const ValidationContext *val, const egl::Display *dpyPacked);
+
 // EGL_ANGLE_external_context_and_surface
 bool ValidateAcquireExternalContextANGLE(const ValidationContext *val,
                                          const egl::Display *dpyPacked,

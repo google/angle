@@ -130,6 +130,11 @@ ScopedContextMutexLock GetContextLock_PresentationTimeANDROID(Thread *thread,
 ScopedContextMutexLock GetContextLock_CreateDeviceANGLE(Thread *thread);
 ScopedContextMutexLock GetContextLock_ReleaseDeviceANGLE(Thread *thread);
 
+// EGL_ANGLE_device_vulkan
+ScopedContextMutexLock GetContextLock_LockVulkanQueueANGLE(Thread *thread, egl::Display *dpyPacked);
+ScopedContextMutexLock GetContextLock_UnlockVulkanQueueANGLE(Thread *thread,
+                                                             egl::Display *dpyPacked);
+
 // EGL_ANGLE_external_context_and_surface
 ScopedContextMutexLock GetContextLock_AcquireExternalContextANGLE(Thread *thread,
                                                                   egl::Display *dpyPacked);

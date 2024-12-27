@@ -2646,6 +2646,16 @@ Error Display::waitUntilWorkScheduled()
     return NoError();
 }
 
+void Display::lockVulkanQueue()
+{
+    return mImplementation->lockVulkanQueue();
+}
+
+void Display::unlockVulkanQueue()
+{
+    return mImplementation->unlockVulkanQueue();
+}
+
 bool Display::supportsDmaBufFormat(EGLint format) const
 {
     return mImplementation->supportsDmaBufFormat(format);

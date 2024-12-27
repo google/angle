@@ -688,6 +688,16 @@ void DisplayVk::notifyDeviceLost()
     mState.notifyDeviceLost();
 }
 
+void DisplayVk::lockVulkanQueue()
+{
+    mRenderer->lockVulkanQueueForExternalAccess();
+}
+
+void DisplayVk::unlockVulkanQueue()
+{
+    mRenderer->unlockVulkanQueueForExternalAccess();
+}
+
 egl::Error DisplayVk::querySupportedCompressionRates(const egl::Config *configuration,
                                                      const egl::AttributeMap &attributes,
                                                      EGLint *rates,

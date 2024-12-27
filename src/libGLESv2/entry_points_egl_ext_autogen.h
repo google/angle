@@ -66,6 +66,10 @@ ANGLE_EXPORT EGLDeviceEXT EGLAPIENTRY EGL_CreateDeviceANGLE(EGLint device_type,
                                                             const EGLAttrib *attrib_list);
 ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_ReleaseDeviceANGLE(EGLDeviceEXT device);
 
+// EGL_ANGLE_device_vulkan
+ANGLE_EXPORT void EGLAPIENTRY EGL_LockVulkanQueueANGLE(EGLDisplay dpy);
+ANGLE_EXPORT void EGLAPIENTRY EGL_UnlockVulkanQueueANGLE(EGLDisplay dpy);
+
 // EGL_ANGLE_external_context_and_surface
 ANGLE_EXPORT void EGLAPIENTRY EGL_AcquireExternalContextANGLE(EGLDisplay dpy,
                                                               EGLSurface drawAndRead);

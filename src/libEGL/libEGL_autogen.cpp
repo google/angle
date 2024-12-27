@@ -480,6 +480,19 @@ EGLBoolean EGLAPIENTRY eglReleaseDeviceANGLE(EGLDeviceEXT device)
     return EGL_ReleaseDeviceANGLE(device);
 }
 
+// EGL_ANGLE_device_vulkan
+void EGLAPIENTRY eglLockVulkanQueueANGLE(EGLDisplay dpy)
+{
+    EnsureEGLLoaded();
+    return EGL_LockVulkanQueueANGLE(dpy);
+}
+
+void EGLAPIENTRY eglUnlockVulkanQueueANGLE(EGLDisplay dpy)
+{
+    EnsureEGLLoaded();
+    return EGL_UnlockVulkanQueueANGLE(dpy);
+}
+
 // EGL_ANGLE_external_context_and_surface
 void EGLAPIENTRY eglAcquireExternalContextANGLE(EGLDisplay dpy, EGLSurface drawAndRead)
 {

@@ -341,6 +341,7 @@ supported_egl_extensions = [
     "EGL_ANGLE_device_d3d",
     "EGL_ANGLE_device_d3d11",
     "EGL_ANGLE_device_d3d9",
+    "EGL_ANGLE_device_vulkan",
     "EGL_ANGLE_display_semaphore_share_group",
     "EGL_ANGLE_display_texture_share_group",
     "EGL_ANGLE_external_context_and_surface",
