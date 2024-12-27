@@ -43,7 +43,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': 'faba6412dc5c01c0b2c90caf3d4e0a958af56b77',
+  'chromium_revision': '8bb7bbeac941169d5d8d869ea28a26051988124e',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -450,12 +450,12 @@ vars = {
 deps = {
 
   'build': {
-    'url': Var('chromium_git') + '/chromium/src/build.git@63ad9737d7f81009ebcec8d0fda83b3079342b54',
+    'url': Var('chromium_git') + '/chromium/src/build.git@8f6742f2336cb295c150bbf8449af32ddddbf1e9',
     'condition': 'not build_with_chromium',
   },
 
   'buildtools': {
-    'url': Var('chromium_git') + '/chromium/src/buildtools.git@56013b77b6c0a650d00bde40e750e7c3b7c6bc3d',
+    'url': Var('chromium_git') + '/chromium/src/buildtools.git@2823e220cbd03e103d40b388974758ce46614ae2',
     'condition': 'not build_with_chromium',
   },
 
@@ -509,7 +509,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@41bfee6b2b69f0395a79e769a91339a6ee59bce7',
+    'url': '{chromium_git}/chromium/src/testing@2344736aa3b6ecedccc8c3a1161ec3d7f90d1a4b',
     'condition': 'not build_with_chromium',
   },
 
@@ -842,7 +842,7 @@ deps = {
    },
 
   'third_party/libc++/src': {
-    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libcxx.git@11c38d901d29bc91aee3efb53652f7141f72f47f',
+    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libcxx.git@9ba1d4922ab23234f7a2af4c8cd7699756959950',
     'condition': 'not build_with_chromium',
   },
 
@@ -975,7 +975,7 @@ deps = {
   },
 
   'third_party/rust': {
-    'url': Var('chromium_git') + '/chromium/src/third_party/rust@f6418697ac9f95a8a625be3feca8a3470326b11e',
+    'url': Var('chromium_git') + '/chromium/src/third_party/rust@2559e1ff2f74ac0197c427bcb0b362122aa23770',
     'condition': 'not build_with_chromium',
   },
 
@@ -1141,7 +1141,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': Var('chromium_git') + '/chromium/src/tools/perf@e6eba9706fc32f2fcb36ed1b2e386aad4caf20b3',
+    'url': Var('chromium_git') + '/chromium/src/tools/perf@d0c22105ed5ed283a92fdbd84dca5a1a1af7ea2f',
     'condition': 'not build_with_chromium',
   },
 
