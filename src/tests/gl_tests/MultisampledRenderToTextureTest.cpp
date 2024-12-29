@@ -3528,7 +3528,7 @@ void MultisampledRenderToTextureES3Test::blitFramebufferMixedColorAndDepthCommon
     // Create multisampled framebuffer to use as source.
     GLRenderbuffer depthMS;
     glBindRenderbuffer(GL_RENDERBUFFER, depthMS);
-    glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH_COMPONENT24, kSize, kSize);
+    glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER, 4, GL_DEPTH_COMPONENT24, kSize, kSize);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthMS);
 
     GLTexture textureMS;

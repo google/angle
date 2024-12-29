@@ -8535,6 +8535,28 @@ TEST_P(FramebufferTest_ES31, InvalidateThenResolve)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test framebuffer completeness with a mix of multisampled textures and renderbuffers.
+TEST_P(FramebufferTest_ES31, MixesMultisampleTextureRenderbuffer)
+{
+    GLFramebuffer mFramebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+
+    GLRenderbuffer mRenderbuffer;
+    glBindRenderbuffer(GL_RENDERBUFFER, mRenderbuffer);
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_RGBA8, 1, 1);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, mRenderbuffer);
+
+    GLTexture mTexture;
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, mTexture);
+    glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_DEPTH24_STENCIL8, 1, 1, true);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE, mTexture,
+                           0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE,
+                           mTexture, 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND(AddMockTextureNoRenderTargetTest,
                                ES2_D3D9().enable(Feature::AddMockTextureNoRenderTarget),
                                ES2_D3D11().enable(Feature::AddMockTextureNoRenderTarget));

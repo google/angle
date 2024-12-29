@@ -305,7 +305,7 @@ TEST_P(OcclusionQueriesTestES3, UnresolveNotCounted)
 
     GLRenderbuffer depthMS;
     glBindRenderbuffer(GL_RENDERBUFFER, depthMS);
-    glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH_COMPONENT16, kSize, kSize);
+    glRenderbufferStorageMultisampleEXT(GL_RENDERBUFFER, 4, GL_DEPTH_COMPONENT16, kSize, kSize);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthMS);
 
     EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
