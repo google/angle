@@ -3693,7 +3693,7 @@ bool ValidateCreateImage(const ValidationContext *val,
                         break;
 
                     default:
-                        val->setError(EGL_BAD_PARAMETER,
+                        val->setError(EGL_BAD_ATTRIBUTE,
                                       "Invalid value for EGL_YUV_COLOR_SPACE_HINT_EXT.");
                         return false;
                 }
@@ -3715,7 +3715,7 @@ bool ValidateCreateImage(const ValidationContext *val,
                         break;
 
                     default:
-                        val->setError(EGL_BAD_PARAMETER,
+                        val->setError(EGL_BAD_ATTRIBUTE,
                                       "Invalid value for EGL_SAMPLE_RANGE_HINT_EXT.");
                         return false;
                 }
@@ -3739,7 +3739,7 @@ bool ValidateCreateImage(const ValidationContext *val,
 
                     default:
                         val->setError(
-                            EGL_BAD_PARAMETER,
+                            EGL_BAD_ATTRIBUTE,
                             "Invalid value for EGL_YUV_CHROMA_HORIZONTAL_SITING_HINT_EXT or "
                             "EGL_YUV_CHROMA_VERTICAL_SITING_HINT_EXT.");
                         return false;
