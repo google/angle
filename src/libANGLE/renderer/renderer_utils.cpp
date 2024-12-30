@@ -1364,10 +1364,12 @@ gl::Rectangle ClipRectToScissor(const gl::State &glState, const gl::Rectangle &r
     return clippedRect;
 }
 
-void LogFeatureStatus(const angle::FeatureSetBase &features,
-                      const std::vector<std::string> &featureNames,
-                      bool enabled)
+std::string LogFeatureStatus(const angle::FeatureSetBase &features,
+                             const std::vector<std::string> &featureNames,
+                             bool enabled)
 {
+    std::stringstream featureStream;
+
     for (const std::string &name : featureNames)
     {
         const bool hasWildcard = name.back() == '*';
@@ -1380,7 +1382,11 @@ void LogFeatureStatus(const angle::FeatureSetBase &features,
                 continue;
             }
 
-            INFO() << "Feature: " << featureName << (enabled ? " enabled" : " disabled");
+            if (featureStream.str().empty())
+            {
+                featureStream << "Feature overrides: ";
+            }
+            featureStream << featureName << (enabled ? " enabled, " : " disabled, ");
 
             if (!hasWildcard)
             {
@@ -1388,13 +1394,25 @@ void LogFeatureStatus(const angle::FeatureSetBase &features,
             }
         }
     }
+
+    if (!featureStream.str().empty())
+    {
+        featureStream << std::endl;
+    }
+
+    return featureStream.str();
 }
 
 void ApplyFeatureOverrides(angle::FeatureSetBase *features,
                            const angle::FeatureOverrides &overrides)
 {
+    std::stringstream featureStream;
+
     features->overrideFeatures(overrides.enabled, true);
+    featureStream << LogFeatureStatus(*features, overrides.enabled, true);
+
     features->overrideFeatures(overrides.disabled, false);
+    featureStream << LogFeatureStatus(*features, overrides.disabled, false);
 
     // Override with environment as well.
     constexpr char kAngleFeatureOverridesEnabledEnvName[]  = "ANGLE_FEATURE_OVERRIDES_ENABLED";
@@ -1411,10 +1429,15 @@ void ApplyFeatureOverrides(angle::FeatureSetBase *features,
             kAngleFeatureOverridesDisabledEnvName, kAngleFeatureOverridesDisabledPropertyName, ":");
 
     features->overrideFeatures(overridesEnabled, true);
-    LogFeatureStatus(*features, overridesEnabled, true);
+    featureStream << LogFeatureStatus(*features, overridesEnabled, true);
 
     features->overrideFeatures(overridesDisabled, false);
-    LogFeatureStatus(*features, overridesDisabled, false);
+    featureStream << LogFeatureStatus(*features, overridesDisabled, false);
+
+    if (!featureStream.str().empty())
+    {
+        INFO() << featureStream.str();
+    }
 }
 
 void GetSamplePosition(GLsizei sampleCount, size_t index, GLfloat *xy)
