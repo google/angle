@@ -367,6 +367,21 @@ TEST_P(EGLSyncTest, AndroidNativeFence_DupNativeFenceFD)
     EXPECT_EGL_TRUE(eglDestroySyncKHR(display, syncWithGeneratedFD));
 }
 
+// Test the validation errors for bad parameters for eglDupNativeFenceFDANDROID
+TEST_P(EGLSyncTest, AndroidNativeFence_DupNativeFenceFD_NegativeValidation)
+{
+    ANGLE_SKIP_TEST_IF(!hasFenceSyncExtension());
+    ANGLE_SKIP_TEST_IF(!hasFenceSyncExtension() || !hasGLSyncExtension());
+    ANGLE_SKIP_TEST_IF(!hasAndroidNativeFenceSyncExtension());
+
+    EGLDisplay display = getEGLWindow()->getDisplay();
+
+    int fd;
+    fd = eglDupNativeFenceFDANDROID(display, EGL_NO_SYNC_KHR);
+    EXPECT_EGL_ERROR(EGL_BAD_PARAMETER);
+    EXPECT_EQ(fd, EGL_NO_NATIVE_FENCE_FD_ANDROID);
+}
+
 // Verify CreateSync and ClientWait for EGL_ANDROID_native_fence_sync
 TEST_P(EGLSyncTest, AndroidNativeFence_ClientWait)
 {
