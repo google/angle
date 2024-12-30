@@ -3086,6 +3086,15 @@ cl_int ValidateCreateImage(cl_context context,
         return CL_INVALID_OPERATION;
     }
 
+    // Returns CL_INVALID_OPERATION if no devices in context support creating a 2D image from a
+    // buffer.
+    const bool isImage2dFromBuffer =
+        image_desc->image_type == CL_MEM_OBJECT_IMAGE2D && image_desc->mem_object != NULL;
+    if (isImage2dFromBuffer && !ctx.supportsImage2DFromBuffer())
+    {
+        return CL_INVALID_OPERATION;
+    }
+
     // CL_INVALID_IMAGE_SIZE if image dimensions specified in image_desc exceed the maximum
     // image dimensions described in the Device Queries table for all devices in context.
     const DevicePtrs &devices = ctx.getDevices();
