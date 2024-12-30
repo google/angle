@@ -300,6 +300,8 @@ enum class Feature
     Supports8BitUniformAndStorageBuffer,
     SupportsAndroidHardwareBuffer,
     SupportsAndroidNativeFenceSync,
+    SupportsAngleRgbxInternalFormat,
+    SupportsAppleClipDistance,
     SupportsAstcSliced3d,
     SupportsBindMemory2,
     SupportsBlendOperationAdvanced,

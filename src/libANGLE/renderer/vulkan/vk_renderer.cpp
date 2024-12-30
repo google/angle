@@ -5536,10 +5536,12 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     //
     // This optimization is disabled on the Intel/windows driver before 31.0.101.5379 due to driver
     // bugs.
+    // This optimization is disabled for Samsung.
     ANGLE_FEATURE_CONDITION(
         &mFeatures, preferMonolithicPipelinesOverLibraries,
         mFeatures.supportsGraphicsPipelineLibrary.enabled &&
-            !(IsWindows() && isIntel && intelDriverVersion < IntelDriverVersion(101, 5379)));
+            !(IsWindows() && isIntel && intelDriverVersion < IntelDriverVersion(101, 5379)) &&
+            !isSamsung);
 
     // Whether the pipeline caches should merge into the global pipeline cache.  This should only be
     // enabled on platforms if:
@@ -5841,6 +5843,12 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // Check if VK implementation needs to strip-out non-semantic reflection info from shader module
     // (Default is to assume not supported)
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsShaderNonSemanticInfo, false);
+
+    // Don't expose these 2 extensions on Samsung devices -
+    // 1. ANGLE_rgbx_internal_format
+    // 2. GL_APPLE_clip_distance
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsAngleRgbxInternalFormat, !isSamsung);
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsAppleClipDistance, !isSamsung);
 }
 
 void Renderer::appBasedFeatureOverrides(const vk::ExtensionNameList &extensions) {}
@@ -5979,13 +5987,16 @@ void Renderer::initializeFrontendFeatures(angle::FrontendFeatures *features) con
 {
     const bool isSwiftShader =
         IsSwiftshader(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID);
+    const bool isSamsung = IsSamsung(mPhysicalDeviceProperties.vendorID);
 
     // Hopefully-temporary work-around for a crash on SwiftShader.  An Android process is turning
     // off GL error checking, and then asking ANGLE to write past the end of a buffer.
     // https://issuetracker.google.com/issues/220069903
     ANGLE_FEATURE_CONDITION(features, forceGlErrorChecking, (IsAndroid() && isSwiftShader));
 
-    ANGLE_FEATURE_CONDITION(features, cacheCompiledShader, true);
+    // Disable shader and program caching on Samsung devices.
+    ANGLE_FEATURE_CONDITION(features, cacheCompiledShader, !isSamsung);
+    ANGLE_FEATURE_CONDITION(features, disableProgramCaching, isSamsung);
 
     // https://issuetracker.google.com/292285899
     ANGLE_FEATURE_CONDITION(features, uncurrentEglSurfaceUponSurfaceDestroy, true);

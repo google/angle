@@ -1412,6 +1412,18 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo supportsAngleRgbxInternalFormat = {
+        "supportsAngleRgbxInternalFormat",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
+    FeatureInfo supportsAppleClipDistance = {
+        "supportsAppleClipDistance",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

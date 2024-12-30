@@ -632,8 +632,8 @@ void Renderer::ensureCapsInitialized() const
     // https://gitlab.khronos.org/opengl/API/-/issues/149
     mNativeExtensions.shaderMultisampleInterpolationOES = mNativeExtensions.sampleVariablesOES;
 
-    // Always enable ANGLE_rgbx_internal_format to expose GL_RGBX8_ANGLE.
-    mNativeExtensions.rgbxInternalFormatANGLE = true;
+    // Always enable ANGLE_rgbx_internal_format to expose GL_RGBX8_ANGLE except for Samsung.
+    mNativeExtensions.rgbxInternalFormatANGLE = mFeatures.supportsAngleRgbxInternalFormat.enabled;
 
     // https://vulkan.lunarg.com/doc/view/1.0.30.0/linux/vkspec.chunked/ch31s02.html
     mNativeCaps.maxElementIndex  = std::numeric_limits<GLuint>::max() - 1;
@@ -1226,7 +1226,8 @@ void Renderer::ensureCapsInitialized() const
     if (mPhysicalDeviceFeatures.shaderClipDistance &&
         limitsVk.maxClipDistances >= kMaxClipDistancePerSpec)
     {
-        mNativeExtensions.clipDistanceAPPLE     = true;
+        // Do not enable GL_APPLE_clip_distance for Samsung devices.
+        mNativeExtensions.clipDistanceAPPLE     = mFeatures.supportsAppleClipDistance.enabled;
         mNativeExtensions.clipCullDistanceANGLE = true;
         mNativeCaps.maxClipDistances            = limitsVk.maxClipDistances;
 

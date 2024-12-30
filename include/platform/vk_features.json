@@ -1850,6 +1850,22 @@
                 "VkDevice supports VK_EXT_image_compression_control_swapchain"
             ],
             "issue": "https://anglebug.com/375496226"
+        },
+        {
+            "name": "supports_angle_rgbx_internal_format",
+            "category": "Features",
+            "description": [
+                "Enable support for ANGLE_rgbx_internal_format extension"
+            ],
+            "issue": "https://anglebug.com/386749841"
+        },
+        {
+            "name": "supports_apple_clip_distance",
+            "category": "Features",
+            "description": [
+                "Enable support for GL_APPLE_clip_distance extension"
+            ],
+            "issue": "https://anglebug.com/386749841"
         }
     ]
 }
