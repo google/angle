@@ -48,6 +48,8 @@ class EGLLockSurface3Test : public ANGLETest<>
     {
         if (mDisplay != EGL_NO_DISPLAY)
         {
+            EXPECT_EGL_TRUE(
+                eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
             eglTerminate(mDisplay);
             eglReleaseThread();
             mDisplay = EGL_NO_DISPLAY;
