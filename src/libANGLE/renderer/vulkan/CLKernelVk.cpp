@@ -10,9 +10,11 @@
 #include "libANGLE/renderer/vulkan/CLContextVk.h"
 #include "libANGLE/renderer/vulkan/CLDeviceVk.h"
 #include "libANGLE/renderer/vulkan/CLKernelVk.h"
+#include "libANGLE/renderer/vulkan/CLMemoryVk.h"
 #include "libANGLE/renderer/vulkan/CLProgramVk.h"
 #include "libANGLE/renderer/vulkan/vk_wrapper.h"
 
+#include "libANGLE/CLBuffer.h"
 #include "libANGLE/CLContext.h"
 #include "libANGLE/CLKernel.h"
 #include "libANGLE/CLProgram.h"
@@ -31,7 +33,8 @@ CLKernelVk::CLKernelVk(const cl::Kernel &kernel,
       mContext(&kernel.getProgram().getContext().getImpl<CLContextVk>()),
       mName(name),
       mAttributes(attributes),
-      mArgs(args)
+      mArgs(args),
+      mPODUniformBuffer(nullptr)
 {
     mShaderProgramHelper.setShader(gl::ShaderType::Compute,
                                    mKernel.getProgram().getImpl<CLProgramVk>().getShaderModule());
@@ -44,6 +47,13 @@ CLKernelVk::~CLKernelVk()
         pipelineHelper.destroy(mContext->getDevice());
     }
     mShaderProgramHelper.destroy(mContext->getRenderer());
+
+    if (mPODUniformBuffer)
+    {
+        // mPODUniformBuffer assignment will make newly created buffer
+        // return refcount of 2, so need to release by 1
+        mPODUniformBuffer->release();
+    }
 }
 
 angle::Result CLKernelVk::init()
@@ -51,20 +61,37 @@ angle::Result CLKernelVk::init()
     vk::DescriptorSetLayoutDesc &descriptorSetLayoutDesc =
         mDescriptorSetLayoutDescs[DescriptorSetIndex::KernelArguments];
     VkPushConstantRange pcRange = mProgram->getDeviceProgramData(mName.c_str())->pushConstRange;
+    mPodBufferSize              = 0;
+
+    bool podFound = false;
     for (const auto &arg : getArgs())
     {
         VkDescriptorType descType = VK_DESCRIPTOR_TYPE_MAX_ENUM;
         switch (arg.type)
         {
             case NonSemanticClspvReflectionArgumentStorageBuffer:
-            case NonSemanticClspvReflectionArgumentPodStorageBuffer:
                 descType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
                 break;
             case NonSemanticClspvReflectionArgumentUniform:
-            case NonSemanticClspvReflectionArgumentPodUniform:
             case NonSemanticClspvReflectionArgumentPointerUniform:
                 descType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
                 break;
+            case NonSemanticClspvReflectionArgumentPodUniform:
+            case NonSemanticClspvReflectionArgumentPodStorageBuffer:
+            {
+                uint32_t newPodBufferSize = arg.podStorageBufferOffset + arg.podStorageBufferSize;
+                mPodBufferSize =
+                    newPodBufferSize > mPodBufferSize ? newPodBufferSize : mPodBufferSize;
+                if (podFound)
+                {
+                    continue;
+                }
+                descType = arg.type == NonSemanticClspvReflectionArgumentPodUniform
+                               ? VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER
+                               : VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+                podFound = true;
+                break;
+            }
             case NonSemanticClspvReflectionArgumentPodPushConstant:
                 // Get existing push constant range and see if we need to update
                 if (arg.pushConstOffset + arg.pushConstantSize > pcRange.offset + pcRange.size)
@@ -148,6 +175,21 @@ angle::Result CLKernelVk::setArg(cl_uint argIndex, size_t argSize, const void *a
         {
             ASSERT(mPodArgumentsData.size() >= arg.pushConstantSize + arg.pushConstOffset);
             memcpy(&mPodArgumentsData[arg.pushConstOffset], argValue, argSize);
+        }
+
+        if ((arg.type == NonSemanticClspvReflectionArgumentPodUniform ||
+             arg.type == NonSemanticClspvReflectionArgumentPodStorageBuffer) &&
+            argSize > 0 && argValue != nullptr)
+        {
+            ASSERT(mPodBufferSize >= argSize + arg.podUniformOffset);
+            if (!mPODUniformBuffer)
+            {
+                mPODUniformBuffer =
+                    cl::MemoryPtr(cl::Buffer::Cast(this->mContext->getFrontendObject().createBuffer(
+                        nullptr, cl::MemFlags(CL_MEM_READ_ONLY), mPodBufferSize, nullptr)));
+            }
+            ANGLE_TRY(mPODUniformBuffer->getImpl<CLBufferVk>().copyFrom(
+                argValue, arg.podStorageBufferOffset, argSize));
         }
 
         if (arg.type == NonSemanticClspvReflectionArgumentWorkgroup)

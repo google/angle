@@ -13,6 +13,7 @@
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
+#include "libANGLE/CLMemory.h"
 #include "libANGLE/renderer/CLKernelImpl.h"
 #include "vulkan/vulkan_core.h"
 
@@ -135,6 +136,8 @@ class CLKernelVk : public CLKernelImpl
 
     std::vector<uint8_t> &getPodArgumentsData() { return mPodArgumentsData; }
 
+    cl::MemoryPtr getPodBuffer() { return mPODUniformBuffer; }
+
     bool usesPrintf() const;
 
     angle::Result allocateDescriptorSet(
@@ -156,6 +159,7 @@ class CLKernelVk : public CLKernelImpl
 
     // Copy of the pod data
     std::vector<uint8_t> mPodArgumentsData;
+    size_t mPodBufferSize;
 
     vk::ShaderProgramHelper mShaderProgramHelper;
     vk::ComputePipelineCache mComputePipelineCache;
@@ -171,6 +175,8 @@ class CLKernelVk : public CLKernelImpl
 
     vk::DescriptorSetArray<vk::DescriptorSetLayoutDesc> mDescriptorSetLayoutDescs;
     vk::PipelineLayoutDesc mPipelineLayoutDesc;
+
+    cl::MemoryPtr mPODUniformBuffer;
 };
 
 }  // namespace rx

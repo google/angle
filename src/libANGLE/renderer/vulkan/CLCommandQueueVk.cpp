@@ -1443,6 +1443,9 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
                                                        const cl::NDRange &ndrange,
                                                        const cl::WorkgroupCount &workgroupCount)
 {
+    bool podBufferPresent              = false;
+    uint32_t podBinding                = 0;
+    VkDescriptorType podDescriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
     bool needsBarrier = false;
     const CLProgramVk::DeviceProgramData *devProgramData =
         kernelVk.getProgram()->getDeviceProgramData(mCommandQueue.getDevice().getNative());
@@ -1545,11 +1548,11 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
     // Process each kernel argument/resource
     vk::DescriptorSetArray<UpdateDescriptorSetsBuilder> updateDescriptorSetsBuilders;
     CLKernelArguments args = kernelVk.getArgs();
+    UpdateDescriptorSetsBuilder &kernelArgDescSetBuilder =
+        updateDescriptorSetsBuilders[DescriptorSetIndex::KernelArguments];
     for (size_t index = 0; index < args.size(); index++)
     {
         const auto &arg = args.at(index);
-        UpdateDescriptorSetsBuilder &kernelArgDescSetBuilder =
-            updateDescriptorSetsBuilders[DescriptorSetIndex::KernelArguments];
         switch (arg.type)
         {
             case NonSemanticClspvReflectionArgumentUniform:
@@ -1582,6 +1585,8 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
             }
             case NonSemanticClspvReflectionArgumentPodPushConstant:
             {
+                ASSERT(!podBufferPresent);
+
                 // Spec requires the size and offset to be multiple of 4, round up for size and
                 // round down for offset to ensure this
                 uint32_t offset = roundDownPow2(arg.pushConstOffset, 4u);
@@ -1710,8 +1715,19 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
                 break;
             }
             case NonSemanticClspvReflectionArgumentPodUniform:
-            case NonSemanticClspvReflectionArgumentPointerUniform:
             case NonSemanticClspvReflectionArgumentPodStorageBuffer:
+            {
+                if (!podBufferPresent)
+                {
+                    podBufferPresent  = true;
+                    podBinding        = arg.descriptorBinding;
+                    podDescriptorType = arg.type == NonSemanticClspvReflectionArgumentPodUniform
+                                            ? VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER
+                                            : VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+                }
+                break;
+            }
+            case NonSemanticClspvReflectionArgumentPointerUniform:
             case NonSemanticClspvReflectionArgumentPointerPushConstant:
             default:
             {
@@ -1719,6 +1735,31 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
                 break;
             }
         }
+    }
+    if (podBufferPresent)
+    {
+        cl::MemoryPtr clMem = kernelVk.getPodBuffer();
+        ASSERT(clMem != nullptr);
+        CLBufferVk &vkMem = clMem->getImpl<CLBufferVk>();
+
+        VkDescriptorBufferInfo &bufferInfo = kernelArgDescSetBuilder.allocDescriptorBufferInfo();
+        bufferInfo.range                   = clMem->getSize();
+        bufferInfo.offset                  = clMem->getOffset();
+        bufferInfo.buffer                  = vkMem.getBuffer().getBuffer().getHandle();
+
+        ANGLE_TRY(addMemoryDependencies(clMem.get()));
+
+        VkWriteDescriptorSet &writeDescriptorSet =
+            kernelArgDescSetBuilder.allocWriteDescriptorSet();
+        writeDescriptorSet.sType  = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        writeDescriptorSet.pNext  = nullptr;
+        writeDescriptorSet.dstSet = kernelVk.getDescriptorSet(DescriptorSetIndex::KernelArguments);
+        writeDescriptorSet.dstBinding      = podBinding;
+        writeDescriptorSet.dstArrayElement = 0;
+        writeDescriptorSet.descriptorCount = 1;
+        writeDescriptorSet.descriptorType  = podDescriptorType;
+        writeDescriptorSet.pImageInfo      = nullptr;
+        writeDescriptorSet.pBufferInfo     = &bufferInfo;
     }
 
     // process the printf storage buffer
