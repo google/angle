@@ -160,6 +160,11 @@ egl::Error HardwareBufferImageSiblingVkAndroid::ValidateHardwareBuffer(
     struct AHardwareBuffer *hardwareBuffer = nullptr;
     if (windowBuffer != nullptr)
     {
+        if (!angle::android::IsValidNativeWindowBuffer(windowBuffer))
+        {
+            return egl::EglBadParameter()
+                   << "The given buffer is not a valid native window buffer.";
+        }
         hardwareBuffer = angle::android::ANativeWindowBufferToAHardwareBuffer(windowBuffer);
         if (hardwareBuffer == nullptr)
         {

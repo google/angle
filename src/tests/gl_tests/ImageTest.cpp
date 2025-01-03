@@ -2695,6 +2695,37 @@ TEST_P(ImageTest, SourceAHBInvalid)
     EXPECT_EQ(image, EGL_NO_IMAGE_KHR);
 }
 
+// Testing source AHB EGL image, if the client buffer is not a  ANativeWindowBuffer,
+// eglCreateImageKHR should return NO_IMAGE and generate error EGL_BAD_PARAMETER.
+TEST_P(ImageTest, SourceAHBCorrupt)
+{
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !IsVulkan());
+    ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+
+#if defined(ANGLE_AHARDWARE_BUFFER_SUPPORT)
+    EGLWindow *window = getEGLWindow();
+
+    const AHardwareBuffer_Desc aHardwareBufferDescription = createAndroidHardwareBufferDesc(
+        16, 16, 1, AHARDWAREBUFFER_FORMAT_R8G8B8X8_UNORM, kAHBUsageGPUSampledImage);
+
+    // Allocate memory from Android Hardware Buffer
+    AHardwareBuffer *aHardwareBuffer = nullptr;
+    EXPECT_EQ(0, AHardwareBuffer_allocate(&aHardwareBufferDescription, &aHardwareBuffer));
+
+    std::memset(
+        reinterpret_cast<void *>(angle::android::AHardwareBufferToClientBuffer(aHardwareBuffer)), 0,
+        sizeof(int));
+    EGLImageKHR ahbImage = eglCreateImageKHR(
+        window->getDisplay(), EGL_NO_CONTEXT, EGL_NATIVE_BUFFER_ANDROID,
+        angle::android::AHardwareBufferToClientBuffer(aHardwareBuffer), kDefaultAttribs);
+
+    ASSERT_EGL_ERROR(EGL_BAD_PARAMETER);
+    EXPECT_EQ(ahbImage, EGL_NO_IMAGE_KHR);
+
+    AHardwareBuffer_release(aHardwareBuffer);
+#endif
+}
+
 // Testing source AHB EGL image, target 2D texture and delete when in use
 // If refcounted correctly, the test should pass without issues
 TEST_P(ImageTest, SourceAHBTarget2DEarlyDelete)
