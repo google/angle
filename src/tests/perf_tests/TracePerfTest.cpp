@@ -1911,6 +1911,14 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         }
     }
 
+    if (traceNameIs("monopoly_go"))
+    {
+        if (isNVIDIALinuxANGLE || isIntelWinANGLE)
+        {
+            skipTest("https://anglebug.com/385226328 crashes in UpdateClientBufferData()");
+        }
+    }
+
     if (IsGalaxyS22())
     {
         if (traceNameIs("cod_mobile") || traceNameIs("dota_underlords") ||
