@@ -124,7 +124,7 @@ TIntermTyped *RewriteArrayOfArraySubscriptExpression(TCompiler *compiler,
                                                      const UniformMap &uniformMap)
 {
     // Only interested in opaque uniforms.
-    if (!IsOpaqueType(node->getType().getBasicType()))
+    if (!IsOpaqueType(node->getType().getBasicType()) || node->getOp() == EOpComma)
     {
         return nullptr;
     }
