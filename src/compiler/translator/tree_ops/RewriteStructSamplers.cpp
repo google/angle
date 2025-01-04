@@ -350,7 +350,12 @@ class RewriteStructSamplersTraverser final : public TIntermTraverser
     // Same implementation as in RewriteExpressionTraverser.  That traverser cannot replace root.
     void visitSymbol(TIntermSymbol *node) override
     {
-        ASSERT(mStructureUniformMap.find(&node->variable()) == mStructureUniformMap.end());
+        auto replacement = mStructureUniformMap.find(&node->variable());
+        if (replacement != mStructureUniformMap.end())
+        {
+            // This is a reference to the whole struct, just replace it with its replacement.
+            queueReplacement(new TIntermSymbol(replacement->second), OriginalNode::IS_DROPPED);
+        }
     }
 
   private:
