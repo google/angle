@@ -9834,6 +9834,15 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that *= on boolean vectors fails compilation
+TEST_P(GLSLTest, BVecMultiplyAssign)
+{
+    constexpr char kFS[] = R"(bvec4 c,s;void main(){s*=c;})";
+
+    GLuint fs = CompileShader(GL_FRAGMENT_SHADER, kFS);
+    EXPECT_EQ(fs, 0u);
+}
+
 // Test vector/scalar arithmetic (in this case multiplication and addition).
 TEST_P(GLSLTest, VectorScalarMultiplyAndAddInLoop)
 {
