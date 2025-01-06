@@ -1151,6 +1151,7 @@ TEMPLATE_SOURCES_INCLUDES = """\
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
 #include "libANGLE/context_private_call_autogen.h"
+#include "libANGLE/context_private_call.inl.h"
 #include "libANGLE/capture/capture_{header_version}_autogen.h"
 #include "libANGLE/validation{validation_header_version}.h"
 #include "libANGLE/entry_points_utils.h"

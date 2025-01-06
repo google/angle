@@ -46,6 +46,7 @@
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/capture/FrameCapture.h"
 #include "libANGLE/capture/serialize.h"
+#include "libANGLE/context_private_call.inl.h"
 #include "libANGLE/context_private_call_autogen.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/queryconversions.h"
