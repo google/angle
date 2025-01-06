@@ -163,6 +163,293 @@ ANGLE_INLINE bool ValidateUniform4iv(const Context *context,
     return ValidateUniform(context, entryPoint, GL_INT_VEC4, location, count);
 }
 
+ANGLE_INLINE bool ValidateUniformMatrix2fv(const Context *context,
+                                           angle::EntryPoint entryPoint,
+                                           UniformLocation location,
+                                           GLsizei count,
+                                           GLboolean transpose,
+                                           const GLfloat *value)
+{
+    return ValidateUniformMatrix(context, entryPoint, GL_FLOAT_MAT2, location, count, transpose);
+}
+
+ANGLE_INLINE bool ValidateUniformMatrix3fv(const Context *context,
+                                           angle::EntryPoint entryPoint,
+                                           UniformLocation location,
+                                           GLsizei count,
+                                           GLboolean transpose,
+                                           const GLfloat *value)
+{
+    return ValidateUniformMatrix(context, entryPoint, GL_FLOAT_MAT3, location, count, transpose);
+}
+
+ANGLE_INLINE bool ValidateUniformMatrix4fv(const Context *context,
+                                           angle::EntryPoint entryPoint,
+                                           UniformLocation location,
+                                           GLsizei count,
+                                           GLboolean transpose,
+                                           const GLfloat *value)
+{
+    return ValidateUniformMatrix(context, entryPoint, GL_FLOAT_MAT4, location, count, transpose);
+}
+
+ANGLE_INLINE bool ValidateVertexAttrib1f(const PrivateState &state,
+                                         ErrorSet *errors,
+                                         angle::EntryPoint entryPoint,
+                                         GLuint index,
+                                         GLfloat x)
+{
+    return ValidateVertexAttribIndex(state, errors, entryPoint, index);
+}
+
+ANGLE_INLINE bool ValidateVertexAttrib1fv(const PrivateState &state,
+                                          ErrorSet *errors,
+                                          angle::EntryPoint entryPoint,
+                                          GLuint index,
+                                          const GLfloat *values)
+{
+    return ValidateVertexAttribIndex(state, errors, entryPoint, index);
+}
+
+ANGLE_INLINE bool ValidateVertexAttrib2f(const PrivateState &state,
+                                         ErrorSet *errors,
+                                         angle::EntryPoint entryPoint,
+                                         GLuint index,
+                                         GLfloat x,
+                                         GLfloat y)
+{
+    return ValidateVertexAttribIndex(state, errors, entryPoint, index);
+}
+
+ANGLE_INLINE bool ValidateVertexAttrib2fv(const PrivateState &state,
+                                          ErrorSet *errors,
+                                          angle::EntryPoint entryPoint,
+                                          GLuint index,
+                                          const GLfloat *values)
+{
+    return ValidateVertexAttribIndex(state, errors, entryPoint, index);
+}
+
+ANGLE_INLINE bool ValidateVertexAttrib3f(const PrivateState &state,
+                                         ErrorSet *errors,
+                                         angle::EntryPoint entryPoint,
+                                         GLuint index,
+                                         GLfloat x,
+                                         GLfloat y,
+                                         GLfloat z)
+{
+    return ValidateVertexAttribIndex(state, errors, entryPoint, index);
+}
+
+ANGLE_INLINE bool ValidateVertexAttrib3fv(const PrivateState &state,
+                                          ErrorSet *errors,
+                                          angle::EntryPoint entryPoint,
+                                          GLuint index,
+                                          const GLfloat *values)
+{
+    return ValidateVertexAttribIndex(state, errors, entryPoint, index);
+}
+
+ANGLE_INLINE bool ValidateVertexAttrib4f(const PrivateState &state,
+                                         ErrorSet *errors,
+                                         angle::EntryPoint entryPoint,
+                                         GLuint index,
+                                         GLfloat x,
+                                         GLfloat y,
+                                         GLfloat z,
+                                         GLfloat w)
+{
+    return ValidateVertexAttribIndex(state, errors, entryPoint, index);
+}
+
+ANGLE_INLINE bool ValidateVertexAttrib4fv(const PrivateState &state,
+                                          ErrorSet *errors,
+                                          angle::EntryPoint entryPoint,
+                                          GLuint index,
+                                          const GLfloat *values)
+{
+    return ValidateVertexAttribIndex(state, errors, entryPoint, index);
+}
+
+ANGLE_INLINE bool ValidateGenBuffers(const Context *context,
+                                     angle::EntryPoint entryPoint,
+                                     GLint n,
+                                     const BufferID *buffers)
+{
+    return ValidateGenOrDelete(context, entryPoint, n);
+}
+
+ANGLE_INLINE bool ValidateGenFramebuffers(const Context *context,
+                                          angle::EntryPoint entryPoint,
+                                          GLint n,
+                                          const FramebufferID *framebuffers)
+{
+    return ValidateGenOrDelete(context, entryPoint, n);
+}
+
+ANGLE_INLINE bool ValidateGenRenderbuffers(const Context *context,
+                                           angle::EntryPoint entryPoint,
+                                           GLint n,
+                                           const RenderbufferID *renderbuffers)
+{
+    return ValidateGenOrDelete(context, entryPoint, n);
+}
+
+ANGLE_INLINE bool ValidateGenTextures(const Context *context,
+                                      angle::EntryPoint entryPoint,
+                                      GLint n,
+                                      const TextureID *textures)
+{
+    return ValidateGenOrDelete(context, entryPoint, n);
+}
+
+ANGLE_INLINE bool ValidateGenerateMipmap(const Context *context,
+                                         angle::EntryPoint entryPoint,
+                                         TextureType target)
+{
+    return ValidateGenerateMipmapBase(context, entryPoint, target);
+}
+
+ANGLE_INLINE bool ValidateGetBufferParameteriv(const Context *context,
+                                               angle::EntryPoint entryPoint,
+                                               BufferBinding target,
+                                               GLenum pname,
+                                               const GLint *params)
+{
+    return ValidateGetBufferParameterBase(context, entryPoint, target, pname, false, nullptr);
+}
+
+ANGLE_INLINE bool ValidateGetRenderbufferParameteriv(const Context *context,
+                                                     angle::EntryPoint entryPoint,
+                                                     GLenum target,
+                                                     GLenum pname,
+                                                     const GLint *params)
+{
+    return ValidateGetRenderbufferParameterivBase(context, entryPoint, target, pname, nullptr);
+}
+
+ANGLE_INLINE bool ValidateGetShaderiv(const Context *context,
+                                      angle::EntryPoint entryPoint,
+                                      ShaderProgramID shader,
+                                      GLenum pname,
+                                      const GLint *params)
+{
+    return ValidateGetShaderivBase(context, entryPoint, shader, pname, nullptr);
+}
+
+ANGLE_INLINE bool ValidateGetTexParameterfv(const Context *context,
+                                            angle::EntryPoint entryPoint,
+                                            TextureType target,
+                                            GLenum pname,
+                                            const GLfloat *params)
+{
+    return ValidateGetTexParameterBase(context, entryPoint, target, pname, nullptr);
+}
+
+ANGLE_INLINE bool ValidateGetTexParameteriv(const Context *context,
+                                            angle::EntryPoint entryPoint,
+                                            TextureType target,
+                                            GLenum pname,
+                                            const GLint *params)
+{
+    return ValidateGetTexParameterBase(context, entryPoint, target, pname, nullptr);
+}
+
+ANGLE_INLINE bool ValidateGetUniformfv(const Context *context,
+                                       angle::EntryPoint entryPoint,
+                                       ShaderProgramID program,
+                                       UniformLocation location,
+                                       const GLfloat *params)
+{
+    return ValidateGetUniformBase(context, entryPoint, program, location);
+}
+
+ANGLE_INLINE bool ValidateGetUniformiv(const Context *context,
+                                       angle::EntryPoint entryPoint,
+                                       ShaderProgramID program,
+                                       UniformLocation location,
+                                       const GLint *params)
+{
+    return ValidateGetUniformBase(context, entryPoint, program, location);
+}
+
+ANGLE_INLINE bool ValidateGetVertexAttribfv(const Context *context,
+                                            angle::EntryPoint entryPoint,
+                                            GLuint index,
+                                            GLenum pname,
+                                            const GLfloat *params)
+{
+    return ValidateGetVertexAttribBase(context, entryPoint, index, pname, nullptr, false, false);
+}
+
+ANGLE_INLINE bool ValidateGetVertexAttribiv(const Context *context,
+                                            angle::EntryPoint entryPoint,
+                                            GLuint index,
+                                            GLenum pname,
+                                            const GLint *params)
+{
+    return ValidateGetVertexAttribBase(context, entryPoint, index, pname, nullptr, false, false);
+}
+
+ANGLE_INLINE bool ValidateGetVertexAttribPointerv(const Context *context,
+                                                  angle::EntryPoint entryPoint,
+                                                  GLuint index,
+                                                  GLenum pname,
+                                                  void *const *pointer)
+{
+    return ValidateGetVertexAttribBase(context, entryPoint, index, pname, nullptr, true, false);
+}
+
+ANGLE_INLINE bool ValidateReadPixels(const Context *context,
+                                     angle::EntryPoint entryPoint,
+                                     GLint x,
+                                     GLint y,
+                                     GLsizei width,
+                                     GLsizei height,
+                                     GLenum format,
+                                     GLenum type,
+                                     const void *pixels)
+{
+    return ValidateReadPixelsBase(context, entryPoint, x, y, width, height, format, type, -1,
+                                  nullptr, nullptr, nullptr, pixels);
+}
+
+ANGLE_INLINE bool ValidateTexParameterf(const Context *context,
+                                        angle::EntryPoint entryPoint,
+                                        TextureType target,
+                                        GLenum pname,
+                                        GLfloat param)
+{
+    return ValidateTexParameterBase(context, entryPoint, target, pname, -1, false, &param);
+}
+
+ANGLE_INLINE bool ValidateTexParameterfv(const Context *context,
+                                         angle::EntryPoint entryPoint,
+                                         TextureType target,
+                                         GLenum pname,
+                                         const GLfloat *params)
+{
+    return ValidateTexParameterBase(context, entryPoint, target, pname, -1, true, params);
+}
+
+ANGLE_INLINE bool ValidateTexParameteri(const Context *context,
+                                        angle::EntryPoint entryPoint,
+                                        TextureType target,
+                                        GLenum pname,
+                                        GLint param)
+{
+    return ValidateTexParameterBase(context, entryPoint, target, pname, -1, false, &param);
+}
+
+ANGLE_INLINE bool ValidateTexParameteriv(const Context *context,
+                                         angle::EntryPoint entryPoint,
+                                         TextureType target,
+                                         GLenum pname,
+                                         const GLint *params)
+{
+    return ValidateTexParameterBase(context, entryPoint, target, pname, -1, true, params);
+}
+
 ANGLE_INLINE bool ValidateBindBuffer(const Context *context,
                                      angle::EntryPoint entryPoint,
                                      BufferBinding target,
