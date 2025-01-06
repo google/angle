@@ -24,6 +24,11 @@ CLEventCL::~CLEventCL()
     }
 }
 
+angle::Result CLEventCL::onEventCreate()
+{
+    return angle::Result::Continue;
+}
+
 angle::Result CLEventCL::getCommandExecutionStatus(cl_int &executionStatus)
 {
     ANGLE_CL_TRY(mNative->getDispatch().clGetEventInfo(mNative, CL_EVENT_COMMAND_EXECUTION_STATUS,

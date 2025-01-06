@@ -16,6 +16,7 @@
 #include "common/hash_containers.h"
 
 #include "libANGLE/renderer/vulkan/CLContextVk.h"
+#include "libANGLE/renderer/vulkan/CLEventVk.h"
 #include "libANGLE/renderer/vulkan/CLKernelVk.h"
 #include "libANGLE/renderer/vulkan/CLMemoryVk.h"
 #include "libANGLE/renderer/vulkan/cl_types.h"
@@ -329,6 +330,8 @@ class CLCommandQueueVk : public CLCommandQueueImpl
     {
         return mLastFlushedQueueSerial != mLastSubmittedQueueSerial;
     }
+
+    void addEventReference(CLEventVk &eventVk);
 
   private:
     static constexpr size_t kMaxDependencyTrackerSize    = 64;

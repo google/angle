@@ -119,6 +119,23 @@ angle::Result Event::getProfilingInfo(ProfilingInfo name,
     return mImpl->getProfilingInfo(name, valueSize, value, valueSizeRet);
 }
 
+angle::Result Event::initBackend(const rx::CLEventImpl::CreateFunc &createFunc)
+{
+    if (isUserEvent())
+    {
+        return mContext->getImpl().createUserEvent(*this, &mImpl);
+    }
+    else
+    {
+        mImpl = createFunc(*this);
+        if (mImpl == nullptr)
+        {
+            ANGLE_CL_RETURN_ERROR(CL_OUT_OF_HOST_MEMORY);
+        }
+        return mImpl->onEventCreate();
+    }
+}
+
 Event::~Event() = default;
 
 void Event::callback(cl_int commandStatus)
@@ -152,13 +169,11 @@ Event::Event(Context &context) : mContext(&context), mCommandType(CL_COMMAND_USE
     ANGLE_CL_IMPL_TRY(context.getImpl().createUserEvent(*this, &mImpl));
 }
 
-Event::Event(CommandQueue &queue,
-             cl_command_type commandType,
-             const rx::CLEventImpl::CreateFunc &createFunc)
+Event::Event(CommandQueue &queue, cl_command_type commandType)
     : mContext(&queue.getContext()),
       mCommandQueue(&queue),
       mCommandType(commandType),
-      mImpl(createFunc(*this))
+      mImpl(nullptr)
 {}
 
 }  // namespace cl

@@ -24,15 +24,25 @@
 namespace rx
 {
 
-class CLEventVk : public CLEventImpl, public vk::Resource
+class CLEventVk : public CLEventImpl
 {
   public:
-    CLEventVk(const cl::Event &event);
+    CLEventVk(const cl::Event &event,
+              const cl::ExecutionStatus initialStatus,
+              const QueueSerial eventSerial);
     ~CLEventVk() override;
 
     cl_int getCommandType() const { return mEvent.getCommandType(); }
     bool isUserEvent() const { return mEvent.isUserEvent(); }
     cl::Event &getFrontendObject() { return const_cast<cl::Event &>(mEvent); }
+    const QueueSerial &getQueueSerial() { return mQueueSerial; }
+    bool usedByCommandBuffer(const QueueSerial &commandBufferQueueSerial) const
+    {
+        ASSERT(commandBufferQueueSerial.valid());
+        return mQueueSerial == commandBufferQueueSerial;
+    }
+
+    angle::Result onEventCreate() override;
 
     angle::Result getCommandExecutionStatus(cl_int &executionStatus) override;
 
@@ -65,6 +75,7 @@ class CLEventVk : public CLEventImpl, public vk::Resource
         cl_ulong commandCompleteTS;
     };
     angle::SynchronizedValue<ProfilingTimestamps> mProfilingTimestamps;
+    const QueueSerial mQueueSerial;
 };
 
 }  // namespace rx

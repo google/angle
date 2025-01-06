@@ -344,7 +344,9 @@ cl_program Context::linkProgram(cl_uint numDevices,
 
 cl_event Context::createUserEvent()
 {
-    return Object::Create<Event>(*this);
+    cl_event event = Object::Create<Event>(*this);
+    ANGLE_CL_IMPL_TRY(event->cast<Event>().initBackend(rx::CLEventImpl::CreateFunc{}));
+    return event;
 }
 
 angle::Result Context::waitForEvents(cl_uint numEvents, const cl_event *eventList)

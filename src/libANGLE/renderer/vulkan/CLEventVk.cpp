@@ -13,15 +13,41 @@
 namespace rx
 {
 
-CLEventVk::CLEventVk(const cl::Event &event)
+CLEventVk::CLEventVk(const cl::Event &event,
+                     const cl::ExecutionStatus initialStatus,
+                     const QueueSerial eventSerial)
     : CLEventImpl(event),
-      mStatus(isUserEvent() ? CL_SUBMITTED : CL_QUEUED),
-      mProfilingTimestamps(ProfilingTimestamps{})
+      mStatus(cl::ToCLenum(initialStatus)),
+      mProfilingTimestamps(ProfilingTimestamps{}),
+      mQueueSerial(eventSerial)
 {
     ANGLE_CL_IMPL_TRY(setTimestamp(*mStatus));
 }
 
 CLEventVk::~CLEventVk() {}
+
+angle::Result CLEventVk::onEventCreate()
+{
+    ASSERT(!isUserEvent());
+    ASSERT(mQueueSerial.valid());
+
+    if (cl::FromCLenum<cl::ExecutionStatus>(*mStatus) == cl::ExecutionStatus::Complete)
+    {
+        // Submission finished at this point, just set event to complete
+        ANGLE_TRY(setStatusAndExecuteCallback(CL_COMPLETE));
+    }
+    else
+    {
+        getFrontendObject().getCommandQueue()->getImpl<CLCommandQueueVk>().addEventReference(*this);
+        if (getFrontendObject().getCommandQueue()->getProperties().intersects(
+                CL_QUEUE_PROFILING_ENABLE))
+        {
+            // Block for profiling so that we get timestamps per-command
+            ANGLE_TRY(getFrontendObject().getCommandQueue()->getImpl<CLCommandQueueVk>().finish());
+        }
+    }
+    return angle::Result::Continue;
+}
 
 angle::Result CLEventVk::getCommandExecutionStatus(cl_int &executionStatus)
 {
@@ -127,8 +153,8 @@ angle::Result CLEventVk::setStatusAndExecuteCallback(cl_int status)
 
     // we might skip states in some cases i.e. move from QUEUED to COMPLETE, so
     // make sure we are setting time stamps for all transitions
-    ASSERT(*statusHandle > status);
-    do
+    ASSERT(*statusHandle >= status);
+    while (*statusHandle > status)
     {
         (*statusHandle)--;
         ANGLE_TRY(setTimestamp(*statusHandle));
@@ -138,8 +164,7 @@ angle::Result CLEventVk::setStatusAndExecuteCallback(cl_int status)
             getFrontendObject().callback(*statusHandle);
             haveCallbacksHandle->at(*statusHandle) = false;
         }
-
-    } while (*statusHandle > status);
+    }
 
     return angle::Result::Continue;
 }

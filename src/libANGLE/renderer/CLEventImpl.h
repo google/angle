@@ -22,6 +22,8 @@ class CLEventImpl : angle::NonCopyable
     CLEventImpl(const cl::Event &event);
     virtual ~CLEventImpl();
 
+    virtual angle::Result onEventCreate() = 0;
+
     virtual angle::Result getCommandExecutionStatus(cl_int &executionStatus) = 0;
 
     virtual angle::Result setUserEventStatus(cl_int executionStatus) = 0;

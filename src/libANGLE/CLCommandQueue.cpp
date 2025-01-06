@@ -31,16 +31,21 @@ void InitializeOutputEvent(cl_event *event)
     }
 }
 
-void CheckCreateEvent(CommandQueue &queue,
-                      cl_command_type commandType,
-                      const rx::CLEventImpl::CreateFunc &createFunc,
-                      cl_event *event)
+angle::Result CheckCreateEvent(CommandQueue &queue,
+                               cl_command_type commandType,
+                               const rx::CLEventImpl::CreateFunc &createFunc,
+                               cl_event *event)
 {
     if (event != nullptr)
     {
         ASSERT(createFunc);
-        *event = Object::Create<Event>(queue, commandType, createFunc);
+        *event = Object::Create<Event>(queue, commandType);
+        if (IsError((*event)->cast<Event>().initBackend(createFunc)))
+        {
+            SafeDelete(*event);
+        }
     }
+    return angle::Result::Continue;
 }
 
 }  // namespace
@@ -158,8 +163,7 @@ angle::Result CommandQueue::enqueueReadBuffer(cl_mem buffer,
     ANGLE_TRY(
         mImpl->enqueueReadBuffer(buf, blocking, offset, size, ptr, waitEvents, eventCreateFuncPtr));
 
-    CheckCreateEvent(*this, CL_COMMAND_READ_BUFFER, eventCreateFunc, event);
-    return angle::Result::Continue;
+    return CheckCreateEvent(*this, CL_COMMAND_READ_BUFFER, eventCreateFunc, event);
 }
 
 angle::Result CommandQueue::enqueueWriteBuffer(cl_mem buffer,
@@ -182,8 +186,7 @@ angle::Result CommandQueue::enqueueWriteBuffer(cl_mem buffer,
     ANGLE_TRY(mImpl->enqueueWriteBuffer(buf, blocking, offset, size, ptr, waitEvents,
                                         eventCreateFuncPtr));
 
-    CheckCreateEvent(*this, CL_COMMAND_WRITE_BUFFER, eventCreateFunc, event);
-    return angle::Result::Continue;
+    return CheckCreateEvent(*this, CL_COMMAND_WRITE_BUFFER, eventCreateFunc, event);
 }
 
 angle::Result CommandQueue::enqueueReadBufferRect(cl_mem buffer,
@@ -212,8 +215,7 @@ angle::Result CommandQueue::enqueueReadBufferRect(cl_mem buffer,
                                            bufferRowPitch, bufferSlicePitch, hostRowPitch,
                                            hostSlicePitch, ptr, waitEvents, eventCreateFuncPtr));
 
-    CheckCreateEvent(*this, CL_COMMAND_READ_BUFFER_RECT, eventCreateFunc, event);
-    return angle::Result::Continue;
+    return CheckCreateEvent(*this, CL_COMMAND_READ_BUFFER_RECT, eventCreateFunc, event);
 }
 
 angle::Result CommandQueue::enqueueWriteBufferRect(cl_mem buffer,
@@ -242,8 +244,7 @@ angle::Result CommandQueue::enqueueWriteBufferRect(cl_mem buffer,
                                             bufferRowPitch, bufferSlicePitch, hostRowPitch,
                                             hostSlicePitch, ptr, waitEvents, eventCreateFuncPtr));
 
-    CheckCreateEvent(*this, CL_COMMAND_WRITE_BUFFER_RECT, eventCreateFunc, event);
-    return angle::Result::Continue;
+    return CheckCreateEvent(*this, CL_COMMAND_WRITE_BUFFER_RECT, eventCreateFunc, event);
 }
 
 angle::Result CommandQueue::enqueueCopyBuffer(cl_mem srcBuffer,
@@ -266,8 +267,7 @@ angle::Result CommandQueue::enqueueCopyBuffer(cl_mem srcBuffer,
     ANGLE_TRY(mImpl->enqueueCopyBuffer(src, dst, srcOffset, dstOffset, size, waitEvents,
                                        eventCreateFuncPtr));
 
-    CheckCreateEvent(*this, CL_COMMAND_COPY_BUFFER, eventCreateFunc, event);
-    return angle::Result::Continue;
+    return CheckCreateEvent(*this, CL_COMMAND_COPY_BUFFER, eventCreateFunc, event);
 }
 
 angle::Result CommandQueue::enqueueCopyBufferRect(cl_mem srcBuffer,
@@ -295,8 +295,7 @@ angle::Result CommandQueue::enqueueCopyBufferRect(cl_mem srcBuffer,
                                            srcSlicePitch, dstRowPitch, dstSlicePitch, waitEvents,
                                            eventCreateFuncPtr));
 
-    CheckCreateEvent(*this, CL_COMMAND_COPY_BUFFER_RECT, eventCreateFunc, event);
-    return angle::Result::Continue;
+    return CheckCreateEvent(*this, CL_COMMAND_COPY_BUFFER_RECT, eventCreateFunc, event);
 }
 
 angle::Result CommandQueue::enqueueFillBuffer(cl_mem buffer,
@@ -318,8 +317,7 @@ angle::Result CommandQueue::enqueueFillBuffer(cl_mem buffer,
     ANGLE_TRY(mImpl->enqueueFillBuffer(buf, pattern, patternSize, offset, size, waitEvents,
                                        eventCreateFuncPtr));
 
-    CheckCreateEvent(*this, CL_COMMAND_FILL_BUFFER, eventCreateFunc, event);
-    return angle::Result::Continue;
+    return CheckCreateEvent(*this, CL_COMMAND_FILL_BUFFER, eventCreateFunc, event);
 }
 
 angle::Result CommandQueue::enqueueMapBuffer(cl_mem buffer,
@@ -343,8 +341,7 @@ angle::Result CommandQueue::enqueueMapBuffer(cl_mem buffer,
     ANGLE_TRY(mImpl->enqueueMapBuffer(buf, blocking, mapFlags, offset, size, waitEvents,
                                       eventCreateFuncPtr, mapPtr));
 
-    CheckCreateEvent(*this, CL_COMMAND_MAP_BUFFER, eventCreateFunc, event);
-    return angle::Result::Continue;
+    return CheckCreateEvent(*this, CL_COMMAND_MAP_BUFFER, eventCreateFunc, event);
 }
 
 angle::Result CommandQueue::enqueueReadImage(cl_mem image,
@@ -369,8 +366,7 @@ angle::Result CommandQueue::enqueueReadImage(cl_mem image,
     ANGLE_TRY(mImpl->enqueueReadImage(img, blocking, origin, region, rowPitch, slicePitch, ptr,
                                       waitEvents, eventCreateFuncPtr));
 
-    CheckCreateEvent(*this, CL_COMMAND_READ_IMAGE, eventCreateFunc, event);
-    return angle::Result::Continue;
+    return CheckCreateEvent(*this, CL_COMMAND_READ_IMAGE, eventCreateFunc, event);
 }
 
 angle::Result CommandQueue::enqueueWriteImage(cl_mem image,
@@ -395,8 +391,7 @@ angle::Result CommandQueue::enqueueWriteImage(cl_mem image,
     ANGLE_TRY(mImpl->enqueueWriteImage(img, blocking, origin, region, inputRowPitch,
                                        inputSlicePitch, ptr, waitEvents, eventCreateFuncPtr));
 
-    CheckCreateEvent(*this, CL_COMMAND_WRITE_IMAGE, eventCreateFunc, event);
-    return angle::Result::Continue;
+    return CheckCreateEvent(*this, CL_COMMAND_WRITE_IMAGE, eventCreateFunc, event);
 }
 
 angle::Result CommandQueue::enqueueCopyImage(cl_mem srcImage,
@@ -419,8 +414,7 @@ angle::Result CommandQueue::enqueueCopyImage(cl_mem srcImage,
     ANGLE_TRY(mImpl->enqueueCopyImage(src, dst, srcOrigin, dstOrigin, region, waitEvents,
                                       eventCreateFuncPtr));
 
-    CheckCreateEvent(*this, CL_COMMAND_COPY_IMAGE, eventCreateFunc, event);
-    return angle::Result::Continue;
+    return CheckCreateEvent(*this, CL_COMMAND_COPY_IMAGE, eventCreateFunc, event);
 }
 
 angle::Result CommandQueue::enqueueFillImage(cl_mem image,
@@ -441,8 +435,7 @@ angle::Result CommandQueue::enqueueFillImage(cl_mem image,
     ANGLE_TRY(
         mImpl->enqueueFillImage(img, fillColor, origin, region, waitEvents, eventCreateFuncPtr));
 
-    CheckCreateEvent(*this, CL_COMMAND_FILL_IMAGE, eventCreateFunc, event);
-    return angle::Result::Continue;
+    return CheckCreateEvent(*this, CL_COMMAND_FILL_IMAGE, eventCreateFunc, event);
 }
 
 angle::Result CommandQueue::enqueueCopyImageToBuffer(cl_mem srcImage,
@@ -465,8 +458,7 @@ angle::Result CommandQueue::enqueueCopyImageToBuffer(cl_mem srcImage,
     ANGLE_TRY(mImpl->enqueueCopyImageToBuffer(src, dst, srcOrigin, region, dstOffset, waitEvents,
                                               eventCreateFuncPtr));
 
-    CheckCreateEvent(*this, CL_COMMAND_COPY_IMAGE_TO_BUFFER, eventCreateFunc, event);
-    return angle::Result::Continue;
+    return CheckCreateEvent(*this, CL_COMMAND_COPY_IMAGE_TO_BUFFER, eventCreateFunc, event);
 }
 
 angle::Result CommandQueue::enqueueCopyBufferToImage(cl_mem srcBuffer,
@@ -489,8 +481,7 @@ angle::Result CommandQueue::enqueueCopyBufferToImage(cl_mem srcBuffer,
     ANGLE_TRY(mImpl->enqueueCopyBufferToImage(src, dst, srcOffset, dstOrigin, region, waitEvents,
                                               eventCreateFuncPtr));
 
-    CheckCreateEvent(*this, CL_COMMAND_COPY_BUFFER_TO_IMAGE, eventCreateFunc, event);
-    return angle::Result::Continue;
+    return CheckCreateEvent(*this, CL_COMMAND_COPY_BUFFER_TO_IMAGE, eventCreateFunc, event);
 }
 
 angle::Result CommandQueue::enqueueMapImage(cl_mem image,
@@ -516,8 +507,7 @@ angle::Result CommandQueue::enqueueMapImage(cl_mem image,
     ANGLE_TRY(mImpl->enqueueMapImage(img, blocking, mapFlags, origin, region, imageRowPitch,
                                      imageSlicePitch, waitEvents, eventCreateFuncPtr, mapPtr));
 
-    CheckCreateEvent(*this, CL_COMMAND_MAP_IMAGE, eventCreateFunc, event);
-    return angle::Result::Continue;
+    return CheckCreateEvent(*this, CL_COMMAND_MAP_IMAGE, eventCreateFunc, event);
 }
 
 angle::Result CommandQueue::enqueueUnmapMemObject(cl_mem memobj,
@@ -535,8 +525,7 @@ angle::Result CommandQueue::enqueueUnmapMemObject(cl_mem memobj,
 
     ANGLE_TRY(mImpl->enqueueUnmapMemObject(memory, mappedPtr, waitEvents, eventCreateFuncPtr));
 
-    CheckCreateEvent(*this, CL_COMMAND_UNMAP_MEM_OBJECT, eventCreateFunc, event);
-    return angle::Result::Continue;
+    return CheckCreateEvent(*this, CL_COMMAND_UNMAP_MEM_OBJECT, eventCreateFunc, event);
 }
 
 angle::Result CommandQueue::enqueueMigrateMemObjects(cl_uint numMemObjects,
@@ -560,8 +549,7 @@ angle::Result CommandQueue::enqueueMigrateMemObjects(cl_uint numMemObjects,
 
     ANGLE_TRY(mImpl->enqueueMigrateMemObjects(memories, flags, waitEvents, eventCreateFuncPtr));
 
-    CheckCreateEvent(*this, CL_COMMAND_MIGRATE_MEM_OBJECTS, eventCreateFunc, event);
-    return angle::Result::Continue;
+    return CheckCreateEvent(*this, CL_COMMAND_MIGRATE_MEM_OBJECTS, eventCreateFunc, event);
 }
 
 angle::Result CommandQueue::enqueueNDRangeKernel(cl_kernel kernel,
@@ -579,8 +567,7 @@ angle::Result CommandQueue::enqueueNDRangeKernel(cl_kernel kernel,
 
     ANGLE_TRY(mImpl->enqueueNDRangeKernel(krnl, ndrange, waitEvents, eventCreateFuncPtr));
 
-    CheckCreateEvent(*this, CL_COMMAND_NDRANGE_KERNEL, eventCreateFunc, event);
-    return angle::Result::Continue;
+    return CheckCreateEvent(*this, CL_COMMAND_NDRANGE_KERNEL, eventCreateFunc, event);
 }
 
 angle::Result CommandQueue::enqueueTask(cl_kernel kernel,
@@ -597,8 +584,7 @@ angle::Result CommandQueue::enqueueTask(cl_kernel kernel,
 
     ANGLE_TRY(mImpl->enqueueTask(krnl, waitEvents, eventCreateFuncPtr));
 
-    CheckCreateEvent(*this, CL_COMMAND_TASK, eventCreateFunc, event);
-    return angle::Result::Continue;
+    return CheckCreateEvent(*this, CL_COMMAND_TASK, eventCreateFunc, event);
 }
 
 angle::Result CommandQueue::enqueueNativeKernel(UserFunc userFunc,
@@ -650,8 +636,7 @@ angle::Result CommandQueue::enqueueNativeKernel(UserFunc userFunc,
     ANGLE_TRY(mImpl->enqueueNativeKernel(userFunc, args, cbArgs, buffers, offsets, waitEvents,
                                          eventCreateFuncPtr));
 
-    CheckCreateEvent(*this, CL_COMMAND_NATIVE_KERNEL, eventCreateFunc, event);
-    return angle::Result::Continue;
+    return CheckCreateEvent(*this, CL_COMMAND_NATIVE_KERNEL, eventCreateFunc, event);
 }
 
 angle::Result CommandQueue::enqueueMarkerWithWaitList(cl_uint numEventsInWaitList,
@@ -666,8 +651,7 @@ angle::Result CommandQueue::enqueueMarkerWithWaitList(cl_uint numEventsInWaitLis
 
     ANGLE_TRY(mImpl->enqueueMarkerWithWaitList(waitEvents, eventCreateFuncPtr));
 
-    CheckCreateEvent(*this, CL_COMMAND_MARKER, eventCreateFunc, event);
-    return angle::Result::Continue;
+    return CheckCreateEvent(*this, CL_COMMAND_MARKER, eventCreateFunc, event);
 }
 
 angle::Result CommandQueue::enqueueMarker(cl_event *event)
@@ -677,8 +661,7 @@ angle::Result CommandQueue::enqueueMarker(cl_event *event)
 
     ANGLE_TRY(mImpl->enqueueMarker(eventCreateFunc));
 
-    CheckCreateEvent(*this, CL_COMMAND_MARKER, eventCreateFunc, event);
-    return angle::Result::Continue;
+    return CheckCreateEvent(*this, CL_COMMAND_MARKER, eventCreateFunc, event);
 }
 
 angle::Result CommandQueue::enqueueWaitForEvents(cl_uint numEvents, const cl_event *eventList)
@@ -698,8 +681,7 @@ angle::Result CommandQueue::enqueueBarrierWithWaitList(cl_uint numEventsInWaitLi
 
     ANGLE_TRY(mImpl->enqueueBarrierWithWaitList(waitEvents, eventCreateFuncPtr));
 
-    CheckCreateEvent(*this, CL_COMMAND_BARRIER, eventCreateFunc, event);
-    return angle::Result::Continue;
+    return CheckCreateEvent(*this, CL_COMMAND_BARRIER, eventCreateFunc, event);
 }
 
 angle::Result CommandQueue::enqueueBarrier()

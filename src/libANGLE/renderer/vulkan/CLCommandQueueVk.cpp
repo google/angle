@@ -1973,45 +1973,14 @@ angle::Result CLCommandQueueVk::createEvent(CLEventImpl::CreateFunc *createFunc,
 {
     if (createFunc != nullptr)
     {
-        *createFunc = [this, initialStatus, queueSerial = mComputePassCommands->getQueueSerial()](
+        *createFunc = [initialStatus, queueSerial = mComputePassCommands->getQueueSerial()](
                           const cl::Event &event) {
-            auto eventVk = new (std::nothrow) CLEventVk(event);
+            auto eventVk = new (std::nothrow) CLEventVk(event, initialStatus, queueSerial);
             if (eventVk == nullptr)
             {
-                ERR() << "Failed to create event obj!";
-                ANGLE_CL_SET_ERROR(CL_OUT_OF_HOST_MEMORY);
+                ERR() << "Failed to create cmd event obj!";
                 return CLEventImpl::Ptr(nullptr);
             }
-
-            if (initialStatus == cl::ExecutionStatus::Complete)
-            {
-                // Submission finished at this point, just set event to complete
-                if (IsError(eventVk->setStatusAndExecuteCallback(cl::ToCLenum(initialStatus))))
-                {
-                    ANGLE_CL_SET_ERROR(CL_OUT_OF_RESOURCES);
-                }
-            }
-            else if (mCommandQueue.getProperties().intersects(CL_QUEUE_PROFILING_ENABLE))
-            {
-                // We also block for profiling so that we get timestamps per-command
-                if (IsError(mCommandQueue.getImpl<CLCommandQueueVk>().finish()))
-                {
-                    ANGLE_CL_SET_ERROR(CL_OUT_OF_RESOURCES);
-                }
-                // Submission finished at this point, just set event to complete
-                if (IsError(eventVk->setStatusAndExecuteCallback(CL_COMPLETE)))
-                {
-                    ANGLE_CL_SET_ERROR(CL_OUT_OF_RESOURCES);
-                }
-            }
-            else
-            {
-                eventVk->setQueueSerial(queueSerial);
-                // Save a reference to this event to set event transitions
-                std::lock_guard<std::mutex> lock(mCommandQueueMutex);
-                mCommandsStateMap[queueSerial].events.emplace_back(&eventVk->getFrontendObject());
-            }
-
             return CLEventImpl::Ptr(eventVk);
         };
     }
@@ -2239,6 +2208,16 @@ bool CLCommandQueueVk::hasUserEventDependency() const
 {
     return std::any_of(mExternalEvents.begin(), mExternalEvents.end(),
                        [](const cl::EventPtr event) { return event->isUserEvent(); });
+}
+
+void CLCommandQueueVk::addEventReference(CLEventVk &eventVk)
+{
+    ASSERT(eventVk.getQueueSerial().valid());
+    ASSERT(eventVk.getQueueSerial().getIndex() == mQueueSerialIndex);
+
+    std::lock_guard<std::mutex> lock(mCommandQueueMutex);
+
+    mCommandsStateMap[eventVk.getQueueSerial()].events.emplace_back(&eventVk.getFrontendObject());
 }
 
 }  // namespace rx
