@@ -39,6 +39,10 @@
     "label": "//src/tests:angle_oclcts_basic",
     "type": "windowed_test_launcher",
   },
+  "angle_oclcts_bruteforce": {
+    "label": "//src/tests:angle_oclcts_bruteforce",
+    "type": "windowed_test_launcher",
+  },
   "angle_oclcts_buffers": {
     "label": "//src/tests:angle_oclcts_buffers",
     "type": "windowed_test_launcher",

@@ -38,6 +38,15 @@
       },
     },
 
+    'angle_cl_bruteforce_gtests': {
+      'angle_oclcts_bruteforce': {
+        'linux_args': [
+          '--no-xvfb',
+        ],
+        'use_isolated_scripts_api': True,
+      },
+    },
+
     'angle_cl_buffers_gtests': {
       'angle_oclcts_buffers': {
         'linux_args': [
@@ -1622,6 +1631,7 @@
       'angle_white_box_gtests',
       'angle_cl_api_gtests',
       'angle_cl_basic_gtests',
+      'angle_cl_bruteforce_gtests',
       'angle_cl_buffers_gtests',
       'angle_cl_compiler_gtests',
       'angle_cl_copy_images_gtests',
