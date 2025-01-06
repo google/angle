@@ -4704,10 +4704,14 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // Disable this extension on older ARM platforms that don't support
     // VK_EXT_pipeline_protected_access.
     // http://anglebug.com/42266183
+    //
+    // http://b/381285096. On Intel platforms, we want to prevent protected queues being used as
+    // we cannot handle the teardown scenario if PXP termination occurs.
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsProtectedMemory,
         mProtectedMemoryFeatures.protectedMemory == VK_TRUE &&
-            (!isARM || mPipelineProtectedAccessFeatures.pipelineProtectedAccess == VK_TRUE));
+            (!isARM || mPipelineProtectedAccessFeatures.pipelineProtectedAccess == VK_TRUE) &&
+            !isIntel);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsHostQueryReset,
                             mHostQueryResetFeatures.hostQueryReset == VK_TRUE);
