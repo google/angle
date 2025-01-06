@@ -52,13 +52,17 @@ class Format;
 static constexpr size_t kMaxExtensionNames = 400;
 using ExtensionNameList                    = angle::FixedVector<const char *, kMaxExtensionNames>;
 
+static constexpr size_t kMaxSyncValExtraProperties = 5;
 // Information used to accurately skip known synchronization issues in ANGLE.
+// TODO: remove messageContents1 and messageContents2 fields after all
+// supressions have transitioned to using extraProperties.
 struct SkippedSyncvalMessage
 {
     const char *messageId;
     const char *messageContents1;
-    const char *messageContents2                           = "";
-    bool isDueToNonConformantCoherentColorFramebufferFetch = false;
+    const char *messageContents2                            = "";
+    bool isDueToNonConformantCoherentColorFramebufferFetch  = false;
+    const char *extraProperties[kMaxSyncValExtraProperties] = {};
 };
 
 class ImageMemorySuballocator : angle::NonCopyable
