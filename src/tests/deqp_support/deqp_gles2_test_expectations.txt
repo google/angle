@@ -342,6 +342,8 @@
 42265203 LINUX NVIDIA GTX1660 VULKAN : dEQP-GLES2.functional.shaders.random.all_features.fragment.31 = FAIL
 42265203 LINUX NVIDIA GTX1660 VULKAN : dEQP-GLES2.functional.shaders.random.all_features.fragment.94 = FAIL
 
+388052193 LINUX : dEQP-GLES2.functional.fragment_ops.interaction.basic_shader.* = FAIL
+
 42265173 UBSAN : dEQP-GLES2.functional.shaders.random.* = SKIP
 
 // Samsung Galaxy S23

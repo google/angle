@@ -240,6 +240,9 @@
 
 // Linux only failures
 
+388052193 LINUX : dEQP-GLES3.functional.fragment_ops.interaction.basic_shader.* = FAIL
+
+
 // While loops with 'continue' seem flaky on Linux. (Possibly all GL renderers)
 42260333 LINUX OPENGL : dEQP-GLES3.functional.shaders.loops.while_constant_iterations.conditional_continue_vertex = FAIL
 42260333 LINUX OPENGL : dEQP-GLES3.functional.shaders.loops.while_constant_iterations.conditional_continue_fragment = FAIL
