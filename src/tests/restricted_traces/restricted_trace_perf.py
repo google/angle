@@ -42,6 +42,7 @@ import json
 import logging
 import os
 import pathlib
+import posixpath
 import re
 import statistics
 import subprocess
@@ -184,6 +185,34 @@ def get_trace_width(mode):
     return width
 
 
+def pull_screenshot(args, screenshot_device_dir, renderer):
+    # We don't know the name of the screenshots, since they could have a KeyFrame
+    # Rather than look that up and piece together a file name, we can pull the single screenshot in a generic fashion
+    files = run_adb_shell_command('ls -1 %s' % screenshot_device_dir).split('\n')
+
+    # There might not be a screenshot if the test was skipped
+    files = list(filter(None, (f.strip() for f in files)))  # Remove empty strings and whitespace
+    if files:
+        assert len(files) == 1, 'Multiple files(%s) in %s, expected 1: %s' % (
+            len(files), screenshot_device_dir, files)
+
+        # Grab the single screenshot
+        src_file = files[0]
+
+        # Rename the file to reflect renderer, since we force everything through the platform using "native"
+        dst_file = src_file.replace("native", renderer)
+
+        # Use CWD if no location provided
+        screenshot_dst = args.screenshot_dir if args.screenshot_dir != '' else '.'
+
+        logging.info('Pulling screenshot %s to %s' % (dst_file, screenshot_dst))
+        run_adb_command([
+            'pull',
+            posixpath.join(screenshot_device_dir, src_file),
+            posixpath.join(screenshot_dst, dst_file)
+        ])
+
+
 # This function changes to the target directory, then 'yield' passes execution to the inner part of
 # the 'with' block that invoked it. The 'finally' block is executed at the end of the 'with' block,
 # including when exceptions are raised.
@@ -202,7 +231,7 @@ def run_from_dir(dir):
         os.chdir(cwd)
 
 
-def run_trace(trace, args):
+def run_trace(trace, args, screenshot_device_dir):
     mode = get_mode(args)
 
     # Kick off a subprocess that collects peak gpu memory periodically
@@ -227,6 +256,10 @@ def run_trace(trace, args):
         flags += ['--fixed-test-time-with-warmup', args.fixedtime]
     if args.minimizegpuwork:
         flags.append('--minimize-gpu-work')
+    if screenshot_device_dir != None:
+        flags += ['--screenshot-dir', screenshot_device_dir]
+    if args.screenshot_frame != '':
+        flags += ['--screenshot-frame', args.screenshot_frame]
 
     # Build a command that can be run directly over ADB, for example:
     r'''
@@ -725,6 +758,21 @@ def main():
         'but you can point to any APK that contains ANGLE. Specify \'system\' to use libraries ' +
         'already on the device',
         default=DEFAULT_ANGLE_PACKAGE)
+    parser.add_argument(
+        '--build-dir',
+        help='Where to find the APK on the host, i.e. out/Android. If unset, it is assumed you ' +
+        'are running from the build dir already, or are using the wrapper script ' +
+        'out/<config>/restricted_trace_perf.',
+        default='')
+    parser.add_argument(
+        '--screenshot-dir',
+        help='Host (local) directory to store screenshots of keyframes, which is frame 1 unless ' +
+        'the trace JSON file contains \'KeyFrames\'.',
+        default='')
+    parser.add_argument(
+        '--screenshot-frame',
+        help='Specify a specific frame to screenshot. Uses --screenshot-dir if provied.',
+        default='')
 
     group = parser.add_mutually_exclusive_group()
     group.add_argument(
@@ -737,12 +785,6 @@ def main():
         help='Whether to run the trace in offscreen mode',
         action='store_true',
         default=False)
-    parser.add_argument(
-        '--build-dir',
-        help='Where to find the APK on the host, i.e. out/Android. If unset, it is assumed you ' +
-        'are running from the build dir already, or are using the wrapper script ' +
-        'out/<config>/restricted_trace_perf.',
-        default='')
 
     args = parser.parse_args()
 
@@ -1002,8 +1044,18 @@ def run_traces(args):
                     power_thread.daemon = True
                     power_thread.start()
 
-                logging.debug('Running %s' % test)
-                test_time = run_trace(test, args)
+                # We scope the run_trace call so we can use a temp dir for screenshots that gets deleted
+                with contextlib.ExitStack() as stack:
+                    screenshot_device_dir = None
+                    if args.screenshot_dir != '' or args.screenshot_frame != '':
+                        temp_dir = stack.enter_context(android_helper._TempDeviceDir())
+                        screenshot_device_dir = temp_dir
+
+                    logging.debug('Running %s' % test)
+                    test_time = run_trace(test, args, screenshot_device_dir)
+
+                    if screenshot_device_dir:
+                        pull_screenshot(args, screenshot_device_dir, renderer)
 
                 gpu_power, cpu_power = 0, 0
                 if args.power:
