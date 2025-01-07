@@ -12,3 +12,8 @@ src:*third_party/zlib*
 [pointer-overflow]
 fun:*angle*PoolAllocator*allocate*
 
+# https://crbug.com/388039125
+[*]
+fun:*rsg*isConversionOk*
+fun:*rsg*convertValueRange*
+fun:*rsg*convertExecValue*
