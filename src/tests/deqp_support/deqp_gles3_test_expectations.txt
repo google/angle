@@ -240,7 +240,7 @@
 
 // Linux only failures
 
-388052193 LINUX : dEQP-GLES3.functional.fragment_ops.interaction.basic_shader.* = FAIL
+388052193 LINUX UBSAN : dEQP-GLES3.functional.fragment_ops.interaction.basic_shader.* = SKIP
 
 
 // While loops with 'continue' seem flaky on Linux. (Possibly all GL renderers)
