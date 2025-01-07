@@ -769,6 +769,53 @@ void main() {
     glDeleteProgram(program);
 }
 
+// Tests that making a copy of an array from a uniform functions correctly.
+TEST_P(SimpleUniformUsageTestES3, CopyOfArrayInUniform)
+{
+    constexpr char kFragShader[] = R"(#version 300 es
+precision mediump float;
+struct NestedUniforms {
+    vec2 x[5];
+};
+struct Uniforms {
+    NestedUniforms a;
+    float b;
+    float c;
+    float[5] d;
+    float e;
+    vec3 f[7];
+};
+uniform Uniforms unis;
+out vec4 fragColor;
+void main() {
+    float[5] dCopy = unis.d;
+    fragColor = vec4(dCopy[1], 0.0, 0.0, 1.0);
+})";
+
+    GLuint program = CompileProgram(essl3_shaders::vs::Simple(), kFragShader);
+    ASSERT_NE(program, 0u);
+    glUseProgram(program);
+
+    GLint uniformDLocation = glGetUniformLocation(program, "unis.d[1]");
+    ASSERT_NE(uniformDLocation, -1);
+
+    // Set to black
+    glUniform1f(uniformDLocation, 0.0f);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    // Set to red
+    glUniform1f(uniformDLocation, 1.0f);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    glDeleteProgram(program);
+}
+
 // Tests that ternaries function correctly when retrieving an array element from a uniform.
 TEST_P(SimpleUniformUsageTestES3, TernarySelectAnArrayElement)
 {

@@ -407,7 +407,8 @@ struct Uniforms {
 uniform Uniforms unis;
 out vec4 fragColor;
 void main() {
-    fragColor = vec4(unis.a.x, unis.b, unis.c, 1.0);
+    float[5] dCopy = unis.d;
+    fragColor = vec4(unis.a.x, unis.b, unis.c, dCopy[1]);
     fragColor += vec4(unis.d[2], unis.e, unis.f[0][2], (unis.e > 0.5 ? unis.d : unis.g)[1]);
 })";
     const std::string &outputString =
@@ -460,8 +461,9 @@ struct _uUniforms
 
 fn _umain()
 {
-  (ANGLE_output_global.fragColor) = (vec4<f32>(((ANGLE_defaultUniformBlock.unis)._ua)._ux, (ANGLE_defaultUniformBlock.unis)._ub, (ANGLE_defaultUniformBlock.unis)._uc, 1.0f));
-  (ANGLE_output_global.fragColor) += (vec4<f32>((ANGLE_Convert_ANGLE_wrapped_float_ElementsTo_float_Elements((ANGLE_defaultUniformBlock.unis)._ud))[2i], (ANGLE_defaultUniformBlock.unis)._ue, (((ANGLE_defaultUniformBlock.unis)._uf)[0i])[2i], (select((ANGLE_Convert_ANGLE_wrapped_float_ElementsTo_float_Elements((ANGLE_defaultUniformBlock.unis)._ug)), (ANGLE_Convert_ANGLE_wrapped_float_ElementsTo_float_Elements((ANGLE_defaultUniformBlock.unis)._ud)), (((ANGLE_defaultUniformBlock.unis)._ue) > (0.5f))))[1i]));
+  var _udCopy : array<f32, 5> = (ANGLE_Convert_ANGLE_wrapped_float_ElementsTo_float_Elements((ANGLE_defaultUniformBlock.unis)._ud));
+  (ANGLE_output_global.fragColor) = (vec4<f32>(((ANGLE_defaultUniformBlock.unis)._ua)._ux, (ANGLE_defaultUniformBlock.unis)._ub, (ANGLE_defaultUniformBlock.unis)._uc, (_udCopy)[1i]));
+  (ANGLE_output_global.fragColor) += (vec4<f32>((ANGLE_defaultUniformBlock.unis)._ud[2i].elem, (ANGLE_defaultUniformBlock.unis)._ue, (((ANGLE_defaultUniformBlock.unis)._uf)[0i])[2i], (select((ANGLE_Convert_ANGLE_wrapped_float_ElementsTo_float_Elements((ANGLE_defaultUniformBlock.unis)._ug)), (ANGLE_Convert_ANGLE_wrapped_float_ElementsTo_float_Elements((ANGLE_defaultUniformBlock.unis)._ud)), (((ANGLE_defaultUniformBlock.unis)._ue) > (0.5f))))[1i]));
 }
 @fragment
 fn wgslMain() -> ANGLE_Output_Annotated

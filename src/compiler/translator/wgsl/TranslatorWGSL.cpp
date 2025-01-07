@@ -167,6 +167,7 @@ class OutputWGSLTraverser : public TIntermTraverser
                                  const EmitVariableDeclarationConfig &evdConfig);
     void emitArrayIndex(TIntermTyped &leftNode, TIntermTyped &rightNode);
     void emitStructIndex(TIntermBinary *binaryNode);
+    void emitStructIndexNoUnwrapping(TIntermBinary *binaryNode);
 
     bool emitForLoop(TIntermLoop *);
     bool emitWhileLoop(TIntermLoop *);
@@ -946,58 +947,87 @@ const TField &OutputWGSLTraverser::getDirectField(const TIntermTyped &fieldsNode
 
 void OutputWGSLTraverser::emitArrayIndex(TIntermTyped &leftNode, TIntermTyped &rightNode)
 {
+    TType leftType = leftNode.getType();
 
+    // Some arrays within the uniform address space have their element types wrapped in a struct
+    // when generating WGSL, so this unwraps the element (as an optimization of converting the
+    // entire array back to the unwrapped type).
+    bool needsUnwrapping          = false;
+    TIntermBinary *leftNodeBinary = leftNode.getAsBinaryNode();
+    if (leftNodeBinary && leftNodeBinary->getOp() == TOperator::EOpIndexDirectStruct)
     {
-        TType leftType = leftNode.getType();
+        const TStructure *structure = leftNodeBinary->getLeft()->getType().getStruct();
+
+        needsUnwrapping =
+            structure &&
+            ElementTypeNeedsUniformWrapperStruct(
+                /*inUniformAddressSpace=*/mUniformBlockMetadata->structsInUniformAddressSpace.count(
+                    structure->uniqueId().get()),
+                &leftNodeBinary->getType());
+    }
+
+    // Emit the left side, which should be of type array.
+    if (needsUnwrapping)
+    {
+        emitStructIndexNoUnwrapping(leftNodeBinary);
+    }
+    else
+    {
         groupedTraverse(leftNode);
-        mSink << "[";
-        const TConstantUnion *constIndex = rightNode.getConstantValue();
-        // If the array index is a constant that we can statically verify is within array
-        // bounds, just emit that constant.
-        if (!leftType.isUnsizedArray() && constIndex != nullptr &&
-            constIndex->getType() == EbtInt && constIndex->getIConst() >= 0 &&
-            constIndex->getIConst() < static_cast<int>(leftType.isArray()
-                                                           ? leftType.getOutermostArraySize()
-                                                           : leftType.getNominalSize()))
+    }
+
+    mSink << "[";
+    const TConstantUnion *constIndex = rightNode.getConstantValue();
+    // If the array index is a constant that we can statically verify is within array
+    // bounds, just emit that constant.
+    if (!leftType.isUnsizedArray() && constIndex != nullptr && constIndex->getType() == EbtInt &&
+        constIndex->getIConst() >= 0 &&
+        constIndex->getIConst() < static_cast<int>(leftType.isArray()
+                                                       ? leftType.getOutermostArraySize()
+                                                       : leftType.getNominalSize()))
+    {
+        emitSingleConstant(constIndex);
+    }
+    else
+    {
+        // If the array index is not a constant within the bounds of the array, clamp the
+        // index.
+        mSink << "clamp(";
+        groupedTraverse(rightNode);
+        mSink << ", 0, ";
+        // Now find the array size and clamp it.
+        if (leftType.isUnsizedArray())
         {
-            emitSingleConstant(constIndex);
+            // TODO(anglebug.com/42267100): This is a bug to traverse the `leftNode` a
+            // second time if `leftNode` has side effects (and could also have performance
+            // implications). This should be stored in a temporary variable. This might also
+            // be a bug in the MSL shader compiler.
+            mSink << "arrayLength(&";
+            groupedTraverse(leftNode);
+            mSink << ")";
         }
         else
         {
-            // If the array index is not a constant within the bounds of the array, clamp the
-            // index.
-            mSink << "clamp(";
-            groupedTraverse(rightNode);
-            mSink << ", 0, ";
-            // Now find the array size and clamp it.
-            if (leftType.isUnsizedArray())
+            uint32_t maxSize;
+            if (leftType.isArray())
             {
-                // TODO(anglebug.com/42267100): This is a bug to traverse the `leftNode` a
-                // second time if `leftNode` has side effects (and could also have performance
-                // implications). This should be stored in a temporary variable. This might also
-                // be a bug in the MSL shader compiler.
-                mSink << "arrayLength(&";
-                groupedTraverse(leftNode);
-                mSink << ")";
+                maxSize = leftType.getOutermostArraySize() - 1;
             }
             else
             {
-                uint32_t maxSize;
-                if (leftType.isArray())
-                {
-                    maxSize = leftType.getOutermostArraySize() - 1;
-                }
-                else
-                {
-                    maxSize = leftType.getNominalSize() - 1;
-                }
-                mSink << maxSize;
+                maxSize = leftType.getNominalSize() - 1;
             }
-            // End the clamp() function.
-            mSink << ")";
+            mSink << maxSize;
         }
-        // End the array index operation.
-        mSink << "]";
+        // End the clamp() function.
+        mSink << ")";
+    }
+    // End the array index operation.
+    mSink << "]";
+
+    if (needsUnwrapping)
+    {
+        mSink << "." << kWrappedStructFieldName;
     }
 }
 
@@ -1005,7 +1035,6 @@ void OutputWGSLTraverser::emitStructIndex(TIntermBinary *binaryNode)
 {
     ASSERT(binaryNode->getOp() == TOperator::EOpIndexDirectStruct);
     TIntermTyped &leftNode  = *binaryNode->getLeft();
-    TIntermTyped &rightNode = *binaryNode->getRight();
 
     const TStructure *structure = leftNode.getType().getStruct();
     ASSERT(structure);
@@ -1022,13 +1051,22 @@ void OutputWGSLTraverser::emitStructIndex(TIntermBinary *binaryNode)
         mWGSLGenerationMetadataForUniforms->arrayElementTypesThatNeedUnwrappingConversions.insert(
             binaryNode->getType());
     }
-    groupedTraverse(leftNode);
-    mSink << ".";
-    WriteNameOf(mSink, getDirectField(leftNode, rightNode));
+    emitStructIndexNoUnwrapping(binaryNode);
     if (needsUnwrapping)
     {
         mSink << ")";
     }
+}
+
+void OutputWGSLTraverser::emitStructIndexNoUnwrapping(TIntermBinary *binaryNode)
+{
+    ASSERT(binaryNode->getOp() == TOperator::EOpIndexDirectStruct);
+    TIntermTyped &leftNode  = *binaryNode->getLeft();
+    TIntermTyped &rightNode = *binaryNode->getRight();
+
+    groupedTraverse(leftNode);
+    mSink << ".";
+    WriteNameOf(mSink, getDirectField(leftNode, rightNode));
 }
 
 bool OutputWGSLTraverser::visitBinary(Visit, TIntermBinary *binaryNode)
