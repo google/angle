@@ -2087,301 +2087,185 @@ AttributeType GetAttributeType(GLenum enumValue)
     }
 }
 
-angle::FormatID GetVertexFormatID(VertexAttribType type,
-                                  GLboolean normalized,
-                                  GLuint components,
-                                  bool pureInteger)
-{
-    switch (type)
-    {
-        case VertexAttribType::Byte:
-            switch (components)
-            {
-                case 1:
-                    if (pureInteger)
-                        return angle::FormatID::R8_SINT;
-                    if (normalized)
-                        return angle::FormatID::R8_SNORM;
-                    return angle::FormatID::R8_SSCALED;
-                case 2:
-                    if (pureInteger)
-                        return angle::FormatID::R8G8_SINT;
-                    if (normalized)
-                        return angle::FormatID::R8G8_SNORM;
-                    return angle::FormatID::R8G8_SSCALED;
-                case 3:
-                    if (pureInteger)
-                        return angle::FormatID::R8G8B8_SINT;
-                    if (normalized)
-                        return angle::FormatID::R8G8B8_SNORM;
-                    return angle::FormatID::R8G8B8_SSCALED;
-                case 4:
-                    if (pureInteger)
-                        return angle::FormatID::R8G8B8A8_SINT;
-                    if (normalized)
-                        return angle::FormatID::R8G8B8A8_SNORM;
-                    return angle::FormatID::R8G8B8A8_SSCALED;
-                default:
-                    UNREACHABLE();
-                    return angle::FormatID::NONE;
-            }
-        case VertexAttribType::UnsignedByte:
-            switch (components)
-            {
-                case 1:
-                    if (pureInteger)
-                        return angle::FormatID::R8_UINT;
-                    if (normalized)
-                        return angle::FormatID::R8_UNORM;
-                    return angle::FormatID::R8_USCALED;
-                case 2:
-                    if (pureInteger)
-                        return angle::FormatID::R8G8_UINT;
-                    if (normalized)
-                        return angle::FormatID::R8G8_UNORM;
-                    return angle::FormatID::R8G8_USCALED;
-                case 3:
-                    if (pureInteger)
-                        return angle::FormatID::R8G8B8_UINT;
-                    if (normalized)
-                        return angle::FormatID::R8G8B8_UNORM;
-                    return angle::FormatID::R8G8B8_USCALED;
-                case 4:
-                    if (pureInteger)
-                        return angle::FormatID::R8G8B8A8_UINT;
-                    if (normalized)
-                        return angle::FormatID::R8G8B8A8_UNORM;
-                    return angle::FormatID::R8G8B8A8_USCALED;
-                default:
-                    UNREACHABLE();
-                    return angle::FormatID::NONE;
-            }
-        case VertexAttribType::Short:
-            switch (components)
-            {
-                case 1:
-                    if (pureInteger)
-                        return angle::FormatID::R16_SINT;
-                    if (normalized)
-                        return angle::FormatID::R16_SNORM;
-                    return angle::FormatID::R16_SSCALED;
-                case 2:
-                    if (pureInteger)
-                        return angle::FormatID::R16G16_SINT;
-                    if (normalized)
-                        return angle::FormatID::R16G16_SNORM;
-                    return angle::FormatID::R16G16_SSCALED;
-                case 3:
-                    if (pureInteger)
-                        return angle::FormatID::R16G16B16_SINT;
-                    if (normalized)
-                        return angle::FormatID::R16G16B16_SNORM;
-                    return angle::FormatID::R16G16B16_SSCALED;
-                case 4:
-                    if (pureInteger)
-                        return angle::FormatID::R16G16B16A16_SINT;
-                    if (normalized)
-                        return angle::FormatID::R16G16B16A16_SNORM;
-                    return angle::FormatID::R16G16B16A16_SSCALED;
-                default:
-                    UNREACHABLE();
-                    return angle::FormatID::NONE;
-            }
-        case VertexAttribType::UnsignedShort:
-            switch (components)
-            {
-                case 1:
-                    if (pureInteger)
-                        return angle::FormatID::R16_UINT;
-                    if (normalized)
-                        return angle::FormatID::R16_UNORM;
-                    return angle::FormatID::R16_USCALED;
-                case 2:
-                    if (pureInteger)
-                        return angle::FormatID::R16G16_UINT;
-                    if (normalized)
-                        return angle::FormatID::R16G16_UNORM;
-                    return angle::FormatID::R16G16_USCALED;
-                case 3:
-                    if (pureInteger)
-                        return angle::FormatID::R16G16B16_UINT;
-                    if (normalized)
-                        return angle::FormatID::R16G16B16_UNORM;
-                    return angle::FormatID::R16G16B16_USCALED;
-                case 4:
-                    if (pureInteger)
-                        return angle::FormatID::R16G16B16A16_UINT;
-                    if (normalized)
-                        return angle::FormatID::R16G16B16A16_UNORM;
-                    return angle::FormatID::R16G16B16A16_USCALED;
-                default:
-                    UNREACHABLE();
-                    return angle::FormatID::NONE;
-            }
-        case VertexAttribType::Int:
-            switch (components)
-            {
-                case 1:
-                    if (pureInteger)
-                        return angle::FormatID::R32_SINT;
-                    if (normalized)
-                        return angle::FormatID::R32_SNORM;
-                    return angle::FormatID::R32_SSCALED;
-                case 2:
-                    if (pureInteger)
-                        return angle::FormatID::R32G32_SINT;
-                    if (normalized)
-                        return angle::FormatID::R32G32_SNORM;
-                    return angle::FormatID::R32G32_SSCALED;
-                case 3:
-                    if (pureInteger)
-                        return angle::FormatID::R32G32B32_SINT;
-                    if (normalized)
-                        return angle::FormatID::R32G32B32_SNORM;
-                    return angle::FormatID::R32G32B32_SSCALED;
-                case 4:
-                    if (pureInteger)
-                        return angle::FormatID::R32G32B32A32_SINT;
-                    if (normalized)
-                        return angle::FormatID::R32G32B32A32_SNORM;
-                    return angle::FormatID::R32G32B32A32_SSCALED;
-                default:
-                    UNREACHABLE();
-                    return angle::FormatID::NONE;
-            }
-        case VertexAttribType::UnsignedInt:
-            switch (components)
-            {
-                case 1:
-                    if (pureInteger)
-                        return angle::FormatID::R32_UINT;
-                    if (normalized)
-                        return angle::FormatID::R32_UNORM;
-                    return angle::FormatID::R32_USCALED;
-                case 2:
-                    if (pureInteger)
-                        return angle::FormatID::R32G32_UINT;
-                    if (normalized)
-                        return angle::FormatID::R32G32_UNORM;
-                    return angle::FormatID::R32G32_USCALED;
-                case 3:
-                    if (pureInteger)
-                        return angle::FormatID::R32G32B32_UINT;
-                    if (normalized)
-                        return angle::FormatID::R32G32B32_UNORM;
-                    return angle::FormatID::R32G32B32_USCALED;
-                case 4:
-                    if (pureInteger)
-                        return angle::FormatID::R32G32B32A32_UINT;
-                    if (normalized)
-                        return angle::FormatID::R32G32B32A32_UNORM;
-                    return angle::FormatID::R32G32B32A32_USCALED;
-                default:
-                    UNREACHABLE();
-                    return angle::FormatID::NONE;
-            }
-        case VertexAttribType::Float:
-            switch (components)
-            {
-                case 1:
-                    return angle::FormatID::R32_FLOAT;
-                case 2:
-                    return angle::FormatID::R32G32_FLOAT;
-                case 3:
-                    return angle::FormatID::R32G32B32_FLOAT;
-                case 4:
-                    return angle::FormatID::R32G32B32A32_FLOAT;
-                default:
-                    UNREACHABLE();
-                    return angle::FormatID::NONE;
-            }
-        case VertexAttribType::HalfFloat:
-        case VertexAttribType::HalfFloatOES:
-            switch (components)
-            {
-                case 1:
-                    return angle::FormatID::R16_FLOAT;
-                case 2:
-                    return angle::FormatID::R16G16_FLOAT;
-                case 3:
-                    return angle::FormatID::R16G16B16_FLOAT;
-                case 4:
-                    return angle::FormatID::R16G16B16A16_FLOAT;
-                default:
-                    UNREACHABLE();
-                    return angle::FormatID::NONE;
-            }
-        case VertexAttribType::Fixed:
-            switch (components)
-            {
-                case 1:
-                    return angle::FormatID::R32_FIXED;
-                case 2:
-                    return angle::FormatID::R32G32_FIXED;
-                case 3:
-                    return angle::FormatID::R32G32B32_FIXED;
-                case 4:
-                    return angle::FormatID::R32G32B32A32_FIXED;
-                default:
-                    UNREACHABLE();
-                    return angle::FormatID::NONE;
-            }
-        case VertexAttribType::Int2101010:
-            if (pureInteger)
-                return angle::FormatID::R10G10B10A2_SINT;
-            if (normalized)
-                return angle::FormatID::R10G10B10A2_SNORM;
-            return angle::FormatID::R10G10B10A2_SSCALED;
-        case VertexAttribType::UnsignedInt2101010:
-            if (pureInteger)
-                return angle::FormatID::R10G10B10A2_UINT;
-            if (normalized)
-                return angle::FormatID::R10G10B10A2_UNORM;
-            return angle::FormatID::R10G10B10A2_USCALED;
-        case VertexAttribType::Int1010102:
-            switch (components)
-            {
-                case 3:
-                    if (pureInteger)
-                        return angle::FormatID::X2R10G10B10_SINT_VERTEX;
-                    if (normalized)
-                        return angle::FormatID::X2R10G10B10_SNORM_VERTEX;
-                    return angle::FormatID::X2R10G10B10_SSCALED_VERTEX;
-                case 4:
-                    if (pureInteger)
-                        return angle::FormatID::A2R10G10B10_SINT_VERTEX;
-                    if (normalized)
-                        return angle::FormatID::A2R10G10B10_SNORM_VERTEX;
-                    return angle::FormatID::A2R10G10B10_SSCALED_VERTEX;
-                default:
-                    UNREACHABLE();
-                    return angle::FormatID::NONE;
-            }
-        case VertexAttribType::UnsignedInt1010102:
-            switch (components)
-            {
-                case 3:
-                    if (pureInteger)
-                        return angle::FormatID::X2R10G10B10_UINT_VERTEX;
-                    if (normalized)
-                        return angle::FormatID::X2R10G10B10_UNORM_VERTEX;
-                    return angle::FormatID::X2R10G10B10_USCALED_VERTEX;
+// kVertexFormat* tables below rely on these values
+static_assert(kVertexFormatCount == 18);
+static_assert(static_cast<uint32_t>(VertexAttribType::Byte) == 0);
+static_assert(static_cast<uint32_t>(VertexAttribType::UnsignedByte) == 1);
+static_assert(static_cast<uint32_t>(VertexAttribType::Short) == 2);
+static_assert(static_cast<uint32_t>(VertexAttribType::UnsignedShort) == 3);
+static_assert(static_cast<uint32_t>(VertexAttribType::Int) == 4);
+static_assert(static_cast<uint32_t>(VertexAttribType::UnsignedInt) == 5);
+static_assert(static_cast<uint32_t>(VertexAttribType::Float) == 6);
+static_assert(static_cast<uint32_t>(VertexAttribType::Unused1) == 7);
+static_assert(static_cast<uint32_t>(VertexAttribType::Unused2) == 8);
+static_assert(static_cast<uint32_t>(VertexAttribType::Unused3) == 9);
+static_assert(static_cast<uint32_t>(VertexAttribType::Unused4) == 10);
+static_assert(static_cast<uint32_t>(VertexAttribType::HalfFloat) == 11);
+static_assert(static_cast<uint32_t>(VertexAttribType::Fixed) == 12);
+static_assert(static_cast<uint32_t>(VertexAttribType::UnsignedInt2101010) == 13);
+static_assert(static_cast<uint32_t>(VertexAttribType::HalfFloatOES) == 14);
+static_assert(static_cast<uint32_t>(VertexAttribType::Int2101010) == 15);
+static_assert(static_cast<uint32_t>(VertexAttribType::UnsignedInt1010102) == 16);
+static_assert(static_cast<uint32_t>(VertexAttribType::Int1010102) == 17);
 
-                case 4:
-                    if (pureInteger)
-                        return angle::FormatID::A2R10G10B10_UINT_VERTEX;
-                    if (normalized)
-                        return angle::FormatID::A2R10G10B10_UNORM_VERTEX;
-                    return angle::FormatID::A2R10G10B10_USCALED_VERTEX;
-                default:
-                    UNREACHABLE();
-                    return angle::FormatID::NONE;
-            }
-        default:
-            UNREACHABLE();
-            return angle::FormatID::NONE;
-    }
-}
+angle::FormatID kVertexFormatPureInteger[kVertexFormatCount][4] = {
+    // Byte
+    {angle::FormatID::R8_SINT, angle::FormatID::R8G8_SINT, angle::FormatID::R8G8B8_SINT,
+     angle::FormatID::R8G8B8A8_SINT},
+    // UnsignedByte
+    {angle::FormatID::R8_UINT, angle::FormatID::R8G8_UINT, angle::FormatID::R8G8B8_UINT,
+     angle::FormatID::R8G8B8A8_UINT},
+    // Short
+    {angle::FormatID::R16_SINT, angle::FormatID::R16G16_SINT, angle::FormatID::R16G16B16_SINT,
+     angle::FormatID::R16G16B16A16_SINT},
+    // UnsignedShort
+    {angle::FormatID::R16_UINT, angle::FormatID::R16G16_UINT, angle::FormatID::R16G16B16_UINT,
+     angle::FormatID::R16G16B16A16_UINT},
+    // Int
+    {angle::FormatID::R32_SINT, angle::FormatID::R32G32_SINT, angle::FormatID::R32G32B32_SINT,
+     angle::FormatID::R32G32B32A32_SINT},
+    // UnsignedInt
+    {angle::FormatID::R32_UINT, angle::FormatID::R32G32_UINT, angle::FormatID::R32G32B32_UINT,
+     angle::FormatID::R32G32B32A32_UINT},
+    // Float
+    {angle::FormatID::R32_FLOAT, angle::FormatID::R32G32_FLOAT, angle::FormatID::R32G32B32_FLOAT,
+     angle::FormatID::R32G32B32A32_FLOAT},
+    // Unused1
+    {angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::NONE},
+    // Unused2
+    {angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::NONE},
+    // Unused3
+    {angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::NONE},
+    // Unused4
+    {angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::NONE},
+    // HalfFloat
+    {angle::FormatID::R16_FLOAT, angle::FormatID::R16G16_FLOAT, angle::FormatID::R16G16B16_FLOAT,
+     angle::FormatID::R16G16B16A16_FLOAT},
+    // Fixed
+    {angle::FormatID::R32_FIXED, angle::FormatID::R32G32_FIXED, angle::FormatID::R32G32B32_FIXED,
+     angle::FormatID::R32G32B32A32_FIXED},
+    // UnsignedInt2101010
+    {angle::FormatID::R10G10B10A2_UINT, angle::FormatID::R10G10B10A2_UINT,
+     angle::FormatID::R10G10B10A2_UINT, angle::FormatID::R10G10B10A2_UINT},
+    // HalfFloatOES
+    {angle::FormatID::R16_FLOAT, angle::FormatID::R16G16_FLOAT, angle::FormatID::R16G16B16_FLOAT,
+     angle::FormatID::R16G16B16A16_FLOAT},
+    // Int2101010
+    {angle::FormatID::R10G10B10A2_SINT, angle::FormatID::R10G10B10A2_SINT,
+     angle::FormatID::R10G10B10A2_SINT, angle::FormatID::R10G10B10A2_SINT},
+    // UnsignedInt1010102
+    {angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::X2R10G10B10_UINT_VERTEX,
+     angle::FormatID::A2R10G10B10_UINT_VERTEX},
+    // Int1010102
+    {angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::X2R10G10B10_SINT_VERTEX,
+     angle::FormatID::A2R10G10B10_SINT_VERTEX},
+};
+
+angle::FormatID kVertexFormatNormalized[kVertexFormatCount][4] = {
+    // Byte
+    {angle::FormatID::R8_SNORM, angle::FormatID::R8G8_SNORM, angle::FormatID::R8G8B8_SNORM,
+     angle::FormatID::R8G8B8A8_SNORM},
+    // UnsignedByte
+    {angle::FormatID::R8_UNORM, angle::FormatID::R8G8_UNORM, angle::FormatID::R8G8B8_UNORM,
+     angle::FormatID::R8G8B8A8_UNORM},
+    // Short
+    {angle::FormatID::R16_SNORM, angle::FormatID::R16G16_SNORM, angle::FormatID::R16G16B16_SNORM,
+     angle::FormatID::R16G16B16A16_SNORM},
+    // UnsignedShort
+    {angle::FormatID::R16_UNORM, angle::FormatID::R16G16_UNORM, angle::FormatID::R16G16B16_UNORM,
+     angle::FormatID::R16G16B16A16_UNORM},
+    // Int
+    {angle::FormatID::R32_SNORM, angle::FormatID::R32G32_SNORM, angle::FormatID::R32G32B32_SNORM,
+     angle::FormatID::R32G32B32A32_SNORM},
+    // UnsignedInt
+    {angle::FormatID::R32_UNORM, angle::FormatID::R32G32_UNORM, angle::FormatID::R32G32B32_UNORM,
+     angle::FormatID::R32G32B32A32_UNORM},
+    // Float
+    {angle::FormatID::R32_FLOAT, angle::FormatID::R32G32_FLOAT, angle::FormatID::R32G32B32_FLOAT,
+     angle::FormatID::R32G32B32A32_FLOAT},
+    // Unused1
+    {angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::NONE},
+    // Unused2
+    {angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::NONE},
+    // Unused3
+    {angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::NONE},
+    // Unused4
+    {angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::NONE},
+    // HalfFloat
+    {angle::FormatID::R16_FLOAT, angle::FormatID::R16G16_FLOAT, angle::FormatID::R16G16B16_FLOAT,
+     angle::FormatID::R16G16B16A16_FLOAT},
+    // Fixed
+    {angle::FormatID::R32_FIXED, angle::FormatID::R32G32_FIXED, angle::FormatID::R32G32B32_FIXED,
+     angle::FormatID::R32G32B32A32_FIXED},
+    // UnsignedInt2101010
+    {angle::FormatID::R10G10B10A2_UNORM, angle::FormatID::R10G10B10A2_UNORM,
+     angle::FormatID::R10G10B10A2_UNORM, angle::FormatID::R10G10B10A2_UNORM},
+    // HalfFloatOES
+    {angle::FormatID::R16_FLOAT, angle::FormatID::R16G16_FLOAT, angle::FormatID::R16G16B16_FLOAT,
+     angle::FormatID::R16G16B16A16_FLOAT},
+    // Int2101010
+    {angle::FormatID::R10G10B10A2_SNORM, angle::FormatID::R10G10B10A2_SNORM,
+     angle::FormatID::R10G10B10A2_SNORM, angle::FormatID::R10G10B10A2_SNORM},
+    // UnsignedInt1010102
+    {angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::X2R10G10B10_UNORM_VERTEX,
+     angle::FormatID::A2R10G10B10_UNORM_VERTEX},
+    // Int1010102
+    {angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::X2R10G10B10_SNORM_VERTEX,
+     angle::FormatID::A2R10G10B10_SNORM_VERTEX},
+};
+
+angle::FormatID kVertexFormatScaled[kVertexFormatCount][4] = {
+    // Byte
+    {angle::FormatID::R8_SSCALED, angle::FormatID::R8G8_SSCALED, angle::FormatID::R8G8B8_SSCALED,
+     angle::FormatID::R8G8B8A8_SSCALED},
+    // UnsignedByte
+    {angle::FormatID::R8_USCALED, angle::FormatID::R8G8_USCALED, angle::FormatID::R8G8B8_USCALED,
+     angle::FormatID::R8G8B8A8_USCALED},
+    // Short
+    {angle::FormatID::R16_SSCALED, angle::FormatID::R16G16_SSCALED,
+     angle::FormatID::R16G16B16_SSCALED, angle::FormatID::R16G16B16A16_SSCALED},
+    // UnsignedShort
+    {angle::FormatID::R16_USCALED, angle::FormatID::R16G16_USCALED,
+     angle::FormatID::R16G16B16_USCALED, angle::FormatID::R16G16B16A16_USCALED},
+    // Int
+    {angle::FormatID::R32_SSCALED, angle::FormatID::R32G32_SSCALED,
+     angle::FormatID::R32G32B32_SSCALED, angle::FormatID::R32G32B32A32_SSCALED},
+    // UnsignedInt
+    {angle::FormatID::R32_USCALED, angle::FormatID::R32G32_USCALED,
+     angle::FormatID::R32G32B32_USCALED, angle::FormatID::R32G32B32A32_USCALED},
+    // Float
+    {angle::FormatID::R32_FLOAT, angle::FormatID::R32G32_FLOAT, angle::FormatID::R32G32B32_FLOAT,
+     angle::FormatID::R32G32B32A32_FLOAT},
+    // Unused1
+    {angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::NONE},
+    // Unused2
+    {angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::NONE},
+    // Unused3
+    {angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::NONE},
+    // Unused4
+    {angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::NONE},
+    // HalfFloat
+    {angle::FormatID::R16_FLOAT, angle::FormatID::R16G16_FLOAT, angle::FormatID::R16G16B16_FLOAT,
+     angle::FormatID::R16G16B16A16_FLOAT},
+    // Fixed
+    {angle::FormatID::R32_FIXED, angle::FormatID::R32G32_FIXED, angle::FormatID::R32G32B32_FIXED,
+     angle::FormatID::R32G32B32A32_FIXED},
+    // UnsignedInt2101010
+    {angle::FormatID::R10G10B10A2_USCALED, angle::FormatID::R10G10B10A2_USCALED,
+     angle::FormatID::R10G10B10A2_USCALED, angle::FormatID::R10G10B10A2_USCALED},
+    // HalfFloatOES
+    {angle::FormatID::R16_FLOAT, angle::FormatID::R16G16_FLOAT, angle::FormatID::R16G16B16_FLOAT,
+     angle::FormatID::R16G16B16A16_FLOAT},
+    // Int2101010
+    {angle::FormatID::R10G10B10A2_SSCALED, angle::FormatID::R10G10B10A2_SSCALED,
+     angle::FormatID::R10G10B10A2_SSCALED, angle::FormatID::R10G10B10A2_SSCALED},
+    // UnsignedInt1010102
+    {angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::X2R10G10B10_USCALED_VERTEX,
+     angle::FormatID::A2R10G10B10_USCALED_VERTEX},
+    // Int1010102
+    {angle::FormatID::NONE, angle::FormatID::NONE, angle::FormatID::X2R10G10B10_SSCALED_VERTEX,
+     angle::FormatID::A2R10G10B10_SSCALED_VERTEX},
+};
 
 angle::FormatID GetVertexFormatID(const VertexAttribute &attrib, VertexAttribType currentValueType)
 {

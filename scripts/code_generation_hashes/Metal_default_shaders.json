@@ -4,7 +4,7 @@
   "src/libANGLE/renderer/angle_format_map.json":
     "135d70465df3e9b8535f15d3daee38ac",
   "src/libANGLE/renderer/gen_angle_format_table.py":
-    "dfaab1331e585707958f5dff7e766a03",
+    "5dc62611df0c3498b12449185b7ccd6b",
   "src/libANGLE/renderer/metal/shaders/blit.metal":
     "9b3b7c24cd486c0987be24014f0ac427",
   "src/libANGLE/renderer/metal/shaders/clear.metal":

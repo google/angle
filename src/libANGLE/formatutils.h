@@ -402,10 +402,36 @@ struct VertexFormat : private angle::NonCopyable
     bool pureInteger;
 };
 
-angle::FormatID GetVertexFormatID(VertexAttribType type,
-                                  GLboolean normalized,
-                                  GLuint components,
-                                  bool pureInteger);
+constexpr uint32_t kVertexFormatCount = static_cast<uint32_t>(VertexAttribType::EnumCount);
+extern angle::FormatID kVertexFormatPureInteger[kVertexFormatCount][4];
+extern angle::FormatID kVertexFormatNormalized[kVertexFormatCount][4];
+extern angle::FormatID kVertexFormatScaled[kVertexFormatCount][4];
+
+ANGLE_INLINE angle::FormatID GetVertexFormatID(VertexAttribType type,
+                                               GLboolean normalized,
+                                               GLuint components,
+                                               bool pureInteger)
+{
+    ASSERT(components >= 1 && components <= 4);
+
+    angle::FormatID result;
+    int index = static_cast<int>(type);
+    if (pureInteger)
+    {
+        result = kVertexFormatPureInteger[index][components - 1];
+    }
+    else if (normalized)
+    {
+        result = kVertexFormatNormalized[index][components - 1];
+    }
+    else
+    {
+        result = kVertexFormatScaled[index][components - 1];
+    }
+
+    ASSERT(result != angle::FormatID::NONE);
+    return result;
+}
 
 angle::FormatID GetVertexFormatID(const VertexAttribute &attrib, VertexAttribType currentValueType);
 angle::FormatID GetCurrentValueFormatID(VertexAttribType currentValueType);

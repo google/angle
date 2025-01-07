@@ -26,7 +26,7 @@ namespace angle
 struct FeatureSetBase;
 struct Format;
 struct ImageLoadContext;
-enum class FormatID;
+enum class FormatID : uint8_t;
 }  // namespace angle
 
 namespace gl
