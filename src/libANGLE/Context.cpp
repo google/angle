@@ -3455,9 +3455,24 @@ void Context::initVersionStrings()
     const Version &clientVersion = getClientVersion();
 
     std::ostringstream versionString;
-    versionString << "OpenGL ES ";
-    versionString << clientVersion.major << "." << clientVersion.minor << ".0 (ANGLE "
-                  << angle::GetANGLEVersionString() << ")";
+
+    constexpr char kVersionString[]        = "ANGLE_GL_VERSION";
+    constexpr char kAndroidVersionString[] = "debug.angle.gl_version";
+
+    std::string overrideVersion =
+        angle::GetEnvironmentVarOrAndroidProperty(kVersionString, kAndroidVersionString);
+
+    if (!overrideVersion.empty())
+    {
+        versionString << overrideVersion;
+    }
+    else
+    {
+        versionString << "OpenGL ES ";
+        versionString << clientVersion.major << "." << clientVersion.minor << ".0 (ANGLE "
+                      << angle::GetANGLEVersionString() << ")";
+    }
+
     mVersionString = MakeStaticString(versionString.str());
 
     std::ostringstream shadingLanguageVersionString;
