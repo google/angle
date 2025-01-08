@@ -105,7 +105,6 @@ SYNCED_GCS_DEPS = {
 #   * third_party/vulkan-utility-libraries/src
 #   * third_party/vulkan-validation-layers/src
 #   * third_party/vulkan_memory_allocator
-#   * third_party/wayland
 SYNCED_REPOS = {
     'third_party/catapult': None,
     'third_party/clang-format/script': None,
@@ -113,6 +112,7 @@ SYNCED_REPOS = {
     'third_party/cpu_features/src': None,
     # third_party/dawn is synced manually due to a circular dependency.
     'third_party/depot_tools': None,
+    'third_party/expat/src': None,
     'third_party/flatbuffers/src': None,
     'third_party/googletest/src': None,
     'third_party/libdrm/src': None,
@@ -124,6 +124,8 @@ SYNCED_REPOS = {
     'third_party/nasm': None,
     'third_party/re2/src': None,
     'third_party/requests/src': None,
+    'third_party/wayland/src': None,
+    'third_party/wayland-protocols/src': None,
 }
 
 # Chromium directories that are exported as pseudo-repos in

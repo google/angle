@@ -104,7 +104,7 @@
 /third_party/vulkan-utility-libraries/src
 /third_party/vulkan-validation-layers/src
 /third_party/vulkan_memory_allocator
-/third_party/wayland
+/third_party/wayland/src
 /third_party/zlib
 /tools/android
 /tools/clang

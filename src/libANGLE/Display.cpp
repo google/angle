@@ -452,6 +452,13 @@ rx::DisplayImpl *CreateDisplayFromAttribs(EGLAttrib displayType,
                 break;
             }
 #        endif
+#        if defined(ANGLE_USE_WAYLAND)
+            if (platformType == EGL_PLATFORM_WAYLAND_EXT)
+            {
+                impl = new rx::DisplayEGL(state);
+                break;
+            }
+#        endif
             if (platformType == EGL_PLATFORM_SURFACELESS_MESA)
             {
                 impl = new rx::DisplayEGL(state);
@@ -502,6 +509,13 @@ rx::DisplayImpl *CreateDisplayFromAttribs(EGLAttrib displayType,
                 if (platformType == EGL_PLATFORM_X11_EXT)
                 {
                     impl = rx::CreateGLXDisplay(state);
+                    break;
+                }
+#        endif
+#        if defined(ANGLE_USE_WAYLAND)
+                if (platformType == EGL_PLATFORM_WAYLAND_EXT)
+                {
+                    impl = new rx::DisplayEGL(state);
                     break;
                 }
 #        endif

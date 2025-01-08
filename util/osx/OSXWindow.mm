@@ -831,7 +831,7 @@ NSWindow *OSXWindow::getNSWindow() const
 }
 
 // static
-OSWindow *OSWindow::New()
+OSWindow *OSWindow::New(void * /*nativeDisplay*/)
 {
     return new OSXWindow;
 }

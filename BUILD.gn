@@ -32,8 +32,9 @@ if (angle_has_build) {
 
 declare_args() {
   # Use the PCI lib to collect GPU information on Linux.
-  use_libpci = (is_linux || is_chromeos) && (angle_use_x11 || use_ozone) &&
-               angle_has_build
+  use_libpci =
+      (is_linux || is_chromeos) &&
+      (angle_use_x11 || angle_use_wayland || use_ozone) && angle_has_build
 
   # Enable using Vulkan to collect system info as a fallback.
   angle_enable_vulkan_system_info = is_chromeos
@@ -263,21 +264,22 @@ config("internal_config") {
     defines += [ "ANGLE_PLATFORM_CHROMEOS" ]
   }
 
+  # Enable system without X11.
+  if (!angle_use_x11) {
+    defines += [ "EGL_NO_X11" ]
+  }
+
+  # These two are needed here to correctly select OSWindow::New
+  if (angle_use_x11) {
+    defines += [ "ANGLE_USE_X11" ]
+  }
+  if (angle_use_wayland) {
+    defines += [ "ANGLE_USE_WAYLAND" ]
+  }
   if (angle_use_vulkan_null_display) {
     defines += [ "ANGLE_USE_VULKAN_NULL_DISPLAY" ]
   } else if (angle_use_vulkan_display) {
     defines += [ "ANGLE_USE_VULKAN_DISPLAY" ]
-    if (!angle_use_x11) {
-      defines += [ "EGL_NO_X11" ]
-    }
-
-    # These two are needed here to correctly select OSWindow::New
-    if (angle_use_x11) {
-      defines += [ "ANGLE_USE_X11" ]
-    }
-    if (angle_use_wayland) {
-      defines += [ "ANGLE_USE_WAYLAND" ]
-    }
 
     if (angle_vulkan_display_mode == "simple") {
       defines += [ "ANGLE_VULKAN_DISPLAY_MODE_SIMPLE" ]
@@ -1236,7 +1238,7 @@ if (angle_use_wayland) {
 
     include_dirs = [
       "$wayland_dir/egl",
-      "$wayland_dir/src",
+      "$wayland_dir",
     ]
   }
 
