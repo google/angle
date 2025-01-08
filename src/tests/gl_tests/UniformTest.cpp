@@ -782,6 +782,7 @@ struct Uniforms {
     float b;
     float c;
     float[5] d;
+    float[4] d2;
     float e;
     vec3 f[7];
 };
@@ -789,7 +790,8 @@ uniform Uniforms unis;
 out vec4 fragColor;
 void main() {
     float[5] dCopy = unis.d;
-    fragColor = vec4(dCopy[1], 0.0, 0.0, 1.0);
+    float[4] d2Copy = unis.d2;
+    fragColor = vec4(dCopy[1], d2Copy[0], 0.0, 1.0);
 })";
 
     GLuint program = CompileProgram(essl3_shaders::vs::Simple(), kFragShader);
@@ -798,9 +800,12 @@ void main() {
 
     GLint uniformDLocation = glGetUniformLocation(program, "unis.d[1]");
     ASSERT_NE(uniformDLocation, -1);
+    GLint uniformD2Location = glGetUniformLocation(program, "unis.d2[0]");
+    ASSERT_NE(uniformD2Location, -1);
 
     // Set to black
     glUniform1f(uniformDLocation, 0.0f);
+    glUniform1f(uniformD2Location, 0.0f);
 
     drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
     ASSERT_GL_NO_ERROR();

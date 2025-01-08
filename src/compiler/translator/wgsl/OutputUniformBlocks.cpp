@@ -136,9 +136,13 @@ bool OutputUniformWrapperStructsAndConversions(
 
 ImmutableString MakeUnwrappingArrayConversionFunctionName(const TType *type)
 {
-    return BuildConcatenatedImmutableString("ANGLE_Convert_", MakeUniformWrapperStructName(type),
-                                            "_ElementsTo_", type->getBuiltInTypeNameString(),
-                                            "_Elements");
+    ASSERT(type->getNumArraySizes() <= 1);
+    ImmutableString arrStr = type->isArray() ? BuildConcatenatedImmutableString(
+                                                   "Array", type->getOutermostArraySize(), "_")
+                                             : kEmptyImmutableString;
+    return BuildConcatenatedImmutableString("ANGLE_Convert_", arrStr,
+                                            MakeUniformWrapperStructName(type), "_ElementsTo_",
+                                            type->getBuiltInTypeNameString(), "_Elements");
 }
 
 bool OutputUniformBlocks(TCompiler *compiler, TIntermBlock *root)

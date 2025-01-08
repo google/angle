@@ -432,7 +432,7 @@ struct ANGLE_wrapped_float
 {
   @align(16) elem : f32
 };
-fn ANGLE_Convert_ANGLE_wrapped_float_ElementsTo_float_Elements(wrappedArr : array<ANGLE_wrapped_float, 5>) -> array<f32, 5>
+fn ANGLE_Convert_Array5_ANGLE_wrapped_float_ElementsTo_float_Elements(wrappedArr : array<ANGLE_wrapped_float, 5>) -> array<f32, 5>
 {
   var retVal : array<f32, 5>;
   for (var i : u32 = 0; i < 5; i++) {;
@@ -461,9 +461,9 @@ struct _uUniforms
 
 fn _umain()
 {
-  var _udCopy : array<f32, 5> = (ANGLE_Convert_ANGLE_wrapped_float_ElementsTo_float_Elements((ANGLE_defaultUniformBlock.unis)._ud));
+  var _udCopy : array<f32, 5> = (ANGLE_Convert_Array5_ANGLE_wrapped_float_ElementsTo_float_Elements((ANGLE_defaultUniformBlock.unis)._ud));
   (ANGLE_output_global.fragColor) = (vec4<f32>(((ANGLE_defaultUniformBlock.unis)._ua)._ux, (ANGLE_defaultUniformBlock.unis)._ub, (ANGLE_defaultUniformBlock.unis)._uc, (_udCopy)[1i]));
-  (ANGLE_output_global.fragColor) += (vec4<f32>((ANGLE_defaultUniformBlock.unis)._ud[2i].elem, (ANGLE_defaultUniformBlock.unis)._ue, (((ANGLE_defaultUniformBlock.unis)._uf)[0i])[2i], (select((ANGLE_Convert_ANGLE_wrapped_float_ElementsTo_float_Elements((ANGLE_defaultUniformBlock.unis)._ug)), (ANGLE_Convert_ANGLE_wrapped_float_ElementsTo_float_Elements((ANGLE_defaultUniformBlock.unis)._ud)), (((ANGLE_defaultUniformBlock.unis)._ue) > (0.5f))))[1i]));
+  (ANGLE_output_global.fragColor) += (vec4<f32>((ANGLE_defaultUniformBlock.unis)._ud[2i].elem, (ANGLE_defaultUniformBlock.unis)._ue, (((ANGLE_defaultUniformBlock.unis)._uf)[0i])[2i], (select((ANGLE_Convert_Array5_ANGLE_wrapped_float_ElementsTo_float_Elements((ANGLE_defaultUniformBlock.unis)._ug)), (ANGLE_Convert_Array5_ANGLE_wrapped_float_ElementsTo_float_Elements((ANGLE_defaultUniformBlock.unis)._ud)), (((ANGLE_defaultUniformBlock.unis)._ue) > (0.5f))))[1i]));
 }
 @fragment
 fn wgslMain() -> ANGLE_Output_Annotated
