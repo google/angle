@@ -7517,6 +7517,16 @@ bool ValidatePixelPack(const Context *context,
             ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kParamOverflow);
             return false;
         }
+
+        const auto &typeInfo = GetTypeInfo(type);
+        if (reinterpret_cast<uintptr_t>(pixels) % typeInfo.bytes != 0)
+        {
+            // data is not evenly divisible by the number of basic machine units needed
+            // to store in memory the corresponding GL data type from table 8.4 for the
+            // type parameter.
+            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kBufferOffsetNotAligned);
+            return false;
+        }
     }
 
     if (pixelPackBuffer == nullptr && length != nullptr)

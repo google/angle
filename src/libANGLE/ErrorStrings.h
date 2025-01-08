@@ -502,6 +502,7 @@ MSG kOffsetOverflow = "Offset overflows texture dimensions.";
 MSG kOtherQueryActive = "Other query is active.";
 MSG kOutsideOfBounds = "Parameter outside of bounds.";
 MSG kParamOverflow = "The provided parameters overflow with the provided buffer.";
+MSG kBufferOffsetNotAligned = "Buffer offset in ReadPixels not aligned with type";
 MSG kPerfMonitorNotActive = "Perf monitor is not started.";
 MSG kPixelDataNotNull = "Pixel data must be null.";
 MSG kPixelDataNull = "Pixel data cannot be null.";
