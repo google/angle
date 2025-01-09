@@ -1119,13 +1119,18 @@ class BufferHelper : public ReadWriteResource
                            VkAccessFlags readAccessType,
                            VkPipelineStageFlags readStage,
                            PipelineStage stageIndex,
-                           PipelineBarrierArray *pipelineBarriers);
+                           PipelineBarrierArray *pipelineBarriers,
+                           EventBarrierArray *eventBarriers,
+                           RefCountedEventCollector *eventCollector);
 
     void recordWriteBarrier(Context *context,
                             VkAccessFlags writeAccessType,
                             VkPipelineStageFlags writeStage,
                             PipelineStage stageIndex,
-                            PipelineBarrierArray *pipelineBarriers);
+                            const QueueSerial &queueSerial,
+                            PipelineBarrierArray *pipelineBarriers,
+                            EventBarrierArray *eventBarriers,
+                            RefCountedEventCollector *eventCollector);
 
     void fillWithColor(const angle::Color<uint8_t> &color,
                        const gl::InternalFormat &internalFormat);
@@ -1160,6 +1165,19 @@ class BufferHelper : public ReadWriteResource
     // Returns the current VkAccessFlags bits
     VkAccessFlags getCurrentWriteAccess() const { return mCurrentWriteAccess; }
 
+    void setCurrentWriteEvent(Context *context,
+                              VkAccessFlags writeAccessType,
+                              VkPipelineStageFlags writePipelineStageFlags,
+                              PipelineStage writeStage,
+                              EventStage eventStage,
+                              RefCountedEventArray *eventArray);
+
+    void setCurrentReadEvent(Context *context,
+                             VkAccessFlags readAccessType,
+                             VkPipelineStageFlags readPipelineStageFlags,
+                             EventStage eventStage,
+                             RefCountedEventArray *eventArray);
+
   private:
     // Only called by DynamicBuffer.
     friend class DynamicBuffer;
@@ -1169,6 +1187,15 @@ class BufferHelper : public ReadWriteResource
     }
 
     void releaseImpl(Renderer *renderer);
+
+    void updatePipelineStageWriteHistory(PipelineStage writeStage)
+    {
+        mTransformFeedbackWriteHeuristicBits <<= 1;
+        if (writeStage == PipelineStage::TransformFeedback)
+        {
+            mTransformFeedbackWriteHeuristicBits |= 1;
+        }
+    }
 
     // Suballocation object.
     BufferSuballocation mSuballocation;
@@ -1184,6 +1211,16 @@ class BufferHelper : public ReadWriteResource
     VkFlags mCurrentReadAccess;
     VkPipelineStageFlags mCurrentWriteStages;
     VkPipelineStageFlags mCurrentReadStages;
+
+    // The current refCounted event. When barrier is needed, we should wait for this event.
+    RefCountedEvent mCurrentWriteEvent;
+    RefCountedEventArrayWithAccessFlags mCurrentReadEvents;
+
+    // Track history of pipeline stages being used. This information provides
+    // heuristic for making decisions if a VkEvent should be used to track the operation.
+    static constexpr uint32_t kTransformFeedbackWriteHeuristicWindowSize = 16;
+    angle::BitSet16<kTransformFeedbackWriteHeuristicWindowSize>
+        mTransformFeedbackWriteHeuristicBits;
 
     BufferSerial mSerial;
     // Manages the descriptorSet cache that created with this BufferHelper object.

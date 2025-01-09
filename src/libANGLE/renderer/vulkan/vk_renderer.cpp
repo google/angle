@@ -5869,6 +5869,8 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // TBRs. Also enabled for SwiftShader so that we get more test coverage in bots.
     ANGLE_FEATURE_CONDITION(&mFeatures, useVkEventForImageBarrier,
                             isTileBasedRenderer || isSwiftShader);
+    ANGLE_FEATURE_CONDITION(&mFeatures, useVkEventForBufferBarrier,
+                            isTileBasedRenderer || isSwiftShader);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsMaintenance5,
                             mMaintenance5Features.maintenance5 == VK_TRUE);
