@@ -800,9 +800,6 @@ struct ClientExtensions
     // EGL_ANGLE_platform_angle_vulkan
     bool platformANGLEVulkan = false;
 
-    // EGL_ANGLE_platform_angle_vulkan_device_uuid
-    bool platformANGLEVulkanDeviceUUID = false;
-
     // EGL_ANGLE_platform_angle_metal
     bool platformANGLEMetal = false;
 

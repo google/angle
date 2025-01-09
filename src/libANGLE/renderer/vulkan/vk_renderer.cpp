@@ -1736,7 +1736,6 @@ Renderer::Renderer()
       mEnabledICD(angle::vk::ICD::Default),
       mDebugUtilsMessenger(VK_NULL_HANDLE),
       mPhysicalDevice(VK_NULL_HANDLE),
-      mPhysicalDeviceProperties(mPhysicalDeviceProperties2.properties),
       mCurrentQueueFamilyIndex(std::numeric_limits<uint32_t>::max()),
       mMaxVertexAttribDivisor(1),
       mMaxVertexAttribStride(0),
@@ -2052,9 +2051,6 @@ angle::Result Renderer::initialize(vk::Context *context,
                                    angle::vk::ICD desiredICD,
                                    uint32_t preferredVendorId,
                                    uint32_t preferredDeviceId,
-                                   const uint8_t *preferredDeviceUuid,
-                                   const uint8_t *preferredDriverUuid,
-                                   VkDriverId preferredDriverId,
                                    UseDebugLayers useDebugLayers,
                                    const char *wsiExtension,
                                    const char *wsiLayer,
@@ -2275,14 +2271,13 @@ angle::Result Renderer::initialize(vk::Context *context,
     ANGLE_VK_TRY(context, vkEnumeratePhysicalDevices(mInstance, &physicalDeviceCount, nullptr));
     ANGLE_VK_CHECK(context, physicalDeviceCount > 0, VK_ERROR_INITIALIZATION_FAILED);
 
+    // TODO(jmadill): Handle multiple physical devices. For now, use the first device.
     std::vector<VkPhysicalDevice> physicalDevices(physicalDeviceCount);
     ANGLE_VK_TRY(context, vkEnumeratePhysicalDevices(mInstance, &physicalDeviceCount,
                                                      physicalDevices.data()));
-    ChoosePhysicalDevice(vkGetPhysicalDeviceProperties2, physicalDevices, mEnabledICD,
-                         preferredVendorId, preferredDeviceId, preferredDeviceUuid,
-                         preferredDriverUuid, preferredDriverId, &mPhysicalDevice,
-                         &mPhysicalDeviceProperties2, &mPhysicalDeviceIDProperties,
-                         &mDriverProperties);
+    ChoosePhysicalDevice(vkGetPhysicalDeviceProperties, physicalDevices, mEnabledICD,
+                         preferredVendorId, preferredDeviceId, &mPhysicalDevice,
+                         &mPhysicalDeviceProperties);
 
     // The device version that is assumed by ANGLE is the minimum of the actual device version and
     // the highest it's allowed to use.
@@ -2916,6 +2911,12 @@ void Renderer::appendDeviceExtensionFeaturesPromotedTo13(
 void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceExtensionNames)
 {
     // Default initialize all extension features to false.
+    mPhysicalDevice11Properties       = {};
+    mPhysicalDevice11Properties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_PROPERTIES;
+
+    mPhysicalDevice11Features       = {};
+    mPhysicalDevice11Features.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_1_FEATURES;
+
     mLineRasterizationFeatures = {};
     mLineRasterizationFeatures.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_LINE_RASTERIZATION_FEATURES_EXT;
@@ -3152,6 +3153,8 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
     vkGetPhysicalDeviceProperties2(mPhysicalDevice, &deviceProperties);
 
     // Clean up pNext chains
+    mPhysicalDevice11Properties.pNext                 = nullptr;
+    mPhysicalDevice11Features.pNext                   = nullptr;
     mLineRasterizationFeatures.pNext                  = nullptr;
     mMemoryReportFeatures.pNext                       = nullptr;
     mProvokingVertexFeatures.pNext                    = nullptr;
@@ -3567,8 +3570,16 @@ void Renderer::enableDeviceExtensionsPromotedTo11(const vk::ExtensionNameList &d
 {
     // OVR_multiview disallows multiview with geometry and tessellation, so don't request these
     // features.
-    mMultiviewFeatures.multiviewGeometryShader     = VK_FALSE;
-    mMultiviewFeatures.multiviewTessellationShader = VK_FALSE;
+    mMultiviewFeatures.multiviewGeometryShader            = VK_FALSE;
+    mMultiviewFeatures.multiviewTessellationShader        = VK_FALSE;
+    mPhysicalDevice11Features.multiviewGeometryShader     = VK_FALSE;
+    mPhysicalDevice11Features.multiviewTessellationShader = VK_FALSE;
+
+    // Disable protected memory if not needed as it can introduce overhead
+    if (!mFeatures.supportsProtectedMemory.enabled)
+    {
+        mPhysicalDevice11Features.protectedMemory = VK_FALSE;
+    }
 
     if (mFeatures.supportsMultiview.enabled)
     {

@@ -49,8 +49,6 @@ struct GPUDeviceInfo
 
     // Fields only available via GetSystemInfoVulkan:
     VersionInfo detailedDriverVersion;
-    uint8_t deviceUUID[16]    = {};
-    uint8_t driverUUID[16]    = {};
     DriverID driverId         = 0;
     uint32_t driverApiVersion = 0;
 };

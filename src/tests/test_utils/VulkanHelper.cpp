@@ -239,13 +239,9 @@ void VulkanHelper::initialize(bool useSwiftshader, bool enableValidationLayers)
 
     ASSERT(physicalDevices.size() > 0);
 
-    VkPhysicalDeviceProperties2 physicalDeviceProperties2;
-    VkPhysicalDeviceIDProperties physicalDeviceIDProperties;
-    VkPhysicalDeviceDriverProperties driverProperties;
-    ChoosePhysicalDevice(vkGetPhysicalDeviceProperties2, physicalDevices, icd, 0, 0, nullptr,
-                         nullptr, static_cast<VkDriverId>(0), &mPhysicalDevice,
-                         &physicalDeviceProperties2, &physicalDeviceIDProperties,
-                         &driverProperties);
+    VkPhysicalDeviceProperties physicalDeviceProperties;
+    ChoosePhysicalDevice(vkGetPhysicalDeviceProperties, physicalDevices, icd, 0, 0,
+                         &mPhysicalDevice, &physicalDeviceProperties);
 
     vkGetPhysicalDeviceMemoryProperties(mPhysicalDevice, &mMemoryProperties);
 

@@ -2168,9 +2168,8 @@ static ClientExtensions GenerateClientExtensions()
 #endif
 
 #if defined(ANGLE_ENABLE_VULKAN)
-    extensions.platformANGLEVulkan           = true;
-    extensions.platformANGLEVulkanDeviceUUID = true;
-    extensions.platformANGLEDeviceId         = true;
+    extensions.platformANGLEVulkan   = true;
+    extensions.platformANGLEDeviceId = true;
 #endif
 
 #if defined(ANGLE_ENABLE_SWIFTSHADER)

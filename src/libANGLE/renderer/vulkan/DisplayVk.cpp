@@ -174,17 +174,10 @@ egl::Error DisplayVk::initialize(egl::Display *display)
         static_cast<uint32_t>(attribs.get(EGL_PLATFORM_ANGLE_DEVICE_ID_HIGH_ANGLE, 0));
     const uint32_t preferredDeviceId =
         static_cast<uint32_t>(attribs.get(EGL_PLATFORM_ANGLE_DEVICE_ID_LOW_ANGLE, 0));
-    const uint8_t *preferredDeviceUuid = reinterpret_cast<const uint8_t *>(
-        attribs.get(EGL_PLATFORM_ANGLE_VULKAN_DEVICE_UUID_ANGLE, 0));
-    const uint8_t *preferredDriverUuid = reinterpret_cast<const uint8_t *>(
-        attribs.get(EGL_PLATFORM_ANGLE_VULKAN_DRIVER_UUID_ANGLE, 0));
-    const VkDriverId preferredDriverId =
-        static_cast<VkDriverId>(attribs.get(EGL_PLATFORM_ANGLE_VULKAN_DRIVER_ID_ANGLE, 0));
 
     angle::Result result = mRenderer->initialize(
-        this, this, desiredICD, preferredVendorId, preferredDeviceId, preferredDeviceUuid,
-        preferredDriverUuid, preferredDriverId, useDebugLayers, getWSIExtension(), getWSILayer(),
-        getWindowSystem(), mState.featureOverrides);
+        this, this, desiredICD, preferredVendorId, preferredDeviceId, useDebugLayers,
+        getWSIExtension(), getWSILayer(), getWindowSystem(), mState.featureOverrides);
     ANGLE_TRY(angle::ToEGL(result, EGL_NOT_INITIALIZED));
 
     mDeviceQueueIndex = mRenderer->getDeviceQueueIndex(egl::ContextPriority::Medium);
