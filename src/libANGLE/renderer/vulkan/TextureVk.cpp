@@ -897,26 +897,32 @@ angle::Result TextureVk::clearSubImageImpl(const gl::Context *context,
     // If the texture is renderable (including multisampled), the partial clear can be applied to
     // the image simply by opening/closing a render pass with LOAD_OP_CLEAR. Otherwise, a buffer can
     // be filled with the given pixel data on the host and staged to the image as a buffer update.
-    ContextVk *contextVk                 = vk::GetImpl(context);
-    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(format, type);
-    const vk::Format &vkFormat =
-        contextVk->getRenderer()->getFormat(formatInfo.sizedInternalFormat);
-    const angle::FormatID &actualFormatID =
-        vkFormat.getActualImageFormatID(getRequiredImageAccess());
+    ContextVk *contextVk = vk::GetImpl(context);
+
+    const gl::InternalFormat &inputFormatInfo = gl::GetInternalFormatInfo(format, type);
+    const vk::Format &inputVkFormat =
+        contextVk->getRenderer()->getFormat(inputFormatInfo.sizedInternalFormat);
+
+    const gl::InternalFormat &outputFormatInfo =
+        gl::GetSizedInternalFormatInfo(mImage->getIntendedFormat().glInternalFormat);
+    const vk::Format &outputVkFormat =
+        contextVk->getRenderer()->getFormat(outputFormatInfo.sizedInternalFormat);
+    const angle::FormatID &outputActualFormatID = mImage->getActualFormatID();
+
     bool usesBufferForClear = false;
 
     VkFormatFeatureFlags renderableCheckFlag =
         clearMode == vk::ClearTextureMode::FullClear ? VK_FORMAT_FEATURE_TRANSFER_DST_BIT
-        : formatInfo.isDepthOrStencil() ? VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT
-                                        : VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
-    if (vk::FormatHasNecessaryFeature(contextVk->getRenderer(), actualFormatID, getTilingMode(),
-                                      renderableCheckFlag))
+        : outputFormatInfo.isDepthOrStencil() ? VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT
+                                              : VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
+    if (vk::FormatHasNecessaryFeature(contextVk->getRenderer(), outputActualFormatID,
+                                      getTilingMode(), renderableCheckFlag))
     {
         uint32_t baseLayer  = useLayerAsDepth ? clearArea.z : 0;
         uint32_t layerCount = useLayerAsDepth ? clearArea.depth : 1;
         ANGLE_TRY(mImage->stagePartialClear(contextVk, clearArea, clearMode, mState.getType(),
-                                            level, baseLayer, layerCount, type, formatInfo,
-                                            vkFormat, getRequiredImageAccess(), data));
+                                            level, baseLayer, layerCount, type, inputFormatInfo,
+                                            inputVkFormat, getRequiredImageAccess(), data));
     }
     else
     {
@@ -924,7 +930,7 @@ angle::Result TextureVk::clearSubImageImpl(const gl::Context *context,
         bool updateAppliedImmediately = false;
         usesBufferForClear            = true;
 
-        auto pixelSize = static_cast<size_t>(formatInfo.pixelBytes);
+        auto pixelSize = static_cast<size_t>(inputFormatInfo.pixelBytes);
         std::vector<uint8_t> pixelValue(pixelSize, 0);
         if (data != nullptr)
         {
@@ -964,8 +970,8 @@ angle::Result TextureVk::clearSubImageImpl(const gl::Context *context,
                 ANGLE_TRY(mImage->stageSubresourceUpdate(
                     contextVk, getNativeImageIndex(index),
                     gl::Extents(clearArea.width, clearArea.height, 1),
-                    gl::Offset(clearArea.x, clearArea.y, 0), formatInfo, pixelUnpackState, type,
-                    clearBuffer.data(), vkFormat, getRequiredImageAccess(),
+                    gl::Offset(clearArea.x, clearArea.y, 0), inputFormatInfo, pixelUnpackState,
+                    type, clearBuffer.data(), outputVkFormat, getRequiredImageAccess(),
                     vk::ApplyImageUpdate::Defer, &updateAppliedImmediately));
                 ASSERT(!updateAppliedImmediately);
             }
@@ -980,17 +986,17 @@ angle::Result TextureVk::clearSubImageImpl(const gl::Context *context,
             ANGLE_TRY(mImage->stageSubresourceUpdate(
                 contextVk, getNativeImageIndex(index),
                 gl::Extents(clearArea.width, clearArea.height, clearArea.depth),
-                gl::Offset(clearArea.x, clearArea.y, clearArea.z), formatInfo, pixelUnpackState,
-                type, clearBuffer.data(), vkFormat, getRequiredImageAccess(),
-                vk::ApplyImageUpdate::Defer, &updateAppliedImmediately));
+                gl::Offset(clearArea.x, clearArea.y, clearArea.z), inputFormatInfo,
+                pixelUnpackState, type, clearBuffer.data(), outputVkFormat,
+                getRequiredImageAccess(), vk::ApplyImageUpdate::Defer, &updateAppliedImmediately));
             ASSERT(!updateAppliedImmediately);
         }
     }
 
     // Flush the staged updates if needed.
-    ANGLE_TRY(ensureImageInitializedIfUpdatesNeedStageOrFlush(contextVk, gl::LevelIndex(level),
-                                                              vkFormat, vk::ApplyImageUpdate::Defer,
-                                                              usesBufferForClear));
+    ANGLE_TRY(ensureImageInitializedIfUpdatesNeedStageOrFlush(
+        contextVk, gl::LevelIndex(level), outputVkFormat, vk::ApplyImageUpdate::Defer,
+        usesBufferForClear));
     return angle::Result::Continue;
 }
 
