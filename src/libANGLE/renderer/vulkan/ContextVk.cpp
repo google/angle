@@ -2474,6 +2474,8 @@ angle::Result ContextVk::handleDirtyGraphicsRenderPass(DirtyBits::Iterator *dirt
         }
         ASSERT(framebufferRenderPassDesc == mRenderPassCommands->getRenderPassDesc());
 
+        ANGLE_TRY(resumeRenderPassQueriesIfActive());
+
         return angle::Result::Continue;
     }
 

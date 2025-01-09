@@ -951,6 +951,54 @@ TEST_P(OcclusionQueriesTest, ManyQueriesInFlight)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test two occlusion queries in sequence and there are some glBindFramebuffer in between.
+// This test provoked a bug that the second query been skipped.
+TEST_P(OcclusionQueriesTest, WrongSkippedQuery)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 &&
+                       !IsGLExtensionEnabled("GL_EXT_occlusion_query_boolean"));
+
+    GLRenderbuffer rbo;
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 32, 32);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo);
+    EXPECT_GL_NO_ERROR();
+
+    GLQueryEXT query1;
+    // Draw square in 1st FBO, clear main framebuffer - main framebuffer is active after
+    glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_EXT, query1);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.5f);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    glEndQueryEXT(GL_ANY_SAMPLES_PASSED_EXT);
+    EXPECT_GL_NO_ERROR();
+
+    GLQueryEXT query2;
+    // Draw square in FBO, clear main framebuffer - FBO is active after
+    glBeginQueryEXT(GL_ANY_SAMPLES_PASSED_EXT, query2);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.5f);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glEndQueryEXT(GL_ANY_SAMPLES_PASSED_EXT);
+    EXPECT_GL_NO_ERROR();
+
+    GLuint results[2]  = {0};
+    GLuint expectation = GL_TRUE;
+    glGetQueryObjectuivEXT(query1, GL_QUERY_RESULT_EXT, &results[0]);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(expectation, results[0]);
+
+    glGetQueryObjectuivEXT(query2, GL_QUERY_RESULT_EXT, &results[1]);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(expectation, results[1]);
+}
+
 class OcclusionQueriesNoSurfaceTestES3 : public ANGLETestBase,
                                          public ::testing::TestWithParam<angle::PlatformParameters>
 {
