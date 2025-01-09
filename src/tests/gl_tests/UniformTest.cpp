@@ -892,6 +892,55 @@ void main() {
     glDeleteProgram(program);
 }
 
+// Tests that a struct used in the uniform address space can also be used outside of the uniform
+// address space. The WGSL translator changes the type signature of the struct which can cause
+// problems assigning to fields.
+TEST_P(SimpleUniformUsageTestES3, UseUniformStructOutsideOfUniformAddressSpace)
+{
+    constexpr char kFragShader[] = R"(#version 300 es
+precision mediump float;
+struct NestedUniforms {
+    float x[3];
+};
+struct Uniforms {
+    NestedUniforms a;
+    float b;
+    float c;
+    float[5] d;
+    float e;
+    vec3 f[7];
+};
+uniform Uniforms unis;
+out vec4 fragColor;
+void main() {
+    NestedUniforms privUnis;
+    privUnis.x = float[3](1.0, 1.0, 1.0);
+    NestedUniforms privUnis2;
+    privUnis2.x = unis.a.x;
+    Uniforms privUnisWholeStruct;
+    privUnisWholeStruct = unis;
+    fragColor = vec4(privUnis.x[1], privUnis2.x[1], privUnisWholeStruct.a.x[1], 1.0);
+})";
+
+    GLuint program = CompileProgram(essl3_shaders::vs::Simple(), kFragShader);
+    ASSERT_NE(program, 0u);
+    glUseProgram(program);
+
+    GLint uniformAXLocation = glGetUniformLocation(program, "unis.a.x");
+    ASSERT_NE(uniformAXLocation, -1);
+
+    GLfloat x[3] = {0.0, 1.0, 0.0};
+
+    // Set to white
+    glUniform1fv(uniformAXLocation, 3, x);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+
+    glDeleteProgram(program);
+}
+
 class UniformTest : public ANGLETest<>
 {
   protected:
