@@ -1432,7 +1432,7 @@ angle::Result CLCommandQueueVk::addMemoryDependencies(cl::Memory *clMem)
     {
         CLBufferVk &vkMem = clMem->getImpl<CLBufferVk>();
 
-        mComputePassCommands->bufferWrite(VK_ACCESS_SHADER_WRITE_BIT,
+        mComputePassCommands->bufferWrite(mContext, VK_ACCESS_SHADER_WRITE_BIT,
                                           vk::PipelineStage::ComputeShader, &vkMem.getBuffer());
     }
 
@@ -2086,7 +2086,7 @@ angle::Result CLCommandQueueVk::onResourceAccess(const vk::CommandBufferAccess &
             ANGLE_TRY(flushInternal());
         }
 
-        mComputePassCommands->bufferRead(bufferAccess.accessType, bufferAccess.stage,
+        mComputePassCommands->bufferRead(mContext, bufferAccess.accessType, bufferAccess.stage,
                                          bufferAccess.buffer);
     }
 
@@ -2098,7 +2098,7 @@ angle::Result CLCommandQueueVk::onResourceAccess(const vk::CommandBufferAccess &
             ANGLE_TRY(flushInternal());
         }
 
-        mComputePassCommands->bufferWrite(bufferAccess.accessType, bufferAccess.stage,
+        mComputePassCommands->bufferWrite(mContext, bufferAccess.accessType, bufferAccess.stage,
                                           bufferAccess.buffer);
         if (bufferAccess.buffer->isHostVisible())
         {

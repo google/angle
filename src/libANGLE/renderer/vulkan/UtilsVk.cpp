@@ -5205,8 +5205,8 @@ angle::Result LineLoopHelper::streamArrayIndirect(ContextVk *contextVk,
 
 void LineLoopHelper::release(ContextVk *contextVk)
 {
-    mDynamicIndexBuffer.release(contextVk->getRenderer());
-    mDynamicIndirectBuffer.release(contextVk->getRenderer());
+    mDynamicIndexBuffer.release(contextVk);
+    mDynamicIndirectBuffer.release(contextVk);
 }
 
 void LineLoopHelper::destroy(vk::Renderer *renderer)

@@ -219,7 +219,7 @@ class DynamicBuffer : angle::NonCopyable
                            bool *newBufferAllocatedOut);
 
     // This releases resources when they might currently be in use.
-    void release(Renderer *renderer);
+    void release(Context *context);
 
     // This adds in-flight buffers to the mResourceUseList in the share group and then releases
     // them.
@@ -1024,7 +1024,8 @@ class BufferHelper : public ReadWriteResource
 
     void destroy(Renderer *renderer);
     void release(Renderer *renderer);
-    void releaseBufferAndDescriptorSetCache(Renderer *renderer);
+    void release(Context *context);
+    void releaseBufferAndDescriptorSetCache(Context *context);
 
     BufferSerial getBufferSerial() const { return mSerial; }
     BufferSerial getBlockSerial() const
@@ -1080,12 +1081,14 @@ class BufferHelper : public ReadWriteResource
     // Returns true if the image is owned by an external API or instance.
     bool isReleasedToExternal() const;
 
-    void recordReadBarrier(VkAccessFlags readAccessType,
+    void recordReadBarrier(Context *context,
+                           VkAccessFlags readAccessType,
                            VkPipelineStageFlags readStage,
                            PipelineStage stageIndex,
                            PipelineBarrierArray *barriers);
 
-    void recordWriteBarrier(VkAccessFlags writeAccessType,
+    void recordWriteBarrier(Context *context,
+                            VkAccessFlags writeAccessType,
                             VkPipelineStageFlags writeStage,
                             PipelineStage stageIndex,
                             PipelineBarrierArray *barriers);
@@ -1130,6 +1133,8 @@ class BufferHelper : public ReadWriteResource
     {
         mSuballocation.setOffsetAndSize(offset, size);
     }
+
+    void releaseImpl(Renderer *renderer);
 
     // Suballocation object.
     BufferSuballocation mSuballocation;
@@ -1394,19 +1399,26 @@ constexpr uint32_t kInfiniteCmdCount = 0xFFFFFFFF;
 class CommandBufferHelperCommon : angle::NonCopyable
 {
   public:
-    void bufferWrite(VkAccessFlags writeAccessType, PipelineStage writeStage, BufferHelper *buffer);
+    void bufferWrite(Context *context,
+                     VkAccessFlags writeAccessType,
+                     PipelineStage writeStage,
+                     BufferHelper *buffer);
 
-    void bufferRead(VkAccessFlags readAccessType, PipelineStage readStage, BufferHelper *buffer)
+    void bufferRead(Context *context,
+                    VkAccessFlags readAccessType,
+                    PipelineStage readStage,
+                    BufferHelper *buffer)
     {
-        bufferReadImpl(readAccessType, readStage, buffer);
+        bufferReadImpl(context, readAccessType, readStage, buffer);
         setBufferReadQueueSerial(buffer);
     }
 
-    void bufferRead(VkAccessFlags readAccessType,
+    void bufferRead(Context *context,
+                    VkAccessFlags readAccessType,
                     const gl::ShaderBitSet &readShaderStages,
                     BufferHelper *buffer)
     {
-        bufferReadImpl(readAccessType, readShaderStages, buffer);
+        bufferReadImpl(context, readAccessType, readShaderStages, buffer);
         setBufferReadQueueSerial(buffer);
     }
 
@@ -1496,17 +1508,19 @@ class CommandBufferHelperCommon : angle::NonCopyable
     template <class DerivedT>
     void assertCanBeRecycledImpl();
 
-    void bufferReadImpl(VkAccessFlags readAccessType,
+    void bufferReadImpl(Context *context,
+                        VkAccessFlags readAccessType,
                         PipelineStage readStage,
                         BufferHelper *buffer);
-    void bufferReadImpl(VkAccessFlags readAccessType,
+    void bufferReadImpl(Context *context,
+                        VkAccessFlags readAccessType,
                         const gl::ShaderBitSet &readShaderStages,
                         BufferHelper *buffer)
     {
         for (gl::ShaderType shaderType : readShaderStages)
         {
             const vk::PipelineStage readStage = vk::GetPipelineStage(shaderType);
-            bufferReadImpl(readAccessType, readStage, buffer);
+            bufferReadImpl(context, readAccessType, readStage, buffer);
         }
     }
     void imageReadImpl(Context *context,

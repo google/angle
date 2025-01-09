@@ -1071,11 +1071,11 @@ bool CanCopyWithTransferForCopyImage(Renderer *renderer,
                                dstImage->getActualFormatID(), dstTilingMode);
 }
 
-void ReleaseBufferListToRenderer(Renderer *renderer, BufferHelperQueue *buffers)
+void ReleaseBufferListToRenderer(Context *context, BufferHelperQueue *buffers)
 {
     for (std::unique_ptr<BufferHelper> &toFree : *buffers)
     {
-        toFree->release(renderer);
+        toFree->release(context);
     }
     buffers->clear();
 }
@@ -1826,14 +1826,15 @@ void CommandBufferHelperCommon::assertCanBeRecycledImpl()
     ASSERT(!DerivedT::ExecutesInline() || derived->getCommandBuffer().empty());
 }
 
-void CommandBufferHelperCommon::bufferWrite(VkAccessFlags writeAccessType,
+void CommandBufferHelperCommon::bufferWrite(Context *context,
+                                            VkAccessFlags writeAccessType,
                                             PipelineStage writeStage,
                                             BufferHelper *buffer)
 {
     buffer->setWriteQueueSerial(mQueueSerial);
 
     VkPipelineStageFlagBits stageBits = kPipelineStageFlagBitMap[writeStage];
-    buffer->recordWriteBarrier(writeAccessType, stageBits, writeStage, &mPipelineBarriers);
+    buffer->recordWriteBarrier(context, writeAccessType, stageBits, writeStage, &mPipelineBarriers);
 
     // Make sure host-visible buffer writes result in a barrier inserted at the end of the frame to
     // make the results visible to the host.  The buffer may be mapped by the application in the
@@ -1857,12 +1858,13 @@ void CommandBufferHelperCommon::executeBarriers(Renderer *renderer, CommandsStat
     mEventBarriers.execute(renderer, &commandsState->primaryCommands);
 }
 
-void CommandBufferHelperCommon::bufferReadImpl(VkAccessFlags readAccessType,
+void CommandBufferHelperCommon::bufferReadImpl(Context *context,
+                                               VkAccessFlags readAccessType,
                                                PipelineStage readStage,
                                                BufferHelper *buffer)
 {
     VkPipelineStageFlagBits stageBits = kPipelineStageFlagBitMap[readStage];
-    buffer->recordReadBarrier(readAccessType, stageBits, readStage, &mPipelineBarriers);
+    buffer->recordReadBarrier(context, readAccessType, stageBits, readStage, &mPipelineBarriers);
     ASSERT(!usesBufferForWrite(*buffer));
 }
 
@@ -3728,7 +3730,7 @@ angle::Result DynamicBuffer::allocate(Context *context,
     {
         mSize = minRequiredBlockSize;
         // Clear the free list since the free buffers are now either too small or too big.
-        ReleaseBufferListToRenderer(renderer, &mBufferFreeList);
+        ReleaseBufferListToRenderer(context, &mBufferFreeList);
     }
 
     // The front of the free list should be the oldest. Thus if it is in use the rest of the
@@ -3756,16 +3758,16 @@ angle::Result DynamicBuffer::allocate(Context *context,
     return angle::Result::Continue;
 }
 
-void DynamicBuffer::release(Renderer *renderer)
+void DynamicBuffer::release(Context *context)
 {
     reset();
 
-    ReleaseBufferListToRenderer(renderer, &mInFlightBuffers);
-    ReleaseBufferListToRenderer(renderer, &mBufferFreeList);
+    ReleaseBufferListToRenderer(context, &mInFlightBuffers);
+    ReleaseBufferListToRenderer(context, &mBufferFreeList);
 
     if (mBuffer)
     {
-        mBuffer->release(renderer);
+        mBuffer->release(context);
         mBuffer.reset(nullptr);
     }
 }
@@ -3784,7 +3786,7 @@ void DynamicBuffer::updateQueueSerialAndReleaseInFlightBuffers(ContextVk *contex
         // suballocation's size. We need to use the whole block memory size here.
         if (bufferHelper->getBlockMemorySize() != mSize)
         {
-            bufferHelper->release(contextVk->getRenderer());
+            bufferHelper->release(contextVk);
         }
         else
         {
@@ -5671,6 +5673,16 @@ void BufferHelper::destroy(Renderer *renderer)
 
 void BufferHelper::release(Renderer *renderer)
 {
+    releaseImpl(renderer);
+}
+
+void BufferHelper::release(Context *context)
+{
+    releaseImpl(context->getRenderer());
+}
+
+void BufferHelper::releaseImpl(Renderer *renderer)
+{
     ASSERT(mDescriptorSetCacheManager.empty());
     unmap(renderer);
 
@@ -5696,8 +5708,9 @@ void BufferHelper::release(Renderer *renderer)
     }
 }
 
-void BufferHelper::releaseBufferAndDescriptorSetCache(Renderer *renderer)
+void BufferHelper::releaseBufferAndDescriptorSetCache(Context *context)
 {
+    Renderer *renderer = context->getRenderer();
     if (renderer->hasResourceUseFinished(getResourceUse()))
     {
         mDescriptorSetCacheManager.destroyKeys(renderer);
@@ -5707,7 +5720,7 @@ void BufferHelper::releaseBufferAndDescriptorSetCache(Renderer *renderer)
         mDescriptorSetCacheManager.releaseKeys(renderer);
     }
 
-    release(renderer);
+    release(context);
 }
 
 angle::Result BufferHelper::map(Context *context, uint8_t **ptrOut)
@@ -5793,7 +5806,8 @@ bool BufferHelper::isReleasedToExternal() const
     return mIsReleasedToExternal;
 }
 
-void BufferHelper::recordReadBarrier(VkAccessFlags readAccessType,
+void BufferHelper::recordReadBarrier(Context *context,
+                                     VkAccessFlags readAccessType,
                                      VkPipelineStageFlags readStage,
                                      PipelineStage stageIndex,
                                      PipelineBarrierArray *barriers)
@@ -5812,7 +5826,8 @@ void BufferHelper::recordReadBarrier(VkAccessFlags readAccessType,
     mCurrentReadStages |= readStage;
 }
 
-void BufferHelper::recordWriteBarrier(VkAccessFlags writeAccessType,
+void BufferHelper::recordWriteBarrier(Context *context,
+                                      VkAccessFlags writeAccessType,
                                       VkPipelineStageFlags writeStage,
                                       PipelineStage stageIndex,
                                       PipelineBarrierArray *barriers)
@@ -8913,7 +8928,6 @@ angle::Result ImageHelper::reformatStagedBufferUpdates(ContextVk *contextVk,
                                                        angle::FormatID srcFormatID,
                                                        angle::FormatID dstFormatID)
 {
-    Renderer *renderer             = contextVk->getRenderer();
     const angle::Format &srcFormat = angle::Format::Get(srcFormatID);
     const angle::Format &dstFormat = angle::Format::Get(dstFormatID);
     const gl::InternalFormat &dstFormatInfo =
@@ -8983,7 +8997,7 @@ angle::Result ImageHelper::reformatStagedBufferUpdates(ContextVk *contextVk,
                     update.refCounted.buffer->releaseRef();
                     if (!update.refCounted.buffer->isReferenced())
                     {
-                        update.refCounted.buffer->get().release(renderer);
+                        update.refCounted.buffer->get().release(contextVk);
                         SafeDelete(update.refCounted.buffer);
                     }
                 }
