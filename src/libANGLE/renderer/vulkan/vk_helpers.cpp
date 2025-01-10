@@ -12019,6 +12019,7 @@ ComputePipelineOptions GetComputePipelineOptions(vk::PipelineRobustness robustne
 // ImageViewHelper implementation.
 ImageViewHelper::ImageViewHelper()
     : mCurrentBaseMaxLevelHash(0),
+      mIsCopyImageViewShared(false),
       mReadColorspace(ImageViewColorspace::Invalid),
       mWriteColorspace(ImageViewColorspace::Invalid)
 {}
@@ -12034,6 +12035,7 @@ ImageViewHelper::ImageViewHelper(ImageViewHelper &&other)
     std::swap(mPerLevelRangeSRGBReadImageViews, other.mPerLevelRangeSRGBReadImageViews);
     std::swap(mPerLevelRangeLinearCopyImageViews, other.mPerLevelRangeLinearCopyImageViews);
     std::swap(mPerLevelRangeSRGBCopyImageViews, other.mPerLevelRangeSRGBCopyImageViews);
+    std::swap(mIsCopyImageViewShared, other.mIsCopyImageViewShared);
     std::swap(mPerLevelRangeStencilReadImageViews, other.mPerLevelRangeStencilReadImageViews);
     std::swap(mPerLevelRangeSamplerExternal2DY2YEXTImageViews,
               other.mPerLevelRangeSamplerExternal2DY2YEXTImageViews);
@@ -12068,6 +12070,8 @@ void ImageViewHelper::release(Renderer *renderer, const ResourceUse &use)
     mCurrentBaseMaxLevelHash = 0;
     mReadColorspace          = ImageViewColorspace::Invalid;
     mWriteColorspace         = ImageViewColorspace::Invalid;
+    // Clear shared flag
+    mIsCopyImageViewShared = false;
     mColorspaceState.reset();
 
     std::vector<vk::GarbageObject> garbage;
@@ -12264,9 +12268,17 @@ angle::Result ImageViewHelper::initReadViewsImpl(ContextVk *contextVk,
 
     if (!image.getActualFormat().isBlock)
     {
-        ANGLE_TRY(image.initLayerImageViewWithUsage(
-            contextVk, fetchType, aspectFlags, formatSwizzle, &getCopyImageView(), baseLevel,
-            levelCount, baseLayer, layerCount, imageUsageFlags));
+        if (fetchType != viewType || readSwizzle != formatSwizzle ||
+            HasBothDepthAndStencilAspects(aspectFlags))
+        {
+            ANGLE_TRY(image.initLayerImageViewWithUsage(
+                contextVk, fetchType, aspectFlags, formatSwizzle, &getCopyImageViewStorage(),
+                baseLevel, levelCount, baseLayer, layerCount, imageUsageFlags));
+        }
+        else
+        {
+            mIsCopyImageViewShared = true;
+        }
     }
     return angle::Result::Continue;
 }
@@ -12351,20 +12363,28 @@ angle::Result ImageViewHelper::initLinearAndSrgbReadViewsImpl(ContextVk *context
 
     if (!image.getActualFormat().isBlock)
     {
-        if (!mPerLevelRangeLinearCopyImageViews[mCurrentBaseMaxLevelHash].valid())
+        if (fetchType != viewType || formatSwizzle != readSwizzle ||
+            HasBothDepthAndStencilAspects(aspectFlags))
         {
-            ANGLE_TRY(image.initReinterpretedLayerImageView(
-                contextVk, fetchType, aspectFlags, formatSwizzle,
-                &mPerLevelRangeLinearCopyImageViews[mCurrentBaseMaxLevelHash], baseLevel,
-                levelCount, baseLayer, layerCount, imageUsageFlags, linearFormat));
+            if (!mPerLevelRangeLinearCopyImageViews[mCurrentBaseMaxLevelHash].valid())
+            {
+                ANGLE_TRY(image.initReinterpretedLayerImageView(
+                    contextVk, fetchType, aspectFlags, formatSwizzle,
+                    &mPerLevelRangeLinearCopyImageViews[mCurrentBaseMaxLevelHash], baseLevel,
+                    levelCount, baseLayer, layerCount, imageUsageFlags, linearFormat));
+            }
+            if (srgbFormat != angle::FormatID::NONE &&
+                !mPerLevelRangeSRGBCopyImageViews[mCurrentBaseMaxLevelHash].valid())
+            {
+                ANGLE_TRY(image.initReinterpretedLayerImageView(
+                    contextVk, fetchType, aspectFlags, formatSwizzle,
+                    &mPerLevelRangeSRGBCopyImageViews[mCurrentBaseMaxLevelHash], baseLevel,
+                    levelCount, baseLayer, layerCount, imageUsageFlags, srgbFormat));
+            }
         }
-        if (srgbFormat != angle::FormatID::NONE &&
-            !mPerLevelRangeSRGBCopyImageViews[mCurrentBaseMaxLevelHash].valid())
+        else
         {
-            ANGLE_TRY(image.initReinterpretedLayerImageView(
-                contextVk, fetchType, aspectFlags, formatSwizzle,
-                &mPerLevelRangeSRGBCopyImageViews[mCurrentBaseMaxLevelHash], baseLevel, levelCount,
-                baseLayer, layerCount, imageUsageFlags, srgbFormat));
+            mIsCopyImageViewShared = true;
         }
     }
 
