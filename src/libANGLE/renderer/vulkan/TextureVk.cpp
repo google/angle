@@ -314,14 +314,17 @@ const vk::Format *AdjustViewFormatForSampler(vk::Renderer *renderer,
             switch (intended->getIntendedFormatID())
             {
                 case angle::FormatID::R8_UNORM:
-                case angle::FormatID::R16_FLOAT:
-                case angle::FormatID::R32_FLOAT:
                 case angle::FormatID::R8G8_UNORM:
+                case angle::FormatID::R8G8B8A8_UNORM:
+                case angle::FormatID::R16_UNORM:
+                case angle::FormatID::R16G16_UNORM:
+                case angle::FormatID::R16G16B16A16_UNORM:
+                case angle::FormatID::R16_FLOAT:
                 case angle::FormatID::R16G16_FLOAT:
+                case angle::FormatID::R16G16B16A16_FLOAT:
+                case angle::FormatID::R32_FLOAT:
                 case angle::FormatID::R32G32_FLOAT:
                 case angle::FormatID::R32G32B32_FLOAT:
-                case angle::FormatID::R8G8B8A8_UNORM:
-                case angle::FormatID::R16G16B16A16_FLOAT:
                 case angle::FormatID::R32G32B32A32_FLOAT:
                     return intended;
                 case angle::FormatID::R8_SINT:

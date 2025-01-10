@@ -90,6 +90,9 @@ void InitMinimumTextureCapsMap(const Version &clientVersion,
 // present. Does not determine if they are natively supported without decompression.
 bool DetermineCompressedTextureETCSupport(const TextureCapsMap &textureCaps);
 
+// Determine support for signed normalized format renderability.
+bool DetermineRenderSnormSupport(const TextureCapsMap &textureCaps, bool textureNorm16EXT);
+
 // Pointer to a boolean member of the Extensions struct
 using ExtensionBool = bool Extensions::*;
 

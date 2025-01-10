@@ -1090,6 +1090,31 @@ void Renderer::ensureCapsInitialized() const
     mNativeCaps.textureBufferOffsetAlignment =
         rx::LimitToInt(limitsVk.minTexelBufferOffsetAlignment);
 
+    // From the GL_EXT_texture_norm16 spec: Accepted by the <internalFormat> parameter of
+    // TexImage2D,TexImage3D, TexStorage2D, TexStorage3D and TexStorage2DMultisample,
+    // TexStorage3DMultisampleOES, TexBufferEXT, TexBufferRangeEXT, TextureViewEXT,
+    // RenderbufferStorage and RenderbufferStorageMultisample:
+    //   - R16_EXT
+    //   - RG16_EXT
+    //   - RGBA16_EXT
+    bool norm16FormatsSupportedForBufferTexture =
+        hasBufferFormatFeatureBits(angle::FormatID::R16_UNORM,
+                                   VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT) &&
+        hasBufferFormatFeatureBits(angle::FormatID::R16G16_UNORM,
+                                   VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT) &&
+        hasBufferFormatFeatureBits(angle::FormatID::R16G16B16A16_UNORM,
+                                   VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT);
+
+    if (!norm16FormatsSupportedForBufferTexture)
+    {
+        mNativeExtensions.textureNorm16EXT = false;
+
+        // With textureNorm16EXT disabled, renderSnormEXT will skip checking support for the 16-bit
+        // normalized formats.
+        mNativeExtensions.renderSnormEXT =
+            DetermineRenderSnormSupport(mNativeTextureCaps, mNativeExtensions.textureNorm16EXT);
+    }
+
     // Atomic image operations in the vertex and fragment shaders require the
     // vertexPipelineStoresAndAtomics and fragmentStoresAndAtomics Vulkan features respectively.
     // If either of these features is not present, the number of image uniforms for that stage is

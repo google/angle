@@ -14177,13 +14177,136 @@ TEST_P(ETC1CompressedTextureTest, ETC1ShrinkThenGrowMaxLevels)
     ASSERT_GL_NO_ERROR();
 }
 
-class TextureBufferTestES31 : public ANGLETest<>
+class TextureBufferTestBase : public ANGLETest<>
+{
+  protected:
+    TextureBufferTestBase() {}
+
+    void callTexBufferAPI(const APIExtensionVersion usedExtension,
+                          GLenum target,
+                          GLenum internalFormat,
+                          GLuint buffer);
+    void testTexBuffer(const APIExtensionVersion usedExtension,
+                       GLenum internalFormat,
+                       const size_t inputTextureDataSize,
+                       const void *inputTextureData,
+                       const GLColor expectedOutputColor);
+};
+
+class TextureBufferTestES31 : public TextureBufferTestBase
 {
   protected:
     TextureBufferTestES31() {}
 
     void drawWithIncompleteOrZeroTexture(bool useCompleteTexture, bool useNonZeroTexture);
 };
+
+class TextureBufferTestES32 : public TextureBufferTestBase
+{
+  protected:
+    TextureBufferTestES32() {}
+};
+
+void TextureBufferTestBase::callTexBufferAPI(const APIExtensionVersion usedExtension,
+                                             GLenum target,
+                                             GLenum internalFormat,
+                                             GLuint buffer)
+{
+    ASSERT(usedExtension == APIExtensionVersion::EXT || usedExtension == APIExtensionVersion::OES ||
+           usedExtension == APIExtensionVersion::Core);
+    if (usedExtension == APIExtensionVersion::EXT)
+    {
+        glTexBufferEXT(target, internalFormat, buffer);
+    }
+    else if (usedExtension == APIExtensionVersion::OES)
+    {
+        glTexBufferOES(target, internalFormat, buffer);
+    }
+    else
+    {
+        glTexBuffer(target, internalFormat, buffer);
+    }
+}
+
+void TextureBufferTestBase::testTexBuffer(const APIExtensionVersion usedExtension,
+                                          GLenum internalFormat,
+                                          const size_t inputTextureDataSize,
+                                          const void *inputTextureData,
+                                          const GLColor expectedOutputColor)
+{
+    ASSERT(usedExtension == APIExtensionVersion::EXT || usedExtension == APIExtensionVersion::OES ||
+           usedExtension == APIExtensionVersion::Core);
+
+    // TODO(http://anglebug.com/42264369): Claims to support GL_OES_texture_buffer, but fails
+    // compilation of shader because "extension 'GL_OES_texture_buffer' is not supported".
+    ANGLE_SKIP_TEST_IF(usedExtension == APIExtensionVersion::OES && IsQualcomm() && IsOpenGLES());
+
+    GLBuffer buffer;
+    glBindBuffer(GL_TEXTURE_BUFFER, buffer);
+    glBufferData(GL_TEXTURE_BUFFER, inputTextureDataSize, inputTextureData, GL_DYNAMIC_DRAW);
+    EXPECT_GL_NO_ERROR();
+
+    // Shaders
+    std::string simpleVS;
+    std::string samplerBufferFS;
+
+    constexpr char kGLSLVersion31[] = R"(#version 310 es
+)";
+    constexpr char kGLSLVersion32[] = R"(#version 320 es
+)";
+    constexpr char kTexBufEXT[]     = R"(#extension GL_EXT_texture_buffer : require
+)";
+    constexpr char kTexBufOES[]     = R"(#extension GL_OES_texture_buffer : require
+)";
+
+    if (usedExtension == APIExtensionVersion::EXT)
+    {
+        simpleVS.append(kGLSLVersion31);
+        samplerBufferFS.append(kGLSLVersion31);
+        samplerBufferFS.append(kTexBufEXT);
+    }
+    else if (usedExtension == APIExtensionVersion::OES)
+    {
+        simpleVS.append(kGLSLVersion31);
+        samplerBufferFS.append(kGLSLVersion31);
+        samplerBufferFS.append(kTexBufOES);
+    }
+    else
+    {
+        simpleVS.append(kGLSLVersion32);
+        samplerBufferFS.append(kGLSLVersion32);
+    }
+
+    constexpr char kVSBody[] = R"(
+in vec4 a_position;
+void main()
+{
+    gl_Position = a_position;
+})";
+    simpleVS.append(kVSBody);
+
+    constexpr char kFSBody[] = R"(
+precision mediump float;
+uniform highp samplerBuffer s;
+out vec4 colorOut;
+void main()
+{
+    colorOut = texelFetch(s, 0);
+})";
+    samplerBufferFS.append(kFSBody);
+
+    ANGLE_GL_PROGRAM(program, simpleVS.c_str(), samplerBufferFS.c_str());
+    ASSERT_GL_NO_ERROR();
+
+    // Draw
+    callTexBufferAPI(usedExtension, GL_TEXTURE_BUFFER, internalFormat, buffer);
+    ASSERT_GL_NO_ERROR();
+
+    drawQuad(program, "a_position", 0.5);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, expectedOutputColor);
+}
 
 void TextureBufferTestES31::drawWithIncompleteOrZeroTexture(bool useCompleteTexture,
                                                             bool useNonZeroTexture)
@@ -14303,6 +14426,184 @@ void main()
     EXPECT_GL_NO_ERROR();
 
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
+// Test that glTexBufferEXT can be used in a draw call for R8 normalized values.
+TEST_P(TextureBufferTestES31, RNorm8EXT)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_buffer"));
+
+    const std::array<uint8_t, 1> kTexData = {0xFF};
+    testTexBuffer(APIExtensionVersion::EXT, GL_R8, sizeof(kTexData), kTexData.data(), GLColor::red);
+}
+
+// Test that glTexBufferEXT can be used in a draw call for RG8 normalized values.
+TEST_P(TextureBufferTestES31, RGNorm8EXT)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_buffer"));
+
+    const std::array<uint8_t, 2> kTexData = {0xFF, 0xFF};
+    testTexBuffer(APIExtensionVersion::EXT, GL_RG8, sizeof(kTexData), kTexData.data(),
+                  GLColor::yellow);
+}
+
+// Test that glTexBufferEXT can be used in a draw call for RGBA8 normalized values.
+TEST_P(TextureBufferTestES31, RGBANorm8EXT)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_buffer"));
+
+    const std::array<uint8_t, 4> kTexData = {0xFF, 0, 0xFF, 0xFF};
+    testTexBuffer(APIExtensionVersion::EXT, GL_RGBA8, sizeof(kTexData), kTexData.data(),
+                  GLColor::magenta);
+}
+
+// Test that glTexBufferEXT can be used in a draw call for R16 normalized values.
+TEST_P(TextureBufferTestES31, RNorm16EXT)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_buffer"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_norm16"));
+
+    const std::array<uint16_t, 1> kTexData = {0xFFFF};
+    testTexBuffer(APIExtensionVersion::EXT, GL_R16_EXT, sizeof(kTexData), kTexData.data(),
+                  GLColor::red);
+}
+
+// Test that glTexBufferEXT can be used in a draw call for RG16 normalized values.
+TEST_P(TextureBufferTestES31, RGNorm16EXT)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_buffer"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_norm16"));
+
+    const std::array<uint16_t, 2> kTexData = {0xFFFF, 0xFFFF};
+    testTexBuffer(APIExtensionVersion::EXT, GL_RG16_EXT, sizeof(kTexData), kTexData.data(),
+                  GLColor::yellow);
+}
+
+// Test that glTexBufferEXT can be used in a draw call for RGBA16 normalized values.
+TEST_P(TextureBufferTestES31, RGBANorm16EXT)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_buffer"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_norm16"));
+
+    const std::array<uint16_t, 4> kTexData = {0xFFFF, 0, 0xFFFF, 0xFFFF};
+    testTexBuffer(APIExtensionVersion::EXT, GL_RGBA16_EXT, sizeof(kTexData), kTexData.data(),
+                  GLColor::magenta);
+}
+
+// Test that glTexBufferOES can be used in a draw call for R8 normalized values.
+TEST_P(TextureBufferTestES31, RNorm8OES)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_buffer"));
+
+    const std::array<uint8_t, 1> kTexData = {0xFF};
+    testTexBuffer(APIExtensionVersion::OES, GL_R8, sizeof(kTexData), kTexData.data(), GLColor::red);
+}
+
+// Test that glTexBufferOES can be used in a draw call for RG8 normalized values.
+TEST_P(TextureBufferTestES31, RGNorm8OES)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_buffer"));
+
+    const std::array<uint8_t, 2> kTexData = {0xFF, 0xFF};
+    testTexBuffer(APIExtensionVersion::OES, GL_RG8, sizeof(kTexData), kTexData.data(),
+                  GLColor::yellow);
+}
+
+// Test that glTexBufferOES can be used in a draw call for RGBA8 normalized values.
+TEST_P(TextureBufferTestES31, RGBANorm8OES)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_buffer"));
+
+    const std::array<uint8_t, 4> kTexData = {0xFF, 0, 0xFF, 0xFF};
+    testTexBuffer(APIExtensionVersion::OES, GL_RGBA8, sizeof(kTexData), kTexData.data(),
+                  GLColor::magenta);
+}
+
+// Test that glTexBufferOES can be used in a draw call for R16 normalized values.
+TEST_P(TextureBufferTestES31, RNorm16OES)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_buffer"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_norm16"));
+
+    const std::array<uint16_t, 1> kTexData = {0xFFFF};
+    testTexBuffer(APIExtensionVersion::OES, GL_R16_EXT, sizeof(kTexData), kTexData.data(),
+                  GLColor::red);
+}
+
+// Test that glTexBufferOES can be used in a draw call for RG16 normalized values.
+TEST_P(TextureBufferTestES31, RGNorm16OES)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_buffer"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_norm16"));
+
+    const std::array<uint16_t, 2> kTexData = {0xFFFF, 0xFFFF};
+    testTexBuffer(APIExtensionVersion::OES, GL_RG16_EXT, sizeof(kTexData), kTexData.data(),
+                  GLColor::yellow);
+}
+
+// Test that glTexBufferOES can be used in a draw call for RGBA16 normalized values.
+TEST_P(TextureBufferTestES31, RGBANorm16OES)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_texture_buffer"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_norm16"));
+
+    const std::array<uint16_t, 4> kTexData = {0xFFFF, 0, 0xFFFF, 0xFFFF};
+    testTexBuffer(APIExtensionVersion::OES, GL_RGBA16_EXT, sizeof(kTexData), kTexData.data(),
+                  GLColor::magenta);
+}
+
+// Test that glTexBuffer can be used in a draw call for R8 normalized values.
+TEST_P(TextureBufferTestES32, RNorm8)
+{
+    const std::array<uint8_t, 1> kTexData = {0xFF};
+    testTexBuffer(APIExtensionVersion::Core, GL_R8, sizeof(kTexData), kTexData.data(),
+                  GLColor::red);
+}
+
+// Test that glTexBuffer can be used in a draw call for RG8 normalized values.
+TEST_P(TextureBufferTestES32, RGNorm8)
+{
+    const std::array<uint8_t, 2> kTexData = {0xFF, 0xFF};
+    testTexBuffer(APIExtensionVersion::Core, GL_RG8, sizeof(kTexData), kTexData.data(),
+                  GLColor::yellow);
+}
+
+// Test that glTexBuffer can be used in a draw call for RGBA8 normalized values.
+TEST_P(TextureBufferTestES32, RGBANorm8)
+{
+    const std::array<uint8_t, 4> kTexData = {0xFF, 0, 0xFF, 0xFF};
+    testTexBuffer(APIExtensionVersion::Core, GL_RGBA8, sizeof(kTexData), kTexData.data(),
+                  GLColor::magenta);
+}
+
+// Test that glTexBuffer can be used in a draw call for R16 normalized values.
+TEST_P(TextureBufferTestES32, RNorm16)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_norm16"));
+
+    const std::array<uint16_t, 1> kTexData = {0xFFFF};
+    testTexBuffer(APIExtensionVersion::Core, GL_R16_EXT, sizeof(kTexData), kTexData.data(),
+                  GLColor::red);
+}
+
+// Test that glTexBuffer can be used in a draw call for RG16 normalized values.
+TEST_P(TextureBufferTestES32, RGNorm16)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_norm16"));
+
+    const std::array<uint16_t, 2> kTexData = {0xFFFF, 0xFFFF};
+    testTexBuffer(APIExtensionVersion::Core, GL_RG16_EXT, sizeof(kTexData), kTexData.data(),
+                  GLColor::yellow);
+}
+
+// Test that glTexBuffer can be used in a draw call for RGBA16 normalized values.
+TEST_P(TextureBufferTestES32, RGBANorm16)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_norm16"));
+
+    const std::array<uint16_t, 4> kTexData = {0xFFFF, 0, 0xFFFF, 0xFFFF};
+    testTexBuffer(APIExtensionVersion::Core, GL_RGBA16_EXT, sizeof(kTexData), kTexData.data(),
+                  GLColor::magenta);
 }
 
 // Test that uploading data to buffer that's in use then using it as texture buffer works.
@@ -15946,6 +16247,9 @@ ANGLE_INSTANTIATE_TEST_ES3(PBOCompressedTexture3DTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureBufferTestES31);
 ANGLE_INSTANTIATE_TEST_ES31(TextureBufferTestES31);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureBufferTestES32);
+ANGLE_INSTANTIATE_TEST_ES32(TextureBufferTestES32);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureTestES31);
 ANGLE_INSTANTIATE_TEST_ES31(TextureTestES31);

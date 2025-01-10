@@ -880,7 +880,8 @@ static bool DetermineRenderSharedExponentSupport(const TextureCapsMap &textureCa
     return GetFormatSupport(textureCaps, requiredFormats, false, false, true, true, true);
 }
 
-static bool DetermineRenderSnormSupport(const TextureCapsMap &textureCaps, bool textureNorm16EXT)
+// Check for GL_EXT_render_snorm support
+bool DetermineRenderSnormSupport(const TextureCapsMap &textureCaps, bool textureNorm16EXT)
 {
     constexpr GLenum requiredSnorm8Formats[] = {
         GL_R8_SNORM,
