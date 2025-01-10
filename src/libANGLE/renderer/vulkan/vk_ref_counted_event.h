@@ -127,6 +127,7 @@ enum class EventStage : uint32_t
     InvalidEnum                                       = 15,
     EnumCount                                         = InvalidEnum,
 };
+using EventStageBitMask = typename angle::PackedEnumBitSet<EventStage, uint64_t>;
 
 // Initialize EventStage to VkPipelineStageFlags mapping table.
 void InitializeEventAndPipelineStagesMap(
@@ -238,13 +239,55 @@ class RefCountedEvent final
 using RefCountedEventCollector = std::deque<RefCountedEvent>;
 
 // Tracks a list of RefCountedEvents per EventStage.
-struct EventMaps
+class RefCountedEventArray final : angle::NonCopyable
 {
-    angle::PackedEnumMap<EventStage, RefCountedEvent> map;
+  public:
+    RefCountedEventArray &operator=(RefCountedEventArray &&other)
+    {
+        for (EventStage stage : other.mBitMask)
+        {
+            mEvents[stage] = std::move(other.mEvents[stage]);
+        }
+        mBitMask = std::move(other.mBitMask);
+        other.mBitMask.reset();
+        return *this;
+    }
+
+    void release(Renderer *renderer);
+    void release(Context *context);
+
+    void releaseToEventCollector(RefCountedEventCollector *eventCollector);
+
+    const RefCountedEvent &getEvent(EventStage eventStage) const { return mEvents[eventStage]; }
+
+    bool initEventAtStage(Context *context, EventStage eventStage);
+
+    bool empty() const { return mBitMask.none(); }
+    const EventStageBitMask getBitMask() const { return mBitMask; }
+
+    template <typename CommandBufferT>
+    void flushSetEvents(Renderer *renderer, CommandBufferT *commandBuffer) const;
+
+  private:
+    angle::PackedEnumMap<EventStage, RefCountedEvent> mEvents;
     // The mask is used to accelerate the loop of map
-    angle::PackedEnumBitSet<EventStage, uint64_t> mask;
-    // Only used by RenderPassCommandBufferHelper
-    angle::PackedEnumMap<EventStage, VkEvent> vkEvents;
+    EventStageBitMask mBitMask;
+};
+
+// Only used by RenderPassCommandBufferHelper
+class EventArray final : angle::NonCopyable
+{
+  public:
+    void init(Renderer *renderer, const RefCountedEventArray &refCountedEventArray);
+
+    bool empty() const { return mBitMask.none(); }
+    void flushSetEvents(PrimaryCommandBuffer *primary);
+
+  private:
+    // The mask is used to accelerate the loop of map
+    EventStageBitMask mBitMask;
+    angle::PackedEnumMap<EventStage, VkEvent> mEvents;
+    angle::PackedEnumMap<EventStage, VkPipelineStageFlags> mPipelineStageFlags;
 };
 
 // This class tracks a vector of RefcountedEvent garbage. For performance reason, instead of

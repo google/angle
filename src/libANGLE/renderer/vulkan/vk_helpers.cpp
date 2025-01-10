@@ -1737,7 +1737,7 @@ void CommandBufferHelperCommon::resetImpl(ErrorContext *context)
     mCommandAllocator.resetAllocator();
     ASSERT(!mIsAnyHostVisibleBufferWritten);
 
-    ASSERT(mRefCountedEvents.mask.none());
+    ASSERT(mRefCountedEvents.empty());
     ASSERT(mRefCountedEventCollector.empty());
 }
 
@@ -1977,30 +1977,22 @@ void CommandBufferHelperCommon::retainImageWithEvent(Context *context, ImageHelp
 
     if (context->getFeatures().useVkEventForImageBarrier.enabled)
     {
-        image->setCurrentRefCountedEvent(context, mRefCountedEvents);
+        image->setCurrentRefCountedEvent(context, &mRefCountedEvents);
     }
 }
 
 template <typename CommandBufferT>
 void CommandBufferHelperCommon::flushSetEventsImpl(Context *context, CommandBufferT *commandBuffer)
 {
-    if (mRefCountedEvents.mask.none())
+    if (mRefCountedEvents.empty())
     {
         return;
     }
 
-    Renderer *renderer = context->getRenderer();
     // Add VkCmdSetEvent here to track the completion of this renderPass.
-    for (EventStage stage : mRefCountedEvents.mask)
-    {
-        RefCountedEvent &refCountedEvent = mRefCountedEvents.map[stage];
-        ASSERT(refCountedEvent.valid());
-        VkPipelineStageFlags stageMask = renderer->getPipelineStageMask(stage);
-        commandBuffer->setEvent(refCountedEvent.getEvent().getHandle(), stageMask);
-        // We no longer need event, so garbage collect it.
-        mRefCountedEventCollector.emplace_back(std::move(refCountedEvent));
-    }
-    mRefCountedEvents.mask.reset();
+    mRefCountedEvents.flushSetEvents(context->getRenderer(), commandBuffer);
+    // We no longer need event, so garbage collect it.
+    mRefCountedEvents.releaseToEventCollector(&mRefCountedEventCollector);
 }
 
 template void CommandBufferHelperCommon::flushSetEventsImpl<priv::SecondaryCommandBuffer>(
@@ -2111,7 +2103,7 @@ void OutsideRenderPassCommandBufferHelper::retainImage(ImageHelper *image)
 
 void OutsideRenderPassCommandBufferHelper::trackImageWithEvent(Context *context, ImageHelper *image)
 {
-    image->setCurrentRefCountedEvent(context, mRefCountedEvents);
+    image->setCurrentRefCountedEvent(context, &mRefCountedEvents);
     flushSetEventsImpl(context, &mCommandBuffer);
 }
 
@@ -2981,38 +2973,18 @@ void RenderPassCommandBufferHelper::finalizeDepthStencilImageLayoutAndLoadStore(
     mDepthAttachment.getImage()->resetRenderPassUsageFlags();
 }
 
-void RenderPassCommandBufferHelper::executeSetEvents(Context *context,
-                                                     PrimaryCommandBuffer *primary)
-{
-    Renderer *renderer = context->getRenderer();
-    // Add VkCmdSetEvent here to track the completion of this renderPass.
-    for (EventStage stage : mRefCountedEvents.mask)
-    {
-        // This must have been garbage collected. The VkEvent handle should have been copied to
-        // VkEvents.
-        ASSERT(!mRefCountedEvents.map[stage].valid());
-        ASSERT(mRefCountedEvents.vkEvents[stage] != VK_NULL_HANDLE);
-        primary->setEvent(mRefCountedEvents.vkEvents[stage], renderer->getPipelineStageMask(stage));
-        mRefCountedEvents.vkEvents[stage] = VK_NULL_HANDLE;
-    }
-    mRefCountedEvents.mask.reset();
-}
-
 void RenderPassCommandBufferHelper::collectRefCountedEventsGarbage(
+    Renderer *renderer,
     RefCountedEventsGarbageRecycler *garbageRecycler)
 {
     // For render pass the VkCmdSetEvent works differently from OutsideRenderPassCommands.
     // VkCmdEndRenderPass are called in the primary command buffer, and VkCmdSetEvents has to be
     // issued after VkCmdEndRenderPass. This means VkCmdSetEvent has to be delayed. Because of this,
-    // here we simply make a local copy of the VkEvent and then add the RefCountedEvent to the
-    // garbage collector. No VkCmdSetEvent call is issued here (they will be issued at
-    // flushToPrimary time).
-    for (EventStage stage : mRefCountedEvents.mask)
-    {
-        ASSERT(mRefCountedEvents.map[stage].valid());
-        mRefCountedEvents.vkEvents[stage] = mRefCountedEvents.map[stage].getEvent().getHandle();
-        mRefCountedEventCollector.emplace_back(std::move(mRefCountedEvents.map[stage]));
-    }
+    // here we simply make a copy of the VkEvent from RefCountedEvent and then add the
+    // RefCountedEvent to the garbage collector. No VkCmdSetEvent call is issued here (they will be
+    // issued at flushToPrimary time).
+    mVkEventArray.init(renderer, mRefCountedEvents);
+    mRefCountedEvents.releaseToEventCollector(&mRefCountedEventCollector);
 
     if (!mRefCountedEventCollector.empty())
     {
@@ -3310,7 +3282,8 @@ angle::Result RenderPassCommandBufferHelper::flushToPrimary(Context *context,
     }
 
     // Now issue VkCmdSetEvents to primary command buffer
-    executeSetEvents(context, &primary);
+    ASSERT(mRefCountedEvents.empty());
+    mVkEventArray.flushSetEvents(&primary);
 
     // Restart the command buffer.
     return reset(context, &commandsState->secondaryCommands);
@@ -8036,7 +8009,8 @@ void ImageHelper::updateLayoutAndBarrier(Context *context,
     ASSERT(!mCurrentEvent.valid());
 }
 
-void ImageHelper::setCurrentRefCountedEvent(Context *context, EventMaps &eventMaps)
+void ImageHelper::setCurrentRefCountedEvent(Context *context,
+                                            RefCountedEventArray *refCountedEventArray)
 {
     ASSERT(context->getFeatures().useVkEventForImageBarrier.enabled);
 
@@ -8059,20 +8033,17 @@ void ImageHelper::setCurrentRefCountedEvent(Context *context, EventMaps &eventMa
     // Create the event if we have not yet so. Otherwise just use the already created event. This
     // means all images used in the same render pass that has the same layout will be tracked by the
     // same event.
-    EventStage stage = GetImageLayoutEventStage(mCurrentLayout);
-    if (!eventMaps.map[stage].valid())
+    EventStage eventStage = GetImageLayoutEventStage(mCurrentLayout);
+    if (!refCountedEventArray->getEvent(eventStage).valid() &&
+        !refCountedEventArray->initEventAtStage(context, eventStage))
     {
-        if (!eventMaps.map[stage].init(context, stage))
-        {
-            // If VkEvent creation fail, we fallback to pipelineBarrier
-            return;
-        }
-        eventMaps.mask.set(stage);
+        // If VkEvent creation fail, we fallback to pipelineBarrier
+        return;
     }
 
     // Copy the event to mCurrentEvent so that we can wait for it in future. This will add extra
     // refcount to the underlying VkEvent.
-    mCurrentEvent = eventMaps.map[stage];
+    mCurrentEvent = refCountedEventArray->getEvent(eventStage);
 }
 
 void ImageHelper::updatePipelineStageAccessHistory()

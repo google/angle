@@ -157,6 +157,91 @@ void RefCountedEvent::destroy(VkDevice device)
     SafeDelete(mHandle);
 }
 
+// RefCountedEventArray implementation.
+void RefCountedEventArray::release(Renderer *renderer)
+{
+    for (EventStage eventStage : mBitMask)
+    {
+        ASSERT(mEvents[eventStage].valid());
+        mEvents[eventStage].release(renderer);
+    }
+    mBitMask.reset();
+}
+
+void RefCountedEventArray::release(Context *context)
+{
+    for (EventStage eventStage : mBitMask)
+    {
+        ASSERT(mEvents[eventStage].valid());
+        mEvents[eventStage].release(context);
+    }
+    mBitMask.reset();
+}
+
+void RefCountedEventArray::releaseToEventCollector(RefCountedEventCollector *eventCollector)
+{
+    for (EventStage eventStage : mBitMask)
+    {
+        eventCollector->emplace_back(std::move(mEvents[eventStage]));
+    }
+    mBitMask.reset();
+}
+
+bool RefCountedEventArray::initEventAtStage(Context *context, EventStage eventStage)
+{
+    ASSERT(!mBitMask[eventStage]);
+    // Create the event if we have not yet so. Otherwise just use the already created event.
+    if (!mEvents[eventStage].init(context, eventStage))
+    {
+        return false;
+    }
+    mBitMask.set(eventStage);
+    return true;
+}
+
+template <typename CommandBufferT>
+void RefCountedEventArray::flushSetEvents(Renderer *renderer, CommandBufferT *commandBuffer) const
+{
+    for (EventStage eventStage : mBitMask)
+    {
+        VkPipelineStageFlags pipelineStageFlags = renderer->getPipelineStageMask(eventStage);
+        commandBuffer->setEvent(mEvents[eventStage].getEvent().getHandle(), pipelineStageFlags);
+    }
+}
+
+template void RefCountedEventArray::flushSetEvents<VulkanSecondaryCommandBuffer>(
+    Renderer *renderer,
+    VulkanSecondaryCommandBuffer *commandBuffer) const;
+template void RefCountedEventArray::flushSetEvents<priv::SecondaryCommandBuffer>(
+    Renderer *renderer,
+    priv::SecondaryCommandBuffer *commandBuffer) const;
+template void RefCountedEventArray::flushSetEvents<priv::CommandBuffer>(
+    Renderer *renderer,
+    priv::CommandBuffer *commandBuffer) const;
+
+// EventArray implementation.
+void EventArray::init(Renderer *renderer, const RefCountedEventArray &refCountedEventArray)
+{
+    mBitMask = refCountedEventArray.getBitMask();
+    for (EventStage eventStage : mBitMask)
+    {
+        ASSERT(refCountedEventArray.getEvent(eventStage).valid());
+        mEvents[eventStage] = refCountedEventArray.getEvent(eventStage).getEvent().getHandle();
+        mPipelineStageFlags[eventStage] = renderer->getPipelineStageMask(eventStage);
+    }
+}
+
+void EventArray::flushSetEvents(PrimaryCommandBuffer *primary)
+{
+    for (EventStage eventStage : mBitMask)
+    {
+        ASSERT(mEvents[eventStage] != VK_NULL_HANDLE);
+        primary->setEvent(mEvents[eventStage], mPipelineStageFlags[eventStage]);
+        mEvents[eventStage] = VK_NULL_HANDLE;
+    }
+    mBitMask.reset();
+}
+
 // RefCountedEventsGarbage implementation.
 void RefCountedEventsGarbage::destroy(Renderer *renderer)
 {

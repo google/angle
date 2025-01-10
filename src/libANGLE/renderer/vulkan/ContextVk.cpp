@@ -8190,7 +8190,7 @@ angle::Result ContextVk::flushCommandsAndEndRenderPassWithoutSubmit(RenderPassCl
     flushDescriptorSetUpdates();
     // Collect RefCountedEvent garbage before submitting to renderer
     mRenderPassCommands->collectRefCountedEventsGarbage(
-        mShareGroupVk->getRefCountedEventsGarbageRecycler());
+        mRenderer, mShareGroupVk->getRefCountedEventsGarbageRecycler());
 
     // Save the queueSerial before calling flushRenderPassCommands, which may return a new
     // mRenderPassCommands

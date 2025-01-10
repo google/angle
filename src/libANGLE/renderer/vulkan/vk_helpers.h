@@ -1466,7 +1466,7 @@ class CommandBufferHelperCommon : angle::NonCopyable
     bool hasSetEventPendingFlush(const RefCountedEvent &event) const
     {
         ASSERT(event.valid());
-        return mRefCountedEvents.map[event.getEventStage()] == event;
+        return mRefCountedEvents.getEvent(event.getEventStage()) == event;
     }
 
     // Issue VkCmdSetEvent call for events in this command buffer.
@@ -1568,7 +1568,7 @@ class CommandBufferHelperCommon : angle::NonCopyable
     Semaphore mAcquireNextImageSemaphore;
 
     // The list of RefCountedEvents that have be tracked
-    EventMaps mRefCountedEvents;
+    RefCountedEventArray mRefCountedEvents;
     // The list of RefCountedEvents that should be garbage collected when it gets reset.
     RefCountedEventCollector mRefCountedEventCollector;
 
@@ -2014,7 +2014,8 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     void updateDepthStencilReadOnlyMode(RenderPassUsageFlags dsUsageFlags,
                                         VkImageAspectFlags dsAspectFlags);
 
-    void collectRefCountedEventsGarbage(RefCountedEventsGarbageRecycler *garbageRecycler);
+    void collectRefCountedEventsGarbage(Renderer *renderer,
+                                        RefCountedEventsGarbageRecycler *garbageRecycler);
 
     void updatePerfCountersForDynamicRenderingInstance(ErrorContext *context,
                                                        angle::VulkanPerfCounters *countersOut);
@@ -2056,8 +2057,6 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
                                               PackedAttachmentIndex packedAttachmentIndex);
     void finalizeDepthStencilImageLayoutAndLoadStore(Context *context);
     void finalizeFragmentShadingRateImageLayout(Context *context);
-
-    void executeSetEvents(Context *context, PrimaryCommandBuffer *primary);
 
     // When using Vulkan secondary command buffers, each subpass must be recorded in a separate
     // command buffer.  Currently ANGLE produces render passes with at most 2 subpasses.
@@ -2107,6 +2106,9 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     // command buffer.
     ImageHelper *mImageOptimizeForPresent;
     ImageLayout mImageOptimizeForPresentOriginalLayout;
+
+    // The list of VkEvents copied from RefCountedEventArray
+    EventArray mVkEventArray;
 
     friend class CommandBufferHelperCommon;
 };
@@ -2917,7 +2919,7 @@ class ImageHelper final : public Resource, public angle::Subject
     size_t getLevelUpdateCount(gl::LevelIndex level) const;
 
     // Create event if needed and record the event in ImageHelper::mCurrentEvent.
-    void setCurrentRefCountedEvent(Context *context, EventMaps &eventMaps);
+    void setCurrentRefCountedEvent(Context *context, RefCountedEventArray *refCountedEventArray);
     void releaseCurrentRefCountedEvent(Context *context)
     {
         // This will also force next barrier use pipelineBarrier
