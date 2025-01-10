@@ -111,6 +111,11 @@ struct GraphicsDriverUniformsExtended
 };
 static_assert(sizeof(GraphicsDriverUniformsExtended) % (sizeof(uint32_t) * 4) == 0,
               "GraphicsDriverUniformsExtended should be 16bytes aligned");
+// Driver uniforms are updated using push constants and Vulkan spec guarantees universal support for
+// 128 bytes worth of push constants. For maximum compatibility ensure
+// GraphicsDriverUniformsExtended size is within that limit.
+static_assert(sizeof(GraphicsDriverUniformsExtended) <= 128,
+              "Only 128 bytes are guranteed for push constants");
 
 struct ComputeDriverUniforms
 {
