@@ -403,9 +403,9 @@ struct VertexFormat : private angle::NonCopyable
 };
 
 constexpr uint32_t kVertexFormatCount = static_cast<uint32_t>(VertexAttribType::EnumCount);
-extern angle::FormatID kVertexFormatPureInteger[kVertexFormatCount][4];
-extern angle::FormatID kVertexFormatNormalized[kVertexFormatCount][4];
-extern angle::FormatID kVertexFormatScaled[kVertexFormatCount][4];
+extern const angle::FormatID kVertexFormatPureInteger[kVertexFormatCount][4];
+extern const angle::FormatID kVertexFormatNormalized[kVertexFormatCount][4];
+extern const angle::FormatID kVertexFormatScaled[kVertexFormatCount][4];
 
 ANGLE_INLINE angle::FormatID GetVertexFormatID(VertexAttribType type,
                                                GLboolean normalized,

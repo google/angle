@@ -2108,7 +2108,7 @@ static_assert(static_cast<uint32_t>(VertexAttribType::Int2101010) == 15);
 static_assert(static_cast<uint32_t>(VertexAttribType::UnsignedInt1010102) == 16);
 static_assert(static_cast<uint32_t>(VertexAttribType::Int1010102) == 17);
 
-angle::FormatID kVertexFormatPureInteger[kVertexFormatCount][4] = {
+const angle::FormatID kVertexFormatPureInteger[kVertexFormatCount][4] = {
     // Byte
     {angle::FormatID::R8_SINT, angle::FormatID::R8G8_SINT, angle::FormatID::R8G8B8_SINT,
      angle::FormatID::R8G8B8A8_SINT},
@@ -2161,7 +2161,7 @@ angle::FormatID kVertexFormatPureInteger[kVertexFormatCount][4] = {
      angle::FormatID::A2R10G10B10_SINT_VERTEX},
 };
 
-angle::FormatID kVertexFormatNormalized[kVertexFormatCount][4] = {
+const angle::FormatID kVertexFormatNormalized[kVertexFormatCount][4] = {
     // Byte
     {angle::FormatID::R8_SNORM, angle::FormatID::R8G8_SNORM, angle::FormatID::R8G8B8_SNORM,
      angle::FormatID::R8G8B8A8_SNORM},
@@ -2214,7 +2214,7 @@ angle::FormatID kVertexFormatNormalized[kVertexFormatCount][4] = {
      angle::FormatID::A2R10G10B10_SNORM_VERTEX},
 };
 
-angle::FormatID kVertexFormatScaled[kVertexFormatCount][4] = {
+const angle::FormatID kVertexFormatScaled[kVertexFormatCount][4] = {
     // Byte
     {angle::FormatID::R8_SSCALED, angle::FormatID::R8G8_SSCALED, angle::FormatID::R8G8B8_SSCALED,
      angle::FormatID::R8G8B8A8_SSCALED},
