@@ -2089,8 +2089,10 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
 
     RenderPassAttachment mFragmentShadingRateAtachment;
 
-    // This is last renderpass before present and this is the image will be presented. We can use
-    // final layout of the renderpass to transition it to the presentable layout
+    // This is last renderpass before present and this is the image that will be presented. We can
+    // use final layout of the render pass to transition it to the presentable layout.  With dynamic
+    // rendering, the barrier is recorded after the pass without needing an outside render pass
+    // command buffer.
     ImageHelper *mImageOptimizeForPresent;
     ImageLayout mImageOptimizeForPresentOriginalLayout;
 

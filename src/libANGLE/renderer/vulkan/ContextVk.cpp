@@ -4655,18 +4655,25 @@ angle::Result ContextVk::optimizeRenderPassForPresent(vk::ImageViewHelper *color
             mRenderPassCommands->getRenderArea());
     }
 
-    // Use finalLayout instead of extra barrier for layout change to present
-    if (colorImage != nullptr && getFeatures().supportsPresentation.enabled)
-    {
-        mRenderPassCommands->setImageOptimizeForPresent(colorImage);
-    }
-
     // Resolve the multisample image
     vk::RenderPassCommandBufferHelper &commandBufferHelper = getStartedRenderPassCommands();
     gl::Rectangle renderArea                               = commandBufferHelper.getRenderArea();
-    const gl::Rectangle invalidateArea(0, 0, colorImageMS->getRotatedExtents().width,
-                                       colorImageMS->getRotatedExtents().height);
-    if (colorImageMS->valid() && renderArea == invalidateArea)
+    const gl::Rectangle fullExtent(0, 0, colorImageMS->getRotatedExtents().width,
+                                   colorImageMS->getRotatedExtents().height);
+    const bool resolveWithRenderPass = colorImageMS->valid() && renderArea == fullExtent;
+
+    // Handle transition to PRESENT_SRC automatically as part of the render pass.  If the swapchain
+    // image is the target of resolve, but that resolve cannot happen with the render pass, do not
+    // apply this optimization; the image has to be moved out of PRESENT_SRC to be resolved after
+    // this call.
+    if (getFeatures().supportsPresentation.enabled &&
+        (!colorImageMS->valid() || resolveWithRenderPass))
+    {
+        ASSERT(colorImage != nullptr);
+        mRenderPassCommands->setImageOptimizeForPresent(colorImage);
+    }
+
+    if (resolveWithRenderPass)
     {
         // Due to lack of support for GL_MESA_framebuffer_flip_y, it is currently impossible for the
         // application to resolve the default framebuffer into an FBO with a resolve attachment.  If
@@ -4690,7 +4697,7 @@ angle::Result ContextVk::optimizeRenderPassForPresent(vk::ImageViewHelper *color
         if (presentMode != vk::PresentMode::SharedDemandRefreshKHR)
         {
             commandBufferHelper.invalidateRenderPassColorAttachment(
-                mState, 0, vk::PackedAttachmentIndex(0), invalidateArea);
+                mState, 0, vk::PackedAttachmentIndex(0), fullExtent);
         }
 
         ANGLE_TRY(

@@ -2285,6 +2285,9 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
     // the optimization.
     if (contextVk->hasStartedRenderPassWithDefaultFramebuffer())
     {
+        // If image is resolved above, render pass is necessary closed.
+        ASSERT(!imageResolved);
+
         ANGLE_TRY(contextVk->optimizeRenderPassForPresent(&image.imageViews, image.image.get(),
                                                           &mColorImageMS, mSwapchainPresentMode,
                                                           &imageResolved));
