@@ -696,7 +696,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     ANGLE_INLINE Program *getProgramResolveLink(ShaderProgramID handle) const
     {
         Program *program = mState.mShaderProgramManager->getProgram(handle);
-        if (program)
+        if (ANGLE_LIKELY(program))
         {
             program->resolveLink(this);
         }

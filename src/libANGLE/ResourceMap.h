@@ -120,7 +120,7 @@ class ResourceMap final : angle::NonCopyable
         // locking is not needed.
         static_assert(!kNeedsLock || kInitialFlatResourcesSize == kFlatResourcesLimit);
 
-        if (handle < mFlatResourcesSize)
+        if (ANGLE_LIKELY(handle < mFlatResourcesSize))
         {
             ResourceType *value = mFlatResources[handle];
             return (value == InvalidPointer() ? nullptr : value);
