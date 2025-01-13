@@ -953,23 +953,40 @@ void OutputWGSLTraverser::emitArrayIndex(TIntermTyped &leftNode, TIntermTyped &r
     // Some arrays within the uniform address space have their element types wrapped in a struct
     // when generating WGSL, so this unwraps the element (as an optimization of converting the
     // entire array back to the unwrapped type).
-    bool needsUnwrapping          = false;
-    TIntermBinary *leftNodeBinary = leftNode.getAsBinaryNode();
+    bool needsUnwrapping                  = false;
+    bool isUniformMatrixNeedingConversion = false;
+    TIntermBinary *leftNodeBinary         = leftNode.getAsBinaryNode();
     if (leftNodeBinary && leftNodeBinary->getOp() == TOperator::EOpIndexDirectStruct)
     {
         const TStructure *structure = leftNodeBinary->getLeft()->getType().getStruct();
 
+        bool isInUniformAddressSpace =
+            mUniformBlockMetadata->structsInUniformAddressSpace.count(structure->uniqueId().get());
+
         needsUnwrapping =
-            structure &&
-            ElementTypeNeedsUniformWrapperStruct(
-                /*inUniformAddressSpace=*/mUniformBlockMetadata->structsInUniformAddressSpace.count(
-                    structure->uniqueId().get()),
-                &leftNodeBinary->getType());
+            structure && ElementTypeNeedsUniformWrapperStruct(isInUniformAddressSpace, &leftType);
+
+        isUniformMatrixNeedingConversion = isInUniformAddressSpace && IsMatCx2(&leftType);
+
+        ASSERT(!needsUnwrapping || !isUniformMatrixNeedingConversion);
     }
 
     // Emit the left side, which should be of type array.
-    if (needsUnwrapping)
+    if (needsUnwrapping || isUniformMatrixNeedingConversion)
     {
+        if (isUniformMatrixNeedingConversion)
+        {
+            // If this array index expression is yielding an std140 matCx2 (i.e.
+            // array<ANGLE_wrapped_vec2, C>), just convert the entire expression to a WGSL matCx2,
+            // instead of converting the entire array of std140 matCx2s into an array of WGSL
+            // matCx2s and then indexing into it.
+            TType baseType = leftType;
+            baseType.toArrayBaseType();
+            mSink << MakeMatCx2ConversionFunctionName(&baseType) << "(";
+            // Make sure the conversion function referenced here is actually generated in the
+            // resulting WGSL.
+            mWGSLGenerationMetadataForUniforms->outputMatCx2Conversion.insert(baseType);
+        }
         emitStructIndexNoUnwrapping(leftNodeBinary);
     }
     else
@@ -1030,30 +1047,48 @@ void OutputWGSLTraverser::emitArrayIndex(TIntermTyped &leftNode, TIntermTyped &r
     {
         mSink << "." << kWrappedStructFieldName;
     }
+    else if (isUniformMatrixNeedingConversion)
+    {
+        // Close conversion function call
+        mSink << ")";
+    }
 }
 
 void OutputWGSLTraverser::emitStructIndex(TIntermBinary *binaryNode)
 {
     ASSERT(binaryNode->getOp() == TOperator::EOpIndexDirectStruct);
     TIntermTyped &leftNode  = *binaryNode->getLeft();
+    const TType *binaryNodeType = &binaryNode->getType();
 
     const TStructure *structure = leftNode.getType().getStruct();
     ASSERT(structure);
 
-    bool needsUnwrapping = ElementTypeNeedsUniformWrapperStruct(
-        /*inUniformAddressSpace=*/mUniformBlockMetadata->structsInUniformAddressSpace.count(
-            structure->uniqueId().get()),
-        &binaryNode->getType());
+    bool isInUniformAddressSpace =
+        mUniformBlockMetadata->structsInUniformAddressSpace.count(structure->uniqueId().get());
+
+    bool isUniformMatrixNeedingConversion = isInUniformAddressSpace && IsMatCx2(binaryNodeType);
+
+    bool needsUnwrapping =
+        ElementTypeNeedsUniformWrapperStruct(isInUniformAddressSpace, binaryNodeType);
     if (needsUnwrapping)
     {
+        ASSERT(!isUniformMatrixNeedingConversion);
+
         mSink << MakeUnwrappingArrayConversionFunctionName(&binaryNode->getType()) << "(";
         // Make sure the conversion function referenced here is actually generated in the resulting
         // WGSL.
         mWGSLGenerationMetadataForUniforms->arrayElementTypesThatNeedUnwrappingConversions.insert(
-            binaryNode->getType());
+            *binaryNodeType);
+    }
+    else if (isUniformMatrixNeedingConversion)
+    {
+        mSink << MakeMatCx2ConversionFunctionName(binaryNodeType) << "(";
+        // Make sure the conversion function referenced here is actually generated in the resulting
+        // WGSL.
+        mWGSLGenerationMetadataForUniforms->outputMatCx2Conversion.insert(*binaryNodeType);
     }
     emitStructIndexNoUnwrapping(binaryNode);
-    if (needsUnwrapping)
+    if (needsUnwrapping || isUniformMatrixNeedingConversion)
     {
         mSink << ")";
     }
@@ -1585,10 +1620,11 @@ void OutputWGSLTraverser::emitStructDeclaration(const TType &type)
         if (isInUniformAddressSpace)
         {
             // Here, the field must be aligned to 16 if:
-            // 1. The field is a struct or array
+            // 1. The field is a struct or array (note that matCx2 is represented as an array of
+            // vec2)
             // 2. The previous field is a struct
             // 3. The field is the first in the struct (for convenience).
-            if (field->type()->getStruct() || fieldType->isArray())
+            if (field->type()->getStruct() || fieldType->isArray() || IsMatCx2(fieldType))
             {
                 alignTo16InUniformAddressSpace = true;
             }

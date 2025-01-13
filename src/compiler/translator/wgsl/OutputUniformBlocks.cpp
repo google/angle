@@ -11,6 +11,7 @@
 #include "common/utilities.h"
 #include "compiler/translator/BaseTypes.h"
 #include "compiler/translator/Compiler.h"
+#include "compiler/translator/ImmutableString.h"
 #include "compiler/translator/ImmutableStringBuilder.h"
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/IntermNode.h"
@@ -92,6 +93,16 @@ bool OutputUniformWrapperStructsAndConversions(
     TInfoSinkBase &output,
     const WGSLGenerationMetadataForUniforms &wgslGenerationMetadataForUniforms)
 {
+
+    auto generate16AlignedWrapperStruct = [&output](const TType &type) {
+        output << "struct " << MakeUniformWrapperStructName(&type) << "\n{\n";
+        output << "  @align(16) " << kWrappedStructFieldName << " : ";
+        WriteWgslType(output, type, {});
+        output << "\n};\n";
+    };
+
+    bool generatedVec2WrapperStruct = false;
+
     for (const TType &type : wgslGenerationMetadataForUniforms.arrayElementTypesInUniforms)
     {
         // Structs don't need wrapper structs.
@@ -99,10 +110,19 @@ bool OutputUniformWrapperStructsAndConversions(
         // Multidimensional arrays not currently supported in uniforms
         ASSERT(!type.isArray());
 
-        output << "struct " << MakeUniformWrapperStructName(&type) << "\n{\n";
-        output << "  @align(16) " << kWrappedStructFieldName << " : ";
-        WriteWgslType(output, type, {});
-        output << "\n};\n";
+        if (type.isVector() && type.getNominalSize() == 2)
+        {
+            generatedVec2WrapperStruct = true;
+        }
+        generate16AlignedWrapperStruct(type);
+    }
+
+    // matCx2 is represented as array<ANGLE_wrapped_vec2, C> so if there are matCx2s we need to
+    // generate an ANGLE_wrapped_vec2 struct.
+    if (!wgslGenerationMetadataForUniforms.outputMatCx2Conversion.empty() &&
+        !generatedVec2WrapperStruct)
+    {
+        generate16AlignedWrapperStruct(*new TType(TBasicType::EbtFloat, 2));
     }
 
     for (const TType &type :
@@ -131,6 +151,56 @@ bool OutputUniformWrapperStructsAndConversions(
         output << "}\n";
     }
 
+    for (const TType &type : wgslGenerationMetadataForUniforms.outputMatCx2Conversion)
+    {
+        ASSERT(type.isMatrix() && type.getRows() == 2);
+        output << "fn " << MakeMatCx2ConversionFunctionName(&type) << "(mangledMatrix : ";
+
+        WriteWgslType(output, type, {WgslAddressSpace::Uniform});
+        output << ") -> ";
+        WriteWgslType(output, type, {WgslAddressSpace::NonUniform});
+        output << "\n{\n";
+        output << "  var retVal : ";
+        WriteWgslType(output, type, {WgslAddressSpace::NonUniform});
+        output << ";\n";
+
+        if (type.isArray())
+        {
+            output << "  for (var i : u32 = 0; i < " << type.getOutermostArraySize()
+                   << "; i++) {;\n";
+            output << "    retVal[i] = ";
+        }
+        else
+        {
+            output << "  retVal = ";
+        }
+
+        TType baseType = type;
+        baseType.toArrayBaseType();
+        WriteWgslType(output, baseType, {WgslAddressSpace::NonUniform});
+        output << "(";
+        for (uint8_t i = 0; i < type.getCols(); i++)
+        {
+            if (i != 0)
+            {
+                output << ", ";
+            }
+            // The mangled matrix is an array and the elements are wrapped vec2s, which can be
+            // passed directly to the matCx2 constructor.
+            output << "mangledMatrix" << (type.isArray() ? "[i]" : "") << "[" << static_cast<int>(i)
+                   << "]." << kWrappedStructFieldName;
+        }
+        output << ");\n";
+
+        if (type.isArray())
+        {
+            // Close the for loop.
+            output << "  }\n";
+        }
+        output << "  return retVal;\n";
+        output << "}\n";
+    }
+
     return true;
 }
 
@@ -143,6 +213,20 @@ ImmutableString MakeUnwrappingArrayConversionFunctionName(const TType *type)
     return BuildConcatenatedImmutableString("ANGLE_Convert_", arrStr,
                                             MakeUniformWrapperStructName(type), "_ElementsTo_",
                                             type->getBuiltInTypeNameString(), "_Elements");
+}
+
+bool IsMatCx2(const TType *type)
+{
+    return type->isMatrix() && type->getRows() == 2;
+}
+
+ImmutableString MakeMatCx2ConversionFunctionName(const TType *type)
+{
+    ASSERT(type->getNumArraySizes() <= 1);
+    ImmutableString arrStr = type->isArray() ? BuildConcatenatedImmutableString(
+                                                   "Array", type->getOutermostArraySize(), "_")
+                                             : kEmptyImmutableString;
+    return BuildConcatenatedImmutableString("ANGLE_Convert_", arrStr, "Mat", type->getCols(), "x2");
 }
 
 bool OutputUniformBlocks(TCompiler *compiler, TIntermBlock *root)
@@ -178,9 +262,7 @@ bool OutputUniformBlocks(TCompiler *compiler, TIntermBlock *root)
         // bool, and arrays with stride less than 16.
         // (this check does not cover the unsupported case where there is an array of structs of
         // size < 16).
-        if (gl::VariableRowCount(shaderVar.type) == 2 || shaderVar.type == GL_BOOL ||
-            (shaderVar.isArray() && !shaderVar.isStruct() &&
-             gl::VariableComponentCount(shaderVar.type) < 3))
+        if (shaderVar.type == GL_BOOL)
         {
             return false;
         }

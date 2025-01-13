@@ -15,6 +15,11 @@
 namespace sh
 {
 
+namespace
+{
+const char kWrappedPrefix[] = "ANGLE_wrapped_";
+}
+
 template <typename StringStreamType>
 void WriteWgslBareTypeName(StringStreamType &output,
                            const TType &type,
@@ -173,10 +178,20 @@ void WriteWgslType(StringStreamType &output, const TType &type, const EmitTypeCo
     }
     else if (type.isMatrix())
     {
-        output << "mat" << static_cast<uint32_t>(type.getCols()) << "x"
-               << static_cast<uint32_t>(type.getRows()) << "<";
-        WriteWgslBareTypeName(output, type, config);
-        output << ">";
+        if (config.addressSpace == WgslAddressSpace::Uniform && type.getRows() == 2)
+        {
+            // matCx2 in the uniform address space is too packed for std140, and so they will be
+            // represented by an array<ANGLE_wrapped_vec2, C>.
+            output << "array<" << kWrappedPrefix << "vec2, "
+                   << static_cast<uint32_t>(type.getCols()) << ">";
+        }
+        else
+        {
+            output << "mat" << static_cast<uint32_t>(type.getCols()) << "x"
+                   << static_cast<uint32_t>(type.getRows()) << "<";
+            WriteWgslBareTypeName(output, type, config);
+            output << ">";
+        }
     }
     else
     {
@@ -207,7 +222,7 @@ template void WriteWgslType<TStringStream>(TStringStream &output,
 
 ImmutableString MakeUniformWrapperStructName(const TType *type)
 {
-    return BuildConcatenatedImmutableString("ANGLE_wrapped_", type->getBuiltInTypeNameString());
+    return BuildConcatenatedImmutableString(kWrappedPrefix, type->getBuiltInTypeNameString());
 }
 
 bool ElementTypeNeedsUniformWrapperStruct(bool inUniformAddressSpace, const TType *type)

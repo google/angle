@@ -55,12 +55,22 @@ struct WGSLGenerationMetadataForUniforms
     // If we need to convert arrays with wrapped element types into arrays with unwrapped element
     // types, the necessary conversions are listed here.
     TSet<TType> arrayElementTypesThatNeedUnwrappingConversions;
+
+    // MatCx2 in a uniform will be represented as array<ANGLE_wrapped_vec2, C> to match std140 (WGSL
+    // uniforms pack their matrices a bit tighter). These will have to be converted back to matCx2
+    // for all other purposes (e.g. multiplication).
+    // If this set isn't empty, ANGLE_wrapped_vec2 will be generated even if it
+    // hasn't been yet.
+    TSet<TType> outputMatCx2Conversion;
 };
 bool OutputUniformWrapperStructsAndConversions(
     TInfoSinkBase &output,
-    const WGSLGenerationMetadataForUniforms &arrayElementTypesInUniforms);
+    const WGSLGenerationMetadataForUniforms &wgslGenerationMetadataForUniforms);
+
+bool IsMatCx2(const TType *type);
 
 ImmutableString MakeUnwrappingArrayConversionFunctionName(const TType *type);
+ImmutableString MakeMatCx2ConversionFunctionName(const TType *type);
 
 // TODO(anglebug.com/42267100): for now does not output all uniform blocks,
 // just the default block. (fails for  matCx2, bool.)
