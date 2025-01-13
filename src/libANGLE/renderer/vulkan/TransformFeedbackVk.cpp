@@ -47,7 +47,7 @@ void TransformFeedbackVk::onDestroy(const gl::Context *context)
     releaseCounterBuffers(contextVk);
 }
 
-void TransformFeedbackVk::releaseCounterBuffers(vk::ErrorContext *context)
+void TransformFeedbackVk::releaseCounterBuffers(vk::Context *context)
 {
     for (vk::BufferHelper &bufferHelper : mCounterBufferHelpers)
     {

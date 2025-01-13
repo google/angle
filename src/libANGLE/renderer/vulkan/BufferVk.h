@@ -51,7 +51,7 @@ class ConversionBuffer
 
     bool valid() const { return mData && mData->valid(); }
     vk::BufferHelper *getBuffer() const { return mData.get(); }
-    void release(vk::ErrorContext *context) { mData->release(context); }
+    void release(vk::Context *context) { mData->release(context); }
     void destroy(vk::Renderer *renderer) { mData->destroy(renderer); }
 
   private:
@@ -293,7 +293,7 @@ class BufferVk : public BufferImpl
                                VkMemoryPropertyFlags memoryPropertyFlags,
                                size_t size) const;
 
-    void releaseConversionBuffers(vk::ErrorContext *context);
+    void releaseConversionBuffers(vk::Context *context);
 
     vk::BufferHelper mBuffer;
 

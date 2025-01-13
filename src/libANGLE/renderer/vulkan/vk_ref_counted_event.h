@@ -130,9 +130,10 @@ enum class EventStage : uint32_t
 };
 using EventStageBitMask = typename angle::PackedEnumBitSet<EventStage, uint64_t>;
 
+using EventStageToVkPipelineStageFlagsMap = angle::PackedEnumMap<EventStage, VkPipelineStageFlags>;
 // Initialize EventStage to VkPipelineStageFlags mapping table.
-void InitializeEventAndPipelineStagesMap(
-    angle::PackedEnumMap<EventStage, VkPipelineStageFlags> *mapping,
+void InitializeEventStageToVkPipelineStageFlagsMap(
+    EventStageToVkPipelineStageFlagsMap *map,
     VkPipelineStageFlags supportedVulkanPipelineStageMask);
 
 // VkCmdWaitEvents requires srcStageMask must be the bitwise OR of the stageMask parameter used in
@@ -227,6 +228,8 @@ class RefCountedEvent final
         ASSERT(mHandle != nullptr);
         return mHandle->get().eventStage;
     }
+
+    VkPipelineStageFlags getPipelineStageMask(Renderer *renderer) const;
 
   private:
     // Release one reference count to the underline Event object and destroy or recycle the handle
@@ -544,15 +547,16 @@ class EventBarrierArray final
                                   VkPipelineStageFlags dstStageMask,
                                   VkAccessFlags dstAccess);
 
-    void addMemoryEvent(Renderer *renderer,
-                        const RefCountedEvent &waitEvent,
-                        VkPipelineStageFlags dstStageMask,
-                        VkAccessFlags dstAccess);
+    void addEventMemoryBarrier(Renderer *renderer,
+                               const RefCountedEvent &waitEvent,
+                               VkAccessFlags srcAccess,
+                               VkPipelineStageFlags dstStageMask,
+                               VkAccessFlags dstAccess);
 
-    void addImageEvent(Renderer *renderer,
-                       const RefCountedEvent &waitEvent,
-                       VkPipelineStageFlags dstStageMask,
-                       const VkImageMemoryBarrier &imageMemoryBarrier);
+    void addEventImageBarrier(Renderer *renderer,
+                              const RefCountedEvent &waitEvent,
+                              VkPipelineStageFlags dstStageMask,
+                              const VkImageMemoryBarrier &imageMemoryBarrier);
 
     void reset() { ASSERT(mBarriers.empty()); }
 

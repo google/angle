@@ -390,7 +390,7 @@ void BufferVk::destroy(const gl::Context *context)
     (void)release(contextVk);
 }
 
-void BufferVk::releaseConversionBuffers(vk::ErrorContext *context)
+void BufferVk::releaseConversionBuffers(vk::Context *context)
 {
     for (ConversionBuffer &buffer : mVertexConversionBuffers)
     {

@@ -47,25 +47,34 @@ constexpr VkClearDepthStencilValue kRobustInitDepthStencilValue = {1.0f, 0};
 constexpr VkImageAspectFlags kDepthStencilAspects =
     VK_IMAGE_ASPECT_STENCIL_BIT | VK_IMAGE_ASPECT_DEPTH_BIT;
 
-constexpr angle::PackedEnumMap<PipelineStage, VkPipelineStageFlagBits> kPipelineStageFlagBitMap = {
-    {PipelineStage::TopOfPipe, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT},
-    {PipelineStage::DrawIndirect, VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT},
-    {PipelineStage::VertexInput, VK_PIPELINE_STAGE_VERTEX_INPUT_BIT},
-    {PipelineStage::VertexShader, VK_PIPELINE_STAGE_VERTEX_SHADER_BIT},
-    {PipelineStage::TessellationControl, VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT},
-    {PipelineStage::TessellationEvaluation, VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT},
-    {PipelineStage::GeometryShader, VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT},
-    {PipelineStage::TransformFeedback, VK_PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT},
-    {PipelineStage::FragmentShadingRate,
-     VK_PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR},
-    {PipelineStage::EarlyFragmentTest, VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT},
-    {PipelineStage::FragmentShader, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT},
-    {PipelineStage::LateFragmentTest, VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT},
-    {PipelineStage::ColorAttachmentOutput, VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT},
-    {PipelineStage::ComputeShader, VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT},
-    {PipelineStage::Transfer, VK_PIPELINE_STAGE_TRANSFER_BIT},
-    {PipelineStage::BottomOfPipe, VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT},
-    {PipelineStage::Host, VK_PIPELINE_STAGE_HOST_BIT}};
+// Information useful for buffer related barriers
+struct BufferMemoryBarrierData
+{
+    VkPipelineStageFlags pipelineStageFlags;
+    // EventStage::InvalidEnum indicates don't use VkEvent for barrier(i.e., use pipelineBarrier
+    // instead)
+    EventStage eventStage;
+};
+// clang-format off
+constexpr angle::PackedEnumMap<PipelineStage, BufferMemoryBarrierData> kBufferMemoryBarrierData = {
+    {PipelineStage::TopOfPipe, {VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, EventStage::InvalidEnum}},
+    {PipelineStage::DrawIndirect, {VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT, EventStage::InvalidEnum}},
+    {PipelineStage::VertexInput, {VK_PIPELINE_STAGE_VERTEX_INPUT_BIT, EventStage::InvalidEnum}},
+    {PipelineStage::VertexShader, {VK_PIPELINE_STAGE_VERTEX_SHADER_BIT, EventStage::InvalidEnum}},
+    {PipelineStage::TessellationControl, {VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT, EventStage::InvalidEnum}},
+    {PipelineStage::TessellationEvaluation, {VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT, EventStage::InvalidEnum}},
+    {PipelineStage::GeometryShader, {VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT, EventStage::InvalidEnum}},
+    {PipelineStage::TransformFeedback, {VK_PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT, EventStage::InvalidEnum}},
+    {PipelineStage::FragmentShadingRate, {0, EventStage::InvalidEnum}},
+    {PipelineStage::EarlyFragmentTest, {0, EventStage::InvalidEnum}},
+    {PipelineStage::FragmentShader, {VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, EventStage::InvalidEnum}},
+    {PipelineStage::LateFragmentTest, {0, EventStage::InvalidEnum}},
+    {PipelineStage::ColorAttachmentOutput, {0, EventStage::InvalidEnum}},
+    {PipelineStage::ComputeShader, {VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT, EventStage::InvalidEnum}},
+    {PipelineStage::Transfer, {VK_PIPELINE_STAGE_TRANSFER_BIT, EventStage::InvalidEnum}},
+    {PipelineStage::BottomOfPipe, BufferMemoryBarrierData{VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, EventStage::InvalidEnum}},
+    {PipelineStage::Host, {VK_PIPELINE_STAGE_HOST_BIT, EventStage::InvalidEnum}},
+};
 
 constexpr gl::ShaderMap<PipelineStage> kPipelineStageShaderMap = {
     {gl::ShaderType::Vertex, PipelineStage::VertexShader},
@@ -76,8 +85,7 @@ constexpr gl::ShaderMap<PipelineStage> kPipelineStageShaderMap = {
     {gl::ShaderType::Compute, PipelineStage::ComputeShader},
 };
 
-// clang-format off
-constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemoryBarrierData = {
+constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::Undefined,
         ImageMemoryBarrierData{
@@ -1093,7 +1101,7 @@ bool CanCopyWithTransferForCopyImage(Renderer *renderer,
                                dstImage->getActualFormatID(), dstTilingMode);
 }
 
-void ReleaseBufferListToRenderer(ErrorContext *context, BufferHelperQueue *buffers)
+void ReleaseBufferListToRenderer(Context *context, BufferHelperQueue *buffers)
 {
     for (std::unique_ptr<BufferHelper> &toFree : *buffers)
     {
@@ -1290,8 +1298,8 @@ VkPipelineStageFlags ConvertShaderBitSetToVkPipelineStageFlags(
     VkPipelineStageFlags pipelineStageFlags = 0;
     for (gl::ShaderType shaderType : writeShaderStages)
     {
-        const PipelineStage writeStage = GetPipelineStage(shaderType);
-        pipelineStageFlags |= kPipelineStageFlagBitMap[writeStage];
+        const PipelineStage stage = GetPipelineStage(shaderType);
+        pipelineStageFlags |= kBufferMemoryBarrierData[stage].pipelineStageFlags;
     }
     return pipelineStageFlags;
 }
@@ -1412,7 +1420,7 @@ PipelineStageGroup GetPipelineStageGroupFromStageFlags(VkPipelineStageFlags dstS
 }
 
 void InitializeImageLayoutAndMemoryBarrierDataMap(
-    angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> *map,
+    ImageLayoutToMemoryBarrierDataMap *map,
     VkPipelineStageFlags supportedVulkanPipelineStageMask)
 {
     *map = kImageMemoryBarrierData;
@@ -1423,23 +1431,6 @@ void InitializeImageLayoutAndMemoryBarrierDataMap(
         ASSERT(barrierData.pipelineStageGroup ==
                GetPipelineStageGroupFromStageFlags(barrierData.dstStageMask));
     }
-}
-
-bool EventAndPipelineBarrierHaveMatchingStageFlags(
-    const angle::PackedEnumMap<EventStage, VkPipelineStageFlags> &eventStageMap,
-    const angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> &barrierDataMap)
-{
-    // mImageLayoutAndMemoryBarrierData's dstStageMask should match EventStage's
-    // kEventStageAndPipelineStageFlagsMap
-    for (const ImageMemoryBarrierData &barrierData : barrierDataMap)
-    {
-        if (barrierData.eventStage != EventStage::InvalidEnum &&
-            eventStageMap[barrierData.eventStage] != barrierData.dstStageMask)
-        {
-            return false;
-        }
-    }
-    return true;
 }
 
 bool FormatHasNecessaryFeature(Renderer *renderer,
@@ -1466,6 +1457,35 @@ bool CanCopyWithTransfer(Renderer *renderer,
         renderer, dstFormatID, dstTilingMode, VK_FORMAT_FEATURE_TRANSFER_DST_BIT);
 
     return isTilingCompatible && srcFormatHasNecessaryFeature && dstFormatHasNecessaryFeature;
+}
+
+void InitializeEventStageToVkPipelineStageFlagsMap(
+    EventStageToVkPipelineStageFlagsMap *map,
+    VkPipelineStageFlags supportedVulkanPipelineStageMask)
+{
+    map->fill(0);
+
+    for (const BufferMemoryBarrierData &bufferBarrierData : kBufferMemoryBarrierData)
+    {
+        const EventStage eventStage = bufferBarrierData.eventStage;
+        if (eventStage != EventStage::InvalidEnum)
+        {
+            (*map)[eventStage] |=
+                bufferBarrierData.pipelineStageFlags & supportedVulkanPipelineStageMask;
+        }
+    }
+
+    for (const ImageMemoryBarrierData &imageBarrierData : kImageMemoryBarrierData)
+    {
+        const EventStage eventStage = imageBarrierData.eventStage;
+        if (eventStage != EventStage::InvalidEnum)
+        {
+            ASSERT((*map)[eventStage] == 0 ||
+                   (*map)[eventStage] ==
+                       (imageBarrierData.dstStageMask & supportedVulkanPipelineStageMask));
+            (*map)[eventStage] = imageBarrierData.dstStageMask & supportedVulkanPipelineStageMask;
+        }
+    }
 }
 
 // Context implementation
@@ -1908,7 +1928,8 @@ void CommandBufferHelperCommon::bufferWrite(Context *context,
                                             PipelineStage writeStage,
                                             BufferHelper *buffer)
 {
-    VkPipelineStageFlagBits writePipelineStageFlags = kPipelineStageFlagBitMap[writeStage];
+    VkPipelineStageFlags writePipelineStageFlags =
+        kBufferMemoryBarrierData[writeStage].pipelineStageFlags;
     bufferWriteImpl(context, writeAccessType, writePipelineStageFlags, writeStage, buffer);
 }
 
@@ -1928,7 +1949,8 @@ void CommandBufferHelperCommon::bufferRead(Context *context,
                                            PipelineStage readStage,
                                            BufferHelper *buffer)
 {
-    VkPipelineStageFlags readPipelineStageFlags = kPipelineStageFlagBitMap[readStage];
+    VkPipelineStageFlags readPipelineStageFlags =
+        kBufferMemoryBarrierData[readStage].pipelineStageFlags;
     bufferReadImpl(context, readAccessType, readPipelineStageFlags, readStage, buffer);
 }
 
@@ -3784,7 +3806,7 @@ bool DynamicBuffer::allocateFromCurrentBuffer(size_t sizeInBytes, BufferHelper *
     return true;
 }
 
-angle::Result DynamicBuffer::allocate(ErrorContext *context,
+angle::Result DynamicBuffer::allocate(Context *context,
                                       size_t sizeInBytes,
                                       BufferHelper **bufferHelperOut,
                                       bool *newBufferAllocatedOut)
@@ -3854,7 +3876,7 @@ angle::Result DynamicBuffer::allocate(ErrorContext *context,
     return angle::Result::Continue;
 }
 
-void DynamicBuffer::release(ErrorContext *context)
+void DynamicBuffer::release(Context *context)
 {
     reset();
 
@@ -5598,7 +5620,7 @@ angle::Result BufferHelper::initExternal(ErrorContext *context,
     return angle::Result::Continue;
 }
 
-VkResult BufferHelper::initSuballocation(ErrorContext *context,
+VkResult BufferHelper::initSuballocation(Context *context,
                                          uint32_t memoryTypeIndex,
                                          size_t size,
                                          size_t alignment,
@@ -5773,7 +5795,7 @@ void BufferHelper::release(Renderer *renderer)
     releaseImpl(renderer);
 }
 
-void BufferHelper::release(ErrorContext *context)
+void BufferHelper::release(Context *context)
 {
     releaseImpl(context->getRenderer());
 }
@@ -5805,7 +5827,7 @@ void BufferHelper::releaseImpl(Renderer *renderer)
     }
 }
 
-void BufferHelper::releaseBufferAndDescriptorSetCache(ErrorContext *context)
+void BufferHelper::releaseBufferAndDescriptorSetCache(Context *context)
 {
     Renderer *renderer = context->getRenderer();
     if (renderer->hasResourceUseFinished(getResourceUse()))
@@ -7702,7 +7724,8 @@ void ImageHelper::barrierImpl(Renderer *renderer,
         // event gets garbage collected (which is GPU completion tracked) to avoid waited again in
         // future. We always use DstStageMask since that is what setEvent used and
         // VUID-vkCmdWaitEvents-srcStageMask-01158 requires they must match.
-        VkPipelineStageFlags srcStageMask = renderer->getEventPipelineStageMask(mCurrentEvent);
+        VkPipelineStageFlags srcStageMask =
+            renderer->getPipelineStageMask(mCurrentEvent.getEventStage());
         commandBuffer->imageWaitEvent(mCurrentEvent.getEvent().getHandle(), srcStageMask,
                                       dstStageMask, imageMemoryBarrier);
         eventCollector->emplace_back(std::move(mCurrentEvent));
@@ -7945,8 +7968,11 @@ void ImageHelper::updateLayoutAndBarrier(Context *context,
         // No layout change, only memory barrier is required
         if (barrierType == BarrierType::Event)
         {
-            eventBarriers->addMemoryEvent(renderer, mCurrentEvent, layoutData.dstStageMask,
-                                          layoutData.dstAccessMask);
+            // This should come down as WAW without layout change, dstStageMask should be the same
+            // as event's stageMask. Otherwise you should get into addEventImageBarrier.
+            ASSERT(mCurrentEvent.getPipelineStageMask(renderer) == layoutData.dstStageMask);
+            eventBarriers->addEventMemoryBarrier(renderer, mCurrentEvent, layoutData.dstAccessMask,
+                                                 layoutData.dstStageMask, layoutData.dstAccessMask);
             // Garbage collect the event, which tracks GPU completion automatically.
             eventCollector->emplace_back(std::move(mCurrentEvent));
         }
@@ -8087,8 +8113,8 @@ void ImageHelper::updateLayoutAndBarrier(Context *context,
 
             if (barrierType == BarrierType::Event)
             {
-                eventBarriers->addImageEvent(renderer, mCurrentEvent, dstStageMask,
-                                             imageMemoryBarrier);
+                eventBarriers->addEventImageBarrier(renderer, mCurrentEvent, dstStageMask,
+                                                    imageMemoryBarrier);
                 if (isShaderReadOnly)
                 {
                     mLastNonShaderReadOnlyEvent = mCurrentEvent;

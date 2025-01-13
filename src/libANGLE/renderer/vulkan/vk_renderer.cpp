@@ -4252,13 +4252,10 @@ angle::Result Renderer::createDeviceAndQueue(vk::ErrorContext *context, uint32_t
     }
 
     // Initialize the barrierData tables by removing unsupported pipeline stage bits
-    InitializeEventAndPipelineStagesMap(&mEventStageAndPipelineStageFlagsMap, ~unsupportedStages);
+    InitializeEventStageToVkPipelineStageFlagsMap(&mEventStageToPipelineStageFlagsMap,
+                                                  ~unsupportedStages);
     InitializeImageLayoutAndMemoryBarrierDataMap(&mImageLayoutAndMemoryBarrierDataMap,
                                                  ~unsupportedStages);
-    // mEventStageAndPipelineStageFlagsMap supposedly should match the value in dstStageMask of
-    // mImageLayoutAndMemoryBarrierData
-    ASSERT(EventAndPipelineBarrierHaveMatchingStageFlags(mEventStageAndPipelineStageFlagsMap,
-                                                         mImageLayoutAndMemoryBarrierDataMap));
 
     ANGLE_TRY(initializeMemoryAllocator(context));
 
