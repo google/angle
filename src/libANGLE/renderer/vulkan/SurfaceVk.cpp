@@ -2837,7 +2837,7 @@ VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::Context *context)
         AcquireNextImageUnlocked(context->getDevice(), mSwapchain, &mAcquireOperation);
     }
 
-    // After the above call result is alway ready for processing.
+    // After the above call result is always ready for processing.
     return postProcessUnlockedAcquire(context);
 }
 
@@ -3322,9 +3322,9 @@ egl::Error WindowSurfaceVk::getBufferAge(const gl::Context *context, EGLint *age
         }
 
         uint64_t frameNumber = mSwapchainImages[mCurrentSwapchainImageIndex].frameNumber;
-        if (frameNumber < mBufferAgeQueryFrameNumber)
+        if (frameNumber == 0)
         {
-            *age = 0;  // Has not been used for rendering yet or since age was queried, no age.
+            *age = 0;  // Has not been used for rendering yet, no age.
         }
         else
         {
