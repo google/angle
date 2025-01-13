@@ -5421,14 +5421,14 @@ void CaptureMidExecutionSetup(const gl::Context *context,
             if (currentDrawFramebuffer != stateDrawFramebuffer)
             {
                 cap(framebufferFuncs.bindFramebuffer(replayState, true, GL_DRAW_FRAMEBUFFER,
-                                                     currentDrawFramebuffer));
+                                                     stateDrawFramebuffer));
                 currentDrawFramebuffer = stateDrawFramebuffer;
             }
 
             if (currentReadFramebuffer != stateReadFramebuffer)
             {
                 cap(framebufferFuncs.bindFramebuffer(replayState, true, GL_READ_FRAMEBUFFER,
-                                                     replayState.getReadFramebuffer()->id()));
+                                                     stateReadFramebuffer));
                 currentReadFramebuffer = stateReadFramebuffer;
             }
         }
