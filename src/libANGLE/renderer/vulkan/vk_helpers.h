@@ -1085,13 +1085,13 @@ class BufferHelper : public ReadWriteResource
                            VkAccessFlags readAccessType,
                            VkPipelineStageFlags readStage,
                            PipelineStage stageIndex,
-                           PipelineBarrierArray *barriers);
+                           PipelineBarrierArray *pipelineBarriers);
 
     void recordWriteBarrier(Context *context,
                             VkAccessFlags writeAccessType,
                             VkPipelineStageFlags writeStage,
                             PipelineStage stageIndex,
-                            PipelineBarrierArray *barriers);
+                            PipelineBarrierArray *pipelineBarriers);
 
     void fillWithColor(const angle::Color<uint8_t> &color,
                        const gl::InternalFormat &internalFormat);
@@ -1404,23 +1404,20 @@ class CommandBufferHelperCommon : angle::NonCopyable
                      PipelineStage writeStage,
                      BufferHelper *buffer);
 
+    void bufferWrite(Context *context,
+                     VkAccessFlags writeAccessType,
+                     const gl::ShaderBitSet &writeShaderStages,
+                     BufferHelper *buffer);
+
     void bufferRead(Context *context,
                     VkAccessFlags readAccessType,
                     PipelineStage readStage,
-                    BufferHelper *buffer)
-    {
-        bufferReadImpl(context, readAccessType, readStage, buffer);
-        setBufferReadQueueSerial(buffer);
-    }
+                    BufferHelper *buffer);
 
     void bufferRead(Context *context,
                     VkAccessFlags readAccessType,
                     const gl::ShaderBitSet &readShaderStages,
-                    BufferHelper *buffer)
-    {
-        bufferReadImpl(context, readAccessType, readShaderStages, buffer);
-        setBufferReadQueueSerial(buffer);
-    }
+                    BufferHelper *buffer);
 
     bool usesBuffer(const BufferHelper &buffer) const
     {
@@ -1508,26 +1505,24 @@ class CommandBufferHelperCommon : angle::NonCopyable
     template <class DerivedT>
     void assertCanBeRecycledImpl();
 
+    void bufferWriteImpl(Context *context,
+                         VkAccessFlags writeAccessType,
+                         VkPipelineStageFlags writePipelineStageFlags,
+                         PipelineStage writeStage,
+                         BufferHelper *buffer);
+
     void bufferReadImpl(Context *context,
                         VkAccessFlags readAccessType,
+                        VkPipelineStageFlags readPipelineStageFlags,
                         PipelineStage readStage,
                         BufferHelper *buffer);
-    void bufferReadImpl(Context *context,
-                        VkAccessFlags readAccessType,
-                        const gl::ShaderBitSet &readShaderStages,
-                        BufferHelper *buffer)
-    {
-        for (gl::ShaderType shaderType : readShaderStages)
-        {
-            const vk::PipelineStage readStage = vk::GetPipelineStage(shaderType);
-            bufferReadImpl(context, readAccessType, readStage, buffer);
-        }
-    }
+
     void imageReadImpl(Context *context,
                        VkImageAspectFlags aspectFlags,
                        ImageLayout imageLayout,
                        BarrierType barrierType,
                        ImageHelper *image);
+
     void imageWriteImpl(Context *context,
                         gl::LevelIndex level,
                         uint32_t layerStart,
@@ -1544,8 +1539,6 @@ class CommandBufferHelperCommon : angle::NonCopyable
                                      BarrierType barrierType);
 
     void addCommandDiagnosticsCommon(std::ostringstream *out);
-
-    void setBufferReadQueueSerial(BufferHelper *buffer);
 
     // Allocator used by this class.
     SecondaryCommandBlockAllocator mCommandAllocator;
@@ -1621,6 +1614,7 @@ class OutsideRenderPassCommandBufferHelper final : public CommandBufferHelperCom
                    VkImageAspectFlags aspectFlags,
                    ImageLayout imageLayout,
                    ImageHelper *image);
+
     void imageWrite(Context *context,
                     gl::LevelIndex level,
                     uint32_t layerStart,
@@ -1855,6 +1849,7 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
                    VkImageAspectFlags aspectFlags,
                    ImageLayout imageLayout,
                    ImageHelper *image);
+
     void imageWrite(ContextVk *contextVk,
                     gl::LevelIndex level,
                     uint32_t layerStart,

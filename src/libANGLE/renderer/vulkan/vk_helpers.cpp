@@ -1261,6 +1261,18 @@ void GetVkClearDepthStencilValueFromBytes(uint8_t *intendedData,
     clearValueOut->depthStencil.depth   = static_cast<float>(depthValue);
     clearValueOut->depthStencil.stencil = dsData[2];
 }
+
+VkPipelineStageFlags ConvertShaderBitSetToVkPipelineStageFlags(
+    const gl::ShaderBitSet &writeShaderStages)
+{
+    VkPipelineStageFlags pipelineStageFlags = 0;
+    for (gl::ShaderType shaderType : writeShaderStages)
+    {
+        const PipelineStage writeStage = GetPipelineStage(shaderType);
+        pipelineStageFlags |= kPipelineStageFlagBitMap[writeStage];
+    }
+    return pipelineStageFlags;
+}
 }  // anonymous namespace
 
 // This is an arbitrary max. We can change this later if necessary.
@@ -1831,10 +1843,49 @@ void CommandBufferHelperCommon::bufferWrite(Context *context,
                                             PipelineStage writeStage,
                                             BufferHelper *buffer)
 {
-    buffer->setWriteQueueSerial(mQueueSerial);
+    VkPipelineStageFlagBits writePipelineStageFlags = kPipelineStageFlagBitMap[writeStage];
+    bufferWriteImpl(context, writeAccessType, writePipelineStageFlags, writeStage, buffer);
+}
 
-    VkPipelineStageFlagBits stageBits = kPipelineStageFlagBitMap[writeStage];
-    buffer->recordWriteBarrier(context, writeAccessType, stageBits, writeStage, &mPipelineBarriers);
+void CommandBufferHelperCommon::bufferWrite(Context *context,
+                                            VkAccessFlags writeAccessType,
+                                            const gl::ShaderBitSet &writeShaderStages,
+                                            BufferHelper *buffer)
+{
+    VkPipelineStageFlags writePipelineStageFlags =
+        ConvertShaderBitSetToVkPipelineStageFlags(writeShaderStages);
+    PipelineStage firstWriteStage = GetPipelineStage(writeShaderStages.first());
+    bufferWriteImpl(context, writeAccessType, writePipelineStageFlags, firstWriteStage, buffer);
+}
+
+void CommandBufferHelperCommon::bufferRead(Context *context,
+                                           VkAccessFlags readAccessType,
+                                           PipelineStage readStage,
+                                           BufferHelper *buffer)
+{
+    VkPipelineStageFlags readPipelineStageFlags = kPipelineStageFlagBitMap[readStage];
+    bufferReadImpl(context, readAccessType, readPipelineStageFlags, readStage, buffer);
+}
+
+void CommandBufferHelperCommon::bufferRead(Context *context,
+                                           VkAccessFlags readAccessType,
+                                           const gl::ShaderBitSet &readShaderStages,
+                                           BufferHelper *buffer)
+{
+    VkPipelineStageFlags readPipelineStageFlags =
+        ConvertShaderBitSetToVkPipelineStageFlags(readShaderStages);
+    PipelineStage firstReadStage = GetPipelineStage(readShaderStages.first());
+    bufferReadImpl(context, readAccessType, readPipelineStageFlags, firstReadStage, buffer);
+}
+
+void CommandBufferHelperCommon::bufferWriteImpl(Context *context,
+                                                VkAccessFlags writeAccessType,
+                                                VkPipelineStageFlags writePipelineStageFlags,
+                                                PipelineStage writeStage,
+                                                BufferHelper *buffer)
+{
+    buffer->recordWriteBarrier(context, writeAccessType, writePipelineStageFlags, writeStage,
+                               &mPipelineBarriers);
 
     // Make sure host-visible buffer writes result in a barrier inserted at the end of the frame to
     // make the results visible to the host.  The buffer may be mapped by the application in the
@@ -1843,29 +1894,33 @@ void CommandBufferHelperCommon::bufferWrite(Context *context,
     {
         mIsAnyHostVisibleBufferWritten = true;
     }
-}
 
-void CommandBufferHelperCommon::executeBarriers(Renderer *renderer, CommandsState *commandsState)
-{
-    // Add ANI semaphore to the command submission.
-    if (mAcquireNextImageSemaphore.valid())
-    {
-        commandsState->waitSemaphores.emplace_back(mAcquireNextImageSemaphore.release());
-        commandsState->waitSemaphoreStageMasks.emplace_back(kSwapchainAcquireImageWaitStageFlags);
-    }
-
-    mPipelineBarriers.execute(renderer, &commandsState->primaryCommands);
-    mEventBarriers.execute(renderer, &commandsState->primaryCommands);
+    buffer->setWriteQueueSerial(mQueueSerial);
 }
 
 void CommandBufferHelperCommon::bufferReadImpl(Context *context,
                                                VkAccessFlags readAccessType,
+                                               VkPipelineStageFlags readPipelineStageFlags,
                                                PipelineStage readStage,
                                                BufferHelper *buffer)
 {
-    VkPipelineStageFlagBits stageBits = kPipelineStageFlagBitMap[readStage];
-    buffer->recordReadBarrier(context, readAccessType, stageBits, readStage, &mPipelineBarriers);
+    buffer->recordReadBarrier(context, readAccessType, readPipelineStageFlags, readStage,
+                              &mPipelineBarriers);
     ASSERT(!usesBufferForWrite(*buffer));
+
+    if (buffer->getResourceUse() >= mQueueSerial)
+    {
+        // We should not run into situation that RP is writing to it while we are reading it here
+        ASSERT(!(buffer->getWriteResourceUse() >= mQueueSerial));
+        // A buffer could have read accessed by both renderPassCommands and
+        // outsideRenderPassCommands and there is no need to endRP or flush. In this case, the
+        // renderPassCommands' read will override the outsideRenderPassCommands' read, since its
+        // queueSerial must be greater than outsideRP.
+    }
+    else
+    {
+        buffer->setQueueSerial(mQueueSerial);
+    }
 }
 
 void CommandBufferHelperCommon::imageReadImpl(Context *context,
@@ -1955,27 +2010,23 @@ template void CommandBufferHelperCommon::flushSetEventsImpl<VulkanSecondaryComma
     Context *context,
     VulkanSecondaryCommandBuffer *commandBuffer);
 
+void CommandBufferHelperCommon::executeBarriers(Renderer *renderer, CommandsState *commandsState)
+{
+    // Add ANI semaphore to the command submission.
+    if (mAcquireNextImageSemaphore.valid())
+    {
+        commandsState->waitSemaphores.emplace_back(mAcquireNextImageSemaphore.release());
+        commandsState->waitSemaphoreStageMasks.emplace_back(kSwapchainAcquireImageWaitStageFlags);
+    }
+
+    mPipelineBarriers.execute(renderer, &commandsState->primaryCommands);
+    mEventBarriers.execute(renderer, &commandsState->primaryCommands);
+}
+
 void CommandBufferHelperCommon::addCommandDiagnosticsCommon(std::ostringstream *out)
 {
     mPipelineBarriers.addDiagnosticsString(*out);
     mEventBarriers.addDiagnosticsString(*out);
-}
-
-void CommandBufferHelperCommon::setBufferReadQueueSerial(BufferHelper *buffer)
-{
-    if (buffer->getResourceUse() >= mQueueSerial)
-    {
-        // We should not run into situation that RP is writing to it while we are reading it here
-        ASSERT(!(buffer->getWriteResourceUse() >= mQueueSerial));
-        // A buffer could have read accessed by both renderPassCommands and
-        // outsideRenderPassCommands and there is no need to endRP or flush. In this case, the
-        // renderPassCommands' read will override the outsideRenderPassCommands' read, since its
-        // queueSerial must be greater than outsideRP.
-    }
-    else
-    {
-        buffer->setQueueSerial(mQueueSerial);
-    }
 }
 
 // OutsideRenderPassCommandBufferHelper implementation.
@@ -5810,15 +5861,15 @@ void BufferHelper::recordReadBarrier(Context *context,
                                      VkAccessFlags readAccessType,
                                      VkPipelineStageFlags readStage,
                                      PipelineStage stageIndex,
-                                     PipelineBarrierArray *barriers)
+                                     PipelineBarrierArray *pipelineBarriers)
 {
     // If there was a prior write and we are making a read that is either a new access type or from
     // a new stage, we need a barrier
     if (mCurrentWriteAccess != 0 && (((mCurrentReadAccess & readAccessType) != readAccessType) ||
                                      ((mCurrentReadStages & readStage) != readStage)))
     {
-        barriers->mergeMemoryBarrier(stageIndex, mCurrentWriteStages, readStage,
-                                     mCurrentWriteAccess, readAccessType);
+        pipelineBarriers->mergeMemoryBarrier(stageIndex, mCurrentWriteStages, readStage,
+                                             mCurrentWriteAccess, readAccessType);
     }
 
     // Accumulate new read usage.
@@ -5830,7 +5881,7 @@ void BufferHelper::recordWriteBarrier(Context *context,
                                       VkAccessFlags writeAccessType,
                                       VkPipelineStageFlags writeStage,
                                       PipelineStage stageIndex,
-                                      PipelineBarrierArray *barriers)
+                                      PipelineBarrierArray *pipelineBarriers)
 {
     // We don't need to check mCurrentReadStages here since if it is not zero, mCurrentReadAccess
     // must not be zero as well. stage is finer grain than accessType.
@@ -5839,8 +5890,8 @@ void BufferHelper::recordWriteBarrier(Context *context,
     if (mCurrentReadAccess != 0 || mCurrentWriteAccess != 0)
     {
         VkPipelineStageFlags srcStageMask = mCurrentWriteStages | mCurrentReadStages;
-        barriers->mergeMemoryBarrier(stageIndex, srcStageMask, writeStage, mCurrentWriteAccess,
-                                     writeAccessType);
+        pipelineBarriers->mergeMemoryBarrier(stageIndex, srcStageMask, writeStage,
+                                             mCurrentWriteAccess, writeAccessType);
     }
 
     // Reset usages on the new write.

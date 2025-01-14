@@ -6521,12 +6521,8 @@ void DescriptorSetDescBuilder::updateOneShaderBuffer(
         {
             // We set the SHADER_READ_BIT to be conservative.
             VkAccessFlags accessFlags = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
-            for (const gl::ShaderType shaderType : block.activeShaders())
-            {
-                const vk::PipelineStage pipelineStage = vk::GetPipelineStage(shaderType);
-                commandBufferHelper->bufferWrite(context, accessFlags, pipelineStage,
-                                                 &bufferHelper);
-            }
+            commandBufferHelper->bufferWrite(context, accessFlags, block.activeShaders(),
+                                             &bufferHelper);
         }
     }
 
@@ -6628,13 +6624,9 @@ void DescriptorSetDescBuilder::updateAtomicCounters(
         BufferVk *bufferVk             = vk::GetImpl(bufferBinding.get());
         vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
 
-        for (const gl::ShaderType shaderType : atomicCounterBuffer.activeShaders())
-        {
-            const vk::PipelineStage pipelineStage = vk::GetPipelineStage(shaderType);
-            commandBufferHelper->bufferWrite(context,
-                                             VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT,
-                                             pipelineStage, &bufferHelper);
-        }
+        VkAccessFlags accessFlags = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
+        commandBufferHelper->bufferWrite(context, accessFlags, atomicCounterBuffer.activeShaders(),
+                                         &bufferHelper);
 
         VkDeviceSize offset = bufferBinding.getOffset() + bufferHelper.getOffset();
 

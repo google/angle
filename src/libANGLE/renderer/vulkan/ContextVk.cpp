@@ -575,14 +575,8 @@ void OnImageBufferWrite(vk::Context *context,
                         CommandBufferT *commandBufferHelper)
 {
     vk::BufferHelper &buffer = bufferVk->getBuffer();
-
-    // TODO: accept multiple stages in bufferWrite.  http://anglebug.com/42262235
-    for (gl::ShaderType stage : stages)
-    {
-        commandBufferHelper->bufferWrite(context,
-                                         VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT,
-                                         vk::GetPipelineStage(stage), &buffer);
-    }
+    VkAccessFlags accessFlags = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
+    commandBufferHelper->bufferWrite(context, accessFlags, stages, &buffer);
 }
 
 constexpr angle::PackedEnumMap<RenderPassClosureReason, const char *> kRenderPassClosureReason = {{
