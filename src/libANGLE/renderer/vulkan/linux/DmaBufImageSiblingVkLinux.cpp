@@ -547,7 +547,7 @@ angle::Result DmaBufImageSiblingVkLinux::initWithFormat(DisplayVk *displayVk,
         // Build an appropriate conversion desc. This is not an android-style external format,
         // but requires Ycbcr sampler conversion.
         conversionDesc.update(renderer, 0, model, range, xChromaOffset, yChromaOffset,
-                              VK_FILTER_NEAREST, components, intendedFormatID,
+                              vk::kDefaultYCbCrChromaFilter, components, intendedFormatID,
                               linearFilterSupported);
     }
 
