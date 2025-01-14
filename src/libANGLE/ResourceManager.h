@@ -256,8 +256,8 @@ class SamplerManager : public TypedResourceManager<Sampler, SamplerManager, Samp
 {
   public:
     SamplerID createSampler();
-    Sampler *getSampler(SamplerID handle) const;
-    bool isSampler(SamplerID sampler) const;
+    Sampler *getSampler(SamplerID handle) const { return mObjectMap.query(handle); }
+    bool isSampler(SamplerID sampler) const { return mObjectMap.contains(sampler); }
 
     Sampler *checkSamplerAllocation(rx::GLImplFactory *factory, SamplerID handle)
     {

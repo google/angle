@@ -336,16 +336,6 @@ SamplerID SamplerManager::createSampler()
     return AllocateEmptyObject(&mHandleAllocator, &mObjectMap);
 }
 
-Sampler *SamplerManager::getSampler(SamplerID handle) const
-{
-    return mObjectMap.query(handle);
-}
-
-bool SamplerManager::isSampler(SamplerID sampler) const
-{
-    return mObjectMap.contains(sampler);
-}
-
 // SyncManager Implementation.
 
 SyncManager::~SyncManager() = default;
