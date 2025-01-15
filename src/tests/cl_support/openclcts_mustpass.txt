@@ -131,3 +131,7 @@ multiples.context_four_contexts_same_device
 cl_copy_images.1D
 cl_fill_images.2D
 cl_get_info.2D
+non_uniform_work_group.non_uniform_1d_basic
+non_uniform_work_group.non_uniform_2d_atomics
+non_uniform_work_group.non_uniform_3d_barriers
+non_uniform_work_group.non_uniform_other_basic

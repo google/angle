@@ -216,6 +216,96 @@ struct NDRange
         }
     }
 
+    cl::WorkgroupCount getWorkgroupCount() const
+    {
+        ASSERT(localWorkSize[0] > 0 && localWorkSize[1] > 0 && localWorkSize[2] > 0);
+        return cl::WorkgroupCount{rx::UnsignedCeilDivide(globalWorkSize[0], localWorkSize[0]),
+                                  rx::UnsignedCeilDivide(globalWorkSize[1], localWorkSize[1]),
+                                  rx::UnsignedCeilDivide(globalWorkSize[2], localWorkSize[2])};
+    }
+
+    bool isUniform() const
+    {
+        for (cl_uint dim = 0; dim < workDimensions; dim++)
+        {
+            if (globalWorkSize[dim] % localWorkSize[dim] != 0)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    std::vector<NDRange> createUniformRegions(
+        const std::array<uint32_t, 3> maxComputeWorkGroupCount) const
+    {
+        std::vector<NDRange> regions;
+        regions.push_back(*this);
+        regions.front().globalWorkOffset = {0};
+        uint32_t regionCount             = 1;
+        for (uint32_t regionPos = 0; regionPos < regionCount; ++regionPos)
+        {
+            // "Work-group sizes could be non-uniform in multiple dimensions, potentially producing
+            // work-groups of up to 4 different sizes in a 2D range and 8 different sizes in a 3D
+            // range."
+            // https://registry.khronos.org/OpenCL/specs/3.0-unified/html/OpenCL_API.html#_mapping_work_items_onto_an_nd_range
+            ASSERT(regionPos < 8);
+
+            for (uint32_t dim = 0; dim < workDimensions; dim++)
+            {
+                NDRange &region    = regions.at(regionPos);
+                uint32_t remainder = region.globalWorkSize[dim] % region.localWorkSize[dim];
+                if (remainder != 0)
+                {
+                    // Split the range along this dimension. The original range's global work size
+                    // (e.g. 19) is clipped to a multiple of the local work size (e.g. 8). A new
+                    // range is added for the remainder (in this example 3) where the global and
+                    // local work sizes are identical to the remainder (i.e. it's also a uniform
+                    // range).
+                    NDRange newRegion(region);
+                    newRegion.globalWorkSize[dim] = newRegion.localWorkSize[dim] = remainder;
+                    region.globalWorkSize[dim] = newRegion.globalWorkOffset[dim] =
+                        (region.globalWorkSize[dim] - remainder);
+                    regions.push_back(newRegion);
+                    regionCount++;
+                }
+            }
+        }
+        // Break into uniform regions that fit into given maxComputeWorkGroupCount (if needed)
+        uint32_t limitRegionCount = 1;
+        std::vector<NDRange> regionsWithinDeviceLimits;
+        for (const auto &region : regions)
+        {
+            regionsWithinDeviceLimits.push_back(region);
+            for (uint32_t regionPos = 0; regionPos < limitRegionCount; ++regionPos)
+            {
+                NDRange &currentRegion = regionsWithinDeviceLimits.at(regionPos);
+                for (uint32_t dim = 0; dim < workDimensions; dim++)
+                {
+                    if (currentRegion.globalWorkSize[dim] >
+                        (maxComputeWorkGroupCount[dim] * currentRegion.localWorkSize[dim]))
+                    {
+                        uint32_t maxGwsForRegion =
+                            maxComputeWorkGroupCount[dim] * currentRegion.localWorkSize[dim];
+                        uint32_t remainderGws = currentRegion.globalWorkSize[dim] - maxGwsForRegion;
+                        if (remainderGws > 0)
+                        {
+                            NDRange remainderRegion             = currentRegion;
+                            remainderRegion.globalWorkSize[dim] = remainderGws;
+                            remainderRegion.globalWorkOffset[dim] =
+                                currentRegion.globalWorkOffset[dim] +
+                                (currentRegion.globalWorkSize[dim] - remainderGws);
+                            currentRegion.globalWorkSize[dim] = maxGwsForRegion;
+                            regionsWithinDeviceLimits.push_back(remainderRegion);
+                            limitRegionCount++;
+                        }
+                    }
+                }
+            }
+        }
+        return regionsWithinDeviceLimits;
+    }
+
     cl_uint workDimensions;
     GlobalWorkOffset globalWorkOffset;
     GlobalWorkSize globalWorkSize;

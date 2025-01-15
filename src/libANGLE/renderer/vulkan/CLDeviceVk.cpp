@@ -125,7 +125,7 @@ CLDeviceVk::CLDeviceVk(const cl::Device &device, vk::Renderer *renderer)
         {cl::DeviceInfo::PreferredLocalAtomicAlignment, 0},
         {cl::DeviceInfo::PreferredGlobalAtomicAlignment, 0},
         {cl::DeviceInfo::PreferredPlatformAtomicAlignment, 0},
-        {cl::DeviceInfo::NonUniformWorkGroupSupport, CL_FALSE},
+        {cl::DeviceInfo::NonUniformWorkGroupSupport, CL_TRUE},
         {cl::DeviceInfo::GenericAddressSpaceSupport, CL_FALSE},
         {cl::DeviceInfo::SubGroupIndependentForwardProgress, CL_FALSE},
         {cl::DeviceInfo::WorkGroupCollectiveFunctionsSupport, CL_FALSE},

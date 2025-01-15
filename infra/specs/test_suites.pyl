@@ -101,6 +101,15 @@
       },
     },
 
+    'angle_cl_non_uniform_work_group_gtests': {
+      'angle_oclcts_non_uniform_work_group': {
+        'linux_args': [
+          '--no-xvfb',
+        ],
+        'use_isolated_scripts_api': True,
+      },
+    },
+
     'angle_cl_profiling_gtests': {
       'angle_oclcts_profiling': {
         'linux_args': [
@@ -1620,6 +1629,7 @@
       'angle_cl_fill_images_gtests',
       'angle_cl_images_get_info_gtests',
       'angle_cl_multiples_gtests',
+      'angle_cl_non_uniform_work_group_gtests',
       'angle_cl_profiling_gtests',
     ],
 

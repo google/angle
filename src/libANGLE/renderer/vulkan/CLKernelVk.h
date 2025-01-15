@@ -107,8 +107,7 @@ class CLKernelVk : public CLKernelImpl
     angle::Result getOrCreateComputePipeline(vk::PipelineCacheAccess *pipelineCache,
                                              const cl::NDRange &ndrange,
                                              const cl::Device &device,
-                                             vk::PipelineHelper **pipelineOut,
-                                             cl::WorkgroupCount *workgroupCountOut);
+                                             vk::PipelineHelper **pipelineOut);
 
     const vk::DescriptorSetLayoutDesc &getDescriptorSetLayoutDesc(DescriptorSetIndex index) const
     {

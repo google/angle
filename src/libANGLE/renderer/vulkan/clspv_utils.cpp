@@ -342,13 +342,40 @@ std::string ClspvGetCompilerOptions(const CLDeviceVk *device)
     cl_uint addressBits;
     if (IsError(device->getInfoUInt(cl::DeviceInfo::AddressBits, &addressBits)))
     {
-        // This should'nt fail here
+        // This shouldn't fail here
         ASSERT(false);
     }
     options += addressBits == 64 ? " -arch=spir64" : " -arch=spir";
 
     // select SPIR-V version target
     options += " --spv-version=" + GetSpvVersionAsClspvString(device->getSpirvVersion());
+
+    cl_uint nonUniformNDRangeSupport;
+    if (IsError(device->getInfoUInt(cl::DeviceInfo::NonUniformWorkGroupSupport,
+                                    &nonUniformNDRangeSupport)))
+    {
+        // This shouldn't fail here
+        ASSERT(false);
+    }
+    // This "cl-arm-non-uniform-work-group-size" flag is needed to generate region reflection
+    // instructions since clspv builtin pass is conditionally dependant on it:
+    /*
+        bool NonUniformNDRangeSupported() {
+            return ((Language() == SourceLanguage::OpenCL_CPP) ||
+                    (Language() == SourceLanguage::OpenCL_C_20) ||
+                    (Language() == SourceLanguage::OpenCL_C_30) ||
+                    ArmNonUniformWorkGroupSize()) &&
+                    !UniformWorkgroupSize();
+        }
+        ...
+            Value *Ret = GidBase;
+            if (clspv::Option::NonUniformNDRangeSupported()) {
+                auto Ptr = GetPushConstantPointer(BB, clspv::PushConstant::RegionOffset);
+                auto DimPtr = Builder.CreateInBoundsGEP(VT, Ptr, Indices);
+                auto Size = Builder.CreateLoad(IT, DimPtr);
+                ...
+    */
+    options += nonUniformNDRangeSupport == CL_TRUE ? " -cl-arm-non-uniform-work-group-size" : "";
 
     // Other internal Clspv compiler flags that are needed/required
     options += " --long-vector";
