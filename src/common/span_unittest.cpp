@@ -3,10 +3,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// span_unittests.cpp: Unit tests for the TSpan class.
+// span_unittests.cpp: Unit tests for the angle::Span class.
 //
 
-#include "Common.h"
+#include "common/span.h"
 
 #include <gtest/gtest.h>
 
@@ -15,7 +15,7 @@ using namespace angle;
 namespace
 {
 
-using Span                                      = sh::TSpan<const unsigned int>;
+using Span                                      = angle::Span<const unsigned int>;
 constexpr size_t kSpanDataSize                  = 16;
 constexpr unsigned int kSpanData[kSpanDataSize] = {0, 1, 2,  3,  4,  5,  6,  7,
                                                    8, 9, 10, 11, 12, 13, 14, 15};
@@ -51,7 +51,7 @@ TEST(SpanTest, Indexing)
     }
 
     unsigned int storage[kSpanDataSize] = {};
-    sh::TSpan<unsigned int> writableSpan(storage, kSpanDataSize);
+    angle::Span<unsigned int> writableSpan(storage, kSpanDataSize);
 
     for (size_t i = 0; i < kSpanDataSize; ++i)
     {

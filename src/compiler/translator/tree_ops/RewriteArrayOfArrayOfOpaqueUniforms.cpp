@@ -8,6 +8,7 @@
 
 #include "compiler/translator/tree_ops/RewriteArrayOfArrayOfOpaqueUniforms.h"
 
+#include "common/span.h"
 #include "compiler/translator/Compiler.h"
 #include "compiler/translator/ImmutableStringBuilder.h"
 #include "compiler/translator/SymbolTable.h"
@@ -278,7 +279,7 @@ class RewriteArrayOfArrayOfOpaqueUniformsTraverser : public TIntermTraverser
         UniformData &data = mUniformMap[uniformVariable];
 
         // Calculate the accumulated dimension products.  See UniformData::mSubArraySizes.
-        const TSpan<const unsigned int> &arraySizes = type.getArraySizes();
+        const angle::Span<const unsigned int> &arraySizes = type.getArraySizes();
         mUniformMap[uniformVariable].mSubArraySizes.resize(arraySizes.size());
         unsigned int runningProduct = 1;
         for (size_t dimension = 0; dimension < arraySizes.size(); ++dimension)

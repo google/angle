@@ -9,6 +9,7 @@
 #include "compiler/translator/tree_ops/RewriteStructSamplers.h"
 
 #include "common/hash_containers.h"
+#include "common/span.h"
 #include "compiler/translator/ImmutableStringBuilder.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
@@ -570,7 +571,7 @@ class RewriteStructSamplersTraverser final : public TIntermTraverser
 
     void enterArray(const TType &arrayType)
     {
-        const TSpan<const unsigned int> &arraySizes = arrayType.getArraySizes();
+        const angle::Span<const unsigned int> &arraySizes = arrayType.getArraySizes();
         for (auto it = arraySizes.rbegin(); it != arraySizes.rend(); ++it)
         {
             unsigned int arraySize = *it;

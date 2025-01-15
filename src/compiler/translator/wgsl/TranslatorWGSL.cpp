@@ -11,6 +11,7 @@
 
 #include "GLSLANG/ShaderLang.h"
 #include "common/log_utils.h"
+#include "common/span.h"
 #include "compiler/translator/BaseTypes.h"
 #include "compiler/translator/Common.h"
 #include "compiler/translator/Diagnostics.h"
@@ -158,7 +159,7 @@ class OutputWGSLTraverser : public TIntermTraverser
     void emitIndentation();
     void emitOpenBrace();
     void emitCloseBrace();
-    bool emitBlock(TSpan<TIntermNode *> nodes);
+    bool emitBlock(angle::Span<TIntermNode *> nodes);
     void emitFunctionSignature(const TFunction &func);
     void emitFunctionReturn(const TFunction &func);
     void emitFunctionParameter(const TFunction &func, const TVariable &param);
@@ -1272,8 +1273,8 @@ bool OutputWGSLTraverser::visitSwitch(Visit, TIntermSwitch *switchNode)
                  nextCaseStmt++)
             {
             }
-            TSpan<TIntermNode *> stmtListView(&stmtList.getSequence()->at(currStmt),
-                                              nextCaseStmt - currStmt);
+            angle::Span<TIntermNode *> stmtListView(&stmtList.getSequence()->at(currStmt),
+                                                    nextCaseStmt - currStmt);
             emitBlock(stmtListView);
             mSink << "\n";
 
@@ -1492,7 +1493,7 @@ bool OutputWGSLTraverser::visitAggregate(Visit, TIntermAggregate *aggregateNode)
     }
 }
 
-bool OutputWGSLTraverser::emitBlock(TSpan<TIntermNode *> nodes)
+bool OutputWGSLTraverser::emitBlock(angle::Span<TIntermNode *> nodes)
 {
     ASSERT(mIndentLevel >= -1);
     const bool isGlobalScope = mIndentLevel == -1;
@@ -1546,7 +1547,8 @@ bool OutputWGSLTraverser::emitBlock(TSpan<TIntermNode *> nodes)
 
 bool OutputWGSLTraverser::visitBlock(Visit, TIntermBlock *blockNode)
 {
-    return emitBlock(TSpan(blockNode->getSequence()->data(), blockNode->getSequence()->size()));
+    return emitBlock(
+        angle::Span(blockNode->getSequence()->data(), blockNode->getSequence()->size()));
 }
 
 bool OutputWGSLTraverser::visitGlobalQualifierDeclaration(Visit,

@@ -4721,7 +4721,7 @@ void TParseContext::checkIsNotUnsizedArray(const TSourceLoc &line,
     if (arrayType->isUnsizedArray())
     {
         error(line, errorMessage, token);
-        arrayType->sizeUnsizedArrays(TSpan<const unsigned int>());
+        arrayType->sizeUnsizedArrays(angle::Span<const unsigned int>());
     }
 }
 
@@ -4821,7 +4821,7 @@ TIntermTyped *TParseContext::addConstructor(TFunctionLookup *fnCall, const TSour
     {
         if (!checkUnsizedArrayConstructorArgumentDimensionality(arguments, type, line))
         {
-            type.sizeUnsizedArrays(TSpan<const unsigned int>());
+            type.sizeUnsizedArrays(angle::Span<const unsigned int>());
             return CreateZeroNode(type);
         }
         TIntermTyped *firstElement = arguments.at(0)->getAsTyped();
