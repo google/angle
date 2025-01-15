@@ -1330,15 +1330,10 @@ angle::Result ComputeStartVertex(ContextImpl *contextImpl,
                                  GLint baseVertex,
                                  GLint *firstVertexOut)
 {
-    // The entire index range should be within the limits of a 32-bit uint because the largest
-    // GL index type is GL_UNSIGNED_INT.
-    ASSERT(indexRange.start <= std::numeric_limits<uint32_t>::max() &&
-           indexRange.end <= std::numeric_limits<uint32_t>::max());
-
     // The base vertex is only used in DrawElementsIndirect. Given the assertion above and the
     // type of mBaseVertex (GLint), adding them both as 64-bit ints is safe.
     int64_t startVertexInt64 =
-        static_cast<int64_t>(baseVertex) + static_cast<int64_t>(indexRange.start);
+        static_cast<int64_t>(baseVertex) + static_cast<int64_t>(indexRange.start());
 
     // OpenGL ES 3.2 spec section 10.5: "Behavior of DrawElementsOneInstance is undefined if the
     // vertex ID is negative for any element"

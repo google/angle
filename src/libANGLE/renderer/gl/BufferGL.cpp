@@ -320,7 +320,7 @@ angle::Result BufferGL::getIndexRange(const gl::Context *context,
         else
         {
             // Workaround the null driver not having map support.
-            *outRange = gl::IndexRange(0, 0, 1);
+            *outRange = gl::IndexRange(0, 0);
         }
     }
 

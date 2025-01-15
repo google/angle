@@ -221,8 +221,7 @@ angle::Result VertexArrayGL::syncDrawState(const gl::Context *context,
     else
     {
         // Not an indexed call, set the range to [first, first + count - 1]
-        indexRange.start = first;
-        indexRange.end   = first + count - 1;
+        indexRange = IndexRange(first, first + count - 1);
 
         if (features.shiftInstancedArrayDataWithOffset.enabled && first > 0)
         {
@@ -421,7 +420,7 @@ angle::Result VertexArrayGL::streamAttributes(
     // If first is greater than zero, a slack space needs to be left at the beginning of the buffer
     // for each attribute so that the same 'first' argument can be passed into the draw call.
     const size_t bufferEmptySpace =
-        attribsToStream.count() * maxAttributeDataSize * indexRange.start;
+        attribsToStream.count() * maxAttributeDataSize * indexRange.start();
     const size_t requiredBufferSize = streamingDataSize + bufferEmptySpace;
 
     stateManager->bindBuffer(gl::BufferBinding::Array, mStreamingArrayBuffer);
@@ -443,7 +442,7 @@ angle::Result VertexArrayGL::streamAttributes(
     {
         uint8_t *bufferPointer = MapBufferRangeWithFallback(functions, GL_ARRAY_BUFFER, 0,
                                                             requiredBufferSize, GL_MAP_WRITE_BIT);
-        size_t curBufferOffset = maxAttributeDataSize * indexRange.start;
+        size_t curBufferOffset = maxAttributeDataSize * indexRange.start();
 
         const auto &attribs  = mState.getVertexAttributes();
         const auto &bindings = mState.getVertexBindings();
@@ -468,7 +467,7 @@ angle::Result VertexArrayGL::streamAttributes(
             // a non-instanced draw call
             const size_t firstIndex =
                 (adjustedDivisor == 0 || applyExtraOffsetWorkaroundForInstancedAttributes)
-                    ? indexRange.start
+                    ? indexRange.start()
                     : 0;
 
             // Attributes using client memory ignore the VERTEX_ATTRIB_BINDING state.
@@ -485,7 +484,7 @@ angle::Result VertexArrayGL::streamAttributes(
             {
                 const size_t originalStreamedVertexCount = streamedVertexCount;
                 streamedVertexCount =
-                    (instanceCount + indexRange.start + adjustedDivisor - 1u) / adjustedDivisor;
+                    (instanceCount + indexRange.start() + adjustedDivisor - 1u) / adjustedDivisor;
 
                 const size_t copySize =
                     sourceStride *
@@ -570,10 +569,10 @@ angle::Result VertexArrayGL::streamAttributes(
             mArrayBuffers[idx].set(context, nullptr);
             mNativeState->bindings[idx].buffer = mStreamingArrayBuffer;
 
-            // There's maxAttributeDataSize * indexRange.start of empty space allocated for each
+            // There's maxAttributeDataSize * indexRange.start() of empty space allocated for each
             // streaming attributes
             curBufferOffset +=
-                destStride * streamedVertexCount + maxAttributeDataSize * indexRange.start;
+                destStride * streamedVertexCount + maxAttributeDataSize * indexRange.start();
         }
 
         unmapResult = ANGLE_GL_TRY(context, functions->unmapBuffer(GL_ARRAY_BUFFER));

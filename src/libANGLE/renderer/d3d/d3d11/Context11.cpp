@@ -484,7 +484,7 @@ angle::Result Context11::drawElementsIndirect(const gl::Context *context,
         ANGLE_TRY(mRenderer->getStateManager()->updateState(
             context, mode, startVertex, cmd->count, type, indices, cmd->primCount, cmd->baseVertex,
             cmd->baseInstance, true));
-        return mRenderer->drawElements(context, mode, static_cast<GLint>(indexRange.start),
+        return mRenderer->drawElements(context, mode, static_cast<GLint>(indexRange.start()),
                                        cmd->count, type, indices, cmd->primCount, 0,
                                        cmd->baseInstance, true);
     }

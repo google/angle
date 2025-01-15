@@ -1501,12 +1501,12 @@ angle::Result Renderer9::drawElementsImpl(const gl::Context *context,
         &indexRange));
 
     size_t vertexCount = indexRange.vertexCount();
-    ANGLE_TRY(applyVertexBuffer(context, mode, static_cast<GLsizei>(indexRange.start),
+    ANGLE_TRY(applyVertexBuffer(context, mode, static_cast<GLsizei>(indexRange.start()),
                                 static_cast<GLsizei>(vertexCount), instances, &indexInfo));
 
     startScene();
 
-    int minIndex = static_cast<int>(indexRange.start);
+    int minIndex = static_cast<int>(indexRange.start());
 
     gl::VertexArray *vao           = context->getState().getVertexArray();
     gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer();

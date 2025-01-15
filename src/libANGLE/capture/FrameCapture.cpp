@@ -6785,7 +6785,7 @@ void FrameCaptureShared::maybeCaptureDrawElementsClientData(const gl::Context *c
     }
 
     // index starts from 0
-    captureClientArraySnapshot(context, indexRange.end + 1, instanceCount);
+    captureClientArraySnapshot(context, indexRange.end() + 1, instanceCount);
 }
 
 template <typename AttribT, typename FactoryT>

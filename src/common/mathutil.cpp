@@ -80,4 +80,17 @@ void convert999E5toRGBFloats(unsigned int input, float *red, float *green, float
     *blue  = inputData->B * pow2_exp;
 }
 
+std::ostream &operator<<(std::ostream &s, const IndexRange &a)
+{
+    if (a.isEmpty())
+    {
+        s << "[]";
+    }
+    else
+    {
+        s << "[" << a.start() << ", " << a.end() << "]";
+    }
+    return s;
+}
+
 }  // namespace gl

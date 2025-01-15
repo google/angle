@@ -259,12 +259,13 @@ angle::Result VertexArrayWgpu::syncClientArrays(
         size_t vertexCount = 0;
         ANGLE_TRY(GetVertexRangeInfo(context, first, count, sourceDrawElementsTypeOrInvalid,
                                      indices, baseVertex, &startVertex, &vertexCount));
-        indexRange = gl::IndexRange(startVertex, startVertex + vertexCount - 1, 0);
+        indexRange =
+            gl::IndexRange(startVertex, static_cast<GLuint>(startVertex + vertexCount - 1));
     }
     else if (indexDataNeedsStreaming == IndexDataNeedsStreaming::Yes &&
              sourceDrawElementsTypeOrInvalid == gl::DrawElementsType::InvalidEnum)
     {
-        indexRange = gl::IndexRange(first, first + count - 1, 0);
+        indexRange = gl::IndexRange(first, first + count - 1);
     }
 
     // Pre-compute the total size of all streamed vertex and index data so a single staging buffer
@@ -371,7 +372,7 @@ angle::Result VertexArrayWgpu::syncClientArrays(
             ASSERT(destDrawElementsTypeOrInvalid != gl::DrawElementsType::InvalidEnum);
             ASSERT(mode == gl::PrimitiveMode::LineLoop);
             uint32_t clampedVertexCount = gl::clampCast<uint32_t>(indexRange->vertexCount());
-            uint32_t startVertex        = static_cast<uint32_t>(indexRange->start);
+            uint32_t startVertex        = static_cast<uint32_t>(indexRange->start());
             size_t index                = currentStagingDataPosition;
             for (uint32_t i = 0; i < clampedVertexCount; i++)
             {
@@ -439,7 +440,7 @@ angle::Result VertexArrayWgpu::syncClientArrays(
 
         // Vertices do not apply the 'start' offset when the divisor is non-zero even when doing
         // a non-instanced draw call
-        const size_t firstIndex = (binding.getDivisor() == 0) ? indexRange->start : 0;
+        const size_t firstIndex = (binding.getDivisor() == 0) ? indexRange->start() : 0;
 
         // Attributes using client memory ignore the VERTEX_ATTRIB_BINDING state.
         // https://www.opengl.org/registry/specs/ARB/vertex_attrib_binding.txt

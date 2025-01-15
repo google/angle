@@ -946,8 +946,7 @@ angle::Result BufferVk::getIndexRange(const gl::Context *context,
     // Could be removed if https://github.com/KhronosGroup/Vulkan-Tools/issues/84 is fixed.
     if (renderer->isMockICDEnabled())
     {
-        outRange->start = 0;
-        outRange->end   = 0;
+        *outRange = {};
         return angle::Result::Continue;
     }
 

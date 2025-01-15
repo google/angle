@@ -1322,22 +1322,23 @@ ANGLE_INLINE bool ValidateDrawElementsCommon(const Context *context,
                                                 context->getState().isPrimitiveRestartEnabled(),
                                                 &indexRange));
 
-        // If we use an index greater than our maximum supported index range, return an error.
-        // The ES3 spec does not specify behaviour here, it is undefined, but ANGLE should
-        // always return an error if possible here.
-        if (static_cast<GLint64>(indexRange.end) >= context->getCaps().maxElementIndex)
-        {
-            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, err::kExceedsMaxElement);
-            return false;
-        }
-
-        if (!ValidateDrawAttribs(context, entryPoint, static_cast<GLint>(indexRange.end)))
-        {
-            return false;
-        }
-
         // No op if there are no real indices in the index data (all are primitive restart).
-        return (indexRange.vertexIndexCount > 0);
+        if (!indexRange.isEmpty())
+        {
+            // If we use an index greater than our maximum supported index range, return an error.
+            // The ES3 spec does not specify behaviour here, it is undefined, but ANGLE should
+            // always return an error if possible here.
+            if (static_cast<GLint64>(indexRange.end()) >= context->getCaps().maxElementIndex)
+            {
+                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, err::kExceedsMaxElement);
+                return false;
+            }
+
+            if (!ValidateDrawAttribs(context, entryPoint, static_cast<GLint>(indexRange.end())))
+            {
+                return false;
+            }
+        }
     }
 
     return true;

@@ -570,12 +570,11 @@ bool ValidateDrawRangeElementsBaseVertexEXT(const Context *context,
     }
 
     // Note that resolving the index range is a bit slow. We should probably optimize this.
-    IndexRange indexRange;
+    IndexRange indexRange{IndexRange::Undefined()};
     ANGLE_VALIDATION_TRY(context->getState().getVertexArray()->getIndexRange(
         context, type, count, indices, context->getState().isPrimitiveRestartEnabled(),
         &indexRange));
-
-    if (indexRange.end > end || indexRange.start < start)
+    if (!indexRange.isEmpty() && (indexRange.end() > end || indexRange.start() < start))
     {
         // GL spec says that behavior in this case is undefined - generating an error is fine.
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExceedsElementRange);
@@ -789,12 +788,11 @@ bool ValidateDrawRangeElementsBaseVertexOES(const Context *context,
     }
 
     // Note that resolving the index range is a bit slow. We should probably optimize this.
-    IndexRange indexRange;
+    IndexRange indexRange{IndexRange::Undefined()};
     ANGLE_VALIDATION_TRY(context->getState().getVertexArray()->getIndexRange(
         context, type, count, indices, context->getState().isPrimitiveRestartEnabled(),
         &indexRange));
-
-    if (indexRange.end > end || indexRange.start < start)
+    if (!indexRange.isEmpty() && (indexRange.end() > end || indexRange.start() < start))
     {
         // GL spec says that behavior in this case is undefined - generating an error is fine.
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExceedsElementRange);
