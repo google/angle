@@ -38,9 +38,11 @@ SurfaceState::SurfaceState(SurfaceID idIn,
       timestampsEnabled(false),
       autoRefreshEnabled(false),
       directComposition(false),
-      swapBehavior(EGL_NONE)
+      swapBehavior(EGL_NONE),
+      swapInterval(0)
 {
     directComposition = attributes.get(EGL_DIRECT_COMPOSITION_ANGLE, EGL_FALSE) == EGL_TRUE;
+    swapInterval      = attributes.getAsInt(EGL_SWAP_INTERVAL_ANGLE, 1);
 }
 
 SurfaceState::~SurfaceState()
@@ -56,11 +58,6 @@ bool SurfaceState::isRobustResourceInitEnabled() const
 bool SurfaceState::hasProtectedContent() const
 {
     return attributes.get(EGL_PROTECTED_CONTENT_EXT, EGL_FALSE) == EGL_TRUE;
-}
-
-EGLint SurfaceState::getPreferredSwapInterval() const
-{
-    return attributes.getAsInt(EGL_SWAP_INTERVAL_ANGLE, 1);
 }
 
 Surface::Surface(EGLint surfaceType,
@@ -95,6 +92,7 @@ Surface::Surface(EGLint surfaceType,
       mPixelAspectRatio(static_cast<EGLint>(1.0 * EGL_DISPLAY_SCALING)),
       mRenderBuffer(EGL_BACK_BUFFER),
       mRequestedRenderBuffer(EGL_BACK_BUFFER),
+      mRequestedSwapInterval(mState.swapInterval),
       mOrientation(0),
       mTexture(nullptr),
       mColorFormat(config->renderTargetFormat),
@@ -337,7 +335,7 @@ Error Surface::swap(gl::Context *context)
 
     context->getState().getOverlay()->onSwap();
 
-    ANGLE_TRY(setRenderBufferWhileSwap(context));
+    ANGLE_TRY(updatePropertiesOnSwap(context));
     ANGLE_TRY(mImplementation->swap(context));
     postSwap(context);
     return NoError();
@@ -350,7 +348,7 @@ Error Surface::swapWithDamage(gl::Context *context, const EGLint *rects, EGLint 
 
     context->getState().getOverlay()->onSwap();
 
-    ANGLE_TRY(setRenderBufferWhileSwap(context));
+    ANGLE_TRY(updatePropertiesOnSwap(context));
     ANGLE_TRY(mImplementation->swapWithDamage(context, rects, n_rects));
     postSwap(context);
     return NoError();
@@ -363,7 +361,7 @@ Error Surface::swapWithFrameToken(gl::Context *context, EGLFrameTokenANGLE frame
 
     context->getState().getOverlay()->onSwap();
 
-    ANGLE_TRY(setRenderBufferWhileSwap(context));
+    ANGLE_TRY(updatePropertiesOnSwap(context));
     ANGLE_TRY(mImplementation->swapWithFrameToken(context, frameToken));
     postSwap(context);
     return NoError();
@@ -382,7 +380,7 @@ Error Surface::postSubBuffer(const gl::Context *context,
 
     context->getState().getOverlay()->onSwap();
 
-    ANGLE_TRY(setRenderBufferWhileSwap(context));
+    ANGLE_TRY(updatePropertiesOnSwap(context));
     ANGLE_TRY(mImplementation->postSubBuffer(context, x, y, width, height));
     postSwap(context);
     return NoError();
@@ -403,9 +401,15 @@ EGLint Surface::isPostSubBufferSupported() const
     return mPostSubBufferRequested && mImplementation->isPostSubBufferSupported();
 }
 
+void Surface::setRequestedSwapInterval(EGLint interval)
+{
+    mRequestedSwapInterval = interval;
+}
+
 void Surface::setSwapInterval(const Display *display, EGLint interval)
 {
     mImplementation->setSwapInterval(display, interval);
+    mState.swapInterval = interval;
 }
 
 void Surface::setMipmapLevel(EGLint level)
@@ -797,13 +801,17 @@ void Surface::setRequestedRenderBuffer(EGLint requestedRenderBuffer)
     mRequestedRenderBuffer = requestedRenderBuffer;
 }
 
-Error Surface::setRenderBufferWhileSwap(const gl::Context *context)
+Error Surface::updatePropertiesOnSwap(const gl::Context *context)
 {
     if ((mRenderBuffer != mRequestedRenderBuffer) &&
         context->getDisplay()->getExtensions().mutableRenderBufferKHR &&
         (getConfig()->surfaceType & EGL_MUTABLE_RENDER_BUFFER_BIT_KHR))
     {
         ANGLE_TRY(setRenderBuffer(mRequestedRenderBuffer));
+    }
+    if (mState.swapInterval != mRequestedSwapInterval)
+    {
+        setSwapInterval(context->getDisplay(), mRequestedSwapInterval);
     }
     return NoError();
 }

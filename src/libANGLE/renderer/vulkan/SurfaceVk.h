@@ -402,7 +402,7 @@ class WindowSurfaceVk : public SurfaceVk
 
     vk::PresentMode getDesiredSwapchainPresentMode() const;
     void setDesiredSwapchainPresentMode(vk::PresentMode presentMode);
-    void setSwapInterval(DisplayVk *displayVk, EGLint interval);
+    void setDesiredSwapInterval(EGLint interval);
 
     angle::Result initializeImpl(DisplayVk *displayVk, bool *anyMatchesOut);
     angle::Result recreateSwapchain(ContextVk *contextVk, const gl::Extents &extents);

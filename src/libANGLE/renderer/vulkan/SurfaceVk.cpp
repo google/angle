@@ -1341,7 +1341,7 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk, bool *anyMat
 
     // Select appropriate present mode based on vsync parameter. Default to 1 (FIFO), though it
     // will get clamped to the min/max values specified at display creation time.
-    setSwapInterval(displayVk, mState.getPreferredSwapInterval());
+    setDesiredSwapInterval(mState.swapInterval);
 
     if (!updateColorSpace(displayVk))
     {
@@ -2896,7 +2896,7 @@ VkResult WindowSurfaceVk::postProcessUnlockedAcquire(vk::ErrorContext *context)
             ASSERT(semaphore == acquireImageSemaphore);
             if (primaryCommandBuffer.end() != VK_SUCCESS)
             {
-                setDesiredSwapchainPresentMode(vk::PresentMode::FifoKHR);
+                setDesiredSwapInterval(mState.swapInterval);
                 return VK_ERROR_OUT_OF_DATE_KHR;
             }
             QueueSerial queueSerial;
@@ -2905,7 +2905,7 @@ VkResult WindowSurfaceVk::postProcessUnlockedAcquire(vk::ErrorContext *context)
                                             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
                                             &queueSerial) != angle::Result::Continue)
             {
-                setDesiredSwapchainPresentMode(vk::PresentMode::FifoKHR);
+                setDesiredSwapInterval(mState.swapInterval);
                 return VK_ERROR_OUT_OF_DATE_KHR;
             }
             mUse.setQueueSerial(queueSerial);
@@ -2988,14 +2988,8 @@ void WindowSurfaceVk::setDesiredSwapchainPresentMode(vk::PresentMode presentMode
     mDesiredSwapchainPresentMode.store(presentMode, std::memory_order_relaxed);
 }
 
-void WindowSurfaceVk::setSwapInterval(DisplayVk *displayVk, EGLint interval)
+void WindowSurfaceVk::setDesiredSwapInterval(EGLint interval)
 {
-    // Don't let setSwapInterval change presentation mode if using SHARED present.
-    if (isSharedPresentMode())
-    {
-        return;
-    }
-
     const EGLint minSwapInterval = mState.config->minSwapInterval;
     const EGLint maxSwapInterval = mState.config->maxSwapInterval;
     ASSERT(minSwapInterval == 0 || minSwapInterval == 1);
@@ -3011,8 +3005,11 @@ void WindowSurfaceVk::setSwapInterval(DisplayVk *displayVk, EGLint interval)
 
 void WindowSurfaceVk::setSwapInterval(const egl::Display *display, EGLint interval)
 {
-    DisplayVk *displayVk = vk::GetImpl(display);
-    setSwapInterval(displayVk, interval);
+    // Don't let setSwapInterval change presentation mode if using SHARED present.
+    if (!isSharedPresentModeDesired())
+    {
+        setDesiredSwapInterval(interval);
+    }
 }
 
 egl::Error WindowSurfaceVk::getUserWidth(const egl::Display *display, EGLint *value) const
@@ -3356,7 +3353,7 @@ egl::Error WindowSurfaceVk::setRenderBuffer(EGLint renderBuffer)
     }
     else  // EGL_BACK_BUFFER
     {
-        setDesiredSwapchainPresentMode(vk::PresentMode::FifoKHR);
+        setDesiredSwapInterval(mState.swapInterval);
     }
     return egl::NoError();
 }

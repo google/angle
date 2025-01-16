@@ -52,7 +52,6 @@ struct SurfaceState final : private angle::NonCopyable
 
     bool isRobustResourceInitEnabled() const;
     bool hasProtectedContent() const;
-    EGLint getPreferredSwapInterval() const;
 
     SurfaceID id;
 
@@ -66,6 +65,7 @@ struct SurfaceState final : private angle::NonCopyable
     SupportedTimestamps supportedTimestamps;
     bool directComposition;
     EGLenum swapBehavior;
+    EGLint swapInterval;
 };
 
 class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
@@ -100,6 +100,7 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
 
     EGLint isPostSubBufferSupported() const;
 
+    void setRequestedSwapInterval(EGLint interval);
     void setSwapInterval(const Display *display, EGLint interval);
     Error onDestroy(const Display *display);
 
@@ -281,6 +282,8 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
     EGLenum mRenderBuffer;           // Render buffer
     EGLenum mRequestedRenderBuffer;  // Requested render buffer
 
+    EGLint mRequestedSwapInterval;
+
     EGLint mOrientation;
 
     // We don't use a binding pointer here. We don't ever want to own an orphaned texture. If a
@@ -310,7 +313,7 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
     // ObserverInterface implementation.
     void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
 
-    Error setRenderBufferWhileSwap(const gl::Context *context);
+    Error updatePropertiesOnSwap(const gl::Context *context);
 
     gl::InitState mColorInitState;
     gl::InitState mDepthStencilInitState;
