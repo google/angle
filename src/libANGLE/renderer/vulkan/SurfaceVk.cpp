@@ -1618,8 +1618,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context, const gl::E
     VkSwapchainCreateInfoKHR swapchainInfo = {};
     swapchainInfo.sType                    = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
     swapchainInfo.flags = mState.hasProtectedContent() ? VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR : 0;
-    swapchainInfo.surface = mSurface;
-    swapchainInfo.minImageCount = mMinImageCount;
+    swapchainInfo.surface     = mSurface;
     swapchainInfo.imageFormat = vk::GetVkFormatFromFormatID(renderer, getActualFormatID(renderer));
     swapchainInfo.imageColorSpace = mSurfaceColorSpace;
     // Note: Vulkan doesn't allow 0-width/height swapchains.
@@ -1671,20 +1670,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context, const gl::E
         swapchainInfo.flags |= VK_SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_EXT;
     }
 
-    if (isSharedPresentModeDesired())
-    {
-        swapchainInfo.minImageCount = 1;
-
-        // This feature is by default disabled, and only affects Android platform wsi behavior
-        // transparent to angle internal tracking for shared present.
-        if (renderer->getFeatures().forceContinuousRefreshOnSharedPresent.enabled)
-        {
-            swapchainInfo.presentMode = VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR;
-        }
-    }
-
-    // Get the list of compatible present modes to avoid unnecessary swapchain recreation.  Also
-    // update minImageCount with the per-present limit.
+    // Get the list of compatible present modes to avoid unnecessary swapchain recreation.
     if (renderer->getFeatures().supportsSurfaceMaintenance1.enabled)
     {
         VkPhysicalDeviceSurfaceInfo2KHR surfaceInfo2 = {};
@@ -1730,9 +1716,10 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context, const gl::E
         // mode imageCount here. Otherwise we may get into
         // VUID-VkSwapchainCreateInfoKHR-presentMode-02839.
         mSurfaceCaps   = surfaceCaps2.surfaceCapabilities;
-        mMinImageCount = GetMinImageCount(renderer, mSurfaceCaps, mDesiredSwapchainPresentMode);
-        swapchainInfo.minImageCount = mMinImageCount;
     }
+
+    mMinImageCount = GetMinImageCount(renderer, mSurfaceCaps, mDesiredSwapchainPresentMode);
+    swapchainInfo.minImageCount = mMinImageCount;
 
     VkSwapchainPresentModesCreateInfoEXT compatibleModesInfo = {};
     if (renderer->getFeatures().supportsSwapchainMaintenance1.enabled &&
@@ -1751,6 +1738,18 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context, const gl::E
         // compatible with itself.
         mCompatiblePresentModes.resize(1);
         mCompatiblePresentModes[0] = swapchainInfo.presentMode;
+    }
+
+    if (isSharedPresentModeDesired())
+    {
+        swapchainInfo.minImageCount = 1;
+
+        // This feature is by default disabled, and only affects Android platform wsi behavior
+        // transparent to angle internal tracking for shared present.
+        if (renderer->getFeatures().forceContinuousRefreshOnSharedPresent.enabled)
+        {
+            swapchainInfo.presentMode = VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR;
+        }
     }
 
     // Old swapchain is retired regardless if the below call fails or not.
@@ -1949,37 +1948,28 @@ angle::Result WindowSurfaceVk::checkForOutOfDateSwapchain(ContextVk *contextVk, 
     // Get the latest surface capabilities.
     ANGLE_TRY(queryAndAdjustSurfaceCaps(contextVk, &mSurfaceCaps));
 
-    if (contextVk->getFeatures().perFrameWindowSizeQuery.enabled)
+    if (contextVk->getFeatures().perFrameWindowSizeQuery.enabled && !needRecreate)
     {
+        // This device generates neither VK_ERROR_OUT_OF_DATE_KHR nor VK_SUBOPTIMAL_KHR.  Check for
+        // whether the size and/or rotation have changed since the swapchain was created.
+        uint32_t swapchainWidth  = getWidth();
+        uint32_t swapchainHeight = getHeight();
+
+        // getWidth() and getHeight() are swapped for 90 degree and 270 degree emulated
+        // preTransform, we should swap them back before comparing with surface properties to avoid
+        // a size mismatch and unnecessary swapchain recreation
+
+        if (Is90DegreeRotation(mEmulatedPreTransform))
+        {
+            std::swap(swapchainWidth, swapchainHeight);
+        }
+
         // On Android, rotation can cause the minImageCount to change
-        uint32_t minImageCount =
-            GetMinImageCount(contextVk->getRenderer(), mSurfaceCaps, mDesiredSwapchainPresentMode);
-        if (mMinImageCount != minImageCount)
-        {
-            needRecreate     = true;
-            mMinImageCount   = minImageCount;
-        }
-
-        if (!needRecreate)
-        {
-            // This device generates neither VK_ERROR_OUT_OF_DATE_KHR nor VK_SUBOPTIMAL_KHR.  Check
-            // for whether the size and/or rotation have changed since the swapchain was created.
-            uint32_t swapchainWidth  = getWidth();
-            uint32_t swapchainHeight = getHeight();
-
-            // getWidth() and getHeight() are swapped for 90 degree and 270 degree emulated
-            // preTransform, we should swap them back before comparing with surface properties
-            // to avoid a size mismatch and unnecessary swapchain recreation
-
-            if (Is90DegreeRotation(mEmulatedPreTransform))
-            {
-                std::swap(swapchainWidth, swapchainHeight);
-            }
-
-            needRecreate             = mSurfaceCaps.currentTransform != mPreTransform ||
-                           mSurfaceCaps.currentExtent.width != swapchainWidth ||
-                           mSurfaceCaps.currentExtent.height != swapchainHeight;
-        }
+        needRecreate = mSurfaceCaps.currentTransform != mPreTransform ||
+                       mSurfaceCaps.currentExtent.width != swapchainWidth ||
+                       mSurfaceCaps.currentExtent.height != swapchainHeight ||
+                       GetMinImageCount(contextVk->getRenderer(), mSurfaceCaps,
+                                        mDesiredSwapchainPresentMode) != mMinImageCount;
     }
 
     // If anything has changed, recreate the swapchain.
@@ -2990,10 +2980,6 @@ void WindowSurfaceVk::setSwapInterval(DisplayVk *displayVk, EGLint interval)
     interval = gl::clamp(interval, minSwapInterval, maxSwapInterval);
 
     mDesiredSwapchainPresentMode = GetDesiredPresentMode(mPresentModes, interval);
-
-    // minImageCount may vary based on the Present Mode
-    mMinImageCount =
-        GetMinImageCount(displayVk->getRenderer(), mSurfaceCaps, mDesiredSwapchainPresentMode);
 
     // On the next swap, if the desired present mode is different from the current one, the
     // swapchain will be recreated.
