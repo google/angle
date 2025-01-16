@@ -79,6 +79,7 @@ if (angle_has_build) {
     ozone_platform_headless = false
     use_fuzzing_engine = false
     is_apple = is_mac || is_ios
+    is_desktop_android = false
   }
 
   declare_args() {
