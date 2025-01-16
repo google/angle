@@ -198,6 +198,17 @@ angle::Result CLKernelVk::setArg(cl_uint argIndex, size_t argSize, const void *a
                 KernelSpecConstant{.ID   = arg.workgroupSpecId,
                                    .data = static_cast<uint32_t>(argSize / arg.workgroupSize)});
         }
+
+        if (arg.type == NonSemanticClspvReflectionArgumentUniform ||
+            arg.type == NonSemanticClspvReflectionArgumentStorageBuffer ||
+            arg.type == NonSemanticClspvReflectionArgumentStorageImage ||
+            arg.type == NonSemanticClspvReflectionArgumentSampledImage ||
+            arg.type == NonSemanticClspvReflectionArgumentUniformTexelBuffer ||
+            arg.type == NonSemanticClspvReflectionArgumentStorageTexelBuffer)
+        {
+            ASSERT(argSize == sizeof(cl_mem *));
+            arg.handle = *static_cast<const cl_mem *>(argValue);
+        }
     }
 
     return angle::Result::Continue;

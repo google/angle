@@ -1562,7 +1562,7 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
             case NonSemanticClspvReflectionArgumentUniform:
             case NonSemanticClspvReflectionArgumentStorageBuffer:
             {
-                cl::Memory *clMem = cl::Buffer::Cast(*static_cast<const cl_mem *>(arg.handle));
+                cl::Memory *clMem = cl::Buffer::Cast(static_cast<const cl_mem>(arg.handle));
                 CLBufferVk &vkMem = clMem->getImpl<CLBufferVk>();
 
                 ANGLE_TRY(addMemoryDependencies(clMem));
@@ -1645,7 +1645,7 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
             case NonSemanticClspvReflectionArgumentStorageImage:
             case NonSemanticClspvReflectionArgumentSampledImage:
             {
-                cl::Memory *clMem = cl::Image::Cast(*static_cast<const cl_mem *>(arg.handle));
+                cl::Memory *clMem = cl::Image::Cast(static_cast<const cl_mem>(arg.handle));
                 CLImageVk &vkMem  = clMem->getImpl<CLImageVk>();
 
                 ANGLE_TRY(addMemoryDependencies(clMem));
@@ -1697,7 +1697,7 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
             case NonSemanticClspvReflectionArgumentUniformTexelBuffer:
             case NonSemanticClspvReflectionArgumentStorageTexelBuffer:
             {
-                cl::Memory *clMem = cl::Image::Cast(*static_cast<const cl_mem *>(arg.handle));
+                cl::Memory *clMem = cl::Image::Cast(static_cast<const cl_mem>(arg.handle));
                 CLImageVk &vkMem  = clMem->getImpl<CLImageVk>();
 
                 ANGLE_TRY(addMemoryDependencies(clMem));
