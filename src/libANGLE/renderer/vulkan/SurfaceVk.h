@@ -346,8 +346,9 @@ class WindowSurfaceVk : public SurfaceVk
 
     bool isSharedPresentModeDesired() const
     {
-        return (mDesiredSwapchainPresentMode == vk::PresentMode::SharedDemandRefreshKHR ||
-                mDesiredSwapchainPresentMode == vk::PresentMode::SharedContinuousRefreshKHR);
+        vk::PresentMode desiredSwapchainPresentMode = getDesiredSwapchainPresentMode();
+        return (desiredSwapchainPresentMode == vk::PresentMode::SharedDemandRefreshKHR ||
+                desiredSwapchainPresentMode == vk::PresentMode::SharedContinuousRefreshKHR);
     }
 
     egl::Error lockSurface(const egl::Display *display,
@@ -398,6 +399,8 @@ class WindowSurfaceVk : public SurfaceVk
     virtual angle::Result createSurfaceVk(vk::Context *context, gl::Extents *extentsOut)      = 0;
     virtual angle::Result getCurrentWindowSize(vk::Context *context, gl::Extents *extentsOut) = 0;
 
+    vk::PresentMode getDesiredSwapchainPresentMode() const;
+    void setDesiredSwapchainPresentMode(vk::PresentMode presentMode);
     void setSwapInterval(DisplayVk *displayVk, EGLint interval);
 
     angle::Result initializeImpl(DisplayVk *displayVk, bool *anyMatchesOut);
@@ -463,8 +466,8 @@ class WindowSurfaceVk : public SurfaceVk
     VkSwapchainKHR mSwapchain;      // Current swapchain (same as last created or NULL)
     VkSwapchainKHR mLastSwapchain;  // Last created non retired swapchain (or NULL if retired)
     // Cached information used to recreate swapchains.
-    vk::PresentMode mSwapchainPresentMode;         // Current swapchain mode
-    vk::PresentMode mDesiredSwapchainPresentMode;  // Desired mode set through setSwapInterval()
+    vk::PresentMode mSwapchainPresentMode;                      // Current swapchain mode
+    std::atomic<vk::PresentMode> mDesiredSwapchainPresentMode;  // Desired swapchain mode
     uint32_t mMinImageCount;
     VkSurfaceTransformFlagBitsKHR mPreTransform;
     VkSurfaceTransformFlagBitsKHR mEmulatedPreTransform;

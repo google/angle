@@ -1368,8 +1368,7 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk, bool *anyMat
     if ((mState.attributes.getAsInt(EGL_RENDER_BUFFER, EGL_BACK_BUFFER) == EGL_SINGLE_BUFFER) &&
         supportsPresentMode(vk::PresentMode::SharedDemandRefreshKHR))
     {
-        std::vector<vk::PresentMode> presentModes = {vk::PresentMode::SharedDemandRefreshKHR};
-        mDesiredSwapchainPresentMode              = GetDesiredPresentMode(presentModes, 0);
+        setDesiredSwapchainPresentMode(vk::PresentMode::SharedDemandRefreshKHR);
     }
 
     mCompressionFlags    = VK_IMAGE_COMPRESSION_DISABLED_EXT;
@@ -1615,6 +1614,10 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context, const gl::E
         imageUsageFlags |= VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
     }
 
+    mSwapchainPresentMode = getDesiredSwapchainPresentMode();
+    mWidth                = extents.width;
+    mHeight               = extents.height;
+
     VkSwapchainCreateInfoKHR swapchainInfo = {};
     swapchainInfo.sType                    = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
     swapchainInfo.flags = mState.hasProtectedContent() ? VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR : 0;
@@ -1631,8 +1634,8 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context, const gl::E
     swapchainInfo.pQueueFamilyIndices   = nullptr;
     swapchainInfo.preTransform          = mPreTransform;
     swapchainInfo.compositeAlpha        = mCompositeAlpha;
-    swapchainInfo.presentMode = vk::ConvertPresentModeToVkPresentMode(mDesiredSwapchainPresentMode);
-    swapchainInfo.clipped     = VK_TRUE;
+    swapchainInfo.presentMode  = vk::ConvertPresentModeToVkPresentMode(mSwapchainPresentMode);
+    swapchainInfo.clipped      = VK_TRUE;
     swapchainInfo.oldSwapchain = mLastSwapchain;
 
     VkImageCompressionControlEXT compressionInfo = {};
@@ -1708,8 +1711,17 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context, const gl::E
         }
 
         // The implementation must always return the given present mode as compatible with itself.
-        ASSERT(IsCompatiblePresentMode(mDesiredSwapchainPresentMode, mCompatiblePresentModes.data(),
+        ASSERT(IsCompatiblePresentMode(mSwapchainPresentMode, mCompatiblePresentModes.data(),
                                        mCompatiblePresentModes.size()));
+
+        // On Android we expect VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR and
+        // VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR to be compatible.
+        ASSERT(!IsAndroid() || !isSharedPresentMode() ||
+               IsCompatiblePresentMode(
+                   mSwapchainPresentMode == vk::PresentMode::SharedDemandRefreshKHR
+                       ? vk::PresentMode::SharedContinuousRefreshKHR
+                       : vk::PresentMode::SharedDemandRefreshKHR,
+                   mCompatiblePresentModes.data(), mCompatiblePresentModes.size()));
 
         // Vulkan spec says "The per-present mode image counts may be less-than or greater-than the
         // image counts returned when VkSurfacePresentModeEXT is not provided.". Use the per present
@@ -1718,7 +1730,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context, const gl::E
         mSurfaceCaps   = surfaceCaps2.surfaceCapabilities;
     }
 
-    mMinImageCount = GetMinImageCount(renderer, mSurfaceCaps, mDesiredSwapchainPresentMode);
+    mMinImageCount              = GetMinImageCount(renderer, mSurfaceCaps, mSwapchainPresentMode);
     swapchainInfo.minImageCount = mMinImageCount;
 
     VkSwapchainPresentModesCreateInfoEXT compatibleModesInfo = {};
@@ -1740,7 +1752,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context, const gl::E
         mCompatiblePresentModes[0] = swapchainInfo.presentMode;
     }
 
-    if (isSharedPresentModeDesired())
+    if (isSharedPresentMode())
     {
         swapchainInfo.minImageCount = 1;
 
@@ -1760,9 +1772,6 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context, const gl::E
     VkSwapchainKHR newSwapChain = VK_NULL_HANDLE;
     ANGLE_VK_TRY(context, vkCreateSwapchainKHR(device, &swapchainInfo, nullptr, &newSwapChain));
     mLastSwapchain        = newSwapChain;
-    mSwapchainPresentMode = mDesiredSwapchainPresentMode;
-    mWidth                = extents.width;
-    mHeight               = extents.height;
 
     // If frame timestamp was enabled for the surface, [re]enable it when [re]creating the swapchain
     if (renderer->getFeatures().supportsTimestampSurfaceAttribute.enabled &&
@@ -1896,7 +1905,7 @@ angle::Result WindowSurfaceVk::queryAndAdjustSurfaceCaps(ContextVk *contextVk,
         VkSurfacePresentModeEXT surfacePresentMode = {};
         surfacePresentMode.sType                   = VK_STRUCTURE_TYPE_SURFACE_PRESENT_MODE_EXT;
         surfacePresentMode.presentMode =
-            vk::ConvertPresentModeToVkPresentMode(mDesiredSwapchainPresentMode);
+            vk::ConvertPresentModeToVkPresentMode(getDesiredSwapchainPresentMode());
         vk::AddToPNextChain(&surfaceInfo2, &surfacePresentMode);
 
         VkSurfaceCapabilities2KHR surfaceCaps2 = {};
@@ -1933,8 +1942,10 @@ angle::Result WindowSurfaceVk::checkForOutOfDateSwapchain(ContextVk *contextVk, 
 {
     ASSERT(mAcquireOperation.state != impl::ImageAcquireState::Ready);
 
+    vk::PresentMode desiredSwapchainPresentMode = getDesiredSwapchainPresentMode();
+
     bool presentModeIncompatible =
-        !IsCompatiblePresentMode(mDesiredSwapchainPresentMode, mCompatiblePresentModes.data(),
+        !IsCompatiblePresentMode(desiredSwapchainPresentMode, mCompatiblePresentModes.data(),
                                  mCompatiblePresentModes.size());
     bool swapchainMissing = (mSwapchain == VK_NULL_HANDLE);
     bool needRecreate     = forceRecreate || presentModeIncompatible || swapchainMissing;
@@ -1969,7 +1980,7 @@ angle::Result WindowSurfaceVk::checkForOutOfDateSwapchain(ContextVk *contextVk, 
                        mSurfaceCaps.currentExtent.width != swapchainWidth ||
                        mSurfaceCaps.currentExtent.height != swapchainHeight ||
                        GetMinImageCount(contextVk->getRenderer(), mSurfaceCaps,
-                                        mDesiredSwapchainPresentMode) != mMinImageCount;
+                                        desiredSwapchainPresentMode) != mMinImageCount;
     }
 
     // If anything has changed, recreate the swapchain.
@@ -2157,7 +2168,7 @@ egl::Error WindowSurfaceVk::swap(const gl::Context *context)
     //
     // Some apps issue eglSwapBuffers after glFlush unnecessary, causing the CPU throttling logic to
     // effectively wait for the just submitted commands.
-    if (isSharedPresentMode() && mSwapchainPresentMode == mDesiredSwapchainPresentMode)
+    if (isSharedPresentMode() && mSwapchainPresentMode == getDesiredSwapchainPresentMode())
     {
         const angle::Result result = vk::GetImpl(context)->flush(context);
         return angle::ToEGL(result, EGL_BAD_SURFACE);
@@ -2438,11 +2449,12 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
         vk::AddToPNextChain(&presentInfo, &presentFenceInfo);
 
         // Update the present mode if necessary and possible
-        if (mSwapchainPresentMode != mDesiredSwapchainPresentMode &&
-            IsCompatiblePresentMode(mDesiredSwapchainPresentMode, mCompatiblePresentModes.data(),
+        vk::PresentMode desiredSwapchainPresentMode = getDesiredSwapchainPresentMode();
+        if (mSwapchainPresentMode != desiredSwapchainPresentMode &&
+            IsCompatiblePresentMode(desiredSwapchainPresentMode, mCompatiblePresentModes.data(),
                                     mCompatiblePresentModes.size()))
         {
-            presentMode = vk::ConvertPresentModeToVkPresentMode(mDesiredSwapchainPresentMode);
+            presentMode = vk::ConvertPresentModeToVkPresentMode(desiredSwapchainPresentMode);
 
             presentModeInfo.sType          = VK_STRUCTURE_TYPE_SWAPCHAIN_PRESENT_MODE_INFO_EXT;
             presentModeInfo.swapchainCount = 1;
@@ -2450,7 +2462,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
 
             vk::AddToPNextChain(&presentInfo, &presentModeInfo);
 
-            mSwapchainPresentMode = mDesiredSwapchainPresentMode;
+            mSwapchainPresentMode = desiredSwapchainPresentMode;
         }
     }
 
@@ -2882,7 +2894,7 @@ VkResult WindowSurfaceVk::postProcessUnlockedAcquire(vk::Context *context)
             ASSERT(semaphore == acquireImageSemaphore);
             if (primaryCommandBuffer.end() != VK_SUCCESS)
             {
-                mDesiredSwapchainPresentMode = vk::PresentMode::FifoKHR;
+                setDesiredSwapchainPresentMode(vk::PresentMode::FifoKHR);
                 return VK_ERROR_OUT_OF_DATE_KHR;
             }
             QueueSerial queueSerial;
@@ -2891,7 +2903,7 @@ VkResult WindowSurfaceVk::postProcessUnlockedAcquire(vk::Context *context)
                                             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
                                             &queueSerial) != angle::Result::Continue)
             {
-                mDesiredSwapchainPresentMode = vk::PresentMode::FifoKHR;
+                setDesiredSwapchainPresentMode(vk::PresentMode::FifoKHR);
                 return VK_ERROR_OUT_OF_DATE_KHR;
             }
             mUse.setQueueSerial(queueSerial);
@@ -2964,6 +2976,16 @@ egl::Error WindowSurfaceVk::getMscRate(EGLint * /*numerator*/, EGLint * /*denomi
     return egl::EglBadAccess();
 }
 
+vk::PresentMode WindowSurfaceVk::getDesiredSwapchainPresentMode() const
+{
+    return mDesiredSwapchainPresentMode.load(std::memory_order_relaxed);
+}
+
+void WindowSurfaceVk::setDesiredSwapchainPresentMode(vk::PresentMode presentMode)
+{
+    mDesiredSwapchainPresentMode.store(presentMode, std::memory_order_relaxed);
+}
+
 void WindowSurfaceVk::setSwapInterval(DisplayVk *displayVk, EGLint interval)
 {
     // Don't let setSwapInterval change presentation mode if using SHARED present.
@@ -2979,7 +3001,7 @@ void WindowSurfaceVk::setSwapInterval(DisplayVk *displayVk, EGLint interval)
 
     interval = gl::clamp(interval, minSwapInterval, maxSwapInterval);
 
-    mDesiredSwapchainPresentMode = GetDesiredPresentMode(mPresentModes, interval);
+    setDesiredSwapchainPresentMode(GetDesiredPresentMode(mPresentModes, interval));
 
     // On the next swap, if the desired present mode is different from the current one, the
     // swapchain will be recreated.
@@ -3230,19 +3252,14 @@ egl::Error WindowSurfaceVk::setAutoRefreshEnabled(bool enabled)
                 : vk::PresentMode::SharedDemandRefreshKHR;
 
     // We only expose EGL_ANDROID_front_buffer_auto_refresh extension on Android with supported
-    // VK_EXT_swapchain_maintenance1 extension, where present modes expected to be compatible.
-    if (!IsCompatiblePresentMode(newDesiredSwapchainPresentMode, mCompatiblePresentModes.data(),
-                                 mCompatiblePresentModes.size()))
-    {
-        // This should not happen, unless some specific Android platform requires swapchain
-        // recreation for these present modes, in which case EGL_ANDROID_front_buffer_auto_refresh
-        // should not be exposed or this code should be updated to support this scenario.
-        return egl::EglBadMatch();
-    }
+    // VK_EXT_swapchain_maintenance1 extension, where current and new present modes expected to be
+    // compatible.  Can't use |mCompatiblePresentModes| here to check if this is true because it is
+    // not thread safe.  Instead of the check, ASSERT is added to the |createSwapChain| method where
+    // |mCompatiblePresentModes| are queried.
 
     // Simply change mDesiredSwapchainPresentMode regardless if we are already in single buffer mode
     // or not, since compatible present modes does not require swapchain recreation.
-    mDesiredSwapchainPresentMode = newDesiredSwapchainPresentMode;
+    setDesiredSwapchainPresentMode(newDesiredSwapchainPresentMode);
 
     return egl::NoError();
 }
@@ -3333,11 +3350,11 @@ egl::Error WindowSurfaceVk::setRenderBuffer(EGLint renderBuffer)
         {
             return egl::EglBadMatch();
         }
-        mDesiredSwapchainPresentMode = presentMode;
+        setDesiredSwapchainPresentMode(presentMode);
     }
     else  // EGL_BACK_BUFFER
     {
-        mDesiredSwapchainPresentMode = vk::PresentMode::FifoKHR;
+        setDesiredSwapchainPresentMode(vk::PresentMode::FifoKHR);
     }
     return egl::NoError();
 }
