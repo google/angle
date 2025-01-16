@@ -5034,12 +5034,13 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     //   pipeline creation.  http://issuetracker.google.com/173636783
     // - ARM hardware
     // - Imagination hardware
+    // - Samsung hardware
     // - SwiftShader
     //
     ANGLE_FEATURE_CONDITION(
         &mFeatures, preferDriverUniformOverSpecConst,
         (isQualcommProprietary && qualcommDriverVersion < QualcommDriverVersion(512, 513, 0)) ||
-            isARM || isPowerVR || isSwiftShader);
+            isARM || isPowerVR || isSamsung || isSwiftShader);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, preferCachedNoncoherentForDynamicStreamBufferUsage,
                             IsMeteorLake(mPhysicalDeviceProperties.deviceID));
