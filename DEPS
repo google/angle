@@ -765,7 +765,7 @@ deps = {
 
   # glmark2 is a GPL3-licensed OpenGL ES 2.0 benchmark. We use it for testing.
   'third_party/glmark2/src': {
-    'url': Var('chromium_git') + '/external/github.com/glmark2/glmark2@2054465f6f7c9ed2d82f633bb0c88a3222f4a63a',
+    'url': Var('chromium_git') + '/external/github.com/glmark2/glmark2@cb550a25c75a99ae0def91a02e16ae29d73e6d1e',
   },
 
   'third_party/googletest': {
