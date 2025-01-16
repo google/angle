@@ -318,12 +318,73 @@ bool ValidateGetQueryObjectui64vRobustANGLE(const Context *context,
                                             const GLsizei *length,
                                             GLuint64 *params);
 
-bool ValidateUniformCommonBase(const Context *context,
-                               angle::EntryPoint entryPoint,
-                               const Program *program,
-                               UniformLocation location,
-                               GLsizei count,
-                               const LinkedUniform **uniformOut);
+ANGLE_INLINE bool ValidateUniformCommonBase(const Context *context,
+                                            angle::EntryPoint entryPoint,
+                                            const Program *program,
+                                            UniformLocation location,
+                                            GLsizei count,
+                                            const LinkedUniform **uniformOut)
+{
+    // TODO(Jiajia): Add image uniform check in future.
+    if (count < 0)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, err::kNegativeCount);
+        return false;
+    }
+
+    if (!program)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, err::kInvalidProgramName);
+        return false;
+    }
+
+    if (!program->isLinked())
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, err::kProgramNotLinked);
+        return false;
+    }
+
+    if (location.value == -1)
+    {
+        // Silently ignore the uniform command
+        return false;
+    }
+
+    const ProgramExecutable &executable = program->getExecutable();
+    const auto &uniformLocations        = executable.getUniformLocations();
+    size_t castedLocation               = static_cast<size_t>(location.value);
+    if (castedLocation >= uniformLocations.size())
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, err::kInvalidUniformLocation);
+        return false;
+    }
+
+    const auto &uniformLocation = uniformLocations[castedLocation];
+    if (uniformLocation.ignored)
+    {
+        // Silently ignore the uniform command
+        return false;
+    }
+
+    if (!uniformLocation.used())
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, err::kInvalidUniformLocation);
+        return false;
+    }
+
+    const LinkedUniform &uniform = executable.getUniformByIndex(uniformLocation.index);
+
+    // attempting to write an array to a non-array uniform is an INVALID_OPERATION
+    if (count > 1 && !uniform.isArray())
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, err::kInvalidUniformCount);
+        return false;
+    }
+
+    *uniformOut = &uniform;
+    return true;
+}
+
 bool ValidateUniform1ivValue(const Context *context,
                              angle::EntryPoint entryPoint,
                              GLenum uniformType,
