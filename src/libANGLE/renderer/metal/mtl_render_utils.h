@@ -387,18 +387,6 @@ class IndexGeneratorUtils final : angle::NonCopyable
     angle::Result generateLineLoopLastSegmentFromElementsArray(ContextMtl *contextMtl,
                                                                const IndexGenerationParams &params);
 
-    angle::Result generatePrimitiveRestartPointsBuffer(ContextMtl *contextMtl,
-                                                       const IndexGenerationParams &params,
-                                                       size_t *indicesGenerated);
-
-    angle::Result generatePrimitiveRestartLinesBuffer(ContextMtl *contextMtl,
-                                                      const IndexGenerationParams &params,
-                                                      size_t *indicesGenerated);
-
-    angle::Result generatePrimitiveRestartTrianglesBuffer(ContextMtl *contextMtl,
-                                                          const IndexGenerationParams &params,
-                                                          size_t *indicesGenerated);
-
   private:
     // Index generator compute shaders:
     //  - First dimension: index type.
@@ -456,11 +444,6 @@ class IndexGeneratorUtils final : angle::NonCopyable
     angle::Result generateLineLoopLastSegmentFromElementsArrayCPU(
         ContextMtl *contextMtl,
         const IndexGenerationParams &params);
-
-    angle::Result generatePrimitiveRestartBuffer(ContextMtl *contextMtl,
-                                                 unsigned numVerticesPerPrimitive,
-                                                 const IndexGenerationParams &params,
-                                                 size_t *indicesGenerated);
 
     IndexConversionShaderArray mIndexConversionShaders;
 
@@ -749,12 +732,6 @@ class RenderUtils : angle::NonCopyable
                                                  const angle::Format &srcAngleFormat,
                                                  const VertexFormatConvertParams &params);
 
-    angle::Result generatePrimitiveRestartPointsBuffer(ContextMtl *contextMtl,
-                                                       const IndexGenerationParams &params,
-                                                       size_t *indicesGenerated);
-    angle::Result generatePrimitiveRestartLinesBuffer(ContextMtl *contextMtl,
-                                                      const IndexGenerationParams &params,
-                                                      size_t *indicesGenerated);
     angle::Result generatePrimitiveRestartTrianglesBuffer(ContextMtl *contextMtl,
                                                           const IndexGenerationParams &params,
                                                           size_t *indicesGenerated);
