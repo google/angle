@@ -1544,6 +1544,8 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 361623543 WIN INTEL OPENGL : ClearTextureEXTTest.StencilTexture/* = SKIP
 361623543 WIN INTEL OPENGL : FramebufferTest_ES31.ClearTextureEXT2DMSStencil/* = SKIP
 361623543 LINUX INTEL OPENGL : FramebufferTest_ES31.ClearTextureEXT2DMSStencil/* = SKIP
+384967031 WIN INTEL OPENGL : ClearTextureEXTTestES31*.ClearCubeMapArray/* = SKIP
+384967031 WIN INTEL OPENGL : ClearTextureEXTTestES31Unrenderable.ClearRGB9E5/* = SKIP
 
 // MSRTT D3D11 failures
 40644740 D3D11 : MultisampledRenderToTextureES3Test.MultipleLevelsMultisampleMRTDraw2DColor/* = SKIP
