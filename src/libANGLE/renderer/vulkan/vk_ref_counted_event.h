@@ -309,9 +309,55 @@ class RefCountedEventArrayWithAccessFlags final : public RefCountedEventArray
         }
         mBitMask.reset();
     }
+    bool hasEventAndAccess(EventStage eventStage, VkAccessFlags accessType) const
+    {
+        return mBitMask.test(eventStage) && (mAccessFlags[eventStage] & accessType) == accessType;
+    }
 
   private:
     angle::PackedEnumMap<EventStage, VkAccessFlags> mAccessFlags;
+};
+
+class RefCountedEventWithAccessFlags final
+{
+  public:
+    RefCountedEventWithAccessFlags() : mAccessFlags(0) {}
+
+    void release(Renderer *renderer) { mEvent.release(renderer); }
+    void release(Context *context) { mEvent.release(context); }
+    void releaseToEventCollector(RefCountedEventCollector *eventCollector)
+    {
+        eventCollector->emplace_back(std::move(mEvent));
+        mAccessFlags = 0;
+    }
+    RefCountedEventWithAccessFlags &operator=(RefCountedEventWithAccessFlags &&other)
+    {
+        mEvent             = std::move(other.mEvent);
+        mAccessFlags       = other.mAccessFlags;
+        other.mAccessFlags = 0;
+        return *this;
+    }
+
+    void setEventAndAccessFlags(const RefCountedEvent &event, VkAccessFlags accessFlags)
+    {
+        mEvent       = event;
+        mAccessFlags = accessFlags;
+    }
+
+    const RefCountedEvent &getEvent() const { return mEvent; }
+    VkAccessFlags getAccessFlags() const
+    {
+        ASSERT(mEvent.valid());
+        return mAccessFlags;
+    }
+
+    bool valid() const { return mEvent.valid(); }
+
+    EventStage getEventStage() const { return mEvent.getEventStage(); }
+
+  private:
+    RefCountedEvent mEvent;
+    VkAccessFlags mAccessFlags;
 };
 
 // Only used by RenderPassCommandBufferHelper

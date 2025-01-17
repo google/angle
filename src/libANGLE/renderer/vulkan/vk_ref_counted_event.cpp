@@ -156,7 +156,11 @@ void RefCountedEventArray::releaseToEventCollector(RefCountedEventCollector *eve
 
 bool RefCountedEventArray::initEventAtStage(Context *context, EventStage eventStage)
 {
-    ASSERT(!mBitMask[eventStage]);
+    if (mBitMask[eventStage])
+    {
+        return true;
+    }
+
     // Create the event if we have not yet so. Otherwise just use the already created event.
     if (!mEvents[eventStage].init(context, eventStage))
     {
