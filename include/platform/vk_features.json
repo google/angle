@@ -1610,6 +1610,14 @@
             "issue": "https://issuetracker.google.com/336844257"
         },
         {
+            "name": "use_vkEvent_for_buffer_barrier",
+            "category": "Features",
+            "description": [
+                "Uses VkEvent instead of VkCmdPipelineBarrier for buffer barriers"
+            ],
+            "issue": "https://issues.angleproject.org/360274928"
+        },
+        {
             "name": "supports_synchronization2",
             "category": "Features",
             "description": [

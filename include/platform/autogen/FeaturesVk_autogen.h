@@ -1232,6 +1232,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo useVkEventForBufferBarrier = {
+        "useVkEventForBufferBarrier",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
     FeatureInfo supportsSynchronization2 = {
         "supportsSynchronization2",
         FeatureCategory::VulkanFeatures,
