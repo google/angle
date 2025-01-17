@@ -2885,6 +2885,7 @@ TEST_P(FramebufferFetchES31, ReopenRenderPass)
     else
     {
         fs << "#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require\n";
+        fs << "layout(noncoherent) ";
     }
     fs << R"(inout highp vec4 color;
 void main (void)
@@ -2943,6 +2944,7 @@ void main()
     else
     {
         fs << "#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require\n";
+        fs << "layout(noncoherent) ";
     }
     fs << R"(inout highp vec4 color;
 void main (void)
@@ -3021,6 +3023,7 @@ void main()
     else
     {
         fs << "#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require\n";
+        fs << "layout(noncoherent) ";
     }
     fs << R"(inout highp vec4 color;
 void main (void)

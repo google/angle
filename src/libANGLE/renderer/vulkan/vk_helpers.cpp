@@ -7157,13 +7157,18 @@ angle::Result ImageHelper::initImplicitMultisampledRenderToTexture(
         hasLazilyAllocatedMemory ? VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT : 0;
     constexpr VkImageUsageFlags kColorFlags =
         VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
-    constexpr VkImageUsageFlags kDepthStencilFlags =
-        VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
+
+    // Request input attachment flag iff supportsShaderFramebufferFetchDepthStencil is enabled.
+    const VkImageUsageFlags depthStencilFlags =
+        VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT |
+        ((context->getFeatures().supportsShaderFramebufferFetchDepthStencil.enabled)
+             ? VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT
+             : 0);
 
     const VkImageUsageFlags kMultisampledUsageFlags =
         kLazyFlags |
         (resolveImage.getAspectFlags() == VK_IMAGE_ASPECT_COLOR_BIT ? kColorFlags
-                                                                    : kDepthStencilFlags);
+                                                                    : depthStencilFlags);
     const VkImageCreateFlags kMultisampledCreateFlags =
         hasProtectedContent ? VK_IMAGE_CREATE_PROTECTED_BIT : 0;
 
