@@ -778,17 +778,17 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     void onPreSwap();
 
-    Program *getActiveLinkedProgram() const
+    ANGLE_INLINE Program *getActiveLinkedProgram() const
     {
         Program *program = mState.getLinkedProgram(this);
-        if (program)
+        if (ANGLE_LIKELY(program))
         {
             return program;
         }
         return getActiveLinkedProgramPPO();
     }
 
-    Program *getActiveLinkedProgramPPO() const;
+    ANGLE_NOINLINE Program *getActiveLinkedProgramPPO() const;
 
     // EGL_ANGLE_power_preference implementation.
     egl::Error releaseHighPowerGPU();
