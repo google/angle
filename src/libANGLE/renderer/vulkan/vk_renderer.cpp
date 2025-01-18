@@ -364,7 +364,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     // http://anglebug.com/42264930
     // http://anglebug.com/42265542
     //
-    // Occassionally, this is due to VVL's lack of support for some extensions.  For example,
+    // Occasionally, this is due to VVL's lack of support for some extensions.  For example,
     // syncval doesn't properly account for VK_EXT_fragment_shader_interlock, which gives
     // synchronization guarantees without the need for an image barrier.
     // https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/4387
@@ -770,7 +770,7 @@ DebugUtilsMessenger(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
     // Aesthetic value based on length of the function name, line number, etc.
     constexpr size_t kStartIndent = 28;
 
-    // Output the debug marker hierarchy under which this error has occured.
+    // Output the debug marker hierarchy under which this error has occurred.
     size_t indent = kStartIndent;
     if (callbackData->queueLabelCount > 0)
     {
@@ -1214,7 +1214,7 @@ size_t StorePipelineCacheVkChunks(vk::GlobalOps *globalOps,
         isMissing.resize(chunkInfos.size());
         numChunksToStore = 0;
 
-        // Defer storing chunks until all missing chunks are found to avoid unecessary stores.
+        // Defer storing chunks until all missing chunks are found to avoid unnecessary stores.
         size_t chunkIndex = chunkInfos.size();
         while (chunkIndex > 0)
         {
@@ -5259,7 +5259,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // automatically deduce this support.
     //
     // http://issuetracker.google.com/376899587
-    // Advanced blend emulation depends on this functionaly, lack of which prevents support for
+    // Advanced blend emulation depends on this functionally, lack of which prevents support for
     // ES 3.2; exposeNonConformantExtensionsAndVersions is used to force this.
     const bool isMesaAtLeast22_0_0 = mesaVersion.major >= 22;
     const bool supportsFramebufferFetchInSurface =
@@ -5524,7 +5524,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
 
     // The following drivers are known to key the pipeline cache blobs with vertex input and
     // fragment output state, causing draw-time pipeline creation to miss the cache regardless of
-    // warmup:
+    // warm up:
     //
     // - ARM drivers
     // - Imagination drivers
@@ -5548,7 +5548,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // On SwiftShader, no data is retrieved from the pipeline cache, so there is no reason to
     // serialize it or put it in the blob cache.
     // For Windows Nvidia Vulkan driver older than 520, Vulkan pipeline cache will only generate one
-    // single huge cache for one process shared by all graphics piplines in the same process, which
+    // single huge cache for one process shared by all graphics pipelines in the same process, which
     // can be huge.
     const bool nvVersionLessThan520 = isNvidia && (nvidiaVersion.major < 520u);
     ANGLE_FEATURE_CONDITION(&mFeatures, hasEffectivePipelineCacheSerialization,
@@ -5587,7 +5587,8 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // - VK_EXT_graphics_pipeline_library is not supported, and the program cache is not warmed up:
     //   If the pipeline cache is being warmed up at link time, the blobs corresponding to each
     //   program is individually retrieved and stored in the blob cache already.
-    // - VK_EXT_graphics_pipeline_library is supported, but monolithic pipelines are still prefered,
+    // - VK_EXT_graphics_pipeline_library is supported, but monolithic pipelines are still
+    // preferred,
     //   and the cost of syncing the large cache is acceptable.
     //
     // Otherwise monolithic pipelines are recreated on every run.

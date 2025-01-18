@@ -1140,11 +1140,11 @@ void ProgramExecutableVk::waitForGraphicsPostLinkTasks(
 
     if (!mWarmUpGraphicsPipelineDesc.keyEqual(currentGraphicsPipelineDesc, subset))
     {
-        // The GraphicsPipelineDesc used for warmup differs from the one used by the draw call.
-        // There is no need to wait for the warmup tasks to complete.
+        // The GraphicsPipelineDesc used for warm up differs from the one used by the draw call.
+        // There is no need to wait for the warm up tasks to complete.
         ANGLE_PERF_WARNING(
             contextVk->getDebug(), GL_DEBUG_SEVERITY_LOW,
-            "GraphicsPipelineDesc used for warmup differs from the one used by draw.");
+            "GraphicsPipelineDesc used for warm up differs from the one used by draw.");
 
         // If the warm up tasks are finished anyway, let |waitForPostLinkTasksImpl| clean them up.
         if (!angle::WaitableEvent::AllReady(&mExecutable->getPostLinkSubTaskWaitableEvents()))

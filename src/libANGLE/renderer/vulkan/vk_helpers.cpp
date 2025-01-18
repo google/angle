@@ -4604,7 +4604,7 @@ angle::Result DynamicDescriptorPool::getOrAllocateDescriptorSet(
         return angle::Result::Continue;
     }
 
-    // Try to allocate from the existing pool (or recycle from grabage list)
+    // Try to allocate from the existing pool (or recycle from garbage list)
     success = allocateFromExistingPool(context, descriptorSetLayout, descriptorSetOut);
 
     // Try to recycle from the garbage list.
@@ -7193,7 +7193,7 @@ angle::Result ImageHelper::initImplicitMultisampledRenderToTexture(
 
     // If this ever fails, it can be retried without the LAZILY_ALLOCATED flag (which will probably
     // still fail), but ideally that means GL_EXT_multisampled_render_to_texture should not be
-    // advertized on this platform in the first place.
+    // advertised on this platform in the first place.
     ANGLE_TRY(initMemoryAndNonZeroFillIfNeeded(
         context, hasProtectedContent, memoryProperties, kMultisampledMemoryFlags,
         vk::MemoryAllocationType::ImplicitMultisampledRenderToTextureImage));

@@ -129,7 +129,7 @@ enum class ImageLayout
     DepthReadStencilReadFragmentShaderRead,
     DepthReadStencilReadAllShadersRead,
 
-    // The GENERAL layout is used when there's a feedback loop.  For depth/stencil it does't matter
+    // The GENERAL layout is used when there's a feedback loop.  For depth/stencil it doesn't matter
     // which aspect is participating in feedback and whether the other aspect is read-only.
     ColorWriteFragmentShaderFeedback,
     ColorWriteAllShadersFeedback,
@@ -1356,7 +1356,7 @@ struct CommandsState
 // How the ImageHelper object is being used by the renderpass
 enum class RenderPassUsage
 {
-    // Attached to the render taget of the current renderpass commands. It could be read/write or
+    // Attached to the render target of the current renderpass commands. It could be read/write or
     // read only access.
     RenderTargetAttachment,
     // This is special case of RenderTargetAttachment where the render target access is read only.
@@ -1919,7 +1919,7 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     const gl::Rectangle &getRenderArea() const { return mRenderArea; }
 
     // If render pass is started with a small render area due to a small scissor, and if a new
-    // larger scissor is specified, grow the render area to accomodate it.
+    // larger scissor is specified, grow the render area to accommodate it.
     void growRenderArea(ContextVk *contextVk, const gl::Rectangle &newRenderArea);
 
     void resumeTransformFeedback();

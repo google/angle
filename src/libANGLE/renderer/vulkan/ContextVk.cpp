@@ -2160,7 +2160,7 @@ angle::Result ContextVk::createGraphicsPipeline()
     ProgramExecutableVk *executableVk = vk::GetImpl(mState.getProgramExecutable());
     ASSERT(executableVk);
 
-    // Wait for any warmup task if necessary
+    // Wait for any warm up task if necessary
     executableVk->waitForGraphicsPostLinkTasks(this, *mGraphicsPipelineDesc);
 
     vk::PipelineCacheAccess pipelineCache;
@@ -6009,7 +6009,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                             // If VK_EXT_depth_clip_control is not enabled, there's nothing needed
                             // for depth correction for EXT_clip_control.
                             // glState will be used to toggle control path of depth correction code
-                            // in SPIR-V tranform options.
+                            // in SPIR-V transform options.
                             if (getFeatures().supportsDepthClipControl.enabled)
                             {
                                 mGraphicsPipelineDesc->updateDepthClipControl(
@@ -6462,7 +6462,7 @@ angle::Result ContextVk::invalidateCurrentShaderResources(gl::Command command)
         ANGLE_TRY(endRenderPassIfComputeReadAfterTransformFeedbackWrite());
     }
 
-    // Take care of implict layout transition by compute program access-after-read.
+    // Take care of implicit layout transition by compute program access-after-read.
     if (hasImages && command == gl::Command::Dispatch)
     {
         ANGLE_TRY(endRenderPassIfComputeAccessAfterGraphicsImageAccess());
@@ -8347,7 +8347,7 @@ angle::Result ContextVk::onSyncObjectInit(vk::SyncHelper *syncHelper, SyncFenceS
 
     onRenderPassFinished(RenderPassClosureReason::SyncObjectInit);
 
-    // Mark the context as having a deffered flush.  This is later used to close the render pass and
+    // Mark the context as having a deferred flush.  This is later used to close the render pass and
     // cause a submission in this context if another context wants to wait on the fence while the
     // original context never issued a submission naturally.  Note that this also takes care of
     // contexts that think they issued a submission (through glFlush) but that the submission got

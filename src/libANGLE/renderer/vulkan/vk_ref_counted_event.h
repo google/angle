@@ -289,7 +289,7 @@ class RefCountedEventsGarbage final
 // events recycler system. The first level is per ShareGroupVk, which owns RefCountedEventRecycler.
 // RefCountedEvent garbage is added to it without any lock. Once GPU complete, the refCount is
 // decremented. When the last refCount goes away, it goes into mEventsToReset. Note that since
-// ShareGoupVk access is already protected by context share lock at the API level, so no lock is
+// ShareGroupVk access is already protected by context share lock at the API level, so no lock is
 // taken and reference counting is not atomic. At RefCountedEventsGarbageRecycler::cleanup time, the
 // entire mEventsToReset is added into renderer's list. The renderer owns RefCountedEventRecycler
 // list, and all access to it is protected with simple mutex lock. When any context calls
