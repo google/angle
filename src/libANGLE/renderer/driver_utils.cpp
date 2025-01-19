@@ -290,6 +290,7 @@ std::string GetVendorString(uint32_t vendorId)
             return "NVIDIA";
         case VENDOR_ID_POWERVR:
             return "Imagination Technologies";
+        case VENDOR_ID_QUALCOMM_DXGI:
         case VENDOR_ID_QUALCOMM:
             return "Qualcomm";
         case VENDOR_ID_SAMSUNG:

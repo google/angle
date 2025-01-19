@@ -316,6 +316,7 @@ bool GetSystemInfoVulkanWithICD(SystemInfo *info, vk::ICD preferredICD)
                 gpu.detailedDriverVersion.patch    = properties.driverVersion & 0x3F;
                 break;
             case kVendorID_Qualcomm:
+            case kVendorID_Qualcomm_DXGI:
                 gpu.driverVendor = "Qualcomm Technologies, Inc";
                 if (properties.driverVersion & 0x80000000)
                 {

@@ -101,19 +101,20 @@ bool GetSystemInfo(SystemInfo *info);
 bool GetSystemInfoVulkan(SystemInfo *info);
 
 // Known PCI vendor IDs
-constexpr VendorID kVendorID_AMD       = 0x1002;
-constexpr VendorID kVendorID_ARM       = 0x13B5;
-constexpr VendorID kVendorID_Broadcom  = 0x14E4;
-constexpr VendorID kVendorID_GOOGLE    = 0x1AE0;
-constexpr VendorID kVendorID_ImgTec    = 0x1010;
-constexpr VendorID kVendorID_Intel     = 0x8086;
-constexpr VendorID kVendorID_NVIDIA    = 0x10DE;
-constexpr VendorID kVendorID_Qualcomm  = 0x5143;
-constexpr VendorID kVendorID_Samsung   = 0x144D;
-constexpr VendorID kVendorID_VMWare    = 0x15ad;
-constexpr VendorID kVendorID_Apple     = 0x106B;
-constexpr VendorID kVendorID_Microsoft = 0x1414;
-constexpr VendorID kVendorID_VirtIO    = 0x1AF4;
+constexpr VendorID kVendorID_AMD           = 0x1002;
+constexpr VendorID kVendorID_ARM           = 0x13B5;
+constexpr VendorID kVendorID_Broadcom      = 0x14E4;
+constexpr VendorID kVendorID_GOOGLE        = 0x1AE0;
+constexpr VendorID kVendorID_ImgTec        = 0x1010;
+constexpr VendorID kVendorID_Intel         = 0x8086;
+constexpr VendorID kVendorID_NVIDIA        = 0x10DE;
+constexpr VendorID kVendorID_Qualcomm      = 0x5143;
+constexpr VendorID kVendorID_Qualcomm_DXGI = 0x4D4F4351;
+constexpr VendorID kVendorID_Samsung       = 0x144D;
+constexpr VendorID kVendorID_VMWare        = 0x15ad;
+constexpr VendorID kVendorID_Apple         = 0x106B;
+constexpr VendorID kVendorID_Microsoft     = 0x1414;
+constexpr VendorID kVendorID_VirtIO        = 0x1AF4;
 
 // Known non-PCI (i.e. Khronos-registered) vendor IDs
 constexpr VendorID kVendorID_Vivante     = 0x10001;
