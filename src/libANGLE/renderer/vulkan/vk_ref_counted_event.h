@@ -26,6 +26,7 @@ namespace rx
 {
 namespace vk
 {
+class Context;
 enum class ImageLayout;
 
 // There are two ways to implement a barrier: Using VkCmdPipelineBarrier or VkCmdWaitEvents. The

@@ -61,6 +61,7 @@ enum class DescriptorSetIndex : uint32_t
 
 namespace vk
 {
+class Context;
 class BufferHelper;
 class DynamicDescriptorPool;
 class SamplerHelper;

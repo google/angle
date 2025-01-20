@@ -1410,7 +1410,7 @@ angle::Result CLCommandQueueVk::addMemoryDependencies(cl::Memory *clMem)
     bool insertBarrier = false;
     if (clMem->getFlags().intersects(CL_MEM_READ_WRITE))
     {
-        // Texel buffers have backing buffer obects
+        // Texel buffers have backing buffer objects
         if (mDependencyTracker.contains(clMem) || mDependencyTracker.contains(parentMem) ||
             mDependencyTracker.size() == kMaxDependencyTrackerSize)
         {
@@ -1903,7 +1903,7 @@ angle::Result CLCommandQueueVk::submitCommands()
     // Kick off renderer submit
     ANGLE_TRY(mContext->getRenderer()->submitCommands(mContext, getProtectionType(),
                                                       egl::ContextPriority::Medium, nullptr,
-                                                      nullptr, mLastFlushedQueueSerial));
+                                                      nullptr, {}, mLastFlushedQueueSerial));
 
     mLastSubmittedQueueSerial = mLastFlushedQueueSerial;
 

@@ -597,13 +597,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         mRenderPassCommands->fragmentShadingRateImageRead(image);
     }
 
-    void finalizeImageLayout(const vk::ImageHelper *image, UniqueSerial imageSiblingSerial)
-    {
-        if (mRenderPassCommands->started())
-        {
-            mRenderPassCommands->finalizeImageLayout(this, image, imageSiblingSerial);
-        }
-    }
+    void finalizeImageLayout(vk::ImageHelper *image, UniqueSerial imageSiblingSerial);
 
     angle::Result getOutsideRenderPassCommandBuffer(
         const vk::CommandBufferAccess &access,
@@ -633,13 +627,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result submitStagedTextureUpdates()
     {
         // Staged updates are recorded in outside RP command buffer, submit them.
-        return flushOutsideRenderPassCommands();
-    }
-
-    angle::Result onEGLImageQueueChange()
-    {
-        // Flush the barrier inserted to change the queue and layout of an EGL image.  Another
-        // thread may start using this image without issuing a sync object.
         return flushOutsideRenderPassCommands();
     }
 

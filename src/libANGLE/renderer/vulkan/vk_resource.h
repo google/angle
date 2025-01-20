@@ -97,7 +97,7 @@ class ResourceUse final
         return false;
     }
 
-    // Returns true if it contains a serial that is greater than
+    // Compare the recorded serial with the parameter
     bool operator>(const QueueSerial &queuSerial) const
     {
         return mSerials.size() > queuSerial.getIndex() &&

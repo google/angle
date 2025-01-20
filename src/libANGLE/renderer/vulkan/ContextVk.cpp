@@ -3756,8 +3756,10 @@ angle::Result ContextVk::submitCommands(const vk::Semaphore *signalSemaphore,
     ASSERT(QueueSerialsHaveDifferentIndexOrSmaller(mLastSubmittedQueueSerial,
                                                    mLastFlushedQueueSerial));
 
-    ANGLE_TRY(mRenderer->submitCommands(this, getProtectionType(), mContextPriority,
-                                        signalSemaphore, externalFence, mLastFlushedQueueSerial));
+    finalizeAllForeignImages();
+    ANGLE_TRY(mRenderer->submitCommands(
+        this, getProtectionType(), mContextPriority, signalSemaphore, externalFence,
+        std::move(mImagesToTransitionToForeign), mLastFlushedQueueSerial));
 
     mLastSubmittedQueueSerial = mLastFlushedQueueSerial;
     mSubmittedResourceUse.setQueueSerial(mLastSubmittedQueueSerial);
@@ -8042,6 +8044,19 @@ angle::Result ContextVk::onImageReleaseToExternal(const vk::ImageHelper &image)
             RenderPassClosureReason::ImageUseThenReleaseToExternal);
     }
     return angle::Result::Continue;
+}
+
+void ContextVk::finalizeImageLayout(vk::ImageHelper *image, UniqueSerial imageSiblingSerial)
+{
+    if (mRenderPassCommands->started())
+    {
+        mRenderPassCommands->finalizeImageLayout(this, image, imageSiblingSerial);
+    }
+
+    if (image->isForeignImage() && !image->isReleasedToForeign())
+    {
+        finalizeForeignImage(image);
+    }
 }
 
 angle::Result ContextVk::beginNewRenderPass(

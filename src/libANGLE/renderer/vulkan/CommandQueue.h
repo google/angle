@@ -233,6 +233,7 @@ class CommandPoolAccess : angle::NonCopyable
         ProtectionType protectionType,
         egl::ContextPriority priority,
         CommandBatch *batchOut,
+        std::vector<VkImageMemoryBarrier> &&imagesToTransitionToForeign,
         std::vector<VkSemaphore> *waitSemaphoresOut,
         std::vector<VkPipelineStageFlags> *waitSemaphoreStageMasksOut);
 
@@ -349,6 +350,7 @@ class CommandQueue : angle::NonCopyable
                                  egl::ContextPriority priority,
                                  VkSemaphore signalSemaphore,
                                  SharedExternalFence &&externalFence,
+                                 std::vector<VkImageMemoryBarrier> &&imagesToTransitionToForeign,
                                  const QueueSerial &submitQueueSerial);
 
     angle::Result queueSubmitOneOff(ErrorContext *context,

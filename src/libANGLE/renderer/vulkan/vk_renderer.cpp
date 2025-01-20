@@ -5367,7 +5367,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // automatically deduce this support.
     //
     // http://issuetracker.google.com/376899587
-    // Advanced blend emulation depends on this functionally, lack of which prevents support for
+    // Advanced blend emulation depends on this functionality, lack of which prevents support for
     // ES 3.2; exposeNonConformantExtensionsAndVersions is used to force this.
     const bool supportsFramebufferFetchInSurface =
         IsAndroid() || !isIntel ||
@@ -5695,8 +5695,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     //   If the pipeline cache is being warmed up at link time, the blobs corresponding to each
     //   program is individually retrieved and stored in the blob cache already.
     // - VK_EXT_graphics_pipeline_library is supported, but monolithic pipelines are still
-    // preferred,
-    //   and the cost of syncing the large cache is acceptable.
+    //   preferred, and the cost of syncing the large cache is acceptable.
     //
     // Otherwise monolithic pipelines are recreated on every run.
     const bool hasNoPipelineWarmUp = !mFeatures.supportsGraphicsPipelineLibrary.enabled &&
@@ -6567,12 +6566,14 @@ void Renderer::initializeDeviceExtensionEntryPointsFromCore() const
     }
 }
 
-angle::Result Renderer::submitCommands(vk::ErrorContext *context,
-                                       vk::ProtectionType protectionType,
-                                       egl::ContextPriority contextPriority,
-                                       const vk::Semaphore *signalSemaphore,
-                                       const vk::SharedExternalFence *externalFence,
-                                       const QueueSerial &submitQueueSerial)
+angle::Result Renderer::submitCommands(
+    vk::ErrorContext *context,
+    vk::ProtectionType protectionType,
+    egl::ContextPriority contextPriority,
+    const vk::Semaphore *signalSemaphore,
+    const vk::SharedExternalFence *externalFence,
+    std::vector<VkImageMemoryBarrier> &&imagesToTransitionToForeign,
+    const QueueSerial &submitQueueSerial)
 {
     ASSERT(signalSemaphore == nullptr || signalSemaphore->valid());
     const VkSemaphore signalVkSemaphore =
@@ -6584,9 +6585,9 @@ angle::Result Renderer::submitCommands(vk::ErrorContext *context,
         externalFenceCopy = *externalFence;
     }
 
-    ANGLE_TRY(mCommandQueue.submitCommands(context, protectionType, contextPriority,
-                                           signalVkSemaphore, std::move(externalFenceCopy),
-                                           submitQueueSerial));
+    ANGLE_TRY(mCommandQueue.submitCommands(
+        context, protectionType, contextPriority, signalVkSemaphore, std::move(externalFenceCopy),
+        std::move(imagesToTransitionToForeign), submitQueueSerial));
 
     ANGLE_TRY(mCommandQueue.postSubmitCheck(context));
 
@@ -6622,7 +6623,7 @@ angle::Result Renderer::submitPriorityDependency(vk::ErrorContext *context,
             signalSemaphore = &semaphore.get().get();
         }
         ANGLE_TRY(submitCommands(context, protectionType, srcContextPriority, signalSemaphore,
-                                 nullptr, queueSerial));
+                                 nullptr, {}, queueSerial));
     }
 
     // Submit only Wait Semaphore into the destination Priority (VkQueue).

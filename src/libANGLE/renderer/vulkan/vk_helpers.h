@@ -146,6 +146,7 @@ enum class ImageLayout
     ExternalPreInitialized,
     ExternalShadersReadOnly,
     ExternalShadersWrite,
+    ForeignAccess,
     TransferSrc,
     TransferDst,
     TransferSrcDst,
@@ -176,6 +177,40 @@ ImageLayout GetImageLayoutFromGLImageLayout(ErrorContext *context, GLenum layout
 GLenum ConvertImageLayoutToGLImageLayout(ImageLayout imageLayout);
 
 VkImageLayout ConvertImageLayoutToVkImageLayout(Renderer *renderer, ImageLayout imageLayout);
+
+class ImageHelper;
+
+// Abstracts contexts where command recording is done in response to API calls, and includes
+// data structures that are Vulkan-related, need to be accessed by the internals of |namespace vk|
+// object, but are otherwise managed by these API objects.
+class Context : public ErrorContext
+{
+  public:
+    Context(Renderer *renderer);
+    virtual ~Context() override;
+
+    RefCountedEventsGarbageRecycler *getRefCountedEventsGarbageRecycler()
+    {
+        return mShareGroupRefCountedEventsGarbageRecycler;
+    }
+
+    void onForeignImageUse(ImageHelper *image);
+    void finalizeForeignImage(ImageHelper *image);
+    void finalizeAllForeignImages();
+
+  protected:
+    // Stash the ShareGroupVk's RefCountedEventRecycler here ImageHelper to conveniently access
+    RefCountedEventsGarbageRecycler *mShareGroupRefCountedEventsGarbageRecycler;
+    // List of foreign images that are currently used in recorded commands but haven't been
+    // submitted.  The use of these images has not yet finalized.
+    angle::HashSet<ImageHelper *> mForeignImagesInUse;
+    // List of image barriers for foreign images to transition them back to the FOREIGN queue on
+    // submission.  Once the use of an ImageHelper is finalized, e.g. because it is being deleted,
+    // or the commands are about to be submitted, a queue family ownership transfer is generated for
+    // it (thus far residing in |mForeignImagesInUse|) and added to |mImagesToTransitionToForeign|,
+    // it's marked as belonging to the foreign queue, and removed from |mForeignImagesInUse|.
+    std::vector<VkImageMemoryBarrier> mImagesToTransitionToForeign;
+};
 
 // A dynamic buffer is conceptually an infinitely long buffer. Each time you write to the buffer,
 // you will always write to a previously unused portion. After a series of writes, you must flush
@@ -1079,7 +1114,7 @@ class BufferHelper : public ReadWriteResource
                            OutsideRenderPassCommandBuffer *commandBuffer);
 
     // Returns true if the image is owned by an external API or instance.
-    bool isReleasedToExternal() const;
+    bool isReleasedToExternal() const { return mIsReleasedToExternal; }
 
     void recordReadBarrier(Context *context,
                            VkAccessFlags readAccessType,
@@ -1235,9 +1270,6 @@ class PackedClearValuesArray final
   private:
     gl::AttachmentArray<VkClearValue> mValues;
 };
-
-class ImageHelper;
-using ImageHelperPtr = ImageHelper *;
 
 // Reference to a render pass attachment (color or depth/stencil) alongside render-pass-related
 // tracking such as when the attachment is last written to or invalidated.  This is used to
@@ -2754,7 +2786,18 @@ class ImageHelper final : public Resource, public angle::Subject
                            OutsideRenderPassCommandBuffer *commandBuffer);
 
     // Returns true if the image is owned by an external API or instance.
-    bool isReleasedToExternal() const;
+    bool isReleasedToExternal() const { return mIsReleasedToExternal; }
+    // Returns true if the image was sourced from the FOREIGN queue.
+    bool isForeignImage() const { return mIsForeignImage; }
+    // Returns true if the image is owned by a foreign entity.
+    bool isReleasedToForeign() const
+    {
+        return mCurrentDeviceQueueIndex == kForeignDeviceQueueIndex;
+    }
+
+    // Marks the image as having been used by the FOREIGN queue.  On the next barrier, it is
+    // acquired from the FOREIGN queue again automatically.
+    VkImageMemoryBarrier releaseToForeign(Renderer *renderer);
 
     gl::LevelIndex getFirstAllocatedLevel() const
     {
@@ -2831,7 +2874,7 @@ class ImageHelper final : public Resource, public angle::Subject
                              uint32_t layer,
                              void *pixels);
 
-    angle::Result CalculateBufferInfo(ContextVk *contextVk,
+    angle::Result calculateBufferInfo(ContextVk *contextVk,
                                       const gl::Extents &glExtents,
                                       const gl::InternalFormat &formatInfo,
                                       const gl::PixelUnpackState &unpack,
@@ -3342,6 +3385,8 @@ class ImageHelper final : public Resource, public angle::Subject
 
     // Whether ANGLE currently has ownership of this resource or it's released to external.
     bool mIsReleasedToExternal;
+    // Whether this image came from a foreign source.
+    bool mIsForeignImage;
 
     // For imported images
     YcbcrConversionDesc mYcbcrConversionDesc;

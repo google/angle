@@ -1088,7 +1088,7 @@ angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
         GLuint inputDepthPitch         = 0;
         GLuint inputSkipBytes          = 0;
 
-        ANGLE_TRY(mImage->CalculateBufferInfo(
+        ANGLE_TRY(mImage->calculateBufferInfo(
             contextVk, gl::Extents(area.width, area.height, area.depth), formatInfo, unpack, type,
             index.usesTex3D(), &inputRowPitch, &inputDepthPitch, &inputSkipBytes));
 
@@ -3071,8 +3071,6 @@ angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
                             ImageMipLevels::EnabledLevels));
     }
 
-    ANGLE_TRY(performImageQueueTransferIfNecessary(contextVk));
-
     const bool hasRenderToTextureEXT =
         contextVk->getFeatures().supportsMultisampledRenderToSingleSampled.enabled;
 
@@ -3185,37 +3183,6 @@ angle::Result TextureVk::flushImageStagedUpdates(ContextVk *contextVk)
     return mImage->flushStagedUpdates(contextVk, firstLevelGL,
                                       firstLevelGL + getImageViewLevelCount(), firstLayer,
                                       firstLayer + getImageViewLayerCount(), mRedefinedLevels);
-}
-
-angle::Result TextureVk::performImageQueueTransferIfNecessary(ContextVk *contextVk)
-{
-    if (mImage->valid() && mImage->isQueueFamilyChangeNeccesary(contextVk->getDeviceQueueIndex()))
-    {
-        vk::ImageLayout newLayout = vk::ImageLayout::AllGraphicsShadersWrite;
-        if (mImage->getUsage() & VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT)
-        {
-            newLayout = vk::ImageLayout::ColorWrite;
-        }
-        else if (mImage->getUsage() & VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT)
-        {
-            newLayout = vk::ImageLayout::DepthWriteStencilWrite;
-        }
-        else if (mImage->getUsage() &
-                 (VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT))
-        {
-            newLayout = vk::ImageLayout::AllGraphicsShadersReadOnly;
-        }
-
-        vk::OutsideRenderPassCommandBuffer *commandBuffer;
-        vk::CommandBufferAccess access;
-        access.onExternalAcquireRelease(mImage);
-        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
-        mImage->changeLayoutAndQueue(contextVk, mImage->getAspectFlags(), newLayout,
-                                     contextVk->getDeviceQueueIndex(), commandBuffer);
-        ANGLE_TRY(contextVk->onEGLImageQueueChange());
-    }
-
-    return angle::Result::Continue;
 }
 
 void TextureVk::initSingleLayerRenderTargets(ContextVk *contextVk,
@@ -3609,8 +3576,6 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     }
 
     ANGLE_TRY(respecifyImageStorageIfNecessary(contextVk, source));
-
-    ANGLE_TRY(performImageQueueTransferIfNecessary(contextVk));
 
     // Initialize the image storage and flush the pixel buffer.
     const bool isGenerateMipmap = source == gl::Command::GenerateMipmap;

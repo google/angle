@@ -91,7 +91,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             0,
             ResourceAccess::ReadOnly,
             PipelineStage::InvalidEnum,
-            // We do not directly using this layout in SetEvent. We transit to other layout before using
+            // We do not directly use this layout in SetEvent. We transit to other layout before using
             EventStage::InvalidEnum,
             PipelineStageGroup::Other,
         },
@@ -464,7 +464,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             0,
             ResourceAccess::ReadOnly,
             PipelineStage::BottomOfPipe,
-            // We do not directly using this layout in SetEvent.
+            // We do not directly use this layout in SetEvent.
             EventStage::InvalidEnum,
             PipelineStageGroup::Other,
         },
@@ -509,7 +509,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             VK_ACCESS_MEMORY_WRITE_BIT,
             ResourceAccess::ReadOnly,
             PipelineStage::InvalidEnum,
-            // We do not directly using this layout in SetEvent. We transit to internal layout before using
+            // We do not directly use this layout in SetEvent. We transit to internal layout before using
             EventStage::InvalidEnum,
             PipelineStageGroup::Other,
         },
@@ -528,7 +528,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             ResourceAccess::ReadOnly,
             // In case of multiple destination stages, We barrier the earliest stage
             PipelineStage::TopOfPipe,
-            // We do not directly using this layout in SetEvent. We transit to internal layout before using
+            // We do not directly use this layout in SetEvent. We transit to internal layout before using
             EventStage::InvalidEnum,
             PipelineStageGroup::Other,
         },
@@ -547,7 +547,29 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             ResourceAccess::ReadWrite,
             // In case of multiple destination stages, We barrier the earliest stage
             PipelineStage::TopOfPipe,
-            // We do not directly using this layout in SetEvent. We transit to internal layout before using
+            // We do not directly use this layout in SetEvent. We transit to internal layout before using
+            EventStage::InvalidEnum,
+            PipelineStageGroup::Other,
+        },
+    },
+    {
+        ImageLayout::ForeignAccess,
+        ImageMemoryBarrierData{
+            "ForeignAccess",
+            VK_IMAGE_LAYOUT_GENERAL,
+            // Transition to: we don't expect to transition into ForeignAccess, that's done at
+            // submission time by the CommandQueue; the following value doesn't matter.
+            VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+            VK_PIPELINE_STAGE_HOST_BIT | VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+            // Transition to: see dstStageMask
+            0,
+            // Transition from: all writes must finish before barrier; it is unknown how the foreign
+            // entity has access the memory.
+            VK_ACCESS_MEMORY_WRITE_BIT,
+            ResourceAccess::ReadWrite,
+            // In case of multiple destination stages, We barrier the earliest stage
+            PipelineStage::TopOfPipe,
+            // We do not directly use this layout in SetEvent. We transit to internal layout before using
             EventStage::InvalidEnum,
             PipelineStageGroup::Other,
         },
@@ -618,7 +640,7 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             0,
             ResourceAccess::ReadOnly,
             PipelineStage::InvalidEnum,
-            // We do not directly using this layout in SetEvent.
+            // We do not directly use this layout in SetEvent.
             EventStage::InvalidEnum,
             PipelineStageGroup::Other,
         },
@@ -1444,6 +1466,49 @@ bool CanCopyWithTransfer(Renderer *renderer,
         renderer, dstFormatID, dstTilingMode, VK_FORMAT_FEATURE_TRANSFER_DST_BIT);
 
     return isTilingCompatible && srcFormatHasNecessaryFeature && dstFormatHasNecessaryFeature;
+}
+
+// Context implementation
+Context::Context(Renderer *renderer)
+    : ErrorContext(renderer), mShareGroupRefCountedEventsGarbageRecycler(nullptr)
+{}
+
+Context::~Context()
+{
+    ASSERT(mForeignImagesInUse.empty());
+}
+
+void Context::onForeignImageUse(ImageHelper *image)
+{
+    // The image might be used multiple times in the same frame, |mForeignImagesInUse| is a "set"
+    // so the image is tracked only once.
+    mForeignImagesInUse.insert(image);
+}
+
+void Context::finalizeForeignImage(ImageHelper *image)
+{
+    // The image must have been marked as in use, otherwise finalize is called while the initial use
+    // was missed.
+    ASSERT(mForeignImagesInUse.find(image) != mForeignImagesInUse.end());
+    // The image must not already be finalized.
+    ASSERT(
+        std::find_if(mImagesToTransitionToForeign.begin(), mImagesToTransitionToForeign.end(),
+                     [image = image->getImage().getHandle()](const VkImageMemoryBarrier &barrier) {
+                         return barrier.image == image;
+                     }) == mImagesToTransitionToForeign.end());
+
+    mImagesToTransitionToForeign.push_back(image->releaseToForeign(mRenderer));
+    mForeignImagesInUse.erase(image);
+}
+
+void Context::finalizeAllForeignImages()
+{
+    mImagesToTransitionToForeign.reserve(mImagesToTransitionToForeign.size() +
+                                         mForeignImagesInUse.size());
+    while (!mForeignImagesInUse.empty())
+    {
+        finalizeForeignImage(*mForeignImagesInUse.begin());
+    }
 }
 
 // PackedClearValuesArray implementation
@@ -5833,11 +5898,6 @@ void BufferHelper::releaseToExternal(DeviceQueueIndex externalQueueIndex,
     mIsReleasedToExternal = true;
 }
 
-bool BufferHelper::isReleasedToExternal() const
-{
-    return mIsReleasedToExternal;
-}
-
 void BufferHelper::recordReadBarrier(Context *context,
                                      VkAccessFlags readAccessType,
                                      VkPipelineStageFlags readStage,
@@ -6006,6 +6066,7 @@ void ImageHelper::resetCachedProperties()
     mCurrentLayout               = ImageLayout::Undefined;
     mCurrentDeviceQueueIndex     = kInvalidDeviceQueueIndex;
     mIsReleasedToExternal        = false;
+    mIsForeignImage              = false;
     mLastNonShaderReadOnlyLayout = ImageLayout::Undefined;
     mCurrentShaderReadStageMask  = 0;
     mFirstAllocatedLevel         = gl::LevelIndex(0);
@@ -6385,6 +6446,7 @@ angle::Result ImageHelper::initExternal(ErrorContext *context,
     mCurrentLayout               = initialLayout;
     mCurrentDeviceQueueIndex     = kInvalidDeviceQueueIndex;
     mIsReleasedToExternal        = false;
+    mIsForeignImage              = false;
     mLastNonShaderReadOnlyLayout = ImageLayout::Undefined;
     mCurrentShaderReadStageMask  = 0;
 
@@ -6752,7 +6814,8 @@ angle::Result ImageHelper::initializeNonZeroMemory(ErrorContext *context,
     {
         stagingBuffer.collectGarbage(renderer, queueSerial);
     }
-    mUse.setQueueSerial(queueSerial);
+    setQueueSerial(queueSerial);
+    ASSERT(!mIsForeignImage);
 
     return angle::Result::Continue;
 }
@@ -6792,6 +6855,7 @@ VkResult ImageHelper::initMemory(ErrorContext *context,
 
     mCurrentDeviceQueueIndex = context->getDeviceQueueIndex();
     mIsReleasedToExternal    = false;
+    mIsForeignImage          = false;
     *sizeOut                 = mAllocationSize;
 
     return VK_SUCCESS;
@@ -6823,7 +6887,11 @@ angle::Result ImageHelper::initMemoryAndNonZeroFillIfNeeded(
                  initMemory(context, memoryProperties, flags, 0, &memoryRequirements,
                             allocateDedicatedMemory, allocationType, &outputFlags, &outputSize));
 
-    if (renderer->getFeatures().allocateNonZeroMemory.enabled)
+    // Memory can only be non-zero initialized if the TRANSFER_DST usage is set.  This is normally
+    // the case, but not with |initImplicitMultisampledRenderToTexture| which creates a
+    // lazy-allocated transient image.
+    if (renderer->getFeatures().allocateNonZeroMemory.enabled &&
+        (mUsage & VK_IMAGE_USAGE_TRANSFER_DST_BIT) != 0)
     {
         ANGLE_TRY(initializeNonZeroMemory(context, hasProtectedContent, outputFlags, outputSize));
     }
@@ -6868,6 +6936,7 @@ angle::Result ImageHelper::initExternalMemory(ErrorContext *context,
     }
     mCurrentDeviceQueueIndex = currentDeviceQueueIndex;
     mIsReleasedToExternal    = false;
+    mIsForeignImage          = currentDeviceQueueIndex == kForeignDeviceQueueIndex;
 
     return angle::Result::Continue;
 }
@@ -7077,6 +7146,7 @@ void ImageHelper::init2DWeakReference(ErrorContext *context,
     mImageSerial             = renderer->getResourceSerialFactory().generateImageSerial();
     mCurrentDeviceQueueIndex = context->getDeviceQueueIndex();
     mIsReleasedToExternal    = false;
+    mIsForeignImage          = false;
     mCurrentLayout           = ImageLayout::Undefined;
     mLayerCount              = 1;
     mLevelCount              = 1;
@@ -7438,6 +7508,8 @@ void ImageHelper::changeLayoutAndQueue(Context *context,
                                        DeviceQueueIndex newDeviceQueueIndex,
                                        OutsideRenderPassCommandBuffer *commandBuffer)
 {
+    ASSERT(!mIsForeignImage);
+
     ASSERT(isQueueFamilyChangeNeccesary(newDeviceQueueIndex));
     VkSemaphore acquireNextImageSemaphore;
     // recordBarrierImpl should detect there is queue switch and fall back to pipelineBarrier
@@ -7503,9 +7575,31 @@ void ImageHelper::releaseToExternal(Context *context,
     mIsReleasedToExternal = true;
 }
 
-bool ImageHelper::isReleasedToExternal() const
+VkImageMemoryBarrier ImageHelper::releaseToForeign(Renderer *renderer)
 {
-    return mIsReleasedToExternal;
+    ASSERT(mIsForeignImage);
+
+    const ImageMemoryBarrierData barrierData = renderer->getImageMemoryBarrierData(mCurrentLayout);
+
+    VkImageMemoryBarrier barrier        = {};
+    barrier.sType                       = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+    barrier.srcAccessMask               = barrierData.srcAccessMask;
+    barrier.dstAccessMask               = VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT;
+    barrier.oldLayout                   = barrierData.layout;
+    barrier.newLayout                   = VK_IMAGE_LAYOUT_GENERAL;
+    barrier.srcQueueFamilyIndex         = renderer->getQueueFamilyIndex();
+    barrier.dstQueueFamilyIndex         = VK_QUEUE_FAMILY_FOREIGN_EXT;
+    barrier.image                       = mImage.getHandle();
+    barrier.subresourceRange.aspectMask = getAspectFlags();
+    barrier.subresourceRange.levelCount = mLevelCount;
+    barrier.subresourceRange.layerCount = mLayerCount;
+
+    mCurrentLayout               = ImageLayout::ForeignAccess;
+    mCurrentDeviceQueueIndex     = kForeignDeviceQueueIndex;
+    mLastNonShaderReadOnlyLayout = ImageLayout::Undefined;
+    mCurrentShaderReadStageMask  = 0;
+
+    return barrier;
 }
 
 LevelIndex ImageHelper::toVkLevel(gl::LevelIndex levelIndexGL) const
@@ -7651,6 +7745,13 @@ void ImageHelper::recordBarrierImpl(Context *context,
         mCurrentEvent.release(context);
     }
 
+    // The image has transitioned out of the FOREIGN queue.  Remember it so it can be transitioned
+    // back on submission.
+    if (mCurrentDeviceQueueIndex == kForeignDeviceQueueIndex)
+    {
+        context->onForeignImageUse(this);
+    }
+
     barrierImpl(renderer, aspectMask, newLayout, newDeviceQueueIndex, eventCollector, commandBuffer,
                 acquireNextImageSemaphoreOut);
 
@@ -7670,6 +7771,7 @@ void ImageHelper::recordBarrierOneOffImpl(Renderer *renderer,
 {
     // Release the event here to force pipelineBarrier.
     mCurrentEvent.release(renderer);
+    ASSERT(mCurrentDeviceQueueIndex != kForeignDeviceQueueIndex);
 
     barrierImpl(renderer, aspectMask, newLayout, newDeviceQueueIndex, nullptr, commandBuffer,
                 acquireNextImageSemaphoreOut);
@@ -7801,11 +7903,15 @@ void ImageHelper::updateLayoutAndBarrier(Context *context,
     // mCurrentEvent must be invalid if useVkEventForImageBarrieris disabled.
     ASSERT(renderer->getFeatures().useVkEventForImageBarrier.enabled || !mCurrentEvent.valid());
 
-    if (mCurrentDeviceQueueIndex != context->getDeviceQueueIndex())
+    const bool hasQueueChange = mCurrentDeviceQueueIndex != context->getDeviceQueueIndex();
+    if (hasQueueChange)
     {
         // Fallback to pipelineBarrier if the VkQueue has changed.
         barrierType              = BarrierType::Pipeline;
-        mCurrentDeviceQueueIndex = context->getDeviceQueueIndex();
+        if (mCurrentDeviceQueueIndex == kForeignDeviceQueueIndex)
+        {
+            context->onForeignImageUse(this);
+        }
     }
     else if (!mCurrentEvent.valid())
     {
@@ -7819,7 +7925,7 @@ void ImageHelper::updateLayoutAndBarrier(Context *context,
         newLayout = ImageLayout::SharedPresent;
     }
 
-    if (newLayout == mCurrentLayout)
+    if (newLayout == mCurrentLayout && !hasQueueChange)
     {
         if (mBarrierQueueSerial == queueSerial)
         {
@@ -7865,7 +7971,7 @@ void ImageHelper::updateLayoutAndBarrier(Context *context,
         VkPipelineStageFlags dstStageMask          = transitionTo.dstStageMask;
 
         if (transitionFrom.layout == transitionTo.layout && IsShaderReadOnlyLayout(transitionTo) &&
-            mBarrierQueueSerial == queueSerial)
+            mBarrierQueueSerial == queueSerial && !hasQueueChange)
         {
             // If we are switching between different shader stage reads of the same render pass,
             // then there is no actual layout change or access type change. We only need a barrier
@@ -8000,6 +8106,8 @@ void ImageHelper::updateLayoutAndBarrier(Context *context,
         }
         mCurrentLayout = newLayout;
     }
+
+    mCurrentDeviceQueueIndex = context->getDeviceQueueIndex();
 
     *semaphoreOut = mAcquireNextImageSemaphore.release();
     // We must release the event so that new event will be created and added. If we did not add new
@@ -9060,7 +9168,7 @@ angle::Result ImageHelper::reformatStagedBufferUpdates(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
-angle::Result ImageHelper::CalculateBufferInfo(ContextVk *contextVk,
+angle::Result ImageHelper::calculateBufferInfo(ContextVk *contextVk,
                                                const gl::Extents &glExtents,
                                                const gl::InternalFormat &formatInfo,
                                                const gl::PixelUnpackState &unpack,
@@ -9433,7 +9541,7 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
     GLuint inputRowPitch   = 0;
     GLuint inputDepthPitch = 0;
     GLuint inputSkipBytes  = 0;
-    ANGLE_TRY(CalculateBufferInfo(contextVk, glExtents, formatInfo, unpack, type, index.usesTex3D(),
+    ANGLE_TRY(calculateBufferInfo(contextVk, glExtents, formatInfo, unpack, type, index.usesTex3D(),
                                   &inputRowPitch, &inputDepthPitch, &inputSkipBytes));
 
     ANGLE_TRY(stageSubresourceUpdateImpl(
@@ -9893,6 +10001,7 @@ void ImageHelper::stageSelfAsSubresourceUpdates(
     mCurrentLayout               = ImageLayout::Undefined;
     mCurrentDeviceQueueIndex     = kInvalidDeviceQueueIndex;
     mIsReleasedToExternal        = false;
+    mIsForeignImage              = false;
     mLastNonShaderReadOnlyLayout = ImageLayout::Undefined;
     mCurrentShaderReadStageMask  = 0;
     mImageSerial                 = kInvalidImageSerial;

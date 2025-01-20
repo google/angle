@@ -370,25 +370,6 @@ class ErrorContext : angle::NonCopyable
     angle::VulkanPerfCounters mPerfCounters;
 };
 
-// Abstracts contexts where command recording is done in response to API calls, and includes
-// data structures that are Vulkan-related, need to be accessed by the internals of |namespace vk|
-// object, but are otherwise managed by these API objects.
-class Context : public ErrorContext
-{
-  public:
-    Context(Renderer *renderer);
-    virtual ~Context() override;
-
-    RefCountedEventsGarbageRecycler *getRefCountedEventsGarbageRecycler()
-    {
-        return mShareGroupRefCountedEventsGarbageRecycler;
-    }
-
-  protected:
-    // Stash the ShareGroupVk's RefCountedEventRecycler here ImageHelper to conveniently access
-    RefCountedEventsGarbageRecycler *mShareGroupRefCountedEventsGarbageRecycler;
-};
-
 // Abstract global operations that are handled differently between EGL and OpenCL.
 class GlobalOps : angle::NonCopyable
 {

@@ -384,13 +384,6 @@ const angle::FeaturesVk &ErrorContext::getFeatures() const
     return mRenderer->getFeatures();
 }
 
-// Context implementation
-Context::Context(Renderer *renderer)
-    : ErrorContext(renderer), mShareGroupRefCountedEventsGarbageRecycler(nullptr)
-{}
-
-Context::~Context() = default;
-
 // MemoryProperties implementation.
 MemoryProperties::MemoryProperties() : mMemoryProperties{} {}
 
