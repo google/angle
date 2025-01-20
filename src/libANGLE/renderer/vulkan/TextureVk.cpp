@@ -3817,7 +3817,9 @@ angle::Result TextureVk::getStorageImageView(vk::Context *context,
         getNativeImageLevel(gl::LevelIndex(static_cast<uint32_t>(binding.level)));
     vk::LevelIndex nativeLevelVk = mImage->toVkLevel(nativeLevelGL);
 
-    if (binding.layered != GL_TRUE)
+    // If the texture does not have multiple layers or faces, the entire texture
+    // level is bound, regardless of the values specified by layered and layer.
+    if (binding.layered != GL_TRUE && IsLayeredTextureType(mState.getType()))
     {
         uint32_t nativeLayer = getNativeImageLayer(static_cast<uint32_t>(binding.layer));
 
