@@ -43,7 +43,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '40f789b3639fad07aa50e929325c93bab4551a76',
+  'chromium_revision': '367ef52f4b2b28d40f192b5eff908e8807df1ef1',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -92,7 +92,7 @@ vars = {
 
   # the commit queue can handle CLs rolling Fuchsia sdk
   # and whatever else without interference from each other.
-  'fuchsia_version': 'version:26.20250110.4.1',
+  'fuchsia_version': 'version:26.20250117.5.1',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
@@ -133,7 +133,7 @@ vars = {
   'reclient_version': 're_client_version:0.174.0.d516e7c7-gomaip',
 
   # siso CIPD package version.
-  'siso_version': 'git_revision:67a8780a72f407b3dffe9e338c368f0b799d004b',
+  'siso_version': 'git_revision:0721be7440a7c67f8369fcce1ca01932638641bb',
 
   # 'magic' text to tell depot_tools that git submodules should be accepted but
   # but parity with DEPS file is expected.
@@ -451,7 +451,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': Var('chromium_git') + '/chromium/src/build.git@287333d912667a9818423ad9e61451f600684317',
+    'url': Var('chromium_git') + '/chromium/src/build.git@64e296c42a93fbd27acc9a94713e4289273409b2',
     'condition': 'not build_with_chromium',
   },
 
@@ -510,7 +510,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@c61fa789bb73e76df78829f4d245d0baf09e182b',
+    'url': '{chromium_git}/chromium/src/testing@e52ba4f90d643b5aff1955e82f08d511c33d754d',
     'condition': 'not build_with_chromium',
   },
 
@@ -613,7 +613,7 @@ deps = {
   },
 
   'third_party/android_deps': {
-    'url': Var('chromium_git') + '/chromium/src/third_party/android_deps@ac0e58959cd67742cfff81af451fd350e975746c',
+    'url': Var('chromium_git') + '/chromium/src/third_party/android_deps@567ad21ab45263c2652261da3f8fd54058d2ea29',
     'condition': 'checkout_android and not build_with_chromium',
   },
 
@@ -725,7 +725,7 @@ deps = {
   },
 
   'third_party/depot_tools': {
-    'url': Var('chromium_git') + '/chromium/tools/depot_tools.git@ea75de4c3baba538f4758d507dd304136cfeab52',
+    'url': Var('chromium_git') + '/chromium/tools/depot_tools.git@80d1969422e75e8e9eecafa46074074b289e2568',
     'condition': 'not build_with_chromium',
   },
 
@@ -853,7 +853,7 @@ deps = {
   },
 
   'third_party/llvm-libc/src': {
-    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libc.git@4414ade7ba78078d7bf94efd21f654c183bc1da2',
+    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libc.git@12809bfa855813dcef51871e2ee3155e53ed35ea',
     'condition': 'not build_with_chromium',
   },
 
@@ -945,7 +945,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/r8',
-              'version': 'CqDcMSHb2wxXTFpn_KVnKoQSUN1HXWOqix19Kgv-oAYC',
+              'version': 'PO3aHSPf_6XsPQhr5ej6sRCj8EXUTKutmhlFCLBeak4C',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -1142,7 +1142,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': Var('chromium_git') + '/chromium/src/tools/perf@60ae4bee55bc7993875bb2821ea581699ef693e8',
+    'url': Var('chromium_git') + '/chromium/src/tools/perf@1d1846688bef445437b07b4ac71b03aa713685dc',
     'condition': 'not build_with_chromium',
   },
 
@@ -1187,7 +1187,7 @@ deps = {
       'packages': [
         {
           'package': 'skia/tools/goldctl/mac-amd64',
-          'version': 'aGSV8FRvSVFoQndmtzdgxKhvRR5fHzqV4Out1xJ8IdQC',
+          'version': 'i1pCGOButmwiJERJNRCcVJvvq5eJVXmgn6naqj5pIUwC',
         },
       ],
       'dep_type': 'cipd',
@@ -4505,17 +4505,6 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/android_deps/libs/com_google_dagger_dagger',
-              'version': 'version:2@2.52.cr1',
-          },
-      ],
-      'condition': 'checkout_android and not build_with_chromium and non_git_source',
-      'dep_type': 'cipd',
-  },
-
-  'third_party/android_deps/cipd/libs/com_google_dagger_hilt_core': {
-      'packages': [
-          {
-              'package': 'chromium/third_party/android_deps/libs/com_google_dagger_hilt_core',
               'version': 'version:2@2.52.cr1',
           },
       ],
