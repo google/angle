@@ -342,6 +342,11 @@ constexpr const char *kSkippedMessagesWithDynamicRendering[] = {
     "VUID-vkCmdDrawIndexed-multisampledRenderToSingleSampled-07287",
 };
 
+// Mock ICD limitations
+constexpr const char *kSkippedMessagesWithMockICD[] = {
+    "UNASSIGNED-vkAllocateMemory-maxMemoryAllocationSize",
+};
+
 // Some syncval errors are resolved in the presence of the NONE load or store render pass ops.  For
 // those, ANGLE makes no further attempt to resolve them and expects vendor support for the
 // extensions instead.  The list of skipped messages is split based on this support.
@@ -4224,6 +4229,13 @@ void Renderer::initializeValidationMessageSuppressions()
         mSkippedValidationMessages.insert(
             mSkippedValidationMessages.end(), kSkippedMessagesWithDynamicRendering,
             kSkippedMessagesWithDynamicRendering + ArraySize(kSkippedMessagesWithDynamicRendering));
+    }
+
+    if (isMockICDEnabled())
+    {
+        mSkippedValidationMessages.insert(
+            mSkippedValidationMessages.end(), kSkippedMessagesWithMockICD,
+            kSkippedMessagesWithMockICD + ArraySize(kSkippedMessagesWithMockICD));
     }
 
     // Build the list of syncval errors that are currently expected and should be skipped.
