@@ -3851,6 +3851,14 @@ bool ValidateCreateImage(const ValidationContext *val,
                 return false;
             }
 
+            if (texture->isEGLImageSource(gl::ImageIndex::MakeFromTarget(
+                    gl::TextureTarget::_2D, static_cast<GLint>(level), 1)))
+            {
+                val->setError(EGL_BAD_ACCESS,
+                              "The texture has been bound to an existing EGL image.");
+                return false;
+            }
+
             ANGLE_VALIDATION_TRY(ValidateCreateImageMipLevelCommon(val, context, texture, level));
         }
         break;
@@ -3922,6 +3930,16 @@ bool ValidateCreateImage(const ValidationContext *val,
                               "of target.");
                 return false;
             }
+
+            gl::TextureTarget glTexTarget =
+                gl::CubeFaceIndexToTextureTarget(CubeMapTextureTargetToLayerIndex(target));
+            if (texture->isEGLImageSource(
+                    gl::ImageIndex::MakeCubeMapFace(glTexTarget, static_cast<GLint>(level))))
+            {
+                val->setError(EGL_BAD_ACCESS,
+                              "The texture has been bound to an existing EGL image.");
+                return false;
+            }
         }
         break;
 
@@ -3985,6 +4003,13 @@ bool ValidateCreateImage(const ValidationContext *val,
                               "of target.");
                 return false;
             }
+            if (texture->isEGLImageSource(
+                    gl::ImageIndex::Make3D(static_cast<GLint>(level), static_cast<GLint>(zOffset))))
+            {
+                val->setError(EGL_BAD_ACCESS,
+                              "The texture has been bound to an existing EGL image.");
+                return false;
+            }
 
             ANGLE_VALIDATION_TRY(ValidateCreateImageMipLevelCommon(val, context, texture, level));
         }
@@ -4035,6 +4060,13 @@ bool ValidateCreateImage(const ValidationContext *val,
                 val->setError(EGL_BAD_ACCESS,
                               "EGL_PROTECTED_CONTENT_EXT attribute does not match protected state "
                               "of target.");
+                return false;
+            }
+
+            if (renderbuffer->isEGLImageSource())
+            {
+                val->setError(EGL_BAD_ACCESS,
+                              "The renderbuffer has been bound to an existing EGL image.");
                 return false;
             }
         }

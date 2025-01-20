@@ -991,6 +991,7 @@ void main()
                                            AHardwareBuffer *srcAhb,
                                            GLuint srcTexture,
                                            EGLImageKHR *imageOut);
+    void ImageCheckingTextureAccessHelper(GLenum target, bool mipmap);
     void verifyImageStorageMipmap(const EGLint *attribs,
                                   EGLImageKHR image,
                                   const GLsizei mipLevelCount);
@@ -2724,6 +2725,176 @@ TEST_P(ImageTest, SourceAHBCorrupt)
 
     AHardwareBuffer_release(aHardwareBuffer);
 #endif
+}
+
+// Helper function to check if it is reasonable to access texture resource
+void ImageTest::ImageCheckingTextureAccessHelper(GLenum target, bool mipmap)
+{
+    constexpr GLsizei width = 2, height = 2, depth = 2;
+    GLTexture source;
+    EGLenum eglTarget;
+    EGLWindow *window = getEGLWindow();
+
+    glBindTexture(target, source);
+    switch (target)
+    {
+        case GL_TEXTURE_2D:
+            eglTarget = EGL_GL_TEXTURE_2D_KHR;
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                         nullptr);
+            break;
+        case GL_TEXTURE_3D:
+            eglTarget = EGL_GL_TEXTURE_3D_KHR;
+            glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA, width, height, depth, 0, GL_RGBA,
+                         GL_UNSIGNED_BYTE, nullptr);
+            break;
+        case GL_TEXTURE_CUBE_MAP:
+            eglTarget = EGL_GL_TEXTURE_CUBE_MAP_POSITIVE_X_KHR;
+            for (GLenum faceIdx = 0; faceIdx < 6; faceIdx++)
+            {
+                glTexImage2D(faceIdx + GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, GL_RGBA, width, height, 0,
+                             GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+            }
+            break;
+        default:
+            return;
+    }
+
+    if (mipmap)
+    {
+        glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        glGenerateMipmap(target);
+    }
+
+    EGLImageKHR image = eglCreateImageKHR(window->getDisplay(), window->getContext(), eglTarget,
+                                          reinterpretHelper<EGLClientBuffer>(source), nullptr);
+    ASSERT_EGL_SUCCESS();
+    EXPECT_NE(image, EGL_NO_IMAGE_KHR);
+
+    // If the texture is bound to egl image, EGL_BAD_ACCESS should be returned.
+    EGLImageKHR invalidImage1 =
+        eglCreateImageKHR(window->getDisplay(), window->getContext(), eglTarget,
+                          reinterpretHelper<EGLClientBuffer>(source), nullptr);
+    ASSERT_EGL_ERROR(EGL_BAD_ACCESS);
+    EXPECT_EQ(invalidImage1, EGL_NO_IMAGE_KHR);
+
+    // If the image is destroyed, the texture could be bound to egl image here.
+    eglDestroyImageKHR(window->getDisplay(), image);
+
+    EGLImageKHR validImage1 =
+        eglCreateImageKHR(window->getDisplay(), window->getContext(), eglTarget,
+                          reinterpretHelper<EGLClientBuffer>(source), nullptr);
+    ASSERT_EGL_SUCCESS();
+    EXPECT_NE(validImage1, EGL_NO_IMAGE_KHR);
+
+    if (target == GL_TEXTURE_3D)
+    {
+        constexpr EGLint zOffsetAttribs[] = {
+            EGL_GL_TEXTURE_ZOFFSET,
+            1,
+            EGL_NONE,
+        };
+        EGLImageKHR validImage2 =
+            eglCreateImageKHR(window->getDisplay(), window->getContext(), eglTarget,
+                              reinterpretHelper<EGLClientBuffer>(source), zOffsetAttribs);
+        ASSERT_EGL_SUCCESS();
+        EXPECT_NE(validImage2, EGL_NO_IMAGE_KHR);
+        eglDestroyImageKHR(window->getDisplay(), validImage2);
+    }
+
+    if (target == GL_TEXTURE_CUBE_MAP)
+    {
+        for (GLenum faceIdx = 1; faceIdx < 6; faceIdx++)
+        {
+            EGLImageKHR validImage2 =
+                eglCreateImageKHR(window->getDisplay(), window->getContext(), eglTarget + faceIdx,
+                                  reinterpretHelper<EGLClientBuffer>(source), nullptr);
+            ASSERT_EGL_SUCCESS();
+            EXPECT_NE(validImage2, EGL_NO_IMAGE_KHR);
+            eglDestroyImageKHR(window->getDisplay(), validImage2);
+        }
+    }
+
+    if (mipmap)
+    {
+        constexpr EGLint mipmapAttribs[] = {
+            EGL_GL_TEXTURE_LEVEL,
+            1,
+            EGL_NONE,
+        };
+        EGLImageKHR validImage3 =
+            eglCreateImageKHR(window->getDisplay(), window->getContext(), eglTarget,
+                              reinterpretHelper<EGLClientBuffer>(source), mipmapAttribs);
+        ASSERT_EGL_SUCCESS();
+        EXPECT_NE(validImage3, EGL_NO_IMAGE_KHR);
+
+        EGLImageKHR invalidImage2 =
+            eglCreateImageKHR(window->getDisplay(), window->getContext(), eglTarget,
+                              reinterpretHelper<EGLClientBuffer>(source), mipmapAttribs);
+        ASSERT_EGL_ERROR(EGL_BAD_ACCESS);
+        EXPECT_EQ(invalidImage2, EGL_NO_IMAGE_KHR);
+
+        eglDestroyImageKHR(window->getDisplay(), validImage3);
+        EGLImageKHR validImage4 =
+            eglCreateImageKHR(window->getDisplay(), window->getContext(), eglTarget,
+                              reinterpretHelper<EGLClientBuffer>(source), mipmapAttribs);
+        ASSERT_EGL_SUCCESS();
+        EXPECT_NE(validImage4, EGL_NO_IMAGE_KHR);
+        eglDestroyImageKHR(window->getDisplay(), validImage4);
+    }
+
+    eglDestroyImageKHR(window->getDisplay(), validImage1);
+}
+
+// Testing GLES resources when creating EGL image, if the client buffer itself is an EGL sibling,
+// eglCreateImageKHR should return NO_IMAGE and generate error EGL_BAD_ACCESS.
+TEST_P(ImageTest, SourceBadAccess)
+{
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !IsVulkan());
+
+    // Validate gles 2D texture
+    if (has2DTextureExt())
+    {
+        ImageCheckingTextureAccessHelper(GL_TEXTURE_2D, false);
+        ImageCheckingTextureAccessHelper(GL_TEXTURE_2D, true);
+    }
+
+    // Validate gles 3D texture
+    if (has3DTextureExt() && getClientMajorVersion() >= 3)
+    {
+        ImageCheckingTextureAccessHelper(GL_TEXTURE_3D, false);
+        ImageCheckingTextureAccessHelper(GL_TEXTURE_3D, true);
+    }
+
+    // Validate gles cube map texture
+    if (hasCubemapExt())
+    {
+        ImageCheckingTextureAccessHelper(GL_TEXTURE_CUBE_MAP, false);
+        ImageCheckingTextureAccessHelper(GL_TEXTURE_CUBE_MAP, true);
+    }
+
+    // Validate gles renderbuffer
+    if (hasRenderbufferExt())
+    {
+        EGLWindow *window = getEGLWindow();
+        GLRenderbuffer source;
+        EGLImageKHR image;
+        createEGLImageRenderbufferSource(1, 1, GL_RGBA8_OES, kDefaultAttribs, source, &image);
+
+        EGLImageKHR invalidImage =
+            eglCreateImageKHR(window->getDisplay(), window->getContext(), EGL_GL_RENDERBUFFER_KHR,
+                              reinterpretHelper<EGLClientBuffer>(source), kDefaultAttribs);
+        ASSERT_EGL_ERROR(EGL_BAD_ACCESS);
+        EXPECT_EQ(invalidImage, EGL_NO_IMAGE_KHR);
+        eglDestroyImageKHR(window->getDisplay(), image);
+
+        EGLImageKHR validImage =
+            eglCreateImageKHR(window->getDisplay(), window->getContext(), EGL_GL_RENDERBUFFER_KHR,
+                              reinterpretHelper<EGLClientBuffer>(source), kDefaultAttribs);
+        ASSERT_EGL_SUCCESS();
+        EXPECT_NE(validImage, EGL_NO_IMAGE_KHR);
+        eglDestroyImageKHR(window->getDisplay(), validImage);
+    }
 }
 
 // Testing source AHB EGL image, target 2D texture and delete when in use

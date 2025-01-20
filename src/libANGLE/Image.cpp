@@ -38,6 +38,10 @@ gl::ImageIndex GetImageIndex(EGLenum eglTarget, const egl::AttributeMap &attribs
     {
         return gl::ImageIndex::Make3D(mip, layer);
     }
+    else if (gl::IsCubeMapFaceTarget(target))
+    {
+        return gl::ImageIndex::MakeCubeMapFace(target, mip);
+    }
     else
     {
         ASSERT(layer == 0);
