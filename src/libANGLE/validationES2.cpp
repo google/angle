@@ -614,7 +614,7 @@ static bool IsCapBannedWithActivePLS(GLenum cap)
     }
 }
 
-bool ValidCap(const PrivateState &state, ErrorSet *errors, GLenum cap, bool queryOnly)
+bool ValidCapUncommon(const PrivateState &state, ErrorSet *errors, GLenum cap, bool queryOnly)
 {
     switch (cap)
     {
@@ -623,14 +623,8 @@ bool ValidCap(const PrivateState &state, ErrorSet *errors, GLenum cap, bool quer
         case GL_SAMPLE_ALPHA_TO_ONE_EXT:
             return state.getExtensions().multisampleCompatibilityEXT;
 
-        case GL_CULL_FACE:
-        case GL_POLYGON_OFFSET_FILL:
         case GL_SAMPLE_ALPHA_TO_COVERAGE:
         case GL_SAMPLE_COVERAGE:
-        case GL_SCISSOR_TEST:
-        case GL_STENCIL_TEST:
-        case GL_DEPTH_TEST:
-        case GL_BLEND:
         case GL_DITHER:
             return true;
 
@@ -754,6 +748,19 @@ bool ValidCap(const PrivateState &state, ErrorSet *errors, GLenum cap, bool quer
         default:
             return false;
     }
+}
+
+ANGLE_INLINE bool ValidCap(const PrivateState &state, ErrorSet *errors, GLenum cap, bool queryOnly)
+{
+    // Most frequent cases inline.
+    if (ANGLE_LIKELY(cap == GL_BLEND || cap == GL_DEPTH_TEST || cap == GL_SCISSOR_TEST ||
+                     cap == GL_STENCIL_TEST || cap == GL_CULL_FACE ||
+                     cap == GL_POLYGON_OFFSET_FILL))
+    {
+        return true;
+    }
+    // Other less common cases are a function call.
+    return ValidCapUncommon(state, errors, cap, queryOnly);
 }
 
 // Return true if a character belongs to the ASCII subset as defined in GLSL ES 1.0 spec section
