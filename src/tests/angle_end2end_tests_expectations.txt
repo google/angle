@@ -944,9 +944,6 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 // Fails on swangle builders
 42266918 SWIFTSHADER : WebGL2GLSLTest.TexelFetchLodOutOfBounds/* = SKIP
 
-// ANGLE should return OOM for large allocations, but doesn't and hits a VVL error
-391002353 SWIFTSHADER : TransformFeedbackTest.BufferOutOfMemory/* = SKIP
-
 // HLSL compiler bug
 42261155 D3D11 : GLSLTest_ES3.ComplexCrossExpression/* = SKIP
 

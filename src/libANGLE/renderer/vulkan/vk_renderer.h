@@ -652,6 +652,11 @@ class Renderer : angle::NonCopyable
 
     void requestAsyncCommandsAndGarbageCleanup(vk::ErrorContext *context);
 
+    VkDeviceSize getMaxMemoryAllocationSize()
+    {
+        return mMaintenance3Properties.maxMemoryAllocationSize;
+    }
+
     // Cleanup garbage and finish command batches from the queue if necessary in the event of an OOM
     // error.
     angle::Result cleanupSomeGarbage(ErrorContext *context, bool *anyGarbageCleanedOut);
@@ -886,6 +891,7 @@ class Renderer : angle::NonCopyable
     VkPhysicalDeviceVariablePointersFeatures mVariablePointersFeatures;
     VkPhysicalDeviceFloatControlsProperties mFloatControlProperties;
     VkPhysicalDeviceUniformBufferStandardLayoutFeaturesKHR mUniformBufferStandardLayoutFeatures;
+    VkPhysicalDeviceMaintenance3Properties mMaintenance3Properties;
 
     uint32_t mLegacyDitheringVersion = 0;
 

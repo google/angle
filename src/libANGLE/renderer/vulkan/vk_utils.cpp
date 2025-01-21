@@ -94,10 +94,11 @@ VkResult FindAndAllocateCompatibleMemory(vk::ErrorContext *context,
                                          vk::DeviceMemory *deviceMemoryOut)
 {
     VkDevice device = context->getDevice();
+    vk::Renderer *renderer = context->getRenderer();
 
     VK_RESULT_TRY(memoryProperties.findCompatibleMemoryIndex(
-        context, memoryRequirements, requestedMemoryPropertyFlags, (extraAllocationInfo != nullptr),
-        memoryPropertyFlagsOut, memoryTypeIndexOut));
+        renderer, memoryRequirements, requestedMemoryPropertyFlags,
+        (extraAllocationInfo != nullptr), memoryPropertyFlagsOut, memoryTypeIndexOut));
 
     VkMemoryAllocateInfo allocInfo = {};
     allocInfo.sType                = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
@@ -106,7 +107,6 @@ VkResult FindAndAllocateCompatibleMemory(vk::ErrorContext *context,
     allocInfo.allocationSize       = memoryRequirements.size;
 
     // Add the new allocation for tracking.
-    vk::Renderer *renderer = context->getRenderer();
     renderer->getMemoryAllocationTracker()->setPendingMemoryAlloc(
         memoryAllocationType, allocInfo.allocationSize, *memoryTypeIndexOut);
 
@@ -420,7 +420,7 @@ bool MemoryProperties::hasLazilyAllocatedMemory() const
 }
 
 VkResult MemoryProperties::findCompatibleMemoryIndex(
-    ErrorContext *context,
+    Renderer *renderer,
     const VkMemoryRequirements &memoryRequirements,
     VkMemoryPropertyFlags requestedMemoryPropertyFlags,
     bool isExternalMemory,
@@ -428,6 +428,14 @@ VkResult MemoryProperties::findCompatibleMemoryIndex(
     uint32_t *typeIndexOut) const
 {
     ASSERT(mMemoryProperties.memoryTypeCount > 0 && mMemoryProperties.memoryTypeCount <= 32);
+
+    // The required size must not be greater than the maximum allocation size allowed by the driver.
+    if (memoryRequirements.size > renderer->getMaxMemoryAllocationSize())
+    {
+        renderer->getMemoryAllocationTracker()->onExceedingMaxMemoryAllocationSize(
+            memoryRequirements.size);
+        return VK_ERROR_OUT_OF_DEVICE_MEMORY;
+    }
 
     // Find a compatible memory pool index. If the index doesn't change, we could cache it.
     // Not finding a valid memory pool means an out-of-spec driver, or internal error.
