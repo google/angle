@@ -3304,6 +3304,70 @@ TEST_P(EGLSurfaceTest, SurfaceFixedRateCompression)
     }
 }
 
+// Test the validation errors for eglSetDamageRegionKHR
+TEST_P(EGLSurfaceTest, SetDamageRegionNegativeValidation)
+{
+    initializeDisplay();
+    ANGLE_SKIP_TEST_IF(!IsEGLDisplayExtensionEnabled(mDisplay, "EGL_KHR_partial_update"));
+
+    constexpr EGLint kSurfaceAttributes[] = {EGL_RED_SIZE,     8,
+                                             EGL_GREEN_SIZE,   8,
+                                             EGL_BLUE_SIZE,    8,
+                                             EGL_ALPHA_SIZE,   8,
+                                             EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
+                                             EGL_NONE};
+
+    EGLint age              = 0;
+    EGLint configCount      = 0;
+    EGLConfig surfaceConfig = nullptr;
+
+    ASSERT_EGL_TRUE(eglChooseConfig(mDisplay, kSurfaceAttributes, &surfaceConfig, 1, &configCount));
+    ASSERT_NE(configCount, 0);
+    ASSERT_NE(surfaceConfig, nullptr);
+
+    initializeSurface(surfaceConfig);
+    initializeAllContexts();
+    EXPECT_EGL_SUCCESS();
+    EXPECT_NE(mWindowSurface, EGL_NO_SURFACE);
+    EXPECT_NE(mPbufferSurface, EGL_NO_SURFACE);
+
+    // Fail: surface is not a postable surface
+    EXPECT_EGL_FALSE(eglSetDamageRegionKHR(mDisplay, mPbufferSurface, nullptr, 0));
+    EXPECT_EGL_ERROR(EGL_BAD_MATCH);
+
+    // Fail: surface is not the current draw surface for the calling thread
+    EXPECT_EGL_FALSE(eglSetDamageRegionKHR(mDisplay, mWindowSurface, nullptr, 0));
+    EXPECT_EGL_ERROR(EGL_BAD_MATCH);
+
+    EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mSecondContext));
+    EXPECT_EGL_SUCCESS();
+
+    // Fail: EGL_BUFFER_AGE_KHR attribute of surface has not been queried since the most recent
+    // frame boundary
+    EXPECT_EGL_FALSE(eglSetDamageRegionKHR(mDisplay, mWindowSurface, nullptr, 0));
+    EXPECT_EGL_ERROR(EGL_BAD_ACCESS);
+
+    // Perform empty swap
+    EXPECT_EGL_TRUE(eglSwapBuffers(mDisplay, mWindowSurface));
+    EXPECT_EGL_SUCCESS();
+
+    EXPECT_EGL_TRUE(eglQuerySurface(mDisplay, mWindowSurface, EGL_BUFFER_AGE_KHR, &age));
+    EXPECT_EGL_SUCCESS();
+    EXPECT_GE(age, 0);
+
+    // Fail: n_rects should be a valid value
+    EXPECT_EGL_FALSE(eglSetDamageRegionKHR(mDisplay, mWindowSurface, nullptr, -1));
+    EXPECT_EGL_ERROR(EGL_BAD_PARAMETER);
+
+    // Success
+    EXPECT_EGL_TRUE(eglSetDamageRegionKHR(mDisplay, mWindowSurface, nullptr, 0));
+    EXPECT_EGL_SUCCESS();
+
+    // Fail: damage region has already been set on surface since the most recent frame boundary
+    EXPECT_EGL_FALSE(eglSetDamageRegionKHR(mDisplay, mWindowSurface, nullptr, 0));
+    EXPECT_EGL_ERROR(EGL_BAD_ACCESS);
+}
+
 }  // anonymous namespace
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLSingleBufferTest);
