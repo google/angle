@@ -1598,6 +1598,11 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk,
                     &kernelVk.getPodArgumentsData()[offset]);
                 break;
             }
+            case NonSemanticClspvReflectionArgumentWorkgroup:
+            {
+                // Nothing to do here (this is already taken care of during clSetKernelArg)
+                break;
+            }
             case NonSemanticClspvReflectionArgumentSampler:
             {
                 cl::Sampler *clSampler =
