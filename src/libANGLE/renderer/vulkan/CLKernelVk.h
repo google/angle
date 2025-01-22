@@ -146,7 +146,7 @@ class CLKernelVk : public CLKernelImpl
         vk::OutsideRenderPassCommandBufferHelper *computePassCommands);
 
   private:
-    static constexpr std::array<size_t, 3> kEmptyWorkgroupSize = {0, 0, 0};
+    static constexpr std::array<uint32_t, 3> kEmptyWorkgroupSize = {0, 0, 0};
 
     // Initialize the descriptor pools for this kernel resources
     angle::Result initializeDescriptorPools();

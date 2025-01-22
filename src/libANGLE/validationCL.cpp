@@ -2299,6 +2299,37 @@ cl_int ValidateEnqueueNDRangeKernel(cl_command_queue command_queue,
         }
     }
 
+    // CL_INVALID_GLOBAL_WORK_SIZE if any of the values specified in global_work_size[0], ...
+    // global_work_size[work_dim - 1] exceed the maximum value representable by size_t on the device
+    // on which the kernel-instance will be enqueued.
+    if (global_work_size != nullptr)
+    {
+        for (cl_uint dim = 0u; dim < work_dim; ++dim)
+        {
+            if (global_work_size[dim] > UINT32_MAX)
+            {
+                // Set hard limit in ANGLE to 2^32 for all backends (regardless of device support).
+                return CL_INVALID_GLOBAL_WORK_SIZE;
+            }
+        }
+    }
+
+    // CL_INVALID_GLOBAL_OFFSET if the value specified in global_work_size + the corresponding
+    // values in global_work_offset for any dimensions is greater than the maximum value
+    // representable by size t on the device on which the kernel-instance will be enqueued
+    if (global_work_offset != nullptr)
+    {
+        for (cl_uint dim = 0u; dim < work_dim; ++dim)
+        {
+            if (static_cast<uint32_t>((global_work_offset[dim] + global_work_size[dim])) <
+                global_work_offset[dim])
+            {
+                // Set hard limit in ANGLE to 2^32 for all backends (regardless of device support).
+                return CL_INVALID_GLOBAL_OFFSET;
+            }
+        }
+    }
+
     if (local_work_size != nullptr)
     {
         size_t numWorkItems = 1u;  // Initialize with neutral element for multiplication

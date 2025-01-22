@@ -62,9 +62,9 @@ using MemoryPtrs   = std::vector<MemoryPtr>;
 using PlatformPtrs = std::vector<PlatformPtr>;
 using ProgramPtrs  = std::vector<ProgramPtr>;
 
-using WorkgroupSize    = std::array<size_t, 3>;
-using GlobalWorkOffset = std::array<size_t, 3>;
-using GlobalWorkSize   = std::array<size_t, 3>;
+using WorkgroupSize    = std::array<uint32_t, 3>;
+using GlobalWorkOffset = std::array<uint32_t, 3>;
+using GlobalWorkSize   = std::array<uint32_t, 3>;
 using WorkgroupCount   = std::array<uint32_t, 3>;
 
 template <typename T>
@@ -199,15 +199,19 @@ struct NDRange
         {
             if (globalWorkOffsetIn != nullptr)
             {
-                globalWorkOffset[dim] = globalWorkOffsetIn[dim];
+                ASSERT(!(static_cast<uint32_t>((globalWorkOffsetIn[dim] + globalWorkSizeIn[dim])) <
+                         globalWorkOffsetIn[dim]));
+                globalWorkOffset[dim] = static_cast<uint32_t>(globalWorkOffsetIn[dim]);
             }
             if (globalWorkSizeIn != nullptr)
             {
-                globalWorkSize[dim] = globalWorkSizeIn[dim];
+                ASSERT(globalWorkSizeIn[dim] <= UINT32_MAX);
+                globalWorkSize[dim] = static_cast<uint32_t>(globalWorkSizeIn[dim]);
             }
             if (localWorkSizeIn != nullptr)
             {
-                localWorkSize[dim] = localWorkSizeIn[dim];
+                ASSERT(localWorkSizeIn[dim] <= UINT32_MAX);
+                localWorkSize[dim] = static_cast<uint32_t>(localWorkSizeIn[dim]);
             }
         }
     }
