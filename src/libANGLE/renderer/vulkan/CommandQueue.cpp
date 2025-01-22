@@ -121,7 +121,7 @@ void RecyclableFence::destroy(VkDevice device)
 }
 
 // FenceRecycler implementation
-void FenceRecycler::destroy(Context *context)
+void FenceRecycler::destroy(ErrorContext *context)
 {
     std::lock_guard<angle::SimpleMutex> lock(mMutex);
     mRecycler.destroy(context->getDevice());
@@ -185,7 +185,7 @@ void CommandBatch::destroy(VkDevice device)
     // Do not clean other members to catch invalid reuse attempt with ASSERTs.
 }
 
-angle::Result CommandBatch::release(Context *context)
+angle::Result CommandBatch::release(ErrorContext *context)
 {
     if (mPrimaryCommands.valid())
     {
@@ -341,7 +341,7 @@ void CleanUpThread::handleError(VkResult errorCode,
 }
 
 CleanUpThread::CleanUpThread(Renderer *renderer, CommandQueue *commandQueue)
-    : Context(renderer),
+    : ErrorContext(renderer),
       mCommandQueue(commandQueue),
       mTaskThreadShouldExit(false),
       mNeedCleanUp(false)
@@ -349,7 +349,7 @@ CleanUpThread::CleanUpThread(Renderer *renderer, CommandQueue *commandQueue)
 
 CleanUpThread::~CleanUpThread() = default;
 
-angle::Result CleanUpThread::checkAndPopPendingError(Context *errorHandlingContext)
+angle::Result CleanUpThread::checkAndPopPendingError(ErrorContext *errorHandlingContext)
 {
     std::lock_guard<angle::SimpleMutex> queueLock(mErrorMutex);
     if (mErrors.empty())
@@ -431,7 +431,7 @@ angle::Result CleanUpThread::init()
     return angle::Result::Continue;
 }
 
-void CleanUpThread::destroy(Context *context)
+void CleanUpThread::destroy(ErrorContext *context)
 {
     {
         // Request to terminate the worker thread
@@ -459,7 +459,7 @@ CommandPoolAccess::~CommandPoolAccess() = default;
 
 // CommandPoolAccess public API implementation. These must be thread safe and never called from
 // CommandPoolAccess class itself.
-angle::Result CommandPoolAccess::initCommandPool(Context *context,
+angle::Result CommandPoolAccess::initCommandPool(ErrorContext *context,
                                                  ProtectionType protectionType,
                                                  const uint32_t queueFamilyIndex)
 {
@@ -497,7 +497,7 @@ void CommandPoolAccess::destroyPrimaryCommandBuffer(VkDevice device,
     primaryCommands->destroy(device);
 }
 
-angle::Result CommandPoolAccess::collectPrimaryCommandBuffer(Context *context,
+angle::Result CommandPoolAccess::collectPrimaryCommandBuffer(ErrorContext *context,
                                                              const ProtectionType protectionType,
                                                              PrimaryCommandBuffer *primaryCommands)
 {
@@ -511,7 +511,7 @@ angle::Result CommandPoolAccess::collectPrimaryCommandBuffer(Context *context,
 }
 
 angle::Result CommandPoolAccess::flushOutsideRPCommands(
-    Context *context,
+    ErrorContext *context,
     ProtectionType protectionType,
     egl::ContextPriority priority,
     OutsideRenderPassCommandBufferHelper **outsideRPCommands)
@@ -523,7 +523,7 @@ angle::Result CommandPoolAccess::flushOutsideRPCommands(
 }
 
 angle::Result CommandPoolAccess::flushRenderPassCommands(
-    Context *context,
+    ErrorContext *context,
     const ProtectionType &protectionType,
     const egl::ContextPriority &priority,
     const RenderPass &renderPass,
@@ -559,7 +559,7 @@ void CommandPoolAccess::flushWaitSemaphores(
 }
 
 angle::Result CommandPoolAccess::getCommandsAndWaitSemaphores(
-    Context *context,
+    ErrorContext *context,
     ProtectionType protectionType,
     egl::ContextPriority priority,
     CommandBatch *batchOut,
@@ -599,7 +599,7 @@ CommandQueue::CommandQueue()
 
 CommandQueue::~CommandQueue() = default;
 
-void CommandQueue::destroy(Context *context)
+void CommandQueue::destroy(ErrorContext *context)
 {
     std::lock_guard<angle::SimpleMutex> queueSubmitLock(mQueueSubmitMutex);
     std::lock_guard<angle::SimpleMutex> cmdCompleteLock(mCmdCompleteMutex);
@@ -619,7 +619,7 @@ void CommandQueue::destroy(Context *context)
     ASSERT(mNumAllCommands == 0);
 }
 
-angle::Result CommandQueue::init(Context *context,
+angle::Result CommandQueue::init(ErrorContext *context,
                                  const QueueFamily &queueFamily,
                                  bool enableProtectedContent,
                                  uint32_t queueCount)
@@ -670,7 +670,7 @@ void CommandQueue::handleDeviceLost(Renderer *renderer)
     }
 }
 
-angle::Result CommandQueue::postSubmitCheck(Context *context)
+angle::Result CommandQueue::postSubmitCheck(ErrorContext *context)
 {
     Renderer *renderer = context->getRenderer();
 
@@ -702,7 +702,7 @@ angle::Result CommandQueue::postSubmitCheck(Context *context)
     return angle::Result::Continue;
 }
 
-angle::Result CommandQueue::finishResourceUse(Context *context,
+angle::Result CommandQueue::finishResourceUse(ErrorContext *context,
                                               const ResourceUse &use,
                                               uint64_t timeout)
 {
@@ -732,7 +732,7 @@ angle::Result CommandQueue::finishResourceUse(Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result CommandQueue::finishQueueSerial(Context *context,
+angle::Result CommandQueue::finishQueueSerial(ErrorContext *context,
                                               const QueueSerial &queueSerial,
                                               uint64_t timeout)
 {
@@ -740,7 +740,7 @@ angle::Result CommandQueue::finishQueueSerial(Context *context,
     return finishResourceUse(context, use, timeout);
 }
 
-angle::Result CommandQueue::waitIdle(Context *context, uint64_t timeout)
+angle::Result CommandQueue::waitIdle(ErrorContext *context, uint64_t timeout)
 {
     // Fill the local variable with lock
     ResourceUse use;
@@ -756,7 +756,7 @@ angle::Result CommandQueue::waitIdle(Context *context, uint64_t timeout)
     return finishResourceUse(context, use, timeout);
 }
 
-angle::Result CommandQueue::waitForResourceUseToFinishWithUserTimeout(Context *context,
+angle::Result CommandQueue::waitForResourceUseToFinishWithUserTimeout(ErrorContext *context,
                                                                       const ResourceUse &use,
                                                                       uint64_t timeout,
                                                                       VkResult *result)
@@ -823,7 +823,7 @@ bool CommandQueue::isBusy(Renderer *renderer) const
     return false;
 }
 
-angle::Result CommandQueue::submitCommands(Context *context,
+angle::Result CommandQueue::submitCommands(ErrorContext *context,
                                            ProtectionType protectionType,
                                            egl::ContextPriority priority,
                                            VkSemaphore signalSemaphore,
@@ -889,7 +889,7 @@ angle::Result CommandQueue::submitCommands(Context *context,
     return queueSubmitLocked(context, priority, submitInfo, scopedBatch, submitQueueSerial);
 }
 
-angle::Result CommandQueue::queueSubmitOneOff(Context *context,
+angle::Result CommandQueue::queueSubmitOneOff(ErrorContext *context,
                                               ProtectionType protectionType,
                                               egl::ContextPriority contextPriority,
                                               VkCommandBuffer commandBufferHandle,
@@ -938,7 +938,7 @@ angle::Result CommandQueue::queueSubmitOneOff(Context *context,
     return queueSubmitLocked(context, contextPriority, submitInfo, scopedBatch, submitQueueSerial);
 }
 
-angle::Result CommandQueue::queueSubmitLocked(Context *context,
+angle::Result CommandQueue::queueSubmitLocked(ErrorContext *context,
                                               egl::ContextPriority contextPriority,
                                               const VkSubmitInfo &submitInfo,
                                               DeviceScoped<CommandBatch> &commandBatch,
@@ -1025,7 +1025,7 @@ void CommandQueue::resetPerFramePerfCounters()
     mPerfCounters.vkQueueSubmitCallsPerFrame      = 0;
 }
 
-angle::Result CommandQueue::releaseFinishedCommandsAndCleanupGarbage(Context *context)
+angle::Result CommandQueue::releaseFinishedCommandsAndCleanupGarbage(ErrorContext *context)
 {
     Renderer *renderer = context->getRenderer();
     if (renderer->isAsyncCommandBufferResetAndGarbageCleanupEnabled())
@@ -1042,7 +1042,7 @@ angle::Result CommandQueue::releaseFinishedCommandsAndCleanupGarbage(Context *co
     return angle::Result::Continue;
 }
 
-angle::Result CommandQueue::cleanupSomeGarbage(Context *context,
+angle::Result CommandQueue::cleanupSomeGarbage(ErrorContext *context,
                                                size_t minInFlightBatchesToKeep,
                                                bool *anyGarbageCleanedOut)
 {
@@ -1074,7 +1074,7 @@ angle::Result CommandQueue::cleanupSomeGarbage(Context *context,
 }
 
 // CommandQueue private API implementation. These are called by public API, so lock already held.
-angle::Result CommandQueue::checkOneCommandBatchLocked(Context *context, bool *finished)
+angle::Result CommandQueue::checkOneCommandBatchLocked(ErrorContext *context, bool *finished)
 {
     ASSERT(!mInFlightCommands.empty());
 
@@ -1096,7 +1096,7 @@ angle::Result CommandQueue::checkOneCommandBatchLocked(Context *context, bool *f
     return angle::Result::Continue;
 }
 
-angle::Result CommandQueue::finishOneCommandBatch(Context *context,
+angle::Result CommandQueue::finishOneCommandBatch(ErrorContext *context,
                                                   uint64_t timeout,
                                                   std::unique_lock<angle::SimpleMutex> *lock)
 {
@@ -1130,7 +1130,7 @@ void CommandQueue::onCommandBatchFinishedLocked(CommandBatch &&batch)
     moveInFlightBatchToFinishedQueueLocked(std::move(batch));
 }
 
-angle::Result CommandQueue::releaseFinishedCommandsLocked(Context *context)
+angle::Result CommandQueue::releaseFinishedCommandsLocked(ErrorContext *context)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "releaseFinishedCommandsLocked");
 
@@ -1145,7 +1145,7 @@ angle::Result CommandQueue::releaseFinishedCommandsLocked(Context *context)
     return angle::Result::Continue;
 }
 
-angle::Result CommandQueue::checkCompletedCommandsLocked(Context *context)
+angle::Result CommandQueue::checkCompletedCommandsLocked(ErrorContext *context)
 {
     while (!mInFlightCommands.empty())
     {

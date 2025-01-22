@@ -47,7 +47,8 @@ WindowSurfaceVkWayland::WindowSurfaceVkWayland(const egl::SurfaceState &surfaceS
     mExtents = gl::Extents(eglWindow->width, eglWindow->height, 1);
 }
 
-angle::Result WindowSurfaceVkWayland::createSurfaceVk(vk::Context *context, gl::Extents *extentsOut)
+angle::Result WindowSurfaceVkWayland::createSurfaceVk(vk::ErrorContext *context,
+                                                      gl::Extents *extentsOut)
 {
     ANGLE_VK_CHECK(context,
                    vkGetPhysicalDeviceWaylandPresentationSupportKHR(
@@ -69,7 +70,7 @@ angle::Result WindowSurfaceVkWayland::createSurfaceVk(vk::Context *context, gl::
     return getCurrentWindowSize(context, extentsOut);
 }
 
-angle::Result WindowSurfaceVkWayland::getCurrentWindowSize(vk::Context *context,
+angle::Result WindowSurfaceVkWayland::getCurrentWindowSize(vk::ErrorContext *context,
                                                            gl::Extents *extentsOut)
 {
     *extentsOut = mExtents;

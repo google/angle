@@ -144,7 +144,7 @@ angle::Result SyncHelper::initialize(ContextVk *contextVk, SyncFenceScope scope)
     return contextVk->onSyncObjectInit(this, scope);
 }
 
-angle::Result SyncHelper::prepareForClientWait(Context *context,
+angle::Result SyncHelper::prepareForClientWait(ErrorContext *context,
                                                ContextVk *contextVk,
                                                bool flushCommands,
                                                uint64_t timeout,
@@ -177,7 +177,7 @@ angle::Result SyncHelper::prepareForClientWait(Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result SyncHelper::clientWait(Context *context,
+angle::Result SyncHelper::clientWait(ErrorContext *context,
                                      ContextVk *contextVk,
                                      bool flushCommands,
                                      uint64_t timeout,
@@ -246,7 +246,7 @@ angle::Result SyncHelper::serverWait(ContextVk *contextVk)
     return angle::Result::Continue;
 }
 
-angle::Result SyncHelper::getStatus(Context *context, ContextVk *contextVk, bool *signaledOut)
+angle::Result SyncHelper::getStatus(ErrorContext *context, ContextVk *contextVk, bool *signaledOut)
 {
     // Submit commands if it was deferred on the context that issued the sync object
     ANGLE_TRY(submitSyncIfDeferred(contextVk, RenderPassClosureReason::SyncObjectClientWait));
@@ -440,7 +440,7 @@ angle::Result SyncHelperNativeFence::initializeWithFd(ContextVk *contextVk, int 
     return angle::Result::Continue;
 }
 
-angle::Result SyncHelperNativeFence::prepareForClientWait(Context *context,
+angle::Result SyncHelperNativeFence::prepareForClientWait(ErrorContext *context,
                                                           ContextVk *contextVk,
                                                           bool flushCommands,
                                                           uint64_t timeout,
@@ -472,7 +472,7 @@ angle::Result SyncHelperNativeFence::prepareForClientWait(Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result SyncHelperNativeFence::clientWait(Context *context,
+angle::Result SyncHelperNativeFence::clientWait(ErrorContext *context,
                                                 ContextVk *contextVk,
                                                 bool flushCommands,
                                                 uint64_t timeout,
@@ -538,7 +538,7 @@ angle::Result SyncHelperNativeFence::serverWait(ContextVk *contextVk)
     return angle::Result::Continue;
 }
 
-angle::Result SyncHelperNativeFence::getStatus(Context *context,
+angle::Result SyncHelperNativeFence::getStatus(ErrorContext *context,
                                                ContextVk *contextVk,
                                                bool *signaledOut)
 {
@@ -551,7 +551,7 @@ angle::Result SyncHelperNativeFence::getStatus(Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result SyncHelperNativeFence::dupNativeFenceFD(Context *context, int *fdOut) const
+angle::Result SyncHelperNativeFence::dupNativeFenceFD(ErrorContext *context, int *fdOut) const
 {
     if (mExternalFence->getFenceFd() == kInvalidFenceFd)
     {

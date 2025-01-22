@@ -540,7 +540,7 @@ void DeriveRenderingInfo(Renderer *renderer,
     }
 }
 
-void AttachPipelineRenderingInfo(Context *context,
+void AttachPipelineRenderingInfo(ErrorContext *context,
                                  const RenderPassDesc &desc,
                                  const DynamicRenderingInfo &renderingInfo,
                                  GraphicsPipelineSubset subset,
@@ -677,7 +677,7 @@ void UnpackColorResolveAttachmentDesc(Renderer *renderer,
     desc->finalLayout    = ConvertImageLayoutToVkImageLayout(renderer, finalLayout);
 }
 
-void UnpackDepthStencilResolveAttachmentDesc(vk::Context *context,
+void UnpackDepthStencilResolveAttachmentDesc(vk::ErrorContext *context,
                                              VkAttachmentDescription2 *desc,
                                              angle::FormatID formatID,
                                              const AttachmentInfo &depthInfo,
@@ -1119,7 +1119,7 @@ void InitializeUnresolveSubpassDependencies(const SubpassVector<VkSubpassDescrip
 // masks in preparation of potential framebuffer fetch and advanced blend barriers.  This is known
 // not to add any overhead on any hardware we have been able to gather information from.
 void InitializeDefaultSubpassSelfDependencies(
-    Context *context,
+    ErrorContext *context,
     const RenderPassDesc &desc,
     uint32_t subpassIndex,
     std::vector<VkSubpassDependency2> *subpassDependencies)
@@ -1166,7 +1166,7 @@ void InitializeDefaultSubpassSelfDependencies(
     }
 }
 
-void InitializeMSRTSS(Context *context,
+void InitializeMSRTSS(ErrorContext *context,
                       uint8_t renderToTextureSamples,
                       VkSubpassDescription2 *subpass,
                       VkSubpassDescriptionDepthStencilResolve *msrtssResolve,
@@ -1192,7 +1192,7 @@ void InitializeMSRTSS(Context *context,
     AppendToPNextChain(subpass, msrtss);
 }
 
-void SetRenderPassViewMask(Context *context,
+void SetRenderPassViewMask(ErrorContext *context,
                            const uint32_t *viewMask,
                            VkRenderPassCreateInfo2 *createInfo,
                            SubpassVector<VkSubpassDescription2> *subpassDesc)
@@ -1292,7 +1292,7 @@ void ToRenderPassMultiviewCreateInfo(const VkRenderPassCreateInfo2 &createInfo,
     AddToPNextChain(createInfo1, multiviewInfo);
 }
 
-angle::Result CreateRenderPass1(Context *context,
+angle::Result CreateRenderPass1(ErrorContext *context,
                                 const VkRenderPassCreateInfo2 &createInfo,
                                 uint8_t viewCount,
                                 RenderPass *renderPass)
@@ -2440,7 +2440,7 @@ PipelineState GetPipelineState(size_t stateIndex, bool *isRangedOut, size_t *sub
     out << "\\n";
 }
 
-[[maybe_unused]] void OutputAllPipelineState(Context *context,
+[[maybe_unused]] void OutputAllPipelineState(ErrorContext *context,
                                              std::ostream &out,
                                              const UnpackedPipelineState &pipeline,
                                              GraphicsPipelineSubset subset,
@@ -2556,7 +2556,7 @@ PipelineState GetPipelineState(size_t stateIndex, bool *isRangedOut, size_t *sub
 
 template <typename Hash>
 void DumpPipelineCacheGraph(
-    Context *context,
+    ErrorContext *context,
     const std::unordered_map<GraphicsPipelineDesc,
                              PipelineHelper,
                              Hash,
@@ -2701,7 +2701,7 @@ void MakeInvalidCachedObject(SharedDescriptorSetCacheKey *cacheKeyOut)
     *cacheKeyOut = SharedDescriptorSetCacheKey::MakeShared(VK_NULL_HANDLE);
 }
 
-angle::Result InitializePipelineFromLibraries(Context *context,
+angle::Result InitializePipelineFromLibraries(ErrorContext *context,
                                               PipelineCacheAccess *pipelineCache,
                                               const vk::PipelineLayout &pipelineLayout,
                                               const vk::PipelineHelper &vertexInputPipeline,
@@ -2763,7 +2763,7 @@ angle::Result InitializePipelineFromLibraries(Context *context,
     return angle::Result::Continue;
 }
 
-bool ShouldDumpPipelineCacheGraph(Context *context)
+bool ShouldDumpPipelineCacheGraph(ErrorContext *context)
 {
     return kDumpPipelineCacheGraph && context->getRenderer()->isPipelineCacheGraphDumpEnabled();
 }
@@ -3008,7 +3008,7 @@ void RenderPassDesc::setLegacyDither(bool enabled)
 }
 
 void RenderPassDesc::beginRenderPass(
-    Context *context,
+    ErrorContext *context,
     PrimaryCommandBuffer *primary,
     const RenderPass &renderPass,
     VkFramebuffer framebuffer,
@@ -3033,7 +3033,7 @@ void RenderPassDesc::beginRenderPass(
 }
 
 void RenderPassDesc::beginRendering(
-    Context *context,
+    ErrorContext *context,
     PrimaryCommandBuffer *primary,
     const gl::Rectangle &renderArea,
     VkSubpassContents subpassContents,
@@ -3095,7 +3095,7 @@ void RenderPassDesc::populateRenderingInheritanceInfo(
 }
 
 void RenderPassDesc::updatePerfCounters(
-    Context *context,
+    ErrorContext *context,
     const FramebufferAttachmentsVector<VkImageView> &attachmentViews,
     const AttachmentOpsArray &ops,
     angle::VulkanPerfCounters *countersOut)
@@ -3320,7 +3320,7 @@ bool GraphicsPipelineDesc::keyEqual(const GraphicsPipelineDesc &other,
 // effect, or the context is robust.  For VK_EXT_graphics_pipeline_library, such state that affects
 // multiple subsets of the pipeline is duplicated in each subset (for example, there are two
 // copies of isRobustContext, one for vertex input and one for shader stages).
-void GraphicsPipelineDesc::initDefaults(const Context *context,
+void GraphicsPipelineDesc::initDefaults(const ErrorContext *context,
                                         GraphicsPipelineSubset subset,
                                         PipelineRobustness pipelineRobustness,
                                         PipelineProtectedAccess pipelineProtectedAccess)
@@ -3428,7 +3428,7 @@ void GraphicsPipelineDesc::initDefaults(const Context *context,
             pipelineProtectedAccess == PipelineProtectedAccess::Protected;
 }
 
-VkResult GraphicsPipelineDesc::initializePipeline(Context *context,
+VkResult GraphicsPipelineDesc::initializePipeline(ErrorContext *context,
                                                   PipelineCacheAccess *pipelineCache,
                                                   GraphicsPipelineSubset subset,
                                                   const RenderPass &compatibleRenderPass,
@@ -3673,7 +3673,7 @@ angle::FormatID patchVertexAttribComponentType(angle::FormatID format,
 }
 
 VkFormat GraphicsPipelineDesc::getPipelineVertexInputStateFormat(
-    Context *context,
+    ErrorContext *context,
     angle::FormatID formatID,
     bool compressed,
     const gl::ComponentType programAttribType,
@@ -3723,7 +3723,7 @@ VkFormat GraphicsPipelineDesc::getPipelineVertexInputStateFormat(
 }
 
 void GraphicsPipelineDesc::initializePipelineVertexInputState(
-    Context *context,
+    ErrorContext *context,
     GraphicsPipelineVertexInputVulkanStructs *stateOut,
     GraphicsPipelineDynamicStateList *dynamicStateListOut) const
 {
@@ -3818,7 +3818,7 @@ void GraphicsPipelineDesc::initializePipelineVertexInputState(
 }
 
 void GraphicsPipelineDesc::initializePipelineShadersState(
-    Context *context,
+    ErrorContext *context,
     const ShaderModuleMap &shaders,
     const SpecializationConstants &specConsts,
     GraphicsPipelineShadersVulkanStructs *stateOut,
@@ -4055,7 +4055,7 @@ void GraphicsPipelineDesc::initializePipelineShadersState(
 }
 
 void GraphicsPipelineDesc::initializePipelineSharedNonVertexInputState(
-    Context *context,
+    ErrorContext *context,
     GraphicsPipelineSharedNonVertexInputVulkanStructs *stateOut,
     GraphicsPipelineDynamicStateList *dynamicStateListOut) const
 {
@@ -4081,7 +4081,7 @@ void GraphicsPipelineDesc::initializePipelineSharedNonVertexInputState(
 }
 
 void GraphicsPipelineDesc::initializePipelineFragmentOutputState(
-    Context *context,
+    ErrorContext *context,
     GraphicsPipelineFragmentOutputVulkanStructs *stateOut,
     GraphicsPipelineDynamicStateList *dynamicStateListOut) const
 {
@@ -5054,7 +5054,7 @@ CreateMonolithicPipelineTask::CreateMonolithicPipelineTask(
     const ShaderModuleMap &shaders,
     const SpecializationConstants &specConsts,
     const GraphicsPipelineDesc &desc)
-    : Context(renderer),
+    : ErrorContext(renderer),
       mPipelineCache(pipelineCache),
       mCompatibleRenderPass(nullptr),
       mPipelineLayout(pipelineLayout),
@@ -5132,7 +5132,7 @@ void PipelineHelper::destroy(VkDevice device)
     reset();
 }
 
-void PipelineHelper::release(Context *context)
+void PipelineHelper::release(ErrorContext *context)
 {
     Renderer *renderer = context->getRenderer();
 
@@ -5243,7 +5243,8 @@ FramebufferHelper &FramebufferHelper::operator=(FramebufferHelper &&other)
     return *this;
 }
 
-angle::Result FramebufferHelper::init(Context *context, const VkFramebufferCreateInfo &createInfo)
+angle::Result FramebufferHelper::init(ErrorContext *context,
+                                      const VkFramebufferCreateInfo &createInfo)
 {
     ANGLE_VK_TRY(context, mFramebuffer.init(context->getDevice(), createInfo));
     return angle::Result::Continue;
@@ -5520,7 +5521,7 @@ void YcbcrConversionDesc::updateConversionModel(VkSamplerYcbcrModelConversion co
     SetBitField(mConversionModel, conversionModel);
 }
 
-angle::Result YcbcrConversionDesc::init(Context *context,
+angle::Result YcbcrConversionDesc::init(ErrorContext *context,
                                         SamplerYcbcrConversion *conversionOut) const
 {
     // Create the VkSamplerYcbcrConversion
@@ -5567,7 +5568,7 @@ SamplerDesc::SamplerDesc(const SamplerDesc &other) = default;
 
 SamplerDesc &SamplerDesc::operator=(const SamplerDesc &rhs) = default;
 
-SamplerDesc::SamplerDesc(Context *context,
+SamplerDesc::SamplerDesc(ErrorContext *context,
                          const gl::SamplerState &samplerState,
                          bool stencilMode,
                          const YcbcrConversionDesc *ycbcrConversionDesc,
@@ -5810,7 +5811,7 @@ SamplerHelper &SamplerHelper::operator=(SamplerHelper &&rhs)
     return *this;
 }
 
-angle::Result SamplerHelper::init(Context *context, const VkSamplerCreateInfo &createInfo)
+angle::Result SamplerHelper::init(ErrorContext *context, const VkSamplerCreateInfo &createInfo)
 {
     mSamplerSerial = context->getRenderer()->getResourceSerialFactory().generateSamplerSerial();
     ANGLE_VK_TRY(context, mSampler.init(context->getDevice(), createInfo));
@@ -6273,7 +6274,7 @@ void DescriptorSetDescBuilder::updateUniformBuffer(uint32_t bindingIndex,
 }
 
 void DescriptorSetDescBuilder::updateTransformFeedbackBuffer(
-    const Context *context,
+    const ErrorContext *context,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
     const WriteDescriptorDescs &writeDescriptorDescs,
     uint32_t xfbBufferIndex,
@@ -6301,7 +6302,7 @@ void DescriptorSetDescBuilder::updateTransformFeedbackBuffer(
 }
 
 void DescriptorSetDescBuilder::updateUniformsAndXfb(
-    Context *context,
+    ErrorContext *context,
     const gl::ProgramExecutable &executable,
     const WriteDescriptorDescs &writeDescriptorDescs,
     const BufferHelper *currentUniformBuffer,
@@ -6339,7 +6340,7 @@ void DescriptorSetDescBuilder::updateUniformsAndXfb(
 }
 
 void DescriptorSetDescBuilder::updatePreCacheActiveTextures(
-    Context *context,
+    ErrorContext *context,
     const gl::ProgramExecutable &executable,
     const gl::ActiveTextureArray<TextureVk *> &textures,
     const gl::SamplerBindingVector &samplers)
@@ -6439,7 +6440,7 @@ void DescriptorSetDescBuilder::setEmptyBuffer(uint32_t infoDescIndex,
 
 template <typename CommandBufferT>
 void DescriptorSetDescBuilder::updateOneShaderBuffer(
-    Context *context,
+    ErrorContext *context,
     CommandBufferT *commandBufferHelper,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
     const gl::BufferVector &buffers,
@@ -6547,7 +6548,7 @@ void DescriptorSetDescBuilder::updateOneShaderBuffer(
 
 template <typename CommandBufferT>
 void DescriptorSetDescBuilder::updateShaderBuffers(
-    Context *context,
+    ErrorContext *context,
     CommandBufferT *commandBufferHelper,
     const gl::ProgramExecutable &executable,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
@@ -6576,7 +6577,7 @@ void DescriptorSetDescBuilder::updateShaderBuffers(
 
 template <typename CommandBufferT>
 void DescriptorSetDescBuilder::updateAtomicCounters(
-    Context *context,
+    ErrorContext *context,
     CommandBufferT *commandBufferHelper,
     const gl::ProgramExecutable &executable,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
@@ -6649,7 +6650,7 @@ void DescriptorSetDescBuilder::updateAtomicCounters(
 
 // Explicit instantiation
 template void DescriptorSetDescBuilder::updateOneShaderBuffer<vk::RenderPassCommandBufferHelper>(
-    Context *context,
+    ErrorContext *context,
     RenderPassCommandBufferHelper *commandBufferHelper,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
     const gl::BufferVector &buffers,
@@ -6662,7 +6663,7 @@ template void DescriptorSetDescBuilder::updateOneShaderBuffer<vk::RenderPassComm
     const GLbitfield memoryBarrierBits);
 
 template void DescriptorSetDescBuilder::updateOneShaderBuffer<OutsideRenderPassCommandBufferHelper>(
-    Context *context,
+    ErrorContext *context,
     OutsideRenderPassCommandBufferHelper *commandBufferHelper,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
     const gl::BufferVector &buffers,
@@ -6675,7 +6676,7 @@ template void DescriptorSetDescBuilder::updateOneShaderBuffer<OutsideRenderPassC
     const GLbitfield memoryBarrierBits);
 
 template void DescriptorSetDescBuilder::updateShaderBuffers<OutsideRenderPassCommandBufferHelper>(
-    Context *context,
+    ErrorContext *context,
     OutsideRenderPassCommandBufferHelper *commandBufferHelper,
     const gl::ProgramExecutable &executable,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
@@ -6688,7 +6689,7 @@ template void DescriptorSetDescBuilder::updateShaderBuffers<OutsideRenderPassCom
     const GLbitfield memoryBarrierBits);
 
 template void DescriptorSetDescBuilder::updateShaderBuffers<RenderPassCommandBufferHelper>(
-    Context *context,
+    ErrorContext *context,
     RenderPassCommandBufferHelper *commandBufferHelper,
     const gl::ProgramExecutable &executable,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
@@ -6701,7 +6702,7 @@ template void DescriptorSetDescBuilder::updateShaderBuffers<RenderPassCommandBuf
     const GLbitfield memoryBarrierBits);
 
 template void DescriptorSetDescBuilder::updateAtomicCounters<OutsideRenderPassCommandBufferHelper>(
-    Context *context,
+    ErrorContext *context,
     OutsideRenderPassCommandBufferHelper *commandBufferHelper,
     const gl::ProgramExecutable &executable,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
@@ -6712,7 +6713,7 @@ template void DescriptorSetDescBuilder::updateAtomicCounters<OutsideRenderPassCo
     const WriteDescriptorDescs &writeDescriptorDescs);
 
 template void DescriptorSetDescBuilder::updateAtomicCounters<RenderPassCommandBufferHelper>(
-    Context *context,
+    ErrorContext *context,
     RenderPassCommandBufferHelper *commandBufferHelper,
     const gl::ProgramExecutable &executable,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
@@ -6723,7 +6724,7 @@ template void DescriptorSetDescBuilder::updateAtomicCounters<RenderPassCommandBu
     const WriteDescriptorDescs &writeDescriptorDescs);
 
 angle::Result DescriptorSetDescBuilder::updateImages(
-    Context *context,
+    ErrorContext *context,
     const gl::ProgramExecutable &executable,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
     const gl::ActiveTextureArray<TextureVk *> &activeImages,
@@ -6824,7 +6825,7 @@ angle::Result DescriptorSetDescBuilder::updateImages(
 }
 
 angle::Result DescriptorSetDescBuilder::updateInputAttachments(
-    vk::Context *context,
+    vk::ErrorContext *context,
     const gl::ProgramExecutable &executable,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
     FramebufferVk *framebufferVk,
@@ -6916,7 +6917,7 @@ angle::Result DescriptorSetDescBuilder::updateInputAttachments(
 }
 
 void DescriptorSetDescBuilder::updateInputAttachment(
-    Context *context,
+    ErrorContext *context,
     uint32_t binding,
     ImageLayout layout,
     const vk::ImageView *imageView,
@@ -7114,7 +7115,7 @@ std::unique_lock<angle::SimpleMutex> PipelineCacheAccess::getLock()
     return std::unique_lock<angle::SimpleMutex>(*mMutex);
 }
 
-VkResult PipelineCacheAccess::createGraphicsPipeline(vk::Context *context,
+VkResult PipelineCacheAccess::createGraphicsPipeline(vk::ErrorContext *context,
                                                      const VkGraphicsPipelineCreateInfo &createInfo,
                                                      vk::Pipeline *pipelineOut)
 {
@@ -7123,7 +7124,7 @@ VkResult PipelineCacheAccess::createGraphicsPipeline(vk::Context *context,
     return pipelineOut->initGraphics(context->getDevice(), createInfo, *mPipelineCache);
 }
 
-VkResult PipelineCacheAccess::createComputePipeline(vk::Context *context,
+VkResult PipelineCacheAccess::createComputePipeline(vk::ErrorContext *context,
                                                     const VkComputePipelineCreateInfo &createInfo,
                                                     vk::Pipeline *pipelineOut)
 {
@@ -7132,7 +7133,9 @@ VkResult PipelineCacheAccess::createComputePipeline(vk::Context *context,
     return pipelineOut->initCompute(context->getDevice(), createInfo, *mPipelineCache);
 }
 
-VkResult PipelineCacheAccess::getCacheData(vk::Context *context, size_t *cacheSize, void *cacheData)
+VkResult PipelineCacheAccess::getCacheData(vk::ErrorContext *context,
+                                           size_t *cacheSize,
+                                           void *cacheData)
 {
     std::unique_lock<angle::SimpleMutex> lock = getLock();
     return mPipelineCache->getCacheData(context->getDevice(), cacheSize, cacheData);
@@ -7445,7 +7448,7 @@ angle::Result RenderPassCache::getRenderPassWithOpsImpl(ContextVk *contextVk,
 }
 
 // static
-angle::Result RenderPassCache::MakeRenderPass(vk::Context *context,
+angle::Result RenderPassCache::MakeRenderPass(vk::ErrorContext *context,
                                               const vk::RenderPassDesc &desc,
                                               const vk::AttachmentOpsArray &ops,
                                               vk::RenderPass *renderPass,
@@ -7912,7 +7915,7 @@ angle::Result RenderPassCache::MakeRenderPass(vk::Context *context,
 
 // GraphicsPipelineCache implementation.
 template <typename Hash>
-void GraphicsPipelineCache<Hash>::destroy(vk::Context *context)
+void GraphicsPipelineCache<Hash>::destroy(vk::ErrorContext *context)
 {
     if (vk::ShouldDumpPipelineCacheGraph(context) && !mPayload.empty())
     {
@@ -7933,7 +7936,7 @@ void GraphicsPipelineCache<Hash>::destroy(vk::Context *context)
 }
 
 template <typename Hash>
-void GraphicsPipelineCache<Hash>::release(vk::Context *context)
+void GraphicsPipelineCache<Hash>::release(vk::ErrorContext *context)
 {
     if (vk::ShouldDumpPipelineCacheGraph(context) && !mPayload.empty())
     {
@@ -7951,7 +7954,7 @@ void GraphicsPipelineCache<Hash>::release(vk::Context *context)
 
 template <typename Hash>
 angle::Result GraphicsPipelineCache<Hash>::createPipeline(
-    vk::Context *context,
+    vk::ErrorContext *context,
     vk::PipelineCacheAccess *pipelineCache,
     const vk::RenderPass &compatibleRenderPass,
     const vk::PipelineLayout &pipelineLayout,
@@ -7993,7 +7996,7 @@ angle::Result GraphicsPipelineCache<Hash>::createPipeline(
 
 template <typename Hash>
 angle::Result GraphicsPipelineCache<Hash>::linkLibraries(
-    vk::Context *context,
+    vk::ErrorContext *context,
     vk::PipelineCacheAccess *pipelineCache,
     const vk::GraphicsPipelineDesc &desc,
     const vk::PipelineLayout &pipelineLayout,
@@ -8083,11 +8086,11 @@ void GraphicsPipelineCache<Hash>::populate(const vk::GraphicsPipelineDesc &desc,
 
 // Instantiate the pipeline cache functions
 template void GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>::destroy(
-    vk::Context *context);
+    vk::ErrorContext *context);
 template void GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>::release(
-    vk::Context *context);
+    vk::ErrorContext *context);
 template angle::Result GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>::createPipeline(
-    vk::Context *context,
+    vk::ErrorContext *context,
     vk::PipelineCacheAccess *pipelineCache,
     const vk::RenderPass &compatibleRenderPass,
     const vk::PipelineLayout &pipelineLayout,
@@ -8098,7 +8101,7 @@ template angle::Result GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>::
     const vk::GraphicsPipelineDesc **descPtrOut,
     vk::PipelineHelper **pipelineOut);
 template angle::Result GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>::linkLibraries(
-    vk::Context *context,
+    vk::ErrorContext *context,
     vk::PipelineCacheAccess *pipelineCache,
     const vk::GraphicsPipelineDesc &desc,
     const vk::PipelineLayout &pipelineLayout,
@@ -8113,11 +8116,11 @@ template void GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>::populate(
     vk::PipelineHelper **pipelineHelperOut);
 
 template void GraphicsPipelineCache<GraphicsPipelineDescVertexInputHash>::destroy(
-    vk::Context *context);
+    vk::ErrorContext *context);
 template void GraphicsPipelineCache<GraphicsPipelineDescVertexInputHash>::release(
-    vk::Context *context);
+    vk::ErrorContext *context);
 template angle::Result GraphicsPipelineCache<GraphicsPipelineDescVertexInputHash>::createPipeline(
-    vk::Context *context,
+    vk::ErrorContext *context,
     vk::PipelineCacheAccess *pipelineCache,
     const vk::RenderPass &compatibleRenderPass,
     const vk::PipelineLayout &pipelineLayout,
@@ -8132,10 +8135,12 @@ template void GraphicsPipelineCache<GraphicsPipelineDescVertexInputHash>::popula
     vk::Pipeline &&pipeline,
     vk::PipelineHelper **pipelineHelperOut);
 
-template void GraphicsPipelineCache<GraphicsPipelineDescShadersHash>::destroy(vk::Context *context);
-template void GraphicsPipelineCache<GraphicsPipelineDescShadersHash>::release(vk::Context *context);
+template void GraphicsPipelineCache<GraphicsPipelineDescShadersHash>::destroy(
+    vk::ErrorContext *context);
+template void GraphicsPipelineCache<GraphicsPipelineDescShadersHash>::release(
+    vk::ErrorContext *context);
 template angle::Result GraphicsPipelineCache<GraphicsPipelineDescShadersHash>::createPipeline(
-    vk::Context *context,
+    vk::ErrorContext *context,
     vk::PipelineCacheAccess *pipelineCache,
     const vk::RenderPass &compatibleRenderPass,
     const vk::PipelineLayout &pipelineLayout,
@@ -8151,12 +8156,12 @@ template void GraphicsPipelineCache<GraphicsPipelineDescShadersHash>::populate(
     vk::PipelineHelper **pipelineHelperOut);
 
 template void GraphicsPipelineCache<GraphicsPipelineDescFragmentOutputHash>::destroy(
-    vk::Context *context);
+    vk::ErrorContext *context);
 template void GraphicsPipelineCache<GraphicsPipelineDescFragmentOutputHash>::release(
-    vk::Context *context);
+    vk::ErrorContext *context);
 template angle::Result
 GraphicsPipelineCache<GraphicsPipelineDescFragmentOutputHash>::createPipeline(
-    vk::Context *context,
+    vk::ErrorContext *context,
     vk::PipelineCacheAccess *pipelineCache,
     const vk::RenderPass &compatibleRenderPass,
     const vk::PipelineLayout &pipelineLayout,
@@ -8187,7 +8192,7 @@ void DescriptorSetLayoutCache::destroy(vk::Renderer *renderer)
 }
 
 angle::Result DescriptorSetLayoutCache::getDescriptorSetLayout(
-    vk::Context *context,
+    vk::ErrorContext *context,
     const vk::DescriptorSetLayoutDesc &desc,
     vk::DescriptorSetLayoutPtr *descriptorSetLayoutOut)
 {
@@ -8246,7 +8251,7 @@ void PipelineLayoutCache::destroy(vk::Renderer *renderer)
 }
 
 angle::Result PipelineLayoutCache::getPipelineLayout(
-    vk::Context *context,
+    vk::ErrorContext *context,
     const vk::PipelineLayoutDesc &desc,
     const vk::DescriptorSetLayoutPointerArray &descriptorSetLayouts,
     vk::PipelineLayoutPtr *pipelineLayoutOut)
@@ -8337,7 +8342,7 @@ void SamplerYcbcrConversionCache::destroy(vk::Renderer *renderer)
 }
 
 angle::Result SamplerYcbcrConversionCache::getSamplerYcbcrConversion(
-    vk::Context *context,
+    vk::ErrorContext *context,
     const vk::YcbcrConversionDesc &ycbcrConversionDesc,
     VkSamplerYcbcrConversion *vkSamplerYcbcrConversionOut)
 {

@@ -17,7 +17,7 @@
 
 namespace rx
 {
-class DisplayVk : public DisplayImpl, public vk::Context, public vk::GlobalOps
+class DisplayVk : public DisplayImpl, public vk::ErrorContext, public vk::GlobalOps
 {
   public:
     DisplayVk(const egl::DisplayState &state);

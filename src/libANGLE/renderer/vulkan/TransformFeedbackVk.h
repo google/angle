@@ -88,7 +88,7 @@ class TransformFeedbackVk : public TransformFeedbackImpl, public angle::Observer
     }
 
     void updateTransformFeedbackDescriptorDesc(
-        const vk::Context *context,
+        const vk::ErrorContext *context,
         const gl::ProgramExecutable &executable,
         const ShaderInterfaceVariableInfoMap &variableInfoMap,
         const vk::WriteDescriptorDescs &writeDescriptorDescs,
@@ -109,7 +109,7 @@ class TransformFeedbackVk : public TransformFeedbackImpl, public angle::Observer
   private:
     void initializeXFBVariables(ContextVk *contextVk, uint32_t xfbBufferCount);
 
-    void releaseCounterBuffers(vk::Context *context);
+    void releaseCounterBuffers(vk::ErrorContext *context);
 
     // This member variable is set when glBindTransformFeedbackBuffers/glBeginTransformFeedback
     // is called and unset in dirty bit handler for transform feedback state change. If this

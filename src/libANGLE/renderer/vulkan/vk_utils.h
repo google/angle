@@ -346,11 +346,11 @@ class [[nodiscard]] ScopedQueueSerialIndex final : angle::NonCopyable
 class RefCountedEventsGarbageRecycler;
 // Abstracts error handling. Implemented by ContextVk for GL, DisplayVk for EGL, worker threads,
 // CLContextVk etc.
-class Context : angle::NonCopyable
+class ErrorContext : angle::NonCopyable
 {
   public:
-    Context(Renderer *renderer);
-    virtual ~Context();
+    ErrorContext(Renderer *renderer);
+    virtual ~ErrorContext();
 
     virtual void handleError(VkResult result,
                              const char *file,
@@ -517,7 +517,7 @@ class MemoryProperties final : angle::NonCopyable
 
     void init(VkPhysicalDevice physicalDevice);
     bool hasLazilyAllocatedMemory() const;
-    VkResult findCompatibleMemoryIndex(Context *context,
+    VkResult findCompatibleMemoryIndex(ErrorContext *context,
                                        const VkMemoryRequirements &memoryRequirements,
                                        VkMemoryPropertyFlags requestedMemoryPropertyFlags,
                                        bool isExternalMemory,
@@ -560,7 +560,7 @@ class StagingBuffer final : angle::NonCopyable
     void collectGarbage(Renderer *renderer, const QueueSerial &queueSerial);
     void destroy(Renderer *renderer);
 
-    angle::Result init(Context *context, VkDeviceSize size, StagingUsage usage);
+    angle::Result init(ErrorContext *context, VkDeviceSize size, StagingUsage usage);
 
     Buffer &getBuffer() { return mBuffer; }
     const Buffer &getBuffer() const { return mBuffer; }
@@ -572,14 +572,14 @@ class StagingBuffer final : angle::NonCopyable
     size_t mSize;
 };
 
-angle::Result InitMappableAllocation(Context *context,
+angle::Result InitMappableAllocation(ErrorContext *context,
                                      const Allocator &allocator,
                                      Allocation *allocation,
                                      VkDeviceSize size,
                                      int value,
                                      VkMemoryPropertyFlags memoryPropertyFlags);
 
-VkResult AllocateBufferMemory(Context *context,
+VkResult AllocateBufferMemory(ErrorContext *context,
                               vk::MemoryAllocationType memoryAllocationType,
                               VkMemoryPropertyFlags requestedMemoryPropertyFlags,
                               VkMemoryPropertyFlags *memoryPropertyFlagsOut,
@@ -589,7 +589,7 @@ VkResult AllocateBufferMemory(Context *context,
                               DeviceMemory *deviceMemoryOut,
                               VkDeviceSize *sizeOut);
 
-VkResult AllocateImageMemory(Context *context,
+VkResult AllocateImageMemory(ErrorContext *context,
                              vk::MemoryAllocationType memoryAllocationType,
                              VkMemoryPropertyFlags memoryPropertyFlags,
                              VkMemoryPropertyFlags *memoryPropertyFlagsOut,
@@ -599,7 +599,7 @@ VkResult AllocateImageMemory(Context *context,
                              DeviceMemory *deviceMemoryOut,
                              VkDeviceSize *sizeOut);
 
-VkResult AllocateImageMemoryWithRequirements(Context *context,
+VkResult AllocateImageMemoryWithRequirements(ErrorContext *context,
                                              vk::MemoryAllocationType memoryAllocationType,
                                              VkMemoryPropertyFlags memoryPropertyFlags,
                                              const VkMemoryRequirements &memoryRequirements,
@@ -609,7 +609,7 @@ VkResult AllocateImageMemoryWithRequirements(Context *context,
                                              uint32_t *memoryTypeIndexOut,
                                              DeviceMemory *deviceMemoryOut);
 
-VkResult AllocateBufferMemoryWithRequirements(Context *context,
+VkResult AllocateBufferMemoryWithRequirements(ErrorContext *context,
                                               MemoryAllocationType memoryAllocationType,
                                               VkMemoryPropertyFlags memoryPropertyFlags,
                                               const VkMemoryRequirements &memoryRequirements,
@@ -1191,7 +1191,7 @@ using SpecializationConstantMap = angle::PackedEnumMap<sh::vk::SpecializationCon
 using ShaderModulePtr = SharedPtr<ShaderModule>;
 using ShaderModuleMap = gl::ShaderMap<ShaderModulePtr>;
 
-angle::Result InitShaderModule(Context *context,
+angle::Result InitShaderModule(ErrorContext *context,
                                ShaderModulePtr *shaderModulePtr,
                                const uint32_t *shaderCode,
                                size_t shaderCodeSize);
@@ -1353,7 +1353,8 @@ constexpr bool IsDynamicDescriptor(VkDescriptorType descriptorType)
     }
 }
 
-void ApplyPipelineCreationFeedback(Context *context, const VkPipelineCreationFeedback &feedback);
+void ApplyPipelineCreationFeedback(ErrorContext *context,
+                                   const VkPipelineCreationFeedback &feedback);
 
 angle::Result SetDebugUtilsObjectName(ContextVk *contextVk,
                                       VkObjectType objectType,

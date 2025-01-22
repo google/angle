@@ -194,7 +194,7 @@ class RefCountedEvent final
 
     // Create VkEvent and associated it with given layout. Returns true if success and false if
     // failed.
-    bool init(Context *context, EventStage eventStage);
+    bool init(ErrorContext *context, EventStage eventStage);
 
     // Release one reference count to the underline Event object and destroy or recycle the handle
     // to renderer's recycler if this is the very last reference.
@@ -202,7 +202,7 @@ class RefCountedEvent final
 
     // Release one reference count to the underline Event object and destroy or recycle the handle
     // to the context share group's recycler if this is the very last reference.
-    void release(Context *context);
+    void release(ErrorContext *context);
 
     // Destroy the event and mHandle. Caller must ensure there is no outstanding reference to the
     // mHandle.
@@ -340,7 +340,7 @@ class RefCountedEventRecycler final
     }
 
     // Reset all events in the toReset list and move them to the toReuse list
-    void resetEvents(Context *context,
+    void resetEvents(ErrorContext *context,
                      const QueueSerial queueSerial,
                      PrimaryCommandBuffer *commandbuffer);
 

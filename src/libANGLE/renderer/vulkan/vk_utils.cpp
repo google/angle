@@ -83,7 +83,7 @@ bool FindCompatibleMemory(const VkPhysicalDeviceMemoryProperties &memoryProperti
     return false;
 }
 
-VkResult FindAndAllocateCompatibleMemory(vk::Context *context,
+VkResult FindAndAllocateCompatibleMemory(vk::ErrorContext *context,
                                          vk::MemoryAllocationType memoryAllocationType,
                                          const vk::MemoryProperties &memoryProperties,
                                          VkMemoryPropertyFlags requestedMemoryPropertyFlags,
@@ -121,7 +121,7 @@ VkResult FindAndAllocateCompatibleMemory(vk::Context *context,
 }
 
 template <typename T>
-VkResult AllocateAndBindBufferOrImageMemory(vk::Context *context,
+VkResult AllocateAndBindBufferOrImageMemory(vk::ErrorContext *context,
                                             vk::MemoryAllocationType memoryAllocationType,
                                             VkMemoryPropertyFlags requestedMemoryPropertyFlags,
                                             VkMemoryPropertyFlags *memoryPropertyFlagsOut,
@@ -133,7 +133,7 @@ VkResult AllocateAndBindBufferOrImageMemory(vk::Context *context,
                                             vk::DeviceMemory *deviceMemoryOut);
 
 template <>
-VkResult AllocateAndBindBufferOrImageMemory(vk::Context *context,
+VkResult AllocateAndBindBufferOrImageMemory(vk::ErrorContext *context,
                                             vk::MemoryAllocationType memoryAllocationType,
                                             VkMemoryPropertyFlags requestedMemoryPropertyFlags,
                                             VkMemoryPropertyFlags *memoryPropertyFlagsOut,
@@ -171,7 +171,7 @@ VkResult AllocateAndBindBufferOrImageMemory(vk::Context *context,
 }
 
 template <>
-VkResult AllocateAndBindBufferOrImageMemory(vk::Context *context,
+VkResult AllocateAndBindBufferOrImageMemory(vk::ErrorContext *context,
                                             vk::MemoryAllocationType memoryAllocationType,
                                             VkMemoryPropertyFlags requestedMemoryPropertyFlags,
                                             VkMemoryPropertyFlags *memoryPropertyFlagsOut,
@@ -196,7 +196,7 @@ VkResult AllocateAndBindBufferOrImageMemory(vk::Context *context,
 }
 
 template <typename T>
-VkResult AllocateBufferOrImageMemory(vk::Context *context,
+VkResult AllocateBufferOrImageMemory(vk::ErrorContext *context,
                                      vk::MemoryAllocationType memoryAllocationType,
                                      VkMemoryPropertyFlags requestedMemoryPropertyFlags,
                                      VkMemoryPropertyFlags *memoryPropertyFlagsOut,
@@ -369,19 +369,19 @@ VkImageAspectFlags GetFormatAspectFlags(const angle::Format &format)
     return dsAspect != 0 ? dsAspect : VK_IMAGE_ASPECT_COLOR_BIT;
 }
 
-// Context implementation.
-Context::Context(Renderer *renderer)
+// ErrorContext implementation.
+ErrorContext::ErrorContext(Renderer *renderer)
     : mRenderer(renderer), mShareGroupRefCountedEventsGarbageRecycler(nullptr), mPerfCounters{}
 {}
 
-Context::~Context() {}
+ErrorContext::~ErrorContext() {}
 
-VkDevice Context::getDevice() const
+VkDevice ErrorContext::getDevice() const
 {
     return mRenderer->getDevice();
 }
 
-const angle::FeaturesVk &Context::getFeatures() const
+const angle::FeaturesVk &ErrorContext::getFeatures() const
 {
     return mRenderer->getFeatures();
 }
@@ -415,7 +415,7 @@ bool MemoryProperties::hasLazilyAllocatedMemory() const
 }
 
 VkResult MemoryProperties::findCompatibleMemoryIndex(
-    Context *context,
+    ErrorContext *context,
     const VkMemoryRequirements &memoryRequirements,
     VkMemoryPropertyFlags requestedMemoryPropertyFlags,
     bool isExternalMemory,
@@ -479,7 +479,7 @@ void StagingBuffer::destroy(Renderer *renderer)
     mSize = 0;
 }
 
-angle::Result StagingBuffer::init(Context *context, VkDeviceSize size, StagingUsage usage)
+angle::Result StagingBuffer::init(ErrorContext *context, VkDeviceSize size, StagingUsage usage)
 {
     VkBufferCreateInfo createInfo    = {};
     createInfo.sType                 = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -531,7 +531,7 @@ void StagingBuffer::collectGarbage(Renderer *renderer, const QueueSerial &queueS
     renderer->collectGarbage(use, std::move(garbageObjects));
 }
 
-angle::Result InitMappableAllocation(Context *context,
+angle::Result InitMappableAllocation(ErrorContext *context,
                                      const Allocator &allocator,
                                      Allocation *allocation,
                                      VkDeviceSize size,
@@ -552,7 +552,7 @@ angle::Result InitMappableAllocation(Context *context,
     return angle::Result::Continue;
 }
 
-VkResult AllocateBufferMemory(Context *context,
+VkResult AllocateBufferMemory(ErrorContext *context,
                               vk::MemoryAllocationType memoryAllocationType,
                               VkMemoryPropertyFlags requestedMemoryPropertyFlags,
                               VkMemoryPropertyFlags *memoryPropertyFlagsOut,
@@ -567,7 +567,7 @@ VkResult AllocateBufferMemory(Context *context,
                                        memoryTypeIndexOut, deviceMemoryOut, sizeOut);
 }
 
-VkResult AllocateImageMemory(Context *context,
+VkResult AllocateImageMemory(ErrorContext *context,
                              vk::MemoryAllocationType memoryAllocationType,
                              VkMemoryPropertyFlags memoryPropertyFlags,
                              VkMemoryPropertyFlags *memoryPropertyFlagsOut,
@@ -582,7 +582,7 @@ VkResult AllocateImageMemory(Context *context,
                                        memoryTypeIndexOut, deviceMemoryOut, sizeOut);
 }
 
-VkResult AllocateImageMemoryWithRequirements(Context *context,
+VkResult AllocateImageMemoryWithRequirements(ErrorContext *context,
                                              vk::MemoryAllocationType memoryAllocationType,
                                              VkMemoryPropertyFlags memoryPropertyFlags,
                                              const VkMemoryRequirements &memoryRequirements,
@@ -599,7 +599,7 @@ VkResult AllocateImageMemoryWithRequirements(Context *context,
                                               memoryTypeIndexOut, deviceMemoryOut);
 }
 
-VkResult AllocateBufferMemoryWithRequirements(Context *context,
+VkResult AllocateBufferMemoryWithRequirements(ErrorContext *context,
                                               MemoryAllocationType memoryAllocationType,
                                               VkMemoryPropertyFlags memoryPropertyFlags,
                                               const VkMemoryRequirements &memoryRequirements,
@@ -615,7 +615,7 @@ VkResult AllocateBufferMemoryWithRequirements(Context *context,
                                               memoryTypeIndexOut, deviceMemoryOut);
 }
 
-angle::Result InitShaderModule(Context *context,
+angle::Result InitShaderModule(ErrorContext *context,
                                ShaderModulePtr *shaderModulePtr,
                                const uint32_t *shaderCode,
                                size_t shaderCodeSize)
@@ -875,7 +875,8 @@ void ClampViewport(VkViewport *viewport)
     }
 }
 
-void ApplyPipelineCreationFeedback(Context *context, const VkPipelineCreationFeedback &feedback)
+void ApplyPipelineCreationFeedback(ErrorContext *context,
+                                   const VkPipelineCreationFeedback &feedback)
 {
     const bool cacheHit =
         (feedback.flags & VK_PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT) != 0;

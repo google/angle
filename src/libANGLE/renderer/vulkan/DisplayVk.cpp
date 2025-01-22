@@ -153,7 +153,7 @@ void InstallDebugAnnotator(egl::Display *display, vk::Renderer *renderer)
 
 DisplayVk::DisplayVk(const egl::DisplayState &state)
     : DisplayImpl(state),
-      vk::Context(new vk::Renderer()),
+      vk::ErrorContext(new vk::Renderer()),
       mScratchBuffer(1000u),
       mSupportedColorspaceFormatsMap{}
 {}

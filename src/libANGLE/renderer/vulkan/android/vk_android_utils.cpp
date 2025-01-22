@@ -34,7 +34,7 @@ DisplayVkAndroid *GetDisplayVkAndroid(Renderer *renderer)
 #endif
 }  // anonymous namespace
 
-angle::Result GetClientBufferMemoryRequirements(Context *context,
+angle::Result GetClientBufferMemoryRequirements(ErrorContext *context,
                                                 const AHardwareBuffer *hardwareBuffer,
                                                 VkMemoryRequirements &memRequirements)
 {
@@ -72,7 +72,7 @@ angle::Result GetClientBufferMemoryRequirements(Context *context,
 #endif
 }
 
-angle::Result InitAndroidExternalMemory(Context *context,
+angle::Result InitAndroidExternalMemory(ErrorContext *context,
                                         EGLClientBuffer clientBuffer,
                                         VkMemoryPropertyFlags memoryProperties,
                                         Buffer *buffer,

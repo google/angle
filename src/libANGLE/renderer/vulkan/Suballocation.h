@@ -25,7 +25,7 @@ enum class MemoryAllocationType;
 
 namespace vk
 {
-class Context;
+class ErrorContext;
 
 // BufferBlock
 class BufferBlock final : angle::NonCopyable
@@ -36,14 +36,14 @@ class BufferBlock final : angle::NonCopyable
     ~BufferBlock();
 
     void destroy(Renderer *renderer);
-    VkResult init(Context *context,
+    VkResult init(ErrorContext *context,
                   Buffer &buffer,
                   uint32_t memoryTypeIndex,
                   vma::VirtualBlockCreateFlags flags,
                   DeviceMemory &deviceMemory,
                   VkMemoryPropertyFlags memoryPropertyFlags,
                   VkDeviceSize size);
-    void initWithoutVirtualBlock(Context *context,
+    void initWithoutVirtualBlock(ErrorContext *context,
                                  Buffer &buffer,
                                  MemoryAllocationType memoryAllocationType,
                                  uint32_t memoryTypeIndex,
@@ -190,7 +190,7 @@ class BufferSuballocation final : angle::NonCopyable
               VmaVirtualAllocation allocation,
               VkDeviceSize offset,
               VkDeviceSize size);
-    void initWithEntireBuffer(Context *context,
+    void initWithEntireBuffer(ErrorContext *context,
                               Buffer &buffer,
                               MemoryAllocationType memoryAllocationType,
                               uint32_t memoryTypeIndex,
@@ -212,7 +212,7 @@ class BufferSuballocation final : angle::NonCopyable
     void invalidate(const VkDevice &device);
     VkDeviceSize getOffset() const;
     bool valid() const;
-    VkResult map(Context *context);
+    VkResult map(ErrorContext *context);
     BufferSerial getBlockSerial() const;
     uint8_t *getBlockMemory() const;
     VkDeviceSize getBlockMemorySize() const;
@@ -375,7 +375,7 @@ ANGLE_INLINE void BufferSuballocation::init(BufferBlock *block,
 }
 
 ANGLE_INLINE void BufferSuballocation::initWithEntireBuffer(
-    Context *context,
+    ErrorContext *context,
     Buffer &buffer,
     MemoryAllocationType memoryAllocationType,
     uint32_t memoryTypeIndex,

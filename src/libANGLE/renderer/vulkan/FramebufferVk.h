@@ -188,7 +188,7 @@ class FramebufferVk : public FramebufferImpl
     // sparse to be placed in |RenderPassFramebuffer|, but the calling function will have to pack
     // them to match the render buffers before creating a framebuffer.
     angle::Result getAttachmentsAndRenderTargets(
-        vk::Context *context,
+        vk::ErrorContext *context,
         vk::FramebufferAttachmentsVector<VkImageView> *unpackedAttachments,
         vk::FramebufferAttachmentsVector<RenderTargetInfo> *packedRenderTargetsInfoOut);
 

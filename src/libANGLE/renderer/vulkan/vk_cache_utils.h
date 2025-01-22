@@ -297,7 +297,7 @@ class alignas(4) RenderPassDesc final
     }
 
     // Start a render pass with a render pass object.
-    void beginRenderPass(Context *context,
+    void beginRenderPass(ErrorContext *context,
                          PrimaryCommandBuffer *primary,
                          const RenderPass &renderPass,
                          VkFramebuffer framebuffer,
@@ -307,7 +307,7 @@ class alignas(4) RenderPassDesc final
                          const VkRenderPassAttachmentBeginInfo *attachmentBeginInfo) const;
 
     // Start a render pass with dynamic rendering.
-    void beginRendering(Context *context,
+    void beginRendering(ErrorContext *context,
                         PrimaryCommandBuffer *primary,
                         const gl::Rectangle &renderArea,
                         VkSubpassContents subpassContents,
@@ -324,7 +324,7 @@ class alignas(4) RenderPassDesc final
     // Calculate perf counters for a dynamic rendering render pass instance.  For render pass
     // objects, the perf counters are updated when creating the render pass, where access to
     // ContextVk is available.
-    void updatePerfCounters(Context *context,
+    void updatePerfCounters(ErrorContext *context,
                             const FramebufferAttachmentsVector<VkImageView> &attachmentViews,
                             const AttachmentOpsArray &ops,
                             angle::VulkanPerfCounters *countersOut);
@@ -829,7 +829,7 @@ class GraphicsPipelineDesc final
     size_t hash(GraphicsPipelineSubset subset) const;
     bool keyEqual(const GraphicsPipelineDesc &other, GraphicsPipelineSubset subset) const;
 
-    void initDefaults(const Context *context,
+    void initDefaults(const ErrorContext *context,
                       GraphicsPipelineSubset subset,
                       PipelineRobustness contextRobustness,
                       PipelineProtectedAccess contextProtectedAccess);
@@ -841,7 +841,7 @@ class GraphicsPipelineDesc final
         return reinterpret_cast<const T *>(this);
     }
 
-    VkResult initializePipeline(Context *context,
+    VkResult initializePipeline(ErrorContext *context,
                                 PipelineCacheAccess *pipelineCache,
                                 GraphicsPipelineSubset subset,
                                 const RenderPass &compatibleRenderPass,
@@ -1024,7 +1024,7 @@ class GraphicsPipelineDesc final
         mShaders.shaders.bits.nonZeroStencilWriteMaskWorkaround                 = false;
     }
 
-    static VkFormat getPipelineVertexInputStateFormat(Context *context,
+    static VkFormat getPipelineVertexInputStateFormat(ErrorContext *context,
                                                       angle::FormatID formatID,
                                                       bool compressed,
                                                       const gl::ComponentType programAttribType,
@@ -1048,24 +1048,24 @@ class GraphicsPipelineDesc final
     const void *getPipelineSubsetMemory(GraphicsPipelineSubset subset, size_t *sizeOut) const;
 
     void initializePipelineVertexInputState(
-        Context *context,
+        ErrorContext *context,
         GraphicsPipelineVertexInputVulkanStructs *stateOut,
         GraphicsPipelineDynamicStateList *dynamicStateListOut) const;
 
     void initializePipelineShadersState(
-        Context *context,
+        ErrorContext *context,
         const ShaderModuleMap &shaders,
         const SpecializationConstants &specConsts,
         GraphicsPipelineShadersVulkanStructs *stateOut,
         GraphicsPipelineDynamicStateList *dynamicStateListOut) const;
 
     void initializePipelineSharedNonVertexInputState(
-        Context *context,
+        ErrorContext *context,
         GraphicsPipelineSharedNonVertexInputVulkanStructs *stateOut,
         GraphicsPipelineDynamicStateList *dynamicStateListOut) const;
 
     void initializePipelineFragmentOutputState(
-        Context *context,
+        ErrorContext *context,
         GraphicsPipelineFragmentOutputVulkanStructs *stateOut,
         GraphicsPipelineDynamicStateList *dynamicStateListOut) const;
 
@@ -1237,7 +1237,7 @@ class YcbcrConversionDesc final
     void updateConversionModel(VkSamplerYcbcrModelConversion conversionModel);
     uint64_t getExternalFormat() const { return mIsExternalFormat ? mExternalOrVkFormat : 0; }
 
-    angle::Result init(Context *context, SamplerYcbcrConversion *conversionOut) const;
+    angle::Result init(ErrorContext *context, SamplerYcbcrConversion *conversionOut) const;
 
   private:
     // If the sampler needs to convert the image content (e.g. from YUV to RGB) then
@@ -1279,7 +1279,7 @@ class SamplerDesc final
 {
   public:
     SamplerDesc();
-    SamplerDesc(Context *context,
+    SamplerDesc(ErrorContext *context,
                 const gl::SamplerState &samplerState,
                 bool stencilMode,
                 const YcbcrConversionDesc *ycbcrConversionDesc,
@@ -1414,14 +1414,14 @@ class PipelineCacheAccess
         mMutex         = mutex;
     }
 
-    VkResult createGraphicsPipeline(vk::Context *context,
+    VkResult createGraphicsPipeline(vk::ErrorContext *context,
                                     const VkGraphicsPipelineCreateInfo &createInfo,
                                     vk::Pipeline *pipelineOut);
-    VkResult createComputePipeline(vk::Context *context,
+    VkResult createComputePipeline(vk::ErrorContext *context,
                                    const VkComputePipelineCreateInfo &createInfo,
                                    vk::Pipeline *pipelineOut);
 
-    VkResult getCacheData(vk::Context *context, size_t *cacheSize, void *cacheData);
+    VkResult getCacheData(vk::ErrorContext *context, size_t *cacheSize, void *cacheData);
 
     void merge(Renderer *renderer, const vk::PipelineCache &pipelineCache);
 
@@ -1437,7 +1437,7 @@ class PipelineCacheAccess
 // Monolithic pipeline creation tasks are created as soon as a pipeline is created out of libraries.
 // However, they are not immediately posted to the worker queue to allow pacing.  On each use of a
 // pipeline, an attempt is made to post the task.
-class CreateMonolithicPipelineTask : public Context, public angle::Closure
+class CreateMonolithicPipelineTask : public ErrorContext, public angle::Closure
 {
   public:
     CreateMonolithicPipelineTask(Renderer *renderer,
@@ -1523,7 +1523,7 @@ class PipelineHelper final : public Resource
     PipelineHelper &operator=(PipelineHelper &&other);
 
     void destroy(VkDevice device);
-    void release(Context *context);
+    void release(ErrorContext *context);
 
     bool valid() const { return mPipeline.valid(); }
     const Pipeline &getPipeline() const { return mPipeline; }
@@ -1611,7 +1611,7 @@ class FramebufferHelper : public Resource
     FramebufferHelper(FramebufferHelper &&other);
     FramebufferHelper &operator=(FramebufferHelper &&other);
 
-    angle::Result init(Context *context, const VkFramebufferCreateInfo &createInfo);
+    angle::Result init(ErrorContext *context, const VkFramebufferCreateInfo &createInfo);
     void destroy(Renderer *renderer);
     void release(ContextVk *contextVk);
 
@@ -1932,7 +1932,7 @@ class DescriptorSetDescBuilder final
                              const BufferHelper &bufferHelper,
                              VkDeviceSize bufferRange);
 
-    void updateTransformFeedbackBuffer(const Context *context,
+    void updateTransformFeedbackBuffer(const ErrorContext *context,
                                        const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                        const WriteDescriptorDescs &writeDescriptorDescs,
                                        uint32_t xfbBufferIndex,
@@ -1940,7 +1940,7 @@ class DescriptorSetDescBuilder final
                                        VkDeviceSize bufferOffset,
                                        VkDeviceSize bufferRange);
 
-    void updateUniformsAndXfb(Context *context,
+    void updateUniformsAndXfb(ErrorContext *context,
                               const gl::ProgramExecutable &executable,
                               const WriteDescriptorDescs &writeDescriptorDescs,
                               const BufferHelper *currentUniformBuffer,
@@ -1950,7 +1950,7 @@ class DescriptorSetDescBuilder final
 
     // Specific helpers for shader resource descriptors.
     template <typename CommandBufferT>
-    void updateOneShaderBuffer(Context *context,
+    void updateOneShaderBuffer(ErrorContext *context,
                                CommandBufferT *commandBufferHelper,
                                const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                const gl::BufferVector &buffers,
@@ -1962,7 +1962,7 @@ class DescriptorSetDescBuilder final
                                const WriteDescriptorDescs &writeDescriptorDescs,
                                const GLbitfield memoryBarrierBits);
     template <typename CommandBufferT>
-    void updateShaderBuffers(Context *context,
+    void updateShaderBuffers(ErrorContext *context,
                              CommandBufferT *commandBufferHelper,
                              const gl::ProgramExecutable &executable,
                              const ShaderInterfaceVariableInfoMap &variableInfoMap,
@@ -1974,7 +1974,7 @@ class DescriptorSetDescBuilder final
                              const WriteDescriptorDescs &writeDescriptorDescs,
                              const GLbitfield memoryBarrierBits);
     template <typename CommandBufferT>
-    void updateAtomicCounters(Context *context,
+    void updateAtomicCounters(ErrorContext *context,
                               CommandBufferT *commandBufferHelper,
                               const gl::ProgramExecutable &executable,
                               const ShaderInterfaceVariableInfoMap &variableInfoMap,
@@ -1983,20 +1983,20 @@ class DescriptorSetDescBuilder final
                               const VkDeviceSize requiredOffsetAlignment,
                               const BufferHelper &emptyBuffer,
                               const WriteDescriptorDescs &writeDescriptorDescs);
-    angle::Result updateImages(Context *context,
+    angle::Result updateImages(ErrorContext *context,
                                const gl::ProgramExecutable &executable,
                                const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                const gl::ActiveTextureArray<TextureVk *> &activeImages,
                                const std::vector<gl::ImageUnit> &imageUnits,
                                const WriteDescriptorDescs &writeDescriptorDescs);
-    angle::Result updateInputAttachments(vk::Context *context,
+    angle::Result updateInputAttachments(vk::ErrorContext *context,
                                          const gl::ProgramExecutable &executable,
                                          const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                          FramebufferVk *framebufferVk,
                                          const WriteDescriptorDescs &writeDescriptorDescs);
 
     // Specialized update for textures.
-    void updatePreCacheActiveTextures(Context *context,
+    void updatePreCacheActiveTextures(ErrorContext *context,
                                       const gl::ProgramExecutable &executable,
                                       const gl::ActiveTextureArray<TextureVk *> &textures,
                                       const gl::SamplerBindingVector &samplers);
@@ -2010,7 +2010,7 @@ class DescriptorSetDescBuilder final
     size_t getDynamicOffsetsSize() const { return mDynamicOffsets.size(); }
 
   private:
-    void updateInputAttachment(Context *context,
+    void updateInputAttachment(ErrorContext *context,
                                uint32_t binding,
                                ImageLayout layout,
                                const vk::ImageView *imageView,
@@ -2162,7 +2162,7 @@ class SamplerHelper final : angle::NonCopyable
     explicit SamplerHelper(SamplerHelper &&samplerHelper);
     SamplerHelper &operator=(SamplerHelper &&rhs);
 
-    angle::Result init(Context *context, const VkSamplerCreateInfo &createInfo);
+    angle::Result init(ErrorContext *context, const VkSamplerCreateInfo &createInfo);
     angle::Result init(ContextVk *contextVk, const SamplerDesc &desc);
     void destroy(VkDevice device) { mSampler.destroy(device); }
     void destroy() { ASSERT(!valid()); }
@@ -2498,7 +2498,7 @@ class RenderPassCache final : angle::NonCopyable
 
     static void InitializeOpsForCompatibleRenderPass(const vk::RenderPassDesc &desc,
                                                      vk::AttachmentOpsArray *opsOut);
-    static angle::Result MakeRenderPass(vk::Context *context,
+    static angle::Result MakeRenderPass(vk::ErrorContext *context,
                                         const vk::RenderPassDesc &desc,
                                         const vk::AttachmentOpsArray &ops,
                                         vk::RenderPass *renderPass,
@@ -2636,8 +2636,8 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
     GraphicsPipelineCache() = default;
     ~GraphicsPipelineCache() override { ASSERT(mPayload.empty()); }
 
-    void destroy(vk::Context *context);
-    void release(vk::Context *context);
+    void destroy(vk::ErrorContext *context);
+    void release(vk::ErrorContext *context);
 
     void populate(const vk::GraphicsPipelineDesc &desc,
                   vk::Pipeline &&pipeline,
@@ -2662,7 +2662,7 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
         return true;
     }
 
-    angle::Result createPipeline(vk::Context *context,
+    angle::Result createPipeline(vk::ErrorContext *context,
                                  vk::PipelineCacheAccess *pipelineCache,
                                  const vk::RenderPass &compatibleRenderPass,
                                  const vk::PipelineLayout &pipelineLayout,
@@ -2673,7 +2673,7 @@ class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::Graphi
                                  const vk::GraphicsPipelineDesc **descPtrOut,
                                  vk::PipelineHelper **pipelineOut);
 
-    angle::Result linkLibraries(vk::Context *context,
+    angle::Result linkLibraries(vk::ErrorContext *context,
                                 vk::PipelineCacheAccess *pipelineCache,
                                 const vk::GraphicsPipelineDesc &desc,
                                 const vk::PipelineLayout &pipelineLayout,
@@ -2712,7 +2712,7 @@ class DescriptorSetLayoutCache final : angle::NonCopyable
 
     void destroy(vk::Renderer *renderer);
 
-    angle::Result getDescriptorSetLayout(vk::Context *context,
+    angle::Result getDescriptorSetLayout(vk::ErrorContext *context,
                                          const vk::DescriptorSetLayoutDesc &desc,
                                          vk::DescriptorSetLayoutPtr *descriptorSetLayoutOut);
 
@@ -2734,7 +2734,7 @@ class PipelineLayoutCache final : public HasCacheStats<VulkanCacheType::Pipeline
 
     void destroy(vk::Renderer *renderer);
 
-    angle::Result getPipelineLayout(vk::Context *context,
+    angle::Result getPipelineLayout(vk::ErrorContext *context,
                                     const vk::PipelineLayoutDesc &desc,
                                     const vk::DescriptorSetLayoutPointerArray &descriptorSetLayouts,
                                     vk::PipelineLayoutPtr *pipelineLayoutOut);
@@ -2770,7 +2770,7 @@ class SamplerYcbcrConversionCache final
 
     void destroy(vk::Renderer *renderer);
 
-    angle::Result getSamplerYcbcrConversion(vk::Context *context,
+    angle::Result getSamplerYcbcrConversion(vk::ErrorContext *context,
                                             const vk::YcbcrConversionDesc &ycbcrConversionDesc,
                                             VkSamplerYcbcrConversion *vkSamplerYcbcrConversionOut);
 

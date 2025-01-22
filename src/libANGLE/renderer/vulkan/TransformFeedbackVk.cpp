@@ -47,7 +47,7 @@ void TransformFeedbackVk::onDestroy(const gl::Context *context)
     releaseCounterBuffers(contextVk);
 }
 
-void TransformFeedbackVk::releaseCounterBuffers(vk::Context *context)
+void TransformFeedbackVk::releaseCounterBuffers(vk::ErrorContext *context)
 {
     for (vk::BufferHelper &bufferHelper : mCounterBufferHelpers)
     {
@@ -255,7 +255,7 @@ void TransformFeedbackVk::onSubjectStateChange(angle::SubjectIndex index,
 }
 
 void TransformFeedbackVk::updateTransformFeedbackDescriptorDesc(
-    const vk::Context *context,
+    const vk::ErrorContext *context,
     const gl::ProgramExecutable &executable,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
     const vk::WriteDescriptorDescs &writeDescriptorDescs,

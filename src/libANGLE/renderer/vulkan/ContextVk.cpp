@@ -550,7 +550,7 @@ vk::ImageLayout GetImageWriteLayoutAndSubresource(const gl::ImageUnit &imageUnit
 }
 
 template <typename CommandBufferT>
-void OnTextureBufferRead(vk::Context *context,
+void OnTextureBufferRead(vk::ErrorContext *context,
                          vk::BufferHelper *buffer,
                          gl::ShaderBitSet stages,
                          CommandBufferT *commandBufferHelper)
@@ -569,7 +569,7 @@ void OnTextureBufferRead(vk::Context *context,
 }
 
 template <typename CommandBufferT>
-void OnImageBufferWrite(vk::Context *context,
+void OnImageBufferWrite(vk::ErrorContext *context,
                         BufferVk *bufferVk,
                         gl::ShaderBitSet stages,
                         CommandBufferT *commandBufferHelper)
@@ -713,7 +713,7 @@ bool BlendModeSupportsDither(const ContextVk *contextVk, size_t colorIndex)
     return ditheringCompatibleBlendFactors || allowAdditionalBlendFactors;
 }
 
-bool ShouldUseGraphicsDriverUniformsExtended(const vk::Context *context)
+bool ShouldUseGraphicsDriverUniformsExtended(const vk::ErrorContext *context)
 {
     return context->getFeatures().emulateTransformFeedback.enabled;
 }
@@ -874,7 +874,7 @@ ANGLE_INLINE void ContextVk::onRenderPassFinished(RenderPassClosureReason reason
 // ContextVk implementation.
 ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Renderer *renderer)
     : ContextImpl(state, errorSet),
-      vk::Context(renderer),
+      vk::ErrorContext(renderer),
       mGraphicsDirtyBitHandlers{},
       mComputeDirtyBitHandlers{},
       mRenderPassCommandBuffer(nullptr),
@@ -1238,7 +1238,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
         mPipelineDirtyBitsMask.reset(gl::state::DIRTY_BIT_VERTEX_ARRAY_BINDING);
     }
 
-    // Stash the mRefCountedEventRecycler in vk::Context for ImageHelper to conveniently access
+    // Stash the mRefCountedEventRecycler in vk::ErrorContext for ImageHelper to conveniently access
     mShareGroupRefCountedEventsGarbageRecycler =
         mShareGroupVk->getRefCountedEventsGarbageRecycler();
 
@@ -8433,7 +8433,7 @@ bool ContextVk::shouldConvertUint8VkIndexType(gl::DrawElementsType glIndexType) 
             !mRenderer->getFeatures().supportsIndexTypeUint8.enabled);
 }
 
-uint32_t GetDriverUniformSize(vk::Context *context, PipelineType pipelineType)
+uint32_t GetDriverUniformSize(vk::ErrorContext *context, PipelineType pipelineType)
 {
     if (pipelineType == PipelineType::Compute)
     {

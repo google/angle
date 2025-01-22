@@ -1347,7 +1347,7 @@ class CompressAndStorePipelineCacheTask : public angle::Closure
     size_t mMaxTotalSize;
 };
 
-angle::Result GetAndDecompressPipelineCacheVk(vk::Context *context,
+angle::Result GetAndDecompressPipelineCacheVk(vk::ErrorContext *context,
                                               vk::GlobalOps *globalOps,
                                               angle::MemoryBuffer *uncompressedData,
                                               bool *success)
@@ -1671,7 +1671,7 @@ void OneOffCommandPool::destroy(VkDevice device)
     mProtectionType = vk::ProtectionType::InvalidEnum;
 }
 
-angle::Result OneOffCommandPool::getCommandBuffer(vk::Context *context,
+angle::Result OneOffCommandPool::getCommandBuffer(vk::ErrorContext *context,
                                                   vk::ScopedPrimaryCommandBuffer *commandBufferOut)
 {
     std::unique_lock<angle::SimpleMutex> lock(mMutex);
@@ -1797,7 +1797,7 @@ bool Renderer::hasSharedGarbage()
     return !mSharedGarbageList.empty() || !mSuballocationGarbageList.empty();
 }
 
-void Renderer::onDestroy(vk::Context *context)
+void Renderer::onDestroy(vk::ErrorContext *context)
 {
     if (isDeviceLost())
     {
@@ -1898,7 +1898,7 @@ bool Renderer::isDeviceLost() const
     return mDeviceLost;
 }
 
-angle::Result Renderer::enableInstanceExtensions(vk::Context *context,
+angle::Result Renderer::enableInstanceExtensions(vk::ErrorContext *context,
                                                  const VulkanLayerVector &enabledInstanceLayerNames,
                                                  const char *wsiExtension,
                                                  UseVulkanSwapchain useVulkanSwapchain,
@@ -2055,7 +2055,7 @@ angle::Result Renderer::enableInstanceExtensions(vk::Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result Renderer::initialize(vk::Context *context,
+angle::Result Renderer::initialize(vk::ErrorContext *context,
                                    vk::GlobalOps *globalOps,
                                    angle::vk::ICD desiredICD,
                                    uint32_t preferredVendorId,
@@ -2382,7 +2382,7 @@ angle::Result Renderer::initialize(vk::Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result Renderer::initializeMemoryAllocator(vk::Context *context)
+angle::Result Renderer::initializeMemoryAllocator(vk::ErrorContext *context)
 {
     // This number matches Chromium and was picked by looking at memory usage of
     // Android apps. The allocator will start making blocks at 1/8 the max size
@@ -3748,7 +3748,7 @@ void Renderer::enableDeviceExtensionsPromotedTo13(const vk::ExtensionNameList &d
     }
 }
 
-angle::Result Renderer::enableDeviceExtensions(vk::Context *context,
+angle::Result Renderer::enableDeviceExtensions(vk::ErrorContext *context,
                                                const angle::FeatureOverrides &featureOverrides,
                                                UseVulkanSwapchain useVulkanSwapchain,
                                                angle::NativeWindowSystem nativeWindowSystem)
@@ -3920,7 +3920,7 @@ void Renderer::initDeviceExtensionEntryPoints()
     initializeDeviceExtensionEntryPointsFromCore();
 }
 
-angle::Result Renderer::setupDevice(vk::Context *context,
+angle::Result Renderer::setupDevice(vk::ErrorContext *context,
                                     const angle::FeatureOverrides &featureOverrides,
                                     const char *wsiLayer,
                                     UseVulkanSwapchain useVulkanSwapchain,
@@ -4026,7 +4026,7 @@ angle::Result Renderer::setupDevice(vk::Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result Renderer::createDeviceAndQueue(vk::Context *context, uint32_t queueFamilyIndex)
+angle::Result Renderer::createDeviceAndQueue(vk::ErrorContext *context, uint32_t queueFamilyIndex)
 {
     mCurrentQueueFamilyIndex = queueFamilyIndex;
 
@@ -4270,7 +4270,7 @@ void Renderer::initializeValidationMessageSuppressions()
     }
 }
 
-angle::Result Renderer::checkQueueForSurfacePresent(vk::Context *context,
+angle::Result Renderer::checkQueueForSurfacePresent(vk::ErrorContext *context,
                                                     VkSurfaceKHR surface,
                                                     bool *supportedOut)
 {
@@ -5886,7 +5886,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
 
 void Renderer::appBasedFeatureOverrides(const vk::ExtensionNameList &extensions) {}
 
-angle::Result Renderer::initPipelineCache(vk::Context *context,
+angle::Result Renderer::initPipelineCache(vk::ErrorContext *context,
                                           vk::PipelineCache *pipelineCache,
                                           bool *success)
 {
@@ -5908,7 +5908,7 @@ angle::Result Renderer::initPipelineCache(vk::Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result Renderer::ensurePipelineCacheInitialized(vk::Context *context)
+angle::Result Renderer::ensurePipelineCacheInitialized(vk::ErrorContext *context)
 {
     // If it is initialized already, there is nothing to do
     if (mPipelineCacheInitialized)
@@ -5958,7 +5958,7 @@ size_t Renderer::updatePipelineCacheChunkCount(size_t chunkCount)
     return previousChunkCount;
 }
 
-angle::Result Renderer::getPipelineCache(vk::Context *context,
+angle::Result Renderer::getPipelineCache(vk::ErrorContext *context,
                                          vk::PipelineCacheAccess *pipelineCacheOut)
 {
     ANGLE_TRY(ensurePipelineCacheInitialized(context));
@@ -5973,7 +5973,7 @@ angle::Result Renderer::getPipelineCache(vk::Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result Renderer::mergeIntoPipelineCache(vk::Context *context,
+angle::Result Renderer::mergeIntoPipelineCache(vk::ErrorContext *context,
                                                const vk::PipelineCache &pipelineCache)
 {
     // It is an error to call into this method when the feature is disabled.
@@ -6042,7 +6042,7 @@ void Renderer::initializeFrontendFeatures(angle::FrontendFeatures *features) con
     ANGLE_FEATURE_CONDITION(features, alwaysRunLinkSubJobsThreaded, true);
 }
 
-angle::Result Renderer::getLockedPipelineCacheDataIfNew(vk::Context *context,
+angle::Result Renderer::getLockedPipelineCacheDataIfNew(vk::ErrorContext *context,
                                                         size_t *pipelineCacheSizeOut,
                                                         size_t lastSyncSize,
                                                         std::vector<uint8_t> *pipelineCacheDataOut)
@@ -6090,7 +6090,7 @@ angle::Result Renderer::getLockedPipelineCacheDataIfNew(vk::Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result Renderer::syncPipelineCacheVk(vk::Context *context,
+angle::Result Renderer::syncPipelineCacheVk(vk::ErrorContext *context,
                                             vk::GlobalOps *globalOps,
                                             const gl::Context *contextGL)
 {
@@ -6204,7 +6204,7 @@ void Renderer::outputVmaStatString()
     mAllocator.freeStatsString(statsString);
 }
 
-angle::Result Renderer::queueSubmitOneOff(vk::Context *context,
+angle::Result Renderer::queueSubmitOneOff(vk::ErrorContext *context,
                                           vk::ScopedPrimaryCommandBuffer &&scopedCommandBuffer,
                                           vk::ProtectionType protectionType,
                                           egl::ContextPriority priority,
@@ -6238,7 +6238,7 @@ angle::Result Renderer::queueSubmitOneOff(vk::Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result Renderer::queueSubmitWaitSemaphore(vk::Context *context,
+angle::Result Renderer::queueSubmitWaitSemaphore(vk::ErrorContext *context,
                                                  egl::ContextPriority priority,
                                                  const vk::Semaphore &waitSemaphore,
                                                  VkPipelineStageFlags waitSemaphoreStageMasks,
@@ -6464,7 +6464,7 @@ void Renderer::initializeDeviceExtensionEntryPointsFromCore() const
     }
 }
 
-angle::Result Renderer::submitCommands(vk::Context *context,
+angle::Result Renderer::submitCommands(vk::ErrorContext *context,
                                        vk::ProtectionType protectionType,
                                        egl::ContextPriority contextPriority,
                                        const vk::Semaphore *signalSemaphore,
@@ -6490,7 +6490,7 @@ angle::Result Renderer::submitCommands(vk::Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result Renderer::submitPriorityDependency(vk::Context *context,
+angle::Result Renderer::submitPriorityDependency(vk::ErrorContext *context,
                                                  vk::ProtectionTypes protectionTypes,
                                                  egl::ContextPriority srcContextPriority,
                                                  egl::ContextPriority dstContextPriority,
@@ -6536,18 +6536,18 @@ void Renderer::handleDeviceLost()
     mCommandQueue.handleDeviceLost(this);
 }
 
-angle::Result Renderer::finishResourceUse(vk::Context *context, const vk::ResourceUse &use)
+angle::Result Renderer::finishResourceUse(vk::ErrorContext *context, const vk::ResourceUse &use)
 {
     return mCommandQueue.finishResourceUse(context, use, getMaxFenceWaitTimeNs());
 }
 
-angle::Result Renderer::finishQueueSerial(vk::Context *context, const QueueSerial &queueSerial)
+angle::Result Renderer::finishQueueSerial(vk::ErrorContext *context, const QueueSerial &queueSerial)
 {
     ASSERT(queueSerial.valid());
     return mCommandQueue.finishQueueSerial(context, queueSerial, getMaxFenceWaitTimeNs());
 }
 
-angle::Result Renderer::waitForResourceUseToFinishWithUserTimeout(vk::Context *context,
+angle::Result Renderer::waitForResourceUseToFinishWithUserTimeout(vk::ErrorContext *context,
                                                                   const vk::ResourceUse &use,
                                                                   uint64_t timeout,
                                                                   VkResult *result)
@@ -6570,7 +6570,7 @@ angle::Result Renderer::flushWaitSemaphores(
 }
 
 angle::Result Renderer::flushRenderPassCommands(
-    vk::Context *context,
+    vk::ErrorContext *context,
     vk::ProtectionType protectionType,
     egl::ContextPriority priority,
     const vk::RenderPass &renderPass,
@@ -6583,7 +6583,7 @@ angle::Result Renderer::flushRenderPassCommands(
 }
 
 angle::Result Renderer::flushOutsideRPCommands(
-    vk::Context *context,
+    vk::ErrorContext *context,
     vk::ProtectionType protectionType,
     egl::ContextPriority priority,
     vk::OutsideRenderPassCommandBufferHelper **outsideRPCommands)
@@ -6593,7 +6593,7 @@ angle::Result Renderer::flushOutsideRPCommands(
                                                 outsideRPCommands);
 }
 
-VkResult Renderer::queuePresent(vk::Context *context,
+VkResult Renderer::queuePresent(vk::ErrorContext *context,
                                 egl::ContextPriority priority,
                                 const VkPresentInfoKHR &presentInfo)
 {
@@ -6608,7 +6608,7 @@ VkResult Renderer::queuePresent(vk::Context *context,
 }
 
 template <typename CommandBufferHelperT, typename RecyclerT>
-angle::Result Renderer::getCommandBufferImpl(vk::Context *context,
+angle::Result Renderer::getCommandBufferImpl(vk::ErrorContext *context,
                                              vk::SecondaryCommandPool *commandPool,
                                              vk::SecondaryCommandMemoryAllocator *commandsAllocator,
                                              RecyclerT *recycler,
@@ -6619,7 +6619,7 @@ angle::Result Renderer::getCommandBufferImpl(vk::Context *context,
 }
 
 angle::Result Renderer::getOutsideRenderPassCommandBufferHelper(
-    vk::Context *context,
+    vk::ErrorContext *context,
     vk::SecondaryCommandPool *commandPool,
     vk::SecondaryCommandMemoryAllocator *commandsAllocator,
     vk::OutsideRenderPassCommandBufferHelper **commandBufferHelperOut)
@@ -6630,7 +6630,7 @@ angle::Result Renderer::getOutsideRenderPassCommandBufferHelper(
 }
 
 angle::Result Renderer::getRenderPassCommandBufferHelper(
-    vk::Context *context,
+    vk::ErrorContext *context,
     vk::SecondaryCommandPool *commandPool,
     vk::SecondaryCommandMemoryAllocator *commandsAllocator,
     vk::RenderPassCommandBufferHelper **commandBufferHelperOut)
@@ -6671,7 +6671,7 @@ void Renderer::logCacheStats() const
     }
 }
 
-angle::Result Renderer::getFormatDescriptorCountForVkFormat(vk::Context *context,
+angle::Result Renderer::getFormatDescriptorCountForVkFormat(vk::ErrorContext *context,
                                                             VkFormat format,
                                                             uint32_t *descriptorCountOut)
 {
@@ -6709,7 +6709,7 @@ angle::Result Renderer::getFormatDescriptorCountForVkFormat(vk::Context *context
     return angle::Result::Continue;
 }
 
-angle::Result Renderer::getFormatDescriptorCountForExternalFormat(vk::Context *context,
+angle::Result Renderer::getFormatDescriptorCountForExternalFormat(vk::ErrorContext *context,
                                                                   uint64_t format,
                                                                   uint32_t *descriptorCountOut)
 {
@@ -6769,7 +6769,7 @@ void Renderer::releaseQueueSerialIndex(SerialIndex index)
     mQueueSerialIndexAllocator.release(index);
 }
 
-angle::Result Renderer::cleanupSomeGarbage(Context *context, bool *anyGarbageCleanedOut)
+angle::Result Renderer::cleanupSomeGarbage(ErrorContext *context, bool *anyGarbageCleanedOut)
 {
     return mCommandQueue.cleanupSomeGarbage(context, 0, anyGarbageCleanedOut);
 }
@@ -6786,7 +6786,7 @@ ImageMemorySuballocator::~ImageMemorySuballocator() {}
 void ImageMemorySuballocator::destroy(Renderer *renderer) {}
 
 VkResult ImageMemorySuballocator::allocateAndBindMemory(
-    Context *context,
+    ErrorContext *context,
     Image *image,
     const VkImageCreateInfo *imageCreateInfo,
     VkMemoryPropertyFlags requiredFlags,

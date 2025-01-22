@@ -3787,7 +3787,7 @@ const vk::ImageView &TextureVk::getCopyImageView() const
     return imageViews.getLinearCopyImageView();
 }
 
-angle::Result TextureVk::getLevelLayerImageView(vk::Context *context,
+angle::Result TextureVk::getLevelLayerImageView(vk::ErrorContext *context,
                                                 gl::LevelIndex level,
                                                 size_t layer,
                                                 const vk::ImageView **imageViewOut)
@@ -3802,7 +3802,7 @@ angle::Result TextureVk::getLevelLayerImageView(vk::Context *context,
                                                       imageViewOut);
 }
 
-angle::Result TextureVk::getStorageImageView(vk::Context *context,
+angle::Result TextureVk::getStorageImageView(vk::ErrorContext *context,
                                              const gl::ImageUnit &binding,
                                              const vk::ImageView **imageViewOut)
 {
@@ -3837,7 +3837,7 @@ angle::Result TextureVk::getStorageImageView(vk::Context *context,
         format->getActualImageFormatID(getRequiredImageAccess()), imageViewOut);
 }
 
-vk::BufferHelper *TextureVk::getPossiblyEmulatedTextureBuffer(vk::Context *context) const
+vk::BufferHelper *TextureVk::getPossiblyEmulatedTextureBuffer(vk::ErrorContext *context) const
 {
     vk::Renderer *renderer = context->getRenderer();
 
@@ -3851,7 +3851,7 @@ vk::BufferHelper *TextureVk::getPossiblyEmulatedTextureBuffer(vk::Context *conte
     return &bufferVk->getBuffer();
 }
 
-angle::Result TextureVk::getBufferView(vk::Context *context,
+angle::Result TextureVk::getBufferView(vk::ErrorContext *context,
                                        const vk::Format *imageUniformFormat,
                                        const gl::SamplerBinding *samplerBinding,
                                        bool isImage,

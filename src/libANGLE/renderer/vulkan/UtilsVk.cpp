@@ -1141,7 +1141,7 @@ angle::spirv::Blob MakeFragShader(
 }  // namespace unresolve
 
 angle::Result GetUnresolveFrag(
-    vk::Context *context,
+    vk::ErrorContext *context,
     uint32_t colorAttachmentCount,
     gl::DrawBuffersArray<UnresolveColorAttachmentType> &colorAttachmentTypes,
     bool unresolveDepth,
