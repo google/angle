@@ -416,9 +416,8 @@ class WindowSurfaceVk : public SurfaceVk
     // not check for surface property changes for the purposes of swapchain recreation (because
     // that's already done by prepareForAcquireNextSwapchainImage.
     angle::Result doDeferredAcquireNextImageWithUsableSwapchain(const gl::Context *context);
-    // This method calls vkAcquireNextImageKHR() to acquire the next swapchain image.  It is called
-    // when the swapchain is initially created and when present() finds the swapchain out of date.
-    // Otherwise, it is scheduled to be called later by deferAcquireNextImage().
+    // This method calls vkAcquireNextImageKHR() to acquire the next swapchain image or to process
+    // unlocked ANI result.  It is scheduled to be called later by deferAcquireNextImage().
     VkResult acquireNextSwapchainImage(vk::ErrorContext *context);
     // Process the result of vkAcquireNextImageKHR.
     VkResult postProcessUnlockedAcquire(vk::ErrorContext *context);

@@ -5085,8 +5085,8 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
                             mPhysicalDeviceFeatures.multiDrawIndirect == VK_TRUE);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, perFrameWindowSizeQuery,
-                            IsAndroid() || isIntel || (IsWindows() && isAMD) || IsFuchsia() ||
-                                isSamsung ||
+                            IsAndroid() || isIntel || (IsWindows() && (isAMD || isNvidia)) ||
+                                IsFuchsia() || isSamsung ||
                                 nativeWindowSystem == angle::NativeWindowSystem::Wayland);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, padBuffersToMaxVertexAttribStride, isAMD || isSamsung);
