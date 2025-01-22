@@ -2593,6 +2593,12 @@ void RenderPassCommandBufferHelper::finalizeColorImageLayout(
             ASSERT(imageLayout == ImageLayout::ColorWrite);
             imageLayout = ImageLayout::ColorWriteAndInput;
         }
+        else if (image->getCurrentImageLayout() == ImageLayout::SharedPresent)
+        {
+            // Once you transition to ImageLayout::SharedPresent, you never transition out of it.
+            ASSERT(imageLayout == ImageLayout::ColorWrite);
+            imageLayout = ImageLayout::SharedPresent;
+        }
 
         updateImageLayoutAndBarrier(context, image, VK_IMAGE_ASPECT_COLOR_BIT, imageLayout,
                                     BarrierType::Event);
