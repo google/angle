@@ -6274,7 +6274,7 @@ void DescriptorSetDescBuilder::updateUniformBuffer(uint32_t bindingIndex,
 }
 
 void DescriptorSetDescBuilder::updateTransformFeedbackBuffer(
-    const ErrorContext *context,
+    const Context *context,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
     const WriteDescriptorDescs &writeDescriptorDescs,
     uint32_t xfbBufferIndex,
@@ -6302,7 +6302,7 @@ void DescriptorSetDescBuilder::updateTransformFeedbackBuffer(
 }
 
 void DescriptorSetDescBuilder::updateUniformsAndXfb(
-    ErrorContext *context,
+    Context *context,
     const gl::ProgramExecutable &executable,
     const WriteDescriptorDescs &writeDescriptorDescs,
     const BufferHelper *currentUniformBuffer,
@@ -6340,7 +6340,7 @@ void DescriptorSetDescBuilder::updateUniformsAndXfb(
 }
 
 void DescriptorSetDescBuilder::updatePreCacheActiveTextures(
-    ErrorContext *context,
+    Context *context,
     const gl::ProgramExecutable &executable,
     const gl::ActiveTextureArray<TextureVk *> &textures,
     const gl::SamplerBindingVector &samplers)
@@ -6440,7 +6440,7 @@ void DescriptorSetDescBuilder::setEmptyBuffer(uint32_t infoDescIndex,
 
 template <typename CommandBufferT>
 void DescriptorSetDescBuilder::updateOneShaderBuffer(
-    ErrorContext *context,
+    Context *context,
     CommandBufferT *commandBufferHelper,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
     const gl::BufferVector &buffers,
@@ -6548,7 +6548,7 @@ void DescriptorSetDescBuilder::updateOneShaderBuffer(
 
 template <typename CommandBufferT>
 void DescriptorSetDescBuilder::updateShaderBuffers(
-    ErrorContext *context,
+    Context *context,
     CommandBufferT *commandBufferHelper,
     const gl::ProgramExecutable &executable,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
@@ -6577,7 +6577,7 @@ void DescriptorSetDescBuilder::updateShaderBuffers(
 
 template <typename CommandBufferT>
 void DescriptorSetDescBuilder::updateAtomicCounters(
-    ErrorContext *context,
+    Context *context,
     CommandBufferT *commandBufferHelper,
     const gl::ProgramExecutable &executable,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
@@ -6650,7 +6650,7 @@ void DescriptorSetDescBuilder::updateAtomicCounters(
 
 // Explicit instantiation
 template void DescriptorSetDescBuilder::updateOneShaderBuffer<vk::RenderPassCommandBufferHelper>(
-    ErrorContext *context,
+    Context *context,
     RenderPassCommandBufferHelper *commandBufferHelper,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
     const gl::BufferVector &buffers,
@@ -6663,7 +6663,7 @@ template void DescriptorSetDescBuilder::updateOneShaderBuffer<vk::RenderPassComm
     const GLbitfield memoryBarrierBits);
 
 template void DescriptorSetDescBuilder::updateOneShaderBuffer<OutsideRenderPassCommandBufferHelper>(
-    ErrorContext *context,
+    Context *context,
     OutsideRenderPassCommandBufferHelper *commandBufferHelper,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
     const gl::BufferVector &buffers,
@@ -6676,7 +6676,7 @@ template void DescriptorSetDescBuilder::updateOneShaderBuffer<OutsideRenderPassC
     const GLbitfield memoryBarrierBits);
 
 template void DescriptorSetDescBuilder::updateShaderBuffers<OutsideRenderPassCommandBufferHelper>(
-    ErrorContext *context,
+    Context *context,
     OutsideRenderPassCommandBufferHelper *commandBufferHelper,
     const gl::ProgramExecutable &executable,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
@@ -6689,7 +6689,7 @@ template void DescriptorSetDescBuilder::updateShaderBuffers<OutsideRenderPassCom
     const GLbitfield memoryBarrierBits);
 
 template void DescriptorSetDescBuilder::updateShaderBuffers<RenderPassCommandBufferHelper>(
-    ErrorContext *context,
+    Context *context,
     RenderPassCommandBufferHelper *commandBufferHelper,
     const gl::ProgramExecutable &executable,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
@@ -6702,7 +6702,7 @@ template void DescriptorSetDescBuilder::updateShaderBuffers<RenderPassCommandBuf
     const GLbitfield memoryBarrierBits);
 
 template void DescriptorSetDescBuilder::updateAtomicCounters<OutsideRenderPassCommandBufferHelper>(
-    ErrorContext *context,
+    Context *context,
     OutsideRenderPassCommandBufferHelper *commandBufferHelper,
     const gl::ProgramExecutable &executable,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
@@ -6713,7 +6713,7 @@ template void DescriptorSetDescBuilder::updateAtomicCounters<OutsideRenderPassCo
     const WriteDescriptorDescs &writeDescriptorDescs);
 
 template void DescriptorSetDescBuilder::updateAtomicCounters<RenderPassCommandBufferHelper>(
-    ErrorContext *context,
+    Context *context,
     RenderPassCommandBufferHelper *commandBufferHelper,
     const gl::ProgramExecutable &executable,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
@@ -6724,7 +6724,7 @@ template void DescriptorSetDescBuilder::updateAtomicCounters<RenderPassCommandBu
     const WriteDescriptorDescs &writeDescriptorDescs);
 
 angle::Result DescriptorSetDescBuilder::updateImages(
-    ErrorContext *context,
+    Context *context,
     const gl::ProgramExecutable &executable,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
     const gl::ActiveTextureArray<TextureVk *> &activeImages,
@@ -6825,7 +6825,7 @@ angle::Result DescriptorSetDescBuilder::updateImages(
 }
 
 angle::Result DescriptorSetDescBuilder::updateInputAttachments(
-    vk::ErrorContext *context,
+    vk::Context *context,
     const gl::ProgramExecutable &executable,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
     FramebufferVk *framebufferVk,
@@ -6917,7 +6917,7 @@ angle::Result DescriptorSetDescBuilder::updateInputAttachments(
 }
 
 void DescriptorSetDescBuilder::updateInputAttachment(
-    ErrorContext *context,
+    Context *context,
     uint32_t binding,
     ImageLayout layout,
     const vk::ImageView *imageView,

@@ -550,7 +550,7 @@ vk::ImageLayout GetImageWriteLayoutAndSubresource(const gl::ImageUnit &imageUnit
 }
 
 template <typename CommandBufferT>
-void OnTextureBufferRead(vk::ErrorContext *context,
+void OnTextureBufferRead(vk::Context *context,
                          vk::BufferHelper *buffer,
                          gl::ShaderBitSet stages,
                          CommandBufferT *commandBufferHelper)
@@ -569,7 +569,7 @@ void OnTextureBufferRead(vk::ErrorContext *context,
 }
 
 template <typename CommandBufferT>
-void OnImageBufferWrite(vk::ErrorContext *context,
+void OnImageBufferWrite(vk::Context *context,
                         BufferVk *bufferVk,
                         gl::ShaderBitSet stages,
                         CommandBufferT *commandBufferHelper)
@@ -874,7 +874,7 @@ ANGLE_INLINE void ContextVk::onRenderPassFinished(RenderPassClosureReason reason
 // ContextVk implementation.
 ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Renderer *renderer)
     : ContextImpl(state, errorSet),
-      vk::ErrorContext(renderer),
+      vk::Context(renderer),
       mGraphicsDirtyBitHandlers{},
       mComputeDirtyBitHandlers{},
       mRenderPassCommandBuffer(nullptr),

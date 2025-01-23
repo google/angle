@@ -26,7 +26,7 @@ namespace rx
 
 class CLKernelVk;
 
-class CLContextVk : public CLContextImpl, public vk::ErrorContext
+class CLContextVk : public CLContextImpl, public vk::Context
 {
   public:
     CLContextVk(const cl::Context &context, const cl::DevicePtrs devicePtrs);

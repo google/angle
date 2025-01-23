@@ -1932,7 +1932,7 @@ class DescriptorSetDescBuilder final
                              const BufferHelper &bufferHelper,
                              VkDeviceSize bufferRange);
 
-    void updateTransformFeedbackBuffer(const ErrorContext *context,
+    void updateTransformFeedbackBuffer(const Context *context,
                                        const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                        const WriteDescriptorDescs &writeDescriptorDescs,
                                        uint32_t xfbBufferIndex,
@@ -1940,7 +1940,7 @@ class DescriptorSetDescBuilder final
                                        VkDeviceSize bufferOffset,
                                        VkDeviceSize bufferRange);
 
-    void updateUniformsAndXfb(ErrorContext *context,
+    void updateUniformsAndXfb(Context *context,
                               const gl::ProgramExecutable &executable,
                               const WriteDescriptorDescs &writeDescriptorDescs,
                               const BufferHelper *currentUniformBuffer,
@@ -1950,7 +1950,7 @@ class DescriptorSetDescBuilder final
 
     // Specific helpers for shader resource descriptors.
     template <typename CommandBufferT>
-    void updateOneShaderBuffer(ErrorContext *context,
+    void updateOneShaderBuffer(Context *context,
                                CommandBufferT *commandBufferHelper,
                                const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                const gl::BufferVector &buffers,
@@ -1962,7 +1962,7 @@ class DescriptorSetDescBuilder final
                                const WriteDescriptorDescs &writeDescriptorDescs,
                                const GLbitfield memoryBarrierBits);
     template <typename CommandBufferT>
-    void updateShaderBuffers(ErrorContext *context,
+    void updateShaderBuffers(Context *context,
                              CommandBufferT *commandBufferHelper,
                              const gl::ProgramExecutable &executable,
                              const ShaderInterfaceVariableInfoMap &variableInfoMap,
@@ -1974,7 +1974,7 @@ class DescriptorSetDescBuilder final
                              const WriteDescriptorDescs &writeDescriptorDescs,
                              const GLbitfield memoryBarrierBits);
     template <typename CommandBufferT>
-    void updateAtomicCounters(ErrorContext *context,
+    void updateAtomicCounters(Context *context,
                               CommandBufferT *commandBufferHelper,
                               const gl::ProgramExecutable &executable,
                               const ShaderInterfaceVariableInfoMap &variableInfoMap,
@@ -1983,20 +1983,20 @@ class DescriptorSetDescBuilder final
                               const VkDeviceSize requiredOffsetAlignment,
                               const BufferHelper &emptyBuffer,
                               const WriteDescriptorDescs &writeDescriptorDescs);
-    angle::Result updateImages(ErrorContext *context,
+    angle::Result updateImages(Context *context,
                                const gl::ProgramExecutable &executable,
                                const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                const gl::ActiveTextureArray<TextureVk *> &activeImages,
                                const std::vector<gl::ImageUnit> &imageUnits,
                                const WriteDescriptorDescs &writeDescriptorDescs);
-    angle::Result updateInputAttachments(vk::ErrorContext *context,
+    angle::Result updateInputAttachments(vk::Context *context,
                                          const gl::ProgramExecutable &executable,
                                          const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                          FramebufferVk *framebufferVk,
                                          const WriteDescriptorDescs &writeDescriptorDescs);
 
     // Specialized update for textures.
-    void updatePreCacheActiveTextures(ErrorContext *context,
+    void updatePreCacheActiveTextures(Context *context,
                                       const gl::ProgramExecutable &executable,
                                       const gl::ActiveTextureArray<TextureVk *> &textures,
                                       const gl::SamplerBindingVector &samplers);
@@ -2010,7 +2010,7 @@ class DescriptorSetDescBuilder final
     size_t getDynamicOffsetsSize() const { return mDynamicOffsets.size(); }
 
   private:
-    void updateInputAttachment(ErrorContext *context,
+    void updateInputAttachment(Context *context,
                                uint32_t binding,
                                ImageLayout layout,
                                const vk::ImageView *imageView,

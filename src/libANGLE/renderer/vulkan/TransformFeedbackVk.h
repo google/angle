@@ -88,7 +88,7 @@ class TransformFeedbackVk : public TransformFeedbackImpl, public angle::Observer
     }
 
     void updateTransformFeedbackDescriptorDesc(
-        const vk::ErrorContext *context,
+        const vk::Context *context,
         const gl::ProgramExecutable &executable,
         const ShaderInterfaceVariableInfoMap &variableInfoMap,
         const vk::WriteDescriptorDescs &writeDescriptorDescs,

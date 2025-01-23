@@ -76,7 +76,7 @@ static constexpr GLbitfield kImageMemoryBarrierBits =
     GL_TEXTURE_FETCH_BARRIER_BIT | GL_SHADER_IMAGE_ACCESS_BARRIER_BIT |
     GL_TEXTURE_UPDATE_BARRIER_BIT | GL_FRAMEBUFFER_BARRIER_BIT;
 
-class ContextVk : public ContextImpl, public vk::ErrorContext, public MultisampleTextureInitializer
+class ContextVk : public ContextImpl, public vk::Context, public MultisampleTextureInitializer
 {
   public:
     ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Renderer *renderer);

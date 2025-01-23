@@ -212,11 +212,11 @@ class CommandPoolAccess : angle::NonCopyable
     angle::Result collectPrimaryCommandBuffer(ErrorContext *context,
                                               const ProtectionType protectionType,
                                               PrimaryCommandBuffer *primaryCommands);
-    angle::Result flushOutsideRPCommands(ErrorContext *context,
+    angle::Result flushOutsideRPCommands(Context *context,
                                          ProtectionType protectionType,
                                          egl::ContextPriority priority,
                                          OutsideRenderPassCommandBufferHelper **outsideRPCommands);
-    angle::Result flushRenderPassCommands(ErrorContext *context,
+    angle::Result flushRenderPassCommands(Context *context,
                                           const ProtectionType &protectionType,
                                           const egl::ContextPriority &priority,
                                           const RenderPass &renderPass,
@@ -394,7 +394,7 @@ class CommandQueue : angle::NonCopyable
                                                       std::move(waitSemaphoreStageMasks));
     }
     ANGLE_INLINE angle::Result flushOutsideRPCommands(
-        ErrorContext *context,
+        Context *context,
         ProtectionType protectionType,
         egl::ContextPriority priority,
         OutsideRenderPassCommandBufferHelper **outsideRPCommands)
@@ -403,7 +403,7 @@ class CommandQueue : angle::NonCopyable
                                                          outsideRPCommands);
     }
     ANGLE_INLINE angle::Result flushRenderPassCommands(
-        ErrorContext *context,
+        Context *context,
         ProtectionType protectionType,
         const egl::ContextPriority &priority,
         const RenderPass &renderPass,

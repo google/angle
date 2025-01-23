@@ -370,11 +370,9 @@ VkImageAspectFlags GetFormatAspectFlags(const angle::Format &format)
 }
 
 // ErrorContext implementation.
-ErrorContext::ErrorContext(Renderer *renderer)
-    : mRenderer(renderer), mShareGroupRefCountedEventsGarbageRecycler(nullptr), mPerfCounters{}
-{}
+ErrorContext::ErrorContext(Renderer *renderer) : mRenderer(renderer), mPerfCounters{} {}
 
-ErrorContext::~ErrorContext() {}
+ErrorContext::~ErrorContext() = default;
 
 VkDevice ErrorContext::getDevice() const
 {
@@ -385,6 +383,13 @@ const angle::FeaturesVk &ErrorContext::getFeatures() const
 {
     return mRenderer->getFeatures();
 }
+
+// Context implementation
+Context::Context(Renderer *renderer)
+    : ErrorContext(renderer), mShareGroupRefCountedEventsGarbageRecycler(nullptr)
+{}
+
+Context::~Context() = default;
 
 // MemoryProperties implementation.
 MemoryProperties::MemoryProperties() : mMemoryProperties{} {}

@@ -6570,7 +6570,7 @@ angle::Result Renderer::flushWaitSemaphores(
 }
 
 angle::Result Renderer::flushRenderPassCommands(
-    vk::ErrorContext *context,
+    vk::Context *context,
     vk::ProtectionType protectionType,
     egl::ContextPriority priority,
     const vk::RenderPass &renderPass,
@@ -6583,7 +6583,7 @@ angle::Result Renderer::flushRenderPassCommands(
 }
 
 angle::Result Renderer::flushOutsideRPCommands(
-    vk::ErrorContext *context,
+    vk::Context *context,
     vk::ProtectionType protectionType,
     egl::ContextPriority priority,
     vk::OutsideRenderPassCommandBufferHelper **outsideRPCommands)

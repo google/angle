@@ -452,14 +452,14 @@ class Renderer : angle::NonCopyable
                                       egl::ContextPriority priority,
                                       std::vector<VkSemaphore> &&waitSemaphores,
                                       std::vector<VkPipelineStageFlags> &&waitSemaphoreStageMasks);
-    angle::Result flushRenderPassCommands(vk::ErrorContext *context,
+    angle::Result flushRenderPassCommands(vk::Context *context,
                                           vk::ProtectionType protectionType,
                                           egl::ContextPriority priority,
                                           const vk::RenderPass &renderPass,
                                           VkFramebuffer framebufferOverride,
                                           vk::RenderPassCommandBufferHelper **renderPassCommands);
     angle::Result flushOutsideRPCommands(
-        vk::ErrorContext *context,
+        vk::Context *context,
         vk::ProtectionType protectionType,
         egl::ContextPriority priority,
         vk::OutsideRenderPassCommandBufferHelper **outsideRPCommands);

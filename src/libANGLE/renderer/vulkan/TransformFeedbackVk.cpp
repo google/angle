@@ -255,7 +255,7 @@ void TransformFeedbackVk::onSubjectStateChange(angle::SubjectIndex index,
 }
 
 void TransformFeedbackVk::updateTransformFeedbackDescriptorDesc(
-    const vk::ErrorContext *context,
+    const vk::Context *context,
     const gl::ProgramExecutable &executable,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
     const vk::WriteDescriptorDescs &writeDescriptorDescs,

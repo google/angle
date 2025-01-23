@@ -420,7 +420,7 @@ class DynamicDescriptorPool final : angle::NonCopyable
                                         const DescriptorSetLayout &descriptorSetLayout,
                                         DescriptorSetPointer *descriptorSetOut);
 
-    angle::Result getOrAllocateDescriptorSet(ErrorContext *context,
+    angle::Result getOrAllocateDescriptorSet(Context *context,
                                              uint32_t currentFrame,
                                              const DescriptorSetDesc &desc,
                                              const DescriptorSetLayout &descriptorSetLayout,
@@ -1081,13 +1081,13 @@ class BufferHelper : public ReadWriteResource
     // Returns true if the image is owned by an external API or instance.
     bool isReleasedToExternal() const;
 
-    void recordReadBarrier(ErrorContext *context,
+    void recordReadBarrier(Context *context,
                            VkAccessFlags readAccessType,
                            VkPipelineStageFlags readStage,
                            PipelineStage stageIndex,
                            PipelineBarrierArray *pipelineBarriers);
 
-    void recordWriteBarrier(ErrorContext *context,
+    void recordWriteBarrier(Context *context,
                             VkAccessFlags writeAccessType,
                             VkPipelineStageFlags writeStage,
                             PipelineStage stageIndex,
@@ -1399,22 +1399,22 @@ constexpr uint32_t kInfiniteCmdCount = 0xFFFFFFFF;
 class CommandBufferHelperCommon : angle::NonCopyable
 {
   public:
-    void bufferWrite(ErrorContext *context,
+    void bufferWrite(Context *context,
                      VkAccessFlags writeAccessType,
                      PipelineStage writeStage,
                      BufferHelper *buffer);
 
-    void bufferWrite(ErrorContext *context,
+    void bufferWrite(Context *context,
                      VkAccessFlags writeAccessType,
                      const gl::ShaderBitSet &writeShaderStages,
                      BufferHelper *buffer);
 
-    void bufferRead(ErrorContext *context,
+    void bufferRead(Context *context,
                     VkAccessFlags readAccessType,
                     PipelineStage readStage,
                     BufferHelper *buffer);
 
-    void bufferRead(ErrorContext *context,
+    void bufferRead(Context *context,
                     VkAccessFlags readAccessType,
                     const gl::ShaderBitSet &readShaderStages,
                     BufferHelper *buffer);
@@ -1460,7 +1460,7 @@ class CommandBufferHelperCommon : angle::NonCopyable
 
     // Update image with this command buffer's queueSerial. If VkEvent is enabled, image's current
     // event is also updated with this command's event.
-    void retainImageWithEvent(ErrorContext *context, ImageHelper *image);
+    void retainImageWithEvent(Context *context, ImageHelper *image);
 
     // Returns true if event already existed in this command buffer.
     bool hasSetEventPendingFlush(const RefCountedEvent &event) const
@@ -1471,7 +1471,7 @@ class CommandBufferHelperCommon : angle::NonCopyable
 
     // Issue VkCmdSetEvent call for events in this command buffer.
     template <typename CommandBufferT>
-    void flushSetEventsImpl(ErrorContext *context, CommandBufferT *commandBuffer);
+    void flushSetEventsImpl(Context *context, CommandBufferT *commandBuffer);
 
     const QueueSerial &getQueueSerial() const { return mQueueSerial; }
 
@@ -1506,25 +1506,25 @@ class CommandBufferHelperCommon : angle::NonCopyable
     template <class DerivedT>
     void assertCanBeRecycledImpl();
 
-    void bufferWriteImpl(ErrorContext *context,
+    void bufferWriteImpl(Context *context,
                          VkAccessFlags writeAccessType,
                          VkPipelineStageFlags writePipelineStageFlags,
                          PipelineStage writeStage,
                          BufferHelper *buffer);
 
-    void bufferReadImpl(ErrorContext *context,
+    void bufferReadImpl(Context *context,
                         VkAccessFlags readAccessType,
                         VkPipelineStageFlags readPipelineStageFlags,
                         PipelineStage readStage,
                         BufferHelper *buffer);
 
-    void imageReadImpl(ErrorContext *context,
+    void imageReadImpl(Context *context,
                        VkImageAspectFlags aspectFlags,
                        ImageLayout imageLayout,
                        BarrierType barrierType,
                        ImageHelper *image);
 
-    void imageWriteImpl(ErrorContext *context,
+    void imageWriteImpl(Context *context,
                         gl::LevelIndex level,
                         uint32_t layerStart,
                         uint32_t layerCount,
@@ -1533,7 +1533,7 @@ class CommandBufferHelperCommon : angle::NonCopyable
                         BarrierType barrierType,
                         ImageHelper *image);
 
-    void updateImageLayoutAndBarrier(ErrorContext *context,
+    void updateImageLayoutAndBarrier(Context *context,
                                      ImageHelper *image,
                                      VkImageAspectFlags aspectFlags,
                                      ImageLayout imageLayout,
@@ -1612,12 +1612,12 @@ class OutsideRenderPassCommandBufferHelper final : public CommandBufferHelperCom
     void markClosed() { mCommandBuffer.close(); }
 #endif
 
-    void imageRead(ErrorContext *context,
+    void imageRead(Context *context,
                    VkImageAspectFlags aspectFlags,
                    ImageLayout imageLayout,
                    ImageHelper *image);
 
-    void imageWrite(ErrorContext *context,
+    void imageWrite(Context *context,
                     gl::LevelIndex level,
                     uint32_t layerStart,
                     uint32_t layerCount,
@@ -1629,17 +1629,17 @@ class OutsideRenderPassCommandBufferHelper final : public CommandBufferHelperCom
     void retainImage(ImageHelper *image);
 
     // Call SetEvent and have image's current event pointing to it.
-    void trackImageWithEvent(ErrorContext *context, ImageHelper *image);
+    void trackImageWithEvent(Context *context, ImageHelper *image);
 
     // Issues SetEvent calls to the command buffer.
-    void flushSetEvents(ErrorContext *context) { flushSetEventsImpl(context, &mCommandBuffer); }
+    void flushSetEvents(Context *context) { flushSetEventsImpl(context, &mCommandBuffer); }
     // Clean up event garbage. Note that ImageHelper object may still holding reference count to it,
     // so the event itself will not gets destroyed until the last refCount goes away.
     void collectRefCountedEventsGarbage(RefCountedEventsGarbageRecycler *garbageRecycler);
 
     RefCountedEventCollector *getRefCountedEventCollector() { return &mRefCountedEventCollector; }
 
-    angle::Result flushToPrimary(ErrorContext *context, CommandsState *commandsState);
+    angle::Result flushToPrimary(Context *context, CommandsState *commandsState);
 
     void setGLMemoryBarrierIssued()
     {
@@ -1879,7 +1879,7 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     bool usesImage(const ImageHelper &image) const;
     bool startedAndUsesImageWithBarrier(const ImageHelper &image) const;
 
-    angle::Result flushToPrimary(ErrorContext *context,
+    angle::Result flushToPrimary(Context *context,
                                  CommandsState *commandsState,
                                  const RenderPass &renderPass,
                                  VkFramebuffer framebufferOverride);
@@ -1887,7 +1887,7 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     bool started() const { return mRenderPassStarted; }
 
     // Finalize the layout if image has any deferred layout transition.
-    void finalizeImageLayout(ErrorContext *context,
+    void finalizeImageLayout(Context *context,
                              const ImageHelper *image,
                              UniqueSerial imageSiblingSerial);
 
@@ -2043,22 +2043,21 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     // We can't determine the image layout at the renderpass start time since their full usage
     // aren't known until later time. We finalize the layout when either ImageHelper object is
     // released or when renderpass ends.
-    void finalizeColorImageLayout(ErrorContext *context,
+    void finalizeColorImageLayout(Context *context,
                                   ImageHelper *image,
                                   PackedAttachmentIndex packedAttachmentIndex,
                                   bool isResolveImage);
-    void finalizeColorImageLoadStore(ErrorContext *context,
-                                     PackedAttachmentIndex packedAttachmentIndex);
-    void finalizeDepthStencilImageLayout(ErrorContext *context);
-    void finalizeDepthStencilResolveImageLayout(ErrorContext *context);
-    void finalizeDepthStencilLoadStore(ErrorContext *context);
+    void finalizeColorImageLoadStore(Context *context, PackedAttachmentIndex packedAttachmentIndex);
+    void finalizeDepthStencilImageLayout(Context *context);
+    void finalizeDepthStencilResolveImageLayout(Context *context);
+    void finalizeDepthStencilLoadStore(Context *context);
 
-    void finalizeColorImageLayoutAndLoadStore(ErrorContext *context,
+    void finalizeColorImageLayoutAndLoadStore(Context *context,
                                               PackedAttachmentIndex packedAttachmentIndex);
-    void finalizeDepthStencilImageLayoutAndLoadStore(ErrorContext *context);
-    void finalizeFragmentShadingRateImageLayout(ErrorContext *context);
+    void finalizeDepthStencilImageLayoutAndLoadStore(Context *context);
+    void finalizeFragmentShadingRateImageLayout(Context *context);
 
-    void executeSetEvents(ErrorContext *context, PrimaryCommandBuffer *primary);
+    void executeSetEvents(Context *context, PrimaryCommandBuffer *primary);
 
     // When using Vulkan secondary command buffers, each subpass must be recorded in a separate
     // command buffer.  Currently ANGLE produces render passes with at most 2 subpasses.
@@ -2672,7 +2671,7 @@ class ImageHelper final : public Resource, public angle::Subject
     bool removeStagedClearUpdatesAndReturnColor(gl::LevelIndex levelGL,
                                                 const VkClearColorValue **color);
 
-    void recordWriteBarrier(ErrorContext *context,
+    void recordWriteBarrier(Context *context,
                             VkImageAspectFlags aspectMask,
                             ImageLayout newLayout,
                             gl::LevelIndex levelStart,
@@ -2681,7 +2680,7 @@ class ImageHelper final : public Resource, public angle::Subject
                             uint32_t layerCount,
                             OutsideRenderPassCommandBufferHelper *commands);
 
-    void recordReadSubresourceBarrier(ErrorContext *context,
+    void recordReadSubresourceBarrier(Context *context,
                                       VkImageAspectFlags aspectMask,
                                       ImageLayout newLayout,
                                       gl::LevelIndex levelStart,
@@ -2690,18 +2689,18 @@ class ImageHelper final : public Resource, public angle::Subject
                                       uint32_t layerCount,
                                       OutsideRenderPassCommandBufferHelper *commands);
 
-    void recordWriteBarrierOneOff(ErrorContext *context,
+    void recordWriteBarrierOneOff(Renderer *renderer,
                                   ImageLayout newLayout,
                                   PrimaryCommandBuffer *commandBuffer,
                                   VkSemaphore *acquireNextImageSemaphoreOut)
     {
         if (mCurrentEvent.valid())
         {
-            mCurrentEvent.release(context->getRenderer());
+            mCurrentEvent.release(renderer);
         }
 
-        barrierImpl(context, getAspectFlags(), newLayout, mCurrentDeviceQueueIndex, nullptr,
-                    commandBuffer, acquireNextImageSemaphoreOut);
+        barrierImplOneOff(renderer, getAspectFlags(), newLayout, mCurrentDeviceQueueIndex,
+                          commandBuffer, acquireNextImageSemaphoreOut);
     }
 
     // This function can be used to prevent issuing redundant layout transition commands.
@@ -2717,7 +2716,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                  uint32_t layerStart,
                                  uint32_t layerCount) const;
 
-    void recordReadBarrier(ErrorContext *context,
+    void recordReadBarrier(Context *context,
                            VkImageAspectFlags aspectMask,
                            ImageLayout newLayout,
                            OutsideRenderPassCommandBufferHelper *commands);
@@ -2727,14 +2726,14 @@ class ImageHelper final : public Resource, public angle::Subject
         return mCurrentDeviceQueueIndex.familyIndex() != newDeviceQueueIndex.familyIndex();
     }
 
-    void changeLayoutAndQueue(ErrorContext *context,
+    void changeLayoutAndQueue(Context *context,
                               VkImageAspectFlags aspectMask,
                               ImageLayout newLayout,
                               DeviceQueueIndex newDeviceQueueIndex,
                               OutsideRenderPassCommandBuffer *commandBuffer);
 
     // Returns true if barrier has been generated
-    void updateLayoutAndBarrier(ErrorContext *context,
+    void updateLayoutAndBarrier(Context *context,
                                 VkImageAspectFlags aspectMask,
                                 ImageLayout newLayout,
                                 BarrierType barrierType,
@@ -2745,14 +2744,14 @@ class ImageHelper final : public Resource, public angle::Subject
                                 VkSemaphore *semaphoreOut);
 
     // Performs an ownership transfer from an external instance or API.
-    void acquireFromExternal(ErrorContext *context,
+    void acquireFromExternal(Context *context,
                              DeviceQueueIndex externalQueueIndex,
                              DeviceQueueIndex newDeviceQueueIndex,
                              ImageLayout currentLayout,
                              OutsideRenderPassCommandBuffer *commandBuffer);
 
     // Performs an ownership transfer to an external instance or API.
-    void releaseToExternal(ErrorContext *context,
+    void releaseToExternal(Context *context,
                            DeviceQueueIndex externalQueueIndex,
                            ImageLayout desiredLayout,
                            OutsideRenderPassCommandBuffer *commandBuffer);
@@ -2923,8 +2922,8 @@ class ImageHelper final : public Resource, public angle::Subject
     size_t getLevelUpdateCount(gl::LevelIndex level) const;
 
     // Create event if needed and record the event in ImageHelper::mCurrentEvent.
-    void setCurrentRefCountedEvent(ErrorContext *context, EventMaps &eventMaps);
-    void releaseCurrentRefCountedEvent(ErrorContext *context)
+    void setCurrentRefCountedEvent(Context *context, EventMaps &eventMaps);
+    void releaseCurrentRefCountedEvent(Context *context)
     {
         // This will also force next barrier use pipelineBarrier
         mCurrentEvent.release(context);
@@ -3072,13 +3071,20 @@ class ImageHelper final : public Resource, public angle::Subject
 
     // Generalized to accept both "primary" and "secondary" command buffers.
     template <typename CommandBufferT>
-    void barrierImpl(ErrorContext *context,
+    void barrierImpl(Context *context,
                      VkImageAspectFlags aspectMask,
                      ImageLayout newLayout,
                      DeviceQueueIndex newDeviceQueueIndex,
                      RefCountedEventCollector *eventCollector,
                      CommandBufferT *commandBuffer,
                      VkSemaphore *acquireNextImageSemaphoreOut);
+
+    void barrierImplOneOff(Renderer *renderer,
+                           VkImageAspectFlags aspectMask,
+                           ImageLayout newLayout,
+                           DeviceQueueIndex newDeviceQueueIndex,
+                           PrimaryCommandBuffer *commandBuffer,
+                           VkSemaphore *acquireNextImageSemaphoreOut);
 
     void setSubresourcesWrittenSinceBarrier(gl::LevelIndex levelStart,
                                             uint32_t levelCount,

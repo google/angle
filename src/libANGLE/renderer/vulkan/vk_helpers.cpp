@@ -1838,7 +1838,7 @@ void CommandBufferHelperCommon::assertCanBeRecycledImpl()
     ASSERT(!DerivedT::ExecutesInline() || derived->getCommandBuffer().empty());
 }
 
-void CommandBufferHelperCommon::bufferWrite(ErrorContext *context,
+void CommandBufferHelperCommon::bufferWrite(Context *context,
                                             VkAccessFlags writeAccessType,
                                             PipelineStage writeStage,
                                             BufferHelper *buffer)
@@ -1847,7 +1847,7 @@ void CommandBufferHelperCommon::bufferWrite(ErrorContext *context,
     bufferWriteImpl(context, writeAccessType, writePipelineStageFlags, writeStage, buffer);
 }
 
-void CommandBufferHelperCommon::bufferWrite(ErrorContext *context,
+void CommandBufferHelperCommon::bufferWrite(Context *context,
                                             VkAccessFlags writeAccessType,
                                             const gl::ShaderBitSet &writeShaderStages,
                                             BufferHelper *buffer)
@@ -1858,7 +1858,7 @@ void CommandBufferHelperCommon::bufferWrite(ErrorContext *context,
     bufferWriteImpl(context, writeAccessType, writePipelineStageFlags, firstWriteStage, buffer);
 }
 
-void CommandBufferHelperCommon::bufferRead(ErrorContext *context,
+void CommandBufferHelperCommon::bufferRead(Context *context,
                                            VkAccessFlags readAccessType,
                                            PipelineStage readStage,
                                            BufferHelper *buffer)
@@ -1867,7 +1867,7 @@ void CommandBufferHelperCommon::bufferRead(ErrorContext *context,
     bufferReadImpl(context, readAccessType, readPipelineStageFlags, readStage, buffer);
 }
 
-void CommandBufferHelperCommon::bufferRead(ErrorContext *context,
+void CommandBufferHelperCommon::bufferRead(Context *context,
                                            VkAccessFlags readAccessType,
                                            const gl::ShaderBitSet &readShaderStages,
                                            BufferHelper *buffer)
@@ -1878,7 +1878,7 @@ void CommandBufferHelperCommon::bufferRead(ErrorContext *context,
     bufferReadImpl(context, readAccessType, readPipelineStageFlags, firstReadStage, buffer);
 }
 
-void CommandBufferHelperCommon::bufferWriteImpl(ErrorContext *context,
+void CommandBufferHelperCommon::bufferWriteImpl(Context *context,
                                                 VkAccessFlags writeAccessType,
                                                 VkPipelineStageFlags writePipelineStageFlags,
                                                 PipelineStage writeStage,
@@ -1898,7 +1898,7 @@ void CommandBufferHelperCommon::bufferWriteImpl(ErrorContext *context,
     buffer->setWriteQueueSerial(mQueueSerial);
 }
 
-void CommandBufferHelperCommon::bufferReadImpl(ErrorContext *context,
+void CommandBufferHelperCommon::bufferReadImpl(Context *context,
                                                VkAccessFlags readAccessType,
                                                VkPipelineStageFlags readPipelineStageFlags,
                                                PipelineStage readStage,
@@ -1923,7 +1923,7 @@ void CommandBufferHelperCommon::bufferReadImpl(ErrorContext *context,
     }
 }
 
-void CommandBufferHelperCommon::imageReadImpl(ErrorContext *context,
+void CommandBufferHelperCommon::imageReadImpl(Context *context,
                                               VkImageAspectFlags aspectFlags,
                                               ImageLayout imageLayout,
                                               BarrierType barrierType,
@@ -1935,7 +1935,7 @@ void CommandBufferHelperCommon::imageReadImpl(ErrorContext *context,
     }
 }
 
-void CommandBufferHelperCommon::imageWriteImpl(ErrorContext *context,
+void CommandBufferHelperCommon::imageWriteImpl(Context *context,
                                                gl::LevelIndex level,
                                                uint32_t layerStart,
                                                uint32_t layerCount,
@@ -1951,7 +1951,7 @@ void CommandBufferHelperCommon::imageWriteImpl(ErrorContext *context,
     }
 }
 
-void CommandBufferHelperCommon::updateImageLayoutAndBarrier(ErrorContext *context,
+void CommandBufferHelperCommon::updateImageLayoutAndBarrier(Context *context,
                                                             ImageHelper *image,
                                                             VkImageAspectFlags aspectFlags,
                                                             ImageLayout imageLayout,
@@ -1970,7 +1970,7 @@ void CommandBufferHelperCommon::updateImageLayoutAndBarrier(ErrorContext *contex
     }
 }
 
-void CommandBufferHelperCommon::retainImageWithEvent(ErrorContext *context, ImageHelper *image)
+void CommandBufferHelperCommon::retainImageWithEvent(Context *context, ImageHelper *image)
 {
     image->setQueueSerial(mQueueSerial);
     image->updatePipelineStageAccessHistory();
@@ -1982,8 +1982,7 @@ void CommandBufferHelperCommon::retainImageWithEvent(ErrorContext *context, Imag
 }
 
 template <typename CommandBufferT>
-void CommandBufferHelperCommon::flushSetEventsImpl(ErrorContext *context,
-                                                   CommandBufferT *commandBuffer)
+void CommandBufferHelperCommon::flushSetEventsImpl(Context *context, CommandBufferT *commandBuffer)
 {
     if (mRefCountedEvents.mask.none())
     {
@@ -2005,10 +2004,10 @@ void CommandBufferHelperCommon::flushSetEventsImpl(ErrorContext *context,
 }
 
 template void CommandBufferHelperCommon::flushSetEventsImpl<priv::SecondaryCommandBuffer>(
-    ErrorContext *context,
+    Context *context,
     priv::SecondaryCommandBuffer *commandBuffer);
 template void CommandBufferHelperCommon::flushSetEventsImpl<VulkanSecondaryCommandBuffer>(
-    ErrorContext *context,
+    Context *context,
     VulkanSecondaryCommandBuffer *commandBuffer);
 
 void CommandBufferHelperCommon::executeBarriers(Renderer *renderer, CommandsState *commandsState)
@@ -2067,7 +2066,7 @@ angle::Result OutsideRenderPassCommandBufferHelper::reset(
     return initializeCommandBuffer(context);
 }
 
-void OutsideRenderPassCommandBufferHelper::imageRead(ErrorContext *context,
+void OutsideRenderPassCommandBufferHelper::imageRead(Context *context,
                                                      VkImageAspectFlags aspectFlags,
                                                      ImageLayout imageLayout,
                                                      ImageHelper *image)
@@ -2089,7 +2088,7 @@ void OutsideRenderPassCommandBufferHelper::imageRead(ErrorContext *context,
     }
 }
 
-void OutsideRenderPassCommandBufferHelper::imageWrite(ErrorContext *context,
+void OutsideRenderPassCommandBufferHelper::imageWrite(Context *context,
                                                       gl::LevelIndex level,
                                                       uint32_t layerStart,
                                                       uint32_t layerCount,
@@ -2110,8 +2109,7 @@ void OutsideRenderPassCommandBufferHelper::retainImage(ImageHelper *image)
     image->updatePipelineStageAccessHistory();
 }
 
-void OutsideRenderPassCommandBufferHelper::trackImageWithEvent(ErrorContext *context,
-                                                               ImageHelper *image)
+void OutsideRenderPassCommandBufferHelper::trackImageWithEvent(Context *context, ImageHelper *image)
 {
     image->setCurrentRefCountedEvent(context, mRefCountedEvents);
     flushSetEventsImpl(context, &mCommandBuffer);
@@ -2127,7 +2125,7 @@ void OutsideRenderPassCommandBufferHelper::collectRefCountedEventsGarbage(
     }
 }
 
-angle::Result OutsideRenderPassCommandBufferHelper::flushToPrimary(ErrorContext *context,
+angle::Result OutsideRenderPassCommandBufferHelper::flushToPrimary(Context *context,
                                                                    CommandsState *commandsState)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "OutsideRenderPassCommandBufferHelper::flushToPrimary");
@@ -2561,7 +2559,7 @@ void RenderPassCommandBufferHelper::updateStartedRenderPassWithDepthStencilMode(
 }
 
 void RenderPassCommandBufferHelper::finalizeColorImageLayout(
-    ErrorContext *context,
+    Context *context,
     ImageHelper *image,
     PackedAttachmentIndex packedAttachmentIndex,
     bool isResolveImage)
@@ -2653,7 +2651,7 @@ void RenderPassCommandBufferHelper::finalizeColorImageLayout(
 }
 
 void RenderPassCommandBufferHelper::finalizeColorImageLoadStore(
-    ErrorContext *context,
+    Context *context,
     PackedAttachmentIndex packedAttachmentIndex)
 {
     PackedAttachmentOpsDesc &ops = mAttachmentOps[packedAttachmentIndex];
@@ -2692,7 +2690,7 @@ void RenderPassCommandBufferHelper::finalizeColorImageLoadStore(
     SetBitField(ops.storeOp, storeOp);
 }
 
-void RenderPassCommandBufferHelper::finalizeDepthStencilImageLayout(ErrorContext *context)
+void RenderPassCommandBufferHelper::finalizeDepthStencilImageLayout(Context *context)
 {
     ASSERT(mDepthAttachment.getImage() != nullptr);
     ASSERT(mDepthAttachment.getImage() == mStencilAttachment.getImage());
@@ -2773,7 +2771,7 @@ void RenderPassCommandBufferHelper::finalizeDepthStencilImageLayout(ErrorContext
     }
 }
 
-void RenderPassCommandBufferHelper::finalizeDepthStencilResolveImageLayout(ErrorContext *context)
+void RenderPassCommandBufferHelper::finalizeDepthStencilResolveImageLayout(Context *context)
 {
     ASSERT(mDepthResolveAttachment.getImage() != nullptr);
     ASSERT(mDepthResolveAttachment.getImage() == mStencilResolveAttachment.getImage());
@@ -2812,7 +2810,7 @@ void RenderPassCommandBufferHelper::finalizeDepthStencilResolveImageLayout(Error
     depthStencilResolveImage->resetRenderPassUsageFlags();
 }
 
-void RenderPassCommandBufferHelper::finalizeFragmentShadingRateImageLayout(ErrorContext *context)
+void RenderPassCommandBufferHelper::finalizeFragmentShadingRateImageLayout(Context *context)
 {
     ImageHelper *image      = mFragmentShadingRateAtachment.getImage();
     ImageLayout imageLayout = ImageLayout::FragmentShadingRateAttachmentReadOnly;
@@ -2825,7 +2823,7 @@ void RenderPassCommandBufferHelper::finalizeFragmentShadingRateImageLayout(Error
     image->resetRenderPassUsageFlags();
 }
 
-void RenderPassCommandBufferHelper::finalizeImageLayout(ErrorContext *context,
+void RenderPassCommandBufferHelper::finalizeImageLayout(Context *context,
                                                         const ImageHelper *image,
                                                         UniqueSerial imageSiblingSerial)
 {
@@ -2869,7 +2867,7 @@ void RenderPassCommandBufferHelper::finalizeImageLayout(ErrorContext *context,
     }
 }
 
-void RenderPassCommandBufferHelper::finalizeDepthStencilLoadStore(ErrorContext *context)
+void RenderPassCommandBufferHelper::finalizeDepthStencilLoadStore(Context *context)
 {
     ASSERT(mDepthStencilAttachmentIndex != kAttachmentIndexInvalid);
 
@@ -2964,7 +2962,7 @@ void RenderPassCommandBufferHelper::finalizeDepthStencilLoadStore(ErrorContext *
 }
 
 void RenderPassCommandBufferHelper::finalizeColorImageLayoutAndLoadStore(
-    ErrorContext *context,
+    Context *context,
     PackedAttachmentIndex packedAttachmentIndex)
 {
     finalizeColorImageLayout(context, mColorAttachments[packedAttachmentIndex].getImage(),
@@ -2974,8 +2972,7 @@ void RenderPassCommandBufferHelper::finalizeColorImageLayoutAndLoadStore(
     mColorAttachments[packedAttachmentIndex].getImage()->resetRenderPassUsageFlags();
 }
 
-void RenderPassCommandBufferHelper::finalizeDepthStencilImageLayoutAndLoadStore(
-    ErrorContext *context)
+void RenderPassCommandBufferHelper::finalizeDepthStencilImageLayoutAndLoadStore(Context *context)
 {
     finalizeDepthStencilImageLayout(context);
     finalizeDepthStencilLoadStore(context);
@@ -2984,7 +2981,7 @@ void RenderPassCommandBufferHelper::finalizeDepthStencilImageLayoutAndLoadStore(
     mDepthAttachment.getImage()->resetRenderPassUsageFlags();
 }
 
-void RenderPassCommandBufferHelper::executeSetEvents(ErrorContext *context,
+void RenderPassCommandBufferHelper::executeSetEvents(Context *context,
                                                      PrimaryCommandBuffer *primary)
 {
     Renderer *renderer = context->getRenderer();
@@ -3223,11 +3220,12 @@ void RenderPassCommandBufferHelper::invalidateRenderPassStencilAttachment(
                                   getRenderPassWriteCommandCount());
 }
 
-angle::Result RenderPassCommandBufferHelper::flushToPrimary(ErrorContext *context,
+angle::Result RenderPassCommandBufferHelper::flushToPrimary(Context *context,
                                                             CommandsState *commandsState,
                                                             const RenderPass &renderPass,
                                                             VkFramebuffer framebufferOverride)
 {
+    Renderer *renderer = context->getRenderer();
     // |framebufferOverride| must only be provided if the initial framebuffer the render pass was
     // started with is not usable (due to the addition of resolve attachments after the fact).
     ASSERT(framebufferOverride == VK_NULL_HANDLE ||
@@ -3241,7 +3239,7 @@ angle::Result RenderPassCommandBufferHelper::flushToPrimary(ErrorContext *contex
     PrimaryCommandBuffer &primary = commandsState->primaryCommands;
 
     // Commands that are added to primary before beginRenderPass command
-    executeBarriers(context->getRenderer(), commandsState);
+    executeBarriers(renderer, commandsState);
 
     constexpr VkSubpassContents kSubpassContents =
         ExecutesInline() ? VK_SUBPASS_CONTENTS_INLINE
@@ -3264,7 +3262,7 @@ angle::Result RenderPassCommandBufferHelper::flushToPrimary(ErrorContext *contex
             // If nullColorAttachmentWithExternalFormatResolve is true, there will be no color
             // attachment even though mRenderPassDesc indicates so.
             ASSERT((mRenderPassDesc.hasYUVResolveAttachment() &&
-                    context->getRenderer()->nullColorAttachmentWithExternalFormatResolve()) ||
+                    renderer->nullColorAttachmentWithExternalFormatResolve()) ||
                    attachmentBeginInfo.attachmentCount == mRenderPassDesc.attachmentCount());
         }
 
@@ -3298,9 +3296,9 @@ angle::Result RenderPassCommandBufferHelper::flushToPrimary(ErrorContext *contex
 
             // Restore the original layout of the image and do the real transition after the render
             // pass ends.
-            mImageOptimizeForPresent->setCurrentImageLayout(context->getRenderer(),
+            mImageOptimizeForPresent->setCurrentImageLayout(renderer,
                                                             mImageOptimizeForPresentOriginalLayout);
-            mImageOptimizeForPresent->recordWriteBarrierOneOff(context, ImageLayout::Present,
+            mImageOptimizeForPresent->recordWriteBarrierOneOff(renderer, ImageLayout::Present,
                                                                &primary, nullptr);
             mImageOptimizeForPresent               = nullptr;
             mImageOptimizeForPresentOriginalLayout = ImageLayout::Undefined;
@@ -4643,7 +4641,7 @@ angle::Result DynamicDescriptorPool::allocateDescriptorSet(
 }
 
 angle::Result DynamicDescriptorPool::getOrAllocateDescriptorSet(
-    ErrorContext *context,
+    Context *context,
     uint32_t currentFrame,
     const DescriptorSetDesc &desc,
     const DescriptorSetLayout &descriptorSetLayout,
@@ -5867,7 +5865,7 @@ bool BufferHelper::isReleasedToExternal() const
     return mIsReleasedToExternal;
 }
 
-void BufferHelper::recordReadBarrier(ErrorContext *context,
+void BufferHelper::recordReadBarrier(Context *context,
                                      VkAccessFlags readAccessType,
                                      VkPipelineStageFlags readStage,
                                      PipelineStage stageIndex,
@@ -5887,7 +5885,7 @@ void BufferHelper::recordReadBarrier(ErrorContext *context,
     mCurrentReadStages |= readStage;
 }
 
-void BufferHelper::recordWriteBarrier(ErrorContext *context,
+void BufferHelper::recordWriteBarrier(Context *context,
                                       VkAccessFlags writeAccessType,
                                       VkPipelineStageFlags writeStage,
                                       PipelineStage stageIndex,
@@ -6255,9 +6253,8 @@ angle::Result ImageHelper::copyToBufferOneOff(ErrorContext *context,
     PrimaryCommandBuffer &commandBuffer = scopedCommandBuffer.get();
 
     VkSemaphore acquireNextImageSemaphore;
-    barrierImpl(context, getAspectFlags(), ImageLayout::TransferDst,
-                renderer->getQueueFamilyIndex(), nullptr, &commandBuffer,
-                &acquireNextImageSemaphore);
+    barrierImplOneOff(renderer, getAspectFlags(), ImageLayout::TransferDst,
+                      renderer->getQueueFamilyIndex(), &commandBuffer, &acquireNextImageSemaphore);
     commandBuffer.copyBufferToImage(stagingBuffer->getBuffer().getHandle(), getImage(),
                                     getCurrentLayout(renderer), 1, &copyRegion);
     ANGLE_VK_TRY(context, commandBuffer.end());
@@ -6690,8 +6687,8 @@ angle::Result ImageHelper::initializeNonZeroMemory(ErrorContext *context,
 
     // Queue a DMA copy.
     VkSemaphore acquireNextImageSemaphore;
-    barrierImpl(context, getAspectFlags(), ImageLayout::TransferDst, context->getDeviceQueueIndex(),
-                nullptr, &commandBuffer, &acquireNextImageSemaphore);
+    barrierImplOneOff(renderer, getAspectFlags(), ImageLayout::TransferDst,
+                      context->getDeviceQueueIndex(), &commandBuffer, &acquireNextImageSemaphore);
     // SwapChain image should not come here
     ASSERT(acquireNextImageSemaphore == VK_NULL_HANDLE);
 
@@ -7460,7 +7457,7 @@ bool ImageHelper::isWriteBarrierNecessary(ImageLayout newLayout,
     return false;
 }
 
-void ImageHelper::changeLayoutAndQueue(ErrorContext *context,
+void ImageHelper::changeLayoutAndQueue(Context *context,
                                        VkImageAspectFlags aspectMask,
                                        ImageLayout newLayout,
                                        DeviceQueueIndex newDeviceQueueIndex,
@@ -7475,7 +7472,7 @@ void ImageHelper::changeLayoutAndQueue(ErrorContext *context,
     ASSERT(acquireNextImageSemaphore == VK_NULL_HANDLE);
 }
 
-void ImageHelper::acquireFromExternal(ErrorContext *context,
+void ImageHelper::acquireFromExternal(Context *context,
                                       DeviceQueueIndex externalQueueIndex,
                                       DeviceQueueIndex newDeviceQueueIndex,
                                       ImageLayout currentLayout,
@@ -7511,7 +7508,7 @@ void ImageHelper::acquireFromExternal(ErrorContext *context,
     }
 }
 
-void ImageHelper::releaseToExternal(ErrorContext *context,
+void ImageHelper::releaseToExternal(Context *context,
                                     DeviceQueueIndex externalQueueIndex,
                                     ImageLayout desiredLayout,
                                     OutsideRenderPassCommandBuffer *commandBuffer)
@@ -7578,7 +7575,7 @@ ANGLE_INLINE void ImageHelper::initImageMemoryBarrierStruct(
 
 // Generalized to accept both "primary" and "secondary" command buffers.
 template <typename CommandBufferT>
-void ImageHelper::barrierImpl(ErrorContext *context,
+void ImageHelper::barrierImpl(Context *context,
                               VkImageAspectFlags aspectMask,
                               ImageLayout newLayout,
                               DeviceQueueIndex newDeviceQueueIndex,
@@ -7588,7 +7585,7 @@ void ImageHelper::barrierImpl(ErrorContext *context,
 {
     Renderer *renderer = context->getRenderer();
     // mCurrentEvent must be invalid if useVkEventForImageBarrieris disabled.
-    ASSERT(context->getFeatures().useVkEventForImageBarrier.enabled || !mCurrentEvent.valid());
+    ASSERT(renderer->getFeatures().useVkEventForImageBarrier.enabled || !mCurrentEvent.valid());
 
     // Release the ANI semaphore to caller to add to the command submission.
     ASSERT(acquireNextImageSemaphoreOut != nullptr || !mAcquireNextImageSemaphore.valid());
@@ -7643,8 +7640,7 @@ void ImageHelper::barrierImpl(ErrorContext *context,
         // event gets garbage collected (which is GPU completion tracked) to avoid waited again in
         // future. We always use DstStageMask since that is what setEvent used and
         // VUID-vkCmdWaitEvents-srcStageMask-01158 requires they must match.
-        VkPipelineStageFlags srcStageMask =
-            context->getRenderer()->getEventPipelineStageMask(mCurrentEvent);
+        VkPipelineStageFlags srcStageMask = renderer->getEventPipelineStageMask(mCurrentEvent);
         commandBuffer->imageWaitEvent(mCurrentEvent.getEvent().getHandle(), srcStageMask,
                                       dstStageMask, imageMemoryBarrier);
         eventCollector->emplace_back(std::move(mCurrentEvent));
@@ -7676,13 +7672,73 @@ void ImageHelper::barrierImpl(ErrorContext *context,
 }
 
 template void ImageHelper::barrierImpl<priv::CommandBuffer>(
-    ErrorContext *context,
+    Context *context,
     VkImageAspectFlags aspectMask,
     ImageLayout newLayout,
     DeviceQueueIndex newDeviceQueueIndex,
     RefCountedEventCollector *eventCollector,
     priv::CommandBuffer *commandBuffer,
     VkSemaphore *acquireNextImageSemaphoreOut);
+
+void ImageHelper::barrierImplOneOff(Renderer *renderer,
+                                    VkImageAspectFlags aspectMask,
+                                    ImageLayout newLayout,
+                                    DeviceQueueIndex newDeviceQueueIndex,
+                                    PrimaryCommandBuffer *commandBuffer,
+                                    VkSemaphore *acquireNextImageSemaphoreOut)
+{
+    // We use pipelineBarrier only here for simplicity. mCurrentEvent must already released by
+    // caller.
+    ASSERT(!mCurrentEvent.valid());
+
+    // Release the ANI semaphore to caller to add to the command submission.
+    ASSERT(acquireNextImageSemaphoreOut != nullptr || !mAcquireNextImageSemaphore.valid());
+    if (acquireNextImageSemaphoreOut != nullptr)
+    {
+        *acquireNextImageSemaphoreOut = mAcquireNextImageSemaphore.release();
+    }
+
+    if (mCurrentLayout == ImageLayout::SharedPresent)
+    {
+        const ImageMemoryBarrierData &transition =
+            renderer->getImageMemoryBarrierData(mCurrentLayout);
+        VkMemoryBarrier memoryBarrier = {};
+        memoryBarrier.sType           = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
+        memoryBarrier.srcAccessMask   = transition.srcAccessMask;
+        memoryBarrier.dstAccessMask   = transition.dstAccessMask;
+
+        commandBuffer->memoryBarrier(transition.srcStageMask, transition.dstStageMask,
+                                     memoryBarrier);
+        return;
+    }
+
+    // Make sure we never transition out of SharedPresent
+    ASSERT(mCurrentLayout != ImageLayout::SharedPresent || newLayout == ImageLayout::SharedPresent);
+
+    const ImageMemoryBarrierData &transitionFrom =
+        renderer->getImageMemoryBarrierData(mCurrentLayout);
+    const ImageMemoryBarrierData &transitionTo = renderer->getImageMemoryBarrierData(newLayout);
+
+    VkImageMemoryBarrier imageMemoryBarrier = {};
+    initImageMemoryBarrierStruct(renderer, aspectMask, newLayout, newDeviceQueueIndex.familyIndex(),
+                                 &imageMemoryBarrier);
+
+    VkPipelineStageFlags dstStageMask = transitionTo.dstStageMask;
+
+    // There might be other shaderRead operations there other than the current layout.
+    VkPipelineStageFlags srcStageMask = transitionFrom.srcStageMask;
+    if (mCurrentShaderReadStageMask)
+    {
+        srcStageMask |= mCurrentShaderReadStageMask;
+        mCurrentShaderReadStageMask  = 0;
+        mLastNonShaderReadOnlyLayout = ImageLayout::Undefined;
+    }
+    commandBuffer->imageBarrier(srcStageMask, dstStageMask, imageMemoryBarrier);
+
+    mCurrentLayout           = newLayout;
+    mCurrentDeviceQueueIndex = newDeviceQueueIndex;
+    resetSubresourcesWrittenSinceBarrier();
+}
 
 void ImageHelper::setSubresourcesWrittenSinceBarrier(gl::LevelIndex levelStart,
                                                      uint32_t levelCount,
@@ -7712,7 +7768,7 @@ void ImageHelper::resetSubresourcesWrittenSinceBarrier()
     }
 }
 
-void ImageHelper::recordWriteBarrier(ErrorContext *context,
+void ImageHelper::recordWriteBarrier(Context *context,
                                      VkImageAspectFlags aspectMask,
                                      ImageLayout newLayout,
                                      gl::LevelIndex levelStart,
@@ -7738,7 +7794,7 @@ void ImageHelper::recordWriteBarrier(ErrorContext *context,
     setSubresourcesWrittenSinceBarrier(levelStart, levelCount, layerStart, layerCount);
 }
 
-void ImageHelper::recordReadSubresourceBarrier(ErrorContext *context,
+void ImageHelper::recordReadSubresourceBarrier(Context *context,
                                                VkImageAspectFlags aspectMask,
                                                ImageLayout newLayout,
                                                gl::LevelIndex levelStart,
@@ -7768,7 +7824,7 @@ void ImageHelper::recordReadSubresourceBarrier(ErrorContext *context,
     setSubresourcesWrittenSinceBarrier(levelStart, levelCount, layerStart, layerCount);
 }
 
-void ImageHelper::recordReadBarrier(ErrorContext *context,
+void ImageHelper::recordReadBarrier(Context *context,
                                     VkImageAspectFlags aspectMask,
                                     ImageLayout newLayout,
                                     OutsideRenderPassCommandBufferHelper *commands)
@@ -7790,7 +7846,7 @@ void ImageHelper::recordReadBarrier(ErrorContext *context,
     }
 }
 
-void ImageHelper::updateLayoutAndBarrier(ErrorContext *context,
+void ImageHelper::updateLayoutAndBarrier(Context *context,
                                          VkImageAspectFlags aspectMask,
                                          ImageLayout newLayout,
                                          BarrierType barrierType,
@@ -8018,7 +8074,7 @@ void ImageHelper::updateLayoutAndBarrier(ErrorContext *context,
     ASSERT(!mCurrentEvent.valid());
 }
 
-void ImageHelper::setCurrentRefCountedEvent(ErrorContext *context, EventMaps &eventMaps)
+void ImageHelper::setCurrentRefCountedEvent(Context *context, EventMaps &eventMaps)
 {
     ASSERT(context->getFeatures().useVkEventForImageBarrier.enabled);
 
@@ -10942,9 +10998,9 @@ angle::Result ImageHelper::copySurfaceImageToBuffer(DisplayVk *displayVk,
     PrimaryCommandBuffer &primaryCommandBuffer = scopedCommandBuffer.get();
 
     VkSemaphore acquireNextImageSemaphore;
-    barrierImpl(displayVk, getAspectFlags(), ImageLayout::TransferSrc,
-                displayVk->getDeviceQueueIndex(), nullptr, &primaryCommandBuffer,
-                &acquireNextImageSemaphore);
+    barrierImplOneOff(renderer, getAspectFlags(), ImageLayout::TransferSrc,
+                      displayVk->getDeviceQueueIndex(), &primaryCommandBuffer,
+                      &acquireNextImageSemaphore);
     primaryCommandBuffer.copyImageToBuffer(mImage, getCurrentLayout(renderer),
                                            bufferHelper->getBuffer().getHandle(), 1, &region);
 
@@ -10995,9 +11051,8 @@ angle::Result ImageHelper::copyBufferToSurfaceImage(DisplayVk *displayVk,
     PrimaryCommandBuffer &commandBuffer = scopedCommandBuffer.get();
 
     VkSemaphore acquireNextImageSemaphore;
-    barrierImpl(displayVk, getAspectFlags(), ImageLayout::TransferDst,
-                displayVk->getDeviceQueueIndex(), nullptr, &commandBuffer,
-                &acquireNextImageSemaphore);
+    barrierImplOneOff(renderer, getAspectFlags(), ImageLayout::TransferDst,
+                      displayVk->getDeviceQueueIndex(), &commandBuffer, &acquireNextImageSemaphore);
     commandBuffer.copyBufferToImage(bufferHelper->getBuffer().getHandle(), mImage,
                                     getCurrentLayout(renderer), 1, &region);
 

@@ -511,7 +511,7 @@ angle::Result CommandPoolAccess::collectPrimaryCommandBuffer(ErrorContext *conte
 }
 
 angle::Result CommandPoolAccess::flushOutsideRPCommands(
-    ErrorContext *context,
+    Context *context,
     ProtectionType protectionType,
     egl::ContextPriority priority,
     OutsideRenderPassCommandBufferHelper **outsideRPCommands)
@@ -523,7 +523,7 @@ angle::Result CommandPoolAccess::flushOutsideRPCommands(
 }
 
 angle::Result CommandPoolAccess::flushRenderPassCommands(
-    ErrorContext *context,
+    Context *context,
     const ProtectionType &protectionType,
     const egl::ContextPriority &priority,
     const RenderPass &renderPass,

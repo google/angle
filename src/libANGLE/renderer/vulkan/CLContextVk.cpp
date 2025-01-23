@@ -29,7 +29,7 @@ namespace rx
 
 CLContextVk::CLContextVk(const cl::Context &context, const cl::DevicePtrs devicePtrs)
     : CLContextImpl(context),
-      vk::ErrorContext(getPlatform()->getRenderer()),
+      vk::Context(getPlatform()->getRenderer()),
       mAssociatedDevices(devicePtrs)
 {
     mDeviceQueueIndex = mRenderer->getDefaultDeviceQueueIndex();

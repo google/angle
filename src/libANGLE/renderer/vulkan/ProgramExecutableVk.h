@@ -215,7 +215,7 @@ class ProgramExecutableVk : public ProgramExecutableImpl
         DescriptorSetLayoutCache *descriptorSetLayoutCache,
         vk::DescriptorSetArray<vk::MetaDescriptorPool> *metaDescriptorPools);
 
-    angle::Result updateTexturesDescriptorSet(vk::ErrorContext *context,
+    angle::Result updateTexturesDescriptorSet(vk::Context *context,
                                               uint32_t currentFrame,
                                               const gl::ActiveTextureArray<TextureVk *> &textures,
                                               const gl::SamplerBindingVector &samplers,
@@ -223,7 +223,7 @@ class ProgramExecutableVk : public ProgramExecutableImpl
                                               UpdateDescriptorSetsBuilder *updateBuilder);
 
     angle::Result updateShaderResourcesDescriptorSet(
-        vk::ErrorContext *context,
+        vk::Context *context,
         uint32_t currentFrame,
         UpdateDescriptorSetsBuilder *updateBuilder,
         const vk::WriteDescriptorDescs &writeDescriptorDescs,
@@ -231,7 +231,7 @@ class ProgramExecutableVk : public ProgramExecutableImpl
         vk::SharedDescriptorSetCacheKey *newSharedCacheKeyOut);
 
     angle::Result updateUniformsAndXfbDescriptorSet(
-        vk::ErrorContext *context,
+        vk::Context *context,
         uint32_t currentFrame,
         UpdateDescriptorSetsBuilder *updateBuilder,
         const vk::WriteDescriptorDescs &writeDescriptorDescs,
@@ -304,7 +304,7 @@ class ProgramExecutableVk : public ProgramExecutableImpl
     }
 
     void setAllDefaultUniformsDirty();
-    angle::Result updateUniforms(vk::ErrorContext *context,
+    angle::Result updateUniforms(vk::Context *context,
                                  uint32_t currentFrame,
                                  UpdateDescriptorSetsBuilder *updateBuilder,
                                  vk::BufferHelper *emptyBuffer,
@@ -500,7 +500,7 @@ class ProgramExecutableVk : public ProgramExecutableImpl
                                               vk::PipelineHelper *placeholderPipelineHelper);
     void waitForPostLinkTasksImpl(ContextVk *contextVk);
 
-    angle::Result getOrAllocateDescriptorSet(vk::ErrorContext *context,
+    angle::Result getOrAllocateDescriptorSet(vk::Context *context,
                                              uint32_t currentFrame,
                                              UpdateDescriptorSetsBuilder *updateBuilder,
                                              const vk::DescriptorSetDescBuilder &descriptorSetDesc,

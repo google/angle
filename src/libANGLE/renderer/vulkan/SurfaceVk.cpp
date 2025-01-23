@@ -2891,7 +2891,7 @@ VkResult WindowSurfaceVk::postProcessUnlockedAcquire(vk::ErrorContext *context)
             vk::PrimaryCommandBuffer &primaryCommandBuffer = scopedCommandBuffer.get();
             VkSemaphore semaphore;
             // Note return errors is early exit may leave new Image and Swapchain in unknown state.
-            image.image->recordWriteBarrierOneOff(context, vk::ImageLayout::SharedPresent,
+            image.image->recordWriteBarrierOneOff(renderer, vk::ImageLayout::SharedPresent,
                                                   &primaryCommandBuffer, &semaphore);
             ASSERT(semaphore == acquireImageSemaphore);
             if (primaryCommandBuffer.end() != VK_SUCCESS)

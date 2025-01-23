@@ -1873,7 +1873,7 @@ void ProgramExecutableVk::resolvePrecisionMismatch(const gl::ProgramMergedVaryin
 }
 
 angle::Result ProgramExecutableVk::getOrAllocateDescriptorSet(
-    vk::ErrorContext *context,
+    vk::Context *context,
     uint32_t currentFrame,
     UpdateDescriptorSetsBuilder *updateBuilder,
     const vk::DescriptorSetDescBuilder &descriptorSetDesc,
@@ -1912,7 +1912,7 @@ angle::Result ProgramExecutableVk::getOrAllocateDescriptorSet(
 }
 
 angle::Result ProgramExecutableVk::updateShaderResourcesDescriptorSet(
-    vk::ErrorContext *context,
+    vk::Context *context,
     uint32_t currentFrame,
     UpdateDescriptorSetsBuilder *updateBuilder,
     const vk::WriteDescriptorDescs &writeDescriptorDescs,
@@ -1941,7 +1941,7 @@ angle::Result ProgramExecutableVk::updateShaderResourcesDescriptorSet(
 }
 
 angle::Result ProgramExecutableVk::updateUniformsAndXfbDescriptorSet(
-    vk::ErrorContext *context,
+    vk::Context *context,
     uint32_t currentFrame,
     UpdateDescriptorSetsBuilder *updateBuilder,
     const vk::WriteDescriptorDescs &writeDescriptorDescs,
@@ -1958,7 +1958,7 @@ angle::Result ProgramExecutableVk::updateUniformsAndXfbDescriptorSet(
 }
 
 angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(
-    vk::ErrorContext *context,
+    vk::Context *context,
     uint32_t currentFrame,
     const gl::ActiveTextureArray<TextureVk *> &textures,
     const gl::SamplerBindingVector &samplers,
@@ -2109,7 +2109,7 @@ void ProgramExecutableVk::setAllDefaultUniformsDirty()
     }
 }
 
-angle::Result ProgramExecutableVk::updateUniforms(vk::ErrorContext *context,
+angle::Result ProgramExecutableVk::updateUniforms(vk::Context *context,
                                                   uint32_t currentFrame,
                                                   UpdateDescriptorSetsBuilder *updateBuilder,
                                                   vk::BufferHelper *emptyBuffer,

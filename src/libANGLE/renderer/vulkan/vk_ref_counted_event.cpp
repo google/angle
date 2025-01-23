@@ -65,7 +65,7 @@ void InitializeEventAndPipelineStagesMap(
     }
 }
 
-bool RefCountedEvent::init(ErrorContext *context, EventStage eventStage)
+bool RefCountedEvent::init(Context *context, EventStage eventStage)
 {
     ASSERT(mHandle == nullptr);
     ASSERT(eventStage != EventStage::InvalidEnum);
@@ -112,7 +112,7 @@ bool RefCountedEvent::init(ErrorContext *context, EventStage eventStage)
     return true;
 }
 
-void RefCountedEvent::release(ErrorContext *context)
+void RefCountedEvent::release(Context *context)
 {
     if (mHandle != nullptr)
     {
