@@ -2694,13 +2694,8 @@ class ImageHelper final : public Resource, public angle::Subject
                                   PrimaryCommandBuffer *commandBuffer,
                                   VkSemaphore *acquireNextImageSemaphoreOut)
     {
-        if (mCurrentEvent.valid())
-        {
-            mCurrentEvent.release(renderer);
-        }
-
-        barrierImplOneOff(renderer, getAspectFlags(), newLayout, mCurrentDeviceQueueIndex,
-                          commandBuffer, acquireNextImageSemaphoreOut);
+        recordBarrierOneOffImpl(renderer, getAspectFlags(), newLayout, mCurrentDeviceQueueIndex,
+                                commandBuffer, acquireNextImageSemaphoreOut);
     }
 
     // This function can be used to prevent issuing redundant layout transition commands.
@@ -3071,7 +3066,7 @@ class ImageHelper final : public Resource, public angle::Subject
 
     // Generalized to accept both "primary" and "secondary" command buffers.
     template <typename CommandBufferT>
-    void barrierImpl(Context *context,
+    void barrierImpl(Renderer *renderer,
                      VkImageAspectFlags aspectMask,
                      ImageLayout newLayout,
                      DeviceQueueIndex newDeviceQueueIndex,
@@ -3079,12 +3074,21 @@ class ImageHelper final : public Resource, public angle::Subject
                      CommandBufferT *commandBuffer,
                      VkSemaphore *acquireNextImageSemaphoreOut);
 
-    void barrierImplOneOff(Renderer *renderer,
+    template <typename CommandBufferT>
+    void recordBarrierImpl(Context *context,
                            VkImageAspectFlags aspectMask,
                            ImageLayout newLayout,
                            DeviceQueueIndex newDeviceQueueIndex,
-                           PrimaryCommandBuffer *commandBuffer,
+                           RefCountedEventCollector *eventCollector,
+                           CommandBufferT *commandBuffer,
                            VkSemaphore *acquireNextImageSemaphoreOut);
+
+    void recordBarrierOneOffImpl(Renderer *renderer,
+                                 VkImageAspectFlags aspectMask,
+                                 ImageLayout newLayout,
+                                 DeviceQueueIndex newDeviceQueueIndex,
+                                 PrimaryCommandBuffer *commandBuffer,
+                                 VkSemaphore *acquireNextImageSemaphoreOut);
 
     void setSubresourcesWrittenSinceBarrier(gl::LevelIndex levelStart,
                                             uint32_t levelCount,

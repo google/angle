@@ -6253,8 +6253,9 @@ angle::Result ImageHelper::copyToBufferOneOff(ErrorContext *context,
     PrimaryCommandBuffer &commandBuffer = scopedCommandBuffer.get();
 
     VkSemaphore acquireNextImageSemaphore;
-    barrierImplOneOff(renderer, getAspectFlags(), ImageLayout::TransferDst,
-                      renderer->getQueueFamilyIndex(), &commandBuffer, &acquireNextImageSemaphore);
+    recordBarrierOneOffImpl(renderer, getAspectFlags(), ImageLayout::TransferDst,
+                            renderer->getQueueFamilyIndex(), &commandBuffer,
+                            &acquireNextImageSemaphore);
     commandBuffer.copyBufferToImage(stagingBuffer->getBuffer().getHandle(), getImage(),
                                     getCurrentLayout(renderer), 1, &copyRegion);
     ANGLE_VK_TRY(context, commandBuffer.end());
@@ -6687,8 +6688,9 @@ angle::Result ImageHelper::initializeNonZeroMemory(ErrorContext *context,
 
     // Queue a DMA copy.
     VkSemaphore acquireNextImageSemaphore;
-    barrierImplOneOff(renderer, getAspectFlags(), ImageLayout::TransferDst,
-                      context->getDeviceQueueIndex(), &commandBuffer, &acquireNextImageSemaphore);
+    recordBarrierOneOffImpl(renderer, getAspectFlags(), ImageLayout::TransferDst,
+                            context->getDeviceQueueIndex(), &commandBuffer,
+                            &acquireNextImageSemaphore);
     // SwapChain image should not come here
     ASSERT(acquireNextImageSemaphore == VK_NULL_HANDLE);
 
@@ -7465,9 +7467,10 @@ void ImageHelper::changeLayoutAndQueue(Context *context,
 {
     ASSERT(isQueueFamilyChangeNeccesary(newDeviceQueueIndex));
     VkSemaphore acquireNextImageSemaphore;
-    // barrierImpl should detect there is queue switch and fall back to pipelineBarrier properly.
-    barrierImpl(context, aspectMask, newLayout, newDeviceQueueIndex, nullptr, commandBuffer,
-                &acquireNextImageSemaphore);
+    // recordBarrierImpl should detect there is queue switch and fall back to pipelineBarrier
+    // properly.
+    recordBarrierImpl(context, aspectMask, newLayout, newDeviceQueueIndex, nullptr, commandBuffer,
+                      &acquireNextImageSemaphore);
     // SwapChain image should not get here.
     ASSERT(acquireNextImageSemaphore == VK_NULL_HANDLE);
 }
@@ -7575,7 +7578,7 @@ ANGLE_INLINE void ImageHelper::initImageMemoryBarrierStruct(
 
 // Generalized to accept both "primary" and "secondary" command buffers.
 template <typename CommandBufferT>
-void ImageHelper::barrierImpl(Context *context,
+void ImageHelper::barrierImpl(Renderer *renderer,
                               VkImageAspectFlags aspectMask,
                               ImageLayout newLayout,
                               DeviceQueueIndex newDeviceQueueIndex,
@@ -7583,10 +7586,6 @@ void ImageHelper::barrierImpl(Context *context,
                               CommandBufferT *commandBuffer,
                               VkSemaphore *acquireNextImageSemaphoreOut)
 {
-    Renderer *renderer = context->getRenderer();
-    // mCurrentEvent must be invalid if useVkEventForImageBarrieris disabled.
-    ASSERT(renderer->getFeatures().useVkEventForImageBarrier.enabled || !mCurrentEvent.valid());
-
     // Release the ANI semaphore to caller to add to the command submission.
     ASSERT(acquireNextImageSemaphoreOut != nullptr || !mAcquireNextImageSemaphore.valid());
     if (acquireNextImageSemaphoreOut != nullptr)
@@ -7596,10 +7595,6 @@ void ImageHelper::barrierImpl(Context *context,
 
     if (mCurrentLayout == ImageLayout::SharedPresent)
     {
-        // For now we always use pipelineBarrier for singlebuffer mode. We could use event here in
-        // future.
-        mCurrentEvent.release(context);
-
         const ImageMemoryBarrierData &transition =
             renderer->getImageMemoryBarrierData(mCurrentLayout);
         VkMemoryBarrier memoryBarrier = {};
@@ -7656,88 +7651,55 @@ void ImageHelper::barrierImpl(Context *context,
             mLastNonShaderReadOnlyLayout = ImageLayout::Undefined;
         }
         commandBuffer->imageBarrier(srcStageMask, dstStageMask, imageMemoryBarrier);
-        // We use pipelineBarrier here, no needs to wait for events any more.
-        mCurrentEvent.release(context);
     }
 
     mCurrentLayout           = newLayout;
     mCurrentDeviceQueueIndex = newDeviceQueueIndex;
     resetSubresourcesWrittenSinceBarrier();
+}
+
+template <typename CommandBufferT>
+void ImageHelper::recordBarrierImpl(Context *context,
+                                    VkImageAspectFlags aspectMask,
+                                    ImageLayout newLayout,
+                                    DeviceQueueIndex newDeviceQueueIndex,
+                                    RefCountedEventCollector *eventCollector,
+                                    CommandBufferT *commandBuffer,
+                                    VkSemaphore *acquireNextImageSemaphoreOut)
+{
+    Renderer *renderer = context->getRenderer();
+    // mCurrentEvent must be invalid if useVkEventForImageBarrieris disabled.
+    ASSERT(renderer->getFeatures().useVkEventForImageBarrier.enabled || !mCurrentEvent.valid());
+
+    if (mCurrentLayout == ImageLayout::SharedPresent)
+    {
+        // For now we always use pipelineBarrier for singlebuffer mode. We could use event here in
+        // future.
+        mCurrentEvent.release(context);
+    }
+
+    barrierImpl(renderer, aspectMask, newLayout, newDeviceQueueIndex, eventCollector, commandBuffer,
+                acquireNextImageSemaphoreOut);
 
     // We must release the event so that new event will be created and added. If we did not add new
     // event, because mCurrentEvent have been released, next barrier will automatically fallback to
     // pipelineBarrier. Otherwise if we keep mCurrentEvent here we may accidentally end up waiting
     // for an old event which creates sync hazard.
-    ASSERT(!mCurrentEvent.valid());
+    mCurrentEvent.release(context);
 }
 
-template void ImageHelper::barrierImpl<priv::CommandBuffer>(
-    Context *context,
-    VkImageAspectFlags aspectMask,
-    ImageLayout newLayout,
-    DeviceQueueIndex newDeviceQueueIndex,
-    RefCountedEventCollector *eventCollector,
-    priv::CommandBuffer *commandBuffer,
-    VkSemaphore *acquireNextImageSemaphoreOut);
-
-void ImageHelper::barrierImplOneOff(Renderer *renderer,
-                                    VkImageAspectFlags aspectMask,
-                                    ImageLayout newLayout,
-                                    DeviceQueueIndex newDeviceQueueIndex,
-                                    PrimaryCommandBuffer *commandBuffer,
-                                    VkSemaphore *acquireNextImageSemaphoreOut)
+void ImageHelper::recordBarrierOneOffImpl(Renderer *renderer,
+                                          VkImageAspectFlags aspectMask,
+                                          ImageLayout newLayout,
+                                          DeviceQueueIndex newDeviceQueueIndex,
+                                          PrimaryCommandBuffer *commandBuffer,
+                                          VkSemaphore *acquireNextImageSemaphoreOut)
 {
-    // We use pipelineBarrier only here for simplicity. mCurrentEvent must already released by
-    // caller.
-    ASSERT(!mCurrentEvent.valid());
+    // Release the event here to force pipelineBarrier.
+    mCurrentEvent.release(renderer);
 
-    // Release the ANI semaphore to caller to add to the command submission.
-    ASSERT(acquireNextImageSemaphoreOut != nullptr || !mAcquireNextImageSemaphore.valid());
-    if (acquireNextImageSemaphoreOut != nullptr)
-    {
-        *acquireNextImageSemaphoreOut = mAcquireNextImageSemaphore.release();
-    }
-
-    if (mCurrentLayout == ImageLayout::SharedPresent)
-    {
-        const ImageMemoryBarrierData &transition =
-            renderer->getImageMemoryBarrierData(mCurrentLayout);
-        VkMemoryBarrier memoryBarrier = {};
-        memoryBarrier.sType           = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
-        memoryBarrier.srcAccessMask   = transition.srcAccessMask;
-        memoryBarrier.dstAccessMask   = transition.dstAccessMask;
-
-        commandBuffer->memoryBarrier(transition.srcStageMask, transition.dstStageMask,
-                                     memoryBarrier);
-        return;
-    }
-
-    // Make sure we never transition out of SharedPresent
-    ASSERT(mCurrentLayout != ImageLayout::SharedPresent || newLayout == ImageLayout::SharedPresent);
-
-    const ImageMemoryBarrierData &transitionFrom =
-        renderer->getImageMemoryBarrierData(mCurrentLayout);
-    const ImageMemoryBarrierData &transitionTo = renderer->getImageMemoryBarrierData(newLayout);
-
-    VkImageMemoryBarrier imageMemoryBarrier = {};
-    initImageMemoryBarrierStruct(renderer, aspectMask, newLayout, newDeviceQueueIndex.familyIndex(),
-                                 &imageMemoryBarrier);
-
-    VkPipelineStageFlags dstStageMask = transitionTo.dstStageMask;
-
-    // There might be other shaderRead operations there other than the current layout.
-    VkPipelineStageFlags srcStageMask = transitionFrom.srcStageMask;
-    if (mCurrentShaderReadStageMask)
-    {
-        srcStageMask |= mCurrentShaderReadStageMask;
-        mCurrentShaderReadStageMask  = 0;
-        mLastNonShaderReadOnlyLayout = ImageLayout::Undefined;
-    }
-    commandBuffer->imageBarrier(srcStageMask, dstStageMask, imageMemoryBarrier);
-
-    mCurrentLayout           = newLayout;
-    mCurrentDeviceQueueIndex = newDeviceQueueIndex;
-    resetSubresourcesWrittenSinceBarrier();
+    barrierImpl(renderer, aspectMask, newLayout, newDeviceQueueIndex, nullptr, commandBuffer,
+                acquireNextImageSemaphoreOut);
 }
 
 void ImageHelper::setSubresourcesWrittenSinceBarrier(gl::LevelIndex levelStart,
@@ -7781,9 +7743,9 @@ void ImageHelper::recordWriteBarrier(Context *context,
     {
         ASSERT(!mCurrentEvent.valid() || !commands->hasSetEventPendingFlush(mCurrentEvent));
         VkSemaphore acquireNextImageSemaphore;
-        barrierImpl(context, aspectMask, newLayout, context->getDeviceQueueIndex(),
-                    commands->getRefCountedEventCollector(), &commands->getCommandBuffer(),
-                    &acquireNextImageSemaphore);
+        recordBarrierImpl(context, aspectMask, newLayout, context->getDeviceQueueIndex(),
+                          commands->getRefCountedEventCollector(), &commands->getCommandBuffer(),
+                          &acquireNextImageSemaphore);
 
         if (acquireNextImageSemaphore != VK_NULL_HANDLE)
         {
@@ -7810,9 +7772,9 @@ void ImageHelper::recordReadSubresourceBarrier(Context *context,
     {
         ASSERT(!mCurrentEvent.valid() || !commands->hasSetEventPendingFlush(mCurrentEvent));
         VkSemaphore acquireNextImageSemaphore;
-        barrierImpl(context, aspectMask, newLayout, context->getDeviceQueueIndex(),
-                    commands->getRefCountedEventCollector(), &commands->getCommandBuffer(),
-                    &acquireNextImageSemaphore);
+        recordBarrierImpl(context, aspectMask, newLayout, context->getDeviceQueueIndex(),
+                          commands->getRefCountedEventCollector(), &commands->getCommandBuffer(),
+                          &acquireNextImageSemaphore);
 
         if (acquireNextImageSemaphore != VK_NULL_HANDLE)
         {
@@ -7836,9 +7798,9 @@ void ImageHelper::recordReadBarrier(Context *context,
 
     ASSERT(!mCurrentEvent.valid() || !commands->hasSetEventPendingFlush(mCurrentEvent));
     VkSemaphore acquireNextImageSemaphore;
-    barrierImpl(context, aspectMask, newLayout, context->getDeviceQueueIndex(),
-                commands->getRefCountedEventCollector(), &commands->getCommandBuffer(),
-                &acquireNextImageSemaphore);
+    recordBarrierImpl(context, aspectMask, newLayout, context->getDeviceQueueIndex(),
+                      commands->getRefCountedEventCollector(), &commands->getCommandBuffer(),
+                      &acquireNextImageSemaphore);
 
     if (acquireNextImageSemaphore != VK_NULL_HANDLE)
     {
@@ -10988,19 +10950,15 @@ angle::Result ImageHelper::copySurfaceImageToBuffer(DisplayVk *displayVk,
     region.imageSubresource.layerCount     = layerCount;
     region.imageSubresource.mipLevel       = toVkLevel(sourceLevelGL).get();
 
-    // We may have a valid event here but we do not have a collector to collect it. Release the
-    // event here to force pipelineBarrier.
-    mCurrentEvent.release(renderer);
-
     ScopedPrimaryCommandBuffer scopedCommandBuffer(renderer->getDevice());
     ANGLE_TRY(renderer->getCommandBufferOneOff(displayVk, ProtectionType::Unprotected,
                                                &scopedCommandBuffer));
     PrimaryCommandBuffer &primaryCommandBuffer = scopedCommandBuffer.get();
 
     VkSemaphore acquireNextImageSemaphore;
-    barrierImplOneOff(renderer, getAspectFlags(), ImageLayout::TransferSrc,
-                      displayVk->getDeviceQueueIndex(), &primaryCommandBuffer,
-                      &acquireNextImageSemaphore);
+    recordBarrierOneOffImpl(renderer, getAspectFlags(), ImageLayout::TransferSrc,
+                            displayVk->getDeviceQueueIndex(), &primaryCommandBuffer,
+                            &acquireNextImageSemaphore);
     primaryCommandBuffer.copyImageToBuffer(mImage, getCurrentLayout(renderer),
                                            bufferHelper->getBuffer().getHandle(), 1, &region);
 
@@ -11041,18 +10999,15 @@ angle::Result ImageHelper::copyBufferToSurfaceImage(DisplayVk *displayVk,
     region.imageSubresource.layerCount     = layerCount;
     region.imageSubresource.mipLevel       = toVkLevel(sourceLevelGL).get();
 
-    // We may have a valid event here but we do not have a collector to collect it. Release the
-    // event here to force pipelineBarrier.
-    mCurrentEvent.release(displayVk->getRenderer());
-
     ScopedPrimaryCommandBuffer scopedCommandBuffer(renderer->getDevice());
     ANGLE_TRY(renderer->getCommandBufferOneOff(displayVk, ProtectionType::Unprotected,
                                                &scopedCommandBuffer));
     PrimaryCommandBuffer &commandBuffer = scopedCommandBuffer.get();
 
     VkSemaphore acquireNextImageSemaphore;
-    barrierImplOneOff(renderer, getAspectFlags(), ImageLayout::TransferDst,
-                      displayVk->getDeviceQueueIndex(), &commandBuffer, &acquireNextImageSemaphore);
+    recordBarrierOneOffImpl(renderer, getAspectFlags(), ImageLayout::TransferDst,
+                            displayVk->getDeviceQueueIndex(), &commandBuffer,
+                            &acquireNextImageSemaphore);
     commandBuffer.copyBufferToImage(bufferHelper->getBuffer().getHandle(), mImage,
                                     getCurrentLayout(renderer), 1, &region);
 
