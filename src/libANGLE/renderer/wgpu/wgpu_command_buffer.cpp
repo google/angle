@@ -73,6 +73,17 @@ void CommandBuffer::setBindGroup(uint32_t groupIndex, wgpu::BindGroup bindGroup)
     setBindGroupCommand->bindGroup = GetReferencedObject(mReferencedBindGroups, bindGroup);
 }
 
+void CommandBuffer::setBlendConstant(float r, float g, float b, float a)
+{
+    SetBlendConstantCommand *setBlendConstantCommand = initCommand<CommandID::SetBlendConstant>();
+    setBlendConstantCommand->r                       = r;
+    setBlendConstantCommand->g                       = g;
+    setBlendConstantCommand->b                       = b;
+    setBlendConstantCommand->a                       = a;
+
+    mHasSetBlendConstantCommand = true;
+}
+
 void CommandBuffer::setPipeline(wgpu::RenderPipeline pipeline)
 {
     SetPipelineCommand *setPiplelineCommand = initCommand<CommandID::SetPipeline>();
@@ -138,6 +149,7 @@ void CommandBuffer::clear()
 
     mHasSetScissorCommand  = false;
     mHasSetViewportCommand = false;
+    mHasSetBlendConstantCommand = false;
 
     if (!mCommandBlocks.empty())
     {
@@ -200,6 +212,16 @@ void CommandBuffer::recordCommands(wgpu::RenderPassEncoder encoder)
                         GetCommandAndIterate<CommandID::SetBindGroup>(&currentCommand);
                     encoder.SetBindGroup(setBindGroupCommand.groupIndex,
                                          *setBindGroupCommand.bindGroup);
+                    break;
+                }
+
+                case CommandID::SetBlendConstant:
+                {
+                    const SetBlendConstantCommand &setBlendConstantCommand =
+                        GetCommandAndIterate<CommandID::SetBlendConstant>(&currentCommand);
+                    wgpu::Color color{setBlendConstantCommand.r, setBlendConstantCommand.g,
+                                      setBlendConstantCommand.b, setBlendConstantCommand.a};
+                    encoder.SetBlendConstant(&color);
                     break;
                 }
 

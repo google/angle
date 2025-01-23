@@ -418,7 +418,13 @@ b/328156792 PINEAPPLE VULKAN : dEQP-GLES2.functional.uniform_api.value.assigned.
 356399840 WGPU : dEQP-GLES2.functional.fbo.api.texture_levels = FAIL
 356399840 WGPU : dEQP-GLES2.functional.fbo.completeness.renderable.texture.stencil.stencil_index8 = FAIL
 356399840 WGPU : dEQP-GLES2.functional.fbo.render.* = FAIL
-356399840 WGPU : dEQP-GLES2.functional.fragment_ops.* = FAIL
+370690274 WGPU : dEQP-GLES2.functional.fragment_ops.depth.* = FAIL
+370690274 WGPU : dEQP-GLES2.functional.fragment_ops.stencil.* = FAIL
+370690274 WGPU : dEQP-GLES2.functional.fragment_ops.depth_stencil.* = FAIL
+370690274 WGPU : dEQP-GLES2.functional.fragment_ops.scissor.* = FAIL
+356399840 WGPU : dEQP-GLES2.functional.fragment_ops.blend.*constant_alpha* = FAIL
+370690274 WGPU : dEQP-GLES2.functional.fragment_ops.random.* = FAIL
+370690274 WGPU : dEQP-GLES2.functional.fragment_ops.interaction.* = FAIL
 356399840 WGPU : dEQP-GLES2.functional.lifetime.attach.deleted_input.renderbuffer_framebuffer = FAIL
 356399840 WGPU : dEQP-GLES2.functional.lifetime.attach.deleted_input.shader_program = FAIL
 356399840 WGPU : dEQP-GLES2.functional.lifetime.attach.deleted_output.renderbuffer_framebuffer = FAIL

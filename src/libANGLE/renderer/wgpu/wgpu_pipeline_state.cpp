@@ -97,6 +97,76 @@ bool RenderPipelineDesc::setPrimitiveMode(gl::PrimitiveMode primitiveMode,
     return changed;
 }
 
+bool RenderPipelineDesc::setBlendEnabled(size_t colorIndex, bool enabled)
+{
+    PackedColorTargetState &colorTarget = mColorTargetStates[colorIndex];
+    if (colorTarget.blendEnabled == enabled)
+    {
+        return false;
+    }
+
+    SetBitField(colorTarget.blendEnabled, enabled);
+    return true;
+}
+
+bool RenderPipelineDesc::setBlendFuncs(size_t colorIndex,
+                                       wgpu::BlendFactor srcRGB,
+                                       wgpu::BlendFactor dstRGB,
+                                       wgpu::BlendFactor srcAlpha,
+                                       wgpu::BlendFactor dstAlpha)
+{
+    bool changed                        = false;
+    PackedColorTargetState &colorTarget = mColorTargetStates[colorIndex];
+
+    if (colorTarget.colorBlendSrcFactor != static_cast<uint32_t>(srcRGB))
+    {
+        SetBitField(colorTarget.colorBlendSrcFactor, srcRGB);
+        changed = true;
+    }
+
+    if (colorTarget.colorBlendDstFactor != static_cast<uint32_t>(dstRGB))
+    {
+        SetBitField(colorTarget.colorBlendDstFactor, dstRGB);
+        changed = true;
+    }
+
+    if (colorTarget.alphaBlendSrcFactor != static_cast<uint32_t>(srcAlpha))
+    {
+        SetBitField(colorTarget.alphaBlendSrcFactor, srcAlpha);
+        changed = true;
+    }
+
+    if (colorTarget.alphaBlendDstFactor != static_cast<uint32_t>(dstAlpha))
+    {
+        SetBitField(colorTarget.alphaBlendDstFactor, dstAlpha);
+        changed = true;
+    }
+
+    return changed;
+}
+
+bool RenderPipelineDesc::setBlendEquations(size_t colorIndex,
+                                           wgpu::BlendOperation rgb,
+                                           wgpu::BlendOperation alpha)
+{
+    bool changed                        = false;
+    PackedColorTargetState &colorTarget = mColorTargetStates[colorIndex];
+
+    if (colorTarget.colorBlendOp != static_cast<uint32_t>(rgb))
+    {
+        SetBitField(colorTarget.colorBlendOp, rgb);
+        changed = true;
+    }
+
+    if (colorTarget.alphaBlendOp != static_cast<uint32_t>(alpha))
+    {
+        SetBitField(colorTarget.alphaBlendOp, alpha);
+        changed = true;
+    }
+
+    return changed;
+}
+
 void RenderPipelineDesc::setFrontFace(GLenum frontFace)
 {
     SetBitField(mPrimitiveState.frontFace, PackFrontFace(gl_wgpu::GetFrontFace(frontFace)));
@@ -325,6 +395,8 @@ angle::Result RenderPipelineDesc::createPipeline(ContextWgpu *context,
                     static_cast<wgpu::BlendFactor>(packedColorTarget.alphaBlendDstFactor);
                 blendStates[colorTargetIndex].alpha.operation =
                     static_cast<wgpu::BlendOperation>(packedColorTarget.alphaBlendOp);
+
+                outputColorTarget.blend = &blendStates[colorTargetIndex];
             }
 
             outputColorTarget.writeMask =

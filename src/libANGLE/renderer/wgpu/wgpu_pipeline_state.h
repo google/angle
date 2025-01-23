@@ -140,6 +140,14 @@ class RenderPipelineDesc final
     void setCullMode(gl::CullFaceMode cullMode, bool cullFaceEnabled);
     void setColorWriteMask(size_t colorIndex, bool r, bool g, bool b, bool a);
 
+    bool setBlendEnabled(size_t colorIndex, bool enabled);
+    bool setBlendFuncs(size_t colorIndex,
+                       wgpu::BlendFactor srcRGB,
+                       wgpu::BlendFactor dstRGB,
+                       wgpu::BlendFactor srcAlpha,
+                       wgpu::BlendFactor dstAlpha);
+    bool setBlendEquations(size_t colorIndex, wgpu::BlendOperation rgb, wgpu::BlendOperation alpha);
+
     bool setVertexAttribute(size_t attribIndex, PackedVertexAttribute &newAttrib);
     bool setColorAttachmentFormat(size_t colorIndex, wgpu::TextureFormat format);
     bool setDepthStencilAttachmentFormat(wgpu::TextureFormat format);

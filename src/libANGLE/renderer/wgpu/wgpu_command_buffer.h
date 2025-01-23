@@ -133,7 +133,10 @@ struct SetBindGroupCommand
 
 struct SetBlendConstantCommand
 {
-    uint64_t pad;
+    float r;
+    float g;
+    float b;
+    float a;
 };
 
 struct SetIndexBufferCommand
@@ -240,6 +243,7 @@ class CommandBuffer
                      int32_t baseVertex,
                      uint32_t firstInstance);
     void setBindGroup(uint32_t groupIndex, wgpu::BindGroup bindGroup);
+    void setBlendConstant(float r, float g, float b, float a);
     void setPipeline(wgpu::RenderPipeline pipeline);
     void setScissorRect(uint32_t x, uint32_t y, uint32_t width, uint32_t height);
     void setViewport(float x, float y, float width, float height, float minDepth, float maxDepth);
@@ -254,6 +258,7 @@ class CommandBuffer
     bool hasCommands() const { return mCommandCount > 0; }
     bool hasSetScissorCommand() const { return mHasSetScissorCommand; }
     bool hasSetViewportCommand() const { return mHasSetViewportCommand; }
+    bool hasSetBlendConstantCommand() const { return mHasSetBlendConstantCommand; }
 
     void recordCommands(wgpu::RenderPassEncoder encoder);
 
@@ -295,6 +300,7 @@ class CommandBuffer
     size_t mCommandCount = 0;
     bool mHasSetScissorCommand  = false;
     bool mHasSetViewportCommand = false;
+    bool mHasSetBlendConstantCommand = false;
 
     // std::unordered_set required because it does not move elements and stored command reference
     // addresses in the set
