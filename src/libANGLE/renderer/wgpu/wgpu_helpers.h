@@ -186,6 +186,8 @@ enum class MapAtCreation
     Yes,
 };
 
+struct BufferReadback;
+
 class BufferHelper : public angle::NonCopyable
 {
   public:
@@ -218,11 +220,25 @@ class BufferHelper : public angle::NonCopyable
     uint64_t requestedSize() const;
     uint64_t actualSize() const;
 
+    // Helper to copy data to a staging buffer and map it. Staging data is cleaned up by the
+    // BufferReadback RAII object.
+    angle::Result readDataImmediate(ContextWgpu *context,
+                                    size_t offset,
+                                    size_t size,
+                                    webgpu::RenderPassClosureReason reason,
+                                    BufferReadback *result);
+
   private:
     wgpu::Buffer mBuffer;
     size_t mRequestedSize = 0;
 
     std::optional<BufferMapState> mMappedState;
+};
+
+struct BufferReadback
+{
+    BufferHelper buffer;
+    const uint8_t *data = nullptr;
 };
 
 }  // namespace webgpu

@@ -439,7 +439,6 @@ wgpu::IndexFormat GetIndexFormat(gl::DrawElementsType drawElementsType)
     switch (drawElementsType)
     {
         case gl::DrawElementsType::UnsignedByte:
-            UNIMPLEMENTED();
             return wgpu::IndexFormat::Uint16;  // Emulated
         case gl::DrawElementsType::UnsignedShort:
             return wgpu::IndexFormat::Uint16;

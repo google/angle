@@ -185,6 +185,8 @@ struct SetVertexBufferCommand
         const wgpu::Buffer *buffer;
         uint64_t pad1;  // Pad to 64 bits on 32-bit systems
     };
+    uint64_t offset;
+    uint64_t size;
 };
 
 struct SetViewportCommand
@@ -245,7 +247,7 @@ class CommandBuffer
                         wgpu::IndexFormat format,
                         uint64_t offset,
                         uint64_t size);
-    void setVertexBuffer(uint32_t slot, wgpu::Buffer buffer);
+    void setVertexBuffer(uint32_t slot, wgpu::Buffer buffer, uint64_t offset, uint64_t size);
 
     void clear();
 

@@ -1231,19 +1231,20 @@ angle::Result ContextWgpu::handleDirtyVertexBuffers(const gl::AttributesMask &sl
     VertexArrayWgpu *vertexArrayWgpu = GetImplAs<VertexArrayWgpu>(mState.getVertexArray());
     for (size_t slot : slots)
     {
-        webgpu::BufferHelper *buffer = vertexArrayWgpu->getVertexBuffer(slot);
-        if (!buffer)
+        const VertexBufferWithOffset &buffer = vertexArrayWgpu->getVertexBuffer(slot);
+        if (!buffer.buffer)
         {
             // Missing default attribute support
             ASSERT(!mState.getVertexArray()->getVertexAttribute(slot).enabled);
             UNIMPLEMENTED();
             continue;
         }
-        if (buffer->getMappedState())
+        if (buffer.buffer->getMappedState())
         {
-            ANGLE_TRY(buffer->unmap());
+            ANGLE_TRY(buffer.buffer->unmap());
         }
-        mCommandBuffer.setVertexBuffer(static_cast<uint32_t>(slot), buffer->getBuffer());
+        mCommandBuffer.setVertexBuffer(static_cast<uint32_t>(slot), buffer.buffer->getBuffer(),
+                                       buffer.offset, WGPU_WHOLE_SIZE);
     }
     return angle::Result::Continue;
 }

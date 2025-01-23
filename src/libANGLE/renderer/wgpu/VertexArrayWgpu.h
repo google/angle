@@ -29,6 +29,12 @@ enum class IndexDataNeedsStreaming
     No,
 };
 
+struct VertexBufferWithOffset
+{
+    webgpu::BufferHelper *buffer = nullptr;
+    size_t offset                = 0;
+};
+
 class VertexArrayWgpu : public VertexArrayImpl
 {
   public:
@@ -39,7 +45,10 @@ class VertexArrayWgpu : public VertexArrayImpl
                             gl::VertexArray::DirtyAttribBitsArray *attribBits,
                             gl::VertexArray::DirtyBindingBitsArray *bindingBits) override;
 
-    webgpu::BufferHelper *getVertexBuffer(size_t slot) const { return mCurrentArrayBuffers[slot]; }
+    const VertexBufferWithOffset &getVertexBuffer(size_t slot) const
+    {
+        return mCurrentArrayBuffers[slot];
+    }
     webgpu::BufferHelper *getIndexBuffer() const { return mCurrentIndexBuffer; }
 
     angle::Result syncClientArrays(const gl::Context *context,
@@ -71,7 +80,10 @@ class VertexArrayWgpu : public VertexArrayImpl
 
     gl::AttribArray<webgpu::PackedVertexAttribute> mCurrentAttribs;
     gl::AttribArray<webgpu::BufferHelper> mStreamingArrayBuffers;
-    gl::AttribArray<webgpu::BufferHelper *> mCurrentArrayBuffers;
+    gl::AttribArray<VertexBufferWithOffset> mCurrentArrayBuffers;
+
+    // Attributes that need to be streamed due to incompatibilities
+    gl::AttributesMask mForcedStreamingAttributes;
 
     webgpu::BufferHelper mStreamingIndexBuffer;
     webgpu::BufferHelper *mCurrentIndexBuffer = nullptr;

@@ -296,7 +296,7 @@ inline void CopyToFloatVertexData(const uint8_t *input,
             }
             else
             {
-                offsetOutput[3] = static_cast<outputType>(gl::Float32One);
+                offsetOutput[3] = static_cast<outputType>(1.0f);
             }
         }
     }

@@ -1190,7 +1190,11 @@ void Format::initialize(const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R16G16B16A16_SSCALED:
-            // This format is not implemented in WebGPU.
+            mIntendedGLFormat = GL_RGBA16_SSCALED_ANGLEX;
+
+            mActualBufferFormatID         = angle::FormatID::R32G32B32A32_FLOAT;
+            mVertexLoadFunction           = CopyToFloatVertexData<GLshort, 4, 4, false, false>;
+            mVertexLoadRequiresConversion = true;
             break;
 
         case angle::FormatID::R16G16B16A16_UINT:
@@ -1214,7 +1218,11 @@ void Format::initialize(const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R16G16B16A16_USCALED:
-            // This format is not implemented in WebGPU.
+            mIntendedGLFormat = GL_RGBA16_USCALED_ANGLEX;
+
+            mActualBufferFormatID         = angle::FormatID::R32G32B32A32_FLOAT;
+            mVertexLoadFunction           = CopyToFloatVertexData<GLushort, 4, 4, false, false>;
+            mVertexLoadRequiresConversion = true;
             break;
 
         case angle::FormatID::R16G16B16_FLOAT:
@@ -1252,7 +1260,11 @@ void Format::initialize(const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R16G16B16_SSCALED:
-            // This format is not implemented in WebGPU.
+            mIntendedGLFormat = GL_RGB16_SSCALED_ANGLEX;
+
+            mActualBufferFormatID         = angle::FormatID::R32G32B32A32_FLOAT;
+            mVertexLoadFunction           = CopyToFloatVertexData<GLshort, 3, 4, false, false>;
+            mVertexLoadRequiresConversion = true;
             break;
 
         case angle::FormatID::R16G16B16_UINT:
@@ -1260,11 +1272,20 @@ void Format::initialize(const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R16G16B16_UNORM:
-            // This format is not implemented in WebGPU.
+            mIntendedGLFormat = GL_RGB16_EXT;
+
+            mActualBufferFormatID = angle::FormatID::R16G16B16A16_UNORM;
+            mVertexLoadFunction =
+                CopyNativeVertexData<GLushort, 3, 4, std::numeric_limits<GLushort>::max()>;
+            mVertexLoadRequiresConversion = true;
             break;
 
         case angle::FormatID::R16G16B16_USCALED:
-            // This format is not implemented in WebGPU.
+            mIntendedGLFormat = GL_RGB16_USCALED_ANGLEX;
+
+            mActualBufferFormatID         = angle::FormatID::R32G32B32A32_FLOAT;
+            mVertexLoadFunction           = CopyToFloatVertexData<GLushort, 3, 4, false, false>;
+            mVertexLoadRequiresConversion = true;
             break;
 
         case angle::FormatID::R16G16_FLOAT:
@@ -1374,11 +1395,13 @@ void Format::initialize(const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R16_UNORM:
-            mIntendedGLFormat         = GL_R16_EXT;
-            mActualImageFormatID      = angle::FormatID::R16_UNORM;
-            mImageInitializerFunction = nullptr;
-            mIsRenderable             = true;
-
+            mIntendedGLFormat             = GL_R16_EXT;
+            mActualImageFormatID          = angle::FormatID::R16_UNORM;
+            mImageInitializerFunction     = nullptr;
+            mIsRenderable                 = true;
+            mActualBufferFormatID         = angle::FormatID::R16G16_UNORM;
+            mVertexLoadFunction           = CopyNativeVertexData<GLushort, 1, 2, 0>;
+            mVertexLoadRequiresConversion = true;
             break;
 
         case angle::FormatID::R16_USCALED:
@@ -1460,7 +1483,11 @@ void Format::initialize(const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R32G32B32_FIXED:
-            // This format is not implemented in WebGPU.
+            mIntendedGLFormat = GL_RGB32_FIXED_ANGLEX;
+
+            mActualBufferFormatID         = angle::FormatID::R32G32B32_FLOAT;
+            mVertexLoadFunction           = Copy32FixedTo32FVertexData<3, 3>;
+            mVertexLoadRequiresConversion = true;
             break;
 
         case angle::FormatID::R32G32B32_FLOAT:
@@ -1845,19 +1872,20 @@ void Format::initialize(const angle::Format &angleFormat)
             mActualImageFormatID          = angle::FormatID::R8G8_SINT;
             mImageInitializerFunction     = nullptr;
             mIsRenderable                 = true;
-            mActualBufferFormatID         = angle::FormatID::R8G8_SINT;
-            mVertexLoadFunction           = CopyNativeVertexData<GLbyte, 2, 2, 0>;
-            mVertexLoadRequiresConversion = false;
+            mActualBufferFormatID         = angle::FormatID::R8G8B8A8_SINT;
+            mVertexLoadFunction           = CopyNativeVertexData<GLbyte, 2, 4, 1>;
+            mVertexLoadRequiresConversion = true;
             break;
 
         case angle::FormatID::R8G8_SNORM:
-            mIntendedGLFormat             = GL_RG8_SNORM;
-            mActualImageFormatID          = angle::FormatID::R8G8_SNORM;
-            mImageInitializerFunction     = nullptr;
-            mIsRenderable                 = false;
-            mActualBufferFormatID         = angle::FormatID::R8G8_SNORM;
-            mVertexLoadFunction           = CopyNativeVertexData<GLbyte, 2, 2, 0>;
-            mVertexLoadRequiresConversion = false;
+            mIntendedGLFormat         = GL_RG8_SNORM;
+            mActualImageFormatID      = angle::FormatID::R8G8_SNORM;
+            mImageInitializerFunction = nullptr;
+            mIsRenderable             = false;
+            mActualBufferFormatID     = angle::FormatID::R8G8B8A8_SNORM;
+            mVertexLoadFunction =
+                CopyNativeVertexData<GLbyte, 2, 4, std::numeric_limits<GLbyte>::max()>;
+            mVertexLoadRequiresConversion = true;
             break;
 
         case angle::FormatID::R8G8_SSCALED:
@@ -1873,19 +1901,20 @@ void Format::initialize(const angle::Format &angleFormat)
             mActualImageFormatID          = angle::FormatID::R8G8_UINT;
             mImageInitializerFunction     = nullptr;
             mIsRenderable                 = true;
-            mActualBufferFormatID         = angle::FormatID::R8G8_UINT;
-            mVertexLoadFunction           = CopyNativeVertexData<GLubyte, 2, 2, 0>;
-            mVertexLoadRequiresConversion = false;
+            mActualBufferFormatID         = angle::FormatID::R8G8B8A8_UINT;
+            mVertexLoadFunction           = CopyNativeVertexData<GLubyte, 2, 4, 1>;
+            mVertexLoadRequiresConversion = true;
             break;
 
         case angle::FormatID::R8G8_UNORM:
-            mIntendedGLFormat             = GL_RG8;
-            mActualImageFormatID          = angle::FormatID::R8G8_UNORM;
-            mImageInitializerFunction     = nullptr;
-            mIsRenderable                 = true;
-            mActualBufferFormatID         = angle::FormatID::R8G8_UNORM;
-            mVertexLoadFunction           = CopyNativeVertexData<GLubyte, 2, 2, 0>;
-            mVertexLoadRequiresConversion = false;
+            mIntendedGLFormat         = GL_RG8;
+            mActualImageFormatID      = angle::FormatID::R8G8_UNORM;
+            mImageInitializerFunction = nullptr;
+            mIsRenderable             = true;
+            mActualBufferFormatID     = angle::FormatID::R8G8B8A8_UNORM;
+            mVertexLoadFunction =
+                CopyNativeVertexData<GLubyte, 2, 4, std::numeric_limits<GLubyte>::max()>;
+            mVertexLoadRequiresConversion = true;
             break;
 
         case angle::FormatID::R8G8_UNORM_SRGB:
@@ -1901,11 +1930,13 @@ void Format::initialize(const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R8_SINT:
-            mIntendedGLFormat         = GL_R8I;
-            mActualImageFormatID      = angle::FormatID::R8_SINT;
-            mImageInitializerFunction = nullptr;
-            mIsRenderable             = true;
-
+            mIntendedGLFormat             = GL_R8I;
+            mActualImageFormatID          = angle::FormatID::R8_SINT;
+            mImageInitializerFunction     = nullptr;
+            mIsRenderable                 = true;
+            mActualBufferFormatID         = angle::FormatID::R8G8B8A8_SINT;
+            mVertexLoadFunction           = CopyNativeVertexData<GLbyte, 1, 4, 1>;
+            mVertexLoadRequiresConversion = true;
             break;
 
         case angle::FormatID::R8_SNORM:
@@ -1913,7 +1944,10 @@ void Format::initialize(const angle::Format &angleFormat)
             mActualImageFormatID      = angle::FormatID::R8_SNORM;
             mImageInitializerFunction = nullptr;
             mIsRenderable             = false;
-
+            mActualBufferFormatID     = angle::FormatID::R8G8B8A8_SNORM;
+            mVertexLoadFunction =
+                CopyNativeVertexData<GLbyte, 1, 4, std::numeric_limits<GLbyte>::max()>;
+            mVertexLoadRequiresConversion = true;
             break;
 
         case angle::FormatID::R8_SSCALED:
@@ -1925,11 +1959,13 @@ void Format::initialize(const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R8_UINT:
-            mIntendedGLFormat         = GL_R8UI;
-            mActualImageFormatID      = angle::FormatID::R8_UINT;
-            mImageInitializerFunction = nullptr;
-            mIsRenderable             = true;
-
+            mIntendedGLFormat             = GL_R8UI;
+            mActualImageFormatID          = angle::FormatID::R8_UINT;
+            mImageInitializerFunction     = nullptr;
+            mIsRenderable                 = true;
+            mActualBufferFormatID         = angle::FormatID::R8G8B8A8_UINT;
+            mVertexLoadFunction           = CopyNativeVertexData<GLubyte, 1, 4, 1>;
+            mVertexLoadRequiresConversion = true;
             break;
 
         case angle::FormatID::R8_UNORM:
@@ -1937,7 +1973,10 @@ void Format::initialize(const angle::Format &angleFormat)
             mActualImageFormatID      = angle::FormatID::R8_UNORM;
             mImageInitializerFunction = nullptr;
             mIsRenderable             = true;
-
+            mActualBufferFormatID     = angle::FormatID::R8G8B8A8_UNORM;
+            mVertexLoadFunction =
+                CopyNativeVertexData<GLubyte, 1, 4, std::numeric_limits<GLubyte>::max()>;
+            mVertexLoadRequiresConversion = true;
             break;
 
         case angle::FormatID::R8_UNORM_SRGB:
@@ -2398,11 +2437,7 @@ wgpu::VertexFormat GetWgpuVertexFormatFromFormatID(angle::FormatID formatID)
         {angle::FormatID::R8G8B8A8_SINT, wgpu::VertexFormat::Sint8x4},
         {angle::FormatID::R8G8B8A8_SNORM, wgpu::VertexFormat::Snorm8x4},
         {angle::FormatID::R8G8B8A8_UINT, wgpu::VertexFormat::Uint8x4},
-        {angle::FormatID::R8G8B8A8_UNORM, wgpu::VertexFormat::Unorm8x4},
-        {angle::FormatID::R8G8_SINT, wgpu::VertexFormat::Sint8x2},
-        {angle::FormatID::R8G8_SNORM, wgpu::VertexFormat::Snorm8x2},
-        {angle::FormatID::R8G8_UINT, wgpu::VertexFormat::Uint8x2},
-        {angle::FormatID::R8G8_UNORM, wgpu::VertexFormat::Unorm8x2}};
+        {angle::FormatID::R8G8B8A8_UNORM, wgpu::VertexFormat::Unorm8x4}};
 
     return kMap[formatID];
 }
@@ -2465,14 +2500,6 @@ angle::FormatID GetFormatIDFromWgpuBufferFormat(wgpu::VertexFormat wgpuFormat)
             return angle::FormatID::R8G8B8A8_UINT;
         case wgpu::VertexFormat::Unorm8x4:
             return angle::FormatID::R8G8B8A8_UNORM;
-        case wgpu::VertexFormat::Sint8x2:
-            return angle::FormatID::R8G8_SINT;
-        case wgpu::VertexFormat::Snorm8x2:
-            return angle::FormatID::R8G8_SNORM;
-        case wgpu::VertexFormat::Uint8x2:
-            return angle::FormatID::R8G8_UINT;
-        case wgpu::VertexFormat::Unorm8x2:
-            return angle::FormatID::R8G8_UNORM;
 
         default:
             UNREACHABLE();

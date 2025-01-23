@@ -68,12 +68,13 @@ class Format final : private angle::NonCopyable
     {
         return GetWgpuTextureFormatFromFormatID(mActualImageFormatID);
     }
+    angle::FormatID getActualImageFormatID() const { return mActualImageFormatID; }
+
     wgpu::VertexFormat getActualWgpuVertexFormat() const
     {
         return GetWgpuVertexFormatFromFormatID(mActualBufferFormatID);
     }
-
-    angle::FormatID getActualImageFormatID() const { return mActualImageFormatID; }
+    angle::FormatID getActualVertexFormatID() const { return mActualBufferFormatID; }
 
     // The actual Buffer format is used to implement the front-end format for Buffers.  This format
     // is used by vertex buffers as well as texture buffers.
@@ -81,6 +82,9 @@ class Format final : private angle::NonCopyable
     {
         return angle::Format::Get(mActualBufferFormatID);
     }
+
+    bool vertexLoadRequiresConversion() const { return mVertexLoadRequiresConversion; }
+    VertexCopyFunction getVertexLoadFunction() const { return mVertexLoadFunction; }
 
     // |intendedGLFormat| always correponds to a valid GLenum type. For types that don't have a
     // corresponding GLenum we do our best to specify a GLenum that is "close".

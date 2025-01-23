@@ -574,5 +574,45 @@ uint64_t BufferHelper::actualSize() const
     return mBuffer ? mBuffer.GetSize() : 0;
 }
 
+angle::Result BufferHelper::readDataImmediate(ContextWgpu *context,
+                                              size_t offset,
+                                              size_t size,
+                                              webgpu::RenderPassClosureReason reason,
+                                              BufferReadback *result)
+{
+    ASSERT(result);
+
+    if (getMappedState())
+    {
+        ANGLE_TRY(unmap());
+    }
+
+    // Create a staging buffer just big enough for this copy but aligned for both copying and
+    // mapping.
+    const size_t stagingBufferSize = roundUpPow2(
+        size, std::max(webgpu::kBufferCopyToBufferAlignment, webgpu::kBufferMapOffsetAlignment));
+
+    ANGLE_TRY(result->buffer.initBuffer(context->getDisplay()->getDevice(), stagingBufferSize,
+                                        wgpu::BufferUsage::CopyDst | wgpu::BufferUsage::MapRead,
+                                        webgpu::MapAtCreation::No));
+
+    // Copy the source buffer to staging and flush the commands
+    context->ensureCommandEncoderCreated();
+    wgpu::CommandEncoder &commandEncoder = context->getCurrentCommandEncoder();
+    size_t safeCopyOffset   = rx::roundDownPow2(offset, webgpu::kBufferCopyToBufferAlignment);
+    size_t offsetAdjustment = offset - safeCopyOffset;
+    size_t copySize = roundUpPow2(size + offsetAdjustment, webgpu::kBufferCopyToBufferAlignment);
+    commandEncoder.CopyBufferToBuffer(getBuffer(), safeCopyOffset, result->buffer.getBuffer(), 0,
+                                      copySize);
+
+    ANGLE_TRY(context->flush(reason));
+
+    // Read back from the staging buffer and compute the index range
+    ANGLE_TRY(result->buffer.mapImmediate(context, wgpu::MapMode::Read, offsetAdjustment, size));
+    result->data = result->buffer.getMapReadPointer(offsetAdjustment, size);
+
+    return angle::Result::Continue;
+}
+
 }  // namespace webgpu
 }  // namespace rx

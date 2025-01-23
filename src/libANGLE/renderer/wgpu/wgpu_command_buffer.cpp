@@ -120,11 +120,16 @@ void CommandBuffer::setIndexBuffer(wgpu::Buffer buffer,
     setIndexBufferCommand->size                  = size;
 }
 
-void CommandBuffer::setVertexBuffer(uint32_t slot, wgpu::Buffer buffer)
+void CommandBuffer::setVertexBuffer(uint32_t slot,
+                                    wgpu::Buffer buffer,
+                                    uint64_t offset,
+                                    uint64_t size)
 {
     SetVertexBufferCommand *setVertexBufferCommand = initCommand<CommandID::SetVertexBuffer>();
     setVertexBufferCommand->slot                   = slot;
     setVertexBufferCommand->buffer = GetReferencedObject(mReferencedBuffers, buffer);
+    setVertexBufferCommand->offset                 = offset;
+    setVertexBufferCommand->size                   = size;
 }
 
 void CommandBuffer::clear()
@@ -240,8 +245,9 @@ void CommandBuffer::recordCommands(wgpu::RenderPassEncoder encoder)
                 {
                     const SetVertexBufferCommand &setVertexBufferCommand =
                         GetCommandAndIterate<CommandID::SetVertexBuffer>(&currentCommand);
-                    encoder.SetVertexBuffer(setVertexBufferCommand.slot,
-                                            *setVertexBufferCommand.buffer);
+                    encoder.SetVertexBuffer(
+                        setVertexBufferCommand.slot, *setVertexBufferCommand.buffer,
+                        setVertexBufferCommand.offset, setVertexBufferCommand.size);
                     break;
                 }
 
