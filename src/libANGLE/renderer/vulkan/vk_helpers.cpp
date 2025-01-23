@@ -13132,94 +13132,9 @@ angle::Result ShaderProgramHelper::getOrCreateComputePipeline(
     const char *shaderName,
     VkSpecializationInfo *specializationInfo) const
 {
-    PipelineHelper *computePipeline = &(*computePipelines)[pipelineOptions.permutationIndex];
-
-    if (computePipeline->valid())
-    {
-        *pipelineOut = computePipeline;
-        return angle::Result::Continue;
-    }
-
-    VkPipelineShaderStageCreateInfo shaderStage = {};
-    VkComputePipelineCreateInfo createInfo      = {};
-
-    shaderStage.sType               = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-    shaderStage.flags               = 0;
-    shaderStage.stage               = VK_SHADER_STAGE_COMPUTE_BIT;
-    shaderStage.module              = mShaders[gl::ShaderType::Compute]->getHandle();
-    shaderStage.pName               = shaderName ? shaderName : "main";
-    shaderStage.pSpecializationInfo = specializationInfo;
-
-    createInfo.sType              = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
-    createInfo.flags              = 0;
-    createInfo.stage              = shaderStage;
-    createInfo.layout             = pipelineLayout.getHandle();
-    createInfo.basePipelineHandle = VK_NULL_HANDLE;
-    createInfo.basePipelineIndex  = 0;
-
-    VkPipelineRobustnessCreateInfoEXT robustness = {};
-    robustness.sType = VK_STRUCTURE_TYPE_PIPELINE_ROBUSTNESS_CREATE_INFO_EXT;
-
-    // Enable robustness on the pipeline if needed.  Note that the global robustBufferAccess feature
-    // must be disabled by default.
-    if (pipelineOptions.robustness != 0)
-    {
-        ASSERT(context->getFeatures().supportsPipelineRobustness.enabled);
-
-        robustness.storageBuffers = VK_PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT;
-        robustness.uniformBuffers = VK_PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT;
-        robustness.vertexInputs   = VK_PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DEVICE_DEFAULT_EXT;
-        robustness.images         = VK_PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_DEVICE_DEFAULT_EXT;
-
-        AddToPNextChain(&createInfo, &robustness);
-    }
-
-    // Restrict pipeline to protected or unprotected command buffers if possible.
-    if (pipelineOptions.protectedAccess != 0)
-    {
-        ASSERT(context->getFeatures().supportsPipelineProtectedAccess.enabled);
-        createInfo.flags |= VK_PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT;
-    }
-    else if (context->getFeatures().supportsPipelineProtectedAccess.enabled)
-    {
-        createInfo.flags |= VK_PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT;
-    }
-
-    VkPipelineCreationFeedback feedback               = {};
-    VkPipelineCreationFeedback perStageFeedback       = {};
-    VkPipelineCreationFeedbackCreateInfo feedbackInfo = {};
-    feedbackInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO;
-    feedbackInfo.pPipelineCreationFeedback = &feedback;
-    // Note: see comment in GraphicsPipelineDesc::initializePipeline about why per-stage feedback is
-    // specified even though unused.
-    feedbackInfo.pipelineStageCreationFeedbackCount = 1;
-    feedbackInfo.pPipelineStageCreationFeedbacks    = &perStageFeedback;
-
-    const bool supportsFeedback = context->getFeatures().supportsPipelineCreationFeedback.enabled;
-    if (supportsFeedback)
-    {
-        AddToPNextChain(&createInfo, &feedbackInfo);
-    }
-
-    vk::Pipeline pipeline;
-    ANGLE_VK_TRY(context, pipelineCache->createComputePipeline(context, createInfo, &pipeline));
-
-    vk::CacheLookUpFeedback lookUpFeedback = CacheLookUpFeedback::None;
-
-    if (supportsFeedback)
-    {
-        const bool cacheHit =
-            (feedback.flags & VK_PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT) !=
-            0;
-
-        lookUpFeedback = cacheHit ? CacheLookUpFeedback::Hit : CacheLookUpFeedback::Miss;
-        ApplyPipelineCreationFeedback(context, feedback);
-    }
-
-    computePipeline->setComputePipeline(std::move(pipeline), lookUpFeedback);
-
-    *pipelineOut = computePipeline;
-    return angle::Result::Continue;
+    return computePipelines->getOrCreatePipeline(context, pipelineCache, pipelineLayout,
+                                                 pipelineOptions, source, pipelineOut, shaderName,
+                                                 specializationInfo, mShaders);
 }
 
 // ActiveHandleCounter implementation.

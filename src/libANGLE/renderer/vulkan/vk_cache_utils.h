@@ -811,6 +811,62 @@ enum class PipelineProtectedAccess
     Protected,
 };
 
+// Context state that can affect a compute pipeline
+union ComputePipelineOptions final
+{
+    struct
+    {
+        // Whether VK_EXT_pipeline_robustness should be used to make the pipeline robust.  Note that
+        // programs are allowed to be shared between robust and non-robust contexts, so different
+        // pipelines can be created for the same compute program.
+        uint8_t robustness : 1;
+        // Whether VK_EXT_pipeline_protected_access should be used to make the pipeline
+        // protected-only. Similar to robustness, EGL allows protected and unprotected to be in the
+        // same share group.
+        uint8_t protectedAccess : 1;
+        uint8_t reserved : 6;  // must initialize to zero
+    };
+    uint8_t permutationIndex;
+    static constexpr uint32_t kPermutationCount = 0x1 << 2;
+};
+static_assert(sizeof(ComputePipelineOptions) == 1, "Size check failed");
+ComputePipelineOptions GetComputePipelineOptions(vk::PipelineRobustness robustness,
+                                                 vk::PipelineProtectedAccess protectedAccess);
+
+// Compute Pipeline Description
+class ComputePipelineDesc final
+{
+  public:
+    void *operator new(std::size_t size);
+    void operator delete(void *ptr);
+
+    ComputePipelineDesc();
+    ComputePipelineDesc(const ComputePipelineDesc &other);
+    ComputePipelineDesc &operator=(const ComputePipelineDesc &other);
+
+    ComputePipelineDesc(VkSpecializationInfo *specializationInfo,
+                        vk::ComputePipelineOptions pipelineOptions);
+    ~ComputePipelineDesc() = default;
+
+    size_t hash() const;
+    bool keyEqual(const ComputePipelineDesc &other) const;
+
+    template <typename T>
+    const T *getPtr() const
+    {
+        return reinterpret_cast<const T *>(this);
+    }
+
+    std::vector<uint32_t> getConstantIds() const { return mConstantIds; }
+    std::vector<uint32_t> getConstants() const { return mConstants; }
+    ComputePipelineOptions getPipelineOptions() const { return mPipelineOptions; }
+
+  private:
+    std::vector<uint32_t> mConstantIds, mConstants;
+    ComputePipelineOptions mPipelineOptions = {};
+    char mPadding[7]                        = {};
+};
+
 // State changes are applied through the update methods. Each update method can also have a
 // sibling method that applies the update without marking a state transition. The non-transition
 // update methods are used for internal shader pipelines. Not every non-transition update method
@@ -2326,6 +2382,7 @@ enum class VulkanCacheType
     CompatibleRenderPass,
     RenderPassWithOps,
     GraphicsPipeline,
+    ComputePipeline,
     PipelineLayout,
     Sampler,
     SamplerYcbcrConversion,
@@ -2537,8 +2594,14 @@ enum class PipelineSource
     DrawLinked,
     // Pipeline created for UtilsVk
     Utils,
+    // Pipeline created at dispatch time
+    Dispatch
 };
 
+struct ComputePipelineDescHash
+{
+    size_t operator()(const rx::vk::ComputePipelineDesc &key) const { return key.hash(); }
+};
 struct GraphicsPipelineDescCompleteHash
 {
     size_t operator()(const rx::vk::GraphicsPipelineDesc &key) const
@@ -2568,6 +2631,14 @@ struct GraphicsPipelineDescFragmentOutputHash
     }
 };
 
+struct ComputePipelineDescKeyEqual
+{
+    size_t operator()(const rx::vk::ComputePipelineDesc &first,
+                      const rx::vk::ComputePipelineDesc &second) const
+    {
+        return first.keyEqual(second);
+    }
+};
 struct GraphicsPipelineDescCompleteKeyEqual
 {
     size_t operator()(const rx::vk::GraphicsPipelineDesc &first,
@@ -2627,6 +2698,47 @@ struct GraphicsPipelineCacheTypeHelper<GraphicsPipelineDescFragmentOutputHash>
     using KeyEqual = GraphicsPipelineDescFragmentOutputKeyEqual;
     static constexpr vk::GraphicsPipelineSubset kSubset =
         vk::GraphicsPipelineSubset::FragmentOutput;
+};
+
+// Compute Pipeline Cache implementation
+// TODO(aannestrand): Add cache trimming/eviction.
+// http://anglebug.com/391672281
+class ComputePipelineCache final : HasCacheStats<rx::VulkanCacheType::ComputePipeline>
+{
+  public:
+    ComputePipelineCache() = default;
+    ~ComputePipelineCache() override { ASSERT(mPayload.empty()); }
+
+    void destroy(vk::ErrorContext *context);
+    void release(vk::ErrorContext *context);
+
+    angle::Result getOrCreatePipeline(vk::ErrorContext *context,
+                                      vk::PipelineCacheAccess *pipelineCache,
+                                      const vk::PipelineLayout &pipelineLayout,
+                                      vk::ComputePipelineOptions &pipelineOptions,
+                                      PipelineSource source,
+                                      vk::PipelineHelper **pipelineOut,
+                                      const char *shaderName,
+                                      VkSpecializationInfo *specializationInfo,
+                                      const vk::ShaderModuleMap &shaderModuleMap);
+
+  private:
+    angle::Result createPipeline(vk::ErrorContext *context,
+                                 vk::PipelineCacheAccess *pipelineCache,
+                                 const vk::PipelineLayout &pipelineLayout,
+                                 vk::ComputePipelineOptions &pipelineOptions,
+                                 PipelineSource source,
+                                 const char *shaderName,
+                                 const vk::ShaderModule &shaderModule,
+                                 VkSpecializationInfo *specializationInfo,
+                                 const vk::ComputePipelineDesc &desc,
+                                 vk::PipelineHelper **pipelineOut);
+
+    std::unordered_map<vk::ComputePipelineDesc,
+                       vk::PipelineHelper *,
+                       ComputePipelineDescHash,
+                       ComputePipelineDescKeyEqual>
+        mPayload;
 };
 
 // TODO(jmadill): Add cache trimming/eviction.

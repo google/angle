@@ -42,10 +42,7 @@ CLKernelVk::CLKernelVk(const cl::Kernel &kernel,
 
 CLKernelVk::~CLKernelVk()
 {
-    for (auto &pipelineHelper : mComputePipelineCache)
-    {
-        pipelineHelper.destroy(mContext->getDevice());
-    }
+    mComputePipelineCache.destroy(mContext);
     mShaderProgramHelper.destroy(mContext->getRenderer());
 
     if (mPODUniformBuffer)
@@ -362,10 +359,11 @@ angle::Result CLKernelVk::getOrCreateComputePipeline(vk::PipelineCacheAccess *pi
     };
 
     // Now get or create (on compute pipeline cache miss) compute pipeline and return it
+    vk::ComputePipelineOptions options = vk::GetComputePipelineOptions(
+        vk::PipelineRobustness::NonRobust, vk::PipelineProtectedAccess::Unprotected);
     return mShaderProgramHelper.getOrCreateComputePipeline(
-        mContext, &mComputePipelineCache, pipelineCache, getPipelineLayout(),
-        vk::ComputePipelineOptions{}, PipelineSource::Draw, pipelineOut, mName.c_str(),
-        &computeSpecializationInfo);
+        mContext, &mComputePipelineCache, pipelineCache, getPipelineLayout(), options,
+        PipelineSource::Draw, pipelineOut, mName.c_str(), &computeSpecializationInfo);
 }
 
 bool CLKernelVk::usesPrintf() const

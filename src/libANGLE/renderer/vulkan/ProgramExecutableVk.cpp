@@ -710,10 +710,7 @@ void ProgramExecutableVk::resetLayout(ContextVk *contextVk)
     }
     mValidGraphicsPermutations.reset();
 
-    for (size_t index : mValidComputePermutations)
-    {
-        mComputePipelines[index].release(contextVk);
-    }
+    mComputePipelines.release(contextVk);
     mComputeProgramInfo.release(contextVk);
     mValidComputePermutations.reset();
 

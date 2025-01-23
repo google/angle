@@ -162,7 +162,7 @@ class CLKernelVk : public CLKernelImpl
     size_t mPodBufferSize;
 
     vk::ShaderProgramHelper mShaderProgramHelper;
-    vk::ComputePipelineCache mComputePipelineCache;
+    ComputePipelineCache mComputePipelineCache;
     KernelSpecConstants mSpecConstants;
 
     // Pipeline and DescriptorSetLayout Shared pointers

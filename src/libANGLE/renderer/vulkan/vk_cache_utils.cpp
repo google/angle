@@ -3196,6 +3196,93 @@ bool operator==(const RenderPassDesc &lhs, const RenderPassDesc &rhs)
     return memcmp(&lhs, &rhs, sizeof(RenderPassDesc)) == 0;
 }
 
+// Compute Pipeline Description implementation.
+// Use aligned allocation and free so we can use the alignas keyword.
+void *ComputePipelineDesc::operator new(std::size_t size)
+{
+    return angle::AlignedAlloc(size, 32);
+}
+
+void ComputePipelineDesc::operator delete(void *ptr)
+{
+    return angle::AlignedFree(ptr);
+}
+
+ComputePipelineDesc::ComputePipelineDesc()
+{
+    ASSERT(mPipelineOptions.permutationIndex == 0);
+    ASSERT(std::all_of(mPadding, mPadding + sizeof(mPadding), [](char c) { return c == 0; }));
+}
+
+ComputePipelineDesc::ComputePipelineDesc(const ComputePipelineDesc &other)
+    : mConstantIds{other.getConstantIds()},
+      mConstants{other.getConstants()},
+      mPipelineOptions{other.getPipelineOptions()}
+{}
+
+ComputePipelineDesc &ComputePipelineDesc::operator=(const ComputePipelineDesc &other)
+{
+    mPipelineOptions = other.getPipelineOptions();
+    mConstantIds     = other.getConstantIds();
+    mConstants       = other.getConstants();
+    return *this;
+}
+
+ComputePipelineDesc::ComputePipelineDesc(VkSpecializationInfo *specializationInfo,
+                                         ComputePipelineOptions pipelineOptions)
+    : mConstantIds{}, mConstants{}, mPipelineOptions{pipelineOptions}
+{
+    if (specializationInfo != nullptr && specializationInfo->pMapEntries &&
+        specializationInfo->mapEntryCount != 0)
+    {
+        const VkSpecializationMapEntry *mapEntries = specializationInfo->pMapEntries;
+        mConstantIds.resize(specializationInfo->mapEntryCount);
+        for (size_t mapEntryCount = 0; mapEntryCount < mConstantIds.size(); mapEntryCount++)
+            mConstantIds[mapEntryCount] = mapEntries[mapEntryCount].constantID;
+    }
+    if (specializationInfo != nullptr && specializationInfo->pData &&
+        specializationInfo->dataSize != 0)
+    {
+        const uint32_t *constDataEntries = (const uint32_t *)specializationInfo->pData;
+        mConstants.resize(specializationInfo->dataSize / sizeof(uint32_t));
+        for (size_t constantEntryCount = 0; constantEntryCount < mConstants.size();
+             constantEntryCount++)
+            mConstants[constantEntryCount] = constDataEntries[constantEntryCount];
+    }
+}
+
+size_t ComputePipelineDesc::hash() const
+{
+    // Union is static-asserted, just another sanity check here
+    ASSERT(sizeof(ComputePipelineOptions) == 1);
+
+    size_t paddedPipelineOptions = mPipelineOptions.permutationIndex;
+    size_t pipelineOptionsHash =
+        angle::ComputeGenericHash(&paddedPipelineOptions, sizeof(paddedPipelineOptions));
+
+    size_t specializationConstantIDsHash = 0;
+    if (!mConstantIds.empty())
+    {
+        specializationConstantIDsHash =
+            angle::ComputeGenericHash(mConstantIds.data(), mConstantIds.size() * sizeof(uint32_t));
+    }
+
+    size_t specializationConstantsHash = 0;
+    if (!mConstants.empty())
+    {
+        specializationConstantsHash =
+            angle::ComputeGenericHash(mConstants.data(), mConstants.size() * sizeof(uint32_t));
+    }
+
+    return pipelineOptionsHash ^ specializationConstantIDsHash ^ specializationConstantsHash;
+}
+
+bool ComputePipelineDesc::keyEqual(const ComputePipelineDesc &other) const
+{
+    return mPipelineOptions.permutationIndex == other.getPipelineOptions().permutationIndex &&
+           mConstantIds == other.getConstantIds() && mConstants == other.getConstants();
+}
+
 // GraphicsPipelineDesc implementation.
 // Use aligned allocation and free so we can use the alignas keyword.
 void *GraphicsPipelineDesc::operator new(std::size_t size)
@@ -7909,6 +7996,154 @@ angle::Result RenderPassCache::MakeRenderPass(vk::ErrorContext *context,
         // passed in separately.
         vk::UpdateRenderPassPerfCounters(desc, createInfo, depthStencilResolve, renderPassCounters);
     }
+
+    return angle::Result::Continue;
+}
+
+// ComputePipelineCache implementation
+void ComputePipelineCache::destroy(vk::ErrorContext *context)
+{
+    VkDevice device = context->getDevice();
+
+    for (auto &item : mPayload)
+    {
+        vk::PipelineHelper *pipeline = item.second;
+        ASSERT(context->getRenderer()->hasResourceUseFinished(pipeline->getResourceUse()));
+        pipeline->destroy(device);
+    }
+
+    mPayload.clear();
+}
+
+void ComputePipelineCache::release(vk::ErrorContext *context)
+{
+    for (auto &item : mPayload)
+    {
+        vk::PipelineHelper *pipeline = item.second;
+        pipeline->release(context);
+    }
+
+    mPayload.clear();
+}
+
+angle::Result ComputePipelineCache::getOrCreatePipeline(
+    vk::ErrorContext *context,
+    vk::PipelineCacheAccess *pipelineCache,
+    const vk::PipelineLayout &pipelineLayout,
+    rx::vk::ComputePipelineOptions &pipelineOptions,
+    PipelineSource source,
+    vk::PipelineHelper **pipelineOut,
+    const char *shaderName,
+    VkSpecializationInfo *specializationInfo,
+    const vk::ShaderModuleMap &shaderModuleMap)
+{
+    vk::ComputePipelineDesc desc(specializationInfo, pipelineOptions);
+
+    auto iter = mPayload.find(desc);
+    if (iter != mPayload.end())
+    {
+        mCacheStats.hit();
+        *pipelineOut = iter->second;
+        return angle::Result::Continue;
+    }
+    return createPipeline(context, pipelineCache, pipelineLayout, pipelineOptions, source,
+                          shaderName, *shaderModuleMap[gl::ShaderType::Compute].get(),
+                          specializationInfo, desc, pipelineOut);
+}
+
+angle::Result ComputePipelineCache::createPipeline(vk::ErrorContext *context,
+                                                   vk::PipelineCacheAccess *pipelineCache,
+                                                   const vk::PipelineLayout &pipelineLayout,
+                                                   vk::ComputePipelineOptions &pipelineOptions,
+                                                   PipelineSource source,
+                                                   const char *shaderName,
+                                                   const vk::ShaderModule &shaderModule,
+                                                   VkSpecializationInfo *specializationInfo,
+                                                   const vk::ComputePipelineDesc &desc,
+                                                   vk::PipelineHelper **pipelineOut)
+{
+    VkPipelineShaderStageCreateInfo shaderStage = {};
+    VkComputePipelineCreateInfo createInfo      = {};
+
+    shaderStage.sType               = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+    shaderStage.flags               = 0;
+    shaderStage.stage               = VK_SHADER_STAGE_COMPUTE_BIT;
+    shaderStage.module              = shaderModule.getHandle();
+    shaderStage.pName               = shaderName ? shaderName : "main";
+    shaderStage.pSpecializationInfo = specializationInfo;
+
+    createInfo.sType              = VK_STRUCTURE_TYPE_COMPUTE_PIPELINE_CREATE_INFO;
+    createInfo.flags              = 0;
+    createInfo.stage              = shaderStage;
+    createInfo.layout             = pipelineLayout.getHandle();
+    createInfo.basePipelineHandle = VK_NULL_HANDLE;
+    createInfo.basePipelineIndex  = 0;
+
+    VkPipelineRobustnessCreateInfoEXT robustness = {};
+    robustness.sType = VK_STRUCTURE_TYPE_PIPELINE_ROBUSTNESS_CREATE_INFO_EXT;
+
+    // Enable robustness on the pipeline if needed.  Note that the global robustBufferAccess feature
+    // must be disabled by default.
+    if (pipelineOptions.robustness != 0)
+    {
+        ASSERT(context->getFeatures().supportsPipelineRobustness.enabled);
+
+        robustness.storageBuffers = VK_PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT;
+        robustness.uniformBuffers = VK_PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_ROBUST_BUFFER_ACCESS_EXT;
+        robustness.vertexInputs   = VK_PIPELINE_ROBUSTNESS_BUFFER_BEHAVIOR_DEVICE_DEFAULT_EXT;
+        robustness.images         = VK_PIPELINE_ROBUSTNESS_IMAGE_BEHAVIOR_DEVICE_DEFAULT_EXT;
+
+        vk::AddToPNextChain(&createInfo, &robustness);
+    }
+
+    // Restrict pipeline to protected or unprotected command buffers if possible.
+    if (pipelineOptions.protectedAccess != 0)
+    {
+        ASSERT(context->getFeatures().supportsPipelineProtectedAccess.enabled);
+        createInfo.flags |= VK_PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT;
+    }
+    else if (context->getFeatures().supportsPipelineProtectedAccess.enabled)
+    {
+        createInfo.flags |= VK_PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT;
+    }
+
+    VkPipelineCreationFeedback feedback               = {};
+    VkPipelineCreationFeedback perStageFeedback       = {};
+    VkPipelineCreationFeedbackCreateInfo feedbackInfo = {};
+    feedbackInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO;
+    feedbackInfo.pPipelineCreationFeedback = &feedback;
+    // Note: see comment in GraphicsPipelineDesc::initializePipeline about why per-stage feedback is
+    // specified even though unused.
+    feedbackInfo.pipelineStageCreationFeedbackCount = 1;
+    feedbackInfo.pPipelineStageCreationFeedbacks    = &perStageFeedback;
+
+    const bool supportsFeedback =
+        context->getRenderer()->getFeatures().supportsPipelineCreationFeedback.enabled;
+    if (supportsFeedback)
+    {
+        vk::AddToPNextChain(&createInfo, &feedbackInfo);
+    }
+
+    vk::Pipeline pipeline;
+    ANGLE_VK_TRY(context, pipelineCache->createComputePipeline(context, createInfo, &pipeline));
+
+    vk::CacheLookUpFeedback lookUpFeedback = vk::CacheLookUpFeedback::None;
+
+    if (supportsFeedback)
+    {
+        const bool cacheHit =
+            (feedback.flags & VK_PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT) !=
+            0;
+
+        lookUpFeedback = cacheHit ? vk::CacheLookUpFeedback::Hit : vk::CacheLookUpFeedback::Miss;
+        ApplyPipelineCreationFeedback(context, feedback);
+    }
+    vk::PipelineHelper *computePipeline = new vk::PipelineHelper();
+    computePipeline->setComputePipeline(std::move(pipeline), lookUpFeedback);
+
+    mCacheStats.missAndIncrementSize();
+    mPayload[desc] = computePipeline;
+    *pipelineOut   = computePipeline;
 
     return angle::Result::Continue;
 }

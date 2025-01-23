@@ -3888,29 +3888,6 @@ class BufferViewHelper final : public Resource
     ImageOrBufferViewSerial mViewSerial;
 };
 
-// Context state that can affect a compute pipeline
-union ComputePipelineOptions final
-{
-    struct
-    {
-        // Whether VK_EXT_pipeline_robustness should be used to make the pipeline robust.  Note that
-        // programs are allowed to be shared between robust and non-robust contexts, so different
-        // pipelines can be created for the same compute program.
-        uint8_t robustness : 1;
-        // Whether VK_EXT_pipeline_protected_access should be used to make the pipeline
-        // protected-only. Similar to robustness, EGL allows protected and unprotected to be in the
-        // same share group.
-        uint8_t protectedAccess : 1;
-        uint8_t reserved : 6;  // must initialize to zero
-    };
-    uint8_t permutationIndex;
-    static constexpr uint32_t kPermutationCount = 0x1 << 2;
-};
-static_assert(sizeof(ComputePipelineOptions) == 1, "Size check failed");
-ComputePipelineOptions GetComputePipelineOptions(vk::PipelineRobustness robustness,
-                                                 vk::PipelineProtectedAccess protectedAccess);
-using ComputePipelineCache = std::array<PipelineHelper, ComputePipelineOptions::kPermutationCount>;
-
 class ShaderProgramHelper : angle::NonCopyable
 {
   public:

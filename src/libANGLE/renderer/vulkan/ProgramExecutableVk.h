@@ -558,7 +558,7 @@ class ProgramExecutableVk : public ProgramExecutableImpl
         mCompleteGraphicsPipelines[ProgramTransformOptions::kPermutationCount];
     ShadersGraphicsPipelineCache
         mShadersGraphicsPipelines[ProgramTransformOptions::kPermutationCount];
-    vk::ComputePipelineCache mComputePipelines;
+    ComputePipelineCache mComputePipelines;
 
     DefaultUniformBlockMap mDefaultUniformBlocks;
     gl::ShaderBitSet mDefaultUniformBlocksDirty;
