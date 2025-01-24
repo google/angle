@@ -629,10 +629,13 @@ angle::Result ContextWgpu::syncState(const gl::Context *context,
             case gl::state::DIRTY_BIT_SAMPLE_MASK:
                 break;
             case gl::state::DIRTY_BIT_DEPTH_TEST_ENABLED:
+                // Enabled and func get combined into one state in WebGPU. Only sync it once.
+                iter.setLaterBit(gl::state::DIRTY_BIT_DEPTH_FUNC);
                 break;
             case gl::state::DIRTY_BIT_DEPTH_FUNC:
                 if (mRenderPipelineDesc.setDepthFunc(
-                        gl_wgpu::getCompareFunc(glState.getDepthStencilState().depthFunc)))
+                        gl_wgpu::GetCompareFunc(glState.getDepthStencilState().depthFunc,
+                                                glState.getDepthStencilState().depthTest)))
                 {
                     invalidateCurrentRenderPipeline();
                 }
@@ -640,17 +643,22 @@ angle::Result ContextWgpu::syncState(const gl::Context *context,
             case gl::state::DIRTY_BIT_DEPTH_MASK:
                 break;
             case gl::state::DIRTY_BIT_STENCIL_TEST_ENABLED:
+                // Changing the state of stencil test affects both the front and back funcs.
+                iter.setLaterBit(gl::state::DIRTY_BIT_STENCIL_FUNCS_FRONT);
+                iter.setLaterBit(gl::state::DIRTY_BIT_STENCIL_FUNCS_BACK);
                 break;
             case gl::state::DIRTY_BIT_STENCIL_FUNCS_FRONT:
                 if (mRenderPipelineDesc.setStencilFrontFunc(
-                        gl_wgpu::getCompareFunc(glState.getDepthStencilState().stencilFunc)))
+                        gl_wgpu::GetCompareFunc(glState.getDepthStencilState().stencilFunc,
+                                                glState.getDepthStencilState().stencilTest)))
                 {
                     invalidateCurrentRenderPipeline();
                 }
                 break;
             case gl::state::DIRTY_BIT_STENCIL_FUNCS_BACK:
                 if (mRenderPipelineDesc.setStencilBackFunc(
-                        gl_wgpu::getCompareFunc(glState.getDepthStencilState().stencilBackFunc)))
+                        gl_wgpu::GetCompareFunc(glState.getDepthStencilState().stencilBackFunc,
+                                                glState.getDepthStencilState().stencilTest)))
                 {
                     invalidateCurrentRenderPipeline();
                 }

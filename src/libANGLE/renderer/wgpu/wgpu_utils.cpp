@@ -523,8 +523,13 @@ wgpu::TextureDimension getWgpuTextureDimension(gl::TextureType glTextureType)
     return dimension;
 }
 
-wgpu::CompareFunction getCompareFunc(const GLenum glCompareFunc)
+wgpu::CompareFunction GetCompareFunc(const GLenum glCompareFunc, bool testEnabled)
 {
+    if (!testEnabled)
+    {
+        return wgpu::CompareFunction::Always;
+    }
+
     switch (glCompareFunc)
     {
         case GL_NEVER:
