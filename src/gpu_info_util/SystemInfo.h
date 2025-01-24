@@ -160,9 +160,6 @@ void GetDualGPUInfo(SystemInfo *info);
 // Dumps the system info to stdout.
 void PrintSystemInfo(const SystemInfo &info);
 
-VersionInfo ParseNvidiaDriverVersion(uint32_t version);
-VersionInfo ParseMesaDriverVersion(uint32_t version);
-
 uint64_t GetSystemDeviceIdFromParts(uint32_t highPart, uint32_t lowPart);
 uint32_t GetSystemDeviceIdHighPart(uint64_t systemDeviceId);
 uint32_t GetSystemDeviceIdLowPart(uint64_t systemDeviceId);

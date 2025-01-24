@@ -26,6 +26,123 @@
 
 namespace angle
 {
+namespace
+{
+// Note: most drivers use VK_MAKE_API_VERSION to create the version.
+VersionInfo ParseGenericDriverVersion(uint32_t driverVersion)
+{
+    VersionInfo version = {};
+
+    version.major    = VK_API_VERSION_MAJOR(driverVersion);
+    version.minor    = VK_API_VERSION_MINOR(driverVersion);
+    version.subMinor = VK_API_VERSION_PATCH(driverVersion);
+
+    return version;
+}
+}  // namespace
+
+VersionInfo ParseAMDVulkanDriverVersion(uint32_t driverVersion)
+{
+    return ParseGenericDriverVersion(driverVersion);
+}
+
+VersionInfo ParseArmVulkanDriverVersion(uint32_t driverVersion)
+{
+    return ParseGenericDriverVersion(driverVersion);
+}
+
+VersionInfo ParseBroadcomVulkanDriverVersion(uint32_t driverVersion)
+{
+    return ParseGenericDriverVersion(driverVersion);
+}
+
+VersionInfo ParseSwiftShaderVulkanDriverVersion(uint32_t driverVersion)
+{
+    return ParseGenericDriverVersion(driverVersion);
+}
+
+VersionInfo ParseImaginationVulkanDriverVersion(uint32_t driverVersion)
+{
+    return ParseGenericDriverVersion(driverVersion);
+}
+
+VersionInfo ParseIntelWindowsVulkanDriverVersion(uint32_t driverVersion)
+{
+    VersionInfo version = {};
+
+    // Windows Intel driver versions are built in the following format:
+    //
+    //     Major (18 bits) | Minor (14 bits)
+    //
+    version.major = driverVersion >> 14;
+    version.minor = driverVersion & 0x3FFF;
+
+    return version;
+}
+
+VersionInfo ParseKazanVulkanDriverVersion(uint32_t driverVersion)
+{
+    return ParseGenericDriverVersion(driverVersion);
+}
+
+VersionInfo ParseNvidiaVulkanDriverVersion(uint32_t driverVersion)
+{
+    VersionInfo version = {};
+
+    version.major    = driverVersion >> 22;
+    version.minor    = driverVersion >> 14 & 0xFF;
+    version.subMinor = driverVersion >> 6 & 0xFF;
+    version.patch    = driverVersion & 0x3F;
+
+    return version;
+}
+
+VersionInfo ParseQualcommVulkanDriverVersion(uint32_t driverVersion)
+{
+    if ((driverVersion & 0x80000000) != 0)
+    {
+        return ParseGenericDriverVersion(driverVersion);
+    }
+
+    // Older drivers with an unknown format, consider them version 0.
+    VersionInfo version = {};
+    version.minor       = driverVersion;
+    return version;
+}
+
+VersionInfo ParseSamsungVulkanDriverVersion(uint32_t driverVersion)
+{
+    return ParseGenericDriverVersion(driverVersion);
+}
+
+VersionInfo ParseVeriSiliconVulkanDriverVersion(uint32_t driverVersion)
+{
+    return ParseGenericDriverVersion(driverVersion);
+}
+
+VersionInfo ParseVivanteVulkanDriverVersion(uint32_t driverVersion)
+{
+    return ParseGenericDriverVersion(driverVersion);
+}
+
+VersionInfo ParseMesaVulkanDriverVersion(uint32_t driverVersion)
+{
+    return ParseGenericDriverVersion(driverVersion);
+}
+
+VersionInfo ParseMoltenVulkanDriverVersion(uint32_t driverVersion)
+{
+    // Note: MoltenVK formulates its version number as a decimal number like so:
+    //     (major * 10000) + (minor * 100) + patch
+    VersionInfo version = {};
+
+    version.major = driverVersion / 10000;
+    version.minor = (driverVersion / 100) % 100;
+    version.patch = driverVersion % 100;
+
+    return version;
+}
+
 class VulkanLibrary final : NonCopyable
 {
   public:
@@ -261,113 +378,92 @@ bool GetSystemInfoVulkanWithICD(SystemInfo *info, vk::ICD preferredICD)
         memcpy(gpu.deviceUUID, deviceIDProperties.deviceUUID, VK_UUID_SIZE);
         memcpy(gpu.driverUUID, deviceIDProperties.driverUUID, VK_UUID_SIZE);
 
-        // Need to parse/re-format properties.driverVersion.
-        //
-        // TODO(ianelliott): Determine the formatting used for each vendor
-        // (http://anglebug.com/42261385)
         // TODO(http://anglebug.com/42266143): Use driverID instead of the hardware vendorID to
         // detect driveVendor, etc.
         switch (properties.vendorID)
         {
             case kVendorID_AMD:
                 gpu.driverVendor                = "Advanced Micro Devices, Inc";
-                gpu.driverVersion               = FormatString("0x%x", properties.driverVersion);
-                gpu.detailedDriverVersion.major = properties.driverVersion;
+                gpu.detailedDriverVersion = ParseAMDVulkanDriverVersion(properties.driverVersion);
                 break;
             case kVendorID_ARM:
                 gpu.driverVendor                = "Arm Holdings";
-                gpu.driverVersion               = FormatString("0x%x", properties.driverVersion);
-                gpu.detailedDriverVersion.major = properties.driverVersion;
+                gpu.detailedDriverVersion = ParseArmVulkanDriverVersion(properties.driverVersion);
                 break;
             case kVendorID_Broadcom:
                 gpu.driverVendor                = "Broadcom";
-                gpu.driverVersion               = FormatString("0x%x", properties.driverVersion);
-                gpu.detailedDriverVersion.major = properties.driverVersion;
+                gpu.detailedDriverVersion =
+                    ParseBroadcomVulkanDriverVersion(properties.driverVersion);
                 break;
             case kVendorID_GOOGLE:
                 gpu.driverVendor                = "Google";
-                gpu.driverVersion               = FormatString("0x%x", properties.driverVersion);
-                gpu.detailedDriverVersion.major = properties.driverVersion;
+                gpu.detailedDriverVersion =
+                    ParseSwiftShaderVulkanDriverVersion(properties.driverVersion);
                 break;
             case kVendorID_ImgTec:
                 gpu.driverVendor                = "Imagination Technologies Limited";
-                gpu.driverVersion               = FormatString("0x%x", properties.driverVersion);
-                gpu.detailedDriverVersion.major = properties.driverVersion;
+                gpu.detailedDriverVersion =
+                    ParseImaginationVulkanDriverVersion(properties.driverVersion);
                 break;
             case kVendorID_Intel:
                 gpu.driverVendor                = "Intel Corporation";
-                gpu.driverVersion               = FormatString("0x%x", properties.driverVersion);
-                gpu.detailedDriverVersion.major = properties.driverVersion;
+                if (IsWindows())
+                {
+                    gpu.detailedDriverVersion =
+                        ParseIntelWindowsVulkanDriverVersion(properties.driverVersion);
+                }
+                else
+                {
+                    gpu.detailedDriverVersion =
+                        ParseMesaVulkanDriverVersion(properties.driverVersion);
+                }
                 break;
             case kVendorID_Kazan:
                 gpu.driverVendor                = "Kazan Software";
-                gpu.driverVersion               = FormatString("0x%x", properties.driverVersion);
-                gpu.detailedDriverVersion.major = properties.driverVersion;
+                gpu.detailedDriverVersion = ParseKazanVulkanDriverVersion(properties.driverVersion);
                 break;
             case kVendorID_NVIDIA:
                 gpu.driverVendor  = "NVIDIA Corporation";
-                gpu.driverVersion = FormatString("%d.%d.%d.%d", properties.driverVersion >> 22,
-                                                 (properties.driverVersion >> 14) & 0XFF,
-                                                 (properties.driverVersion >> 6) & 0XFF,
-                                                 properties.driverVersion & 0x3F);
-                gpu.detailedDriverVersion.major    = properties.driverVersion >> 22;
-                gpu.detailedDriverVersion.minor    = (properties.driverVersion >> 14) & 0xFF;
-                gpu.detailedDriverVersion.subMinor = (properties.driverVersion >> 6) & 0xFF;
-                gpu.detailedDriverVersion.patch    = properties.driverVersion & 0x3F;
+                gpu.detailedDriverVersion =
+                    ParseNvidiaVulkanDriverVersion(properties.driverVersion);
                 break;
             case kVendorID_Qualcomm:
             case kVendorID_Qualcomm_DXGI:
                 gpu.driverVendor = "Qualcomm Technologies, Inc";
-                if (properties.driverVersion & 0x80000000)
-                {
-                    gpu.driverVersion = FormatString("%d.%d.%d", properties.driverVersion >> 22,
-                                                     (properties.driverVersion >> 12) & 0X3FF,
-                                                     properties.driverVersion & 0xFFF);
-                    gpu.detailedDriverVersion.major    = properties.driverVersion >> 22;
-                    gpu.detailedDriverVersion.minor    = (properties.driverVersion >> 12) & 0x3FF;
-                    gpu.detailedDriverVersion.subMinor = properties.driverVersion & 0xFFF;
-                }
-                else
-                {
-                    gpu.driverVersion = FormatString("0x%x", properties.driverVersion);
-                    gpu.detailedDriverVersion.major = properties.driverVersion;
-                }
+                gpu.detailedDriverVersion =
+                    ParseQualcommVulkanDriverVersion(properties.driverVersion);
                 break;
             case kVendorID_Samsung:
                 gpu.driverVendor                = "Samsung";
-                gpu.driverVersion               = FormatString("0x%x", properties.driverVersion);
-                gpu.detailedDriverVersion.major = properties.driverVersion;
+                gpu.detailedDriverVersion =
+                    ParseSamsungVulkanDriverVersion(properties.driverVersion);
                 break;
             case kVendorID_VeriSilicon:
                 gpu.driverVendor                = "VeriSilicon";
-                gpu.driverVersion               = FormatString("0x%x", properties.driverVersion);
-                gpu.detailedDriverVersion.major = properties.driverVersion;
+                gpu.detailedDriverVersion =
+                    ParseVeriSiliconVulkanDriverVersion(properties.driverVersion);
                 break;
             case kVendorID_Vivante:
                 gpu.driverVendor                = "Vivante";
-                gpu.driverVersion               = FormatString("0x%x", properties.driverVersion);
-                gpu.detailedDriverVersion.major = properties.driverVersion;
+                gpu.detailedDriverVersion =
+                    ParseVivanteVulkanDriverVersion(properties.driverVersion);
                 break;
             case kVendorID_Mesa:
                 gpu.driverVendor                = "Mesa";
-                gpu.driverVersion               = FormatString("0x%x", properties.driverVersion);
-                gpu.detailedDriverVersion.major = properties.driverVersion;
+                gpu.detailedDriverVersion = ParseMesaVulkanDriverVersion(properties.driverVersion);
                 break;
             case kVendorID_Apple:
-                // Note: this is the version extraction for MoltenVK, which
-                // formulates its version number as a decimal number like so:
-                //     (major * 10000) + (minor * 100) + patch
+                // Note: This is MoltenVk
                 gpu.driverVendor                = "Apple";
-                gpu.detailedDriverVersion.major = properties.driverVersion / 10000;
-                gpu.detailedDriverVersion.minor = (properties.driverVersion / 100) % 100;
-                gpu.detailedDriverVersion.patch = properties.driverVersion % 100;
-                gpu.driverVersion =
-                    FormatString("%d.%d.%d", gpu.detailedDriverVersion.major,
-                                 gpu.detailedDriverVersion.minor, gpu.detailedDriverVersion.patch);
+                gpu.detailedDriverVersion =
+                    ParseMoltenVulkanDriverVersion(properties.driverVersion);
                 break;
             default:
                 return false;
         }
+        gpu.driverVersion =
+            FormatString("%d.%d.%d", gpu.detailedDriverVersion.major,
+                         gpu.detailedDriverVersion.minor, gpu.detailedDriverVersion.subMinor);
         gpu.driverId         = static_cast<DriverID>(driverProperties.driverID);
         gpu.driverApiVersion = properties.apiVersion;
         gpu.driverDate       = "";

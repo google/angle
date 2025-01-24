@@ -20,7 +20,7 @@
 #include "common/system_utils.h"
 #include "common/vulkan/libvulkan_loader.h"
 #include "common/vulkan/vulkan_icd.h"
-#include "gpu_info_util/SystemInfo.h"
+#include "gpu_info_util/SystemInfo_vulkan.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/renderer/driver_utils.h"
@@ -4753,32 +4753,39 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // maxDrawIndirectCount==1 and all CSF based has maxDrawIndirectCount>1.
     bool isMaliJobManagerBasedGPU =
         isARM && getPhysicalDeviceProperties().limits.maxDrawIndirectCount <= 1;
-    // Parse the ARM driver version to be readable/comparable
-    const ARMDriverVersion armDriverVersion =
-        ParseARMVulkanDriverVersion(mPhysicalDeviceProperties.driverVersion);
-
-    // Parse the Qualcomm driver version.
-    const QualcommDriverVersion qualcommDriverVersion =
-        ParseQualcommVulkanDriverVersion(mPhysicalDeviceProperties.driverVersion);
-
-    // Parse the Intel driver version. (Currently it only supports the Windows driver.)
-    const IntelDriverVersion intelDriverVersion =
-        ParseIntelWindowsDriverVersion(mPhysicalDeviceProperties.driverVersion);
 
     // Distinguish between the mesa and proprietary drivers
     const bool isRADV = IsRADV(mPhysicalDeviceProperties.vendorID, mDriverProperties.driverID,
                                mPhysicalDeviceProperties.deviceName);
 
-    angle::VersionInfo nvidiaVersion;
-    if (isNvidia)
+    angle::VersionInfo driverVersion = {};
+    if (isARM)
     {
-        nvidiaVersion = angle::ParseNvidiaDriverVersion(mPhysicalDeviceProperties.driverVersion);
+        driverVersion = angle::ParseArmVulkanDriverVersion(mPhysicalDeviceProperties.driverVersion);
     }
-
-    angle::VersionInfo mesaVersion;
-    if (isIntel && IsLinux())
+    else if (isQualcommProprietary)
     {
-        mesaVersion = angle::ParseMesaDriverVersion(mPhysicalDeviceProperties.driverVersion);
+        driverVersion =
+            angle::ParseQualcommVulkanDriverVersion(mPhysicalDeviceProperties.driverVersion);
+    }
+    else if (isNvidia)
+    {
+        driverVersion =
+            angle::ParseNvidiaVulkanDriverVersion(mPhysicalDeviceProperties.driverVersion);
+    }
+    else if (IsLinux() && (isIntel || isRADV))
+    {
+        driverVersion =
+            angle::ParseMesaVulkanDriverVersion(mPhysicalDeviceProperties.driverVersion);
+    }
+    else if (IsWindows() && isIntel)
+    {
+        driverVersion =
+            angle::ParseIntelWindowsVulkanDriverVersion(mPhysicalDeviceProperties.driverVersion);
+    }
+    else if (isAMD && !isRADV)
+    {
+        driverVersion = angle::ParseAMDVulkanDriverVersion(mPhysicalDeviceProperties.driverVersion);
     }
 
     // Classify devices based on general architecture:
@@ -4858,12 +4865,14 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // Clamp if driver version is:
     //   < 430 on Windows
     //   < 421 otherwise
-    ANGLE_FEATURE_CONDITION(&mFeatures, clampPointSize,
-                            isNvidia && nvidiaVersion.major < uint32_t(IsWindows() ? 430 : 421));
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, clampPointSize,
+        isNvidia && driverVersion < angle::VersionTriple(IsWindows() ? 430 : 421, 0, 0));
 
     // Affecting Nvidia drivers 535 through 551.
     ANGLE_FEATURE_CONDITION(&mFeatures, avoidOpSelectWithMismatchingRelaxedPrecision,
-                            isNvidia && (nvidiaVersion.major >= 535 && nvidiaVersion.major <= 551));
+                            isNvidia && (driverVersion >= angle::VersionTriple(535, 0, 0) &&
+                                         driverVersion < angle::VersionTriple(552, 0, 0)));
 
     // Affecting Linux/Intel (unknown range).
     ANGLE_FEATURE_CONDITION(&mFeatures, wrapSwitchInIfTrue, isIntel && IsLinux());
@@ -4915,7 +4924,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // enable the extension and opt out of it to avoid seeing those error codes
     // entirely.
     ANGLE_FEATURE_CONDITION(&mFeatures, forceDisableFullScreenExclusive,
-                            isAMD && mPhysicalDeviceProperties.driverVersion < 0x800106);
+                            isAMD && driverVersion < angle::VersionTriple(2, 0, 262));
 #endif
 
     ANGLE_FEATURE_CONDITION(
@@ -4984,7 +4993,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         ExtensionFound(VK_EXT_LOAD_STORE_OP_NONE_EXTENSION_NAME, deviceExtensionNames));
 
     ANGLE_FEATURE_CONDITION(&mFeatures, disallowMixedDepthStencilLoadOpNoneAndLoad,
-                            isARM && armDriverVersion < ARMDriverVersion(38, 1, 0));
+                            isARM && driverVersion < angle::VersionTriple(38, 1, 0));
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsRenderPassStoreOpNone,
@@ -5126,7 +5135,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(
         &mFeatures, enablePrecisionQualifiers,
         !(IsPixel2(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID) &&
-          (qualcommDriverVersion < QualcommDriverVersion(512, 490, 0))) &&
+          (driverVersion < angle::VersionTriple(512, 490, 0))) &&
             !IsPixel4(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID));
 
     // http://anglebug.com/42265957
@@ -5167,8 +5176,8 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     //
     ANGLE_FEATURE_CONDITION(
         &mFeatures, preferDriverUniformOverSpecConst,
-        (isQualcommProprietary && qualcommDriverVersion < QualcommDriverVersion(512, 513, 0)) ||
-            isARM || isPowerVR || isSamsung || isSwiftShader);
+        (isQualcommProprietary && driverVersion < angle::VersionTriple(512, 513, 0)) || isARM ||
+            isPowerVR || isSamsung || isSwiftShader);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, preferCachedNoncoherentForDynamicStreamBufferUsage,
                             IsMeteorLake(mPhysicalDeviceProperties.deviceID));
@@ -5249,7 +5258,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // Pixel4.  https://issuetracker.google.com/issues/166809097
     ANGLE_FEATURE_CONDITION(
         &mFeatures, preferDrawClearOverVkCmdClearAttachments,
-        isQualcommProprietary && qualcommDriverVersion < QualcommDriverVersion(512, 762, 12));
+        isQualcommProprietary && driverVersion < angle::VersionTriple(512, 762, 12));
 
     // R32F imageAtomicExchange emulation is done if shaderImageFloat32Atomics feature is not
     // supported.
@@ -5270,7 +5279,8 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         mFeatures.exposeNonConformantExtensionsAndVersions.enabled &&
             (isSwiftShader ||
              IsPixel4(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID) ||
-             (IsLinux() && isNvidia && nvidiaVersion.major <= 440) || (IsWindows() && isIntel)));
+             (IsLinux() && isNvidia && driverVersion < angle::VersionTriple(441, 0, 0)) ||
+             (IsWindows() && isIntel)));
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsMemoryBudget,
@@ -5345,7 +5355,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
 
     ANGLE_FEATURE_CONDITION(&mFeatures, adjustClearColorPrecision,
                             IsAndroid() && mFeatures.supportsLegacyDithering.enabled && isARM &&
-                                armDriverVersion < ARMDriverVersion(50, 0, 0));
+                                driverVersion < angle::VersionTriple(50, 0, 0));
 
     // ANGLE always exposes framebuffer fetch because too many apps assume it's there.  See comments
     // on |mIsColorFramebufferFetchCoherent| for details.  Non-coherent framebuffer fetch is always
@@ -5359,9 +5369,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // http://issuetracker.google.com/376899587
     // Advanced blend emulation depends on this functionally, lack of which prevents support for
     // ES 3.2; exposeNonConformantExtensionsAndVersions is used to force this.
-    const bool isMesaAtLeast22_0_0 = mesaVersion.major >= 22;
     const bool supportsFramebufferFetchInSurface =
-        IsAndroid() || !isIntel || (isIntel && IsLinux() && isMesaAtLeast22_0_0) ||
+        IsAndroid() || !isIntel ||
+        (isIntel && IsLinux() && driverVersion >= angle::VersionTriple(22, 0, 0)) ||
         mFeatures.exposeNonConformantExtensionsAndVersions.enabled;
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsShaderFramebufferFetch,
@@ -5422,9 +5432,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     //                 since at least version 47.  http://anglebug.com/343218491
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsSPIRV14,
                             ExtensionFound(VK_KHR_SPIRV_1_4_EXTENSION_NAME, deviceExtensionNames) &&
-                                !(isNvidia && nvidiaVersion.major < 525) &&
+                                !(isNvidia && driverVersion < angle::VersionTriple(525, 0, 0)) &&
                                 !isQualcommProprietary &&
-                                !(isARM && armDriverVersion < ARMDriverVersion(47, 0, 0)));
+                                !(isARM && driverVersion < angle::VersionTriple(47, 0, 0)));
 
     // Rounding features from VK_KHR_float_controls extension
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsDenormFtzFp16,
@@ -5481,12 +5491,12 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // Regressions have been detected using r46 on older architectures though
     // http://issuetracker.google.com/336411904
     const bool isExtendedDynamicStateBuggy =
-        (isARM && armDriverVersion < ARMDriverVersion(44, 1, 0)) ||
-        (isMaliJobManagerBasedGPU && armDriverVersion >= ARMDriverVersion(46, 0, 0));
+        (isARM && driverVersion < angle::VersionTriple(44, 1, 0)) ||
+        (isMaliJobManagerBasedGPU && driverVersion >= angle::VersionTriple(46, 0, 0));
 
     // Vertex input binding stride is buggy for Windows/Intel drivers before 100.9684.
     const bool isVertexInputBindingStrideBuggy =
-        IsWindows() && isIntel && intelDriverVersion < IntelDriverVersion(100, 9684);
+        IsWindows() && isIntel && driverVersion < angle::VersionTriple(100, 9684, 0);
 
     // Intel driver has issues with VK_EXT_vertex_input_dynamic_state
     // http://anglebug.com/42265637#comment9
@@ -5499,7 +5509,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsVertexInputDynamicState,
                             mVertexInputDynamicStateFeatures.vertexInputDynamicState == VK_TRUE &&
                                 !(IsWindows() && isIntel) &&
-                                !(isARM && armDriverVersion < ARMDriverVersion(48, 0, 0)) &&
+                                !(isARM && driverVersion < angle::VersionTriple(48, 0, 0)) &&
                                 !isQualcommProprietary);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsExtendedDynamicState,
@@ -5518,7 +5528,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, useCullModeDynamicState,
                             mFeatures.supportsExtendedDynamicState.enabled &&
                                 !isExtendedDynamicStateBuggy &&
-                                !(isARM && armDriverVersion < ARMDriverVersion(52, 0, 0)));
+                                !(isARM && driverVersion < angle::VersionTriple(52, 0, 0)));
     ANGLE_FEATURE_CONDITION(&mFeatures, useDepthCompareOpDynamicState,
                             mFeatures.supportsExtendedDynamicState.enabled);
     ANGLE_FEATURE_CONDITION(&mFeatures, useDepthTestEnableDynamicState,
@@ -5547,23 +5557,21 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
 
     // Disabled on Intel/Mesa due to driver bug (crbug.com/1379201).  This bug is fixed since Mesa
     // 22.2.0.
-    const bool isMesaLessThan22_2 =
-        mesaVersion.major < 22 || (mesaVersion.major == 22 && mesaVersion.minor < 2);
-
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsLogicOpDynamicState,
         mFeatures.supportsExtendedDynamicState2.enabled &&
             mExtendedDynamicState2Features.extendedDynamicState2LogicOp == VK_TRUE &&
-            !(IsLinux() && isIntel && isMesaLessThan22_2) && !(IsAndroid() && isGalaxyS23));
+            !(IsLinux() && isIntel && driverVersion < angle::VersionTriple(22, 2, 0)) &&
+            !(IsAndroid() && isGalaxyS23));
 
     // Samsung Vulkan driver with API level < 1.3.244 has a bug in imageless framebuffer support.
-    // http://issuetracker.google.com/42266906
+    // http://anglebug.com/42266906
     const bool isSamsungDriverWithImagelessFramebufferBug =
         isSamsung && mPhysicalDeviceProperties.apiVersion < VK_MAKE_VERSION(1, 3, 244);
     // Qualcomm with imageless framebuffers, vkCreateFramebuffer loops forever.
     // http://issuetracker.google.com/369693310
     const bool isQualcommWithImagelessFramebufferBug =
-        isQualcommProprietary && qualcommDriverVersion < QualcommDriverVersion(512, 802, 0);
+        isQualcommProprietary && driverVersion < angle::VersionTriple(512, 802, 0);
     // PowerVR with imageless framebuffer spends enormous amounts of time in framebuffer destruction
     // and creation. ANGLE doesn't cache imageless framebuffers, instead adding them to garbage
     // collection, expecting them to be lightweight.
@@ -5618,7 +5626,8 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // On RADV, creating graphics pipeline can crash in the driver.  http://crbug.com/1497512
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsGraphicsPipelineLibrary,
                             mGraphicsPipelineLibraryFeatures.graphicsPipelineLibrary == VK_TRUE &&
-                                (!isNvidia || nvidiaVersion.major >= 531) && !isRADV);
+                                (!isNvidia || driverVersion >= angle::VersionTriple(531, 0, 0)) &&
+                                !isRADV);
 
     // The following drivers are known to key the pipeline cache blobs with vertex input and
     // fragment output state, causing draw-time pipeline creation to miss the cache regardless of
@@ -5648,7 +5657,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // For Windows Nvidia Vulkan driver older than 520, Vulkan pipeline cache will only generate one
     // single huge cache for one process shared by all graphics pipelines in the same process, which
     // can be huge.
-    const bool nvVersionLessThan520 = isNvidia && (nvidiaVersion.major < 520u);
+    const bool nvVersionLessThan520 = isNvidia && driverVersion < angle::VersionTriple(520, 0, 0);
     ANGLE_FEATURE_CONDITION(&mFeatures, hasEffectivePipelineCacheSerialization,
                             !isSwiftShader && !nvVersionLessThan520);
 
@@ -5662,7 +5671,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(
         &mFeatures, preferMonolithicPipelinesOverLibraries,
         mFeatures.supportsGraphicsPipelineLibrary.enabled &&
-            !(IsWindows() && isIntel && intelDriverVersion < IntelDriverVersion(101, 5379)) &&
+            !(IsWindows() && isIntel && driverVersion < angle::VersionTriple(101, 5379, 0)) &&
             !isSamsung);
 
     // Whether the pipeline caches should merge into the global pipeline cache.  This should only be
@@ -5718,7 +5727,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // discard or alpha to coverage, if the static state provided when creating the pipeline has a
     // value of 0.
     ANGLE_FEATURE_CONDITION(&mFeatures, useNonZeroStencilWriteMaskStaticState,
-                            isARM && armDriverVersion < ARMDriverVersion(43, 0, 0));
+                            isARM && driverVersion < angle::VersionTriple(43, 0, 0));
 
     // On some vendors per-sample shading is not enabled despite the presence of a Sample
     // decoration. Guard against this by parsing shader for "sample" decoration and explicitly
@@ -5805,7 +5814,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // driver, vkGetQueryPoolResult() with VK_QUERY_RESULT_WAIT_BIT may result in incorrect result.
     // In that case we force into CPU wait for submission to complete. http://anglebug.com/42265186
     ANGLE_FEATURE_CONDITION(&mFeatures, forceWaitForSubmissionToCompleteForQueryResult,
-                            isARM || (isNvidia && nvidiaVersion.major < 470u));
+                            isARM || (isNvidia && driverVersion < angle::VersionTriple(470, 0, 0)));
 
     // Some ARM drivers may not free memory in "vkFreeCommandBuffers()" without
     // VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT flag.
@@ -5898,7 +5907,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
                             mFeatures.supportsDynamicRendering.enabled &&
                                 mFeatures.supportsDynamicRenderingLocalRead.enabled &&
                                 !hasLegacyDitheringV1 && !emulatesMultisampledRenderToTexture &&
-                                !(isARM && armDriverVersion < ARMDriverVersion(52, 0, 0)) &&
+                                !(isARM && driverVersion < angle::VersionTriple(52, 0, 0)) &&
                                 !isPowerVR);
 
     // On tile-based renderers, breaking the render pass is costly.  Changing into and out of

@@ -13,6 +13,11 @@
 #include "common/platform_helpers.h"
 #include "libANGLE/angletypes.h"
 
+namespace angle
+{
+struct VersionInfo;
+}
+
 namespace rx
 {
 
@@ -164,27 +169,6 @@ inline bool IsSwiftshader(uint32_t vendorId, uint32_t deviceId)
 
 std::string GetVendorString(uint32_t vendorId);
 
-// For Linux, Intel graphics driver version is the Mesa version. The version number has three
-// fields: major revision, minor revision and release number.
-// For Windows, The version number includes 3rd and 4th fields. Please refer the details at
-// http://www.intel.com/content/www/us/en/support/graphics-drivers/000005654.html.
-// Current implementation only supports Windows.
-class IntelDriverVersion
-{
-  public:
-    IntelDriverVersion(uint32_t buildNumber);
-    IntelDriverVersion(uint32_t majorVersion, uint32_t minorVersion);
-    bool operator==(const IntelDriverVersion &) const;
-    bool operator!=(const IntelDriverVersion &) const;
-    bool operator<(const IntelDriverVersion &) const;
-    bool operator>=(const IntelDriverVersion &) const;
-
-  private:
-    uint32_t mBuildNumber;
-};
-
-IntelDriverVersion ParseIntelWindowsDriverVersion(uint32_t driverVersion);
-
 bool IsSandyBridge(uint32_t DeviceId);
 bool IsIvyBridge(uint32_t DeviceId);
 bool IsHaswell(uint32_t DeviceId);
@@ -200,11 +184,12 @@ bool Is9thGenIntel(uint32_t DeviceId);
 bool Is11thGenIntel(uint32_t DeviceId);
 bool Is12thGenIntel(uint32_t DeviceId);
 
-using ARMDriverVersion = angle::VersionTriple;
-ARMDriverVersion ParseARMVulkanDriverVersion(uint32_t driverVersion);
-
-using QualcommDriverVersion = angle::VersionTriple;
-QualcommDriverVersion ParseQualcommVulkanDriverVersion(uint32_t driverVersion);
+// For ease of comparison of SystemInfo's external-facing VersionInfo with ANGLE's more commonly
+// used VersionTriple.
+bool operator==(const angle::VersionInfo &a, const angle::VersionTriple &b);
+bool operator!=(const angle::VersionInfo &a, const angle::VersionTriple &b);
+bool operator<(const angle::VersionInfo &a, const angle::VersionTriple &b);
+bool operator>=(const angle::VersionInfo &a, const angle::VersionTriple &b);
 
 // Platform helpers
 using angle::IsAndroid;

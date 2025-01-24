@@ -350,27 +350,6 @@ void PrintSystemInfo(const SystemInfo &info)
     std::cout << std::endl;
 }
 
-VersionInfo ParseNvidiaDriverVersion(uint32_t version)
-{
-    return {
-        version >> 22,         // major
-        version >> 14 & 0xff,  // minor
-        version >> 6 & 0xff,   // subMinor
-        version & 0x3f         // patch
-    };
-}
-
-VersionInfo ParseMesaDriverVersion(uint32_t version)
-{
-    // Mesa uses VK_MAKE_VERSION
-    return {
-        version >> 22 & 0x7F,
-        version >> 12 & 0x3FF,
-        version & 0xFFF,
-        0,
-    };
-}
-
 uint64_t GetSystemDeviceIdFromParts(uint32_t highPart, uint32_t lowPart)
 {
     return (static_cast<uint64_t>(highPart) << 32) | lowPart;
