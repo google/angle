@@ -4787,6 +4787,11 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     {
         driverVersion = angle::ParseAMDVulkanDriverVersion(mPhysicalDeviceProperties.driverVersion);
     }
+    else if (isSamsung)
+    {
+        driverVersion =
+            angle::ParseSamsungVulkanDriverVersion(mPhysicalDeviceProperties.driverVersion);
+    }
 
     // Classify devices based on general architecture:
     //
@@ -5564,10 +5569,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
             !(IsLinux() && isIntel && driverVersion < angle::VersionTriple(22, 2, 0)) &&
             !(IsAndroid() && isGalaxyS23));
 
-    // Samsung Vulkan driver with API level < 1.3.244 has a bug in imageless framebuffer support.
-    // http://anglebug.com/42266906
+    // Older Samsung drivers with version < 24.0.0 have a bug in imageless framebuffer support.
     const bool isSamsungDriverWithImagelessFramebufferBug =
-        isSamsung && mPhysicalDeviceProperties.apiVersion < VK_MAKE_VERSION(1, 3, 244);
+        isSamsung && driverVersion < angle::VersionTriple(24, 0, 0);
     // Qualcomm with imageless framebuffers, vkCreateFramebuffer loops forever.
     // http://issuetracker.google.com/369693310
     const bool isQualcommWithImagelessFramebufferBug =
