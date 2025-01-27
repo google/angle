@@ -9,10 +9,6 @@
 
 #include "libANGLE/renderer/vulkan/linux/wayland/WindowSurfaceVkWayland.h"
 
-#include "libANGLE/Context.h"
-#include "libANGLE/Display.h"
-#include "libANGLE/renderer/vulkan/ContextVk.h"
-#include "libANGLE/renderer/vulkan/DisplayVk.h"
 #include "libANGLE/renderer/vulkan/vk_renderer.h"
 
 #include <wayland-egl-backend.h>
@@ -24,15 +20,8 @@ void WindowSurfaceVkWayland::ResizeCallback(wl_egl_window *eglWindow, void *payl
 {
     WindowSurfaceVkWayland *windowSurface = reinterpret_cast<WindowSurfaceVkWayland *>(payload);
 
-    if (windowSurface->mExtents.width != eglWindow->width ||
-        windowSurface->mExtents.height != eglWindow->height)
-    {
-        windowSurface->mExtents.width  = eglWindow->width;
-        windowSurface->mExtents.height = eglWindow->height;
-
-        // Trigger swapchain resize
-        windowSurface->mResized = true;
-    }
+    windowSurface->mExtents.width  = eglWindow->width;
+    windowSurface->mExtents.height = eglWindow->height;
 }
 
 WindowSurfaceVkWayland::WindowSurfaceVkWayland(const egl::SurfaceState &surfaceState,
@@ -87,23 +76,6 @@ egl::Error WindowSurfaceVkWayland::getUserHeight(const egl::Display *display, EG
 {
     *value = getHeight();
     return egl::NoError();
-}
-
-angle::Result WindowSurfaceVkWayland::getAttachmentRenderTarget(
-    const gl::Context *context,
-    GLenum binding,
-    const gl::ImageIndex &imageIndex,
-    GLsizei samples,
-    FramebufferAttachmentRenderTarget **rtOut)
-{
-    if (mResized)
-    {
-        // A wl_egl_window_resize() should take effect on the next operation which provokes a
-        // backbuffer to be pulled
-        ANGLE_TRY(doDeferredAcquireNextImage(context, true));
-        mResized = false;
-    }
-    return WindowSurfaceVk::getAttachmentRenderTarget(context, binding, imageIndex, samples, rtOut);
 }
 
 }  // namespace rx
