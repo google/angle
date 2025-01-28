@@ -2018,6 +2018,24 @@ angle::Result CLCommandQueueVk::createEvent(CLEventImpl::CreateFunc *createFunc,
     return angle::Result::Continue;
 }
 
+angle::Result CLCommandQueueVk::submitEmptyCommand()
+{
+    // This will be called as part of resetting the command buffer and command buffer has to be
+    // empty.
+    ASSERT(mComputePassCommands->empty());
+
+    // There is nothing to be flushed, mark it flushed and do a submit to signal the queue serial
+    mLastFlushedQueueSerial = mComputePassCommands->getQueueSerial();
+    ANGLE_TRY(submitCommands());
+    ANGLE_TRY(finishQueueSerialInternal(mLastSubmittedQueueSerial));
+
+    // increment the queue serial for the next command batch
+    mComputePassCommands->setQueueSerial(
+        mQueueSerialIndex, mContext->getRenderer()->generateQueueSerial(mQueueSerialIndex));
+
+    return angle::Result::Continue;
+}
+
 angle::Result CLCommandQueueVk::resetCommandBufferWithError(cl_int errorCode)
 {
     // Got an error so reset the command buffer and report back error to all the associated
@@ -2038,6 +2056,11 @@ angle::Result CLCommandQueueVk::resetCommandBufferWithError(cl_int errorCode)
     }
     mCommandsStateMap.erase(currentSerial);
     mExternalEvents.clear();
+
+    // Command buffer has been reset and as such the associated queue serial will not get signaled
+    // leading to causality issues. So submit an empty command to keep the queue serials timelines
+    // intact.
+    ANGLE_TRY(submitEmptyCommand());
 
     ANGLE_CL_RETURN_ERROR(errorCode);
 }

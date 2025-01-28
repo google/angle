@@ -118,6 +118,7 @@ events.event_enqueue_marker
 events.event_enqueue_marker_with_event_list
 events.event_enqueue_barrier_with_event_list
 events.waitlists
+events.userevents
 events.userevents_multithreaded
 buffers.mem_read_write_flags
 buffers.mem_write_only_flags

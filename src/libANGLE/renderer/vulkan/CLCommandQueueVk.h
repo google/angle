@@ -379,6 +379,8 @@ class CLCommandQueueVk : public CLCommandQueueImpl
     angle::Result insertBarrier();
     angle::Result addMemoryDependencies(cl::Memory *clMem);
 
+    angle::Result submitEmptyCommand();
+
     CLContextVk *mContext;
     const CLDeviceVk *mDevice;
     cl::Memory *mPrintfBuffer;
