@@ -260,6 +260,8 @@ def run_trace(trace, args, screenshot_device_dir):
         flags += ['--screenshot-dir', screenshot_device_dir]
     if args.screenshot_frame != '':
         flags += ['--screenshot-frame', args.screenshot_frame]
+    if args.fps_limit != '':
+        flags += ['--fps-limit', args.fps_limit]
 
     # Build a command that can be run directly over ADB, for example:
     r'''
@@ -773,6 +775,8 @@ def main():
         '--screenshot-frame',
         help='Specify a specific frame to screenshot. Uses --screenshot-dir if provied.',
         default='')
+    parser.add_argument(
+        '--fps-limit', help='Limit replay framerate to specified value', default='')
 
     group = parser.add_mutually_exclusive_group()
     group.add_argument(
