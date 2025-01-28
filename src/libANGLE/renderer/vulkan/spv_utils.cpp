@@ -4198,16 +4198,17 @@ TransformationState SpirvTransformer::transformEntryPoint(const uint32_t *instru
     mInactiveVaryingRemover.modifyEntryPointInterfaceList(mVariableInfoById, mOptions.shaderType,
                                                           entryPointList(), &interfaceList);
 
+    if (mOptions.useSpirvVaryingPrecisionFixer)
+    {
+        mVaryingPrecisionFixer.modifyEntryPointInterfaceList(entryPointList(), &interfaceList);
+    }
+
     if (mOptions.shaderType == gl::ShaderType::Fragment)
     {
         mSecondaryOutputTransformer.modifyEntryPointInterfaceList(
             mVariableInfoById, entryPointList(), &interfaceList, mSpirvBlobOut);
     }
 
-    if (mOptions.useSpirvVaryingPrecisionFixer)
-    {
-        mVaryingPrecisionFixer.modifyEntryPointInterfaceList(entryPointList(), &interfaceList);
-    }
     if (mOptions.removeDepthStencilInput)
     {
         mDepthStencilInputRemover.modifyEntryPointInterfaceList(&interfaceList, mSpirvBlobOut);
