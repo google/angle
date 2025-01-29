@@ -1588,6 +1588,7 @@ enum class RenderPassClosureReason
     // common cases.
     XfbPause,
     FramebufferFetchEmulation,
+    ColorBufferWithEmulatedAlphaInvalidate,
     GenerateMipmapOnCPU,
     CopyTextureOnCPU,
     TextureReformatToRenderable,

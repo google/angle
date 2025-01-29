@@ -9442,16 +9442,21 @@ void ImageHelper::restoreSubresourceContentImpl(gl::LevelIndex level,
                    (contentDefinedMask->bits() & layerRangeBits) == layerRangeBits);
             break;
         case VK_IMAGE_ASPECT_COLOR_BIT:
+        {
             // This function is called on attachments during a render pass when it's determined that
             // they should no longer be considered invalidated.  For an attachment with emulated
             // format that has extra channels, invalidateSubresourceContentImpl may have proactively
-            // inserted a clear so that the extra channels continue to have defined values.  That
-            // clear should be removed.
-            if (hasEmulatedImageChannels())
-            {
-                removeSingleStagedClearAfterInvalidate(level, layerIndex, layerCount);
-            }
+            // inserted a clear so that the extra channels continue to have defined values.
+            // |FramebufferVk::invalidateImpl| closes the render pass right away however in that
+            // case, so it should be impossible for the contents of such formats to need to be
+            // restored.
+            const bool hasClearAfterInvalidateUpdate =
+                getLevelUpdates(level) != nullptr && getLevelUpdates(level)->size() != 0 &&
+                getLevelUpdates(level)->at(0).updateSource == UpdateSource::ClearAfterInvalidate;
+            ASSERT(!hasEmulatedImageChannels() || !hasClearAfterInvalidateUpdate);
+
             break;
+        }
         default:
             UNREACHABLE();
             break;

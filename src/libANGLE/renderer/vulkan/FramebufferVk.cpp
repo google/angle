@@ -2188,6 +2188,8 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
     // to invalidate the D/S of FBO 2 since it would be the currently active renderpass.
     if (contextVk->hasStartedRenderPassWithQueueSerial(mLastRenderPassQueueSerial))
     {
+        bool closeRenderPass = false;
+
         // Mark the invalidated attachments in the render pass for loadOp and storeOp determination
         // at its end.
         vk::PackedAttachmentIndex colorIndexVk(0);
@@ -2198,6 +2200,29 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
             {
                 contextVk->getStartedRenderPassCommands().invalidateRenderPassColorAttachment(
                     contextVk->getState(), colorIndexGL, colorIndexVk, invalidateArea);
+
+                // If invalidating a color image with emulated channels, a clear is automatically
+                // staged so the emulated channels don't contain invalid data later.  This is
+                // problematic with deferred clears; the clear marks the framebuffer attachment as
+                // dirty, and the next command causes |FramebufferVk::syncState| to pick the clear
+                // up as a deferred clear.
+                //
+                // This is normally correct, except if the following command is another draw call;
+                // in that case, the render pass does not close, yet the clear is cached in
+                // |mDeferredClears|.  When the render pass later closes, it undoes the invalidate
+                // and attempts to remove the clear from the image... but it does not exist there
+                // anymore (it's in |mDeferredClears|).  Next usage of the image then clears it,
+                // undoing the draws after invalidate.
+                //
+                // In this case, the simplest approach is to close the render pass right away here.
+                // Note that it is not possible to make |FramebufferVk::syncState| avoid picking up
+                // the clear in |mDeferredClears|, not apply the clear, _and_ keep the render pass
+                // open; because future uses of the image (like with |glReadPixels|) will not
+                // trigger |FramebufferVk::syncState| and the clear won't be done.
+                if (mEmulatedAlphaAttachmentMask[colorIndexGL])
+                {
+                    closeRenderPass = true;
+                }
             }
             ++colorIndexVk;
         }
@@ -2216,6 +2241,12 @@ angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,
                 contextVk->getStartedRenderPassCommands().invalidateRenderPassStencilAttachment(
                     dsState, mState.getStencilBitCount(), invalidateArea);
             }
+        }
+
+        if (closeRenderPass)
+        {
+            ANGLE_TRY(contextVk->flushCommandsAndEndRenderPass(
+                RenderPassClosureReason::ColorBufferWithEmulatedAlphaInvalidate));
         }
     }
 
