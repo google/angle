@@ -2735,7 +2735,7 @@ class ComputePipelineCache final : HasCacheStats<rx::VulkanCacheType::ComputePip
                                  vk::PipelineHelper **pipelineOut);
 
     std::unordered_map<vk::ComputePipelineDesc,
-                       vk::PipelineHelper *,
+                       vk::PipelineHelper,
                        ComputePipelineDescHash,
                        ComputePipelineDescKeyEqual>
         mPayload;

@@ -8007,9 +8007,9 @@ void ComputePipelineCache::destroy(vk::ErrorContext *context)
 
     for (auto &item : mPayload)
     {
-        vk::PipelineHelper *pipeline = item.second;
-        ASSERT(context->getRenderer()->hasResourceUseFinished(pipeline->getResourceUse()));
-        pipeline->destroy(device);
+        vk::PipelineHelper &pipeline = item.second;
+        ASSERT(context->getRenderer()->hasResourceUseFinished(pipeline.getResourceUse()));
+        pipeline.destroy(device);
     }
 
     mPayload.clear();
@@ -8019,8 +8019,8 @@ void ComputePipelineCache::release(vk::ErrorContext *context)
 {
     for (auto &item : mPayload)
     {
-        vk::PipelineHelper *pipeline = item.second;
-        pipeline->release(context);
+        vk::PipelineHelper &pipeline = item.second;
+        pipeline.release(context);
     }
 
     mPayload.clear();
@@ -8043,7 +8043,7 @@ angle::Result ComputePipelineCache::getOrCreatePipeline(
     if (iter != mPayload.end())
     {
         mCacheStats.hit();
-        *pipelineOut = iter->second;
+        *pipelineOut = &iter->second;
         return angle::Result::Continue;
     }
     return createPipeline(context, pipelineCache, pipelineLayout, pipelineOptions, source,
@@ -8138,12 +8138,12 @@ angle::Result ComputePipelineCache::createPipeline(vk::ErrorContext *context,
         lookUpFeedback = cacheHit ? vk::CacheLookUpFeedback::Hit : vk::CacheLookUpFeedback::Miss;
         ApplyPipelineCreationFeedback(context, feedback);
     }
-    vk::PipelineHelper *computePipeline = new vk::PipelineHelper();
-    computePipeline->setComputePipeline(std::move(pipeline), lookUpFeedback);
+    vk::PipelineHelper computePipeline = vk::PipelineHelper();
+    computePipeline.setComputePipeline(std::move(pipeline), lookUpFeedback);
 
     mCacheStats.missAndIncrementSize();
-    mPayload[desc] = computePipeline;
-    *pipelineOut   = computePipeline;
+    mPayload[desc] = std::move(computePipeline);
+    *pipelineOut   = &mPayload[desc];
 
     return angle::Result::Continue;
 }
