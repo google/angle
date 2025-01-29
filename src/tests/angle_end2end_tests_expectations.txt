@@ -211,6 +211,7 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 347282472 LINUX NVIDIA OPENGL : CopyTextureTest.CopyOutsideMipmap/* = SKIP
 // New failures when upgrading to Ubuntu 22/newer driver.
 362545033 LINUX NVIDIA VULKAN : ClearTextureEXTTestES31Renderable.Clear2DArray/* = SKIP
+362545033 LINUX NVIDIA VULKAN : ClearTextureEXTTestES31Renderable.Clear3D/* = SKIP
 362545033 LINUX NVIDIA VULKAN : ClearTextureEXTTestES31Renderable.ClearCubeMap/* = SKIP
 362545033 LINUX NVIDIA VULKAN : ClearTextureEXTTestES31Renderable.ClearCubeMapArray/* = SKIP
 362545033 LINUX NVIDIA VULKAN : EGLBufferAgeTest.SingleBuffer/* = SKIP
