@@ -6591,9 +6591,9 @@ angle::Result ImageHelper::initExternal(ErrorContext *context,
 
     if (externalImageCreateInfo == nullptr)
     {
-        imageCreateInfoPNext = DeriveCreateInfoPNext(context, actualFormatID, compressionControl,
-                                                     &imageFormatListInfoStorage,
-                                                     &imageListFormatsStorage, &mCreateFlags);
+        imageCreateInfoPNext = DeriveCreateInfoPNext(
+            context, mUsage, actualFormatID, compressionControl, &imageFormatListInfoStorage,
+            &imageListFormatsStorage, &mCreateFlags);
     }
     else
     {
@@ -6682,6 +6682,7 @@ angle::Result ImageHelper::initExternal(ErrorContext *context,
 // static
 const void *ImageHelper::DeriveCreateInfoPNext(
     ErrorContext *context,
+    VkImageUsageFlags usage,
     angle::FormatID actualFormatID,
     const void *pNext,
     VkImageFormatListCreateInfoKHR *imageFormatListInfoStorage,
@@ -6698,8 +6699,12 @@ const void *ImageHelper::DeriveCreateInfoPNext(
     (*imageListFormatsStorage)[0] = vk::GetVkFormatFromFormatID(renderer, actualFormatID);
     (*imageListFormatsStorage)[1] = vk::GetVkFormatFromFormatID(renderer, additionalFormat);
 
+    // Don't add the format list if the storage bit is enabled for the image; framebuffer
+    // compression is already disabled in that case, and GL allows many formats to alias
+    // the original format for storage images (more than ANGLE provides in the format list).
     if (renderer->getFeatures().supportsImageFormatList.enabled &&
-        renderer->haveSameFormatFeatureBits(actualFormatID, additionalFormat))
+        renderer->haveSameFormatFeatureBits(actualFormatID, additionalFormat) &&
+        (usage & VK_IMAGE_USAGE_STORAGE_BIT) == 0)
     {
         // Add VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT to VkImage create flag
         *createFlagsOut |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;

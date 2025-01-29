@@ -474,8 +474,8 @@ angle::Result DmaBufImageSiblingVkLinux::initWithFormat(DisplayVk *displayVk,
     VkImageFormatListCreateInfoKHR imageFormatListCreateInfo;
     vk::ImageHelper::ImageListFormats imageListFormatsStorage;
     const void *imageCreateInfoPNext = vk::ImageHelper::DeriveCreateInfoPNext(
-        displayVk, actualImageFormatID, &externalMemoryImageCreateInfo, &imageFormatListCreateInfo,
-        &imageListFormatsStorage, &createFlags);
+        displayVk, usageFlags, actualImageFormatID, &externalMemoryImageCreateInfo,
+        &imageFormatListCreateInfo, &imageListFormatsStorage, &createFlags);
 
     if (mutableFormat == MutableFormat::NotAllowed)
     {

@@ -199,8 +199,6 @@ constexpr const char *kSkippedMessages[] = {
     // http://anglebug.com/42263850
     "VUID-vkCmdDraw-magFilter-04553",
     "VUID-vkCmdDrawIndexed-magFilter-04553",
-    // http://anglebug.com/42264452
-    "VUID-VkImageViewCreateInfo-pNext-01585",
     // http://anglebug.com/42265014
     "vkEnumeratePhysicalDevices: One or more layers modified physical devices",
     // http://anglebug.com/42265797

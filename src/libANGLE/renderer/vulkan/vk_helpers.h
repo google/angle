@@ -2412,6 +2412,7 @@ class ImageHelper final : public Resource, public angle::Subject
     using ImageListFormats                          = std::array<VkFormat, kImageListFormatCount>;
     static const void *DeriveCreateInfoPNext(
         ErrorContext *context,
+        VkImageUsageFlags usage,
         angle::FormatID actualFormatID,
         const void *pNext,
         VkImageFormatListCreateInfoKHR *imageFormatListInfoStorage,
