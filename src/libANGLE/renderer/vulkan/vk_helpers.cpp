@@ -117,7 +117,7 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
             VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
             ResourceAccess::ReadWrite,
             PipelineStage::ColorAttachmentOutput,
-            EventStage::ColorAttachmentOutput,
+            EventStage::Attachment,
             PipelineStageGroup::FragmentOnly,
         },
     },
@@ -134,7 +134,7 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
             VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
             ResourceAccess::ReadWrite,
             PipelineStage::ColorAttachmentOutput,
-            EventStage::ColorAttachmentOutput,
+            EventStage::Attachment,
             PipelineStageGroup::FragmentOnly,
         },
     },
@@ -151,7 +151,7 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
             VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
             ResourceAccess::ReadWrite,
             PipelineStage::FragmentShader,
-            EventStage::ColorAttachmentOutputAndFragmentShader,
+            EventStage::AttachmentAndFragmentShader,
             PipelineStageGroup::FragmentOnly,
         },
     },
@@ -168,7 +168,7 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
             VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
             ResourceAccess::ReadWrite,
             PipelineStage::EarlyFragmentTest,
-            EventStage::AllFragmentTest,
+            EventStage::Attachment,
             PipelineStageGroup::FragmentOnly,
         },
     },
@@ -185,7 +185,7 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
             VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
             ResourceAccess::ReadWrite,
             PipelineStage::EarlyFragmentTest,
-            EventStage::AllFragmentTest,
+            EventStage::Attachment,
             PipelineStageGroup::FragmentOnly,
         },
     },
@@ -202,7 +202,7 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
             VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
             ResourceAccess::ReadWrite,
             PipelineStage::EarlyFragmentTest,
-            EventStage::AllFragmentTest,
+            EventStage::Attachment,
             PipelineStageGroup::FragmentOnly,
         },
     },
@@ -219,7 +219,7 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
             VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
             ResourceAccess::ReadWrite,
             PipelineStage::EarlyFragmentTest,
-            EventStage::AllFragmentTestAndFragmentShader,
+            EventStage::AttachmentAndFragmentShader,
             PipelineStageGroup::FragmentOnly,
         },
     },
@@ -236,7 +236,7 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
             VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
             ResourceAccess::ReadWrite,
             PipelineStage::VertexShader,
-            EventStage::AllFragmentTestAndAllShaders,
+            EventStage::AttachmentAndAllShaders,
             PipelineStageGroup::Other,
         },
     },
@@ -253,7 +253,7 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
             VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
             ResourceAccess::ReadWrite,
             PipelineStage::EarlyFragmentTest,
-            EventStage::AllFragmentTest,
+            EventStage::Attachment,
             PipelineStageGroup::FragmentOnly,
         },
     },
@@ -270,7 +270,7 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
             VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
             ResourceAccess::ReadWrite,
             PipelineStage::EarlyFragmentTest,
-            EventStage::AllFragmentTestAndFragmentShader,
+            EventStage::AttachmentAndFragmentShader,
             PipelineStageGroup::FragmentOnly,
         },
     },
@@ -287,7 +287,7 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
             VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
             ResourceAccess::ReadWrite,
             PipelineStage::VertexShader,
-            EventStage::AllFragmentTestAndAllShaders,
+            EventStage::AttachmentAndAllShaders,
             PipelineStageGroup::Other,
         },
     },
@@ -304,7 +304,7 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
             0,
             ResourceAccess::ReadOnly,
             PipelineStage::EarlyFragmentTest,
-            EventStage::AllFragmentTest,
+            EventStage::Attachment,
             PipelineStageGroup::FragmentOnly,
         },
     },
@@ -322,7 +322,7 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
             0,
             ResourceAccess::ReadOnly,
             PipelineStage::EarlyFragmentTest,
-            EventStage::AllFragmentTestAndFragmentShader,
+            EventStage::AttachmentAndFragmentShader,
             PipelineStageGroup::FragmentOnly,
         },
     },
@@ -339,7 +339,7 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
             0,
             ResourceAccess::ReadOnly,
             PipelineStage::VertexShader,
-            EventStage::AllFragmentTestAndAllShaders,
+            EventStage::AttachmentAndAllShaders,
             PipelineStageGroup::Other,
         },
     },
@@ -356,7 +356,7 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
             VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
             ResourceAccess::ReadWrite,
             PipelineStage::FragmentShader,
-            EventStage::ColorAttachmentOutputAndFragmentShader,
+            EventStage::AttachmentAndFragmentShader,
             PipelineStageGroup::FragmentOnly,
         },
     },
@@ -374,7 +374,7 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
             ResourceAccess::ReadWrite,
             // In case of multiple destination stages, We barrier the earliest stage
             PipelineStage::VertexShader,
-            EventStage::ColorAttachmentOutputAndAllShaders,
+            EventStage::AttachmentAndAllShaders,
             PipelineStageGroup::Other,
         },
     },
@@ -391,7 +391,7 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
             VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
             ResourceAccess::ReadWrite,
             PipelineStage::FragmentShader,
-            EventStage::AllFragmentTestAndFragmentShader,
+            EventStage::AttachmentAndFragmentShader,
             PipelineStageGroup::FragmentOnly,
         },
     },
@@ -409,7 +409,7 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
             ResourceAccess::ReadWrite,
             // In case of multiple destination stages, We barrier the earliest stage
             PipelineStage::VertexShader,
-            EventStage::AllFragmentTestAndAllShaders,
+            EventStage::AttachmentAndAllShaders,
             PipelineStageGroup::Other,
         },
     },
@@ -427,7 +427,7 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
             VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
             ResourceAccess::ReadWrite,
             PipelineStage::ColorAttachmentOutput,
-            EventStage::ColorAttachmentOutput,
+            EventStage::Attachment,
             PipelineStageGroup::FragmentOnly,
         },
     },
@@ -445,7 +445,7 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
             VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
             ResourceAccess::ReadWrite,
             PipelineStage::FragmentShader,
-            EventStage::ColorAttachmentOutputAndFragmentShader,
+            EventStage::AttachmentAndFragmentShader,
             PipelineStageGroup::FragmentOnly,
         },
     },
@@ -491,7 +491,7 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
             VK_ACCESS_MEMORY_WRITE_BIT,
             ResourceAccess::ReadWrite,
             PipelineStage::BottomOfPipe,
-            EventStage::ColorAttachmentOutputAndFragmentShaderAndTransfer,
+            EventStage::AttachmentAndFragmentShaderAndTransfer,
             PipelineStageGroup::Other,
         },
     },
@@ -1480,10 +1480,7 @@ void InitializeEventStageToVkPipelineStageFlagsMap(
         const EventStage eventStage = imageBarrierData.eventStage;
         if (eventStage != EventStage::InvalidEnum)
         {
-            ASSERT((*map)[eventStage] == 0 ||
-                   (*map)[eventStage] ==
-                       (imageBarrierData.dstStageMask & supportedVulkanPipelineStageMask));
-            (*map)[eventStage] = imageBarrierData.dstStageMask & supportedVulkanPipelineStageMask;
+            (*map)[eventStage] |= imageBarrierData.dstStageMask & supportedVulkanPipelineStageMask;
         }
     }
 }
@@ -8159,9 +8156,6 @@ void ImageHelper::updateLayoutAndBarrier(Context *context,
         // No layout change, only memory barrier is required
         if (barrierType == BarrierType::Event)
         {
-            // This should come down as WAW without layout change, dstStageMask should be the same
-            // as event's stageMask. Otherwise you should get into addEventImageBarrier.
-            ASSERT(mCurrentEvent.getPipelineStageMask(renderer) == layoutData.dstStageMask);
             eventBarriers->addEventMemoryBarrier(renderer, mCurrentEvent, layoutData.dstAccessMask,
                                                  layoutData.dstStageMask, layoutData.dstAccessMask);
             // Garbage collect the event, which tracks GPU completion automatically.
