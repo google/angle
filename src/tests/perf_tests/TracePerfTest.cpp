@@ -1259,6 +1259,11 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
             skipTest("TODO: http://anglebug.com/42264520 Intel Linux crashing on teardown");
         }
 
+        if (isIntelLinuxNative)
+        {
+            skipTest("TODO: http://anglebug.com/392938092 flaky crash");
+        }
+
         if (isIntelWinANGLE)
         {
             skipTest("TODO: http://anglebug.com/42264526 Intel Windows timing out periodically");
