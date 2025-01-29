@@ -1600,7 +1600,7 @@ angle::Result FramebufferMtl::readPixelsImpl(const gl::Context *context,
         {
             return angle::Result::Stop;
         }
-        ANGLE_MTL_CHECK(contextMtl, texture->samples() == 1, GL_INVALID_OPERATION);
+        ANGLE_CHECK(contextMtl, texture->samples() == 1, "Internal error.", GL_INVALID_OPERATION);
     }
 
     const mtl::Format &readFormat        = renderTarget->getFormat();
@@ -1673,8 +1673,8 @@ angle::Result FramebufferMtl::readPixelsToPBO(const gl::Context *context,
 
     ContextMtl *contextMtl = mtl::GetImpl(context);
 
-    ANGLE_MTL_CHECK(contextMtl, packPixelsParams.offset <= std::numeric_limits<uint32_t>::max(),
-                    GL_INVALID_OPERATION);
+    ANGLE_CHECK_GL_MATH(contextMtl,
+                        packPixelsParams.offset <= std::numeric_limits<uint32_t>::max());
     uint32_t offset = static_cast<uint32_t>(packPixelsParams.offset);
 
     BufferMtl *packBufferMtl = mtl::GetImpl(packPixelsParams.packBuffer);
@@ -1732,7 +1732,7 @@ angle::Result FramebufferMtl::readPixelsToBuffer(const gl::Context *context,
                             break;
                         default:
                             // Unsupported format.
-                            ANGLE_MTL_CHECK(contextMtl, false, GL_INVALID_ENUM);
+                            ANGLE_GL_UNREACHABLE(contextMtl);
                     }
                     break;
                 }

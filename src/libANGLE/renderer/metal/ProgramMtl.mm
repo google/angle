@@ -91,24 +91,6 @@ class CompileMslTask final : public LinkSubTask, public mtl::Context
         mErrorLine     = line;
     }
 
-    void handleError(NSError *error,
-                     const char *message,
-                     const char *file,
-                     const char *function,
-                     unsigned int line) override
-    {
-        if (!error)
-        {
-            return;
-        }
-
-        mErrorCode     = GL_INVALID_OPERATION;
-        mErrorMessage  = message;
-        mErrorFile     = file;
-        mErrorFunction = function;
-        mErrorLine     = line;
-    }
-
   private:
     mtl::TranslatedShaderInfo *mTranslatedMslInfo;
     std::map<std::string, std::string> mSubstitutionMacros;
@@ -163,24 +145,6 @@ class ProgramMtl::LinkTaskMtl final : public LinkTask, public mtl::Context
                      unsigned int line) override
     {
         mErrorCode     = glErrorCode;
-        mErrorMessage  = message;
-        mErrorFile     = file;
-        mErrorFunction = function;
-        mErrorLine     = line;
-    }
-
-    void handleError(NSError *error,
-                     const char *message,
-                     const char *file,
-                     const char *function,
-                     unsigned int line) override
-    {
-        if (!error)
-        {
-            return;
-        }
-
-        mErrorCode     = GL_INVALID_OPERATION;
         mErrorMessage  = message;
         mErrorFile     = file;
         mErrorFunction = function;

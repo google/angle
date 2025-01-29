@@ -661,8 +661,7 @@ angle::Result WindowSurfaceMtl::obtainNextDrawable(const gl::Context *context)
     ANGLE_MTL_OBJC_SCOPE
     {
         ContextMtl *contextMtl = mtl::GetImpl(context);
-
-        ANGLE_MTL_TRY(contextMtl, mMetalLayer);
+        ANGLE_CHECK(contextMtl, mMetalLayer, "Internal error.", GL_INVALID_OPERATION);
 
         // Check if layer was resized
         if (checkIfLayerResized(context))

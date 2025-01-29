@@ -1645,60 +1645,34 @@ angle::Result GetTriangleFanIndicesCount(ContextMtl *context,
     size_t numTris = vetexCount - 2;
     ANGLE_TRY(TriangleFanBoundCheck(context, numTris));
     size_t numIndices = numTris * 3;
-    ANGLE_CHECK(context, numIndices <= std::numeric_limits<uint32_t>::max(),
-                "Failed to create a scratch index buffer for GL_TRIANGLE_FAN, "
-                "too many indices required.",
-                GL_OUT_OF_MEMORY);
-
+    ANGLE_CHECK_GL_MATH(context, numIndices <= std::numeric_limits<uint32_t>::max());
     *numElemsOut = static_cast<uint32_t>(numIndices);
     return angle::Result::Continue;
 }
 
-angle::Result CreateMslShader(mtl::Context *context,
-                              id<MTLLibrary> shaderLib,
-                              NSString *shaderName,
-                              MTLFunctionConstantValues *funcConstants,
-                              id<MTLFunction> *shaderOut)
-{
-    NSError *nsErr = nil;
-
-    id<MTLFunction> mtlShader;
-    if (funcConstants)
-    {
-        mtlShader = [shaderLib newFunctionWithName:shaderName
-                                    constantValues:funcConstants
-                                             error:&nsErr];
-    }
-    else
-    {
-        mtlShader = [shaderLib newFunctionWithName:shaderName];
-    }
-
-    [mtlShader ANGLE_MTL_AUTORELEASE];
-    if (nsErr && !mtlShader)
-    {
-        std::ostringstream ss;
-        ss << "Internal error compiling Metal shader:\n"
-           << nsErr.localizedDescription.UTF8String << "\n";
-
-        ERR() << ss.str();
-
-        ANGLE_MTL_CHECK(context, false, GL_INVALID_OPERATION);
-    }
-    *shaderOut = mtlShader;
-    return angle::Result::Continue;
-}
-
-angle::Result CreateMslShader(Context *context,
+angle::Result CreateMslShader(ContextMtl *context,
                               id<MTLLibrary> shaderLib,
                               NSString *shaderName,
                               MTLFunctionConstantValues *funcConstants,
                               AutoObjCPtr<id<MTLFunction>> *shaderOut)
 {
-    id<MTLFunction> outFunction;
-    ANGLE_TRY(CreateMslShader(context, shaderLib, shaderName, funcConstants, &outFunction));
-    shaderOut->retainAssign(outFunction);
-    return angle::Result::Continue;
+    ANGLE_MTL_OBJC_SCOPE
+    {
+        NSError *err = nil;
+        if (funcConstants)
+        {
+            *shaderOut = adoptObjCObj([shaderLib newFunctionWithName:shaderName
+                                                      constantValues:funcConstants
+                                                               error:&err]);
+        }
+        else
+        {
+            *shaderOut = adoptObjCObj([shaderLib newFunctionWithName:shaderName]);
+        }
+        ANGLE_MTL_CHECK(context, *shaderOut, err);
+        return angle::Result::Continue;
+    }
 }
+
 }  // namespace mtl
 }  // namespace rx

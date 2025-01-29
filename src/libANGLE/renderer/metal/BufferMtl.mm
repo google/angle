@@ -574,7 +574,7 @@ angle::Result BufferMtl::setDataImpl(const gl::Context *context,
                          adjustedSize <= mtl::kSharedMemBufferMaxBufSizeHint)
                             ? adjustedSize
                             : 0;
-    ANGLE_MTL_CHECK(contextMtl, mShadowCopy.resize(shadowSize), GL_OUT_OF_MEMORY);
+    ANGLE_CHECK_GL_ALLOC(contextMtl, mShadowCopy.resize(shadowSize));
 
     if (data)
     {
@@ -715,7 +715,7 @@ angle::Result BufferMtl::setSubDataImpl(const gl::Context *context,
     ContextMtl *contextMtl             = mtl::GetImpl(context);
     const angle::FeaturesMtl &features = contextMtl->getDisplay()->getFeatures();
 
-    ANGLE_MTL_TRY(contextMtl, offset <= mGLSize);
+    ANGLE_CHECK(contextMtl, offset <= mGLSize, "Internal error.", GL_INVALID_OPERATION);
 
     auto srcPtr     = static_cast<const uint8_t *>(data);
     auto sizeToCopy = std::min<size_t>(size, mGLSize - offset);

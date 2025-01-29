@@ -322,7 +322,7 @@ angle::Result Texture::MakeTexture(ContextMtl *context,
     ASSERT(refOut);
     Texture *newTexture =
         new Texture(context, desc, mips, renderTargetOnly, allowFormatView, memoryLess);
-    ANGLE_MTL_CHECK(context, newTexture->valid(), GL_OUT_OF_MEMORY);
+    ANGLE_CHECK_GL_ALLOC(context, newTexture->valid());
     refOut->reset(newTexture);
 
     if (!mtlFormat.hasDepthAndStencilBits())
@@ -351,7 +351,7 @@ angle::Result Texture::MakeTexture(ContextMtl *context,
 
     ASSERT(refOut);
     Texture *newTexture = new Texture(context, desc, surfaceRef, slice, renderTargetOnly);
-    ANGLE_MTL_CHECK(context, newTexture->valid(), GL_OUT_OF_MEMORY);
+    ANGLE_CHECK_GL_ALLOC(context, newTexture->valid());
     refOut->reset(newTexture);
     if (!mtlFormat.hasDepthAndStencilBits())
     {
@@ -1108,12 +1108,7 @@ angle::Result Buffer::MakeBufferWithStorageMode(ContextMtl *context,
                                                 BufferRef *bufferOut)
 {
     bufferOut->reset(new Buffer(context, storageMode, size, data));
-
-    if (!(*bufferOut) || !(*bufferOut)->get())
-    {
-        ANGLE_MTL_CHECK(context, false, GL_OUT_OF_MEMORY);
-    }
-
+    ANGLE_CHECK_GL_ALLOC(context, *bufferOut && (*bufferOut)->get());
     return angle::Result::Continue;
 }
 

@@ -1672,20 +1672,6 @@ void ContextMtl::handleError(GLenum glErrorCode,
     mErrors->handleError(glErrorCode, message, file, function, line);
 }
 
-void ContextMtl::handleError(NSError *nserror,
-                             const char *message,
-                             const char *file,
-                             const char *function,
-                             unsigned int line)
-{
-    if (!nserror)
-    {
-        return;
-    }
-
-    mErrors->handleError(GL_INVALID_OPERATION, message, file, function, line);
-}
-
 void ContextMtl::invalidateState(const gl::Context *context)
 {
     mDirtyBits.set();
@@ -1957,7 +1943,8 @@ mtl::RenderCommandEncoder *ContextMtl::getRenderPassCommandEncoder(const mtl::Re
             std::stringstream errorStream;
             errorStream << "This set of render targets requires " << renderTargetSize
                         << " bytes of pixel storage. This device supports " << maxSize << " bytes.";
-            ANGLE_MTL_HANDLE_ERROR(this, errorStream.str().c_str(), GL_INVALID_OPERATION);
+            handleError(GL_INVALID_OPERATION, errorStream.str().c_str(), __FILE__, ANGLE_FUNCTION,
+                        __LINE__);
             return nullptr;
         }
     }
