@@ -5362,6 +5362,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, emulateDithering,
                             IsAndroid() && !mFeatures.supportsLegacyDithering.enabled);
 
+    // Enable additional blend factors when dithering for Samsung
+    ANGLE_FEATURE_CONDITION(&mFeatures, enableAdditionalBlendFactorsForDithering, isSamsung);
+
     ANGLE_FEATURE_CONDITION(&mFeatures, adjustClearColorPrecision,
                             IsAndroid() && mFeatures.supportsLegacyDithering.enabled && isARM &&
                                 driverVersion < angle::VersionTriple(50, 0, 0));
@@ -6000,6 +6003,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // Each builtin kernel gets its own feature and condition, for now a single feature condition is
     // setup
     ANGLE_FEATURE_CONDITION(&mFeatures, usesNativeBuiltinClKernel, isSamsung);
+
+    // Force enable sample usage for AHB images for Samsung
+    ANGLE_FEATURE_CONDITION(&mFeatures, forceSampleUsageForAhbBackedImages, isSamsung);
 }
 
 void Renderer::appBasedFeatureOverrides(const vk::ExtensionNameList &extensions) {}
