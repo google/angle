@@ -3436,6 +3436,19 @@ void CaptureDefaultVertexAttribs(const gl::State &replayState,
     }
 }
 
+void CaptureBindFramebufferForContext(const gl::Context *context,
+                                      std::vector<CallCapture> *calls,
+                                      FramebufferCaptureFuncs &framebufferFuncs,
+                                      const gl::State &glState,
+                                      GLenum target,
+                                      const gl::FramebufferID &id)
+{
+    Capture(calls, framebufferFuncs.bindFramebuffer(glState, true, target, id));
+
+    // Set current context for this CallCapture since we track these in gFramebufferMapPerContext
+    calls->back().contextID = context->id();
+}
+
 void CompressPalettedTexture(angle::MemoryBuffer &data,
                              angle::MemoryBuffer &tmp,
                              const gl::InternalFormat &compressedFormat,
@@ -4675,9 +4688,8 @@ void CaptureMidExecutionSetup(const gl::Context *context,
 
         for (std::vector<CallCapture> *calls : framebufferSetupCalls)
         {
-            Capture(calls, framebufferFuncs.bindFramebuffer(replayState, true, GL_FRAMEBUFFER, id));
-            // Set current context for this CallCapture
-            calls->back().contextID = context->id();
+            CaptureBindFramebufferForContext(context, calls, framebufferFuncs, replayState,
+                                             GL_FRAMEBUFFER, id);
         }
         currentDrawFramebuffer = currentReadFramebuffer = id;
 
@@ -4750,8 +4762,8 @@ void CaptureMidExecutionSetup(const gl::Context *context,
             if (currentDrawFramebuffer != stateDrawFramebuffer ||
                 currentReadFramebuffer != stateReadFramebuffer)
             {
-                cap(framebufferFuncs.bindFramebuffer(replayState, true, GL_FRAMEBUFFER,
-                                                     stateDrawFramebuffer));
+                CaptureBindFramebufferForContext(context, setupCalls, framebufferFuncs, replayState,
+                                                 GL_FRAMEBUFFER, stateDrawFramebuffer);
                 currentDrawFramebuffer = currentReadFramebuffer = stateDrawFramebuffer;
             }
         }
@@ -4759,15 +4771,15 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         {
             if (currentDrawFramebuffer != stateDrawFramebuffer)
             {
-                cap(framebufferFuncs.bindFramebuffer(replayState, true, GL_DRAW_FRAMEBUFFER,
-                                                     stateDrawFramebuffer));
+                CaptureBindFramebufferForContext(context, setupCalls, framebufferFuncs, replayState,
+                                                 GL_DRAW_FRAMEBUFFER, stateDrawFramebuffer);
                 currentDrawFramebuffer = stateDrawFramebuffer;
             }
 
             if (currentReadFramebuffer != stateReadFramebuffer)
             {
-                cap(framebufferFuncs.bindFramebuffer(replayState, true, GL_READ_FRAMEBUFFER,
-                                                     stateReadFramebuffer));
+                CaptureBindFramebufferForContext(context, setupCalls, framebufferFuncs, replayState,
+                                                 GL_READ_FRAMEBUFFER, stateReadFramebuffer);
                 currentReadFramebuffer = stateReadFramebuffer;
             }
         }
