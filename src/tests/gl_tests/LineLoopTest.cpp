@@ -104,7 +104,7 @@ void main()
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    void runTest(GLenum indexType, GLuint indexBuffer, const void *indexPtr)
+    void runTestBlend(GLenum indexType, GLuint indexBuffer, const void *indexPtr)
     {
         glClear(GL_COLOR_BUFFER_BIT);
 
@@ -114,7 +114,7 @@ void main()
 
         static const GLfloat stripPositions[] = {-0.5f, -0.5f, -0.5f, 0.5f,
                                                  0.5f,  0.5f,  0.5f,  -0.5f};
-        static const GLubyte stripIndices[]   = {1, 0, 3, 2, 1};
+        static const GLushort stripIndices[]  = {1, 0, 3, 2, 1};
 
         glEnable(GL_BLEND);
 
@@ -128,9 +128,56 @@ void main()
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
         glVertexAttribPointer(mPositionLocation, 2, GL_FLOAT, GL_FALSE, 0, stripPositions);
         glUniform4f(mColorLocation, 0, 1, 0, 1);
-        glDrawElements(GL_LINE_STRIP, 5, GL_UNSIGNED_BYTE, stripIndices);
+        glDrawElements(GL_LINE_STRIP, 5, GL_UNSIGNED_SHORT, stripIndices);
 
         checkPixels();
+    }
+
+    void runTestNoBlend(GLenum indexType, GLuint indexBuffer, const void *indexPtr)
+    {
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        static const GLfloat loopPositions[] = {0.0f,  0.0f, 0.0f, 0.0f, 0.0f, 0.0f,  0.0f,
+                                                0.0f,  0.0f, 0.0f, 0.0f, 0.0f, -0.5f, -0.5f,
+                                                -0.5f, 0.5f, 0.5f, 0.5f, 0.5f, -0.5f};
+
+        static const GLfloat stripPositions[] = {-0.5f, -0.5f, -0.5f, 0.5f,
+                                                 0.5f,  0.5f,  0.5f,  -0.5f};
+        static const GLushort stripIndices[]  = {1, 0, 3, 2, 1};
+
+        std::vector<GLColor> expectedPixels(getWindowWidth() * getWindowHeight());
+        std::vector<GLColor> renderedPixels(getWindowWidth() * getWindowHeight());
+
+        glUseProgram(mProgram);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+        glEnableVertexAttribArray(mPositionLocation);
+        glVertexAttribPointer(mPositionLocation, 2, GL_FLOAT, GL_FALSE, 0, loopPositions);
+        glUniform4f(mColorLocation, 0.0f, 0.0f, 1.0f, 1.0f);
+        glDrawElements(GL_LINE_LOOP, 4, indexType, indexPtr);
+
+        glReadPixels(0, 0, getWindowWidth(), getWindowHeight(), GL_RGBA, GL_UNSIGNED_BYTE,
+                     renderedPixels.data());
+
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        glVertexAttribPointer(mPositionLocation, 2, GL_FLOAT, GL_FALSE, 0, stripPositions);
+        glUniform4f(mColorLocation, 0.0f, 0.0f, 1.0f, 1.0f);
+        glDrawElements(GL_LINE_STRIP, 5, GL_UNSIGNED_SHORT, stripIndices);
+
+        glReadPixels(0, 0, getWindowWidth(), getWindowHeight(), GL_RGBA, GL_UNSIGNED_BYTE,
+                     expectedPixels.data());
+
+        for (int y = 0; y < getWindowHeight(); ++y)
+        {
+            for (int x = 0; x < getWindowWidth(); ++x)
+            {
+                int idx = y * getWindowWidth() + x;
+                EXPECT_EQ(expectedPixels[idx], renderedPixels[idx])
+                    << "Expected pixel at " << x << ", " << y << " to be " << expectedPixels[idx]
+                    << std::endl;
+            }
+        }
     }
 
     GLuint mProgram;
@@ -138,7 +185,9 @@ void main()
     GLint mColorLocation;
 };
 
-TEST_P(LineLoopTest, LineLoopUByteIndices)
+// Line loop test that draws a loop and a strip, blends the colors, and checks they're correct. No
+// index buffer is set.
+TEST_P(LineLoopTest, LineLoopUByteIndicesBlend)
 {
     // http://anglebug.com/42265165: Disable D3D11 SDK Layers warnings checks.
     // On Win7, the D3D SDK Layers emits a false warning for these tests.
@@ -146,19 +195,23 @@ TEST_P(LineLoopTest, LineLoopUByteIndices)
     ignoreD3D11SDKLayersWarnings();
 
     static const GLubyte indices[] = {0, 7, 6, 9, 8, 0};
-    runTest(GL_UNSIGNED_BYTE, 0, indices + 1);
+    runTestBlend(GL_UNSIGNED_BYTE, 0, indices + 1);
 }
 
-TEST_P(LineLoopTest, LineLoopUShortIndices)
+// Line loop test that draws a loop and a strip, blends the colors, and checks they're correct. No
+// index buffer is set.
+TEST_P(LineLoopTest, LineLoopUShortIndicesBlend)
 {
     // http://anglebug.com/42265165: Disable D3D11 SDK Layers warnings checks.
     ignoreD3D11SDKLayersWarnings();
 
     static const GLushort indices[] = {0, 7, 6, 9, 8, 0};
-    runTest(GL_UNSIGNED_SHORT, 0, indices + 1);
+    runTestBlend(GL_UNSIGNED_SHORT, 0, indices + 1);
 }
 
-TEST_P(LineLoopTest, LineLoopUIntIndices)
+// Line loop test that draws a loop and a strip, blends the colors, and checks they're correct. No
+// index buffer is set.
+TEST_P(LineLoopTest, LineLoopUIntIndicesBlend)
 {
     if (!IsGLExtensionEnabled("GL_OES_element_index_uint"))
     {
@@ -169,10 +222,12 @@ TEST_P(LineLoopTest, LineLoopUIntIndices)
     ignoreD3D11SDKLayersWarnings();
 
     static const GLuint indices[] = {0, 7, 6, 9, 8, 0};
-    runTest(GL_UNSIGNED_INT, 0, indices + 1);
+    runTestBlend(GL_UNSIGNED_INT, 0, indices + 1);
 }
 
-TEST_P(LineLoopTest, LineLoopUByteIndexBuffer)
+// Line loop test that draws a loop and a strip, blends the colors, and checks they're correct.
+// Index buffer is set.
+TEST_P(LineLoopTest, LineLoopUByteIndexBufferBlend)
 {
     // http://anglebug.com/42265165: Disable D3D11 SDK Layers warnings checks.
     ignoreD3D11SDKLayersWarnings();
@@ -183,10 +238,12 @@ TEST_P(LineLoopTest, LineLoopUByteIndexBuffer)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buf);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-    runTest(GL_UNSIGNED_BYTE, buf, reinterpret_cast<const void *>(sizeof(GLubyte)));
+    runTestBlend(GL_UNSIGNED_BYTE, buf, reinterpret_cast<const void *>(sizeof(GLubyte)));
 }
 
-TEST_P(LineLoopTest, LineLoopUShortIndexBuffer)
+// Line loop test that draws a loop and a strip, blends the colors, and checks they're correct.
+// Index buffer is set.
+TEST_P(LineLoopTest, LineLoopUShortIndexBufferBlend)
 {
     // http://anglebug.com/42265165: Disable D3D11 SDK Layers warnings checks.
     ignoreD3D11SDKLayersWarnings();
@@ -197,10 +254,12 @@ TEST_P(LineLoopTest, LineLoopUShortIndexBuffer)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buf);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-    runTest(GL_UNSIGNED_SHORT, buf, reinterpret_cast<const void *>(sizeof(GLushort)));
+    runTestBlend(GL_UNSIGNED_SHORT, buf, reinterpret_cast<const void *>(sizeof(GLushort)));
 }
 
-TEST_P(LineLoopTest, LineLoopUIntIndexBuffer)
+// Line loop test that draws a loop and a strip, blends the colors, and checks they're correct.
+// Index buffer is set.
+TEST_P(LineLoopTest, LineLoopUIntIndexBufferBlend)
 {
     if (!IsGLExtensionEnabled("GL_OES_element_index_uint"))
     {
@@ -216,7 +275,100 @@ TEST_P(LineLoopTest, LineLoopUIntIndexBuffer)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buf);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-    runTest(GL_UNSIGNED_INT, buf, reinterpret_cast<const void *>(sizeof(GLuint)));
+    runTestBlend(GL_UNSIGNED_INT, buf, reinterpret_cast<const void *>(sizeof(GLuint)));
+}
+
+// Line loop test that draws a loop, reads it, then a strip, reads it, and confirms the pixels are
+// the same. No index buffer is set.
+TEST_P(LineLoopTest, LineLoopUByteIndicesNoBlend)
+{
+    // http://anglebug.com/42265165: Disable D3D11 SDK Layers warnings checks.
+    // On Win7, the D3D SDK Layers emits a false warning for these tests.
+    // This doesn't occur on Windows 10 (Version 1511) though.
+    ignoreD3D11SDKLayersWarnings();
+
+    static const GLubyte indices[] = {0, 7, 6, 9, 8, 0};
+    runTestNoBlend(GL_UNSIGNED_BYTE, 0, indices + 1);
+}
+
+// Line loop test that draws a loop, reads it, then a strip, reads it, and confirms the pixels are
+// the same. No index buffer is set.
+TEST_P(LineLoopTest, LineLoopUShortIndicesNoBlend)
+{
+    // http://anglebug.com/42265165: Disable D3D11 SDK Layers warnings checks.
+    ignoreD3D11SDKLayersWarnings();
+
+    static const GLushort indices[] = {0, 7, 6, 9, 8, 0};
+    runTestNoBlend(GL_UNSIGNED_SHORT, 0, indices + 1);
+}
+
+// Line loop test that draws a loop, reads it, then a strip, reads it, and confirms the pixels are
+// the same. No index buffer is set.
+TEST_P(LineLoopTest, LineLoopUIntIndicesNoBlend)
+{
+    if (!IsGLExtensionEnabled("GL_OES_element_index_uint"))
+    {
+        return;
+    }
+
+    // http://anglebug.com/42265165: Disable D3D11 SDK Layers warnings checks.
+    ignoreD3D11SDKLayersWarnings();
+
+    static const GLuint indices[] = {0, 7, 6, 9, 8, 0};
+    runTestNoBlend(GL_UNSIGNED_INT, 0, indices + 1);
+}
+
+// Line loop test that draws a loop, reads it, then a strip, reads it, and confirms the pixels are
+// the same. Index buffer is set.
+TEST_P(LineLoopTest, LineLoopUByteIndexBufferNoBlend)
+{
+    // http://anglebug.com/42265165: Disable D3D11 SDK Layers warnings checks.
+    ignoreD3D11SDKLayersWarnings();
+
+    static const GLubyte indices[] = {0, 7, 6, 9, 8, 0};
+
+    GLBuffer buf;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buf);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+    runTestNoBlend(GL_UNSIGNED_BYTE, buf, reinterpret_cast<const void *>(sizeof(GLubyte)));
+}
+
+// Line loop test that draws a loop, reads it, then a strip, reads it, and confirms the pixels are
+// the same. Index buffer is set.
+TEST_P(LineLoopTest, LineLoopUShortIndexBufferNoBlend)
+{
+    // http://anglebug.com/42265165: Disable D3D11 SDK Layers warnings checks.
+    ignoreD3D11SDKLayersWarnings();
+
+    static const GLushort indices[] = {0, 7, 6, 9, 8, 0};
+
+    GLBuffer buf;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buf);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+    runTestNoBlend(GL_UNSIGNED_SHORT, buf, reinterpret_cast<const void *>(sizeof(GLushort)));
+}
+
+// Line loop test that draws a loop, reads it, then a strip, reads it, and confirms the pixels are
+// the same. Index buffer is set.
+TEST_P(LineLoopTest, LineLoopUIntIndexBufferNoBlend)
+{
+    if (!IsGLExtensionEnabled("GL_OES_element_index_uint"))
+    {
+        return;
+    }
+
+    // http://anglebug.com/42265165: Disable D3D11 SDK Layers warnings checks.
+    ignoreD3D11SDKLayersWarnings();
+
+    static const GLuint indices[] = {0, 7, 6, 9, 8, 0};
+
+    GLBuffer buf;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buf);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+    runTestNoBlend(GL_UNSIGNED_INT, buf, reinterpret_cast<const void *>(sizeof(GLuint)));
 }
 
 // Test that drawing elements between line loop arrays using the same array buffer does not result
@@ -278,7 +430,7 @@ TEST_P(LineLoopTestES3, UseAsUBOThenUpdateThenLineLoopUByteIndexBuffer)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buf);
     glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(indices), indices);
 
-    runTest(GL_UNSIGNED_BYTE, buf, reinterpret_cast<const void *>(sizeof(GLubyte)));
+    runTestBlend(GL_UNSIGNED_BYTE, buf, reinterpret_cast<const void *>(sizeof(GLubyte)));
 
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
@@ -305,7 +457,7 @@ TEST_P(LineLoopTestES3, UseAsUBOThenUpdateThenLineLoopUShortIndexBuffer)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buf);
     glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(indices), indices);
 
-    runTest(GL_UNSIGNED_SHORT, buf, reinterpret_cast<const void *>(sizeof(GLushort)));
+    runTestBlend(GL_UNSIGNED_SHORT, buf, reinterpret_cast<const void *>(sizeof(GLushort)));
 
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
@@ -337,7 +489,7 @@ TEST_P(LineLoopTestES3, UseAsUBOThenUpdateThenLineLoopUIntIndexBuffer)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buf);
     glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(indices), indices);
 
-    runTest(GL_UNSIGNED_INT, buf, reinterpret_cast<const void *>(sizeof(GLuint)));
+    runTestBlend(GL_UNSIGNED_INT, buf, reinterpret_cast<const void *>(sizeof(GLuint)));
 
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
@@ -1129,7 +1281,7 @@ TEST_P(LineLoopIndirectTest, IndirectAndElementDrawsShareIndexBuffer)
     }
 }
 
-ANGLE_INSTANTIATE_TEST_ES2(LineLoopTest);
+ANGLE_INSTANTIATE_TEST_ES2_AND(LineLoopTest, ES2_WEBGPU());
 ANGLE_INSTANTIATE_TEST_ES3(LineLoopTestES3);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(LineLoopPrimitiveRestartTest);
