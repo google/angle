@@ -154,7 +154,7 @@ angle::Result DisplayMtl::initializeImpl(egl::Display *display)
         ANGLE_TRY(mFormatTable.initialize(this));
         ANGLE_TRY(initializeShaderLibrary());
 
-        mUtils = std::make_unique<mtl::RenderUtils>(this);
+        mUtils = std::make_unique<mtl::RenderUtils>();
 
         return angle::Result::Continue;
     }

@@ -656,11 +656,10 @@ class DepthSaturationUtils final : angle::NonCopyable
 };
 
 // RenderUtils: container class of various util classes above
-class RenderUtils : public Context, angle::NonCopyable
+class RenderUtils : angle::NonCopyable
 {
   public:
-    RenderUtils(DisplayMtl *display);
-    ~RenderUtils() override;
+    RenderUtils();
 
     // Clear current framebuffer
     angle::Result clearWithDraw(const gl::Context *context,
@@ -767,13 +766,6 @@ class RenderUtils : public Context, angle::NonCopyable
     angle::Result saturateDepth(ContextMtl *contextMtl, const DepthSaturationParams &params);
 
   private:
-    // override ErrorHandler
-    void handleError(GLenum error,
-                     const char *message,
-                     const char *file,
-                     const char *function,
-                     unsigned int line) override;
-
     std::array<ClearUtils, angle::EnumSize<PixelType>()> mClearUtils;
 
     std::array<ColorBlitUtils, angle::EnumSize<PixelType>()> mColorBlitUtils;
