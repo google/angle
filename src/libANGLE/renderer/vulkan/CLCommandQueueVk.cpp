@@ -1405,15 +1405,19 @@ angle::Result CLCommandQueueVk::flush()
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "CLCommandQueueVk::flush");
 
-    std::scoped_lock<std::mutex> sl(mCommandQueueMutex);
-    ANGLE_TRY(flushInternal());
+    QueueSerial lastSubmittedQueueSerial;
+    {
+        std::unique_lock<std::mutex> ul(mCommandQueueMutex);
 
-    return mFinishHandler.notify(mLastSubmittedQueueSerial);
+        ANGLE_TRY(flushInternal());
+        lastSubmittedQueueSerial = mLastSubmittedQueueSerial;
+    }
+
+    return mFinishHandler.notify(lastSubmittedQueueSerial);
 }
 
 angle::Result CLCommandQueueVk::finish()
 {
-
     std::scoped_lock<std::mutex> sl(mCommandQueueMutex);
 
     ANGLE_TRACE_EVENT0("gpu.angle", "CLCommandQueueVk::finish");
