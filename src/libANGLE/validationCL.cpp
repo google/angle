@@ -838,18 +838,12 @@ cl_int ValidateGetCommandQueueInfo(cl_command_queue command_queue,
                                    const void *param_value,
                                    const size_t *param_value_size_ret)
 {
-    // CL_INVALID_COMMAND_QUEUE if command_queue is not a valid command-queue ...
+    // CL_INVALID_COMMAND_QUEUE if command_queue is not a valid command-queue
     if (!CommandQueue::IsValid(command_queue))
     {
         return CL_INVALID_COMMAND_QUEUE;
     }
     const CommandQueue &queue = command_queue->cast<CommandQueue>();
-    // or if command_queue is not a valid command-queue for param_name.
-    if (param_name == CommandQueueInfo::Size && queue.isOnDevice() &&
-        !queue.getDevice().hasDeviceEnqueueCaps())
-    {
-        return CL_INVALID_COMMAND_QUEUE;
-    }
 
     // CL_INVALID_VALUE if param_name is not one of the supported values.
     const cl_version version = queue.getDevice().getVersion();
@@ -869,6 +863,23 @@ cl_int ValidateGetCommandQueueInfo(cl_command_queue command_queue,
         default:
             // All remaining possible values for param_name are valid for all versions.
             break;
+    }
+
+    // CL_INVALID_COMMAND_QUEUE if command_queue is not a valid command-queue for param_name.
+    if (param_name == CommandQueueInfo::Size)
+    {
+        if (queue.isOnDevice() && !queue.getDevice().hasDeviceEnqueueCaps())
+        {
+            return CL_INVALID_COMMAND_QUEUE;
+        }
+        if (queue.getDevice().getPlatform().isVersionOrNewer(3u, 0u) && !queue.isOnDevice())
+        {
+            // Device-side enqueue and on-device queues are optional for devices supporting
+            // OpenCL 3.0. When device-side enqueue is not supported:
+            // - clGetCommandQueueInfo, passing CL_QUEUE_SIZE Returns CL_INVALID_COMMAND_QUEUE since
+            // command_queue cannot be a valid device command-queue.
+            return CL_INVALID_COMMAND_QUEUE;
+        }
     }
 
     return CL_SUCCESS;

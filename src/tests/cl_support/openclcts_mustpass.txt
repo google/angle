@@ -66,6 +66,7 @@ api.get_image2d_info
 api.queue_hint
 api.queue_properties
 api.sub_group_dispatch
+api.consistency_device_enqueue
 compiler.load_program_source
 compiler.load_multistring_source
 compiler.load_null_terminated_partial_multi_line_source
