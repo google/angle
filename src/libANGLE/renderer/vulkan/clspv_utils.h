@@ -52,6 +52,8 @@ ClspvError ClspvCompileSource(const size_t programCount,
 
 spv_target_env ClspvGetSpirvVersion(const vk::Renderer *renderer);
 
+bool ClspvValidate(vk::Renderer *rendererVk, const angle::spirv::Blob &blob);
+
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_VULKAN_CLSPV_UTILS_H_

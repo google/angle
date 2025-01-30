@@ -20,6 +20,9 @@
 
 #include "clspv/Compiler.h"
 
+#include "spirv-tools/libspirv.h"
+#include "spirv-tools/libspirv.hpp"
+
 namespace rx
 {
 constexpr std::string_view kPrintfConversionSpecifiers = "diouxXfFeEgGaAcsp";
@@ -537,6 +540,47 @@ spv_target_env ClspvGetSpirvVersion(const vk::Renderer *renderer)
         // return the latest supported version
         return SPV_ENV_VULKAN_1_3;
     }
+}
+
+bool ClspvValidate(vk::Renderer *rendererVk, const angle::spirv::Blob &blob)
+{
+    spvtools::SpirvTools spvTool(ClspvGetSpirvVersion(rendererVk));
+    spvTool.SetMessageConsumer([](spv_message_level_t level, const char *,
+                                  const spv_position_t &position, const char *message) {
+        switch (level)
+        {
+            case SPV_MSG_FATAL:
+            case SPV_MSG_ERROR:
+            case SPV_MSG_INTERNAL_ERROR:
+                ERR() << "SPV validation error (" << position.line << "." << position.column
+                      << "): " << message;
+                break;
+            case SPV_MSG_WARNING:
+                WARN() << "SPV validation warning (" << position.line << "." << position.column
+                       << "): " << message;
+                break;
+            case SPV_MSG_INFO:
+                INFO() << "SPV validation info (" << position.line << "." << position.column
+                       << "): " << message;
+                break;
+            case SPV_MSG_DEBUG:
+                INFO() << "SPV validation debug (" << position.line << "." << position.column
+                       << "): " << message;
+                break;
+            default:
+                UNREACHABLE();
+                break;
+        }
+    });
+
+    spvtools::ValidatorOptions options;
+    if (rendererVk->getFeatures().supportsUniformBufferStandardLayout.enabled)
+    {
+        // Allow UBO layouts that conform to std430 (SSBO) layout requirements
+        options.SetUniformBufferStandardLayout(true);
+    }
+
+    return spvTool.Validate(blob.data(), blob.size(), options);
 }
 
 }  // namespace rx

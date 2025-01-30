@@ -936,6 +936,14 @@ bool CLProgramVk::buildInternal(const cl::DevicePtrs &devices,
         // the shader module
         if (deviceProgramData.binaryType == CL_PROGRAM_BINARY_TYPE_EXECUTABLE)
         {
+            // Report SPIR-V validation failure as a build failure
+            if (!ClspvValidate(mContext->getRenderer(), deviceProgramData.binary))
+            {
+                ERR() << "Failed to validate SPIR-V binary!";
+                deviceProgramData.buildStatus = CL_BUILD_ERROR;
+                return false;
+            }
+
             spvtools::SpirvTools spvTool(deviceProgramData.spirvVersion);
             bool parseRet = spvTool.Parse(
                 deviceProgramData.binary,
