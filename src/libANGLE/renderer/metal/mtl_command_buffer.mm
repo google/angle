@@ -1007,7 +1007,7 @@ uint64_t CommandBuffer::queueEventSignal(id<MTLEvent> event, uint64_t value)
         // We cannot set event when there is an active render pass, defer the setting until the pass
         // end.
         PendingEvent pending;
-        pending.event.retainAssign(event);
+        pending.event       = std::move(event);
         pending.signalValue = value;
         mPendingSignalEvents.push_back(std::move(pending));
     }
@@ -2356,7 +2356,7 @@ RenderCommandEncoder &RenderCommandEncoder::setStencilLoadAction(MTLLoadAction a
 
 void RenderCommandEncoder::setLabel(NSString *label)
 {
-    mLabel.retainAssign(label);
+    mLabel = std::move(label);
 }
 
 // BlitCommandEncoder

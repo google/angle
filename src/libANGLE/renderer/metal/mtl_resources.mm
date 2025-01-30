@@ -477,8 +477,7 @@ Texture::Texture(ContextMtl *context,
         }
 
         set(metalDevice.newTextureWithDescriptor(desc));
-
-        mCreationDesc.retainAssign(desc);
+        mCreationDesc = std::move(desc);
     }
 }
 

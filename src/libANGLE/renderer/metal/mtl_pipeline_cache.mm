@@ -198,8 +198,8 @@ angle::Result PipelineCache::getRenderPipeline(
     AutoObjCPtr<id<MTLRenderPipelineState>> *outRenderPipeline)
 {
     PipelineKey key;
-    key.vertexShader.retainAssign(vertexShader);
-    key.fragmentShader.retainAssign(fragmentShader);
+    key.vertexShader   = std::move(vertexShader);
+    key.fragmentShader = std::move(fragmentShader);
     key.pipelineDesc = desc;
 
     auto iter = mPipelineCache.Get(key);
@@ -228,7 +228,7 @@ angle::Result PipelineCache::getComputePipeline(
     AutoObjCPtr<id<MTLComputePipelineState>> *outComputePipeline)
 {
     PipelineKey key;
-    key.computeShader.retainAssign(computeShader);
+    key.computeShader = std::move(computeShader);
 
     auto iter = mPipelineCache.Get(key);
     if (iter != mPipelineCache.end())
