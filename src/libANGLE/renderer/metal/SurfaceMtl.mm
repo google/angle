@@ -472,7 +472,7 @@ egl::Error WindowSurfaceMtl::initialize(const egl::Display *display)
         }
         else
         {
-            mMetalLayer             = [[[CAMetalLayer alloc] init] ANGLE_MTL_AUTORELEASE];
+            mMetalLayer             = mtl::adoptObjCObj([[CAMetalLayer alloc] init]);
             mMetalLayer.get().frame = mLayer.frame;
         }
 
