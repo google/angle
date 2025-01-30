@@ -223,7 +223,7 @@ angle::Result Texture::Make2DMSTexture(ContextMtl *context,
 {
     ANGLE_MTL_OBJC_SCOPE
     {
-        AutoObjCPtr<MTLTextureDescriptor *> desc = adoptObjCObj([MTLTextureDescriptor new]);
+        AutoObjCPtr<MTLTextureDescriptor *> desc = adoptObjCPtr([MTLTextureDescriptor new]);
         desc.get().textureType                   = MTLTextureType2DMultisample;
         desc.get().pixelFormat                   = format.metalFormat;
         desc.get().width                         = width;
@@ -524,7 +524,7 @@ Texture::Texture(Texture *original, MTLPixelFormat pixelFormat)
 {
     ANGLE_MTL_OBJC_SCOPE
     {
-        set(adoptObjCObj([original->get() newTextureViewWithPixelFormat:pixelFormat]));
+        set(adoptObjCPtr([original->get() newTextureViewWithPixelFormat:pixelFormat]));
         // Texture views consume no additional memory
         mEstimatedByteSize = 0;
     }
@@ -540,7 +540,7 @@ Texture::Texture(Texture *original,
 {
     ANGLE_MTL_OBJC_SCOPE
     {
-        set(adoptObjCObj([original->get() newTextureViewWithPixelFormat:pixelFormat
+        set(adoptObjCPtr([original->get() newTextureViewWithPixelFormat:pixelFormat
                                                             textureType:textureType
                                                                  levels:levels
                                                                  slices:slices]));
@@ -560,7 +560,7 @@ Texture::Texture(Texture *original,
 {
     ANGLE_MTL_OBJC_SCOPE
     {
-        set(adoptObjCObj([original->get() newTextureViewWithPixelFormat:pixelFormat
+        set(adoptObjCPtr([original->get() newTextureViewWithPixelFormat:pixelFormat
                                                             textureType:textureType
                                                                  levels:levels
                                                                  slices:slices
@@ -879,7 +879,7 @@ angle::Result Texture::resize(ContextMtl *context, uint32_t width, uint32_t heig
     ANGLE_MTL_OBJC_SCOPE
     {
         AutoObjCPtr<MTLTextureDescriptor *> newDesc =
-            adoptObjCObj<MTLTextureDescriptor>([mCreationDesc.get() copy]);
+            adoptObjCPtr<MTLTextureDescriptor>([mCreationDesc.get() copy]);
         newDesc.get().width           = width;
         newDesc.get().height          = height;
         auto newTexture               = context->getMetalDevice().newTextureWithDescriptor(newDesc);
@@ -929,7 +929,7 @@ TextureRef Texture::getReadableCopy(ContextMtl *context,
         // Create a texture that big enough to store the first level data and any smaller level
         ANGLE_MTL_OBJC_SCOPE
         {
-            AutoObjCPtr<MTLTextureDescriptor *> desc = adoptObjCObj([MTLTextureDescriptor new]);
+            AutoObjCPtr<MTLTextureDescriptor *> desc = adoptObjCPtr([MTLTextureDescriptor new]);
             desc.get().textureType                   = get().textureType;
             desc.get().pixelFormat                   = get().pixelFormat;
             desc.get().width                         = firstLevelSize.width;

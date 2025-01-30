@@ -264,17 +264,11 @@ class WrappedObject
     T mMetalObject = nil;
 };
 
-// Because ARC enablement is a compile-time choice, and we compile this header
-// both ways, we need a separate copy of our code when ARC is enabled.
-#if __has_feature(objc_arc)
-#    define adoptObjCObj adoptObjCObjArc
-#endif
 template <typename T>
 class AutoObjCPtr;
-template <typename T>
-using AutoObjCObj = AutoObjCPtr<T *>;
+
 template <typename U>
-AutoObjCObj<U> adoptObjCObj(U *NS_RELEASES_ARGUMENT) __attribute__((__warn_unused_result__));
+AutoObjCPtr<U *> adoptObjCPtr(U *NS_RELEASES_ARGUMENT) __attribute__((__warn_unused_result__));
 
 // This class is similar to WrappedObject, however, it allows changing the
 // internal pointer with public methods.
@@ -344,7 +338,7 @@ class AutoObjCPtr : public WrappedObject<T>
     using ParentType::retainAssign;
 
     template <typename U>
-    friend AutoObjCObj<U> adoptObjCObj(U *NS_RELEASES_ARGUMENT)
+    friend AutoObjCPtr<U *> adoptObjCPtr(U *NS_RELEASES_ARGUMENT)
         __attribute__((__warn_unused_result__));
 
   private:
@@ -362,7 +356,7 @@ class AutoObjCPtr : public WrappedObject<T>
 };
 
 template <typename U>
-inline AutoObjCObj<U> adoptObjCObj(U *NS_RELEASES_ARGUMENT src)
+inline AutoObjCPtr<U *> adoptObjCPtr(U *NS_RELEASES_ARGUMENT src)
 {
 #if __has_feature(objc_arc)
     return src;

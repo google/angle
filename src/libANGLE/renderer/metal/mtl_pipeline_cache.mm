@@ -106,7 +106,7 @@ angle::Result CreateRenderPipelineState(ContextMtl *context,
         // Special attribute slot for default attribute
         if (HasDefaultAttribs(key.pipelineDesc))
         {
-            auto defaultAttribLayoutObjCDesc = adoptObjCObj<MTLVertexBufferLayoutDescriptor>(
+            auto defaultAttribLayoutObjCDesc = adoptObjCPtr<MTLVertexBufferLayoutDescriptor>(
                 [[MTLVertexBufferLayoutDescriptor alloc] init]);
             defaultAttribLayoutObjCDesc.get().stepFunction = MTLVertexStepFunctionConstant;
             defaultAttribLayoutObjCDesc.get().stepRate     = 0;

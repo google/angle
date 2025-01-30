@@ -622,9 +622,9 @@ class RenderCommandEncoder final : public CommandEncoder
 
     RenderPassDesc mRenderPassDesc;
     // Cached Objective-C render pass desc to avoid re-allocate every frame.
-    mtl::AutoObjCObj<MTLRenderPassDescriptor> mCachedRenderPassDescObjC;
+    mtl::AutoObjCPtr<MTLRenderPassDescriptor *> mCachedRenderPassDescObjC;
 
-    mtl::AutoObjCObj<NSString> mLabel;
+    mtl::AutoObjCPtr<NSString *> mLabel;
 
     MTLScissorRect mRenderPassMaxScissorRect;
 

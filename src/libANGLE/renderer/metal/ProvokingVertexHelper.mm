@@ -155,7 +155,7 @@ angle::Result ProvokingVertexHelper::getComputePipleineState(
 
     id<MTLLibrary> provokingVertexLibrary = context->getDisplay()->getDefaultShadersLib();
     uint indexBufferKey                   = buildIndexBufferKey(desc);
-    auto fcValues = mtl::adoptObjCObj([[MTLFunctionConstantValues alloc] init]);
+    auto fcValues = mtl::adoptObjCPtr([[MTLFunctionConstantValues alloc] init]);
     [fcValues setConstantValue:&indexBufferKey type:MTLDataTypeUInt withName:@"fixIndexBufferKey"];
 
     mtl::AutoObjCPtr<id<MTLFunction>> computeShader;

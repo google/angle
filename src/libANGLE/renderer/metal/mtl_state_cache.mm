@@ -40,7 +40,7 @@ inline T ToObjC(const T p)
 
 inline AutoObjCPtr<MTLStencilDescriptor *> ToObjC(const StencilDesc &desc)
 {
-    auto objCDesc = adoptObjCObj<MTLStencilDescriptor>([[MTLStencilDescriptor alloc] init]);
+    auto objCDesc = adoptObjCPtr<MTLStencilDescriptor>([[MTLStencilDescriptor alloc] init]);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, stencilFailureOperation);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, depthFailureOperation);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, depthStencilPassOperation);
@@ -53,7 +53,7 @@ inline AutoObjCPtr<MTLStencilDescriptor *> ToObjC(const StencilDesc &desc)
 inline AutoObjCPtr<MTLDepthStencilDescriptor *> ToObjC(const DepthStencilDesc &desc)
 {
     auto objCDesc =
-        adoptObjCObj<MTLDepthStencilDescriptor>([[MTLDepthStencilDescriptor alloc] init]);
+        adoptObjCPtr<MTLDepthStencilDescriptor>([[MTLDepthStencilDescriptor alloc] init]);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, backFaceStencil);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, frontFaceStencil);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, depthCompareFunction);
@@ -63,7 +63,7 @@ inline AutoObjCPtr<MTLDepthStencilDescriptor *> ToObjC(const DepthStencilDesc &d
 
 inline AutoObjCPtr<MTLSamplerDescriptor *> ToObjC(const SamplerDesc &desc)
 {
-    auto objCDesc = adoptObjCObj<MTLSamplerDescriptor>([[MTLSamplerDescriptor alloc] init]);
+    auto objCDesc = adoptObjCPtr<MTLSamplerDescriptor>([[MTLSamplerDescriptor alloc] init]);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, rAddressMode);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, sAddressMode);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, tAddressMode);
@@ -77,7 +77,7 @@ inline AutoObjCPtr<MTLSamplerDescriptor *> ToObjC(const SamplerDesc &desc)
 
 inline AutoObjCPtr<MTLVertexAttributeDescriptor *> ToObjC(const VertexAttributeDesc &desc)
 {
-    auto objCDesc = adoptObjCObj([[MTLVertexAttributeDescriptor alloc] init]);
+    auto objCDesc = adoptObjCPtr([[MTLVertexAttributeDescriptor alloc] init]);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, format);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, offset);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, bufferIndex);
@@ -87,7 +87,7 @@ inline AutoObjCPtr<MTLVertexAttributeDescriptor *> ToObjC(const VertexAttributeD
 
 inline AutoObjCPtr<MTLVertexBufferLayoutDescriptor *> ToObjC(const VertexBufferLayoutDesc &desc)
 {
-    auto objCDesc = adoptObjCObj([[MTLVertexBufferLayoutDescriptor alloc] init]);
+    auto objCDesc = adoptObjCPtr([[MTLVertexBufferLayoutDescriptor alloc] init]);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, stepFunction);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, stepRate);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, stride);
@@ -96,7 +96,7 @@ inline AutoObjCPtr<MTLVertexBufferLayoutDescriptor *> ToObjC(const VertexBufferL
 
 inline AutoObjCPtr<MTLVertexDescriptor *> ToObjC(const VertexDesc &desc)
 {
-    auto objCDesc = adoptObjCObj<MTLVertexDescriptor>([[MTLVertexDescriptor alloc] init]);
+    auto objCDesc = adoptObjCPtr<MTLVertexDescriptor>([[MTLVertexDescriptor alloc] init]);
     [objCDesc reset];
 
     for (uint8_t i = 0; i < desc.numAttribs; ++i)
@@ -120,7 +120,7 @@ inline AutoObjCPtr<MTLVertexDescriptor *> ToObjC(const VertexDesc &desc)
 inline AutoObjCPtr<MTLRenderPipelineColorAttachmentDescriptor *> ToObjC(
     const RenderPipelineColorAttachmentDesc &desc)
 {
-    auto objCDesc = adoptObjCObj([[MTLRenderPipelineColorAttachmentDescriptor alloc] init]);
+    auto objCDesc = adoptObjCPtr([[MTLRenderPipelineColorAttachmentDescriptor alloc] init]);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, pixelFormat);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, writeMask);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, alphaBlendOperation);
@@ -653,7 +653,7 @@ AutoObjCPtr<MTLRenderPipelineDescriptor *> RenderPipelineDesc::createMetalDesc(
     id<MTLFunction> vertexShader,
     id<MTLFunction> fragmentShader) const
 {
-    auto objCDesc = adoptObjCObj([[MTLRenderPipelineDescriptor alloc] init]);
+    auto objCDesc = adoptObjCPtr([[MTLRenderPipelineDescriptor alloc] init]);
     [objCDesc reset];
 
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), *this, vertexDescriptor);

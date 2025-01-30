@@ -188,7 +188,7 @@ void StartFrameCapture(id<MTLDevice> metalDevice, id<MTLCommandQueue> metalCmdQu
         return;
     }
 
-    auto captureDescriptor                = mtl::adoptObjCObj([[MTLCaptureDescriptor alloc] init]);
+    auto captureDescriptor                = mtl::adoptObjCPtr([[MTLCaptureDescriptor alloc] init]);
     captureDescriptor.get().captureObject = metalDevice;
     const std::string filePath            = GetMetalCaptureFile();
     NSString *frameCapturePath            = nil;
@@ -887,11 +887,11 @@ AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
     {
         NSError *nsError = nil;
         AutoObjCPtr nsSource =
-            adoptObjCObj([[NSString alloc] initWithBytesNoCopy:const_cast<char *>(source.data())
+            adoptObjCPtr([[NSString alloc] initWithBytesNoCopy:const_cast<char *>(source.data())
                                                         length:source.length()
                                                       encoding:NSUTF8StringEncoding
                                                   freeWhenDone:NO]);
-        AutoObjCPtr options = adoptObjCObj([[MTLCompileOptions alloc] init]);
+        AutoObjCPtr options = adoptObjCPtr([[MTLCompileOptions alloc] init]);
 
         // Mark all positions in VS with attribute invariant as non-optimizable
         options.get().preserveInvariance = usesInvariance;
@@ -917,7 +917,7 @@ AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
         auto *platform   = ANGLEPlatformCurrent();
         double startTime = platform->currentTime(platform);
 
-        result = adoptObjCObj([metalDevice newLibraryWithSource:nsSource.get()
+        result = adoptObjCPtr([metalDevice newLibraryWithSource:nsSource.get()
                                                         options:options.get()
                                                           error:&nsError]);
         if (angle::GetBoolEnvironmentVar(kANGLEPrintMSLEnv))
@@ -1019,9 +1019,9 @@ AutoObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromBinary(id<MTLDevice> metalDev
     ANGLE_MTL_OBJC_SCOPE
     {
         NSError *nsError = nil;
-        AutoObjCPtr binaryData = adoptObjCObj(
+        AutoObjCPtr binaryData = adoptObjCPtr(
             dispatch_data_create(data, length, nullptr, DISPATCH_DATA_DESTRUCTOR_DEFAULT));
-        result    = adoptObjCObj([metalDevice newLibraryWithData:binaryData.get() error:&nsError]);
+        result    = adoptObjCPtr([metalDevice newLibraryWithData:binaryData.get() error:&nsError]);
         *errorOut = std::move(nsError);
     }
     return result;
@@ -1037,10 +1037,10 @@ AutoObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromStaticBinary(id<MTLDevice> me
     {
         NSError *nsError = nil;
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
-        AutoObjCPtr binaryData = adoptObjCObj(dispatch_data_create(data, length, queue,
+        AutoObjCPtr binaryData = adoptObjCPtr(dispatch_data_create(data, length, queue,
                                                                    ^{
                                                                    }));
-        result    = adoptObjCObj([metalDevice newLibraryWithData:binaryData.get() error:&nsError]);
+        result    = adoptObjCPtr([metalDevice newLibraryWithData:binaryData.get() error:&nsError]);
         *errorOut = std::move(nsError);
     }
     return result;
@@ -1661,13 +1661,13 @@ angle::Result CreateMslShader(ContextMtl *context,
         NSError *err = nil;
         if (funcConstants)
         {
-            *shaderOut = adoptObjCObj([shaderLib newFunctionWithName:shaderName
+            *shaderOut = adoptObjCPtr([shaderLib newFunctionWithName:shaderName
                                                       constantValues:funcConstants
                                                                error:&err]);
         }
         else
         {
-            *shaderOut = adoptObjCObj([shaderLib newFunctionWithName:shaderName]);
+            *shaderOut = adoptObjCPtr([shaderLib newFunctionWithName:shaderName]);
         }
         ANGLE_MTL_CHECK(context, *shaderOut, err);
         return angle::Result::Continue;

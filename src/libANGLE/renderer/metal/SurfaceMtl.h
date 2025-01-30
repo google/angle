@@ -177,7 +177,7 @@ class WindowSurfaceMtl : public SurfaceMtl
     // Check if metal layer has been resized.
     bool checkIfLayerResized(const gl::Context *context);
 
-    mtl::AutoObjCObj<CAMetalLayer> mMetalLayer = nil;
+    mtl::AutoObjCPtr<CAMetalLayer *> mMetalLayer = nil;
     CALayer *mLayer;
     mtl::AutoObjCPtr<id<CAMetalDrawable>> mCurrentDrawable = nil;
 

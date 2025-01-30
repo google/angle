@@ -149,7 +149,7 @@ angle::Result DisplayMtl::initializeImpl(egl::Display *display)
             return angle::Result::Stop;
         }
 
-        mCmdQueue = mtl::adoptObjCObj([mMetalDevice newCommandQueue]);
+        mCmdQueue = mtl::adoptObjCPtr([mMetalDevice newCommandQueue]);
 
         ANGLE_TRY(mFormatTable.initialize(this));
         ANGLE_TRY(initializeShaderLibrary());
@@ -231,7 +231,7 @@ mtl::AutoObjCPtr<id<MTLDevice>> DisplayMtl::getMetalDeviceMatchingAttribute(
     const egl::AttributeMap &attribs)
 {
 #if TARGET_OS_OSX || TARGET_OS_MACCATALYST
-    auto deviceList = mtl::adoptObjCObj(MTLCopyAllDevices());
+    auto deviceList = mtl::adoptObjCPtr(MTLCopyAllDevices());
 
     EGLAttrib high = attribs.get(EGL_PLATFORM_ANGLE_DEVICE_ID_HIGH_ANGLE, 0);
     EGLAttrib low  = attribs.get(EGL_PLATFORM_ANGLE_DEVICE_ID_LOW_ANGLE, 0);
@@ -250,11 +250,11 @@ mtl::AutoObjCPtr<id<MTLDevice>> DisplayMtl::getMetalDeviceMatchingAttribute(
     }
 
     auto externalGPUs =
-        mtl::adoptObjCObj<NSMutableArray<id<MTLDevice>>>([[NSMutableArray alloc] init]);
+        mtl::adoptObjCPtr<NSMutableArray<id<MTLDevice>>>([[NSMutableArray alloc] init]);
     auto integratedGPUs =
-        mtl::adoptObjCObj<NSMutableArray<id<MTLDevice>>>([[NSMutableArray alloc] init]);
+        mtl::adoptObjCPtr<NSMutableArray<id<MTLDevice>>>([[NSMutableArray alloc] init]);
     auto discreteGPUs =
-        mtl::adoptObjCObj<NSMutableArray<id<MTLDevice>>>([[NSMutableArray alloc] init]);
+        mtl::adoptObjCPtr<NSMutableArray<id<MTLDevice>>>([[NSMutableArray alloc] init]);
     for (id<MTLDevice> device in deviceList.get())
     {
         if (device.removable)
@@ -309,7 +309,7 @@ mtl::AutoObjCPtr<id<MTLDevice>> DisplayMtl::getMetalDeviceMatchingAttribute(
 #endif
     // If we can't find anything, or are on a platform that doesn't support power options, create a
     // default device.
-    return mtl::adoptObjCObj(MTLCreateSystemDefaultDevice());
+    return mtl::adoptObjCPtr(MTLCreateSystemDefaultDevice());
 }
 
 egl::Error DisplayMtl::waitClient(const gl::Context *context)
@@ -1467,13 +1467,13 @@ bool DisplayMtl::isSimulator() const
     return TARGET_OS_SIMULATOR;
 }
 
-mtl::AutoObjCObj<MTLSharedEventListener> DisplayMtl::getOrCreateSharedEventListener()
+mtl::AutoObjCPtr<MTLSharedEventListener *> DisplayMtl::getOrCreateSharedEventListener()
 {
     if (!mSharedEventListener)
     {
         ANGLE_MTL_OBJC_SCOPE
         {
-            mSharedEventListener = mtl::adoptObjCObj([[MTLSharedEventListener alloc] init]);
+            mSharedEventListener = mtl::adoptObjCPtr([[MTLSharedEventListener alloc] init]);
             ASSERT(mSharedEventListener);  // Failure here most probably means a sandbox issue.
         }
     }

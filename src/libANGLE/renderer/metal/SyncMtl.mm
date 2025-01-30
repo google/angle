@@ -100,7 +100,7 @@ class SharedEventSyncImpl : public SyncImpl
         // onDestroy(), but the callback might still not be fired yet.
         std::shared_ptr<std::condition_variable> cvRef = mCv;
         std::shared_ptr<std::mutex> lockRef            = mLock;
-        AutoObjCObj<MTLSharedEventListener> eventListener =
+        AutoObjCPtr<MTLSharedEventListener *> eventListener =
             contextMtl->getDisplay()->getOrCreateSharedEventListener();
         [mMetalSharedEvent.get() notifyListener:eventListener
                                         atValue:mSignalValue

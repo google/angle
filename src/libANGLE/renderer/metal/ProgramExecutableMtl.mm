@@ -242,7 +242,7 @@ void InitArgumentBufferEncoder(mtl::Context *context,
                                ProgramArgumentBufferEncoderMtl *encoder)
 {
     encoder->metalArgBufferEncoder =
-        mtl::adoptObjCObj([function newArgumentEncoderWithBufferIndex:bufferIndex]);
+        mtl::adoptObjCPtr([function newArgumentEncoderWithBufferIndex:bufferIndex]);
     if (encoder->metalArgBufferEncoder)
     {
         encoder->bufferPool.initialize(context, encoder->metalArgBufferEncoder.get().encodedLength,
@@ -938,7 +938,7 @@ angle::Result ProgramExecutableMtl::getSpecializedShader(
 
     mtl::TranslatedShaderInfo *translatedMslInfo = &mMslShaderTranslateInfo[shaderType];
     ProgramShaderObjVariantMtl *shaderVariant;
-    mtl::AutoObjCObj<MTLFunctionConstantValues> funcConstants;
+    mtl::AutoObjCPtr<MTLFunctionConstantValues *> funcConstants;
 
     if (shaderType == gl::ShaderType::Vertex)
     {
@@ -975,7 +975,7 @@ angle::Result ProgramExecutableMtl::getSpecializedShader(
             NSString *discardEnabledStr =
                 [NSString stringWithUTF8String:sh::mtl::kRasterizerDiscardEnabledConstName];
 
-            funcConstants = mtl::adoptObjCObj([[MTLFunctionConstantValues alloc] init]);
+            funcConstants = mtl::adoptObjCPtr([[MTLFunctionConstantValues alloc] init]);
             [funcConstants setConstantValue:&emulateDiscard
                                        type:MTLDataTypeBool
                                    withName:discardEnabledStr];
@@ -1006,7 +1006,7 @@ angle::Result ProgramExecutableMtl::getSpecializedShader(
             NSString *depthWriteEnabledStr =
                 [NSString stringWithUTF8String:sh::mtl::kDepthWriteEnabledConstName];
 
-            funcConstants = mtl::adoptObjCObj([[MTLFunctionConstantValues alloc] init]);
+            funcConstants = mtl::adoptObjCPtr([[MTLFunctionConstantValues alloc] init]);
             [funcConstants setConstantValue:&multisampledRendering
                                        type:MTLDataTypeBool
                                    withName:multisampledRenderingStr];

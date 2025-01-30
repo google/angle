@@ -520,7 +520,7 @@ angle::Result EnsureComputeShaderInitialized(ContextMtl *context,
     ANGLE_MTL_OBJC_SCOPE
     {
         auto shaderLib = context->getDisplay()->getDefaultShadersLib();
-        shader         = adoptObjCObj([shaderLib newFunctionWithName:functionName]);
+        shader         = adoptObjCPtr([shaderLib newFunctionWithName:functionName]);
         ANGLE_CHECK(context, shader, gl::err::kInternalError, GL_INVALID_OPERATION);
         return angle::Result::Continue;
     }
@@ -547,7 +547,7 @@ angle::Result EnsureSpecializedComputeShaderInitialized(ContextMtl *context,
     {
         auto shaderLib = context->getDisplay()->getDefaultShadersLib();
         NSError *err   = nil;
-        shader         = adoptObjCObj([shaderLib newFunctionWithName:functionName
+        shader         = adoptObjCPtr([shaderLib newFunctionWithName:functionName
                                               constantValues:funcConstants
                                                        error:&err]);
         ANGLE_MTL_CHECK(context, shader, err);
@@ -1042,7 +1042,7 @@ angle::Result ClearUtils::ensureShadersInitialized(ContextMtl *ctx, uint32_t num
         if (!mVertexShader)
         {
             id<MTLLibrary> shaderLib = ctx->getDisplay()->getDefaultShadersLib();
-            mVertexShader            = adoptObjCObj([shaderLib newFunctionWithName:@"clearVS"]);
+            mVertexShader            = adoptObjCPtr([shaderLib newFunctionWithName:@"clearVS"]);
             ANGLE_CHECK(ctx, mVertexShader, gl::err::kInternalError, GL_INVALID_OPERATION);
         }
 
@@ -1051,7 +1051,7 @@ angle::Result ClearUtils::ensureShadersInitialized(ContextMtl *ctx, uint32_t num
             NSError *err             = nil;
             id<MTLLibrary> shaderLib = ctx->getDisplay()->getDefaultShadersLib();
             AutoObjCPtr<MTLFunctionConstantValues *> funcConstants =
-                adoptObjCObj([[MTLFunctionConstantValues alloc] init]);
+                adoptObjCPtr([[MTLFunctionConstantValues alloc] init]);
 
             // Create clear shader for each number of color outputs.
             // So clear k color outputs will use mFragmentShaders[k] for example:
@@ -1059,7 +1059,7 @@ angle::Result ClearUtils::ensureShadersInitialized(ContextMtl *ctx, uint32_t num
                                        type:MTLDataTypeUInt
                                    withName:NUM_COLOR_OUTPUTS_CONSTANT_NAME];
 
-            mFragmentShaders[numOutputs] = adoptObjCObj([shaderLib
+            mFragmentShaders[numOutputs] = adoptObjCPtr([shaderLib
                 newFunctionWithName:[NSString stringWithUTF8String:mFragmentShaderName.c_str()]
                      constantValues:funcConstants
                               error:&err]);
@@ -1245,7 +1245,7 @@ angle::Result ColorBlitUtils::ensureShadersInitialized(
         if (!mVertexShader)
         {
             id<MTLLibrary> shaderLib = ctx->getDisplay()->getDefaultShadersLib();
-            mVertexShader            = adoptObjCObj([shaderLib newFunctionWithName:@"blitVS"]);
+            mVertexShader            = adoptObjCPtr([shaderLib newFunctionWithName:@"blitVS"]);
             ANGLE_CHECK(ctx, mVertexShader, gl::err::kInternalError, GL_INVALID_OPERATION);
         }
 
@@ -1254,7 +1254,7 @@ angle::Result ColorBlitUtils::ensureShadersInitialized(
             NSError *err             = nil;
             id<MTLLibrary> shaderLib = ctx->getDisplay()->getDefaultShadersLib();
             AutoObjCPtr<MTLFunctionConstantValues *> funcConstants =
-                adoptObjCObj([[MTLFunctionConstantValues alloc] init]);
+                adoptObjCPtr([[MTLFunctionConstantValues alloc] init]);
 
             // Set alpha multiply flags
             [funcConstants setConstantValue:&key.unmultiplyAlpha
@@ -1278,7 +1278,7 @@ angle::Result ColorBlitUtils::ensureShadersInitialized(
                                        type:MTLDataTypeInt
                                    withName:SOURCE_TEXTURE_TYPE_CONSTANT_NAME];
 
-            *fragmentShaderOut = adoptObjCObj([shaderLib
+            *fragmentShaderOut = adoptObjCPtr([shaderLib
                 newFunctionWithName:[NSString stringWithUTF8String:mFragmentShaderName.c_str()]
                      constantValues:funcConstants
                               error:&err]);
@@ -1390,7 +1390,7 @@ angle::Result DepthStencilBlitUtils::ensureShadersInitialized(
         if (!mVertexShader)
         {
             id<MTLLibrary> shaderLib = ctx->getDisplay()->getDefaultShadersLib();
-            mVertexShader            = adoptObjCObj([shaderLib newFunctionWithName:@"blitVS"]);
+            mVertexShader            = adoptObjCPtr([shaderLib newFunctionWithName:@"blitVS"]);
             ANGLE_CHECK(ctx, mVertexShader, gl::err::kInternalError, GL_INVALID_OPERATION);
         }
 
@@ -1399,7 +1399,7 @@ angle::Result DepthStencilBlitUtils::ensureShadersInitialized(
             NSError *err             = nil;
             id<MTLLibrary> shaderLib = ctx->getDisplay()->getDefaultShadersLib();
             AutoObjCPtr<MTLFunctionConstantValues *> funcConstants =
-                adoptObjCObj([[MTLFunctionConstantValues alloc] init]);
+                adoptObjCPtr([[MTLFunctionConstantValues alloc] init]);
             NSString *shaderName;
             if (sourceDepthTextureType != -1 && sourceStencilTextureType != -1)
             {
@@ -1428,7 +1428,7 @@ angle::Result DepthStencilBlitUtils::ensureShadersInitialized(
                                        withName:SOURCE_TEXTURE2_TYPE_CONSTANT_NAME];
             }
 
-            *fragmentShaderOut = adoptObjCObj([shaderLib newFunctionWithName:shaderName
+            *fragmentShaderOut = adoptObjCPtr([shaderLib newFunctionWithName:shaderName
                                                               constantValues:funcConstants
                                                                        error:&err]);
             ANGLE_MTL_CHECK(ctx, *fragmentShaderOut, err);
@@ -1453,13 +1453,13 @@ angle::Result DepthStencilBlitUtils::getStencilToBufferComputePipelineState(
             auto shaderLib     = contextMtl->getDisplay()->getDefaultShadersLib();
             NSError *err       = nil;
             AutoObjCPtr<MTLFunctionConstantValues *> funcConstants =
-                adoptObjCObj([[MTLFunctionConstantValues alloc] init]);
+                adoptObjCPtr([[MTLFunctionConstantValues alloc] init]);
 
             [funcConstants setConstantValue:&sourceStencilTextureType
                                        type:MTLDataTypeInt
                                    withName:SOURCE_TEXTURE2_TYPE_CONSTANT_NAME];
 
-            shader = adoptObjCObj([shaderLib newFunctionWithName:@"blitStencilToBufferCS"
+            shader = adoptObjCPtr([shaderLib newFunctionWithName:@"blitStencilToBufferCS"
                                                   constantValues:funcConstants
                                                            error:&err]);
             ANGLE_MTL_CHECK(contextMtl, shader, err);
@@ -1709,7 +1709,7 @@ angle::Result IndexGeneratorUtils::getIndexConversionPipeline(
         ANGLE_MTL_OBJC_SCOPE
         {
             AutoObjCPtr<MTLFunctionConstantValues *> funcConstants =
-                adoptObjCObj([[MTLFunctionConstantValues alloc] init]);
+                adoptObjCPtr([[MTLFunctionConstantValues alloc] init]);
 
             [funcConstants setConstantValue:&aligned
                                        type:MTLDataTypeBool
@@ -1761,7 +1761,7 @@ angle::Result IndexGeneratorUtils::getIndicesFromElemArrayGeneratorPipeline(
         ANGLE_MTL_OBJC_SCOPE
         {
             AutoObjCPtr<MTLFunctionConstantValues *> funcConstants =
-                adoptObjCObj([[MTLFunctionConstantValues alloc] init]);
+                adoptObjCPtr([[MTLFunctionConstantValues alloc] init]);
 
             bool isU8  = false;
             bool isU16 = false;
@@ -2250,7 +2250,7 @@ angle::Result VisibilityResultUtils::getVisibilityResultCombinePipeline(
         ANGLE_MTL_OBJC_SCOPE
         {
             AutoObjCPtr<MTLFunctionConstantValues *> funcConstants =
-                adoptObjCObj([[MTLFunctionConstantValues alloc] init]);
+                adoptObjCPtr([[MTLFunctionConstantValues alloc] init]);
 
             [funcConstants setConstantValue:&keepOldValueVal
                                        type:MTLDataTypeBool
@@ -2490,7 +2490,7 @@ angle::Result CopyPixelsUtils::getPixelsCopyPipeline(
         ANGLE_MTL_OBJC_SCOPE
         {
             AutoObjCPtr<MTLFunctionConstantValues *> funcConstants =
-                adoptObjCObj([[MTLFunctionConstantValues alloc] init]);
+                adoptObjCPtr([[MTLFunctionConstantValues alloc] init]);
 
             [funcConstants setConstantValue:&formatIDValue
                                        type:MTLDataTypeInt
@@ -2779,7 +2779,7 @@ angle::Result VertexFormatConversionUtils::getComponentsExpandRenderPipeline(
         {
             id<MTLLibrary> shaderLib     = contextMtl->getDisplay()->getDefaultShadersLib();
             mComponentsExpandVertexShader =
-                adoptObjCObj([shaderLib newFunctionWithName:@"expandVertexFormatComponentsVS"]);
+                adoptObjCPtr([shaderLib newFunctionWithName:@"expandVertexFormatComponentsVS"]);
             ANGLE_CHECK(contextMtl, mComponentsExpandVertexShader, gl::err::kInternalError,
                         GL_INVALID_OPERATION);
         }
@@ -2807,7 +2807,7 @@ angle::Result VertexFormatConversionUtils::getFloatConverstionComputePipeline(
         ANGLE_MTL_OBJC_SCOPE
         {
             AutoObjCPtr<MTLFunctionConstantValues *> funcConstants =
-                adoptObjCObj([[MTLFunctionConstantValues alloc] init]);
+                adoptObjCPtr([[MTLFunctionConstantValues alloc] init]);
 
             [funcConstants setConstantValue:&formatIDValue
                                        type:MTLDataTypeInt
@@ -2836,14 +2836,14 @@ angle::Result VertexFormatConversionUtils::getFloatConverstionRenderPipeline(
             NSError *err             = nil;
             id<MTLLibrary> shaderLib = contextMtl->getDisplay()->getDefaultShadersLib();
             AutoObjCPtr<MTLFunctionConstantValues *> funcConstants =
-                adoptObjCObj([[MTLFunctionConstantValues alloc] init]);
+                adoptObjCPtr([[MTLFunctionConstantValues alloc] init]);
 
             [funcConstants setConstantValue:&formatIDValue
                                        type:MTLDataTypeInt
                                    withName:COPY_FORMAT_TYPE_CONSTANT_NAME];
 
             mConvertToFloatVertexShaders[formatIDValue] =
-                adoptObjCObj([shaderLib newFunctionWithName:@"convertToFloatVertexFormatVS"
+                adoptObjCPtr([shaderLib newFunctionWithName:@"convertToFloatVertexFormatVS"
                                              constantValues:funcConstants
                                                       error:&err]);
             ANGLE_MTL_CHECK(contextMtl, mConvertToFloatVertexShaders[formatIDValue], err);
