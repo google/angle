@@ -29,6 +29,7 @@
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Compiler.h"
 #include "libANGLE/Display.h"
+#include "libANGLE/ErrorStrings.h"
 #include "libANGLE/Fence.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/MemoryObject.h"
@@ -4657,7 +4658,7 @@ ANGLE_INLINE angle::Result Context::prepareForDispatch()
         // since it successfully linked already in order to become part of the PPO in the first
         // place.
         pipeline->resolveLink(this);
-        ANGLE_CHECK(this, pipeline->isLinked(), "Program pipeline link failed",
+        ANGLE_CHECK(this, pipeline->isLinked(), err::kProgramPipelineLinkFailed,
                     GL_INVALID_OPERATION);
     }
 
@@ -10151,7 +10152,7 @@ void ErrorSet::handleError(GLenum errorCode,
     }
 
     std::stringstream errorStream;
-    errorStream << "Error: " << gl::FmtHex(errorCode) << ", in " << file << ", " << function << ":"
+    errorStream << "Error: " << gl::FmtHex(errorCode) << ", in " << file << ", " << function << ':'
                 << line << ". " << message;
 
     std::string formattedMessage = errorStream.str();

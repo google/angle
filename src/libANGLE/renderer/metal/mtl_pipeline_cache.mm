@@ -9,6 +9,7 @@
 
 #include "libANGLE/renderer/metal/mtl_pipeline_cache.h"
 
+#include "libANGLE/ErrorStrings.h"
 #include "libANGLE/renderer/metal/ContextMtl.h"
 
 namespace rx
@@ -93,7 +94,7 @@ angle::Result CreateRenderPipelineState(ContextMtl *context,
                                         AutoObjCPtr<id<MTLRenderPipelineState>> *outRenderPipeline)
 {
     ASSERT(key.isRenderPipeline());
-    ANGLE_CHECK(context, key.vertexShader, "Internal error.", GL_INVALID_OPERATION);
+    ANGLE_CHECK(context, key.vertexShader, gl::err::kInternalError, GL_INVALID_OPERATION);
     ANGLE_MTL_OBJC_SCOPE
     {
         const mtl::ContextDevice &metalDevice = context->getMetalDevice();
@@ -129,7 +130,7 @@ angle::Result CreateComputePipelineState(
     AutoObjCPtr<id<MTLComputePipelineState>> *outComputePipeline)
 {
     ASSERT(!key.isRenderPipeline());
-    ANGLE_CHECK(context, key.computeShader, "Internal error.", GL_INVALID_OPERATION);
+    ANGLE_CHECK(context, key.computeShader, gl::err::kInternalError, GL_INVALID_OPERATION);
     ANGLE_MTL_OBJC_SCOPE
     {
         const mtl::ContextDevice &metalDevice = context->getMetalDevice();

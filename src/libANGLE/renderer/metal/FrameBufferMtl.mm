@@ -1600,7 +1600,8 @@ angle::Result FramebufferMtl::readPixelsImpl(const gl::Context *context,
         {
             return angle::Result::Stop;
         }
-        ANGLE_CHECK(contextMtl, texture->samples() == 1, "Internal error.", GL_INVALID_OPERATION);
+        ANGLE_CHECK(contextMtl, texture->samples() == 1, gl::err::kInternalError,
+                    GL_INVALID_OPERATION);
     }
 
     const mtl::Format &readFormat        = renderTarget->getFormat();

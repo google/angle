@@ -19,6 +19,7 @@
 #include "common/mathutil.h"
 #include "image_util/imageformats.h"
 #include "image_util/loadimage.h"
+#include "libANGLE/ErrorStrings.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/Format.h"
 #include "libANGLE/renderer/metal/BufferMtl.h"
@@ -969,7 +970,7 @@ angle::Result TextureMtl::ensureNativeStorageCreated(const gl::Context *context)
     // Create actual texture object:
     GLuint mips        = mState.getMipmapMaxLevel() - mState.getEffectiveBaseLevel() + 1;
     gl::ImageDesc desc = mState.getBaseLevelDesc();
-    ANGLE_CHECK(contextMtl, desc.format.valid(), "Internal error.", GL_INVALID_OPERATION);
+    ANGLE_CHECK(contextMtl, desc.format.valid(), gl::err::kInternalError, GL_INVALID_OPERATION);
     angle::FormatID angleFormatId =
         angle::Format::InternalFormatToID(desc.format.info->sizedInternalFormat);
     mFormat = contextMtl->getPixelFormat(angleFormatId);
@@ -1379,7 +1380,7 @@ angle::Result TextureMtl::getRenderTarget(ContextMtl *context,
     if (implicitSamples > 1 && !rtt.getImplicitMSTexture())
     {
         // This format must supports implicit resolve
-        ANGLE_CHECK(context, mFormat.getCaps().resolve, "Internal error.", GL_INVALID_VALUE);
+        ANGLE_CHECK(context, mFormat.getCaps().resolve, gl::err::kInternalError, GL_INVALID_VALUE);
         mtl::TextureRef &msTexture = mImplicitMSTextures[imageIndex][renderToTextureIndex];
         if (!msTexture)
         {
@@ -1701,7 +1702,7 @@ angle::Result TextureMtl::generateMipmapCPU(const gl::Context *context)
     ContextMtl *contextMtl           = mtl::GetImpl(context);
     const angle::Format &angleFormat = mFormat.actualAngleFormat();
     // This format must have mip generation function.
-    ANGLE_CHECK(contextMtl, angleFormat.mipGenerationFunction, "Internal error.",
+    ANGLE_CHECK(contextMtl, angleFormat.mipGenerationFunction, gl::err::kInternalError,
                 GL_INVALID_OPERATION);
 
     for (uint32_t slice = 0; slice < mSlices; ++slice)
@@ -1836,7 +1837,7 @@ angle::Result TextureMtl::getAttachmentRenderTarget(const gl::Context *context,
     ANGLE_TRY(ensureNativeStorageCreated(context));
 
     ContextMtl *contextMtl = mtl::GetImpl(context);
-    ANGLE_CHECK(contextMtl, mNativeTextureStorage, "Internal error.", GL_INVALID_OPERATION);
+    ANGLE_CHECK(contextMtl, mNativeTextureStorage, gl::err::kInternalError, GL_INVALID_OPERATION);
 
     RenderTargetMtl *rtt;
     ANGLE_TRY(getRenderTarget(contextMtl, imageIndex, samples, &rtt));

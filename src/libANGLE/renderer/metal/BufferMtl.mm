@@ -11,6 +11,7 @@
 
 #include "common/debug.h"
 #include "common/utilities.h"
+#include "libANGLE/ErrorStrings.h"
 #include "libANGLE/renderer/metal/ContextMtl.h"
 #include "libANGLE/renderer/metal/DisplayMtl.h"
 #include "libANGLE/renderer/metal/mtl_buffer_manager.h"
@@ -715,7 +716,7 @@ angle::Result BufferMtl::setSubDataImpl(const gl::Context *context,
     ContextMtl *contextMtl             = mtl::GetImpl(context);
     const angle::FeaturesMtl &features = contextMtl->getDisplay()->getFeatures();
 
-    ANGLE_CHECK(contextMtl, offset <= mGLSize, "Internal error.", GL_INVALID_OPERATION);
+    ANGLE_CHECK(contextMtl, offset <= mGLSize, gl::err::kInternalError, GL_INVALID_OPERATION);
 
     auto srcPtr     = static_cast<const uint8_t *>(data);
     auto sizeToCopy = std::min<size_t>(size, mGLSize - offset);

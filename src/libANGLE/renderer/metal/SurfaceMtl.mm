@@ -11,6 +11,7 @@
 
 #include "common/platform.h"
 #include "libANGLE/Display.h"
+#include "libANGLE/ErrorStrings.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/metal/ContextMtl.h"
 #include "libANGLE/renderer/metal/DisplayMtl.h"
@@ -661,7 +662,7 @@ angle::Result WindowSurfaceMtl::obtainNextDrawable(const gl::Context *context)
     ANGLE_MTL_OBJC_SCOPE
     {
         ContextMtl *contextMtl = mtl::GetImpl(context);
-        ANGLE_CHECK(contextMtl, mMetalLayer, "Internal error.", GL_INVALID_OPERATION);
+        ANGLE_CHECK(contextMtl, mMetalLayer, gl::err::kInternalError, GL_INVALID_OPERATION);
 
         // Check if layer was resized
         if (checkIfLayerResized(context))

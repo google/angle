@@ -12,6 +12,7 @@
 #include <utility>
 
 #include "common/debug.h"
+#include "libANGLE/ErrorStrings.h"
 #include "libANGLE/renderer/metal/BufferMtl.h"
 #include "libANGLE/renderer/metal/ContextMtl.h"
 #include "libANGLE/renderer/metal/DisplayMtl.h"
@@ -520,7 +521,7 @@ angle::Result EnsureComputeShaderInitialized(ContextMtl *context,
     {
         auto shaderLib = context->getDisplay()->getDefaultShadersLib();
         shader         = adoptObjCObj([shaderLib newFunctionWithName:functionName]);
-        ANGLE_CHECK(context, shader, "Internal error.", GL_INVALID_OPERATION);
+        ANGLE_CHECK(context, shader, gl::err::kInternalError, GL_INVALID_OPERATION);
         return angle::Result::Continue;
     }
 }
@@ -1056,7 +1057,7 @@ angle::Result ClearUtils::ensureShadersInitialized(ContextMtl *ctx, uint32_t num
             id<MTLLibrary> shaderLib = ctx->getDisplay()->getDefaultShadersLib();
             id<MTLFunction> vertexShader =
                 [[shaderLib newFunctionWithName:@"clearVS"] ANGLE_MTL_AUTORELEASE];
-            ANGLE_CHECK(ctx, vertexShader, "Invalid operation.", GL_INVALID_OPERATION);
+            ANGLE_CHECK(ctx, vertexShader, gl::err::kInternalError, GL_INVALID_OPERATION);
             mVertexShader.retainAssign(vertexShader);
         }
 
@@ -1263,7 +1264,7 @@ angle::Result ColorBlitUtils::ensureShadersInitialized(
             id<MTLLibrary> shaderLib = ctx->getDisplay()->getDefaultShadersLib();
             id<MTLFunction> vertexShader =
                 [[shaderLib newFunctionWithName:@"blitVS"] ANGLE_MTL_AUTORELEASE];
-            ANGLE_CHECK(ctx, vertexShader, "Internal error.", GL_INVALID_OPERATION);
+            ANGLE_CHECK(ctx, vertexShader, gl::err::kInternalError, GL_INVALID_OPERATION);
             mVertexShader.retainAssign(vertexShader);
         }
 
@@ -1411,7 +1412,7 @@ angle::Result DepthStencilBlitUtils::ensureShadersInitialized(
             id<MTLLibrary> shaderLib = ctx->getDisplay()->getDefaultShadersLib();
             id<MTLFunction> vertexShader =
                 [[shaderLib newFunctionWithName:@"blitVS"] ANGLE_MTL_AUTORELEASE];
-            ANGLE_CHECK(ctx, vertexShader, "Internal error.", GL_INVALID_OPERATION);
+            ANGLE_CHECK(ctx, vertexShader, gl::err::kInternalError, GL_INVALID_OPERATION);
             mVertexShader.retainAssign(vertexShader);
         }
 
@@ -2798,7 +2799,7 @@ angle::Result VertexFormatConversionUtils::getComponentsExpandRenderPipeline(
             id<MTLLibrary> shaderLib     = contextMtl->getDisplay()->getDefaultShadersLib();
             id<MTLFunction> vertexShader = [[shaderLib
                 newFunctionWithName:@"expandVertexFormatComponentsVS"] ANGLE_MTL_AUTORELEASE];
-            ANGLE_CHECK(contextMtl, vertexShader, "Internal error.", GL_INVALID_OPERATION);
+            ANGLE_CHECK(contextMtl, vertexShader, gl::err::kInternalError, GL_INVALID_OPERATION);
             mComponentsExpandVertexShader.retainAssign(vertexShader);
         }
 
