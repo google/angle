@@ -1601,10 +1601,10 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk)
                 uint32_t offset = roundDownPow2(arg.pushConstOffset, 4u);
                 uint32_t size =
                     roundUpPow2(arg.pushConstOffset + arg.pushConstantSize, 4u) - offset;
-                ASSERT(offset + size <= kernelVk.getPodArgumentsData().size());
+                ASSERT(offset + size <= kernelVk.getPodArgumentPushConstantsData().size());
                 mComputePassCommands->getCommandBuffer().pushConstants(
                     kernelVk.getPipelineLayout(), VK_SHADER_STAGE_COMPUTE_BIT, offset, size,
-                    &kernelVk.getPodArgumentsData()[offset]);
+                    &kernelVk.getPodArgumentPushConstantsData()[offset]);
                 break;
             }
             case NonSemanticClspvReflectionArgumentWorkgroup:

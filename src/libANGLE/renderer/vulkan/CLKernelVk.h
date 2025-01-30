@@ -91,15 +91,11 @@ class CLKernelVk : public CLKernelImpl
 
     angle::Result createInfo(CLKernelImpl::Info *infoOut) const override;
 
+    angle::Result initPipelineLayout();
+
     CLProgramVk *getProgram() { return mProgram; }
     const std::string &getKernelName() { return mName; }
     const CLKernelArguments &getArgs() { return mArgs; }
-    angle::Result initPipelineLayout()
-    {
-        PipelineLayoutCache *pipelineLayoutCache = mContext->getPipelineLayoutCache();
-        return pipelineLayoutCache->getPipelineLayout(mContext, mPipelineLayoutDesc,
-                                                      mDescriptorSetLayouts, &mPipelineLayout);
-    }
     const vk::PipelineLayout &getPipelineLayout() const { return *mPipelineLayout; }
     vk::DescriptorSetLayoutPointerArray &getDescriptorSetLayouts() { return mDescriptorSetLayouts; }
     cl::Kernel &getFrontendObject() { return const_cast<cl::Kernel &>(mKernel); }
@@ -133,9 +129,9 @@ class CLKernelVk : public CLKernelImpl
         return mDescriptorSets[index]->getDescriptorSet();
     }
 
-    std::vector<uint8_t> &getPodArgumentsData() { return mPodArgumentsData; }
+    std::vector<uint8_t> &getPodArgumentPushConstantsData() { return mPodArgumentPushConstants; }
 
-    cl::MemoryPtr getPodBuffer() { return mPODUniformBuffer; }
+    cl::MemoryPtr getPodBuffer() { return mPodBuffer; }
 
     bool usesPrintf() const;
 
@@ -145,8 +141,6 @@ class CLKernelVk : public CLKernelImpl
         vk::OutsideRenderPassCommandBufferHelper *computePassCommands);
 
   private:
-    static constexpr std::array<uint32_t, 3> kEmptyWorkgroupSize = {0, 0, 0};
-
     // Initialize the descriptor pools for this kernel resources
     angle::Result initializeDescriptorPools();
 
@@ -156,9 +150,8 @@ class CLKernelVk : public CLKernelImpl
     std::string mAttributes;
     CLKernelArguments mArgs;
 
-    // Copy of the pod data
-    std::vector<uint8_t> mPodArgumentsData;
-    size_t mPodBufferSize;
+    std::vector<uint8_t> mPodArgumentPushConstants;
+    cl::MemoryPtr mPodBuffer;
 
     vk::ShaderProgramHelper mShaderProgramHelper;
     ComputePipelineCache mComputePipelineCache;
@@ -174,8 +167,6 @@ class CLKernelVk : public CLKernelImpl
 
     vk::DescriptorSetArray<vk::DescriptorSetLayoutDesc> mDescriptorSetLayoutDescs;
     vk::PipelineLayoutDesc mPipelineLayoutDesc;
-
-    cl::MemoryPtr mPODUniformBuffer;
 };
 
 }  // namespace rx
