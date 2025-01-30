@@ -282,11 +282,12 @@ struct NDRange
                 NDRange &currentRegion = regionsWithinDeviceLimits.at(regionPos);
                 for (uint32_t dim = 0; dim < workDimensions; dim++)
                 {
-                    if (currentRegion.globalWorkSize[dim] >
-                        (maxComputeWorkGroupCount[dim] * currentRegion.localWorkSize[dim]))
+                    uint32_t maxGwsForRegion = gl::clampCast<uint32_t, uint64_t>(
+                        static_cast<uint64_t>(maxComputeWorkGroupCount[dim]) *
+                        static_cast<uint64_t>(currentRegion.localWorkSize[dim]));
+
+                    if (currentRegion.globalWorkSize[dim] > maxGwsForRegion)
                     {
-                        uint32_t maxGwsForRegion =
-                            maxComputeWorkGroupCount[dim] * currentRegion.localWorkSize[dim];
                         uint32_t remainderGws = currentRegion.globalWorkSize[dim] - maxGwsForRegion;
                         if (remainderGws > 0)
                         {
