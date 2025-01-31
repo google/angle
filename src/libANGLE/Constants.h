@@ -132,4 +132,18 @@ constexpr uint32_t kMinTextureBufferOffsetAlignment = 256;
 
 }  // namespace gl
 
+namespace cl
+{
+enum
+{
+    // Implementation maximums
+
+    // CL requires a min of 128 maximum read images as kernel arguments
+    IMPLEMENATION_MAX_READ_IMAGES = 128,
+
+    // CL requires a min of 64 maximum write images as kernel arguments
+    IMPLEMENATION_MAX_WRITE_IMAGES = 64,
+};
+}
+
 #endif  // LIBANGLE_CONSTANTS_H_
