@@ -351,7 +351,7 @@ angle::Result CreateMslShaderLib(mtl::Context *context,
         mtl::LibraryCache &libraryCache = context->getDisplay()->getLibraryCache();
 
         // Convert to actual binary shader
-        mtl::AutoObjCPtr<NSError *> err = nil;
+        mtl::ObjCPtr<NSError> err = nil;
         const bool disableFastMath =
             context->getDisplay()->getFeatures().intelDisableFastMath.enabled ||
             translatedMslInfo->hasIsnanOrIsinf;
@@ -888,7 +888,7 @@ angle::Result ProgramExecutableMtl::setupDraw(const gl::Context *glContext,
         ANGLE_TRY(
             getSpecializedShader(context, gl::ShaderType::Fragment, pipelineDesc, &fragmentShader));
 
-        mtl::AutoObjCPtr<id<MTLRenderPipelineState>> pipelineState;
+        mtl::ObjCPtr<id<MTLRenderPipelineState>> pipelineState;
         ANGLE_TRY(context->getPipelineCache().getRenderPipeline(
             context, vertexShader, fragmentShader, pipelineDesc, &pipelineState));
 
@@ -938,7 +938,7 @@ angle::Result ProgramExecutableMtl::getSpecializedShader(
 
     mtl::TranslatedShaderInfo *translatedMslInfo = &mMslShaderTranslateInfo[shaderType];
     ProgramShaderObjVariantMtl *shaderVariant;
-    mtl::AutoObjCPtr<MTLFunctionConstantValues *> funcConstants;
+    mtl::ObjCPtr<MTLFunctionConstantValues> funcConstants;
 
     if (shaderType == gl::ShaderType::Vertex)
     {

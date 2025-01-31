@@ -874,24 +874,24 @@ static MTLLanguageVersion GetUserSetOrHighestMSLVersion(const MTLLanguageVersion
     return currentVersion;
 }
 
-AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
+ObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
     id<MTLDevice> metalDevice,
     std::string_view source,
     const std::map<std::string, std::string> &substitutionMacros,
     bool disableFastMath,
     bool usesInvariance,
-    AutoObjCPtr<NSError *> *errorOut)
+    ObjCPtr<NSError> *errorOut)
 {
-    AutoObjCPtr<id<MTLLibrary>> result;
+    ObjCPtr<id<MTLLibrary>> result;
     ANGLE_MTL_OBJC_SCOPE
     {
         NSError *nsError = nil;
-        AutoObjCPtr nsSource =
+        ObjCPtr nsSource =
             adoptObjCPtr([[NSString alloc] initWithBytesNoCopy:const_cast<char *>(source.data())
                                                         length:source.length()
                                                       encoding:NSUTF8StringEncoding
                                                   freeWhenDone:NO]);
-        AutoObjCPtr options = adoptObjCPtr([[MTLCompileOptions alloc] init]);
+        ObjCPtr options = adoptObjCPtr([[MTLCompileOptions alloc] init]);
 
         // Mark all positions in VS with attribute invariant as non-optimizable
         options.get().preserveInvariance = usesInvariance;
@@ -1010,16 +1010,16 @@ std::string CompileShaderLibraryToFile(const std::string &source,
     return metallibFileName.value();
 }
 
-AutoObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromBinary(id<MTLDevice> metalDevice,
-                                                          const uint8_t *data,
-                                                          size_t length,
-                                                          AutoObjCPtr<NSError *> *errorOut)
+ObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromBinary(id<MTLDevice> metalDevice,
+                                                      const uint8_t *data,
+                                                      size_t length,
+                                                      ObjCPtr<NSError> *errorOut)
 {
-    AutoObjCPtr<id<MTLLibrary>> result;
+    ObjCPtr<id<MTLLibrary>> result;
     ANGLE_MTL_OBJC_SCOPE
     {
         NSError *nsError = nil;
-        AutoObjCPtr binaryData = adoptObjCPtr(
+        ObjCPtr binaryData = adoptObjCPtr(
             dispatch_data_create(data, length, nullptr, DISPATCH_DATA_DESTRUCTOR_DEFAULT));
         result    = adoptObjCPtr([metalDevice newLibraryWithData:binaryData.get() error:&nsError]);
         *errorOut = std::move(nsError);
@@ -1027,19 +1027,19 @@ AutoObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromBinary(id<MTLDevice> metalDev
     return result;
 }
 
-AutoObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromStaticBinary(id<MTLDevice> metalDevice,
-                                                                const uint8_t *data,
-                                                                size_t length,
-                                                                AutoObjCPtr<NSError *> *errorOut)
+ObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromStaticBinary(id<MTLDevice> metalDevice,
+                                                            const uint8_t *data,
+                                                            size_t length,
+                                                            ObjCPtr<NSError> *errorOut)
 {
-    AutoObjCPtr<id<MTLLibrary>> result;
+    ObjCPtr<id<MTLLibrary>> result;
     ANGLE_MTL_OBJC_SCOPE
     {
         NSError *nsError = nil;
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
-        AutoObjCPtr binaryData = adoptObjCPtr(dispatch_data_create(data, length, queue,
+        ObjCPtr binaryData     = adoptObjCPtr(dispatch_data_create(data, length, queue,
                                                                    ^{
-                                                                   }));
+                                                               }));
         result    = adoptObjCPtr([metalDevice newLibraryWithData:binaryData.get() error:&nsError]);
         *errorOut = std::move(nsError);
     }
@@ -1654,7 +1654,7 @@ angle::Result CreateMslShader(ContextMtl *context,
                               id<MTLLibrary> shaderLib,
                               NSString *shaderName,
                               MTLFunctionConstantValues *funcConstants,
-                              AutoObjCPtr<id<MTLFunction>> *shaderOut)
+                              ObjCPtr<id<MTLFunction>> *shaderOut)
 {
     ANGLE_MTL_OBJC_SCOPE
     {

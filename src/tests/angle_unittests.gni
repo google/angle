@@ -173,7 +173,10 @@ angle_unittests_hlsl_sources = [
 angle_unittests_gl_sources =
     [ "../libANGLE/renderer/gl/DisplayGL_unittest.cpp" ]
 
-angle_unittests_msl_sources = [ "../tests/compiler_tests/MSLOutput_test.cpp" ]
+angle_unittests_msl_sources = [
+  "../libANGLE/renderer/metal/mtl_common_test.mm",
+  "../tests/compiler_tests/MSLOutput_test.cpp",
+]
 
 angle_unittests_wgsl_sources = [ "../tests/compiler_tests/WGSLOutput_test.cpp" ]
 

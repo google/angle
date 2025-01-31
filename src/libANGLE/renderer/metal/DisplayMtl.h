@@ -175,7 +175,7 @@ class DisplayMtl : public DisplayImpl
         return mFormatTable.getVertexFormat(angleFormatId, tightlyPacked);
     }
 
-    mtl::AutoObjCPtr<MTLSharedEventListener *> getOrCreateSharedEventListener();
+    mtl::ObjCPtr<MTLSharedEventListener> getOrCreateSharedEventListener();
 
   protected:
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
@@ -190,13 +190,12 @@ class DisplayMtl : public DisplayImpl
     void initializeFeatures();
     void initializeLimitations();
     EGLenum EGLDrawingBufferTextureTarget();
-    mtl::AutoObjCPtr<id<MTLDevice>> getMetalDeviceMatchingAttribute(
-        const egl::AttributeMap &attribs);
+    mtl::ObjCPtr<id<MTLDevice>> getMetalDeviceMatchingAttribute(const egl::AttributeMap &attribs);
     angle::Result initializeShaderLibrary();
 
     egl::Display *mDisplay;
 
-    mtl::AutoObjCPtr<id<MTLDevice>> mMetalDevice = nil;
+    mtl::ObjCPtr<id<MTLDevice>> mMetalDevice     = nil;
     uint32_t mMetalDeviceVendorId                = 0;
 
     // Expensive-to-compute AMD Bronze driver detection
@@ -211,8 +210,8 @@ class DisplayMtl : public DisplayImpl
     std::unique_ptr<mtl::RenderUtils> mUtils;
 
     // Built-in Shaders
-    mtl::AutoObjCPtr<id<MTLLibrary>> mDefaultShaders;
-    mtl::AutoObjCPtr<MTLSharedEventListener *> mSharedEventListener;
+    mtl::ObjCPtr<id<MTLLibrary>> mDefaultShaders;
+    mtl::ObjCPtr<MTLSharedEventListener> mSharedEventListener;
 
     mutable bool mCapsInitialized;
     mutable gl::TextureCapsMap mNativeTextureCaps;

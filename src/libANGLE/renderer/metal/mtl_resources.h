@@ -387,7 +387,7 @@ class Texture final : public Resource,
 
     void syncContentIfNeeded(ContextMtl *context);
 
-    AutoObjCPtr<MTLTextureDescriptor *> mCreationDesc;
+    ObjCPtr<MTLTextureDescriptor> mCreationDesc;
 
     // This property is shared between this object and its views:
     std::shared_ptr<MTLColorWriteMask> mColorWritableMask;

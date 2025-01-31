@@ -264,100 +264,149 @@ class WrappedObject
     T mMetalObject = nil;
 };
 
+// Smart pointer for holding Objective-C objects. Use adoptObjCPtr for create functions
+// that return owned reference, e.g. functions that begin with 'new', 'copy', 'create'.
 template <typename T>
-class AutoObjCPtr;
-
-template <typename U>
-AutoObjCPtr<U *> adoptObjCPtr(U *NS_RELEASES_ARGUMENT) __attribute__((__warn_unused_result__));
-
-// This class is similar to WrappedObject, however, it allows changing the
-// internal pointer with public methods.
-template <typename T>
-class AutoObjCPtr : public WrappedObject<T>
+class ObjCPtr
 {
   public:
-    using ParentType = WrappedObject<T>;
+    using PtrType = std::remove_pointer_t<T> *;
 
-    AutoObjCPtr() {}
+    constexpr ObjCPtr() = default;
+    constexpr ObjCPtr(std::nullptr_t other) {}
+    ObjCPtr(PtrType other);
+    ObjCPtr(const ObjCPtr &other);
+    template <typename U>
+    constexpr ObjCPtr(ObjCPtr<U> &&other);
+    ~ObjCPtr();
+    ObjCPtr &operator=(const ObjCPtr &other);
+    ObjCPtr &operator=(PtrType other);
+    template <typename U>
+    constexpr ObjCPtr &operator=(ObjCPtr<U> &&other);
 
-    AutoObjCPtr(const std::nullptr_t &theNull) {}
+    [[nodiscard]] constexpr PtrType leakObject();
+    void reset();
 
-    AutoObjCPtr(const AutoObjCPtr &src) { this->retainAssign(src.get()); }
-
-    AutoObjCPtr(AutoObjCPtr &&src) { this->transfer(std::forward<AutoObjCPtr>(src)); }
-
-    AutoObjCPtr(T src) { this->retainAssign(src); }
-
-    AutoObjCPtr &operator=(const AutoObjCPtr &src)
-    {
-        this->retainAssign(src.get());
-        return *this;
-    }
-
-    AutoObjCPtr &operator=(AutoObjCPtr &&src)
-    {
-        this->transfer(std::forward<AutoObjCPtr>(src));
-        return *this;
-    }
-
-    AutoObjCPtr &operator=(T src)
-    {
-        this->retainAssign(src);
-        return *this;
-    }
-
-    AutoObjCPtr &operator=(std::nullptr_t theNull)
-    {
-        this->set(nil);
-        return *this;
-    }
-
-    bool operator==(const AutoObjCPtr &rhs) const { return (*this) == rhs.get(); }
-
-    bool operator==(T rhs) const { return this->get() == rhs; }
-
-    bool operator==(std::nullptr_t theNull) const { return this->get() == nullptr; }
-
-    bool operator!=(std::nullptr_t) const { return this->get() != nullptr; }
-
-    inline operator bool() { return this->get(); }
-
-    bool operator!=(const AutoObjCPtr &rhs) const { return (*this) != rhs.get(); }
-
-    bool operator!=(T rhs) const { return this->get() != rhs; }
-
-    operator T() const { return this->get(); }
-
-    using ParentType::retainAssign;
+    constexpr explicit operator bool() const { return get(); }
+    constexpr operator PtrType() const { return get(); }
+    constexpr PtrType get() const { return mObject; }
+    constexpr void swap(ObjCPtr<T> &other);
 
     template <typename U>
-    friend AutoObjCPtr<U *> adoptObjCPtr(U *NS_RELEASES_ARGUMENT)
-        __attribute__((__warn_unused_result__));
+    friend ObjCPtr<std::remove_pointer_t<U>> adoptObjCPtr(U NS_RELEASES_ARGUMENT);
 
   private:
-    enum AdoptTag
-    {
-        Adopt
-    };
-    AutoObjCPtr(T src, AdoptTag) { this->unretainAssign(src); }
+    struct AdoptTag
+    {};
+    constexpr ObjCPtr(PtrType other, AdoptTag);
 
-    void transfer(AutoObjCPtr &&src)
-    {
-        this->retainAssign(std::move(src.get()));
-        src.reset();
-    }
+    PtrType mObject = nil;
 };
 
-template <typename U>
-inline AutoObjCPtr<U *> adoptObjCPtr(U *NS_RELEASES_ARGUMENT src)
+template <typename T>
+ObjCPtr(T) -> ObjCPtr<std::remove_pointer_t<T>>;
+
+template <typename T>
+ObjCPtr<T>::ObjCPtr(PtrType other) : mObject(other)
 {
-#if __has_feature(objc_arc)
-    return src;
-#elif defined(OBJC_NO_GC)
-    return AutoObjCPtr<U *>(src, AutoObjCPtr<U *>::Adopt);
-#else
-#    error "ObjC GC not supported."
+#if !__has_feature(objc_arc)
+    [mObject retain];
 #endif
+}
+
+template <typename T>
+ObjCPtr<T>::ObjCPtr(const ObjCPtr &other) : ObjCPtr(other.mObject)
+{}
+
+template <typename T>
+template <typename U>
+constexpr ObjCPtr<T>::ObjCPtr(ObjCPtr<U> &&other) : mObject(other.leakObject())
+{}
+
+template <typename T>
+ObjCPtr<T>::~ObjCPtr()
+{
+#if !__has_feature(objc_arc)
+    [mObject release];
+#endif
+}
+
+template <typename T>
+ObjCPtr<T> &ObjCPtr<T>::operator=(const ObjCPtr &other)
+{
+    ObjCPtr temp = other;
+    swap(temp);
+    return *this;
+}
+
+template <typename T>
+template <typename U>
+constexpr ObjCPtr<T> &ObjCPtr<T>::operator=(ObjCPtr<U> &&other)
+{
+    ObjCPtr temp = std::move(other);
+    swap(temp);
+    return *this;
+}
+
+template <typename T>
+ObjCPtr<T> &ObjCPtr<T>::operator=(PtrType other)
+{
+    ObjCPtr temp = other;
+    swap(temp);
+    return *this;
+}
+
+template <typename T>
+constexpr ObjCPtr<T>::ObjCPtr(PtrType other, AdoptTag) : mObject(other)
+{}
+
+template <typename T>
+constexpr void ObjCPtr<T>::swap(ObjCPtr<T> &other)
+{
+    // std::swap is constexpr only in c++20.
+    auto object   = other.mObject;
+    other.mObject = mObject;
+    mObject       = object;
+}
+
+template <typename T>
+constexpr typename ObjCPtr<T>::PtrType ObjCPtr<T>::leakObject()
+{
+    // std::exchange is constexper only in c++20.
+    auto object = mObject;
+    mObject     = nullptr;
+    return object;
+}
+
+template <typename T>
+void ObjCPtr<T>::reset()
+{
+    *this = {};
+}
+
+template <typename T, typename U>
+constexpr bool operator==(const ObjCPtr<T> &a, const ObjCPtr<U> &b)
+{
+    return a.get() == b.get();
+}
+
+template <typename T, typename U>
+constexpr bool operator==(const ObjCPtr<T> &a, U *b)
+{
+    return a.get() == b;
+}
+
+template <typename T, typename U>
+constexpr bool operator==(T *a, const ObjCPtr<U> &b)
+{
+    return a == b.get();
+}
+
+template <typename U>
+ObjCPtr<std::remove_pointer_t<U>> adoptObjCPtr(U NS_RELEASES_ARGUMENT other)
+{
+    using ResultType = ObjCPtr<std::remove_pointer_t<U>>;
+    return ResultType(other, typename ResultType::AdoptTag{});
 }
 
 // The native image index used by Metal back-end,  the image index uses native mipmap level instead

@@ -227,7 +227,7 @@ DeviceImpl *DisplayMtl::createDevice()
     return new DeviceMtl();
 }
 
-mtl::AutoObjCPtr<id<MTLDevice>> DisplayMtl::getMetalDeviceMatchingAttribute(
+mtl::ObjCPtr<id<MTLDevice>> DisplayMtl::getMetalDeviceMatchingAttribute(
     const egl::AttributeMap &attribs)
 {
 #if TARGET_OS_OSX || TARGET_OS_MACCATALYST
@@ -249,12 +249,9 @@ mtl::AutoObjCPtr<id<MTLDevice>> DisplayMtl::getMetalDeviceMatchingAttribute(
         }
     }
 
-    auto externalGPUs =
-        mtl::adoptObjCPtr<NSMutableArray<id<MTLDevice>>>([[NSMutableArray alloc] init]);
-    auto integratedGPUs =
-        mtl::adoptObjCPtr<NSMutableArray<id<MTLDevice>>>([[NSMutableArray alloc] init]);
-    auto discreteGPUs =
-        mtl::adoptObjCPtr<NSMutableArray<id<MTLDevice>>>([[NSMutableArray alloc] init]);
+    auto externalGPUs   = mtl::adoptObjCPtr([[NSMutableArray alloc] init]);
+    auto integratedGPUs = mtl::adoptObjCPtr([[NSMutableArray alloc] init]);
+    auto discreteGPUs   = mtl::adoptObjCPtr([[NSMutableArray alloc] init]);
     for (id<MTLDevice> device in deviceList.get())
     {
         if (device.removable)
@@ -1330,7 +1327,7 @@ void DisplayMtl::initializeFeatures()
 
 angle::Result DisplayMtl::initializeShaderLibrary()
 {
-    mtl::AutoObjCPtr<NSError *> err = nil;
+    mtl::ObjCPtr<NSError> err;
 #if ANGLE_METAL_XCODE_BUILDS_SHADERS || ANGLE_METAL_HAS_PREBUILT_INTERNAL_SHADERS
     mDefaultShaders = mtl::CreateShaderLibraryFromStaticBinary(getMetalDevice(), gDefaultMetallib,
                                                                std::size(gDefaultMetallib), &err);
@@ -1467,7 +1464,7 @@ bool DisplayMtl::isSimulator() const
     return TARGET_OS_SIMULATOR;
 }
 
-mtl::AutoObjCPtr<MTLSharedEventListener *> DisplayMtl::getOrCreateSharedEventListener()
+mtl::ObjCPtr<MTLSharedEventListener> DisplayMtl::getOrCreateSharedEventListener()
 {
     if (!mSharedEventListener)
     {

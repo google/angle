@@ -200,9 +200,9 @@ angle_test("angle_unittests") {
     if (is_apple) {
       sources += angle_unittests_glsl_mac_sources
     }
-    if (angle_enable_metal) {
-      sources += angle_unittests_msl_sources
-    }
+  }
+  if (angle_enable_metal) {
+    sources += angle_unittests_msl_sources
   }
 
   defines = []

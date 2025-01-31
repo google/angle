@@ -99,23 +99,23 @@ MTLScissorRect GetScissorRect(const gl::Rectangle &rect,
 
 uint32_t GetDeviceVendorId(id<MTLDevice> metalDevice);
 
-AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
+ObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
     id<MTLDevice> metalDevice,
     std::string_view source,
     const std::map<std::string, std::string> &substitutionDictionary,
     bool disableFastMath,
     bool usesInvariance,
-    AutoObjCPtr<NSError *> *error);
+    ObjCPtr<NSError> *error);
 
-AutoObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromBinary(id<MTLDevice> metalDevice,
-                                                          const uint8_t *data,
-                                                          size_t length,
-                                                          AutoObjCPtr<NSError *> *error);
+ObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromBinary(id<MTLDevice> metalDevice,
+                                                      const uint8_t *data,
+                                                      size_t length,
+                                                      ObjCPtr<NSError> *error);
 
-AutoObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromStaticBinary(id<MTLDevice> metalDevice,
-                                                                const uint8_t *data,
-                                                                size_t length,
-                                                                AutoObjCPtr<NSError *> *error);
+ObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromStaticBinary(id<MTLDevice> metalDevice,
+                                                            const uint8_t *data,
+                                                            size_t length,
+                                                            ObjCPtr<NSError> *error);
 
 // Compiles a shader library into a metallib file, returning the path to it.
 std::string CompileShaderLibraryToFile(const std::string &source,
@@ -206,7 +206,7 @@ angle::Result CreateMslShader(ContextMtl *context,
                               id<MTLLibrary> shaderLib,
                               NSString *shaderName,
                               MTLFunctionConstantValues *funcConstants,
-                              AutoObjCPtr<id<MTLFunction>> *shaderOut);
+                              ObjCPtr<id<MTLFunction>> *shaderOut);
 
 }  // namespace mtl
 }  // namespace rx

@@ -223,13 +223,13 @@ angle::Result Texture::Make2DMSTexture(ContextMtl *context,
 {
     ANGLE_MTL_OBJC_SCOPE
     {
-        AutoObjCPtr<MTLTextureDescriptor *> desc = adoptObjCPtr([MTLTextureDescriptor new]);
-        desc.get().textureType                   = MTLTextureType2DMultisample;
-        desc.get().pixelFormat                   = format.metalFormat;
-        desc.get().width                         = width;
-        desc.get().height                        = height;
-        desc.get().mipmapLevelCount              = 1;
-        desc.get().sampleCount                   = samples;
+        ObjCPtr<MTLTextureDescriptor> desc = adoptObjCPtr([MTLTextureDescriptor new]);
+        desc.get().textureType             = MTLTextureType2DMultisample;
+        desc.get().pixelFormat             = format.metalFormat;
+        desc.get().width                   = width;
+        desc.get().height                  = height;
+        desc.get().mipmapLevelCount        = 1;
+        desc.get().sampleCount             = samples;
 
         return MakeTexture(context, format, desc, 1, renderTargetOnly, allowFormatView, refOut);
     }  // ANGLE_MTL_OBJC_SCOPE
@@ -878,10 +878,9 @@ angle::Result Texture::resize(ContextMtl *context, uint32_t width, uint32_t heig
 
     ANGLE_MTL_OBJC_SCOPE
     {
-        AutoObjCPtr<MTLTextureDescriptor *> newDesc =
-            adoptObjCPtr<MTLTextureDescriptor>([mCreationDesc.get() copy]);
-        newDesc.get().width           = width;
-        newDesc.get().height          = height;
+        ObjCPtr<MTLTextureDescriptor> newDesc = adoptObjCPtr([mCreationDesc.get() copy]);
+        newDesc.get().width                   = width;
+        newDesc.get().height                  = height;
         auto newTexture               = context->getMetalDevice().newTextureWithDescriptor(newDesc);
         ANGLE_CHECK_GL_ALLOC(context, newTexture);
         mCreationDesc = std::move(newDesc);
@@ -929,15 +928,15 @@ TextureRef Texture::getReadableCopy(ContextMtl *context,
         // Create a texture that big enough to store the first level data and any smaller level
         ANGLE_MTL_OBJC_SCOPE
         {
-            AutoObjCPtr<MTLTextureDescriptor *> desc = adoptObjCPtr([MTLTextureDescriptor new]);
-            desc.get().textureType                   = get().textureType;
-            desc.get().pixelFormat                   = get().pixelFormat;
-            desc.get().width                         = firstLevelSize.width;
-            desc.get().height                        = firstLevelSize.height;
-            desc.get().depth                         = 1;
-            desc.get().arrayLength                   = 1;
-            desc.get().resourceOptions               = MTLResourceStorageModePrivate;
-            desc.get().sampleCount                   = get().sampleCount;
+            ObjCPtr<MTLTextureDescriptor> desc = adoptObjCPtr([MTLTextureDescriptor new]);
+            desc.get().textureType             = get().textureType;
+            desc.get().pixelFormat             = get().pixelFormat;
+            desc.get().width                   = firstLevelSize.width;
+            desc.get().height                  = firstLevelSize.height;
+            desc.get().depth                   = 1;
+            desc.get().arrayLength             = 1;
+            desc.get().resourceOptions         = MTLResourceStorageModePrivate;
+            desc.get().sampleCount             = get().sampleCount;
             desc.get().usage = MTLTextureUsageShaderRead | MTLTextureUsagePixelFormatView;
             mReadCopy.reset(new Texture(context->getMetalDevice().newTextureWithDescriptor(desc)));
         }  // ANGLE_MTL_OBJC_SCOPE
@@ -1118,7 +1117,7 @@ angle::Result Buffer::reset(ContextMtl *context,
                             const uint8_t *data)
 {
     auto options = resourceOptionsForStorageMode(storageMode);
-    set([&]() -> AutoObjCPtr<id<MTLBuffer>> {
+    set([&]() -> ObjCPtr<id<MTLBuffer>> {
         const mtl::ContextDevice &metalDevice = context->getMetalDevice();
         if (size > [metalDevice maxBufferLength])
         {
