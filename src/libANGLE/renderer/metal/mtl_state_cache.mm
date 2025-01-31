@@ -38,9 +38,9 @@ inline T ToObjC(const T p)
     return p;
 }
 
-inline ObjCPtr<MTLStencilDescriptor> ToObjC(const StencilDesc &desc)
+inline angle::ObjCPtr<MTLStencilDescriptor> ToObjC(const StencilDesc &desc)
 {
-    auto objCDesc = adoptObjCPtr([[MTLStencilDescriptor alloc] init]);
+    auto objCDesc = angle::adoptObjCPtr([[MTLStencilDescriptor alloc] init]);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, stencilFailureOperation);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, depthFailureOperation);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, depthStencilPassOperation);
@@ -50,9 +50,9 @@ inline ObjCPtr<MTLStencilDescriptor> ToObjC(const StencilDesc &desc)
     return objCDesc;
 }
 
-inline ObjCPtr<MTLDepthStencilDescriptor> ToObjC(const DepthStencilDesc &desc)
+inline angle::ObjCPtr<MTLDepthStencilDescriptor> ToObjC(const DepthStencilDesc &desc)
 {
-    auto objCDesc = adoptObjCPtr([[MTLDepthStencilDescriptor alloc] init]);
+    auto objCDesc = angle::adoptObjCPtr([[MTLDepthStencilDescriptor alloc] init]);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, backFaceStencil);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, frontFaceStencil);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, depthCompareFunction);
@@ -60,9 +60,9 @@ inline ObjCPtr<MTLDepthStencilDescriptor> ToObjC(const DepthStencilDesc &desc)
     return objCDesc;
 }
 
-inline ObjCPtr<MTLSamplerDescriptor> ToObjC(const SamplerDesc &desc)
+inline angle::ObjCPtr<MTLSamplerDescriptor> ToObjC(const SamplerDesc &desc)
 {
-    auto objCDesc = adoptObjCPtr([[MTLSamplerDescriptor alloc] init]);
+    auto objCDesc = angle::adoptObjCPtr([[MTLSamplerDescriptor alloc] init]);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, rAddressMode);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, sAddressMode);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, tAddressMode);
@@ -74,9 +74,9 @@ inline ObjCPtr<MTLSamplerDescriptor> ToObjC(const SamplerDesc &desc)
     return objCDesc;
 }
 
-inline ObjCPtr<MTLVertexAttributeDescriptor> ToObjC(const VertexAttributeDesc &desc)
+inline angle::ObjCPtr<MTLVertexAttributeDescriptor> ToObjC(const VertexAttributeDesc &desc)
 {
-    auto objCDesc = adoptObjCPtr([[MTLVertexAttributeDescriptor alloc] init]);
+    auto objCDesc = angle::adoptObjCPtr([[MTLVertexAttributeDescriptor alloc] init]);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, format);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, offset);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, bufferIndex);
@@ -84,18 +84,18 @@ inline ObjCPtr<MTLVertexAttributeDescriptor> ToObjC(const VertexAttributeDesc &d
     return objCDesc;
 }
 
-inline ObjCPtr<MTLVertexBufferLayoutDescriptor> ToObjC(const VertexBufferLayoutDesc &desc)
+inline angle::ObjCPtr<MTLVertexBufferLayoutDescriptor> ToObjC(const VertexBufferLayoutDesc &desc)
 {
-    auto objCDesc = adoptObjCPtr([[MTLVertexBufferLayoutDescriptor alloc] init]);
+    auto objCDesc = angle::adoptObjCPtr([[MTLVertexBufferLayoutDescriptor alloc] init]);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, stepFunction);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, stepRate);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, stride);
     return objCDesc;
 }
 
-inline ObjCPtr<MTLVertexDescriptor> ToObjC(const VertexDesc &desc)
+inline angle::ObjCPtr<MTLVertexDescriptor> ToObjC(const VertexDesc &desc)
 {
-    auto objCDesc = adoptObjCPtr([[MTLVertexDescriptor alloc] init]);
+    auto objCDesc = angle::adoptObjCPtr([[MTLVertexDescriptor alloc] init]);
     [objCDesc reset];
 
     for (uint8_t i = 0; i < desc.numAttribs; ++i)
@@ -116,10 +116,10 @@ inline ObjCPtr<MTLVertexDescriptor> ToObjC(const VertexDesc &desc)
     return objCDesc;
 }
 
-inline ObjCPtr<MTLRenderPipelineColorAttachmentDescriptor> ToObjC(
+inline angle::ObjCPtr<MTLRenderPipelineColorAttachmentDescriptor> ToObjC(
     const RenderPipelineColorAttachmentDesc &desc)
 {
-    auto objCDesc = adoptObjCPtr([[MTLRenderPipelineColorAttachmentDescriptor alloc] init]);
+    auto objCDesc = angle::adoptObjCPtr([[MTLRenderPipelineColorAttachmentDescriptor alloc] init]);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, pixelFormat);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, writeMask);
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), desc, alphaBlendOperation);
@@ -648,11 +648,11 @@ bool RenderPipelineDesc::rasterizationEnabled() const
     return rasterizationType != RenderPipelineRasterization::Disabled;
 }
 
-ObjCPtr<MTLRenderPipelineDescriptor> RenderPipelineDesc::createMetalDesc(
+angle::ObjCPtr<MTLRenderPipelineDescriptor> RenderPipelineDesc::createMetalDesc(
     id<MTLFunction> vertexShader,
     id<MTLFunction> fragmentShader) const
 {
-    auto objCDesc = adoptObjCPtr([[MTLRenderPipelineDescriptor alloc] init]);
+    auto objCDesc = angle::adoptObjCPtr([[MTLRenderPipelineDescriptor alloc] init]);
     [objCDesc reset];
 
     ANGLE_OBJC_CP_PROPERTY(objCDesc.get(), *this, vertexDescriptor);
@@ -925,7 +925,7 @@ StateCache::StateCache(const angle::FeaturesMtl &features) : mFeatures(features)
 
 StateCache::~StateCache() {}
 
-ObjCPtr<id<MTLDepthStencilState>> StateCache::getNullDepthStencilState(
+angle::ObjCPtr<id<MTLDepthStencilState>> StateCache::getNullDepthStencilState(
     const mtl::ContextDevice &device)
 {
     if (!mNullDepthStencilState)
@@ -939,8 +939,9 @@ ObjCPtr<id<MTLDepthStencilState>> StateCache::getNullDepthStencilState(
     return mNullDepthStencilState;
 }
 
-ObjCPtr<id<MTLDepthStencilState>> StateCache::getDepthStencilState(const mtl::ContextDevice &device,
-                                                                   const DepthStencilDesc &desc)
+angle::ObjCPtr<id<MTLDepthStencilState>> StateCache::getDepthStencilState(
+    const mtl::ContextDevice &device,
+    const DepthStencilDesc &desc)
 {
     auto ite = mDepthStencilStates.find(desc);
     if (ite == mDepthStencilStates.end())
@@ -958,8 +959,8 @@ ObjCPtr<id<MTLDepthStencilState>> StateCache::getDepthStencilState(const mtl::Co
     return ite->second;
 }
 
-ObjCPtr<id<MTLSamplerState>> StateCache::getSamplerState(const mtl::ContextDevice &device,
-                                                         const SamplerDesc &desc)
+angle::ObjCPtr<id<MTLSamplerState>> StateCache::getSamplerState(const mtl::ContextDevice &device,
+                                                                const SamplerDesc &desc)
 {
     auto ite = mSamplerStates.find(desc);
     if (ite == mSamplerStates.end())
@@ -981,12 +982,13 @@ ObjCPtr<id<MTLSamplerState>> StateCache::getSamplerState(const mtl::ContextDevic
     return ite->second;
 }
 
-ObjCPtr<id<MTLSamplerState>> StateCache::getNullSamplerState(ContextMtl *context)
+angle::ObjCPtr<id<MTLSamplerState>> StateCache::getNullSamplerState(ContextMtl *context)
 {
     return getNullSamplerState(context->getMetalDevice());
 }
 
-ObjCPtr<id<MTLSamplerState>> StateCache::getNullSamplerState(const mtl::ContextDevice &device)
+angle::ObjCPtr<id<MTLSamplerState>> StateCache::getNullSamplerState(
+    const mtl::ContextDevice &device)
 {
     SamplerDesc desc;
     desc.reset();

@@ -100,7 +100,7 @@ class SharedEventSyncImpl : public SyncImpl
         // onDestroy(), but the callback might still not be fired yet.
         std::shared_ptr<std::condition_variable> cvRef = mCv;
         std::shared_ptr<std::mutex> lockRef            = mLock;
-        ObjCPtr<MTLSharedEventListener> eventListener =
+        angle::ObjCPtr<MTLSharedEventListener> eventListener =
             contextMtl->getDisplay()->getOrCreateSharedEventListener();
         [mMetalSharedEvent.get() notifyListener:eventListener
                                         atValue:mSignalValue
@@ -136,7 +136,7 @@ class SharedEventSyncImpl : public SyncImpl
     }
 
   private:
-    ObjCPtr<id<MTLSharedEvent>> mMetalSharedEvent;
+    angle::ObjCPtr<id<MTLSharedEvent>> mMetalSharedEvent;
     uint64_t mSignalValue = 0;
 
     std::shared_ptr<std::condition_variable> mCv;
@@ -205,7 +205,7 @@ class EventSyncImpl : public SyncImpl
     }
 
   private:
-    ObjCPtr<id<MTLEvent>> mMetalEvent;
+    angle::ObjCPtr<id<MTLEvent>> mMetalEvent;
     uint64_t mEncodedCommandBufferSerial = 0;
 };
 }  // namespace mtl
@@ -459,7 +459,7 @@ egl::Error EGLSyncMtl::copyMetalSharedEventANGLE(const egl::Display *display, vo
 {
     ASSERT(mSharedEvent != nil);
 
-    mtl::ObjCPtr<id<MTLSharedEvent>> copySharedEvent = mSharedEvent;
+    angle::ObjCPtr<id<MTLSharedEvent>> copySharedEvent = mSharedEvent;
     *result = reinterpret_cast<void *>(copySharedEvent.leakObject());
 
     return egl::NoError();

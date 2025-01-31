@@ -28,31 +28,32 @@ class ContextDevice final : public WrappedObject<id<MTLDevice>>, angle::NonCopya
     ~ContextDevice();
     inline void set(id<MTLDevice> metalDevice) { ParentClass::set(metalDevice); }
 
-    ObjCPtr<id<MTLSamplerState>> newSamplerStateWithDescriptor(
+    angle::ObjCPtr<id<MTLSamplerState>> newSamplerStateWithDescriptor(
         MTLSamplerDescriptor *descriptor) const;
 
-    ObjCPtr<id<MTLTexture>> newTextureWithDescriptor(MTLTextureDescriptor *descriptor) const;
-    ObjCPtr<id<MTLTexture>> newTextureWithDescriptor(MTLTextureDescriptor *descriptor,
-                                                     IOSurfaceRef iosurface,
-                                                     NSUInteger plane) const;
+    angle::ObjCPtr<id<MTLTexture>> newTextureWithDescriptor(MTLTextureDescriptor *descriptor) const;
+    angle::ObjCPtr<id<MTLTexture>> newTextureWithDescriptor(MTLTextureDescriptor *descriptor,
+                                                            IOSurfaceRef iosurface,
+                                                            NSUInteger plane) const;
 
-    ObjCPtr<id<MTLBuffer>> newBufferWithLength(NSUInteger length, MTLResourceOptions options) const;
-    ObjCPtr<id<MTLBuffer>> newBufferWithBytes(const void *pointer,
-                                              NSUInteger length,
-                                              MTLResourceOptions options) const;
+    angle::ObjCPtr<id<MTLBuffer>> newBufferWithLength(NSUInteger length,
+                                                      MTLResourceOptions options) const;
+    angle::ObjCPtr<id<MTLBuffer>> newBufferWithBytes(const void *pointer,
+                                                     NSUInteger length,
+                                                     MTLResourceOptions options) const;
 
-    ObjCPtr<id<MTLComputePipelineState>> newComputePipelineStateWithFunction(
+    angle::ObjCPtr<id<MTLComputePipelineState>> newComputePipelineStateWithFunction(
         id<MTLFunction> computeFunction,
         __autoreleasing NSError **error) const;
-    ObjCPtr<id<MTLRenderPipelineState>> newRenderPipelineStateWithDescriptor(
+    angle::ObjCPtr<id<MTLRenderPipelineState>> newRenderPipelineStateWithDescriptor(
         MTLRenderPipelineDescriptor *descriptor,
         __autoreleasing NSError **error) const;
 
-    ObjCPtr<id<MTLDepthStencilState>> newDepthStencilStateWithDescriptor(
+    angle::ObjCPtr<id<MTLDepthStencilState>> newDepthStencilStateWithDescriptor(
         MTLDepthStencilDescriptor *descriptor) const;
 
-    ObjCPtr<id<MTLSharedEvent>> newSharedEvent() const;
-    ObjCPtr<id<MTLEvent>> newEvent() const;
+    angle::ObjCPtr<id<MTLSharedEvent>> newSharedEvent() const;
+    angle::ObjCPtr<id<MTLEvent>> newEvent() const;
 
     void setOwnerWithIdentity(id<MTLResource> resource) const;
     bool hasUnifiedMemory() const;

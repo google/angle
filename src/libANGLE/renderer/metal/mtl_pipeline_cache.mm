@@ -89,9 +89,10 @@ angle::Result ValidateRenderPipelineState(ContextMtl *context,
     return angle::Result::Continue;
 }
 
-angle::Result CreateRenderPipelineState(ContextMtl *context,
-                                        const PipelineKey &key,
-                                        ObjCPtr<id<MTLRenderPipelineState>> *outRenderPipeline)
+angle::Result CreateRenderPipelineState(
+    ContextMtl *context,
+    const PipelineKey &key,
+    angle::ObjCPtr<id<MTLRenderPipelineState>> *outRenderPipeline)
 {
     ASSERT(key.isRenderPipeline());
     ANGLE_CHECK(context, key.vertexShader, gl::err::kInternalError, GL_INVALID_OPERATION);
@@ -107,7 +108,7 @@ angle::Result CreateRenderPipelineState(ContextMtl *context,
         if (HasDefaultAttribs(key.pipelineDesc))
         {
             auto defaultAttribLayoutObjCDesc =
-                adoptObjCPtr([[MTLVertexBufferLayoutDescriptor alloc] init]);
+                angle::adoptObjCPtr([[MTLVertexBufferLayoutDescriptor alloc] init]);
             defaultAttribLayoutObjCDesc.get().stepFunction = MTLVertexStepFunctionConstant;
             defaultAttribLayoutObjCDesc.get().stepRate     = 0;
             defaultAttribLayoutObjCDesc.get().stride = kDefaultAttributeSize * kMaxVertexAttribs;
@@ -124,9 +125,10 @@ angle::Result CreateRenderPipelineState(ContextMtl *context,
     }
 }
 
-angle::Result CreateComputePipelineState(ContextMtl *context,
-                                         const PipelineKey &key,
-                                         ObjCPtr<id<MTLComputePipelineState>> *outComputePipeline)
+angle::Result CreateComputePipelineState(
+    ContextMtl *context,
+    const PipelineKey &key,
+    angle::ObjCPtr<id<MTLComputePipelineState>> *outComputePipeline)
 {
     ASSERT(!key.isRenderPipeline());
     ANGLE_CHECK(context, key.computeShader, gl::err::kInternalError, GL_INVALID_OPERATION);
@@ -194,7 +196,7 @@ angle::Result PipelineCache::getRenderPipeline(
     id<MTLFunction> vertexShader,
     id<MTLFunction> fragmentShader,
     const RenderPipelineDesc &desc,
-    ObjCPtr<id<MTLRenderPipelineState>> *outRenderPipeline)
+    angle::ObjCPtr<id<MTLRenderPipelineState>> *outRenderPipeline)
 {
     PipelineKey key;
     key.vertexShader   = std::move(vertexShader);
@@ -224,7 +226,7 @@ angle::Result PipelineCache::getRenderPipeline(
 angle::Result PipelineCache::getComputePipeline(
     ContextMtl *context,
     id<MTLFunction> computeShader,
-    ObjCPtr<id<MTLComputePipelineState>> *outComputePipeline)
+    angle::ObjCPtr<id<MTLComputePipelineState>> *outComputePipeline)
 {
     PipelineKey key;
     key.computeShader = std::move(computeShader);

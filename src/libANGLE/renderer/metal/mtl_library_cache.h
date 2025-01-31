@@ -24,17 +24,17 @@ class LibraryCache : angle::NonCopyable
   public:
     LibraryCache();
 
-    ObjCPtr<id<MTLLibrary>> get(const std::shared_ptr<const std::string> &source,
-                                const std::map<std::string, std::string> &macros,
-                                bool disableFastMath,
-                                bool usesInvariance);
-    ObjCPtr<id<MTLLibrary>> getOrCompileShaderLibrary(
+    angle::ObjCPtr<id<MTLLibrary>> get(const std::shared_ptr<const std::string> &source,
+                                       const std::map<std::string, std::string> &macros,
+                                       bool disableFastMath,
+                                       bool usesInvariance);
+    angle::ObjCPtr<id<MTLLibrary>> getOrCompileShaderLibrary(
         DisplayMtl *displayMtl,
         const std::shared_ptr<const std::string> &source,
         const std::map<std::string, std::string> &macros,
         bool disableFastMath,
         bool usesInvariance,
-        ObjCPtr<NSError> *errorOut);
+        angle::ObjCPtr<NSError> *errorOut);
 
   private:
     struct LibraryKey
@@ -70,7 +70,7 @@ class LibraryCache : angle::NonCopyable
 
         // library can only go from the null -> not null state. It is safe to check if the library
         // already exists without locking.
-        ObjCPtr<id<MTLLibrary>> library;
+        angle::ObjCPtr<id<MTLLibrary>> library;
 
         // Lock for this specific library to avoid multiple threads compiling the same shader at
         // once.

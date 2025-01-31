@@ -593,11 +593,11 @@ bool CommandQueue::waitUntilSerialCompleted(uint64_t serial, uint64_t timeoutNs)
     return true;
 }
 
-ObjCPtr<id<MTLCommandBuffer>> CommandQueue::makeMetalCommandBuffer(uint64_t *queueSerialOut)
+angle::ObjCPtr<id<MTLCommandBuffer>> CommandQueue::makeMetalCommandBuffer(uint64_t *queueSerialOut)
 {
     ANGLE_MTL_OBJC_SCOPE
     {
-        ObjCPtr<id<MTLCommandBuffer>> metalCmdBuffer = [get() commandBuffer];
+        angle::ObjCPtr<id<MTLCommandBuffer>> metalCmdBuffer = [get() commandBuffer];
 
         std::lock_guard<std::mutex> lg(mLock);
 
@@ -933,7 +933,7 @@ uint64_t CommandBuffer::getQueueSerial() const
 void CommandBuffer::restart()
 {
     uint64_t serial                                  = 0;
-    ObjCPtr<id<MTLCommandBuffer>> metalCmdBuffer     = mCmdQueue.makeMetalCommandBuffer(&serial);
+    angle::ObjCPtr<id<MTLCommandBuffer>> metalCmdBuffer = mCmdQueue.makeMetalCommandBuffer(&serial);
 
     std::lock_guard<std::mutex> lg(mLock);
 

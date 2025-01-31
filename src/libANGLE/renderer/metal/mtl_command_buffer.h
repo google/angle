@@ -106,7 +106,7 @@ class CommandQueue final : public WrappedObject<id<MTLCommandQueue>>, angle::Non
         return *this;
     }
 
-    ObjCPtr<id<MTLCommandBuffer>> makeMetalCommandBuffer(uint64_t *queueSerialOut);
+    angle::ObjCPtr<id<MTLCommandBuffer>> makeMetalCommandBuffer(uint64_t *queueSerialOut);
     void onCommandBufferCommitted(id<MTLCommandBuffer> buf, uint64_t serial);
 
     uint64_t getNextRenderPassEncoderSerial();
@@ -126,7 +126,7 @@ class CommandQueue final : public WrappedObject<id<MTLCommandQueue>>, angle::Non
 
     struct CmdBufferQueueEntry
     {
-        ObjCPtr<id<MTLCommandBuffer>> buffer;
+        angle::ObjCPtr<id<MTLCommandBuffer>> buffer;
         uint64_t serial;
     };
     std::deque<CmdBufferQueueEntry> mMetalCmdBuffers;
@@ -243,7 +243,7 @@ class CommandBuffer final : public WrappedObject<id<MTLCommandBuffer>>, angle::N
     std::vector<std::string> mPendingDebugSigns;
     struct PendingEvent
     {
-        ObjCPtr<id<MTLEvent>> event;
+        angle::ObjCPtr<id<MTLEvent>> event;
         uint64_t signalValue = 0;
     };
     std::vector<PendingEvent> mPendingSignalEvents;
@@ -622,9 +622,9 @@ class RenderCommandEncoder final : public CommandEncoder
 
     RenderPassDesc mRenderPassDesc;
     // Cached Objective-C render pass desc to avoid re-allocate every frame.
-    mtl::ObjCPtr<MTLRenderPassDescriptor> mCachedRenderPassDescObjC;
+    angle::ObjCPtr<MTLRenderPassDescriptor> mCachedRenderPassDescObjC;
 
-    mtl::ObjCPtr<NSString> mLabel;
+    angle::ObjCPtr<NSString> mLabel;
 
     MTLScissorRect mRenderPassMaxScissorRect;
 

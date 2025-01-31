@@ -27,7 +27,7 @@ void SamplerMtl::onDestroy(const gl::Context *context)
     mSamplerState = nil;
 }
 
-const mtl::ObjCPtr<id<MTLSamplerState>> &SamplerMtl::getSampler(ContextMtl *contextMtl)
+const angle::ObjCPtr<id<MTLSamplerState>> &SamplerMtl::getSampler(ContextMtl *contextMtl)
 {
     if (!mSamplerState)
     {

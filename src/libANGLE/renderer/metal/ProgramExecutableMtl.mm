@@ -242,7 +242,7 @@ void InitArgumentBufferEncoder(mtl::Context *context,
                                ProgramArgumentBufferEncoderMtl *encoder)
 {
     encoder->metalArgBufferEncoder =
-        mtl::adoptObjCPtr([function newArgumentEncoderWithBufferIndex:bufferIndex]);
+        angle::adoptObjCPtr([function newArgumentEncoderWithBufferIndex:bufferIndex]);
     if (encoder->metalArgBufferEncoder)
     {
         encoder->bufferPool.initialize(context, encoder->metalArgBufferEncoder.get().encodedLength,
@@ -351,7 +351,7 @@ angle::Result CreateMslShaderLib(mtl::Context *context,
         mtl::LibraryCache &libraryCache = context->getDisplay()->getLibraryCache();
 
         // Convert to actual binary shader
-        mtl::ObjCPtr<NSError> err = nil;
+        angle::ObjCPtr<NSError> err;
         const bool disableFastMath =
             context->getDisplay()->getFeatures().intelDisableFastMath.enabled ||
             translatedMslInfo->hasIsnanOrIsinf;
@@ -888,7 +888,7 @@ angle::Result ProgramExecutableMtl::setupDraw(const gl::Context *glContext,
         ANGLE_TRY(
             getSpecializedShader(context, gl::ShaderType::Fragment, pipelineDesc, &fragmentShader));
 
-        mtl::ObjCPtr<id<MTLRenderPipelineState>> pipelineState;
+        angle::ObjCPtr<id<MTLRenderPipelineState>> pipelineState;
         ANGLE_TRY(context->getPipelineCache().getRenderPipeline(
             context, vertexShader, fragmentShader, pipelineDesc, &pipelineState));
 
@@ -938,7 +938,7 @@ angle::Result ProgramExecutableMtl::getSpecializedShader(
 
     mtl::TranslatedShaderInfo *translatedMslInfo = &mMslShaderTranslateInfo[shaderType];
     ProgramShaderObjVariantMtl *shaderVariant;
-    mtl::ObjCPtr<MTLFunctionConstantValues> funcConstants;
+    angle::ObjCPtr<MTLFunctionConstantValues> funcConstants;
 
     if (shaderType == gl::ShaderType::Vertex)
     {
@@ -975,7 +975,7 @@ angle::Result ProgramExecutableMtl::getSpecializedShader(
             NSString *discardEnabledStr =
                 [NSString stringWithUTF8String:sh::mtl::kRasterizerDiscardEnabledConstName];
 
-            funcConstants = mtl::adoptObjCPtr([[MTLFunctionConstantValues alloc] init]);
+            funcConstants = angle::adoptObjCPtr([[MTLFunctionConstantValues alloc] init]);
             [funcConstants setConstantValue:&emulateDiscard
                                        type:MTLDataTypeBool
                                    withName:discardEnabledStr];
@@ -1006,7 +1006,7 @@ angle::Result ProgramExecutableMtl::getSpecializedShader(
             NSString *depthWriteEnabledStr =
                 [NSString stringWithUTF8String:sh::mtl::kDepthWriteEnabledConstName];
 
-            funcConstants = mtl::adoptObjCPtr([[MTLFunctionConstantValues alloc] init]);
+            funcConstants = angle::adoptObjCPtr([[MTLFunctionConstantValues alloc] init]);
             [funcConstants setConstantValue:&multisampledRendering
                                        type:MTLDataTypeBool
                                    withName:multisampledRenderingStr];

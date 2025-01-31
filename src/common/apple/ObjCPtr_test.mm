@@ -3,16 +3,16 @@
 //   of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// mtl_common_test.cpp:
-//   Test for functionality in mtl_common.h/.mm
+// ObjCPtr_test.cpp:
+//   Test for functionality in ObjCPtr.h
 
-#include "libANGLE/renderer/metal/mtl_common.h"
-#include "gtest/gtest.h"
-
-using namespace rx::mtl;
+#import "common/apple/ObjCPtr.h"
+#import <Metal/Metal.h>
+#import "gtest/gtest.h"
 
 namespace
 {
+using namespace angle;
 
 // This explains why the implementation has ObjCPtr<U> &&other constructor/operator=
 // as opposed to ObjCPtr &&other ones.

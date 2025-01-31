@@ -21,11 +21,11 @@ namespace mtl
 
 struct PipelineKey
 {
-    ObjCPtr<id<MTLFunction>> vertexShader;
-    ObjCPtr<id<MTLFunction>> fragmentShader;
+    angle::ObjCPtr<id<MTLFunction>> vertexShader;
+    angle::ObjCPtr<id<MTLFunction>> fragmentShader;
     RenderPipelineDesc pipelineDesc;
 
-    ObjCPtr<id<MTLFunction>> computeShader;
+    angle::ObjCPtr<id<MTLFunction>> computeShader;
 
     bool isRenderPipeline() const;
 
@@ -61,10 +61,11 @@ class PipelineCache : angle::NonCopyable
                                     id<MTLFunction> vertexShader,
                                     id<MTLFunction> fragmentShader,
                                     const RenderPipelineDesc &desc,
-                                    ObjCPtr<id<MTLRenderPipelineState>> *outRenderPipeline);
-    angle::Result getComputePipeline(ContextMtl *context,
-                                     id<MTLFunction> computeShader,
-                                     ObjCPtr<id<MTLComputePipelineState>> *outComputePipeline);
+                                    angle::ObjCPtr<id<MTLRenderPipelineState>> *outRenderPipeline);
+    angle::Result getComputePipeline(
+        ContextMtl *context,
+        id<MTLFunction> computeShader,
+        angle::ObjCPtr<id<MTLComputePipelineState>> *outComputePipeline);
 
   private:
     static constexpr unsigned int kMaxPipelines = 128;
@@ -74,8 +75,8 @@ class PipelineCache : angle::NonCopyable
 
     struct PipelineVariant
     {
-        ObjCPtr<id<MTLRenderPipelineState>> renderPipeline;
-        ObjCPtr<id<MTLComputePipelineState>> computePipeline;
+        angle::ObjCPtr<id<MTLRenderPipelineState>> renderPipeline;
+        angle::ObjCPtr<id<MTLComputePipelineState>> computePipeline;
     };
 
     using RenderPipelineMap = angle::base::HashingMRUCache<PipelineKey, PipelineVariant>;

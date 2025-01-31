@@ -122,6 +122,7 @@ if (is_linux || is_chromeos || is_android || is_fuchsia) {
 
 if (is_apple) {
   libangle_common_sources += [
+    "src/common/apple/ObjCPtr.h",
     "src/common/apple/SoftLinking.h",
     "src/common/apple/apple_platform.h",
     "src/common/apple_platform_utils.mm",
