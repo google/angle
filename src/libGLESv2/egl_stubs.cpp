@@ -17,17 +17,11 @@
 #include "libANGLE/queryutils.h"
 #include "libANGLE/validationEGL.h"
 #include "libGLESv2/global_state.h"
-#include "libGLESv2/proc_table_egl.h"
 
 namespace egl
 {
 namespace
 {
-
-bool CompareProc(const ProcEntry &a, const char *b)
-{
-    return strcmp(a.first, b) < 0;
-}
 
 void ClipConfigs(const std::vector<const Config *> &filteredConfigs,
                  EGLConfig *outputConfigs,
@@ -482,21 +476,6 @@ EGLDisplay GetPlatformDisplay(Thread *thread,
             return EGL_NO_DISPLAY;
         }
     }
-}
-
-__eglMustCastToProperFunctionPointerType GetProcAddress(Thread *thread, const char *procname)
-{
-    const ProcEntry *entry =
-        std::lower_bound(&g_procTable[0], &g_procTable[g_numProcs], procname, CompareProc);
-
-    thread->setSuccess();
-
-    if (entry == &g_procTable[g_numProcs] || strcmp(entry->first, procname) != 0)
-    {
-        return nullptr;
-    }
-
-    return entry->second;
 }
 
 EGLBoolean GetSyncAttrib(Thread *thread,
