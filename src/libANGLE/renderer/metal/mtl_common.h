@@ -286,12 +286,7 @@ class AutoObjCPtr : public WrappedObject<T>
 
     AutoObjCPtr(AutoObjCPtr &&src) { this->transfer(std::forward<AutoObjCPtr>(src)); }
 
-    // Take ownership of the pointer
-    AutoObjCPtr(T &&src)
-    {
-        this->retainAssign(src);
-        src = nil;
-    }
+    AutoObjCPtr(T src) { this->retainAssign(src); }
 
     AutoObjCPtr &operator=(const AutoObjCPtr &src)
     {
@@ -305,11 +300,9 @@ class AutoObjCPtr : public WrappedObject<T>
         return *this;
     }
 
-    // Take ownership of the pointer
-    AutoObjCPtr &operator=(T &&src)
+    AutoObjCPtr &operator=(T src)
     {
         this->retainAssign(src);
-        src = nil;
         return *this;
     }
 
