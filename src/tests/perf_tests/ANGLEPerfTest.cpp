@@ -471,6 +471,15 @@ void ANGLEPerfTest::runTrial(double maxRunTime, int maxStepsToRun, RunTrialPolic
             }
         }
 
+        if (gFpsLimit)
+        {
+            double wantTime    = mTrialNumStepsPerformed / double(gFpsLimit);
+            double currentTime = mTrialTimer.getElapsedWallClockTime();
+            if (currentTime < wantTime)
+            {
+                std::this_thread::sleep_for(std::chrono::duration<double>(wantTime - currentTime));
+            }
+        }
         step();
 
         if (runPolicy == RunTrialPolicy::FinishEveryStep)

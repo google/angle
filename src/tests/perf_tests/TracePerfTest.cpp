@@ -243,9 +243,6 @@ class TracePerfTest : public ANGLERenderTest
     bool mScreenshotSaved                                               = false;
     int32_t mScreenshotFrame                                            = gScreenshotFrame;
     std::unique_ptr<TraceLibrary> mTraceReplay;
-
-    static constexpr int kFpsNumFrames               = 4;
-    std::array<double, kFpsNumFrames> mFpsStartTimes = {0, 0, 0, 0};
 };
 
 TracePerfTest *gCurrentTracePerfTest = nullptr;
@@ -2357,21 +2354,6 @@ void TracePerfTest::drawBenchmark()
     }
 
     endInternalTraceEvent(frameName);
-
-    if (gFpsLimit)
-    {
-        // Interval and time delta over kFpsNumFrames frames to get closer to requested fps
-        // (this allows a bit more jitter in individual frames due to the averaging effect)
-        double requestedNthFrameInterval = static_cast<double>(kFpsNumFrames) / gFpsLimit;
-        double nthFrameTimeDelta =
-            angle::GetCurrentSystemTime() - mFpsStartTimes[mTotalFrameCount % kFpsNumFrames];
-        if (nthFrameTimeDelta < requestedNthFrameInterval)
-        {
-            std::this_thread::sleep_for(
-                std::chrono::duration<double>(requestedNthFrameInterval - nthFrameTimeDelta));
-        }
-        mFpsStartTimes[mTotalFrameCount % kFpsNumFrames] = angle::GetCurrentSystemTime();
-    }
 
     mTotalFrameCount++;
 
