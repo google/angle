@@ -4013,6 +4013,9 @@ void Context::initCaps()
     Caps *caps = mState.getMutableCaps();
     *caps      = mImplementation->getNativeCaps();
 
+    // Update limitations before evaluating extension support
+    *mState.getMutableLimitations() = mImplementation->getNativeLimitations();
+
     // TODO (http://anglebug.com/42264543): mSupportedExtensions should not be modified here
     mSupportedExtensions = generateSupportedExtensions();
 
@@ -4052,8 +4055,6 @@ void Context::initCaps()
 
     Extensions *extensions = mState.getMutableExtensions();
     *extensions            = mSupportedExtensions;
-
-    *mState.getMutableLimitations() = mImplementation->getNativeLimitations();
 
     // GLES1 emulation: Initialize caps (Table 6.20 / 6.22 in the ES 1.1 spec)
     if (getClientVersion() < Version(2, 0))
