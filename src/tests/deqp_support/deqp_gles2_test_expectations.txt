@@ -378,16 +378,6 @@ b/328156792 PINEAPPLE VULKAN : dEQP-GLES2.functional.texture*cube* = SKIP
 b/328156792 PINEAPPLE VULKAN : dEQP-GLES2.functional.uniform_api.random.* = SKIP
 b/328156792 PINEAPPLE VULKAN : dEQP-GLES2.functional.uniform_api.value.assigned.* = SKIP
 
-// BGRA failures
-42267264 : dEQP-GLES2.functional.fbo.completeness.renderable.renderbuffer*bgra = FAIL
-42267264 : dEQP-GLES2.functional.fbo.render.color*bgra* = FAIL
-42267264 : dEQP-GLES2.functional.fbo.render.depth*bgra* = FAIL
-42267264 : dEQP-GLES2.functional.fbo.render.*_colorbuffer*bgra* = FAIL
-42267264 : dEQP-GLES2.functional.fbo.render.*_depthbuffer*bgra* = FAIL
-42267264 : dEQP-GLES2.functional.fbo.render.*_stencilbuffer*bgra* = FAIL
-42267264 : dEQP-GLES2.functional.fbo.render.resize*bgra* = FAIL
-42267264 : dEQP-GLES2.functional.fbo.render.stencil*bgra* = FAIL
-
 // WebGPU failures
 // These tests fail because the WGSL translator doesn't know what to do with matrix attributes yet.
 42267100 WGPU : dEQP-GLES2.functional.attribute_location.bind_relink_hole.mat* = FAIL

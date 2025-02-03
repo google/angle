@@ -314,6 +314,8 @@ FormatID Format::InternalFormatToID(GLenum internalFormat)
             return FormatID::B8G8R8A8_TYPELESS;
         case GL_BGRA8_TYPELESS_SRGB_ANGLEX:
             return FormatID::B8G8R8A8_TYPELESS_SRGB;
+        case GL_BGRA_EXT:
+            return FormatID::B8G8R8A8_UNORM;
         case GL_BGRX8_ANGLEX:
             return FormatID::B8G8R8X8_UNORM;
         case GL_BGRX8_SRGB_ANGLEX:
