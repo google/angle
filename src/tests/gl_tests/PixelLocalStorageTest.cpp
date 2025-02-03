@@ -4315,7 +4315,7 @@ TEST_P(PixelLocalStorageValidationTest, FramebufferTexturePixelLocalStorageANGLE
     glTexStorage2D(GL_TEXTURE_2D, 3, GL_R32UI, 10, 10);
     glFramebufferTexturePixelLocalStorageANGLE(2, tex, -1, 0);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_VALUE);
-    EXPECT_GL_SINGLE_ERROR_MSG("Level is negative.");
+    EXPECT_GL_SINGLE_ERROR_MSG("Negative level.");
 
     // GL_INVALID_VALUE is generated if <backingtexture> is nonzero and <level> >= the immutable
     // number of mipmap levels in <backingtexture>.
