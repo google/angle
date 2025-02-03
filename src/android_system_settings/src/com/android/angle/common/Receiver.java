@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.android.angle.R;
@@ -83,20 +84,18 @@ public class Receiver extends BroadcastReceiver
         final List<String> nativePackages = angleRuleHelper.getPackageNamesForNative();
 
         // packages = anglePackage1,anglePackage2,nativePackage1,nativePackage2
-        packages = String.join(",", Stream.concat(
-                                    anglePackages.stream(),
-                                    nativePackages.stream())
-                                  .toList());
+        packages = Stream.concat(anglePackages.stream(), nativePackages.stream())
+                .collect(Collectors.joining(","));
 
         // choices = angle,angle,native,native
-        choices = String.join(",", Stream.concat(
-                                    Collections.nCopies(
-                                        anglePackages.size(), "angle")
-                                    .stream(),
-                                    Collections.nCopies(
-                                        nativePackages.size(), "native")
-                                    .stream())
-                                 .toList());
+        choices = Stream.concat(
+                Collections.nCopies(
+                    anglePackages.size(), "angle")
+                .stream(),
+                Collections.nCopies(
+                    nativePackages.size(), "native")
+                .stream())
+                .collect(Collectors.joining(","));
 
         Log.v(TAG, "Updating ANGLE global settings with:" +
                 " packages = " + packages +
