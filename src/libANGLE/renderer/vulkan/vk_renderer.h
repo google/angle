@@ -254,6 +254,10 @@ class Renderer : angle::NonCopyable
     uint32_t getMaxVertexAttribDivisor() const { return mMaxVertexAttribDivisor; }
     VkDeviceSize getMaxVertexAttribStride() const { return mMaxVertexAttribStride; }
     uint32_t getMaxColorInputAttachmentCount() const { return mMaxColorInputAttachmentCount; }
+    ANGLE_INLINE bool isInFlightCommandsEmpty() const
+    {
+        return mCommandQueue.isInFlightCommandsEmpty();
+    }
 
     uint32_t getDefaultUniformBufferSize() const { return mDefaultUniformBufferSize; }
 

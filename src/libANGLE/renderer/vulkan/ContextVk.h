@@ -1729,6 +1729,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     VulkanCacheStats mVulkanCacheStats;
 
     RangedSerialFactory mOutsideRenderPassSerialFactory;
+
+    uint32_t mCommandsPendingSubmissionCount;
 };
 
 ANGLE_INLINE angle::Result ContextVk::endRenderPassIfTransformFeedbackBuffer(

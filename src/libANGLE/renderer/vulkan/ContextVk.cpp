@@ -58,6 +58,10 @@ static constexpr VkDeviceSize kMaxBufferToImageCopySize = 64 * 1024 * 1024;
 // RenderPassCommands.
 static constexpr size_t kMaxReservedOutsideRenderPassQueueSerials = 15;
 
+// The number of minimum commands in the command buffer to prefer submit at FBO boundary or
+// immediately submit when the device is idle after calling to flush.
+static constexpr uint32_t kMinCommandCountToSubmit = 32;
+
 // Dumping the command stream is disabled by default.
 static constexpr bool kEnableCommandStreamDiagnostics = false;
 
@@ -916,7 +920,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
       mInitialContextPriority(renderer->getDriverPriority(GetContextPriority(state))),
       mContextPriority(mInitialContextPriority),
       mProtectionType(vk::ConvertProtectionBoolToType(state.hasProtectedContent())),
-      mShareGroupVk(vk::GetImpl(state.getShareGroup()))
+      mShareGroupVk(vk::GetImpl(state.getShareGroup())),
+      mCommandsPendingSubmissionCount(0)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::ContextVk");
     memset(&mClearColorValue, 0, sizeof(mClearColorValue));
@@ -1538,6 +1543,26 @@ angle::Result ContextVk::flushImpl(const gl::Context *context)
     const bool isSingleBufferedWindow = isSingleBufferedWindowCurrent();
     const bool frontBufferRenderingEnabled =
         isSingleBufferedWindow || drawFramebufferVk->hasFrontBufferUsage();
+
+    // In case there is enough workload pending submission and the device is idle, we call for
+    // submission to keep the device busy.
+    uint32_t currentRPCommandCount =
+        mRenderPassCommands->getCommandBuffer().getRenderPassWriteCommandCount() +
+        mCommandsPendingSubmissionCount;
+    if (currentRPCommandCount >= kMinCommandCountToSubmit)
+    {
+        if (!mRenderer->isInFlightCommandsEmpty())
+        {
+            ANGLE_TRY(mRenderer->checkCompletedCommands(this));
+        }
+
+        // If the device is now idle, the pending work should be submitted.
+        if (mRenderer->isInFlightCommandsEmpty())
+        {
+            ANGLE_TRY(flushAndSubmitCommands(nullptr, nullptr, RenderPassClosureReason::GLFlush));
+            return angle::Result::Continue;
+        }
+    }
 
     if (hasActiveRenderPass() && !frontBufferRenderingEnabled)
     {
@@ -5836,8 +5861,24 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 // If we are switching from user FBO to system frame buffer, we always submit work
                 // first so that these FBO rendering will not have to wait for ANI semaphore (which
                 // draw to system frame buffer must wait for).
-                if ((getFeatures().preferSubmitAtFBOBoundary.enabled ||
-                     mState.getDrawFramebuffer()->isDefault()) &&
+
+                // To reduce CPU overhead if submission at FBO boundary is preferred, the deferred
+                // flush is triggered after the currently accumulated command count for the render
+                // pass command buffer hits a threshold (kMinCommandCountToSubmit). However,
+                // currently in the case of a clear or invalidate GL command, a deferred flush is
+                // still triggered.
+                uint32_t currentRPCommandCount =
+                    mRenderPassCommands->getCommandBuffer().getRenderPassWriteCommandCount() +
+                    mCommandsPendingSubmissionCount;
+                bool allowExceptionForSubmitAtBoundary = command == gl::Command::Clear ||
+                                                         command == gl::Command::Invalidate ||
+                                                         mRenderer->isInFlightCommandsEmpty();
+                bool shouldSubmitAtFBOBoundary =
+                    getFeatures().preferSubmitAtFBOBoundary.enabled &&
+                    (currentRPCommandCount >= kMinCommandCountToSubmit ||
+                     allowExceptionForSubmitAtBoundary);
+
+                if ((shouldSubmitAtFBOBoundary || mState.getDrawFramebuffer()->isDefault()) &&
                     mRenderPassCommands->started())
                 {
                     // This will behave as if user called glFlush, but the actual flush will be
@@ -7864,6 +7905,7 @@ angle::Result ContextVk::flushAndSubmitCommands(const vk::Semaphore *signalSemap
     ASSERT(mWaitSemaphoreStageMasks.empty());
 
     ANGLE_TRY(submitCommands(signalSemaphore, externalFence, Submit::AllCommands));
+    mCommandsPendingSubmissionCount = 0;
 
     ASSERT(mOutsideRenderPassCommands->getQueueSerial() > mLastSubmittedQueueSerial);
 
@@ -8250,6 +8292,12 @@ angle::Result ContextVk::flushCommandsAndEndRenderPassWithoutSubmit(RenderPassCl
     {
         mIsAnyHostVisibleBufferWritten = true;
     }
+
+    // The counter for pending submission count is used for possible submission at FBO boundary and
+    // flush.
+    mCommandsPendingSubmissionCount +=
+        mRenderPassCommands->getCommandBuffer().getRenderPassWriteCommandCount();
+
     ANGLE_TRY(mRenderer->flushRenderPassCommands(this, getProtectionType(), mContextPriority,
                                                  *renderPass, framebufferOverride,
                                                  &mRenderPassCommands));

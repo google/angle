@@ -434,6 +434,8 @@ class CommandQueue : angle::NonCopyable
     }
     angle::Result postSubmitCheck(ErrorContext *context);
 
+    bool isInFlightCommandsEmpty() const;
+
     // Try to cleanup garbage and return if something was cleaned.  Otherwise, wait for the
     // mInFlightCommands and retry.
     angle::Result cleanupSomeGarbage(ErrorContext *context,
@@ -502,6 +504,11 @@ class CommandQueue : angle::NonCopyable
 
     angle::VulkanPerfCounters mPerfCounters;
 };
+
+ANGLE_INLINE bool CommandQueue::isInFlightCommandsEmpty() const
+{
+    return mInFlightCommands.empty();
+}
 
 // A helper thread used to clean up garbage
 class CleanUpThread : public ErrorContext

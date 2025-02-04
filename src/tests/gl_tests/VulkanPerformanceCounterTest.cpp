@@ -7276,9 +7276,10 @@ TEST_P(VulkanPerformanceCounterTest, VerifySubmitCounterForSwitchUserFBOToSystem
               expectedCommandQueueWaitSemaphoreCount);
 }
 
-// Tests that PreferSubmitAtFBOBoundary feature works properly. Bind to different FBO and should
-// trigger submit of previous FBO. In this specific test, we test bind to a new user FBO which we
-// used to had a bug.
+// Tests that PreferSubmitAtFBOBoundary feature works properly. Binding to a different FBO should
+// trigger the submission of the previous FBO if enough workload has been accumulated. In this
+// specific test, we test binding to a new user FBO after issuing the minimum amount of draw calls
+// for submission.
 TEST_P(VulkanPerformanceCounterTest, VerifySubmitCounterForSwitchUserFBOToDirtyUserFBO)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
@@ -7287,18 +7288,25 @@ TEST_P(VulkanPerformanceCounterTest, VerifySubmitCounterForSwitchUserFBOToDirtyU
     uint64_t expectedCommandQueueWaitSemaphoreCount =
         getPerfCounters().commandQueueWaitSemaphoresTotal;
 
-    GLFramebuffer framebuffer;
-    GLTexture texture;
-    setupForColorOpsTest(&framebuffer, &texture);
+    GLFramebuffer framebuffer1;
+    GLTexture texture1;
+    setupForColorOpsTest(&framebuffer1, &texture1);
 
-    // Draw
+    // Issue the draws. In case of preference to submit at FBO boundary, there is a minimum render
+    // pass command count to submit. (Currently, the exception is if there is a clear or invalidate
+    // command at the boundary, or if there are no in-flight commands. In those cases, the minimum
+    // command count is ignored.)
+    constexpr uint32_t kMinCommandCountToSubmit = 32;
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
-    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    for (uint32_t i = 0; i < kMinCommandCountToSubmit; i++)
+    {
+        drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    }
     ASSERT_GL_NO_ERROR();
 
     if (hasPreferSubmitAtFBOBoundary())
     {
-        // One submission coming from glBindFramebuffer and draw
+        // One submission coming from glBindFramebuffer and draw calls.
         ++expectedCommandQueueSubmitCount;
         // This submission should not wait for any semaphore.
     }
