@@ -44,6 +44,7 @@ class DataCounters final : angle::NonCopyable
     ~DataCounters();
 
     int getAndIncrement(EntryPoint entryPoint, const std::string &paramName);
+    void reset() { mData.clear(); }
 
   private:
     // <CallName, ParamName>
@@ -60,6 +61,7 @@ class StringCounters final : angle::NonCopyable
 
     int getStringCounter(const std::vector<std::string> &str);
     void setStringCounter(const std::vector<std::string> &str, int &counter);
+    void reset() { mStringCounterMap.clear(); }
 
   private:
     std::map<std::vector<std::string>, int> mStringCounterMap;
@@ -73,6 +75,12 @@ class DataTracker final : angle::NonCopyable
 
     DataCounters &getCounters() { return mCounters; }
     StringCounters &getStringCounters() { return mStringCounters; }
+
+    void reset()
+    {
+        mCounters.reset();
+        mStringCounters.reset();
+    }
 
   private:
     DataCounters mCounters;
@@ -97,7 +105,6 @@ class ReplayWriter final : angle::NonCopyable
     void setSourceFileExtension(const char *ext);
     void setSourceFileSizeThreshold(size_t sourceFileSizeThreshold);
     void setFilenamePattern(const std::string &pattern);
-    void setCaptureLabel(const std::string &label);
     void setSourcePrologue(const std::string &prologue);
     void setHeaderPrologue(const std::string &prologue);
 
@@ -123,6 +130,12 @@ class ReplayWriter final : angle::NonCopyable
 
     std::vector<std::string> getAndResetWrittenFiles();
 
+    void reset()
+    {
+        mDataTracker.reset();
+        mFrameIndex = 1;  // This is really the FileIndex
+    }
+
     CaptureAPI captureAPI = CaptureAPI::GL;
 
   private:
@@ -139,7 +152,6 @@ class ReplayWriter final : angle::NonCopyable
 
     DataTracker mDataTracker;
     std::string mFilenamePattern;
-    std::string mCaptureLabel;
     std::string mSourcePrologue;
     std::string mHeaderPrologue;
 
@@ -208,6 +220,17 @@ class TrackedResource final : angle::NonCopyable
 
     ResourceCalls &getResourceRegenCalls() { return mResourceRegenCalls; }
     ResourceCalls &getResourceRestoreCalls() { return mResourceRestoreCalls; }
+
+    void reset()
+    {
+        mResourceRegenCalls.clear();
+        mResourceRestoreCalls.clear();
+        mStartingResources.clear();
+        mNewResources.clear();
+        mResourcesToDelete.clear();
+        mResourcesToRegen.clear();
+        mResourcesToRestore.clear();
+    }
 
   private:
     // Resource regen calls will gen a resource
@@ -310,23 +333,55 @@ class ResourceTracker final : angle::NonCopyable
         return mShaderProgramType[id];
     }
 
+    void resetTrackedResourceArray(TrackedResourceArray &trackedResourceArray)
+    {
+        for (auto &trackedResource : trackedResourceArray)
+        {
+            trackedResource.reset();
+        }
+    }
+
+    // Some data in FrameCaptureShared tracks resources across all captures while
+    // other data is tracked per-capture. This function is responsible for
+    // resetting the per-capture tracking data in this class.
+    void resetResourceTracking()
+    {
+        resetTrackedResourceArray(mTrackedResourcesShared);
+        for (auto &pair : mTrackedResourcesPerContext)
+        {
+            resetTrackedResourceArray(pair.second);
+        }
+
+        mBufferMapCalls.clear();
+        mBufferUnmapCalls.clear();
+        mBufferBindingCalls.clear();
+        mStartingBuffersMappedInitial.clear();
+        mStartingBuffersMappedCurrent.clear();
+        mMaxShaderPrograms = 0;
+        mStartingFenceSyncs.clear();
+        mFenceSyncRegenCalls.clear();
+        mFenceSyncsToRegen.clear();
+        mDefaultUniformsToReset.clear();
+        mDefaultUniformResetCalls.clear();
+        mDefaultUniformBaseLocations.clear();
+    }
+
   private:
+    // These data structures are per-capture and must be reset before beginning a new
+    // capture in the resetResourceTracking() function above
+
     // Buffer map calls will map a buffer with correct offset, length, and access flags
     BufferCalls mBufferMapCalls;
     // Buffer unmap calls will bind and unmap a given buffer
     BufferCalls mBufferUnmapCalls;
-
     // Buffer binding calls to restore bindings recorded during MEC
     std::vector<CallCapture> mBufferBindingCalls;
-
     // Whether a given buffer was mapped at the start of the trace
     BufferMapStatusMap mStartingBuffersMappedInitial;
     // The status of buffer mapping throughout the trace, modified with each Map/Unmap call
     BufferMapStatusMap mStartingBuffersMappedCurrent;
-
     // Maximum accessed shader program ID.
     uint32_t mMaxShaderPrograms = 0;
-
     // Fence sync objects created during MEC setup
     FenceSyncSet mStartingFenceSyncs;
     // Fence sync regen calls will create a fence sync objects
@@ -334,22 +389,20 @@ class ResourceTracker final : angle::NonCopyable
     // Fence syncs to regen are a list of starting fence sync objects that were deleted and need to
     // be regen'ed.
     FenceSyncSet mFenceSyncsToRegen;
-
     // Default uniforms that were modified during the run
     DefaultUniformLocationsPerProgramMap mDefaultUniformsToReset;
     // Calls per default uniform to return to original state
     DefaultUniformCallsPerProgramMap mDefaultUniformResetCalls;
-
     // Base location of arrayed uniforms
     DefaultUniformBaseLocationMap mDefaultUniformBaseLocations;
+
+    // These data structures must be preserved across all captures
 
     // Tracked resources per context
     TrackedResourceArray mTrackedResourcesShared;
     std::map<gl::ContextID, TrackedResourceArray> mTrackedResourcesPerContext;
-
     std::map<EGLImage, egl::AttributeMap> mMatchImageToAttribs;
     std::map<GLuint, egl::ImageID> mMatchTextureIDToImage;
-
     std::map<gl::ShaderProgramID, ShaderProgramType> mShaderProgramType;
 };
 
@@ -494,6 +547,17 @@ class StateResetHelper final : angle::NonCopyable
     void setStartingBufferBinding(gl::BufferBinding binding, gl::BufferID bufferID)
     {
         mStartingBufferBindings.insert({binding, bufferID});
+    }
+
+    void reset()
+    {
+        mDirtyEntryPoints.clear();
+        mResetCalls.clear();
+        mDirtyTextureBindings.clear();
+        mResetTextureBindings.clear();
+        mResetActiveTexture = 0;
+        mStartingBufferBindings.clear();
+        mDirtyBufferBindings.clear();
     }
 
   private:
@@ -660,9 +724,11 @@ class CoherentBufferTracker final : angle::NonCopyable
   public:
     angle::SimpleMutex mMutex;
     HashMap<GLuint, std::shared_ptr<CoherentBuffer>> mBuffers;
+    bool hasBeenReset() { return mHasBeenReset; }
 
   private:
     bool mEnabled;
+    bool mHasBeenReset;
     std::unique_ptr<PageFaultHandler> mPageFaultHandler;
     size_t mPageSize;
 
@@ -848,6 +914,7 @@ class FrameCaptureShared final : angle::NonCopyable
                                         GLuint id,
                                         gl::Range<size_t> range);
 
+    void getOutputDirectory();
     void updateReadBufferSize(size_t readBufferSize)
     {
         mReadBufferSize = std::max(mReadBufferSize, readBufferSize);
@@ -899,6 +966,14 @@ class FrameCaptureShared final : angle::NonCopyable
 
     static bool isRuntimeEnabled();
 
+    void resetCaptureStartEndFrames()
+    {
+        // If the trigger has been populated the frame range variables will be calculated
+        // based on the trigger value, so for now reset them to unreasonable values.
+        mCaptureStartFrame = mCaptureEndFrame = std::numeric_limits<uint32_t>::max();
+        INFO() << "Capture trigger detected, resetting capture start/end frame.";
+    }
+
   private:
     void writeJSON(const gl::Context *context);
     void writeJSONCL();
@@ -920,6 +995,7 @@ class FrameCaptureShared final : angle::NonCopyable
     void captureCompressedTextureData(const gl::Context *context, const CallCapture &call);
 
     void reset();
+    void resetMidExecutionCapture(gl::Context *context);
     void maybeOverrideEntryPoint(const gl::Context *context,
                                  CallCapture &call,
                                  std::vector<CallCapture> &newCalls);

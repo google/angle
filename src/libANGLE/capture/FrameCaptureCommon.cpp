@@ -509,10 +509,8 @@ FrameCaptureShared::FrameCaptureShared()
     {
         mCaptureTrigger = atoi(captureTriggerFromEnv.c_str());
 
-        // If the trigger has been populated, ignore the other frame range variables by setting them
-        // to unreasonable values. This isn't perfect, but it is effective.
-        mCaptureStartFrame = mCaptureEndFrame = std::numeric_limits<uint32_t>::max();
-        INFO() << "Capture trigger detected, disabling capture start/end frame.";
+        // Using capture trigger, initialize frame range variables for MEC
+        resetCaptureStartEndFrames();
     }
 
     std::string labelFromEnv =
@@ -609,30 +607,13 @@ FrameCaptureShared::FrameCaptureShared()
         mEnabled = false;
     }
 
-    mReplayWriter.setCaptureLabel(mCaptureLabel);
-
     // Special case the output directory
     if (mEnabled)
     {
         // Only perform output directory checks if enabled
         // - This can avoid some expensive process name and filesystem checks
         // - We want to emit errors if the directory doesn't exist
-        std::string pathFromEnv =
-            GetEnvironmentVarOrUnCachedAndroidProperty(kOutDirectoryVarName, kAndroidOutDir);
-        if (pathFromEnv.empty())
-        {
-            mOutDirectory = GetDefaultOutDirectory();
-        }
-        else
-        {
-            mOutDirectory = pathFromEnv;
-        }
-
-        // Ensure the capture path ends with a slash.
-        if (mOutDirectory.back() != '\\' && mOutDirectory.back() != '/')
-        {
-            mOutDirectory += '/';
-        }
+        getOutputDirectory();
     }
 
     mMaxCLParamsSize[ParamType::Tcl_device_idPointer]   = 0;
@@ -654,7 +635,7 @@ bool FrameCaptureShared::isCapturing() const
     // Currently we will always do a capture up until the last frame. In the future we could improve
     // mid execution capture by only capturing between the start and end frames. The only necessary
     // reason we need to capture before the start is for attached program and shader sources.
-    return mEnabled && mFrameIndex <= mCaptureEndFrame;
+    return mEnabled;
 }
 
 uint32_t FrameCaptureShared::getFrameCount() const
@@ -727,6 +708,38 @@ void FrameCaptureShared::reset()
     // necessary.
 }
 
+// This function will clear FrameCaptureShared state so that mid-execution capture can be
+// run multiple times.
+void FrameCaptureShared::resetMidExecutionCapture(gl::Context *context)
+{
+    for (ResourceIDType resourceID : AllEnums<ResourceIDType>())
+    {
+        mResourceIDToSetupCalls[resourceID].clear();
+    }
+
+    egl::ShareGroup *shareGroup = context->getShareGroup();
+    for (auto shareContext : shareGroup->getContexts())
+    {
+        FrameCapture *frameCapture = shareContext.second->getFrameCapture();
+        frameCapture->reset();
+        frameCapture->getStateResetHelper().reset();
+    }
+
+    mActiveFrameIndices.clear();
+    mWroteIndexFile = false;
+    std::fill(std::begin(mClientArraySizes), std::end(mClientArraySizes), 0);
+    mReadBufferSize       = 0;
+    mResourceIDBufferSize = 0;
+    mHasResourceType.Zero();
+    mBufferDataMap.clear();
+    mMaxAccessedResourceIDs.fill(0);
+    mResourceTracker.resetResourceTracking();
+    mReplayWriter.reset();
+    mShareGroupSetupCalls.clear();
+    mDeferredLinkPrograms.clear();
+    mActiveContexts.clear();
+}
+
 // ReplayWriter implementation.
 ReplayWriter::ReplayWriter()
     : mSourceFileExtension(kDefaultSourceFileExt),
@@ -761,11 +774,6 @@ void ReplayWriter::setFilenamePattern(const std::string &pattern)
     {
         mFilenamePattern = pattern;
     }
-}
-
-void ReplayWriter::setCaptureLabel(const std::string &label)
-{
-    mCaptureLabel = label;
 }
 
 void ReplayWriter::setSourcePrologue(const std::string &prologue)
@@ -1108,6 +1116,26 @@ void AddComment(std::vector<CallCapture> *outCalls, const std::string &comment)
 bool FrameCaptureShared::mRuntimeEnabled     = false;
 bool FrameCaptureShared::mRuntimeInitialized = false;
 
+void FrameCaptureShared::getOutputDirectory()
+{
+    std::string pathFromEnv =
+        GetEnvironmentVarOrUnCachedAndroidProperty(kOutDirectoryVarName, kAndroidOutDir);
+    if (pathFromEnv.empty())
+    {
+        mOutDirectory = GetDefaultOutDirectory();
+    }
+    else
+    {
+        mOutDirectory = pathFromEnv;
+    }
+
+    // Ensure the capture path ends with a slash.
+    if (mOutDirectory.back() != '\\' && mOutDirectory.back() != '/')
+    {
+        mOutDirectory += '/';
+    }
+}
+
 void CaptureMemory(const void *source, size_t size, ParamCapture *paramCapture)
 {
     std::vector<uint8_t> data(size);
@@ -1133,7 +1161,8 @@ StateResetHelper::StateResetHelper() = default;
 
 StateResetHelper::~StateResetHelper() = default;
 
-CoherentBufferTracker::CoherentBufferTracker() : mEnabled(false), mShadowMemoryEnabled(false)
+CoherentBufferTracker::CoherentBufferTracker()
+    : mEnabled(false), mHasBeenReset(false), mShadowMemoryEnabled(false)
 {
     mPageSize = GetPageSize();
 }

@@ -6009,6 +6009,8 @@ void CoherentBufferTracker::onEndFrame()
         return;
     }
 
+    mHasBeenReset = true;
+
     // Remove protection from all buffers
     for (const auto &pair : mBuffers)
     {
@@ -6218,6 +6220,11 @@ void FrameCaptureShared::trackBufferMapping(const gl::Context *context,
         // first coherent glMapBufferRange call.
         if (coherent && isCaptureActive())
         {
+            if (mCoherentBufferTracker.hasBeenReset())
+            {
+                FATAL() << "Multi-capture not supprted for apps using persistent coherent memory";
+            }
+
             mCoherentBufferTracker.enable();
             // When not using shadow memory, adding buffers to the tracking happens here instead of
             // during mapping
@@ -8023,13 +8030,7 @@ void FrameCaptureShared::captureMappedBufferSnapshot(const gl::Context *context,
 
 void FrameCaptureShared::checkForCaptureTrigger()
 {
-    // If the capture trigger has not been set, move on
-    if (mCaptureTrigger == 0)
-    {
-        return;
-    }
-
-    // Otherwise, poll the value for a change
+    // Determine if trigger has changed
     std::string captureTriggerStr = GetCaptureTrigger();
     if (captureTriggerStr.empty())
     {
@@ -8037,11 +8038,8 @@ void FrameCaptureShared::checkForCaptureTrigger()
     }
 
     // If the value has changed, use the original value as the frame count
-    // TODO (anglebug.com/42263521): Improve capture at unknown frame time. It is good to
-    // avoid polling if the feature is not enabled, but not entirely intuitive to set
-    // a value to zero when you want to trigger it.
     uint32_t captureTrigger = atoi(captureTriggerStr.c_str());
-    if (captureTrigger != mCaptureTrigger)
+    if ((mCaptureTrigger > 0) && (captureTrigger == 0))
     {
         // Start mid-execution capture for the current frame
         mCaptureStartFrame = mFrameIndex + 1;
@@ -8054,6 +8052,11 @@ void FrameCaptureShared::checkForCaptureTrigger()
 
         // Stop polling
         mCaptureTrigger = 0;
+    }
+    else if (captureTrigger > 0)
+    {
+        // Update number of frames to capture in MEC
+        mCaptureTrigger = captureTrigger;
     }
 }
 
@@ -8166,6 +8169,12 @@ void FrameCaptureShared::onEndFrame(gl::Context *context)
     {
         setCaptureInactive();
         mCoherentBufferTracker.onEndFrame();
+        if (enabled())
+        {
+            resetMidExecutionCapture(context);
+        }
+        resetCaptureStartEndFrames();
+        mFrameIndex++;
         return;
     }
 
@@ -8195,6 +8204,8 @@ void FrameCaptureShared::onEndFrame(gl::Context *context)
     {
         if (mFrameIndex == mCaptureStartFrame - 1)
         {
+            // Update output directory location
+            getOutputDirectory();
             // Trigger MEC.
             runMidExecutionCapture(context);
         }

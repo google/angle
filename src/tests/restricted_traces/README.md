@@ -280,6 +280,52 @@ capture. The app should continue rendering after that:
 ANGLE   : INFO: Finished recording graphics API capture
 ```
 
+## Optionally trigger additional captures
+
+It is possible to capture an arbitrary number of traces.
+
+After each trace completes, set the trigger value to the desired number of frames to capture
+for the next trace, optionally create and specify a different out_dir for the new trace data,
+and then start the new trace by again resetting the trigger value to zero.
+
+Example workflow for multiple captures:
+
+```
+adb shell mkdir -p /data/data/$PACKAGE_NAME/angle_capture_1
+adb shell mkdir -p /data/data/$PACKAGE_NAME/angle_capture_2
+adb shell mkdir -p /data/data/$PACKAGE_NAME/angle_capture_3
+
+# Set initial output dir and frame count
+adb shell setprop debug.angle.capture.out_dir /data/data/$PACKAGE_NAME/angle_capture_1
+adb shell setprop debug.angle.capture.trigger 100
+
+# Trigger capture
+adb shell setprop debug.angle.capture.trigger 0
+
+# Set the next output dir and frame count
+adb shell setprop debug.angle.capture.out_dir /data/data/$PACKAGE_NAME/angle_capture_2
+adb shell setprop debug.angle.capture.trigger 30
+
+# Trigger capture
+adb shell setprop debug.angle.capture.trigger 0
+
+# Set the next output dir and frame count
+adb shell setprop debug.angle.capture.out_dir /data/data/$PACKAGE_NAME/angle_capture_3
+adb shell setprop debug.angle.capture.trigger 60
+
+# Trigger capture
+adb shell setprop debug.angle.capture.trigger 0
+
+# Pull the traces
+adb pull /data/data/$PACKAGE_NAME/angle_capture_1
+adb pull /data/data/$PACKAGE_NAME/angle_capture_2
+adb pull /data/data/$PACKAGE_NAME/angle_capture_3
+```
+
+Note that multiple captures are incompatible with applications using persistent coherent memory.
+If more than one capture is attempted in this situation the tracer will exit immediately.
+The initial capture will remain valid.
+
 ## Pull the trace files
 
 Next, we want to pull those files over to the host and run some scripts.
