@@ -282,6 +282,9 @@ constexpr const char *kSkippedMessages[] = {
     "WARNING-Shader-OutputNotConsumed",
     // https://anglebug.com/383311444
     "VUID-vkCmdDraw-None-09462",
+    // https://anglebug.com/394598758
+    "VUID-vkBindBufferMemory-size-01037",
+    "VUID-vkBindBufferMemory-buffer-01444",
 };
 
 // Validation messages that should be ignored only when VK_EXT_primitive_topology_list_restart is
@@ -563,6 +566,13 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
         "SYNC-HAZARD-WRITE-AFTER-WRITE",
         "Hazard WRITE_AFTER_WRITE for VkImageView",
         "Access info (usage: SYNC_ACCESS_INDEX_NONE, prior_usage: SYNC_IMAGE_LAYOUT_TRANSITION, ",
+    },
+    // http://anglebug.com/394598470
+    {
+        "SYNC-HAZARD-WRITE-AFTER-READ",
+        "access = VK_PIPELINE_STAGE_2_COPY_BIT(VK_ACCESS_2_TRANSFER_WRITE_BIT)",
+        "prior_access = "
+        "VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT(VK_ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT)",
     },
 };
 
