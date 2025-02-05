@@ -1621,11 +1621,14 @@ void SpirvVaryingPrecisionFixer::modifyEntryPointInterfaceList(EntryPointList en
     //
     // With SPIR-V 1.4, the original variables are changed to Private and should remain in the list.
     // The new variables should be added to the variable list.
+    //
+    // If any ID is beyond the original bound, it was added by another transformation, and should be
+    // left intact.
     const size_t variableCount = interfaceList->size();
     for (size_t index = 0; index < variableCount; ++index)
     {
         const spirv::IdRef id            = (*interfaceList)[index];
-        const spirv::IdRef replacementId = getReplacementId(id);
+        const spirv::IdRef replacementId = id < mFixedVaryingId.size() ? getReplacementId(id) : id;
         if (replacementId != id)
         {
             if (entryPointList == EntryPointList::InterfaceVariables)
@@ -2703,6 +2706,7 @@ class SpirvMultisampleTransformer final : angle::NonCopyable
                                           const ShaderInterfaceVariableInfo &info,
                                           gl::ShaderType shaderType,
                                           spirv::IdRef id,
+                                          spirv::IdRef replacementId,
                                           spv::Decoration &decoration,
                                           spirv::Blob *blobOut);
 
@@ -2928,6 +2932,7 @@ TransformationState SpirvMultisampleTransformer::transformDecorate(
     const ShaderInterfaceVariableInfo &info,
     gl::ShaderType shaderType,
     spirv::IdRef id,
+    spirv::IdRef replacementId,
     spv::Decoration &decoration,
     spirv::Blob *blobOut)
 {
@@ -2956,7 +2961,7 @@ TransformationState SpirvMultisampleTransformer::transformDecorate(
             // not already decorated with Sample:
             //
             //     OpDecorate %id Sample
-            spirv::WriteDecorate(blobOut, id, spv::DecorationSample, {});
+            spirv::WriteDecorate(blobOut, replacementId, spv::DecorationSample, {});
         }
         else if (decoration == spv::DecorationBlock)
         {
@@ -2969,8 +2974,9 @@ TransformationState SpirvMultisampleTransformer::transformDecorate(
             {
                 if (!mVaryingInfoById[id].skipMemberSampleDecoration[member])
                 {
-                    spirv::WriteMemberDecorate(blobOut, id, spirv::LiteralInteger(member),
-                                               spv::DecorationSample, {});
+                    spirv::WriteMemberDecorate(blobOut, replacementId,
+                                               spirv::LiteralInteger(member), spv::DecorationSample,
+                                               {});
                 }
             }
         }
@@ -4004,8 +4010,12 @@ TransformationState SpirvTransformer::transformDecorate(const uint32_t *instruct
         }
     }
 
-    mMultisampleTransformer.transformDecorate(mNonSemanticInstructions, *info, mOptions.shaderType,
-                                              id, decoration, mSpirvBlobOut);
+    if (mInactiveVaryingRemover.transformDecorate(*info, mOptions.shaderType, id, decoration,
+                                                  decorationValues, mSpirvBlobOut) ==
+        TransformationState::Transformed)
+    {
+        return TransformationState::Transformed;
+    }
 
     if (mXfbCodeGenerator.transformDecorate(info, mOptions.shaderType, id, decoration,
                                             decorationValues,
@@ -4014,18 +4024,15 @@ TransformationState SpirvTransformer::transformDecorate(const uint32_t *instruct
         return TransformationState::Transformed;
     }
 
-    if (mInactiveVaryingRemover.transformDecorate(*info, mOptions.shaderType, id, decoration,
-                                                  decorationValues, mSpirvBlobOut) ==
-        TransformationState::Transformed)
-    {
-        return TransformationState::Transformed;
-    }
-
     // If using relaxed precision, generate instructions for the replacement id instead.
+    spirv::IdRef replacementId = id;
     if (mOptions.useSpirvVaryingPrecisionFixer)
     {
-        id = mVaryingPrecisionFixer.getReplacementId(id);
+        replacementId = mVaryingPrecisionFixer.getReplacementId(id);
     }
+
+    mMultisampleTransformer.transformDecorate(mNonSemanticInstructions, *info, mOptions.shaderType,
+                                              id, replacementId, decoration, mSpirvBlobOut);
 
     uint32_t newDecorationValue = ShaderInterfaceVariableInfo::kInvalid;
 
@@ -4047,7 +4054,7 @@ TransformationState SpirvTransformer::transformDecorate(const uint32_t *instruct
             if (mOptions.useSpirvVaryingPrecisionFixer && info->useRelaxedPrecision)
             {
                 // Change the id to replacement variable
-                spirv::WriteDecorate(mSpirvBlobOut, id, decoration, decorationValues);
+                spirv::WriteDecorate(mSpirvBlobOut, replacementId, decoration, decorationValues);
                 return TransformationState::Transformed;
             }
             break;
@@ -4062,7 +4069,7 @@ TransformationState SpirvTransformer::transformDecorate(const uint32_t *instruct
             }
             break;
         case spv::DecorationInvariant:
-            spirv::WriteDecorate(mSpirvBlobOut, id, spv::DecorationInvariant, {});
+            spirv::WriteDecorate(mSpirvBlobOut, replacementId, spv::DecorationInvariant, {});
             return TransformationState::Transformed;
         default:
             break;
@@ -4076,7 +4083,7 @@ TransformationState SpirvTransformer::transformDecorate(const uint32_t *instruct
 
     // Modify the decoration value.
     ASSERT(decorationValues.size() == 1);
-    spirv::WriteDecorate(mSpirvBlobOut, id, decoration,
+    spirv::WriteDecorate(mSpirvBlobOut, replacementId, decoration,
                          {spirv::LiteralInteger(newDecorationValue)});
 
     // If there are decorations to be added, add them right after the Location decoration is
@@ -4090,20 +4097,20 @@ TransformationState SpirvTransformer::transformDecorate(const uint32_t *instruct
     // fixedVaryingId.
     if (mOptions.useSpirvVaryingPrecisionFixer && info->useRelaxedPrecision)
     {
-        mVaryingPrecisionFixer.addDecorate(id, mSpirvBlobOut);
+        mVaryingPrecisionFixer.addDecorate(replacementId, mSpirvBlobOut);
     }
 
     // Add component decoration, if any.
     if (info->component != ShaderInterfaceVariableInfo::kInvalid)
     {
-        spirv::WriteDecorate(mSpirvBlobOut, id, spv::DecorationComponent,
+        spirv::WriteDecorate(mSpirvBlobOut, replacementId, spv::DecorationComponent,
                              {spirv::LiteralInteger(info->component)});
     }
 
     // Add index decoration, if any.
     if (info->index != ShaderInterfaceVariableInfo::kInvalid)
     {
-        spirv::WriteDecorate(mSpirvBlobOut, id, spv::DecorationIndex,
+        spirv::WriteDecorate(mSpirvBlobOut, replacementId, spv::DecorationIndex,
                              {spirv::LiteralInteger(info->index)});
     }
 
@@ -4111,7 +4118,7 @@ TransformationState SpirvTransformer::transformDecorate(const uint32_t *instruct
     if (mOptions.isTransformFeedbackStage && info->hasTransformFeedback)
     {
         const XFBInterfaceVariableInfo &xfbInfo = mVariableInfoMap.getXFBDataForVariableInfo(info);
-        mXfbCodeGenerator.addDecorate(xfbInfo, id, mSpirvBlobOut);
+        mXfbCodeGenerator.addDecorate(xfbInfo, replacementId, mSpirvBlobOut);
     }
 
     return TransformationState::Transformed;
