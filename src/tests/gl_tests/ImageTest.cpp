@@ -7767,6 +7767,33 @@ void ImageTest::framebufferResolveAttachmentDeletedWhileInUseHelper(bool useText
     ASSERT_NE(currentStep, Step::Abort);
 }
 
+// Test whether the dimension size of the target GL_TEXTURE_EXTERNAL_OES is as expected.
+TEST_P(ImageTestES31, QueryDimFromExternalTex)
+{
+    EGLWindow *window = getEGLWindow();
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt() || !hasExternalExt());
+
+    // Create the Image
+    GLTexture source;
+    GLsizei src_w = 1, src_h = 1, qw = 0, qh = 0;
+    EGLImageKHR image;
+    createEGLImage2DTextureSource(src_w, src_h, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
+                                  kSrgbColor, source, &image);
+
+    // Create the target
+    GLTexture target;
+    createEGLImageTargetTextureExternal(image, target);
+
+    // Querying the dimensions should work
+    glGetTexLevelParameteriv(GL_TEXTURE_EXTERNAL_OES, 0, GL_TEXTURE_WIDTH, &qw);
+    EXPECT_EQ(qw, src_w);
+    glGetTexLevelParameteriv(GL_TEXTURE_EXTERNAL_OES, 0, GL_TEXTURE_HEIGHT, &qh);
+    EXPECT_EQ(qh, src_h);
+
+    // Clean up
+    eglDestroyImageKHR(window->getDisplay(), image);
+}
+
 // Testing Target 2D Texture deleted while still used in the RenderPass as resolve attachment (Image
 // destroyed last).
 TEST_P(ImageTestES31, TargetTexture2DDeletedWhileInUseAsResolve)

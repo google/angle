@@ -1073,6 +1073,8 @@ bool ValidTexLevelDestinationTarget(const Context *context, TextureType type)
                    context->getExtensions().textureCubeMapArrayAny();
         case TextureType::Rectangle:
             return context->getExtensions().textureRectangleANGLE;
+        case TextureType::External:
+            return context->getExtensions().EGLImageExternalOES;
         case TextureType::Buffer:
             return context->getClientVersion() >= ES_3_2 ||
                    context->getExtensions().textureBufferAny();
