@@ -3149,7 +3149,8 @@ void SpirvSecondaryOutputTransformer::modifyEntryPointInterfaceList(
     for (size_t index = 0; index < interfaceList->size(); ++index)
     {
         const spirv::IdRef id((*interfaceList)[index]);
-        const ShaderInterfaceVariableInfo *info = variableInfoById[id];
+        const ShaderInterfaceVariableInfo *info =
+            id < variableInfoById.size() ? variableInfoById[id] : nullptr;
 
         if (info == nullptr || info->index != 1 || !info->isArray)
         {
