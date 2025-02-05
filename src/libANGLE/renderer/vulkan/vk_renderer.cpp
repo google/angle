@@ -223,8 +223,6 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdDrawIndexed-None-07835",
     "VUID-VkGraphicsPipelineCreateInfo-Input-08733",
     "VUID-vkCmdDraw-Input-08734",
-    // https://anglebug.com/42266575#comment4
-    "VUID-VkBufferViewCreateInfo-format-08779",
     // https://anglebug.com/42266639
     "VUID-VkVertexInputBindingDivisorDescriptionKHR-divisor-01870",
     "VUID-VkVertexInputBindingDivisorDescription-divisor-01870",
@@ -288,6 +286,12 @@ constexpr const char *kSkippedMessages[] = {
 constexpr const char *kNoListRestartSkippedMessages[] = {
     // http://anglebug.com/42262476
     "VUID-VkPipelineInputAssemblyStateCreateInfo-topology-06252",
+};
+
+// Validation messages that should be ignored only when VK_KHR_maintenance5 is not present.
+constexpr const char *kNoMaintenance5SkippedMessages[] = {
+    // https://anglebug.com/42266575#comment4
+    "VUID-VkBufferViewCreateInfo-format-08779",
 };
 
 // Validation messages that should be ignored only when exposeNonConformantExtensionsAndVersions is
@@ -4408,6 +4412,13 @@ void Renderer::initializeValidationMessageSuppressions()
             kExposeNonConformantSkippedMessages + ArraySize(kExposeNonConformantSkippedMessages));
     }
 
+    if (!getFeatures().supportsMaintenance5.enabled)
+    {
+        mSkippedValidationMessages.insert(
+            mSkippedValidationMessages.end(), kNoMaintenance5SkippedMessages,
+            kNoMaintenance5SkippedMessages + ArraySize(kNoMaintenance5SkippedMessages));
+    }
+
     if (getFeatures().useVkEventForImageBarrier.enabled &&
         (!vk::OutsideRenderPassCommandBuffer::ExecutesInline() ||
          !vk::RenderPassCommandBuffer::ExecutesInline()))
@@ -6529,6 +6540,13 @@ VkFormatFeatureFlags Renderer::getImageFormatFeatureBits(
     const VkFormatFeatureFlags featureBits) const
 {
     return getFormatFeatureBits<&VkFormatProperties::optimalTilingFeatures>(formatID, featureBits);
+}
+
+VkFormatFeatureFlags Renderer::getBufferFormatFeatureBits(
+    angle::FormatID formatID,
+    const VkFormatFeatureFlags featureBits) const
+{
+    return getFormatFeatureBits<&VkFormatProperties::bufferFeatures>(formatID, featureBits);
 }
 
 bool Renderer::hasImageFormatFeatureBits(angle::FormatID formatID,

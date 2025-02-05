@@ -274,6 +274,8 @@ class Renderer : angle::NonCopyable
         const VkFormatFeatureFlags featureBits) const;
     VkFormatFeatureFlags getImageFormatFeatureBits(angle::FormatID format,
                                                    const VkFormatFeatureFlags featureBits) const;
+    VkFormatFeatureFlags getBufferFormatFeatureBits(angle::FormatID format,
+                                                    const VkFormatFeatureFlags featureBits) const;
     bool hasImageFormatFeatureBits(angle::FormatID format,
                                    const VkFormatFeatureFlags featureBits) const;
     bool hasBufferFormatFeatureBits(angle::FormatID format,
