@@ -301,10 +301,7 @@ cl::WorkgroupSize CLDeviceVk::selectWorkGroupSize(const cl::NDRange &ndrange) co
             cl::WorkgroupSize newLocalSize = localSize;
             newLocalSize[i] *= 2;
 
-            // TODO: Add support for non-uniform WGS
-            // http://anglebug.com/42267067
-            if (ndrange.globalWorkSize[i] % newLocalSize[i] == 0 &&
-                newLocalSize[i] <= props.limits.maxComputeWorkGroupCount[i] &&
+            if (newLocalSize[i] <= props.limits.maxComputeWorkGroupCount[i] &&
                 newLocalSize[0] * newLocalSize[1] * newLocalSize[2] <= maxSize)
             {
                 localSize      = newLocalSize;
