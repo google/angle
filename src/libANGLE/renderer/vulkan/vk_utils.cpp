@@ -1844,7 +1844,7 @@ GLint ConvertCompressionFlagsToGLFixedRates(
     }
     VkImageCompressionFixedRateFlagsEXT tmpFlags = imageCompressionFixedRateFlags;
     uint8_t bitCount                             = 0;
-    std::vector<GLint> GLRates;
+    angle::FastVector<GLint, 4> GLRates;
 
     while (tmpFlags > 0)
     {
