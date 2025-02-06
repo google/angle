@@ -383,10 +383,9 @@ bool ValidateGetBooleani_v(const Context *context,
                            GLuint index,
                            const GLboolean *data)
 {
-    if (context->getClientVersion() < ES_3_1 && !context->getExtensions().drawBuffersIndexedAny())
+    if (context->getClientVersion() < ES_3_1)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION,
-                               kES31OrDrawBuffersIndexedExtensionNotAvailable);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES31Required);
         return false;
     }
 
@@ -406,10 +405,9 @@ bool ValidateGetBooleani_vRobustANGLE(const Context *context,
                                       const GLsizei *length,
                                       const GLboolean *data)
 {
-    if (context->getClientVersion() < ES_3_1 && !context->getExtensions().drawBuffersIndexedAny())
+    if (context->getClientVersion() < ES_3_1)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION,
-                               kES31OrDrawBuffersIndexedExtensionNotAvailable);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES31Required);
         return false;
     }
 

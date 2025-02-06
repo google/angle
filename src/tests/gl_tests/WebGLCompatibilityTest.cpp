@@ -2064,7 +2064,7 @@ TEST_P(WebGLCompatibilityTest, DrawBuffersIndexedGetIndexedParameter)
     ANGLE_SKIP_TEST_IF(!IsGLExtensionRequestable("GL_OES_draw_buffers_indexed"));
 
     GLint value;
-    GLboolean data[4];
+    GLint data[4];
 
     glGetIntegeri_v(GL_BLEND_EQUATION_RGB, 0, &value);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
@@ -2078,8 +2078,8 @@ TEST_P(WebGLCompatibilityTest, DrawBuffersIndexedGetIndexedParameter)
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
     glGetIntegeri_v(GL_BLEND_DST_ALPHA, 0, &value);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
-    glGetBooleani_v(GL_COLOR_WRITEMASK, 0, data);
-    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    glGetIntegeri_v(GL_COLOR_WRITEMASK, 0, data);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
     glRequestExtensionANGLE("GL_OES_draw_buffers_indexed");
     EXPECT_GL_NO_ERROR();
@@ -2112,7 +2112,7 @@ TEST_P(WebGLCompatibilityTest, DrawBuffersIndexedGetIndexedParameter)
     glGetIntegeri_v(GL_BLEND_DST_ALPHA, 0, &value);
     EXPECT_GL_NO_ERROR();
     EXPECT_EQ(GL_ZERO, value);
-    glGetBooleani_v(GL_COLOR_WRITEMASK, 0, data);
+    glGetIntegeri_v(GL_COLOR_WRITEMASK, 0, data);
     EXPECT_GL_NO_ERROR();
     EXPECT_EQ(true, data[0]);
     EXPECT_EQ(false, data[1]);

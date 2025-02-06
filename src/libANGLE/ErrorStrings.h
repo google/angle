@@ -101,7 +101,6 @@ inline constexpr const char *kDimensionsMustBePow2 = "Texture dimensions must be
 inline constexpr const char *kDispatchIndirectBufferNotBound = "Dispatch indirect buffer must be bound.";
 inline constexpr const char *kDrawBufferMaskMismatch = "Active draw buffers with missing fragment shader outputs.";
 inline constexpr const char *kDrawBuffersIndexedExtensionNotAvailable = "EXT/OES_draw_buffers_indexed is not available.";
-inline constexpr const char *kES31OrDrawBuffersIndexedExtensionNotAvailable = "EXT/OES_draw_buffers_indexed or ES 3.1 are required but not available.";
 inline constexpr const char *kDrawBufferTypeMismatch = "Fragment shader output type does not match the bound framebuffer attachment type.";
 inline constexpr const char *kDrawFramebufferIncomplete = "Draw framebuffer is incomplete.";
 inline constexpr const char *kDrawIndirectBufferNotBound = "Draw indirect buffer must be bound.";
