@@ -97,6 +97,12 @@ angle::Result InitAndroidExternalMemory(ErrorContext *context,
     importHardwareBufferInfo.sType  = VK_STRUCTURE_TYPE_IMPORT_ANDROID_HARDWARE_BUFFER_INFO_ANDROID;
     importHardwareBufferInfo.buffer = hardwareBuffer;
 
+    // Configure dedicated memory allocation for the external buffer and append it to the AHB info.
+    VkMemoryDedicatedAllocateInfo dedicatedAllocateInfo = {};
+    dedicatedAllocateInfo.sType    = VK_STRUCTURE_TYPE_MEMORY_DEDICATED_ALLOCATE_INFO;
+    dedicatedAllocateInfo.buffer   = buffer->getHandle();
+    importHardwareBufferInfo.pNext = &dedicatedAllocateInfo;
+
     ANGLE_VK_TRY(context, AllocateBufferMemoryWithRequirements(
                               context, MemoryAllocationType::BufferExternal, memoryProperties,
                               externalMemoryRequirements, &importHardwareBufferInfo, buffer,
