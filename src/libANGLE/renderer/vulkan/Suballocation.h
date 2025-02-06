@@ -61,6 +61,7 @@ class BufferBlock final : angle::NonCopyable
 
     VkMemoryPropertyFlags getMemoryPropertyFlags() const;
     VkDeviceSize getMemorySize() const;
+    VkDeviceSize getAllocatedBufferSize() const;
 
     VkResult allocate(VkDeviceSize size,
                       VkDeviceSize alignment,
@@ -208,8 +209,8 @@ class BufferSuballocation final : angle::NonCopyable
     bool isCached() const;
     bool isMapped() const;
     uint8_t *getMappedMemory() const;
-    void flush(const VkDevice &device);
-    void invalidate(const VkDevice &device);
+    void flush(Renderer *renderer);
+    void invalidate(Renderer *renderer);
     VkDeviceSize getOffset() const;
     bool valid() const;
     VkResult map(ErrorContext *context);
@@ -276,6 +277,11 @@ ANGLE_INLINE VkMemoryPropertyFlags BufferBlock::getMemoryPropertyFlags() const
 ANGLE_INLINE VkDeviceSize BufferBlock::getMemorySize() const
 {
     return mSize;
+}
+
+ANGLE_INLINE VkDeviceSize BufferBlock::getAllocatedBufferSize() const
+{
+    return mAllocatedBufferSize;
 }
 
 ANGLE_INLINE VkBool32 BufferBlock::isEmpty()
@@ -435,32 +441,6 @@ ANGLE_INLINE bool BufferSuballocation::isMapped() const
 ANGLE_INLINE uint8_t *BufferSuballocation::getMappedMemory() const
 {
     return mBufferBlock->getMappedMemory() + getOffset();
-}
-
-ANGLE_INLINE void BufferSuballocation::flush(const VkDevice &device)
-{
-    if (!isCoherent())
-    {
-        VkMappedMemoryRange mappedRange = {};
-        mappedRange.sType               = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-        mappedRange.memory              = mBufferBlock->getDeviceMemory().getHandle();
-        mappedRange.offset              = getOffset();
-        mappedRange.size                = mSize;
-        mBufferBlock->getDeviceMemory().flush(device, mappedRange);
-    }
-}
-
-ANGLE_INLINE void BufferSuballocation::invalidate(const VkDevice &device)
-{
-    if (!isCoherent())
-    {
-        VkMappedMemoryRange mappedRange = {};
-        mappedRange.sType               = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
-        mappedRange.memory              = mBufferBlock->getDeviceMemory().getHandle();
-        mappedRange.offset              = getOffset();
-        mappedRange.size                = mSize;
-        mBufferBlock->getDeviceMemory().invalidate(device, mappedRange);
-    }
 }
 
 ANGLE_INLINE VkDeviceSize BufferSuballocation::getOffset() const

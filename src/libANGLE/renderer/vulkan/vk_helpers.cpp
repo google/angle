@@ -5708,7 +5708,7 @@ angle::Result BufferHelper::initializeNonZeroMemory(ErrorContext *context,
         memset(mapPointer, kNonZeroInitValue, static_cast<size_t>(getSize()));
         if (!isCoherent())
         {
-            mSuballocation.flush(renderer->getDevice());
+            mSuballocation.flush(renderer);
         }
     }
 
@@ -5866,7 +5866,7 @@ angle::Result BufferHelper::mapWithOffset(ErrorContext *context, uint8_t **ptrOu
 
 angle::Result BufferHelper::flush(Renderer *renderer, VkDeviceSize offset, VkDeviceSize size)
 {
-    mSuballocation.flush(renderer->getDevice());
+    mSuballocation.flush(renderer);
     return angle::Result::Continue;
 }
 angle::Result BufferHelper::flush(Renderer *renderer)
@@ -5876,7 +5876,7 @@ angle::Result BufferHelper::flush(Renderer *renderer)
 
 angle::Result BufferHelper::invalidate(Renderer *renderer, VkDeviceSize offset, VkDeviceSize size)
 {
-    mSuballocation.invalidate(renderer->getDevice());
+    mSuballocation.invalidate(renderer);
     return angle::Result::Continue;
 }
 angle::Result BufferHelper::invalidate(Renderer *renderer)
