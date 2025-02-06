@@ -1082,9 +1082,7 @@ void ExtendRenderPassInvalidateArea(const gl::Rectangle &invalidateArea, gl::Rec
 
 bool CanCopyWithTransferForCopyImage(Renderer *renderer,
                                      ImageHelper *srcImage,
-                                     VkImageTiling srcTilingMode,
-                                     ImageHelper *dstImage,
-                                     VkImageTiling dstTilingMode)
+                                     ImageHelper *dstImage)
 {
     // Neither source nor destination formats can be emulated for copy image through transfer,
     // unless they are emulated with the same format!
@@ -1097,8 +1095,8 @@ bool CanCopyWithTransferForCopyImage(Renderer *renderer,
            srcImage->getActualFormat().pixelBytes == dstImage->getActualFormat().pixelBytes);
 
     return isFormatCompatible &&
-           CanCopyWithTransfer(renderer, srcImage->getActualFormatID(), srcTilingMode,
-                               dstImage->getActualFormatID(), dstTilingMode);
+           CanCopyWithTransfer(renderer, srcImage->getUsage(), dstImage->getActualFormatID(),
+                               dstImage->getTilingMode());
 }
 
 void ReleaseBufferListToRenderer(Context *context, BufferHelperQueue *buffers)
@@ -1444,19 +1442,16 @@ bool FormatHasNecessaryFeature(Renderer *renderer,
 }
 
 bool CanCopyWithTransfer(Renderer *renderer,
-                         angle::FormatID srcFormatID,
-                         VkImageTiling srcTilingMode,
+                         VkImageUsageFlags srcUsage,
                          angle::FormatID dstFormatID,
                          VkImageTiling dstTilingMode)
 {
-    // Checks that the formats in the copy transfer have the appropriate tiling and transfer bits
-    bool isTilingCompatible           = srcTilingMode == dstTilingMode;
-    bool srcFormatHasNecessaryFeature = FormatHasNecessaryFeature(
-        renderer, srcFormatID, srcTilingMode, VK_FORMAT_FEATURE_TRANSFER_SRC_BIT);
+    // Checks that the formats in the copy transfer have the appropriate transfer bits
+    bool srcFormatHasNecessaryFeature = (srcUsage & VK_IMAGE_USAGE_TRANSFER_SRC_BIT) != 0;
     bool dstFormatHasNecessaryFeature = FormatHasNecessaryFeature(
         renderer, dstFormatID, dstTilingMode, VK_FORMAT_FEATURE_TRANSFER_DST_BIT);
 
-    return isTilingCompatible && srcFormatHasNecessaryFeature && dstFormatHasNecessaryFeature;
+    return srcFormatHasNecessaryFeature && dstFormatHasNecessaryFeature;
 }
 
 void InitializeEventStageToVkPipelineStageFlagsMap(
@@ -8554,14 +8549,10 @@ angle::Result ImageHelper::CopyImageSubData(const gl::Context *context,
     ContextVk *contextVk = GetImpl(context);
     Renderer *renderer   = contextVk->getRenderer();
 
-    VkImageTiling srcTilingMode  = srcImage->getTilingMode();
-    VkImageTiling destTilingMode = dstImage->getTilingMode();
-
     const gl::LevelIndex srcLevelGL = gl::LevelIndex(srcLevel);
     const gl::LevelIndex dstLevelGL = gl::LevelIndex(dstLevel);
 
-    if (CanCopyWithTransferForCopyImage(renderer, srcImage, srcTilingMode, dstImage,
-                                        destTilingMode))
+    if (CanCopyWithTransferForCopyImage(renderer, srcImage, dstImage))
     {
         bool isSrc3D                         = srcImage->getType() == VK_IMAGE_TYPE_3D;
         bool isDst3D                         = dstImage->getType() == VK_IMAGE_TYPE_3D;
@@ -11752,8 +11743,11 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
 
     if (isExternalFormat)
     {
+        // Make sure the render pass is closed, per UtilsVk::copyImage's requirements.
+        ANGLE_TRY(
+            contextVk->flushCommandsAndEndRenderPass(RenderPassClosureReason::PrepareForImageCopy));
+
         CommandBufferAccess access;
-        access.onImageTransferRead(layoutChangeAspectFlags, this);
         OutsideRenderPassCommandBuffer *commandBuffer;
         ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
 

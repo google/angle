@@ -2247,8 +2247,7 @@ bool FormatHasNecessaryFeature(Renderer *renderer,
                                VkFormatFeatureFlags featureBits);
 
 bool CanCopyWithTransfer(Renderer *renderer,
-                         angle::FormatID srcFormatID,
-                         VkImageTiling srcTilingMode,
+                         VkImageUsageFlags srcUsage,
                          angle::FormatID dstFormatID,
                          VkImageTiling dstTilingMode);
 

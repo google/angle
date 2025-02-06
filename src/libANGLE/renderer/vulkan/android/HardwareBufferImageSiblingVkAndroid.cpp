@@ -76,9 +76,15 @@ VkImageTiling AhbDescUsageToVkImageTiling(const AHardwareBuffer_Desc &ahbDescrip
 // Map AHB usage flags to VkImageUsageFlags using this table from the Vulkan spec
 // https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/chap11.html#memory-external-android-hardware-buffer-usage
 VkImageUsageFlags AhbDescUsageToVkImageUsage(const AHardwareBuffer_Desc &ahbDescription,
-                                             bool isDepthOrStencilFormat)
+                                             bool isDepthOrStencilFormat,
+                                             bool isExternal)
 {
-    VkImageUsageFlags usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+    VkImageUsageFlags usage = 0;
+
+    if (!isExternal)
+    {
+        usage |= VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
+    }
 
     if ((ahbDescription.usage & AHARDWAREBUFFER_USAGE_GPU_SAMPLED_IMAGE) != 0)
     {
@@ -334,7 +340,8 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
     AHardwareBuffer_Desc ahbDescription;
     functions.describe(hardwareBuffer, &ahbDescription);
     VkImageTiling imageTilingMode = AhbDescUsageToVkImageTiling(ahbDescription);
-    VkImageUsageFlags usage = AhbDescUsageToVkImageUsage(ahbDescription, isDepthOrStencilFormat);
+    VkImageUsageFlags usage =
+        AhbDescUsageToVkImageUsage(ahbDescription, isDepthOrStencilFormat, isExternal);
 
     if (isExternal)
     {
