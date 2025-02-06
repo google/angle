@@ -1106,52 +1106,52 @@ ProgramMergedVaryings GetMergedVaryingsFromLinkingVariables(
     ShaderType frontShaderType = ShaderType::InvalidEnum;
     ProgramMergedVaryings merged;
 
-    for (ShaderType backShaderType : kAllGraphicsShaderTypes)
+    for (ShaderType currentShaderType : kAllGraphicsShaderTypes)
     {
-        if (!linkingVariables.isShaderStageUsedBitset[backShaderType])
+        if (!linkingVariables.isShaderStageUsedBitset[currentShaderType])
         {
             continue;
         }
-        const std::vector<sh::ShaderVariable> &backShaderOutputVaryings =
-            linkingVariables.outputVaryings[backShaderType];
-        const std::vector<sh::ShaderVariable> &backShaderInputVaryings =
-            linkingVariables.inputVaryings[backShaderType];
+        const std::vector<sh::ShaderVariable> &outputVaryings =
+            linkingVariables.outputVaryings[currentShaderType];
+        const std::vector<sh::ShaderVariable> &inputVaryings =
+            linkingVariables.inputVaryings[currentShaderType];
 
         // Add outputs. These are always unmatched since we walk shader stages sequentially.
-        for (const sh::ShaderVariable &frontVarying : backShaderOutputVaryings)
+        for (const sh::ShaderVariable &outputVarying : outputVaryings)
         {
             ProgramVaryingRef ref;
-            ref.frontShader      = &frontVarying;
-            ref.frontShaderStage = backShaderType;
+            ref.frontShader      = &outputVarying;
+            ref.frontShaderStage = currentShaderType;
             merged.push_back(ref);
         }
 
         if (frontShaderType == ShaderType::InvalidEnum)
         {
             // If this is our first shader stage, and not a VS, we might have unmatched inputs.
-            for (const sh::ShaderVariable &backVarying : backShaderInputVaryings)
+            for (const sh::ShaderVariable &inputVarying : inputVaryings)
             {
                 ProgramVaryingRef ref;
-                ref.backShader      = &backVarying;
-                ref.backShaderStage = backShaderType;
+                ref.backShader      = &inputVarying;
+                ref.backShaderStage = currentShaderType;
                 merged.push_back(ref);
             }
         }
         else
         {
             // Match inputs with the prior shader stage outputs.
-            for (const sh::ShaderVariable &backVarying : backShaderInputVaryings)
+            for (const sh::ShaderVariable &inputVarying : inputVaryings)
             {
                 bool found = false;
                 for (ProgramVaryingRef &ref : merged)
                 {
                     if (ref.frontShader && ref.frontShaderStage == frontShaderType &&
-                        InterfaceVariablesMatch(*ref.frontShader, backVarying))
+                        InterfaceVariablesMatch(*ref.frontShader, inputVarying))
                     {
                         ASSERT(ref.backShader == nullptr);
 
-                        ref.backShader      = &backVarying;
-                        ref.backShaderStage = backShaderType;
+                        ref.backShader      = &inputVarying;
+                        ref.backShaderStage = currentShaderType;
                         found               = true;
                         break;
                     }
@@ -1161,15 +1161,15 @@ ProgramMergedVaryings GetMergedVaryingsFromLinkingVariables(
                 if (!found)
                 {
                     ProgramVaryingRef ref;
-                    ref.backShader      = &backVarying;
-                    ref.backShaderStage = backShaderType;
+                    ref.backShader      = &inputVarying;
+                    ref.backShaderStage = currentShaderType;
                     merged.push_back(ref);
                 }
             }
         }
 
         // Save the current back shader to use as the next front shader.
-        frontShaderType = backShaderType;
+        frontShaderType = currentShaderType;
     }
 
     return merged;

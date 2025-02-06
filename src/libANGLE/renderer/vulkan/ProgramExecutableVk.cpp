@@ -1839,6 +1839,11 @@ void ProgramExecutableVk::resolvePrecisionMismatch(const gl::ProgramMergedVaryin
             continue;
         }
 
+        if (!mergedVarying.frontShader->active || !mergedVarying.backShader->active)
+        {
+            continue;
+        }
+
         GLenum frontPrecision = mergedVarying.frontShader->precision;
         GLenum backPrecision  = mergedVarying.backShader->precision;
         if (frontPrecision == backPrecision)

@@ -20630,6 +20630,40 @@ void main ()
     drawQuad(program, "position", 0);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
+
+// Test that a mismatched varying that is unused in fragshader compiles.
+TEST_P(GLSLTest, MismatchedInactiveVarying)
+{
+    const char kVS[] = R"(precision mediump float;
+
+attribute vec2 a_position_0;
+attribute vec4 a_color_0;
+
+varying vec4 vertexColor;
+
+void main()
+{
+    vertexColor = a_color_0;
+    gl_Position = vec4(a_position_0, 0.0, 1.0);
+})";
+
+    const char kFS[] = R"(precision highp float;
+
+uniform vec2 resolution;
+uniform vec2 fragOffset;
+uniform vec2 fragScale;
+
+varying vec4 vertexColor;
+varying vec2 texCoord;
+
+void main()
+{
+    vec2 uv = (fragScale * gl_FragCoord.xy + fragOffset) / resolution;
+    gl_FragColor = vec4(uv, 1.0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(
