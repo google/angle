@@ -986,6 +986,9 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState, EGLNativ
                                    {}, gl::LevelIndex(0), 0, 1, RenderTargetTransience::Default);
     mDepthStencilImageBinding.bind(&mDepthStencilImage);
     mColorImageMSBinding.bind(&mColorImageMS);
+    // Reserve enough room upfront to avoid storage re-allocation.
+    mSwapchainImages.reserve(8);
+    mSwapchainImageBindings.reserve(8);
 }
 
 WindowSurfaceVk::~WindowSurfaceVk()
