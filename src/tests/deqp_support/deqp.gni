@@ -1488,7 +1488,6 @@ deqp_khr_glesext_sources = [
 deqp_framework_debase_sources = [
   "$deqp_path/framework/delibs/debase/deDefs.c",
   "$deqp_path/framework/delibs/debase/deDefs.h",
-  "$deqp_path/framework/delibs/debase/deDefs_kc_cts.h",
   "$deqp_path/framework/delibs/debase/deFloat16.c",
   "$deqp_path/framework/delibs/debase/deFloat16.h",
   "$deqp_path/framework/delibs/debase/deInt32.c",
