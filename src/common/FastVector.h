@@ -489,7 +489,7 @@ ANGLE_INLINE void FastVector<T, N, Storage>::resize_down(size_type count)
                   "This is a special method for non trivially constructible types. "
                   "Please use regular resize(count) method.");
     ASSERT(count <= mSize);
-    resize_impl(count);
+    mSize = count;
 }
 
 template <class T, size_t N, class Storage>
