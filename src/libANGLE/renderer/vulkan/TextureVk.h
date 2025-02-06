@@ -634,11 +634,6 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                                  gl::TextureType type,
                                  const vk::Format &format);
 
-    GLint getFormatSupportedCompressionRatesImpl(vk::Renderer *renderer,
-                                                 const vk::Format &format,
-                                                 GLsizei bufSize,
-                                                 GLint *rates);
-
     bool mOwnsImage;
     // Generated from ImageVk if EGLImage target, or from throw-away generator if Surface target.
     UniqueSerial mImageSiblingSerial;

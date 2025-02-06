@@ -489,6 +489,74 @@ bool NeedsRGBAEmulation(vk::Renderer *renderer, angle::FormatID formatID)
     return true;
 }
 
+GLint GetFormatSupportedCompressionRates(vk::Renderer *renderer,
+                                         const vk::Format &format,
+                                         GLsizei bufSize,
+                                         GLint *rates)
+{
+    if (renderer->getFeatures().supportsImageCompressionControl.enabled)
+    {
+        VkImageCompressionControlEXT compressionInfo = {};
+        compressionInfo.sType = VK_STRUCTURE_TYPE_IMAGE_COMPRESSION_CONTROL_EXT;
+        // Use default compression control flag for query
+        compressionInfo.flags = VK_IMAGE_COMPRESSION_FIXED_RATE_DEFAULT_EXT;
+
+        VkImageCompressionPropertiesEXT compressionProp = {};
+        compressionProp.sType = VK_STRUCTURE_TYPE_IMAGE_COMPRESSION_PROPERTIES_EXT;
+
+        if (vk::ImageHelper::FormatSupportsUsage(
+                renderer,
+                vk::GetVkFormatFromFormatID(renderer, format.getActualRenderableImageFormatID()),
+                VK_IMAGE_TYPE_2D, VK_IMAGE_TILING_OPTIMAL,
+                VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT |
+                    VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+                0, &compressionInfo, &compressionProp,
+                vk::ImageHelper::FormatSupportCheck::OnlyQuerySuccess))
+        {
+            if ((compressionProp.imageCompressionFlags &
+                 VK_IMAGE_COMPRESSION_FIXED_RATE_EXPLICIT_EXT) != 0)
+            {
+                return vk_gl::ConvertCompressionFlagsToGLFixedRates(
+                    compressionProp.imageCompressionFixedRateFlags, bufSize, rates);
+            }
+        }
+    }
+
+    return 0;
+}
+
+bool GetCompressionFixedRate(VkImageCompressionControlEXT *compressionInfo,
+                             VkImageCompressionFixedRateFlagsEXT *compressionRates,
+                             GLenum glCompressionRate)
+{
+    bool rtn = true;
+    ASSERT(compressionInfo->sType == VK_STRUCTURE_TYPE_IMAGE_COMPRESSION_CONTROL_EXT);
+    compressionInfo->compressionControlPlaneCount = 1;
+
+    if (glCompressionRate == GL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT)
+    {
+        compressionInfo->flags = VK_IMAGE_COMPRESSION_DISABLED_EXT;
+    }
+    else if (glCompressionRate == GL_SURFACE_COMPRESSION_FIXED_RATE_DEFAULT_EXT)
+    {
+        compressionInfo->flags = VK_IMAGE_COMPRESSION_FIXED_RATE_DEFAULT_EXT;
+    }
+    else if (glCompressionRate >= GL_SURFACE_COMPRESSION_FIXED_RATE_1BPC_EXT &&
+             glCompressionRate <= GL_SURFACE_COMPRESSION_FIXED_RATE_12BPC_EXT)
+    {
+        int offset             = glCompressionRate - GL_SURFACE_COMPRESSION_FIXED_RATE_1BPC_EXT;
+        compressionInfo->flags = VK_IMAGE_COMPRESSION_FIXED_RATE_EXPLICIT_EXT;
+        *compressionRates      = 1u << offset;
+        compressionInfo->pFixedRateFlags = compressionRates;
+    }
+    else
+    {
+        // Invalid value
+        rtn = false;
+    }
+
+    return rtn;
+}
 }  // anonymous namespace
 
 // TextureVk implementation.
@@ -2067,42 +2135,6 @@ GLint TextureVk::getImageCompressionRate(const gl::Context *context)
     return compressionRate;
 }
 
-GLint TextureVk::getFormatSupportedCompressionRatesImpl(vk::Renderer *renderer,
-                                                        const vk::Format &format,
-                                                        GLsizei bufSize,
-                                                        GLint *rates)
-{
-    if (renderer->getFeatures().supportsImageCompressionControl.enabled)
-    {
-        VkImageCompressionControlEXT compressionInfo = {};
-        compressionInfo.sType = VK_STRUCTURE_TYPE_IMAGE_COMPRESSION_CONTROL_EXT;
-        // Use default compression control flag for query
-        compressionInfo.flags = VK_IMAGE_COMPRESSION_FIXED_RATE_DEFAULT_EXT;
-
-        VkImageCompressionPropertiesEXT compressionProp = {};
-        compressionProp.sType = VK_STRUCTURE_TYPE_IMAGE_COMPRESSION_PROPERTIES_EXT;
-
-        if (vk::ImageHelper::FormatSupportsUsage(
-                renderer,
-                vk::GetVkFormatFromFormatID(renderer, format.getActualRenderableImageFormatID()),
-                VK_IMAGE_TYPE_2D, VK_IMAGE_TILING_OPTIMAL,
-                VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT |
-                    VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
-                0, &compressionInfo, &compressionProp,
-                vk::ImageHelper::FormatSupportCheck::OnlyQuerySuccess))
-        {
-            if ((compressionProp.imageCompressionFlags &
-                 VK_IMAGE_COMPRESSION_FIXED_RATE_EXPLICIT_EXT) != 0)
-            {
-                return vk_gl::ConvertCompressionFlagsToGLFixedRates(
-                    compressionProp.imageCompressionFixedRateFlags, bufSize, rates);
-            }
-        }
-    }
-
-    return 0;
-}
-
 GLint TextureVk::getFormatSupportedCompressionRates(const gl::Context *context,
                                                     GLenum internalformat,
                                                     GLsizei bufSize,
@@ -2112,7 +2144,7 @@ GLint TextureVk::getFormatSupportedCompressionRates(const gl::Context *context,
     vk::Renderer *renderer   = contextVk->getRenderer();
     const vk::Format &format = renderer->getFormat(internalformat);
 
-    return getFormatSupportedCompressionRatesImpl(renderer, format, bufSize, rates);
+    return GetFormatSupportedCompressionRates(renderer, format, bufSize, rates);
 }
 
 void TextureVk::handleImmutableSamplerTransition(const vk::ImageHelper *previousImage,
@@ -4000,10 +4032,10 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
     // Fixed rate compression
     VkImageCompressionControlEXT *compressionInfo   = nullptr;
     VkImageCompressionControlEXT compressionInfoVar = {};
-    compressionInfoVar.sType = VK_STRUCTURE_TYPE_IMAGE_COMPRESSION_CONTROL_EXT;
-    VkImageCompressionFixedRateFlagsEXT compressionRates = VK_IMAGE_COMPRESSION_FIXED_RATE_NONE_EXT;
-    if (mOwnsImage && renderer->getFeatures().supportsImageCompressionControl.enabled)
+    if (renderer->getFeatures().supportsImageCompressionControl.enabled && mOwnsImage &&
+        mState.getSurfaceCompressionFixedRate() != GL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT)
     {
+        compressionInfoVar.sType = VK_STRUCTURE_TYPE_IMAGE_COMPRESSION_CONTROL_EXT;
         // Use default compression control flag for query
         compressionInfoVar.flags = VK_IMAGE_COMPRESSION_FIXED_RATE_DEFAULT_EXT;
 
@@ -4013,10 +4045,12 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
         // If fixed rate compression is supported by this type, not support YUV now.
         const vk::Format &format = renderer->getFormat(intendedImageFormatID);
         if (!mImage->isYuvResolve() &&
-            (getFormatSupportedCompressionRatesImpl(renderer, format, 0, nullptr) != 0))
+            (GetFormatSupportedCompressionRates(renderer, format, 0, nullptr) != 0))
         {
-            mImage->getCompressionFixedRate(&compressionInfoVar, &compressionRates,
-                                            mState.getSurfaceCompressionFixedRate());
+            VkImageCompressionFixedRateFlagsEXT compressionRates =
+                VK_IMAGE_COMPRESSION_FIXED_RATE_NONE_EXT;
+            GetCompressionFixedRate(&compressionInfoVar, &compressionRates,
+                                    mState.getSurfaceCompressionFixedRate());
             compressionInfo = &compressionInfoVar;
         }
     }

@@ -12359,39 +12359,6 @@ VkColorComponentFlags ImageHelper::getEmulatedChannelsMask() const
     return emulatedChannelsMask;
 }
 
-bool ImageHelper::getCompressionFixedRate(VkImageCompressionControlEXT *compressionInfo,
-                                          VkImageCompressionFixedRateFlagsEXT *compressionRates,
-                                          GLenum glCompressionRate) const
-{
-    bool rtn = true;
-    ASSERT(compressionInfo->sType == VK_STRUCTURE_TYPE_IMAGE_COMPRESSION_CONTROL_EXT);
-    compressionInfo->compressionControlPlaneCount = 1;
-
-    if (glCompressionRate == GL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT)
-    {
-        compressionInfo->flags = VK_IMAGE_COMPRESSION_DISABLED_EXT;
-    }
-    else if (glCompressionRate == GL_SURFACE_COMPRESSION_FIXED_RATE_DEFAULT_EXT)
-    {
-        compressionInfo->flags = VK_IMAGE_COMPRESSION_FIXED_RATE_DEFAULT_EXT;
-    }
-    else if (glCompressionRate >= GL_SURFACE_COMPRESSION_FIXED_RATE_1BPC_EXT &&
-             glCompressionRate <= GL_SURFACE_COMPRESSION_FIXED_RATE_12BPC_EXT)
-    {
-        int offset             = glCompressionRate - GL_SURFACE_COMPRESSION_FIXED_RATE_1BPC_EXT;
-        compressionInfo->flags = VK_IMAGE_COMPRESSION_FIXED_RATE_EXPLICIT_EXT;
-        *compressionRates      = 1u << offset;
-        compressionInfo->pFixedRateFlags = compressionRates;
-    }
-    else
-    {
-        // Invalid value
-        rtn = false;
-    }
-
-    return rtn;
-}
-
 LayerMode GetLayerMode(const vk::ImageHelper &image, uint32_t layerCount)
 {
     const uint32_t imageLayerCount = GetImageLayerCountForView(image);
