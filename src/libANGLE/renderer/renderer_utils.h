@@ -73,10 +73,10 @@ bool IsRotatedAspectRatio(SurfaceRotation rotation);
 
 using SpecConstUsageBits = angle::PackedEnumBitSet<sh::vk::SpecConstUsage, uint32_t>;
 
-void RotateRectangle(const SurfaceRotation rotation,
-                     const bool flipY,
-                     const int framebufferWidth,
-                     const int framebufferHeight,
+void RotateRectangle(SurfaceRotation rotation,
+                     bool flipY,
+                     int framebufferWidth,
+                     int framebufferHeight,
                      const gl::Rectangle &incoming,
                      gl::Rectangle *outgoing);
 
@@ -226,8 +226,8 @@ class MultisampleTextureInitializer
 class IncompleteTextureSet final : angle::NonCopyable
 {
   public:
-    IncompleteTextureSet();
-    ~IncompleteTextureSet();
+    IncompleteTextureSet()  = default;
+    ~IncompleteTextureSet() = default;
 
     void onDestroy(const gl::Context *context);
 
@@ -441,7 +441,7 @@ void CopyLineLoopIndicesWithRestart(GLsizei indexCount, const uint8_t *srcPtr, u
     if (indexCount > (loopStartIndex + 1))
     {
         // Close the last loop if it has more than one vertex.
-        *(outIndices++) = inIndices[loopStartIndex];
+        *outIndices = inIndices[loopStartIndex];
     }
 }
 

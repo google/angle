@@ -24,8 +24,8 @@
 #include "libANGLE/renderer/Format.h"
 #include "platform/Feature.h"
 
-#include <string.h>
 #include <cctype>
+#include <cstring>
 
 namespace angle
 {
@@ -74,7 +74,7 @@ void FeatureInfo::applyOverride(bool state)
 // FeatureSetBase implementation
 void FeatureSetBase::reset()
 {
-    for (auto iter : members)
+    for (const auto &iter : members)
     {
         FeatureInfo *feature = iter.second;
         feature->enabled     = false;
@@ -87,7 +87,7 @@ void FeatureSetBase::overrideFeatures(const std::vector<std::string> &featureNam
     for (const std::string &name : featureNames)
     {
         const bool hasWildcard = name.back() == '*';
-        for (auto iter : members)
+        for (const auto &iter : members)
         {
             const std::string &featureName = iter.first;
             FeatureInfo *feature           = iter.second;
@@ -111,9 +111,9 @@ void FeatureSetBase::overrideFeatures(const std::vector<std::string> &featureNam
 
 void FeatureSetBase::populateFeatureList(FeatureList *features) const
 {
-    for (FeatureMap::const_iterator it = members.begin(); it != members.end(); it++)
+    for (const auto &member : members)
     {
-        features->push_back(it->second);
+        features->push_back(member.second);
     }
 }
 }  // namespace angle
@@ -385,6 +385,7 @@ PackPixelsParams::PackPixelsParams()
     : destFormat(nullptr),
       outputPitch(0),
       packBuffer(nullptr),
+      reverseRowOrder(false),
       offset(0),
       rotation(SurfaceRotation::Identity)
 {}
@@ -692,10 +693,6 @@ void CopyImageCHROMIUM(const uint8_t *sourceData,
 }
 
 // IncompleteTextureSet implementation.
-IncompleteTextureSet::IncompleteTextureSet() {}
-
-IncompleteTextureSet::~IncompleteTextureSet() {}
-
 void IncompleteTextureSet::onDestroy(const gl::Context *context)
 {
     // Clear incomplete textures.
@@ -1374,7 +1371,7 @@ void LogFeatureStatus(const angle::FeatureSetBase &features,
     for (const std::string &name : featureNames)
     {
         const bool hasWildcard = name.back() == '*';
-        for (auto iter : features.getFeatures())
+        for (const auto &iter : features.getFeatures())
         {
             const std::string &featureName = iter.first;
 
