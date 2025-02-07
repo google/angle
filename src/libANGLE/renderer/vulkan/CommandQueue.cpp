@@ -668,6 +668,9 @@ void CommandQueue::handleDeviceLost(Renderer *renderer)
     std::lock_guard<angle::SimpleMutex> cmdCompleteLock(mCmdCompleteMutex);
     std::lock_guard<angle::SimpleMutex> cmdReleaseLock(mCmdReleaseMutex);
 
+    // Work around a driver bug where resource clean up would cause a crash without vkQueueWaitIdle.
+    mQueueMap.waitAllQueuesIdle();
+
     while (!mInFlightCommands.empty())
     {
         CommandBatch &batch = mInFlightCommands.front();
@@ -1221,6 +1224,11 @@ const float QueueFamily::kQueuePriorities[static_cast<uint32_t>(egl::ContextPrio
 DeviceQueueMap::~DeviceQueueMap() {}
 
 void DeviceQueueMap::destroy()
+{
+    waitAllQueuesIdle();
+}
+
+void DeviceQueueMap::waitAllQueuesIdle()
 {
     // Force all commands to finish by flushing all queues.
     for (const QueueAndIndex &queueAndIndex : mQueueAndIndices)

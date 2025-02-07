@@ -185,6 +185,9 @@ class DeviceQueueMap final
         return mQueueAndIndices[priority].queue;
     }
 
+    // Wait for all queues to be idle, called on device loss and destruction.
+    void waitAllQueuesIdle();
+
   private:
     uint32_t mQueueFamilyIndex;
     bool mIsProtected;
