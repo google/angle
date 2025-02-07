@@ -1089,6 +1089,11 @@ void Renderer::ensureCapsInitialized() const
     mNativeExtensions.textureBufferOES = true;
     mNativeExtensions.textureBufferEXT = true;
     mNativeCaps.maxTextureBufferSize   = rx::LimitToInt(limitsVk.maxTexelBufferElements);
+    if (getFeatures().padBuffersToMaxVertexAttribStride.enabled)
+    {
+        // Account for buffer padding
+        mNativeCaps.maxTextureBufferSize -= getMaxVertexAttribStride();
+    }
     mNativeCaps.textureBufferOffsetAlignment =
         rx::LimitToInt(limitsVk.minTexelBufferOffsetAlignment);
 
