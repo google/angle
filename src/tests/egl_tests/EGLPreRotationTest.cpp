@@ -650,6 +650,7 @@ TEST_P(EGLPreRotationSurfaceTest, CheckSurfaceCapabilities)
     // Set the initial window surface size.
     mOSWindow->resize(curWindowSurfaceWidth, curWindowSurfaceHeight);
     mOSWindow->setOrientation(curWindowSurfaceWidth, curWindowSurfaceHeight);
+    angle::Sleep(1000);
     eglSwapBuffers(mDisplay, mWindowSurface);
     ASSERT_EGL_SUCCESS();
 
@@ -673,6 +674,7 @@ TEST_P(EGLPreRotationSurfaceTest, CheckSurfaceCapabilities)
 
     mOSWindow->resize(curWindowSurfaceWidth, curWindowSurfaceHeight);
     mOSWindow->setOrientation(curWindowSurfaceWidth, curWindowSurfaceHeight);
+    angle::Sleep(1000);
 
     eglQuerySurface(mDisplay, mWindowSurface, EGL_WIDTH, &actualWidth);
     eglQuerySurface(mDisplay, mWindowSurface, EGL_HEIGHT, &actualHeight);
