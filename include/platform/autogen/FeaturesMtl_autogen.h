@@ -296,24 +296,6 @@ struct FeaturesMtl : FeatureSetBase
         &members,
     };
 
-    FeatureInfo compileMetalShaders = {
-        "compileMetalShaders",
-        FeatureCategory::MetalFeatures,
-        &members,
-    };
-
-    FeatureInfo loadMetalShadersFromBlobCache = {
-        "loadMetalShadersFromBlobCache",
-        FeatureCategory::MetalFeatures,
-        &members,
-    };
-
-    FeatureInfo printMetalShaders = {
-        "printMetalShaders",
-        FeatureCategory::MetalFeatures,
-        &members,
-    };
-
     FeatureInfo generateShareableShaders = {
         "generateShareableShaders",
         FeatureCategory::MetalFeatures,

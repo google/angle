@@ -23,7 +23,6 @@
 #include "libANGLE/renderer/metal/DisplayMtl.h"
 #include "libANGLE/renderer/metal/RenderTargetMtl.h"
 #include "libANGLE/renderer/metal/mtl_render_utils.h"
-#include "libANGLE/renderer/metal/process.h"
 #include "platform/PlatformMethods.h"
 
 // Compiler can turn on programmatical frame capture in release build by defining
@@ -930,84 +929,6 @@ angle::ObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
         ANGLE_HISTOGRAM_COUNTS("GPU.ANGLE.MetalShaderCompilationTimeUs", us);
     }
     return result;
-}
-
-std::string CompileShaderLibraryToFile(const std::string &source,
-                                       const std::map<std::string, std::string> &macros,
-                                       bool disableFastMath,
-                                       bool usesInvariance)
-{
-    auto tmpDir = angle::GetTempDirectory();
-    if (!tmpDir.valid())
-    {
-        FATAL() << "angle::GetTempDirectory() failed";
-    }
-    // NOTE: metal/metallib seem to require extensions, otherwise they interpret the files
-    // differently.
-    auto metalFileName =
-        angle::CreateTemporaryFileInDirectoryWithExtension(tmpDir.value(), ".metal");
-    auto airFileName = angle::CreateTemporaryFileInDirectoryWithExtension(tmpDir.value(), ".air");
-    auto metallibFileName =
-        angle::CreateTemporaryFileInDirectoryWithExtension(tmpDir.value(), ".metallib");
-    if (!metalFileName.valid() || !airFileName.valid() || !metallibFileName.valid())
-    {
-        FATAL() << "Unable to generate temporary files for compiling metal";
-    }
-    // Save the source.
-    {
-        FILE *fp = fopen(metalFileName.value().c_str(), "wb");
-        ASSERT(fp);
-        fwrite(source.c_str(), sizeof(char), metalFileName.value().length(), fp);
-        fclose(fp);
-    }
-
-    // metal -> air
-    std::vector<std::string> metalToAirArgv{"/usr/bin/xcrun",
-                                            "/usr/bin/xcrun",
-                                            "-sdk",
-                                            "macosx",
-                                            "metal",
-                                            "-std=macos-metal2.0",
-                                            "-mmacosx-version-min=10.13",
-                                            "-c",
-                                            metalFileName.value(),
-                                            "-o",
-                                            airFileName.value()};
-    // Macros are passed using `-D key=value`.
-    for (const auto &macro : macros)
-    {
-        metalToAirArgv.push_back("-D");
-        // TODO: not sure if this needs to escape strings or what (for example, might
-        // a space cause problems)?
-        metalToAirArgv.push_back(macro.first + "=" + macro.second);
-    }
-    // TODO: is this right, not sure if MTLCompileOptions.fastMathEnabled is same as -ffast-math.
-    if (!disableFastMath)
-    {
-        metalToAirArgv.push_back("-ffast-math");
-    }
-    if (usesInvariance)
-    {
-        metalToAirArgv.push_back("-fpreserve-invariance");
-    }
-    Process metalToAirProcess(metalToAirArgv);
-    int exitCode = -1;
-    if (!metalToAirProcess.DidLaunch() || !metalToAirProcess.WaitForExit(exitCode) || exitCode != 0)
-    {
-        FATAL() << "Generating air file failed";
-    }
-
-    // air -> metallib
-    const std::vector<std::string> airToMetallibArgv{
-        "xcrun",    "/usr/bin/xcrun",    "-sdk", "macosx",
-        "metallib", airFileName.value(), "-o",   metallibFileName.value()};
-    Process air_to_metallib_process(airToMetallibArgv);
-    if (!air_to_metallib_process.DidLaunch() || !air_to_metallib_process.WaitForExit(exitCode) ||
-        exitCode != 0)
-    {
-        FATAL() << "Ggenerating metallib file failed";
-    }
-    return metallibFileName.value();
 }
 
 angle::ObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromBinary(id<MTLDevice> metalDevice,
