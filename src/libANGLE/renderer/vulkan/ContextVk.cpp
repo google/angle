@@ -3751,7 +3751,10 @@ angle::Result ContextVk::submitCommands(const vk::Semaphore *signalSemaphore,
     {
         // Clean up garbage.
         vk::ResourceUse use(mLastFlushedQueueSerial);
+        size_t capacity = mCurrentGarbage.capacity();
         mRenderer->collectGarbage(use, std::move(mCurrentGarbage));
+        // Make sure we don't lose capacity after the move to avoid storage reallocation.
+        mCurrentGarbage.reserve(capacity);
     }
 
     ASSERT(mLastFlushedQueueSerial.valid());
