@@ -1712,6 +1712,107 @@ class BlitFramebufferTest : public ANGLETest<>
                         quadVertices.data());
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
+
+    void BlitSampleStencilToDefault(GLsizei samples)
+    {
+        GLsizei w = 3, h = 2;
+        GLint stencilValue = 1;
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+        GLRenderbuffer colorbuf;
+        glBindRenderbuffer(GL_RENDERBUFFER, colorbuf);
+        if (samples != 0)
+        {
+            glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_RGBA8, w, h);
+        }
+        else
+        {
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, w, h);
+        }
+
+        GLRenderbuffer depthstencilbuf;
+        glBindRenderbuffer(GL_RENDERBUFFER, depthstencilbuf);
+        if (samples != 0)
+        {
+            glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, w, h);
+        }
+        else
+        {
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, w, h);
+        }
+
+        GLFramebuffer framebuffer;
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorbuf);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
+                                  depthstencilbuf);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                                  depthstencilbuf);
+        glCheckFramebufferStatus(GL_FRAMEBUFFER);
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        glFlush();
+
+        // Clear the stencil of each pixel to a different value.
+        glEnable(GL_STENCIL_TEST);
+        glEnable(GL_SCISSOR_TEST);
+        glViewport(0, 0, w, h);
+        for (GLsizei y = 0; y < h; y++)
+        {
+            for (GLsizei x = 0; x < w; x++)
+            {
+                glScissor(x, y, 1, 1);
+                glClearStencil(stencilValue);
+                glClear(GL_STENCIL_BUFFER_BIT);
+                stencilValue += 1;
+            }
+        }
+        glDisable(GL_SCISSOR_TEST);
+
+        // Blit stencil buffer to default framebuffer.
+        GLenum attachments1[] = {GL_COLOR_ATTACHMENT0};
+        glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, attachments1);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+        glBlitFramebuffer(0, 0, w, h, 0, 0, w, h, GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT,
+                          GL_NEAREST);
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+
+        // Disable stencil and draw full_screen green color.
+        ANGLE_GL_PROGRAM(drawGreen, essl3_shaders::vs::Simple(), essl3_shaders::fs::Green());
+        glDisable(GL_STENCIL_TEST);
+        drawQuad(drawGreen, essl3_shaders::PositionAttrib(), 0.5f);
+
+        // Get the stencil through drawQuad.
+        // If the blit finished successfully, the stencil test should all pass.
+        ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+        GLint colorUniformLocation =
+            glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+        ASSERT_NE(colorUniformLocation, -1);
+        glUseProgram(drawColor);
+        glEnable(GL_STENCIL_TEST);
+        for (GLsizei i = 1; i <= 6; i++)
+        {
+            glStencilFunc(GL_EQUAL, i, 255);
+            glUniform4f(colorUniformLocation, i * 1.0f / 255, 0.0f, 0.0f, 1.0f);
+            drawQuad(drawColor, essl1_shaders::PositionAttrib(), 1.0f);
+            ASSERT_GL_NO_ERROR();
+        }
+
+        // Check the result.
+        std::vector<GLColor> pixels(w * h);
+        GLuint color_ref = 1;
+        glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
+        for (GLsizei y = 0; y < h; y++)
+        {
+            for (GLsizei x = 0; x < w; x++)
+            {
+                const int curPos = y * w + x;
+                EXPECT_COLOR_NEAR(GLColor(color_ref, 0, 0, 255), pixels[curPos], 1);
+                color_ref += 1;
+            }
+        }
+    }
 };
 
 class BlitFramebufferTestES31 : public BlitFramebufferTest
@@ -1793,72 +1894,16 @@ TEST_P(BlitFramebufferTest, MultisampleDepth)
     ASSERT_GL_NO_ERROR();
 }
 
-// Blit multisample stencil buffer to default framebuffer without prerotaion.
+// Blit stencil buffer to default framebuffer with prerotaion.
+TEST_P(BlitFramebufferTest, BlitStencilToDefault)
+{
+    BlitSampleStencilToDefault(0);
+}
+
+// Blit multisample stencil buffer to default framebuffer with prerotaion.
 TEST_P(BlitFramebufferTest, BlitMultisampleStencilToDefault)
 {
-    // http://anglebug.com/42262159
-    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsMac());
-
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-
-    GLRenderbuffer colorbuf;
-    glBindRenderbuffer(GL_RENDERBUFFER, colorbuf);
-    glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_RGBA8, 128, 128);
-
-    GLRenderbuffer depthstencilbuf;
-    glBindRenderbuffer(GL_RENDERBUFFER, depthstencilbuf);
-    glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, 128, 128);
-
-    GLFramebuffer framebuffer;
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, colorbuf);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
-                              depthstencilbuf);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
-                              depthstencilbuf);
-    glCheckFramebufferStatus(GL_FRAMEBUFFER);
-
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    glFlush();
-
-    // Replace stencil to 1.
-    ANGLE_GL_PROGRAM(drawRed, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
-    glEnable(GL_STENCIL_TEST);
-    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
-    glStencilFunc(GL_ALWAYS, 1, 255);
-    drawQuad(drawRed, essl3_shaders::PositionAttrib(), 0.8f);
-
-    // Blit multisample stencil buffer to default frambuffer.
-    GLenum attachments1[] = {GL_COLOR_ATTACHMENT0};
-    glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, attachments1);
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-    glBlitFramebuffer(0, 0, 128, 128, 0, 0, 128, 128, GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT,
-                      GL_NEAREST);
-    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-
-    // Disable stencil and draw full_screen green color.
-    ANGLE_GL_PROGRAM(drawGreen, essl3_shaders::vs::Simple(), essl3_shaders::fs::Green());
-    glDisable(GL_STENCIL_TEST);
-    drawQuad(drawGreen, essl3_shaders::PositionAttrib(), 0.5f);
-
-    // Draw blue color if the stencil is equal to 1.
-    // If the blit finished successfully, the stencil test should all pass.
-    ANGLE_GL_PROGRAM(drawBlue, essl3_shaders::vs::Simple(), essl3_shaders::fs::Blue());
-    glEnable(GL_STENCIL_TEST);
-    glStencilFunc(GL_EQUAL, 1, 255);
-    drawQuad(drawBlue, essl3_shaders::PositionAttrib(), 0.2f);
-
-    // Check the result, especially the boundaries.
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
-    EXPECT_PIXEL_COLOR_EQ(127, 0, GLColor::blue);
-    EXPECT_PIXEL_COLOR_EQ(50, 0, GLColor::blue);
-    EXPECT_PIXEL_COLOR_EQ(127, 1, GLColor::blue);
-    EXPECT_PIXEL_COLOR_EQ(0, 127, GLColor::blue);
-    EXPECT_PIXEL_COLOR_EQ(127, 127, GLColor::blue);
-    EXPECT_PIXEL_COLOR_EQ(64, 64, GLColor::blue);
-
-    ASSERT_GL_NO_ERROR();
+    BlitSampleStencilToDefault(4);
 }
 
 // Test blit multisampled framebuffer to MRT framebuffer

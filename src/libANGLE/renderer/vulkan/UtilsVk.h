@@ -490,11 +490,12 @@ class UtilsVk : angle::NonCopyable
         float invSrcExtent[2]    = {};
         int32_t srcLayer         = 0;
         int32_t srcWidth         = 0;
-        int32_t blitArea[4]      = {};
-        int32_t dstPitch         = 0;
+        int32_t srcHeight        = 0;
         uint32_t flipX           = 0;
         uint32_t flipY           = 0;
         uint32_t rotateXY        = 0;
+        int32_t blitArea[4]      = {};
+        int32_t dstPitch         = 0;
     };
 
     struct ExportStencilShaderParams

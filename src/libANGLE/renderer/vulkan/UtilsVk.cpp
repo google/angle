@@ -3193,6 +3193,7 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
     shaderParams.invSrcExtent[1] = 1.0f / params.srcExtents[1];
     shaderParams.srcLayer        = params.srcLayer;
     shaderParams.srcWidth        = params.srcExtents[0];
+    shaderParams.srcHeight       = params.srcExtents[1];
     shaderParams.dstPitch        = bufferRowLengthInUints;
     shaderParams.blitArea[0]     = params.blitArea.x;
     shaderParams.blitArea[1]     = params.blitArea.y;
