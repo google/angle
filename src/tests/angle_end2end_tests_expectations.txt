@@ -816,6 +816,10 @@ b/217922015 PIXEL6 VULKAN : GLSLTest_ES3.NestedPowFromUniform/* = SKIP
 378404998 PIXEL6 VULKAN : VulkanPerformanceCounterTest_ES31.ColorMaskedFramebufferFetchDrawThenClear/* = SKIP
 b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachments/* = SKIP
 
+// Temporary suppression until VUID-VkSubpassDescription2-nullColorAttachmentWithExternalFormatResolve-09336 is fixed
+395223719 PIXEL6 VULKAN : ImageTestES3.ClearYUVAHB/* = SKIP
+395223719 PIXEL6 VULKAN : ImageTestES3.RenderToYUVAHB/* = SKIP
+
 // Some Metal tests fail on iOS Intel simulator
 40096874 IOS METAL : CubeMapTextureTest.SampleCoordinateTransformGrad/* = SKIP
 40096874 IOS METAL : CubeMapTextureTest.SampleCoordinateTransformGrad_ES3/* = SKIP
