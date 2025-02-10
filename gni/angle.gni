@@ -186,8 +186,7 @@ declare_args() {
   angle_enable_gl =
       (ozone_platform_gbm || ozone_platform_wayland || !is_linux ||
        ((angle_use_x11 && !is_chromeos) || angle_use_wayland || is_castos)) &&
-      !is_fuchsia && !angle_is_winuwp && !is_ggp && !is_win_arm64 && !is_ios &&
-      !is_desktop_android
+      !is_fuchsia && !angle_is_winuwp && !is_ggp && !is_win_arm64 && !is_ios
 
   angle_enable_vulkan =
       angle_has_build &&
