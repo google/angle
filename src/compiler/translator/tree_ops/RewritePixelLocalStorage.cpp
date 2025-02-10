@@ -756,12 +756,12 @@ class RewritePLSToFramebufferFetchTraverser : public RewritePLSTraverser
         {
             const TType &plsType = plsVar.getType();
 
-            TType *accessVarType = nullptr;
+            TType *accessVarType;
             switch (plsType.getLayoutQualifier().imageInternalFormat)
             {
                 default:
                     UNREACHABLE();
-                    break;
+                    [[fallthrough]];
                 case EiifRGBA8:
                     accessVarType = new TType(EbtFloat, 4);
                     break;
