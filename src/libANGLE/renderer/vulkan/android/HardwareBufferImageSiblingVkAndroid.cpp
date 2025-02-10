@@ -168,20 +168,20 @@ egl::Error HardwareBufferImageSiblingVkAndroid::ValidateHardwareBuffer(
     {
         if (!angle::android::IsValidNativeWindowBuffer(windowBuffer))
         {
-            return egl::EglBadParameter()
-                   << "The given buffer is not a valid native window buffer.";
+            return egl::Error(EGL_BAD_PARAMETER,
+                              "The given buffer is not a valid native window buffer.");
         }
         hardwareBuffer = angle::android::ANativeWindowBufferToAHardwareBuffer(windowBuffer);
         if (hardwareBuffer == nullptr)
         {
-            return egl::EglBadParameter()
-                   << "Failed to obtain hardware buffer through given window buffer.";
+            return egl::Error(EGL_BAD_PARAMETER,
+                              "Failed to obtain hardware buffer through given window buffer.");
         }
     }
     else
     {
-        return egl::EglBadParameter()
-               << "Failed to obtain Window buffer through given client buffer handler.";
+        return egl::Error(EGL_BAD_PARAMETER,
+                          "Failed to obtain Window buffer through given client buffer handler.");
     }
 
     VkAndroidHardwareBufferFormatPropertiesANDROID bufferFormatProperties = {};
@@ -198,7 +198,7 @@ egl::Error HardwareBufferImageSiblingVkAndroid::ValidateHardwareBuffer(
         vkGetAndroidHardwareBufferPropertiesANDROID(device, hardwareBuffer, &bufferProperties);
     if (result != VK_SUCCESS)
     {
-        return egl::EglBadParameter() << "Failed to query AHardwareBuffer properties";
+        return egl::Error(EGL_BAD_PARAMETER, "Failed to query AHardwareBuffer properties");
     }
 
     int width       = 0;
@@ -215,9 +215,10 @@ egl::Error HardwareBufferImageSiblingVkAndroid::ValidateHardwareBuffer(
         // We must have an external format, check that it supports texture sampling
         if (!(bufferFormatProperties.formatFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT))
         {
-            return egl::EglBadParameter()
-                   << "Sampling from AHardwareBuffer externalFormat 0x" << std::hex
-                   << bufferFormatProperties.externalFormat << " is unsupported ";
+            std::ostringstream err;
+            err << "Sampling from AHardwareBuffer externalFormat 0x" << std::hex
+                << bufferFormatProperties.externalFormat << " is unsupported.";
+            return egl::Error(EGL_BAD_PARAMETER, err.str());
         }
     }
     else
@@ -229,9 +230,10 @@ egl::Error HardwareBufferImageSiblingVkAndroid::ValidateHardwareBuffer(
                 : HasNonRenderableTextureFormatSupport(renderer, formatID);
         if (!hasNecessaryFormatSupport)
         {
-            return egl::EglBadParameter()
-                   << "AHardwareBuffer format " << bufferFormatProperties.format
-                   << " does not support enough features to use as a texture.";
+            std::ostringstream err;
+            err << "AHardwareBuffer format " << bufferFormatProperties.format
+                << " does not support enough features to use as a texture.";
+            return egl::Error(EGL_BAD_PARAMETER, err.str());
         }
     }
 
@@ -239,9 +241,9 @@ egl::Error HardwareBufferImageSiblingVkAndroid::ValidateHardwareBuffer(
     {
         if ((usage & AHARDWAREBUFFER_USAGE_PROTECTED_CONTENT) == 0)
         {
-            return egl::EglBadAccess()
-                   << "EGL_PROTECTED_CONTENT_EXT attribute does not match protected state "
-                      "of EGLClientBuffer.";
+            return egl::Error(EGL_BAD_ACCESS,
+                              "EGL_PROTECTED_CONTENT_EXT attribute does not match protected state "
+                              "of EGLClientBuffer.");
         }
     }
 

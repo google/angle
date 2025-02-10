@@ -206,7 +206,7 @@ Error Surface::initialize(const Display *display)
     // EGL_BAD_MATCH error
     if (!gl::ColorspaceFormatOverride(mGLColorspace, &overrideRenderTargetFormat))
     {
-        return egl::EglBadMatch();
+        return egl::Error(EGL_BAD_MATCH);
     }
 
     // If an override is required update mState.config as well
@@ -269,7 +269,7 @@ Error Surface::makeCurrent(const gl::Context *context)
 {
     if (isLocked())
     {
-        return EglBadAccess();
+        return egl::Error(EGL_BAD_ACCESS);
     }
     ANGLE_TRY(mImplementation->makeCurrent(context));
     mIsCurrentOnAnyContext = true;

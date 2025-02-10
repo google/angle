@@ -43,14 +43,16 @@ egl::Error ExternalImageSiblingImpl11::initialize(const egl::Display *display)
     {
         if (!mAttribs.contains(EGL_D3D11_TEXTURE_PLANE_ANGLE))
         {
-            return egl::EglBadParameter()
-                   << "EGL_D3D11_TEXTURE_PLANE_ANGLE must be specified for YUV textures.";
+            return egl::Error(EGL_BAD_PARAMETER,
+                              "EGL_D3D11_TEXTURE_PLANE_ANGLE must be specified for YUV textures.");
         }
 
         EGLint plane = mAttribs.getAsInt(EGL_D3D11_TEXTURE_PLANE_ANGLE);
         if (plane < 0 || plane > 1)
         {
-            return egl::EglBadParameter() << "Invalid client buffer texture plane: " << plane;
+            std::ostringstream err;
+            err << "Invalid client buffer texture plane: " << plane;
+            return egl::Error(EGL_BAD_PARAMETER, err.str());
         }
 
         mTexture.set(texture, d3d11::GetYUVPlaneFormat(textureDesc.Format, plane));

@@ -1073,7 +1073,7 @@ egl::Error SwapChain11::getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLu
 {
     if (!mSwapChain)
     {
-        return egl::EglNotInitialized() << "Swap chain uninitialized";
+        return egl::Error(EGL_NOT_INITIALIZED, "Swap chain uninitialized");
     }
 
     DXGI_FRAME_STATISTICS stats = {};
@@ -1081,7 +1081,9 @@ egl::Error SwapChain11::getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLu
 
     if (FAILED(result))
     {
-        return egl::EglBadAlloc() << "Failed to get frame statistics, " << gl::FmtHR(result);
+        std::ostringstream err;
+        err << "Failed to get frame statistics, " << gl::FmtHR(result);
+        return egl::Error(EGL_BAD_ALLOC, err.str());
     }
 
     // Conversion from DXGI_FRAME_STATISTICS to the output values:

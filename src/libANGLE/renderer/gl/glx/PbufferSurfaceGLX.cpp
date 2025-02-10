@@ -52,7 +52,7 @@ egl::Error PbufferSurfaceGLX::initialize(const egl::Display *display)
     mPbuffer = mGLX.createPbuffer(mFBConfig, attribs);
     if (!mPbuffer)
     {
-        return egl::EglBadAlloc() << "Failed to create a native GLX pbuffer.";
+        return egl::Error(EGL_BAD_ALLOC, "Failed to create a native GLX pbuffer.");
     }
 
     if (mLargest)

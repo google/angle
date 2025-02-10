@@ -42,7 +42,7 @@ egl::Error DisplayVkWayland::initialize(egl::Display *display)
     if (!mWaylandDisplay)
     {
         ERR() << "Failed to retrieve wayland display";
-        return egl::EglNotInitialized();
+        return egl::Error(EGL_NOT_INITIALIZED);
     }
 
     egl::Error ret = DisplayVk::initialize(display);

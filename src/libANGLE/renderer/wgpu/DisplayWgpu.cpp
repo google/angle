@@ -278,7 +278,9 @@ egl::Error DisplayWgpu::createWgpuDevice()
     wgpu::WaitStatus status = mInstance.WaitAny(1, &futureWaitInfo, -1);
     if (webgpu::IsWgpuError(status))
     {
-        return egl::EglBadAlloc() << "Failed to get WebGPU adapter: " << adapterResult.message;
+        std::ostringstream err;
+        err << "Failed to get WebGPU adapter: " << adapterResult.message;
+        return egl::Error(EGL_BAD_ALLOC, err.str());
     }
 
     mAdapter = adapterResult.adapter;

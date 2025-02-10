@@ -28,7 +28,7 @@ egl::Error DisplayVkGbm::initialize(egl::Display *display)
     if (!mGbmDevice)
     {
         ERR() << "Failed to retrieve GBM device";
-        return egl::EglNotInitialized();
+        return egl::Error(EGL_NOT_INITIALIZED);
     }
 
     return DisplayVk::initialize(display);

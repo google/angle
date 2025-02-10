@@ -48,7 +48,7 @@ egl::Error Device11::initialize()
 {
     if (!mDevice)
     {
-        return egl::EglBadAttribute() << "Invalid D3D device passed into EGLDeviceEXT";
+        return egl::Error(EGL_BAD_ATTRIBUTE, "Invalid D3D device passed into EGLDeviceEXT");
     }
 
     return egl::NoError();

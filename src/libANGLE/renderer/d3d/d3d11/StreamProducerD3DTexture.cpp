@@ -25,13 +25,13 @@ egl::Error GetGLDescFromTex(ID3D11Texture2D *const tex,
                             egl::Stream::GLTextureDescription *const out)
 {
     if (!tex)
-        return egl::EglBadParameter() << "Texture is null";
+        return egl::Error(EGL_BAD_PARAMETER, "Texture is null");
 
     D3D11_TEXTURE2D_DESC desc;
     tex->GetDesc(&desc);
 
     if (desc.Width < 1 || desc.Height < 1)
-        return egl::EglBadParameter() << "Width or height < 1";
+        return egl::Error(EGL_BAD_PARAMETER, "Width or height < 1");
 
     out->width     = desc.Width;
     out->height    = desc.Height;
@@ -76,13 +76,14 @@ egl::Error GetGLDescFromTex(ID3D11Texture2D *const tex,
             break;
 
         default:
-            return egl::EglBadParameter() << "Unsupported format";
+            return egl::Error(EGL_BAD_PARAMETER, "Unsupported format");
     }
 
     if (planeFormats[1])  // If we have YUV planes, expect 4:2:0.
     {
         if ((desc.Width % 2) != 0 || (desc.Height % 2) != 0)
-            return egl::EglBadParameter() << "YUV 4:2:0 textures must have even width and height.";
+            return egl::Error(EGL_BAD_PARAMETER,
+                              "YUV 4:2:0 textures must have even width and height.");
     }
     if (planeIndex > 0)
     {
@@ -96,7 +97,7 @@ egl::Error GetGLDescFromTex(ID3D11Texture2D *const tex,
         out->internalFormat = planeFormats[planeIndex];
     }
     if (!out->internalFormat)
-        return egl::EglBadParameter() << "Plane out of range";
+        return egl::Error(EGL_BAD_PARAMETER, "Plane out of range");
 
     return egl::NoError();
 }
@@ -123,7 +124,7 @@ egl::Error StreamProducerD3DTexture::validateD3DTexture(const void *pointer,
     textureD3D->GetDevice(&device);
     if (device.Get() != mRenderer->getDevice())
     {
-        return egl::EglBadParameter() << "Texture not created on ANGLE D3D device";
+        return egl::Error(EGL_BAD_PARAMETER, "Texture not created on ANGLE D3D device");
     }
 
     const auto planeId = static_cast<UINT>(attributes.get(EGL_NATIVE_BUFFER_PLANE_OFFSET_IMG, 0));

@@ -60,13 +60,13 @@ egl::Error SurfaceNULL::releaseTexImage(const gl::Context *context, EGLint buffe
 egl::Error SurfaceNULL::getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR *sbc)
 {
     UNIMPLEMENTED();
-    return egl::EglBadAccess();
+    return egl::Error(EGL_BAD_ACCESS);
 }
 
 egl::Error SurfaceNULL::getMscRate(EGLint *numerator, EGLint *denominator)
 {
     UNIMPLEMENTED();
-    return egl::EglBadAccess();
+    return egl::Error(EGL_BAD_ACCESS);
 }
 
 void SurfaceNULL::setSwapInterval(const egl::Display *display, EGLint interval) {}

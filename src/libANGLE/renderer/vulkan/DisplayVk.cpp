@@ -222,7 +222,7 @@ egl::Error DisplayVk::restoreLostDevice(const egl::Display *display)
 {
     // A vulkan device cannot be restored, the entire renderer would have to be re-created along
     // with any other EGL objects that reference it.
-    return egl::EglBadDisplay();
+    return egl::Error(EGL_BAD_DISPLAY);
 }
 
 std::string DisplayVk::getRendererDescription()
@@ -456,7 +456,7 @@ egl::Error DisplayVk::validateImageClientBuffer(const gl::Context *context,
             VkImage *vkImage = reinterpret_cast<VkImage *>(clientBuffer);
             if (!vkImage || *vkImage == VK_NULL_HANDLE)
             {
-                return egl::EglBadParameter() << "clientBuffer is invalid.";
+                return egl::Error(EGL_BAD_PARAMETER, "clientBuffer is invalid.");
             }
 
             GLenum internalFormat =
@@ -474,8 +474,10 @@ egl::Error DisplayVk::validateImageClientBuffer(const gl::Context *context,
                 case GL_NONE:
                     break;
                 default:
-                    return egl::EglBadParameter() << "Invalid EGLImage texture internal format: 0x"
-                                                  << std::hex << internalFormat;
+                    std::ostringstream err;
+                    err << "Invalid EGLImage texture internal format: 0x" << std::hex
+                        << internalFormat;
+                    return egl::Error(EGL_BAD_PARAMETER, err.str());
             }
 
             uint64_t hi = static_cast<uint64_t>(attribs.get(EGL_VULKAN_IMAGE_CREATE_INFO_HI_ANGLE));
@@ -484,10 +486,10 @@ egl::Error DisplayVk::validateImageClientBuffer(const gl::Context *context,
             if (reinterpret_cast<const VkImageCreateInfo *>(info)->sType !=
                 VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO)
             {
-                return egl::EglBadParameter()
-                       << "EGL_VULKAN_IMAGE_CREATE_INFO_HI_ANGLE and "
-                          "EGL_VULKAN_IMAGE_CREATE_INFO_LO_ANGLE are not pointing to a "
-                          "valid VkImageCreateInfo structure.";
+                return egl::Error(EGL_BAD_PARAMETER,
+                                  "EGL_VULKAN_IMAGE_CREATE_INFO_HI_ANGLE and "
+                                  "EGL_VULKAN_IMAGE_CREATE_INFO_LO_ANGLE are not pointing to a "
+                                  "valid VkImageCreateInfo structure.");
             }
 
             return egl::NoError();
@@ -748,11 +750,11 @@ egl::Error DisplayVk::querySupportedCompressionRates(const egl::Config *configur
     }
     else if (result == VK_ERROR_OUT_OF_HOST_MEMORY || result == VK_ERROR_OUT_OF_DEVICE_MEMORY)
     {
-        return egl::EglBadAlloc();
+        return egl::Error(EGL_BAD_ALLOC);
     }
     else if (result != VK_SUCCESS)
     {
-        return egl::EglBadAccess();
+        return egl::Error(EGL_BAD_ACCESS);
     }
 
     std::vector<EGLint> eglFixedRates = vk_gl::ConvertCompressionFlagsToEGLFixedRate(

@@ -29,7 +29,7 @@ uint32_t ExternalImageSiblingImpl::getLevelCount() const
 egl::Error ImageImpl::exportVkImage(void *vkImage, void *vkImageCreateInfo)
 {
     UNIMPLEMENTED();
-    return egl::EglBadAccess();
+    return egl::Error(EGL_BAD_ACCESS);
 }
 
 bool ImageImpl::isFixedRatedCompression(const gl::Context *context)

@@ -113,7 +113,7 @@ egl::Error DisplayMtl::initialize(egl::Display *display)
     if (result != angle::Result::Continue)
     {
         terminate();
-        return egl::EglNotInitialized();
+        return egl::Error(EGL_NOT_INITIALIZED);
     }
     return egl::NoError();
 }
@@ -316,7 +316,7 @@ egl::Error DisplayMtl::waitClient(const gl::Context *context)
 
     if (result != angle::Result::Continue)
     {
-        return egl::EglBadAccess();
+        return egl::Error(EGL_BAD_ACCESS);
     }
     return egl::NoError();
 }
@@ -643,12 +643,12 @@ egl::Error DisplayMtl::validateClientBuffer(const egl::Config *configuration,
         case EGL_IOSURFACE_ANGLE:
             if (!IOSurfaceSurfaceMtl::ValidateAttributes(clientBuffer, attribs))
             {
-                return egl::EglBadAttribute();
+                return egl::Error(EGL_BAD_ATTRIBUTE);
             }
             break;
         default:
             UNREACHABLE();
-            return egl::EglBadAttribute();
+            return egl::Error(EGL_BAD_ATTRIBUTE);
     }
     return egl::NoError();
 }
@@ -664,7 +664,7 @@ egl::Error DisplayMtl::validateImageClientBuffer(const gl::Context *context,
             return TextureImageSiblingMtl::ValidateClientBuffer(this, clientBuffer, attribs);
         default:
             UNREACHABLE();
-            return egl::EglBadAttribute();
+            return egl::Error(EGL_BAD_ATTRIBUTE);
     }
 }
 

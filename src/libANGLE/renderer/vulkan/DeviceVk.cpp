@@ -124,7 +124,7 @@ egl::Error DeviceVk::getAttribute(const egl::Display *display, EGLint attribute,
             return egl::NoError();
         }
         default:
-            return egl::EglBadAccess();
+            return egl::Error(EGL_BAD_ACCESS);
     }
 }
 

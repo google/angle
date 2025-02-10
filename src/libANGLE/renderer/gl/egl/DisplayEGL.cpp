@@ -168,7 +168,7 @@ egl::Error DisplayEGL::initializeContext(EGLContext shareContext,
     {
         if (initializeRequested && (requestedMajor != 2 || requestedMinor != 0))
         {
-            return egl::EglBadAttribute() << "Unsupported requested context version";
+            return egl::Error(EGL_BAD_ATTRIBUTE, "Unsupported requested context version");
         }
 
         egl::AttributeMap fallbackAttribs;
@@ -227,7 +227,7 @@ egl::Error DisplayEGL::findConfig(egl::Display *display,
     std::vector<EGLint> renderableTypes = RenderableTypesFromPlatformAttrib(mEGL, platformAttrib);
     if (renderableTypes.empty())
     {
-        return egl::EglNotInitialized() << "No available renderable types.";
+        return egl::Error(EGL_NOT_INITIALIZED, "No available renderable types.");
     }
 
     EGLint surfaceType = EGL_DONT_CARE;
@@ -298,8 +298,9 @@ egl::Error DisplayEGL::findConfig(egl::Display *display,
         }
     }
 
-    return egl::EglNotInitialized()
-           << "Failed to find a usable config. Last error: " << egl::Error(mEGL->getError());
+    std::ostringstream err;
+    err << "Failed to find a usable config. Last error: " << egl::Error(mEGL->getError());
+    return egl::Error(EGL_NOT_INITIALIZED, err.str());
 }
 
 egl::Error DisplayEGL::initialize(egl::Display *display)
@@ -317,7 +318,7 @@ egl::Error DisplayEGL::initialize(egl::Display *display)
     gl::Version eglVersion(mEGL->majorVersion, mEGL->minorVersion);
     if (eglVersion < gl::Version(1, 4))
     {
-        return egl::EglNotInitialized() << "EGL >= 1.4 is required";
+        return egl::Error(EGL_NOT_INITIALIZED, "EGL >= 1.4 is required");
     }
 
     // https://anglebug.com/42266130
@@ -352,8 +353,9 @@ egl::Error DisplayEGL::initialize(egl::Display *display)
         mMockPbuffer = mEGL->createPbufferSurface(pbufferConfig, mockPbufferAttribs);
         if (mMockPbuffer == EGL_NO_SURFACE)
         {
-            return egl::EglNotInitialized()
-                   << "eglCreatePbufferSurface failed with " << egl::Error(mEGL->getError());
+            std::ostringstream err;
+            err << "eglCreatePbufferSurface failed with " << egl::Error(mEGL->getError());
+            return egl::Error(EGL_NOT_INITIALIZED, err.str());
         }
     }
 
@@ -362,7 +364,7 @@ egl::Error DisplayEGL::initialize(egl::Display *display)
     const gl::Version &maxVersion = mRenderer->getMaxSupportedESVersion();
     if (maxVersion < gl::Version(2, 0))
     {
-        return egl::EglNotInitialized() << "OpenGL ES 2.0 is not supportable.";
+        return egl::Error(EGL_NOT_INITIALIZED, "OpenGL ES 2.0 is not supportable.");
     }
 
     ANGLE_TRY(DisplayGL::initialize(display));
@@ -946,8 +948,9 @@ egl::Error DisplayEGL::createRenderer(EGLContext shareContext,
         ANGLE_TRY(initializeContext(shareContext, mDisplayAttributes, &context));
         if (mEGL->makeCurrent(mMockPbuffer, context) == EGL_FALSE)
         {
-            return egl::EglNotInitialized()
-                   << "eglMakeCurrent failed with " << egl::Error(mEGL->getError());
+            std::ostringstream err;
+            err << "eglMakeCurrent failed with " << egl::Error(mEGL->getError());
+            return egl::Error(EGL_NOT_INITIALIZED, err.str());
         }
     }
 
@@ -969,8 +972,9 @@ egl::Error DisplayEGL::createRenderer(EGLContext shareContext,
         // Reset the current context back to the previous state
         if (mEGL->makeCurrent(currentContext.surface, currentContext.context) == EGL_FALSE)
         {
-            return egl::EglNotInitialized()
-                   << "eglMakeCurrent failed with " << egl::Error(mEGL->getError());
+            std::ostringstream err;
+            err << "eglMakeCurrent failed with " << egl::Error(mEGL->getError());
+            return egl::Error(EGL_NOT_INITIALIZED, err.str());
         }
     }
 

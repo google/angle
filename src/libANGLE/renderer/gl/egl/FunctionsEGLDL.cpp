@@ -46,7 +46,9 @@ egl::Error FunctionsEGLDL::initialize(EGLAttrib platformType,
         nativeEGLHandle = dlopen(libName, RTLD_NOW);
         if (!nativeEGLHandle)
         {
-            return egl::EglNotInitialized() << "Could not dlopen native EGL: " << dlerror();
+            std::ostringstream err;
+            err << "Could not dlopen native EGL: " << dlerror();
+            return egl::Error(EGL_NOT_INITIALIZED, err.str());
         }
     }
 
@@ -54,7 +56,7 @@ egl::Error FunctionsEGLDL::initialize(EGLAttrib platformType,
         reinterpret_cast<PFNEGLGETPROCADDRESSPROC>(dlsym(nativeEGLHandle, "eglGetProcAddress"));
     if (!mGetProcAddressPtr)
     {
-        return egl::EglNotInitialized() << "Could not find eglGetProcAddress";
+        return egl::Error(EGL_NOT_INITIALIZED, "Could not find eglGetProcAddress");
     }
 
     return FunctionsEGL::initialize(platformType, nativeDisplay);

@@ -86,10 +86,11 @@ egl::Error DisplayVkWin32::initialize(egl::Display *display)
         mWindowClass                        = RegisterClassW(&intermediateClassDesc);
         if (!mWindowClass)
         {
-            return egl::EglNotInitialized()
-                   << "Failed to register intermediate OpenGL window class \""
-                   << gl::FmtHex<egl::Display *, char>(display)
-                   << "\":" << gl::FmtErr(HRESULT_CODE(GetLastError()));
+            std::ostringstream err;
+            err << "Failed to register intermediate OpenGL window class \""
+                << gl::FmtHex<egl::Display *, char>(display)
+                << "\":" << gl::FmtErr(HRESULT_CODE(GetLastError()));
+            return egl::Error(EGL_NOT_INITIALIZED, err.str());
         }
     }
 
@@ -98,7 +99,7 @@ egl::Error DisplayVkWin32::initialize(egl::Display *display)
                                   CW_USEDEFAULT, nullptr, nullptr, nullptr, nullptr);
     if (!mMockWindow)
     {
-        return egl::EglNotInitialized() << "Failed to create mock OpenGL window.";
+        return egl::Error(EGL_NOT_INITIALIZED, "Failed to create mock OpenGL window.");
     }
 
     VkSurfaceKHR surfaceVk;
@@ -110,20 +111,20 @@ egl::Error DisplayVkWin32::initialize(egl::Display *display)
 
     if (vkCreateWin32SurfaceKHR(instance, &info, nullptr, &surfaceVk) != VK_SUCCESS)
     {
-        return egl::EglNotInitialized() << "vkCreateWin32SurfaceKHR failed";
+        return egl::Error(EGL_NOT_INITIALIZED, "vkCreateWin32SurfaceKHR failed");
     }
     uint32_t surfaceFormatCount;
 
     if (vkGetPhysicalDeviceSurfaceFormatsKHR(physDevice, surfaceVk, &surfaceFormatCount, nullptr) !=
         VK_SUCCESS)
     {
-        return egl::EglNotInitialized() << "vkGetPhysicalDeviceSurfaceFormatsKHR failed";
+        return egl::Error(EGL_NOT_INITIALIZED, "vkGetPhysicalDeviceSurfaceFormatsKHR failed");
     }
     mSurfaceFormats.resize(surfaceFormatCount);
     if (vkGetPhysicalDeviceSurfaceFormatsKHR(physDevice, surfaceVk, &surfaceFormatCount,
                                              mSurfaceFormats.data()) != VK_SUCCESS)
     {
-        return egl::EglNotInitialized() << "vkGetPhysicalDeviceSurfaceFormatsKHR (2nd) failed";
+        return egl::Error(EGL_NOT_INITIALIZED, "vkGetPhysicalDeviceSurfaceFormatsKHR (2nd) failed");
     }
     vkDestroySurfaceKHR(instance, surfaceVk, nullptr);
 

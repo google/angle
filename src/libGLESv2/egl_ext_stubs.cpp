@@ -457,7 +457,8 @@ const char *QueryDeviceStringEXT(Thread *thread, Device *dev, EGLint name)
             result = dev->getDeviceString(name).c_str();
             break;
         default:
-            thread->setError(EglBadDevice(), "eglQueryDeviceStringEXT", GetDeviceIfValid(dev));
+            thread->setError(egl::Error(EGL_BAD_DEVICE_EXT), "eglQueryDeviceStringEXT",
+                             GetDeviceIfValid(dev));
             return nullptr;
     }
 

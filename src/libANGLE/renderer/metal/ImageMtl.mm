@@ -70,36 +70,39 @@ egl::Error TextureImageSiblingMtl::ValidateClientBuffer(const DisplayMtl *displa
     id<MTLTexture> texture = (__bridge id<MTLTexture>)(buffer);
     if (!texture || texture.device != display->getMetalDevice())
     {
-        return egl::EglBadAttribute();
+        return egl::Error(EGL_BAD_ATTRIBUTE);
     }
 
     if (texture.textureType != MTLTextureType2D && texture.textureType != MTLTextureTypeCube &&
         texture.textureType != MTLTextureType2DArray)
     {
-        return egl::EglBadAttribute();
+        return egl::Error(EGL_BAD_ATTRIBUTE);
     }
 
     angle::FormatID angleFormatId = intendedFormatForMTLTexture(texture, attribs);
     const mtl::Format &format     = display->getPixelFormat(angleFormatId);
     if (!format.valid())
     {
-        return egl::EglBadAttribute() << "Unrecognized format";
+        return egl::Error(EGL_BAD_ATTRIBUTE, "Unrecognized format");
     }
 
     if (format.metalFormat != texture.pixelFormat)
     {
-        return egl::EglBadAttribute() << "Incompatible format";
+        return egl::Error(EGL_BAD_ATTRIBUTE, "Incompatible format");
     }
 
     unsigned textureArraySlice =
         static_cast<unsigned>(attribs.getAsInt(EGL_METAL_TEXTURE_ARRAY_SLICE_ANGLE, 0));
     if (texture.textureType != MTLTextureType2DArray && textureArraySlice > 0)
     {
-        return egl::EglBadAttribute() << "Invalid texture type for non-zero texture array slice";
+        return egl::Error(EGL_BAD_ATTRIBUTE,
+                          "Invalid texture type for non-zero texture array slice");
     }
     if (textureArraySlice >= texture.arrayLength)
     {
-        return egl::EglBadAttribute() << "Invalid texture array slice: " << textureArraySlice;
+        std::ostringstream err;
+        err << "Invalid texture array slice: " << textureArraySlice;
+        return egl::Error(EGL_BAD_ATTRIBUTE, err.str());
     }
 
     return egl::NoError();
@@ -110,7 +113,7 @@ egl::Error TextureImageSiblingMtl::initialize(const egl::Display *display)
     DisplayMtl *displayMtl = mtl::GetImpl(display);
     if (initImpl(displayMtl) != angle::Result::Continue)
     {
-        return egl::EglBadParameter();
+        return egl::Error(EGL_BAD_PARAMETER);
     }
 
     return egl::NoError();
@@ -231,7 +234,7 @@ egl::Error ImageMtl::initialize(const egl::Display *display)
     else
     {
         UNREACHABLE();
-        return egl::EglBadAccess();
+        return egl::Error(EGL_BAD_ACCESS);
     }
 
     return egl::NoError();

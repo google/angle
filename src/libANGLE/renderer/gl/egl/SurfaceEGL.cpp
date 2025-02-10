@@ -80,7 +80,7 @@ egl::Error SurfaceEGL::postSubBuffer(const gl::Context *context,
                                      EGLint height)
 {
     UNIMPLEMENTED();
-    return egl::EglBadSurface();
+    return egl::Error(EGL_BAD_SURFACE);
 }
 
 egl::Error SurfaceEGL::setPresentationTime(EGLnsecsANDROID time)
@@ -96,7 +96,7 @@ egl::Error SurfaceEGL::setPresentationTime(EGLnsecsANDROID time)
 egl::Error SurfaceEGL::querySurfacePointerANGLE(EGLint attribute, void **value)
 {
     UNIMPLEMENTED();
-    return egl::EglBadSurface();
+    return egl::Error(EGL_BAD_SURFACE);
 }
 
 egl::Error SurfaceEGL::bindTexImage(const gl::Context *context, gl::Texture *texture, EGLint buffer)

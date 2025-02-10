@@ -35,14 +35,14 @@ egl::Error SurfaceImpl::swapWithDamage(const gl::Context *context,
                                        EGLint n_rects)
 {
     UNREACHABLE();
-    return egl::EglBadSurface() << "swapWithDamage implementation missing.";
+    return egl::Error(EGL_BAD_SURFACE, "swapWithDamage implementation missing.");
 }
 
 egl::Error SurfaceImpl::swapWithFrameToken(const gl::Context *context,
                                            EGLFrameTokenANGLE frameToken)
 {
     UNREACHABLE();
-    return egl::EglBadDisplay();
+    return egl::Error(EGL_BAD_DISPLAY);
 }
 
 egl::Error SurfaceImpl::postSubBuffer(const gl::Context *context,
@@ -52,31 +52,31 @@ egl::Error SurfaceImpl::postSubBuffer(const gl::Context *context,
                                       EGLint height)
 {
     UNREACHABLE();
-    return egl::EglBadSurface() << "getMscRate implementation missing.";
+    return egl::Error(EGL_BAD_SURFACE, "getMscRate implementation missing.");
 }
 
 egl::Error SurfaceImpl::setPresentationTime(EGLnsecsANDROID time)
 {
     UNREACHABLE();
-    return egl::EglBadSurface() << "setPresentationTime implementation missing.";
+    return egl::Error(EGL_BAD_SURFACE, "setPresentationTime implementation missing.");
 }
 
 egl::Error SurfaceImpl::querySurfacePointerANGLE(EGLint attribute, void **value)
 {
     UNREACHABLE();
-    return egl::EglBadSurface() << "querySurfacePointerANGLE implementation missing.";
+    return egl::Error(EGL_BAD_SURFACE, "querySurfacePointerANGLE implementation missing.");
 }
 
 egl::Error SurfaceImpl::getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR *sbc)
 {
     UNREACHABLE();
-    return egl::EglBadSurface() << "getSyncValues implementation missing.";
+    return egl::Error(EGL_BAD_SURFACE, "getSyncValues implementation missing.");
 }
 
 egl::Error SurfaceImpl::getMscRate(EGLint *numerator, EGLint *denominator)
 {
     UNREACHABLE();
-    return egl::EglBadSurface() << "getMscRate implementation missing.";
+    return egl::Error(EGL_BAD_SURFACE, "getMscRate implementation missing.");
 }
 
 void SurfaceImpl::setFixedWidth(EGLint width)
@@ -111,13 +111,13 @@ egl::Error SurfaceImpl::getCompositorTiming(EGLint numTimestamps,
                                             EGLnsecsANDROID *values) const
 {
     UNREACHABLE();
-    return egl::EglBadDisplay();
+    return egl::Error(EGL_BAD_DISPLAY);
 }
 
 egl::Error SurfaceImpl::getNextFrameId(EGLuint64KHR *frameId) const
 {
     UNREACHABLE();
-    return egl::EglBadDisplay();
+    return egl::Error(EGL_BAD_DISPLAY);
 }
 
 egl::SupportedTimestamps SurfaceImpl::getSupportedTimestamps() const
@@ -132,7 +132,7 @@ egl::Error SurfaceImpl::getFrameTimestamps(EGLuint64KHR frameId,
                                            EGLnsecsANDROID *values) const
 {
     UNREACHABLE();
-    return egl::EglBadDisplay();
+    return egl::Error(EGL_BAD_DISPLAY);
 }
 egl::Error SurfaceImpl::getUserWidth(const egl::Display *display, EGLint *value) const
 {
@@ -160,7 +160,7 @@ egl::Error SurfaceImpl::getBufferAge(const gl::Context *context, EGLint *age)
 
 egl::Error SurfaceImpl::setAutoRefreshEnabled(bool enabled)
 {
-    return egl::EglBadMatch();
+    return egl::Error(EGL_BAD_MATCH);
 }
 
 egl::Error SurfaceImpl::lockSurface(const egl::Display *display,
@@ -170,13 +170,13 @@ egl::Error SurfaceImpl::lockSurface(const egl::Display *display,
                                     EGLint *bufferPitchOut)
 {
     UNREACHABLE();
-    return egl::EglBadMatch();
+    return egl::Error(EGL_BAD_MATCH);
 }
 
 egl::Error SurfaceImpl::unlockSurface(const egl::Display *display, bool preservePixels)
 {
     UNREACHABLE();
-    return egl::EglBadMatch();
+    return egl::Error(EGL_BAD_MATCH);
 }
 
 EGLint SurfaceImpl::origin() const

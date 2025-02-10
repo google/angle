@@ -567,8 +567,9 @@ egl::Error Renderer11::initialize()
             result = mDevice.As(&dxgiDevice2);
             if (FAILED(result))
             {
-                return egl::EglNotInitialized(D3D11_INIT_INCOMPATIBLE_DXGI)
-                       << "DXGI 1.2 required to present to HWNDs owned by another process.";
+                return egl::Error(
+                    EGL_NOT_INITIALIZED, D3D11_INIT_INCOMPATIBLE_DXGI,
+                    "DXGI 1.2 required to present to HWNDs owned by another process.");
             }
         }
     }
@@ -617,8 +618,8 @@ egl::Error Renderer11::initialize()
 
         if (FAILED(result))
         {
-            return egl::EglNotInitialized(D3D11_INIT_OTHER_ERROR)
-                   << "Could not read DXGI adaptor description.";
+            return egl::Error(EGL_NOT_INITIALIZED, D3D11_INIT_OTHER_ERROR,
+                              "Could not read DXGI adaptor description.");
         }
 
         memset(mDescription, 0, sizeof(mDescription));
@@ -628,8 +629,8 @@ egl::Error Renderer11::initialize()
 
         if (!mDxgiFactory || FAILED(result))
         {
-            return egl::EglNotInitialized(D3D11_INIT_OTHER_ERROR)
-                   << "Could not create DXGI factory.";
+            return egl::Error(EGL_NOT_INITIALIZED, D3D11_INIT_OTHER_ERROR,
+                              "Could not create DXGI factory.");
         }
     }
 
@@ -689,13 +690,13 @@ egl::Error Renderer11::initializeDXGIAdapter()
         ID3D11Device *d3dDevice = device11->getDevice();
         if (FAILED(d3dDevice->GetDeviceRemovedReason()))
         {
-            return egl::EglNotInitialized() << "Inputted D3D11 device has been lost.";
+            return egl::Error(EGL_NOT_INITIALIZED, "Inputted D3D11 device has been lost.");
         }
 
         if (d3dDevice->GetFeatureLevel() < D3D_FEATURE_LEVEL_9_3)
         {
-            return egl::EglNotInitialized()
-                   << "Inputted D3D11 device must be Feature Level 9_3 or greater.";
+            return egl::Error(EGL_NOT_INITIALIZED,
+                              "Inputted D3D11 device must be Feature Level 9_3 or greater.");
         }
 
         // The Renderer11 adds a ref to the inputted D3D11 device, like D3D11CreateDevice does.
@@ -711,8 +712,8 @@ egl::Error Renderer11::initializeDXGIAdapter()
         HRESULT hr = CreateDXGIFactory1(IID_PPV_ARGS(&factory));
         if (FAILED(hr))
         {
-            return egl::EglNotInitialized(D3D11_INIT_OTHER_ERROR)
-                   << "Could not create DXGI factory";
+            return egl::Error(EGL_NOT_INITIALIZED, D3D11_INIT_OTHER_ERROR,
+                              "Could not create DXGI factory");
         }
 
         // If the developer requests a specific adapter, honor their request regardless of the value
@@ -765,8 +766,8 @@ egl::Error Renderer11::initializeDXGIAdapter()
             hr = factory->EnumAdapters(0, &mDxgiAdapter);
             if (FAILED(hr))
             {
-                return egl::EglNotInitialized(D3D11_INIT_OTHER_ERROR)
-                       << "Could not retrieve DXGI adapter";
+                return egl::Error(EGL_NOT_INITIALIZED, D3D11_INIT_OTHER_ERROR,
+                                  "Could not retrieve DXGI adapter");
             }
         }
     }
@@ -782,13 +783,15 @@ egl::Error Renderer11::initializeAdapterFromDevice()
     HRESULT result = mDevice.As(&dxgiDevice);
     if (FAILED(result))
     {
-        return egl::EglNotInitialized(D3D11_INIT_OTHER_ERROR) << "Could not query DXGI device.";
+        return egl::Error(EGL_NOT_INITIALIZED, D3D11_INIT_OTHER_ERROR,
+                          "Could not query DXGI device.");
     }
 
     result = dxgiDevice->GetParent(IID_PPV_ARGS(&mDxgiAdapter));
     if (FAILED(result))
     {
-        return egl::EglNotInitialized(D3D11_INIT_OTHER_ERROR) << "Could not retrieve DXGI adapter";
+        return egl::Error(EGL_NOT_INITIALIZED, D3D11_INIT_OTHER_ERROR,
+                          "Could not retrieve DXGI adapter");
     }
 
     return egl::NoError();
@@ -877,32 +880,32 @@ egl::Error Renderer11::initializeD3DDevice()
                 mD3d12Module = LoadLibrary(TEXT("d3d12.dll"));
                 if (mD3d12Module == nullptr)
                 {
-                    return egl::EglNotInitialized(D3D11_INIT_MISSING_DEP)
-                           << "Could not load D3D12 library.";
+                    return egl::Error(EGL_NOT_INITIALIZED, D3D11_INIT_MISSING_DEP,
+                                      "Could not load D3D12 library.");
                 }
 
                 D3D12CreateDevice = reinterpret_cast<PFN_D3D12_CREATE_DEVICE>(
                     GetProcAddress(mD3d12Module, "D3D12CreateDevice"));
                 if (D3D12CreateDevice == nullptr)
                 {
-                    return egl::EglNotInitialized(D3D11_INIT_MISSING_DEP)
-                           << "Could not retrieve D3D12CreateDevice address.";
+                    return egl::Error(EGL_NOT_INITIALIZED, D3D11_INIT_MISSING_DEP,
+                                      "Could not retrieve D3D12CreateDevice address.");
                 }
 
                 D3D11On12CreateDevice = reinterpret_cast<PFN_D3D11ON12_CREATE_DEVICE>(
                     GetProcAddress(mD3d11Module, "D3D11On12CreateDevice"));
                 if (D3D11On12CreateDevice == nullptr)
                 {
-                    return egl::EglNotInitialized(D3D11_INIT_MISSING_DEP)
-                           << "Could not retrieve D3D11On12CreateDevice address.";
+                    return egl::Error(EGL_NOT_INITIALIZED, D3D11_INIT_MISSING_DEP,
+                                      "Could not retrieve D3D11On12CreateDevice address.");
                 }
             }
             else
             {
                 if (mD3d11Module == nullptr)
                 {
-                    return egl::EglNotInitialized(D3D11_INIT_MISSING_DEP)
-                           << "Could not load D3D11 library.";
+                    return egl::Error(EGL_NOT_INITIALIZED, D3D11_INIT_MISSING_DEP,
+                                      "Could not load D3D11 library.");
                 }
 
                 D3D11CreateDevice = reinterpret_cast<PFN_D3D11_CREATE_DEVICE>(
@@ -910,8 +913,8 @@ egl::Error Renderer11::initializeD3DDevice()
 
                 if (D3D11CreateDevice == nullptr)
                 {
-                    return egl::EglNotInitialized(D3D11_INIT_MISSING_DEP)
-                           << "Could not retrieve D3D11CreateDevice address.";
+                    return egl::Error(EGL_NOT_INITIALIZED, D3D11_INIT_MISSING_DEP,
+                                      "Could not retrieve D3D11CreateDevice address.");
                 }
             }
         }
@@ -988,8 +991,8 @@ egl::Error Renderer11::initializeD3DDevice()
             {
                 ANGLE_HISTOGRAM_SPARSE_SLOWLY("GPU.ANGLE.D3D11CreateDeviceError",
                                               static_cast<int>(result));
-                return egl::EglNotInitialized(D3D11_INIT_CREATEDEVICE_ERROR)
-                       << "Could not create D3D11 device.";
+                return egl::Error(EGL_NOT_INITIALIZED, D3D11_INIT_CREATEDEVICE_ERROR,
+                                  "Could not create D3D11 device.");
             }
         }
 
@@ -1539,14 +1542,14 @@ egl::Error Renderer11::getD3DTextureInfo(const egl::Config *configuration,
     texture->QueryInterface(IID_PPV_ARGS(&d3dTexture));
     if (d3dTexture == nullptr)
     {
-        return egl::EglBadParameter() << "client buffer is not a ID3D11Texture2D";
+        return egl::Error(EGL_BAD_PARAMETER, "client buffer is not a ID3D11Texture2D");
     }
 
     angle::ComPtr<ID3D11Device> textureDevice;
     d3dTexture->GetDevice(&textureDevice);
     if (textureDevice != mDevice)
     {
-        return egl::EglBadParameter() << "Texture's device does not match.";
+        return egl::Error(EGL_BAD_PARAMETER, "Texture's device does not match.");
     }
 
     D3D11_TEXTURE2D_DESC desc = {};
@@ -1564,7 +1567,7 @@ egl::Error Renderer11::getD3DTextureInfo(const egl::Config *configuration,
         // not one.
         if (configuration->samples != 0 || sampleCount != 1)
         {
-            return egl::EglBadParameter() << "Texture's sample count does not match.";
+            return egl::Error(EGL_BAD_PARAMETER, "Texture's sample count does not match.");
         }
     }
 
@@ -1577,8 +1580,8 @@ egl::Error Renderer11::getD3DTextureInfo(const egl::Config *configuration,
     {
         if (!attribs.contains(EGL_D3D11_TEXTURE_PLANE_ANGLE))
         {
-            return egl::EglBadParameter()
-                   << "EGL_D3D11_TEXTURE_PLANE_ANGLE must be specified for YUV textures.";
+            return egl::Error(EGL_BAD_PARAMETER,
+                              "EGL_D3D11_TEXTURE_PLANE_ANGLE must be specified for YUV textures.");
         }
 
         EGLint plane = attribs.getAsInt(EGL_D3D11_TEXTURE_PLANE_ANGLE);
@@ -1599,7 +1602,9 @@ egl::Error Renderer11::getD3DTextureInfo(const egl::Config *configuration,
         }
         else
         {
-            return egl::EglBadParameter() << "Invalid client buffer texture plane: " << plane;
+            std::ostringstream err;
+            err << "Invalid client buffer texture plane: " << plane;
+            return egl::Error(EGL_BAD_PARAMETER, err.str());
         }
 
         ASSERT(textureAngleFormat);
@@ -1625,8 +1630,9 @@ egl::Error Renderer11::getD3DTextureInfo(const egl::Config *configuration,
                 break;
 
             default:
-                return egl::EglBadParameter()
-                       << "Invalid client buffer texture format: " << desc.Format;
+                std::ostringstream err;
+                err << "Invalid client buffer texture format: " << desc.Format;
+                return egl::Error(EGL_BAD_PARAMETER, err.str());
         }
 
         textureAngleFormat = &d3d11_angle::GetFormat(desc.Format);
@@ -1650,9 +1656,10 @@ egl::Error Renderer11::getD3DTextureInfo(const egl::Config *configuration,
                 case GL_RG16_EXT:
                     break;
                 default:
-                    return egl::EglBadParameter()
-                           << "Invalid client buffer texture internal format: " << std::hex
-                           << internalFormat;
+                    std::ostringstream err;
+                    err << "Invalid client buffer texture internal format: " << std::hex
+                        << internalFormat;
+                    return egl::Error(EGL_BAD_PARAMETER, err.str());
             }
 
             const GLenum type = gl::GetSizedInternalFormatInfo(sizedInternalFormat).type;
@@ -1660,9 +1667,10 @@ egl::Error Renderer11::getD3DTextureInfo(const egl::Config *configuration,
             const auto format = gl::Format(internalFormat, type);
             if (!format.valid())
             {
-                return egl::EglBadParameter()
-                       << "Invalid client buffer texture internal format: " << std::hex
-                       << internalFormat;
+                std::ostringstream err;
+                err << "Invalid client buffer texture internal format: " << std::hex
+                    << internalFormat;
+                return egl::Error(EGL_BAD_PARAMETER, err.str());
             }
 
             sizedInternalFormat = format.info->sizedInternalFormat;
@@ -1673,8 +1681,9 @@ egl::Error Renderer11::getD3DTextureInfo(const egl::Config *configuration,
         static_cast<UINT>(attribs.getAsInt(EGL_D3D11_TEXTURE_ARRAY_SLICE_ANGLE, 0));
     if (textureArraySlice >= desc.ArraySize)
     {
-        return egl::EglBadParameter()
-               << "Invalid client buffer texture array slice: " << textureArraySlice;
+        std::ostringstream err;
+        err << "Invalid client buffer texture array slice: " << textureArraySlice;
+        return egl::Error(EGL_BAD_PARAMETER, err.str());
     }
 
     if (width)
@@ -1716,7 +1725,7 @@ egl::Error Renderer11::validateShareHandle(const egl::Config *config,
 {
     if (shareHandle == nullptr)
     {
-        return egl::EglBadParameter() << "NULL share handle.";
+        return egl::Error(EGL_BAD_PARAMETER, "NULL share handle.");
     }
 
     angle::ComPtr<ID3D11Resource> tempResource11;
@@ -1728,15 +1737,17 @@ egl::Error Renderer11::validateShareHandle(const egl::Config *config,
 
     if (FAILED(result))
     {
-        return egl::EglBadParameter() << "Failed to open share handle, " << gl::FmtHR(result);
+        std::ostringstream err;
+        err << "Failed to open share handle, " << gl::FmtHR(result);
+        return egl::Error(EGL_BAD_PARAMETER, err.str());
     }
 
     angle::ComPtr<ID3D11Texture2D> texture2D;
     tempResource11.As(&texture2D);
     if (texture2D == nullptr)
     {
-        return egl::EglBadParameter()
-               << "Failed to query ID3D11Texture2D object from share handle.";
+        return egl::Error(EGL_BAD_PARAMETER,
+                          "Failed to query ID3D11Texture2D object from share handle.");
     }
 
     D3D11_TEXTURE2D_DESC desc = {};
@@ -1752,7 +1763,7 @@ egl::Error Renderer11::validateShareHandle(const egl::Config *config,
     if (desc.Width != static_cast<UINT>(width) || desc.Height != static_cast<UINT>(height) ||
         desc.Format != backbufferFormatInfo.texFormat || desc.MipLevels != 1 || desc.ArraySize != 1)
     {
-        return egl::EglBadParameter() << "Invalid texture parameters in share handle texture.";
+        return egl::Error(EGL_BAD_PARAMETER, "Invalid texture parameters in share handle texture.");
     }
 
     return egl::NoError();

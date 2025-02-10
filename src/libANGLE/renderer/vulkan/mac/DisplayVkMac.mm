@@ -89,7 +89,7 @@ egl::Error DisplayVkMac::validateClientBuffer(const egl::Config *configuration,
 
     if (!IOSurfaceSurfaceVkMac::ValidateAttributes(this, clientBuffer, attribs))
     {
-        return egl::EglBadAttribute();
+        return egl::Error(EGL_BAD_ATTRIBUTE);
     }
     return egl::NoError();
 }

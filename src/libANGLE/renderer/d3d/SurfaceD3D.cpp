@@ -98,7 +98,7 @@ egl::Error SurfaceD3D::initialize(const egl::Display *display)
     {
         if (!mNativeWindow->initialize())
         {
-            return egl::EglBadSurface();
+            return egl::Error(EGL_BAD_SURFACE);
         }
     }
 
@@ -112,8 +112,8 @@ egl::Error SurfaceD3D::initialize(const egl::Display *display)
             if (mColorFormat->id != angle::FormatID::R8G8B8A8_TYPELESS &&
                 mColorFormat->id != angle::FormatID::B8G8R8A8_TYPELESS)
             {
-                return egl::EglBadMatch()
-                       << "EGL_GL_COLORSPACE may only be specified for TYPELESS textures";
+                return egl::Error(EGL_BAD_MATCH,
+                                  "EGL_GL_COLORSPACE may only be specified for TYPELESS textures");
             }
         }
         if (mColorFormat->id == angle::FormatID::R8G8B8A8_TYPELESS)
@@ -155,8 +155,8 @@ egl::Error SurfaceD3D::getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLui
 {
     if (!mState.directComposition)
     {
-        return egl::EglBadSurface()
-               << "getSyncValues: surface requires Direct Composition to be enabled";
+        return egl::Error(EGL_BAD_SURFACE,
+                          "getSyncValues: surface requires Direct Composition to be enabled");
     }
 
     return mSwapChain->getSyncValues(ust, msc, sbc);
@@ -165,7 +165,7 @@ egl::Error SurfaceD3D::getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLui
 egl::Error SurfaceD3D::getMscRate(EGLint *numerator, EGLint *denominator)
 {
     UNIMPLEMENTED();
-    return egl::EglBadAccess();
+    return egl::Error(EGL_BAD_ACCESS);
 }
 
 egl::Error SurfaceD3D::resetSwapChain(const egl::Display *display)
@@ -182,7 +182,7 @@ egl::Error SurfaceD3D::resetSwapChain(const egl::Display *display)
         {
             ASSERT(false);
 
-            return egl::EglBadSurface() << "Could not retrieve the window dimensions";
+            return egl::Error(EGL_BAD_SURFACE, "Could not retrieve the window dimensions");
         }
 
         width  = windowRect.right - windowRect.left;
@@ -200,7 +200,7 @@ egl::Error SurfaceD3D::resetSwapChain(const egl::Display *display)
                                    mDepthStencilFormat, mOrientation, mState.config->samples);
     if (!mSwapChain)
     {
-        return egl::EglBadAlloc();
+        return egl::Error(EGL_BAD_ALLOC);
     }
 
     // This is a bit risky to pass the proxy context here, but it can happen at almost any time.

@@ -95,8 +95,9 @@ egl::Error PbufferSurfaceWGL::initialize(const egl::Display *display)
     if (mPbuffer == nullptr)
     {
         DWORD error = GetLastError();
-        return egl::EglBadAlloc() << "Failed to create a native WGL pbuffer, "
-                                  << gl::FmtErr(HRESULT_CODE(error));
+        std::ostringstream err;
+        err << "Failed to create a native WGL pbuffer, " << gl::FmtErr(HRESULT_CODE(error));
+        return egl::Error(EGL_BAD_ALLOC, err.str());
     }
 
     // The returned pbuffer may not be as large as requested, update the size members.
@@ -104,8 +105,9 @@ egl::Error PbufferSurfaceWGL::initialize(const egl::Display *display)
         mFunctionsWGL->queryPbufferARB(mPbuffer, WGL_PBUFFER_HEIGHT_ARB, &mHeight) != TRUE)
     {
         DWORD error = GetLastError();
-        return egl::EglBadAlloc() << "Failed to query the WGL pbuffer's dimensions, "
-                                  << gl::FmtErr(HRESULT_CODE(error));
+        std::ostringstream err;
+        err << "Failed to query the WGL pbuffer's dimensions, " << gl::FmtErr(HRESULT_CODE(error));
+        return egl::Error(EGL_BAD_ALLOC, err.str());
     }
 
     mPbufferDeviceContext = mFunctionsWGL->getPbufferDCARB(mPbuffer);
@@ -115,8 +117,9 @@ egl::Error PbufferSurfaceWGL::initialize(const egl::Display *display)
         mPbuffer = nullptr;
 
         DWORD error = GetLastError();
-        return egl::EglBadAlloc() << "Failed to get the WGL pbuffer handle, "
-                                  << gl::FmtErr(HRESULT_CODE(error));
+        std::ostringstream err;
+        err << "Failed to get the WGL pbuffer handle, " << gl::FmtErr(HRESULT_CODE(error));
+        return egl::Error(EGL_BAD_ALLOC, err.str());
     }
 
     return egl::NoError();
@@ -166,8 +169,9 @@ egl::Error PbufferSurfaceWGL::bindTexImage(const gl::Context *context,
     if (!mFunctionsWGL->bindTexImageARB(mPbuffer, GetWGLBufferBindTarget(buffer)))
     {
         DWORD error = GetLastError();
-        return egl::EglBadSurface()
-               << "Failed to bind native wgl pbuffer, " << gl::FmtErr(HRESULT_CODE(error));
+        std::ostringstream err;
+        err << "Failed to bind native wgl pbuffer, " << gl::FmtErr(HRESULT_CODE(error));
+        return egl::Error(EGL_BAD_SURFACE, err.str());
     }
 
     return egl::NoError();
@@ -178,8 +182,9 @@ egl::Error PbufferSurfaceWGL::releaseTexImage(const gl::Context *context, EGLint
     if (!mFunctionsWGL->releaseTexImageARB(mPbuffer, GetWGLBufferBindTarget(buffer)))
     {
         DWORD error = GetLastError();
-        return egl::EglBadSurface()
-               << "Failed to unbind native wgl pbuffer, " << gl::FmtErr(HRESULT_CODE(error));
+        std::ostringstream err;
+        err << "Failed to unbind native wgl pbuffer, " << gl::FmtErr(HRESULT_CODE(error));
+        return egl::Error(EGL_BAD_SURFACE, err.str());
     }
 
     return egl::NoError();

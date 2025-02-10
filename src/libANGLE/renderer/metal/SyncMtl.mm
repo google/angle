@@ -468,7 +468,7 @@ egl::Error EGLSyncMtl::copyMetalSharedEventANGLE(const egl::Display *display, vo
 egl::Error EGLSyncMtl::dupNativeFenceFD(const egl::Display *display, EGLint *result) const
 {
     UNREACHABLE();
-    return egl::EglBadDisplay();
+    return egl::Error(EGL_BAD_DISPLAY);
 }
 
 }  // namespace rx

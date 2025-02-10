@@ -85,7 +85,7 @@ egl::Error ReusableSync::serverWait(const egl::Display *display,
                                     EGLint flags)
 {
     // Does not support server wait.
-    return egl::EglBadMatch();
+    return egl::Error(EGL_BAD_MATCH);
 }
 
 egl::Error ReusableSync::signal(const egl::Display *display,

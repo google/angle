@@ -62,7 +62,7 @@ egl::Error Device::CreateDevice(EGLint deviceType, void *nativeDevice, Device **
 
     if (newDeviceImpl == nullptr)
     {
-        return EglBadAttribute();
+        return egl::Error(EGL_BAD_ATTRIBUTE);
     }
 
     ANGLE_TRY(newDeviceImpl->initialize());

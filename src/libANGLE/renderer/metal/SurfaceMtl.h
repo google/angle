@@ -29,7 +29,7 @@ class DisplayMtl;
     {                                                          \
         if (ANGLE_UNLIKELY((EXPR) != angle::Result::Continue)) \
         {                                                      \
-            return egl::EglBadSurface();                       \
+            return egl::Error(EGL_BAD_SURFACE);                \
         }                                                      \
     } while (0)
 

@@ -157,7 +157,7 @@ egl::Error CreateRendererD3D(egl::Display *display, RendererD3D **outRenderer)
         ERR() << "Failed to create D3D renderer: " << result.getMessage();
     }
 
-    return egl::EglNotInitialized() << "No available renderers.";
+    return egl::Error(EGL_NOT_INITIALIZED, "No available renderers.");
 }
 
 DisplayD3D::DisplayD3D(const egl::DisplayState &state) : DisplayImpl(state), mRenderer(nullptr) {}
@@ -288,7 +288,7 @@ egl::Error DisplayD3D::restoreLostDevice(const egl::Display *display)
 
     if (!mRenderer->resetDevice())
     {
-        return egl::EglBadAlloc();
+        return egl::Error(EGL_BAD_ALLOC);
     }
 
     // Restore any surfaces that may have been lost

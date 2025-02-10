@@ -207,7 +207,7 @@ egl::Error Renderer9::initialize()
 
     if (mD3d9Module == nullptr)
     {
-        return egl::EglNotInitialized(D3D9_INIT_MISSING_DEP) << "No D3D9 module found.";
+        return egl::Error(EGL_NOT_INITIALIZED, D3D9_INIT_MISSING_DEP, "No D3D9 module found.");
     }
 
     typedef HRESULT(WINAPI * Direct3DCreate9ExFunc)(UINT, IDirect3D9Ex **);
@@ -234,7 +234,8 @@ egl::Error Renderer9::initialize()
 
     if (!mD3d9)
     {
-        return egl::EglNotInitialized(D3D9_INIT_MISSING_DEP) << "Could not create D3D9 device.";
+        return egl::Error(EGL_NOT_INITIALIZED, D3D9_INIT_MISSING_DEP,
+                          "Could not create D3D9 device.");
     }
 
     if (mDisplay->getNativeDisplayId() != nullptr)
@@ -263,8 +264,9 @@ egl::Error Renderer9::initialize()
                                       // D3DERR_INVALIDDEVICE, or another error we can't recover
                                       // from
             {
-                return egl::EglNotInitialized(D3D9_INIT_OTHER_ERROR)
-                       << "Failed to get device caps, " << gl::FmtHR(result);
+                std::ostringstream err;
+                err << "Failed to get device caps, " << gl::FmtHR(result);
+                return egl::Error(EGL_NOT_INITIALIZED, D3D9_INIT_OTHER_ERROR, err.str());
             }
         }
     }
@@ -277,8 +279,9 @@ egl::Error Renderer9::initialize()
 
     if (mDeviceCaps.PixelShaderVersion < D3DPS_VERSION(minShaderModel, 0))
     {
-        return egl::EglNotInitialized(D3D9_INIT_UNSUPPORTED_VERSION)
-               << "Renderer does not support PS " << minShaderModel << ".0, aborting!";
+        std::ostringstream err;
+        err << "Renderer does not support PS " << minShaderModel << ".0, aborting!";
+        return egl::Error(EGL_NOT_INITIALIZED, D3D9_INIT_UNSUPPORTED_VERSION, err.str());
     }
 
     // When DirectX9 is running with an older DirectX8 driver, a StretchRect from a regular texture
@@ -286,8 +289,8 @@ egl::Error Renderer9::initialize()
     // Texture2D::ensureRenderTarget.
     if ((mDeviceCaps.DevCaps2 & D3DDEVCAPS2_CAN_STRETCHRECT_FROM_TEXTURES) == 0)
     {
-        return egl::EglNotInitialized(D3D9_INIT_UNSUPPORTED_STRETCHRECT)
-               << "Renderer does not support StretctRect from textures.";
+        return egl::Error(EGL_NOT_INITIALIZED, D3D9_INIT_UNSUPPORTED_STRETCHRECT,
+                          "Renderer does not support StretctRect from textures.");
     }
 
     {
@@ -323,8 +326,9 @@ egl::Error Renderer9::initialize()
     }
     if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY || result == D3DERR_DEVICELOST)
     {
-        return egl::EglBadAlloc(D3D9_INIT_OUT_OF_MEMORY)
-               << "CreateDevice failed: device lost or out of memory (" << gl::FmtHR(result) << ")";
+        std::ostringstream err;
+        err << "CreateDevice failed: device lost or out of memory (" << gl::FmtHR(result) << ")";
+        return egl::Error(EGL_BAD_ALLOC, D3D9_INIT_OUT_OF_MEMORY, err.str());
     }
 
     if (FAILED(result))
@@ -338,9 +342,10 @@ egl::Error Renderer9::initialize()
         {
             ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY ||
                    result == D3DERR_NOTAVAILABLE || result == D3DERR_DEVICELOST);
-            return egl::EglBadAlloc(D3D9_INIT_OUT_OF_MEMORY)
-                   << "CreateDevice2 failed: device lost, not available, or of out of memory ("
-                   << gl::FmtHR(result) << ")";
+            std::ostringstream err;
+            err << "CreateDevice2 failed: device lost, not available, or of out of memory ("
+                << gl::FmtHR(result) << ")";
+            return egl::Error(EGL_BAD_ALLOC, D3D9_INIT_OUT_OF_MEMORY, err.str());
         }
     }
 
@@ -741,7 +746,7 @@ egl::Error Renderer9::getD3DTextureInfo(const egl::Config *configuration,
     IDirect3DTexture9 *texture = nullptr;
     if (FAILED(d3dTexture->QueryInterface(&texture)))
     {
-        return egl::EglBadParameter() << "Client buffer is not a IDirect3DTexture9";
+        return egl::Error(EGL_BAD_PARAMETER, "Client buffer is not a IDirect3DTexture9");
     }
 
     IDirect3DDevice9 *textureDevice = nullptr;
@@ -749,7 +754,7 @@ egl::Error Renderer9::getD3DTextureInfo(const egl::Config *configuration,
     if (textureDevice != mDevice)
     {
         SafeRelease(texture);
-        return egl::EglBadParameter() << "Texture's device does not match.";
+        return egl::Error(EGL_BAD_PARAMETER, "Texture's device does not match.");
     }
     SafeRelease(textureDevice);
 
@@ -770,7 +775,8 @@ egl::Error Renderer9::getD3DTextureInfo(const egl::Config *configuration,
     GLsizei sampleCount = d3d9_gl::GetSamplesCount(desc.MultiSampleType);
     if ((configuration && configuration->samples > 1) || sampleCount != 0)
     {
-        return egl::EglBadParameter() << "Multisampling not supported for client buffer texture";
+        return egl::Error(EGL_BAD_PARAMETER,
+                          "Multisampling not supported for client buffer texture");
     }
     if (samples)
     {
@@ -787,8 +793,9 @@ egl::Error Renderer9::getD3DTextureInfo(const egl::Config *configuration,
             break;
 
         default:
-            return egl::EglBadParameter()
-                   << "Unknown client buffer texture format: " << desc.Format;
+            std::ostringstream err;
+            err << "Unknown client buffer texture format: " << desc.Format;
+            return egl::Error(EGL_BAD_PARAMETER, err.str());
     }
 
     const auto &d3dFormatInfo = d3d9::GetD3DFormatInfo(desc.Format);
@@ -819,7 +826,7 @@ egl::Error Renderer9::validateShareHandle(const egl::Config *config,
 {
     if (shareHandle == nullptr)
     {
-        return egl::EglBadParameter() << "NULL share handle.";
+        return egl::Error(EGL_BAD_PARAMETER, "NULL share handle.");
     }
 
     EGLint width  = attribs.getAsInt(EGL_WIDTH, 0);
@@ -835,7 +842,9 @@ egl::Error Renderer9::validateShareHandle(const egl::Config *config,
                                                         &texture, &shareHandle);
     if (FAILED(result))
     {
-        return egl::EglBadParameter() << "Failed to open share handle, " << gl::FmtHR(result);
+        std::ostringstream err;
+        err << "Failed to open share handle, " << gl::FmtHR(result);
+        return egl::Error(EGL_BAD_PARAMETER, err.str());
     }
 
     DWORD levelCount = texture->GetLevelCount();
@@ -848,7 +857,7 @@ egl::Error Renderer9::validateShareHandle(const egl::Config *config,
         desc.Height != static_cast<UINT>(height) ||
         desc.Format != backBufferd3dFormatInfo.texFormat)
     {
-        return egl::EglBadParameter() << "Invalid texture parameters in share handle texture.";
+        return egl::Error(EGL_BAD_PARAMETER, "Invalid texture parameters in share handle texture.");
     }
 
     return egl::NoError();

@@ -35,7 +35,7 @@ egl::Error DeviceMtl::getAttribute(const egl::Display *display, EGLint attribute
             *outValue = displayImpl->getMetalDevice();
             break;
         default:
-            return egl::EglBadAttribute();
+            return egl::Error(EGL_BAD_ATTRIBUTE);
     }
 
     return egl::NoError();

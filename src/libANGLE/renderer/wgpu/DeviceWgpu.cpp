@@ -26,7 +26,7 @@ egl::Error DeviceWgpu::initialize()
 egl::Error DeviceWgpu::getAttribute(const egl::Display *display, EGLint attribute, void **outValue)
 {
     UNIMPLEMENTED();
-    return egl::EglBadAccess();
+    return egl::Error(EGL_BAD_ACCESS);
 }
 
 void DeviceWgpu::generateExtensions(egl::DeviceExtensions *outExtensions) const {}

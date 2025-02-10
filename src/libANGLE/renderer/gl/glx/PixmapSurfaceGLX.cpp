@@ -105,8 +105,8 @@ egl::Error PixmapSurfaceGLX::initialize(const egl::Display *display)
                                   &borderWidth, &depth);
         if (!status)
         {
-            return egl::EglBadSurface() << "XGetGeometry query failed on pixmap surface: "
-                                        << x11::XErrorToString(mDisplay, status);
+            return egl::Error(EGL_BAD_SURFACE, "XGetGeometry query failed on pixmap surface: " +
+                                                   x11::XErrorToString(mDisplay, status));
         }
     }
 
@@ -129,7 +129,7 @@ egl::Error PixmapSurfaceGLX::initialize(const egl::Display *display)
     mGLXPixmap = mGLX.createPixmap(mFBConfig, mXPixmap, pixmapAttribs.data());
     if (!mGLXPixmap)
     {
-        return egl::EglBadAlloc() << "Failed to create a native GLX pixmap.";
+        return egl::Error(EGL_BAD_ALLOC, "Failed to create a native GLX pixmap.");
     }
 
     XFlush(mDisplay);

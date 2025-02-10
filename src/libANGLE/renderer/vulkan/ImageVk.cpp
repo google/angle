@@ -104,7 +104,7 @@ egl::Error ImageVk::initialize(const egl::Display *display)
         else
         {
             UNREACHABLE();
-            return egl::EglBadAccess();
+            return egl::Error(EGL_BAD_ACCESS);
         }
 
         mOwnsImage = false;

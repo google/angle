@@ -58,7 +58,7 @@ egl::Error DisplayVkXcb::initialize(egl::Display *display)
             ERR() << "xcb_connect() failed, error " << xcb_connection_error;
             xcb_disconnect(mXcbConnection);
             mXcbConnection = nullptr;
-            return egl::EglNotInitialized();
+            return egl::Error(EGL_NOT_INITIALIZED);
         }
     }
     return DisplayVk::initialize(display);

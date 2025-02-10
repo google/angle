@@ -188,14 +188,14 @@ egl::Error DisplayCGL::initialize(egl::Display *display)
 
         if (mPixelFormat == nullptr)
         {
-            return egl::EglNotInitialized() << "Could not create the context's pixel format.";
+            return egl::Error(EGL_NOT_INITIALIZED, "Could not create the context's pixel format.");
         }
     }
 
     CGLCreateContext(mPixelFormat, nullptr, &mContext);
     if (mContext == nullptr)
     {
-        return egl::EglNotInitialized() << "Could not create the CGL context.";
+        return egl::Error(EGL_NOT_INITIALIZED, "Could not create the CGL context.");
     }
 
     if (mSupportsGPUSwitching)
@@ -224,7 +224,7 @@ egl::Error DisplayCGL::initialize(egl::Display *display)
 
     if (CGLSetCurrentContext(mContext) != kCGLNoError)
     {
-        return egl::EglNotInitialized() << "Could not make the CGL context current.";
+        return egl::Error(EGL_NOT_INITIALIZED, "Could not make the CGL context current.");
     }
     mThreadsWithCurrentContext.insert(angle::GetCurrentThreadUniqueId());
 
@@ -236,7 +236,7 @@ egl::Error DisplayCGL::initialize(egl::Display *display)
     }
     if (!handle)
     {
-        return egl::EglNotInitialized() << "Could not open the OpenGL Framework.";
+        return egl::Error(EGL_NOT_INITIALIZED, "Could not open the OpenGL Framework.");
     }
 
     std::unique_ptr<FunctionsGL> functionsGL(new FunctionsGLCGL(handle));
@@ -247,7 +247,7 @@ egl::Error DisplayCGL::initialize(egl::Display *display)
     const gl::Version &maxVersion = mRenderer->getMaxSupportedESVersion();
     if (maxVersion < gl::Version(2, 0))
     {
-        return egl::EglNotInitialized() << "OpenGL ES 2.0 is not supportable.";
+        return egl::Error(EGL_NOT_INITIALIZED, "OpenGL ES 2.0 is not supportable.");
     }
 
     auto &attributes = display->getAttributeMap();
@@ -286,7 +286,7 @@ egl::Error DisplayCGL::prepareForCall()
 {
     if (!mContext)
     {
-        return egl::EglNotInitialized() << "Context not allocated.";
+        return egl::Error(EGL_NOT_INITIALIZED, "Context not allocated.");
     }
     auto threadId = angle::GetCurrentThreadUniqueId();
     if (mDeviceContextIsVolatile ||
@@ -294,7 +294,7 @@ egl::Error DisplayCGL::prepareForCall()
     {
         if (CGLSetCurrentContext(mContext) != kCGLNoError)
         {
-            return egl::EglBadAlloc() << "Could not make device CGL context current.";
+            return egl::Error(EGL_BAD_ALLOC, "Could not make device CGL context current.");
         }
         mThreadsWithCurrentContext.insert(threadId);
     }
@@ -309,7 +309,7 @@ egl::Error DisplayCGL::releaseThread()
     {
         if (CGLSetCurrentContext(nullptr) != kCGLNoError)
         {
-            return egl::EglBadAlloc() << "Could not release device CGL context.";
+            return egl::Error(EGL_BAD_ALLOC, "Could not release device CGL context.");
         }
         mThreadsWithCurrentContext.erase(threadId);
     }
@@ -458,7 +458,7 @@ bool DisplayCGL::testDeviceLost()
 egl::Error DisplayCGL::restoreLostDevice(const egl::Display *display)
 {
     UNIMPLEMENTED();
-    return egl::EglBadDisplay();
+    return egl::Error(EGL_BAD_DISPLAY);
 }
 
 bool DisplayCGL::isValidNativeWindow(EGLNativeWindowType window) const
@@ -476,7 +476,7 @@ egl::Error DisplayCGL::validateClientBuffer(const egl::Config *configuration,
 
     if (!IOSurfaceSurfaceCGL::validateAttributes(clientBuffer, attribs))
     {
-        return egl::EglBadAttribute();
+        return egl::Error(EGL_BAD_ATTRIBUTE);
     }
 
     return egl::NoError();
@@ -581,7 +581,7 @@ egl::Error DisplayCGL::referenceDiscreteGPU()
         if (CGLChoosePixelFormat(discreteAttribs, &mDiscreteGPUPixelFormat, &numPixelFormats) !=
             kCGLNoError)
         {
-            return egl::EglBadAlloc() << "Error choosing discrete pixel format.";
+            return egl::Error(EGL_BAD_ALLOC, "Error choosing discrete pixel format.");
         }
     }
     ++mDiscreteGPURefs;

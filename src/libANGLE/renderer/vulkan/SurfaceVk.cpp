@@ -717,7 +717,7 @@ egl::Error OffscreenSurfaceVk::postSubBuffer(const gl::Context * /*context*/,
 egl::Error OffscreenSurfaceVk::querySurfacePointerANGLE(EGLint /*attribute*/, void ** /*value*/)
 {
     UNREACHABLE();
-    return egl::EglBadCurrentSurface();
+    return egl::Error(EGL_BAD_CURRENT_SURFACE);
 }
 
 egl::Error OffscreenSurfaceVk::bindTexImage(const gl::Context * /*context*/,
@@ -737,13 +737,13 @@ egl::Error OffscreenSurfaceVk::getSyncValues(EGLuint64KHR * /*ust*/,
                                              EGLuint64KHR * /*sbc*/)
 {
     UNIMPLEMENTED();
-    return egl::EglBadAccess();
+    return egl::Error(EGL_BAD_ACCESS);
 }
 
 egl::Error OffscreenSurfaceVk::getMscRate(EGLint * /*numerator*/, EGLint * /*denominator*/)
 {
     UNIMPLEMENTED();
-    return egl::EglBadAccess();
+    return egl::Error(EGL_BAD_ACCESS);
 }
 
 void OffscreenSurfaceVk::setSwapInterval(const egl::Display *display, EGLint /*interval*/) {}
@@ -2958,7 +2958,7 @@ egl::Error WindowSurfaceVk::postSubBuffer(const gl::Context *context,
 egl::Error WindowSurfaceVk::querySurfacePointerANGLE(EGLint attribute, void **value)
 {
     UNREACHABLE();
-    return egl::EglBadCurrentSurface();
+    return egl::Error(EGL_BAD_CURRENT_SURFACE);
 }
 
 egl::Error WindowSurfaceVk::bindTexImage(const gl::Context *context,
@@ -2978,13 +2978,13 @@ egl::Error WindowSurfaceVk::getSyncValues(EGLuint64KHR * /*ust*/,
                                           EGLuint64KHR * /*sbc*/)
 {
     UNIMPLEMENTED();
-    return egl::EglBadAccess();
+    return egl::Error(EGL_BAD_ACCESS);
 }
 
 egl::Error WindowSurfaceVk::getMscRate(EGLint * /*numerator*/, EGLint * /*denominator*/)
 {
     UNIMPLEMENTED();
-    return egl::EglBadAccess();
+    return egl::Error(EGL_BAD_ACCESS);
 }
 
 vk::PresentMode WindowSurfaceVk::getDesiredSwapchainPresentMode() const
@@ -3356,7 +3356,7 @@ egl::Error WindowSurfaceVk::setRenderBuffer(EGLint renderBuffer)
                                           : vk::PresentMode::SharedDemandRefreshKHR;
         if (!supportsPresentMode(presentMode))
         {
-            return egl::EglBadMatch();
+            return egl::Error(EGL_BAD_MATCH);
         }
         setDesiredSwapchainPresentMode(presentMode);
     }

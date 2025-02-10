@@ -206,13 +206,13 @@ egl::Error FunctionsEGL::initialize(EGLAttrib platformType, EGLNativeDisplayType
             WARN() << "Could not load EGL entry point " #NAME; \
         }                                                      \
     } while (0)
-#define ANGLE_GET_PROC_OR_ERROR(MEMBER, NAME)                                           \
-    do                                                                                  \
-    {                                                                                   \
-        if (!SetPtr(MEMBER, getProcAddress(#NAME)))                                     \
-        {                                                                               \
-            return egl::EglNotInitialized() << "Could not load EGL entry point " #NAME; \
-        }                                                                               \
+#define ANGLE_GET_PROC_OR_ERROR(MEMBER, NAME)                                                \
+    do                                                                                       \
+    {                                                                                        \
+        if (!SetPtr(MEMBER, getProcAddress(#NAME)))                                          \
+        {                                                                                    \
+            return egl::Error(EGL_NOT_INITIALIZED, "Could not load EGL entry point " #NAME); \
+        }                                                                                    \
     } while (0)
 
     ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->bindAPIPtr, eglBindAPI);
@@ -274,11 +274,11 @@ egl::Error FunctionsEGL::initialize(EGLAttrib platformType, EGLNativeDisplayType
     }
     if (mEGLDisplay == EGL_NO_DISPLAY)
     {
-        return egl::EglNotInitialized() << "Failed to get system egl display";
+        return egl::Error(EGL_NOT_INITIALIZED, "Failed to get system egl display");
     }
     if (majorVersion < 1 || (majorVersion == 1 && minorVersion < 4))
     {
-        return egl::EglNotInitialized() << "Unsupported EGL version (require at least 1.4).";
+        return egl::Error(EGL_NOT_INITIALIZED, "Unsupported EGL version (require at least 1.4).");
     }
     if (mFnPtrs->bindAPIPtr(EGL_OPENGL_ES_API) != EGL_TRUE)
     {
