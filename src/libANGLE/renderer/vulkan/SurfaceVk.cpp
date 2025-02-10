@@ -1900,7 +1900,7 @@ angle::Result WindowSurfaceVk::queryAndAdjustSurfaceCaps(ContextVk *contextVk,
     vk::Renderer *renderer                 = contextVk->getRenderer();
     const VkPhysicalDevice &physicalDevice = renderer->getPhysicalDevice();
 
-    if (renderer->getFeatures().supportsSwapchainMaintenance1.enabled)
+    if (renderer->getFeatures().supportsSurfaceMaintenance1.enabled)
     {
         VkPhysicalDeviceSurfaceInfo2KHR surfaceInfo2 = {};
         surfaceInfo2.sType   = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR;
