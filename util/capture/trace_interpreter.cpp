@@ -516,6 +516,7 @@ class TraceInterpreter : angle::NonCopyable
     void replayFrame(uint32_t frameIndex);
     void setupReplay();
     void resetReplay();
+    void setupFirstFrame();
     const char *getSerializedContextState(uint32_t frameIndex);
 
   private:
@@ -631,6 +632,11 @@ void TraceInterpreter::setupReplay()
 void TraceInterpreter::resetReplay()
 {
     runTraceFunction("ResetReplay");
+}
+
+void TraceInterpreter::setupFirstFrame()
+{
+    runTraceFunction("SetupFirstFrame");
 }
 
 const char *TraceInterpreter::getSerializedContextState(uint32_t frameIndex)

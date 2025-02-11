@@ -1,0 +1,37 @@
+{
+    "clGetProgramBuildInfo": {
+        "CL_PROGRAM_BUILD_STATUS": 0,
+        "device": "0x5652b4c49440",
+        "program": "0x5652b5054db0"
+    }
+},
+{
+    "clGetMemObjectInfo": {
+        "CL_MEM_SIZE": 512,
+        "memObj": "0x5652b50efdd0"
+    }
+},
+{
+    "clGetMemObjectInfo": {
+        "CL_MEM_SIZE": 512,
+        "memObj": "0x5652b50efdd0"
+    }
+},
+{
+    "clGetMemObjectInfo": {
+        "CL_MEM_SIZE": 512,
+        "memObj": "0x5652b50efdd0"
+    }
+},
+{
+    "clGetMemObjectInfo": {
+        "CL_MEM_SIZE": 512,
+        "memObj": "0x5652b50efdd0"
+    }
+},
+{
+    "clGetMemObjectInfo": {
+        "CL_MEM_SIZE": 512,
+        "memObj": "0x5652b50efdd0"
+    }
+},

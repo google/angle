@@ -272,6 +272,9 @@ if (is_win || is_linux || is_chromeos || is_android || is_fuchsia || is_apple) {
     include_dirs = [ "." ]
 
     sources = angle_end2end_tests_sources + [ "angle_end2end_tests_main.cpp" ]
+    if (angle_enable_cl) {
+      sources += [ "capture_tests/CapturedTestCL.cpp" ]
+    }
     libs = []
     defines = []
     configs += [ "${angle_root}:libANGLE_config" ]
@@ -311,6 +314,10 @@ if (is_win || is_linux || is_chromeos || is_android || is_fuchsia || is_apple) {
       "$angle_root:angle_image_util",
       "$angle_root:translator",
     ]
+
+    if (angle_enable_cl) {
+      deps += [ "$angle_root/src/libOpenCL:OpenCL_ANGLE" ]
+    }
 
     if (is_ios) {
       deps += [ ":angle_end2end_tests_bundle_data" ]
@@ -564,6 +571,8 @@ template("angle_perftests_common") {
     }
     sources = [
       "../common/base/anglebase/trace_event/trace_event.h",
+      "perf_tests/ANGLEComputeTestCL.cpp",
+      "perf_tests/ANGLEComputeTestCL.h",
       "perf_tests/ANGLEPerfTest.cpp",
       "perf_tests/ANGLEPerfTest.h",
       "perf_tests/ANGLEPerfTestArgs.cpp",
@@ -704,6 +713,8 @@ if (build_angle_trace_tests) {
     sources = [
       "angle_trace_tests_main.cpp",
       "perf_tests/TracePerfTest.cpp",
+      "perf_tests/TracePerfTest.h",
+      "perf_tests/TracePerfTestCL.cpp",
     ]
 
     deps = [
@@ -2062,6 +2073,9 @@ group("angle_tests") {
     deps += [ ":angle_trace_perf_tests" ]
     deps += [ "capture_tests:angle_capture_tests_multi_frame_trace" ]
     deps += [ "capture_tests:angle_capture_tests_active_textures_trace" ]
+    if (angle_enable_cl) {
+      deps += [ "capture_tests:angle_capture_tests_multi_frame_cl_trace" ]
+    }
   }
   if (is_clang && angle_has_frame_capture) {
     deps += [ "capture_replay_tests" ]

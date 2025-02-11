@@ -300,6 +300,7 @@ extern "C" {
 void SetupReplay();
 void ReplayFrame(uint32_t frameIndex);
 void ResetReplay();
+void SetupFirstFrame();
 ANGLE_REPLAY_EXPORT const char *GetSerializedContextState(uint32_t frameIndex);
 }  // extern "C"
 

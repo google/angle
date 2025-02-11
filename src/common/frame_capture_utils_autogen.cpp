@@ -611,6 +611,270 @@ void WriteParamCaptureReplay(std::ostream &os, const CallCapture &call, const Pa
             WriteParamValueReplay<ParamType::TvoidPointerPointer>(
                 os, call, param.value.voidPointerPointerVal);
             break;
+#ifdef ANGLE_ENABLE_CL
+        case ParamType::TAddressingMode:
+            WriteParamValueReplay<ParamType::TAddressingMode>(os, call,
+                                                              param.value.AddressingModeVal);
+            break;
+        case ParamType::TCommandQueueInfo:
+            WriteParamValueReplay<ParamType::TCommandQueueInfo>(os, call,
+                                                                param.value.CommandQueueInfoVal);
+            break;
+        case ParamType::TCommandQueueProperties:
+            WriteParamValueReplay<ParamType::TCommandQueueProperties>(
+                os, call, param.value.CommandQueuePropertiesVal);
+            break;
+        case ParamType::TContextInfo:
+            WriteParamValueReplay<ParamType::TContextInfo>(os, call, param.value.ContextInfoVal);
+            break;
+        case ParamType::TDeviceInfo:
+            WriteParamValueReplay<ParamType::TDeviceInfo>(os, call, param.value.DeviceInfoVal);
+            break;
+        case ParamType::TDeviceType:
+            WriteParamValueReplay<ParamType::TDeviceType>(os, call, param.value.DeviceTypeVal);
+            break;
+        case ParamType::TEventInfo:
+            WriteParamValueReplay<ParamType::TEventInfo>(os, call, param.value.EventInfoVal);
+            break;
+        case ParamType::TFilterMode:
+            WriteParamValueReplay<ParamType::TFilterMode>(os, call, param.value.FilterModeVal);
+            break;
+        case ParamType::TImageInfo:
+            WriteParamValueReplay<ParamType::TImageInfo>(os, call, param.value.ImageInfoVal);
+            break;
+        case ParamType::TKernelArgInfo:
+            WriteParamValueReplay<ParamType::TKernelArgInfo>(os, call,
+                                                             param.value.KernelArgInfoVal);
+            break;
+        case ParamType::TKernelExecInfo:
+            WriteParamValueReplay<ParamType::TKernelExecInfo>(os, call,
+                                                              param.value.KernelExecInfoVal);
+            break;
+        case ParamType::TKernelInfo:
+            WriteParamValueReplay<ParamType::TKernelInfo>(os, call, param.value.KernelInfoVal);
+            break;
+        case ParamType::TKernelSubGroupInfo:
+            WriteParamValueReplay<ParamType::TKernelSubGroupInfo>(
+                os, call, param.value.KernelSubGroupInfoVal);
+            break;
+        case ParamType::TKernelWorkGroupInfo:
+            WriteParamValueReplay<ParamType::TKernelWorkGroupInfo>(
+                os, call, param.value.KernelWorkGroupInfoVal);
+            break;
+        case ParamType::TMapFlags:
+            WriteParamValueReplay<ParamType::TMapFlags>(os, call, param.value.MapFlagsVal);
+            break;
+        case ParamType::TMemFlags:
+            WriteParamValueReplay<ParamType::TMemFlags>(os, call, param.value.MemFlagsVal);
+            break;
+        case ParamType::TMemInfo:
+            WriteParamValueReplay<ParamType::TMemInfo>(os, call, param.value.MemInfoVal);
+            break;
+        case ParamType::TMemMigrationFlags:
+            WriteParamValueReplay<ParamType::TMemMigrationFlags>(os, call,
+                                                                 param.value.MemMigrationFlagsVal);
+            break;
+        case ParamType::TMemObjectType:
+            WriteParamValueReplay<ParamType::TMemObjectType>(os, call,
+                                                             param.value.MemObjectTypeVal);
+            break;
+        case ParamType::TPipeInfo:
+            WriteParamValueReplay<ParamType::TPipeInfo>(os, call, param.value.PipeInfoVal);
+            break;
+        case ParamType::TPlatformInfo:
+            WriteParamValueReplay<ParamType::TPlatformInfo>(os, call, param.value.PlatformInfoVal);
+            break;
+        case ParamType::TProfilingInfo:
+            WriteParamValueReplay<ParamType::TProfilingInfo>(os, call,
+                                                             param.value.ProfilingInfoVal);
+            break;
+        case ParamType::TProgramBuildInfo:
+            WriteParamValueReplay<ParamType::TProgramBuildInfo>(os, call,
+                                                                param.value.ProgramBuildInfoVal);
+            break;
+        case ParamType::TProgramInfo:
+            WriteParamValueReplay<ParamType::TProgramInfo>(os, call, param.value.ProgramInfoVal);
+            break;
+        case ParamType::TSVM_MemFlags:
+            WriteParamValueReplay<ParamType::TSVM_MemFlags>(os, call, param.value.SVM_MemFlagsVal);
+            break;
+        case ParamType::TSamplerInfo:
+            WriteParamValueReplay<ParamType::TSamplerInfo>(os, call, param.value.SamplerInfoVal);
+            break;
+        case ParamType::TcharConstPointerPointer:
+            WriteParamValueReplay<ParamType::TcharConstPointerPointer>(
+                os, call, param.value.charConstPointerPointerVal);
+            break;
+        case ParamType::TcharUnsignedConstPointerPointer:
+            WriteParamValueReplay<ParamType::TcharUnsignedConstPointerPointer>(
+                os, call, param.value.charUnsignedConstPointerPointerVal);
+            break;
+        case ParamType::Tcl_bool:
+            WriteParamValueReplay<ParamType::Tcl_bool>(os, call, param.value.cl_boolVal);
+            break;
+        case ParamType::Tcl_buffer_create_type:
+            WriteParamValueReplay<ParamType::Tcl_buffer_create_type>(
+                os, call, param.value.cl_buffer_create_typeVal);
+            break;
+        case ParamType::Tcl_callback_func_type:
+            WriteParamValueReplay<ParamType::Tcl_callback_func_type>(
+                os, call, param.value.cl_callback_func_typeVal);
+            break;
+        case ParamType::Tcl_command_queue:
+            WriteParamValueReplay<ParamType::Tcl_command_queue>(os, call,
+                                                                param.value.cl_command_queueVal);
+            break;
+        case ParamType::Tcl_command_queue_propertiesPointer:
+            WriteParamValueReplay<ParamType::Tcl_command_queue_propertiesPointer>(
+                os, call, param.value.cl_command_queue_propertiesPointerVal);
+            break;
+        case ParamType::Tcl_context:
+            WriteParamValueReplay<ParamType::Tcl_context>(os, call, param.value.cl_contextVal);
+            break;
+        case ParamType::Tcl_context_destructor_func_type:
+            WriteParamValueReplay<ParamType::Tcl_context_destructor_func_type>(
+                os, call, param.value.cl_context_destructor_func_typeVal);
+            break;
+        case ParamType::Tcl_context_func_type:
+            WriteParamValueReplay<ParamType::Tcl_context_func_type>(
+                os, call, param.value.cl_context_func_typeVal);
+            break;
+        case ParamType::Tcl_context_propertiesConstPointer:
+            WriteParamValueReplay<ParamType::Tcl_context_propertiesConstPointer>(
+                os, call, param.value.cl_context_propertiesConstPointerVal);
+            break;
+        case ParamType::Tcl_device_id:
+            WriteParamValueReplay<ParamType::Tcl_device_id>(os, call, param.value.cl_device_idVal);
+            break;
+        case ParamType::Tcl_device_idConstPointer:
+            WriteParamValueReplay<ParamType::Tcl_device_idConstPointer>(
+                os, call, param.value.cl_device_idConstPointerVal);
+            break;
+        case ParamType::Tcl_device_idPointer:
+            WriteParamValueReplay<ParamType::Tcl_device_idPointer>(
+                os, call, param.value.cl_device_idPointerVal);
+            break;
+        case ParamType::Tcl_device_partition_propertyConstPointer:
+            WriteParamValueReplay<ParamType::Tcl_device_partition_propertyConstPointer>(
+                os, call, param.value.cl_device_partition_propertyConstPointerVal);
+            break;
+        case ParamType::Tcl_event:
+            WriteParamValueReplay<ParamType::Tcl_event>(os, call, param.value.cl_eventVal);
+            break;
+        case ParamType::Tcl_eventConstPointer:
+            WriteParamValueReplay<ParamType::Tcl_eventConstPointer>(
+                os, call, param.value.cl_eventConstPointerVal);
+            break;
+        case ParamType::Tcl_eventPointer:
+            WriteParamValueReplay<ParamType::Tcl_eventPointer>(os, call,
+                                                               param.value.cl_eventPointerVal);
+            break;
+        case ParamType::Tcl_image_descConstPointer:
+            WriteParamValueReplay<ParamType::Tcl_image_descConstPointer>(
+                os, call, param.value.cl_image_descConstPointerVal);
+            break;
+        case ParamType::Tcl_image_formatConstPointer:
+            WriteParamValueReplay<ParamType::Tcl_image_formatConstPointer>(
+                os, call, param.value.cl_image_formatConstPointerVal);
+            break;
+        case ParamType::Tcl_image_formatPointer:
+            WriteParamValueReplay<ParamType::Tcl_image_formatPointer>(
+                os, call, param.value.cl_image_formatPointerVal);
+            break;
+        case ParamType::Tcl_int:
+            WriteParamValueReplay<ParamType::Tcl_int>(os, call, param.value.cl_intVal);
+            break;
+        case ParamType::Tcl_intPointer:
+            WriteParamValueReplay<ParamType::Tcl_intPointer>(os, call,
+                                                             param.value.cl_intPointerVal);
+            break;
+        case ParamType::Tcl_kernel:
+            WriteParamValueReplay<ParamType::Tcl_kernel>(os, call, param.value.cl_kernelVal);
+            break;
+        case ParamType::Tcl_kernelPointer:
+            WriteParamValueReplay<ParamType::Tcl_kernelPointer>(os, call,
+                                                                param.value.cl_kernelPointerVal);
+            break;
+        case ParamType::Tcl_mem:
+            WriteParamValueReplay<ParamType::Tcl_mem>(os, call, param.value.cl_memVal);
+            break;
+        case ParamType::Tcl_memConstPointer:
+            WriteParamValueReplay<ParamType::Tcl_memConstPointer>(
+                os, call, param.value.cl_memConstPointerVal);
+            break;
+        case ParamType::Tcl_mem_destructor_func_type:
+            WriteParamValueReplay<ParamType::Tcl_mem_destructor_func_type>(
+                os, call, param.value.cl_mem_destructor_func_typeVal);
+            break;
+        case ParamType::Tcl_mem_propertiesConstPointer:
+            WriteParamValueReplay<ParamType::Tcl_mem_propertiesConstPointer>(
+                os, call, param.value.cl_mem_propertiesConstPointerVal);
+            break;
+        case ParamType::Tcl_pipe_propertiesConstPointer:
+            WriteParamValueReplay<ParamType::Tcl_pipe_propertiesConstPointer>(
+                os, call, param.value.cl_pipe_propertiesConstPointerVal);
+            break;
+        case ParamType::Tcl_platform_id:
+            WriteParamValueReplay<ParamType::Tcl_platform_id>(os, call,
+                                                              param.value.cl_platform_idVal);
+            break;
+        case ParamType::Tcl_platform_idPointer:
+            WriteParamValueReplay<ParamType::Tcl_platform_idPointer>(
+                os, call, param.value.cl_platform_idPointerVal);
+            break;
+        case ParamType::Tcl_program:
+            WriteParamValueReplay<ParamType::Tcl_program>(os, call, param.value.cl_programVal);
+            break;
+        case ParamType::Tcl_programConstPointer:
+            WriteParamValueReplay<ParamType::Tcl_programConstPointer>(
+                os, call, param.value.cl_programConstPointerVal);
+            break;
+        case ParamType::Tcl_program_func_type:
+            WriteParamValueReplay<ParamType::Tcl_program_func_type>(
+                os, call, param.value.cl_program_func_typeVal);
+            break;
+        case ParamType::Tcl_queue_propertiesConstPointer:
+            WriteParamValueReplay<ParamType::Tcl_queue_propertiesConstPointer>(
+                os, call, param.value.cl_queue_propertiesConstPointerVal);
+            break;
+        case ParamType::Tcl_sampler:
+            WriteParamValueReplay<ParamType::Tcl_sampler>(os, call, param.value.cl_samplerVal);
+            break;
+        case ParamType::Tcl_sampler_propertiesConstPointer:
+            WriteParamValueReplay<ParamType::Tcl_sampler_propertiesConstPointer>(
+                os, call, param.value.cl_sampler_propertiesConstPointerVal);
+            break;
+        case ParamType::Tcl_svm_free_callback_func_type:
+            WriteParamValueReplay<ParamType::Tcl_svm_free_callback_func_type>(
+                os, call, param.value.cl_svm_free_callback_func_typeVal);
+            break;
+        case ParamType::Tcl_uint:
+            WriteParamValueReplay<ParamType::Tcl_uint>(os, call, param.value.cl_uintVal);
+            break;
+        case ParamType::Tcl_uintPointer:
+            WriteParamValueReplay<ParamType::Tcl_uintPointer>(os, call,
+                                                              param.value.cl_uintPointerVal);
+            break;
+        case ParamType::Tcl_ulongPointer:
+            WriteParamValueReplay<ParamType::Tcl_ulongPointer>(os, call,
+                                                               param.value.cl_ulongPointerVal);
+            break;
+        case ParamType::Tcl_void_func_type:
+            WriteParamValueReplay<ParamType::Tcl_void_func_type>(os, call,
+                                                                 param.value.cl_void_func_typeVal);
+            break;
+        case ParamType::Tsize_t:
+            WriteParamValueReplay<ParamType::Tsize_t>(os, call, param.value.size_tVal);
+            break;
+        case ParamType::Tsize_tConstPointer:
+            WriteParamValueReplay<ParamType::Tsize_tConstPointer>(
+                os, call, param.value.size_tConstPointerVal);
+            break;
+        case ParamType::Tsize_tPointer:
+            WriteParamValueReplay<ParamType::Tsize_tPointer>(os, call,
+                                                             param.value.size_tPointerVal);
+            break;
+#endif
         default:
             os << "unknown";
             break;
@@ -748,7 +1012,7 @@ const char *ParamTypeToString(ParamType paramType)
         case ParamType::TGLcharConstPointer:
             return "const GLchar *";
         case ParamType::TGLcharConstPointerPointer:
-            return "const GLchar * const *";
+            return "const GLchar *const *";
         case ParamType::TGLcharPointer:
             return "GLchar *";
         case ParamType::TGLclampx:
@@ -928,7 +1192,7 @@ const char *ParamTypeToString(ParamType paramType)
         case ParamType::TVertexAttribType:
             return "GLenum";
         case ParamType::TcharConstPointer:
-            return "const GLenum *";
+            return "const char *";
         case ParamType::Tegl_ConfigPointer:
             return "GLenum *";
         case ParamType::Tegl_DevicePointer:
@@ -942,11 +1206,155 @@ const char *ParamTypeToString(ParamType paramType)
         case ParamType::TvoidConstPointer:
             return "const void *";
         case ParamType::TvoidConstPointerPointer:
-            return "const void * const *";
+            return "const void **";
         case ParamType::TvoidPointer:
             return "void *";
         case ParamType::TvoidPointerPointer:
             return "void **";
+        case ParamType::TAddressingMode:
+            return "GLenum";
+        case ParamType::TCommandQueueInfo:
+            return "GLenum";
+        case ParamType::TCommandQueueProperties:
+            return "GLenum";
+        case ParamType::TContextInfo:
+            return "GLenum";
+        case ParamType::TDeviceInfo:
+            return "GLenum";
+        case ParamType::TDeviceType:
+            return "GLenum";
+        case ParamType::TEventInfo:
+            return "GLenum";
+        case ParamType::TFilterMode:
+            return "GLenum";
+        case ParamType::TImageInfo:
+            return "GLenum";
+        case ParamType::TKernelArgInfo:
+            return "GLenum";
+        case ParamType::TKernelExecInfo:
+            return "GLenum";
+        case ParamType::TKernelInfo:
+            return "GLenum";
+        case ParamType::TKernelSubGroupInfo:
+            return "GLenum";
+        case ParamType::TKernelWorkGroupInfo:
+            return "GLenum";
+        case ParamType::TMapFlags:
+            return "GLenum";
+        case ParamType::TMemFlags:
+            return "GLenum";
+        case ParamType::TMemInfo:
+            return "GLenum";
+        case ParamType::TMemMigrationFlags:
+            return "GLenum";
+        case ParamType::TMemObjectType:
+            return "GLenum";
+        case ParamType::TPipeInfo:
+            return "GLenum";
+        case ParamType::TPlatformInfo:
+            return "GLenum";
+        case ParamType::TProfilingInfo:
+            return "GLenum";
+        case ParamType::TProgramBuildInfo:
+            return "GLenum";
+        case ParamType::TProgramInfo:
+            return "GLenum";
+        case ParamType::TSVM_MemFlags:
+            return "GLenum";
+        case ParamType::TSamplerInfo:
+            return "GLenum";
+        case ParamType::TcharConstPointerPointer:
+            return "const char **";
+        case ParamType::TcharUnsignedConstPointerPointer:
+            return "const unsigned char **";
+        case ParamType::Tcl_bool:
+            return "cl_bool";
+        case ParamType::Tcl_buffer_create_type:
+            return "cl_buffer_create_type";
+        case ParamType::Tcl_callback_func_type:
+            return "cl_callback_func_type";
+        case ParamType::Tcl_command_queue:
+            return "cl_command_queue";
+        case ParamType::Tcl_command_queue_propertiesPointer:
+            return "cl_command_queue_properties *";
+        case ParamType::Tcl_context:
+            return "cl_context";
+        case ParamType::Tcl_context_destructor_func_type:
+            return "cl_context_destructor_func_type";
+        case ParamType::Tcl_context_func_type:
+            return "cl_context_func_type";
+        case ParamType::Tcl_context_propertiesConstPointer:
+            return "const cl_context_properties *";
+        case ParamType::Tcl_device_id:
+            return "cl_device_id";
+        case ParamType::Tcl_device_idConstPointer:
+            return "const cl_device_id *";
+        case ParamType::Tcl_device_idPointer:
+            return "cl_device_id *";
+        case ParamType::Tcl_device_partition_propertyConstPointer:
+            return "const cl_device_partition_property *";
+        case ParamType::Tcl_event:
+            return "cl_event";
+        case ParamType::Tcl_eventConstPointer:
+            return "const cl_event *";
+        case ParamType::Tcl_eventPointer:
+            return "cl_event *";
+        case ParamType::Tcl_image_descConstPointer:
+            return "const cl_image_desc *";
+        case ParamType::Tcl_image_formatConstPointer:
+            return "const cl_image_format *";
+        case ParamType::Tcl_image_formatPointer:
+            return "cl_image_format *";
+        case ParamType::Tcl_int:
+            return "cl_int";
+        case ParamType::Tcl_intPointer:
+            return "cl_int *";
+        case ParamType::Tcl_kernel:
+            return "cl_kernel";
+        case ParamType::Tcl_kernelPointer:
+            return "cl_kernel *";
+        case ParamType::Tcl_mem:
+            return "cl_mem";
+        case ParamType::Tcl_memConstPointer:
+            return "const cl_mem *";
+        case ParamType::Tcl_mem_destructor_func_type:
+            return "cl_mem_destructor_func_type";
+        case ParamType::Tcl_mem_propertiesConstPointer:
+            return "const cl_mem_properties *";
+        case ParamType::Tcl_pipe_propertiesConstPointer:
+            return "const cl_pipe_properties *";
+        case ParamType::Tcl_platform_id:
+            return "cl_platform_id";
+        case ParamType::Tcl_platform_idPointer:
+            return "cl_platform_id *";
+        case ParamType::Tcl_program:
+            return "cl_program";
+        case ParamType::Tcl_programConstPointer:
+            return "const cl_program *";
+        case ParamType::Tcl_program_func_type:
+            return "cl_program_func_type";
+        case ParamType::Tcl_queue_propertiesConstPointer:
+            return "const cl_queue_properties *";
+        case ParamType::Tcl_sampler:
+            return "cl_sampler";
+        case ParamType::Tcl_sampler_propertiesConstPointer:
+            return "const cl_sampler_properties *";
+        case ParamType::Tcl_svm_free_callback_func_type:
+            return "cl_svm_free_callback_func_type";
+        case ParamType::Tcl_uint:
+            return "cl_uint";
+        case ParamType::Tcl_uintPointer:
+            return "cl_uint *";
+        case ParamType::Tcl_ulongPointer:
+            return "cl_ulong *";
+        case ParamType::Tcl_void_func_type:
+            return "cl_void_func_type";
+        case ParamType::Tsize_t:
+            return "size_t";
+        case ParamType::Tsize_tConstPointer:
+            return "const size_t *";
+        case ParamType::Tsize_tPointer:
+            return "size_t *";
         default:
             UNREACHABLE();
             return "unknown";
@@ -1045,6 +1453,7 @@ ResourceIDType GetResourceIDTypeFromParamType(ParamType paramType)
             return ResourceIDType::VertexArray;
         case ParamType::Tegl_SyncID:
             return ResourceIDType::egl_Sync;
+
         default:
             return ResourceIDType::InvalidEnum;
     }
@@ -1090,6 +1499,7 @@ const char *GetResourceIDTypeName(ResourceIDType resourceIDType)
             return "VertexArray";
         case ResourceIDType::egl_Sync:
             return "egl_Sync";
+
         default:
             UNREACHABLE();
             return "GetResourceIDTypeName error";

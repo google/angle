@@ -20,6 +20,10 @@ ParamBuffer::~ParamBuffer() {}
 ParamCapture::~ParamCapture() {}
 ResourceTracker::ResourceTracker() {}
 ResourceTracker::~ResourceTracker() {}
+#ifdef ANGLE_ENABLE_CL
+ResourceTrackerCL::ResourceTrackerCL() {}
+ResourceTrackerCL::~ResourceTrackerCL() {}
+#endif
 TrackedResource::TrackedResource() {}
 TrackedResource::~TrackedResource() {}
 StateResetHelper::StateResetHelper() {}

@@ -2316,7 +2316,6 @@ bool Program::deserialize(const Context *context, BinaryInputStream &stream)
             ASSERT(shaderSource.length() > 0);
             sources[shaderType] = std::move(shaderSource);
         }
-
         // Store it for use during mid-execution capture
         context->getShareGroup()->getFrameCaptureShared()->setProgramSources(id(),
                                                                              std::move(sources));

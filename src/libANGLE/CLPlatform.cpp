@@ -5,8 +5,12 @@
 //
 // CLPlatform.cpp: Implements the cl::Platform class.
 
+#include "libANGLE/Context.h"
+#include "libANGLE/capture/FrameCapture.h"
+
 #include "libANGLE/CLPlatform.h"
 
+#include "entry_points_utils.h"
 #include "libANGLE/CLContext.h"
 #include "libANGLE/CLDevice.h"
 #include "libANGLE/cl_utils.h"
@@ -303,6 +307,16 @@ DevicePtrs Platform::createDevices(rx::CLDeviceImpl::CreateDatas &&createDatas)
     return devices;
 }
 
+angle::FrameCaptureShared *Platform::getFrameCaptureShared()
+{
+    if (mFrameCaptureShared == nullptr)
+    {
+        mFrameCaptureShared = new angle::FrameCaptureShared;
+    }
+    return mFrameCaptureShared;
+}
+
+angle::FrameCaptureShared *Platform::mFrameCaptureShared = nullptr;
 constexpr char Platform::kVendor[];
 constexpr char Platform::kIcdSuffix[];
 

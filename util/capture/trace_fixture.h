@@ -57,6 +57,7 @@ extern "C" {
 /* not exported */ void ReplayFrame(uint32_t frameIndex);
 /* not exported */ void ResetReplay();
 /* not exported */ void FinishReplay();
+/* not exported */ void SetupFirstFrame();
 
 ANGLE_REPLAY_EXPORT void SetValidateSerializedStateCallback(
     ValidateSerializedStateCallback callback);
@@ -273,6 +274,7 @@ void CreateNativeClientBufferANDROID(const EGLint *attrib_list, uintptr_t client
 void CreateContext(GLuint contextID);
 
 void ValidateSerializedState(const char *serializedState, const char *fileName, uint32_t line);
+
 #define VALIDATE_CHECKPOINT(STATE) ValidateSerializedState(STATE, __FILE__, __LINE__)
 
 #if defined(__cplusplus)

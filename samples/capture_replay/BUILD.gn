@@ -15,10 +15,7 @@ angle_trace_fixture("angle_capture_replay_sample_fixture") {
 angle_trace("capture_replay_sample_trace") {
   _trace = "angle_capture"
 
-  _trace_data = []
-  _trace_data = read_file("$_trace.json", "json")
-
-  sources = _trace_data.TraceFiles
+  json_file_name = "$_trace.json"
 
   data = [
     "$_trace.json",

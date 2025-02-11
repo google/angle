@@ -116,7 +116,7 @@ def GetFunctionsFromFixture():
                 funcs.append(func_name)
                 arg_counts.add(func_args)
         f.close()
-    return sorted(funcs), arg_counts
+    return sorted(list(set(funcs))), arg_counts
 
 
 def get_dispatch(n):

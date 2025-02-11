@@ -324,11 +324,11 @@ void InitializeReplay(const char *binaryDataFileName,
 
 void FinishReplay()
 {
+    delete[] gReadBuffer;
     for (uint8_t *&clientArray : gClientArrays)
     {
         delete[] clientArray;
     }
-    delete[] gReadBuffer;
     delete[] gResourceIDBuffer;
     delete[] gBufferMap;
     delete[] gContextMap2;
@@ -371,6 +371,8 @@ struct TraceFunctionsImpl : angle::TraceFunctions
     void ReplayFrame(uint32_t frameIndex) override { ::ReplayFrame(frameIndex); }
 
     void ResetReplay() override { ::ResetReplay(); }
+
+    void SetupFirstFrame() override {}
 
     void FinishReplay() override { ::FinishReplay(); }
 

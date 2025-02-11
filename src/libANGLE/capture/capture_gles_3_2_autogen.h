@@ -13,6 +13,9 @@
 
 #include "common/PackedEnums.h"
 #include "libANGLE/capture/FrameCapture.h"
+#ifdef ANGLE_ENABLE_CL
+#    include "common/PackedCLEnums_autogen.h"
+#endif
 
 namespace gl
 {

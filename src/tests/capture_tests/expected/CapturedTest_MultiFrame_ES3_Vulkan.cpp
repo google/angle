@@ -8,7 +8,6 @@ void InitReplay(void)
 {
     // binaryDataFileName = CapturedTest_MultiFrame_ES3_Vulkan.angledata
     // maxClientArraySize = 72
-    // maxClientArraySize = 72
     // readBufferSize = 32
     // resourceIDBufferSize = 1
     // contextID = 1

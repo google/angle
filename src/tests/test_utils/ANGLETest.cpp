@@ -188,6 +188,7 @@ bool ShouldAlwaysForceNewDisplay(const PlatformParameters &params)
     SystemInfo *systemInfo = GetTestSystemInfo();
     return (!systemInfo || !IsWindows() || systemInfo->hasAMDGPU());
 }
+}  // anonymous namespace
 
 GPUTestConfig::API GetTestConfigAPIFromRenderer(angle::GLESDriverType driverType,
                                                 EGLenum renderer,
@@ -227,7 +228,6 @@ GPUTestConfig::API GetTestConfigAPIFromRenderer(angle::GLESDriverType driverType
             return GPUTestConfig::kAPIUnknown;
     }
 }
-}  // anonymous namespace
 
 GLColorRGB::GLColorRGB(const Vector3 &floatColor)
     : R(ColorDenorm(floatColor.x())), G(ColorDenorm(floatColor.y())), B(ColorDenorm(floatColor.z()))
@@ -429,12 +429,6 @@ void SetTestStartDelay(const char *testStartDelay)
 {
     gTestStartDelaySeconds = std::stoi(testStartDelay);
 }
-
-#if defined(ANGLE_TEST_ENABLE_RENDERDOC_CAPTURE)
-bool gEnableRenderDocCapture = true;
-#else
-bool gEnableRenderDocCapture = false;
-#endif
 
 // static
 std::array<Vector3, 6> ANGLETestBase::GetQuadVertices()

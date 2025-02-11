@@ -7,6 +7,7 @@
 //   Performance test for ANGLE replaying traces.
 //
 
+#include "tests/perf_tests/TracePerfTest.h"
 #include <gtest/gtest.h>
 #include "common/PackedEnums.h"
 #include "common/string_utils.h"
@@ -50,61 +51,6 @@ using namespace egl_platform;
 
 namespace
 {
-constexpr size_t kMaxPath = 1024;
-
-struct TracePerfParams final : public RenderTestParams
-{
-    // Common default options
-    TracePerfParams(const TraceInfo &traceInfoIn,
-                    GLESDriverType driverType,
-                    EGLenum platformType,
-                    EGLenum deviceType)
-        : traceInfo(traceInfoIn)
-    {
-        majorVersion = traceInfo.contextClientMajorVersion;
-        minorVersion = traceInfo.contextClientMinorVersion;
-        windowWidth  = traceInfo.drawSurfaceWidth;
-        windowHeight = traceInfo.drawSurfaceHeight;
-        colorSpace   = traceInfo.drawSurfaceColorSpace;
-
-        // Display the frame after every drawBenchmark invocation
-        iterationsPerStep = 1;
-
-        driver                   = driverType;
-        eglParameters.renderer   = platformType;
-        eglParameters.deviceType = deviceType;
-
-        ASSERT(!gOffscreen || !gVsync);
-
-        if (gOffscreen)
-        {
-            surfaceType = SurfaceType::Offscreen;
-        }
-        if (gVsync)
-        {
-            surfaceType = SurfaceType::WindowWithVSync;
-        }
-
-        // Force on features if we're validating serialization.
-        if (gTraceTestValidation)
-        {
-            // Enable limits when validating traces because we usually turn off capture.
-            eglParameters.enable(Feature::EnableCaptureLimits);
-
-            // This feature should also be enabled in capture to mirror the replay.
-            eglParameters.enable(Feature::ForceInitShaderVariables);
-        }
-    }
-
-    std::string story() const override
-    {
-        std::stringstream strstr;
-        strstr << RenderTestParams::story() << "_" << traceInfo.name;
-        return strstr.str();
-    }
-
-    TraceInfo traceInfo = {};
-};
 
 class TracePerfTest : public ANGLERenderTest
 {
@@ -835,8 +781,6 @@ void ValidateSerializedState(const char *serializedState, const char *fileName, 
 {
     gCurrentTracePerfTest->validateSerializedState(serializedState, fileName, line);
 }
-
-constexpr char kTraceTestFolder[] = "src/tests/restricted_traces";
 
 bool FindTraceTestDataPath(const char *traceName, char *testDataDirOut, size_t maxDataDirLen)
 {
@@ -2979,7 +2923,11 @@ void RegisterTraceTests()
             continue;
         }
 
-        auto factory = [params]() {
+        std::function<ANGLEPerfTest *()> factory = [params]() -> ANGLEPerfTest * {
+            if (params.isCL)
+            {
+                return CreateTracePerfTestCL(std::make_unique<TracePerfParams>(params));
+            }
             return new TracePerfTest(std::make_unique<TracePerfParams>(params));
         };
         testing::RegisterTest("TraceTest", traceInfo.name, nullptr, nullptr, __FILE__, __LINE__,

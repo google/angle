@@ -10,6 +10,7 @@
 #define LIBANGLE_CLPLATFORM_H_
 
 #include "libANGLE/CLObject.h"
+#include "libANGLE/Context.h"
 
 #include "common/WorkerThread.h"
 
@@ -78,6 +79,8 @@ class Platform final : public _cl_platform_id, public Object
 
     const std::shared_ptr<angle::WorkerThreadPool> &getMultiThreadPool() const;
 
+    angle::FrameCaptureShared *getFrameCaptureShared();
+
   private:
     explicit Platform(const rx::CLPlatformImpl::CreateFunc &createFunc);
 
@@ -92,6 +95,8 @@ class Platform final : public _cl_platform_id, public Object
 
     static constexpr char kVendor[]    = "ANGLE";
     static constexpr char kIcdSuffix[] = "ANGLE";
+
+    static angle::FrameCaptureShared *mFrameCaptureShared;
 };
 
 inline Platform *Platform::GetDefault()

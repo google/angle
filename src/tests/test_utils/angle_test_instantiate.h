@@ -363,6 +363,8 @@ bool IsMetalTextureSwizzleAvailable();
 
 extern bool gEnableANGLEPerTestCaptureLabel;
 
+extern bool gEnableRenderDocCapture;
+
 // For use with ANGLE_INSTANTIATE_TEST_ARRAY
 template <typename ParamsT>
 using ModifierFunc = std::function<ParamsT(const ParamsT &)>;

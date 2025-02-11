@@ -21,6 +21,7 @@
 #include "common/system_utils.h"
 #include "common/vector_utils.h"
 #include "platform/PlatformMethods.h"
+#include "test_expectations/GPUTestConfig.h"
 #include "util/EGLWindow.h"
 #include "util/shader_utils.h"
 #include "util/util_gl.h"
@@ -231,6 +232,10 @@ constexpr std::array<GLenum, 6> kCubeFaces = {
 void LoadEntryPointsWithUtilLoader(angle::GLESDriverType driver);
 
 bool IsFormatEmulated(GLenum target);
+
+GPUTestConfig::API GetTestConfigAPIFromRenderer(angle::GLESDriverType driverType,
+                                                EGLenum renderer,
+                                                EGLenum deviceType);
 }  // namespace angle
 
 #define EXPECT_PIXEL_EQ(x, y, r, g, b, a) \
@@ -417,8 +422,10 @@ class ANGLETestBase
 
   protected:
     void ANGLETestSetUp();
+    void ANGLETestSetUpCL();
     void ANGLETestPreTearDown();
     void ANGLETestTearDown();
+    void ANGLETestTearDownCL();
 
     virtual void swapBuffers();
 
@@ -667,6 +674,7 @@ class ANGLETest : public ANGLETestBase, public ::testing::TestWithParam<Params>
     void SetUp() final
     {
         ANGLETestBase::ANGLETestSetUp();
+
         if (mIsSetUp)
         {
             testSetUp();
@@ -725,5 +733,7 @@ class ANGLETestEnvironment : public testing::Environment
 };
 
 extern angle::PlatformMethods gDefaultPlatformMethods;
+
+int GetTestStartDelaySeconds();
 
 #endif  // ANGLE_TESTS_ANGLE_TEST_H_

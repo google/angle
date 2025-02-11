@@ -78,6 +78,8 @@ class TraceLibrary : angle::NonCopyable, angle::TraceCallbacks
         mBinaryData = {};  // set to empty vector to release memory.
     }
 
+    void setupFirstFrame() { mTraceFunctions->SetupFirstFrame(); }
+
     const char *getSerializedContextState(uint32_t frameIndex)
     {
         return callFunc<GetSerializedContextStateFunc>("GetSerializedContextState", frameIndex);

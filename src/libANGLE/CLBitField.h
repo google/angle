@@ -9,6 +9,7 @@
 #define LIBANGLE_CLBITFIELD_H_
 
 #include <angle_cl.h>
+#include <ostream>
 
 namespace cl
 {

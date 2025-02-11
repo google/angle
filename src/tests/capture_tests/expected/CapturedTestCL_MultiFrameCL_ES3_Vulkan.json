@@ -1,0 +1,14 @@
+{
+    "TraceMetadata": {
+        "CaptureRevision": 24837,
+        "FrameEnd": 5,
+        "FrameStart": 2,
+        "IsBinaryDataCompressed": false,
+        "IsOpenCL": true
+    },
+    "TraceFiles": [
+        "CapturedTestCL_MultiFrameCL_ES3_Vulkan.cpp",
+        "CapturedTestCL_MultiFrameCL_ES3_Vulkan.h",
+        "CapturedTestCL_MultiFrameCL_ES3_Vulkan_001.cpp"
+    ]
+}

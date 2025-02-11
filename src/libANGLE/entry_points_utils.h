@@ -140,4 +140,14 @@ inline int CID(EGLDisplay display, EGLContext context)
 #endif  // ANGLE_CAPTURE_ENABLED
 }  // namespace egl
 
+namespace cl
+{
+#if ANGLE_CAPTURE_ENABLED
+#    define ANGLE_CAPTURE_CL(Func, ...) \
+        angle::CaptureCLCallToFrameCapture(Capture##Func, __VA_ARGS__)
+#else
+#    define ANGLE_CAPTURE_CL(...)
+#endif  // ANGLE_CAPTURE_ENABLED
+}  // namespace cl
+
 #endif  // LIBANGLE_ENTRY_POINT_UTILS_H_

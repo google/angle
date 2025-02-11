@@ -182,6 +182,7 @@ struct RenderTestParams : public angle::PlatformParameters
     EGLenum colorSpace             = EGL_COLORSPACE_LINEAR;
     bool multisample               = false;
     EGLint samples                 = -1;
+    bool isCL                      = false;
 };
 
 class ANGLERenderTest : public ANGLEPerfTest

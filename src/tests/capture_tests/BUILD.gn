@@ -8,11 +8,8 @@ import("../angle_traces.gni")
 angle_trace("angle_capture_tests_multi_frame_trace") {
   _trace = "CapturedTest_MultiFrame_ES3_Vulkan"
 
-  _trace_data = []
-  _trace_data =
-      read_file("expected/CapturedTest_MultiFrame_ES3_Vulkan.json", "json")
-
-  sources = rebase_path(_trace_data.TraceFiles, ".", "expected/")
+  json_file_name = "expected/CapturedTest_MultiFrame_ES3_Vulkan.json"
+  rebased_path = "expected/"
 
   data = [
     "$_trace.json",
@@ -25,11 +22,8 @@ angle_trace("angle_capture_tests_multi_frame_trace") {
 angle_trace("angle_capture_tests_active_textures_trace") {
   _trace = "CapturedTest_ActiveTextures_ES3_Vulkan"
 
-  _trace_data = []
-  _trace_data =
-      read_file("expected/CapturedTest_ActiveTextures_ES3_Vulkan.json", "json")
-
-  sources = rebase_path(_trace_data.TraceFiles, ".", "expected/")
+  json_file_name = "expected/CapturedTest_ActiveTextures_ES3_Vulkan.json"
+  rebased_path = "expected/"
 
   data = [
     "$_trace.json",
@@ -37,4 +31,20 @@ angle_trace("angle_capture_tests_active_textures_trace") {
   ]
 
   deps = [ "$angle_root/util:angle_trace_fixture" ]
+}
+
+if (angle_enable_cl) {
+  angle_trace("angle_capture_tests_multi_frame_cl_trace") {
+    _trace = "CapturedTestCL_MultiFrameCL_ES3_Vulkan"
+
+    json_file_name = "expected/CapturedTestCL_MultiFrameCL_ES3_Vulkan.json"
+    rebased_path = "expected/"
+
+    data = [
+      "$_trace.json",
+      "$_trace.angledata",
+    ]
+
+    deps = [ "$angle_root/src/libOpenCL:OpenCL_ANGLE" ]
+  }
 }

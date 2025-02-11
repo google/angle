@@ -11,17 +11,31 @@ template("angle_trace") {
   angle_shared_library(target_name) {
     testonly = true
 
-    # Similar to capture replay sample, use the file index for sources
-    sources = invoker.sources
-
     data = invoker.data
     defines = [ "ANGLE_REPLAY_IMPLEMENTATION" ]
     suppressed_configs += [ "$angle_root:constructor_and_destructor_warnings" ]
 
-    deps = [
-      "$angle_root/util:angle_trace_fixture",
-      "$angle_root/util:angle_trace_loader",
-    ]
+    _trace_data = read_file(invoker.json_file_name, "json")
+    parsed_json = _trace_data.TraceMetadata
+
+    if (defined(invoker.rebased_path)) {
+      sources = rebase_path(_trace_data.TraceFiles, ".", invoker.rebased_path)
+    } else {
+      sources = _trace_data.TraceFiles
+    }
+
+    # Dummy statement to enable the use of defined(parsed_json.IsOpenCL)
+    if (parsed_json.IsBinaryDataCompressed) {
+    }
+
+    if (defined(parsed_json.IsOpenCL) && parsed_json.IsOpenCL &&
+        angle_enable_cl) {
+      deps = [ "$angle_root/util:angle_trace_fixture_cl" ]
+    } else {
+      deps = [ "$angle_root/util:angle_trace_fixture" ]
+    }
+
+    deps += [ "$angle_root/util:angle_trace_loader" ]
 
     if (defined(invoker.deps)) {
       deps += invoker.deps
@@ -75,8 +89,8 @@ template("angle_trace_libs") {
       _trace_dir = _trace
     }
     _trace_json_path = "$_trace_dir/$_trace.json"
-    _trace_data = []
-    _trace_data = read_file(_trace_json_path, "json")
+    json_file_name = _trace_json_path
+    rebased_path = _trace_dir
 
     if (invoker.short_names) {
       _target = "cr_trace_${_trace_counter}"
@@ -98,15 +112,19 @@ template("angle_trace_libs") {
     }
 
     angle_trace(_target) {
-      sources = rebase_path(_trace_data.TraceFiles, ".", _trace_dir)
-
       data = [
         "$_trace_dir/$_trace.json",
         "$_trace_dir/$_trace.angledata.gz",
       ]
 
+      deps = []
+
+      if (angle_enable_cl) {
+        deps += [ "$angle_root/src/libOpenCL:OpenCL_ANGLE" ]
+      }
+
       if (angle_enable_tracegz) {
-        deps = [ ":$_gen_tracegz_target" ]
+        deps += [ ":$_gen_tracegz_target" ]
         data += [ "$root_gen_dir/tracegz_$_trace.gz" ]
       }
 

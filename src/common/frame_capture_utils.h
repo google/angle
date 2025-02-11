@@ -78,6 +78,8 @@ struct ParamCapture : angle::NonCopyable
     int dataNElements           = 0;
     int arrayClientPointerIndex = -1;
     size_t readBufferSizeBytes  = 0;
+    uint32_t uniqueID           = 0;
+    static uint32_t nextID;
 };
 
 using Captures = std::vector<ParamCapture>;
@@ -438,6 +440,160 @@ template <>
 void WriteParamValueReplay<ParamType::TGLSETBLOBPROCANGLE>(std::ostream &os,
                                                            const CallCapture &call,
                                                            GLSETBLOBPROCANGLE value);
+
+template <>
+void WriteParamValueReplay<ParamType::TcharConstPointer>(std::ostream &os,
+                                                         const CallCapture &call,
+                                                         const char *value);
+
+template <>
+void WriteParamValueReplay<ParamType::Tsize_tPointer>(std::ostream &os,
+                                                      const CallCapture &call,
+                                                      size_t *value);
+
+template <>
+void WriteParamValueReplay<ParamType::Tsize_tConstPointer>(std::ostream &os,
+                                                           const CallCapture &call,
+                                                           size_t const *value);
+
+template <>
+void WriteParamValueReplay<ParamType::TcharConstPointerPointer>(std::ostream &os,
+                                                                const CallCapture &call,
+                                                                const char **value);
+
+template <>
+void WriteParamValueReplay<ParamType::TcharUnsignedConstPointerPointer>(
+    std::ostream &os,
+    const CallCapture &call,
+    const unsigned char **value);
+
+#ifdef ANGLE_ENABLE_CL
+
+template <>
+void WriteParamValueReplay<ParamType::Tcl_platform_idPointer>(std::ostream &os,
+                                                              const CallCapture &call,
+                                                              cl_platform_id *value);
+
+template <>
+void WriteParamValueReplay<ParamType::Tcl_uintPointer>(std::ostream &os,
+                                                       const CallCapture &call,
+                                                       cl_uint *value);
+
+template <>
+void WriteParamValueReplay<ParamType::Tcl_device_idPointer>(std::ostream &os,
+                                                            const CallCapture &call,
+                                                            cl_device_id *value);
+
+template <>
+void WriteParamValueReplay<ParamType::Tcl_context_propertiesConstPointer>(
+    std::ostream &os,
+    const CallCapture &call,
+    cl_context_properties const *value);
+
+template <>
+void WriteParamValueReplay<ParamType::Tcl_eventPointer>(std::ostream &os,
+                                                        const CallCapture &call,
+                                                        cl_event *value);
+
+template <>
+void WriteParamValueReplay<ParamType::Tcl_eventConstPointer>(std::ostream &os,
+                                                             const CallCapture &call,
+                                                             cl_event const *value);
+
+template <>
+void WriteParamValueReplay<ParamType::Tcl_device_idConstPointer>(std::ostream &os,
+                                                                 const CallCapture &call,
+                                                                 cl_device_id const *value);
+
+template <>
+void WriteParamValueReplay<ParamType::Tcl_image_formatPointer>(std::ostream &os,
+                                                               const CallCapture &call,
+                                                               cl_image_format *value);
+
+template <>
+void WriteParamValueReplay<ParamType::Tcl_intPointer>(std::ostream &os,
+                                                      const CallCapture &call,
+                                                      cl_int *value);
+
+template <>
+void WriteParamValueReplay<ParamType::Tcl_queue_propertiesConstPointer>(
+    std::ostream &os,
+    const CallCapture &call,
+    const cl_queue_properties *value);
+
+template <>
+void WriteParamValueReplay<ParamType::Tcl_command_queue_propertiesPointer>(
+    std::ostream &os,
+    const CallCapture &call,
+    const cl_command_queue_properties *value);
+
+template <>
+void WriteParamValueReplay<ParamType::Tcl_device_partition_propertyConstPointer>(
+    std::ostream &os,
+    const CallCapture &call,
+    const cl_device_partition_property *value);
+
+template <>
+void WriteParamValueReplay<ParamType::Tcl_programConstPointer>(std::ostream &os,
+                                                               const CallCapture &call,
+                                                               const cl_program *value);
+
+template <>
+void WriteParamValueReplay<ParamType::Tcl_pipe_propertiesConstPointer>(
+    std::ostream &os,
+    const CallCapture &call,
+    const cl_pipe_properties *value);
+
+template <>
+void WriteParamValueReplay<ParamType::Tcl_ulongPointer>(std::ostream &os,
+                                                        const CallCapture &call,
+                                                        cl_ulong *value);
+
+template <>
+void WriteParamValueReplay<ParamType::Tcl_callback_func_type>(std::ostream &os,
+                                                              const CallCapture &call,
+                                                              cl_callback_func_type value);
+
+template <>
+void WriteParamValueReplay<ParamType::Tcl_context_destructor_func_type>(
+    std::ostream &os,
+    const CallCapture &call,
+    cl_context_destructor_func_type value);
+
+template <>
+void WriteParamValueReplay<ParamType::Tcl_context_func_type>(std::ostream &os,
+                                                             const CallCapture &call,
+                                                             cl_context_func_type value);
+
+template <>
+void WriteParamValueReplay<ParamType::Tcl_mem_destructor_func_type>(
+    std::ostream &os,
+    const CallCapture &call,
+    cl_mem_destructor_func_type value);
+
+template <>
+void WriteParamValueReplay<ParamType::Tcl_program_func_type>(std::ostream &os,
+                                                             const CallCapture &call,
+                                                             cl_program_func_type value);
+
+template <>
+void WriteParamValueReplay<ParamType::Tcl_svm_free_callback_func_type>(
+    std::ostream &os,
+    const CallCapture &call,
+    cl_svm_free_callback_func_type value);
+
+template <>
+void WriteParamValueReplay<ParamType::Tcl_void_func_type>(std::ostream &os,
+                                                          const CallCapture &call,
+                                                          cl_void_func_type value);
+
+template <ParamType ParamT>
+void WriteParamValueReplay(std::ostream &os, const CallCapture &call, cl::BitField value)
+{
+    os << value.get();
+}
+
+#endif
 
 // General fallback for any unspecific type.
 template <ParamType ParamT, typename T>
