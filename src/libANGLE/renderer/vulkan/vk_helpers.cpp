@@ -6254,6 +6254,8 @@ angle::Result InitMappableDeviceMemory(ErrorContext *context,
 ImageHelper::ImageHelper()
 {
     resetCachedProperties();
+    // Reserve reasonable amount of space to avoid storage reallocation.
+    mSubresourceUpdates.reserve(12);
 }
 
 ImageHelper::~ImageHelper()
