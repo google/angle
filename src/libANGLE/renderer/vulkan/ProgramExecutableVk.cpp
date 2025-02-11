@@ -265,7 +265,7 @@ angle::Result UpdateFullTexturesDescriptorSet(vk::ErrorContext *context,
 
     // Allocate VkWriteDescriptorSet and initialize the data structure
     VkWriteDescriptorSet *writeDescriptorSets =
-        updateBuilder->allocWriteDescriptorSets(writeDescriptorDescs.size());
+        updateBuilder->allocWriteDescriptorSets(static_cast<uint32_t>(writeDescriptorDescs.size()));
     for (uint32_t writeIndex = 0; writeIndex < writeDescriptorDescs.size(); ++writeIndex)
     {
         ASSERT(writeDescriptorDescs[writeIndex].descriptorCount > 0);

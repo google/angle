@@ -11,6 +11,8 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_VK_CACHE_UTILS_H_
 #define LIBANGLE_RENDERER_VULKAN_VK_CACHE_UTILS_H_
 
+#include <deque>
+
 #include "common/Color.h"
 #include "common/FixedVector.h"
 #include "common/SimpleMutex.h"
@@ -2981,10 +2983,19 @@ class UpdateDescriptorSetsBuilder final : angle::NonCopyable
     UpdateDescriptorSetsBuilder();
     ~UpdateDescriptorSetsBuilder();
 
-    VkDescriptorBufferInfo *allocDescriptorBufferInfos(size_t count);
-    VkDescriptorImageInfo *allocDescriptorImageInfos(size_t count);
-    VkWriteDescriptorSet *allocWriteDescriptorSets(size_t count);
-    VkBufferView *allocBufferViews(size_t count);
+    VkDescriptorBufferInfo *allocDescriptorBufferInfos(uint32_t count)
+    {
+        return mDescriptorBufferInfos.allocate(count);
+    }
+    VkDescriptorImageInfo *allocDescriptorImageInfos(uint32_t count)
+    {
+        return mDescriptorImageInfos.allocate(count);
+    }
+    VkWriteDescriptorSet *allocWriteDescriptorSets(uint32_t count)
+    {
+        return mWriteDescriptorSets.allocate(count);
+    }
+    VkBufferView *allocBufferViews(uint32_t count) { return mBufferViews.allocate(count); }
 
     VkDescriptorBufferInfo &allocDescriptorBufferInfo() { return *allocDescriptorBufferInfos(1); }
     VkDescriptorImageInfo &allocDescriptorImageInfo() { return *allocDescriptorImageInfos(1); }
@@ -2995,15 +3006,52 @@ class UpdateDescriptorSetsBuilder final : angle::NonCopyable
     uint32_t flushDescriptorSetUpdates(VkDevice device);
 
   private:
-    template <typename T, const T *VkWriteDescriptorSet::*pInfo>
-    T *allocDescriptorInfos(std::vector<T> *descriptorVector, size_t count);
-    template <typename T, const T *VkWriteDescriptorSet::*pInfo>
-    void growDescriptorCapacity(std::vector<T> *descriptorVector, size_t newSize);
+    // Manage the storage for VkDescriptorBufferInfo and VkDescriptorImageInfo. The storage is not
+    // required to be continuous, but the requested allocation from allocate() call must be
+    // continuous. The actual storage will grow as needed.
+    template <typename T>
+    class DescriptorInfoAllocator : angle::NonCopyable
+    {
+      public:
+        void init(uint32_t initialVectorCapacity)
+        {
+            mVectorCapacity = initialVectorCapacity;
+            mDescriptorInfos.emplace_back();
+            mDescriptorInfos.back().reserve(mVectorCapacity);
+            mCurrentVector = mDescriptorInfos.begin();
+            mTotalSize     = 0;
+        }
+        void clear()
+        {
+            mDescriptorInfos.resize(1);
+            mDescriptorInfos.front().clear();
+            // Grow the first vector's capacity big enough to hold all of them
+            mVectorCapacity = std::max(mTotalSize, mVectorCapacity);
+            mDescriptorInfos.front().reserve(mVectorCapacity);
+            mCurrentVector = mDescriptorInfos.begin();
+            mTotalSize     = 0;
+        }
+        T *allocate(uint32_t count);
 
-    std::vector<VkDescriptorBufferInfo> mDescriptorBufferInfos;
-    std::vector<VkDescriptorImageInfo> mDescriptorImageInfos;
-    std::vector<VkWriteDescriptorSet> mWriteDescriptorSets;
-    std::vector<VkBufferView> mBufferViews;
+        bool empty() const { return mTotalSize == 0; }
+
+      protected:
+        uint32_t mVectorCapacity = 16;
+        std::deque<std::vector<T>> mDescriptorInfos;
+        typename std::deque<std::vector<T>>::iterator mCurrentVector;
+        uint32_t mTotalSize;
+    };
+
+    class WriteDescriptorSetAllocator final : public DescriptorInfoAllocator<VkWriteDescriptorSet>
+    {
+      public:
+        uint32_t updateDescriptorSets(VkDevice device) const;
+    };
+
+    DescriptorInfoAllocator<VkDescriptorBufferInfo> mDescriptorBufferInfos;
+    DescriptorInfoAllocator<VkDescriptorImageInfo> mDescriptorImageInfos;
+    DescriptorInfoAllocator<VkBufferView> mBufferViews;
+    WriteDescriptorSetAllocator mWriteDescriptorSets;
 };
 
 }  // namespace rx

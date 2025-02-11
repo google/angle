@@ -7242,81 +7242,60 @@ void PipelineCacheAccess::merge(Renderer *renderer, const vk::PipelineCache &pip
 UpdateDescriptorSetsBuilder::UpdateDescriptorSetsBuilder()
 {
     // Reserve reasonable amount of spaces so that for majority of apps we don't need to grow at all
-    constexpr size_t kDescriptorBufferInfosInitialSize = 8;
-    constexpr size_t kDescriptorImageInfosInitialSize  = 4;
+    constexpr size_t kDescriptorBufferInfosInitialSize = 16;
+    constexpr size_t kDescriptorImageInfosInitialSize  = 16;
+    constexpr size_t kDescriptorBufferViewsInitialSize = 1;
     constexpr size_t kDescriptorWriteInfosInitialSize =
         kDescriptorBufferInfosInitialSize + kDescriptorImageInfosInitialSize;
-    constexpr size_t kDescriptorBufferViewsInitialSize = 0;
 
-    mDescriptorBufferInfos.reserve(kDescriptorBufferInfosInitialSize);
-    mDescriptorImageInfos.reserve(kDescriptorImageInfosInitialSize);
-    mWriteDescriptorSets.reserve(kDescriptorWriteInfosInitialSize);
-    mBufferViews.reserve(kDescriptorBufferViewsInitialSize);
+    mDescriptorBufferInfos.init(kDescriptorBufferInfosInitialSize);
+    mDescriptorImageInfos.init(kDescriptorImageInfosInitialSize);
+    mBufferViews.init(kDescriptorBufferViewsInitialSize);
+    mWriteDescriptorSets.init(kDescriptorWriteInfosInitialSize);
 }
 
 UpdateDescriptorSetsBuilder::~UpdateDescriptorSetsBuilder() = default;
 
-template <typename T, const T *VkWriteDescriptorSet::*pInfo>
-void UpdateDescriptorSetsBuilder::growDescriptorCapacity(std::vector<T> *descriptorVector,
-                                                         size_t newSize)
+template <typename T>
+T *UpdateDescriptorSetsBuilder::DescriptorInfoAllocator<T>::allocate(uint32_t count)
 {
-    const T *const oldInfoStart = descriptorVector->empty() ? nullptr : &(*descriptorVector)[0];
-    size_t newCapacity          = std::max(descriptorVector->capacity() << 1, newSize);
-    descriptorVector->reserve(newCapacity);
-
-    if (oldInfoStart)
+    size_t oldSize = mCurrentVector->size();
+    size_t newSize = oldSize + count;
+    if (newSize <= mCurrentVector->capacity())
     {
-        // patch mWriteInfo with new BufferInfo/ImageInfo pointers
-        for (VkWriteDescriptorSet &set : mWriteDescriptorSets)
+        (*mCurrentVector).resize(newSize);
+        mTotalSize += count;
+        return &(*mCurrentVector)[oldSize];
+    }
+
+    ++mCurrentVector;
+    // clear() always ensures we have a single element left.
+    ASSERT(mCurrentVector == mDescriptorInfos.end());
+
+    // We have reached capacity, grow the storage
+    mVectorCapacity = std::max(count, mVectorCapacity);
+    mDescriptorInfos.emplace_back();
+    mDescriptorInfos.back().reserve(mVectorCapacity);
+    mCurrentVector = mDescriptorInfos.end() - 1;
+
+    mCurrentVector->resize(count);
+    mTotalSize += count;
+
+    return &mCurrentVector->front();
+}
+
+uint32_t UpdateDescriptorSetsBuilder::WriteDescriptorSetAllocator::updateDescriptorSets(
+    VkDevice device) const
+{
+    for (const std::vector<VkWriteDescriptorSet> &vector : mDescriptorInfos)
+    {
+        if (!vector.empty())
         {
-            if (set.*pInfo)
-            {
-                size_t index = set.*pInfo - oldInfoStart;
-                set.*pInfo   = &(*descriptorVector)[index];
-            }
+            vkUpdateDescriptorSets(device, static_cast<uint32_t>(vector.size()), vector.data(), 0,
+                                   nullptr);
         }
     }
-}
-
-template <typename T, const T *VkWriteDescriptorSet::*pInfo>
-T *UpdateDescriptorSetsBuilder::allocDescriptorInfos(std::vector<T> *descriptorVector, size_t count)
-{
-    size_t oldSize = descriptorVector->size();
-    size_t newSize = oldSize + count;
-    if (newSize > descriptorVector->capacity())
-    {
-        // If we have reached capacity, grow the storage and patch the descriptor set with new
-        // buffer info pointer
-        growDescriptorCapacity<T, pInfo>(descriptorVector, newSize);
-    }
-    descriptorVector->resize(newSize);
-    return &(*descriptorVector)[oldSize];
-}
-
-VkDescriptorBufferInfo *UpdateDescriptorSetsBuilder::allocDescriptorBufferInfos(size_t count)
-{
-    return allocDescriptorInfos<VkDescriptorBufferInfo, &VkWriteDescriptorSet::pBufferInfo>(
-        &mDescriptorBufferInfos, count);
-}
-
-VkDescriptorImageInfo *UpdateDescriptorSetsBuilder::allocDescriptorImageInfos(size_t count)
-{
-    return allocDescriptorInfos<VkDescriptorImageInfo, &VkWriteDescriptorSet::pImageInfo>(
-        &mDescriptorImageInfos, count);
-}
-
-VkWriteDescriptorSet *UpdateDescriptorSetsBuilder::allocWriteDescriptorSets(size_t count)
-{
-    size_t oldSize = mWriteDescriptorSets.size();
-    size_t newSize = oldSize + count;
-    mWriteDescriptorSets.resize(newSize);
-    return &mWriteDescriptorSets[oldSize];
-}
-
-VkBufferView *UpdateDescriptorSetsBuilder::allocBufferViews(size_t count)
-{
-    return allocDescriptorInfos<VkBufferView, &VkWriteDescriptorSet::pTexelBufferView>(
-        &mBufferViews, count);
+    return mTotalSize;
 }
 
 uint32_t UpdateDescriptorSetsBuilder::flushDescriptorSetUpdates(VkDevice device)
@@ -7328,17 +7307,14 @@ uint32_t UpdateDescriptorSetsBuilder::flushDescriptorSetUpdates(VkDevice device)
         return 0;
     }
 
-    vkUpdateDescriptorSets(device, static_cast<uint32_t>(mWriteDescriptorSets.size()),
-                           mWriteDescriptorSets.data(), 0, nullptr);
-
-    uint32_t retVal = static_cast<uint32_t>(mWriteDescriptorSets.size());
+    uint32_t totalSize = mWriteDescriptorSets.updateDescriptorSets(device);
 
     mWriteDescriptorSets.clear();
     mDescriptorBufferInfos.clear();
     mDescriptorImageInfos.clear();
     mBufferViews.clear();
 
-    return retVal;
+    return totalSize;
 }
 
 // FramebufferCache implementation.
