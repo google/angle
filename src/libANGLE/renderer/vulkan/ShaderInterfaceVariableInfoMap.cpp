@@ -43,7 +43,11 @@ void SaveShaderInterfaceVariableXfbInfo(const ShaderInterfaceVariableXfbInfo &xf
 }  // anonymous namespace
 
 // ShaderInterfaceVariableInfoMap implementation.
-ShaderInterfaceVariableInfoMap::ShaderInterfaceVariableInfoMap() = default;
+ShaderInterfaceVariableInfoMap::ShaderInterfaceVariableInfoMap()
+{
+    // Reserve storage for most common use case
+    mData.reserve(64);
+}
 
 ShaderInterfaceVariableInfoMap::~ShaderInterfaceVariableInfoMap() = default;
 
