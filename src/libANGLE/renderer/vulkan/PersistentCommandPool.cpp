@@ -60,11 +60,11 @@ void PersistentCommandPool::destroy(VkDevice device)
 
     ASSERT(mCommandPool.valid());
 
-    for (PrimaryCommandBuffer &cmdBuf : mFreeBuffers)
+    while (!mFreeBuffers.empty())
     {
-        cmdBuf.destroy(device, mCommandPool);
+        mFreeBuffers.back().destroy(device, mCommandPool);
+        mFreeBuffers.pop_back();
     }
-    mFreeBuffers.clear();
 
     mCommandPool.destroy(device);
 }

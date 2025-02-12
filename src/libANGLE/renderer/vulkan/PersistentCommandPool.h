@@ -40,7 +40,7 @@ class PersistentCommandPool final
   private:
     angle::Result allocateCommandBuffer(ErrorContext *context);
 
-    std::vector<PrimaryCommandBuffer> mFreeBuffers;
+    std::deque<PrimaryCommandBuffer> mFreeBuffers;
 
     CommandPool mCommandPool;
 

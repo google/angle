@@ -32,6 +32,7 @@ TransformFeedbackVk::TransformFeedbackVk(const gl::TransformFeedbackState &state
       mCounterBufferHandles{},
       mCounterBufferOffsets{}
 {
+    mBufferObserverBindings.reserve(gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS);
     for (angle::SubjectIndex bufferIndex = 0;
          bufferIndex < gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS; ++bufferIndex)
     {
