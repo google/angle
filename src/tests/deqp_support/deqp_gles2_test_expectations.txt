@@ -423,6 +423,7 @@ b/328156792 PINEAPPLE VULKAN : dEQP-GLES2.functional.uniform_api.value.assigned.
 370690274 WGPU : dEQP-GLES2.functional.fragment_ops.depth_stencil.* = FAIL
 370690274 WGPU : dEQP-GLES2.functional.fragment_ops.scissor.* = FAIL
 356399840 WGPU : dEQP-GLES2.functional.fragment_ops.blend.*constant_alpha* = FAIL
+370690274 WGPU MAC INTEL : dEQP-GLES2.functional.fragment_ops.blend.* = FAIL
 370690274 WGPU : dEQP-GLES2.functional.fragment_ops.random.* = FAIL
 370690274 WGPU : dEQP-GLES2.functional.fragment_ops.interaction.* = FAIL
 356399840 WGPU : dEQP-GLES2.functional.lifetime.attach.deleted_input.renderbuffer_framebuffer = FAIL
