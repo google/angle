@@ -1859,7 +1859,7 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
 
     if (traceNameIs("monopoly_go"))
     {
-        if (isNVIDIALinuxANGLE || isIntelWinANGLE)
+        if (isNVIDIALinuxANGLE || isIntelWinANGLE || isIntelLinuxANGLE)
         {
             skipTest("https://anglebug.com/385226328 crashes in UpdateClientBufferData()");
         }
