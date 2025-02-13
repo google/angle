@@ -572,23 +572,25 @@ angle::Result CommandPoolAccess::getCommandsAndWaitSemaphores(
     CommandsState &state = mCommandsStateMap[priority][protectionType];
     ASSERT(state.primaryCommands.valid() || state.secondaryCommands.empty());
 
+    // If there are foreign images to transition, issue the barrier now.
+    if (!imagesToTransitionToForeign.empty())
+    {
+        // It is possible for another thread to have made a submission just now, such that there is
+        // no primary command buffer anymore.  In that case, one has to be allocated to hold the
+        // barriers.
+        ANGLE_TRY(ensurePrimaryCommandBufferValidLocked(context, protectionType, priority));
+
+        state.primaryCommands.pipelineBarrier(
+            VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, 0, nullptr, 0,
+            nullptr, static_cast<uint32_t>(imagesToTransitionToForeign.size()),
+            imagesToTransitionToForeign.data());
+        imagesToTransitionToForeign.clear();
+    }
+
     // Store the primary CommandBuffer and the reference to CommandPoolAccess in the in-flight list.
     if (state.primaryCommands.valid())
     {
-        if (!imagesToTransitionToForeign.empty())
-        {
-            state.primaryCommands.pipelineBarrier(
-                VK_PIPELINE_STAGE_ALL_COMMANDS_BIT, VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT, 0, 0,
-                nullptr, 0, nullptr, static_cast<uint32_t>(imagesToTransitionToForeign.size()),
-                imagesToTransitionToForeign.data());
-            imagesToTransitionToForeign.clear();
-        }
-
         ANGLE_VK_TRY(context, state.primaryCommands.end());
-    }
-    else
-    {
-        ASSERT(imagesToTransitionToForeign.empty());
     }
     batchOut->setPrimaryCommands(std::move(state.primaryCommands), this);
 
