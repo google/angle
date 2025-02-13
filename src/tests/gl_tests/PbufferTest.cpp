@@ -1070,6 +1070,67 @@ TEST_P(PbufferColorspaceTest, CreateSurfaceWithColorspace)
     }
 }
 
+// Test the implementation for EGL_LARGEST_PBUFFER
+TEST_P(PbufferTest, LargestPbuffer)
+{
+    ANGLE_SKIP_TEST_IF(!mSupportsPbuffers);
+    ANGLE_SKIP_TEST_IF(!IsARM());
+    EGLWindow *window  = getEGLWindow();
+    EGLDisplay display = window->getDisplay();
+    EGLSurface pbufferSurface;
+
+    EGLint maxPbufferWidth;
+    EGLint maxPbufferHeight;
+    EGLint value;
+    EGLint pBufferAttributes[] = {EGL_WIDTH,           1,         EGL_HEIGHT, 1,
+                                  EGL_LARGEST_PBUFFER, EGL_FALSE, EGL_NONE};
+
+    // Check that eglCreatePbufferSurface can succeed when EGL_LARGEST_PBUFFER is set to EGL_FALSE
+    pbufferSurface = eglCreatePbufferSurface(display, window->getConfig(), pBufferAttributes);
+    ASSERT_NE(pbufferSurface, EGL_NO_SURFACE);
+    ASSERT_EGL_SUCCESS();
+
+    // Cleanup
+    eglDestroySurface(display, pbufferSurface);
+
+    EXPECT_EGL_TRUE(
+        eglGetConfigAttrib(display, window->getConfig(), EGL_MAX_PBUFFER_WIDTH, &maxPbufferWidth));
+    pBufferAttributes[1] = maxPbufferWidth + 1;
+    pBufferAttributes[5] = EGL_TRUE;
+
+    // Check that eglCreatePbufferSurface clamps an EGL_WIDTH that is too large with
+    // EGL_LARGEST_PBUFFER set
+    pbufferSurface = eglCreatePbufferSurface(display, window->getConfig(), pBufferAttributes);
+    ASSERT_NE(pbufferSurface, EGL_NO_SURFACE);
+    ASSERT_EGL_SUCCESS();
+
+    EXPECT_EGL_TRUE(eglQuerySurface(display, pbufferSurface, EGL_WIDTH, &value));
+    ASSERT_EGL_SUCCESS();
+    ASSERT_EQ(value, maxPbufferWidth);
+
+    // Cleanup
+    eglDestroySurface(display, pbufferSurface);
+
+    pBufferAttributes[1] = 1;
+
+    EXPECT_EGL_TRUE(eglGetConfigAttrib(display, window->getConfig(), EGL_MAX_PBUFFER_HEIGHT,
+                                       &maxPbufferHeight));
+    pBufferAttributes[3] = maxPbufferHeight + 1;
+
+    // Check that eglCreatePbufferSurface clamps an EGL_HEIGHT that is too large with
+    // EGL_LARGEST_PBUFFER set
+    pbufferSurface = eglCreatePbufferSurface(display, window->getConfig(), pBufferAttributes);
+    ASSERT_NE(pbufferSurface, EGL_NO_SURFACE);
+    ASSERT_EGL_SUCCESS();
+
+    EXPECT_EGL_TRUE(eglQuerySurface(display, pbufferSurface, EGL_HEIGHT, &value));
+    ASSERT_EGL_SUCCESS();
+    ASSERT_EQ(value, maxPbufferHeight);
+
+    // Cleanup
+    eglDestroySurface(display, pbufferSurface);
+}
+
 ANGLE_INSTANTIATE_TEST_ES2(PbufferTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(PbufferColorspaceTest);

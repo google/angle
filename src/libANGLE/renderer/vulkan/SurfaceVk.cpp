@@ -654,6 +654,20 @@ angle::Result OffscreenSurfaceVk::initializeImpl(DisplayVk *displayVk)
 
     bool robustInit = mState.isRobustResourceInitEnabled();
 
+    EGLBoolean isLargestPbuffer =
+        static_cast<EGLBoolean>(mState.attributes.get(EGL_LARGEST_PBUFFER, EGL_FALSE));
+    if (isLargestPbuffer)
+    {
+        mWidth = std::min(mWidth, config->maxPBufferWidth);
+
+        mHeight = std::min(mHeight, config->maxPBufferHeight);
+
+        if (mWidth * mHeight > config->maxPBufferPixels)
+        {
+            mHeight = config->maxPBufferPixels / mWidth;
+        }
+    }
+
     if (config->renderTargetFormat != GL_NONE)
     {
         ANGLE_TRY(mColorAttachment.initialize(displayVk, mWidth, mHeight,
