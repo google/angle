@@ -83,9 +83,9 @@ bool IsWgpuError(wgpu::WaitStatus waitStatus)
     return waitStatus != wgpu::WaitStatus::Success;
 }
 
-bool IsWgpuError(WGPUBufferMapAsyncStatus mapBufferStatus)
+bool IsWgpuError(wgpu::MapAsyncStatus mapAsyncStatus)
 {
-    return mapBufferStatus != WGPUBufferMapAsyncStatus_Success;
+    return mapAsyncStatus != wgpu::MapAsyncStatus::Success;
 }
 
 ClearValuesArray::ClearValuesArray() : mValues{}, mEnabled{} {}

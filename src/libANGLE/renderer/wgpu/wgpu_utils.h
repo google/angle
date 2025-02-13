@@ -241,7 +241,7 @@ wgpu::RenderPassDepthStencilAttachment CreateNewDepthStencilAttachment(
     bool hasStencilValue = false);
 
 bool IsWgpuError(wgpu::WaitStatus waitStatus);
-bool IsWgpuError(WGPUBufferMapAsyncStatus mapBufferStatus);
+bool IsWgpuError(wgpu::MapAsyncStatus mapAsyncStatus);
 
 bool IsStripPrimitiveTopology(wgpu::PrimitiveTopology topology);
 

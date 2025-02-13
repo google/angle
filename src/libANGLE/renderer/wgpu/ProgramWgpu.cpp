@@ -128,44 +128,39 @@ class CreateWGPUShaderModuleTask : public LinkSubTask
 
         mShaderModule.module = mDevice.CreateShaderModule(&shaderModuleDescriptor);
 
-        wgpu::CompilationInfoCallbackInfo callbackInfo;
-        callbackInfo.mode     = wgpu::CallbackMode::WaitAnyOnly;
-        callbackInfo.callback = [](WGPUCompilationInfoRequestStatus status,
-                                   struct WGPUCompilationInfo const *compilationInfo,
-                                   void *userdata) {
-            CreateWGPUShaderModuleTask *task = static_cast<CreateWGPUShaderModuleTask *>(userdata);
-
-            if (status != WGPUCompilationInfoRequestStatus_Success)
-            {
-                task->mResult = angle::Result::Stop;
-            }
-
-            for (size_t msgIdx = 0; msgIdx < compilationInfo->messageCount; ++msgIdx)
-            {
-                const WGPUCompilationMessage &message = compilationInfo->messages[msgIdx];
-                switch (message.type)
+        wgpu::CompilationInfoCallback<CreateWGPUShaderModuleTask *> *getCompilationInfoCallback =
+            [](wgpu::CompilationInfoRequestStatus status,
+               wgpu::CompilationInfo const *compilationInfo, CreateWGPUShaderModuleTask *task) {
+                if (status != wgpu::CompilationInfoRequestStatus::Success)
                 {
-                    case WGPUCompilationMessageType_Error:
-                        task->mLog << "Error: ";
-                        break;
-                    case WGPUCompilationMessageType_Warning:
-                        task->mLog << "Warning: ";
-                        break;
-                    case WGPUCompilationMessageType_Info:
-                        task->mLog << "Info: ";
-                        break;
-                    default:
-                        task->mLog << "Unknown: ";
-                        break;
+                    task->mResult = angle::Result::Stop;
                 }
-                task->mLog << message.lineNum << ":" << message.linePos << ": " << message.message
-                           << std::endl;
-            }
-        };
-        callbackInfo.userdata = this;
 
+                for (size_t msgIdx = 0; msgIdx < compilationInfo->messageCount; ++msgIdx)
+                {
+                    const wgpu::CompilationMessage &message = compilationInfo->messages[msgIdx];
+                    switch (message.type)
+                    {
+                        case wgpu::CompilationMessageType::Error:
+                            task->mLog << "Error: ";
+                            break;
+                        case wgpu::CompilationMessageType::Warning:
+                            task->mLog << "Warning: ";
+                            break;
+                        case wgpu::CompilationMessageType::Info:
+                            task->mLog << "Info: ";
+                            break;
+                        default:
+                            task->mLog << "Unknown: ";
+                            break;
+                    }
+                    task->mLog << message.lineNum << ":" << message.linePos << ": "
+                               << std::string(message.message) << std::endl;
+                }
+            };
         wgpu::FutureWaitInfo waitInfo;
-        waitInfo.future = mShaderModule.module.GetCompilationInfo(callbackInfo);
+        waitInfo.future = mShaderModule.module.GetCompilationInfo(wgpu::CallbackMode::WaitAnyOnly,
+                                                                  getCompilationInfoCallback, this);
 
         wgpu::WaitStatus waitStatus = mInstance.WaitAny(1, &waitInfo, -1);
         if (waitStatus != wgpu::WaitStatus::Success)

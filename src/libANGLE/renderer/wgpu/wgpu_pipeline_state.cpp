@@ -352,6 +352,7 @@ angle::Result RenderPipelineDesc::createPipeline(ContextWgpu *context,
 
         wgpu::VertexBufferLayout &newBufferLayout = vertexBuffers[attribCount];
         newBufferLayout.arrayStride               = packedAttrib.stride;
+        newBufferLayout.stepMode                  = wgpu::VertexStepMode::Undefined;
         newBufferLayout.attributeCount            = 1;
         newBufferLayout.attributes                = &newAttribute;
 

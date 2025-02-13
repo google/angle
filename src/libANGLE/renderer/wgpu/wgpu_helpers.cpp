@@ -481,18 +481,15 @@ angle::Result BufferHelper::mapImmediate(ContextWgpu *context,
 {
     ASSERT(!mMappedState.has_value());
 
-    WGPUBufferMapAsyncStatus mapResult = WGPUBufferMapAsyncStatus_Unknown;
-
-    wgpu::BufferMapCallbackInfo callbackInfo;
-    callbackInfo.mode     = wgpu::CallbackMode::WaitAnyOnly;
-    callbackInfo.callback = [](WGPUBufferMapAsyncStatus status, void *userdata) {
-        *static_cast<WGPUBufferMapAsyncStatus *>(userdata) = status;
-    };
-    callbackInfo.userdata = &mapResult;
-
+    wgpu::MapAsyncStatus mapResult = wgpu::MapAsyncStatus::Error;
+    wgpu::BufferMapCallback<wgpu::MapAsyncStatus *> *mapAsyncCallback =
+        [](wgpu::MapAsyncStatus status, wgpu::StringView message, wgpu::MapAsyncStatus *pStatus) {
+            *pStatus = status;
+        };
     wgpu::FutureWaitInfo waitInfo;
-    waitInfo.future = mBuffer.MapAsync(mode, GetSafeBufferMapOffset(offset),
-                                       GetSafeBufferMapSize(offset, size), callbackInfo);
+    waitInfo.future =
+        mBuffer.MapAsync(mode, GetSafeBufferMapOffset(offset), GetSafeBufferMapSize(offset, size),
+                         wgpu::CallbackMode::WaitAnyOnly, mapAsyncCallback, &mapResult);
 
     wgpu::Instance instance = context->getDisplay()->getInstance();
     ANGLE_WGPU_TRY(context, instance.WaitAny(1, &waitInfo, -1));
