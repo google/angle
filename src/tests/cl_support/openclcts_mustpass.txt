@@ -68,6 +68,7 @@ api.queue_properties
 api.sub_group_dispatch
 api.consistency_device_enqueue
 api.get_buffer_info
+api.clone_kernel
 compiler.load_program_source
 compiler.load_multistring_source
 compiler.load_null_terminated_partial_multi_line_source

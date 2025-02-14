@@ -1503,14 +1503,14 @@ angle::Result CLCommandQueueVk::addMemoryDependencies(cl::Memory *clMem)
     mCommandsStateMap[mComputePassCommands->getQueueSerial()].memories.emplace_back(clMem);
 
     // Handle possible resource RAW hazard
-    bool insertBarrier = false;
+    bool needsBarrier = false;
     if (clMem->getFlags().intersects(CL_MEM_READ_WRITE))
     {
         // Texel buffers have backing buffer objects
         if (mDependencyTracker.contains(clMem) || mDependencyTracker.contains(parentMem) ||
             mDependencyTracker.size() == kMaxDependencyTrackerSize)
         {
-            insertBarrier = true;
+            needsBarrier = true;
             mDependencyTracker.clear();
         }
         mDependencyTracker.insert(clMem);
@@ -1528,12 +1528,9 @@ angle::Result CLCommandQueueVk::addMemoryDependencies(cl::Memory *clMem)
                                          vkMem.getImage().getAspectFlags(),
                                          vk::ImageLayout::ComputeShaderWrite, &vkMem.getImage());
     }
-    else if (insertBarrier && cl::IsBufferType(clMem->getType()))
+    if (needsBarrier)
     {
-        CLBufferVk &vkMem = clMem->getImpl<CLBufferVk>();
-
-        mComputePassCommands->bufferWrite(mContext, VK_ACCESS_SHADER_WRITE_BIT,
-                                          vk::PipelineStage::ComputeShader, &vkMem.getBuffer());
+        ANGLE_TRY(insertBarrier());
     }
 
     return angle::Result::Continue;
@@ -1544,7 +1541,6 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk)
     bool podBufferPresent              = false;
     uint32_t podBinding                = 0;
     VkDescriptorType podDescriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    bool needsBarrier = false;
     const CLProgramVk::DeviceProgramData *devProgramData =
         kernelVk.getProgram()->getDeviceProgramData(mCommandQueue.getDevice().getNative());
     ASSERT(devProgramData != nullptr);
@@ -1884,11 +1880,6 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk)
 
             ++descriptorSetIndex;
         }
-    }
-
-    if (needsBarrier)
-    {
-        ANGLE_TRY(insertBarrier());
     }
 
     return angle::Result::Continue;
@@ -2242,7 +2233,7 @@ angle::Result CLCommandQueueVk::processPrintfBuffer()
     ASSERT(mPrintfInfos);
 
     cl::MemoryPtr clMem = getOrCreatePrintfBuffer();
-    CLBufferVk &vkMem = clMem->getImpl<CLBufferVk>();
+    CLBufferVk &vkMem   = clMem->getImpl<CLBufferVk>();
 
     unsigned char *data = nullptr;
     ANGLE_TRY(vkMem.map(data, 0));
