@@ -55,9 +55,21 @@ CLKernelVk::~CLKernelVk()
 
 angle::Result CLKernelVk::init()
 {
+    const CLProgramVk::DeviceProgramData *deviceProgramData =
+        mProgram->getDeviceProgramData(mName.c_str());
+
+    // Literal sampler handling
+    for (const ClspvLiteralSampler &literalSampler :
+         deviceProgramData->reflectionData.literalSamplers)
+    {
+        mDescriptorSetLayoutDescs[DescriptorSetIndex::LiteralSampler].addBinding(
+            literalSampler.binding, VK_DESCRIPTOR_TYPE_SAMPLER, 1, VK_SHADER_STAGE_COMPUTE_BIT,
+            nullptr);
+    }
+
     vk::DescriptorSetLayoutDesc &descriptorSetLayoutDesc =
         mDescriptorSetLayoutDescs[DescriptorSetIndex::KernelArguments];
-    VkPushConstantRange pcRange = mProgram->getDeviceProgramData(mName.c_str())->pushConstRange;
+    VkPushConstantRange pcRange = deviceProgramData->pushConstRange;
     size_t podBufferSize        = 0;
 
     bool podFound = false;
@@ -130,8 +142,7 @@ angle::Result CLKernelVk::init()
     if (usesPrintf())
     {
         mDescriptorSetLayoutDescs[DescriptorSetIndex::Printf].addBinding(
-            mProgram->getDeviceProgramData(mName.c_str())
-                ->reflectionData.printfBufferStorage.binding,
+            deviceProgramData->reflectionData.printfBufferStorage.binding,
             VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, 1, VK_SHADER_STAGE_COMPUTE_BIT, nullptr);
     }
 

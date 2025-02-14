@@ -13,6 +13,7 @@
 #include "common/SimpleMutex.h"
 #include "common/hash_containers.h"
 
+#include "libANGLE/CLSampler.h"
 #include "libANGLE/renderer/vulkan/CLContextVk.h"
 #include "libANGLE/renderer/vulkan/CLKernelVk.h"
 #include "libANGLE/renderer/vulkan/cl_types.h"
@@ -61,6 +62,7 @@ class CLProgramVk : public CLProgramImpl
         angle::HashSet<uint32_t> kernelIDs;
         ClspvPrintfBufferStorage printfBufferStorage;
         angle::HashMap<uint32_t, ClspvPrintfInfo> printfInfoMap;
+        std::vector<ClspvLiteralSampler> literalSamplers;
     };
 
     // Output binary structure (for CL_PROGRAM_BINARIES query)

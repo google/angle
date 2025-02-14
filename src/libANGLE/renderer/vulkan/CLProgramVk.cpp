@@ -293,6 +293,22 @@ spv_result_t ParseReflection(CLProgramVk::SpvReflectionData &reflectionData,
                         {.pcRange = pcRange, .ordinal = ordinal});
                     break;
                 }
+                case NonSemanticClspvReflectionLiteralSampler:
+                {
+                    uint32_t descriptorSet = reflectionData.spvIntLookup[spvInstr.words[5]];
+                    ASSERT(descriptorSet < static_cast<uint32_t>(DescriptorSetIndex::EnumCount));
+                    uint32_t binding         = reflectionData.spvIntLookup[spvInstr.words[6]];
+                    uint32_t mask            = reflectionData.spvIntLookup[spvInstr.words[7]];
+                    cl_bool normalizedCoords = clspv_cl::IsNormalizedCoords(mask);
+                    cl::AddressingMode addressingMode = clspv_cl::GetAddressingMode(mask);
+                    cl::FilterMode filterMode         = clspv_cl::GetFilterMode(mask);
+                    reflectionData.literalSamplers.push_back({.descriptorSet    = descriptorSet,
+                                                              .binding          = binding,
+                                                              .normalizedCoords = normalizedCoords,
+                                                              .addressingMode   = addressingMode,
+                                                              .filterMode       = filterMode});
+                    break;
+                }
                 default:
                     break;
             }

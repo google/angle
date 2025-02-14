@@ -121,6 +121,7 @@ struct CommandsState
     cl::EventPtrs events;
     cl::MemoryPtrs memories;
     cl::KernelPtrs kernels;
+    cl::SamplerPtrs samplers;
     HostTransferEntries hostTransferList;
 };
 using CommandsStateMap = angle::HashMap<QueueSerial, CommandsState>;

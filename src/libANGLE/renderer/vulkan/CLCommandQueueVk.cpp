@@ -1578,8 +1578,44 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk)
     mCommandsStateMap[mComputePassCommands->getQueueSerial()].kernels.emplace_back(
         &kernelVk.getFrontendObject());
 
-    // Process each kernel argument/resource
+    // Process descriptor sets used by the kernel
     vk::DescriptorSetArray<UpdateDescriptorSetsBuilder> updateDescriptorSetsBuilders;
+
+    UpdateDescriptorSetsBuilder &literalSamplerDescSetBuilder =
+        updateDescriptorSetsBuilders[DescriptorSetIndex::LiteralSampler];
+
+    // Create/Setup Literal Sampler
+    for (const ClspvLiteralSampler &literalSampler : devProgramData->reflectionData.literalSamplers)
+    {
+        cl::SamplerPtr clLiteralSampler =
+            cl::SamplerPtr(cl::Sampler::Cast(this->mContext->getFrontendObject().createSampler(
+                literalSampler.normalizedCoords, literalSampler.addressingMode,
+                literalSampler.filterMode)));
+
+        // Release immediately to ensure correct refcount
+        clLiteralSampler->release();
+        ASSERT(clLiteralSampler != nullptr);
+        CLSamplerVk &vkLiteralSampler = clLiteralSampler->getImpl<CLSamplerVk>();
+
+        VkDescriptorImageInfo &samplerInfo =
+            literalSamplerDescSetBuilder.allocDescriptorImageInfo();
+        samplerInfo.sampler     = vkLiteralSampler.getSamplerHelper().get().getHandle();
+        samplerInfo.imageView   = VK_NULL_HANDLE;
+        samplerInfo.imageLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+
+        VkWriteDescriptorSet &writeDescriptorSet =
+            literalSamplerDescSetBuilder.allocWriteDescriptorSet();
+        writeDescriptorSet.descriptorCount = 1;
+        writeDescriptorSet.descriptorType  = VK_DESCRIPTOR_TYPE_SAMPLER;
+        writeDescriptorSet.pImageInfo      = &samplerInfo;
+        writeDescriptorSet.sType           = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        writeDescriptorSet.dstSet = kernelVk.getDescriptorSet(DescriptorSetIndex::LiteralSampler);
+        writeDescriptorSet.dstBinding = literalSampler.binding;
+
+        mCommandsStateMap[mComputePassCommands->getQueueSerial()].samplers.emplace_back(
+            clLiteralSampler);
+    }
+
     CLKernelArguments args = kernelVk.getArgs();
     UpdateDescriptorSetsBuilder &kernelArgDescSetBuilder =
         updateDescriptorSetsBuilders[DescriptorSetIndex::KernelArguments];

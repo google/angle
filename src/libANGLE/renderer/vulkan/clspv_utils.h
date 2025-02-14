@@ -15,6 +15,7 @@
 #include <libANGLE/renderer/vulkan/CLDeviceVk.h>
 
 #include "clspv/Compiler.h"
+#include "clspv/Sampler.h"
 #include "spirv-tools/libspirv.h"
 
 namespace rx
@@ -33,6 +34,29 @@ struct ClspvPrintfInfo
     std::string formatSpecifier;
     std::vector<uint32_t> argSizes;
 };
+
+struct ClspvLiteralSampler
+{
+    uint32_t descriptorSet;
+    uint32_t binding;
+    cl_bool normalizedCoords;
+    cl::AddressingMode addressingMode;
+    cl::FilterMode filterMode;
+};
+
+namespace clspv_cl
+{
+
+cl::AddressingMode GetAddressingMode(uint32_t mask);
+
+cl::FilterMode GetFilterMode(uint32_t mask);
+
+inline bool IsNormalizedCoords(uint32_t mask)
+{
+    return (mask & clspv::kSamplerNormalizedCoordsMask) == clspv::CLK_NORMALIZED_COORDS_TRUE;
+}
+
+}  // namespace clspv_cl
 
 angle::Result ClspvProcessPrintfBuffer(unsigned char *buffer,
                                        const size_t bufferSize,
