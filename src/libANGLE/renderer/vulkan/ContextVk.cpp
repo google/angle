@@ -1262,6 +1262,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
 #undef ANGLE_ADD_PERF_MONITOR_COUNTER_GROUP
 
     mPerfMonitorCounters.push_back(vulkanGroup);
+
+    mCurrentGarbage.reserve(32);
 }
 
 ContextVk::~ContextVk() {}

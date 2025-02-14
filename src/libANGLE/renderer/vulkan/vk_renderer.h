@@ -102,21 +102,6 @@ class ImageMemorySuballocator : angle::NonCopyable
 // glSignalSemaphoreEXT.
 using SignalSemaphoreVector = angle::FixedVector<VkSemaphore, 2>;
 
-// Recursive function to process variable arguments for garbage collection
-inline void CollectGarbage(std::vector<vk::GarbageObject> *garbageOut) {}
-template <typename ArgT, typename... ArgsT>
-void CollectGarbage(std::vector<vk::GarbageObject> *garbageOut, ArgT object, ArgsT... objectsIn)
-{
-    if (object->valid())
-    {
-        garbageOut->emplace_back(vk::GarbageObject::Get(object));
-    }
-    CollectGarbage(garbageOut, objectsIn...);
-}
-
-// Recursive function to process variable arguments for garbage destroy
-inline void DestroyGarbage(vk::Renderer *renderer) {}
-
 class OneOffCommandPool : angle::NonCopyable
 {
   public:
@@ -332,29 +317,42 @@ class Renderer : angle::NonCopyable
                                            VkPipelineStageFlags waitSemaphoreStageMasks,
                                            QueueSerial submitQueueSerial);
 
-    template <typename... ArgsT>
-    void collectGarbage(const vk::ResourceUse &use, ArgsT... garbageIn)
+    template <typename ArgT>
+    void collectGarbage(const vk::ResourceUse &use, ArgT garbageIn)
     {
+        if (!garbageIn->valid())
+        {
+            return;
+        }
+
         if (hasResourceUseFinished(use))
         {
-            DestroyGarbage(this, garbageIn...);
+            garbageIn->destroy(mDevice);
         }
         else
         {
             std::vector<vk::GarbageObject> sharedGarbage;
-            CollectGarbage(&sharedGarbage, garbageIn...);
-            if (!sharedGarbage.empty())
-            {
-                collectGarbage(use, std::move(sharedGarbage));
-            }
+            sharedGarbage.emplace_back(vk::GarbageObject::Get(garbageIn));
+            collectGarbage(use, std::move(sharedGarbage));
         }
     }
 
     void collectGarbage(const vk::ResourceUse &use, vk::GarbageObjects &&sharedGarbage)
     {
         ASSERT(!sharedGarbage.empty());
-        vk::SharedGarbage garbage(use, std::move(sharedGarbage));
-        mSharedGarbageList.add(this, std::move(garbage));
+        if (hasResourceUseFinished(use))
+        {
+            for (auto &garbage : sharedGarbage)
+            {
+                garbage.destroy(this);
+            }
+            sharedGarbage.clear();
+        }
+        else
+        {
+            vk::SharedGarbage garbage(use, std::move(sharedGarbage));
+            mSharedGarbageList.add(this, std::move(garbage));
+        }
     }
 
     void collectSuballocationGarbage(const vk::ResourceUse &use,
@@ -1125,26 +1123,6 @@ ANGLE_INLINE angle::Result Renderer::checkCompletedCommandsAndCleanup(vk::ErrorC
 ANGLE_INLINE angle::Result Renderer::releaseFinishedCommands(vk::ErrorContext *context)
 {
     return mCommandQueue.releaseFinishedCommands(context);
-}
-
-template <typename ArgT, typename... ArgsT>
-void DestroyGarbage(Renderer *renderer, ArgT object, ArgsT... objectsIn)
-{
-    if (object->valid())
-    {
-        object->destroy(renderer->getDevice());
-    }
-    DestroyGarbage(renderer, objectsIn...);
-}
-
-template <typename... ArgsT>
-void DestroyGarbage(Renderer *renderer, vk::Allocation *object, ArgsT... objectsIn)
-{
-    if (object->valid())
-    {
-        object->destroy(renderer->getAllocator());
-    }
-    DestroyGarbage(renderer, objectsIn...);
 }
 }  // namespace vk
 }  // namespace rx

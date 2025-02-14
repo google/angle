@@ -5196,7 +5196,10 @@ WaitableMonolithicPipelineCreationTask::~WaitableMonolithicPipelineCreationTask(
 }
 
 // PipelineHelper implementation.
-PipelineHelper::PipelineHelper() = default;
+PipelineHelper::PipelineHelper()
+{
+    mTransitions.reserve(8);
+}
 
 PipelineHelper::~PipelineHelper() = default;
 

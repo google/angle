@@ -1613,7 +1613,7 @@ class PipelineHelper final : public Resource
                        const GraphicsPipelineDesc *desc,
                        PipelineHelper *pipeline);
 
-    const std::vector<GraphicsPipelineTransition> getTransitions() const { return mTransitions; }
+    const std::vector<GraphicsPipelineTransition> &getTransitions() const { return mTransitions; }
 
     void setComputePipeline(Pipeline &&pipeline, CacheLookUpFeedback feedback)
     {
