@@ -6887,11 +6887,12 @@ void ImageHelper::releaseStagedUpdates(Renderer *renderer)
     ASSERT(validateSubresourceUpdateRefCountsConsistent());
 
     // Remove updates that never made it to the texture.
-    for (std::vector<SubresourceUpdate> &levelUpdates : mSubresourceUpdates)
+    for (SubresourceUpdates &levelUpdates : mSubresourceUpdates)
     {
-        for (SubresourceUpdate &update : levelUpdates)
+        while (!levelUpdates.empty())
         {
-            update.release(renderer);
+            levelUpdates.front().release(renderer);
+            levelUpdates.pop_front();
         }
     }
 
@@ -8795,7 +8796,7 @@ void ImageHelper::removeSingleSubresourceStagedUpdates(ContextVk *contextVk,
     mCurrentSingleClearValue.reset();
 
     // Find any staged updates for this index and remove them from the pending list.
-    std::vector<SubresourceUpdate> *levelUpdates = getLevelUpdates(levelIndexGL);
+    SubresourceUpdates *levelUpdates = getLevelUpdates(levelIndexGL);
     if (levelUpdates == nullptr)
     {
         return;
@@ -8828,7 +8829,7 @@ void ImageHelper::removeSingleStagedClearAfterInvalidate(gl::LevelIndex levelInd
     // ClearAfterInvalidate update pending to this subresource, and that's a color clear due to
     // emulated channels after invalidate.  This function removes that update.
 
-    std::vector<SubresourceUpdate> *levelUpdates = getLevelUpdates(levelIndexGL);
+    SubresourceUpdates *levelUpdates = getLevelUpdates(levelIndexGL);
     if (levelUpdates == nullptr)
     {
         return;
@@ -8857,7 +8858,7 @@ void ImageHelper::removeStagedUpdates(ErrorContext *context,
     // Remove all updates to levels [start, end].
     for (gl::LevelIndex level = levelGLStart; level <= levelGLEnd; ++level)
     {
-        std::vector<SubresourceUpdate> *levelUpdates = getLevelUpdates(level);
+        SubresourceUpdates *levelUpdates = getLevelUpdates(level);
         if (levelUpdates == nullptr)
         {
             ASSERT(static_cast<size_t>(level.get()) >= mSubresourceUpdates.size());
@@ -9327,7 +9328,7 @@ angle::Result ImageHelper::reformatStagedBufferUpdates(ContextVk *contextVk,
     const gl::InternalFormat &dstFormatInfo =
         gl::GetSizedInternalFormatInfo(dstFormat.glInternalFormat);
 
-    for (std::vector<SubresourceUpdate> &levelUpdates : mSubresourceUpdates)
+    for (SubresourceUpdates &levelUpdates : mSubresourceUpdates)
     {
         for (SubresourceUpdate &update : levelUpdates)
         {
@@ -10160,8 +10161,7 @@ void ImageHelper::stageClearIfEmulatedFormat(bool isRobustResourceInitEnabled, b
     }
 }
 
-bool ImageHelper::verifyEmulatedClearsAreBeforeOtherUpdates(
-    const std::vector<SubresourceUpdate> &updates)
+bool ImageHelper::verifyEmulatedClearsAreBeforeOtherUpdates(const SubresourceUpdates &updates)
 {
     bool isIteratingEmulatedClears = true;
 
@@ -10292,7 +10292,7 @@ angle::Result ImageHelper::flushSingleSubresourceStagedUpdates(ContextVk *contex
                                                                ClearValuesArray *deferredClears,
                                                                uint32_t deferredClearIndex)
 {
-    std::vector<SubresourceUpdate> *levelUpdates = getLevelUpdates(levelGL);
+    SubresourceUpdates *levelUpdates = getLevelUpdates(levelGL);
     if (levelUpdates == nullptr || levelUpdates->empty())
     {
         return angle::Result::Continue;
@@ -10359,7 +10359,7 @@ angle::Result ImageHelper::flushStagedClearEmulatedChannelsUpdates(ContextVk *co
     {
         // It is expected that the checked mip levels in this loop do not surpass the size of
         // mSubresourceUpdates.
-        std::vector<SubresourceUpdate> *levelUpdates = getLevelUpdates(updateMipLevelGL);
+        SubresourceUpdates *levelUpdates = getLevelUpdates(updateMipLevelGL);
         ASSERT(levelUpdates != nullptr);
 
         // The levels with no updates should be skipped.
@@ -10372,7 +10372,7 @@ angle::Result ImageHelper::flushStagedClearEmulatedChannelsUpdates(ContextVk *co
         // than one such update type, we can process the first update and move on if there is
         // another update type in the list.
         ASSERT(verifyEmulatedClearsAreBeforeOtherUpdates(*levelUpdates));
-        std::vector<SubresourceUpdate>::iterator update = (*levelUpdates).begin();
+        SubresourceUpdate *update = &(*levelUpdates).front();
 
         if (update->updateSource != UpdateSource::ClearEmulatedChannelsOnly)
         {
@@ -10396,7 +10396,7 @@ angle::Result ImageHelper::flushStagedClearEmulatedChannelsUpdates(ContextVk *co
         // superseded by Clears, |mCurrentSingleClearValue| is irrelevant and can't have a value.
         ASSERT(!mCurrentSingleClearValue.valid());
 
-        levelUpdates->erase(update);
+        levelUpdates->pop_front();
         if (!levelUpdates->empty())
         {
             ASSERT(levelUpdates->begin()->updateSource != UpdateSource::ClearEmulatedChannelsOnly);
@@ -10457,8 +10457,8 @@ angle::Result ImageHelper::flushStagedUpdatesImpl(ContextVk *contextVk,
 
         // It is expected that the checked mip levels in this loop do not surpass the size of
         // mSubresourceUpdates.
-        std::vector<SubresourceUpdate> *levelUpdates = getLevelUpdates(updateMipLevelGL);
-        std::vector<SubresourceUpdate> updatesToKeep;
+        SubresourceUpdates *levelUpdates = getLevelUpdates(updateMipLevelGL);
+        SubresourceUpdates updatesToKeep;
         ASSERT(levelUpdates != nullptr);
 
         // Because updates may have overlapping layer ranges, we must first figure out the actual
@@ -10742,7 +10742,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
     // the clear.
     if (mCurrentSingleClearValue.valid())
     {
-        std::vector<SubresourceUpdate> *levelUpdates =
+        SubresourceUpdates *levelUpdates =
             getLevelUpdates(gl::LevelIndex(mCurrentSingleClearValue.value().levelIndex));
         if (levelUpdates && levelUpdates->size() == 1)
         {
@@ -10815,7 +10815,7 @@ bool ImageHelper::hasStagedUpdatesForSubresource(gl::LevelIndex levelGL,
 {
     // Check to see if any updates are staged for the given level and layer
 
-    const std::vector<SubresourceUpdate> *levelUpdates = getLevelUpdates(levelGL);
+    const SubresourceUpdates *levelUpdates = getLevelUpdates(levelGL);
     if (levelUpdates == nullptr || levelUpdates->empty())
     {
         return false;
@@ -10843,7 +10843,7 @@ bool ImageHelper::hasStagedUpdatesForSubresource(gl::LevelIndex levelGL,
 bool ImageHelper::removeStagedClearUpdatesAndReturnColor(gl::LevelIndex levelGL,
                                                          const VkClearColorValue **color)
 {
-    std::vector<SubresourceUpdate> *levelUpdates = getLevelUpdates(levelGL);
+    SubresourceUpdates *levelUpdates = getLevelUpdates(levelGL);
     if (levelUpdates == nullptr || levelUpdates->empty())
     {
         return false;
@@ -10868,7 +10868,7 @@ bool ImageHelper::removeStagedClearUpdatesAndReturnColor(gl::LevelIndex levelGL,
     return result;
 }
 
-void ImageHelper::adjustLayerRange(const std::vector<SubresourceUpdate> &levelUpdates,
+void ImageHelper::adjustLayerRange(const SubresourceUpdates &levelUpdates,
                                    uint32_t *layerStart,
                                    uint32_t *layerEnd)
 {
@@ -10905,7 +10905,7 @@ bool ImageHelper::hasStagedUpdatesInLevels(gl::LevelIndex levelStart, gl::LevelI
 {
     for (gl::LevelIndex level = levelStart; level < levelEnd; ++level)
     {
-        const std::vector<SubresourceUpdate> *levelUpdates = getLevelUpdates(level);
+        const SubresourceUpdates *levelUpdates = getLevelUpdates(level);
         if (levelUpdates == nullptr)
         {
             ASSERT(static_cast<size_t>(level.get()) >= mSubresourceUpdates.size());
@@ -10926,7 +10926,7 @@ bool ImageHelper::hasStagedImageUpdatesWithMismatchedFormat(gl::LevelIndex level
 {
     for (gl::LevelIndex level = levelStart; level < levelEnd; ++level)
     {
-        const std::vector<SubresourceUpdate> *levelUpdates = getLevelUpdates(level);
+        const SubresourceUpdates *levelUpdates = getLevelUpdates(level);
         if (levelUpdates == nullptr)
         {
             continue;
@@ -10948,7 +10948,7 @@ bool ImageHelper::hasBufferSourcedStagedUpdatesInAllLevels() const
 {
     for (gl::LevelIndex level = mFirstAllocatedLevel; level <= getLastAllocatedLevel(); ++level)
     {
-        const std::vector<SubresourceUpdate> *levelUpdates = getLevelUpdates(level);
+        const SubresourceUpdates *levelUpdates = getLevelUpdates(level);
         if (levelUpdates == nullptr || levelUpdates->empty())
         {
             return false;
@@ -10982,7 +10982,7 @@ bool ImageHelper::validateSubresourceUpdateBufferRefConsistent(
 
     uint32_t refs = 0;
 
-    for (const std::vector<SubresourceUpdate> &levelUpdates : mSubresourceUpdates)
+    for (const SubresourceUpdates &levelUpdates : mSubresourceUpdates)
     {
         for (const SubresourceUpdate &update : levelUpdates)
         {
@@ -11005,7 +11005,7 @@ bool ImageHelper::validateSubresourceUpdateImageRefConsistent(RefCounted<ImageHe
 
     uint32_t refs = 0;
 
-    for (const std::vector<SubresourceUpdate> &levelUpdates : mSubresourceUpdates)
+    for (const SubresourceUpdates &levelUpdates : mSubresourceUpdates)
     {
         for (const SubresourceUpdate &update : levelUpdates)
         {
@@ -11021,7 +11021,7 @@ bool ImageHelper::validateSubresourceUpdateImageRefConsistent(RefCounted<ImageHe
 
 bool ImageHelper::validateSubresourceUpdateRefCountsConsistent() const
 {
-    for (const std::vector<SubresourceUpdate> &levelUpdates : mSubresourceUpdates)
+    for (const SubresourceUpdates &levelUpdates : mSubresourceUpdates)
     {
         for (const SubresourceUpdate &update : levelUpdates)
         {
@@ -11051,7 +11051,7 @@ void ImageHelper::pruneSupersededUpdatesForLevel(ContextVk *contextVk,
 {
     constexpr VkDeviceSize kSubresourceUpdateSizeBeforePruning = 16 * 1024 * 1024;  // 16 MB
     constexpr int kUpdateCountThreshold                        = 1024;
-    std::vector<ImageHelper::SubresourceUpdate> *levelUpdates  = getLevelUpdates(level);
+    SubresourceUpdates *levelUpdates                           = getLevelUpdates(level);
 
     // If we are below pruning threshold, nothing to do.
     const int updateCount      = static_cast<int>(levelUpdates->size());
@@ -11163,7 +11163,7 @@ void ImageHelper::removeSupersededUpdates(ContextVk *contextVk,
     for (LevelIndex levelVk(0); levelVk < LevelIndex(mLevelCount); ++levelVk)
     {
         gl::LevelIndex levelGL                       = toGLLevel(levelVk);
-        std::vector<SubresourceUpdate> *levelUpdates = getLevelUpdates(levelGL);
+        SubresourceUpdates *levelUpdates             = getLevelUpdates(levelGL);
         if (levelUpdates == nullptr || levelUpdates->size() == 0 ||
             skipLevelsAllFaces.test(levelGL.get()))
         {
@@ -12090,6 +12090,33 @@ ImageHelper::SubresourceUpdate::SubresourceUpdate(VkColorComponentFlags colorMas
     data.clear.colorMaskFlags = colorMaskFlags;
 }
 
+ImageHelper::SubresourceUpdate::SubresourceUpdate(const SubresourceUpdate &other)
+    : updateSource(other.updateSource)
+{
+    switch (updateSource)
+    {
+        case UpdateSource::Clear:
+        case UpdateSource::ClearEmulatedChannelsOnly:
+        case UpdateSource::ClearAfterInvalidate:
+            data.clear        = other.data.clear;
+            refCounted.buffer = nullptr;
+            break;
+        case UpdateSource::ClearPartial:
+            data.clearPartial = other.data.clearPartial;
+            break;
+        case UpdateSource::Buffer:
+            data.buffer       = other.data.buffer;
+            refCounted.buffer = other.refCounted.buffer;
+            break;
+        case UpdateSource::Image:
+            data.image       = other.data.image;
+            refCounted.image = other.refCounted.image;
+            break;
+        default:
+            UNREACHABLE();
+    }
+}
+
 ImageHelper::SubresourceUpdate::SubresourceUpdate(SubresourceUpdate &&other)
     : updateSource(other.updateSource)
 {
@@ -12261,15 +12288,14 @@ void ImageHelper::clipLevelToUpdateListUpperLimit(gl::LevelIndex *level) const
     *level = std::min(*level, levelLimit);
 }
 
-std::vector<ImageHelper::SubresourceUpdate> *ImageHelper::getLevelUpdates(gl::LevelIndex level)
+ImageHelper::SubresourceUpdates *ImageHelper::getLevelUpdates(gl::LevelIndex level)
 {
     return static_cast<size_t>(level.get()) < mSubresourceUpdates.size()
                ? &mSubresourceUpdates[level.get()]
                : nullptr;
 }
 
-const std::vector<ImageHelper::SubresourceUpdate> *ImageHelper::getLevelUpdates(
-    gl::LevelIndex level) const
+const ImageHelper::SubresourceUpdates *ImageHelper::getLevelUpdates(gl::LevelIndex level) const
 {
     return static_cast<size_t>(level.get()) < mSubresourceUpdates.size()
                ? &mSubresourceUpdates[level.get()]
@@ -12301,8 +12327,7 @@ void ImageHelper::prependSubresourceUpdate(gl::LevelIndex level, SubresourceUpda
     mTotalStagedBufferUpdateSize += update.updateSource == UpdateSource::Buffer
                                         ? update.data.buffer.bufferHelper->getSize()
                                         : 0;
-    mSubresourceUpdates[level.get()].insert(mSubresourceUpdates[level.get()].begin(),
-                                            std::move(update));
+    mSubresourceUpdates[level.get()].emplace_front(std::move(update));
     onStateChange(angle::SubjectMessage::SubjectChanged);
 }
 
