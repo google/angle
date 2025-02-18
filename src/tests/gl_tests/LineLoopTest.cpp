@@ -409,6 +409,53 @@ TEST_P(LineLoopTest, DrawTriangleElementsBetweenArrays)
     checkPixels();
 }
 
+// Tests drawing elements with line loop arrays and drawing elements with line strip arrays and
+// confirms the draws are the same.
+TEST_P(LineLoopTest, SimpleDrawArrays)
+{
+    // http://anglebug.com/42265165: Disable D3D11 SDK Layers warnings checks.
+    ignoreD3D11SDKLayersWarnings();
+
+    static const GLfloat positions[] = {-0.5f, -0.5f, -0.5f, 0.5f,  0.5f,  0.5f,
+                                        0.5f,  -0.5f, -0.5f, -0.5f, -0.1f, 0.1f,
+                                        -0.1f, -0.1f, 0.1f,  -0.1f, 0.1f,  0.1f};
+
+    std::vector<GLColor> expectedPixels(getWindowWidth() * getWindowHeight());
+    std::vector<GLColor> renderedPixels(getWindowWidth() * getWindowHeight());
+
+    GLBuffer arrayBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, arrayBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW);
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    glUseProgram(mProgram);
+    glEnableVertexAttribArray(mPositionLocation);
+    glVertexAttribPointer(mPositionLocation, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    glUniform4f(mColorLocation, 0.0f, 0.0f, 1.0f, 1.0f);
+    glDrawArrays(GL_LINE_STRIP, 0, 5);
+    glReadPixels(0, 0, getWindowWidth(), getWindowHeight(), GL_RGBA, GL_UNSIGNED_BYTE,
+                 expectedPixels.data());
+
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glUniform4f(mColorLocation, 0.0f, 0.0f, 1.0f, 1.0f);
+    glDrawArrays(GL_LINE_LOOP, 0, 4);
+    glReadPixels(0, 0, getWindowWidth(), getWindowHeight(), GL_RGBA, GL_UNSIGNED_BYTE,
+                 renderedPixels.data());
+
+    for (int y = 0; y < getWindowHeight(); ++y)
+    {
+        for (int x = 0; x < getWindowWidth(); ++x)
+        {
+            int idx = y * getWindowWidth() + x;
+            EXPECT_EQ(expectedPixels[idx], renderedPixels[idx])
+                << "Expected pixel at " << x << ", " << y << " to be " << expectedPixels[idx]
+                << std::endl;
+        }
+    }
+}
+
 class LineLoopTestES3 : public LineLoopTest
 {};
 

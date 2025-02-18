@@ -162,8 +162,8 @@ void GenerateCaps(const wgpu::Limits &limitsWgpu,
     glCaps->maxVertexAttribStride =
         rx::LimitToInt(std::min(limitsWgpu.maxVertexBufferArrayStride,
                                 static_cast<uint32_t>(std::numeric_limits<uint16_t>::max())));
-    glCaps->maxElementsIndices    = std::numeric_limits<GLint>::max();
-    glCaps->maxElementsVertices   = std::numeric_limits<GLint>::max();
+    glCaps->maxElementsIndices  = std::numeric_limits<GLint>::max();
+    glCaps->maxElementsVertices = std::numeric_limits<GLint>::max();
     glCaps->vertexHighpFloat.setIEEEFloat();
     glCaps->vertexMediumpFloat.setIEEEHalfFloat();
     glCaps->vertexLowpFloat.setIEEEHalfFloat();

@@ -9,6 +9,7 @@
 
 #include "libANGLE/renderer/wgpu/ContextWgpu.h"
 
+#include "common/PackedEnums.h"
 #include "common/debug.h"
 
 #include "compiler/translator/wgsl/OutputUniformBlocks.h"
@@ -203,20 +204,24 @@ angle::Result ContextWgpu::drawArrays(const gl::Context *context,
                                       GLint first,
                                       GLsizei count)
 {
-    if (mode == gl::PrimitiveMode::LineLoop)
-    {
-        UNIMPLEMENTED();
-        return angle::Result::Continue;
-    }
-    else if (mode == gl::PrimitiveMode::TriangleFan)
+    if (mode == gl::PrimitiveMode::TriangleFan)
     {
         UNIMPLEMENTED();
         return angle::Result::Continue;
     }
 
+    uint32_t firstIndex = 0;
+    uint32_t indexCount = static_cast<uint32_t>(count);
     ANGLE_TRY(setupDraw(context, mode, first, count, 1, gl::DrawElementsType::InvalidEnum, nullptr,
-                        0, nullptr, nullptr));
-    mCommandBuffer.draw(static_cast<uint32_t>(count), 1, static_cast<uint32_t>(first), 0);
+                        0, &firstIndex, &indexCount));
+    if (mode == gl::PrimitiveMode::LineLoop)
+    {
+        mCommandBuffer.drawIndexed(indexCount, 1, firstIndex, 0, 0);
+    }
+    else
+    {
+        mCommandBuffer.draw(static_cast<uint32_t>(count), 1, static_cast<uint32_t>(first), 0);
+    }
     return angle::Result::Continue;
 }
 
@@ -226,21 +231,26 @@ angle::Result ContextWgpu::drawArraysInstanced(const gl::Context *context,
                                                GLsizei count,
                                                GLsizei instanceCount)
 {
-    if (mode == gl::PrimitiveMode::LineLoop)
-    {
-        UNIMPLEMENTED();
-        return angle::Result::Continue;
-    }
-    else if (mode == gl::PrimitiveMode::TriangleFan)
+    if (mode == gl::PrimitiveMode::TriangleFan)
     {
         UNIMPLEMENTED();
         return angle::Result::Continue;
     }
 
+    uint32_t firstIndex = 0;
+    uint32_t indexCount = static_cast<uint32_t>(count);
     ANGLE_TRY(setupDraw(context, mode, first, count, instanceCount,
-                        gl::DrawElementsType::InvalidEnum, nullptr, 0, nullptr, nullptr));
-    mCommandBuffer.draw(static_cast<uint32_t>(count), static_cast<uint32_t>(instanceCount),
-                        static_cast<uint32_t>(first), 0);
+                        gl::DrawElementsType::InvalidEnum, nullptr, 0, &firstIndex, &indexCount));
+    if (mode == gl::PrimitiveMode::LineLoop)
+    {
+        mCommandBuffer.drawIndexed(indexCount, static_cast<uint32_t>(instanceCount), firstIndex, 0,
+                                   0);
+    }
+    else
+    {
+        mCommandBuffer.draw(indexCount, static_cast<uint32_t>(instanceCount),
+                            static_cast<uint32_t>(first), 0);
+    }
     return angle::Result::Continue;
 }
 
@@ -251,21 +261,26 @@ angle::Result ContextWgpu::drawArraysInstancedBaseInstance(const gl::Context *co
                                                            GLsizei instanceCount,
                                                            GLuint baseInstance)
 {
-    if (mode == gl::PrimitiveMode::LineLoop)
-    {
-        UNIMPLEMENTED();
-        return angle::Result::Continue;
-    }
-    else if (mode == gl::PrimitiveMode::TriangleFan)
+    if (mode == gl::PrimitiveMode::TriangleFan)
     {
         UNIMPLEMENTED();
         return angle::Result::Continue;
     }
 
+    uint32_t firstIndex = 0;
+    uint32_t indexCount = static_cast<uint32_t>(count);
     ANGLE_TRY(setupDraw(context, mode, first, count, instanceCount,
-                        gl::DrawElementsType::InvalidEnum, nullptr, 0, nullptr, nullptr));
-    mCommandBuffer.draw(static_cast<uint32_t>(count), static_cast<uint32_t>(instanceCount),
-                        static_cast<uint32_t>(first), baseInstance);
+                        gl::DrawElementsType::InvalidEnum, nullptr, 0, &firstIndex, &indexCount));
+    if (mode == gl::PrimitiveMode::LineLoop)
+    {
+        mCommandBuffer.drawIndexed(indexCount, static_cast<uint32_t>(instanceCount), firstIndex, 0,
+                                   baseInstance);
+    }
+    else
+    {
+        mCommandBuffer.draw(static_cast<uint32_t>(count), static_cast<uint32_t>(instanceCount),
+                            static_cast<uint32_t>(first), baseInstance);
+    }
     return angle::Result::Continue;
 }
 
@@ -1058,7 +1073,21 @@ angle::Result ContextWgpu::setupDraw(const gl::Context *context,
                                      uint32_t *outFirstIndex,
                                      uint32_t *indexCountOut)
 {
-    if (mRenderPipelineDesc.setPrimitiveMode(mode, indexTypeOrInvalid))
+    gl::DrawElementsType dstDndexTypeOrInvalid = indexTypeOrInvalid;
+    if (mode == gl::PrimitiveMode::LineLoop &&
+        dstDndexTypeOrInvalid == gl::DrawElementsType::InvalidEnum)
+    {
+        if (vertexOrIndexCount >= std::numeric_limits<unsigned short>::max())
+        {
+            dstDndexTypeOrInvalid = gl::DrawElementsType::UnsignedInt;
+        }
+        else
+        {
+            dstDndexTypeOrInvalid = gl::DrawElementsType::UnsignedShort;
+        }
+    }
+
+    if (mRenderPipelineDesc.setPrimitiveMode(mode, dstDndexTypeOrInvalid))
     {
         invalidateCurrentRenderPipeline();
     }
@@ -1073,6 +1102,8 @@ angle::Result ContextWgpu::setupDraw(const gl::Context *context,
     if (mState.areClientArraysEnabled())
     {
         VertexArrayWgpu *vertexArrayWgpu = GetImplAs<VertexArrayWgpu>(mState.getVertexArray());
+        // Pass in original indexTypeOrInvalid into syncClientArrays because the method will need to
+        // determine if the original draw call was a DrawElements or DrawArrays call.
         ANGLE_TRY(vertexArrayWgpu->syncClientArrays(
             context, mState.getProgramExecutable()->getActiveAttribLocationsMask(), mode,
             firstVertexOrInvalid, vertexOrIndexCount, instanceCount, indexTypeOrInvalid, indices,
@@ -1080,17 +1111,14 @@ angle::Result ContextWgpu::setupDraw(const gl::Context *context,
     }
 
     bool reAddDirtyIndexBufferBit = false;
-    if (indexTypeOrInvalid != gl::DrawElementsType::InvalidEnum)
+    if (dstDndexTypeOrInvalid != gl::DrawElementsType::InvalidEnum)
     {
-        *outFirstIndex = gl_wgpu::GetFirstIndexForDrawCall(indexTypeOrInvalid, adjustedIndicesPtr);
-        if (mCurrentIndexBufferType != indexTypeOrInvalid)
+        *outFirstIndex =
+            gl_wgpu::GetFirstIndexForDrawCall(dstDndexTypeOrInvalid, adjustedIndicesPtr);
+        if (mCurrentIndexBufferType != dstDndexTypeOrInvalid)
         {
             invalidateIndexBuffer();
         }
-    }
-    else
-    {
-        ASSERT(outFirstIndex == nullptr);
     }
 
     if (mDirtyBits.any())
@@ -1131,9 +1159,9 @@ angle::Result ContextWgpu::setupDraw(const gl::Context *context,
                     break;
 
                 case DIRTY_BIT_INDEX_BUFFER:
-                    if (indexTypeOrInvalid != gl::DrawElementsType::InvalidEnum)
+                    if (dstDndexTypeOrInvalid != gl::DrawElementsType::InvalidEnum)
                     {
-                        ANGLE_TRY(handleDirtyIndexBuffer(indexTypeOrInvalid, &dirtyBitIter));
+                        ANGLE_TRY(handleDirtyIndexBuffer(dstDndexTypeOrInvalid, &dirtyBitIter));
                     }
                     else
                     {
