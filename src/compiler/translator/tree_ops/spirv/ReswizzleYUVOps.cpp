@@ -30,7 +30,6 @@ class ReswizzleYUVOpsTraverser : public TIntermTraverser
 
     bool visitAggregate(Visit visit, TIntermAggregate *node) override;
     bool visitSwizzle(Visit visit, TIntermSwizzle *node) override;
-    bool adjustOutput(TCompiler *compiler, TIntermBlock *root, const TIntermSymbol &yuvOutput);
 
   private:
 };
@@ -107,12 +106,14 @@ bool ReswizzleYUVOpsTraverser::visitSwizzle(Visit visit, TIntermSwizzle *node)
 
     return true;
 }
+}  // anonymous namespace
 
 // OpenGLES and Vulkan has different color component mapping for YUV. When we write YUV data, we
 // need to convert OpenGL mapping to vulkan's mapping, which comes out to be {2, 0, 1, 3}.
-bool ReswizzleYUVOpsTraverser::adjustOutput(TCompiler *compiler,
-                                            TIntermBlock *root,
-                                            const TIntermSymbol &yuvOutput)
+bool AdjustYUVOutput(TCompiler *compiler,
+                     TIntermBlock *root,
+                     TSymbolTable *symbolTable,
+                     const TIntermSymbol &yuvOutput)
 {
     TIntermBlock *block = new TIntermBlock;
 
@@ -128,14 +129,10 @@ bool ReswizzleYUVOpsTraverser::adjustOutput(TCompiler *compiler,
                                                  new TIntermSwizzle(yuvOutput.deepCopy(), swizzle));
     block->appendStatement(assignment);
 
-    return RunAtTheEndOfShader(compiler, root, block, mSymbolTable);
+    return RunAtTheEndOfShader(compiler, root, block, symbolTable);
 }
-}  // anonymous namespace
 
-bool ReswizzleYUVOps(TCompiler *compiler,
-                     TIntermBlock *root,
-                     TSymbolTable *symbolTable,
-                     const TIntermSymbol *yuvOutput)
+bool ReswizzleYUVTextureAccess(TCompiler *compiler, TIntermBlock *root, TSymbolTable *symbolTable)
 {
     ReswizzleYUVOpsTraverser traverser(symbolTable);
     root->traverse(&traverser);
@@ -145,10 +142,6 @@ bool ReswizzleYUVOps(TCompiler *compiler,
         return false;
     }
 
-    if (yuvOutput != nullptr && !traverser.adjustOutput(compiler, root, *yuvOutput))
-    {
-        return false;
-    }
     return true;
 }
 }  // namespace sh

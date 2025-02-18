@@ -971,6 +971,19 @@ bool TranslatorSPIRV::translateImpl(TIntermBlock *root,
         }
     }
 
+    if (IsExtensionEnabled(getExtensionBehavior(), TExtension::EXT_YUV_target))
+    {
+        if (!EmulateYUVBuiltIns(this, root, &getSymbolTable()))
+        {
+            return false;
+        }
+
+        if (!ReswizzleYUVTextureAccess(this, root, &getSymbolTable()))
+        {
+            return false;
+        }
+    }
+
     switch (packedShaderType)
     {
         case gl::ShaderType::Fragment:
@@ -1162,12 +1175,8 @@ bool TranslatorSPIRV::translateImpl(TIntermBlock *root,
 
             if (IsExtensionEnabled(getExtensionBehavior(), TExtension::EXT_YUV_target))
             {
-                if (!EmulateYUVBuiltIns(this, root, &getSymbolTable()))
-                {
-                    return false;
-                }
-
-                if (!ReswizzleYUVOps(this, root, &getSymbolTable(), yuvOutput))
+                if (yuvOutput != nullptr &&
+                    !AdjustYUVOutput(this, root, &getSymbolTable(), *yuvOutput))
                 {
                     return false;
                 }

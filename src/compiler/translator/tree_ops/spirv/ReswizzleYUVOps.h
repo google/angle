@@ -19,10 +19,15 @@ class TCompiler;
 class TIntermBlock;
 class TSymbolTable;
 
-[[nodiscard]] bool ReswizzleYUVOps(TCompiler *compiler,
+[[nodiscard]] bool AdjustYUVOutput(TCompiler *compiler,
                                    TIntermBlock *root,
                                    TSymbolTable *symbolTable,
-                                   const TIntermSymbol *yuvOutput);
+                                   const TIntermSymbol &yuvOutput);
+
+[[nodiscard]] bool ReswizzleYUVTextureAccess(TCompiler *compiler,
+                                             TIntermBlock *root,
+                                             TSymbolTable *symbolTable);
+
 }  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_TREEOPS_SPIRV_RESWIZZLEYUVOPS_H_

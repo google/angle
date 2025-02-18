@@ -280,6 +280,37 @@ void main()
 })";
     }
 
+    const char *getTextureYUVVS() const
+    {
+        return R"(#version 300 es
+#extension GL_EXT_YUV_target : require
+precision highp float;
+uniform __samplerExternal2DY2YEXT tex;
+in vec4 position;
+out vec4 color;
+
+void main()
+{
+    gl_Position = position;
+    vec2 texcoord = (position.xy * 0.5) + 0.5;
+    texcoord.y = 1.0 - texcoord.y;
+    color = texture(tex, texcoord);
+})";
+    }
+
+    const char *getPassThroughFS() const
+    {
+        return R"(#version 300 es
+precision highp float;
+in vec4 color;
+out vec4 frag_color;
+
+void main()
+{
+    frag_color = color;
+})";
+    }
+
     const char *getTextureYUVFS() const
     {
         return R"(#version 300 es
@@ -357,6 +388,11 @@ void main()
             ASSERT_NE(0u, mTextureYUVProgram) << "shader compilation failed.";
 
             mTextureYUVUniformLocation = glGetUniformLocation(mTextureYUVProgram, "tex");
+
+            mTextureYUVVSProgram = CompileProgram(getTextureYUVVS(), getPassThroughFS());
+            ASSERT_NE(0u, mTextureYUVVSProgram) << "shader compilation failed.";
+
+            mTextureYUVVSUniformLocation = glGetUniformLocation(mTextureYUVVSProgram, "tex");
 
             mRenderYUVProgram = CompileProgram(getVSESSL3(), getRenderYUVFS());
             ASSERT_NE(0u, mRenderYUVProgram) << "shader compilation failed.";
@@ -1096,6 +1132,12 @@ void main()
                              mTextureYUVUniformLocation);
     }
 
+    void verifyResultsExternalYUVVS(GLuint texture, const GLubyte data[4])
+    {
+        verifyResultsTexture(texture, data, GL_TEXTURE_EXTERNAL_OES, mTextureYUVVSProgram,
+                             mTextureYUVVSUniformLocation);
+    }
+
     void verifyResultsRenderbuffer(GLuint renderbuffer, GLubyte referenceColor[4])
     {
         // Bind the renderbuffer to a framebuffer
@@ -1533,6 +1575,9 @@ void main()
 
     GLuint mTextureYUVProgram        = 0;
     GLint mTextureYUVUniformLocation = -1;
+
+    GLuint mTextureYUVVSProgram        = 0;
+    GLint mTextureYUVVSUniformLocation = -1;
 
     GLuint mRenderYUVProgram        = 0;
     GLint mRenderYUVUniformLocation = -1;
@@ -3828,6 +3873,43 @@ TEST_P(ImageTestES3, SourceYUVAHBTargetExternalYUVSample)
 
     GLubyte pixelColor[4] = {197, 128, 192, 255};
     verifyResultsExternalYUV(target, pixelColor);
+
+    // Clean up
+    eglDestroyImageKHR(window->getDisplay(), image);
+    destroyAndroidHardwareBuffer(source);
+}
+
+// Test sampling from a YUV AHB using EXT_yuv_target in the vertex shader
+TEST_P(ImageTestES3, SourceYUVAHBTargetExternalYUVSampleVS)
+{
+    EGLWindow *window = getEGLWindow();
+
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt() || !hasYUVTargetExt());
+    ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
+
+    // 3 planes of data
+    GLubyte dataY[4]  = {7, 51, 197, 231};
+    GLubyte dataCb[1] = {
+        128,
+    };
+    GLubyte dataCr[1] = {
+        192,
+    };
+
+    // Create the Image
+    AHardwareBuffer *source;
+    EGLImageKHR image;
+    createEGLImageAndroidHardwareBufferSource(
+        2, 2, 1, AHARDWAREBUFFER_FORMAT_Y8Cb8Cr8_420, kDefaultAHBUsage, kDefaultAttribs,
+        {{dataY, 1}, {dataCb, 1}, {dataCr, 1}}, &source, &image);
+
+    // Create a texture target to bind the egl image
+    GLTexture target;
+    createEGLImageTargetTextureExternal(image, target);
+
+    GLubyte pixelColor[4] = {197, 128, 192, 255};
+    verifyResultsExternalYUVVS(target, pixelColor);
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);
