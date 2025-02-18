@@ -1121,10 +1121,6 @@ egl::Error WindowSurfaceVk::unMakeCurrent(const gl::Context *context)
     ContextVk *contextVk = vk::GetImpl(context);
 
     angle::Result result = contextVk->onSurfaceUnMakeCurrent(this);
-    // Even though all swap chain images are tracked individually, the semaphores are not
-    // tracked by ResourceUse. This propagates context's queue serial to surface when it
-    // detaches from context so that surface will always wait until context is finished.
-    mUse.merge(contextVk->getSubmittedResourceUse());
 
     return angle::ToEGL(result, EGL_BAD_CURRENT_SURFACE);
 }
@@ -1507,7 +1503,6 @@ angle::Result WindowSurfaceVk::collectOldSwapchain(ContextVk *contextVk, VkSwapc
     static constexpr size_t kMaxOldSwapchains = 5;
     if (mOldSwapchains.size() > kMaxOldSwapchains)
     {
-        mUse.merge(contextVk->getSubmittedResourceUse());
         ANGLE_TRY(finish(contextVk));
         for (SwapchainCleanupData &oldSwapchain : mOldSwapchains)
         {
@@ -1547,7 +1542,6 @@ angle::Result WindowSurfaceVk::recreateSwapchain(ContextVk *contextVk, const gl:
     if (mLastSwapchain != VK_NULL_HANDLE &&
         contextVk->getFeatures().waitIdleBeforeSwapchainRecreation.enabled)
     {
-        mUse.merge(contextVk->getSubmittedResourceUse());
         ANGLE_TRY(finish(contextVk));
     }
 
@@ -2021,6 +2015,9 @@ void WindowSurfaceVk::releaseSwapchainImages(ContextVk *contextVk)
 {
     vk::Renderer *renderer = contextVk->getRenderer();
 
+    // This is the last chance when resource uses may be merged.
+    mergeImageResourceUses();
+
     mColorRenderTarget.releaseImageAndViews(contextVk);
     mDepthStencilRenderTarget.releaseImageAndViews(contextVk);
 
@@ -2060,16 +2057,24 @@ void WindowSurfaceVk::releaseSwapchainImages(ContextVk *contextVk)
     mSwapchainImages.clear();
 }
 
-angle::Result WindowSurfaceVk::finish(vk::ErrorContext *context)
+void WindowSurfaceVk::mergeImageResourceUses()
 {
-    vk::Renderer *renderer = context->getRenderer();
-
     mUse.merge(mDepthStencilImage.getResourceUse());
     mUse.merge(mColorImageMS.getResourceUse());
     for (SwapchainImage &swapchainImage : mSwapchainImages)
     {
         mUse.merge(swapchainImage.image->getResourceUse());
     }
+}
+
+angle::Result WindowSurfaceVk::finish(vk::ErrorContext *context)
+{
+    vk::Renderer *renderer = context->getRenderer();
+
+    // Image acquire semaphores are tracked by the ResourceUse of the corresponding swapchain images
+    // (waiting for image will also wait for the semaphore).  Present semaphores are tracked
+    // explicitly after pre-present submission.
+    mergeImageResourceUses();
 
     return renderer->finishResourceUse(context, mUse);
 }
@@ -2361,6 +2366,9 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
     ASSERT(image.image->getCurrentImageLayout() ==
            (isSharedPresentMode() ? vk::ImageLayout::SharedPresent : vk::ImageLayout::Present));
 
+    // This is to track |presentSemaphore| submission.
+    mUse.setQueueSerial(contextVk->getLastSubmittedQueueSerial());
+
     return angle::Result::Continue;
 }
 
@@ -2388,6 +2396,7 @@ angle::Result WindowSurfaceVk::recordPresentLayoutBarrierIfNecessary(ContextVk *
 
         image->recordReadBarrier(contextVk, VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::Present,
                                  commandBufferHelper);
+        commandBufferHelper->retainImage(image);
     }
 
     return angle::Result::Continue;
@@ -2944,7 +2953,7 @@ VkResult WindowSurfaceVk::postProcessUnlockedAcquire(vk::ErrorContext *context)
                 setDesiredSwapInterval(mState.swapInterval);
                 return VK_ERROR_OUT_OF_DATE_KHR;
             }
-            mUse.setQueueSerial(queueSerial);
+            image.image->setQueueSerial(queueSerial);
         }
     }
 

@@ -446,6 +446,7 @@ class WindowSurfaceVk : public SurfaceVk
     // not ahead of the frame being rendered by *one* frame.
     angle::Result throttleCPU(vk::ErrorContext *context, const QueueSerial &currentSubmitSerial);
 
+    void mergeImageResourceUses();
     // Finish all GPU operations on the surface
     angle::Result finish(vk::ErrorContext *context);
 
