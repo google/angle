@@ -430,6 +430,7 @@ class WindowSurfaceVk : public SurfaceVk
                                           VkResult result,
                                           bool *presentOutOfDate);
     angle::Result prePresentSubmit(ContextVk *contextVk, const vk::Semaphore &presentSemaphore);
+    angle::Result recordPresentLayoutBarrierIfNecessary(ContextVk *contextVk);
     angle::Result present(ContextVk *contextVk,
                           const EGLint *rects,
                           EGLint n_rects,

@@ -4658,7 +4658,7 @@ angle::Result ContextVk::multiDrawElementsInstancedBaseVertexBaseInstance(
 angle::Result ContextVk::optimizeRenderPassForPresent(vk::ImageViewHelper *colorImageView,
                                                       vk::ImageHelper *colorImage,
                                                       vk::ImageHelper *colorImageMS,
-                                                      vk::PresentMode presentMode,
+                                                      bool isSharedPresentMode,
                                                       bool *imageResolved)
 {
     // Note: mRenderPassCommandBuffer may be nullptr because the render pass is marked for closure.
@@ -4695,7 +4695,7 @@ angle::Result ContextVk::optimizeRenderPassForPresent(vk::ImageViewHelper *color
     // image is the target of resolve, but that resolve cannot happen with the render pass, do not
     // apply this optimization; the image has to be moved out of PRESENT_SRC to be resolved after
     // this call.
-    if (getFeatures().supportsPresentation.enabled &&
+    if (getFeatures().supportsPresentation.enabled && !isSharedPresentMode &&
         (!colorImageMS->valid() || resolveWithRenderPass))
     {
         ASSERT(colorImage != nullptr);
@@ -4721,16 +4721,14 @@ angle::Result ContextVk::optimizeRenderPassForPresent(vk::ImageViewHelper *color
         onImageRenderPassWrite(gl::LevelIndex(0), 0, 1, VK_IMAGE_ASPECT_COLOR_BIT,
                                vk::ImageLayout::ColorWrite, colorImage);
 
-        // Invalidate the surface.  See comment in WindowSurfaceVk::doDeferredAcquireNextImage on
-        // why this is not done when in DEMAND_REFRESH mode.
-        if (presentMode != vk::PresentMode::SharedDemandRefreshKHR)
+        // Invalidate the surface.
+        // See comment in WindowSurfaceVk::doDeferredAcquireNextImageWithUsableSwapchain on why this
+        // is not done when in shared present mode.
+        if (!isSharedPresentMode)
         {
             commandBufferHelper.invalidateRenderPassColorAttachment(
                 mState, 0, vk::PackedAttachmentIndex(0), fullExtent);
         }
-
-        ANGLE_TRY(
-            flushCommandsAndEndRenderPass(RenderPassClosureReason::AlreadySpecifiedElsewhere));
 
         *imageResolved = true;
 

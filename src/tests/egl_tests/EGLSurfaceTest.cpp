@@ -3438,6 +3438,68 @@ TEST_P(EGLSurfaceTest, SetDamageRegionNegativeValidation)
     EXPECT_EGL_ERROR(EGL_BAD_ACCESS);
 }
 
+// Verifies that swapchain image is transitioned into the Present layout after MSAA resolve,
+// regardless if it was performed as part of the renderpass or by using an outside renderpass
+// command.
+TEST_P(EGLSurfaceTest, PresentLayoutTransitionWithMSAA)
+{
+    initializeDisplay();
+
+    constexpr EGLint kInitialSize = 64;
+
+    // Initialize an RGBA8 window surface with 4x MSAA
+    constexpr EGLint kSurfaceAttributes[] = {EGL_RED_SIZE,
+                                             8,
+                                             EGL_GREEN_SIZE,
+                                             8,
+                                             EGL_BLUE_SIZE,
+                                             8,
+                                             EGL_ALPHA_SIZE,
+                                             8,
+                                             EGL_SAMPLE_BUFFERS,
+                                             1,
+                                             EGL_SAMPLES,
+                                             4,
+                                             EGL_SURFACE_TYPE,
+                                             EGL_WINDOW_BIT,
+                                             EGL_NONE};
+
+    EGLint configCount      = 0;
+    EGLConfig surfaceConfig = nullptr;
+    ANGLE_SKIP_TEST_IF(
+        !eglChooseConfig(mDisplay, kSurfaceAttributes, &surfaceConfig, 1, &configCount));
+    ANGLE_SKIP_TEST_IF(configCount == 0);
+    ASSERT_NE(surfaceConfig, nullptr);
+
+    initializeSurface(surfaceConfig);
+    initializeMainContext();
+    ASSERT_EGL_SUCCESS();
+    ASSERT_NE(mWindowSurface, EGL_NO_SURFACE);
+
+    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
+    ASSERT_EGL_SUCCESS();
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    glUseProgram(program);
+
+    glViewport(0, 0, kInitialSize, kInitialSize);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    // Tests that swapchain image layout is in Present layout after resolve with renderpass.
+    eglSwapBuffers(mDisplay, mWindowSurface);
+    ASSERT_EGL_SUCCESS();
+
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(0, 0, kInitialSize / 2, kInitialSize / 2);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    // Tests that swapchain image layout is in Present layout after outside renderpass resolve.
+    eglSwapBuffers(mDisplay, mWindowSurface);
+    ASSERT_EGL_SUCCESS();
+}
+
 }  // anonymous namespace
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLSingleBufferTest);

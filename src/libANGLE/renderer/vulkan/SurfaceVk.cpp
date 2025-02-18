@@ -2304,18 +2304,9 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
         ASSERT(!imageResolved);
 
         ANGLE_TRY(contextVk->optimizeRenderPassForPresent(&image.imageViews, image.image.get(),
-                                                          &mColorImageMS, mSwapchainPresentMode,
+                                                          &mColorImageMS, isSharedPresentMode(),
                                                           &imageResolved));
     }
-
-    // Because the color attachment defers layout changes until endRenderPass time, we must call
-    // finalize the layout transition in the renderpass before we insert layout change to
-    // ImageLayout::Present bellow.
-    contextVk->finalizeImageLayout(image.image.get(), {});
-    contextVk->finalizeImageLayout(&mColorImageMS, {});
-
-    vk::OutsideRenderPassCommandBufferHelper *commandBufferHelper;
-    ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper({}, &commandBufferHelper));
 
     if (mColorImageMS.valid() && !imageResolved)
     {
@@ -2325,6 +2316,7 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
         access.onImageTransferWrite(gl::LevelIndex(0), 1, 0, 1, VK_IMAGE_ASPECT_COLOR_BIT,
                                     image.image.get());
 
+        vk::OutsideRenderPassCommandBufferHelper *commandBufferHelper;
         ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper(access, &commandBufferHelper));
 
         VkImageResolve resolveRegion                = {};
@@ -2347,11 +2339,9 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
     // with other functionality, especially counters used to validate said functionality.
     const bool shouldDrawOverlay = overlayHasEnabledWidget(contextVk);
 
-    if (renderer->getFeatures().supportsPresentation.enabled && !shouldDrawOverlay)
+    if (!shouldDrawOverlay)
     {
-        // This does nothing if it's already in the requested layout
-        image.image->recordReadBarrier(contextVk, VK_IMAGE_ASPECT_COLOR_BIT,
-                                       vk::ImageLayout::Present, commandBufferHelper);
+        ANGLE_TRY(recordPresentLayoutBarrierIfNecessary(contextVk));
     }
 
     ANGLE_TRY(contextVk->flushAndSubmitCommands(shouldDrawOverlay ? nullptr : &presentSemaphore,
@@ -2362,15 +2352,42 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
         updateOverlay(contextVk);
         ANGLE_TRY(drawOverlay(contextVk, &image));
 
-        if (renderer->getFeatures().supportsPresentation.enabled)
-        {
-            ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper({}, &commandBufferHelper));
-            image.image->recordReadBarrier(contextVk, VK_IMAGE_ASPECT_COLOR_BIT,
-                                           vk::ImageLayout::Present, commandBufferHelper);
-        }
+        ANGLE_TRY(recordPresentLayoutBarrierIfNecessary(contextVk));
 
         ANGLE_TRY(contextVk->flushAndSubmitCommands(
             &presentSemaphore, nullptr, RenderPassClosureReason::AlreadySpecifiedElsewhere));
+    }
+
+    ASSERT(image.image->getCurrentImageLayout() ==
+           (isSharedPresentMode() ? vk::ImageLayout::SharedPresent : vk::ImageLayout::Present));
+
+    return angle::Result::Continue;
+}
+
+angle::Result WindowSurfaceVk::recordPresentLayoutBarrierIfNecessary(ContextVk *contextVk)
+{
+    if (!contextVk->getFeatures().supportsPresentation.enabled || isSharedPresentMode())
+    {
+        return angle::Result::Continue;
+    }
+    vk::ImageHelper *image = mSwapchainImages[mCurrentSwapchainImageIndex].image.get();
+
+    // Note that renderpass will be automatically closed in case of outside renderpass resolve.
+    if (contextVk->hasStartedRenderPassWithDefaultFramebuffer())
+    {
+        // When we have a renderpass with default framebuffer it must be optimized for present.
+        ASSERT(contextVk->getStartedRenderPassCommands().isImageOptimizedForPresent(image));
+        return angle::Result::Continue;
+    }
+
+    // Image may be already in Present layout if swap without any draw.
+    if (image->getCurrentImageLayout() != vk::ImageLayout::Present)
+    {
+        vk::OutsideRenderPassCommandBufferHelper *commandBufferHelper;
+        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper({}, &commandBufferHelper));
+
+        image->recordReadBarrier(contextVk, VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::Present,
+                                 commandBufferHelper);
     }
 
     return angle::Result::Continue;
