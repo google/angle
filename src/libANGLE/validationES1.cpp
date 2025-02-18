@@ -1883,7 +1883,7 @@ bool ValidateGenFramebuffersOES(const Context *context,
         return false;
     }
 
-    return ValidateGenOrDelete(context, entryPoint, n);
+    return ValidateGenOrDelete(context, entryPoint, n, framebuffers);
 }
 
 bool ValidateDeleteFramebuffersOES(const Context *context,
@@ -1897,7 +1897,7 @@ bool ValidateDeleteFramebuffersOES(const Context *context,
         return false;
     }
 
-    return ValidateGenOrDelete(context, entryPoint, n);
+    return ValidateGenOrDelete(context, entryPoint, n, framebuffers);
 }
 
 bool ValidateGenRenderbuffersOES(const Context *context,
@@ -1911,7 +1911,7 @@ bool ValidateGenRenderbuffersOES(const Context *context,
         return false;
     }
 
-    return ValidateGenOrDelete(context, entryPoint, n);
+    return ValidateGenOrDelete(context, entryPoint, n, renderbuffers);
 }
 
 bool ValidateDeleteRenderbuffersOES(const Context *context,
@@ -1925,7 +1925,7 @@ bool ValidateDeleteRenderbuffersOES(const Context *context,
         return false;
     }
 
-    return ValidateGenOrDelete(context, entryPoint, n);
+    return ValidateGenOrDelete(context, entryPoint, n, renderbuffers);
 }
 
 bool ValidateBindFramebufferOES(const Context *context,

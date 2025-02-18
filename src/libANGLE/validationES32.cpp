@@ -484,7 +484,7 @@ bool ValidateGetSamplerParameterIiv(const Context *context,
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES32Required);
         return false;
     }
-    return ValidateGetSamplerParameterBase(context, entryPoint, sampler, pname, nullptr);
+    return ValidateGetSamplerParameterBase(context, entryPoint, sampler, pname, nullptr, params);
 }
 
 bool ValidateGetSamplerParameterIuiv(const Context *context,
@@ -498,7 +498,7 @@ bool ValidateGetSamplerParameterIuiv(const Context *context,
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES32Required);
         return false;
     }
-    return ValidateGetSamplerParameterBase(context, entryPoint, sampler, pname, nullptr);
+    return ValidateGetSamplerParameterBase(context, entryPoint, sampler, pname, nullptr, params);
 }
 
 bool ValidateGetTexParameterIiv(const Context *context,

@@ -695,7 +695,10 @@ bool ValidateFlushMappedBufferRangeBase(const Context *context,
                                         GLintptr offset,
                                         GLsizeiptr length);
 
-bool ValidateGenOrDelete(const Context *context, angle::EntryPoint entryPoint, GLint n);
+bool ValidateGenOrDelete(const Context *context,
+                         angle::EntryPoint entryPoint,
+                         GLint n,
+                         const void *ids);
 
 bool ValidateRobustEntryPoint(const Context *context,
                               angle::EntryPoint entryPoint,
@@ -868,11 +871,13 @@ bool ValidateGetActiveUniformBlockivBase(const Context *context,
                                          GLenum pname,
                                          GLsizei *length);
 
+template <typename ParamType>
 bool ValidateGetSamplerParameterBase(const Context *context,
                                      angle::EntryPoint entryPoint,
                                      SamplerID sampler,
                                      GLenum pname,
-                                     GLsizei *length);
+                                     GLsizei *length,
+                                     const ParamType *params);
 
 template <typename ParamType>
 bool ValidateSamplerParameterBase(const Context *context,

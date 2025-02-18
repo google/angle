@@ -1962,7 +1962,7 @@ bool ValidateDeleteVertexArraysOES(const Context *context,
         return false;
     }
 
-    return ValidateGenOrDelete(context, entryPoint, n);
+    return ValidateGenOrDelete(context, entryPoint, n, arrays);
 }
 
 bool ValidateGenVertexArraysOES(const Context *context,
@@ -1976,7 +1976,7 @@ bool ValidateGenVertexArraysOES(const Context *context,
         return false;
     }
 
-    return ValidateGenOrDelete(context, entryPoint, n);
+    return ValidateGenOrDelete(context, entryPoint, n, arrays);
 }
 
 bool ValidateIsVertexArrayOES(const Context *context,
@@ -4606,12 +4606,19 @@ bool ValidateGetActiveUniform(const Context *context,
 
     if (!programObject)
     {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kProgramNotValid);
         return false;
     }
 
     if (index >= programObject->getExecutable().getUniforms().size())
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kIndexExceedsMaxActiveUniform);
+        return false;
+    }
+
+    if (bufsize > 0 && name == nullptr)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidName);
         return false;
     }
 
@@ -4625,6 +4632,12 @@ bool ValidateGetAttachedShaders(const Context *context,
                                 const GLsizei *count,
                                 const ShaderProgramID *shaders)
 {
+    if (shaders == nullptr)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kPLSParamsNULL);
+        return false;
+    }
+
     if (maxcount < 0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeMaxCount);
@@ -4694,6 +4707,13 @@ bool ValidateGetBooleanv(const Context *context,
 {
     GLenum nativeType;
     unsigned int numParams = 0;
+
+    if (params == nullptr)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, err::kPLSParamsNULL);
+        return false;
+    }
+
     return ValidateStateQuery(context, entryPoint, pname, &nativeType, &numParams);
 }
 
@@ -4709,6 +4729,13 @@ bool ValidateGetFloatv(const Context *context,
 {
     GLenum nativeType;
     unsigned int numParams = 0;
+
+    if (params == nullptr)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, err::kPLSParamsNULL);
+        return false;
+    }
+
     return ValidateStateQuery(context, entryPoint, pname, &nativeType, &numParams);
 }
 
@@ -4719,6 +4746,13 @@ bool ValidateGetIntegerv(const Context *context,
 {
     GLenum nativeType;
     unsigned int numParams = 0;
+
+    if (params == nullptr)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, err::kPLSParamsNULL);
+        return false;
+    }
+
     return ValidateStateQuery(context, entryPoint, pname, &nativeType, &numParams);
 }
 
@@ -4773,6 +4807,12 @@ bool ValidateGetShaderPrecisionFormat(const Context *context,
                                       const GLint *range,
                                       const GLint *precision)
 {
+    if (range == nullptr || precision == nullptr)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kPLSParamsNULL);
+        return false;
+    }
+
     switch (shadertype)
     {
         case GL_VERTEX_SHADER:
@@ -5382,7 +5422,7 @@ bool ValidateDeleteBuffers(const Context *context,
                            GLint n,
                            const BufferID *buffers)
 {
-    return ValidateGenOrDelete(context, entryPoint, n);
+    return ValidateGenOrDelete(context, entryPoint, n, buffers);
 }
 
 bool ValidateDeleteFramebuffers(const Context *context,
@@ -5390,7 +5430,7 @@ bool ValidateDeleteFramebuffers(const Context *context,
                                 GLint n,
                                 const FramebufferID *framebuffers)
 {
-    return ValidateGenOrDelete(context, entryPoint, n);
+    return ValidateGenOrDelete(context, entryPoint, n, framebuffers);
 }
 
 bool ValidateDeleteRenderbuffers(const Context *context,
@@ -5398,7 +5438,7 @@ bool ValidateDeleteRenderbuffers(const Context *context,
                                  GLint n,
                                  const RenderbufferID *renderbuffers)
 {
-    return ValidateGenOrDelete(context, entryPoint, n);
+    return ValidateGenOrDelete(context, entryPoint, n, renderbuffers);
 }
 
 bool ValidateDeleteTextures(const Context *context,
@@ -5406,7 +5446,7 @@ bool ValidateDeleteTextures(const Context *context,
                             GLint n,
                             const TextureID *textures)
 {
-    return ValidateGenOrDelete(context, entryPoint, n);
+    return ValidateGenOrDelete(context, entryPoint, n, textures);
 }
 
 bool ValidateDisable(const PrivateState &state,

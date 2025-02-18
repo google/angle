@@ -2378,7 +2378,7 @@ bool ValidateGenQueriesEXT(const Context *context,
         return false;
     }
 
-    return ValidateGenOrDelete(context, entryPoint, n);
+    return ValidateGenOrDelete(context, entryPoint, n, ids);
 }
 
 bool ValidateDeleteQueriesEXT(const Context *context,
@@ -2393,7 +2393,7 @@ bool ValidateDeleteQueriesEXT(const Context *context,
         return false;
     }
 
-    return ValidateGenOrDelete(context, entryPoint, n);
+    return ValidateGenOrDelete(context, entryPoint, n, ids);
 }
 
 bool ValidateIsQueryEXT(const Context *context, angle::EntryPoint entryPoint, QueryID id)
@@ -5313,6 +5313,12 @@ bool ValidateDrawBuffersBase(const Context *context,
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kIndexExceedsMaxDrawBuffer);
         return false;
     }
+    // INVALID_VALUE is generated if n != 0 and bufs is NULL
+    if (n != 0 && bufs == nullptr)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kPLSParamsNULL);
+        return false;
+    }
 
     ASSERT(context->getState().getDrawFramebuffer());
     FramebufferID frameBufferId = context->getState().getDrawFramebuffer()->id();
@@ -5605,13 +5611,23 @@ bool ValidateFlushMappedBufferRangeBase(const Context *context,
     return true;
 }
 
-bool ValidateGenOrDelete(const Context *context, angle::EntryPoint entryPoint, GLint n)
+bool ValidateGenOrDelete(const Context *context,
+                         angle::EntryPoint entryPoint,
+                         GLint n,
+                         const void *ids)
 {
     if (n < 0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeCount);
         return false;
     }
+
+    if (n > 0 && ids == nullptr)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kPLSParamsNULL);
+        return false;
+    }
+
     return true;
 }
 
@@ -6473,7 +6489,7 @@ bool ValidateGetSamplerParameterfvRobustANGLE(const Context *context,
 
     GLsizei numParams = 0;
 
-    if (!ValidateGetSamplerParameterBase(context, entryPoint, sampler, pname, &numParams))
+    if (!ValidateGetSamplerParameterBase(context, entryPoint, sampler, pname, &numParams, params))
     {
         return false;
     }
@@ -6502,7 +6518,7 @@ bool ValidateGetSamplerParameterivRobustANGLE(const Context *context,
 
     GLsizei numParams = 0;
 
-    if (!ValidateGetSamplerParameterBase(context, entryPoint, sampler, pname, &numParams))
+    if (!ValidateGetSamplerParameterBase(context, entryPoint, sampler, pname, &numParams, params))
     {
         return false;
     }
@@ -8193,6 +8209,12 @@ bool ValidateSamplerParameterBase(const Context *context,
         return false;
     }
 
+    if (params == nullptr)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kPLSParamsNULL);
+        return false;
+    }
+
     const GLsizei minBufSize = GetSamplerParameterCount(pname);
     if (bufSize >= 0 && bufSize < minBufSize)
     {
@@ -8305,11 +8327,13 @@ template bool ValidateSamplerParameterBase(const Context *,
                                            bool,
                                            const GLuint *);
 
+template <typename ParamType>
 bool ValidateGetSamplerParameterBase(const Context *context,
                                      angle::EntryPoint entryPoint,
                                      SamplerID sampler,
                                      GLenum pname,
-                                     GLsizei *length)
+                                     GLsizei *length,
+                                     const ParamType *params)
 {
     if (length)
     {
@@ -8374,8 +8398,34 @@ bool ValidateGetSamplerParameterBase(const Context *context,
     {
         *length = GetSamplerParameterCount(pname);
     }
+
+    if (params == nullptr)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kPLSParamsNULL);
+        return false;
+    }
+
     return true;
 }
+
+template bool ValidateGetSamplerParameterBase(const Context *,
+                                              angle::EntryPoint,
+                                              SamplerID,
+                                              GLenum,
+                                              GLsizei *,
+                                              const GLfloat *);
+template bool ValidateGetSamplerParameterBase(const Context *,
+                                              angle::EntryPoint,
+                                              SamplerID,
+                                              GLenum,
+                                              GLsizei *,
+                                              const GLint *);
+template bool ValidateGetSamplerParameterBase(const Context *,
+                                              angle::EntryPoint,
+                                              SamplerID,
+                                              GLenum,
+                                              GLsizei *,
+                                              const GLuint *);
 
 bool ValidateGetInternalFormativBase(const Context *context,
                                      angle::EntryPoint entryPoint,

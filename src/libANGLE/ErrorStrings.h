@@ -662,6 +662,7 @@ inline constexpr const char *kNotAllStagesOfSeparableProgramUsed = "A program ob
 inline constexpr const char *kNoExecutableCodeInstalled = "There is no current program object specified by UseProgram, there is a current program pipeline object, and that object is empty (no executable code is installed for any stage).";
 inline constexpr const char *kProgramPipelineLinkFailed = "Program pipeline link failed.";
 inline constexpr const char *kProtectedTexturesExtensionRequired = "GL_EXT_protected_textures not enabled.";
+inline constexpr const char *kProgramNotValid = "Program is not a program object.";
 // clang-format on
 
 }  // namespace err
