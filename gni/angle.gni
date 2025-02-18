@@ -614,8 +614,7 @@ if (angle_standalone || build_with_chromium || build_angle_end2end_tests_aosp) {
         }
       }
 
-      if ((is_linux && !is_chromeos) ||
-          (build_with_chromium && is_chromeos_lacros && !is_chromeos_device)) {
+      if (is_linux && !is_chromeos) {
         use_xvfb = true
       }
 
