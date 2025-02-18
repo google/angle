@@ -1242,15 +1242,12 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk, bool *anyMat
                        kSurfaceVkColorImageUsageFlags,
                    VK_ERROR_INITIALIZATION_FAILED);
 
-    EGLAttrib attribWidth  = mState.attributes.get(EGL_WIDTH, 0);
-    EGLAttrib attribHeight = mState.attributes.get(EGL_HEIGHT, 0);
-
     if (mSurfaceCaps.currentExtent.width == kSurfaceSizedBySwapchain)
     {
         ASSERT(mSurfaceCaps.currentExtent.height == kSurfaceSizedBySwapchain);
 
-        width  = (attribWidth != 0) ? static_cast<uint32_t>(attribWidth) : windowSize.width;
-        height = (attribHeight != 0) ? static_cast<uint32_t>(attribHeight) : windowSize.height;
+        width  = windowSize.width;
+        height = windowSize.height;
     }
 
     gl::Extents extents(static_cast<int>(width), static_cast<int>(height), 1);
