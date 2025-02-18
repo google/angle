@@ -1591,7 +1591,8 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::ErrorContext *context,
     vk::Renderer *renderer = context->getRenderer();
     VkDevice device        = renderer->getDevice();
 
-    const vk::Format &format = renderer->getFormat(mState.config->renderTargetFormat);
+    const angle::FormatID actualFormatID   = getActualFormatID(renderer);
+    const angle::FormatID intendedFormatID = getIntendedFormatID(renderer);
 
     gl::Extents rotatedExtents = extents;
     if (Is90DegreeRotation(getPreTransform()))
@@ -1623,7 +1624,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::ErrorContext *context,
     swapchainInfo.sType                    = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
     swapchainInfo.flags = mState.hasProtectedContent() ? VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR : 0;
     swapchainInfo.surface     = mSurface;
-    swapchainInfo.imageFormat = vk::GetVkFormatFromFormatID(renderer, getActualFormatID(renderer));
+    swapchainInfo.imageFormat = vk::GetVkFormatFromFormatID(renderer, actualFormatID);
     swapchainInfo.imageColorSpace = mSurfaceColorSpace;
     // Note: Vulkan doesn't allow 0-width/height swapchains.
     swapchainInfo.imageExtent.width     = std::max(rotatedExtents.width, 1);
@@ -1817,8 +1818,9 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::ErrorContext *context,
         // with the rest of ANGLE, (e.g. which calculates the Vulkan scissor with non-rotated
         // values and then rotates the final rectangle).
         ANGLE_TRY(mColorImageMS.initMSAASwapchain(
-            context, gl::TextureType::_2D, vkExtents, Is90DegreeRotation(getPreTransform()), format,
-            samples, usage, gl::LevelIndex(0), 1, 1, robustInit, mState.hasProtectedContent()));
+            context, gl::TextureType::_2D, vkExtents, Is90DegreeRotation(getPreTransform()),
+            intendedFormatID, actualFormatID, samples, usage, gl::LevelIndex(0), 1, 1, robustInit,
+            mState.hasProtectedContent()));
         ANGLE_TRY(mColorImageMS.initMemoryAndNonZeroFillIfNeeded(
             context, mState.hasProtectedContent(), renderer->getMemoryProperties(),
             VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, vk::MemoryAllocationType::SwapchainMSAAImage));
@@ -1844,8 +1846,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::ErrorContext *context,
         ASSERT(member.image);
         member.image->init2DWeakReference(
             context, swapchainImages[imageIndex], extents, Is90DegreeRotation(getPreTransform()),
-            getIntendedFormatID(renderer), getActualFormatID(renderer), createFlags,
-            imageUsageFlags, 1, robustInit);
+            intendedFormatID, actualFormatID, createFlags, imageUsageFlags, 1, robustInit);
         member.imageViews.init(renderer);
         member.frameNumber = 0;
     }
