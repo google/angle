@@ -175,7 +175,7 @@ angle::Result CLSamplerVk::create()
 
 angle::Result CLSamplerVk::createNormalized()
 {
-    if (mSamplerHelperNormalized.valid())
+    if (!mSamplerHelperNormalized.valid())
     {
         mDefaultSamplerCreateInfo.unnormalizedCoordinates = false;
         ANGLE_TRY(mSamplerHelperNormalized.init(mContext, mDefaultSamplerCreateInfo));
