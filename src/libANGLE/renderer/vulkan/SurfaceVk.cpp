@@ -2514,9 +2514,6 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     VkResult presentResult =
         renderer->queuePresent(contextVk, contextVk->getPriority(), presentInfo);
 
-    // Update cached surface capabilities.
-    ANGLE_VK_TRY(contextVk, vkGetPhysicalDeviceSurfaceCapabilitiesKHR(renderer->getPhysicalDevice(),
-                                                                      mSurface, &mSurfaceCaps));
     // EGL_EXT_buffer_age
     // 4) What is the buffer age of a single buffered surface?
     //     RESOLVED: 0.  This falls out implicitly from the buffer age
@@ -3104,7 +3101,10 @@ egl::Error WindowSurfaceVk::getUserHeight(const egl::Display *display, EGLint *v
 angle::Result WindowSurfaceVk::getUserExtentsImpl(DisplayVk *displayVk,
                                                   VkSurfaceCapabilitiesKHR *surfaceCaps) const
 {
-    *surfaceCaps = mSurfaceCaps;
+    const VkPhysicalDevice &physicalDevice = displayVk->getRenderer()->getPhysicalDevice();
+
+    ANGLE_VK_TRY(displayVk,
+                 vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, mSurface, surfaceCaps));
 
     // With real prerotation, the surface reports the rotated sizes.  With emulated prerotation,
     // adjust the window extents to match what real pre-rotation would have reported.
