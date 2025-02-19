@@ -5882,8 +5882,20 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
 #if defined(ANGLE_PLATFORM_ANDROID)
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsExternalFormatResolve,
                             mExternalFormatResolveFeatures.externalFormatResolve == VK_TRUE);
+
+    // We can fully support GL_EXT_YUV_target iff we have support for
+    // VK_ANDROID_external_format_resolve and Vulkan ICD supports
+    // nullColorAttachmentWithExternalFormatResolve. ANGLE cannot yet support vendors that lack
+    // support for nullColorAttachmentWithExternalFormatResolve.
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsYuvTarget,
+        mFeatures.supportsExternalFormatResolve.enabled &&
+            mExternalFormatResolveProperties.nullColorAttachmentWithExternalFormatResolve ==
+                VK_TRUE);
+
 #else
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsExternalFormatResolve, false);
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsYuvTarget, false);
 #endif
 
     // VkEvent has much bigger overhead. Until we know that it helps desktop GPUs, we restrict it to

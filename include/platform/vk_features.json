@@ -1106,7 +1106,7 @@
             "name": "supports_yuv_target",
             "category": "Features",
             "description": [
-                "VkDevice supports VK_ANDROID_render_to_external_format and VK_EXT_ycbcr_attachment"
+                "VkDevice supports VK_ANDROID_external_format_resolve with nullColorAttachmentWithExternalFormatResolve"
             ]
         },
         {

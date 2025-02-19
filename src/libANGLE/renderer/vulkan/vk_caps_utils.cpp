@@ -1412,7 +1412,7 @@ void Renderer::ensureCapsInitialized() const
 
     mNativeExtensions.logicOpANGLE = mPhysicalDeviceFeatures.logicOp == VK_TRUE;
 
-    mNativeExtensions.YUVTargetEXT = mFeatures.supportsExternalFormatResolve.enabled;
+    mNativeExtensions.YUVTargetEXT = mFeatures.supportsYuvTarget.enabled;
 
     mNativeExtensions.textureStorageCompressionEXT =
         mFeatures.supportsImageCompressionControl.enabled;
