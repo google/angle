@@ -2648,6 +2648,10 @@ void RenderPassCommandBufferHelper::finalizeColorImageLayout(
     {
         mAttachmentOps.setLayouts(packedAttachmentIndex, imageLayout, imageLayout);
     }
+    else
+    {
+        SetBitField(mAttachmentOps[packedAttachmentIndex].finalResolveLayout, imageLayout);
+    }
 
     // Dynamic rendering does not have implicit layout transitions at render pass boundaries.  This
     // optimization is instead done by recording the necessary transition after the render pass
@@ -2657,6 +2661,8 @@ void RenderPassCommandBufferHelper::finalizeColorImageLayout(
         ASSERT(isDefault());
         ASSERT(context->getFeatures().supportsPresentation.enabled);
         ASSERT(packedAttachmentIndex == kAttachmentIndexZero);
+        // Shared present mode must not change layout
+        ASSERT(imageLayout != ImageLayout::SharedPresent);
 
         // Use finalLayout instead of extra barrier for layout change to present.  For dynamic
         // rendering, this is not possible and is done when the render pass is flushed.  However,

@@ -2252,6 +2252,7 @@ TEST_P(EGLSingleBufferTest, MutableRenderBuffer)
                               EGL_NONE};
     EGLint count           = 0;
     ANGLE_SKIP_TEST_IF(!eglChooseConfig(mDisplay, attribs, &config, 1, &count));
+    ANGLE_SKIP_TEST_IF(count == 0);
 
     EGLContext context = EGL_NO_CONTEXT;
     EXPECT_EGL_TRUE(createContext(config, &context));
@@ -2697,6 +2698,73 @@ TEST_P(EGLSingleBufferTest, StagedClearResolveOnSwap)
 
         // Confirm that staged clear was not dropped in the above resolve on swap optimization.
         EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    }
+    else
+    {
+        std::cout << "EGL_SINGLE_BUFFER mode is not supported." << std::endl;
+    }
+
+    EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, context));
+    ASSERT_EGL_SUCCESS() << "eglMakeCurrent - uncurrent failed.";
+
+    eglDestroySurface(mDisplay, surface);
+    surface = EGL_NO_SURFACE;
+    osWindow->destroy();
+    OSWindow::Delete(&osWindow);
+
+    eglDestroyContext(mDisplay, context);
+    context = EGL_NO_CONTEXT;
+}
+
+// Tests that SharedPresent image layout is not changed by the renderpass resolve operation.
+TEST_P(EGLSingleBufferTest, SharedPresentLayoutWithMSAA)
+{
+    ANGLE_SKIP_TEST_IF(!IsEGLDisplayExtensionEnabled(mDisplay, "EGL_KHR_mutable_render_buffer"));
+
+    EGLConfig config       = EGL_NO_CONFIG_KHR;
+    const EGLint attribs[] = {EGL_RED_SIZE,
+                              8,
+                              EGL_GREEN_SIZE,
+                              8,
+                              EGL_BLUE_SIZE,
+                              8,
+                              EGL_ALPHA_SIZE,
+                              8,
+                              EGL_SAMPLE_BUFFERS,
+                              1,
+                              EGL_SAMPLES,
+                              4,
+                              EGL_SURFACE_TYPE,
+                              EGL_WINDOW_BIT | EGL_MUTABLE_RENDER_BUFFER_BIT_KHR,
+                              EGL_RENDERABLE_TYPE,
+                              EGL_OPENGL_ES2_BIT,
+                              EGL_NONE};
+    EGLint count           = 0;
+    ANGLE_SKIP_TEST_IF(!eglChooseConfig(mDisplay, attribs, &config, 1, &count));
+    ANGLE_SKIP_TEST_IF(count == 0);
+
+    EGLContext context = EGL_NO_CONTEXT;
+    EXPECT_EGL_TRUE(createContext(config, &context));
+    ASSERT_EGL_SUCCESS() << "eglCreateContext failed.";
+
+    EGLSurface surface = EGL_NO_SURFACE;
+    OSWindow *osWindow = OSWindow::New();
+    osWindow->initialize("EGLSingleBufferTest", kWidth, kHeight);
+    EXPECT_EGL_TRUE(
+        createWindowSurface(config, osWindow->getNativeWindow(), &surface, EGL_BACK_BUFFER));
+    ASSERT_EGL_SUCCESS() << "eglCreateWindowSurface failed.";
+
+    EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, surface, surface, context));
+    ASSERT_EGL_SUCCESS() << "eglMakeCurrent failed.";
+
+    EXPECT_EGL_TRUE(eglSurfaceAttrib(mDisplay, surface, EGL_RENDER_BUFFER, EGL_SINGLE_BUFFER));
+    if (eglSwapBuffers(mDisplay, surface))
+    {
+        // Draw using renderpass.
+        ANGLE_GL_PROGRAM(greenProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+        drawQuad(greenProgram, essl1_shaders::PositionAttrib(), 0.5f);
+        // This should perform resolve with renderpass but must keep the SharedPresent layout.
+        glFlush();
     }
     else
     {
