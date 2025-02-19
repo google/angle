@@ -540,6 +540,13 @@ GLint LimitToInt(const LargerInt physicalDeviceValue)
         std::min(physicalDeviceValue, static_cast<LargerInt>(std::numeric_limits<int32_t>::max())));
 }
 
+template <typename LargerInt>
+GLint LimitToIntAnd(const LargerInt physicalDeviceValue, const LargerInt cap)
+{
+    LargerInt result = LimitToInt(physicalDeviceValue);
+    return static_cast<GLint>(std::min(result, cap));
+}
+
 bool TextureHasAnyRedefinedLevels(const gl::CubeFaceArray<gl::TexLevelMask> &redefinedLevels);
 bool IsTextureLevelRedefined(const gl::CubeFaceArray<gl::TexLevelMask> &redefinedLevels,
                              gl::TextureType textureType,
