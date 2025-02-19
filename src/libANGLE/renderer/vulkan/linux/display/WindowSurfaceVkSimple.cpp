@@ -20,8 +20,7 @@ WindowSurfaceVkSimple::WindowSurfaceVkSimple(const egl::SurfaceState &surfaceSta
 
 WindowSurfaceVkSimple::~WindowSurfaceVkSimple() {}
 
-angle::Result WindowSurfaceVkSimple::createSurfaceVk(vk::ErrorContext *context,
-                                                     gl::Extents *extentsOut)
+angle::Result WindowSurfaceVkSimple::createSurfaceVk(vk::ErrorContext *context)
 {
     vk::Renderer *renderer = context->getRenderer();
     ASSERT(renderer != nullptr);
@@ -63,20 +62,20 @@ angle::Result WindowSurfaceVkSimple::createSurfaceVk(vk::ErrorContext *context,
 
     ANGLE_VK_TRY(context, vkCreateDisplayPlaneSurfaceKHR(instance, &info, nullptr, &mSurface));
 
-    return getCurrentWindowSize(context, extentsOut);
+    return angle::Result::Continue;
 }
 
 angle::Result WindowSurfaceVkSimple::getCurrentWindowSize(vk::ErrorContext *context,
-                                                          gl::Extents *extentsOut)
+                                                          gl::Extents *extentsOut) const
 {
     vk::Renderer *renderer                 = context->getRenderer();
     const VkPhysicalDevice &physicalDevice = renderer->getPhysicalDevice();
 
-    ANGLE_VK_TRY(context, vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, mSurface,
-                                                                    &mSurfaceCaps));
+    VkSurfaceCapabilitiesKHR surfaceCaps;
+    ANGLE_VK_TRY(context,
+                 vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, mSurface, &surfaceCaps));
 
-    *extentsOut =
-        gl::Extents(mSurfaceCaps.currentExtent.width, mSurfaceCaps.currentExtent.height, 1);
+    *extentsOut = gl::Extents(surfaceCaps.currentExtent.width, surfaceCaps.currentExtent.height, 1);
     return angle::Result::Continue;
 }
 

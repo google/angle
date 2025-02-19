@@ -29,8 +29,7 @@ WindowSurfaceVkMac::~WindowSurfaceVkMac()
     [mMetalLayer release];
 }
 
-angle::Result WindowSurfaceVkMac::createSurfaceVk(vk::ErrorContext *context,
-                                                  gl::Extents *extentsOut)
+angle::Result WindowSurfaceVkMac::createSurfaceVk(vk::ErrorContext *context)
     API_AVAILABLE(macosx(10.11))
 {
     mMetalDevice = MTLCreateSystemDefaultDevice();
@@ -57,11 +56,11 @@ angle::Result WindowSurfaceVkMac::createSurfaceVk(vk::ErrorContext *context,
     ANGLE_VK_TRY(context, vkCreateMetalSurfaceEXT(context->getRenderer()->getInstance(),
                                                   &createInfo, nullptr, &mSurface));
 
-    return getCurrentWindowSize(context, extentsOut);
+    return angle::Result::Continue;
 }
 
 angle::Result WindowSurfaceVkMac::getCurrentWindowSize(vk::ErrorContext *context,
-                                                       gl::Extents *extentsOut)
+                                                       gl::Extents *extentsOut) const
     API_AVAILABLE(macosx(10.11))
 {
     ANGLE_VK_CHECK(context, (mMetalLayer != nullptr), VK_ERROR_INITIALIZATION_FAILED);
