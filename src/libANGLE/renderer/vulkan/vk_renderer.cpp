@@ -575,6 +575,12 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
         "prior_access = "
         "VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT(VK_ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT)",
     },
+    // http://anglebug.com/397775556
+    {
+        "SYNC-HAZARD-READ-AFTER-WRITE",
+        "vkCmdDrawIndexed reads vertex VkBuffer",
+        "which was previously written by vkCmdCopyBuffer.",
+    },
 };
 
 // Messages that shouldn't be generated if storeOp=NONE is supported, otherwise they are expected.
