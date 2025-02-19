@@ -1905,7 +1905,8 @@ Renderer::Renderer()
       mCleanUpThread(this, &mCommandQueue),
       mSupportedBufferWritePipelineStageMask(0),
       mSupportedVulkanShaderStageMask(0),
-      mMemoryAllocationTracker(MemoryAllocationTracker(this))
+      mMemoryAllocationTracker(MemoryAllocationTracker(this)),
+      mMaxBufferMemorySizeLimit(0)
 {
     VkFormatProperties invalid = {0, 0, kInvalidFormatFeatureFlags};
     mFormatProperties.fill(invalid);
@@ -5152,6 +5153,12 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, padBuffersToMaxVertexAttribStride, isAMD || isSamsung);
     mMaxVertexAttribStride = std::min(static_cast<uint32_t>(gl::limits::kMaxVertexAttribStride),
                                       mPhysicalDeviceProperties.limits.maxVertexInputBindingStride);
+
+    // The limits related to buffer size should also take the max memory allocation size and padding
+    // (if applicable) into account.
+    mMaxBufferMemorySizeLimit = getFeatures().padBuffersToMaxVertexAttribStride.enabled
+                                    ? getMaxMemoryAllocationSize() - mMaxVertexAttribStride
+                                    : getMaxMemoryAllocationSize();
 
     ANGLE_FEATURE_CONDITION(&mFeatures, forceD16TexFilter, IsAndroid() && isQualcommProprietary);
 
