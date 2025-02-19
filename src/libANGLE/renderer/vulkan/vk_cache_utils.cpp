@@ -411,6 +411,19 @@ void DeriveRenderingInfo(Renderer *renderer,
             // See description of RenderPassFramebuffer::mImageViews regarding the layout of the
             // attachmentViews.  In short, the draw attachments are packed, while the resolve
             // attachments are not.
+            if (isYUVExternalFormat && renderer->nullColorAttachmentWithExternalFormatResolve())
+            {
+                // If nullColorAttachmentWithExternalFormatResolve is VK_TRUE, attachmentViews has
+                // no color attachment imageView and only has resolveImageView.
+                infoOut->colorAttachmentInfo[attachmentCount.get()].imageView = VK_NULL_HANDLE;
+                infoOut->colorAttachmentInfo[attachmentCount.get()].resolveImageView =
+                    attachmentViews[attachmentCount.get()];
+                infoOut->colorAttachmentInfo[attachmentCount.get()].clearValue =
+                    clearValues[attachmentCount];
+
+                ++attachmentCount;
+                continue;
+            }
             infoOut->colorAttachmentInfo[attachmentCount.get()].imageView =
                 attachmentViews[attachmentCount.get()];
             if (resolveMode != VK_RESOLVE_MODE_NONE)
@@ -7591,12 +7604,37 @@ angle::Result RenderPassCache::MakeRenderPass(vk::ErrorContext *context,
         ASSERT(attachmentFormatID != angle::FormatID::NONE);
 
         bool isYUVExternalFormat = vk::IsYUVExternalFormat(attachmentFormatID);
+
+        // If nullColorAttachmentWithExternalFormatResolve is VK_TRUE, pack YUV resolve first as if
+        // it is the color attachment.
         if (isYUVExternalFormat && renderer->nullColorAttachmentWithExternalFormatResolve())
         {
             colorAttachmentRefs.push_back(kUnusedAttachment);
             // temporary workaround for ARM driver assertion. Will remove once driver fix lands
             colorAttachmentRefs.back().layout     = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
             colorAttachmentRefs.back().aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+
+            VkAttachmentReference2 colorRef = {};
+            colorRef.sType                  = VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2;
+            colorRef.attachment             = attachmentCount.get();
+            colorRef.layout                 = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+            colorRef.aspectMask             = VK_IMAGE_ASPECT_COLOR_BIT;
+
+            colorResolveAttachmentRefs.push_back(colorRef);
+            vk::UnpackAttachmentDesc(renderer, &attachmentDescs[attachmentCount.get()],
+                                     attachmentFormatID, attachmentSamples, ops[attachmentCount]);
+
+#if defined(ANGLE_PLATFORM_ANDROID)
+            // For rendering to YUV, chain on the external format info to the resolve
+            // attachment
+            const vk::ExternalYuvFormatInfo &externalFormatInfo =
+                renderer->getExternalFormatTable()->getExternalFormatInfo(attachmentFormatID);
+            externalFormat.externalFormat        = externalFormatInfo.externalFormat;
+            VkAttachmentDescription2 &attachment = attachmentDescs[attachmentCount.get()];
+            attachment.pNext                     = &externalFormat;
+            ASSERT(attachment.format == VK_FORMAT_UNDEFINED);
+#endif
+            ++attachmentCount;
             continue;
         }
 
@@ -7683,7 +7721,7 @@ angle::Result RenderPassCache::MakeRenderPass(vk::ErrorContext *context,
     }
 
     // Pack color resolve attachments
-    const uint32_t nonResolveAttachmentCount = attachmentCount.get();
+    uint32_t nonResolveAttachmentCount = attachmentCount.get();
     for (uint32_t colorIndexGL = 0; colorIndexGL < desc.colorAttachmentRange(); ++colorIndexGL)
     {
         if (!desc.hasColorResolveAttachment(colorIndexGL))
@@ -7696,6 +7734,13 @@ angle::Result RenderPassCache::MakeRenderPass(vk::ErrorContext *context,
 
         angle::FormatID attachmentFormatID = desc[colorIndexGL];
         bool isYUVExternalFormat           = vk::IsYUVExternalFormat(attachmentFormatID);
+
+        if (isYUVExternalFormat && renderer->nullColorAttachmentWithExternalFormatResolve())
+        {
+            // attachmentCount counts the YUV resolve, so decrease nonResolveAttachmentCount here.
+            --nonResolveAttachmentCount;
+            continue;
+        }
 
         VkAttachmentReference2 colorRef = {};
         colorRef.sType                  = VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2;
@@ -7715,18 +7760,10 @@ angle::Result RenderPassCache::MakeRenderPass(vk::ErrorContext *context,
 
         const bool isInvalidated = isMSRTTEmulationColorInvalidated.test(colorIndexGL);
 
-        if (isYUVExternalFormat && renderer->nullColorAttachmentWithExternalFormatResolve())
-        {
-            vk::UnpackAttachmentDesc(renderer, &attachmentDescs[attachmentCount.get()],
-                                     attachmentFormatID, attachmentSamples, ops[attachmentCount]);
-        }
-        else
-        {
-            vk::UnpackColorResolveAttachmentDesc(
-                renderer, &attachmentDescs[attachmentCount.get()], attachmentFormatID,
-                {desc.hasColorUnresolveAttachment(colorIndexGL), isInvalidated, false},
-                colorResolveImageLayout[colorIndexGL]);
-        }
+        vk::UnpackColorResolveAttachmentDesc(
+            renderer, &attachmentDescs[attachmentCount.get()], attachmentFormatID,
+            {desc.hasColorUnresolveAttachment(colorIndexGL), isInvalidated, false},
+            colorResolveImageLayout[colorIndexGL]);
 
 #if defined(ANGLE_PLATFORM_ANDROID)
         // For rendering to YUV, chain on the external format info to the resolve attachment

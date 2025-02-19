@@ -2727,6 +2727,8 @@ angle::Result FramebufferVk::getAttachmentsAndRenderTargets(
     vk::FramebufferAttachmentsVector<VkImageView> *unpackedAttachments,
     vk::FramebufferAttachmentsVector<RenderTargetInfo> *packedRenderTargetsInfoOut)
 {
+    bool anyResolveAttachments = false;
+
     // Color attachments.
     mIsYUVResolve                  = false;
     const auto &colorRenderTargets = mRenderTargetCache.getColors();
@@ -2740,6 +2742,18 @@ angle::Result FramebufferVk::getAttachmentsAndRenderTargets(
             mIsYUVResolve = true;
             if (context->getRenderer()->nullColorAttachmentWithExternalFormatResolve())
             {
+                // Because the color attachment will be null if
+                // nullColorAttachmentWithExternalFormatResolve is VK_TRUE, push YUV resolve as
+                // color attachment to ensure the coherency of other attachment information, like
+                // ops and clearValues.
+                const vk::ImageView *resolveImageView = nullptr;
+                ANGLE_TRY(colorRenderTarget->getResolveImageView(context, &resolveImageView));
+                unpackedAttachments->push_back(resolveImageView->getHandle());
+
+                packedRenderTargetsInfoOut->emplace_back(
+                    RenderTargetInfo(colorRenderTarget, RenderTargetImage::Resolve));
+
+                anyResolveAttachments = true;
                 continue;
             }
         }
@@ -2781,8 +2795,6 @@ angle::Result FramebufferVk::getAttachmentsAndRenderTargets(
     static_assert(vk::RenderPassFramebuffer::kDepthStencilResolveAttachment <
                   vk::kMaxFramebufferAttachments);
 
-    bool anyResolveAttachments = false;
-
     for (size_t colorIndexGL : mState.getColorAttachmentsMask())
     {
         RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
@@ -2790,6 +2802,12 @@ angle::Result FramebufferVk::getAttachmentsAndRenderTargets(
 
         if (colorRenderTarget->hasResolveAttachment())
         {
+            if (colorRenderTarget->isYuvResolve() &&
+                context->getRenderer()->nullColorAttachmentWithExternalFormatResolve())
+            {
+                continue;
+            }
+
             const vk::ImageView *resolveImageView = nullptr;
             ANGLE_TRY(colorRenderTarget->getResolveImageView(context, &resolveImageView));
 
