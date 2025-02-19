@@ -885,3 +885,14 @@ b/328156792 PINEAPPLE VULKAN : dEQP-GLES3.functional.uniform_api.value.assigned.
 376899587 PIXEL4ORXL : dEQP-GLES3.functional.negative_api.vertex_array.draw_elements_instanced_incomplete_primitive = SKIP
 376899587 PIXEL4ORXL : dEQP-GLES3.functional.negative_api.vertex_array.draw_range_elements = SKIP
 376899587 PIXEL4ORXL : dEQP-GLES3.functional.negative_api.vertex_array.draw_range_elements_incomplete_primitive = SKIP
+
+b/395920316 LINUX SWIFTSHADER ASAN : dEQP-GLES3.functional.draw.draw_elements.indices.buffer.* = SKIP
+b/395920316 LINUX SWIFTSHADER ASAN : dEQP-GLES3.functional.draw.draw_elements_instanced.indices.buffer.* = SKIP
+b/395920316 LINUX SWIFTSHADER ASAN : dEQP-GLES3.functional.texture.specification.teximage2d_depth.depth24_stencil8 = SKIP
+b/395920316 LINUX SWIFTSHADER ASAN : dEQP-GLES3.functional.texture.specification.teximage2d_depth_pbo.depth24_stencil8 = SKIP
+b/395920316 LINUX SWIFTSHADER ASAN : dEQP-GLES3.functional.texture.specification.teximage3d_depth.depth24_stencil8_2d_array = SKIP
+b/395920316 LINUX SWIFTSHADER ASAN : dEQP-GLES3.functional.texture.specification.teximage3d_depth_pbo.depth24_stencil8_2d_array = SKIP
+b/395920316 LINUX SWIFTSHADER ASAN : dEQP-GLES3.functional.texture.specification.texstorage2d.format.depth24_stencil8_2d = SKIP
+b/395920316 LINUX SWIFTSHADER ASAN : dEQP-GLES3.functional.texture.specification.texstorage3d.format.depth24_stencil8_2d_array = SKIP
+b/395920316 LINUX SWIFTSHADER ASAN : dEQP-GLES3.functional.texture.specification.texsubimage2d_depth.depth24_stencil8 = SKIP
+b/395920316 LINUX SWIFTSHADER ASAN : dEQP-GLES3.functional.texture.specification.texsubimage3d_depth.depth24_stencil8_2d_array = SKIP
