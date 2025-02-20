@@ -1119,6 +1119,10 @@ TestSuite::TestSuite(int *argc, char **argv, std::function<void()> registerTests
         {
             SetEnvironmentVar(kPreferredDeviceEnvVar, "apple");
         }
+        else if (conditions[GPUTestConfig::kConditionQualcomm])
+        {
+            SetEnvironmentVar(kPreferredDeviceEnvVar, "qualcomm");
+        }
     }
 
     // Special handling for TSAN and UBSAN to force crashes when run in automated testing.

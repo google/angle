@@ -699,6 +699,15 @@ if (build_angle_perftests) {
   }
 }
 
+if (is_ios) {
+  bundle_data("angle_trace_tests_bundle_data") {
+    testonly = true
+    sources = [ "angle_trace_tests_expectations.txt" ]
+    outputs = [ "{{bundle_resources_dir}}/" +
+                "{{source_root_relative_dir}}/{{source_file_part}}" ]
+  }
+}
+
 if (build_angle_trace_tests) {
   angle_test("angle_trace_tests") {
     # http://anglebug.com/42264541: Traces with long shaders are hitting string literal
@@ -740,6 +749,14 @@ if (build_angle_trace_tests) {
     }
 
     data = [ "$angle_root/src/tests/py_utils/android_helper.py" ]
+
+    if (is_ios) {
+      deps += [ ":angle_trace_tests_bundle_data" ]
+    } else {
+      data += [
+        "$angle_root/src/tests/perf_tests/angle_trace_tests_expectations.txt",
+      ]
+    }
 
     if (is_android) {
       android_test_runner_script =

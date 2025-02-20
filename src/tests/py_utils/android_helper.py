@@ -341,6 +341,10 @@ def PrepareTestSuite(suite_name):
 
     if suite_name == ANGLE_TRACE_TEST_SUITE:
         _AddRestrictedTracesJson()
+        _AdbRun([
+            'push', '../../src/tests/perf_tests/angle_trace_tests_expectations.txt',
+            _Global.external_storage + 'src/tests/perf_tests/angle_trace_tests_expectations.txt'
+        ])
 
     if '_deqp_' in suite_name:
         _AddDeqpFiles(suite_name)

@@ -11,6 +11,7 @@
 #include <gtest/gtest.h>
 #include "tests/perf_tests/ANGLEPerfTest.h"
 #include "tests/perf_tests/ANGLEPerfTestArgs.h"
+#include "tests/test_expectations/GPUTestExpectationsParser.h"
 #include "util/capture/frame_capture_test_utils.h"
 #include "util/test_utils.h"
 
