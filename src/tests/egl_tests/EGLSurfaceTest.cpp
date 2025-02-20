@@ -2437,7 +2437,7 @@ TEST_P(EGLSingleBufferTest, ScissoredClear)
     context = EGL_NO_CONTEXT;
 }
 
-// Tests scissored clear on single buffer surface
+// Tests scissored draw on single buffer surface
 TEST_P(EGLSingleBufferTest, ScissoredDraw)
 {
     ANGLE_SKIP_TEST_IF(!IsEGLDisplayExtensionEnabled(mDisplay, "EGL_KHR_mutable_render_buffer"));
@@ -2627,6 +2627,76 @@ TEST_P(EGLSingleBufferTest, AcquireImageFromSwapImpl)
         // ASSERT will trigger in |present|.
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glFlush();
+    }
+    else
+    {
+        std::cout << "EGL_SINGLE_BUFFER mode is not supported." << std::endl;
+    }
+
+    EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, context));
+    ASSERT_EGL_SUCCESS() << "eglMakeCurrent - uncurrent failed.";
+
+    eglDestroySurface(mDisplay, surface);
+    surface = EGL_NO_SURFACE;
+    osWindow->destroy();
+    OSWindow::Delete(&osWindow);
+
+    eglDestroyContext(mDisplay, context);
+    context = EGL_NO_CONTEXT;
+}
+
+// Tests that staged clear into MSAA surface is resolved and not dropped on swap.
+TEST_P(EGLSingleBufferTest, StagedClearResolveOnSwap)
+{
+    ANGLE_SKIP_TEST_IF(!IsEGLDisplayExtensionEnabled(mDisplay, "EGL_KHR_mutable_render_buffer"));
+
+    EGLConfig config       = EGL_NO_CONFIG_KHR;
+    const EGLint attribs[] = {EGL_RED_SIZE,
+                              8,
+                              EGL_GREEN_SIZE,
+                              8,
+                              EGL_BLUE_SIZE,
+                              8,
+                              EGL_ALPHA_SIZE,
+                              8,
+                              EGL_SAMPLE_BUFFERS,
+                              1,
+                              EGL_SAMPLES,
+                              4,
+                              EGL_SURFACE_TYPE,
+                              EGL_WINDOW_BIT | EGL_MUTABLE_RENDER_BUFFER_BIT_KHR,
+                              EGL_RENDERABLE_TYPE,
+                              EGL_OPENGL_ES2_BIT,
+                              EGL_NONE};
+    EGLint count           = 0;
+    ANGLE_SKIP_TEST_IF(!eglChooseConfig(mDisplay, attribs, &config, 1, &count));
+    ANGLE_SKIP_TEST_IF(count == 0);
+
+    EGLContext context = EGL_NO_CONTEXT;
+    EXPECT_EGL_TRUE(createContext(config, &context));
+    ASSERT_EGL_SUCCESS() << "eglCreateContext failed.";
+
+    EGLSurface surface = EGL_NO_SURFACE;
+    OSWindow *osWindow = OSWindow::New();
+    osWindow->initialize("EGLSingleBufferTest", kWidth, kHeight);
+    EXPECT_EGL_TRUE(
+        createWindowSurface(config, osWindow->getNativeWindow(), &surface, EGL_BACK_BUFFER));
+    ASSERT_EGL_SUCCESS() << "eglCreateWindowSurface failed.";
+
+    EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, surface, surface, context));
+    ASSERT_EGL_SUCCESS() << "eglMakeCurrent failed.";
+
+    EXPECT_EGL_TRUE(eglSurfaceAttrib(mDisplay, surface, EGL_RENDER_BUFFER, EGL_SINGLE_BUFFER));
+    if (eglSwapBuffers(mDisplay, surface))
+    {
+        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        // Flush here performs swap and tests the code that performs the resolve optimization.
+        glFlush();
+
+        // Confirm that staged clear was not dropped in the above resolve on swap optimization.
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
     }
     else
     {

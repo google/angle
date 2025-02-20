@@ -2224,25 +2224,23 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
     // Make sure deferred clears are applied, if any.
     if (mColorImageMS.valid())
     {
-        // anglebug:382006939
+        // http://anglebug.com/382006939
         // If app calls:
-        // glClear(GL_COLOR_BUFFER_BIT);
-        // eglSwapBuffers();
+        //     glClear(GL_COLOR_BUFFER_BIT);
+        //     eglSwapBuffers();
         // As an optimization, deferred clear could skip msaa buffer and applied to back buffer
         // directly instead of clearing msaa buffer and then resolve.
         // The exception is that when we back buffer data has to be preserved under
         // certain situations, we must also ensure msaa buffer contains the right content.
         // Under that situation, this optimization will not apply.
 
-        vk::ClearValuesArray deferredClearValues;
-        ANGLE_TRY(mColorImageMS.flushSingleSubresourceStagedUpdates(contextVk, gl::LevelIndex(0), 0,
-                                                                    1, &deferredClearValues, 0));
-        if (deferredClearValues.any())
+        if (!isSharedPresentMode() &&
+            (mState.swapBehavior == EGL_BUFFER_DESTROYED && mBufferAgeQueryFrameNumber == 0))
         {
-            // Apply clear color directly to the single sampled image if the EGL surface is
-            // double buffered or when EGL_SWAP_BEHAVIOR is EGL_BUFFER_DESTROYED
-            if (!isSharedPresentMode() &&
-                (mState.swapBehavior == EGL_BUFFER_DESTROYED && mBufferAgeQueryFrameNumber == 0))
+            vk::ClearValuesArray deferredClearValues;
+            ANGLE_TRY(mColorImageMS.flushSingleSubresourceStagedUpdates(
+                contextVk, gl::LevelIndex(0), 0, 1, &deferredClearValues, 0));
+            if (deferredClearValues.any())
             {
                 // Apply clear color directly to the single sampled image if the EGL surface is
                 // double buffered and when EGL_SWAP_BEHAVIOR is EGL_BUFFER_DESTROYED
@@ -2253,14 +2251,14 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
                                                           gl::LevelIndex(1), 0, 1, {}));
                 imageResolved = true;
             }
-            else
-            {
-                // Apply clear value to multisampled mColorImageMS and then resolve to single
-                // sampled image later if EGL surface is single buffered or when EGL_SWAP_BEHAVIOR
-                // is EGL_BUFFER_PRESERVED
-                ANGLE_TRY(mColorImageMS.flushStagedUpdates(contextVk, gl::LevelIndex(0),
-                                                           gl::LevelIndex(1), 0, 1, {}));
-            }
+        }
+        else
+        {
+            // Apply clear value to multisampled mColorImageMS and then resolve to single sampled
+            // image later if EGL surface is single buffered or when EGL_SWAP_BEHAVIOR is
+            // EGL_BUFFER_PRESERVED
+            ANGLE_TRY(mColorImageMS.flushStagedUpdates(contextVk, gl::LevelIndex(0),
+                                                       gl::LevelIndex(1), 0, 1, {}));
         }
     }
     else
