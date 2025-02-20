@@ -956,8 +956,8 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
-    FeatureInfo hasEffectivePipelineCacheSerialization = {
-        "hasEffectivePipelineCacheSerialization",
+    FeatureInfo skipPipelineCacheSerialization = {
+        "skipPipelineCacheSerialization",
         FeatureCategory::VulkanFeatures,
         &members,
     };

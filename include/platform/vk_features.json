@@ -1241,12 +1241,12 @@
             "issue": "https://anglebug.com/42265839"
         },
         {
-            "name": "has_effective_pipeline_cache_serialization",
+            "name": "skip_pipeline_cache_serialization",
             "category": "Features",
             "description": [
-                "Whether the implementation serializes the Vulkan pipeline cache effectively. ",
-                "On some implementations, pipeline cache serialization returns no data, so there ",
-                "is no benefit to serializing it"
+                "Whether to serialize the Vulkan pipeline cache data. ",
+                "On some implementations, pipeline cache serialization returns no data",
+                "or very big data,so there is no benefit to serializing it."
             ],
             "issue": "https://anglebug.com/42265839"
         },

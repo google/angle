@@ -398,9 +398,9 @@ class VulkanPerformanceCounterTest : public ANGLETest<>
     {
         return isFeatureEnabled(Feature::WarmUpPipelineCacheAtLink);
     }
-    bool hasEffectivePipelineCacheSerialization() const
+    bool skipPipelineCacheSerialization() const
     {
-        return isFeatureEnabled(Feature::HasEffectivePipelineCacheSerialization);
+        return isFeatureEnabled(Feature::SkipPipelineCacheSerialization);
     }
     bool hasPreferCPUForBufferSubData() const
     {
@@ -7764,7 +7764,7 @@ TEST_P(VulkanPerformanceCounterTest, PipelineCacheIsWarmedUpAtLinkTime)
 
     // Test is only valid when pipeline creation feedback is available
     ANGLE_SKIP_TEST_IF(!hasSupportsPipelineCreationFeedback() || !hasWarmUpPipelineCacheAtLink() ||
-                       !hasEffectivePipelineCacheSerialization());
+                       skipPipelineCacheSerialization());
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Passthrough(), essl1_shaders::fs::UniformColor());
 
@@ -7778,7 +7778,7 @@ TEST_P(VulkanPerformanceCounterTest, PipelineCacheIsRestoredWithProgramBinary)
 
     // Test is only valid when pipeline creation feedback is available
     ANGLE_SKIP_TEST_IF(!hasSupportsPipelineCreationFeedback() || !hasWarmUpPipelineCacheAtLink() ||
-                       !hasEffectivePipelineCacheSerialization());
+                       skipPipelineCacheSerialization());
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Passthrough(), essl1_shaders::fs::UniformColor());
     GLProgram reloadedProgram;
@@ -7794,7 +7794,7 @@ TEST_P(VulkanPerformanceCounterTest, PipelineCacheIsRestoredWithProgramBinaryTwi
 
     // Test is only valid when pipeline creation feedback is available
     ANGLE_SKIP_TEST_IF(!hasSupportsPipelineCreationFeedback() || !hasWarmUpPipelineCacheAtLink() ||
-                       !hasEffectivePipelineCacheSerialization());
+                       skipPipelineCacheSerialization());
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Passthrough(), essl1_shaders::fs::UniformColor());
     GLProgram reloadedProgram;
