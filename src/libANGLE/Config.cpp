@@ -229,6 +229,14 @@ class ConfigSorter
 std::vector<const Config *> ConfigSet::filter(const AttributeMap &attributeMap) const
 {
     std::vector<const Config *> result;
+
+    // If EGL_CONFIG_ID is included, all other attributes should be ignored.
+    if (attributeMap.contains(EGL_CONFIG_ID))
+    {
+        result.push_back(&ConfigSet::get(attributeMap.getAsInt(EGL_CONFIG_ID)));
+        return result;
+    }
+
     result.reserve(mConfigs.size());
 
     for (auto configIter = mConfigs.begin(); configIter != mConfigs.end(); configIter++)
@@ -271,9 +279,6 @@ std::vector<const Config *> ConfigSet::filter(const AttributeMap &attributeMap) 
                     break;
                 case EGL_CONFIG_CAVEAT:
                     match = config.configCaveat == static_cast<EGLenum>(attributeValue);
-                    break;
-                case EGL_CONFIG_ID:
-                    match = config.configID == attributeValue;
                     break;
                 case EGL_LEVEL:
                     match = config.level == attributeValue;

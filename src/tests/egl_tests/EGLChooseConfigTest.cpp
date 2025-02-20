@@ -136,6 +136,38 @@ TEST_P(EGLChooseConfigTest, NegativeValidationBadAttributes)
     }
 }
 
+// Test that if all the config ID can be successfully chosen
+TEST_P(EGLChooseConfigTest, ValidateConfigID)
+{
+    EGLDisplay display = getEGLWindow()->getDisplay();
+
+    EGLint nConfigs       = 0;
+    EGLint allConfigCount = 0;
+    ASSERT_EGL_TRUE(eglGetConfigs(display, nullptr, 0, &nConfigs));
+    ASSERT_NE(nConfigs, 0);
+
+    std::vector<EGLConfig> allConfigs(nConfigs);
+    ASSERT_EGL_TRUE(eglGetConfigs(display, allConfigs.data(), nConfigs, &allConfigCount));
+    ASSERT_EQ(nConfigs, allConfigCount);
+
+    // All attributes except EGL_CONFIG_ID should be ignored when EGL_CONFIG_ID is include.
+    EGLint configIDAttributes[] = {EGL_CONFIG_ID,    EGL_DONT_CARE,       EGL_COLOR_BUFFER_TYPE,
+                                   EGL_RGB_BUFFER,   EGL_RENDERABLE_TYPE, EGL_OPENGL_ES_BIT,
+                                   EGL_SURFACE_TYPE, EGL_PIXMAP_BIT,      EGL_NONE};
+    for (EGLConfig configs : allConfigs)
+    {
+        EGLConfig configsWithID;
+        EGLint configID;
+        EGLint configCount;
+        eglGetConfigAttrib(display, configs, EGL_CONFIG_ID, &configID);
+        configIDAttributes[1] = configID;
+        ASSERT_EGL_TRUE(
+            eglChooseConfig(display, configIDAttributes, &configsWithID, 1, &configCount));
+        ASSERT_EGL_SUCCESS();
+        ASSERT_EQ(configCount, 1);
+    }
+}
+
 }  // namespace angle
 
 ANGLE_INSTANTIATE_TEST(EGLChooseConfigTest,
