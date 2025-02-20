@@ -454,6 +454,12 @@ std::string ClspvGetCompilerOptions(const CLDeviceVk *device)
     options += " --enable-printf";
     options += " --cl-kernel-arg-info";
 
+    // check for int8 support
+    if (rendererVk->getFeatures().supportsShaderInt8.enabled)
+    {
+        options += " --int8 --rewrite-packed-structs";
+    }
+
     // 8 bit storage buffer support
     if (!rendererVk->getFeatures().supports8BitStorageBuffer.enabled)
     {
