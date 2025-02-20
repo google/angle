@@ -43,7 +43,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': 'c3ce5b627f8fd744118ead7bf60c5e361fe61b60',
+  'chromium_revision': '8fcb1d1f64aea1ab9fb0fc16217d34706f3e0084',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -512,7 +512,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@236a573eb2a0b470fdb4d7d50cf6158167d944f2',
+    'url': '{chromium_git}/chromium/src/testing@75065cfcbb2b3db725f614f0d97bafcaaad3bb4b',
     'condition': 'not build_with_chromium',
   },
 
@@ -855,12 +855,12 @@ deps = {
   },
 
   'third_party/llvm-libc/src': {
-    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libc.git@99782c3117bf68302f6d9080d70ac5bd86fa72f6',
+    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libc.git@e722dac269c4c938fcd197d0e37987eb29cb2989',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/libunwind/src': {
-    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libunwind.git@b05ea6f335254c55d6f967b5881cc6b38045d824',
+    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libunwind.git@62e217a12ee1133833d9890b2f7adde900e4efbd',
     'condition': 'not build_with_chromium',
   },
 
@@ -1094,7 +1094,7 @@ deps = {
   },
 
   'tools/clang': {
-    'url': Var('chromium_git') + '/chromium/src/tools/clang.git@e7ca9835dd5d0938de091c5ebd18234c5718be5d',
+    'url': Var('chromium_git') + '/chromium/src/tools/clang.git@a6615a458df25db4cb42e22639d82ad55e77af6d',
     'condition': 'not build_with_chromium',
   },
 
@@ -1144,7 +1144,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': Var('chromium_git') + '/chromium/src/tools/perf@6bc9879f0403886dd60b341dd0a196a3290bc33b',
+    'url': Var('chromium_git') + '/chromium/src/tools/perf@810ed5860bb661c22a0773ee094ddb5cf05564d8',
     'condition': 'not build_with_chromium',
   },
 
