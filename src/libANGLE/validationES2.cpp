@@ -104,8 +104,8 @@ bool IsValidCopyTextureDestinationInternalFormatEnum(GLint internalFormat)
     switch (internalFormat)
     {
         case GL_ALPHA:
-        case GL_BGRA_EXT:
         case GL_BGRA8_EXT:
+        case GL_BGRA_EXT:
         case GL_LUMINANCE:
         case GL_LUMINANCE_ALPHA:
         case GL_R11F_G11F_B10F:
@@ -411,8 +411,7 @@ bool ValidateES2CopyTexImageParameters(const Context *context,
             case GL_ALPHA:
                 if (colorbufferFormat != GL_ALPHA8_EXT && colorbufferFormat != GL_RGBA4 &&
                     colorbufferFormat != GL_RGB5_A1 && colorbufferFormat != GL_RGBA8_OES &&
-                    colorbufferFormat != GL_BGRA_EXT && colorbufferFormat != GL_BGRA8_EXT &&
-                    colorbufferFormat != GL_BGR5_A1_ANGLEX &&
+                    colorbufferFormat != GL_BGRA8_EXT && colorbufferFormat != GL_BGR5_A1_ANGLEX &&
                     !Valid4ComponentFloatColorBufferFormat(context, colorbufferFormat))
                 {
                     ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidFormat);
@@ -423,8 +422,8 @@ bool ValidateES2CopyTexImageParameters(const Context *context,
                 if (colorbufferFormat != GL_R8_EXT && colorbufferFormat != GL_RG8_EXT &&
                     colorbufferFormat != GL_RGB565 && colorbufferFormat != GL_RGB8_OES &&
                     colorbufferFormat != GL_RGBA4 && colorbufferFormat != GL_RGB5_A1 &&
-                    colorbufferFormat != GL_RGBA8_OES && colorbufferFormat != GL_BGRA_EXT &&
-                    colorbufferFormat != GL_BGRA8_EXT && colorbufferFormat != GL_BGR5_A1_ANGLEX &&
+                    colorbufferFormat != GL_RGBA8_OES && colorbufferFormat != GL_BGRA8_EXT &&
+                    colorbufferFormat != GL_BGR5_A1_ANGLEX &&
                     colorbufferFormat != GL_BGRX8_ANGLEX && colorbufferFormat != GL_RGBX8_ANGLE &&
                     !Valid1to4ComponentFloatColorBufferFormat(context, colorbufferFormat))
                 {
@@ -438,8 +437,8 @@ bool ValidateES2CopyTexImageParameters(const Context *context,
                     colorbufferFormat != GL_RGBA4 && colorbufferFormat != GL_RGB5_A1 &&
                     colorbufferFormat != GL_RGBA8_OES && colorbufferFormat != GL_R32F &&
                     colorbufferFormat != GL_RG32F && colorbufferFormat != GL_RGB32F &&
-                    colorbufferFormat != GL_RGBA32F && colorbufferFormat != GL_BGRA_EXT &&
-                    colorbufferFormat != GL_BGRA8_EXT && colorbufferFormat != GL_BGR5_A1_ANGLEX &&
+                    colorbufferFormat != GL_RGBA32F && colorbufferFormat != GL_BGRA8_EXT &&
+                    colorbufferFormat != GL_BGR5_A1_ANGLEX &&
                     colorbufferFormat != GL_BGRX8_ANGLEX && colorbufferFormat != GL_RGBX8_ANGLE &&
                     !Valid1to4ComponentFloatColorBufferFormat(context, colorbufferFormat))
                 {
@@ -452,8 +451,8 @@ bool ValidateES2CopyTexImageParameters(const Context *context,
                     colorbufferFormat != GL_RGB8_OES && colorbufferFormat != GL_RGBA4 &&
                     colorbufferFormat != GL_RGB5_A1 && colorbufferFormat != GL_RGBA8_OES &&
                     colorbufferFormat != GL_RG32F && colorbufferFormat != GL_RGB32F &&
-                    colorbufferFormat != GL_RGBA32F && colorbufferFormat != GL_BGRA_EXT &&
-                    colorbufferFormat != GL_BGRA8_EXT && colorbufferFormat != GL_BGR5_A1_ANGLEX &&
+                    colorbufferFormat != GL_RGBA32F && colorbufferFormat != GL_BGRA8_EXT &&
+                    colorbufferFormat != GL_BGR5_A1_ANGLEX &&
                     colorbufferFormat != GL_BGRX8_ANGLEX && colorbufferFormat != GL_RGBX8_ANGLE &&
                     !Valid2to4ComponentFloatColorBufferFormat(context, colorbufferFormat))
                 {
@@ -465,8 +464,7 @@ bool ValidateES2CopyTexImageParameters(const Context *context,
                 if (colorbufferFormat != GL_RGB565 && colorbufferFormat != GL_RGB8_OES &&
                     colorbufferFormat != GL_RGBA4 && colorbufferFormat != GL_RGB5_A1 &&
                     colorbufferFormat != GL_RGBA8_OES && colorbufferFormat != GL_RGB32F &&
-                    colorbufferFormat != GL_RGBA32F && colorbufferFormat != GL_BGRA_EXT &&
-                    colorbufferFormat != GL_BGRA_EXT && colorbufferFormat != GL_BGRA8_EXT &&
+                    colorbufferFormat != GL_RGBA32F && colorbufferFormat != GL_BGRA8_EXT &&
                     colorbufferFormat != GL_BGR5_A1_ANGLEX &&
                     colorbufferFormat != GL_BGRX8_ANGLEX && colorbufferFormat != GL_RGBX8_ANGLE &&
                     !Valid3to4ComponentFloatColorBufferFormat(context, colorbufferFormat))
@@ -480,8 +478,7 @@ bool ValidateES2CopyTexImageParameters(const Context *context,
             case GL_BGRA_EXT:
                 if (colorbufferFormat != GL_RGBA4 && colorbufferFormat != GL_RGB5_A1 &&
                     colorbufferFormat != GL_RGBA8_OES && colorbufferFormat != GL_RGBA32F &&
-                    colorbufferFormat != GL_BGRA_EXT && colorbufferFormat != GL_BGRA8_EXT &&
-                    colorbufferFormat != GL_BGR5_A1_ANGLEX &&
+                    colorbufferFormat != GL_BGRA8_EXT && colorbufferFormat != GL_BGR5_A1_ANGLEX &&
                     !Valid4ComponentFloatColorBufferFormat(context, colorbufferFormat))
                 {
                     ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidFormat);
@@ -506,9 +503,8 @@ bool ValidateES2CopyTexImageParameters(const Context *context,
             case GL_ALPHA:
             case GL_ALPHA8_OES:
                 if (colorbufferFormat != GL_ALPHA8_EXT && colorbufferFormat != GL_RGBA4 &&
-                    colorbufferFormat != GL_RGB5_A1 && colorbufferFormat != GL_BGRA_EXT &&
-                    colorbufferFormat != GL_BGRA8_EXT && colorbufferFormat != GL_RGBA8_OES &&
-                    colorbufferFormat != GL_BGR5_A1_ANGLEX &&
+                    colorbufferFormat != GL_RGB5_A1 && colorbufferFormat != GL_BGRA8_EXT &&
+                    colorbufferFormat != GL_RGBA8_OES && colorbufferFormat != GL_BGR5_A1_ANGLEX &&
                     !Valid4ComponentFloatColorBufferFormat(context, colorbufferFormat))
                 {
                     ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidFormat);
@@ -521,8 +517,8 @@ bool ValidateES2CopyTexImageParameters(const Context *context,
                 if (colorbufferFormat != GL_R8_EXT && colorbufferFormat != GL_RG8_EXT &&
                     colorbufferFormat != GL_RGB565 && colorbufferFormat != GL_RGB8_OES &&
                     colorbufferFormat != GL_RGBA4 && colorbufferFormat != GL_RGB5_A1 &&
-                    colorbufferFormat != GL_BGRA_EXT && colorbufferFormat != GL_BGRA8_EXT &&
-                    colorbufferFormat != GL_RGBA8_OES && colorbufferFormat != GL_BGR5_A1_ANGLEX &&
+                    colorbufferFormat != GL_BGRA8_EXT && colorbufferFormat != GL_RGBA8_OES &&
+                    colorbufferFormat != GL_BGR5_A1_ANGLEX &&
                     colorbufferFormat != GL_BGRX8_ANGLEX && colorbufferFormat != GL_RGBX8_ANGLE &&
                     !Valid1to4ComponentFloatColorBufferFormat(context, colorbufferFormat))
                 {
@@ -533,9 +529,8 @@ bool ValidateES2CopyTexImageParameters(const Context *context,
             case GL_RG_EXT:
                 if (colorbufferFormat != GL_RG8_EXT && colorbufferFormat != GL_RGB565 &&
                     colorbufferFormat != GL_RGB8_OES && colorbufferFormat != GL_RGBA4 &&
-                    colorbufferFormat != GL_RGB5_A1 && colorbufferFormat != GL_BGRA_EXT &&
-                    colorbufferFormat != GL_BGRA8_EXT && colorbufferFormat != GL_RGBA8_OES &&
-                    colorbufferFormat != GL_BGR5_A1_ANGLEX &&
+                    colorbufferFormat != GL_RGB5_A1 && colorbufferFormat != GL_BGRA8_EXT &&
+                    colorbufferFormat != GL_RGBA8_OES && colorbufferFormat != GL_BGR5_A1_ANGLEX &&
                     colorbufferFormat != GL_BGRX8_ANGLEX && colorbufferFormat != GL_RGBX8_ANGLE &&
                     !Valid2to4ComponentFloatColorBufferFormat(context, colorbufferFormat))
                 {
@@ -548,8 +543,8 @@ bool ValidateES2CopyTexImageParameters(const Context *context,
             case GL_RGB8_OES:
                 if (colorbufferFormat != GL_RGB565 && colorbufferFormat != GL_RGB8_OES &&
                     colorbufferFormat != GL_RGBA4 && colorbufferFormat != GL_RGB5_A1 &&
-                    colorbufferFormat != GL_BGRA_EXT && colorbufferFormat != GL_BGRA8_EXT &&
-                    colorbufferFormat != GL_RGBA8_OES && colorbufferFormat != GL_BGR5_A1_ANGLEX &&
+                    colorbufferFormat != GL_BGRA8_EXT && colorbufferFormat != GL_RGBA8_OES &&
+                    colorbufferFormat != GL_BGR5_A1_ANGLEX &&
                     colorbufferFormat != GL_BGRX8_ANGLEX && colorbufferFormat != GL_RGBX8_ANGLE &&
                     !Valid3to4ComponentFloatColorBufferFormat(context, colorbufferFormat))
                 {
@@ -566,9 +561,8 @@ bool ValidateES2CopyTexImageParameters(const Context *context,
             case GL_RGB5_A1_OES:
             case GL_RGBA8_OES:
                 if (colorbufferFormat != GL_RGBA4 && colorbufferFormat != GL_RGB5_A1 &&
-                    colorbufferFormat != GL_BGRA_EXT && colorbufferFormat != GL_BGRA8_EXT &&
-                    colorbufferFormat != GL_RGBA8_OES && colorbufferFormat != GL_BGR5_A1_ANGLEX &&
-                    colorbufferFormat != GL_RGBA16F &&
+                    colorbufferFormat != GL_BGRA8_EXT && colorbufferFormat != GL_RGBA8_OES &&
+                    colorbufferFormat != GL_BGR5_A1_ANGLEX && colorbufferFormat != GL_RGBA16F &&
                     !Valid4ComponentFloatColorBufferFormat(context, colorbufferFormat))
                 {
                     ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidFormat);
