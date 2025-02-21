@@ -1583,6 +1583,7 @@ enum class RenderPassClosureReason
     SyncObjectClientWait,
     SyncObjectServerWait,
     SyncObjectGetStatus,
+    ForeignImageRelease,
 
     // Closures that ANGLE could have avoided, but doesn't for simplicity or optimization of more
     // common cases.

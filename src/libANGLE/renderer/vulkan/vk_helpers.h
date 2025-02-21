@@ -199,6 +199,11 @@ class Context : public ErrorContext
     void finalizeAllForeignImages();
 
   protected:
+    bool hasForeignImagesToTransition() const
+    {
+        return !mForeignImagesInUse.empty() || !mImagesToTransitionToForeign.empty();
+    }
+
     // Stash the ShareGroupVk's RefCountedEventRecycler here ImageHelper to conveniently access
     RefCountedEventsGarbageRecycler *mShareGroupRefCountedEventsGarbageRecycler;
     // List of foreign images that are currently used in recorded commands but haven't been

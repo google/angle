@@ -2813,8 +2813,9 @@ TEST_P(Texture2DTestES3, UnitTest_DMSAA_dst_read)
     // Create texture program
     ANGLE_GL_PROGRAM(drawTexture, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
     ASSERT_GL_NO_ERROR();
-    GLint texLocation = glGetUniformLocation(drawTexture, "u_tex2D");
+    GLint texLocation = glGetUniformLocation(drawTexture, essl1_shaders::Texture2DUniform());
     ASSERT_NE(-1, texLocation);
+    glUseProgram(drawTexture);
     glUniform1i(texLocation, 0);
 
     glDisable(GL_BLEND);
