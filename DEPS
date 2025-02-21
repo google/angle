@@ -43,7 +43,7 @@ vars = {
   'checkout_angle_mesa': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '8fcb1d1f64aea1ab9fb0fc16217d34706f3e0084',
+  'chromium_revision': '365dbf46bc08ea317233c7e27987921daf08817c',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -88,7 +88,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': '30345af7ee8bf6e5ac59d4fc9a2fa3edbb707a4a',
+  'catapult_revision': '09f963b5f4b4304a0f1b9e75fc610de2eb0603ef',
 
   # the commit queue can handle CLs rolling Fuchsia sdk
   # and whatever else without interference from each other.
@@ -453,12 +453,12 @@ vars = {
 deps = {
 
   'build': {
-    'url': Var('chromium_git') + '/chromium/src/build.git@e42ba23e14b15bbfc89a809dee1c8f700d80c736',
+    'url': Var('chromium_git') + '/chromium/src/build.git@530d40d7d32fdb762b8eec27d0b30325eeca2dfe',
     'condition': 'not build_with_chromium',
   },
 
   'buildtools': {
-    'url': Var('chromium_git') + '/chromium/src/buildtools.git@d1ed719a33042a69290036402227949ec4d11877',
+    'url': Var('chromium_git') + '/chromium/src/buildtools.git@99bd0872895b0e7da5a5fa241b24b5b58f508641',
     'condition': 'not build_with_chromium',
   },
 
@@ -512,7 +512,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@75065cfcbb2b3db725f614f0d97bafcaaad3bb4b',
+    'url': '{chromium_git}/chromium/src/testing@0d1f0f2d5d1eec0d377f81f5c1dca82527ca13d3',
     'condition': 'not build_with_chromium',
   },
 
@@ -727,7 +727,7 @@ deps = {
   },
 
   'third_party/depot_tools': {
-    'url': Var('chromium_git') + '/chromium/tools/depot_tools.git@ab387d1ddc530d405f662904f2df292f700e4b0f',
+    'url': Var('chromium_git') + '/chromium/tools/depot_tools.git@2259aa176628b8c8ef67a1e1c6dab94cb69ba3c9',
     'condition': 'not build_with_chromium',
   },
 
@@ -845,7 +845,7 @@ deps = {
    },
 
   'third_party/libc++/src': {
-    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libcxx.git@e36be6784f33c592ecc89da2a829807920d374ef',
+    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project/libcxx.git@1a88911caa16345beb23d141f0361d58f3c4fcf5',
     'condition': 'not build_with_chromium',
   },
 
@@ -947,7 +947,7 @@ deps = {
       'packages': [
           {
               'package': 'chromium/third_party/r8',
-              'version': 'QDwsH_fhjzc4w9ejy5IKJrAl9g6ct71e1UJiFwGoqYMC',
+              'version': '2ChXGrcBJ9WNhFhS069j3L6VMp0jw5xyyPqKhlOqj_sC',
           },
       ],
       'condition': 'checkout_android and not build_with_chromium',
@@ -978,7 +978,7 @@ deps = {
   },
 
   'third_party/rust': {
-    'url': Var('chromium_git') + '/chromium/src/third_party/rust@ca9f9058396501781c028f2062f6e9f0a97e863a',
+    'url': Var('chromium_git') + '/chromium/src/third_party/rust@4d1b3107e380dad943687110ebfb989153642e72',
     'condition': 'not build_with_chromium',
   },
 
@@ -1089,12 +1089,12 @@ deps = {
   },
 
   'tools/android': {
-    'url': Var('chromium_git') + '/chromium/src/tools/android@1bc9dfc738ef290c91039e537a5c50896be20e75',
+    'url': Var('chromium_git') + '/chromium/src/tools/android@7d5d00ed000c9fa21276e76675826d33f63fb61f',
     'condition': 'checkout_android and not build_with_chromium',
   },
 
   'tools/clang': {
-    'url': Var('chromium_git') + '/chromium/src/tools/clang.git@a6615a458df25db4cb42e22639d82ad55e77af6d',
+    'url': Var('chromium_git') + '/chromium/src/tools/clang.git@55237f5cfb77bbd550b05ff203311319106a0898',
     'condition': 'not build_with_chromium',
   },
 
@@ -1144,7 +1144,7 @@ deps = {
   },
 
   'tools/perf': {
-    'url': Var('chromium_git') + '/chromium/src/tools/perf@810ed5860bb661c22a0773ee094ddb5cf05564d8',
+    'url': Var('chromium_git') + '/chromium/src/tools/perf@ff6b5b724569f60aa7161f29157e9e7d71408fd5',
     'condition': 'not build_with_chromium',
   },
 
