@@ -82,8 +82,11 @@ void FeatureSetBase::reset()
     }
 }
 
-void FeatureSetBase::overrideFeatures(const std::vector<std::string> &featureNames, bool enabled)
+std::string FeatureSetBase::overrideFeatures(const std::vector<std::string> &featureNames,
+                                             bool enabled)
 {
+    std::stringstream featureStream;
+
     for (const std::string &name : featureNames)
     {
         const bool hasWildcard = name.back() == '*';
@@ -99,6 +102,12 @@ void FeatureSetBase::overrideFeatures(const std::vector<std::string> &featureNam
 
             feature->applyOverride(enabled);
 
+            if (featureStream.str().empty())
+            {
+                featureStream << "Feature overrides: ";
+            }
+            featureStream << featureName << (enabled ? " enabled, " : " disabled, ");
+
             // If name has a wildcard, try to match it with all features.  Otherwise, bail on first
             // match, as names are unique.
             if (!hasWildcard)
@@ -107,6 +116,13 @@ void FeatureSetBase::overrideFeatures(const std::vector<std::string> &featureNam
             }
         }
     }
+
+    if (!featureStream.str().empty())
+    {
+        featureStream << std::endl;
+    }
+
+    return featureStream.str();
 }
 
 void FeatureSetBase::populateFeatureList(FeatureList *features) const
@@ -1364,55 +1380,13 @@ gl::Rectangle ClipRectToScissor(const gl::State &glState, const gl::Rectangle &r
     return clippedRect;
 }
 
-std::string LogFeatureStatus(const angle::FeatureSetBase &features,
-                             const std::vector<std::string> &featureNames,
-                             bool enabled)
-{
-    std::stringstream featureStream;
-
-    for (const std::string &name : featureNames)
-    {
-        const bool hasWildcard = name.back() == '*';
-        for (const auto &iter : features.getFeatures())
-        {
-            const std::string &featureName = iter.first;
-
-            if (!angle::FeatureNameMatch(featureName, name))
-            {
-                continue;
-            }
-
-            if (featureStream.str().empty())
-            {
-                featureStream << "Feature overrides: ";
-            }
-            featureStream << featureName << (enabled ? " enabled, " : " disabled, ");
-
-            if (!hasWildcard)
-            {
-                break;
-            }
-        }
-    }
-
-    if (!featureStream.str().empty())
-    {
-        featureStream << std::endl;
-    }
-
-    return featureStream.str();
-}
-
 void ApplyFeatureOverrides(angle::FeatureSetBase *features,
                            const angle::FeatureOverrides &overrides)
 {
     std::stringstream featureStream;
 
-    features->overrideFeatures(overrides.enabled, true);
-    featureStream << LogFeatureStatus(*features, overrides.enabled, true);
-
-    features->overrideFeatures(overrides.disabled, false);
-    featureStream << LogFeatureStatus(*features, overrides.disabled, false);
+    featureStream << features->overrideFeatures(overrides.enabled, true);
+    featureStream << features->overrideFeatures(overrides.disabled, false);
 
     // Override with environment as well.
     constexpr char kAngleFeatureOverridesEnabledEnvName[]  = "ANGLE_FEATURE_OVERRIDES_ENABLED";
@@ -1428,11 +1402,8 @@ void ApplyFeatureOverrides(angle::FeatureSetBase *features,
         angle::GetCachedStringsFromEnvironmentVarOrAndroidProperty(
             kAngleFeatureOverridesDisabledEnvName, kAngleFeatureOverridesDisabledPropertyName, ":");
 
-    features->overrideFeatures(overridesEnabled, true);
-    featureStream << LogFeatureStatus(*features, overridesEnabled, true);
-
-    features->overrideFeatures(overridesDisabled, false);
-    featureStream << LogFeatureStatus(*features, overridesDisabled, false);
+    featureStream << features->overrideFeatures(overridesEnabled, true);
+    featureStream << features->overrideFeatures(overridesDisabled, false);
 
     if (!featureStream.str().empty())
     {

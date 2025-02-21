@@ -171,7 +171,7 @@ struct FeatureSetBase
 
   public:
     void reset();
-    void overrideFeatures(const std::vector<std::string> &featureNames, bool enabled);
+    std::string overrideFeatures(const std::vector<std::string> &featureNames, bool enabled);
     void populateFeatureList(FeatureList *features) const;
 
     const FeatureMap &getFeatures() const { return members; }
