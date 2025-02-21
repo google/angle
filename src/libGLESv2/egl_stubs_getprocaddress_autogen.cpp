@@ -1010,6 +1010,11 @@ const ProcEntry g_procTable[] = {
 
 __eglMustCastToProperFunctionPointerType GetProcAddress(Thread *thread, const char *procname)
 {
+    if (procname == nullptr)
+    {
+        return nullptr;
+    }
+
     const ProcEntry *entry =
         std::lower_bound(std::begin(g_procTable), std::end(g_procTable), procname, CompareProc);
 

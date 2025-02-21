@@ -32,17 +32,24 @@ TEST_P(EGLReadinessCheckTest, HasGetPlatformDisplayEXT)
     ASSERT_NE(eglGetPlatformDisplayEXT, nullptr);
 }
 
-// Checks that calling GetProcAddress for a non-existant function fails.
+// Checks that calling GetProcAddress for a non-existent function fails.
 TEST_P(EGLReadinessCheckTest, GetProcAddressNegativeTest)
 {
     auto check = eglGetProcAddress("WigglyWombats");
     EXPECT_EQ(nullptr, check);
 }
 
+// Checks that calling GetProcAddress for a null pointer function fails.
+TEST_P(EGLReadinessCheckTest, GetProcAddressNullInput)
+{
+    auto check = eglGetProcAddress(nullptr);
+    EXPECT_EQ(nullptr, check);
+}
+
 // Tests that our allowlist function generally maps to our support function.
 // We can add specific exceptions here if needed.
 // Disabled because it was creating a large number of configs. This could even result
-// in a BDOD on Windows.
+// in a BSOD on Windows.
 TEST_P(EGLReadinessCheckTest, DISABLED_AllowlistMatchesSupport)
 {
     // Has issues with Vulkan support detection on Android.
