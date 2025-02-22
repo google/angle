@@ -824,7 +824,7 @@ void f(out float r, out float)
 0:11:         Constant union (const highp float)
 0:11:           1.0 (const float)
 )";
-    compile(kShader);
+    EXPECT_TRUE(compile(kShader));
     EXPECT_EQ(kExpected, intermediateTree());
 }
 
