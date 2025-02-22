@@ -188,7 +188,7 @@ class CLCommandQueueCL : public CLCommandQueueImpl
                                       void *args,
                                       size_t cbArgs,
                                       const cl::BufferPtrs &buffers,
-                                      const std::vector<size_t> bufferPtrOffsets,
+                                      const std::vector<size_t> &bufferPtrOffsets,
                                       const cl::EventPtrs &waitEvents,
                                       CLEventImpl::CreateFunc *eventCreateFunc) override;
 
