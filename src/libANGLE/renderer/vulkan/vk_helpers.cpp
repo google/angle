@@ -4629,6 +4629,9 @@ bool DynamicDescriptorPool::evictStaleDescriptorSets(Renderer *renderer,
             // Evict it from the cache and remove it from LRU list.
             bool removed = mDescriptorSetCache.eraseDescriptorSet(it->sharedCacheKey->getDesc());
             ASSERT(removed);
+            // Invalidate the sharedCacheKey so that they could be reused.
+            it->sharedCacheKey->destroy(renderer->getDevice());
+            ASSERT(!it->sharedCacheKey->valid());
 
             // Note that erase it from LRU list will "destroy" descriptorSet. Since we
             // never actually destroy descriptorSet, it will just add to the garbage list. Here we
@@ -4875,6 +4878,13 @@ void DynamicDescriptorPool::checkAndDestroyUnusedPool(Renderer *renderer)
             ++it;
         }
     }
+}
+
+// For ASSERT only
+bool DynamicDescriptorPool::hasCachedDescriptorSet(const DescriptorSetDesc &desc) const
+{
+    DescriptorSetLRUListIterator listIterator;
+    return mDescriptorSetCache.getDescriptorSet(desc, &listIterator);
 }
 
 // For testing only!
@@ -5785,6 +5795,7 @@ void BufferHelper::destroy(Renderer *renderer)
 {
     mCurrentWriteEvent.release(renderer);
     mCurrentReadEvents.release(renderer);
+    ASSERT(mDescriptorSetCacheManager.allValidEntriesAreCached(nullptr));
     mDescriptorSetCacheManager.destroyKeys(renderer);
     unmap(renderer);
     mBufferWithUserSize.destroy(renderer->getDevice());
@@ -5837,9 +5848,11 @@ void BufferHelper::releaseImpl(Renderer *renderer)
     }
 }
 
-void BufferHelper::releaseBufferAndDescriptorSetCache(Context *context)
+void BufferHelper::releaseBufferAndDescriptorSetCache(ContextVk *contextVk)
 {
-    Renderer *renderer = context->getRenderer();
+    Renderer *renderer = contextVk->getRenderer();
+
+    ASSERT(mDescriptorSetCacheManager.allValidEntriesAreCached(contextVk));
     if (renderer->hasResourceUseFinished(getResourceUse()))
     {
         mDescriptorSetCacheManager.destroyKeys(renderer);
@@ -5849,7 +5862,7 @@ void BufferHelper::releaseBufferAndDescriptorSetCache(Context *context)
         mDescriptorSetCacheManager.releaseKeys(renderer);
     }
 
-    release(context);
+    release(contextVk);
 }
 
 angle::Result BufferHelper::map(ErrorContext *context, uint8_t **ptrOut)

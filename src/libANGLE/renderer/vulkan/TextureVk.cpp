@@ -2287,6 +2287,8 @@ void TextureVk::releaseAndDeleteImageAndViews(ContextVk *contextVk)
         onStateChange(angle::SubjectMessage::SubjectChanged);
     }
     mRedefinedLevels = {};
+
+    ASSERT(mDescriptorSetCacheManager.allValidEntriesAreCached(contextVk));
     mDescriptorSetCacheManager.releaseKeys(contextVk->getRenderer());
 }
 

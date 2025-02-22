@@ -92,6 +92,7 @@ class BufferBlock final : angle::NonCopyable
     {
         if (!mDescriptorSetCacheManager.empty())
         {
+            ASSERT(mDescriptorSetCacheManager.allValidEntriesAreCached(nullptr));
             mDescriptorSetCacheManager.releaseKeys(renderer);
         }
     }

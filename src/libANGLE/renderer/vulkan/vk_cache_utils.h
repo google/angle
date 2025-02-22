@@ -1952,6 +1952,9 @@ class DescriptorSetDescAndPool final
         return mDesc == other.mDesc && mPool == other.mPool;
     }
 
+    // Returns true if the key/value can be found in the cache.
+    bool hasValidCachedObject(ContextVk *contextVk) const;
+
   private:
     DescriptorSetDesc mDesc;
     DynamicDescriptorPool *mPool;
@@ -2161,6 +2164,7 @@ class FramebufferDesc
     void releaseCachedObject(Renderer *renderer) { UNREACHABLE(); }
     void releaseCachedObject(ContextVk *contextVk);
     bool valid() const { return mIsValid; }
+    bool hasValidCachedObject(ContextVk *contextVk) const;
 
   private:
     void reset();
@@ -2279,7 +2283,8 @@ class SharedCacheKeyManager
     // The following APIs are expected to be used for assertion only
     bool containsKey(const SharedCacheKeyT &key) const;
     bool empty() const { return mSharedCacheKeys.empty(); }
-    void assertAllEntriesDestroyed();
+    void assertAllEntriesDestroyed() const;
+    bool allValidEntriesAreCached(ContextVk *contextVk) const;
 
   private:
     size_t updateEmptySlotBits();
@@ -2917,7 +2922,7 @@ class DescriptorSetCache final : angle::NonCopyable
 
     void clear() { mPayload.clear(); }
 
-    bool getDescriptorSet(const vk::DescriptorSetDesc &desc, T *descriptorSetOut)
+    bool getDescriptorSet(const vk::DescriptorSetDesc &desc, T *descriptorSetOut) const
     {
         auto iter = mPayload.find(desc);
         if (iter != mPayload.end())

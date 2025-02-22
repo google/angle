@@ -485,6 +485,8 @@ class DynamicDescriptorPool final : angle::NonCopyable
     void destroyUnusedPool(Renderer *renderer, const DescriptorPoolWeakPointer &pool);
     void checkAndDestroyUnusedPool(Renderer *renderer);
 
+    // For ASSERT use only. Return true if mDescriptorSetCache contains DescriptorSet for desc.
+    bool hasCachedDescriptorSet(const DescriptorSetDesc &desc) const;
     // For testing only!
     static uint32_t GetMaxSetsPerPoolForTesting();
     static void SetMaxSetsPerPoolForTesting(uint32_t maxSetsPerPool);
@@ -1064,7 +1066,7 @@ class BufferHelper : public ReadWriteResource
     void destroy(Renderer *renderer);
     void release(Renderer *renderer);
     void release(Context *context);
-    void releaseBufferAndDescriptorSetCache(Context *context);
+    void releaseBufferAndDescriptorSetCache(ContextVk *contextVk);
 
     BufferSerial getBufferSerial() const { return mSerial; }
     BufferSerial getBlockSerial() const

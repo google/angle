@@ -5517,6 +5517,13 @@ void FramebufferDesc::releaseCachedObject(ContextVk *contextVk)
     SetBitField(mIsValid, 0);
 }
 
+bool FramebufferDesc::hasValidCachedObject(ContextVk *contextVk) const
+{
+    ASSERT(valid());
+    Framebuffer framebuffer;
+    return contextVk->getShareGroup()->getFramebufferCache().get(contextVk, *this, framebuffer);
+}
+
 // YcbcrConversionDesc implementation
 YcbcrConversionDesc::YcbcrConversionDesc()
 {
@@ -6337,6 +6344,12 @@ void DescriptorSetDescAndPool::releaseCachedObject(Renderer *renderer)
     ASSERT(valid());
     mPool->releaseCachedDescriptorSet(renderer, mDesc);
     mPool = nullptr;
+}
+
+bool DescriptorSetDescAndPool::hasValidCachedObject(ContextVk *contextVk) const
+{
+    ASSERT(valid());
+    return mPool->hasCachedDescriptorSet(mDesc);
 }
 
 // DescriptorSetDescBuilder implementation.
@@ -7193,13 +7206,26 @@ bool SharedCacheKeyManager<SharedCacheKeyT>::containsKey(const SharedCacheKeyT &
 }
 
 template <class SharedCacheKeyT>
-void SharedCacheKeyManager<SharedCacheKeyT>::assertAllEntriesDestroyed()
+void SharedCacheKeyManager<SharedCacheKeyT>::assertAllEntriesDestroyed() const
 {
     // Caller must have already freed all caches
-    for (SharedCacheKeyT &sharedCacheKey : mSharedCacheKeys)
+    for (const SharedCacheKeyT &sharedCacheKey : mSharedCacheKeys)
     {
         ASSERT(!sharedCacheKey->valid());
     }
+}
+
+template <class SharedCacheKeyT>
+bool SharedCacheKeyManager<SharedCacheKeyT>::allValidEntriesAreCached(ContextVk *contextVk) const
+{
+    for (const SharedCacheKeyT &sharedCacheKey : mSharedCacheKeys)
+    {
+        if (sharedCacheKey->valid() && !sharedCacheKey->hasValidCachedObject(contextVk))
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 // Explict instantiate for FramebufferCacheManager

@@ -70,6 +70,7 @@ void BufferBlock::destroy(Renderer *renderer)
 {
     VkDevice device = renderer->getDevice();
 
+    ASSERT(mDescriptorSetCacheManager.allValidEntriesAreCached(nullptr));
     mDescriptorSetCacheManager.destroyKeys(renderer);
     if (mMappedMemory)
     {
