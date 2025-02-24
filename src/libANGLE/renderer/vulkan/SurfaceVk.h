@@ -393,10 +393,11 @@ class WindowSurfaceVk : public SurfaceVk
     void setDesiredSwapInterval(EGLint interval);
 
     angle::Result initializeImpl(DisplayVk *displayVk, bool *anyMatchesOut);
-    angle::Result recreateSwapchain(ContextVk *contextVk, const gl::Extents &extents);
+    void invalidateSwapchain(ContextVk *contextVk);
+    angle::Result recreateSwapchain(vk::ErrorContext *context, const gl::Extents &extents);
     angle::Result createSwapChain(vk::ErrorContext *context, const gl::Extents &extents);
-    angle::Result collectOldSwapchain(ContextVk *contextVk, VkSwapchainKHR swapchain);
-    angle::Result queryAndAdjustSurfaceCaps(ContextVk *contextVk,
+    angle::Result collectOldSwapchain(vk::ErrorContext *context, VkSwapchainKHR swapchain);
+    angle::Result queryAndAdjustSurfaceCaps(vk::ErrorContext *context,
                                             VkSurfaceCapabilitiesKHR *surfaceCapsOut) const;
     angle::Result checkForOutOfDateSwapchain(ContextVk *contextVk, bool forceRecreate);
     angle::Result resizeSwapchainImages(vk::ErrorContext *context, uint32_t imageCount);
