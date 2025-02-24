@@ -80,7 +80,7 @@ void RandomOrderExecutor::pruneStack(size_t newStackSize)
             else
                 DE_ASSERT(curEntry.children.empty());
 
-            curEntry.node = DE_NULL;
+            curEntry.node = nullptr;
             curEntry.children.clear();
         }
 
@@ -99,7 +99,7 @@ static TestNode *findNodeByName(vector<TestNode *> &nodes, const std::string &na
             return *node;
     }
 
-    return DE_NULL;
+    return nullptr;
 }
 
 TestCase *RandomOrderExecutor::seekToCase(const string &path)

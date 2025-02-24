@@ -51,7 +51,7 @@ class RandomOrderExecutor
         TestNode *node;
         std::vector<TestNode *> children;
 
-        NodeStackEntry(void) : node(DE_NULL) {}
+        NodeStackEntry(void) : node(nullptr) {}
         NodeStackEntry(TestNode *node_) : node(node_) {}
     };
 

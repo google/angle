@@ -218,12 +218,12 @@ NativePixmap::NativePixmap(EGLNativeDisplayType display, int width, int height, 
 #else
     if (!mPixmap)
     {
-        throw ResourceError("Failed to create pixmap", DE_NULL, __FILE__, __LINE__);
+        throw ResourceError("Failed to create pixmap", nullptr, __FILE__, __LINE__);
     }
 
     if (!mPixmap->initialize(display, width, height, bitDepth))
     {
-        throw ResourceError("Failed to initialize pixmap", DE_NULL, __FILE__, __LINE__);
+        throw ResourceError("Failed to initialize pixmap", nullptr, __FILE__, __LINE__);
     }
 #endif
 }
@@ -409,12 +409,12 @@ void NativeWindow::readScreenPixels(tcu::TextureLevel *dst) const
                     mWindow->getWidth(), mWindow->getHeight());
     if (!mWindow->takeScreenshot(reinterpret_cast<uint8_t *>(dst->getAccess().getDataPtr())))
     {
-        throw InternalError("Failed to read screen pixels", DE_NULL, __FILE__, __LINE__);
+        throw InternalError("Failed to read screen pixels", nullptr, __FILE__, __LINE__);
     }
 
     if (mPreRotation != 0)
     {
-        throw InternalError("Read screen pixels with prerotation is not supported", DE_NULL,
+        throw InternalError("Read screen pixels with prerotation is not supported", nullptr,
                             __FILE__, __LINE__);
     }
 }
@@ -513,7 +513,7 @@ eglu::NativeDisplay *ANGLENativeDisplayFactory::createDisplay(
 #endif
     else
     {
-        throw InternalError("unsupported platform type", DE_NULL, __FILE__, __LINE__);
+        throw InternalError("unsupported platform type", nullptr, __FILE__, __LINE__);
     }
 }
 
