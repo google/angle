@@ -408,13 +408,13 @@ class WindowSurfaceVk : public SurfaceVk
     // will recreate the swapchain (if needed due to present returning OUT_OF_DATE, swap interval
     // changing, surface size changing etc, by calling prepareForAcquireNextSwapchainImage()) and
     // call the doDeferredAcquireNextImageWithUsableSwapchain() method.
-    angle::Result doDeferredAcquireNextImage(ContextVk *contextVk);
+    angle::Result doDeferredAcquireNextImage(vk::ErrorContext *context);
     // Calls acquireNextSwapchainImage() and sets up the acquired image.  On some platforms,
     // vkAcquireNextImageKHR returns OUT_OF_DATE instead of present, so this function may still
     // recreate the swapchain.  The main difference with doDeferredAcquireNextImage is that it does
     // not check for surface property changes for the purposes of swapchain recreation (because
     // that's already done by prepareForAcquireNextSwapchainImage.
-    angle::Result doDeferredAcquireNextImageWithUsableSwapchain(ContextVk *contextVk);
+    angle::Result doDeferredAcquireNextImageWithUsableSwapchain(vk::ErrorContext *context);
     // This method calls vkAcquireNextImageKHR() to acquire the next swapchain image or to process
     // unlocked ANI result.  It is scheduled to be called later by deferAcquireNextImage().
     VkResult acquireNextSwapchainImage(vk::ErrorContext *context);

@@ -9484,16 +9484,41 @@ bool ImageHelper::hasSubresourceDefinedStencilContent(gl::LevelIndex level,
         .any();
 }
 
+void ImageHelper::invalidateEntireLevelContent(vk::ErrorContext *context, gl::LevelIndex level)
+{
+    invalidateSubresourceContentImpl(
+        context, level, 0, mLayerCount,
+        static_cast<VkImageAspectFlagBits>(getAspectFlags() & ~VK_IMAGE_ASPECT_STENCIL_BIT),
+        &getLevelContentDefined(toVkLevel(level)), nullptr, nullptr);
+}
+
 void ImageHelper::invalidateSubresourceContent(ContextVk *contextVk,
                                                gl::LevelIndex level,
                                                uint32_t layerIndex,
                                                uint32_t layerCount,
                                                bool *preferToKeepContentsDefinedOut)
 {
-    invalidateSubresourceContentImpl(
-        contextVk, level, layerIndex, layerCount,
-        static_cast<VkImageAspectFlagBits>(getAspectFlags() & ~VK_IMAGE_ASPECT_STENCIL_BIT),
-        &getLevelContentDefined(toVkLevel(level)), preferToKeepContentsDefinedOut);
+    const VkImageAspectFlagBits aspect =
+        static_cast<VkImageAspectFlagBits>(getAspectFlags() & ~VK_IMAGE_ASPECT_STENCIL_BIT);
+    bool layerLimitReached = false;
+    invalidateSubresourceContentImpl(contextVk, level, layerIndex, layerCount, aspect,
+                                     &getLevelContentDefined(toVkLevel(level)),
+                                     preferToKeepContentsDefinedOut, &layerLimitReached);
+    if (layerLimitReached)
+    {
+        const char *aspectName = (aspect == VK_IMAGE_ASPECT_DEPTH_BIT ? "depth" : "color");
+        ANGLE_VK_PERF_WARNING(
+            contextVk, GL_DEBUG_SEVERITY_LOW,
+            "glInvalidateFramebuffer (%s) ineffective on attachments with layer >= 8", aspectName);
+    }
+}
+
+void ImageHelper::invalidateEntireLevelStencilContent(vk::ErrorContext *context,
+                                                      gl::LevelIndex level)
+{
+    invalidateSubresourceContentImpl(context, level, 0, mLayerCount, VK_IMAGE_ASPECT_STENCIL_BIT,
+                                     &getLevelStencilContentDefined(toVkLevel(level)), nullptr,
+                                     nullptr);
 }
 
 void ImageHelper::invalidateSubresourceStencilContent(ContextVk *contextVk,
@@ -9502,18 +9527,27 @@ void ImageHelper::invalidateSubresourceStencilContent(ContextVk *contextVk,
                                                       uint32_t layerCount,
                                                       bool *preferToKeepContentsDefinedOut)
 {
-    invalidateSubresourceContentImpl(
-        contextVk, level, layerIndex, layerCount, VK_IMAGE_ASPECT_STENCIL_BIT,
-        &getLevelStencilContentDefined(toVkLevel(level)), preferToKeepContentsDefinedOut);
+    bool layerLimitReached = false;
+    invalidateSubresourceContentImpl(contextVk, level, layerIndex, layerCount,
+                                     VK_IMAGE_ASPECT_STENCIL_BIT,
+                                     &getLevelStencilContentDefined(toVkLevel(level)),
+                                     preferToKeepContentsDefinedOut, &layerLimitReached);
+    if (layerLimitReached)
+    {
+        ANGLE_VK_PERF_WARNING(
+            contextVk, GL_DEBUG_SEVERITY_LOW,
+            "glInvalidateFramebuffer (stencil) ineffective on attachments with layer >= 8");
+    }
 }
 
-void ImageHelper::invalidateSubresourceContentImpl(ContextVk *contextVk,
+void ImageHelper::invalidateSubresourceContentImpl(vk::ErrorContext *context,
                                                    gl::LevelIndex level,
                                                    uint32_t layerIndex,
                                                    uint32_t layerCount,
                                                    VkImageAspectFlagBits aspect,
                                                    LevelContentDefinedMask *contentDefinedMask,
-                                                   bool *preferToKeepContentsDefinedOut)
+                                                   bool *preferToKeepContentsDefinedOut,
+                                                   bool *layerLimitReachedOut)
 {
     // If the aspect being invalidated doesn't exist, skip invalidation altogether.
     if ((getAspectFlags() & aspect) == 0)
@@ -9544,7 +9578,7 @@ void ImageHelper::invalidateSubresourceContentImpl(ContextVk *contextVk,
             break;
         case VK_IMAGE_ASPECT_COLOR_BIT:
             skip = hasEmulatedChannels &&
-                   contextVk->getFeatures().preferSkippingInvalidateForEmulatedFormats.enabled;
+                   context->getFeatures().preferSkippingInvalidateForEmulatedFormats.enabled;
             break;
         default:
             UNREACHABLE();
@@ -9562,18 +9596,8 @@ void ImageHelper::invalidateSubresourceContentImpl(ContextVk *contextVk,
 
     if (layerIndex >= kMaxContentDefinedLayerCount)
     {
-        const char *aspectName = "color";
-        if (aspect == VK_IMAGE_ASPECT_DEPTH_BIT)
-        {
-            aspectName = "depth";
-        }
-        else if (aspect == VK_IMAGE_ASPECT_STENCIL_BIT)
-        {
-            aspectName = "stencil";
-        }
-        ANGLE_VK_PERF_WARNING(
-            contextVk, GL_DEBUG_SEVERITY_LOW,
-            "glInvalidateFramebuffer (%s) ineffective on attachments with layer >= 8", aspectName);
+        ASSERT(layerLimitReachedOut != nullptr);
+        *layerLimitReachedOut = true;
         return;
     }
 

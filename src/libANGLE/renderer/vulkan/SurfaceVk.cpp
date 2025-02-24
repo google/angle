@@ -2807,19 +2807,20 @@ angle::Result WindowSurfaceVk::prepareForAcquireNextSwapchainImage(vk::ErrorCont
     return checkForOutOfDateSwapchain(context, false);
 }
 
-angle::Result WindowSurfaceVk::doDeferredAcquireNextImage(ContextVk *contextVk)
+angle::Result WindowSurfaceVk::doDeferredAcquireNextImage(vk::ErrorContext *context)
 {
     ASSERT(mAcquireOperation.state != ImageAcquireState::Ready);
     // prepareForAcquireNextSwapchainImage() may recreate Swapchain even if there is an image
     // acquired. Avoid this, by skipping the prepare call.
     if (mAcquireOperation.state == ImageAcquireState::Unacquired)
     {
-        ANGLE_TRY(prepareForAcquireNextSwapchainImage(contextVk));
+        ANGLE_TRY(prepareForAcquireNextSwapchainImage(context));
     }
-    return doDeferredAcquireNextImageWithUsableSwapchain(contextVk);
+    return doDeferredAcquireNextImageWithUsableSwapchain(context);
 }
 
-angle::Result WindowSurfaceVk::doDeferredAcquireNextImageWithUsableSwapchain(ContextVk *contextVk)
+angle::Result WindowSurfaceVk::doDeferredAcquireNextImageWithUsableSwapchain(
+    vk::ErrorContext *context)
 {
     ASSERT(mAcquireOperation.state != ImageAcquireState::Ready);
 
@@ -2829,18 +2830,18 @@ angle::Result WindowSurfaceVk::doDeferredAcquireNextImageWithUsableSwapchain(Con
         ANGLE_TRACE_EVENT0("gpu.angle", "acquireNextSwapchainImage");
 
         // Get the next available swapchain image.
-        VkResult result = acquireNextSwapchainImage(contextVk);
+        VkResult result = acquireNextSwapchainImage(context);
 
         ASSERT(result != VK_SUBOPTIMAL_KHR);
         // If OUT_OF_DATE is returned, it's ok, we just need to recreate the swapchain before
         // continuing.
         if (ANGLE_UNLIKELY(result == VK_ERROR_OUT_OF_DATE_KHR))
         {
-            ANGLE_TRY(checkForOutOfDateSwapchain(contextVk, true));
+            ANGLE_TRY(checkForOutOfDateSwapchain(context, true));
             // Try one more time and bail if we fail
-            result = acquireNextSwapchainImage(contextVk);
+            result = acquireNextSwapchainImage(context);
         }
-        ANGLE_VK_TRY(contextVk, result);
+        ANGLE_VK_TRY(context, result);
     }
 
     // Auto-invalidate the contents of the surface.  According to EGL, on swap:
@@ -2856,20 +2857,17 @@ angle::Result WindowSurfaceVk::doDeferredAcquireNextImageWithUsableSwapchain(Con
     {
         if (mState.swapBehavior == EGL_BUFFER_DESTROYED && mBufferAgeQueryFrameNumber == 0)
         {
-            mSwapchainImages[mCurrentSwapchainImageIndex].image->invalidateSubresourceContent(
-                contextVk, gl::LevelIndex(0), 0, 1, nullptr);
+            mSwapchainImages[mCurrentSwapchainImageIndex].image->invalidateEntireLevelContent(
+                context, gl::LevelIndex(0));
             if (mColorImageMS.valid())
             {
-                mColorImageMS.invalidateSubresourceContent(contextVk, gl::LevelIndex(0), 0, 1,
-                                                           nullptr);
+                mColorImageMS.invalidateEntireLevelContent(context, gl::LevelIndex(0));
             }
         }
         if (mDepthStencilImage.valid())
         {
-            mDepthStencilImage.invalidateSubresourceContent(contextVk, gl::LevelIndex(0), 0, 1,
-                                                            nullptr);
-            mDepthStencilImage.invalidateSubresourceStencilContent(contextVk, gl::LevelIndex(0), 0,
-                                                                   1, nullptr);
+            mDepthStencilImage.invalidateEntireLevelContent(context, gl::LevelIndex(0));
+            mDepthStencilImage.invalidateEntireLevelStencilContent(context, gl::LevelIndex(0));
         }
     }
 
@@ -3455,18 +3453,10 @@ egl::Error WindowSurfaceVk::lockSurface(const egl::Display *display,
 
     if (mAcquireOperation.state != ImageAcquireState::Ready)
     {
-        if (mAcquireOperation.state == ImageAcquireState::Unacquired)
+        angle::Result result = doDeferredAcquireNextImage(displayVk);
+        if (result != angle::Result::Continue)
         {
-            angle::Result result = prepareForAcquireNextSwapchainImage(displayVk);
-            if (result != angle::Result::Continue)
-            {
-                return angle::ToEGL(result, EGL_BAD_ACCESS);
-            }
-        }
-        VkResult result = acquireNextSwapchainImage(displayVk);
-        if (result != VK_SUCCESS)
-        {
-            return angle::ToEGL(angle::Result::Stop, EGL_BAD_ACCESS);
+            return angle::ToEGL(result, EGL_BAD_ACCESS);
         }
     }
 
