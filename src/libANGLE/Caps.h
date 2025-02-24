@@ -711,6 +711,9 @@ struct DisplayExtensions
 
     // EGL_ANGLE_webgpu_texture_client_buffer
     bool webgpuTextureClientBuffer = false;
+
+    // EXT_ANGLE_create_context_passthrough_shaders
+    bool createContextPassthroughShadersANGLE = false;
 };
 
 struct DeviceExtensions

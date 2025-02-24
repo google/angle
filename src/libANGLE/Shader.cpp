@@ -198,8 +198,7 @@ angle::Result CompileTask::compileImpl()
 
 angle::Result CompileTask::postTranslate()
 {
-    const bool isBinaryOutput = mOutputType == SH_SPIRV_VULKAN_OUTPUT;
-    mCompiledState->buildCompiledShaderState(mCompilerHandle, isBinaryOutput);
+    mCompiledState->buildCompiledShaderState(mCompilerHandle, mSource, mOutputType);
 
     ASSERT(!mCompiledState->translatedSource.empty() || !mCompiledState->compiledBinary.empty());
 
@@ -234,7 +233,7 @@ angle::Result CompileTask::postTranslate()
         // To support reading/writing compiled binaries (SPIR-V representation), need more file
         // input/output facilities, and figure out the byte ordering of writing the 32-bit words to
         // disk.
-        if (isBinaryOutput)
+        if (!mCompiledState->compiledBinary.empty())
         {
             INFO() << "Can not substitute compiled binary (SPIR-V) shaders yet";
         }
@@ -257,7 +256,7 @@ angle::Result CompileTask::postTranslate()
     // same data back to the file.
     if (mFrontendFeatures.dumpTranslatedShaders.enabled && !substitutedTranslatedShader)
     {
-        if (isBinaryOutput)
+        if (!mCompiledState->compiledBinary.empty())
         {
             INFO() << "Can not dump compiled binary (SPIR-V) shaders yet";
         }
@@ -272,7 +271,7 @@ angle::Result CompileTask::postTranslate()
     }
 
 #if defined(ANGLE_ENABLE_ASSERTS)
-    if (!isBinaryOutput)
+    if (!mCompiledState->compiledBinary.empty())
     {
         // Suffix the translated shader with commented out un-translated shader.
         // Useful in diagnostics tools which capture the shader source.
@@ -455,50 +454,12 @@ ShaderProgramID Shader::getHandle() const
     return mHandle;
 }
 
-std::string Shader::joinShaderSources(GLsizei count, const char *const *string, const GLint *length)
-{
-    // Fast path for the most common case.
-    if (count == 1)
-    {
-        if (length == nullptr || length[0] < 0)
-            return std::string(string[0]);
-        else
-            return std::string(string[0], static_cast<size_t>(length[0]));
-    }
-
-    // Start with totalLength of 1 to reserve space for the null terminator
-    size_t totalLength = 1;
-
-    // First pass, calculate the total length of the joined string
-    for (GLsizei i = 0; i < count; ++i)
-    {
-        if (length == nullptr || length[i] < 0)
-            totalLength += std::strlen(string[i]);
-        else
-            totalLength += static_cast<size_t>(length[i]);
-    }
-
-    // Second pass, allocate the string and concatenate each shader source
-    // fragment
-    std::string joinedString;
-    joinedString.reserve(totalLength);
-    for (GLsizei i = 0; i < count; ++i)
-    {
-        if (length == nullptr || length[i] < 0)
-            joinedString.append(string[i]);
-        else
-            joinedString.append(string[i], static_cast<size_t>(length[i]));
-    }
-
-    return joinedString;
-}
-
 void Shader::setSource(const Context *context,
                        GLsizei count,
                        const char *const *string,
                        const GLint *length)
 {
-    std::string source = joinShaderSources(count, string, length);
+    std::string source = JoinShaderSources(count, string, length);
 
     // Compute the hash based on the original source before any substitutions
     size_t sourceHash = ComputeShaderHash(source);
@@ -696,6 +657,11 @@ void Shader::compile(const Context *context, angle::JobResultExpectancy resultEx
 #if defined(ANGLE_ENABLE_ASSERTS)
     options.validateAST = true;
 #endif
+
+    if (context->getState().usesPassthroughShaders())
+    {
+        options.skipAllValidationAndTransforms = true;
+    }
 
     // Find a shader in Blob Cache
     Compiler *compiler = context->getCompiler();

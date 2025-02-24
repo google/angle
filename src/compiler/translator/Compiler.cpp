@@ -625,9 +625,16 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
     }
 
     TIntermBlock *root = parseContext.getTreeRoot();
-    if (!checkAndSimplifyAST(root, parseContext, compileOptions))
+    if (compileOptions.skipAllValidationAndTransforms)
     {
-        return nullptr;
+        collectVariables(root);
+    }
+    else
+    {
+        if (!checkAndSimplifyAST(root, parseContext, compileOptions))
+        {
+            return nullptr;
+        }
     }
 
     return root;
@@ -798,7 +805,10 @@ bool TCompiler::getShaderBinary(const ShHandle compilerHandle,
     gl::BinaryOutputStream stream;
     gl::ShaderType shaderType = gl::FromGLenum<gl::ShaderType>(mShaderType);
     gl::CompiledShaderState state(shaderType);
-    state.buildCompiledShaderState(compilerHandle, IsOutputSPIRV(mOutputType));
+    state.buildCompiledShaderState(
+        compilerHandle,
+        gl::JoinShaderSources(static_cast<GLsizei>(numStrings), shaderStrings, nullptr),
+        mOutputType);
 
     stream.writeBytes(
         reinterpret_cast<const unsigned char *>(angle::GetANGLEShaderProgramVersion()),
@@ -1277,17 +1287,13 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    ASSERT(!mVariablesCollected);
     if (!sortUniforms(root))
     {
         return false;
     }
-    CollectVariables(root, &mAttributes, &mOutputVariables, &mUniforms, &mInputVaryings,
-                     &mOutputVaryings, &mSharedVariables, &mUniformBlocks, &mShaderStorageBlocks,
-                     mResources.HashFunction, &mSymbolTable, mShaderType, mExtensionBehavior,
-                     mResources, mTessControlShaderOutputVertices);
-    collectInterfaceBlocks();
-    mVariablesCollected = true;
+
+    collectVariables(root);
+
     if (compileOptions.useUnusedStandardSharedBlocks)
     {
         if (!useAllMembersInUnusedStandardAndSharedBlocks(root))
@@ -1695,6 +1701,17 @@ void TCompiler::setResourceString()
     // clang-format on
 
     mBuiltInResourcesString = strstream.str();
+}
+
+void TCompiler::collectVariables(TIntermBlock *root)
+{
+    ASSERT(!mVariablesCollected);
+    CollectVariables(root, &mAttributes, &mOutputVariables, &mUniforms, &mInputVaryings,
+                     &mOutputVaryings, &mSharedVariables, &mUniformBlocks, &mShaderStorageBlocks,
+                     mResources.UserVariableNamePrefix, mResources.HashFunction, &mSymbolTable,
+                     mShaderType, mExtensionBehavior, mResources, mTessControlShaderOutputVertices);
+    collectInterfaceBlocks();
+    mVariablesCollected = true;
 }
 
 void TCompiler::collectInterfaceBlocks()

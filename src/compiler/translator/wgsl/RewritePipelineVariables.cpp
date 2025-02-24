@@ -549,7 +549,7 @@ bool RewritePipelineVarOutput::OutputMainFunction(TInfoSinkBase &output)
     {
         output << "  " << conversionFunc << "\n";
     }
-    output << "  " << kUserDefinedNamePrefix << "main()" << ";\n";
+    output << "  " << '_' << kUserDefinedNamePrefix << "main()" << ";\n";
 
     if (!mOutputBlock.angleGlobalMembers.empty())
     {
