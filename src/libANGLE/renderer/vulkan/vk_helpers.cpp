@@ -7644,6 +7644,11 @@ bool ImageHelper::hasRenderPassUsageFlag(RenderPassUsage flag) const
     return mRenderPassUsageFlags.test(flag);
 }
 
+bool ImageHelper::hasAnyRenderPassUsageFlags() const
+{
+    return mRenderPassUsageFlags.any();
+}
+
 bool ImageHelper::usedByCurrentRenderPassAsAttachmentAndSampler(
     RenderPassUsage textureSamplerUsage) const
 {

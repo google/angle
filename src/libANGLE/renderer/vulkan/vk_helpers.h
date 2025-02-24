@@ -2570,6 +2570,7 @@ class ImageHelper final : public Resource, public angle::Subject
     void clearRenderPassUsageFlag(RenderPassUsage flag);
     void resetRenderPassUsageFlags();
     bool hasRenderPassUsageFlag(RenderPassUsage flag) const;
+    bool hasAnyRenderPassUsageFlags() const;
     bool usedByCurrentRenderPassAsAttachmentAndSampler(RenderPassUsage textureSamplerUsage) const;
 
     static void Copy(Renderer *renderer,

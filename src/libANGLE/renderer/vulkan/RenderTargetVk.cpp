@@ -64,17 +64,12 @@ void RenderTargetVk::init(vk::ImageHelper *image,
     mTransience = transience;
 }
 
-void RenderTargetVk::invalidateImageAndViews()
-{
-    mImage             = nullptr;
-    mImageViews        = nullptr;
-    mResolveImage      = nullptr;
-    mResolveImageViews = nullptr;
-}
-
 void RenderTargetVk::reset()
 {
-    invalidateImageAndViews();
+    mImage              = nullptr;
+    mImageViews         = nullptr;
+    mResolveImage       = nullptr;
+    mResolveImageViews  = nullptr;
     mImageSiblingSerial = {};
     mLevelIndexGL       = gl::LevelIndex(0);
     mLayerIndex         = 0;
@@ -362,10 +357,14 @@ void RenderTargetVk::updateSwapchainImage(vk::ImageHelper *image,
                                           vk::ImageViewHelper *resolveImageViews)
 {
     ASSERT(image && image->valid() && imageViews);
+    ASSERT(!mImageSiblingSerial.valid());
+    ASSERT(mLevelIndexGL == gl::LevelIndex(0));
+    ASSERT(mLayerIndex == 0);
     mImage             = image;
     mImageViews        = imageViews;
     mResolveImage      = resolveImage;
     mResolveImageViews = resolveImageViews;
+    mLayerCount        = 1;
 }
 
 vk::ImageHelper &RenderTargetVk::getImageForCopy() const

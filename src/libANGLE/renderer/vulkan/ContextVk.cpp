@@ -1573,7 +1573,7 @@ angle::Result ContextVk::flushImpl(const gl::Context *context)
     if (isSingleBufferedWindow &&
         mRenderer->getFeatures().swapbuffersOnFlushOrFinishWithSingleBuffer.enabled)
     {
-        return mCurrentWindowSurface->onSharedPresentContextFlush(context);
+        return mCurrentWindowSurface->onSharedPresentContextFlush(this);
     }
 
     return flushAndSubmitCommands(nullptr, nullptr, RenderPassClosureReason::GLFlush);
@@ -1598,7 +1598,7 @@ angle::Result ContextVk::finish(const gl::Context *context)
     if (mRenderer->getFeatures().swapbuffersOnFlushOrFinishWithSingleBuffer.enabled &&
         singleBufferedFlush)
     {
-        ANGLE_TRY(mCurrentWindowSurface->onSharedPresentContextFlush(context));
+        ANGLE_TRY(mCurrentWindowSurface->onSharedPresentContextFlush(this));
         // While call above performs implicit flush, don't skip |finishImpl| below, since we still
         // need to wait for submitted commands.
     }

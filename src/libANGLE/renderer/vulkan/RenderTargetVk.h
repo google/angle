@@ -169,14 +169,16 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     {
         mFramebufferCacheManager.releaseKeys(contextVk);
     }
-    // Releases framebuffers and resets Image and ImageView pointers, while keeping other
-    // members intact, in order to allow |updateSwapchainImage| call later.
-    void releaseImageAndViews(ContextVk *contextVk)
+    // Resets all members to the initial state without releasing framebuffers since Window Surface
+    // framebuffers are not managed by the cache.
+    void releaseSwapchainImage() { reset(); }
+    // Releases framebuffers and resets all members to the initial state.
+    void release(ContextVk *contextVk)
     {
         releaseFramebuffers(contextVk);
-        invalidateImageAndViews();
+        reset();
     }
-    // Releases framebuffers and resets all members to the initial state.
+    // Destroys framebuffers and resets all members to the initial state.
     void destroy(vk::Renderer *renderer)
     {
         mFramebufferCacheManager.destroyKeys(renderer);
@@ -206,7 +208,6 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     }
 
   private:
-    void invalidateImageAndViews();
     void reset();
 
     angle::Result getImageViewImpl(vk::ErrorContext *context,
