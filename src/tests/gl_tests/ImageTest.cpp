@@ -4432,6 +4432,37 @@ TEST_P(ImageTestES3, AHBClearAppliedBeforeReadBack)
     destroyAndroidHardwareBuffer(ahb);
 }
 
+// Similar to AHBClearAppliedBeforeReadBack, but clear is applied glClearTexImage().
+TEST_P(ImageTestES3, AHBClearAppliedViaClearTexImageBeforeReadBack)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_clear_texture"));
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+    ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
+    EGLWindow *window = getEGLWindow();
+
+    const GLubyte kRed[]   = {255, 0, 0, 255};
+    const GLubyte kBlack[] = {0, 0, 0, 0};
+
+    // Create one image backed by the AHB.
+    AHardwareBuffer *ahb;
+    EGLImageKHR ahbImage;
+    createEGLImageAndroidHardwareBufferSource(1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM,
+                                              kDefaultAHBUsage, kDefaultAttribs, {{kBlack, 4}},
+                                              &ahb, &ahbImage);
+    GLTexture ahbTexture;
+    createEGLImageTargetTexture2D(ahbImage, ahbTexture);
+
+    // Clear to red
+    glClearTexImageEXT(ahbTexture, 0, GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::red);
+    glFinish();
+
+    verifyResultAHB(ahb, {{kRed, 4}});
+
+    eglDestroyImageKHR(window->getDisplay(), ahbImage);
+    destroyAndroidHardwareBuffer(ahb);
+}
+
 // Similar to AHBClearAppliedBeforeReadBack, but clear is applied twice.
 TEST_P(ImageTestES3, AHBTwiceClearAppliedBeforeReadBack)
 {
@@ -4467,6 +4498,38 @@ TEST_P(ImageTestES3, AHBTwiceClearAppliedBeforeReadBack)
         glClear(GL_COLOR_BUFFER_BIT);
         glFinish();
     }
+
+    verifyResultAHB(ahb, {{kRed, 4}});
+
+    eglDestroyImageKHR(window->getDisplay(), ahbImage);
+    destroyAndroidHardwareBuffer(ahb);
+}
+
+// Similar to AHBTwiceClearAppliedBeforeReadBack, but clear is applied using glClearTexImage().
+TEST_P(ImageTestES3, AHBTwiceClearViaClearTexImageAppliedBeforeReadBack)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_clear_texture"));
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+    ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
+    EGLWindow *window = getEGLWindow();
+
+    const GLubyte kRed[]   = {255, 0, 0, 255};
+    const GLubyte kBlack[] = {0, 0, 0, 0};
+
+    // Create one image backed by the AHB.
+    AHardwareBuffer *ahb;
+    EGLImageKHR ahbImage;
+    createEGLImageAndroidHardwareBufferSource(1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM,
+                                              kDefaultAHBUsage, kDefaultAttribs, {{kBlack, 4}},
+                                              &ahb, &ahbImage);
+    GLTexture ahbTexture;
+    createEGLImageTargetTexture2D(ahbImage, ahbTexture);
+
+    // Clear to green, then to red
+    glClearTexImageEXT(ahbTexture, 0, GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::green);
+    glClearTexImageEXT(ahbTexture, 0, GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::red);
+    glFinish();
 
     verifyResultAHB(ahb, {{kRed, 4}});
 
