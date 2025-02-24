@@ -994,6 +994,7 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState, EGLNativ
       mNativeWindowType(window),
       mSurface(VK_NULL_HANDLE),
       mSupportsProtectedSwapchain(false),
+      mIsSurfaceSizedBySwapchain(false),
       mSwapchain(VK_NULL_HANDLE),
       mLastSwapchain(VK_NULL_HANDLE),
       mSwapchainPresentMode(vk::PresentMode::FifoKHR),
@@ -1204,6 +1205,8 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk, bool *anyMat
 
     const VkPhysicalDevice &physicalDevice = renderer->getPhysicalDevice();
 
+    VkSurfaceCapabilitiesKHR surfaceCaps;
+
     if (renderer->getFeatures().supportsSurfaceCapabilities2Extension.enabled)
     {
         VkPhysicalDeviceSurfaceInfo2KHR surfaceInfo2 = {};
@@ -1235,13 +1238,13 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk, bool *anyMat
         ANGLE_VK_TRY(displayVk, vkGetPhysicalDeviceSurfaceCapabilities2KHR(
                                     physicalDevice, &surfaceInfo2, &surfaceCaps2));
 
-        mSurfaceCaps                = surfaceCaps2.surfaceCapabilities;
+        surfaceCaps                 = surfaceCaps2.surfaceCapabilities;
         mSupportsProtectedSwapchain = surfaceProtectedCaps.supportsProtected;
     }
     else
     {
         ANGLE_VK_TRY(displayVk, vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, mSurface,
-                                                                          &mSurfaceCaps));
+                                                                          &surfaceCaps));
     }
 
     if (IsAndroid())
@@ -1252,27 +1255,18 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk, bool *anyMat
     ANGLE_VK_CHECK(displayVk, (mState.hasProtectedContent() ? mSupportsProtectedSwapchain : true),
                    VK_ERROR_FEATURE_NOT_PRESENT);
 
-    // Adjust width and height to the swapchain if necessary.
-    uint32_t width  = mSurfaceCaps.currentExtent.width;
-    uint32_t height = mSurfaceCaps.currentExtent.height;
-
     ANGLE_VK_CHECK(displayVk,
-                   (mSurfaceCaps.supportedUsageFlags & kSurfaceVkColorImageUsageFlags) ==
+                   (surfaceCaps.supportedUsageFlags & kSurfaceVkColorImageUsageFlags) ==
                        kSurfaceVkColorImageUsageFlags,
                    VK_ERROR_INITIALIZATION_FAILED);
 
-    if (mSurfaceCaps.currentExtent.width == kSurfaceSizedBySwapchain)
+    if (surfaceCaps.currentExtent.width == kSurfaceSizedBySwapchain)
     {
-        ASSERT(mSurfaceCaps.currentExtent.height == kSurfaceSizedBySwapchain);
+        ASSERT(surfaceCaps.currentExtent.height == kSurfaceSizedBySwapchain);
+        ASSERT(!IsAndroid());
 
-        gl::Extents windowSize;
-        ANGLE_TRY(getCurrentWindowSize(displayVk, &windowSize));
-
-        width  = windowSize.width;
-        height = windowSize.height;
+        mIsSurfaceSizedBySwapchain = true;
     }
-
-    gl::Extents extents(static_cast<int>(width), static_cast<int>(height), 1);
 
     // Introduction to Android rotation and pre-rotation:
     //
@@ -1303,10 +1297,10 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk, bool *anyMat
     // and scissor calculations are done with non-rotated values; and then the final values are
     // rotated.
     //
-    // ANGLE learns about the window's rotation from mSurfaceCaps.currentTransform.  If
+    // ANGLE learns about the window's rotation from surfaceCaps.currentTransform.  If
     // currentTransform is non-IDENTITY, ANGLE must "pre-rotate" various aspects of its work
     // (e.g. rotate vertices in the vertex shaders, change scissor, viewport, and render-pass
-    // renderArea).  The swapchain's transform is given the value of mSurfaceCaps.currentTransform.
+    // renderArea).  The swapchain's transform is given the value of surfaceCaps.currentTransform.
     // That prevents SurfaceFlinger from doing a rotation blit for every frame (which is costly in
     // terms of performance and power).
     //
@@ -1316,22 +1310,22 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk, bool *anyMat
     if (renderer->getFeatures().enablePreRotateSurfaces.enabled)
     {
         // Use the surface's transform.  For many platforms, this will always be identity (ANGLE
-        // does not need to do any pre-rotation).  However, when mSurfaceCaps.currentTransform is
+        // does not need to do any pre-rotation).  However, when surfaceCaps.currentTransform is
         // not identity, the device has been rotated away from its natural orientation.  In such a
         // case, ANGLE must rotate all rendering in order to avoid the compositor
         // (e.g. SurfaceFlinger on Android) performing an additional rotation blit.  In addition,
         // ANGLE must create the swapchain with VkSwapchainCreateInfoKHR::preTransform set to the
-        // value of mSurfaceCaps.currentTransform.
-        mPreTransform = mSurfaceCaps.currentTransform;
+        // value of surfaceCaps.currentTransform.
+        mPreTransform = surfaceCaps.currentTransform;
     }
     else
     {
         // Default to identity transform.
         mPreTransform = VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR;
 
-        if ((mSurfaceCaps.supportedTransforms & mPreTransform) == 0)
+        if ((surfaceCaps.supportedTransforms & mPreTransform) == 0)
         {
-            mPreTransform = mSurfaceCaps.currentTransform;
+            mPreTransform = surfaceCaps.currentTransform;
         }
     }
 
@@ -1347,16 +1341,6 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk, bool *anyMat
     else if (renderer->getFeatures().emulatedPrerotation270.enabled)
     {
         mEmulatedPreTransform = VK_SURFACE_TRANSFORM_ROTATE_270_BIT_KHR;
-    }
-
-    // If prerotation is emulated, the window is physically rotated.  With real prerotation, the
-    // surface reports the rotated sizes.  With emulated prerotation however, the surface reports
-    // the actual window sizes.  Adjust the window extents to match what real prerotation would have
-    // reported.
-    if (Is90DegreeRotation(mEmulatedPreTransform))
-    {
-        ASSERT(mPreTransform == VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR);
-        std::swap(extents.width, extents.height);
     }
 
     ANGLE_TRY(GetPresentModes(displayVk, physicalDevice, mSurface, &mPresentModes));
@@ -1379,11 +1363,11 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk, bool *anyMat
         mCompositeAlpha = VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR;
     }
 
-    if ((mSurfaceCaps.supportedCompositeAlpha & mCompositeAlpha) == 0)
+    if ((surfaceCaps.supportedCompositeAlpha & mCompositeAlpha) == 0)
     {
         mCompositeAlpha = VK_COMPOSITE_ALPHA_INHERIT_BIT_KHR;
     }
-    ANGLE_VK_CHECK(displayVk, (mSurfaceCaps.supportedCompositeAlpha & mCompositeAlpha) != 0,
+    ANGLE_VK_CHECK(displayVk, (surfaceCaps.supportedCompositeAlpha & mCompositeAlpha) != 0,
                    VK_ERROR_INITIALIZATION_FAILED);
 
     // Single buffer, if supported
@@ -1417,7 +1401,8 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk, bool *anyMat
         }
     }
 
-    ANGLE_TRY(createSwapChain(displayVk, extents));
+    ANGLE_TRY(prepareForAcquireNextSwapchainImage(displayVk));
+    ASSERT(mSwapchain != VK_NULL_HANDLE);
 
     // Create the semaphores that will be used for vkAcquireNextImageKHR.
     for (vk::Semaphore &semaphore : mAcquireOperation.unlockedAcquireData.acquireImageSemaphores)
@@ -1542,8 +1527,7 @@ void WindowSurfaceVk::invalidateSwapchain(vk::ErrorContext *context)
     releaseSwapchainImages(context->getRenderer());
 }
 
-angle::Result WindowSurfaceVk::recreateSwapchain(vk::ErrorContext *context,
-                                                 const gl::Extents &extents)
+angle::Result WindowSurfaceVk::recreateSwapchain(vk::ErrorContext *context)
 {
     // Swapchain must be already invalidated.
     ASSERT(mAcquireOperation.state != ImageAcquireState::Ready);
@@ -1553,15 +1537,6 @@ angle::Result WindowSurfaceVk::recreateSwapchain(vk::ErrorContext *context,
     if (!mSwapchainImages.empty() || mDepthStencilImage.valid() || mColorImageMS.valid())
     {
         releaseSwapchainImages(context->getRenderer());
-    }
-
-    // If prerotation is emulated, adjust the window extents to match what real prerotation would
-    // have reported.
-    gl::Extents swapchainExtents = extents;
-    if (Is90DegreeRotation(mEmulatedPreTransform))
-    {
-        ASSERT(mPreTransform == VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR);
-        std::swap(swapchainExtents.width, swapchainExtents.height);
     }
 
     if (mLastSwapchain != VK_NULL_HANDLE)
@@ -1589,7 +1564,7 @@ angle::Result WindowSurfaceVk::recreateSwapchain(vk::ErrorContext *context,
     // Save the handle since it is going to be updated in the createSwapChain call below.
     VkSwapchainKHR oldSwapchain = mLastSwapchain;
 
-    angle::Result result = createSwapChain(context, swapchainExtents);
+    angle::Result result = createSwapChain(context);
 
     // Notify the parent classes of the surface's new state.
     onStateChange(angle::SubjectMessage::SurfaceChanged);
@@ -1629,8 +1604,7 @@ angle::Result WindowSurfaceVk::resizeSwapchainImages(vk::ErrorContext *context, 
     return angle::Result::Continue;
 }
 
-angle::Result WindowSurfaceVk::createSwapChain(vk::ErrorContext *context,
-                                               const gl::Extents &extents)
+angle::Result WindowSurfaceVk::createSwapChain(vk::ErrorContext *context)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::createSwapchain");
 
@@ -1643,7 +1617,10 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::ErrorContext *context,
     const angle::FormatID actualFormatID   = getActualFormatID(renderer);
     const angle::FormatID intendedFormatID = getIntendedFormatID(renderer);
 
-    gl::Extents rotatedExtents = extents;
+    // Note: Vulkan doesn't allow 0-width/height swapchains and images.
+    const gl::Extents nonZeroSurfaceExtents(std::max(mWidth, 1), std::max(mHeight, 1), 1);
+
+    gl::Extents swapchainExtents = nonZeroSurfaceExtents;
     if (Is90DegreeRotation(getPreTransform()))
     {
         // The Surface is oriented such that its aspect ratio no longer matches that of the
@@ -1653,7 +1630,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::ErrorContext *context,
         // scissor, and render-pass render area must also be swapped.  Then, when ANGLE rotates
         // gl_Position in the vertex shader, the rendering will look the same as if no
         // pre-rotation had been done.
-        std::swap(rotatedExtents.width, rotatedExtents.height);
+        std::swap(swapchainExtents.width, swapchainExtents.height);
     }
 
     // We need transfer src for reading back from the backbuffer.
@@ -1665,19 +1642,15 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::ErrorContext *context,
         imageUsageFlags |= VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
     }
 
-    mSwapchainPresentMode = getDesiredSwapchainPresentMode();
-    mWidth                = extents.width;
-    mHeight               = extents.height;
-
     VkSwapchainCreateInfoKHR swapchainInfo = {};
     swapchainInfo.sType                    = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
     swapchainInfo.flags = mState.hasProtectedContent() ? VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR : 0;
-    swapchainInfo.surface     = mSurface;
-    swapchainInfo.imageFormat = vk::GetVkFormatFromFormatID(renderer, actualFormatID);
-    swapchainInfo.imageColorSpace = mSurfaceColorSpace;
-    // Note: Vulkan doesn't allow 0-width/height swapchains.
-    swapchainInfo.imageExtent.width     = std::max(rotatedExtents.width, 1);
-    swapchainInfo.imageExtent.height    = std::max(rotatedExtents.height, 1);
+    swapchainInfo.surface = mSurface;
+    swapchainInfo.minImageCount         = mMinImageCount;
+    swapchainInfo.imageFormat           = vk::GetVkFormatFromFormatID(renderer, actualFormatID);
+    swapchainInfo.imageColorSpace       = mSurfaceColorSpace;
+    swapchainInfo.imageExtent.width     = swapchainExtents.width;
+    swapchainInfo.imageExtent.height    = swapchainExtents.height;
     swapchainInfo.imageArrayLayers      = 1;
     swapchainInfo.imageUsage            = imageUsageFlags;
     swapchainInfo.imageSharingMode      = VK_SHARING_MODE_EXCLUSIVE;
@@ -1724,66 +1697,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::ErrorContext *context,
         swapchainInfo.flags |= VK_SWAPCHAIN_CREATE_DEFERRED_MEMORY_ALLOCATION_BIT_EXT;
     }
 
-    // Get the list of compatible present modes to avoid unnecessary swapchain recreation.
-    if (renderer->getFeatures().supportsSurfaceMaintenance1.enabled)
-    {
-        VkPhysicalDeviceSurfaceInfo2KHR surfaceInfo2 = {};
-        surfaceInfo2.sType   = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR;
-        surfaceInfo2.surface = mSurface;
-
-        VkSurfacePresentModeEXT surfacePresentMode = {};
-        surfacePresentMode.sType                   = VK_STRUCTURE_TYPE_SURFACE_PRESENT_MODE_EXT;
-        surfacePresentMode.presentMode             = swapchainInfo.presentMode;
-        vk::AddToPNextChain(&surfaceInfo2, &surfacePresentMode);
-
-        VkSurfaceCapabilities2KHR surfaceCaps2 = {};
-        surfaceCaps2.sType                     = VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR;
-
-        mCompatiblePresentModes.resize(kCompatiblePresentModesSize);
-
-        VkSurfacePresentModeCompatibilityEXT compatibleModes = {};
-        compatibleModes.sType            = VK_STRUCTURE_TYPE_SURFACE_PRESENT_MODE_COMPATIBILITY_EXT;
-        compatibleModes.presentModeCount = kCompatiblePresentModesSize;
-        compatibleModes.pPresentModes    = mCompatiblePresentModes.data();
-        vk::AddToPNextChain(&surfaceCaps2, &compatibleModes);
-
-        ANGLE_VK_TRY(context, vkGetPhysicalDeviceSurfaceCapabilities2KHR(
-                                  renderer->getPhysicalDevice(), &surfaceInfo2, &surfaceCaps2));
-
-        mCompatiblePresentModes.resize(compatibleModes.presentModeCount);
-
-        // http://anglebug.com/368647924: in case of multiple drivers vulkan loader causes extension
-        // to be listed when not actually supported. kCompatiblePresentModesSize is above max count
-        // to catch this case and work around.
-        if (compatibleModes.presentModeCount == kCompatiblePresentModesSize)
-        {
-            mCompatiblePresentModes.resize(1);
-            mCompatiblePresentModes[0] = swapchainInfo.presentMode;
-        }
-
-        // The implementation must always return the given present mode as compatible with itself.
-        ASSERT(IsCompatiblePresentMode(mSwapchainPresentMode, mCompatiblePresentModes.data(),
-                                       mCompatiblePresentModes.size()));
-
-        // On Android we expect VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR and
-        // VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR to be compatible.
-        ASSERT(!IsAndroid() || !isSharedPresentMode() ||
-               IsCompatiblePresentMode(
-                   mSwapchainPresentMode == vk::PresentMode::SharedDemandRefreshKHR
-                       ? vk::PresentMode::SharedContinuousRefreshKHR
-                       : vk::PresentMode::SharedDemandRefreshKHR,
-                   mCompatiblePresentModes.data(), mCompatiblePresentModes.size()));
-
-        // Vulkan spec says "The per-present mode image counts may be less-than or greater-than the
-        // image counts returned when VkSurfacePresentModeEXT is not provided.". Use the per present
-        // mode imageCount here. Otherwise we may get into
-        // VUID-VkSwapchainCreateInfoKHR-presentMode-02839.
-        mSurfaceCaps = surfaceCaps2.surfaceCapabilities;
-    }
-
-    mMinImageCount              = GetMinImageCount(renderer, mSurfaceCaps, mSwapchainPresentMode);
-    swapchainInfo.minImageCount = mMinImageCount;
-
+    ASSERT(!mCompatiblePresentModes.empty());
     VkSwapchainPresentModesCreateInfoEXT compatibleModesInfo = {};
     if (renderer->getFeatures().supportsSwapchainMaintenance1.enabled &&
         mCompatiblePresentModes.size() > 1)
@@ -1794,13 +1708,6 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::ErrorContext *context,
         compatibleModesInfo.pPresentModes = mCompatiblePresentModes.data();
 
         vk::AddToPNextChain(&swapchainInfo, &compatibleModesInfo);
-    }
-    else
-    {
-        // Without VK_EXT_swapchain_maintenance1, each present mode can be considered only
-        // compatible with itself.
-        mCompatiblePresentModes.resize(1);
-        mCompatiblePresentModes[0] = swapchainInfo.presentMode;
     }
 
     if (isSharedPresentMode())
@@ -1849,7 +1756,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::ErrorContext *context,
     ANGLE_VK_CHECK(context, samples > 0, VK_ERROR_INITIALIZATION_FAILED);
 
     VkExtent3D vkExtents;
-    gl_vk::GetExtent(rotatedExtents, &vkExtents);
+    gl_vk::GetExtent(swapchainExtents, &vkExtents);
 
     bool robustInit = mState.isRobustResourceInitEnabled();
 
@@ -1894,8 +1801,9 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::ErrorContext *context,
 
         ASSERT(member.image);
         member.image->init2DWeakReference(
-            context, swapchainImages[imageIndex], extents, Is90DegreeRotation(getPreTransform()),
-            intendedFormatID, actualFormatID, createFlags, imageUsageFlags, 1, robustInit);
+            context, swapchainImages[imageIndex], nonZeroSurfaceExtents,
+            Is90DegreeRotation(getPreTransform()), intendedFormatID, actualFormatID, createFlags,
+            imageUsageFlags, 1, robustInit);
         member.imageViews.init(renderer);
         member.frameNumber = 0;
     }
@@ -1943,8 +1851,14 @@ bool WindowSurfaceVk::isMultiSampled() const
 
 angle::Result WindowSurfaceVk::queryAndAdjustSurfaceCaps(
     vk::ErrorContext *context,
-    VkSurfaceCapabilitiesKHR *surfaceCapsOut) const
+    vk::PresentMode presentMode,
+    VkSurfaceCapabilitiesKHR *surfaceCapsOut,
+    CompatiblePresentModes *compatiblePresentModesOut) const
 {
+    // We must not query compatible present modes while swapchain is valid, but must query otherwise
+    ASSERT((compatiblePresentModesOut == nullptr && mSwapchain != VK_NULL_HANDLE) ||
+           (compatiblePresentModesOut != nullptr && mSwapchain == VK_NULL_HANDLE));
+
     vk::Renderer *renderer                 = context->getRenderer();
     const VkPhysicalDevice &physicalDevice = renderer->getPhysicalDevice();
 
@@ -1956,28 +1870,83 @@ angle::Result WindowSurfaceVk::queryAndAdjustSurfaceCaps(
 
         VkSurfacePresentModeEXT surfacePresentMode = {};
         surfacePresentMode.sType                   = VK_STRUCTURE_TYPE_SURFACE_PRESENT_MODE_EXT;
-        surfacePresentMode.presentMode =
-            vk::ConvertPresentModeToVkPresentMode(getDesiredSwapchainPresentMode());
+        surfacePresentMode.presentMode = vk::ConvertPresentModeToVkPresentMode(presentMode);
         vk::AddToPNextChain(&surfaceInfo2, &surfacePresentMode);
 
         VkSurfaceCapabilities2KHR surfaceCaps2 = {};
         surfaceCaps2.sType                     = VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR;
 
+        VkSurfacePresentModeCompatibilityEXT compatibleModes = {};
+        if (compatiblePresentModesOut != nullptr)
+        {
+            // Skip the query if VK_EXT_swapchain_maintenance1 is not supported since compatible
+            // modes can't be used.
+            if (renderer->getFeatures().supportsSwapchainMaintenance1.enabled)
+            {
+                compatiblePresentModesOut->resize(kCompatiblePresentModesSize);
+
+                compatibleModes.sType = VK_STRUCTURE_TYPE_SURFACE_PRESENT_MODE_COMPATIBILITY_EXT;
+                compatibleModes.presentModeCount = kCompatiblePresentModesSize;
+                compatibleModes.pPresentModes    = compatiblePresentModesOut->data();
+                vk::AddToPNextChain(&surfaceCaps2, &compatibleModes);
+            }
+            else
+            {
+                compatiblePresentModesOut->resize(1);
+                (*compatiblePresentModesOut)[0] = surfacePresentMode.presentMode;
+            }
+        }
+
         ANGLE_VK_TRY(context, vkGetPhysicalDeviceSurfaceCapabilities2KHR(
                                   physicalDevice, &surfaceInfo2, &surfaceCaps2));
+
+        if (compatibleModes.pPresentModes != nullptr)
+        {
+            // http://anglebug.com/368647924: in case of multiple drivers vulkan loader causes
+            // extension to be listed when not actually supported. kCompatiblePresentModesSize is
+            // above max count to catch this case and work around.
+            if (compatibleModes.presentModeCount == kCompatiblePresentModesSize)
+            {
+                compatiblePresentModesOut->resize(1);
+                (*compatiblePresentModesOut)[0] = surfacePresentMode.presentMode;
+            }
+            else
+            {
+                compatiblePresentModesOut->resize(compatibleModes.presentModeCount);
+
+                // The implementation must always return the given present mode as compatible with
+                // itself.
+                ASSERT(IsCompatiblePresentMode(presentMode, compatiblePresentModesOut->data(),
+                                               compatiblePresentModesOut->size()));
+
+                // On Android we expect VK_PRESENT_MODE_SHARED_DEMAND_REFRESH_KHR and
+                // VK_PRESENT_MODE_SHARED_CONTINUOUS_REFRESH_KHR to be compatible.
+                ASSERT(!IsAndroid() || !IsSharedPresentMode(presentMode) ||
+                       IsCompatiblePresentMode(
+                           presentMode == vk::PresentMode::SharedDemandRefreshKHR
+                               ? vk::PresentMode::SharedContinuousRefreshKHR
+                               : vk::PresentMode::SharedDemandRefreshKHR,
+                           compatiblePresentModesOut->data(), compatiblePresentModesOut->size()));
+            }
+        }
+
         *surfaceCapsOut = surfaceCaps2.surfaceCapabilities;
     }
     else
     {
         ANGLE_VK_TRY(context, vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, mSurface,
                                                                         surfaceCapsOut));
+        if (compatiblePresentModesOut != nullptr)
+        {
+            // Without VK_EXT_surface_maintenance1, each present mode can be considered only
+            // compatible with itself.
+            compatiblePresentModesOut->resize(1);
+            (*compatiblePresentModesOut)[0] = vk::ConvertPresentModeToVkPresentMode(presentMode);
+        }
     }
 
-    if (surfaceCapsOut->currentExtent.width == kSurfaceSizedBySwapchain)
+    if (mIsSurfaceSizedBySwapchain)
     {
-        ASSERT(surfaceCapsOut->currentExtent.height == kSurfaceSizedBySwapchain);
-        ASSERT(!IsAndroid());
-
         // vkGetPhysicalDeviceSurfaceCapabilitiesKHR does not provide useful extents for some
         // platforms (e.g. Fuchsia).  Therefore, we must query the window size via a
         // platform-specific mechanism.  Add those extents to the surfaceCapsOut
@@ -1987,7 +1956,27 @@ angle::Result WindowSurfaceVk::queryAndAdjustSurfaceCaps(
         surfaceCapsOut->currentExtent.height = windowExtents.height;
     }
 
+    adjustSurfaceExtent(&surfaceCapsOut->currentExtent);
+
     return angle::Result::Continue;
+}
+
+void WindowSurfaceVk::adjustSurfaceExtent(VkExtent2D *extent) const
+{
+    ASSERT(extent->width != kSurfaceSizedBySwapchain);
+    ASSERT(extent->height != kSurfaceSizedBySwapchain);
+
+    // When screen is physically rotated and prerotation is emulated, the window is rotated along
+    // with it.  With real prerotation, the window preserves the upright orientation, by counter
+    // rotating relative to the screen physical rotation.  In both cases, surface reports the window
+    // sizes.  Because with emulated prerotation window is physically rotated, the surface will
+    // also report rotated sizes (relative to the upright orientation).  Adjust the window extents
+    // to match what real prerotation would have reported.
+    if (Is90DegreeRotation(mEmulatedPreTransform))
+    {
+        ASSERT(mPreTransform == VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR);
+        std::swap(extent->width, extent->height);
+    }
 }
 
 angle::Result WindowSurfaceVk::checkForOutOfDateSwapchain(vk::ErrorContext *context,
@@ -1995,70 +1984,76 @@ angle::Result WindowSurfaceVk::checkForOutOfDateSwapchain(vk::ErrorContext *cont
 {
     ASSERT(mAcquireOperation.state != ImageAcquireState::Ready);
 
-    vk::PresentMode desiredSwapchainPresentMode = getDesiredSwapchainPresentMode();
+    const vk::PresentMode desiredSwapchainPresentMode = getDesiredSwapchainPresentMode();
 
-    bool presentModeIncompatible =
-        !IsCompatiblePresentMode(desiredSwapchainPresentMode, mCompatiblePresentModes.data(),
-                                 mCompatiblePresentModes.size());
-    bool swapchainMissing = (mSwapchain == VK_NULL_HANDLE);
-    bool needRecreate     = forceRecreate || presentModeIncompatible || swapchainMissing;
+    bool needRecreate = (mSwapchain == VK_NULL_HANDLE);
 
-    // If there's no change, early out.
-    if (!context->getFeatures().perFrameWindowSizeQuery.enabled && !needRecreate)
+    if (!needRecreate)
     {
-        return angle::Result::Continue;
+        if (forceRecreate ||
+            !IsCompatiblePresentMode(desiredSwapchainPresentMode, mCompatiblePresentModes.data(),
+                                     mCompatiblePresentModes.size()))
+        {
+            // Invalidate swapchain now, in order to update the |mCompatiblePresentModes| in the
+            // |queryAndAdjustSurfaceCaps| call below.
+            invalidateSwapchain(context);
+            needRecreate = true;
+        }
+        else if (!context->getFeatures().perFrameWindowSizeQuery.enabled)
+        {
+            // If there's no change, early out.
+            return angle::Result::Continue;
+        }
     }
     ASSERT(context->getFeatures().perFrameWindowSizeQuery.enabled || needRecreate);
 
-    // Get the latest surface capabilities.
-    ANGLE_TRY(queryAndAdjustSurfaceCaps(context, &mSurfaceCaps));
+    // Get the latest surface capabilities.  Also update the compatible present modes if recreate
+    // was probably cased by the incompatible desired present mode.  Note, that we must not update
+    // compatible present modes while swapchain is still valid, but must do it otherwise.
+    VkSurfaceCapabilitiesKHR surfaceCaps;
+    ANGLE_TRY(queryAndAdjustSurfaceCaps(context, desiredSwapchainPresentMode, &surfaceCaps,
+                                        needRecreate ? &mCompatiblePresentModes : nullptr));
+
+    const uint32_t minImageCount =
+        GetMinImageCount(context->getRenderer(), surfaceCaps, desiredSwapchainPresentMode);
 
     if (context->getFeatures().perFrameWindowSizeQuery.enabled && !needRecreate)
     {
         // This device generates neither VK_ERROR_OUT_OF_DATE_KHR nor VK_SUBOPTIMAL_KHR.  Check for
         // whether the size and/or rotation have changed since the swapchain was created.
-        uint32_t swapchainWidth  = getWidth();
-        uint32_t swapchainHeight = getHeight();
-
-        // getWidth() and getHeight() are swapped for 90 degree and 270 degree emulated
-        // preTransform, we should swap them back before comparing with surface properties to avoid
-        // a size mismatch and unnecessary swapchain recreation
-
-        if (Is90DegreeRotation(mEmulatedPreTransform))
-        {
-            std::swap(swapchainWidth, swapchainHeight);
-        }
+        uint32_t curSurfaceWidth  = mWidth;
+        uint32_t curSurfaceHeight = mHeight;
 
         // On Android, rotation can cause the minImageCount to change
-        needRecreate = mSurfaceCaps.currentTransform != mPreTransform ||
-                       mSurfaceCaps.currentExtent.width != swapchainWidth ||
-                       mSurfaceCaps.currentExtent.height != swapchainHeight ||
-                       GetMinImageCount(context->getRenderer(), mSurfaceCaps,
-                                        desiredSwapchainPresentMode) != mMinImageCount;
+        needRecreate = (context->getFeatures().enablePreRotateSurfaces.enabled &&
+                        surfaceCaps.currentTransform != mPreTransform) ||
+                       surfaceCaps.currentExtent.width != curSurfaceWidth ||
+                       surfaceCaps.currentExtent.height != curSurfaceHeight ||
+                       minImageCount != mMinImageCount;
 
         if (!needRecreate)
         {
             return angle::Result::Continue;
         }
-    }
-    ASSERT(needRecreate);
 
-    // mSwapchain may be already NULL if this is a repeated call (after a previous failure).
-    if (mSwapchain != VK_NULL_HANDLE)
-    {
         invalidateSwapchain(context);
     }
+    ASSERT(needRecreate);
+    ASSERT(mSwapchain == VK_NULL_HANDLE);
 
-    gl::Extents newSwapchainExtents(mSurfaceCaps.currentExtent.width,
-                                    mSurfaceCaps.currentExtent.height, 1);
+    mWidth  = surfaceCaps.currentExtent.width;
+    mHeight = surfaceCaps.currentExtent.height;
+
+    mMinImageCount        = minImageCount;
+    mSwapchainPresentMode = desiredSwapchainPresentMode;
 
     if (context->getFeatures().enablePreRotateSurfaces.enabled)
     {
         // Update the surface's transform, which can change even if the window size does not.
-        mPreTransform = mSurfaceCaps.currentTransform;
+        mPreTransform = surfaceCaps.currentTransform;
     }
 
-    return recreateSwapchain(context, newSwapchainExtents);
+    return recreateSwapchain(context);
 }
 
 void WindowSurfaceVk::releaseSwapchainImages(vk::Renderer *renderer)
@@ -3096,7 +3091,7 @@ egl::Error WindowSurfaceVk::getUserWidth(const egl::Display *display, EGLint *va
 {
     DisplayVk *displayVk = vk::GetImpl(display);
 
-    if (mSurfaceCaps.currentExtent.width == kSurfaceSizedBySwapchain)
+    if (mIsSurfaceSizedBySwapchain)
     {
         // Surface has no intrinsic size; use current size.
         *value = getWidth();
@@ -3118,7 +3113,7 @@ egl::Error WindowSurfaceVk::getUserHeight(const egl::Display *display, EGLint *v
 {
     DisplayVk *displayVk = vk::GetImpl(display);
 
-    if (mSurfaceCaps.currentExtent.height == kSurfaceSizedBySwapchain)
+    if (mIsSurfaceSizedBySwapchain)
     {
         // Surface has no intrinsic size; use current size.
         *value = getHeight();

@@ -338,17 +338,11 @@ class WindowSurfaceVk : public SurfaceVk
 
     egl::Error setRenderBuffer(EGLint renderBuffer) override;
 
-    bool isSharedPresentMode() const
-    {
-        return (mSwapchainPresentMode == vk::PresentMode::SharedDemandRefreshKHR ||
-                mSwapchainPresentMode == vk::PresentMode::SharedContinuousRefreshKHR);
-    }
+    bool isSharedPresentMode() const { return IsSharedPresentMode(mSwapchainPresentMode); }
 
     bool isSharedPresentModeDesired() const
     {
-        vk::PresentMode desiredSwapchainPresentMode = getDesiredSwapchainPresentMode();
-        return (desiredSwapchainPresentMode == vk::PresentMode::SharedDemandRefreshKHR ||
-                desiredSwapchainPresentMode == vk::PresentMode::SharedContinuousRefreshKHR);
+        return IsSharedPresentMode(getDesiredSwapchainPresentMode());
     }
 
     egl::Error lockSurface(const egl::Display *display,
@@ -380,10 +374,22 @@ class WindowSurfaceVk : public SurfaceVk
 
     EGLNativeWindowType mNativeWindowType;
     VkSurfaceKHR mSurface;
-    VkSurfaceCapabilitiesKHR mSurfaceCaps;
     VkBool32 mSupportsProtectedSwapchain;
 
   private:
+    // Present modes that are compatible with the current mode.  If mDesiredSwapchainPresentMode is
+    // in this list, mode switch can happen without the need to recreate the swapchain.
+    // There are currently only 6 possible present modes but vector is bigger for a workaround.
+    static constexpr uint32_t kCompatiblePresentModesSize = 10;
+    using CompatiblePresentModes =
+        angle::FixedVector<VkPresentModeKHR, kCompatiblePresentModesSize>;
+
+    static bool IsSharedPresentMode(vk::PresentMode presentMode)
+    {
+        return (presentMode == vk::PresentMode::SharedDemandRefreshKHR ||
+                presentMode == vk::PresentMode::SharedContinuousRefreshKHR);
+    }
+
     virtual angle::Result createSurfaceVk(vk::ErrorContext *context)          = 0;
     virtual angle::Result getCurrentWindowSize(vk::ErrorContext *context,
                                                gl::Extents *extentsOut) const = 0;
@@ -394,11 +400,15 @@ class WindowSurfaceVk : public SurfaceVk
 
     angle::Result initializeImpl(DisplayVk *displayVk, bool *anyMatchesOut);
     void invalidateSwapchain(vk::ErrorContext *context);
-    angle::Result recreateSwapchain(vk::ErrorContext *context, const gl::Extents &extents);
-    angle::Result createSwapChain(vk::ErrorContext *context, const gl::Extents &extents);
+    angle::Result recreateSwapchain(vk::ErrorContext *context);
+    angle::Result createSwapChain(vk::ErrorContext *context);
     angle::Result collectOldSwapchain(vk::ErrorContext *context, VkSwapchainKHR swapchain);
-    angle::Result queryAndAdjustSurfaceCaps(vk::ErrorContext *context,
-                                            VkSurfaceCapabilitiesKHR *surfaceCapsOut) const;
+    angle::Result queryAndAdjustSurfaceCaps(
+        vk::ErrorContext *context,
+        vk::PresentMode presentMode,
+        VkSurfaceCapabilitiesKHR *surfaceCapsOut,
+        CompatiblePresentModes *compatiblePresentModesOut) const;
+    void adjustSurfaceExtent(VkExtent2D *extent) const;
     angle::Result checkForOutOfDateSwapchain(vk::ErrorContext *context, bool forceRecreate);
     angle::Result resizeSwapchainImages(vk::ErrorContext *context, uint32_t imageCount);
     void releaseSwapchainImages(vk::Renderer *renderer);
@@ -462,6 +472,8 @@ class WindowSurfaceVk : public SurfaceVk
     angle::FormatID getIntendedFormatID(vk::Renderer *renderer);
     angle::FormatID getActualFormatID(vk::Renderer *renderer);
 
+    bool mIsSurfaceSizedBySwapchain;
+
     std::vector<vk::PresentMode> mPresentModes;
 
     VkSwapchainKHR mSwapchain;      // Current swapchain (same as last created or NULL)
@@ -477,11 +489,7 @@ class WindowSurfaceVk : public SurfaceVk
     VkImageCompressionFlagBitsEXT mCompressionFlags;
     VkImageCompressionFixedRateFlagsEXT mFixedRateFlags;
 
-    // Present modes that are compatible with the current mode.  If mDesiredSwapchainPresentMode is
-    // in this list, mode switch can happen without the need to recreate the swapchain.
-    // There are currently only 6 possible present modes but vector is bigger for a workaround.
-    static constexpr uint32_t kCompatiblePresentModesSize = 10;
-    angle::FixedVector<VkPresentModeKHR, kCompatiblePresentModesSize> mCompatiblePresentModes;
+    CompatiblePresentModes mCompatiblePresentModes;
 
     // A circular buffer that stores the serial of the submission fence of the context on every
     // swap. The CPU is throttled by waiting for the 2nd previous serial to finish.  This should
