@@ -111,7 +111,7 @@ void WriteNameOf(StringStreamType &output, SymbolType symbolType, const Immutabl
             output << name;
             break;
         case SymbolType::UserDefined:
-            output << kUserDefinedNamePrefix << name;
+            output << '_' << kUserDefinedNamePrefix << name;
             break;
         case SymbolType::AngleInternal:
             output << name;

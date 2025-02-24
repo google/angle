@@ -253,6 +253,8 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     // Disable name hashing by default.
     resources->HashFunction = nullptr;
 
+    resources->UserVariableNamePrefix = kUserDefinedNamePrefix;
+
     resources->MaxExpressionComplexity = 256;
     resources->MaxStatementDepth       = 256;
     resources->MaxCallStackDepth       = 256;
@@ -906,7 +908,7 @@ uint32_t GetAdvancedBlendEquations(const ShHandle handle)
 // Can't prefix with just _ because then we might introduce a double underscore, which is not safe
 // in GLSL (ESSL 3.00.6 section 3.8: All identifiers containing a double underscore are reserved for
 // use by the underlying implementation). u is short for user-defined.
-const char kUserDefinedNamePrefix[] = "_u";
+const char kUserDefinedNamePrefix = 'u';
 
 const char *BlockLayoutTypeToString(BlockLayoutType type)
 {

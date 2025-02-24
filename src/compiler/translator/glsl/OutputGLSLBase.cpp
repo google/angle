@@ -88,6 +88,7 @@ TOutputGLSLBase::TOutputGLSLBase(TCompiler *compiler,
       mObjSink(objSink),
       mDeclaringVariable(false),
       mHashFunction(compiler->getHashFunction()),
+      mUserVariablePrefix(compiler->getUserVariableNamePrefix()),
       mNameMap(compiler->getNameMap()),
       mShaderType(compiler->getShaderType()),
       mShaderVersion(compiler->getShaderVersion()),
@@ -1156,12 +1157,12 @@ ImmutableString TOutputGLSLBase::getTypeName(const TType &type)
         return ImmutableString("sampler2D");
     }
 
-    return GetTypeName(type, mHashFunction, &mNameMap);
+    return GetTypeName(type, mUserVariablePrefix, mHashFunction, &mNameMap);
 }
 
 ImmutableString TOutputGLSLBase::hashName(const TSymbol *symbol)
 {
-    return HashName(symbol, mHashFunction, &mNameMap);
+    return HashName(symbol, mUserVariablePrefix, mHashFunction, &mNameMap);
 }
 
 ImmutableString TOutputGLSLBase::hashFieldName(const TField *field)
@@ -1169,7 +1170,7 @@ ImmutableString TOutputGLSLBase::hashFieldName(const TField *field)
     ASSERT(field->symbolType() != SymbolType::Empty);
     if (field->symbolType() == SymbolType::UserDefined)
     {
-        return HashName(field->name(), mHashFunction, &mNameMap);
+        return HashName(field->name(), mUserVariablePrefix, mHashFunction, &mNameMap);
     }
 
     return field->name();

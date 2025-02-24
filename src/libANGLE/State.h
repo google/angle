@@ -785,7 +785,8 @@ class State : angle::NonCopyable
           EGLenum contextPriority,
           bool hasRobustAccess,
           bool hasProtectedContent,
-          bool isExternal);
+          bool isExternal,
+          bool passthroughShaders);
     ~State();
 
     void initialize(Context *context);
@@ -812,6 +813,8 @@ class State : angle::NonCopyable
     const Limitations &getLimitations() const { return mPrivateState.getLimitations(); }
 
     bool isExternal() const { return mPrivateState.isExternal(); }
+
+    bool usesPassthroughShaders() const { return mPassthroughShaders; }
 
     Caps *getMutableCaps() { return mPrivateState.getMutableCaps(); }
     TextureCapsMap *getMutableTextureCaps() { return mPrivateState.getMutableTextureCaps(); }
@@ -1548,6 +1551,7 @@ class State : angle::NonCopyable
     bool mHasRobustAccess;
     bool mHasProtectedContent;
     bool mIsDebugContext;
+    bool mPassthroughShaders;
 
     egl::ShareGroup *mShareGroup;
     mutable egl::ContextMutex mContextMutex;

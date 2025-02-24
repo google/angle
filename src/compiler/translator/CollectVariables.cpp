@@ -123,6 +123,7 @@ class CollectVariablesTraverser : public TIntermTraverser
                               std::vector<ShaderVariable> *sharedVariables,
                               std::vector<InterfaceBlock> *uniformBlocks,
                               std::vector<InterfaceBlock> *shaderStorageBlocks,
+                              char userVariablePrefix,
                               ShHashFunction64 hashFunction,
                               TSymbolTable *symbolTable,
                               GLenum shaderType,
@@ -245,6 +246,7 @@ class CollectVariablesTraverser : public TIntermTraverser
     bool mTessCoordAdded;
     const int mTessControlShaderOutputVertices;
 
+    char mUserVariablePrefix;
     ShHashFunction64 mHashFunction;
 
     GLenum mShaderType;
@@ -261,6 +263,7 @@ CollectVariablesTraverser::CollectVariablesTraverser(
     std::vector<sh::ShaderVariable> *sharedVariables,
     std::vector<sh::InterfaceBlock> *uniformBlocks,
     std::vector<sh::InterfaceBlock> *shaderStorageBlocks,
+    char userVariablePrefix,
     ShHashFunction64 hashFunction,
     TSymbolTable *symbolTable,
     GLenum shaderType,
@@ -318,6 +321,7 @@ CollectVariablesTraverser::CollectVariablesTraverser(
       mBoundingBoxAdded(false),
       mTessCoordAdded(false),
       mTessControlShaderOutputVertices(tessControlShaderOutputVertices),
+      mUserVariablePrefix(userVariablePrefix),
       mHashFunction(hashFunction),
       mShaderType(shaderType),
       mExtensionBehavior(extensionBehavior),
@@ -326,7 +330,7 @@ CollectVariablesTraverser::CollectVariablesTraverser(
 
 std::string CollectVariablesTraverser::getMappedName(const TSymbol *symbol) const
 {
-    return HashName(symbol, mHashFunction, nullptr).data();
+    return HashName(symbol, mUserVariablePrefix, mHashFunction, nullptr).data();
 }
 
 void CollectVariablesTraverser::setBuiltInInfoFromSymbol(const TVariable &variable,
@@ -773,8 +777,10 @@ void CollectVariablesTraverser::setFieldOrVariableProperties(const TType &type,
         {
             variableOut->structOrBlockName = interfaceBlock->name().data();
             variableOut->mappedStructOrBlockName =
-                isPerVertex ? interfaceBlock->name().data()
-                            : HashName(interfaceBlock->name(), mHashFunction, nullptr).data();
+                isPerVertex
+                    ? interfaceBlock->name().data()
+                    : HashName(interfaceBlock->name(), mUserVariablePrefix, mHashFunction, nullptr)
+                          .data();
         }
         const TFieldList &fields = interfaceBlock->fields();
         for (const TField *field : fields)
@@ -832,9 +838,10 @@ void CollectVariablesTraverser::setFieldProperties(const TType &type,
     ASSERT(variableOut);
     setFieldOrVariableProperties(type, staticUse, isShaderIOBlock, isPatch, variableOut);
     variableOut->name.assign(name.data(), name.length());
-    variableOut->mappedName = (symbolType == SymbolType::BuiltIn)
-                                  ? name.data()
-                                  : HashName(name, mHashFunction, nullptr).data();
+    variableOut->mappedName =
+        (symbolType == SymbolType::BuiltIn)
+            ? name.data()
+            : HashName(name, mUserVariablePrefix, mHashFunction, nullptr).data();
 }
 
 void CollectVariablesTraverser::setCommonVariableProperties(const TType &type,
@@ -870,7 +877,7 @@ void CollectVariablesTraverser::setCommonVariableProperties(const TType &type,
         variableOut->structOrBlockName.assign(interfaceBlock->name().data(),
                                               interfaceBlock->name().length());
         variableOut->mappedStructOrBlockName =
-            HashName(interfaceBlock->name(), mHashFunction, nullptr).data();
+            HashName(interfaceBlock->name(), mUserVariablePrefix, mHashFunction, nullptr).data();
         variableOut->isShaderIOBlock = true;
     }
 }
@@ -1099,7 +1106,10 @@ ShaderVariable CollectVariablesTraverser::recordUniform(const TIntermSymbol &var
 bool CollectVariablesTraverser::visitDeclaration(Visit, TIntermDeclaration *node)
 {
     const TIntermSequence &sequence = *(node->getSequence());
-    ASSERT(!sequence.empty());
+    if (sequence.empty())
+    {
+        return false;
+    }
 
     const TIntermTyped &typedNode = *(sequence.front()->getAsTyped());
     TQualifier qualifier          = typedNode.getQualifier();
@@ -1303,6 +1313,7 @@ void CollectVariables(TIntermBlock *root,
                       std::vector<ShaderVariable> *sharedVariables,
                       std::vector<InterfaceBlock> *uniformBlocks,
                       std::vector<InterfaceBlock> *shaderStorageBlocks,
+                      char userVariablePrefix,
                       ShHashFunction64 hashFunction,
                       TSymbolTable *symbolTable,
                       GLenum shaderType,
@@ -1312,8 +1323,8 @@ void CollectVariables(TIntermBlock *root,
 {
     CollectVariablesTraverser collect(
         attributes, outputVariables, uniforms, inputVaryings, outputVaryings, sharedVariables,
-        uniformBlocks, shaderStorageBlocks, hashFunction, symbolTable, shaderType,
-        extensionBehavior, resources, tessControlShaderOutputVertices);
+        uniformBlocks, shaderStorageBlocks, userVariablePrefix, hashFunction, symbolTable,
+        shaderType, extensionBehavior, resources, tessControlShaderOutputVertices);
     root->traverse(&collect);
 }
 

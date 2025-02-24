@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 374
+#define ANGLE_SH_VERSION 375
 
 enum ShShaderSpec
 {
@@ -480,6 +480,10 @@ struct ShCompileOptions
     // Whether inactive shader variables from the output.
     uint64_t removeInactiveVariables : 1;
 
+    // Do not preform any shader validation or perform any shader transformations. Shader state can
+    // still be reflected.
+    uint64_t skipAllValidationAndTransforms : 1;
+
     ShCompileOptionsMetal metal;
     ShPixelLocalStorageOptions pls;
 };
@@ -600,6 +604,11 @@ struct ShBuiltInResources
     // Set a 64 bit hash function to enable user-defined name hashing.
     // Default is NULL.
     ShHashFunction64 HashFunction;
+
+    // User defined variables are prefixed with '_' and UserVariableNamePrefix. If UserVariableName
+    // is the null character, no prefixing is done and collisions between user variables and
+    // variables introduced during translation is possible.
+    char UserVariableNamePrefix;
 
     // The maximum complexity an expression can be when limitExpressionComplexity is turned on.
     int MaxExpressionComplexity;
@@ -973,7 +982,7 @@ inline bool IsWebGLBasedSpec(ShShaderSpec spec)
 // Can't prefix with just _ because then we might introduce a double underscore, which is not safe
 // in GLSL (ESSL 3.00.6 section 3.8: All identifiers containing a double underscore are reserved for
 // use by the underlying implementation). u is short for user-defined.
-extern const char kUserDefinedNamePrefix[];
+extern const char kUserDefinedNamePrefix;
 
 enum class MetadataFlags
 {
