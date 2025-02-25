@@ -721,8 +721,7 @@ void Renderer::ensureCapsInitialized() const
         rx::LimitToInt(limitsVk.maxComputeWorkGroupInvocations);
     mNativeCaps.maxComputeSharedMemorySize = rx::LimitToInt(limitsVk.maxComputeSharedMemorySize);
 
-    GLuint maxUniformBlockSize =
-        std::min(limitsVk.maxUniformBufferRange, static_cast<uint32_t>(mMaxBufferMemorySizeLimit));
+    GLuint maxUniformBlockSize = limitsVk.maxUniformBufferRange;
 
     // Clamp the maxUniformBlockSize to 64KB (majority of devices support up to this size
     // currently), on AMD the maxUniformBufferRange is near uint32_t max.
@@ -844,8 +843,7 @@ void Renderer::ensureCapsInitialized() const
     // Emulated as storage buffers, atomic counter buffers have the same size limit.  However, the
     // limit is a signed integer and values above int max will end up as a negative size.  The
     // storage buffer size is just capped to int unconditionally.
-    uint32_t maxStorageBufferRange = rx::LimitToIntAnd(
-        limitsVk.maxStorageBufferRange, static_cast<uint32_t>(mMaxBufferMemorySizeLimit));
+    uint32_t maxStorageBufferRange = rx::LimitToInt(limitsVk.maxStorageBufferRange);
     if (mFeatures.limitMaxStorageBufferSize.enabled)
     {
         constexpr uint32_t kStorageBufferLimit = 256 * 1024 * 1024;
@@ -1090,10 +1088,12 @@ void Renderer::ensureCapsInitialized() const
     //    GL_RGBA32UI                  Y                           Y
     mNativeExtensions.textureBufferOES = true;
     mNativeExtensions.textureBufferEXT = true;
-
-    mNativeCaps.maxTextureBufferSize = rx::LimitToIntAnd(
-        limitsVk.maxTexelBufferElements, static_cast<uint32_t>(mMaxBufferMemorySizeLimit));
-
+    mNativeCaps.maxTextureBufferSize   = rx::LimitToInt(limitsVk.maxTexelBufferElements);
+    if (getFeatures().padBuffersToMaxVertexAttribStride.enabled)
+    {
+        // Account for buffer padding
+        mNativeCaps.maxTextureBufferSize -= getMaxVertexAttribStride();
+    }
     mNativeCaps.textureBufferOffsetAlignment =
         rx::LimitToInt(limitsVk.minTexelBufferOffsetAlignment);
 
