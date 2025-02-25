@@ -76,7 +76,13 @@ action("clspv-builtins") {
 # to the clspv README.md file for instructions.
 action("clspv_builtin_library") {
   script = "src/cmake/bake_file.py"
-  inputs = [ "src/cmake/clspv--.bc" ]
+
+  #  TODO(hoonee.cho): fix the GN script to build libclc libraries with clspv
+  # The recent CLSPV's commit changed a way to get clspv--.bc and clspv64--.bc when building CLSPV.
+  # https://github.com/google/clspv/commit/769daac0f9b7ace2d6fb9839f18ba82f9751aefd
+  # Before: use prebuilt clspv--.bc and clspv64--.bc
+  # After: build clang/libclc with target set to clspv--.bc and clspv64--.bc
+  inputs = [ "gn/clspv--.bc" ]
   outputs = [ "$target_gen_dir/clspv/clspv_builtin_library.h" ]
 
   args = [
@@ -89,7 +95,7 @@ action("clspv_builtin_library") {
 
 action("clspv64_builtin_library") {
   script = "src/cmake/bake_file.py"
-  inputs = [ "src/cmake/clspv64--.bc" ]
+  inputs = [ "gn/clspv64--.bc" ]
   outputs = [ "$target_gen_dir/clspv/clspv64_builtin_library.h" ]
 
   args = [

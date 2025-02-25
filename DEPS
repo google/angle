@@ -711,7 +711,7 @@ deps = {
   },
 
   'third_party/clspv/src': {
-    'url': Var('chromium_git') + '/external/github.com/google/clspv@a173c052455434a422bcfe5c12ffe44d574fd6e1',
+    'url': Var('chromium_git') + '/external/github.com/google/clspv@60f822e8123ca414dddc0e0f944440c99cb3c04d',
     'condition': 'not build_with_chromium',
   },
 
@@ -808,7 +808,7 @@ deps = {
   },
 
   'third_party/llvm/src': {
-    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project@d222fa4521531cc4ac14b8e157d231c108c003be',
+    'url': Var('chromium_git') + '/external/github.com/llvm/llvm-project@1fd8d3fea53e6e4573cdce55bd38ef0a7813a442',
     'condition': 'not build_with_chromium',
   },
 
