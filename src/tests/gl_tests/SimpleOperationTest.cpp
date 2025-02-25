@@ -1571,6 +1571,73 @@ TEST_P(SimpleOperationTest, DrawSingleMultiSampleWithAlphaToCoverage)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
 }
 
+// Test glGetRenderbufferParameteriv returned value for different render buffer
+TEST_P(SimpleOperationTest, GetRenderbufferParameter)
+{
+    GLint value = 0;
+    // call glGetRenderbufferParameteriv with renderbuffer bound to 0
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &value);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // generate an empty renderbuffer, then get all parameters, they should equal to default values
+    GLRenderbuffer renderBuffer;
+    glBindRenderbuffer(GL_RENDERBUFFER, renderBuffer);
+
+    // Retrieve all values
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &value);
+    ASSERT_EQ(value, 0);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &value);
+    ASSERT_EQ(value, 0);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_INTERNAL_FORMAT, &value);
+    ASSERT_EQ(value, GL_RGBA4);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_RED_SIZE, &value);
+    ASSERT_EQ(value, 0);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_GREEN_SIZE, &value);
+    ASSERT_EQ(value, 0);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_BLUE_SIZE, &value);
+    ASSERT_EQ(value, 0);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_ALPHA_SIZE, &value);
+    ASSERT_EQ(value, 0);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_DEPTH_SIZE, &value);
+    ASSERT_EQ(value, 0);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_STENCIL_SIZE, &value);
+    ASSERT_EQ(value, 0);
+
+    // set buffer storage, then get all renderbuffer parameters
+
+    // Allocate memory for renderbuffer
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, 32, 32);
+
+    /* Retrieve all values */
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &value);
+    ASSERT_EQ(value, 32);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &value);
+    ASSERT_EQ(value, 32);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_INTERNAL_FORMAT, &value);
+    ASSERT_EQ(value, GL_DEPTH_COMPONENT16);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_RED_SIZE, &value);
+    ASSERT_EQ(value, 0);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_GREEN_SIZE, &value);
+    ASSERT_EQ(value, 0);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_BLUE_SIZE, &value);
+    ASSERT_EQ(value, 0);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_ALPHA_SIZE, &value);
+    ASSERT_EQ(value, 0);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_DEPTH_SIZE, &value);
+    ASSERT_GE(value, 16);
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_STENCIL_SIZE, &value);
+    ASSERT_EQ(value, 0);
+
+    // call glGetRenderbufferParameteriv with an invalid pname
+    glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_INVALID_ENUM, &value);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    // Call with invalid target with invalid target
+    glGetRenderbufferParameteriv(GL_INVALID_VALUE, GL_RENDERBUFFER_WIDTH, &value);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(

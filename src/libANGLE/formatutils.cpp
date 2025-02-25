@@ -373,7 +373,7 @@ InternalFormat::InternalFormat()
       format(GL_NONE),
       type(GL_NONE),
       componentType(GL_NONE),
-      colorEncoding(GL_NONE),
+      colorEncoding(GL_LINEAR),
       textureSupport(NeverSupported),
       filterSupport(NeverSupported),
       textureAttachmentSupport(NeverSupported),

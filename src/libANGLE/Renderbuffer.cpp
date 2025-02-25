@@ -36,7 +36,7 @@ InitState DetermineInitState(const Context *context)
 RenderbufferState::RenderbufferState()
     : mWidth(0),
       mHeight(0),
-      mFormat(GL_RGBA4),
+      mFormat(GL_NONE),
       mSamples(0),
       mMultisamplingMode(MultisamplingMode::Regular),
       mHasProtectedContent(false),

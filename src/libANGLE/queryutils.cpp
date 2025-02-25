@@ -1513,7 +1513,9 @@ void QueryRenderbufferiv(const Context *context,
             }
             else
             {
-                *params = renderbuffer->getFormat().info->internalFormat;
+                *params = (renderbuffer->getFormat().info->internalFormat == GL_NONE)
+                              ? GL_RGBA4
+                              : renderbuffer->getFormat().info->internalFormat;
             }
             break;
         case GL_RENDERBUFFER_RED_SIZE:
