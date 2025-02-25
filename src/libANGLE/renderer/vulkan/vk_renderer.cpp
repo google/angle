@@ -581,6 +581,36 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
         "vkCmdDrawIndexed reads vertex VkBuffer",
         "which was previously written by vkCmdCopyBuffer.",
     },
+    // http://anglebug.com/399191283
+    {"SYNC-HAZARD-WRITE-AFTER-WRITE",
+     "vkCmdBeginRenderingKHR writes pRenderingInfo.pDepthAttachment",
+     "which was previously written during an image layout transition initiated by "
+     "vkCmdPipelineBarrier.",
+     false,
+     {"message_type = GeneralError",
+      "access = "
+      "VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_"
+      "BIT)",
+      "prior_access = SYNC_IMAGE_LAYOUT_TRANSITION",
+      "write_barriers = "
+      "VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT|VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT|VK_"
+      "PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT)",
+      "command = vkCmdBeginRenderingKHR"}},
+    // http://anglebug.com/399191283
+    {"SYNC-HAZARD-WRITE-AFTER-WRITE",
+     "vkCmdBeginRenderingKHR writes pRenderingInfo.pStencilAttachment",
+     "which was previously written during an image layout transition initiated by "
+     "vkCmdPipelineBarrier.",
+     false,
+     {"message_type = GeneralError",
+      "access = "
+      "VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_"
+      "BIT)",
+      "prior_access = SYNC_IMAGE_LAYOUT_TRANSITION",
+      "write_barriers = "
+      "VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT|VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT|VK_"
+      "PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT)",
+      "command = vkCmdBeginRenderingKHR"}},
 };
 
 // Messages that shouldn't be generated if storeOp=NONE is supported, otherwise they are expected.
