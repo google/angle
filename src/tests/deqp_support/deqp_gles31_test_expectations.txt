@@ -483,10 +483,3 @@ b/328156792 PINEAPPLE VULKAN : dEQP-GLES31.functional.synchronization.in* = SKIP
 b/328156792 PINEAPPLE VULKAN : dEQP-GLES31.functional.texture.border_clamp.* = SKIP
 b/328156792 PINEAPPLE VULKAN : dEQP-GLES31.functional.texture.*cube_array* = SKIP
 b/328156792 PINEAPPLE VULKAN : dEQP-GLES31.functional.texture.gather.basic.cube* = SKIP
-
-b/395920316 LINUX SWIFTSHADER ASAN : dEQP-GLES31.functional.draw_base_vertex.draw_elements_base_vertex.indices.* = SKIP
-b/395920316 LINUX SWIFTSHADER ASAN : dEQP-GLES31.functional.draw_base_vertex.draw_elements_instanced_base_vertex.indices.* = SKIP
-b/395920316 LINUX SWIFTSHADER ASAN : dEQP-GLES31.functional.draw_base_vertex.draw_range_elements_base_vertex.indices.* = SKIP
-b/395920316 LINUX SWIFTSHADER ASAN : dEQP-GLES31.functional.draw_indirect.draw_elements_indirect.indices.* = SKIP
-b/395920316 LINUX SWIFTSHADER ASAN : dEQP-GLES31.functional.draw_indirect.random.* = SKIP
-b/395920316 LINUX SWIFTSHADER ASAN : dEQP-GLES31.functional.texture.border_clamp.* = SKIP
