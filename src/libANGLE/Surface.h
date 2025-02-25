@@ -115,13 +115,7 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
     // width and height can change with client window resizing
     EGLint getWidth() const;
     EGLint getHeight() const;
-    // Note: windows cannot be resized on Android.  The approach requires
-    // calling vkGetPhysicalDeviceSurfaceCapabilitiesKHR.  However, that is
-    // expensive; and there are troublesome timing issues for other parts of
-    // ANGLE (which cause test failures and crashes).  Therefore, a
-    // special-Android-only path is created just for the querying of EGL_WIDTH
-    // and EGL_HEIGHT.
-    // https://issuetracker.google.com/issues/153329980
+    // Sizes that Surface will have after render target is first accessed (e.g. after draw).
     egl::Error getUserWidth(const egl::Display *display, EGLint *value) const;
     egl::Error getUserHeight(const egl::Display *display, EGLint *value) const;
     EGLint getPixelAspectRatio() const;

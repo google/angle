@@ -460,9 +460,6 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 351275980 MAC METAL : GLSLTest_ES3.DynamicIndexingOfSwizzledLValuesShouldWork2/* = SKIP
 351275980 IOS METAL : GLSLTest_ES3.DynamicIndexingOfSwizzledLValuesShouldWork2/* = SKIP
 
-373659619 MAC METAL : EGLSurfaceTest.ResizeWindow/* = SKIP
-373659619 IOS METAL : EGLSurfaceTest.ResizeWindow/* = SKIP
-
 // D3D
 42264944 WIN D3D9 : GLSLTest.HandleExcessiveLoopBug/* = SKIP
 42264620 WIN D3D11 : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
@@ -498,7 +495,6 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 42264624 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
 42264646 ANDROID GLES : GLSLTestLoops.ForNoCondition/* = SKIP
 42264756 ANDROID GLES : BufferDataTestES3.DrawWithNotCallingBufferData/* = SKIP
-42265529 ANDROID VULKAN : EGLSurfaceTest.ResizeWindowWithDraw/* = SKIP
 42265529 ANDROID : EGLReadinessCheckTest.IsRunningOnANGLE/* = SKIP
 42265529 ANDROID : EGLReadinessCheckTest.GetProcAddressNegativeTest/* = SKIP
 42265529 ANDROID : EGLReadinessCheckTest.HasGetPlatformDisplayEXT/* = SKIP
@@ -654,8 +650,6 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 
 42266902 PIXEL4ORXL : GLSLTest_ES3.LargeConstGlobalArraysOfStructs/* = SKIP
 
-42265843 PIXEL4ORXL VULKAN : FramebufferTest_ES3.SurfaceDimensionsChangeAndFragCoord/* = SKIP
-
 42266150 PIXEL4ORXL VULKAN : PixelLocalStorageTest.MaxCombinedDrawBuffersAndPLSPlanes/* = SKIP
 42266150 PIXEL4ORXL VULKAN : PixelLocalStorageTest.BlendColorMaskAndClear/* = SKIP
 42266150 PIXEL4ORXL VULKAN : PixelLocalStorageTest.ClearWithActivePLS/* = SKIP
@@ -736,7 +730,6 @@ b/346650202 PIXEL4ORXL : GeometryShaderTest.CreateAndAttachGeometryShaderOES/* =
 // Pixel 6 expectations.
 40096826 PIXEL6 VULKAN : BlitFramebufferTest.OOBWrite/* = SKIP
 40096826 PIXEL6 VULKAN : BufferSubDataTest.MapInvalidateThenBufferSubData/* = SKIP
-40096826 PIXEL6 VULKAN : EGLSurfaceTest.ResizeWindowWithDraw/* = SKIP
 40096826 PIXEL6 VULKAN : ExternalBufferTestES31.BufferDoesNotLeakAHB/* = SKIP
 40096826 PIXEL6 VULKAN : FramebufferMultiviewLayeredClearTest.ScissoredClearBufferfi/* = SKIP
 40096826 PIXEL6 VULKAN : FramebufferTest_ES31.MultipleTextureMultisampleResolveWithBlitMultipleResolves* = SKIP
@@ -1090,8 +1083,6 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 42266575 LINUX NVIDIA OpenGL : RGBTextureBufferTestES31.*/* = SKIP
 // Misbehaves on D3D11 (pixels remain black or reading from wrong offsets)
 42266575 D3D11 : RGBTextureBufferTestES31.*/* = SKIP
-
-42266013 LINUX VULKAN : FramebufferTest_ES3.SurfaceDimensionsChangeAndFragCoord/* = SKIP
 
 42266091 WIN INTEL : *EmulateCopyTexImage2DFromRenderbuffers* = SKIP
 
@@ -1668,6 +1659,23 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 42267264 WGPU : ClearTest.*BGRA* = SKIP
 
 405286904 SWIFTSHADER : TextureBufferTestES31.UseAsXFBThenAsTextureBuffer/* = SKIP
+
+// EGLSurfaceTest.Resize* failures
+42264022 IOS : EGLSurfaceTest.ResizeAfterSwap/* = SKIP
+42264022 IOS : EGLSurfaceTest.ResizeAfterSwapSkipSizeQuery/* = SKIP
+42264022 IOS : EGLSurfaceTest.ResizeBeforeDraw/* = SKIP
+42264022 IOS : EGLSurfaceTest.ResizeBeforeDrawPostSizeQuery/* = SKIP
+42264022 IOS : EGLSurfaceTest.ResizeAfterDraw/* = SKIP
+42264022 IOS : EGLSurfaceTest.ResizeLargeWindow/* = SKIP
+373659619 MAC METAL : EGLSurfaceTest.ResizeAfterSwap/* = SKIP
+373659619 MAC METAL : EGLSurfaceTest.ResizeBeforeDraw/* = SKIP
+373659619 MAC OPENGL : EGLSurfaceTest.ResizeBeforeDraw/* = SKIP
+373659619 MAC OPENGL : EGLSurfaceTest.ResizeBeforeDrawPostSizeQuery/* = SKIP
+373659619 MAC OPENGL : EGLSurfaceTest.ResizeAfterDraw/* = SKIP
+373659619 MAC : EGLSurfaceTest.ResizeLargeWindow/* = SKIP
+397848903 LINUX NVIDIA OPENGL : EGLSurfaceTest.ResizeBeforeDraw/* = SKIP
+397848903 LINUX NVIDIA OPENGL : EGLSurfaceTest.ResizeBeforeDrawPostSizeQuery/* = SKIP
+397848903 LINUX NVIDIA OPENGL : EGLSurfaceTest.ResizeAfterDraw/* = SKIP
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Slow tests, should appear last in this file

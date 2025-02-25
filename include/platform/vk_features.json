@@ -319,7 +319,7 @@
             "description": [
                 "Vulkan swapchain is not returning VK_ERROR_OUT_OF_DATE when window resizing"
             ],
-            "issue": "http://anglebug.com/40096601, http://anglebug.com/42262286, http://anglebug.com/42262287"
+            "issue": "http://anglebug.com/40096601, http://anglebug.com/42262286, http://anglebug.com/42262287, http://anglebug.com/397848903"
         },
         {
             "name": "pad_buffers_to_max_vertex_attrib_stride",

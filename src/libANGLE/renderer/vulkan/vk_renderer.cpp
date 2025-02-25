@@ -5285,10 +5285,21 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsMultiDrawIndirect,
                             mPhysicalDeviceFeatures.multiDrawIndirect == VK_TRUE);
 
+    // Enable if at lease one is true after window is resized:
+    // - surface must be resized before acquire next image.
+    // - queue present VK_ERROR_OUT_OF_DATE_KHR result is absent or inconsistent.
+    // - acquire next image may return VK_ERROR_OUT_OF_DATE_KHR result (consistently or not).
+    // Notes:
+    // - Since we want for surface to be resized before acquire next image (and not only after
+    //   swap), enable the feature by default for all platforms.  This also covers platforms that
+    //   have inconsistent present OUT_OF_DATE results, or may start to have after a driver update
+    //   or some other reason.
+    // - NVIDIA on Linux X11 is disabled because of the possible driver bug, despite acquire next
+    //   image and queue present results are inconsistent (when window is invisible).  Without this
+    //   feature, surface will be resized only after swap and only if window is visible.  Surface
+    //   will not be resized when window is invisible.
     ANGLE_FEATURE_CONDITION(&mFeatures, perFrameWindowSizeQuery,
-                            IsAndroid() || isIntel || (IsWindows() && (isAMD || isNvidia)) ||
-                                IsFuchsia() || isSamsung ||
-                                nativeWindowSystem == angle::NativeWindowSystem::Wayland);
+                            !(isNvidia && nativeWindowSystem == angle::NativeWindowSystem::X11));
 
     ANGLE_FEATURE_CONDITION(&mFeatures, padBuffersToMaxVertexAttribStride, isAMD || isSamsung);
     mMaxVertexAttribStride = std::min(static_cast<uint32_t>(gl::limits::kMaxVertexAttribStride),

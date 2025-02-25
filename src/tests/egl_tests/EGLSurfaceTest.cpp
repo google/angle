@@ -328,6 +328,8 @@ class EGLSurfaceTest : public ANGLETest<>
 
     void drawQuadThenTearDown();
 
+    int drawSizeCheckRect(EGLSurface surface, GLsizei width, GLsizei height);
+
     EGLDisplay mDisplay;
     EGLSurface mWindowSurface;
     EGLSurface mPbufferSurface;
@@ -733,154 +735,6 @@ TEST_P(EGLSurfaceTest, SurfaceUseAfterFreeBug)
     eglDestroyContext(mDisplay, mSecondContext);
     ASSERT_EGL_SUCCESS();
     mSecondContext = EGL_NO_CONTEXT;
-}
-
-// Test that the window surface is correctly resized after calling swapBuffers
-TEST_P(EGLSurfaceTest, ResizeWindow)
-{
-    // http://anglebug.com/42263074
-    ANGLE_SKIP_TEST_IF(isVulkanRenderer() && IsLinux() && IsIntel());
-    // Flaky on Linux SwANGLE http://anglebug.com/42263074
-    ANGLE_SKIP_TEST_IF(IsLinux() && isSwiftshader());
-    // http://anglebug.com/42264022
-    ANGLE_SKIP_TEST_IF(IsIOS());
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsARM());
-
-    // Necessary for a window resizing test if there is no per-frame window size query
-    setWindowVisible(mOSWindow, true);
-
-    GLenum platform               = GetParam().getRenderer();
-    bool platformSupportsZeroSize = platform == EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE ||
-                                    platform == EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE;
-    int minSize = platformSupportsZeroSize ? 0 : 1;
-
-    initializeDisplay();
-    initializeSurfaceWithDefaultConfig(true);
-    initializeMainContext();
-    ASSERT_NE(mWindowSurface, EGL_NO_SURFACE);
-
-    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
-    eglSwapBuffers(mDisplay, mWindowSurface);
-    ASSERT_EGL_SUCCESS();
-
-    EGLint height;
-    eglQuerySurface(mDisplay, mWindowSurface, EGL_HEIGHT, &height);
-    ASSERT_EGL_SUCCESS();
-    ASSERT_EQ(64, height);  // initial size
-
-    // set window's height to 0 (if possible) or 1
-    mOSWindow->resize(64, minSize);
-
-    eglSwapBuffers(mDisplay, mWindowSurface);
-    ASSERT_EGL_SUCCESS();
-
-    // TODO(syoussefi): the GLX implementation still reads the window size as 64x64 through
-    // XGetGeometry.  http://anglebug.com/42261800
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsOpenGL());
-
-    eglQuerySurface(mDisplay, mWindowSurface, EGL_HEIGHT, &height);
-    ASSERT_EGL_SUCCESS();
-    ASSERT_EQ(minSize, height);
-
-    // restore window's height
-    mOSWindow->resize(64, 64);
-
-    eglSwapBuffers(mDisplay, mWindowSurface);
-    ASSERT_EGL_SUCCESS();
-
-    eglQuerySurface(mDisplay, mWindowSurface, EGL_HEIGHT, &height);
-    ASSERT_EGL_SUCCESS();
-    ASSERT_EQ(64, height);
-}
-
-// Test that the backbuffer is correctly resized after calling swapBuffers
-TEST_P(EGLSurfaceTest, ResizeWindowWithDraw)
-{
-    // http://anglebug.com/42263074
-    ANGLE_SKIP_TEST_IF(IsLinux());
-    // http://anglebug.com/42264022
-    ANGLE_SKIP_TEST_IF(IsIOS());
-
-    // Necessary for a window resizing test if there is no per-frame window size query
-    setWindowVisible(mOSWindow, true);
-
-    initializeDisplay();
-    initializeSurfaceWithDefaultConfig(true);
-    initializeMainContext();
-    ASSERT_NE(mWindowSurface, EGL_NO_SURFACE);
-
-    int size      = 64;
-    EGLint height = 0;
-    EGLint width  = 0;
-
-    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
-    eglSwapBuffers(mDisplay, mWindowSurface);
-    ASSERT_EGL_SUCCESS();
-
-    // Clear to red
-    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    eglQuerySurface(mDisplay, mWindowSurface, EGL_HEIGHT, &height);
-    eglQuerySurface(mDisplay, mWindowSurface, EGL_WIDTH, &width);
-    ASSERT_EGL_SUCCESS();
-
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(size - 1, 0, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(size - 1, size - 1, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(0, size - 1, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(-1, -1, GLColor::transparentBlack);
-    EXPECT_PIXEL_COLOR_EQ(size, 0, GLColor::transparentBlack);
-    EXPECT_PIXEL_COLOR_EQ(0, size, GLColor::transparentBlack);
-    EXPECT_PIXEL_COLOR_EQ(size, size, GLColor::transparentBlack);
-
-    // set window's size small
-    size = 1;
-    mOSWindow->resize(size, size);
-
-    eglSwapBuffers(mDisplay, mWindowSurface);
-    ASSERT_EGL_SUCCESS();
-
-    // Clear to green
-    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    eglQuerySurface(mDisplay, mWindowSurface, EGL_HEIGHT, &height);
-    eglQuerySurface(mDisplay, mWindowSurface, EGL_WIDTH, &width);
-    ASSERT_EGL_SUCCESS();
-
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(size - 1, 0, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(size - 1, size - 1, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(0, size - 1, GLColor::green);
-    EXPECT_PIXEL_COLOR_EQ(-1, -1, GLColor::transparentBlack);
-    EXPECT_PIXEL_COLOR_EQ(size, 0, GLColor::transparentBlack);
-    EXPECT_PIXEL_COLOR_EQ(0, size, GLColor::transparentBlack);
-    EXPECT_PIXEL_COLOR_EQ(size, size, GLColor::transparentBlack);
-
-    // set window's height large
-    size = 128;
-    mOSWindow->resize(size, size);
-
-    eglSwapBuffers(mDisplay, mWindowSurface);
-    ASSERT_EGL_SUCCESS();
-
-    // Clear to blue
-    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    eglQuerySurface(mDisplay, mWindowSurface, EGL_HEIGHT, &height);
-    eglQuerySurface(mDisplay, mWindowSurface, EGL_WIDTH, &width);
-    ASSERT_EGL_SUCCESS();
-
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
-    EXPECT_PIXEL_COLOR_EQ(size - 1, 0, GLColor::blue);
-    EXPECT_PIXEL_COLOR_EQ(size - 1, size - 1, GLColor::blue);
-    EXPECT_PIXEL_COLOR_EQ(0, size - 1, GLColor::blue);
-    EXPECT_PIXEL_COLOR_EQ(-1, -1, GLColor::transparentBlack);
-    EXPECT_PIXEL_COLOR_EQ(size, 0, GLColor::transparentBlack);
-    EXPECT_PIXEL_COLOR_EQ(0, size, GLColor::transparentBlack);
-    EXPECT_PIXEL_COLOR_EQ(size, size, GLColor::transparentBlack);
 }
 
 // Test that the window can be reset repeatedly before surface creation.
@@ -3864,6 +3718,366 @@ TEST_P(EGLSurfaceTest, MSAAResolveWithEGLConfig8880)
     ASSERT_EGL_SUCCESS();
 }
 
+int EGLSurfaceTest::drawSizeCheckRect(EGLSurface surface,
+                                      GLsizei surfaceWidth,
+                                      GLsizei surfaceHeight)
+{
+    glDisable(GL_SCISSOR_TEST);
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(1, 1, surfaceWidth - 2, surfaceHeight - 2);
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_GL_NO_ERROR();
+
+    const angle::GLColor referenceColors[8] = {GLColor::green, GLColor::green, GLColor::red,
+                                               GLColor::red,   GLColor::red,   GLColor::red,
+                                               GLColor::green, GLColor::green};
+    angle::GLColor surfaceColors[std::size(referenceColors)];
+
+    // Pixels are listed in a scanning order (left->right, bottom->top).
+    surfaceColors[0] = angle::ReadColor(0, 0);
+    surfaceColors[1] = angle::ReadColor(surfaceWidth - 1, 0);
+    surfaceColors[2] = angle::ReadColor(1, 1);
+    surfaceColors[3] = angle::ReadColor(surfaceWidth - 2, 1);
+    surfaceColors[4] = angle::ReadColor(1, surfaceHeight - 2);
+    surfaceColors[5] = angle::ReadColor(surfaceWidth - 2, surfaceHeight - 2);
+    surfaceColors[6] = angle::ReadColor(0, surfaceHeight - 1);
+    surfaceColors[7] = angle::ReadColor(surfaceWidth - 1, surfaceHeight - 1);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_EQ(surfaceColors[0], referenceColors[0]);
+    EXPECT_EQ(surfaceColors[1], referenceColors[1]);
+    EXPECT_EQ(surfaceColors[2], referenceColors[2]);
+    EXPECT_EQ(surfaceColors[3], referenceColors[3]);
+    EXPECT_EQ(surfaceColors[4], referenceColors[4]);
+    EXPECT_EQ(surfaceColors[5], referenceColors[5]);
+    EXPECT_EQ(surfaceColors[6], referenceColors[6]);
+    EXPECT_EQ(surfaceColors[7], referenceColors[7]);
+
+    int result = 0;
+    for (size_t i = 0; i < std::size(referenceColors); ++i)
+    {
+        result += (surfaceColors[i] != referenceColors[i]) ? 1 : 0;
+    }
+
+    // Surface size must not change after the draw.
+    EGLint height = 0;
+    EGLint width  = 0;
+    eglQuerySurface(mDisplay, surface, EGL_WIDTH, &width);
+    eglQuerySurface(mDisplay, surface, EGL_HEIGHT, &height);
+    EXPECT_EGL_SUCCESS();
+    EXPECT_EQ(width, surfaceWidth);
+    EXPECT_EQ(height, surfaceHeight);
+
+    result += (width != surfaceWidth) ? 10 : 0;
+    result += (height != surfaceHeight) ? 10 : 0;
+
+    return result;
+}
+
+// Tests window surface resize after swap that follows window resize.
+TEST_P(EGLSurfaceTest, ResizeAfterSwap)
+{
+    // http://anglebug.com/42263074
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsARM());
+
+    constexpr size_t kSizeCount = 2;
+    constexpr std::array<int, kSizeCount> kWidths{199, 500};
+    constexpr std::array<int, kSizeCount> kHeights{499, 200};
+
+    // Necessary for some platforms (NVIDIA on Linux) if there is no per-frame window size query.
+    setWindowVisible(mOSWindow, true);
+
+    initializeDisplay();
+    initializeSurfaceWithDefaultConfig(true);
+    initializeMainContext();
+    ASSERT_NE(mWindowSurface, EGL_NO_SURFACE);
+
+    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
+    ASSERT_EGL_SUCCESS();
+
+    for (size_t i = 0; i < kSizeCount; ++i)
+    {
+        // Resize before swap.
+        mOSWindow->resize(kWidths[i], kHeights[i]);
+
+        // Swap must resize the surface if it is not already resized.
+        eglSwapBuffers(mDisplay, mWindowSurface);
+        ASSERT_EGL_SUCCESS();
+
+        EGLint height = 0;
+        EGLint width  = 0;
+
+        // Surface must have window size after swap.
+        eglQuerySurface(mDisplay, mWindowSurface, EGL_WIDTH, &width);
+        eglQuerySurface(mDisplay, mWindowSurface, EGL_HEIGHT, &height);
+        ASSERT_EGL_SUCCESS();
+        EXPECT_EQ(width, kWidths[i]);
+        EXPECT_EQ(height, kHeights[i]);
+
+        // Actual buffer size must match the reported size.
+        EXPECT_EQ(drawSizeCheckRect(mWindowSurface, width, height), 0);
+    }
+}
+
+// Tests window surface resize after swap that follows window resize, while skipping size query.
+TEST_P(EGLSurfaceTest, ResizeAfterSwapSkipSizeQuery)
+{
+    // http://anglebug.com/42263074
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsARM());
+
+    constexpr size_t kSizeCount = 2;
+    constexpr std::array<int, kSizeCount> kWidths{199, 500};
+    constexpr std::array<int, kSizeCount> kHeights{499, 200};
+
+    // Necessary for some platforms (NVIDIA on Linux) if there is no per-frame window size query.
+    setWindowVisible(mOSWindow, true);
+
+    initializeDisplay();
+    initializeSurfaceWithDefaultConfig(true);
+    initializeMainContext();
+    ASSERT_NE(mWindowSurface, EGL_NO_SURFACE);
+
+    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
+    ASSERT_EGL_SUCCESS();
+
+    for (size_t i = 0; i < kSizeCount; ++i)
+    {
+        // Resize before swap.
+        mOSWindow->resize(kWidths[i], kHeights[i]);
+
+        // Swap must resize the surface if it is not already resized.
+        eglSwapBuffers(mDisplay, mWindowSurface);
+        ASSERT_EGL_SUCCESS();
+
+        // Actual buffer size must match the reported size.
+        EXPECT_EQ(drawSizeCheckRect(mWindowSurface, kWidths[i], kHeights[i]), 0);
+    }
+}
+
+// Tests window surface resize when window is resized before draw and swap.
+TEST_P(EGLSurfaceTest, ResizeBeforeDraw)
+{
+    // http://anglebug.com/42263074
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsARM());
+
+    constexpr size_t kSizeCount = 3;
+    constexpr std::array<int, kSizeCount> kWidths{64, 199, 500};
+    constexpr std::array<int, kSizeCount> kHeights{64, 499, 200};
+
+    // Necessary for some platforms (NVIDIA on Linux) if there is no per-frame window size query.
+    setWindowVisible(mOSWindow, true);
+
+    initializeDisplay();
+    initializeSurfaceWithDefaultConfig(true);
+    initializeMainContext();
+    ASSERT_NE(mWindowSurface, EGL_NO_SURFACE);
+
+    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
+    ASSERT_EGL_SUCCESS();
+
+    for (size_t i = 1; i < kSizeCount; ++i)
+    {
+        // Resize after create/swap (before draw).
+        mOSWindow->resize(kWidths[i], kHeights[i]);
+
+        EGLint height = 0;
+        EGLint width  = 0;
+
+        // Some platforms may resize the surface before draw, while others may wait until swap.
+        eglQuerySurface(mDisplay, mWindowSurface, EGL_WIDTH, &width);
+        eglQuerySurface(mDisplay, mWindowSurface, EGL_HEIGHT, &height);
+        ASSERT_EGL_SUCCESS();
+        if (width == kWidths[i])
+        {
+            EXPECT_EQ(height, kHeights[i]);
+        }
+        else
+        {
+            EXPECT_EQ(width, kWidths[i - 1]);
+            EXPECT_EQ(height, kHeights[i - 1]);
+        }
+
+        // Actual buffer size must match the reported size.
+        EXPECT_EQ(drawSizeCheckRect(mWindowSurface, width, height), 0);
+
+        // Start a new frame.
+        eglSwapBuffers(mDisplay, mWindowSurface);
+        ASSERT_EGL_SUCCESS();
+    }
+}
+
+// Tests window surface resize when window is resized before draw and swap, while delaying size
+// query after the draw.
+TEST_P(EGLSurfaceTest, ResizeBeforeDrawPostSizeQuery)
+{
+    // http://anglebug.com/42263074
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsARM());
+
+    constexpr size_t kSizeCount = 3;
+    constexpr std::array<int, kSizeCount> kWidths{64, 199, 500};
+    constexpr std::array<int, kSizeCount> kHeights{64, 499, 200};
+
+    // Necessary for some platforms (NVIDIA on Linux) if there is no per-frame window size query.
+    setWindowVisible(mOSWindow, true);
+
+    initializeDisplay();
+    initializeSurfaceWithDefaultConfig(true);
+    initializeMainContext();
+    ASSERT_NE(mWindowSurface, EGL_NO_SURFACE);
+
+    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
+    ASSERT_EGL_SUCCESS();
+
+    for (size_t i = 1; i < kSizeCount; ++i)
+    {
+        // Resize after create/swap (before draw).
+        mOSWindow->resize(kWidths[i], kHeights[i]);
+
+        // A warm-up draw in order to acquire the back buffer image before size query.
+        glEnable(GL_SCISSOR_TEST);
+        glScissor(1, 1, 1, 1);
+        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        EXPECT_GL_NO_ERROR();
+
+        EGLint height = 0;
+        EGLint width  = 0;
+
+        // Some platforms may resize the surface, while others may wait until swap.
+        eglQuerySurface(mDisplay, mWindowSurface, EGL_WIDTH, &width);
+        eglQuerySurface(mDisplay, mWindowSurface, EGL_HEIGHT, &height);
+        ASSERT_EGL_SUCCESS();
+        if (width == kWidths[i])
+        {
+            EXPECT_EQ(height, kHeights[i]);
+        }
+        else
+        {
+            EXPECT_EQ(width, kWidths[i - 1]);
+            EXPECT_EQ(height, kHeights[i - 1]);
+        }
+
+        // Actual buffer size must match the reported size.
+        EXPECT_EQ(drawSizeCheckRect(mWindowSurface, width, height), 0);
+
+        // Start a new frame.
+        eglSwapBuffers(mDisplay, mWindowSurface);
+        ASSERT_EGL_SUCCESS();
+    }
+}
+
+// Tests window surface resize when window is resized after draw but before swap.
+TEST_P(EGLSurfaceTest, ResizeAfterDraw)
+{
+    // http://anglebug.com/42263074
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsARM());
+
+    constexpr size_t kSizeCount = 3;
+    constexpr std::array<int, kSizeCount> kWidths{64, 199, 500};
+    constexpr std::array<int, kSizeCount> kHeights{64, 499, 200};
+
+    // Necessary for some platforms (NVIDIA on Linux) if there is no per-frame window size query.
+    setWindowVisible(mOSWindow, true);
+
+    initializeDisplay();
+    initializeSurfaceWithDefaultConfig(true);
+    initializeMainContext();
+    ASSERT_NE(mWindowSurface, EGL_NO_SURFACE);
+
+    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
+    ASSERT_EGL_SUCCESS();
+
+    // http://anglebug.com/397848903
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsAdreno() && IsOpenGLES());
+
+    for (size_t i = 1; i < kSizeCount; ++i)
+    {
+        // Actual buffer size must match the window size.
+        EXPECT_EQ(drawSizeCheckRect(mWindowSurface, kWidths[i - 1], kHeights[i - 1]), 0);
+
+        // Resize after draw (before swap).
+        mOSWindow->resize(kWidths[i], kHeights[i]);
+
+        EGLint height = 0;
+        EGLint width  = 0;
+
+        // Some platforms may resize the surface after draw, while others may wait until swap.
+        eglQuerySurface(mDisplay, mWindowSurface, EGL_WIDTH, &width);
+        eglQuerySurface(mDisplay, mWindowSurface, EGL_HEIGHT, &height);
+        ASSERT_EGL_SUCCESS();
+        if (width == kWidths[i])
+        {
+            EXPECT_EQ(height, kHeights[i]);
+        }
+        else
+        {
+            EXPECT_EQ(width, kWidths[i - 1]);
+            EXPECT_EQ(height, kHeights[i - 1]);
+        }
+
+        // Actual buffer size must match the reported size.
+        EXPECT_EQ(drawSizeCheckRect(mWindowSurface, width, height), 0);
+
+        // Start a new frame.
+        eglSwapBuffers(mDisplay, mWindowSurface);
+        ASSERT_EGL_SUCCESS();
+    }
+}
+
+// Tests window surface resize using large window sizes.
+TEST_P(EGLSurfaceTest, ResizeLargeWindow)
+{
+    // http://anglebug.com/42263074
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsARM());
+
+    constexpr size_t kSizeCount = 2;
+    constexpr std::array<int, kSizeCount> kWidths{1079, 999};
+    constexpr std::array<int, kSizeCount> kHeights{999, 1079};
+
+    // Necessary for some platforms (NVIDIA on Linux) if there is no per-frame window size query.
+    setWindowVisible(mOSWindow, true);
+
+    initializeDisplay();
+    initializeSurfaceWithDefaultConfig(true);
+    initializeMainContext();
+    ASSERT_NE(mWindowSurface, EGL_NO_SURFACE);
+
+    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
+    ASSERT_EGL_SUCCESS();
+
+    for (size_t i = 0; i < kSizeCount; ++i)
+    {
+        // Resize before swap.
+        mOSWindow->resize(kWidths[i], kHeights[i]);
+
+        // Swap must resize the surface if it is not already resized.
+        eglSwapBuffers(mDisplay, mWindowSurface);
+        ASSERT_EGL_SUCCESS();
+
+        // A warm-up draw in order to acquire the back buffer image before size query.
+        glEnable(GL_SCISSOR_TEST);
+        glScissor(1, 1, 1, 1);
+        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        EXPECT_GL_NO_ERROR();
+
+        EGLint height = 0;
+        EGLint width  = 0;
+
+        // Surface must have window size after swap and draw.
+        eglQuerySurface(mDisplay, mWindowSurface, EGL_WIDTH, &width);
+        eglQuerySurface(mDisplay, mWindowSurface, EGL_HEIGHT, &height);
+        ASSERT_EGL_SUCCESS();
+        EXPECT_EQ(width, kWidths[i]);
+        EXPECT_EQ(height, kHeights[i]);
+
+        // Actual buffer size must match the reported size.
+        EXPECT_EQ(drawSizeCheckRect(mWindowSurface, width, height), 0);
+    }
+}
 }  // anonymous namespace
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLSingleBufferTest);
