@@ -14,6 +14,7 @@
 #include "common/mathutil.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/Observer.h"
+#include "libANGLE/angletypes.h"
 
 #include <stdint.h>
 
@@ -41,7 +42,8 @@ class BufferImpl : public angle::Subject
                                                 const void *data,
                                                 size_t size,
                                                 gl::BufferUsage usage,
-                                                GLbitfield flags);
+                                                GLbitfield flags,
+                                                gl::BufferStorage bufferStorage);
     virtual angle::Result setData(const gl::Context *context,
                                   gl::BufferBinding target,
                                   const void *data,

@@ -280,7 +280,8 @@ void CaptureGetBufferParameteri64v_params(const State &glState,
                                           GLint64 *params,
                                           ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    // This only returns one value
+    paramCapture->readBufferSizeBytes = sizeof(GLuint);
 }
 
 void CaptureGetBufferPointerv_params(const State &glState,

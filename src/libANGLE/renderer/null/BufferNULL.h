@@ -29,7 +29,8 @@ class BufferNULL : public BufferImpl
                                         const void *data,
                                         size_t size,
                                         gl::BufferUsage usage,
-                                        GLbitfield flags) override;
+                                        GLbitfield flags,
+                                        gl::BufferStorage bufferStorage) override;
     angle::Result setData(const gl::Context *context,
                           gl::BufferBinding target,
                           const void *data,

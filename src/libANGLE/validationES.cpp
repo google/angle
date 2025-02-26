@@ -6906,7 +6906,7 @@ bool ValidateGetBufferParameterBase(const Context *context,
             break;
 
         case GL_MEMORY_SIZE_ANGLE:
-            if (!context->getExtensions().memorySizeANGLE)
+            if (!extensions.memorySizeANGLE)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kExtensionNotEnabled);
                 return false;
@@ -6914,10 +6914,18 @@ bool ValidateGetBufferParameterBase(const Context *context,
             break;
 
         case GL_RESOURCE_INITIALIZED_ANGLE:
-            if (!context->getExtensions().robustResourceInitializationANGLE)
+            if (!extensions.robustResourceInitializationANGLE)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM,
                                        kRobustResourceInitializationExtensionRequired);
+                return false;
+            }
+            break;
+        case GL_BUFFER_IMMUTABLE_STORAGE_EXT:
+        case GL_BUFFER_STORAGE_FLAGS_EXT:
+            if (!extensions.bufferStorageEXT)
+            {
+                ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
                 return false;
             }
             break;

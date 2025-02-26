@@ -444,29 +444,25 @@ angle::Result BufferVk::setDataWithUsageFlags(const gl::Context *context,
                                               const void *data,
                                               size_t size,
                                               gl::BufferUsage usage,
-                                              GLbitfield flags)
+                                              GLbitfield flags,
+                                              gl::BufferStorage bufferStorage)
 {
     ContextVk *contextVk                      = vk::GetImpl(context);
     VkMemoryPropertyFlags memoryPropertyFlags = 0;
     bool persistentMapRequired                = false;
     const bool isExternalBuffer               = clientBuffer != nullptr;
 
-    switch (usage)
+    if (bufferStorage == gl::BufferStorage::Immutable)
     {
-        case gl::BufferUsage::InvalidEnum:
-        {
-            // glBufferStorage API call
-            memoryPropertyFlags =
-                GetStorageMemoryType(contextVk->getRenderer(), flags, isExternalBuffer);
-            persistentMapRequired = (flags & GL_MAP_PERSISTENT_BIT_EXT) != 0;
-            break;
-        }
-        default:
-        {
-            // glBufferData API call
-            memoryPropertyFlags = GetPreferredMemoryType(contextVk->getRenderer(), target, usage);
-            break;
-        }
+        // glBufferStorage API call
+        memoryPropertyFlags =
+            GetStorageMemoryType(contextVk->getRenderer(), flags, isExternalBuffer);
+        persistentMapRequired = (flags & GL_MAP_PERSISTENT_BIT_EXT) != 0;
+    }
+    else
+    {
+        // glBufferData API call
+        memoryPropertyFlags = GetPreferredMemoryType(contextVk->getRenderer(), target, usage);
     }
 
     if (isExternalBuffer)

@@ -1554,6 +1554,14 @@ class FoveationState
     std::array<FocalPoint, kMaxFocalPoints> mFocalPoints;
 };
 
+enum class BufferStorage : bool
+{
+    // The buffer storage is mutable
+    Mutable,
+    // The buffer storage is immutable
+    Immutable,
+};
+
 }  // namespace gl
 
 #endif  // LIBANGLE_ANGLETYPES_H_

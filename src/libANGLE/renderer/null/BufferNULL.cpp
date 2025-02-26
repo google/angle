@@ -36,7 +36,8 @@ angle::Result BufferNULL::setDataWithUsageFlags(const gl::Context *context,
                                                 const void *data,
                                                 size_t size,
                                                 gl::BufferUsage usage,
-                                                GLbitfield flags)
+                                                GLbitfield flags,
+                                                gl::BufferStorage bufferStorage)
 {
     ANGLE_CHECK_GL_ALLOC(GetImplAs<ContextNULL>(context),
                          mAllocationTracker->updateMemoryAllocation(mData.size(), size));

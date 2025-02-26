@@ -212,7 +212,8 @@ class Buffer final : public ThreadSafeRefCountObject<BufferID>,
                                  const void *data,
                                  GLsizeiptr size,
                                  BufferUsage usage,
-                                 GLbitfield flags);
+                                 GLbitfield flags,
+                                 BufferStorage bufferStorage);
     angle::Result bufferExternalDataImpl(Context *context,
                                          BufferBinding target,
                                          GLeglClientBufferEXT clientBuffer,

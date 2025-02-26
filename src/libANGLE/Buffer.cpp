@@ -117,7 +117,8 @@ angle::Result Buffer::bufferStorage(Context *context,
                                     const void *data,
                                     GLbitfield flags)
 {
-    return bufferDataImpl(context, target, data, size, BufferUsage::InvalidEnum, flags);
+    return bufferDataImpl(context, target, data, size, BufferUsage::DynamicDraw, flags,
+                          BufferStorage::Immutable);
 }
 
 angle::Result Buffer::bufferData(Context *context,
@@ -127,7 +128,7 @@ angle::Result Buffer::bufferData(Context *context,
                                  BufferUsage usage)
 {
     GLbitfield flags = (GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_DYNAMIC_STORAGE_BIT_EXT);
-    return bufferDataImpl(context, target, data, size, usage, flags);
+    return bufferDataImpl(context, target, data, size, usage, flags, BufferStorage::Mutable);
 }
 
 angle::Result Buffer::bufferDataImpl(Context *context,
@@ -135,7 +136,8 @@ angle::Result Buffer::bufferDataImpl(Context *context,
                                      const void *data,
                                      GLsizeiptr size,
                                      BufferUsage usage,
-                                     GLbitfield flags)
+                                     GLbitfield flags,
+                                     BufferStorage bufferStorage)
 {
     const void *dataForImpl = data;
 
@@ -163,8 +165,8 @@ angle::Result Buffer::bufferDataImpl(Context *context,
         dataForImpl = scratchBuffer->data();
     }
 
-    if (mImpl->setDataWithUsageFlags(context, target, nullptr, dataForImpl, size, usage, flags) ==
-        angle::Result::Stop)
+    if (mImpl->setDataWithUsageFlags(context, target, nullptr, dataForImpl, size, usage, flags,
+                                     bufferStorage) == angle::Result::Stop)
     {
         // If setData fails, the buffer contents are undefined. Set a zero size to indicate that.
         mIndexRangeCache.clear();
@@ -181,7 +183,7 @@ angle::Result Buffer::bufferDataImpl(Context *context,
     mIndexRangeCache.clear();
     mState.mUsage                = usage;
     mState.mSize                 = size;
-    mState.mImmutable            = (usage == BufferUsage::InvalidEnum);
+    mState.mImmutable            = (bufferStorage == BufferStorage::Immutable);
     mState.mStorageExtUsageFlags = flags;
 
     // Notify when storage changes.
@@ -217,7 +219,8 @@ angle::Result Buffer::bufferExternalDataImpl(Context *context,
     }
 
     if (mImpl->setDataWithUsageFlags(context, target, clientBuffer, nullptr, size,
-                                     BufferUsage::InvalidEnum, flags) == angle::Result::Stop)
+                                     BufferUsage::InvalidEnum, flags,
+                                     BufferStorage::Immutable) == angle::Result::Stop)
     {
         // If setData fails, the buffer contents are undefined. Set a zero size to indicate that.
         mIndexRangeCache.clear();
