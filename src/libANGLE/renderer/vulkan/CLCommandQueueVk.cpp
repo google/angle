@@ -2126,26 +2126,26 @@ angle::Result CLCommandQueueVk::processWaitlist(const cl::EventPtrs &waitEvents)
 {
     if (!waitEvents.empty())
     {
-        bool insertedBarrier = false;
+        bool needsBarrier = false;
         for (const cl::EventPtr &event : waitEvents)
         {
-            if (event->getImpl<CLEventVk>().isUserEvent() ||
-                event->getCommandQueue() != &mCommandQueue)
+            if (event->isUserEvent() || event->getCommandQueue() != &mCommandQueue)
             {
-                // We cannot use a barrier in these cases, therefore defer the event
-                // handling till submission time
-                // TODO: Perhaps we could utilize VkEvents here instead and have GPU wait(s)
-                // https://anglebug.com/42267109
+                // Track the user and external cq events separately
                 mExternalEvents.push_back(event);
             }
-            else if (event->getCommandQueue() == &mCommandQueue && !insertedBarrier)
+            if (!event->isUserEvent())
             {
-                // As long as there is at least one dependant command in same queue,
-                // we just need to insert one execution barrier
-                ANGLE_TRY(insertBarrier());
-
-                insertedBarrier = true;
+                // At the moment, the vulkan backend is set up with single queue for all the command
+                // buffer recording (only if the Vk Queue priorities match).
+                // So inserting a barrier (in this case) is enough to ensure dependencies here.
+                needsBarrier |=
+                    event->getCommandQueue()->getPriority() == mCommandQueue.getPriority();
             }
+        }
+        if (needsBarrier)
+        {
+            ANGLE_TRY(insertBarrier());
         }
     }
     return angle::Result::Continue;
@@ -2347,9 +2347,21 @@ angle::Result CLCommandQueueVk::flushInternal()
                 }
                 else
                 {
-                    // Otherwise, we just need to submit/finish for dependant event queues
-                    // here that are not associated with this queue
-                    ANGLE_TRY(depEvent->getCommandQueue()->finish());
+                    if (depEvent->getCommandQueue()->getPriority() != mCommandQueue.getPriority())
+                    {
+                        // this implicitly means that different Vk Queues are used between the
+                        // dependency event queue and this queue. thus, sync/finish here to ensure
+                        // dependencies.
+                        // TODO: Look into Vk Semaphores here to track GPU-side only
+                        // https://anglebug.com/42267109
+                        ANGLE_TRY(depEvent->getCommandQueue()->finish());
+                    }
+                    else
+                    {
+                        // We have inserted appropriate pipeline barriers, we just need to flush the
+                        // dependent queue before we submit the commands here.
+                        ANGLE_TRY(depEvent->getCommandQueue()->flush());
+                    }
                 }
             }
             mExternalEvents.clear();
