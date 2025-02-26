@@ -7083,6 +7083,17 @@ size_t SharedCacheKeyManager<SharedCacheKeyT>::updateEmptySlotBits()
 template <class SharedCacheKeyT>
 void SharedCacheKeyManager<SharedCacheKeyT>::addKey(const SharedCacheKeyT &key)
 {
+    // There are cases that same texture or buffer are bound in multiple binding point. When we have
+    // a cache miss, we end up looping binding point and calling addKey which may end up adding same
+    // key multiple times. This is a quick way to avoid that.
+    if (mLastAddedSharedCacheKey.owner_equal(key))
+    {
+        return;
+    }
+
+    mLastAddedSharedCacheKey = key;
+    ASSERT(!containsKeyWithOwnerEqual(key));
+
     // Search for available slots and use that if any
     size_t slot = 0;
     for (SlotBitMask &emptyBits : mEmptySlotBits)
@@ -7193,11 +7204,12 @@ void SharedCacheKeyManager<SharedCacheKeyT>::clear()
 }
 
 template <class SharedCacheKeyT>
-bool SharedCacheKeyManager<SharedCacheKeyT>::containsKey(const SharedCacheKeyT &key) const
+bool SharedCacheKeyManager<SharedCacheKeyT>::containsKeyWithOwnerEqual(
+    const SharedCacheKeyT &key) const
 {
     for (const SharedCacheKeyT &sharedCacheKey : mSharedCacheKeys)
     {
-        if (*key == *sharedCacheKey)
+        if (key.owner_equal(sharedCacheKey))
         {
             return true;
         }
