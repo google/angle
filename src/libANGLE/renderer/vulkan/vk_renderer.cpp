@@ -583,9 +583,9 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     },
     // http://anglebug.com/399191283
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
-     "vkCmdBeginRenderingKHR writes pRenderingInfo.pDepthAttachment",
+     "vkCmdBeginRenderingKHR potentially modifies",
      "which was previously written during an image layout transition initiated by "
-     "vkCmdPipelineBarrier.",
+     "vkCmdPipelineBarrier",
      false,
      {"message_type = GeneralError",
       "access = "
@@ -598,9 +598,9 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
       "command = vkCmdBeginRenderingKHR"}},
     // http://anglebug.com/399191283
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
-     "vkCmdBeginRenderingKHR writes pRenderingInfo.pStencilAttachment",
+     "vkCmdBeginRenderPass potentially modifies",
      "which was previously written during an image layout transition initiated by "
-     "vkCmdPipelineBarrier.",
+     "vkCmdPipelineBarrier",
      false,
      {"message_type = GeneralError",
       "access = "
@@ -608,9 +608,20 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
       "BIT)",
       "prior_access = SYNC_IMAGE_LAYOUT_TRANSITION",
       "write_barriers = "
-      "VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT|VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT|VK_"
-      "PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT)",
-      "command = vkCmdBeginRenderingKHR"}},
+      "VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT|VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT(VK_"
+      "ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT)",
+      "command = vkCmdBeginRenderPass"}},
+    // http://anglebug.com/399191283
+    {"SYNC-HAZARD-READ-AFTER-WRITE",
+     "vkCmdBeginRenderPass reads",
+     "which was previously written during an image layout transition initiated by "
+     "vkCmdEndRenderPass",
+     false,
+     {"message_type = GeneralError",
+      "access = "
+      "VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT(VK_ACCESS_2_COLOR_ATTACHMENT_READ_BIT)",
+      "prior_access = SYNC_IMAGE_LAYOUT_TRANSITION", "write_barriers = 0",
+      "command = vkCmdBeginRenderPass"}},
 };
 
 // Messages that shouldn't be generated if storeOp=NONE is supported, otherwise they are expected.
