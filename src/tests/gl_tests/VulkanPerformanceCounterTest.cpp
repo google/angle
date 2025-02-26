@@ -5763,7 +5763,7 @@ precision mediump float;
 uniform block {
     uvec4 data;
 } ubo;
-uniform uint expect;
+uniform highp uint expect;
 uniform vec4 successOutput;
 out vec4 colorOut;
 void main()

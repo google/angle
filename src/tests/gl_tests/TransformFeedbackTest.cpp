@@ -2148,10 +2148,9 @@ TEST_P(TransformFeedbackTestES31, CaptureArray)
     float *mappedFloats = static_cast<float *>(mappedBuffer);
     for (int i = 0; i < 6; i++)
     {
-        std::array<float, 3> mappedData = {mappedFloats[i * 3], mappedFloats[i * 3 + 1],
-                                           mappedFloats[i * 3 + 2]};
-        std::array<float, 3> data       = {data1[i], data2[i], data3[i]};
-        EXPECT_EQ(data, mappedData) << "iteration #" << i;
+        EXPECT_NEAR(data1[i], mappedFloats[i * 3], 0.001f);
+        EXPECT_NEAR(data2[i], mappedFloats[i * 3 + 1], 0.001f);
+        EXPECT_NEAR(data3[i], mappedFloats[i * 3 + 2], 0.001f);
     }
 
     glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);

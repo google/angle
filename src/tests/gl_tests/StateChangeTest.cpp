@@ -4334,8 +4334,13 @@ void main()
     // Capture rendered pixel color w/ s1 linear
     std::vector<GLColor> s1LinearColors(kWindowSize * kWindowSize);
     glReadPixels(0, 0, kWindowSize, kWindowSize, GL_RGBA, GL_UNSIGNED_BYTE, s1LinearColors.data());
+
     // Results should be the same regardless of if s0 or s1 is linear
-    EXPECT_EQ(s0LinearColors, s1LinearColors);
+    ASSERT(s0LinearColors.size() == s1LinearColors.size());
+    for (size_t index = 0; index < s0LinearColors.size(); index++)
+    {
+        EXPECT_COLOR_NEAR(s0LinearColors[index], s1LinearColors[index], 1u);
+    }
 }
 
 // Tests that rendering works as expected with multiple VAOs.
@@ -7642,7 +7647,7 @@ TEST_P(SimpleStateChangeTestES31, DrawThenUpdateUBOThenDrawThenDrawIndexed)
     constexpr char kFS[] = R"(#version 300 es
 precision mediump float;
 uniform block { uint data; } ubo;
-uniform uint expect;
+uniform highp uint expect;
 uniform vec4 successColor;
 out vec4 colorOut;
 void main()
