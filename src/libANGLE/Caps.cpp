@@ -305,6 +305,7 @@ static bool DetermineRGB8TextureSupport(const TextureCapsMap &textureCaps)
 static bool DetermineBGRA8TextureSupport(const TextureCapsMap &textureCaps)
 {
     constexpr GLenum requiredFormats[] = {
+        GL_BGRA_EXT,
         GL_BGRA8_EXT,
     };
 

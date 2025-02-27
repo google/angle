@@ -1629,5 +1629,12 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 42263645 : GLSLTest.VerifyMaxFragmentUniformVectors* = TIMEOUT
 42264781 : MultithreadingTest* = TIMEOUT
 
+// Some GLES drivers don't accept BGRA as internal format for renderbuffers
+42267264 GLES : FramebufferFormatsTest.Renderbuffer_BGRA_EXT/* = SKIP
+42267264 GLES : FramebufferFormatsTest.Renderbuffer_BGRA8_EXT/* = SKIP
+
+// WebGPU does not support BGRA
+42267264 WGPU : ClearTest.*BGRA* = SKIP
+
 // Please do not add expectations below this line,
 // so that TIMEOUT expectations above don't override more precise SKIP expectations

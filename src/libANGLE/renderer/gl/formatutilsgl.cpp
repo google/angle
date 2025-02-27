@@ -526,7 +526,8 @@ static GLenum GetNativeInternalFormat(const FunctionsGL *functions,
             result = GL_RGB8;
         }
 
-        if (internalFormat.sizedInternalFormat == GL_BGRA8_EXT)
+        if (internalFormat.sizedInternalFormat == GL_BGRA_EXT ||
+            internalFormat.sizedInternalFormat == GL_BGRA8_EXT)
         {
             // GLES accepts GL_BGRA as an internal format but desktop GL only accepts it as a type.
             // Update the internal format to GL_RGBA.
@@ -614,6 +615,12 @@ static GLenum GetNativeInternalFormat(const FunctionsGL *functions,
             {
                 result = internalFormat.sizedInternalFormat;
             }
+        }
+        else if (internalFormat.sizedInternalFormat == GL_BGRA8_EXT)
+        {
+            // GL_BGRA8_EXT was clarified as an internal format in GL_EXT_texture_format_BGRA8888,
+            // but not all drivers support it.  Map it back to equivalent GL_BGRA_EXT.
+            result = GL_BGRA_EXT;
         }
     }
 

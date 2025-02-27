@@ -869,7 +869,6 @@ b/328156792 PINEAPPLE VULKAN : dEQP-GLES3.functional.uniform_api.value.assigned.
 42262773 VULKAN : dEQP-GLES3.functional.transform_feedback.random.* = FAIL
 
 // BGRA failures
-42267264 : dEQP-GLES3.functional.fbo.completeness.renderable.renderbuffer*bgra = FAIL
 42267264 MAC : dEQP-GLES3.functional.texture.filtering.2d_array.formats.bgra* = FAIL
 
 // Tests failing on SwS due to ES 3.2 being enabled for testing regardless of support.

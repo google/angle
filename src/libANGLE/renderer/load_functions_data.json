@@ -194,7 +194,7 @@
   },
   "GL_BGRA_EXT": {
     "NONE": {
-      "GL_UNSIGNED_BYTE": "UnreachableLoadFunction"
+      "GL_UNSIGNED_BYTE": "LoadToNative<GLubyte, 4>"
     }
   },
   "GL_COMPRESSED_RGB8_ETC2": {
