@@ -280,6 +280,14 @@
             "issue": "http://anglebug.com/42267057"
         },
         {
+            "name": "supports_device_fault",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_EXT_device_fault extension"
+            ],
+            "issue": "http://issuetracker.google.com/399478440"
+        },
+        {
             "name": "supports_multiview",
             "category": "Features",
             "description": [

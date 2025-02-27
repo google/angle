@@ -43,6 +43,9 @@ extern PFN_vkImportSemaphoreFdKHR vkImportSemaphoreFdKHR;
 // VK_EXT_external_memory_host
 extern PFN_vkGetMemoryHostPointerPropertiesEXT vkGetMemoryHostPointerPropertiesEXT;
 
+// VK_EXT_device_fault
+extern PFN_vkGetDeviceFaultInfoEXT vkGetDeviceFaultInfoEXT;
+
 // VK_EXT_host_query_reset
 extern PFN_vkResetQueryPoolEXT vkResetQueryPoolEXT;
 

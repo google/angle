@@ -7310,6 +7310,15 @@ void ContextVk::handleError(VkResult errorCode,
 
     if (errorCode == VK_ERROR_DEVICE_LOST)
     {
+        VkResult deviceLostInfoErrorCode = getRenderer()->retrieveDeviceLostDetails();
+        if (deviceLostInfoErrorCode != VK_SUCCESS)
+        {
+            errorStream << std::endl
+                        << "Unable to retrieve VK_ERROR_DEVICE_LOST details due to Vulkan error ("
+                        << deviceLostInfoErrorCode
+                        << "): " << VulkanResultString(deviceLostInfoErrorCode) << ".";
+        }
+
         WARN() << errorStream.str();
         handleDeviceLost();
     }

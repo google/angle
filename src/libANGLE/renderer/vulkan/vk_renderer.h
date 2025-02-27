@@ -698,6 +698,9 @@ class Renderer : angle::NonCopyable
         return mPlaceHolderDescriptorSetLayout;
     }
 
+    // VK_EXT_device_fault allows gathering more info if the device is lost.
+    VkResult retrieveDeviceLostDetails() const;
+
   private:
     angle::Result setupDevice(vk::ErrorContext *context,
                               const angle::FeatureOverrides &featureOverrides,
@@ -896,6 +899,7 @@ class Renderer : angle::NonCopyable
     VkPhysicalDeviceFloatControlsProperties mFloatControlProperties;
     VkPhysicalDeviceUniformBufferStandardLayoutFeaturesKHR mUniformBufferStandardLayoutFeatures;
     VkPhysicalDeviceMaintenance3Properties mMaintenance3Properties;
+    VkPhysicalDeviceFaultFeaturesEXT mFaultFeatures;
 
     uint32_t mLegacyDitheringVersion = 0;
 

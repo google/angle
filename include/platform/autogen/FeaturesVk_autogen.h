@@ -236,6 +236,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo supportsDeviceFault = {
+        "supportsDeviceFault",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
     FeatureInfo supportsMultiview = {
         "supportsMultiview",
         FeatureCategory::VulkanFeatures,

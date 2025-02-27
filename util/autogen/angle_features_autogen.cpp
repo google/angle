@@ -316,6 +316,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SupportsDepthClipControl, "supportsDepthClipControl"},
     {Feature::SupportsDepthStencilIndependentResolveNone, "supportsDepthStencilIndependentResolveNone"},
     {Feature::SupportsDepthStencilResolve, "supportsDepthStencilResolve"},
+    {Feature::SupportsDeviceFault, "supportsDeviceFault"},
     {Feature::SupportsDynamicRendering, "supportsDynamicRendering"},
     {Feature::SupportsDynamicRenderingLocalRead, "supportsDynamicRenderingLocalRead"},
     {Feature::SupportsExtendedDynamicState, "supportsExtendedDynamicState"},

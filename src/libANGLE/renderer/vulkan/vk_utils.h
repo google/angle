@@ -1381,6 +1381,9 @@ void InitGGPStreamDescriptorSurfaceFunctions(VkInstance instance);
 // VK_KHR_external_semaphore_fd
 void InitExternalSemaphoreFdFunctions(VkDevice device);
 
+// VK_EXT_device_fault
+void InitDeviceFaultFunctions(VkDevice device);
+
 // VK_EXT_host_query_reset
 void InitHostQueryResetFunctions(VkDevice device);
 

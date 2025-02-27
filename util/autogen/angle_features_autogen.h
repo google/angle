@@ -316,6 +316,7 @@ enum class Feature
     SupportsDepthClipControl,
     SupportsDepthStencilIndependentResolveNone,
     SupportsDepthStencilResolve,
+    SupportsDeviceFault,
     SupportsDynamicRendering,
     SupportsDynamicRenderingLocalRead,
     SupportsExtendedDynamicState,
