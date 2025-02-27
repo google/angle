@@ -357,7 +357,6 @@ enum class Feature
     SupportsLogicOpDynamicState,
     SupportsMaintenance5,
     SupportsMemoryBudget,
-    SupportsMixedReadWriteDepthStencilLayouts,
     SupportsMultiDrawIndirect,
     SupportsMultisampledRenderToSingleSampled,
     SupportsMultiview,

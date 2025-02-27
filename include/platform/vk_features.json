@@ -1267,14 +1267,6 @@
             "issue": "https://anglebug.com/42266183"
         },
         {
-            "name": "supports_mixed_read_write_depth_stencil_layouts",
-            "category": "Features",
-            "description": [
-                "VkDevice supports the mixed read and write depth/stencil layouts introduced by VK_KHR_maintenance2"
-            ],
-            "issue": "https://anglebug.com/42266364"
-        },
-        {
             "name": "supports_maintenance5",
             "category": "Features",
             "description": [

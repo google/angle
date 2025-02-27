@@ -974,12 +974,6 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
-    FeatureInfo supportsMixedReadWriteDepthStencilLayouts = {
-        "supportsMixedReadWriteDepthStencilLayouts",
-        FeatureCategory::VulkanFeatures,
-        &members,
-    };
-
     FeatureInfo supportsMaintenance5 = {
         "supportsMaintenance5",
         FeatureCategory::VulkanFeatures,

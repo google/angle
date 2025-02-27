@@ -2541,8 +2541,7 @@ angle::Result TextureVk::copyBufferDataToImage(ContextVk *contextVk,
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(access, &commandBuffer));
 
     commandBuffer->copyBufferToImage(srcBuffer->getBuffer().getHandle(), mImage->getImage(),
-                                     mImage->getCurrentLayout(contextVk->getRenderer()), 1,
-                                     &region);
+                                     mImage->getCurrentLayout(), 1, &region);
 
     return angle::Result::Continue;
 }
@@ -2858,9 +2857,9 @@ angle::Result TextureVk::copyAndStageImageData(ContextVk *contextVk,
         copyRegion.dstSubresource.mipLevel = levelVk.get();
         gl_vk::GetExtent(levelExtents, &copyRegion.extent);
 
-        commandBuffer->copyImage(srcImage->getImage(), srcImage->getCurrentLayout(renderer),
+        commandBuffer->copyImage(srcImage->getImage(), srcImage->getCurrentLayout(),
                                  stagingImage->get().getImage(),
-                                 stagingImage->get().getCurrentLayout(renderer), 1, &copyRegion);
+                                 stagingImage->get().getCurrentLayout(), 1, &copyRegion);
     }
 
     // Stage the staging image in the destination

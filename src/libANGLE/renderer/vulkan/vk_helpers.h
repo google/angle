@@ -176,7 +176,7 @@ ImageLayout GetImageLayoutFromGLImageLayout(ErrorContext *context, GLenum layout
 
 GLenum ConvertImageLayoutToGLImageLayout(ImageLayout imageLayout);
 
-VkImageLayout ConvertImageLayoutToVkImageLayout(Renderer *renderer, ImageLayout imageLayout);
+VkImageLayout ConvertImageLayoutToVkImageLayout(ImageLayout imageLayout);
 
 class ImageHelper;
 
@@ -2551,7 +2551,7 @@ class ImageHelper final : public Resource, public angle::Subject
 
     void setCurrentImageLayout(Renderer *renderer, ImageLayout newLayout);
     ImageLayout getCurrentImageLayout() const { return mCurrentLayout; }
-    VkImageLayout getCurrentLayout(Renderer *renderer) const;
+    VkImageLayout getCurrentLayout() const;
     const QueueSerial &getBarrierQueueSerial() const { return mBarrierQueueSerial; }
 
     gl::Extents getLevelExtents(LevelIndex levelVk) const;

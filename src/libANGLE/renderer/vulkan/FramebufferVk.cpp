@@ -3886,8 +3886,8 @@ angle::Result FramebufferVk::flushDepthStencilDeferredClear(ContextVk *contextVk
         mDeferredClears.reset(vk::kUnpackedStencilIndex);
     }
 
-    commandBuffer->clearDepthStencilImage(
-        image.getImage(), image.getCurrentLayout(contextVk->getRenderer()), clearValue, 1, &range);
+    commandBuffer->clearDepthStencilImage(image.getImage(), image.getCurrentLayout(), clearValue, 1,
+                                          &range);
     return angle::Result::Continue;
 }
 

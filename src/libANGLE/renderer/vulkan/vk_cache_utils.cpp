@@ -394,7 +394,7 @@ void DeriveRenderingInfo(Renderer *renderer,
         if (subset == DynamicRenderingInfoSubset::Full)
         {
             const VkImageLayout layout = vk::ConvertImageLayoutToVkImageLayout(
-                renderer, static_cast<vk::ImageLayout>(ops[attachmentCount].initialLayout));
+                static_cast<vk::ImageLayout>(ops[attachmentCount].initialLayout));
             const VkImageLayout resolveImageLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
             const VkResolveModeFlagBits resolveMode =
                 isYUVExternalFormat ? VK_RESOLVE_MODE_EXTERNAL_FORMAT_DOWNSAMPLE_ANDROID
@@ -469,7 +469,7 @@ void DeriveRenderingInfo(Renderer *renderer,
                 angleFormat.stencilBits != 0 && desc.hasStencilResolveAttachment();
 
             const VkImageLayout layout = ConvertImageLayoutToVkImageLayout(
-                renderer, static_cast<vk::ImageLayout>(ops[attachmentCount].initialLayout));
+                static_cast<vk::ImageLayout>(ops[attachmentCount].initialLayout));
             const VkImageLayout resolveImageLayout =
                 VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
             const VkResolveModeFlagBits depthResolveMode =
@@ -644,9 +644,9 @@ void UnpackAttachmentDesc(Renderer *renderer,
     desc->stencilStoreOp =
         ConvertRenderPassStoreOpToVkStoreOp(static_cast<RenderPassStoreOp>(ops.stencilStoreOp));
     desc->initialLayout =
-        ConvertImageLayoutToVkImageLayout(renderer, static_cast<ImageLayout>(ops.initialLayout));
+        ConvertImageLayoutToVkImageLayout(static_cast<ImageLayout>(ops.initialLayout));
     desc->finalLayout =
-        ConvertImageLayoutToVkImageLayout(renderer, static_cast<ImageLayout>(ops.finalLayout));
+        ConvertImageLayoutToVkImageLayout(static_cast<ImageLayout>(ops.finalLayout));
 }
 
 struct AttachmentInfo
@@ -687,7 +687,7 @@ void UnpackColorResolveAttachmentDesc(Renderer *renderer,
     desc->stencilLoadOp  = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
     desc->stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
     desc->initialLayout  = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-    desc->finalLayout    = ConvertImageLayoutToVkImageLayout(renderer, finalLayout);
+    desc->finalLayout    = ConvertImageLayoutToVkImageLayout(finalLayout);
 }
 
 void UnpackDepthStencilResolveAttachmentDesc(vk::ErrorContext *context,
@@ -6458,7 +6458,6 @@ void DescriptorSetDescBuilder::updatePreCacheActiveTextures(
     const gl::ActiveTextureArray<TextureVk *> &textures,
     const gl::SamplerBindingVector &samplers)
 {
-    Renderer *renderer                                     = context->getRenderer();
     const std::vector<gl::SamplerBinding> &samplerBindings = executable.getSamplerBindings();
     const gl::ActiveTextureMask &activeTextures            = executable.getActiveSamplersMask();
     const ProgramExecutableVk *executableVk                = vk::GetImpl(&executable);
@@ -6524,7 +6523,7 @@ void DescriptorSetDescBuilder::updatePreCacheActiveTextures(
                     textureVk->getImageViewSubresourceSerial(
                         samplerState, samplerUniform.isTexelFetchStaticUse());
 
-                VkImageLayout imageLayout = textureVk->getImage().getCurrentLayout(renderer);
+                VkImageLayout imageLayout = textureVk->getImage().getCurrentLayout();
                 SetBitField(infoDesc.imageLayoutOrRange, imageLayout);
                 infoDesc.imageViewSerialOrOffset = imageViewSerial.viewSerial.getValue();
                 infoDesc.samplerOrBufferSerial   = samplerHelper.getSamplerSerial().getValue();
@@ -6925,7 +6924,7 @@ angle::Result DescriptorSetDescBuilder::updateImages(
                 // Note: binding.access is unused because it is implied by the shader.
 
                 DescriptorInfoDesc &infoDesc = mDesc.getInfoDesc(infoIndex);
-                SetBitField(infoDesc.imageLayoutOrRange, image->getCurrentLayout(renderer));
+                SetBitField(infoDesc.imageLayoutOrRange, image->getCurrentLayout());
                 memcpy(&infoDesc.imageSubresourceRange, &serial.subresource, sizeof(uint32_t));
                 infoDesc.imageViewSerialOrOffset = serial.viewSerial.getValue();
                 infoDesc.samplerOrBufferSerial   = 0;
@@ -7678,11 +7677,10 @@ angle::Result RenderPassCache::MakeRenderPass(vk::ErrorContext *context,
         VkAttachmentReference2 colorRef = {};
         colorRef.sType                  = VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2;
         colorRef.attachment             = attachmentCount.get();
-        colorRef.layout =
-            needInputAttachments
-                ? VK_IMAGE_LAYOUT_GENERAL
-                : vk::ConvertImageLayoutToVkImageLayout(
-                      renderer, static_cast<vk::ImageLayout>(ops[attachmentCount].initialLayout));
+        colorRef.layout                 = needInputAttachments
+                                              ? VK_IMAGE_LAYOUT_GENERAL
+                                              : vk::ConvertImageLayoutToVkImageLayout(static_cast<vk::ImageLayout>(
+                                    ops[attachmentCount].initialLayout));
         colorRef.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
         colorAttachmentRefs.push_back(colorRef);
 
@@ -7728,7 +7726,7 @@ angle::Result RenderPassCache::MakeRenderPass(vk::ErrorContext *context,
         depthStencilAttachmentRef.sType      = VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2;
         depthStencilAttachmentRef.attachment = attachmentCount.get();
         depthStencilAttachmentRef.layout     = ConvertImageLayoutToVkImageLayout(
-            renderer, static_cast<vk::ImageLayout>(ops[attachmentCount].initialLayout));
+            static_cast<vk::ImageLayout>(ops[attachmentCount].initialLayout));
         depthStencilAttachmentRef.aspectMask =
             VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
 

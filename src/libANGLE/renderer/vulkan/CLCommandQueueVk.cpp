@@ -1735,10 +1735,9 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk)
                 // Update image/descriptor info
                 VkDescriptorImageInfo &imageInfo =
                     kernelArgDescSetBuilder.allocDescriptorImageInfo();
-                imageInfo.imageLayout =
-                    arg.type == NonSemanticClspvReflectionArgumentStorageImage
-                        ? VK_IMAGE_LAYOUT_GENERAL
-                        : vkMem.getImage().getCurrentLayout(mContext->getRenderer());
+                imageInfo.imageLayout = arg.type == NonSemanticClspvReflectionArgumentStorageImage
+                                            ? VK_IMAGE_LAYOUT_GENERAL
+                                            : vkMem.getImage().getCurrentLayout();
                 imageInfo.imageView = vkMem.getImageView().getHandle();
                 imageInfo.sampler   = VK_NULL_HANDLE;
                 VkWriteDescriptorSet &writeDescriptorSet =
