@@ -84,19 +84,6 @@ class BufferBlock final : angle::NonCopyable
     int32_t getAndIncrementEmptyCounter();
     void calculateStats(vma::StatInfo *pStatInfo) const;
 
-    void onNewDescriptorSet(const SharedDescriptorSetCacheKey &sharedCacheKey)
-    {
-        mDescriptorSetCacheManager.addKey(sharedCacheKey);
-    }
-    void releaseAllCachedDescriptorSetCacheKeys(Renderer *renderer)
-    {
-        if (!mDescriptorSetCacheManager.empty())
-        {
-            ASSERT(mDescriptorSetCacheManager.allValidEntriesAreCached(nullptr));
-            mDescriptorSetCacheManager.releaseKeys(renderer);
-        }
-    }
-
   private:
     mutable angle::SimpleMutex mVirtualBlockMutex;
     VirtualBlock mVirtualBlock;
@@ -120,8 +107,6 @@ class BufferBlock final : angle::NonCopyable
     // buffer block is found to be empty when pruneEmptyBuffer is called. This gets reset whenever
     // it becomes non-empty.
     int32_t mCountRemainsEmpty;
-    // Manages the descriptorSet cache that created with this BufferBlock.
-    DescriptorSetCacheManager mDescriptorSetCacheManager;
 };
 using BufferBlockPointer       = std::unique_ptr<BufferBlock>;
 using BufferBlockPointerVector = std::vector<BufferBlockPointer>;

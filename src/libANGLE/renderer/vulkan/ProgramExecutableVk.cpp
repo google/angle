@@ -2190,7 +2190,6 @@ angle::Result ProgramExecutableVk::updateUniforms(vk::Context *context,
                                                     &uniformsAndXfbDesc, &newSharedCacheKey));
         if (newSharedCacheKey)
         {
-            defaultUniformBuffer->getBufferBlock()->onNewDescriptorSet(newSharedCacheKey);
             if (mExecutable->hasTransformFeedbackOutput() &&
                 context->getFeatures().emulateTransformFeedback.enabled)
             {

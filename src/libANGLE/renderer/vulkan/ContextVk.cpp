@@ -812,7 +812,6 @@ void UpdateImagesWithSharedCacheKey(const gl::ActiveTextureArray<TextureVk *> &a
 }
 
 void UpdateBufferWithSharedCacheKey(const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding,
-                                    VkDescriptorType descriptorType,
                                     const vk::SharedDescriptorSetCacheKey &sharedCacheKey)
 {
     if (bufferBinding.get() != nullptr)
@@ -822,14 +821,7 @@ void UpdateBufferWithSharedCacheKey(const gl::OffsetBindingPointer<gl::Buffer> &
         // destroyed.
         BufferVk *bufferVk             = vk::GetImpl(bufferBinding.get());
         vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
-        if (vk::IsDynamicDescriptor(descriptorType))
-        {
-            bufferHelper.getBufferBlock()->onNewDescriptorSet(sharedCacheKey);
-        }
-        else
-        {
-            bufferHelper.onNewDescriptorSet(sharedCacheKey);
-        }
+        bufferHelper.onNewDescriptorSet(sharedCacheKey);
     }
 }
 
@@ -3072,10 +3064,6 @@ angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersEmulation(
 
     if (newSharedCacheKey)
     {
-        if (currentUniformBuffer)
-        {
-            currentUniformBuffer->getBufferBlock()->onNewDescriptorSet(newSharedCacheKey);
-        }
         transformFeedbackVk->onNewDescriptorSet(*executable, newSharedCacheKey);
     }
 
@@ -6528,37 +6516,45 @@ void ContextVk::updateShaderResourcesWithSharedCacheKey(
     const gl::ProgramExecutable *executable = mState.getProgramExecutable();
     ProgramExecutableVk *executableVk       = vk::GetImpl(executable);
 
-    if (executable->hasUniformBuffers())
+    // Dynamic descriptor type uses the underlying BufferBlock in the descriptorSet. There could be
+    // many BufferHelper objects sub-allocated from the same BufferBlock. And each BufferHelper
+    // could combine with other buffers to form a descriptorSet. This means the descriptorSet
+    // numbers for BufferBlock could potentially very large, in thousands with some app traces like
+    // seeing in honkai_star_rail. The overhead of maintaining mDescriptorSetCacheManager for
+    // BufferBlock could be too big. We chose to not maintain mDescriptorSetCacheManager in this
+    // case. The only downside is that when BufferBlock gets destroyed, we will not able to
+    // immediately destroy all cached descriptorSets that it is part of. They will still gets
+    // evicted later on if needed.
+    if (executable->hasUniformBuffers() && !executableVk->usesDynamicUniformBufferDescriptors())
     {
         const std::vector<gl::InterfaceBlock> &blocks = executable->getUniformBlocks();
         for (uint32_t bufferIndex = 0; bufferIndex < blocks.size(); ++bufferIndex)
         {
             const GLuint binding = executable->getUniformBlockBinding(bufferIndex);
             UpdateBufferWithSharedCacheKey(mState.getOffsetBindingPointerUniformBuffers()[binding],
-                                           executableVk->getUniformBufferDescriptorType(),
                                            sharedCacheKey);
         }
     }
-    if (executable->hasStorageBuffers())
+    if (executable->hasStorageBuffers() &&
+        !executableVk->usesDynamicShaderStorageBufferDescriptors())
     {
         const std::vector<gl::InterfaceBlock> &blocks = executable->getShaderStorageBlocks();
         for (uint32_t bufferIndex = 0; bufferIndex < blocks.size(); ++bufferIndex)
         {
             const GLuint binding = executable->getShaderStorageBlockBinding(bufferIndex);
             UpdateBufferWithSharedCacheKey(
-                mState.getOffsetBindingPointerShaderStorageBuffers()[binding],
-                executableVk->getStorageBufferDescriptorType(), sharedCacheKey);
+                mState.getOffsetBindingPointerShaderStorageBuffers()[binding], sharedCacheKey);
         }
     }
-    if (executable->hasAtomicCounterBuffers())
+    if (executable->hasAtomicCounterBuffers() &&
+        !executableVk->usesDynamicAtomicCounterBufferDescriptors())
     {
         const std::vector<gl::AtomicCounterBuffer> &blocks = executable->getAtomicCounterBuffers();
         for (uint32_t bufferIndex = 0; bufferIndex < blocks.size(); ++bufferIndex)
         {
             const GLuint binding = executable->getAtomicCounterBufferBinding(bufferIndex);
             UpdateBufferWithSharedCacheKey(
-                mState.getOffsetBindingPointerAtomicCounterBuffers()[binding],
-                executableVk->getAtomicCounterBufferDescriptorType(), sharedCacheKey);
+                mState.getOffsetBindingPointerAtomicCounterBuffers()[binding], sharedCacheKey);
         }
     }
     if (executable->hasImages())
