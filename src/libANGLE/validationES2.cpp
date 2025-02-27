@@ -2123,6 +2123,11 @@ bool ValidateDebugMessageControlKHR(const Context *context,
             return false;
         }
     }
+    else if (count < 0)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeParam);
+        return false;
+    }
 
     return true;
 }

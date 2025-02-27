@@ -7463,7 +7463,8 @@ bool ValidatePixelPack(const Context *context,
         CheckedNumeric<size_t> checkedOffset(reinterpret_cast<size_t>(pixels));
         checkedEndByte += checkedOffset;
 
-        if (checkedEndByte.ValueOrDie() > static_cast<size_t>(pixelPackBuffer->getSize()))
+        if (!checkedEndByte.IsValid() ||
+            checkedEndByte.ValueOrDie() > static_cast<size_t>(pixelPackBuffer->getSize()))
         {
             // Overflow past the end of the buffer
             ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kParamOverflow);
