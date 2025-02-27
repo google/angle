@@ -453,8 +453,9 @@ angle::Result BufferHelper::initBuffer(wgpu::Device device,
                                        wgpu::BufferUsage usage,
                                        MapAtCreation mappedAtCreation)
 {
+    size_t safeBufferSize = rx::roundUpPow2(size, kBufferSizeAlignment);
     wgpu::BufferDescriptor descriptor;
-    descriptor.size             = roundUp(size, kBufferSizeAlignment);
+    descriptor.size             = safeBufferSize;
     descriptor.usage            = usage;
     descriptor.mappedAtCreation = mappedAtCreation == MapAtCreation::Yes;
 
@@ -462,7 +463,7 @@ angle::Result BufferHelper::initBuffer(wgpu::Device device,
 
     if (mappedAtCreation == MapAtCreation::Yes)
     {
-        mMappedState = {wgpu::MapMode::Read | wgpu::MapMode::Write, 0, size};
+        mMappedState = {wgpu::MapMode::Read | wgpu::MapMode::Write, 0, safeBufferSize};
     }
     else
     {
@@ -487,8 +488,10 @@ angle::Result BufferHelper::mapImmediate(ContextWgpu *context,
             *pStatus = status;
         };
     wgpu::FutureWaitInfo waitInfo;
+    size_t safeBufferMapOffset = GetSafeBufferMapOffset(offset);
+    size_t safeBufferMapSize   = GetSafeBufferMapSize(offset, size);
     waitInfo.future =
-        mBuffer.MapAsync(mode, GetSafeBufferMapOffset(offset), GetSafeBufferMapSize(offset, size),
+        mBuffer.MapAsync(mode, safeBufferMapOffset, safeBufferMapSize,
                          wgpu::CallbackMode::WaitAnyOnly, mapAsyncCallback, &mapResult);
 
     wgpu::Instance instance = context->getDisplay()->getInstance();
