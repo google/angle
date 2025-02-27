@@ -105,7 +105,7 @@ constexpr uint32_t kPipelineCacheVkUpdatePeriod = 60;
 constexpr uint32_t kPreferredVulkanAPIVersion = VK_API_VERSION_1_1;
 
 // Development flag for transition period when both old and new syncval fitlers are used
-constexpr bool kSyncValCheckExtraProperties = false;
+constexpr bool kSyncValCheckExtraProperties = true;
 
 bool IsVulkan11(uint32_t apiVersion)
 {
@@ -587,14 +587,11 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
      "which was previously written during an image layout transition initiated by "
      "vkCmdPipelineBarrier",
      false,
-     {"message_type = GeneralError",
+     {"message_type = GeneralError", "hazard_type = WRITE_AFTER_WRITE",
       "access = "
       "VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_"
       "BIT)",
-      "prior_access = SYNC_IMAGE_LAYOUT_TRANSITION",
-      "write_barriers = "
-      "VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT|VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT|VK_"
-      "PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT)",
+      "prior_access = SYNC_IMAGE_LAYOUT_TRANSITION", "prior_command = vkCmdPipelineBarrier",
       "command = vkCmdBeginRenderingKHR"}},
     // http://anglebug.com/399191283
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
@@ -602,14 +599,11 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
      "which was previously written during an image layout transition initiated by "
      "vkCmdPipelineBarrier",
      false,
-     {"message_type = GeneralError",
+     {"message_type = GeneralError", "hazard_type = WRITE_AFTER_WRITE",
       "access = "
       "VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_"
       "BIT)",
-      "prior_access = SYNC_IMAGE_LAYOUT_TRANSITION",
-      "write_barriers = "
-      "VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT|VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT(VK_"
-      "ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT)",
+      "prior_access = SYNC_IMAGE_LAYOUT_TRANSITION", "prior_command = vkCmdPipelineBarrier",
       "command = vkCmdBeginRenderPass"}},
     // http://anglebug.com/399191283
     {"SYNC-HAZARD-READ-AFTER-WRITE",

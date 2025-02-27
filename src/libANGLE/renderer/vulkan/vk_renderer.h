@@ -52,7 +52,7 @@ class Format;
 static constexpr size_t kMaxExtensionNames = 400;
 using ExtensionNameList                    = angle::FixedVector<const char *, kMaxExtensionNames>;
 
-static constexpr size_t kMaxSyncValExtraProperties = 5;
+static constexpr size_t kMaxSyncValExtraProperties = 6;
 // Information used to accurately skip known synchronization issues in ANGLE.
 // TODO: remove messageContents1 and messageContents2 fields after all
 // supressions have transitioned to using extraProperties.
