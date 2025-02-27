@@ -106,7 +106,7 @@
       'gn_args': 'angle_with_capture_by_default=true',
     },
     'cxx17': {
-      # Android does not fully support C++20 yet: b/330910097
+      # Skia does not support C++20 yet: b/330910097
       'gn_args': 'use_cxx17=true',
     },
     'debug': {

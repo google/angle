@@ -782,8 +782,6 @@ def main():
         {
             'name':
                 'angle_common_library_cflags',
-            'cpp_std':
-                'gnu++17',  # TODO(b/330910097): std::popcount missing from external/libcxx
             'cflags': [
                 # Chrome and Android use different versions of Clang which support differnt warning options.
                 # Ignore errors about unrecognized warning flags.
