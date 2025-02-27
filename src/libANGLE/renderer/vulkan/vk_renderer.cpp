@@ -612,36 +612,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
       "ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT)",
       "command = vkCmdBeginRenderPass"}},
     // http://anglebug.com/399191283
-    {"SYNC-HAZARD-WRITE-AFTER-WRITE",
-     "vkCmdBeginRenderingKHR writes",
-     "which was previously written during an image layout transition initiated by "
-     "vkCmdPipelineBarrier",
-     false,
-     {"message_type = GeneralError",
-      "access = "
-      "VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_"
-      "BIT)",
-      "prior_access = SYNC_IMAGE_LAYOUT_TRANSITION",
-      "write_barriers = "
-      "VK_PIPELINE_STAGE_2_FRAGMENT_SHADER_BIT|VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT|VK_"
-      "PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT)",
-      "command = vkCmdBeginRenderingKHR"}},
-    // http://anglebug.com/399191283
-    {"SYNC-HAZARD-WRITE-AFTER-WRITE",
-     "vkCmdBeginRenderPass writes",
-     "which was previously written during an image layout transition initiated by "
-     "vkCmdPipelineBarrier",
-     false,
-     {"message_type = GeneralError",
-      "access = "
-      "VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_"
-      "BIT)",
-      "prior_access = SYNC_IMAGE_LAYOUT_TRANSITION",
-      "write_barriers = "
-      "VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT|VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT(VK_"
-      "ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT)",
-      "command = vkCmdBeginRenderPass"}},
-    // http://anglebug.com/399191283
     {"SYNC-HAZARD-READ-AFTER-WRITE",
      "vkCmdBeginRenderPass reads",
      "which was previously written during an image layout transition initiated by "
