@@ -4222,7 +4222,6 @@ ANGLE_INSTANTIATE_TEST(
     ES2_OPENGLES(),
     ES3_OPENGLES(),
     ES3_VULKAN(),
-    ES3_VULKAN_SWIFTSHADER().disable(Feature::PreferMonolithicPipelinesOverLibraries),
     ES3_VULKAN_SWIFTSHADER().enable(Feature::PreferMonolithicPipelinesOverLibraries),
     ES3_VULKAN_SWIFTSHADER()
         .enable(Feature::PreferMonolithicPipelinesOverLibraries)
@@ -4247,7 +4246,6 @@ ANGLE_INSTANTIATE_TEST(
     ES3_OPENGL(),
     ES3_OPENGLES(),
     ES3_VULKAN(),
-    ES3_VULKAN_SWIFTSHADER().disable(Feature::PreferMonolithicPipelinesOverLibraries),
     ES3_VULKAN_SWIFTSHADER().enable(Feature::PreferMonolithicPipelinesOverLibraries),
     ES3_VULKAN_SWIFTSHADER()
         .enable(Feature::PreferMonolithicPipelinesOverLibraries)

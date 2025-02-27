@@ -326,9 +326,6 @@ class VulkanPerformanceCounterTest : public ANGLETest<>
     void maskedFramebufferFetchDraw(const GLColor &clearColor, GLBuffer &buffer);
     void maskedFramebufferFetchDrawVerify(const GLColor &expectedColor, GLBuffer &buffer);
 
-    void saveAndReloadBinary(GLProgram *original, GLProgram *reloaded);
-    void testPipelineCacheIsWarm(GLProgram *program, GLColor color);
-
     void updateBuffer(BufferUpdate update,
                       GLenum target,
                       GLintptr offset,
@@ -7719,100 +7716,6 @@ TEST_P(VulkanPerformanceCounterTest, SetTextureSwizzleWithDifferentValueOnFBOAtt
     EXPECT_EQ(framebufferCacheSizeIncrease, expectedFramebufferCacheSizeIncrease);
 }
 
-void VulkanPerformanceCounterTest::saveAndReloadBinary(GLProgram *original, GLProgram *reloaded)
-{
-    GLint programLength = 0;
-    GLint writtenLength = 0;
-    GLenum binaryFormat = 0;
-
-    // Get the binary out of the program and delete it.
-    glGetProgramiv(*original, GL_PROGRAM_BINARY_LENGTH_OES, &programLength);
-    EXPECT_GL_NO_ERROR();
-
-    std::vector<uint8_t> binary(programLength);
-    glGetProgramBinaryOES(*original, programLength, &writtenLength, &binaryFormat, binary.data());
-    EXPECT_GL_NO_ERROR();
-
-    original->reset();
-
-    // Reload the binary into another program
-    reloaded->makeEmpty();
-    glProgramBinaryOES(*reloaded, binaryFormat, binary.data(), writtenLength);
-    EXPECT_GL_NO_ERROR();
-
-    GLint linkStatus;
-    glGetProgramiv(*reloaded, GL_LINK_STATUS, &linkStatus);
-    EXPECT_NE(linkStatus, 0);
-}
-
-void VulkanPerformanceCounterTest::testPipelineCacheIsWarm(GLProgram *program, GLColor color)
-{
-    glUseProgram(*program);
-    GLint colorUniformLocation =
-        glGetUniformLocation(*program, angle::essl1_shaders::ColorUniform());
-    ASSERT_NE(-1, colorUniformLocation);
-    ASSERT_GL_NO_ERROR();
-
-    GLuint expectedCacheHits   = getPerfCounters().pipelineCreationCacheHits + 1;
-    GLuint expectedCacheMisses = getPerfCounters().pipelineCreationCacheMisses;
-
-    glUniform4fv(colorUniformLocation, 1, color.toNormalizedVector().data());
-    drawQuad(*program, essl1_shaders::PositionAttrib(), 0.5f);
-
-    EXPECT_EQ(getPerfCounters().pipelineCreationCacheHits, expectedCacheHits);
-    EXPECT_EQ(getPerfCounters().pipelineCreationCacheMisses, expectedCacheMisses);
-
-    EXPECT_PIXEL_COLOR_EQ(0, 0, color);
-}
-
-// Verifies that the pipeline cache is warmed up at link time with reasonable defaults.
-TEST_P(VulkanPerformanceCounterTest, PipelineCacheIsWarmedUpAtLinkTime)
-{
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
-
-    // Test is only valid when pipeline creation feedback is available
-    ANGLE_SKIP_TEST_IF(!hasSupportsPipelineCreationFeedback() || !hasWarmUpPipelineCacheAtLink() ||
-                       skipPipelineCacheSerialization());
-
-    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Passthrough(), essl1_shaders::fs::UniformColor());
-
-    testPipelineCacheIsWarm(&program, GLColor::red);
-}
-
-// Verifies that the pipeline cache is reloaded correctly through glProgramBinary.
-TEST_P(VulkanPerformanceCounterTest, PipelineCacheIsRestoredWithProgramBinary)
-{
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
-
-    // Test is only valid when pipeline creation feedback is available
-    ANGLE_SKIP_TEST_IF(!hasSupportsPipelineCreationFeedback() || !hasWarmUpPipelineCacheAtLink() ||
-                       skipPipelineCacheSerialization());
-
-    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Passthrough(), essl1_shaders::fs::UniformColor());
-    GLProgram reloadedProgram;
-    saveAndReloadBinary(&program, &reloadedProgram);
-
-    testPipelineCacheIsWarm(&reloadedProgram, GLColor::green);
-}
-
-// Verifies that the pipeline cache is reloaded correctly through glProgramBinary twice.
-TEST_P(VulkanPerformanceCounterTest, PipelineCacheIsRestoredWithProgramBinaryTwice)
-{
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
-
-    // Test is only valid when pipeline creation feedback is available
-    ANGLE_SKIP_TEST_IF(!hasSupportsPipelineCreationFeedback() || !hasWarmUpPipelineCacheAtLink() ||
-                       skipPipelineCacheSerialization());
-
-    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Passthrough(), essl1_shaders::fs::UniformColor());
-    GLProgram reloadedProgram;
-    GLProgram twiceReloadedProgram;
-    saveAndReloadBinary(&program, &reloadedProgram);
-    saveAndReloadBinary(&reloadedProgram, &twiceReloadedProgram);
-
-    testPipelineCacheIsWarm(&twiceReloadedProgram, GLColor::blue);
-}
-
 // Test calling glEGLImageTargetTexture2DOES repeatedly with same arguments will not leak
 // DescriptorSets. This is the same usage pattern surafceflinger is doing with notification shades
 // except with AHB.
@@ -8418,7 +8321,6 @@ ANGLE_INSTANTIATE_TEST(
     VulkanPerformanceCounterTest,
     ES3_VULKAN(),
     ES3_VULKAN().enable(Feature::PadBuffersToMaxVertexAttribStride),
-    ES3_VULKAN_SWIFTSHADER().disable(Feature::PreferMonolithicPipelinesOverLibraries),
     ES3_VULKAN_SWIFTSHADER().enable(Feature::PreferMonolithicPipelinesOverLibraries),
     ES3_VULKAN_SWIFTSHADER()
         .enable(Feature::PreferMonolithicPipelinesOverLibraries)

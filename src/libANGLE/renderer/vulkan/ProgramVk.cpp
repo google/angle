@@ -128,17 +128,6 @@ class LinkTaskVk final : public vk::ErrorContext, public LinkTask
             return angle::Result::Stop;
         }
 
-        // Accumulate relevant perf counters
-        const angle::VulkanPerfCounters &from = getPerfCounters();
-        angle::VulkanPerfCounters &to         = contextVk->getPerfCounters();
-
-        to.pipelineCreationCacheHits += from.pipelineCreationCacheHits;
-        to.pipelineCreationCacheMisses += from.pipelineCreationCacheMisses;
-        to.pipelineCreationTotalCacheHitsDurationNs +=
-            from.pipelineCreationTotalCacheHitsDurationNs;
-        to.pipelineCreationTotalCacheMissesDurationNs +=
-            from.pipelineCreationTotalCacheMissesDurationNs;
-
         return angle::Result::Continue;
     }
 

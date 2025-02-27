@@ -5913,28 +5913,35 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
                                 (!isNvidia || driverVersion >= angle::VersionTriple(531, 0, 0)) &&
                                 !isRADV);
 
-    // The following drivers are known to key the pipeline cache blobs with vertex input and
-    // fragment output state, causing draw-time pipeline creation to miss the cache regardless of
-    // warm up:
+    // When VK_EXT_graphics_pipeline_library is not used:
     //
-    // - ARM drivers
-    // - Imagination drivers
+    //   The following drivers are known to key the pipeline cache blobs with vertex input and
+    //   fragment output state, causing draw-time pipeline creation to miss the cache regardless of
+    //   warm up:
     //
-    // The following drivers are instead known to _not_ include said state, and hit the cache at
-    // draw time.
+    //     - ARM drivers
+    //     - Imagination drivers
     //
-    // - SwiftShader
-    // - Open source Qualcomm drivers
+    //   The following drivers are instead known to _not_ include said state, and hit the cache at
+    //   draw time.
     //
-    // The situation is unknown for other drivers.
+    //     - SwiftShader
+    //     - Open source Qualcomm drivers
     //
-    // Additionally, numerous tests that previously never created a Vulkan pipeline fail or crash on
-    // proprietary Qualcomm drivers when they do during cache warm up.  On Intel/Linux, one trace
-    // shows flakiness with this.
+    //   The situation is unknown for other drivers.
+    //
+    //   Additionally, numerous tests that previously never created a Vulkan pipeline fail or crash
+    //   on proprietary Qualcomm drivers when they do during cache warm up.  On Intel/Linux, one
+    //   trace shows flakiness with this.
+    //
+    // When VK_EXT_graphics_pipeline_library is used, warm up is always enabled as the chances of
+    // blobs being reused is very high.
     const bool libraryBlobsAreReusedByMonolithicPipelines = !isARM && !isPowerVR;
-    ANGLE_FEATURE_CONDITION(&mFeatures, warmUpPipelineCacheAtLink,
-                            libraryBlobsAreReusedByMonolithicPipelines && !isQualcommProprietary &&
-                                !(IsLinux() && isIntel) && !(IsChromeOS() && isSwiftShader));
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, warmUpPipelineCacheAtLink,
+        mFeatures.supportsGraphicsPipelineLibrary.enabled ||
+            (libraryBlobsAreReusedByMonolithicPipelines && !isQualcommProprietary &&
+             !(IsLinux() && isIntel) && !(IsChromeOS() && isSwiftShader)));
 
     // On SwiftShader, no data is retrieved from the pipeline cache, so there is no reason to
     // serialize it or put it in the blob cache.
@@ -5947,14 +5954,20 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // graphicsPipelineLibraryFastLinking allows them to quickly produce working pipelines, but it
     // is typically not as efficient as complete pipelines.
     //
-    // This optimization is disabled on the Intel/windows driver before 31.0.101.5379 due to driver
-    // bugs.
-    // This optimization is disabled for Samsung.
-    ANGLE_FEATURE_CONDITION(
-        &mFeatures, preferMonolithicPipelinesOverLibraries,
-        mFeatures.supportsGraphicsPipelineLibrary.enabled &&
-            !(IsWindows() && isIntel && driverVersion < angle::VersionTriple(101, 5379, 0)) &&
-            !isSamsung);
+    // Unfortunately, the monolithic pipeline is not required to produce the exact same output as
+    // linked-pipelines, which violates OpenGL ES rules:
+    //
+    //   Rule 4 The same vertex or fragment shader will produce the same result when run multiple
+    //   times with the same input. The wording 'the same shader' means a program object that is
+    //   populated with the same source strings, which are compiled and then linked, possibly
+    //   multiple times, and which program object is then executed using the same GL state vector.
+    //   Invariance is relaxed for shaders with side effects, such as image stores, image atomic
+    //   operations, or accessing atomic counters (see section A.5)
+    //
+    // For that reason, this feature is disabled by default.  An application that does not rely on
+    // the above rule and would like to benefit from the gains may override this.
+    ANGLE_FEATURE_CONDITION(&mFeatures, preferMonolithicPipelinesOverLibraries,
+                            mFeatures.supportsGraphicsPipelineLibrary.enabled && false);
 
     // Whether the pipeline caches should merge into the global pipeline cache.  This should only be
     // enabled on platforms if:
