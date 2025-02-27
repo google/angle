@@ -6301,10 +6301,7 @@ void DescriptorSetDesc::updateDescriptorSet(Renderer *renderer,
                         mDescriptorInfos[infoDescIndex + arrayElement];
                     VkDescriptorImageInfo &imageInfo = writeImages[arrayElement];
 
-                    ImageLayout imageLayout = static_cast<ImageLayout>(infoDesc.imageLayoutOrRange);
-
-                    imageInfo.imageLayout =
-                        ConvertImageLayoutToVkImageLayout(renderer, imageLayout);
+                    imageInfo.imageLayout = static_cast<VkImageLayout>(infoDesc.imageLayoutOrRange);
                     imageInfo.imageView = handles[infoDescIndex + arrayElement].imageView;
                     imageInfo.sampler   = handles[infoDescIndex + arrayElement].sampler;
                 }
@@ -6461,6 +6458,7 @@ void DescriptorSetDescBuilder::updatePreCacheActiveTextures(
     const gl::ActiveTextureArray<TextureVk *> &textures,
     const gl::SamplerBindingVector &samplers)
 {
+    Renderer *renderer                                     = context->getRenderer();
     const std::vector<gl::SamplerBinding> &samplerBindings = executable.getSamplerBindings();
     const gl::ActiveTextureMask &activeTextures            = executable.getActiveSamplersMask();
     const ProgramExecutableVk *executableVk                = vk::GetImpl(&executable);
@@ -6526,7 +6524,7 @@ void DescriptorSetDescBuilder::updatePreCacheActiveTextures(
                     textureVk->getImageViewSubresourceSerial(
                         samplerState, samplerUniform.isTexelFetchStaticUse());
 
-                ImageLayout imageLayout = textureVk->getImage().getCurrentImageLayout();
+                VkImageLayout imageLayout = textureVk->getImage().getCurrentLayout(renderer);
                 SetBitField(infoDesc.imageLayoutOrRange, imageLayout);
                 infoDesc.imageViewSerialOrOffset = imageViewSerial.viewSerial.getValue();
                 infoDesc.samplerOrBufferSerial   = samplerHelper.getSamplerSerial().getValue();
@@ -6927,7 +6925,7 @@ angle::Result DescriptorSetDescBuilder::updateImages(
                 // Note: binding.access is unused because it is implied by the shader.
 
                 DescriptorInfoDesc &infoDesc = mDesc.getInfoDesc(infoIndex);
-                SetBitField(infoDesc.imageLayoutOrRange, image->getCurrentImageLayout());
+                SetBitField(infoDesc.imageLayoutOrRange, image->getCurrentLayout(renderer));
                 memcpy(&infoDesc.imageSubresourceRange, &serial.subresource, sizeof(uint32_t));
                 infoDesc.imageViewSerialOrOffset = serial.viewSerial.getValue();
                 infoDesc.samplerOrBufferSerial   = 0;
@@ -6974,8 +6972,9 @@ angle::Result DescriptorSetDescBuilder::updateInputAttachments(
                         .getVariableById(gl::ShaderType::Fragment,
                                          sh::vk::spirv::kIdDepthInputAttachment)
                         .binding;
-                updateInputAttachment(context, depthBinding, ImageLayout::DepthStencilWriteAndInput,
-                                      imageView, serial, writeDescriptorDescs);
+                updateInputAttachment(context, depthBinding,
+                                      VK_IMAGE_LAYOUT_RENDERING_LOCAL_READ_KHR, imageView, serial,
+                                      writeDescriptorDescs);
             }
 
             if (executable.usesStencilFramebufferFetch() &&
@@ -6991,7 +6990,7 @@ angle::Result DescriptorSetDescBuilder::updateInputAttachments(
                                          sh::vk::spirv::kIdStencilInputAttachment)
                         .binding;
                 updateInputAttachment(context, stencilBinding,
-                                      ImageLayout::DepthStencilWriteAndInput, imageView, serial,
+                                      VK_IMAGE_LAYOUT_RENDERING_LOCAL_READ_KHR, imageView, serial,
                                       writeDescriptorDescs);
             }
         }
@@ -7024,8 +7023,8 @@ angle::Result DescriptorSetDescBuilder::updateInputAttachments(
         // rendering, there's a specific layout.
         updateInputAttachment(context, binding,
                               context->getFeatures().preferDynamicRendering.enabled
-                                  ? ImageLayout::ColorWriteAndInput
-                                  : ImageLayout::FragmentShaderWrite,
+                                  ? VK_IMAGE_LAYOUT_RENDERING_LOCAL_READ_KHR
+                                  : VK_IMAGE_LAYOUT_GENERAL,
                               imageView, serial, writeDescriptorDescs);
     }
 
@@ -7035,7 +7034,7 @@ angle::Result DescriptorSetDescBuilder::updateInputAttachments(
 void DescriptorSetDescBuilder::updateInputAttachment(
     Context *context,
     uint32_t binding,
-    ImageLayout layout,
+    VkImageLayout layout,
     const vk::ImageView *imageView,
     ImageOrBufferViewSubresourceSerial serial,
     const WriteDescriptorDescs &writeDescriptorDescs)

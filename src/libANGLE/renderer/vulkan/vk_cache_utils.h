@@ -1773,7 +1773,7 @@ struct DescriptorInfoDesc
 {
     uint32_t samplerOrBufferSerial;
     uint32_t imageViewSerialOrOffset;
-    uint32_t imageLayoutOrRange;  // Packed VkImageLayout
+    uint32_t imageLayoutOrRange;
     uint32_t imageSubresourceRange;
 };
 
@@ -1857,10 +1857,6 @@ class WriteDescriptorDescs
     void updateWriteDesc(uint32_t bindingIndex,
                          VkDescriptorType descriptorType,
                          uint32_t descriptorCount);
-
-    void updateInputAttachment(uint32_t binding,
-                               ImageLayout layout,
-                               RenderTargetVk *renderTargetVk);
 
     // After a preliminary minimum size, use heap memory.
     angle::FastMap<WriteDescriptorDesc, kFastDescriptorSetDescLimit> mDescs;
@@ -2074,7 +2070,7 @@ class DescriptorSetDescBuilder final
   private:
     void updateInputAttachment(Context *context,
                                uint32_t binding,
-                               ImageLayout layout,
+                               VkImageLayout layout,
                                const vk::ImageView *imageView,
                                ImageOrBufferViewSubresourceSerial serial,
                                const WriteDescriptorDescs &writeDescriptorDescs);
