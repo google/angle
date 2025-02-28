@@ -311,7 +311,7 @@ LoadImageFunctionInfo BGRA_EXT_to_default(GLenum type)
     switch (type)
     {
         case GL_UNSIGNED_BYTE:
-            return LoadImageFunctionInfo(LoadToNative<GLubyte, 4>, false);
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
         default:
             UNREACHABLE();
             return LoadImageFunctionInfo(UnreachableLoadFunction, true);
