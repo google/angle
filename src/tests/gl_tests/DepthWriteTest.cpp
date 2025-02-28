@@ -134,7 +134,7 @@ std::string BufferFormatToString(GLenum format)
         case GL_DEPTH_COMPONENT32F:
             return "Depth32Float";
         default:
-            return nullptr;
+            return "";
     }
 }
 
