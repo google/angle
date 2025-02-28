@@ -603,16 +603,71 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
       "prior_access = SYNC_IMAGE_LAYOUT_TRANSITION", "prior_command = vkCmdPipelineBarrier",
       "command = vkCmdBeginRenderPass"}},
     // http://anglebug.com/399191283
-    {"SYNC-HAZARD-READ-AFTER-WRITE",
-     "vkCmdBeginRenderPass reads",
-     "which was previously written during an image layout transition initiated by "
-     "vkCmdEndRenderPass",
+    {"SYNC-HAZARD-WRITE-AFTER-WRITE",
+     nullptr,
+     nullptr,
      false,
-     {"message_type = GeneralError",
+     {"message_type = GeneralError", "hazard_type = WRITE_AFTER_WRITE",
+      "access = SYNC_IMAGE_LAYOUT_TRANSITION",
+      "prior_access = "
+      "VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT(VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT)",
+      "command = vkCmdBeginRenderPass", "prior_command = vkCmdDrawIndexed",
+      "old_layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL",
+      "new_layout = VK_IMAGE_LAYOUT_GENERAL"}},
+    // http://anglebug.com/399191283
+    {"SYNC-HAZARD-WRITE-AFTER-WRITE",
+     nullptr,
+     nullptr,
+     false,
+     {"message_type = GeneralError", "hazard_type = WRITE_AFTER_WRITE",
+      "access = SYNC_IMAGE_LAYOUT_TRANSITION",
+      "prior_access = "
+      "VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT(VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT)",
+      "command = vkCmdBeginRenderPass", "prior_command = vkCmdEndRenderPass",
+      "old_layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL",
+      "new_layout = VK_IMAGE_LAYOUT_GENERAL"}},
+    // http://anglebug.com/399191283
+    {"SYNC-HAZARD-WRITE-AFTER-WRITE",
+     nullptr,
+     nullptr,
+     false,
+     {"message_type = GeneralError", "hazard_type = WRITE_AFTER_WRITE",
+      "access = SYNC_IMAGE_LAYOUT_TRANSITION",
+      "prior_access = "
+      "VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT(VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT)",
+      "command = vkCmdBeginRenderPass", "prior_command = vkCmdEndRenderPass",
+      "old_layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL",
+      "new_layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL"}},
+    // http://anglebug.com/399191283
+    {"SYNC-HAZARD-WRITE-AFTER-WRITE",
+     nullptr,
+     nullptr,
+     false,
+     {"message_type = GeneralError", "hazard_type = WRITE_AFTER_WRITE",
+      "access = "
+      "VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT(VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT)",
+      "prior_access = SYNC_IMAGE_LAYOUT_TRANSITION", "command = vkCmdDrawIndexed",
+      "prior_command = vkCmdEndRenderPass", "subcmd = 1"}},
+    // http://anglebug.com/399191283
+    {"SYNC-HAZARD-WRITE-AFTER-WRITE",
+     nullptr,
+     nullptr,
+     false,
+     {"message_type = GeneralError", "hazard_type = WRITE_AFTER_WRITE",
+      "access = SYNC_IMAGE_LAYOUT_TRANSITION",
+      "prior_access = "
+      "VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT)",
+      "command = vkCmdPipelineBarrier", "prior_command = vkCmdEndRenderPass"}},
+    // http://anglebug.com/399191283
+    {"SYNC-HAZARD-READ-AFTER-WRITE",
+     nullptr,
+     nullptr,
+     false,
+     {"message_type = GeneralError", "hazard_type = READ_AFTER_WRITE",
       "access = "
       "VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT(VK_ACCESS_2_COLOR_ATTACHMENT_READ_BIT)",
-      "prior_access = SYNC_IMAGE_LAYOUT_TRANSITION", "write_barriers = 0",
-      "command = vkCmdBeginRenderPass"}},
+      "prior_access = SYNC_IMAGE_LAYOUT_TRANSITION", "command = vkCmdBeginRenderPass",
+      "prior_command = vkCmdEndRenderPass", "load_op = VK_ATTACHMENT_LOAD_OP_LOAD", "subcmd = 1"}},
 };
 
 // Messages that shouldn't be generated if storeOp=NONE is supported, otherwise they are expected.

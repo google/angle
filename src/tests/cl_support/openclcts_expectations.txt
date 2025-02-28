@@ -10,3 +10,5 @@
 42267085 LINUX NVIDIA VULKAN : non_uniform_work_group.non_uniform_1d_basic = FAIL
 42267085 LINUX NVIDIA VULKAN : non_uniform_work_group.non_uniform_other_basic = FAIL
 
+399969262 LINUX NVIDIA VULKAN : basic.local_kernel_def = SKIP
+
