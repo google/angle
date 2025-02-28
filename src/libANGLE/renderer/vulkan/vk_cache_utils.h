@@ -2282,6 +2282,7 @@ class SharedCacheKeyManager
 
   private:
     size_t updateEmptySlotBits();
+    void addKeyImpl(const SharedCacheKeyT &key);
 
     bool containsKeyWithOwnerEqual(const SharedCacheKeyT &key) const;
     void assertAllEntriesDestroyed() const;
@@ -2300,7 +2301,12 @@ class SharedCacheKeyManager
 };
 
 using FramebufferCacheManager   = SharedCacheKeyManager<SharedFramebufferCacheKey>;
+template <>
+void FramebufferCacheManager::addKey(const SharedFramebufferCacheKey &key);
+
 using DescriptorSetCacheManager = SharedCacheKeyManager<SharedDescriptorSetCacheKey>;
+template <>
+void DescriptorSetCacheManager::addKey(const SharedDescriptorSetCacheKey &key);
 }  // namespace vk
 }  // namespace rx
 

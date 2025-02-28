@@ -7079,19 +7079,8 @@ size_t SharedCacheKeyManager<SharedCacheKeyT>::updateEmptySlotBits()
 }
 
 template <class SharedCacheKeyT>
-void SharedCacheKeyManager<SharedCacheKeyT>::addKey(const SharedCacheKeyT &key)
+void SharedCacheKeyManager<SharedCacheKeyT>::addKeyImpl(const SharedCacheKeyT &key)
 {
-    // There are cases that same texture or buffer are bound in multiple binding point. When we have
-    // a cache miss, we end up looping binding point and calling addKey which may end up adding same
-    // key multiple times. This is a quick way to avoid that.
-    if (mLastAddedSharedCacheKey.owner_equal(key))
-    {
-        return;
-    }
-
-    mLastAddedSharedCacheKey = key;
-    ASSERT(!containsKeyWithOwnerEqual(key));
-
     // Search for available slots and use that if any
     size_t slot = 0;
     for (SlotBitMask &emptyBits : mEmptySlotBits)
@@ -7240,8 +7229,41 @@ bool SharedCacheKeyManager<SharedCacheKeyT>::allValidEntriesAreCached(ContextVk 
 
 // Explict instantiate for FramebufferCacheManager
 template class SharedCacheKeyManager<SharedFramebufferCacheKey>;
+template <>
+void SharedCacheKeyManager<SharedFramebufferCacheKey>::addKey(const SharedFramebufferCacheKey &key)
+{
+    addKeyImpl(key);
+}
+
 // Explict instantiate for DescriptorSetCacheManager
 template class SharedCacheKeyManager<SharedDescriptorSetCacheKey>;
+template <>
+void SharedCacheKeyManager<SharedDescriptorSetCacheKey>::addKey(
+    const SharedDescriptorSetCacheKey &key)
+{
+    // There are cases that same texture or buffer are bound in multiple binding point. When we have
+    // a cache miss, we end up looping binding point and calling addKey which may end up adding same
+    // key multiple times. This is a quick way to avoid that.
+    if (mLastAddedSharedCacheKey.owner_equal(key))
+    {
+        return;
+    }
+
+    // In case of the texture or buffer is part of many descriptorSets, lets not track it any more
+    // to alleviate the overhead associated with this. We will rely on eviction to free the
+    // descriptorSets when needed.
+    static constexpr size_t kMaxEmptySlots            = 4;
+    static constexpr size_t kMaxSharedCacheKeyTracked = kSlotBitCount * kMaxEmptySlots;
+    if (mSharedCacheKeys.size() >= kMaxSharedCacheKeyTracked)
+    {
+        return;
+    }
+
+    mLastAddedSharedCacheKey = key;
+    ASSERT(!containsKeyWithOwnerEqual(key));
+
+    addKeyImpl(key);
+}
 
 // PipelineCacheAccess implementation.
 std::unique_lock<angle::SimpleMutex> PipelineCacheAccess::getLock()
