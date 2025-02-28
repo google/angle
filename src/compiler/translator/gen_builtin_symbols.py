@@ -1434,13 +1434,12 @@ def gen_function_variants(function_props):
         function_variants.append(function_props)
         return function_variants
 
-    # If we have image_params then we're generating variants for 33 separate functions,
+    # If we have image_params then we're generating variants for multiple separate functions,
     # each for a different type of image variable
     if 'image_params' in gen_type:
         variants = [['gimage2D', 'ivec2'], ['gimage3D', 'ivec3'], ['gimageCube', 'ivec3'],
                     ['gimageBuffer', 'int'], ['gimage2DArray', 'ivec3'],
-                    ['gimageCubeArray', 'ivec3'], ['gimageRect', 'ivec2'],
-                    ['gimage2DMS', 'ivec2', 'int'], ['gimage2DMSArray', 'ivec3', 'int']]
+                    ['gimageCubeArray', 'ivec3']]
         for variant in variants:
             image_variant_parameters = []
             for param in parameters:
