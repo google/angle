@@ -104,9 +104,6 @@ constexpr uint32_t kPipelineCacheVkUpdatePeriod = 60;
 // initialization logic simpler.
 constexpr uint32_t kPreferredVulkanAPIVersion = VK_API_VERSION_1_1;
 
-// Development flag for transition period when both old and new syncval fitlers are used
-constexpr bool kSyncValCheckExtraProperties = true;
-
 bool IsVulkan11(uint32_t apiVersion)
 {
     return apiVersion >= VK_API_VERSION_1_1;
@@ -721,6 +718,43 @@ bool IsMessageInSkipList(const char *message,
     return false;
 }
 
+bool SyncvalMessageMatchesSkip(const char *messageId,
+                               const char *message,
+                               const vk::SkippedSyncvalMessage &skip)
+{
+    // TODO(http://angleproject:391284743): Ongoing transition: textual matches -> extraProperties.
+    // When a skip includes the extraProperties list, use that list and ignore messageContents1/2.
+    // When extraProperties list is not present, use messageContents1/2 as before.
+    if (skip.extraProperties[0])
+    {
+        if (strstr(messageId, skip.messageId) == nullptr)
+        {
+            return false;
+        }
+        // Check that all extraProperties entries are present in the message
+        bool mismatch = false;
+        for (uint32_t i = 0; i < kMaxSyncValExtraProperties; i++)
+        {
+            if (skip.extraProperties[i] == nullptr)
+            {
+                break;
+            }
+            if (strstr(message, skip.extraProperties[i]) == nullptr)
+            {
+                mismatch = true;
+                break;
+            }
+        }
+        return !mismatch;
+    }
+    else
+    {
+        return (strstr(messageId, skip.messageId) != nullptr &&
+                strstr(message, skip.messageContents1) != nullptr &&
+                strstr(message, skip.messageContents2) != nullptr);
+    }
+}
+
 // Suppress validation errors that are known.  Returns DebugMessageReport::Ignore in that case.
 DebugMessageReport ShouldReportDebugMessage(Renderer *renderer,
                                             const char *messageId,
@@ -741,63 +775,37 @@ DebugMessageReport ShouldReportDebugMessage(Renderer *renderer,
     // Then check with syncval messages:
     const bool isColorFramebufferFetchUsed = renderer->isColorFramebufferFetchUsed();
 
-    for (const vk::SkippedSyncvalMessage &msg : renderer->getSkippedSyncvalMessages())
+    for (const vk::SkippedSyncvalMessage &skip : renderer->getSkippedSyncvalMessages())
     {
-        if (kSyncValCheckExtraProperties && msg.extraProperties[0])
+        if (!SyncvalMessageMatchesSkip(messageId, message, skip))
         {
-            if (strstr(messageId, msg.messageId) == nullptr)
-            {
-                continue;
-            }
-            bool mismatch = false;
-            for (uint32_t i = 0; i < kMaxSyncValExtraProperties; i++)
-            {
-                if (msg.extraProperties[i] == nullptr)
-                {
-                    break;
-                }
-                if (strstr(message, msg.extraProperties[i]) == nullptr)
-                {
-                    mismatch = true;
-                    break;
-                }
-            }
-            if (mismatch)
-            {
-                continue;
-            }
+            continue;
         }
-        else
+
+        if (skip.isDueToNonConformantCoherentColorFramebufferFetch)
         {
-            if (strstr(messageId, msg.messageId) == nullptr ||
-                strstr(message, msg.messageContents1) == nullptr ||
-                strstr(message, msg.messageContents2) == nullptr)
+            // If the error is due to exposing coherent framebuffer fetch (without
+            // VK_EXT_rasterization_order_attachment_access), but framebuffer fetch has not been
+            // used by the application, report it.
+            //
+            // Note that currently syncval doesn't support the
+            // VK_EXT_rasterization_order_attachment_access extension, so the syncval messages would
+            // continue to be produced despite the extension.
+            constexpr bool kSyncValSupportsRasterizationOrderExtension = false;
+            const bool hasRasterizationOrderExtension =
+                renderer->getFeatures().supportsRasterizationOrderAttachmentAccess.enabled &&
+                kSyncValSupportsRasterizationOrderExtension;
+            if (!isColorFramebufferFetchUsed || hasRasterizationOrderExtension)
             {
-                continue;
+                return DebugMessageReport::Print;
             }
         }
 
-        // If the error is due to exposing coherent framebuffer fetch (without
-        // VK_EXT_rasterization_order_attachment_access), but framebuffer fetch has not been used by
-        // the application, report it.
-        //
-        // Note that currently syncval doesn't support the
-        // VK_EXT_rasterization_order_attachment_access extension, so the syncval messages would
-        // continue to be produced despite the extension.
-        constexpr bool kSyncValSupportsRasterizationOrderExtension = false;
-        const bool hasRasterizationOrderExtension =
-            renderer->getFeatures().supportsRasterizationOrderAttachmentAccess.enabled &&
-            kSyncValSupportsRasterizationOrderExtension;
-        if (msg.isDueToNonConformantCoherentColorFramebufferFetch &&
-            (!isColorFramebufferFetchUsed || hasRasterizationOrderExtension))
-        {
-            return DebugMessageReport::Print;
-        }
-
-        // Otherwise ignore the message
+        // Ignore the message as it matched one the the skips
         return DebugMessageReport::Ignore;
     }
 
+    // Message didn't match any skips, report
     return DebugMessageReport::Print;
 }
 
