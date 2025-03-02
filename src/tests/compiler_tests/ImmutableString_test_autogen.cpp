@@ -818,24 +818,24 @@ TEST(ImmutableStringTest, ScriptGeneratedHashesMatch)
     ASSERT_EQ(0x00000315u, ImmutableString("textureGather(00H10B").mangledNameHash());
     ASSERT_EQ(0x00000316u, ImmutableString("textureGather(00Q10B").mangledNameHash());
     ASSERT_EQ(0x00000317u, ImmutableString("textureGather(00W10B").mangledNameHash());
-    ASSERT_EQ(0x00000318u, ImmutableString("textureGather(00H10B00C").mangledNameHash());
-    ASSERT_EQ(0x00000319u, ImmutableString("textureGather(00Q10B00C").mangledNameHash());
-    ASSERT_EQ(0x0000031au, ImmutableString("textureGather(00W10B00C").mangledNameHash());
-    ASSERT_EQ(0x0000031bu, ImmutableString("textureGather(00K20B").mangledNameHash());
-    ASSERT_EQ(0x0000031cu, ImmutableString("textureGather(00T20B").mangledNameHash());
-    ASSERT_EQ(0x0000031du, ImmutableString("textureGather(00Z20B").mangledNameHash());
-    ASSERT_EQ(0x0000031eu, ImmutableString("textureGather(00K20B00C").mangledNameHash());
-    ASSERT_EQ(0x0000031fu, ImmutableString("textureGather(00T20B00C").mangledNameHash());
-    ASSERT_EQ(0x00000320u, ImmutableString("textureGather(00Z20B00C").mangledNameHash());
-    ASSERT_EQ(0x00000321u, ImmutableString("textureGather(00J20B").mangledNameHash());
-    ASSERT_EQ(0x00000322u, ImmutableString("textureGather(00S20B").mangledNameHash());
-    ASSERT_EQ(0x00000323u, ImmutableString("textureGather(00Y20B").mangledNameHash());
-    ASSERT_EQ(0x00000324u, ImmutableString("textureGather(00J20B00C").mangledNameHash());
-    ASSERT_EQ(0x00000325u, ImmutableString("textureGather(00S20B00C").mangledNameHash());
-    ASSERT_EQ(0x00000326u, ImmutableString("textureGather(00Y20B00C").mangledNameHash());
-    ASSERT_EQ(0x00000327u, ImmutableString("textureGather(00g30B").mangledNameHash());
-    ASSERT_EQ(0x00000328u, ImmutableString("textureGather(00l30B").mangledNameHash());
-    ASSERT_EQ(0x00000329u, ImmutableString("textureGather(00o30B").mangledNameHash());
+    ASSERT_EQ(0x00000318u, ImmutableString("textureGather(00K20B").mangledNameHash());
+    ASSERT_EQ(0x00000319u, ImmutableString("textureGather(00T20B").mangledNameHash());
+    ASSERT_EQ(0x0000031au, ImmutableString("textureGather(00Z20B").mangledNameHash());
+    ASSERT_EQ(0x0000031bu, ImmutableString("textureGather(00J20B").mangledNameHash());
+    ASSERT_EQ(0x0000031cu, ImmutableString("textureGather(00S20B").mangledNameHash());
+    ASSERT_EQ(0x0000031du, ImmutableString("textureGather(00Y20B").mangledNameHash());
+    ASSERT_EQ(0x0000031eu, ImmutableString("textureGather(00g30B").mangledNameHash());
+    ASSERT_EQ(0x0000031fu, ImmutableString("textureGather(00l30B").mangledNameHash());
+    ASSERT_EQ(0x00000320u, ImmutableString("textureGather(00o30B").mangledNameHash());
+    ASSERT_EQ(0x00000321u, ImmutableString("textureGather(00H10B00C").mangledNameHash());
+    ASSERT_EQ(0x00000322u, ImmutableString("textureGather(00Q10B00C").mangledNameHash());
+    ASSERT_EQ(0x00000323u, ImmutableString("textureGather(00W10B00C").mangledNameHash());
+    ASSERT_EQ(0x00000324u, ImmutableString("textureGather(00K20B00C").mangledNameHash());
+    ASSERT_EQ(0x00000325u, ImmutableString("textureGather(00T20B00C").mangledNameHash());
+    ASSERT_EQ(0x00000326u, ImmutableString("textureGather(00Z20B00C").mangledNameHash());
+    ASSERT_EQ(0x00000327u, ImmutableString("textureGather(00J20B00C").mangledNameHash());
+    ASSERT_EQ(0x00000328u, ImmutableString("textureGather(00S20B00C").mangledNameHash());
+    ASSERT_EQ(0x00000329u, ImmutableString("textureGather(00Y20B00C").mangledNameHash());
     ASSERT_EQ(0x0000032au, ImmutableString("textureGather(00g30B00C").mangledNameHash());
     ASSERT_EQ(0x0000032bu, ImmutableString("textureGather(00l30B00C").mangledNameHash());
     ASSERT_EQ(0x0000032cu, ImmutableString("textureGather(00o30B00C").mangledNameHash());
@@ -849,14 +849,14 @@ TEST(ImmutableStringTest, ScriptGeneratedHashesMatch)
     ASSERT_EQ(0x00000334u, ImmutableString("textureGatherOffset(00K20B10C").mangledNameHash());
     ASSERT_EQ(0x00000335u, ImmutableString("textureGatherOffset(00T20B10C").mangledNameHash());
     ASSERT_EQ(0x00000336u, ImmutableString("textureGatherOffset(00Z20B10C").mangledNameHash());
-    ASSERT_EQ(0x00000337u, ImmutableString("textureGatherOffset(00c10B00B10C").mangledNameHash());
-    ASSERT_EQ(0x00000338u, ImmutableString("textureGatherOffset(00e20B00B10C").mangledNameHash());
-    ASSERT_EQ(0x00000339u, ImmutableString("textureGatherOffset(00H10B10C00C").mangledNameHash());
-    ASSERT_EQ(0x0000033au, ImmutableString("textureGatherOffset(00Q10B10C00C").mangledNameHash());
-    ASSERT_EQ(0x0000033bu, ImmutableString("textureGatherOffset(00W10B10C00C").mangledNameHash());
-    ASSERT_EQ(0x0000033cu, ImmutableString("textureGatherOffset(00K20B10C00C").mangledNameHash());
-    ASSERT_EQ(0x0000033du, ImmutableString("textureGatherOffset(00T20B10C00C").mangledNameHash());
-    ASSERT_EQ(0x0000033eu, ImmutableString("textureGatherOffset(00Z20B10C00C").mangledNameHash());
+    ASSERT_EQ(0x00000337u, ImmutableString("textureGatherOffset(00H10B10C00C").mangledNameHash());
+    ASSERT_EQ(0x00000338u, ImmutableString("textureGatherOffset(00Q10B10C00C").mangledNameHash());
+    ASSERT_EQ(0x00000339u, ImmutableString("textureGatherOffset(00W10B10C00C").mangledNameHash());
+    ASSERT_EQ(0x0000033au, ImmutableString("textureGatherOffset(00K20B10C00C").mangledNameHash());
+    ASSERT_EQ(0x0000033bu, ImmutableString("textureGatherOffset(00T20B10C00C").mangledNameHash());
+    ASSERT_EQ(0x0000033cu, ImmutableString("textureGatherOffset(00Z20B10C00C").mangledNameHash());
+    ASSERT_EQ(0x0000033du, ImmutableString("textureGatherOffset(00c10B00B10C").mangledNameHash());
+    ASSERT_EQ(0x0000033eu, ImmutableString("textureGatherOffset(00e20B00B10C").mangledNameHash());
     ASSERT_EQ(0x0000033fu, ImmutableString("textureGatherOffsets(00H10B10Cx4").mangledNameHash());
     ASSERT_EQ(0x00000340u, ImmutableString("textureGatherOffsets(00Q10B10Cx4").mangledNameHash());
     ASSERT_EQ(0x00000341u, ImmutableString("textureGatherOffsets(00W10B10Cx4").mangledNameHash());
@@ -864,21 +864,21 @@ TEST(ImmutableStringTest, ScriptGeneratedHashesMatch)
     ASSERT_EQ(0x00000343u, ImmutableString("textureGatherOffsets(00T20B10Cx4").mangledNameHash());
     ASSERT_EQ(0x00000344u, ImmutableString("textureGatherOffsets(00Z20B10Cx4").mangledNameHash());
     ASSERT_EQ(0x00000345u,
-              ImmutableString("textureGatherOffsets(00c10B00B10Cx4").mangledNameHash());
-    ASSERT_EQ(0x00000346u,
-              ImmutableString("textureGatherOffsets(00e20B00B10Cx4").mangledNameHash());
-    ASSERT_EQ(0x00000347u,
               ImmutableString("textureGatherOffsets(00H10B10Cx400C").mangledNameHash());
-    ASSERT_EQ(0x00000348u,
+    ASSERT_EQ(0x00000346u,
               ImmutableString("textureGatherOffsets(00Q10B10Cx400C").mangledNameHash());
-    ASSERT_EQ(0x00000349u,
+    ASSERT_EQ(0x00000347u,
               ImmutableString("textureGatherOffsets(00W10B10Cx400C").mangledNameHash());
-    ASSERT_EQ(0x0000034au,
+    ASSERT_EQ(0x00000348u,
               ImmutableString("textureGatherOffsets(00K20B10Cx400C").mangledNameHash());
-    ASSERT_EQ(0x0000034bu,
+    ASSERT_EQ(0x00000349u,
               ImmutableString("textureGatherOffsets(00T20B10Cx400C").mangledNameHash());
-    ASSERT_EQ(0x0000034cu,
+    ASSERT_EQ(0x0000034au,
               ImmutableString("textureGatherOffsets(00Z20B10Cx400C").mangledNameHash());
+    ASSERT_EQ(0x0000034bu,
+              ImmutableString("textureGatherOffsets(00c10B00B10Cx4").mangledNameHash());
+    ASSERT_EQ(0x0000034cu,
+              ImmutableString("textureGatherOffsets(00e20B00B10Cx4").mangledNameHash());
     ASSERT_EQ(0x0000034du, ImmutableString("textureQueryLOD(00H10B").mangledNameHash());
     ASSERT_EQ(0x0000034eu, ImmutableString("textureQueryLOD(00Q10B").mangledNameHash());
     ASSERT_EQ(0x0000034fu, ImmutableString("textureQueryLOD(00W10B").mangledNameHash());

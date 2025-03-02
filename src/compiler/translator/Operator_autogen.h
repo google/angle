@@ -307,7 +307,15 @@ enum TOperator : uint16_t
     EOpTextureProjOffsetBias,
 
     // Group TextureGather
+
+    // Group TextureGatherNoComp
     EOpTextureGather,
+
+    // Group TextureGatherComp
+    EOpTextureGatherComp,
+
+    // Group TextureGatherRef
+    EOpTextureGatherRef,
 
     // Group TextureGatherOffset
 
@@ -317,6 +325,9 @@ enum TOperator : uint16_t
     // Group TextureGatherOffsetComp
     EOpTextureGatherOffsetComp,
 
+    // Group TextureGatherOffsetRef
+    EOpTextureGatherOffsetRef,
+
     // Group TextureGatherOffsets
 
     // Group TextureGatherOffsetsNoComp
@@ -324,6 +335,9 @@ enum TOperator : uint16_t
 
     // Group TextureGatherOffsetsComp
     EOpTextureGatherOffsetsComp,
+
+    // Group TextureGatherOffsetsRef
+    EOpTextureGatherOffsetsRef,
 
     // Group TextureQueryLod
     EOpTextureQueryLOD,
@@ -446,6 +460,18 @@ static inline bool IsTextureOffsetBias(TOperator op)
 {
     return op >= EOpTextureOffsetBias && op <= EOpTextureProjOffsetBias;
 }
+static inline bool IsTextureGatherNoComp(TOperator op)
+{
+    return op >= EOpTextureGather && op <= EOpTextureGather;
+}
+static inline bool IsTextureGatherComp(TOperator op)
+{
+    return op >= EOpTextureGatherComp && op <= EOpTextureGatherComp;
+}
+static inline bool IsTextureGatherRef(TOperator op)
+{
+    return op >= EOpTextureGatherRef && op <= EOpTextureGatherRef;
+}
 static inline bool IsTextureGatherOffsetNoComp(TOperator op)
 {
     return op >= EOpTextureGatherOffset && op <= EOpTextureGatherOffset;
@@ -454,9 +480,13 @@ static inline bool IsTextureGatherOffsetComp(TOperator op)
 {
     return op >= EOpTextureGatherOffsetComp && op <= EOpTextureGatherOffsetComp;
 }
+static inline bool IsTextureGatherOffsetRef(TOperator op)
+{
+    return op >= EOpTextureGatherOffsetRef && op <= EOpTextureGatherOffsetRef;
+}
 static inline bool IsTextureGatherOffset(TOperator op)
 {
-    return op >= EOpTextureGatherOffset && op <= EOpTextureGatherOffsetComp;
+    return op >= EOpTextureGatherOffset && op <= EOpTextureGatherOffsetRef;
 }
 static inline bool IsTextureGatherOffsetsNoComp(TOperator op)
 {
@@ -466,13 +496,17 @@ static inline bool IsTextureGatherOffsetsComp(TOperator op)
 {
     return op >= EOpTextureGatherOffsetsComp && op <= EOpTextureGatherOffsetsComp;
 }
+static inline bool IsTextureGatherOffsetsRef(TOperator op)
+{
+    return op >= EOpTextureGatherOffsetsRef && op <= EOpTextureGatherOffsetsRef;
+}
 static inline bool IsTextureGatherOffsets(TOperator op)
 {
-    return op >= EOpTextureGatherOffsets && op <= EOpTextureGatherOffsetsComp;
+    return op >= EOpTextureGatherOffsets && op <= EOpTextureGatherOffsetsRef;
 }
 static inline bool IsTextureGather(TOperator op)
 {
-    return op >= EOpTextureGather && op <= EOpTextureGatherOffsetsComp;
+    return op >= EOpTextureGather && op <= EOpTextureGatherOffsetsRef;
 }
 static inline bool IsTexture(TOperator op)
 {

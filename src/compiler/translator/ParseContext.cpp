@@ -7439,7 +7439,9 @@ void TParseContext::checkTextureOffset(TIntermAggregate *functionCall)
     TIntermSequence *arguments = functionCall->getSequence();
 
     if (BuiltInGroup::IsTextureOffsetNoBias(op) || BuiltInGroup::IsTextureGatherOffsetNoComp(op) ||
-        BuiltInGroup::IsTextureGatherOffsetsNoComp(op))
+        BuiltInGroup::IsTextureGatherOffsetRef(op) ||
+        BuiltInGroup::IsTextureGatherOffsetsNoComp(op) ||
+        BuiltInGroup::IsTextureGatherOffsetsRef(op))
     {
         offset = arguments->back();
     }

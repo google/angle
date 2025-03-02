@@ -3589,6 +3589,8 @@ spirv::IdRef OutputSPIRVTraverser::createImageTextureBuiltIn(TIntermOperator *no
             break;
 
         case EOpTextureGather:
+        case EOpTextureGatherComp:
+        case EOpTextureGatherRef:
 
             // For shadow textures, refZ (same as Dref) is specified as the last argument.
             // Otherwise a component may be specified which defaults to 0 if not specified.
@@ -3606,9 +3608,11 @@ spirv::IdRef OutputSPIRVTraverser::createImageTextureBuiltIn(TIntermOperator *no
 
         case EOpTextureGatherOffset:
         case EOpTextureGatherOffsetComp:
+        case EOpTextureGatherOffsetRef:
 
         case EOpTextureGatherOffsets:
         case EOpTextureGatherOffsetsComp:
+        case EOpTextureGatherOffsetsRef:
 
             // textureGatherOffset and textureGatherOffsets have the following forms:
             //

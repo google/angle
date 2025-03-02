@@ -302,7 +302,7 @@ GROUP BEGIN Texture {"queryFunction": true}
       vec4 texture2DProjGradEXT(sampler2D, vec4, vec2, vec2);
       vec4 textureCubeGradEXT(samplerCube, vec3, vec3, vec3);
     DEFAULT METADATA {"essl_level": "ESSL1_BUILTINS", "extension": "WEBGL_video_texture"}
-        vec4 textureVideoWEBGL(samplerVideoWEBGL, vec2);
+      vec4 textureVideoWEBGL(samplerVideoWEBGL, vec2);
 
     // Variants with bias are limited to fragment shaders
     GROUP BEGIN Bias {"shader_type": "FRAGMENT", "opSuffix": "Bias"}
@@ -557,62 +557,80 @@ GROUP BEGIN Texture {"queryFunction": true}
   GROUP END OffsetBias
 
   GROUP BEGIN Gather {"queryFunction": true}
-    DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS"}
-      gvec4 textureGather(gsampler2D, vec2);
-      gvec4 textureGather(gsampler2D, vec2, int);
-      gvec4 textureGather(gsampler2DArray, vec3);
-      gvec4 textureGather(gsampler2DArray, vec3, int);
-      gvec4 textureGather(gsamplerCube, vec3);
-      gvec4 textureGather(gsamplerCube, vec3, int);
-    DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS"}
-      gvec4 textureGather(gsamplerCubeArray, vec4);
-      gvec4 textureGather(gsamplerCubeArray, vec4, int);
-      vec4 textureGather(samplerCubeArrayShadow, vec4, float);
-    DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "essl_extension": "OES_texture_cube_map_array, EXT_texture_cube_map_array", "suffix": "Ext"}
-      gvec4 textureGather(gsamplerCubeArray, vec4);
-      gvec4 textureGather(gsamplerCubeArray, vec4, int);
-      vec4 textureGather(samplerCubeArrayShadow, vec4, float);
-    DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS"}
-      vec4 textureGather(sampler2DShadow, vec2, float);
-      vec4 textureGather(sampler2DArrayShadow, vec3, float);
-      vec4 textureGather(samplerCubeShadow, vec3, float);
+    GROUP BEGIN NoComp {"queryFunction": true}
+      DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS"}
+        gvec4 textureGather(gsampler2D, vec2);
+        gvec4 textureGather(gsampler2DArray, vec3);
+        gvec4 textureGather(gsamplerCube, vec3);
+      DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS"}
+        gvec4 textureGather(gsamplerCubeArray, vec4);
+      DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "essl_extension": "OES_texture_cube_map_array, EXT_texture_cube_map_array", "suffix": "Ext"}
+        gvec4 textureGather(gsamplerCubeArray, vec4);
+    GROUP END NoComp
+    GROUP BEGIN Comp {"queryFunction": true, "opSuffix": "Comp"}
+      DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS"}
+        gvec4 textureGather(gsampler2D, vec2, int);
+        gvec4 textureGather(gsampler2DArray, vec3, int);
+        gvec4 textureGather(gsamplerCube, vec3, int);
+      DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS"}
+        gvec4 textureGather(gsamplerCubeArray, vec4, int);
+      DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "essl_extension": "OES_texture_cube_map_array, EXT_texture_cube_map_array", "suffix": "Ext"}
+        gvec4 textureGather(gsamplerCubeArray, vec4, int);
+    GROUP END Comp
+    GROUP BEGIN Ref {"queryFunction": true, "opSuffix": "Ref"}
+      DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS"}
+        vec4 textureGather(samplerCubeArrayShadow, vec4, float);
+      DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "essl_extension": "OES_texture_cube_map_array, EXT_texture_cube_map_array", "suffix": "Ext"}
+        vec4 textureGather(samplerCubeArrayShadow, vec4, float);
+      DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS"}
+        vec4 textureGather(sampler2DShadow, vec2, float);
+        vec4 textureGather(sampler2DArrayShadow, vec3, float);
+        vec4 textureGather(samplerCubeShadow, vec3, float);
+    GROUP END Ref
 
-      GROUP BEGIN Offset {"queryFunction": true}
-        GROUP BEGIN NoComp {"queryFunction": true}
-          DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS"}
-            gvec4 textureGatherOffset(gsampler2D, vec2, ivec2);
-            gvec4 textureGatherOffset(gsampler2DArray, vec3, ivec2);
-            vec4 textureGatherOffset(sampler2DShadow, vec2, float, ivec2);
-            vec4 textureGatherOffset(sampler2DArrayShadow, vec3, float, ivec2);
-        GROUP END NoComp
-        GROUP BEGIN Comp {"queryFunction": true, "opSuffix": "Comp"}
-          DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS"}
-            gvec4 textureGatherOffset(gsampler2D, vec2, ivec2, int);
-            gvec4 textureGatherOffset(gsampler2DArray, vec3, ivec2, int);
-        GROUP END Comp
-      GROUP END Offset
-      GROUP BEGIN Offsets {"queryFunction": true}
-        GROUP BEGIN NoComp {"queryFunction": true}
-          DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS"}
-            gvec4 textureGatherOffsets(gsampler2D, vec2, ivec2[4]);
-            gvec4 textureGatherOffsets(gsampler2DArray, vec3, ivec2[4]);
-            vec4 textureGatherOffsets(sampler2DShadow, vec2, float, ivec2[4]);
-            vec4 textureGatherOffsets(sampler2DArrayShadow, vec3, float, ivec2[4]);
-          DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "essl_extension": "EXT_gpu_shader5, OES_gpu_shader5", "suffix": "Ext"}
-            gvec4 textureGatherOffsets(gsampler2D, vec2, ivec2[4]);
-            gvec4 textureGatherOffsets(gsampler2DArray, vec3, ivec2[4]);
-            vec4 textureGatherOffsets(sampler2DShadow, vec2, float, ivec2[4]);
-            vec4 textureGatherOffsets(sampler2DArrayShadow, vec3, float, ivec2[4]);
-        GROUP END NoComp
-        GROUP BEGIN Comp {"queryFunction": true, "opSuffix": "Comp"}
-          DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS"}
-            gvec4 textureGatherOffsets(gsampler2D, vec2, ivec2[4], int);
-            gvec4 textureGatherOffsets(gsampler2DArray, vec3, ivec2[4], int);
-          DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "essl_extension": "EXT_gpu_shader5, OES_gpu_shader5", "suffix": "Ext"}
-            gvec4 textureGatherOffsets(gsampler2D, vec2, ivec2[4], int);
-            gvec4 textureGatherOffsets(gsampler2DArray, vec3, ivec2[4], int);
-        GROUP END Comp
-      GROUP END Offsets
+    GROUP BEGIN Offset {"queryFunction": true}
+      GROUP BEGIN NoComp {"queryFunction": true}
+        DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS"}
+          gvec4 textureGatherOffset(gsampler2D, vec2, ivec2);
+          gvec4 textureGatherOffset(gsampler2DArray, vec3, ivec2);
+      GROUP END NoComp
+      GROUP BEGIN Comp {"queryFunction": true, "opSuffix": "Comp"}
+        DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS"}
+          gvec4 textureGatherOffset(gsampler2D, vec2, ivec2, int);
+          gvec4 textureGatherOffset(gsampler2DArray, vec3, ivec2, int);
+      GROUP END Comp
+      GROUP BEGIN Ref {"queryFunction": true, "opSuffix": "Ref"}
+        DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS"}
+          vec4 textureGatherOffset(sampler2DShadow, vec2, float, ivec2);
+          vec4 textureGatherOffset(sampler2DArrayShadow, vec3, float, ivec2);
+      GROUP END Ref
+    GROUP END Offset
+    GROUP BEGIN Offsets {"queryFunction": true}
+      GROUP BEGIN NoComp {"queryFunction": true}
+        DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS"}
+          gvec4 textureGatherOffsets(gsampler2D, vec2, ivec2[4]);
+          gvec4 textureGatherOffsets(gsampler2DArray, vec3, ivec2[4]);
+        DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "essl_extension": "EXT_gpu_shader5, OES_gpu_shader5", "suffix": "Ext"}
+          gvec4 textureGatherOffsets(gsampler2D, vec2, ivec2[4]);
+          gvec4 textureGatherOffsets(gsampler2DArray, vec3, ivec2[4]);
+      GROUP END NoComp
+      GROUP BEGIN Comp {"queryFunction": true, "opSuffix": "Comp"}
+        DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS"}
+          gvec4 textureGatherOffsets(gsampler2D, vec2, ivec2[4], int);
+          gvec4 textureGatherOffsets(gsampler2DArray, vec3, ivec2[4], int);
+        DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "essl_extension": "EXT_gpu_shader5, OES_gpu_shader5", "suffix": "Ext"}
+          gvec4 textureGatherOffsets(gsampler2D, vec2, ivec2[4], int);
+          gvec4 textureGatherOffsets(gsampler2DArray, vec3, ivec2[4], int);
+      GROUP END Comp
+      GROUP BEGIN Ref {"queryFunction": true, "opSuffix": "Ref"}
+        DEFAULT METADATA {"essl_level": "ESSL3_2_BUILTINS"}
+          vec4 textureGatherOffsets(sampler2DShadow, vec2, float, ivec2[4]);
+          vec4 textureGatherOffsets(sampler2DArrayShadow, vec3, float, ivec2[4]);
+        DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "essl_extension": "EXT_gpu_shader5, OES_gpu_shader5", "suffix": "Ext"}
+          vec4 textureGatherOffsets(sampler2DShadow, vec2, float, ivec2[4]);
+          vec4 textureGatherOffsets(sampler2DArrayShadow, vec3, float, ivec2[4]);
+      GROUP END Ref
+    GROUP END Offsets
   GROUP END Gather
 
   GROUP BEGIN QueryLod {"shader_type": "FRAGMENT"}

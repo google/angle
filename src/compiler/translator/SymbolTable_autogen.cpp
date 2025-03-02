@@ -9371,33 +9371,6 @@ constexpr const TFunction textureGather_00W10B(
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGather,
     true);
-constexpr const TFunction textureGather_00H10B00C(
-    BuiltInId::textureGather_Sampler2D1_Float2_Int1,
-    BuiltInName::textureGather,
-    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00H10B00C,
-    3,
-    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureGather,
-    true);
-constexpr const TFunction textureGather_00Q10B00C(
-    BuiltInId::textureGather_ISampler2D1_Float2_Int1,
-    BuiltInName::textureGather,
-    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00Q10B00C,
-    3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureGather,
-    true);
-constexpr const TFunction textureGather_00W10B00C(
-    BuiltInId::textureGather_USampler2D1_Float2_Int1,
-    BuiltInName::textureGather,
-    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00W10B00C,
-    3,
-    StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureGather,
-    true);
 constexpr const TFunction textureGather_00K20B(
     BuiltInId::textureGather_Sampler2DArray1_Float3,
     BuiltInName::textureGather,
@@ -9422,33 +9395,6 @@ constexpr const TFunction textureGather_00Z20B(
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     BuiltInParameters::p00Z20B00B10C,
     2,
-    StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureGather,
-    true);
-constexpr const TFunction textureGather_00K20B00C(
-    BuiltInId::textureGather_Sampler2DArray1_Float3_Int1,
-    BuiltInName::textureGather,
-    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00K20B00C,
-    3,
-    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureGather,
-    true);
-constexpr const TFunction textureGather_00T20B00C(
-    BuiltInId::textureGather_ISampler2DArray1_Float3_Int1,
-    BuiltInName::textureGather,
-    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00T20B00C,
-    3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureGather,
-    true);
-constexpr const TFunction textureGather_00Z20B00C(
-    BuiltInId::textureGather_USampler2DArray1_Float3_Int1,
-    BuiltInName::textureGather,
-    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00Z20B00C,
-    3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGather,
     true);
@@ -9479,33 +9425,6 @@ constexpr const TFunction textureGather_00Y20B(
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGather,
     true);
-constexpr const TFunction textureGather_00J20B00C(
-    BuiltInId::textureGather_SamplerCube1_Float3_Int1,
-    BuiltInName::textureGather,
-    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00J20B00C,
-    3,
-    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureGather,
-    true);
-constexpr const TFunction textureGather_00S20B00C(
-    BuiltInId::textureGather_ISamplerCube1_Float3_Int1,
-    BuiltInName::textureGather,
-    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00S20B00C,
-    3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureGather,
-    true);
-constexpr const TFunction textureGather_00Y20B00C(
-    BuiltInId::textureGather_USamplerCube1_Float3_Int1,
-    BuiltInName::textureGather,
-    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00Y20B00C,
-    3,
-    StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureGather,
-    true);
 constexpr const TFunction textureGather_00g30B(
     BuiltInId::textureGather_SamplerCubeArray1_Float4,
     BuiltInName::textureGather,
@@ -9531,42 +9450,6 @@ constexpr const TFunction textureGather_00o30B(
     BuiltInParameters::p00o30B00B,
     2,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureGather,
-    true);
-constexpr const TFunction textureGather_00g30B00C(
-    BuiltInId::textureGather_SamplerCubeArray1_Float4_Int1,
-    BuiltInName::textureGather,
-    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00g30B00C,
-    3,
-    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureGather,
-    true);
-constexpr const TFunction textureGather_00l30B00C(
-    BuiltInId::textureGather_ISamplerCubeArray1_Float4_Int1,
-    BuiltInName::textureGather,
-    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00l30B00C,
-    3,
-    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureGather,
-    true);
-constexpr const TFunction textureGather_00o30B00C(
-    BuiltInId::textureGather_USamplerCubeArray1_Float4_Int1,
-    BuiltInName::textureGather,
-    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00o30B00C,
-    3,
-    StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureGather,
-    true);
-constexpr const TFunction textureGather_00h30B00B(
-    BuiltInId::textureGather_SamplerCubeArrayShadow1_Float4_Float1,
-    BuiltInName::textureGather,
-    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00h30B00B00B,
-    3,
-    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGather,
     true);
 constexpr const TFunction textureGatherExt_00g30B(
@@ -9599,6 +9482,114 @@ constexpr const TFunction textureGatherExt_00o30B(
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGather,
     true);
+constexpr const TFunction textureGather_00H10B00C(
+    BuiltInId::textureGather_Sampler2D1_Float2_Int1,
+    BuiltInName::textureGather,
+    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+    BuiltInParameters::p00H10B00C,
+    3,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpTextureGatherComp,
+    true);
+constexpr const TFunction textureGather_00Q10B00C(
+    BuiltInId::textureGather_ISampler2D1_Float2_Int1,
+    BuiltInName::textureGather,
+    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+    BuiltInParameters::p00Q10B00C,
+    3,
+    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpTextureGatherComp,
+    true);
+constexpr const TFunction textureGather_00W10B00C(
+    BuiltInId::textureGather_USampler2D1_Float2_Int1,
+    BuiltInName::textureGather,
+    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+    BuiltInParameters::p00W10B00C,
+    3,
+    StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpTextureGatherComp,
+    true);
+constexpr const TFunction textureGather_00K20B00C(
+    BuiltInId::textureGather_Sampler2DArray1_Float3_Int1,
+    BuiltInName::textureGather,
+    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+    BuiltInParameters::p00K20B00C,
+    3,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpTextureGatherComp,
+    true);
+constexpr const TFunction textureGather_00T20B00C(
+    BuiltInId::textureGather_ISampler2DArray1_Float3_Int1,
+    BuiltInName::textureGather,
+    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+    BuiltInParameters::p00T20B00C,
+    3,
+    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpTextureGatherComp,
+    true);
+constexpr const TFunction textureGather_00Z20B00C(
+    BuiltInId::textureGather_USampler2DArray1_Float3_Int1,
+    BuiltInName::textureGather,
+    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+    BuiltInParameters::p00Z20B00C,
+    3,
+    StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpTextureGatherComp,
+    true);
+constexpr const TFunction textureGather_00J20B00C(
+    BuiltInId::textureGather_SamplerCube1_Float3_Int1,
+    BuiltInName::textureGather,
+    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+    BuiltInParameters::p00J20B00C,
+    3,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpTextureGatherComp,
+    true);
+constexpr const TFunction textureGather_00S20B00C(
+    BuiltInId::textureGather_ISamplerCube1_Float3_Int1,
+    BuiltInName::textureGather,
+    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+    BuiltInParameters::p00S20B00C,
+    3,
+    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpTextureGatherComp,
+    true);
+constexpr const TFunction textureGather_00Y20B00C(
+    BuiltInId::textureGather_USamplerCube1_Float3_Int1,
+    BuiltInName::textureGather,
+    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+    BuiltInParameters::p00Y20B00C,
+    3,
+    StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpTextureGatherComp,
+    true);
+constexpr const TFunction textureGather_00g30B00C(
+    BuiltInId::textureGather_SamplerCubeArray1_Float4_Int1,
+    BuiltInName::textureGather,
+    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+    BuiltInParameters::p00g30B00C,
+    3,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpTextureGatherComp,
+    true);
+constexpr const TFunction textureGather_00l30B00C(
+    BuiltInId::textureGather_ISamplerCubeArray1_Float4_Int1,
+    BuiltInName::textureGather,
+    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+    BuiltInParameters::p00l30B00C,
+    3,
+    StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpTextureGatherComp,
+    true);
+constexpr const TFunction textureGather_00o30B00C(
+    BuiltInId::textureGather_USamplerCubeArray1_Float4_Int1,
+    BuiltInName::textureGather,
+    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+    BuiltInParameters::p00o30B00C,
+    3,
+    StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpTextureGatherComp,
+    true);
 constexpr const TFunction textureGatherExt_00g30B00C(
     BuiltInId::textureGatherExt_SamplerCubeArray1_Float4_Int1,
     BuiltInName::textureGatherExt,
@@ -9607,7 +9598,7 @@ constexpr const TFunction textureGatherExt_00g30B00C(
     BuiltInParameters::p00g30B00C,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureGather,
+    EOpTextureGatherComp,
     true);
 constexpr const TFunction textureGatherExt_00l30B00C(
     BuiltInId::textureGatherExt_ISamplerCubeArray1_Float4_Int1,
@@ -9617,7 +9608,7 @@ constexpr const TFunction textureGatherExt_00l30B00C(
     BuiltInParameters::p00l30B00C,
     3,
     StaticType::Get<EbtInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureGather,
+    EOpTextureGatherComp,
     true);
 constexpr const TFunction textureGatherExt_00o30B00C(
     BuiltInId::textureGatherExt_USamplerCubeArray1_Float4_Int1,
@@ -9627,7 +9618,16 @@ constexpr const TFunction textureGatherExt_00o30B00C(
     BuiltInParameters::p00o30B00C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureGather,
+    EOpTextureGatherComp,
+    true);
+constexpr const TFunction textureGather_00h30B00B(
+    BuiltInId::textureGather_SamplerCubeArrayShadow1_Float4_Float1,
+    BuiltInName::textureGather,
+    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+    BuiltInParameters::p00h30B00B00B,
+    3,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpTextureGatherRef,
     true);
 constexpr const TFunction textureGatherExt_00h30B00B(
     BuiltInId::textureGatherExt_SamplerCubeArrayShadow1_Float4_Float1,
@@ -9637,7 +9637,7 @@ constexpr const TFunction textureGatherExt_00h30B00B(
     BuiltInParameters::p00h30B00B00B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureGather,
+    EOpTextureGatherRef,
     true);
 constexpr const TFunction textureGather_00c10B00B(
     BuiltInId::textureGather_Sampler2DShadow1_Float2_Float1,
@@ -9646,7 +9646,7 @@ constexpr const TFunction textureGather_00c10B00B(
     BuiltInParameters::p00c10B00B10Cx4,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureGather,
+    EOpTextureGatherRef,
     true);
 constexpr const TFunction textureGather_00e20B00B(
     BuiltInId::textureGather_Sampler2DArrayShadow1_Float3_Float1,
@@ -9655,7 +9655,7 @@ constexpr const TFunction textureGather_00e20B00B(
     BuiltInParameters::p00e20B00B10Cx4,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureGather,
+    EOpTextureGatherRef,
     true);
 constexpr const TFunction textureGather_00d20B00B(
     BuiltInId::textureGather_SamplerCubeShadow1_Float3_Float1,
@@ -9664,7 +9664,7 @@ constexpr const TFunction textureGather_00d20B00B(
     BuiltInParameters::p00d20B00B,
     3,
     StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureGather,
+    EOpTextureGatherRef,
     true);
 constexpr const TFunction textureGatherOffset_00H10B10C(
     BuiltInId::textureGatherOffset_Sampler2D1_Float2_Int2,
@@ -9718,24 +9718,6 @@ constexpr const TFunction textureGatherOffset_00Z20B10C(
     BuiltInParameters::p00Z20B10C00B,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureGatherOffset,
-    true);
-constexpr const TFunction textureGatherOffset_00c10B00B10C(
-    BuiltInId::textureGatherOffset_Sampler2DShadow1_Float2_Float1_Int2,
-    BuiltInName::textureGatherOffset,
-    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00c10B00B10Cx4,
-    4,
-    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureGatherOffset,
-    true);
-constexpr const TFunction textureGatherOffset_00e20B00B10C(
-    BuiltInId::textureGatherOffset_Sampler2DArrayShadow1_Float3_Float1_Int2,
-    BuiltInName::textureGatherOffset,
-    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00e20B00B10Cx4,
-    4,
-    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGatherOffset,
     true);
 constexpr const TFunction textureGatherOffset_00H10B10C00C(
@@ -9792,6 +9774,24 @@ constexpr const TFunction textureGatherOffset_00Z20B10C00C(
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGatherOffsetComp,
     true);
+constexpr const TFunction textureGatherOffset_00c10B00B10C(
+    BuiltInId::textureGatherOffset_Sampler2DShadow1_Float2_Float1_Int2,
+    BuiltInName::textureGatherOffset,
+    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+    BuiltInParameters::p00c10B00B10Cx4,
+    4,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpTextureGatherOffsetRef,
+    true);
+constexpr const TFunction textureGatherOffset_00e20B00B10C(
+    BuiltInId::textureGatherOffset_Sampler2DArrayShadow1_Float3_Float1_Int2,
+    BuiltInName::textureGatherOffset,
+    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+    BuiltInParameters::p00e20B00B10Cx4,
+    4,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpTextureGatherOffsetRef,
+    true);
 constexpr const TFunction textureGatherOffsets_00H10B10Cx4(
     BuiltInId::textureGatherOffsets_Sampler2D1_Float2_4xInt2,
     BuiltInName::textureGatherOffsets,
@@ -9846,24 +9846,6 @@ constexpr const TFunction textureGatherOffsets_00Z20B10Cx4(
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGatherOffsets,
     true);
-constexpr const TFunction textureGatherOffsets_00c10B00B10Cx4(
-    BuiltInId::textureGatherOffsets_Sampler2DShadow1_Float2_Float1_4xInt2,
-    BuiltInName::textureGatherOffsets,
-    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00c10B00B10Cx4,
-    4,
-    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureGatherOffsets,
-    true);
-constexpr const TFunction textureGatherOffsets_00e20B00B10Cx4(
-    BuiltInId::textureGatherOffsets_Sampler2DArrayShadow1_Float3_Float1_4xInt2,
-    BuiltInName::textureGatherOffsets,
-    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
-    BuiltInParameters::p00e20B00B10Cx4,
-    4,
-    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureGatherOffsets,
-    true);
 constexpr const TFunction textureGatherOffsetsExt_00H10B10Cx4(
     BuiltInId::textureGatherOffsetsExt_Sampler2D1_Float2_4xInt2,
     BuiltInName::textureGatherOffsetsExt,
@@ -9916,24 +9898,6 @@ constexpr const TFunction textureGatherOffsetsExt_00Z20B10Cx4(
     BuiltInParameters::p00Z20B10Cx400C,
     3,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureGatherOffsets,
-    true);
-constexpr const TFunction textureGatherOffsetsExt_00c10B00B10Cx4(
-    BuiltInId::textureGatherOffsetsExt_Sampler2DShadow1_Float2_Float1_4xInt2,
-    BuiltInName::textureGatherOffsetsExt,
-    std::array<TExtension, 2u>{{TExtension::EXT_gpu_shader5, TExtension::OES_gpu_shader5}},
-    BuiltInParameters::p00c10B00B10Cx4,
-    4,
-    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
-    EOpTextureGatherOffsets,
-    true);
-constexpr const TFunction textureGatherOffsetsExt_00e20B00B10Cx4(
-    BuiltInId::textureGatherOffsetsExt_Sampler2DArrayShadow1_Float3_Float1_4xInt2,
-    BuiltInName::textureGatherOffsetsExt,
-    std::array<TExtension, 2u>{{TExtension::EXT_gpu_shader5, TExtension::OES_gpu_shader5}},
-    BuiltInParameters::p00e20B00B10Cx4,
-    4,
-    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGatherOffsets,
     true);
 constexpr const TFunction textureGatherOffsets_00H10B10Cx400C(
@@ -10043,6 +10007,42 @@ constexpr const TFunction textureGatherOffsetsExt_00Z20B10Cx400C(
     4,
     StaticType::Get<EbtUInt, EbpUndefined, EvqGlobal, 4, 1>(),
     EOpTextureGatherOffsetsComp,
+    true);
+constexpr const TFunction textureGatherOffsets_00c10B00B10Cx4(
+    BuiltInId::textureGatherOffsets_Sampler2DShadow1_Float2_Float1_4xInt2,
+    BuiltInName::textureGatherOffsets,
+    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+    BuiltInParameters::p00c10B00B10Cx4,
+    4,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpTextureGatherOffsetsRef,
+    true);
+constexpr const TFunction textureGatherOffsets_00e20B00B10Cx4(
+    BuiltInId::textureGatherOffsets_Sampler2DArrayShadow1_Float3_Float1_4xInt2,
+    BuiltInName::textureGatherOffsets,
+    std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+    BuiltInParameters::p00e20B00B10Cx4,
+    4,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpTextureGatherOffsetsRef,
+    true);
+constexpr const TFunction textureGatherOffsetsExt_00c10B00B10Cx4(
+    BuiltInId::textureGatherOffsetsExt_Sampler2DShadow1_Float2_Float1_4xInt2,
+    BuiltInName::textureGatherOffsetsExt,
+    std::array<TExtension, 2u>{{TExtension::EXT_gpu_shader5, TExtension::OES_gpu_shader5}},
+    BuiltInParameters::p00c10B00B10Cx4,
+    4,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpTextureGatherOffsetsRef,
+    true);
+constexpr const TFunction textureGatherOffsetsExt_00e20B00B10Cx4(
+    BuiltInId::textureGatherOffsetsExt_Sampler2DArrayShadow1_Float3_Float1_4xInt2,
+    BuiltInName::textureGatherOffsetsExt,
+    std::array<TExtension, 2u>{{TExtension::EXT_gpu_shader5, TExtension::OES_gpu_shader5}},
+    BuiltInParameters::p00e20B00B10Cx4,
+    4,
+    StaticType::Get<EbtFloat, EbpUndefined, EvqGlobal, 4, 1>(),
+    EOpTextureGatherOffsetsRef,
     true);
 constexpr const TFunction textureQueryLOD_00H10B(
     BuiltInId::textureQueryLOD_Sampler2D1_Float2,
@@ -18175,21 +18175,12 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<310, Shader::ALL, 0>(&textureGather_00H10B),
     Rule::Get<310, Shader::ALL, 0>(&textureGather_00Q10B),
     Rule::Get<310, Shader::ALL, 0>(&textureGather_00W10B),
-    Rule::Get<310, Shader::ALL, 0>(&textureGather_00H10B00C),
-    Rule::Get<310, Shader::ALL, 0>(&textureGather_00Q10B00C),
-    Rule::Get<310, Shader::ALL, 0>(&textureGather_00W10B00C),
     Rule::Get<310, Shader::ALL, 0>(&textureGather_00K20B),
     Rule::Get<310, Shader::ALL, 0>(&textureGather_00T20B),
     Rule::Get<310, Shader::ALL, 0>(&textureGather_00Z20B),
-    Rule::Get<310, Shader::ALL, 0>(&textureGather_00K20B00C),
-    Rule::Get<310, Shader::ALL, 0>(&textureGather_00T20B00C),
-    Rule::Get<310, Shader::ALL, 0>(&textureGather_00Z20B00C),
     Rule::Get<310, Shader::ALL, 0>(&textureGather_00J20B),
     Rule::Get<310, Shader::ALL, 0>(&textureGather_00S20B),
     Rule::Get<310, Shader::ALL, 0>(&textureGather_00Y20B),
-    Rule::Get<310, Shader::ALL, 0>(&textureGather_00J20B00C),
-    Rule::Get<310, Shader::ALL, 0>(&textureGather_00S20B00C),
-    Rule::Get<310, Shader::ALL, 0>(&textureGather_00Y20B00C),
     Rule::Get<320, Shader::ALL, 0>(&textureGather_00g30B),
     Rule::Get<310, Shader::ALL, EXT_INDEX(OES_texture_cube_map_array)>(&textureGatherExt_00g30B),
     Rule::Get<310, Shader::ALL, EXT_INDEX(EXT_texture_cube_map_array)>(&textureGatherExt_00g30B),
@@ -18199,6 +18190,15 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<320, Shader::ALL, 0>(&textureGather_00o30B),
     Rule::Get<310, Shader::ALL, EXT_INDEX(OES_texture_cube_map_array)>(&textureGatherExt_00o30B),
     Rule::Get<310, Shader::ALL, EXT_INDEX(EXT_texture_cube_map_array)>(&textureGatherExt_00o30B),
+    Rule::Get<310, Shader::ALL, 0>(&textureGather_00H10B00C),
+    Rule::Get<310, Shader::ALL, 0>(&textureGather_00Q10B00C),
+    Rule::Get<310, Shader::ALL, 0>(&textureGather_00W10B00C),
+    Rule::Get<310, Shader::ALL, 0>(&textureGather_00K20B00C),
+    Rule::Get<310, Shader::ALL, 0>(&textureGather_00T20B00C),
+    Rule::Get<310, Shader::ALL, 0>(&textureGather_00Z20B00C),
+    Rule::Get<310, Shader::ALL, 0>(&textureGather_00J20B00C),
+    Rule::Get<310, Shader::ALL, 0>(&textureGather_00S20B00C),
+    Rule::Get<310, Shader::ALL, 0>(&textureGather_00Y20B00C),
     Rule::Get<320, Shader::ALL, 0>(&textureGather_00g30B00C),
     Rule::Get<310, Shader::ALL, EXT_INDEX(OES_texture_cube_map_array)>(&textureGatherExt_00g30B00C),
     Rule::Get<310, Shader::ALL, EXT_INDEX(EXT_texture_cube_map_array)>(&textureGatherExt_00g30B00C),
@@ -18220,14 +18220,14 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<310, Shader::ALL, 0>(&textureGatherOffset_00K20B10C),
     Rule::Get<310, Shader::ALL, 0>(&textureGatherOffset_00T20B10C),
     Rule::Get<310, Shader::ALL, 0>(&textureGatherOffset_00Z20B10C),
-    Rule::Get<310, Shader::ALL, 0>(&textureGatherOffset_00c10B00B10C),
-    Rule::Get<310, Shader::ALL, 0>(&textureGatherOffset_00e20B00B10C),
     Rule::Get<310, Shader::ALL, 0>(&textureGatherOffset_00H10B10C00C),
     Rule::Get<310, Shader::ALL, 0>(&textureGatherOffset_00Q10B10C00C),
     Rule::Get<310, Shader::ALL, 0>(&textureGatherOffset_00W10B10C00C),
     Rule::Get<310, Shader::ALL, 0>(&textureGatherOffset_00K20B10C00C),
     Rule::Get<310, Shader::ALL, 0>(&textureGatherOffset_00T20B10C00C),
     Rule::Get<310, Shader::ALL, 0>(&textureGatherOffset_00Z20B10C00C),
+    Rule::Get<310, Shader::ALL, 0>(&textureGatherOffset_00c10B00B10C),
+    Rule::Get<310, Shader::ALL, 0>(&textureGatherOffset_00e20B00B10C),
     Rule::Get<320, Shader::ALL, 0>(&textureGatherOffsets_00H10B10Cx4),
     Rule::Get<310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(&textureGatherOffsetsExt_00H10B10Cx4),
     Rule::Get<310, Shader::ALL, EXT_INDEX(OES_gpu_shader5)>(&textureGatherOffsetsExt_00H10B10Cx4),
@@ -18246,16 +18246,6 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<320, Shader::ALL, 0>(&textureGatherOffsets_00Z20B10Cx4),
     Rule::Get<310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(&textureGatherOffsetsExt_00Z20B10Cx4),
     Rule::Get<310, Shader::ALL, EXT_INDEX(OES_gpu_shader5)>(&textureGatherOffsetsExt_00Z20B10Cx4),
-    Rule::Get<320, Shader::ALL, 0>(&textureGatherOffsets_00c10B00B10Cx4),
-    Rule::Get<310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
-        &textureGatherOffsetsExt_00c10B00B10Cx4),
-    Rule::Get<310, Shader::ALL, EXT_INDEX(OES_gpu_shader5)>(
-        &textureGatherOffsetsExt_00c10B00B10Cx4),
-    Rule::Get<320, Shader::ALL, 0>(&textureGatherOffsets_00e20B00B10Cx4),
-    Rule::Get<310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
-        &textureGatherOffsetsExt_00e20B00B10Cx4),
-    Rule::Get<310, Shader::ALL, EXT_INDEX(OES_gpu_shader5)>(
-        &textureGatherOffsetsExt_00e20B00B10Cx4),
     Rule::Get<320, Shader::ALL, 0>(&textureGatherOffsets_00H10B10Cx400C),
     Rule::Get<310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
         &textureGatherOffsetsExt_00H10B10Cx400C),
@@ -18286,6 +18276,16 @@ constexpr SymbolRule kRules[] = {
         &textureGatherOffsetsExt_00Z20B10Cx400C),
     Rule::Get<310, Shader::ALL, EXT_INDEX(OES_gpu_shader5)>(
         &textureGatherOffsetsExt_00Z20B10Cx400C),
+    Rule::Get<320, Shader::ALL, 0>(&textureGatherOffsets_00c10B00B10Cx4),
+    Rule::Get<310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
+        &textureGatherOffsetsExt_00c10B00B10Cx4),
+    Rule::Get<310, Shader::ALL, EXT_INDEX(OES_gpu_shader5)>(
+        &textureGatherOffsetsExt_00c10B00B10Cx4),
+    Rule::Get<320, Shader::ALL, 0>(&textureGatherOffsets_00e20B00B10Cx4),
+    Rule::Get<310, Shader::ALL, EXT_INDEX(EXT_gpu_shader5)>(
+        &textureGatherOffsetsExt_00e20B00B10Cx4),
+    Rule::Get<310, Shader::ALL, EXT_INDEX(OES_gpu_shader5)>(
+        &textureGatherOffsetsExt_00e20B00B10Cx4),
     Rule::Get<300, Shader::FRAGMENT, EXT_INDEX(EXT_texture_query_lod)>(&textureQueryLOD_00H10B),
     Rule::Get<300, Shader::FRAGMENT, EXT_INDEX(EXT_texture_query_lod)>(&textureQueryLOD_00Q10B),
     Rule::Get<300, Shader::FRAGMENT, EXT_INDEX(EXT_texture_query_lod)>(&textureQueryLOD_00W10B),
@@ -20421,24 +20421,24 @@ constexpr const char *kMangledNames[] = {"radians(00B",
                                          "textureGather(00H10B",
                                          "textureGather(00Q10B",
                                          "textureGather(00W10B",
-                                         "textureGather(00H10B00C",
-                                         "textureGather(00Q10B00C",
-                                         "textureGather(00W10B00C",
                                          "textureGather(00K20B",
                                          "textureGather(00T20B",
                                          "textureGather(00Z20B",
-                                         "textureGather(00K20B00C",
-                                         "textureGather(00T20B00C",
-                                         "textureGather(00Z20B00C",
                                          "textureGather(00J20B",
                                          "textureGather(00S20B",
                                          "textureGather(00Y20B",
-                                         "textureGather(00J20B00C",
-                                         "textureGather(00S20B00C",
-                                         "textureGather(00Y20B00C",
                                          "textureGather(00g30B",
                                          "textureGather(00l30B",
                                          "textureGather(00o30B",
+                                         "textureGather(00H10B00C",
+                                         "textureGather(00Q10B00C",
+                                         "textureGather(00W10B00C",
+                                         "textureGather(00K20B00C",
+                                         "textureGather(00T20B00C",
+                                         "textureGather(00Z20B00C",
+                                         "textureGather(00J20B00C",
+                                         "textureGather(00S20B00C",
+                                         "textureGather(00Y20B00C",
                                          "textureGather(00g30B00C",
                                          "textureGather(00l30B00C",
                                          "textureGather(00o30B00C",
@@ -20452,28 +20452,28 @@ constexpr const char *kMangledNames[] = {"radians(00B",
                                          "textureGatherOffset(00K20B10C",
                                          "textureGatherOffset(00T20B10C",
                                          "textureGatherOffset(00Z20B10C",
-                                         "textureGatherOffset(00c10B00B10C",
-                                         "textureGatherOffset(00e20B00B10C",
                                          "textureGatherOffset(00H10B10C00C",
                                          "textureGatherOffset(00Q10B10C00C",
                                          "textureGatherOffset(00W10B10C00C",
                                          "textureGatherOffset(00K20B10C00C",
                                          "textureGatherOffset(00T20B10C00C",
                                          "textureGatherOffset(00Z20B10C00C",
+                                         "textureGatherOffset(00c10B00B10C",
+                                         "textureGatherOffset(00e20B00B10C",
                                          "textureGatherOffsets(00H10B10Cx4",
                                          "textureGatherOffsets(00Q10B10Cx4",
                                          "textureGatherOffsets(00W10B10Cx4",
                                          "textureGatherOffsets(00K20B10Cx4",
                                          "textureGatherOffsets(00T20B10Cx4",
                                          "textureGatherOffsets(00Z20B10Cx4",
-                                         "textureGatherOffsets(00c10B00B10Cx4",
-                                         "textureGatherOffsets(00e20B00B10Cx4",
                                          "textureGatherOffsets(00H10B10Cx400C",
                                          "textureGatherOffsets(00Q10B10Cx400C",
                                          "textureGatherOffsets(00W10B10Cx400C",
                                          "textureGatherOffsets(00K20B10Cx400C",
                                          "textureGatherOffsets(00T20B10Cx400C",
                                          "textureGatherOffsets(00Z20B10Cx400C",
+                                         "textureGatherOffsets(00c10B00B10Cx4",
+                                         "textureGatherOffsets(00e20B00B10Cx4",
                                          "textureQueryLOD(00H10B",
                                          "textureQueryLOD(00Q10B",
                                          "textureQueryLOD(00W10B",
@@ -21846,24 +21846,24 @@ constexpr uint16_t kMangledOffsets[] = {
     858,   // textureGather_00H10B
     859,   // textureGather_00Q10B
     860,   // textureGather_00W10B
-    861,   // textureGather_00H10B00C
-    862,   // textureGather_00Q10B00C
-    863,   // textureGather_00W10B00C
-    864,   // textureGather_00K20B
-    865,   // textureGather_00T20B
-    866,   // textureGather_00Z20B
-    867,   // textureGather_00K20B00C
-    868,   // textureGather_00T20B00C
-    869,   // textureGather_00Z20B00C
-    870,   // textureGather_00J20B
-    871,   // textureGather_00S20B
-    872,   // textureGather_00Y20B
-    873,   // textureGather_00J20B00C
-    874,   // textureGather_00S20B00C
-    875,   // textureGather_00Y20B00C
-    876,   // textureGather_00g30B
-    879,   // textureGather_00l30B
-    882,   // textureGather_00o30B
+    861,   // textureGather_00K20B
+    862,   // textureGather_00T20B
+    863,   // textureGather_00Z20B
+    864,   // textureGather_00J20B
+    865,   // textureGather_00S20B
+    866,   // textureGather_00Y20B
+    867,   // textureGather_00g30B
+    870,   // textureGather_00l30B
+    873,   // textureGather_00o30B
+    876,   // textureGather_00H10B00C
+    877,   // textureGather_00Q10B00C
+    878,   // textureGather_00W10B00C
+    879,   // textureGather_00K20B00C
+    880,   // textureGather_00T20B00C
+    881,   // textureGather_00Z20B00C
+    882,   // textureGather_00J20B00C
+    883,   // textureGather_00S20B00C
+    884,   // textureGather_00Y20B00C
     885,   // textureGather_00g30B00C
     888,   // textureGather_00l30B00C
     891,   // textureGather_00o30B00C
@@ -21877,28 +21877,28 @@ constexpr uint16_t kMangledOffsets[] = {
     903,   // textureGatherOffset_00K20B10C
     904,   // textureGatherOffset_00T20B10C
     905,   // textureGatherOffset_00Z20B10C
-    906,   // textureGatherOffset_00c10B00B10C
-    907,   // textureGatherOffset_00e20B00B10C
-    908,   // textureGatherOffset_00H10B10C00C
-    909,   // textureGatherOffset_00Q10B10C00C
-    910,   // textureGatherOffset_00W10B10C00C
-    911,   // textureGatherOffset_00K20B10C00C
-    912,   // textureGatherOffset_00T20B10C00C
-    913,   // textureGatherOffset_00Z20B10C00C
+    906,   // textureGatherOffset_00H10B10C00C
+    907,   // textureGatherOffset_00Q10B10C00C
+    908,   // textureGatherOffset_00W10B10C00C
+    909,   // textureGatherOffset_00K20B10C00C
+    910,   // textureGatherOffset_00T20B10C00C
+    911,   // textureGatherOffset_00Z20B10C00C
+    912,   // textureGatherOffset_00c10B00B10C
+    913,   // textureGatherOffset_00e20B00B10C
     914,   // textureGatherOffsets_00H10B10Cx4
     917,   // textureGatherOffsets_00Q10B10Cx4
     920,   // textureGatherOffsets_00W10B10Cx4
     923,   // textureGatherOffsets_00K20B10Cx4
     926,   // textureGatherOffsets_00T20B10Cx4
     929,   // textureGatherOffsets_00Z20B10Cx4
-    932,   // textureGatherOffsets_00c10B00B10Cx4
-    935,   // textureGatherOffsets_00e20B00B10Cx4
-    938,   // textureGatherOffsets_00H10B10Cx400C
-    941,   // textureGatherOffsets_00Q10B10Cx400C
-    944,   // textureGatherOffsets_00W10B10Cx400C
-    947,   // textureGatherOffsets_00K20B10Cx400C
-    950,   // textureGatherOffsets_00T20B10Cx400C
-    953,   // textureGatherOffsets_00Z20B10Cx400C
+    932,   // textureGatherOffsets_00H10B10Cx400C
+    935,   // textureGatherOffsets_00Q10B10Cx400C
+    938,   // textureGatherOffsets_00W10B10Cx400C
+    941,   // textureGatherOffsets_00K20B10Cx400C
+    944,   // textureGatherOffsets_00T20B10Cx400C
+    947,   // textureGatherOffsets_00Z20B10Cx400C
+    950,   // textureGatherOffsets_00c10B00B10Cx4
+    953,   // textureGatherOffsets_00e20B00B10Cx4
     956,   // textureQueryLOD_00H10B
     957,   // textureQueryLOD_00Q10B
     958,   // textureQueryLOD_00W10B
