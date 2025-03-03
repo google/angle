@@ -207,6 +207,7 @@ class DynamicHLSL : angle::NonCopyable
     static void GenerateVaryingLinkHLSL(RendererD3D *renderer,
                                         const gl::VaryingPacking &varyingPacking,
                                         const BuiltinInfo &builtins,
+                                        FragDepthUsage fragDepthUsage,
                                         bool programUsesPointSize,
                                         std::ostringstream &hlslStream);
 

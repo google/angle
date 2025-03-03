@@ -214,6 +214,8 @@ void main() {
 })";
 
     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    EXPECT_GL_NO_ERROR();
 }
 
 // Test gl_FragDepth redeclaration with depth_any layout qualifier
@@ -231,6 +233,8 @@ void main() {
 })";
 
     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    EXPECT_GL_NO_ERROR();
 }
 
 // Test gl_FragDepth redeclaration with depth_greater layout qualifier
@@ -248,6 +252,8 @@ void main() {
 })";
 
     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    EXPECT_GL_NO_ERROR();
 }
 
 // Test gl_FragDepth redeclaration with depth_less layout qualifier
@@ -265,6 +271,8 @@ void main() {
 })";
 
     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    EXPECT_GL_NO_ERROR();
 }
 
 // Test gl_FragDepth redeclaration with depth_unchanged layout qualifier
@@ -282,6 +290,84 @@ void main() {
 })";
 
     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test gl_FragDepth redeclaration with depth_any layout qualifier and gl_FragCoord
+TEST_P(FragDepthRedeclarationTest, AnyWithFragCoord)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_conservative_depth"));
+
+    constexpr char kFS[] = R"(#version 300 es
+#extension GL_EXT_conservative_depth: require
+out highp vec4 color;
+layout (depth_any) out highp float gl_FragDepth;
+void main() {
+    color = vec4(1.0, 0.0, 0.0, 1.0);
+    gl_FragDepth = cos(gl_FragCoord.z);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test gl_FragDepth redeclaration with depth_greater layout qualifier and gl_FragCoord
+TEST_P(FragDepthRedeclarationTest, GreaterWithFragCoord)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_conservative_depth"));
+
+    constexpr char kFS[] = R"(#version 300 es
+#extension GL_EXT_conservative_depth: require
+out highp vec4 color;
+layout (depth_greater) out highp float gl_FragDepth;
+void main() {
+    color = vec4(1.0, 0.0, 0.0, 1.0);
+    gl_FragDepth = gl_FragCoord.z + 0.5;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test gl_FragDepth redeclaration with depth_less layout qualifier and gl_FragCoord
+TEST_P(FragDepthRedeclarationTest, LessWithFragCoord)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_conservative_depth"));
+
+    constexpr char kFS[] = R"(#version 300 es
+#extension GL_EXT_conservative_depth: require
+out highp vec4 color;
+layout (depth_less) out highp float gl_FragDepth;
+void main() {
+    color = vec4(1.0, 0.0, 0.0, 1.0);
+    gl_FragDepth = gl_FragCoord.z - 0.5;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test gl_FragDepth redeclaration with depth_unchanged layout qualifier and gl_FragCoord
+TEST_P(FragDepthRedeclarationTest, UnchangedWithFragCoord)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_conservative_depth"));
+
+    constexpr char kFS[] = R"(#version 300 es
+#extension GL_EXT_conservative_depth: require
+out highp vec4 color;
+layout (depth_unchanged) out highp float gl_FragDepth;
+void main() {
+    color = vec4(1.0, 0.0, 0.0, 1.0);
+    gl_FragDepth = gl_FragCoord.z;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    EXPECT_GL_NO_ERROR();
 }
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FragDepthTest);
