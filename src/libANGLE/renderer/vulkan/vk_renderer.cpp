@@ -348,14 +348,6 @@ constexpr const char *kSkippedMessagesWithDynamicRendering[] = {
 // those, ANGLE makes no further attempt to resolve them and expects vendor support for the
 // extensions instead.  The list of skipped messages is split based on this support.
 constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
-    // http://anglebug.com/42264929
-    // http://anglebug.com/42264934
-    {
-        "SYNC-HAZARD-WRITE-AFTER-WRITE",
-        "Access info (usage: SYNC_IMAGE_LAYOUT_TRANSITION, prior_usage: "
-        "SYNC_IMAGE_LAYOUT_TRANSITION, "
-        "write_barriers: 0",
-    },
     // These errors are caused by a feedback loop tests that don't produce correct Vulkan to begin
     // with.
     // http://anglebug.com/42264930
