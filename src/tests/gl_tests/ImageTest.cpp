@@ -163,6 +163,19 @@ void main()
 })";
     }
 
+    const char *getVS3D() const
+    {
+        return R"(#version 300 es
+out vec2 texcoord;
+in vec4 position;
+
+void main()
+{
+    gl_Position = vec4(position.xy, 0.0, 1.0);
+    texcoord = (position.xy * 0.5) + 0.5;
+})";
+    }
+
     const char *getVSCube() const
     {
         return R"(#version 300 es
@@ -221,6 +234,20 @@ out vec4 fragColor;
 void main()
 {
     fragColor = texture(tex2DArray, vec3(texcoord.x, texcoord.y, float(layer)));
+})";
+    }
+
+    const char *getTexture3DFS() const
+    {
+        return R"(#version 300 es
+precision highp float;
+uniform highp sampler3D tex3D;
+uniform uint layer;
+in vec2 texcoord;
+out vec4 fragColor;
+void main()
+{
+    fragColor = texture(tex3D, vec3(texcoord.x, texcoord.y, float(layer)));
 })";
     }
 
@@ -362,6 +389,18 @@ void main()
                 glGetUniformLocation(m2DArrayTextureProgram, "tex2DArray");
             m2DArrayTextureLayerUniformLocation =
                 glGetUniformLocation(m2DArrayTextureProgram, "layer");
+        }
+
+        if (getClientMajorVersion() >= 3)
+        {
+            m3DTextureProgram = CompileProgram(getVS3D(), getTexture3DFS());
+            if (m3DTextureProgram == 0)
+            {
+                FAIL() << "shader compilation failed.";
+            }
+
+            m3DTextureUniformLocation      = glGetUniformLocation(m3DTextureProgram, "tex3D");
+            m3DTextureLayerUniformLocation = glGetUniformLocation(m3DTextureProgram, "layer");
         }
 
         if (IsGLExtensionEnabled("GL_OES_EGL_image_external"))
@@ -1075,6 +1114,15 @@ void main()
                              mTextureUniformLocation);
     }
 
+    void verifyResults3D(GLuint texture, const GLubyte data[4], uint32_t layerIndex = 0)
+    {
+        glUseProgram(m3DTextureProgram);
+        glUniform1ui(m3DTextureLayerUniformLocation, layerIndex);
+
+        verifyResultsTexture(texture, data, GL_TEXTURE_3D, m3DTextureProgram,
+                             m3DTextureUniformLocation);
+    }
+
     void verifyResults2DLeftAndRight(GLuint texture, const GLubyte left[4], const GLubyte right[4])
     {
         verifyResultsTextureLeftAndRight(texture, left, right, GL_TEXTURE_2D, mTextureProgram,
@@ -1556,11 +1604,14 @@ void main()
     };
     GLuint mTextureProgram;
     GLuint m2DArrayTextureProgram;
+    GLuint m3DTextureProgram;
     GLuint mCubeTextureProgram;
     GLuint mCubeArrayTextureProgram;
     GLint mTextureUniformLocation;
     GLuint m2DArrayTextureUniformLocation;
     GLuint m2DArrayTextureLayerUniformLocation;
+    GLuint m3DTextureUniformLocation;
+    GLuint m3DTextureLayerUniformLocation;
     GLuint mCubeTextureUniformLocation;
     GLuint mCubeTextureFaceCoordUniformLocation;
     GLuint mCubeArrayTextureUniformLocation;
@@ -2654,6 +2705,43 @@ TEST_P(ImageTestES3, Source2DTarget2DStorageOrphan)
     // Try to orphan this target texture
     glBindTexture(GL_TEXTURE_2D, target);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, kLinearColor);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Clean up
+    eglDestroyImageKHR(window->getDisplay(), image);
+}
+
+// Try to orphan 3D image created with the GL_EXT_EGL_image_storage extension
+TEST_P(ImageTestES3, Source3DTarget3DStorageOrphan)
+{
+    EGLWindow *window = getEGLWindow();
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has3DTextureExt());
+    ANGLE_SKIP_TEST_IF(!hasEglImageStorageExt());
+
+    constexpr size_t depth = 2;
+    EGLint attribs[3]      = {EGL_IMAGE_PRESERVED, EGL_TRUE, EGL_NONE};
+
+    // Create the Image
+    GLTexture source;
+    EGLImageKHR image;
+
+    createEGLImage3DTextureSource(1, 1, depth, GL_RGBA, GL_UNSIGNED_BYTE, attribs,
+                                  static_cast<void *>(&kLinearColor), source, &image);
+
+    // Create the target
+    GLTexture target;
+    createEGLImageTargetTextureStorage(image, GL_TEXTURE_3D, target, nullptr);
+
+    for (size_t layer = 0; layer < depth; layer++)
+    {
+        // Expect that the target texture has the same color as the source texture
+        verifyResults3D(target, kLinearColor);
+    }
+
+    // Try to orphan this target texture
+    glBindTexture(GL_TEXTURE_3D, target);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA, 1, 1, depth, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kLinearColor);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
     // Clean up

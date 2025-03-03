@@ -5126,13 +5126,6 @@ bool ValidateEGLImageObject(const Context *context,
         return false;
     }
 
-    // 3d EGLImages are currently not supported
-    if (type == TextureType::_3D)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kEGLImageTextureTargetMismatch);
-        return false;
-    }
-
     if (imageObject->hasProtectedContent() && !context->getState().hasProtectedContent())
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION,
