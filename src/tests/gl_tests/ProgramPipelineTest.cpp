@@ -2302,6 +2302,19 @@ void main()
     EXPECT_GL_NO_ERROR();
 }
 
+// Test that GetProgramPipelineivf works.
+TEST_P(ProgramPipelineTest31, ProgramPipelineivTest)
+{
+    GLuint pipeline;
+    GLint log_length = -1;
+    glGenProgramPipelines(1, &pipeline);
+    glGetProgramPipelineiv(pipeline, GL_INFO_LOG_LENGTH, &log_length);
+    // glGetProgramPipelineInfoLog(pipeline, 0, NULL, NULL);
+    EXPECT_GL_NO_ERROR();
+    glDeleteProgramPipelines(1, &pipeline);
+    EXPECT_GL_NO_ERROR();
+}
+
 class ProgramPipelineTest32 : public ProgramPipelineTest
 {
   protected:

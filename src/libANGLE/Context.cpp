@@ -7091,7 +7091,8 @@ void Context::getProgramPipelineiv(ProgramPipelineID pipeline, GLenum pname, GLi
     ProgramPipeline *programPipeline = nullptr;
     if (!isContextLost())
     {
-        programPipeline = getProgramPipeline(pipeline);
+        programPipeline = mState.mProgramPipelineManager->checkProgramPipelineAllocation(
+            mImplementation.get(), pipeline);
     }
     QueryProgramPipelineiv(this, programPipeline, pname, params);
 }
@@ -7580,14 +7581,6 @@ void Context::validateProgramPipeline(ProgramPipelineID pipeline)
     // pipeline is the program pipeline object name. The resulting program pipeline
     // object is a new state vector, comprising all the state and with the same initial values
     // listed in table 21.20.
-    //
-    // If we do not have a pipeline object that's been created with glBindProgramPipeline, we leave
-    // VALIDATE_STATUS at it's default false value without generating a pipeline object.
-    if (!getProgramPipeline(pipeline))
-    {
-        return;
-    }
-
     ProgramPipeline *programPipeline =
         mState.mProgramPipelineManager->checkProgramPipelineAllocation(mImplementation.get(),
                                                                        pipeline);
