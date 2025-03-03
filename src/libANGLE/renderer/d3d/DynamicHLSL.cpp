@@ -431,12 +431,22 @@ std::string DynamicHLSL::GenerateShaderForImage2DBindSignature(
 void DynamicHLSL::GenerateVaryingLinkHLSL(RendererD3D *renderer,
                                           const VaryingPacking &varyingPacking,
                                           const BuiltinInfo &builtins,
+                                          FragDepthUsage fragDepthUsage,
                                           bool programUsesPointSize,
                                           std::ostringstream &hlslStream)
 {
     ASSERT(builtins.dxPosition.enabled);
     hlslStream << "{\n";
-    hlslStream << "    float4 dx_Position : " << builtins.dxPosition.str() << ";\n";
+    hlslStream << "    ";
+    if (fragDepthUsage == FragDepthUsage::Greater || fragDepthUsage == FragDepthUsage::Less)
+    {
+        // When conservative depth output is used and the pixel shader runs at pixel-frequency,
+        // input position must use centroid interpolation to avoid HLSL compilation errors.
+        // NOTE: Accuracy can be improved by using sample interpolation here,
+        // when a shader already runs at sample-frequency.
+        hlslStream << "centroid ";
+    }
+    hlslStream << "float4 dx_Position : " << builtins.dxPosition.str() << ";\n";
 
     if (builtins.glPosition.enabled)
     {
@@ -580,8 +590,8 @@ void DynamicHLSL::GenerateShaderLinkHLSL(
     std::ostringstream vertexStream;
     vertexStream << "struct VS_OUTPUT\n";
     const auto &vertexBuiltins = builtinsD3D[gl::ShaderType::Vertex];
-    GenerateVaryingLinkHLSL(renderer, varyingPacking, vertexBuiltins, builtinsD3D.usesPointSize(),
-                            vertexStream);
+    GenerateVaryingLinkHLSL(renderer, varyingPacking, vertexBuiltins, FragDepthUsage::Unused,
+                            builtinsD3D.usesPointSize(), vertexStream);
 
     std::ostringstream vertexGenerateOutput;
     vertexGenerateOutput << "VS_OUTPUT generateOutput(VS_INPUT input)\n"
@@ -817,7 +827,8 @@ void DynamicHLSL::GenerateShaderLinkHLSL(
 
     std::ostringstream pixelStream;
     pixelStream << "struct PS_INPUT\n";
-    GenerateVaryingLinkHLSL(renderer, varyingPacking, pixelBuiltins, builtinsD3D.usesPointSize(),
+    GenerateVaryingLinkHLSL(renderer, varyingPacking, pixelBuiltins,
+                            programMetadata.getFragDepthUsage(), builtinsD3D.usesPointSize(),
                             pixelStream);
     pixelStream << "\n";
 
@@ -1152,12 +1163,12 @@ std::string DynamicHLSL::GenerateGeometryShaderPreamble(RendererD3D *renderer,
     const auto &vertexBuiltins = builtinsD3D[gl::ShaderType::Vertex];
 
     preambleStream << "struct GS_INPUT\n";
-    GenerateVaryingLinkHLSL(renderer, varyingPacking, vertexBuiltins, builtinsD3D.usesPointSize(),
-                            preambleStream);
+    GenerateVaryingLinkHLSL(renderer, varyingPacking, vertexBuiltins, FragDepthUsage::Unused,
+                            builtinsD3D.usesPointSize(), preambleStream);
     preambleStream << "\n"
                       "struct GS_OUTPUT\n";
     GenerateVaryingLinkHLSL(renderer, varyingPacking, builtinsD3D[gl::ShaderType::Geometry],
-                            builtinsD3D.usesPointSize(), preambleStream);
+                            FragDepthUsage::Unused, builtinsD3D.usesPointSize(), preambleStream);
     preambleStream
         << "\n"
         << "void copyVertex(inout GS_OUTPUT output, GS_INPUT input, GS_INPUT flatinput)\n"
