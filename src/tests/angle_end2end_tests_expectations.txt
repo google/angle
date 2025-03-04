@@ -1614,6 +1614,27 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 // Metal backend doesn't support different sized attachments.
 42261786 METAL : MultisampledRenderToTextureES3Test.MultipleLevelsMultisampleMRTDraw2DColor/* = SKIP
 
+// Blit on out-of-bounds regions failures on NVIDIA, INTEL and AMD
+404959030 METAL : BlitFramebufferTest.BlitWithDifferentSizesColorAttachments/* = SKIP
+404959030 METAL : BlitFramebufferTest.BlitLargeColorSmallDepthAttachments/* = SKIP
+404959030 METAL : BlitFramebufferTest.BlitSmallColorLargeDepthAttachments/* = SKIP
+404958318 D3D11 : BlitFramebufferTest.BlitWithDifferentSizesColorAttachments/* = SKIP
+404958318 D3D11 : BlitFramebufferTest.BlitLargeColorSmallDepthAttachments/* = SKIP
+404958318 D3D11 : BlitFramebufferTest.BlitSmallColorLargeDepthAttachments/* = SKIP
+404958319 LINUX NVIDIA OPENGL : BlitFramebufferTest.BlitLargeColorSmallDepthAttachments/* = SKIP
+404958319 LINUX NVIDIA OPENGL : BlitFramebufferTest.BlitSmallColorLargeDepthAttachments/* = SKIP
+404983220 LINUX NVIDIA VULKAN : BlitFramebufferTest.BlitLargeColorSmallDepthAttachments/* = SKIP
+404983220 LINUX NVIDIA VULKAN : BlitFramebufferTest.BlitSmallColorLargeDepthAttachments/* = SKIP
+404983220 LINUX INTEL VULKAN : BlitFramebufferTest.BlitLargeColorSmallDepthAttachments/* = SKIP
+404983220 LINUX INTEL VULKAN : BlitFramebufferTest.BlitSmallColorLargeDepthAttachments/* = SKIP
+404959032 MAC AMD OPENGL : BlitFramebufferTest.BlitLargeColorSmallDepthAttachments/* = SKIP
+404959032 MAC AMD OPENGL : BlitFramebufferTest.BlitSmallColorLargeDepthAttachments/* = SKIP
+404959032 MAC INTEL OPENGL : BlitFramebufferTest.BlitLargeColorSmallDepthAttachments/* = SKIP
+404958320 WIN INTEL VULKAN : BlitFramebufferTest.BlitLargeColorSmallDepthAttachments/* = SKIP
+404958320 WIN INTEL VULKAN : BlitFramebufferTest.BlitSmallColorLargeDepthAttachments/* = SKIP
+404958320 WIN NVIDIA VULKAN : BlitFramebufferTest.BlitLargeColorSmallDepthAttachments/* = SKIP
+404958320 WIN NVIDIA VULKAN : BlitFramebufferTest.BlitSmallColorLargeDepthAttachments/* = SKIP
+
 // EGLImage colorspace renderbuffer failures on NVIDIA, INTEL and ANDROID
 40644776 D3D11                : ImageTest.SourceRenderbufferTargetTexture* = SKIP
 40644776 D3D11                : ImageTestES3.SourceRenderbufferTargetTextureExternalESSL3* = SKIP
