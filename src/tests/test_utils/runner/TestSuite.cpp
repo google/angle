@@ -322,7 +322,12 @@ void UpdateCurrentTestResult(const testing::TestResult &resultIn, TestResults *r
     }
     else
     {
-        resultOut.type = TestResultType::Pass;
+        // With --gtest_repeat the same test is seen multiple times, so resultOut.type may have been
+        // previously set to e.g. ::Fail. Only set to ::Pass if there was no other result yet.
+        if (resultOut.type == TestResultType::NoResult)
+        {
+            resultOut.type = TestResultType::Pass;
+        }
     }
 
     resultOut.elapsedTimeSeconds.back() = resultsOut->currentTestTimer.getElapsedWallClockTime();

@@ -605,8 +605,11 @@ def RunTests(test_suite, args, stdoutfile=None, log_output=True):
             if perf_output_path:
                 _AdbRun(['pull', device_perf_path, perf_output_path])
 
-        if log_output:
+        if log_output or result:
             logging.info(output.decode())
+
+        if result:
+            logging.error('Tests failed, see stdout above')
 
         if stdoutfile:
             with open(stdoutfile, 'wb') as f:
