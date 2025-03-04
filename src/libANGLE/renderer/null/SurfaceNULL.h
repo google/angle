@@ -22,7 +22,7 @@ class SurfaceNULL : public SurfaceImpl
     ~SurfaceNULL() override;
 
     egl::Error initialize(const egl::Display *display) override;
-    egl::Error swap(const gl::Context *context) override;
+    egl::Error swap(const gl::Context *context, SurfaceSwapFeedback *feedback) override;
     egl::Error postSubBuffer(const gl::Context *context,
                              EGLint x,
                              EGLint y,

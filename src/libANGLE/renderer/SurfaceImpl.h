@@ -41,6 +41,11 @@ using SupportedCompositorTimings = angle::PackedEnumBitSet<CompositorTiming>;
 
 namespace rx
 {
+struct SurfaceSwapFeedback
+{
+    bool swapChainImageChanged = false;
+};
+
 class SurfaceImpl : public FramebufferAttachmentObjectImpl
 {
   public:
@@ -52,10 +57,11 @@ class SurfaceImpl : public FramebufferAttachmentObjectImpl
     virtual egl::Error makeCurrent(const gl::Context *context);
     virtual egl::Error unMakeCurrent(const gl::Context *context);
     virtual egl::Error prepareSwap(const gl::Context *);
-    virtual egl::Error swap(const gl::Context *context) = 0;
+    virtual egl::Error swap(const gl::Context *context, SurfaceSwapFeedback *feedback) = 0;
     virtual egl::Error swapWithDamage(const gl::Context *context,
                                       const EGLint *rects,
-                                      EGLint n_rects);
+                                      EGLint n_rects,
+                                      SurfaceSwapFeedback *feedback);
     virtual egl::Error postSubBuffer(const gl::Context *context,
                                      EGLint x,
                                      EGLint y,

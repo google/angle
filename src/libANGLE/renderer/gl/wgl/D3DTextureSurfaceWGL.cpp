@@ -393,7 +393,7 @@ egl::Error D3DTextureSurfaceWGL::unMakeCurrent(const gl::Context *context)
     return egl::NoError();
 }
 
-egl::Error D3DTextureSurfaceWGL::swap(const gl::Context *context)
+egl::Error D3DTextureSurfaceWGL::swap(const gl::Context *context, SurfaceSwapFeedback *feedback)
 {
     return egl::NoError();
 }

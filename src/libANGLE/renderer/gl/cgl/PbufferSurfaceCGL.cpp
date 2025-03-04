@@ -70,7 +70,7 @@ egl::Error PbufferSurfaceCGL::makeCurrent(const gl::Context *context)
     return egl::NoError();
 }
 
-egl::Error PbufferSurfaceCGL::swap(const gl::Context *context)
+egl::Error PbufferSurfaceCGL::swap(const gl::Context *context, SurfaceSwapFeedback *feedback)
 {
     return egl::NoError();
 }
