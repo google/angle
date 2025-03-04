@@ -127,9 +127,19 @@ bool AndroidWindow::resize(int width, int height)
         FATAL() << "Window is NULL (is screen locked? e.g. SplashScreen in logcat)";
     }
 
-    // TODO: figure out a way to set the format as well,
-    // which is available only after EGLWindow initialization
-    int32_t err = ANativeWindow_setBuffersGeometry(sApp->window, mWidth, mHeight, 0);
+    // On some devices acquiring next swapchain image after window format change (without resize)
+    // does not return VK_ERROR_OUT_OF_DATE_KHR.  Further rendering into the acquired image and/or
+    // presenting that image may produce undefined results.  Try to preserve current window format
+    // to avoid such problem.  Note, window format is automatically set after swapchain create based
+    // on the create info imageFormat.
+    int32_t currentFormat = ANativeWindow_getFormat(sApp->window);
+    if (currentFormat < 0)
+    {
+        ERR() << "ANativeWindow_getFormat() failed: " << currentFormat;
+        currentFormat = 0;
+    }
+
+    int32_t err = ANativeWindow_setBuffersGeometry(sApp->window, mWidth, mHeight, currentFormat);
     return err == 0;
 }
 
