@@ -470,6 +470,12 @@ class Framebuffer final : public angle::ObserverInterface,
     // Detaches the the pixel local storage object so the Context can call deleteContextObjects().
     std::unique_ptr<PixelLocalStorage> detachPixelLocalStorage();
 
+    void onSwapChainImageChanged()
+    {
+        mDirtyBits.set(DIRTY_BIT_COLOR_BUFFER_CONTENTS_0);
+        onStateChange(angle::SubjectMessage::DirtyBitsFlagged);
+    }
+
     static const FramebufferID kDefaultDrawFramebufferHandle;
 
   private:

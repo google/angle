@@ -754,7 +754,7 @@ egl::Error OffscreenSurfaceVk::unMakeCurrent(const gl::Context *context)
     return angle::ToEGL(result, EGL_BAD_CURRENT_SURFACE);
 }
 
-egl::Error OffscreenSurfaceVk::swap(const gl::Context *context)
+egl::Error OffscreenSurfaceVk::swap(const gl::Context *context, SurfaceSwapFeedback *feedback)
 {
     return egl::NoError();
 }
@@ -2253,10 +2253,11 @@ egl::Error WindowSurfaceVk::prepareSwap(const gl::Context *context)
 
 egl::Error WindowSurfaceVk::swapWithDamage(const gl::Context *context,
                                            const EGLint *rects,
-                                           EGLint n_rects)
+                                           EGLint n_rects,
+                                           SurfaceSwapFeedback *feedback)
 {
     ContextVk *contextVk = vk::GetImpl(context);
-    angle::Result result = swapImpl(contextVk, rects, n_rects, nullptr);
+    angle::Result result = swapImpl(contextVk, rects, n_rects, nullptr, feedback);
     if (result == angle::Result::Continue)
     {
         result = contextVk->onFramebufferBoundary(context);
@@ -2265,7 +2266,7 @@ egl::Error WindowSurfaceVk::swapWithDamage(const gl::Context *context,
     return angle::ToEGL(result, EGL_BAD_SURFACE);
 }
 
-egl::Error WindowSurfaceVk::swap(const gl::Context *context)
+egl::Error WindowSurfaceVk::swap(const gl::Context *context, SurfaceSwapFeedback *feedback)
 {
     ContextVk *contextVk = vk::GetImpl(context);
 
@@ -2282,7 +2283,7 @@ egl::Error WindowSurfaceVk::swap(const gl::Context *context)
         return angle::ToEGL(result, EGL_BAD_SURFACE);
     }
 
-    angle::Result result = swapImpl(contextVk, nullptr, 0, nullptr);
+    angle::Result result = swapImpl(contextVk, nullptr, 0, nullptr, feedback);
     if (result == angle::Result::Continue)
     {
         result = contextVk->onFramebufferBoundary(context);
@@ -2776,7 +2777,8 @@ angle::Result WindowSurfaceVk::cleanUpOldSwapchains(vk::ErrorContext *context)
 angle::Result WindowSurfaceVk::swapImpl(ContextVk *contextVk,
                                         const EGLint *rects,
                                         EGLint n_rects,
-                                        const void *pNextChain)
+                                        const void *pNextChain,
+                                        SurfaceSwapFeedback *feedback)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::swapImpl");
 
@@ -2803,6 +2805,9 @@ angle::Result WindowSurfaceVk::swapImpl(ContextVk *contextVk,
     if (!isSharedPresentMode())
     {
         deferAcquireNextImage();
+        // Tell front end that swapChain image changed so that it could dirty default framebuffer.
+        ASSERT(feedback != nullptr);
+        feedback->swapChainImageChanged = true;
     }
 
     // Check for out of date swapchain.  Note, possible swapchain invalidate will also defer ANI.
@@ -2819,7 +2824,7 @@ angle::Result WindowSurfaceVk::swapImpl(ContextVk *contextVk,
 
 angle::Result WindowSurfaceVk::onSharedPresentContextFlush(ContextVk *contextVk)
 {
-    return swapImpl(contextVk, nullptr, 0, nullptr);
+    return swapImpl(contextVk, nullptr, 0, nullptr, nullptr);
 }
 
 bool WindowSurfaceVk::hasStagedUpdates() const
@@ -2848,15 +2853,6 @@ void WindowSurfaceVk::deferAcquireNextImage()
 
     // Swapchain may be recreated in prepareSwapchainForAcquireNextImage() call.
     setSizeState(SurfaceSizeState::Unresolved);
-
-    // Set gl::Framebuffer::DIRTY_BIT_COLOR_BUFFER_CONTENTS_0 via subject-observer message-passing
-    // to the front-end Surface, Framebuffer, and Context classes.  The DIRTY_BIT_COLOR_ATTACHMENT_0
-    // is processed before all other dirty bits.  However, since the attachments of the default
-    // framebuffer cannot change, this bit will be processed before all others.  It will cause
-    // WindowSurfaceVk::getAttachmentRenderTarget() to be called (which will acquire the next image)
-    // before any RenderTargetVk accesses.  The processing of other dirty bits as well as other
-    // setup for draws and reads will then access a properly-updated RenderTargetVk.
-    onStateChange(angle::SubjectMessage::SwapchainImageChanged);
 }
 
 angle::Result WindowSurfaceVk::doDeferredAcquireNextImage(vk::ErrorContext *context)
@@ -3039,12 +3035,6 @@ VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::ErrorContext *context)
             mDepthStencilImage.invalidateEntireLevelContent(context, gl::LevelIndex(0));
             mDepthStencilImage.invalidateEntireLevelStencilContent(context, gl::LevelIndex(0));
         }
-    }
-
-    // Notify the owning framebuffer there may be staged updates.
-    if (image.image->hasStagedUpdatesInAllocatedLevels())
-    {
-        onStateChange(angle::SubjectMessage::SwapchainImageChanged);
     }
 
     // Note that an acquire and result processing is no longer needed.

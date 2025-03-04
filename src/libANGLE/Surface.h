@@ -301,7 +301,7 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
 
     Error destroyImpl(const Display *display);
 
-    void postSwap(const gl::Context *context);
+    void postSwap(const gl::Context *context, const rx::SurfaceSwapFeedback &feedback);
     Error releaseRef(const Display *display);
 
     // ObserverInterface implementation.

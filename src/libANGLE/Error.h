@@ -71,10 +71,11 @@ inline Error NoError()
 #define ANGLE_CONCAT2(x, y) ANGLE_CONCAT1(x, y)
 #define ANGLE_LOCAL_VAR ANGLE_CONCAT2(_localVar, __LINE__)
 
-#define ANGLE_TRY_TEMPLATE(EXPR, FUNC)                \
+#define ANGLE_TRY_TEMPLATE(EXPR, FINALLY, FUNC)       \
     do                                                \
     {                                                 \
         auto ANGLE_LOCAL_VAR = EXPR;                  \
+        FINALLY;                                      \
         if (ANGLE_UNLIKELY(IsError(ANGLE_LOCAL_VAR))) \
         {                                             \
             FUNC(ANGLE_LOCAL_VAR);                    \
@@ -82,7 +83,8 @@ inline Error NoError()
     } while (0)
 
 #define ANGLE_RETURN(X) return X;
-#define ANGLE_TRY(EXPR) ANGLE_TRY_TEMPLATE(EXPR, ANGLE_RETURN)
+#define ANGLE_TRY(EXPR) ANGLE_TRY_TEMPLATE(EXPR, static_cast<void>(0), ANGLE_RETURN)
+#define ANGLE_TRY_WITH_FINALLY(EXPR, FINALLY) ANGLE_TRY_TEMPLATE(EXPR, FINALLY, ANGLE_RETURN)
 
 // TODO(jmadill): Remove after EGL error refactor. http://anglebug.com/42261727
 #define ANGLE_SWALLOW_ERR(EXPR)                                       \
@@ -151,7 +153,8 @@ inline bool IsError(bool value)
         return false;                  \
     } while (0)
 
-#define ANGLE_VALIDATION_TRY(EXPR) ANGLE_TRY_TEMPLATE(EXPR, ANGLE_HANDLE_VALIDATION_ERR)
+#define ANGLE_VALIDATION_TRY(EXPR) \
+    ANGLE_TRY_TEMPLATE(EXPR, static_cast<void>(0), ANGLE_HANDLE_VALIDATION_ERR)
 
 #include "Error.inc"
 

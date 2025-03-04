@@ -18,7 +18,7 @@
 #define ANGLE_HANDLE_ERR(X) \
     (void)(X);              \
     return;
-#define ANGLE_CONTEXT_TRY(EXPR) ANGLE_TRY_TEMPLATE(EXPR, ANGLE_HANDLE_ERR)
+#define ANGLE_CONTEXT_TRY(EXPR) ANGLE_TRY_TEMPLATE(EXPR, static_cast<void>(0), ANGLE_HANDLE_ERR)
 
 namespace gl
 {

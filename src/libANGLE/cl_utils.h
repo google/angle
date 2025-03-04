@@ -30,9 +30,9 @@
         }                                                  \
     } while (0)
 
-#define ANGLE_CL_IMPL_TRY(EXPR) ANGLE_TRY_TEMPLATE(EXPR, (void))
+#define ANGLE_CL_IMPL_TRY(EXPR) ANGLE_TRY_TEMPLATE(EXPR, static_cast<void>(0), (void))
 #define ANGLE_CL_IMPL_TRY_ERROR(EXPR, ERROR) \
-    ANGLE_TRY_TEMPLATE(EXPR, ANGLE_CL_RETURN_ERROR(ERROR); (void))
+    ANGLE_TRY_TEMPLATE(EXPR, static_cast<void>(0), ANGLE_CL_RETURN_ERROR(ERROR); (void))
 
 namespace cl
 {

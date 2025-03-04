@@ -139,7 +139,7 @@ egl::Error IOSurfaceSurfaceCGL::unMakeCurrent(const gl::Context *context)
     return egl::NoError();
 }
 
-egl::Error IOSurfaceSurfaceCGL::swap(const gl::Context *context)
+egl::Error IOSurfaceSurfaceCGL::swap(const gl::Context *context, SurfaceSwapFeedback *feedback)
 {
     return egl::NoError();
 }

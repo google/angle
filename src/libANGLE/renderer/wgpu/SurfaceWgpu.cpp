@@ -66,7 +66,7 @@ egl::Error OffscreenSurfaceWgpu::initialize(const egl::Display *display)
     return angle::ResultToEGL(initializeImpl(display));
 }
 
-egl::Error OffscreenSurfaceWgpu::swap(const gl::Context *context)
+egl::Error OffscreenSurfaceWgpu::swap(const gl::Context *context, SurfaceSwapFeedback *feedback)
 {
     UNREACHABLE();
     return egl::NoError();
@@ -206,7 +206,7 @@ void WindowSurfaceWgpu::destroy(const egl::Display *display)
     mDepthStencilAttachment.texture.resetImage();
 }
 
-egl::Error WindowSurfaceWgpu::swap(const gl::Context *context)
+egl::Error WindowSurfaceWgpu::swap(const gl::Context *context, SurfaceSwapFeedback *feedback)
 {
     return angle::ResultToEGL(swapImpl(context));
 }

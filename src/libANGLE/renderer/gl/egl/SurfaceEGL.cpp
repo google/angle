@@ -37,20 +37,20 @@ egl::Error SurfaceEGL::makeCurrent(const gl::Context *context)
     return egl::NoError();
 }
 
-egl::Error SurfaceEGL::swap(const gl::Context *context)
+egl::Error SurfaceEGL::swap(const gl::Context *context, SurfaceSwapFeedback *feedback)
 {
     egl::Display::GetCurrentThreadUnlockedTailCall()->add(
         [egl = mEGL, surface = mSurface](void *resultOut) {
             ANGLE_UNUSED_VARIABLE(resultOut);
             *static_cast<EGLBoolean *>(resultOut) = egl->swapBuffers(surface);
         });
-
     return egl::NoError();
 }
 
 egl::Error SurfaceEGL::swapWithDamage(const gl::Context *context,
                                       const EGLint *rects,
-                                      EGLint n_rects)
+                                      EGLint n_rects,
+                                      SurfaceSwapFeedback *feedback)
 {
     if (mHasSwapBuffersWithDamage)
     {

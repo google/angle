@@ -47,7 +47,7 @@ class SurfaceMtl : public SurfaceImpl
 
     egl::Error makeCurrent(const gl::Context *context) override;
     egl::Error unMakeCurrent(const gl::Context *context) override;
-    egl::Error swap(const gl::Context *context) override;
+    egl::Error swap(const gl::Context *context, SurfaceSwapFeedback *feedback) override;
     egl::Error postSubBuffer(const gl::Context *context,
                              EGLint x,
                              EGLint y,
@@ -139,7 +139,7 @@ class WindowSurfaceMtl : public SurfaceMtl
 
     egl::Error initialize(const egl::Display *display) override;
 
-    egl::Error swap(const gl::Context *context) override;
+    egl::Error swap(const gl::Context *context, SurfaceSwapFeedback *feedback) override;
 
     void setSwapInterval(const egl::Display *display, EGLint interval) override;
     EGLint getSwapBehavior() const override;
@@ -203,7 +203,7 @@ class OffscreenSurfaceMtl : public SurfaceMtl
     EGLint getWidth() const override;
     EGLint getHeight() const override;
 
-    egl::Error swap(const gl::Context *context) override;
+    egl::Error swap(const gl::Context *context, SurfaceSwapFeedback *feedback) override;
 
     egl::Error bindTexImage(const gl::Context *context,
                             gl::Texture *texture,

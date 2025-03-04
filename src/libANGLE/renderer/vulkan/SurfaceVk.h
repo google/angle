@@ -59,7 +59,7 @@ class OffscreenSurfaceVk : public SurfaceVk
     egl::Error unMakeCurrent(const gl::Context *context) override;
     const vk::ImageHelper *getColorImage() const { return &mColorAttachment.image; }
 
-    egl::Error swap(const gl::Context *context) override;
+    egl::Error swap(const gl::Context *context, SurfaceSwapFeedback *feedback) override;
     egl::Error postSubBuffer(const gl::Context *context,
                              EGLint x,
                              EGLint y,
@@ -286,10 +286,11 @@ class WindowSurfaceVk : public SurfaceVk
                                             GLsizei samples,
                                             FramebufferAttachmentRenderTarget **rtOut) override;
     egl::Error prepareSwap(const gl::Context *context) override;
-    egl::Error swap(const gl::Context *context) override;
+    egl::Error swap(const gl::Context *context, SurfaceSwapFeedback *feedback) override;
     egl::Error swapWithDamage(const gl::Context *context,
                               const EGLint *rects,
-                              EGLint n_rects) override;
+                              EGLint n_rects,
+                              SurfaceSwapFeedback *feedback) override;
     egl::Error postSubBuffer(const gl::Context *context,
                              EGLint x,
                              EGLint y,
@@ -369,7 +370,8 @@ class WindowSurfaceVk : public SurfaceVk
     angle::Result swapImpl(ContextVk *contextVk,
                            const EGLint *rects,
                            EGLint n_rects,
-                           const void *pNextChain);
+                           const void *pNextChain,
+                           SurfaceSwapFeedback *feedback);
 
     EGLNativeWindowType mNativeWindowType;
     VkSurfaceKHR mSurface;

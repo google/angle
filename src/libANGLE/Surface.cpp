@@ -183,8 +183,13 @@ Error Surface::destroyImpl(const Display *display)
     return NoError();
 }
 
-void Surface::postSwap(const gl::Context *context)
+void Surface::postSwap(const gl::Context *context, const rx::SurfaceSwapFeedback &feedback)
 {
+    if (feedback.swapChainImageChanged)
+    {
+        context->onSwapChainImageChanged();
+    }
+
     if (mRobustResourceInitialization && mState.swapBehavior != EGL_BUFFER_PRESERVED)
     {
         mColorInitState        = gl::InitState::MayNeedInit;
@@ -336,8 +341,9 @@ Error Surface::swap(gl::Context *context)
     context->getState().getOverlay()->onSwap();
 
     ANGLE_TRY(updatePropertiesOnSwap(context));
-    ANGLE_TRY(mImplementation->swap(context));
-    postSwap(context);
+
+    rx::SurfaceSwapFeedback feedback;
+    ANGLE_TRY_WITH_FINALLY(mImplementation->swap(context, &feedback), postSwap(context, feedback));
     return NoError();
 }
 
@@ -349,8 +355,10 @@ Error Surface::swapWithDamage(gl::Context *context, const EGLint *rects, EGLint 
     context->getState().getOverlay()->onSwap();
 
     ANGLE_TRY(updatePropertiesOnSwap(context));
-    ANGLE_TRY(mImplementation->swapWithDamage(context, rects, n_rects));
-    postSwap(context);
+
+    rx::SurfaceSwapFeedback feedback;
+    ANGLE_TRY_WITH_FINALLY(mImplementation->swapWithDamage(context, rects, n_rects, &feedback),
+                           postSwap(context, feedback));
     return NoError();
 }
 
@@ -369,7 +377,8 @@ Error Surface::postSubBuffer(const gl::Context *context,
 
     ANGLE_TRY(updatePropertiesOnSwap(context));
     ANGLE_TRY(mImplementation->postSubBuffer(context, x, y, width, height));
-    postSwap(context);
+    rx::SurfaceSwapFeedback feedback;
+    postSwap(context, feedback);
     return NoError();
 }
 
@@ -772,9 +781,6 @@ void Surface::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
             break;
         case angle::SubjectMessage::SurfaceChanged:
             onStateChange(angle::SubjectMessage::SurfaceChanged);
-            break;
-        case angle::SubjectMessage::SwapchainImageChanged:
-            onStateChange(angle::SubjectMessage::SwapchainImageChanged);
             break;
         default:
             UNREACHABLE();

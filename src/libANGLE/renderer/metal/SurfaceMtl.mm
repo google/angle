@@ -159,7 +159,7 @@ egl::Error SurfaceMtl::unMakeCurrent(const gl::Context *context)
     return egl::NoError();
 }
 
-egl::Error SurfaceMtl::swap(const gl::Context *context)
+egl::Error SurfaceMtl::swap(const gl::Context *context, SurfaceSwapFeedback *feedback)
 {
     return egl::NoError();
 }
@@ -498,7 +498,7 @@ egl::Error WindowSurfaceMtl::initialize(const egl::Display *display)
     return egl::NoError();
 }
 
-egl::Error WindowSurfaceMtl::swap(const gl::Context *context)
+egl::Error WindowSurfaceMtl::swap(const gl::Context *context, SurfaceSwapFeedback *feedback)
 {
     ANGLE_TO_EGL_TRY(swapImpl(context));
 
@@ -760,7 +760,7 @@ EGLint OffscreenSurfaceMtl::getHeight() const
     return mSize.height;
 }
 
-egl::Error OffscreenSurfaceMtl::swap(const gl::Context *context)
+egl::Error OffscreenSurfaceMtl::swap(const gl::Context *context, SurfaceSwapFeedback *feedback)
 {
     // Check for surface resize.
     ANGLE_TO_EGL_TRY(ensureTexturesSizeCorrect(context));

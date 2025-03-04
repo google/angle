@@ -143,7 +143,7 @@ egl::Error PixmapSurfaceGLX::makeCurrent(const gl::Context *context)
     return egl::NoError();
 }
 
-egl::Error PixmapSurfaceGLX::swap(const gl::Context *context)
+egl::Error PixmapSurfaceGLX::swap(const gl::Context *context, SurfaceSwapFeedback *feedback)
 {
     UNREACHABLE();
     return egl::NoError();
