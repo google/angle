@@ -226,6 +226,23 @@ const Format &Format::Get(GLenum internalFormat, const Renderer11DeviceCaps &dev
                                          nullptr);
             return info;
         }
+        case GL_BGRA_EXT:
+        {
+            static constexpr Format info(GL_BGRA_EXT,
+                                         angle::FormatID::B8G8R8A8_UNORM,
+                                         DXGI_FORMAT_B8G8R8A8_UNORM,
+                                         DXGI_FORMAT_B8G8R8A8_UNORM,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_B8G8R8A8_UNORM,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_B8G8R8A8_UNORM,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_B8G8R8A8_TYPELESS,
+                                         GL_BGRA8_EXT,
+                                         nullptr);
+            return info;
+        }
         case GL_BGRX8_ANGLEX:
         {
             if (OnlyFL11_1Plus(deviceCaps))

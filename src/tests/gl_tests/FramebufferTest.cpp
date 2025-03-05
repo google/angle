@@ -214,14 +214,24 @@ TEST_P(FramebufferFormatsTest, RGB8)
     testTextureFormat(GL_RGB8_OES, 8, 8, 8, 0);
 }
 
-// Test that BGRA8 can be used as a framebuffer texture format
-TEST_P(FramebufferFormatsTest, BGRA8)
+// Test that BGRA8_EXT can be used as a framebuffer texture format
+TEST_P(FramebufferFormatsTest, BGRA8_EXT)
 {
     ANGLE_SKIP_TEST_IF(
         !IsGLExtensionEnabled("GL_EXT_texture_format_BGRA8888") ||
         (getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_texture_storage")));
 
     testTextureFormat(GL_BGRA8_EXT, 8, 8, 8, 8);
+}
+
+// Test that BGRA_EXT can be used as a framebuffer texture format
+TEST_P(FramebufferFormatsTest, BGRA_EXT)
+{
+    ANGLE_SKIP_TEST_IF(
+        !IsGLExtensionEnabled("GL_EXT_texture_format_BGRA8888") ||
+        (getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_EXT_texture_storage")));
+
+    testTextureFormat(GL_BGRA_EXT, 8, 8, 8, 8);
 }
 
 TEST_P(FramebufferFormatsTest, RGBA8)
@@ -231,6 +241,54 @@ TEST_P(FramebufferFormatsTest, RGBA8)
                         !IsGLExtensionEnabled("GL_EXT_texture_storage")));
 
     testTextureFormat(GL_RGBA8_OES, 8, 8, 8, 8);
+}
+
+// Test whether glRenderbufferStorage supports GL_BGRA_EXT.
+TEST_P(FramebufferFormatsTest, Renderbuffer_BGRA_EXT)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_format_BGRA8888"));
+
+    glGenRenderbuffers(1, &mRenderbuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, mRenderbuffer);
+    EXPECT_GL_NO_ERROR();
+
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_BGRA_EXT, 128, 128);
+    EXPECT_GL_NO_ERROR();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, mRenderbuffer);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glClearColor(0, 1, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test whether glRenderbufferStorage supports GL_BGRA8_EXT.
+TEST_P(FramebufferFormatsTest, Renderbuffer_BGRA8_EXT)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_format_BGRA8888"));
+
+    glGenRenderbuffers(1, &mRenderbuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, mRenderbuffer);
+    EXPECT_GL_NO_ERROR();
+
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_BGRA8_EXT, 128, 128);
+    EXPECT_GL_NO_ERROR();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, mRenderbuffer);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glClearColor(0, 1, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
 TEST_P(FramebufferFormatsTest, RenderbufferMultisample_DEPTH16)

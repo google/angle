@@ -526,10 +526,11 @@ static GLenum GetNativeInternalFormat(const FunctionsGL *functions,
             result = GL_RGB8;
         }
 
-        if (internalFormat.sizedInternalFormat == GL_BGRA8_EXT)
+        if (internalFormat.sizedInternalFormat == GL_BGRA_EXT ||
+            internalFormat.sizedInternalFormat == GL_BGRA8_EXT)
         {
-            // GLES accepts GL_BGRA as an internal format but desktop GL only accepts it as a type.
-            // Update the internal format to GL_RGBA.
+            // GLES accepts GL_BGRA as an internal format but desktop GL only accepts it as a
+            // format. Update the internal format to GL_RGBA8.
             result = GL_RGBA8;
         }
 
@@ -614,6 +615,71 @@ static GLenum GetNativeInternalFormat(const FunctionsGL *functions,
             {
                 result = internalFormat.sizedInternalFormat;
             }
+        }
+        else if (internalFormat.sizedInternalFormat == GL_BGRA_EXT)
+        {
+            // GL_BGRA_EXT and GL_BGRA8_EXT are both allowed as sized internal formats now, but not
+            // all drivers support that behavior.  Map to the previously sized for internal format.
+            // http://anglebug.com/42267264
+            result = GL_BGRA8_EXT;
+        }
+    }
+
+    return result;
+}
+
+static GLenum GetTexImageNativeInternalFormat(const FunctionsGL *functions,
+                                              const angle::FeaturesGL &features,
+                                              const gl::InternalFormat &internalFormat)
+{
+    GLenum result = internalFormat.internalFormat;
+
+    if (functions->standard == STANDARD_GL_DESKTOP)
+    {
+        result = GetNativeInternalFormat(functions, features, internalFormat);
+    }
+    else if (functions->isAtLeastGLES(gl::Version(3, 0)))
+    {
+        if (internalFormat.sizedInternalFormat == GL_BGRA_EXT ||
+            internalFormat.sizedInternalFormat == GL_BGRA8_EXT)
+        {
+            // GL_BGRA_EXT and GL_BGRA8_EXT are both allowed as sized internal formats now, but
+            // not all drivers support that behavior.  For *TexImage*, map to the previously
+            // *unsized* internal format. http://anglebug.com/42267264
+            result = GL_BGRA_EXT;
+        }
+        else
+        {
+            result = GetNativeInternalFormat(functions, features, internalFormat);
+        }
+    }
+
+    return result;
+}
+
+static GLenum GetTexStorageNativeInternalFormat(const FunctionsGL *functions,
+                                                const angle::FeaturesGL &features,
+                                                const gl::InternalFormat &internalFormat)
+{
+    GLenum result = internalFormat.internalFormat;
+
+    if (functions->standard == STANDARD_GL_DESKTOP)
+    {
+        result = GetNativeInternalFormat(functions, features, internalFormat);
+    }
+    else if (functions->isAtLeastGLES(gl::Version(3, 0)))
+    {
+        if (internalFormat.sizedInternalFormat == GL_BGRA_EXT ||
+            internalFormat.sizedInternalFormat == GL_BGRA8_EXT)
+        {
+            // GL_BGRA_EXT and GL_BGRA8_EXT are both allowed as sized internal formats now, but not
+            // all drivers support that behavior.  For *TexStorage*, map to the previously *sized*
+            // internal format. http://anglebug.com/42267264
+            result = GL_BGRA8_EXT;
+        }
+        else
+        {
+            result = GetNativeInternalFormat(functions, features, internalFormat);
         }
     }
 
@@ -797,7 +863,7 @@ TexImageFormat GetTexImageFormat(const FunctionsGL *functions,
                                  GLenum type)
 {
     TexImageFormat result;
-    result.internalFormat = GetNativeInternalFormat(
+    result.internalFormat = GetTexImageNativeInternalFormat(
         functions, features, gl::GetInternalFormatInfo(internalFormat, type));
     result.format = GetNativeFormat(functions, features, format, type);
     result.type   = GetNativeType(functions, features, format, type);
@@ -839,7 +905,7 @@ CopyTexImageImageFormat GetCopyTexImageImageFormat(const FunctionsGL *functions,
                                                    GLenum framebufferType)
 {
     CopyTexImageImageFormat result;
-    result.internalFormat = GetNativeInternalFormat(
+    result.internalFormat = GetTexImageNativeInternalFormat(
         functions, features, gl::GetInternalFormatInfo(internalFormat, framebufferType));
     return result;
 }
@@ -858,7 +924,8 @@ TexStorageFormat GetTexStorageFormat(const FunctionsGL *functions,
     }
     else
     {
-        result.internalFormat = GetNativeInternalFormat(functions, features, sizedFormatInfo);
+        result.internalFormat =
+            GetTexStorageNativeInternalFormat(functions, features, sizedFormatInfo);
     }
 
     return result;
