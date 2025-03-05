@@ -1019,7 +1019,7 @@ deps = {
   },
 
   'third_party/vulkan-deps': {
-    'url': Var('chromium_git') + '/vulkan-deps@898a2304cea9cf11c5e49dca92008d199015acc2',
+    'url': Var('chromium_git') + '/vulkan-deps@4b720a347d47a85991e605f7d5c621883792ecde',
     'condition': 'not build_with_chromium',
   },
 
@@ -1069,7 +1069,7 @@ deps = {
   },
 
   'third_party/vulkan-validation-layers/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@cc4bfd761e025ff14ae329c1b1dbbf24e4f0922b',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@5f8c82f68a9e1a63f3b9effceb928d7068873813',
     'condition': 'not build_with_chromium',
   },
 

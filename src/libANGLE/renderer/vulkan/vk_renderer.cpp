@@ -661,7 +661,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
       "prior_access = SYNC_IMAGE_LAYOUT_TRANSITION", "command = vkCmdBeginRenderPass",
       "prior_command = vkCmdEndRenderPass", "load_op = VK_ATTACHMENT_LOAD_OP_LOAD", "subcmd = 1"}},
     // https://anglebug.com/400789178
-    {"SYNC-HAZARD-WRITE_AFTER_WRITE",
+    {"SYNC-HAZARD-WRITE-AFTER-WRITE",
      nullptr,
      nullptr,
      false,
@@ -671,7 +671,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
       "VK_PIPELINE_STAGE_2_LATE_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT)",
       "command = vkCmdPipelineBarrier", "prior_command = vkCmdEndRenderPass"}},
     // https://anglebug.com/400789178
-    {"SYNC-HAZARD-WRITE_AFTER_WRITE",
+    {"SYNC-HAZARD-WRITE-AFTER-WRITE",
      nullptr,
      nullptr,
      false,
