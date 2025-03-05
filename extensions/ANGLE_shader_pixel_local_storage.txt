@@ -496,9 +496,6 @@ Additions to the OpenGL ES Specification, Version 3.0.6
         the advanced blend equations defined in KHR_blend_equation_advanced.
 
       * INVALID_OPERATION is generated if a draw is issued with a fragment
-        shader that accesses a texture bound to pixel local storage.
-
-      * INVALID_OPERATION is generated if a draw is issued with a fragment
         shader that has a pixel local uniform bound to an inactive pixel local
         storage plane.
 
@@ -601,6 +598,13 @@ Additions to the OpenGL ES Specification, Version 3.0.6
     the value of PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE at the time this
     framebuffer entered an interrupted state. This command is ignored when the
     default framebuffer object name 0 is bound.
+
+  Modify Section 3.8.10.3 "Rendering Feedback Loops"
+
+  (Modify the second bullet point)
+
+    * The texture is attached to one of the attachment points or active pixel
+      local storage planes, A, of framebuffer object F
 
   Modify Section 4.4.2 "Attaching Images to Framebuffer Objects"
 
@@ -1259,3 +1263,10 @@ Issues
 
       RESOLVED: No. Transform feedback can lead to render pass breaks in the
       Vulkan backend.
+
+    (6) Should feedback loops between sampled textures and pixel local storage
+    planes generate errors?
+
+      RESOLVED: No. Follow the language for feedback loops between framebuffer
+      attachments and sampled textures. Rendering results are undefined. Layered
+      APIs such as WebGL make this case an error.

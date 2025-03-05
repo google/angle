@@ -4716,6 +4716,15 @@ class PixelLocalStorageValidationTest : public ANGLETest<>
     std::vector<std::string> mErrorMessages;
 };
 
+class PixelLocalStorageWebGLValidationTest : public PixelLocalStorageValidationTest
+{
+  public:
+    PixelLocalStorageWebGLValidationTest() { setWebGLCompatibilityEnabled(true); }
+
+  protected:
+    void testSetUp() override { PixelLocalStorageValidationTest::testSetUp(); }
+};
+
 class ScopedEnable
 {
   public:
@@ -6776,11 +6785,6 @@ TEST_P(PixelLocalStorageValidationTest, BannedCommands)
         EXPECT_GL_NO_ERROR();
     }
 
-    // INVALID_OPERATION is generated if a draw is issued with a fragment shader that accesses a
-    // texture bound to pixel local storage.
-    //
-    // TODO(anglebug.com/40096838).
-
     ASSERT_GL_NO_ERROR();
 }
 
@@ -7006,6 +7010,91 @@ TEST_P(PixelLocalStorageValidationTest, FramebufferQueries)
                                           GL_COLOR_ATTACHMENT0 + MAX_COLOR_ATTACHMENTS - 1,
                                           GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME, &intValue);
     EXPECT_GL_NO_ERROR();
+}
+
+// Test that binding overlapping regions of a texture to a sampler and a PLS plane is an error.
+TEST_P(PixelLocalStorageWebGLValidationTest, FeedbackLoopValidation)
+{
+    PLSProgram program;
+    program.compile(R"(
+        layout(binding=0, rgba8) uniform lowp pixelLocalANGLE plane1;
+        layout(rgba8i, binding=1) uniform lowp ipixelLocalANGLE plane2;
+        layout(binding=2, rgba8ui) uniform lowp upixelLocalANGLE plane3;
+        uniform sampler2D tex2d;
+        uniform highp sampler2DArray tex2dArray;
+        void main()
+        {
+            vec3 texcoord = vec3(0, 0, 0);
+            vec4 sampledValue = texture(tex2d, texcoord.xy) + texture(tex2dArray, texcoord.xyz);
+            pixelLocalStoreANGLE(plane1, sampledValue + color + pixelLocalLoadANGLE(plane1));
+            pixelLocalStoreANGLE(plane2, ivec4(aux1) + pixelLocalLoadANGLE(plane2));
+            pixelLocalStoreANGLE(plane3, uvec4(aux2) + pixelLocalLoadANGLE(plane3));
+        })");
+
+    GLuint sampler2dLocation = glGetUniformLocation(program, "tex2d");
+    glUniform1i(sampler2dLocation, 0);
+
+    GLuint sampler2dArrayLocation = glGetUniformLocation(program, "tex2dArray");
+    glUniform1i(sampler2dArrayLocation, 1);
+
+    PLSTestTexture tex1(GL_RGBA8);
+    PLSTestTexture tex2(GL_RGBA8I);
+    PLSTestTexture tex3(GL_RGBA8UI);
+
+    // 2D_ARRAY texture for coverage of more texture types
+    GLTexture tex4;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, tex4);
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, W, H, 16);
+
+    // Attached to plane 3 but unrefernced/inactive
+    PLSTestTexture tex5(GL_RGBA8);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexturePixelLocalStorageANGLE(1, tex2, 0, 0);
+    glFramebufferTexturePixelLocalStorageANGLE(2, tex3, 0, 0);
+    glFramebufferTexturePixelLocalStorageANGLE(3, tex5, 0, 0);
+    glViewport(0, 0, W, H);
+    glDrawBuffers(0, nullptr);
+
+    auto doSinglePLSDraw = [&]() {
+        glBeginPixelLocalStorageANGLE(
+            3, GLenumArray({GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE}));
+        program.drawBoxes({{FULLSCREEN, {-1.5, 0, 0, 0}, {0x000000ff, 0, 0, 0}}});
+        glEndPixelLocalStorageANGLE(
+            3, GLenumArray(
+                   {GL_STORE_OP_STORE_ANGLE, GL_STORE_OP_STORE_ANGLE, GL_STORE_OP_STORE_ANGLE}));
+    };
+
+    // Bind tex1 and tex4 for sampling
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex1);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D_ARRAY, tex4);
+    ASSERT_GL_NO_ERROR();
+
+    // Bind tex1 as a PLS plane, should generate a feedback loop error
+    glFramebufferTexturePixelLocalStorageANGLE(0, tex1, 0, 0);
+    ASSERT_GL_NO_ERROR();
+    doSinglePLSDraw();
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG("Feedback loop formed between Framebuffer and active Texture.");
+
+    // Bind tex5 for sampling. Should not generate feedback loop errors because it's bound to an
+    // inactive plane
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex5);
+    ASSERT_GL_NO_ERROR();
+    doSinglePLSDraw();
+    EXPECT_GL_NO_ERROR();
+
+    // Bind the 2D array texture as a PLS plane and expect that it generates a feedback loop because
+    // it's also bound for sampling.
+    glFramebufferTexturePixelLocalStorageANGLE(0, tex4, 0, 0);
+    ASSERT_GL_NO_ERROR();
+    doSinglePLSDraw();
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG("Feedback loop formed between Framebuffer and active Texture.");
 }
 
 // Check that glEnable(GL_BLEND) and glColorMask() do not generate errors, and are ignored for
@@ -7685,7 +7774,10 @@ TEST_P(PixelLocalStorageValidationTest, LoseContext)
 }
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(PixelLocalStorageValidationTest);
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(PixelLocalStorageWebGLValidationTest);
 ANGLE_INSTANTIATE_TEST(PixelLocalStorageValidationTest,
+                       WithRobustness(ES31_NULL()).enable(Feature::EmulatePixelLocalStorage));
+ANGLE_INSTANTIATE_TEST(PixelLocalStorageWebGLValidationTest,
                        WithRobustness(ES31_NULL()).enable(Feature::EmulatePixelLocalStorage));
 
 class PixelLocalStorageCompilerTest : public ANGLETest<>
