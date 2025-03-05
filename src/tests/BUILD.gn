@@ -702,7 +702,7 @@ if (build_angle_perftests) {
 if (is_ios) {
   bundle_data("angle_trace_tests_bundle_data") {
     testonly = true
-    sources = [ "angle_trace_tests_expectations.txt" ]
+    sources = [ "perf_tests/angle_trace_tests_expectations.txt" ]
     outputs = [ "{{bundle_resources_dir}}/" +
                 "{{source_root_relative_dir}}/{{source_file_part}}" ]
   }
