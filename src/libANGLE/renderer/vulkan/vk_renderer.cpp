@@ -348,20 +348,6 @@ constexpr const char *kSkippedMessagesWithDynamicRendering[] = {
 // those, ANGLE makes no further attempt to resolve them and expects vendor support for the
 // extensions instead.  The list of skipped messages is split based on this support.
 constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
-    // These errors are caused by a feedback loop tests that don't produce correct Vulkan to begin
-    // with.
-    // http://anglebug.com/42264930
-    // http://anglebug.com/42265542
-    //
-    // Occasionally, this is due to VVL's lack of support for some extensions.  For example,
-    // syncval doesn't properly account for VK_EXT_fragment_shader_interlock, which gives
-    // synchronization guarantees without the need for an image barrier.
-    // https://github.com/KhronosGroup/Vulkan-ValidationLayers/issues/4387
-    {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
-        "imageLayout: VK_IMAGE_LAYOUT_GENERAL",
-        "usage: SYNC_FRAGMENT_SHADER_SHADER_",
-    },
     // http://anglebug.com/42265049
     {
         "SYNC-HAZARD-WRITE-AFTER-WRITE",
