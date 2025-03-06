@@ -82,7 +82,35 @@ class ScopedDisableScissor : angle::NonCopyable
 
   private:
     Context *const mContext;
-    const GLint mScissorTestEnabled;
+    const bool mScissorTestEnabled;
+};
+
+class ScopedDisableRasterizerDiscard : angle::NonCopyable
+{
+  public:
+    ScopedDisableRasterizerDiscard(Context *context)
+        : mContext(context),
+          mRasterizerDiscardEnabled(mContext->getState().isRasterizerDiscardEnabled())
+    {
+        if (mRasterizerDiscardEnabled)
+        {
+            ContextPrivateDisable(mContext->getMutablePrivateState(),
+                                  mContext->getMutablePrivateStateCache(), GL_RASTERIZER_DISCARD);
+        }
+    }
+
+    ~ScopedDisableRasterizerDiscard()
+    {
+        if (mRasterizerDiscardEnabled)
+        {
+            ContextPrivateEnable(mContext->getMutablePrivateState(),
+                                 mContext->getMutablePrivateStateCache(), GL_RASTERIZER_DISCARD);
+        }
+    }
+
+  private:
+    Context *const mContext;
+    const bool mRasterizerDiscardEnabled;
 };
 
 class ScopedEnableColorMask : angle::NonCopyable
@@ -729,6 +757,7 @@ class PixelLocalStorageImageLoadStore : public PixelLocalStorage
             context->bindFramebuffer(GL_DRAW_FRAMEBUFFER, mScratchFramebufferForClearing);
         }
         ScopedDisableScissor scopedDisableScissor(context);
+        ScopedDisableRasterizerDiscard scopedDisableRasterizerDiscard(context);
 
         // Bind and clear the PLS planes.
         size_t maxClearedAttachments = 0;
@@ -914,6 +943,7 @@ class PixelLocalStorageFramebufferFetch : public PixelLocalStorage
         if (needsClear)
         {
             ScopedDisableScissor scopedDisableScissor(context);
+            ScopedDisableRasterizerDiscard scopedDisableRasterizerDiscard(context);
             ClearBufferCommands clearBufferCommands(context);
             for (GLsizei i = 0; i < n; ++i)
             {

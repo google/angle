@@ -3067,6 +3067,87 @@ TEST_P(PixelLocalStorageTest, BlitFramebuffer)
     EXPECT_PIXEL_RECT32UI_EQ(0, 0, W, H, GLColor32UI(123, 0, 0, 1));
 }
 
+// Check that GL_RASTERIZER_DISCARD disables renders to PLS, but not PLS clear operations.
+TEST_P(PixelLocalStorageTest, RasterizerDiscard)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+
+    PLSTestTexture tex(GL_RGBA8);
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexturePixelLocalStorageANGLE(0, tex, 0, 0);
+    glFramebufferPixelLocalClearValuefvANGLE(0, ClearF(1, 0, 0, 1));
+
+    mProgram.compile(R"(
+        layout(binding=0, rgba8) uniform lowp pixelLocalANGLE tex;
+        void main()
+        {
+            pixelLocalStoreANGLE(tex, vec4(0, 1, 0, 1));
+        })");
+
+    // PLS clears still pass when RASTERIZER_DISCARD is disabled.
+    glDisable(GL_RASTERIZER_DISCARD);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferPixelLocalClearValuefvANGLE(0, ClearF(0, 0, 1, 1));
+    glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_LOAD_OP_CLEAR_ANGLE}));
+    glEndPixelLocalStorageANGLE(1, GLenumArray({GL_STORE_OP_STORE_ANGLE}));
+    attachTexture2DToScratchFBO(tex);
+    EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::blue);
+    ASSERT_GL_NO_ERROR();
+
+    // PLS clears still pass when RASTERIZER_DISCARD is enabled.
+    glEnable(GL_RASTERIZER_DISCARD);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_LOAD_OP_ZERO_ANGLE}));
+    glEndPixelLocalStorageANGLE(1, GLenumArray({GL_STORE_OP_STORE_ANGLE}));
+    attachTexture2DToScratchFBO(tex);
+    EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::transparentBlack);
+    ASSERT_GL_NO_ERROR();
+
+    // Rasterization passes when RASTERIZER_DISCARD is disabled.
+    glDisable(GL_RASTERIZER_DISCARD);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferPixelLocalClearValuefvANGLE(0, ClearF(1, 0, 0, 1));
+    glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_LOAD_OP_CLEAR_ANGLE}));
+    mProgram.drawBoxes({{{FULLSCREEN}}});
+    glEndPixelLocalStorageANGLE(1, GLenumArray({GL_STORE_OP_STORE_ANGLE}));
+    attachTexture2DToScratchFBO(tex);
+    EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::green);
+    ASSERT_GL_NO_ERROR();
+
+    // Rasterization fails when RASTERIZER_DISCARD is enabled (but PLS still clears).
+    glEnable(GL_RASTERIZER_DISCARD);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_LOAD_OP_CLEAR_ANGLE}));
+    mProgram.drawBoxes({{{FULLSCREEN}}});
+    glEndPixelLocalStorageANGLE(1, GLenumArray({GL_STORE_OP_STORE_ANGLE}));
+    attachTexture2DToScratchFBO(tex);
+    EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+
+    // RASTERIZER_DISCARD can be disabled while PLS is active.
+    glEnable(GL_RASTERIZER_DISCARD);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_LOAD_OP_CLEAR_ANGLE}));
+    glDisable(GL_RASTERIZER_DISCARD);
+    mProgram.drawBoxes({{{FULLSCREEN}}});
+    glEndPixelLocalStorageANGLE(1, GLenumArray({GL_STORE_OP_STORE_ANGLE}));
+    attachTexture2DToScratchFBO(tex);
+    EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::green);
+    ASSERT_GL_NO_ERROR();
+
+    // RASTERIZER_DISCARD can be enabled while PLS is active.
+    glDisable(GL_RASTERIZER_DISCARD);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_LOAD_OP_CLEAR_ANGLE}));
+    glEnable(GL_RASTERIZER_DISCARD);
+    mProgram.drawBoxes({{{FULLSCREEN}}});
+    glEndPixelLocalStorageANGLE(1, GLenumArray({GL_STORE_OP_STORE_ANGLE}));
+    attachTexture2DToScratchFBO(tex);
+    EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Check that PLS and EXT_shader_framebuffer_fetch can be used together.
 TEST_P(PixelLocalStorageTest, ParallelFramebufferFetch)
 {
@@ -4723,16 +4804,6 @@ TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_context_stat
             "Attempted to begin pixel local storage with GL_DITHER enabled.");
         ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
     }
-
-    // INVALID_OPERATION is generated if RASTERIZER_DISCARD is enabled.
-    {
-        ScopedEnable scopedEnable(GL_RASTERIZER_DISCARD);
-        glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_LOAD_OP_ZERO_ANGLE}));
-        EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
-        EXPECT_GL_SINGLE_ERROR_MSG(
-            "Attempted to begin pixel local storage with GL_RASTERIZER_DISCARD enabled.");
-        ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
-    }
 }
 
 // Check that transform feedback is banned when PLS is active.
@@ -5895,6 +5966,7 @@ TEST_P(PixelLocalStorageValidationTest, BannedCommands)
     }
     EXPECT_ALLOWED_CAP(GL_POLYGON_OFFSET_FILL);
     EXPECT_ALLOWED_CAP(GL_PRIMITIVE_RESTART_FIXED_INDEX);
+    EXPECT_ALLOWED_CAP(GL_RASTERIZER_DISCARD);
     EXPECT_ALLOWED_CAP(GL_SCISSOR_TEST);
     EXPECT_ALLOWED_CAP(GL_STENCIL_TEST);
     if (EnsureGLExtensionEnabled("GL_EXT_clip_cull_distance"))
@@ -5907,7 +5979,6 @@ TEST_P(PixelLocalStorageValidationTest, BannedCommands)
     EXPECT_BANNED_CAP(GL_SAMPLE_ALPHA_TO_COVERAGE);
     EXPECT_BANNED_CAP(GL_SAMPLE_COVERAGE);
     EXPECT_BANNED_CAP(GL_DITHER);
-    EXPECT_BANNED_CAP(GL_RASTERIZER_DISCARD);
     if (isContextVersionAtLeast(3, 1))
     {
         EXPECT_BANNED_CAP(GL_SAMPLE_MASK);

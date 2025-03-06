@@ -280,6 +280,8 @@ Additions to the OpenGL ES Specification, Version 3.0.6
                                  plane to 0. This is recommended over
                                  LOAD_OP_CLEAR_ANGLE, as it is more likely to be
                                  performant on all implementations.
+                                 This clear is executed regardless of
+                                 RASTERIZER_DISCARD state.
 
         LOAD_OP_CLEAR_ANGLE      Clear the pixel local storage plane to its
                                  framebuffer's ith clear value of corresponding
@@ -291,6 +293,8 @@ Additions to the OpenGL ES Specification, Version 3.0.6
                                  of the clear value is too large to be
                                  represented in the plane's internalformat, it
                                  is clamped.
+                                 This clear is executed regardless of
+                                 RASTERIZER_DISCARD state.
 
         LOAD_OP_LOAD_ANGLE       Load the contents of the bound texture image
                                  into pixel local storage. This Load Operation
@@ -343,8 +347,6 @@ Additions to the OpenGL ES Specification, Version 3.0.6
         (i.e., if rendering to a multisampled framebuffer).
 
       * INVALID_OPERATION is generated if DITHER is enabled.
-
-      * INVALID_OPERATION is generated if RASTERIZER_DISCARD is enabled.
 
       * INVALID_OPERATION is generated if TRANSFORM_FEEDBACK_ACTIVE is TRUE.
 
@@ -545,8 +547,8 @@ Additions to the OpenGL ES Specification, Version 3.0.6
         one of: BLEND, CULL_FACE, DEBUG_OUTPUT, DEBUG_OUTPUT_SYNCHRONOUS,
         DEPTH_CLAMP_EXT, DEPTH_TEST, POLYGON_OFFSET_POINT_NV,
         POLYGON_OFFSET_LINE_NV, POLYGON_OFFSET_LINE_ANGLE, POLYGON_OFFSET_FILL,
-        PRIMITIVE_RESTART_FIXED_INDEX, SCISSOR_TEST, SCISSOR_TEST_EXCLUSIVE_NV,
-        STENCIL_TEST, CLIP_DISTANCE[0..7]_EXT
+        PRIMITIVE_RESTART_FIXED_INDEX, RASTERIZER_DISCARD, SCISSOR_TEST,
+        SCISSOR_TEST_EXCLUSIVE_NV, STENCIL_TEST, CLIP_DISTANCE[0..7]_EXT
 
       * Calls to ClearBuffer{f,i,ui}v() are ignored if <buffer> is COLOR and any
         of the following are true:

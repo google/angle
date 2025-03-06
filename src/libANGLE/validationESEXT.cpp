@@ -2467,13 +2467,6 @@ bool ValidateBeginPixelLocalStorageANGLE(const Context *context,
         return false;
     }
 
-    // INVALID_OPERATION is generated if RASTERIZER_DISCARD is enabled.
-    if (state.isRasterizerDiscardEnabled())
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kPLSRasterizerDiscardEnabled);
-        return false;
-    }
-
     // INVALID_OPERATION is generated if TRANSFORM_FEEDBACK_ACTIVE is true.
     if (state.isTransformFeedbackActive())
     {
