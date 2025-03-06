@@ -1131,6 +1131,44 @@ TEST_P(PbufferTest, LargestPbuffer)
     eglDestroySurface(display, pbufferSurface);
 }
 
+// Test the implementation for query format sizes from zero sized pbuffer surface
+TEST_P(PbufferTest, ZeroSizedSurfaceFormatQuery)
+{
+    ANGLE_SKIP_TEST_IF(!mSupportsPbuffers);
+    EGLWindow *window  = getEGLWindow();
+    EGLDisplay display = window->getDisplay();
+    EGLSurface pbufferSurface;
+
+    EGLint pBufferAttributes[] = {EGL_WIDTH, 0, EGL_HEIGHT, 0, EGL_NONE};
+
+    pbufferSurface = eglCreatePbufferSurface(display, window->getConfig(), pBufferAttributes);
+    ASSERT_NE(pbufferSurface, EGL_NO_SURFACE);
+    ASSERT_EGL_SUCCESS();
+
+    EGLint width, height;
+    EXPECT_EGL_TRUE(eglQuerySurface(display, pbufferSurface, EGL_WIDTH, &width));
+    EXPECT_EGL_TRUE(eglQuerySurface(display, pbufferSurface, EGL_HEIGHT, &height));
+    EXPECT_EQ(width, 0);
+    EXPECT_EQ(height, 0);
+
+    window->makeCurrent(pbufferSurface, pbufferSurface, window->getContext());
+
+    GLint redBits, greenBits, blueBits, alphaBits;
+    glGetIntegerv(GL_RED_BITS, &redBits);
+    glGetIntegerv(GL_GREEN_BITS, &greenBits);
+    glGetIntegerv(GL_BLUE_BITS, &blueBits);
+    glGetIntegerv(GL_ALPHA_BITS, &alphaBits);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(redBits, 8);
+    EXPECT_EQ(greenBits, 8);
+    EXPECT_EQ(blueBits, 8);
+    EXPECT_EQ(alphaBits, 8);
+
+    // Cleanup
+    window->makeCurrent();
+    eglDestroySurface(display, pbufferSurface);
+}
+
 ANGLE_INSTANTIATE_TEST_ES2(PbufferTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(PbufferColorspaceTest);

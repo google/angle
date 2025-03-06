@@ -49,6 +49,7 @@ class ImageSibling : public gl::FramebufferAttachmentObject
     gl::InitState sourceEGLImageInitState() const;
     void setSourceEGLImageInitState(gl::InitState initState) const;
 
+    bool isAttachmentSpecified(const gl::ImageIndex &imageIndex) const override;
     bool isRenderable(const gl::Context *context,
                       GLenum binding,
                       const gl::ImageIndex &imageIndex) const override;

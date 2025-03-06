@@ -172,6 +172,8 @@ class FramebufferAttachment final
     static const GLint kDefaultRenderToTextureSamples;
 
   private:
+    bool isSpecified() const;
+
     angle::Result getRenderTargetImpl(const Context *context,
                                       GLsizei samples,
                                       rx::FramebufferAttachmentRenderTarget **rtOut) const;
@@ -222,6 +224,7 @@ class FramebufferAttachmentObject : public angle::Subject, public angle::Observe
     FramebufferAttachmentObject();
     ~FramebufferAttachmentObject() override;
 
+    virtual bool isAttachmentSpecified(const ImageIndex &imageIndex) const                 = 0;
     virtual Extents getAttachmentSize(const ImageIndex &imageIndex) const                  = 0;
     virtual Format getAttachmentFormat(GLenum binding, const ImageIndex &imageIndex) const = 0;
     virtual GLsizei getAttachmentSamples(const ImageIndex &imageIndex) const               = 0;
@@ -263,6 +266,12 @@ inline const ImageIndex &FramebufferAttachment::getTextureImageIndex() const
 {
     ASSERT(type() == GL_TEXTURE);
     return mTarget.textureIndex();
+}
+
+inline bool FramebufferAttachment::isSpecified() const
+{
+    ASSERT(mResource);
+    return mResource->isAttachmentSpecified(mTarget.textureIndex());
 }
 
 inline Extents FramebufferAttachment::getSize() const

@@ -601,6 +601,12 @@ Error Surface::releaseTexImageFromTexture(const gl::Context *context)
     return releaseRef(context->getDisplay());
 }
 
+bool Surface::isAttachmentSpecified(const gl::ImageIndex & /*imageIndex*/) const
+{
+    // Surface is always specified even if it has 0 sizes.
+    return true;
+}
+
 gl::Extents Surface::getAttachmentSize(const gl::ImageIndex & /*target*/) const
 {
     return gl::Extents(getWidth(), getHeight(), 1);
