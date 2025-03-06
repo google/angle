@@ -5,12 +5,13 @@
 //
 
 #include "libANGLE/renderer/wgpu/wgpu_helpers.h"
-#include "libANGLE/formatutils.h"
 
+#include <algorithm>
+
+#include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/wgpu/ContextWgpu.h"
 #include "libANGLE/renderer/wgpu/DisplayWgpu.h"
 #include "libANGLE/renderer/wgpu/FramebufferWgpu.h"
-#include "wgpu_helpers.h"
 
 namespace rx
 {
@@ -139,9 +140,21 @@ angle::Result ImageHelper::flushSingleLevelUpdates(ContextWgpu *contextWgpu,
         switch (srcUpdate.updateSource)
         {
             case UpdateSource::Texture:
-                dst.mipLevel = toWgpuLevel(srcUpdate.targetLevel).get();
-                encoder.CopyBufferToTexture(&srcUpdate.textureData, &dst, &mTextureDescriptor.size);
-                break;
+            {
+                dst.mipLevel              = toWgpuLevel(srcUpdate.targetLevel).get();
+                wgpu::Extent3D copyExtent = mTextureDescriptor.size;
+                // https://www.w3.org/TR/webgpu/#abstract-opdef-logical-miplevel-specific-texture-extent
+                copyExtent.width  = std::max(1u, copyExtent.width >> dst.mipLevel);
+                copyExtent.height = std::max(1u, copyExtent.height >> dst.mipLevel);
+                if (mTextureDescriptor.dimension == wgpu::TextureDimension::e3D)
+                {
+                    copyExtent.depthOrArrayLayers =
+                        std::max(1u, copyExtent.depthOrArrayLayers >> dst.mipLevel);
+                }
+                encoder.CopyBufferToTexture(&srcUpdate.textureData, &dst, &copyExtent);
+            }
+            break;
+
             case UpdateSource::Clear:
                 if (deferredClears)
                 {
