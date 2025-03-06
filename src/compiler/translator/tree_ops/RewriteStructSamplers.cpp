@@ -8,8 +8,11 @@
 
 #include "compiler/translator/tree_ops/RewriteStructSamplers.h"
 
+#include "GLSLANG/ShaderVars.h"
 #include "common/hash_containers.h"
 #include "common/span.h"
+#include "compiler/translator/Compiler.h"
+#include "compiler/translator/ImmutableString.h"
 #include "compiler/translator/ImmutableStringBuilder.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
@@ -360,6 +363,23 @@ class RewriteStructSamplersTraverser final : public TIntermTraverser
     }
 
   private:
+    bool isActiveUniform(const ImmutableString &rootStructureName)
+    {
+        if (!mActiveUniforms)
+        {
+            mActiveUniforms = new TSet<ImmutableString>();
+            for (const ShaderVariable &uniform : mCompiler->getUniforms())
+            {
+                if (uniform.active)
+                {
+                    mActiveUniforms->insert(uniform.name);
+                }
+            }
+        }
+
+        return mActiveUniforms->count(rootStructureName) > 0;
+    }
+
     // Removes all samplers from a struct specifier.
     void stripStructSpecifierSamplers(const TStructure *structure, TIntermSequence *newSequence)
     {
@@ -462,7 +482,8 @@ class RewriteStructSamplersTraverser final : public TIntermTraverser
 
         for (const TField *field : structure->fields())
         {
-            extractFieldSamplers(variable.name().data(), field, newSequence);
+            extractFieldSamplers(isActiveUniform(variable.name()), variable.name().data(), field,
+                                 newSequence);
         }
 
         // If there's a replacement structure (because there are non-sampler fields in the struct),
@@ -496,7 +517,8 @@ class RewriteStructSamplersTraverser final : public TIntermTraverser
     }
 
     // Extracts samplers from a field of a struct. Works with nested structs and arrays.
-    void extractFieldSamplers(const std::string &prefix,
+    void extractFieldSamplers(bool inActiveUniform,
+                              const std::string &prefix,
                               const TField *field,
                               TIntermSequence *newSequence)
     {
@@ -507,7 +529,10 @@ class RewriteStructSamplersTraverser final : public TIntermTraverser
 
             if (fieldType.isSampler())
             {
-                extractSampler(newPrefix, fieldType, newSequence);
+                if (inActiveUniform)
+                {
+                    extractSampler(newPrefix, fieldType, newSequence);
+                }
             }
             else
             {
@@ -515,7 +540,7 @@ class RewriteStructSamplersTraverser final : public TIntermTraverser
                 const TStructure *structure = fieldType.getStruct();
                 for (const TField *nestedField : structure->fields())
                 {
-                    extractFieldSamplers(newPrefix, nestedField, newSequence);
+                    extractFieldSamplers(inActiveUniform, newPrefix, nestedField, newSequence);
                 }
                 exitArray(fieldType);
             }
@@ -600,6 +625,9 @@ class RewriteStructSamplersTraverser final : public TIntermTraverser
     // A stack of array sizes.  Used to figure out the array dimensions of the extracted sampler,
     // for example when it's nested in an array of structs in an array of structs.
     TVector<unsigned int> mArraySizeStack;
+
+    // Caches the names of all inactive uniforms.
+    TSet<ImmutableString> *mActiveUniforms = nullptr;
 };
 }  // anonymous namespace
 

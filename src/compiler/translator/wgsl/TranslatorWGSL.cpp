@@ -19,10 +19,15 @@
 #include "compiler/translator/ImmutableStringBuilder.h"
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/IntermNode.h"
+#include "compiler/translator/Operator_autogen.h"
 #include "compiler/translator/OutputTree.h"
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/SymbolUniqueId.h"
 #include "compiler/translator/Types.h"
+#include "compiler/translator/tree_ops/MonomorphizeUnsupportedFunctions.h"
+#include "compiler/translator/tree_ops/RewriteArrayOfArrayOfOpaqueUniforms.h"
+#include "compiler/translator/tree_ops/RewriteStructSamplers.h"
+#include "compiler/translator/tree_ops/SeparateStructFromUniformDeclarations.h"
 #include "compiler/translator/tree_util/BuiltIn_autogen.h"
 #include "compiler/translator/tree_util/FindMain.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
@@ -1512,15 +1517,9 @@ bool OutputWGSLTraverser::visitAggregate(Visit, TIntermAggregate *aggregateNode)
                 }
                 else
                 {
-                    if (opName == nullptr)
-                    {
-                        // TODO(anglebug.com/42267100): opName should not be allowed to be nullptr
-                        // here, but for now not all builtins are mapped to a string.
-                        opName = "TODO_Operator";
-                    }
                     // If the operator is not symbolic then it is a builtin that uses function call
                     // syntax: builtin(arg1, arg2, ..);
-                    mSink << opName;
+                    mSink << (opName == nullptr ? "TODO_Operator" : opName);
                     emitArgList();
                     return false;
                 }
@@ -1702,7 +1701,15 @@ void OutputWGSLTraverser::emitVariableDeclaration(const VarDecl &decl,
         // TODO(anglebug.com/42267100): <workgroup> or <storage>?
         if (evdConfig.isGlobalScope)
         {
-            mSink << "<private>";
+            if (decl.type.getQualifier() == EvqUniform)
+            {
+                ASSERT(IsOpaqueType(decl.type.getBasicType()));
+                mSink << "<uniform>";
+            }
+            else
+            {
+                mSink << "<private>";
+            }
         }
         mSink << " ";
     }
@@ -1942,6 +1949,66 @@ TranslatorWGSL::TranslatorWGSL(sh::GLenum type, ShShaderSpec spec, ShShaderOutpu
     : TCompiler(type, spec, output)
 {}
 
+bool TranslatorWGSL::preTranslateTreeModifications(TIntermBlock *root)
+{
+
+    int aggregateTypesUsedForUniforms = 0;
+    for (const auto &uniform : getUniforms())
+    {
+        if (uniform.isStruct() || uniform.isArrayOfArrays())
+        {
+            ++aggregateTypesUsedForUniforms;
+        }
+    }
+
+    // Samplers are legal as function parameters, but samplers within structs or arrays are not
+    // allowed in WGSL
+    // (https://www.w3.org/TR/WGSL/#function-call-expr:~:text=A%20function%20parameter,a%20sampler%20type).
+    // TODO(anglebug.com/389145696): handle arrays of samplers here.
+
+    // If there are any function calls that take array-of-array of opaque uniform parameters, or
+    // other opaque uniforms that need special handling in WebGPU, monomorphize the functions by
+    // removing said parameters and replacing them in the function body with the call arguments.
+    //
+    // This  dramatically simplifies future transformations w.r.t to samplers in structs, array of
+    //   arrays of opaque types, atomic counters etc.
+    UnsupportedFunctionArgsBitSet args{UnsupportedFunctionArgs::StructContainingSamplers,
+                                       UnsupportedFunctionArgs::ArrayOfArrayOfSamplerOrImage,
+                                       UnsupportedFunctionArgs::AtomicCounter,
+                                       UnsupportedFunctionArgs::Image};
+    if (!MonomorphizeUnsupportedFunctions(this, root, &getSymbolTable(), args))
+    {
+        return false;
+    }
+
+    if (aggregateTypesUsedForUniforms > 0)
+    {
+        if (!SeparateStructFromUniformDeclarations(this, root, &getSymbolTable()))
+        {
+            return false;
+        }
+
+        int removedUniformsCount;
+
+        // Requires MonomorphizeUnsupportedFunctions() to have been run already.
+        if (!RewriteStructSamplers(this, root, &getSymbolTable(), &removedUniformsCount))
+        {
+            return false;
+        }
+    }
+
+    // Replace array of array of opaque uniforms with a flattened array.  This is run after
+    // MonomorphizeUnsupportedFunctions and RewriteStructSamplers so that it's not possible for an
+    // array of array of opaque type to be partially subscripted and passed to a function.
+    // TODO(anglebug.com/389145696): Even single-level arrays of samplers are not allowed in WGSL.
+    if (!RewriteArrayOfArrayOfOpaqueUniforms(this, root, &getSymbolTable()))
+    {
+        return false;
+    }
+
+    return true;
+}
+
 bool TranslatorWGSL::translate(TIntermBlock *root,
                                const ShCompileOptions &compileOptions,
                                PerformanceDiagnostics *perfDiagnostics)
@@ -1951,6 +2018,12 @@ bool TranslatorWGSL::translate(TIntermBlock *root,
         OutputTree(root, getInfoSink().info);
         std::cout << getInfoSink().info.c_str();
     }
+
+    if (!preTranslateTreeModifications(root))
+    {
+        return false;
+    }
+    enableValidateNoMoreTransformations();
 
     RewritePipelineVarOutput rewritePipelineVarOutput(getShaderType());
     WGSLGenerationMetadataForUniforms wgslGenerationMetadataForUniforms;
@@ -1969,7 +2042,7 @@ bool TranslatorWGSL::translate(TIntermBlock *root,
         return false;
     }
 
-    if (!OutputUniformBlocks(this, root))
+    if (!OutputUniformBlocksAndSamplers(this, root))
     {
         return false;
     }

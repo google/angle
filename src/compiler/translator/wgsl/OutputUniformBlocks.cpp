@@ -10,6 +10,7 @@
 #include "common/mathutil.h"
 #include "common/utilities.h"
 #include "compiler/translator/BaseTypes.h"
+#include "compiler/translator/Common.h"
 #include "compiler/translator/Compiler.h"
 #include "compiler/translator/ImmutableString.h"
 #include "compiler/translator/ImmutableStringBuilder.h"
@@ -229,7 +230,7 @@ ImmutableString MakeMatCx2ConversionFunctionName(const TType *type)
     return BuildConcatenatedImmutableString("ANGLE_Convert_", arrStr, "Mat", type->getCols(), "x2");
 }
 
-bool OutputUniformBlocks(TCompiler *compiler, TIntermBlock *root)
+bool OutputUniformBlocksAndSamplers(TCompiler *compiler, TIntermBlock *root)
 {
     // TODO(anglebug.com/42267100): This should eventually just be handled the same way as a regular
     // UBO, like in Vulkan which create a block out of the default uniforms with a traverser:
@@ -242,7 +243,7 @@ bool OutputUniformBlocks(TCompiler *compiler, TIntermBlock *root)
     bool outputStructHeader = false;
     for (const ShaderVariable &shaderVar : basicUniforms)
     {
-        if (gl::IsOpaqueType(shaderVar.type))
+        if (gl::IsOpaqueType(shaderVar.type) || !shaderVar.active)
         {
             continue;
         }
@@ -252,12 +253,7 @@ bool OutputUniformBlocks(TCompiler *compiler, TIntermBlock *root)
             // TODO(anglebug.com/42267100): put gl_DepthRange into default uniform block.
             continue;
         }
-        if (!outputStructHeader)
-        {
-            output << "struct ANGLE_DefaultUniformBlock {\n";
-            outputStructHeader = true;
-        }
-        output << "  ";
+
         // TODO(anglebug.com/42267100): some types will NOT match std140 layout here, namely matCx2,
         // bool, and arrays with stride less than 16.
         // (this check does not cover the unsupported case where there is an array of structs of
@@ -266,9 +262,24 @@ bool OutputUniformBlocks(TCompiler *compiler, TIntermBlock *root)
         {
             return false;
         }
+
+        // Some uniform variables might have been deleted, for example if they were structs that
+        // only contained samplers (which are pulled into separate default uniforms).
+        auto globalVarIter = globalVars.find(shaderVar.name);
+        if (globalVarIter == globalVars.end())
+        {
+            continue;
+        }
+
+        if (!outputStructHeader)
+        {
+            output << "struct ANGLE_DefaultUniformBlock {\n";
+            outputStructHeader = true;
+        }
+        output << "  ";
         output << shaderVar.name << " : ";
 
-        TIntermDeclaration *declNode = globalVars.find(shaderVar.name)->second;
+        TIntermDeclaration *declNode = globalVarIter->second;
         const TVariable *astVar      = &ViewDeclaration(*declNode).symbol.variable();
         WriteWgslType(output, astVar->getType(), {WgslAddressSpace::Uniform});
 
@@ -290,7 +301,61 @@ bool OutputUniformBlocks(TCompiler *compiler, TIntermBlock *root)
                << kDefaultUniformBlockVarType << ";\n";
     }
 
+    for (const auto &globalVarIter : globalVars)
+    {
+        TIntermDeclaration *declNode = globalVarIter.second;
+        ASSERT(declNode);
+
+        const TIntermSymbol *declSymbol = &ViewDeclaration(*declNode).symbol;
+        const TType &declType           = declSymbol->getType();
+        if (!declType.isSampler())
+        {
+            continue;
+        }
+
+        // Note that this may output ignored symbols.
+        output << kTextureSamplerBindingMarker << kAngleSamplerPrefix << declSymbol->getName()
+               << " : ";
+        WriteWgslType(output, declType, {});
+        output << ";\n";
+
+        output << kTextureSamplerBindingMarker << kAngleTexturePrefix << declSymbol->getName()
+               << " : ";
+        WriteWgslType(output, declType, {});
+        output << ";\n";
+    }
+
     return true;
+}
+
+std::string WGSLGetMappedSamplerName(const std::string &originalName)
+{
+    std::string samplerName = originalName;
+
+    // Samplers in structs are extracted.
+    std::replace(samplerName.begin(), samplerName.end(), '.', '_');
+
+    // Remove array elements
+    auto out = samplerName.begin();
+    for (auto in = samplerName.begin(); in != samplerName.end(); in++)
+    {
+        if (*in == '[')
+        {
+            while (*in != ']')
+            {
+                in++;
+                ASSERT(in != samplerName.end());
+            }
+        }
+        else
+        {
+            *out++ = *in;
+        }
+    }
+
+    samplerName.erase(out, samplerName.end());
+
+    return samplerName;
 }
 
 }  // namespace sh

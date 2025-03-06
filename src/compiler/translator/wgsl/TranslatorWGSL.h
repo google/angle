@@ -17,6 +17,7 @@ class TranslatorWGSL : public TCompiler
     TranslatorWGSL(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output);
 
   protected:
+    bool preTranslateTreeModifications(TIntermBlock *root);
     bool translate(TIntermBlock *root,
                    const ShCompileOptions &compileOptions,
                    PerformanceDiagnostics *perfDiagnostics) override;

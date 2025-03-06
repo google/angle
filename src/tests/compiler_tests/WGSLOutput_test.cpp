@@ -614,3 +614,59 @@ fn wgslMain() -> ANGLE_Output_Annotated
     compile(shaderString);
     EXPECT_TRUE(foundInCode(outputString.c_str()));
 }
+
+TEST_F(WGSLOutputTest, BasicSamplers)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+precision mediump float;
+struct SamplerStruct {
+  sampler2D samp1;
+};
+uniform SamplerStruct sampStruct;
+
+uniform sampler2D samp2;
+
+out vec4 fragColor;
+void main() {
+  fragColor = texture(samp2, vec2(0.0, 0.0));
+  fragColor += texture(sampStruct.samp1, vec2(0.0, 0.0));
+}
+)";
+    const std::string &outputString =
+        R"(struct ANGLE_Output_Global {
+  fragColor : vec4<f32>,
+};
+
+var<private> ANGLE_output_global : ANGLE_Output_Global;
+
+struct ANGLE_Output_Annotated {
+  @location(@@@@@@) fragColor : vec4<f32>,
+};
+
+@group(1) @binding(@@@@@@) var ANGLE_sampler_samp2 : texture2d<f32>;
+@group(1) @binding(@@@@@@) var ANGLE_texture_samp2 : texture2d<f32>;
+@group(1) @binding(@@@@@@) var ANGLE_sampler_sampStruct_samp1 : texture2d<f32>;
+@group(1) @binding(@@@@@@) var ANGLE_texture_sampStruct_samp1 : texture2d<f32>;
+
+;
+;
+;
+
+fn _umain()
+{
+  (ANGLE_output_global.fragColor) = (TODO_Operator(_usamp2, vec2<f32>(0.0f, 0.0f)));
+  (ANGLE_output_global.fragColor) += (TODO_Operator(sampStruct_samp1, vec2<f32>(0.0f, 0.0f)));
+}
+@fragment
+fn wgslMain() -> ANGLE_Output_Annotated
+{
+  _umain();
+  var ANGLE_output_annotated : ANGLE_Output_Annotated;
+  ANGLE_output_annotated.fragColor = ANGLE_output_global.fragColor;
+  return ANGLE_output_annotated;
+}
+)";
+    compile(shaderString);
+    EXPECT_TRUE(foundInCode(outputString.c_str()));
+}

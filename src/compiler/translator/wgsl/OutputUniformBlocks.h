@@ -20,6 +20,16 @@ const uint32_t kDefaultUniformBlockBindGroup       = 0;
 const uint32_t kDefaultVertexUniformBlockBinding   = 0;
 const uint32_t kDefaultFragmentUniformBlockBinding = 1;
 
+const uint32_t kTextureAndSamplerBindGroup = 1;
+// The translator emits this dummy location, which needs to be replaced when linking the two
+// separate shader stages.
+const char kTextureSamplerBindingMarker[] = "@group(1) @binding(@@@@@@) var ";
+// The translator emits split samplers/textures for GLSL's combined textures/samplers (combined
+// textures/samplers are not supported by WGSL). The new variables are prefixed with these
+// constants, respectively.
+const char kAngleSamplerPrefix[] = "ANGLE_sampler_";
+const char kAngleTexturePrefix[] = "ANGLE_texture_";
+
 const char kWrappedStructFieldName[] = "elem";
 
 struct UniformBlockMetadata
@@ -74,7 +84,11 @@ ImmutableString MakeMatCx2ConversionFunctionName(const TType *type);
 
 // TODO(anglebug.com/42267100): for now does not output all uniform blocks,
 // just the default block. (fails for  matCx2, bool.)
-bool OutputUniformBlocks(TCompiler *compiler, TIntermBlock *root);
+bool OutputUniformBlocksAndSamplers(TCompiler *compiler, TIntermBlock *root);
+
+// GLSL sampler uniforms are extracted from structs. Given a GLSL sampler's associated name string,
+// this function retrieves its new WGSL name and strips off array indices.
+std::string WGSLGetMappedSamplerName(const std::string &originalName);
 
 }  // namespace sh
 
