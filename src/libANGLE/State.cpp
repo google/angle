@@ -2658,6 +2658,29 @@ void State::invalidateTextureBindings(TextureType type)
     mDirtyBits.set(state::DIRTY_BIT_TEXTURE_BINDINGS);
 }
 
+bool State::isTextureBoundToActivePLS(TextureID textureID) const
+{
+    if (getPixelLocalStorageActivePlanes() == 0)
+    {
+        return false;
+    }
+    PixelLocalStorage *pls = getDrawFramebuffer()->peekPixelLocalStorage();
+    if (pls == nullptr)
+    {
+        // Even though there is a nonzero number of active PLS planes, peekPixelLocalStorage() may
+        // still return null if we are in the middle of deleting the active framebuffer.
+        return false;
+    }
+    for (GLuint i = 0; i < getCaps().maxPixelLocalStoragePlanes; ++i)
+    {
+        if (pls->getPlane(i).getTextureID() == textureID)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 void State::setSamplerBinding(const Context *context, GLuint textureUnit, Sampler *sampler)
 {
     if (mSamplers[textureUnit].get() == sampler)

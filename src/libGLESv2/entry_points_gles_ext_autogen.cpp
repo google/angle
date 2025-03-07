@@ -2426,12 +2426,9 @@ void GL_APIENTRY GL_TexSubImage2DRobustANGLE(GLenum target,
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLTexSubImage2DRobustANGLE) &&
-              ValidateTexSubImage2DRobustANGLE(
-                  context, angle::EntryPoint::GLTexSubImage2DRobustANGLE, targetPacked, level,
-                  xoffset, yoffset, width, height, format, type, bufSize, pixels)));
+             ValidateTexSubImage2DRobustANGLE(
+                 context, angle::EntryPoint::GLTexSubImage2DRobustANGLE, targetPacked, level,
+                 xoffset, yoffset, width, height, format, type, bufSize, pixels));
         if (isCallValid)
         {
             context->texSubImage2DRobust(targetPacked, level, xoffset, yoffset, width, height,
@@ -2527,12 +2524,9 @@ void GL_APIENTRY GL_TexSubImage3DRobustANGLE(GLenum target,
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLTexSubImage3DRobustANGLE) &&
-              ValidateTexSubImage3DRobustANGLE(
-                  context, angle::EntryPoint::GLTexSubImage3DRobustANGLE, targetPacked, level,
-                  xoffset, yoffset, zoffset, width, height, depth, format, type, bufSize, pixels)));
+             ValidateTexSubImage3DRobustANGLE(
+                 context, angle::EntryPoint::GLTexSubImage3DRobustANGLE, targetPacked, level,
+                 xoffset, yoffset, zoffset, width, height, depth, format, type, bufSize, pixels));
         if (isCallValid)
         {
             context->texSubImage3DRobust(targetPacked, level, xoffset, yoffset, zoffset, width,
@@ -4666,11 +4660,8 @@ void GL_APIENTRY GL_InvalidateTextureANGLE(GLenum target)
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLInvalidateTextureANGLE) &&
-              ValidateInvalidateTextureANGLE(context, angle::EntryPoint::GLInvalidateTextureANGLE,
-                                             targetPacked)));
+             ValidateInvalidateTextureANGLE(context, angle::EntryPoint::GLInvalidateTextureANGLE,
+                                            targetPacked));
         if (isCallValid)
         {
             context->invalidateTexture(targetPacked);
@@ -13407,14 +13398,10 @@ void GL_APIENTRY GL_TexSubImage3DOES(GLenum target,
     {
         TextureTarget targetPacked = PackParam<TextureTarget>(target);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLTexSubImage3DOES) &&
-              ValidateTexSubImage3DOES(context, angle::EntryPoint::GLTexSubImage3DOES, targetPacked,
-                                       level, xoffset, yoffset, zoffset, width, height, depth,
-                                       format, type, pixels)));
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateTexSubImage3DOES(context, angle::EntryPoint::GLTexSubImage3DOES,
+                                                     targetPacked, level, xoffset, yoffset, zoffset,
+                                                     width, height, depth, format, type, pixels));
         if (isCallValid)
         {
             context->texSubImage3D(targetPacked, level, xoffset, yoffset, zoffset, width, height,

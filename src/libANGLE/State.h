@@ -841,6 +841,8 @@ class State : angle::NonCopyable
 
     void invalidateTextureBindings(TextureType type);
 
+    bool isTextureBoundToActivePLS(TextureID) const;
+
     // Sampler object binding manipulation
     void setSamplerBinding(const Context *context, GLuint textureUnit, Sampler *sampler);
     SamplerID getSamplerId(GLuint textureUnit) const

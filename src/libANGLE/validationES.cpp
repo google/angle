@@ -2187,6 +2187,12 @@ bool ValidateGenerateMipmapBase(const Context *context,
         return false;
     }
 
+    if (context->getState().isTextureBoundToActivePLS(texture->id()))
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kActivePLSBackingTexture);
+        return false;
+    }
+
     const GLuint effectiveBaseLevel = texture->getTextureState().getEffectiveBaseLevel();
 
     // This error isn't spelled out in the spec in a very explicit way, but we interpret the spec so
@@ -6460,6 +6466,8 @@ bool ValidateTexParameterIivRobustANGLE(const Context *context,
                                         GLsizei bufSize,
                                         const GLint *params)
 {
+    // TODO: Uncomment glTexParameterIivRobustANGLE tests in
+    // PixelLocalStorageValidationTest.ModifyTextureDuringPLS once implemented.
     UNIMPLEMENTED();
     return false;
 }
@@ -6471,6 +6479,8 @@ bool ValidateTexParameterIuivRobustANGLE(const Context *context,
                                          GLsizei bufSize,
                                          const GLuint *params)
 {
+    // TODO: Uncomment glTexParameterIuivRobustANGLE tests in
+    // PixelLocalStorageValidationTest.ModifyTextureDuringPLS once implemented.
     UNIMPLEMENTED();
     return false;
 }
@@ -7735,10 +7745,17 @@ bool ValidateTexParameterBase(const Context *context,
         return false;
     }
 
-    if (context->getTextureByType(target) == nullptr)
+    Texture *texture = context->getTextureByType(target);
+    if (texture == nullptr)
     {
         // Should only be possible for external textures
         ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kTextureNotBound);
+        return false;
+    }
+
+    if (context->getState().isTextureBoundToActivePLS(texture->id()))
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kActivePLSBackingTexture);
         return false;
     }
 
@@ -8942,6 +8959,13 @@ bool ValidateInvalidateTextureANGLE(const Context *context,
     if (!ValidTextureTarget(context, target) && !ValidTextureExternalTarget(context, target))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidTextureTarget);
+        return false;
+    }
+
+    Texture *texture = context->getTextureByType(target);
+    if (texture != nullptr && context->getState().isTextureBoundToActivePLS(texture->id()))
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kActivePLSBackingTexture);
         return false;
     }
 

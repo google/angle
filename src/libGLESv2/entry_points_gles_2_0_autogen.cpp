@@ -3450,11 +3450,8 @@ void GL_APIENTRY GL_TexSubImage2D(GLenum target,
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLTexSubImage2D) &&
-              ValidateTexSubImage2D(context, angle::EntryPoint::GLTexSubImage2D, targetPacked,
-                                    level, xoffset, yoffset, width, height, format, type, pixels)));
+             ValidateTexSubImage2D(context, angle::EntryPoint::GLTexSubImage2D, targetPacked, level,
+                                   xoffset, yoffset, width, height, format, type, pixels));
         if (isCallValid)
         {
             context->texSubImage2D(targetPacked, level, xoffset, yoffset, width, height, format,

@@ -2624,14 +2624,10 @@ void GL_APIENTRY GL_TexSubImage3D(GLenum target,
     {
         TextureTarget targetPacked = PackParam<TextureTarget>(target);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLTexSubImage3D) &&
-              ValidateTexSubImage3D(context, angle::EntryPoint::GLTexSubImage3D, targetPacked,
-                                    level, xoffset, yoffset, zoffset, width, height, depth, format,
-                                    type, pixels)));
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateTexSubImage3D(context, angle::EntryPoint::GLTexSubImage3D,
+                                                  targetPacked, level, xoffset, yoffset, zoffset,
+                                                  width, height, depth, format, type, pixels));
         if (isCallValid)
         {
             context->texSubImage3D(targetPacked, level, xoffset, yoffset, zoffset, width, height,

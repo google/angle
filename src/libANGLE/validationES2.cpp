@@ -1026,6 +1026,9 @@ bool ValidateES2TexImageParametersBase(const Context *context,
         return false;
     }
 
+    // Pixel local storage isn't supported on ES2.
+    ASSERT(!context->getState().isTextureBoundToActivePLS(texture->id()));
+
     // Verify zero border
     if (border != 0)
     {

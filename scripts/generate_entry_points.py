@@ -95,6 +95,7 @@ PLS_ALLOW_LIST = {
     "FramebufferPixelLocalStorageInterruptANGLE",
     "FramebufferRenderbuffer",
     "FrontFace",
+    "InvalidateTextureANGLE",
     "MapBufferRange",
     "PixelLocalStorageBarrierANGLE",
     "ProvokingVertexANGLE",
@@ -143,6 +144,7 @@ PLS_ALLOW_WILDCARDS = [
     "PushDebugGroup*",
     "SamplerParameter*",
     "TexParameter*",
+    "TexSubImage*",
     "Uniform*",
     "VertexAttrib*",
 ]

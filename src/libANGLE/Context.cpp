@@ -1175,26 +1175,13 @@ void Context::deleteProgram(ShaderProgramID program)
 
 void Context::deleteTexture(TextureID textureID)
 {
-    // If a texture object is deleted while its image is bound to a pixel local storage plane on the
-    // currently bound draw framebuffer, and pixel local storage is active, then it is as if
-    // EndPixelLocalStorageANGLE() had been called with <n>=PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE
-    // and <storeops> of STORE_OP_STORE_ANGLE.
-    if (mState.getPixelLocalStorageActivePlanes() != 0)
+    if (mState.isTextureBoundToActivePLS(textureID))
     {
-        PixelLocalStorage *pls = mState.getDrawFramebuffer()->peekPixelLocalStorage();
-        // Even though there is a nonzero number of active PLS planes, peekPixelLocalStorage() may
-        // still return null if we are in the middle of deleting the active framebuffer.
-        if (pls != nullptr)
-        {
-            for (GLuint i = 0; i < mState.getCaps().maxPixelLocalStoragePlanes; ++i)
-            {
-                if (pls->getPlane(i).getTextureID() == textureID)
-                {
-                    endPixelLocalStorageImplicit();
-                    break;
-                }
-            }
-        }
+        // If a texture object is deleted while its image is bound to a pixel local storage plane on
+        // the currently bound draw framebuffer, and pixel local storage is active, then it is as if
+        // EndPixelLocalStorageANGLE() had been called with
+        // <n>=PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE and <storeops> of STORE_OP_STORE_ANGLE.
+        endPixelLocalStorageImplicit();
     }
 
     Texture *texture = mState.mTextureManager->getTexture(textureID);

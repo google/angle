@@ -508,6 +508,7 @@ inline constexpr const char *kPixelPackBufferBoundForTransformFeedback = "It is 
 inline constexpr const char *kPixelUnpackBufferBoundForTransformFeedback = "It is undefined behavior to use a pixel unpack buffer that is bound for transform feedback.";
 inline constexpr const char *kPLSActive = "Operation not permitted while pixel local storage is active.";
 inline constexpr const char *kPLSColorAttachmentReserved = "Color attachment is actively reserved for pixel local storage.";
+inline constexpr const char *kActivePLSBackingTexture = "Operation not permitted on an active pixel local storage backing texture.";
 inline constexpr const char *kPLSCapNotAllowed = "Cap 0x%04X cannot be enabled or disabled while pixel local storage is active.";
 inline constexpr const char *kPLSDefaultFramebufferBound = "Default framebuffer object name 0 does not support pixel local storage.";
 inline constexpr const char *kPLSDimensionsDontMatchRenderingArea = "Pixel local storage backing texture dimensions not equal to the rendering area.";
