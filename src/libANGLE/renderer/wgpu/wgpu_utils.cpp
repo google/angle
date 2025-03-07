@@ -212,7 +212,7 @@ void GenerateCaps(const wgpu::Limits &limitsWgpu,
         glCaps->maxCombinedShaderUniformComponents[shaderType] = maxCombinedUniformComponents;
     }
 
-    const GLint maxVarryingComponents = rx::LimitToInt(limitsWgpu.maxInterStageShaderComponents);
+    const GLint maxVaryingComponents = rx::LimitToInt(limitsWgpu.maxInterStageShaderVariables * 4);
 
     glCaps->maxVertexAttributes = rx::LimitToInt(
         limitsWgpu.maxVertexBuffers);  // WebGPU has maxVertexBuffers and maxVertexAttributes but
@@ -222,10 +222,10 @@ void GenerateCaps(const wgpu::Limits &limitsWgpu,
         maxUniformVectors;  // Uniforms are implemented using a uniform buffer, so the max number of
                             // uniforms we can support is the max buffer range divided by the size
                             // of a single uniform (4X float).
-    glCaps->maxVertexOutputComponents = maxVarryingComponents;
+    glCaps->maxVertexOutputComponents = maxVaryingComponents;
 
     glCaps->maxFragmentUniformVectors     = maxUniformVectors;
-    glCaps->maxFragmentInputComponents    = maxVarryingComponents;
+    glCaps->maxFragmentInputComponents    = maxVaryingComponents;
     glCaps->minProgramTextureGatherOffset = 0;
     glCaps->maxProgramTextureGatherOffset = 0;
     glCaps->minProgramTexelOffset         = -8;
@@ -244,7 +244,7 @@ void GenerateCaps(const wgpu::Limits &limitsWgpu,
     glCaps->uniformBufferOffsetAlignment =
         rx::LimitToInt(limitsWgpu.minUniformBufferOffsetAlignment);
     glCaps->maxCombinedUniformBlocks = glCaps->maxUniformBufferBindings;
-    glCaps->maxVaryingComponents     = maxVarryingComponents;
+    glCaps->maxVaryingComponents     = maxVaryingComponents;
     glCaps->maxVaryingVectors        = rx::LimitToInt(limitsWgpu.maxInterStageShaderVariables);
     glCaps->maxCombinedTextureImageUnits =
         rx::LimitToInt(limitsWgpu.maxSamplersPerShaderStage * kShaderStageCount);

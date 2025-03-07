@@ -396,7 +396,8 @@ angle::Result WindowSurfaceWgpu::updateCurrentTexture(const egl::Display *displa
 {
     wgpu::SurfaceTexture texture;
     mSurface.GetCurrentTexture(&texture);
-    if (texture.status != wgpu::SurfaceGetCurrentTextureStatus::Success)
+    if (texture.status != wgpu::SurfaceGetCurrentTextureStatus::SuccessOptimal &&
+        texture.status != wgpu::SurfaceGetCurrentTextureStatus::SuccessSuboptimal)
     {
         ERR() << "wgpu::Surface::GetCurrentTexture failed: "
               << gl::FmtHex(static_cast<uint32_t>(texture.status));

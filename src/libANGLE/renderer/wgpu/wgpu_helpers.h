@@ -26,7 +26,7 @@ namespace webgpu
 {
 
 // WebGPU requires copy buffers bytesPerRow to be aligned to 256.
-// https://www.w3.org/TR/webgpu/#abstract-opdef-validating-gpuimagecopybuffer
+// https://www.w3.org/TR/webgpu/#abstract-opdef-validating-gputexelcopybufferinfo
 static const GLuint kCopyBufferAlignment = 256;
 
 enum class UpdateSource
@@ -49,7 +49,7 @@ struct SubresourceUpdate
 
     SubresourceUpdate(UpdateSource targetUpdateSource,
                       gl::LevelIndex newTargetLevel,
-                      wgpu::ImageCopyBuffer targetBuffer)
+                      wgpu::TexelCopyBufferInfo targetBuffer)
     {
         updateSource = targetUpdateSource;
         textureData  = targetBuffer;
@@ -71,7 +71,7 @@ struct SubresourceUpdate
 
     UpdateSource updateSource;
     ClearUpdate clearData;
-    wgpu::ImageCopyBuffer textureData;
+    wgpu::TexelCopyBufferInfo textureData;
 
     gl::LevelIndex targetLevel;
 };

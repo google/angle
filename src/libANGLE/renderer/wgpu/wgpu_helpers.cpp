@@ -121,7 +121,7 @@ angle::Result ImageHelper::flushSingleLevelUpdates(ContextWgpu *contextWgpu,
     wgpu::Device device          = contextWgpu->getDevice();
     wgpu::Queue queue            = contextWgpu->getQueue();
     wgpu::CommandEncoder encoder = device.CreateCommandEncoder();
-    wgpu::ImageCopyTexture dst;
+    wgpu::TexelCopyTextureInfo dst;
     dst.texture = mTexture;
     std::vector<wgpu::RenderPassColorAttachment> colorAttachments;
     wgpu::TextureView textureView;
@@ -245,10 +245,10 @@ angle::Result ImageHelper::stageTextureUpload(ContextWgpu *contextWgpu,
                                   inputDepthPitch, data, outputRowPitch, outputDepthPitch);
     ANGLE_TRY(bufferHelper.unmap());
 
-    wgpu::TextureDataLayout textureDataLayout = {};
+    wgpu::TexelCopyBufferLayout textureDataLayout = {};
     textureDataLayout.bytesPerRow             = outputRowPitch;
     textureDataLayout.rowsPerImage            = outputDepthPitch;
-    wgpu::ImageCopyBuffer imageCopyBuffer;
+    wgpu::TexelCopyBufferInfo imageCopyBuffer;
     imageCopyBuffer.layout = textureDataLayout;
     imageCopyBuffer.buffer = bufferHelper.getBuffer();
     appendSubresourceUpdate(levelGL,
@@ -325,7 +325,7 @@ angle::Result ImageHelper::readPixels(rx::ContextWgpu *contextWgpu,
     const angle::Format &actualFormat = angle::Format::Get(mActualFormatID);
     uint32_t textureBytesPerRow =
         roundUp(actualFormat.pixelBytes * area.width, kCopyBufferAlignment);
-    wgpu::TextureDataLayout textureDataLayout;
+    wgpu::TexelCopyBufferLayout textureDataLayout;
     textureDataLayout.bytesPerRow  = textureBytesPerRow;
     textureDataLayout.rowsPerImage = area.height;
 
@@ -335,11 +335,11 @@ angle::Result ImageHelper::readPixels(rx::ContextWgpu *contextWgpu,
     ANGLE_TRY(bufferHelper.initBuffer(device, allocationSize,
                                       wgpu::BufferUsage::MapRead | wgpu::BufferUsage::CopyDst,
                                       MapAtCreation::No));
-    wgpu::ImageCopyBuffer copyBuffer;
+    wgpu::TexelCopyBufferInfo copyBuffer;
     copyBuffer.buffer = bufferHelper.getBuffer();
     copyBuffer.layout = textureDataLayout;
 
-    wgpu::ImageCopyTexture copyTexture;
+    wgpu::TexelCopyTextureInfo copyTexture;
     wgpu::Origin3D textureOrigin;
     textureOrigin.x      = area.x;
     textureOrigin.y      = area.y;
