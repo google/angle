@@ -1101,6 +1101,16 @@ class GraphicsPipelineDesc final
         return mFragmentOutput;
     }
 
+    bool hasPipelineProtectedAccess() const
+    {
+        ASSERT(mShaders.shaders.bits.isProtectedContext ==
+               mVertexInput.inputAssembly.bits.isProtectedContext);
+        ASSERT(mShaders.shaders.bits.isProtectedContext ==
+               mFragmentOutput.blendMaskAndLogic.bits.isProtectedContext);
+
+        return mShaders.shaders.bits.isProtectedContext;
+    }
+
   private:
     void updateSubpass(GraphicsPipelineTransitionBits *transition, uint32_t subpass);
 

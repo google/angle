@@ -2743,6 +2743,13 @@ angle::Result InitializePipelineFromLibraries(ErrorContext *context,
         createInfo.flags |= VK_PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR;
     }
 
+    if (context->getFeatures().supportsPipelineProtectedAccess.enabled)
+    {
+        createInfo.flags |= desc.hasPipelineProtectedAccess()
+                                ? VK_PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT
+                                : VK_PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT;
+    }
+
     const std::array<VkPipeline, 3> pipelines = {
         vertexInputPipeline.getPipeline().getHandle(),
         shadersPipeline.getPipeline().getHandle(),
