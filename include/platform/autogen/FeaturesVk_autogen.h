@@ -434,6 +434,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo destroyOldSwapchainInSharedPresentMode = {
+        "destroyOldSwapchainInSharedPresentMode",
+        FeatureCategory::VulkanWorkarounds,
+        &members,
+    };
+
     FeatureInfo forceTextureLodOffset1 = {
         "forceTextureLodOffset1",
         FeatureCategory::VulkanWorkarounds,

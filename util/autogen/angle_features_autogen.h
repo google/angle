@@ -76,6 +76,7 @@ enum class Feature
     DecodeEncodeSRGBForGenerateMipmap,
     DepthStencilBlitExtraCopy,
     DescriptorSetCache,
+    DestroyOldSwapchainInSharedPresentMode,
     DisableAnisotropicFiltering,
     DisableB5G6R5Support,
     DisableBaseInstanceVertex,

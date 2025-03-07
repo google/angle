@@ -556,6 +556,17 @@
             "issue": "http://anglebug.com/42263629"
         },
         {
+            "name": "destroy_old_swapchain_in_shared_present_mode",
+            "category": "Workarounds",
+            "description": [
+                "Instead of passing an oldSwapchain to VkSwapchainCreateInfoKHR, wait for queue to ",
+                "be idle and destroy the swapchain immediately. Works around a bug on platforms ",
+                "which may return VK_ERROR_NATIVE_WINDOW_IN_USE_KHR from vkCreateSwapchainKHR ",
+                "if use the oldSwapchain pointer."
+            ],
+            "issue": "http://anglebug.com/42262606"
+        },
+        {
             "name": "force_texture_lod_offset_1",
             "category": "Workarounds",
             "description": [

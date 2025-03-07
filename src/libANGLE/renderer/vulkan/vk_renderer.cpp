@@ -5472,6 +5472,8 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // Android mistakenly destroys the old swapchain when creating a new one.
     ANGLE_FEATURE_CONDITION(&mFeatures, waitIdleBeforeSwapchainRecreation, IsAndroid() && isARM);
 
+    ANGLE_FEATURE_CONDITION(&mFeatures, destroyOldSwapchainInSharedPresentMode, IsAndroid());
+
     // vkCmdClearAttachments races with draw calls on Qualcomm hardware as observed on Pixel2 and
     // Pixel4.  https://issuetracker.google.com/issues/166809097
     ANGLE_FEATURE_CONDITION(

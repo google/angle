@@ -478,6 +478,23 @@ bool HasAnyOldSwapchains(const std::deque<impl::ImagePresentOperation> &presentH
     return false;
 }
 
+void DestroyPresentHistory(vk::Renderer *renderer,
+                           std::deque<impl::ImagePresentOperation> *presentHistory,
+                           vk::Recycler<vk::Fence> *fenceRecycler,
+                           vk::Recycler<vk::Semaphore> *semaphoreRecycler)
+{
+    VkDevice device = renderer->getDevice();
+    for (impl::ImagePresentOperation &presentOperation : *presentHistory)
+    {
+        if (presentOperation.fence.valid())
+        {
+            (void)presentOperation.fence.wait(device, renderer->getMaxFenceWaitTimeNs());
+        }
+        presentOperation.destroy(device, fenceRecycler, semaphoreRecycler);
+    }
+    presentHistory->clear();
+}
+
 bool IsCompatiblePresentMode(vk::PresentMode mode,
                              VkPresentModeKHR *compatibleModes,
                              size_t compatibleModesCount)
@@ -1037,15 +1054,8 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
         mLockBufferHelper.destroy(renderer);
     }
 
-    for (ImagePresentOperation &presentOperation : mPresentHistory)
-    {
-        if (presentOperation.fence.valid())
-        {
-            (void)presentOperation.fence.wait(device, renderer->getMaxFenceWaitTimeNs());
-        }
-        presentOperation.destroy(device, &mPresentFenceRecycler, &mPresentSemaphoreRecycler);
-    }
-    mPresentHistory.clear();
+    DestroyPresentHistory(renderer, &mPresentHistory, &mPresentFenceRecycler,
+                          &mPresentSemaphoreRecycler);
 
     destroySwapChainImages(displayVk);
 
@@ -1555,12 +1565,26 @@ angle::Result WindowSurfaceVk::recreateSwapchain(vk::ErrorContext *context,
         std::swap(swapchainExtents.width, swapchainExtents.height);
     }
 
-    // On Android, vkCreateSwapchainKHR destroys mLastSwapchain, which is incorrect.  Wait idle in
-    // that case as a workaround.
-    if (mLastSwapchain != VK_NULL_HANDLE &&
-        context->getFeatures().waitIdleBeforeSwapchainRecreation.enabled)
+    if (mLastSwapchain != VK_NULL_HANDLE)
     {
-        ANGLE_TRY(finish(context));
+        // On Android, vkCreateSwapchainKHR may return VK_ERROR_NATIVE_WINDOW_IN_USE_KHR if use
+        // mLastSwapchain as an oldSwapchain when in shared present mode.  Destroy the swapchain
+        // now as a workaround.
+        if (isSharedPresentMode() &&
+            context->getFeatures().destroyOldSwapchainInSharedPresentMode.enabled)
+        {
+            ANGLE_TRY(finish(context));
+            DestroyPresentHistory(context->getRenderer(), &mPresentHistory, &mPresentFenceRecycler,
+                                  &mPresentSemaphoreRecycler);
+            vkDestroySwapchainKHR(context->getDevice(), mLastSwapchain, nullptr);
+            mLastSwapchain = VK_NULL_HANDLE;
+        }
+        // On Android, vkCreateSwapchainKHR destroys mLastSwapchain, which is incorrect.  Wait idle
+        // in that case as a workaround.
+        else if (context->getFeatures().waitIdleBeforeSwapchainRecreation.enabled)
+        {
+            ANGLE_TRY(finish(context));
+        }
     }
 
     // Save the handle since it is going to be updated in the createSwapChain call below.
