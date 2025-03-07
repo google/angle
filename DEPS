@@ -1019,7 +1019,7 @@ deps = {
   },
 
   'third_party/vulkan-deps': {
-    'url': Var('chromium_git') + '/vulkan-deps@4f7de8f463f890bea8f20aba385db4a25678a0f2',
+    'url': Var('chromium_git') + '/vulkan-deps@d34de7171c18502aa3e2eb3d348ff6f665a01d29',
     'condition': 'not build_with_chromium',
   },
 
@@ -1049,7 +1049,7 @@ deps = {
   },
 
   'third_party/vulkan-headers/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Headers@952f776f6573aafbb62ea717d871cd1d6816c387',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Headers@0f0cfd88d7e6ece3ca6456df692f0055bde94be7',
     'condition': 'not build_with_chromium',
   },
 
