@@ -201,6 +201,14 @@
             ]
         },
         {
+            "name": "force_max_combined_shader_output_resources",
+            "category": "Features",
+            "description": [
+                "Force GL_MAX_COMBINED_SHADER_OUTPUT_RESOURCES to be the sum of GL_MAX_COMBINED_IMAGE_UNIFORMS, GL_MAX_COMBINED_SHADER_STORAGE_BLOCKS, and GL_MAX_COLOR_ATTACHMENTS"
+            ],
+            "issue": ""
+        },
+        {
             "name": "dont_use_loops_to_initialize_variables",
             "category": "Workarounds",
             "description": [

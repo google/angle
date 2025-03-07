@@ -176,6 +176,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo forceMaxCombinedShaderOutputResources = {
+        "forceMaxCombinedShaderOutputResources",
+        FeatureCategory::OpenGLFeatures,
+        &members,
+    };
+
     FeatureInfo dontUseLoopsToInitializeVariables = {
         "dontUseLoopsToInitializeVariables",
         FeatureCategory::OpenGLWorkarounds,

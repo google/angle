@@ -1348,6 +1348,12 @@ void GenerateCaps(const FunctionsGL *functions,
         caps->maxImageUnits = QuerySingleGLInt(functions, GL_MAX_IMAGE_UNITS);
         caps->maxCombinedImageUniforms =
             QuerySingleGLInt(functions, GL_MAX_COMBINED_IMAGE_UNIFORMS);
+        if (features.forceMaxCombinedShaderOutputResources.enabled)
+        {
+            caps->maxCombinedShaderOutputResources = caps->maxCombinedImageUniforms +
+                                                     caps->maxCombinedShaderStorageBlocks +
+                                                     caps->maxColorAttachments;
+        }
     }
     else
     {
@@ -2396,6 +2402,11 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
                             isIntelLinuxLessThanKernelVersion5);
 
     ANGLE_FEATURE_CONDITION(features, allowClearForRobustResourceInit, IsApple());
+
+    // NVidia and PowerVR Rogue report MAX_COMBINED_SHADER_OUTPUT_RESOURCES incorrectly.
+    // Force it to the sum of all sublimits.
+    ANGLE_FEATURE_CONDITION(features, forceMaxCombinedShaderOutputResources,
+                            isNvidia || IsPowerVrRogue(functions));
 
     // The WebGL conformance/uniforms/out-of-bounds-uniform-array-access test has been seen to fail
     // on AMD and Android devices.
