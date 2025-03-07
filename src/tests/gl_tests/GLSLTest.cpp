@@ -17275,6 +17275,35 @@ TEST_P(GLSLTest_ES3, UnsuccessfulRelinkWithBindAttribLocation)
     EXPECT_GL_NO_ERROR();
 }
 
+// Regression test for an unsuccessful link with a varying followed by another link
+TEST_P(GLSLTest_ES3, UnsuccessfulLinkFollowedByAnotherLink)
+{
+    // Make a simple program.
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+
+    // Install the executable.
+    glUseProgram(program);
+
+    // Re-link with a bad XFB varying and a bound attrib location.
+    const char *tfVaryings = "gl_FragColor";
+    glTransformFeedbackVaryings(program, 1, &tfVaryings, GL_SEPARATE_ATTRIBS);
+    glBindAttribLocation(program, 8, essl1_shaders::PositionAttrib());
+    glLinkProgram(program);
+    GLint linkStatus = 999;
+    glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
+    ASSERT_GL_NO_ERROR();
+    // Link expected to fail on the first program
+    ASSERT_EQ(linkStatus, GL_FALSE);
+
+    // Another program with the same shaders but without the varying is expected to link
+    ANGLE_GL_PROGRAM(anotherProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    ASSERT_NE(program, anotherProgram);
+    glUseProgram(anotherProgram);
+    glLinkProgram(anotherProgram);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_NE(CheckLinkStatusAndReturnProgram(anotherProgram, true), 0u);
+}
+
 // Tests an unsuccessful re-link using glBindAttribLocation under WebGL.
 TEST_P(WebGL2GLSLTest, UnsuccessfulRelinkWithBindAttribLocation)
 {
