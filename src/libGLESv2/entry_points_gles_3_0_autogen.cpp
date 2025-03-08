@@ -1907,11 +1907,8 @@ void GL_APIENTRY GL_InvalidateFramebuffer(GLenum target,
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLInvalidateFramebuffer) &&
-              ValidateInvalidateFramebuffer(context, angle::EntryPoint::GLInvalidateFramebuffer,
-                                            target, numAttachments, attachments)));
+             ValidateInvalidateFramebuffer(context, angle::EntryPoint::GLInvalidateFramebuffer,
+                                           target, numAttachments, attachments));
         if (isCallValid)
         {
             context->invalidateFramebuffer(target, numAttachments, attachments);
@@ -1945,14 +1942,10 @@ void GL_APIENTRY GL_InvalidateSubFramebuffer(GLenum target,
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLInvalidateSubFramebuffer) &&
-              ValidateInvalidateSubFramebuffer(
-                  context, angle::EntryPoint::GLInvalidateSubFramebuffer, target, numAttachments,
-                  attachments, x, y, width, height)));
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateInvalidateSubFramebuffer(
+                                context, angle::EntryPoint::GLInvalidateSubFramebuffer, target,
+                                numAttachments, attachments, x, y, width, height));
         if (isCallValid)
         {
             context->invalidateSubFramebuffer(target, numAttachments, attachments, x, y, width,

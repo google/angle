@@ -6692,6 +6692,51 @@ TEST_P(PixelLocalStorageValidationTest, ModifyTextureDuringPLS)
     ASSERT_GL_NO_ERROR();
 }
 
+// Check that framebuffer invalidations bounce while PLS is active.
+TEST_P(PixelLocalStorageValidationTest, InvalidateFramebufferDuringPLS)
+{
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    PLSTestTexture pls0(GL_RGBA8, 100, 100);
+    glFramebufferTexturePixelLocalStorageANGLE(0, pls0, 0, 0);
+    glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_DONT_CARE}));
+    EXPECT_GL_NO_ERROR();
+
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 0, nullptr);
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG("Operation not permitted while pixel local storage is active.");
+
+    glInvalidateSubFramebuffer(GL_FRAMEBUFFER, 0, nullptr, 0, 0, 10, 10);
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG("Operation not permitted while pixel local storage is active.");
+
+    if (EnsureGLExtensionEnabled("GL_EXT_discard_framebuffer"))
+    {
+        glDiscardFramebufferEXT(GL_FRAMEBUFFER, 0, nullptr);
+        EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+        EXPECT_GL_SINGLE_ERROR_MSG("Operation not permitted while pixel local storage is active.");
+    }
+
+    glEndPixelLocalStorageANGLE(1, GLenumArray({GL_DONT_CARE}));
+    EXPECT_GL_NO_ERROR();
+
+    // Framebuffer invalidations become legal again after PLS is done.
+    glInvalidateFramebuffer(GL_FRAMEBUFFER, 0, nullptr);
+    EXPECT_GL_NO_ERROR();
+
+    glInvalidateSubFramebuffer(GL_FRAMEBUFFER, 0, nullptr, 0, 0, 10, 10);
+    EXPECT_GL_NO_ERROR();
+
+    if (EnsureGLExtensionEnabled("GL_EXT_discard_framebuffer"))
+    {
+        glDiscardFramebufferEXT(GL_FRAMEBUFFER, 0, nullptr);
+        EXPECT_GL_NO_ERROR();
+    }
+
+    ASSERT_GL_NO_ERROR();
+}
+
 // Check that glReadPixels and glCopyTex*Image* end PLS before running.
 TEST_P(PixelLocalStorageValidationTest, ReadPixels)
 {

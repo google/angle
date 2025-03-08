@@ -5914,11 +5914,8 @@ void GL_APIENTRY GL_DiscardFramebufferEXT(GLenum target,
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLDiscardFramebufferEXT) &&
-              ValidateDiscardFramebufferEXT(context, angle::EntryPoint::GLDiscardFramebufferEXT,
-                                            target, numAttachments, attachments)));
+             ValidateDiscardFramebufferEXT(context, angle::EntryPoint::GLDiscardFramebufferEXT,
+                                           target, numAttachments, attachments));
         if (isCallValid)
         {
             context->discardFramebuffer(target, numAttachments, attachments);
