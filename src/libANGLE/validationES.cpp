@@ -5763,7 +5763,6 @@ bool ValidateGetFramebufferAttachmentParameterivBase(const Context *context,
             }
             break;
 
-        case GL_COLOR_ATTACHMENT0:
         case GL_DEPTH_ATTACHMENT:
         case GL_STENCIL_ATTACHMENT:
             break;
@@ -5775,6 +5774,15 @@ bool ValidateGetFramebufferAttachmentParameterivBase(const Context *context,
                     static_cast<GLuint>(context->getCaps().maxColorAttachments))
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidAttachment);
+                return false;
+            }
+            [[fallthrough]];
+
+        case GL_COLOR_ATTACHMENT0:
+            if (context->getPrivateState().isActivelyOverriddenPLSDrawBuffer(
+                    attachment - GL_COLOR_ATTACHMENT0_EXT))
+            {
+                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kPLSColorAttachmentReserved);
                 return false;
             }
             break;

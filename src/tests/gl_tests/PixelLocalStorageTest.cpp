@@ -6204,6 +6204,90 @@ TEST_P(PixelLocalStorageValidationTest, BlendFuncDuringPLS)
     }
 }
 
+// Check that glGetFramebufferAttachmentParameteriv() generates errors when
+// querying overridden PLS attachments.
+TEST_P(PixelLocalStorageValidationTest, FramebufferQueries)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+
+    PLSTestTexture pls0(GL_RGBA8);
+    PLSTestTexture pls1(GL_RGBA8);
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexturePixelLocalStorageANGLE(0, pls0, 0, 0);
+    glFramebufferTexturePixelLocalStorageANGLE(1, pls1, 0, 0);
+
+    glBeginPixelLocalStorageANGLE(2, GLenumArray({GL_DONT_CARE, GL_DONT_CARE}));
+    EXPECT_GL_NO_ERROR();
+
+    int firstOverriddenDrawBuffer =
+        std::min(MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE,
+                 MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES - 2);
+    GLint intValue;
+
+    glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER,
+                                          GL_COLOR_ATTACHMENT0 + firstOverriddenDrawBuffer,
+                                          GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME, &intValue);
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG("Color attachment is actively reserved for pixel local storage.");
+
+    glGetFramebufferAttachmentParameteriv(
+        GL_FRAMEBUFFER,
+        GL_COLOR_ATTACHMENT0 + MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES - 2,
+        GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME, &intValue);
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG("Color attachment is actively reserved for pixel local storage.");
+
+    glGetFramebufferAttachmentParameteriv(
+        GL_FRAMEBUFFER,
+        GL_COLOR_ATTACHMENT0 + MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES - 1,
+        GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME, &intValue);
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG("Color attachment is actively reserved for pixel local storage.");
+
+    glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER,
+                                          GL_COLOR_ATTACHMENT0 + MAX_COLOR_ATTACHMENTS - 1,
+                                          GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME, &intValue);
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG("Color attachment is actively reserved for pixel local storage.");
+
+    if (firstOverriddenDrawBuffer != 0)
+    {
+        glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                              GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME, &intValue);
+        EXPECT_GL_NO_ERROR();
+        glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER,
+                                              GL_COLOR_ATTACHMENT0 + firstOverriddenDrawBuffer - 1,
+                                              GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME, &intValue);
+        EXPECT_GL_NO_ERROR();
+    }
+
+    glEndPixelLocalStorageANGLE(2, GLenumArray({GL_DONT_CARE, GL_DONT_CARE}));
+    EXPECT_GL_NO_ERROR();
+
+    glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER,
+                                          GL_COLOR_ATTACHMENT0 + firstOverriddenDrawBuffer,
+                                          GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME, &intValue);
+    EXPECT_GL_NO_ERROR();
+
+    glGetFramebufferAttachmentParameteriv(
+        GL_FRAMEBUFFER,
+        GL_COLOR_ATTACHMENT0 + MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES - 2,
+        GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME, &intValue);
+    EXPECT_GL_NO_ERROR();
+
+    glGetFramebufferAttachmentParameteriv(
+        GL_FRAMEBUFFER,
+        GL_COLOR_ATTACHMENT0 + MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES - 1,
+        GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME, &intValue);
+    EXPECT_GL_NO_ERROR();
+
+    glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER,
+                                          GL_COLOR_ATTACHMENT0 + MAX_COLOR_ATTACHMENTS - 1,
+                                          GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME, &intValue);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Check that glEnable(GL_BLEND) and glColorMask() do not generate errors, and are ignored for
 // overridden draw buffers during PLS.
 TEST_P(PixelLocalStorageValidationTest, BlendMaskDuringPLS)
