@@ -408,8 +408,9 @@ inline uint32_t GetLineLoopWithRestartIndexCount(gl::DrawElementsType glIndexTyp
 
 // Writes the line-strip vertices for a line loop to outPtr,
 // where outLimit is calculated as in GetPrimitiveRestartIndexCount.
+// Returns number of vertices written.
 template <typename In, typename Out>
-void CopyLineLoopIndicesWithRestart(GLsizei indexCount, const uint8_t *srcPtr, uint8_t *outPtr)
+size_t CopyLineLoopIndicesWithRestart(GLsizei indexCount, const uint8_t *srcPtr, uint8_t *outPtr)
 {
     constexpr In restartIndex     = gl::GetPrimitiveRestartIndexFromType<In>();
     constexpr Out outRestartIndex = gl::GetPrimitiveRestartIndexFromType<Out>();
@@ -441,8 +442,9 @@ void CopyLineLoopIndicesWithRestart(GLsizei indexCount, const uint8_t *srcPtr, u
     if (indexCount > (loopStartIndex + 1))
     {
         // Close the last loop if it has more than one vertex.
-        *outIndices = inIndices[loopStartIndex];
+        *(outIndices++) = inIndices[loopStartIndex];
     }
+    return static_cast<size_t>(outIndices - reinterpret_cast<Out *>(outPtr));
 }
 
 void GetSamplePosition(GLsizei sampleCount, size_t index, GLfloat *xy);

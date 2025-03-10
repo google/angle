@@ -430,7 +430,7 @@ class Buffer final : public Resource, public WrappedObject<id<MTLBuffer>>
                         const uint8_t *data);
 
     const uint8_t *mapReadOnly(ContextMtl *context);
-    uint8_t *map(ContextMtl *context);
+    uint8_t *map(ContextMtl *context, size_t offset = 0);
     uint8_t *mapWithOpt(ContextMtl *context, bool readonly, bool noSync);
 
     void unmap(ContextMtl *context);

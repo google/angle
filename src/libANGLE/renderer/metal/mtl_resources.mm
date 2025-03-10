@@ -1147,9 +1147,11 @@ const uint8_t *Buffer::mapReadOnly(ContextMtl *context)
     return mapWithOpt(context, true, false);
 }
 
-uint8_t *Buffer::map(ContextMtl *context)
+uint8_t *Buffer::map(ContextMtl *context, size_t offset)
 {
-    return mapWithOpt(context, false, false);
+    ASSERT(offset < size());
+    uint8_t *result = mapWithOpt(context, false, false);
+    return result != nullptr ? result + offset : nullptr;
 }
 
 uint8_t *Buffer::mapWithOpt(ContextMtl *context, bool readonly, bool noSync)

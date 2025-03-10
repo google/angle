@@ -2043,7 +2043,10 @@ angle::Result Renderer11::drawLineLoop(const gl::Context *context,
 
     GetLineLoopIndices(indices, type, static_cast<GLuint>(count),
                        glState.isPrimitiveRestartEnabled(), &mScratchIndexDataBuffer);
-
+    if (ANGLE_UNLIKELY(mScratchIndexDataBuffer.empty()))
+    {
+        return angle::Result::Continue;
+    }
     unsigned int spaceNeeded =
         static_cast<unsigned int>(sizeof(GLuint) * mScratchIndexDataBuffer.size());
     ANGLE_TRY(

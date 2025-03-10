@@ -718,6 +718,25 @@ void main()
     }
 }
 
+// Tests that drawing an element buffer with primitive restart indices only
+// does not crash.
+TEST_P(LineLoopPrimitiveRestartTest, PrimitiveRestartRestartOnlyIndicesNoCrash)
+{
+    constexpr char kVS[] = "void main() { gl_Position = vec4(0); }";
+    constexpr char kFS[] = "void main() { gl_FragColor = vec4(0, 1, 0, 1); }";
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+    ASSERT_GL_NO_ERROR();
+    std::vector<GLshort> indices(0x1000, static_cast<GLshort>(0xFFFFF));
+    GLBuffer indexBuffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(indices[0]), &indices[0],
+                 GL_STATIC_DRAW);
+    glEnable(GL_PRIMITIVE_RESTART_FIXED_INDEX);
+    glDrawElements(GL_LINE_LOOP, 0x800, GL_UNSIGNED_SHORT, 0);
+    ASSERT_GL_NO_ERROR();
+}
+
 class LineLoopPrimitiveRestartXfbTest : public ANGLETest<>
 {
   protected:
