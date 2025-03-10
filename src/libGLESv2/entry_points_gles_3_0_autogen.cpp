@@ -67,13 +67,14 @@ void GL_APIENTRY GL_BeginTransformFeedback(GLenum primitiveMode)
     {
         PrimitiveMode primitiveModePacked = PackParam<PrimitiveMode>(primitiveMode);
         SCOPED_SHARE_CONTEXT_LOCK(context);
+        if (context->getState().getPixelLocalStorageActivePlanes() != 0)
+        {
+            context->endPixelLocalStorageImplicit();
+        }
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLBeginTransformFeedback) &&
-              ValidateBeginTransformFeedback(context, angle::EntryPoint::GLBeginTransformFeedback,
-                                             primitiveModePacked)));
+             ValidateBeginTransformFeedback(context, angle::EntryPoint::GLBeginTransformFeedback,
+                                            primitiveModePacked));
         if (isCallValid)
         {
             context->beginTransformFeedback(primitiveModePacked);

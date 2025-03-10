@@ -3588,6 +3588,48 @@ TEST_P(PixelLocalStorageTest, DeleteAttachments_read_framebuffer)
     EXPECT_PLS_INTEGER(1, GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, 0);
 }
 
+// Check that glBeginPixelLocalStorageANGLE() is banned while tiled rendering is
+// active, and that glStartTilingQCOM() implicitly disables PLS.
+TEST_P(PixelLocalStorageTest, TiledRenderingInteractions)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_QCOM_tiled_rendering"));
+    ANGLE_SKIP_TEST_IF(MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE < 1);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    PLSTestTexture pls0(GL_RGBA8, 100, 100);
+    glFramebufferTexturePixelLocalStorageANGLE(0, pls0, 0, 0);
+
+    PLSTestTexture color0(GL_RGBA8, 100, 100);
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color0, 0);
+
+    glStartTilingQCOM(8, 8, 8, 8, GL_COLOR_BUFFER_BIT0_QCOM);
+    ASSERT_GL_NO_ERROR();
+
+    glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_LOAD_OP_ZERO_ANGLE}));
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
+
+    glEndTilingQCOM(GL_COLOR_BUFFER_BIT0_QCOM);
+    ASSERT_GL_NO_ERROR();
+
+    glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_LOAD_OP_ZERO_ANGLE}));
+    EXPECT_GL_NO_ERROR();
+    EXPECT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 1);
+
+    // glStartTilingQCOM implicitly disables PLS.
+    glStartTilingQCOM(8, 8, 8, 8, GL_COLOR_BUFFER_BIT0_QCOM);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
+
+    glEndPixelLocalStorageANGLE(1, GLenumArray({GL_DONT_CARE}));
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+
+    glEndTilingQCOM(GL_COLOR_BUFFER_BIT0_QCOM);
+}
+
 // Checks that draw commands validate current PLS state against the shader's PLS uniforms.
 class DrawCommandValidationTest
 {
@@ -4806,8 +4848,9 @@ TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_context_stat
     }
 }
 
-// Check that transform feedback is banned when PLS is active.
-TEST_P(PixelLocalStorageValidationTest, PLSActive_bans_transform_feedback)
+// Check that glBeginPixelLocalStorageANGLE() is banned while transform feedback
+// is active, and that glBeginTransformFeedback() implicitly disables PLS.
+TEST_P(PixelLocalStorageValidationTest, TransformFeedbackInteractions)
 {
     GLFramebuffer fbo;
     glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -4848,14 +4891,20 @@ TEST_P(PixelLocalStorageValidationTest, PLSActive_bans_transform_feedback)
     EXPECT_GL_NO_ERROR();
     EXPECT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 1);
 
-    // glBeginTransformFeedback is not on the PLS allow list.
-    EXPECT_BANNED_DEFAULT_MSG(glBeginTransformFeedback(GL_TRIANGLES))
-    ASSERT_GL_INTEGER(GL_TRANSFORM_FEEDBACK_ACTIVE, 0);
-
-    glUseProgram(0);
+    // glBeginTransformFeedback implicitly disables PLS.
+    glBeginTransformFeedback(GL_TRIANGLES);
     EXPECT_GL_NO_ERROR();
+    EXPECT_GL_INTEGER(GL_TRANSFORM_FEEDBACK_ACTIVE, 1);
+    EXPECT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
 
     glEndPixelLocalStorageANGLE(1, GLenumArray({GL_DONT_CARE}));
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG("Pixel local storage is not active.");
+
+    glEndTransformFeedback();
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(0);
     EXPECT_GL_NO_ERROR();
 }
 

@@ -14417,13 +14417,13 @@ GL_StartTilingQCOM(GLuint x, GLuint y, GLuint width, GLuint height, GLbitfield p
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLStartTilingQCOM) &&
-              ValidateStartTilingQCOM(context, angle::EntryPoint::GLStartTilingQCOM, x, y, width,
-                                      height, preserveMask)));
+        if (context->getState().getPixelLocalStorageActivePlanes() != 0)
+        {
+            context->endPixelLocalStorageImplicit();
+        }
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateStartTilingQCOM(context, angle::EntryPoint::GLStartTilingQCOM,
+                                                    x, y, width, height, preserveMask));
         if (isCallValid)
         {
             context->startTiling(x, y, width, height, preserveMask);

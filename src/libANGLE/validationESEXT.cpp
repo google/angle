@@ -2474,6 +2474,13 @@ bool ValidateBeginPixelLocalStorageANGLE(const Context *context,
         return false;
     }
 
+    // INVALID_OPERATION is generated if QCOM_tiled_rendering is active.
+    if (context->getPrivateState().isTiledRendering())
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kPLSTiledRenderingActive);
+        return false;
+    }
+
     // INVALID_OPERATION is generated if BLEND_DST_ALPHA, BLEND_DST_RGB, BLEND_SRC_ALPHA, or
     // BLEND_SRC_RGB, for any draw buffer, is a blend function requiring the secondary color input,
     // as specified in EXT_blend_func_extended.

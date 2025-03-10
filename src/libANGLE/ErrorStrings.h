@@ -545,6 +545,7 @@ inline constexpr const char *kPLSAdvancedBlendEnabled = "Attempted to begin pixe
 inline constexpr const char *kPLSAdvancedBlendNotSupported = "Advanced blend equations are not supported when pixel local storage is active.";
 inline constexpr const char *kPLSRasterizerDiscardEnabled = "Attempted to begin pixel local storage with GL_RASTERIZER_DISCARD enabled.";
 inline constexpr const char *kPLSTransformFeedbackActive = "Attempted to begin pixel local storage with transform feedback active.";
+inline constexpr const char *kPLSTiledRenderingActive = "Attempted to begin pixel local storage with QCOM_tiled_rendering active.";
 inline constexpr const char *kPLSReservedDrawBufferInUse = "When beginning pixel local storage, glDrawBuffers must all be GL_NONE at indices greater than or equal to: min(GL_MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PLS_ANGLE, GL_MAX_COMBINED_DRAW_BUFFERS_AND_PLS_PLANES_ANGLE - <n>).";
 inline constexpr const char *kPLSSecondaryBlendEnabled = "Attempted to begin pixel local storage with a blend function requiring the secondary color input.";
 inline constexpr const char *kPLSSecondaryBlendNotSupported = "Blend functions requiring the secondary color input are not supported when pixel local storage is active.";
