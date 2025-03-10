@@ -1317,7 +1317,9 @@ ANGLE_INLINE bool ValidateDrawElementsCommon(const Context *context,
         // TODO: this calculation should take basevertex into account for
         // glDrawElementsInstancedBaseVertexBaseInstanceEXT.  http://anglebug.com/41481166
         IndexRange indexRange{IndexRange::Undefined()};
-        ANGLE_VALIDATION_TRY(vao->getIndexRange(context, type, count, indices, &indexRange));
+        ANGLE_VALIDATION_TRY(vao->getIndexRange(context, type, count, indices,
+                                                context->getState().isPrimitiveRestartEnabled(),
+                                                &indexRange));
 
         // If we use an index greater than our maximum supported index range, return an error.
         // The ES3 spec does not specify behaviour here, it is undefined, but ANGLE should

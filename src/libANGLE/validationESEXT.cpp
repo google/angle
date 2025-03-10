@@ -571,8 +571,9 @@ bool ValidateDrawRangeElementsBaseVertexEXT(const Context *context,
 
     // Note that resolving the index range is a bit slow. We should probably optimize this.
     IndexRange indexRange;
-    ANGLE_VALIDATION_TRY(context->getState().getVertexArray()->getIndexRange(context, type, count,
-                                                                             indices, &indexRange));
+    ANGLE_VALIDATION_TRY(context->getState().getVertexArray()->getIndexRange(
+        context, type, count, indices, context->getState().isPrimitiveRestartEnabled(),
+        &indexRange));
 
     if (indexRange.end > end || indexRange.start < start)
     {
@@ -789,8 +790,9 @@ bool ValidateDrawRangeElementsBaseVertexOES(const Context *context,
 
     // Note that resolving the index range is a bit slow. We should probably optimize this.
     IndexRange indexRange;
-    ANGLE_VALIDATION_TRY(context->getState().getVertexArray()->getIndexRange(context, type, count,
-                                                                             indices, &indexRange));
+    ANGLE_VALIDATION_TRY(context->getState().getVertexArray()->getIndexRange(
+        context, type, count, indices, context->getState().isPrimitiveRestartEnabled(),
+        &indexRange));
 
     if (indexRange.end > end || indexRange.start < start)
     {

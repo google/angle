@@ -323,7 +323,8 @@ ANGLE_INLINE angle::Result Context11::drawElementsImpl(const gl::Context *contex
     {
         gl::IndexRange indexRange;
         ANGLE_TRY(context->getState().getVertexArray()->getIndexRange(
-            context, indexType, indexCount, indices, &indexRange));
+            context, indexType, indexCount, indices,
+            context->getState().isPrimitiveRestartEnabled(), &indexRange));
         GLint startVertex;
         ANGLE_TRY(ComputeStartVertex(GetImplAs<Context11>(context), indexRange, baseVertex,
                                      &startVertex));
@@ -472,8 +473,9 @@ angle::Result Context11::drawElementsIndirect(const gl::Context *context,
         // make sure we are using the correct 'baseVertex'. This parameter does not exist for the
         // direct drawElements.
         gl::IndexRange indexRange;
-        ANGLE_TRY(context->getState().getVertexArray()->getIndexRange(context, type, cmd->count,
-                                                                      indices, &indexRange));
+        ANGLE_TRY(context->getState().getVertexArray()->getIndexRange(
+            context, type, cmd->count, indices, context->getState().isPrimitiveRestartEnabled(),
+            &indexRange));
 
         GLint startVertex;
         ANGLE_TRY(ComputeStartVertex(GetImplAs<Context11>(context), indexRange, cmd->baseVertex,

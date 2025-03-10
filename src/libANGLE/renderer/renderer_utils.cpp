@@ -1339,7 +1339,8 @@ angle::Result GetVertexRangeInfo(const gl::Context *context,
     {
         gl::IndexRange indexRange;
         ANGLE_TRY(context->getState().getVertexArray()->getIndexRange(
-            context, indexTypeOrInvalid, vertexOrIndexCount, indices, &indexRange));
+            context, indexTypeOrInvalid, vertexOrIndexCount, indices,
+            context->getState().isPrimitiveRestartEnabled(), &indexRange));
         ANGLE_TRY(ComputeStartVertex(context->getImplementation(), indexRange, baseVertex,
                                      startVertexOut));
         *vertexCountOut = indexRange.vertexCount();

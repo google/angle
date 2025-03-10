@@ -81,18 +81,7 @@ void IndexRangeCache::clear()
     mIndexRangeCache.clear();
 }
 
-IndexRangeCache::IndexRangeKey::IndexRangeKey()
-    : IndexRangeCache::IndexRangeKey(DrawElementsType::InvalidEnum, 0, 0, false)
-{}
-
-IndexRangeCache::IndexRangeKey::IndexRangeKey(DrawElementsType type_,
-                                              size_t offset_,
-                                              size_t count_,
-                                              bool primitiveRestartEnabled_)
-    : type(type_), offset(offset_), count(count_), primitiveRestartEnabled(primitiveRestartEnabled_)
-{}
-
-bool IndexRangeCache::IndexRangeKey::operator<(const IndexRangeKey &rhs) const
+bool IndexRangeKey::operator<(const IndexRangeKey &rhs) const
 {
     if (type != rhs.type)
     {

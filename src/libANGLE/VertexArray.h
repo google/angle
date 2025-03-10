@@ -16,6 +16,7 @@
 #include "common/Optional.h"
 #include "libANGLE/Constants.h"
 #include "libANGLE/Debug.h"
+#include "libANGLE/IndexRangeCache.h"
 #include "libANGLE/Observer.h"
 #include "libANGLE/RefCountObject.h"
 #include "libANGLE/VertexAttribute.h"
@@ -319,20 +320,12 @@ class VertexArray final : public angle::ObserverInterface,
     void onBindingChanged(const Context *context, int incr);
     bool hasTransformFeedbackBindingConflict(const Context *context) const;
 
-    ANGLE_INLINE angle::Result getIndexRange(const Context *context,
-                                             DrawElementsType type,
-                                             GLsizei indexCount,
-                                             const void *indices,
-                                             IndexRange *indexRangeOut) const
-    {
-        Buffer *elementArrayBuffer = mState.mElementArrayBuffer.get();
-        if (elementArrayBuffer && mIndexRangeCache.get(type, indexCount, indices, indexRangeOut))
-        {
-            return angle::Result::Continue;
-        }
-
-        return getIndexRangeImpl(context, type, indexCount, indices, indexRangeOut);
-    }
+    angle::Result getIndexRange(const Context *context,
+                                DrawElementsType type,
+                                GLsizei indexCount,
+                                const void *indices,
+                                bool primitiveRestartEnabled,
+                                IndexRange *indexRangeOut) const;
 
     void setBufferAccessValidationEnabled(bool enabled)
     {
@@ -360,12 +353,6 @@ class VertexArray final : public angle::ObserverInterface,
                                        bool isPersistent,
                                        const AttributesMask &boundAttributesMask);
     void updateCachedMappedArrayBuffersBinding(const VertexBinding &binding);
-
-    angle::Result getIndexRangeImpl(const Context *context,
-                                    DrawElementsType type,
-                                    GLsizei indexCount,
-                                    const void *indices,
-                                    IndexRange *indexRangeOut) const;
 
     void setVertexAttribPointerImpl(const Context *context,
                                     ComponentType componentType,
@@ -409,44 +396,36 @@ class VertexArray final : public angle::ObserverInterface,
 
     AttributesMask mCachedTransformFeedbackConflictedBindingsMask;
 
-    class IndexRangeCache final : angle::NonCopyable
-    {
-      public:
-        IndexRangeCache();
-
-        void invalidate() { mTypeKey = DrawElementsType::InvalidEnum; }
-
-        bool get(DrawElementsType type,
-                 GLsizei indexCount,
-                 const void *indices,
-                 IndexRange *indexRangeOut)
-        {
-            size_t offset = reinterpret_cast<uintptr_t>(indices);
-            if (mTypeKey == type && mIndexCountKey == indexCount && mOffsetKey == offset)
-            {
-                *indexRangeOut = mPayload;
-                return true;
-            }
-
-            return false;
-        }
-
-        void put(DrawElementsType type,
-                 GLsizei indexCount,
-                 size_t offset,
-                 const IndexRange &indexRange);
-
-      private:
-        DrawElementsType mTypeKey;
-        GLsizei mIndexCountKey;
-        size_t mOffsetKey;
-        IndexRange mPayload;
-    };
-
-    mutable IndexRangeCache mIndexRangeCache;
+    mutable IndexRangeInlineCache mIndexRangeInlineCache;
     bool mBufferAccessValidationEnabled;
     VertexArrayBufferContentsObservers mContentsObservers;
 };
+
+inline angle::Result VertexArray::getIndexRange(const Context *context,
+                                                DrawElementsType type,
+                                                GLsizei indexCount,
+                                                const void *indices,
+                                                bool primitiveRestartEnabled,
+                                                IndexRange *indexRangeOut) const
+{
+    Buffer *elementArrayBuffer = mState.mElementArrayBuffer.get();
+    if (!elementArrayBuffer)
+    {
+        *indexRangeOut = ComputeIndexRange(type, indices, indexCount, primitiveRestartEnabled);
+        return angle::Result::Continue;
+    }
+    size_t offset = reinterpret_cast<uintptr_t>(indices);
+    size_t count  = static_cast<size_t>(indexCount);
+    if (mIndexRangeInlineCache.get(type, offset, count, primitiveRestartEnabled, indexRangeOut))
+    {
+        return angle::Result::Continue;
+    }
+    ANGLE_TRY(elementArrayBuffer->getIndexRange(context, type, offset, count,
+                                                primitiveRestartEnabled, indexRangeOut));
+    mIndexRangeInlineCache =
+        IndexRangeInlineCache{type, offset, count, primitiveRestartEnabled, *indexRangeOut};
+    return angle::Result::Continue;
+}
 
 }  // namespace gl
 

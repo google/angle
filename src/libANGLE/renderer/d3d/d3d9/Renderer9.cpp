@@ -1496,8 +1496,9 @@ angle::Result Renderer9::drawElementsImpl(const gl::Context *context,
     ANGLE_TRY(applyIndexBuffer(context, indices, count, mode, type, &indexInfo));
 
     gl::IndexRange indexRange;
-    ANGLE_TRY(context->getState().getVertexArray()->getIndexRange(context, type, count, indices,
-                                                                  &indexRange));
+    ANGLE_TRY(context->getState().getVertexArray()->getIndexRange(
+        context, type, count, indices, context->getState().isPrimitiveRestartEnabled(),
+        &indexRange));
 
     size_t vertexCount = indexRange.vertexCount();
     ANGLE_TRY(applyVertexBuffer(context, mode, static_cast<GLsizei>(indexRange.start),

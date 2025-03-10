@@ -6844,6 +6844,34 @@ void main()
     }
 }
 
+// Tests that indexing with primitive restart index produces error, even
+// if it's done after toggling GL_PRIMITIVE_RESTART_FIXED_INDEX.
+// If there is MAX_ELEMENT_INDEX, it is smaller or equal than primitive
+// restart index 2^32 - 1 for GLuint.
+TEST_P(WebGL2CompatibilityTest, PrimitiveRestartIndexAfterToggleIsError)
+{
+    constexpr char kVS[] = "void main() { gl_Position = vec4(0); }";
+    constexpr char kFS[] = "void main() { gl_FragColor = vec4(0, 1, 0, 1); }";
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+    ASSERT_GL_NO_ERROR();
+    std::vector<GLuint> indices(1);
+    indices[0] = 0xFFFFFFFFu;
+    GLBuffer indexBuffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(indices[0]), &indices[0],
+                 GL_STATIC_DRAW);
+    EXPECT_GL_NO_ERROR();
+    // Primitive restart works, no-op draw.
+    glEnable(GL_PRIMITIVE_RESTART_FIXED_INDEX);
+    glDrawElements(GL_POINTS, indices.size(), GL_UNSIGNED_INT, 0);
+    EXPECT_GL_NO_ERROR();
+    // This is being tested: ensure that any cached state keys on PRIMITIVE_RESTART_FIXED_INDEX.
+    glDisable(GL_PRIMITIVE_RESTART_FIXED_INDEX);
+    glDrawElements(GL_POINTS, indices.size(), GL_UNSIGNED_INT, 0);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(WebGLCompatibilityTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(WebGL2CompatibilityTest);
