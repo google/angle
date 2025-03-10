@@ -609,6 +609,8 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 
 372269602 PIXEL4ORXL GLES : FramebufferFetchES31.MultiSampled/* = SKIP
 
+405840226 PIXEL4ORXL GLES : ImageTestES3.SourceAHBTargetTexture2DGenerateMipmap/* = SKIP
+
 // Qualcomm on Pixel4 does not ignore gl_Layer for non-layered framebuffers
 374790899 PIXEL4ORXL GLES : GeometryShaderTest.GLLayerIneffectiveWithoutLayeredFramebuffer/* = SKIP
 

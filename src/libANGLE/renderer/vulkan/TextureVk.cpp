@@ -3008,6 +3008,12 @@ angle::Result TextureVk::respecifyImageStorage(ContextVk *contextVk)
         // Save previousFirstAllocateLevel before mImage becomes invalid
         gl::LevelIndex previousFirstAllocateLevel = mImage->getFirstAllocatedLevel();
 
+        // If the current level is less than levelCount, Angle needs to generate the required
+        // levelCount for it.
+        const bool levelIncomplete =
+            mImage->getLevelCount() <
+            getMipLevelCount(ImageMipLevels::FullMipChainForGenerateMipmap);
+
         // If we didn't own the image, release the current and create a new one
         releaseImage(contextVk);
 
@@ -3015,7 +3021,7 @@ angle::Result TextureVk::respecifyImageStorage(ContextVk *contextVk)
         ANGLE_TRY(ensureImageAllocated(contextVk, format));
         ANGLE_TRY(initImage(contextVk, format.getIntendedFormatID(),
                             format.getActualImageFormatID(getRequiredImageAccess()),
-                            mState.getImmutableFormat()
+                            mState.getImmutableFormat() || levelIncomplete
                                 ? ImageMipLevels::FullMipChainForGenerateMipmap
                                 : ImageMipLevels::EnabledLevels));
 
@@ -3458,34 +3464,21 @@ angle::Result TextureVk::respecifyImageStorageIfNecessary(ContextVk *contextVk, 
 
     // If generating mipmaps and the image needs to be recreated (not full-mip already, or changed
     // usage flags), make sure it's recreated.
-    if (isGenerateMipmap && mImage && mImage->valid() &&
+    const bool isMipmapEnabledByGenerateMipmap =
+        isGenerateMipmap && mImage && mImage->valid() &&
         (oldUsageFlags != mImageUsageFlags ||
          (!mState.getImmutableFormat() &&
           mImage->getLevelCount() !=
-              getMipLevelCount(ImageMipLevels::FullMipChainForGenerateMipmap))))
-    {
-        ASSERT(mOwnsImage);
-        // Immutable texture is not expected to reach here. The usage flag change should have
-        // been handled earlier and level count change should not need to reallocate
-        ASSERT(!mState.getImmutableFormat());
+              getMipLevelCount(ImageMipLevels::FullMipChainForGenerateMipmap)));
 
-        // Flush staged updates to the base level of the image.  Note that updates to the rest of
-        // the levels have already been discarded through the |removeStagedUpdates| call above.
-        ANGLE_TRY(flushImageStagedUpdates(contextVk));
-
-        stageSelfAsSubresourceUpdates(contextVk);
-
-        // Release the mImage without collecting garbage from image views.
-        releaseImage(contextVk);
-    }
-
-    // Respecify the image if it's changed in usage, or if any of its levels are redefined and no
-    // update to base/max levels were done (otherwise the above call would have already taken care
-    // of this).  Note that if both base/max and image usage are changed, the image is recreated
-    // twice, which incurs unnecessary copies.  This is not expected to be happening in real
-    // applications.
+    // Respecify the image if it's changed in usage, not full-mip, or if any of its levels are
+    // redefined and no update to base/max levels were done (otherwise the above call would have
+    // already taken care of this).  Note that if both base/max and image usage are changed, the
+    // image is recreated twice, which incurs unnecessary copies.  This is not expected to be
+    // happening in real applications.
     if (oldUsageFlags != mImageUsageFlags || oldCreateFlags != mImageCreateFlags ||
-        TextureHasAnyRedefinedLevels(mRedefinedLevels) || isMipmapEnabledByMinFilter)
+        TextureHasAnyRedefinedLevels(mRedefinedLevels) || isMipmapEnabledByMinFilter ||
+        isMipmapEnabledByGenerateMipmap)
     {
         ANGLE_TRY(respecifyImageStorage(contextVk));
     }

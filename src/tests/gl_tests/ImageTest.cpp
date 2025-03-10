@@ -2577,6 +2577,68 @@ TEST_P(ImageTestES3, SourceAHBTarget2DGenerateMipmapColorspaceBlend)
     destroyAndroidHardwareBuffer(aHardwareBuffer);
 }
 
+// Test interaction between AHB, GL_OES_EGL_image_external and glGenerateMipmap.
+TEST_P(ImageTestES3, SourceAHBTargetTexture2DGenerateMipmap)
+{
+    EGLWindow *window = getEGLWindow();
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+    ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+
+    GLubyte red_data[16] = {255, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255, 255, 0, 0, 255};
+
+    AHardwareBuffer *source;
+    EGLImageKHR image;
+    createEGLImageAndroidHardwareBufferSource(2, 2, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM,
+                                              kDefaultAHBUsage, kDefaultAttribs, {{red_data, 16}},
+                                              &source, &image);
+
+    // Create a texture target to bind the egl image.
+    GLTexture tex1;
+    createEGLImageTargetTexture2D(image, tex1);
+
+    // Draw to the tex1.
+    GLFramebuffer fbo1;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo1);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex1, 0);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ANGLE_GL_PROGRAM(drawGreen, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    drawQuad(drawGreen, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    // Generate mipmap for texture.
+    glBindTexture(GL_TEXTURE_2D, tex1);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    ASSERT_GL_NO_ERROR();
+
+    // Attach the texture to fbo2.
+    GLTexture tex2;
+    glBindTexture(GL_TEXTURE_2D, tex2);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    GLFramebuffer fbo2;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo2);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex2, 0);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Sample tex1.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glBindTexture(GL_TEXTURE_2D, tex1);
+    ANGLE_GL_PROGRAM(drawTexture, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+    glUseProgram(drawTexture);
+    GLint texLocation = glGetUniformLocation(drawTexture, essl1_shaders::Texture2DUniform());
+    ASSERT_NE(-1, texLocation);
+    glUniform1i(texLocation, 0);
+    drawQuad(drawTexture, essl1_shaders::PositionAttrib(), 0.5f);
+
+    // Verify results.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Clean up.
+    eglDestroyImageKHR(window->getDisplay(), image);
+    destroyAndroidHardwareBuffer(source);
+}
+
 // Test that drawing to an AHB works.
 TEST_P(ImageTestES3, SourceAHBTarget2DDraw)
 {
