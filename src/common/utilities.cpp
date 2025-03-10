@@ -908,12 +908,18 @@ std::string ParseResourceName(const std::string &name, std::vector<unsigned int>
     {
         size_t open  = name.find_last_of('[', baseNameLength - 1);
         size_t close = name.find_last_of(']', baseNameLength - 1);
-        hasIndex     = (open != std::string::npos) && (close == baseNameLength - 1);
+        hasIndex =
+            (open != std::string::npos) && (close == baseNameLength - 1) && (close != open + 1);
         if (hasIndex)
         {
             baseNameLength = open;
             if (outSubscripts)
             {
+                if (!isdigit(name[open + 1]))
+                {
+                    outSubscripts->push_back(GL_INVALID_INDEX);
+                    break;
+                }
                 int index = atoi(name.substr(open + 1).c_str());
                 if (index >= 0)
                 {

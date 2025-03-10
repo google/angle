@@ -35,11 +35,23 @@ TEST(ParseResourceName, NegativeArrayIndex)
     EXPECT_EQ(GL_INVALID_INDEX, indices.back());
 }
 
+// Parsing a letter array index should result in INVALID_INDEX.
+TEST(ParseResourceName, LetterArrayIndex)
+{
+    std::vector<unsigned int> indices;
+    EXPECT_EQ("foo", gl::ParseResourceName("foo[a]", &indices));
+    ASSERT_EQ(1u, indices.size());
+    EXPECT_EQ(GL_INVALID_INDEX, indices.back());
+}
+
 // Parsing no array indices should result in an empty array.
 TEST(ParseResourceName, NoArrayIndex)
 {
     std::vector<unsigned int> indices;
     EXPECT_EQ("foo", gl::ParseResourceName("foo", &indices));
+    EXPECT_TRUE(indices.empty());
+
+    EXPECT_EQ("foo[]", gl::ParseResourceName("foo[]", &indices));
     EXPECT_TRUE(indices.empty());
 }
 
