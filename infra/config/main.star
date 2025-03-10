@@ -268,10 +268,19 @@ def angle_builder(name, cpu):
 
     properties = {
         "builder_group": "angle",
+        # TODO: crbug.com/401959048 - Remove reclient props after migration.
         "$build/reclient": {
             "instance": "rbe-chromium-untrusted",
             "metrics_project": "chromium-reclient-metrics",
             "scandeps_server": True,
+        },
+        "$build/siso": {
+            "project": "rbe-chromium-untrusted",
+            "configs": ["builder"],
+            "enable_cloud_monitoring": True,
+            "enable_cloud_profiler": True,
+            "enable_cloud_trace": True,
+            "metrics_project": "chromium-reclient-metrics",
         },
         "platform": config_os.console_name,
         "toolchain": toolchain,
@@ -280,10 +289,19 @@ def angle_builder(name, cpu):
 
     ci_properties = {
         "builder_group": "angle",
+        # TODO: crbug.com/401959048 - Remove reclient props after migration.
         "$build/reclient": {
             "instance": "rbe-chromium-trusted",
             "metrics_project": "chromium-reclient-metrics",
             "scandeps_server": True,
+        },
+        "$build/siso": {
+            "project": "rbe-chromium-trusted",
+            "configs": ["builder"],
+            "enable_cloud_monitoring": True,
+            "enable_cloud_profiler": True,
+            "enable_cloud_trace": True,
+            "metrics_project": "chromium-reclient-metrics",
         },
         "platform": config_os.console_name,
         "toolchain": toolchain,
