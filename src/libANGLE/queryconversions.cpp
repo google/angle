@@ -54,6 +54,22 @@ QueryT CastFromStateValueToInt(GLenum pname, NativeT value)
     return clampCast<QueryT>(value);
 }
 
+template <typename QueryT, typename NativeT>
+QueryT CastFromStateValueToFloat(GLenum pname, NativeT value)
+{
+    switch (pname)
+    {
+        // For mask values, their floating-point values should be positive, not -1.
+        case GL_STENCIL_VALUE_MASK:
+        case GL_STENCIL_BACK_VALUE_MASK:
+        case GL_STENCIL_WRITEMASK:
+        case GL_STENCIL_BACK_WRITEMASK:
+            return static_cast<QueryT>(static_cast<GLuint>(value));
+        default:
+            return static_cast<QueryT>(value);
+    }
+}
+
 template <typename NativeT, typename QueryT>
 NativeT CastQueryValueToInt(GLenum pname, QueryT value)
 {
@@ -77,11 +93,6 @@ NativeT CastQueryValueToInt(GLenum pname, QueryT value)
 }
 
 }  // anonymous namespace
-
-GLint CastMaskValue(GLuint value)
-{
-    return clampCast<GLint>(value);
-}
 
 template <typename QueryT, typename InternalT>
 QueryT CastFromGLintStateValue(GLenum pname, InternalT value)
@@ -116,7 +127,7 @@ QueryT CastFromStateValue(GLenum pname, NativeT value)
         case GL_UINT_64_ANGLEX:
             return CastFromStateValueToInt<QueryT, NativeT>(pname, value);
         case GL_FLOAT:
-            return static_cast<QueryT>(value);
+            return CastFromStateValueToFloat<QueryT, NativeT>(pname, value);
         case GL_BOOL:
             return static_cast<QueryT>(value == static_cast<NativeT>(0) ? GL_FALSE : GL_TRUE);
         default:
