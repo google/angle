@@ -999,14 +999,24 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const TSymbol *bl
     {
         // Declaring a sampler.  First, declare the non-sampled image and then a combined
         // image-sampler.
+        //
+        // For sampler buffers, combined image-sampler shouldn't be created.  While this is allowed
+        // for SPIR-V before 1.6, it was never intended to be correct.
 
         SpirvType imageType          = type;
         imageType.isSamplerBaseImage = true;
 
         const spirv::IdRef nonSampledId = getSpirvTypeData(imageType, nullptr).id;
 
-        typeId = getNewId({});
-        spirv::WriteTypeSampledImage(&mSpirvTypeAndConstantDecls, typeId, nonSampledId);
+        if (IsSamplerBuffer(type.type))
+        {
+            typeId = nonSampledId;
+        }
+        else
+        {
+            typeId = getNewId({});
+            spirv::WriteTypeSampledImage(&mSpirvTypeAndConstantDecls, typeId, nonSampledId);
+        }
     }
     else if (IsImage(type.type) || IsSubpassInputType(type.type) || type.isSamplerBaseImage)
     {

@@ -3731,11 +3731,15 @@ spirv::IdRef OutputSPIRVTraverser::createImageTextureBuiltIn(TIntermOperator *no
         imageType.isSamplerBaseImage            = true;
         const spirv::IdRef extractedImageTypeId = mBuilder.getSpirvTypeData(imageType, nullptr).id;
 
-        // Use OpImage to get the image out of the sampled image.
-        const spirv::IdRef extractedImage = mBuilder.getNewId({});
-        spirv::WriteImage(mBuilder.getSpirvCurrentFunctionBlock(), extractedImageTypeId,
-                          extractedImage, image);
-        image = extractedImage;
+        // Use OpImage to get the image out of the sampled image.  Note that for sampler buffers,
+        // there is no sampled image type, and the image already has the non-sampled type.
+        if (!IsSamplerBuffer(samplerBasicType))
+        {
+            const spirv::IdRef extractedImage = mBuilder.getNewId({});
+            spirv::WriteImage(mBuilder.getSpirvCurrentFunctionBlock(), extractedImageTypeId,
+                              extractedImage, image);
+            image = extractedImage;
+        }
     }
 
     // Gather operands as necessary.
