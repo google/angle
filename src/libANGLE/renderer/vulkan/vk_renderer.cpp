@@ -348,33 +348,6 @@ constexpr const char *kSkippedMessagesWithDynamicRendering[] = {
 // those, ANGLE makes no further attempt to resolve them and expects vendor support for the
 // extensions instead.  The list of skipped messages is split based on this support.
 constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
-    // http://anglebug.com/42265049
-    {
-        "SYNC-HAZARD-WRITE-AFTER-WRITE",
-        "Access info (usage: SYNC_IMAGE_LAYOUT_TRANSITION, prior_usage: "
-        "SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, write_barriers: "
-        "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_READ|SYNC_EARLY_FRAGMENT_TESTS_DEPTH_"
-        "STENCIL_ATTACHMENT_WRITE|SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_READ|SYNC_LATE_"
-        "FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE|SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_"
-        "ATTACHMENT_"
-        "READ|SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE",
-    },
-    {"SYNC-HAZARD-WRITE-AFTER-WRITE",
-     "Access info (usage: SYNC_IMAGE_LAYOUT_TRANSITION, prior_usage: "
-     "SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, write_barriers: "
-     "SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_READ|SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_"
-     "ATTACHMENT_WRITE",
-     "",
-     false,
-     {
-         "message_type = RenderPassLayoutTransitionError",
-         "access = SYNC_IMAGE_LAYOUT_TRANSITION",  // probably not needed, message_type implies this
-         "prior_access = "
-         "VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT(VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT)",
-         "write_barriers = "
-         "VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT(VK_ACCESS_2_COLOR_ATTACHMENT_READ_BIT|VK_"
-         "ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT)",
-     }},
     // From: TraceTest.manhattan_31 with SwiftShader and
     // VulkanPerformanceCounterTest.NewTextureDoesNotBreakRenderPass for both depth and stencil
     // aspect. http://anglebug.com/42265196.
