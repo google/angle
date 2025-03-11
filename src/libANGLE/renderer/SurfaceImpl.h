@@ -56,8 +56,6 @@ class SurfaceImpl : public FramebufferAttachmentObjectImpl
     virtual egl::Error swapWithDamage(const gl::Context *context,
                                       const EGLint *rects,
                                       EGLint n_rects);
-    virtual egl::Error swapWithFrameToken(const gl::Context *context,
-                                          EGLFrameTokenANGLE frameToken);
     virtual egl::Error postSubBuffer(const gl::Context *context,
                                      EGLint x,
                                      EGLint y,

@@ -712,13 +712,6 @@ CallCapture ParseCallCapture(const Token &nameToken,
                 paramTokens, strings);
         return CallCapture(EntryPoint::EGLSwapBuffersWithDamageKHR, std::move(params));
     }
-    if (strcmp(nameToken, "eglSwapBuffersWithFrameTokenANGLE") == 0)
-    {
-        ParamBuffer params =
-            ParseParameters<std::remove_pointer<PFNEGLSWAPBUFFERSWITHFRAMETOKENANGLEPROC>::type>(
-                paramTokens, strings);
-        return CallCapture(EntryPoint::EGLSwapBuffersWithFrameTokenANGLE, std::move(params));
-    }
     if (strcmp(nameToken, "eglSwapInterval") == 0)
     {
         ParamBuffer params = ParseParameters<std::remove_pointer<PFNEGLSWAPINTERVALPROC>::type>(

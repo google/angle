@@ -342,7 +342,6 @@ enum class Feature
     SupportsFullScreenExclusive,
     SupportsGeometryStreamsCapability,
     SupportsGetMemoryRequirements2,
-    SupportsGGPFrameToken,
     SupportsGraphicsPipelineLibrary,
     SupportsHostImageCopy,
     SupportsHostQueryReset,

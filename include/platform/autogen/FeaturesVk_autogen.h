@@ -98,12 +98,6 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
-    FeatureInfo supportsGGPFrameToken = {
-        "supportsGGPFrameToken",
-        FeatureCategory::VulkanFeatures,
-        &members,
-    };
-
     FeatureInfo supportsExternalMemoryFd = {
         "supportsExternalMemoryFd",
         FeatureCategory::VulkanFeatures,

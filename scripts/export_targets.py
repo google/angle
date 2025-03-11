@@ -212,7 +212,6 @@ IGNORED_INCLUDES = {
     b'libANGLE/renderer/vulkan/android/DisplayVkAndroid.h',
     b'libANGLE/renderer/vulkan/DisplayVk_api.h',
     b'libANGLE/renderer/vulkan/fuchsia/DisplayVkFuchsia.h',
-    b'libANGLE/renderer/vulkan/ggp/DisplayVkGGP.h',
     b'libANGLE/renderer/vulkan/mac/DisplayVkMac.h',
     b'libANGLE/renderer/vulkan/win32/DisplayVkWin32.h',
     b'libANGLE/renderer/vulkan/xcb/DisplayVkXcb.h',

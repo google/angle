@@ -257,10 +257,6 @@ void AcquireExternalContextANGLE(Thread *thread,
                                  egl::Display *dpyPacked,
                                  SurfaceID drawAndReadPacked);
 void ReleaseExternalContextANGLE(Thread *thread, egl::Display *dpyPacked);
-EGLBoolean SwapBuffersWithFrameTokenANGLE(Thread *thread,
-                                          egl::Display *dpyPacked,
-                                          SurfaceID surfacePacked,
-                                          EGLFrameTokenANGLE frametoken);
 void LockVulkanQueueANGLE(Thread *thread, egl::Display *dpyPacked);
 void UnlockVulkanQueueANGLE(Thread *thread, egl::Display *dpyPacked);
 EGLBoolean PrepareSwapBuffersANGLE(Thread *thread,

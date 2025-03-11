@@ -354,19 +354,6 @@ Error Surface::swapWithDamage(gl::Context *context, const EGLint *rects, EGLint 
     return NoError();
 }
 
-Error Surface::swapWithFrameToken(gl::Context *context, EGLFrameTokenANGLE frameToken)
-{
-    ANGLE_TRACE_EVENT0("gpu.angle", "egl::Surface::swapWithFrameToken");
-    context->onPreSwap();
-
-    context->getState().getOverlay()->onSwap();
-
-    ANGLE_TRY(updatePropertiesOnSwap(context));
-    ANGLE_TRY(mImplementation->swapWithFrameToken(context, frameToken));
-    postSwap(context);
-    return NoError();
-}
-
 Error Surface::postSubBuffer(const gl::Context *context,
                              EGLint x,
                              EGLint y,

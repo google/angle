@@ -581,12 +581,6 @@ rx::DisplayImpl *CreateDisplayFromAttribs(EGLAttrib displayType,
                 impl = rx::CreateVulkanFuchsiaDisplay(state);
             }
             break;
-#    elif defined(ANGLE_PLATFORM_GGP)
-            if (rx::IsVulkanGGPDisplayAvailable())
-            {
-                impl = rx::CreateVulkanGGPDisplay(state);
-            }
-            break;
 #    elif defined(ANGLE_PLATFORM_APPLE)
             if (rx::IsVulkanMacDisplayAvailable())
             {

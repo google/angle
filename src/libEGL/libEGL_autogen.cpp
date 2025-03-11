@@ -629,14 +629,6 @@ EGLBoolean EGLAPIENTRY eglStreamPostD3DTextureANGLE(EGLDisplay dpy,
     return EGL_StreamPostD3DTextureANGLE(dpy, stream, texture, attrib_list);
 }
 
-// EGL_ANGLE_swap_with_frame_token
-EGLBoolean EGLAPIENTRY eglSwapBuffersWithFrameTokenANGLE(EGLDisplay dpy,
-                                                         EGLSurface surface,
-                                                         EGLFrameTokenANGLE frametoken)
-{
-    EnsureEGLLoaded();
-    return EGL_SwapBuffersWithFrameTokenANGLE(dpy, surface, frametoken);
-}
 
 // EGL_ANGLE_sync_control_rate
 EGLBoolean EGLAPIENTRY eglGetMscRateANGLE(EGLDisplay dpy,

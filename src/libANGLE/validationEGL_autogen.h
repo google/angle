@@ -319,12 +319,6 @@ bool ValidateStreamPostD3DTextureANGLE(const ValidationContext *val,
                                        const void *texture,
                                        const AttributeMap &attrib_listPacked);
 
-// EGL_ANGLE_swap_with_frame_token
-bool ValidateSwapBuffersWithFrameTokenANGLE(const ValidationContext *val,
-                                            const egl::Display *dpyPacked,
-                                            SurfaceID surfacePacked,
-                                            EGLFrameTokenANGLE frametoken);
-
 // EGL_ANGLE_sync_control_rate
 bool ValidateGetMscRateANGLE(const ValidationContext *val,
                              const egl::Display *dpyPacked,

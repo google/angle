@@ -150,7 +150,6 @@ const ProcEntry g_procTable[] = {
     {"eglSurfaceAttrib", P(EGL_SurfaceAttrib)},
     {"eglSwapBuffers", P(EGL_SwapBuffers)},
     {"eglSwapBuffersWithDamageKHR", P(EGL_SwapBuffersWithDamageKHR)},
-    {"eglSwapBuffersWithFrameTokenANGLE", P(EGL_SwapBuffersWithFrameTokenANGLE)},
     {"eglSwapInterval", P(EGL_SwapInterval)},
     {"eglTerminate", P(EGL_Terminate)},
     {"eglUnlockSurfaceKHR", P(EGL_UnlockSurfaceKHR)},

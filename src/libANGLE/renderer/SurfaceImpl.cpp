@@ -38,13 +38,6 @@ egl::Error SurfaceImpl::swapWithDamage(const gl::Context *context,
     return egl::Error(EGL_BAD_SURFACE, "swapWithDamage implementation missing.");
 }
 
-egl::Error SurfaceImpl::swapWithFrameToken(const gl::Context *context,
-                                           EGLFrameTokenANGLE frameToken)
-{
-    UNREACHABLE();
-    return egl::Error(EGL_BAD_DISPLAY);
-}
-
 egl::Error SurfaceImpl::postSubBuffer(const gl::Context *context,
                                       EGLint x,
                                       EGLint y,

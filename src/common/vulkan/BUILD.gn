@@ -10,7 +10,7 @@ if (angle_use_wayland) {
 }
 
 declare_args() {
-  angle_use_custom_libvulkan = !is_android && !is_fuchsia && !is_ggp
+  angle_use_custom_libvulkan = !is_android && !is_fuchsia
 
   # On real CrOS devices, we should use the system Vulkan loader. On the
   # ChromeOS-for-Linux build, we should use the built libvulkan because the
@@ -123,7 +123,7 @@ if (angle_enable_vulkan) {
       if (!angle_use_vulkan_null_display) {
         public_deps += [ "//third_party/fuchsia-sdk/sdk/pkg/vulkan_layers:VkLayer_image_pipe_swapchain" ]
       }
-    } else if (!is_android && !is_ggp) {
+    } else if (!is_android) {
       if (angle_shared_libvulkan) {
         data_deps = [ "$angle_vulkan_loader_dir:libvulkan" ]
       } else {

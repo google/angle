@@ -92,7 +92,6 @@
 #define eglQuerySurfacePointerANGLE l_eglQuerySurfacePointerANGLE
 #define eglCreateStreamProducerD3DTextureANGLE l_eglCreateStreamProducerD3DTextureANGLE
 #define eglStreamPostD3DTextureANGLE l_eglStreamPostD3DTextureANGLE
-#define eglSwapBuffersWithFrameTokenANGLE l_eglSwapBuffersWithFrameTokenANGLE
 #define eglGetMscRateANGLE l_eglGetMscRateANGLE
 #define eglExportVkImageANGLE l_eglExportVkImageANGLE
 #define eglWaitUntilWorkScheduledANGLE l_eglWaitUntilWorkScheduledANGLE
@@ -216,8 +215,6 @@ ANGLE_UTIL_EXPORT extern PFNEGLQUERYSURFACEPOINTERANGLEPROC l_eglQuerySurfacePoi
 ANGLE_UTIL_EXPORT extern PFNEGLCREATESTREAMPRODUCERD3DTEXTUREANGLEPROC
     l_eglCreateStreamProducerD3DTextureANGLE;
 ANGLE_UTIL_EXPORT extern PFNEGLSTREAMPOSTD3DTEXTUREANGLEPROC l_eglStreamPostD3DTextureANGLE;
-ANGLE_UTIL_EXPORT extern PFNEGLSWAPBUFFERSWITHFRAMETOKENANGLEPROC
-    l_eglSwapBuffersWithFrameTokenANGLE;
 ANGLE_UTIL_EXPORT extern PFNEGLGETMSCRATEANGLEPROC l_eglGetMscRateANGLE;
 ANGLE_UTIL_EXPORT extern PFNEGLEXPORTVKIMAGEANGLEPROC l_eglExportVkImageANGLE;
 ANGLE_UTIL_EXPORT extern PFNEGLWAITUNTILWORKSCHEDULEDANGLEPROC l_eglWaitUntilWorkScheduledANGLE;
@@ -268,7 +265,7 @@ typedef GenericProc(KHRONOS_APIENTRY *LoadProc)(const char *);
 ANGLE_UTIL_EXPORT void LoadUtilEGL(LoadProc loadProc);
 
 #if defined(__cplusplus)
-}       // extern "C"
+}  // extern "C"
 #endif  // defined(__cplusplus)
 
 #endif  // UTIL_EGL_LOADER_AUTOGEN_H_

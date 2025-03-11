@@ -236,7 +236,6 @@ enum class EntryPoint
     EGLSurfaceAttrib,
     EGLSwapBuffers,
     EGLSwapBuffersWithDamageKHR,
-    EGLSwapBuffersWithFrameTokenANGLE,
     EGLSwapInterval,
     EGLTerminate,
     EGLUnlockSurfaceKHR,

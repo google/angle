@@ -84,7 +84,6 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
     Error prepareSwap(const gl::Context *context);
     Error swap(gl::Context *context);
     Error swapWithDamage(gl::Context *context, const EGLint *rects, EGLint n_rects);
-    Error swapWithFrameToken(gl::Context *context, EGLFrameTokenANGLE frameToken);
     Error postSubBuffer(const gl::Context *context,
                         EGLint x,
                         EGLint y,

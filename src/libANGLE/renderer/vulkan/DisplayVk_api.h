@@ -53,11 +53,6 @@ bool IsVulkanFuchsiaDisplayAvailable();
 DisplayImpl *CreateVulkanFuchsiaDisplay(const egl::DisplayState &state);
 #endif  // defined(ANGLE_PLATFORM_FUCHSIA)
 
-#if defined(ANGLE_PLATFORM_GGP)
-bool IsVulkanGGPDisplayAvailable();
-DisplayImpl *CreateVulkanGGPDisplay(const egl::DisplayState &state);
-#endif  // defined(ANGLE_PLATFORM_GGP)
-
 #if defined(ANGLE_PLATFORM_APPLE)
 bool IsVulkanMacDisplayAvailable();
 DisplayImpl *CreateVulkanMacDisplay(const egl::DisplayState &state);

@@ -9,11 +9,6 @@
         Includes data used to auto-generate ANGLE classes.
     </comment>
 
-    <!-- SECTION: EGL type definitions. -->
-    <types>
-        <type requires="khrplatform">typedef khronos_uint64_t <name>EGLFrameTokenANGLE</name>;</type>
-    </types>
-
     <!-- SECTION: EGL command definitions. -->
     <commands namespace="EGL">
         <command>
@@ -95,12 +90,6 @@
         <command>
             <proto>void <name>eglReleaseExternalContextANGLE</name></proto>
             <param><ptype>EGLDisplay</ptype> <name>dpy</name></param>
-        </command>
-        <command>
-            <proto><ptype>EGLBoolean</ptype> <name>eglSwapBuffersWithFrameTokenANGLE</name></proto>
-            <param><ptype>EGLDisplay</ptype> <name>dpy</name></param>
-            <param><ptype>EGLSurface</ptype> <name>surface</name></param>
-            <param><ptype>EGLFrameTokenANGLE</ptype> <name>frametoken</name></param>
         </command>
         <command>
             <proto><ptype>void</ptype> <name>eglLockVulkanQueueANGLE</name></proto>
@@ -219,11 +208,6 @@
         <extension name="EGL_ANGLE_wait_until_work_scheduled" supported="egl">
             <require>
                 <command name="eglWaitUntilWorkScheduledANGLE"/>
-            </require>
-        </extension>
-        <extension name="EGL_ANGLE_swap_with_frame_token" supported="egl">
-            <require>
-                <command name="eglSwapBuffersWithFrameTokenANGLE"/>
             </require>
         </extension>
         <extension name="EGL_ANGLE_prepare_swap_buffers" supported="egl">
@@ -360,11 +344,6 @@
                 <enum name="EGL_EXPERIMENTAL_PRESENT_PATH_ANGLE"/>
                 <enum name="EGL_EXPERIMENTAL_PRESENT_PATH_FAST_ANGLE"/>
                 <enum name="EGL_EXPERIMENTAL_PRESENT_PATH_COPY_ANGLE"/>
-            </require>
-        </extension>
-        <extension name="EGL_ANGLE_ggp_stream_descriptor" supported="egl">
-            <require>
-                <enum name="EGL_GGP_STREAM_DESCRIPTOR_ANGLE"/>
             </require>
         </extension>
         <extension name="EGL_ANGLE_iosurface_client_buffer" supported="egl">
@@ -628,7 +607,6 @@
         <enum value="0x3488" name="EGL_PLATFORM_ANGLE_D3D11ON12_ANGLE"/>
         <enum value="0x3489" name="EGL_PLATFORM_ANGLE_TYPE_METAL_ANGLE"/>
         <enum value="0x348A" name="EGL_IOSURFACE_USAGE_HINT_ANGLE"/>
-        <enum value="0x348B" name="EGL_GGP_STREAM_DESCRIPTOR_ANGLE"/>
         <enum value="0x348C" name="EGL_EAGL_CONTEXT_ANGLE"/>
 
         <!-- NOTE: Yes, these two values are the same according to the extension specs. -->

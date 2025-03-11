@@ -104,13 +104,6 @@
             ]
         },
         {
-            "name": "supports_GGP_frame_token",
-            "category": "Features",
-            "description": [
-                "VkDevice supports the VK_GGP_frame_token extension"
-            ]
-        },
-        {
             "name": "supports_external_memory_fd",
             "category": "Features",
             "description": [

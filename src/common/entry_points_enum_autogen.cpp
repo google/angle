@@ -460,8 +460,6 @@ const char *GetEntryPointName(EntryPoint ep)
             return "eglSwapBuffers";
         case EntryPoint::EGLSwapBuffersWithDamageKHR:
             return "eglSwapBuffersWithDamageKHR";
-        case EntryPoint::EGLSwapBuffersWithFrameTokenANGLE:
-            return "eglSwapBuffersWithFrameTokenANGLE";
         case EntryPoint::EGLSwapInterval:
             return "eglSwapInterval";
         case EntryPoint::EGLTerminate:

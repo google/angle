@@ -3550,7 +3550,6 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
 // - VK_KHR_incremental_present
 // - VK_EXT_queue_family_foreign
 // - VK_ANDROID_external_memory_android_hardware_buffer
-// - VK_GGP_frame_token
 // - VK_KHR_external_memory_fd
 // - VK_KHR_external_memory_fuchsia
 // - VK_KHR_external_semaphore_fd
@@ -3599,15 +3598,6 @@ void Renderer::enableDeviceExtensionsNotPromoted(const vk::ExtensionNameList &de
     }
 #else
     ASSERT(!mFeatures.supportsAndroidHardwareBuffer.enabled);
-#endif
-
-#if defined(ANGLE_PLATFORM_GGP)
-    if (mFeatures.supportsGGPFrameToken.enabled)
-    {
-        mEnabledDeviceExtensions.push_back(VK_GGP_FRAME_TOKEN_EXTENSION_NAME);
-    }
-#else
-    ASSERT(!mFeatures.supportsGGPFrameToken.enabled);
 #endif
 
     if (mFeatures.supportsExternalMemoryFd.enabled)
@@ -5121,12 +5111,6 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
             ExtensionFound(VK_ANDROID_EXTERNAL_MEMORY_ANDROID_HARDWARE_BUFFER_EXTENSION_NAME,
                            deviceExtensionNames) &&
             ExtensionFound(VK_EXT_QUEUE_FAMILY_FOREIGN_EXTENSION_NAME, deviceExtensionNames));
-#endif
-
-#if defined(ANGLE_PLATFORM_GGP)
-    ANGLE_FEATURE_CONDITION(
-        &mFeatures, supportsGGPFrameToken,
-        ExtensionFound(VK_GGP_FRAME_TOKEN_EXTENSION_NAME, deviceExtensionNames));
 #endif
 
     ANGLE_FEATURE_CONDITION(

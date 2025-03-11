@@ -189,10 +189,6 @@ ScopedContextMutexLock GetContextLock_CreateStreamProducerD3DTextureANGLE(Thread
 ScopedContextMutexLock GetContextLock_StreamPostD3DTextureANGLE(Thread *thread,
                                                                 egl::Display *dpyPacked);
 
-// EGL_ANGLE_swap_with_frame_token
-ScopedContextMutexLock GetContextLock_SwapBuffersWithFrameTokenANGLE(Thread *thread,
-                                                                     egl::Display *dpyPacked);
-
 // EGL_ANGLE_sync_control_rate
 ScopedContextMutexLock GetContextLock_GetMscRateANGLE(Thread *thread, egl::Display *dpyPacked);
 

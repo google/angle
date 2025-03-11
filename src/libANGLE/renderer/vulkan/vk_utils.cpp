@@ -976,10 +976,6 @@ PFN_vkGetAndroidHardwareBufferPropertiesANDROID vkGetAndroidHardwareBufferProper
 PFN_vkGetMemoryAndroidHardwareBufferANDROID vkGetMemoryAndroidHardwareBufferANDROID = nullptr;
 #    endif
 
-#    if defined(ANGLE_PLATFORM_GGP)
-PFN_vkCreateStreamDescriptorSurfaceGGP vkCreateStreamDescriptorSurfaceGGP = nullptr;
-#    endif
-
 #    define GET_INSTANCE_FUNC(vkName)                                                          \
         do                                                                                     \
         {                                                                                      \
@@ -1087,13 +1083,6 @@ void InitExternalMemoryHardwareBufferANDROIDFunctions(VkDevice device)
     GET_DEVICE_FUNC(vkGetMemoryAndroidHardwareBufferANDROID);
 }
 #    endif
-
-#    if defined(ANGLE_PLATFORM_GGP)
-void InitGGPStreamDescriptorSurfaceFunctions(VkInstance instance)
-{
-    GET_INSTANCE_FUNC(vkCreateStreamDescriptorSurfaceGGP);
-}
-#    endif  // defined(ANGLE_PLATFORM_GGP)
 
 void InitExternalSemaphoreFdFunctions(VkDevice device)
 {

@@ -1173,46 +1173,6 @@ EGLBoolean EGLAPIENTRY EGL_StreamPostD3DTextureANGLE(EGLDisplay dpy,
     return returnValue;
 }
 
-// EGL_ANGLE_swap_with_frame_token
-EGLBoolean EGLAPIENTRY EGL_SwapBuffersWithFrameTokenANGLE(EGLDisplay dpy,
-                                                          EGLSurface surface,
-                                                          EGLFrameTokenANGLE frametoken)
-{
-    ANGLE_EGLBOOLEAN_TRY(EGL_PrepareSwapBuffersANGLE(dpy, surface));
-    Thread *thread = egl::GetCurrentThread();
-    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
-    EGLBoolean returnValue;
-    {
-        ANGLE_SCOPED_GLOBAL_LOCK();
-        EGL_EVENT(SwapBuffersWithFrameTokenANGLE,
-                  "dpy = 0x%016" PRIxPTR ", surface = 0x%016" PRIxPTR ", frametoken = 0x%llX",
-                  (uintptr_t)dpy, (uintptr_t)surface, static_cast<unsigned long long>(frametoken));
-
-        egl::Display *dpyPacked = PackParam<egl::Display *>(dpy);
-        SurfaceID surfacePacked = PackParam<SurfaceID>(surface);
-
-        {
-            ANGLE_EGL_SCOPED_CONTEXT_LOCK(SwapBuffersWithFrameTokenANGLE, thread, dpyPacked);
-            if (IsEGLValidationEnabled())
-            {
-                ANGLE_EGL_VALIDATE(thread, SwapBuffersWithFrameTokenANGLE,
-                                   GetDisplayIfValid(dpyPacked), EGLBoolean, dpyPacked,
-                                   surfacePacked, frametoken);
-            }
-            else
-            {
-            }
-
-            returnValue =
-                SwapBuffersWithFrameTokenANGLE(thread, dpyPacked, surfacePacked, frametoken);
-        }
-
-        ANGLE_CAPTURE_EGL(SwapBuffersWithFrameTokenANGLE, true, thread, dpyPacked, surfacePacked,
-                          frametoken, returnValue);
-    }
-    egl::Display::GetCurrentThreadUnlockedTailCall()->run(nullptr);
-    return returnValue;
-}
 
 // EGL_ANGLE_sync_control_rate
 EGLBoolean EGLAPIENTRY EGL_GetMscRateANGLE(EGLDisplay dpy,

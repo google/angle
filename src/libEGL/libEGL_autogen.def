@@ -127,9 +127,6 @@ EXPORTS
     eglCreateStreamProducerD3DTextureANGLE
     eglStreamPostD3DTextureANGLE
 
-    ; EGL_ANGLE_swap_with_frame_token
-    eglSwapBuffersWithFrameTokenANGLE
-
     ; EGL_ANGLE_sync_control_rate
     eglGetMscRateANGLE
 

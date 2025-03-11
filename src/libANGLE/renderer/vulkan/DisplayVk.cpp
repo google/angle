@@ -571,11 +571,6 @@ void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
     outExtensions->nativeFenceSyncANDROID = getFeatures().supportsAndroidNativeFenceSync.enabled;
 #endif  // defined(ANGLE_PLATFORM_ANDROID) || defined(ANGLE_PLATFORM_LINUX)
 
-#if defined(ANGLE_PLATFORM_GGP)
-    outExtensions->ggpStreamDescriptor = true;
-    outExtensions->swapWithFrameToken  = getFeatures().supportsGGPFrameToken.enabled;
-#endif  // defined(ANGLE_PLATFORM_GGP)
-
     outExtensions->bufferAgeEXT = true;
 
     outExtensions->protectedContentEXT = (getFeatures().supportsProtectedMemory.enabled &&

@@ -66,7 +66,6 @@ enum class ParamType
     TEGLDEBUGPROCKHR,
     TEGLDeviceEXT,
     TEGLDisplay,
-    TEGLFrameTokenANGLE,
     TEGLGetBlobFuncANDROID,
     TEGLImage,
     TEGLImageKHR,
@@ -272,7 +271,7 @@ enum class ParamType
     TvoidPointerPointer,
 };
 
-constexpr uint32_t kParamTypeCount = 235;
+constexpr uint32_t kParamTypeCount = 234;
 
 union ParamValue
 {
@@ -303,7 +302,6 @@ union ParamValue
     EGLDEBUGPROCKHR EGLDEBUGPROCKHRVal;
     EGLDeviceEXT EGLDeviceEXTVal;
     EGLDisplay EGLDisplayVal;
-    EGLFrameTokenANGLE EGLFrameTokenANGLEVal;
     EGLGetBlobFuncANDROID EGLGetBlobFuncANDROIDVal;
     EGLImage EGLImageVal;
     EGLImageKHR EGLImageKHRVal;
@@ -683,13 +681,6 @@ template <>
 inline EGLDisplay GetParamVal<ParamType::TEGLDisplay, EGLDisplay>(const ParamValue &value)
 {
     return value.EGLDisplayVal;
-}
-
-template <>
-inline EGLFrameTokenANGLE GetParamVal<ParamType::TEGLFrameTokenANGLE, EGLFrameTokenANGLE>(
-    const ParamValue &value)
-{
-    return value.EGLFrameTokenANGLEVal;
 }
 
 template <>
@@ -2152,8 +2143,6 @@ T AccessParamValue(ParamType paramType, const ParamValue &value)
             return GetParamVal<ParamType::TEGLDeviceEXT, T>(value);
         case ParamType::TEGLDisplay:
             return GetParamVal<ParamType::TEGLDisplay, T>(value);
-        case ParamType::TEGLFrameTokenANGLE:
-            return GetParamVal<ParamType::TEGLFrameTokenANGLE, T>(value);
         case ParamType::TEGLGetBlobFuncANDROID:
             return GetParamVal<ParamType::TEGLGetBlobFuncANDROID, T>(value);
         case ParamType::TEGLImage:
@@ -2723,13 +2712,6 @@ template <>
 inline void SetParamVal<ParamType::TEGLDisplay>(EGLDisplay valueIn, ParamValue *valueOut)
 {
     valueOut->EGLDisplayVal = valueIn;
-}
-
-template <>
-inline void SetParamVal<ParamType::TEGLFrameTokenANGLE>(EGLFrameTokenANGLE valueIn,
-                                                        ParamValue *valueOut)
-{
-    valueOut->EGLFrameTokenANGLEVal = valueIn;
 }
 
 template <>
@@ -4191,9 +4173,6 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
             break;
         case ParamType::TEGLDisplay:
             SetParamVal<ParamType::TEGLDisplay>(valueIn, valueOut);
-            break;
-        case ParamType::TEGLFrameTokenANGLE:
-            SetParamVal<ParamType::TEGLFrameTokenANGLE>(valueIn, valueOut);
             break;
         case ParamType::TEGLGetBlobFuncANDROID:
             SetParamVal<ParamType::TEGLGetBlobFuncANDROID>(valueIn, valueOut);

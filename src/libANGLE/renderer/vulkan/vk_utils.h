@@ -1373,11 +1373,6 @@ void InitImagePipeSurfaceFUCHSIAFunctions(VkInstance instance);
 void InitExternalMemoryHardwareBufferANDROIDFunctions(VkDevice device);
 #    endif
 
-#    if defined(ANGLE_PLATFORM_GGP)
-// VK_GGP_stream_descriptor_surface
-void InitGGPStreamDescriptorSurfaceFunctions(VkInstance instance);
-#    endif  // defined(ANGLE_PLATFORM_GGP)
-
 // VK_KHR_external_semaphore_fd
 void InitExternalSemaphoreFdFunctions(VkDevice device);
 

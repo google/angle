@@ -109,10 +109,6 @@ void WriteParamCaptureReplay(std::ostream &os, const CallCapture &call, const Pa
         case ParamType::TEGLDisplay:
             WriteParamValueReplay<ParamType::TEGLDisplay>(os, call, param.value.EGLDisplayVal);
             break;
-        case ParamType::TEGLFrameTokenANGLE:
-            WriteParamValueReplay<ParamType::TEGLFrameTokenANGLE>(
-                os, call, param.value.EGLFrameTokenANGLEVal);
-            break;
         case ParamType::TEGLGetBlobFuncANDROID:
             WriteParamValueReplay<ParamType::TEGLGetBlobFuncANDROID>(
                 os, call, param.value.EGLGetBlobFuncANDROIDVal);
@@ -935,8 +931,6 @@ const char *ParamTypeToString(ParamType paramType)
             return "EGLDeviceEXT";
         case ParamType::TEGLDisplay:
             return "EGLDisplay";
-        case ParamType::TEGLFrameTokenANGLE:
-            return "EGLFrameTokenANGLE";
         case ParamType::TEGLGetBlobFuncANDROID:
             return "EGLGetBlobFuncANDROID";
         case ParamType::TEGLImage:

@@ -223,15 +223,6 @@ if (is_fuchsia) {
   ]
 }
 
-if (is_ggp) {
-  vulkan_backend_sources += [
-    "ggp/DisplayVkGGP.cpp",
-    "ggp/DisplayVkGGP.h",
-    "ggp/WindowSurfaceVkGGP.cpp",
-    "ggp/WindowSurfaceVkGGP.h",
-  ]
-}
-
 if (is_mac) {
   vulkan_backend_sources += [
     "mac/DisplayVkMac.h",

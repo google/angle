@@ -133,12 +133,6 @@ ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_StreamPostD3DTextureANGLE(EGLDisplay dpy
                                                                   void *texture,
                                                                   const EGLAttrib *attrib_list);
 
-// EGL_ANGLE_swap_with_frame_token
-ANGLE_EXPORT EGLBoolean EGLAPIENTRY
-EGL_SwapBuffersWithFrameTokenANGLE(EGLDisplay dpy,
-                                   EGLSurface surface,
-                                   EGLFrameTokenANGLE frametoken);
-
 // EGL_ANGLE_sync_control_rate
 ANGLE_EXPORT EGLBoolean EGLAPIENTRY EGL_GetMscRateANGLE(EGLDisplay dpy,
                                                         EGLSurface surface,

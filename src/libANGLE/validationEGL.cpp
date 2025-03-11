@@ -2579,16 +2579,6 @@ bool ValidateCreateWindowSurfaceAttributes(const ValidationContext *val,
                 }
                 break;
 
-            case EGL_GGP_STREAM_DESCRIPTOR_ANGLE:
-                if (!display->getExtensions().ggpStreamDescriptor)
-                {
-                    val->setError(EGL_BAD_ATTRIBUTE,
-                                  "EGL_GGP_STREAM_DESCRIPTOR_ANGLE requires "
-                                  "EGL_ANGLE_ggp_stream_descriptor.");
-                    return false;
-                }
-                break;
-
             case EGL_PROTECTED_CONTENT_EXT:
                 if (!displayExtensions.protectedContentEXT)
                 {
@@ -6490,24 +6480,6 @@ bool ValidateDupNativeFenceFDANDROID(const ValidationContext *val,
     }
 
     ANGLE_VALIDATION_TRY(ValidateSync(val, display, sync));
-
-    return true;
-}
-
-bool ValidateSwapBuffersWithFrameTokenANGLE(const ValidationContext *val,
-                                            const Display *display,
-                                            SurfaceID surfaceID,
-                                            EGLFrameTokenANGLE frametoken)
-{
-    ANGLE_VALIDATION_TRY(ValidateDisplay(val, display));
-
-    if (!display->getExtensions().swapWithFrameToken)
-    {
-        val->setError(EGL_BAD_DISPLAY, "EGL_ANGLE_swap_buffers_with_frame_token is not available.");
-        return false;
-    }
-
-    ANGLE_VALIDATION_TRY(ValidateSurface(val, display, surfaceID));
 
     return true;
 }

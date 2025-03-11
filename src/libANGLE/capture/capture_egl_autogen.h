@@ -426,12 +426,6 @@ angle::CallCapture CaptureStreamPostD3DTextureANGLE(egl::Thread *thread,
                                                     void *texture,
                                                     const AttributeMap &attrib_listPacked,
                                                     EGLBoolean returnValue);
-angle::CallCapture CaptureSwapBuffersWithFrameTokenANGLE(egl::Thread *thread,
-                                                         bool isCallValid,
-                                                         egl::Display *dpyPacked,
-                                                         SurfaceID surfacePacked,
-                                                         EGLFrameTokenANGLE frametoken,
-                                                         EGLBoolean returnValue);
 angle::CallCapture CaptureGetMscRateANGLE(egl::Thread *thread,
                                           bool isCallValid,
                                           egl::Display *dpyPacked,

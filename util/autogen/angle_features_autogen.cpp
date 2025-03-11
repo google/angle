@@ -342,7 +342,6 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SupportsFullScreenExclusive, "supportsFullScreenExclusive"},
     {Feature::SupportsGeometryStreamsCapability, "supportsGeometryStreamsCapability"},
     {Feature::SupportsGetMemoryRequirements2, "supportsGetMemoryRequirements2"},
-    {Feature::SupportsGGPFrameToken, "supportsGGPFrameToken"},
     {Feature::SupportsGraphicsPipelineLibrary, "supportsGraphicsPipelineLibrary"},
     {Feature::SupportsHostImageCopy, "supportsHostImageCopy"},
     {Feature::SupportsHostQueryReset, "supportsHostQueryReset"},

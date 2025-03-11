@@ -1392,27 +1392,6 @@ CallCapture CaptureStreamPostD3DTextureANGLE(egl::Thread *thread,
     return CallCapture(angle::EntryPoint::EGLStreamPostD3DTextureANGLE, std::move(paramBuffer));
 }
 
-CallCapture CaptureSwapBuffersWithFrameTokenANGLE(egl::Thread *thread,
-                                                  bool isCallValid,
-                                                  egl::Display *dpyPacked,
-                                                  SurfaceID surfacePacked,
-                                                  EGLFrameTokenANGLE frametoken,
-                                                  EGLBoolean returnValue)
-{
-    ParamBuffer paramBuffer;
-
-    paramBuffer.addValueParam("dpyPacked", ParamType::Tegl_DisplayPointer, dpyPacked);
-    paramBuffer.addValueParam("surfacePacked", ParamType::TSurfaceID, surfacePacked);
-    paramBuffer.addValueParam("frametoken", ParamType::TEGLFrameTokenANGLE, frametoken);
-
-    ParamCapture returnValueCapture("returnValue", ParamType::TEGLBoolean);
-    InitParamValue(ParamType::TEGLBoolean, returnValue, &returnValueCapture.value);
-    paramBuffer.addReturnValue(std::move(returnValueCapture));
-
-    return CallCapture(angle::EntryPoint::EGLSwapBuffersWithFrameTokenANGLE,
-                       std::move(paramBuffer));
-}
-
 CallCapture CaptureGetMscRateANGLE(egl::Thread *thread,
                                    bool isCallValid,
                                    egl::Display *dpyPacked,

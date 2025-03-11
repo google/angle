@@ -94,10 +94,6 @@ extern PFN_vkGetAndroidHardwareBufferPropertiesANDROID vkGetAndroidHardwareBuffe
 extern PFN_vkGetMemoryAndroidHardwareBufferANDROID vkGetMemoryAndroidHardwareBufferANDROID;
 #    endif
 
-#    if defined(ANGLE_PLATFORM_GGP)
-extern PFN_vkCreateStreamDescriptorSurfaceGGP vkCreateStreamDescriptorSurfaceGGP;
-#    endif  // defined(ANGLE_PLATFORM_GGP)
-
 // VK_KHR_shared_presentable_image
 extern PFN_vkGetSwapchainStatusKHR vkGetSwapchainStatusKHR;
 

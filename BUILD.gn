@@ -243,10 +243,6 @@ config("internal_config") {
     defines += [ "ANGLE_PLATFORM_CHROMEOS" ]
   }
 
-  if (is_ggp) {
-    defines += [ "__ggp__" ]
-  }
-
   if (angle_use_vulkan_null_display) {
     defines += [ "ANGLE_USE_VULKAN_NULL_DISPLAY" ]
   } else if (angle_use_vulkan_display) {

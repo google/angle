@@ -32,7 +32,6 @@ ES 3.0 with [known issues][ES1].
 | iOS          |                |                |               |             |             | complete [2]         |
 | Chrome OS    |                |                |               |   complete  |   planned   |                      |
 | Android      |                |                |               |   complete  |   complete  |                      |
-| GGP (Stadia) |                |                |               |             |   complete  |                      |
 | Fuchsia      |                |                |               |             |   complete  |                      |
 
 [1] Metal is supported on macOS 10.14+
