@@ -701,6 +701,8 @@ class BlendStateExt final
 
     ///////// Color Write Mask /////////
 
+    constexpr static uint8_t kColorMaskRGBA = 0xf;
+
     static constexpr size_t PackColorMask(const bool red,
                                           const bool green,
                                           const bool blue,

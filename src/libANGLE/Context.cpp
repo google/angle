@@ -8852,7 +8852,7 @@ void Context::beginPixelLocalStorage(GLsizei n, const GLenum loadops[])
     PixelLocalStorage &pls = framebuffer->getPixelLocalStorage(this);
 
     pls.begin(this, n, loadops);
-    mState.setPixelLocalStorageActivePlanes(n);
+    getMutablePrivateState()->setPixelLocalStorageActivePlanes(n);
 }
 
 void Context::endPixelLocalStorage(GLsizei n, const GLenum storeops[])
@@ -8862,7 +8862,7 @@ void Context::endPixelLocalStorage(GLsizei n, const GLenum storeops[])
     PixelLocalStorage &pls = framebuffer->getPixelLocalStorage(this);
 
     ASSERT(n == mState.getPixelLocalStorageActivePlanes());
-    mState.setPixelLocalStorageActivePlanes(0);
+    getMutablePrivateState()->setPixelLocalStorageActivePlanes(0);
     pls.end(this, n, storeops);
 }
 

@@ -308,11 +308,13 @@ class PrivateState : angle::NonCopyable
     bool isClipDepthModeZeroToOne() const { return mClipDepthMode == ClipDepthMode::ZeroToOne; }
 
     // Blend state manipulation
-    bool isBlendEnabled() const { return mBlendStateExt.getEnabledMask().test(0); }
+    bool isBlendEnabled() const { return isBlendEnabledIndexed(0); }
     bool isBlendEnabledIndexed(GLuint index) const
     {
         ASSERT(static_cast<size_t>(index) < mBlendStateExt.getDrawBufferCount());
-        return mBlendStateExt.getEnabledMask().test(index);
+        return isActivelyOverriddenPLSDrawBuffer(index)
+                   ? mPLSDeferredBlendEnables.test(index)
+                   : mBlendStateExt.getEnabledMask().test(index);
     }
     DrawBufferMask getBlendEnabledDrawBufferMask() const { return mBlendStateExt.getEnabledMask(); }
     void setBlend(bool enabled);
@@ -709,6 +711,10 @@ class PrivateState : angle::NonCopyable
 
     // GL_ANGLE_shader_pixel_local_storage
     GLsizei mPixelLocalStorageActivePlanes;
+    // Overridden PLS draw buffers require no blend and a full color mask. While PLS is active,
+    // defer any updates to these states until it ends.
+    DrawBufferMask mPLSDeferredBlendEnables;
+    BlendStateExt::ColorMaskStorage::Type mPLSDeferredColorMasks;
 
     // GLES1 emulation: state specific to GLES1
     GLES1State mGLES1State;
@@ -1375,10 +1381,6 @@ class State : angle::NonCopyable
     GLenum getCoverageModulation() const { return mPrivateState.getCoverageModulation(); }
     bool getFramebufferSRGB() const { return mPrivateState.getFramebufferSRGB(); }
     GLuint getPatchVertices() const { return mPrivateState.getPatchVertices(); }
-    void setPixelLocalStorageActivePlanes(GLsizei n)
-    {
-        mPrivateState.setPixelLocalStorageActivePlanes(n);
-    }
     GLsizei getPixelLocalStorageActivePlanes() const
     {
         return mPrivateState.getPixelLocalStorageActivePlanes();

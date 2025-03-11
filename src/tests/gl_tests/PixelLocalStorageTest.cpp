@@ -2181,9 +2181,6 @@ void PixelLocalStorageTest::doStateRestorationTest()
     glPixelLocalStorageBarrierANGLE();
     glEndPixelLocalStorageANGLE(
         4, GLenumArray({GL_DONT_CARE, GL_STORE_OP_STORE_ANGLE, GL_DONT_CARE, GL_DONT_CARE}));
-    int firstOverriddenDrawBuffer =
-        std::min(MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE,
-                 MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES - 4);
 
     // Check state.
     GLint textureBinding2D;
@@ -2244,21 +2241,17 @@ void PixelLocalStorageTest::doStateRestorationTest()
 
     if (hasDrawBuffersIndexedOES)
     {
-        for (int i = 0; i < firstOverriddenDrawBuffer; ++i)
+        for (int i = 0; i < MAX_DRAW_BUFFERS; ++i)
         {
             EXPECT_EQ(glIsEnablediOES(GL_BLEND, i), i % 2 == 1);
             EXPECT_GL_COLOR_MASK_INDEXED(i, i % 3 == 0, i % 3 == 1, i % 3 == 2, i % 2 == 0);
         }
-        for (int i = firstOverriddenDrawBuffer; i < MAX_DRAW_BUFFERS; ++i)
-        {
-            EXPECT_FALSE(glIsEnablediOES(GL_BLEND, i));
-            EXPECT_GL_COLOR_MASK_INDEXED(i, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-        }
     }
     else
     {
-        EXPECT_FALSE(glIsEnabled(GL_BLEND));
-        EXPECT_GL_COLOR_MASK(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE)
+        EXPECT_TRUE(glIsEnabled(GL_BLEND));
+        EXPECT_GL_INTEGER(GL_BLEND, GL_TRUE);
+        EXPECT_GL_COLOR_MASK(GL_FALSE, GL_FALSE, GL_FALSE, GL_TRUE)
     }
 
     EXPECT_TRUE(glIsEnabled(GL_SCISSOR_TEST));
@@ -2693,14 +2686,13 @@ TEST_P(PixelLocalStorageTest, BlendColorMaskAndClear)
 
     const bool drawBuffersIndexed = IsGLExtensionEnabled("GL_OES_draw_buffers_indexed") &&
                                     MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE >= 2;
-    GLint firstClearBuffer             = 0;
-    GLint firstPLSOverriddenDrawBuffer = 0;
+    GLint firstClearBuffer = 0;
     if (!drawBuffersIndexed)
     {
         // Blend should not affect pixel local storage.
         glBlendFunc(GL_ZERO, GL_ZERO);
         // Color mask should not affect pixel local storage.
-        glColorMask(GL_FALSE, GL_TRUE, GL_FALSE, GL_FALSE);
+        glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
 
         mProgram.compile(R"(
         layout(binding=0, rgba8) uniform lowp pixelLocalANGLE pls1;
@@ -2726,22 +2718,26 @@ TEST_P(PixelLocalStorageTest, BlendColorMaskAndClear)
 
         // Blend should not affect pixel local storage.
         EXPECT_FALSE(glIsEnabled(GL_BLEND));
+        EXPECT_GL_INTEGER(GL_BLEND, GL_FALSE);
         glEnable(GL_BLEND);
 
-        // Enabling GL_BLEND is ignored while PLS is active.
-        EXPECT_FALSE(glIsEnabled(GL_BLEND));
+        // Enabling GL_BLEND works from the client perspective even though PLS is overriding it.
+        EXPECT_TRUE(glIsEnabled(GL_BLEND));
+        EXPECT_GL_INTEGER(GL_BLEND, GL_TRUE);
 
         // BlendFunc has no effect as long as GL_BLEND stays disabled on our PLS draw buffers.
         glBlendFunc(GL_ZERO, GL_ONE);
+        EXPECT_GL_INTEGER(GL_BLEND_SRC_RGB, GL_ZERO);
+        EXPECT_GL_INTEGER(GL_BLEND_SRC_ALPHA, GL_ZERO);
+        EXPECT_GL_INTEGER(GL_BLEND_DST_RGB, GL_ONE);
+        EXPECT_GL_INTEGER(GL_BLEND_DST_ALPHA, GL_ONE);
 
         EXPECT_GL_NO_ERROR();
 
-        // Color is ignored when PLS is active.
-        EXPECT_GL_COLOR_MASK(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-        glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-        EXPECT_GL_COLOR_MASK(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-
-        EXPECT_GL_NO_ERROR();
+        // Color mask should not affect PLS.
+        EXPECT_GL_COLOR_MASK(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
+        glColorMask(GL_FALSE, GL_TRUE, GL_FALSE, GL_FALSE);
+        EXPECT_GL_COLOR_MASK(GL_FALSE, GL_TRUE, GL_FALSE, GL_FALSE);
 
         EXPECT_GL_NO_ERROR();
     }
@@ -2768,6 +2764,7 @@ TEST_P(PixelLocalStorageTest, BlendColorMaskAndClear)
         glEnablei(GL_BLEND, 0);
         glBlendEquationi(0, GL_FUNC_REVERSE_SUBTRACT);
         glBlendFunci(0, GL_ONE, GL_ONE);
+        glEnablei(GL_BLEND, 2);
 
         std::vector<GLColor> blackData(H * W, GLColor::black);
         glBindTexture(GL_TEXTURE_2D, tex2);
@@ -2779,53 +2776,47 @@ TEST_P(PixelLocalStorageTest, BlendColorMaskAndClear)
         glFramebufferTexturePixelLocalStorageANGLE(1, tex4, 0, 0);
         glDrawBuffers(2, GLenumArray({GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1}));
         firstClearBuffer = 2;
-        firstPLSOverriddenDrawBuffer =
-            std::min(MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE,
-                     MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES - 2);
 
         glBeginPixelLocalStorageANGLE(2,
                                       GLenumArray({GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE}));
 
         // Color mask should not affect pixel local storage.
         glColorMask(GL_FALSE, GL_TRUE, GL_TRUE, GL_FALSE);
+        glColorMaski(2, GL_TRUE, GL_FALSE, GL_TRUE, GL_FALSE);
         EXPECT_GL_COLOR_MASK_INDEXED(0, GL_FALSE, GL_TRUE, GL_TRUE, GL_FALSE);
         EXPECT_GL_COLOR_MASK_INDEXED(1, GL_FALSE, GL_TRUE, GL_TRUE, GL_FALSE);
+        EXPECT_GL_COLOR_MASK_INDEXED(2, GL_TRUE, GL_FALSE, GL_TRUE, GL_FALSE);
 
         EXPECT_TRUE(glIsEnabledi(GL_BLEND, 0));
         EXPECT_FALSE(glIsEnabledi(GL_BLEND, 1));
         for (int i = 2; i < MAX_DRAW_BUFFERS; ++i)
         {
-            // Blend cannot be enabled on an overridden PLS plane.
-            EXPECT_FALSE(glIsEnabledi(GL_BLEND, i));
-            glEnablei(GL_BLEND, i);
-            glBlendFunci(i, GL_ZERO, GL_ONE);
-            if (i >= firstPLSOverriddenDrawBuffer)
-            {
-                EXPECT_FALSE(glIsEnabledi(GL_BLEND, i));
-            }
-            else
+            // Enabling blend with PLS active still works from the client perspective, even though
+            // it's overridden by PLS.
+            if (i == 2)
             {
                 EXPECT_TRUE(glIsEnabledi(GL_BLEND, i));
             }
-
-            // Color mask cannot be enabled on an overridden PLS plane.
-            if (i >= firstPLSOverriddenDrawBuffer)
+            else
             {
-                EXPECT_GL_COLOR_MASK_INDEXED(i, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+                EXPECT_FALSE(glIsEnabledi(GL_BLEND, i));
+            }
+            glEnablei(GL_BLEND, i);
+            EXPECT_TRUE(glIsEnabledi(GL_BLEND, i));
+            glBlendFunci(i, GL_ZERO, GL_ONE);
+
+            // Changing the color mask with PLS active still works from the client perspective, even
+            // though it's overridden by PLS.
+            if (i == 2)
+            {
+                EXPECT_GL_COLOR_MASK_INDEXED(i, GL_TRUE, GL_FALSE, GL_TRUE, GL_FALSE);
             }
             else
             {
                 EXPECT_GL_COLOR_MASK_INDEXED(i, GL_FALSE, GL_TRUE, GL_TRUE, GL_FALSE);
             }
             glColorMaski(i, GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-            if (i >= firstPLSOverriddenDrawBuffer)
-            {
-                EXPECT_GL_COLOR_MASK_INDEXED(i, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-            }
-            else
-            {
-                EXPECT_GL_COLOR_MASK_INDEXED(i, GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-            }
+            EXPECT_GL_COLOR_MASK_INDEXED(i, GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
         }
 
         ASSERT_GL_NO_ERROR();
@@ -2862,12 +2853,13 @@ TEST_P(PixelLocalStorageTest, BlendColorMaskAndClear)
     attachTexture2DToScratchFBO(tex4);
     EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::black);
 
-    // Blend state attempted to be set on overridden draw buffers during PLS should not have taken
-    // effect afterward.
+    // Blend state that was set on overridden draw buffers during PLS should still be in effect
+    // after PLS ends.
     if (!drawBuffersIndexed)
     {
-        EXPECT_FALSE(glIsEnabled(GL_BLEND));
-        EXPECT_GL_COLOR_MASK(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+        EXPECT_TRUE(glIsEnabled(GL_BLEND));
+        EXPECT_GL_INTEGER(GL_BLEND, GL_TRUE);
+        EXPECT_GL_COLOR_MASK(GL_FALSE, GL_TRUE, GL_FALSE, GL_FALSE);
     }
     else
     {
@@ -2877,22 +2869,8 @@ TEST_P(PixelLocalStorageTest, BlendColorMaskAndClear)
         EXPECT_GL_COLOR_MASK_INDEXED(1, GL_FALSE, GL_TRUE, GL_TRUE, GL_FALSE);
         for (GLint i = 2; i < MAX_DRAW_BUFFERS; ++i)
         {
-            if (i >= firstPLSOverriddenDrawBuffer)
-            {
-                EXPECT_FALSE(glIsEnabledi(GL_BLEND, i));
-            }
-            else
-            {
-                EXPECT_TRUE(glIsEnabledi(GL_BLEND, i));
-            }
-            if (i >= firstPLSOverriddenDrawBuffer)
-            {
-                EXPECT_GL_COLOR_MASK_INDEXED(i, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-            }
-            else
-            {
-                EXPECT_GL_COLOR_MASK_INDEXED(i, GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-            }
+            EXPECT_TRUE(glIsEnabledi(GL_BLEND, i));
+            // EXPECT_GL_COLOR_MASK_INDEXED(i, GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
         }
     }
 
@@ -6585,63 +6563,40 @@ TEST_P(PixelLocalStorageValidationTest, BlendMaskDuringPLS)
         glEndPixelLocalStorageANGLE(numActivePlanes,
                                     std::vector<GLenum>(numActivePlanes, GL_DONT_CARE).data());
     };
-    int firstOverriddenDrawBuffer =
-        std::min(MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE,
-                 MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES - numActivePlanes);
 
-#define CHECK_OVERRIDDEN_BLEND_MASKS_INDEXED()                         \
-    for (int i = firstOverriddenDrawBuffer; i < MAX_DRAW_BUFFERS; ++i) \
-    {                                                                  \
-        EXPECT_FALSE(glIsEnabledi(GL_BLEND, i));                       \
+#define EXPECT_UNIFORM_BLEND_MASK(ENABLED)                   \
+    EXPECT_EQ(glIsEnabled(GL_BLEND), ENABLED);               \
+    EXPECT_GL_INTEGER(GL_BLEND, ENABLED);                    \
+    if (IsGLExtensionEnabled("GL_OES_draw_buffers_indexed")) \
+    {                                                        \
+        for (int i = 0; i < MAX_DRAW_BUFFERS; ++i)           \
+        {                                                    \
+            EXPECT_EQ(glIsEnabledi(GL_BLEND, i), ENABLED);   \
+        }                                                    \
     }
 
-#define EXPECT_NON_OVERRIDDEN_BLEND_MASK(ENABLED)             \
-    if (!IsGLExtensionEnabled("GL_OES_draw_buffers_indexed")) \
-    {                                                         \
-        EXPECT_FALSE(glIsEnabled(GL_BLEND));                  \
-    }                                                         \
-    else                                                      \
-    {                                                         \
-        EXPECT_EQ(glIsEnabled(GL_BLEND), ENABLED);            \
-        for (int i = 0; i < firstOverriddenDrawBuffer; ++i)   \
-        {                                                     \
-            EXPECT_EQ(glIsEnabledi(GL_BLEND, i), ENABLED);    \
-        }                                                     \
-        CHECK_OVERRIDDEN_BLEND_MASKS_INDEXED();               \
-    }
-
-#define CHECK_OVERRIDDEN_COLOR_MASKS_INDEXED()                               \
-    for (int i = firstOverriddenDrawBuffer; i < MAX_DRAW_BUFFERS; ++i)       \
-    {                                                                        \
-        EXPECT_GL_COLOR_MASK_INDEXED(i, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE); \
-    }
-
-#define EXPECT_NON_OVERRIDDEN_COLOR_MASK(R, G, B, A)              \
-    if (!IsGLExtensionEnabled("GL_OES_draw_buffers_indexed"))     \
-    {                                                             \
-        EXPECT_GL_COLOR_MASK(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE); \
-    }                                                             \
-    else                                                          \
-    {                                                             \
-        EXPECT_GL_COLOR_MASK(R, G, B, A);                         \
-        for (int i = 0; i < firstOverriddenDrawBuffer; ++i)       \
-        {                                                         \
-            EXPECT_GL_COLOR_MASK_INDEXED(i, R, G, B, A);          \
-        }                                                         \
-        CHECK_OVERRIDDEN_COLOR_MASKS_INDEXED();                   \
+#define EXPECT_UNIFORM_COLOR_MASK(R, G, B, A)                \
+    EXPECT_GL_COLOR_MASK(R, G, B, A);                        \
+    if (IsGLExtensionEnabled("GL_OES_draw_buffers_indexed")) \
+    {                                                        \
+        for (int i = 0; i < MAX_DRAW_BUFFERS; ++i)           \
+        {                                                    \
+            EXPECT_GL_COLOR_MASK_INDEXED(i, R, G, B, A);     \
+        }                                                    \
     }
 
     // Set before.
     glEnable(GL_BLEND);
-    EXPECT_TRUE(glIsEnabled(GL_BLEND));
+    EXPECT_UNIFORM_BLEND_MASK(GL_TRUE);
     beginPLS();
-    EXPECT_NON_OVERRIDDEN_BLEND_MASK(GL_TRUE);
+    EXPECT_UNIFORM_BLEND_MASK(GL_TRUE);
     glColorMask(GL_TRUE, GL_TRUE, GL_FALSE, GL_FALSE);
     EXPECT_GL_NO_ERROR();
-    EXPECT_NON_OVERRIDDEN_COLOR_MASK(GL_TRUE, GL_TRUE, GL_FALSE, GL_FALSE);
+    EXPECT_UNIFORM_COLOR_MASK(GL_TRUE, GL_TRUE, GL_FALSE, GL_FALSE);
     endPLS();
     // Blend & color mask shouldn't change after endPLS().
-    EXPECT_NON_OVERRIDDEN_BLEND_MASK(GL_TRUE);
+    EXPECT_UNIFORM_BLEND_MASK(GL_TRUE);
+    EXPECT_UNIFORM_COLOR_MASK(GL_TRUE, GL_TRUE, GL_FALSE, GL_FALSE);
     glColorMask(GL_TRUE, GL_TRUE, GL_FALSE, GL_FALSE);
     glDisable(GL_BLEND);
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
@@ -6649,85 +6604,55 @@ TEST_P(PixelLocalStorageValidationTest, BlendMaskDuringPLS)
 
     // Set during.
     beginPLS();
-    EXPECT_NON_OVERRIDDEN_BLEND_MASK(GL_FALSE);
-    EXPECT_NON_OVERRIDDEN_COLOR_MASK(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    EXPECT_UNIFORM_BLEND_MASK(GL_FALSE);
+    EXPECT_UNIFORM_COLOR_MASK(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
     glEnable(GL_BLEND);
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
     EXPECT_GL_NO_ERROR();
-    EXPECT_NON_OVERRIDDEN_BLEND_MASK(GL_TRUE);
-    EXPECT_NON_OVERRIDDEN_COLOR_MASK(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
+    EXPECT_UNIFORM_BLEND_MASK(GL_TRUE);
+    EXPECT_UNIFORM_COLOR_MASK(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
     endPLS();
     // Blend & color mask shouldn't change after endPLS().
-    EXPECT_NON_OVERRIDDEN_BLEND_MASK(GL_TRUE);
-    EXPECT_NON_OVERRIDDEN_COLOR_MASK(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
+    EXPECT_UNIFORM_BLEND_MASK(GL_TRUE);
+    EXPECT_UNIFORM_COLOR_MASK(GL_TRUE, GL_TRUE, GL_TRUE, GL_FALSE);
     glDisable(GL_BLEND);
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
     EXPECT_GL_NO_ERROR();
 
     if (IsGLExtensionEnabled("GL_OES_draw_buffers_indexed"))
     {
-        ASSERT(firstOverriddenDrawBuffer > 0);
-        GLint highestPLSDrawBuffer =
-            std::min(MAX_DRAW_BUFFERS, MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES) -
-            1;
-
         // Indexed before, non-indexed during.
         glEnablei(GL_BLEND, 0);
-        glEnablei(GL_BLEND, highestPLSDrawBuffer);
+        glEnablei(GL_BLEND, MAX_DRAW_BUFFERS - 1);
         glColorMaski(0, GL_FALSE, GL_FALSE, GL_TRUE, GL_FALSE);
-        glColorMaski(highestPLSDrawBuffer, GL_FALSE, GL_FALSE, GL_TRUE, GL_FALSE);
+        glColorMaski(MAX_DRAW_BUFFERS - 1, GL_FALSE, GL_FALSE, GL_FALSE, GL_TRUE);
 
         beginPLS();
 
         EXPECT_TRUE(glIsEnabledi(GL_BLEND, 0));
-        if (firstOverriddenDrawBuffer > 1)
+        for (GLint i = 1; i < MAX_DRAW_BUFFERS - 1; ++i)
         {
-            EXPECT_TRUE(!glIsEnabledi(GL_BLEND, 1));
+            EXPECT_FALSE(glIsEnabledi(GL_BLEND, i));
         }
-        CHECK_OVERRIDDEN_BLEND_MASKS_INDEXED();
+        EXPECT_TRUE(glIsEnabledi(GL_BLEND, MAX_DRAW_BUFFERS - 1));
 
         EXPECT_GL_COLOR_MASK_INDEXED(0, GL_FALSE, GL_FALSE, GL_TRUE, GL_FALSE);
-        if (firstOverriddenDrawBuffer > 1)
+        for (GLint i = 1; i < MAX_DRAW_BUFFERS - 1; ++i)
         {
-            EXPECT_GL_COLOR_MASK_INDEXED(1, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+            EXPECT_GL_COLOR_MASK_INDEXED(i, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
         }
-        CHECK_OVERRIDDEN_COLOR_MASKS_INDEXED();
+        EXPECT_GL_COLOR_MASK_INDEXED(MAX_DRAW_BUFFERS - 1, GL_FALSE, GL_FALSE, GL_FALSE, GL_TRUE);
 
         glEnable(GL_BLEND);
-        EXPECT_TRUE(glIsEnabled(GL_BLEND));
-        EXPECT_TRUE(glIsEnabledi(GL_BLEND, 0));
-        if (firstOverriddenDrawBuffer > 1)
-        {
-            EXPECT_TRUE(glIsEnabledi(GL_BLEND, 1));
-        }
-        CHECK_OVERRIDDEN_BLEND_MASKS_INDEXED();
+        EXPECT_UNIFORM_BLEND_MASK(GL_TRUE);
 
         glColorMask(GL_FALSE, GL_TRUE, GL_FALSE, GL_TRUE);
-        EXPECT_GL_COLOR_MASK(GL_FALSE, GL_TRUE, GL_FALSE, GL_TRUE);
-        EXPECT_GL_COLOR_MASK_INDEXED(0, GL_FALSE, GL_TRUE, GL_FALSE, GL_TRUE);
-        if (firstOverriddenDrawBuffer > 1)
-        {
-            EXPECT_GL_COLOR_MASK_INDEXED(1, GL_FALSE, GL_TRUE, GL_FALSE, GL_TRUE);
-        }
-        CHECK_OVERRIDDEN_COLOR_MASKS_INDEXED();
+        EXPECT_UNIFORM_COLOR_MASK(GL_FALSE, GL_TRUE, GL_FALSE, GL_TRUE);
 
         endPLS();
 
-        EXPECT_TRUE(glIsEnabled(GL_BLEND));
-        EXPECT_TRUE(glIsEnabledi(GL_BLEND, 0));
-        if (firstOverriddenDrawBuffer > 1)
-        {
-            EXPECT_TRUE(glIsEnabledi(GL_BLEND, 1));
-        }
-        CHECK_OVERRIDDEN_BLEND_MASKS_INDEXED();
-
-        EXPECT_GL_COLOR_MASK(GL_FALSE, GL_TRUE, GL_FALSE, GL_TRUE);
-        EXPECT_GL_COLOR_MASK_INDEXED(0, GL_FALSE, GL_TRUE, GL_FALSE, GL_TRUE);
-        if (firstOverriddenDrawBuffer > 1)
-        {
-            EXPECT_GL_COLOR_MASK_INDEXED(1, GL_FALSE, GL_TRUE, GL_FALSE, GL_TRUE);
-        }
-        CHECK_OVERRIDDEN_COLOR_MASKS_INDEXED();
+        EXPECT_UNIFORM_BLEND_MASK(GL_TRUE);
+        EXPECT_UNIFORM_COLOR_MASK(GL_FALSE, GL_TRUE, GL_FALSE, GL_TRUE);
 
         glDisable(GL_BLEND);
         glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
@@ -6735,64 +6660,57 @@ TEST_P(PixelLocalStorageValidationTest, BlendMaskDuringPLS)
         EXPECT_GL_NO_ERROR();
 
         // Non-indexed before, indexed during.
-        glColorMaski(1, GL_TRUE, GL_TRUE, GL_FALSE, GL_TRUE);
+        glColorMask(GL_TRUE, GL_TRUE, GL_FALSE, GL_TRUE);
         glEnable(GL_BLEND);
 
         beginPLS();
 
+        EXPECT_UNIFORM_BLEND_MASK(GL_TRUE);
+        EXPECT_UNIFORM_COLOR_MASK(GL_TRUE, GL_TRUE, GL_FALSE, GL_TRUE);
+
+        glDisablei(GL_BLEND, 1);
+        glDisablei(GL_BLEND, MAX_DRAW_BUFFERS - 1);
         EXPECT_TRUE(glIsEnabled(GL_BLEND));
         EXPECT_TRUE(glIsEnabledi(GL_BLEND, 0));
-        if (firstOverriddenDrawBuffer > 1)
+        EXPECT_FALSE(glIsEnabledi(GL_BLEND, 1));
+        for (GLint i = 2; i < MAX_DRAW_BUFFERS - 1; ++i)
         {
-            EXPECT_TRUE(glIsEnabledi(GL_BLEND, 1));
+            EXPECT_TRUE(glIsEnabledi(GL_BLEND, i));
         }
-        CHECK_OVERRIDDEN_BLEND_MASKS_INDEXED();
+        EXPECT_FALSE(glIsEnabledi(GL_BLEND, MAX_DRAW_BUFFERS - 1));
 
-        EXPECT_GL_COLOR_MASK(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-        EXPECT_GL_COLOR_MASK_INDEXED(0, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-        if (firstOverriddenDrawBuffer > 1)
+        glColorMaski(2, GL_FALSE, GL_FALSE, GL_TRUE, GL_FALSE);
+        glColorMaski(MAX_DRAW_BUFFERS - 1, GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+        EXPECT_GL_COLOR_MASK(GL_TRUE, GL_TRUE, GL_FALSE, GL_TRUE);
+        EXPECT_GL_COLOR_MASK_INDEXED(0, GL_TRUE, GL_TRUE, GL_FALSE, GL_TRUE);
+        EXPECT_GL_COLOR_MASK_INDEXED(1, GL_TRUE, GL_TRUE, GL_FALSE, GL_TRUE);
+        EXPECT_GL_COLOR_MASK_INDEXED(2, GL_FALSE, GL_FALSE, GL_TRUE, GL_FALSE);
+        for (GLint i = 3; i < MAX_DRAW_BUFFERS - 1; ++i)
         {
             EXPECT_GL_COLOR_MASK_INDEXED(1, GL_TRUE, GL_TRUE, GL_FALSE, GL_TRUE);
         }
-        CHECK_OVERRIDDEN_COLOR_MASKS_INDEXED();
-
-        glDisablei(GL_BLEND, 1);
-        glDisablei(GL_BLEND, highestPLSDrawBuffer);
-        EXPECT_TRUE(glIsEnabled(GL_BLEND));
-        EXPECT_TRUE(glIsEnabledi(GL_BLEND, 0));
-        if (firstOverriddenDrawBuffer > 1)
-        {
-            EXPECT_FALSE(glIsEnabledi(GL_BLEND, 1));
-        }
-        CHECK_OVERRIDDEN_BLEND_MASKS_INDEXED();
-
-        glColorMaski(2, GL_FALSE, GL_FALSE, GL_TRUE, GL_FALSE);
-        glColorMaski(highestPLSDrawBuffer, GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-        EXPECT_GL_COLOR_MASK(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-        EXPECT_GL_COLOR_MASK_INDEXED(0, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-        if (firstOverriddenDrawBuffer > 2)
-        {
-            EXPECT_GL_COLOR_MASK_INDEXED(2, GL_FALSE, GL_FALSE, GL_TRUE, GL_FALSE);
-        }
-        CHECK_OVERRIDDEN_COLOR_MASKS_INDEXED();
+        EXPECT_GL_COLOR_MASK_INDEXED(MAX_DRAW_BUFFERS - 1, GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 
         endPLS();
 
         EXPECT_TRUE(glIsEnabled(GL_BLEND));
         EXPECT_TRUE(glIsEnabledi(GL_BLEND, 0));
-        if (firstOverriddenDrawBuffer > 1)
+        EXPECT_FALSE(glIsEnabledi(GL_BLEND, 1));
+        for (GLint i = 2; i < MAX_DRAW_BUFFERS - 1; ++i)
         {
-            EXPECT_FALSE(glIsEnabledi(GL_BLEND, 1));
+            EXPECT_TRUE(glIsEnabledi(GL_BLEND, i));
         }
-        CHECK_OVERRIDDEN_BLEND_MASKS_INDEXED();
+        EXPECT_FALSE(glIsEnabledi(GL_BLEND, MAX_DRAW_BUFFERS - 1));
 
-        EXPECT_GL_COLOR_MASK(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-        EXPECT_GL_COLOR_MASK_INDEXED(0, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-        if (firstOverriddenDrawBuffer > 2)
+        EXPECT_GL_COLOR_MASK(GL_TRUE, GL_TRUE, GL_FALSE, GL_TRUE);
+        EXPECT_GL_COLOR_MASK_INDEXED(0, GL_TRUE, GL_TRUE, GL_FALSE, GL_TRUE);
+        EXPECT_GL_COLOR_MASK_INDEXED(1, GL_TRUE, GL_TRUE, GL_FALSE, GL_TRUE);
+        EXPECT_GL_COLOR_MASK_INDEXED(2, GL_FALSE, GL_FALSE, GL_TRUE, GL_FALSE);
+        for (GLint i = 3; i < MAX_DRAW_BUFFERS - 1; ++i)
         {
-            EXPECT_GL_COLOR_MASK_INDEXED(2, GL_FALSE, GL_FALSE, GL_TRUE, GL_FALSE);
+            EXPECT_GL_COLOR_MASK_INDEXED(1, GL_TRUE, GL_TRUE, GL_FALSE, GL_TRUE);
         }
-        CHECK_OVERRIDDEN_COLOR_MASKS_INDEXED();
+        EXPECT_GL_COLOR_MASK_INDEXED(MAX_DRAW_BUFFERS - 1, GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 
         glDisable(GL_BLEND);
         glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
@@ -6802,10 +6720,8 @@ TEST_P(PixelLocalStorageValidationTest, BlendMaskDuringPLS)
 
     EXPECT_GL_NO_ERROR();
 
-#undef CHECK_OVERRIDDEN_COLOR_MASKS_INDEXED
 #undef EXPECT_NON_OVERRIDDEN_COLOR_MASK
-#undef CHECK_OVERRIDDEN_BLEND_MASKS_INDEXED
-#undef EXPECT_NON_OVERRIDDEN_BLEND_MASK
+#undef EXPECT_UNIFORM_BLEND_MASK
 }
 
 // Check that modifications to PLS textures bounce while it's active.

@@ -513,13 +513,16 @@ void PrivateState::setColorMask(bool red, bool green, bool blue, bool alpha)
     if (hasActivelyOverriddenPLSDrawBuffers(&firstPLSDrawBuffer))
     {
         // Some draw buffers are currently overridden by pixel local storage. Update only the
-        // buffers that are still visible to the client.
+        // buffers that are still visible to the client and defer the remaining updates until PLS
+        // ends.
+        assert(firstPLSDrawBuffer == 0 || mExtensions.drawBuffersIndexedAny());
         assert(firstPLSDrawBuffer < mCaps.maxDrawBuffers);
         for (GLint i = 0; i < firstPLSDrawBuffer; ++i)
         {
             ASSERT(mExtensions.drawBuffersIndexedAny());
             setColorMaskIndexed(red, green, blue, alpha, i);
         }
+        mPLSDeferredColorMasks = mBlendStateExt.expandColorMaskValue(red, green, blue, alpha);
         return;
     }
 
@@ -536,8 +539,10 @@ void PrivateState::setColorMaskIndexed(bool red, bool green, bool blue, bool alp
 {
     if (isActivelyOverriddenPLSDrawBuffer(index))
     {
-        // The indexed draw buffer is currently overridden by pixel local storage. Setting the color
-        // mask has no effect.
+        // The indexed draw buffer is currently overridden by pixel local storage. Defer this update
+        // until PLS ends.
+        BlendStateExt::ColorMaskStorage::SetValueIndexed(
+            index, BlendStateExt::PackColorMask(red, green, blue, alpha), &mPLSDeferredColorMasks);
         return;
     }
 
@@ -665,13 +670,17 @@ void PrivateState::setBlend(bool enabled)
     if (hasActivelyOverriddenPLSDrawBuffers(&firstPLSDrawBuffer))
     {
         // Some draw buffers are currently overridden by pixel local storage. Update only the
-        // buffers that are still visible to the client.
+        // buffers that are still visible to the client and defer the remaining updates until PLS
+        // ends.
+        assert(firstPLSDrawBuffer == 0 || mExtensions.drawBuffersIndexedAny());
         assert(firstPLSDrawBuffer < mCaps.maxDrawBuffers);
         for (GLint i = 0; i < firstPLSDrawBuffer; ++i)
         {
             ASSERT(mExtensions.drawBuffersIndexedAny());
             setBlendIndexed(enabled, i);
         }
+        mPLSDeferredBlendEnables =
+            enabled ? mBlendStateExt.getAllEnabledMask() : DrawBufferMask::Zero();
         return;
     }
 
@@ -689,8 +698,9 @@ void PrivateState::setBlendIndexed(bool enabled, GLuint index)
 {
     if (isActivelyOverriddenPLSDrawBuffer(index))
     {
-        // The indexed draw buffer is currently overridden by pixel local storage. Enabling
-        // blend has no effect.
+        // The indexed draw buffer is currently overridden by pixel local storage. Defer this update
+        // until PLS ends.
+        mPLSDeferredBlendEnables.set(index, enabled);
         return;
     }
 
@@ -1210,7 +1220,95 @@ void PrivateState::setPatchVertices(GLuint value)
 
 void PrivateState::setPixelLocalStorageActivePlanes(GLsizei n)
 {
-    mPixelLocalStorageActivePlanes = n;
+    if (n != 0)
+    {
+        // Pixel local storage is beginning.
+        ASSERT(mPixelLocalStorageActivePlanes == 0);
+        const GLuint firstActivePLSDrawBuffer =
+            PixelLocalStorage::FirstOverriddenDrawBuffer(mCaps, n);
+
+        // Save the original blend & color mask state so we can restore it when PLS ends.
+        mPLSDeferredBlendEnables = mBlendStateExt.getEnabledMask();
+        mPLSDeferredColorMasks   = mBlendStateExt.getColorMaskBits();
+
+        // Disable blend & enable color mask on the reserved PLS planes.
+        if (firstActivePLSDrawBuffer == 0)
+        {
+            if (mBlendStateExt.getEnabledMask().test(0))
+            {
+                setBlend(false);
+            }
+            if (mBlendStateExt.getColorMaskIndexed(0) != BlendStateExt::kColorMaskRGBA)
+            {
+                setColorMask(true, true, true, true);
+            }
+        }
+        else
+        {
+            ASSERT(mExtensions.drawBuffersIndexedAny());
+            for (GLint i = firstActivePLSDrawBuffer; i < mCaps.maxDrawBuffers; ++i)
+            {
+                if (mBlendStateExt.getEnabledMask().test(i))
+                {
+                    setBlendIndexed(false, i);
+                }
+                if (mBlendStateExt.getColorMaskIndexed(i) != BlendStateExt::kColorMaskRGBA)
+                {
+                    setColorMaskIndexed(true, true, true, true, i);
+                }
+            }
+        }
+
+        // Set mPixelLocalStorageActivePlanes last, so the setBlend()/setColorMask() calls above
+        // don't bounce.
+        mPixelLocalStorageActivePlanes = n;
+    }
+    else
+    {
+        // Pixel local storage is ending.
+        ASSERT(mPixelLocalStorageActivePlanes != 0);
+        const GLuint firstActivePLSDrawBuffer =
+            PixelLocalStorage::FirstOverriddenDrawBuffer(mCaps, mPixelLocalStorageActivePlanes);
+
+        // Set mPixelLocalStorageActivePlanes first, so the following calls to
+        // setBlend()/setColorMask() don't bounce.
+        mPixelLocalStorageActivePlanes = 0;
+
+        // Restore and/or apply deferred updates to blend and color mask state on the overridden PLS
+        // draw buffers.
+        bool r, g, b, a;
+        if (!mExtensions.drawBuffersIndexedAny())
+        {
+            if (mPLSDeferredBlendEnables.test(0))
+            {
+                setBlend(true);
+            }
+            const uint8_t colorMask =
+                BlendStateExt::ColorMaskStorage::GetValueIndexed(0, mPLSDeferredColorMasks);
+            if (colorMask != BlendStateExt::kColorMaskRGBA)
+            {
+                BlendStateExt::UnpackColorMask(colorMask, &r, &g, &b, &a);
+                setColorMask(r, g, b, a);
+            }
+        }
+        else
+        {
+            for (GLint i = firstActivePLSDrawBuffer; i < mCaps.maxDrawBuffers; ++i)
+            {
+                if (mPLSDeferredBlendEnables.test(i))
+                {
+                    setBlendIndexed(true, i);
+                }
+                const uint8_t colorMask =
+                    BlendStateExt::ColorMaskStorage::GetValueIndexed(i, mPLSDeferredColorMasks);
+                if (colorMask != BlendStateExt::kColorMaskRGBA)
+                {
+                    BlendStateExt::UnpackColorMask(colorMask, &r, &g, &b, &a);
+                    setColorMaskIndexed(r, g, b, a, i);
+                }
+            }
+        }
+    }
 }
 
 void PrivateState::setLineWidth(GLfloat width)
@@ -1688,12 +1786,7 @@ void PrivateState::getBooleanv(GLenum pname, GLboolean *params) const
         case GL_COLOR_WRITEMASK:
         {
             // non-indexed get returns the state of draw buffer zero
-            bool r, g, b, a;
-            mBlendStateExt.getColorMaskIndexed(0, &r, &g, &b, &a);
-            params[0] = r;
-            params[1] = g;
-            params[2] = b;
-            params[3] = a;
+            getBooleani_v(GL_COLOR_WRITEMASK, 0, params);
             break;
         }
         case GL_CULL_FACE:
@@ -1730,8 +1823,7 @@ void PrivateState::getBooleanv(GLenum pname, GLboolean *params) const
             *params = mDepthStencil.depthTest;
             break;
         case GL_BLEND:
-            // non-indexed get returns the state of draw buffer zero
-            *params = mBlendStateExt.getEnabledMask().test(0);
+            *params = isBlendEnabled();
             break;
         case GL_DITHER:
             *params = mRasterizer.dither;
@@ -2230,8 +2322,12 @@ void PrivateState::getBooleani_v(GLenum target, GLuint index, GLboolean *data) c
         case GL_COLOR_WRITEMASK:
         {
             ASSERT(static_cast<size_t>(index) < mBlendStateExt.getDrawBufferCount());
+            const uint8_t colorMask = isActivelyOverriddenPLSDrawBuffer(index)
+                                          ? BlendStateExt::ColorMaskStorage::GetValueIndexed(
+                                                index, mPLSDeferredColorMasks)
+                                          : mBlendStateExt.getColorMaskIndexed(index);
             bool r, g, b, a;
-            mBlendStateExt.getColorMaskIndexed(index, &r, &g, &b, &a);
+            BlendStateExt::UnpackColorMask(colorMask, &r, &g, &b, &a);
             data[0] = r;
             data[1] = g;
             data[2] = b;
