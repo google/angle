@@ -502,13 +502,13 @@ class RenderCommandEncoder final : public CommandEncoder
                                             uint32_t offset,
                                             uint32_t index);
     RenderCommandEncoder &setBytes(gl::ShaderType shaderType,
-                                   const uint8_t *bytes,
+                                   const void *bytes,
                                    size_t size,
                                    uint32_t index);
-    template <typename T>
+    template <typename T, typename = std::enable_if_t<!std::is_pointer_v<T>>>
     RenderCommandEncoder &setData(gl::ShaderType shaderType, const T &data, uint32_t index)
     {
-        return setBytes(shaderType, reinterpret_cast<const uint8_t *>(&data), sizeof(T), index);
+        return setBytes(shaderType, &data, sizeof(data), index);
     }
     RenderCommandEncoder &setSamplerState(gl::ShaderType shaderType,
                                           id<MTLSamplerState> state,
@@ -723,11 +723,11 @@ class ComputeCommandEncoder final : public CommandEncoder
     ComputeCommandEncoder &setBufferForWrite(const BufferRef &buffer,
                                              uint32_t offset,
                                              uint32_t index);
-    ComputeCommandEncoder &setBytes(const uint8_t *bytes, size_t size, uint32_t index);
+    ComputeCommandEncoder &setBytes(const void *bytes, size_t size, uint32_t index);
     template <typename T>
     ComputeCommandEncoder &setData(const T &data, uint32_t index)
     {
-        return setBytes(reinterpret_cast<const uint8_t *>(&data), sizeof(T), index);
+        return setBytes(&data, sizeof(data), index);
     }
     ComputeCommandEncoder &setSamplerState(id<MTLSamplerState> state,
                                            float lodMinClamp,
