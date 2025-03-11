@@ -4507,6 +4507,12 @@ bool ValidateVertexAttribI4iv(const PrivateState &state,
         return false;
     }
 
+    if (v == nullptr)
+    {
+        errors->validationError(entryPoint, GL_INVALID_VALUE, kVertexAttributeValueNULL);
+        return false;
+    }
+
     return ValidateVertexAttribIndex(state, errors, entryPoint, index);
 }
 
@@ -4519,6 +4525,12 @@ bool ValidateVertexAttribI4uiv(const PrivateState &state,
     if (state.getClientMajorVersion() < 3)
     {
         errors->validationError(entryPoint, GL_INVALID_OPERATION, kES3Required);
+        return false;
+    }
+
+    if (v == nullptr)
+    {
+        errors->validationError(entryPoint, GL_INVALID_VALUE, kVertexAttributeValueNULL);
         return false;
     }
 

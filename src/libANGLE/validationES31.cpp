@@ -1765,7 +1765,7 @@ bool ValidateUseProgramStagesBase(const Context *context,
     // GL_INVALID_OPERATION is generated if pipeline is not a name previously returned from a call
     // to glGenProgramPipelines or if such a name has been deleted by a call to
     // glDeleteProgramPipelines.
-    if (!context->isProgramPipelineGenerated({pipeline}))
+    if ((pipeline.value == 0) || (!context->isProgramPipelineGenerated({pipeline})))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kObjectNotGenerated);
         return false;
@@ -1816,7 +1816,7 @@ bool ValidateActiveShaderProgramBase(const Context *context,
     // An INVALID_OPERATION error is generated if pipeline is not a name returned from a previous
     // call to GenProgramPipelines or if such a name has since been deleted by
     // DeleteProgramPipelines.
-    if (!context->isProgramPipelineGenerated({pipeline}))
+    if ((pipeline.value == 0) || (!context->isProgramPipelineGenerated({pipeline})))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kObjectNotGenerated);
         return false;
@@ -1952,12 +1952,10 @@ bool ValidateValidateProgramPipelineBase(const Context *context,
                                          angle::EntryPoint entryPoint,
                                          ProgramPipelineID pipeline)
 {
-    if (pipeline.value == 0)
-    {
-        return false;
-    }
-
-    if (!context->isProgramPipelineGenerated(pipeline))
+    // An INVALID_OPERATION error is generated if pipeline is not a name returned from a previous
+    // call to GenProgramPipelines or if such a name has since been deleted by
+    // DeleteProgramPipelines.
+    if ((pipeline.value == 0) || (!context->isProgramPipelineGenerated(pipeline)))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kProgramPipelineDoesNotExist);
         return false;
@@ -1976,6 +1974,12 @@ bool ValidateGetProgramPipelineInfoLogBase(const Context *context,
     if (bufSize < 0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeBufSize);
+        return false;
+    }
+
+    if (bufSize > 0 && infoLog == nullptr)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kProgramPipelineInfoLogNULL);
         return false;
     }
 

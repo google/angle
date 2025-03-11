@@ -208,6 +208,12 @@ ANGLE_INLINE bool ValidateVertexAttrib1fv(const PrivateState &state,
                                           GLuint index,
                                           const GLfloat *values)
 {
+    if (values == nullptr)
+    {
+        errors->validationError(entryPoint, GL_INVALID_VALUE, err::kVertexAttributeValueNULL);
+        return false;
+    }
+
     return ValidateVertexAttribIndex(state, errors, entryPoint, index);
 }
 
@@ -227,6 +233,12 @@ ANGLE_INLINE bool ValidateVertexAttrib2fv(const PrivateState &state,
                                           GLuint index,
                                           const GLfloat *values)
 {
+    if (values == nullptr)
+    {
+        errors->validationError(entryPoint, GL_INVALID_VALUE, err::kVertexAttributeValueNULL);
+        return false;
+    }
+
     return ValidateVertexAttribIndex(state, errors, entryPoint, index);
 }
 
@@ -247,6 +259,12 @@ ANGLE_INLINE bool ValidateVertexAttrib3fv(const PrivateState &state,
                                           GLuint index,
                                           const GLfloat *values)
 {
+    if (values == nullptr)
+    {
+        errors->validationError(entryPoint, GL_INVALID_VALUE, err::kVertexAttributeValueNULL);
+        return false;
+    }
+
     return ValidateVertexAttribIndex(state, errors, entryPoint, index);
 }
 
@@ -268,6 +286,12 @@ ANGLE_INLINE bool ValidateVertexAttrib4fv(const PrivateState &state,
                                           GLuint index,
                                           const GLfloat *values)
 {
+    if (values == nullptr)
+    {
+        errors->validationError(entryPoint, GL_INVALID_VALUE, err::kVertexAttributeValueNULL);
+        return false;
+    }
+
     return ValidateVertexAttribIndex(state, errors, entryPoint, index);
 }
 
@@ -631,6 +655,23 @@ bool ValidatePushDebugGroupBase(const Context *context,
                                 GLsizei length,
                                 const GLchar *message);
 bool ValidatePopDebugGroupBase(const Context *context, angle::EntryPoint entryPoint);
+
+bool ValidateDebugMessageControlBase(const Context *context,
+                                     angle::EntryPoint entryPoint,
+                                     GLenum source,
+                                     GLenum type,
+                                     GLenum severity,
+                                     GLsizei count,
+                                     const GLuint *ids);
+
+bool ValidateDebugMessageInsertBase(const Context *context,
+                                    angle::EntryPoint entryPoint,
+                                    GLenum source,
+                                    GLenum type,
+                                    GLuint id,
+                                    GLenum severity,
+                                    GLsizei length,
+                                    const GLchar *buf);
 
 // Validation of ObjectLabel
 bool ValidateObjectLabelBase(const Context *context,

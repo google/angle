@@ -6159,6 +6159,13 @@ void Context::debugMessageInsert(GLenum source,
                                  GLsizei length,
                                  const GLchar *buf)
 {
+    if (!mState.getDebug().isOutputEnabled())
+    {
+        // If the DEBUG_OUTPUT state is disabled calls to DebugMessageInsert are discarded and do
+        // not generate an error.
+        return;
+    }
+
     std::string msg(buf, (length > 0) ? static_cast<size_t>(length) : strlen(buf));
     mState.getDebug().insertMessage(source, type, id, severity, std::move(msg), gl::LOG_INFO,
                                     angle::EntryPoint::GLDebugMessageInsert);

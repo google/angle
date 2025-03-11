@@ -1672,7 +1672,7 @@ bool ValidateES2TexImageParametersBase(const Context *context,
 
         if (format != textureInternalFormat.format)
         {
-            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, err::kTextureFormatMismatch);
+            ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kTextureFormatMismatch);
             return false;
         }
 
@@ -2085,21 +2085,14 @@ static bool ValidDebugSeverity(GLenum severity)
     }
 }
 
-bool ValidateDebugMessageControlKHR(const Context *context,
-                                    angle::EntryPoint entryPoint,
-                                    GLenum source,
-                                    GLenum type,
-                                    GLenum severity,
-                                    GLsizei count,
-                                    const GLuint *ids,
-                                    GLboolean enabled)
+bool ValidateDebugMessageControlBase(const Context *context,
+                                     angle::EntryPoint entryPoint,
+                                     GLenum source,
+                                     GLenum type,
+                                     GLenum severity,
+                                     GLsizei count,
+                                     const GLuint *ids)
 {
-    if (!context->getExtensions().debugKHR)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     if (!ValidDebugSource(source, false) && source != GL_DONT_CARE)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidDebugSource);
@@ -2131,6 +2124,12 @@ bool ValidateDebugMessageControlKHR(const Context *context,
             ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidDebugSeverity);
             return false;
         }
+
+        if (ids == nullptr)
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kDebugMessageControlIdsNULL);
+            return false;
+        }
     }
     else if (count < 0)
     {
@@ -2141,28 +2140,15 @@ bool ValidateDebugMessageControlKHR(const Context *context,
     return true;
 }
 
-bool ValidateDebugMessageInsertKHR(const Context *context,
-                                   angle::EntryPoint entryPoint,
-                                   GLenum source,
-                                   GLenum type,
-                                   GLuint id,
-                                   GLenum severity,
-                                   GLsizei length,
-                                   const GLchar *buf)
+bool ValidateDebugMessageInsertBase(const Context *context,
+                                    angle::EntryPoint entryPoint,
+                                    GLenum source,
+                                    GLenum type,
+                                    GLuint id,
+                                    GLenum severity,
+                                    GLsizei length,
+                                    const GLchar *buf)
 {
-    if (!context->getExtensions().debugKHR)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
-    if (!context->getState().getDebug().isOutputEnabled())
-    {
-        // If the DEBUG_OUTPUT state is disabled calls to DebugMessageInsert are discarded and do
-        // not generate an error.
-        return false;
-    }
-
     if (!ValidDebugSeverity(severity))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidDebugSource);
@@ -2181,6 +2167,12 @@ bool ValidateDebugMessageInsertKHR(const Context *context,
         return false;
     }
 
+    if (buf == nullptr)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kDebugMessageInsertBufNULL);
+        return false;
+    }
+
     size_t messageLength = (length < 0) ? strlen(buf) : length;
     if (messageLength > context->getCaps().maxDebugMessageLength)
     {
@@ -2189,6 +2181,43 @@ bool ValidateDebugMessageInsertKHR(const Context *context,
     }
 
     return true;
+}
+
+bool ValidateDebugMessageControlKHR(const Context *context,
+                                    angle::EntryPoint entryPoint,
+                                    GLenum source,
+                                    GLenum type,
+                                    GLenum severity,
+                                    GLsizei count,
+                                    const GLuint *ids,
+                                    GLboolean enabled)
+{
+    if (!context->getExtensions().debugKHR)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateDebugMessageControlBase(context, entryPoint, source, type, severity, count, ids);
+}
+
+bool ValidateDebugMessageInsertKHR(const Context *context,
+                                   angle::EntryPoint entryPoint,
+                                   GLenum source,
+                                   GLenum type,
+                                   GLuint id,
+                                   GLenum severity,
+                                   GLsizei length,
+                                   const GLchar *buf)
+{
+    if (!context->getExtensions().debugKHR)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateDebugMessageInsertBase(context, entryPoint, source, type, id, severity, length,
+                                          buf);
 }
 
 bool ValidateDebugMessageCallbackKHR(const Context *context,
@@ -3997,6 +4026,12 @@ bool ValidateBindAttribLocation(const Context *context,
         return false;
     }
 
+    if (name == nullptr)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kAttributeLocationNull);
+        return false;
+    }
+
     if (strncmp(name, "gl_", 3) == 0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kNameBeginsWithGL);
@@ -4680,6 +4715,12 @@ bool ValidateGetAttribLocation(const Context *context,
                                ShaderProgramID program,
                                const GLchar *name)
 {
+    if (name == nullptr)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kAttributeLocationNull);
+        return false;
+    }
+
     if (strncmp(name, "gl_", 3) == 0)
     {
         return false;
@@ -4731,7 +4772,7 @@ bool ValidateGetBooleanv(const Context *context,
 
     if (params == nullptr)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, err::kPLSParamsNULL);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kPLSParamsNULL);
         return false;
     }
 
@@ -4753,7 +4794,7 @@ bool ValidateGetFloatv(const Context *context,
 
     if (params == nullptr)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, err::kPLSParamsNULL);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kPLSParamsNULL);
         return false;
     }
 
@@ -4770,7 +4811,7 @@ bool ValidateGetIntegerv(const Context *context,
 
     if (params == nullptr)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, err::kPLSParamsNULL);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kPLSParamsNULL);
         return false;
     }
 
@@ -4892,6 +4933,12 @@ bool ValidateGetUniformLocation(const Context *context,
                                 ShaderProgramID program,
                                 const GLchar *name)
 {
+    if (name == nullptr)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kUniformLocationNull);
+        return false;
+    }
+
     if (strstr(name, "gl_") == name)
     {
         return false;
