@@ -549,19 +549,19 @@ void X11Window::setVisible(bool isVisible)
         XEvent placeholderEvent;
         XIfEvent(mDisplay, &placeholderEvent, WaitForMapNotify,
                  reinterpret_cast<XPointer>(mWindow));
+
+        // Block until we get ConfigureNotify to set up fully before returning.
+        mConfigured = false;
+        while (!mConfigured)
+        {
+            messageLoop();
+            angle::Sleep(10);
+        }
     }
     else
     {
         XUnmapWindow(mDisplay, mWindow);
         XFlush(mDisplay);
-    }
-
-    // Block until we get ConfigureNotify to set up fully before returning.
-    mConfigured = false;
-    while (!mConfigured)
-    {
-        messageLoop();
-        angle::Sleep(10);
     }
 
     mVisible = isVisible;
