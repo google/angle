@@ -266,6 +266,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo avoidInvisibleWindowSwapchainRecreate = {
+        "avoidInvisibleWindowSwapchainRecreate",
+        FeatureCategory::VulkanWorkarounds,
+        &members,
+    };
+
     FeatureInfo padBuffersToMaxVertexAttribStride = {
         "padBuffersToMaxVertexAttribStride",
         FeatureCategory::VulkanWorkarounds,

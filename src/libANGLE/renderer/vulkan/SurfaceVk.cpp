@@ -527,6 +527,7 @@ void AcquireNextImageUnlocked(VkDevice device,
                               std::atomic<impl::SurfaceSizeState> *sizeState)
 {
     ASSERT(acquire->state == impl::ImageAcquireState::Unacquired);
+    ASSERT(*sizeState != impl::SurfaceSizeState::InvalidSwapchain);
     ASSERT(swapchain != VK_NULL_HANDLE);
 
     impl::UnlockedAcquireData *data     = &acquire->unlockedAcquireData;
@@ -1026,7 +1027,7 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState, EGLNativ
       mSurface(VK_NULL_HANDLE),
       mSupportsProtectedSwapchain(false),
       mIsSurfaceSizedBySwapchain(false),
-      mSizeState(SurfaceSizeState::Unresolved),
+      mSizeState(SurfaceSizeState::InvalidSwapchain),
       mSwapchain(VK_NULL_HANDLE),
       mLastSwapchain(VK_NULL_HANDLE),
       mSwapchainPresentMode(vk::PresentMode::FifoKHR),
@@ -1550,6 +1551,7 @@ angle::Result WindowSurfaceVk::collectOldSwapchain(vk::ErrorContext *context,
 
 void WindowSurfaceVk::invalidateSwapchain(vk::Renderer *renderer)
 {
+    ASSERT(mSizeState != SurfaceSizeState::InvalidSwapchain);
     ASSERT(mSwapchain != VK_NULL_HANDLE);
     ASSERT(!mSwapchainImages[mCurrentSwapchainImageIndex]
                 .image->getAcquireNextImageSemaphore()
@@ -1562,7 +1564,7 @@ void WindowSurfaceVk::invalidateSwapchain(vk::Renderer *renderer)
     mAcquireOperation.state = ImageAcquireState::Unacquired;
 
     // Surface size is unresolved since new swapchain may have new size.
-    setSizeState(SurfaceSizeState::Unresolved);
+    setSizeState(SurfaceSizeState::InvalidSwapchain);
 
     releaseSwapchainImages(renderer);
 
@@ -1641,7 +1643,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::ErrorContext *context)
     ANGLE_TRACE_EVENT0("gpu.angle", "WindowSurfaceVk::createSwapchain");
 
     ASSERT(mAcquireOperation.state == ImageAcquireState::Unacquired);
-    ASSERT(mSizeState != SurfaceSizeState::Resolved);
+    ASSERT(mSizeState == SurfaceSizeState::InvalidSwapchain);
     ASSERT(mSwapchain == VK_NULL_HANDLE);
 
     vk::Renderer *renderer = context->getRenderer();
@@ -1870,7 +1872,12 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::ErrorContext *context)
     // Assign swapchain after all initialization is finished.
     mSwapchain = newSwapChain;
 
-    if (!renderer->getFeatures().perFrameWindowSizeQuery.enabled)
+    if (renderer->getFeatures().perFrameWindowSizeQuery.enabled)
+    {
+        // Swapchain is now valid, but size is still unresolved until acquire next image.
+        setSizeState(SurfaceSizeState::Unresolved);
+    }
+    else
     {
         // When feature is disabled, size is resolved as long the swapchain is valid.
         setSizeState(SurfaceSizeState::Resolved);
@@ -2037,6 +2044,8 @@ void WindowSurfaceVk::checkForOutOfDateSwapchain(vk::Renderer *renderer, bool pr
 angle::Result WindowSurfaceVk::prepareSwapchainForAcquireNextImage(vk::ErrorContext *context)
 {
     ASSERT(mAcquireOperation.state == ImageAcquireState::Unacquired);
+    ASSERT(context->getFeatures().perFrameWindowSizeQuery.enabled ||
+           !context->getFeatures().avoidInvisibleWindowSwapchainRecreate.enabled);
 
     vk::Renderer *renderer = context->getRenderer();
 
@@ -2053,7 +2062,7 @@ angle::Result WindowSurfaceVk::prepareSwapchainForAcquireNextImage(vk::ErrorCont
     ASSERT(mSizeState != SurfaceSizeState::Resolved);
 
     // Get the latest surface capabilities.  Also update the compatible present modes if recreate
-    // was probably cased by the incompatible desired present mode.  Note, that we must not update
+    // was probably caused by the incompatible desired present mode.  Note, that we must not update
     // compatible present modes while swapchain is still valid, but must do it otherwise.
     VkSurfaceCapabilitiesKHR surfaceCaps;
     ANGLE_TRY(queryAndAdjustSurfaceCaps(context, mSwapchainPresentMode, &surfaceCaps,
@@ -2075,6 +2084,16 @@ angle::Result WindowSurfaceVk::prepareSwapchainForAcquireNextImage(vk::ErrorCont
             surfaceCaps.currentExtent.height == curSurfaceHeight && minImageCount == mMinImageCount)
         {
             return angle::Result::Continue;
+        }
+
+        if (renderer->getFeatures().avoidInvisibleWindowSwapchainRecreate.enabled)
+        {
+            bool isWindowVisible = false;
+            ANGLE_TRY(getWindowVisibility(context, &isWindowVisible));
+            if (!isWindowVisible)
+            {
+                return angle::Result::Continue;
+            }
         }
 
         invalidateSwapchain(renderer);
@@ -2957,7 +2976,7 @@ VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::ErrorContext *context)
 
     if (IsImageAcquireFailed(result))
     {
-        ASSERT(mSizeState != SurfaceSizeState::Resolved);
+        ASSERT(mSizeState == SurfaceSizeState::Unresolved);
         return result;
     }
     ASSERT(mSizeState == SurfaceSizeState::Resolved);
@@ -3140,6 +3159,13 @@ void WindowSurfaceVk::setSwapInterval(const egl::Display *display, EGLint interv
     }
 }
 
+angle::Result WindowSurfaceVk::getWindowVisibility(vk::ErrorContext *context,
+                                                   bool *isVisibleOut) const
+{
+    UNIMPLEMENTED();
+    return angle::Result::Stop;
+}
+
 SurfaceSizeState WindowSurfaceVk::getSizeState() const
 {
     return GetSizeState(mSizeState);
@@ -3210,6 +3236,26 @@ angle::Result WindowSurfaceVk::getUserExtentsImpl(vk::ErrorContext *context,
     }
 
     adjustSurfaceExtent(extentOut);
+
+    // Must return current surface size if swapchain recreate will be skipped in the future
+    // |prepareSwapchainForAcquireNextImage| call.  Can't skip recreate if swapchain is already
+    // invalid.  Avoid unnecessary |getWindowVisibility| call if window and surface sizes match.
+    if (context->getFeatures().avoidInvisibleWindowSwapchainRecreate.enabled &&
+        getSizeState() == SurfaceSizeState::Unresolved)
+    {
+        std::lock_guard<angle::SimpleMutex> lock(mSizeMutex);
+        if (extentOut->width != static_cast<uint32_t>(mWidth) ||
+            extentOut->height != static_cast<uint32_t>(mHeight))
+        {
+            bool isWindowVisible = false;
+            ANGLE_TRY(getWindowVisibility(context, &isWindowVisible));
+            if (!isWindowVisible)
+            {
+                extentOut->width  = mWidth;
+                extentOut->height = mHeight;
+            }
+        }
+    }
 
     return angle::Result::Continue;
 }

@@ -4078,6 +4078,55 @@ TEST_P(EGLSurfaceTest, ResizeLargeWindow)
         EXPECT_EQ(drawSizeCheckRect(mWindowSurface, width, height), 0);
     }
 }
+
+// Tests that window surface resize when window is invisible does not cause failure.
+TEST_P(EGLSurfaceTest, ResizeInvisibleWindow)
+{
+    // http://anglebug.com/42263074
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsARM());
+
+    constexpr size_t kSizeCount = 2;
+    constexpr std::array<int, kSizeCount> kWidths{199, 500};
+    constexpr std::array<int, kSizeCount> kHeights{499, 200};
+
+    setWindowVisible(mOSWindow, false);
+
+    initializeDisplay();
+    initializeSurfaceWithDefaultConfig(true);
+    initializeMainContext();
+    ASSERT_NE(mWindowSurface, EGL_NO_SURFACE);
+
+    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
+    ASSERT_EGL_SUCCESS();
+
+    for (size_t i = 0; i < kSizeCount; ++i)
+    {
+        // Resize before swap.
+        mOSWindow->resize(kWidths[i], kHeights[i]);
+
+        // Swap should resize the surface if it is not already resized.
+        eglSwapBuffers(mDisplay, mWindowSurface);
+        ASSERT_EGL_SUCCESS();
+
+        // A warm-up draw in order to acquire the back buffer image before size query.
+        glEnable(GL_SCISSOR_TEST);
+        glScissor(1, 1, 1, 1);
+        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        EXPECT_GL_NO_ERROR();
+
+        EGLint height = 0;
+        EGLint width  = 0;
+
+        // Query surface size but skip the check since size may not change when window is invisible.
+        eglQuerySurface(mDisplay, mWindowSurface, EGL_WIDTH, &width);
+        eglQuerySurface(mDisplay, mWindowSurface, EGL_HEIGHT, &height);
+        ASSERT_EGL_SUCCESS();
+
+        // Actual buffer size must match the reported size.
+        EXPECT_EQ(drawSizeCheckRect(mWindowSurface, width, height), 0);
+    }
+}
 }  // anonymous namespace
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLSingleBufferTest);

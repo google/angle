@@ -52,6 +52,7 @@ enum class Feature
     AsyncGarbageCleanup,
     Avoid1BitAlphaTextureFormats,
     AvoidBindFragDataLocation,
+    AvoidInvisibleWindowSwapchainRecreate,
     AvoidOpSelectWithMismatchingRelaxedPrecision,
     AvoidStencilTextureSwizzle,
     BgraTexImageFormatsBroken,

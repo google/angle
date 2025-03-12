@@ -28,6 +28,7 @@ class WindowSurfaceVkXcb : public WindowSurfaceVk
     angle::Result createSurfaceVk(vk::ErrorContext *context) override;
     angle::Result getCurrentWindowSize(vk::ErrorContext *context,
                                        gl::Extents *extentsOut) const override;
+    angle::Result getWindowVisibility(vk::ErrorContext *context, bool *isVisibleOut) const override;
 
     xcb_connection_t *mXcbConnection;
 };

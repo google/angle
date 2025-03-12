@@ -322,6 +322,17 @@
             "issue": "http://anglebug.com/40096601, http://anglebug.com/42262286, http://anglebug.com/42262287, http://anglebug.com/397848903"
         },
         {
+            "name": "avoid_invisible_window_swapchain_recreate",
+            "category": "Workarounds",
+            "description": [
+                "When per_frame_window_size_query is enabled, do not recreate a swapchain when ",
+                "window is invisible even if its size is changed. This is a workaround for the ",
+                "bug when vkAcquireNextImageKHR constantly returns VK_ERROR_OUT_OF_DATE if ",
+                "recreate the swapchain while window is invisible."
+            ],
+            "issue": "http://anglebug.com/397848903"
+        },
+        {
             "name": "pad_buffers_to_max_vertex_attrib_stride",
             "category": "Workarounds",
             "description": [

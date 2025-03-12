@@ -5294,12 +5294,17 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     //   swap), enable the feature by default for all platforms.  This also covers platforms that
     //   have inconsistent present OUT_OF_DATE results, or may start to have after a driver update
     //   or some other reason.
-    // - NVIDIA on Linux X11 is disabled because of the possible driver bug, despite acquire next
-    //   image and queue present results are inconsistent (when window is invisible).  Without this
-    //   feature, surface will be resized only after swap and only if window is visible.  Surface
-    //   will not be resized when window is invisible.
-    ANGLE_FEATURE_CONDITION(&mFeatures, perFrameWindowSizeQuery,
-                            !(isNvidia && nativeWindowSystem == angle::NativeWindowSystem::X11));
+    ANGLE_FEATURE_CONDITION(&mFeatures, perFrameWindowSizeQuery, true);
+
+    // The perFrameWindowSizeQuery must be enabled and |WindowSurfaceVk::getWindowVisibility|
+    // method implemented.  When enabled, surface will be resized only if window is visible.
+    // Notes:
+    // - Enable for NVIDIA on Linux X11 because of the possible driver bug, when acquire next image
+    //   continuously returns OUT_OF_DATE if recreate the swapchain while window is not visible
+    //   (http://anglebug.com/397848903).
+    ANGLE_FEATURE_CONDITION(&mFeatures, avoidInvisibleWindowSwapchainRecreate,
+                            mFeatures.perFrameWindowSizeQuery.enabled &&
+                                (isNvidia && nativeWindowSystem == angle::NativeWindowSystem::X11));
 
     ANGLE_FEATURE_CONDITION(&mFeatures, padBuffersToMaxVertexAttribStride, isAMD || isSamsung);
     mMaxVertexAttribStride = std::min(static_cast<uint32_t>(gl::limits::kMaxVertexAttribStride),

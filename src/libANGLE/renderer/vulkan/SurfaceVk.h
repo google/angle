@@ -262,6 +262,7 @@ struct ImageAcquireOperation : angle::NonCopyable
 
 enum class SurfaceSizeState
 {
+    InvalidSwapchain,
     Unresolved,
     Resolved,
 };
@@ -391,6 +392,7 @@ class WindowSurfaceVk : public SurfaceVk
     virtual angle::Result createSurfaceVk(vk::ErrorContext *context)          = 0;
     virtual angle::Result getCurrentWindowSize(vk::ErrorContext *context,
                                                gl::Extents *extentsOut) const = 0;
+    virtual angle::Result getWindowVisibility(vk::ErrorContext *context, bool *isVisibleOut) const;
 
     impl::SurfaceSizeState getSizeState() const;
     void setSizeState(impl::SurfaceSizeState sizeState);

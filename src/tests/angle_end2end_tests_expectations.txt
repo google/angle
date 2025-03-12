@@ -1667,6 +1667,7 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 42264022 IOS : EGLSurfaceTest.ResizeBeforeDrawPostSizeQuery/* = SKIP
 42264022 IOS : EGLSurfaceTest.ResizeAfterDraw/* = SKIP
 42264022 IOS : EGLSurfaceTest.ResizeLargeWindow/* = SKIP
+42264022 IOS : EGLSurfaceTest.ResizeInvisibleWindow/* = SKIP
 373659619 MAC METAL : EGLSurfaceTest.ResizeAfterSwap/* = SKIP
 373659619 MAC METAL : EGLSurfaceTest.ResizeBeforeDraw/* = SKIP
 373659619 MAC OPENGL : EGLSurfaceTest.ResizeBeforeDraw/* = SKIP
@@ -1676,6 +1677,7 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 397848903 LINUX NVIDIA OPENGL : EGLSurfaceTest.ResizeBeforeDraw/* = SKIP
 397848903 LINUX NVIDIA OPENGL : EGLSurfaceTest.ResizeBeforeDrawPostSizeQuery/* = SKIP
 397848903 LINUX NVIDIA OPENGL : EGLSurfaceTest.ResizeAfterDraw/* = SKIP
+397848903 LINUX NVIDIA OPENGL : EGLSurfaceTest.ResizeInvisibleWindow/* = SKIP
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Slow tests, should appear last in this file

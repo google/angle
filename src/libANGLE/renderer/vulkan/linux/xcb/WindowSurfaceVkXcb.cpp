@@ -52,4 +52,22 @@ angle::Result WindowSurfaceVkXcb::getCurrentWindowSize(vk::ErrorContext *context
     return angle::Result::Continue;
 }
 
+angle::Result WindowSurfaceVkXcb::getWindowVisibility(vk::ErrorContext *context,
+                                                      bool *isVisibleOut) const
+{
+    xcb_get_window_attributes_cookie_t cookie =
+        xcb_get_window_attributes(mXcbConnection, static_cast<xcb_window_t>(mNativeWindowType));
+    xcb_generic_error_t *error = nullptr;
+    xcb_get_window_attributes_reply_t *reply =
+        xcb_get_window_attributes_reply(mXcbConnection, cookie, &error);
+    if (error)
+    {
+        free(reply);
+        ANGLE_VK_CHECK(context, false, VK_ERROR_INITIALIZATION_FAILED);
+    }
+    *isVisibleOut = (reply->map_state == XCB_MAP_STATE_VIEWABLE);
+    free(reply);
+    return angle::Result::Continue;
+}
+
 }  // namespace rx
