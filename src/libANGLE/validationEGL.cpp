@@ -2812,7 +2812,7 @@ bool ValidateCreateContext(const ValidationContext *val,
                 case 1:
                     if (clientMinorVersion != 0 && clientMinorVersion != 1)
                     {
-                        val->setError(EGL_BAD_ATTRIBUTE);
+                        val->setError(EGL_BAD_MATCH);
                         return false;
                     }
                     if (configuration == EGL_NO_CONFIG_KHR)
@@ -2831,7 +2831,7 @@ bool ValidateCreateContext(const ValidationContext *val,
                 case 2:
                     if (clientMinorVersion != 0)
                     {
-                        val->setError(EGL_BAD_ATTRIBUTE);
+                        val->setError(EGL_BAD_MATCH);
                         return false;
                     }
                     if ((configuration != EGL_NO_CONFIG_KHR) &&
@@ -2844,7 +2844,7 @@ bool ValidateCreateContext(const ValidationContext *val,
                 case 3:
                     if (clientMinorVersion < 0 || clientMinorVersion > 2)
                     {
-                        val->setError(EGL_BAD_ATTRIBUTE);
+                        val->setError(EGL_BAD_MATCH);
                         return false;
                     }
                     if ((configuration != EGL_NO_CONFIG_KHR) &&
@@ -2858,7 +2858,7 @@ bool ValidateCreateContext(const ValidationContext *val,
                                     static_cast<GLuint>(clientMinorVersion)))
                     {
                         gl::Version max = display->getMaxSupportedESVersion();
-                        val->setError(EGL_BAD_ATTRIBUTE,
+                        val->setError(EGL_BAD_MATCH,
                                       "Requested GLES version (%" PRIxPTR ".%" PRIxPTR
                                       ") is greater than "
                                       "max supported (%d, %d).",
@@ -2869,7 +2869,7 @@ bool ValidateCreateContext(const ValidationContext *val,
                          EGL_TRUE) &&
                         (clientMinorVersion > 1))
                     {
-                        val->setError(EGL_BAD_ATTRIBUTE,
+                        val->setError(EGL_BAD_MATCH,
                                       "Requested GLES version (%" PRIxPTR ".%" PRIxPTR
                                       ") is greater than "
                                       "max supported 3.1 for WebGL.",
@@ -2878,7 +2878,7 @@ bool ValidateCreateContext(const ValidationContext *val,
                     }
                     break;
                 default:
-                    val->setError(EGL_BAD_ATTRIBUTE);
+                    val->setError(EGL_BAD_MATCH);
                     return false;
             }
             break;

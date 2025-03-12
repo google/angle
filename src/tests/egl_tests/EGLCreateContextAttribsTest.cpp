@@ -33,7 +33,7 @@ class EGLCreateContextAttribsTest : public ANGLETest<>
 };
 
 // Specify invalid client version in the attributes to eglCreateContext
-// and verify EGL_BAD_ATTRIBUTE
+// and verify EGL_BAD_MATCH
 TEST_P(EGLCreateContextAttribsTest, InvalidClientVersion)
 {
     EGLContext context = EGL_NO_CONTEXT;
@@ -52,7 +52,7 @@ TEST_P(EGLCreateContextAttribsTest, InvalidClientVersion)
                                 EGL_NONE};
     context                  = eglCreateContext(mDisplay, config, nullptr, contextAttribs1);
     EXPECT_EQ(context, EGL_NO_CONTEXT);
-    ASSERT_EGL_ERROR(EGL_BAD_ATTRIBUTE);
+    ASSERT_EGL_ERROR(EGL_BAD_MATCH);
 
     // Get a 2.0/3.x compatible config
     EGLint cfgAttribList2[] = {EGL_RENDERABLE_TYPE, (EGL_OPENGL_ES2_BIT), EGL_NONE};
@@ -64,21 +64,21 @@ TEST_P(EGLCreateContextAttribsTest, InvalidClientVersion)
                                 EGL_NONE};
     context                  = eglCreateContext(mDisplay, config, nullptr, contextAttribs2);
     EXPECT_EQ(context, EGL_NO_CONTEXT);
-    ASSERT_EGL_ERROR(EGL_BAD_ATTRIBUTE);
+    ASSERT_EGL_ERROR(EGL_BAD_MATCH);
 
     // GLES 3.3 is invalid verify invalid attribute request
     EGLint contextAttribs3[] = {EGL_CONTEXT_MAJOR_VERSION, 3, EGL_CONTEXT_MINOR_VERSION, 3,
                                 EGL_NONE};
     context                  = eglCreateContext(mDisplay, config, nullptr, contextAttribs3);
     EXPECT_EQ(context, EGL_NO_CONTEXT);
-    ASSERT_EGL_ERROR(EGL_BAD_ATTRIBUTE);
+    ASSERT_EGL_ERROR(EGL_BAD_MATCH);
 
     // GLES 4.0 is invalid verify invalid attribute request
     EGLint contextAttribs4[] = {EGL_CONTEXT_MAJOR_VERSION, 4, EGL_CONTEXT_MINOR_VERSION, 0,
                                 EGL_NONE};
     context                  = eglCreateContext(mDisplay, config, nullptr, contextAttribs4);
     EXPECT_EQ(context, EGL_NO_CONTEXT);
-    ASSERT_EGL_ERROR(EGL_BAD_ATTRIBUTE);
+    ASSERT_EGL_ERROR(EGL_BAD_MATCH);
 
     // Cleanup contexts
     eglTerminate(mDisplay);
