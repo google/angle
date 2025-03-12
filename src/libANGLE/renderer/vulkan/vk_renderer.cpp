@@ -3546,6 +3546,7 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
 // here which don't have feature structs:
 //
 // - VK_KHR_shared_presentable_image
+// - VK_EXT_device_memory_report
 // - VK_EXT_memory_budget
 // - VK_KHR_incremental_present
 // - VK_EXT_queue_family_foreign
@@ -3697,6 +3698,7 @@ void Renderer::enableDeviceExtensionsNotPromoted(const vk::ExtensionNameList &de
     {
         ASSERT(mMemoryReportFeatures.deviceMemoryReport);
         mEnabledDeviceExtensions.push_back(VK_EXT_DEVICE_MEMORY_REPORT_EXTENSION_NAME);
+        vk::AddToPNextChain(&mEnabledFeatures, &mMemoryReportFeatures);
     }
 
     if (mFeatures.supportsExternalMemoryDmaBufAndModifiers.enabled)
