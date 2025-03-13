@@ -510,42 +510,6 @@ const FramebufferAttachment *FramebufferState::getReadPixelsAttachment(GLenum re
     }
 }
 
-const FramebufferAttachment *FramebufferState::getFirstNonNullAttachment() const
-{
-    auto *colorAttachment = getFirstColorAttachment();
-    if (colorAttachment)
-    {
-        return colorAttachment;
-    }
-    return getDepthOrStencilAttachment();
-}
-
-const FramebufferAttachment *FramebufferState::getFirstColorAttachment() const
-{
-    for (const FramebufferAttachment &colorAttachment : mColorAttachments)
-    {
-        if (colorAttachment.isAttached())
-        {
-            return &colorAttachment;
-        }
-    }
-
-    return nullptr;
-}
-
-const FramebufferAttachment *FramebufferState::getDepthOrStencilAttachment() const
-{
-    if (mDepthAttachment.isAttached())
-    {
-        return &mDepthAttachment;
-    }
-    if (mStencilAttachment.isAttached())
-    {
-        return &mStencilAttachment;
-    }
-    return nullptr;
-}
-
 const FramebufferAttachment *FramebufferState::getStencilOrDepthStencilAttachment() const
 {
     if (mStencilAttachment.isAttached())
@@ -2425,11 +2389,6 @@ void Framebuffer::setFlipY(bool flipY)
     mState.mFlipY = flipY;
     mDirtyBits.set(DIRTY_BIT_FLIP_Y);
     invalidateCompletenessCache();
-}
-
-GLsizei Framebuffer::getNumViews() const
-{
-    return mState.getNumViews();
 }
 
 GLint Framebuffer::getBaseViewIndex() const

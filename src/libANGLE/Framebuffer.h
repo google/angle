@@ -118,15 +118,7 @@ class FramebufferState final : angle::NonCopyable
 
     bool isMultiview() const;
 
-    ANGLE_INLINE GLsizei getNumViews() const
-    {
-        const FramebufferAttachment *attachment = getFirstNonNullAttachment();
-        if (attachment == nullptr)
-        {
-            return FramebufferAttachment::kDefaultNumViews;
-        }
-        return attachment->getNumViews();
-    }
+    GLsizei getNumViews() const;
 
     GLint getBaseViewIndex() const;
 
@@ -269,7 +261,7 @@ class Framebuffer final : public angle::ObserverInterface,
     const FramebufferAttachment *getAttachment(const Context *context, GLenum attachment) const;
     bool isMultiview() const;
     bool readDisallowedByMultiview() const;
-    GLsizei getNumViews() const;
+    ANGLE_INLINE GLsizei getNumViews() const { return mState.getNumViews(); }
     GLint getBaseViewIndex() const;
     Extents getExtents() const;
 
@@ -577,6 +569,52 @@ inline bool FramebufferState::isDefault() const
 }
 
 using UniqueFramebufferPointer = angle::UniqueObjectPointer<Framebuffer, Context>;
+
+ANGLE_INLINE const FramebufferAttachment *FramebufferState::getFirstNonNullAttachment() const
+{
+    auto *colorAttachment = getFirstColorAttachment();
+    if (colorAttachment)
+    {
+        return colorAttachment;
+    }
+    return getDepthOrStencilAttachment();
+}
+
+ANGLE_INLINE const FramebufferAttachment *FramebufferState::getFirstColorAttachment() const
+{
+    for (const FramebufferAttachment &colorAttachment : mColorAttachments)
+    {
+        if (colorAttachment.isAttached())
+        {
+            return &colorAttachment;
+        }
+    }
+
+    return nullptr;
+}
+
+ANGLE_INLINE const FramebufferAttachment *FramebufferState::getDepthOrStencilAttachment() const
+{
+    if (mDepthAttachment.isAttached())
+    {
+        return &mDepthAttachment;
+    }
+    if (mStencilAttachment.isAttached())
+    {
+        return &mStencilAttachment;
+    }
+    return nullptr;
+}
+
+ANGLE_INLINE GLsizei FramebufferState::getNumViews() const
+{
+    const FramebufferAttachment *attachment = getFirstNonNullAttachment();
+    if (attachment == nullptr)
+    {
+        return FramebufferAttachment::kDefaultNumViews;
+    }
+    return attachment->getNumViews();
+}
 
 }  // namespace gl
 
