@@ -1368,6 +1368,10 @@ TEST_P(PixelLocalStorageTest, MemorylessStorage)
     glViewport(0, 0, W, H);
     glDrawBuffers(0, nullptr);
 
+    glBeginPixelLocalStorageANGLE(2, GLenumArray({GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE}));
+
+    // Draw into memoryless storage.
+    // (Also validates that compiling works while PLS is active.)
     PLSProgram drawMemorylessProgram;
     drawMemorylessProgram.compile(R"(
     layout(binding=0, rgba8) uniform highp pixelLocalANGLE framebuffer;
@@ -1377,6 +1381,14 @@ TEST_P(PixelLocalStorageTest, MemorylessStorage)
         pixelLocalStoreANGLE(memoryless, color + pixelLocalLoadANGLE(memoryless));
     })");
 
+    drawMemorylessProgram.drawBoxes({{{0, 20, W, H}, {1, 0, 0, 0}},
+                                     {{0, 40, W, H}, {0, 1, 0, 0}},
+                                     {{0, 60, W, H}, {0, 0, 1, 0}}});
+
+    ASSERT_GL_NO_ERROR();
+
+    // Transfer to a texture.
+    // (Also validates that compiling works while PLS is active.)
     PLSProgram transferToTextureProgram;
     transferToTextureProgram.compile(R"(
     layout(binding=0, rgba8) uniform highp pixelLocalANGLE framebuffer;
@@ -1385,19 +1397,6 @@ TEST_P(PixelLocalStorageTest, MemorylessStorage)
     {
         pixelLocalStoreANGLE(framebuffer, vec4(1) - pixelLocalLoadANGLE(memoryless));
     })");
-
-    glBeginPixelLocalStorageANGLE(2, GLenumArray({GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE}));
-
-    // Draw into memoryless storage.
-    drawMemorylessProgram.bind();
-    drawMemorylessProgram.drawBoxes({{{0, 20, W, H}, {1, 0, 0, 0}},
-                                     {{0, 40, W, H}, {0, 1, 0, 0}},
-                                     {{0, 60, W, H}, {0, 0, 1, 0}}});
-
-    ASSERT_GL_NO_ERROR();
-
-    // Transfer to a texture.
-    transferToTextureProgram.bind();
     transferToTextureProgram.drawBoxes({{FULLSCREEN}});
 
     glEndPixelLocalStorageANGLE(2, GLenumArray({GL_STORE_OP_STORE_ANGLE, GL_DONT_CARE}));

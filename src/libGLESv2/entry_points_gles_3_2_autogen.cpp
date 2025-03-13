@@ -33,12 +33,8 @@ void GL_APIENTRY GL_BlendBarrier()
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLBlendBarrier) &&
-              ValidateBlendBarrier(context, angle::EntryPoint::GLBlendBarrier)));
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateBlendBarrier(context, angle::EntryPoint::GLBlendBarrier));
         if (isCallValid)
         {
             context->blendBarrier();
@@ -232,12 +228,9 @@ void GL_APIENTRY GL_CopyImageSubData(GLuint srcName,
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLCopyImageSubData) &&
-              ValidateCopyImageSubData(context, angle::EntryPoint::GLCopyImageSubData, srcName,
-                                       srcTarget, srcLevel, srcX, srcY, srcZ, dstName, dstTarget,
-                                       dstLevel, dstX, dstY, dstZ, srcWidth, srcHeight, srcDepth)));
+             ValidateCopyImageSubData(context, angle::EntryPoint::GLCopyImageSubData, srcName,
+                                      srcTarget, srcLevel, srcX, srcY, srcZ, dstName, dstTarget,
+                                      dstLevel, dstX, dstY, dstZ, srcWidth, srcHeight, srcDepth));
         if (isCallValid)
         {
             context->copyImageSubData(srcName, srcTarget, srcLevel, srcX, srcY, srcZ, dstName,
@@ -989,14 +982,10 @@ void GL_APIENTRY GL_MinSampleShading(GLfloat value)
 
     if (context)
     {
-        bool isCallValid =
-            (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLMinSampleShading) &&
-              ValidateMinSampleShading(context->getPrivateState(),
-                                       context->getMutableErrorSetForValidation(),
-                                       angle::EntryPoint::GLMinSampleShading, value)));
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateMinSampleShading(context->getPrivateState(),
+                                                     context->getMutableErrorSetForValidation(),
+                                                     angle::EntryPoint::GLMinSampleShading, value));
         if (isCallValid)
         {
             ContextPrivateMinSampleShading(context->getMutablePrivateState(),
@@ -1077,12 +1066,9 @@ void GL_APIENTRY GL_PatchParameteri(GLenum pname, GLint value)
     {
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLPatchParameteri) &&
-              ValidatePatchParameteri(context->getPrivateState(),
-                                      context->getMutableErrorSetForValidation(),
-                                      angle::EntryPoint::GLPatchParameteri, pname, value)));
+             ValidatePatchParameteri(context->getPrivateState(),
+                                     context->getMutableErrorSetForValidation(),
+                                     angle::EntryPoint::GLPatchParameteri, pname, value));
         if (isCallValid)
         {
             ContextPrivatePatchParameteri(context->getMutablePrivateState(),
@@ -1141,13 +1127,10 @@ void GL_APIENTRY GL_PrimitiveBoundingBox(GLfloat minX,
     {
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLPrimitiveBoundingBox) &&
-              ValidatePrimitiveBoundingBox(context->getPrivateState(),
-                                           context->getMutableErrorSetForValidation(),
-                                           angle::EntryPoint::GLPrimitiveBoundingBox, minX, minY,
-                                           minZ, minW, maxX, maxY, maxZ, maxW)));
+             ValidatePrimitiveBoundingBox(context->getPrivateState(),
+                                          context->getMutableErrorSetForValidation(),
+                                          angle::EntryPoint::GLPrimitiveBoundingBox, minX, minY,
+                                          minZ, minW, maxX, maxY, maxZ, maxW));
         if (isCallValid)
         {
             ContextPrivatePrimitiveBoundingBox(context->getMutablePrivateState(),
@@ -1212,13 +1195,9 @@ void GL_APIENTRY GL_ReadnPixels(GLint x,
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLReadnPixels) &&
-              ValidateReadnPixels(context, angle::EntryPoint::GLReadnPixels, x, y, width, height,
-                                  format, type, bufSize, data)));
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateReadnPixels(context, angle::EntryPoint::GLReadnPixels, x, y,
+                                                width, height, format, type, bufSize, data));
         if (isCallValid)
         {
             context->readnPixels(x, y, width, height, format, type, bufSize, data);
@@ -1304,13 +1283,9 @@ void GL_APIENTRY GL_TexBuffer(GLenum target, GLenum internalformat, GLuint buffe
         TextureType targetPacked = PackParam<TextureType>(target);
         BufferID bufferPacked    = PackParam<BufferID>(buffer);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLTexBuffer) &&
-              ValidateTexBuffer(context, angle::EntryPoint::GLTexBuffer, targetPacked,
-                                internalformat, bufferPacked)));
+        bool isCallValid = (context->skipValidation() ||
+                            ValidateTexBuffer(context, angle::EntryPoint::GLTexBuffer, targetPacked,
+                                              internalformat, bufferPacked));
         if (isCallValid)
         {
             context->texBuffer(targetPacked, internalformat, bufferPacked);
@@ -1346,11 +1321,8 @@ void GL_APIENTRY GL_TexBufferRange(GLenum target,
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLTexBufferRange) &&
-              ValidateTexBufferRange(context, angle::EntryPoint::GLTexBufferRange, targetPacked,
-                                     internalformat, bufferPacked, offset, size)));
+             ValidateTexBufferRange(context, angle::EntryPoint::GLTexBufferRange, targetPacked,
+                                    internalformat, bufferPacked, offset, size));
         if (isCallValid)
         {
             context->texBufferRange(targetPacked, internalformat, bufferPacked, offset, size);
@@ -1446,12 +1418,9 @@ void GL_APIENTRY GL_TexStorage3DMultisample(GLenum target,
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid =
             (context->skipValidation() ||
-             (ValidatePixelLocalStorageInactive(context->getPrivateState(),
-                                                context->getMutableErrorSetForValidation(),
-                                                angle::EntryPoint::GLTexStorage3DMultisample) &&
-              ValidateTexStorage3DMultisample(context, angle::EntryPoint::GLTexStorage3DMultisample,
-                                              targetPacked, samples, internalformat, width, height,
-                                              depth, fixedsamplelocations)));
+             ValidateTexStorage3DMultisample(context, angle::EntryPoint::GLTexStorage3DMultisample,
+                                             targetPacked, samples, internalformat, width, height,
+                                             depth, fixedsamplelocations));
         if (isCallValid)
         {
             context->texStorage3DMultisample(targetPacked, samples, internalformat, width, height,

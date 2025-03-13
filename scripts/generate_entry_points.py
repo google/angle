@@ -57,105 +57,6 @@ INIT_DICT = {
     "clIcdGetPlatformIDsKHR": "true",
 }
 
-# These are the only entry points that are allowed while pixel local storage is active.
-PLS_ALLOW_LIST = {
-    "ActiveTexture",
-    "BeginTransformFeedback",
-    "BindBuffer",
-    "BindBufferBase",
-    "BindBufferRange",
-    "BindFramebuffer",
-    "BindSampler",
-    "BindTexture",
-    "BindVertexArray",
-    "BlendEquation",
-    "BlendEquationSeparate",
-    "BlendFunc",
-    "BlendFuncSeparate",
-    "BlitFramebuffer",
-    "BufferData",
-    "BufferSubData",
-    "CheckFramebufferStatus",
-    "Clear",
-    "ClearColor",
-    "ClipControlEXT",
-    "ColorMask",
-    "CullFace",
-    "DepthFunc",
-    "DepthMask",
-    "DepthRangef",
-    "Disable",
-    "DisableVertexAttribArray",
-    "DiscardFramebufferEXT",
-    "DispatchComputeIndirect",
-    "DrawBuffers",
-    "Enable",
-    "EnableClientState",
-    "EnableVertexAttribArray",
-    "EndPixelLocalStorageANGLE",
-    "FenceSync",
-    "FlushMappedBufferRange",
-    "FramebufferMemorylessPixelLocalStorageANGLE",
-    "FramebufferPixelLocalStorageInterruptANGLE",
-    "FramebufferRenderbuffer",
-    "FrontFace",
-    "InvalidateFramebuffer",
-    "InvalidateSubFramebuffer",
-    "InvalidateTextureANGLE",
-    "MapBufferRange",
-    "PixelLocalStorageBarrierANGLE",
-    "ProvokingVertexANGLE",
-    "ReadBuffer",
-    "ReadPixels",
-    "Scissor",
-    "StartTilingQCOM",
-    "StencilFunc",
-    "StencilFuncSeparate",
-    "StencilMask",
-    "StencilMaskSeparate",
-    "StencilOp",
-    "StencilOpSeparate",
-    "UnmapBuffer",
-    "UseProgram",
-    "ValidateProgram",
-    "Viewport",
-}
-PLS_ALLOW_WILDCARDS = [
-    "BlendEquationSeparatei*",
-    "BlendEquationi*",
-    "BlendFuncSeparatei*",
-    "BlendFunci*",
-    "ClearBuffer*",
-    "ColorMaski*",
-    "CopyTexImage*",
-    "CopyTexSubImage*",
-    "DebugMessageCallback*",
-    "DebugMessageControl*",
-    "DebugMessageInsert*",
-    "Delete*",
-    "Disablei*",
-    "DrawArrays*",
-    "DrawElements*",
-    "DrawRangeElements*",
-    "Enablei*",
-    "FramebufferParameter*",
-    "FramebufferTexture*",
-    "Gen*",
-    "Get*",
-    "Is*",
-    "ObjectLabel*",
-    "ObjectPtrLabel*",
-    "PolygonMode*",
-    "PolygonOffset*",
-    "PopDebugGroup*",
-    "PushDebugGroup*",
-    "SamplerParameter*",
-    "TexParameter*",
-    "TexSubImage*",
-    "Uniform*",
-    "VertexAttrib*",
-]
-
 # These entry points implicitly disable pixel local storage (if active) before running and before
 # validation.
 PLS_DISABLE_LIST = {
@@ -1712,11 +1613,6 @@ def is_aliasing_excepted(api, cmd_name):
     return api == apis.GLES and cmd_name in ALIASING_EXCEPTIONS
 
 
-def is_allowed_with_active_pixel_local_storage(name):
-    return name in PLS_ALLOW_LIST or any(
-        [fnmatch.fnmatchcase(name, entry) for entry in PLS_ALLOW_WILDCARDS])
-
-
 def is_implicit_pls_disable_command(name):
     return name in PLS_DISABLE_LIST or any(
         [fnmatch.fnmatchcase(name, entry) for entry in PLS_DISABLE_WILDCARDS])
@@ -1763,9 +1659,6 @@ def get_validation_expression(api, cmd_name, entry_point_name, internal_params, 
                                                                       cmd_name) else ["context"]
     expr = "Validate{name}({params})".format(
         name=name, params=", ".join(extra_params + [entry_point_name] + internal_params))
-    if not is_gles1 and not is_allowed_with_active_pixel_local_storage(name):
-        expr = "(ValidatePixelLocalStorageInactive({extra_params}, {entry_point_name}) && {expr})".format(
-            extra_params=", ".join(private_params), entry_point_name=entry_point_name, expr=expr)
     return expr
 
 

@@ -4826,6 +4826,12 @@ bool ValidateClientWaitSync(const Context *context,
         return false;
     }
 
+    if (context->getState().getPixelLocalStorageActivePlanes() != 0)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kPLSActive);
+        return false;
+    }
+
     if ((flags & ~(GL_SYNC_FLUSH_COMMANDS_BIT)) != 0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidFlags);

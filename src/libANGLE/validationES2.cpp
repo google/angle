@@ -4537,11 +4537,23 @@ bool ValidateEnableVertexAttribArray(const Context *context,
 
 bool ValidateFinish(const Context *context, angle::EntryPoint entryPoint)
 {
+    if (context->getState().getPixelLocalStorageActivePlanes() != 0)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kPLSActive);
+        return false;
+    }
+
     return true;
 }
 
 bool ValidateFlush(const Context *context, angle::EntryPoint entryPoint)
 {
+    if (context->getState().getPixelLocalStorageActivePlanes() != 0)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kPLSActive);
+        return false;
+    }
+
     return true;
 }
 
