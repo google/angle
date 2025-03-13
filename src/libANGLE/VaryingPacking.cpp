@@ -108,7 +108,7 @@ bool InterfaceVariablesMatch(const sh::ShaderVariable &front, const sh::ShaderVa
     // Compare names, or if shader I/O blocks, block names.
     const std::string &backName  = back.isShaderIOBlock ? back.structOrBlockName : back.name;
     const std::string &frontName = front.isShaderIOBlock ? front.structOrBlockName : front.name;
-    return backName == frontName;
+    return backName == frontName && back.location == front.location;
 }
 
 GLint GetMaxShaderInputVectors(const Caps &caps, ShaderType shaderStage)
