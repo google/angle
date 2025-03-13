@@ -1503,6 +1503,58 @@ TEST_P(MipmapTestES3, MipmapForDeepTextureArray)
     EXPECT_PIXEL_COLOR_EQ(px, py, GLColor::red);
 }
 
+// Creates a mipmapped 3D texture with 1x1x2 size, GL_ALPHA, and calls GenerateMipmap. Should not
+// crash. Tests the case where the format is non-renderable and depth has more mip levels than
+// width, height.
+TEST_P(MipmapTestES3, MipmapsForTexture3DNonRenderableMoreMipLevelsInDepthNoCrash)
+{
+    int px = getWindowWidth() / 2;
+    int py = getWindowHeight() / 2;
+
+    glUseProgram(m3DProgram);
+    EXPECT_GL_NO_ERROR();
+
+    glBindTexture(GL_TEXTURE_3D, mTexture);
+    uint8_t colors[] = {5, 200};
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_ALPHA, 1, 1, 2, 0, GL_ALPHA, GL_UNSIGNED_BYTE, &colors);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    EXPECT_GL_NO_ERROR();
+    glGenerateMipmap(GL_TEXTURE_3D);
+    EXPECT_GL_NO_ERROR();
+
+    // Mipmap level 0 slice 0.
+    glUniform1f(mTexture3DLODUniformLocation, 0.);
+    glUniform1f(mTexture3DSliceUniformLocation, 0.25f);
+    drawQuad(m3DProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(px, py, GLColor(0, 0, 0, 5));
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Mipmap level 0 slice 1.
+    glUniform1f(mTexture3DSliceUniformLocation, 0.75f);
+    drawQuad(m3DProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(px, py, GLColor(0, 0, 0, 200));
+
+    // Mipmap level 1 slice 0, the only slice.
+    glUniform1f(mTexture3DLODUniformLocation, 1.);
+    glUniform1f(mTexture3DSliceUniformLocation, 0.);
+    drawQuad(m3DProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+    GLColor pixel;
+    glReadPixels(px, py, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixel.data());
+    GLColor err(0, 0, 0, 1);
+    // Nearest or box filtering implementation.
+    if (!(pixel.ExpectNear(GLColor(0, 0, 0, 5), err) ||
+          pixel.ExpectNear(GLColor(0, 0, 0, 102), err) ||
+          pixel.ExpectNear(GLColor(0, 0, 0, 200), err)))
+    {
+        FAIL() << "Unexpected pixel color: " << pixel;
+    }
+}
+
 // Creates a mipmapped 3D texture with two layers, and calls ANGLE's GenerateMipmap.
 // Then tests if the mipmaps are rendered correctly for all two layers.
 TEST_P(MipmapTestES3, MipmapsForTexture3D)

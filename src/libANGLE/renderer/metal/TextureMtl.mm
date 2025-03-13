@@ -1743,9 +1743,10 @@ angle::Result TextureMtl::generateMipmapCPU(const gl::Context *context)
             }
 
             // Generate mip level
-            angleFormat.mipGenerationFunction(
-                prevLevelWidth, prevLevelHeight, 1, prevLevelData.get(), prevLevelRowPitch,
-                prevLevelDepthPitch, dstLevelData.get(), dstRowPitch, dstDepthPitch);
+            angleFormat.mipGenerationFunction(prevLevelWidth, prevLevelHeight, prevLevelDepth,
+                                              prevLevelData.get(), prevLevelRowPitch,
+                                              prevLevelDepthPitch, dstLevelData.get(), dstRowPitch,
+                                              dstDepthPitch);
 
             mtl::MipmapNativeLevel nativeLevel = mViewFromBaseToMaxLevel->getNativeLevel(glLevel);
 
