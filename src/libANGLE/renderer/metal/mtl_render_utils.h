@@ -255,30 +255,51 @@ class ColorBlitUtils final : angle::NonCopyable
                                     const ColorBlitParams &params);
 
   private:
+    ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
     struct ShaderKey
     {
-        uint32_t numColorAttachments = 0;
         int sourceTextureType        = 0;
-        bool unmultiplyAlpha         = false;
-        bool premultiplyAlpha        = false;
-        bool transformLinearToSrgb   = false;
+        uint32_t numColorAttachments : 29;
+        uint32_t unmultiplyAlpha : 1;
+        uint32_t premultiplyAlpha : 1;
+        uint32_t transformLinearToSrgb : 1;
+        ShaderKey()
+            : numColorAttachments(0),
+              unmultiplyAlpha(false),
+              premultiplyAlpha(false),
+              transformLinearToSrgb(false)
+        {}
+        ShaderKey(int sourceTextureType,
+                  uint32_t numColorAttachments,
+                  bool unmultiplyAlpha,
+                  bool premultiplyAlpha,
+                  bool transformLinearToSrgb)
+            : sourceTextureType(sourceTextureType),
+              numColorAttachments(numColorAttachments),
+              unmultiplyAlpha(unmultiplyAlpha != premultiplyAlpha ? unmultiplyAlpha : false),
+              premultiplyAlpha(unmultiplyAlpha != premultiplyAlpha ? premultiplyAlpha : false),
+              transformLinearToSrgb(transformLinearToSrgb)
+        {}
         bool operator==(const ShaderKey &other) const
         {
-            return numColorAttachments == other.numColorAttachments &&
+            return sourceTextureType == other.sourceTextureType &&
+                   numColorAttachments == other.numColorAttachments &&
                    unmultiplyAlpha == other.unmultiplyAlpha &&
                    premultiplyAlpha == other.premultiplyAlpha &&
-                   transformLinearToSrgb == other.transformLinearToSrgb &&
-                   sourceTextureType == other.sourceTextureType;
+                   transformLinearToSrgb == other.transformLinearToSrgb;
         }
         struct Hash
         {
             size_t operator()(const ShaderKey &k) const noexcept
             {
-                return angle::HashMultiple(k.numColorAttachments, k.unmultiplyAlpha,
-                                           k.premultiplyAlpha, k.sourceTextureType);
+                return angle::HashMultiple(k.sourceTextureType, k.numColorAttachments,
+                                           k.unmultiplyAlpha, k.premultiplyAlpha,
+                                           k.transformLinearToSrgb);
             }
         };
     };
+    ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
+    static_assert(sizeof(ShaderKey) == 8);
     angle::Result ensureShadersInitialized(ContextMtl *ctx,
                                            const ShaderKey &key,
                                            angle::ObjCPtr<id<MTLFunction>> *fragmentShaderOut);

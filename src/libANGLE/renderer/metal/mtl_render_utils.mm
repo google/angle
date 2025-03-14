@@ -1126,20 +1126,24 @@ angle::Result ColorBlitUtils::ensureShadersInitialized(
             angle::ObjCPtr<MTLFunctionConstantValues> funcConstants =
                 angle::adoptObjCPtr([[MTLFunctionConstantValues alloc] init]);
 
+            bool unmultiplyAlpha       = key.unmultiplyAlpha;
+            bool premultiplyAlpha      = key.premultiplyAlpha;
+            bool transformLinearToSrgb = key.transformLinearToSrgb;
             // Set alpha multiply flags
-            [funcConstants setConstantValue:&key.unmultiplyAlpha
+            [funcConstants setConstantValue:&unmultiplyAlpha
                                        type:MTLDataTypeBool
                                    withName:UNMULTIPLY_ALPHA_CONSTANT_NAME];
-            [funcConstants setConstantValue:&key.premultiplyAlpha
+            [funcConstants setConstantValue:&premultiplyAlpha
                                        type:MTLDataTypeBool
                                    withName:PREMULTIPLY_ALPHA_CONSTANT_NAME];
-            [funcConstants setConstantValue:&key.transformLinearToSrgb
+            [funcConstants setConstantValue:&transformLinearToSrgb
                                        type:MTLDataTypeBool
                                    withName:TRANSFORM_LINEAR_TO_SRGB_CONSTANT_NAME];
 
+            uint32_t numColorAttachments = key.numColorAttachments;
             // We create blit shader pipeline cache for each number of color outputs.
             // So blit k color outputs will use mBlitRenderPipelineCache[k-1] for example:
-            [funcConstants setConstantValue:&key.numColorAttachments
+            [funcConstants setConstantValue:&numColorAttachments
                                        type:MTLDataTypeUInt
                                    withName:NUM_COLOR_OUTPUTS_CONSTANT_NAME];
 
@@ -1175,15 +1179,9 @@ angle::Result ColorBlitUtils::getColorBlitRenderPipelineState(
 
     pipelineDesc.inputPrimitiveTopology = MTLPrimitiveTopologyClassTriangle;
 
-    ShaderKey key;
-    key.numColorAttachments   = renderPassDesc.numColorAttachments;
-    key.sourceTextureType     = GetShaderTextureType(params.src);
-    key.transformLinearToSrgb = params.transformLinearToSrgb;
-    if (params.unpackPremultiplyAlpha != params.unpackUnmultiplyAlpha)
-    {
-        key.unmultiplyAlpha  = params.unpackUnmultiplyAlpha;
-        key.premultiplyAlpha = params.unpackPremultiplyAlpha;
-    }
+    ShaderKey key(GetShaderTextureType(params.src), renderPassDesc.numColorAttachments,
+                  params.unpackUnmultiplyAlpha, params.unpackPremultiplyAlpha,
+                  params.transformLinearToSrgb);
 
     angle::ObjCPtr<id<MTLFunction>> *fragmentShader = &mBlitFragmentShaders[key];
     ANGLE_TRY(ensureShadersInitialized(contextMtl, key, fragmentShader));
