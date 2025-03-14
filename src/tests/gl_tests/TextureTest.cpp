@@ -14783,6 +14783,84 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
 }
 
+// Test that drawing with a texture buffer after changing its content using transform feedback.
+TEST_P(TextureBufferTestES31, UseAsXFBThenAsTextureBuffer)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_buffer"));
+
+    // Issue a draw call with xfb, set buffer to red
+    constexpr char kXFBVS[] = R"(#version 310 es
+    uniform vec4 colorIn;
+    flat out highp vec4 colorOut;
+    void main()
+    {
+        gl_Position = vec4(0, 0, 0, 1);
+        colorOut = colorIn;
+    })";
+
+    // Capture the varying "v".
+    const std::vector<std::string> tfVaryings = {"colorOut"};
+    ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(programXFB, kXFBVS, essl31_shaders::fs::Green(), tfVaryings,
+                                        GL_INTERLEAVED_ATTRIBS);
+    EXPECT_GL_NO_ERROR();
+    glUseProgram(programXFB);
+    const GLint colorLoc = glGetUniformLocation(programXFB, "colorIn");
+    ASSERT_NE(-1, colorLoc);
+    glUniform4f(colorLoc, 1, 0, 0, 1);
+    EXPECT_GL_NO_ERROR();
+
+    GLTransformFeedback tf;
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, tf);
+    // Initializing the buffer with 0. After the transform feedback writes to it, the data will
+    // change.
+    const std::array<GLfloat, 4> data = {0.0, 0.0, 0.0, 0.0};
+    GLBuffer buffer;
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, buffer);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, data.size() * sizeof(data[0]), data.data(),
+                 GL_DYNAMIC_DRAW);
+    // Fill the buffer using transform feedback.
+    glBeginTransformFeedback(GL_POINTS);
+    glDrawArrays(GL_POINTS, 0, 1);
+    glEndTransformFeedback();
+
+    // Issue a draw call with samplerBuffer, sample from buffer and write to color attachment
+    constexpr char kTextureBufferFS[] = R"(#version 310 es
+    #extension GL_EXT_texture_buffer : require
+    precision mediump float;
+    uniform highp samplerBuffer sampler_buffer;
+    out vec4 colorOut;
+    void main()
+    {
+        colorOut = texelFetch(sampler_buffer, 0);
+    })";
+    ANGLE_GL_PROGRAM(programTextureBuffer, essl31_shaders::vs::Simple(), kTextureBufferFS);
+    glUseProgram(programTextureBuffer);
+
+    glBindBuffer(GL_TEXTURE_BUFFER, buffer);
+    glTexBufferEXT(GL_TEXTURE_BUFFER, GL_RGBA32F, buffer);
+
+    drawQuad(programTextureBuffer, essl31_shaders::PositionAttrib(), 0.5);
+    EXPECT_GL_NO_ERROR();
+
+    // Issue a draw call with xfb, set buffer to green
+    glUseProgram(programXFB);
+    glUniform4f(colorLoc, 0, 1, 0, 1);
+    EXPECT_GL_NO_ERROR();
+    glBeginTransformFeedback(GL_POINTS);
+    glDrawArrays(GL_POINTS, 0, 1);
+    glEndTransformFeedback();
+
+    // Enable blend, with glBlendFunc(GL_ONE, GL_ONE)
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    // Issue a draw call with samplerBuffer
+    glUseProgram(programTextureBuffer);
+    drawQuad(programTextureBuffer, essl31_shaders::PositionAttrib(), 0.5);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor(255, 255, 0, 255));
+}
+
 // Test workaround in Vulkan backend for mismatched texture buffer and sampler formats
 TEST_P(TextureBufferTestES31, TexBufferFormatMismatch)
 {

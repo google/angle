@@ -1551,6 +1551,7 @@ enum class RenderPassClosureReason
     DepthStencilUseInFeedbackLoop,
     DepthStencilWriteAfterFeedbackLoop,
     PipelineBindWhileXfbActive,
+    XfbWriteThenTextureBuffer,
 
     // Use of resource after render pass
     BufferWriteThenMap,

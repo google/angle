@@ -614,6 +614,9 @@ constexpr angle::PackedEnumMap<RenderPassClosureReason, const char *> kRenderPas
      "Render pass closed due to depth/stencil attachment write after feedback loop"},
     {RenderPassClosureReason::PipelineBindWhileXfbActive,
      "Render pass closed due to graphics pipeline change while transform feedback is active"},
+    {RenderPassClosureReason::XfbWriteThenTextureBuffer,
+     "Render pass closed due to read of texture buffer previously used as transform feedback "
+     "output in render pass"},
     {RenderPassClosureReason::BufferWriteThenMap,
      "Render pass closed due to mapping buffer being written to by said render pass"},
     {RenderPassClosureReason::BufferWriteThenOutOfRPRead,
@@ -7552,6 +7555,14 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context, gl::Co
 
         if (textureType == gl::TextureType::Buffer)
         {
+            vk::BufferHelper *buffer = textureVk->getPossiblyEmulatedTextureBuffer(this);
+
+            if (mCurrentTransformFeedbackQueueSerial.valid() &&
+                buffer->writtenByCommandBuffer(mCurrentTransformFeedbackQueueSerial))
+            {
+                ANGLE_TRY(flushCommandsAndEndRenderPass(
+                    RenderPassClosureReason::XfbWriteThenTextureBuffer));
+            }
             continue;
         }
 
