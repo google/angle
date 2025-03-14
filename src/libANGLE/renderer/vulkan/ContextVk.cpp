@@ -731,66 +731,6 @@ bool IsAnySamplesQuery(gl::QueryType type)
     return type == gl::QueryType::AnySamples || type == gl::QueryType::AnySamplesConservative;
 }
 
-enum class GraphicsPipelineSubsetRenderPass
-{
-    Unused,
-    Required,
-};
-
-template <typename Cache>
-angle::Result CreateGraphicsPipelineSubset(ContextVk *contextVk,
-                                           const vk::GraphicsPipelineDesc &desc,
-                                           vk::GraphicsPipelineTransitionBits transition,
-                                           GraphicsPipelineSubsetRenderPass renderPass,
-                                           Cache *cache,
-                                           vk::PipelineCacheAccess *pipelineCache,
-                                           vk::PipelineHelper **pipelineOut)
-{
-    const vk::PipelineLayout unusedPipelineLayout;
-    const vk::ShaderModuleMap unusedShaders;
-    const vk::SpecializationConstants unusedSpecConsts = {};
-
-    if (*pipelineOut != nullptr && !transition.any())
-    {
-        return angle::Result::Continue;
-    }
-
-    if (*pipelineOut != nullptr)
-    {
-        ASSERT((*pipelineOut)->valid());
-        if ((*pipelineOut)->findTransition(transition, desc, pipelineOut))
-        {
-            return angle::Result::Continue;
-        }
-    }
-
-    vk::PipelineHelper *oldPipeline = *pipelineOut;
-
-    const vk::GraphicsPipelineDesc *descPtr = nullptr;
-    if (!cache->getPipeline(desc, &descPtr, pipelineOut))
-    {
-        const vk::RenderPass unusedRenderPass;
-        const vk::RenderPass *compatibleRenderPass = &unusedRenderPass;
-        if (renderPass == GraphicsPipelineSubsetRenderPass::Required)
-        {
-            // Pull in a compatible RenderPass if used by this subset.
-            ANGLE_TRY(contextVk->getCompatibleRenderPass(desc.getRenderPassDesc(),
-                                                         &compatibleRenderPass));
-        }
-
-        ANGLE_TRY(cache->createPipeline(contextVk, pipelineCache, *compatibleRenderPass,
-                                        unusedPipelineLayout, unusedShaders, unusedSpecConsts,
-                                        PipelineSource::Draw, desc, &descPtr, pipelineOut));
-    }
-
-    if (oldPipeline)
-    {
-        oldPipeline->addTransition(transition, descPtr, *pipelineOut);
-    }
-
-    return angle::Result::Continue;
-}
-
 bool QueueSerialsHaveDifferentIndexOrSmaller(const QueueSerial &queueSerial1,
                                              const QueueSerial &queueSerial2)
 {
@@ -880,8 +820,6 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
       mRenderPassCommandBuffer(nullptr),
       mCurrentGraphicsPipeline(nullptr),
       mCurrentGraphicsPipelineShaders(nullptr),
-      mCurrentGraphicsPipelineVertexInput(nullptr),
-      mCurrentGraphicsPipelineFragmentOutput(nullptr),
       mCurrentComputePipeline(nullptr),
       mCurrentDrawMode(gl::PrimitiveMode::InvalidEnum),
       mCurrentWindowSurface(nullptr),
@@ -2201,8 +2139,8 @@ angle::Result ContextVk::createGraphicsPipeline()
     // - If VK_EXT_graphics_pipeline_library is not supported, create a new monolithic pipeline
     // - If VK_EXT_graphics_pipeline_library is supported:
     //   * Create the Shaders subset of the pipeline through the program executable
-    //   * Create the VertexInput and FragmentOutput subsets
-    //   * Link them together through the program executable
+    //   * Create the complete pipeline by providing the VertexInput and FragmentOutput states as
+    //     well as the Shaders library.
     if (mCurrentGraphicsPipeline == nullptr)
     {
         // Not found in cache
@@ -2217,13 +2155,8 @@ angle::Result ContextVk::createGraphicsPipeline()
         {
             const vk::GraphicsPipelineTransitionBits kShadersTransitionBitsMask =
                 vk::GetGraphicsPipelineTransitionBitsMask(vk::GraphicsPipelineSubset::Shaders);
-            const vk::GraphicsPipelineTransitionBits kVertexInputTransitionBitsMask =
-                vk::GetGraphicsPipelineTransitionBitsMask(vk::GraphicsPipelineSubset::VertexInput);
-            const vk::GraphicsPipelineTransitionBits kFragmentOutputTransitionBitsMask =
-                vk::GetGraphicsPipelineTransitionBitsMask(
-                    vk::GraphicsPipelineSubset::FragmentOutput);
 
-            // Recreate the shaders subset if necessary
+            // Recreate the Shaders subset if necessary
             const vk::GraphicsPipelineTransitionBits shadersTransitionBits =
                 mGraphicsPipelineLibraryTransition & kShadersTransitionBitsMask;
             if (mCurrentGraphicsPipelineShaders == nullptr || shadersTransitionBits.any())
@@ -2261,44 +2194,11 @@ angle::Result ContextVk::createGraphicsPipeline()
                 }
             }
 
-            // If blobs are reused between the pipeline libraries and the monolithic pipelines (so
-            // |mergeProgramPipelineCachesToGlobalCache| would be enabled because merging the
-            // pipelines would be beneficial), directly use the global cache for the vertex input
-            // and fragment output pipelines.  This _may_ cause stalls as the worker thread that
-            // creates pipelines is also holding the same lock.
-            //
-            // On the other hand, if there is not going to be any reuse of blobs, use a private
-            // pipeline cache to avoid the aforementioned potential stall.
-            vk::PipelineCacheAccess interfacePipelineCacheStorage;
-            vk::PipelineCacheAccess *interfacePipelineCache = &pipelineCache;
-            if (!getFeatures().mergeProgramPipelineCachesToGlobalCache.enabled)
-            {
-                ANGLE_TRY(ensureInterfacePipelineCache());
-                interfacePipelineCacheStorage.init(&mInterfacePipelinesCache, nullptr);
-                interfacePipelineCache = &interfacePipelineCacheStorage;
-            }
-
-            // Recreate the vertex input subset if necessary
-            ANGLE_TRY(CreateGraphicsPipelineSubset(
-                this, *mGraphicsPipelineDesc,
-                mGraphicsPipelineLibraryTransition & kVertexInputTransitionBitsMask,
-                GraphicsPipelineSubsetRenderPass::Unused,
-                mShareGroupVk->getVertexInputGraphicsPipelineCache(), interfacePipelineCache,
-                &mCurrentGraphicsPipelineVertexInput));
-
-            // Recreate the fragment output subset if necessary
-            ANGLE_TRY(CreateGraphicsPipelineSubset(
-                this, *mGraphicsPipelineDesc,
-                mGraphicsPipelineLibraryTransition & kFragmentOutputTransitionBitsMask,
-                GraphicsPipelineSubsetRenderPass::Required,
-                mShareGroupVk->getFragmentOutputGraphicsPipelineCache(), interfacePipelineCache,
-                &mCurrentGraphicsPipelineFragmentOutput));
-
-            // Link the three subsets into one pipeline.
-            ANGLE_TRY(executableVk->linkGraphicsPipelineLibraries(
-                this, &pipelineCache, *mGraphicsPipelineDesc, mCurrentGraphicsPipelineVertexInput,
-                mCurrentGraphicsPipelineShaders, mCurrentGraphicsPipelineFragmentOutput, &descPtr,
-                &mCurrentGraphicsPipeline));
+            // Link the shaders subset into a complete pipeline that includes vertex input and
+            // fragment output subsets.
+            ANGLE_TRY(executableVk->createLinkedGraphicsPipeline(
+                this, &pipelineCache, *mGraphicsPipelineDesc, mCurrentGraphicsPipelineShaders,
+                &descPtr, &mCurrentGraphicsPipeline));
 
             // Reset the transition bits for pipeline libraries, they are only made to be up-to-date
             // here.

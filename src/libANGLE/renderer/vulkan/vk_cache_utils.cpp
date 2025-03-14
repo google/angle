@@ -112,20 +112,9 @@ constexpr GraphicsPipelineTransitionBits kPipelineShadersTransitionBitsMask =
                                          TransitionBits(kPipelineShadersDescOffset)) &
     ~GraphicsPipelineTransitionBits::Mask(TransitionBits(kPipelineShadersDescOffset));
 
-constexpr GraphicsPipelineTransitionBits kPipelineFragmentOutputTransitionBitsMask =
-    GraphicsPipelineTransitionBits::Mask(TransitionBits(kPipelineFragmentOutputDescSize) +
-                                         TransitionBits(kPipelineFragmentOutputDescOffset)) &
-    ~GraphicsPipelineTransitionBits::Mask(TransitionBits(kPipelineFragmentOutputDescOffset));
-
-constexpr GraphicsPipelineTransitionBits kPipelineVertexInputTransitionBitsMask =
-    GraphicsPipelineTransitionBits::Mask(TransitionBits(kPipelineVertexInputDescSize) +
-                                         TransitionBits(kPipelineVertexInputDescOffset)) &
-    ~GraphicsPipelineTransitionBits::Mask(TransitionBits(kPipelineVertexInputDescOffset));
-
 bool GraphicsPipelineHasVertexInput(GraphicsPipelineSubset subset)
 {
-    return subset == GraphicsPipelineSubset::Complete ||
-           subset == GraphicsPipelineSubset::VertexInput;
+    return subset == GraphicsPipelineSubset::Complete;
 }
 
 bool GraphicsPipelineHasShaders(GraphicsPipelineSubset subset)
@@ -135,13 +124,12 @@ bool GraphicsPipelineHasShaders(GraphicsPipelineSubset subset)
 
 bool GraphicsPipelineHasShadersOrFragmentOutput(GraphicsPipelineSubset subset)
 {
-    return subset != GraphicsPipelineSubset::VertexInput;
+    return true;
 }
 
 bool GraphicsPipelineHasFragmentOutput(GraphicsPipelineSubset subset)
 {
-    return subset == GraphicsPipelineSubset::Complete ||
-           subset == GraphicsPipelineSubset::FragmentOutput;
+    return subset == GraphicsPipelineSubset::Complete;
 }
 
 uint8_t PackGLBlendOp(gl::BlendEquationType blendOp)
@@ -561,10 +549,17 @@ void DeriveRenderingInfo(Renderer *renderer,
     }
 }
 
+enum class ShadersStateSource
+{
+    ThisPipeline,
+    PipelineLibrary,
+};
+
 void AttachPipelineRenderingInfo(ErrorContext *context,
                                  const RenderPassDesc &desc,
                                  const DynamicRenderingInfo &renderingInfo,
                                  GraphicsPipelineSubset subset,
+                                 ShadersStateSource shadersSource,
                                  VkPipelineRenderingCreateInfoKHR *pipelineRenderingInfoOut,
                                  VkRenderingAttachmentLocationInfoKHR *attachmentLocationsOut,
                                  VkRenderingInputAttachmentIndexInfoKHR *inputLocationsOut,
@@ -593,8 +588,11 @@ void AttachPipelineRenderingInfo(ErrorContext *context,
         renderingInfo.colorAttachmentLocations.data();
     AddToPNextChain(createInfoOut, attachmentLocationsOut);
 
-    // Note: VkRenderingInputAttachmentIndexInfoKHR only affects the fragment stage subset.
-    if (desc.hasColorFramebufferFetch() && GraphicsPipelineHasShaders(subset))
+    // Note: VkRenderingInputAttachmentIndexInfoKHR only affects the fragment stage subset, and is
+    // needed only when the shaders stage is not coming from a pipeline library (where this mapping
+    // is already specified).
+    if (desc.hasColorFramebufferFetch() && shadersSource == ShadersStateSource::ThisPipeline &&
+        GraphicsPipelineHasShaders(subset))
     {
         *inputLocationsOut       = {};
         inputLocationsOut->sType = VK_STRUCTURE_TYPE_RENDERING_INPUT_ATTACHMENT_INDEX_INFO_KHR;
@@ -2611,17 +2609,9 @@ void DumpPipelineCacheGraph(
     const char *subsetTag         = "";
     switch (kSubset)
     {
-        case GraphicsPipelineSubset::VertexInput:
-            subsetDescription = "(vertex input)\\n";
-            subsetTag         = "VI_";
-            break;
         case GraphicsPipelineSubset::Shaders:
             subsetDescription = "(shaders)\\n";
             subsetTag         = "S_";
-            break;
-        case GraphicsPipelineSubset::FragmentOutput:
-            subsetDescription = "(fragment output)\\n";
-            subsetTag         = "FO_";
             break;
         default:
             break;
@@ -2723,75 +2713,6 @@ void MakeInvalidCachedObject(SharedDescriptorSetCacheKey *cacheKeyOut)
     *cacheKeyOut = SharedDescriptorSetCacheKey::MakeShared(VK_NULL_HANDLE);
 }
 
-angle::Result InitializePipelineFromLibraries(ErrorContext *context,
-                                              PipelineCacheAccess *pipelineCache,
-                                              const vk::PipelineLayout &pipelineLayout,
-                                              const vk::PipelineHelper &vertexInputPipeline,
-                                              const vk::PipelineHelper &shadersPipeline,
-                                              const vk::PipelineHelper &fragmentOutputPipeline,
-                                              const vk::GraphicsPipelineDesc &desc,
-                                              Pipeline *pipelineOut,
-                                              CacheLookUpFeedback *feedbackOut)
-{
-    // Nothing in the create info, everything comes from the libraries.
-    VkGraphicsPipelineCreateInfo createInfo = {};
-    createInfo.sType                        = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-    createInfo.layout                       = pipelineLayout.getHandle();
-
-    if (context->getFeatures().preferDynamicRendering.enabled && desc.getRenderPassFoveation())
-    {
-        createInfo.flags |= VK_PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR;
-    }
-
-    if (context->getFeatures().supportsPipelineProtectedAccess.enabled)
-    {
-        createInfo.flags |= desc.hasPipelineProtectedAccess()
-                                ? VK_PIPELINE_CREATE_PROTECTED_ACCESS_ONLY_BIT_EXT
-                                : VK_PIPELINE_CREATE_NO_PROTECTED_ACCESS_BIT_EXT;
-    }
-
-    const std::array<VkPipeline, 3> pipelines = {
-        vertexInputPipeline.getPipeline().getHandle(),
-        shadersPipeline.getPipeline().getHandle(),
-        fragmentOutputPipeline.getPipeline().getHandle(),
-    };
-
-    // Specify the three subsets as input libraries.
-    VkPipelineLibraryCreateInfoKHR libraryInfo = {};
-    libraryInfo.sType                          = VK_STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR;
-    libraryInfo.libraryCount                   = 3;
-    libraryInfo.pLibraries                     = pipelines.data();
-
-    AddToPNextChain(&createInfo, &libraryInfo);
-
-    // If supported, get feedback.
-    VkPipelineCreationFeedback feedback               = {};
-    VkPipelineCreationFeedbackCreateInfo feedbackInfo = {};
-    feedbackInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_CREATION_FEEDBACK_CREATE_INFO;
-
-    const bool supportsFeedback = context->getFeatures().supportsPipelineCreationFeedback.enabled;
-    if (supportsFeedback)
-    {
-        feedbackInfo.pPipelineCreationFeedback = &feedback;
-        AddToPNextChain(&createInfo, &feedbackInfo);
-    }
-
-    // Create the pipeline
-    ANGLE_VK_TRY(context, pipelineCache->createGraphicsPipeline(context, createInfo, pipelineOut));
-
-    if (supportsFeedback)
-    {
-        const bool cacheHit =
-            (feedback.flags & VK_PIPELINE_CREATION_FEEDBACK_APPLICATION_PIPELINE_CACHE_HIT_BIT) !=
-            0;
-
-        *feedbackOut = cacheHit ? CacheLookUpFeedback::Hit : CacheLookUpFeedback::Miss;
-        ApplyPipelineCreationFeedback(context, feedback);
-    }
-
-    return angle::Result::Continue;
-}
-
 bool ShouldDumpPipelineCacheGraph(ErrorContext *context)
 {
     return kDumpPipelineCacheGraph && context->getRenderer()->isPipelineCacheGraphDumpEnabled();
@@ -2822,16 +2743,9 @@ FramebufferFetchMode GetProgramFramebufferFetchMode(const gl::ProgramExecutable 
 
 GraphicsPipelineTransitionBits GetGraphicsPipelineTransitionBitsMask(GraphicsPipelineSubset subset)
 {
-    switch (subset)
+    if (subset == GraphicsPipelineSubset::Shaders)
     {
-        case GraphicsPipelineSubset::VertexInput:
-            return kPipelineVertexInputTransitionBitsMask;
-        case GraphicsPipelineSubset::Shaders:
-            return kPipelineShadersTransitionBitsMask;
-        case GraphicsPipelineSubset::FragmentOutput:
-            return kPipelineFragmentOutputTransitionBitsMask;
-        default:
-            break;
+        return kPipelineShadersTransitionBitsMask;
     }
 
     ASSERT(subset == GraphicsPipelineSubset::Complete);
@@ -3386,17 +3300,9 @@ const void *GraphicsPipelineDesc::getPipelineSubsetMemory(GraphicsPipelineSubset
 
     switch (subset)
     {
-        case GraphicsPipelineSubset::VertexInput:
-            *sizeOut = kPipelineVertexInputDescSize - vertexInputReduceSize;
-            return &mVertexInput;
-
         case GraphicsPipelineSubset::Shaders:
             *sizeOut = kPipelineShadersDescSize;
             return &mShaders;
-
-        case GraphicsPipelineSubset::FragmentOutput:
-            *sizeOut = kPipelineFragmentOutputDescSize;
-            return &mSharedNonVertexInput;
 
         case GraphicsPipelineSubset::Complete:
         default:
@@ -3549,8 +3455,7 @@ VkResult GraphicsPipelineDesc::initializePipeline(ErrorContext *context,
                                                   GraphicsPipelineSubset subset,
                                                   const RenderPass &compatibleRenderPass,
                                                   const PipelineLayout &pipelineLayout,
-                                                  const ShaderModuleMap &shaders,
-                                                  const SpecializationConstants &specConsts,
+                                                  const GraphicsPipelineShadersInfo &shaders,
                                                   Pipeline *pipelineOut,
                                                   CacheLookUpFeedback *feedbackOut) const
 {
@@ -3582,17 +3487,35 @@ VkResult GraphicsPipelineDesc::initializePipeline(ErrorContext *context,
         createInfo.pInputAssemblyState = &vertexInputState.inputAssemblyState;
     }
 
+    VkPipeline shadersPipeline                        = VK_NULL_HANDLE;
+    VkPipelineLibraryCreateInfoKHR shadersLibraryInfo = {};
+    shadersLibraryInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_LIBRARY_CREATE_INFO_KHR;
+
     if (hasShaders)
     {
-        initializePipelineShadersState(context, shaders, specConsts, &shadersState,
-                                       &dynamicStateList);
+        // If the shaders state comes from a library, use the library instead.
+        if (shaders.usePipelineLibrary())
+        {
+            shadersPipeline = shaders.mPipelineLibrary->getPipeline().getHandle();
 
-        createInfo.stageCount          = static_cast<uint32_t>(shadersState.shaderStages.size());
-        createInfo.pStages             = shadersState.shaderStages.data();
-        createInfo.pTessellationState  = &shadersState.tessellationState;
-        createInfo.pViewportState      = &shadersState.viewportState;
-        createInfo.pRasterizationState = &shadersState.rasterState;
-        createInfo.pDepthStencilState  = &shadersState.depthStencilState;
+            shadersLibraryInfo.libraryCount = 1;
+            shadersLibraryInfo.pLibraries   = &shadersPipeline;
+
+            AddToPNextChain(&createInfo, &shadersLibraryInfo);
+        }
+        else
+        {
+            initializePipelineShadersState(context, *shaders.mShaders, *shaders.mSpecConsts,
+                                           &shadersState, &dynamicStateList);
+
+            createInfo.stageCount         = static_cast<uint32_t>(shadersState.shaderStages.size());
+            createInfo.pStages            = shadersState.shaderStages.data();
+            createInfo.pTessellationState = &shadersState.tessellationState;
+            createInfo.pViewportState     = &shadersState.viewportState;
+            createInfo.pRasterizationState = &shadersState.rasterState;
+            createInfo.pDepthStencilState  = &shadersState.depthStencilState;
+        }
+
         createInfo.layout              = pipelineLayout.getHandle();
     }
 
@@ -3621,26 +3544,19 @@ VkResult GraphicsPipelineDesc::initializePipeline(ErrorContext *context,
     VkGraphicsPipelineLibraryCreateInfoEXT libraryInfo = {};
     libraryInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_LIBRARY_CREATE_INFO_EXT;
 
-    if (subset != GraphicsPipelineSubset::Complete)
+    if (subset == GraphicsPipelineSubset::Shaders)
     {
-        switch (subset)
-        {
-            case GraphicsPipelineSubset::VertexInput:
-                libraryInfo.flags = VK_GRAPHICS_PIPELINE_LIBRARY_VERTEX_INPUT_INTERFACE_BIT_EXT;
-                break;
-            case GraphicsPipelineSubset::Shaders:
-                libraryInfo.flags = VK_GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT |
-                                    VK_GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT;
-                break;
-            case GraphicsPipelineSubset::FragmentOutput:
-                libraryInfo.flags = VK_GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT;
-                break;
-            default:
-                UNREACHABLE();
-                break;
-        }
+        libraryInfo.flags = VK_GRAPHICS_PIPELINE_LIBRARY_PRE_RASTERIZATION_SHADERS_BIT_EXT |
+                            VK_GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_SHADER_BIT_EXT;
 
         createInfo.flags |= VK_PIPELINE_CREATE_LIBRARY_BIT_KHR;
+
+        AddToPNextChain(&createInfo, &libraryInfo);
+    }
+    else if (hasShaders && shaders.usePipelineLibrary())
+    {
+        libraryInfo.flags = VK_GRAPHICS_PIPELINE_LIBRARY_VERTEX_INPUT_INTERFACE_BIT_EXT |
+                            VK_GRAPHICS_PIPELINE_LIBRARY_FRAGMENT_OUTPUT_INTERFACE_BIT_EXT;
 
         AddToPNextChain(&createInfo, &libraryInfo);
     }
@@ -3709,6 +3625,9 @@ VkResult GraphicsPipelineDesc::initializePipeline(ErrorContext *context,
                             DynamicRenderingInfoSubset::Pipeline, {}, VK_SUBPASS_CONTENTS_INLINE,
                             {}, {}, {}, 0, &renderingInfo);
         AttachPipelineRenderingInfo(context, getRenderPassDesc(), renderingInfo, subset,
+                                    shaders.usePipelineLibrary()
+                                        ? ShadersStateSource::PipelineLibrary
+                                        : ShadersStateSource::ThisPipeline,
                                     &pipelineRenderingInfo, &attachmentLocations, &inputLocations,
                                     &createFlags2, &createInfo);
     }
@@ -5194,8 +5113,8 @@ void CreateMonolithicPipelineTask::operator()()
 
     ANGLE_TRACE_EVENT0("gpu.angle", "CreateMonolithicPipelineTask");
     mResult = mDesc.initializePipeline(this, &mPipelineCache, vk::GraphicsPipelineSubset::Complete,
-                                       *compatibleRenderPass, mPipelineLayout, mShaders,
-                                       mSpecConsts, &mPipeline, &mFeedback);
+                                       *compatibleRenderPass, mPipelineLayout,
+                                       {&mShaders, &mSpecConsts}, &mPipeline, &mFeedback);
 
     if (mRenderer->getFeatures().slowDownMonolithicPipelineCreationForTesting.enabled)
     {
@@ -8293,8 +8212,7 @@ angle::Result GraphicsPipelineCache<Hash>::createPipeline(
     vk::PipelineCacheAccess *pipelineCache,
     const vk::RenderPass &compatibleRenderPass,
     const vk::PipelineLayout &pipelineLayout,
-    const vk::ShaderModuleMap &shaders,
-    const vk::SpecializationConstants &specConsts,
+    const vk::GraphicsPipelineShadersInfo &shaders,
     PipelineSource source,
     const vk::GraphicsPipelineDesc &desc,
     const vk::GraphicsPipelineDesc **descPtrOut,
@@ -8309,9 +8227,9 @@ angle::Result GraphicsPipelineCache<Hash>::createPipeline(
         constexpr vk::GraphicsPipelineSubset kSubset =
             GraphicsPipelineCacheTypeHelper<Hash>::kSubset;
 
-        ANGLE_VK_TRY(context, desc.initializePipeline(context, pipelineCache, kSubset,
-                                                      compatibleRenderPass, pipelineLayout, shaders,
-                                                      specConsts, &newPipeline, &feedback));
+        ANGLE_VK_TRY(context,
+                     desc.initializePipeline(context, pipelineCache, kSubset, compatibleRenderPass,
+                                             pipelineLayout, shaders, &newPipeline, &feedback));
     }
 
     if (source == PipelineSource::WarmUp)
@@ -8321,37 +8239,16 @@ angle::Result GraphicsPipelineCache<Hash>::createPipeline(
         // pipeline.
         **pipelineOut =
             vk::PipelineHelper(std::move(newPipeline), vk::CacheLookUpFeedback::WarmUpMiss);
+        ASSERT(!shaders.usePipelineLibrary());
     }
     else
     {
         addToCache(source, desc, std::move(newPipeline), feedback, descPtrOut, pipelineOut);
+        if (shaders.usePipelineLibrary())
+        {
+            (*pipelineOut)->setLinkedLibraryReferences(shaders.pipelineLibrary());
+        }
     }
-    return angle::Result::Continue;
-}
-
-template <typename Hash>
-angle::Result GraphicsPipelineCache<Hash>::linkLibraries(
-    vk::ErrorContext *context,
-    vk::PipelineCacheAccess *pipelineCache,
-    const vk::GraphicsPipelineDesc &desc,
-    const vk::PipelineLayout &pipelineLayout,
-    vk::PipelineHelper *vertexInputPipeline,
-    vk::PipelineHelper *shadersPipeline,
-    vk::PipelineHelper *fragmentOutputPipeline,
-    const vk::GraphicsPipelineDesc **descPtrOut,
-    vk::PipelineHelper **pipelineOut)
-{
-    vk::Pipeline newPipeline;
-    vk::CacheLookUpFeedback feedback = vk::CacheLookUpFeedback::None;
-
-    ANGLE_TRY(vk::InitializePipelineFromLibraries(
-        context, pipelineCache, pipelineLayout, *vertexInputPipeline, *shadersPipeline,
-        *fragmentOutputPipeline, desc, &newPipeline, &feedback));
-
-    addToCache(PipelineSource::DrawLinked, desc, std::move(newPipeline), feedback, descPtrOut,
-               pipelineOut);
-    (*pipelineOut)->setLinkedLibraryReferences(shadersPipeline);
-
     return angle::Result::Continue;
 }
 
@@ -8429,43 +8326,12 @@ template angle::Result GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>::
     vk::PipelineCacheAccess *pipelineCache,
     const vk::RenderPass &compatibleRenderPass,
     const vk::PipelineLayout &pipelineLayout,
-    const vk::ShaderModuleMap &shaders,
-    const vk::SpecializationConstants &specConsts,
+    const vk::GraphicsPipelineShadersInfo &shaders,
     PipelineSource source,
     const vk::GraphicsPipelineDesc &desc,
-    const vk::GraphicsPipelineDesc **descPtrOut,
-    vk::PipelineHelper **pipelineOut);
-template angle::Result GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>::linkLibraries(
-    vk::ErrorContext *context,
-    vk::PipelineCacheAccess *pipelineCache,
-    const vk::GraphicsPipelineDesc &desc,
-    const vk::PipelineLayout &pipelineLayout,
-    vk::PipelineHelper *vertexInputPipeline,
-    vk::PipelineHelper *shadersPipeline,
-    vk::PipelineHelper *fragmentOutputPipeline,
     const vk::GraphicsPipelineDesc **descPtrOut,
     vk::PipelineHelper **pipelineOut);
 template void GraphicsPipelineCache<GraphicsPipelineDescCompleteHash>::populate(
-    const vk::GraphicsPipelineDesc &desc,
-    vk::Pipeline &&pipeline,
-    vk::PipelineHelper **pipelineHelperOut);
-
-template void GraphicsPipelineCache<GraphicsPipelineDescVertexInputHash>::destroy(
-    vk::ErrorContext *context);
-template void GraphicsPipelineCache<GraphicsPipelineDescVertexInputHash>::release(
-    vk::ErrorContext *context);
-template angle::Result GraphicsPipelineCache<GraphicsPipelineDescVertexInputHash>::createPipeline(
-    vk::ErrorContext *context,
-    vk::PipelineCacheAccess *pipelineCache,
-    const vk::RenderPass &compatibleRenderPass,
-    const vk::PipelineLayout &pipelineLayout,
-    const vk::ShaderModuleMap &shaders,
-    const vk::SpecializationConstants &specConsts,
-    PipelineSource source,
-    const vk::GraphicsPipelineDesc &desc,
-    const vk::GraphicsPipelineDesc **descPtrOut,
-    vk::PipelineHelper **pipelineOut);
-template void GraphicsPipelineCache<GraphicsPipelineDescVertexInputHash>::populate(
     const vk::GraphicsPipelineDesc &desc,
     vk::Pipeline &&pipeline,
     vk::PipelineHelper **pipelineHelperOut);
@@ -8479,34 +8345,12 @@ template angle::Result GraphicsPipelineCache<GraphicsPipelineDescShadersHash>::c
     vk::PipelineCacheAccess *pipelineCache,
     const vk::RenderPass &compatibleRenderPass,
     const vk::PipelineLayout &pipelineLayout,
-    const vk::ShaderModuleMap &shaders,
-    const vk::SpecializationConstants &specConsts,
+    const vk::GraphicsPipelineShadersInfo &shaders,
     PipelineSource source,
     const vk::GraphicsPipelineDesc &desc,
     const vk::GraphicsPipelineDesc **descPtrOut,
     vk::PipelineHelper **pipelineOut);
 template void GraphicsPipelineCache<GraphicsPipelineDescShadersHash>::populate(
-    const vk::GraphicsPipelineDesc &desc,
-    vk::Pipeline &&pipeline,
-    vk::PipelineHelper **pipelineHelperOut);
-
-template void GraphicsPipelineCache<GraphicsPipelineDescFragmentOutputHash>::destroy(
-    vk::ErrorContext *context);
-template void GraphicsPipelineCache<GraphicsPipelineDescFragmentOutputHash>::release(
-    vk::ErrorContext *context);
-template angle::Result
-GraphicsPipelineCache<GraphicsPipelineDescFragmentOutputHash>::createPipeline(
-    vk::ErrorContext *context,
-    vk::PipelineCacheAccess *pipelineCache,
-    const vk::RenderPass &compatibleRenderPass,
-    const vk::PipelineLayout &pipelineLayout,
-    const vk::ShaderModuleMap &shaders,
-    const vk::SpecializationConstants &specConsts,
-    PipelineSource source,
-    const vk::GraphicsPipelineDesc &desc,
-    const vk::GraphicsPipelineDesc **descPtrOut,
-    vk::PipelineHelper **pipelineOut);
-template void GraphicsPipelineCache<GraphicsPipelineDescFragmentOutputHash>::populate(
     const vk::GraphicsPipelineDesc &desc,
     vk::Pipeline &&pipeline,
     vk::PipelineHelper **pipelineHelperOut);

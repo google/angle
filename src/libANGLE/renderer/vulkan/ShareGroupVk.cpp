@@ -158,8 +158,6 @@ angle::Result ShareGroupVk::updateContextsPriority(ContextVk *contextVk,
 
 void ShareGroupVk::onDestroy(const egl::Display *display)
 {
-    DisplayVk *displayVk   = vk::GetImpl(display);
-
     mRefCountedEventsGarbageRecycler.destroy(mRenderer);
 
     for (std::unique_ptr<vk::BufferPool> &pool : mDefaultBufferPools)
@@ -182,9 +180,6 @@ void ShareGroupVk::onDestroy(const egl::Display *display)
 
     mFramebufferCache.destroy(mRenderer);
     resetPrevTexture();
-
-    mVertexInputGraphicsPipelineCache.destroy(displayVk);
-    mFragmentOutputGraphicsPipelineCache.destroy(displayVk);
 }
 
 angle::Result ShareGroupVk::onMutableTextureUpload(ContextVk *contextVk, TextureVk *newTexture)

@@ -188,14 +188,12 @@ class ProgramExecutableVk : public ProgramExecutableImpl
                                          const vk::GraphicsPipelineDesc **descPtrOut,
                                          vk::PipelineHelper **pipelineOut);
 
-    angle::Result linkGraphicsPipelineLibraries(ContextVk *contextVk,
-                                                vk::PipelineCacheAccess *pipelineCache,
-                                                const vk::GraphicsPipelineDesc &desc,
-                                                vk::PipelineHelper *vertexInputPipeline,
-                                                vk::PipelineHelper *shadersPipeline,
-                                                vk::PipelineHelper *fragmentOutputPipeline,
-                                                const vk::GraphicsPipelineDesc **descPtrOut,
-                                                vk::PipelineHelper **pipelineOut);
+    angle::Result createLinkedGraphicsPipeline(ContextVk *contextVk,
+                                               vk::PipelineCacheAccess *pipelineCache,
+                                               const vk::GraphicsPipelineDesc &desc,
+                                               vk::PipelineHelper *shadersPipeline,
+                                               const vk::GraphicsPipelineDesc **descPtrOut,
+                                               vk::PipelineHelper **pipelineOut);
 
     angle::Result getOrCreateComputePipeline(vk::ErrorContext *context,
                                              vk::PipelineCacheAccess *pipelineCache,
