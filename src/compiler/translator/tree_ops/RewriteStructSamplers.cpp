@@ -52,14 +52,23 @@ TIntermTyped *RewriteExpressionVisitBinaryHelper(TCompiler *compiler,
                                                  const StructureUniformMap &structureUniformMap,
                                                  const ExtractedSamplerMap &extractedSamplers)
 {
-    // Only interested in EOpIndexDirectStruct binary nodes.
-    if (node->getOp() != EOpIndexDirectStruct)
+    // Only interested in EOpIndex* binary nodes.
+    switch (node->getOp())
     {
-        return nullptr;
+        case EOpIndexDirectInterfaceBlock:
+        case EOpIndexIndirect:
+        case EOpIndexDirect:
+        case EOpIndexDirectStruct:
+            break;
+        default:
+            return nullptr;
     }
 
     const TStructure *structure = node->getLeft()->getType().getStruct();
-    ASSERT(structure);
+    if (structure == nullptr)
+    {
+        return nullptr;
+    }
 
     // If the result of the index is not a sampler and the struct is not replaced, there's nothing
     // to do.
@@ -177,8 +186,6 @@ TIntermTyped *RewriteModifiedStructFieldSelectionExpression(
     const StructureUniformMap &structureUniformMap,
     const ExtractedSamplerMap &extractedSamplers)
 {
-    ASSERT(node->getOp() == EOpIndexDirectStruct);
-
     const bool isSampler = node->getType().isSampler();
 
     TIntermSymbol *baseUniform = nullptr;

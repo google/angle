@@ -4978,7 +4978,12 @@ bool OutputSPIRVTraverser::visitBinary(Visit visit, TIntermBinary *node)
         }
         resultTypeSpec = mNodeData[mNodeData.size() - 2].accessChain.typeSpec;
     }
-    const spirv::IdRef resultTypeId = mBuilder.getTypeData(node->getType(), resultTypeSpec).id;
+    // Workaround bugs in the transformers that don't take operator comma into account; the type of
+    // operator comma can be wrong if the type of RHS is changed (such as when extracting samplers
+    // out of structs).  Fortunately, we don't need the type of the comma node at all.
+    const spirv::IdRef resultTypeId =
+        node->getOp() == EOpComma ? spirv::IdRef{}
+                                  : mBuilder.getTypeData(node->getType(), resultTypeSpec).id;
 
     // For EOpIndex* operations, push the right value as an index to the left value's access chain.
     // For the other operations, evaluate the expression.

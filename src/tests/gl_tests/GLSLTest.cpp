@@ -20693,6 +20693,24 @@ void main()
 
     ANGLE_GL_PROGRAM(program, kVS, kFS);
 }
+
+// Regression test for a bug where the sampler-in-struct rewrite transformation did not take a
+// specific pattern of side_effect,index_the_struct_to_write into account.
+TEST_P(GLSLTest_ES3, StructWithSamplerRHSOfCommaWithSideEffect)
+{
+    constexpr char kVS[] = R"(uniform struct S {
+    sampler2D s;
+    mat2 m;
+} u[2];
+void main()
+{
+    ++gl_Position, u[0];
+})";
+
+    GLuint shader = CompileShader(GL_VERTEX_SHADER, kVS);
+    EXPECT_NE(0u, shader);
+    glDeleteShader(shader);
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(
