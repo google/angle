@@ -166,15 +166,6 @@ class PixelLocalStorage
     void interrupt(Context *);
     void restore(Context *);
 
-    // While pixel local storage is active, the draw buffers on and after
-    // 'FirstOverriddenDrawBuffer' are blocked from the client and reserved for internal use by PLS.
-    static GLint FirstOverriddenDrawBuffer(const Caps &caps, GLuint numActivePlanes)
-    {
-        ASSERT(numActivePlanes > 0);
-        return std::min(caps.maxColorAttachmentsWithActivePixelLocalStorage,
-                        caps.maxCombinedDrawBuffersAndPixelLocalStoragePlanes - numActivePlanes);
-    }
-
   protected:
     PixelLocalStorage(const ShPixelLocalStorageOptions &, const Caps &);
 

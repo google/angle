@@ -418,7 +418,7 @@ void Renderer::ensureCapsInitialized() const
     mNativeLimitations.multidrawEmulated   = false;
 
     // Enable EXT_base_instance
-    mNativeExtensions.baseInstanceEXT = true;
+    mNativeExtensions.baseInstanceEXT       = true;
     mNativeLimitations.baseInstanceEmulated = false;
 
     // Enable ANGLE_base_vertex_base_instance
@@ -1329,28 +1329,39 @@ void Renderer::ensureCapsInitialized() const
     mNativeExtensions.textureFoveatedQCOM = mFeatures.supportsFoveatedRendering.enabled;
 
     // GL_ANGLE_shader_pixel_local_storage
-    mNativeExtensions.shaderPixelLocalStorageANGLE = true;
-    if (getFeatures().supportsShaderFramebufferFetch.enabled && mIsColorFramebufferFetchCoherent)
+    //
+    // NOTE:
+    //   * The Vulkan backend limits the ES version to 2.0 when drawBuffersIndexed is not supported.
+    //   * The frontend disables all ES 3.x extensions when the context version is too low for them.
+    //   * This means it is impossible on Vulkan to have pixel local storage without DBI.
+    if (mNativeExtensions.drawBuffersIndexedAny())
     {
-        mNativeExtensions.shaderPixelLocalStorageCoherentANGLE = true;
-        mNativePLSOptions.type             = ShPixelLocalStorageType::FramebufferFetch;
-        mNativePLSOptions.fragmentSyncType = ShFragmentSynchronizationType::Automatic;
-    }
-    else if (getFeatures().supportsFragmentShaderPixelInterlock.enabled)
-    {
-        // Use shader images with VK_EXT_fragment_shader_interlock, instead of attachments, if
-        // they're our only option to be coherent.
-        mNativeExtensions.shaderPixelLocalStorageCoherentANGLE = true;
-        mNativePLSOptions.type = ShPixelLocalStorageType::ImageLoadStore;
-        // GL_ARB_fragment_shader_interlock compiles to SPV_EXT_fragment_shader_interlock.
-        mNativePLSOptions.fragmentSyncType =
-            ShFragmentSynchronizationType::FragmentShaderInterlock_ARB_GL;
-        mNativePLSOptions.supportsNativeRGBA8ImageFormats = true;
-    }
-    else
-    {
-        mNativePLSOptions.type = ShPixelLocalStorageType::FramebufferFetch;
-        ASSERT(mNativePLSOptions.fragmentSyncType == ShFragmentSynchronizationType::NotSupported);
+        // With drawBuffersIndexed, we can always at least support non-coherent PLS with input
+        // attachments.
+        mNativeExtensions.shaderPixelLocalStorageANGLE = true;
+
+        if (!mIsColorFramebufferFetchCoherent &&
+            getFeatures().supportsFragmentShaderPixelInterlock.enabled)
+        {
+            // Use shader images with VK_EXT_fragment_shader_interlock, instead of input
+            // attachments, if they're our only option to be coherent.
+            mNativeExtensions.shaderPixelLocalStorageCoherentANGLE = true;
+            mNativePLSOptions.type = ShPixelLocalStorageType::ImageLoadStore;
+            // GL_ARB_fragment_shader_interlock compiles to SPV_EXT_fragment_shader_interlock.
+            mNativePLSOptions.fragmentSyncType =
+                ShFragmentSynchronizationType::FragmentShaderInterlock_ARB_GL;
+            mNativePLSOptions.supportsNativeRGBA8ImageFormats = true;
+        }
+        else
+        {
+            // Input attachments are the preferred implementation for PLS on Vulkan.
+            mNativeExtensions.shaderPixelLocalStorageCoherentANGLE =
+                mIsColorFramebufferFetchCoherent;
+            mNativePLSOptions.type             = ShPixelLocalStorageType::FramebufferFetch;
+            mNativePLSOptions.fragmentSyncType = mIsColorFramebufferFetchCoherent
+                                                     ? ShFragmentSynchronizationType::Automatic
+                                                     : ShFragmentSynchronizationType::NotSupported;
+        }
     }
 
     // If framebuffer fetch is to be enabled/used, cap maxColorAttachments/maxDrawBuffers to

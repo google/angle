@@ -2431,9 +2431,6 @@ void Context::getIntegervImpl(GLenum pname, GLint *params) const
         case GL_MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE:
             *params = mState.getCaps().maxPixelLocalStoragePlanes;
             break;
-        case GL_MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE_ANGLE:
-            *params = mState.getCaps().maxColorAttachmentsWithActivePixelLocalStorage;
-            break;
         case GL_MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE:
             *params = mState.getCaps().maxCombinedDrawBuffersAndPixelLocalStoragePlanes;
             break;
@@ -3907,12 +3904,6 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.renderabilityValidationANGLE = true;
     }
 
-    if (getFrontendFeatures().disableDrawBuffersIndexed.enabled)
-    {
-        supportedExtensions.drawBuffersIndexedEXT = false;
-        supportedExtensions.drawBuffersIndexedOES = false;
-    }
-
     if (getFrontendFeatures().disableAnisotropicFiltering.enabled)
     {
         supportedExtensions.textureFilterAnisotropicEXT = false;
@@ -4445,7 +4436,6 @@ void Context::initCaps()
                     caps->maxShaderImageUniforms[ShaderType::Fragment];
                 ANGLE_LIMIT_CAP(caps->maxPixelLocalStoragePlanes,
                                 IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES);
-                caps->maxColorAttachmentsWithActivePixelLocalStorage = caps->maxColorAttachments;
                 caps->maxCombinedDrawBuffersAndPixelLocalStoragePlanes =
                     std::min<GLint>(caps->maxPixelLocalStoragePlanes +
                                         std::min(caps->maxDrawBuffers, caps->maxColorAttachments),
@@ -4453,23 +4443,13 @@ void Context::initCaps()
                 break;
 
             case ShPixelLocalStorageType::FramebufferFetch:
+                // When pixel local storage is implemented as framebuffer attachments, we need
+                // draw_buffers_indexed in order to control the blend & color mask state
+                // on the PLS planes independently.
+                ASSERT(mSupportedExtensions.drawBuffersIndexedAny());
                 caps->maxPixelLocalStoragePlanes = maxDrawableAttachments;
                 ANGLE_LIMIT_CAP(caps->maxPixelLocalStoragePlanes,
                                 IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES);
-                if (!mSupportedExtensions.drawBuffersIndexedAny())
-                {
-                    // When pixel local storage is implemented as framebuffer attachments, we need
-                    // to disable color masks and blending to its attachments. If the backend
-                    // context doesn't have indexed blend and color mask support, then we will have
-                    // have to disable them globally. This also means the application can't have its
-                    // own draw buffers while PLS is active.
-                    caps->maxColorAttachmentsWithActivePixelLocalStorage = 0;
-                }
-                else
-                {
-                    caps->maxColorAttachmentsWithActivePixelLocalStorage =
-                        maxDrawableAttachments - 1;
-                }
                 caps->maxCombinedDrawBuffersAndPixelLocalStoragePlanes = maxDrawableAttachments;
                 break;
 

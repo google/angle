@@ -194,43 +194,42 @@ New Tokens
     Accepted by the <pname> parameter of GetIntegerv():
 
         MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE                              0x96E0
-        MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE_ANGLE       0x96E1
-        MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE    0x96E2
-        PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE                           0x96E3
+        MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE    0x96E1
+        PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE                           0x96E2
 
     Accepted as array elements in the <loadops> parameter of
     BeginPixelLocalStorageANGLE():
 
-        LOAD_OP_ZERO_ANGLE                                                0x96E4
-        LOAD_OP_CLEAR_ANGLE                                               0x96E5
-        LOAD_OP_LOAD_ANGLE                                                0x96E6
+        LOAD_OP_ZERO_ANGLE                                                0x96E3
+        LOAD_OP_CLEAR_ANGLE                                               0x96E4
+        LOAD_OP_LOAD_ANGLE                                                0x96E5
 
     Accepted as array elements in the <storeops> parameter of
     EndPixelLocalStorageANGLE():
 
-        STORE_OP_STORE_ANGLE                                              0x96E7
+        STORE_OP_STORE_ANGLE                                              0x96E6
 
     Accepted by the <pname> parameter of
     GetFramebufferPixelLocalStorageParameterivANGLE() and
     GetFramebufferPixelLocalStorageParameterivRobustANGLE():
 
-        PIXEL_LOCAL_FORMAT_ANGLE                                          0x96E8
-        PIXEL_LOCAL_TEXTURE_NAME_ANGLE                                    0x96E9
-        PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE                                   0x96EA
-        PIXEL_LOCAL_TEXTURE_LAYER_ANGLE                                   0x96EB
+        PIXEL_LOCAL_FORMAT_ANGLE                                          0x96E7
+        PIXEL_LOCAL_TEXTURE_NAME_ANGLE                                    0x96E8
+        PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE                                   0x96E9
+        PIXEL_LOCAL_TEXTURE_LAYER_ANGLE                                   0x96EA
 
     Accepted by the <pname> parameter of
     GetFramebufferPixelLocalStorageParameterfvANGLE() and
     GetFramebufferPixelLocalStorageParameterfvRobustANGLE():
 
-        PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE                               0x96EC
+        PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE                               0x96EB
 
     Accepted by the <pname> parameter of
     GetFramebufferPixelLocalStorageParameterivANGLE() and
     GetFramebufferPixelLocalStorageParameterivRobustANGLE():
 
-        PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE                                 0x96ED
-        PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE                        0x96EE
+        PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE                                 0x96EC
+        PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE                        0x96ED
 
 New GLSL Opaque Types
 
@@ -371,12 +370,6 @@ Additions to the OpenGL ES Specification, Version 3.0.6
         an image attached to any color attachment point on or after:
 
           COLOR_ATTACHMENT0 +
-          MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE_ANGLE
-
-      * INVALID_FRAMEBUFFER_OPERATION is generated if the draw framebuffer has
-        an image attached to any color attachment point on or after:
-
-          COLOR_ATTACHMENT0 +
           MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE - <n>
 
       * INVALID_VALUE is generated if <loadops> is NULL.
@@ -487,10 +480,8 @@ Additions to the OpenGL ES Specification, Version 3.0.6
         PRIMITIVE_RESTART_FIXED_INDEX, RASTERIZER_DISCARD, SCISSOR_TEST,
         SCISSOR_TEST_EXCLUSIVE_NV, STENCIL_TEST, CLIP_DISTANCE[0..7]_EXT
 
-      * Calls to ClearBuffer{f,i,ui}v() are ignored if <buffer> is COLOR and any
-        of the following are true:
+      * Calls to ClearBuffer{f,i,ui}v() are ignored if <buffer> is COLOR and:
 
-        <buffer> >= MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE_ANGLE
         <buffer> >=
             (MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE -
              ACTIVE_PIXEL_LOCAL_STORAGE_PLANES_ANGLE)
@@ -949,17 +940,10 @@ Additions to the OpenGL ES Specification, Version 3.0.6
     MAX_PIXEL_LOCAL_STORAGE-
     _PLANES_ANGLE                       Z+   GetIntegerv      4      4.4.2.X
 
-    MAX_COLOR_ATTACHMENTS_WITH-
-    _ACTIVE_PIXEL_LOCAL_STORAGE_ANGLE   Z+   GetIntegerv     *0!         2.X
-
     MAX_COMBINED_DRAW_BUFFERS_AND-
     _PIXEL_LOCAL_STORAGE_PLANES_ANGLE   Z+   GetIntegerv      4          2.X
 
     Table 6.X: Impementation Dependent Pixel Local Storage Limits
-
-    Note that MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE_ANGLE may be
-    zero, in which case the application cannot render to any other color
-    attachments while PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE is nonzero.
 
                                                                 Initial
     Get Value                  Type  Get Command                 Value    Sec.

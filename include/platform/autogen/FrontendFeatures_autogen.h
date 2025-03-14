@@ -39,12 +39,6 @@ struct FrontendFeatures : FeatureSetBase
         &members,
     };
 
-    FeatureInfo disableDrawBuffersIndexed = {
-        "disableDrawBuffersIndexed",
-        FeatureCategory::FrontendFeatures,
-        &members,
-    };
-
     FeatureInfo disableAnisotropicFiltering = {
         "disableAnisotropicFiltering",
         FeatureCategory::FrontendWorkarounds,

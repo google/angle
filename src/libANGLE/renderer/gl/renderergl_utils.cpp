@@ -1698,7 +1698,7 @@ void GenerateCaps(const FunctionsGL *functions,
                                         functions->hasGLExtension("GL_ARB_stencil_texturing") ||
                                         functions->isAtLeastGLES(gl::Version(3, 1));
 
-    if (features.supportsShaderFramebufferFetchEXT.enabled)
+    if (features.supportsShaderFramebufferFetchEXT.enabled && extensions->drawBuffersIndexedAny())
     {
         // We can support PLS natively, probably in tiled memory.
         extensions->shaderPixelLocalStorageANGLE         = true;

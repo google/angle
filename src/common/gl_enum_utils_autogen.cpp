@@ -2853,32 +2853,30 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
                 case 0x96E0:
                     return "GL_MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE";
                 case 0x96E1:
-                    return "GL_MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE_ANGLE";
-                case 0x96E2:
                     return "GL_MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE";
-                case 0x96E3:
+                case 0x96E2:
                     return "GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE";
-                case 0x96E4:
+                case 0x96E3:
                     return "GL_LOAD_OP_ZERO_ANGLE";
-                case 0x96E5:
+                case 0x96E4:
                     return "GL_LOAD_OP_CLEAR_ANGLE";
-                case 0x96E6:
+                case 0x96E5:
                     return "GL_LOAD_OP_LOAD_ANGLE";
-                case 0x96E7:
+                case 0x96E6:
                     return "GL_STORE_OP_STORE_ANGLE";
-                case 0x96E8:
+                case 0x96E7:
                     return "GL_PIXEL_LOCAL_FORMAT_ANGLE";
-                case 0x96E9:
+                case 0x96E8:
                     return "GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE";
-                case 0x96EA:
+                case 0x96E9:
                     return "GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE";
-                case 0x96EB:
+                case 0x96EA:
                     return "GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE";
-                case 0x96EC:
+                case 0x96EB:
                     return "GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE";
-                case 0x96ED:
+                case 0x96EC:
                     return "GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE";
-                case 0x96EE:
+                case 0x96ED:
                     return "GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE";
                 case 0x9EA0:
                     return "GL_RENDERABILITY_VALIDATION_ANGLE";
@@ -6197,7 +6195,7 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
         {
             switch (value)
             {
-                case 0x96EC:
+                case 0x96EB:
                     return "GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE";
                 default:
                     return UnknownEnumToString(value);
@@ -6208,17 +6206,17 @@ const char *GLenumToString(GLESEnum enumGroup, unsigned int value)
         {
             switch (value)
             {
-                case 0x96E8:
+                case 0x96E7:
                     return "GL_PIXEL_LOCAL_FORMAT_ANGLE";
-                case 0x96E9:
+                case 0x96E8:
                     return "GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE";
-                case 0x96EA:
+                case 0x96E9:
                     return "GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE";
-                case 0x96EB:
+                case 0x96EA:
                     return "GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE";
-                case 0x96ED:
+                case 0x96EC:
                     return "GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE";
-                case 0x96EE:
+                case 0x96ED:
                     return "GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE";
                 default:
                     return UnknownEnumToString(value);
@@ -21524,9 +21522,9 @@ static StringEnumEntry g_stringEnumTable[] = {
     {"GL_LIST_MODE", 0x0B30},
     {"GL_LIST_PRIORITY_SGIX", 0x8182},
     {"GL_LOAD", 0x0101},
-    {"GL_LOAD_OP_CLEAR_ANGLE", 0x96E5},
-    {"GL_LOAD_OP_LOAD_ANGLE", 0x96E6},
-    {"GL_LOAD_OP_ZERO_ANGLE", 0x96E4},
+    {"GL_LOAD_OP_CLEAR_ANGLE", 0x96E4},
+    {"GL_LOAD_OP_LOAD_ANGLE", 0x96E5},
+    {"GL_LOAD_OP_ZERO_ANGLE", 0x96E3},
     {"GL_LOCAL_CONSTANT_DATATYPE_EXT", 0x87ED},
     {"GL_LOCAL_CONSTANT_EXT", 0x87C3},
     {"GL_LOCAL_CONSTANT_VALUE_EXT", 0x87EC},
@@ -21804,7 +21802,6 @@ static StringEnumEntry g_stringEnumTable[] = {
     {"GL_MAX_COLOR_ATTACHMENTS", 0x8CDF},
     {"GL_MAX_COLOR_ATTACHMENTS_EXT", 0x8CDF},
     {"GL_MAX_COLOR_ATTACHMENTS_NV", 0x8CDF},
-    {"GL_MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE_ANGLE", 0x96E1},
     {"GL_MAX_COLOR_FRAMEBUFFER_SAMPLES_AMD", 0x91B3},
     {"GL_MAX_COLOR_FRAMEBUFFER_STORAGE_SAMPLES_AMD", 0x91B4},
     {"GL_MAX_COLOR_MATRIX_STACK_DEPTH", 0x80B3},
@@ -21818,7 +21815,7 @@ static StringEnumEntry g_stringEnumTable[] = {
     {"GL_MAX_COMBINED_CLIP_AND_CULL_DISTANCES_EXT", 0x82FA},
     {"GL_MAX_COMBINED_COMPUTE_UNIFORM_COMPONENTS", 0x8266},
     {"GL_MAX_COMBINED_DIMENSIONS", 0x8282},
-    {"GL_MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE", 0x96E2},
+    {"GL_MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE", 0x96E1},
     {"GL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS", 0x8A33},
     {"GL_MAX_COMBINED_GEOMETRY_UNIFORM_COMPONENTS", 0x8A32},
     {"GL_MAX_COMBINED_GEOMETRY_UNIFORM_COMPONENTS_EXT", 0x8A32},
@@ -22792,14 +22789,14 @@ static StringEnumEntry g_stringEnumTable[] = {
     {"GL_PIXEL_FRAGMENT_ALPHA_SOURCE_SGIS", 0x8355},
     {"GL_PIXEL_FRAGMENT_RGB_SOURCE_SGIS", 0x8354},
     {"GL_PIXEL_GROUP_COLOR_SGIS", 0x8356},
-    {"GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE", 0x96EC},
-    {"GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE", 0x96ED},
-    {"GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE", 0x96EE},
-    {"GL_PIXEL_LOCAL_FORMAT_ANGLE", 0x96E8},
-    {"GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE", 0x96E3},
-    {"GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE", 0x96EB},
-    {"GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE", 0x96EA},
-    {"GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE", 0x96E9},
+    {"GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE", 0x96EB},
+    {"GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE", 0x96EC},
+    {"GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE", 0x96ED},
+    {"GL_PIXEL_LOCAL_FORMAT_ANGLE", 0x96E7},
+    {"GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE", 0x96E2},
+    {"GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE", 0x96EA},
+    {"GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE", 0x96E9},
+    {"GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE", 0x96E8},
     {"GL_PIXEL_MAG_FILTER_EXT", 0x8331},
     {"GL_PIXEL_MAP_A_TO_A", 0x0C79},
     {"GL_PIXEL_MAP_A_TO_A_SIZE", 0x0CB9},
@@ -24015,7 +24012,7 @@ static StringEnumEntry g_stringEnumTable[] = {
     {"GL_STORAGE_CLIENT_APPLE", 0x85B4},
     {"GL_STORAGE_PRIVATE_APPLE", 0x85BD},
     {"GL_STORAGE_SHARED_APPLE", 0x85BF},
-    {"GL_STORE_OP_STORE_ANGLE", 0x96E7},
+    {"GL_STORE_OP_STORE_ANGLE", 0x96E6},
     {"GL_STREAM_COPY", 0x88E2},
     {"GL_STREAM_COPY_ARB", 0x88E2},
     {"GL_STREAM_DRAW", 0x88E0},

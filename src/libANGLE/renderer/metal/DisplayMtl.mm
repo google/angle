@@ -1126,8 +1126,6 @@ void DisplayMtl::initializeExtensions() const
                           gl::IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES);
             mNativeCaps.maxPixelLocalStoragePlanes =
                 gl::IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES;
-            mNativeCaps.maxColorAttachmentsWithActivePixelLocalStorage =
-                gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
             mNativeCaps.maxCombinedDrawBuffersAndPixelLocalStoragePlanes =
                 gl::IMPLEMENTATION_MAX_PIXEL_LOCAL_STORAGE_PLANES +
                 gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;

@@ -391,7 +391,6 @@ struct Caps
 
     // GL_ANGLE_shader_pixel_local_storage
     GLuint maxPixelLocalStoragePlanes                       = 0;
-    GLuint maxColorAttachmentsWithActivePixelLocalStorage   = 0;
     GLuint maxCombinedDrawBuffersAndPixelLocalStoragePlanes = 0;
 
     // GL_EXT_shader_pixel_local_storage.

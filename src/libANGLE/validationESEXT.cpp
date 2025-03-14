@@ -2529,28 +2529,11 @@ bool ValidateBeginPixelLocalStorageANGLE(const Context *context,
     // INVALID_FRAMEBUFFER_OPERATION is generated if the draw framebuffer has an image attached to
     // any color attachment point on or after:
     //
-    //   COLOR_ATTACHMENT0 +
-    //   MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE_ANGLE
-    //
-    const Caps &caps = context->getCaps();
-    for (int i = caps.maxColorAttachmentsWithActivePixelLocalStorage; i < caps.maxColorAttachments;
-         ++i)
-    {
-        if (framebuffer->getColorAttachment(i))
-        {
-            ANGLE_VALIDATION_ERROR(GL_INVALID_FRAMEBUFFER_OPERATION,
-                                   kPLSMaxColorAttachmentsExceded);
-            return false;
-        }
-    }
-
-    // INVALID_FRAMEBUFFER_OPERATION is generated if the draw framebuffer has an image attached to
-    // any color attachment point on or after:
-    //
     //   COLOR_ATTACHMENT0 + MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE - <n>
     //
-    for (GLuint i = caps.maxCombinedDrawBuffersAndPixelLocalStoragePlanes - n;
-         i < caps.maxColorAttachmentsWithActivePixelLocalStorage; ++i)
+    const Caps &caps = context->getCaps();
+    for (int i = caps.maxCombinedDrawBuffersAndPixelLocalStoragePlanes - n; i < caps.maxDrawBuffers;
+         ++i)
     {
         if (framebuffer->getColorAttachment(i))
         {

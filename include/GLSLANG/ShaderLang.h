@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 371
+#define ANGLE_SH_VERSION 372
 
 enum ShShaderSpec
 {
@@ -738,7 +738,6 @@ struct ShBuiltInResources
 
     // ANGLE_shader_pixel_local_storage.
     int MaxPixelLocalStoragePlanes;
-    int MaxColorAttachmentsWithActivePixelLocalStorage;
     int MaxCombinedDrawBuffersAndPixelLocalStoragePlanes;
 };
 

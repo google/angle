@@ -169,8 +169,6 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state, egl::Disp
 
     // ANGLE_shader_pixel_local_storage.
     mResources.MaxPixelLocalStoragePlanes = caps.maxPixelLocalStoragePlanes;
-    mResources.MaxColorAttachmentsWithActivePixelLocalStorage =
-        caps.maxColorAttachmentsWithActivePixelLocalStorage;
     mResources.MaxCombinedDrawBuffersAndPixelLocalStoragePlanes =
         caps.maxCombinedDrawBuffersAndPixelLocalStoragePlanes;
 

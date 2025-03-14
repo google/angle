@@ -4100,7 +4100,6 @@ bool GetQueryParameterInfo(const State &glState,
         switch (pname)
         {
             case GL_MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE:
-            case GL_MAX_COLOR_ATTACHMENTS_WITH_ACTIVE_PIXEL_LOCAL_STORAGE_ANGLE:
             case GL_MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE:
             case GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE:
                 *type      = GL_INT;
