@@ -527,7 +527,7 @@ void AcquireNextImageUnlocked(VkDevice device,
                               std::atomic<impl::SurfaceSizeState> *sizeState)
 {
     ASSERT(acquire->state == impl::ImageAcquireState::Unacquired);
-    ASSERT(*sizeState != impl::SurfaceSizeState::InvalidSwapchain);
+    ASSERT(*sizeState == impl::SurfaceSizeState::Unresolved);
     ASSERT(swapchain != VK_NULL_HANDLE);
 
     impl::UnlockedAcquireData *data     = &acquire->unlockedAcquireData;
@@ -545,15 +545,6 @@ void AcquireNextImageUnlocked(VkDevice device,
     if (!IsImageAcquireFailed(result->result))
     {
         SetSizeState(sizeState, impl::SurfaceSizeState::Resolved);
-    }
-    else if (GetSizeState(*sizeState) == impl::SurfaceSizeState::Resolved)
-    {
-        WARN() << "vkAcquireNextImageKHR() failed: " << VulkanResultString(result->result);
-        WARN() << "Mark surface size unresolved."
-               << (result->result == VK_ERROR_OUT_OF_DATE_KHR
-                       ? " Consider enabling perFrameWindowSizeQuery."
-                       : "");
-        SetSizeState(sizeState, impl::SurfaceSizeState::Unresolved);
     }
 
     // Result processing will be done later in the same thread.
@@ -1872,16 +1863,8 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::ErrorContext *context)
     // Assign swapchain after all initialization is finished.
     mSwapchain = newSwapChain;
 
-    if (renderer->getFeatures().perFrameWindowSizeQuery.enabled)
-    {
-        // Swapchain is now valid, but size is still unresolved until acquire next image.
-        setSizeState(SurfaceSizeState::Unresolved);
-    }
-    else
-    {
-        // When feature is disabled, size is resolved as long the swapchain is valid.
-        setSizeState(SurfaceSizeState::Resolved);
-    }
+    // Swapchain is now valid, but size is still unresolved until acquire next image.
+    setSizeState(SurfaceSizeState::Unresolved);
 
     context->getPerfCounters().swapchainCreate++;
 
@@ -2044,22 +2027,12 @@ void WindowSurfaceVk::checkForOutOfDateSwapchain(vk::Renderer *renderer, bool pr
 angle::Result WindowSurfaceVk::prepareSwapchainForAcquireNextImage(vk::ErrorContext *context)
 {
     ASSERT(mAcquireOperation.state == ImageAcquireState::Unacquired);
-    ASSERT(context->getFeatures().perFrameWindowSizeQuery.enabled ||
-           !context->getFeatures().avoidInvisibleWindowSwapchainRecreate.enabled);
+    ASSERT(mSizeState != SurfaceSizeState::Resolved);
 
     vk::Renderer *renderer = context->getRenderer();
 
     const bool isSwapchainValid = (mSwapchain != VK_NULL_HANDLE);
     ASSERT(!isSwapchainValid || !skipAcquireNextSwapchainImageForSharedPresentMode());
-
-    if (isSwapchainValid && !renderer->getFeatures().perFrameWindowSizeQuery.enabled)
-    {
-        // If feature is disabled, early out.
-        ASSERT(mSizeState == SurfaceSizeState::Resolved);
-        return angle::Result::Continue;
-    }
-    ASSERT(renderer->getFeatures().perFrameWindowSizeQuery.enabled || !isSwapchainValid);
-    ASSERT(mSizeState != SurfaceSizeState::Resolved);
 
     // Get the latest surface capabilities.  Also update the compatible present modes if recreate
     // was probably caused by the incompatible desired present mode.  Note, that we must not update
@@ -2070,7 +2043,7 @@ angle::Result WindowSurfaceVk::prepareSwapchainForAcquireNextImage(vk::ErrorCont
 
     const uint32_t minImageCount = GetMinImageCount(renderer, surfaceCaps, mSwapchainPresentMode);
 
-    if (renderer->getFeatures().perFrameWindowSizeQuery.enabled && isSwapchainValid)
+    if (isSwapchainValid)
     {
         // This device generates neither VK_ERROR_OUT_OF_DATE_KHR nor VK_SUBOPTIMAL_KHR.  Check for
         // whether the size and/or rotation have changed since the swapchain was created.
@@ -2829,7 +2802,7 @@ angle::Result WindowSurfaceVk::swapImpl(ContextVk *contextVk,
     // swapchain will be invalidated in the |checkForOutOfDateSwapchain| call below.
     if (!isSharedPresentMode())
     {
-        deferAcquireNextImage(renderer);
+        deferAcquireNextImage();
     }
 
     // Check for out of date swapchain.  Note, possible swapchain invalidate will also defer ANI.
@@ -2861,7 +2834,7 @@ void WindowSurfaceVk::setTimestampsEnabled(bool enabled)
     ASSERT(IsAndroid());
 }
 
-void WindowSurfaceVk::deferAcquireNextImage(vk::Renderer *renderer)
+void WindowSurfaceVk::deferAcquireNextImage()
 {
     ASSERT(mAcquireOperation.state == ImageAcquireState::Ready);
     ASSERT(mSizeState == SurfaceSizeState::Resolved);
@@ -2873,11 +2846,8 @@ void WindowSurfaceVk::deferAcquireNextImage(vk::Renderer *renderer)
 
     mAcquireOperation.state = ImageAcquireState::Unacquired;
 
-    if (renderer->getFeatures().perFrameWindowSizeQuery.enabled)
-    {
-        // Swapchain may be recreated in prepareSwapchainForAcquireNextImage() call.
-        setSizeState(SurfaceSizeState::Unresolved);
-    }
+    // Swapchain may be recreated in prepareSwapchainForAcquireNextImage() call.
+    setSizeState(SurfaceSizeState::Unresolved);
 
     // Set gl::Framebuffer::DIRTY_BIT_COLOR_BUFFER_CONTENTS_0 via subject-observer message-passing
     // to the front-end Surface, Framebuffer, and Context classes.  The DIRTY_BIT_COLOR_ATTACHMENT_0

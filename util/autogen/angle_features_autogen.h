@@ -238,7 +238,6 @@ enum class Feature
     PackOverlappingRowsSeparatelyPackBuffer,
     PadBuffersToMaxVertexAttribStride,
     PassHighpToPackUnormSnormBuiltins,
-    PerFrameWindowSizeQuery,
     PermanentlySwitchToFramebufferFetchMode,
     PersistentlyMappedBuffers,
     PreAddTexelFetchOffsets,

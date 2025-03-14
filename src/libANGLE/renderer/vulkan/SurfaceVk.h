@@ -433,7 +433,7 @@ class WindowSurfaceVk : public SurfaceVk
     VkResult acquireNextSwapchainImage(vk::ErrorContext *context);
     // This method is called when a swapchain image is presented.  It schedules
     // doDeferredAcquireNextImage() to be called later.
-    void deferAcquireNextImage(vk::Renderer *renderer);
+    void deferAcquireNextImage();
     bool skipAcquireNextSwapchainImageForSharedPresentMode() const;
 
     angle::Result computePresentOutOfDate(vk::ErrorContext *context,

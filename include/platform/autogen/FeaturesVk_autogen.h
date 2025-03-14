@@ -260,12 +260,6 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
-    FeatureInfo perFrameWindowSizeQuery = {
-        "perFrameWindowSizeQuery",
-        FeatureCategory::VulkanWorkarounds,
-        &members,
-    };
-
     FeatureInfo avoidInvisibleWindowSwapchainRecreate = {
         "avoidInvisibleWindowSwapchainRecreate",
         FeatureCategory::VulkanWorkarounds,
