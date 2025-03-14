@@ -195,6 +195,229 @@ ANGLE_INLINE void Context::bindBuffer(BufferBinding target, BufferID buffer)
     }
 }
 
+ANGLE_INLINE void Context::uniform1f(UniformLocation location, GLfloat x)
+{
+    Program *program = getActiveLinkedProgram();
+    program->getExecutable().setUniform1fv(location, 1, &x);
+}
+
+ANGLE_INLINE void Context::uniform1fv(UniformLocation location, GLsizei count, const GLfloat *v)
+{
+    Program *program = getActiveLinkedProgram();
+    program->getExecutable().setUniform1fv(location, count, v);
+}
+
+ANGLE_INLINE void Context::setUniform1iImpl(Program *program,
+                                            UniformLocation location,
+                                            GLsizei count,
+                                            const GLint *v)
+{
+    program->getExecutable().setUniform1iv(this, location, count, v);
+}
+
+ANGLE_INLINE void Context::uniform1i(UniformLocation location, GLint x)
+{
+    Program *program = getActiveLinkedProgram();
+    setUniform1iImpl(program, location, 1, &x);
+}
+
+ANGLE_INLINE void Context::uniform1iv(UniformLocation location, GLsizei count, const GLint *v)
+{
+    Program *program = getActiveLinkedProgram();
+    setUniform1iImpl(program, location, count, v);
+}
+
+ANGLE_INLINE void Context::uniform2f(UniformLocation location, GLfloat x, GLfloat y)
+{
+    GLfloat xy[2]    = {x, y};
+    Program *program = getActiveLinkedProgram();
+    program->getExecutable().setUniform2fv(location, 1, xy);
+}
+
+ANGLE_INLINE void Context::uniform2fv(UniformLocation location, GLsizei count, const GLfloat *v)
+{
+    Program *program = getActiveLinkedProgram();
+    program->getExecutable().setUniform2fv(location, count, v);
+}
+
+ANGLE_INLINE void Context::uniform2i(UniformLocation location, GLint x, GLint y)
+{
+    GLint xy[2]      = {x, y};
+    Program *program = getActiveLinkedProgram();
+    program->getExecutable().setUniform2iv(location, 1, xy);
+}
+
+ANGLE_INLINE void Context::uniform2iv(UniformLocation location, GLsizei count, const GLint *v)
+{
+    Program *program = getActiveLinkedProgram();
+    program->getExecutable().setUniform2iv(location, count, v);
+}
+
+ANGLE_INLINE void Context::uniform3f(UniformLocation location, GLfloat x, GLfloat y, GLfloat z)
+{
+    GLfloat xyz[3]   = {x, y, z};
+    Program *program = getActiveLinkedProgram();
+    program->getExecutable().setUniform3fv(location, 1, xyz);
+}
+
+ANGLE_INLINE void Context::uniform3fv(UniformLocation location, GLsizei count, const GLfloat *v)
+{
+    Program *program = getActiveLinkedProgram();
+    program->getExecutable().setUniform3fv(location, count, v);
+}
+
+ANGLE_INLINE void Context::uniform3i(UniformLocation location, GLint x, GLint y, GLint z)
+{
+    GLint xyz[3]     = {x, y, z};
+    Program *program = getActiveLinkedProgram();
+    program->getExecutable().setUniform3iv(location, 1, xyz);
+}
+
+ANGLE_INLINE void Context::uniform3iv(UniformLocation location, GLsizei count, const GLint *v)
+{
+    Program *program = getActiveLinkedProgram();
+    program->getExecutable().setUniform3iv(location, count, v);
+}
+
+ANGLE_INLINE void Context::uniform4f(UniformLocation location,
+                                     GLfloat x,
+                                     GLfloat y,
+                                     GLfloat z,
+                                     GLfloat w)
+{
+    GLfloat xyzw[4]  = {x, y, z, w};
+    Program *program = getActiveLinkedProgram();
+    program->getExecutable().setUniform4fv(location, 1, xyzw);
+}
+
+ANGLE_INLINE void Context::uniform4fv(UniformLocation location, GLsizei count, const GLfloat *v)
+{
+    Program *program = getActiveLinkedProgram();
+    program->getExecutable().setUniform4fv(location, count, v);
+}
+
+ANGLE_INLINE void Context::uniform4i(UniformLocation location, GLint x, GLint y, GLint z, GLint w)
+{
+    GLint xyzw[4]    = {x, y, z, w};
+    Program *program = getActiveLinkedProgram();
+    program->getExecutable().setUniform4iv(location, 1, xyzw);
+}
+
+ANGLE_INLINE void Context::uniform4iv(UniformLocation location, GLsizei count, const GLint *v)
+{
+    Program *program = getActiveLinkedProgram();
+    program->getExecutable().setUniform4iv(location, count, v);
+}
+
+ANGLE_INLINE void Context::uniform1ui(UniformLocation location, GLuint v0)
+{
+    Program *program = getActiveLinkedProgram();
+    program->getExecutable().setUniform1uiv(location, 1, &v0);
+}
+
+ANGLE_INLINE void Context::uniform2ui(UniformLocation location, GLuint v0, GLuint v1)
+{
+    Program *program  = getActiveLinkedProgram();
+    const GLuint xy[] = {v0, v1};
+    program->getExecutable().setUniform2uiv(location, 1, xy);
+}
+
+ANGLE_INLINE void Context::uniform3ui(UniformLocation location, GLuint v0, GLuint v1, GLuint v2)
+{
+    Program *program   = getActiveLinkedProgram();
+    const GLuint xyz[] = {v0, v1, v2};
+    program->getExecutable().setUniform3uiv(location, 1, xyz);
+}
+
+ANGLE_INLINE void Context::uniform4ui(UniformLocation location,
+                                      GLuint v0,
+                                      GLuint v1,
+                                      GLuint v2,
+                                      GLuint v3)
+{
+    Program *program    = getActiveLinkedProgram();
+    const GLuint xyzw[] = {v0, v1, v2, v3};
+    program->getExecutable().setUniform4uiv(location, 1, xyzw);
+}
+
+ANGLE_INLINE void Context::uniform1uiv(UniformLocation location, GLsizei count, const GLuint *value)
+{
+    Program *program = getActiveLinkedProgram();
+    program->getExecutable().setUniform1uiv(location, count, value);
+}
+
+ANGLE_INLINE void Context::uniform2uiv(UniformLocation location, GLsizei count, const GLuint *value)
+{
+    Program *program = getActiveLinkedProgram();
+    program->getExecutable().setUniform2uiv(location, count, value);
+}
+
+ANGLE_INLINE void Context::uniform3uiv(UniformLocation location, GLsizei count, const GLuint *value)
+{
+    Program *program = getActiveLinkedProgram();
+    program->getExecutable().setUniform3uiv(location, count, value);
+}
+
+ANGLE_INLINE void Context::uniform4uiv(UniformLocation location, GLsizei count, const GLuint *value)
+{
+    Program *program = getActiveLinkedProgram();
+    program->getExecutable().setUniform4uiv(location, count, value);
+}
+
+ANGLE_INLINE void Context::uniformMatrix2x3fv(UniformLocation location,
+                                              GLsizei count,
+                                              GLboolean transpose,
+                                              const GLfloat *value)
+{
+    Program *program = getActiveLinkedProgram();
+    program->getExecutable().setUniformMatrix2x3fv(location, count, transpose, value);
+}
+
+ANGLE_INLINE void Context::uniformMatrix3x2fv(UniformLocation location,
+                                              GLsizei count,
+                                              GLboolean transpose,
+                                              const GLfloat *value)
+{
+    Program *program = getActiveLinkedProgram();
+    program->getExecutable().setUniformMatrix3x2fv(location, count, transpose, value);
+}
+
+ANGLE_INLINE void Context::uniformMatrix2x4fv(UniformLocation location,
+                                              GLsizei count,
+                                              GLboolean transpose,
+                                              const GLfloat *value)
+{
+    Program *program = getActiveLinkedProgram();
+    program->getExecutable().setUniformMatrix2x4fv(location, count, transpose, value);
+}
+
+ANGLE_INLINE void Context::uniformMatrix4x2fv(UniformLocation location,
+                                              GLsizei count,
+                                              GLboolean transpose,
+                                              const GLfloat *value)
+{
+    Program *program = getActiveLinkedProgram();
+    program->getExecutable().setUniformMatrix4x2fv(location, count, transpose, value);
+}
+
+ANGLE_INLINE void Context::uniformMatrix3x4fv(UniformLocation location,
+                                              GLsizei count,
+                                              GLboolean transpose,
+                                              const GLfloat *value)
+{
+    Program *program = getActiveLinkedProgram();
+    program->getExecutable().setUniformMatrix3x4fv(location, count, transpose, value);
+}
+
+ANGLE_INLINE void Context::uniformMatrix4x3fv(UniformLocation location,
+                                              GLsizei count,
+                                              GLboolean transpose,
+                                              const GLfloat *value)
+{
+    Program *program = getActiveLinkedProgram();
+    program->getExecutable().setUniformMatrix4x3fv(location, count, transpose, value);
+}
+
 }  // namespace gl
 
 #endif  // LIBANGLE_CONTEXT_INL_H_
