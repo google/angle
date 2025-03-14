@@ -2550,6 +2550,13 @@ bool ValidateQueryCounterEXT(const Context *context,
         return false;
     }
 
+    // Check if target type matches the query object target type
+    if (queryObject && queryObject->getType() != target)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kQueryTargetMismatch);
+        return false;
+    }
+
     return true;
 }
 

@@ -561,6 +561,24 @@ TEST_P(TimerQueriesTestES3, TimestampGetInteger64)
     EXPECT_LT(result1, result2);
 }
 
+// Test glQueryCounterEXT with target GL_TIMESTAMP_EXT after query id has been used for
+// GL_ANY_SAMPLES_PASSED
+TEST_P(TimerQueriesTest, QueryCounterEXTWithTypeMismatch)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_disjoint_timer_query"));
+
+    GLuint query = 0;
+    GLint result = 0;
+    glGenQueriesEXT(1, &query);
+    glBeginQueryEXT(GL_ANY_SAMPLES_PASSED, query);
+    glEndQueryEXT(GL_ANY_SAMPLES_PASSED);
+    glGetQueryObjectivEXT(query, GL_QUERY_RESULT_EXT, &result);
+    ASSERT_GL_NO_ERROR();
+
+    glQueryCounterEXT(query, GL_TIMESTAMP_EXT);
+    ASSERT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND(TimerstampQueriesTest,
                                ES3_D3D11().disable(Feature::EnableTimestampQueries),
                                ES3_D3D11().enable(Feature::EnableTimestampQueries));
