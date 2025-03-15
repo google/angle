@@ -1533,6 +1533,13 @@ NSUInteger ComputeTotalSizeUsedForMTLRenderPipelineDescriptor(
     return currentRenderTargetSize;
 }
 
+gl::Rectangle MTLRegionToGLRect(const MTLRegion &mtlRegion)
+{
+    return gl::Rectangle(static_cast<int>(mtlRegion.origin.x), static_cast<int>(mtlRegion.origin.y),
+                         static_cast<int>(mtlRegion.size.width),
+                         static_cast<int>(mtlRegion.size.height));
+}
+
 gl::Box MTLRegionToGLBox(const MTLRegion &mtlRegion)
 {
     return gl::Box(static_cast<int>(mtlRegion.origin.x), static_cast<int>(mtlRegion.origin.y),

@@ -13,6 +13,7 @@
 
 #import <Metal/Metal.h>
 #include <unordered_map>
+#include <unordered_set>
 
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/metal/RenderTargetMtl.h"
@@ -157,24 +158,20 @@ struct CopyPixelsCommonParams
     uint32_t bufferRowPitch    = 0;
 
     TextureRef texture;
+
+    gl::Rectangle textureArea    = {};
+    uint32_t textureSliceOrDepth = 0;
 };
 
 struct CopyPixelsFromBufferParams : CopyPixelsCommonParams
 {
     uint32_t bufferDepthPitch = 0;
-
-    // z offset is:
-    //  - slice index if texture is array.
-    //  - depth if texture is 3d.
-    gl::Box textureArea;
 };
 
 struct CopyPixelsToBufferParams : CopyPixelsCommonParams
 {
-    gl::Rectangle textureArea;
     MipmapNativeLevel textureLevel = kZeroNativeMipLevel;
-    uint32_t textureSliceOrDeph    = 0;
-    bool reverseTextureRowOrder;
+    bool reverseTextureRowOrder    = false;
 };
 
 struct VertexFormatConvertParams
@@ -535,27 +532,38 @@ class CopyPixelsUtils final : angle::NonCopyable
     CopyPixelsUtils() = default;
     CopyPixelsUtils(const std::string &readShaderName, const std::string &writeShaderName);
 
-    angle::Result unpackPixelsFromBufferToTexture(ContextMtl *contextMtl,
-                                                  const angle::Format &srcAngleFormat,
-                                                  const CopyPixelsFromBufferParams &params);
-    angle::Result packPixelsFromTextureToBuffer(ContextMtl *contextMtl,
-                                                const angle::Format &dstAngleFormat,
-                                                const CopyPixelsToBufferParams &params);
+    angle::Result unpackPixelsWithDraw(const gl::Context *context,
+                                       const angle::Format &srcAngleFormat,
+                                       const CopyPixelsFromBufferParams &params);
+    angle::Result packPixelsCS(ContextMtl *contextMtl,
+                               const angle::Format &dstAngleFormat,
+                               const CopyPixelsToBufferParams &params);
 
   private:
-    angle::Result getPixelsCopyPipeline(
+    angle::Result getT2BComputePipeline(
         ContextMtl *contextMtl,
         const angle::Format &angleFormat,
         const TextureRef &texture,
-        bool bufferWrite,
         angle::ObjCPtr<id<MTLComputePipelineState>> *outComputePipeline);
-    // Copy pixels between buffer and texture compute pipelines:
-    // - First dimension: pixel format.
-    // - Second dimension: texture type * (buffer read/write flag)
-    using PixelsCopyComputeShaderArray =
-        std::array<std::array<angle::ObjCPtr<id<MTLFunction>>, mtl_shader::kTextureTypeCount * 2>,
+    angle::Result getB2TRenderPipeline(
+        ContextMtl *contextMtl,
+        RenderCommandEncoder *cmdEncoder,
+        const angle::Format &angleFormat,
+        angle::ObjCPtr<id<MTLRenderPipelineState>> *outRenderPipeline);
+    // Compute functions that copy pixels from texture to buffer:
+    // - First dimension: pixel format key.
+    // - Second dimension: texture type key.
+    using T2BComputeShaderArray =
+        std::array<std::array<angle::ObjCPtr<id<MTLFunction>>, mtl_shader::kTextureTypeCount>,
                    angle::kNumANGLEFormats>;
-    PixelsCopyComputeShaderArray mPixelsCopyComputeShaders;
+    T2BComputeShaderArray mT2BComputeShaders;
+
+    // Render pipeline functions that copy pixels from buffer to texture:
+    // - Keyed by pixel formats.
+    using B2TFragmentShaderArray =
+        std::array<angle::ObjCPtr<id<MTLFunction>>, angle::kNumANGLEFormats>;
+    B2TFragmentShaderArray mB2TFragmentShaders;
+    angle::ObjCPtr<id<MTLFunction>> mB2TVertexShader;
 
     const std::string mReadShaderName;
     const std::string mWriteShaderName;
@@ -727,12 +735,13 @@ class RenderUtils : angle::NonCopyable
                                    bool sRGBMipmap,
                                    NativeTexLevelArray *mipmapOutputViews);
 
-    angle::Result unpackPixelsFromBufferToTexture(ContextMtl *contextMtl,
-                                                  const angle::Format &srcAngleFormat,
-                                                  const CopyPixelsFromBufferParams &params);
-    angle::Result packPixelsFromTextureToBuffer(ContextMtl *contextMtl,
-                                                const angle::Format &dstAngleFormat,
-                                                const CopyPixelsToBufferParams &params);
+    bool isPixelsUnpackSupported(const angle::Format &format) const;
+    angle::Result unpackPixelsWithDraw(const gl::Context *context,
+                                       const angle::Format &srcAngleFormat,
+                                       const CopyPixelsFromBufferParams &params);
+    angle::Result packPixelsCS(ContextMtl *contextMtl,
+                               const angle::Format &dstAngleFormat,
+                               const CopyPixelsToBufferParams &params);
 
     // See VertexFormatConversionUtils::convertVertexFormatToFloatCS()
     angle::Result convertVertexFormatToFloatCS(ContextMtl *contextMtl,
@@ -777,6 +786,8 @@ class RenderUtils : angle::NonCopyable
     VertexFormatConversionUtils mVertexFormatUtils;
     BlockLinearizationUtils mBlockLinearizationUtils;
     DepthSaturationUtils mDepthSaturationUtils;
+
+    const std::unordered_set<angle::FormatID> mPixelUnpackSupportedFormats;
 };
 
 }  // namespace mtl

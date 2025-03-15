@@ -122,14 +122,14 @@ static inline float4 linearToSRGB(float4 color)
     return float4(linearToSRGB(color.r), linearToSRGB(color.g), linearToSRGB(color.b), color.a);
 }
 template <typename Short>
-static inline Short bytesToShort(constant uchar *input, uint offset)
+static inline Short bytesToShort(const device uchar *input, uint offset)
 {
     Short inputLo = input[offset];
     Short inputHi = input[offset + 1];
     return inputLo | (inputHi << 8);
 }
 template <typename Int>
-static inline Int bytesToInt(constant uchar *input, uint offset)
+static inline Int bytesToInt(const device uchar *input, uint offset)
 {
     Int input0 = input[offset];
     Int input1 = input[offset + 1];
@@ -577,25 +577,25 @@ struct IndexConversionParams
     uint32_t indexCount;
     bool primitiveRestartEnabled;
 };
-inline ushort getIndexAligned(constant ushort *inputAligned, uint offset, uint idx)
+inline ushort getIndexAligned(const device ushort *inputAligned, uint offset, uint idx)
 {
     return inputAligned[offset / 2 + idx];
 }
-inline uint getIndexAligned(constant uint *inputAligned, uint offset, uint idx)
+inline uint getIndexAligned(const device uint *inputAligned, uint offset, uint idx)
 {
     return inputAligned[offset / 4 + idx];
 }
-inline uchar getIndexAligned(constant uchar *input, uint offset, uint idx)
+inline uchar getIndexAligned(const device uchar *input, uint offset, uint idx)
 {
     return input[offset + idx];
 }
-inline ushort getIndexUnalignedU16(constant uchar *input, uint offset, uint idx)
+inline ushort getIndexUnalignedU16(const device uchar *input, uint offset, uint idx)
 {
     ushort inputLo = input[offset + 2 * idx];
     ushort inputHi = input[offset + 2 * idx + 1];
     return inputLo | (inputHi << 8);
 }
-inline uint getIndexUnalignedU32(constant uchar *input, uint offset, uint idx)
+inline uint getIndexUnalignedU32(const device uchar *input, uint offset, uint idx)
 {
     uint input0 = input[offset + 4 * idx];
     uint input1 = input[offset + 4 * idx + 1];
@@ -605,7 +605,7 @@ inline uint getIndexUnalignedU32(constant uchar *input, uint offset, uint idx)
 }
 kernel void convertIndexU8ToU16(uint idx [[thread_position_in_grid]],
                                 constant IndexConversionParams &options [[buffer(0)]],
-                                constant uchar *input [[buffer(1)]],
+                                const device uchar *input [[buffer(1)]],
                                 device ushort *output [[buffer(2)]])
 {
     if (idx >= options.indexCount) { return; };
@@ -621,9 +621,9 @@ kernel void convertIndexU8ToU16(uint idx [[thread_position_in_grid]],
 }
 kernel void convertIndexU16(uint idx [[thread_position_in_grid]],
                             constant IndexConversionParams &options [[buffer(0)]],
-                            constant uchar *input
+                            const device uchar *input
                             [[buffer(1), function_constant(kSourceBufferUnaligned)]],
-                            constant ushort *inputAligned
+                            const device ushort *inputAligned
                             [[buffer(1), function_constant(kSourceBufferAligned)]],
                             device ushort *output [[buffer(2)]])
 {
@@ -641,9 +641,9 @@ kernel void convertIndexU16(uint idx [[thread_position_in_grid]],
 }
 kernel void convertIndexU32(uint idx [[thread_position_in_grid]],
                             constant IndexConversionParams &options [[buffer(0)]],
-                            constant uchar *input
+                            const device uchar *input
                             [[buffer(1), function_constant(kSourceBufferUnaligned)]],
-                            constant uint *inputAligned
+                            const device uint *inputAligned
                             [[buffer(1), function_constant(kSourceBufferAligned)]],
                             device uint *output [[buffer(2)]])
 {
@@ -676,9 +676,9 @@ kernel void genTriFanIndicesFromArray(uint idx [[thread_position_in_grid]],
 }
 inline uint getIndexU32(uint offset,
                         uint idx,
-                        constant uchar *inputU8 [[function_constant(kUseSourceBufferU8)]],
-                        constant ushort *inputU16 [[function_constant(kUseSourceBufferU16)]],
-                        constant uint *inputU32 [[function_constant(kUseSourceBufferU32)]])
+                        const device uchar *inputU8 [[function_constant(kUseSourceBufferU8)]],
+                        const device ushort *inputU16 [[function_constant(kUseSourceBufferU16)]],
+                        const device uint *inputU32 [[function_constant(kUseSourceBufferU32)]])
 {
     if (kUseSourceBufferU8)
     {
@@ -704,11 +704,11 @@ inline uint getIndexU32(uint offset,
 }
 kernel void genTriFanIndicesFromElements(uint idx [[thread_position_in_grid]],
                                          constant IndexConversionParams &options [[buffer(0)]],
-                                         constant uchar *inputU8
+                                         const device uchar *inputU8
                                          [[buffer(1), function_constant(kUseSourceBufferU8)]],
-                                         constant ushort *inputU16
+                                         const device ushort *inputU16
                                          [[buffer(1), function_constant(kUseSourceBufferU16)]],
-                                         constant uint *inputU32
+                                         const device uint *inputU32
                                          [[buffer(1), function_constant(kUseSourceBufferU32)]],
                                          device uint *output [[buffer(2)]])
 {
@@ -728,11 +728,11 @@ kernel void genLineLoopIndicesFromArray(uint idx [[thread_position_in_grid]],
 }
 kernel void genLineLoopIndicesFromElements(uint idx [[thread_position_in_grid]],
                                            constant IndexConversionParams &options [[buffer(0)]],
-                                           constant uchar *inputU8
+                                           const device uchar *inputU8
                                            [[buffer(1), function_constant(kUseSourceBufferU8)]],
-                                           constant ushort *inputU16
+                                           const device ushort *inputU16
                                            [[buffer(1), function_constant(kUseSourceBufferU16)]],
-                                           constant uint *inputU32
+                                           const device uint *inputU32
                                            [[buffer(1), function_constant(kUseSourceBufferU32)]],
                                            device uint *output [[buffer(2)]])
 {
@@ -1332,16 +1332,15 @@ constant bool kCopyTextureType2DArray = kCopyTextureType == kTextureType2DArray;
 constant bool kCopyTextureType2DMS = kCopyTextureType == kTextureType2DMultisample;
 constant bool kCopyTextureTypeCube = kCopyTextureType == kTextureTypeCube;
 constant bool kCopyTextureType3D = kCopyTextureType == kTextureType3D;
-struct CopyPixelParams
+struct B2TParams
 {
-    uint3 copySize;
-    uint3 textureOffset;
     uint bufferStartOffset;
     uint pixelSize;
     uint bufferRowPitch;
     uint bufferDepthPitch;
+    uint2 textureOffset;
 };
-struct WritePixelParams
+struct T2BParams
 {
     uint2 copySize;
     uint2 textureOffset;
@@ -1353,31 +1352,8 @@ struct WritePixelParams
     bool reverseTextureRowOrder;
 };
 template <typename T>
-static inline void textureWrite(ushort3 gIndices,
-                                constant CopyPixelParams &options,
-                                vec<T, 4> color,
-                                texture2d<T, access::write> dstTexture2d [[texture(0), function_constant(kCopyTextureType2D)]], texture2d_array<T, access::write> dstTexture2dArray [[texture(0), function_constant(kCopyTextureType2DArray)]], texture3d<T, access::write> dstTexture3d [[texture(0), function_constant(kCopyTextureType3D)]], texturecube<T, access::write> dstTextureCube [[texture(0), function_constant(kCopyTextureTypeCube)]])
-{
-    uint3 writeIndices = options.textureOffset + uint3(gIndices);
-    switch (kCopyTextureType)
-    {
-        case kTextureType2D:
-            dstTexture2d.write(color, writeIndices.xy);
-            break;
-        case kTextureType2DArray:
-            dstTexture2dArray.write(color, writeIndices.xy, writeIndices.z);
-            break;
-        case kTextureType3D:
-            dstTexture3d.write(color, writeIndices);
-            break;
-        case kTextureTypeCube:
-            dstTextureCube.write(color, writeIndices.xy, writeIndices.z);
-            break;
-    }
-}
-template <typename T>
 static inline vec<T, 4> textureRead(ushort2 gIndices,
-                                    constant WritePixelParams &options,
+                                    constant T2BParams &options,
                                     texture2d<T, access::read> srcTexture2d [[texture(0), function_constant(kCopyTextureType2D)]], texture2d_array<T, access::read> srcTexture2dArray [[texture(0), function_constant(kCopyTextureType2DArray)]], texture3d<T, access::read> srcTexture3d [[texture(0), function_constant(kCopyTextureType3D)]], texturecube<T, access::read> srcTextureCube [[texture(0), function_constant(kCopyTextureTypeCube)]], texture2d_ms<T, access::read> srcTexture2dMS [[texture(0), function_constant(kCopyTextureType2DMS)]])
 {
     vec<T, 4> color;
@@ -1407,7 +1383,7 @@ static inline vec<T, 4> textureRead(ushort2 gIndices,
     }
     return color;
 }
-static inline float4 readR5G6B5_UNORM(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR5G6B5_UNORM(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     ushort src = bytesToShort<ushort>(buffer, bufferOffset);
@@ -1417,14 +1393,14 @@ static inline float4 readR5G6B5_UNORM(uint bufferOffset, constant uchar *buffer)
     color.a = 1.0;
     return color;
 }
-static inline void writeR5G6B5_UNORM(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeR5G6B5_UNORM(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     ushort dst = shiftData<5, 11>(floatToNormalized<5, ushort>(color.r)) |
                  shiftData<6, 5>(floatToNormalized<6, ushort>(color.g)) |
                  shiftData<5, 0>(floatToNormalized<5, ushort>(color.b));
     shortToBytes(dst, bufferOffset, buffer);
 }
-static inline float4 readR4G4B4A4_UNORM(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR4G4B4A4_UNORM(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     ushort src = bytesToShort<ushort>(buffer, bufferOffset);
@@ -1434,7 +1410,7 @@ static inline float4 readR4G4B4A4_UNORM(uint bufferOffset, constant uchar *buffe
     color.a = normalizedToFloat<4>(getShiftedData<4, 0>(src));
     return color;
 }
-static inline void writeR4G4B4A4_UNORM(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeR4G4B4A4_UNORM(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     ushort dst = shiftData<4, 12>(floatToNormalized<4, ushort>(color.r)) |
                  shiftData<4, 8>(floatToNormalized<4, ushort>(color.g)) |
@@ -1443,7 +1419,7 @@ static inline void writeR4G4B4A4_UNORM(ushort2 gIndices, constant WritePixelPara
     ;
     shortToBytes(dst, bufferOffset, buffer);
 }
-static inline float4 readR5G5B5A1_UNORM(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR5G5B5A1_UNORM(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     ushort src = bytesToShort<ushort>(buffer, bufferOffset);
@@ -1453,7 +1429,7 @@ static inline float4 readR5G5B5A1_UNORM(uint bufferOffset, constant uchar *buffe
     color.a = normalizedToFloat<1>(getShiftedData<1, 0>(src));
     return color;
 }
-static inline void writeR5G5B5A1_UNORM(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeR5G5B5A1_UNORM(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     ushort dst = shiftData<5, 11>(floatToNormalized<5, ushort>(color.r)) |
                  shiftData<5, 6>(floatToNormalized<5, ushort>(color.g)) |
@@ -1462,7 +1438,7 @@ static inline void writeR5G5B5A1_UNORM(ushort2 gIndices, constant WritePixelPara
     ;
     shortToBytes(dst, bufferOffset, buffer);
 }
-static inline int4 readR10G10B10A2_SINT(uint bufferOffset, constant uchar *buffer)
+static inline int4 readR10G10B10A2_SINT(uint bufferOffset, const device uchar *buffer)
 {
     int4 color;
     int src = bytesToInt<int>(buffer, bufferOffset);
@@ -1480,7 +1456,7 @@ static inline int4 readR10G10B10A2_SINT(uint bufferOffset, constant uchar *buffe
     color.a = (isAlphaNegative * alphaNegMask) | color.a;
     return color;
 }
-static inline uint4 readR10G10B10A2_UINT(uint bufferOffset, constant uchar *buffer)
+static inline uint4 readR10G10B10A2_UINT(uint bufferOffset, const device uchar *buffer)
 {
     uint4 color;
     uint src = bytesToInt<uint>(buffer, bufferOffset);
@@ -1490,7 +1466,7 @@ static inline uint4 readR10G10B10A2_UINT(uint bufferOffset, constant uchar *buff
     color.a = getShiftedData<2, 30>(src);
     return color;
 }
-static inline float4 readR8G8B8A8(uint bufferOffset, constant uchar *buffer, bool isSRGB)
+static inline float4 readR8G8B8A8(uint bufferOffset, const device uchar *buffer, bool isSRGB)
 {
     float4 color;
     uint src = bytesToInt<uint>(buffer, bufferOffset);
@@ -1504,7 +1480,7 @@ static inline float4 readR8G8B8A8(uint bufferOffset, constant uchar *buffer, boo
     }
     return color;
 }
-static inline void writeR8G8B8A8(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer, bool isSRGB)
+static inline void writeR8G8B8A8(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer, bool isSRGB)
 {
     uint dst;
     if (isSRGB)
@@ -1517,7 +1493,7 @@ static inline void writeR8G8B8A8(ushort2 gIndices, constant WritePixelParams &op
     }
     intToBytes(dst, bufferOffset, buffer);
 }
-static inline float4 readR8G8B8(uint bufferOffset, constant uchar *buffer, bool isSRGB)
+static inline float4 readR8G8B8(uint bufferOffset, const device uchar *buffer, bool isSRGB)
 {
     float4 color;
     color.r = normalizedToFloat<uchar>(buffer[bufferOffset]);
@@ -1530,7 +1506,7 @@ static inline float4 readR8G8B8(uint bufferOffset, constant uchar *buffer, bool 
     }
     return color;
 }
-static inline void writeR8G8B8(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer, bool isSRGB)
+static inline void writeR8G8B8(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer, bool isSRGB)
 {
     color.a = 1.0;
     uint dst;
@@ -1544,19 +1520,19 @@ static inline void writeR8G8B8(ushort2 gIndices, constant WritePixelParams &opti
     }
     int24bitToBytes(dst, bufferOffset, buffer);
 }
-static inline float4 readR8G8B8A8_SNORM(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR8G8B8A8_SNORM(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     uint src = bytesToInt<uint>(buffer, bufferOffset);
     color = unpack_snorm4x8_to_float(src);
     return color;
 }
-static inline void writeR8G8B8A8_SNORM(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeR8G8B8A8_SNORM(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     uint dst = pack_float_to_snorm4x8(color);
     intToBytes(dst, bufferOffset, buffer);
 }
-static inline float4 readR8G8B8_SNORM(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR8G8B8_SNORM(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.r = normalizedToFloat<7, char>(buffer[bufferOffset]);
@@ -1565,89 +1541,89 @@ static inline float4 readR8G8B8_SNORM(uint bufferOffset, constant uchar *buffer)
     color.a = 1.0;
     return color;
 }
-static inline void writeR8G8B8_SNORM(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeR8G8B8_SNORM(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     uint dst = pack_float_to_snorm4x8(color);
     int24bitToBytes(dst, bufferOffset, buffer);
 }
-static inline float4 readR8G8B8A8_UNORM(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR8G8B8A8_UNORM(uint bufferOffset, const device uchar *buffer)
 {
     return readR8G8B8A8(bufferOffset, buffer, false);
 }
-static inline void writeR8G8B8A8_UNORM(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeR8G8B8A8_UNORM(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     return writeR8G8B8A8(gIndices, options, bufferOffset, color, buffer, false);
 }
-static inline float4 readR8G8B8A8_UNORM_SRGB(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR8G8B8A8_UNORM_SRGB(uint bufferOffset, const device uchar *buffer)
 {
     return readR8G8B8A8(bufferOffset, buffer, true);
 }
-static inline void writeR8G8B8A8_UNORM_SRGB(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeR8G8B8A8_UNORM_SRGB(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     return writeR8G8B8A8(gIndices, options, bufferOffset, color, buffer, true);
 }
-static inline float4 readB8G8R8A8_UNORM(uint bufferOffset, constant uchar *buffer)
+static inline float4 readB8G8R8A8_UNORM(uint bufferOffset, const device uchar *buffer)
 {
     return readR8G8B8A8(bufferOffset, buffer, false).bgra;
 }
-static inline void writeB8G8R8A8_UNORM(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeB8G8R8A8_UNORM(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     color.rgba = color.bgra;
     return writeR8G8B8A8(gIndices, options, bufferOffset, color, buffer, false);
 }
-static inline float4 readB8G8R8A8_UNORM_SRGB(uint bufferOffset, constant uchar *buffer)
+static inline float4 readB8G8R8A8_UNORM_SRGB(uint bufferOffset, const device uchar *buffer)
 {
     return readR8G8B8A8(bufferOffset, buffer, true).bgra;
 }
-static inline void writeB8G8R8A8_UNORM_SRGB(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeB8G8R8A8_UNORM_SRGB(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     color.rgba = color.bgra;
     return writeR8G8B8A8(gIndices, options, bufferOffset, color, buffer, true);
 }
-static inline float4 readR8G8B8_UNORM(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR8G8B8_UNORM(uint bufferOffset, const device uchar *buffer)
 {
     return readR8G8B8(bufferOffset, buffer, false);
 }
-static inline void writeR8G8B8_UNORM(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeR8G8B8_UNORM(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     return writeR8G8B8(gIndices, options, bufferOffset, color, buffer, false);
 }
-static inline float4 readR8G8B8_UNORM_SRGB(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR8G8B8_UNORM_SRGB(uint bufferOffset, const device uchar *buffer)
 {
     return readR8G8B8(bufferOffset, buffer, true);
 }
-static inline void writeR8G8B8_UNORM_SRGB(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeR8G8B8_UNORM_SRGB(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     return writeR8G8B8(gIndices, options, bufferOffset, color, buffer, true);
 }
-static inline float4 readL8_UNORM(uint bufferOffset, constant uchar *buffer)
+static inline float4 readL8_UNORM(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.rgb = float3(normalizedToFloat<uchar>(buffer[bufferOffset]));
     color.a = 1.0;
     return color;
 }
-static inline void writeL8_UNORM(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeL8_UNORM(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     buffer[bufferOffset] = floatToNormalized<uchar>(color.r);
 }
-static inline void writeA8_UNORM(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeA8_UNORM(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     buffer[bufferOffset] = floatToNormalized<uchar>(color.a);
 }
-static inline float4 readL8A8_UNORM(uint bufferOffset, constant uchar *buffer)
+static inline float4 readL8A8_UNORM(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.rgb = float3(normalizedToFloat<uchar>(buffer[bufferOffset]));
     color.a = normalizedToFloat<uchar>(buffer[bufferOffset + 1]);
     return color;
 }
-static inline void writeL8A8_UNORM(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeL8A8_UNORM(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     buffer[bufferOffset] = floatToNormalized<uchar>(color.r);
     buffer[bufferOffset + 1] = floatToNormalized<uchar>(color.a);
 }
-static inline float4 readR8_UNORM(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR8_UNORM(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.r = normalizedToFloat<uchar>(buffer[bufferOffset]);
@@ -1655,11 +1631,11 @@ static inline float4 readR8_UNORM(uint bufferOffset, constant uchar *buffer)
     color.a = 1.0;
     return color;
 }
-static inline void writeR8_UNORM(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeR8_UNORM(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     buffer[bufferOffset] = floatToNormalized<uchar>(color.r);
 }
-static inline float4 readR8_SNORM(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR8_SNORM(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.r = normalizedToFloat<7, char>(buffer[bufferOffset]);
@@ -1667,11 +1643,11 @@ static inline float4 readR8_SNORM(uint bufferOffset, constant uchar *buffer)
     color.a = 1.0;
     return color;
 }
-static inline void writeR8_SNORM(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeR8_SNORM(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     buffer[bufferOffset] = as_type<uchar>(floatToNormalized<char>(color.r));
 }
-static inline int4 readR8_SINT(uint bufferOffset, constant uchar *buffer)
+static inline int4 readR8_SINT(uint bufferOffset, const device uchar *buffer)
 {
     int4 color;
     color.r = as_type<char>(buffer[bufferOffset]);
@@ -1679,11 +1655,11 @@ static inline int4 readR8_SINT(uint bufferOffset, constant uchar *buffer)
     color.a = 1;
     return color;
 }
-static inline void writeR8_SINT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<int, 4> color, device uchar *buffer)
+static inline void writeR8_SINT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<int, 4> color, device uchar *buffer)
 {
     buffer[bufferOffset] = static_cast<uchar>(color.r);
 }
-static inline uint4 readR8_UINT(uint bufferOffset, constant uchar *buffer)
+static inline uint4 readR8_UINT(uint bufferOffset, const device uchar *buffer)
 {
     uint4 color;
     color.r = as_type<uchar>(buffer[bufferOffset]);
@@ -1691,11 +1667,11 @@ static inline uint4 readR8_UINT(uint bufferOffset, constant uchar *buffer)
     color.a = 1;
     return color;
 }
-static inline void writeR8_UINT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<uint, 4> color, device uchar *buffer)
+static inline void writeR8_UINT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<uint, 4> color, device uchar *buffer)
 {
     buffer[bufferOffset] = static_cast<uchar>(color.r);
 }
-static inline float4 readR8G8_UNORM(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR8G8_UNORM(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.r = normalizedToFloat<uchar>(buffer[bufferOffset]);
@@ -1704,12 +1680,12 @@ static inline float4 readR8G8_UNORM(uint bufferOffset, constant uchar *buffer)
     color.a = 1.0;
     return color;
 }
-static inline void writeR8G8_UNORM(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeR8G8_UNORM(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     buffer[bufferOffset] = floatToNormalized<uchar>(color.r);
     buffer[bufferOffset + 1] = floatToNormalized<uchar>(color.g);
 }
-static inline float4 readR8G8_SNORM(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR8G8_SNORM(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.r = normalizedToFloat<7, char>(buffer[bufferOffset]);
@@ -1718,12 +1694,12 @@ static inline float4 readR8G8_SNORM(uint bufferOffset, constant uchar *buffer)
     color.a = 1.0;
     return color;
 }
-static inline void writeR8G8_SNORM(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeR8G8_SNORM(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     buffer[bufferOffset] = as_type<uchar>(floatToNormalized<char>(color.r));
     buffer[bufferOffset + 1] = as_type<uchar>(floatToNormalized<char>(color.g));
 }
-static inline int4 readR8G8_SINT(uint bufferOffset, constant uchar *buffer)
+static inline int4 readR8G8_SINT(uint bufferOffset, const device uchar *buffer)
 {
     int4 color;
     color.r = as_type<char>(buffer[bufferOffset]);
@@ -1732,12 +1708,12 @@ static inline int4 readR8G8_SINT(uint bufferOffset, constant uchar *buffer)
     color.a = 1;
     return color;
 }
-static inline void writeR8G8_SINT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<int, 4> color, device uchar *buffer)
+static inline void writeR8G8_SINT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<int, 4> color, device uchar *buffer)
 {
     buffer[bufferOffset] = static_cast<uchar>(color.r);
     buffer[bufferOffset + 1] = static_cast<uchar>(color.g);
 }
-static inline uint4 readR8G8_UINT(uint bufferOffset, constant uchar *buffer)
+static inline uint4 readR8G8_UINT(uint bufferOffset, const device uchar *buffer)
 {
     uint4 color;
     color.r = as_type<uchar>(buffer[bufferOffset]);
@@ -1746,12 +1722,12 @@ static inline uint4 readR8G8_UINT(uint bufferOffset, constant uchar *buffer)
     color.a = 1;
     return color;
 }
-static inline void writeR8G8_UINT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<uint, 4> color, device uchar *buffer)
+static inline void writeR8G8_UINT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<uint, 4> color, device uchar *buffer)
 {
     buffer[bufferOffset] = static_cast<uchar>(color.r);
     buffer[bufferOffset + 1] = static_cast<uchar>(color.g);
 }
-static inline int4 readR8G8B8_SINT(uint bufferOffset, constant uchar *buffer)
+static inline int4 readR8G8B8_SINT(uint bufferOffset, const device uchar *buffer)
 {
     int4 color;
     color.r = as_type<char>(buffer[bufferOffset]);
@@ -1760,7 +1736,7 @@ static inline int4 readR8G8B8_SINT(uint bufferOffset, constant uchar *buffer)
     color.a = 1;
     return color;
 }
-static inline uint4 readR8G8B8_UINT(uint bufferOffset, constant uchar *buffer)
+static inline uint4 readR8G8B8_UINT(uint bufferOffset, const device uchar *buffer)
 {
     uint4 color;
     color.r = as_type<uchar>(buffer[bufferOffset]);
@@ -1769,7 +1745,7 @@ static inline uint4 readR8G8B8_UINT(uint bufferOffset, constant uchar *buffer)
     color.a = 1;
     return color;
 }
-static inline int4 readR8G8B8A8_SINT(uint bufferOffset, constant uchar *buffer)
+static inline int4 readR8G8B8A8_SINT(uint bufferOffset, const device uchar *buffer)
 {
     int4 color;
     color.r = as_type<char>(buffer[bufferOffset]);
@@ -1778,14 +1754,14 @@ static inline int4 readR8G8B8A8_SINT(uint bufferOffset, constant uchar *buffer)
     color.a = as_type<char>(buffer[bufferOffset + 3]);
     return color;
 }
-static inline void writeR8G8B8A8_SINT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<int, 4> color, device uchar *buffer)
+static inline void writeR8G8B8A8_SINT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<int, 4> color, device uchar *buffer)
 {
     buffer[bufferOffset] = static_cast<uchar>(color.r);
     buffer[bufferOffset + 1] = static_cast<uchar>(color.g);
     buffer[bufferOffset + 2] = static_cast<uchar>(color.b);
     buffer[bufferOffset + 3] = static_cast<uchar>(color.a);
 }
-static inline uint4 readR8G8B8A8_UINT(uint bufferOffset, constant uchar *buffer)
+static inline uint4 readR8G8B8A8_UINT(uint bufferOffset, const device uchar *buffer)
 {
     uint4 color;
     color.r = as_type<uchar>(buffer[bufferOffset]);
@@ -1794,14 +1770,14 @@ static inline uint4 readR8G8B8A8_UINT(uint bufferOffset, constant uchar *buffer)
     color.a = as_type<uchar>(buffer[bufferOffset + 3]);
     return color;
 }
-static inline void writeR8G8B8A8_UINT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<uint, 4> color, device uchar *buffer)
+static inline void writeR8G8B8A8_UINT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<uint, 4> color, device uchar *buffer)
 {
     buffer[bufferOffset] = static_cast<uchar>(color.r);
     buffer[bufferOffset + 1] = static_cast<uchar>(color.g);
     buffer[bufferOffset + 2] = static_cast<uchar>(color.b);
     buffer[bufferOffset + 3] = static_cast<uchar>(color.a);
 }
-static inline float4 readR16_FLOAT(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR16_FLOAT(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.r = as_type<half>(bytesToShort<ushort>(buffer, bufferOffset));
@@ -1809,12 +1785,12 @@ static inline float4 readR16_FLOAT(uint bufferOffset, constant uchar *buffer)
     color.a = 1.0;
     return color;
 }
-static inline void writeR16_FLOAT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeR16_FLOAT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     shortToBytes(as_type<ushort>(static_cast<half>(color.r)), bufferOffset, buffer);
 }
 template <typename ShortType>
-static inline float4 readR16_NORM(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR16_NORM(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.r = normalizedToFloat<ShortType>(bytesToShort<ShortType>(buffer, bufferOffset));
@@ -1823,11 +1799,11 @@ static inline float4 readR16_NORM(uint bufferOffset, constant uchar *buffer)
     return color;
 }
 template<typename ShortType>
-static inline void writeR16_NORM(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeR16_NORM(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     shortToBytes(floatToNormalized<ShortType>(color.r), bufferOffset, buffer);
 }
-static inline int4 readR16_SINT(uint bufferOffset, constant uchar *buffer)
+static inline int4 readR16_SINT(uint bufferOffset, const device uchar *buffer)
 {
     int4 color;
     color.r = bytesToShort<short>(buffer, bufferOffset);
@@ -1835,11 +1811,11 @@ static inline int4 readR16_SINT(uint bufferOffset, constant uchar *buffer)
     color.a = 1;
     return color;
 }
-static inline void writeR16_SINT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<int, 4> color, device uchar *buffer)
+static inline void writeR16_SINT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<int, 4> color, device uchar *buffer)
 {
     shortToBytes(static_cast<short>(color.r), bufferOffset, buffer);
 }
-static inline uint4 readR16_UINT(uint bufferOffset, constant uchar *buffer)
+static inline uint4 readR16_UINT(uint bufferOffset, const device uchar *buffer)
 {
     uint4 color;
     color.r = bytesToShort<ushort>(buffer, bufferOffset);
@@ -1847,45 +1823,45 @@ static inline uint4 readR16_UINT(uint bufferOffset, constant uchar *buffer)
     color.a = 1;
     return color;
 }
-static inline void writeR16_UINT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<uint, 4> color, device uchar *buffer)
+static inline void writeR16_UINT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<uint, 4> color, device uchar *buffer)
 {
     shortToBytes(static_cast<ushort>(color.r), bufferOffset, buffer);
 }
-static inline float4 readA16_FLOAT(uint bufferOffset, constant uchar *buffer)
+static inline float4 readA16_FLOAT(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.a = as_type<half>(bytesToShort<ushort>(buffer, bufferOffset));
     color.rgb = 0.0;
     return color;
 }
-static inline void writeA16_FLOAT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeA16_FLOAT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     shortToBytes(as_type<ushort>(static_cast<half>(color.a)), bufferOffset, buffer);
 }
-static inline float4 readL16_FLOAT(uint bufferOffset, constant uchar *buffer)
+static inline float4 readL16_FLOAT(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.rgb = as_type<half>(bytesToShort<ushort>(buffer, bufferOffset));
     color.a = 1.0;
     return color;
 }
-static inline void writeL16_FLOAT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeL16_FLOAT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     shortToBytes(as_type<ushort>(static_cast<half>(color.r)), bufferOffset, buffer);
 }
-static inline float4 readL16A16_FLOAT(uint bufferOffset, constant uchar *buffer)
+static inline float4 readL16A16_FLOAT(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.rgb = as_type<half>(bytesToShort<ushort>(buffer, bufferOffset));
     color.a = as_type<half>(bytesToShort<ushort>(buffer, bufferOffset + 2));
     return color;
 }
-static inline void writeL16A16_FLOAT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeL16A16_FLOAT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     shortToBytes(as_type<ushort>(static_cast<half>(color.r)), bufferOffset, buffer);
     shortToBytes(as_type<ushort>(static_cast<half>(color.a)), bufferOffset + 2, buffer);
 }
-static inline float4 readR16G16_FLOAT(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR16G16_FLOAT(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.r = as_type<half>(bytesToShort<ushort>(buffer, bufferOffset));
@@ -1894,13 +1870,13 @@ static inline float4 readR16G16_FLOAT(uint bufferOffset, constant uchar *buffer)
     color.a = 1.0;
     return color;
 }
-static inline void writeR16G16_FLOAT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeR16G16_FLOAT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     shortToBytes(as_type<ushort>(static_cast<half>(color.r)), bufferOffset, buffer);
     shortToBytes(as_type<ushort>(static_cast<half>(color.g)), bufferOffset + 2, buffer);
 }
 template <typename ShortType>
-static inline float4 readR16G16_NORM(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR16G16_NORM(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.r = normalizedToFloat<ShortType>(bytesToShort<ShortType>(buffer, bufferOffset));
@@ -1910,12 +1886,12 @@ static inline float4 readR16G16_NORM(uint bufferOffset, constant uchar *buffer)
     return color;
 }
 template<typename ShortType>
-static inline void writeR16G16_NORM(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeR16G16_NORM(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     shortToBytes(floatToNormalized<ShortType>(color.r), bufferOffset, buffer);
     shortToBytes(floatToNormalized<ShortType>(color.g), bufferOffset + 2, buffer);
 }
-static inline int4 readR16G16_SINT(uint bufferOffset, constant uchar *buffer)
+static inline int4 readR16G16_SINT(uint bufferOffset, const device uchar *buffer)
 {
     int4 color;
     color.r = bytesToShort<short>(buffer, bufferOffset);
@@ -1924,12 +1900,12 @@ static inline int4 readR16G16_SINT(uint bufferOffset, constant uchar *buffer)
     color.a = 1;
     return color;
 }
-static inline void writeR16G16_SINT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<int, 4> color, device uchar *buffer)
+static inline void writeR16G16_SINT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<int, 4> color, device uchar *buffer)
 {
     shortToBytes(static_cast<short>(color.r), bufferOffset, buffer);
     shortToBytes(static_cast<short>(color.g), bufferOffset + 2, buffer);
 }
-static inline uint4 readR16G16_UINT(uint bufferOffset, constant uchar *buffer)
+static inline uint4 readR16G16_UINT(uint bufferOffset, const device uchar *buffer)
 {
     uint4 color;
     color.r = bytesToShort<ushort>(buffer, bufferOffset);
@@ -1938,12 +1914,12 @@ static inline uint4 readR16G16_UINT(uint bufferOffset, constant uchar *buffer)
     color.a = 1;
     return color;
 }
-static inline void writeR16G16_UINT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<uint, 4> color, device uchar *buffer)
+static inline void writeR16G16_UINT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<uint, 4> color, device uchar *buffer)
 {
     shortToBytes(static_cast<ushort>(color.r), bufferOffset, buffer);
     shortToBytes(static_cast<ushort>(color.g), bufferOffset + 2, buffer);
 }
-static inline float4 readR16G16B16_FLOAT(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR16G16B16_FLOAT(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.r = as_type<half>(bytesToShort<ushort>(buffer, bufferOffset));
@@ -1953,7 +1929,7 @@ static inline float4 readR16G16B16_FLOAT(uint bufferOffset, constant uchar *buff
     return color;
 }
 template <typename ShortType>
-static inline float4 readR16G16B16_NORM(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR16G16B16_NORM(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.r = normalizedToFloat<ShortType>(bytesToShort<ShortType>(buffer, bufferOffset));
@@ -1962,7 +1938,7 @@ static inline float4 readR16G16B16_NORM(uint bufferOffset, constant uchar *buffe
     color.a = 1.0;
     return color;
 }
-static inline int4 readR16G16B16_SINT(uint bufferOffset, constant uchar *buffer)
+static inline int4 readR16G16B16_SINT(uint bufferOffset, const device uchar *buffer)
 {
     int4 color;
     color.r = bytesToShort<short>(buffer, bufferOffset);
@@ -1971,7 +1947,7 @@ static inline int4 readR16G16B16_SINT(uint bufferOffset, constant uchar *buffer)
     color.a = 1;
     return color;
 }
-static inline uint4 readR16G16B16_UINT(uint bufferOffset, constant uchar *buffer)
+static inline uint4 readR16G16B16_UINT(uint bufferOffset, const device uchar *buffer)
 {
     uint4 color;
     color.r = bytesToShort<ushort>(buffer, bufferOffset);
@@ -1980,7 +1956,7 @@ static inline uint4 readR16G16B16_UINT(uint bufferOffset, constant uchar *buffer
     color.a = 1;
     return color;
 }
-static inline float4 readR16G16B16A16_FLOAT(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR16G16B16A16_FLOAT(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.r = as_type<half>(bytesToShort<ushort>(buffer, bufferOffset));
@@ -1989,7 +1965,7 @@ static inline float4 readR16G16B16A16_FLOAT(uint bufferOffset, constant uchar *b
     color.a = as_type<half>(bytesToShort<ushort>(buffer, bufferOffset + 6));
     return color;
 }
-static inline void writeR16G16B16A16_FLOAT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeR16G16B16A16_FLOAT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     shortToBytes(as_type<ushort>(static_cast<half>(color.r)), bufferOffset, buffer);
     shortToBytes(as_type<ushort>(static_cast<half>(color.g)), bufferOffset + 2, buffer);
@@ -1997,7 +1973,7 @@ static inline void writeR16G16B16A16_FLOAT(ushort2 gIndices, constant WritePixel
     shortToBytes(as_type<ushort>(static_cast<half>(color.a)), bufferOffset + 6, buffer);
 }
 template <typename ShortType>
-static inline float4 readR16G16B16A16_NORM(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR16G16B16A16_NORM(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.r = normalizedToFloat<ShortType>(bytesToShort<ShortType>(buffer, bufferOffset));
@@ -2007,14 +1983,14 @@ static inline float4 readR16G16B16A16_NORM(uint bufferOffset, constant uchar *bu
     return color;
 }
 template<typename ShortType>
-static inline void writeR16G16B16A16_NORM(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeR16G16B16A16_NORM(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     shortToBytes(floatToNormalized<ShortType>(color.r), bufferOffset, buffer);
     shortToBytes(floatToNormalized<ShortType>(color.g), bufferOffset + 2, buffer);
     shortToBytes(floatToNormalized<ShortType>(color.b), bufferOffset + 4, buffer);
     shortToBytes(floatToNormalized<ShortType>(color.a), bufferOffset + 6, buffer);
 }
-static inline int4 readR16G16B16A16_SINT(uint bufferOffset, constant uchar *buffer)
+static inline int4 readR16G16B16A16_SINT(uint bufferOffset, const device uchar *buffer)
 {
     int4 color;
     color.r = bytesToShort<short>(buffer, bufferOffset);
@@ -2023,14 +1999,14 @@ static inline int4 readR16G16B16A16_SINT(uint bufferOffset, constant uchar *buff
     color.a = bytesToShort<short>(buffer, bufferOffset + 6);
     return color;
 }
-static inline void writeR16G16B16A16_SINT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<int, 4> color, device uchar *buffer)
+static inline void writeR16G16B16A16_SINT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<int, 4> color, device uchar *buffer)
 {
     shortToBytes(static_cast<short>(color.r), bufferOffset, buffer);
     shortToBytes(static_cast<short>(color.g), bufferOffset + 2, buffer);
     shortToBytes(static_cast<short>(color.b), bufferOffset + 4, buffer);
     shortToBytes(static_cast<short>(color.a), bufferOffset + 6, buffer);
 }
-static inline uint4 readR16G16B16A16_UINT(uint bufferOffset, constant uchar *buffer)
+static inline uint4 readR16G16B16A16_UINT(uint bufferOffset, const device uchar *buffer)
 {
     uint4 color;
     color.r = bytesToShort<ushort>(buffer, bufferOffset);
@@ -2039,14 +2015,14 @@ static inline uint4 readR16G16B16A16_UINT(uint bufferOffset, constant uchar *buf
     color.a = bytesToShort<ushort>(buffer, bufferOffset + 6);
     return color;
 }
-static inline void writeR16G16B16A16_UINT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<uint, 4> color, device uchar *buffer)
+static inline void writeR16G16B16A16_UINT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<uint, 4> color, device uchar *buffer)
 {
     shortToBytes(static_cast<ushort>(color.r), bufferOffset, buffer);
     shortToBytes(static_cast<ushort>(color.g), bufferOffset + 2, buffer);
     shortToBytes(static_cast<ushort>(color.b), bufferOffset + 4, buffer);
     shortToBytes(static_cast<ushort>(color.a), bufferOffset + 6, buffer);
 }
-static inline float4 readR32_FLOAT(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR32_FLOAT(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.r = as_type<float>(bytesToInt<uint>(buffer, bufferOffset));
@@ -2054,12 +2030,12 @@ static inline float4 readR32_FLOAT(uint bufferOffset, constant uchar *buffer)
     color.a = 1.0;
     return color;
 }
-static inline void writeR32_FLOAT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeR32_FLOAT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     intToBytes(as_type<uint>(color.r), bufferOffset, buffer);
 }
 template <typename IntType>
-static inline float4 readR32_NORM(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR32_NORM(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.r = normalizedToFloat<IntType>(bytesToInt<IntType>(buffer, bufferOffset));
@@ -2067,29 +2043,29 @@ static inline float4 readR32_NORM(uint bufferOffset, constant uchar *buffer)
     color.a = 1.0;
     return color;
 }
-static inline float4 readA32_FLOAT(uint bufferOffset, constant uchar *buffer)
+static inline float4 readA32_FLOAT(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.a = as_type<float>(bytesToInt<uint>(buffer, bufferOffset));
     color.rgb = 0.0;
     return color;
 }
-static inline void writeA32_FLOAT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeA32_FLOAT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     intToBytes(as_type<uint>(color.a), bufferOffset, buffer);
 }
-static inline float4 readL32_FLOAT(uint bufferOffset, constant uchar *buffer)
+static inline float4 readL32_FLOAT(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.rgb = as_type<float>(bytesToInt<uint>(buffer, bufferOffset));
     color.a = 1.0;
     return color;
 }
-static inline void writeL32_FLOAT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeL32_FLOAT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     intToBytes(as_type<uint>(color.r), bufferOffset, buffer);
 }
-static inline int4 readR32_SINT(uint bufferOffset, constant uchar *buffer)
+static inline int4 readR32_SINT(uint bufferOffset, const device uchar *buffer)
 {
     int4 color;
     color.r = bytesToInt<int>(buffer, bufferOffset);
@@ -2097,11 +2073,11 @@ static inline int4 readR32_SINT(uint bufferOffset, constant uchar *buffer)
     color.a = 1;
     return color;
 }
-static inline void writeR32_SINT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<int, 4> color, device uchar *buffer)
+static inline void writeR32_SINT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<int, 4> color, device uchar *buffer)
 {
     intToBytes(color.r, bufferOffset, buffer);
 }
-static inline float4 readR32_FIXED(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR32_FIXED(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     constexpr float kDivisor = 1.0f / (1 << 16);
@@ -2110,7 +2086,7 @@ static inline float4 readR32_FIXED(uint bufferOffset, constant uchar *buffer)
     color.a = 1.0;
     return color;
 }
-static inline uint4 readR32_UINT(uint bufferOffset, constant uchar *buffer)
+static inline uint4 readR32_UINT(uint bufferOffset, const device uchar *buffer)
 {
     uint4 color;
     color.r = bytesToInt<uint>(buffer, bufferOffset);
@@ -2118,23 +2094,23 @@ static inline uint4 readR32_UINT(uint bufferOffset, constant uchar *buffer)
     color.a = 1;
     return color;
 }
-static inline void writeR32_UINT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<uint, 4> color, device uchar *buffer)
+static inline void writeR32_UINT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<uint, 4> color, device uchar *buffer)
 {
     intToBytes(color.r, bufferOffset, buffer);
 }
-static inline float4 readL32A32_FLOAT(uint bufferOffset, constant uchar *buffer)
+static inline float4 readL32A32_FLOAT(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.rgb = as_type<float>(bytesToInt<uint>(buffer, bufferOffset));
     color.a = as_type<float>(bytesToInt<uint>(buffer, bufferOffset + 4));
     return color;
 }
-static inline void writeL32A32_FLOAT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeL32A32_FLOAT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     intToBytes(as_type<uint>(color.r), bufferOffset, buffer);
     intToBytes(as_type<uint>(color.a), bufferOffset + 4, buffer);
 }
-static inline float4 readR32G32_FLOAT(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR32G32_FLOAT(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.r = as_type<float>(bytesToInt<uint>(buffer, bufferOffset));
@@ -2143,13 +2119,13 @@ static inline float4 readR32G32_FLOAT(uint bufferOffset, constant uchar *buffer)
     color.a = 1.0;
     return color;
 }
-static inline void writeR32G32_FLOAT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeR32G32_FLOAT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     intToBytes(as_type<uint>(color.r), bufferOffset, buffer);
     intToBytes(as_type<uint>(color.g), bufferOffset + 4, buffer);
 }
 template <typename IntType>
-static inline float4 readR32G32_NORM(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR32G32_NORM(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.r = normalizedToFloat<IntType>(bytesToInt<IntType>(buffer, bufferOffset));
@@ -2158,7 +2134,7 @@ static inline float4 readR32G32_NORM(uint bufferOffset, constant uchar *buffer)
     color.a = 1.0;
     return color;
 }
-static inline int4 readR32G32_SINT(uint bufferOffset, constant uchar *buffer)
+static inline int4 readR32G32_SINT(uint bufferOffset, const device uchar *buffer)
 {
     int4 color;
     color.r = bytesToInt<int>(buffer, bufferOffset);
@@ -2167,12 +2143,12 @@ static inline int4 readR32G32_SINT(uint bufferOffset, constant uchar *buffer)
     color.a = 1;
     return color;
 }
-static inline void writeR32G32_SINT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<int, 4> color, device uchar *buffer)
+static inline void writeR32G32_SINT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<int, 4> color, device uchar *buffer)
 {
     intToBytes(color.r, bufferOffset, buffer);
     intToBytes(color.g, bufferOffset + 4, buffer);
 }
-static inline float4 readR32G32_FIXED(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR32G32_FIXED(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     constexpr float kDivisor = 1.0f / (1 << 16);
@@ -2182,7 +2158,7 @@ static inline float4 readR32G32_FIXED(uint bufferOffset, constant uchar *buffer)
     color.a = 1.0;
     return color;
 }
-static inline uint4 readR32G32_UINT(uint bufferOffset, constant uchar *buffer)
+static inline uint4 readR32G32_UINT(uint bufferOffset, const device uchar *buffer)
 {
     uint4 color;
     color.r = bytesToInt<uint>(buffer, bufferOffset);
@@ -2191,12 +2167,12 @@ static inline uint4 readR32G32_UINT(uint bufferOffset, constant uchar *buffer)
     color.a = 1;
     return color;
 }
-static inline void writeR32G32_UINT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<uint, 4> color, device uchar *buffer)
+static inline void writeR32G32_UINT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<uint, 4> color, device uchar *buffer)
 {
     intToBytes(color.r, bufferOffset, buffer);
     intToBytes(color.g, bufferOffset + 4, buffer);
 }
-static inline float4 readR32G32B32_FLOAT(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR32G32B32_FLOAT(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.r = as_type<float>(bytesToInt<uint>(buffer, bufferOffset));
@@ -2206,7 +2182,7 @@ static inline float4 readR32G32B32_FLOAT(uint bufferOffset, constant uchar *buff
     return color;
 }
 template <typename IntType>
-static inline float4 readR32G32B32_NORM(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR32G32B32_NORM(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.r = normalizedToFloat<IntType>(bytesToInt<IntType>(buffer, bufferOffset));
@@ -2215,7 +2191,7 @@ static inline float4 readR32G32B32_NORM(uint bufferOffset, constant uchar *buffe
     color.a = 1.0;
     return color;
 }
-static inline int4 readR32G32B32_SINT(uint bufferOffset, constant uchar *buffer)
+static inline int4 readR32G32B32_SINT(uint bufferOffset, const device uchar *buffer)
 {
     int4 color;
     color.r = bytesToInt<int>(buffer, bufferOffset);
@@ -2224,7 +2200,7 @@ static inline int4 readR32G32B32_SINT(uint bufferOffset, constant uchar *buffer)
     color.a = 1;
     return color;
 }
-static inline float4 readR32G32B32_FIXED(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR32G32B32_FIXED(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     constexpr float kDivisor = 1.0f / (1 << 16);
@@ -2234,7 +2210,7 @@ static inline float4 readR32G32B32_FIXED(uint bufferOffset, constant uchar *buff
     color.a = 1.0;
     return color;
 }
-static inline uint4 readR32G32B32_UINT(uint bufferOffset, constant uchar *buffer)
+static inline uint4 readR32G32B32_UINT(uint bufferOffset, const device uchar *buffer)
 {
     uint4 color;
     color.r = bytesToInt<uint>(buffer, bufferOffset);
@@ -2243,7 +2219,7 @@ static inline uint4 readR32G32B32_UINT(uint bufferOffset, constant uchar *buffer
     color.a = 1;
     return color;
 }
-static inline float4 readR32G32B32A32_FLOAT(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR32G32B32A32_FLOAT(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.r = as_type<float>(bytesToInt<uint>(buffer, bufferOffset));
@@ -2252,7 +2228,7 @@ static inline float4 readR32G32B32A32_FLOAT(uint bufferOffset, constant uchar *b
     color.a = as_type<float>(bytesToInt<uint>(buffer, bufferOffset + 12));
     return color;
 }
-static inline void writeR32G32B32A32_FLOAT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
+static inline void writeR32G32B32A32_FLOAT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<float, 4> color, device uchar *buffer)
 {
     intToBytes(as_type<uint>(color.r), bufferOffset, buffer);
     intToBytes(as_type<uint>(color.g), bufferOffset + 4, buffer);
@@ -2260,7 +2236,7 @@ static inline void writeR32G32B32A32_FLOAT(ushort2 gIndices, constant WritePixel
     intToBytes(as_type<uint>(color.a), bufferOffset + 12, buffer);
 }
 template <typename IntType>
-static inline float4 readR32G32B32A32_NORM(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR32G32B32A32_NORM(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     color.r = normalizedToFloat<IntType>(bytesToInt<IntType>(buffer, bufferOffset));
@@ -2269,7 +2245,7 @@ static inline float4 readR32G32B32A32_NORM(uint bufferOffset, constant uchar *bu
     color.a = normalizedToFloat<IntType>(bytesToInt<IntType>(buffer, bufferOffset + 12));
     return color;
 }
-static inline int4 readR32G32B32A32_SINT(uint bufferOffset, constant uchar *buffer)
+static inline int4 readR32G32B32A32_SINT(uint bufferOffset, const device uchar *buffer)
 {
     int4 color;
     color.r = bytesToInt<int>(buffer, bufferOffset);
@@ -2278,14 +2254,14 @@ static inline int4 readR32G32B32A32_SINT(uint bufferOffset, constant uchar *buff
     color.a = bytesToInt<int>(buffer, bufferOffset + 12);
     return color;
 }
-static inline void writeR32G32B32A32_SINT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<int, 4> color, device uchar *buffer)
+static inline void writeR32G32B32A32_SINT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<int, 4> color, device uchar *buffer)
 {
     intToBytes(color.r, bufferOffset, buffer);
     intToBytes(color.g, bufferOffset + 4, buffer);
     intToBytes(color.b, bufferOffset + 8, buffer);
     intToBytes(color.a, bufferOffset + 12, buffer);
 }
-static inline float4 readR32G32B32A32_FIXED(uint bufferOffset, constant uchar *buffer)
+static inline float4 readR32G32B32A32_FIXED(uint bufferOffset, const device uchar *buffer)
 {
     float4 color;
     constexpr float kDivisor = 1.0f / (1 << 16);
@@ -2295,7 +2271,7 @@ static inline float4 readR32G32B32A32_FIXED(uint bufferOffset, constant uchar *b
     color.a = bytesToInt<int>(buffer, bufferOffset + 12) * kDivisor;
     return color;
 }
-static inline uint4 readR32G32B32A32_UINT(uint bufferOffset, constant uchar *buffer)
+static inline uint4 readR32G32B32A32_UINT(uint bufferOffset, const device uchar *buffer)
 {
     uint4 color;
     color.r = bytesToInt<uint>(buffer, bufferOffset);
@@ -2304,66 +2280,90 @@ static inline uint4 readR32G32B32A32_UINT(uint bufferOffset, constant uchar *buf
     color.a = bytesToInt<uint>(buffer, bufferOffset + 12);
     return color;
 }
-static inline void writeR32G32B32A32_UINT(ushort2 gIndices, constant WritePixelParams &options, uint bufferOffset, vec<uint, 4> color, device uchar *buffer)
+static inline void writeR32G32B32A32_UINT(ushort2 gIndices, constant T2BParams &options, uint bufferOffset, vec<uint, 4> color, device uchar *buffer)
 {
     intToBytes(color.r, bufferOffset, buffer);
     intToBytes(color.g, bufferOffset + 4, buffer);
     intToBytes(color.b, bufferOffset + 8, buffer);
     intToBytes(color.a, bufferOffset + 12, buffer);
 }
-static inline int4 readR8_SSCALED(uint bufferOffset, constant uchar *buffer) { return readR8_SINT(bufferOffset, buffer); } static inline uint4 readR8_USCALED(uint bufferOffset, constant uchar *buffer) { return readR8_UINT(bufferOffset, buffer); } static inline int4 readR8G8_SSCALED(uint bufferOffset, constant uchar *buffer) { return readR8G8_SINT(bufferOffset, buffer); } static inline uint4 readR8G8_USCALED(uint bufferOffset, constant uchar *buffer) { return readR8G8_UINT(bufferOffset, buffer); } static inline int4 readR8G8B8_SSCALED(uint bufferOffset, constant uchar *buffer) { return readR8G8B8_SINT(bufferOffset, buffer); } static inline uint4 readR8G8B8_USCALED(uint bufferOffset, constant uchar *buffer) { return readR8G8B8_UINT(bufferOffset, buffer); } static inline int4 readR8G8B8A8_SSCALED(uint bufferOffset, constant uchar *buffer) { return readR8G8B8A8_SINT(bufferOffset, buffer); } static inline uint4 readR8G8B8A8_USCALED(uint bufferOffset, constant uchar *buffer) { return readR8G8B8A8_UINT(bufferOffset, buffer); }
-static inline int4 readR16_SSCALED(uint bufferOffset, constant uchar *buffer) { return readR16_SINT(bufferOffset, buffer); } static inline uint4 readR16_USCALED(uint bufferOffset, constant uchar *buffer) { return readR16_UINT(bufferOffset, buffer); } static inline int4 readR16G16_SSCALED(uint bufferOffset, constant uchar *buffer) { return readR16G16_SINT(bufferOffset, buffer); } static inline uint4 readR16G16_USCALED(uint bufferOffset, constant uchar *buffer) { return readR16G16_UINT(bufferOffset, buffer); } static inline int4 readR16G16B16_SSCALED(uint bufferOffset, constant uchar *buffer) { return readR16G16B16_SINT(bufferOffset, buffer); } static inline uint4 readR16G16B16_USCALED(uint bufferOffset, constant uchar *buffer) { return readR16G16B16_UINT(bufferOffset, buffer); } static inline int4 readR16G16B16A16_SSCALED(uint bufferOffset, constant uchar *buffer) { return readR16G16B16A16_SINT(bufferOffset, buffer); } static inline uint4 readR16G16B16A16_USCALED(uint bufferOffset, constant uchar *buffer) { return readR16G16B16A16_UINT(bufferOffset, buffer); }
-static inline int4 readR32_SSCALED(uint bufferOffset, constant uchar *buffer) { return readR32_SINT(bufferOffset, buffer); } static inline uint4 readR32_USCALED(uint bufferOffset, constant uchar *buffer) { return readR32_UINT(bufferOffset, buffer); } static inline int4 readR32G32_SSCALED(uint bufferOffset, constant uchar *buffer) { return readR32G32_SINT(bufferOffset, buffer); } static inline uint4 readR32G32_USCALED(uint bufferOffset, constant uchar *buffer) { return readR32G32_UINT(bufferOffset, buffer); } static inline int4 readR32G32B32_SSCALED(uint bufferOffset, constant uchar *buffer) { return readR32G32B32_SINT(bufferOffset, buffer); } static inline uint4 readR32G32B32_USCALED(uint bufferOffset, constant uchar *buffer) { return readR32G32B32_UINT(bufferOffset, buffer); } static inline int4 readR32G32B32A32_SSCALED(uint bufferOffset, constant uchar *buffer) { return readR32G32B32A32_SINT(bufferOffset, buffer); } static inline uint4 readR32G32B32A32_USCALED(uint bufferOffset, constant uchar *buffer) { return readR32G32B32A32_UINT(bufferOffset, buffer); }
-static inline int4 readR10G10B10A2_SSCALED(uint bufferOffset, constant uchar *buffer) { return readR10G10B10A2_SINT(bufferOffset, buffer); } static inline uint4 readR10G10B10A2_USCALED(uint bufferOffset, constant uchar *buffer) { return readR10G10B10A2_UINT(bufferOffset, buffer); }
-kernel void readFromBufferToFloatTexture(ushort3 gIndices [[thread_position_in_grid]], constant CopyPixelParams &options[[buffer(0)]], constant uchar *buffer [[buffer(1)]], texture2d<float, access::write> dstTexture2d [[texture(0), function_constant(kCopyTextureType2D)]], texture2d_array<float, access::write> dstTexture2dArray [[texture(0), function_constant(kCopyTextureType2DArray)]], texture3d<float, access::write> dstTexture3d [[texture(0), function_constant(kCopyTextureType3D)]], texturecube<float, access::write> dstTextureCube [[texture(0), function_constant(kCopyTextureTypeCube)]])
+static inline int4 readR8_SSCALED(uint bufferOffset, const device uchar *buffer) { return readR8_SINT(bufferOffset, buffer); } static inline uint4 readR8_USCALED(uint bufferOffset, const device uchar *buffer) { return readR8_UINT(bufferOffset, buffer); } static inline int4 readR8G8_SSCALED(uint bufferOffset, const device uchar *buffer) { return readR8G8_SINT(bufferOffset, buffer); } static inline uint4 readR8G8_USCALED(uint bufferOffset, const device uchar *buffer) { return readR8G8_UINT(bufferOffset, buffer); } static inline int4 readR8G8B8_SSCALED(uint bufferOffset, const device uchar *buffer) { return readR8G8B8_SINT(bufferOffset, buffer); } static inline uint4 readR8G8B8_USCALED(uint bufferOffset, const device uchar *buffer) { return readR8G8B8_UINT(bufferOffset, buffer); } static inline int4 readR8G8B8A8_SSCALED(uint bufferOffset, const device uchar *buffer) { return readR8G8B8A8_SINT(bufferOffset, buffer); } static inline uint4 readR8G8B8A8_USCALED(uint bufferOffset, const device uchar *buffer) { return readR8G8B8A8_UINT(bufferOffset, buffer); }
+static inline int4 readR16_SSCALED(uint bufferOffset, const device uchar *buffer) { return readR16_SINT(bufferOffset, buffer); } static inline uint4 readR16_USCALED(uint bufferOffset, const device uchar *buffer) { return readR16_UINT(bufferOffset, buffer); } static inline int4 readR16G16_SSCALED(uint bufferOffset, const device uchar *buffer) { return readR16G16_SINT(bufferOffset, buffer); } static inline uint4 readR16G16_USCALED(uint bufferOffset, const device uchar *buffer) { return readR16G16_UINT(bufferOffset, buffer); } static inline int4 readR16G16B16_SSCALED(uint bufferOffset, const device uchar *buffer) { return readR16G16B16_SINT(bufferOffset, buffer); } static inline uint4 readR16G16B16_USCALED(uint bufferOffset, const device uchar *buffer) { return readR16G16B16_UINT(bufferOffset, buffer); } static inline int4 readR16G16B16A16_SSCALED(uint bufferOffset, const device uchar *buffer) { return readR16G16B16A16_SINT(bufferOffset, buffer); } static inline uint4 readR16G16B16A16_USCALED(uint bufferOffset, const device uchar *buffer) { return readR16G16B16A16_UINT(bufferOffset, buffer); }
+static inline int4 readR32_SSCALED(uint bufferOffset, const device uchar *buffer) { return readR32_SINT(bufferOffset, buffer); } static inline uint4 readR32_USCALED(uint bufferOffset, const device uchar *buffer) { return readR32_UINT(bufferOffset, buffer); } static inline int4 readR32G32_SSCALED(uint bufferOffset, const device uchar *buffer) { return readR32G32_SINT(bufferOffset, buffer); } static inline uint4 readR32G32_USCALED(uint bufferOffset, const device uchar *buffer) { return readR32G32_UINT(bufferOffset, buffer); } static inline int4 readR32G32B32_SSCALED(uint bufferOffset, const device uchar *buffer) { return readR32G32B32_SINT(bufferOffset, buffer); } static inline uint4 readR32G32B32_USCALED(uint bufferOffset, const device uchar *buffer) { return readR32G32B32_UINT(bufferOffset, buffer); } static inline int4 readR32G32B32A32_SSCALED(uint bufferOffset, const device uchar *buffer) { return readR32G32B32A32_SINT(bufferOffset, buffer); } static inline uint4 readR32G32B32A32_USCALED(uint bufferOffset, const device uchar *buffer) { return readR32G32B32A32_UINT(bufferOffset, buffer); }
+static inline int4 readR10G10B10A2_SSCALED(uint bufferOffset, const device uchar *buffer) { return readR10G10B10A2_SINT(bufferOffset, buffer); } static inline uint4 readR10G10B10A2_USCALED(uint bufferOffset, const device uchar *buffer) { return readR10G10B10A2_UINT(bufferOffset, buffer); }
+static inline uint getB2TReadOffset(float2 position, constant B2TParams &options)
 {
-    if (gIndices.x >= options.copySize.x || gIndices.y >= options.copySize.y || gIndices.z >= options.copySize.z) { return; }
-    uint bufferOffset = options.bufferStartOffset + (gIndices.z * options.bufferDepthPitch + gIndices.y * options.bufferRowPitch + gIndices.x * options.pixelSize);
+    uint2 iposition = static_cast<uint2>(position) - options.textureOffset;
+    return options.bufferStartOffset +
+           (iposition.y * options.bufferRowPitch + iposition.x * options.pixelSize);
+}
+vertex float4 readFromBufferToTextureVS(unsigned int vid [[vertex_id]])
+{
+    float4 output;
+    output.xy = select(float2(-1.0f), float2(1.0f), bool2(vid & uint2(2, 1)));
+    output.zw = float2(0.0, 1.0);
+    return output;
+}
+fragment float4 readFromBufferToFloatTextureFS(float4 position [[position]],
+                                               constant B2TParams &options [[buffer(0)]],
+                                               const device uchar *buffer [[buffer(1)]])
+{
+    uint bufferOffset = getB2TReadOffset(position.xy, options);
     switch (kCopyFormatType)
     {
-        case FormatID::R5G6B5_UNORM: { auto color = readR5G6B5_UNORM(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R8G8B8A8_UNORM: { auto color = readR8G8B8A8_UNORM(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R8G8B8A8_UNORM_SRGB: { auto color = readR8G8B8A8_UNORM_SRGB(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R8G8B8A8_SNORM: { auto color = readR8G8B8A8_SNORM(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::B8G8R8A8_UNORM: { auto color = readB8G8R8A8_UNORM(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::B8G8R8A8_UNORM_SRGB: { auto color = readB8G8R8A8_UNORM_SRGB(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R8G8B8_UNORM: { auto color = readR8G8B8_UNORM(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R8G8B8_UNORM_SRGB: { auto color = readR8G8B8_UNORM_SRGB(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R8G8B8_SNORM: { auto color = readR8G8B8_SNORM(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::L8_UNORM: { auto color = readL8_UNORM(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::L8A8_UNORM: { auto color = readL8A8_UNORM(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R5G5B5A1_UNORM: { auto color = readR5G5B5A1_UNORM(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R4G4B4A4_UNORM: { auto color = readR4G4B4A4_UNORM(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R8_UNORM: { auto color = readR8_UNORM(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R8_SNORM: { auto color = readR8_SNORM(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R8G8_UNORM: { auto color = readR8G8_UNORM(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R8G8_SNORM: { auto color = readR8G8_SNORM(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R16_FLOAT: { auto color = readR16_FLOAT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R16_SNORM: { auto color = readR16_NORM<short>(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R16_UNORM: { auto color = readR16_NORM<ushort>(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::A16_FLOAT: { auto color = readA16_FLOAT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::L16_FLOAT: { auto color = readL16_FLOAT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::L16A16_FLOAT: { auto color = readL16A16_FLOAT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R16G16_FLOAT: { auto color = readR16G16_FLOAT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R16G16_SNORM: { auto color = readR16G16_NORM<short>(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R16G16_UNORM: { auto color = readR16G16_NORM<ushort>(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R16G16B16_FLOAT: { auto color = readR16G16B16_FLOAT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R16G16B16_SNORM: { auto color = readR16G16B16_NORM<short>(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R16G16B16_UNORM: { auto color = readR16G16B16_NORM<ushort>(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R16G16B16A16_FLOAT: { auto color = readR16G16B16A16_FLOAT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R16G16B16A16_SNORM: { auto color = readR16G16B16A16_NORM<short>(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R16G16B16A16_UNORM: { auto color = readR16G16B16A16_NORM<ushort>(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R32_FLOAT: { auto color = readR32_FLOAT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::A32_FLOAT: { auto color = readA32_FLOAT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::L32_FLOAT: { auto color = readL32_FLOAT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::L32A32_FLOAT: { auto color = readL32A32_FLOAT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R32G32_FLOAT: { auto color = readR32G32_FLOAT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R32G32B32_FLOAT: { auto color = readR32G32B32_FLOAT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R32G32B32A32_FLOAT: { auto color = readR32G32B32A32_FLOAT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break;
+        case FormatID::R5G6B5_UNORM: { return readR5G6B5_UNORM(bufferOffset, buffer); } case FormatID::R8G8B8A8_UNORM: { return readR8G8B8A8_UNORM(bufferOffset, buffer); } case FormatID::R8G8B8A8_UNORM_SRGB: { return readR8G8B8A8_UNORM_SRGB(bufferOffset, buffer); } case FormatID::R8G8B8A8_SNORM: { return readR8G8B8A8_SNORM(bufferOffset, buffer); } case FormatID::B8G8R8A8_UNORM: { return readB8G8R8A8_UNORM(bufferOffset, buffer); } case FormatID::B8G8R8A8_UNORM_SRGB: { return readB8G8R8A8_UNORM_SRGB(bufferOffset, buffer); } case FormatID::R8G8B8_UNORM: { return readR8G8B8_UNORM(bufferOffset, buffer); } case FormatID::R8G8B8_UNORM_SRGB: { return readR8G8B8_UNORM_SRGB(bufferOffset, buffer); } case FormatID::R8G8B8_SNORM: { return readR8G8B8_SNORM(bufferOffset, buffer); } case FormatID::L8_UNORM: { return readL8_UNORM(bufferOffset, buffer); } case FormatID::L8A8_UNORM: { return readL8A8_UNORM(bufferOffset, buffer); } case FormatID::R5G5B5A1_UNORM: { return readR5G5B5A1_UNORM(bufferOffset, buffer); } case FormatID::R4G4B4A4_UNORM: { return readR4G4B4A4_UNORM(bufferOffset, buffer); } case FormatID::R8_UNORM: { return readR8_UNORM(bufferOffset, buffer); } case FormatID::R8_SNORM: { return readR8_SNORM(bufferOffset, buffer); } case FormatID::R8G8_UNORM: { return readR8G8_UNORM(bufferOffset, buffer); } case FormatID::R8G8_SNORM: { return readR8G8_SNORM(bufferOffset, buffer); } case FormatID::R16_FLOAT: { return readR16_FLOAT(bufferOffset, buffer); } case FormatID::R16_SNORM: { return readR16_NORM<short>(bufferOffset, buffer); } case FormatID::R16_UNORM: { return readR16_NORM<ushort>(bufferOffset, buffer); } case FormatID::A16_FLOAT: { return readA16_FLOAT(bufferOffset, buffer); } case FormatID::L16_FLOAT: { return readL16_FLOAT(bufferOffset, buffer); } case FormatID::L16A16_FLOAT: { return readL16A16_FLOAT(bufferOffset, buffer); } case FormatID::R16G16_FLOAT: { return readR16G16_FLOAT(bufferOffset, buffer); } case FormatID::R16G16_SNORM: { return readR16G16_NORM<short>(bufferOffset, buffer); } case FormatID::R16G16_UNORM: { return readR16G16_NORM<ushort>(bufferOffset, buffer); } case FormatID::R16G16B16_FLOAT: { return readR16G16B16_FLOAT(bufferOffset, buffer); } case FormatID::R16G16B16_SNORM: { return readR16G16B16_NORM<short>(bufferOffset, buffer); } case FormatID::R16G16B16_UNORM: { return readR16G16B16_NORM<ushort>(bufferOffset, buffer); } case FormatID::R16G16B16A16_FLOAT: { return readR16G16B16A16_FLOAT(bufferOffset, buffer); } case FormatID::R16G16B16A16_SNORM: { return readR16G16B16A16_NORM<short>(bufferOffset, buffer); } case FormatID::R16G16B16A16_UNORM: { return readR16G16B16A16_NORM<ushort>(bufferOffset, buffer); } case FormatID::R32_FLOAT: { return readR32_FLOAT(bufferOffset, buffer); } case FormatID::A32_FLOAT: { return readA32_FLOAT(bufferOffset, buffer); } case FormatID::L32_FLOAT: { return readL32_FLOAT(bufferOffset, buffer); } case FormatID::L32A32_FLOAT: { return readL32A32_FLOAT(bufferOffset, buffer); } case FormatID::R32G32_FLOAT: { return readR32G32_FLOAT(bufferOffset, buffer); } case FormatID::R32G32B32_FLOAT: { return readR32G32B32_FLOAT(bufferOffset, buffer); } case FormatID::R32G32B32A32_FLOAT: { return readR32G32B32A32_FLOAT(bufferOffset, buffer); }
     }
+    return float4(0.0);
 }
-kernel void readFromBufferToIntTexture(ushort3 gIndices [[thread_position_in_grid]], constant CopyPixelParams &options[[buffer(0)]], constant uchar *buffer [[buffer(1)]], texture2d<int, access::write> dstTexture2d [[texture(0), function_constant(kCopyTextureType2D)]], texture2d_array<int, access::write> dstTexture2dArray [[texture(0), function_constant(kCopyTextureType2DArray)]], texture3d<int, access::write> dstTexture3d [[texture(0), function_constant(kCopyTextureType3D)]], texturecube<int, access::write> dstTextureCube [[texture(0), function_constant(kCopyTextureTypeCube)]])
+fragment int4 readFromBufferToIntTextureFS(float4 position [[position]],
+                                           constant B2TParams &options [[buffer(0)]],
+                                           const device uchar *buffer [[buffer(1)]])
 {
-    if (gIndices.x >= options.copySize.x || gIndices.y >= options.copySize.y || gIndices.z >= options.copySize.z) { return; }
-    uint bufferOffset = options.bufferStartOffset + (gIndices.z * options.bufferDepthPitch + gIndices.y * options.bufferRowPitch + gIndices.x * options.pixelSize);
+    uint bufferOffset = getB2TReadOffset(position.xy, options);
     switch (kCopyFormatType)
     {
-        case FormatID::R8_SINT: { auto color = readR8_SINT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R8G8_SINT: { auto color = readR8G8_SINT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R8G8B8_SINT: { auto color = readR8G8B8_SINT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R8G8B8A8_SINT: { auto color = readR8G8B8A8_SINT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R16_SINT: { auto color = readR16_SINT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R16G16_SINT: { auto color = readR16G16_SINT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R16G16B16_SINT: { auto color = readR16G16B16_SINT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R16G16B16A16_SINT: { auto color = readR16G16B16A16_SINT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R32_SINT: { auto color = readR32_SINT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R32G32_SINT: { auto color = readR32G32_SINT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R32G32B32_SINT: { auto color = readR32G32B32_SINT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R32G32B32A32_SINT: { auto color = readR32G32B32A32_SINT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break;
+        case FormatID::R8_SINT: { return readR8_SINT(bufferOffset, buffer); } case FormatID::R8G8_SINT: { return readR8G8_SINT(bufferOffset, buffer); } case FormatID::R8G8B8_SINT: { return readR8G8B8_SINT(bufferOffset, buffer); } case FormatID::R8G8B8A8_SINT: { return readR8G8B8A8_SINT(bufferOffset, buffer); } case FormatID::R16_SINT: { return readR16_SINT(bufferOffset, buffer); } case FormatID::R16G16_SINT: { return readR16G16_SINT(bufferOffset, buffer); } case FormatID::R16G16B16_SINT: { return readR16G16B16_SINT(bufferOffset, buffer); } case FormatID::R16G16B16A16_SINT: { return readR16G16B16A16_SINT(bufferOffset, buffer); } case FormatID::R32_SINT: { return readR32_SINT(bufferOffset, buffer); } case FormatID::R32G32_SINT: { return readR32G32_SINT(bufferOffset, buffer); } case FormatID::R32G32B32_SINT: { return readR32G32B32_SINT(bufferOffset, buffer); } case FormatID::R32G32B32A32_SINT: { return readR32G32B32A32_SINT(bufferOffset, buffer); }
     }
+    return int4(0);
 }
-kernel void readFromBufferToUIntTexture(ushort3 gIndices [[thread_position_in_grid]], constant CopyPixelParams &options[[buffer(0)]], constant uchar *buffer [[buffer(1)]], texture2d<uint, access::write> dstTexture2d [[texture(0), function_constant(kCopyTextureType2D)]], texture2d_array<uint, access::write> dstTexture2dArray [[texture(0), function_constant(kCopyTextureType2DArray)]], texture3d<uint, access::write> dstTexture3d [[texture(0), function_constant(kCopyTextureType3D)]], texturecube<uint, access::write> dstTextureCube [[texture(0), function_constant(kCopyTextureTypeCube)]])
+fragment uint4 readFromBufferToUIntTextureFS(float4 position [[position]],
+                                             constant B2TParams &options [[buffer(0)]],
+                                             const device uchar *buffer [[buffer(1)]])
 {
-    if (gIndices.x >= options.copySize.x || gIndices.y >= options.copySize.y || gIndices.z >= options.copySize.z) { return; }
-    uint bufferOffset = options.bufferStartOffset + (gIndices.z * options.bufferDepthPitch + gIndices.y * options.bufferRowPitch + gIndices.x * options.pixelSize);
+    uint bufferOffset = getB2TReadOffset(position.xy, options);
     switch (kCopyFormatType)
     {
-        case FormatID::R8_UINT: { auto color = readR8_UINT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R8G8_UINT: { auto color = readR8G8_UINT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R8G8B8_UINT: { auto color = readR8G8B8_UINT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R8G8B8A8_UINT: { auto color = readR8G8B8A8_UINT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R16_UINT: { auto color = readR16_UINT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R16G16_UINT: { auto color = readR16G16_UINT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R16G16B16_UINT: { auto color = readR16G16B16_UINT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R16G16B16A16_UINT: { auto color = readR16G16B16A16_UINT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R32_UINT: { auto color = readR32_UINT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R32G32_UINT: { auto color = readR32G32_UINT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R32G32B32_UINT: { auto color = readR32G32B32_UINT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break; case FormatID::R32G32B32A32_UINT: { auto color = readR32G32B32A32_UINT(bufferOffset, buffer); textureWrite(gIndices, options, color, dstTexture2d, dstTexture2dArray, dstTexture3d, dstTextureCube); } break;
+        case FormatID::R8_UINT: { return readR8_UINT(bufferOffset, buffer); } case FormatID::R8G8_UINT: { return readR8G8_UINT(bufferOffset, buffer); } case FormatID::R8G8B8_UINT: { return readR8G8B8_UINT(bufferOffset, buffer); } case FormatID::R8G8B8A8_UINT: { return readR8G8B8A8_UINT(bufferOffset, buffer); } case FormatID::R16_UINT: { return readR16_UINT(bufferOffset, buffer); } case FormatID::R16G16_UINT: { return readR16G16_UINT(bufferOffset, buffer); } case FormatID::R16G16B16_UINT: { return readR16G16B16_UINT(bufferOffset, buffer); } case FormatID::R16G16B16A16_UINT: { return readR16G16B16A16_UINT(bufferOffset, buffer); } case FormatID::R32_UINT: { return readR32_UINT(bufferOffset, buffer); } case FormatID::R32G32_UINT: { return readR32G32_UINT(bufferOffset, buffer); } case FormatID::R32G32B32_UINT: { return readR32G32B32_UINT(bufferOffset, buffer); } case FormatID::R32G32B32A32_UINT: { return readR32G32B32A32_UINT(bufferOffset, buffer); }
     }
+    return uint4(0);
 }
-kernel void writeFromFloatTextureToBuffer(ushort2 gIndices [[thread_position_in_grid]], constant WritePixelParams &options[[buffer(0)]], texture2d<float, access::read> srcTexture2d [[texture(0), function_constant(kCopyTextureType2D)]], texture2d_array<float, access::read> srcTexture2dArray [[texture(0), function_constant(kCopyTextureType2DArray)]], texture3d<float, access::read> srcTexture3d [[texture(0), function_constant(kCopyTextureType3D)]], texturecube<float, access::read> srcTextureCube [[texture(0), function_constant(kCopyTextureTypeCube)]], texture2d_ms<float, access::read> srcTexture2dMS [[texture(0), function_constant(kCopyTextureType2DMS)]], device uchar *buffer [[buffer(1)]])
+static inline uint getT2BWriteOffset(ushort2 position, constant T2BParams &options)
+{
+    return options.bufferStartOffset +
+           (position.y * options.bufferRowPitch + position.x * options.pixelSize);
+}
+kernel void writeFromFloatTextureToBufferCS(ushort2 gIndices [[thread_position_in_grid]], constant T2BParams &options[[buffer(0)]], texture2d<float, access::read> srcTexture2d [[texture(0), function_constant(kCopyTextureType2D)]], texture2d_array<float, access::read> srcTexture2dArray [[texture(0), function_constant(kCopyTextureType2DArray)]], texture3d<float, access::read> srcTexture3d [[texture(0), function_constant(kCopyTextureType3D)]], texturecube<float, access::read> srcTextureCube [[texture(0), function_constant(kCopyTextureTypeCube)]], texture2d_ms<float, access::read> srcTexture2dMS [[texture(0), function_constant(kCopyTextureType2DMS)]], device uchar *buffer [[buffer(1)]])
 {
     if (gIndices.x >= options.copySize.x || gIndices.y >= options.copySize.y) { return; }
-    uint bufferOffset = options.bufferStartOffset + (gIndices.y * options.bufferRowPitch + gIndices.x * options.pixelSize);
+    uint bufferOffset = getT2BWriteOffset(gIndices, options);
     switch (kCopyFormatType)
     {
         case FormatID::R5G6B5_UNORM: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR5G6B5_UNORM(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R8G8B8A8_UNORM: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR8G8B8A8_UNORM(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R8G8B8A8_UNORM_SRGB: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR8G8B8A8_UNORM_SRGB(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R8G8B8A8_SNORM: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR8G8B8A8_SNORM(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::B8G8R8A8_UNORM: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeB8G8R8A8_UNORM(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::B8G8R8A8_UNORM_SRGB: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeB8G8R8A8_UNORM_SRGB(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R8G8B8_UNORM: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR8G8B8_UNORM(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R8G8B8_UNORM_SRGB: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR8G8B8_UNORM_SRGB(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R8G8B8_SNORM: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR8G8B8_SNORM(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::L8_UNORM: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeL8_UNORM(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::A8_UNORM: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeA8_UNORM(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::L8A8_UNORM: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeL8A8_UNORM(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R5G5B5A1_UNORM: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR5G5B5A1_UNORM(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R4G4B4A4_UNORM: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR4G4B4A4_UNORM(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R8_UNORM: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR8_UNORM(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R8_SNORM: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR8_SNORM(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R8G8_UNORM: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR8G8_UNORM(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R8G8_SNORM: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR8G8_SNORM(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R16_FLOAT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR16_FLOAT(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R16_SNORM: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR16_NORM<short>(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R16_UNORM: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR16_NORM<ushort>(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::A16_FLOAT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeA16_FLOAT(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::L16_FLOAT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeL16_FLOAT(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::L16A16_FLOAT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeL16A16_FLOAT(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R16G16_FLOAT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR16G16_FLOAT(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R16G16_SNORM: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR16G16_NORM<short>(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R16G16_UNORM: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR16G16_NORM<ushort>(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R16G16B16A16_FLOAT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR16G16B16A16_FLOAT(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R16G16B16A16_SNORM: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR16G16B16A16_NORM<short>(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R16G16B16A16_UNORM: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR16G16B16A16_NORM<ushort>(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R32_FLOAT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR32_FLOAT(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::A32_FLOAT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeA32_FLOAT(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::L32_FLOAT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeL32_FLOAT(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::L32A32_FLOAT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeL32A32_FLOAT(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R32G32_FLOAT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR32G32_FLOAT(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R32G32B32A32_FLOAT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR32G32B32A32_FLOAT(gIndices, options, bufferOffset, color, buffer); } break;
     }
 }
-kernel void writeFromIntTextureToBuffer(ushort2 gIndices [[thread_position_in_grid]], constant WritePixelParams &options[[buffer(0)]], texture2d<int, access::read> srcTexture2d [[texture(0), function_constant(kCopyTextureType2D)]], texture2d_array<int, access::read> srcTexture2dArray [[texture(0), function_constant(kCopyTextureType2DArray)]], texture3d<int, access::read> srcTexture3d [[texture(0), function_constant(kCopyTextureType3D)]], texturecube<int, access::read> srcTextureCube [[texture(0), function_constant(kCopyTextureTypeCube)]], texture2d_ms<int, access::read> srcTexture2dMS [[texture(0), function_constant(kCopyTextureType2DMS)]], device uchar *buffer [[buffer(1)]])
+kernel void writeFromIntTextureToBufferCS(ushort2 gIndices [[thread_position_in_grid]], constant T2BParams &options[[buffer(0)]], texture2d<int, access::read> srcTexture2d [[texture(0), function_constant(kCopyTextureType2D)]], texture2d_array<int, access::read> srcTexture2dArray [[texture(0), function_constant(kCopyTextureType2DArray)]], texture3d<int, access::read> srcTexture3d [[texture(0), function_constant(kCopyTextureType3D)]], texturecube<int, access::read> srcTextureCube [[texture(0), function_constant(kCopyTextureTypeCube)]], texture2d_ms<int, access::read> srcTexture2dMS [[texture(0), function_constant(kCopyTextureType2DMS)]], device uchar *buffer [[buffer(1)]])
 {
     if (gIndices.x >= options.copySize.x || gIndices.y >= options.copySize.y) { return; }
-    uint bufferOffset = options.bufferStartOffset + (gIndices.y * options.bufferRowPitch + gIndices.x * options.pixelSize);
+    uint bufferOffset = getT2BWriteOffset(gIndices, options);
     switch (kCopyFormatType)
     {
         case FormatID::R8_SINT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR8_SINT(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R8G8_SINT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR8G8_SINT(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R8G8B8A8_SINT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR8G8B8A8_SINT(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R16_SINT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR16_SINT(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R16G16_SINT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR16G16_SINT(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R16G16B16A16_SINT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR16G16B16A16_SINT(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R32_SINT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR32_SINT(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R32G32_SINT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR32G32_SINT(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R32G32B32A32_SINT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR32G32B32A32_SINT(gIndices, options, bufferOffset, color, buffer); } break;
     }
 }
-kernel void writeFromUIntTextureToBuffer(ushort2 gIndices [[thread_position_in_grid]], constant WritePixelParams &options[[buffer(0)]], texture2d<uint, access::read> srcTexture2d [[texture(0), function_constant(kCopyTextureType2D)]], texture2d_array<uint, access::read> srcTexture2dArray [[texture(0), function_constant(kCopyTextureType2DArray)]], texture3d<uint, access::read> srcTexture3d [[texture(0), function_constant(kCopyTextureType3D)]], texturecube<uint, access::read> srcTextureCube [[texture(0), function_constant(kCopyTextureTypeCube)]], texture2d_ms<uint, access::read> srcTexture2dMS [[texture(0), function_constant(kCopyTextureType2DMS)]], device uchar *buffer [[buffer(1)]])
+kernel void writeFromUIntTextureToBufferCS(ushort2 gIndices [[thread_position_in_grid]], constant T2BParams &options[[buffer(0)]], texture2d<uint, access::read> srcTexture2d [[texture(0), function_constant(kCopyTextureType2D)]], texture2d_array<uint, access::read> srcTexture2dArray [[texture(0), function_constant(kCopyTextureType2DArray)]], texture3d<uint, access::read> srcTexture3d [[texture(0), function_constant(kCopyTextureType3D)]], texturecube<uint, access::read> srcTextureCube [[texture(0), function_constant(kCopyTextureTypeCube)]], texture2d_ms<uint, access::read> srcTexture2dMS [[texture(0), function_constant(kCopyTextureType2DMS)]], device uchar *buffer [[buffer(1)]])
 {
     if (gIndices.x >= options.copySize.x || gIndices.y >= options.copySize.y) { return; }
-    uint bufferOffset = options.bufferStartOffset + (gIndices.y * options.bufferRowPitch + gIndices.x * options.pixelSize);
+    uint bufferOffset = getT2BWriteOffset(gIndices, options);
     switch (kCopyFormatType)
     {
         case FormatID::R8_UINT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR8_UINT(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R8G8_UINT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR8G8_UINT(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R8G8B8A8_UINT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR8G8B8A8_UINT(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R16_UINT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR16_UINT(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R16G16_UINT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR16G16_UINT(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R16G16B16A16_UINT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR16G16B16A16_UINT(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R32_UINT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR32_UINT(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R32G32_UINT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR32G32_UINT(gIndices, options, bufferOffset, color, buffer); } break; case FormatID::R32G32B32A32_UINT: { auto color = textureRead(gIndices, options, srcTexture2d, srcTexture2dArray, srcTexture3d, srcTextureCube, srcTexture2dMS); writeR32G32B32A32_UINT(gIndices, options, bufferOffset, color, buffer); } break;
@@ -2407,7 +2407,7 @@ inline void writeFloatVertex(constant CopyVertexParams &options,
 }
 static inline void convertToFloatVertexFormat(uint index,
                                               constant CopyVertexParams &options,
-                                              constant uchar *srcBuffer,
+                                              const device uchar *srcBuffer,
                                               device uchar *dstBuffer)
 {
     uint bufferOffset = options.srcBufferStartOffset + options.srcStride * index;
@@ -2418,7 +2418,7 @@ static inline void convertToFloatVertexFormat(uint index,
 }
 kernel void convertToFloatVertexFormatCS(uint index [[thread_position_in_grid]],
                                          constant CopyVertexParams &options [[buffer(0)]],
-                                         constant uchar *srcBuffer [[buffer(1)]],
+                                         const device uchar *srcBuffer [[buffer(1)]],
                                          device uchar *dstBuffer [[buffer(2)]])
 {
     if (index >= options.vertexCount) { return; };
@@ -2426,14 +2426,14 @@ kernel void convertToFloatVertexFormatCS(uint index [[thread_position_in_grid]],
 }
 vertex void convertToFloatVertexFormatVS(uint index [[vertex_id]],
                                          constant CopyVertexParams &options [[buffer(0)]],
-                                         constant uchar *srcBuffer [[buffer(1)]],
+                                         const device uchar *srcBuffer [[buffer(1)]],
                                          device uchar *dstBuffer [[buffer(2)]])
 {
     convertToFloatVertexFormat(index, options, srcBuffer, dstBuffer);
 }
 static inline void expandVertexFormatComponents(uint index,
                                                 constant CopyVertexParams &options,
-                                                constant uchar *srcBuffer,
+                                                const device uchar *srcBuffer,
                                                 device uchar *dstBuffer)
 {
     uint srcOffset = options.srcBufferStartOffset + options.srcStride * index;
@@ -2466,7 +2466,7 @@ static inline void expandVertexFormatComponents(uint index,
 }
 kernel void expandVertexFormatComponentsCS(uint index [[thread_position_in_grid]],
                                            constant CopyVertexParams &options [[buffer(0)]],
-                                           constant uchar *srcBuffer [[buffer(1)]],
+                                           const device uchar *srcBuffer [[buffer(1)]],
                                            device uchar *dstBuffer [[buffer(2)]])
 {
     if (index >= options.vertexCount) { return; };
@@ -2474,14 +2474,14 @@ kernel void expandVertexFormatComponentsCS(uint index [[thread_position_in_grid]
 }
 vertex void expandVertexFormatComponentsVS(uint index [[vertex_id]],
                                            constant CopyVertexParams &options [[buffer(0)]],
-                                           constant uchar *srcBuffer [[buffer(1)]],
+                                           const device uchar *srcBuffer [[buffer(1)]],
                                            device uchar *dstBuffer [[buffer(2)]])
 {
     expandVertexFormatComponents(index, options, srcBuffer, dstBuffer);
 }
 kernel void linearizeBlocks(ushort2 position [[thread_position_in_grid]],
                             constant uint2 *dimensions [[buffer(0)]],
-                            constant uint2 *srcBuffer [[buffer(1)]],
+                            const device uint2 *srcBuffer [[buffer(1)]],
                             device uint2 *dstBuffer [[buffer(2)]])
 {
     if (any(uint2(position) >= *dimensions))
@@ -2497,7 +2497,7 @@ kernel void linearizeBlocks(ushort2 position [[thread_position_in_grid]],
 }
 kernel void saturateDepth(uint2 position [[thread_position_in_grid]],
                           constant uint3 *dimensions [[buffer(0)]],
-                          device float *srcBuffer [[buffer(1)]],
+                          const device float *srcBuffer [[buffer(1)]],
                           device float *dstBuffer [[buffer(2)]])
 {
     if (any(position >= (*dimensions).xy))

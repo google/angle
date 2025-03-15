@@ -366,6 +366,9 @@ class ContextMtl : public ContextImpl, public mtl::Context
     // The previous content of texture will be loaded
     mtl::RenderCommandEncoder *getTextureRenderCommandEncoder(const mtl::TextureRef &textureTarget,
                                                               const mtl::ImageNativeIndex &index);
+    mtl::RenderCommandEncoder *getTextureRenderCommandEncoder(const mtl::TextureRef &textureTarget,
+                                                              mtl::MipmapNativeLevel level,
+                                                              uint32_t layer);
     // The previous content of texture will be loaded if clearColor is not provided
     mtl::RenderCommandEncoder *getRenderTargetCommandEncoderWithClear(
         const RenderTargetMtl &renderTarget,

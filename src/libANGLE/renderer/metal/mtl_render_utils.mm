@@ -111,14 +111,13 @@ struct Generate3DMipmapUniform
 // See libANGLE/renderer/metal/shaders/copy_buffer.metal
 struct CopyPixelFromBufferUniforms
 {
-    uint32_t copySize[3];
-    uint32_t padding1;
-    uint32_t textureOffset[3];
-    uint32_t padding2;
     uint32_t bufferStartOffset;
     uint32_t pixelSize;
     uint32_t bufferRowPitch;
     uint32_t bufferDepthPitch;
+
+    uint32_t textureOffset[2];
+    uint8_t padding[8];
 };
 struct WritePixelToBufferUniforms
 {
@@ -151,6 +150,77 @@ struct CopyVertexUniforms
     uint32_t vertexCount;
 
     uint32_t padding[3];
+};
+
+constexpr angle::FormatID kSupportedPixelUnpackFormats[] = {
+    // Float formats
+    angle::FormatID::R5G6B5_UNORM,
+    angle::FormatID::R8G8B8A8_UNORM,
+    angle::FormatID::R8G8B8A8_UNORM_SRGB,
+    angle::FormatID::R8G8B8A8_SNORM,
+    angle::FormatID::B8G8R8A8_UNORM,
+    angle::FormatID::B8G8R8A8_UNORM_SRGB,
+    angle::FormatID::R8G8B8_UNORM,
+    angle::FormatID::R8G8B8_UNORM_SRGB,
+    angle::FormatID::R8G8B8_SNORM,
+    angle::FormatID::L8_UNORM,
+    angle::FormatID::L8A8_UNORM,
+    angle::FormatID::R5G5B5A1_UNORM,
+    angle::FormatID::R4G4B4A4_UNORM,
+    angle::FormatID::R8_UNORM,
+    angle::FormatID::R8_SNORM,
+    angle::FormatID::R8G8_UNORM,
+    angle::FormatID::R8G8_SNORM,
+    angle::FormatID::R16_FLOAT,
+    angle::FormatID::R16_SNORM,
+    angle::FormatID::R16_UNORM,
+    angle::FormatID::A16_FLOAT,
+    angle::FormatID::L16_FLOAT,
+    angle::FormatID::L16A16_FLOAT,
+    angle::FormatID::R16G16_FLOAT,
+    angle::FormatID::R16G16_SNORM,
+    angle::FormatID::R16G16_UNORM,
+    angle::FormatID::R16G16B16_FLOAT,
+    angle::FormatID::R16G16B16_SNORM,
+    angle::FormatID::R16G16B16_UNORM,
+    angle::FormatID::R16G16B16A16_FLOAT,
+    angle::FormatID::R16G16B16A16_SNORM,
+    angle::FormatID::R16G16B16A16_UNORM,
+    angle::FormatID::R32_FLOAT,
+    angle::FormatID::A32_FLOAT,
+    angle::FormatID::L32_FLOAT,
+    angle::FormatID::L32A32_FLOAT,
+    angle::FormatID::R32G32_FLOAT,
+    angle::FormatID::R32G32B32_FLOAT,
+    angle::FormatID::R32G32B32A32_FLOAT,
+
+    // Int formats
+    angle::FormatID::R8_SINT,
+    angle::FormatID::R8G8_SINT,
+    angle::FormatID::R8G8B8_SINT,
+    angle::FormatID::R8G8B8A8_SINT,
+    angle::FormatID::R16_SINT,
+    angle::FormatID::R16G16_SINT,
+    angle::FormatID::R16G16B16_SINT,
+    angle::FormatID::R16G16B16A16_SINT,
+    angle::FormatID::R32_SINT,
+    angle::FormatID::R32G32_SINT,
+    angle::FormatID::R32G32B32_SINT,
+    angle::FormatID::R32G32B32A32_SINT,
+
+    // Uint formats
+    angle::FormatID::R8_UINT,
+    angle::FormatID::R8G8_UINT,
+    angle::FormatID::R8G8B8_UINT,
+    angle::FormatID::R8G8B8A8_UINT,
+    angle::FormatID::R16_UINT,
+    angle::FormatID::R16G16_UINT,
+    angle::FormatID::R16G16B16_UINT,
+    angle::FormatID::R16G16B16A16_UINT,
+    angle::FormatID::R32_UINT,
+    angle::FormatID::R32G32_UINT,
+    angle::FormatID::R32G32B32_UINT,
+    angle::FormatID::R32G32B32A32_UINT,
 };
 
 // Class to automatically disable occlusion query upon entering block and re-able it upon
@@ -685,9 +755,11 @@ RenderUtils::RenderUtils()
                       ColorBlitUtils("blitFloatFS")},
       mCopyTextureFloatToUIntUtils("copyTextureFloatToUIntFS"),
       mCopyPixelsUtils{
-          CopyPixelsUtils("readFromBufferToIntTexture", "writeFromIntTextureToBuffer"),
-          CopyPixelsUtils("readFromBufferToUIntTexture", "writeFromUIntTextureToBuffer"),
-          CopyPixelsUtils("readFromBufferToFloatTexture", "writeFromFloatTextureToBuffer")}
+          CopyPixelsUtils("readFromBufferToIntTextureFS", "writeFromIntTextureToBufferCS"),
+          CopyPixelsUtils("readFromBufferToUIntTextureFS", "writeFromUIntTextureToBufferCS"),
+          CopyPixelsUtils("readFromBufferToFloatTextureFS", "writeFromFloatTextureToBufferCS")},
+      mPixelUnpackSupportedFormats(std::begin(kSupportedPixelUnpackFormats),
+                                   std::end(kSupportedPixelUnpackFormats))
 {}
 
 // Clear current framebuffer
@@ -838,21 +910,25 @@ angle::Result RenderUtils::generateMipmapCS(ContextMtl *contextMtl,
     return mMipmapUtils.generateMipmapCS(contextMtl, srcTexture, sRGBMipmap, mipmapOutputViews);
 }
 
-angle::Result RenderUtils::unpackPixelsFromBufferToTexture(ContextMtl *contextMtl,
-                                                           const angle::Format &srcAngleFormat,
-                                                           const CopyPixelsFromBufferParams &params)
+bool RenderUtils::isPixelsUnpackSupported(const angle::Format &format) const
 {
-    int index = GetPixelTypeIndex(srcAngleFormat);
-    return mCopyPixelsUtils[index].unpackPixelsFromBufferToTexture(contextMtl, srcAngleFormat,
-                                                                   params);
+    return mPixelUnpackSupportedFormats.count(format.id) != 0;
 }
-angle::Result RenderUtils::packPixelsFromTextureToBuffer(ContextMtl *contextMtl,
-                                                         const angle::Format &dstAngleFormat,
-                                                         const CopyPixelsToBufferParams &params)
+
+angle::Result RenderUtils::unpackPixelsWithDraw(const gl::Context *context,
+                                                const angle::Format &srcAngleFormat,
+                                                const CopyPixelsFromBufferParams &params)
+{
+    ASSERT(isPixelsUnpackSupported(srcAngleFormat));
+    int index = GetPixelTypeIndex(srcAngleFormat);
+    return mCopyPixelsUtils[index].unpackPixelsWithDraw(context, srcAngleFormat, params);
+}
+angle::Result RenderUtils::packPixelsCS(ContextMtl *contextMtl,
+                                        const angle::Format &dstAngleFormat,
+                                        const CopyPixelsToBufferParams &params)
 {
     int index = GetPixelTypeIndex(dstAngleFormat);
-    return mCopyPixelsUtils[index].packPixelsFromTextureToBuffer(contextMtl, dstAngleFormat,
-                                                                 params);
+    return mCopyPixelsUtils[index].packPixelsCS(contextMtl, dstAngleFormat, params);
 }
 
 angle::Result RenderUtils::convertVertexFormatToFloatCS(ContextMtl *contextMtl,
@@ -2270,22 +2346,20 @@ CopyPixelsUtils::CopyPixelsUtils(const std::string &readShaderName,
     : mReadShaderName(readShaderName), mWriteShaderName(writeShaderName)
 {}
 
-angle::Result CopyPixelsUtils::getPixelsCopyPipeline(
+angle::Result CopyPixelsUtils::getT2BComputePipeline(
     ContextMtl *contextMtl,
     const angle::Format &angleFormat,
     const TextureRef &texture,
-    bool bufferWrite,
     angle::ObjCPtr<id<MTLComputePipelineState>> *outComputePipeline)
 {
     int formatIDValue     = static_cast<int>(angleFormat.id);
     int shaderTextureType = GetShaderTextureType(texture);
-    int index2 = mtl_shader::kTextureTypeCount * (bufferWrite ? 1 : 0) + shaderTextureType;
 
-    auto &shader = mPixelsCopyComputeShaders[formatIDValue][index2];
+    auto &shader = mT2BComputeShaders[formatIDValue][shaderTextureType];
 
     if (!shader)
     {
-        // Pipeline not cached, create it now:
+        // Shader not cached, create it now:
         ANGLE_MTL_OBJC_SCOPE
         {
             angle::ObjCPtr<MTLFunctionConstantValues> funcConstants =
@@ -2298,15 +2372,7 @@ angle::Result CopyPixelsUtils::getPixelsCopyPipeline(
                                        type:MTLDataTypeInt
                                    withName:PIXEL_COPY_TEXTURE_TYPE_CONSTANT_NAME];
 
-            NSString *shaderName = nil;
-            if (bufferWrite)
-            {
-                shaderName = [NSString stringWithUTF8String:mWriteShaderName.c_str()];
-            }
-            else
-            {
-                shaderName = [NSString stringWithUTF8String:mReadShaderName.c_str()];
-            }
+            NSString *shaderName = [NSString stringWithUTF8String:mWriteShaderName.c_str()];
 
             ANGLE_TRY(
                 EnsureSpecializedShaderInitialized(contextMtl, shaderName, funcConstants, &shader));
@@ -2317,55 +2383,117 @@ angle::Result CopyPixelsUtils::getPixelsCopyPipeline(
                                                              outComputePipeline);
 }
 
-angle::Result CopyPixelsUtils::unpackPixelsFromBufferToTexture(
+angle::Result CopyPixelsUtils::getB2TRenderPipeline(
     ContextMtl *contextMtl,
-    const angle::Format &srcAngleFormat,
-    const CopyPixelsFromBufferParams &params)
+    RenderCommandEncoder *cmdEncoder,
+    const angle::Format &angleFormat,
+    angle::ObjCPtr<id<MTLRenderPipelineState>> *outRenderPipeline)
 {
-    ComputeCommandEncoder *cmdEncoder = contextMtl->getComputeCommandEncoder();
+
+    // Vertex shader
+    ANGLE_TRY(EnsureShaderInitialized(contextMtl, @"readFromBufferToTextureVS", &mB2TVertexShader));
+
+    // Fragment shader:
+    int formatIDValue    = static_cast<int>(angleFormat.id);
+    auto &fragmentShader = mB2TFragmentShaders[formatIDValue];
+
+    if (!fragmentShader)
+    {
+        // Shader not cached, create it now:
+        ANGLE_MTL_OBJC_SCOPE
+        {
+            angle::ObjCPtr<MTLFunctionConstantValues> funcConstants =
+                angle::adoptObjCPtr([[MTLFunctionConstantValues alloc] init]);
+
+            [funcConstants setConstantValue:&formatIDValue
+                                       type:MTLDataTypeInt
+                                   withName:COPY_FORMAT_TYPE_CONSTANT_NAME];
+
+            NSString *shaderName = [NSString stringWithUTF8String:mReadShaderName.c_str()];
+
+            ANGLE_TRY(EnsureSpecializedShaderInitialized(contextMtl, shaderName, funcConstants,
+                                                         &fragmentShader));
+        }
+    }
+
+    RenderPipelineDesc pipelineDesc;
+    const RenderPassDesc &renderPassDesc = cmdEncoder->renderPassDesc();
+    renderPassDesc.populateRenderPipelineOutputDesc(&pipelineDesc.outputDescriptor);
+
+    pipelineDesc.setInputPrimitiveTopology(MTLPrimitiveTopologyClassTriangle);
+
+    return contextMtl->getPipelineCache().getRenderPipeline(
+        contextMtl, mB2TVertexShader, fragmentShader, pipelineDesc, outRenderPipeline);
+}
+
+angle::Result CopyPixelsUtils::unpackPixelsWithDraw(const gl::Context *context,
+                                                    const angle::Format &srcAngleFormat,
+                                                    const CopyPixelsFromBufferParams &params)
+{
+    ContextMtl *contextMtl           = mtl::GetImpl(context);
+    RenderCommandEncoder *cmdEncoder = contextMtl->getTextureRenderCommandEncoder(
+        params.texture, kZeroNativeMipLevel, params.textureSliceOrDepth);
     ASSERT(cmdEncoder);
 
-    angle::ObjCPtr<id<MTLComputePipelineState>> pipeline;
-    ANGLE_TRY(getPixelsCopyPipeline(contextMtl, srcAngleFormat, params.texture, false, &pipeline));
+    angle::ObjCPtr<id<MTLRenderPipelineState>> pipeline;
+    ANGLE_TRY(getB2TRenderPipeline(contextMtl, cmdEncoder, srcAngleFormat, &pipeline));
 
-    cmdEncoder->setComputePipelineState(pipeline);
-    cmdEncoder->setBuffer(params.buffer, 0, 1);
-    cmdEncoder->setTextureForWrite(params.texture, 0);
+    // Setup states
+    SetupFullscreenQuadDrawCommonStates(cmdEncoder);
+    cmdEncoder->setRenderPipelineState(pipeline);
+    cmdEncoder->setFragmentBuffer(params.buffer, 0, 1);
 
+    id<MTLDepthStencilState> dsState =
+        contextMtl->getDisplay()->getStateCache().getNullDepthStencilState(
+            contextMtl->getMetalDevice());
+    cmdEncoder->setDepthStencilState(dsState);
+
+    // Viewports
+    MTLViewport viewport;
+    MTLScissorRect scissorRect;
+
+    const gl::Rectangle rect(params.textureArea.x, params.textureArea.y, params.textureArea.width,
+                             params.textureArea.height);
+    viewport = GetViewport(rect);
+
+    scissorRect = GetScissorRect(rect);
+
+    cmdEncoder->setViewport(viewport);
+    cmdEncoder->setScissorRect(scissorRect);
+
+    // uniform
     CopyPixelFromBufferUniforms options;
-    options.copySize[0]       = params.textureArea.width;
-    options.copySize[1]       = params.textureArea.height;
-    options.copySize[2]       = params.textureArea.depth;
     options.bufferStartOffset = params.bufferStartOffset;
     options.pixelSize         = srcAngleFormat.pixelBytes;
     options.bufferRowPitch    = params.bufferRowPitch;
     options.bufferDepthPitch  = params.bufferDepthPitch;
     options.textureOffset[0]  = params.textureArea.x;
     options.textureOffset[1]  = params.textureArea.y;
-    options.textureOffset[2]  = params.textureArea.z;
-    cmdEncoder->setData(options, 0);
+    cmdEncoder->setFragmentData(options, 0);
 
-    NSUInteger w                  = pipeline.get().threadExecutionWidth;
-    MTLSize threadsPerThreadgroup = MTLSizeMake(w, 1, 1);
+    angle::Result result;
+    {
+        // Need to disable occlusion query, otherwise blitting will affect the occlusion counting
+        ScopedDisableOcclusionQuery disableOcclusionQuery(contextMtl, cmdEncoder, &result);
+        // Draw the screen aligned quad
+        cmdEncoder->draw(MTLPrimitiveTypeTriangleStrip, 0, 4);
+    }
 
-    MTLSize threads =
-        MTLSizeMake(params.textureArea.width, params.textureArea.height, params.textureArea.depth);
+    // Invalidate current context's state
+    contextMtl->invalidateState(context);
 
-    DispatchCompute(contextMtl, cmdEncoder,
-                    /** allowNonUniform */ true, threads, threadsPerThreadgroup);
-
-    return angle::Result::Continue;
+    return result;
 }
 
-angle::Result CopyPixelsUtils::packPixelsFromTextureToBuffer(ContextMtl *contextMtl,
-                                                             const angle::Format &dstAngleFormat,
-                                                             const CopyPixelsToBufferParams &params)
+angle::Result CopyPixelsUtils::packPixelsCS(ContextMtl *contextMtl,
+                                            const angle::Format &dstAngleFormat,
+                                            const CopyPixelsToBufferParams &params)
 {
     ComputeCommandEncoder *cmdEncoder = contextMtl->getComputeCommandEncoder();
     ASSERT(cmdEncoder);
 
     angle::ObjCPtr<id<MTLComputePipelineState>> pipeline;
-    ANGLE_TRY(getPixelsCopyPipeline(contextMtl, dstAngleFormat, params.texture, true, &pipeline));
+    ANGLE_TRY(getT2BComputePipeline(contextMtl, dstAngleFormat, params.texture, &pipeline));
 
     cmdEncoder->setComputePipelineState(pipeline);
     cmdEncoder->setTexture(params.texture, 0);
@@ -2380,7 +2508,7 @@ angle::Result CopyPixelsUtils::packPixelsFromTextureToBuffer(ContextMtl *context
     options.textureOffset[0]       = params.textureArea.x;
     options.textureOffset[1]       = params.textureArea.y;
     options.textureLevel           = params.textureLevel.get();
-    options.textureLayer           = params.textureSliceOrDeph;
+    options.textureLayer           = params.textureSliceOrDepth;
     options.reverseTextureRowOrder = params.reverseTextureRowOrder;
     cmdEncoder->setData(options, 0);
 

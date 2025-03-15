@@ -26,18 +26,17 @@ constant bool kCopyTextureType2DMS    = kCopyTextureType == kTextureType2DMultis
 constant bool kCopyTextureTypeCube    = kCopyTextureType == kTextureTypeCube;
 constant bool kCopyTextureType3D      = kCopyTextureType == kTextureType3D;
 
-struct CopyPixelParams
+struct B2TParams
 {
-    uint3 copySize;
-    uint3 textureOffset;
-
     uint bufferStartOffset;
     uint pixelSize;
     uint bufferRowPitch;
     uint bufferDepthPitch;
+
+    uint2 textureOffset;
 };
 
-struct WritePixelParams
+struct T2BParams
 {
     uint2 copySize;
     uint2 textureOffset;
@@ -71,18 +70,9 @@ struct WritePixelParams
     NAME_PREFIX##TextureCube
 
 // Params for reading from buffer to texture
-#define DEST_TEXTURE_PARAMS(TYPE)  TEXTURE_PARAMS(TYPE, access::write, dst)
-#define FORWARD_DEST_TEXTURE_PARAMS FORWARD_TEXTURE_PARAMS(dst)
-
-#define COMMON_READ_KERNEL_PARAMS(TEXTURE_TYPE)     \
-    ushort3 gIndices [[thread_position_in_grid]],   \
-    constant CopyPixelParams &options[[buffer(0)]], \
-    constant uchar *buffer [[buffer(1)]],           \
-    DEST_TEXTURE_PARAMS(TEXTURE_TYPE)
-
 #define COMMON_READ_FUNC_PARAMS        \
     uint bufferOffset,                 \
-    constant uchar *buffer
+    const device uchar *buffer
 
 #define FORWARD_COMMON_READ_FUNC_PARAMS bufferOffset, buffer
 
@@ -97,13 +87,13 @@ struct WritePixelParams
 
 #define COMMON_WRITE_KERNEL_PARAMS(TEXTURE_TYPE)     \
     ushort2 gIndices [[thread_position_in_grid]],    \
-    constant WritePixelParams &options[[buffer(0)]], \
+    constant T2BParams &options[[buffer(0)]], \
     SRC_TEXTURE_PARAMS(TEXTURE_TYPE),                \
     device uchar *buffer [[buffer(1)]]               \
 
 #define COMMON_WRITE_FUNC_PARAMS(TYPE) \
     ushort2 gIndices,                  \
-    constant WritePixelParams &options,\
+    constant T2BParams &options,\
     uint bufferOffset,                 \
     vec<TYPE, 4> color,                \
     device uchar *buffer               \
@@ -116,35 +106,10 @@ struct WritePixelParams
 
 // clang-format on
 
-// Write to texture code based on texture type:
-template <typename T>
-static inline void textureWrite(ushort3 gIndices,
-                                constant CopyPixelParams &options,
-                                vec<T, 4> color,
-                                DEST_TEXTURE_PARAMS(T))
-{
-    uint3 writeIndices = options.textureOffset + uint3(gIndices);
-    switch (kCopyTextureType)
-    {
-        case kTextureType2D:
-            dstTexture2d.write(color, writeIndices.xy);
-            break;
-        case kTextureType2DArray:
-            dstTexture2dArray.write(color, writeIndices.xy, writeIndices.z);
-            break;
-        case kTextureType3D:
-            dstTexture3d.write(color, writeIndices);
-            break;
-        case kTextureTypeCube:
-            dstTextureCube.write(color, writeIndices.xy, writeIndices.z);
-            break;
-    }
-}
-
 // Read from texture code based on texture type:
 template <typename T>
 static inline vec<T, 4> textureRead(ushort2 gIndices,
-                                    constant WritePixelParams &options,
+                                    constant T2BParams &options,
                                     SRC_TEXTURE_PARAMS(T))
 {
     vec<T, 4> color;
@@ -175,21 +140,12 @@ static inline vec<T, 4> textureRead(ushort2 gIndices,
     return color;
 }
 
-// Calculate offset into buffer:
-#define CALC_BUFFER_READ_OFFSET(pixelSize)                               \
-    options.bufferStartOffset + (gIndices.z * options.bufferDepthPitch + \
-                                 gIndices.y * options.bufferRowPitch + gIndices.x * pixelSize)
-
-#define CALC_BUFFER_WRITE_OFFSET(pixelSize) \
-    options.bufferStartOffset + (gIndices.y * options.bufferRowPitch + gIndices.x * pixelSize)
-
 // Per format handling code:
-#define READ_FORMAT_SWITCH_CASE(format)                                      \
-    case FormatID::format: {                                                 \
-        auto color = read##format(FORWARD_COMMON_READ_FUNC_PARAMS);          \
-        textureWrite(gIndices, options, color, FORWARD_DEST_TEXTURE_PARAMS); \
-    }                                                                        \
-    break;
+#define READ_FORMAT_SWITCH_CASE(format)                       \
+    case FormatID::format:                                    \
+    {                                                         \
+        return read##format(FORWARD_COMMON_READ_FUNC_PARAMS); \
+    }
 
 #define WRITE_FORMAT_SWITCH_CASE(format)                                         \
     case FormatID::format: {                                                     \
@@ -197,13 +153,6 @@ static inline vec<T, 4> textureRead(ushort2 gIndices,
         write##format(FORWARD_COMMON_WRITE_FUNC_PARAMS);                         \
     }                                                                            \
     break;
-
-#define READ_KERNEL_GUARD                                                       \
-    if (gIndices.x >= options.copySize.x || gIndices.y >= options.copySize.y || \
-        gIndices.z >= options.copySize.z)                                       \
-    {                                                                           \
-        return;                                                                 \
-    }
 
 #define WRITE_KERNEL_GUARD                                                    \
     if (gIndices.x >= options.copySize.x || gIndices.y >= options.copySize.y) \
@@ -1324,10 +1273,25 @@ ALIAS_READ_INT_FUNCS(32)
 ALIAS_READ_INT_FUNC(R10G10B10A2)
 
 // Copy pixels from buffer to texture
-kernel void readFromBufferToFloatTexture(COMMON_READ_KERNEL_PARAMS(float))
+static inline uint getB2TReadOffset(float2 position, constant B2TParams &options)
 {
-    READ_KERNEL_GUARD
+    uint2 iposition = static_cast<uint2>(position) - options.textureOffset;
+    return options.bufferStartOffset +
+           (iposition.y * options.bufferRowPitch + iposition.x * options.pixelSize);
+}
 
+vertex float4 readFromBufferToTextureVS(unsigned int vid [[vertex_id]])
+{
+    float4 output;
+    output.xy = select(float2(-1.0f), float2(1.0f), bool2(vid & uint2(2, 1)));
+    output.zw = float2(0.0, 1.0);
+    return output;
+}
+
+fragment float4 readFromBufferToFloatTextureFS(float4 position [[position]],
+                                               constant B2TParams &options [[buffer(0)]],
+                                               const device uchar *buffer [[buffer(1)]])
+{
 #define SUPPORTED_FORMATS(PROC) \
     PROC(R5G6B5_UNORM)          \
     PROC(R8G8B8A8_UNORM)        \
@@ -1369,7 +1333,7 @@ kernel void readFromBufferToFloatTexture(COMMON_READ_KERNEL_PARAMS(float))
     PROC(R32G32B32_FLOAT)       \
     PROC(R32G32B32A32_FLOAT)
 
-    uint bufferOffset = CALC_BUFFER_READ_OFFSET(options.pixelSize);
+    uint bufferOffset = getB2TReadOffset(position.xy, options);
 
     switch (kCopyFormatType)
     {
@@ -1377,12 +1341,14 @@ kernel void readFromBufferToFloatTexture(COMMON_READ_KERNEL_PARAMS(float))
     }
 
 #undef SUPPORTED_FORMATS
+
+    return float4(0.0);
 }
 
-kernel void readFromBufferToIntTexture(COMMON_READ_KERNEL_PARAMS(int))
+fragment int4 readFromBufferToIntTextureFS(float4 position [[position]],
+                                           constant B2TParams &options [[buffer(0)]],
+                                           const device uchar *buffer [[buffer(1)]])
 {
-    READ_KERNEL_GUARD
-
 #define SUPPORTED_FORMATS(PROC) \
     PROC(R8_SINT)               \
     PROC(R8G8_SINT)             \
@@ -1397,7 +1363,7 @@ kernel void readFromBufferToIntTexture(COMMON_READ_KERNEL_PARAMS(int))
     PROC(R32G32B32_SINT)        \
     PROC(R32G32B32A32_SINT)
 
-    uint bufferOffset = CALC_BUFFER_READ_OFFSET(options.pixelSize);
+    uint bufferOffset = getB2TReadOffset(position.xy, options);
 
     switch (kCopyFormatType)
     {
@@ -1405,12 +1371,14 @@ kernel void readFromBufferToIntTexture(COMMON_READ_KERNEL_PARAMS(int))
     }
 
 #undef SUPPORTED_FORMATS
+
+    return int4(0);
 }
 
-kernel void readFromBufferToUIntTexture(COMMON_READ_KERNEL_PARAMS(uint))
+fragment uint4 readFromBufferToUIntTextureFS(float4 position [[position]],
+                                             constant B2TParams &options [[buffer(0)]],
+                                             const device uchar *buffer [[buffer(1)]])
 {
-    READ_KERNEL_GUARD
-
 #define SUPPORTED_FORMATS(PROC) \
     PROC(R8_UINT)               \
     PROC(R8G8_UINT)             \
@@ -1425,7 +1393,7 @@ kernel void readFromBufferToUIntTexture(COMMON_READ_KERNEL_PARAMS(uint))
     PROC(R32G32B32_UINT)        \
     PROC(R32G32B32A32_UINT)
 
-    uint bufferOffset = CALC_BUFFER_READ_OFFSET(options.pixelSize);
+    uint bufferOffset = getB2TReadOffset(position.xy, options);
 
     switch (kCopyFormatType)
     {
@@ -1433,10 +1401,18 @@ kernel void readFromBufferToUIntTexture(COMMON_READ_KERNEL_PARAMS(uint))
     }
 
 #undef SUPPORTED_FORMATS
+
+    return uint4(0);
 }
 
 // Copy pixels from texture to buffer
-kernel void writeFromFloatTextureToBuffer(COMMON_WRITE_KERNEL_PARAMS(float))
+static inline uint getT2BWriteOffset(ushort2 position, constant T2BParams &options)
+{
+    return options.bufferStartOffset +
+           (position.y * options.bufferRowPitch + position.x * options.pixelSize);
+}
+
+kernel void writeFromFloatTextureToBufferCS(COMMON_WRITE_KERNEL_PARAMS(float))
 {
     WRITE_KERNEL_GUARD
 
@@ -1478,7 +1454,7 @@ kernel void writeFromFloatTextureToBuffer(COMMON_WRITE_KERNEL_PARAMS(float))
     PROC(R32G32_FLOAT)          \
     PROC(R32G32B32A32_FLOAT)
 
-    uint bufferOffset = CALC_BUFFER_WRITE_OFFSET(options.pixelSize);
+    uint bufferOffset = getT2BWriteOffset(gIndices, options);
 
     switch (kCopyFormatType)
     {
@@ -1488,7 +1464,7 @@ kernel void writeFromFloatTextureToBuffer(COMMON_WRITE_KERNEL_PARAMS(float))
 #undef SUPPORTED_FORMATS
 }
 
-kernel void writeFromIntTextureToBuffer(COMMON_WRITE_KERNEL_PARAMS(int))
+kernel void writeFromIntTextureToBufferCS(COMMON_WRITE_KERNEL_PARAMS(int))
 {
     WRITE_KERNEL_GUARD
 
@@ -1503,7 +1479,7 @@ kernel void writeFromIntTextureToBuffer(COMMON_WRITE_KERNEL_PARAMS(int))
     PROC(R32G32_SINT)           \
     PROC(R32G32B32A32_SINT)
 
-    uint bufferOffset = CALC_BUFFER_WRITE_OFFSET(options.pixelSize);
+    uint bufferOffset = getT2BWriteOffset(gIndices, options);
 
     switch (kCopyFormatType)
     {
@@ -1513,7 +1489,7 @@ kernel void writeFromIntTextureToBuffer(COMMON_WRITE_KERNEL_PARAMS(int))
 #undef SUPPORTED_FORMATS
 }
 
-kernel void writeFromUIntTextureToBuffer(COMMON_WRITE_KERNEL_PARAMS(uint))
+kernel void writeFromUIntTextureToBufferCS(COMMON_WRITE_KERNEL_PARAMS(uint))
 {
     WRITE_KERNEL_GUARD
 
@@ -1528,7 +1504,7 @@ kernel void writeFromUIntTextureToBuffer(COMMON_WRITE_KERNEL_PARAMS(uint))
     PROC(R32G32_UINT)           \
     PROC(R32G32B32A32_UINT)
 
-    uint bufferOffset = CALC_BUFFER_WRITE_OFFSET(options.pixelSize);
+    uint bufferOffset = getT2BWriteOffset(gIndices, options);
 
     switch (kCopyFormatType)
     {
@@ -1609,7 +1585,7 @@ inline void writeFloatVertex(constant CopyVertexParams &options,
 // Function to convert from any vertex format to float vertex format
 static inline void convertToFloatVertexFormat(uint index,
                                               constant CopyVertexParams &options,
-                                              constant uchar *srcBuffer,
+                                              const device uchar *srcBuffer,
                                               device uchar *dstBuffer)
 {
 #define SUPPORTED_FORMATS(PROC)                   \
@@ -1644,7 +1620,7 @@ static inline void convertToFloatVertexFormat(uint index,
 // Kernel to convert from any vertex format to float vertex format
 kernel void convertToFloatVertexFormatCS(uint index [[thread_position_in_grid]],
                                          constant CopyVertexParams &options [[buffer(0)]],
-                                         constant uchar *srcBuffer [[buffer(1)]],
+                                         const device uchar *srcBuffer [[buffer(1)]],
                                          device uchar *dstBuffer [[buffer(2)]])
 {
     ANGLE_KERNEL_GUARD(index, options.vertexCount);
@@ -1654,7 +1630,7 @@ kernel void convertToFloatVertexFormatCS(uint index [[thread_position_in_grid]],
 // Vertex shader to convert from any vertex format to float vertex format
 vertex void convertToFloatVertexFormatVS(uint index [[vertex_id]],
                                          constant CopyVertexParams &options [[buffer(0)]],
-                                         constant uchar *srcBuffer [[buffer(1)]],
+                                         const device uchar *srcBuffer [[buffer(1)]],
                                          device uchar *dstBuffer [[buffer(2)]])
 {
     convertToFloatVertexFormat(index, options, srcBuffer, dstBuffer);
@@ -1663,7 +1639,7 @@ vertex void convertToFloatVertexFormatVS(uint index [[vertex_id]],
 // Function to expand (or just simply copy) the components of the vertex
 static inline void expandVertexFormatComponents(uint index,
                                                 constant CopyVertexParams &options,
-                                                constant uchar *srcBuffer,
+                                                const device uchar *srcBuffer,
                                                 device uchar *dstBuffer)
 {
     uint srcOffset = options.srcBufferStartOffset + options.srcStride * index;
@@ -1702,7 +1678,7 @@ static inline void expandVertexFormatComponents(uint index,
 // Kernel to expand (or just simply copy) the components of the vertex
 kernel void expandVertexFormatComponentsCS(uint index [[thread_position_in_grid]],
                                            constant CopyVertexParams &options [[buffer(0)]],
-                                           constant uchar *srcBuffer [[buffer(1)]],
+                                           const device uchar *srcBuffer [[buffer(1)]],
                                            device uchar *dstBuffer [[buffer(2)]])
 {
     ANGLE_KERNEL_GUARD(index, options.vertexCount);
@@ -1713,7 +1689,7 @@ kernel void expandVertexFormatComponentsCS(uint index [[thread_position_in_grid]
 // Vertex shader to expand (or just simply copy) the components of the vertex
 vertex void expandVertexFormatComponentsVS(uint index [[vertex_id]],
                                            constant CopyVertexParams &options [[buffer(0)]],
-                                           constant uchar *srcBuffer [[buffer(1)]],
+                                           const device uchar *srcBuffer [[buffer(1)]],
                                            device uchar *dstBuffer [[buffer(2)]])
 {
     expandVertexFormatComponents(index, options, srcBuffer, dstBuffer);
@@ -1722,7 +1698,7 @@ vertex void expandVertexFormatComponentsVS(uint index [[vertex_id]],
 // Kernel to linearize PVRTC1 texture blocks
 kernel void linearizeBlocks(ushort2 position [[thread_position_in_grid]],
                             constant uint2 *dimensions [[buffer(0)]],
-                            constant uint2 *srcBuffer [[buffer(1)]],
+                            const device uint2 *srcBuffer [[buffer(1)]],
                             device uint2 *dstBuffer [[buffer(2)]])
 {
     if (any(uint2(position) >= *dimensions))
@@ -1740,7 +1716,7 @@ kernel void linearizeBlocks(ushort2 position [[thread_position_in_grid]],
 // Kernel to saturate floating-point depth data
 kernel void saturateDepth(uint2 position [[thread_position_in_grid]],
                           constant uint3 *dimensions [[buffer(0)]],
-                          device float *srcBuffer [[buffer(1)]],
+                          const device float *srcBuffer [[buffer(1)]],
                           device float *dstBuffer [[buffer(2)]])
 {
     if (any(position >= (*dimensions).xy))

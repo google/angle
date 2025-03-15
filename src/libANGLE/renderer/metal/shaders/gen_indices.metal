@@ -27,26 +27,26 @@ struct IndexConversionParams
 
 #define ANGLE_IDX_CONVERSION_GUARD(IDX, OPTS) ANGLE_KERNEL_GUARD(IDX, OPTS.indexCount)
 
-inline ushort getIndexAligned(constant ushort *inputAligned, uint offset, uint idx)
+inline ushort getIndexAligned(const device ushort *inputAligned, uint offset, uint idx)
 {
     return inputAligned[offset / 2 + idx];
 }
-inline uint getIndexAligned(constant uint *inputAligned, uint offset, uint idx)
+inline uint getIndexAligned(const device uint *inputAligned, uint offset, uint idx)
 {
     return inputAligned[offset / 4 + idx];
 }
-inline uchar getIndexAligned(constant uchar *input, uint offset, uint idx)
+inline uchar getIndexAligned(const device uchar *input, uint offset, uint idx)
 {
     return input[offset + idx];
 }
-inline ushort getIndexUnalignedU16(constant uchar *input, uint offset, uint idx)
+inline ushort getIndexUnalignedU16(const device uchar *input, uint offset, uint idx)
 {
     ushort inputLo = input[offset + 2 * idx];
     ushort inputHi = input[offset + 2 * idx + 1];
     // Little endian conversion:
     return inputLo | (inputHi << 8);
 }
-inline uint getIndexUnalignedU32(constant uchar *input, uint offset, uint idx)
+inline uint getIndexUnalignedU32(const device uchar *input, uint offset, uint idx)
 {
     uint input0 = input[offset + 4 * idx];
     uint input1 = input[offset + 4 * idx + 1];
@@ -58,7 +58,7 @@ inline uint getIndexUnalignedU32(constant uchar *input, uint offset, uint idx)
 
 kernel void convertIndexU8ToU16(uint idx [[thread_position_in_grid]],
                                 constant IndexConversionParams &options [[buffer(0)]],
-                                constant uchar *input [[buffer(1)]],
+                                const device uchar *input [[buffer(1)]],
                                 device ushort *output [[buffer(2)]])
 {
     ANGLE_IDX_CONVERSION_GUARD(idx, options);
@@ -77,9 +77,9 @@ kernel void convertIndexU8ToU16(uint idx [[thread_position_in_grid]],
 
 kernel void convertIndexU16(uint idx [[thread_position_in_grid]],
                             constant IndexConversionParams &options [[buffer(0)]],
-                            constant uchar *input
+                            const device uchar *input
                             [[buffer(1), function_constant(kSourceBufferUnaligned)]],
-                            constant ushort *inputAligned
+                            const device ushort *inputAligned
                             [[buffer(1), function_constant(kSourceBufferAligned)]],
                             device ushort *output [[buffer(2)]])
 {
@@ -99,9 +99,9 @@ kernel void convertIndexU16(uint idx [[thread_position_in_grid]],
 
 kernel void convertIndexU32(uint idx [[thread_position_in_grid]],
                             constant IndexConversionParams &options [[buffer(0)]],
-                            constant uchar *input
+                            const device uchar *input
                             [[buffer(1), function_constant(kSourceBufferUnaligned)]],
-                            constant uint *inputAligned
+                            const device uint *inputAligned
                             [[buffer(1), function_constant(kSourceBufferAligned)]],
                             device uint *output [[buffer(2)]])
 {
@@ -144,9 +144,9 @@ kernel void genTriFanIndicesFromArray(uint idx [[thread_position_in_grid]],
 
 inline uint getIndexU32(uint offset,
                         uint idx,
-                        constant uchar *inputU8 [[function_constant(kUseSourceBufferU8)]],
-                        constant ushort *inputU16 [[function_constant(kUseSourceBufferU16)]],
-                        constant uint *inputU32 [[function_constant(kUseSourceBufferU32)]])
+                        const device uchar *inputU8 [[function_constant(kUseSourceBufferU8)]],
+                        const device ushort *inputU16 [[function_constant(kUseSourceBufferU16)]],
+                        const device uint *inputU32 [[function_constant(kUseSourceBufferU32)]])
 {
     if (kUseSourceBufferU8)
     {
@@ -176,11 +176,11 @@ inline uint getIndexU32(uint offset,
 // of indices starting from the 3rd.
 kernel void genTriFanIndicesFromElements(uint idx [[thread_position_in_grid]],
                                          constant IndexConversionParams &options [[buffer(0)]],
-                                         constant uchar *inputU8
+                                         const device uchar *inputU8
                                          [[buffer(1), function_constant(kUseSourceBufferU8)]],
-                                         constant ushort *inputU16
+                                         const device ushort *inputU16
                                          [[buffer(1), function_constant(kUseSourceBufferU16)]],
-                                         constant uint *inputU32
+                                         const device uint *inputU32
                                          [[buffer(1), function_constant(kUseSourceBufferU32)]],
                                          device uint *output [[buffer(2)]])
 {
@@ -208,11 +208,11 @@ kernel void genLineLoopIndicesFromArray(uint idx [[thread_position_in_grid]],
 // Generate line loop indices for glDrawElements()
 kernel void genLineLoopIndicesFromElements(uint idx [[thread_position_in_grid]],
                                            constant IndexConversionParams &options [[buffer(0)]],
-                                           constant uchar *inputU8
+                                           const device uchar *inputU8
                                            [[buffer(1), function_constant(kUseSourceBufferU8)]],
-                                           constant ushort *inputU16
+                                           const device ushort *inputU16
                                            [[buffer(1), function_constant(kUseSourceBufferU16)]],
-                                           constant uint *inputU32
+                                           const device uint *inputU32
                                            [[buffer(1), function_constant(kUseSourceBufferU32)]],
                                            device uint *output [[buffer(2)]])
 {

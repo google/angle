@@ -148,7 +148,7 @@ static inline float4 linearToSRGB(float4 color)
 }
 
 template <typename Short>
-static inline Short bytesToShort(constant uchar *input, uint offset)
+static inline Short bytesToShort(const device uchar *input, uint offset)
 {
     Short inputLo = input[offset];
     Short inputHi = input[offset + 1];
@@ -157,7 +157,7 @@ static inline Short bytesToShort(constant uchar *input, uint offset)
 }
 
 template <typename Int>
-static inline Int bytesToInt(constant uchar *input, uint offset)
+static inline Int bytesToInt(const device uchar *input, uint offset)
 {
     Int input0 = input[offset];
     Int input1 = input[offset + 1];

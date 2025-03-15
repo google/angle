@@ -1751,11 +1751,11 @@ angle::Result FramebufferMtl::readPixelsToBuffer(const gl::Context *context,
         params.texture                = texture;
         params.textureArea            = area;
         params.textureLevel           = renderTarget->getLevelIndex();
-        params.textureSliceOrDeph     = renderTarget->getLayerIndex();
+        params.textureSliceOrDepth    = renderTarget->getLayerIndex();
         params.reverseTextureRowOrder = reverseRowOrder;
 
-        ANGLE_TRY(contextMtl->getDisplay()->getUtils().packPixelsFromTextureToBuffer(
-            contextMtl, *actualDstAngleFormat, params));
+        ANGLE_TRY(contextMtl->getDisplay()->getUtils().packPixelsCS(contextMtl,
+                                                                    *actualDstAngleFormat, params));
     }
     else
     {

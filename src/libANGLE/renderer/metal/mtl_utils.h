@@ -191,6 +191,7 @@ NSUInteger ComputeTotalSizeUsedForMTLRenderPipelineDescriptor(
     const Context *context,
     const mtl::ContextDevice &device);
 
+gl::Rectangle MTLRegionToGLRect(const MTLRegion &mtlRegion);
 gl::Box MTLRegionToGLBox(const MTLRegion &mtlRegion);
 
 MipmapNativeLevel GetNativeMipLevel(GLuint level, GLuint base);
