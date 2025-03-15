@@ -34,6 +34,7 @@
 378464990 PIXEL4ORXL VULKAN : diablo_immortal = SKIP
 42266157 PIXEL4ORXL VULKAN : eve_echoes = SKIP
 378464990 QUALCOMM VULKAN : genshin_impact = SKIP
+404436749 PIXEL4ORXL VULKAN : aliexpress = SKIP
 
 42264164 LINUX AMD NATIVE : bus_simulator_indonesia = SKIP
 42264363 LINUX AMD NATIVE : professional_baseball_spirits = SKIP

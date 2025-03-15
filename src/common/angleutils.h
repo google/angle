@@ -162,7 +162,8 @@ struct PerfMonitorTriplet
     FN(bufferSuballocationCalls)                   \
     FN(dynamicBufferAllocations)                   \
     FN(framebufferCacheSize)                       \
-    FN(pendingSubmissionGarbageObjects)
+    FN(pendingSubmissionGarbageObjects)            \
+    FN(graphicsDriverUniformsUpdated)
 
 #define ANGLE_DECLARE_PERF_COUNTER(COUNTER) uint64_t COUNTER;
 

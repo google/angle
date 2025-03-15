@@ -8201,6 +8201,57 @@ TEST_P(VulkanPerformanceCounterTest, FBOChangeAndClearAndBackDoesNotBreakRenderP
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
+// Test that just switching programs without breaking the renderpass
+// doesn't cause updates to GraphicsDriverUniforms
+TEST_P(VulkanPerformanceCounterTest, NoUpdatesToGraphicsDriverUniformsOnProgramChange)
+{
+    // Create 2 programs and switch between them
+    ANGLE_GL_PROGRAM(program1, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+    ANGLE_GL_PROGRAM(program2, essl1_shaders::vs::Simple(), essl1_shaders::fs::Blue());
+
+    GLFramebuffer framebuffer;
+    GLTexture texture;
+    setupForColorOpsTest(&framebuffer, &texture);
+
+    glUseProgram(program1);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(program1, essl1_shaders::PositionAttrib(), 0);
+    uint64_t program1Count = getPerfCounters().graphicsDriverUniformsUpdated;
+
+    glUseProgram(program2);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(program2, essl1_shaders::PositionAttrib(), 0);
+    uint64_t program2Count = getPerfCounters().graphicsDriverUniformsUpdated;
+
+    // Verify vkCmdUpdatePushConstants perf counter
+    EXPECT_EQ(program1Count, program2Count);
+
+    glUseProgram(program1);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(program1, essl1_shaders::PositionAttrib(), 0);
+    program1Count = getPerfCounters().graphicsDriverUniformsUpdated;
+
+    // Verify vkCmdUpdatePushConstants perf counter
+    EXPECT_EQ(program1Count, program2Count);
+
+    // Verify pixel color
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Now that we have broken the render pass expect a call to vkCmdUpdatePushConstants
+    // even if using the same program
+    glUseProgram(program1);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(program1, essl1_shaders::PositionAttrib(), 0);
+    program1Count = getPerfCounters().graphicsDriverUniformsUpdated;
+
+    // Verify vkCmdUpdatePushConstants perf counter
+    EXPECT_EQ(program1Count, program2Count + 1);
+}
+
 // This is test for optimization in vulkan backend. efootball_pes_2021 usage shows this usage
 // pattern and we expect implementation to reuse the storage for performance.
 TEST_P(VulkanPerformanceCounterTest,

@@ -97,6 +97,7 @@ struct GraphicsDriverUniforms
     // - Sample count
     // - Enabled clip planes
     // - Depth transformation
+    // - layered FBO
     uint32_t misc;
 };
 static_assert(sizeof(GraphicsDriverUniforms) % (sizeof(uint32_t) * 4) == 0,
@@ -5853,7 +5854,6 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                     "Dirty bit order");
                 iter.setLaterBit(gl::state::DIRTY_BIT_TEXTURE_BINDINGS);
                 ANGLE_TRY(invalidateCurrentShaderResources(command));
-                invalidateDriverUniforms();
                 ANGLE_TRY(invalidateProgramExecutableHelper(context));
 
                 static_assert(
@@ -7169,6 +7169,7 @@ angle::Result ContextVk::handleDirtyGraphicsDriverUniforms(DirtyBits::Iterator *
     mRenderPassCommands->getCommandBuffer().pushConstants(
         executableVk->getPipelineLayout(), getRenderer()->getSupportedVulkanShaderStageMask(), 0,
         driverUniformSize, driverUniforms);
+    mPerfCounters.graphicsDriverUniformsUpdated++;
 
     return angle::Result::Continue;
 }
@@ -7190,6 +7191,7 @@ angle::Result ContextVk::handleDirtyComputeDriverUniforms(DirtyBits::Iterator *d
     mOutsideRenderPassCommands->getCommandBuffer().pushConstants(
         executableVk->getPipelineLayout(), getRenderer()->getSupportedVulkanShaderStageMask(), 0,
         driverUniformSize, &driverUniforms);
+    mPerfCounters.graphicsDriverUniformsUpdated++;
 
     return angle::Result::Continue;
 }
