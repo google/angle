@@ -304,7 +304,7 @@ config("internal_config") {
 }
 
 config("constructor_and_destructor_warnings") {
-  if (is_clang) {
+  if (is_clang && !angle_enable_global_mutex_load_time_allocate) {
     cflags = [
       "-Wexit-time-destructors",
       "-Wglobal-constructors",
