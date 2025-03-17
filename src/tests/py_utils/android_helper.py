@@ -163,6 +163,12 @@ def _AdbShell(cmd):
     return output
 
 
+def _AdbShellWithRunAs(cmd):
+    if _Global.use_run_as:
+        cmd = "run-as com.android.angle.test sh -c '{cmd}'".format(cmd=cmd)
+    return _AdbShell(cmd)
+
+
 def _GetAdbRoot(shell_id, su_path):
     if int(shell_id) == 0:
         logging.info('adb already got root')
