@@ -85,7 +85,7 @@ TraceEventHandle AddPerfTraceEvent(PlatformMethods *platform,
                                    const unsigned char *categoryEnabledFlag,
                                    const char *name,
                                    unsigned long long id,
-                                   double timestamp,
+                                   double /*timestamp*/,
                                    int numArgs,
                                    const char **argNames,
                                    const unsigned char *argTypes,
@@ -108,7 +108,8 @@ TraceEventHandle AddPerfTraceEvent(PlatformMethods *platform,
     uint32_t tid = renderTest->getCurrentThreadSerial();
 
     std::vector<TraceEvent> &buffer = renderTest->getTraceEventBuffer();
-    buffer.emplace_back(phase, category->name, name, timestamp, tid);
+    buffer.emplace_back(phase, category->name, name,
+                        platform->monotonicallyIncreasingTime(platform), tid);
     return buffer.size();
 }
 

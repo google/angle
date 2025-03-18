@@ -301,6 +301,10 @@ config("internal_config") {
   if (angle_enable_cl) {
     defines += [ "ANGLE_ENABLE_CL" ]
   }
+
+  if (angle_trace_events_ignore_timestamp) {
+    defines += [ "ANGLE_TRACE_EVENTS_IGNORE_TIMESTAMP" ]
+  }
 }
 
 config("constructor_and_destructor_warnings") {
