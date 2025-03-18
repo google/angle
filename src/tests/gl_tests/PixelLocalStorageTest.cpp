@@ -5503,18 +5503,209 @@ TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_pls_planes)
     }
 }
 
-// TODO(anglebug.com/40096838): Block feedback loops
-// Check glBeginPixelLocalStorageANGLE validates feedback loops as specified.
-// TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_feedback_loops)
-// {
-//     // INVALID_OPERATION is generated if a single texture image is bound to more than one pixel
-//     // local storage plane.
+// Check that glBeginPixelLocalStorageANGLE validates feedback loops with GL_TEXTURE_2D as
+// specified:
 //
-//     // INVALID_OPERATION is generated if a single texture image is simultaneously bound to a
-//     // pixel local storage plane and attached to the draw framebuffer.
+// INVALID_OPERATION is generated if a single texture slice is bound to more than one pixel local
+// storage plane.
 //
-//     ASSERT_GL_NO_ERROR();
-// }
+// INVALID_OPERATION is generated if a single texture slice is simultaneously bound to an active
+// pixel local storage plane and attached to an enabled drawbuffer.
+TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_pls_collisions_tex2d)
+{
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glDrawBuffers(4, GLenumArray({GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2,
+                                  GL_COLOR_ATTACHMENT3}));
+    ASSERT_GL_NO_ERROR();
+
+    // Check for simple tex2D collisions.
+    PLSTestTexture pls0(GL_RGBA8, W, H);
+    PLSTestTexture pls1(GL_RGBA8, W, H);
+    glFramebufferTexturePixelLocalStorageANGLE(0, pls0, 0, 0);
+    glFramebufferTexturePixelLocalStorageANGLE(1, pls1, 0, 0);
+    glBeginPixelLocalStorageANGLE(2, GLenumArray({GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE}));
+    EXPECT_GL_NO_ERROR();
+    glEndPixelLocalStorageANGLE(2, GLenumArray({GL_STORE_OP_STORE_ANGLE, GL_STORE_OP_STORE_ANGLE}));
+    EXPECT_GL_NO_ERROR();
+    glFramebufferTexturePixelLocalStorageANGLE(2, pls0, 0, 0);
+    glBeginPixelLocalStorageANGLE(
+        3, GLenumArray({GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE}));
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG(
+        "A single texture slice is bound to multiple active pixel local storage planes.");
+    ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
+
+    // Now attach it to the framebuffer and check for a collision there.
+    PLSTestTexture color(GL_RGBA8, W, H);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, pls0, 0);
+    glBeginPixelLocalStorageANGLE(2, GLenumArray({GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE}));
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG(
+        "A single texture slice is simultaneously bound to an active pixel local storage plane and "
+        "attached to an enabled drawbuffer.");
+    ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
+
+    // Turning off the draw buffer removes the collision.
+    glDrawBuffers(4, GLenumArray({GL_COLOR_ATTACHMENT0, GL_NONE, GL_COLOR_ATTACHMENT2, GL_NONE}));
+    glBeginPixelLocalStorageANGLE(2, GLenumArray({GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE}));
+    EXPECT_GL_NO_ERROR();
+    glEndPixelLocalStorageANGLE(2, GLenumArray({GL_STORE_OP_STORE_ANGLE, GL_STORE_OP_STORE_ANGLE}));
+    ASSERT_GL_NO_ERROR();
+    glDrawBuffers(4, GLenumArray({GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2,
+                                  GL_COLOR_ATTACHMENT3}));
+
+    // Double-binding the other plane also causes a collision.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, pls1, 0);
+    glBeginPixelLocalStorageANGLE(2, GLenumArray({GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE}));
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG(
+        "A single texture slice is simultaneously bound to an active pixel local storage plane and "
+        "attached to an enabled drawbuffer.");
+    ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
+
+    // A PLS collision is fine as long as only one of the planes is active.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, 0, 0);
+    glBeginPixelLocalStorageANGLE(2, GLenumArray({GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE}));
+    EXPECT_GL_NO_ERROR();
+    glEndPixelLocalStorageANGLE(2, GLenumArray({GL_STORE_OP_STORE_ANGLE, GL_STORE_OP_STORE_ANGLE}));
+    ASSERT_GL_NO_ERROR();
+}
+
+// Check that glBeginPixelLocalStorageANGLE validates feedback loops with GL_TEXTURE_2D_ARRAY as
+// specified:
+//
+// INVALID_OPERATION is generated if a single texture slice is bound to more than one active pixel
+// local storage plane.
+//
+// INVALID_OPERATION is generated if a single texture slice is simultaneously bound to an active
+// pixel local storage plane and attached to an enabled drawbuffer.
+TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_pls_collisions_tex2darray)
+{
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glDrawBuffers(4, GLenumArray({GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2,
+                                  GL_COLOR_ATTACHMENT3}));
+    ASSERT_GL_NO_ERROR();
+
+    // Attach different array indices of the same texture to PLS.
+    GLTexture pls2darray;
+    glBindTexture(GL_TEXTURE_2D_ARRAY, pls2darray);
+    glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_RGBA8, W, H, 4);
+    glFramebufferTexturePixelLocalStorageANGLE(0, pls2darray, 0, 0);
+    glFramebufferTexturePixelLocalStorageANGLE(1, pls2darray, 0, 1);
+    glFramebufferTexturePixelLocalStorageANGLE(2, pls2darray, 0, 2);
+    glFramebufferTexturePixelLocalStorageANGLE(3, pls2darray, 0, 3);
+    glBeginPixelLocalStorageANGLE(4, GLenumArray({GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE,
+                                                  GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE}));
+    EXPECT_GL_NO_ERROR();
+    glEndPixelLocalStorageANGLE(4, GLenumArray({GL_STORE_OP_STORE_ANGLE, GL_STORE_OP_STORE_ANGLE,
+                                                GL_STORE_OP_STORE_ANGLE, GL_STORE_OP_STORE_ANGLE}));
+    EXPECT_GL_NO_ERROR();
+
+    // Now attach the same array index twice.
+    glFramebufferTexturePixelLocalStorageANGLE(2, pls2darray, 0, 3);
+    glBeginPixelLocalStorageANGLE(4, GLenumArray({GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE,
+                                                  GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE}));
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG(
+        "A single texture slice is bound to multiple active pixel local storage planes.");
+    ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
+
+    // Now attach the same array index to the framebuffer and PLS.
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, pls2darray, 0, 3);
+    glBeginPixelLocalStorageANGLE(
+        3, GLenumArray({GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE}));
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG(
+        "A single texture slice is simultaneously bound to an active pixel local storage plane and "
+        "attached to an enabled drawbuffer.");
+    ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
+
+    // Attach the sidelined layer to the framebuffer and use fewer PLS planes so there is no
+    // longer a collision.
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, pls2darray, 0, 2);
+    glBeginPixelLocalStorageANGLE(2, GLenumArray({GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE}));
+    EXPECT_GL_NO_ERROR();
+    glEndPixelLocalStorageANGLE(2, GLenumArray({GL_STORE_OP_STORE_ANGLE, GL_STORE_OP_STORE_ANGLE}));
+    ASSERT_GL_NO_ERROR();
+}
+
+// Check that glBeginPixelLocalStorageANGLE validates feedback loops with mipmap levels as
+// specified:
+//
+// INVALID_OPERATION is generated if a single texture slice is bound to more than one active pixel
+// local storage plane.
+//
+// INVALID_OPERATION is generated if a single texture slice is simultaneously bound to an active
+// pixel local storage plane and attached to an enabled drawbuffer.
+TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_pls_collisions_mipmap)
+{
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glDrawBuffers(4, GLenumArray({GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2,
+                                  GL_COLOR_ATTACHMENT3}));
+    ASSERT_GL_NO_ERROR();
+
+    // Check collisions with mipmaps.
+    GLTexture pls8;
+    glBindTexture(GL_TEXTURE_2D, pls8);
+    glTexStorage2D(GL_TEXTURE_2D, 4, GL_RGBA8, 8, 8);
+    GLTexture pls16;
+    glBindTexture(GL_TEXTURE_2D, pls16);
+    glTexStorage2D(GL_TEXTURE_2D, 5, GL_RGBA8, 16, 16);
+    ASSERT_GL_NO_ERROR();
+    glFramebufferTexturePixelLocalStorageANGLE(0, pls8, 2, 0);
+    glFramebufferTexturePixelLocalStorageANGLE(1, pls16, 3, 0);
+    glBeginPixelLocalStorageANGLE(2, GLenumArray({GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE}));
+    EXPECT_GL_NO_ERROR();
+    glEndPixelLocalStorageANGLE(2, GLenumArray({GL_STORE_OP_STORE_ANGLE, GL_STORE_OP_STORE_ANGLE}));
+    EXPECT_GL_NO_ERROR();
+
+    // Can't have the same mipmap level attached to different PLS planes.
+    glFramebufferTexturePixelLocalStorageANGLE(2, pls16, 3, 0);
+    glBeginPixelLocalStorageANGLE(
+        3, GLenumArray({GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE}));
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG(
+        "A single texture slice is bound to multiple active pixel local storage planes.");
+    ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
+
+    // Can't attach different levels to PLS because they're different sizes.
+    glFramebufferTexturePixelLocalStorageANGLE(2, pls16, 2, 0);
+    glBeginPixelLocalStorageANGLE(
+        3, GLenumArray({GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE}));
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG("Mismatched pixel local storage backing texture sizes.");
+    ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
+
+    // Can't have the same mipmap level attached to PLS and the framebuffer.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, pls16, 3);
+    glBeginPixelLocalStorageANGLE(
+        2, GLenumArray({GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE}));
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG(
+        "A single texture slice is simultaneously bound to an active pixel local storage plane and "
+        "attached to an enabled drawbuffer.");
+    ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
+
+    // Can't attach different levels to the framebuffer because they're different sizes.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, pls16, 2);
+    glBeginPixelLocalStorageANGLE(
+        2, GLenumArray({GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE}));
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG(
+        "Pixel local storage backing texture dimensions not equal to the rendering area.");
+    ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
+
+    // Removing the attachment causes PLS to pass again.
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, 0, 0);
+    glBeginPixelLocalStorageANGLE(2, GLenumArray({GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE}));
+    EXPECT_GL_NO_ERROR();
+    glEndPixelLocalStorageANGLE(2, GLenumArray({GL_STORE_OP_STORE_ANGLE, GL_STORE_OP_STORE_ANGLE}));
+    ASSERT_GL_NO_ERROR();
+}
 
 // Check that glEndPixelLocalStorageANGLE and glPixelLocalStorageBarrierANGLE validate as specified.
 TEST_P(PixelLocalStorageValidationTest, EndAndBarrierANGLE)
