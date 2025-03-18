@@ -638,7 +638,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
       "access = "
       "VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT(VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT)",
       "prior_access = SYNC_IMAGE_LAYOUT_TRANSITION", "command = vkCmdDrawIndexed",
-      "prior_command = vkCmdEndRenderPass", "subcmd = 1"}},
+      "prior_command = vkCmdEndRenderPass"}},
 };
 
 // Messages that shouldn't be generated if storeOp=NONE is supported, otherwise they are expected.
