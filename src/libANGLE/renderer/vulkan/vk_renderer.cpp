@@ -348,40 +348,38 @@ constexpr const char *kSkippedMessagesWithDynamicRendering[] = {
 // those, ANGLE makes no further attempt to resolve them and expects vendor support for the
 // extensions instead.  The list of skipped messages is split based on this support.
 constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
-    // From: TraceTest.manhattan_31 with SwiftShader and
-    // VulkanPerformanceCounterTest.NewTextureDoesNotBreakRenderPass for both depth and stencil
-    // aspect. http://anglebug.com/42265196.
-    // Additionally hit in the asphalt_9 trace
     // https://issuetracker.google.com/316337308
-    {"SYNC-HAZARD-WRITE-AFTER-WRITE",
-     "with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info (usage: "
-     "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
-     "SYNC_IMAGE_LAYOUT_TRANSITION",
-     "",
-     false,
-     {
-         "message_type = RenderPassLoadOpError",
-         "load_op = VK_ATTACHMENT_LOAD_OP_DONT_CARE",
-         "access = "
-         "VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_"
-         "BIT)",
-         "prior_access = SYNC_IMAGE_LAYOUT_TRANSITION",
-     }},
     // DifferentStencilMasksTest.DrawWithSameEffectiveMask/ES2_Vulkan_SwiftShader
+    // VulkanPerformanceCounterTest.NewTextureDoesNotBreakRenderPass for both depth and stencil
+    // Hit in the asphalt_9 trace
     // Also other errors with similar message structure.
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
-     "with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info (usage: "
-     "SYNC_EARLY_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, prior_usage: "
-     "SYNC_IMAGE_LAYOUT_TRANSITION",
-     "",
+     nullptr,
+     nullptr,
      false,
      {
          "message_type = BeginRenderingError",
-         "load_op = VK_ATTACHMENT_LOAD_OP_DONT_CARE",
          "access = "
          "VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_"
          "BIT)",
          "prior_access = SYNC_IMAGE_LAYOUT_TRANSITION",
+         "command = vkCmdBeginRenderingKHR",
+         "prior_command = vkCmdPipelineBarrier",
+         "load_op = VK_ATTACHMENT_LOAD_OP_DONT_CARE",
+     }},
+    {"SYNC-HAZARD-WRITE-AFTER-WRITE",
+     nullptr,
+     nullptr,
+     false,
+     {
+         "message_type = RenderPassLoadOpError",
+         "access = "
+         "VK_PIPELINE_STAGE_2_EARLY_FRAGMENT_TESTS_BIT(VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_"
+         "BIT)",
+         "prior_access = SYNC_IMAGE_LAYOUT_TRANSITION",
+         "command = vkCmdBeginRenderPass",
+         "prior_command = vkCmdPipelineBarrier",
+         "load_op = VK_ATTACHMENT_LOAD_OP_DONT_CARE",
      }},
     // From various tests. The validation layer does not calculate the exact vertexCounts that's
     // being accessed. http://anglebug.com/42265220
