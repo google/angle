@@ -1142,6 +1142,7 @@ void Renderer::ensureCapsInitialized() const
         bool tessellationShaderEnabled =
             mFeatures.supportsTransformFeedbackExtension.enabled &&
             (mFeatures.supportsPrimitivesGeneratedQuery.enabled ||
+             mFeatures.allowPipelineStaticsForPrimitivesGeneratedQuery.enabled ||
              mFeatures.exposeNonConformantExtensionsAndVersions.enabled);
         mNativeExtensions.tessellationShaderEXT = tessellationShaderEnabled;
         mNativeExtensions.tessellationShaderOES = tessellationShaderEnabled;
@@ -1194,9 +1195,11 @@ void Renderer::ensureCapsInitialized() const
     // Geometry shaders are required for ES 3.2.
     if (mPhysicalDeviceFeatures.geometryShader)
     {
-        bool geometryShaderEnabled = mFeatures.supportsTransformFeedbackExtension.enabled &&
-                                     (mFeatures.supportsPrimitivesGeneratedQuery.enabled ||
-                                      mFeatures.exposeNonConformantExtensionsAndVersions.enabled);
+        bool geometryShaderEnabled =
+            mFeatures.supportsTransformFeedbackExtension.enabled &&
+            (mFeatures.supportsPrimitivesGeneratedQuery.enabled ||
+             mFeatures.allowPipelineStaticsForPrimitivesGeneratedQuery.enabled ||
+             mFeatures.exposeNonConformantExtensionsAndVersions.enabled);
         mNativeExtensions.geometryShaderEXT = geometryShaderEnabled;
         mNativeExtensions.geometryShaderOES = geometryShaderEnabled;
         mNativeCaps.maxFramebufferLayers    = rx::LimitToInt(limitsVk.maxFramebufferLayers);

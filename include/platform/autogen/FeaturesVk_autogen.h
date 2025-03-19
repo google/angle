@@ -26,6 +26,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo allowPipelineStaticsForPrimitivesGeneratedQuery = {
+        "allowPipelineStaticsForPrimitivesGeneratedQuery",
+        FeatureCategory::VulkanWorkarounds,
+        &members,
+    };
+
     FeatureInfo bresenhamLineRasterization = {
         "bresenhamLineRasterization",
         FeatureCategory::VulkanFeatures,
