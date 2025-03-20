@@ -706,7 +706,7 @@ egl::Error Renderer11::initializeDXGIAdapter()
 
         return initializeAdapterFromDevice();
     }
-    else
+    else if (mRequestedDriverType == D3D_DRIVER_TYPE_HARDWARE)
     {
         angle::ComPtr<IDXGIFactory1> factory;
         HRESULT hr = CreateDXGIFactory1(IID_PPV_ARGS(&factory));
@@ -716,8 +716,8 @@ egl::Error Renderer11::initializeDXGIAdapter()
                               "Could not create DXGI factory");
         }
 
-        // If the developer requests a specific adapter, honor their request regardless of the value
-        // of EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE.
+        // Prefer EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE over specific adapter requests if the user
+        // requests a non-hardware adapter.
         const egl::AttributeMap &attributes = mDisplay->getAttributeMap();
         // Check EGL_ANGLE_platform_angle_d3d_luid
         long high = static_cast<long>(attributes.get(EGL_PLATFORM_ANGLE_D3D_LUID_HIGH_ANGLE, 0));
@@ -759,9 +759,7 @@ egl::Error Renderer11::initializeDXGIAdapter()
             }
         }
 
-        // For requested driver types besides Hardware such as Warp, Reference, or Null
-        // allow D3D11CreateDevice to pick the adapter by passing it the driver type.
-        if (!mDxgiAdapter && mRequestedDriverType == D3D_DRIVER_TYPE_HARDWARE)
+        if (!mDxgiAdapter)
         {
             hr = factory->EnumAdapters(0, &mDxgiAdapter);
             if (FAILED(hr))
@@ -771,6 +769,21 @@ egl::Error Renderer11::initializeDXGIAdapter()
             }
         }
     }
+    else
+    {
+        // For requested driver types besides Hardware such as Warp, Reference, or Null
+        // allow D3D11CreateDevice to pick the adapter by passing it the driver type.
+
+        const egl::AttributeMap &attributes = mDisplay->getAttributeMap();
+        if (attributes.get(EGL_PLATFORM_ANGLE_D3D_LUID_HIGH_ANGLE, 0) != 0 ||
+            attributes.get(EGL_PLATFORM_ANGLE_D3D_LUID_LOW_ANGLE, 0) != 0)
+        {
+            WARN() << "Non-hardware EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE requested at the same "
+                      "time as non-default EGL_PLATFORM_ANGLE_D3D_LUID values. Ignoring requested "
+                      "adapter.";
+        }
+    }
+
     return egl::NoError();
 }
 
