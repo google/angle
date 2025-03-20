@@ -3568,6 +3568,64 @@ TEST_P(EGLSurfaceTest, PresentLayoutTransitionWithMSAA)
     ASSERT_EGL_SUCCESS();
 }
 
+// Test resolve a 4xMSAA surface that supports a EGLConfig without alpha support
+TEST_P(EGLSurfaceTest, MSAAResolveWithEGLConfig8880)
+{
+    initializeDisplay();
+
+    // Initialize an RGB8 window surface with 4x MSAA
+    constexpr EGLint kSurfaceAttributes[] = {EGL_RED_SIZE,
+                                             8,
+                                             EGL_GREEN_SIZE,
+                                             8,
+                                             EGL_BLUE_SIZE,
+                                             8,
+                                             EGL_ALPHA_SIZE,
+                                             0,
+                                             EGL_SAMPLE_BUFFERS,
+                                             1,
+                                             EGL_SAMPLES,
+                                             4,
+                                             EGL_SURFACE_TYPE,
+                                             EGL_WINDOW_BIT,
+                                             EGL_NONE};
+
+    EGLint configCount      = 0;
+    EGLConfig surfaceConfig = nullptr;
+    ANGLE_SKIP_TEST_IF(
+        !eglChooseConfig(mDisplay, kSurfaceAttributes, &surfaceConfig, 1, &configCount));
+    ANGLE_SKIP_TEST_IF(configCount == 0);
+    ASSERT_NE(surfaceConfig, nullptr);
+
+    initializeSurface(surfaceConfig);
+    initializeMainContext();
+    ASSERT_EGL_SUCCESS();
+    ASSERT_NE(mWindowSurface, EGL_NO_SURFACE);
+
+    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
+    ASSERT_EGL_SUCCESS();
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    glUseProgram(program);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    // Tests resolve during read pixels.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Tests outside renderpass resolve during swap.
+    eglSwapBuffers(mDisplay, mWindowSurface);
+    ASSERT_EGL_SUCCESS();
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    // Tests renderpass resolve during swap.
+    eglSwapBuffers(mDisplay, mWindowSurface);
+    ASSERT_EGL_SUCCESS();
+}
+
 }  // anonymous namespace
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLSingleBufferTest);
