@@ -316,12 +316,12 @@ bool OutputUniformBlocksAndSamplers(TCompiler *compiler, TIntermBlock *root)
         // Note that this may output ignored symbols.
         output << kTextureSamplerBindingMarker << kAngleSamplerPrefix << declSymbol->getName()
                << " : ";
-        WriteWgslType(output, declType, {});
+        WriteWgslSamplerType(output, declType, WgslSamplerTypeConfig::Sampler);
         output << ";\n";
 
         output << kTextureSamplerBindingMarker << kAngleTexturePrefix << declSymbol->getName()
                << " : ";
-        WriteWgslType(output, declType, {});
+        WriteWgslSamplerType(output, declType, WgslSamplerTypeConfig::Texture);
         output << ";\n";
     }
 

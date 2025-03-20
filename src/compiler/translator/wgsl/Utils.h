@@ -47,6 +47,19 @@ void WriteWgslBareTypeName(StringStreamType &output,
 template <typename StringStreamType>
 void WriteWgslType(StringStreamType &output, const TType &type, const EmitTypeConfig &config);
 
+// GLSL's samplers are split into a separate sampler and texture in WGSL, so two different types
+// will be emitted for a single sampler type.
+enum class WgslSamplerTypeConfig
+{
+    Sampler,
+    Texture
+};
+
+template <typename StringStreamType>
+void WriteWgslSamplerType(StringStreamType &output,
+                          const TType &type,
+                          WgslSamplerTypeConfig samplerType);
+
 // From the type, creates a legal WGSL name for a struct that wraps it.
 ImmutableString MakeUniformWrapperStructName(const TType *type);
 

@@ -618,6 +618,54 @@ inline bool IsSamplerArray(TBasicType type)
     return false;
 }
 
+inline bool IsSampler2DArray(TBasicType type)
+{
+    switch (type)
+    {
+        case EbtSampler2DArray:
+        case EbtISampler2DArray:
+        case EbtUSampler2DArray:
+        case EbtSampler2DMSArray:
+        case EbtISampler2DMSArray:
+        case EbtUSampler2DMSArray:
+        case EbtSampler2DArrayShadow:
+            return true;
+        case EbtSampler2D:
+        case EbtISampler2D:
+        case EbtUSampler2D:
+        case EbtSampler2DRect:
+        case EbtISampler2DRect:
+        case EbtUSampler2DRect:
+        case EbtSampler2DRectShadow:
+        case EbtSamplerExternalOES:
+        case EbtSamplerExternal2DY2YEXT:
+        case EbtSampler2DShadow:
+        case EbtSampler2DMS:
+        case EbtISampler2DMS:
+        case EbtUSampler2DMS:
+        case EbtSamplerVideoWEBGL:
+        case EbtSampler3D:
+        case EbtISampler3D:
+        case EbtUSampler3D:
+        case EbtISamplerCube:
+        case EbtUSamplerCube:
+        case EbtSamplerCube:
+        case EbtSamplerCubeShadow:
+        case EbtSamplerBuffer:
+        case EbtSamplerCubeArray:
+        case EbtSamplerCubeArrayShadow:
+        case EbtISamplerBuffer:
+        case EbtISamplerCubeArray:
+        case EbtUSamplerBuffer:
+        case EbtUSamplerCubeArray:
+            return false;
+        default:
+            ASSERT(!IsSampler(type));
+    }
+
+    return false;
+}
+
 inline bool IsSamplerBuffer(TBasicType type)
 {
     switch (type)

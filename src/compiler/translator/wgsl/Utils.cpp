@@ -6,6 +6,8 @@
 
 #include "compiler/translator/wgsl/Utils.h"
 
+#include "common/log_utils.h"
+#include "compiler/translator/BaseTypes.h"
 #include "compiler/translator/Common.h"
 #include "compiler/translator/ImmutableStringBuilder.h"
 #include "compiler/translator/Symbol.h"
@@ -58,38 +60,19 @@ void WriteWgslBareTypeName(StringStreamType &output,
         default:
             if (IsSampler(basicType))
             {
-                //  TODO(anglebug.com/42267100): possibly emit both a sampler and a texture2d. WGSL
-                //  has sampler variables for the sampler configuration, whereas GLSL has sampler2d
-                //  and other sampler* variables for an actual texture.
-                output << "texture2d<";
-                switch (type.getBasicType())
-                {
-                    case EbtSampler2D:
-                        output << "f32";
-                        break;
-                    case EbtISampler2D:
-                        output << "i32";
-                        break;
-                    case EbtUSampler2D:
-                        output << "u32";
-                        break;
-                    default:
-                        // TODO(anglebug.com/42267100): are any of the other sampler types necessary
-                        // to translate?
-                        UNIMPLEMENTED();
-                        break;
-                }
-                if (type.getMemoryQualifier().readonly || type.getMemoryQualifier().writeonly)
-                {
-                    // TODO(anglebug.com/42267100): implement memory qualifiers.
-                    UNIMPLEMENTED();
-                }
-                output << ">";
+                // Variables of sampler type should be written elsewhere since they require special
+                // handling; they are split into two different variables in WGSL.
+
+                // TODO(anglebug.com/389145696): this is reachable if a sampler is passed as a
+                // function parameter. They should be monomorphized.
+                UNIMPLEMENTED();
             }
             else if (IsImage(basicType))
             {
-                // TODO(anglebug.com/42267100): does texture2d also correspond to GLSL's image type?
-                output << "texture2d<";
+                // GLSL's image types are not implemented in this backend.
+                UNIMPLEMENTED();
+
+                output << "texture_storage_2d<";
                 switch (type.getBasicType())
                 {
                     case EbtImage2D:
@@ -102,15 +85,12 @@ void WriteWgslBareTypeName(StringStreamType &output,
                         output << "u32";
                         break;
                     default:
-                        // TODO(anglebug.com/42267100): are any of the other image types necessary
-                        // to translate?
                         UNIMPLEMENTED();
                         break;
                 }
                 if (type.getMemoryQualifier().readonly || type.getMemoryQualifier().writeonly)
                 {
-                    // TODO(anglebug.com/42267100): implement memory qualifiers.
-                    UNREACHABLE();
+                    UNIMPLEMENTED();
                 }
                 output << ">";
             }
@@ -147,6 +127,9 @@ void WriteWgslType(StringStreamType &output, const TType &type, const EmitTypeCo
 {
     if (type.isArray())
     {
+        // WGSL does not support samplers anywhere inside structs or arrays.
+        ASSERT(!type.isSampler() && !type.isStructureContainingSamplers());
+
         // Examples:
         // array<f32, 5>
         // array<array<u32, 5>, 10>
@@ -219,6 +202,95 @@ template void WriteNameOf<TStringStream>(TStringStream &output,
 template void WriteWgslType<TStringStream>(TStringStream &output,
                                            const TType &type,
                                            const EmitTypeConfig &config);
+
+template <typename StringStreamType>
+void WriteWgslSamplerType(StringStreamType &output,
+                          const TType &type,
+                          WgslSamplerTypeConfig samplerType)
+{
+    ASSERT(type.isSampler());
+    if (samplerType == WgslSamplerTypeConfig::Texture)
+    {
+        output << "texture";
+        if (IsShadowSampler(type.getBasicType()))
+        {
+            output << "_depth";
+        }
+
+        if (IsSamplerMS(type.getBasicType()))
+        {
+            output << "_multisampled";
+            ASSERT(IsSampler2D(type.getBasicType()));
+            // Unsupported in wGSL, it seems.
+            ASSERT(!IsSampler2DMSArray(type.getBasicType()));
+        }
+
+        if (IsSampler2D(type.getBasicType()) || IsSampler2DArray(type.getBasicType()))
+        {
+            output << "_2d";
+        }
+        else if (IsSampler3D(type.getBasicType()))
+        {
+            output << "_3d";
+        }
+        else if (IsSamplerCube(type.getBasicType()))
+        {
+            output << "_cube";
+        }
+
+        if (IsSamplerArray(type.getBasicType()))
+        {
+            ASSERT(!IsSampler3D(type.getBasicType()));
+            output << "_array";
+        }
+
+        // Shadow samplers are always floating point in both GLSL and WGSL and don't need to be
+        // parameterized.
+        if (!IsShadowSampler(type.getBasicType()))
+        {
+            output << "<";
+            if (!IsIntegerSampler(type.getBasicType()))
+            {
+                output << "f32";
+            }
+            else if (!IsIntegerSamplerUnsigned(type.getBasicType()))
+            {
+                output << "i32";
+            }
+            else
+            {
+                output << "u32";
+            }
+            output << ">";
+        }
+        if (type.getMemoryQualifier().readonly || type.getMemoryQualifier().writeonly)
+        {
+            // TODO(anglebug.com/42267100): implement memory qualifiers.
+            UNIMPLEMENTED();
+        }
+    }
+    else
+    {
+        ASSERT(samplerType == WgslSamplerTypeConfig::Sampler);
+        // sampler or sampler_comparison.
+        if (IsShadowSampler(type.getBasicType()))
+        {
+            output << "sampler_comparison";
+        }
+        else
+        {
+            output << "sampler";
+        }
+    }
+}
+
+template void WriteWgslSamplerType<TInfoSinkBase>(TInfoSinkBase &output,
+                                                  const TType &type,
+                                                  WgslSamplerTypeConfig samplerType);
+
+template void WriteWgslSamplerType<TStringStream>(TStringStream &output,
+                                                  const TType &type,
+                                                  WgslSamplerTypeConfig samplerType);
 
 ImmutableString MakeUniformWrapperStructName(const TType *type)
 {

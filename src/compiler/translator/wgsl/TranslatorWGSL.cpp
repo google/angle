@@ -174,6 +174,7 @@ class OutputWGSLTraverser : public TIntermTraverser
     void emitArrayIndex(TIntermTyped &leftNode, TIntermTyped &rightNode);
     void emitStructIndex(TIntermBinary *binaryNode);
     void emitStructIndexNoUnwrapping(TIntermBinary *binaryNode);
+    void emitTextureBuiltin(const TOperator op, const TIntermSequence &args);
 
     bool emitForLoop(TIntermLoop *);
     bool emitWhileLoop(TIntermLoop *);
@@ -1418,6 +1419,417 @@ bool OutputWGSLTraverser::visitFunctionDefinition(Visit, TIntermFunctionDefiniti
     return false;
 }
 
+void OutputWGSLTraverser::emitTextureBuiltin(const TOperator op, const TIntermSequence &args)
+{
+
+    ASSERT(BuiltInGroup::IsTexture(op));
+
+    // The index in the GLSL function's argument list of each particular argument, e.g. bias.
+    // `bias`, `lod`, `offset`, and `P` (the coordinates) are the common arguments to most texture
+    // functions.
+    size_t biasIndex   = 0;
+    size_t lodIndex    = 0;
+    size_t offsetIndex = 0;
+    size_t pIndex      = 0;
+
+    size_t dpdxIndex = 0;
+    size_t dpdyIndex = 0;
+
+    // TODO(anglebug.com/389145696): These are probably incorrect translations when sampling from
+    // integer or unsigned integer samplers. Using texture() with a usampler
+    // is similar to using texelFetch(), except wrap modes are respected. Possibly, the correct mip
+    // levels are also selected.
+
+    // The name of the equivalent texture function in WGSL.
+    ImmutableString wgslFunctionName("");
+    // GLSL stuffs 1, 2, or 3 arguments into a single vector. These represent the swizzles necessary
+    // for extracting each argument from P to pass to the appropriate WGSL function.
+    ImmutableString coordsSwizzle("");
+    ImmutableString arrayIndexSwizzle("");
+    ImmutableString depthRefSwizzle("");
+    // For the projection forms of the texture builtins, the last coordinate will divide the other
+    // three. This is just a swizzle for the last coordinate if the builtin call includes
+    // projection.
+    ImmutableString projectionDivisionSwizzle("");
+
+    ImmutableString wgslTextureVarName("");
+    ImmutableString wgslSamplerVarName("");
+
+    constexpr char k2DCoordsSwizzle[] = ".xy";
+    constexpr char k3DCoordsSwizzle[] = ".xyz";
+
+    constexpr char kPossibleElems[] = "xyzw";
+
+    // MonomorphizeUnsupportedFunctions() and RewriteStructSamplers() ensure that this is a
+    // reference to the global sampler.
+    TIntermSymbol *samplerNode = args[0]->getAsSymbolNode();
+    // TODO(anglebug.com/389145696): this will fail if it's an array of samplers, which isn't yet
+    // handled.
+    if (!samplerNode)
+    {
+        UNIMPLEMENTED();
+        mSink << "TODO_UNHANDLED_TEXTURE_FUNCTION()";
+        return;
+    }
+    TBasicType samplerType = samplerNode->getType().getBasicType();
+    ASSERT(IsSampler(samplerType));
+
+    bool isProj = false;
+
+    auto setWgslTextureVarName = [&]() {
+        wgslTextureVarName =
+            BuildConcatenatedImmutableString(kAngleTexturePrefix, samplerNode->getName());
+    };
+
+    auto setWgslSamplerVarName = [&]() {
+        wgslSamplerVarName =
+            BuildConcatenatedImmutableString(kAngleSamplerPrefix, samplerNode->getName());
+    };
+
+    auto setTextureSampleFunctionNameFromBias = [&]() {
+        // TODO(anglebug.com/389145696): these are incorrect translations in vertex shaders, where
+        // they should probably use textureLoad() (and textureDimensions()).
+        if (IsShadowSampler(samplerType))
+        {
+            if (biasIndex != 0)
+            {
+                // TODO(anglebug.com/389145696): WGSL doesn't support using bias with shadow
+                // samplers.
+                UNIMPLEMENTED();
+                wgslFunctionName = ImmutableString("TODO_CANNOT_USE_BIAS_WITH_SHADOW_SAMPLER");
+            }
+            else
+            {
+                wgslFunctionName = ImmutableString("textureSampleCompare");
+            }
+        }
+        else
+        {
+            if (biasIndex == 0)
+            {
+                wgslFunctionName = ImmutableString("textureSample");
+            }
+            else
+            {
+
+                wgslFunctionName = ImmutableString("textureSampleBias");
+            }
+        }
+    };
+
+    switch (op)
+    {
+        case EOpTextureSize:
+        {
+            lodIndex = 1;
+            ASSERT(args.size() == 2);
+
+            wgslFunctionName = ImmutableString("textureDimensions");
+            setWgslTextureVarName();
+        }
+        break;
+
+        case EOpTexelFetchOffset:
+        case EOpTexelFetch:
+        {
+            pIndex   = 1;
+            lodIndex = 2;
+            if (args.size() == 4)
+            {
+                offsetIndex = 3;
+            }
+            ASSERT(args.size() == 3 || args.size() == 4);
+
+            wgslFunctionName = ImmutableString("textureLoad");
+            setWgslTextureVarName();
+        }
+        break;
+
+        // texture() use to be split into texture2D() and textureCube(). WGSL matches GLSL 3.0 and
+        // combines them.
+        case EOpTextureProj:
+        case EOpTexture2DProj:
+        case EOpTextureProjBias:
+        case EOpTexture2DProjBias:
+            isProj = true;
+            [[fallthrough]];
+        case EOpTexture:
+        case EOpTexture2D:
+        case EOpTextureCube:
+        case EOpTextureBias:
+        case EOpTexture2DBias:
+        case EOpTextureCubeBias:
+        {
+            pIndex = 1;
+            if (args.size() == 3)
+            {
+                biasIndex = 2;
+            }
+            ASSERT(args.size() == 2 || args.size() == 3);
+
+            setTextureSampleFunctionNameFromBias();
+            setWgslTextureVarName();
+            setWgslSamplerVarName();
+        }
+        break;
+
+        case EOpTextureProjLod:
+        case EOpTextureProjLodOffset:
+        case EOpTexture2DProjLodVS:
+        case EOpTexture2DProjLodEXTFS:
+            isProj = true;
+            [[fallthrough]];
+        case EOpTextureLod:
+        case EOpTexture2DLodVS:
+        case EOpTextureCubeLodVS:
+        case EOpTexture2DLodEXTFS:
+        case EOpTextureCubeLodEXTFS:
+        case EOpTextureLodOffset:
+        {
+            pIndex   = 1;
+            lodIndex = 2;
+            if (args.size() == 4)
+            {
+                offsetIndex = 3;
+            }
+            ASSERT(args.size() == 3 || args.size() == 4);
+
+            if (IsShadowSampler(samplerType))
+            {
+                // TODO(anglebug.com/389145696): WGSL may not support explicit LOD with shadow
+                // samplers. textureSampleCompareLevel() only uses mip level 0.
+                UNIMPLEMENTED();
+                wgslFunctionName =
+                    ImmutableString("TODO_CANNOT_USE_EXPLICIT_LOD_WITH_SHADOW_SAMPLER");
+            }
+            else
+            {
+                wgslFunctionName = ImmutableString("textureSampleLevel");
+            }
+            setWgslTextureVarName();
+            setWgslSamplerVarName();
+        }
+        break;
+
+        case EOpTextureProjOffset:
+        case EOpTextureProjOffsetBias:
+            isProj = true;
+            [[fallthrough]];
+        case EOpTextureOffset:
+        case EOpTextureOffsetBias:
+        {
+            pIndex      = 1;
+            offsetIndex = 2;
+            if (args.size() == 4)
+            {
+                biasIndex = 3;
+            }
+            ASSERT(args.size() == 3 || args.size() == 4);
+
+            setTextureSampleFunctionNameFromBias();
+            setWgslTextureVarName();
+            setWgslSamplerVarName();
+        }
+        break;
+
+        case EOpTextureProjGrad:
+        case EOpTextureProjGradOffset:
+            isProj = true;
+            [[fallthrough]];
+        case EOpTextureGrad:
+        case EOpTextureGradOffset:
+        {
+            pIndex    = 1;
+            dpdxIndex = 2;
+            dpdyIndex = 3;
+            if (args.size() == 5)
+            {
+                offsetIndex = 4;
+            }
+            ASSERT(args.size() == 4 || args.size() == 5);
+
+            if (IsShadowSampler(samplerType))
+            {
+                // TODO(anglebug.com/389145696): WGSL may not support explicit gradients with shadow
+                // samplers.
+                UNIMPLEMENTED();
+                wgslFunctionName =
+                    ImmutableString("TODO_CANNOT_USE_EXPLICIT_GRAD_WITH_SHADOW_SAMPLER");
+            }
+            else
+            {
+                wgslFunctionName = ImmutableString("textureSampleGrad");
+            }
+            setWgslTextureVarName();
+            setWgslSamplerVarName();
+        }
+        break;
+
+        default:
+            UNIMPLEMENTED();
+            mSink << "TODO_UNHANDLED_TEXTURE_FUNCTION()";
+            return;
+    }
+
+    mSink << wgslFunctionName << "(";
+
+    ASSERT(!wgslTextureVarName.empty());
+    mSink << wgslTextureVarName;
+
+    if (!wgslSamplerVarName.empty())
+    {
+        mSink << ", " << wgslSamplerVarName;
+
+        // If using a projection division, set the swizzle that extracts the last argument from the
+        // p vector.
+        if (isProj)
+        {
+            ASSERT(pIndex == 1);
+            const uint8_t vecSize = args[pIndex]->getAsTyped()->getNominalSize();
+            ASSERT(vecSize == 3 || vecSize == 4);
+            projectionDivisionSwizzle =
+                BuildConcatenatedImmutableString('.', kPossibleElems[vecSize - 1]);
+        }
+
+        // If sampling from an array, set the swizzle that extracts the array layer number from the
+        // p vector.
+        if (IsSampler2DArray(samplerType))
+        {
+            arrayIndexSwizzle = ImmutableString(".z");
+        }
+
+        // If sampling from a shadow samplers, set the swizzle that extracts the D_ref argument from
+        // the p vector.
+        if (IsShadowSampler(samplerType))
+        {
+            size_t elemIndex = 0;
+            if (IsSampler2D(samplerType))
+            {
+                elemIndex = 2;
+            }
+            else if (IsSampler2DArray(samplerType) || IsSampler3D(samplerType) ||
+                     IsSamplerCube(samplerType))
+            {
+                elemIndex = 3;
+            }
+
+            depthRefSwizzle = BuildConcatenatedImmutableString('.', kPossibleElems[elemIndex]);
+        }
+
+        // Finally, set the swizzle for extracting coordinates from the p vector.
+        if (IsSampler2D(samplerType) || IsSampler2DArray(samplerType))
+        {
+            coordsSwizzle = ImmutableString(k2DCoordsSwizzle);
+        }
+        else if (IsSampler3D(samplerType) || IsSamplerCube(samplerType))
+        {
+            coordsSwizzle = ImmutableString(k3DCoordsSwizzle);
+        }
+    }
+
+    // TODO(anglebug.com/389145696): traversing the pArg multiple times is an error if it ever
+    // contains side effects (e.g. a function call). There is also a problem if this traverses
+    // function arguments in a different order, arguments with side effects that effect arguments
+    // that come later may be reordered incorrectly. ESSL specs defined function argument evaluation
+    // as left-to-right.
+    auto traversePArg = [&]() {
+        mSink << "(";
+        ASSERT(pIndex != 0);
+        args[pIndex]->traverse(this);
+        mSink << ")";
+    };
+
+    auto outputProjectionDivisionIfNecessary = [&]() {
+        if (projectionDivisionSwizzle.empty())
+        {
+            return;
+        }
+        mSink << " / ";
+        traversePArg();
+        mSink << projectionDivisionSwizzle;
+    };
+
+    // The arguments to the WGSL function always appear in a certain (partial) order, so output them
+    // in that order.
+    //
+    // The order is always
+    // - texture
+    // - sampler
+    // - coordinates
+    // - array layer index
+    // - depth_ref, bias, explicit level of detail (never appear together)
+    // - dfdx
+    // - dfdy
+    // - offset
+    //
+    // See the texture builtin functions in the WGSL spec:
+    // https://www.w3.org/TR/WGSL/#texture-builtin-functions
+    //
+    // For example
+    // @must_use fn textureSampleLevel(t: texture_2d_array<f32>,
+    //                             s: sampler,
+    //                             coords: vec2<f32>,
+    //                             array_index: A,
+    //                             level: f32,
+    //                             offset: vec2<i32>) -> vec4<f32>
+
+    if (pIndex != 0)
+    {
+        mSink << ", ";
+        traversePArg();
+        mSink << coordsSwizzle;
+        outputProjectionDivisionIfNecessary();
+    }
+
+    if (!arrayIndexSwizzle.empty())
+    {
+        mSink << ", ";
+        traversePArg();
+        mSink << arrayIndexSwizzle;
+    }
+
+    if (!depthRefSwizzle.empty())
+    {
+        mSink << ", ";
+        traversePArg();
+        mSink << depthRefSwizzle;
+        outputProjectionDivisionIfNecessary();
+    }
+
+    if (biasIndex != 0)
+    {
+        mSink << ", ";
+        args[biasIndex]->traverse(this);
+    }
+
+    if (lodIndex != 0)
+    {
+        mSink << ", ";
+        args[lodIndex]->traverse(this);
+    }
+
+    if (dpdxIndex != 0)
+    {
+        mSink << ", ";
+        args[dpdxIndex]->traverse(this);
+    }
+
+    if (dpdyIndex != 0)
+    {
+        mSink << ", ";
+        args[dpdyIndex]->traverse(this);
+    }
+
+    if (offsetIndex != 0)
+    {
+        mSink << ", ";
+        // Both GLSL and WGSL require this to be a const expression.
+        args[offsetIndex]->traverse(this);
+    }
+
+    mSink << ")";
+}
+
 bool OutputWGSLTraverser::visitAggregate(Visit, TIntermAggregate *aggregateNode)
 {
     const TIntermSequence &args = *aggregateNode->getSequence();
@@ -1517,6 +1929,12 @@ bool OutputWGSLTraverser::visitAggregate(Visit, TIntermAggregate *aggregateNode)
                 }
                 else
                 {
+                    // Rewrite the calls to sampler functions.
+                    if (BuiltInGroup::IsTexture(op))
+                    {
+                        emitTextureBuiltin(op, args);
+                        return false;
+                    }
                     // If the operator is not symbolic then it is a builtin that uses function call
                     // syntax: builtin(arg1, arg2, ..);
                     mSink << (opName == nullptr ? "TODO_Operator" : opName);
