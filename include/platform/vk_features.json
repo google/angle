@@ -1648,6 +1648,14 @@
             "issue": "https://issues.angleproject.org/360274928"
         },
         {
+            "name": "recycle_vkEvent",
+            "category": "Features",
+            "description": [
+                "Keep and recycle VkEvent instead of destroying when the last reference goes away"
+            ],
+            "issue": "https://issues.angleproject.org/409441956"
+        },
+        {
             "name": "supports_synchronization2",
             "category": "Features",
             "description": [

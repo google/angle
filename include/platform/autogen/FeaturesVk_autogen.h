@@ -1256,6 +1256,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo recycleVkEvent = {
+        "recycleVkEvent",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
     FeatureInfo supportsSynchronization2 = {
         "supportsSynchronization2",
         FeatureCategory::VulkanFeatures,

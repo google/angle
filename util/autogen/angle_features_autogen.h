@@ -265,6 +265,7 @@ enum class Feature
     QueryCounterBitsGeneratesErrors,
     ReadPixelsUsingImplementationColorReadFormatForNorm16,
     ReapplyUBOBindingsAfterUsingBinaryProgram,
+    RecycleVkEvent,
     RegenerateStructNames,
     RejectWebglShadersWithUndefinedBehavior,
     RemoveDynamicIndexingOfSwizzledVector,
