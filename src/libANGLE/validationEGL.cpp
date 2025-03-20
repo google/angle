@@ -3849,6 +3849,13 @@ bool ValidateCreateImage(const ValidationContext *val,
                 return false;
             }
 
+            if (texture->isEGLImageTarget())
+            {
+                val->setError(EGL_BAD_ACCESS,
+                              "The texture has been a target of an existing EGL image.");
+                return false;
+            }
+
             ANGLE_VALIDATION_TRY(ValidateCreateImageMipLevelCommon(val, context, texture, level));
         }
         break;
@@ -3930,6 +3937,13 @@ bool ValidateCreateImage(const ValidationContext *val,
                               "The texture has been bound to an existing EGL image.");
                 return false;
             }
+
+            if (texture->isEGLImageTarget())
+            {
+                val->setError(EGL_BAD_ACCESS,
+                              "The texture has been a target of an existing EGL image.");
+                return false;
+            }
         }
         break;
 
@@ -4001,6 +4015,13 @@ bool ValidateCreateImage(const ValidationContext *val,
                 return false;
             }
 
+            if (texture->isEGLImageTarget())
+            {
+                val->setError(EGL_BAD_ACCESS,
+                              "The texture has been a target of an existing EGL image.");
+                return false;
+            }
+
             ANGLE_VALIDATION_TRY(ValidateCreateImageMipLevelCommon(val, context, texture, level));
         }
         break;
@@ -4057,6 +4078,13 @@ bool ValidateCreateImage(const ValidationContext *val,
             {
                 val->setError(EGL_BAD_ACCESS,
                               "The renderbuffer has been bound to an existing EGL image.");
+                return false;
+            }
+
+            if (renderbuffer->isEGLImageTarget())
+            {
+                val->setError(EGL_BAD_ACCESS,
+                              "The renderbuffer has been a target of an existing EGL image.");
                 return false;
             }
         }

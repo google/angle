@@ -3202,6 +3202,49 @@ TEST_P(ImageTest, SourceBadAccess)
     }
 }
 
+// Testing GLES resources when creating EGL image, if the client buffer itself is an EGL target,
+// eglCreateImageKHR should return NO_IMAGE and generate error EGL_BAD_ACCESS.
+TEST_P(ImageTest, ImageSiblingAsSourceTarget)
+{
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !IsVulkan() || !has2DTextureExt() ||
+                       !hasRenderbufferExt());
+    EGLWindow *window = getEGLWindow();
+
+    // Validate gles texture
+    GLRenderbuffer renderBufferSource;
+    EGLImageKHR image1;
+    createEGLImageRenderbufferSource(1, 1, GL_RGBA8_OES, kDefaultAttribs, renderBufferSource,
+                                     &image1);
+    GLTexture texture;
+    createEGLImageTargetTexture2D(image1, texture);
+
+    // Texture is both an EGL target and an EGL source. EGL_BAD_ACCESS should be returned
+    EGLImageKHR invalidImage =
+        eglCreateImageKHR(window->getDisplay(), window->getContext(), EGL_GL_TEXTURE_2D,
+                          reinterpretHelper<EGLClientBuffer>(texture), kDefaultAttribs);
+    ASSERT_EGL_ERROR(EGL_BAD_ACCESS);
+    EXPECT_EQ(invalidImage, EGL_NO_IMAGE_KHR);
+
+    // Validate gles renderbuffer
+    GLTexture textureSource;
+    EGLImageKHR image2;
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
+                                  static_cast<void *>(&kLinearColor), textureSource, &image2);
+    GLRenderbuffer renderBuffer;
+    createEGLImageTargetRenderbuffer(image2, renderBuffer);
+
+    // Renderbuffer is both an EGL target and an EGL source. EGL_BAD_ACCESS should be returned
+    invalidImage =
+        eglCreateImageKHR(window->getDisplay(), window->getContext(), EGL_GL_RENDERBUFFER_KHR,
+                          reinterpretHelper<EGLClientBuffer>(renderBuffer), kDefaultAttribs);
+    ASSERT_EGL_ERROR(EGL_BAD_ACCESS);
+    EXPECT_EQ(invalidImage, EGL_NO_IMAGE_KHR);
+
+    // Clean up
+    eglDestroyImageKHR(window->getDisplay(), image1);
+    eglDestroyImageKHR(window->getDisplay(), image2);
+}
+
 // Testing source AHB EGL image, target 2D texture and delete when in use
 // If refcounted correctly, the test should pass without issues
 TEST_P(ImageTest, SourceAHBTarget2DEarlyDelete)
