@@ -33,7 +33,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::AllowInlineConstVertexData, "allowInlineConstVertexData"},
     {Feature::AllowMultisampledRenderToTextureEmulation, "allowMultisampledRenderToTextureEmulation"},
     {Feature::AllowMultisampleStoreAndResolve, "allowMultisampleStoreAndResolve"},
-    {Feature::AllowPipelineStaticsForPrimitivesGeneratedQuery, "allowPipelineStaticsForPrimitivesGeneratedQuery"},
+    {Feature::AllowPipelineStatisticsForPrimitivesGeneratedQuery, "allowPipelineStatisticsForPrimitivesGeneratedQuery"},
     {Feature::AllowRenderpassWithoutAttachment, "allowRenderpassWithoutAttachment"},
     {Feature::AllowRuntimeSamplerCompareMode, "allowRuntimeSamplerCompareMode"},
     {Feature::AllowSamplerCompareGradient, "allowSamplerCompareGradient"},

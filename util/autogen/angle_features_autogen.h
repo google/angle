@@ -33,7 +33,7 @@ enum class Feature
     AllowInlineConstVertexData,
     AllowMultisampledRenderToTextureEmulation,
     AllowMultisampleStoreAndResolve,
-    AllowPipelineStaticsForPrimitivesGeneratedQuery,
+    AllowPipelineStatisticsForPrimitivesGeneratedQuery,
     AllowRenderpassWithoutAttachment,
     AllowRuntimeSamplerCompareMode,
     AllowSamplerCompareGradient,

@@ -26,8 +26,8 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
-    FeatureInfo allowPipelineStaticsForPrimitivesGeneratedQuery = {
-        "allowPipelineStaticsForPrimitivesGeneratedQuery",
+    FeatureInfo allowPipelineStatisticsForPrimitivesGeneratedQuery = {
+        "allowPipelineStatisticsForPrimitivesGeneratedQuery",
         FeatureCategory::VulkanWorkarounds,
         &members,
     };

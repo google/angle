@@ -16,7 +16,7 @@
             "issue": "b/266235549"
         },
         {
-            "name": "allow_pipeline_statics_for_primitives_generated_query",
+            "name": "allow_pipeline_statistics_for_primitives_generated_query",
             "category": "Workarounds",
             "description": [
                 "On devices where primitivesGeneratedQuery vulkan feature is not available, allows pipelineStatisticsQuery vulkan feature to substitute primitivesGeneratedQuery if it generates the same results as primitivesGeneratedQuery"
