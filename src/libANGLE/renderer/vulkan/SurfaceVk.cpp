@@ -2818,25 +2818,34 @@ angle::Result WindowSurfaceVk::doDeferredAcquireNextImageWithUsableSwapchain(
 {
     ASSERT(mAcquireOperation.state != ImageAcquireState::Ready);
 
-    {
-        // Note: TRACE_EVENT0 is put here instead of inside the function to workaround this issue:
-        // http://anglebug.com/42261625
-        ANGLE_TRACE_EVENT0("gpu.angle", "acquireNextSwapchainImage");
+    VkResult result = VK_ERROR_UNKNOWN;
 
+    constexpr uint32_t kMaxAttempts = 2;
+    for (uint32_t attempt = 1; attempt <= kMaxAttempts; ++attempt)
+    {
         // Get the next available swapchain image.
-        VkResult result = acquireNextSwapchainImage(context);
+        result = acquireNextSwapchainImage(context);
+        if (result == VK_SUCCESS)
+        {
+            break;
+        }
 
         ASSERT(result != VK_SUBOPTIMAL_KHR);
         // If OUT_OF_DATE is returned, it's ok, we just need to recreate the swapchain before
         // continuing.
-        if (ANGLE_UNLIKELY(result == VK_ERROR_OUT_OF_DATE_KHR))
+        if (ANGLE_UNLIKELY(result != VK_ERROR_OUT_OF_DATE_KHR))
+        {
+            break;
+        }
+
+        // Do not recreate the swapchain if it's the last attempt.
+        if (attempt < kMaxAttempts)
         {
             ANGLE_TRY(checkForOutOfDateSwapchain(context, true));
-            // Try one more time and bail if we fail
-            result = acquireNextSwapchainImage(context);
         }
-        ANGLE_VK_TRY(context, result);
     }
+
+    ANGLE_VK_TRY(context, result);
 
     // Auto-invalidate the contents of the surface.  According to EGL, on swap:
     //
@@ -2888,6 +2897,7 @@ bool WindowSurfaceVk::skipAcquireNextSwapchainImageForSharedPresentMode() const
 // the return value won't be VK_SUBOPTIMAL_KHR.
 VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::ErrorContext *context)
 {
+    ANGLE_TRACE_EVENT0("gpu.angle", "acquireNextSwapchainImage");
     ASSERT(mAcquireOperation.state != ImageAcquireState::Ready);
 
     VkDevice device = context->getDevice();
@@ -2921,7 +2931,6 @@ VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::ErrorContext *context)
 VkResult WindowSurfaceVk::postProcessUnlockedAcquire(vk::ErrorContext *context)
 {
     ASSERT(mAcquireOperation.state == ImageAcquireState::NeedToProcessResult);
-    ASSERT(mSwapchain != VK_NULL_HANDLE);
 
     const VkResult result = mAcquireOperation.unlockedAcquireResult.result;
 
@@ -2934,6 +2943,9 @@ VkResult WindowSurfaceVk::postProcessUnlockedAcquire(vk::ErrorContext *context)
         // possible next EGL/GLES call (where swapchain will be recreated).
         return result;
     }
+
+    // Swapchain must be valid if acquire result is success (but may be NULL if error).
+    ASSERT(mSwapchain != VK_NULL_HANDLE);
 
     mCurrentSwapchainImageIndex = mAcquireOperation.unlockedAcquireResult.imageIndex;
     ASSERT(!isSharedPresentMode() || mCurrentSwapchainImageIndex == 0);
