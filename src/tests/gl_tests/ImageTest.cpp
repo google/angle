@@ -325,6 +325,26 @@ void main()
 })";
     }
 
+    const char *getFetchYUVVS() const
+    {
+        return R"(#version 300 es
+#extension GL_OES_EGL_image_external_essl3 : enable
+precision highp float;
+uniform samplerExternalOES tex;
+in vec4 position;
+out vec4 color;
+
+void main()
+{
+    gl_Position = position;
+    vec2 texcoord = (position.xy * 0.5) + 0.5;
+    texcoord.y = 1.0 - texcoord.y;
+    ivec2 fetchcoord = ivec2(texcoord * vec2(textureSize(tex, 0)));
+    fetchcoord = min(fetchcoord, textureSize(tex, 0) - ivec2(1.0));
+    color = texelFetch(tex, fetchcoord, 0);
+})";
+    }
+
     const char *getPassThroughFS() const
     {
         return R"(#version 300 es
@@ -350,6 +370,23 @@ out vec4 color;
 void main()
 {
     color = texture(tex, texcoord);
+})";
+    }
+
+    const char *getFetchYUVFS() const
+    {
+        return R"(#version 300 es
+#extension GL_OES_EGL_image_external_essl3 : enable
+precision highp float;
+uniform samplerExternalOES tex;
+in vec2 texcoord;
+out vec4 color;
+
+void main()
+{
+    ivec2 fetchcoord = ivec2(texcoord * vec2(textureSize(tex, 0)));
+    fetchcoord = min(fetchcoord, textureSize(tex, 0) - ivec2(1.0));
+    color = texelFetch(tex, fetchcoord, 0);
 })";
     }
 
@@ -437,6 +474,19 @@ void main()
             ASSERT_NE(0u, mRenderYUVProgram) << "shader compilation failed.";
 
             mRenderYUVUniformLocation = glGetUniformLocation(mRenderYUVProgram, "u_color");
+        }
+
+        if (IsGLExtensionEnabled(kExternalESSL3Ext))
+        {
+            mFetchYUVProgram = CompileProgram(getVSESSL3(), getFetchYUVFS());
+            ASSERT_NE(0u, mFetchYUVProgram) << "shader compilation failed.";
+
+            mFetchYUVUniformLocation = glGetUniformLocation(mFetchYUVProgram, "tex");
+
+            mFetchYUVVSProgram = CompileProgram(getFetchYUVVS(), getPassThroughFS());
+            ASSERT_NE(0u, mFetchYUVVSProgram) << "shader compilation failed.";
+
+            mFetchYUVVSUniformLocation = glGetUniformLocation(mFetchYUVVSProgram, "tex");
         }
 
         if (IsGLExtensionEnabled(kEGLImageStorageExt))
@@ -1196,6 +1246,18 @@ void main()
                              mTextureYUVVSUniformLocation);
     }
 
+    void verifyResultsExternalYUVFetch(GLuint texture, const GLubyte data[4])
+    {
+        verifyResultsTexture(texture, data, GL_TEXTURE_EXTERNAL_OES, mFetchYUVProgram,
+                             mFetchYUVUniformLocation);
+    }
+
+    void verifyResultsExternalYUVFetchVS(GLuint texture, const GLubyte data[4])
+    {
+        verifyResultsTexture(texture, data, GL_TEXTURE_EXTERNAL_OES, mFetchYUVVSProgram,
+                             mFetchYUVVSUniformLocation);
+    }
+
     void verifyResultsRenderbuffer(GLuint renderbuffer, GLubyte referenceColor[4])
     {
         // Bind the renderbuffer to a framebuffer
@@ -1639,6 +1701,11 @@ void main()
 
     GLuint mTextureYUVVSProgram        = 0;
     GLint mTextureYUVVSUniformLocation = -1;
+
+    GLuint mFetchYUVProgram          = 0;
+    GLint mFetchYUVUniformLocation   = -1;
+    GLuint mFetchYUVVSProgram        = 0;
+    GLint mFetchYUVVSUniformLocation = -1;
 
     GLuint mRenderYUVProgram        = 0;
     GLint mRenderYUVUniformLocation = -1;
@@ -4218,6 +4285,82 @@ TEST_P(ImageTestES3, SourceYUVAHBTargetExternalYUVSampleVS)
 
     GLubyte pixelColor[4] = {197, 128, 192, 255};
     verifyResultsExternalYUVVS(target, pixelColor);
+
+    // Clean up
+    eglDestroyImageKHR(window->getDisplay(), image);
+    destroyAndroidHardwareBuffer(source);
+}
+
+// Test texelFetch from a YUV AHB using samplerExternalOES in the fragment shader
+TEST_P(ImageTestES3, SourceYUVAHBTargetExternalYUVFetchSamplerExternalOES)
+{
+    EGLWindow *window = getEGLWindow();
+
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt() ||
+                       !hasExternalESSL3Ext());
+    ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
+
+    // 3 planes of data
+    GLubyte dataY[4]  = {7, 51, 197, 231};
+    GLubyte dataCb[1] = {
+        128,
+    };
+    GLubyte dataCr[1] = {
+        192,
+    };
+
+    // Create the Image
+    AHardwareBuffer *source;
+    EGLImageKHR image;
+    createEGLImageAndroidHardwareBufferSource(
+        2, 2, 1, AHARDWAREBUFFER_FORMAT_Y8Cb8Cr8_420, kDefaultAHBUsage, kDefaultAttribs,
+        {{dataY, 1}, {dataCb, 1}, {dataCr, 1}}, &source, &image);
+
+    // Create a texture target to bind the egl image
+    GLTexture target;
+    createEGLImageTargetTextureExternal(image, target);
+
+    GLubyte pixelRGBColor[4] = {255, 159, 212, 255};
+    verifyResultsExternalYUVFetch(target, pixelRGBColor);
+
+    // Clean up
+    eglDestroyImageKHR(window->getDisplay(), image);
+    destroyAndroidHardwareBuffer(source);
+}
+
+// Test texelFetch from a YUV AHB using samplerExternalOES in the vertex shader
+TEST_P(ImageTestES3, SourceYUVAHBTargetExternalYUVFetchVSSamplerExternalOES)
+{
+    EGLWindow *window = getEGLWindow();
+
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt() ||
+                       !hasExternalESSL3Ext());
+    ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
+
+    // 3 planes of data
+    GLubyte dataY[4]  = {7, 51, 197, 231};
+    GLubyte dataCb[1] = {
+        128,
+    };
+    GLubyte dataCr[1] = {
+        192,
+    };
+
+    // Create the Image
+    AHardwareBuffer *source;
+    EGLImageKHR image;
+    createEGLImageAndroidHardwareBufferSource(
+        2, 2, 1, AHARDWAREBUFFER_FORMAT_Y8Cb8Cr8_420, kDefaultAHBUsage, kDefaultAttribs,
+        {{dataY, 1}, {dataCb, 1}, {dataCr, 1}}, &source, &image);
+
+    // Create a texture target to bind the egl image
+    GLTexture target;
+    createEGLImageTargetTextureExternal(image, target);
+
+    GLubyte pixelRGBColor[4] = {255, 159, 212, 255};
+    verifyResultsExternalYUVFetchVS(target, pixelRGBColor);
 
     // Clean up
     eglDestroyImageKHR(window->getDisplay(), image);
