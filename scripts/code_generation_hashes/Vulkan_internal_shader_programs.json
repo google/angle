@@ -280,7 +280,7 @@
   "src/libANGLE/renderer/vulkan/shaders/gen/ImageCopy.frag.0000002A.inc":
     "426a6cabb4753b203b6ba60274fbb1b5",
   "src/libANGLE/renderer/vulkan/shaders/gen/ImageCopyFloat.frag.00000000.inc":
-    "7b8f9ea38024c54df7dafb58250cb172",
+    "32716fd0dc24ac20515521635f444ccf",
   "src/libANGLE/renderer/vulkan/shaders/gen/ImageCopyFloat.frag.00000001.inc":
     "b62b650bc28561e4036a99d91c36c960",
   "src/libANGLE/renderer/vulkan/shaders/gen/OverlayDraw.frag.00000000.inc":
@@ -348,7 +348,7 @@
   "src/libANGLE/renderer/vulkan/shaders/src/ImageCopy.inc":
     "6c28a7ca97d0d9b1140eb73325248455",
   "src/libANGLE/renderer/vulkan/shaders/src/ImageCopyFloat.frag":
-    "f0f3fc1e9cd7f765e59f078490504a91",
+    "995bef2533de7b5f35f4f79d93629354",
   "src/libANGLE/renderer/vulkan/shaders/src/ImageCopyFloat.frag.json":
     "648ac936936acb9f2f8714c1de15a7ca",
   "src/libANGLE/renderer/vulkan/shaders/src/OverlayDraw.frag":

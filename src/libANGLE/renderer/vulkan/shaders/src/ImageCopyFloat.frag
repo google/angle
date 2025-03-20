@@ -34,7 +34,7 @@ void main()
 
 #if SrcIsYUV
     SrcType srcValue = texture(
-        src, vec2(params.srcOffset + srcSubImageCoords) / textureSize(src, 0), params.srcMip);
+        src, vec2((params.srcOffset + srcSubImageCoords) + vec2(0.5)) / textureSize(src, 0), params.srcMip);
 #elif SrcIs2DMS
     SrcType srcValue = SrcType(0);
     for (int i = 0; i < params.srcSampleCount; i++)

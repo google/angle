@@ -1302,6 +1302,31 @@ VkPipelineStageFlags ConvertShaderBitSetToVkPipelineStageFlags(
     }
     return pipelineStageFlags;
 }
+
+// Temporarily updating an image's chromaFilter and restore it at the end.
+class [[nodiscard]] ScopedOverrideYCbCrFilter final
+{
+  public:
+    ScopedOverrideYCbCrFilter(Renderer *renderer, ImageHelper *img, const VkFilter &filter)
+        : mRenderer(renderer),
+          mImage(img),
+          mOriginalFilter(img->getYcbcrConversionDesc().getChromaFilter())
+    {
+        img->updateChromaFilter(renderer, filter);
+    }
+
+    ~ScopedOverrideYCbCrFilter()
+    {
+        mImage->updateChromaFilter(mRenderer, mOriginalFilter);
+        mRenderer = nullptr;
+        mImage    = nullptr;
+    }
+
+  private:
+    Renderer *mRenderer;
+    ImageHelper *mImage;
+    VkFilter mOriginalFilter;
+};
 }  // anonymous namespace
 
 // This is an arbitrary max. We can change this later if necessary.
@@ -11784,6 +11809,8 @@ angle::Result ImageHelper::readPixelsImpl(ContextVk *contextVk,
 
         // Create some temp views because copyImage works in terms of them
         gl::TextureType textureType = Get2DTextureType(1, resolvedImage.get().getSamples());
+
+        ScopedOverrideYCbCrFilter scopedOverrideYCbCrFilter(renderer, src, VK_FILTER_NEAREST);
 
         // Surely we have a view of this already!
         vk::ImageView srcView;
