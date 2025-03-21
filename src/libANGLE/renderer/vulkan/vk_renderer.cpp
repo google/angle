@@ -5920,6 +5920,11 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
 
     ANGLE_FEATURE_CONDITION(&mFeatures, enableAsyncPipelineCacheCompression, true);
 
+    // Enable using an extra submit fence for the command batches. In case there is an external
+    // fence during the main submission, this extra fence will be used for an empty submission right
+    // after it.
+    ANGLE_FEATURE_CONDITION(&mFeatures, enableExtraSubmitFence, false);
+
     // Sync monolithic pipelines to the blob cache occasionally on platforms that would benefit from
     // it:
     //

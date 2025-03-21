@@ -980,6 +980,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo enableExtraSubmitFence = {
+        "enableExtraSubmitFence",
+        FeatureCategory::VulkanWorkarounds,
+        &members,
+    };
+
     FeatureInfo supportsPipelineProtectedAccess = {
         "supportsPipelineProtectedAccess",
         FeatureCategory::VulkanFeatures,

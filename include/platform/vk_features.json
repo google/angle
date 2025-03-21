@@ -1281,6 +1281,14 @@
             "issue": "http://anglebug.com/42263322"
         },
         {
+            "name": "enable_extra_submit_fence",
+            "category": "Workarounds",
+            "description": [
+                "Enable using a separate submit fence in the command batches."
+            ],
+            "issue": "https://issuetracker.google.com/384477641"
+        },
+        {
             "name": "supports_pipeline_protected_access",
             "category": "Features",
             "description": [

@@ -249,7 +249,7 @@ VkResult CommandBatch::initFence(VkDevice device, FenceRecycler *recycler)
 
 void CommandBatch::setExternalFence(SharedExternalFence &&externalFence)
 {
-    ASSERT(!hasFence());
+    ASSERT(!mExternalFence);
     mExternalFence = std::move(externalFence);
 }
 
@@ -271,7 +271,6 @@ const SharedExternalFence &CommandBatch::getExternalFence()
 
 bool CommandBatch::hasFence() const
 {
-    ASSERT(!mExternalFence || !mFence);
     ASSERT(!mFence || mFence->valid());
     return mFence || mExternalFence;
 }
@@ -901,11 +900,15 @@ angle::Result CommandQueue::submitCommands(
             submitInfo.pNext                    = &protectedSubmitInfo;
         }
 
-        if (!externalFence)
+        // Initializing a fence is not required if the batch already has an external fence and does
+        // not need an extra fence after its submission.
+        const bool needsOwnedFence =
+            renderer->getFeatures().enableExtraSubmitFence.enabled || !externalFence;
+        if (needsOwnedFence)
         {
-            ANGLE_VK_TRY(context, batch.initFence(context->getDevice(), &mFenceRecycler));
+            ANGLE_VK_TRY(context, batch.initFence(device, &mFenceRecycler));
         }
-        else
+        if (externalFence)
         {
             batch.setExternalFence(std::move(externalFence));
         }
@@ -1005,12 +1008,21 @@ angle::Result CommandQueue::queueSubmitLocked(ErrorContext *context,
         CommandBatch &batch = commandBatch.get();
 
         VkQueue queue = getQueue(contextPriority);
-        VkFence fence = batch.getFenceHandle();
-        ASSERT(fence != VK_NULL_HANDLE);
-        ANGLE_VK_TRY(context, vkQueueSubmit(queue, 1, &submitInfo, fence));
-
         if (batch.getExternalFence())
         {
+            VkFence externalFenceHandle = batch.getExternalFence()->getHandle();
+            ASSERT(externalFenceHandle != VK_NULL_HANDLE);
+            ANGLE_VK_TRY(context, vkQueueSubmit(queue, 1, &submitInfo, externalFenceHandle));
+
+            // If enabled, there will be an extra fence submitted after the primary commands.
+            if (renderer->getFeatures().enableExtraSubmitFence.enabled)
+            {
+                VkFence extraSubmitFence     = batch.getFenceHandle();
+                VkSubmitInfo fenceSubmitInfo = {};
+                fenceSubmitInfo.sType        = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+                ANGLE_VK_TRY(context, vkQueueSubmit(queue, 1, &fenceSubmitInfo, extraSubmitFence));
+            }
+
             // exportFd is exporting VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT_KHR type handle which
             // obeys copy semantics. This means that the fence must already be signaled or the work
             // to signal it is in the graphics pipeline at the time we export the fd.
@@ -1018,9 +1030,15 @@ angle::Result CommandQueue::queueSubmitLocked(ErrorContext *context,
             ExternalFence &externalFence       = *batch.getExternalFence();
             VkFenceGetFdInfoKHR fenceGetFdInfo = {};
             fenceGetFdInfo.sType               = VK_STRUCTURE_TYPE_FENCE_GET_FD_INFO_KHR;
-            fenceGetFdInfo.fence               = externalFence.getHandle();
+            fenceGetFdInfo.fence               = externalFenceHandle;
             fenceGetFdInfo.handleType          = VK_EXTERNAL_FENCE_HANDLE_TYPE_SYNC_FD_BIT_KHR;
             externalFence.exportFd(renderer->getDevice(), fenceGetFdInfo);
+        }
+        else
+        {
+            VkFence fence = batch.getFenceHandle();
+            ASSERT(fence != VK_NULL_HANDLE);
+            ANGLE_VK_TRY(context, vkQueueSubmit(queue, 1, &submitInfo, fence));
         }
     }
 

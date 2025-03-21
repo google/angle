@@ -145,6 +145,7 @@ enum class Feature
     EnableAdditionalBlendFactorsForDithering,
     EnableAsyncPipelineCacheCompression,
     EnableCaptureLimits,
+    EnableExtraSubmitFence,
     EnableInMemoryMtlLibraryCache,
     EnableMergeClientAttribBuffer,
     EnableMultisampledRenderToTexture,

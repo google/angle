@@ -925,4 +925,6 @@ void main(void)
     EXPECT_LT(numLongWaits, kMinLongWaitsToFail);
 }
 
-ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(EGLSyncTest);
+ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(EGLSyncTest,
+                                       ES2_VULKAN().enable(Feature::EnableExtraSubmitFence),
+                                       ES3_VULKAN().enable(Feature::EnableExtraSubmitFence));

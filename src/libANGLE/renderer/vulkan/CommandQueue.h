@@ -102,6 +102,8 @@ class CommandBatch final : angle::NonCopyable
     const PrimaryCommandBuffer &getPrimaryCommands() const;
     const SharedExternalFence &getExternalFence();
 
+    // Accessing the shared fence is prioritized before the shared external fence, since the shared
+    // fence may be used in an extra empty submission after the external fence (via a feature flag).
     bool hasFence() const;
     VkFence getFenceHandle() const;
     VkResult getFenceStatus(VkDevice device) const;
