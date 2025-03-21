@@ -535,7 +535,7 @@ void SortDeclarations(TIntermBlock *root)
     replacement.insert(replacement.end(), functionDefs.begin(), functionDefs.end());
 
     // Replace root's sequence with |replacement|.
-    root->replaceAllChildren(replacement);
+    root->replaceAllChildren(std::move(replacement));
 }
 
 bool MonomorphizeUnsupportedFunctionsImpl(TCompiler *compiler,

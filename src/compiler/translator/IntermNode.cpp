@@ -467,10 +467,9 @@ bool TIntermBlock::replaceChildNode(TIntermNode *original, TIntermNode *replacem
     return replaceChildNodeInternal(original, replacement);
 }
 
-void TIntermBlock::replaceAllChildren(const TIntermSequence &newStatements)
+void TIntermBlock::replaceAllChildren(TIntermSequence &&newStatements)
 {
-    mStatements.clear();
-    mStatements.insert(mStatements.begin(), newStatements.begin(), newStatements.end());
+    mStatements = std::move(newStatements);
 }
 
 size_t TIntermFunctionPrototype::getChildCount() const

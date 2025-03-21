@@ -700,7 +700,7 @@ class TIntermBlock : public TIntermNode, public TIntermAggregateBase
     size_t getChildCount() const final;
     TIntermNode *getChildNode(size_t index) const final;
     bool replaceChildNode(TIntermNode *original, TIntermNode *replacement) override;
-    void replaceAllChildren(const TIntermSequence &newStatements);
+    void replaceAllChildren(TIntermSequence &&newStatements);
 
     // Only intended for initially building the block.
     void appendStatement(TIntermNode *statement);
