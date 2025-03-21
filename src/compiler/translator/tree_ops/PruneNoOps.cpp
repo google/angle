@@ -112,6 +112,7 @@ class PruneNoOpsTraverser : private TIntermTraverser
     bool visitBlock(Visit visit, TIntermBlock *node) override;
     bool visitLoop(Visit visit, TIntermLoop *loop) override;
     bool visitBranch(Visit visit, TIntermBranch *node) override;
+    TIntermTyped *pruneNoOpCommaExpressions(TIntermTyped *statement);
 
     bool mIsBranchVisited = false;
 };
@@ -221,6 +222,22 @@ bool PruneNoOpsTraverser::visitBlock(Visit visit, TIntermBlock *node)
             continue;
         }
 
+        // If the statement is a series of expressions delimited by comma, the resulting value is
+        // not used (because this is a block-level statement).  Prune the no-op statements, and put
+        // the ones with side effect back together with comma.
+        if (statement->getAsBinaryNode() != nullptr)
+        {
+            statement = pruneNoOpCommaExpressions(statement->getAsBinaryNode());
+            if (statement == nullptr)
+            {
+                TIntermSequence emptyReplacement;
+                mMultiReplacements.emplace_back(node, statement, std::move(emptyReplacement));
+                continue;
+            }
+
+            statements[statementIndex] = statement;
+        }
+
         // Visit the statement if not pruned.
         statement->traverse(this);
     }
@@ -234,6 +251,40 @@ bool PruneNoOpsTraverser::visitBlock(Visit visit, TIntermBlock *node)
     }
 
     return false;
+}
+
+TIntermTyped *PruneNoOpsTraverser::pruneNoOpCommaExpressions(TIntermTyped *statement)
+{
+    TIntermBinary *commaSeparatedExpressions = statement->getAsBinaryNode();
+    if (commaSeparatedExpressions == nullptr || commaSeparatedExpressions->getOp() != EOpComma)
+    {
+        return statement;
+    }
+
+    TIntermTyped *left  = commaSeparatedExpressions->getLeft();
+    TIntermTyped *right = commaSeparatedExpressions->getRight();
+
+    TIntermTyped *prunedLeft  = IsNoOp(left) ? nullptr : pruneNoOpCommaExpressions(left);
+    TIntermTyped *prunedRight = IsNoOp(right) ? nullptr : pruneNoOpCommaExpressions(right);
+
+    if (left == prunedLeft && right == prunedRight)
+    {
+        // Nothing got pruned.
+        return statement;
+    }
+
+    // If either side is pruned, return the other side.  Automatically returns nullptr if both sides
+    // are pruned.
+    if (prunedRight == nullptr)
+    {
+        return prunedLeft;
+    }
+    if (prunedLeft == nullptr)
+    {
+        return prunedRight;
+    }
+
+    return new TIntermBinary(EOpComma, prunedLeft, prunedRight);
 }
 
 bool PruneNoOpsTraverser::visitLoop(Visit visit, TIntermLoop *loop)
