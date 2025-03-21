@@ -187,13 +187,13 @@ void CommandBatch::destroy(VkDevice device)
     // Do not clean other members to catch invalid reuse attempt with ASSERTs.
 }
 
-angle::Result CommandBatch::release(ErrorContext *context)
+angle::Result CommandBatch::release(ErrorContext *context, WhenToResetCommandBuffer whenToReset)
 {
     if (mPrimaryCommands.valid())
     {
         ASSERT(mCommandPoolAccess != nullptr);
         ANGLE_TRY(mCommandPoolAccess->collectPrimaryCommandBuffer(context, mProtectionType,
-                                                                  &mPrimaryCommands));
+                                                                  &mPrimaryCommands, whenToReset));
     }
     mSecondaryCommands.releaseCommandBuffers();
     mFence.reset();
@@ -396,6 +396,9 @@ void CleanUpThread::processTasks()
 
 angle::Result CleanUpThread::processTasksImpl(bool *exitThread)
 {
+    WhenToResetCommandBuffer whenToReset = mRenderer->getFeatures().asyncCommandBufferReset.enabled
+                                               ? WhenToResetCommandBuffer::Now
+                                               : WhenToResetCommandBuffer::Defer;
     while (true)
     {
         std::unique_lock<std::mutex> lock(mMutex);
@@ -414,10 +417,10 @@ angle::Result CleanUpThread::processTasksImpl(bool *exitThread)
             ANGLE_TRY(mCommandQueue->checkCompletedCommands(this));
 
             // Reset command buffer and clean up garbage
-            if (mRenderer->isAsyncCommandBufferResetAndGarbageCleanupEnabled() &&
+            if (mRenderer->getFeatures().asyncGarbageCleanup.enabled &&
                 mCommandQueue->hasFinishedCommands())
             {
-                ANGLE_TRY(mCommandQueue->releaseFinishedCommands(this));
+                ANGLE_TRY(mCommandQueue->releaseFinishedCommands(this, whenToReset));
             }
             mRenderer->cleanupGarbage(nullptr);
         }
@@ -444,9 +447,9 @@ void CleanUpThread::destroy(ErrorContext *context)
     }
 
     // Perform any lingering clean up right away.
-    if (mRenderer->isAsyncCommandBufferResetAndGarbageCleanupEnabled())
+    if (mRenderer->getFeatures().asyncGarbageCleanup.enabled)
     {
-        (void)mCommandQueue->releaseFinishedCommands(context);
+        (void)mCommandQueue->releaseFinishedCommands(context, WhenToResetCommandBuffer::Now);
         mRenderer->cleanupGarbage(nullptr);
     }
 
@@ -501,13 +504,14 @@ void CommandPoolAccess::destroyPrimaryCommandBuffer(VkDevice device,
 
 angle::Result CommandPoolAccess::collectPrimaryCommandBuffer(ErrorContext *context,
                                                              const ProtectionType protectionType,
-                                                             PrimaryCommandBuffer *primaryCommands)
+                                                             PrimaryCommandBuffer *primaryCommands,
+                                                             WhenToResetCommandBuffer whenToReset)
 {
     ASSERT(primaryCommands->valid());
     std::lock_guard<angle::SimpleMutex> lock(mCmdPoolMutex);
 
     PersistentCommandPool &commandPool = mPrimaryCommandPoolMap[protectionType];
-    ANGLE_TRY(commandPool.collect(context, std::move(*primaryCommands)));
+    ANGLE_TRY(commandPool.collect(context, std::move(*primaryCommands), whenToReset));
 
     return angle::Result::Continue;
 }
@@ -991,7 +995,7 @@ angle::Result CommandQueue::queueSubmitLocked(ErrorContext *context,
     if (mNumAllCommands == mFinishedCommandBatches.capacity())
     {
         std::lock_guard<angle::SimpleMutex> lock(mCmdReleaseMutex);
-        ANGLE_TRY(releaseFinishedCommandsLocked(context));
+        ANGLE_TRY(releaseFinishedCommandsLocked(context, WhenToResetCommandBuffer::Now));
     }
     // Assert will succeed since mNumAllCommands is incremented only in this method below.
     ASSERT(mNumAllCommands < mFinishedCommandBatches.capacity());
@@ -1052,14 +1056,14 @@ void CommandQueue::resetPerFramePerfCounters()
 angle::Result CommandQueue::releaseFinishedCommandsAndCleanupGarbage(ErrorContext *context)
 {
     Renderer *renderer = context->getRenderer();
-    if (renderer->isAsyncCommandBufferResetAndGarbageCleanupEnabled())
+    if (renderer->getFeatures().asyncGarbageCleanup.enabled)
     {
         renderer->requestAsyncCommandsAndGarbageCleanup(context);
     }
     else
     {
         // Do immediate command buffer reset and garbage cleanup
-        ANGLE_TRY(releaseFinishedCommands(context));
+        ANGLE_TRY(releaseFinishedCommands(context, WhenToResetCommandBuffer::Now));
         renderer->cleanupGarbage(nullptr);
     }
 
@@ -1154,7 +1158,8 @@ void CommandQueue::onCommandBatchFinishedLocked(CommandBatch &&batch)
     moveInFlightBatchToFinishedQueueLocked(std::move(batch));
 }
 
-angle::Result CommandQueue::releaseFinishedCommandsLocked(ErrorContext *context)
+angle::Result CommandQueue::releaseFinishedCommandsLocked(ErrorContext *context,
+                                                          WhenToResetCommandBuffer whenToReset)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "releaseFinishedCommandsLocked");
 
@@ -1162,7 +1167,7 @@ angle::Result CommandQueue::releaseFinishedCommandsLocked(ErrorContext *context)
     {
         CommandBatch &batch = mFinishedCommandBatches.front();
         ASSERT(batch.getQueueSerial() <= mLastCompletedSerials);
-        ANGLE_TRY(batch.release(context));
+        ANGLE_TRY(batch.release(context, whenToReset));
         popFinishedBatchLocked();
     }
 

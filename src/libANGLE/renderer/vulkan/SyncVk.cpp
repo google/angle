@@ -268,7 +268,7 @@ angle::Result SyncHelper::getStatus(ErrorContext *context, ContextVk *contextVk,
         // be blocked by command buffer recording if another thread calls
         // CommandPoolAccess::flushRenderPassCommands(), which is against EGL spec where
         // eglClientWaitSync() should return immediately with timeout == 0.
-        if (renderer->isAsyncCommandBufferResetAndGarbageCleanupEnabled())
+        if (renderer->getFeatures().asyncGarbageCleanup.enabled)
         {
             ANGLE_TRY(renderer->checkCompletedCommandsAndCleanup(context));
         }

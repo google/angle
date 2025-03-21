@@ -5359,7 +5359,12 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, preferSkippingInvalidateForEmulatedFormats,
                             isImmediateModeRenderer);
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, asyncCommandBufferResetAndGarbageCleanup, true);
+    ANGLE_FEATURE_CONDITION(&mFeatures, asyncGarbageCleanup, true);
+    // reset sometimes gets blocked by mutex lock inside vulkan driver and runs in small core while
+    // main thread gets blocked by command pool lock. FOr now dont call reset in garbage clean up
+    // thread on ARM.
+    ANGLE_FEATURE_CONDITION(&mFeatures, asyncCommandBufferReset,
+                            mFeatures.asyncGarbageCleanup.enabled && !isARM);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsYUVSamplerConversion,
                             mSamplerYcbcrConversionFeatures.samplerYcbcrConversion != VK_FALSE);

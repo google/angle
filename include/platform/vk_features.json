@@ -1350,12 +1350,20 @@
             "issue": "https://issuetracker.google.com/253522366"
         },
         {
-            "name": "async_command_buffer_reset_and_garbage_cleanup",
+            "name": "async_garbage_cleanup",
             "category": "Features",
             "description": [
-                "Reset command buffer and cleanup garbage in async thread."
+                "cleanup garbage in async thread."
             ],
             "issue": "https://issuetracker.google.com/255411748"
+        },
+        {
+            "name": "async_command_buffer_reset",
+            "category": "Features",
+            "description": [
+                "Reset command buffer in async thread."
+            ],
+            "issue": "https://issuetracker.google.com/378718508"
         },
         {
             "name": "use_reset_command_buffer_bit_for_secondary_pools",

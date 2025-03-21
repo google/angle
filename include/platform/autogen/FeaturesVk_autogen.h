@@ -1034,8 +1034,14 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
-    FeatureInfo asyncCommandBufferResetAndGarbageCleanup = {
-        "asyncCommandBufferResetAndGarbageCleanup",
+    FeatureInfo asyncGarbageCleanup = {
+        "asyncGarbageCleanup",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
+    FeatureInfo asyncCommandBufferReset = {
+        "asyncCommandBufferReset",
         FeatureCategory::VulkanFeatures,
         &members,
     };

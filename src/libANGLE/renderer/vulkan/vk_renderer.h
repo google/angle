@@ -279,11 +279,6 @@ class Renderer : angle::NonCopyable
     bool hasBufferFormatFeatureBits(angle::FormatID format,
                                     const VkFormatFeatureFlags featureBits) const;
 
-    bool isAsyncCommandBufferResetAndGarbageCleanupEnabled() const
-    {
-        return mFeatures.asyncCommandBufferResetAndGarbageCleanup.enabled;
-    }
-
     ANGLE_INLINE egl::ContextPriority getDriverPriority(egl::ContextPriority priority)
     {
         return mCommandQueue.getDriverPriority(priority);
@@ -1133,7 +1128,7 @@ ANGLE_INLINE angle::Result Renderer::checkCompletedCommandsAndCleanup(vk::ErrorC
 
 ANGLE_INLINE angle::Result Renderer::releaseFinishedCommands(vk::ErrorContext *context)
 {
-    return mCommandQueue.releaseFinishedCommands(context);
+    return mCommandQueue.releaseFinishedCommands(context, WhenToResetCommandBuffer::Now);
 }
 }  // namespace vk
 }  // namespace rx

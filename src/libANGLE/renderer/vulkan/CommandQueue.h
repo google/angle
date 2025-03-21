@@ -88,7 +88,7 @@ class CommandBatch final : angle::NonCopyable
     CommandBatch &operator=(CommandBatch &&other);
 
     void destroy(VkDevice device);
-    angle::Result release(ErrorContext *context);
+    angle::Result release(ErrorContext *context, WhenToResetCommandBuffer whenToReset);
 
     void setQueueSerial(const QueueSerial &serial);
     void setProtectionType(ProtectionType protectionType);
@@ -216,7 +216,8 @@ class CommandPoolAccess : angle::NonCopyable
     void destroyPrimaryCommandBuffer(VkDevice device, PrimaryCommandBuffer *primaryCommands) const;
     angle::Result collectPrimaryCommandBuffer(ErrorContext *context,
                                               const ProtectionType protectionType,
-                                              PrimaryCommandBuffer *primaryCommands);
+                                              PrimaryCommandBuffer *primaryCommands,
+                                              WhenToResetCommandBuffer whenToReset);
     angle::Result flushOutsideRPCommands(Context *context,
                                          ProtectionType protectionType,
                                          egl::ContextPriority priority,
@@ -427,10 +428,11 @@ class CommandQueue : angle::NonCopyable
     // Release finished commands and clean up garbage immediately, or request async clean up if
     // enabled.
     angle::Result releaseFinishedCommandsAndCleanupGarbage(ErrorContext *context);
-    angle::Result releaseFinishedCommands(ErrorContext *context)
+    angle::Result releaseFinishedCommands(ErrorContext *context,
+                                          WhenToResetCommandBuffer whenToReset)
     {
         std::lock_guard<angle::SimpleMutex> lock(mCmdReleaseMutex);
-        return releaseFinishedCommandsLocked(context);
+        return releaseFinishedCommandsLocked(context, whenToReset);
     }
     angle::Result postSubmitCheck(ErrorContext *context);
 
@@ -453,7 +455,8 @@ class CommandQueue : angle::NonCopyable
                                         std::unique_lock<angle::SimpleMutex> *lock);
     void onCommandBatchFinishedLocked(CommandBatch &&batch);
     // Walk mFinishedCommands, reset and recycle all command buffers.
-    angle::Result releaseFinishedCommandsLocked(ErrorContext *context);
+    angle::Result releaseFinishedCommandsLocked(ErrorContext *context,
+                                                WhenToResetCommandBuffer whenToReset);
     // Walk mInFlightCommands, check and update mLastCompletedSerials for all commands that are
     // finished
     angle::Result checkCompletedCommandsLocked(ErrorContext *context);
