@@ -528,6 +528,7 @@ inline constexpr const char *kPLSInvalidLoadOperation = "Invalid pixel local sto
 inline constexpr const char *kPLSInvalidStoreOperation = "Invalid pixel local storage Store Operation: 0x%04X.";
 inline constexpr const char *kPLSInvalidTextureType = "Invalid pixel local storage texture type.";
 inline constexpr const char *kPLSKeepingMemorylessPlane = "Load Operation GL_LOAD_OP_LOAD_ANGLE is invalid for memoryless planes.";
+inline constexpr const char *kPLSLevelIndexOutOfRange = "Mipmap level for PLS backing texture outside the effective base/max range.";
 inline constexpr const char *kPLSLoadOpsNULL = "<loadops> cannot be null.";
 inline constexpr const char *kPLSMaxCombinedDrawBuffersAndPlanesExceded = "Framebuffer cannot have images attached to color attachment points on or after COLOR_ATTACHMENT0 + MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE - <n>.";
 inline constexpr const char *kPLSMismatchedBackingTextureSizes = "Mismatched pixel local storage backing texture sizes.";

@@ -399,6 +399,10 @@ Additions to the OpenGL ES Specification, Version 3.0.6
       * INVALID_OPERATION is generated if the draw framebuffer has no
         attachments and no enabled, texture-backed pixel local storage planes.
 
+      * INVALID_OPERATION is generated if, for any enabled backing texture, the
+        mipmap level bound to pixel local storage is outside the effective
+        base/max range of that texture.
+
       * INVALID_OPERATION is generated if a single texture slice is bound to
         more than one active pixel local storage plane.
 

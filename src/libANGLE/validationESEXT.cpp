@@ -2612,6 +2612,18 @@ bool ValidateBeginPixelLocalStorageANGLE(const Context *context,
             ASSERT(planeImageIdx.getLayerCount() == 1);
             ASSERT(planeImageIdx.getLevelIndex() >= 0);
 
+            // INVALID_OPERATION is generated if, for any active backing texture, the mipmap level
+            // bound to pixel local storage is outside the effective base/max range of that texture.
+            const Texture *const backingTexture = plane.getBackingTexture(context);
+            if (planeImageIdx.getLevelIndex() <
+                    static_cast<GLint>(backingTexture->getState().getEffectiveBaseLevel()) ||
+                planeImageIdx.getLevelIndex() >
+                    static_cast<GLint>(backingTexture->getState().getEffectiveMaxLevel()))
+            {
+                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kPLSLevelIndexOutOfRange);
+                return false;
+            }
+
             // INVALID_OPERATION is generated if a single texture slice is bound to more than one
             // active pixel local storage plane.
             for (GLsizei j = i + 1; j < n; ++j)

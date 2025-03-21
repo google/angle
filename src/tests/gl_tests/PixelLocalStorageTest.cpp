@@ -201,20 +201,24 @@ class PLSTestTexture
 {
   public:
     PLSTestTexture(GLenum internalformat) { reset(internalformat); }
-    PLSTestTexture(GLenum internalformat, int w, int h) { reset(internalformat, w, h); }
+    PLSTestTexture(GLenum internalformat, int w, int h) { reset(internalformat, w, h, 1); }
+    PLSTestTexture(GLenum internalformat, int w, int h, int mipLevels)
+    {
+        reset(internalformat, w, h, mipLevels);
+    }
     PLSTestTexture(PLSTestTexture &&that) : mID(std::exchange(that.mID, 0)) {}
     void reset()
     {
         glDeleteTextures(1, &mID);
         mID = 0;
     }
-    void reset(GLenum internalformat) { reset(internalformat, W, H); }
-    void reset(GLenum internalformat, int w, int h)
+    void reset(GLenum internalformat) { reset(internalformat, W, H, 1); }
+    void reset(GLenum internalformat, int w, int h, int mipLevels)
     {
         GLuint id;
         glGenTextures(1, &id);
         glBindTexture(GL_TEXTURE_2D, id);
-        glTexStorage2D(GL_TEXTURE_2D, 1, internalformat, w, h);
+        glTexStorage2D(GL_TEXTURE_2D, mipLevels, internalformat, w, h);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         if (mID)
@@ -5501,6 +5505,74 @@ TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_pls_planes)
             "storage planes.");
         ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
     }
+}
+
+// Check that glBeginPixelLocalStorageANGLE validates GL_TEXTURE_BASE_LEVEL and
+// GL_TEXTURE_MAX_LEVEL.
+//
+// INVALID_OPERATION is generated if, for any active backing texture, the mipmap level bound to
+// pixel local storage is outside the effective base/max range of that texture.
+TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_base_max_level)
+{
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    ASSERT_GL_NO_ERROR();
+
+    PLSTestTexture pls0(GL_RGBA8, 256, 256, 9);
+    PLSTestTexture pls1(GL_RGBA8, 256, 256, 9);
+    glFramebufferTexturePixelLocalStorageANGLE(0, pls0, 2, 0);
+    glFramebufferTexturePixelLocalStorageANGLE(1, pls1, 2, 0);
+
+    GLenum dontCare[2] = {GL_DONT_CARE, GL_DONT_CARE};
+    glBeginPixelLocalStorageANGLE(2, dontCare);
+    glEndPixelLocalStorageANGLE(2, dontCare);
+    ASSERT_GL_NO_ERROR();
+
+    // GL_TEXTURE_BASE_LEVEL == GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE: pass.
+    glBindTexture(GL_TEXTURE_2D, pls0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 2);
+    glBeginPixelLocalStorageANGLE(2, dontCare);
+    glEndPixelLocalStorageANGLE(2, dontCare);
+    ASSERT_GL_NO_ERROR();
+
+    // GL_TEXTURE_BASE_LEVEL > GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE: fail.
+    glBindTexture(GL_TEXTURE_2D, pls1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 3);
+    glBeginPixelLocalStorageANGLE(2, dontCare);
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG(
+        "Mipmap level for PLS backing texture outside the effective base/max range.");
+    ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
+
+    // GL_TEXTURE_BASE_LEVEL > GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE, but plane not enabled: pass.
+    glBindTexture(GL_TEXTURE_2D, pls1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 3);
+    glBeginPixelLocalStorageANGLE(1, dontCare);
+    glEndPixelLocalStorageANGLE(1, dontCare);
+    ASSERT_GL_NO_ERROR();
+
+    // GL_TEXTURE_BASE_LEVEL == GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE: pass again.
+    glFramebufferTexturePixelLocalStorageANGLE(0, pls0, 3, 0);
+    glFramebufferTexturePixelLocalStorageANGLE(1, pls1, 3, 0);
+    glBeginPixelLocalStorageANGLE(2, dontCare);
+    glEndPixelLocalStorageANGLE(2, dontCare);
+    ASSERT_GL_NO_ERROR();
+
+    // GL_TEXTURE_MAX_LEVEL == GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE: pass.
+    glBindTexture(GL_TEXTURE_2D, pls1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 3);
+    glBeginPixelLocalStorageANGLE(2, dontCare);
+    glEndPixelLocalStorageANGLE(2, dontCare);
+    ASSERT_GL_NO_ERROR();
+
+    // GL_TEXTURE_MAX_LEVEL < GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE: fail.
+    glBindTexture(GL_TEXTURE_2D, pls0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 2);
+    glBeginPixelLocalStorageANGLE(2, dontCare);
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG(
+        "Mipmap level for PLS backing texture outside the effective base/max range.");
+    ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
 }
 
 // Check that glBeginPixelLocalStorageANGLE validates feedback loops with GL_TEXTURE_2D as
