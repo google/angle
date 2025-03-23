@@ -33,6 +33,8 @@ BraceWrapping:
   # Keeps extern "C" blocks unindented.
   AfterExternBlock: false
 
+InsertBraces: true
+
 # Indent case labels.
 IndentCaseLabels: true
 
