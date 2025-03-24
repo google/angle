@@ -127,6 +127,7 @@ TEST_P(TextureFixedRateCompressionTest, TexStorageAttribs2DEXT)
     }
 }
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureFixedRateCompressionTest);
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES31_AND(TextureFixedRateCompressionTest);
