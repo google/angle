@@ -843,9 +843,6 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     size_t getMemoryUsage() const;
 
-    // Only used by vulkan backend.
-    void onSwapChainImageChanged() const { mDefaultFramebuffer->onSwapChainImageChanged(); }
-
   private:
     void initializeDefaultResources();
     void releaseSharedObjects();

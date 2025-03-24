@@ -24,11 +24,10 @@ class SurfaceEGL : public SurfaceGL
     ~SurfaceEGL() override;
 
     egl::Error makeCurrent(const gl::Context *context) override;
-    egl::Error swap(const gl::Context *context, SurfaceSwapFeedback *feedback) override;
+    egl::Error swap(const gl::Context *context) override;
     egl::Error swapWithDamage(const gl::Context *context,
                               const EGLint *rects,
-                              EGLint n_rects,
-                              SurfaceSwapFeedback *feedback) override;
+                              EGLint n_rects) override;
     egl::Error postSubBuffer(const gl::Context *context,
                              EGLint x,
                              EGLint y,

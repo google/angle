@@ -240,7 +240,7 @@ egl::Error WindowSurfaceCGL::makeCurrent(const gl::Context *context)
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error WindowSurfaceCGL::swap(const gl::Context *context, SurfaceSwapFeedback *feedback)
+egl::Error WindowSurfaceCGL::swap(const gl::Context *context)
 {
     const FunctionsGL *functions = GetFunctionsGL(context);
     StateManagerGL *stateManager = GetStateManagerGL(context);

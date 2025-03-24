@@ -100,7 +100,7 @@ egl::Error WindowSurfaceWGL::makeCurrent(const gl::Context *context)
     return egl::NoError();
 }
 
-egl::Error WindowSurfaceWGL::swap(const gl::Context *context, SurfaceSwapFeedback *feedback)
+egl::Error WindowSurfaceWGL::swap(const gl::Context *context)
 {
     if (!mFunctionsWGL->swapBuffers(mDeviceContext))
     {

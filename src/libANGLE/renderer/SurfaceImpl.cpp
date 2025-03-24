@@ -32,8 +32,7 @@ egl::Error SurfaceImpl::prepareSwap(const gl::Context *)
 
 egl::Error SurfaceImpl::swapWithDamage(const gl::Context *context,
                                        const EGLint *rects,
-                                       EGLint n_rects,
-                                       SurfaceSwapFeedback *feedback)
+                                       EGLint n_rects)
 {
     UNREACHABLE();
     return egl::Error(EGL_BAD_SURFACE, "swapWithDamage implementation missing.");

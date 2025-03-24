@@ -350,10 +350,9 @@ egl::Error SurfaceD3D::checkForOutOfDateSwapChain(DisplayD3D *displayD3D)
     return egl::NoError();
 }
 
-egl::Error SurfaceD3D::swap(const gl::Context *context, SurfaceSwapFeedback *feedback)
+egl::Error SurfaceD3D::swap(const gl::Context *context)
 {
     DisplayD3D *displayD3D = GetImplAs<DisplayD3D>(context->getDisplay());
-    feedback->swapChainImageChanged = false;
     return swapRect(displayD3D, 0, 0, mWidth, mHeight);
 }
 

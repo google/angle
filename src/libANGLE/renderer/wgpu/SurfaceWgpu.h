@@ -46,7 +46,7 @@ class OffscreenSurfaceWgpu : public SurfaceWgpu
     ~OffscreenSurfaceWgpu() override;
 
     egl::Error initialize(const egl::Display *display) override;
-    egl::Error swap(const gl::Context *context, SurfaceSwapFeedback *feedback) override;
+    egl::Error swap(const gl::Context *context) override;
     egl::Error bindTexImage(const gl::Context *context,
                             gl::Texture *texture,
                             EGLint buffer) override;
@@ -92,7 +92,7 @@ class WindowSurfaceWgpu : public SurfaceWgpu
 
     egl::Error initialize(const egl::Display *display) override;
     void destroy(const egl::Display *display) override;
-    egl::Error swap(const gl::Context *context, SurfaceSwapFeedback *feedback) override;
+    egl::Error swap(const gl::Context *context) override;
     egl::Error bindTexImage(const gl::Context *context,
                             gl::Texture *texture,
                             EGLint buffer) override;

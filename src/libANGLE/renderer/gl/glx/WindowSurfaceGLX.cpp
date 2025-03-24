@@ -151,7 +151,7 @@ egl::Error WindowSurfaceGLX::makeCurrent(const gl::Context *context)
     return egl::NoError();
 }
 
-egl::Error WindowSurfaceGLX::swap(const gl::Context *context, SurfaceSwapFeedback *feedback)
+egl::Error WindowSurfaceGLX::swap(const gl::Context *context)
 {
     // We need to swap before resizing as some drivers clobber the back buffer
     // when the window is resized.

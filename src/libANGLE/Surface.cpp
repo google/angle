@@ -336,14 +336,7 @@ Error Surface::swap(gl::Context *context)
     context->getState().getOverlay()->onSwap();
 
     ANGLE_TRY(updatePropertiesOnSwap(context));
-
-    rx::SurfaceSwapFeedback feedback;
-    ANGLE_TRY(mImplementation->swap(context, &feedback));
-    if (feedback.swapChainImageChanged)
-    {
-        context->onSwapChainImageChanged();
-    }
-
+    ANGLE_TRY(mImplementation->swap(context));
     postSwap(context);
     return NoError();
 }
@@ -356,14 +349,7 @@ Error Surface::swapWithDamage(gl::Context *context, const EGLint *rects, EGLint 
     context->getState().getOverlay()->onSwap();
 
     ANGLE_TRY(updatePropertiesOnSwap(context));
-
-    rx::SurfaceSwapFeedback feedback;
-    ANGLE_TRY(mImplementation->swapWithDamage(context, rects, n_rects, &feedback));
-    if (feedback.swapChainImageChanged)
-    {
-        context->onSwapChainImageChanged();
-    }
-
+    ANGLE_TRY(mImplementation->swapWithDamage(context, rects, n_rects));
     postSwap(context);
     return NoError();
 }
@@ -786,6 +772,9 @@ void Surface::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
             break;
         case angle::SubjectMessage::SurfaceChanged:
             onStateChange(angle::SubjectMessage::SurfaceChanged);
+            break;
+        case angle::SubjectMessage::SwapchainImageChanged:
+            onStateChange(angle::SubjectMessage::SwapchainImageChanged);
             break;
         default:
             UNREACHABLE();
