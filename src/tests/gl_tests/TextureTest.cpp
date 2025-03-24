@@ -11954,27 +11954,22 @@ TEST_P(TextureCubeTestES32, ValidateCubeMapArrayTexSubImageGreaterThanSizeLimit)
     GLTexture cubeMapArrayTexture;
     glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, cubeMapArrayTexture);
 
-    GLint max3DTextureSize = -1;
-    glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &max3DTextureSize);
-    EXPECT_GT(max3DTextureSize, 0);
-
     GLint maxCubeTextureSize = -1;
     glGetIntegerv(GL_MAX_CUBE_MAP_TEXTURE_SIZE, &maxCubeTextureSize);
     EXPECT_GT(maxCubeTextureSize, 0);
 
-    GLint maxSizeLimit = std::min(maxCubeTextureSize, max3DTextureSize);
-    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, GL_RGBA, maxSizeLimit, maxSizeLimit, 6, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, nullptr);
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, GL_RGBA, maxCubeTextureSize, maxCubeTextureSize, 6,
+                 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     ASSERT_GL_NO_ERROR();
 
     // TexSubImage3D can take unequal values for width and height for cube map arrays. However, they
     // should stay below the size limit.
-    glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0, 0, maxSizeLimit + 1, maxSizeLimit, 6,
-                    GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::green);
+    glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0, 0, maxCubeTextureSize + 1,
+                    maxCubeTextureSize, 6, GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::green);
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 
-    glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0, 0, maxSizeLimit, maxSizeLimit + 1, 6,
-                    GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::green);
+    glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0, 0, maxCubeTextureSize,
+                    maxCubeTextureSize + 1, 6, GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::green);
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 }
 
@@ -12037,25 +12032,15 @@ TEST_P(TextureCubeTestES32, ValidateCubeMapArrayTexImageInvalidInputs)
                  maxCubeTextureSize / 4 + 1, 6, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 
-    // Width and height and depth should not exceed the maximum 3D texture size.
-    GLint max3DTextureSize = -1;
-    glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &max3DTextureSize);
-    EXPECT_GT(max3DTextureSize, 0);
+    // Depth should not exceed the maximum array layer count.
+    GLint maxArrayTextureLayers = -1;
+    glGetIntegerv(GL_MAX_ARRAY_TEXTURE_LAYERS, &maxArrayTextureLayers);
+    ASSERT_GE(maxArrayTextureLayers, 6);
+    // Max valid layer count
+    const GLint maxValidCubeArrayTextureLayers = maxArrayTextureLayers / 6 * 6;
 
-    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, GL_RGBA, 256, 256, max3DTextureSize + 1, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, nullptr);
-    EXPECT_GL_ERROR(GL_INVALID_VALUE);
-
-    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, GL_RGBA, max3DTextureSize + 1, max3DTextureSize + 1,
-                 6, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-    EXPECT_GL_ERROR(GL_INVALID_VALUE);
-
-    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_RGBA, max3DTextureSize / 2 + 1,
-                 max3DTextureSize / 2 + 1, 6, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-    EXPECT_GL_ERROR(GL_INVALID_VALUE);
-
-    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 2, GL_RGBA, max3DTextureSize / 4 + 1,
-                 max3DTextureSize / 4 + 1, 6, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, GL_RGBA, 256, 256,
+                 maxValidCubeArrayTextureLayers + 6, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 }
 
@@ -12095,16 +12080,15 @@ TEST_P(TextureCubeTestES32, ValidateCubeMapArrayTexStorageInvalidInputs)
                    maxCubeTextureSize + 1, 6);
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 
-    // Width and height and depth should not exceed the maximum 3D texture size.
-    GLint max3DTextureSize = -1;
-    glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &max3DTextureSize);
-    EXPECT_GT(max3DTextureSize, 0);
+    // Depth should not exceed the maximum array layer count.
+    GLint maxArrayTextureLayers = -1;
+    glGetIntegerv(GL_MAX_ARRAY_TEXTURE_LAYERS, &maxArrayTextureLayers);
+    ASSERT_GE(maxArrayTextureLayers, 6);
+    // Max valid layer count
+    const GLint maxValidCubeArrayTextureLayers = maxArrayTextureLayers / 6 * 6;
 
-    glTexStorage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_RGBA8, max3DTextureSize + 1,
-                   max3DTextureSize + 1, 6);
-    EXPECT_GL_ERROR(GL_INVALID_VALUE);
-
-    glTexStorage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_RGBA8, 256, 256, max3DTextureSize + 1);
+    glTexStorage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_RGBA8, 256, 256,
+                   maxValidCubeArrayTextureLayers + 6);
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 
     // Level count must not exceed log2(max(width, height)) + 1.

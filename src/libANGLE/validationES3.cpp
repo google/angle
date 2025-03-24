@@ -611,29 +611,26 @@ bool ValidateES3TexImageParametersBase(const Context *context,
             break;
 
         case TextureType::CubeMapArray:
-            if (!isSubImage && width != height)
+            if (!isSubImage)
             {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kCubemapFacesEqualDimensions);
-                return false;
+                if (width != height)
+                {
+                    ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kCubemapFacesEqualDimensions);
+                    return false;
+                }
+
+                if (depth % 6 != 0)
+                {
+                    ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kCubemapInvalidDepth);
+                    return false;
+                }
             }
 
             if (width > (caps.maxCubeMapTextureSize >> level) ||
-                height > (caps.maxCubeMapTextureSize >> level))
+                height > (caps.maxCubeMapTextureSize >> level) ||
+                depth > caps.maxArrayTextureLayers)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kResourceMaxTextureSize);
-                return false;
-            }
-
-            if (width > (caps.max3DTextureSize >> level) ||
-                height > (caps.max3DTextureSize >> level) || depth > caps.max3DTextureSize)
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kResourceMaxTextureSize);
-                return false;
-            }
-
-            if (!isSubImage && depth % 6 != 0)
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kCubemapInvalidDepth);
                 return false;
             }
             break;
@@ -1344,7 +1341,8 @@ bool ValidateES3TexStorageParametersLevel(const Context *context,
                                           GLsizei depth)
 {
     GLsizei maxDim = std::max(width, height);
-    if (target != TextureType::_2DArray)
+    // The "depth" parameter of array texture types does not affect mip levels.
+    if (target == TextureType::_3D)
     {
         maxDim = std::max(maxDim, depth);
     }
@@ -1442,14 +1440,7 @@ bool ValidateES3TexStorageParametersExtent(const Context *context,
                 return false;
             }
 
-            if (width > caps.maxCubeMapTextureSize)
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kResourceMaxTextureSize);
-                return false;
-            }
-
-            if (width > caps.max3DTextureSize || height > caps.max3DTextureSize ||
-                depth > caps.max3DTextureSize)
+            if (width > caps.maxCubeMapTextureSize || depth > caps.maxArrayTextureLayers)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kResourceMaxTextureSize);
                 return false;
