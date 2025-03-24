@@ -66,7 +66,6 @@ class ANGLE_UTIL_EXPORT ScenicWindow : public OSWindow
     async::Loop *const mLoop;
 
     // System services.
-    zx::channel mServiceRoot;
     fuchsia::element::GraphicalPresenterPtr mPresenter;
 
     // EGL native window.

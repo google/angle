@@ -27,30 +27,13 @@ async::Loop *GetDefaultLoop()
     return defaultLoop;
 }
 
-zx::channel ConnectToServiceRoot()
-{
-    zx::channel clientChannel;
-    zx::channel serverChannel;
-    zx_status_t result = zx::channel::create(0, &clientChannel, &serverChannel);
-    ASSERT(result == ZX_OK);
-    result = fdio_service_connect("/svc/.", serverChannel.release());
-    ASSERT(result == ZX_OK);
-    return clientChannel;
-}
-
 template <typename Interface>
-zx_status_t ConnectToService(zx_handle_t serviceRoot, fidl::InterfaceRequest<Interface> request)
-{
-    ASSERT(request.is_valid());
-    return fdio_service_connect_at(serviceRoot, Interface::Name_, request.TakeChannel().release());
-}
-
-template <typename Interface>
-fidl::InterfacePtr<Interface> ConnectToService(zx_handle_t serviceRoot,
-                                               async_dispatcher_t *dispatcher)
+fidl::InterfacePtr<Interface> ConnectToService(async_dispatcher_t *dispatcher)
 {
     fidl::InterfacePtr<Interface> result;
-    ConnectToService(serviceRoot, result.NewRequest(dispatcher));
+    fidl::InterfaceRequest<Interface> request = result.NewRequest(dispatcher);
+    ASSERT(request.is_valid());
+    fdio_service_connect_by_name(Interface::Name_, request.TakeChannel().release());
     return result;
 }
 
@@ -60,9 +43,7 @@ fidl::InterfacePtr<Interface> ConnectToService(zx_handle_t serviceRoot,
 // ViewCreationToken to Fuchsia Flatland.
 ScenicWindow::ScenicWindow()
     : mLoop(GetDefaultLoop()),
-      mServiceRoot(ConnectToServiceRoot()),
-      mPresenter(ConnectToService<fuchsia::element::GraphicalPresenter>(mServiceRoot.get(),
-                                                                        mLoop->dispatcher()))
+      mPresenter(ConnectToService<fuchsia::element::GraphicalPresenter>(mLoop->dispatcher()))
 {}
 
 ScenicWindow::~ScenicWindow()
