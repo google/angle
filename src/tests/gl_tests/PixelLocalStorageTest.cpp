@@ -562,6 +562,17 @@ class PixelLocalStorageTest : public ANGLETest<>
         ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
     }
 
+    void attachTextureCubeFaceToScratchFBO(GLuint tex, GLenum target, GLint level = 0)
+    {
+        if (!mScratchFBO)
+        {
+            glGenFramebuffers(1, &mScratchFBO);
+        }
+        glBindFramebuffer(GL_FRAMEBUFFER, mScratchFBO);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, target, tex, level);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    }
+
     void attachTextureLayerToScratchFBO(GLuint tex, int level, int layer)
     {
         if (!mScratchFBO)
@@ -2048,6 +2059,75 @@ TEST_P(PixelLocalStorageTest, TextureLevelsAndLayers)
         attachTextureLayerToScratchFBO(tex, 1, D - 1);
         EXPECT_PIXEL_RECT_EQ(0, 0, W / 2.f, H, GLColor::yellow);
         EXPECT_PIXEL_RECT_EQ(W / 2.f, 0, W / 2.f, H, GLColor::red);
+        ASSERT_GL_NO_ERROR();
+    }
+}
+
+// Check that cube map faces work as PLS planes.
+TEST_P(PixelLocalStorageTest, TextureCubeFaces)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+
+    // Invert the color of PLS plane 0 assuming opaque alpha, e.g., red <-> cyan
+    mProgram.compile(R"(
+        layout(binding=0, rgba8) uniform lowp pixelLocalANGLE pls;
+        void main()
+        {
+            pixelLocalStoreANGLE(pls, vec4(1, 1, 1, 2) - pixelLocalLoadANGLE(pls));
+        })");
+
+    std::vector<GLColor> redImg(H * W, GLColor::red);
+    std::vector<GLColor> greenImg(H * W, GLColor::green);
+    std::vector<GLColor> blueImg(H * W, GLColor::blue);
+    std::vector<GLColor> cyanImg(H * W, GLColor::cyan);
+    std::vector<GLColor> magentaImg(H * W, GLColor::magenta);
+    std::vector<GLColor> yellowImg(H * W, GLColor::yellow);
+
+    {
+        // Level 2.
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_CUBE_MAP, tex);
+        glTexStorage2D(GL_TEXTURE_CUBE_MAP, 3, GL_RGBA8, W * 4, H * 4);
+        glTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 2, 0, 0, W, H, GL_RGBA, GL_UNSIGNED_BYTE,
+                        redImg.data());
+        glTexSubImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 2, 0, 0, W, H, GL_RGBA, GL_UNSIGNED_BYTE,
+                        cyanImg.data());
+        glTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 2, 0, 0, W, H, GL_RGBA, GL_UNSIGNED_BYTE,
+                        greenImg.data());
+        glTexSubImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 2, 0, 0, W, H, GL_RGBA, GL_UNSIGNED_BYTE,
+                        magentaImg.data());
+        glTexSubImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 2, 0, 0, W, H, GL_RGBA, GL_UNSIGNED_BYTE,
+                        blueImg.data());
+        glTexSubImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 2, 0, 0, W, H, GL_RGBA, GL_UNSIGNED_BYTE,
+                        yellowImg.data());
+        ASSERT_GL_NO_ERROR();
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        for (size_t i = 0; i < 6; ++i)
+        {
+            // Sequentially attach each cube map face as PLS plane 0 and invert it
+            glFramebufferTexturePixelLocalStorageANGLE(0, tex, 2, i);
+            ASSERT_GL_NO_ERROR();
+            glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_LOAD_OP_LOAD_ANGLE}));
+            mProgram.drawBoxes({{FULLSCREEN}});
+            ASSERT_GL_NO_ERROR();
+            glEndPixelLocalStorageANGLE(1, GLenumArray({GL_STORE_OP_STORE_ANGLE}));
+            ASSERT_GL_NO_ERROR();
+        }
+
+        // Check that all faces have inverted colors now
+        attachTextureCubeFaceToScratchFBO(tex, GL_TEXTURE_CUBE_MAP_POSITIVE_X, 2);
+        EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::cyan);
+        attachTextureCubeFaceToScratchFBO(tex, GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 2);
+        EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::red);
+        attachTextureCubeFaceToScratchFBO(tex, GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 2);
+        EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::magenta);
+        attachTextureCubeFaceToScratchFBO(tex, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 2);
+        EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::green);
+        attachTextureCubeFaceToScratchFBO(tex, GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 2);
+        EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::yellow);
+        attachTextureCubeFaceToScratchFBO(tex, GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 2);
+        EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::blue);
         ASSERT_GL_NO_ERROR();
     }
 }
@@ -4010,6 +4090,77 @@ PLS_INSTANTIATE_RENDERING_TEST_ES3(PixelLocalStorageTest);
 class PixelLocalStorageTestES31 : public PixelLocalStorageTest
 {};
 
+// Check that cube map array faces work as PLS planes.
+TEST_P(PixelLocalStorageTestES31, TextureCubeArrayFaces)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_texture_cube_map_array") &&
+                       !EnsureGLExtensionEnabled("GL_OES_texture_cube_map_array"));
+
+    // Invert the color of PLS plane 0 assuming opaque alpha, e.g., red <-> cyan
+    mProgram.compile(R"(
+        layout(binding=0, rgba8) uniform lowp pixelLocalANGLE pls;
+        void main()
+        {
+            pixelLocalStoreANGLE(pls, vec4(1, 1, 1, 2) - pixelLocalLoadANGLE(pls));
+        })");
+
+    std::vector<GLColor> redImg(H * W, GLColor::red);
+    std::vector<GLColor> greenImg(H * W, GLColor::green);
+    std::vector<GLColor> blueImg(H * W, GLColor::blue);
+    std::vector<GLColor> cyanImg(H * W, GLColor::cyan);
+    std::vector<GLColor> magentaImg(H * W, GLColor::magenta);
+    std::vector<GLColor> yellowImg(H * W, GLColor::yellow);
+
+    {
+        // Level 2, layer 1 (layer-faces 6-11)
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, tex);
+        glTexStorage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 3, GL_RGBA8, W * 4, H * 4, 12);
+        glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 2, 0, 0, 6, W, H, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                        redImg.data());
+        glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 2, 0, 0, 7, W, H, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                        cyanImg.data());
+        glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 2, 0, 0, 8, W, H, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                        greenImg.data());
+        glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 2, 0, 0, 9, W, H, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                        magentaImg.data());
+        glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 2, 0, 0, 10, W, H, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                        blueImg.data());
+        glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 2, 0, 0, 11, W, H, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                        yellowImg.data());
+        ASSERT_GL_NO_ERROR();
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        for (size_t i = 6; i < 12; ++i)
+        {
+            // Sequentially attach cube map layer-faces 6-11 as PLS plane 0 and invert them
+            glFramebufferTexturePixelLocalStorageANGLE(0, tex, 2, i);
+            ASSERT_GL_NO_ERROR();
+            glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_LOAD_OP_LOAD_ANGLE}));
+            mProgram.drawBoxes({{FULLSCREEN}});
+            ASSERT_GL_NO_ERROR();
+            glEndPixelLocalStorageANGLE(1, GLenumArray({GL_STORE_OP_STORE_ANGLE}));
+            ASSERT_GL_NO_ERROR();
+        }
+
+        // Check that layer-faces 6-11 have inverted colors now
+        attachTextureLayerToScratchFBO(tex, 2, 6);
+        EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::cyan);
+        attachTextureLayerToScratchFBO(tex, 2, 7);
+        EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::red);
+        attachTextureLayerToScratchFBO(tex, 2, 8);
+        EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::magenta);
+        attachTextureLayerToScratchFBO(tex, 2, 9);
+        EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::green);
+        attachTextureLayerToScratchFBO(tex, 2, 10);
+        EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::yellow);
+        attachTextureLayerToScratchFBO(tex, 2, 11);
+        EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::blue);
+        ASSERT_GL_NO_ERROR();
+    }
+}
+
 // Check that early_fragment_tests are not triggered when PLS uniforms are not declared.
 TEST_P(PixelLocalStorageTestES31, EarlyFragmentTests)
 {
@@ -4640,19 +4791,7 @@ TEST_P(PixelLocalStorageValidationTest, FramebufferTexturePixelLocalStorageANGLE
     EXPECT_GL_SINGLE_ERROR_MSG("Texture is not immutable.");
 
     // INVALID_OPERATION is generated if <backingtexture> is nonzero
-    // and not of type TEXTURE_2D or TEXTURE_2D_ARRAY.
-    GLTexture texCube;
-    glBindTexture(GL_TEXTURE_CUBE_MAP, texCube);
-    glTexStorage2D(GL_TEXTURE_CUBE_MAP, 1, GL_RGBA8, 10, 10);
-    EXPECT_GL_NO_ERROR();
-    glFramebufferTexturePixelLocalStorageANGLE(0, texCube, 0, 1);
-    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
-    EXPECT_GL_SINGLE_ERROR_MSG("Invalid pixel local storage texture type.");
-    EXPECT_PLS_INTEGER(0, GL_PIXEL_LOCAL_FORMAT_ANGLE, GL_NONE);
-    EXPECT_PLS_INTEGER(0, GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, 0);
-    EXPECT_PLS_INTEGER(0, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE, 0);
-    EXPECT_PLS_INTEGER(0, GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE, 0);
-
+    // and of type TEXTURE_2D_MULTISAMPLE or TEXTURE_3D.
     GLTexture tex2DMultisample;
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, tex2DMultisample);
     glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 1, GL_RGBA8, 10, 10, 1);
@@ -4734,6 +4873,23 @@ TEST_P(PixelLocalStorageValidationTest, FramebufferTexturePixelLocalStorageANGLE
         EXPECT_PLS_INTEGER(2, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE, 0);
         EXPECT_PLS_INTEGER(2, GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE, 0);
     }
+
+    GLTexture texCubeMap;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texCubeMap);
+    glTexStorage2D(GL_TEXTURE_CUBE_MAP, 2, GL_RGBA8I, 10, 10);
+    EXPECT_GL_NO_ERROR();
+    glFramebufferTexturePixelLocalStorageANGLE(2, texCubeMap, 1, 6);
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_VALUE);
+    EXPECT_GL_SINGLE_ERROR_MSG("Layer is larger than texture depth.");
+    glFramebufferTexturePixelLocalStorageANGLE(2, texCubeMap, 2, 5);
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_VALUE);
+    EXPECT_GL_SINGLE_ERROR_MSG("Level is larger than texture level count.");
+    glFramebufferTexturePixelLocalStorageANGLE(2, texCubeMap, 1, 5);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PLS_INTEGER(2, GL_PIXEL_LOCAL_FORMAT_ANGLE, GL_RGBA8I);
+    EXPECT_PLS_INTEGER(2, GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, texCubeMap);
+    EXPECT_PLS_INTEGER(2, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE, 1);
+    EXPECT_PLS_INTEGER(2, GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE, 5);
 
     // INVALID_ENUM is generated if <backingtexture> is nonzero and its internalformat is not
     // one of the acceptable values in Table X.2.
@@ -5698,6 +5854,68 @@ TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_pls_collisio
     // Attach the sidelined layer to the framebuffer and use fewer PLS planes so there is no
     // longer a collision.
     glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, pls2darray, 0, 2);
+    glBeginPixelLocalStorageANGLE(2, GLenumArray({GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE}));
+    EXPECT_GL_NO_ERROR();
+    glEndPixelLocalStorageANGLE(2, GLenumArray({GL_STORE_OP_STORE_ANGLE, GL_STORE_OP_STORE_ANGLE}));
+    ASSERT_GL_NO_ERROR();
+}
+
+// Check that glBeginPixelLocalStorageANGLE validates feedback loops with GL_TEXTURE_CUBE_MAP as
+// specified:
+//
+// INVALID_OPERATION is generated if a single texture slice is bound to more than one active pixel
+// local storage plane.
+//
+// INVALID_OPERATION is generated if a single texture slice is simultaneously bound to an active
+// pixel local storage plane and attached to an enabled drawbuffer.
+TEST_P(PixelLocalStorageValidationTest, BeginPixelLocalStorageANGLE_pls_collisions_texcubemap)
+{
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glDrawBuffers(4, GLenumArray({GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2,
+                                  GL_COLOR_ATTACHMENT3}));
+    ASSERT_GL_NO_ERROR();
+
+    // Attach different faces of the same cube map texture to PLS.
+    GLTexture plscubemap;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, plscubemap);
+    glTexStorage2D(GL_TEXTURE_CUBE_MAP, 1, GL_RGBA8, W, H);
+    ASSERT_GL_NO_ERROR();
+    glFramebufferTexturePixelLocalStorageANGLE(0, plscubemap, 0, 0);
+    glFramebufferTexturePixelLocalStorageANGLE(1, plscubemap, 0, 1);
+    glFramebufferTexturePixelLocalStorageANGLE(2, plscubemap, 0, 2);
+    glFramebufferTexturePixelLocalStorageANGLE(3, plscubemap, 0, 3);
+    glBeginPixelLocalStorageANGLE(4, GLenumArray({GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE,
+                                                  GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE}));
+    EXPECT_GL_NO_ERROR();
+    glEndPixelLocalStorageANGLE(4, GLenumArray({GL_STORE_OP_STORE_ANGLE, GL_STORE_OP_STORE_ANGLE,
+                                                GL_STORE_OP_STORE_ANGLE, GL_STORE_OP_STORE_ANGLE}));
+    EXPECT_GL_NO_ERROR();
+
+    // Now attach the same face index twice.
+    glFramebufferTexturePixelLocalStorageANGLE(2, plscubemap, 0, 3);
+    glBeginPixelLocalStorageANGLE(4, GLenumArray({GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE,
+                                                  GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE}));
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG(
+        "A single texture slice is bound to multiple active pixel local storage planes.");
+    ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
+
+    // Now attach the same face index to the framebuffer and PLS (-Y face has index 3).
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
+                           plscubemap, 0);
+    glBeginPixelLocalStorageANGLE(
+        3, GLenumArray({GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE}));
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
+    EXPECT_GL_SINGLE_ERROR_MSG(
+        "A single texture slice is simultaneously bound to an active pixel local storage plane and "
+        "attached to an enabled drawbuffer.");
+    ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, 0);
+
+    // Attach the sidelined face to the framebuffer and use fewer PLS planes so there is no
+    // longer a collision (+Y face has index 2).
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_CUBE_MAP_POSITIVE_Y,
+                           plscubemap, 0);
     glBeginPixelLocalStorageANGLE(2, GLenumArray({GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE}));
     EXPECT_GL_NO_ERROR();
     glEndPixelLocalStorageANGLE(2, GLenumArray({GL_STORE_OP_STORE_ANGLE, GL_STORE_OP_STORE_ANGLE}));

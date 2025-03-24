@@ -364,13 +364,13 @@ void PixelLocalStoragePlane::attachToDrawFramebuffer(Context *context, GLenum co
     ASSERT(!isDeinitialized());
     // Call ensureBackingTextureIfMemoryless() first!
     ASSERT(mTextureID.value != 0 && context->getTexture(mTextureID) != nullptr);
-    if (mTextureImageIndex.usesTex3D())  // GL_TEXTURE_3D or GL_TEXTURE_2D_ARRAY.
+    if (mTextureImageIndex.usesTex3D())  // GL_TEXTURE_2D_ARRAY or GL_TEXTURE_CUBE_MAP_ARRAY
     {
         context->framebufferTextureLayer(GL_DRAW_FRAMEBUFFER, colorAttachment, mTextureID,
                                          mTextureImageIndex.getLevelIndex(),
                                          mTextureImageIndex.getLayerIndex());
     }
-    else
+    else  // GL_TEXTURE_2D or GL_TEXTURE_CUBE_MAP
     {
         context->framebufferTexture2D(GL_DRAW_FRAMEBUFFER, colorAttachment,
                                       mTextureImageIndex.getTarget(), mTextureID,

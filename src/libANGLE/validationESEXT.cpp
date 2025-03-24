@@ -2196,7 +2196,8 @@ bool ValidatePLSTextureType(const Context *context,
                             size_t *textureDepth)
 {
     // INVALID_OPERATION is generated if <backingtexture> is nonzero
-    // and not of type TEXTURE_2D or TEXTURE_2D_ARRAY.
+    // and not of type TEXTURE_2D, TEXTURE_2D_ARRAY, TEXTURE_CUBE_MAP,
+    // or TEXTURE_CUBE_MAP_ARRAY.
     switch (tex->getType())
     {
         case TextureType::_2D:
@@ -2204,6 +2205,12 @@ bool ValidatePLSTextureType(const Context *context,
             return true;
         case TextureType::_2DArray:
             *textureDepth = tex->getDepth(TextureTarget::_2DArray, 0);
+            return true;
+        case TextureType::CubeMap:
+            *textureDepth = 6;
+            return true;
+        case TextureType::CubeMapArray:
+            *textureDepth = tex->getDepth(TextureTarget::CubeMapArray, 0);
             return true;
         default:
             ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kPLSInvalidTextureType);
@@ -2370,7 +2377,8 @@ bool ValidateFramebufferTexturePixelLocalStorageANGLE(const Context *context,
         }
 
         // INVALID_OPERATION is generated if <backingtexture> is nonzero
-        // and not of type GL_TEXTURE_2D or GL_TEXTURE_2D_ARRAY.
+        // and not of type GL_TEXTURE_2D, GL_TEXTURE_2D_ARRAY, GL_TEXTURE_CUBE_MAP,
+        // or GL_TEXTURE_CUBE_MAP_ARRAY.
         size_t textureDepth;
         if (!ValidatePLSTextureType(context, entryPoint, tex, &textureDepth))
         {

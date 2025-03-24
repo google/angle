@@ -70,6 +70,8 @@ Dependencies
 
     This extension interacts with EXT_polygon_offset_clamp.
 
+    This extension interacts with EXT_texture_cube_map_array.
+
     This extension interacts with KHR_blend_equation_advanced.
 
     This extension interacts with KHR_debug.
@@ -82,9 +84,13 @@ Dependencies
 
     This extension interacts with OES_sample_variables.
 
+    This extension interacts with OES_texture_cube_map_array.
+
     This extension interacts with QCOM_tiled_rendering.
 
     This extension interacts with OpenGL ES 3.1.
+
+    This extension interacts with OpenGL ES 3.2.
 
     This extension interacts with GLSL ES 3.10.
 
@@ -735,6 +741,12 @@ Additions to the OpenGL ES Specification, Version 3.0.6
 
         - Zero if <backingtexture> is a TEXTURE_2D
         - The array index to bind if <backingtexture> is a TEXTURE_2D_ARRAY
+        - The cube map face index to bind if <backingtexture> is a
+          TEXTURE_CUBE_MAP; indices zero to five correspond to the following
+          cube map faces: +X, -X, +Y, -Y, +Z, -Z
+        - The cube map array layer-face index to bind if <backingtexture> is a
+          TEXTURE_CUBE_MAP_ARRAY_EXT, TEXTURE_CUBE_MAP_ARRAY_OES, or
+          TEXTURE_CUBE_MAP_ARRAY
 
     Errors:
 
@@ -755,7 +767,9 @@ Additions to the OpenGL ES Specification, Version 3.0.6
         existing immutable texture object, or zero.
 
       * INVALID_OPERATION is generated if <backingtexture> is nonzero and not of
-        type TEXTURE_2D or TEXTURE_2D_ARRAY.
+        type TEXTURE_2D, TEXTURE_2D_ARRAY, TEXTURE_CUBE_MAP,
+        TEXTURE_CUBE_MAP_ARRAY_EXT, TEXTURE_CUBE_MAP_ARRAY_OES, or
+        TEXTURE_CUBE_MAP_ARRAY.
 
       * INVALID_VALUE is generated if <backingtexture> is nonzero and
         <level> < 0.
@@ -995,8 +1009,9 @@ Interactions with the ANGLE_request_extension specification
 Interactions with ANGLE_provoking_vertex, ANGLE_polygon_mode,
 EXT_blend_func_extended, EXT_clip_control, EXT_clip_cull_distance,
 EXT_depth_clamp, EXT_draw_buffers_indexed, EXT_polygon_offset_clamp,
-KHR_blend_equation_advanced, KHR_debug, NV_polygon_mode,
-NV_scissor_exclusive, OES_draw_buffers_indexed
+EXT_texture_cube_map_array, KHR_blend_equation_advanced, KHR_debug,
+NV_polygon_mode, NV_scissor_exclusive, OES_draw_buffers_indexed,
+OES_texture_cube_map_array
 
     If any of these extensions is not supported, ignore the applicable
     references to the extension itself, and to BlendEquationSeparatei*,
@@ -1006,7 +1021,8 @@ NV_scissor_exclusive, OES_draw_buffers_indexed
     ProvokingVertexANGLE, ObjectPtrLabel*, PopDebugGroup*, PushDebugGroup*,
     DEBUG_OUTPUT, DEBUG_OUTPUT_SYNCHRONOUS, SCISSOR_TEST_EXCLUSIVE_NV,
     CLIP_DISTANCE[0..7]_EXT, POLYGON_OFFSET_POINT_NV, POLYGON_OFFSET_LINE_NV,
-    POLYGON_OFFSET_LINE_ANGLE symbols.
+    POLYGON_OFFSET_LINE_ANGLE, TEXTURE_CUBE_MAP_ARRAY_EXT,
+    TEXTURE_CUBE_MAP_ARRAY_OES symbols.
 
 Interactions with OpenGL ES 3.1
 
@@ -1017,6 +1033,10 @@ Interactions with OpenGL ES 3.1
   Add active pixel local storage planes to the list of resource types that count
   against MAX_COMBINED_SHADER_OUTPUT_RESOURCES.
 
+Interactions with OpenGL ES 3.2
+
+  If OpenGL ES 3.2 is not supported, ignore all references to the
+  TEXTURE_CUBE_MAP_ARRAY symbol.
 
 Additions to the OpenGL ES Shading Language Specification, Version 3.00
 
@@ -1254,11 +1274,8 @@ Issues
 
     (4) Should we support binding cube map layers to pixel local storage?
 
-      RESOLVED: No. There is currently a 1:1 mapping on every implementation
-      from pixel local storage shaders to backend shaders, but binding a cube
-      map layer would require a texelFetch() implementation to behave
-      differently in the shader. We can always add cube map support in the
-      future, if the need arises.
+      RESOLVED: Yes. Cube map and cube map array layers use the same binding
+      semantics as 2D array layers.
 
     (5) Can we support transform feedback?
 
