@@ -216,6 +216,9 @@ class BufferHelper : public angle::NonCopyable
     bool canMapForRead() const;
     bool canMapForWrite() const;
 
+    bool isMappedForRead() const;
+    bool isMappedForWrite() const;
+
     wgpu::Buffer &getBuffer();
     uint64_t requestedSize() const;
     uint64_t actualSize() const;

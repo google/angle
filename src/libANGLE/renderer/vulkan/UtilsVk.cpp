@@ -520,35 +520,6 @@ void SetStencilDynamicStateForUnused(vk::Renderer *renderer,
     commandBuffer->setStencilReference(0x00, 0x00);
 }
 
-void HandlePrimitiveRestart(ContextVk *contextVk,
-                            gl::DrawElementsType glIndexType,
-                            GLsizei indexCount,
-                            const uint8_t *srcPtr,
-                            uint8_t *outPtr)
-{
-    switch (glIndexType)
-    {
-        case gl::DrawElementsType::UnsignedByte:
-            if (contextVk->getFeatures().supportsIndexTypeUint8.enabled)
-            {
-                CopyLineLoopIndicesWithRestart<uint8_t, uint8_t>(indexCount, srcPtr, outPtr);
-            }
-            else
-            {
-                CopyLineLoopIndicesWithRestart<uint8_t, uint16_t>(indexCount, srcPtr, outPtr);
-            }
-            break;
-        case gl::DrawElementsType::UnsignedShort:
-            CopyLineLoopIndicesWithRestart<uint16_t, uint16_t>(indexCount, srcPtr, outPtr);
-            break;
-        case gl::DrawElementsType::UnsignedInt:
-            CopyLineLoopIndicesWithRestart<uint32_t, uint32_t>(indexCount, srcPtr, outPtr);
-            break;
-        default:
-            UNREACHABLE();
-    }
-}
-
 namespace unresolve
 {
 // The unresolve shader looks like the following, based on the number and types of unresolve
@@ -5048,7 +5019,8 @@ angle::Result LineLoopHelper::streamIndices(ContextVk *contextVk,
 
     if (contextVk->getState().isPrimitiveRestartEnabled())
     {
-        HandlePrimitiveRestart(contextVk, glIndexType, indexCount, srcPtr, indices);
+        rx::StreamEmulatedLineLoopIndices(glIndexType, indexCount, srcPtr, indices,
+                                          !contextVk->getFeatures().supportsIndexTypeUint8.enabled);
     }
     else
     {

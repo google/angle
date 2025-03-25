@@ -244,18 +244,55 @@ angle::Result VertexArrayWgpu::syncClientArrays(
     }
 
     GLsizei adjustedCount = count;
+    gl::Buffer *elementArrayBuffer = mState.getElementArrayBuffer();
+    const uint8_t *srcIndexData    = static_cast<const uint8_t *>(indices);
+    ContextWgpu *contextWgpu       = webgpu::GetImpl(context);
+    wgpu::Device device            = webgpu::GetDevice(context);
+
     if (mode == gl::PrimitiveMode::LineLoop)
     {
-        adjustedCount++;
+        if (primitiveRestartEnabled)
+        {
+            if (elementArrayBuffer)
+            {
+                BufferWgpu *elementArrayBufferWgpu = GetImplAs<BufferWgpu>(elementArrayBuffer);
+                size_t sourceOffset = rx::roundDownPow2(reinterpret_cast<size_t>(indices),
+                                                        webgpu::kBufferMapOffsetAlignment);
+                ASSERT(sourceOffset < elementArrayBufferWgpu->getBuffer().actualSize());
+                size_t mapReadSize = rx::roundUpPow2(
+                    static_cast<size_t>(elementArrayBufferWgpu->getBuffer().actualSize()) -
+                        sourceOffset,
+                    webgpu::kBufferCopyToBufferAlignment);
+                if (!elementArrayBufferWgpu->getBuffer().isMappedForRead())
+                {
+                    ASSERT(elementArrayBufferWgpu->getBuffer().canMapForRead());
+                    ANGLE_TRY(elementArrayBufferWgpu->getBuffer().mapImmediate(
+                        contextWgpu, wgpu::MapMode::Read, sourceOffset, mapReadSize));
+                }
+                srcIndexData = elementArrayBufferWgpu->getBuffer().getMapReadPointer(sourceOffset,
+                                                                                     mapReadSize);
+            }
+            adjustedCount = GetLineLoopWithRestartIndexCount(destDrawElementsTypeOrInvalid, count,
+                                                             srcIndexData);
+            // If there aren't any client attributes to sync but the adjusted count is 0, that means
+            // there no indices outside the primitive restart index, so this is a no-op.
+            if (!clientAttributesToSync.any() && adjustedCount == 0)
+            {
+                return angle::Result::Continue;
+            }
+        }
+        // Without primitive restarts, the adjusted count is always count + 1 because emulating line
+        // loops requires appending the first index to the end of the list to make a line strip.
+        else
+        {
+            adjustedCount++;
+        }
     }
 
     if (indexCountOut)
     {
         *indexCountOut = adjustedCount;
     }
-
-    ContextWgpu *contextWgpu = webgpu::GetImpl(context);
-    wgpu::Device device      = webgpu::GetDevice(context);
 
     // If any attributes need to be streamed, we need to know the index range. We also need to know
     // the index range if there is a draw arrays call and we have to stream the index data for it.
@@ -280,7 +317,6 @@ angle::Result VertexArrayWgpu::syncClientArrays(
 
     std::optional<size_t> destIndexDataSize;
     std::optional<size_t> destIndexUnitSize;
-    gl::Buffer *elementArrayBuffer = mState.getElementArrayBuffer();
     if (indexDataNeedsStreaming != IndexDataNeedsStreaming::No)
     {
         destIndexUnitSize =
@@ -289,7 +325,8 @@ angle::Result VertexArrayWgpu::syncClientArrays(
 
         // Allocating staging buffer space for indices is only needed when there is no source index
         // buffer or index data conversion is needed
-        if (!elementArrayBuffer || sourceDrawElementsTypeOrInvalid != destDrawElementsTypeOrInvalid)
+        if (primitiveRestartEnabled || !elementArrayBuffer ||
+            sourceDrawElementsTypeOrInvalid != destDrawElementsTypeOrInvalid)
         {
             stagingBufferSize +=
                 rx::roundUpPow2(destIndexDataSize.value(), webgpu::kBufferCopyToBufferAlignment);
@@ -363,7 +400,23 @@ angle::Result VertexArrayWgpu::syncClientArrays(
         ANGLE_TRY(ensureBufferCreated(context, mStreamingIndexBuffer, destIndexBufferSize, 0,
                                       wgpu::BufferUsage::CopyDst | wgpu::BufferUsage::Index,
                                       BufferType::IndexBuffer));
-        if (sourceDrawElementsTypeOrInvalid == destDrawElementsTypeOrInvalid && elementArrayBuffer)
+        // TODO(anglebug.com/401226623): Don't use the staging buffer when the adjustedCount for
+        // primitive restarts is count + 1.
+        if (primitiveRestartEnabled && mode == gl::PrimitiveMode::LineLoop)
+        {
+            rx::StreamEmulatedLineLoopIndices(destDrawElementsTypeOrInvalid, count, srcIndexData,
+                                              stagingData,
+                                              /* shouldConvertUint8= */ true);
+            if (elementArrayBuffer)
+            {
+                BufferWgpu *elementArrayBufferWgpu = GetImplAs<BufferWgpu>(elementArrayBuffer);
+                ANGLE_TRY(elementArrayBufferWgpu->getBuffer().unmap());
+            }
+            stagingUploads.push_back({currentStagingDataPosition, &stagingBuffer,
+                                      &mStreamingIndexBuffer, 0, destIndexBufferSize});
+        }
+        else if (sourceDrawElementsTypeOrInvalid == destDrawElementsTypeOrInvalid &&
+                 elementArrayBuffer)
         {
             // Use the element array buffer as the source for the new streaming index buffer. This
             // condition is only hit when an indexed draw call has an element array buffer and is
@@ -414,8 +467,6 @@ angle::Result VertexArrayWgpu::syncClientArrays(
         }
         else
         {
-            const uint8_t *srcIndexData = static_cast<const uint8_t *>(indices);
-
             webgpu::BufferReadback readbackBuffer;
             if (mState.getElementArrayBuffer())
             {

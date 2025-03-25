@@ -513,16 +513,18 @@ angle::Result BufferHelper::mapImmediate(ContextWgpu *context,
 
     ASSERT(waitInfo.completed);
 
-    mMappedState = {mode, offset, size};
+    mMappedState = {mode, safeBufferMapOffset, safeBufferMapSize};
 
     return angle::Result::Continue;
 }
 
 angle::Result BufferHelper::unmap()
 {
-    ASSERT(mMappedState.has_value());
-    mBuffer.Unmap();
-    mMappedState.reset();
+    if (mMappedState.has_value())
+    {
+        mBuffer.Unmap();
+        mMappedState.reset();
+    }
     return angle::Result::Continue;
 }
 
@@ -570,6 +572,15 @@ bool BufferHelper::canMapForWrite() const
 {
     return (mMappedState.has_value() && (mMappedState->mode & wgpu::MapMode::Write)) ||
            (mBuffer && (mBuffer.GetUsage() & wgpu::BufferUsage::MapWrite));
+}
+
+bool BufferHelper::isMappedForRead() const
+{
+    return mMappedState.has_value() && (mMappedState->mode & wgpu::MapMode::Read);
+}
+bool BufferHelper::isMappedForWrite() const
+{
+    return mMappedState.has_value() && (mMappedState->mode & wgpu::MapMode::Write);
 }
 
 wgpu::Buffer &BufferHelper::getBuffer()

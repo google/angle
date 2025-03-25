@@ -447,6 +447,12 @@ size_t CopyLineLoopIndicesWithRestart(GLsizei indexCount, const uint8_t *srcPtr,
     return static_cast<size_t>(outIndices - reinterpret_cast<Out *>(outPtr));
 }
 
+void StreamEmulatedLineLoopIndices(gl::DrawElementsType glIndexType,
+                                   GLsizei indexCount,
+                                   const uint8_t *srcPtr,
+                                   uint8_t *outPtr,
+                                   bool shouldConvertUint8);
+
 void GetSamplePosition(GLsizei sampleCount, size_t index, GLfloat *xy);
 
 angle::Result MultiDrawArraysGeneral(ContextImpl *contextImpl,

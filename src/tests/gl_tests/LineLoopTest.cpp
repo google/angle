@@ -1354,7 +1354,8 @@ GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(LineLoopPrimitiveRestartTest);
 ANGLE_INSTANTIATE_TEST_ES3_AND(
     LineLoopPrimitiveRestartTest,
     ES3_METAL().enable(Feature::ForceBufferGPUStorage),
-    ES3_METAL().disable(Feature::HasExplicitMemBarrier).disable(Feature::HasCheapRenderPass));
+    ES3_METAL().disable(Feature::HasExplicitMemBarrier).disable(Feature::HasCheapRenderPass),
+    ES3_WEBGPU());
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(LineLoopIndirectTest);
 ANGLE_INSTANTIATE_TEST_ES31(LineLoopIndirectTest);
