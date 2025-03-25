@@ -2179,7 +2179,21 @@ void Framebuffer::onSubjectStateChange(angle::SubjectIndex index, angle::Subject
         // This can be triggered by external changes to the default framebuffer.
         if (message == angle::SubjectMessage::SurfaceChanged)
         {
-            onStateChange(angle::SubjectMessage::SurfaceChanged);
+            // Ignore notification for the depth and stencil bindings.
+            if (index < DIRTY_BIT_COLOR_ATTACHMENT_MAX)
+            {
+                // Surface only has single color attachment.
+                ASSERT(index == 0);
+                // During syncState the bit must be already set, skip setting it again.
+                ASSERT(!mDirtyBitsGuard.valid() ||
+                       mDirtyBitsGuard.value().test(DIRTY_BIT_COLOR_BUFFER_CONTENTS_0));
+                if (!mDirtyBitsGuard.valid())
+                {
+                    mDirtyBits.set(DIRTY_BIT_COLOR_BUFFER_CONTENTS_0);
+                    onStateChange(angle::SubjectMessage::DirtyBitsFlagged);
+                }
+                onStateChange(angle::SubjectMessage::SurfaceChanged);
+            }
             return;
         }
 

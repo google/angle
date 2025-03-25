@@ -19,6 +19,7 @@
 #include "util/EGLWindow.h"
 #include "util/OSWindow.h"
 #include "util/Timer.h"
+#include "util/test_utils.h"
 
 #if defined(ANGLE_ENABLE_D3D11)
 #    define INITGUID
@@ -2113,6 +2114,9 @@ TEST_P(EGLSingleBufferTest, OnCreateWindowSurface)
     {
         EXPECT_EGL_TRUE(actualRenderbuffer == EGL_SINGLE_BUFFER);
 
+        glEnable(GL_SCISSOR_TEST);
+        glScissor(0, 0, 2, 2);
+
         glClearColor(0.0, 1.0, 0.0, 1.0);
         glClear(GL_COLOR_BUFFER_BIT);
         glFlush();
@@ -2120,6 +2124,13 @@ TEST_P(EGLSingleBufferTest, OnCreateWindowSurface)
         // Flush should result in update of screen. Must be visually confirmed.
         // Pixel test for automation.
         EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::green);
+
+        // Check second flush
+        glClearColor(1.0, 0.0, 0.0, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glFlush();
+        ASSERT_GL_NO_ERROR();
+        EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::red);
     }
     else
     {
@@ -2170,6 +2181,9 @@ TEST_P(EGLSingleBufferTest, OnSetSurfaceAttrib)
         EXPECT_EGL_TRUE(eglQueryContext(mDisplay, context, EGL_RENDER_BUFFER, &actualRenderbuffer));
         EXPECT_EGL_TRUE(actualRenderbuffer == EGL_SINGLE_BUFFER);
 
+        glEnable(GL_SCISSOR_TEST);
+        glScissor(0, 0, 2, 2);
+
         glClearColor(0.0, 1.0, 0.0, 1.0);
         glClear(GL_COLOR_BUFFER_BIT);
         glFlush();
@@ -2178,7 +2192,13 @@ TEST_P(EGLSingleBufferTest, OnSetSurfaceAttrib)
         // Check color for automation.
         EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::green);
 
-        // Switch back to EGL_BACK_BUFFEr and check.
+        // Check second flush
+        glClearColor(1.0, 0.0, 0.0, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glFlush();
+        EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::red);
+
+        // Switch back to EGL_BACK_BUFFER and check.
         EXPECT_EGL_TRUE(eglSurfaceAttrib(mDisplay, surface, EGL_RENDER_BUFFER, EGL_BACK_BUFFER));
         glClearColor(1.0, 1.0, 1.0, 1.0);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -2783,6 +2803,157 @@ TEST_P(EGLSingleBufferTest, SharedPresentLayoutWithMSAA)
     context = EGL_NO_CONTEXT;
 }
 
+// Tests that Window resize does not invalidate the previous content.
+TEST_P(EGLSingleBufferTest, WindowResize)
+{
+    ANGLE_SKIP_TEST_IF(!IsEGLDisplayExtensionEnabled(mDisplay, "EGL_KHR_mutable_render_buffer"));
+
+    EGLConfig config = EGL_NO_CONFIG_KHR;
+    ANGLE_SKIP_TEST_IF(!chooseConfig(&config, true));
+
+    EGLContext context = EGL_NO_CONTEXT;
+    EXPECT_EGL_TRUE(createContext(config, &context));
+    ASSERT_EGL_SUCCESS() << "eglCreateContext failed.";
+
+    EGLSurface surface = EGL_NO_SURFACE;
+    OSWindow *osWindow = OSWindow::New();
+    osWindow->initialize("EGLSingleBufferTest", kWidth, kHeight);
+    EXPECT_EGL_TRUE(
+        createWindowSurface(config, osWindow->getNativeWindow(), &surface, EGL_BACK_BUFFER));
+    ASSERT_EGL_SUCCESS() << "eglCreateWindowSurface failed.";
+
+    EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, surface, surface, context));
+    ASSERT_EGL_SUCCESS() << "eglMakeCurrent failed.";
+
+    EXPECT_EGL_TRUE(eglSurfaceAttrib(mDisplay, surface, EGL_RENDER_BUFFER, EGL_SINGLE_BUFFER));
+
+    // Transition into EGL_SINGLE_BUFFER mode.
+    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    if (eglSwapBuffers(mDisplay, surface))
+    {
+        EGLint actualRenderbuffer;
+        EXPECT_EGL_TRUE(eglQueryContext(mDisplay, context, EGL_RENDER_BUFFER, &actualRenderbuffer));
+        EXPECT_EGL_TRUE(actualRenderbuffer == EGL_SINGLE_BUFFER);
+
+        glEnable(GL_SCISSOR_TEST);
+
+        // Draw before resize
+        glScissor(0, 0, 2, 2);
+        glClearColor(0.0, 1.0, 0.0, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glFlush();
+
+        // Window resize should not invalidate the previous content.  Note, window resize may be
+        // ignored to preserve the content (native GLES Android behavior).
+        osWindow->resize(kWidth + 16, kHeight + 16);
+
+        // Draw after resize
+        glScissor(1, 1, 1, 1);
+        glClearColor(1.0, 0.0, 0.0, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glFlush();
+
+        // Check result from both draws.
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+        EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::red);
+    }
+    else
+    {
+        std::cout << "EGL_SINGLE_BUFFER mode is not supported." << std::endl;
+    }
+
+    EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, context));
+    ASSERT_EGL_SUCCESS() << "eglMakeCurrent - uncurrent failed.";
+
+    eglDestroySurface(mDisplay, surface);
+    surface = EGL_NO_SURFACE;
+    osWindow->destroy();
+    OSWindow::Delete(&osWindow);
+
+    eglDestroyContext(mDisplay, context);
+    context = EGL_NO_CONTEXT;
+}
+
+// Tests that Window rotation does not invalidate the previous content.
+TEST_P(EGLSingleBufferTest, WindowRotation)
+{
+    ANGLE_SKIP_TEST_IF(!IsEGLDisplayExtensionEnabled(mDisplay, "EGL_KHR_mutable_render_buffer"));
+    // This test uses functionality that is only available on Android
+    ANGLE_SKIP_TEST_IF(!IsAndroid());
+
+    EGLConfig config = EGL_NO_CONFIG_KHR;
+    ANGLE_SKIP_TEST_IF(!chooseConfig(&config, true));
+
+    EGLContext context = EGL_NO_CONTEXT;
+    EXPECT_EGL_TRUE(createContext(config, &context));
+    ASSERT_EGL_SUCCESS() << "eglCreateContext failed.";
+
+    EGLSurface surface = EGL_NO_SURFACE;
+    OSWindow *osWindow = OSWindow::New();
+    osWindow->initialize("EGLSingleBufferTest", kWidth, kHeight);
+    EXPECT_EGL_TRUE(
+        createWindowSurface(config, osWindow->getNativeWindow(), &surface, EGL_BACK_BUFFER));
+    ASSERT_EGL_SUCCESS() << "eglCreateWindowSurface failed.";
+
+    EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, surface, surface, context));
+    ASSERT_EGL_SUCCESS() << "eglMakeCurrent failed.";
+
+    EXPECT_EGL_TRUE(eglSurfaceAttrib(mDisplay, surface, EGL_RENDER_BUFFER, EGL_SINGLE_BUFFER));
+
+    // Transition into EGL_SINGLE_BUFFER mode.
+    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    if (eglSwapBuffers(mDisplay, surface))
+    {
+        EGLint actualRenderbuffer;
+        EXPECT_EGL_TRUE(eglQueryContext(mDisplay, context, EGL_RENDER_BUFFER, &actualRenderbuffer));
+        EXPECT_EGL_TRUE(actualRenderbuffer == EGL_SINGLE_BUFFER);
+
+        glEnable(GL_SCISSOR_TEST);
+
+        // Set landscape orientation.  Note, this will not change window size.
+        osWindow->setOrientation(200, 100);
+        angle::Sleep(1000);
+
+        // Draw in landscape orientation.
+        glScissor(0, 0, 2, 2);
+        glClearColor(0.0, 1.0, 0.0, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glFlush();
+
+        // Set portrait orientation.  Window rotation should not invalidate the previous content.
+        // Note, window rotation may be ignored to preserve content (native GLES Android behavior).
+        osWindow->setOrientation(100, 200);
+        angle::Sleep(1000);
+
+        // Draw in portrait orientation.
+        glScissor(1, 1, 1, 1);
+        glClearColor(1.0, 0.0, 0.0, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glFlush();
+
+        // Check result from both draws.
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+        EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::red);
+    }
+    else
+    {
+        std::cout << "EGL_SINGLE_BUFFER mode is not supported." << std::endl;
+    }
+
+    EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, context));
+    ASSERT_EGL_SUCCESS() << "eglMakeCurrent - uncurrent failed.";
+
+    eglDestroySurface(mDisplay, surface);
+    surface = EGL_NO_SURFACE;
+    osWindow->destroy();
+    OSWindow::Delete(&osWindow);
+
+    eglDestroyContext(mDisplay, context);
+    context = EGL_NO_CONTEXT;
+}
+
 // Test that setting a surface to EGL_SINGLE_BUFFER after enabling
 // EGL_FRONT_BUFFER_AUTO_REFRESH_ANDROID does not disable auto refresh
 TEST_P(EGLAndroidAutoRefreshTest, Basic)
@@ -2934,6 +3105,73 @@ TEST_P(EGLAndroidAutoRefreshTest, SwapCPUThrottling)
 
     eglDestroyContext(mDisplay, context);
     context = EGL_NO_CONTEXT;
+}
+
+// Tests that draw draw does not also synchronize read framebuffer binding.
+TEST_P(EGLSurfaceTest, ReadFramebufferBindingSyncState)
+{
+    // This test uses functionality that is only available on Android
+    ANGLE_SKIP_TEST_IF(!IsAndroid());
+
+    const EGLint kPortraitWidth  = 128;
+    const EGLint kPortraitHeight = 256;
+
+    // Set portrait orientation before surface creation.
+    mOSWindow->resize(kPortraitWidth, kPortraitHeight);
+    mOSWindow->setOrientation(kPortraitWidth, kPortraitHeight);
+    angle::Sleep(1000);
+
+    initializeDisplay();
+    initializeSurfaceWithDefaultConfig(true);
+    initializeMainContext();
+    ASSERT_NE(mWindowSurface, EGL_NO_SURFACE);
+
+    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
+    ASSERT_EGL_SUCCESS();
+
+    // Make sure swapchain is created.
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    // Set landscape orientation after swapchain creation.  Note, this will not change window size.
+    mOSWindow->setOrientation(kPortraitHeight, kPortraitWidth);
+    angle::Sleep(1000);
+
+    // Current swapchain is expected to be invalidated because of the present SUBOPTIMAL result.
+    // This will invalidate draw and read framebuffer bindings context state dirty bits.
+    eglSwapBuffers(mDisplay, mWindowSurface);
+    ASSERT_EGL_SUCCESS();
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 64, 64);
+    ASSERT_GL_NO_ERROR();
+
+    // Bind only draw framebuffer, keeping default read framebuffer.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_DRAW_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw should not sync read framebuffer binding (at least not without read framebuffer object).
+    ANGLE_GL_PROGRAM(drawRed, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
+    drawQuad(drawRed.get(), essl3_shaders::PositionAttrib(), 0.8f);
+    ASSERT_GL_NO_ERROR();
+
+    // Clear default framebuffer. This should sync both, read framebuffer object and binding.
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    // Check the entire surface.
+    EXPECT_PIXEL_RECT_EQ(0, 0, kPortraitWidth, kPortraitHeight, GLColor::red);
+
+    // Revert to the portrait orientation.
+    mOSWindow->setOrientation(kPortraitWidth, kPortraitHeight);
+    angle::Sleep(1000);
 }
 
 void EGLSurfaceTest::runWaitSemaphoreTest(bool useSecondContext)
