@@ -677,7 +677,7 @@ bool ValidateGetPlatformDisplayCommon(const ValidationContext *val,
             }
             break;
         default:
-            val->setError(EGL_BAD_CONFIG, "Bad platform type.");
+            val->setError(EGL_BAD_PARAMETER, "Bad platform type.");
             return false;
     }
 
