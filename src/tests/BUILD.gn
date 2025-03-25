@@ -1772,10 +1772,6 @@ if (build_angle_deqp_tests && !is_fuchsia) {
       ":angle_deqp_framework_egl",
       ":angle_deqp_glshared",
     ]
-    if (is_clang) {
-      # TODO(crbug.com/393942204): Unused field in es31fSRGBDecodeTests.cpp
-      cflags_cc = [ "-Wno-unused-private-field" ]
-    }
   }
 
   template("angle_deqp_core_gtest") {
