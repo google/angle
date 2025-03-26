@@ -593,7 +593,6 @@ class PrivateState : angle::NonCopyable
     const GLES1State &gles1() const { return mGLES1State; }
 
     const state::DirtyBits &getDirtyBits() const { return mDirtyBits; }
-    void clearDirtyBits() { mDirtyBits.reset(); }
     void clearDirtyBits(const state::DirtyBits &bitset) { mDirtyBits &= ~bitset; }
     void setAllDirtyBits()
     {
@@ -603,7 +602,6 @@ class PrivateState : angle::NonCopyable
     }
 
     const state::ExtendedDirtyBits &getExtendedDirtyBits() const { return mExtendedDirtyBits; }
-    void clearExtendedDirtyBits() { mExtendedDirtyBits.reset(); }
     void clearExtendedDirtyBits(const state::ExtendedDirtyBits &bitset)
     {
         mExtendedDirtyBits &= ~bitset;
@@ -1102,11 +1100,6 @@ class State : angle::NonCopyable
     {
         return mDirtyBits | mPrivateState.getDirtyBits();
     }
-    void clearDirtyBits()
-    {
-        mDirtyBits.reset();
-        mPrivateState.clearDirtyBits();
-    }
     void clearDirtyBits(const state::DirtyBits &bitset)
     {
         mDirtyBits &= ~bitset;
@@ -1122,11 +1115,6 @@ class State : angle::NonCopyable
     const state::ExtendedDirtyBits getExtendedDirtyBits() const
     {
         return mExtendedDirtyBits | mPrivateState.getExtendedDirtyBits();
-    }
-    void clearExtendedDirtyBits()
-    {
-        mExtendedDirtyBits.reset();
-        mPrivateState.clearExtendedDirtyBits();
     }
     void clearExtendedDirtyBits(const state::ExtendedDirtyBits &bitset)
     {
