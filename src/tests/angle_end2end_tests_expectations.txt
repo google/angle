@@ -1635,6 +1635,7 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 404959032 MAC AMD OPENGL : BlitFramebufferTest.BlitLargeColorSmallDepthAttachments/* = SKIP
 404959032 MAC AMD OPENGL : BlitFramebufferTest.BlitSmallColorLargeDepthAttachments/* = SKIP
 404959032 MAC INTEL OPENGL : BlitFramebufferTest.BlitLargeColorSmallDepthAttachments/* = SKIP
+404959032 MAC INTEL OPENGL : BlitFramebufferTest.BlitSmallColorLargeDepthAttachments/* = SKIP
 404958320 WIN INTEL VULKAN : BlitFramebufferTest.BlitLargeColorSmallDepthAttachments/* = SKIP
 404958320 WIN INTEL VULKAN : BlitFramebufferTest.BlitSmallColorLargeDepthAttachments/* = SKIP
 404958320 WIN NVIDIA VULKAN : BlitFramebufferTest.BlitLargeColorSmallDepthAttachments/* = SKIP
