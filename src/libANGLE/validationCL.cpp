@@ -4263,6 +4263,17 @@ cl_int ValidateExternalMemObjectsKHR(cl_command_queue command_queue,
     return CL_SUCCESS;
 }
 
+// cl_arm_import_memory
+cl_int ValidateImportMemoryARM(cl_context context,
+                               MemFlags flags,
+                               const cl_import_properties_arm *properties,
+                               const void *memory,
+                               size_t size)
+{
+    WARN() << "clImportMemoryARM not supported";
+    return CL_INVALID_OPERATION;
+}
+
 cl_int ValidateEnqueueAcquireExternalMemObjectsKHR(cl_command_queue command_queue,
                                                    cl_uint num_mem_objects,
                                                    const cl_mem *mem_objects,

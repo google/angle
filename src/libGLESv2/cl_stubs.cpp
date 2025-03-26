@@ -1167,6 +1167,16 @@ cl_int EnqueueReleaseExternalMemObjectsKHR(cl_command_queue command_queue,
         num_mem_objects, mem_objects, num_events_in_wait_list, event_wait_list, event));
 }
 
+cl_mem ImportMemoryARM(cl_context context,
+                       MemFlags flags,
+                       const cl_import_properties_arm *properties,
+                       void *memory,
+                       size_t size)
+{
+    WARN_NOT_SUPPORTED(ImportMemoryARM);
+    return nullptr;
+}
+
 void *GetExtensionFunctionAddressForPlatform(cl_platform_id platform, const char *func_name)
 {
     return GetExtensionFunctionAddress(func_name);

@@ -237,6 +237,7 @@ enum class ParamType
     Tcl_image_descConstPointer,
     Tcl_image_formatConstPointer,
     Tcl_image_formatPointer,
+    Tcl_import_properties_armConstPointer,
     Tcl_int,
     Tcl_intPointer,
     Tcl_kernel,
@@ -273,7 +274,7 @@ enum class ParamType
     TvoidPointerPointer,
 };
 
-constexpr uint32_t kParamTypeCount = 236;
+constexpr uint32_t kParamTypeCount = 237;
 
 union ParamValue
 {
@@ -494,6 +495,7 @@ union ParamValue
     const cl_image_desc *cl_image_descConstPointerVal;
     const cl_image_format *cl_image_formatConstPointerVal;
     cl_image_format *cl_image_formatPointerVal;
+    const cl_import_properties_arm *cl_import_properties_armConstPointerVal;
     cl_int cl_intVal;
     cl_int *cl_intPointerVal;
     cl_kernel cl_kernelVal;
@@ -1940,6 +1942,14 @@ inline cl_image_format *GetParamVal<ParamType::Tcl_image_formatPointer, cl_image
 }
 
 template <>
+inline const cl_import_properties_arm *
+GetParamVal<ParamType::Tcl_import_properties_armConstPointer, const cl_import_properties_arm *>(
+    const ParamValue &value)
+{
+    return value.cl_import_properties_armConstPointerVal;
+}
+
+template <>
 inline cl_int GetParamVal<ParamType::Tcl_int, cl_int>(const ParamValue &value)
 {
     return value.cl_intVal;
@@ -2502,6 +2512,8 @@ T AccessParamValue(ParamType paramType, const ParamValue &value)
             return GetParamVal<ParamType::Tcl_image_formatConstPointer, T>(value);
         case ParamType::Tcl_image_formatPointer:
             return GetParamVal<ParamType::Tcl_image_formatPointer, T>(value);
+        case ParamType::Tcl_import_properties_armConstPointer:
+            return GetParamVal<ParamType::Tcl_import_properties_armConstPointer, T>(value);
         case ParamType::Tcl_int:
             return GetParamVal<ParamType::Tcl_int, T>(value);
         case ParamType::Tcl_intPointer:
@@ -3956,6 +3968,14 @@ inline void SetParamVal<ParamType::Tcl_image_formatPointer>(cl_image_format *val
 }
 
 template <>
+inline void SetParamVal<ParamType::Tcl_import_properties_armConstPointer>(
+    const cl_import_properties_arm *valueIn,
+    ParamValue *valueOut)
+{
+    valueOut->cl_import_properties_armConstPointerVal = valueIn;
+}
+
+template <>
 inline void SetParamVal<ParamType::Tcl_int>(cl_int valueIn, ParamValue *valueOut)
 {
     valueOut->cl_intVal = valueIn;
@@ -4719,6 +4739,9 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
             break;
         case ParamType::Tcl_image_formatPointer:
             SetParamVal<ParamType::Tcl_image_formatPointer>(valueIn, valueOut);
+            break;
+        case ParamType::Tcl_import_properties_armConstPointer:
+            SetParamVal<ParamType::Tcl_import_properties_armConstPointer>(valueIn, valueOut);
             break;
         case ParamType::Tcl_int:
             SetParamVal<ParamType::Tcl_int>(valueIn, valueOut);

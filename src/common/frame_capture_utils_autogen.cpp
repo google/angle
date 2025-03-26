@@ -783,6 +783,10 @@ void WriteParamCaptureReplay(std::ostream &os, const CallCapture &call, const Pa
             WriteParamValueReplay<ParamType::Tcl_image_formatPointer>(
                 os, call, param.value.cl_image_formatPointerVal);
             break;
+        case ParamType::Tcl_import_properties_armConstPointer:
+            WriteParamValueReplay<ParamType::Tcl_import_properties_armConstPointer>(
+                os, call, param.value.cl_import_properties_armConstPointerVal);
+            break;
         case ParamType::Tcl_int:
             WriteParamValueReplay<ParamType::Tcl_int>(os, call, param.value.cl_intVal);
             break;
@@ -1309,6 +1313,8 @@ const char *ParamTypeToString(ParamType paramType)
             return "const cl_image_format *";
         case ParamType::Tcl_image_formatPointer:
             return "cl_image_format *";
+        case ParamType::Tcl_import_properties_armConstPointer:
+            return "const cl_import_properties_arm *";
         case ParamType::Tcl_int:
             return "cl_int";
         case ParamType::Tcl_intPointer:

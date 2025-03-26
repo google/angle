@@ -1286,7 +1286,7 @@ cl_int CL_API_CALL clEnqueueUnmapMemObject(cl_command_queue command_queue,
     ANGLE_CL_VALIDATE_ERROR(EnqueueUnmapMemObject, command_queue, memobj, mapped_ptr,
                             num_events_in_wait_list, event_wait_list, event);
 
-    cl::gClErrorTls = CL_SUCCESS;
+    cl::gClErrorTls    = CL_SUCCESS;
     cl_int returnValue = EnqueueUnmapMemObject(command_queue, memobj, mapped_ptr,
                                                num_events_in_wait_list, event_wait_list, event);
     ANGLE_CAPTURE_CL(EnqueueUnmapMemObject, true, command_queue, memobj, mapped_ptr,
@@ -2870,6 +2870,38 @@ cl_mem CL_API_CALL clCreateImageWithProperties(cl_context context,
     }
     ANGLE_CAPTURE_CL(CreateImageWithProperties, true, context, properties, flagsPacked,
                      image_format, image_desc, host_ptr, errcode_ret, object);
+    return object;
+}
+
+// cl_arm_import_memory
+cl_mem CL_API_CALL clImportMemoryARM(cl_context context,
+                                     cl_mem_flags flags,
+                                     const cl_import_properties_arm *properties,
+                                     void *memory,
+                                     size_t size,
+                                     cl_int *errcode_ret)
+{
+    ANGLE_UNSAFE_TODO(
+        CL_EVENT(ImportMemoryARM,
+                 "context = 0x%016" PRIxPTR ", flags = %llu, properties = 0x%016" PRIxPTR
+                 ", memory = 0x%016" PRIxPTR ", size = %zu, errcode_ret = 0x%016" PRIxPTR "",
+                 (uintptr_t)context, static_cast<unsigned long long>(flags), (uintptr_t)properties,
+                 (uintptr_t)memory, size, (uintptr_t)errcode_ret));
+
+    MemFlags flagsPacked = PackParam<MemFlags>(flags);
+
+    ANGLE_CL_VALIDATE_ERRCODE_RET(ImportMemoryARM, context, flagsPacked, properties, memory, size);
+
+    cl::gClErrorTls = CL_SUCCESS;
+    cl_mem object   = ImportMemoryARM(context, flagsPacked, properties, memory, size);
+
+    ASSERT((cl::gClErrorTls == CL_SUCCESS) == (object != nullptr));
+    if (errcode_ret != nullptr)
+    {
+        *errcode_ret = cl::gClErrorTls;
+    }
+    ANGLE_CAPTURE_CL(ImportMemoryARM, true, context, flagsPacked, properties, memory, size,
+                     errcode_ret, object);
     return object;
 }
 

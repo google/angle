@@ -6179,6 +6179,73 @@ CallCapture CaptureCreateImageWithProperties(bool isCallValid,
     return CallCapture(angle::EntryPoint::CLCreateImageWithProperties, std::move(paramBuffer));
 }
 
+// cl_arm_import_memory
+CallCapture CaptureImportMemoryARM(bool isCallValid,
+                                   cl_context context,
+                                   MemFlags flagsPacked,
+                                   const cl_import_properties_arm *properties,
+                                   void *memory,
+                                   size_t size,
+                                   cl_int *errcode_ret,
+                                   cl_mem returnValue)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("context", ParamType::Tcl_context, context);
+    paramBuffer.addValueParam("flagsPacked", ParamType::TMemFlags, flagsPacked);
+
+    ParamCapture propertiesParam("properties", ParamType::Tcl_import_properties_armConstPointer);
+    if (isCallValid)
+    {
+        InitParamValue(ParamType::Tcl_import_properties_armConstPointer, properties,
+                       &propertiesParam.value);
+        CaptureImportMemoryARM_properties(context, flagsPacked, properties, memory, size,
+                                          errcode_ret, &propertiesParam);
+    }
+    else
+    {
+        InitParamValue(ParamType::Tcl_import_properties_armConstPointer,
+                       static_cast<const cl_import_properties_arm *>(nullptr),
+                       &propertiesParam.value);
+    }
+    paramBuffer.addParam(std::move(propertiesParam));
+
+    ParamCapture memoryParam("memory", ParamType::TvoidPointer);
+    if (isCallValid)
+    {
+        InitParamValue(ParamType::TvoidPointer, memory, &memoryParam.value);
+        CaptureImportMemoryARM_memory(context, flagsPacked, properties, memory, size, errcode_ret,
+                                      &memoryParam);
+    }
+    else
+    {
+        InitParamValue(ParamType::TvoidPointer, static_cast<void *>(nullptr), &memoryParam.value);
+    }
+    paramBuffer.addParam(std::move(memoryParam));
+
+    paramBuffer.addValueParam("size", ParamType::Tsize_t, size);
+
+    ParamCapture errcode_retParam("errcode_ret", ParamType::Tcl_intPointer);
+    if (isCallValid)
+    {
+        InitParamValue(ParamType::Tcl_intPointer, errcode_ret, &errcode_retParam.value);
+        CaptureImportMemoryARM_errcode_ret(context, flagsPacked, properties, memory, size,
+                                           errcode_ret, &errcode_retParam);
+    }
+    else
+    {
+        InitParamValue(ParamType::Tcl_intPointer, static_cast<cl_int *>(nullptr),
+                       &errcode_retParam.value);
+    }
+    paramBuffer.addParam(std::move(errcode_retParam));
+
+    ParamCapture returnValueCapture("returnValue", ParamType::Tcl_mem);
+    InitParamValue(ParamType::Tcl_mem, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
+
+    return CallCapture(angle::EntryPoint::CLImportMemoryARM, std::move(paramBuffer));
+}
+
 // cl_khr_external_memory
 CallCapture CaptureEnqueueAcquireExternalMemObjectsKHR(bool isCallValid,
                                                        cl_command_queue command_queue,

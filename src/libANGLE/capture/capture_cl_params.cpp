@@ -4081,6 +4081,48 @@ void CaptureEnqueueReleaseExternalMemObjectsKHR_event(cl_command_queue command_q
     }
 }
 
+void CaptureImportMemoryARM_properties(cl_context context,
+                                       MemFlags flagsPacked,
+                                       const cl_import_properties_arm *properties,
+                                       void *memory,
+                                       size_t size,
+                                       cl_int *errcode_ret,
+                                       angle::ParamCapture *paramCapture)
+{
+    if (properties)
+    {
+        CaptureMemory(properties, sizeof(cl_import_properties_arm), paramCapture);
+    }
+}
+
+void CaptureImportMemoryARM_memory(cl_context context,
+                                   MemFlags flagsPacked,
+                                   const cl_import_properties_arm *properties,
+                                   void *memory,
+                                   size_t size,
+                                   cl_int *errcode_ret,
+                                   angle::ParamCapture *paramCapture)
+{
+    if (memory)
+    {
+        CaptureMemory(memory, sizeof(void *), paramCapture);
+    }
+}
+
+void CaptureImportMemoryARM_errcode_ret(cl_context context,
+                                        MemFlags flagsPacked,
+                                        const cl_import_properties_arm *properties,
+                                        void *memory,
+                                        size_t size,
+                                        cl_int *errcode_ret,
+                                        angle::ParamCapture *paramCapture)
+{
+    if (errcode_ret)
+    {
+        paramCapture->readBufferSizeBytes = sizeof(cl_int);
+    }
+}
+
 void CaptureIcdGetPlatformIDsKHR_platforms(cl_uint num_entries,
                                            cl_platform_id *platforms,
                                            cl_uint *num_platforms,

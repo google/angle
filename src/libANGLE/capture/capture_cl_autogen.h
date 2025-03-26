@@ -815,6 +815,16 @@ angle::CallCapture CaptureCreateImageWithProperties(bool isCallValid,
                                                     cl_int *errcode_ret,
                                                     cl_mem returnValue);
 
+// cl_arm_import_memory
+angle::CallCapture CaptureImportMemoryARM(bool isCallValid,
+                                          cl_context context,
+                                          MemFlags flagsPacked,
+                                          const cl_import_properties_arm *properties,
+                                          void *memory,
+                                          size_t size,
+                                          cl_int *errcode_ret,
+                                          cl_mem returnValue);
+
 // cl_khr_external_memory
 angle::CallCapture CaptureEnqueueAcquireExternalMemObjectsKHR(bool isCallValid,
                                                               cl_command_queue command_queue,
@@ -2987,6 +2997,29 @@ void CaptureCreateImageWithProperties_errcode_ret(cl_context context,
                                                   void *host_ptr,
                                                   cl_int *errcode_ret,
                                                   angle::ParamCapture *paramCapture);
+
+// cl_arm_import_memory
+void CaptureImportMemoryARM_properties(cl_context context,
+                                       MemFlags flagsPacked,
+                                       const cl_import_properties_arm *properties,
+                                       void *memory,
+                                       size_t size,
+                                       cl_int *errcode_ret,
+                                       angle::ParamCapture *paramCapture);
+void CaptureImportMemoryARM_memory(cl_context context,
+                                   MemFlags flagsPacked,
+                                   const cl_import_properties_arm *properties,
+                                   void *memory,
+                                   size_t size,
+                                   cl_int *errcode_ret,
+                                   angle::ParamCapture *paramCapture);
+void CaptureImportMemoryARM_errcode_ret(cl_context context,
+                                        MemFlags flagsPacked,
+                                        const cl_import_properties_arm *properties,
+                                        void *memory,
+                                        size_t size,
+                                        cl_int *errcode_ret,
+                                        angle::ParamCapture *paramCapture);
 
 // cl_khr_external_memory
 void CaptureEnqueueAcquireExternalMemObjectsKHR_mem_objects(cl_command_queue command_queue,
