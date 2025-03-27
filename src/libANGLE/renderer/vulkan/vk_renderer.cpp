@@ -381,11 +381,8 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
          "prior_command = vkCmdPipelineBarrier",
          "load_op = VK_ATTACHMENT_LOAD_OP_DONT_CARE",
      }},
-    {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
-        "Hazard READ_AFTER_WRITE for index",
-        "usage: SYNC_INDEX_INPUT_INDEX_READ",
-    },
+    // From various tests. The validation layer does not calculate the exact vertexCounts that's
+    // being accessed. http://anglebug.com/42265220
     {
         "SYNC-HAZARD-WRITE-AFTER-READ",
         "Hazard WRITE_AFTER_READ for",
