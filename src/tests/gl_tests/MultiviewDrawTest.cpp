@@ -610,6 +610,68 @@ TEST_P(MultiviewDrawValidationTest, IndirectDraw)
     }
 }
 
+// Test separable programs with OVR multiview.
+TEST_P(MultiviewDrawValidationTest, SSOProgramMultiview)
+{
+    // Only the Vulkan backend supports PPOs.
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
+    ANGLE_SKIP_TEST_IF(!requestMultiviewExtension());
+
+    const std::string VS =
+        "#version 300 es\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
+        "layout(num_views = 2) in;\n"
+        "void main()\n"
+        "{}\n";
+    const std::string FS =
+        "#version 300 es\n"
+        "#extension " +
+        extensionName() +
+        ": require\n"
+        "precision mediump float;\n"
+        "out vec4 color;\n"
+        "void main()\n"
+        "{color = vec4(1);}\n";
+
+    const char *vsSource = VS.c_str(), *fsSource = FS.c_str();
+    GLuint programVS, programFS, pipeline;
+    programVS = glCreateShaderProgramv(GL_VERTEX_SHADER, 1, &vsSource);
+    ASSERT_NE(programVS, 0u);
+    glProgramParameteri(programVS, GL_PROGRAM_SEPARABLE, GL_TRUE);
+    programFS = glCreateShaderProgramv(GL_FRAGMENT_SHADER, 1, &fsSource);
+    ASSERT_NE(programFS, 0u);
+    glProgramParameteri(programFS, GL_PROGRAM_SEPARABLE, GL_TRUE);
+    glGenProgramPipelines(1, &pipeline);
+    glUseProgramStages(pipeline, GL_VERTEX_SHADER_BIT, programVS);
+    EXPECT_GL_NO_ERROR();
+    glUseProgramStages(pipeline, GL_FRAGMENT_SHADER_BIT, programFS);
+    EXPECT_GL_NO_ERROR();
+    glBindProgramPipeline(pipeline);
+
+    GLVertexArray vao;
+    GLBuffer vertexBuffer;
+    GLBuffer indexBuffer;
+    initVAO(vao, vertexBuffer, indexBuffer);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    {
+        GLTexture tex2DArray;
+        initOnePixelColorTexture2DMultiLayered(tex2DArray);
+
+        glFramebufferTextureMultiviewOVR(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex2DArray, 0, 0, 2);
+
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        EXPECT_GL_NO_ERROR();
+
+        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+        EXPECT_GL_NO_ERROR();
+    }
+}
+
 // The test verifies that glDraw*:
 // 1) generates an INVALID_OPERATION error if the number of views in the active draw framebuffer and
 // program differs.

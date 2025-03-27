@@ -644,10 +644,12 @@ ANGLE_INLINE const char *ValidateProgramDrawStates(const Context *context,
     if (extensions.multiviewOVR || extensions.multiview2OVR)
     {
         const int programNumViews     = executable.usesMultiview() ? executable.getNumViews() : 1;
+        const bool hasVertexShader    = executable.hasLinkedShaderStage(ShaderType::Vertex);
         Framebuffer *framebuffer      = state.getDrawFramebuffer();
         const int framebufferNumViews = framebuffer->getNumViews();
 
-        if (framebufferNumViews != programNumViews)
+        // num_views layout qualifiers are allowed only in vertex shaders.
+        if (hasVertexShader && (framebufferNumViews != programNumViews))
         {
             return gl::err::kMultiviewMismatch;
         }
@@ -4498,7 +4500,7 @@ const char *ValidateDrawStates(const Context *context, GLenum *outErrorCode)
             }
 
             // Validate that we are rendering with a linked program.
-            if (!program->isLinked())
+            if (program != nullptr && !program->isLinked())
             {
                 return kProgramNotLinked;
             }
