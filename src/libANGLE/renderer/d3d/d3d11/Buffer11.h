@@ -202,6 +202,8 @@ class Buffer11 : public BufferD3D
     void onCopyStorage(BufferStorage *dest, BufferStorage *source);
     void onStorageUpdate(BufferStorage *updatedStorage);
 
+    void onStateChange(const gl::Context *context, angle::SubjectMessage message);
+
     Renderer11 *mRenderer;
     size_t mSize;
 

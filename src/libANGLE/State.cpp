@@ -2952,8 +2952,11 @@ bool State::removeDrawFramebufferBinding(FramebufferID framebuffer)
 
 void State::setVertexArrayBinding(const Context *context, VertexArray *vertexArray)
 {
+    // We have to call onBindingChanged even if we are rebinding the same vertex array, because
+    // underlying buffer may have changed.
     if (mVertexArray == vertexArray)
     {
+        mVertexArray->onRebind(context);
         return;
     }
 

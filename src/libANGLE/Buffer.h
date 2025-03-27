@@ -39,6 +39,23 @@ enum class WebGLBufferType
     OtherData,
 };
 
+// Track vertex array's binding index of all contexts that a buffer is bound to
+class VertexArrayBufferBindingMaskAndContext final
+{
+  public:
+    VertexArrayBufferBindingMaskAndContext();
+    ~VertexArrayBufferBindingMaskAndContext();
+
+    void add(const gl::Context *context, size_t bindingIndex);
+    void remove(const gl::Context *context, size_t bindingIndex);
+    VertexArrayBufferBindingMask getBufferBindingMask(const gl::Context *context) const;
+
+  private:
+    // The expectation is that one buffer will only used in a very small number of shared contexts,
+    // the cost of searching in a vector is negligible.
+    std::vector<std::pair<const gl::Context *, VertexArrayBufferBindingMask>> mBufferBindingMask;
+};
+
 class BufferState final : angle::NonCopyable
 {
   public:
@@ -201,6 +218,15 @@ class Buffer final : public ThreadSafeRefCountObject<BufferID>,
     // angle::ObserverInterface implementation.
     void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
 
+    void addVertexArrayBinding(const gl::Context *context, size_t bindingIndex)
+    {
+        mVertexArrayBufferBindingMaskAndContext.add(context, bindingIndex);
+    }
+    void removeVertexArrayBinding(const gl::Context *context, size_t bindingIndex)
+    {
+        mVertexArrayBufferBindingMaskAndContext.remove(context, bindingIndex);
+    }
+
     void addContentsObserver(VertexArray *vertexArray, uint32_t bufferIndex);
     void removeContentsObserver(VertexArray *vertexArray, uint32_t bufferIndex);
     void addContentsObserver(Texture *texture);
@@ -221,6 +247,7 @@ class Buffer final : public ThreadSafeRefCountObject<BufferID>,
                                          GLsizeiptr size,
                                          GLbitfield flags);
 
+    void onStateChange(const Context *context, angle::SubjectMessage message);
     void onContentsChange();
     size_t getContentsObserverIndex(void *observer, uint32_t bufferIndex) const;
     void removeContentsObserverImpl(void *observer, uint32_t bufferIndex);
@@ -241,6 +268,9 @@ class Buffer final : public ThreadSafeRefCountObject<BufferID>,
     // TODO: only used by D3D11 backend. Remove once D3D11 usage is removed.
     // https://issues.angleproject.org/400711938
     angle::ObserverBinding mImplObserver;
+
+    // Current VertexArray's binding index bitmask
+    VertexArrayBufferBindingMaskAndContext mVertexArrayBufferBindingMaskAndContext;
 
     angle::FastVector<ContentsObserver, angle::kMaxFixedObservers> mContentsObservers;
     mutable IndexRangeCache mIndexRangeCache;

@@ -26,6 +26,8 @@ namespace rx
 
 namespace
 {
+constexpr gl::VertexArrayBufferBindingMask kVertexArrayBufferBindingMaskAllBits =
+    ~gl::VertexArrayBufferBindingMask::Zero();
 
 template <typename T>
 GLuint ReadIndexValueFromIndices(const uint8_t *data, size_t index)
@@ -1023,13 +1025,13 @@ bool Buffer11::supportsDirectBinding() const
 void Buffer11::initializeStaticData(const gl::Context *context)
 {
     BufferD3D::initializeStaticData(context);
-    onStateChange(angle::SubjectMessage::SubjectChanged);
+    onStateChange(context, angle::SubjectMessage::SubjectChanged);
 }
 
 void Buffer11::invalidateStaticData(const gl::Context *context)
 {
     BufferD3D::invalidateStaticData(context);
-    onStateChange(angle::SubjectMessage::SubjectChanged);
+    onStateChange(context, angle::SubjectMessage::SubjectChanged);
 }
 
 void Buffer11::onCopyStorage(BufferStorage *dest, BufferStorage *source)
@@ -1048,6 +1050,14 @@ void Buffer11::onStorageUpdate(BufferStorage *updatedStorage)
 {
     updatedStorage->setDataRevision(updatedStorage->getDataRevision() + 1);
     mLatestBufferStorage = updatedStorage;
+}
+
+void Buffer11::onStateChange(const gl::Context *context, angle::SubjectMessage message)
+{
+    angle::Subject::onStateChange(message);
+    // Since gl::VertexArray in the front end no longer observe the buffer change, notify current
+    // context's current vertex array immediately.
+    context->onBufferChanged(message, kVertexArrayBufferBindingMaskAllBits);
 }
 
 // Buffer11::BufferStorage implementation
@@ -1224,6 +1234,8 @@ angle::Result Buffer11::NativeStorage::resize(const gl::Context *context,
     if (mOnStorageChanged)
     {
         mOnStorageChanged->onStateChange(angle::SubjectMessage::SubjectChanged);
+        context->onBufferChanged(angle::SubjectMessage::SubjectChanged,
+                                 kVertexArrayBufferBindingMaskAllBits);
     }
 
     return angle::Result::Continue;
@@ -1454,6 +1466,8 @@ angle::Result Buffer11::StructuredBufferStorage::resizeStructuredBuffer(
     if (mOnStorageChanged)
     {
         mOnStorageChanged->onStateChange(angle::SubjectMessage::SubjectChanged);
+        context->onBufferChanged(angle::SubjectMessage::SubjectChanged,
+                                 kVertexArrayBufferBindingMaskAllBits);
     }
 
     return angle::Result::Continue;

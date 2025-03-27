@@ -848,6 +848,18 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     // Only used by vulkan backend.
     void onSwapChainImageChanged() const { mDefaultFramebuffer->onSwapChainImageChanged(); }
+    void onBufferChanged(const angle::SubjectMessage message,
+                         VertexArrayBufferBindingMask vertexArrayBufferBindingMask) const
+    {
+        // Notify current vertex array of the buffer changed. Note that other vertex arrays of this
+        // context or other context requires rebind which will check buffer changes
+        // at that time.
+        if (vertexArrayBufferBindingMask.any())
+        {
+            ASSERT(mState.mVertexArray != nullptr);
+            mState.mVertexArray->onBufferChanged(this, message, vertexArrayBufferBindingMask);
+        }
+    }
 
   private:
     void initializeDefaultResources();

@@ -320,6 +320,8 @@ class VertexArray final : public angle::ObserverInterface,
     AttributesMask getAttributesMask() const { return mState.mEnabledAttributesMask; }
 
     void onBindingChanged(const Context *context, int incr);
+    void onRebind(const Context *context) { onBind(context); }
+
     bool hasTransformFeedbackBindingConflict(const Context *context) const;
 
     angle::Result getIndexRange(const Context *context,
@@ -332,6 +334,18 @@ class VertexArray final : public angle::ObserverInterface,
     void setBufferAccessValidationEnabled(bool enabled)
     {
         mBufferAccessValidationEnabled = enabled;
+    }
+
+    void onBufferChanged(const Context *context,
+                         angle::SubjectMessage message,
+                         VertexArrayBufferBindingMask vertexArrayBufferBindingMask)
+    {
+        VertexArrayBufferBindingMask bufferBindingMask =
+            vertexArrayBufferBindingMask & mState.mBufferBindingMask;
+        for (size_t bindingIndex : bufferBindingMask)
+        {
+            onSubjectStateChange(bindingIndex, message);
+        }
     }
 
   private:
@@ -394,8 +408,6 @@ class VertexArray final : public angle::ObserverInterface,
     Optional<DirtyBits> mDirtyBitsGuard;
 
     rx::VertexArrayImpl *mVertexArray;
-
-    std::vector<angle::ObserverBinding> mArrayBufferObserverBindings;
 
     AttributesMask mCachedTransformFeedbackConflictedBindingsMask;
 
