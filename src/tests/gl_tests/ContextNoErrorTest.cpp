@@ -416,9 +416,92 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+// Tests that a program is resolved before draw calls.
+TEST_P(ContextNoErrorTestES3, DrawCommandsWaitOnProgramRelinking)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_KHR_no_error"));
+
+    int w = getWindowWidth();
+    int h = getWindowHeight();
+    glViewport(0, 0, w, h);
+
+    glClearColor(0, 0, 0, 1);
+
+    constexpr char kVS[] = R"(#version 300 es
+void main()
+{
+    vec2 position = vec2(-1, -1);
+    if (gl_VertexID == 1)
+        position = vec2(3, -1);
+    else if (gl_VertexID == 2)
+        position = vec2(-1, 3);
+    gl_Position = vec4(position, 0, 1);
+})";
+
+    GLuint vs    = CompileShader(GL_VERTEX_SHADER, kVS);
+    GLuint red   = CompileShader(GL_FRAGMENT_SHADER, essl3_shaders::fs::Red());
+    GLuint green = CompileShader(GL_FRAGMENT_SHADER, essl3_shaders::fs::Green());
+
+    enum class DrawType
+    {
+        DrawArrays,
+        DrawArraysInstanced,
+        MultiDrawArrays
+    };
+
+    for (auto drawType :
+         {DrawType::DrawArrays, DrawType::DrawArraysInstanced, DrawType::MultiDrawArrays})
+    {
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        GLuint program = glCreateProgram();
+        glAttachShader(program, vs);
+        glAttachShader(program, red);
+        glLinkProgram(program);
+        glUseProgram(program);
+
+        // Relink to green while the program is bound.
+        glDetachShader(program, red);
+        glAttachShader(program, green);
+        glLinkProgram(program);
+
+        // Draw must wait until relinking is done.
+        std::string command;
+        switch (drawType)
+        {
+            case DrawType::DrawArrays:
+                glDrawArrays(GL_TRIANGLES, 0, 3);
+                command = "DrawArrays";
+                break;
+            case DrawType::DrawArraysInstanced:
+                glDrawArraysInstanced(GL_TRIANGLES, 0, 3, 1);
+                command = "glDrawArraysInstanced";
+                break;
+            case DrawType::MultiDrawArrays:
+                if (IsGLExtensionEnabled("GL_ANGLE_multi_draw"))
+                {
+                    GLint firsts[1] = {0};
+                    GLint counts[1] = {3};
+                    glMultiDrawArraysANGLE(GL_TRIANGLES, firsts, counts, 1);
+                    command = "MultiDrawArrays";
+                }
+                break;
+        }
+        EXPECT_PIXEL_COLOR_EQ(w / 2, h / 2, GLColor::green) << command;
+        ASSERT_GL_NO_ERROR() << command;
+    }
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(ContextNoErrorTest);
 
-ANGLE_INSTANTIATE_TEST_ES3(ContextNoErrorTestES3);
+#define ANGLE_ALL_MULTIDRAW_TEST_PLATFORMS_ES3                                             \
+    ES3_D3D11().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions),                  \
+        ES3_OPENGL().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions),             \
+        ES3_OPENGLES().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions),           \
+        ES3_VULKAN().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions),             \
+        ES3_VULKAN_SWIFTSHADER().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions), \
+        ES3_METAL().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions)
+ANGLE_INSTANTIATE_TEST(ContextNoErrorTestES3, ANGLE_ALL_MULTIDRAW_TEST_PLATFORMS_ES3);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ContextNoErrorPPOTest31);
 ANGLE_INSTANTIATE_TEST_ES31(ContextNoErrorPPOTest31);
