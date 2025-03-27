@@ -3,14 +3,7 @@
 # found in the LICENSE file.
 
 import("../../gni/angle.gni")
-
-angle_trace_fixture("angle_capture_replay_sample_fixture") {
-  gl_header = "angle_trace_gl.h"
-  public_deps = [
-    "$angle_root:libEGL",
-    "$angle_root/util:angle_util",
-  ]
-}
+import("../../src/tests/angle_traces.gni")
 
 angle_trace("capture_replay_sample_trace") {
   _trace = "angle_capture"
@@ -21,5 +14,4 @@ angle_trace("capture_replay_sample_trace") {
     "$_trace.json",
     "$_trace.angledata.gz",
   ]
-  fixture = ":angle_capture_replay_sample_fixture"
 }

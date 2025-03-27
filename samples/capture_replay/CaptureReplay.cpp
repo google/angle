@@ -26,7 +26,7 @@ class CaptureReplaySample : public SampleApplication
 
     bool initialize() override
     {
-        mTraceLibrary.reset(new angle::TraceLibrary("capture_replay_sample_trace"));
+        mTraceLibrary.reset(new angle::TraceLibrary("capture_replay_sample_trace", mTraceInfo, ""));
         assert(mTraceLibrary->valid());
 
         std::stringstream binaryPathStream;
