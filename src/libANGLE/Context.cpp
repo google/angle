@@ -2960,6 +2960,12 @@ void Context::drawRangeElementsBaseVertex(PrimitiveMode mode,
 
 void Context::drawArraysIndirect(PrimitiveMode mode, const void *indirect)
 {
+    if (noopDrawProgram())
+    {
+        ANGLE_CONTEXT_TRY(mImplementation->handleNoopDrawEvent());
+        return;
+    }
+
     ANGLE_CONTEXT_TRY(prepareForDraw(mode));
     ANGLE_CONTEXT_TRY(mImplementation->drawArraysIndirect(this, mode, indirect));
     MarkShaderStorageUsage(this);
@@ -2967,6 +2973,12 @@ void Context::drawArraysIndirect(PrimitiveMode mode, const void *indirect)
 
 void Context::drawElementsIndirect(PrimitiveMode mode, DrawElementsType type, const void *indirect)
 {
+    if (noopDrawProgram())
+    {
+        ANGLE_CONTEXT_TRY(mImplementation->handleNoopDrawEvent());
+        return;
+    }
+
     ANGLE_CONTEXT_TRY(prepareForDraw(mode));
     ANGLE_CONTEXT_TRY(mImplementation->drawElementsIndirect(this, mode, type, indirect));
     MarkShaderStorageUsage(this);

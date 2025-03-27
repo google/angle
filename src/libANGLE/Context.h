@@ -799,6 +799,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     egl::Error acquireExternalContext(egl::Surface *drawAndReadSurface);
     egl::Error releaseExternalContext();
 
+    bool noopDrawProgram() const;
     bool noopDraw(PrimitiveMode mode, GLsizei count) const;
     bool noopDrawInstanced(PrimitiveMode mode, GLsizei count, GLsizei instanceCount) const;
     bool noopMultiDraw(GLsizei drawcount) const;

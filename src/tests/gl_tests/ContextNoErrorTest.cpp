@@ -492,6 +492,106 @@ void main()
     }
 }
 
+class ContextNoErrorTestES31 : public ContextNoErrorTest
+{};
+
+// Tests that a program is resolved before indirect draw calls.
+TEST_P(ContextNoErrorTestES31, IndirectDrawCommandsWaitOnProgramRelinking)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_KHR_no_error"));
+
+    int w = getWindowWidth();
+    int h = getWindowHeight();
+    glViewport(0, 0, w, h);
+
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    constexpr char kVS[] = R"(#version 300 es
+void main()
+{
+    vec2 position = vec2(-1, -1);
+    if (gl_VertexID == 1)
+        position = vec2(3, -1);
+    else if (gl_VertexID == 2)
+        position = vec2(-1, 3);
+    gl_Position = vec4(position, 0, 1);
+})";
+
+    GLuint vs    = CompileShader(GL_VERTEX_SHADER, kVS);
+    GLuint red   = CompileShader(GL_FRAGMENT_SHADER, essl3_shaders::fs::Red());
+    GLuint green = CompileShader(GL_FRAGMENT_SHADER, essl3_shaders::fs::Green());
+
+    GLVertexArray vao;
+    glBindVertexArray(vao);
+
+    const GLushort indexData[3] = {0, 1, 2};
+    GLBuffer indexBuffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6, indexData, GL_STATIC_DRAW);
+
+    const GLuint drawArraysData[4] = {3, 1, 0, 0};
+    GLBuffer drawArraysIndirectCommandBuffer;
+    glBindBuffer(GL_DRAW_INDIRECT_BUFFER, drawArraysIndirectCommandBuffer);
+    glBufferData(GL_DRAW_INDIRECT_BUFFER, 16, drawArraysData, GL_STATIC_DRAW);
+
+    const GLuint drawElementsData[5] = {3, 1, 0, 0, 0};
+    GLBuffer drawElementsIndirectCommandBuffer;
+    glBindBuffer(GL_DRAW_INDIRECT_BUFFER, drawElementsIndirectCommandBuffer);
+    glBufferData(GL_DRAW_INDIRECT_BUFFER, 20, drawElementsData, GL_STATIC_DRAW);
+
+    enum class DrawType
+    {
+        DrawArraysIndirect,
+        DrawElementsIndirect
+    };
+
+    for (auto drawType : {DrawType::DrawArraysIndirect, DrawType::DrawElementsIndirect})
+    {
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        // Bind buffers before creating the program
+        switch (drawType)
+        {
+            case DrawType::DrawArraysIndirect:
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+                glBindBuffer(GL_DRAW_INDIRECT_BUFFER, drawArraysIndirectCommandBuffer);
+                break;
+            case DrawType::DrawElementsIndirect:
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+                glBindBuffer(GL_DRAW_INDIRECT_BUFFER, drawElementsIndirectCommandBuffer);
+                break;
+        }
+
+        GLuint program = glCreateProgram();
+        glAttachShader(program, vs);
+        glAttachShader(program, red);
+        glLinkProgram(program);
+        glUseProgram(program);
+
+        // Relink to green while the program is bound.
+        glDetachShader(program, red);
+        glAttachShader(program, green);
+        glLinkProgram(program);
+
+        // Draw must wait until relinking is done.
+        std::string command;
+        switch (drawType)
+        {
+            case DrawType::DrawArraysIndirect:
+                glDrawArraysIndirect(GL_TRIANGLES, nullptr);
+                command = "DrawArraysIndirect";
+                break;
+            case DrawType::DrawElementsIndirect:
+                glDrawElementsIndirect(GL_TRIANGLES, GL_UNSIGNED_SHORT, nullptr);
+                command = "DrawElementsIndirect";
+                break;
+        }
+        EXPECT_PIXEL_COLOR_EQ(w / 2, h / 2, GLColor::green) << command;
+        ASSERT_GL_NO_ERROR() << command;
+    }
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(ContextNoErrorTest);
 
 #define ANGLE_ALL_MULTIDRAW_TEST_PLATFORMS_ES3                                             \
@@ -502,6 +602,8 @@ ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(ContextNoErrorTest);
         ES3_VULKAN_SWIFTSHADER().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions), \
         ES3_METAL().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions)
 ANGLE_INSTANTIATE_TEST(ContextNoErrorTestES3, ANGLE_ALL_MULTIDRAW_TEST_PLATFORMS_ES3);
+
+ANGLE_INSTANTIATE_TEST_ES31(ContextNoErrorTestES31);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ContextNoErrorPPOTest31);
 ANGLE_INSTANTIATE_TEST_ES31(ContextNoErrorPPOTest31);

@@ -81,6 +81,15 @@ ANGLE_INLINE void MarkShaderStorageUsage(const Context *context)
 //  an error. ANGLE will treat this as a no-op.
 //  A no-op draw occurs if the count of vertices is less than the minimum required to
 //  have a valid primitive for this mode (0 for points, 0-1 for lines, 0-2 for tris).
+ANGLE_INLINE bool Context::noopDrawProgram() const
+{
+    // Make sure any pending link is done before checking whether draw is allowed.
+    mState.ensureNoPendingLink(this);
+
+    // No-op when there is no active vertex shader
+    return !mStateCache.getCanDraw();
+}
+
 ANGLE_INLINE bool Context::noopDraw(PrimitiveMode mode, GLsizei count) const
 {
     if (ANGLE_UNLIKELY(count < kMinimumPrimitiveCounts[mode]))
@@ -88,11 +97,7 @@ ANGLE_INLINE bool Context::noopDraw(PrimitiveMode mode, GLsizei count) const
         return true;
     }
 
-    // Make sure any pending link is done before checking whether draw is allowed.
-    mState.ensureNoPendingLink(this);
-
-    // No-op when there is no active vertex shader
-    return !mStateCache.getCanDraw();
+    return noopDrawProgram();
 }
 
 ANGLE_INLINE bool Context::noopDrawInstanced(PrimitiveMode mode,
@@ -114,11 +119,7 @@ ANGLE_INLINE bool Context::noopMultiDraw(GLsizei drawcount) const
         return true;
     }
 
-    // Make sure any pending link is done before checking whether draw is allowed.
-    mState.ensureNoPendingLink(this);
-
-    // No-op when there is no active vertex shader
-    return !mStateCache.getCanDraw();
+    return noopDrawProgram();
 }
 
 ANGLE_INLINE angle::Result Context::syncDirtyBits(const state::DirtyBits bitMask,
