@@ -7044,6 +7044,37 @@ TEST_P(GLSLTest, InactiveVaryingInVertexActiveInFragment)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that standard derivatives work as expected with FBOs since the render target
+// might have flipped viewport orientation.
+TEST_P(GLSLTest, ScreenFlipCauseStandardDerivativesWrong)
+{
+    constexpr char kFS[] =
+        R"(
+#extension GL_OES_standard_derivatives : enable
+precision mediump float;
+
+void main()
+{
+    gl_FragColor = vec4(
+        dFdx(gl_FragCoord.x),
+        dFdy(gl_FragCoord.y),
+        0.0, 1.0
+    );
+}
+        )";
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glClearColor(0.0, 0.0, 0.0, 1.0);
+    ASSERT_GL_NO_ERROR();
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::yellow);
+}
+
 // Test that a varying struct that's not statically used in the fragment shader works.
 // GLSL ES 3.00.6 section 4.3.10.
 TEST_P(GLSLTest_ES3, VaryingStructNotStaticallyUsedInFragmentShader)

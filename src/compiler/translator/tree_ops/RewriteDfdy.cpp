@@ -126,12 +126,6 @@ bool RewriteDfdy(TCompiler *compiler,
                  SpecConst *specConst,
                  const DriverUniform *driverUniforms)
 {
-    // dFdx/dFdy is only valid in GLSL 3.0 and later.
-    if (shaderVersion < 300)
-    {
-        return true;
-    }
-
     Traverser traverser(symbolTable, specConst, driverUniforms);
     root->traverse(&traverser);
     return traverser.updateTree(compiler, root);
