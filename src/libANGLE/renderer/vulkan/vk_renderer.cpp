@@ -5818,10 +5818,14 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // on those earlier versions.  http://anglebug.com/42266655
     //
     // On RADV, creating graphics pipeline can crash in the driver.  http://crbug.com/1497512
+    //
+    // Some unacceptable performance degradation has been observed on ARM GPU based device
+    // when graphics pipeline is enabled, therefore it's recommended to disable it until
+    // the problematic area gets addressed and fixed. http://anglebug.com/404581992
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsGraphicsPipelineLibrary,
                             mGraphicsPipelineLibraryFeatures.graphicsPipelineLibrary == VK_TRUE &&
                                 (!isNvidia || driverVersion >= angle::VersionTriple(531, 0, 0)) &&
-                                !isRADV);
+                                !isRADV && !isARM);
 
     // When VK_EXT_graphics_pipeline_library is not used:
     //
