@@ -39,7 +39,7 @@ namespace angle
 void WriteCppReplayFunctionWithPartsCL(ReplayFunc replayFunc,
                                        ReplayWriter &replayWriter,
                                        uint32_t frameIndex,
-                                       std::vector<uint8_t> *binaryData,
+                                       FrameCaptureBinaryData *binaryData,
                                        const std::vector<CallCapture> &calls,
                                        std::stringstream &header,
                                        std::stringstream &out)
@@ -67,7 +67,7 @@ void WriteCppReplayForCallCL(const CallCapture &call,
                              ReplayWriter &replayWriter,
                              std::ostream &out,
                              std::ostream &header,
-                             std::vector<uint8_t> *binaryData)
+                             FrameCaptureBinaryData *binaryData)
 {
     if (call.customFunctionName == "Comment")
     {
@@ -479,9 +479,7 @@ void WriteCppReplayForCallCL(const CallCapture &call,
                             out << ", ";
                         }
                         data          = &param.data[i];
-                        size_t offset = rx::roundUpPow2(binaryData->size(), kBinaryAlignment);
-                        binaryData->resize(offset + data->size());
-                        memcpy(binaryData->data() + offset, data->data(), data->size());
+                        const size_t offset = binaryData->append(data->data(), data->size());
                         out << tempStructureType << "&gBinaryData[" << offset << "]";
                     }
                     out << "};\n    ";

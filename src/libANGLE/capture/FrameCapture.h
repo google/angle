@@ -735,6 +735,25 @@ class CoherentBufferTracker final : angle::NonCopyable
     bool mShadowMemoryEnabled;
 };
 
+class FrameCaptureBinaryData
+{
+  public:
+    const std::vector<std::vector<uint8_t>> &data() const { return mData; }
+    size_t totalSize() const { return mTotalSize; }
+
+    size_t append(const void *data, size_t size);
+    void clear();
+
+  private:
+    // Chrome's allocator disallows creating one allocation that's bigger than 2GB, so the following
+    // is one large buffer that is split in multiple pieces in memory.  This is also more efficient
+    // when capturing large amounts of binary data as it avoids large copies during vector
+    // reallocations.
+    std::vector<std::vector<uint8_t>> mData;
+    // Total size of mData, used to write the offset of data in the captured output.
+    size_t mTotalSize = 0;
+};
+
 // Shared class for any items that need to be tracked by FrameCapture across shared contexts
 class FrameCaptureShared final : angle::NonCopyable
 {
@@ -1036,7 +1055,7 @@ class FrameCaptureShared final : angle::NonCopyable
 
     // We save one large buffer of binary data for the whole CPP replay.
     // This simplifies a lot of file management.
-    std::vector<uint8_t> mBinaryData;
+    FrameCaptureBinaryData mBinaryData;
 
     bool mEnabled;
     static bool mRuntimeEnabled;
@@ -1537,21 +1556,21 @@ void WriteCppReplayForCall(const CallCapture &call,
                            ReplayWriter &replayWriter,
                            std::ostream &out,
                            std::ostream &header,
-                           std::vector<uint8_t> *binaryData,
+                           FrameCaptureBinaryData *binaryData,
                            size_t *maxResourceIDBufferSize);
 
 void WriteCppReplayForCallCL(const CallCapture &call,
                              ReplayWriter &replayWriter,
                              std::ostream &out,
                              std::ostream &header,
-                             std::vector<uint8_t> *binaryData);
+                             FrameCaptureBinaryData *binaryData);
 
 void WriteBinaryParamReplay(ReplayWriter &replayWriter,
                             std::ostream &out,
                             std::ostream &header,
                             const CallCapture &call,
                             const ParamCapture &param,
-                            std::vector<uint8_t> *binaryData);
+                            FrameCaptureBinaryData *binaryData);
 
 std::string GetBinaryDataFilePath(bool compression, const std::string &captureLabel);
 
@@ -1559,7 +1578,7 @@ void SaveBinaryData(bool compression,
                     const std::string &outDir,
                     gl::ContextID contextId,
                     const std::string &captureLabel,
-                    const std::vector<uint8_t> &binaryData);
+                    FrameCaptureBinaryData &binaryData);
 
 void WriteStringPointerParamReplay(ReplayWriter &replayWriter,
                                    std::ostream &out,
@@ -1571,7 +1590,7 @@ void WriteCppReplayFunctionWithParts(const gl::ContextID contextID,
                                      ReplayFunc replayFunc,
                                      ReplayWriter &replayWriter,
                                      uint32_t frameIndex,
-                                     std::vector<uint8_t> *binaryData,
+                                     FrameCaptureBinaryData *binaryData,
                                      const std::vector<CallCapture> &calls,
                                      std::stringstream &header,
                                      std::stringstream &out,

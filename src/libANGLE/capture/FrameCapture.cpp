@@ -184,7 +184,7 @@ void WriteStringParamReplay(ReplayWriter &replayWriter,
                             std::ostream &header,
                             const CallCapture &call,
                             const ParamCapture &param,
-                            std::vector<uint8_t> *binaryData)
+                            FrameCaptureBinaryData *binaryData)
 {
     const std::vector<uint8_t> &data = param.data[0];
     // null terminate C style string
@@ -196,9 +196,7 @@ void WriteStringParamReplay(ReplayWriter &replayWriter,
     {
         // Store in binary file if the string is too long.
         // Round up to 16-byte boundary for cross ABI safety.
-        size_t offset = rx::roundUpPow2(binaryData->size(), kBinaryAlignment);
-        binaryData->resize(offset + str.size() + 1);
-        memcpy(binaryData->data() + offset, str.data(), str.size() + 1);
+        const size_t offset = binaryData->append(str.data(), str.size() + 1);
         out << "(const char *)&gBinaryData[" << offset << "]";
     }
     else if (str.find('\n') != std::string::npos)
@@ -272,7 +270,7 @@ void WriteCppReplayForCall(const CallCapture &call,
                            ReplayWriter &replayWriter,
                            std::ostream &out,
                            std::ostream &header,
-                           std::vector<uint8_t> *binaryData,
+                           FrameCaptureBinaryData *binaryData,
                            size_t *maxResourceIDBufferSize)
 {
     if (call.customFunctionName == "Comment")
@@ -495,7 +493,7 @@ void MaybeResetResources(egl::Display *display,
                          std::stringstream &out,
                          std::stringstream &header,
                          ResourceTracker *resourceTracker,
-                         std::vector<uint8_t> *binaryData,
+                         FrameCaptureBinaryData *binaryData,
                          bool &anyResourceReset,
                          size_t *maxResourceIDBufferSize)
 {
@@ -942,7 +940,7 @@ void MaybeResetFenceSyncObjects(std::stringstream &out,
                                 ReplayWriter &replayWriter,
                                 std::stringstream &header,
                                 ResourceTracker *resourceTracker,
-                                std::vector<uint8_t> *binaryData,
+                                FrameCaptureBinaryData *binaryData,
                                 size_t *maxResourceIDBufferSize)
 {
     FenceSyncCalls &fenceSyncRegenCalls = resourceTracker->getFenceSyncRegenCalls();
@@ -1016,7 +1014,7 @@ void MaybeResetDefaultUniforms(std::stringstream &out,
                                std::stringstream &header,
                                const gl::Context *context,
                                ResourceTracker *resourceTracker,
-                               std::vector<uint8_t> *binaryData,
+                               FrameCaptureBinaryData *binaryData,
                                size_t *maxResourceIDBufferSize)
 {
     DefaultUniformLocationsPerProgramMap &defaultUniformsToReset =
@@ -1083,7 +1081,7 @@ void MaybeResetOpaqueTypeObjects(ReplayWriter &replayWriter,
                                  std::stringstream &header,
                                  const gl::Context *context,
                                  ResourceTracker *resourceTracker,
-                                 std::vector<uint8_t> *binaryData,
+                                 FrameCaptureBinaryData *binaryData,
                                  size_t *maxResourceIDBufferSize)
 {
     MaybeResetFenceSyncObjects(out, replayWriter, header, resourceTracker, binaryData,
@@ -1098,7 +1096,7 @@ void MaybeResetContextState(ReplayWriter &replayWriter,
                             std::stringstream &header,
                             ResourceTracker *resourceTracker,
                             const gl::Context *context,
-                            std::vector<uint8_t> *binaryData,
+                            FrameCaptureBinaryData *binaryData,
                             StateResetHelper &stateResetHelper,
                             size_t *maxResourceIDBufferSize)
 {
@@ -1233,7 +1231,7 @@ void WriteCppReplayFunctionWithParts(const gl::ContextID contextID,
                                      ReplayFunc replayFunc,
                                      ReplayWriter &replayWriter,
                                      uint32_t frameIndex,
-                                     std::vector<uint8_t> *binaryData,
+                                     FrameCaptureBinaryData *binaryData,
                                      const std::vector<CallCapture> &calls,
                                      std::stringstream &header,
                                      std::stringstream &out,
@@ -1308,7 +1306,7 @@ void WriteCppReplayFunctionWithPartsMultiContext(const gl::ContextID contextID,
                                                  ReplayFunc replayFunc,
                                                  ReplayWriter &replayWriter,
                                                  uint32_t frameIndex,
-                                                 std::vector<uint8_t> *binaryData,
+                                                 FrameCaptureBinaryData *binaryData,
                                                  std::vector<CallCapture> &calls,
                                                  std::stringstream &header,
                                                  std::stringstream &out,
@@ -1459,7 +1457,7 @@ void WriteAuxiliaryContextCppSetupReplay(ReplayWriter &replayWriter,
                                          const std::string &captureLabel,
                                          uint32_t frameIndex,
                                          const std::vector<CallCapture> &setupCalls,
-                                         std::vector<uint8_t> *binaryData,
+                                         FrameCaptureBinaryData *binaryData,
                                          bool serializeStateEnabled,
                                          const FrameCaptureShared &frameCaptureShared,
                                          size_t *maxResourceIDBufferSize)
@@ -1511,7 +1509,7 @@ void WriteShareGroupCppSetupReplay(ReplayWriter &replayWriter,
                                    uint32_t frameCount,
                                    const std::vector<CallCapture> &setupCalls,
                                    ResourceTracker *resourceTracker,
-                                   std::vector<uint8_t> *binaryData,
+                                   FrameCaptureBinaryData *binaryData,
                                    bool serializeStateEnabled,
                                    gl::ContextID windowSurfaceContextID,
                                    size_t *maxResourceIDBufferSize)
@@ -6130,6 +6128,49 @@ void CoherentBufferTracker::removeBuffer(gl::BufferID id)
     PageSharingType sharingType = doesBufferSharePage(id);
     mBuffers[id.value]->removeProtection(sharingType);
     mBuffers.erase(id.value);
+}
+
+size_t FrameCaptureBinaryData::append(const void *data, size_t size)
+{
+    if (mData.empty())
+    {
+        mData.resize(1);
+    }
+
+    // Limit blocks of binary data to avoid allocating large vectors.  The following 512MB value
+    // works with Chrome captures, but is otherwise arbitrary.
+    constexpr size_t kMaxDataBlockSize = 512 * 1024 * 1024;
+
+    ASSERT(mTotalSize % kBinaryAlignment == 0);
+    const size_t offset         = mTotalSize;
+    const size_t sizeToIncrease = rx::roundUpPow2(size, kBinaryAlignment);
+
+    ASSERT(mData.back().size() % kBinaryAlignment == 0);
+    size_t offsetInLastElement = mData.back().size();
+    if (offsetInLastElement + sizeToIncrease > kMaxDataBlockSize)
+    {
+        // Add a new data block to append to so that each block is capped at kMaxDataBlockSize
+        // bytes.
+        mData.emplace_back();
+        offsetInLastElement = 0;
+    }
+
+    mData.back().resize(offsetInLastElement + sizeToIncrease);
+    memcpy(mData.back().data() + offsetInLastElement, data, size);
+    if (sizeToIncrease != size)
+    {
+        // Make sure the padding does not include garbage.
+        memset(mData.back().data() + offsetInLastElement + size, 0, sizeToIncrease - size);
+    }
+    mTotalSize += sizeToIncrease;
+
+    return offset;
+}
+
+void FrameCaptureBinaryData::clear()
+{
+    mData.clear();
+    mTotalSize = 0;
 }
 
 void *FrameCaptureShared::maybeGetShadowMemoryPointer(gl::Buffer *buffer,
