@@ -1761,6 +1761,7 @@ bool ValidateGetTexParameterIivOES(const Context *context,
     if (context->getClientMajorVersion() < 3)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
+        return false;
     }
 
     if (!context->getExtensions().textureBorderClampOES)
@@ -1780,11 +1781,13 @@ bool ValidateGetTexParameterIuivOES(const Context *context,
     if (context->getClientMajorVersion() < 3)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
+        return false;
     }
 
     if (!context->getExtensions().textureBorderClampOES)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
     }
     return ValidateGetTexParameterBase(context, entryPoint, target, pname, nullptr);
 }
@@ -1798,6 +1801,7 @@ bool ValidateTexParameterIivOES(const Context *context,
     if (context->getClientMajorVersion() < 3)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
+        return false;
     }
 
     if (!context->getExtensions().textureBorderClampOES)
@@ -1817,6 +1821,7 @@ bool ValidateTexParameterIuivOES(const Context *context,
     if (context->getClientMajorVersion() < 3)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
+        return false;
     }
 
     if (!context->getExtensions().textureBorderClampOES)
@@ -1837,6 +1842,7 @@ bool ValidateGetSamplerParameterIivOES(const Context *context,
     if (context->getClientMajorVersion() < 3)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
+        return false;
     }
 
     if (!context->getExtensions().textureBorderClampOES)
@@ -1856,6 +1862,7 @@ bool ValidateGetSamplerParameterIuivOES(const Context *context,
     if (context->getClientMajorVersion() < 3)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
+        return false;
     }
 
     if (!context->getExtensions().textureBorderClampOES)
@@ -1875,6 +1882,7 @@ bool ValidateSamplerParameterIivOES(const Context *context,
     if (context->getClientMajorVersion() < 3)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
+        return false;
     }
 
     if (!context->getExtensions().textureBorderClampOES)
@@ -1894,6 +1902,7 @@ bool ValidateSamplerParameterIuivOES(const Context *context,
     if (context->getClientMajorVersion() < 3)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
+        return false;
     }
 
     if (!context->getExtensions().textureBorderClampOES)
@@ -1913,6 +1922,7 @@ bool ValidateGetSamplerParameterIivEXT(const Context *context,
     if (context->getClientMajorVersion() < 3)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
+        return false;
     }
 
     if (!context->getExtensions().textureBorderClampEXT)
@@ -1933,6 +1943,7 @@ bool ValidateGetSamplerParameterIuivEXT(const Context *context,
     if (context->getClientMajorVersion() < 3)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
+        return false;
     }
 
     if (!context->getExtensions().textureBorderClampEXT)
@@ -1953,6 +1964,7 @@ bool ValidateGetTexParameterIivEXT(const Context *context,
     if (context->getClientMajorVersion() < 3)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
+        return false;
     }
 
     if (!context->getExtensions().textureBorderClampEXT)
@@ -1972,6 +1984,7 @@ bool ValidateGetTexParameterIuivEXT(const Context *context,
     if (context->getClientMajorVersion() < 3)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
+        return false;
     }
 
     if (!context->getExtensions().textureBorderClampEXT)
@@ -1991,6 +2004,7 @@ bool ValidateSamplerParameterIivEXT(const Context *context,
     if (context->getClientMajorVersion() < 3)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
+        return false;
     }
 
     if (!context->getExtensions().textureBorderClampEXT)
@@ -2010,6 +2024,7 @@ bool ValidateSamplerParameterIuivEXT(const Context *context,
     if (context->getClientMajorVersion() < 3)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
+        return false;
     }
 
     if (!context->getExtensions().textureBorderClampEXT)
@@ -2029,6 +2044,7 @@ bool ValidateTexParameterIivEXT(const Context *context,
     if (context->getClientMajorVersion() < 3)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
+        return false;
     }
 
     if (!context->getExtensions().textureBorderClampEXT)
@@ -2048,6 +2064,7 @@ bool ValidateTexParameterIuivEXT(const Context *context,
     if (context->getClientMajorVersion() < 3)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
+        return false;
     }
 
     if (!context->getExtensions().textureBorderClampEXT)
