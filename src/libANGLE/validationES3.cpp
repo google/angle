@@ -1276,8 +1276,7 @@ bool ValidateES3CopyTexImageParametersBase(const Context *context,
         }
     }
 
-    // If width or height is zero, it is a no-op.  Return false without setting an error.
-    return (width > 0 && height > 0);
+    return true;
 }
 
 bool ValidateES3CopyTexImage2DParameters(const Context *context,

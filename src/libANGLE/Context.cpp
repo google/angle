@@ -5055,6 +5055,11 @@ void Context::copyTexImage2D(TextureTarget target,
                              GLsizei height,
                              GLint border)
 {
+    if (ANGLE_UNLIKELY(width == 0 || height == 0))
+    {
+        return;
+    }
+
     ANGLE_CONTEXT_TRY(prepareForCopyImage());
 
     Rectangle sourceArea(x, y, width, height);
@@ -5074,7 +5079,7 @@ void Context::copyTexSubImage2D(TextureTarget target,
                                 GLsizei width,
                                 GLsizei height)
 {
-    if (width == 0 || height == 0)
+    if (ANGLE_UNLIKELY(width == 0 || height == 0))
     {
         return;
     }
@@ -5101,7 +5106,7 @@ void Context::copyTexSubImage3D(TextureTarget target,
                                 GLsizei width,
                                 GLsizei height)
 {
-    if (width == 0 || height == 0)
+    if (ANGLE_UNLIKELY(width == 0 || height == 0))
     {
         return;
     }
