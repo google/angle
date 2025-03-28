@@ -2675,23 +2675,21 @@ bool ValidateGetQueryObjectValueBase(const Context *context,
 
     if (context->isContextLost())
     {
-        ANGLE_VALIDATION_ERROR(GL_CONTEXT_LOST, kContextLost);
-
         if (pname == GL_QUERY_RESULT_AVAILABLE_EXT)
         {
-            // Generate an error but still return true, the context still needs to return a
-            // value in this case.
+            // The context needs to return a value in this case.
+            // It will also generate a CONTEXT_LOST error.
             return true;
         }
         else
         {
+            ANGLE_VALIDATION_ERROR(GL_CONTEXT_LOST, kContextLost);
             return false;
         }
     }
 
     Query *queryObject = context->getQuery(id);
-
-    if (!queryObject)
+    if (queryObject == nullptr)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidQueryId);
         return false;
@@ -6033,16 +6031,15 @@ bool ValidateGetProgramivBase(const Context *context,
 
     if (context->isContextLost())
     {
-        ANGLE_VALIDATION_ERROR(GL_CONTEXT_LOST, kContextLost);
-
         if (context->getExtensions().parallelShaderCompileKHR && pname == GL_COMPLETION_STATUS_KHR)
         {
-            // Generate an error but still return true, the context still needs to return a
-            // value in this case.
+            // The context needs to return a value in this case.
+            // It will also generate a CONTEXT_LOST error.
             return true;
         }
         else
         {
+            ANGLE_VALIDATION_ERROR(GL_CONTEXT_LOST, kContextLost);
             return false;
         }
     }
@@ -6995,16 +6992,15 @@ bool ValidateGetShaderivBase(const Context *context,
 
     if (context->isContextLost())
     {
-        ANGLE_VALIDATION_ERROR(GL_CONTEXT_LOST, kContextLost);
-
         if (context->getExtensions().parallelShaderCompileKHR && pname == GL_COMPLETION_STATUS_KHR)
         {
-            // Generate an error but still return true, the context still needs to return a
-            // value in this case.
+            // The context needs to return a value in this case.
+            // It will also generate a CONTEXT_LOST error.
             return true;
         }
         else
         {
+            ANGLE_VALIDATION_ERROR(GL_CONTEXT_LOST, kContextLost);
             return false;
         }
     }

@@ -3790,22 +3790,21 @@ bool ValidateGetSynciv(const Context *context,
 
     if (context->isContextLost())
     {
-        ANGLE_VALIDATION_ERROR(GL_CONTEXT_LOST, kContextLost);
-
         if (pname == GL_SYNC_STATUS)
         {
-            // Generate an error but still return true, the context still needs to return a
-            // value in this case.
+            // The context needs to return a value in this case.
+            // It will also generate a CONTEXT_LOST error.
             return true;
         }
         else
         {
+            ANGLE_VALIDATION_ERROR(GL_CONTEXT_LOST, kContextLost);
             return false;
         }
     }
 
     Sync *syncObject = context->getSync(syncPacked);
-    if (!syncObject)
+    if (syncObject == nullptr)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kSyncMissing);
         return false;

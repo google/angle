@@ -1375,6 +1375,7 @@ void QueryProgramiv(Context *context, Program *program, GLenum pname, GLint *par
         case GL_COMPLETION_STATUS_KHR:
             if (context->isContextLost())
             {
+                context->contextLostErrorOnBlockingCall(angle::EntryPoint::GLGetProgramiv);
                 *params = GL_TRUE;
             }
             else
@@ -1575,6 +1576,7 @@ void QueryShaderiv(const Context *context, Shader *shader, GLenum pname, GLint *
         case GL_COMPLETION_STATUS_KHR:
             if (context->isContextLost())
             {
+                context->contextLostErrorOnBlockingCall(angle::EntryPoint::GLGetShaderiv);
                 *params = GL_TRUE;
             }
             else
@@ -1849,6 +1851,7 @@ angle::Result QuerySynciv(const Context *context,
         case GL_SYNC_STATUS:
             if (context->isContextLost())
             {
+                context->contextLostErrorOnBlockingCall(angle::EntryPoint::GLGetSynciv);
                 *values = GL_SIGNALED;
             }
             else

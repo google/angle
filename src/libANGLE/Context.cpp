@@ -218,6 +218,7 @@ angle::Result GetQueryObjectParameter(const Context *context, Query *query, GLen
             bool available = false;
             if (context->isContextLost())
             {
+                context->contextLostErrorOnBlockingCall(angle::EntryPoint::GLGetQueryObjectuiv);
                 available = true;
             }
             else
@@ -1087,6 +1088,11 @@ egl::Error Context::unMakeCurrent(const egl::Display *display)
     }
 
     return egl::NoError();
+}
+
+void Context::contextLostErrorOnBlockingCall(angle::EntryPoint entryPoint) const
+{
+    mErrors.validationError(entryPoint, GL_CONTEXT_LOST, err::kContextLost);
 }
 
 BufferID Context::createBuffer()

@@ -687,6 +687,10 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     void markContextLost(GraphicsResetStatus status) { mErrors.markContextLost(status); }
     bool isContextLost() const { return mErrors.isContextLost(); }
 
+    // Some commands may need to generate a context lost error but still return a value.
+    // The validation layer does not generate the context lost error in such cases.
+    void contextLostErrorOnBlockingCall(angle::EntryPoint entryPoint) const;
+
     ErrorSet *getMutableErrorSetForValidation() const { return &mErrors; }
 
     // Specific methods needed for validation.
