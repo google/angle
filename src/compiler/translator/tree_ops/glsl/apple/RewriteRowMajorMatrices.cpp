@@ -137,7 +137,7 @@ TOperator GetIndex(TSymbolTable *symbolTable,
     TIntermSwizzle *asSwizzle = node->getAsSwizzleNode();
     if (asSwizzle)
     {
-        for (int channel : asSwizzle->getSwizzleOffsets())
+        for (uint32_t channel : asSwizzle->getSwizzleOffsets())
         {
             indices->push_back(CreateIndexNode(channel));
         }

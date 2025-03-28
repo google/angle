@@ -365,7 +365,7 @@ void ScalarizeTraverser::createConstructorMatrixFromMatrix(TIntermAggregate *nod
                 TIntermTyped *col = new TIntermBinary(EOpIndexDirect, matrix->deepCopy(),
                                                       CreateIndexNode(columnIndex));
                 constructorArgsOut->push_back(
-                    new TIntermSwizzle(col, {static_cast<int>(rowIndex)}));
+                    new TIntermSwizzle(col, {static_cast<uint32_t>(rowIndex)}));
             }
             else
             {

@@ -1537,7 +1537,7 @@ void TIntermUnary::propagatePrecision(TPrecision precision)
     }
 }
 
-TIntermSwizzle::TIntermSwizzle(TIntermTyped *operand, const TVector<int> &swizzleOffsets)
+TIntermSwizzle::TIntermSwizzle(TIntermTyped *operand, const TVector<uint32_t> &swizzleOffsets)
     : TIntermExpression(TType(EbtFloat, EbpUndefined)),
       mOperand(operand),
       mSwizzleOffsets(swizzleOffsets),
@@ -1739,8 +1739,8 @@ bool TIntermSwizzle::hasDuplicateOffsets() const
     {
         return true;
     }
-    int offsetCount[4] = {0u, 0u, 0u, 0u};
-    for (const auto offset : mSwizzleOffsets)
+    uint32_t offsetCount[4] = {0u, 0u, 0u, 0u};
+    for (const uint32_t offset : mSwizzleOffsets)
     {
         offsetCount[offset]++;
         if (offsetCount[offset] > 1)
@@ -1756,7 +1756,7 @@ void TIntermSwizzle::setHasFoldedDuplicateOffsets(bool hasFoldedDuplicateOffsets
     mHasFoldedDuplicateOffsets = hasFoldedDuplicateOffsets;
 }
 
-bool TIntermSwizzle::offsetsMatch(int offset) const
+bool TIntermSwizzle::offsetsMatch(uint32_t offset) const
 {
     return mSwizzleOffsets.size() == 1 && mSwizzleOffsets[0] == offset;
 }
@@ -1764,7 +1764,7 @@ bool TIntermSwizzle::offsetsMatch(int offset) const
 ImmutableString TIntermSwizzle::getOffsetsAsXYZW() const
 {
     ImmutableStringBuilder offsets(mSwizzleOffsets.size());
-    for (const int offset : mSwizzleOffsets)
+    for (const uint32_t offset : mSwizzleOffsets)
     {
         switch (offset)
         {
@@ -2134,11 +2134,11 @@ TIntermTyped *TIntermSwizzle::fold(TDiagnostics * /* diagnostics */)
         // We need to fold the two swizzles into one, so that repeated swizzling can't cause stack
         // overflow in ParseContext::checkCanBeLValue().
         bool hadDuplicateOffsets = operandSwizzle->hasDuplicateOffsets();
-        TVector<int> foldedOffsets;
-        for (int offset : mSwizzleOffsets)
+        TVector<uint32_t> foldedOffsets;
+        for (uint32_t offset : mSwizzleOffsets)
         {
             // Offset should already be validated.
-            ASSERT(static_cast<size_t>(offset) < operandSwizzle->mSwizzleOffsets.size());
+            ASSERT(offset < operandSwizzle->mSwizzleOffsets.size());
             foldedOffsets.push_back(operandSwizzle->mSwizzleOffsets[offset]);
         }
         operandSwizzle->mSwizzleOffsets = foldedOffsets;
@@ -2209,10 +2209,10 @@ TIntermTyped *TIntermBinary::fold(TDiagnostics *diagnostics)
             TIntermSwizzle *leftSwizzle = mLeft->getAsSwizzleNode();
             if (leftSwizzle != nullptr)
             {
-                const TVector<int> &swizzleOffsets = leftSwizzle->getSwizzleOffsets();
+                const TVector<uint32_t> &swizzleOffsets = leftSwizzle->getSwizzleOffsets();
                 ASSERT(index < swizzleOffsets.size());
 
-                int remappedIndex = swizzleOffsets[index];
+                uint32_t remappedIndex = swizzleOffsets[index];
                 return new TIntermSwizzle(leftSwizzle->getOperand(), {remappedIndex});
             }
 

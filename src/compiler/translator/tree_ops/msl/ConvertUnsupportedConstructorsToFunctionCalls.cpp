@@ -19,7 +19,7 @@ namespace
 
 void AppendMatrixElementArgument(TIntermSymbol *parameter,
                                  int colIndex,
-                                 int rowIndex,
+                                 uint32_t rowIndex,
                                  TIntermSequence *returnCtorArgs)
 {
     TIntermBinary *matColN =

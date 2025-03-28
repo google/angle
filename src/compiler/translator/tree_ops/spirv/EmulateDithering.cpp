@@ -219,7 +219,7 @@ void EmitFragmentOutputDither(TCompiler *compiler,
     // round() the output if workaround is enabled
     if (roundOutputAfterDithering)
     {
-        TVector<int> swizzle = {0, 1, 2};
+        TVector<uint32_t> swizzle = {0, 1, 2};
         swizzle.resize(fragmentOutput->getNominalSize());
         TIntermTyped *multiplier = new TIntermSwizzle(roundMultiplier, swizzle);
 

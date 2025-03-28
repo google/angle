@@ -449,7 +449,7 @@ class TIntermSwizzle : public TIntermExpression
 {
   public:
     // This constructor determines the type of the node based on the operand.
-    TIntermSwizzle(TIntermTyped *operand, const TVector<int> &swizzleOffsets);
+    TIntermSwizzle(TIntermTyped *operand, const TVector<uint32_t> &swizzleOffsets);
 
     TIntermTyped *deepCopy() const override { return new TIntermSwizzle(*this); }
 
@@ -466,17 +466,17 @@ class TIntermSwizzle : public TIntermExpression
     ImmutableString getOffsetsAsXYZW() const;
     void writeOffsetsAsXYZW(TInfoSinkBase *out) const;
 
-    const TVector<int> &getSwizzleOffsets() { return mSwizzleOffsets; }
+    const TVector<uint32_t> &getSwizzleOffsets() { return mSwizzleOffsets; }
 
     bool hasDuplicateOffsets() const;
     void setHasFoldedDuplicateOffsets(bool hasFoldedDuplicateOffsets);
-    bool offsetsMatch(int offset) const;
+    bool offsetsMatch(uint32_t offset) const;
 
     TIntermTyped *fold(TDiagnostics *diagnostics) override;
 
   protected:
     TIntermTyped *mOperand;
-    TVector<int> mSwizzleOffsets;
+    TVector<uint32_t> mSwizzleOffsets;
     bool mHasFoldedDuplicateOffsets;
 
   private:

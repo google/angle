@@ -266,7 +266,7 @@ TIntermTyped &sh::SubVector(TIntermTyped &vectorNode, int begin, int end)
     {
         return vectorNode;
     }
-    TVector<int> offsets(static_cast<size_t>(end - begin));
+    TVector<uint32_t> offsets(static_cast<size_t>(end - begin));
     std::iota(offsets.begin(), offsets.end(), begin);
     TIntermSwizzle *swizzle = new TIntermSwizzle(vectorNode.deepCopy(), offsets);
     return *swizzle->fold(nullptr);  // Swizzles must always be folded to prevent double swizzles.

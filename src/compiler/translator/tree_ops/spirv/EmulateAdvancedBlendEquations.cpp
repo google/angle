@@ -1043,7 +1043,7 @@ TIntermSymbol *Builder::premultiplyAlpha(TIntermBlock *blendBlock,
     constexpr int kColorChannels = 3;
     // For each component:
     // symbol.x = (var.x == var.w) ? 1.0 : var.x / var.w
-    for (int index = 0; index < kColorChannels; index++)
+    for (uint32_t index = 0; index < kColorChannels; index++)
     {
         TIntermTyped *divideNode        = divideFloatNode(new TIntermSwizzle(var, {index}), alpha);
         TIntermBinary *assignDivideNode = new TIntermBinary(
@@ -1168,7 +1168,7 @@ void Builder::generateEquationSwitch(TIntermBlock *blendBlock)
         if (equation < gl::BlendEquationType::HslHue)
         {
             TIntermSequence constructorArgs;
-            for (int channel = 0; channel < 3; ++channel)
+            for (uint32_t channel = 0; channel < 3; ++channel)
             {
                 TIntermTyped *srcChannel = new TIntermSwizzle(mSrc->deepCopy(), {channel});
                 TIntermTyped *dstChannel = new TIntermSwizzle(mDst->deepCopy(), {channel});
@@ -1226,7 +1226,7 @@ void Builder::generateEquationSwitch(TIntermBlock *blendBlock)
     uint32_t vecSize = mOutputVar->getType().getNominalSize();
     if (vecSize < 4)
     {
-        TVector<int> swizzle = {0, 1, 2, 3};
+        TVector<uint32_t> swizzle = {0, 1, 2, 3};
         swizzle.resize(vecSize);
         blendResult = new TIntermSwizzle(blendResult, swizzle);
     }

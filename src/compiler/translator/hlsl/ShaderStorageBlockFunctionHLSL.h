@@ -74,7 +74,7 @@ class ShaderStorageBlockFunctionHLSL final : angle::NonCopyable
         bool rowMajor;
         int matrixStride;
         int unsizedArrayStride;
-        TVector<int> swizzleOffsets;
+        TVector<uint32_t> swizzleOffsets;
         bool isDefaultSwizzle;
     };
 

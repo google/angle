@@ -125,8 +125,8 @@ class TParseContext : angle::NonCopyable
     // Look at a '.' field selector string and change it into offsets for a vector.
     bool parseVectorFields(const TSourceLoc &line,
                            const ImmutableString &compString,
-                           int vecSize,
-                           TVector<int> *fieldOffsets);
+                           uint32_t vecSize,
+                           TVector<uint32_t> *fieldOffsets);
 
     void assignError(const TSourceLoc &line, const char *op, const TType &left, const TType &right);
     void unaryOpError(const TSourceLoc &line, const char *op, const TType &operand);

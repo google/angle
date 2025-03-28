@@ -217,7 +217,7 @@ TIntermSequence *GetMainSequence(TIntermBlock *root)
     TIntermSymbol *builtinRef = new TIntermSymbol(builtin);
 
     // Create a swizzle to "builtin.xy"
-    TVector<int> swizzleOffsetXY = {0, 1};
+    TVector<uint32_t> swizzleOffsetXY = {0, 1};
     TIntermSwizzle *builtinXY    = new TIntermSwizzle(builtinRef, swizzleOffsetXY);
 
     // Create a symbol reference to our new variable that will hold the modified builtin.
@@ -738,7 +738,7 @@ void AddFragDepthEXTDeclaration(TCompiler &compiler, TIntermBlock &root, TSymbol
     TIntermSymbol *positionRef = new TIntermSymbol(position);
 
     // Create a swizzle to "gl_Position.y"
-    TVector<int> swizzleOffsetY;
+    TVector<uint32_t> swizzleOffsetY;
     swizzleOffsetY.push_back(1);
     TIntermSwizzle *positionY = new TIntermSwizzle(positionRef, swizzleOffsetY);
 
@@ -867,7 +867,7 @@ bool TranslatorMSL::transformDepthBeforeCorrection(TIntermBlock *root,
     TIntermSymbol *positionRef = new TIntermSymbol(position);
 
     // Create a swizzle to "gl_Position.z"
-    TVector<int> swizzleOffsetZ = {2};
+    TVector<uint32_t> swizzleOffsetZ = {2};
     TIntermSwizzle *positionZ   = new TIntermSwizzle(positionRef, swizzleOffsetZ);
 
     // Create a ref to "zscale"
@@ -899,12 +899,12 @@ bool TranslatorMSL::appendVertexShaderDepthCorrectionToMain(
     const TVariable *position  = BuiltInVariable::gl_Position();
     TIntermSymbol *positionRef = new TIntermSymbol(position);
 
-    TVector<int> swizzleOffsetZ = {2};
+    TVector<uint32_t> swizzleOffsetZ = {2};
     TIntermSwizzle *positionZ   = new TIntermSwizzle(positionRef, swizzleOffsetZ);
 
     TIntermConstantUnion *oneHalf = CreateFloatNode(0.5f, EbpMedium);
 
-    TVector<int> swizzleOffsetW = {3};
+    TVector<uint32_t> swizzleOffsetW = {3};
     TIntermSwizzle *positionW   = new TIntermSwizzle(positionRef->deepCopy(), swizzleOffsetW);
 
     // Create the expression "(gl_Position.z + gl_Position.w) * 0.5".

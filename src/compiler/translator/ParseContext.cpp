@@ -362,8 +362,8 @@ bool TParseContext::anyMultiviewExtensionAvailable()
 
 bool TParseContext::parseVectorFields(const TSourceLoc &line,
                                       const ImmutableString &compString,
-                                      int vecSize,
-                                      TVector<int> *fieldOffsets)
+                                      uint32_t vecSize,
+                                      TVector<uint32_t> *fieldOffsets)
 {
     ASSERT(fieldOffsets);
     size_t fieldCount = compString.length();
@@ -5576,7 +5576,7 @@ TIntermTyped *TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
 
     if (baseExpression->isVector())
     {
-        TVector<int> fieldOffsets;
+        TVector<uint32_t> fieldOffsets;
         if (!parseVectorFields(fieldLocation, fieldString, baseExpression->getNominalSize(),
                                &fieldOffsets))
         {

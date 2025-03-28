@@ -436,7 +436,7 @@ void InitializeFromInputAttachment(TSymbolTable *symbolTable,
     const int vecSize = assignVariable->getType().getNominalSize();
     if (vecSize < 4)
     {
-        TVector<int> swizzle = {0, 1, 2, 3};
+        TVector<uint32_t> swizzle = {0, 1, 2, 3};
         swizzle.resize(vecSize);
         input = new TIntermSwizzle(input, swizzle);
     }

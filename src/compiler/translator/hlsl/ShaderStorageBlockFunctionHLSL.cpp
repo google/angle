@@ -61,7 +61,7 @@ void ShaderStorageBlockFunctionHLSL::OutputSSBOLoadFunctionBody(
             }
 
             out << " = {";
-            for (const int offset : ssboFunction.swizzleOffsets)
+            for (const uint32_t offset : ssboFunction.swizzleOffsets)
             {
                 size_t offsetInBytes = offset * componentStride;
                 out << convertString << "buffer.Load(loc + " << offsetInBytes << ")),";
@@ -151,7 +151,7 @@ void ShaderStorageBlockFunctionHLSL::OutputSSBOStoreFunctionBody(
             {
                 componentStride = ssboFunction.matrixStride;
             }
-            const TVector<int> &swizzleOffsets = ssboFunction.swizzleOffsets;
+            const TVector<uint32_t> &swizzleOffsets = ssboFunction.swizzleOffsets;
             for (int index = 0; index < static_cast<int>(swizzleOffsets.size()); index++)
             {
                 size_t offsetInBytes = swizzleOffsets[index] * componentStride;
@@ -346,7 +346,7 @@ TString ShaderStorageBlockFunctionHLSL::registerShaderStorageBlockFunction(
         ssboFunction.functionName += "_cm_";
     }
 
-    for (const int offset : ssboFunction.swizzleOffsets)
+    for (const uint32_t offset : ssboFunction.swizzleOffsets)
     {
         switch (offset)
         {

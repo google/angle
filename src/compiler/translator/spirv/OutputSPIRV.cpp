@@ -223,7 +223,7 @@ class OutputSPIRVTraverser : public TIntermTraverser
                                 spirv::LiteralInteger index,
                                 spirv::IdRef typeId) const;
     void accessChainPushSwizzle(NodeData *data,
-                                const TVector<int> &swizzle,
+                                const TVector<uint32_t> &swizzle,
                                 spirv::IdRef typeId,
                                 uint8_t componentCount) const;
     void accessChainPushDynamicComponent(NodeData *data, spirv::IdRef index, spirv::IdRef typeId);
@@ -826,7 +826,7 @@ void OutputSPIRVTraverser::accessChainPushLiteral(NodeData *data,
 }
 
 void OutputSPIRVTraverser::accessChainPushSwizzle(NodeData *data,
-                                                  const TVector<int> &swizzle,
+                                                  const TVector<uint32_t> &swizzle,
                                                   spirv::IdRef typeId,
                                                   uint8_t componentCount) const
 {
@@ -4873,7 +4873,7 @@ bool OutputSPIRVTraverser::visitSwizzle(Visit visit, TIntermSwizzle *node)
 
     const TType &vectorType            = node->getOperand()->getType();
     const uint8_t vectorComponentCount = static_cast<uint8_t>(vectorType.getNominalSize());
-    const TVector<int> &swizzle        = node->getSwizzleOffsets();
+    const TVector<uint32_t> &swizzle   = node->getSwizzleOffsets();
 
     // As an optimization, do nothing if the swizzle is selecting all the components of the vector
     // in order.

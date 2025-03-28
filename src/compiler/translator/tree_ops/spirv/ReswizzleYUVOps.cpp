@@ -118,7 +118,7 @@ bool AdjustYUVOutput(TCompiler *compiler,
     TIntermBlock *block = new TIntermBlock;
 
     // output = output.brga
-    TVector<int> swizzle = {2, 0, 1, 3};
+    TVector<uint32_t> swizzle = {2, 0, 1, 3};
     const int size       = yuvOutput.getType().getNominalSize();
     if (size < 4)
     {

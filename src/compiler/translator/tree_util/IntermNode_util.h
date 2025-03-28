@@ -105,10 +105,10 @@ TIntermTyped *CreateBuiltInUnaryFunctionCallNode(const char *name,
                                                  const TSymbolTable &symbolTable,
                                                  int shaderVersion);
 
-inline void GetSwizzleIndex(TVector<int> *indexOut) {}
+inline void GetSwizzleIndex(TVector<uint32_t> *indexOut) {}
 
 template <typename T, typename... ArgsT>
-void GetSwizzleIndex(TVector<int> *indexOut, T arg, ArgsT... args)
+void GetSwizzleIndex(TVector<uint32_t> *indexOut, T arg, ArgsT... args)
 {
     indexOut->push_back(arg);
     GetSwizzleIndex(indexOut, args...);
@@ -117,7 +117,7 @@ void GetSwizzleIndex(TVector<int> *indexOut, T arg, ArgsT... args)
 template <typename... ArgsT>
 TIntermSwizzle *CreateSwizzle(TIntermTyped *reference, ArgsT... args)
 {
-    TVector<int> swizzleIndex;
+    TVector<uint32_t> swizzleIndex;
     GetSwizzleIndex(&swizzleIndex, args...);
     return new TIntermSwizzle(reference, swizzleIndex);
 }
