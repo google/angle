@@ -5195,6 +5195,7 @@ bool ValidateEGLImageTargetTexture2DOES(const Context *context,
             if (!context->getExtensions().EGLImageOES)
             {
                 ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, ToGLenum(type));
+                return false;
             }
             break;
 
@@ -5202,6 +5203,7 @@ bool ValidateEGLImageTargetTexture2DOES(const Context *context,
             if (!context->getExtensions().EGLImageArrayEXT)
             {
                 ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, ToGLenum(type));
+                return false;
             }
             break;
 
@@ -5209,6 +5211,7 @@ bool ValidateEGLImageTargetTexture2DOES(const Context *context,
             if (!context->getExtensions().EGLImageExternalOES)
             {
                 ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, ToGLenum(type));
+                return false;
             }
             break;
 
