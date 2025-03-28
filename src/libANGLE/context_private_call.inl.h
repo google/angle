@@ -694,6 +694,7 @@ inline void ContextPrivatePixelStorei(PrivateState *privateState,
             break;
 
         case GL_PACK_REVERSE_ROW_ORDER_ANGLE:
+            ASSERT(privateState->getExtensions().packReverseRowOrderANGLE);
             privateState->setPackReverseRowOrder(param != 0);
             break;
 
