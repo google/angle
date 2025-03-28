@@ -243,9 +243,8 @@ IGNORED_INCLUDES = {
     # comments. Since the script doesn't skip comments they are
     # erroneously marked as valid includes
     b'rapidjson/...',
-    # Validation layers support building with robin hood hashing, but we are not enabling that
-    # See http://anglebug.com/42264327
-    b'robin_hood.h',
+    # Conditionally included in http://github.com/KhronosGroup/Vulkan-ValidationLayers/pull/9790
+    b'parallel_hashmap/phmap.h',
     # Validation layers optionally use mimalloc
     b'mimalloc-new-delete.h',
     # From the Vulkan-Loader
