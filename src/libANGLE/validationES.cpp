@@ -3291,100 +3291,6 @@ bool ValidateRobustStateQuery(const Context *context,
     return true;
 }
 
-bool ValidateCopyImageSubDataTarget(const Context *context,
-                                    angle::EntryPoint entryPoint,
-                                    GLuint name,
-                                    GLenum target)
-{
-    // From EXT_copy_image: INVALID_ENUM is generated if either <srcTarget> or <dstTarget> is not
-    // RENDERBUFFER or a valid non - proxy texture target, is TEXTURE_BUFFER, or is one of the
-    // cubemap face selectors described in table 3.17, or if the target does not match the type of
-    // the object. INVALID_VALUE is generated if either <srcName> or <dstName> does not correspond
-    // to a valid renderbuffer or texture object according to the corresponding target parameter.
-    switch (target)
-    {
-        case GL_RENDERBUFFER:
-        {
-            RenderbufferID renderbuffer = PackParam<RenderbufferID>(name);
-            if (!context->isRenderbuffer(renderbuffer))
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidRenderbufferName);
-                return false;
-            }
-            break;
-        }
-        case GL_TEXTURE_2D:
-        case GL_TEXTURE_3D:
-        case GL_TEXTURE_2D_ARRAY:
-        case GL_TEXTURE_CUBE_MAP:
-        case GL_TEXTURE_CUBE_MAP_ARRAY_EXT:
-        case GL_TEXTURE_EXTERNAL_OES:
-        case GL_TEXTURE_2D_MULTISAMPLE:
-        case GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES:
-        {
-            TextureID texture = PackParam<TextureID>(name);
-            if (!context->isTexture(texture))
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidTextureName);
-                return false;
-            }
-
-            Texture *textureObject = context->getTexture(texture);
-            if (textureObject && textureObject->getType() != PackParam<TextureType>(target))
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, err::kTextureTypeMismatch);
-                return false;
-            }
-            break;
-        }
-        default:
-            ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidTarget);
-            return false;
-    }
-
-    return true;
-}
-
-bool ValidateCopyImageSubDataLevel(const Context *context,
-                                   angle::EntryPoint entryPoint,
-                                   GLenum target,
-                                   GLint level)
-{
-    switch (target)
-    {
-        case GL_RENDERBUFFER:
-        {
-            if (level != 0)
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidMipLevel);
-                return false;
-            }
-            break;
-        }
-        case GL_TEXTURE_2D:
-        case GL_TEXTURE_3D:
-        case GL_TEXTURE_2D_ARRAY:
-        case GL_TEXTURE_CUBE_MAP:
-        case GL_TEXTURE_CUBE_MAP_ARRAY_EXT:
-        case GL_TEXTURE_EXTERNAL_OES:
-        case GL_TEXTURE_2D_MULTISAMPLE:
-        case GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES:
-        {
-            if (!ValidMipLevel(context, PackParam<TextureType>(target), level))
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidMipLevel);
-                return false;
-            }
-            break;
-        }
-        default:
-            ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidTarget);
-            return false;
-    }
-
-    return true;
-}
-
 bool ValidateCopyImageSubDataTargetRegion(const Context *context,
                                           angle::EntryPoint entryPoint,
                                           GLuint name,
@@ -3475,47 +3381,6 @@ bool ValidateCompressedRegion(const Context *context,
     }
 
     return true;
-}
-
-const InternalFormat &GetTargetFormatInfo(const Context *context,
-                                          angle::EntryPoint entryPoint,
-                                          GLuint name,
-                                          GLenum target,
-                                          GLint level)
-{
-    static const InternalFormat defaultInternalFormat;
-
-    switch (target)
-    {
-        case GL_RENDERBUFFER:
-        {
-            Renderbuffer *buffer = context->getRenderbuffer(PackParam<RenderbufferID>(name));
-            return *buffer->getFormat().info;
-        }
-        case GL_TEXTURE_2D:
-        case GL_TEXTURE_3D:
-        case GL_TEXTURE_2D_ARRAY:
-        case GL_TEXTURE_CUBE_MAP:
-        case GL_TEXTURE_CUBE_MAP_ARRAY_EXT:
-        case GL_TEXTURE_EXTERNAL_OES:
-        case GL_TEXTURE_2D_MULTISAMPLE:
-        case GL_TEXTURE_2D_MULTISAMPLE_ARRAY_OES:
-        {
-            Texture *texture          = context->getTexture(PackParam<TextureID>(name));
-            GLenum textureTargetToUse = target;
-
-            if (target == GL_TEXTURE_CUBE_MAP)
-            {
-                // Use GL_TEXTURE_CUBE_MAP_POSITIVE_X to properly gather the
-                // textureWidth/textureHeight
-                textureTargetToUse = GL_TEXTURE_CUBE_MAP_POSITIVE_X;
-            }
-            return *texture->getFormat(PackParam<TextureTarget>(textureTargetToUse), level).info;
-        }
-        default:
-            ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidTarget);
-            return defaultInternalFormat;
-    }
 }
 
 bool ValidateCopyMixedFormatCompatible(GLenum uncompressedFormat, GLenum compressedFormat)
@@ -3778,6 +3643,70 @@ bool ValidateCopyFormatCompatible(const InternalFormat &srcFormatInfo,
     return ValidateCopyCompressedFormatCompatible(srcFormatInfo, dstFormatInfo);
 }
 
+const InternalFormat *GetValidFormatInfoForCopyImageSubData(const Context *context,
+                                                            angle::EntryPoint entryPoint,
+                                                            GLuint name,
+                                                            GLenum target,
+                                                            GLint level)
+{
+    if (target == GL_RENDERBUFFER)
+    {
+        Renderbuffer *renderbufferObject =
+            context->getRenderbuffer(PackParam<RenderbufferID>(name));
+        if (renderbufferObject == nullptr)
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidRenderbufferName);
+            return nullptr;
+        }
+
+        if (level != 0)
+        {
+            ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidMipLevel);
+            return nullptr;
+        }
+
+        return renderbufferObject->getFormat().info;
+    }
+
+    // If the target is not RENDERBUFFER, it could only be a texture.
+    Texture *textureObject = context->getTexture(PackParam<TextureID>(name));
+    if (textureObject == nullptr)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidTextureName);
+        return nullptr;
+    }
+
+    // Buffer textures are not allowed and the target must match the texture type.
+    const TextureType textureType = textureObject->getType();
+    if (textureType == TextureType::Buffer || ToGLenum(textureType) != target)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kTextureTargetInvalidForCopyImage);
+        return nullptr;
+    }
+
+    // Check that mip level is not greater than the maximum possible for the texture type.
+    if (!ValidMipLevel(context, textureType, level))
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidMipLevel);
+        return nullptr;
+    }
+
+    const gl::TextureTarget textureTarget = (textureType == TextureType::CubeMap)
+                                                ? kCubeMapTextureTargetMin
+                                                : NonCubeTextureTypeToTarget(textureType);
+    const InternalFormat *internalFormat  = textureObject->getFormat(textureTarget, level).info;
+    ASSERT(internalFormat != nullptr);
+
+    // Check that an image exists at the specified level.
+    if (internalFormat->internalFormat == GL_NONE)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidTextureLevel);
+        return nullptr;
+    }
+
+    return internalFormat;
+}
+
 bool ValidateCopyImageSubDataBase(const Context *context,
                                   angle::EntryPoint entryPoint,
                                   GLuint srcName,
@@ -3804,43 +3733,31 @@ bool ValidateCopyImageSubDataBase(const Context *context,
         return false;
     }
 
-    if (!ValidateCopyImageSubDataTarget(context, entryPoint, srcName, srcTarget))
+    const InternalFormat *srcFormatInfo =
+        GetValidFormatInfoForCopyImageSubData(context, entryPoint, srcName, srcTarget, srcLevel);
+    if (srcFormatInfo == nullptr)
     {
-        return false;
-    }
-    if (!ValidateCopyImageSubDataTarget(context, entryPoint, dstName, dstTarget))
-    {
-        return false;
-    }
-
-    if (!ValidateCopyImageSubDataLevel(context, entryPoint, srcTarget, srcLevel))
-    {
-        return false;
-    }
-    if (!ValidateCopyImageSubDataLevel(context, entryPoint, dstTarget, dstLevel))
-    {
+        // Error already generated.
         return false;
     }
 
-    const InternalFormat &srcFormatInfo =
-        GetTargetFormatInfo(context, entryPoint, srcName, srcTarget, srcLevel);
-    const InternalFormat &dstFormatInfo =
-        GetTargetFormatInfo(context, entryPoint, dstName, dstTarget, dstLevel);
+    const InternalFormat *dstFormatInfo =
+        GetValidFormatInfoForCopyImageSubData(context, entryPoint, dstName, dstTarget, dstLevel);
+    if (dstFormatInfo == nullptr)
+    {
+        // Error already generated.
+        return false;
+    }
+
     GLsizei dstWidth   = srcWidth;
     GLsizei dstHeight  = srcHeight;
     GLsizei srcSamples = 1;
     GLsizei dstSamples = 1;
 
-    if (srcFormatInfo.internalFormat == GL_NONE || dstFormatInfo.internalFormat == GL_NONE)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidTextureLevel);
-        return false;
-    }
-
     // From EXT_copy_image: INVALID_OPERATION is generated if the source and destination formats
     // are not compatible, if one image is compressed and the other is uncompressed and the block
     // size of compressed image is not equal to the texel size of the compressed image.
-    if (!ValidateCopyFormatCompatible(srcFormatInfo, dstFormatInfo))
+    if (!ValidateCopyFormatCompatible(*srcFormatInfo, *dstFormatInfo))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kIncompatibleTextures);
         return false;
@@ -3855,21 +3772,21 @@ bool ValidateCopyImageSubDataBase(const Context *context,
     // When copying from a compressed image to an uncompressed image the image texel dimensions
     // written to the uncompressed image will be source extent divided by the compressed texel block
     // dimensions.
-    if ((srcFormatInfo.compressed) && (!dstFormatInfo.compressed))
+    if ((srcFormatInfo->compressed) && (!dstFormatInfo->compressed))
     {
-        ASSERT(srcFormatInfo.compressedBlockWidth != 0);
-        ASSERT(srcFormatInfo.compressedBlockHeight != 0);
+        ASSERT(srcFormatInfo->compressedBlockWidth != 0);
+        ASSERT(srcFormatInfo->compressedBlockHeight != 0);
 
-        dstWidth /= srcFormatInfo.compressedBlockWidth;
-        dstHeight /= srcFormatInfo.compressedBlockHeight;
+        dstWidth /= srcFormatInfo->compressedBlockWidth;
+        dstHeight /= srcFormatInfo->compressedBlockHeight;
     }
     // When copying from an uncompressed image to a compressed image the image texel dimensions
     // written to the compressed image will be the source extent multiplied by the compressed texel
     // block dimensions.
-    else if ((!srcFormatInfo.compressed) && (dstFormatInfo.compressed))
+    else if ((!srcFormatInfo->compressed) && (dstFormatInfo->compressed))
     {
-        dstWidth *= dstFormatInfo.compressedBlockWidth;
-        dstHeight *= dstFormatInfo.compressedBlockHeight;
+        dstWidth *= dstFormatInfo->compressedBlockWidth;
+        dstHeight *= dstFormatInfo->compressedBlockHeight;
     }
 
     if (!ValidateCopyImageSubDataTargetRegion(context, entryPoint, dstName, dstTarget, dstLevel,
@@ -3891,14 +3808,14 @@ bool ValidateCopyImageSubDataBase(const Context *context,
                          srcHeight == dstExtents.height && srcDepth == dstExtents.depth;
     }
 
-    if (srcFormatInfo.compressed && !fillsEntireMip &&
-        !ValidateCompressedRegion(context, entryPoint, srcFormatInfo, srcWidth, srcHeight))
+    if (srcFormatInfo->compressed && !fillsEntireMip &&
+        !ValidateCompressedRegion(context, entryPoint, *srcFormatInfo, srcWidth, srcHeight))
     {
         return false;
     }
 
-    if (dstFormatInfo.compressed && !fillsEntireMip &&
-        !ValidateCompressedRegion(context, entryPoint, dstFormatInfo, dstWidth, dstHeight))
+    if (dstFormatInfo->compressed && !fillsEntireMip &&
+        !ValidateCompressedRegion(context, entryPoint, *dstFormatInfo, dstWidth, dstHeight))
     {
         return false;
     }

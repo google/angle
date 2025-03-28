@@ -613,6 +613,7 @@ inline constexpr const char *kTextureNotPow2 = "The texture is a non-power-of-tw
 inline constexpr const char *kTextureRectangleNotSupported = "Context does not support GL_ANGLE_texture_rectangle.";
 inline constexpr const char *kTextureSizeTooSmall = "Texture dimensions must all be greater than zero.";
 inline constexpr const char *kTextureStorageCompressionExtensionRequired = "GL_EXT_texture_storage_compression not enabled.";
+inline constexpr const char *kTextureTargetInvalidForCopyImage = "Texture target is TEXTURE_BUFFER or does not match the type of the texture.";
 inline constexpr const char *kTextureTargetMismatch = "Textarget must match the texture target type.";
 inline constexpr const char *kTextureTargetMismatchWithLabel = "Textarget must match the texture target type. Requested: %d Texture's: %d label: %s.";
 inline constexpr const char *kTextureTargetRequiresES31 = "Texture target requires at least OpenGL ES 3.1.";
