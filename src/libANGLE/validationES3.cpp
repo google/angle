@@ -2349,8 +2349,10 @@ bool ValidateProgramParameteriBase(const Context *context,
                                    GLenum pname,
                                    GLint value)
 {
-    if (GetValidProgram(context, entryPoint, program) == nullptr)
+    Program *programObject = GetValidProgram(context, entryPoint, program);
+    if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -4289,8 +4291,9 @@ bool ValidateTransformFeedbackVaryings(const Context *context,
     }
 
     Program *programObject = GetValidProgram(context, entryPoint, program);
-    if (!programObject)
+    if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -4320,8 +4323,9 @@ bool ValidateGetTransformFeedbackVarying(const Context *context,
     }
 
     Program *programObject = GetValidProgram(context, entryPoint, program);
-    if (!programObject)
+    if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -4540,8 +4544,9 @@ bool ValidateGetFragDataLocation(const Context *context,
     }
 
     Program *programObject = GetValidProgram(context, entryPoint, program);
-    if (!programObject)
+    if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -4574,8 +4579,9 @@ bool ValidateGetUniformIndices(const Context *context,
     }
 
     Program *programObject = GetValidProgram(context, entryPoint, program);
-    if (!programObject)
+    if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -4603,8 +4609,9 @@ bool ValidateGetActiveUniformsiv(const Context *context,
     }
 
     Program *programObject = GetValidProgram(context, entryPoint, program);
-    if (!programObject)
+    if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -4665,8 +4672,9 @@ bool ValidateGetUniformBlockIndex(const Context *context,
     }
 
     Program *programObject = GetValidProgram(context, entryPoint, program);
-    if (!programObject)
+    if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -4699,8 +4707,9 @@ bool ValidateGetActiveUniformBlockName(const Context *context,
     }
 
     Program *programObject = GetValidProgram(context, entryPoint, program);
-    if (!programObject)
+    if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -4732,8 +4741,9 @@ bool ValidateUniformBlockBinding(const Context *context,
     }
 
     Program *programObject = GetValidProgram(context, entryPoint, program);
-    if (!programObject)
+    if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -5140,11 +5150,14 @@ bool ValidateBindFragDataLocationIndexedEXT(const Context *context,
             return false;
         }
     }
+
     Program *programObject = GetValidProgram(context, entryPoint, program);
-    if (!programObject)
+    if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
+
     return true;
 }
 
@@ -5173,16 +5186,20 @@ bool ValidateGetFragDataIndexEXT(const Context *context,
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
         return false;
     }
+
     Program *programObject = GetValidProgram(context, entryPoint, program);
-    if (!programObject)
+    if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
+
     if (!programObject->isLinked())
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kProgramNotLinked);
         return false;
     }
+
     return true;
 }
 

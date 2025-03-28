@@ -4788,12 +4788,13 @@ bool ValidateGetUniformBase(const Context *context,
     }
 
     Program *programObject = GetValidProgram(context, entryPoint, program);
-    if (!programObject)
+    if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
-    if (!programObject || !programObject->isLinked())
+    if (!programObject->isLinked())
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kProgramNotLinked);
         return false;
@@ -5287,6 +5288,7 @@ bool ValidateProgramBinaryBase(const Context *context,
     Program *programObject = GetValidProgram(context, entryPoint, program);
     if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -5319,6 +5321,7 @@ bool ValidateGetProgramBinaryBase(const Context *context,
     Program *programObject = GetValidProgram(context, entryPoint, program);
     if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -6158,8 +6161,9 @@ bool ValidateGetProgramivBase(const Context *context,
     Program *programObject = (pname == GL_COMPLETION_STATUS_KHR)
                                  ? GetValidProgramNoResolve(context, entryPoint, program)
                                  : GetValidProgram(context, entryPoint, program);
-    if (!programObject)
+    if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -7115,8 +7119,10 @@ bool ValidateGetShaderivBase(const Context *context,
         }
     }
 
-    if (GetValidShader(context, entryPoint, shader) == nullptr)
+    Shader *shaderObject = GetValidShader(context, entryPoint, shader);
+    if (shaderObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -8213,8 +8219,9 @@ bool ValidateGetActiveUniformBlockivBase(const Context *context,
     }
 
     Program *programObject = GetValidProgram(context, entryPoint, program);
-    if (!programObject)
+    if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 

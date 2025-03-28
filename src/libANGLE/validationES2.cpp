@@ -3362,8 +3362,9 @@ bool ValidateBindUniformLocationCHROMIUM(const Context *context,
     }
 
     Program *programObject = GetValidProgram(context, entryPoint, program);
-    if (!programObject)
+    if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -3993,14 +3994,16 @@ bool ValidateAttachShader(const Context *context,
                           ShaderProgramID shader)
 {
     Program *programObject = GetValidProgram(context, entryPoint, program);
-    if (!programObject)
+    if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
     Shader *shaderObject = GetValidShader(context, entryPoint, shader);
-    if (!shaderObject)
+    if (shaderObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -4056,7 +4059,14 @@ bool ValidateBindAttribLocation(const Context *context,
         }
     }
 
-    return GetValidProgram(context, entryPoint, program) != nullptr;
+    Program *programObject = GetValidProgram(context, entryPoint, program);
+    if (programObject == nullptr)
+    {
+        // Error already generated.
+        return false;
+    }
+
+    return true;
 }
 
 bool ValidateBindFramebuffer(const Context *context,
@@ -4522,14 +4532,16 @@ bool ValidateDetachShader(const Context *context,
                           ShaderProgramID shader)
 {
     Program *programObject = GetValidProgram(context, entryPoint, program);
-    if (!programObject)
+    if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
     Shader *shaderObject = GetValidShader(context, entryPoint, shader);
-    if (!shaderObject)
+    if (shaderObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -4626,9 +4638,9 @@ bool ValidateGetActiveAttrib(const Context *context,
     }
 
     Program *programObject = GetValidProgram(context, entryPoint, program);
-
-    if (!programObject)
+    if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -4658,10 +4670,9 @@ bool ValidateGetActiveUniform(const Context *context,
     }
 
     Program *programObject = GetValidProgram(context, entryPoint, program);
-
-    if (!programObject)
+    if (programObject == nullptr)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kProgramNotValid);
+        // Error already generated.
         return false;
     }
 
@@ -4700,9 +4711,9 @@ bool ValidateGetAttachedShaders(const Context *context,
     }
 
     Program *programObject = GetValidProgram(context, entryPoint, program);
-
-    if (!programObject)
+    if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -4745,10 +4756,9 @@ bool ValidateGetAttribLocation(const Context *context,
     }
 
     Program *programObject = GetValidProgram(context, entryPoint, program);
-
-    if (!programObject)
+    if (programObject == nullptr)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kProgramNotBound);
+        // Error already generated.
         return false;
     }
 
@@ -4831,8 +4841,9 @@ bool ValidateGetProgramInfoLog(const Context *context,
     }
 
     Program *programObject = GetValidProgram(context, entryPoint, program);
-    if (!programObject)
+    if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -4853,8 +4864,9 @@ bool ValidateGetShaderInfoLog(const Context *context,
     }
 
     Shader *shaderObject = GetValidShader(context, entryPoint, shader);
-    if (!shaderObject)
+    if (shaderObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -4919,8 +4931,9 @@ bool ValidateGetShaderSource(const Context *context,
     }
 
     Shader *shaderObject = GetValidShader(context, entryPoint, shader);
-    if (!shaderObject)
+    if (shaderObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -4952,9 +4965,9 @@ bool ValidateGetUniformLocation(const Context *context,
     }
 
     Program *programObject = GetValidProgram(context, entryPoint, program);
-
-    if (!programObject)
+    if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -5218,8 +5231,9 @@ bool ValidateShaderBinary(const Context *context,
     }
 
     Shader *shaderObject = GetValidShader(context, entryPoint, shaders[0]);
-    if (!shaderObject)
+    if (shaderObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -5260,8 +5274,9 @@ bool ValidateShaderSource(const Context *context,
     }
 
     Shader *shaderObject = GetValidShader(context, entryPoint, shader);
-    if (!shaderObject)
+    if (shaderObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -5380,9 +5395,9 @@ bool ValidateValidateProgram(const Context *context,
                              ShaderProgramID program)
 {
     Program *programObject = GetValidProgram(context, entryPoint, program);
-
-    if (!programObject)
+    if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -5816,8 +5831,9 @@ bool ValidateLinkProgram(const Context *context,
     }
 
     Program *programObject = GetValidProgram(context, entryPoint, program);
-    if (!programObject)
+    if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 

@@ -325,8 +325,14 @@ bool ValidateProgramUniformBase(const Context *context,
                                 UniformLocation location,
                                 GLsizei count)
 {
+    Program *programObject = GetValidProgram(context, entryPoint, program);
+    if (programObject == nullptr)
+    {
+        // Error already generated.
+        return false;
+    }
+
     const LinkedUniform *uniform = nullptr;
-    Program *programObject       = GetValidProgram(context, entryPoint, program);
     if (!ValidateUniformCommonBase(context, entryPoint, programObject, location, count, &uniform))
     {
         // Error already generated.
@@ -347,8 +353,14 @@ bool ValidateProgramUniformMatrixBase(const Context *context,
                                       GLsizei count,
                                       GLboolean transpose)
 {
+    Program *programObject = GetValidProgram(context, entryPoint, program);
+    if (programObject == nullptr)
+    {
+        // Error already generated.
+        return false;
+    }
+
     const LinkedUniform *uniform = nullptr;
-    Program *programObject       = GetValidProgram(context, entryPoint, program);
     if (!ValidateUniformCommonBase(context, entryPoint, programObject, location, count, &uniform))
     {
         // Error already generated.
@@ -754,8 +766,14 @@ bool ValidateProgramUniform1ivBase(const Context *context,
                                    GLsizei count,
                                    const GLint *value)
 {
+    Program *programObject = GetValidProgram(context, entryPoint, program);
+    if (programObject == nullptr)
+    {
+        // Error already generated.
+        return false;
+    }
+
     const LinkedUniform *uniform = nullptr;
-    Program *programObject       = GetValidProgram(context, entryPoint, program);
     if (!ValidateUniformCommonBase(context, entryPoint, programObject, location, count, &uniform))
     {
         // Error already generated.
@@ -1172,6 +1190,7 @@ bool ValidateGetProgramResourceIndex(const Context *context,
     Program *programObject = GetValidProgram(context, entryPoint, program);
     if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -1346,6 +1365,7 @@ bool ValidateGetProgramResourceName(const Context *context,
     Program *programObject = GetValidProgram(context, entryPoint, program);
     if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -1570,6 +1590,7 @@ bool ValidateGetProgramResourceLocation(const Context *context,
     Program *programObject = GetValidProgram(context, entryPoint, program);
     if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -1607,8 +1628,10 @@ bool ValidateGetProgramResourceiv(const Context *context,
     Program *programObject = GetValidProgram(context, entryPoint, program);
     if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
+
     if (!ValidateProgramInterface(programInterface))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidProgramInterface);
@@ -1661,6 +1684,7 @@ bool ValidateGetProgramInterfaceiv(const Context *context,
     Program *programObject = GetValidProgram(context, entryPoint, program);
     if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
 
@@ -2945,16 +2969,20 @@ bool ValidateGetProgramResourceLocationIndexEXT(const Context *context,
         ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kProgramInterfaceMustBeProgramOutput);
         return false;
     }
+
     Program *programObject = GetValidProgram(context, entryPoint, program);
-    if (!programObject)
+    if (programObject == nullptr)
     {
+        // Error already generated.
         return false;
     }
+
     if (!programObject->isLinked())
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kProgramNotLinked);
         return false;
     }
+
     return true;
 }
 
