@@ -44,10 +44,9 @@ BufferState::BufferState()
 BufferState::~BufferState() {}
 
 Buffer::Buffer(rx::GLImplFactory *factory, BufferID id)
-    : RefCountObject(factory->generateSerial(), id),
-      mImpl(factory->createBuffer(mState)),
-      mImplObserver(this, kImplementationSubjectIndex)
+    : RefCountObject(factory->generateSerial(), id), mImpl(factory->createBuffer(mState))
 {
+    mImplObserver = angle::ObserverBinding(this, kImplementationSubjectIndex);
     mImplObserver.bind(mImpl);
 }
 
@@ -126,6 +125,33 @@ angle::Result Buffer::bufferData(Context *context,
     return bufferDataImpl(context, target, data, size, usage, flags, BufferStorage::Mutable);
 }
 
+angle::Result Buffer::setDataWithUsageFlags(const gl::Context *context,
+                                            gl::BufferBinding target,
+                                            GLeglClientBufferEXT clientBuffer,
+                                            const void *data,
+                                            size_t size,
+                                            gl::BufferUsage usage,
+                                            GLbitfield flags,
+                                            gl::BufferStorage bufferStorage)
+{
+    rx::BufferFeedback feedback;
+    angle::Result result = mImpl->setDataWithUsageFlags(context, target, clientBuffer, data, size,
+                                                        usage, flags, bufferStorage, &feedback);
+
+    applyImplFeedback(context, feedback);
+
+    if (result == angle::Result::Stop)
+    {
+        // If setData fails, the buffer contents are undefined. Set a zero size to indicate that.
+        mIndexRangeCache.clear();
+        mState.mSize = 0;
+
+        // Notify when storage changes.
+        onStateChange(angle::SubjectMessage::SubjectChanged);
+    }
+    return result;
+}
+
 angle::Result Buffer::bufferDataImpl(Context *context,
                                      BufferBinding target,
                                      const void *data,
@@ -160,18 +186,8 @@ angle::Result Buffer::bufferDataImpl(Context *context,
         dataForImpl = scratchBuffer->data();
     }
 
-    if (mImpl->setDataWithUsageFlags(context, target, nullptr, dataForImpl, size, usage, flags,
-                                     bufferStorage) == angle::Result::Stop)
-    {
-        // If setData fails, the buffer contents are undefined. Set a zero size to indicate that.
-        mIndexRangeCache.clear();
-        mState.mSize = 0;
-
-        // Notify when storage changes.
-        onStateChange(angle::SubjectMessage::SubjectChanged);
-
-        return angle::Result::Stop;
-    }
+    ANGLE_TRY(setDataWithUsageFlags(context, target, nullptr, dataForImpl, size, usage, flags,
+                                    bufferStorage));
 
     bool wholeBuffer = size == mState.mSize;
 
@@ -213,19 +229,8 @@ angle::Result Buffer::bufferExternalDataImpl(Context *context,
         ANGLE_TRY(unmap(context, &dontCare));
     }
 
-    if (mImpl->setDataWithUsageFlags(context, target, clientBuffer, nullptr, size,
-                                     BufferUsage::InvalidEnum, flags,
-                                     BufferStorage::Immutable) == angle::Result::Stop)
-    {
-        // If setData fails, the buffer contents are undefined. Set a zero size to indicate that.
-        mIndexRangeCache.clear();
-        mState.mSize = 0;
-
-        // Notify when storage changes.
-        onStateChange(angle::SubjectMessage::SubjectChanged);
-
-        return angle::Result::Stop;
-    }
+    ANGLE_TRY(setDataWithUsageFlags(context, target, clientBuffer, nullptr, size,
+                                    BufferUsage::InvalidEnum, flags, BufferStorage::Immutable));
 
     mIndexRangeCache.clear();
     mState.mUsage                = BufferUsage::InvalidEnum;
@@ -246,7 +251,9 @@ angle::Result Buffer::bufferSubData(const Context *context,
                                     GLsizeiptr size,
                                     GLintptr offset)
 {
-    ANGLE_TRY(mImpl->setSubData(context, target, data, size, offset));
+    rx::BufferFeedback feedback;
+    ANGLE_TRY_WITH_FINALLY(mImpl->setSubData(context, target, data, size, offset, &feedback),
+                           applyImplFeedback(context, feedback));
 
     mIndexRangeCache.invalidateRange(static_cast<unsigned int>(offset),
                                      static_cast<unsigned int>(size));
@@ -263,8 +270,10 @@ angle::Result Buffer::copyBufferSubData(const Context *context,
                                         GLintptr destOffset,
                                         GLsizeiptr size)
 {
-    ANGLE_TRY(
-        mImpl->copySubData(context, source->getImplementation(), sourceOffset, destOffset, size));
+    rx::BufferFeedback feedback;
+    ANGLE_TRY_WITH_FINALLY(mImpl->copySubData(context, source->getImplementation(), sourceOffset,
+                                              destOffset, size, &feedback),
+                           applyImplFeedback(context, feedback));
 
     mIndexRangeCache.invalidateRange(static_cast<unsigned int>(destOffset),
                                      static_cast<unsigned int>(size));
@@ -279,8 +288,10 @@ angle::Result Buffer::map(const Context *context, GLenum access)
 {
     ASSERT(!mState.mMapped);
 
+    rx::BufferFeedback feedback;
     mState.mMapPointer = nullptr;
-    ANGLE_TRY(mImpl->map(context, access, &mState.mMapPointer));
+    ANGLE_TRY_WITH_FINALLY(mImpl->map(context, access, &mState.mMapPointer, &feedback),
+                           applyImplFeedback(context, feedback));
 
     ASSERT(access == GL_WRITE_ONLY_OES);
 
@@ -305,8 +316,11 @@ angle::Result Buffer::mapRange(const Context *context,
     ASSERT(!mState.mMapped);
     ASSERT(offset + length <= mState.mSize);
 
+    rx::BufferFeedback feedback;
     mState.mMapPointer = nullptr;
-    ANGLE_TRY(mImpl->mapRange(context, offset, length, access, &mState.mMapPointer));
+    ANGLE_TRY_WITH_FINALLY(
+        mImpl->mapRange(context, offset, length, access, &mState.mMapPointer, &feedback),
+        applyImplFeedback(context, feedback));
 
     mState.mMapped      = GL_TRUE;
     mState.mMapOffset   = static_cast<GLint64>(offset);
@@ -335,8 +349,10 @@ angle::Result Buffer::unmap(const Context *context, GLboolean *result)
 {
     ASSERT(mState.mMapped);
 
+    rx::BufferFeedback feedback;
     *result = GL_FALSE;
-    ANGLE_TRY(mImpl->unmap(context, result));
+    ANGLE_TRY_WITH_FINALLY(mImpl->unmap(context, result, &feedback),
+                           applyImplFeedback(context, feedback));
 
     mState.mMapped      = GL_FALSE;
     mState.mMapPointer  = nullptr;
@@ -500,6 +516,20 @@ void Buffer::onContentsChange()
         {
             static_cast<Texture *>(contentsObserver.observer)->onBufferContentsChange();
         }
+    }
+}
+
+void Buffer::applyImplFeedback(const gl::Context *context, const rx::BufferFeedback &feedback)
+{
+    // Pass it along to observer of Buffer
+    if (feedback.internalMemoryAllocationChanged)
+    {
+        onStateChange(angle::SubjectMessage::InternalMemoryAllocationChanged);
+    }
+
+    if (feedback.bufferStateChanged)
+    {
+        onStateChange(angle::SubjectMessage::SubjectChanged);
     }
 }
 }  // namespace gl

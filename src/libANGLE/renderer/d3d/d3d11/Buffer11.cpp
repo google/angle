@@ -336,10 +336,11 @@ angle::Result Buffer11::setData(const gl::Context *context,
                                 gl::BufferBinding target,
                                 const void *data,
                                 size_t size,
-                                gl::BufferUsage usage)
+                                gl::BufferUsage usage,
+                                BufferFeedback *feedback)
 {
     updateD3DBufferUsage(context, usage);
-    return setSubData(context, target, data, size, 0);
+    return setSubData(context, target, data, size, 0, feedback);
 }
 
 angle::Result Buffer11::getData(const gl::Context *context, const uint8_t **outData)
@@ -365,7 +366,8 @@ angle::Result Buffer11::setSubData(const gl::Context *context,
                                    gl::BufferBinding target,
                                    const void *data,
                                    size_t size,
-                                   size_t offset)
+                                   size_t offset,
+                                   BufferFeedback *feedback)
 {
     size_t requiredSize = size + offset;
 
@@ -434,7 +436,8 @@ angle::Result Buffer11::copySubData(const gl::Context *context,
                                     BufferImpl *source,
                                     GLintptr sourceOffset,
                                     GLintptr destOffset,
-                                    GLsizeiptr size)
+                                    GLsizeiptr size,
+                                    BufferFeedback *feedback)
 {
     Buffer11 *sourceBuffer = GetAs<Buffer11>(source);
     ASSERT(sourceBuffer != nullptr);
@@ -494,19 +497,23 @@ angle::Result Buffer11::copySubData(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result Buffer11::map(const gl::Context *context, GLenum access, void **mapPtr)
+angle::Result Buffer11::map(const gl::Context *context,
+                            GLenum access,
+                            void **mapPtr,
+                            BufferFeedback *feedback)
 {
     // GL_OES_mapbuffer uses an enum instead of a bitfield for it's access, convert to a bitfield
     // and call mapRange.
     ASSERT(access == GL_WRITE_ONLY_OES);
-    return mapRange(context, 0, mSize, GL_MAP_WRITE_BIT, mapPtr);
+    return mapRange(context, 0, mSize, GL_MAP_WRITE_BIT, mapPtr, feedback);
 }
 
 angle::Result Buffer11::mapRange(const gl::Context *context,
                                  size_t offset,
                                  size_t length,
                                  GLbitfield access,
-                                 void **mapPtr)
+                                 void **mapPtr,
+                                 BufferFeedback *feedback)
 {
     ASSERT(!mMappedStorage);
 
@@ -544,7 +551,9 @@ angle::Result Buffer11::mapRange(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result Buffer11::unmap(const gl::Context *context, GLboolean *result)
+angle::Result Buffer11::unmap(const gl::Context *context,
+                              GLboolean *result,
+                              BufferFeedback *feedback)
 {
     ASSERT(mMappedStorage);
     mMappedStorage->unmap();

@@ -727,9 +727,10 @@ angle::Result VertexArrayGL::updateAttribPointer(const gl::Context *context, siz
         stateManager->bindBuffer(gl::BufferBinding::Array, bufferId);
         if (features.ensureNonEmptyBufferIsBoundForDraw.enabled && bufferGL->getBufferSize() == 0)
         {
+            BufferFeedback feedback;
             constexpr uint32_t data = 0;
             ANGLE_TRY(bufferGL->setData(context, gl::BufferBinding::Array, &data, sizeof(data),
-                                        gl::BufferUsage::StaticDraw));
+                                        gl::BufferUsage::StaticDraw, &feedback));
             ASSERT(bufferGL->getBufferSize() > 0);
         }
         ANGLE_TRY(callVertexAttribPointer(context, static_cast<GLuint>(attribIndex), attrib,

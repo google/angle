@@ -143,6 +143,8 @@ struct BufferDataSource
 
 VkBufferUsageFlags GetDefaultBufferUsageFlags(vk::Renderer *renderer);
 
+// TransformFeedbackVk is still observing BufferVk, so make it Subject class until we remove that
+// observer.
 class BufferVk : public BufferImpl
 {
   public:
@@ -162,29 +164,39 @@ class BufferVk : public BufferImpl
                                         size_t size,
                                         gl::BufferUsage usage,
                                         GLbitfield flags,
-                                        gl::BufferStorage bufferStorage) override;
+                                        gl::BufferStorage bufferStorage,
+                                        BufferFeedback *feedback) override;
     angle::Result setData(const gl::Context *context,
                           gl::BufferBinding target,
                           const void *data,
                           size_t size,
-                          gl::BufferUsage usage) override;
+                          gl::BufferUsage usage,
+                          BufferFeedback *feedback) override;
     angle::Result setSubData(const gl::Context *context,
                              gl::BufferBinding target,
                              const void *data,
                              size_t size,
-                             size_t offset) override;
+                             size_t offset,
+                             BufferFeedback *feedback) override;
     angle::Result copySubData(const gl::Context *context,
                               BufferImpl *source,
                               GLintptr sourceOffset,
                               GLintptr destOffset,
-                              GLsizeiptr size) override;
-    angle::Result map(const gl::Context *context, GLenum access, void **mapPtr) override;
+                              GLsizeiptr size,
+                              BufferFeedback *feedback) override;
+    angle::Result map(const gl::Context *context,
+                      GLenum access,
+                      void **mapPtr,
+                      BufferFeedback *feedback) override;
     angle::Result mapRange(const gl::Context *context,
                            size_t offset,
                            size_t length,
                            GLbitfield access,
-                           void **mapPtr) override;
-    angle::Result unmap(const gl::Context *context, GLboolean *result) override;
+                           void **mapPtr,
+                           BufferFeedback *feedback) override;
+    angle::Result unmap(const gl::Context *context,
+                        GLboolean *result,
+                        BufferFeedback *feedback) override;
     angle::Result getSubData(const gl::Context *context,
                              GLintptr offset,
                              GLsizeiptr size,
@@ -212,18 +224,51 @@ class BufferVk : public BufferImpl
     bool isBufferValid() const { return mBuffer.valid(); }
     bool isCurrentlyInUse(vk::Renderer *renderer) const;
 
-    angle::Result mapImpl(ContextVk *contextVk, GLbitfield access, void **mapPtr);
+    angle::Result mapForReadAccessOnly(ContextVk *contextVk, void **mapPtr)
+    {
+        BufferFeedback feedback;
+        ANGLE_TRY(mapImpl(contextVk, GL_MAP_READ_BIT, mapPtr, &feedback));
+        // read should not change main buffer storage that GPU uses
+        ASSERT(!feedback.hasFeedback());
+        return angle::Result::Continue;
+    }
+    angle::Result mapRangeForReadAccessOnly(ContextVk *contextVk,
+                                            VkDeviceSize offset,
+                                            VkDeviceSize length,
+                                            void **mapPtr)
+    {
+        BufferFeedback feedback;
+        ANGLE_TRY(mapRangeImpl(contextVk, offset, length, GL_MAP_READ_BIT, mapPtr, &feedback));
+        // read should not change main buffer storage that GPU uses
+        ASSERT(!feedback.hasFeedback());
+        return angle::Result::Continue;
+    }
+    angle::Result unmapReadAccessOnly(ContextVk *contextVk)
+    {
+        BufferFeedback feedback;
+        ANGLE_TRY(unmapImpl(contextVk, &feedback));
+        // read should not change main buffer storage that GPU uses
+        ASSERT(!feedback.hasFeedback());
+        return angle::Result::Continue;
+    }
+
+    angle::Result mapImpl(ContextVk *contextVk,
+                          GLbitfield access,
+                          void **mapPtr,
+                          BufferFeedback *feedback);
     angle::Result mapRangeImpl(ContextVk *contextVk,
                                VkDeviceSize offset,
                                VkDeviceSize length,
                                GLbitfield access,
-                               void **mapPtr);
-    angle::Result unmapImpl(ContextVk *contextVk);
+                               void **mapPtr,
+                               BufferFeedback *feedback);
+    angle::Result unmapImpl(ContextVk *contextVk, BufferFeedback *feedback);
     angle::Result ghostMappedBuffer(ContextVk *contextVk,
                                     VkDeviceSize offset,
                                     VkDeviceSize length,
                                     GLbitfield access,
-                                    void **mapPtr);
+                                    void **mapPtr,
+                                    BufferFeedback *feedback);
 
     VertexConversionBuffer *getVertexConversionBuffer(
         vk::Renderer *renderer,
@@ -253,13 +298,15 @@ class BufferVk : public BufferImpl
                                    const BufferDataSource &dataSource,
                                    size_t updateSize,
                                    size_t updateOffset,
-                                   BufferUpdateType updateType);
+                                   BufferUpdateType updateType,
+                                   BufferFeedback *feedback);
     angle::Result setDataWithMemoryType(const gl::Context *context,
                                         gl::BufferBinding target,
                                         const void *data,
                                         size_t size,
                                         VkMemoryPropertyFlags memoryPropertyFlags,
-                                        gl::BufferUsage usage);
+                                        gl::BufferUsage usage,
+                                        BufferFeedback *feedback);
     angle::Result handleDeviceLocalBufferMap(ContextVk *contextVk,
                                              VkDeviceSize offset,
                                              VkDeviceSize size,
@@ -273,14 +320,16 @@ class BufferVk : public BufferImpl
                               const BufferDataSource &dataSource,
                               size_t updateSize,
                               size_t updateOffset,
-                              BufferUpdateType updateType);
+                              BufferUpdateType updateType,
+                              BufferFeedback *feedback);
     angle::Result release(ContextVk *context);
     void dataUpdated();
     void dataRangeUpdated(const RangeDeviceSize &range);
 
     angle::Result acquireBufferHelper(ContextVk *contextVk,
                                       size_t sizeInBytes,
-                                      BufferUsageType usageType);
+                                      BufferUsageType usageType,
+                                      BufferFeedback *feedback);
 
     bool isExternalBuffer() const { return mClientBuffer != nullptr; }
     BufferUpdateType calculateBufferUpdateTypeOnFullUpdate(
@@ -295,6 +344,12 @@ class BufferVk : public BufferImpl
                                size_t size) const;
 
     void releaseConversionBuffers(vk::Context *context);
+
+    void internalMemoryAllocationChanged(BufferFeedback *feedback)
+    {
+        feedback->internalMemoryAllocationChanged = true;
+        onStateChange(angle::SubjectMessage::InternalMemoryAllocationChanged);
+    }
 
     vk::BufferHelper mBuffer;
 

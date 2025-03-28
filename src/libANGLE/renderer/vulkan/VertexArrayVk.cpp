@@ -673,7 +673,7 @@ angle::Result VertexArrayVk::convertVertexBufferCPU(ContextVk *contextVk,
     }
 
     uint8_t *src = nullptr;
-    ANGLE_TRY(srcBuffer->mapImpl(contextVk, GL_MAP_READ_BIT, reinterpret_cast<void **>(&src)));
+    ANGLE_TRY(srcBuffer->mapForReadAccessOnly(contextVk, reinterpret_cast<void **>(&src)));
     uint32_t srcStride      = conversion->getCacheKey().stride;
 
     if (conversion->isEntireBufferDirty())
@@ -717,7 +717,7 @@ angle::Result VertexArrayVk::convertVertexBufferCPU(ContextVk *contextVk,
     }
 
     conversion->clearDirty();
-    ANGLE_TRY(srcBuffer->unmapImpl(contextVk));
+    ANGLE_TRY(srcBuffer->unmapReadAccessOnly(contextVk));
 
     return angle::Result::Continue;
 }
@@ -1297,7 +1297,7 @@ angle::Result VertexArrayVk::updateStreamedAttribs(const gl::Context *context,
                         // Map buffer to expand attribs for divisor emulation
                         BufferVk *bufferVk = vk::GetImpl(binding.getBuffer().get());
                         void *buffSrc      = nullptr;
-                        ANGLE_TRY(bufferVk->mapImpl(contextVk, GL_MAP_READ_BIT, &buffSrc));
+                        ANGLE_TRY(bufferVk->mapForReadAccessOnly(contextVk, &buffSrc));
                         src = reinterpret_cast<const uint8_t *>(buffSrc) + binding.getOffset();
 
                         uint32_t srcAttributeSize =
@@ -1310,7 +1310,7 @@ angle::Result VertexArrayVk::updateStreamedAttribs(const gl::Context *context,
                             stride, vertexFormat.getVertexLoadFunction(compressed), divisor,
                             numVertices));
 
-                        ANGLE_TRY(bufferVk->unmapImpl(contextVk));
+                        ANGLE_TRY(bufferVk->unmapReadAccessOnly(contextVk));
                     }
                     else if (contextVk->getExtensions().robustnessAny())
                     {

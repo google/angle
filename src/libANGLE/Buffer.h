@@ -23,6 +23,7 @@
 namespace rx
 {
 class BufferImpl;
+struct BufferFeedback;
 class GLImplFactory;
 }  // namespace rx
 
@@ -224,8 +225,21 @@ class Buffer final : public ThreadSafeRefCountObject<BufferID>,
     size_t getContentsObserverIndex(void *observer, uint32_t bufferIndex) const;
     void removeContentsObserverImpl(void *observer, uint32_t bufferIndex);
 
+    void applyImplFeedback(const gl::Context *context, const rx::BufferFeedback &feedback);
+    angle::Result setDataWithUsageFlags(const gl::Context *context,
+                                        gl::BufferBinding target,
+                                        GLeglClientBufferEXT clientBuffer,
+                                        const void *data,
+                                        size_t size,
+                                        gl::BufferUsage usage,
+                                        GLbitfield flags,
+                                        gl::BufferStorage bufferStorage);
+
     BufferState mState;
     rx::BufferImpl *mImpl;
+
+    // TODO: only used by D3D11 backend. Remove once D3D11 usage is removed.
+    // https://issues.angleproject.org/400711938
     angle::ObserverBinding mImplObserver;
 
     angle::FastVector<ContentsObserver, angle::kMaxFixedObservers> mContentsObservers;

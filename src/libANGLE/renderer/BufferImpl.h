@@ -26,6 +26,15 @@ class Context;
 
 namespace rx
 {
+struct BufferFeedback
+{
+    bool hasFeedback() const { return internalMemoryAllocationChanged || bufferStateChanged; }
+    // buffer's backend storage was reallocated due to optimizations to prevent having to flush
+    // pending commands and waiting for the GPU to become idle.
+    bool internalMemoryAllocationChanged = false;
+    // The buffer's state (size, storage etc) have changed.
+    bool bufferStateChanged = false;
+};
 // We use two set of Subject messages. The CONTENTS_CHANGED message is signaled whenever data
 // changes, to trigger re-translation or other events. Some buffers only need to be updated when the
 // underlying driver object changes - this is notified via the STORAGE_CHANGED message.
@@ -33,7 +42,7 @@ class BufferImpl : public angle::Subject
 {
   public:
     BufferImpl(const gl::BufferState &state) : mState(state) {}
-    ~BufferImpl() override {}
+    virtual ~BufferImpl() override {}
     virtual void destroy(const gl::Context *context) {}
 
     virtual angle::Result setDataWithUsageFlags(const gl::Context *context,
@@ -43,29 +52,39 @@ class BufferImpl : public angle::Subject
                                                 size_t size,
                                                 gl::BufferUsage usage,
                                                 GLbitfield flags,
-                                                gl::BufferStorage bufferStorage);
+                                                gl::BufferStorage bufferStorage,
+                                                BufferFeedback *feedback);
     virtual angle::Result setData(const gl::Context *context,
                                   gl::BufferBinding target,
                                   const void *data,
                                   size_t size,
-                                  gl::BufferUsage usage)                                = 0;
+                                  gl::BufferUsage usage,
+                                  BufferFeedback *feedback)     = 0;
     virtual angle::Result setSubData(const gl::Context *context,
                                      gl::BufferBinding target,
                                      const void *data,
                                      size_t size,
-                                     size_t offset)                                     = 0;
+                                     size_t offset,
+                                     BufferFeedback *feedback)  = 0;
     virtual angle::Result copySubData(const gl::Context *context,
                                       BufferImpl *source,
                                       GLintptr sourceOffset,
                                       GLintptr destOffset,
-                                      GLsizeiptr size)                                  = 0;
-    virtual angle::Result map(const gl::Context *context, GLenum access, void **mapPtr) = 0;
+                                      GLsizeiptr size,
+                                      BufferFeedback *feedback) = 0;
+    virtual angle::Result map(const gl::Context *context,
+                              GLenum access,
+                              void **mapPtr,
+                              BufferFeedback *feedback)         = 0;
     virtual angle::Result mapRange(const gl::Context *context,
                                    size_t offset,
                                    size_t length,
                                    GLbitfield access,
-                                   void **mapPtr)                                       = 0;
-    virtual angle::Result unmap(const gl::Context *context, GLboolean *result)          = 0;
+                                   void **mapPtr,
+                                   BufferFeedback *feedback)    = 0;
+    virtual angle::Result unmap(const gl::Context *context,
+                                GLboolean *result,
+                                BufferFeedback *feedback)       = 0;
 
     virtual angle::Result getIndexRange(const gl::Context *context,
                                         gl::DrawElementsType type,

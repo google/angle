@@ -27,9 +27,10 @@ angle::Result BufferImpl::setDataWithUsageFlags(const gl::Context *context,
                                                 size_t size,
                                                 gl::BufferUsage usage,
                                                 GLbitfield flags,
-                                                gl::BufferStorage bufferStorage)
+                                                gl::BufferStorage bufferStorage,
+                                                BufferFeedback *feedback)
 {
-    return setData(context, target, data, size, usage);
+    return setData(context, target, data, size, usage, feedback);
 }
 
 angle::Result BufferImpl::onLabelUpdate(const gl::Context *context)

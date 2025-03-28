@@ -22,26 +22,40 @@ class MockBufferImpl : public BufferImpl
     MockBufferImpl() : BufferImpl(mMockState) {}
     ~MockBufferImpl() { destructor(); }
 
-    MOCK_METHOD5(setData,
+    MOCK_METHOD6(setData,
                  angle::Result(const gl::Context *,
                                gl::BufferBinding,
                                const void *,
                                size_t,
-                               gl::BufferUsage));
-    MOCK_METHOD5(
-        setSubData,
-        angle::Result(const gl::Context *, gl::BufferBinding, const void *, size_t, size_t));
-    MOCK_METHOD5(copySubData,
+                               gl::BufferUsage,
+                               BufferFeedback *));
+    MOCK_METHOD6(setSubData,
+                 angle::Result(const gl::Context *,
+                               gl::BufferBinding,
+                               const void *,
+                               size_t,
+                               size_t,
+                               BufferFeedback *));
+    MOCK_METHOD6(copySubData,
                  angle::Result(const gl::Context *contextImpl,
                                BufferImpl *,
                                GLintptr,
                                GLintptr,
-                               GLsizeiptr));
-    MOCK_METHOD3(map, angle::Result(const gl::Context *contextImpl, GLenum, void **));
-    MOCK_METHOD5(
-        mapRange,
-        angle::Result(const gl::Context *contextImpl, size_t, size_t, GLbitfield, void **));
-    MOCK_METHOD2(unmap, angle::Result(const gl::Context *contextImpl, GLboolean *result));
+                               GLsizeiptr,
+                               BufferFeedback *));
+    MOCK_METHOD4(map,
+                 angle::Result(const gl::Context *contextImpl, GLenum, void **, BufferFeedback *));
+    MOCK_METHOD6(mapRange,
+                 angle::Result(const gl::Context *contextImpl,
+                               size_t,
+                               size_t,
+                               GLbitfield,
+                               void **,
+                               BufferFeedback *));
+    MOCK_METHOD3(unmap,
+                 angle::Result(const gl::Context *contextImpl,
+                               GLboolean *result,
+                               BufferFeedback *));
 
     MOCK_METHOD6(getIndexRange,
                  angle::Result(const gl::Context *,

@@ -69,7 +69,8 @@ angle::Result BufferWgpu::setData(const gl::Context *context,
                                   gl::BufferBinding target,
                                   const void *data,
                                   size_t size,
-                                  gl::BufferUsage usage)
+                                  gl::BufferUsage usage,
+                                  BufferFeedback *feedback)
 {
     ContextWgpu *contextWgpu = webgpu::GetImpl(context);
     wgpu::Device device      = webgpu::GetDevice(context);
@@ -106,7 +107,8 @@ angle::Result BufferWgpu::setSubData(const gl::Context *context,
                                      gl::BufferBinding target,
                                      const void *data,
                                      size_t size,
-                                     size_t offset)
+                                     size_t offset,
+                                     BufferFeedback *feedback)
 {
     ContextWgpu *contextWgpu = webgpu::GetImpl(context);
     wgpu::Device device      = webgpu::GetDevice(context);
@@ -137,12 +139,16 @@ angle::Result BufferWgpu::copySubData(const gl::Context *context,
                                       BufferImpl *source,
                                       GLintptr sourceOffset,
                                       GLintptr destOffset,
-                                      GLsizeiptr size)
+                                      GLsizeiptr size,
+                                      BufferFeedback *feedback)
 {
     return angle::Result::Continue;
 }
 
-angle::Result BufferWgpu::map(const gl::Context *context, GLenum access, void **mapPtr)
+angle::Result BufferWgpu::map(const gl::Context *context,
+                              GLenum access,
+                              void **mapPtr,
+                              BufferFeedback *feedback)
 {
     return angle::Result::Continue;
 }
@@ -151,12 +157,15 @@ angle::Result BufferWgpu::mapRange(const gl::Context *context,
                                    size_t offset,
                                    size_t length,
                                    GLbitfield access,
-                                   void **mapPtr)
+                                   void **mapPtr,
+                                   BufferFeedback *feedback)
 {
     return angle::Result::Continue;
 }
 
-angle::Result BufferWgpu::unmap(const gl::Context *context, GLboolean *result)
+angle::Result BufferWgpu::unmap(const gl::Context *context,
+                                GLboolean *result,
+                                BufferFeedback *feedback)
 {
     *result = GL_TRUE;
     return angle::Result::Continue;

@@ -11996,11 +11996,14 @@ angle::Result ImageHelper::packReadPixelBuffer(ContextVk *contextVk,
         // Must map the PBO in order to read its contents (and then unmap it later)
         BufferVk *packBufferVk = GetImpl(packPixelsParams.packBuffer);
         void *mapPtr           = nullptr;
-        ANGLE_TRY(packBufferVk->mapImpl(contextVk, GL_MAP_WRITE_BIT, &mapPtr));
+        BufferFeedback feedback;
+        ANGLE_TRY(packBufferVk->mapImpl(contextVk, GL_MAP_WRITE_BIT, &mapPtr, &feedback));
+        ASSERT(!feedback.hasFeedback());
         uint8_t *dst = static_cast<uint8_t *>(mapPtr) + reinterpret_cast<ptrdiff_t>(pixels);
         PackPixels(packPixelsParams, aspectFormat, area.width * aspectFormat.pixelBytes,
                    readPixelBuffer, dst);
-        ANGLE_TRY(packBufferVk->unmapImpl(contextVk));
+        ANGLE_TRY(packBufferVk->unmapImpl(contextVk, &feedback));
+        ASSERT(!feedback.hasFeedback());
     }
     else
     {
