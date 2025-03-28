@@ -3791,6 +3791,7 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.textureMultisampleANGLE      = false;
         supportedExtensions.textureQueryLodEXT           = false;
         supportedExtensions.textureShadowLodEXT          = false;
+        supportedExtensions.textureStorageCompressionEXT = false;
         supportedExtensions.textureStencil8OES           = false;
         supportedExtensions.conservativeDepthEXT         = false;
         supportedExtensions.drawBuffersIndexedEXT        = false;
