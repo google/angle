@@ -7836,6 +7836,7 @@ bool ValidateTexParameterBase(const Context *context,
             if (target == TextureType::VideoImage && !context->getExtensions().videoTextureWEBGL)
             {
                 ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
+                return false;
             }
             break;
 
