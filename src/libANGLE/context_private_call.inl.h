@@ -495,7 +495,8 @@ inline void ContextPrivateBlendEquation(PrivateState *privateState,
                                         GLenum mode)
 {
     privateState->setBlendEquation(mode, mode);
-    if (privateState->getExtensions().blendEquationAdvancedKHR)
+    if (privateState->getExtensions().blendEquationAdvancedKHR ||
+        privateState->getClientVersion() >= ES_3_2)
     {
         privateStateCache->onBlendEquationOrFuncChange();
     }
@@ -507,7 +508,8 @@ inline void ContextPrivateBlendEquationi(PrivateState *privateState,
                                          GLenum mode)
 {
     privateState->setBlendEquationIndexed(mode, mode, buf);
-    if (privateState->getExtensions().blendEquationAdvancedKHR)
+    if (privateState->getExtensions().blendEquationAdvancedKHR ||
+        privateState->getClientVersion() >= ES_3_2)
     {
         privateStateCache->onBlendEquationOrFuncChange();
     }
@@ -519,7 +521,8 @@ inline void ContextPrivateBlendEquationSeparate(PrivateState *privateState,
                                                 GLenum modeAlpha)
 {
     privateState->setBlendEquation(modeRGB, modeAlpha);
-    if (privateState->getExtensions().blendEquationAdvancedKHR)
+    if (privateState->getExtensions().blendEquationAdvancedKHR ||
+        privateState->getClientVersion() >= ES_3_2)
     {
         privateStateCache->onBlendEquationOrFuncChange();
     }
@@ -532,7 +535,8 @@ inline void ContextPrivateBlendEquationSeparatei(PrivateState *privateState,
                                                  GLenum modeAlpha)
 {
     privateState->setBlendEquationIndexed(modeRGB, modeAlpha, buf);
-    if (privateState->getExtensions().blendEquationAdvancedKHR)
+    if (privateState->getExtensions().blendEquationAdvancedKHR ||
+        privateState->getClientVersion() >= ES_3_2)
     {
         privateStateCache->onBlendEquationOrFuncChange();
     }

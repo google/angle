@@ -806,15 +806,10 @@ bool ValidateDrawRangeElementsBaseVertexOES(const Context *context,
 // GL_KHR_blend_equation_advanced
 bool ValidateBlendBarrierKHR(const Context *context, angle::EntryPoint entryPoint)
 {
-    if (context->getClientVersion() < ES_2_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES2Required);
-        return false;
-    }
-
     if (!context->getExtensions().blendEquationAdvancedKHR)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kAdvancedBlendExtensionNotEnabled);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kAdvancedBlendExtensionNotEnabled);
+        return false;
     }
 
     return true;
@@ -2262,7 +2257,8 @@ bool ValidatePLSActiveBlendEquation(const Context *context,
 {
     // INVALID_OPERATION is generated if BLEND_EQUATION_RGB and/or BLEND_EQUATION_ALPHA is an
     // advanced blend equation defined in KHR_blend_equation_advanced.
-    ASSERT(context->getState().getExtensions().blendEquationAdvancedKHR);
+    ASSERT(context->getState().getExtensions().blendEquationAdvancedKHR ||
+           context->getClientVersion() >= ES_3_2);
     switch (blendEquation)
     {
         case gl::BlendEquationType::Multiply:
@@ -2532,7 +2528,7 @@ bool ValidateBeginPixelLocalStorageANGLE(const Context *context,
 
     // INVALID_OPERATION is generated if BLEND_EQUATION_RGB and/or BLEND_EQUATION_ALPHA is an
     // advanced blend equation defined in KHR_blend_equation_advanced.
-    if (state.getExtensions().blendEquationAdvancedKHR)
+    if (state.getExtensions().blendEquationAdvancedKHR || context->getClientVersion() >= ES_3_2)
     {
         if (!ValidatePLSActiveBlendEquation(context, entryPoint,
                                             state.getBlendStateExt().getEquationColorIndexed(0)) ||

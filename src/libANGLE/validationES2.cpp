@@ -701,8 +701,7 @@ bool ValidCapUncommon(const PrivateState &state, ErrorSet *errors, GLenum cap, b
             return queryOnly && state.getExtensions().shaderFramebufferFetchARM;
 
         case GL_BLEND_ADVANCED_COHERENT_KHR:
-            return state.getClientVersion() >= Version(2, 0) &&
-                   state.getExtensions().blendEquationAdvancedCoherentKHR;
+            return state.getExtensions().blendEquationAdvancedCoherentKHR;
 
         default:
             break;

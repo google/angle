@@ -3329,7 +3329,7 @@ bool GetQueryParameterInfo(const State &glState,
         }
         case GL_BLEND_ADVANCED_COHERENT_KHR:
         {
-            if (clientMajorVersion < 2 || !extensions.blendEquationAdvancedCoherentKHR)
+            if (!extensions.blendEquationAdvancedCoherentKHR)
             {
                 return false;
             }

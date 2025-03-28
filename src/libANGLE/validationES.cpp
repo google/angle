@@ -747,7 +747,7 @@ ANGLE_INLINE const char *ValidateProgramDrawStates(const Context *context,
     // Enabled blend equation validation
     const char *errorString = nullptr;
 
-    if (extensions.blendEquationAdvancedKHR)
+    if (extensions.blendEquationAdvancedKHR || context->getClientVersion() >= ES_3_2)
     {
         errorString = ValidateProgramDrawAdvancedBlendState(context, executable);
     }

@@ -22,6 +22,7 @@ class AdvancedBlendTest : public ANGLETest<>
         setConfigGreenBits(8);
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
+        setExtensionsEnabled(false);
     }
 
     void callBlendBarrier(APIExtensionVersion usedExtension);
@@ -51,7 +52,7 @@ void AdvancedBlendTest::testAdvancedBlendNotAppliedWhenBlendIsDisabled(
 {
     ASSERT(usedExtension == APIExtensionVersion::Core || usedExtension == APIExtensionVersion::KHR);
 
-    constexpr char kGLSLVersion31[] = R"(#version 310 es
+    constexpr char kGLSLVersion30[] = R"(#version 300 es
 )";
     constexpr char kGLSLVersion32[] = R"(#version 320 es
 )";
@@ -63,8 +64,8 @@ void AdvancedBlendTest::testAdvancedBlendNotAppliedWhenBlendIsDisabled(
 
     if (usedExtension == APIExtensionVersion::KHR)
     {
-        vertSrc.append(kGLSLVersion31);
-        fragSrc.append(kGLSLVersion31);
+        vertSrc.append(kGLSLVersion30);
+        fragSrc.append(kGLSLVersion30);
         fragSrc.append(kBlendKHR);
     }
     else
@@ -130,7 +131,7 @@ void AdvancedBlendTest::testAdvancedBlendNotAppliedWhenBlendIsDisabled(
 // Regression test for a bug in the emulation path in the Vulkan backend.
 TEST_P(AdvancedBlendTest, AdvancedBlendNotAppliedWhenBlendIsDisabledKHR)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_KHR_blend_equation_advanced"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_KHR_blend_equation_advanced"));
     testAdvancedBlendNotAppliedWhenBlendIsDisabled(APIExtensionVersion::KHR);
 }
 
@@ -144,7 +145,7 @@ void AdvancedBlendTest::testAdvancedBlendDisabledAndThenEnabled(APIExtensionVers
 {
     ASSERT(usedExtension == APIExtensionVersion::Core || usedExtension == APIExtensionVersion::KHR);
 
-    constexpr char kGLSLVersion31[] = R"(#version 310 es
+    constexpr char kGLSLVersion30[] = R"(#version 300 es
 )";
     constexpr char kGLSLVersion32[] = R"(#version 320 es
 )";
@@ -156,8 +157,8 @@ void AdvancedBlendTest::testAdvancedBlendDisabledAndThenEnabled(APIExtensionVers
 
     if (usedExtension == APIExtensionVersion::KHR)
     {
-        vertSrc.append(kGLSLVersion31);
-        fragSrc.append(kGLSLVersion31);
+        vertSrc.append(kGLSLVersion30);
+        fragSrc.append(kGLSLVersion30);
         fragSrc.append(kBlendKHR);
     }
     else
@@ -222,7 +223,7 @@ void AdvancedBlendTest::testAdvancedBlendDisabledAndThenEnabled(APIExtensionVers
     glEnable(GL_BLEND);
     // Test the blend with coherent blend disabled. This make the test cover both devices that
     // support / do not support GL_KHR_blend_equation_advanced_coherent
-    if (IsGLExtensionEnabled("GL_KHR_blend_equation_advanced_coherent"))
+    if (EnsureGLExtensionEnabled("GL_KHR_blend_equation_advanced_coherent"))
     {
         glDisable(GL_BLEND_ADVANCED_COHERENT_KHR);
     }
@@ -241,7 +242,7 @@ void AdvancedBlendTest::testAdvancedBlendDisabledAndThenEnabled(APIExtensionVers
 // Regression test for a bug in the emulation path in the Vulkan backend.
 TEST_P(AdvancedBlendTest, AdvancedBlendDisabledAndThenEnabledKHR)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_KHR_blend_equation_advanced"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_KHR_blend_equation_advanced"));
     testAdvancedBlendDisabledAndThenEnabled(APIExtensionVersion::KHR);
 }
 
@@ -256,7 +257,7 @@ void AdvancedBlendTest::testAdvancedBlendEnabledAndThenDisabled(APIExtensionVers
 {
     ASSERT(usedExtension == APIExtensionVersion::Core || usedExtension == APIExtensionVersion::KHR);
 
-    constexpr char kGLSLVersion31[] = R"(#version 310 es
+    constexpr char kGLSLVersion30[] = R"(#version 300 es
 )";
     constexpr char kGLSLVersion32[] = R"(#version 320 es
 )";
@@ -268,8 +269,8 @@ void AdvancedBlendTest::testAdvancedBlendEnabledAndThenDisabled(APIExtensionVers
 
     if (usedExtension == APIExtensionVersion::KHR)
     {
-        vertSrc.append(kGLSLVersion31);
-        fragSrc.append(kGLSLVersion31);
+        vertSrc.append(kGLSLVersion30);
+        fragSrc.append(kGLSLVersion30);
         fragSrc.append(kBlendKHR);
     }
     else
@@ -330,7 +331,7 @@ void AdvancedBlendTest::testAdvancedBlendEnabledAndThenDisabled(APIExtensionVers
     glEnable(GL_BLEND);
     // Test the blend with coherent blend disabled. This make the test cover both devices that
     // support / do not support GL_KHR_blend_equation_advanced_coherent
-    if (IsGLExtensionEnabled("GL_KHR_blend_equation_advanced_coherent"))
+    if (EnsureGLExtensionEnabled("GL_KHR_blend_equation_advanced_coherent"))
     {
         glDisable(GL_BLEND_ADVANCED_COHERENT_KHR);
     }
@@ -354,8 +355,17 @@ void AdvancedBlendTest::testAdvancedBlendEnabledAndThenDisabled(APIExtensionVers
 // Regression test for a bug in the emulation path in the Vulkan backend.
 TEST_P(AdvancedBlendTest, AdvancedBlendEnabledAndThenDisabledKHR)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_KHR_blend_equation_advanced"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_KHR_blend_equation_advanced"));
     testAdvancedBlendEnabledAndThenDisabled(APIExtensionVersion::KHR);
+}
+
+// Test that extension blend barrier results in an error if the extension is not enabled.
+TEST_P(AdvancedBlendTest, AdvancedBlendBarrierKHRFailsIfNotSupported)
+{
+    ASSERT_FALSE(IsGLExtensionEnabled("GL_KHR_blend_equation_advanced"));
+
+    glBlendBarrierKHR();
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
 // Test that when blending is enabled, advanced blend is applied, but is not applied after
@@ -365,10 +375,19 @@ TEST_P(AdvancedBlendTestES32, AdvancedBlendEnabledAndThenDisabled)
     testAdvancedBlendEnabledAndThenDisabled(APIExtensionVersion::Core);
 }
 
+// Test that core blend barrier results in no error if the extension is not enabled.
+TEST_P(AdvancedBlendTestES32, AdvancedBlendBarrierAlwaysPasses)
+{
+    ASSERT_FALSE(IsGLExtensionEnabled("GL_KHR_blend_equation_advanced"));
+
+    glBlendBarrier();
+    EXPECT_GL_NO_ERROR();
+}
+
 // Test querying advanced blend equation coherent on supported devices (enabled by default).
 TEST_P(AdvancedBlendTest, AdvancedBlendCoherentQuery)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_KHR_blend_equation_advanced_coherent"));
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_KHR_blend_equation_advanced_coherent"));
 
     GLint status = -1;
     glGetIntegerv(GL_BLEND_ADVANCED_COHERENT_KHR, &status);
@@ -384,21 +403,28 @@ TEST_P(AdvancedBlendTest, AdvancedBlendCoherentQuery)
     glGetIntegerv(GL_BLEND_ADVANCED_COHERENT_KHR, &status);
     EXPECT_GL_NO_ERROR();
     EXPECT_EQ(status, 1);
+
+    const GLboolean statusBool = glIsEnabled(GL_BLEND_ADVANCED_COHERENT_KHR);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_TRUE(statusBool);
 }
 
 // Test that querying advanced blend equation coherent results in an error as if this enum does not
 // exist.
 TEST_P(AdvancedBlendTest, AdvancedBlendCoherentQueryFailsIfNotSupported)
 {
-    ANGLE_SKIP_TEST_IF(IsGLExtensionEnabled("GL_KHR_blend_equation_advanced_coherent"));
+    ASSERT_FALSE(IsGLExtensionEnabled("GL_KHR_blend_equation_advanced_coherent"));
 
     GLint status = -1;
     glGetIntegerv(GL_BLEND_ADVANCED_COHERENT_KHR, &status);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    glEnable(GL_BLEND_ADVANCED_COHERENT_KHR);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
 }
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(AdvancedBlendTest);
-ANGLE_INSTANTIATE_TEST_ES31(AdvancedBlendTest);
+ANGLE_INSTANTIATE_TEST_ES3(AdvancedBlendTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(AdvancedBlendTestES32);
 ANGLE_INSTANTIATE_TEST_ES32(AdvancedBlendTestES32);

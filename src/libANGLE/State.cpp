@@ -473,7 +473,7 @@ void PrivateState::initialize(Context *context)
 
     // This coherent blending is enabled by default, but can be enabled or disabled by calling
     // glEnable() or glDisable() with the symbolic constant GL_BLEND_ADVANCED_COHERENT_KHR.
-    mBlendAdvancedCoherent = context->getExtensions().blendEquationAdvancedCoherentKHR;
+    mBlendAdvancedCoherent = true;
 
     mPrimitiveRestart = false;
 
@@ -2280,6 +2280,7 @@ void PrivateState::getIntegerv(GLenum pname, GLint *params) const
             *params = mCaps.fragmentShaderFramebufferFetchMRT ? 1 : 0;
             break;
 
+        // GL_KHR_blend_equation_advanced_coherent
         case GL_BLEND_ADVANCED_COHERENT_KHR:
             *params = mBlendAdvancedCoherent ? 1 : 0;
             break;
