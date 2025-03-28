@@ -383,12 +383,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
      }},
     // From various tests. The validation layer does not calculate the exact vertexCounts that's
     // being accessed. http://anglebug.com/42265220
-    {
-        "SYNC-HAZARD-WRITE-AFTER-READ",
-        "Hazard WRITE_AFTER_READ for",
-        "Access info (usage: SYNC_VERTEX_SHADER_SHADER_STORAGE_WRITE, prior_usage: "
-        "SYNC_VERTEX_ATTRIBUTE_INPUT_VERTEX_ATTRIBUTE_READ",
-    },
     {"SYNC-HAZARD-WRITE-AFTER-READ",
      "Hazard WRITE_AFTER_READ for dstBuffer VkBuffer",
      "Access info (usage: SYNC_COPY_TRANSFER_WRITE, prior_usage: "
