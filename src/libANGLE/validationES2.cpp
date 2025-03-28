@@ -6186,8 +6186,6 @@ bool ValidatePopGroupMarkerEXT(const Context *context, angle::EntryPoint entryPo
 {
     if (!context->getExtensions().debugMarkerEXT)
     {
-        // The debug marker calls should not set error state
-        // However, it seems reasonable to set an error state if the extension is not enabled
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
     }

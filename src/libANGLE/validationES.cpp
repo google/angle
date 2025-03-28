@@ -4994,20 +4994,7 @@ bool ValidateInsertEventMarkerEXT(const Context *context,
 {
     if (!context->getExtensions().debugMarkerEXT)
     {
-        // The debug marker calls should not set error state
-        // However, it seems reasonable to set an error state if the extension is not enabled
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
-    // Note that debug marker calls must not set error state
-    if (length < 0)
-    {
-        return false;
-    }
-
-    if (marker == nullptr)
-    {
         return false;
     }
 
@@ -5021,20 +5008,7 @@ bool ValidatePushGroupMarkerEXT(const Context *context,
 {
     if (!context->getExtensions().debugMarkerEXT)
     {
-        // The debug marker calls should not set error state
-        // However, it seems reasonable to set an error state if the extension is not enabled
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
-    // Note that debug marker calls must not set error state
-    if (length < 0)
-    {
-        return false;
-    }
-
-    if (length > 0 && marker == nullptr)
-    {
         return false;
     }
 
