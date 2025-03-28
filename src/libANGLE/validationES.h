@@ -346,8 +346,7 @@ ANGLE_INLINE bool ValidateUniformCommonBase(const Context *context,
 
     if (location.value == -1)
     {
-        // Silently ignore the uniform command
-        return false;
+        return true;  // no-op
     }
 
     const ProgramExecutable &executable = program->getExecutable();
@@ -362,8 +361,7 @@ ANGLE_INLINE bool ValidateUniformCommonBase(const Context *context,
     const auto &uniformLocation = uniformLocations[castedLocation];
     if (uniformLocation.ignored)
     {
-        // Silently ignore the uniform command
-        return false;
+        return true;  // no-op
     }
 
     if (!uniformLocation.used())
