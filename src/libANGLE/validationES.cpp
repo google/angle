@@ -8920,6 +8920,7 @@ bool ValidateLoseContextCHROMIUM(const Context *context,
 
         default:
             ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidResetStatus);
+            return false;
     }
 
     switch (other)
@@ -8931,6 +8932,7 @@ bool ValidateLoseContextCHROMIUM(const Context *context,
 
         default:
             ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidResetStatus);
+            return false;
     }
 
     return true;
