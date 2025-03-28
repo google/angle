@@ -1075,7 +1075,8 @@ void CaptureCompressedTexImage2DRobustANGLE_data(const State &glState,
                                                  const GLvoid *data,
                                                  ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureCompressedTexImage2D_data(glState, isCallValid, targetPacked, level, internalformat,
+                                     width, height, border, imageSize, data, paramCapture);
 }
 
 void CaptureCompressedTexSubImage2DRobustANGLE_data(const State &glState,
@@ -1092,7 +1093,8 @@ void CaptureCompressedTexSubImage2DRobustANGLE_data(const State &glState,
                                                     const GLvoid *data,
                                                     ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureCompressedTexSubImage2D_data(glState, isCallValid, targetPacked, level, xoffset, yoffset,
+                                        width, height, format, imageSize, data, paramCapture);
 }
 
 void CaptureCompressedTexImage3DRobustANGLE_data(const State &glState,

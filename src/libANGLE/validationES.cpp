@@ -6884,6 +6884,7 @@ bool ValidateRobustCompressedTexImageBase(const Context *context,
         if (dataSize < imageSize)
         {
             ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kCompressedDataSizeTooSmall);
+            return false;
         }
     }
     return true;

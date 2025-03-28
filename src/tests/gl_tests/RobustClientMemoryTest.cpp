@@ -27,26 +27,12 @@ class RobustClientMemoryTest : public ANGLETest<>
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
     }
-
-    bool extensionsPresent() const
-    {
-        if (!IsGLExtensionEnabled("GL_ANGLE_robust_client_memory"))
-        {
-            std::cout << "Test skipped because GL_ANGLE_robust_client_memory is not available.";
-            return false;
-        }
-
-        return true;
-    }
 };
 
 // Test basic usage and validation of glGetIntegervRobustANGLE
 TEST_P(RobustClientMemoryTest, GetInteger)
 {
-    if (!extensionsPresent())
-    {
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_robust_client_memory"));
 
     // Verify that the robust and regular entry points return the same values
     GLint resultRobust;
@@ -103,10 +89,8 @@ TEST_P(RobustClientMemoryTest, GetInteger)
 // Test basic usage and validation of glTexImage2DRobustANGLE and glTexSubImage2DRobustANGLE
 TEST_P(RobustClientMemoryTest, TexImage2D)
 {
-    if (!extensionsPresent())
-    {
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_robust_client_memory"));
+
     GLTexture tex;
     glBindTexture(GL_TEXTURE_2D, tex);
 
@@ -146,13 +130,68 @@ TEST_P(RobustClientMemoryTest, TexImage2D)
     }
 }
 
+// Test basic usage and validation of glCompressedTexImage2DRobustANGLE
+// and glCompressedTexSubImage2DRobustANGLE
+TEST_P(RobustClientMemoryTest, CompressedTexImage2D)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_robust_client_memory"));
+
+    // Either ETC1 or BC1 should be supported everywhere
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_dxt1") &&
+                       !IsGLExtensionEnabled("GL_OES_compressed_ETC1_RGB8_texture"));
+
+    const GLenum format = IsGLExtensionEnabled("GL_EXT_texture_compression_dxt1")
+                              ? GL_COMPRESSED_RGBA_S3TC_DXT1_EXT
+                              : GL_ETC1_RGB8_OES;
+
+    // Both ETC1 and BC1 use 4x4 blocks of 8 bytes
+    constexpr GLint smallDimension = 4;
+    std::array<GLubyte, smallDimension * smallDimension / 2> smallData;
+
+    constexpr GLint largeDimension = 1024;
+    constexpr GLint largeSize      = 1024 * 1024 / 2;
+
+    // Test the regular case
+    {
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glCompressedTexImage2DRobustANGLE(GL_TEXTURE_2D, 0, format, smallDimension, smallDimension,
+                                          0, smallData.size(), smallData.size(), smallData.data());
+        EXPECT_GL_NO_ERROR();
+
+        glCompressedTexSubImage2DRobustANGLE(GL_TEXTURE_2D, 0, 0, 0, smallDimension, smallDimension,
+                                             format, smallData.size(), smallData.size(),
+                                             smallData.data());
+        EXPECT_GL_NO_ERROR();
+    }
+
+    // Test creating a large texture with small data size
+    {
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glCompressedTexImage2DRobustANGLE(GL_TEXTURE_2D, 0, format, largeDimension, largeDimension,
+                                          0, largeSize, smallData.size(), smallData.data());
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    }
+
+    // Test updating a large texture with small data size
+    {
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D, tex);
+        glCompressedTexImage2D(GL_TEXTURE_2D, 0, format, largeDimension, largeDimension, 0,
+                               largeSize, nullptr);
+        ASSERT_GL_NO_ERROR();
+
+        glCompressedTexImage2DRobustANGLE(GL_TEXTURE_2D, 0, format, largeDimension, largeDimension,
+                                          0, largeSize, smallData.size(), smallData.data());
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    }
+}
+
 // Test basic usage and validation of glReadPixelsRobustANGLE
 TEST_P(RobustClientMemoryTest, ReadPixels)
 {
-    if (!extensionsPresent())
-    {
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_robust_client_memory"));
 
     // TODO(ynovikov): Looks like a driver bug on Intel HD 530 http://anglebug.com/42260689
     ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsDesktopOpenGL());
