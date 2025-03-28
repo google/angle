@@ -6289,15 +6289,10 @@ bool ValidateFramebufferTexture2DMultisampleEXT(const Context *context,
         return false;
     }
 
-    if (samples < 0)
-    {
-        return false;
-    }
-
     // EXT_multisampled_render_to_texture states that the value of samples
     // must be less than or equal to MAX_SAMPLES_EXT (Context::getCaps().maxSamples)
     // otherwise GL_INVALID_VALUE is generated.
-    if (samples > context->getCaps().maxSamples)
+    if (samples < 0 || samples > context->getCaps().maxSamples)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kSamplesOutOfRange);
         return false;

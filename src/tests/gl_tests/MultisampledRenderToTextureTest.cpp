@@ -338,6 +338,11 @@ TEST_P(MultisampledRenderToTextureTest, Texture2DParameterCheck)
     ASSERT_GL_NO_ERROR();
     EXPECT_GE(samples, 1);
 
+    // Samples negative
+    glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                         texture, 0, -1);
+    ASSERT_GL_ERROR(GL_INVALID_VALUE);
+
     // Samples too large
     glFramebufferTexture2DMultisampleEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
                                          texture, 0, samples + 1);
