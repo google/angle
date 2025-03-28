@@ -4136,12 +4136,15 @@ bool ValidateEGLImageTargetTexStorageEXT(const Context *context,
             if (!context->getExtensions().EGLImageExternalOES)
             {
                 ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, ToGLenum(targetType));
+                return false;
             }
             break;
         case TextureType::CubeMapArray:
-            if (!context->getExtensions().textureCubeMapArrayAny())
+            if (!context->getExtensions().textureCubeMapArrayAny() &&
+                context->getClientVersion() < ES_3_2)
             {
                 ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, ToGLenum(targetType));
+                return false;
             }
             break;
         case TextureType::_2D:
