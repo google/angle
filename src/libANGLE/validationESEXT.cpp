@@ -4103,16 +4103,6 @@ bool ValidateLabelObjectEXT(const Context *context,
     return ValidateObjectIdentifierAndName(context, entryPoint, type, object);
 }
 
-bool ValidateEGLImageTargetTextureStorageEXT(const Context *context,
-                                             angle::EntryPoint entryPoint,
-                                             GLuint texture,
-                                             egl::ImageID image,
-                                             const GLint *attrib_list)
-{
-    UNREACHABLE();
-    return false;
-}
-
 bool ValidateEGLImageTargetTexStorageEXT(const Context *context,
                                          angle::EntryPoint entryPoint,
                                          GLenum target,

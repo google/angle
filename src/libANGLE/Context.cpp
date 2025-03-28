@@ -8997,11 +8997,6 @@ void Context::eGLImageTargetTexStorage(GLenum target, egl::ImageID image, const 
                                                         imageObject, attrib_list));
 }
 
-void Context::eGLImageTargetTextureStorage(GLuint texture,
-                                           egl::ImageID image,
-                                           const GLint *attrib_list)
-{}
-
 void Context::eGLImageTargetTexture2D(TextureType target, egl::ImageID image)
 {
     Texture *texture        = getTextureByType(target);
@@ -9019,11 +9014,6 @@ void Context::eGLImageTargetRenderbufferStorage(GLenum target, egl::ImageID imag
 void Context::framebufferFetchBarrier()
 {
     mImplementation->framebufferFetchBarrier();
-}
-
-void Context::texStorage1D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width)
-{
-    UNIMPLEMENTED();
 }
 
 bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams) const

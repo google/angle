@@ -5480,37 +5480,6 @@ CallCapture CaptureEGLImageTargetTexStorageEXT(const State &glState,
     return CallCapture(angle::EntryPoint::GLEGLImageTargetTexStorageEXT, std::move(paramBuffer));
 }
 
-CallCapture CaptureEGLImageTargetTextureStorageEXT(const State &glState,
-                                                   bool isCallValid,
-                                                   GLuint texture,
-                                                   egl::ImageID imagePacked,
-                                                   const GLint *attrib_list)
-{
-    ParamBuffer paramBuffer;
-
-    paramBuffer.addValueParam("texture", ParamType::TGLuint, texture);
-    paramBuffer.addValueParam("imagePacked", ParamType::TImageID, imagePacked);
-
-    if (isCallValid)
-    {
-        ParamCapture attrib_listParam("attrib_list", ParamType::TGLintConstPointer);
-        InitParamValue(ParamType::TGLintConstPointer, attrib_list, &attrib_listParam.value);
-        CaptureEGLImageTargetTextureStorageEXT_attrib_list(
-            glState, isCallValid, texture, imagePacked, attrib_list, &attrib_listParam);
-        paramBuffer.addParam(std::move(attrib_listParam));
-    }
-    else
-    {
-        ParamCapture attrib_listParam("attrib_list", ParamType::TGLintConstPointer);
-        InitParamValue(ParamType::TGLintConstPointer, static_cast<const GLint *>(nullptr),
-                       &attrib_listParam.value);
-        paramBuffer.addParam(std::move(attrib_listParam));
-    }
-
-    return CallCapture(angle::EntryPoint::GLEGLImageTargetTextureStorageEXT,
-                       std::move(paramBuffer));
-}
-
 CallCapture CaptureDrawArraysInstancedBaseInstanceEXT(const State &glState,
                                                       bool isCallValid,
                                                       PrimitiveMode modePacked,
@@ -9207,24 +9176,6 @@ CallCapture CaptureTexBufferRangeEXT(const State &glState,
     paramBuffer.addValueParam("size", ParamType::TGLsizeiptr, size);
 
     return CallCapture(angle::EntryPoint::GLTexBufferRangeEXT, std::move(paramBuffer));
-}
-
-CallCapture CaptureTexStorage1DEXT(const State &glState,
-                                   bool isCallValid,
-                                   GLenum target,
-                                   GLsizei levels,
-                                   GLenum internalformat,
-                                   GLsizei width)
-{
-    ParamBuffer paramBuffer;
-
-    paramBuffer.addEnumParam("target", GLESEnum::TextureTarget, ParamType::TGLenum, target);
-    paramBuffer.addValueParam("levels", ParamType::TGLsizei, levels);
-    paramBuffer.addEnumParam("internalformat", GLESEnum::SizedInternalFormat, ParamType::TGLenum,
-                             internalformat);
-    paramBuffer.addValueParam("width", ParamType::TGLsizei, width);
-
-    return CallCapture(angle::EntryPoint::GLTexStorage1DEXT, std::move(paramBuffer));
 }
 
 CallCapture CaptureTexStorage2DEXT(const State &glState,

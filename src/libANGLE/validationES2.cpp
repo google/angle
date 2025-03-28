@@ -6179,18 +6179,6 @@ bool ValidatePopGroupMarkerEXT(const Context *context, angle::EntryPoint entryPo
     return true;
 }
 
-bool ValidateTexStorage1DEXT(const Context *context,
-                             angle::EntryPoint entryPoint,
-                             GLenum target,
-                             GLsizei levels,
-                             GLenum internalformat,
-                             GLsizei width)
-{
-    UNIMPLEMENTED();
-    ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-    return false;
-}
-
 bool ValidateTexStorage3DEXT(const Context *context,
                              angle::EntryPoint entryPoint,
                              TextureType target,

@@ -3444,6 +3444,7 @@ def main():
             '../src/libANGLE/validationESEXT_autogen.h',
             '../src/libEGL/libEGL_autogen.cpp',
             '../src/libEGL/libEGL_autogen.def',
+            '../src/libEGL/libEGL_vulkan_secondaries_autogen.def',
             '../src/libGLESv2/entry_points_cl_autogen.cpp',
             '../src/libGLESv2/entry_points_cl_autogen.h',
             '../src/libGLESv2/entry_points_egl_autogen.cpp',
@@ -3466,6 +3467,7 @@ def main():
             '../src/libGLESv2/libGLESv2_autogen.def',
             '../src/libGLESv2/libGLESv2_no_capture_autogen.def',
             '../src/libGLESv2/libGLESv2_with_capture_autogen.def',
+            '../src/libGLESv2/libGLESv2_vulkan_secondaries_autogen.def',
             '../src/libGLESv2/egl_context_lock_autogen.h',
             '../util/capture/frame_capture_replay_autogen.cpp',
         ]

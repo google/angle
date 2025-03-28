@@ -708,7 +708,6 @@ EXPORTS
 
     ; GL_EXT_EGL_image_storage
     glEGLImageTargetTexStorageEXT
-    glEGLImageTargetTextureStorageEXT
 
     ; GL_EXT_EGL_image_storage_compression
 
@@ -997,7 +996,6 @@ EXPORTS
     ; GL_EXT_texture_shadow_lod
 
     ; GL_EXT_texture_storage
-    glTexStorage1DEXT
     glTexStorage2DEXT
     glTexStorage3DEXT
 

@@ -2078,13 +2078,6 @@ CallCapture ParseCallCapture(const Token &nameToken,
                 paramTokens, strings);
         return CallCapture(EntryPoint::GLEGLImageTargetTexture2DOES, std::move(params));
     }
-    if (strcmp(nameToken, "glEGLImageTargetTextureStorageEXT") == 0)
-    {
-        ParamBuffer params =
-            ParseParameters<std::remove_pointer<PFNGLEGLIMAGETARGETTEXTURESTORAGEEXTPROC>::type>(
-                paramTokens, strings);
-        return CallCapture(EntryPoint::GLEGLImageTargetTextureStorageEXT, std::move(params));
-    }
     if (strcmp(nameToken, "glEnable") == 0)
     {
         ParamBuffer params =
@@ -5656,12 +5649,6 @@ CallCapture ParseCallCapture(const Token &nameToken,
         ParamBuffer params = ParseParameters<std::remove_pointer<PFNGLTEXPARAMETERXVPROC>::type>(
             paramTokens, strings);
         return CallCapture(EntryPoint::GLTexParameterxv, std::move(params));
-    }
-    if (strcmp(nameToken, "glTexStorage1DEXT") == 0)
-    {
-        ParamBuffer params = ParseParameters<std::remove_pointer<PFNGLTEXSTORAGE1DEXTPROC>::type>(
-            paramTokens, strings);
-        return CallCapture(EntryPoint::GLTexStorage1DEXT, std::move(params));
     }
     if (strcmp(nameToken, "glTexStorage2D") == 0)
     {

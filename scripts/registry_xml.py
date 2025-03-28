@@ -308,6 +308,23 @@ gles1_extensions = [
     "GL_OES_texture_mirrored_repeat",
 ]
 
+# Unsupported entry points that require explicit exclusion
+# because XML registry does not contain enough information.
+gles_skipped_commands = [
+    # GL_EXT_EGL_image_storage
+    "glEGLImageTargetTextureStorageEXT",
+    # GL_EXT_memory_object
+    "glTextureStorageMem2DEXT",
+    "glTextureStorageMem2DMultisampleEXT",
+    "glTextureStorageMem3DEXT",
+    "glTextureStorageMem3DMultisampleEXT",
+    "glNamedBufferStorageMemEXT",
+    # GL_EXT_texture_storage
+    "glTexStorage1DEXT",
+    "glTextureStorage1DEXT",
+    "glTextureStorage2DEXT",
+    "glTextureStorage3DEXT",
+]
 
 def check_sorted(name, l):
     unidiff = difflib.unified_diff(l, sorted(l, key=str.casefold), 'unsorted', 'sorted')
@@ -602,13 +619,11 @@ class RegistryXML:
                 if 'api' in require.attrib and require.attrib['api'] not in apis:
                     continue
 
-                # A special case for EXT_texture_storage
-                filter_out_comment = "Supported only if GL_EXT_direct_state_access is supported"
-                if 'comment' in require.attrib and require.attrib['comment'] == filter_out_comment:
-                    continue
-
-                extension_commands = require.findall('command')
-                ext_cmd_names += [command.attrib['name'] for command in extension_commands]
+                ext_cmd_names += [
+                    command.attrib['name']
+                    for command in require.findall('command')
+                    if command.attrib['name'] not in gles_skipped_commands
+                ]
 
             self.ext_data[extension_name] = sorted(ext_cmd_names)
 

@@ -810,9 +810,6 @@ ANGLE_EXPORT void GL_APIENTRY GL_LoseContextCHROMIUM(GLenum current, GLenum othe
 ANGLE_EXPORT void GL_APIENTRY GL_EGLImageTargetTexStorageEXT(GLenum target,
                                                              GLeglImageOES image,
                                                              const GLint *attrib_list);
-ANGLE_EXPORT void GL_APIENTRY GL_EGLImageTargetTextureStorageEXT(GLuint texture,
-                                                                 GLeglImageOES image,
-                                                                 const GLint *attrib_list);
 
 // GL_EXT_EGL_image_storage_compression
 
@@ -1418,10 +1415,6 @@ ANGLE_EXPORT void GL_APIENTRY GL_TexBufferRangeEXT(GLenum target,
 // GL_EXT_texture_shadow_lod
 
 // GL_EXT_texture_storage
-ANGLE_EXPORT void GL_APIENTRY GL_TexStorage1DEXT(GLenum target,
-                                                 GLsizei levels,
-                                                 GLenum internalformat,
-                                                 GLsizei width);
 ANGLE_EXPORT void GL_APIENTRY GL_TexStorage2DEXT(GLenum target,
                                                  GLsizei levels,
                                                  GLenum internalformat,

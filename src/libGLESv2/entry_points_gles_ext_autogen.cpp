@@ -5040,37 +5040,6 @@ void GL_APIENTRY GL_EGLImageTargetTexStorageEXT(GLenum target,
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
 
-void GL_APIENTRY GL_EGLImageTargetTextureStorageEXT(GLuint texture,
-                                                    GLeglImageOES image,
-                                                    const GLint *attrib_list)
-{
-    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
-    Context *context = GetValidGlobalContext();
-    EVENT(context, GLEGLImageTargetTextureStorageEXT,
-          "context = %d, texture = %u, image = 0x%016" PRIxPTR ", attrib_list = 0x%016" PRIxPTR "",
-          CID(context), texture, (uintptr_t)image, (uintptr_t)attrib_list);
-
-    if (context)
-    {
-        egl::ImageID imagePacked = PackParam<egl::ImageID>(image);
-        SCOPED_EGL_IMAGE_SHARE_CONTEXT_LOCK(context, imagePacked);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateEGLImageTargetTextureStorageEXT(
-                                context, angle::EntryPoint::GLEGLImageTargetTextureStorageEXT,
-                                texture, imagePacked, attrib_list));
-        if (ANGLE_LIKELY(isCallValid))
-        {
-            context->eGLImageTargetTextureStorage(texture, imagePacked, attrib_list);
-        }
-        ANGLE_CAPTURE_GL(EGLImageTargetTextureStorageEXT, isCallValid, context, texture,
-                         imagePacked, attrib_list);
-    }
-    else
-    {
-        GenerateContextLostErrorOnCurrentGlobalContext();
-    }
-    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
-}
 
 // GL_EXT_EGL_image_storage_compression
 
@@ -9771,38 +9740,6 @@ void GL_APIENTRY GL_TexBufferRangeEXT(GLenum target,
 // GL_EXT_texture_shadow_lod
 
 // GL_EXT_texture_storage
-void GL_APIENTRY GL_TexStorage1DEXT(GLenum target,
-                                    GLsizei levels,
-                                    GLenum internalformat,
-                                    GLsizei width)
-{
-    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
-    Context *context = GetValidGlobalContext();
-    EVENT(context, GLTexStorage1DEXT,
-          "context = %d, target = %s, levels = %d, internalformat = %s, width = %d", CID(context),
-          GLenumToString(GLESEnum::TextureTarget, target), levels,
-          GLenumToString(GLESEnum::SizedInternalFormat, internalformat), width);
-
-    if (context)
-    {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateTexStorage1DEXT(context, angle::EntryPoint::GLTexStorage1DEXT,
-                                                    target, levels, internalformat, width));
-        if (ANGLE_LIKELY(isCallValid))
-        {
-            context->texStorage1D(target, levels, internalformat, width);
-        }
-        ANGLE_CAPTURE_GL(TexStorage1DEXT, isCallValid, context, target, levels, internalformat,
-                         width);
-    }
-    else
-    {
-        GenerateContextLostErrorOnCurrentGlobalContext();
-    }
-    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
-}
-
 void GL_APIENTRY GL_TexStorage2DEXT(GLenum target,
                                     GLsizei levels,
                                     GLenum internalformat,
