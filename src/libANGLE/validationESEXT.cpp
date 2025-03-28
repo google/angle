@@ -73,7 +73,7 @@ bool IsValidImageLayout(ImageLayout layout)
     }
 }
 
-bool IsValidMemoryObjectParamater(const Context *context,
+bool IsValidMemoryObjectParameter(const Context *context,
                                   angle::EntryPoint entryPoint,
                                   GLenum pname)
 {
@@ -1386,9 +1386,10 @@ bool ValidateGetMemoryObjectParameterivEXT(const Context *context,
     if (memory == nullptr)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidMemoryObject);
+        return false;
     }
 
-    if (!IsValidMemoryObjectParamater(context, entryPoint, pname))
+    if (!IsValidMemoryObjectParameter(context, entryPoint, pname))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidMemoryObjectParameter);
         return false;
@@ -1466,7 +1467,7 @@ bool ValidateMemoryObjectParameterivEXT(const Context *context,
         return false;
     }
 
-    if (!IsValidMemoryObjectParamater(context, entryPoint, pname))
+    if (!IsValidMemoryObjectParameter(context, entryPoint, pname))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidMemoryObjectParameter);
         return false;

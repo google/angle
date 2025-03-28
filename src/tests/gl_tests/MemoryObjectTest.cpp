@@ -78,6 +78,17 @@ TEST_P(MemoryObjectTest, MemoryObjectQueries)
     // http://anglebug.com/42263921
     ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsDesktopOpenGL());
 
+    // Validate that configuring or querying memory object zero fails
+    {
+        GLint dedicatedMemory = GL_TRUE;
+        glMemoryObjectParameterivEXT(0, GL_DEDICATED_MEMORY_OBJECT_EXT, &dedicatedMemory);
+        EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+        glGetMemoryObjectParameterivEXT(0, GL_DEDICATED_MEMORY_OBJECT_EXT, &dedicatedMemory);
+        EXPECT_GL_ERROR(GL_INVALID_VALUE);
+        EXPECT_EQ(dedicatedMemory, GL_TRUE);
+    }
+
     GLMemoryObject memoryObject;
 
     // Validate that the initial state of GL_DEDICATED_MEMORY_OBJECT_EXT is GL_FALSE
