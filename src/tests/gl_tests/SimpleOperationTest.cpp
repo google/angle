@@ -214,6 +214,20 @@ TEST_P(SimpleOperationTest, ClearAndSwap)
     ASSERT_FALSE(getGLWindow()->hasError());
 }
 
+// Deleting shader zero is no-op.
+TEST_P(SimpleOperationTest, DeleteShaderZero)
+{
+    glDeleteShader(0);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Deleting program zero is no-op.
+TEST_P(SimpleOperationTest, DeleteProgramZero)
+{
+    glDeleteProgram(0);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Simple case of setting a scissor, enabled or disabled.
 TEST_P(SimpleOperationTest, ScissorTest)
 {
