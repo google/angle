@@ -237,18 +237,11 @@ bool IsValidCopyTextureSourceLevel(const Context *context, TextureType type, GLi
 }
 
 bool IsValidCopyTextureDestinationLevel(const Context *context,
-                                        angle::EntryPoint entryPoint,
                                         TextureType type,
                                         GLint level,
                                         GLsizei width,
-                                        GLsizei height,
-                                        bool isSubImage)
+                                        GLsizei height)
 {
-    if (!ValidImageSizeParameters(context, entryPoint, type, level, width, height, 1, isSubImage))
-    {
-        return false;
-    }
-
     const Caps &caps = context->getCaps();
     switch (type)
     {
@@ -3508,8 +3501,15 @@ bool ValidateCopyTextureCHROMIUM(const Context *context,
         return false;
     }
 
-    if (!IsValidCopyTextureDestinationLevel(context, entryPoint, dest->getType(), destLevel,
-                                            sourceWidth, sourceHeight, false))
+    if (!ValidImageSizeParameters(context, entryPoint, dest->getType(), destLevel, sourceWidth,
+                                  sourceHeight, 1, false))
+    {
+        // Error already generated.
+        return false;
+    }
+
+    if (!IsValidCopyTextureDestinationLevel(context, dest->getType(), destLevel, sourceWidth,
+                                            sourceHeight))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidMipLevel);
         return false;
@@ -3634,8 +3634,14 @@ bool ValidateCopySubTextureCHROMIUM(const Context *context,
         return false;
     }
 
-    if (!IsValidCopyTextureDestinationLevel(context, entryPoint, dest->getType(), destLevel, width,
-                                            height, true))
+    if (!ValidImageSizeParameters(context, entryPoint, dest->getType(), destLevel, width, height, 1,
+                                  true))
+    {
+        // Error already generated.
+        return false;
+    }
+
+    if (!IsValidCopyTextureDestinationLevel(context, dest->getType(), destLevel, width, height))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidMipLevel);
         return false;
