@@ -173,8 +173,8 @@ CLDeviceImpl::Info CLDeviceVk::createInfo(cl::DeviceType type) const
     info.image3D_MaxWidth  = properties.limits.maxImageDimension3D;
     info.image3D_MaxHeight = properties.limits.maxImageDimension3D;
     info.image3D_MaxDepth  = properties.limits.maxImageDimension3D;
-    // TODO (http://anglebug.com/379669750) For now set it minimum requirement.
-    info.imageMaxBufferSize        = 65536;
+    // Max number of pixels for a 1D image created from a buffer object.
+    info.imageMaxBufferSize        = properties.limits.maxTexelBufferElements;
     info.imageMaxArraySize         = properties.limits.maxImageArrayLayers;
     info.imagePitchAlignment       = 0u;
     info.imageBaseAddressAlignment = 0u;
