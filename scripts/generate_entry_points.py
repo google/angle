@@ -301,7 +301,7 @@ void GL_APIENTRY GL_{name}({params})
     {{{packed_gl_enum_conversions}
         {context_lock}{implicit_pls_disable}
         bool isCallValid = (context->skipValidation() || {validation_expression});
-        if (isCallValid)
+        if (ANGLE_LIKELY(isCallValid))
         {{
             context->{name_lower_no_suffix}({internal_params});
         }}
@@ -325,7 +325,7 @@ void GL_APIENTRY GL_{name}({params})
     if ({valid_context_check})
     {{{packed_gl_enum_conversions}
         bool isCallValid = (context->skipValidation() || {validation_expression});
-        if (isCallValid)
+        if (ANGLE_LIKELY(isCallValid))
         {{
             ContextPrivate{name_no_suffix}({context_private_internal_params});
         }}
@@ -351,7 +351,7 @@ TEMPLATE_GLES_ENTRY_POINT_WITH_RETURN = """\
     {{{packed_gl_enum_conversions}
         {context_lock}
         bool isCallValid = (context->skipValidation() || {validation_expression});
-        if (isCallValid)
+        if (ANGLE_LIKELY(isCallValid))
         {{
             returnValue = context->{name_lower_no_suffix}({internal_params});
         }}
@@ -382,7 +382,7 @@ TEMPLATE_GLES_CONTEXT_PRIVATE_ENTRY_POINT_WITH_RETURN = """\
     if ({valid_context_check})
     {{{packed_gl_enum_conversions}
         bool isCallValid = (context->skipValidation() || {validation_expression});
-        if (isCallValid)
+        if (ANGLE_LIKELY(isCallValid))
         {{
             returnValue = ContextPrivate{name_no_suffix}({context_private_internal_params});
         }}

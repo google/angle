@@ -918,9 +918,9 @@ class State : angle::NonCopyable
         return mProgram;
     }
 
-    Program *getLinkedProgram(const Context *context) const
+    ANGLE_INLINE Program *getLinkedProgram(const Context *context) const
     {
-        if (mProgram)
+        if (ANGLE_LIKELY(mProgram))
         {
             mProgram->resolveLink(context);
         }
