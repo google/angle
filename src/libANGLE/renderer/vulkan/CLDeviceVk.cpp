@@ -11,6 +11,7 @@
 #endif
 
 #include "libANGLE/renderer/vulkan/CLDeviceVk.h"
+#include "libANGLE/renderer/driver_utils.h"
 #include "libANGLE/renderer/vulkan/clspv_utils.h"
 #include "libANGLE/renderer/vulkan/vk_renderer.h"
 
@@ -134,16 +135,16 @@ CLDeviceVk::CLDeviceVk(const cl::Device &device, vk::Renderer *renderer)
         {cl::DeviceInfo::NativeVectorWidthInt, 1},
         {cl::DeviceInfo::NativeVectorWidthLong, 1},
         {cl::DeviceInfo::NativeVectorWidthFloat, 1},
-        {cl::DeviceInfo::NativeVectorWidthDouble, 1},
-        {cl::DeviceInfo::NativeVectorWidthHalf, 0},
+        {cl::DeviceInfo::NativeVectorWidthDouble, mRenderer->getNativeVectorWidthDouble()},
+        {cl::DeviceInfo::NativeVectorWidthHalf, mRenderer->getNativeVectorWidthHalf()},
         {cl::DeviceInfo::PartitionMaxSubDevices, 0},
+        {cl::DeviceInfo::PreferredVectorWidthChar, 4},
+        {cl::DeviceInfo::PreferredVectorWidthShort, 8},
         {cl::DeviceInfo::PreferredVectorWidthInt, 1},
         {cl::DeviceInfo::PreferredVectorWidthLong, 1},
-        {cl::DeviceInfo::PreferredVectorWidthChar, 4},
-        {cl::DeviceInfo::PreferredVectorWidthHalf, 0},
-        {cl::DeviceInfo::PreferredVectorWidthShort, 2},
         {cl::DeviceInfo::PreferredVectorWidthFloat, 1},
-        {cl::DeviceInfo::PreferredVectorWidthDouble, 0},
+        {cl::DeviceInfo::PreferredVectorWidthDouble, mRenderer->getPreferredVectorWidthDouble()},
+        {cl::DeviceInfo::PreferredVectorWidthHalf, mRenderer->getPreferredVectorWidthHalf()},
         {cl::DeviceInfo::PreferredLocalAtomicAlignment, 0},
         {cl::DeviceInfo::PreferredGlobalAtomicAlignment, 0},
         {cl::DeviceInfo::PreferredPlatformAtomicAlignment, 0},

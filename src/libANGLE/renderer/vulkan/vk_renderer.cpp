@@ -1900,7 +1900,11 @@ Renderer::Renderer()
       mSupportedBufferWritePipelineStageMask(0),
       mSupportedVulkanShaderStageMask(0),
       mMemoryAllocationTracker(MemoryAllocationTracker(this)),
-      mMaxBufferMemorySizeLimit(0)
+      mMaxBufferMemorySizeLimit(0),
+      mNativeVectorWidthDouble(0),
+      mNativeVectorWidthHalf(0),
+      mPreferredVectorWidthDouble(0),
+      mPreferredVectorWidthHalf(0)
 {
     VkFormatProperties invalid = {0, 0, kInvalidFormatFeatureFlags};
     mFormatProperties.fill(invalid);
@@ -6362,6 +6366,19 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         mFeatures.supportsGlobalPriority.enabled &&
             mPhysicalDeviceGlobalPriorityQueryFeatures.globalPriorityQuery == VK_TRUE &&
             IsAndroid());
+
+    // Set limits to expose to OpenCL.
+    // This information cannot yet be queried from the Vulkan device.
+    if (isSamsung && mFeatures.supportsShaderFloat64.enabled)
+    {
+        mNativeVectorWidthDouble    = 1;
+        mPreferredVectorWidthDouble = 1;
+    }
+    if (isSamsung && mFeatures.supportsShaderFloat16.enabled)
+    {
+        mNativeVectorWidthHalf    = 2;
+        mPreferredVectorWidthHalf = 8;
+    }
 }
 
 void Renderer::appBasedFeatureOverrides(const vk::ExtensionNameList &extensions) {}

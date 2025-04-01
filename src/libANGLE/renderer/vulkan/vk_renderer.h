@@ -706,6 +706,11 @@ class Renderer : angle::NonCopyable
 
     bool supportsAstcHdr() const;
 
+    uint32_t getNativeVectorWidthDouble() const { return mNativeVectorWidthDouble; }
+    uint32_t getNativeVectorWidthHalf() const { return mNativeVectorWidthHalf; }
+    uint32_t getPreferredVectorWidthDouble() const { return mPreferredVectorWidthDouble; }
+    uint32_t getPreferredVectorWidthHalf() const { return mPreferredVectorWidthHalf; }
+
   private:
     angle::Result setupDevice(vk::ErrorContext *context,
                               const angle::FeatureOverrides &featureOverrides,
@@ -1089,6 +1094,12 @@ class Renderer : angle::NonCopyable
 
     // Record submitted queue serials not belongs to any context.
     vk::ResourceUse mSubmittedResourceUse;
+
+    // Potentially vendor & feature-specific device info.
+    uint32_t mNativeVectorWidthDouble;
+    uint32_t mNativeVectorWidthHalf;
+    uint32_t mPreferredVectorWidthDouble;
+    uint32_t mPreferredVectorWidthHalf;
 };
 
 ANGLE_INLINE Serial Renderer::generateQueueSerial(SerialIndex index)
