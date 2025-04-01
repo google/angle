@@ -1551,6 +1551,13 @@ ImmutableString TextureFunctionHLSL::useTextureFunction(const ImmutableString &n
         }
     }
 
+    if (IsShadowSampler(textureFunction.sampler) &&
+        textureFunction.method == TextureFunction::LOD &&
+        lod0)  // This prevents accidentally emitting SampleCmp inside discontinuous loops
+    {
+        textureFunction.method = TextureFunction::LOD0;
+    }
+
     mUsesTexture.insert(textureFunction);
     return textureFunction.name();
 }
