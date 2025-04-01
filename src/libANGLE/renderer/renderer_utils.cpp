@@ -1041,17 +1041,39 @@ BufferAndLayout::BufferAndLayout() = default;
 BufferAndLayout::~BufferAndLayout() = default;
 
 template <typename T>
-void UpdateBufferWithLayout(GLsizei count,
-                            uint32_t arrayIndex,
-                            int componentCount,
-                            const T *v,
-                            const sh::BlockMemberInfo &layoutInfo,
-                            angle::MemoryBuffer *uniformData)
+ANGLE_NOINLINE void UpdateBufferWithLayoutStrided(GLsizei count,
+                                                  uint32_t arrayIndex,
+                                                  int componentCount,
+                                                  const T *v,
+                                                  const sh::BlockMemberInfo &layoutInfo,
+                                                  angle::MemoryBuffer *uniformData)
 {
     const int elementSize = sizeof(T) * componentCount;
+    uint8_t *dst          = uniformData->data() + layoutInfo.offset;
+    int maxIndex          = arrayIndex + count;
+    for (int writeIndex = arrayIndex, readIndex = 0; writeIndex < maxIndex;
+         writeIndex++, readIndex++)
+    {
+        const int arrayOffset = writeIndex * layoutInfo.arrayStride;
+        uint8_t *writePtr     = dst + arrayOffset;
+        const T *readPtr      = v + (readIndex * componentCount);
+        ASSERT(writePtr + elementSize <= uniformData->data() + uniformData->size());
+        memcpy(writePtr, readPtr, elementSize);
+    }
+}
 
+template <typename T>
+ANGLE_INLINE void UpdateBufferWithLayout(GLsizei count,
+                                         uint32_t arrayIndex,
+                                         int componentCount,
+                                         const T *v,
+                                         const sh::BlockMemberInfo &layoutInfo,
+                                         angle::MemoryBuffer *uniformData)
+{
+    const int elementSize = sizeof(T) * componentCount;
     uint8_t *dst = uniformData->data() + layoutInfo.offset;
-    if (layoutInfo.arrayStride == 0 || layoutInfo.arrayStride == elementSize)
+    if (ANGLE_LIKELY(layoutInfo.arrayStride == 0) ||
+        ANGLE_LIKELY(layoutInfo.arrayStride == elementSize))
     {
         uint32_t arrayOffset = arrayIndex * layoutInfo.arrayStride;
         uint8_t *writePtr    = dst + arrayOffset;
@@ -1061,16 +1083,8 @@ void UpdateBufferWithLayout(GLsizei count,
     else
     {
         // Have to respect the arrayStride between each element of the array.
-        int maxIndex = arrayIndex + count;
-        for (int writeIndex = arrayIndex, readIndex = 0; writeIndex < maxIndex;
-             writeIndex++, readIndex++)
-        {
-            const int arrayOffset = writeIndex * layoutInfo.arrayStride;
-            uint8_t *writePtr     = dst + arrayOffset;
-            const T *readPtr      = v + (readIndex * componentCount);
-            ASSERT(writePtr + elementSize <= uniformData->data() + uniformData->size());
-            memcpy(writePtr, readPtr, elementSize);
-        }
+        UpdateBufferWithLayoutStrided(count, arrayIndex, componentCount, v, layoutInfo,
+                                      uniformData);
     }
 }
 
@@ -1101,6 +1115,51 @@ void ReadFromBufferWithLayout(int componentCount,
 }
 
 template <typename T>
+ANGLE_NOINLINE void SetUniformAsBool(const gl::ProgramExecutable *executable,
+                                     GLint location,
+                                     GLsizei count,
+                                     const T *v,
+                                     GLenum entryPointType,
+                                     DefaultUniformBlockMap *defaultUniformBlocks,
+                                     gl::ShaderBitSet *defaultUniformBlocksDirty)
+{
+    const gl::VariableLocation &locationInfo = executable->getUniformLocations()[location];
+    const gl::LinkedUniform &linkedUniform   = executable->getUniforms()[locationInfo.index];
+
+    for (const gl::ShaderType shaderType : executable->getLinkedShaderStages())
+    {
+        BufferAndLayout &uniformBlock         = *(*defaultUniformBlocks)[shaderType];
+        const sh::BlockMemberInfo &layoutInfo = uniformBlock.uniformLayout[location];
+
+        // Assume an offset of -1 means the block is unused.
+        if (layoutInfo.offset == -1)
+        {
+            continue;
+        }
+
+        const GLint componentCount = linkedUniform.getElementComponents();
+
+        ASSERT(linkedUniform.getType() == gl::VariableBoolVectorType(entryPointType));
+
+        GLint initialArrayOffset =
+            locationInfo.arrayIndex * layoutInfo.arrayStride + layoutInfo.offset;
+        for (GLint i = 0; i < count; i++)
+        {
+            GLint elementOffset = i * layoutInfo.arrayStride + initialArrayOffset;
+            GLint *dst = reinterpret_cast<GLint *>(uniformBlock.uniformData.data() + elementOffset);
+            const T *source = v + i * componentCount;
+
+            for (int c = 0; c < componentCount; c++)
+            {
+                dst[c] = (source[c] == static_cast<T>(0)) ? GL_FALSE : GL_TRUE;
+            }
+        }
+
+        defaultUniformBlocksDirty->set(shaderType);
+    }
+}
+
+template <typename T>
 void SetUniform(const gl::ProgramExecutable *executable,
                 GLint location,
                 GLsizei count,
@@ -1114,7 +1173,7 @@ void SetUniform(const gl::ProgramExecutable *executable,
 
     ASSERT(!linkedUniform.isSampler());
 
-    if (linkedUniform.getType() == entryPointType)
+    if (ANGLE_LIKELY(linkedUniform.getType() == entryPointType))
     {
         for (const gl::ShaderType shaderType : executable->getLinkedShaderStages())
         {
@@ -1135,38 +1194,8 @@ void SetUniform(const gl::ProgramExecutable *executable,
     }
     else
     {
-        for (const gl::ShaderType shaderType : executable->getLinkedShaderStages())
-        {
-            BufferAndLayout &uniformBlock         = *(*defaultUniformBlocks)[shaderType];
-            const sh::BlockMemberInfo &layoutInfo = uniformBlock.uniformLayout[location];
-
-            // Assume an offset of -1 means the block is unused.
-            if (layoutInfo.offset == -1)
-            {
-                continue;
-            }
-
-            const GLint componentCount = linkedUniform.getElementComponents();
-
-            ASSERT(linkedUniform.getType() == gl::VariableBoolVectorType(entryPointType));
-
-            GLint initialArrayOffset =
-                locationInfo.arrayIndex * layoutInfo.arrayStride + layoutInfo.offset;
-            for (GLint i = 0; i < count; i++)
-            {
-                GLint elementOffset = i * layoutInfo.arrayStride + initialArrayOffset;
-                GLint *dst =
-                    reinterpret_cast<GLint *>(uniformBlock.uniformData.data() + elementOffset);
-                const T *source = v + i * componentCount;
-
-                for (int c = 0; c < componentCount; c++)
-                {
-                    dst[c] = (source[c] == static_cast<T>(0)) ? GL_FALSE : GL_TRUE;
-                }
-            }
-
-            defaultUniformBlocksDirty->set(shaderType);
-        }
+        SetUniformAsBool(executable, location, count, v, entryPointType, defaultUniformBlocks,
+                         defaultUniformBlocksDirty);
     }
 }
 template void SetUniform<GLint>(const gl::ProgramExecutable *executable,
