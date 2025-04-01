@@ -8557,8 +8557,16 @@ void ResourceTracker::onShaderProgramAccess(gl::ShaderProgramID shaderProgramID)
 // ... etc ...
 void FrameCaptureShared::writeJSON(const gl::Context *context)
 {
+    SurfaceParams noSurface;
+    noSurface.extents.width  = 16;
+    noSurface.extents.height = 9;
+    noSurface.colorSpace     = egl::ColorSpace::sRGB;
+
     const gl::ContextID contextId           = context->id();
-    const SurfaceParams &surfaceParams      = mDrawSurfaceParams.at(contextId);
+    const SurfaceParams &surfaceParams =
+        mDrawSurfaceParams.find(contextId) != mDrawSurfaceParams.end()
+            ? mDrawSurfaceParams.at(contextId)
+            : noSurface;
     const gl::State &glState                = context->getState();
     const egl::Config *config               = context->getConfig();
     const egl::AttributeMap &displayAttribs = context->getDisplay()->getAttributeMap();
