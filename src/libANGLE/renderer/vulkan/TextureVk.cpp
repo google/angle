@@ -711,7 +711,10 @@ angle::Result TextureVk::setImageImpl(const gl::Context *context,
                            unpackBuffer, pixels, vkFormat);
 }
 
-bool TextureVk::isFastUnpackPossible(const vk::Format &vkFormat,
+bool TextureVk::isFastUnpackPossible(const gl::Box &area,
+                                     GLuint rowLengthPixels,
+                                     GLuint imageHeightPixels,
+                                     const vk::Format &vkFormat,
                                      size_t offset,
                                      const vk::Format &bufferVkFormat) const
 {
@@ -725,6 +728,12 @@ bool TextureVk::isFastUnpackPossible(const vk::Format &vkFormat,
     //    to emulated depth/stencil.
     // 4. vkCmdCopyBufferToImage requires byte offset to be a multiple of 4.
     // 5. Actual texture format and intended buffer format must match for color formats
+    // 6. rowLengthPixels must not smaller than the width of the copy area.
+    // 7. imageHeight must not smaller than the height of the copy area.
+    if (!mImage->valid())
+    {
+        return false;
+    }
     const angle::Format &bufferFormat = vkFormat.getActualBufferFormat(false);
     const bool isCombinedDepthStencil = bufferFormat.hasDepthAndStencilBits();
     const bool isDepthXorStencil = bufferFormat.hasDepthOrStencilBits() && !isCombinedDepthStencil;
@@ -734,12 +743,14 @@ bool TextureVk::isFastUnpackPossible(const vk::Format &vkFormat,
     const bool formatsMatch = bufferFormat.hasDepthOrStencilBits() ||
                               (vkFormat.getActualImageFormatID(getRequiredImageAccess()) ==
                                bufferVkFormat.getIntendedFormatID());
+    const bool overlapRow   = rowLengthPixels < static_cast<uint32_t>(area.width);
+    const bool overlapImage = imageHeightPixels < static_cast<uint32_t>(area.height);
 
-    return mImage->valid() && !isCombinedDepthStencil &&
+    return !isCombinedDepthStencil &&
            (vkFormat.getIntendedFormatID() ==
                 vkFormat.getActualImageFormatID(getRequiredImageAccess()) ||
             (isDepthXorStencil && isCompatibleDepth)) &&
-           (offset % imageCopyAlignment) == 0 && formatsMatch;
+           (offset % imageCopyAlignment) == 0 && formatsMatch && !overlapRow && !overlapImage;
 }
 
 bool TextureVk::isMipImageDescDefined(gl::TextureTarget textureTarget, size_t level)
@@ -1162,24 +1173,25 @@ angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
         const vk::Format &bufferVkFormat =
             contextVk->getRenderer()->getFormat(formatInfo.sizedInternalFormat);
 
-        if (shouldUpdateBeFlushed(gl::LevelIndex(index.getLevelIndex()),
-                                  vkFormat.getActualImageFormatID(getRequiredImageAccess())) &&
-            isFastUnpackPossible(vkFormat, offsetBytes, bufferVkFormat))
+        GLuint pixelSize   = formatInfo.pixelBytes;
+        GLuint blockWidth  = formatInfo.compressedBlockWidth;
+        GLuint blockHeight = formatInfo.compressedBlockHeight;
+        if (!formatInfo.compressed)
         {
-            GLuint pixelSize   = formatInfo.pixelBytes;
-            GLuint blockWidth  = formatInfo.compressedBlockWidth;
-            GLuint blockHeight = formatInfo.compressedBlockHeight;
-            if (!formatInfo.compressed)
-            {
-                pixelSize   = formatInfo.computePixelBytes(type);
-                blockWidth  = 1;
-                blockHeight = 1;
-            }
-            ASSERT(pixelSize != 0 && inputRowPitch != 0 && blockWidth != 0 && blockHeight != 0);
+            pixelSize   = formatInfo.computePixelBytes(type);
+            blockWidth  = 1;
+            blockHeight = 1;
+        }
+        ASSERT(pixelSize != 0 && inputRowPitch != 0 && blockWidth != 0 && blockHeight != 0);
 
-            GLuint rowLengthPixels   = inputRowPitch / pixelSize * blockWidth;
-            GLuint imageHeightPixels = inputDepthPitch / inputRowPitch * blockHeight;
+        GLuint rowLengthPixels   = inputRowPitch / pixelSize * blockWidth;
+        GLuint imageHeightPixels = inputDepthPitch / inputRowPitch * blockHeight;
 
+        if ((shouldUpdateBeFlushed(gl::LevelIndex(index.getLevelIndex()),
+                                   vkFormat.getActualImageFormatID(getRequiredImageAccess()))) &&
+            isFastUnpackPossible(area, rowLengthPixels, imageHeightPixels, vkFormat, offsetBytes,
+                                 bufferVkFormat))
+        {
             ANGLE_TRY(copyBufferDataToImage(contextVk, &bufferHelper, index, rowLengthPixels,
                                             imageHeightPixels, area, offsetBytes, aspectFlags));
         }
