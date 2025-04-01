@@ -225,6 +225,11 @@ config("internal_config") {
     defines += [ "ANGLE_ENABLE_TRACE_EVENTS=1" ]
   }
 
+  # Enables platform trace events (PlatformMethods::addTraceEvent) e.g. AGI/perfetto on Android
+  if (angle_enable_platform_trace_events) {
+    defines += [ "ANGLE_ENABLE_PLATFORM_TRACE_EVENTS=1" ]
+  }
+
   # Output `INFO`-level logs and up.
   if (angle_always_log_info) {
     defines += [ "ANGLE_ALWAYS_LOG_INFO" ]
