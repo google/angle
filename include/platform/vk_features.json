@@ -399,6 +399,15 @@
             "issue": "http://anglebug.com/42262166"
         },
         {
+            "name": "present_sub_optimal_returned_on_transform_change",
+            "category": "Features",
+            "description": [
+                "vkQueuePresentKHR() returns VK_SUBOPTIMAL_KHR when current surface transform ",
+                "and swapchain pre-transform does not mach."
+            ],
+            "issue": "http://anglebug.com/42262166"
+        },
+        {
             "name": "enable_precision_qualifiers",
             "category": "Features",
             "description": [

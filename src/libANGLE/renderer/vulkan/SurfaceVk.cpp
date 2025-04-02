@@ -2006,24 +2006,6 @@ void WindowSurfaceVk::adjustSurfaceExtent(VkExtent2D *extent) const
     }
 }
 
-void WindowSurfaceVk::checkForOutOfDateSwapchain(vk::Renderer *renderer, bool presentOutOfDate)
-{
-    ASSERT(mAcquireOperation.state == ImageAcquireState::Unacquired ||
-           (mAcquireOperation.state == ImageAcquireState::Ready &&
-            skipAcquireNextSwapchainImageForSharedPresentMode()));
-    ASSERT(mSwapchain != VK_NULL_HANDLE);
-
-    const vk::PresentMode desiredSwapchainPresentMode = getDesiredSwapchainPresentMode();
-
-    if (presentOutOfDate ||
-        !IsCompatiblePresentMode(desiredSwapchainPresentMode, mCompatiblePresentModes.data(),
-                                 mCompatiblePresentModes.size()))
-    {
-        invalidateSwapchain(renderer);
-        mSwapchainPresentMode = desiredSwapchainPresentMode;
-    }
-}
-
 angle::Result WindowSurfaceVk::prepareSwapchainForAcquireNextImage(vk::ErrorContext *context)
 {
     ASSERT(mAcquireOperation.state == ImageAcquireState::Unacquired);
@@ -2291,32 +2273,79 @@ egl::Error WindowSurfaceVk::swap(const gl::Context *context, SurfaceSwapFeedback
     return angle::ToEGL(result, EGL_BAD_SURFACE);
 }
 
-angle::Result WindowSurfaceVk::computePresentOutOfDate(vk::ErrorContext *context,
-                                                       VkResult result,
-                                                       bool *presentOutOfDate)
+angle::Result WindowSurfaceVk::checkSwapchainOutOfDate(vk::ErrorContext *context,
+                                                       VkResult presentResult)
 {
+    ASSERT(mAcquireOperation.state == ImageAcquireState::Unacquired ||
+           (mAcquireOperation.state == ImageAcquireState::Ready &&
+            skipAcquireNextSwapchainImageForSharedPresentMode()));
+    ASSERT(mSwapchain != VK_NULL_HANDLE);
+
+    bool presentOutOfDate = false;
+    bool isFailure        = false;
+
     // If OUT_OF_DATE is returned, it's ok, we just need to recreate the swapchain before
     // continuing.  We do the same when VK_SUBOPTIMAL_KHR is returned to avoid visual degradation
-    // and handle device rotation / screen resize (except when in shared present mode).
-    switch (result)
+    // (except when in shared present mode or to avoid unnecessary swapchain recreate).
+    switch (presentResult)
     {
         case VK_SUCCESS:
-            *presentOutOfDate = false;
             break;
         case VK_SUBOPTIMAL_KHR:
-            *presentOutOfDate = !isSharedPresentMode();
+            if (!isSharedPresentMode())
+            {
+                if (context->getFeatures().enablePreRotateSurfaces.enabled ||
+                    !context->getFeatures().presentSubOptimalReturnedOnTransformChange.enabled)
+                {
+                    presentOutOfDate = true;
+                }
+                else
+                {
+                    VkSurfaceCapabilitiesKHR surfaceCaps;
+                    presentResult = vkGetPhysicalDeviceSurfaceCapabilitiesKHR(
+                        context->getRenderer()->getPhysicalDevice(), mSurface, &surfaceCaps);
+                    if (presentResult == VK_SUCCESS)
+                    {
+                        // If mPreTransform can be VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR,
+                        // presentSubOptimalReturnedOnTransformChange must be disabled.
+                        ASSERT(mPreTransform != VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR);
+                        // Avoid swapchain recreate if pre-rotation is disabled and present returns
+                        // VK_SUBOPTIMAL_KHR when preTransform does not match currentTransform.
+                        presentOutOfDate = (mPreTransform == surfaceCaps.currentTransform);
+                    }
+                    else
+                    {
+                        isFailure = true;
+                    }
+                }
+            }
             break;
         case VK_ERROR_OUT_OF_DATE_KHR:
-            *presentOutOfDate = true;
+            presentOutOfDate = true;
             break;
         default:
-            // Invalidate the swapchain to avoid repeated swapchain use and to be able to recover
-            // from the error.
-            invalidateSwapchain(context->getRenderer());
-            ANGLE_VK_TRY(context, result);
-            UNREACHABLE();
+            isFailure = true;
             break;
     }
+
+    const vk::PresentMode desiredSwapchainPresentMode = getDesiredSwapchainPresentMode();
+
+    // Invalidate the swapchain on failure to avoid repeated swapchain use and to be able to recover
+    // from the error.
+    if (presentOutOfDate || isFailure ||
+        !IsCompatiblePresentMode(desiredSwapchainPresentMode, mCompatiblePresentModes.data(),
+                                 mCompatiblePresentModes.size()))
+    {
+        invalidateSwapchain(context->getRenderer());
+        mSwapchainPresentMode = desiredSwapchainPresentMode;
+        if (isFailure)
+        {
+            ANGLE_VK_TRY(context, presentResult);
+            UNREACHABLE();
+        }
+    }
+
+    ASSERT(!isFailure);
     return angle::Result::Continue;
 }
 
@@ -2507,7 +2536,7 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
                                        const EGLint *rects,
                                        EGLint n_rects,
                                        const void *pNextChain,
-                                       bool *presentOutOfDate)
+                                       SurfaceSwapFeedback *feedback)
 {
     ASSERT(mAcquireOperation.state == ImageAcquireState::Ready);
     ASSERT(mSizeState == SurfaceSizeState::Resolved);
@@ -2627,6 +2656,13 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     {
         // Set FrameNumber for the presented image.
         mSwapchainImages[mCurrentSwapchainImageIndex].frameNumber = mFrameCount++;
+        // Always defer acquiring the next swapchain image, except when in shared present mode.
+        // Note, if desired present mode is not compatible with the current mode or present is
+        // out-of-date, swapchain will be invalidated in |checkSwapchainOutOfDate| call below.
+        deferAcquireNextImage();
+        // Tell front end that swapChain image changed so that it could dirty default framebuffer.
+        ASSERT(feedback != nullptr);
+        feedback->swapChainImageChanged = true;
     }
 
     // Place the semaphore in the present history.  Schedule pending old swapchains to be destroyed
@@ -2646,7 +2682,8 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
         mPresentHistory.back().oldSwapchains = std::move(mOldSwapchains);
     }
 
-    ANGLE_TRY(computePresentOutOfDate(contextVk, presentResult, presentOutOfDate));
+    // Check for out of date swapchain.  Note, possible swapchain invalidate will also defer ANI.
+    ANGLE_TRY(checkSwapchainOutOfDate(contextVk, presentResult));
 
     // Now apply CPU throttle if needed
     ANGLE_TRY(throttleCPU(contextVk, swapSerial));
@@ -2794,24 +2831,7 @@ angle::Result WindowSurfaceVk::swapImpl(ContextVk *contextVk,
         ANGLE_TRY(doDeferredAcquireNextImage(contextVk));
     }
 
-    bool presentOutOfDate = false;
-    ANGLE_TRY(present(contextVk, rects, n_rects, pNextChain, &presentOutOfDate));
-
-    vk::Renderer *renderer = contextVk->getRenderer();
-
-    // Always defer acquiring the next swapchain image, except when in shared present mode.  Note,
-    // if desired present mode is not compatible with the current mode or present is out-of-date,
-    // swapchain will be invalidated in the |checkForOutOfDateSwapchain| call below.
-    if (!isSharedPresentMode())
-    {
-        deferAcquireNextImage();
-        // Tell front end that swapChain image changed so that it could dirty default framebuffer.
-        ASSERT(feedback != nullptr);
-        feedback->swapChainImageChanged = true;
-    }
-
-    // Check for out of date swapchain.  Note, possible swapchain invalidate will also defer ANI.
-    checkForOutOfDateSwapchain(renderer, presentOutOfDate);
+    ANGLE_TRY(present(contextVk, rects, n_rects, pNextChain, feedback));
 
     // |mColorRenderTarget| may be invalid at this point (in case of swapchain recreate above),
     // however it will not be accessed until update in the |acquireNextSwapchainImage| call.

@@ -320,6 +320,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo presentSubOptimalReturnedOnTransformChange = {
+        "presentSubOptimalReturnedOnTransformChange",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
     FeatureInfo enablePrecisionQualifiers = {
         "enablePrecisionQualifiers",
         FeatureCategory::VulkanFeatures,
