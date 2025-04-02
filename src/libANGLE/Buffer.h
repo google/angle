@@ -113,7 +113,6 @@ ANGLE_INLINE bool operator==(const ContentsObserver &lhs, const ContentsObserver
 
 class Buffer final : public ThreadSafeRefCountObject<BufferID>,
                      public LabeledObject,
-                     public angle::ObserverInterface,
                      public angle::Subject
 {
   public:
@@ -215,9 +214,6 @@ class Buffer final : public ThreadSafeRefCountObject<BufferID>,
                              GLsizeiptr size,
                              void *outData);
 
-    // angle::ObserverInterface implementation.
-    void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
-
     void addVertexArrayBinding(const gl::Context *context, size_t bindingIndex)
     {
         mVertexArrayBufferBindingMaskAndContext.add(context, bindingIndex);
@@ -232,6 +228,8 @@ class Buffer final : public ThreadSafeRefCountObject<BufferID>,
     void addContentsObserver(Texture *texture);
     void removeContentsObserver(Texture *texture);
     bool hasContentsObserver(Texture *texture) const;
+
+    void applyImplFeedback(const gl::Context *context, const rx::BufferFeedback &feedback);
 
   private:
     angle::Result bufferDataImpl(Context *context,
@@ -252,7 +250,6 @@ class Buffer final : public ThreadSafeRefCountObject<BufferID>,
     size_t getContentsObserverIndex(void *observer, uint32_t bufferIndex) const;
     void removeContentsObserverImpl(void *observer, uint32_t bufferIndex);
 
-    void applyImplFeedback(const gl::Context *context, const rx::BufferFeedback &feedback);
     angle::Result setDataWithUsageFlags(const gl::Context *context,
                                         gl::BufferBinding target,
                                         GLeglClientBufferEXT clientBuffer,
@@ -264,10 +261,6 @@ class Buffer final : public ThreadSafeRefCountObject<BufferID>,
 
     BufferState mState;
     rx::BufferImpl *mImpl;
-
-    // TODO: only used by D3D11 backend. Remove once D3D11 usage is removed.
-    // https://issues.angleproject.org/400711938
-    angle::ObserverBinding mImplObserver;
 
     // Current VertexArray's binding index bitmask
     VertexArrayBufferBindingMaskAndContext mVertexArrayBufferBindingMaskAndContext;

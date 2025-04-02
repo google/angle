@@ -60,7 +60,8 @@ class Buffer9 : public BufferD3D
     angle::Result unmap(const gl::Context *context,
                         GLboolean *result,
                         BufferFeedback *feedback) override;
-    angle::Result markTransformFeedbackUsage(const gl::Context *context) override;
+    angle::Result markTransformFeedbackUsage(const gl::Context *context,
+                                             BufferFeedback *feedback) override;
 
   private:
     angle::MemoryBuffer mMemory;

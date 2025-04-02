@@ -3162,8 +3162,10 @@ angle::Result StateManager11::applyVertexBuffers(const gl::Context *context,
             }
             else
             {
+                BufferFeedback feedback;
                 ANGLE_TRY(bufferStorage->getBuffer(
-                    context, BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK, &buffer));
+                    context, BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK, &buffer, &feedback));
+                attrib.binding->getBuffer().get()->applyImplFeedback(context, feedback);
             }
 
             vertexStride = attrib.stride;
@@ -3203,7 +3205,9 @@ angle::Result StateManager11::applyIndexBuffer(const gl::Context *context,
     if (indexInfo.storage)
     {
         Buffer11 *storage = GetAs<Buffer11>(indexInfo.storage);
-        ANGLE_TRY(storage->getBuffer(context, BUFFER_USAGE_INDEX, &buffer));
+        BufferFeedback feedback;
+        ANGLE_TRY(storage->getBuffer(context, BUFFER_USAGE_INDEX, &buffer, &feedback));
+        elementArrayBuffer->applyImplFeedback(context, feedback);
     }
     else
     {
@@ -3554,10 +3558,12 @@ angle::Result StateManager11::syncUniformBuffersForShader(const gl::Context *con
         UINT firstConstant                  = 0;
         UINT numConstants                   = 0;
 
+        BufferFeedback feedback;
         ANGLE_TRY(bufferStorage->getConstantBufferRange(context, uniformBufferOffset,
                                                         uniformBufferSize, &constantBuffer,
-                                                        &firstConstant, &numConstants));
+                                                        &firstConstant, &numConstants, &feedback));
         ASSERT(constantBuffer);
+        uniformBuffer.get()->applyImplFeedback(context, feedback);
 
         switch (shaderType)
         {
@@ -3672,9 +3678,11 @@ angle::Result StateManager11::syncUniformBuffersForShader(const gl::Context *con
 
         Buffer11 *bufferStorage                    = GetImplAs<Buffer11>(uniformBuffer.get());
         const d3d11::ShaderResourceView *bufferSRV = nullptr;
+        BufferFeedback feedback;
         ANGLE_TRY(bufferStorage->getStructuredBufferRangeSRV(
             context, static_cast<unsigned int>(uniformBufferOffset), cache.byteWidth,
-            cache.structureByteStride, &bufferSRV));
+            cache.structureByteStride, &bufferSRV, &feedback));
+        uniformBuffer.get()->applyImplFeedback(context, feedback);
 
         ASSERT(bufferSRV->valid());
         setShaderResourceInternal(shaderType, cache.registerIndex, bufferSRV);
@@ -3735,8 +3743,11 @@ angle::Result StateManager11::getUAVsForShaderStorageBuffers(const gl::Context *
         {
             viewSize = bufferStorage->getSize();
         }
+
+        BufferFeedback feedback;
         ANGLE_TRY(bufferStorage->getRawUAVRange(context, shaderStorageBuffer.getOffset(), viewSize,
-                                                &uavPtr));
+                                                &uavPtr, &feedback));
+        shaderStorageBuffer.get()->applyImplFeedback(context, feedback);
 
         setUnorderedAccessViewInternal(registerIndex, uavPtr, uavList);
     }
@@ -3800,7 +3811,10 @@ angle::Result StateManager11::getUAVsForAtomicCounterBuffers(const gl::Context *
         // buffer size for glBindBufferBase
         GLsizeiptr viewSize = (buffer.getSize() > 0) ? buffer.getSize() : bufferStorage->getSize();
         d3d11::UnorderedAccessView *uavPtr = nullptr;
-        ANGLE_TRY(bufferStorage->getRawUAVRange(context, buffer.getOffset(), viewSize, &uavPtr));
+        BufferFeedback feedback;
+        ANGLE_TRY(bufferStorage->getRawUAVRange(context, buffer.getOffset(), viewSize, &uavPtr,
+                                                &feedback));
+        buffer.get()->applyImplFeedback(context, feedback);
 
         setUnorderedAccessViewInternal(registerIndex, uavPtr, uavList);
     }

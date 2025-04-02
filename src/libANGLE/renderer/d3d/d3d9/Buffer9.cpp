@@ -51,9 +51,9 @@ angle::Result Buffer9::setData(const gl::Context *context,
         memcpy(mMemory.data(), data, size);
     }
 
-    updateD3DBufferUsage(context, usage);
+    updateD3DBufferUsage(context, usage, feedback);
 
-    invalidateStaticData(context);
+    invalidateStaticData(context, feedback);
 
     return angle::Result::Continue;
 }
@@ -89,7 +89,7 @@ angle::Result Buffer9::setSubData(const gl::Context *context,
         memcpy(mMemory.data() + offset, data, size);
     }
 
-    invalidateStaticData(context);
+    invalidateStaticData(context, feedback);
 
     return angle::Result::Continue;
 }
@@ -107,7 +107,7 @@ angle::Result Buffer9::copySubData(const gl::Context *context,
 
     memcpy(mMemory.data() + destOffset, sourceBuffer->mMemory.data() + sourceOffset, size);
 
-    invalidateStaticData(context);
+    invalidateStaticData(context, feedback);
 
     return angle::Result::Continue;
 }
@@ -141,7 +141,8 @@ angle::Result Buffer9::unmap(const gl::Context *context,
     return angle::Result::Stop;
 }
 
-angle::Result Buffer9::markTransformFeedbackUsage(const gl::Context *context)
+angle::Result Buffer9::markTransformFeedbackUsage(const gl::Context *context,
+                                                  BufferFeedback *feedback)
 {
     ANGLE_HR_UNREACHABLE(GetImplAs<Context9>(context));
     return angle::Result::Stop;

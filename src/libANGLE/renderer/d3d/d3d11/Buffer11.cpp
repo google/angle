@@ -26,9 +26,6 @@ namespace rx
 
 namespace
 {
-constexpr gl::VertexArrayBufferBindingMask kVertexArrayBufferBindingMaskAllBits =
-    ~gl::VertexArrayBufferBindingMask::Zero();
-
 template <typename T>
 GLuint ReadIndexValueFromIndices(const uint8_t *data, size_t index)
 {
@@ -126,8 +123,12 @@ class Buffer11::BufferStorage : angle::NonCopyable
                                           size_t sourceOffset,
                                           size_t size,
                                           size_t destOffset,
-                                          CopyResult *resultOut)                             = 0;
-    virtual angle::Result resize(const gl::Context *context, size_t size, bool preserveData) = 0;
+                                          CopyResult *resultOut,
+                                          BufferFeedback *feedback) = 0;
+    virtual angle::Result resize(const gl::Context *context,
+                                 size_t size,
+                                 bool preserveData,
+                                 BufferFeedback *feedback)          = 0;
 
     virtual angle::Result map(const gl::Context *context,
                               size_t offset,
@@ -157,7 +158,7 @@ class Buffer11::BufferStorage : angle::NonCopyable
 class Buffer11::NativeStorage : public Buffer11::BufferStorage
 {
   public:
-    NativeStorage(Renderer11 *renderer, BufferUsage usage, const angle::Subject *onStorageChanged);
+    NativeStorage(Renderer11 *renderer, BufferUsage usage);
     ~NativeStorage() override;
 
     bool isCPUAccessible(GLbitfield access) const override;
@@ -170,8 +171,12 @@ class Buffer11::NativeStorage : public Buffer11::BufferStorage
                                   size_t sourceOffset,
                                   size_t size,
                                   size_t destOffset,
-                                  CopyResult *resultOut) override;
-    angle::Result resize(const gl::Context *context, size_t size, bool preserveData) override;
+                                  CopyResult *resultOut,
+                                  BufferFeedback *feedback) override;
+    angle::Result resize(const gl::Context *context,
+                         size_t size,
+                         bool preserveData,
+                         BufferFeedback *feedback) override;
 
     angle::Result map(const gl::Context *context,
                       size_t offset,
@@ -190,7 +195,6 @@ class Buffer11::NativeStorage : public Buffer11::BufferStorage
 
   protected:
     d3d11::Buffer mBuffer;
-    const angle::Subject *mOnStorageChanged;
 
   private:
     static void FillBufferDesc(D3D11_BUFFER_DESC *bufferDesc,
@@ -207,13 +211,12 @@ class Buffer11::NativeStorage : public Buffer11::BufferStorage
 class Buffer11::StructuredBufferStorage : public Buffer11::NativeStorage
 {
   public:
-    StructuredBufferStorage(Renderer11 *renderer,
-                            BufferUsage usage,
-                            const angle::Subject *onStorageChanged);
+    StructuredBufferStorage(Renderer11 *renderer, BufferUsage usage);
     ~StructuredBufferStorage() override;
     angle::Result resizeStructuredBuffer(const gl::Context *context,
                                          unsigned int size,
-                                         unsigned int structureByteStride);
+                                         unsigned int structureByteStride,
+                                         BufferFeedback *feedback);
     angle::Result getStructuredBufferRangeSRV(const gl::Context *context,
                                               unsigned int offset,
                                               unsigned int size,
@@ -241,8 +244,12 @@ class Buffer11::PackStorage : public Buffer11::BufferStorage
                                   size_t sourceOffset,
                                   size_t size,
                                   size_t destOffset,
-                                  CopyResult *resultOut) override;
-    angle::Result resize(const gl::Context *context, size_t size, bool preserveData) override;
+                                  CopyResult *resultOut,
+                                  BufferFeedback *feedback) override;
+    angle::Result resize(const gl::Context *context,
+                         size_t size,
+                         bool preserveData,
+                         BufferFeedback *feedback) override;
 
     angle::Result map(const gl::Context *context,
                       size_t offset,
@@ -283,8 +290,12 @@ class Buffer11::SystemMemoryStorage : public Buffer11::BufferStorage
                                   size_t sourceOffset,
                                   size_t size,
                                   size_t destOffset,
-                                  CopyResult *resultOut) override;
-    angle::Result resize(const gl::Context *context, size_t size, bool preserveData) override;
+                                  CopyResult *resultOut,
+                                  BufferFeedback *feedback) override;
+    angle::Result resize(const gl::Context *context,
+                         size_t size,
+                         bool preserveData,
+                         BufferFeedback *feedback) override;
 
     angle::Result map(const gl::Context *context,
                       size_t offset,
@@ -341,7 +352,7 @@ angle::Result Buffer11::setData(const gl::Context *context,
                                 gl::BufferUsage usage,
                                 BufferFeedback *feedback)
 {
-    updateD3DBufferUsage(context, usage);
+    updateD3DBufferUsage(context, usage, feedback);
     return setSubData(context, target, data, size, 0, feedback);
 }
 
@@ -356,8 +367,9 @@ angle::Result Buffer11::getData(const gl::Context *context, const uint8_t **outD
     }
 
     SystemMemoryStorage *systemMemoryStorage = nullptr;
-    ANGLE_TRY(getBufferStorage(context, BUFFER_USAGE_SYSTEM_MEMORY, &systemMemoryStorage));
-
+    BufferFeedback feedback;
+    ANGLE_TRY(
+        getBufferStorage(context, BUFFER_USAGE_SYSTEM_MEMORY, &systemMemoryStorage, &feedback));
     ASSERT(systemMemoryStorage->getSize() >= mSize);
 
     *outData = systemMemoryStorage->getSystemCopy()->data();
@@ -390,19 +402,22 @@ angle::Result Buffer11::setSubData(const gl::Context *context,
                 !mRenderer->getFeatures().useSystemMemoryForConstantBuffers.enabled)
             {
                 BufferStorage *latestStorage = nullptr;
-                ANGLE_TRY(getLatestBufferStorage(context, &latestStorage));
+                ANGLE_TRY(getLatestBufferStorage(context, &latestStorage, feedback));
                 if (latestStorage && (latestStorage->getUsage() == BUFFER_USAGE_STRUCTURED))
                 {
-                    ANGLE_TRY(getBufferStorage(context, BUFFER_USAGE_STRUCTURED, &writeBuffer));
+                    ANGLE_TRY(
+                        getBufferStorage(context, BUFFER_USAGE_STRUCTURED, &writeBuffer, feedback));
                 }
                 else
                 {
-                    ANGLE_TRY(getBufferStorage(context, BUFFER_USAGE_UNIFORM, &writeBuffer));
+                    ANGLE_TRY(
+                        getBufferStorage(context, BUFFER_USAGE_UNIFORM, &writeBuffer, feedback));
                 }
             }
             else
             {
-                ANGLE_TRY(getBufferStorage(context, BUFFER_USAGE_SYSTEM_MEMORY, &writeBuffer));
+                ANGLE_TRY(
+                    getBufferStorage(context, BUFFER_USAGE_SYSTEM_MEMORY, &writeBuffer, feedback));
             }
         }
         else if (supportsDirectBinding())
@@ -411,7 +426,8 @@ angle::Result Buffer11::setSubData(const gl::Context *context,
         }
         else
         {
-            ANGLE_TRY(getBufferStorage(context, BUFFER_USAGE_SYSTEM_MEMORY, &writeBuffer));
+            ANGLE_TRY(
+                getBufferStorage(context, BUFFER_USAGE_SYSTEM_MEMORY, &writeBuffer, feedback));
         }
 
         ASSERT(writeBuffer);
@@ -421,7 +437,7 @@ angle::Result Buffer11::setSubData(const gl::Context *context,
         if (writeBuffer->getSize() < requiredSize)
         {
             bool preserveData = (offset > 0);
-            ANGLE_TRY(writeBuffer->resize(context, requiredSize, preserveData));
+            ANGLE_TRY(writeBuffer->resize(context, requiredSize, preserveData, feedback));
         }
 
         ANGLE_TRY(writeBuffer->setData(context, static_cast<const uint8_t *>(data), offset, size));
@@ -429,7 +445,7 @@ angle::Result Buffer11::setSubData(const gl::Context *context,
     }
 
     mSize = std::max(mSize, requiredSize);
-    invalidateStaticData(context);
+    invalidateStaticData(context, feedback);
 
     return angle::Result::Continue;
 }
@@ -445,7 +461,7 @@ angle::Result Buffer11::copySubData(const gl::Context *context,
     ASSERT(sourceBuffer != nullptr);
 
     BufferStorage *copyDest = nullptr;
-    ANGLE_TRY(getLatestBufferStorage(context, &copyDest));
+    ANGLE_TRY(getLatestBufferStorage(context, &copyDest, feedback));
 
     if (!copyDest)
     {
@@ -453,7 +469,7 @@ angle::Result Buffer11::copySubData(const gl::Context *context,
     }
 
     BufferStorage *copySource = nullptr;
-    ANGLE_TRY(sourceBuffer->getLatestBufferStorage(context, &copySource));
+    ANGLE_TRY(sourceBuffer->getLatestBufferStorage(context, &copySource, feedback));
 
     if (!copySource)
     {
@@ -479,8 +495,8 @@ angle::Result Buffer11::copySubData(const gl::Context *context,
     {
         if (copySource->getUsage() == BUFFER_USAGE_STAGING)
         {
-            ANGLE_TRY(
-                getBufferStorage(context, BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK, &copySource));
+            ANGLE_TRY(getBufferStorage(context, BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK,
+                                       &copySource, feedback));
         }
         else
         {
@@ -490,11 +506,11 @@ angle::Result Buffer11::copySubData(const gl::Context *context,
 
     CopyResult copyResult = CopyResult::NOT_RECREATED;
     ANGLE_TRY(copyDest->copyFromStorage(context, copySource, sourceOffset, size, destOffset,
-                                        &copyResult));
+                                        &copyResult, feedback));
     onStorageUpdate(copyDest);
 
     mSize = std::max<size_t>(mSize, destOffset + size);
-    invalidateStaticData(context);
+    invalidateStaticData(context, feedback);
 
     return angle::Result::Continue;
 }
@@ -520,7 +536,7 @@ angle::Result Buffer11::mapRange(const gl::Context *context,
     ASSERT(!mMappedStorage);
 
     BufferStorage *latestStorage = nullptr;
-    ANGLE_TRY(getLatestBufferStorage(context, &latestStorage));
+    ANGLE_TRY(getLatestBufferStorage(context, &latestStorage, feedback));
 
     if (latestStorage && (latestStorage->getUsage() == BUFFER_USAGE_PIXEL_PACK ||
                           latestStorage->getUsage() == BUFFER_USAGE_STAGING))
@@ -542,7 +558,7 @@ angle::Result Buffer11::mapRange(const gl::Context *context,
     {
         // Update the data revision immediately, since the data might be changed at any time
         onStorageUpdate(mMappedStorage);
-        invalidateStaticData(context);
+        invalidateStaticData(context, feedback);
     }
 
     uint8_t *mappedBuffer = nullptr;
@@ -567,9 +583,10 @@ angle::Result Buffer11::unmap(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result Buffer11::markTransformFeedbackUsage(const gl::Context *context)
+angle::Result Buffer11::markTransformFeedbackUsage(const gl::Context *context,
+                                                   BufferFeedback *feedback)
 {
-    ANGLE_TRY(markBufferUsage(context, BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK));
+    ANGLE_TRY(markBufferUsage(context, BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK, feedback));
     return angle::Result::Continue;
 }
 
@@ -595,7 +612,9 @@ void Buffer11::updateDeallocThreshold(BufferUsage usage)
 }
 
 // Free the storage if we decide it isn't being used very often.
-angle::Result Buffer11::checkForDeallocation(const gl::Context *context, BufferUsage usage)
+angle::Result Buffer11::checkForDeallocation(const gl::Context *context,
+                                             BufferUsage usage,
+                                             BufferFeedback *feedback)
 {
     mIdleness[usage]++;
 
@@ -603,7 +622,7 @@ angle::Result Buffer11::checkForDeallocation(const gl::Context *context, BufferU
     if (storage != nullptr && mIdleness[usage] > mDeallocThresholds[usage])
     {
         BufferStorage *latestStorage = nullptr;
-        ANGLE_TRY(getLatestBufferStorage(context, &latestStorage));
+        ANGLE_TRY(getLatestBufferStorage(context, &latestStorage, feedback));
         if (latestStorage != storage)
         {
             SafeDelete(storage);
@@ -631,41 +650,48 @@ void Buffer11::markBufferUsage(BufferUsage usage)
     mIdleness[usage] = 0;
 }
 
-angle::Result Buffer11::markBufferUsage(const gl::Context *context, BufferUsage usage)
+angle::Result Buffer11::markBufferUsage(const gl::Context *context,
+                                        BufferUsage usage,
+                                        BufferFeedback *feedback)
 {
     BufferStorage *bufferStorage = nullptr;
-    ANGLE_TRY(getBufferStorage(context, usage, &bufferStorage));
+    ANGLE_TRY(getBufferStorage(context, usage, &bufferStorage, feedback));
 
     if (bufferStorage)
     {
         onStorageUpdate(bufferStorage);
     }
 
-    invalidateStaticData(context);
+    invalidateStaticData(context, feedback);
     return angle::Result::Continue;
 }
 
 angle::Result Buffer11::garbageCollection(const gl::Context *context, BufferUsage currentUsage)
 {
+    BufferFeedback feedback;
+
     if (currentUsage != BUFFER_USAGE_SYSTEM_MEMORY && canDeallocateSystemMemory())
     {
-        ANGLE_TRY(checkForDeallocation(context, BUFFER_USAGE_SYSTEM_MEMORY));
+        ANGLE_TRY(checkForDeallocation(context, BUFFER_USAGE_SYSTEM_MEMORY, &feedback));
     }
 
     if (currentUsage != BUFFER_USAGE_STAGING)
     {
-        ANGLE_TRY(checkForDeallocation(context, BUFFER_USAGE_STAGING));
+        ANGLE_TRY(checkForDeallocation(context, BUFFER_USAGE_STAGING, &feedback));
     }
+
+    ASSERT(feedback.bufferStateChanged == false);
 
     return angle::Result::Continue;
 }
 
 angle::Result Buffer11::getBuffer(const gl::Context *context,
                                   BufferUsage usage,
-                                  ID3D11Buffer **bufferOut)
+                                  ID3D11Buffer **bufferOut,
+                                  BufferFeedback *feedback)
 {
     NativeStorage *storage = nullptr;
-    ANGLE_TRY(getBufferStorage(context, usage, &storage));
+    ANGLE_TRY(getBufferStorage(context, usage, &storage, feedback));
     *bufferOut = storage->getBuffer().get();
     return angle::Result::Continue;
 }
@@ -675,19 +701,20 @@ angle::Result Buffer11::getConstantBufferRange(const gl::Context *context,
                                                GLsizeiptr size,
                                                const d3d11::Buffer **bufferOut,
                                                UINT *firstConstantOut,
-                                               UINT *numConstantsOut)
+                                               UINT *numConstantsOut,
+                                               BufferFeedback *feedback)
 {
     NativeStorage *bufferStorage = nullptr;
     if ((offset == 0 &&
          size < static_cast<GLsizeiptr>(mRenderer->getNativeCaps().maxUniformBlockSize)) ||
         mRenderer->getRenderer11DeviceCaps().supportsConstantBufferOffsets)
     {
-        ANGLE_TRY(getBufferStorage(context, BUFFER_USAGE_UNIFORM, &bufferStorage));
+        ANGLE_TRY(getBufferStorage(context, BUFFER_USAGE_UNIFORM, &bufferStorage, feedback));
         CalculateConstantBufferParams(offset, size, firstConstantOut, numConstantsOut);
     }
     else
     {
-        ANGLE_TRY(getConstantBufferRangeStorage(context, offset, size, &bufferStorage));
+        ANGLE_TRY(getConstantBufferRangeStorage(context, offset, size, &bufferStorage, feedback));
         *firstConstantOut = 0;
         *numConstantsOut  = 0;
     }
@@ -696,25 +723,26 @@ angle::Result Buffer11::getConstantBufferRange(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result Buffer11::markRawBufferUsage(const gl::Context *context)
+angle::Result Buffer11::markRawBufferUsage(const gl::Context *context, BufferFeedback *feedback)
 {
-    ANGLE_TRY(markBufferUsage(context, BUFFER_USAGE_RAW_UAV));
+    ANGLE_TRY(markBufferUsage(context, BUFFER_USAGE_RAW_UAV, feedback));
     return angle::Result::Continue;
 }
 
-angle::Result Buffer11::markTypedBufferUsage(const gl::Context *context)
+angle::Result Buffer11::markTypedBufferUsage(const gl::Context *context, BufferFeedback *feedback)
 {
-    ANGLE_TRY(markBufferUsage(context, BUFFER_USAGE_TYPED_UAV));
+    ANGLE_TRY(markBufferUsage(context, BUFFER_USAGE_TYPED_UAV, feedback));
     return angle::Result::Continue;
 }
 
 angle::Result Buffer11::getRawUAVRange(const gl::Context *context,
                                        GLintptr offset,
                                        GLsizeiptr size,
-                                       d3d11::UnorderedAccessView **uavOut)
+                                       d3d11::UnorderedAccessView **uavOut,
+                                       BufferFeedback *feedback)
 {
     NativeStorage *nativeStorage = nullptr;
-    ANGLE_TRY(getBufferStorage(context, BUFFER_USAGE_RAW_UAV, &nativeStorage));
+    ANGLE_TRY(getBufferStorage(context, BUFFER_USAGE_RAW_UAV, &nativeStorage, feedback));
 
     return nativeStorage->getRawUAV(context, static_cast<unsigned int>(offset),
                                     static_cast<unsigned int>(size), uavOut);
@@ -722,19 +750,21 @@ angle::Result Buffer11::getRawUAVRange(const gl::Context *context,
 
 angle::Result Buffer11::getSRV(const gl::Context *context,
                                DXGI_FORMAT srvFormat,
-                               const d3d11::ShaderResourceView **srvOut)
+                               const d3d11::ShaderResourceView **srvOut,
+                               BufferFeedback *feedback)
 {
     NativeStorage *nativeStorage = nullptr;
-    ANGLE_TRY(getBufferStorage(context, BUFFER_USAGE_PIXEL_UNPACK, &nativeStorage));
+    ANGLE_TRY(getBufferStorage(context, BUFFER_USAGE_PIXEL_UNPACK, &nativeStorage, feedback));
     return nativeStorage->getSRVForFormat(context, srvFormat, srvOut);
 }
 
 angle::Result Buffer11::packPixels(const gl::Context *context,
                                    const gl::FramebufferAttachment &readAttachment,
-                                   const PackPixelsParams &params)
+                                   const PackPixelsParams &params,
+                                   BufferFeedback *feedback)
 {
     PackStorage *packStorage = nullptr;
-    ANGLE_TRY(getBufferStorage(context, BUFFER_USAGE_PIXEL_PACK, &packStorage));
+    ANGLE_TRY(getBufferStorage(context, BUFFER_USAGE_PIXEL_PACK, &packStorage, feedback));
 
     ASSERT(packStorage);
     ANGLE_TRY(packStorage->packPixels(context, readAttachment, params));
@@ -759,7 +789,8 @@ size_t Buffer11::getTotalCPUBufferMemoryBytes() const
 template <typename StorageOutT>
 angle::Result Buffer11::getBufferStorage(const gl::Context *context,
                                          BufferUsage usage,
-                                         StorageOutT **storageOut)
+                                         StorageOutT **storageOut,
+                                         BufferFeedback *feedback)
 {
     ASSERT(0 <= usage && usage < BUFFER_USAGE_COUNT);
     BufferStorage *&newStorage = mBufferStorages[usage];
@@ -774,12 +805,12 @@ angle::Result Buffer11::getBufferStorage(const gl::Context *context,
     // resize buffer
     if (newStorage->getSize() < mSize)
     {
-        ANGLE_TRY(newStorage->resize(context, mSize, true));
+        ANGLE_TRY(newStorage->resize(context, mSize, true, feedback));
     }
 
     ASSERT(newStorage);
 
-    ANGLE_TRY(updateBufferStorage(context, newStorage, 0, mSize));
+    ANGLE_TRY(updateBufferStorage(context, newStorage, 0, mSize, feedback));
     ANGLE_TRY(garbageCollection(context, usage));
 
     *storageOut = GetAs<StorageOutT>(newStorage);
@@ -797,18 +828,19 @@ Buffer11::BufferStorage *Buffer11::allocateStorage(BufferUsage usage)
             return new SystemMemoryStorage(mRenderer);
         case BUFFER_USAGE_INDEX:
         case BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK:
-            return new NativeStorage(mRenderer, usage, this);
+            return new NativeStorage(mRenderer, usage);
         case BUFFER_USAGE_STRUCTURED:
-            return new StructuredBufferStorage(mRenderer, usage, nullptr);
+            return new StructuredBufferStorage(mRenderer, usage);
         default:
-            return new NativeStorage(mRenderer, usage, nullptr);
+            return new NativeStorage(mRenderer, usage);
     }
 }
 
 angle::Result Buffer11::getConstantBufferRangeStorage(const gl::Context *context,
                                                       GLintptr offset,
                                                       GLsizeiptr size,
-                                                      Buffer11::NativeStorage **storageOut)
+                                                      Buffer11::NativeStorage **storageOut,
+                                                      BufferFeedback *feedback)
 {
     BufferStorage *newStorage;
     {
@@ -851,7 +883,7 @@ angle::Result Buffer11::getConstantBufferRangeStorage(const gl::Context *context
             mConstantBufferRangeStoragesCache.erase(iter);
         }
 
-        ANGLE_TRY(newStorage->resize(context, size, false));
+        ANGLE_TRY(newStorage->resize(context, size, false, feedback));
         mConstantBufferStorageAdditionalSize += sizeDelta;
 
         // We don't copy the old data when resizing the constant buffer because the data may be
@@ -860,7 +892,7 @@ angle::Result Buffer11::getConstantBufferRangeStorage(const gl::Context *context
         newStorage->setDataRevision(0);
     }
 
-    ANGLE_TRY(updateBufferStorage(context, newStorage, offset, size));
+    ANGLE_TRY(updateBufferStorage(context, newStorage, offset, size, feedback));
     ANGLE_TRY(garbageCollection(context, BUFFER_USAGE_UNIFORM));
     *storageOut = GetAs<NativeStorage>(newStorage);
     return angle::Result::Continue;
@@ -870,7 +902,8 @@ angle::Result Buffer11::getStructuredBufferRangeSRV(const gl::Context *context,
                                                     unsigned int offset,
                                                     unsigned int size,
                                                     unsigned int structureByteStride,
-                                                    const d3d11::ShaderResourceView **srvOut)
+                                                    const d3d11::ShaderResourceView **srvOut,
+                                                    BufferFeedback *feedback)
 {
     BufferStorage *newStorage;
 
@@ -917,8 +950,8 @@ angle::Result Buffer11::getStructuredBufferRangeSRV(const gl::Context *context,
             mStructuredBufferRangeStoragesCache.erase(iter);
         }
 
-        ANGLE_TRY(
-            structuredBufferStorage->resizeStructuredBuffer(context, size, structureByteStride));
+        ANGLE_TRY(structuredBufferStorage->resizeStructuredBuffer(context, size,
+                                                                  structureByteStride, feedback));
         mStructuredBufferStorageAdditionalSize += sizeDelta;
 
         // We don't copy the old data when resizing the structured buffer because the data may be
@@ -927,7 +960,8 @@ angle::Result Buffer11::getStructuredBufferRangeSRV(const gl::Context *context,
         newStorage->setDataRevision(0);
     }
 
-    ANGLE_TRY(updateBufferStorage(context, newStorage, offset, static_cast<size_t>(size)));
+    ANGLE_TRY(
+        updateBufferStorage(context, newStorage, offset, static_cast<size_t>(size), feedback));
     ANGLE_TRY(garbageCollection(context, BUFFER_USAGE_STRUCTURED));
     ANGLE_TRY(structuredBufferStorage->getStructuredBufferRangeSRV(context, offset, size,
                                                                    structureByteStride, srvOut));
@@ -937,10 +971,11 @@ angle::Result Buffer11::getStructuredBufferRangeSRV(const gl::Context *context,
 angle::Result Buffer11::updateBufferStorage(const gl::Context *context,
                                             BufferStorage *storage,
                                             size_t sourceOffset,
-                                            size_t storageSize)
+                                            size_t storageSize,
+                                            BufferFeedback *feedback)
 {
     BufferStorage *latestBuffer = nullptr;
-    ANGLE_TRY(getLatestBufferStorage(context, &latestBuffer));
+    ANGLE_TRY(getLatestBufferStorage(context, &latestBuffer, feedback));
 
     ASSERT(storage);
 
@@ -973,15 +1008,15 @@ angle::Result Buffer11::updateBufferStorage(const gl::Context *context,
 
         CopyResult copyResult = CopyResult::NOT_RECREATED;
         ANGLE_TRY(stagingBuffer->copyFromStorage(context, latestBuffer, 0, latestBuffer->getSize(),
-                                                 0, &copyResult));
+                                                 0, &copyResult, feedback));
         onCopyStorage(stagingBuffer, latestBuffer);
 
         latestBuffer = stagingBuffer;
     }
 
     CopyResult copyResult = CopyResult::NOT_RECREATED;
-    ANGLE_TRY(
-        storage->copyFromStorage(context, latestBuffer, sourceOffset, storageSize, 0, &copyResult));
+    ANGLE_TRY(storage->copyFromStorage(context, latestBuffer, sourceOffset, storageSize, 0,
+                                       &copyResult, feedback));
     // If the D3D buffer has been recreated, we should update our serial.
     if (copyResult == CopyResult::RECREATED)
     {
@@ -992,12 +1027,13 @@ angle::Result Buffer11::updateBufferStorage(const gl::Context *context,
 }
 
 angle::Result Buffer11::getLatestBufferStorage(const gl::Context *context,
-                                               Buffer11::BufferStorage **storageOut) const
+                                               Buffer11::BufferStorage **storageOut,
+                                               BufferFeedback *feedback) const
 {
     // resize buffer
     if (mLatestBufferStorage && mLatestBufferStorage->getSize() < mSize)
     {
-        ANGLE_TRY(mLatestBufferStorage->resize(context, mSize, true));
+        ANGLE_TRY(mLatestBufferStorage->resize(context, mSize, true, feedback));
     }
 
     *storageOut = mLatestBufferStorage;
@@ -1007,7 +1043,8 @@ angle::Result Buffer11::getLatestBufferStorage(const gl::Context *context,
 template <typename StorageOutT>
 angle::Result Buffer11::getStagingStorage(const gl::Context *context, StorageOutT **storageOut)
 {
-    return getBufferStorage(context, BUFFER_USAGE_STAGING, storageOut);
+    BufferFeedback feedback;
+    return getBufferStorage(context, BUFFER_USAGE_STAGING, storageOut, &feedback);
 }
 
 size_t Buffer11::getSize() const
@@ -1022,16 +1059,16 @@ bool Buffer11::supportsDirectBinding() const
     return (mUsage == D3DBufferUsage::STATIC);
 }
 
-void Buffer11::initializeStaticData(const gl::Context *context)
+void Buffer11::initializeStaticData(const gl::Context *context, BufferFeedback *feedback)
 {
-    BufferD3D::initializeStaticData(context);
-    onStateChange(context, angle::SubjectMessage::SubjectChanged);
+    BufferD3D::initializeStaticData(context, feedback);
+    feedback->bufferStateChanged = true;
 }
 
-void Buffer11::invalidateStaticData(const gl::Context *context)
+void Buffer11::invalidateStaticData(const gl::Context *context, BufferFeedback *feedback)
 {
-    BufferD3D::invalidateStaticData(context);
-    onStateChange(context, angle::SubjectMessage::SubjectChanged);
+    BufferD3D::invalidateStaticData(context, feedback);
+    feedback->bufferStateChanged = true;
 }
 
 void Buffer11::onCopyStorage(BufferStorage *dest, BufferStorage *source)
@@ -1052,16 +1089,7 @@ void Buffer11::onStorageUpdate(BufferStorage *updatedStorage)
     mLatestBufferStorage = updatedStorage;
 }
 
-void Buffer11::onStateChange(const gl::Context *context, angle::SubjectMessage message)
-{
-    angle::Subject::onStateChange(message);
-    // Since gl::VertexArray in the front end no longer observe the buffer change, notify current
-    // context's current vertex array immediately.
-    context->onBufferChanged(message, kVertexArrayBufferBindingMaskAllBits);
-}
-
 // Buffer11::BufferStorage implementation
-
 Buffer11::BufferStorage::BufferStorage(Renderer11 *renderer, BufferUsage usage)
     : mRenderer(renderer), mRevision(0), mUsage(usage), mBufferSize(0)
 {}
@@ -1089,10 +1117,8 @@ angle::Result Buffer11::BufferStorage::setData(const gl::Context *context,
 
 // Buffer11::NativeStorage implementation
 
-Buffer11::NativeStorage::NativeStorage(Renderer11 *renderer,
-                                       BufferUsage usage,
-                                       const angle::Subject *onStorageChanged)
-    : BufferStorage(renderer, usage), mBuffer(), mOnStorageChanged(onStorageChanged)
+Buffer11::NativeStorage::NativeStorage(Renderer11 *renderer, BufferUsage usage)
+    : BufferStorage(renderer, usage), mBuffer()
 {}
 
 Buffer11::NativeStorage::~NativeStorage()
@@ -1119,7 +1145,8 @@ angle::Result Buffer11::NativeStorage::copyFromStorage(const gl::Context *contex
                                                        size_t sourceOffset,
                                                        size_t size,
                                                        size_t destOffset,
-                                                       CopyResult *resultOut)
+                                                       CopyResult *resultOut,
+                                                       BufferFeedback *feedback)
 {
     size_t requiredSize = destOffset + size;
 
@@ -1127,7 +1154,7 @@ angle::Result Buffer11::NativeStorage::copyFromStorage(const gl::Context *contex
     bool preserveData = (destOffset > 0);
     if (!mBuffer.valid() || mBufferSize < requiredSize)
     {
-        ANGLE_TRY(resize(context, requiredSize, preserveData));
+        ANGLE_TRY(resize(context, requiredSize, preserveData, feedback));
         *resultOut = CopyResult::RECREATED;
     }
     else
@@ -1184,7 +1211,8 @@ angle::Result Buffer11::NativeStorage::copyFromStorage(const gl::Context *contex
 
 angle::Result Buffer11::NativeStorage::resize(const gl::Context *context,
                                               size_t size,
-                                              bool preserveData)
+                                              bool preserveData,
+                                              BufferFeedback *feedback)
 {
     if (size == 0)
     {
@@ -1230,13 +1258,7 @@ angle::Result Buffer11::NativeStorage::resize(const gl::Context *context,
     // Free the UAVs.
     clearUAVs();
 
-    // Notify that the storage has changed.
-    if (mOnStorageChanged)
-    {
-        mOnStorageChanged->onStateChange(angle::SubjectMessage::SubjectChanged);
-        context->onBufferChanged(angle::SubjectMessage::SubjectChanged,
-                                 kVertexArrayBufferBindingMaskAllBits);
-    }
+    feedback->bufferStateChanged = true;
 
     return angle::Result::Continue;
 }
@@ -1419,10 +1441,8 @@ void Buffer11::NativeStorage::clearUAVs()
     mBufferRawUAVs.clear();
 }
 
-Buffer11::StructuredBufferStorage::StructuredBufferStorage(Renderer11 *renderer,
-                                                           BufferUsage usage,
-                                                           const angle::Subject *onStorageChanged)
-    : NativeStorage(renderer, usage, onStorageChanged), mStructuredBufferResourceView()
+Buffer11::StructuredBufferStorage::StructuredBufferStorage(Renderer11 *renderer, BufferUsage usage)
+    : NativeStorage(renderer, usage), mStructuredBufferResourceView()
 {}
 
 Buffer11::StructuredBufferStorage::~StructuredBufferStorage()
@@ -1433,7 +1453,8 @@ Buffer11::StructuredBufferStorage::~StructuredBufferStorage()
 angle::Result Buffer11::StructuredBufferStorage::resizeStructuredBuffer(
     const gl::Context *context,
     unsigned int size,
-    unsigned int structureByteStride)
+    unsigned int structureByteStride,
+    BufferFeedback *feedback)
 {
     if (size == 0)
     {
@@ -1462,13 +1483,7 @@ angle::Result Buffer11::StructuredBufferStorage::resizeStructuredBuffer(
 
     mStructuredBufferResourceView.reset();
 
-    // Notify that the storage has changed.
-    if (mOnStorageChanged)
-    {
-        mOnStorageChanged->onStateChange(angle::SubjectMessage::SubjectChanged);
-        context->onBufferChanged(angle::SubjectMessage::SubjectChanged,
-                                 kVertexArrayBufferBindingMaskAllBits);
-    }
+    feedback->bufferStateChanged = true;
 
     return angle::Result::Continue;
 }
@@ -1513,7 +1528,8 @@ angle::Result Buffer11::PackStorage::copyFromStorage(const gl::Context *context,
                                                      size_t sourceOffset,
                                                      size_t size,
                                                      size_t destOffset,
-                                                     CopyResult *resultOut)
+                                                     CopyResult *resultOut,
+                                                     BufferFeedback *feedback)
 {
     ANGLE_TRY(flushQueuedPackCommand(context));
 
@@ -1530,7 +1546,8 @@ angle::Result Buffer11::PackStorage::copyFromStorage(const gl::Context *context,
 
 angle::Result Buffer11::PackStorage::resize(const gl::Context *context,
                                             size_t size,
-                                            bool preserveData)
+                                            bool preserveData,
+                                            BufferFeedback *feedback)
 {
     if (size != mBufferSize)
     {
@@ -1641,7 +1658,8 @@ angle::Result Buffer11::SystemMemoryStorage::copyFromStorage(const gl::Context *
                                                              size_t sourceOffset,
                                                              size_t size,
                                                              size_t destOffset,
-                                                             CopyResult *resultOut)
+                                                             CopyResult *resultOut,
+                                                             BufferFeedback *feedback)
 {
     ASSERT(source->isCPUAccessible(GL_MAP_READ_BIT));
     uint8_t *sourceData = nullptr;
@@ -1655,7 +1673,8 @@ angle::Result Buffer11::SystemMemoryStorage::copyFromStorage(const gl::Context *
 
 angle::Result Buffer11::SystemMemoryStorage::resize(const gl::Context *context,
                                                     size_t size,
-                                                    bool preserveData)
+                                                    bool preserveData,
+                                                    BufferFeedback *feedback)
 {
     if (mSystemCopy.size() < size)
     {

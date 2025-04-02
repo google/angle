@@ -192,7 +192,9 @@ angle::Result IndexDataManager::prepareIndexData(const gl::Context *context,
 
     if (staticBufferInitialized && !staticBufferUsable)
     {
-        buffer->invalidateStaticData(context);
+        BufferFeedback feedback;
+        buffer->invalidateStaticData(context, &feedback);
+        glBuffer->applyImplFeedback(context, feedback);
         staticBuffer = nullptr;
     }
 
@@ -204,7 +206,9 @@ angle::Result IndexDataManager::prepareIndexData(const gl::Context *context,
 
         ANGLE_TRY(streamIndexData(context, bufferData + offset, count, srcType, dstType,
                                   primitiveRestartFixedIndexEnabled, translated));
-        buffer->promoteStaticUsage(context, count << srcTypeShift);
+        BufferFeedback feedback;
+        buffer->promoteStaticUsage(context, count << srcTypeShift, &feedback);
+        glBuffer->applyImplFeedback(context, feedback);
     }
     else
     {

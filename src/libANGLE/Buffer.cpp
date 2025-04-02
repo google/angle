@@ -18,7 +18,6 @@ namespace gl
 {
 namespace
 {
-constexpr angle::SubjectIndex kImplementationSubjectIndex = 0;
 constexpr size_t kInvalidContentsObserverIndex            = std::numeric_limits<size_t>::max();
 }  // anonymous namespace
 
@@ -97,8 +96,6 @@ BufferState::~BufferState() {}
 Buffer::Buffer(rx::GLImplFactory *factory, BufferID id)
     : RefCountObject(factory->generateSerial(), id), mImpl(factory->createBuffer(mState))
 {
-    mImplObserver = angle::ObserverBinding(this, kImplementationSubjectIndex);
-    mImplObserver.bind(mImpl);
 }
 
 Buffer::~Buffer()
@@ -570,15 +567,6 @@ void Buffer::onContentsChange()
             static_cast<Texture *>(contentsObserver.observer)->onBufferContentsChange();
         }
     }
-}
-
-void Buffer::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message)
-{
-    // Pass it along!
-    ASSERT(index == kImplementationSubjectIndex);
-    ASSERT(message == angle::SubjectMessage::SubjectChanged ||
-           message == angle::SubjectMessage::InternalMemoryAllocationChanged);
-    angle::Subject::onStateChange(message);
 }
 
 void Buffer::applyImplFeedback(const gl::Context *context, const rx::BufferFeedback &feedback)

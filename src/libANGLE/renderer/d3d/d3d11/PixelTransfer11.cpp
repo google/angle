@@ -184,8 +184,11 @@ angle::Result PixelTransfer11::copyBufferToTexture(const gl::Context *context,
     ASSERT(srvFormat != DXGI_FORMAT_UNKNOWN);
     Buffer11 *bufferStorage11                  = GetAs<Buffer11>(unpackBuffer->getImplementation());
     const d3d11::ShaderResourceView *bufferSRV = nullptr;
-    ANGLE_TRY(bufferStorage11->getSRV(context, srvFormat, &bufferSRV));
+    BufferFeedback feedback;
+    ANGLE_TRY(bufferStorage11->getSRV(context, srvFormat, &bufferSRV, &feedback));
+
     ASSERT(bufferSRV != nullptr);
+    unpackBuffer->applyImplFeedback(context, feedback);
 
     const d3d11::RenderTargetView &textureRTV =
         GetAs<RenderTarget11>(destRenderTarget)->getRenderTargetView();

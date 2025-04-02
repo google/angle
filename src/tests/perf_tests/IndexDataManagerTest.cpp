@@ -124,7 +124,8 @@ class MockBufferD3D : public rx::BufferD3D
                  angle::Result(const gl::Context *context, GLboolean *, rx::BufferFeedback *));
 
     // BufferD3D
-    MOCK_METHOD1(markTransformFeedbackUsage, angle::Result(const gl::Context *));
+    MOCK_METHOD2(markTransformFeedbackUsage,
+                 angle::Result(const gl::Context *, rx::BufferFeedback *));
 
     // inlined for speed
     bool supportsDirectBinding() const override { return false; }
@@ -149,11 +150,12 @@ class MockGLFactoryD3D : public rx::MockGLFactory
     rx::BufferImpl *createBuffer(const gl::BufferState &state) override
     {
         MockBufferD3D *mockBufferD3D = new MockBufferD3D(mBufferFactory);
+        rx::BufferFeedback feedback;
 
         EXPECT_CALL(*mBufferFactory, createVertexBuffer())
             .WillOnce(Return(nullptr))
             .RetiresOnSaturation();
-        mockBufferD3D->initializeStaticData(nullptr);
+        mockBufferD3D->initializeStaticData(nullptr, &feedback);
 
         return mockBufferD3D;
     }
