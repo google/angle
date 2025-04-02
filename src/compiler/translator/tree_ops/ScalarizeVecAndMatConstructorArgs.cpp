@@ -8,13 +8,16 @@
 // driver bugs around vector and matrix constructors.
 //
 
-#include "compiler/translator/tree_ops/glsl/ScalarizeVecAndMatConstructorArgs.h"
+#include "compiler/translator/tree_ops/ScalarizeVecAndMatConstructorArgs.h"
 
-#include "angle_gl.h"
-#include "common/angleutils.h"
-#include "compiler/translator/Compiler.h"
-#include "compiler/translator/tree_util/IntermNode_util.h"
-#include "compiler/translator/tree_util/IntermTraverse.h"
+#if defined(ANGLE_ENABLE_GLSL) || defined(ANGLE_ENABLE_WGPU)
+
+#    include "angle_gl.h"
+#    include "common/angleutils.h"
+#    include "compiler/translator/Compiler.h"
+#    include "compiler/translator/IntermNode.h"
+#    include "compiler/translator/tree_util/IntermNode_util.h"
+#    include "compiler/translator/tree_util/IntermTraverse.h"
 
 namespace sh
 {
@@ -39,6 +42,20 @@ const TType *GetHelperType(const TType &type, TQualifier qualifier)
     newType->setQualifier(qualifier);
 
     return newType;
+}
+
+// Cast a scalar to the basic type of node. No-ops if scalar is already the right type.
+TIntermNode *CastScalar(TIntermAggregate *node, TIntermTyped *scalar)
+{
+    const TType &nodeType          = node->getType();
+    const TBasicType nodeBasicType = nodeType.getBasicType();
+    if (scalar->getType().getBasicType() == nodeBasicType)
+    {
+        return scalar;
+    }
+
+    TType castDestType(nodeBasicType, nodeType.getPrecision());
+    return TIntermAggregate::CreateConstructor(castDestType, {scalar});
 }
 
 // Traverser that converts a vector or matrix constructor to one that only uses scalars.  To support
@@ -84,7 +101,8 @@ class ScalarizeTraverser : public TIntermTraverser
     // arguments.  Otherwise, recursively visit the node.
     TIntermTyped *createConstructor(TIntermTyped *node);
 
-    void extractComponents(const TFunction *helper,
+    void extractComponents(TIntermAggregate *node,
+                           const TFunction *helper,
                            size_t componentCount,
                            TIntermSequence *componentsOut);
 
@@ -240,7 +258,8 @@ TIntermTyped *ScalarizeTraverser::createConstructor(TIntermTyped *typed)
 
 // Extract enough scalar arguments from the arguments of helper to produce enough arguments for the
 // constructor call (given in componentCount).
-void ScalarizeTraverser::extractComponents(const TFunction *helper,
+void ScalarizeTraverser::extractComponents(TIntermAggregate *node,
+                                           const TFunction *helper,
                                            size_t componentCount,
                                            TIntermSequence *componentsOut)
 {
@@ -254,7 +273,7 @@ void ScalarizeTraverser::extractComponents(const TFunction *helper,
         if (argumentType.isScalar())
         {
             // For scalar parameters, there's nothing to do
-            componentsOut->push_back(argument);
+            componentsOut->push_back(CastScalar(node, argument));
             continue;
         }
         if (argumentType.isVector())
@@ -265,7 +284,7 @@ void ScalarizeTraverser::extractComponents(const TFunction *helper,
                  ++componentIndex)
             {
                 componentsOut->push_back(
-                    new TIntermSwizzle(argument->deepCopy(), {componentIndex}));
+                    CastScalar(node, new TIntermSwizzle(argument->deepCopy(), {componentIndex})));
             }
             continue;
         }
@@ -285,7 +304,8 @@ void ScalarizeTraverser::extractComponents(const TFunction *helper,
                  componentIndex < argumentType.getRows() && componentsOut->size() < componentCount;
                  ++componentIndex)
             {
-                componentsOut->push_back(new TIntermSwizzle(col->deepCopy(), {componentIndex}));
+                componentsOut->push_back(
+                    CastScalar(node, new TIntermSwizzle(col->deepCopy(), {componentIndex})));
             }
         }
     }
@@ -302,7 +322,7 @@ void ScalarizeTraverser::createConstructorVectorFromScalar(TIntermAggregate *nod
     // Replicate the single scalar argument as many times as necessary.
     for (size_t index = 0; index < type.getNominalSize(); ++index)
     {
-        constructorArgsOut->push_back(scalar->deepCopy());
+        constructorArgsOut->push_back(CastScalar(node, scalar->deepCopy()));
     }
 }
 
@@ -310,7 +330,7 @@ void ScalarizeTraverser::createConstructorVectorFromMultiple(TIntermAggregate *n
                                                              const TFunction *helper,
                                                              TIntermSequence *constructorArgsOut)
 {
-    extractComponents(helper, node->getType().getNominalSize(), constructorArgsOut);
+    extractComponents(node, helper, node->getType().getNominalSize(), constructorArgsOut);
 }
 
 void ScalarizeTraverser::createConstructorMatrixFromScalar(TIntermAggregate *node,
@@ -344,7 +364,7 @@ void ScalarizeTraverser::createConstructorMatrixFromVectors(TIntermAggregate *no
                                                             TIntermSequence *constructorArgsOut)
 {
     const TType &type = node->getType();
-    extractComponents(helper, type.getCols() * type.getRows(), constructorArgsOut);
+    extractComponents(node, helper, type.getCols() * type.getRows(), constructorArgsOut);
 }
 
 void ScalarizeTraverser::createConstructorMatrixFromMatrix(TIntermAggregate *node,
@@ -396,3 +416,16 @@ bool ScalarizeVecAndMatConstructorArgs(TCompiler *compiler,
     return scalarizer.update(compiler, root);
 }
 }  // namespace sh
+
+#else
+namespace sh
+{
+bool ScalarizeVecAndMatConstructorArgs(TCompiler *compiler,
+                                       TIntermBlock *root,
+                                       TSymbolTable *symbolTable)
+{
+    UNREACHABLE();
+    return false;
+}
+}  // namespace sh
+#endif  // defined(ANGLE_ENABLE_GLSL) || defined(ANGLE_ENABLE_WGPU)

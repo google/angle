@@ -51,6 +51,7 @@ std::shared_ptr<ShaderTranslateTask> ShaderWgpu::compile(const gl::Context *cont
     options->validateAST = true;
 
     options->separateCompoundStructDeclarations = true;
+    options->scalarizeVecAndMatConstructorArgs  = true;
 
     return std::shared_ptr<ShaderTranslateTask>(new ShaderTranslateTaskWgpu);
 }

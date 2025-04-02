@@ -192,6 +192,8 @@ angle_translator_sources = [
   "src/compiler/translator/tree_ops/RewriteStructSamplers.h",
   "src/compiler/translator/tree_ops/RewriteTexelFetchOffset.cpp",
   "src/compiler/translator/tree_ops/RewriteTexelFetchOffset.h",
+  "src/compiler/translator/tree_ops/ScalarizeVecAndMatConstructorArgs.cpp",
+  "src/compiler/translator/tree_ops/ScalarizeVecAndMatConstructorArgs.h",
   "src/compiler/translator/tree_ops/SeparateDeclarations.cpp",
   "src/compiler/translator/tree_ops/SeparateDeclarations.h",
   "src/compiler/translator/tree_ops/SeparateStructFromUniformDeclarations.cpp",
@@ -202,7 +204,6 @@ angle_translator_sources = [
   "src/compiler/translator/tree_ops/SplitSequenceOperator.h",
   "src/compiler/translator/tree_ops/glsl/RegenerateStructNames.h",
   "src/compiler/translator/tree_ops/glsl/RewriteRepeatedAssignToSwizzled.h",
-  "src/compiler/translator/tree_ops/glsl/ScalarizeVecAndMatConstructorArgs.h",
   "src/compiler/translator/tree_ops/glsl/UseInterfaceBlockFields.h",
   "src/compiler/translator/tree_ops/glsl/apple/AddAndTrueToLoopCondition.h",
   "src/compiler/translator/tree_ops/glsl/apple/RewriteDoWhile.h",
@@ -271,7 +272,6 @@ angle_translator_glsl_sources = [
   "src/compiler/translator/glsl/VersionGLSL.cpp",
   "src/compiler/translator/tree_ops/glsl/RegenerateStructNames.cpp",
   "src/compiler/translator/tree_ops/glsl/RewriteRepeatedAssignToSwizzled.cpp",
-  "src/compiler/translator/tree_ops/glsl/ScalarizeVecAndMatConstructorArgs.cpp",
   "src/compiler/translator/tree_ops/glsl/UseInterfaceBlockFields.cpp",
 ]
 angle_translator_glsl_apple_sources = [
