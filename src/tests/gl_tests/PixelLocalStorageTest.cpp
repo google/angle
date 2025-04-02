@@ -636,6 +636,7 @@ class PixelLocalStorageTest : public ANGLETest<>
     void doImplicitDisablesTest_Framebuffer();
     void doImplicitDisablesTest_TextureAttachments();
     void doImplicitDisablesTest_RenderbufferAttachments();
+    void doImplicitDisablesTest_Invalidate();
 
     GLint MAX_PIXEL_LOCAL_STORAGE_PLANES                           = 0;
     GLint MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES = 0;
@@ -1919,9 +1920,13 @@ TEST_P(PixelLocalStorageTest, Coherency)
             // Allow boxes to have negative widths and heights. This adds randomness by making the
             // diagonals go in different directions.
             if (rand() & 1)
+            {
                 std::swap(x0, x1);
+            }
             if (rand() & 1)
+            {
                 std::swap(y0, y1);
+            }
             boxes.push_back({{x0, y0, x1, y1}, {(float)r, (float)g, (float)b, (float)a}});
         }
     }
@@ -2130,6 +2135,69 @@ TEST_P(PixelLocalStorageTest, TextureCubeFaces)
         EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor::blue);
         ASSERT_GL_NO_ERROR();
     }
+}
+
+// Check that glFlush, glFinish, and glClientWaitSync don't invalidate PLS.
+TEST_P(PixelLocalStorageTest, FlushFinishSync)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+
+    mProgram.compile(R"(
+        layout(binding=0, rgba8) uniform lowp pixelLocalANGLE plane1;
+        layout(rgba8i, binding=1) uniform lowp ipixelLocalANGLE plane2;
+        layout(binding=2, rgba8ui) uniform lowp upixelLocalANGLE plane3;
+        void main()
+        {
+            pixelLocalStoreANGLE(plane1, color + pixelLocalLoadANGLE(plane1));
+            pixelLocalStoreANGLE(plane2, ivec4(aux1) + pixelLocalLoadANGLE(plane2));
+            pixelLocalStoreANGLE(plane3, uvec4(aux2) + pixelLocalLoadANGLE(plane3));
+        })");
+
+    PLSTestTexture tex1(GL_RGBA8);
+    PLSTestTexture tex2(GL_RGBA8I);
+    PLSTestTexture tex3(GL_RGBA8UI);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexturePixelLocalStorageANGLE(0, tex1, 0, 0);
+    glFramebufferTexturePixelLocalStorageANGLE(1, tex2, 0, 0);
+    glFramebufferTexturePixelLocalStorageANGLE(2, tex3, 0, 0);
+    glViewport(0, 0, W, H);
+    glDrawBuffers(0, nullptr);
+
+    glBeginPixelLocalStorageANGLE(
+        3, GLenumArray({GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_ZERO_ANGLE}));
+
+    // Accumulate R, G, B, A in 4 separate passes.
+    // Store out-of-range values to ensure they are properly clamped upon storage.
+    mProgram.drawBoxes({{FULLSCREEN, {2, -1, -2, -3}, {-500, 0, 0, 0}, {1, 0, 0, 0}}});
+    glFlush();
+
+    mProgram.drawBoxes({{FULLSCREEN, {0, 1, 0, 100}, {0, -129, 0, 0}, {0, 50, 0, 0}}});
+    glFinish();
+
+    mProgram.drawBoxes({{FULLSCREEN, {0, 0, 1, 0}, {0, 0, -70, 0}, {0, 0, 100, 0}}});
+    GLsync sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+    glFlush();
+    glClientWaitSync(sync, 0, std::numeric_limits<GLuint64>::max());
+
+    mProgram.drawBoxes({{FULLSCREEN, {0, 0, 0, -1}, {128, 0, 0, 500}, {0, 0, 0, 300}}});
+    glFlush();
+    glFinish();
+
+    glEndPixelLocalStorageANGLE(3, GLenumArray({GL_STORE_OP_STORE_ANGLE, GL_STORE_OP_STORE_ANGLE,
+                                                GL_STORE_OP_STORE_ANGLE}));
+
+    attachTexture2DToScratchFBO(tex1);
+    EXPECT_PIXEL_RECT_EQ(0, 0, W, H, GLColor(255, 255, 255, 0));
+
+    attachTexture2DToScratchFBO(tex2);
+    EXPECT_PIXEL_RECT32I_EQ(0, 0, W, H, GLColor32I(0, -128, -70, 127));
+
+    attachTexture2DToScratchFBO(tex3);
+    EXPECT_PIXEL_RECT32UI_EQ(0, 0, W, H, GLColor32UI(1, 50, 100, 255));
+
+    ASSERT_GL_NO_ERROR();
 }
 
 void PixelLocalStorageTest::doStateRestorationTest()
@@ -2431,7 +2499,7 @@ void PixelLocalStorageTest::doImplicitDisablesTest_Framebuffer()
 {
     SETUP_IMPLICIT_DISABLES_TEST(GL_DRAW_FRAMEBUFFER);
 
-    // Binding a READ_FRAMEBUFFER does not end PLS.
+    // Binding a READ_FRAMEBUFFER still ends PLS.
     CHECK_ENDS_PLS(glBindFramebuffer(GL_READ_FRAMEBUFFER, 0));
     EXPECT_GL_INTEGER(GL_READ_FRAMEBUFFER_BINDING, 0);
     EXPECT_GL_INTEGER(GL_DRAW_FRAMEBUFFER_BINDING, fbo);
@@ -2672,6 +2740,22 @@ void PixelLocalStorageTest::doImplicitDisablesTest_RenderbufferAttachments()
     glFramebufferRenderbuffer(GL_READ_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, 0);
     CHECK_ENDS_PLS_WITH_READ_FBO(glFramebufferRenderbuffer(
         GL_READ_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, depthStencilBuffer));
+}
+
+void PixelLocalStorageTest::doImplicitDisablesTest_Invalidate()
+{
+    SETUP_IMPLICIT_DISABLES_TEST(GL_FRAMEBUFFER);
+
+    // "... Commands that flush or invalidate tiled memory.
+    //
+    // "e.g., DiscardFramebufferEXT, InvalidateFramebuffer,
+    // InvalidateSubFramebuffer, etc."
+    if (EnsureGLExtensionEnabled("GL_EXT_discard_framebuffer"))
+    {
+        CHECK_ENDS_PLS(glDiscardFramebufferEXT(GL_FRAMEBUFFER, 0, nullptr));
+    }
+    CHECK_ENDS_PLS(glInvalidateFramebuffer(GL_FRAMEBUFFER, 0, nullptr));
+    CHECK_ENDS_PLS(glInvalidateSubFramebuffer(GL_FRAMEBUFFER, 0, nullptr, 0, 0, 1, 1));
 }
 
 #undef CHECK_ENDS_PLS_WITH_READ_FBO
@@ -2950,6 +3034,14 @@ TEST_P(PixelLocalStorageTest, ImplicitDisables_RenderbufferAttachments)
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
 
     doImplicitDisablesTest_RenderbufferAttachments();
+}
+
+// Check that invalidation commands implicitly disable pixel local storage.
+TEST_P(PixelLocalStorageTest, ImplicitDisables_Invalidate)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+
+    doImplicitDisablesTest_Invalidate();
 }
 
 // Check that gl(Copy)TexSubImage{2,3}D end PLS before running.
@@ -4295,6 +4387,14 @@ TEST_P(PixelLocalStorageTestES31, ImplicitDisables_RenderbufferAttachments)
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
 
     doImplicitDisablesTest_RenderbufferAttachments();
+}
+
+// Check that invalidation commands implicitly disable pixel local storage.
+TEST_P(PixelLocalStorageTestES31, ImplicitDisables_Invalidate)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+
+    doImplicitDisablesTest_Invalidate();
 }
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(PixelLocalStorageTestES31);
@@ -6529,11 +6629,6 @@ TEST_P(PixelLocalStorageValidationTest, BannedCommands)
     ASSERT_GL_INTEGER(GL_PIXEL_LOCAL_STORAGE_ACTIVE_PLANES_ANGLE, numActivePlanes);
     ASSERT_GL_NO_ERROR();
 
-    // Check commands called out by EXT_shader_pixel_local_storage for flushing tiled memory.
-    EXPECT_BANNED_DEFAULT_MSG(glFlush());
-    EXPECT_BANNED_DEFAULT_MSG(glFinish());
-    EXPECT_BANNED_DEFAULT_MSG(glClientWaitSync(nullptr, 0, 0));
-
     // INVALID_OPERATION is generated by Enable(), Disable() if <cap> is not one of: CULL_FACE,
     // DEPTH_CLAMP_EXT, DEPTH_TEST, POLYGON_OFFSET_POINT_NV, POLYGON_OFFSET_LINE_NV,
     // POLYGON_OFFSET_LINE_ANGLE, POLYGON_OFFSET_FILL, PRIMITIVE_RESTART_FIXED_INDEX,
@@ -7223,51 +7318,6 @@ TEST_P(PixelLocalStorageValidationTest, ModifyTextureDuringPLS)
 #undef CHECK_TEXTURE_2D_ARRAY_MODIFICATION
 
     glEndPixelLocalStorageANGLE(2, GLenumArray({GL_DONT_CARE, GL_DONT_CARE}));
-    ASSERT_GL_NO_ERROR();
-}
-
-// Check that framebuffer invalidations bounce while PLS is active.
-TEST_P(PixelLocalStorageValidationTest, InvalidateFramebufferDuringPLS)
-{
-
-    GLFramebuffer fbo;
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    PLSTestTexture pls0(GL_RGBA8, 100, 100);
-    glFramebufferTexturePixelLocalStorageANGLE(0, pls0, 0, 0);
-    glBeginPixelLocalStorageANGLE(1, GLenumArray({GL_DONT_CARE}));
-    EXPECT_GL_NO_ERROR();
-
-    glInvalidateFramebuffer(GL_FRAMEBUFFER, 0, nullptr);
-    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
-    EXPECT_GL_SINGLE_ERROR_MSG("Operation not permitted while pixel local storage is active.");
-
-    glInvalidateSubFramebuffer(GL_FRAMEBUFFER, 0, nullptr, 0, 0, 10, 10);
-    EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
-    EXPECT_GL_SINGLE_ERROR_MSG("Operation not permitted while pixel local storage is active.");
-
-    if (EnsureGLExtensionEnabled("GL_EXT_discard_framebuffer"))
-    {
-        glDiscardFramebufferEXT(GL_FRAMEBUFFER, 0, nullptr);
-        EXPECT_GL_SINGLE_ERROR(GL_INVALID_OPERATION);
-        EXPECT_GL_SINGLE_ERROR_MSG("Operation not permitted while pixel local storage is active.");
-    }
-
-    glEndPixelLocalStorageANGLE(1, GLenumArray({GL_DONT_CARE}));
-    EXPECT_GL_NO_ERROR();
-
-    // Framebuffer invalidations become legal again after PLS is done.
-    glInvalidateFramebuffer(GL_FRAMEBUFFER, 0, nullptr);
-    EXPECT_GL_NO_ERROR();
-
-    glInvalidateSubFramebuffer(GL_FRAMEBUFFER, 0, nullptr, 0, 0, 10, 10);
-    EXPECT_GL_NO_ERROR();
-
-    if (EnsureGLExtensionEnabled("GL_EXT_discard_framebuffer"))
-    {
-        glDiscardFramebufferEXT(GL_FRAMEBUFFER, 0, nullptr);
-        EXPECT_GL_NO_ERROR();
-    }
-
     ASSERT_GL_NO_ERROR();
 }
 

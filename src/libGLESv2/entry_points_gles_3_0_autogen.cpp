@@ -1878,6 +1878,10 @@ void GL_APIENTRY GL_InvalidateFramebuffer(GLenum target,
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
+        if (context->getState().getPixelLocalStorageActivePlanes() != 0)
+        {
+            context->endPixelLocalStorageImplicit();
+        }
         bool isCallValid =
             (context->skipValidation() ||
              ValidateInvalidateFramebuffer(context, angle::EntryPoint::GLInvalidateFramebuffer,
@@ -1915,6 +1919,10 @@ void GL_APIENTRY GL_InvalidateSubFramebuffer(GLenum target,
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
+        if (context->getState().getPixelLocalStorageActivePlanes() != 0)
+        {
+            context->endPixelLocalStorageImplicit();
+        }
         bool isCallValid = (context->skipValidation() ||
                             ValidateInvalidateSubFramebuffer(
                                 context, angle::EntryPoint::GLInvalidateSubFramebuffer, target,

@@ -61,12 +61,15 @@ INIT_DICT = {
 # validation.
 PLS_DISABLE_LIST = {
     "glBeginTransformFeedback",
-    "glBlitFramebuffer",
     "glBindFramebuffer",
+    "glBlitFramebuffer",
     "glCopyTexImage2D",
+    "glDiscardFramebufferEXT",
     "glDrawBuffers",
     "glFramebufferMemorylessPixelLocalStorageANGLE",
     "glFramebufferRenderbuffer",
+    "glInvalidateFramebuffer",
+    "glInvalidateSubFramebuffer",
     "glReadPixels",
     "glStartTilingQCOM",
 }
@@ -349,7 +352,7 @@ TEMPLATE_GLES_ENTRY_POINT_WITH_RETURN = """\
     {return_type} returnValue;
     if ({valid_context_check})
     {{{packed_gl_enum_conversions}
-        {context_lock}
+        {context_lock}{implicit_pls_disable}
         bool isCallValid = (context->skipValidation() || {validation_expression});
         if (ANGLE_LIKELY(isCallValid))
         {{

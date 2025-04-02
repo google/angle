@@ -328,7 +328,6 @@ libangle_headers = [
   "src/libANGLE/cl_types.h",
   "src/libANGLE/context_private_call.inl.h",
   "src/libANGLE/context_private_call_autogen.h",
-  "src/libANGLE/entry_points_utils.cpp",
   "src/libANGLE/entry_points_utils.h",
   "src/libANGLE/features.h",
   "src/libANGLE/formatutils.h",
