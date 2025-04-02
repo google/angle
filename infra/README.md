@@ -3,94 +3,56 @@
 ANGLE runs hundreds of thousands of tests on every change before it lands in
 the tree. We scale our pre-commit and post-commit testing to many machines
 using [Chromium Swarming][Swarming]. Our testing setup heavily leverages
-existing work in Chromium. We also run compile-only
-[Standalone Testing][Standalone] that does not depend on a Chromium checkout.
-
-Also see the documentation on [ANGLE Wrangling][Wrangling] for more info.
+existing work in Chromium. We also run standalone testing
+that does not depend on a Chromium checkout.
 
 ## Pre-Commit Testing
 
-See the pre-commit try waterfall here:
-
-[`https://ci.chromium.org/p/chromium/g/tryserver.chromium.angle/builders`](https://ci.chromium.org/p/chromium/g/tryserver.chromium.angle/builders)
+We have pre-commit testing on [Chromium][ANGLEChromiumTry] and [ANGLE][StandaloneTry] try waterfalls.
 
 We currently run pre-commit tests on:
 
- * Windows 32-bit AMD and Windows 64-bit Intel and NVIDIA GPUs
- * Linux 64-bit NVIDIA and Intel GPUs
+ * Windows 64-bit Intel and NVIDIA GPUs and SwiftShader on VMs
+ * Windows 32-bit on SwiftShader on VMs
+ * Linux 64-bit Intel and NVIDIA GPUs and SwiftShader on VMs
  * Mac NVIDIA, Intel and AMD GPUs
- * Pixel 4 and Nexus 5X
- * Fuchsia testing in a VM
+ * Pixel 2, Pixel 4 and Pixel 6
+ * Fuchsia compile-only
+ * iOS simulator on demand
 
 Looking at an example build shows how tests are split up between machines. See for example:
 
-[`https://ci.chromium.org/ui/p/angle/builders/ci/mac-rel/8123/overview`](https://ci.chromium.org/ui/p/angle/builders/ci/mac-rel/8123/overview)
+[`https://ci.chromium.org/ui/p/angle/builders/ci/mac-test/8117/overview`](https://ci.chromium.org/ui/p/angle/builders/ci/mac-test/8117/overview)
 
-This build ran 68 test steps across 3 GPU families. In some cases (e.g.
+This build ran 67 test steps across 3 GPU families. In some cases (e.g.
 `angle_deqp_gles3_metal_tests`) the test is split up between multiple machines to
-run faster (in this case 2 different machines at once). This build took 23
-minutes to complete 72 minutes of real automated testing.
+run faster (in this case 2 different machines at once). This build took 10
+minutes to complete 50 minutes of real automated testing.
 
 For more details on running and working with our test sets see the docs in [Contributing Code][Contrib].
 
+## Post-Commit Testing
+
+Similarly to pre-commit testing, there are also [Chromium][ANGLEChromiumCI] and [ANGLE][StandaloneCI] CI (Continuous Integration) waterfalls.
+These run on the same configurations as pre-commit, plus additional configurations for which we only have limited HW, e.g. Samsung S22 phones.
+They are useful for detecting flaky failures and for regression blamelists in case some failure does manage to slip through pre-commit testing.
+
+## Auto-Rollers
+
+Some ANGLE dependencies are rolled in via automatically created CLs by these auto-rollers:
+ * [SwiftShader](https://autoroll.skia.org/r/swiftshader-angle-autoroll)
+ * [vulkan-deps](https://autoroll.skia.org/r/vulkan-deps-angle-autoroll)
+ * [VK-GL-CTS](https://autoroll.skia.org/r/vk-gl-cts-angle-autoroll)
+ * [Chromium build dependencies](https://autoroll.skia.org/r/chromium-angle-autoroll)
+
+Similarly, Chromium's copy of ANGLE is updated by the [ANGLE into Chromium auto-roller](https://autoroll.skia.org/r/angle-chromium-autoroll).
+And there also exists a [SwiftShader into Chromium auto-roller](https://autoroll.skia.org/r/swiftshader-chromium-autoroll).
+
 [Swarming]: https://chromium-swarm.appspot.com/
-[Standalone]: #ANGLE-Standalone-Testing
 [Contrib]: ../doc/ContributingCode.md#Testing
-[Wrangling]: ANGLEWrangling.md
+[ANGLEChromiumCI]: https://ci.chromium.org/p/chromium/g/chromium.angle/console
+[ANGLEChromiumTry]: https://ci.chromium.org/p/chromium/g/tryserver.chromium.angle/builders
+[StandaloneCI]: https://ci.chromium.org/p/angle/g/ci/console
+[StandaloneTry]: https://ci.chromium.org/ui/p/angle/g/try/builders
 
-## ANGLE Standalone Testing
 
-In addition to the ANGLE try bots using Chrome, and the GPU.FYI bots, ANGLE
-has standalone testing on the Chrome infrastructure. Currently these tests are
-compile-only. This page is for maintaining the configurations that don't use
-Chromium. Also see the main instructions for [ANGLE Wrangling](ANGLEWrangling.md).
-
-It's the ANGLE team's responsibility for maintaining this testing
-infrastructure. The bot configurations live in four different repos and six
-branches.
-
-## Info Consoles
-
-Continuous builders for every ANGLE revision are found on the CI console:
-
-[https://ci.chromium.org/p/angle/g/ci/console](https://ci.chromium.org/p/angle/g/ci/console)
-
-Try jobs from pre-commit builds are found on the builders console:
-
-[https://ci.chromium.org/p/angle/g/try/builders](https://ci.chromium.org/p/angle/g/try/builders)
-
-## How to add a new build configuration
-
- 1. [`bugs.chromium.org/p/chromium/issues/entry?template=Build+Infrastructure`](http://bugs.chromium.org/p/chromium/issues/entry?template=Build+Infrastructure):
-
-    * If adding a Mac bot, request new slaves by filing an infra issue.
-
- 1. [`chrome-internal.googlesource.com/infradata/config`](http://chrome-internal.googlesource.com/infradata/config):
-
-    * Update **`configs/chromium-swarm/starlark/bots/angle.star`** with either Mac slaves requested in the previous step or increase the amount of Windows or Linux GCEs.
-
- 1. [`chromium.googlesource.com/chromium/tools/build`](https://chromium.googlesource.com/chromium/tools/build):
-
-    * Update **`scripts/slave/recipes/angle.py`** with new the config.
-    * The recipe code requires 100% code coverage through mock bots, so add mock bot config to GenTests.
-    * Maybe run `./scripts/slave/recipes.py test train` to update checked-in golden files. This might no longer be necessary.
-
- 1. [`chromium.googlesource.com/angle/angle`](http://chromium.googlesource.com/angle/angle):
-
-    * Update **`infra/config/global/cr-buildbucket.cfg`** to add the new builder (to ci and try), and set the new config option.
-    * Update **`infra/config/global/luci-milo.cfg`** to make the builders show up on the ci and try waterfalls.
-    * Update **`infra/config/global/luci-scheduler.cfg`** to make the builders trigger on new commits or try jobs respectively.
-    * Update **`infra/config/global/commit-queue.cfg`** to add the builder to the default CQ jobs (if desired).
-
-## Other Configuration
-
-There are other places where configuration for ANGLE infra lives. These are files that we shouldn't need to modify very often:
-
- 1. [`chrome-internal.googlesource.com/infradata/config`](http://chrome-internal.googlesource.com/infradata/config):
-
-    * **`configs/luci-token-server/service_accounts.cfg`** (service account names)
-    * **`configs/chromium-swarm/pools.cfg`** (swarming pools)
-
- 1. [`chromium.googlesource.com/chromium/tools/depot_tools`](http://chromium.googlesource.com/chromium/tools/depot_tools):
-
-    * **`recipes/recipe_modules/gclient/config.py`** (gclient config)
