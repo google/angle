@@ -1953,8 +1953,9 @@ bool ProgramExecutable::linkAtomicCounterBuffers(const Caps &caps)
     {
         auto &uniform = mUniforms[index];
 
-        uniform.pod.blockOffset                    = uniform.getOffset();
         uniform.pod.blockArrayStride               = uniform.isArray() ? 4 : 0;
+        uniform.pod.blockOffset =
+            uniform.getOffset() + uniform.pod.blockArrayStride * uniform.getOuterArrayOffset();
         uniform.pod.blockMatrixStride              = 0;
         uniform.pod.flagBits.blockIsRowMajorMatrix = false;
         uniform.pod.flagBits.isBlock               = true;

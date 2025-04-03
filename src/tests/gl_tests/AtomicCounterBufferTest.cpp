@@ -917,6 +917,153 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterMemoryBarrier)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Tests queries for atomic counter
+TEST_P(AtomicCounterBufferTest31, AtomicCounterQueries)
+{
+    constexpr uint32_t kAtomicCounterCount = 1 + 2 + 2 * 3;
+
+    GLint maxAtomicCounters = 0;
+    glGetIntegerv(GL_MAX_COMPUTE_ATOMIC_COUNTERS, &maxAtomicCounters);
+    EXPECT_GL_NO_ERROR();
+
+    // Required minimum is 8 by the spec
+    EXPECT_GE(maxAtomicCounters, 8);
+    ANGLE_SKIP_TEST_IF(static_cast<uint32_t>(maxAtomicCounters) < kAtomicCounterCount);
+
+    constexpr char kComputeShaderSource[] = R"(#version 310 es
+/* 1x1x1 workgroup */
+layout (local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+
+/* GL_MAX_COMPUTE_ATOMIC_COUNTERS is min 8 and GL_MAX_ATOMIC_COUNTER_BUFFER_SIZE
+ * is min 32 bytes according to GLES 3.1 spec */
+layout (binding=0, offset=0) uniform atomic_uint ac;
+layout (binding=0, offset=4) uniform atomic_uint acArray[2];
+layout (binding=0, offset=12) uniform atomic_uint acArrayArray[2][3];
+
+void main()
+{
+    atomicCounterIncrement(ac);
+    atomicCounterDecrement(acArray[0]);
+    atomicCounterIncrement(acArray[1]);
+    atomicCounterIncrement(acArrayArray[0][0]);
+    atomicCounterDecrement(acArrayArray[0][1]);
+    atomicCounterIncrement(acArrayArray[0][2]);
+    atomicCounterDecrement(acArrayArray[1][0]);
+    atomicCounterIncrement(acArrayArray[1][1]);
+    atomicCounterIncrement(acArrayArray[1][2]);
+}
+)";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShaderSource);
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(program);
+    EXPECT_GL_NO_ERROR();
+
+    GLsizei length = 0;
+    // Tests the resource property GL_BUFFER_DATA_SIZE query for ACB
+    GLenum ACBDataSizeProp = GL_BUFFER_DATA_SIZE;
+    GLint ACBDataSize;
+    glGetProgramResourceiv(program, GL_ATOMIC_COUNTER_BUFFER, 0, 1, &ACBDataSizeProp, 1, &length,
+                           &ACBDataSize);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(1, length);
+    // sizeof(GLuint) * 9 = 36
+    // Vulkan rounds up to the required buffer alignment, so >= 36
+    EXPECT_GE(ACBDataSize, 36);
+
+    // Array containing the names of all active atomic counters in the shader */
+    GLenum activeVariablesProperty = GL_ACTIVE_VARIABLES;
+    const char *activeACNames[] = {"ac", "acArray[0]", "acArrayArray[0][0]", "acArrayArray[1][0]"};
+    const int numACs            = sizeof(activeACNames) / sizeof(activeACNames[0]);
+    GLuint uniformsIndices[numACs];
+
+    // Getting the uniform indices for the later queries.
+    glGetProgramResourceiv(program, GL_ATOMIC_COUNTER_BUFFER, 0, 1, &activeVariablesProperty,
+                           numACs, &length, (GLint *)&uniformsIndices[0]);
+    EXPECT_EQ(length, numACs);
+
+    // If <pname> is UNIFORM_OFFSET, then the returned value will be its offset
+    // relative to the beginning of its active atomic counter buffer.
+    GLint queryOffsets[numACs] = {0};
+    glGetActiveUniformsiv(program, numACs, uniformsIndices, GL_UNIFORM_OFFSET, queryOffsets);
+
+    GLint maxLength;
+    glGetProgramiv(program, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxLength);
+    std::vector<char> queryNames(maxLength);
+    for (uint32_t index = 0; index < numACs; index++)
+    {
+        GLint size;
+        GLenum type;
+
+        glGetActiveUniform(program, uniformsIndices[index], maxLength, nullptr, &size, &type,
+                           queryNames.data());
+
+        if (0 == std::strcmp(queryNames.data(), activeACNames[0]))
+        {
+            EXPECT_EQ(queryOffsets[index], 0);
+        }
+        else if (0 == std::strcmp(queryNames.data(), activeACNames[1]))
+        {
+            EXPECT_EQ(queryOffsets[index], 4);
+        }
+        else if (0 == std::strcmp(queryNames.data(), activeACNames[2]))
+        {
+            EXPECT_EQ(queryOffsets[index], 12);
+        }
+        else if (0 == std::strcmp(queryNames.data(), activeACNames[3]))
+        {
+            EXPECT_EQ(queryOffsets[index], 24);
+        }
+        else
+        {
+            ASSERT(false);
+        }
+    }
+
+    // Create buffer with 9 GLuints = 36 bytes (0, 100, 200, ..., 800)
+    constexpr GLuint kInitialValues[kAtomicCounterCount] = {0,   100, 200, 300, 400,
+                                                            500, 600, 700, 800};
+
+    GLBuffer acBuffer;
+    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, acBuffer);
+    glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(kInitialValues), kInitialValues, GL_DYNAMIC_DRAW);
+    glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, acBuffer);
+    EXPECT_GL_NO_ERROR();
+
+    // Dispatch single 1x1x1 work group
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Make sure compute shader has finished writing
+    glMemoryBarrier(GL_ATOMIC_COUNTER_BARRIER_BIT);
+    EXPECT_GL_NO_ERROR();
+
+    // Read back buffer data
+    GLuint results[kAtomicCounterCount] = {};
+    void *ptr = glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(results), GL_MAP_READ_BIT);
+    ASSERT_NE(ptr, nullptr);
+    memcpy(results, ptr, sizeof(results));
+    glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
+
+    // Validate values:
+    // ac = 0 + 1 = 1
+    // acArray[0] = 100 - 1 = 99
+    // acArray[1] = 200 + 1 = 201
+    // acArrayArray[0][0] = 300 + 1 = 301
+    // acArrayArray[0][1] = 400 - 1 = 399
+    // acArrayArray[0][2] = 500 + 1 = 501
+    // acArrayArray[1][0] = 600 - 1 = 599
+    // acArrayArray[1][1] = 700 + 1 = 701
+    // acArrayArray[1][2] = 800 + 1 = 801
+    const GLuint kExpectedResults[kAtomicCounterCount] = {1, 99, 201, 301, 399, 501, 599, 701, 801};
+    for (uint32_t i = 0; i < kAtomicCounterCount; ++i)
+    {
+        EXPECT_EQ(results[i], kExpectedResults[i]) << "at index " << i;
+    }
+    EXPECT_GL_NO_ERROR();
+}
+
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(AtomicCounterBufferTest);
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(AtomicCounterBufferTest31);
 ANGLE_INSTANTIATE_TEST_ES3_AND_ES31(AtomicCounterBufferTest);

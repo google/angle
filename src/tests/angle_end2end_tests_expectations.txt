@@ -1739,6 +1739,9 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 404581995 ANDROID PIXEL4ORXL   : EGLDisplayTestES3.GetPlatformDisplayAndroidValidation/* = SKIP
 404581995 ANDROID GALAXYS22    : EGLDisplayTestES3.GetPlatformDisplayAndroidValidation/* = SKIP
 
+// Fails on D3D11
+412738262 D3D11 : AtomicCounterBufferTest31.AtomicCounterQueries/* = SKIP
+
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Slow tests, should appear last in this file
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

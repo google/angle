@@ -1757,9 +1757,9 @@ void ProgramLinkedResourcesLinker::getAtomicCounterBufferSizeMap(
         // binding. The end of the uniform is calculated by finding the initial offset of the
         // uniform and adding size of the uniform. For arrays, the size is the number of elements
         // times the element size (should always by 4 for atomic_units).
-        unsigned dataOffset =
-            glUniform.getOffset() + static_cast<unsigned int>(glUniform.getBasicTypeElementCount() *
-                                                              glUniform.getElementSize());
+        unsigned dataOffset = glUniform.getBlockOffset() +
+                              static_cast<unsigned int>(glUniform.getBasicTypeElementCount() *
+                                                        glUniform.getElementSize());
         if (dataOffset > bufferDataSize)
         {
             bufferDataSize = dataOffset;
