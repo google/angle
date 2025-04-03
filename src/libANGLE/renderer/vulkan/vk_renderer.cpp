@@ -386,11 +386,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     // http://anglebug.com/42266506 (VkNonDispatchableHandle on x86 bots)
     {
         "SYNC-HAZARD-READ-AFTER-WRITE",
-        "Hazard READ_AFTER_WRITE for VkBuffer",
-        "usage: SYNC_VERTEX_SHADER_SHADER_STORAGE_READ",
-    },
-    {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
         "Hazard READ_AFTER_WRITE for VkNonDispatchableHandle",
         "usage: SYNC_VERTEX_SHADER_SHADER_STORAGE_READ",
     },
