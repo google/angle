@@ -2818,10 +2818,16 @@ angle::Result TextureVk::generateMipmap(const gl::Context *context)
     vk::LevelIndex maxLevel  = mImage->toVkLevel(gl::LevelIndex(mState.getMipmapMaxLevel()));
     ASSERT(maxLevel != vk::LevelIndex(0));
 
-    if (getImageViews().hasColorspaceOverrideForWrite(*mImage))
+    const bool colorspaceOverrideForRead  = getImageViews().hasColorspaceOverrideForRead(*mImage);
+    const bool colorspaceOverrideForWrite = getImageViews().hasColorspaceOverrideForWrite(*mImage);
+
+    if (colorspaceOverrideForRead || colorspaceOverrideForWrite)
     {
         angle::FormatID actualFormatID =
-            getImageViews().getColorspaceOverrideFormatForWrite(mImage->getActualFormatID());
+            colorspaceOverrideForRead
+                ? getImageViews().getColorspaceOverrideFormatForRead(mImage->getActualFormatID())
+                : getImageViews().getColorspaceOverrideFormatForWrite(mImage->getActualFormatID());
+
         return contextVk->getUtils().generateMipmapWithDraw(
             contextVk, mImage, actualFormatID,
             gl::IsMipmapFiltered(mState.getSamplerState().getMinFilter()));

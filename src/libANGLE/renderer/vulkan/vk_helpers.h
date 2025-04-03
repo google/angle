@@ -3699,6 +3699,7 @@ class ImageViewHelper final : angle::NonCopyable
 
     // Helpers for colorspace state
     ImageViewColorspace getColorspaceForRead() const { return mReadColorspace; }
+
     bool hasColorspaceOverrideForRead(const ImageHelper &image) const
     {
         ASSERT(image.valid());
@@ -3716,7 +3717,7 @@ class ImageViewHelper final : angle::NonCopyable
                (image.getActualFormat().isSRGB &&
                 mWriteColorspace == vk::ImageViewColorspace::Linear);
     }
-    angle::FormatID getColorspaceOverrideFormatForWrite(angle::FormatID format) const;
+
     void updateStaticTexelFetch(const ImageHelper &image, bool staticTexelFetchAccess) const
     {
         if (mColorspaceState.hasStaticTexelFetchAccess != staticTexelFetchAccess)
@@ -3758,6 +3759,16 @@ class ImageViewHelper final : angle::NonCopyable
             mColorspaceState.eglImageColorspace = eglImageColorspace;
             updateColorspace(image);
         }
+    }
+
+    angle::FormatID getColorspaceOverrideFormatForRead(angle::FormatID format) const
+    {
+        return getColorspaceOverrideFormatImpl(mReadColorspace, format);
+    }
+
+    angle::FormatID getColorspaceOverrideFormatForWrite(angle::FormatID format) const
+    {
+        return getColorspaceOverrideFormatImpl(mWriteColorspace, format);
     }
 
   private:
@@ -3846,6 +3857,9 @@ class ImageViewHelper final : angle::NonCopyable
                                                  VkImageUsageFlags imageUsageFlags);
 
     void updateColorspace(const ImageHelper &image) const;
+
+    angle::FormatID getColorspaceOverrideFormatImpl(ImageViewColorspace colorspace,
+                                                    angle::FormatID format) const;
 
     // For applications that frequently switch a texture's base/max level, and make no other changes
     // to the texture, keep track of the currently-used base and max levels, and keep one "read

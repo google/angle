@@ -275,6 +275,39 @@ TEST_P(SRGBTextureTest, SRGBDecodeTextureParameter)
     EXPECT_PIXEL_COLOR_NEAR(0, 0, decodedToLinearColor, 1.0);
 }
 
+// Test that GL_SKIP_DECODE_EXT makes glGenerateMipmap skip sRGB conversion
+TEST_P(SRGBTextureTestES3, SRGBSkipEncodeAndDecodeInGenerateMipmap)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_sRGB_decode"));
+
+    constexpr angle::GLColor srgbColor(21, 30, 39, 24);
+    constexpr angle::GLColor linearColor(12, 16, 20, 24);
+    static const GLubyte input[4][4] = {{48, 64, 80, 96}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}};
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB8_ALPHA8, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, input);
+    ASSERT_GL_NO_ERROR();
+
+    glGenerateMipmap(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SRGB_DECODE_EXT, GL_SKIP_DECODE_EXT);
+
+    glUseProgram(mProgram);
+    glUniform1i(mTextureLocation, 0);
+
+    glViewport(0, 0, 1, 1);
+
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, srgbColor, 1.0);
+
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    glViewport(1, 0, 1, 1);
+
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(1, 0, linearColor, 1.0);
+}
+
 // Test interaction between SRGB decode and texelFetch
 TEST_P(SRGBTextureTestES3, SRGBDecodeTexelFetch)
 {
