@@ -283,6 +283,8 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdDraw-None-09462",
     // https://anglebug.com/394598758
     "VUID-vkBindBufferMemory-size-01037",
+    // https://anglebug.com/408190758
+    "VUID-vkQueueSubmit-pSignalSemaphores-00067",
 };
 
 // Validation messages that should be ignored only when VK_EXT_primitive_topology_list_restart is
