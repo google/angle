@@ -117,7 +117,10 @@ void ProvokingVertexHelper::releaseInFlightBuffers(ContextMtl *contextMtl)
 static uint buildIndexBufferKey(const mtl::ProvokingVertexComputePipelineDesc &pipelineDesc)
 {
     uint indexBufferKey              = 0;
-    switch (pipelineDesc.getElementsType())
+    gl::DrawElementsType elementType = (gl::DrawElementsType)pipelineDesc.elementType;
+    bool doPrimPrestart              = pipelineDesc.primitiveRestartEnabled;
+    gl::PrimitiveMode primMode       = pipelineDesc.primitiveMode;
+    switch (elementType)
     {
         case gl::DrawElementsType::UnsignedShort:
             indexBufferKey |= MtlFixIndexBufferKeyUint16 << MtlFixIndexBufferKeyInShift;
@@ -131,10 +134,8 @@ static uint buildIndexBufferKey(const mtl::ProvokingVertexComputePipelineDesc &p
             ASSERT(false);  // Index type should only be short or int.
             break;
     }
-    indexBufferKey |= static_cast<uint>(pipelineDesc.getPrimitiveMode())
-                      << MtlFixIndexBufferKeyModeShift;
-    indexBufferKey |=
-        pipelineDesc.isPrimitiveRestartEnabled() ? MtlFixIndexBufferKeyPrimRestart : 0;
+    indexBufferKey |= (uint)primMode << MtlFixIndexBufferKeyModeShift;
+    indexBufferKey |= doPrimPrestart ? MtlFixIndexBufferKeyPrimRestart : 0;
     // We only rewrite indices if we're switching the provoking vertex mode.
     indexBufferKey |= MtlFixIndexBufferKeyProvokingVertexLast;
     return indexBufferKey;
@@ -158,7 +159,7 @@ angle::Result ProvokingVertexHelper::getComputePipleineState(
     [fcValues setConstantValue:&indexBufferKey type:MTLDataTypeUInt withName:@"fixIndexBufferKey"];
 
     angle::ObjCPtr<id<MTLFunction>> computeShader;
-    if (desc.isGenerateIndices())
+    if (desc.generateIndices)
     {
         ANGLE_TRY(CreateMslShader(context, provokingVertexLibrary, @"genIndexBuffer",
                                   fcValues.get(), &computeShader));
@@ -202,8 +203,11 @@ angle::Result ProvokingVertexHelper::preconditionIndexBuffer(ContextMtl *context
     // Get specialized program
     // Upload index buffer
     // dispatch per-primitive?
-    mtl::ProvokingVertexComputePipelineDesc pipelineDesc(
-        primitiveMode, elementsType, primitiveRestartEnabled, /*generateIndices*/ false);
+    mtl::ProvokingVertexComputePipelineDesc pipelineDesc;
+    pipelineDesc.elementType             = (uint8_t)elementsType;
+    pipelineDesc.primitiveMode           = primitiveMode;
+    pipelineDesc.primitiveRestartEnabled = primitiveRestartEnabled;
+    pipelineDesc.generateIndices         = false;
     uint indexBufferKey                  = buildIndexBufferKey(pipelineDesc);
     uint primCount     = primCountForIndexCount(indexBufferKey, (uint32_t)indexCount);
     uint newIndexCount = indexCountForPrimCount(indexBufferKey, primCount);
@@ -247,8 +251,11 @@ angle::Result ProvokingVertexHelper::generateIndexBuffer(ContextMtl *context,
     // Get specialized program
     // Upload index buffer
     // dispatch per-primitive?
-    mtl::ProvokingVertexComputePipelineDesc pipelineDesc(
-        primitiveMode, elementsType, /*primitiveRestartEnabled*/ false, /*generateIndices*/ true);
+    mtl::ProvokingVertexComputePipelineDesc pipelineDesc;
+    pipelineDesc.elementType             = (uint8_t)elementsType;
+    pipelineDesc.primitiveMode           = primitiveMode;
+    pipelineDesc.primitiveRestartEnabled = false;
+    pipelineDesc.generateIndices         = true;
     uint indexBufferKey                  = buildIndexBufferKey(pipelineDesc);
     uint primCount        = primCountForIndexCount(indexBufferKey, (uint32_t)indexCount);
     uint newIndexCount    = indexCountForPrimCount(indexBufferKey, primCount);

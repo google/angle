@@ -900,11 +900,11 @@ angle::Result ProgramExecutableMtl::setupDraw(const gl::Context *glContext,
 
         // Cache current shader variant references for easier querying.
         mCurrentShaderVariants[gl::ShaderType::Vertex] =
-            &mVertexShaderVariants[pipelineDesc.getRasterizationType()];
+            &mVertexShaderVariants[pipelineDesc.rasterizationType];
 
-        const bool multisampledRendering = pipelineDesc.outputDescriptor.getRasterSampleCount() > 1;
+        const bool multisampledRendering = pipelineDesc.outputDescriptor.rasterSampleCount > 1;
         const bool allowFragDepthWrite =
-            pipelineDesc.outputDescriptor.getDepthAttachmentPixelFormat() != MTLPixelFormatInvalid;
+            pipelineDesc.outputDescriptor.depthAttachmentPixelFormat != 0;
         mCurrentShaderVariants[gl::ShaderType::Fragment] =
             pipelineDesc.rasterizationEnabled()
                 ? &mFragmentShaderVariants[PipelineParametersToFragmentShaderVariantIndex(
@@ -944,7 +944,7 @@ angle::Result ProgramExecutableMtl::getSpecializedShader(
     {
         // For vertex shader, we need to create 3 variants, one with emulated rasterization
         // discard, one with true rasterization discard and one without.
-        shaderVariant = &mVertexShaderVariants[renderPipelineDesc.getRasterizationType()];
+        shaderVariant = &mVertexShaderVariants[renderPipelineDesc.rasterizationType];
         if (shaderVariant->metalShader)
         {
             // Already created.
@@ -952,7 +952,7 @@ angle::Result ProgramExecutableMtl::getSpecializedShader(
             return angle::Result::Continue;
         }
 
-        if (renderPipelineDesc.getRasterizationType() == mtl::RenderPipelineRasterization::Disabled)
+        if (renderPipelineDesc.rasterizationType == mtl::RenderPipelineRasterization::Disabled)
         {
             // Special case: XFB output only vertex shader.
             ASSERT(!mExecutable->getLinkedTransformFeedbackVaryings().empty());
@@ -969,7 +969,7 @@ angle::Result ProgramExecutableMtl::getSpecializedShader(
 
         ANGLE_MTL_OBJC_SCOPE
         {
-            BOOL emulateDiscard = renderPipelineDesc.getRasterizationType() ==
+            BOOL emulateDiscard = renderPipelineDesc.rasterizationType ==
                                   mtl::RenderPipelineRasterization::EmulatedDiscard;
 
             NSString *discardEnabledStr =
@@ -986,10 +986,9 @@ angle::Result ProgramExecutableMtl::getSpecializedShader(
         // For fragment shader, we need to create 4 variants,
         // combining multisampled rendering and depth write enabled states.
         const bool multisampledRendering =
-            renderPipelineDesc.outputDescriptor.getRasterSampleCount() > 1;
+            renderPipelineDesc.outputDescriptor.rasterSampleCount > 1;
         const bool allowFragDepthWrite =
-            renderPipelineDesc.outputDescriptor.getDepthAttachmentPixelFormat() !=
-            MTLPixelFormatInvalid;
+            renderPipelineDesc.outputDescriptor.depthAttachmentPixelFormat != 0;
         shaderVariant = &mFragmentShaderVariants[PipelineParametersToFragmentShaderVariantIndex(
             multisampledRendering, allowFragDepthWrite)];
         if (shaderVariant->metalShader)
