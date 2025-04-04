@@ -14,23 +14,47 @@
 namespace gl
 {
 
-struct Version
+struct alignas(uint16_t) Version
 {
-    constexpr Version();
-    constexpr Version(uint8_t major, uint8_t minor);
+    // Avoid conflicts with linux system defines
+#undef major
+#undef minor
 
-    unsigned int major;
-    unsigned int minor;
+    constexpr Version() : minor(0), major(0) {}
+    constexpr Version(uint8_t major_, uint8_t minor_) : minor(minor_), major(major_) {}
+
+    constexpr bool operator==(const Version &other) const { return value() == other.value(); }
+    constexpr bool operator!=(const Version &other) const { return value() != other.value(); }
+    constexpr bool operator>=(const Version &other) const { return value() >= other.value(); }
+    constexpr bool operator<=(const Version &other) const { return value() <= other.value(); }
+    constexpr bool operator<(const Version &other) const { return value() < other.value(); }
+    constexpr bool operator>(const Version &other) const { return value() > other.value(); }
+
+    // These functions should not be used for compare operations.
+    constexpr uint32_t getMajor() const { return major; }
+    constexpr uint32_t getMinor() const { return minor; }
+
+    // Declaring minor before major makes the value() function
+    // return the struct's bytes as-is, as a single value.
+    uint8_t minor;
+    uint8_t major;
+
+  private:
+    constexpr uint16_t value() const { return (major << 8) | minor; }
 };
+static_assert(sizeof(Version) == 2);
 
-bool operator==(const Version &a, const Version &b);
-bool operator!=(const Version &a, const Version &b);
-bool operator>=(const Version &a, const Version &b);
-bool operator<=(const Version &a, const Version &b);
-bool operator<(const Version &a, const Version &b);
-bool operator>(const Version &a, const Version &b);
+static_assert(Version().getMajor() == 0 && Version().getMinor() == 0);
+static_assert(Version(4, 6) == Version(4, 6));
+static_assert(Version(1, 0) != Version(1, 1));
+static_assert(Version(1, 0) != Version(2, 0));
+static_assert(Version(2, 0) > Version(1, 0));
+static_assert(Version(3, 1) > Version(3, 0));
+static_assert(Version(3, 0) > Version(1, 1));
+static_assert(Version(2, 0) < Version(3, 0));
+static_assert(Version(3, 1) < Version(3, 2));
+static_assert(Version(1, 1) < Version(2, 0));
+
 }  // namespace gl
-
-#include "Version.inc"
 
 #endif  // LIBANGLE_VERSION_H_

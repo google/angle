@@ -319,7 +319,6 @@ libangle_headers = [
   "src/libANGLE/Uniform.h",
   "src/libANGLE/VaryingPacking.h",
   "src/libANGLE/Version.h",
-  "src/libANGLE/Version.inc",
   "src/libANGLE/VertexArray.h",
   "src/libANGLE/VertexAttribute.h",
   "src/libANGLE/VertexAttribute.inc",
