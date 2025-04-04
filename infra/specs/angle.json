@@ -3852,7 +3852,7 @@
       {
         "args": [
           "--gtest_filter=-*Vulkan_SwiftShader*",
-          "--max-processes=4",
+          "--max-processes=1",
           "--no-xvfb"
         ],
         "merge": {

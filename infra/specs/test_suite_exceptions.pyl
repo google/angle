@@ -48,6 +48,14 @@
         },
       },
     },
+    'replacements': {
+      # anglebug.com/408276172 suspecting WebGPU backend flakiness caused by multiprocess
+      'linux-intel': {
+        'args': {
+          '--max-processes': '1',
+        },
+      },
+    },
   },
   'angle_perftests': {
     'modifications': {
