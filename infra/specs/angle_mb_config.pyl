@@ -88,7 +88,7 @@
   # mb should use. See //tools/mb/docs/user_guide.md for more information.
   'mixins': {
     'android': {
-      'gn_args': 'target_os="android"',
+      'gn_args': 'target_os="android" android_static_analysis = "on"',
     },
     'angle': {
       'gn_args': 'is_component_build=true',
