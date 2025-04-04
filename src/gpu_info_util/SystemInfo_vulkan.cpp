@@ -143,41 +143,6 @@ VersionInfo ParseMoltenVulkanDriverVersion(uint32_t driverVersion)
     return version;
 }
 
-VKAPI_ATTR VkBool32 VKAPI_CALL
-VVLDebugUtilsMessenger(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
-                       VkDebugUtilsMessageTypeFlagsEXT messageTypes,
-                       const VkDebugUtilsMessengerCallbackDataEXT *callbackData,
-                       void *userData)
-{
-
-    // VUID-VkDebugUtilsMessengerCallbackDataEXT-pMessage-parameter
-    // pMessage must be a null-terminated UTF-8 string
-    ASSERT(callbackData->pMessage != nullptr);
-    // It is unexpected to see VVL error in GetSystemInfoVulkanWithICD().
-    // Fail with assert if there is any VVL error.
-    ASSERT(false);
-
-    return VK_FALSE;
-}
-
-constexpr const char *kVkKhronosValidationLayerName[] = {"VK_LAYER_KHRONOS_validation"};
-
-bool HasKhronosValidationLayer(const std::vector<VkLayerProperties> &layerProps)
-{
-    for (const auto &layerProp : layerProps)
-    {
-        std::string layerPropLayerName = std::string(layerProp.layerName);
-        if (layerPropLayerName == kVkKhronosValidationLayerName[0])
-        {
-            return true;
-        }
-    }
-
-    WARN() << "Vulkan validation layers are missing";
-
-    return false;
-}
-
 class VulkanLibrary final : NonCopyable
 {
   public:
@@ -185,13 +150,13 @@ class VulkanLibrary final : NonCopyable
 
     ~VulkanLibrary()
     {
-        if (mDebugUtilsMessenger)
-        {
-            mPfnDestroyDebugUtilsMessengerEXT(mInstance, mDebugUtilsMessenger, nullptr);
-        }
         if (mInstance != VK_NULL_HANDLE)
         {
-            mPfnDestroyInstance(mInstance, nullptr);
+            auto pfnDestroyInstance = getProc<PFN_vkDestroyInstance>("vkDestroyInstance");
+            if (pfnDestroyInstance)
+            {
+                pfnDestroyInstance(mInstance, nullptr);
+            }
         }
 
         CloseSystemLibrary(mLibVulkan);
@@ -201,20 +166,23 @@ class VulkanLibrary final : NonCopyable
     {
         std::vector<std::string> extensionNames;
 
-        if (!mPfnEnumerateInstanceExtensionProperties)
+        auto pfnEnumerateInstanceExtensionProperties =
+            getProc<PFN_vkEnumerateInstanceExtensionProperties>(
+                "vkEnumerateInstanceExtensionProperties");
+        if (!pfnEnumerateInstanceExtensionProperties)
         {
             return extensionNames;
         }
 
         uint32_t extensionCount = 0;
-        if (mPfnEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr) !=
+        if (pfnEnumerateInstanceExtensionProperties(nullptr, &extensionCount, nullptr) !=
             VK_SUCCESS)
         {
             return extensionNames;
         }
 
         std::vector<VkExtensionProperties> extensions(extensionCount);
-        if (mPfnEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data()) !=
+        if (pfnEnumerateInstanceExtensionProperties(nullptr, &extensionCount, extensions.data()) !=
             VK_SUCCESS)
         {
             return extensionNames;
@@ -245,42 +213,13 @@ class VulkanLibrary final : NonCopyable
             return VK_NULL_HANDLE;
         }
 
-        mPfnGetInstanceProcAddr =
-            getProcWithDLSym<PFN_vkGetInstanceProcAddr>("vkGetInstanceProcAddr");
-        if (!mPfnGetInstanceProcAddr)
-        {
-            return VK_NULL_HANDLE;
-        }
-
-        mPfnCreateInstance = getProc<PFN_vkCreateInstance>(NULL, "vkCreateInstance");
-        if (!mPfnCreateInstance)
-        {
-            return VK_NULL_HANDLE;
-        }
-
-        mPfnEnumerateInstanceLayerProperties = getProc<PFN_vkEnumerateInstanceLayerProperties>(
-            NULL, "vkEnumerateInstanceLayerProperties");
-        if (!mPfnEnumerateInstanceLayerProperties)
-        {
-            return VK_NULL_HANDLE;
-        }
-
-        mPfnEnumerateInstanceExtensionProperties =
-            getProc<PFN_vkEnumerateInstanceExtensionProperties>(
-                NULL, "vkEnumerateInstanceExtensionProperties");
-        if (!mPfnEnumerateInstanceExtensionProperties)
-        {
-            return VK_NULL_HANDLE;
-        }
-
-        mPfnEnumerateInstanceVersion =
-            getProc<PFN_vkEnumerateInstanceVersion>(NULL, "vkEnumerateInstanceVersion");
-
         // Determine the available Vulkan instance version:
         uint32_t instanceVersion = VK_API_VERSION_1_0;
 #if defined(VK_VERSION_1_1)
-        if (!mPfnEnumerateInstanceVersion ||
-            mPfnEnumerateInstanceVersion(&instanceVersion) != VK_SUCCESS)
+        auto pfnEnumerateInstanceVersion =
+            getProc<PFN_vkEnumerateInstanceVersion>("vkEnumerateInstanceVersion");
+        if (!pfnEnumerateInstanceVersion ||
+            pfnEnumerateInstanceVersion(&instanceVersion) != VK_SUCCESS)
         {
             instanceVersion = VK_API_VERSION_1_0;
         }
@@ -301,29 +240,6 @@ class VulkanLibrary final : NonCopyable
             hasPortabilityEnumeration = true;
         }
 
-        // Enable vulkan validation layer
-        bool enableValidationLayer = false;
-        // Only enable validation layer when asserts are enabled
-#if !defined(NDEBUG) || defined(ANGLE_ASSERT_ALWAYS_ON)
-        uint32_t instanceLayerCount = 0;
-        {
-            mPfnEnumerateInstanceLayerProperties(&instanceLayerCount, nullptr);
-        }
-        std::vector<VkLayerProperties> instanceLayerProps(instanceLayerCount);
-        if (instanceLayerCount > 0)
-        {
-            mPfnEnumerateInstanceLayerProperties(&instanceLayerCount, instanceLayerProps.data());
-        }
-        enableValidationLayer = HasKhronosValidationLayer(instanceLayerProps);
-#endif
-        bool hasDebugMessengerExtension = false;
-        if (enableValidationLayer &&
-            ExtensionFound(VK_EXT_DEBUG_UTILS_EXTENSION_NAME, availableInstanceExtensions))
-        {
-            enabledInstanceExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
-            hasDebugMessengerExtension = true;
-        }
-
         // Create a Vulkan instance:
         VkApplicationInfo appInfo;
         appInfo.sType              = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -333,34 +249,14 @@ class VulkanLibrary final : NonCopyable
         appInfo.pEngineName        = "";
         appInfo.engineVersion      = 1;
         appInfo.apiVersion         = instanceVersion;
-        VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
-        VkInstanceCreateInfo createInstanceInfo{};
+
+        VkInstanceCreateInfo createInstanceInfo;
         createInstanceInfo.sType               = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-        if (enableValidationLayer)
-        {
-            createInstanceInfo.enabledLayerCount   = 1;
-            createInstanceInfo.ppEnabledLayerNames = kVkKhronosValidationLayerName;
-
-            if (hasDebugMessengerExtension)
-            {
-                constexpr VkDebugUtilsMessageSeverityFlagsEXT kSeveritiesToLog =
-                    VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT |
-                    VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT;
-
-                constexpr VkDebugUtilsMessageTypeFlagsEXT kMessagesToLog =
-                    VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT |
-                    VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT |
-                    VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
-
-                debugCreateInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
-                debugCreateInfo.messageSeverity = kSeveritiesToLog;
-                debugCreateInfo.messageType     = kMessagesToLog;
-                debugCreateInfo.pfnUserCallback = &VVLDebugUtilsMessenger;
-                debugCreateInfo.pUserData       = nullptr;
-                createInstanceInfo.pNext        = &debugCreateInfo;
-            }
-        }
+        createInstanceInfo.pNext               = nullptr;
+        createInstanceInfo.flags               = 0;
         createInstanceInfo.pApplicationInfo    = &appInfo;
+        createInstanceInfo.enabledLayerCount   = 0;
+        createInstanceInfo.ppEnabledLayerNames = nullptr;
         createInstanceInfo.enabledExtensionCount =
             static_cast<uint32_t>(enabledInstanceExtensions.size());
         createInstanceInfo.ppEnabledExtensionNames =
@@ -371,102 +267,25 @@ class VulkanLibrary final : NonCopyable
             createInstanceInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
         }
 
-        if (mPfnCreateInstance(&createInstanceInfo, nullptr, &mInstance) != VK_SUCCESS)
+        auto pfnCreateInstance = getProc<PFN_vkCreateInstance>("vkCreateInstance");
+        if (!pfnCreateInstance ||
+            pfnCreateInstance(&createInstanceInfo, nullptr, &mInstance) != VK_SUCCESS)
         {
             return VK_NULL_HANDLE;
         }
 
-        mPfnDestroyInstance = getProc<PFN_vkDestroyInstance>(mInstance, "vkDestroyInstance");
-        if (!mPfnDestroyInstance)
-        {
-            return VK_NULL_HANDLE;
-        }
-
-        mPfnEnumeratePhysicalDevices =
-            getProc<PFN_vkEnumeratePhysicalDevices>(mInstance, "vkEnumeratePhysicalDevices");
-        if (!mPfnEnumeratePhysicalDevices)
-        {
-            return VK_NULL_HANDLE;
-        }
-        mPfnGetPhysicalDeviceProperties =
-            getProc<PFN_vkGetPhysicalDeviceProperties>(mInstance, "vkGetPhysicalDeviceProperties");
-        if (!mPfnGetPhysicalDeviceProperties)
-        {
-            return VK_NULL_HANDLE;
-        }
-        if (instanceVersion >= VK_VERSION_1_1)
-        {
-            mPfnGetPhysicalDeviceProperties2 = getProc<PFN_vkGetPhysicalDeviceProperties2>(
-                mInstance, "vkGetPhysicalDeviceProperties2");
-            if (!mPfnGetPhysicalDeviceProperties2)
-            {
-                return VK_NULL_HANDLE;
-            }
-        }
-
-        mPfnCreateDebugUtilsMessengerEXT = getProc<PFN_vkCreateDebugUtilsMessengerEXT>(
-            mInstance, "vkCreateDebugUtilsMessengerEXT");
-
-        mPfnDestroyDebugUtilsMessengerEXT = getProc<PFN_vkDestroyDebugUtilsMessengerEXT>(
-            mInstance, "vkDestroyDebugUtilsMessengerEXT");
-
-        // Set up vulkan validation layer debug messenger to relay the VVL error to the callback
-        // function VVLDebugUtilsMessenger.
-        hasDebugMessengerExtension = hasDebugMessengerExtension &&
-                                     mPfnCreateDebugUtilsMessengerEXT &&
-                                     mPfnDestroyDebugUtilsMessengerEXT;
-        if (hasDebugMessengerExtension)
-        {
-            ASSERT(debugCreateInfo.sType ==
-                   VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT);
-            mPfnCreateDebugUtilsMessengerEXT(mInstance, &debugCreateInfo, nullptr,
-                                             &mDebugUtilsMessenger);
-        }
         return mInstance;
     }
 
     template <typename Func>
-    Func getProcWithDLSym(const char *fn) const
+    Func getProc(const char *fn) const
     {
         return reinterpret_cast<Func>(angle::GetLibrarySymbol(mLibVulkan, fn));
-    }
-
-    template <typename Func>
-    Func getProc(const VkInstance instance, const char *fn) const
-    {
-        return (Func)mPfnGetInstanceProcAddr(instance, fn);
-    }
-
-    PFN_vkEnumeratePhysicalDevices getEnumeratePhysicalDevicesFunc()
-    {
-        return mPfnEnumeratePhysicalDevices;
-    }
-
-    PFN_vkGetPhysicalDeviceProperties getPhysicalDevicePropertiesFunc()
-    {
-        return mPfnGetPhysicalDeviceProperties;
-    }
-
-    PFN_vkGetPhysicalDeviceProperties2 getPhysicalDeviceProperties2Func()
-    {
-        return mPfnGetPhysicalDeviceProperties2;
     }
 
   private:
     void *mLibVulkan     = nullptr;
     VkInstance mInstance = VK_NULL_HANDLE;
-    VkDebugUtilsMessengerEXT mDebugUtilsMessenger = VK_NULL_HANDLE;
-    PFN_vkGetInstanceProcAddr mPfnGetInstanceProcAddr;
-    PFN_vkCreateInstance mPfnCreateInstance;
-    PFN_vkDestroyInstance mPfnDestroyInstance;
-    PFN_vkEnumerateInstanceVersion mPfnEnumerateInstanceVersion;
-    PFN_vkEnumerateInstanceLayerProperties mPfnEnumerateInstanceLayerProperties;
-    PFN_vkEnumerateInstanceExtensionProperties mPfnEnumerateInstanceExtensionProperties;
-    PFN_vkEnumeratePhysicalDevices mPfnEnumeratePhysicalDevices;
-    PFN_vkGetPhysicalDeviceProperties mPfnGetPhysicalDeviceProperties;
-    PFN_vkGetPhysicalDeviceProperties2 mPfnGetPhysicalDeviceProperties2;
-    PFN_vkCreateDebugUtilsMessengerEXT mPfnCreateDebugUtilsMessengerEXT;
-    PFN_vkDestroyDebugUtilsMessengerEXT mPfnDestroyDebugUtilsMessengerEXT;
 };
 
 ANGLE_FORMAT_PRINTF(1, 2)
@@ -507,11 +326,15 @@ bool GetSystemInfoVulkanWithICD(SystemInfo *info, vk::ICD preferredICD)
     }
 
     // Enumerate the Vulkan physical devices, which are ANGLE gpus:
-    auto pfnEnumeratePhysicalDevices     = vkLibrary.getEnumeratePhysicalDevicesFunc();
-    auto pfnGetPhysicalDeviceProperties  = vkLibrary.getPhysicalDevicePropertiesFunc();
-    auto pfnGetPhysicalDeviceProperties2 = vkLibrary.getPhysicalDeviceProperties2Func();
+    auto pfnEnumeratePhysicalDevices =
+        vkLibrary.getProc<PFN_vkEnumeratePhysicalDevices>("vkEnumeratePhysicalDevices");
+    auto pfnGetPhysicalDeviceProperties =
+        vkLibrary.getProc<PFN_vkGetPhysicalDeviceProperties>("vkGetPhysicalDeviceProperties");
+    auto pfnGetPhysicalDeviceProperties2 =
+        vkLibrary.getProc<PFN_vkGetPhysicalDeviceProperties2>("vkGetPhysicalDeviceProperties2");
     uint32_t physicalDeviceCount = 0;
-    if (pfnEnumeratePhysicalDevices(instance, &physicalDeviceCount, nullptr) != VK_SUCCESS)
+    if (!pfnEnumeratePhysicalDevices || !pfnGetPhysicalDeviceProperties ||
+        pfnEnumeratePhysicalDevices(instance, &physicalDeviceCount, nullptr) != VK_SUCCESS)
     {
         return false;
     }
