@@ -38,14 +38,14 @@ struct CLKernelArgument
         uint32_t op3;
         uint32_t descriptorSet;
         uint32_t pushConstOffset;
-        uint32_t workgroupSpecId;
+        uint32_t workgroupBufferSpecId;
     };
     union
     {
         uint32_t op4;
         uint32_t descriptorBinding;
         uint32_t pushConstantSize;
-        uint32_t workgroupSize;
+        uint32_t workgroupBufferElemSize;
     };
     union
     {
@@ -155,7 +155,6 @@ class CLKernelVk : public CLKernelImpl
 
     vk::ShaderProgramHelper mShaderProgramHelper;
     ComputePipelineCache mComputePipelineCache;
-    KernelSpecConstants mSpecConstants;
 
     // Pipeline and DescriptorSetLayout Shared pointers
     vk::PipelineLayoutPtr mPipelineLayout;

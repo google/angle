@@ -201,12 +201,6 @@ angle::Result CLKernelVk::setArg(cl_uint argIndex, size_t argSize, const void *a
                         argValue, arg.podStorageBufferOffset, argSize));
                 }
                 break;
-            case NonSemanticClspvReflectionArgumentWorkgroup:
-                ASSERT(arg.workgroupSize != 0);
-                mSpecConstants.push_back(
-                    KernelSpecConstant{.ID   = arg.workgroupSpecId,
-                                       .data = static_cast<uint32_t>(argSize / arg.workgroupSize)});
-                break;
             case NonSemanticClspvReflectionArgumentUniform:
             case NonSemanticClspvReflectionArgumentStorageBuffer:
             case NonSemanticClspvReflectionArgumentStorageImage:
@@ -217,6 +211,7 @@ angle::Result CLKernelVk::setArg(cl_uint argIndex, size_t argSize, const void *a
                 arg.handle     = *static_cast<const cl_mem *>(argValue);
                 arg.handleSize = argSize;
                 break;
+            case NonSemanticClspvReflectionArgumentWorkgroup:
             default:
                 // Just store ptr and size (if we end up here)
                 arg.handle     = const_cast<void *>(argValue);
@@ -339,12 +334,19 @@ angle::Result CLKernelVk::getOrCreateComputePipeline(vk::PipelineCacheAccess *pi
         constantDataOffset += sizeof(uint32_t);
     }
     // Populate kernel specialization constants (if any)
-    for (const auto &specConstant : mSpecConstants)
+    for (const auto &arg : mArgs)
     {
-        specConstantData.push_back(specConstant.data);
-        mapEntries.push_back(VkSpecializationMapEntry{
-            .constantID = specConstant.ID, .offset = constantDataOffset, .size = sizeof(uint32_t)});
-        constantDataOffset += sizeof(uint32_t);
+        if (arg.used && arg.type == NonSemanticClspvReflectionArgumentWorkgroup)
+        {
+            ASSERT(arg.workgroupBufferElemSize != 0);
+
+            specConstantData.push_back(
+                static_cast<uint32_t>(arg.handleSize / arg.workgroupBufferElemSize));
+            mapEntries.push_back(VkSpecializationMapEntry{.constantID = arg.workgroupBufferSpecId,
+                                                          .offset     = constantDataOffset,
+                                                          .size       = sizeof(uint32_t)});
+            constantDataOffset += sizeof(uint32_t);
+        }
     }
     VkSpecializationInfo computeSpecializationInfo{
         .mapEntryCount = static_cast<uint32_t>(mapEntries.size()),
