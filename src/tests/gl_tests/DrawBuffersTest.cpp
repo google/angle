@@ -1298,20 +1298,20 @@ TEST_P(DrawBuffersTestES3, BlendWithDrawBufferAndFramebufferChanges)
     }
     ASSERT_GL_NO_ERROR();
 
-    glEnablei(GL_BLEND, 0);
-    glEnablei(GL_BLEND, 1);
-    glEnablei(GL_BLEND, 2);
-    glEnablei(GL_BLEND, 3);
+    glEnableiOES(GL_BLEND, 0);
+    glEnableiOES(GL_BLEND, 1);
+    glEnableiOES(GL_BLEND, 2);
+    glEnableiOES(GL_BLEND, 3);
 
-    glBlendEquationi(0, GL_FUNC_REVERSE_SUBTRACT);
-    glBlendEquationi(1, GL_MIN);
-    glBlendEquationi(2, GL_FUNC_REVERSE_SUBTRACT);
-    glBlendEquationi(3, GL_FUNC_REVERSE_SUBTRACT);
+    glBlendEquationiOES(0, GL_FUNC_REVERSE_SUBTRACT);
+    glBlendEquationiOES(1, GL_MIN);
+    glBlendEquationiOES(2, GL_FUNC_REVERSE_SUBTRACT);
+    glBlendEquationiOES(3, GL_FUNC_REVERSE_SUBTRACT);
 
-    glBlendFunci(0, GL_ONE, GL_ONE);
-    glBlendFunci(1, GL_DST_ALPHA, GL_DST_ALPHA);
-    glBlendFunci(2, GL_SRC_ALPHA, GL_SRC_ALPHA);
-    glBlendFunci(3, GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA);
+    glBlendFunciOES(0, GL_ONE, GL_ONE);
+    glBlendFunciOES(1, GL_DST_ALPHA, GL_DST_ALPHA);
+    glBlendFunciOES(2, GL_SRC_ALPHA, GL_SRC_ALPHA);
+    glBlendFunciOES(3, GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA);
 
     bufs[0] = GL_NONE;
     bufs[2] = GL_NONE;

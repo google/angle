@@ -18,7 +18,6 @@ namespace
 enum class DrawCallVariants
 {
     DrawRangeElements,
-    DrawRangeElementsBaseVertex,
     DrawRangeElementsBaseVertexEXT,
     DrawRangeElementsBaseVertexOES,
 };
@@ -42,10 +41,6 @@ class DrawRangeElementsTest : public ANGLETest<>
         {
             case DrawCallVariants::DrawRangeElements:
                 glDrawRangeElements(GL_TRIANGLES, 0, 1000, count, GL_UNSIGNED_BYTE, nullptr);
-                break;
-            case DrawCallVariants::DrawRangeElementsBaseVertex:
-                glDrawRangeElementsBaseVertex(GL_TRIANGLES, 0, 1000, count, GL_UNSIGNED_BYTE,
-                                              nullptr, baseVertex);
                 break;
             case DrawCallVariants::DrawRangeElementsBaseVertexEXT:
                 glDrawRangeElementsBaseVertexEXT(GL_TRIANGLES, 0, 1000, count, GL_UNSIGNED_BYTE,
@@ -110,14 +105,6 @@ TEST_P(WebGLDrawRangeElementsTest, DrawRangeElementArrayZeroCount)
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
 
     doDrawRangeElementsVariant(DrawCallVariants::DrawRangeElements);
-}
-
-// Test that glDrawRangeElementsBaseVertex generates an error when trying to
-// draw from an empty element array buffer with count other than 0 and no error
-// when count equals 0.
-TEST_P(WebGLDrawRangeElementsTest, DrawRangeElementBaseVertexArrayZeroCount)
-{
-    doDrawRangeElementsVariant(DrawCallVariants::DrawRangeElementsBaseVertex);
 }
 
 // Test that glDrawRangeElementsBaseVertexEXT generates an error when trying to

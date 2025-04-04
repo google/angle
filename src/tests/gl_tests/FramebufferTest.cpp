@@ -4896,6 +4896,8 @@ void main()
 // KHR-GLES32.core.draw_buffers_indexed.color_masks
 TEST_P(FramebufferTest_ES31, ClearWithColorMasksRGB5A1)
 {
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_draw_buffers_indexed"));
+
     constexpr int kSize  = 4;
     GLint maxDrawBuffers = 0;
     glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
@@ -4942,22 +4944,22 @@ TEST_P(FramebufferTest_ES31, ClearWithColorMasksRGB5A1)
     {
         if (i % 4 == 0)
         {
-            glColorMaski(i, GL_TRUE, GL_FALSE, GL_FALSE, GL_FALSE);
+            glColorMaskiOES(i, GL_TRUE, GL_FALSE, GL_FALSE, GL_FALSE);
         }
 
         if (i % 4 == 1)
         {
-            glColorMaski(i, GL_FALSE, GL_TRUE, GL_FALSE, GL_FALSE);
+            glColorMaskiOES(i, GL_FALSE, GL_TRUE, GL_FALSE, GL_FALSE);
         }
 
         if (i % 4 == 2)
         {
-            glColorMaski(i, GL_FALSE, GL_FALSE, GL_TRUE, GL_FALSE);
+            glColorMaskiOES(i, GL_FALSE, GL_FALSE, GL_TRUE, GL_FALSE);
         }
 
         if (i % 4 == 3)
         {
-            glColorMaski(i, GL_FALSE, GL_FALSE, GL_FALSE, GL_TRUE);
+            glColorMaskiOES(i, GL_FALSE, GL_FALSE, GL_FALSE, GL_TRUE);
         }
     }
 
@@ -5026,7 +5028,7 @@ TEST_P(FramebufferTest_ES31, ClearWithColorMasksRGB5A1)
     // Set the framebuffer color mask back to default values
     for (int i = 0; i < maxDrawBuffers; ++i)
     {
-        glColorMaski(i, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+        glColorMaskiOES(i, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
     }
 
     ASSERT_GL_NO_ERROR();
