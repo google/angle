@@ -592,7 +592,7 @@ const char *ValidateProgramDrawAdvancedBlendState(const Context *context,
     const DrawBufferMask &enabledDrawBufferMask        = state.getBlendStateExt().getEnabledMask();
 
     // Zero (default) means everything is BlendEquationType::Add, so check can be skipped
-    if (state.getBlendStateExt().getEquationColorBits() != 0)
+    if (ANGLE_UNLIKELY(state.getBlendStateExt().getEquationColorBits() != 0))
     {
         for (size_t blendEnabledBufferIndex : enabledDrawBufferMask)
         {
@@ -649,49 +649,54 @@ ANGLE_INLINE const char *ValidateProgramDrawStates(const Context *context,
         const int framebufferNumViews = framebuffer->getNumViews();
 
         // num_views layout qualifiers are allowed only in vertex shaders.
-        if (hasVertexShader && (framebufferNumViews != programNumViews))
+        if (hasVertexShader && ANGLE_UNLIKELY(framebufferNumViews != programNumViews))
         {
             return gl::err::kMultiviewMismatch;
         }
 
-        if (state.isTransformFeedbackActiveUnpaused() && framebufferNumViews > 1)
+        if (ANGLE_UNLIKELY(state.isTransformFeedbackActiveUnpaused()) &&
+            ANGLE_UNLIKELY(framebufferNumViews > 1))
         {
             return gl::err::kMultiviewTransformFeedback;
         }
 
-        if (extensions.disjointTimerQueryEXT && framebufferNumViews > 1 &&
-            state.isQueryActive(QueryType::TimeElapsed))
+        if (extensions.disjointTimerQueryEXT && ANGLE_UNLIKELY(framebufferNumViews > 1) &&
+            ANGLE_UNLIKELY(state.isQueryActive(QueryType::TimeElapsed)))
         {
             return gl::err::kMultiviewTimerQuery;
         }
     }
 
-    // Uniform buffer validation
-    for (size_t uniformBlockIndex = 0; uniformBlockIndex < executable.getUniformBlocks().size();
-         uniformBlockIndex++)
+    if (ANGLE_UNLIKELY(context->isWebGL() || context->isBufferAccessValidationEnabled()))
     {
-        const InterfaceBlock &uniformBlock = executable.getUniformBlockByIndex(uniformBlockIndex);
-        GLuint blockBinding                = executable.getUniformBlockBinding(uniformBlockIndex);
-        const OffsetBindingPointer<Buffer> &uniformBuffer =
-            state.getIndexedUniformBuffer(blockBinding);
-
-        if (uniformBuffer.get() == nullptr && context->isWebGL())
+        // Uniform buffer validation
+        for (size_t uniformBlockIndex = 0; uniformBlockIndex < executable.getUniformBlocks().size();
+             uniformBlockIndex++)
         {
-            // undefined behaviour
-            return gl::err::kUniformBufferUnbound;
-        }
+            const InterfaceBlock &uniformBlock =
+                executable.getUniformBlockByIndex(uniformBlockIndex);
+            GLuint blockBinding = executable.getUniformBlockBinding(uniformBlockIndex);
+            const OffsetBindingPointer<Buffer> &uniformBuffer =
+                state.getIndexedUniformBuffer(blockBinding);
 
-        size_t uniformBufferSize = GetBoundBufferAvailableSize(uniformBuffer);
-        if (uniformBufferSize < uniformBlock.pod.dataSize &&
-            (context->isWebGL() || context->isBufferAccessValidationEnabled()))
-        {
-            // undefined behaviour
-            return gl::err::kUniformBufferTooSmall;
-        }
+            if (uniformBuffer.get() == nullptr && context->isWebGL())
+            {
+                // undefined behaviour
+                return gl::err::kUniformBufferUnbound;
+            }
 
-        if (uniformBuffer->hasWebGLXFBBindingConflict(context->isWebGL()))
-        {
-            return gl::err::kUniformBufferBoundForTransformFeedback;
+            size_t uniformBufferSize = GetBoundBufferAvailableSize(uniformBuffer);
+            if (uniformBufferSize < uniformBlock.pod.dataSize &&
+                (context->isWebGL() || context->isBufferAccessValidationEnabled()))
+            {
+                // undefined behaviour
+                return gl::err::kUniformBufferTooSmall;
+            }
+
+            if (uniformBuffer->hasWebGLXFBBindingConflict(context->isWebGL()))
+            {
+                return gl::err::kUniformBufferBoundForTransformFeedback;
+            }
         }
     }
 
@@ -703,14 +708,14 @@ ANGLE_INLINE const char *ValidateProgramDrawStates(const Context *context,
         const auto &shaderPLSFormats   = executable.getPixelLocalStorageFormats();
         size_t activePLSCount          = context->getState().getPixelLocalStorageActivePlanes();
 
-        if (shaderPLSFormats.size() > activePLSCount)
+        if (ANGLE_UNLIKELY(shaderPLSFormats.size() > activePLSCount))
         {
             // INVALID_OPERATION is generated if a draw is issued with a fragment shader that has a
             // pixel local uniform bound to an inactive pixel local storage plane.
             return gl::err::kPLSDrawProgramPlanesInactive;
         }
 
-        if (shaderPLSFormats.size() < activePLSCount)
+        if (ANGLE_UNLIKELY(shaderPLSFormats.size() < activePLSCount))
         {
             // INVALID_OPERATION is generated if a draw is issued with a fragment shader that does
             // _not_ have a pixel local uniform bound to an _active_ pixel local storage plane
@@ -723,7 +728,7 @@ ANGLE_INLINE const char *ValidateProgramDrawStates(const Context *context,
         {
             const auto &plsPlane = pls->getPlane(static_cast<GLint>(i));
             ASSERT(plsPlane.isActive());
-            if (shaderPLSFormats[i] == ShPixelLocalStorageFormat::NotPLS)
+            if (ANGLE_UNLIKELY(shaderPLSFormats[i] == ShPixelLocalStorageFormat::NotPLS))
             {
                 // INVALID_OPERATION is generated if a draw is issued with a fragment shader that
                 // does _not_ have a pixel local uniform bound to an _active_ pixel local storage
@@ -732,8 +737,8 @@ ANGLE_INLINE const char *ValidateProgramDrawStates(const Context *context,
                 return gl::err::kPLSDrawProgramActivePlanesUnused;
             }
 
-            if (ShPixelLocalStorageFormatToGLenum(shaderPLSFormats[i]) !=
-                plsPlane.getInternalformat())
+            if (ANGLE_UNLIKELY(ShPixelLocalStorageFormatToGLenum(shaderPLSFormats[i]) !=
+                               plsPlane.getInternalformat()))
             {
                 // INVALID_OPERATION is generated if a draw is issued with a fragment shader that
                 // has a pixel local storage uniform whose format layout qualifier does not
@@ -4200,7 +4205,8 @@ const char *ValidateDrawStates(const Context *context, GLenum *outErrorCode)
     VertexArray *vertexArray = state.getVertexArray();
     ASSERT(vertexArray);
 
-    if (!extensions.webglCompatibilityANGLE && vertexArray->hasInvalidMappedArrayBuffer())
+    if (!extensions.webglCompatibilityANGLE &&
+        ANGLE_UNLIKELY(vertexArray->hasInvalidMappedArrayBuffer()))
     {
         return kBufferMapped;
     }
@@ -4210,8 +4216,8 @@ const char *ValidateDrawStates(const Context *context, GLenum *outErrorCode)
     Framebuffer *framebuffer = state.getDrawFramebuffer();
     ASSERT(framebuffer);
 
-    if (context->getLimitations().noSeparateStencilRefsAndMasks ||
-        extensions.webglCompatibilityANGLE)
+    if (ANGLE_UNLIKELY(context->getLimitations().noSeparateStencilRefsAndMasks ||
+                       extensions.webglCompatibilityANGLE))
     {
         ASSERT(framebuffer);
         const FramebufferAttachment *dsAttachment =
@@ -4249,13 +4255,13 @@ const char *ValidateDrawStates(const Context *context, GLenum *outErrorCode)
         const DrawBufferMask blendEnabledActiveFloat32ColorAttachmentDrawBufferMask =
             state.getBlendEnabledDrawBufferMask() &
             framebuffer->getActiveFloat32ColorAttachmentDrawBufferMask();
-        if (blendEnabledActiveFloat32ColorAttachmentDrawBufferMask.any())
+        if (ANGLE_UNLIKELY(blendEnabledActiveFloat32ColorAttachmentDrawBufferMask.any()))
         {
             return kUnsupportedFloatBlending;
         }
     }
 
-    if (extensions.renderSharedExponentQCOM)
+    if (ANGLE_UNLIKELY(extensions.renderSharedExponentQCOM))
     {
         if (!ValidateColorMasksForSharedExponentColorBuffers(state.getBlendStateExt(), framebuffer))
         {
@@ -4263,8 +4269,8 @@ const char *ValidateDrawStates(const Context *context, GLenum *outErrorCode)
         }
     }
 
-    if (context->getLimitations().noSimultaneousConstantColorAndAlphaBlendFunc ||
-        extensions.webglCompatibilityANGLE)
+    if (ANGLE_UNLIKELY(context->getLimitations().noSimultaneousConstantColorAndAlphaBlendFunc ||
+                       extensions.webglCompatibilityANGLE))
     {
         if (state.hasSimultaneousConstantColorAndAlphaBlendFunc())
         {
@@ -4279,7 +4285,7 @@ const char *ValidateDrawStates(const Context *context, GLenum *outErrorCode)
     }
 
     const FramebufferStatus &framebufferStatus = framebuffer->checkStatus(context);
-    if (!framebufferStatus.isComplete())
+    if (ANGLE_UNLIKELY(!framebufferStatus.isComplete()))
     {
         *outErrorCode = GL_INVALID_FRAMEBUFFER_OPERATION;
         ASSERT(framebufferStatus.reason);
@@ -4287,7 +4293,7 @@ const char *ValidateDrawStates(const Context *context, GLenum *outErrorCode)
     }
 
     bool framebufferIsYUV = framebuffer->hasYUVAttachment();
-    if (framebufferIsYUV)
+    if (ANGLE_UNLIKELY(framebufferIsYUV))
     {
         const BlendState &blendState = state.getBlendState();
         if (!blendState.colorMaskRed || !blendState.colorMaskGreen || !blendState.colorMaskBlue ||
@@ -4306,7 +4312,7 @@ const char *ValidateDrawStates(const Context *context, GLenum *outErrorCode)
     }
     else
     {
-        if (framebuffer->hasExternalTextureAttachment())
+        if (ANGLE_UNLIKELY(framebuffer->hasExternalTextureAttachment()))
         {
             // It is an error to render into an external texture that is not YUV.
             return kExternalTextureAttachmentNotYUV;
@@ -4315,7 +4321,7 @@ const char *ValidateDrawStates(const Context *context, GLenum *outErrorCode)
 
     // Advanced blend equation can only be enabled for a single render target.
     const BlendStateExt &blendStateExt = state.getBlendStateExt();
-    if (blendStateExt.getUsesAdvancedBlendEquationMask().any())
+    if (ANGLE_UNLIKELY(blendStateExt.getUsesAdvancedBlendEquationMask().any()))
     {
         const size_t drawBufferCount            = framebuffer->getDrawbufferStateCount();
         uint32_t advancedBlendRenderTargetCount = 0;
@@ -4338,7 +4344,7 @@ const char *ValidateDrawStates(const Context *context, GLenum *outErrorCode)
     }
 
     // Dual-source blending functions limit the number of supported draw buffers.
-    if (blendStateExt.getUsesExtendedBlendFactorMask().any())
+    if (ANGLE_UNLIKELY(blendStateExt.getUsesExtendedBlendFactorMask().any()))
     {
         // Imply the strictest spec interpretation to pass on all OpenGL drivers:
         // dual-source blending is considered active if the blend state contains
@@ -4354,7 +4360,7 @@ const char *ValidateDrawStates(const Context *context, GLenum *outErrorCode)
         }
     }
 
-    if (context->getStateCache().hasAnyEnabledClientAttrib())
+    if (ANGLE_UNLIKELY(context->getStateCache().hasAnyEnabledClientAttrib()))
     {
         if (extensions.webglCompatibilityANGLE || !state.areClientArraysEnabled())
         {
@@ -4374,7 +4380,7 @@ const char *ValidateDrawStates(const Context *context, GLenum *outErrorCode)
     }
 
     // If we are running GLES1, there is no current program.
-    if (context->getClientVersion() >= Version(2, 0))
+    if (ANGLE_LIKELY(context->getClientVersion() >= Version(2, 0)))
     {
         Program *program                    = state.getLinkedProgram(context);
         ProgramPipeline *programPipeline    = state.getLinkedProgramPipeline(context);
@@ -4382,7 +4388,7 @@ const char *ValidateDrawStates(const Context *context, GLenum *outErrorCode)
 
         bool programIsYUVOutput = false;
 
-        if (program)
+        if (ANGLE_LIKELY(program))
         {
             const char *errorMsg = ValidateProgramDrawStates(context, extensions, *executable);
             if (errorMsg)
@@ -4392,7 +4398,7 @@ const char *ValidateDrawStates(const Context *context, GLenum *outErrorCode)
 
             programIsYUVOutput = executable->isYUVOutput();
         }
-        else if (programPipeline)
+        else if (ANGLE_UNLIKELY(programPipeline))
         {
             const char *errorMsg = ValidateProgramPipelineAttachedPrograms(programPipeline);
             if (errorMsg)
@@ -4414,14 +4420,14 @@ const char *ValidateDrawStates(const Context *context, GLenum *outErrorCode)
             programIsYUVOutput = executable->isYUVOutput();
         }
 
-        if (executable)
+        if (ANGLE_LIKELY(executable))
         {
             if (!executable->validateSamplers(context->getCaps()))
             {
                 return kTextureTypeConflict;
             }
 
-            if (executable->hasLinkedTessellationShader())
+            if (ANGLE_UNLIKELY(executable->hasLinkedTessellationShader()))
             {
                 if (!executable->hasLinkedShaderStage(ShaderType::Vertex))
                 {
@@ -4435,7 +4441,7 @@ const char *ValidateDrawStates(const Context *context, GLenum *outErrorCode)
                 }
             }
 
-            if (state.isTransformFeedbackActive())
+            if (ANGLE_UNLIKELY(state.isTransformFeedbackActive()))
             {
                 if (!ValidateProgramExecutableXFBBuffersPresent(context, executable))
                 {
@@ -4456,7 +4462,7 @@ const char *ValidateDrawStates(const Context *context, GLenum *outErrorCode)
         }
 
         // Do some additional WebGL-specific validation
-        if (extensions.webglCompatibilityANGLE)
+        if (ANGLE_UNLIKELY(extensions.webglCompatibilityANGLE))
         {
             const TransformFeedback *transformFeedbackObject = state.getCurrentTransformFeedback();
             if (state.isTransformFeedbackActive() &&
@@ -4507,7 +4513,7 @@ const char *ValidateDrawStates(const Context *context, GLenum *outErrorCode)
         }
 
         // The QCOM_framebuffer_foveated spec:
-        if (framebuffer->isFoveationEnabled())
+        if (ANGLE_UNLIKELY(framebuffer->isFoveationEnabled()))
         {
             ASSERT(extensions.framebufferFoveatedQCOM);
 
@@ -4687,7 +4693,7 @@ const char *ValidateDrawElementsStates(const Context *context)
 {
     const State &state = context->getState();
 
-    if (context->getStateCache().isTransformFeedbackActiveUnpaused())
+    if (ANGLE_UNLIKELY(context->getStateCache().isTransformFeedbackActiveUnpaused()))
     {
         // EXT_geometry_shader allows transform feedback to work with all draw commands.
         // [EXT_geometry_shader] Section 12.1, "Transform Feedback"
@@ -4705,13 +4711,14 @@ const char *ValidateDrawElementsStates(const Context *context)
 
     if (elementArrayBuffer)
     {
-        if (elementArrayBuffer->hasWebGLXFBBindingConflict(context->isWebGL()))
+        if (ANGLE_UNLIKELY(context->isWebGL()) &&
+            elementArrayBuffer->hasWebGLXFBBindingConflict(context->isWebGL()))
         {
             return kElementArrayBufferBoundForTransformFeedback;
         }
-        if (elementArrayBuffer->isMapped() &&
-            (!elementArrayBuffer->isImmutable() ||
-             (elementArrayBuffer->getAccessFlags() & GL_MAP_PERSISTENT_BIT_EXT) == 0))
+        if (ANGLE_UNLIKELY(elementArrayBuffer->isMapped()) &&
+            ANGLE_UNLIKELY(!elementArrayBuffer->isImmutable() ||
+                           (elementArrayBuffer->getAccessFlags() & GL_MAP_PERSISTENT_BIT_EXT) == 0))
         {
             return kBufferMapped;
         }
@@ -4721,7 +4728,7 @@ const char *ValidateDrawElementsStates(const Context *context)
         // [WebGL 1.0] Section 6.2 No Client Side Arrays
         // If an indexed draw command (drawElements) is called and no WebGLBuffer is bound to
         // the ELEMENT_ARRAY_BUFFER binding point, an INVALID_OPERATION error is generated.
-        if (!context->getState().areClientArraysEnabled() || context->isWebGL())
+        if (ANGLE_UNLIKELY(!context->getState().areClientArraysEnabled() || context->isWebGL()))
         {
             return kMustHaveElementArrayBinding;
         }
