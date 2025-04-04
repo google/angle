@@ -6001,18 +6001,6 @@ void Context::enableVertexAttribArray(GLuint index)
     mStateCache.onVertexArrayStateChange(this);
 }
 
-void Context::vertexAttribPointer(GLuint index,
-                                  GLint size,
-                                  VertexAttribType type,
-                                  GLboolean normalized,
-                                  GLsizei stride,
-                                  const void *ptr)
-{
-    mState.setVertexAttribPointer(this, index, mState.getTargetBuffer(BufferBinding::Array), size,
-                                  type, ConvertToBool(normalized), stride, ptr);
-    mStateCache.onVertexArrayStateChange(this);
-}
-
 void Context::vertexAttribFormat(GLuint attribIndex,
                                  GLint size,
                                  VertexAttribType type,

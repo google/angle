@@ -7,6 +7,7 @@
 // Context_gles_1_0.cpp: Implements the GLES1-specific parts of Context.
 
 #include "libANGLE/Context.h"
+#include "libANGLE/Context.inl.h"
 
 #include "common/mathutil.h"
 #include "common/utilities.h"
