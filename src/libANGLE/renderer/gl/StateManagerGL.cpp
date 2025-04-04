@@ -964,7 +964,7 @@ angle::Result StateManagerGL::onMakeCurrent(const gl::Context *context)
 
     // Seamless cubemaps are required for ES3 and higher contexts. It should be the cheapest to set
     // this state here since MakeCurrent is expected to be called less frequently than draw calls.
-    setTextureCubemapSeamlessEnabled(context->getClientMajorVersion() >= 3);
+    setTextureCubemapSeamlessEnabled(context->getClientVersion() >= gl::ES_3_0);
 
     return angle::Result::Continue;
 }

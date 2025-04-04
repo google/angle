@@ -637,7 +637,7 @@ bool ValidCapUncommon(const PrivateState &state, ErrorSet *errors, GLenum cap, b
 
         case GL_PRIMITIVE_RESTART_FIXED_INDEX:
         case GL_RASTERIZER_DISCARD:
-            return (state.getClientMajorVersion() >= 3);
+            return state.getClientVersion() >= ES_3_0;
 
         case GL_DEBUG_OUTPUT_SYNCHRONOUS:
         case GL_DEBUG_OUTPUT:
@@ -894,7 +894,7 @@ bool ValidateDstBlendFunc(const PrivateState &state,
     if (val == GL_SRC_ALPHA_SATURATE)
     {
         // Unextended ES2 does not allow GL_SRC_ALPHA_SATURATE as a dst blend func.
-        if (state.getClientMajorVersion() < 3 && !state.getExtensions().blendFuncExtendedEXT)
+        if (state.getClientVersion() < ES_3_0 && !state.getExtensions().blendFuncExtendedEXT)
         {
             errors->validationError(entryPoint, GL_INVALID_ENUM, kInvalidBlendFunction);
             return false;
@@ -2902,14 +2902,13 @@ bool ValidateTexImage2D(const Context *context,
                         GLenum type,
                         const void *pixels)
 {
-    if (context->getClientMajorVersion() < 3)
+    if (context->getClientVersion() < ES_3_0)
     {
         return ValidateES2TexImageParameters(context, entryPoint, target, level, internalformat,
                                              false, false, 0, 0, width, height, border, format,
                                              type, -1, pixels);
     }
 
-    ASSERT(context->getClientMajorVersion() >= 3);
     return ValidateES3TexImage2DParameters(context, entryPoint, target, level, internalformat,
                                            false, false, 0, 0, 0, width, height, 1, border, format,
                                            type, -1, pixels);
@@ -2933,14 +2932,13 @@ bool ValidateTexImage2DRobustANGLE(const Context *context,
         return false;
     }
 
-    if (context->getClientMajorVersion() < 3)
+    if (context->getClientVersion() < ES_3_0)
     {
         return ValidateES2TexImageParameters(context, entryPoint, target, level, internalformat,
                                              false, false, 0, 0, width, height, border, format,
                                              type, bufSize, pixels);
     }
 
-    ASSERT(context->getClientMajorVersion() >= 3);
     return ValidateES3TexImage2DParameters(context, entryPoint, target, level, internalformat,
                                            false, false, 0, 0, 0, width, height, 1, border, format,
                                            type, bufSize, pixels);
@@ -2959,14 +2957,13 @@ bool ValidateTexSubImage2D(const Context *context,
                            const void *pixels)
 {
 
-    if (context->getClientMajorVersion() < 3)
+    if (context->getClientVersion() < ES_3_0)
     {
         return ValidateES2TexImageParameters(context, entryPoint, target, level, GL_NONE, false,
                                              true, xoffset, yoffset, width, height, 0, format, type,
                                              -1, pixels);
     }
 
-    ASSERT(context->getClientMajorVersion() >= 3);
     return ValidateES3TexImage2DParameters(context, entryPoint, target, level, GL_NONE, false, true,
                                            xoffset, yoffset, 0, width, height, 1, 0, format, type,
                                            -1, pixels);
@@ -2990,14 +2987,13 @@ bool ValidateTexSubImage2DRobustANGLE(const Context *context,
         return false;
     }
 
-    if (context->getClientMajorVersion() < 3)
+    if (context->getClientVersion() < ES_3_0)
     {
         return ValidateES2TexImageParameters(context, entryPoint, target, level, GL_NONE, false,
                                              true, xoffset, yoffset, width, height, 0, format, type,
                                              bufSize, pixels);
     }
 
-    ASSERT(context->getClientMajorVersion() >= 3);
     return ValidateES3TexImage2DParameters(context, entryPoint, target, level, GL_NONE, false, true,
                                            xoffset, yoffset, 0, width, height, 1, 0, format, type,
                                            bufSize, pixels);
@@ -3038,7 +3034,7 @@ bool ValidateCompressedTexImage2D(const Context *context,
                                   GLsizei imageSize,
                                   const void *data)
 {
-    if (context->getClientMajorVersion() < 3)
+    if (context->getClientVersion() < ES_3_0)
     {
         if (!ValidateES2TexImageParameters(context, entryPoint, target, level, internalformat, true,
                                            false, 0, 0, width, height, border, GL_NONE, GL_NONE, -1,
@@ -3049,7 +3045,6 @@ bool ValidateCompressedTexImage2D(const Context *context,
     }
     else
     {
-        ASSERT(context->getClientMajorVersion() >= 3);
         if (!ValidateES3TexImage2DParameters(context, entryPoint, target, level, internalformat,
                                              true, false, 0, 0, 0, width, height, 1, border,
                                              GL_NONE, GL_NONE, -1, data))
@@ -3159,7 +3154,7 @@ bool ValidateCompressedTexSubImage2D(const Context *context,
                                      GLsizei imageSize,
                                      const void *data)
 {
-    if (context->getClientMajorVersion() < 3)
+    if (context->getClientVersion() < ES_3_0)
     {
         if (!ValidateES2TexImageParameters(context, entryPoint, target, level, GL_NONE, true, true,
                                            xoffset, yoffset, width, height, 0, format, GL_NONE, -1,
@@ -3170,7 +3165,6 @@ bool ValidateCompressedTexSubImage2D(const Context *context,
     }
     else
     {
-        ASSERT(context->getClientMajorVersion() >= 3);
         if (!ValidateES3TexImage2DParameters(context, entryPoint, target, level, GL_NONE, true,
                                              true, xoffset, yoffset, 0, width, height, 1, 0, format,
                                              GL_NONE, -1, data))
@@ -3837,7 +3831,7 @@ bool ValidateBufferData(const Context *context,
         case BufferUsage::StreamCopy:
         case BufferUsage::StaticCopy:
         case BufferUsage::DynamicCopy:
-            if (context->getClientMajorVersion() < 3)
+            if (context->getClientVersion() < ES_3_0)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidBufferUsage);
                 return false;
@@ -3995,7 +3989,7 @@ bool ValidateActiveTexture(const PrivateState &state,
                            angle::EntryPoint entryPoint,
                            GLenum texture)
 {
-    if (state.getClientMajorVersion() < 2)
+    if (state.getClientVersion() < ES_2_0)
     {
         return ValidateMultitextureUnit(state, errors, entryPoint, texture);
     }
@@ -4367,7 +4361,7 @@ bool ValidateRenderbufferStorageMultisampleANGLE(const Context *context,
     // the specified storage. This is different than ES 3.0 in which a sample number higher
     // than the maximum sample number supported by this format generates a GL_INVALID_VALUE.
     // The TextureCaps::getMaxSamples method is only guarenteed to be valid when the context is ES3.
-    if (context->getClientMajorVersion() >= 3)
+    if (context->getClientVersion() >= ES_3_0)
     {
         const TextureCaps &formatCaps = context->getTextureCaps().get(internalformat);
         if (static_cast<GLuint>(samples) > formatCaps.getMaxSamples())
@@ -5026,7 +5020,7 @@ bool ValidateHint(const PrivateState &state,
         case GL_POINT_SMOOTH_HINT:
         case GL_LINE_SMOOTH_HINT:
         case GL_FOG_HINT:
-            if (state.getClientMajorVersion() >= 2)
+            if (state.getClientVersion() >= ES_2_0)
             {
                 errors->validationErrorF(entryPoint, GL_INVALID_ENUM, kEnumNotSupported, target);
                 return false;
@@ -5083,7 +5077,7 @@ bool ValidatePixelStorei(const PrivateState &state,
                          GLenum pname,
                          GLint param)
 {
-    if (state.getClientMajorVersion() < 3)
+    if (state.getClientVersion() < ES_3_0)
     {
         switch (pname)
         {
@@ -5463,13 +5457,12 @@ bool ValidateCopyTexImage2D(const Context *context,
                             GLsizei height,
                             GLint border)
 {
-    if (context->getClientMajorVersion() < 3)
+    if (context->getClientVersion() < ES_3_0)
     {
         return ValidateES2CopyTexImageParameters(context, entryPoint, target, level, internalformat,
                                                  false, 0, 0, x, y, width, height, border);
     }
 
-    ASSERT(context->getClientMajorVersion() == 3);
     return ValidateES3CopyTexImage2DParameters(context, entryPoint, target, level, internalformat,
                                                false, 0, 0, 0, x, y, width, height, border);
 }
@@ -5485,7 +5478,7 @@ bool ValidateCopyTexSubImage2D(const Context *context,
                                GLsizei width,
                                GLsizei height)
 {
-    if (context->getClientMajorVersion() < 3)
+    if (context->getClientVersion() < ES_3_0)
     {
         return ValidateES2CopyTexImageParameters(context, entryPoint, target, level, GL_NONE, true,
                                                  xoffset, yoffset, x, y, width, height, 0);
@@ -5627,7 +5620,7 @@ bool ValidateFramebufferTexture2D(const Context *context,
 {
     // Attachments are required to be bound to level 0 without ES3 or the GL_OES_fbo_render_mipmap
     // extension
-    if (context->getClientMajorVersion() < 3 && !context->getExtensions().fboRenderMipmapOES &&
+    if (context->getClientVersion() < ES_3_0 && !context->getExtensions().fboRenderMipmapOES &&
         level != 0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidFramebufferTextureLevel);
@@ -5772,7 +5765,7 @@ bool ValidateFramebufferTexture3DOES(const Context *context,
 
     // Attachments are required to be bound to level 0 without ES3 or the
     // GL_OES_fbo_render_mipmap extension
-    if (context->getClientMajorVersion() < 3 && !context->getExtensions().fboRenderMipmapOES &&
+    if (context->getClientVersion() < ES_3_0 && !context->getExtensions().fboRenderMipmapOES &&
         level != 0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidFramebufferTextureLevel);
@@ -6118,13 +6111,12 @@ bool ValidateTexStorage2DEXT(const Context *context,
         return false;
     }
 
-    if (context->getClientMajorVersion() < 3)
+    if (context->getClientVersion() < ES_3_0)
     {
         return ValidateES2TexStorageParametersBase(context, entryPoint, type, levels,
                                                    internalformat, width, height);
     }
 
-    ASSERT(context->getClientMajorVersion() >= 3);
     return ValidateES3TexStorage2DParameters(context, entryPoint, type, levels, internalformat,
                                              width, height, 1);
 }
@@ -6231,7 +6223,7 @@ bool ValidateTexStorage3DEXT(const Context *context,
         return false;
     }
 
-    if (context->getClientMajorVersion() < 3)
+    if (context->getClientVersion() < ES_3_0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -6330,7 +6322,7 @@ bool ValidateFramebufferTexture2DMultisampleEXT(const Context *context,
     // EXT_multisampled_render_to_texture returns INVALID_OPERATION when a sample number higher than
     // the maximum sample number supported by this format is passed.
     // The TextureCaps::getMaxSamples method is only guarenteed to be valid when the context is ES3.
-    if (texture.value != 0 && context->getClientMajorVersion() >= 3)
+    if (texture.value != 0 && context->getClientVersion() >= ES_3_0)
     {
         Texture *tex                  = context->getTexture(texture);
         GLenum sizedInternalFormat    = tex->getFormat(textarget, level).info->sizedInternalFormat;
@@ -6391,7 +6383,7 @@ bool ValidateRenderbufferStorageMultisampleEXT(const Context *context,
     // the specified storage. This is different than ES 3.0 in which a sample number higher
     // than the maximum sample number supported by this format generates a GL_INVALID_VALUE.
     // The TextureCaps::getMaxSamples method is only guarenteed to be valid when the context is ES3.
-    if (context->getClientMajorVersion() >= 3)
+    if (context->getClientVersion() >= ES_3_0)
     {
         const TextureCaps &formatCaps = context->getTextureCaps().get(internalformat);
         if (static_cast<GLuint>(samples) > formatCaps.getMaxSamples())
@@ -6454,18 +6446,18 @@ void RecordBindTextureTypeError(const Context *context,
 
         case TextureType::_3D:
         case TextureType::_2DArray:
-            ASSERT(context->getClientMajorVersion() < 3);
+            ASSERT(context->getClientVersion() < ES_3_0);
             ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kES3Required);
             break;
 
         case TextureType::_2DMultisample:
-            ASSERT(context->getClientVersion() < Version(3, 1) &&
+            ASSERT(context->getClientVersion() < ES_3_1 &&
                    !context->getExtensions().textureMultisampleANGLE);
             ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kMultisampleTextureExtensionOrES31Required);
             break;
 
         case TextureType::_2DMultisampleArray:
-            ASSERT(context->getClientVersion() < Version(3, 2) &&
+            ASSERT(context->getClientVersion() < ES_3_2 &&
                    !context->getExtensions().textureStorageMultisample2dArrayOES);
             ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kMultisampleArrayExtensionOrES32Required);
             break;

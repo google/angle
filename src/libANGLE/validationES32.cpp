@@ -414,7 +414,7 @@ bool ValidateGetPointerv(const Context *context,
         case GL_COLOR_ARRAY_POINTER:
         case GL_TEXTURE_COORD_ARRAY_POINTER:
         case GL_POINT_SIZE_ARRAY_POINTER_OES:
-            if (context->getClientMajorVersion() != 1)
+            if (context->getClientVersion() >= ES_2_0)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidPointerQuery);
                 return false;

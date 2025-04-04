@@ -3208,7 +3208,7 @@ bool GetQueryParameterInfo(const State &glState,
 {
     const Caps &caps             = glState.getCaps();
     const Extensions &extensions = glState.getExtensions();
-    GLint clientMajorVersion     = glState.getClientMajorVersion();
+    const Version &clientVersion = glState.getClientVersion();
 
     // Please note: the query type returned for DEPTH_CLEAR_VALUE in this implementation
     // is FLOAT rather than INT, as would be suggested by the GL ES 2.0 spec. This is due
@@ -3322,7 +3322,7 @@ bool GetQueryParameterInfo(const State &glState,
         case GL_MAX_DRAW_BUFFERS_EXT:
         case GL_MAX_COLOR_ATTACHMENTS_EXT:
         {
-            if ((clientMajorVersion < 3) && !extensions.drawBuffersEXT)
+            if ((clientVersion < ES_3_0) && !extensions.drawBuffersEXT)
             {
                 return false;
             }
@@ -3404,7 +3404,7 @@ bool GetQueryParameterInfo(const State &glState,
         }
         case GL_COLOR_LOGIC_OP:
         {
-            if (clientMajorVersion == 1)
+            if (clientVersion < ES_2_0)
             {
                 // Handle logicOp in GLES1 through GLES1 state management.
                 break;
@@ -3508,7 +3508,7 @@ bool GetQueryParameterInfo(const State &glState,
         case GL_CLIP_DISTANCE5_EXT:
         case GL_CLIP_DISTANCE6_EXT:
         case GL_CLIP_DISTANCE7_EXT:
-            if (clientMajorVersion < 2)
+            if (clientVersion < ES_2_0)
             {
                 break;
             }
@@ -3690,7 +3690,7 @@ bool GetQueryParameterInfo(const State &glState,
     {
         // GL_DRAW_FRAMEBUFFER_BINDING equivalent to GL_FRAMEBUFFER_BINDING
         case GL_READ_FRAMEBUFFER_BINDING:
-            if ((clientMajorVersion < 3) && !extensions.framebufferBlitAny())
+            if ((clientVersion < ES_3_0) && !extensions.framebufferBlitAny())
             {
                 return false;
             }
@@ -3699,7 +3699,7 @@ bool GetQueryParameterInfo(const State &glState,
             return true;
 
         case GL_NUM_PROGRAM_BINARY_FORMATS_OES:
-            if ((clientMajorVersion < 3) && !extensions.getProgramBinaryOES)
+            if ((clientVersion < ES_3_0) && !extensions.getProgramBinaryOES)
             {
                 return false;
             }
@@ -3708,7 +3708,7 @@ bool GetQueryParameterInfo(const State &glState,
             return true;
 
         case GL_PROGRAM_BINARY_FORMATS_OES:
-            if ((clientMajorVersion < 3) && !extensions.getProgramBinaryOES)
+            if ((clientVersion < ES_3_0) && !extensions.getProgramBinaryOES)
             {
                 return false;
             }
@@ -3719,7 +3719,7 @@ bool GetQueryParameterInfo(const State &glState,
         case GL_PACK_ROW_LENGTH:
         case GL_PACK_SKIP_ROWS:
         case GL_PACK_SKIP_PIXELS:
-            if ((clientMajorVersion < 3) && !extensions.packSubimageNV)
+            if ((clientVersion < ES_3_0) && !extensions.packSubimageNV)
             {
                 return false;
             }
@@ -3729,7 +3729,7 @@ bool GetQueryParameterInfo(const State &glState,
         case GL_UNPACK_ROW_LENGTH:
         case GL_UNPACK_SKIP_ROWS:
         case GL_UNPACK_SKIP_PIXELS:
-            if ((clientMajorVersion < 3) && !extensions.unpackSubimageEXT)
+            if ((clientVersion < ES_3_0) && !extensions.unpackSubimageEXT)
             {
                 return false;
             }
@@ -3737,7 +3737,7 @@ bool GetQueryParameterInfo(const State &glState,
             *numParams = 1;
             return true;
         case GL_VERTEX_ARRAY_BINDING:
-            if ((clientMajorVersion < 3) && !extensions.vertexArrayObjectOES)
+            if ((clientVersion < ES_3_0) && !extensions.vertexArrayObjectOES)
             {
                 return false;
             }
@@ -3746,7 +3746,7 @@ bool GetQueryParameterInfo(const State &glState,
             return true;
         case GL_PIXEL_PACK_BUFFER_BINDING:
         case GL_PIXEL_UNPACK_BUFFER_BINDING:
-            if ((clientMajorVersion < 3) && !extensions.pixelBufferObjectNV)
+            if ((clientVersion < ES_3_0) && !extensions.pixelBufferObjectNV)
             {
                 return false;
             }
@@ -3756,7 +3756,7 @@ bool GetQueryParameterInfo(const State &glState,
         case GL_MAX_SAMPLES:
             static_assert(GL_MAX_SAMPLES_ANGLE == GL_MAX_SAMPLES,
                           "GL_MAX_SAMPLES_ANGLE not equal to GL_MAX_SAMPLES");
-            if ((clientMajorVersion < 3) && !(extensions.framebufferMultisampleANGLE ||
+            if ((clientVersion < ES_3_0) && !(extensions.framebufferMultisampleANGLE ||
                                               extensions.multisampledRenderToTextureEXT))
             {
                 return false;
@@ -3765,7 +3765,7 @@ bool GetQueryParameterInfo(const State &glState,
             *numParams = 1;
             return true;
         case GL_FRAGMENT_SHADER_DERIVATIVE_HINT:
-            if ((clientMajorVersion < 3) && !extensions.standardDerivativesOES)
+            if ((clientVersion < ES_3_0) && !extensions.standardDerivativesOES)
             {
                 return false;
             }
@@ -3773,7 +3773,7 @@ bool GetQueryParameterInfo(const State &glState,
             *numParams = 1;
             return true;
         case GL_TEXTURE_BINDING_3D:
-            if ((clientMajorVersion < 3) && !extensions.texture3DOES)
+            if ((clientVersion < ES_3_0) && !extensions.texture3DOES)
             {
                 return false;
             }
@@ -3781,7 +3781,7 @@ bool GetQueryParameterInfo(const State &glState,
             *numParams = 1;
             return true;
         case GL_MAX_3D_TEXTURE_SIZE:
-            if ((clientMajorVersion < 3) && !extensions.texture3DOES)
+            if ((clientVersion < ES_3_0) && !extensions.texture3DOES)
             {
                 return false;
             }

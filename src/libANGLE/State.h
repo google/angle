@@ -228,7 +228,6 @@ class PrivateState : angle::NonCopyable
     void reset();
 
     const Version &getClientVersion() const { return mClientVersion; }
-    GLint getClientMajorVersion() const { return mClientVersion.getMajor(); }
 
     bool isWebGL() const { return getExtensions().webglCompatibilityANGLE; }
     bool isWebGL1() const { return isWebGL() && getClientVersion() == ES_2_0; }
@@ -789,7 +788,6 @@ class State : angle::NonCopyable
     bool hasRobustAccess() const { return mHasRobustAccess; }
     bool hasProtectedContent() const { return mHasProtectedContent; }
     bool isDebugContext() const { return mIsDebugContext; }
-    GLint getClientMajorVersion() const { return mPrivateState.getClientMajorVersion(); }
     const Version &getClientVersion() const { return mPrivateState.getClientVersion(); }
     egl::ShareGroup *getShareGroup() const { return mShareGroup; }
 

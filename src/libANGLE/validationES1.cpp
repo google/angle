@@ -19,7 +19,7 @@
 #define ANGLE_VALIDATE_IS_GLES1(state, errors, entryPoint)                         \
     do                                                                             \
     {                                                                              \
-        if (state.getClientMajorVersion() > 1)                                     \
+        if (state.getClientVersion() >= ES_2_0)                                    \
         {                                                                          \
             errors->validationError(entryPoint, GL_INVALID_OPERATION, kGLES1Only); \
             return false;                                                          \

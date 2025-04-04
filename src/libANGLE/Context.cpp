@@ -9094,7 +9094,7 @@ bool Context::usingDisplaySemaphoreShareGroup() const
 
 GLenum Context::getConvertedRenderbufferFormat(GLenum internalformat) const
 {
-    if (isWebGL() && mState.getClientMajorVersion() == 2 && internalformat == GL_DEPTH_STENCIL)
+    if (isWebGL1() && internalformat == GL_DEPTH_STENCIL)
     {
         return GL_DEPTH24_STENCIL8;
     }
@@ -10404,9 +10404,9 @@ void StateCache::updateValidDrawModes(Context *context)
 void StateCache::updateValidBindTextureTypes(Context *context)
 {
     const Extensions &exts = context->getExtensions();
-    bool isGLES3           = context->getClientMajorVersion() >= 3;
-    bool isGLES31          = context->getClientVersion() >= Version(3, 1);
-    bool isGLES32          = context->getClientVersion() >= Version(3, 2);
+    const bool isGLES3     = context->getClientVersion() >= ES_3_0;
+    const bool isGLES31    = context->getClientVersion() >= ES_3_1;
+    const bool isGLES32    = context->getClientVersion() >= ES_3_2;
 
     mCachedValidBindTextureTypes = {{
         {TextureType::_2D, true},
@@ -10426,7 +10426,7 @@ void StateCache::updateValidBindTextureTypes(Context *context)
 void StateCache::updateValidDrawElementsTypes(Context *context)
 {
     bool supportsUint =
-        (context->getClientMajorVersion() >= 3 || context->getExtensions().elementIndexUintOES);
+        (context->getClientVersion() >= ES_3_0 || context->getExtensions().elementIndexUintOES);
 
     mCachedValidDrawElementsTypes = {{
         {DrawElementsType::UnsignedByte, true},
@@ -10451,7 +10451,7 @@ void StateCache::updateVertexAttribTypesValidation(Context *context)
                                                          ? VertexAttribTypeCase::ValidSize3or4
                                                          : VertexAttribTypeCase::Invalid;
 
-    if (context->getClientMajorVersion() <= 2)
+    if (context->getClientVersion() < ES_3_0)
     {
         mCachedVertexAttribTypesValidation = {{
             {VertexAttribType::Byte, VertexAttribTypeCase::Valid},

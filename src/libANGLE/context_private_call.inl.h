@@ -703,47 +703,47 @@ inline void ContextPrivatePixelStorei(PrivateState *privateState,
             break;
 
         case GL_UNPACK_ROW_LENGTH:
-            ASSERT(privateState->getClientMajorVersion() >= 3 ||
+            ASSERT(privateState->getClientVersion() >= ES_3_0 ||
                    privateState->getExtensions().unpackSubimageEXT);
             privateState->setUnpackRowLength(param);
             break;
 
         case GL_UNPACK_IMAGE_HEIGHT:
-            ASSERT(privateState->getClientMajorVersion() >= 3);
+            ASSERT(privateState->getClientVersion() >= ES_3_0);
             privateState->setUnpackImageHeight(param);
             break;
 
         case GL_UNPACK_SKIP_IMAGES:
-            ASSERT(privateState->getClientMajorVersion() >= 3);
+            ASSERT(privateState->getClientVersion() >= ES_3_0);
             privateState->setUnpackSkipImages(param);
             break;
 
         case GL_UNPACK_SKIP_ROWS:
-            ASSERT((privateState->getClientMajorVersion() >= 3) ||
+            ASSERT((privateState->getClientVersion() >= ES_3_0) ||
                    privateState->getExtensions().unpackSubimageEXT);
             privateState->setUnpackSkipRows(param);
             break;
 
         case GL_UNPACK_SKIP_PIXELS:
-            ASSERT((privateState->getClientMajorVersion() >= 3) ||
+            ASSERT((privateState->getClientVersion() >= ES_3_0) ||
                    privateState->getExtensions().unpackSubimageEXT);
             privateState->setUnpackSkipPixels(param);
             break;
 
         case GL_PACK_ROW_LENGTH:
-            ASSERT((privateState->getClientMajorVersion() >= 3) ||
+            ASSERT((privateState->getClientVersion() >= ES_3_0) ||
                    privateState->getExtensions().packSubimageNV);
             privateState->setPackRowLength(param);
             break;
 
         case GL_PACK_SKIP_ROWS:
-            ASSERT((privateState->getClientMajorVersion() >= 3) ||
+            ASSERT((privateState->getClientVersion() >= ES_3_0) ||
                    privateState->getExtensions().packSubimageNV);
             privateState->setPackSkipRows(param);
             break;
 
         case GL_PACK_SKIP_PIXELS:
-            ASSERT((privateState->getClientMajorVersion() >= 3) ||
+            ASSERT((privateState->getClientVersion() >= ES_3_0) ||
                    privateState->getExtensions().packSubimageNV);
             privateState->setPackSkipPixels(param);
             break;

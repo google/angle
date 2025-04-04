@@ -372,7 +372,7 @@ bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
         // extension, due to some underspecification problems, we must allow linear filtering
         // for legacy compatibility with WebGL 1.0.
         // See http://crbug.com/649200
-        if (state.getClientMajorVersion() >= 3 && info->sized)
+        if (state.getClientVersion() >= ES_3_0 && info->sized)
         {
             return false;
         }
@@ -436,7 +436,7 @@ bool TextureState::computeSamplerCompletenessForCopyImage(const SamplerState &sa
         return false;
     }
 
-    bool npotSupport = state.getExtensions().textureNpotOES || state.getClientMajorVersion() >= 3;
+    bool npotSupport = state.getExtensions().textureNpotOES || state.getClientVersion() >= ES_3_0;
     if (!npotSupport)
     {
         if ((samplerState.getWrapS() != GL_CLAMP_TO_EDGE &&
@@ -2240,7 +2240,7 @@ bool Texture::isRenderable(const Context *context,
             ->getNativeTextureCaps()
             .get(getAttachmentFormat(binding, imageIndex).info->sizedInternalFormat)
             .textureAttachment &&
-        !mState.renderabilityValidation() && context->getClientMajorVersion() < 3)
+        !mState.renderabilityValidation() && context->getClientVersion() < ES_3_0)
     {
         return true;
     }

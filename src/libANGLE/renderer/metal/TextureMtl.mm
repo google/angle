@@ -685,7 +685,7 @@ GLenum OverrideSwizzleValue(const gl::Context *context,
     if (format.actualAngleFormat().hasDepthOrStencilBits())
     {
         ASSERT(!format.swizzled);
-        if (context->getState().getClientMajorVersion() >= 3 && glInternalFormat.sized)
+        if (context->getState().getClientVersion() >= gl::ES_3_0 && glInternalFormat.sized)
         {
             // ES 3.1 spec: treat depth and stencil textures as red textures during sampling.
             if (swizzle == GL_GREEN || swizzle == GL_BLUE)
@@ -1110,7 +1110,7 @@ angle::Result TextureMtl::ensureSamplerStateCreated(const gl::Context *context)
     // for cube maps so that texture wrap modes are ignored.
     if ((mState.getType() == gl::TextureType::CubeMap ||
          mState.getType() == gl::TextureType::CubeMapArray) &&
-        context->getState().getClientMajorVersion() >= 3)
+        context->getState().getClientVersion() >= gl::ES_3_0)
     {
         samplerDesc.rAddressMode = MTLSamplerAddressModeClampToEdge;
         samplerDesc.sAddressMode = MTLSamplerAddressModeClampToEdge;

@@ -835,7 +835,7 @@ bool ValidTexture3DTarget(const Context *context, TextureType target)
     {
         case TextureType::_3D:
         case TextureType::_2DArray:
-            return (context->getClientMajorVersion() >= 3);
+            return (context->getClientVersion() >= ES_3_0);
 
         case TextureType::CubeMapArray:
             return (context->getClientVersion() >= Version(3, 2) ||
@@ -1104,7 +1104,7 @@ bool ValidFramebufferTarget(const Context *context, GLenum target)
         case GL_READ_FRAMEBUFFER:
         case GL_DRAW_FRAMEBUFFER:
             return (context->getExtensions().framebufferBlitAny() ||
-                    context->getClientMajorVersion() >= 3);
+                    context->getClientVersion() >= ES_3_0);
 
         default:
             return false;
@@ -1429,10 +1429,10 @@ bool ValidQueryType(const Context *context, QueryType queryType)
     {
         case QueryType::AnySamples:
         case QueryType::AnySamplesConservative:
-            return context->getClientMajorVersion() >= 3 ||
+            return context->getClientVersion() >= ES_3_0 ||
                    context->getExtensions().occlusionQueryBooleanEXT;
         case QueryType::TransformFeedbackPrimitivesWritten:
-            return (context->getClientMajorVersion() >= 3);
+            return context->getClientVersion() >= ES_3_0;
         case QueryType::TimeElapsed:
             return context->getExtensions().disjointTimerQueryEXT;
         case QueryType::CommandsCompleted:
@@ -1552,7 +1552,7 @@ bool ValidateAttachmentTarget(const Context *context,
 {
     if (attachment >= GL_COLOR_ATTACHMENT1_EXT && attachment <= GL_COLOR_ATTACHMENT15_EXT)
     {
-        if (context->getClientMajorVersion() < 3 && !context->getExtensions().drawBuffersEXT)
+        if (context->getClientVersion() < ES_3_0 && !context->getExtensions().drawBuffersEXT)
         {
             ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidAttachment);
             return false;
@@ -1576,7 +1576,7 @@ bool ValidateAttachmentTarget(const Context *context,
                 break;
 
             case GL_DEPTH_STENCIL_ATTACHMENT:
-                if (!context->isWebGL() && context->getClientMajorVersion() < 3)
+                if (!context->isWebGL() && context->getClientVersion() < ES_3_0)
                 {
                     ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidAttachment);
                     return false;
@@ -3013,7 +3013,7 @@ bool ValidateUniformMatrix(const Context *context,
                            GLsizei count,
                            GLboolean transpose)
 {
-    if (ConvertToBool(transpose) && context->getClientMajorVersion() < 3)
+    if (ConvertToBool(transpose) && context->getClientVersion() < ES_3_0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kES3Required);
         return false;
@@ -4893,7 +4893,7 @@ bool ValidateGetUniformuivRobustANGLE(const Context *context,
         return false;
     }
 
-    if (context->getClientMajorVersion() < 3)
+    if (context->getClientVersion() < ES_3_0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
         return false;
@@ -5605,7 +5605,7 @@ bool ValidateGetFramebufferAttachmentParameterivBase(const Context *context,
         return false;
     }
 
-    int clientVersion = context->getClientMajorVersion();
+    const Version &clientVersion = context->getClientVersion();
 
     switch (pname)
     {
@@ -5617,7 +5617,7 @@ bool ValidateGetFramebufferAttachmentParameterivBase(const Context *context,
 
         case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_NUM_VIEWS_OVR:
         case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_BASE_VIEW_INDEX_OVR:
-            if (clientVersion < 3 ||
+            if (clientVersion < ES_3_0 ||
                 !(context->getExtensions().multiviewOVR || context->getExtensions().multiview2OVR))
             {
                 ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
@@ -5634,7 +5634,7 @@ bool ValidateGetFramebufferAttachmentParameterivBase(const Context *context,
             break;
 
         case GL_FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING:
-            if (clientVersion < 3 && !context->getExtensions().sRGBEXT)
+            if (clientVersion < ES_3_0 && !context->getExtensions().sRGBEXT)
             {
                 ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
                 return false;
@@ -5642,7 +5642,7 @@ bool ValidateGetFramebufferAttachmentParameterivBase(const Context *context,
             break;
 
         case GL_FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE:
-            if (clientVersion < 3 && !context->getExtensions().colorBufferHalfFloatEXT &&
+            if (clientVersion < ES_3_0 && !context->getExtensions().colorBufferHalfFloatEXT &&
                 !context->getExtensions().colorBufferFloatRgbCHROMIUM &&
                 !context->getExtensions().colorBufferFloatRgbaCHROMIUM)
             {
@@ -5658,7 +5658,7 @@ bool ValidateGetFramebufferAttachmentParameterivBase(const Context *context,
         case GL_FRAMEBUFFER_ATTACHMENT_DEPTH_SIZE:
         case GL_FRAMEBUFFER_ATTACHMENT_STENCIL_SIZE:
         case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER:
-            if (clientVersion < 3)
+            if (clientVersion < ES_3_0)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kES3Required);
                 return false;
@@ -5666,8 +5666,7 @@ bool ValidateGetFramebufferAttachmentParameterivBase(const Context *context,
             break;
 
         case GL_FRAMEBUFFER_ATTACHMENT_LAYERED_EXT:
-            if (!context->getExtensions().geometryShaderAny() &&
-                context->getClientVersion() < ES_3_2)
+            if (!context->getExtensions().geometryShaderAny() && clientVersion < ES_3_2)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kGeometryShaderExtensionNotEnabled);
                 return false;
@@ -5685,7 +5684,7 @@ bool ValidateGetFramebufferAttachmentParameterivBase(const Context *context,
         case GL_BACK:
         case GL_DEPTH:
         case GL_STENCIL:
-            if (clientVersion < 3)
+            if (clientVersion < ES_3_0)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidAttachment);
                 return false;
@@ -5693,7 +5692,7 @@ bool ValidateGetFramebufferAttachmentParameterivBase(const Context *context,
             break;
 
         case GL_DEPTH_STENCIL_ATTACHMENT:
-            if (clientVersion < 3 && !context->isWebGL1())
+            if (clientVersion < ES_3_0 && !context->isWebGL1())
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidAttachment);
                 return false;
@@ -5705,7 +5704,7 @@ bool ValidateGetFramebufferAttachmentParameterivBase(const Context *context,
             break;
 
         default:
-            if ((clientVersion < 3 && !context->getExtensions().drawBuffersEXT) ||
+            if ((clientVersion < ES_3_0 && !context->getExtensions().drawBuffersEXT) ||
                 attachment < GL_COLOR_ATTACHMENT0_EXT ||
                 (attachment - GL_COLOR_ATTACHMENT0_EXT) >=
                     static_cast<GLuint>(context->getCaps().maxColorAttachments))
@@ -5730,7 +5729,7 @@ bool ValidateGetFramebufferAttachmentParameterivBase(const Context *context,
 
     if (framebuffer->isDefault())
     {
-        if (clientVersion < 3)
+        if (clientVersion < ES_3_0)
         {
             ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kDefaultFramebufferTarget);
             return false;
@@ -5846,7 +5845,7 @@ bool ValidateGetFramebufferAttachmentParameterivBase(const Context *context,
                 break;
 
             case GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME:
-                if (clientVersion < 3)
+                if (clientVersion < ES_3_0)
                 {
                     ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidFramebufferAttachmentParameter);
                     return false;
@@ -5854,7 +5853,7 @@ bool ValidateGetFramebufferAttachmentParameterivBase(const Context *context,
                 break;
 
             default:
-                if (clientVersion < 3)
+                if (clientVersion < ES_3_0)
                 {
                     ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidFramebufferAttachmentParameter);
                     return false;
@@ -6075,7 +6074,7 @@ bool ValidateGetProgramivBase(const Context *context,
             break;
 
         case GL_PROGRAM_BINARY_LENGTH:
-            if (context->getClientMajorVersion() < 3 &&
+            if (context->getClientVersion() < ES_3_0 &&
                 !context->getExtensions().getProgramBinaryOES)
             {
                 ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
@@ -6089,7 +6088,7 @@ bool ValidateGetProgramivBase(const Context *context,
         case GL_TRANSFORM_FEEDBACK_VARYINGS:
         case GL_TRANSFORM_FEEDBACK_VARYING_MAX_LENGTH:
         case GL_PROGRAM_BINARY_RETRIEVABLE_HINT:
-            if (context->getClientMajorVersion() < 3)
+            if (context->getClientVersion() < ES_3_0)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kEnumRequiresGLES30);
                 return false;
@@ -6829,7 +6828,7 @@ bool ValidateGetBufferParameterBase(const Context *context,
 
         case GL_BUFFER_MAPPED:
             static_assert(GL_BUFFER_MAPPED == GL_BUFFER_MAPPED_OES, "GL enums should be equal.");
-            if (context->getClientMajorVersion() < 3 && !extensions.mapbufferOES &&
+            if (context->getClientVersion() < ES_3_0 && !extensions.mapbufferOES &&
                 !extensions.mapBufferRangeEXT)
             {
                 ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
@@ -6848,7 +6847,7 @@ bool ValidateGetBufferParameterBase(const Context *context,
         case GL_BUFFER_ACCESS_FLAGS:
         case GL_BUFFER_MAP_OFFSET:
         case GL_BUFFER_MAP_LENGTH:
-            if (context->getClientMajorVersion() < 3 && !extensions.mapBufferRangeEXT)
+            if (context->getClientVersion() < ES_3_0 && !extensions.mapBufferRangeEXT)
             {
                 ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
                 return false;
@@ -6932,7 +6931,7 @@ bool ValidateGetRenderbufferParameterivBase(const Context *context,
             break;
 
         case GL_RENDERBUFFER_SAMPLES_ANGLE:
-            if (context->getClientMajorVersion() < 3 &&
+            if (context->getClientVersion() < ES_3_0 &&
                 !context->getExtensions().framebufferMultisampleANGLE)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kExtensionNotEnabled);
@@ -7073,7 +7072,7 @@ bool ValidateGetTexParameterBase(const Context *context,
         return false;
     }
 
-    if (context->getClientMajorVersion() == 1 && !IsValidGLES1TextureParameter(pname))
+    if (context->getClientVersion() < ES_2_0 && !IsValidGLES1TextureParameter(pname))
     {
         ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
         return false;
@@ -7103,7 +7102,7 @@ bool ValidateGetTexParameterBase(const Context *context,
             break;
 
         case GL_TEXTURE_IMMUTABLE_FORMAT:
-            if (context->getClientMajorVersion() < 3 && !context->getExtensions().textureStorageEXT)
+            if (context->getClientVersion() < ES_3_0 && !context->getExtensions().textureStorageEXT)
             {
                 ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
                 return false;
@@ -7120,7 +7119,7 @@ bool ValidateGetTexParameterBase(const Context *context,
         case GL_TEXTURE_MAX_LEVEL:
         case GL_TEXTURE_MIN_LOD:
         case GL_TEXTURE_MAX_LOD:
-            if (context->getClientMajorVersion() < 3)
+            if (context->getClientVersion() < ES_3_0)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kEnumRequiresGLES30);
                 return false;
@@ -7129,7 +7128,7 @@ bool ValidateGetTexParameterBase(const Context *context,
 
         case GL_TEXTURE_COMPARE_MODE:
         case GL_TEXTURE_COMPARE_FUNC:
-            if (context->getClientMajorVersion() < 3 && !context->getExtensions().shadowSamplersEXT)
+            if (context->getClientVersion() < ES_3_0 && !context->getExtensions().shadowSamplersEXT)
             {
                 ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
                 return false;
@@ -7165,7 +7164,7 @@ bool ValidateGetTexParameterBase(const Context *context,
         case GL_TEXTURE_CROP_RECT_OES:
             // TODO(lfy@google.com): Restrict to GL_OES_draw_texture
             // after GL_OES_draw_texture functionality implemented
-            if (context->getClientMajorVersion() > 1)
+            if (context->getClientVersion() >= ES_2_0)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kGLES1Only);
                 return false;
@@ -7276,7 +7275,7 @@ bool ValidateGetVertexAttribBase(const Context *context,
         *length = 0;
     }
 
-    if (pureIntegerEntryPoint && context->getClientMajorVersion() < 3)
+    if (pureIntegerEntryPoint && context->getClientVersion() < ES_3_0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
         return false;
@@ -7313,7 +7312,7 @@ bool ValidateGetVertexAttribBase(const Context *context,
                 static_assert(
                     GL_VERTEX_ATTRIB_ARRAY_DIVISOR == GL_VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE,
                     "ANGLE extension enums not equal to GL enums.");
-                if (context->getClientMajorVersion() < 3 &&
+                if (context->getClientVersion() < ES_3_0 &&
                     !context->getExtensions().instancedArraysAny())
                 {
                     ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
@@ -7322,7 +7321,7 @@ bool ValidateGetVertexAttribBase(const Context *context,
                 break;
 
             case GL_VERTEX_ATTRIB_ARRAY_INTEGER:
-                if (context->getClientMajorVersion() < 3)
+                if (context->getClientVersion() < ES_3_0)
                 {
                     ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
                     return false;
@@ -7699,7 +7698,7 @@ bool ValidateTexParameterBase(const Context *context,
         return false;
     }
 
-    if (context->getClientMajorVersion() == 1 && !IsValidGLES1TextureParameter(pname))
+    if (context->getClientVersion() < ES_2_0 && !IsValidGLES1TextureParameter(pname))
     {
         ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
         return false;
@@ -7718,7 +7717,7 @@ bool ValidateTexParameterBase(const Context *context,
         case GL_TEXTURE_COMPARE_FUNC:
         case GL_TEXTURE_MIN_LOD:
         case GL_TEXTURE_MAX_LOD:
-            if (context->getClientMajorVersion() < 3 &&
+            if (context->getClientVersion() < ES_3_0 &&
                 !(pname == GL_TEXTURE_WRAP_R && context->getExtensions().texture3DOES))
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kES3Required);
@@ -7733,7 +7732,7 @@ bool ValidateTexParameterBase(const Context *context,
 
         case GL_GENERATE_MIPMAP:
         case GL_TEXTURE_CROP_RECT_OES:
-            if (context->getClientMajorVersion() > 1)
+            if (context->getClientVersion() >= ES_2_0)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kGLES1Only);
                 return false;
@@ -7933,7 +7932,7 @@ bool ValidateTexParameterBase(const Context *context,
             break;
 
         case GL_GENERATE_MIPMAP:
-            if (context->getClientMajorVersion() > 1)
+            if (context->getClientVersion() >= ES_2_0)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kGLES1Only);
                 return false;
@@ -7941,7 +7940,7 @@ bool ValidateTexParameterBase(const Context *context,
             break;
 
         case GL_TEXTURE_CROP_RECT_OES:
-            if (context->getClientMajorVersion() > 1)
+            if (context->getClientVersion() >= ES_2_0)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kGLES1Only);
                 return false;
@@ -8097,7 +8096,7 @@ bool ValidateGetActiveUniformBlockivBase(const Context *context,
         *length = 0;
     }
 
-    if (context->getClientMajorVersion() < 3)
+    if (context->getClientVersion() < ES_3_0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
         return false;
@@ -8159,7 +8158,7 @@ bool ValidateSamplerParameterBase(const Context *context,
                                   bool vectorParams,
                                   const ParamType *params)
 {
-    if (context->getClientMajorVersion() < 3)
+    if (context->getClientVersion() < ES_3_0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
         return false;
@@ -8302,7 +8301,7 @@ bool ValidateGetSamplerParameterBase(const Context *context,
         *length = 0;
     }
 
-    if (context->getClientMajorVersion() < 3)
+    if (context->getClientVersion() < ES_3_0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
         return false;
@@ -8402,7 +8401,7 @@ bool ValidateGetInternalFormativBase(const Context *context,
         *numParams = 0;
     }
 
-    if (context->getClientMajorVersion() < 3)
+    if (context->getClientVersion() < ES_3_0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
         return false;
@@ -8861,7 +8860,7 @@ bool ValidateTexImage2DExternalANGLE(const Context *context,
         return false;
     }
 
-    if (context->getClientMajorVersion() <= 2)
+    if (context->getClientVersion() < ES_3_0)
     {
         if (!ValidateES2TexImageParametersBase(context, entryPoint, target, level, internalformat,
                                                false, false, 0, 0, width, height, border, format,
