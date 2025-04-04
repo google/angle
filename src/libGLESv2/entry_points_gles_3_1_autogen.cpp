@@ -36,10 +36,20 @@ void GL_APIENTRY GL_ActiveShaderProgram(GLuint pipeline, GLuint program)
         ProgramPipelineID pipelinePacked = PackParam<ProgramPipelineID>(pipeline);
         ShaderProgramID programPacked    = PackParam<ShaderProgramID>(program);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateActiveShaderProgram(context, angle::EntryPoint::GLActiveShaderProgram,
-                                         pipelinePacked, programPacked));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateActiveShaderProgram(context, angle::EntryPoint::GLActiveShaderProgram,
+                                                pipelinePacked, programPacked);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLActiveShaderProgram);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->activeShaderProgram(pipelinePacked, programPacked);
@@ -74,10 +84,20 @@ void GL_APIENTRY GL_BindImageTexture(GLuint unit,
     {
         TextureID texturePacked = PackParam<TextureID>(texture);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateBindImageTexture(context, angle::EntryPoint::GLBindImageTexture, unit,
-                                      texturePacked, level, layered, layer, access, format));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateBindImageTexture(context, angle::EntryPoint::GLBindImageTexture, unit,
+                                             texturePacked, level, layered, layer, access, format);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLBindImageTexture);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->bindImageTexture(unit, texturePacked, level, layered, layer, access, format);
@@ -102,9 +122,19 @@ void GL_APIENTRY GL_BindProgramPipeline(GLuint pipeline)
     {
         ProgramPipelineID pipelinePacked = PackParam<ProgramPipelineID>(pipeline);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateBindProgramPipeline(
-                                context, angle::EntryPoint::GLBindProgramPipeline, pipelinePacked));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateBindProgramPipeline(
+                    context, angle::EntryPoint::GLBindProgramPipeline, pipelinePacked);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLBindProgramPipeline);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->bindProgramPipeline(pipelinePacked);
@@ -133,9 +163,20 @@ void GL_APIENTRY GL_BindVertexBuffer(GLuint bindingindex,
     {
         BufferID bufferPacked = PackParam<BufferID>(buffer);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateBindVertexBuffer(context, angle::EntryPoint::GLBindVertexBuffer,
-                                                     bindingindex, bufferPacked, offset, stride));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateBindVertexBuffer(context, angle::EntryPoint::GLBindVertexBuffer,
+                                             bindingindex, bufferPacked, offset, stride);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLBindVertexBuffer);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->bindVertexBuffer(bindingindex, bufferPacked, offset, stride);
@@ -163,10 +204,19 @@ GLuint GL_APIENTRY GL_CreateShaderProgramv(GLenum type, GLsizei count, const GLc
     {
         ShaderType typePacked = PackParam<ShaderType>(type);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateCreateShaderProgramv(context, angle::EntryPoint::GLCreateShaderProgramv,
-                                          typePacked, count, strings));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateCreateShaderProgramv(
+                    context, angle::EntryPoint::GLCreateShaderProgramv, typePacked, count, strings);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLCreateShaderProgramv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             returnValue = context->createShaderProgramv(typePacked, count, strings);
@@ -199,10 +249,19 @@ void GL_APIENTRY GL_DeleteProgramPipelines(GLsizei n, const GLuint *pipelines)
     {
         const ProgramPipelineID *pipelinesPacked = PackParam<const ProgramPipelineID *>(pipelines);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateDeleteProgramPipelines(context, angle::EntryPoint::GLDeleteProgramPipelines, n,
-                                            pipelinesPacked));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateDeleteProgramPipelines(
+                    context, angle::EntryPoint::GLDeleteProgramPipelines, n, pipelinesPacked);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLDeleteProgramPipelines);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->deleteProgramPipelines(n, pipelinesPacked);
@@ -227,9 +286,19 @@ void GL_APIENTRY GL_DispatchCompute(GLuint num_groups_x, GLuint num_groups_y, GL
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateDispatchCompute(context, angle::EntryPoint::GLDispatchCompute,
-                                                    num_groups_x, num_groups_y, num_groups_z));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateDispatchCompute(context, angle::EntryPoint::GLDispatchCompute,
+                                                      num_groups_x, num_groups_y, num_groups_z);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLDispatchCompute);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->dispatchCompute(num_groups_x, num_groups_y, num_groups_z);
@@ -254,9 +323,19 @@ void GL_APIENTRY GL_DispatchComputeIndirect(GLintptr indirect)
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateDispatchComputeIndirect(
-                                context, angle::EntryPoint::GLDispatchComputeIndirect, indirect));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateDispatchComputeIndirect(
+                    context, angle::EntryPoint::GLDispatchComputeIndirect, indirect);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLDispatchComputeIndirect);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->dispatchComputeIndirect(indirect);
@@ -281,10 +360,19 @@ void GL_APIENTRY GL_DrawArraysIndirect(GLenum mode, const void *indirect)
     {
         PrimitiveMode modePacked = PackParam<PrimitiveMode>(mode);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateDrawArraysIndirect(context, angle::EntryPoint::GLDrawArraysIndirect,
-                                        modePacked, indirect));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateDrawArraysIndirect(
+                    context, angle::EntryPoint::GLDrawArraysIndirect, modePacked, indirect);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLDrawArraysIndirect);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->drawArraysIndirect(modePacked, indirect);
@@ -312,10 +400,20 @@ void GL_APIENTRY GL_DrawElementsIndirect(GLenum mode, GLenum type, const void *i
         PrimitiveMode modePacked    = PackParam<PrimitiveMode>(mode);
         DrawElementsType typePacked = PackParam<DrawElementsType>(type);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateDrawElementsIndirect(context, angle::EntryPoint::GLDrawElementsIndirect,
-                                          modePacked, typePacked, indirect));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateDrawElementsIndirect(context, angle::EntryPoint::GLDrawElementsIndirect,
+                                                 modePacked, typePacked, indirect);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLDrawElementsIndirect);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->drawElementsIndirect(modePacked, typePacked, indirect);
@@ -345,10 +443,19 @@ void GL_APIENTRY GL_FramebufferParameteri(GLenum target, GLenum pname, GLint par
         {
             context->endPixelLocalStorageImplicit();
         }
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateFramebufferParameteri(context, angle::EntryPoint::GLFramebufferParameteri,
-                                           target, pname, param));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateFramebufferParameteri(
+                    context, angle::EntryPoint::GLFramebufferParameteri, target, pname, param);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLFramebufferParameteri);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->framebufferParameteri(target, pname, param);
@@ -373,10 +480,19 @@ void GL_APIENTRY GL_GenProgramPipelines(GLsizei n, GLuint *pipelines)
     {
         ProgramPipelineID *pipelinesPacked = PackParam<ProgramPipelineID *>(pipelines);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGenProgramPipelines(context, angle::EntryPoint::GLGenProgramPipelines, n,
-                                         pipelinesPacked));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateGenProgramPipelines(
+                    context, angle::EntryPoint::GLGenProgramPipelines, n, pipelinesPacked);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLGenProgramPipelines);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->genProgramPipelines(n, pipelinesPacked);
@@ -401,9 +517,19 @@ void GL_APIENTRY GL_GetBooleani_v(GLenum target, GLuint index, GLboolean *data)
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateGetBooleani_v(context, angle::EntryPoint::GLGetBooleani_v,
-                                                  target, index, data));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateGetBooleani_v(context, angle::EntryPoint::GLGetBooleani_v,
+                                                    target, index, data);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLGetBooleani_v);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->getBooleani_v(target, index, data);
@@ -429,10 +555,19 @@ void GL_APIENTRY GL_GetFramebufferParameteriv(GLenum target, GLenum pname, GLint
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetFramebufferParameteriv(
-                 context, angle::EntryPoint::GLGetFramebufferParameteriv, target, pname, params));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateGetFramebufferParameteriv(
+                    context, angle::EntryPoint::GLGetFramebufferParameteriv, target, pname, params);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLGetFramebufferParameteriv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->getFramebufferParameteriv(target, pname, params);
@@ -457,9 +592,19 @@ void GL_APIENTRY GL_GetMultisamplefv(GLenum pname, GLuint index, GLfloat *val)
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateGetMultisamplefv(context, angle::EntryPoint::GLGetMultisamplefv,
-                                                     pname, index, val));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateGetMultisamplefv(
+                    context, angle::EntryPoint::GLGetMultisamplefv, pname, index, val);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLGetMultisamplefv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->getMultisamplefv(pname, index, val);
@@ -490,10 +635,20 @@ void GL_APIENTRY GL_GetProgramInterfaceiv(GLuint program,
     {
         ShaderProgramID programPacked = PackParam<ShaderProgramID>(program);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetProgramInterfaceiv(context, angle::EntryPoint::GLGetProgramInterfaceiv,
-                                           programPacked, programInterface, pname, params));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateGetProgramInterfaceiv(
+                    context, angle::EntryPoint::GLGetProgramInterfaceiv, programPacked,
+                    programInterface, pname, params);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLGetProgramInterfaceiv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->getProgramInterfaceiv(programPacked, programInterface, pname, params);
@@ -524,10 +679,20 @@ void GL_APIENTRY GL_GetProgramPipelineInfoLog(GLuint pipeline,
     {
         ProgramPipelineID pipelinePacked = PackParam<ProgramPipelineID>(pipeline);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateGetProgramPipelineInfoLog(
-                                context, angle::EntryPoint::GLGetProgramPipelineInfoLog,
-                                pipelinePacked, bufSize, length, infoLog));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateGetProgramPipelineInfoLog(
+                    context, angle::EntryPoint::GLGetProgramPipelineInfoLog, pipelinePacked,
+                    bufSize, length, infoLog);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLGetProgramPipelineInfoLog);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->getProgramPipelineInfoLog(pipelinePacked, bufSize, length, infoLog);
@@ -554,10 +719,20 @@ void GL_APIENTRY GL_GetProgramPipelineiv(GLuint pipeline, GLenum pname, GLint *p
     {
         ProgramPipelineID pipelinePacked = PackParam<ProgramPipelineID>(pipeline);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetProgramPipelineiv(context, angle::EntryPoint::GLGetProgramPipelineiv,
-                                          pipelinePacked, pname, params));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateGetProgramPipelineiv(context, angle::EntryPoint::GLGetProgramPipelineiv,
+                                                 pipelinePacked, pname, params);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLGetProgramPipelineiv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->getProgramPipelineiv(pipelinePacked, pname, params);
@@ -587,10 +762,20 @@ GLuint GL_APIENTRY GL_GetProgramResourceIndex(GLuint program,
     {
         ShaderProgramID programPacked = PackParam<ShaderProgramID>(program);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetProgramResourceIndex(context, angle::EntryPoint::GLGetProgramResourceIndex,
-                                             programPacked, programInterface, name));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateGetProgramResourceIndex(
+                    context, angle::EntryPoint::GLGetProgramResourceIndex, programPacked,
+                    programInterface, name);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLGetProgramResourceIndex);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             returnValue = context->getProgramResourceIndex(programPacked, programInterface, name);
@@ -628,10 +813,20 @@ GLint GL_APIENTRY GL_GetProgramResourceLocation(GLuint program,
     {
         ShaderProgramID programPacked = PackParam<ShaderProgramID>(program);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateGetProgramResourceLocation(
-                                context, angle::EntryPoint::GLGetProgramResourceLocation,
-                                programPacked, programInterface, name));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateGetProgramResourceLocation(
+                    context, angle::EntryPoint::GLGetProgramResourceLocation, programPacked,
+                    programInterface, name);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLGetProgramResourceLocation);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             returnValue =
@@ -674,10 +869,20 @@ void GL_APIENTRY GL_GetProgramResourceName(GLuint program,
     {
         ShaderProgramID programPacked = PackParam<ShaderProgramID>(program);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateGetProgramResourceName(
-                                context, angle::EntryPoint::GLGetProgramResourceName, programPacked,
-                                programInterface, index, bufSize, length, name));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateGetProgramResourceName(
+                    context, angle::EntryPoint::GLGetProgramResourceName, programPacked,
+                    programInterface, index, bufSize, length, name);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLGetProgramResourceName);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->getProgramResourceName(programPacked, programInterface, index, bufSize, length,
@@ -714,10 +919,20 @@ void GL_APIENTRY GL_GetProgramResourceiv(GLuint program,
     {
         ShaderProgramID programPacked = PackParam<ShaderProgramID>(program);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateGetProgramResourceiv(
-                                context, angle::EntryPoint::GLGetProgramResourceiv, programPacked,
-                                programInterface, index, propCount, props, count, length, params));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateGetProgramResourceiv(
+                    context, angle::EntryPoint::GLGetProgramResourceiv, programPacked,
+                    programInterface, index, propCount, props, count, length, params);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLGetProgramResourceiv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->getProgramResourceiv(programPacked, programInterface, index, propCount, props,
@@ -749,10 +964,20 @@ void GL_APIENTRY GL_GetTexLevelParameterfv(GLenum target,
     {
         TextureTarget targetPacked = PackParam<TextureTarget>(target);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetTexLevelParameterfv(context, angle::EntryPoint::GLGetTexLevelParameterfv,
-                                            targetPacked, level, pname, params));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateGetTexLevelParameterfv(
+                    context, angle::EntryPoint::GLGetTexLevelParameterfv, targetPacked, level,
+                    pname, params);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLGetTexLevelParameterfv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->getTexLevelParameterfv(targetPacked, level, pname, params);
@@ -780,10 +1005,20 @@ void GL_APIENTRY GL_GetTexLevelParameteriv(GLenum target, GLint level, GLenum pn
     {
         TextureTarget targetPacked = PackParam<TextureTarget>(target);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetTexLevelParameteriv(context, angle::EntryPoint::GLGetTexLevelParameteriv,
-                                            targetPacked, level, pname, params));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateGetTexLevelParameteriv(
+                    context, angle::EntryPoint::GLGetTexLevelParameteriv, targetPacked, level,
+                    pname, params);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLGetTexLevelParameteriv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->getTexLevelParameteriv(targetPacked, level, pname, params);
@@ -809,9 +1044,19 @@ GLboolean GL_APIENTRY GL_IsProgramPipeline(GLuint pipeline)
     {
         ProgramPipelineID pipelinePacked = PackParam<ProgramPipelineID>(pipeline);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateIsProgramPipeline(
-                                context, angle::EntryPoint::GLIsProgramPipeline, pipelinePacked));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateIsProgramPipeline(
+                    context, angle::EntryPoint::GLIsProgramPipeline, pipelinePacked);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLIsProgramPipeline);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             returnValue = context->isProgramPipeline(pipelinePacked);
@@ -842,9 +1087,19 @@ void GL_APIENTRY GL_MemoryBarrier(GLbitfield barriers)
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateMemoryBarrier(context, angle::EntryPoint::GLMemoryBarrier, barriers));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateMemoryBarrier(context, angle::EntryPoint::GLMemoryBarrier, barriers);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLMemoryBarrier);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->memoryBarrier(barriers);
@@ -868,9 +1123,19 @@ void GL_APIENTRY GL_MemoryBarrierByRegion(GLbitfield barriers)
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateMemoryBarrierByRegion(
-                                context, angle::EntryPoint::GLMemoryBarrierByRegion, barriers));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateMemoryBarrierByRegion(
+                    context, angle::EntryPoint::GLMemoryBarrierByRegion, barriers);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLMemoryBarrierByRegion);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->memoryBarrierByRegion(barriers);
@@ -896,9 +1161,20 @@ void GL_APIENTRY GL_ProgramUniform1f(GLuint program, GLint location, GLfloat v0)
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateProgramUniform1f(context, angle::EntryPoint::GLProgramUniform1f,
-                                                     programPacked, locationPacked, v0));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateProgramUniform1f(context, angle::EntryPoint::GLProgramUniform1f,
+                                             programPacked, locationPacked, v0);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniform1f);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniform1f(programPacked, locationPacked, v0);
@@ -928,10 +1204,20 @@ void GL_APIENTRY GL_ProgramUniform1fv(GLuint program,
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateProgramUniform1fv(context, angle::EntryPoint::GLProgramUniform1fv,
-                                       programPacked, locationPacked, count, value));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateProgramUniform1fv(context, angle::EntryPoint::GLProgramUniform1fv,
+                                              programPacked, locationPacked, count, value);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniform1fv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniform1fv(programPacked, locationPacked, count, value);
@@ -958,9 +1244,20 @@ void GL_APIENTRY GL_ProgramUniform1i(GLuint program, GLint location, GLint v0)
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateProgramUniform1i(context, angle::EntryPoint::GLProgramUniform1i,
-                                                     programPacked, locationPacked, v0));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateProgramUniform1i(context, angle::EntryPoint::GLProgramUniform1i,
+                                             programPacked, locationPacked, v0);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniform1i);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniform1i(programPacked, locationPacked, v0);
@@ -990,10 +1287,20 @@ void GL_APIENTRY GL_ProgramUniform1iv(GLuint program,
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateProgramUniform1iv(context, angle::EntryPoint::GLProgramUniform1iv,
-                                       programPacked, locationPacked, count, value));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateProgramUniform1iv(context, angle::EntryPoint::GLProgramUniform1iv,
+                                              programPacked, locationPacked, count, value);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniform1iv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniform1iv(programPacked, locationPacked, count, value);
@@ -1020,10 +1327,20 @@ void GL_APIENTRY GL_ProgramUniform1ui(GLuint program, GLint location, GLuint v0)
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateProgramUniform1ui(context, angle::EntryPoint::GLProgramUniform1ui,
-                                       programPacked, locationPacked, v0));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateProgramUniform1ui(context, angle::EntryPoint::GLProgramUniform1ui,
+                                              programPacked, locationPacked, v0);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniform1ui);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniform1ui(programPacked, locationPacked, v0);
@@ -1054,10 +1371,20 @@ void GL_APIENTRY GL_ProgramUniform1uiv(GLuint program,
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateProgramUniform1uiv(context, angle::EntryPoint::GLProgramUniform1uiv,
-                                        programPacked, locationPacked, count, value));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateProgramUniform1uiv(context, angle::EntryPoint::GLProgramUniform1uiv,
+                                               programPacked, locationPacked, count, value);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniform1uiv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniform1uiv(programPacked, locationPacked, count, value);
@@ -1085,9 +1412,20 @@ void GL_APIENTRY GL_ProgramUniform2f(GLuint program, GLint location, GLfloat v0,
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateProgramUniform2f(context, angle::EntryPoint::GLProgramUniform2f,
-                                                     programPacked, locationPacked, v0, v1));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateProgramUniform2f(context, angle::EntryPoint::GLProgramUniform2f,
+                                             programPacked, locationPacked, v0, v1);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniform2f);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniform2f(programPacked, locationPacked, v0, v1);
@@ -1118,10 +1456,20 @@ void GL_APIENTRY GL_ProgramUniform2fv(GLuint program,
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateProgramUniform2fv(context, angle::EntryPoint::GLProgramUniform2fv,
-                                       programPacked, locationPacked, count, value));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateProgramUniform2fv(context, angle::EntryPoint::GLProgramUniform2fv,
+                                              programPacked, locationPacked, count, value);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniform2fv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniform2fv(programPacked, locationPacked, count, value);
@@ -1149,9 +1497,20 @@ void GL_APIENTRY GL_ProgramUniform2i(GLuint program, GLint location, GLint v0, G
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateProgramUniform2i(context, angle::EntryPoint::GLProgramUniform2i,
-                                                     programPacked, locationPacked, v0, v1));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateProgramUniform2i(context, angle::EntryPoint::GLProgramUniform2i,
+                                             programPacked, locationPacked, v0, v1);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniform2i);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniform2i(programPacked, locationPacked, v0, v1);
@@ -1182,10 +1541,20 @@ void GL_APIENTRY GL_ProgramUniform2iv(GLuint program,
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateProgramUniform2iv(context, angle::EntryPoint::GLProgramUniform2iv,
-                                       programPacked, locationPacked, count, value));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateProgramUniform2iv(context, angle::EntryPoint::GLProgramUniform2iv,
+                                              programPacked, locationPacked, count, value);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniform2iv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniform2iv(programPacked, locationPacked, count, value);
@@ -1213,10 +1582,20 @@ void GL_APIENTRY GL_ProgramUniform2ui(GLuint program, GLint location, GLuint v0,
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateProgramUniform2ui(context, angle::EntryPoint::GLProgramUniform2ui,
-                                       programPacked, locationPacked, v0, v1));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateProgramUniform2ui(context, angle::EntryPoint::GLProgramUniform2ui,
+                                              programPacked, locationPacked, v0, v1);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniform2ui);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniform2ui(programPacked, locationPacked, v0, v1);
@@ -1247,10 +1626,20 @@ void GL_APIENTRY GL_ProgramUniform2uiv(GLuint program,
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateProgramUniform2uiv(context, angle::EntryPoint::GLProgramUniform2uiv,
-                                        programPacked, locationPacked, count, value));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateProgramUniform2uiv(context, angle::EntryPoint::GLProgramUniform2uiv,
+                                               programPacked, locationPacked, count, value);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniform2uiv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniform2uiv(programPacked, locationPacked, count, value);
@@ -1279,9 +1668,20 @@ GL_ProgramUniform3f(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfl
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateProgramUniform3f(context, angle::EntryPoint::GLProgramUniform3f,
-                                                     programPacked, locationPacked, v0, v1, v2));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateProgramUniform3f(context, angle::EntryPoint::GLProgramUniform3f,
+                                             programPacked, locationPacked, v0, v1, v2);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniform3f);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniform3f(programPacked, locationPacked, v0, v1, v2);
@@ -1312,10 +1712,20 @@ void GL_APIENTRY GL_ProgramUniform3fv(GLuint program,
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateProgramUniform3fv(context, angle::EntryPoint::GLProgramUniform3fv,
-                                       programPacked, locationPacked, count, value));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateProgramUniform3fv(context, angle::EntryPoint::GLProgramUniform3fv,
+                                              programPacked, locationPacked, count, value);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniform3fv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniform3fv(programPacked, locationPacked, count, value);
@@ -1343,9 +1753,20 @@ void GL_APIENTRY GL_ProgramUniform3i(GLuint program, GLint location, GLint v0, G
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateProgramUniform3i(context, angle::EntryPoint::GLProgramUniform3i,
-                                                     programPacked, locationPacked, v0, v1, v2));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateProgramUniform3i(context, angle::EntryPoint::GLProgramUniform3i,
+                                             programPacked, locationPacked, v0, v1, v2);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniform3i);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniform3i(programPacked, locationPacked, v0, v1, v2);
@@ -1376,10 +1797,20 @@ void GL_APIENTRY GL_ProgramUniform3iv(GLuint program,
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateProgramUniform3iv(context, angle::EntryPoint::GLProgramUniform3iv,
-                                       programPacked, locationPacked, count, value));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateProgramUniform3iv(context, angle::EntryPoint::GLProgramUniform3iv,
+                                              programPacked, locationPacked, count, value);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniform3iv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniform3iv(programPacked, locationPacked, count, value);
@@ -1408,10 +1839,20 @@ GL_ProgramUniform3ui(GLuint program, GLint location, GLuint v0, GLuint v1, GLuin
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateProgramUniform3ui(context, angle::EntryPoint::GLProgramUniform3ui,
-                                       programPacked, locationPacked, v0, v1, v2));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateProgramUniform3ui(context, angle::EntryPoint::GLProgramUniform3ui,
+                                              programPacked, locationPacked, v0, v1, v2);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniform3ui);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniform3ui(programPacked, locationPacked, v0, v1, v2);
@@ -1442,10 +1883,20 @@ void GL_APIENTRY GL_ProgramUniform3uiv(GLuint program,
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateProgramUniform3uiv(context, angle::EntryPoint::GLProgramUniform3uiv,
-                                        programPacked, locationPacked, count, value));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateProgramUniform3uiv(context, angle::EntryPoint::GLProgramUniform3uiv,
+                                               programPacked, locationPacked, count, value);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniform3uiv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniform3uiv(programPacked, locationPacked, count, value);
@@ -1474,10 +1925,20 @@ GL_ProgramUniform4f(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfl
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateProgramUniform4f(context, angle::EntryPoint::GLProgramUniform4f, programPacked,
-                                      locationPacked, v0, v1, v2, v3));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateProgramUniform4f(context, angle::EntryPoint::GLProgramUniform4f,
+                                             programPacked, locationPacked, v0, v1, v2, v3);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniform4f);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniform4f(programPacked, locationPacked, v0, v1, v2, v3);
@@ -1508,10 +1969,20 @@ void GL_APIENTRY GL_ProgramUniform4fv(GLuint program,
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateProgramUniform4fv(context, angle::EntryPoint::GLProgramUniform4fv,
-                                       programPacked, locationPacked, count, value));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateProgramUniform4fv(context, angle::EntryPoint::GLProgramUniform4fv,
+                                              programPacked, locationPacked, count, value);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniform4fv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniform4fv(programPacked, locationPacked, count, value);
@@ -1540,10 +2011,20 @@ GL_ProgramUniform4i(GLuint program, GLint location, GLint v0, GLint v1, GLint v2
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateProgramUniform4i(context, angle::EntryPoint::GLProgramUniform4i, programPacked,
-                                      locationPacked, v0, v1, v2, v3));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateProgramUniform4i(context, angle::EntryPoint::GLProgramUniform4i,
+                                             programPacked, locationPacked, v0, v1, v2, v3);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniform4i);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniform4i(programPacked, locationPacked, v0, v1, v2, v3);
@@ -1574,10 +2055,20 @@ void GL_APIENTRY GL_ProgramUniform4iv(GLuint program,
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateProgramUniform4iv(context, angle::EntryPoint::GLProgramUniform4iv,
-                                       programPacked, locationPacked, count, value));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateProgramUniform4iv(context, angle::EntryPoint::GLProgramUniform4iv,
+                                              programPacked, locationPacked, count, value);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniform4iv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniform4iv(programPacked, locationPacked, count, value);
@@ -1606,10 +2097,20 @@ GL_ProgramUniform4ui(GLuint program, GLint location, GLuint v0, GLuint v1, GLuin
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateProgramUniform4ui(context, angle::EntryPoint::GLProgramUniform4ui,
-                                       programPacked, locationPacked, v0, v1, v2, v3));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateProgramUniform4ui(context, angle::EntryPoint::GLProgramUniform4ui,
+                                              programPacked, locationPacked, v0, v1, v2, v3);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniform4ui);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniform4ui(programPacked, locationPacked, v0, v1, v2, v3);
@@ -1640,10 +2141,20 @@ void GL_APIENTRY GL_ProgramUniform4uiv(GLuint program,
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateProgramUniform4uiv(context, angle::EntryPoint::GLProgramUniform4uiv,
-                                        programPacked, locationPacked, count, value));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateProgramUniform4uiv(context, angle::EntryPoint::GLProgramUniform4uiv,
+                                               programPacked, locationPacked, count, value);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniform4uiv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniform4uiv(programPacked, locationPacked, count, value);
@@ -1676,10 +2187,20 @@ void GL_APIENTRY GL_ProgramUniformMatrix2fv(GLuint program,
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateProgramUniformMatrix2fv(
-                                context, angle::EntryPoint::GLProgramUniformMatrix2fv,
-                                programPacked, locationPacked, count, transpose, value));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateProgramUniformMatrix2fv(
+                    context, angle::EntryPoint::GLProgramUniformMatrix2fv, programPacked,
+                    locationPacked, count, transpose, value);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniformMatrix2fv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniformMatrix2fv(programPacked, locationPacked, count, transpose,
@@ -1713,10 +2234,20 @@ void GL_APIENTRY GL_ProgramUniformMatrix2x3fv(GLuint program,
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateProgramUniformMatrix2x3fv(
-                                context, angle::EntryPoint::GLProgramUniformMatrix2x3fv,
-                                programPacked, locationPacked, count, transpose, value));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateProgramUniformMatrix2x3fv(
+                    context, angle::EntryPoint::GLProgramUniformMatrix2x3fv, programPacked,
+                    locationPacked, count, transpose, value);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniformMatrix2x3fv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniformMatrix2x3fv(programPacked, locationPacked, count, transpose,
@@ -1750,10 +2281,20 @@ void GL_APIENTRY GL_ProgramUniformMatrix2x4fv(GLuint program,
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateProgramUniformMatrix2x4fv(
-                                context, angle::EntryPoint::GLProgramUniformMatrix2x4fv,
-                                programPacked, locationPacked, count, transpose, value));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateProgramUniformMatrix2x4fv(
+                    context, angle::EntryPoint::GLProgramUniformMatrix2x4fv, programPacked,
+                    locationPacked, count, transpose, value);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniformMatrix2x4fv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniformMatrix2x4fv(programPacked, locationPacked, count, transpose,
@@ -1787,10 +2328,20 @@ void GL_APIENTRY GL_ProgramUniformMatrix3fv(GLuint program,
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateProgramUniformMatrix3fv(
-                                context, angle::EntryPoint::GLProgramUniformMatrix3fv,
-                                programPacked, locationPacked, count, transpose, value));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateProgramUniformMatrix3fv(
+                    context, angle::EntryPoint::GLProgramUniformMatrix3fv, programPacked,
+                    locationPacked, count, transpose, value);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniformMatrix3fv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniformMatrix3fv(programPacked, locationPacked, count, transpose,
@@ -1824,10 +2375,20 @@ void GL_APIENTRY GL_ProgramUniformMatrix3x2fv(GLuint program,
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateProgramUniformMatrix3x2fv(
-                                context, angle::EntryPoint::GLProgramUniformMatrix3x2fv,
-                                programPacked, locationPacked, count, transpose, value));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateProgramUniformMatrix3x2fv(
+                    context, angle::EntryPoint::GLProgramUniformMatrix3x2fv, programPacked,
+                    locationPacked, count, transpose, value);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniformMatrix3x2fv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniformMatrix3x2fv(programPacked, locationPacked, count, transpose,
@@ -1861,10 +2422,20 @@ void GL_APIENTRY GL_ProgramUniformMatrix3x4fv(GLuint program,
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateProgramUniformMatrix3x4fv(
-                                context, angle::EntryPoint::GLProgramUniformMatrix3x4fv,
-                                programPacked, locationPacked, count, transpose, value));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateProgramUniformMatrix3x4fv(
+                    context, angle::EntryPoint::GLProgramUniformMatrix3x4fv, programPacked,
+                    locationPacked, count, transpose, value);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniformMatrix3x4fv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniformMatrix3x4fv(programPacked, locationPacked, count, transpose,
@@ -1898,10 +2469,20 @@ void GL_APIENTRY GL_ProgramUniformMatrix4fv(GLuint program,
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateProgramUniformMatrix4fv(
-                                context, angle::EntryPoint::GLProgramUniformMatrix4fv,
-                                programPacked, locationPacked, count, transpose, value));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateProgramUniformMatrix4fv(
+                    context, angle::EntryPoint::GLProgramUniformMatrix4fv, programPacked,
+                    locationPacked, count, transpose, value);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniformMatrix4fv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniformMatrix4fv(programPacked, locationPacked, count, transpose,
@@ -1935,10 +2516,20 @@ void GL_APIENTRY GL_ProgramUniformMatrix4x2fv(GLuint program,
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateProgramUniformMatrix4x2fv(
-                                context, angle::EntryPoint::GLProgramUniformMatrix4x2fv,
-                                programPacked, locationPacked, count, transpose, value));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateProgramUniformMatrix4x2fv(
+                    context, angle::EntryPoint::GLProgramUniformMatrix4x2fv, programPacked,
+                    locationPacked, count, transpose, value);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniformMatrix4x2fv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniformMatrix4x2fv(programPacked, locationPacked, count, transpose,
@@ -1972,10 +2563,20 @@ void GL_APIENTRY GL_ProgramUniformMatrix4x3fv(GLuint program,
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateProgramUniformMatrix4x3fv(
-                                context, angle::EntryPoint::GLProgramUniformMatrix4x3fv,
-                                programPacked, locationPacked, count, transpose, value));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateProgramUniformMatrix4x3fv(
+                    context, angle::EntryPoint::GLProgramUniformMatrix4x3fv, programPacked,
+                    locationPacked, count, transpose, value);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLProgramUniformMatrix4x3fv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->programUniformMatrix4x3fv(programPacked, locationPacked, count, transpose,
@@ -2000,11 +2601,20 @@ void GL_APIENTRY GL_SampleMaski(GLuint maskNumber, GLbitfield mask)
 
     if (context)
     {
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateSampleMaski(context->getPrivateState(),
-                                 context->getMutableErrorSetForValidation(),
-                                 angle::EntryPoint::GLSampleMaski, maskNumber, mask));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateSampleMaski(
+                    context->getPrivateState(), context->getMutableErrorSetForValidation(),
+                    angle::EntryPoint::GLSampleMaski, maskNumber, mask);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLSampleMaski);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             ContextPrivateSampleMaski(context->getMutablePrivateState(),
@@ -2039,10 +2649,20 @@ void GL_APIENTRY GL_TexStorage2DMultisample(GLenum target,
     {
         TextureType targetPacked = PackParam<TextureType>(target);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateTexStorage2DMultisample(
-                                context, angle::EntryPoint::GLTexStorage2DMultisample, targetPacked,
-                                samples, internalformat, width, height, fixedsamplelocations));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateTexStorage2DMultisample(
+                    context, angle::EntryPoint::GLTexStorage2DMultisample, targetPacked, samples,
+                    internalformat, width, height, fixedsamplelocations);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLTexStorage2DMultisample);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->texStorage2DMultisample(targetPacked, samples, internalformat, width, height,
@@ -2071,9 +2691,20 @@ void GL_APIENTRY GL_UseProgramStages(GLuint pipeline, GLbitfield stages, GLuint 
         ProgramPipelineID pipelinePacked = PackParam<ProgramPipelineID>(pipeline);
         ShaderProgramID programPacked    = PackParam<ShaderProgramID>(program);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateUseProgramStages(context, angle::EntryPoint::GLUseProgramStages,
-                                                     pipelinePacked, stages, programPacked));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateUseProgramStages(context, angle::EntryPoint::GLUseProgramStages,
+                                             pipelinePacked, stages, programPacked);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLUseProgramStages);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->useProgramStages(pipelinePacked, stages, programPacked);
@@ -2099,10 +2730,19 @@ void GL_APIENTRY GL_ValidateProgramPipeline(GLuint pipeline)
     {
         ProgramPipelineID pipelinePacked = PackParam<ProgramPipelineID>(pipeline);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateValidateProgramPipeline(context, angle::EntryPoint::GLValidateProgramPipeline,
-                                             pipelinePacked));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateValidateProgramPipeline(
+                    context, angle::EntryPoint::GLValidateProgramPipeline, pipelinePacked);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLValidateProgramPipeline);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->validateProgramPipeline(pipelinePacked);
@@ -2126,10 +2766,19 @@ void GL_APIENTRY GL_VertexAttribBinding(GLuint attribindex, GLuint bindingindex)
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateVertexAttribBinding(context, angle::EntryPoint::GLVertexAttribBinding,
-                                         attribindex, bindingindex));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateVertexAttribBinding(
+                    context, angle::EntryPoint::GLVertexAttribBinding, attribindex, bindingindex);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLVertexAttribBinding);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->vertexAttribBinding(attribindex, bindingindex);
@@ -2161,10 +2810,20 @@ void GL_APIENTRY GL_VertexAttribFormat(GLuint attribindex,
     {
         VertexAttribType typePacked = PackParam<VertexAttribType>(type);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateVertexAttribFormat(context, angle::EntryPoint::GLVertexAttribFormat,
-                                        attribindex, size, typePacked, normalized, relativeoffset));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateVertexAttribFormat(
+                    context, angle::EntryPoint::GLVertexAttribFormat, attribindex, size, typePacked,
+                    normalized, relativeoffset);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLVertexAttribFormat);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->vertexAttribFormat(attribindex, size, typePacked, normalized, relativeoffset);
@@ -2194,10 +2853,20 @@ void GL_APIENTRY GL_VertexAttribIFormat(GLuint attribindex,
     {
         VertexAttribType typePacked = PackParam<VertexAttribType>(type);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateVertexAttribIFormat(context, angle::EntryPoint::GLVertexAttribIFormat,
-                                         attribindex, size, typePacked, relativeoffset));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid =
+                    ValidateVertexAttribIFormat(context, angle::EntryPoint::GLVertexAttribIFormat,
+                                                attribindex, size, typePacked, relativeoffset);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLVertexAttribIFormat);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->vertexAttribIFormat(attribindex, size, typePacked, relativeoffset);
@@ -2222,10 +2891,19 @@ void GL_APIENTRY GL_VertexBindingDivisor(GLuint bindingindex, GLuint divisor)
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateVertexBindingDivisor(context, angle::EntryPoint::GLVertexBindingDivisor,
-                                          bindingindex, divisor));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_1))
+            {
+                isCallValid = ValidateVertexBindingDivisor(
+                    context, angle::EntryPoint::GLVertexBindingDivisor, bindingindex, divisor);
+            }
+            else
+            {
+                RecordVersionErrorES31(context, angle::EntryPoint::GLVertexBindingDivisor);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->vertexBindingDivisor(bindingindex, divisor);

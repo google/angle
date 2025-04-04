@@ -33,8 +33,18 @@ void GL_APIENTRY GL_BlendBarrier()
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateBlendBarrier(context, angle::EntryPoint::GLBlendBarrier));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateBlendBarrier(context, angle::EntryPoint::GLBlendBarrier);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLBlendBarrier);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->blendBarrier();
@@ -58,11 +68,20 @@ void GL_APIENTRY GL_BlendEquationSeparatei(GLuint buf, GLenum modeRGB, GLenum mo
 
     if (context)
     {
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateBlendEquationSeparatei(
-                 context->getPrivateState(), context->getMutableErrorSetForValidation(),
-                 angle::EntryPoint::GLBlendEquationSeparatei, buf, modeRGB, modeAlpha));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateBlendEquationSeparatei(
+                    context->getPrivateState(), context->getMutableErrorSetForValidation(),
+                    angle::EntryPoint::GLBlendEquationSeparatei, buf, modeRGB, modeAlpha);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLBlendEquationSeparatei);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             ContextPrivateBlendEquationSeparatei(context->getMutablePrivateState(),
@@ -87,10 +106,20 @@ void GL_APIENTRY GL_BlendEquationi(GLuint buf, GLenum mode)
 
     if (context)
     {
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateBlendEquationi(context->getPrivateState(),
-                                                   context->getMutableErrorSetForValidation(),
-                                                   angle::EntryPoint::GLBlendEquationi, buf, mode));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateBlendEquationi(
+                    context->getPrivateState(), context->getMutableErrorSetForValidation(),
+                    angle::EntryPoint::GLBlendEquationi, buf, mode);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLBlendEquationi);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             ContextPrivateBlendEquationi(context->getMutablePrivateState(),
@@ -119,11 +148,21 @@ GL_BlendFuncSeparatei(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha,
 
     if (context)
     {
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateBlendFuncSeparatei(
-                 context->getPrivateState(), context->getMutableErrorSetForValidation(),
-                 angle::EntryPoint::GLBlendFuncSeparatei, buf, srcRGB, dstRGB, srcAlpha, dstAlpha));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateBlendFuncSeparatei(context->getPrivateState(),
+                                                         context->getMutableErrorSetForValidation(),
+                                                         angle::EntryPoint::GLBlendFuncSeparatei,
+                                                         buf, srcRGB, dstRGB, srcAlpha, dstAlpha);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLBlendFuncSeparatei);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             ContextPrivateBlendFuncSeparatei(context->getMutablePrivateState(),
@@ -150,10 +189,20 @@ void GL_APIENTRY GL_BlendFunci(GLuint buf, GLenum src, GLenum dst)
 
     if (context)
     {
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateBlendFunci(context->getPrivateState(),
-                                               context->getMutableErrorSetForValidation(),
-                                               angle::EntryPoint::GLBlendFunci, buf, src, dst));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateBlendFunci(context->getPrivateState(),
+                                                 context->getMutableErrorSetForValidation(),
+                                                 angle::EntryPoint::GLBlendFunci, buf, src, dst);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLBlendFunci);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             ContextPrivateBlendFunci(context->getMutablePrivateState(),
@@ -178,10 +227,20 @@ void GL_APIENTRY GL_ColorMaski(GLuint index, GLboolean r, GLboolean g, GLboolean
 
     if (context)
     {
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateColorMaski(context->getPrivateState(),
-                                               context->getMutableErrorSetForValidation(),
-                                               angle::EntryPoint::GLColorMaski, index, r, g, b, a));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateColorMaski(
+                    context->getPrivateState(), context->getMutableErrorSetForValidation(),
+                    angle::EntryPoint::GLColorMaski, index, r, g, b, a);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLColorMaski);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             ContextPrivateColorMaski(context->getMutablePrivateState(),
@@ -226,11 +285,21 @@ void GL_APIENTRY GL_CopyImageSubData(GLuint srcName,
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateCopyImageSubData(context, angle::EntryPoint::GLCopyImageSubData, srcName,
-                                      srcTarget, srcLevel, srcX, srcY, srcZ, dstName, dstTarget,
-                                      dstLevel, dstX, dstY, dstZ, srcWidth, srcHeight, srcDepth));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateCopyImageSubData(
+                    context, angle::EntryPoint::GLCopyImageSubData, srcName, srcTarget, srcLevel,
+                    srcX, srcY, srcZ, dstName, dstTarget, dstLevel, dstX, dstY, dstZ, srcWidth,
+                    srcHeight, srcDepth);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLCopyImageSubData);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->copyImageSubData(srcName, srcTarget, srcLevel, srcX, srcY, srcZ, dstName,
@@ -259,10 +328,19 @@ void GL_APIENTRY GL_DebugMessageCallback(GLDEBUGPROC callback, const void *userP
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateDebugMessageCallback(context, angle::EntryPoint::GLDebugMessageCallback,
-                                          callback, userParam));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateDebugMessageCallback(
+                    context, angle::EntryPoint::GLDebugMessageCallback, callback, userParam);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLDebugMessageCallback);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->debugMessageCallback(callback, userParam);
@@ -296,10 +374,20 @@ void GL_APIENTRY GL_DebugMessageControl(GLenum source,
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateDebugMessageControl(context, angle::EntryPoint::GLDebugMessageControl, source,
-                                         type, severity, count, ids, enabled));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid =
+                    ValidateDebugMessageControl(context, angle::EntryPoint::GLDebugMessageControl,
+                                                source, type, severity, count, ids, enabled);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLDebugMessageControl);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->debugMessageControl(source, type, severity, count, ids, enabled);
@@ -333,10 +421,20 @@ void GL_APIENTRY GL_DebugMessageInsert(GLenum source,
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateDebugMessageInsert(context, angle::EntryPoint::GLDebugMessageInsert, source,
-                                        type, id, severity, length, buf));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid =
+                    ValidateDebugMessageInsert(context, angle::EntryPoint::GLDebugMessageInsert,
+                                               source, type, id, severity, length, buf);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLDebugMessageInsert);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->debugMessageInsert(source, type, id, severity, length, buf);
@@ -360,10 +458,20 @@ void GL_APIENTRY GL_Disablei(GLenum target, GLuint index)
 
     if (context)
     {
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateDisablei(context->getPrivateState(),
-                                             context->getMutableErrorSetForValidation(),
-                                             angle::EntryPoint::GLDisablei, target, index));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateDisablei(context->getPrivateState(),
+                                               context->getMutableErrorSetForValidation(),
+                                               angle::EntryPoint::GLDisablei, target, index);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLDisablei);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             ContextPrivateDisablei(context->getMutablePrivateState(),
@@ -397,10 +505,20 @@ void GL_APIENTRY GL_DrawElementsBaseVertex(GLenum mode,
         PrimitiveMode modePacked    = PackParam<PrimitiveMode>(mode);
         DrawElementsType typePacked = PackParam<DrawElementsType>(type);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateDrawElementsBaseVertex(context, angle::EntryPoint::GLDrawElementsBaseVertex,
-                                            modePacked, count, typePacked, indices, basevertex));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateDrawElementsBaseVertex(
+                    context, angle::EntryPoint::GLDrawElementsBaseVertex, modePacked, count,
+                    typePacked, indices, basevertex);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLDrawElementsBaseVertex);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->drawElementsBaseVertex(modePacked, count, typePacked, indices, basevertex);
@@ -436,10 +554,21 @@ void GL_APIENTRY GL_DrawElementsInstancedBaseVertex(GLenum mode,
         PrimitiveMode modePacked    = PackParam<PrimitiveMode>(mode);
         DrawElementsType typePacked = PackParam<DrawElementsType>(type);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateDrawElementsInstancedBaseVertex(
-                                context, angle::EntryPoint::GLDrawElementsInstancedBaseVertex,
-                                modePacked, count, typePacked, indices, instancecount, basevertex));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateDrawElementsInstancedBaseVertex(
+                    context, angle::EntryPoint::GLDrawElementsInstancedBaseVertex, modePacked,
+                    count, typePacked, indices, instancecount, basevertex);
+            }
+            else
+            {
+                RecordVersionErrorES32(context,
+                                       angle::EntryPoint::GLDrawElementsInstancedBaseVertex);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->drawElementsInstancedBaseVertex(modePacked, count, typePacked, indices,
@@ -476,10 +605,20 @@ void GL_APIENTRY GL_DrawRangeElementsBaseVertex(GLenum mode,
         PrimitiveMode modePacked    = PackParam<PrimitiveMode>(mode);
         DrawElementsType typePacked = PackParam<DrawElementsType>(type);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateDrawRangeElementsBaseVertex(
-                                context, angle::EntryPoint::GLDrawRangeElementsBaseVertex,
-                                modePacked, start, end, count, typePacked, indices, basevertex));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateDrawRangeElementsBaseVertex(
+                    context, angle::EntryPoint::GLDrawRangeElementsBaseVertex, modePacked, start,
+                    end, count, typePacked, indices, basevertex);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLDrawRangeElementsBaseVertex);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->drawRangeElementsBaseVertex(modePacked, start, end, count, typePacked, indices,
@@ -504,10 +643,20 @@ void GL_APIENTRY GL_Enablei(GLenum target, GLuint index)
 
     if (context)
     {
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateEnablei(context->getPrivateState(), context->getMutableErrorSetForValidation(),
-                             angle::EntryPoint::GLEnablei, target, index));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateEnablei(context->getPrivateState(),
+                                              context->getMutableErrorSetForValidation(),
+                                              angle::EntryPoint::GLEnablei, target, index);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLEnablei);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             ContextPrivateEnablei(context->getMutablePrivateState(),
@@ -542,10 +691,20 @@ void GL_APIENTRY GL_FramebufferTexture(GLenum target,
         {
             context->endPixelLocalStorageImplicit();
         }
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateFramebufferTexture(context, angle::EntryPoint::GLFramebufferTexture, target,
-                                        attachment, texturePacked, level));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid =
+                    ValidateFramebufferTexture(context, angle::EntryPoint::GLFramebufferTexture,
+                                               target, attachment, texturePacked, level);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLFramebufferTexture);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->framebufferTexture(target, attachment, texturePacked, level);
@@ -582,10 +741,20 @@ GLuint GL_APIENTRY GL_GetDebugMessageLog(GLuint count,
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateGetDebugMessageLog(
-                                context, angle::EntryPoint::GLGetDebugMessageLog, count, bufSize,
-                                sources, types, ids, severities, lengths, messageLog));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateGetDebugMessageLog(
+                    context, angle::EntryPoint::GLGetDebugMessageLog, count, bufSize, sources,
+                    types, ids, severities, lengths, messageLog);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLGetDebugMessageLog);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             returnValue = context->getDebugMessageLog(count, bufSize, sources, types, ids,
@@ -617,9 +786,19 @@ GLenum GL_APIENTRY GL_GetGraphicsResetStatus()
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetGraphicsResetStatus(context, angle::EntryPoint::GLGetGraphicsResetStatus));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateGetGraphicsResetStatus(
+                    context, angle::EntryPoint::GLGetGraphicsResetStatus);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLGetGraphicsResetStatus);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             returnValue = context->getGraphicsResetStatus();
@@ -654,9 +833,19 @@ GL_GetObjectLabel(GLenum identifier, GLuint name, GLsizei bufSize, GLsizei *leng
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateGetObjectLabel(context, angle::EntryPoint::GLGetObjectLabel,
-                                                   identifier, name, bufSize, length, label));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateGetObjectLabel(context, angle::EntryPoint::GLGetObjectLabel,
+                                                     identifier, name, bufSize, length, label);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLGetObjectLabel);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->getObjectLabel(identifier, name, bufSize, length, label);
@@ -686,10 +875,19 @@ void GL_APIENTRY GL_GetObjectPtrLabel(const void *ptr,
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetObjectPtrLabel(context, angle::EntryPoint::GLGetObjectPtrLabel, ptr,
-                                       bufSize, length, label));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateGetObjectPtrLabel(
+                    context, angle::EntryPoint::GLGetObjectPtrLabel, ptr, bufSize, length, label);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLGetObjectPtrLabel);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->getObjectPtrLabel(ptr, bufSize, length, label);
@@ -713,9 +911,20 @@ void GL_APIENTRY GL_GetPointerv(GLenum pname, void **params)
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetPointerv(context, angle::EntryPoint::GLGetPointerv, pname, params));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() < ES_2_0 ||
+                             context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid =
+                    ValidateGetPointerv(context, angle::EntryPoint::GLGetPointerv, pname, params);
+            }
+            else
+            {
+                RecordVersionErrorES1Or32(context, angle::EntryPoint::GLGetPointerv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->getPointerv(pname, params);
@@ -741,10 +950,20 @@ void GL_APIENTRY GL_GetSamplerParameterIiv(GLuint sampler, GLenum pname, GLint *
     {
         SamplerID samplerPacked = PackParam<SamplerID>(sampler);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetSamplerParameterIiv(context, angle::EntryPoint::GLGetSamplerParameterIiv,
-                                            samplerPacked, pname, params));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateGetSamplerParameterIiv(
+                    context, angle::EntryPoint::GLGetSamplerParameterIiv, samplerPacked, pname,
+                    params);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLGetSamplerParameterIiv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->getSamplerParameterIiv(samplerPacked, pname, params);
@@ -771,10 +990,20 @@ void GL_APIENTRY GL_GetSamplerParameterIuiv(GLuint sampler, GLenum pname, GLuint
     {
         SamplerID samplerPacked = PackParam<SamplerID>(sampler);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetSamplerParameterIuiv(context, angle::EntryPoint::GLGetSamplerParameterIuiv,
-                                             samplerPacked, pname, params));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateGetSamplerParameterIuiv(
+                    context, angle::EntryPoint::GLGetSamplerParameterIuiv, samplerPacked, pname,
+                    params);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLGetSamplerParameterIuiv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->getSamplerParameterIuiv(samplerPacked, pname, params);
@@ -802,10 +1031,19 @@ void GL_APIENTRY GL_GetTexParameterIiv(GLenum target, GLenum pname, GLint *param
     {
         TextureType targetPacked = PackParam<TextureType>(target);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetTexParameterIiv(context, angle::EntryPoint::GLGetTexParameterIiv,
-                                        targetPacked, pname, params));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateGetTexParameterIiv(
+                    context, angle::EntryPoint::GLGetTexParameterIiv, targetPacked, pname, params);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLGetTexParameterIiv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->getTexParameterIiv(targetPacked, pname, params);
@@ -832,10 +1070,19 @@ void GL_APIENTRY GL_GetTexParameterIuiv(GLenum target, GLenum pname, GLuint *par
     {
         TextureType targetPacked = PackParam<TextureType>(target);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetTexParameterIuiv(context, angle::EntryPoint::GLGetTexParameterIuiv,
-                                         targetPacked, pname, params));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateGetTexParameterIuiv(
+                    context, angle::EntryPoint::GLGetTexParameterIuiv, targetPacked, pname, params);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLGetTexParameterIuiv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->getTexParameterIuiv(targetPacked, pname, params);
@@ -862,9 +1109,19 @@ void GL_APIENTRY GL_GetnUniformfv(GLuint program, GLint location, GLsizei bufSiz
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateGetnUniformfv(context, angle::EntryPoint::GLGetnUniformfv,
-                                                  programPacked, locationPacked, bufSize, params));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateGetnUniformfv(context, angle::EntryPoint::GLGetnUniformfv,
+                                                    programPacked, locationPacked, bufSize, params);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLGetnUniformfv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->getnUniformfv(programPacked, locationPacked, bufSize, params);
@@ -892,9 +1149,19 @@ void GL_APIENTRY GL_GetnUniformiv(GLuint program, GLint location, GLsizei bufSiz
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateGetnUniformiv(context, angle::EntryPoint::GLGetnUniformiv,
-                                                  programPacked, locationPacked, bufSize, params));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateGetnUniformiv(context, angle::EntryPoint::GLGetnUniformiv,
+                                                    programPacked, locationPacked, bufSize, params);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLGetnUniformiv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->getnUniformiv(programPacked, locationPacked, bufSize, params);
@@ -922,9 +1189,20 @@ void GL_APIENTRY GL_GetnUniformuiv(GLuint program, GLint location, GLsizei bufSi
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateGetnUniformuiv(context, angle::EntryPoint::GLGetnUniformuiv,
-                                                   programPacked, locationPacked, bufSize, params));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid =
+                    ValidateGetnUniformuiv(context, angle::EntryPoint::GLGetnUniformuiv,
+                                           programPacked, locationPacked, bufSize, params);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLGetnUniformuiv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->getnUniformuiv(programPacked, locationPacked, bufSize, params);
@@ -949,10 +1227,20 @@ GLboolean GL_APIENTRY GL_IsEnabledi(GLenum target, GLuint index)
     GLboolean returnValue;
     if (context)
     {
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateIsEnabledi(context->getPrivateState(),
-                                               context->getMutableErrorSetForValidation(),
-                                               angle::EntryPoint::GLIsEnabledi, target, index));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateIsEnabledi(context->getPrivateState(),
+                                                 context->getMutableErrorSetForValidation(),
+                                                 angle::EntryPoint::GLIsEnabledi, target, index);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLIsEnabledi);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             returnValue =
@@ -982,10 +1270,20 @@ void GL_APIENTRY GL_MinSampleShading(GLfloat value)
 
     if (context)
     {
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateMinSampleShading(context->getPrivateState(),
-                                                     context->getMutableErrorSetForValidation(),
-                                                     angle::EntryPoint::GLMinSampleShading, value));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateMinSampleShading(
+                    context->getPrivateState(), context->getMutableErrorSetForValidation(),
+                    angle::EntryPoint::GLMinSampleShading, value);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLMinSampleShading);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             ContextPrivateMinSampleShading(context->getMutablePrivateState(),
@@ -1012,9 +1310,19 @@ void GL_APIENTRY GL_ObjectLabel(GLenum identifier, GLuint name, GLsizei length, 
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateObjectLabel(context, angle::EntryPoint::GLObjectLabel,
-                                                identifier, name, length, label));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateObjectLabel(context, angle::EntryPoint::GLObjectLabel,
+                                                  identifier, name, length, label);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLObjectLabel);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->objectLabel(identifier, name, length, label);
@@ -1039,9 +1347,19 @@ void GL_APIENTRY GL_ObjectPtrLabel(const void *ptr, GLsizei length, const GLchar
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateObjectPtrLabel(context, angle::EntryPoint::GLObjectPtrLabel,
-                                                   ptr, length, label));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateObjectPtrLabel(context, angle::EntryPoint::GLObjectPtrLabel,
+                                                     ptr, length, label);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLObjectPtrLabel);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->objectPtrLabel(ptr, length, label);
@@ -1064,11 +1382,20 @@ void GL_APIENTRY GL_PatchParameteri(GLenum pname, GLint value)
 
     if (context)
     {
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidatePatchParameteri(context->getPrivateState(),
-                                     context->getMutableErrorSetForValidation(),
-                                     angle::EntryPoint::GLPatchParameteri, pname, value));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidatePatchParameteri(
+                    context->getPrivateState(), context->getMutableErrorSetForValidation(),
+                    angle::EntryPoint::GLPatchParameteri, pname, value);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLPatchParameteri);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             ContextPrivatePatchParameteri(context->getMutablePrivateState(),
@@ -1092,8 +1419,18 @@ void GL_APIENTRY GL_PopDebugGroup()
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidatePopDebugGroup(context, angle::EntryPoint::GLPopDebugGroup));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidatePopDebugGroup(context, angle::EntryPoint::GLPopDebugGroup);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLPopDebugGroup);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->popDebugGroup();
@@ -1125,12 +1462,21 @@ void GL_APIENTRY GL_PrimitiveBoundingBox(GLfloat minX,
 
     if (context)
     {
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidatePrimitiveBoundingBox(context->getPrivateState(),
-                                          context->getMutableErrorSetForValidation(),
-                                          angle::EntryPoint::GLPrimitiveBoundingBox, minX, minY,
-                                          minZ, minW, maxX, maxY, maxZ, maxW));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidatePrimitiveBoundingBox(
+                    context->getPrivateState(), context->getMutableErrorSetForValidation(),
+                    angle::EntryPoint::GLPrimitiveBoundingBox, minX, minY, minZ, minW, maxX, maxY,
+                    maxZ, maxW);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLPrimitiveBoundingBox);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             ContextPrivatePrimitiveBoundingBox(context->getMutablePrivateState(),
@@ -1159,9 +1505,19 @@ void GL_APIENTRY GL_PushDebugGroup(GLenum source, GLuint id, GLsizei length, con
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidatePushDebugGroup(context, angle::EntryPoint::GLPushDebugGroup,
-                                                   source, id, length, message));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidatePushDebugGroup(context, angle::EntryPoint::GLPushDebugGroup,
+                                                     source, id, length, message);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLPushDebugGroup);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->pushDebugGroup(source, id, length, message);
@@ -1195,9 +1551,19 @@ void GL_APIENTRY GL_ReadnPixels(GLint x,
     if (context)
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateReadnPixels(context, angle::EntryPoint::GLReadnPixels, x, y,
-                                                width, height, format, type, bufSize, data));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateReadnPixels(context, angle::EntryPoint::GLReadnPixels, x, y,
+                                                  width, height, format, type, bufSize, data);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLReadnPixels);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->readnPixels(x, y, width, height, format, type, bufSize, data);
@@ -1224,10 +1590,19 @@ void GL_APIENTRY GL_SamplerParameterIiv(GLuint sampler, GLenum pname, const GLin
     {
         SamplerID samplerPacked = PackParam<SamplerID>(sampler);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateSamplerParameterIiv(context, angle::EntryPoint::GLSamplerParameterIiv,
-                                         samplerPacked, pname, param));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateSamplerParameterIiv(
+                    context, angle::EntryPoint::GLSamplerParameterIiv, samplerPacked, pname, param);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLSamplerParameterIiv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->samplerParameterIiv(samplerPacked, pname, param);
@@ -1253,10 +1628,20 @@ void GL_APIENTRY GL_SamplerParameterIuiv(GLuint sampler, GLenum pname, const GLu
     {
         SamplerID samplerPacked = PackParam<SamplerID>(sampler);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateSamplerParameterIuiv(context, angle::EntryPoint::GLSamplerParameterIuiv,
-                                          samplerPacked, pname, param));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid =
+                    ValidateSamplerParameterIuiv(context, angle::EntryPoint::GLSamplerParameterIuiv,
+                                                 samplerPacked, pname, param);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLSamplerParameterIuiv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->samplerParameterIuiv(samplerPacked, pname, param);
@@ -1283,9 +1668,19 @@ void GL_APIENTRY GL_TexBuffer(GLenum target, GLenum internalformat, GLuint buffe
         TextureType targetPacked = PackParam<TextureType>(target);
         BufferID bufferPacked    = PackParam<BufferID>(buffer);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateTexBuffer(context, angle::EntryPoint::GLTexBuffer, targetPacked,
-                                              internalformat, bufferPacked));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateTexBuffer(context, angle::EntryPoint::GLTexBuffer,
+                                                targetPacked, internalformat, bufferPacked);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLTexBuffer);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->texBuffer(targetPacked, internalformat, bufferPacked);
@@ -1319,10 +1714,20 @@ void GL_APIENTRY GL_TexBufferRange(GLenum target,
         TextureType targetPacked = PackParam<TextureType>(target);
         BufferID bufferPacked    = PackParam<BufferID>(buffer);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateTexBufferRange(context, angle::EntryPoint::GLTexBufferRange, targetPacked,
-                                    internalformat, bufferPacked, offset, size));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateTexBufferRange(context, angle::EntryPoint::GLTexBufferRange,
+                                                     targetPacked, internalformat, bufferPacked,
+                                                     offset, size);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLTexBufferRange);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->texBufferRange(targetPacked, internalformat, bufferPacked, offset, size);
@@ -1350,9 +1755,19 @@ void GL_APIENTRY GL_TexParameterIiv(GLenum target, GLenum pname, const GLint *pa
     {
         TextureType targetPacked = PackParam<TextureType>(target);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateTexParameterIiv(context, angle::EntryPoint::GLTexParameterIiv,
-                                                    targetPacked, pname, params));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateTexParameterIiv(context, angle::EntryPoint::GLTexParameterIiv,
+                                                      targetPacked, pname, params);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLTexParameterIiv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->texParameterIiv(targetPacked, pname, params);
@@ -1379,9 +1794,19 @@ void GL_APIENTRY GL_TexParameterIuiv(GLenum target, GLenum pname, const GLuint *
     {
         TextureType targetPacked = PackParam<TextureType>(target);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateTexParameterIuiv(context, angle::EntryPoint::GLTexParameterIuiv,
-                                                     targetPacked, pname, params));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateTexParameterIuiv(
+                    context, angle::EntryPoint::GLTexParameterIuiv, targetPacked, pname, params);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLTexParameterIuiv);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->texParameterIuiv(targetPacked, pname, params);
@@ -1416,11 +1841,20 @@ void GL_APIENTRY GL_TexStorage3DMultisample(GLenum target,
     {
         TextureType targetPacked = PackParam<TextureType>(target);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateTexStorage3DMultisample(context, angle::EntryPoint::GLTexStorage3DMultisample,
-                                             targetPacked, samples, internalformat, width, height,
-                                             depth, fixedsamplelocations));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getClientVersion() >= ES_3_2))
+            {
+                isCallValid = ValidateTexStorage3DMultisample(
+                    context, angle::EntryPoint::GLTexStorage3DMultisample, targetPacked, samples,
+                    internalformat, width, height, depth, fixedsamplelocations);
+            }
+            else
+            {
+                RecordVersionErrorES32(context, angle::EntryPoint::GLTexStorage3DMultisample);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->texStorage3DMultisample(targetPacked, samples, internalformat, width, height,

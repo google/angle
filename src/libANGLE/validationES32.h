@@ -14,7 +14,10 @@
 
 namespace gl
 {
-// Nothing here yet.
+
+void RecordVersionErrorES1Or32(const Context *context, angle::EntryPoint entryPoint);
+void RecordVersionErrorES32(const Context *context, angle::EntryPoint entryPoint);
+
 }  // namespace gl
 
 #endif  // LIBANGLE_VALIDATION_ES32_H_

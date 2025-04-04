@@ -15,6 +15,8 @@
 namespace gl
 {
 
+void RecordVersionErrorES31(const Context *context, angle::EntryPoint entryPoint);
+
 bool ValidateTexBufferBase(const Context *context,
                            angle::EntryPoint entryPoint,
                            TextureType target,
