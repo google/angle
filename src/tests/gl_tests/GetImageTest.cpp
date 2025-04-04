@@ -901,10 +901,10 @@ TEST_P(GetImageTest, CompressedTexImageNotBlockMultiple)
     EXPECT_EQ(expectedData, actualData);
 }
 
-void TestCompressedTexImage3D(GLenum target, uint32_t numLayers)
+void TestCompressedTexImage3D(GLenum target, uint32_t numLayers, int clientMajorVersion)
 {
-    auto func = [target, numLayers](const CompressionExtension &ext,
-                                    const CompressedFormat &format) {
+    auto func = [target, numLayers, clientMajorVersion](const CompressionExtension &ext,
+                                                        const CompressedFormat &format) {
         // Skip extensions lacking 2D array and 3D support
         if ((target == GL_TEXTURE_2D_ARRAY && !ext.supports2DArray) ||
             (target == GL_TEXTURE_3D && !ext.supports3D))
@@ -932,8 +932,17 @@ void TestCompressedTexImage3D(GLenum target, uint32_t numLayers)
             expectedData.push_back(i);
         }
 
-        glCompressedTexImage3D(target, 0, format.id, format.w, format.h, numLayers, 0, size,
-                               expectedData.data());
+        if (clientMajorVersion < 3)
+        {
+            ASSERT_TRUE(IsGLExtensionEnabled("GL_OES_texture_3D"));
+            glCompressedTexImage3DOES(target, 0, format.id, format.w, format.h, numLayers, 0, size,
+                                      expectedData.data());
+        }
+        else
+        {
+            glCompressedTexImage3D(target, 0, format.id, format.w, format.h, numLayers, 0, size,
+                                   expectedData.data());
+        }
 
         if (IsFormatEmulated(target))
         {
@@ -955,15 +964,17 @@ TEST_P(GetImageTestES3, CompressedTexImage2DArray)
 {
     // Verify the extension is enabled.
     ASSERT_TRUE(IsGLExtensionEnabled(kExtensionName));
-    TestCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 8);
+    TestCompressedTexImage3D(GL_TEXTURE_2D_ARRAY, 8, getClientMajorVersion());
 }
 
 // Tests GetCompressedTexImage with 3D textures.
 TEST_P(GetImageTest, CompressedTexImage3D)
 {
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !IsGLExtensionEnabled("GL_OES_texture_3D"));
+
     // Verify the extension is enabled.
     ASSERT_TRUE(IsGLExtensionEnabled(kExtensionName));
-    TestCompressedTexImage3D(GL_TEXTURE_3D, 8);
+    TestCompressedTexImage3D(GL_TEXTURE_3D, 8, getClientMajorVersion());
 }
 
 // Simple cube map test for GetCompressedTexImage

@@ -648,9 +648,19 @@ void main()
         // Create a source 3D texture
         glBindTexture(GL_TEXTURE_3D, sourceTexture);
 
-        glTexImage3D(GL_TEXTURE_3D, 0, format, static_cast<GLsizei>(width),
-                     static_cast<GLsizei>(height), static_cast<GLsizei>(depth), 0, format, type,
-                     data);
+        if (getClientMajorVersion() < 3)
+        {
+            ASSERT_TRUE(IsGLExtensionEnabled("GL_OES_texture_3D"));
+            glTexImage3DOES(GL_TEXTURE_3D, 0, format, static_cast<GLsizei>(width),
+                            static_cast<GLsizei>(height), static_cast<GLsizei>(depth), 0, format,
+                            type, data);
+        }
+        else
+        {
+            glTexImage3D(GL_TEXTURE_3D, 0, format, static_cast<GLsizei>(width),
+                         static_cast<GLsizei>(height), static_cast<GLsizei>(depth), 0, format, type,
+                         data);
+        }
 
         // Disable mipmapping
         glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
