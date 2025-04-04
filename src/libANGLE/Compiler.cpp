@@ -336,8 +336,8 @@ void Compiler::putInstance(ShCompilerInstance &&instance)
 
 ShShaderSpec Compiler::SelectShaderSpec(const State &state)
 {
-    const GLint majorVersion = state.getClientMajorVersion();
-    const GLint minorVersion = state.getClientMinorVersion();
+    const GLint majorVersion = state.getClientVersion().getMajor();
+    const GLint minorVersion = state.getClientVersion().getMinor();
     bool isWebGL             = state.isWebGL();
 
     if (majorVersion >= 3)

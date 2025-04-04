@@ -245,7 +245,6 @@ class ContextImpl : public GLImplFactory
 
     const gl::State &getState() const { return mState; }
     int getClientMajorVersion() const { return mState.getClientMajorVersion(); }
-    int getClientMinorVersion() const { return mState.getClientMinorVersion(); }
     const gl::Caps &getCaps() const { return mState.getCaps(); }
     const gl::TextureCapsMap &getTextureCaps() const { return mState.getTextureCaps(); }
     const gl::Extensions &getExtensions() const { return mState.getExtensions(); }

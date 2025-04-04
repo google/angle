@@ -671,7 +671,6 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     const State &getState() const { return mState; }
     const PrivateState &getPrivateState() const { return mState.privateState(); }
     GLint getClientMajorVersion() const { return mState.getClientMajorVersion(); }
-    GLint getClientMinorVersion() const { return mState.getClientMinorVersion(); }
     const Version &getClientVersion() const { return mState.getClientVersion(); }
     const Caps &getCaps() const { return mState.getCaps(); }
     const TextureCapsMap &getTextureCaps() const { return mState.getTextureCaps(); }

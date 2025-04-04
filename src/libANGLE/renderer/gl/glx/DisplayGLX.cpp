@@ -915,10 +915,10 @@ egl::Error DisplayGLX::createContextAttribs(glx::FBConfig,
     if (version.valid())
     {
         attribs.push_back(GLX_CONTEXT_MAJOR_VERSION_ARB);
-        attribs.push_back(version.value().major);
+        attribs.push_back(version.value().getMajor());
 
         attribs.push_back(GLX_CONTEXT_MINOR_VERSION_ARB);
-        attribs.push_back(version.value().minor);
+        attribs.push_back(version.value().getMinor());
     }
 
     if (profileMask != 0 && mHasARBCreateContextProfile)

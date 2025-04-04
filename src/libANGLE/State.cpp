@@ -800,7 +800,7 @@ void PrivateState::setBlendColor(float red, float green, float blue, float alpha
 {
     // In ES2 without render-to-float extensions, BlendColor clamps to [0,1] on store.
     // On ES3+, or with render-to-float exts enabled, it does not clamp on store.
-    const bool isES2 = mClientVersion.major == 2;
+    const bool isES2 = mClientVersion == ES_2_0;
     const bool hasFloatBlending =
         mExtensions.colorBufferFloatEXT || mExtensions.colorBufferHalfFloatEXT ||
         mExtensions.colorBufferFloatRgbCHROMIUM || mExtensions.colorBufferFloatRgbaCHROMIUM;
@@ -1490,7 +1490,7 @@ void PrivateState::setEnableFeature(GLenum feature, bool enabled)
             setDither(enabled);
             return;
         case GL_COLOR_LOGIC_OP:
-            if (mClientVersion.major == 1)
+            if (mClientVersion < ES_2_0)
             {
                 // Handle logicOp in GLES1 through the GLES1 state management and emulation.
                 // Otherwise this state could be set as part of ANGLE_logic_op.
@@ -1533,7 +1533,7 @@ void PrivateState::setEnableFeature(GLenum feature, bool enabled)
         case GL_CLIP_DISTANCE7_EXT:
             // NOTE(hqle): These enums are conflicted with GLES1's enums, need
             // to do additional check here:
-            if (mClientVersion.major >= 2)
+            if (mClientVersion >= ES_2_0)
             {
                 setClipDistanceEnable(feature - GL_CLIP_DISTANCE0_EXT, enabled);
                 return;
@@ -1549,7 +1549,7 @@ void PrivateState::setEnableFeature(GLenum feature, bool enabled)
             break;
     }
 
-    ASSERT(mClientVersion.major == 1);
+    ASSERT(mClientVersion < ES_2_0);
 
     // GLES1 emulation. Need to separate from main switch due to conflict enum between
     // GL_CLIP_DISTANCE0_EXT & GL_CLIP_PLANE0
@@ -1661,7 +1661,7 @@ bool PrivateState::getEnableFeature(GLenum feature) const
         case GL_DITHER:
             return isDitherEnabled();
         case GL_COLOR_LOGIC_OP:
-            if (mClientVersion.major == 1)
+            if (mClientVersion < ES_2_0)
             {
                 // Handle logicOp in GLES1 through the GLES1 state management and emulation.
                 break;
@@ -1700,7 +1700,7 @@ bool PrivateState::getEnableFeature(GLenum feature) const
         case GL_CLIP_DISTANCE5_EXT:
         case GL_CLIP_DISTANCE6_EXT:
         case GL_CLIP_DISTANCE7_EXT:
-            if (mClientVersion.major >= 2)
+            if (mClientVersion >= ES_2_0)
             {
                 // If GLES version is 1, the GL_CLIP_DISTANCE0_EXT enum will be used as
                 // GL_CLIP_PLANE0 instead.
@@ -1713,7 +1713,7 @@ bool PrivateState::getEnableFeature(GLenum feature) const
             return mFetchPerSample;
     }
 
-    ASSERT(mClientVersion.major == 1);
+    ASSERT(mClientVersion < ES_2_0);
 
     switch (feature)
     {
@@ -1842,7 +1842,7 @@ void PrivateState::getBooleanv(GLenum pname, GLboolean *params) const
             *params = mRasterizer.dither;
             break;
         case GL_COLOR_LOGIC_OP:
-            if (mClientVersion.major == 1)
+            if (mClientVersion < ES_2_0)
             {
                 // Handle logicOp in GLES1 through the GLES1 state management.
                 *params = getEnableFeature(pname);
@@ -1909,7 +1909,7 @@ void PrivateState::getBooleanv(GLenum pname, GLboolean *params) const
         case GL_CLIP_DISTANCE5_EXT:
         case GL_CLIP_DISTANCE6_EXT:
         case GL_CLIP_DISTANCE7_EXT:
-            if (mClientVersion.major >= 2)
+            if (mClientVersion >= ES_2_0)
             {
                 // If GLES version is 1, the GL_CLIP_DISTANCE0_EXT enum will be used as
                 // GL_CLIP_PLANE0 instead.
@@ -1925,7 +1925,7 @@ void PrivateState::getBooleanv(GLenum pname, GLboolean *params) const
             *params = mCaps.fragmentShaderFramebufferFetchMRT;
             break;
         default:
-            if (mClientVersion.major == 1)
+            if (mClientVersion < ES_2_0)
             {
                 *params = getEnableFeature(pname);
             }

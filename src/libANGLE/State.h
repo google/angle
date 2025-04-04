@@ -53,13 +53,6 @@ class SyncManager;
 class TextureManager;
 class VertexArray;
 
-static constexpr Version ES_1_0 = Version(1, 0);
-static constexpr Version ES_1_1 = Version(1, 1);
-static constexpr Version ES_2_0 = Version(2, 0);
-static constexpr Version ES_3_0 = Version(3, 0);
-static constexpr Version ES_3_1 = Version(3, 1);
-static constexpr Version ES_3_2 = Version(3, 2);
-
 template <typename T>
 using BufferBindingMap     = angle::PackedEnumMap<BufferBinding, T>;
 using BoundBufferMap       = BufferBindingMap<BindingPointer<Buffer>>;
@@ -235,11 +228,10 @@ class PrivateState : angle::NonCopyable
     void reset();
 
     const Version &getClientVersion() const { return mClientVersion; }
-    GLint getClientMajorVersion() const { return mClientVersion.major; }
-    GLint getClientMinorVersion() const { return mClientVersion.minor; }
+    GLint getClientMajorVersion() const { return mClientVersion.getMajor(); }
 
     bool isWebGL() const { return getExtensions().webglCompatibilityANGLE; }
-    bool isWebGL1() const { return isWebGL() && getClientVersion().major == 2; }
+    bool isWebGL1() const { return isWebGL() && getClientVersion() == ES_2_0; }
     bool isGLES1() const { return getClientVersion() < ES_2_0; }
 
     const Caps &getCaps() const { return mCaps; }
@@ -798,7 +790,6 @@ class State : angle::NonCopyable
     bool hasProtectedContent() const { return mHasProtectedContent; }
     bool isDebugContext() const { return mIsDebugContext; }
     GLint getClientMajorVersion() const { return mPrivateState.getClientMajorVersion(); }
-    GLint getClientMinorVersion() const { return mPrivateState.getClientMinorVersion(); }
     const Version &getClientVersion() const { return mPrivateState.getClientVersion(); }
     egl::ShareGroup *getShareGroup() const { return mShareGroup; }
 

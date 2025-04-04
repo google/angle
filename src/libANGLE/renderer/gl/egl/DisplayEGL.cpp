@@ -158,9 +158,9 @@ egl::Error DisplayEGL::initializeContext(EGLContext shareContext,
             {
                 egl::AttributeMap versionAttribs;
                 versionAttribs.insert(EGL_CONTEXT_MAJOR_VERSION,
-                                      static_cast<EGLint>(version.major));
+                                      static_cast<EGLint>(version.getMajor()));
                 versionAttribs.insert(EGL_CONTEXT_MINOR_VERSION,
-                                      static_cast<EGLint>(version.minor));
+                                      static_cast<EGLint>(version.getMinor()));
 
                 contextAttribLists.push_back(std::move(versionAttribs));
             }

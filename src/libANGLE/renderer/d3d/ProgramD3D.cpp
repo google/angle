@@ -200,7 +200,7 @@ bool ProgramD3DMetadata::usesBroadcast(const gl::Version &clientVersion) const
 {
     const SharedCompiledShaderStateD3D &shader = mAttachedShaders[gl::ShaderType::Fragment];
     return shader && shader->usesFragColor && shader->usesMultipleRenderTargets &&
-           clientVersion.major < 3;
+           clientVersion < gl::ES_3_0;
 }
 
 bool ProgramD3DMetadata::usesSecondaryColor() const

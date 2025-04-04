@@ -700,7 +700,7 @@ bool ValidCapUncommon(const PrivateState &state, ErrorSet *errors, GLenum cap, b
     }
 
     // GLES1 emulation: GLES1-specific caps after this point
-    if (state.getClientVersion().major != 1)
+    if (state.getClientVersion() >= ES_2_0)
     {
         return false;
     }

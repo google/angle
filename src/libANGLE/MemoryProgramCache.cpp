@@ -84,8 +84,8 @@ void MemoryProgramCache::ComputeHash(const Context *context,
     // Add some ANGLE metadata and Context properties, such as version and back-end.
     hashStream.writeString(angle::GetANGLEShaderProgramVersion());
     hashStream.writeInt(angle::GetANGLESHVersion());
-    hashStream.writeInt(context->getClientMajorVersion());
-    hashStream.writeInt(context->getClientMinorVersion());
+    hashStream.writeInt(context->getClientVersion().getMajor());
+    hashStream.writeInt(context->getClientVersion().getMinor());
     hashStream.writeString(reinterpret_cast<const char *>(context->getString(GL_RENDERER)));
 
     // Hash pre-link program properties.

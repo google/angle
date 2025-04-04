@@ -46,8 +46,7 @@ static inline SupportRequirement VersionOrExts(uint8_t major,
                                                const std::string &versionExt)
 {
     SupportRequirement requirement;
-    requirement.version.major = major;
-    requirement.version.minor = minor;
+    requirement.version = gl::Version(major, minor);
     angle::SplitStringAlongWhitespace(versionExt, &requirement.versionExtensions);
     return requirement;
 }
@@ -61,8 +60,7 @@ static inline SupportRequirement ExtAndVersionOrExt(const std::string &requiredE
     SupportRequirement requirement;
     requirement.requiredExtensions.resize(1);
     angle::SplitStringAlongWhitespace(requiredExt, &requirement.requiredExtensions[0]);
-    requirement.version.major = major;
-    requirement.version.minor = minor;
+    requirement.version = gl::Version(major, minor);
     angle::SplitStringAlongWhitespace(requiredWithoutVersionExt, &requirement.versionExtensions);
     return requirement;
 }
@@ -71,8 +69,7 @@ static inline SupportRequirement ExtAndVersionOrExt(const std::string &requiredE
 static inline SupportRequirement VersionOnly(uint8_t major, uint8_t minor)
 {
     SupportRequirement requirement;
-    requirement.version.major = major;
-    requirement.version.minor = minor;
+    requirement.version = gl::Version(major, minor);
     return requirement;
 }
 
@@ -80,8 +77,7 @@ static inline SupportRequirement VersionOnly(uint8_t major, uint8_t minor)
 static inline SupportRequirement ExtsOnly(const std::vector<std::string> &exts)
 {
     SupportRequirement requirement;
-    requirement.version.major = 0;
-    requirement.version.minor = 0;
+    requirement.version = gl::Version();
     requirement.requiredExtensions.resize(exts.size());
     for (size_t i = 0; i < exts.size(); i++)
     {
@@ -106,8 +102,7 @@ static inline SupportRequirement ExtsOnly(const std::string &ext1, const std::st
 static inline SupportRequirement AlwaysSupported()
 {
     SupportRequirement requirement;
-    requirement.version.major = 0;
-    requirement.version.minor = 0;
+    requirement.version = gl::Version();
     return requirement;
 }
 
@@ -115,8 +110,8 @@ static inline SupportRequirement AlwaysSupported()
 static inline SupportRequirement NeverSupported()
 {
     SupportRequirement requirement;
-    requirement.version.major = std::numeric_limits<uint8_t>::max();
-    requirement.version.minor = std::numeric_limits<uint8_t>::max();
+    requirement.version =
+        gl::Version(std::numeric_limits<uint8_t>::max(), std::numeric_limits<uint8_t>::max());
     return requirement;
 }
 

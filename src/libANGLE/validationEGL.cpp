@@ -1300,7 +1300,7 @@ bool ValidateCompatibleSurface(const ValidationContext *val,
     const Config *surfaceConfig = surface->getConfig();
 
     // Surface compatible with client API - only OPENGL_ES supported
-    switch (context->getClientMajorVersion())
+    switch (context->getClientVersion().getMajor())
     {
         case 1:
             if (!(surfaceConfig->renderableType & EGL_OPENGL_ES_BIT))
@@ -2861,8 +2861,9 @@ bool ValidateCreateContext(const ValidationContext *val,
                         val->setError(EGL_BAD_MATCH,
                                       "Requested GLES version (%" PRIxPTR ".%" PRIxPTR
                                       ") is greater than "
-                                      "max supported (%d, %d).",
-                                      clientMajorVersion, clientMinorVersion, max.major, max.minor);
+                                      "max supported (%d.%d).",
+                                      clientMajorVersion, clientMinorVersion, max.getMajor(),
+                                      max.getMinor());
                         return false;
                     }
                     if ((attributes.get(EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE, EGL_FALSE) ==

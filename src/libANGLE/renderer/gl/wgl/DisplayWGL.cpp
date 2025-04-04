@@ -845,10 +845,10 @@ HGLRC DisplayWGL::createContextAttribs(const gl::Version &version, int profileMa
     }
 
     attribs.push_back(WGL_CONTEXT_MAJOR_VERSION_ARB);
-    attribs.push_back(version.major);
+    attribs.push_back(version.getMajor());
 
     attribs.push_back(WGL_CONTEXT_MINOR_VERSION_ARB);
-    attribs.push_back(version.minor);
+    attribs.push_back(version.getMinor());
 
     if (profileMask != 0)
     {

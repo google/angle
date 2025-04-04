@@ -261,7 +261,7 @@ Version GetClientVersion(egl::Display *display, const egl::AttributeMap &attribs
                                    static_cast<uint8_t>(GetClientMinorVersion(attribs)));
     if (GetBackwardCompatibleContext(attribs))
     {
-        if (requestedVersion.major == 1)
+        if (requestedVersion < ES_2_0)
         {
             // If the user requests an ES1 context, we cannot return an ES 2+ context.
             return Version(1, 1);
@@ -2002,10 +2002,10 @@ void Context::getIntegervImpl(GLenum pname, GLint *params) const
             *params = mState.getCaps().maxProgramTexelOffset;
             break;
         case GL_MAJOR_VERSION:
-            *params = getClientVersion().major;
+            *params = getClientVersion().getMajor();
             break;
         case GL_MINOR_VERSION:
-            *params = getClientVersion().minor;
+            *params = getClientVersion().getMinor();
             break;
         case GL_MAX_ELEMENTS_INDICES:
             *params = mState.getCaps().maxElementsIndices;
@@ -2375,7 +2375,7 @@ void Context::getIntegervImpl(GLenum pname, GLint *params) const
 
         // case GL_MAX_CLIP_DISTANCES_EXT:  Conflict enum value
         case GL_MAX_CLIP_PLANES:
-            if (getClientVersion().major >= 2)
+            if (getClientVersion() >= ES_2_0)
             {
                 // GL_APPLE_clip_distance / GL_EXT_clip_cull_distance / GL_ANGLE_clip_cull_distance
                 *params = mState.getCaps().maxClipDistances;

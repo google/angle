@@ -539,8 +539,8 @@ void SerializeContextState(JsonSerializer *json, const gl::State &state)
 {
     GroupScope group(json, "ContextState");
     json->addScalar("Priority", state.getContextPriority());
-    json->addScalar("Major", state.getClientMajorVersion());
-    json->addScalar("Minor", state.getClientMinorVersion());
+    json->addScalar("Major", state.getClientVersion().getMajor());
+    json->addScalar("Minor", state.getClientVersion().getMinor());
     SerializeColorFWithGroup(json, "ColorClearValue", state.getColorClearValue());
     json->addScalar("DepthClearValue", state.getDepthClearValue());
     json->addScalar("StencilClearValue", state.getStencilClearValue());

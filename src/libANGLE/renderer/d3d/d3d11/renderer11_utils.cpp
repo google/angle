@@ -96,7 +96,7 @@ gl::TextureCaps GenerateTextureFormatCaps(gl::Version maxClientVersion,
     if (internalFormatInfo.depthBits == 0 && internalFormatInfo.stencilBits == 0)
     {
         texSupportMask |= D3D11_FORMAT_SUPPORT_TEXTURECUBE;
-        if (maxClientVersion.major > 2)
+        if (maxClientVersion >= gl::ES_3_0)
         {
             texSupportMask |= D3D11_FORMAT_SUPPORT_TEXTURE3D;
         }

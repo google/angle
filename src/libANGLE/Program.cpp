@@ -2164,8 +2164,8 @@ angle::Result Program::serialize(const Context *context)
     // nullptr context is supported when computing binary length.
     if (context)
     {
-        stream.writeInt(context->getClientVersion().major);
-        stream.writeInt(context->getClientVersion().minor);
+        stream.writeInt(context->getClientVersion().getMajor());
+        stream.writeInt(context->getClientVersion().getMinor());
     }
     else
     {
@@ -2265,10 +2265,10 @@ bool Program::deserialize(const Context *context, BinaryInputStream &stream)
         return false;
     }
 
-    int majorVersion = stream.readInt<int>();
-    int minorVersion = stream.readInt<int>();
-    if (majorVersion != context->getClientMajorVersion() ||
-        minorVersion != context->getClientMinorVersion())
+    const uint32_t majorVersion = stream.readInt<int>();
+    const uint32_t minorVersion = stream.readInt<int>();
+    if (majorVersion != context->getClientVersion().getMajor() ||
+        minorVersion != context->getClientVersion().getMinor())
     {
         mState.mInfoLog << "Cannot load program binaries across different ES context versions.";
         return false;

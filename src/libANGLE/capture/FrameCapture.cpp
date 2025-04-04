@@ -8617,8 +8617,8 @@ void FrameCaptureShared::writeJSON(const gl::Context *context)
     JsonSerializer json;
     json.startGroup("TraceMetadata");
     json.addScalar("CaptureRevision", GetANGLERevision());
-    json.addScalar("ContextClientMajorVersion", context->getClientMajorVersion());
-    json.addScalar("ContextClientMinorVersion", context->getClientMinorVersion());
+    json.addScalar("ContextClientMajorVersion", context->getClientVersion().getMajor());
+    json.addScalar("ContextClientMinorVersion", context->getClientVersion().getMinor());
     json.addHexValue("DisplayPlatformType", displayAttribs.getAsInt(EGL_PLATFORM_ANGLE_TYPE_ANGLE));
     json.addHexValue("DisplayDeviceType",
                      displayAttribs.getAsInt(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE));

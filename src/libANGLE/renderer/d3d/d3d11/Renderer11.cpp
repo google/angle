@@ -1330,7 +1330,7 @@ egl::ConfigSet Renderer11::generateConfigs()
                     }
 
                     // We can only support conformant ES3 on FL 10.1+
-                    if (maxVersion.major >= 3)
+                    if (maxVersion >= gl::ES_3_0)
                     {
                         config.conformant |= EGL_OPENGL_ES3_BIT_KHR;
                     }
@@ -1351,7 +1351,7 @@ egl::ConfigSet Renderer11::generateConfigs()
 
                 // Can't support ES3 at all without feature level 10.1
                 config.renderableType = EGL_OPENGL_ES2_BIT;
-                if (maxVersion.major >= 3)
+                if (maxVersion >= gl::ES_3_0)
                 {
                     config.renderableType |= EGL_OPENGL_ES3_BIT_KHR;
                 }
@@ -3940,7 +3940,7 @@ angle::Result Renderer11::blitRenderbufferRect(const gl::Context *context,
 
 bool Renderer11::isES3Capable() const
 {
-    return (d3d11_gl::GetMaximumClientVersion(mRenderer11DeviceCaps).major > 2);
+    return (d3d11_gl::GetMaximumClientVersion(mRenderer11DeviceCaps) >= gl::ES_3_0);
 }
 
 RendererClass Renderer11::getRendererClass() const
