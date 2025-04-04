@@ -14,6 +14,9 @@
 
 namespace gl
 {
+
+void RecordVersionErrorES30(const Context *context, angle::EntryPoint entryPoint);
+
 bool ValidateTexImageFormatCombination(const Context *context,
                                        angle::EntryPoint entryPoint,
                                        TextureType target,

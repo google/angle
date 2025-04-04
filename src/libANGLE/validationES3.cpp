@@ -29,6 +29,11 @@ namespace gl
 {
 using namespace err;
 
+void RecordVersionErrorES30(const Context *context, angle::EntryPoint entryPoint)
+{
+    ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
+}
+
 namespace
 {
 bool ValidateFramebufferTextureMultiviewBaseANGLE(const Context *context,
@@ -86,58 +91,8 @@ bool ValidateFramebufferTextureMultiviewLevelAndFormat(const Context *context,
     return true;
 }
 
-bool ValidateUniformES3(const Context *context,
-                        angle::EntryPoint entryPoint,
-                        GLenum uniformType,
-                        UniformLocation location,
-                        GLint count)
-{
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
-    return ValidateUniform(context, entryPoint, uniformType, location, count);
-}
-
-bool ValidateUniformMatrixES3(const Context *context,
-                              angle::EntryPoint entryPoint,
-                              GLenum valueType,
-                              UniformLocation location,
-                              GLsizei count,
-                              GLboolean transpose)
-{
-    // Check for ES3 uniform entry points
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
-    return ValidateUniformMatrix(context, entryPoint, valueType, location, count, transpose);
-}
-
-bool ValidateGenOrDeleteES3(const Context *context,
-                            angle::EntryPoint entryPoint,
-                            GLint n,
-                            const void *ids)
-{
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-    return ValidateGenOrDelete(context, entryPoint, n, ids);
-}
-
 bool ValidateGenOrDeleteCountES3(const Context *context, angle::EntryPoint entryPoint, GLint count)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
     if (count < 0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeCount);
@@ -1665,23 +1620,11 @@ bool ValidateBeginQuery(const Context *context,
                         QueryType target,
                         QueryID id)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     return ValidateBeginQueryBase(context, entryPoint, target, id);
 }
 
 bool ValidateEndQuery(const Context *context, angle::EntryPoint entryPoint, QueryType target)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     return ValidateEndQueryBase(context, entryPoint, target);
 }
 
@@ -1691,12 +1634,6 @@ bool ValidateGetQueryiv(const Context *context,
                         GLenum pname,
                         const GLint *params)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     return ValidateGetQueryivBase(context, entryPoint, target, pname, nullptr);
 }
 
@@ -1706,12 +1643,6 @@ bool ValidateGetQueryObjectuiv(const Context *context,
                                GLenum pname,
                                const GLuint *params)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     return ValidateGetQueryObjectValueBase(context, entryPoint, id, pname, nullptr);
 }
 
@@ -1723,12 +1654,6 @@ bool ValidateFramebufferTextureLayer(const Context *context,
                                      GLint level,
                                      GLint layer)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     if (!ValidateFramebufferTextureBase(context, entryPoint, target, attachment, texture, level))
     {
         return false;
@@ -1851,12 +1776,6 @@ bool ValidateInvalidateFramebuffer(const Context *context,
                                    GLsizei numAttachments,
                                    const GLenum *attachments)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     bool defaultFramebuffer = false;
 
     switch (target)
@@ -1898,12 +1817,6 @@ bool ValidateInvalidateSubFramebuffer(const Context *context,
 
 bool ValidateClearBuffer(const Context *context, angle::EntryPoint entryPoint)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     Framebuffer *drawFramebuffer = context->getState().getDrawFramebuffer();
     if (!ValidateFramebufferComplete(context, entryPoint, drawFramebuffer))
     {
@@ -1935,12 +1848,6 @@ bool ValidateDrawRangeElements(const Context *context,
                                DrawElementsType type,
                                const void *indices)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     if (end < start)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidElementRange);
@@ -1967,23 +1874,11 @@ bool ValidateGetUniformuiv(const Context *context,
                            UniformLocation location,
                            const GLuint *params)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     return ValidateGetUniformBase(context, entryPoint, program, location);
 }
 
 bool ValidateReadBuffer(const Context *context, angle::EntryPoint entryPoint, GLenum src)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     const Framebuffer *readFBO = context->getState().getReadFramebuffer();
 
     if (readFBO == nullptr)
@@ -2037,12 +1932,6 @@ bool ValidateCompressedTexImage3D(const Context *context,
                                   GLsizei imageSize,
                                   const void *data)
 {
-    if ((context->getClientVersion() < ES_3_0) && !context->getExtensions().texture3DOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     if (!ValidTextureTarget(context, TextureTargetToType(target)))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidTextureTarget);
@@ -2111,6 +2000,12 @@ bool ValidateCompressedTexImage3DRobustANGLE(const Context *context,
                                              GLsizei dataSize,
                                              const void *data)
 {
+    if ((context->getClientVersion() < ES_3_0) && !context->getExtensions().texture3DOES)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
+        return false;
+    }
+
     if (!ValidateRobustCompressedTexImageBase(context, entryPoint, imageSize, dataSize))
     {
         return false;
@@ -2124,12 +2019,6 @@ bool ValidateBindVertexArray(const Context *context,
                              angle::EntryPoint entryPoint,
                              VertexArrayID array)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     return ValidateBindVertexArrayBase(context, entryPoint, array);
 }
 
@@ -2137,12 +2026,6 @@ bool ValidateIsVertexArray(const Context *context,
                            angle::EntryPoint entryPoint,
                            VertexArrayID array)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     return true;
 }
 
@@ -2154,12 +2037,6 @@ static bool ValidateBindBufferCommon(const Context *context,
                                      GLintptr offset,
                                      GLsizeiptr size)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     if (buffer.value != 0 && offset < 0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeOffset);
@@ -2315,12 +2192,6 @@ bool ValidateProgramBinary(const Context *context,
                            const void *binary,
                            GLsizei length)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     return ValidateProgramBinaryBase(context, entryPoint, program, binaryFormat, binary, length);
 }
 
@@ -2332,12 +2203,6 @@ bool ValidateGetProgramBinary(const Context *context,
                               const GLenum *binaryFormat,
                               const void *binary)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     return ValidateGetProgramBinaryBase(context, entryPoint, program, bufSize, length, binaryFormat,
                                         binary);
 }
@@ -2393,12 +2258,6 @@ bool ValidateProgramParameteri(const Context *context,
                                GLenum pname,
                                GLint value)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     return ValidateProgramParameteriBase(context, entryPoint, program, pname, value);
 }
 
@@ -2415,12 +2274,6 @@ bool ValidateBlitFramebuffer(const Context *context,
                              GLbitfield mask,
                              GLenum filter)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     return ValidateBlitFramebufferParameters(context, entryPoint, srcX0, srcY0, srcX1, srcY1, dstX0,
                                              dstY0, dstX1, dstY1, mask, filter);
 }
@@ -2631,12 +2484,6 @@ bool ValidateDrawBuffers(const Context *context,
                          GLsizei n,
                          const GLenum *bufs)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     return ValidateDrawBuffersBase(context, entryPoint, n, bufs);
 }
 
@@ -2652,12 +2499,6 @@ bool ValidateCopyTexSubImage3D(const Context *context,
                                GLsizei width,
                                GLsizei height)
 {
-    if ((context->getClientVersion() < ES_3_0) && !context->getExtensions().texture3DOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     return ValidateES3CopyTexImage3DParameters(context, entryPoint, target, level, GL_NONE, true,
                                                xoffset, yoffset, zoffset, x, y, width, height, 0);
 }
@@ -2828,12 +2669,6 @@ bool ValidateTexImage3D(const Context *context,
                         GLenum type,
                         const void *pixels)
 {
-    if ((context->getClientVersion() < ES_3_0) && !context->getExtensions().texture3DOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     return ValidateES3TexImage3DParameters(context, entryPoint, target, level, internalformat,
                                            false, false, 0, 0, 0, width, height, depth, border,
                                            format, type, -1, pixels);
@@ -2883,12 +2718,6 @@ bool ValidateTexSubImage3D(const Context *context,
                            GLenum type,
                            const void *pixels)
 {
-    if ((context->getClientVersion() < ES_3_0) && !context->getExtensions().texture3DOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     return ValidateES3TexImage3DParameters(context, entryPoint, target, level, GL_NONE, false, true,
                                            xoffset, yoffset, zoffset, width, height, depth, 0,
                                            format, type, -1, pixels);
@@ -2939,12 +2768,6 @@ bool ValidateCompressedTexSubImage3D(const Context *context,
                                      GLsizei imageSize,
                                      const void *data)
 {
-    if ((context->getClientVersion() < ES_3_0) && !context->getExtensions().texture3DOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     if (!ValidateES3TexImage3DParameters(context, entryPoint, target, level, GL_NONE, true, true,
                                          xoffset, yoffset, zoffset, width, height, depth, 0, format,
                                          GL_NONE, -1, data))
@@ -3001,6 +2824,12 @@ bool ValidateCompressedTexSubImage3DRobustANGLE(const Context *context,
                                                 GLsizei dataSize,
                                                 const void *data)
 {
+    if ((context->getClientVersion() < ES_3_0) && !context->getExtensions().texture3DOES)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
+        return false;
+    }
+
     if (!ValidateRobustCompressedTexImageBase(context, entryPoint, imageSize, dataSize))
     {
         return false;
@@ -3015,7 +2844,7 @@ bool ValidateGenQueries(const Context *context,
                         GLsizei n,
                         const QueryID *queries)
 {
-    return ValidateGenOrDeleteES3(context, entryPoint, n, queries);
+    return ValidateGenOrDelete(context, entryPoint, n, queries);
 }
 
 bool ValidateDeleteQueries(const Context *context,
@@ -3023,7 +2852,7 @@ bool ValidateDeleteQueries(const Context *context,
                            GLsizei n,
                            const QueryID *queries)
 {
-    return ValidateGenOrDeleteES3(context, entryPoint, n, queries);
+    return ValidateGenOrDelete(context, entryPoint, n, queries);
 }
 
 bool ValidateGenSamplers(const Context *context,
@@ -3059,7 +2888,7 @@ bool ValidateGenTransformFeedbacks(const Context *context,
                                    GLsizei n,
                                    const TransformFeedbackID *ids)
 {
-    return ValidateGenOrDeleteES3(context, entryPoint, n, ids);
+    return ValidateGenOrDelete(context, entryPoint, n, ids);
 }
 
 bool ValidateDeleteTransformFeedbacks(const Context *context,
@@ -3067,7 +2896,7 @@ bool ValidateDeleteTransformFeedbacks(const Context *context,
                                       GLsizei n,
                                       const TransformFeedbackID *ids)
 {
-    if (!ValidateGenOrDeleteES3(context, entryPoint, n, ids))
+    if (!ValidateGenOrDelete(context, entryPoint, n, ids))
     {
         return false;
     }
@@ -3089,7 +2918,7 @@ bool ValidateGenVertexArrays(const Context *context,
                              GLsizei n,
                              const VertexArrayID *arrays)
 {
-    return ValidateGenOrDeleteES3(context, entryPoint, n, arrays);
+    return ValidateGenOrDelete(context, entryPoint, n, arrays);
 }
 
 bool ValidateDeleteVertexArrays(const Context *context,
@@ -3097,18 +2926,13 @@ bool ValidateDeleteVertexArrays(const Context *context,
                                 GLsizei n,
                                 const VertexArrayID *arrays)
 {
-    return ValidateGenOrDeleteES3(context, entryPoint, n, arrays);
+    return ValidateGenOrDelete(context, entryPoint, n, arrays);
 }
 
 bool ValidateBeginTransformFeedback(const Context *context,
                                     angle::EntryPoint entryPoint,
                                     PrimitiveMode primitiveMode)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
     switch (primitiveMode)
     {
         case PrimitiveMode::Triangles:
@@ -3180,12 +3004,6 @@ bool ValidateGetBufferPointerv(const Context *context,
                                GLenum pname,
                                void *const *params)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     return ValidateGetBufferPointervBase(context, entryPoint, target, pname, nullptr, params);
 }
 
@@ -3227,12 +3045,6 @@ bool ValidateGetBufferPointervRobustANGLE(const Context *context,
 
 bool ValidateUnmapBuffer(const Context *context, angle::EntryPoint entryPoint, BufferBinding target)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     return ValidateUnmapBufferBase(context, entryPoint, target);
 }
 
@@ -3243,12 +3055,6 @@ bool ValidateMapBufferRange(const Context *context,
                             GLsizeiptr length,
                             GLbitfield access)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     return ValidateMapBufferRangeBase(context, entryPoint, target, offset, length, access);
 }
 
@@ -3258,12 +3064,6 @@ bool ValidateFlushMappedBufferRange(const Context *context,
                                     GLintptr offset,
                                     GLsizeiptr length)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     return ValidateFlushMappedBufferRangeBase(context, entryPoint, target, offset, length);
 }
 
@@ -3416,11 +3216,6 @@ bool ValidateGetIntegeri_v(const Context *context,
                            GLuint index,
                            const GLint *data)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
     return ValidateIndexedStateQuery(context, entryPoint, target, index, nullptr);
 }
 
@@ -3466,11 +3261,6 @@ bool ValidateGetInteger64i_v(const Context *context,
                              GLuint index,
                              const GLint64 *data)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
     return ValidateIndexedStateQuery(context, entryPoint, target, index, nullptr);
 }
 
@@ -3518,12 +3308,6 @@ bool ValidateCopyBufferSubData(const Context *context,
                                GLintptr writeOffset,
                                GLsizeiptr size)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     if (!context->isValidBufferBinding(readTarget) || !context->isValidBufferBinding(writeTarget))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidBufferTypes);
@@ -3618,12 +3402,6 @@ bool ValidateGetStringi(const Context *context,
                         GLenum name,
                         GLuint index)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     switch (name)
     {
         case GL_EXTENSIONS:
@@ -3663,12 +3441,6 @@ bool ValidateRenderbufferStorageMultisample(const Context *context,
                                             GLsizei width,
                                             GLsizei height)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     if (!ValidateRenderbufferStorageParametersBase(context, entryPoint, target, samples,
                                                    internalformat, width, height))
     {
@@ -3708,12 +3480,6 @@ bool ValidateVertexAttribIPointer(const Context *context,
                                   GLsizei stride,
                                   const void *pointer)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     if (!ValidateIntegerVertexFormat(context, entryPoint, index, size, type))
     {
         return false;
@@ -3775,12 +3541,6 @@ bool ValidateGetSynciv(const Context *context,
                        const GLsizei *length,
                        const GLint *values)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     if (bufSize < 0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeBufSize);
@@ -3833,12 +3593,6 @@ bool ValidateDrawElementsInstanced(const Context *context,
                                    const void *indices,
                                    GLsizei instanceCount)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     return ValidateDrawElementsInstancedBase(context, entryPoint, mode, count, type, indices,
                                              instanceCount, 0);
 }
@@ -4084,7 +3838,7 @@ bool ValidateUniform1ui(const Context *context,
                         UniformLocation location,
                         GLuint v0)
 {
-    return ValidateUniformES3(context, entryPoint, GL_UNSIGNED_INT, location, 1);
+    return ValidateUniform(context, entryPoint, GL_UNSIGNED_INT, location, 1);
 }
 
 bool ValidateUniform2ui(const Context *context,
@@ -4093,7 +3847,7 @@ bool ValidateUniform2ui(const Context *context,
                         GLuint v0,
                         GLuint v1)
 {
-    return ValidateUniformES3(context, entryPoint, GL_UNSIGNED_INT_VEC2, location, 1);
+    return ValidateUniform(context, entryPoint, GL_UNSIGNED_INT_VEC2, location, 1);
 }
 
 bool ValidateUniform3ui(const Context *context,
@@ -4103,7 +3857,7 @@ bool ValidateUniform3ui(const Context *context,
                         GLuint v1,
                         GLuint v2)
 {
-    return ValidateUniformES3(context, entryPoint, GL_UNSIGNED_INT_VEC3, location, 1);
+    return ValidateUniform(context, entryPoint, GL_UNSIGNED_INT_VEC3, location, 1);
 }
 
 bool ValidateUniform4ui(const Context *context,
@@ -4114,7 +3868,7 @@ bool ValidateUniform4ui(const Context *context,
                         GLuint v2,
                         GLuint v3)
 {
-    return ValidateUniformES3(context, entryPoint, GL_UNSIGNED_INT_VEC4, location, 1);
+    return ValidateUniform(context, entryPoint, GL_UNSIGNED_INT_VEC4, location, 1);
 }
 
 bool ValidateUniform1uiv(const Context *context,
@@ -4123,7 +3877,7 @@ bool ValidateUniform1uiv(const Context *context,
                          GLsizei count,
                          const GLuint *value)
 {
-    return ValidateUniformES3(context, entryPoint, GL_UNSIGNED_INT, location, count);
+    return ValidateUniform(context, entryPoint, GL_UNSIGNED_INT, location, count);
 }
 
 bool ValidateUniform2uiv(const Context *context,
@@ -4132,7 +3886,7 @@ bool ValidateUniform2uiv(const Context *context,
                          GLsizei count,
                          const GLuint *value)
 {
-    return ValidateUniformES3(context, entryPoint, GL_UNSIGNED_INT_VEC2, location, count);
+    return ValidateUniform(context, entryPoint, GL_UNSIGNED_INT_VEC2, location, count);
 }
 
 bool ValidateUniform3uiv(const Context *context,
@@ -4141,7 +3895,7 @@ bool ValidateUniform3uiv(const Context *context,
                          GLsizei count,
                          const GLuint *value)
 {
-    return ValidateUniformES3(context, entryPoint, GL_UNSIGNED_INT_VEC3, location, count);
+    return ValidateUniform(context, entryPoint, GL_UNSIGNED_INT_VEC3, location, count);
 }
 
 bool ValidateUniform4uiv(const Context *context,
@@ -4150,17 +3904,11 @@ bool ValidateUniform4uiv(const Context *context,
                          GLsizei count,
                          const GLuint *value)
 {
-    return ValidateUniformES3(context, entryPoint, GL_UNSIGNED_INT_VEC4, location, count);
+    return ValidateUniform(context, entryPoint, GL_UNSIGNED_INT_VEC4, location, count);
 }
 
 bool ValidateIsQuery(const Context *context, angle::EntryPoint entryPoint, QueryID id)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     return true;
 }
 
@@ -4171,8 +3919,7 @@ bool ValidateUniformMatrix2x3fv(const Context *context,
                                 GLboolean transpose,
                                 const GLfloat *value)
 {
-    return ValidateUniformMatrixES3(context, entryPoint, GL_FLOAT_MAT2x3, location, count,
-                                    transpose);
+    return ValidateUniformMatrix(context, entryPoint, GL_FLOAT_MAT2x3, location, count, transpose);
 }
 
 bool ValidateUniformMatrix3x2fv(const Context *context,
@@ -4182,8 +3929,7 @@ bool ValidateUniformMatrix3x2fv(const Context *context,
                                 GLboolean transpose,
                                 const GLfloat *value)
 {
-    return ValidateUniformMatrixES3(context, entryPoint, GL_FLOAT_MAT3x2, location, count,
-                                    transpose);
+    return ValidateUniformMatrix(context, entryPoint, GL_FLOAT_MAT3x2, location, count, transpose);
 }
 
 bool ValidateUniformMatrix2x4fv(const Context *context,
@@ -4193,8 +3939,7 @@ bool ValidateUniformMatrix2x4fv(const Context *context,
                                 GLboolean transpose,
                                 const GLfloat *value)
 {
-    return ValidateUniformMatrixES3(context, entryPoint, GL_FLOAT_MAT2x4, location, count,
-                                    transpose);
+    return ValidateUniformMatrix(context, entryPoint, GL_FLOAT_MAT2x4, location, count, transpose);
 }
 
 bool ValidateUniformMatrix4x2fv(const Context *context,
@@ -4204,8 +3949,7 @@ bool ValidateUniformMatrix4x2fv(const Context *context,
                                 GLboolean transpose,
                                 const GLfloat *value)
 {
-    return ValidateUniformMatrixES3(context, entryPoint, GL_FLOAT_MAT4x2, location, count,
-                                    transpose);
+    return ValidateUniformMatrix(context, entryPoint, GL_FLOAT_MAT4x2, location, count, transpose);
 }
 
 bool ValidateUniformMatrix3x4fv(const Context *context,
@@ -4215,8 +3959,7 @@ bool ValidateUniformMatrix3x4fv(const Context *context,
                                 GLboolean transpose,
                                 const GLfloat *value)
 {
-    return ValidateUniformMatrixES3(context, entryPoint, GL_FLOAT_MAT3x4, location, count,
-                                    transpose);
+    return ValidateUniformMatrix(context, entryPoint, GL_FLOAT_MAT3x4, location, count, transpose);
 }
 
 bool ValidateUniformMatrix4x3fv(const Context *context,
@@ -4226,18 +3969,11 @@ bool ValidateUniformMatrix4x3fv(const Context *context,
                                 GLboolean transpose,
                                 const GLfloat *value)
 {
-    return ValidateUniformMatrixES3(context, entryPoint, GL_FLOAT_MAT4x3, location, count,
-                                    transpose);
+    return ValidateUniformMatrix(context, entryPoint, GL_FLOAT_MAT4x3, location, count, transpose);
 }
 
 bool ValidateEndTransformFeedback(const Context *context, angle::EntryPoint entryPoint)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     TransformFeedback *transformFeedback = context->getState().getCurrentTransformFeedback();
     ASSERT(transformFeedback != nullptr);
 
@@ -4257,12 +3993,6 @@ bool ValidateTransformFeedbackVaryings(const Context *context,
                                        const GLchar *const *varyings,
                                        GLenum bufferMode)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     if (count < 0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeCount);
@@ -4308,12 +4038,6 @@ bool ValidateGetTransformFeedbackVarying(const Context *context,
                                          const GLenum *type,
                                          const GLchar *name)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     if (bufSize < 0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeBufSize);
@@ -4342,12 +4066,6 @@ bool ValidateBindTransformFeedback(const Context *context,
                                    GLenum target,
                                    TransformFeedbackID id)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     switch (target)
     {
         case GL_TRANSFORM_FEEDBACK:
@@ -4382,23 +4100,11 @@ bool ValidateIsTransformFeedback(const Context *context,
                                  angle::EntryPoint entryPoint,
                                  TransformFeedbackID id)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     return true;
 }
 
 bool ValidatePauseTransformFeedback(const Context *context, angle::EntryPoint entryPoint)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     TransformFeedback *transformFeedback = context->getState().getCurrentTransformFeedback();
     ASSERT(transformFeedback != nullptr);
 
@@ -4420,12 +4126,6 @@ bool ValidatePauseTransformFeedback(const Context *context, angle::EntryPoint en
 
 bool ValidateResumeTransformFeedback(const Context *context, angle::EntryPoint entryPoint)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     TransformFeedback *transformFeedback = context->getState().getCurrentTransformFeedback();
     ASSERT(transformFeedback != nullptr);
 
@@ -4461,12 +4161,6 @@ bool ValidateVertexAttribI4i(const PrivateState &state,
                              GLint z,
                              GLint w)
 {
-    if (state.getClientVersion() < ES_3_0)
-    {
-        errors->validationError(entryPoint, GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     return ValidateVertexAttribIndex(state, errors, entryPoint, index);
 }
 
@@ -4479,12 +4173,6 @@ bool ValidateVertexAttribI4ui(const PrivateState &state,
                               GLuint z,
                               GLuint w)
 {
-    if (state.getClientVersion() < ES_3_0)
-    {
-        errors->validationError(entryPoint, GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     return ValidateVertexAttribIndex(state, errors, entryPoint, index);
 }
 
@@ -4494,12 +4182,6 @@ bool ValidateVertexAttribI4iv(const PrivateState &state,
                               GLuint index,
                               const GLint *v)
 {
-    if (state.getClientVersion() < ES_3_0)
-    {
-        errors->validationError(entryPoint, GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     if (v == nullptr)
     {
         errors->validationError(entryPoint, GL_INVALID_VALUE, kVertexAttributeValueNULL);
@@ -4515,12 +4197,6 @@ bool ValidateVertexAttribI4uiv(const PrivateState &state,
                                GLuint index,
                                const GLuint *v)
 {
-    if (state.getClientVersion() < ES_3_0)
-    {
-        errors->validationError(entryPoint, GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     if (v == nullptr)
     {
         errors->validationError(entryPoint, GL_INVALID_VALUE, kVertexAttributeValueNULL);
@@ -4535,12 +4211,6 @@ bool ValidateGetFragDataLocation(const Context *context,
                                  ShaderProgramID program,
                                  const GLchar *name)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     Program *programObject = GetValidProgram(context, entryPoint, program);
     if (programObject == nullptr)
     {
@@ -4564,12 +4234,6 @@ bool ValidateGetUniformIndices(const Context *context,
                                const GLchar *const *uniformNames,
                                const GLuint *uniformIndices)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     if (uniformCount < 0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeCount);
@@ -4594,12 +4258,6 @@ bool ValidateGetActiveUniformsiv(const Context *context,
                                  GLenum pname,
                                  const GLint *params)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     if (uniformCount < 0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeCount);
@@ -4663,12 +4321,6 @@ bool ValidateGetUniformBlockIndex(const Context *context,
                                   ShaderProgramID program,
                                   const GLchar *uniformBlockName)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     Program *programObject = GetValidProgram(context, entryPoint, program);
     if (programObject == nullptr)
     {
@@ -4698,12 +4350,6 @@ bool ValidateGetActiveUniformBlockName(const Context *context,
                                        const GLsizei *length,
                                        const GLchar *uniformBlockName)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     Program *programObject = GetValidProgram(context, entryPoint, program);
     if (programObject == nullptr)
     {
@@ -4726,12 +4372,6 @@ bool ValidateUniformBlockBinding(const Context *context,
                                  UniformBlockIndex uniformBlockIndex,
                                  GLuint uniformBlockBinding)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     if (uniformBlockBinding >= static_cast<GLuint>(context->getCaps().maxUniformBufferBindings))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kIndexExceedsMaxUniformBufferBindings);
@@ -4762,12 +4402,6 @@ bool ValidateDrawArraysInstanced(const Context *context,
                                  GLsizei count,
                                  GLsizei primcount)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     return ValidateDrawArraysInstancedBase(context, entryPoint, mode, first, count, primcount, 0);
 }
 
@@ -4776,12 +4410,6 @@ bool ValidateFenceSync(const Context *context,
                        GLenum condition,
                        GLbitfield flags)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     if (condition != GL_SYNC_GPU_COMMANDS_COMPLETE)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidFenceCondition);
@@ -4799,23 +4427,11 @@ bool ValidateFenceSync(const Context *context,
 
 bool ValidateIsSync(const Context *context, angle::EntryPoint entryPoint, SyncID syncPacked)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     return true;
 }
 
 bool ValidateDeleteSync(const Context *context, angle::EntryPoint entryPoint, SyncID syncPacked)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     if (syncPacked.value != 0 && !context->getSync(syncPacked))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kSyncMissing);
@@ -4831,12 +4447,6 @@ bool ValidateClientWaitSync(const Context *context,
                             GLbitfield flags,
                             GLuint64 timeout)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     if ((flags & ~(GL_SYNC_FLUSH_COMMANDS_BIT)) != 0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidFlags);
@@ -4859,12 +4469,6 @@ bool ValidateWaitSync(const Context *context,
                       GLbitfield flags,
                       GLuint64 timeout)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     if (flags != 0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidFlags);
@@ -4892,12 +4496,6 @@ bool ValidateGetInteger64v(const Context *context,
                            GLenum pname,
                            const GLint64 *params)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     GLenum nativeType      = GL_NONE;
     unsigned int numParams = 0;
     if (!ValidateStateQuery(context, entryPoint, pname, &nativeType, &numParams))
@@ -4910,12 +4508,6 @@ bool ValidateGetInteger64v(const Context *context,
 
 bool ValidateIsSampler(const Context *context, angle::EntryPoint entryPoint, SamplerID sampler)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     return true;
 }
 
@@ -4924,12 +4516,6 @@ bool ValidateBindSampler(const Context *context,
                          GLuint unit,
                          SamplerID sampler)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     if (GetIDValue(sampler) != 0 && !context->isSampler(sampler))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidSampler);
@@ -4950,12 +4536,6 @@ bool ValidateVertexAttribDivisor(const Context *context,
                                  GLuint index,
                                  GLuint divisor)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     return ValidateVertexAttribIndex(context->getPrivateState(),
                                      context->getMutableErrorSetForValidation(), entryPoint, index);
 }
@@ -4968,12 +4548,6 @@ bool ValidateTexStorage2D(const Context *context,
                           GLsizei width,
                           GLsizei height)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     if (!ValidateES3TexStorage2DParameters(context, entryPoint, target, levels, internalformat,
                                            width, height, 1))
     {
@@ -4992,12 +4566,6 @@ bool ValidateTexStorage3D(const Context *context,
                           GLsizei height,
                           GLsizei depth)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
     if (!ValidateES3TexStorage3DParameters(context, entryPoint, target, levels, internalformat,
                                            width, height, depth))
     {

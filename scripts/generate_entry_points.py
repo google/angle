@@ -1663,8 +1663,8 @@ def get_validation_expression(api, cmd_name, entry_point_name, internal_params, 
     expr = "Validate{name}({params})".format(
         name=name, params=", ".join(extra_params + [entry_point_name] + internal_params))
 
-    # Validation expression for ES 1.x, ES 2.0, ES 3.0, and extension entry points
-    if version not in ["3_1", "3_2"]:
+    # Validation expression for ES 1.x, ES 2.0, and extension entry points
+    if version not in ["3_0", "3_1", "3_2"]:
         return "bool isCallValid = (context->skipValidation() || {validation_expression});".format(
             validation_expression=expr)
 
@@ -1681,8 +1681,8 @@ def get_validation_expression(api, cmd_name, entry_point_name, internal_params, 
         v=version.replace("_", ""),
         entry_point_name=entry_point_name) if not is_get_pointer else get_pointer_error
 
-    # Validation logic with version check generated for ES 3.1 & ES 3.2 entry points
-    es31_32_expr = """bool isCallValid = context->skipValidation();
+    # Validation logic with version check generated for ES 3.x entry points
+    es3_expr = """bool isCallValid = context->skipValidation();
 if (!isCallValid)
 {{
     if (ANGLE_LIKELY({version_condition}))
@@ -1696,7 +1696,7 @@ if (!isCallValid)
 }}""".format(
         version_condition=version_condition, validation_expression=expr, record_error=record_error)
 
-    return es31_32_expr
+    return es3_expr
 
 
 def entry_point_export(api):
