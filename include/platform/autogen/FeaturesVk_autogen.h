@@ -314,14 +314,8 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
-    FeatureInfo enablePreRotateSurfaces = {
-        "enablePreRotateSurfaces",
-        FeatureCategory::VulkanFeatures,
-        &members,
-    };
-
-    FeatureInfo presentSubOptimalReturnedOnTransformChange = {
-        "presentSubOptimalReturnedOnTransformChange",
+    FeatureInfo warmUpPreRotatePipelineVariations = {
+        "warmUpPreRotatePipelineVariations",
         FeatureCategory::VulkanFeatures,
         &members,
     };

@@ -25,24 +25,6 @@ using namespace angle;
 namespace
 {
 
-using EGLPreRotationSurfaceTestParams = std::tuple<angle::PlatformParameters, bool>;
-
-std::string PrintToStringParamName(
-    const ::testing::TestParamInfo<EGLPreRotationSurfaceTestParams> &info)
-{
-    std::stringstream ss;
-    ss << std::get<0>(info.param);
-    if (std::get<1>(info.param))
-    {
-        ss << "__PreRotationEnabled";
-    }
-    else
-    {
-        ss << "__PreRotationDisabled";
-    }
-    return ss.str();
-}
-
 // A class to test various Android pre-rotation cases.  In order to make it easier to debug test
 // failures, the initial window size is 256x256, and each pixel will have a unique and predictable
 // value.  The red channel will increment with the x axis, and the green channel will increment
@@ -53,7 +35,7 @@ std::string PrintToStringParamName(
 // Lower-right, which is ( 1.0,-1.0) & (256,   0) in GLES will be red    (0xFF, 0x00, 0x00, 0xFF)
 // Upper-left,  which is (-1.0, 1.0) & (  0, 256) in GLES will be green  (0x00, 0xFF, 0x00, 0xFF)
 // Upper-right, which is ( 1.0, 1.0) & (256, 256) in GLES will be yellow (0xFF, 0xFF, 0x00, 0xFF)
-class EGLPreRotationSurfaceTest : public ANGLETest<EGLPreRotationSurfaceTestParams>
+class EGLPreRotationSurfaceTest : public ANGLETest<>
 {
   protected:
     EGLPreRotationSurfaceTest()
@@ -101,22 +83,9 @@ class EGLPreRotationSurfaceTest : public ANGLETest<EGLPreRotationSurfaceTestPara
 
     void initializeDisplay()
     {
-        const angle::PlatformParameters platform = ::testing::get<0>(GetParam());
+        const angle::PlatformParameters platform = GetParam();
         GLenum platformType                      = platform.getRenderer();
         GLenum deviceType                        = platform.getDeviceType();
-
-        std::vector<const char *> enabledFeatures;
-        std::vector<const char *> disabledFeatures;
-        if (::testing::get<1>(GetParam()))
-        {
-            enabledFeatures.push_back("enablePreRotateSurfaces");
-        }
-        else
-        {
-            disabledFeatures.push_back("enablePreRotateSurfaces");
-        }
-        enabledFeatures.push_back(nullptr);
-        disabledFeatures.push_back(nullptr);
 
         std::vector<EGLAttrib> displayAttributes;
         displayAttributes.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
@@ -127,10 +96,6 @@ class EGLPreRotationSurfaceTest : public ANGLETest<EGLPreRotationSurfaceTestPara
         displayAttributes.push_back(EGL_DONT_CARE);
         displayAttributes.push_back(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE);
         displayAttributes.push_back(deviceType);
-        displayAttributes.push_back(EGL_FEATURE_OVERRIDES_ENABLED_ANGLE);
-        displayAttributes.push_back(reinterpret_cast<EGLAttrib>(enabledFeatures.data()));
-        displayAttributes.push_back(EGL_FEATURE_OVERRIDES_DISABLED_ANGLE);
-        displayAttributes.push_back(reinterpret_cast<EGLAttrib>(disabledFeatures.data()));
         displayAttributes.push_back(EGL_NONE);
 
         mDisplay = eglGetPlatformDisplay(EGL_PLATFORM_ANGLE_ANGLE,
@@ -147,8 +112,7 @@ class EGLPreRotationSurfaceTest : public ANGLETest<EGLPreRotationSurfaceTestPara
 
     void initializeContext()
     {
-        EGLint contextAttibutes[] = {EGL_CONTEXT_CLIENT_VERSION,
-                                     ::testing::get<0>(GetParam()).majorVersion, EGL_NONE};
+        EGLint contextAttibutes[] = {EGL_CONTEXT_CLIENT_VERSION, GetParam().majorVersion, EGL_NONE};
 
         mContext = eglCreateContext(mDisplay, mConfig, nullptr, contextAttibutes);
         ASSERT_EGL_SUCCESS();
@@ -2521,31 +2485,22 @@ TEST_P(EGLPreRotationInterpolateAtOffsetTest, InterpolateAtOffsetWithCustomFBO)
 }  // anonymous namespace
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLPreRotationInterpolateAtOffsetTest);
-ANGLE_INSTANTIATE_TEST_COMBINE_1(EGLPreRotationInterpolateAtOffsetTest,
-                                 PrintToStringParamName,
-                                 testing::Bool(),
-                                 WithNoFixture(ES31_VULKAN()));
+ANGLE_INSTANTIATE_TEST(EGLPreRotationInterpolateAtOffsetTest, WithNoFixture(ES31_VULKAN()));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLPreRotationSurfaceTest);
-ANGLE_INSTANTIATE_TEST_COMBINE_1(EGLPreRotationSurfaceTest,
-                                 PrintToStringParamName,
-                                 testing::Bool(),
-                                 WithNoFixture(ES2_VULKAN()),
-                                 WithNoFixture(ES3_VULKAN()),
-                                 WithNoFixture(ES3_VULKAN_SWIFTSHADER()));
+ANGLE_INSTANTIATE_TEST(EGLPreRotationSurfaceTest,
+                       WithNoFixture(ES2_VULKAN()),
+                       WithNoFixture(ES3_VULKAN()),
+                       WithNoFixture(ES3_VULKAN_SWIFTSHADER()));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLPreRotationLargeSurfaceTest);
-ANGLE_INSTANTIATE_TEST_COMBINE_1(EGLPreRotationLargeSurfaceTest,
-                                 PrintToStringParamName,
-                                 testing::Bool(),
-                                 WithNoFixture(ES2_VULKAN()),
-                                 WithNoFixture(ES3_VULKAN()),
-                                 WithNoFixture(ES3_VULKAN_SWIFTSHADER()));
+ANGLE_INSTANTIATE_TEST(EGLPreRotationLargeSurfaceTest,
+                       WithNoFixture(ES2_VULKAN()),
+                       WithNoFixture(ES3_VULKAN()),
+                       WithNoFixture(ES3_VULKAN_SWIFTSHADER()));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLPreRotationBlitFramebufferTest);
-ANGLE_INSTANTIATE_TEST_COMBINE_1(EGLPreRotationBlitFramebufferTest,
-                                 PrintToStringParamName,
-                                 testing::Bool(),
-                                 WithNoFixture(ES2_VULKAN()),
-                                 WithNoFixture(ES3_VULKAN()),
-                                 WithNoFixture(ES3_VULKAN_SWIFTSHADER()));
+ANGLE_INSTANTIATE_TEST(EGLPreRotationBlitFramebufferTest,
+                       WithNoFixture(ES2_VULKAN()),
+                       WithNoFixture(ES3_VULKAN()),
+                       WithNoFixture(ES3_VULKAN_SWIFTSHADER()));

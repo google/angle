@@ -391,19 +391,10 @@
             "issue": "http://anglebug.com/40096464"
         },
         {
-            "name": "enable_pre_rotate_surfaces",
+            "name": "warm_up_pre_rotate_pipeline_variations",
             "category": "Features",
             "description": [
-                "Enable Android pre-rotation for landscape applications"
-            ],
-            "issue": "http://anglebug.com/42262166"
-        },
-        {
-            "name": "present_sub_optimal_returned_on_transform_change",
-            "category": "Features",
-            "description": [
-                "vkQueuePresentKHR() returns VK_SUBOPTIMAL_KHR when current surface transform ",
-                "and swapchain pre-transform does not mach."
+                "Enable warm up pre-rotation pipeline variations for landscape applications"
             ],
             "issue": "http://anglebug.com/42262166"
         },

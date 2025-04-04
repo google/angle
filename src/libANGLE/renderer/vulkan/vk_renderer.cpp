@@ -5303,13 +5303,6 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         &mFeatures, supportsExternalMemoryHost,
         ExtensionFound(VK_EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME, deviceExtensionNames));
 
-    // Android pre-rotation support can be disabled.
-    ANGLE_FEATURE_CONDITION(&mFeatures, enablePreRotateSurfaces, IsAndroid());
-
-    // Pre-rotation currently only supported on Android, which returns VK_SUBOPTIMAL_KHR from
-    // vkQueuePresentKHR() if current surface transform does not match the swapchain pre-transform.
-    ANGLE_FEATURE_CONDITION(&mFeatures, presentSubOptimalReturnedOnTransformChange, IsAndroid());
-
     // http://anglebug.com/42261756
     // Precision qualifiers are disabled for Pixel 2 before the driver included relaxed precision.
     ANGLE_FEATURE_CONDITION(
@@ -5363,6 +5356,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         &mFeatures, preferDriverUniformOverSpecConst,
         (isQualcommProprietary && driverVersion < angle::VersionTriple(512, 513, 0)) || isARM ||
             isPowerVR || isSamsung || isSwiftShader);
+
+    ANGLE_FEATURE_CONDITION(&mFeatures, warmUpPreRotatePipelineVariations,
+                            !mFeatures.preferDriverUniformOverSpecConst.enabled && IsAndroid());
 
     ANGLE_FEATURE_CONDITION(&mFeatures, preferCachedNoncoherentForDynamicStreamBufferUsage,
                             IsMeteorLake(mPhysicalDeviceProperties.deviceID));

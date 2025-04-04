@@ -1012,9 +1012,9 @@ angle::Result ProgramExecutableVk::prepareForWarmUpPipelineCache(
     // by most applications, but variations can be added here for certain apps that are known to
     // benefit from it.
     *surfaceRotationVariationsOut = {false};
-    if (context->getFeatures().enablePreRotateSurfaces.enabled &&
-        !context->getFeatures().preferDriverUniformOverSpecConst.enabled)
+    if (context->getFeatures().warmUpPreRotatePipelineVariations.enabled)
     {
+        ASSERT(!context->getFeatures().preferDriverUniformOverSpecConst.enabled);
         surfaceRotationVariationsOut->push_back(true);
     }
 

@@ -1331,27 +1331,6 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk, bool *anyMat
     // When a window is rotated 90 or 270 degrees, the aspect ratio changes.  The width and height
     // are swapped.  The x/y and width/height of various values in ANGLE must also be swapped
     // before communicating the values to Vulkan.
-    if (renderer->getFeatures().enablePreRotateSurfaces.enabled)
-    {
-        // Use the surface's transform.  For many platforms, this will always be identity (ANGLE
-        // does not need to do any pre-rotation).  However, when surfaceCaps.currentTransform is
-        // not identity, the device has been rotated away from its natural orientation.  In such a
-        // case, ANGLE must rotate all rendering in order to avoid the compositor
-        // (e.g. SurfaceFlinger on Android) performing an additional rotation blit.  In addition,
-        // ANGLE must create the swapchain with VkSwapchainCreateInfoKHR::preTransform set to the
-        // value of surfaceCaps.currentTransform.
-        mPreTransform = surfaceCaps.currentTransform;
-    }
-    else
-    {
-        // Default to identity transform.
-        mPreTransform = VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR;
-
-        if ((surfaceCaps.supportedTransforms & mPreTransform) == 0)
-        {
-            mPreTransform = surfaceCaps.currentTransform;
-        }
-    }
 
     // Set emulated pre-transform if any emulated prerotation features are set.
     if (renderer->getFeatures().emulatedPrerotation90.enabled)
@@ -2033,8 +2012,7 @@ angle::Result WindowSurfaceVk::prepareSwapchainForAcquireNextImage(vk::ErrorCont
         uint32_t curSurfaceHeight = mHeight;
 
         // On Android, rotation can cause the minImageCount to change
-        if ((!renderer->getFeatures().enablePreRotateSurfaces.enabled ||
-             surfaceCaps.currentTransform == mPreTransform) &&
+        if (surfaceCaps.currentTransform == mPreTransform &&
             surfaceCaps.currentExtent.width == curSurfaceWidth &&
             surfaceCaps.currentExtent.height == curSurfaceHeight && minImageCount == mMinImageCount)
         {
@@ -2070,11 +2048,14 @@ angle::Result WindowSurfaceVk::prepareSwapchainForAcquireNextImage(vk::ErrorCont
 
     mMinImageCount = minImageCount;
 
-    if (renderer->getFeatures().enablePreRotateSurfaces.enabled)
-    {
-        // Update the surface's transform, which can change even if the window size does not.
-        mPreTransform = surfaceCaps.currentTransform;
-    }
+    // Use the surface's transform.  For many platforms, this will always be identity (ANGLE does
+    // not need to do any pre-rotation).  However, when surfaceCaps.currentTransform is not
+    // identity, the device has been rotated away from its natural orientation.  In such a case,
+    // ANGLE must rotate all rendering in order to avoid the compositor (e.g. SurfaceFlinger on
+    // Android) performing an additional rotation blit.  In addition, ANGLE must create the
+    // swapchain with VkSwapchainCreateInfoKHR::preTransform set to the value of
+    // surfaceCaps.currentTransform.
+    mPreTransform = surfaceCaps.currentTransform;
 
     return recreateSwapchain(context);
 }
@@ -2286,39 +2267,13 @@ angle::Result WindowSurfaceVk::checkSwapchainOutOfDate(vk::ErrorContext *context
 
     // If OUT_OF_DATE is returned, it's ok, we just need to recreate the swapchain before
     // continuing.  We do the same when VK_SUBOPTIMAL_KHR is returned to avoid visual degradation
-    // (except when in shared present mode or to avoid unnecessary swapchain recreate).
+    // (except when in shared present mode).
     switch (presentResult)
     {
         case VK_SUCCESS:
             break;
         case VK_SUBOPTIMAL_KHR:
-            if (!isSharedPresentMode())
-            {
-                if (context->getFeatures().enablePreRotateSurfaces.enabled ||
-                    !context->getFeatures().presentSubOptimalReturnedOnTransformChange.enabled)
-                {
-                    presentOutOfDate = true;
-                }
-                else
-                {
-                    VkSurfaceCapabilitiesKHR surfaceCaps;
-                    presentResult = vkGetPhysicalDeviceSurfaceCapabilitiesKHR(
-                        context->getRenderer()->getPhysicalDevice(), mSurface, &surfaceCaps);
-                    if (presentResult == VK_SUCCESS)
-                    {
-                        // If mPreTransform can be VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR,
-                        // presentSubOptimalReturnedOnTransformChange must be disabled.
-                        ASSERT(mPreTransform != VK_SURFACE_TRANSFORM_INHERIT_BIT_KHR);
-                        // Avoid swapchain recreate if pre-rotation is disabled and present returns
-                        // VK_SUBOPTIMAL_KHR when preTransform does not match currentTransform.
-                        presentOutOfDate = (mPreTransform == surfaceCaps.currentTransform);
-                    }
-                    else
-                    {
-                        isFailure = true;
-                    }
-                }
-            }
+            presentOutOfDate = !isSharedPresentMode();
             break;
         case VK_ERROR_OUT_OF_DATE_KHR:
             presentOutOfDate = true;
