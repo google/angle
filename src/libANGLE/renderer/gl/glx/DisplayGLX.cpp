@@ -478,13 +478,14 @@ egl::Error DisplayGLX::initializeContext(glx::FBConfig config,
     }
 
     // Create a context of the requested version, if any.
-    gl::Version requestedVersion(static_cast<EGLint>(eglAttributes.get(
-                                     EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE, EGL_DONT_CARE)),
-                                 static_cast<EGLint>(eglAttributes.get(
-                                     EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE, EGL_DONT_CARE)));
-    if (static_cast<EGLint>(requestedVersion.major) != EGL_DONT_CARE &&
-        static_cast<EGLint>(requestedVersion.minor) != EGL_DONT_CARE)
+    const EGLint clientMajorVersion = static_cast<EGLint>(
+        eglAttributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE, EGL_DONT_CARE));
+    const EGLint clientMinorVersion = static_cast<EGLint>(
+        eglAttributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE, EGL_DONT_CARE));
+    if (clientMajorVersion != EGL_DONT_CARE && clientMinorVersion != EGL_DONT_CARE)
     {
+        const gl::Version requestedVersion(static_cast<uint8_t>(clientMajorVersion),
+                                           static_cast<uint8_t>(clientMinorVersion));
         if (!(profileMask & GLX_CONTEXT_ES2_PROFILE_BIT_EXT) &&
             requestedVersion >= gl::Version(3, 2))
         {

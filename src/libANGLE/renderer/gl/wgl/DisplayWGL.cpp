@@ -791,13 +791,14 @@ HGLRC DisplayWGL::initializeContextAttribs(const egl::AttributeMap &eglAttribute
         eglAttributes.get(EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE));
 
     // Create a context of the requested version, if any.
-    gl::Version requestedVersion(static_cast<EGLint>(eglAttributes.get(
-                                     EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE, EGL_DONT_CARE)),
-                                 static_cast<EGLint>(eglAttributes.get(
-                                     EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE, EGL_DONT_CARE)));
-    if (static_cast<EGLint>(requestedVersion.major) != EGL_DONT_CARE &&
-        static_cast<EGLint>(requestedVersion.minor) != EGL_DONT_CARE)
+    const EGLint clientMajorVersion = static_cast<EGLint>(
+        eglAttributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE, EGL_DONT_CARE));
+    const EGLint clientMinorVersion = static_cast<EGLint>(
+        eglAttributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE, EGL_DONT_CARE));
+    if (clientMajorVersion != EGL_DONT_CARE && clientMinorVersion != EGL_DONT_CARE)
     {
+        const gl::Version requestedVersion(static_cast<uint8_t>(clientMajorVersion),
+                                           static_cast<uint8_t>(clientMinorVersion));
         int profileMask = 0;
         if (requestedDisplayType != EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE &&
             requestedVersion >= gl::Version(3, 2))

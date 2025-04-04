@@ -9,13 +9,15 @@
 #ifndef LIBANGLE_VERSION_H_
 #define LIBANGLE_VERSION_H_
 
+#include <cstdint>
+
 namespace gl
 {
 
 struct Version
 {
     constexpr Version();
-    constexpr Version(unsigned int major, unsigned int minor);
+    constexpr Version(uint8_t major, uint8_t minor);
 
     unsigned int major;
     unsigned int minor;

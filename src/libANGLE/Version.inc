@@ -20,7 +20,7 @@ constexpr Version::Version()
 #undef major
 #undef minor
 
-constexpr Version::Version(unsigned int major_, unsigned int minor_)
+constexpr Version::Version(uint8_t major_, uint8_t minor_)
     : major(major_),
       minor(minor_)
 {

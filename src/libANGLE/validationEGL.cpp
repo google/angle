@@ -2854,8 +2854,8 @@ bool ValidateCreateContext(const ValidationContext *val,
                         return false;
                     }
                     if (display->getMaxSupportedESVersion() <
-                        gl::Version(static_cast<GLuint>(clientMajorVersion),
-                                    static_cast<GLuint>(clientMinorVersion)))
+                        gl::Version(static_cast<uint8_t>(clientMajorVersion),
+                                    static_cast<uint8_t>(clientMinorVersion)))
                     {
                         gl::Version max = display->getMaxSupportedESVersion();
                         val->setError(EGL_BAD_MATCH,

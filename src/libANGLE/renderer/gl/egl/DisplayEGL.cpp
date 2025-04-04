@@ -46,7 +46,8 @@ std::vector<EGLint> RenderableTypesFromPlatformAttrib(const rx::FunctionsEGL *eg
             static_assert(EGL_OPENGL_ES3_BIT == EGL_OPENGL_ES3_BIT_KHR,
                           "Extension define must match core");
 
-            gl::Version eglVersion(egl->majorVersion, egl->minorVersion);
+            const gl::Version eglVersion(static_cast<uint8_t>(egl->majorVersion),
+                                         static_cast<uint8_t>(egl->minorVersion));
             if (eglVersion >= gl::Version(1, 5) || egl->hasExtension("EGL_KHR_create_context"))
             {
                 renderableTypes.push_back(EGL_OPENGL_ES3_BIT);
@@ -117,7 +118,8 @@ egl::Error DisplayEGL::initializeContext(EGLContext shareContext,
                                          const egl::AttributeMap &eglAttributes,
                                          EGLContext *outContext) const
 {
-    gl::Version eglVersion(mEGL->majorVersion, mEGL->minorVersion);
+    const gl::Version eglVersion(static_cast<uint8_t>(mEGL->majorVersion),
+                                 static_cast<uint8_t>(mEGL->minorVersion));
 
     EGLint requestedMajor =
         eglAttributes.getAsInt(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE, EGL_DONT_CARE);
@@ -315,7 +317,8 @@ egl::Error DisplayEGL::initialize(egl::Display *display)
     ANGLE_TRY(
         mEGL->initialize(platformType, display->getNativeDisplayId(), getEGLPath(), eglHandle));
 
-    gl::Version eglVersion(mEGL->majorVersion, mEGL->minorVersion);
+    const gl::Version eglVersion(static_cast<uint8_t>(mEGL->majorVersion),
+                                 static_cast<uint8_t>(mEGL->minorVersion));
     if (eglVersion < gl::Version(1, 4))
     {
         return egl::Error(EGL_NOT_INITIALIZED, "EGL >= 1.4 is required");
@@ -822,7 +825,8 @@ void DisplayEGL::destroyNativeContext(EGLContext context)
 
 void DisplayEGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
-    gl::Version eglVersion(mEGL->majorVersion, mEGL->minorVersion);
+    const gl::Version eglVersion(static_cast<uint8_t>(mEGL->majorVersion),
+                                 static_cast<uint8_t>(mEGL->minorVersion));
 
     outExtensions->createContextRobustness =
         mEGL->hasExtension("EGL_EXT_create_context_robustness");

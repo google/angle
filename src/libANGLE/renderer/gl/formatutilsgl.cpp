@@ -23,7 +23,7 @@ namespace nativegl
 {
 
 SupportRequirement::SupportRequirement()
-    : version(std::numeric_limits<GLuint>::max(), std::numeric_limits<GLuint>::max()),
+    : version(std::numeric_limits<uint8_t>::max(), std::numeric_limits<uint8_t>::max()),
       versionExtensions(),
       requiredExtensions()
 {}
@@ -41,8 +41,8 @@ InternalFormat::InternalFormat(const InternalFormat &other) = default;
 InternalFormat::~InternalFormat() {}
 
 // supported = version || vertexExt
-static inline SupportRequirement VersionOrExts(GLuint major,
-                                               GLuint minor,
+static inline SupportRequirement VersionOrExts(uint8_t major,
+                                               uint8_t minor,
                                                const std::string &versionExt)
 {
     SupportRequirement requirement;
@@ -54,8 +54,8 @@ static inline SupportRequirement VersionOrExts(GLuint major,
 
 // supported = requiredExt && (version || requiredWithoutVersionExt)
 static inline SupportRequirement ExtAndVersionOrExt(const std::string &requiredExt,
-                                                    GLuint major,
-                                                    GLuint minor,
+                                                    uint8_t major,
+                                                    uint8_t minor,
                                                     const std::string &requiredWithoutVersionExt)
 {
     SupportRequirement requirement;
@@ -68,7 +68,7 @@ static inline SupportRequirement ExtAndVersionOrExt(const std::string &requiredE
 }
 
 // supported = version
-static inline SupportRequirement VersionOnly(GLuint major, GLuint minor)
+static inline SupportRequirement VersionOnly(uint8_t major, uint8_t minor)
 {
     SupportRequirement requirement;
     requirement.version.major = major;
@@ -115,8 +115,8 @@ static inline SupportRequirement AlwaysSupported()
 static inline SupportRequirement NeverSupported()
 {
     SupportRequirement requirement;
-    requirement.version.major = std::numeric_limits<GLuint>::max();
-    requirement.version.minor = std::numeric_limits<GLuint>::max();
+    requirement.version.major = std::numeric_limits<uint8_t>::max();
+    requirement.version.minor = std::numeric_limits<uint8_t>::max();
     return requirement;
 }
 

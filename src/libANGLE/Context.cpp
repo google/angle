@@ -257,8 +257,8 @@ bool GetWebGLContext(const egl::AttributeMap &attribs)
 
 Version GetClientVersion(egl::Display *display, const egl::AttributeMap &attribs)
 {
-    Version requestedVersion =
-        Version(GetClientMajorVersion(attribs), GetClientMinorVersion(attribs));
+    const Version requestedVersion(static_cast<uint8_t>(GetClientMajorVersion(attribs)),
+                                   static_cast<uint8_t>(GetClientMinorVersion(attribs)));
     if (GetBackwardCompatibleContext(attribs))
     {
         if (requestedVersion.major == 1)
