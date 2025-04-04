@@ -141,6 +141,10 @@ std::shared_ptr<ShaderTranslateTask> ShaderVk::compile(const gl::Context *contex
         options->emulateR32fImageAtomicExchange = true;
     }
 
+    // https://issuetracker.google.com/406827038
+    // Unconditionally set this option to true for the Vulkan backend
+    options->preserveDenorms = true;
+
     // The Vulkan backend needs no post-processing of the translated shader.
     return std::shared_ptr<ShaderTranslateTask>(new ShaderTranslateTask);
 }

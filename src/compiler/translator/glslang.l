@@ -115,7 +115,7 @@ static int ES3_and_3_1_reserved_ES3_1_extension_ES3_2_keyword_2(TParseContext *c
 static int WEBGL_video_texture_extension(TParseContext *context, int token);
 static int uint_constant(TParseContext *context);
 static int int_constant(TParseContext *context);
-static int float_constant(yyscan_t yyscanner);
+static int float_constant(TParseContext* context, yyscan_t yyscanner);
 static int floatsuffix_check(TParseContext* context);
 static int yuvcscstandardext_constant(TParseContext *context);
 %}
@@ -405,9 +405,9 @@ O           [0-7]
 0{O}+[uU]         { return uint_constant(context); }
 {D}+[uU]          { return uint_constant(context); }
 
-{D}+{E}           { return float_constant(yyscanner); }
-{D}+"."{D}*({E})? { return float_constant(yyscanner); }
-"."{D}+({E})?     { return float_constant(yyscanner); }
+{D}+{E}           { return float_constant(context, yyscanner); }
+{D}+"."{D}*({E})? { return float_constant(context, yyscanner); }
+"."{D}+({E})?     { return float_constant(context, yyscanner); }
 
 {D}+{E}[fF]           { return floatsuffix_check(context); }
 {D}+"."{D}*({E})?[fF] { return floatsuffix_check(context); }
@@ -863,7 +863,7 @@ int floatsuffix_check(TParseContext* context)
 
     std::string text = yytext;
     text.resize(text.size() - 1);
-    if (!strtof_clamp(text, &(yylval->lex.f)))
+    if (!strtof_clamp(text, &(yylval->lex.f), context->getCompileOptions().preserveDenorms))
         yyextra->warning(*yylloc, "Float overflow", yytext);
 
     return(FLOATCONSTANT);
@@ -888,10 +888,10 @@ int int_constant(TParseContext *context) {
     return INTCONSTANT;
 }
 
-int float_constant(yyscan_t yyscanner) {
+int float_constant(TParseContext* context, yyscan_t yyscanner) {
     struct yyguts_t* yyg = (struct yyguts_t*) yyscanner;
 
-    if (!strtof_clamp(yytext, &(yylval->lex.f)))
+    if (!strtof_clamp(yytext, &(yylval->lex.f), context->getCompileOptions().preserveDenorms))
         yyextra->warning(*yylloc, "Float overflow", yytext);
     return FLOATCONSTANT;
 }

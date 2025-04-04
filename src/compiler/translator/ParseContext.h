@@ -531,6 +531,8 @@ class TParseContext : angle::NonCopyable
     size_t getMaxExpressionComplexity() const { return mMaxExpressionComplexity; }
     size_t getMaxStatementDepth() const { return mMaxStatementDepth; }
 
+    const ShCompileOptions &getCompileOptions() const { return mCompileOptions; }
+
     // TODO(jmadill): make this private
     TSymbolTable &symbolTable;  // symbol table that goes with the language currently being parsed
 

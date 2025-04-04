@@ -24,7 +24,7 @@ class StrtofClampParser
     static float Parse(std::string str)
     {
         float value;
-        sh::strtof_clamp(str, &value);
+        sh::strtof_clamp(str, &value, true);
         return value;
     }
 };
@@ -32,7 +32,10 @@ class StrtofClampParser
 class NumericLexFloatParser
 {
   public:
-    static float Parse(std::string str) { return sh::NumericLexFloat32OutOfRangeToInfinity(str); }
+    static float Parse(std::string str)
+    {
+        return sh::NumericLexFloat32OutOfRangeToInfinity(str, true);
+    }
 };
 
 }  // anonymous namespace
@@ -213,4 +216,16 @@ TYPED_TEST(FloatLexTest, ExponentBitAboveMinIntAndSmallMantissa)
     std::stringstream ss;
     ss << "0." << TestFixture::Zeros(32) << "1e-2147483640";
     ASSERT_TRUE(TestFixture::ParsedMatches(ss.str(), 0.0f));
+}
+
+// Ensure the smallest possible denorm float value is preserved
+TYPED_TEST(FloatLexTest, SmallestPossibleDenormFloat)
+{
+    ASSERT_TRUE(TestFixture::ParsedMatches("1.40129846e-45", 1.40129846e-45f));
+}
+
+// Ensure the largest possible denorm float value is preserved
+TYPED_TEST(FloatLexTest, LargestPossibleDenormFloat)
+{
+    ASSERT_TRUE(TestFixture::ParsedMatches("1.1754942107e-38", 1.1754942107e-38f));
 }

@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 372
+#define ANGLE_SH_VERSION 373
 
 enum ShShaderSpec
 {
@@ -473,6 +473,9 @@ struct ShCompileOptions
 
     // Specify struct in one statement, declare instance in other.
     uint64_t separateCompoundStructDeclarations : 1;
+
+    // Whether to preserve denorm floats in the lexer or convert to zero
+    uint64_t preserveDenorms : 1;
 
     ShCompileOptionsMetal metal;
     ShPixelLocalStorageOptions pls;

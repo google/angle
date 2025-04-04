@@ -29,7 +29,7 @@ class TIntermDeclaration;
 class TSymbolTable;
 class TIntermTyped;
 
-float NumericLexFloat32OutOfRangeToInfinity(const std::string &str);
+float NumericLexFloat32OutOfRangeToInfinity(const std::string &str, bool preserveDenorms);
 
 // strtof_clamp is like strtof but
 //   1. it forces C locale, i.e. forcing '.' as decimal point.
@@ -37,7 +37,7 @@ float NumericLexFloat32OutOfRangeToInfinity(const std::string &str);
 //   3. str should be guaranteed to be in the valid format for a floating point number as defined
 //      by the grammar in the ESSL 3.00.6 spec section 4.1.4.
 // Return false if overflow happens.
-bool strtof_clamp(const std::string &str, float *value);
+bool strtof_clamp(const std::string &str, float *value, bool preserveDenorms);
 
 GLenum GLVariableType(const TType &type);
 GLenum GLVariablePrecision(const TType &type);
