@@ -3017,6 +3017,12 @@ bool ValidateTexSubImage3DOES(const Context *context,
                               GLenum type,
                               const void *pixels)
 {
+    if (!context->getExtensions().texture3DOES)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
     return ValidateTexSubImage3D(context, entryPoint, target, level, xoffset, yoffset, zoffset,
                                  width, height, depth, format, type, pixels);
 }
@@ -3109,6 +3115,12 @@ bool ValidateCompressedTexImage3DOES(const Context *context,
                                      GLsizei imageSize,
                                      const void *data)
 {
+    if (!context->getExtensions().texture3DOES)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
     return ValidateCompressedTexImage3D(context, entryPoint, target, level, internalformat, width,
                                         height, depth, border, imageSize, data);
 }
@@ -3198,6 +3210,12 @@ bool ValidateCompressedTexSubImage3DOES(const Context *context,
                                         GLsizei imageSize,
                                         const void *data)
 {
+    if (!context->getExtensions().texture3DOES)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
     return ValidateCompressedTexSubImage3D(context, entryPoint, target, level, xoffset, yoffset,
                                            zoffset, width, height, depth, format, imageSize, data);
 }
@@ -5489,6 +5507,12 @@ bool ValidateCopyTexSubImage3DOES(const Context *context,
                                   GLsizei width,
                                   GLsizei height)
 {
+    if (!context->getExtensions().texture3DOES)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
     return ValidateCopyTexSubImage3D(context, entryPoint, target, level, xoffset, yoffset, zoffset,
                                      x, y, width, height);
 }
@@ -6171,6 +6195,12 @@ bool ValidateTexImage3DOES(const Context *context,
                            GLenum type,
                            const void *pixels)
 {
+    if (!context->getExtensions().texture3DOES)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
     return ValidateTexImage3D(context, entryPoint, target, level, internalformat, width, height,
                               depth, border, format, type, pixels);
 }
