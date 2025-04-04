@@ -131,7 +131,6 @@ std::string GetCaptureTrigger()
     // Use the GetAndSet variant to improve future lookup times
     return GetAndSetEnvironmentVarOrUnCachedAndroidProperty(kTriggerVarName, kAndroidTrigger);
 }
-
 struct FmtGetSerializedContextStateFunction
 {
     FmtGetSerializedContextStateFunction(gl::ContextID contextIdIn,
@@ -8251,6 +8250,7 @@ void FrameCaptureShared::onEndFrame(gl::Context *context)
 
     // On Android, we can trigger a capture during the run
     checkForCaptureTrigger();
+    checkForCaptureEnd();
 
     // Check for MEC. Done after checkForCaptureTrigger(), since that can modify mCaptureStartFrame.
     if (mFrameIndex < mCaptureStartFrame)

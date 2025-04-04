@@ -763,6 +763,7 @@ class FrameCaptureShared final : angle::NonCopyable
 
     void captureCall(gl::Context *context, CallCapture &&call, bool isCallValid);
     void checkForCaptureTrigger();
+    bool checkForCaptureEnd();
     void onEndFrame(gl::Context *context);
     void onDestroyContext(const gl::Context *context);
     bool onEndCLCapture();
@@ -1127,6 +1128,9 @@ class FrameCaptureShared final : angle::NonCopyable
     // Initialize it to the number of frames you want to capture, and then clear the value to 0 when
     // you reach the content you want to capture. Currently only available on Android.
     uint32_t mCaptureTrigger;
+
+    // If you want to finish capture early, use the end_capture utility.
+    uint32_t mEndCapture;
 
     bool mCaptureActive;
     std::vector<uint32_t> mActiveFrameIndices;
@@ -1519,6 +1523,7 @@ constexpr char kOutDirectoryVarName[]   = "ANGLE_CAPTURE_OUT_DIR";
 constexpr char kFrameStartVarName[]     = "ANGLE_CAPTURE_FRAME_START";
 constexpr char kFrameEndVarName[]       = "ANGLE_CAPTURE_FRAME_END";
 constexpr char kTriggerVarName[]        = "ANGLE_CAPTURE_TRIGGER";
+constexpr char kEndCaptureVarName[]     = "ANGLE_CAPTURE_END_CAPTURE";
 constexpr char kCaptureLabelVarName[]   = "ANGLE_CAPTURE_LABEL";
 constexpr char kCompressionVarName[]    = "ANGLE_CAPTURE_COMPRESSION";
 constexpr char kSerializeStateVarName[] = "ANGLE_CAPTURE_SERIALIZE_STATE";
@@ -1544,6 +1549,7 @@ constexpr char kAndroidOutDir[]         = "debug.angle.capture.out_dir";
 constexpr char kAndroidFrameStart[]     = "debug.angle.capture.frame_start";
 constexpr char kAndroidFrameEnd[]       = "debug.angle.capture.frame_end";
 constexpr char kAndroidTrigger[]        = "debug.angle.capture.trigger";
+constexpr char kAndroidEndCapture[]     = "debug.angle.capture.end_capture";
 constexpr char kAndroidCaptureLabel[]   = "debug.angle.capture.label";
 constexpr char kAndroidCompression[]    = "debug.angle.capture.compression";
 constexpr char kAndroidValidation[]     = "debug.angle.capture.validation";
@@ -1621,6 +1627,10 @@ template <>
 void WriteInlineData<GLchar>(const std::vector<uint8_t> &vec, std::ostream &out);
 
 void AddComment(std::vector<CallCapture> *outCalls, const std::string &comment);
+
+std::string GetCaptureTrigger();
+
+std::string GetEndCapture();
 
 }  // namespace angle
 

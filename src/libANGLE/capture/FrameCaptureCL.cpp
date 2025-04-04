@@ -1624,6 +1624,13 @@ void FrameCaptureShared::captureCLCall(CallCapture &&inCall, bool isCallValid)
         std::atexit(onCLProgramEnd);
     }
 
+    if (checkForCaptureEnd())
+    {
+        onEndCLCapture();
+        mCaptureEndFrame = 0;
+        return;
+    }
+
     if (mFrameIndex <= mCaptureEndFrame)
     {
 
@@ -2200,8 +2207,7 @@ void FrameCaptureShared::saveCLGetInfo(const CallCapture &call)
                 .value.size_tPointerVal;
         if (!sizePointer)
         {
-            size =
-                call.params.getParam("param_value_size", ParamType::Tcl_uint, 3).value.cl_uintVal;
+            size = call.params.getParam("num_entries", ParamType::Tcl_uint, 3).value.cl_uintVal;
         }
         else
         {

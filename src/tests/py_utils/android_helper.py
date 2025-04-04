@@ -485,6 +485,7 @@ def _SetCaptureProps(env, device_out_dir):
         'ANGLE_CAPTURE_FRAME_START': 'debug.angle.capture.frame_start',
         'ANGLE_CAPTURE_FRAME_END': 'debug.angle.capture.frame_end',
         'ANGLE_CAPTURE_TRIGGER': 'debug.angle.capture.trigger',
+        'ANGLE_CAPTURE_END_CAPTURE': 'debug.angle.capture.end_capture',
         'ANGLE_CAPTURE_LABEL': 'debug.angle.capture.label',
         'ANGLE_CAPTURE_COMPRESSION': 'debug.angle.capture.compression',
         'ANGLE_CAPTURE_VALIDATION': 'debug.angle.capture.validation',

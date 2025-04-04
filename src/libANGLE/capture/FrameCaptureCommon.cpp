@@ -484,6 +484,7 @@ FrameCaptureShared::FrameCaptureShared()
       mResourceIDToSetupCalls{},
       mMaxAccessedResourceIDs{},
       mCaptureTrigger(0),
+      mEndCapture(0),
       mCaptureActive(false),
       mWindowSurfaceContextID({0})
 {
@@ -523,6 +524,14 @@ FrameCaptureShared::FrameCaptureShared()
 
         // Using capture trigger, initialize frame range variables for MEC
         resetCaptureStartEndFrames();
+    }
+
+    std::string endCaptureFromEnv =
+        GetEnvironmentVarOrUnCachedAndroidProperty(kEndCaptureVarName, kAndroidEndCapture);
+    if (!endCaptureFromEnv.empty())
+    {
+        mEndCapture      = atoi(endCaptureFromEnv.c_str());
+        mCaptureEndFrame = std::numeric_limits<uint32_t>::max();
     }
 
     std::string labelFromEnv =
@@ -660,6 +669,29 @@ uint32_t FrameCaptureShared::getReplayFrameIndex() const
     return mFrameIndex - mCaptureStartFrame + 1;
 }
 
+bool FrameCaptureShared::checkForCaptureEnd()
+{
+    if (mEndCapture == 0)
+    {
+        return false;
+    }
+
+    std::string captureEndStr = GetEndCapture();
+    if (captureEndStr.empty())
+    {
+        return false;
+    }
+
+    uint32_t captureEnd = atoi(captureEndStr.c_str());
+    if ((mEndCapture > 0) && (captureEnd == 0))
+    {
+        mCaptureEndFrame = mFrameIndex;
+        mEndCapture      = 0;
+        return true;
+    }
+    return false;
+}
+
 bool FrameCaptureShared::isRuntimeEnabled()
 {
     if (!mRuntimeEnabled && mRuntimeInitialized)
@@ -702,9 +734,17 @@ bool FrameCaptureShared::isRuntimeEnabled()
         mCaptureTrigger = atoi(captureTriggerFromEnv.c_str());
     }
 
-    mRuntimeEnabled =
-        enabledFromEnv != "0" &&
-        (mCaptureTrigger || (mCaptureEndFrame != 0 && mCaptureEndFrame >= mCaptureStartFrame));
+    uint32_t mEndCapture = 0;
+    std::string endCaptureFromEnv =
+        GetEnvironmentVarOrUnCachedAndroidProperty(kEndCaptureVarName, kAndroidEndCapture);
+    if (!endCaptureFromEnv.empty())
+    {
+        mEndCapture = atoi(endCaptureFromEnv.c_str());
+    }
+
+    mRuntimeEnabled = enabledFromEnv != "0" &&
+                      (mCaptureTrigger || mEndCapture ||
+                       (mCaptureEndFrame != 0 && mCaptureEndFrame >= mCaptureStartFrame));
 
     mRuntimeInitialized = true;
     return mRuntimeEnabled;
@@ -1159,6 +1199,12 @@ void CaptureString(const GLchar *str, ParamCapture *paramCapture)
 {
     // include the '\0' suffix
     CaptureMemory(str, strlen(str) + 1, paramCapture);
+}
+
+std::string GetEndCapture()
+{
+    // Use the GetAndSet variant to improve future lookup times
+    return GetAndSetEnvironmentVarOrUnCachedAndroidProperty(kEndCaptureVarName, kAndroidEndCapture);
 }
 
 TrackedResource::TrackedResource() = default;

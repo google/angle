@@ -234,6 +234,8 @@ adb shell setprop debug.angle.capture.frame_start 1
 adb shell setprop debug.angle.capture.frame_end 100.
 ```
 
+But if you do want to capture OpenCL and the end frame isn't clear, use the end_capture feature. See [End the capture early](./README.md#end-the-capture-early) for more information.
+
 ## Create output location
 
 We need to write out the trace file in a location accessible by the app. We use the app's data
@@ -325,6 +327,24 @@ adb pull /data/data/$PACKAGE_NAME/angle_capture_3
 Note that multiple captures are incompatible with applications using persistent coherent memory.
 If more than one capture is attempted in this situation the tracer will exit immediately.
 The initial capture will remain valid.
+
+## End the capture early
+
+If the application doesn't have a clear known ending frame, use ```debug.angle.capture.end_capture```.
+
+Set frame_start. frame_end is irrelevant for ending the capture early.
+```
+adb shell setprop debug.angle.capture.frame_start 1
+```
+Set end_capture to any number greater than 0. The value doesn't matter, as long as it's greater than 0.
+```
+adb shell setprop debug.angle.capture.end_capture 1
+```
+Run the application. At the moment you want the capture to be done, set end_capture to 0
+```
+adb shell setprop debug.angle.capture.end_capture 0
+```
+This will capture everything up to the time you triggered the end of the capture.
 
 ## Pull the trace files
 
