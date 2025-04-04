@@ -25,7 +25,7 @@ void ReplayFrame1(void)
     glGetAttribLocation(gShaderProgramMap[1], "a_position");
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, gClientArrays[0]);
     glEnableVertexAttribArray(0);
-    UpdateClientArrayPointer(0, (const GLubyte *)&gBinaryData[0], 72);
+    UpdateClientArrayPointer(0, (const GLubyte *)GetBinaryData(0), 72);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glDisableVertexAttribArray(0);
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
@@ -41,7 +41,7 @@ void ReplayFrame1(void)
     glGetAttribLocation(gShaderProgramMap[1], "a_position");
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, gClientArrays[0]);
     glEnableVertexAttribArray(0);
-    UpdateClientArrayPointer(0, (const GLubyte *)&gBinaryData[80], 72);
+    UpdateClientArrayPointer(0, (const GLubyte *)GetBinaryData(80), 72);
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glDisableVertexAttribArray(0);
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
@@ -50,7 +50,7 @@ void ReplayFrame1(void)
     glGetError();
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, gTextureMap[2]);
-    glTexImage2D(GL_TEXTURE_2D, 0, 6408, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, (const GLubyte *)&gBinaryData[160]);
+    glTexImage2D(GL_TEXTURE_2D, 0, 6408, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, (const GLubyte *)GetBinaryData(160));
 }
 
 void ReplayFrame2(void)
@@ -69,7 +69,7 @@ void ResetReplayContextShared(void)
     glBindTexture(GL_TEXTURE_2D, gTextureMap[2]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, 9728);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, 9728);
-    glTexImage2D(GL_TEXTURE_2D, 0, 6408, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, (const GLubyte *)&gBinaryData[224]);
+    glTexImage2D(GL_TEXTURE_2D, 0, 6408, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, (const GLubyte *)GetBinaryData(224));
 }
 
 void ResetReplayContext3(void)

@@ -19,6 +19,7 @@
 
 #include "common/angleutils.h"
 #include "common/debug.h"
+#include "common/frame_capture_binary_data.h"
 #include "common/frame_capture_utils.h"
 #include "common/system_utils.h"
 #include "trace_interface.h"
@@ -110,6 +111,7 @@ class TraceLibrary : angle::NonCopyable, angle::TraceCallbacks
         return typedFunc(args...);
     }
 
+    FrameCaptureBinaryData *ConfigureBinaryDataLoader(const char *fileName) override;
     uint8_t *LoadBinaryData(const char *fileName) override;
 
     std::unique_ptr<Library> mTraceLibrary;

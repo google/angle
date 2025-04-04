@@ -586,12 +586,20 @@ angle_common_lib("angle_common_shader_state") {
 
 angle_source_set("angle_capture_common") {
   sources = [
+    "src/common/frame_capture_binary_data.cpp",
+    "src/common/frame_capture_binary_data.h",
     "src/common/frame_capture_utils.cpp",
     "src/common/frame_capture_utils.h",
     "src/common/frame_capture_utils_autogen.cpp",
     "src/common/frame_capture_utils_autogen.h",
   ]
-  deps = [ ":angle_common" ]
+
+  # Required for 32-bit platform large file I/O
+  defines = [ "_FILE_OFFSET_BITS=64" ]
+  deps = [
+    ":angle_common",
+    ":angle_compression",
+  ]
   public_deps = [ ":angle_gl_enum_utils" ]
 }
 
@@ -1164,6 +1172,7 @@ angle_source_set("angle_frame_capture_mock") {
   public_deps = [ ":libANGLE_headers" ]
   public_configs = [ ":angle_frame_capture_disabled" ]
   sources = [
+    "src/common/frame_capture_binary_data.h",
     "src/common/frame_capture_utils.h",
     "src/common/frame_capture_utils_autogen.h",
     "src/common/gl_enum_utils_autogen.h",

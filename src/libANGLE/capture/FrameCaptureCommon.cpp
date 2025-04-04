@@ -26,57 +26,6 @@ std::string GetBinaryDataFilePath(bool compression, const std::string &captureLa
     return fnameStream.str();
 }
 
-void SaveBinaryData(bool compression,
-                    const std::string &outDir,
-                    gl::ContextID contextId,
-                    const std::string &captureLabel,
-                    FrameCaptureBinaryData &binaryData)
-{
-    std::string binaryDataFileName = GetBinaryDataFilePath(compression, captureLabel);
-    std::string dataFilepath       = outDir + binaryDataFileName;
-
-    SaveFileHelper saveData(dataFilepath);
-
-    if (compression)
-    {
-        // Save compressed data.
-        uLong uncompressedSize       = static_cast<uLong>(binaryData.totalSize());
-        uLong expectedCompressedSize = zlib_internal::GzipExpectedCompressedSize(uncompressedSize);
-
-        // Concat the pieces of binary data for the sake of gzip helper.
-        // Note: Make sure compression on write is disabled with a Chrome capture
-        // (ANGLE_CAPTURE_COMPRESSION=0), since that would require bundling all data in one big
-        // allocation, which may not be allowed by Chrome's allocator.
-        std::vector<uint8_t> uncompressedData;
-        uncompressedData.reserve(uncompressedSize);
-        for (const auto &piece : binaryData.data())
-        {
-            uncompressedData.insert(uncompressedData.end(), piece.begin(), piece.end());
-        }
-
-        std::vector<uint8_t> compressedData(expectedCompressedSize, 0);
-
-        uLong compressedSize = expectedCompressedSize;
-        int zResult = zlib_internal::GzipCompressHelper(compressedData.data(), &compressedSize,
-                                                        uncompressedData.data(), uncompressedSize,
-                                                        nullptr, nullptr);
-
-        if (zResult != Z_OK)
-        {
-            FATAL() << "Error compressing binary data: " << zResult;
-        }
-
-        saveData.write(compressedData.data(), compressedSize);
-    }
-    else
-    {
-        for (const auto &piece : binaryData.data())
-        {
-            saveData.write(piece.data(), piece.size());
-        }
-    }
-}
-
 template <>
 void WriteInlineData<GLchar>(const std::vector<uint8_t> &vec, std::ostream &out)
 {
@@ -133,7 +82,7 @@ void WriteBinaryParamReplay(ReplayWriter &replayWriter,
         // Store in binary file if data are not of type string
         // Round up to 16-byte boundary for cross ABI safety
         const size_t offset = binaryData->append(data.data(), data.size());
-        out << "(" << ParamTypeToString(overrideType) << ")&gBinaryData[" << offset << "]";
+        out << "(" << ParamTypeToString(overrideType) << ")GetBinaryData(" << offset << ")";
     }
 }
 
@@ -514,6 +463,20 @@ FrameCaptureShared::FrameCaptureShared()
     if (!endFromEnv.empty())
     {
         mCaptureEndFrame = atoi(endFromEnv.c_str());
+    }
+
+    std::string binaryDataSizeFromEnv =
+        GetEnvironmentVarOrUnCachedAndroidProperty(kBinaryDataSizeVarName, kAndroidBinaryDataSize);
+    if (!binaryDataSizeFromEnv.empty())
+    {
+        mBinaryData.setBinaryDataSize(atoi(binaryDataSizeFromEnv.c_str()));
+    }
+
+    std::string blockSizeFromEnv =
+        GetEnvironmentVarOrUnCachedAndroidProperty(kBlockSizeVarName, kAndroidBlockSize);
+    if (!blockSizeFromEnv.empty())
+    {
+        mBinaryData.setBlockSize(atoi(blockSizeFromEnv.c_str()));
     }
 
     std::string captureTriggerFromEnv =
@@ -996,7 +959,7 @@ void ReplayWriter::saveFrame()
     ASSERT(!mSourceFileExtension.empty());
 
     std::stringstream strstr;
-    strstr << mFilenamePattern << "_" << std::setfill('0') << std::setw(3) << mFrameIndex << "."
+    strstr << mFilenamePattern << "_" << std::setfill('0') << std::setw(4) << mFrameIndex << "."
            << mSourceFileExtension;
 
     std::string frameFilePath = strstr.str();
