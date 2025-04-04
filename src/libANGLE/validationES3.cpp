@@ -31,7 +31,7 @@ using namespace err;
 
 void RecordVersionErrorES30(const Context *context, angle::EntryPoint entryPoint)
 {
-    ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
+    ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kEntryPointRequiresES30);
 }
 
 namespace

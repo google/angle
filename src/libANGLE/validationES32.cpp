@@ -29,12 +29,12 @@ using namespace err;
 
 void RecordVersionErrorES1Or32(const Context *context, angle::EntryPoint entryPoint)
 {
-    ANGLE_VALIDATION_ERRORF(GL_INVALID_OPERATION, kES1or32Required, GetEntryPointName(entryPoint));
+    ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kEntryPointRequiresES10or32);
 }
 
 void RecordVersionErrorES32(const Context *context, angle::EntryPoint entryPoint)
 {
-    ANGLE_VALIDATION_ERRORF(GL_INVALID_OPERATION, kES32Required, GetEntryPointName(entryPoint));
+    ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kEntryPointRequiresES32);
 }
 
 namespace
