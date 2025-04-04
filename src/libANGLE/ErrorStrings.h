@@ -114,6 +114,7 @@ inline constexpr const char *kEGLImageTextureFormatNotSupported = "EGL image int
 inline constexpr const char *kEGLImageTextureTargetMismatch = "The source EGL image is incompatible with the target texture type.";
 inline constexpr const char *kElementArrayBufferBoundForTransformFeedback = "It is undefined behavior to use an element array buffer that is bound for transform feedback.";
 inline constexpr const char *kElementArrayNoBufferOrPointer = "No element array buffer and no pointer.";
+inline constexpr const char *kEntryPointRequiresES10 = "Command requires OpenGL ES 1.0.";
 inline constexpr const char *kEntryPointRequiresES10or32 = "Command requires OpenGL ES 1.0 or 3.2.";
 inline constexpr const char *kEntryPointRequiresES30 = "Command requires OpenGL ES 3.0.";
 inline constexpr const char *kEntryPointRequiresES31 = "Command requires OpenGL ES 3.1.";

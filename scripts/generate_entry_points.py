@@ -1663,8 +1663,8 @@ def get_validation_expression(api, cmd_name, entry_point_name, internal_params, 
     expr = "Validate{name}({params})".format(
         name=name, params=", ".join(extra_params + [entry_point_name] + internal_params))
 
-    # Validation expression for ES 1.x, ES 2.0, and extension entry points
-    if version not in ["3_0", "3_1", "3_2"]:
+    # Validation expression for ES 2.0 and extension entry points
+    if version not in ["1_0", "3_0", "3_1", "3_2"]:
         return "bool isCallValid = (context->skipValidation() || {validation_expression});".format(
             validation_expression=expr)
 
@@ -1674,15 +1674,16 @@ def get_validation_expression(api, cmd_name, entry_point_name, internal_params, 
     get_pointer_error = "RecordVersionErrorES1Or32(context, {entry_point_name});".format(
         entry_point_name=entry_point_name)
 
-    version_condition = "context->getClientVersion() >= ES_{version}".format(
-        version=version) if not is_get_pointer else get_pointer_validation
+    version_compare = ">= ES_{version}".format(version=version) if version != "1_0" else "< ES_2_0"
+    version_condition = "context->getClientVersion() {version_compare}".format(
+        version_compare=version_compare) if not is_get_pointer else get_pointer_validation
 
     record_error = "RecordVersionErrorES{v}(context, {entry_point_name});".format(
         v=version.replace("_", ""),
         entry_point_name=entry_point_name) if not is_get_pointer else get_pointer_error
 
-    # Validation logic with version check generated for ES 3.x entry points
-    es3_expr = """bool isCallValid = context->skipValidation();
+    # Validation logic with version check generated for ES 1.0 and ES 3.x entry points
+    return """bool isCallValid = context->skipValidation();
 if (!isCallValid)
 {{
     if (ANGLE_LIKELY({version_condition}))
@@ -1695,8 +1696,6 @@ if (!isCallValid)
     }}
 }}""".format(
         version_condition=version_condition, validation_expression=expr, record_error=record_error)
-
-    return es3_expr
 
 
 def entry_point_export(api):
