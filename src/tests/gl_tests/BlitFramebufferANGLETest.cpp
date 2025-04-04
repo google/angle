@@ -497,8 +497,16 @@ TEST_P(BlitFramebufferANGLETest, BlitColorWithFlip)
     glBindFramebuffer(GL_READ_FRAMEBUFFER_ANGLE, mUserFBO);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER_ANGLE, mOriginalFBO);
 
-    glBlitFramebuffer(0, 0, getWindowWidth(), getWindowHeight(), getWindowWidth(), 0, 0,
-                      getWindowHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    if (getClientMajorVersion() < 3)
+    {
+        glBlitFramebufferNV(0, 0, getWindowWidth(), getWindowHeight(), getWindowWidth(), 0, 0,
+                            getWindowHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    }
+    else
+    {
+        glBlitFramebuffer(0, 0, getWindowWidth(), getWindowHeight(), getWindowWidth(), 0, 0,
+                          getWindowHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    }
 
     EXPECT_GL_NO_ERROR();
 
@@ -514,8 +522,17 @@ TEST_P(BlitFramebufferANGLETest, BlitColorWithFlip)
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER_ANGLE, mOriginalFBO);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    glBlitFramebuffer(0, 0, getWindowWidth(), getWindowHeight(), 0, getWindowHeight(),
-                      getWindowWidth(), 0, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+    if (getClientMajorVersion() < 3)
+    {
+        glBlitFramebufferNV(0, 0, getWindowWidth(), getWindowHeight(), 0, getWindowHeight(),
+                            getWindowWidth(), 0, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    }
+    else
+    {
+        glBlitFramebuffer(0, 0, getWindowWidth(), getWindowHeight(), 0, getWindowHeight(),
+                          getWindowWidth(), 0, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    }
 
     EXPECT_GL_NO_ERROR();
 
@@ -532,8 +549,17 @@ TEST_P(BlitFramebufferANGLETest, BlitColorWithFlip)
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER_ANGLE, mUserFBO);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    glBlitFramebuffer(0, 0, getWindowWidth(), getWindowHeight(), getWindowWidth(), 0, 0,
-                      getWindowHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+    if (getClientMajorVersion() < 3)
+    {
+        glBlitFramebufferNV(0, 0, getWindowWidth(), getWindowHeight(), getWindowWidth(), 0, 0,
+                            getWindowHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    }
+    else
+    {
+        glBlitFramebuffer(0, 0, getWindowWidth(), getWindowHeight(), getWindowWidth(), 0, 0,
+                          getWindowHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    }
 
     EXPECT_GL_NO_ERROR();
 
@@ -549,8 +575,17 @@ TEST_P(BlitFramebufferANGLETest, BlitColorWithFlip)
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER_ANGLE, mUserFBO);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    glBlitFramebuffer(0, 0, getWindowWidth(), getWindowHeight(), 0, getWindowHeight(),
-                      getWindowWidth(), 0, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+    if (getClientMajorVersion() < 3)
+    {
+        glBlitFramebufferNV(0, 0, getWindowWidth(), getWindowHeight(), 0, getWindowHeight(),
+                            getWindowWidth(), 0, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    }
+    else
+    {
+        glBlitFramebuffer(0, 0, getWindowWidth(), getWindowHeight(), 0, getWindowHeight(),
+                          getWindowWidth(), 0, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    }
 
     EXPECT_GL_NO_ERROR();
 
@@ -592,8 +627,16 @@ TEST_P(BlitFramebufferANGLETest, BlitColorWithMesaYFlipSrc)
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    glBlitFramebuffer(0, 0, getWindowWidth(), getWindowHeight(), 0, 0, fboTargetWidth,
-                      fboTargetHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    if (getClientMajorVersion() < 3)
+    {
+        glBlitFramebufferNV(0, 0, getWindowWidth(), getWindowHeight(), 0, 0, fboTargetWidth,
+                            fboTargetHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    }
+    else
+    {
+        glBlitFramebuffer(0, 0, getWindowWidth(), getWindowHeight(), 0, 0, fboTargetWidth,
+                          fboTargetHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    }
 
     EXPECT_GL_NO_ERROR();
 
@@ -633,10 +676,21 @@ TEST_P(BlitFramebufferANGLETest, BlitColorWithMesaYFlipDst)
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    glBlitFramebuffer(0, 0, getWindowWidth(), getWindowHeight(), 0, 0, fboTargetWidth,
-                      fboTargetHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-    glBlitFramebuffer(0, 0, getWindowWidth(), getWindowHeight(), getWindowWidth() / 2, 0,
-                      getWindowWidth(), getWindowHeight() / 2, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    if (getClientMajorVersion() < 3)
+    {
+        glBlitFramebufferNV(0, 0, getWindowWidth(), getWindowHeight(), 0, 0, fboTargetWidth,
+                            fboTargetHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+        glBlitFramebufferNV(0, 0, getWindowWidth(), getWindowHeight(), getWindowWidth() / 2, 0,
+                            getWindowWidth(), getWindowHeight() / 2, GL_COLOR_BUFFER_BIT,
+                            GL_NEAREST);
+    }
+    else
+    {
+        glBlitFramebuffer(0, 0, getWindowWidth(), getWindowHeight(), 0, 0, fboTargetWidth,
+                          fboTargetHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+        glBlitFramebuffer(0, 0, getWindowWidth(), getWindowHeight(), getWindowWidth() / 2, 0,
+                          getWindowWidth(), getWindowHeight() / 2, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    }
 
     glFramebufferParameteriMESA(GL_DRAW_FRAMEBUFFER_ANGLE, GL_FRAMEBUFFER_FLIP_Y_MESA, 0);
 
@@ -704,10 +758,20 @@ TEST_P(BlitFramebufferANGLETest, BlitColorWithMesaYFlipSrcDst)
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    glBlitFramebuffer(0, 0, getWindowWidth(), getWindowHeight(), 0, 0, fboTargetWidth,
-                      fboTargetHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-    glBlitFramebuffer(0, 0, getWindowWidth(), getWindowHeight(), fb0Width / 2, 0, fb0Width,
-                      fb0Height / 2, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    if (getClientMajorVersion() < 3)
+    {
+        glBlitFramebufferNV(0, 0, getWindowWidth(), getWindowHeight(), 0, 0, fboTargetWidth,
+                            fboTargetHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+        glBlitFramebufferNV(0, 0, getWindowWidth(), getWindowHeight(), fb0Width / 2, 0, fb0Width,
+                            fb0Height / 2, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    }
+    else
+    {
+        glBlitFramebuffer(0, 0, getWindowWidth(), getWindowHeight(), 0, 0, fboTargetWidth,
+                          fboTargetHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+        glBlitFramebuffer(0, 0, getWindowWidth(), getWindowHeight(), fb0Width / 2, 0, fb0Width,
+                          fb0Height / 2, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    }
 
     EXPECT_GL_NO_ERROR();
 
@@ -776,8 +840,16 @@ TEST_P(BlitFramebufferANGLETest, BlitColorWithMesaYFlipInteger)
     glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    glBlitFramebuffer(0, 0, getWindowWidth(), getWindowHeight(), 0, 0, fb1_target_width,
-                      fb1_target_height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    if (getClientMajorVersion() < 3)
+    {
+        glBlitFramebufferNV(0, 0, getWindowWidth(), getWindowHeight(), 0, 0, fb1_target_width,
+                            fb1_target_height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    }
+    else
+    {
+        glBlitFramebuffer(0, 0, getWindowWidth(), getWindowHeight(), 0, 0, fb1_target_width,
+                          fb1_target_height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    }
 
     EXPECT_GL_NO_ERROR();
 
@@ -807,8 +879,17 @@ TEST_P(BlitFramebufferANGLETest, BlitColorWithMesaYFlipInteger)
     glFramebufferParameteriMESA(GL_DRAW_FRAMEBUFFER_ANGLE, GL_FRAMEBUFFER_FLIP_Y_MESA, 1);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    glBlitFramebuffer(0, 0, fb1_target_width, fb1_target_height, 0, 0, getWindowWidth(),
-                      getWindowHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+    if (getClientMajorVersion() < 3)
+    {
+        glBlitFramebufferNV(0, 0, fb1_target_width, fb1_target_height, 0, 0, getWindowWidth(),
+                            getWindowHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    }
+    else
+    {
+        glBlitFramebuffer(0, 0, fb1_target_width, fb1_target_height, 0, 0, getWindowWidth(),
+                          getWindowHeight(), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    }
 
     // And explicitly disable y-flip so that read does not implicitly use this flag.
     glFramebufferParameteriMESA(GL_DRAW_FRAMEBUFFER_ANGLE, GL_FRAMEBUFFER_FLIP_Y_MESA, 0);

@@ -2802,7 +2802,7 @@ bool ValidateBlitFramebufferNV(const Context *context,
                                GLbitfield mask,
                                GLenum filter)
 {
-    if (!context->getExtensions().framebufferBlitANGLE)
+    if (!context->getExtensions().framebufferBlitNV)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kBlitExtensionNotAvailable);
         return false;
