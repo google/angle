@@ -4754,21 +4754,6 @@ void GL_APIENTRY GL_ReleaseTexturesANGLE(GLuint numTextures,
 
 // GL_APPLE_clip_distance
 
-// GL_ARB_sync
-// ClientWaitSync is already defined.
-
-// DeleteSync is already defined.
-
-// FenceSync is already defined.
-
-// GetInteger64v is already defined.
-
-// GetSynciv is already defined.
-
-// IsSync is already defined.
-
-// WaitSync is already defined.
-
 // GL_ARM_rgba8
 
 // GL_ARM_shader_framebuffer_fetch

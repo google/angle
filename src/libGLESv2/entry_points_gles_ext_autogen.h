@@ -756,8 +756,6 @@ ANGLE_EXPORT void GL_APIENTRY GL_ReleaseTexturesANGLE(GLuint numTextures,
 
 // GL_APPLE_clip_distance
 
-// GL_ARB_sync
-
 // GL_ARM_rgba8
 
 // GL_ARM_shader_framebuffer_fetch

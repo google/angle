@@ -3775,7 +3775,7 @@ bool ValidateGetSynciv(const Context *context,
                        const GLsizei *length,
                        const GLint *values)
 {
-    if ((context->getClientMajorVersion() < 3) && !context->getExtensions().syncARB)
+    if (context->getClientMajorVersion() < 3)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
         return false;
@@ -4776,7 +4776,7 @@ bool ValidateFenceSync(const Context *context,
                        GLenum condition,
                        GLbitfield flags)
 {
-    if ((context->getClientMajorVersion() < 3) && !context->getExtensions().syncARB)
+    if (context->getClientMajorVersion() < 3)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
         return false;
@@ -4799,7 +4799,7 @@ bool ValidateFenceSync(const Context *context,
 
 bool ValidateIsSync(const Context *context, angle::EntryPoint entryPoint, SyncID syncPacked)
 {
-    if ((context->getClientMajorVersion() < 3) && !context->getExtensions().syncARB)
+    if (context->getClientMajorVersion() < 3)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
         return false;
@@ -4810,7 +4810,7 @@ bool ValidateIsSync(const Context *context, angle::EntryPoint entryPoint, SyncID
 
 bool ValidateDeleteSync(const Context *context, angle::EntryPoint entryPoint, SyncID syncPacked)
 {
-    if ((context->getClientMajorVersion() < 3) && !context->getExtensions().syncARB)
+    if (context->getClientMajorVersion() < 3)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
         return false;
@@ -4831,7 +4831,7 @@ bool ValidateClientWaitSync(const Context *context,
                             GLbitfield flags,
                             GLuint64 timeout)
 {
-    if ((context->getClientMajorVersion() < 3) && !context->getExtensions().syncARB)
+    if (context->getClientMajorVersion() < 3)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
         return false;
@@ -4859,7 +4859,7 @@ bool ValidateWaitSync(const Context *context,
                       GLbitfield flags,
                       GLuint64 timeout)
 {
-    if ((context->getClientMajorVersion() < 3) && !context->getExtensions().syncARB)
+    if (context->getClientMajorVersion() < 3)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
         return false;
@@ -4892,7 +4892,7 @@ bool ValidateGetInteger64v(const Context *context,
                            GLenum pname,
                            const GLint64 *params)
 {
-    if ((context->getClientMajorVersion() < 3) && !context->getExtensions().syncARB)
+    if (context->getClientMajorVersion() < 3)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
         return false;

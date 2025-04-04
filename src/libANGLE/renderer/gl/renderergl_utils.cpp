@@ -1455,7 +1455,6 @@ void GenerateCaps(const FunctionsGL *functions,
                                       functions->hasGLExtension("GL_ARB_pixel_buffer_object") ||
                                       functions->hasGLExtension("GL_EXT_pixel_buffer_object") ||
                                       functions->hasGLESExtension("GL_NV_pixel_buffer_object");
-    extensions->syncARB      = nativegl::SupportsFenceSync(functions);
     extensions->mapbufferOES = functions->isAtLeastGL(gl::Version(1, 5)) ||
                                functions->isAtLeastGLES(gl::Version(3, 0)) ||
                                functions->hasGLESExtension("GL_OES_mapbuffer");

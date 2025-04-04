@@ -1051,9 +1051,6 @@ void DisplayMtl::initializeExtensions() const
 
         // GL_OES_EGL_sync
         mNativeExtensions.EGLSyncOES = true;
-
-        // GL_ARB_sync
-        mNativeExtensions.syncARB = true;
     }
 
     // GL_KHR_parallel_shader_compile

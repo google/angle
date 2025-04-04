@@ -479,9 +479,6 @@ struct Extensions
     // GL_OES_surfaceless_context
     bool surfacelessContextOES = false;
 
-    // GL_ARB_sync
-    bool syncARB = false;
-
     // GL_EXT_tessellation_shader
     bool tessellationShaderEXT = false;
 

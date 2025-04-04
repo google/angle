@@ -88,7 +88,6 @@ gles_requestable_extensions = [
     "GL_ANGLE_pack_reverse_row_order",
     "GL_ANGLE_texture_usage",
     "GL_APPLE_clip_distance",
-    "GL_ARB_sync",
     "GL_ARM_rgba8",
     "GL_ARM_shader_framebuffer_fetch",
     "GL_ARM_shader_framebuffer_fetch_depth_stencil",
@@ -576,7 +575,7 @@ class RegistryXML:
     def _ClassifySupport(self, extension):
         supported = extension.attrib['supported']
         # Desktop GL extensions exposed in ANGLE GLES for Chrome.
-        if extension.attrib['name'] in ['GL_ARB_sync', 'GL_NV_robustness_video_memory_purge']:
+        if extension.attrib['name'] in ['GL_NV_robustness_video_memory_purge']:
             supported += "|gles2"
         if 'gles2' in supported:
             return 'gl2ext'

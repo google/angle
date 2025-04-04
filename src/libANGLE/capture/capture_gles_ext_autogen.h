@@ -1023,8 +1023,6 @@ angle::CallCapture CaptureReleaseTexturesANGLE(const State &glState,
 
 // GL_APPLE_clip_distance
 
-// GL_ARB_sync
-
 // GL_ARM_rgba8
 
 // GL_ARM_shader_framebuffer_fetch

@@ -155,7 +155,6 @@ using data from registry_xml.py and gl.xml.
 | [GL_EXT_sRGB_write_control](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_sRGB_write_control.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_OES_standard_derivatives](https://khronos.org/registry/OpenGL/extensions/OES/OES_standard_derivatives.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_OES_surfaceless_context](https://khronos.org/registry/OpenGL/extensions/OES/OES_surfaceless_context.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
-| [GL_ARB_sync](https://khronos.org/registry/OpenGL/extensions/ARB/ARB_sync.txt) |  |  |  |  |  |  |  |
 | [GL_EXT_tessellation_shader](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_tessellation_shader.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; |  |  | &#x2714; |
 | [GL_OES_tessellation_shader](https://khronos.org/registry/OpenGL/extensions/OES/OES_tessellation_shader.txt) |  |  |  |  |  |  |  |
 | [GL_OES_texture_3D](https://khronos.org/registry/OpenGL/extensions/OES/OES_texture_3D.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
