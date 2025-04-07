@@ -67,6 +67,10 @@ class OESSampleVariablesTest : public sh::ShaderExtensionTest
     {
         DestroyCompiler();
 
+        if (shaderOutputType == SH_SPIRV_VULKAN_OUTPUT || shaderOutputType == SH_MSL_METAL_OUTPUT)
+        {
+            mCompileOptions.removeInactiveVariables = true;
+        }
         mCompiler = sh::ConstructCompiler(GL_FRAGMENT_SHADER, testing::get<0>(GetParam()),
                                           shaderOutputType, &mResources);
         ASSERT_TRUE(mCompiler != nullptr) << "Compiler could not be constructed.";
@@ -77,10 +81,7 @@ class OESSampleVariablesTest : public sh::ShaderExtensionTest
         const char *shaderStrings[] = {testing::get<1>(GetParam()), pragma,
                                        testing::get<2>(GetParam())};
 
-        ShCompileOptions compileOptions = {};
-        compileOptions.objectCode       = true;
-
-        bool success = sh::Compile(mCompiler, shaderStrings, 3, compileOptions);
+        bool success = sh::Compile(mCompiler, shaderStrings, 3, mCompileOptions);
         if (success)
         {
             return ::testing::AssertionSuccess() << "Compilation success";

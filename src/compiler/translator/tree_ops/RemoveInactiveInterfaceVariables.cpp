@@ -71,7 +71,7 @@ bool IsVariableActive(const std::vector<Variable> &mVars, const ImmutableString 
             return var.active;
         }
     }
-    UNREACHABLE();
+    ASSERT(false);
     return true;
 }
 

@@ -45,6 +45,7 @@
 #include "compiler/translator/tree_ops/PruneNoOps.h"
 #include "compiler/translator/tree_ops/RemoveArrayLengthMethod.h"
 #include "compiler/translator/tree_ops/RemoveDynamicIndexing.h"
+#include "compiler/translator/tree_ops/RemoveInactiveInterfaceVariables.h"
 #include "compiler/translator/tree_ops/RemoveInvariantDeclaration.h"
 #include "compiler/translator/tree_ops/RemoveUnreferencedVariables.h"
 #include "compiler/translator/tree_ops/RemoveUnusedFramebufferFetch.h"
@@ -1211,6 +1212,24 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
             return false;
         }
     }
+
+    // Remove declarations of inactive shader interface variables so backends don't need to account
+    // for them.  Note that currently, CollectVariables marks every field of an active uniform
+    // that's of struct type as active, i.e. no extracted sampler is inactive, so this can be done
+    // before extracting samplers from structs.
+    //
+    // For the MSL output, keep the inactive fragment outputs, but remove them otherwise.
+    if (compileOptions.removeInactiveVariables)
+    {
+        if (!RemoveInactiveInterfaceVariables(this, root, &getSymbolTable(), getAttributes(),
+                                              getInputVaryings(), getOutputVariables(),
+                                              getUniforms(), getInterfaceBlocks(),
+                                              mOutputType != SH_MSL_METAL_OUTPUT))
+        {
+            return false;
+        }
+    }
+
     bool needInitializeOutputVariables =
         compileOptions.initOutputVariables && mShaderType != GL_COMPUTE_SHADER;
     needInitializeOutputVariables |=

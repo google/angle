@@ -20801,6 +20801,26 @@ TEST_P(GLSLTest_ES3, DenormFloatsToIntValues)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test output initialization vs. fragment output arrays
+TEST_P(WebGL2GLSLTest, FragmentOutputArray)
+{
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+layout(location = 0) out vec4 activeColor;
+layout(location = 1) out vec4 inactive[3];
+void main() {
+    // Make activeColor active without fully initializing it.
+    activeColor.x += 0.0001;
+})";
+
+    glClearColor(100, 200, 50, 150);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f, 1.0f, true);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::transparentBlack);
+}
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(

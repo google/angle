@@ -19,6 +19,10 @@ class EXTYUVTargetTest : public sh::ShaderExtensionTest
     {
         DestroyCompiler();
 
+        if (shaderOutputType == SH_SPIRV_VULKAN_OUTPUT || shaderOutputType == SH_MSL_METAL_OUTPUT)
+        {
+            mCompileOptions.removeInactiveVariables = true;
+        }
         mCompiler = sh::ConstructCompiler(GL_FRAGMENT_SHADER, testing::get<0>(GetParam()),
                                           shaderOutputType, &mResources);
         ASSERT_TRUE(mCompiler != nullptr) << "Compiler could not be constructed.";

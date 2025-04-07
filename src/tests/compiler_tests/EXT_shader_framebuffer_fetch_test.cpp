@@ -159,6 +159,10 @@ class EXTShaderFramebufferFetchNoncoherentTest : public sh::ShaderExtensionTest
     {
         DestroyCompiler(shaderOutputType);
 
+        if (shaderOutputType == SH_SPIRV_VULKAN_OUTPUT || shaderOutputType == SH_MSL_METAL_OUTPUT)
+        {
+            mCompileOptions.removeInactiveVariables = true;
+        }
         mCompilerList[shaderOutputType] =
             sh::ConstructCompiler(GL_FRAGMENT_SHADER, testing::get<0>(GetParam()), shaderOutputType,
                                   &mResourceList[shaderOutputType]);
@@ -169,14 +173,11 @@ class EXTShaderFramebufferFetchNoncoherentTest : public sh::ShaderExtensionTest
 
     testing::AssertionResult TestShaderCompile(ShShaderOutput shaderOutputType, const char *pragma)
     {
-        ShCompileOptions compileOptions = {};
-        compileOptions.objectCode       = true;
-
         const char *shaderStrings[] = {testing::get<1>(GetParam()), pragma,
                                        testing::get<2>(GetParam())};
 
         bool success =
-            sh::Compile(mCompilerList[shaderOutputType], shaderStrings, 3, compileOptions);
+            sh::Compile(mCompilerList[shaderOutputType], shaderStrings, 3, mCompileOptions);
         if (success)
         {
             return ::testing::AssertionSuccess()

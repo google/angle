@@ -144,6 +144,10 @@ class KHRBlendEquationAdvancedTest : public sh::ShaderExtensionTest
     {
         DestroyCompiler(shaderOutputType);
 
+        if (shaderOutputType == SH_SPIRV_VULKAN_OUTPUT || shaderOutputType == SH_MSL_METAL_OUTPUT)
+        {
+            mCompileOptions.removeInactiveVariables = true;
+        }
         mCompilerList[shaderOutputType] =
             sh::ConstructCompiler(GL_FRAGMENT_SHADER, testing::get<0>(GetParam()), shaderOutputType,
                                   &mResourceList[shaderOutputType]);
@@ -165,8 +169,7 @@ class KHRBlendEquationAdvancedTest : public sh::ShaderExtensionTest
         const char *shaderStrings[] = {testing::get<1>(GetParam()), pragma,
                                        testing::get<2>(GetParam())};
 
-        ShCompileOptions compileFlags = {};
-        compileFlags.objectCode       = true;
+        ShCompileOptions compileFlags = mCompileOptions;
         if (emulate == Emulation::Enabled)
         {
             compileFlags.addAdvancedBlendEquationsEmulation = true;

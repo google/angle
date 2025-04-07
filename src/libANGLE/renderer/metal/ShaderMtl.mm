@@ -92,6 +92,8 @@ std::shared_ptr<ShaderTranslateTask> ShaderMtl::compile(const gl::Context *conte
         options->emulateAlphaToCoverage = true;
     }
 
+    options->removeInactiveVariables = true;
+
     // Constants:
     options->metal.driverUniformsBindingIndex    = mtl::kDriverUniformsBindingIndex;
     options->metal.defaultUniformsBindingIndex   = mtl::kDefaultUniformsBindingIndex;

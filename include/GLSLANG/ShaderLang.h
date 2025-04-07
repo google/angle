@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 373
+#define ANGLE_SH_VERSION 374
 
 enum ShShaderSpec
 {
@@ -476,6 +476,9 @@ struct ShCompileOptions
 
     // Whether to preserve denorm floats in the lexer or convert to zero
     uint64_t preserveDenorms : 1;
+
+    // Whether inactive shader variables from the output.
+    uint64_t removeInactiveVariables : 1;
 
     ShCompileOptionsMetal metal;
     ShPixelLocalStorageOptions pls;

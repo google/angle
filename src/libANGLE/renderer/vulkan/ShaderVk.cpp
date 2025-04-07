@@ -145,6 +145,8 @@ std::shared_ptr<ShaderTranslateTask> ShaderVk::compile(const gl::Context *contex
     // Unconditionally set this option to true for the Vulkan backend
     options->preserveDenorms = true;
 
+    options->removeInactiveVariables = true;
+
     // The Vulkan backend needs no post-processing of the translated shader.
     return std::shared_ptr<ShaderTranslateTask>(new ShaderTranslateTask);
 }

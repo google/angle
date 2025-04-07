@@ -23,7 +23,6 @@
 #include "compiler/translator/tree_ops/MonomorphizeUnsupportedFunctions.h"
 #include "compiler/translator/tree_ops/RecordConstantPrecision.h"
 #include "compiler/translator/tree_ops/RemoveAtomicCounterBuiltins.h"
-#include "compiler/translator/tree_ops/RemoveInactiveInterfaceVariables.h"
 #include "compiler/translator/tree_ops/RewriteArrayOfArrayOfOpaqueUniforms.h"
 #include "compiler/translator/tree_ops/RewriteAtomicCounters.h"
 #include "compiler/translator/tree_ops/RewriteDfdy.h"
@@ -789,17 +788,6 @@ bool TranslatorSPIRV::translateImpl(TIntermBlock *root,
         {
             ++atomicCounterCount;
         }
-    }
-
-    // Remove declarations of inactive shader interface variables so SPIR-V transformer doesn't need
-    // to replace them.  Note that currently, CollectVariables marks every field of an active
-    // uniform that's of struct type as active, i.e. no extracted sampler is inactive, so this can
-    // be done before extracting samplers from structs.
-    if (!RemoveInactiveInterfaceVariables(this, root, &getSymbolTable(), getAttributes(),
-                                          getInputVaryings(), getOutputVariables(), getUniforms(),
-                                          getInterfaceBlocks(), true))
-    {
-        return false;
     }
 
     // If there are any function calls that take array-of-array of opaque uniform parameters, or
