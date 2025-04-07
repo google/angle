@@ -3023,6 +3023,8 @@ class ImageHelper final : public Resource, public angle::Subject
     }
     void updatePipelineStageAccessHistory();
 
+    bool areStagedUpdatesClearOnly();
+
   private:
     ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
     struct ClearUpdate

@@ -8415,6 +8415,21 @@ void ImageHelper::updatePipelineStageAccessHistory()
     mPipelineStageAccessHeuristic.onAccess(barrierData.pipelineStageGroup);
 }
 
+bool ImageHelper::areStagedUpdatesClearOnly()
+{
+    for (SubresourceUpdates &levelUpdates : mSubresourceUpdates)
+    {
+        for (SubresourceUpdate &update : levelUpdates)
+        {
+            if (!IsClear(update.updateSource))
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 void ImageHelper::clearColor(Renderer *renderer,
                              const VkClearColorValue &color,
                              LevelIndex baseMipLevelVk,
