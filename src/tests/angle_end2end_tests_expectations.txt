@@ -1689,6 +1689,7 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 397848903 LINUX NVIDIA OPENGL : EGLSurfaceTest.ResizeInvisibleWindow/* = SKIP
 
 406827038 SWIFTSHADER : GLSLTest_ES3.DenormFloatsToIntValues/* = SKIP
+406827038 PIXEL6 VULKAN : GLSLTest_ES3.DenormFloatsToIntValues/* = SKIP
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Slow tests, should appear last in this file
