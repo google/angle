@@ -725,19 +725,28 @@ std::string GetConfigNameFromTestIdentifier(const TestIdentifier &id)
 
 TestQueue BatchTests(const std::vector<TestIdentifier> &tests, int batchSize)
 {
-    // First sort tests by configuration.
-    angle::HashMap<std::string, std::vector<TestIdentifier>> testsSortedByConfig;
+    // First group tests by configuration.
+    angle::HashMap<std::string, std::vector<TestIdentifier>> testsGroupedByConfig;
     for (const TestIdentifier &id : tests)
     {
         std::string config = GetConfigNameFromTestIdentifier(id);
-        testsSortedByConfig[config].push_back(id);
+        testsGroupedByConfig[config].push_back(id);
     }
+
+    // Sort configs for consistent ordering.
+    std::vector<std::string> configs;
+    configs.reserve(testsGroupedByConfig.size());
+    for (const auto &configAndIds : testsGroupedByConfig)
+    {
+        configs.push_back(configAndIds.first);
+    }
+    std::sort(configs.begin(), configs.end());
 
     // Then group into batches by 'batchSize'.
     TestQueue testQueue;
-    for (const auto &configAndIds : testsSortedByConfig)
+    for (const auto &config : configs)
     {
-        const std::vector<TestIdentifier> &configTests = configAndIds.second;
+        const std::vector<TestIdentifier> &configTests = testsGroupedByConfig[config];
 
         // Count the number of batches needed for this config.
         int batchesForConfig = static_cast<int>(configTests.size() + batchSize - 1) / batchSize;
