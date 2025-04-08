@@ -830,6 +830,7 @@ b/330697097 PIXEL6 VULKAN : FramebufferTest_ES31.MultisampleResolveBothAttachmen
 40096874 IOS METAL : PixelLocalStorageTest.Coherency/ES3_Metal_EmulatePixelLocalStorage* = SKIP
 40096838 IOS METAL : PixelLocalStorageTest.ColorAttachment0Workaround/ES3_Metal_EmulatePixelLocalStorage* = SKIP
 40096838 IOS METAL : PixelLocalStorageTest.CopyTexSubImage/ES3_Metal_EmulatePixelLocalStorage* = SKIP
+40096838 IOS METAL : PixelLocalStorageTest.FlushFinishSync/ES3_Metal_EmulatePixelLocalStorage* = SKIP
 40096874 IOS METAL : PixelLocalStorageTest.ForgetBarrier/ES3_Metal_EmulatePixelLocalStorage* = SKIP
 40096874 IOS METAL : PixelLocalStorageTest.FragmentReject_depth/ES3_Metal_EmulatePixelLocalStorage* = SKIP
 40096874 IOS METAL : PixelLocalStorageTest.FragmentReject_stencil/ES3_Metal_EmulatePixelLocalStorage* = SKIP
