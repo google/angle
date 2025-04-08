@@ -6,8 +6,6 @@ import("../../../../gni/angle.gni")
 vulkan_backend_sources = [
   "AllocatorHelperPool.cpp",
   "AllocatorHelperPool.h",
-  "AllocatorHelperRing.cpp",
-  "AllocatorHelperRing.h",
   "BufferVk.cpp",
   "BufferVk.h",
   "CommandQueue.cpp",

@@ -20,11 +20,7 @@ class PoolAllocator;
 class SharedRingBufferAllocator;
 }  // namespace angle
 
-#if ANGLE_ENABLE_VULKAN_SHARED_RING_BUFFER_CMD_ALLOC
-using SecondaryCommandMemoryAllocator = angle::SharedRingBufferAllocator;
-#else
 using SecondaryCommandMemoryAllocator = angle::PoolAllocator;
-#endif
 
 namespace rx
 {
@@ -59,10 +55,6 @@ class VulkanSecondaryCommandBuffer : public priv::CommandBuffer
                              SecondaryCommandMemoryAllocator *allocator);
 
     void destroy();
-
-    void attachAllocator(SecondaryCommandMemoryAllocator *source) {}
-
-    void detachAllocator(SecondaryCommandMemoryAllocator *destination) {}
 
     angle::Result begin(ErrorContext *context,
                         const VkCommandBufferInheritanceInfo &inheritanceInfo);

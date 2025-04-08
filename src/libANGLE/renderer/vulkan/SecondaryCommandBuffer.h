@@ -14,12 +14,7 @@
 #include "common/vulkan/vk_headers.h"
 #include "libANGLE/renderer/vulkan/vk_command_buffer_utils.h"
 #include "libANGLE/renderer/vulkan/vk_wrapper.h"
-
-#if ANGLE_ENABLE_VULKAN_SHARED_RING_BUFFER_CMD_ALLOC
-#    include "libANGLE/renderer/vulkan/AllocatorHelperRing.h"
-#else
 #    include "libANGLE/renderer/vulkan/AllocatorHelperPool.h"
-#endif
 
 namespace rx
 {
@@ -31,15 +26,9 @@ class ErrorContext;
 class RenderPassDesc;
 class SecondaryCommandPool;
 
-#if ANGLE_ENABLE_VULKAN_SHARED_RING_BUFFER_CMD_ALLOC
-using SecondaryCommandMemoryAllocator = SharedCommandMemoryAllocator;
-using SecondaryCommandBlockPool       = SharedCommandBlockPool;
-using SecondaryCommandBlockAllocator  = SharedCommandBlockAllocator;
-#else
 using SecondaryCommandMemoryAllocator = DedicatedCommandMemoryAllocator;
 using SecondaryCommandBlockPool       = DedicatedCommandBlockPool;
 using SecondaryCommandBlockAllocator  = DedicatedCommandBlockAllocator;
-#endif
 
 namespace priv
 {
@@ -1125,16 +1114,6 @@ class SecondaryCommandBuffer final : angle::NonCopyable
                              SecondaryCommandMemoryAllocator *allocator)
     {
         return mCommandAllocator.initialize(allocator);
-    }
-
-    void attachAllocator(vk::SecondaryCommandMemoryAllocator *source)
-    {
-        mCommandAllocator.attachAllocator(source);
-    }
-
-    void detachAllocator(vk::SecondaryCommandMemoryAllocator *destination)
-    {
-        mCommandAllocator.detachAllocator(destination);
     }
 
     angle::Result begin(ErrorContext *context,

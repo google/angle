@@ -473,12 +473,10 @@ class Renderer : angle::NonCopyable
     angle::Result getOutsideRenderPassCommandBufferHelper(
         vk::ErrorContext *context,
         vk::SecondaryCommandPool *commandPool,
-        vk::SecondaryCommandMemoryAllocator *commandsAllocator,
         vk::OutsideRenderPassCommandBufferHelper **commandBufferHelperOut);
     angle::Result getRenderPassCommandBufferHelper(
         vk::ErrorContext *context,
         vk::SecondaryCommandPool *commandPool,
-        vk::SecondaryCommandMemoryAllocator *commandsAllocator,
         vk::RenderPassCommandBufferHelper **commandBufferHelperOut);
 
     void recycleOutsideRenderPassCommandBufferHelper(
@@ -780,7 +778,6 @@ class Renderer : angle::NonCopyable
     template <typename CommandBufferHelperT, typename RecyclerT>
     angle::Result getCommandBufferImpl(vk::ErrorContext *context,
                                        vk::SecondaryCommandPool *commandPool,
-                                       vk::SecondaryCommandMemoryAllocator *commandsAllocator,
                                        RecyclerT *recycler,
                                        CommandBufferHelperT **commandBufferHelperOut);
 

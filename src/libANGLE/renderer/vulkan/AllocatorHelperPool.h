@@ -32,7 +32,6 @@ class DedicatedCommandBlockAllocator
   public:
     DedicatedCommandBlockAllocator() = default;
     void resetAllocator();
-    bool hasAllocatorLinks() const { return false; }
 
     static constexpr size_t kDefaultPoolAllocatorPageSize = 16 * 1024;
     void init()
@@ -41,10 +40,6 @@ class DedicatedCommandBlockAllocator
         // Push a scope into the pool allocator so we can easily free and re-init on reset()
         mAllocator.push();
     }
-
-    // Placeholder functions for attaching and detaching the allocator.
-    void attachAllocator(DedicatedCommandMemoryAllocator *allocator) {}
-    DedicatedCommandMemoryAllocator *detachAllocator(bool isCommandBufferEmpty) { return nullptr; }
 
     DedicatedCommandMemoryAllocator *getAllocator() { return &mAllocator; }
 
@@ -124,11 +119,6 @@ class DedicatedCommandBlockPool final
 
         *headerOut = updateHeaderAndAllocatorParams(allocationSize);
     }
-
-    // Placeholder functions
-    void terminateLastCommandBlock() {}
-    void attachAllocator(vk::DedicatedCommandMemoryAllocator *source) {}
-    void detachAllocator(vk::DedicatedCommandMemoryAllocator *destination) {}
 
   private:
     void allocateNewBlock(size_t blockSize = kBlockSize);

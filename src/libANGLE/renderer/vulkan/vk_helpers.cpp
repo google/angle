@@ -1190,15 +1190,6 @@ angle::Result InitDynamicDescriptorPool(ErrorContext *context,
     return angle::Result::Continue;
 }
 
-bool CheckSubpassCommandBufferCount(uint32_t count)
-{
-    // When using angle::SharedRingBufferAllocator we must ensure that allocator is attached and
-    // detached from the same priv::SecondaryCommandBuffer instance.
-    // Custom command buffer (priv::SecondaryCommandBuffer) may contain commands for multiple
-    // subpasses, therefore we do not need multiple buffers.
-    return (count == 1 || !RenderPassCommandBuffer::ExecutesInline());
-}
-
 bool IsAnyLayout(VkImageLayout needle, const VkImageLayout *haystack, uint32_t haystackCount)
 {
     const VkImageLayout *haystackEnd = haystack + haystackCount;
@@ -1879,35 +1870,10 @@ void CommandBufferHelperCommon::releaseCommandPoolImpl()
 }
 
 template <class DerivedT>
-void CommandBufferHelperCommon::attachAllocatorImpl(SecondaryCommandMemoryAllocator *allocator)
-{
-    if constexpr (DerivedT::ExecutesInline())
-    {
-        auto &commandBuffer = static_cast<DerivedT *>(this)->getCommandBuffer();
-        mCommandAllocator.attachAllocator(allocator);
-        commandBuffer.attachAllocator(mCommandAllocator.getAllocator());
-    }
-}
-
-template <class DerivedT>
-SecondaryCommandMemoryAllocator *CommandBufferHelperCommon::detachAllocatorImpl()
-{
-    SecondaryCommandMemoryAllocator *result = nullptr;
-    if constexpr (DerivedT::ExecutesInline())
-    {
-        auto &commandBuffer = static_cast<DerivedT *>(this)->getCommandBuffer();
-        commandBuffer.detachAllocator(mCommandAllocator.getAllocator());
-        result = mCommandAllocator.detachAllocator(commandBuffer.empty());
-    }
-    return result;
-}
-
-template <class DerivedT>
 void CommandBufferHelperCommon::assertCanBeRecycledImpl()
 {
     DerivedT *derived = static_cast<DerivedT *>(this);
     ASSERT(mCommandPool == nullptr);
-    ASSERT(!mCommandAllocator.hasAllocatorLinks());
     // Vulkan secondary command buffers must be invalid (collected).
     ASSERT(DerivedT::ExecutesInline() || !derived->getCommandBuffer().valid());
     // ANGLEs Custom secondary command buffers must be empty (reset).
@@ -2248,17 +2214,6 @@ void OutsideRenderPassCommandBufferHelper::releaseCommandPool()
     releaseCommandPoolImpl<OutsideRenderPassCommandBufferHelper>();
 }
 
-void OutsideRenderPassCommandBufferHelper::attachAllocator(
-    SecondaryCommandMemoryAllocator *allocator)
-{
-    attachAllocatorImpl<OutsideRenderPassCommandBufferHelper>(allocator);
-}
-
-SecondaryCommandMemoryAllocator *OutsideRenderPassCommandBufferHelper::detachAllocator()
-{
-    return detachAllocatorImpl<OutsideRenderPassCommandBufferHelper>();
-}
-
 void OutsideRenderPassCommandBufferHelper::assertCanBeRecycled()
 {
     assertCanBeRecycledImpl<OutsideRenderPassCommandBufferHelper>();
@@ -2421,8 +2376,6 @@ angle::Result RenderPassCommandBufferHelper::reset(
     mDepthStencilAttachmentIndex           = kAttachmentIndexInvalid;
     mImageOptimizeForPresent               = nullptr;
     mImageOptimizeForPresentOriginalLayout = ImageLayout::Undefined;
-
-    ASSERT(CheckSubpassCommandBufferCount(getSubpassCommandBufferCount()));
 
     // Collect/Reset the command buffers
     for (uint32_t subpass = 0; subpass < getSubpassCommandBufferCount(); ++subpass)
@@ -3502,18 +3455,6 @@ void RenderPassCommandBufferHelper::releaseCommandPool()
     releaseCommandPoolImpl<RenderPassCommandBufferHelper>();
 }
 
-void RenderPassCommandBufferHelper::attachAllocator(SecondaryCommandMemoryAllocator *allocator)
-{
-    ASSERT(CheckSubpassCommandBufferCount(getSubpassCommandBufferCount()));
-    attachAllocatorImpl<RenderPassCommandBufferHelper>(allocator);
-}
-
-SecondaryCommandMemoryAllocator *RenderPassCommandBufferHelper::detachAllocator()
-{
-    ASSERT(CheckSubpassCommandBufferCount(getSubpassCommandBufferCount()));
-    return detachAllocatorImpl<RenderPassCommandBufferHelper>();
-}
-
 void RenderPassCommandBufferHelper::assertCanBeRecycled()
 {
     ASSERT(!mRenderPassStarted);
@@ -3603,7 +3544,6 @@ template <typename CommandBufferHelperT>
 angle::Result CommandBufferRecycler<CommandBufferHelperT>::getCommandBufferHelper(
     ErrorContext *context,
     SecondaryCommandPool *commandPool,
-    SecondaryCommandMemoryAllocator *commandsAllocator,
     CommandBufferHelperT **commandBufferHelperOut)
 {
     std::unique_lock<angle::SimpleMutex> lock(mMutex);
@@ -3622,9 +3562,6 @@ angle::Result CommandBufferRecycler<CommandBufferHelperT>::getCommandBufferHelpe
 
     ANGLE_TRY((*commandBufferHelperOut)->attachCommandPool(context, commandPool));
 
-    // Attach functions are only used for ring buffer allocators.
-    (*commandBufferHelperOut)->attachAllocator(commandsAllocator);
-
     return angle::Result::Continue;
 }
 
@@ -3632,12 +3569,10 @@ template angle::Result
 CommandBufferRecycler<OutsideRenderPassCommandBufferHelper>::getCommandBufferHelper(
     ErrorContext *,
     SecondaryCommandPool *,
-    SecondaryCommandMemoryAllocator *,
     OutsideRenderPassCommandBufferHelper **);
 template angle::Result CommandBufferRecycler<RenderPassCommandBufferHelper>::getCommandBufferHelper(
     ErrorContext *,
     SecondaryCommandPool *,
-    SecondaryCommandMemoryAllocator *,
     RenderPassCommandBufferHelper **);
 
 template <typename CommandBufferHelperT>

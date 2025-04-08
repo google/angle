@@ -1578,11 +1578,6 @@ class CommandBufferHelperCommon : angle::NonCopyable
     void releaseCommandPoolImpl();
 
     template <class DerivedT>
-    void attachAllocatorImpl(SecondaryCommandMemoryAllocator *allocator);
-    template <class DerivedT>
-    SecondaryCommandMemoryAllocator *detachAllocatorImpl();
-
-    template <class DerivedT>
     void assertCanBeRecycledImpl();
 
     void bufferWriteImpl(Context *context,
@@ -1680,9 +1675,6 @@ class OutsideRenderPassCommandBufferHelper final : public CommandBufferHelperCom
     angle::Result attachCommandPool(ErrorContext *context, SecondaryCommandPool *commandPool);
     angle::Result detachCommandPool(ErrorContext *context, SecondaryCommandPool **commandPoolOut);
     void releaseCommandPool();
-
-    void attachAllocator(SecondaryCommandMemoryAllocator *allocator);
-    SecondaryCommandMemoryAllocator *detachAllocator();
 
     void assertCanBeRecycled();
 
@@ -1916,9 +1908,6 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     angle::Result attachCommandPool(ErrorContext *context, SecondaryCommandPool *commandPool);
     void detachCommandPool(SecondaryCommandPool **commandPoolOut);
     void releaseCommandPool();
-
-    void attachAllocator(SecondaryCommandMemoryAllocator *allocator);
-    SecondaryCommandMemoryAllocator *detachAllocator();
 
     void assertCanBeRecycled();
 
@@ -2209,7 +2198,6 @@ class CommandBufferRecycler
 
     angle::Result getCommandBufferHelper(ErrorContext *context,
                                          SecondaryCommandPool *commandPool,
-                                         SecondaryCommandMemoryAllocator *commandsAllocator,
                                          CommandBufferHelperT **commandBufferHelperOut);
 
     void recycleCommandBufferHelper(CommandBufferHelperT **commandBuffer);

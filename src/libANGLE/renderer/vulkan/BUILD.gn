@@ -32,9 +32,6 @@ declare_args() {
   angle_enable_custom_vulkan_render_pass_cmd_buffers =
       angle_enable_custom_vulkan_cmd_buffers
 
-  # Enable shared ring buffer command buffer allocator
-  angle_enable_vulkan_shared_ring_buffer_cmd_alloc = false
-
   # Enable using CRC for pipeline cache data
   angle_enable_crc_for_pipeline_cache = true
 }
@@ -75,9 +72,6 @@ config("angle_vulkan_backend_config") {
   if (angle_enable_vulkan_api_dump_layer) {
     defines += [ "ANGLE_ENABLE_VULKAN_API_DUMP_LAYER" ]
   }
-
-  defines += [ "ANGLE_ENABLE_VULKAN_SHARED_RING_BUFFER_CMD_ALLOC=" +
-               "${angle_enable_vulkan_shared_ring_buffer_cmd_alloc}" ]
 
   # Ensures that the memory allocation logging can only be enabled with debug layers.
   assert(angle_debug_layers_enabled || !angle_enable_memory_alloc_logging)

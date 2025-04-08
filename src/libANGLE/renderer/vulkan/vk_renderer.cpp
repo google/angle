@@ -6956,34 +6956,30 @@ VkResult Renderer::queuePresent(vk::ErrorContext *context,
 template <typename CommandBufferHelperT, typename RecyclerT>
 angle::Result Renderer::getCommandBufferImpl(vk::ErrorContext *context,
                                              vk::SecondaryCommandPool *commandPool,
-                                             vk::SecondaryCommandMemoryAllocator *commandsAllocator,
                                              RecyclerT *recycler,
                                              CommandBufferHelperT **commandBufferHelperOut)
 {
-    return recycler->getCommandBufferHelper(context, commandPool, commandsAllocator,
-                                            commandBufferHelperOut);
+    return recycler->getCommandBufferHelper(context, commandPool, commandBufferHelperOut);
 }
 
 angle::Result Renderer::getOutsideRenderPassCommandBufferHelper(
     vk::ErrorContext *context,
     vk::SecondaryCommandPool *commandPool,
-    vk::SecondaryCommandMemoryAllocator *commandsAllocator,
     vk::OutsideRenderPassCommandBufferHelper **commandBufferHelperOut)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "Renderer::getOutsideRenderPassCommandBufferHelper");
-    return getCommandBufferImpl(context, commandPool, commandsAllocator,
-                                &mOutsideRenderPassCommandBufferRecycler, commandBufferHelperOut);
+    return getCommandBufferImpl(context, commandPool, &mOutsideRenderPassCommandBufferRecycler,
+                                commandBufferHelperOut);
 }
 
 angle::Result Renderer::getRenderPassCommandBufferHelper(
     vk::ErrorContext *context,
     vk::SecondaryCommandPool *commandPool,
-    vk::SecondaryCommandMemoryAllocator *commandsAllocator,
     vk::RenderPassCommandBufferHelper **commandBufferHelperOut)
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "Renderer::getRenderPassCommandBufferHelper");
-    return getCommandBufferImpl(context, commandPool, commandsAllocator,
-                                &mRenderPassCommandBufferRecycler, commandBufferHelperOut);
+    return getCommandBufferImpl(context, commandPool, &mRenderPassCommandBufferRecycler,
+                                commandBufferHelperOut);
 }
 
 void Renderer::recycleOutsideRenderPassCommandBufferHelper(

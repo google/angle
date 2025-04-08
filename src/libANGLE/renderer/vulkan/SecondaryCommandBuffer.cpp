@@ -202,9 +202,6 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
 
     ANGLE_TRACE_EVENT0("gpu.angle", "SecondaryCommandBuffer::executeCommands");
 
-    // Used for ring buffer allocators only.
-    mCommandAllocator.terminateLastCommandBlock();
-
     for (const CommandHeader *command : mCommands)
     {
         for (const CommandHeader *currentCommand                      = command;

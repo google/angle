@@ -395,7 +395,6 @@ class CLCommandQueueVk : public CLCommandQueueImpl
 
     vk::SecondaryCommandPools mCommandPool;
     vk::OutsideRenderPassCommandBufferHelper *mComputePassCommands;
-    vk::SecondaryCommandMemoryAllocator mOutsideRenderPassCommandsAllocator;
 
     // Queue Serials for this command queue
     SerialIndex mQueueSerialIndex;

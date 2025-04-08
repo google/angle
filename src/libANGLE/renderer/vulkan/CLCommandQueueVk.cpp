@@ -192,10 +192,10 @@ angle::Result CLCommandQueueVk::init()
                                 renderer->getQueueFamilyIndex(), getProtectionType()),
                             CL_OUT_OF_RESOURCES);
 
-    ANGLE_CL_IMPL_TRY_ERROR(mContext->getRenderer()->getOutsideRenderPassCommandBufferHelper(
-                                mContext, &mCommandPool.outsideRenderPassPool,
-                                &mOutsideRenderPassCommandsAllocator, &mComputePassCommands),
-                            CL_OUT_OF_RESOURCES);
+    ANGLE_CL_IMPL_TRY_ERROR(
+        mContext->getRenderer()->getOutsideRenderPassCommandBufferHelper(
+            mContext, &mCommandPool.outsideRenderPassPool, &mComputePassCommands),
+        CL_OUT_OF_RESOURCES);
 
     // Generate initial QueueSerial for command buffer helper
     ANGLE_CL_IMPL_TRY_ERROR(mContext->getRenderer()->allocateQueueSerialIndex(&mQueueSerialIndex),
