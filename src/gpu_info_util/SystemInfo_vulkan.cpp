@@ -186,7 +186,7 @@ bool HasKhronosValidationLayer(const std::vector<VkLayerProperties> &layerProps)
         }
     }
 
-    WARN() << "Vulkan validation layers are missing";
+    INFO() << "Vulkan validation layers are missing";
 
     return false;
 }
