@@ -6,6 +6,7 @@
 
 #include "libANGLE/renderer/wgpu/wgpu_utils.h"
 
+#include "common/log_utils.h"
 #include "libANGLE/renderer/renderer_utils.h"
 #include "libANGLE/renderer/wgpu/ContextWgpu.h"
 #include "libANGLE/renderer/wgpu/DisplayWgpu.h"
@@ -611,30 +612,50 @@ wgpu::BlendOperation GetBlendEquation(gl::BlendEquationType blendEquation)
     }
 }
 
-wgpu::TextureDimension getWgpuTextureDimension(gl::TextureType glTextureType)
+wgpu::TextureViewDimension GetWgpuTextureViewDimension(gl::TextureType textureType)
 {
-    wgpu::TextureDimension dimension = {};
-    switch (glTextureType)
+    switch (textureType)
     {
         case gl::TextureType::_2D:
         case gl::TextureType::_2DMultisample:
+            return wgpu::TextureViewDimension::e2D;
+        case gl::TextureType::_2DArray:
+        case gl::TextureType::_2DMultisampleArray:
+            return wgpu::TextureViewDimension::e2DArray;
+        case gl::TextureType::_3D:
+            return wgpu::TextureViewDimension::e3D;
+        case gl::TextureType::CubeMap:
+            return wgpu::TextureViewDimension::Cube;
+        case gl::TextureType::CubeMapArray:
+            return wgpu::TextureViewDimension::CubeArray;
+        default:
+            UNIMPLEMENTED();
+            return wgpu::TextureViewDimension::Undefined;
+    }
+}
+
+wgpu::TextureDimension GetWgpuTextureDimension(gl::TextureType glTextureType)
+{
+    switch (glTextureType)
+    {
+        // See https://www.w3.org/TR/webgpu/#dom-gputexture-createview.
+        case gl::TextureType::_2D:
+        case gl::TextureType::_2DArray:
+        case gl::TextureType::_2DMultisample:
+        case gl::TextureType::_2DMultisampleArray:
+        case gl::TextureType::CubeMap:
+        case gl::TextureType::CubeMapArray:
         case gl::TextureType::Rectangle:
         case gl::TextureType::External:
         case gl::TextureType::Buffer:
-            dimension = wgpu::TextureDimension::e2D;
-            break;
-        case gl::TextureType::_2DArray:
-        case gl::TextureType::_2DMultisampleArray:
+            return wgpu::TextureDimension::e2D;
         case gl::TextureType::_3D:
-        case gl::TextureType::CubeMap:
-        case gl::TextureType::CubeMapArray:
         case gl::TextureType::VideoImage:
-            dimension = wgpu::TextureDimension::e3D;
-            break;
+            return wgpu::TextureDimension::e3D;
         default:
-            break;
+            UNREACHABLE();
+            return wgpu::TextureDimension::Undefined;
     }
-    return dimension;
 }
 
 wgpu::CompareFunction GetCompareFunc(const GLenum glCompareFunc, bool testEnabled)
@@ -668,6 +689,24 @@ wgpu::CompareFunction GetCompareFunc(const GLenum glCompareFunc, bool testEnable
     }
 }
 
+wgpu::TextureSampleType GetTextureSampleType(gl::SamplerFormat samplerFormat)
+{
+    switch (samplerFormat)
+    {
+        case gl::SamplerFormat::Float:
+            return wgpu::TextureSampleType::Float;
+        case gl::SamplerFormat::Unsigned:
+            return wgpu::TextureSampleType::Uint;
+        case gl::SamplerFormat::Signed:
+            return wgpu::TextureSampleType::Sint;
+        case gl::SamplerFormat::Shadow:
+            return wgpu::TextureSampleType::Depth;
+        default:
+            UNIMPLEMENTED();
+            return wgpu::TextureSampleType::Undefined;
+    }
+}
+
 wgpu::StencilOperation getStencilOp(const GLenum glStencilOp)
 {
     switch (glStencilOp)
@@ -692,6 +731,115 @@ wgpu::StencilOperation getStencilOp(const GLenum glStencilOp)
             UNREACHABLE();
             return wgpu::StencilOperation::Keep;
     }
+}
+
+wgpu::FilterMode GetFilter(const GLenum filter)
+{
+    switch (filter)
+    {
+        case GL_LINEAR_MIPMAP_LINEAR:
+        case GL_LINEAR_MIPMAP_NEAREST:
+        case GL_LINEAR:
+            return wgpu::FilterMode::Linear;
+        case GL_NEAREST_MIPMAP_LINEAR:
+        case GL_NEAREST_MIPMAP_NEAREST:
+        case GL_NEAREST:
+            return wgpu::FilterMode::Nearest;
+        default:
+            UNREACHABLE();
+            return wgpu::FilterMode::Undefined;
+    }
+}
+
+wgpu::MipmapFilterMode GetSamplerMipmapMode(const GLenum filter)
+{
+    switch (filter)
+    {
+        case GL_LINEAR_MIPMAP_LINEAR:
+        case GL_NEAREST_MIPMAP_LINEAR:
+            return wgpu::MipmapFilterMode::Linear;
+        // GL_LINEAR and GL_NEAREST do not map directly to WebGPU but can be easily emulated,
+        // see below.
+        case GL_LINEAR:
+        case GL_NEAREST:
+        case GL_NEAREST_MIPMAP_NEAREST:
+        case GL_LINEAR_MIPMAP_NEAREST:
+            return wgpu::MipmapFilterMode::Nearest;
+        default:
+            UNREACHABLE();
+            return wgpu::MipmapFilterMode::Undefined;
+    }
+}
+
+wgpu::AddressMode GetSamplerAddressMode(const GLenum wrap)
+{
+    switch (wrap)
+    {
+        case GL_REPEAT:
+            return wgpu::AddressMode::Repeat;
+        case GL_MIRRORED_REPEAT:
+            return wgpu::AddressMode::MirrorRepeat;
+        case GL_CLAMP_TO_BORDER:
+            // Not in WebGPU and not available in ES 3.0 or before.
+            UNIMPLEMENTED();
+            return wgpu::AddressMode::ClampToEdge;
+        case GL_CLAMP_TO_EDGE:
+            return wgpu::AddressMode::ClampToEdge;
+        case GL_MIRROR_CLAMP_TO_EDGE_EXT:
+            // Not in WebGPU and not available in ES 3.0 or before.
+            return wgpu::AddressMode::ClampToEdge;
+        default:
+            UNREACHABLE();
+            return wgpu::AddressMode::Undefined;
+    }
+}
+
+wgpu::CompareFunction GetSamplerCompareFunc(const gl::SamplerState *samplerState)
+{
+    if (samplerState->getCompareMode() != GL_COMPARE_REF_TO_TEXTURE)
+    {
+        return wgpu::CompareFunction::Undefined;
+    }
+
+    return GetCompareFunc(samplerState->getCompareFunc(), /*testEnabled=*/true);
+}
+
+wgpu::SamplerDescriptor GetWgpuSamplerDesc(const gl::SamplerState *samplerState)
+{
+    wgpu::MipmapFilterMode wgpuMipmapFilterMode =
+        GetSamplerMipmapMode(samplerState->getMinFilter());
+    // Negative values don't seem to make a difference to the behavior of GLES, a min lod of 0.0
+    // functions the same.
+    float wgpuLodMinClamp =
+        gl::clamp(samplerState->getMinLod(), webgpu::kWGPUMinLod, webgpu::kWGPUMaxLod);
+    float wgpuLodMaxClamp =
+        gl::clamp(samplerState->getMaxLod(), webgpu::kWGPUMinLod, webgpu::kWGPUMaxLod);
+
+    if (!gl::IsMipmapFiltered(samplerState->getMinFilter()))
+    {
+        // Similarly to Vulkan, GL_NEAREST and GL_LINEAR do not map directly to WGPU, so
+        // they must be emulated (See "Mapping of OpenGL to Vulkan filter modes")
+        wgpuMipmapFilterMode = wgpu::MipmapFilterMode::Nearest;
+        wgpuLodMinClamp      = 0.0f;
+        wgpuLodMaxClamp      = 0.25f;
+    }
+
+    wgpu::SamplerDescriptor samplerDesc;
+    samplerDesc.addressModeU = GetSamplerAddressMode(samplerState->getWrapS());
+    samplerDesc.addressModeV = GetSamplerAddressMode(samplerState->getWrapT());
+    samplerDesc.addressModeW = GetSamplerAddressMode(samplerState->getWrapR());
+    samplerDesc.magFilter    = GetFilter(samplerState->getMagFilter());
+    samplerDesc.minFilter    = GetFilter(samplerState->getMinFilter());
+    samplerDesc.mipmapFilter = wgpuMipmapFilterMode;
+    samplerDesc.lodMinClamp  = wgpuLodMinClamp;
+    samplerDesc.lodMaxClamp  = wgpuLodMaxClamp;
+    samplerDesc.compare      = GetSamplerCompareFunc(samplerState);
+    // TODO(anglebug.com/389145696): there's no way to get the supported maxAnisotropy value from
+    // WGPU, so there's no way to communicate to the GL client whether anisotropy is even supported
+    // as an extension, let alone what the max value is.
+    samplerDesc.maxAnisotropy = static_cast<uint16_t>(std::floor(samplerState->getMaxAnisotropy()));
+
+    return samplerDesc;
 }
 
 uint32_t GetFirstIndexForDrawCall(gl::DrawElementsType indexType, const void *indices)

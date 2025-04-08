@@ -433,7 +433,7 @@ angle::Result TextureWgpu::initializeImage(ContextWgpu *contextWgpu, ImageMipLev
     uint32_t levelCount                     = getMipLevelCount(mipLevels);
     gl::LevelIndex firstLevel               = gl::LevelIndex(mState.getEffectiveBaseLevel());
     const gl::Extents &firstLevelExtents    = firstLevelDesc->size;
-    wgpu::TextureDimension textureDimension = gl_wgpu::getWgpuTextureDimension(mState.getType());
+    wgpu::TextureDimension textureDimension = gl_wgpu::GetWgpuTextureDimension(mState.getType());
     wgpu::TextureUsage textureUsage = wgpu::TextureUsage::CopySrc | wgpu::TextureUsage::CopyDst |
                                       wgpu::TextureUsage::RenderAttachment |
                                       wgpu::TextureUsage::TextureBinding;
@@ -662,7 +662,7 @@ angle::Result TextureWgpu::initSingleLayerRenderTargets(
     for (uint32_t layerIndex = 0; layerIndex < layerCount; ++layerIndex)
     {
         wgpu::TextureView textureView;
-        ANGLE_TRY(mImage->createTextureView(levelIndex, layerIndex, textureView));
+        ANGLE_TRY(mImage->createTextureViewSingleLevel(levelIndex, layerIndex, textureView));
 
         renderTargets[layerIndex].set(mImage, textureView, mImage->toWgpuLevel(levelIndex),
                                       layerIndex, mImage->toWgpuTextureFormat());

@@ -45,8 +45,8 @@ angle::Result SurfaceWgpu::createDepthStencilAttachment(uint32_t width,
                                                            device, gl::LevelIndex(level), desc));
 
     wgpu::TextureView view;
-    ANGLE_TRY(
-        outDepthStencilAttachment->texture.createTextureView(gl::LevelIndex(level), layer, view));
+    ANGLE_TRY(outDepthStencilAttachment->texture.createTextureViewSingleLevel(gl::LevelIndex(level),
+                                                                              layer, view));
     outDepthStencilAttachment->renderTarget.set(
         &outDepthStencilAttachment->texture, view, webgpu::LevelIndex(level), layer,
         outDepthStencilAttachment->texture.toWgpuTextureFormat());
@@ -168,7 +168,8 @@ angle::Result OffscreenSurfaceWgpu::initializeImpl(const egl::Display *display)
                                                      gl::LevelIndex(level), desc));
 
         wgpu::TextureView view;
-        ANGLE_TRY(mColorAttachment.texture.createTextureView(gl::LevelIndex(level), layer, view));
+        ANGLE_TRY(mColorAttachment.texture.createTextureViewSingleLevel(gl::LevelIndex(level),
+                                                                        layer, view));
         mColorAttachment.renderTarget.set(&mColorAttachment.texture, view,
                                           webgpu::LevelIndex(level), layer,
                                           mColorAttachment.texture.toWgpuTextureFormat());
@@ -410,7 +411,7 @@ angle::Result WindowSurfaceWgpu::updateCurrentTexture(const egl::Display *displa
     ANGLE_TRY(mColorAttachment.texture.initExternal(angleFormat, angleFormat, texture.texture));
 
     wgpu::TextureView view;
-    ANGLE_TRY(mColorAttachment.texture.createTextureView(gl::LevelIndex(0), 0, view));
+    ANGLE_TRY(mColorAttachment.texture.createTextureViewSingleLevel(gl::LevelIndex(0), 0, view));
 
     mColorAttachment.renderTarget.set(&mColorAttachment.texture, view, webgpu::LevelIndex(0), 0,
                                       wgpuFormat);

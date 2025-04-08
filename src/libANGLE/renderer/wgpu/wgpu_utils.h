@@ -254,6 +254,10 @@ constexpr size_t kBufferMapOffsetAlignment = 8;
 // Required alignments for texture row uploads
 constexpr size_t kTextureRowSizeAlignment = 256;
 
+// min and max LOD clamp values.
+constexpr float kWGPUMinLod = 0.0;
+constexpr float kWGPUMaxLod = 32.0;
+
 }  // namespace webgpu
 
 namespace wgpu_gl
@@ -265,7 +269,8 @@ gl::Extents getExtents(wgpu::Extent3D wgpuExtent);
 namespace gl_wgpu
 {
 webgpu::LevelIndex getLevelIndex(gl::LevelIndex levelGl, gl::LevelIndex baseLevel);
-wgpu::TextureDimension getWgpuTextureDimension(gl::TextureType glTextureType);
+wgpu::TextureViewDimension GetWgpuTextureViewDimension(gl::TextureType textureType);
+wgpu::TextureDimension GetWgpuTextureDimension(gl::TextureType glTextureType);
 wgpu::Extent3D getExtent3D(const gl::Extents &glExtent);
 
 wgpu::PrimitiveTopology GetPrimitiveTopology(gl::PrimitiveMode mode);
@@ -279,7 +284,13 @@ wgpu::BlendFactor GetBlendFactor(gl::BlendFactorType blendFactor);
 wgpu::BlendOperation GetBlendEquation(gl::BlendEquationType blendEquation);
 
 wgpu::CompareFunction GetCompareFunc(const GLenum glCompareFunc, bool testEnabled);
+wgpu::TextureSampleType GetTextureSampleType(gl::SamplerFormat samplerFormat);
 wgpu::StencilOperation getStencilOp(const GLenum glStencilOp);
+wgpu::FilterMode GetFilter(const GLenum filter);
+wgpu::MipmapFilterMode GetSamplerMipmapMode(const GLenum filter);
+wgpu::AddressMode GetSamplerAddressMode(const GLenum wrap);
+
+wgpu::SamplerDescriptor GetWgpuSamplerDesc(const gl::SamplerState *samplerState);
 
 uint32_t GetFirstIndexForDrawCall(gl::DrawElementsType indexType, const void *indices);
 }  // namespace gl_wgpu

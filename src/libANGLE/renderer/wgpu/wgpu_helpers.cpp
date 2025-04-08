@@ -126,7 +126,7 @@ angle::Result ImageHelper::flushSingleLevelUpdates(ContextWgpu *contextWgpu,
     dst.texture = mTexture;
     std::vector<wgpu::RenderPassColorAttachment> colorAttachments;
     wgpu::TextureView textureView;
-    ANGLE_TRY(createTextureView(levelGL, 0, textureView));
+    ANGLE_TRY(createTextureViewSingleLevel(levelGL, 0, textureView));
     bool updateDepth      = false;
     bool updateStencil    = false;
     float depthValue      = 1;
@@ -376,9 +376,28 @@ angle::Result ImageHelper::readPixels(rx::ContextWgpu *contextWgpu,
     return angle::Result::Continue;
 }
 
+angle::Result ImageHelper::createTextureViewSingleLevel(gl::LevelIndex targetLevel,
+                                                        uint32_t layerIndex,
+                                                        wgpu::TextureView &textureViewOut)
+{
+    return createTextureView(targetLevel, /*levelCount=*/1, layerIndex, /*arrayLayerCount=*/1,
+                             textureViewOut, wgpu::TextureViewDimension::Undefined);
+}
+
+angle::Result ImageHelper::createFullTextureView(wgpu::TextureView &textureViewOut,
+                                                 wgpu::TextureViewDimension desiredViewDimension)
+{
+    return createTextureView(mFirstAllocatedLevel, mTextureDescriptor.mipLevelCount, 0,
+                             mTextureDescriptor.size.depthOrArrayLayers, textureViewOut,
+                             desiredViewDimension);
+}
+
 angle::Result ImageHelper::createTextureView(gl::LevelIndex targetLevel,
+                                             uint32_t levelCount,
                                              uint32_t layerIndex,
-                                             wgpu::TextureView &textureViewOut)
+                                             uint32_t arrayLayerCount,
+                                             wgpu::TextureView &textureViewOut,
+                                             wgpu::TextureViewDimension desiredViewDimension)
 {
     if (!isTextureLevelInAllocatedImage(targetLevel))
     {
@@ -387,23 +406,33 @@ angle::Result ImageHelper::createTextureView(gl::LevelIndex targetLevel,
     wgpu::TextureViewDescriptor textureViewDesc;
     textureViewDesc.aspect          = wgpu::TextureAspect::All;
     textureViewDesc.baseArrayLayer  = layerIndex;
-    textureViewDesc.arrayLayerCount = 1;
+    textureViewDesc.arrayLayerCount = arrayLayerCount;
     textureViewDesc.baseMipLevel    = toWgpuLevel(targetLevel).get();
-    textureViewDesc.mipLevelCount   = 1;
-    switch (mTextureDescriptor.dimension)
+    textureViewDesc.mipLevelCount   = levelCount;
+    if (desiredViewDimension == wgpu::TextureViewDimension::Undefined)
     {
-        case wgpu::TextureDimension::Undefined:
-            textureViewDesc.dimension = wgpu::TextureViewDimension::Undefined;
-            break;
-        case wgpu::TextureDimension::e1D:
-            textureViewDesc.dimension = wgpu::TextureViewDimension::e1D;
-            break;
-        case wgpu::TextureDimension::e2D:
-            textureViewDesc.dimension = wgpu::TextureViewDimension::e2D;
-            break;
-        case wgpu::TextureDimension::e3D:
-            textureViewDesc.dimension = wgpu::TextureViewDimension::e3D;
-            break;
+        switch (mTextureDescriptor.dimension)
+        {
+            case wgpu::TextureDimension::Undefined:
+                textureViewDesc.dimension = wgpu::TextureViewDimension::Undefined;
+                break;
+            case wgpu::TextureDimension::e1D:
+                textureViewDesc.dimension = wgpu::TextureViewDimension::e1D;
+                break;
+            case wgpu::TextureDimension::e2D:
+                textureViewDesc.dimension = wgpu::TextureViewDimension::e2D;
+                break;
+            case wgpu::TextureDimension::e3D:
+                textureViewDesc.dimension = wgpu::TextureViewDimension::e3D;
+                break;
+            default:
+                UNIMPLEMENTED();
+                return angle::Result::Stop;
+        }
+    }
+    else
+    {
+        textureViewDesc.dimension = desiredViewDimension;
     }
     textureViewDesc.format = mTextureDescriptor.format;
     textureViewOut         = mTexture.CreateView(&textureViewDesc);

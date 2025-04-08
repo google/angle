@@ -142,9 +142,17 @@ class ImageHelper
                              const rx::PackPixelsParams &packPixelsParams,
                              void *pixels);
 
+    angle::Result createTextureViewSingleLevel(gl::LevelIndex targetLevel,
+                                               uint32_t layerIndex,
+                                               wgpu::TextureView &textureViewOut);
+    angle::Result createFullTextureView(wgpu::TextureView &textureViewOut,
+                                        wgpu::TextureViewDimension desiredViewDimension);
     angle::Result createTextureView(gl::LevelIndex targetLevel,
+                                    uint32_t levelCount,
                                     uint32_t layerIndex,
-                                    wgpu::TextureView &textureViewOut);
+                                    uint32_t arrayLayerCount,
+                                    wgpu::TextureView &textureViewOut,
+                                    wgpu::TextureViewDimension desiredViewDimension);
     LevelIndex toWgpuLevel(gl::LevelIndex levelIndexGl) const;
     gl::LevelIndex toGlLevel(LevelIndex levelIndexWgpu) const;
     bool isTextureLevelInAllocatedImage(gl::LevelIndex textureLevel);
