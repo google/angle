@@ -7,8 +7,4 @@
 
 angle_dotfile_settings = {
   exec_script_allowlist = [ get_path_info("BUILD.gn", "abspath") ]
-
-  # TODO(crbug.com/389986807) - move other clients to `exec_script_allowlist`
-  # so that we don't need to keep supporting `exec_script_whitelist`.
-  exec_script_whitelist = exec_script_allowlist
 }
