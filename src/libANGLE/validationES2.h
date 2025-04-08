@@ -41,6 +41,12 @@ ANGLE_INLINE bool ValidateUniform1fv(const Context *context,
                                      GLsizei count,
                                      const GLfloat *v)
 {
+    if (!ValidateUniformValuePointer(context, entryPoint, v))
+    {
+        // Error already generated.
+        return false;
+    }
+
     return ValidateUniform(context, entryPoint, GL_FLOAT, location, count);
 }
 
@@ -67,6 +73,12 @@ ANGLE_INLINE bool ValidateUniform2fv(const Context *context,
                                      GLsizei count,
                                      const GLfloat *v)
 {
+    if (!ValidateUniformValuePointer(context, entryPoint, v))
+    {
+        // Error already generated.
+        return false;
+    }
+
     return ValidateUniform(context, entryPoint, GL_FLOAT_VEC2, location, count);
 }
 
@@ -85,6 +97,12 @@ ANGLE_INLINE bool ValidateUniform2iv(const Context *context,
                                      GLsizei count,
                                      const GLint *v)
 {
+    if (!ValidateUniformValuePointer(context, entryPoint, v))
+    {
+        // Error already generated.
+        return false;
+    }
+
     return ValidateUniform(context, entryPoint, GL_INT_VEC2, location, count);
 }
 
@@ -104,6 +122,12 @@ ANGLE_INLINE bool ValidateUniform3fv(const Context *context,
                                      GLsizei count,
                                      const GLfloat *v)
 {
+    if (!ValidateUniformValuePointer(context, entryPoint, v))
+    {
+        // Error already generated.
+        return false;
+    }
+
     return ValidateUniform(context, entryPoint, GL_FLOAT_VEC3, location, count);
 }
 
@@ -123,6 +147,12 @@ ANGLE_INLINE bool ValidateUniform3iv(const Context *context,
                                      GLsizei count,
                                      const GLint *v)
 {
+    if (!ValidateUniformValuePointer(context, entryPoint, v))
+    {
+        // Error already generated.
+        return false;
+    }
+
     return ValidateUniform(context, entryPoint, GL_INT_VEC3, location, count);
 }
 
@@ -143,6 +173,12 @@ ANGLE_INLINE bool ValidateUniform4fv(const Context *context,
                                      GLsizei count,
                                      const GLfloat *v)
 {
+    if (!ValidateUniformValuePointer(context, entryPoint, v))
+    {
+        // Error already generated.
+        return false;
+    }
+
     return ValidateUniform(context, entryPoint, GL_FLOAT_VEC4, location, count);
 }
 
@@ -163,6 +199,12 @@ ANGLE_INLINE bool ValidateUniform4iv(const Context *context,
                                      GLsizei count,
                                      const GLint *v)
 {
+    if (!ValidateUniformValuePointer(context, entryPoint, v))
+    {
+        // Error already generated.
+        return false;
+    }
+
     return ValidateUniform(context, entryPoint, GL_INT_VEC4, location, count);
 }
 

@@ -3849,6 +3849,12 @@ bool ValidateUniform1uiv(const Context *context,
                          GLsizei count,
                          const GLuint *value)
 {
+    if (!ValidateUniformValuePointer(context, entryPoint, value))
+    {
+        // Error already generated.
+        return false;
+    }
+
     return ValidateUniform(context, entryPoint, GL_UNSIGNED_INT, location, count);
 }
 
@@ -3858,6 +3864,11 @@ bool ValidateUniform2uiv(const Context *context,
                          GLsizei count,
                          const GLuint *value)
 {
+    if (!ValidateUniformValuePointer(context, entryPoint, value))
+    {
+        // Error already generated.
+        return false;
+    }
     return ValidateUniform(context, entryPoint, GL_UNSIGNED_INT_VEC2, location, count);
 }
 
@@ -3867,6 +3878,11 @@ bool ValidateUniform3uiv(const Context *context,
                          GLsizei count,
                          const GLuint *value)
 {
+    if (!ValidateUniformValuePointer(context, entryPoint, value))
+    {
+        // Error already generated.
+        return false;
+    }
     return ValidateUniform(context, entryPoint, GL_UNSIGNED_INT_VEC3, location, count);
 }
 
@@ -3876,6 +3892,12 @@ bool ValidateUniform4uiv(const Context *context,
                          GLsizei count,
                          const GLuint *value)
 {
+    if (!ValidateUniformValuePointer(context, entryPoint, value))
+    {
+        // Error already generated.
+        return false;
+    }
+
     return ValidateUniform(context, entryPoint, GL_UNSIGNED_INT_VEC4, location, count);
 }
 
@@ -4196,6 +4218,12 @@ bool ValidateGetFragDataLocation(const Context *context,
         return false;
     }
 
+    if (name == nullptr)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidFragDataNamePointer);
+        return false;
+    }
+
     return true;
 }
 
@@ -4332,6 +4360,12 @@ bool ValidateGetActiveUniformBlockName(const Context *context,
     if (uniformBlockIndex.value >= programObject->getExecutable().getUniformBlocks().size())
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kIndexExceedsMaxActiveUniformBlock);
+        return false;
+    }
+
+    if (uniformBlockName == nullptr)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kUniformBlockNameNull);
         return false;
     }
 
