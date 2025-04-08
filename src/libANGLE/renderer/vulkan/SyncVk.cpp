@@ -356,6 +356,10 @@ VkResult ExternalFence::getStatus(VkDevice device) const
 {
     if (mFenceFdStatus == VK_SUCCESS)
     {
+        if (mFenceFd == kInvalidFenceFd)
+        {
+            return VK_SUCCESS;
+        }
         return SyncWaitFd(mFenceFd, 0, VK_NOT_READY);
     }
     return mFence.getStatus(device);
@@ -365,6 +369,10 @@ VkResult ExternalFence::wait(VkDevice device, uint64_t timeout) const
 {
     if (mFenceFdStatus == VK_SUCCESS)
     {
+        if (mFenceFd == kInvalidFenceFd)
+        {
+            return VK_SUCCESS;
+        }
         return SyncWaitFd(mFenceFd, timeout);
     }
     return mFence.wait(device, timeout);

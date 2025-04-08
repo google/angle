@@ -358,12 +358,26 @@ TEST_P(EGLSyncTest, AndroidNativeFence_DupNativeFenceFD)
     EXPECT_NE(syncWithGeneratedFD, EGL_NO_SYNC_KHR);
 
     int fd = eglDupNativeFenceFDANDROID(display, syncWithGeneratedFD);
-    EXPECT_EGL_SUCCESS();
 
     // Clean up created objects.
     if (fd != EGL_NO_NATIVE_FENCE_FD_ANDROID)
     {
+        EXPECT_EGL_SUCCESS();
         close(fd);
+    }
+    else
+    {
+        // For some driver, eglDupNativeFenceFDANDROID() may return -1 with EGL_BAD_PARAMETER, if
+        // the sync has been signalled.
+        EXPECT_EGL_ERROR(EGL_BAD_PARAMETER);
+        EGLint value;
+        EXPECT_EGL_TRUE(
+            eglGetSyncAttribKHR(display, syncWithGeneratedFD, EGL_SYNC_STATUS_KHR, &value));
+        EXPECT_EQ(value, EGL_SIGNALED_KHR);
+
+        EXPECT_EGL_TRUE(eglGetSyncAttribKHR(display, syncWithGeneratedFD,
+                                            EGL_SYNC_NATIVE_FENCE_FD_ANDROID, &value));
+        EXPECT_EQ(value, EGL_NO_NATIVE_FENCE_FD_ANDROID);
     }
 
     EXPECT_EGL_TRUE(eglDestroySyncKHR(display, syncWithGeneratedFD));
