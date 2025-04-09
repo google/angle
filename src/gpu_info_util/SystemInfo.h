@@ -48,6 +48,7 @@ struct GPUDeviceInfo
     std::string driverDate;
 
     // Fields only available via GetSystemInfoVulkan:
+    std::string deviceName;
     VersionInfo detailedDriverVersion;
     uint8_t deviceUUID[16]    = {};
     uint8_t driverUUID[16]    = {};

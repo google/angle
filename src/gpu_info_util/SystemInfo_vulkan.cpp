@@ -561,6 +561,7 @@ bool GetSystemInfoVulkanWithICD(SystemInfo *info, vk::ICD preferredICD)
         GPUDeviceInfo &gpu = info->gpus[i];
         gpu.vendorId       = properties.vendorID;
         gpu.deviceId       = properties.deviceID;
+        gpu.deviceName     = properties.deviceName;
         memcpy(gpu.deviceUUID, deviceIDProperties.deviceUUID, VK_UUID_SIZE);
         memcpy(gpu.driverUUID, deviceIDProperties.driverUUID, VK_UUID_SIZE);
 
