@@ -353,8 +353,9 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     // https://issuetracker.google.com/316337308
     // DifferentStencilMasksTest.DrawWithSameEffectiveMask/ES2_Vulkan_SwiftShader
     // VulkanPerformanceCounterTest.NewTextureDoesNotBreakRenderPass for both depth and stencil
-    // Hit in the asphalt_9 trace
-    // Also other errors with similar message structure.
+    // Hit in the asphalt_9
+    // http://anglebug.com/42265363
+    // dead_by_daylight
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
      nullptr,
      nullptr,
@@ -383,26 +384,24 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
          "prior_command = vkCmdPipelineBarrier",
          "load_op = VK_ATTACHMENT_LOAD_OP_DONT_CARE",
      }},
-    // Coherent framebuffer fetch is enabled on some platforms that are known a priori to have the
-    // needed behavior, even though this is not specified in the Vulkan spec.  These generate
-    // syncval errors that are benign on those platforms.
-    // http://anglebug.com/42265363
-    // From: TraceTest.dead_by_daylight
-    // From: TraceTest.genshin_impact
+    // http://anglebug.com/42265427
+    // From: TraceTest.blade_and_soul_revolution
+    // FramebufferFetchES31.ReopenRenderPass/ES3_1_Vulkan
     {"SYNC-HAZARD-READ-AFTER-WRITE",
-     "with loadOp VK_ATTACHMENT_LOAD_OP_LOAD. Access info (usage: "
-     "SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_READ, prior_usage: "
-     "SYNC_IMAGE_LAYOUT_TRANSITION, write_barriers: 0",
-     "",
+     nullptr,
+     nullptr,
      true,
      {
          "message_type = RenderPassLoadOpError",
-         "load_op = VK_ATTACHMENT_LOAD_OP_LOAD",
          "access = "
          "VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT(VK_ACCESS_2_COLOR_ATTACHMENT_READ_BIT)",
          "prior_access = SYNC_IMAGE_LAYOUT_TRANSITION",
-         "write_barriers = 0",
+         "command = vkCmdBeginRenderPass",
+         "prior_command = vkCmdEndRenderPass",
+         "load_op = VK_ATTACHMENT_LOAD_OP_LOAD",
      }},
+    // http://anglebug.com/42265363
+    // From: TraceTest.genshin_impact
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
      "image layout transition (old_layout: VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, "
      "new_layout: "
