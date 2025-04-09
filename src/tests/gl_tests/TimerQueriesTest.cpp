@@ -579,6 +579,34 @@ TEST_P(TimerQueriesTest, QueryCounterEXTWithTypeMismatch)
     ASSERT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Tests glGetQueryivEXT with GL_QUERY_COUNTER_BITS_EXT works for all targets.
+TEST_P(TimerQueriesTest, QueryCounterBits)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_disjoint_timer_query"));
+    GLint result;
+
+    glGetQueryivEXT(GL_ANY_SAMPLES_PASSED, GL_QUERY_COUNTER_BITS_EXT, &result);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(result, 1);
+
+    glGetQueryivEXT(GL_ANY_SAMPLES_PASSED_CONSERVATIVE, GL_QUERY_COUNTER_BITS_EXT, &result);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(result, 1);
+
+    glGetQueryivEXT(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN, GL_QUERY_COUNTER_BITS_EXT, &result);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(result, 32);
+
+    // Value is returned from Vulkan, so we do not need to check the value since it can vary on
+    // different platforms
+    glGetQueryivEXT(GL_TIME_ELAPSED_EXT, GL_QUERY_COUNTER_BITS_EXT, &result);
+    ASSERT_GL_NO_ERROR();
+
+    glGetQueryivEXT(GL_TIMESTAMP_EXT, GL_QUERY_COUNTER_BITS_EXT, &result);
+    ASSERT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND(TimerstampQueriesTest,
                                ES3_D3D11().disable(Feature::EnableTimestampQueries),
                                ES3_D3D11().enable(Feature::EnableTimestampQueries));

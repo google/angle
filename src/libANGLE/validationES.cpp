@@ -2594,8 +2594,7 @@ bool ValidateGetQueryivBase(const Context *context,
             }
             break;
         case GL_QUERY_COUNTER_BITS_EXT:
-            if (!context->getExtensions().disjointTimerQueryEXT ||
-                (target != QueryType::Timestamp && target != QueryType::TimeElapsed))
+            if (!context->getExtensions().disjointTimerQueryEXT)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidPname);
                 return false;

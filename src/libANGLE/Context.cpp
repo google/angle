@@ -1675,6 +1675,15 @@ void Context::getQueryiv(QueryType target, GLenum pname, GLint *params)
         case GL_QUERY_COUNTER_BITS_EXT:
             switch (target)
             {
+                case QueryType::AnySamples:
+                case QueryType::AnySamplesConservative:
+                case QueryType::CommandsCompleted:
+                    params[0] = 1;
+                    break;
+                case QueryType::PrimitivesGenerated:
+                case QueryType::TransformFeedbackPrimitivesWritten:
+                    params[0] = 32;
+                    break;
                 case QueryType::TimeElapsed:
                     params[0] = getCaps().queryCounterBitsTimeElapsed;
                     break;
