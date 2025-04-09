@@ -43,12 +43,12 @@ ADDITIONAL_MIXINS = {
             '--use-permissive-pixel-comparison=${use_permissive_angle_pixel_comparison}',
         ],
     },
-    'samsung_s22': {
+    'samsung_s24': {
         'swarming': {
             'dimensions': {
                 'device_os': 'UP1A.231005.007',
                 'device_os_type': 'user',
-                'device_type': 's5e9925',
+                'device_type': 's5e9945',
                 'os': 'Android'
             }
         }

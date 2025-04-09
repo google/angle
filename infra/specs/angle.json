@@ -610,7 +610,7 @@
       }
     ]
   },
-  "android-arm64-exp-s22": {
+  "android-arm64-exp-s24": {
     "gtest_tests": [
       {
         "args": [
@@ -627,7 +627,7 @@
           "dimensions": {
             "device_os": "UP1A.231005.007",
             "device_os_type": "user",
-            "device_type": "s5e9925",
+            "device_type": "s5e9945",
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
@@ -653,7 +653,7 @@
           "dimensions": {
             "device_os": "UP1A.231005.007",
             "device_os_type": "user",
-            "device_type": "s5e9925",
+            "device_type": "s5e9945",
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
@@ -679,7 +679,7 @@
           "dimensions": {
             "device_os": "UP1A.231005.007",
             "device_os_type": "user",
-            "device_type": "s5e9925",
+            "device_type": "s5e9945",
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
@@ -704,7 +704,7 @@
           "dimensions": {
             "device_os": "UP1A.231005.007",
             "device_os_type": "user",
-            "device_type": "s5e9925",
+            "device_type": "s5e9945",
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
@@ -729,7 +729,7 @@
           "dimensions": {
             "device_os": "UP1A.231005.007",
             "device_os_type": "user",
-            "device_type": "s5e9925",
+            "device_type": "s5e9945",
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
@@ -755,7 +755,7 @@
           "dimensions": {
             "device_os": "UP1A.231005.007",
             "device_os_type": "user",
-            "device_type": "s5e9925",
+            "device_type": "s5e9945",
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
@@ -780,7 +780,7 @@
           "dimensions": {
             "device_os": "UP1A.231005.007",
             "device_os_type": "user",
-            "device_type": "s5e9925",
+            "device_type": "s5e9945",
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
@@ -805,7 +805,7 @@
           "dimensions": {
             "device_os": "UP1A.231005.007",
             "device_os_type": "user",
-            "device_type": "s5e9925",
+            "device_type": "s5e9945",
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
@@ -834,7 +834,7 @@
           "dimensions": {
             "device_os": "UP1A.231005.007",
             "device_os_type": "user",
-            "device_type": "s5e9925",
+            "device_type": "s5e9945",
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
@@ -862,7 +862,7 @@
           "dimensions": {
             "device_os": "UP1A.231005.007",
             "device_os_type": "user",
-            "device_type": "s5e9925",
+            "device_type": "s5e9945",
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
@@ -890,7 +890,7 @@
           "dimensions": {
             "device_os": "UP1A.231005.007",
             "device_os_type": "user",
-            "device_type": "s5e9925",
+            "device_type": "s5e9945",
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
@@ -918,7 +918,7 @@
           "dimensions": {
             "device_os": "UP1A.231005.007",
             "device_os_type": "user",
-            "device_type": "s5e9925",
+            "device_type": "s5e9945",
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
@@ -947,7 +947,7 @@
           "dimensions": {
             "device_os": "UP1A.231005.007",
             "device_os_type": "user",
-            "device_type": "s5e9925",
+            "device_type": "s5e9945",
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
@@ -976,7 +976,7 @@
           "dimensions": {
             "device_os": "UP1A.231005.007",
             "device_os_type": "user",
-            "device_type": "s5e9925",
+            "device_type": "s5e9945",
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
@@ -1004,7 +1004,7 @@
           "dimensions": {
             "device_os": "UP1A.231005.007",
             "device_os_type": "user",
-            "device_type": "s5e9925",
+            "device_type": "s5e9945",
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
@@ -1029,7 +1029,7 @@
           "dimensions": {
             "device_os": "UP1A.231005.007",
             "device_os_type": "user",
-            "device_type": "s5e9925",
+            "device_type": "s5e9945",
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
@@ -1054,7 +1054,7 @@
           "dimensions": {
             "device_os": "UP1A.231005.007",
             "device_os_type": "user",
-            "device_type": "s5e9925",
+            "device_type": "s5e9945",
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
@@ -1079,7 +1079,7 @@
           "dimensions": {
             "device_os": "UP1A.231005.007",
             "device_os_type": "user",
-            "device_type": "s5e9925",
+            "device_type": "s5e9945",
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
@@ -1105,7 +1105,7 @@
           "dimensions": {
             "device_os": "UP1A.231005.007",
             "device_os_type": "user",
-            "device_type": "s5e9925",
+            "device_type": "s5e9945",
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
@@ -1129,7 +1129,7 @@
           "dimensions": {
             "device_os": "UP1A.231005.007",
             "device_os_type": "user",
-            "device_type": "s5e9925",
+            "device_type": "s5e9945",
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },
@@ -1163,7 +1163,7 @@
           "dimensions": {
             "device_os": "UP1A.231005.007",
             "device_os_type": "user",
-            "device_type": "s5e9925",
+            "device_type": "s5e9945",
             "os": "Android",
             "pool": "chromium.tests.gpu"
           },

@@ -202,7 +202,7 @@ def angle_builder(name, cpu):
     is_debug = "-dbg" in name
     is_exp = "-exp" in name
     is_perf = name.endswith("-perf")
-    is_s22 = "s22" in name
+    is_s24 = "s24" in name
     is_trace = name.endswith("-trace")
     is_uwp = "winuwp" in name
     is_msvc = is_uwp or "-msvc" in name
@@ -260,9 +260,9 @@ def angle_builder(name, cpu):
         short_name = "dbg"
     elif is_exp:
         short_name = "exp"
-        if is_s22:
-            # This is a little clunky, but we'd like this to be cleanly "s22" rather than "s22-exp"
-            short_name = "s22"
+        if is_s24:
+            # This is a little clunky, but we'd like this to be cleanly "s24" rather than "s24-exp"
+            short_name = "s24"
     else:
         short_name = "rel"
 
@@ -342,7 +342,7 @@ def angle_builder(name, cpu):
 
     active_experimental_builders = [
         "android-arm64-exp-test",
-        "android-arm64-exp-s22-test",
+        "android-arm64-exp-s24-test",
         "linux-exp-test",
         "mac-exp-test",
         "win-exp-test",
@@ -527,7 +527,7 @@ luci.gitiles_poller(
 angle_builder("android-arm-compile", cpu = "arm")
 angle_builder("android-arm-dbg-compile", cpu = "arm")
 angle_builder("android-arm64-dbg-compile", cpu = "arm64")
-angle_builder("android-arm64-exp-s22-test", cpu = "arm64")
+angle_builder("android-arm64-exp-s24-test", cpu = "arm64")
 angle_builder("android-arm64-exp-test", cpu = "arm64")
 angle_builder("android-arm64-test", cpu = "arm64")
 angle_builder("linux-asan-test", cpu = "x64")
