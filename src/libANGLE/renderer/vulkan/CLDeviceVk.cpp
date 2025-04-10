@@ -44,6 +44,23 @@ CLDeviceVk::CLDeviceVk(const cl::Device &device, vk::Renderer *renderer)
         {cl::DeviceInfo::PrintfBufferSize, 1024 * 1024},
         {cl::DeviceInfo::PreferredWorkGroupSizeMultiple, 16},
     };
+
+    // Minimum float configs/support required
+    cl_ulong halfFPConfig   = 0;
+    cl_ulong singleFPConfig = CL_FP_ROUND_TO_NEAREST | CL_FP_INF_NAN | CL_FP_FMA;
+    cl_ulong doubleFPConfig = 0;
+
+    if (mRenderer->getFeatures().supportsShaderFloat16.enabled)
+    {
+        halfFPConfig |= CL_FP_ROUND_TO_NEAREST | CL_FP_INF_NAN;
+    }
+
+    if (mRenderer->getFeatures().supportsShaderFloat64.enabled)
+    {
+        doubleFPConfig |= CL_FP_FMA | CL_FP_ROUND_TO_NEAREST | CL_FP_ROUND_TO_ZERO |
+                          CL_FP_ROUND_TO_INF | CL_FP_INF_NAN | CL_FP_DENORM;
+    }
+
     mInfoULong = {
         {cl::DeviceInfo::LocalMemSize, props.limits.maxComputeSharedMemorySize},
         {cl::DeviceInfo::SVM_Capabilities, 0},
@@ -54,12 +71,12 @@ CLDeviceVk::CLDeviceVk(const cl::Device &device, vk::Renderer *renderer)
 
         // TODO(aannestrand) Update these hardcoded platform/device queries
         // http://anglebug.com/42266935
-        {cl::DeviceInfo::HalfFpConfig, 0},
-        {cl::DeviceInfo::DoubleFpConfig, 0},
+        {cl::DeviceInfo::HalfFpConfig, halfFPConfig},
+        {cl::DeviceInfo::DoubleFpConfig, doubleFPConfig},
         {cl::DeviceInfo::GlobalMemCacheSize, 0},
         {cl::DeviceInfo::GlobalMemSize, 1024 * 1024 * 1024},
         {cl::DeviceInfo::MaxConstantBufferSize, 64 * 1024},
-        {cl::DeviceInfo::SingleFpConfig, CL_FP_ROUND_TO_NEAREST | CL_FP_INF_NAN | CL_FP_FMA},
+        {cl::DeviceInfo::SingleFpConfig, singleFPConfig},
         {cl::DeviceInfo::AtomicMemoryCapabilities,
          CL_DEVICE_ATOMIC_ORDER_RELAXED | CL_DEVICE_ATOMIC_SCOPE_WORK_GROUP},
         // TODO (http://anglebug.com/379669750) Add these based on the Vulkan features query
@@ -193,6 +210,18 @@ CLDeviceImpl::Info CLDeviceVk::createInfo(cl::DeviceType type) const
         cl_name_version{.version = CL_MAKE_VERSION(1, 0, 0),
                         .name    = "cl_khr_local_int32_extended_atomics"},
     };
+
+    // Populate other extensions based on feature support
+    if (mRenderer->getFeatures().supportsShaderFloat16.enabled)
+    {
+        versionedExtensionList.push_back(
+            cl_name_version{.version = CL_MAKE_VERSION(1, 0, 0), .name = "cl_khr_fp16"});
+    }
+    if (mRenderer->getFeatures().supportsShaderFloat64.enabled)
+    {
+        versionedExtensionList.push_back(
+            cl_name_version{.version = CL_MAKE_VERSION(1, 0, 0), .name = "cl_khr_fp64"});
+    }
     if (info.imageSupport && info.image3D_MaxDepth > 1)
     {
         versionedExtensionList.push_back(
