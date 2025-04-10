@@ -286,13 +286,14 @@ class VulkanLibrary final : NonCopyable
             return VK_NULL_HANDLE;
         }
 
+        mPfnEnumerateInstanceVersion =
+            getProc<PFN_vkEnumerateInstanceVersion>(NULL, "vkEnumerateInstanceVersion");
+
         // Determine the available Vulkan instance version:
         uint32_t instanceVersion = VK_API_VERSION_1_0;
 #if defined(VK_VERSION_1_1)
-        PFN_vkEnumerateInstanceVersion pfnEnumerateInstanceVersion =
-            getProc<PFN_vkEnumerateInstanceVersion>(NULL, "vkEnumerateInstanceVersion");
-        if (!pfnEnumerateInstanceVersion ||
-            pfnEnumerateInstanceVersion(&instanceVersion) != VK_SUCCESS)
+        if (!mPfnEnumerateInstanceVersion ||
+            mPfnEnumerateInstanceVersion(&instanceVersion) != VK_SUCCESS)
         {
             instanceVersion = VK_API_VERSION_1_0;
         }
@@ -469,6 +470,7 @@ class VulkanLibrary final : NonCopyable
     PFN_vkGetInstanceProcAddr mPfnGetInstanceProcAddr;
     PFN_vkCreateInstance mPfnCreateInstance;
     PFN_vkDestroyInstance mPfnDestroyInstance;
+    PFN_vkEnumerateInstanceVersion mPfnEnumerateInstanceVersion;
     PFN_vkEnumerateInstanceLayerProperties mPfnEnumerateInstanceLayerProperties;
     PFN_vkEnumerateInstanceExtensionProperties mPfnEnumerateInstanceExtensionProperties;
     PFN_vkEnumeratePhysicalDevices mPfnEnumeratePhysicalDevices;
