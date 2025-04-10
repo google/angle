@@ -3815,12 +3815,17 @@ void main()
 // include data via glVertexAttribPointer(), there is no crash.
 TEST_P(VertexAttributeTest, VertexAttribPointerCopyBufferFromInvalidAddress)
 {
+    // clang-format off
     const GLfloat vertices[] = {
         // position   // color                // texCoord
         -1.0f, -1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,  // Lower left corner
         1.0f,  -1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f,  // Bottom right corner
         0.0f,  1.0f,  0.0f, 0.0f, 1.0f, 1.0f, 0.5f, 1.0f   // Top
+        -1.0f, -1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.5f, 0.5f,  // Extra bottom left
+        1.0f,  -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f, 0.5f,  // Extra bottom right
+        0.0f,  1.0f,  0.0f, 1.0f, 0.0f, 0.0f, 0.5f, 1.0f   // Extra top
     };
+    // clang-format on
 
     constexpr char kVS[] = R"(
         attribute highp vec2 position;
@@ -3872,6 +3877,9 @@ TEST_P(VertexAttributeTest, VertexAttribPointerCopyBufferFromInvalidAddress)
                           (GLvoid *)(6 * sizeof(GLfloat)));
 
     glDrawArrays(GL_TRIANGLES, 0, 3);
+    EXPECT_GL_NO_ERROR();
+
+    glDrawArrays(GL_TRIANGLES, 3, 3);
     EXPECT_GL_NO_ERROR();
 
     glDisableVertexAttribArray(0);

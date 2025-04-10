@@ -1343,6 +1343,17 @@ angle::Result VertexArrayVk::updateStreamedAttribs(const gl::Context *context,
                                            vertexFormat.getVertexLoadFunction(compressed)));
             }
         }
+        else if (attrib.pointer == nullptr)
+        {
+            // Set them to the initial value.
+            vk::BufferHelper &emptyBuffer            = contextVk->getEmptyBuffer();
+            mCurrentArrayBuffers[attribIndex]        = &emptyBuffer;
+            mCurrentArrayBufferHandles[attribIndex]  = emptyBuffer.getBuffer().getHandle();
+            mCurrentArrayBufferOffsets[attribIndex]  = 0;
+            mCurrentArrayBufferStrides[attribIndex]  = 0;
+            mCurrentArrayBufferDivisors[attribIndex] = 0;
+            continue;
+        }
         else
         {
             ASSERT(binding.getBuffer().get() == nullptr);
