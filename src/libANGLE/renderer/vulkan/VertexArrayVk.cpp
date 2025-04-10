@@ -1090,10 +1090,17 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
             mCurrentArrayBufferHandles[attribIndex] = emptyBuffer.getBuffer().getHandle();
             mCurrentArrayBufferOffsets[attribIndex] = emptyBuffer.getOffset();
 
-            bool combined = ShouldCombineAttributes(renderer, attrib, binding);
-            mCurrentArrayBufferStrides[attribIndex] =
-                combined ? binding.getStride()
-                         : vertexFormat.getActualBufferFormat(compressed).pixelBytes;
+            if (isStreamingVertexAttrib)
+            {
+                bool combined = ShouldCombineAttributes(renderer, attrib, binding);
+                mCurrentArrayBufferStrides[attribIndex] =
+                    combined ? binding.getStride()
+                             : vertexFormat.getActualBufferFormat(compressed).pixelBytes;
+            }
+            else
+            {
+                mCurrentArrayBufferStrides[attribIndex] = 0;
+            }
         }
 
         if (bufferOnly)
