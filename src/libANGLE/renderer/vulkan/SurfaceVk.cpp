@@ -2278,6 +2278,20 @@ angle::Result WindowSurfaceVk::checkSwapchainOutOfDate(vk::ErrorContext *context
         case VK_ERROR_OUT_OF_DATE_KHR:
             presentOutOfDate = true;
             break;
+        case VK_ERROR_SURFACE_LOST_KHR:
+            // Handle SURFACE_LOST_KHR the same way as OUT_OF_DATE when in shared present mode,
+            // because on some platforms (observed on Android) swapchain recreate still succeeds
+            // making this error behave the same as OUT_OF_DATE.  In case of a real surface lost,
+            // following swapchain recreate will also fail, effectively deferring the failure.
+            if (isSharedPresentMode())
+            {
+                presentOutOfDate = true;
+            }
+            else
+            {
+                isFailure = true;
+            }
+            break;
         default:
             isFailure = true;
             break;
