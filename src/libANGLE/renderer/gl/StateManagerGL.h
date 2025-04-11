@@ -232,6 +232,7 @@ class StateManagerGL final : angle::NonCopyable
     void setSampleAlphaToCoverageEnabled(bool enabled);
     void setSampleCoverageEnabled(bool enabled);
     void setSampleCoverage(float value, bool invert);
+    void forceSetSampleCoverage(float value, bool invert);
     void setSampleMaskEnabled(bool enabled);
     void setSampleMaski(GLuint maskNumber, GLbitfield mask);
 
@@ -515,6 +516,7 @@ class StateManagerGL final : angle::NonCopyable
     bool mSampleCoverageInvert;
     bool mSampleMaskEnabled;
     gl::SampleMaskArray<GLbitfield> mSampleMaskValues;
+    bool mSampleCoverageEverChanged;
 
     bool mDepthTestEnabled;
     GLenum mDepthFunc;

@@ -852,6 +852,14 @@
                 "Disable GL_KHR_blend_equation_advanced due to various driver issues."
             ],
             "issue": "https://anglebug.com/42267098"
+        },
+        {
+            "name": "reset_sample_coverage_on_FBO_change",
+            "category": "Workarounds",
+            "description": [
+                "Some Adreno drivers assume incorrect glSampleCoverage if new FBO is bound with different sample count"
+            ],
+            "issue": "https://crbug.com/408364831"
         }
     ]
 }

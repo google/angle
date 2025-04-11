@@ -10719,6 +10719,66 @@ TEST_P(StateChangeTestES3, SampleCoverageFramebufferAttachmentSwitch)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that GL_SAMPLE_COVERAGE value has proper effect after frame buffer switch.
+TEST_P(StateChangeTestES3, SampleCoverageFramebufferSwitch)
+{
+    // Keep this state unchanged during the test
+    glEnable(GL_SAMPLE_COVERAGE);
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    GLRenderbuffer rboMS;
+    glBindRenderbuffer(GL_RENDERBUFFER, rboMS);
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_RGBA8, 1, 1);
+
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rboMS);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    GLFramebuffer fboResolve;
+    glBindFramebuffer(GL_FRAMEBUFFER, fboResolve);
+
+    GLRenderbuffer rboResolve;
+    glBindRenderbuffer(GL_RENDERBUFFER, rboResolve);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 1, 1);
+
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rboResolve);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    glClearColor(1, 0, 0, 1);
+
+    // Set any non 1 coverage and draw the quad
+    glSampleCoverage(0.5, false);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5);
+    ASSERT_GL_NO_ERROR();
+
+    // Switch to single sampled FBO and draw with coverage 1.
+    glBindFramebuffer(GL_FRAMEBUFFER, fboResolve);
+    glSampleCoverage(1.0, false);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+
+    // Switch back to multisampled FBO and draw with coverage 1, verify that coverage was indeed 1.
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glSampleCoverage(1.0, false);
+    glClear(GL_COLOR_BUFFER_BIT);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+
+    // Resolve
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboResolve);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBlitFramebuffer(0, 0, 1, 1, 0, 0, 1, 1, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Last draw happened with sample coverage 1, so we expect the results to be green.
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, fboResolve);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Test that switching FBO attachments affects alpha-to-coverage
 TEST_P(StateChangeTestES3, AlphaToCoverageFramebufferAttachmentSwitch)
 {

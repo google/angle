@@ -123,6 +123,7 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
       mSampleCoverageValue(1.0f),
       mSampleCoverageInvert(false),
       mSampleMaskEnabled(false),
+      mSampleCoverageEverChanged(false),
       mDepthTestEnabled(false),
       mDepthFunc(GL_LESS),
       mDepthMask(true),
@@ -1603,15 +1604,20 @@ void StateManagerGL::setSampleCoverageEnabled(bool enabled)
     }
 }
 
+void StateManagerGL::forceSetSampleCoverage(float value, bool invert)
+{
+    mSampleCoverageValue       = value;
+    mSampleCoverageInvert      = invert;
+    mSampleCoverageEverChanged = true;
+    mFunctions->sampleCoverage(mSampleCoverageValue, mSampleCoverageInvert);
+    mLocalDirtyBits.set(gl::state::DIRTY_BIT_SAMPLE_COVERAGE);
+}
+
 void StateManagerGL::setSampleCoverage(float value, bool invert)
 {
     if (mSampleCoverageValue != value || mSampleCoverageInvert != invert)
     {
-        mSampleCoverageValue  = value;
-        mSampleCoverageInvert = invert;
-        mFunctions->sampleCoverage(mSampleCoverageValue, mSampleCoverageInvert);
-
-        mLocalDirtyBits.set(gl::state::DIRTY_BIT_SAMPLE_COVERAGE);
+        forceSetSampleCoverage(value, invert);
     }
 }
 
@@ -2260,6 +2266,11 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                 bindFramebuffer(
                     mHasSeparateFramebufferBindings ? GL_DRAW_FRAMEBUFFER : GL_FRAMEBUFFER,
                     framebufferGL->getFramebufferID());
+
+                if (mFeatures.resetSampleCoverageOnFBOChange.enabled && mSampleCoverageEverChanged)
+                {
+                    forceSetSampleCoverage(mSampleCoverageValue, mSampleCoverageInvert);
+                }
 
                 const gl::ProgramExecutable *executable = state.getProgramExecutable();
                 if (executable)

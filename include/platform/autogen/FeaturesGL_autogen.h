@@ -656,6 +656,12 @@ struct FeaturesGL : FeatureSetBase
         &members,
     };
 
+    FeatureInfo resetSampleCoverageOnFBOChange = {
+        "resetSampleCoverageOnFBOChange",
+        FeatureCategory::OpenGLWorkarounds,
+        &members,
+    };
+
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
