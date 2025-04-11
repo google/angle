@@ -611,7 +611,9 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
 
     angle::Result ensureMutable(ContextVk *contextVk);
     angle::Result refreshImageViews(ContextVk *contextVk);
-    void initImageUsageFlags(ContextVk *contextVk, angle::FormatID actualFormatID);
+    void initImageUsageFlags(ContextVk *contextVk,
+                             const angle::Format &intendedFormat,
+                             angle::FormatID actualFormatID);
     void handleImmutableSamplerTransition(const vk::ImageHelper *previousImage,
                                           const vk::ImageHelper *nextImage);
 

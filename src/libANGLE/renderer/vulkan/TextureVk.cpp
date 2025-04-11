@@ -986,12 +986,20 @@ angle::Result TextureVk::clearSubImageImpl(const gl::Context *context,
 
     bool usesBufferForClear = false;
 
-    VkFormatFeatureFlags renderableCheckFlag =
+    const VkFormatFeatureFlags clearUpdateRequiredFeature =
         clearMode == vk::ClearTextureMode::FullClear ? VK_FORMAT_FEATURE_TRANSFER_DST_BIT
         : outputFormatInfo.isDepthOrStencil() ? VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT
                                               : VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
-    if (vk::FormatHasNecessaryFeature(contextVk->getRenderer(), outputActualFormatID,
-                                      getTilingMode(), renderableCheckFlag))
+    const VkImageUsageFlags clearUpdateRequiredUsage =
+        clearMode == vk::ClearTextureMode::FullClear ? VK_IMAGE_USAGE_TRANSFER_DST_BIT
+        : outputFormatInfo.isDepthOrStencil()        ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
+                                                     : VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    const bool formatFeaturesAllowClearUpdate =
+        vk::FormatHasNecessaryFeature(contextVk->getRenderer(), outputActualFormatID,
+                                      getTilingMode(), clearUpdateRequiredFeature);
+    const bool imageUsageAllowsClearUpdate =
+        (mImageUsageFlags & clearUpdateRequiredUsage) == clearUpdateRequiredUsage;
+    if (formatFeaturesAllowClearUpdate && imageUsageAllowsClearUpdate)
     {
         uint32_t baseLayer  = useLayerAsDepth ? clearArea.z : 0;
         uint32_t layerCount = useLayerAsDepth ? clearArea.depth : 1;
@@ -2304,7 +2312,9 @@ void TextureVk::releaseAndDeleteImageAndViews(ContextVk *contextVk)
     mDescriptorSetCacheManager.releaseKeys(contextVk->getRenderer());
 }
 
-void TextureVk::initImageUsageFlags(ContextVk *contextVk, angle::FormatID actualFormatID)
+void TextureVk::initImageUsageFlags(ContextVk *contextVk,
+                                    const angle::Format &intendedFormat,
+                                    angle::FormatID actualFormatID)
 {
     ASSERT(actualFormatID != angle::FormatID::NONE);
 
@@ -2330,7 +2340,13 @@ void TextureVk::initImageUsageFlags(ContextVk *contextVk, angle::FormatID actual
     else if (renderer->hasImageFormatFeatureBits(actualFormatID,
                                                  VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT))
     {
-        mImageUsageFlags |= kColorAttachmentImageFlags;
+        // If the intended format is not renderable, don't add color attachment flags even if the
+        // fallback format is.  This way, the image is more likely to be usable with
+        // VK_EXT_host_image_copy.
+        if (!intendedFormat.isLUMA() || mRequiredImageAccess == vk::ImageAccess::Renderable)
+        {
+            mImageUsageFlags |= kColorAttachmentImageFlags;
+        }
     }
 }
 
@@ -2342,7 +2358,8 @@ angle::Result TextureVk::ensureImageAllocated(ContextVk *contextVk, const vk::Fo
                        {});
     }
 
-    initImageUsageFlags(contextVk, format.getActualImageFormatID(getRequiredImageAccess()));
+    initImageUsageFlags(contextVk, format.getIntendedFormat(),
+                        format.getActualImageFormatID(getRequiredImageAccess()));
 
     return angle::Result::Continue;
 }
@@ -4576,9 +4593,13 @@ angle::Result TextureVk::ensureRenderableWithFormat(ContextVk *contextVk,
         return angle::Result::Continue;
     }
 
-    // luminance/alpha format never fallback for rendering and if we ever do fallback, the
-    // following code may not handle it properly.
-    ASSERT(!format.getIntendedFormat().isLUMA());
+    // If luminance/alpha formats ever fall back for rendering, it would only be because the
+    // color attachment usage isn't specified by default.  The following wouldn't actually change
+    // the format of the LUMA image because it's always emulated with a renderable format.  If
+    // Vulkan ever introduces a LUMA format that ANGLE uses, the following code may not handle it
+    // properly.
+    ASSERT(!format.getIntendedFormat().isLUMA() ||
+           (mImageUsageFlags & VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT) == 0);
 
     angle::FormatID previousActualFormatID =
         format.getActualImageFormatID(vk::ImageAccess::SampleOnly);
