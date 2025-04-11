@@ -4304,9 +4304,9 @@ void Context::initCaps()
             extensions->textureCompressionAstcLdrKHR          = false;
         }
 #if !defined(ANGLE_HAS_ASTCENC)
-        // Don't expose emulated ASTC when it's not built.
-        mSupportedExtensions.textureCompressionAstcLdrKHR = false;
-        extensions->textureCompressionAstcLdrKHR          = false;
+        // ASTC shouldn't be exposed if decoder is not built.
+        ASSERT(!mSupportedExtensions.textureCompressionAstcLdrKHR);
+        ASSERT(!extensions->textureCompressionAstcLdrKHR);
 #endif
     }
 
