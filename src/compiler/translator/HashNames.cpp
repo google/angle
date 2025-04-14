@@ -55,21 +55,23 @@ void AddToNameMapIfNotMapped(const ImmutableString &name,
 }  // anonymous namespace
 
 ImmutableString HashName(const ImmutableString &name,
-                         char prefix,
                          ShHashFunction64 hashFunction,
                          NameMap *nameMap)
 {
+    const ImmutableString kUnhashedNamePrefix(kUserDefinedNamePrefix);
+
     if (hashFunction == nullptr)
     {
-        size_t kPrefixLength = 2;
-        if (!prefix || name.length() + kPrefixLength > kESSLMaxIdentifierLength)
+        if (name.length() + kUnhashedNamePrefix.length() > kESSLMaxIdentifierLength)
         {
             // If the identifier length is already close to the limit, we can't prefix it. This is
             // not a problem since there are no builtins or ANGLE's internal variables that would
             // have as long names and could conflict.
             return name;
         }
-        ImmutableString res = BuildConcatenatedImmutableString('_', prefix, name);
+        ImmutableStringBuilder prefixedName(kUnhashedNamePrefix.length() + name.length());
+        prefixedName << kUnhashedNamePrefix << name;
+        ImmutableString res = prefixedName;
         AddToNameMapIfNotMapped(name, res, nameMap);
         return res;
     }
@@ -80,10 +82,7 @@ ImmutableString HashName(const ImmutableString &name,
     return hashedName;
 }
 
-ImmutableString HashName(const TSymbol *symbol,
-                         char prefix,
-                         ShHashFunction64 hashFunction,
-                         NameMap *nameMap)
+ImmutableString HashName(const TSymbol *symbol, ShHashFunction64 hashFunction, NameMap *nameMap)
 {
     if (symbol->symbolType() == SymbolType::Empty)
     {
@@ -94,7 +93,7 @@ ImmutableString HashName(const TSymbol *symbol,
     {
         return symbol->name();
     }
-    return HashName(symbol->name(), prefix, hashFunction, nameMap);
+    return HashName(symbol->name(), hashFunction, nameMap);
 }
 
 }  // namespace sh

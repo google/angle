@@ -1347,9 +1347,7 @@ TEST_P(LineLoopIndirectTest, IndirectAndElementDrawsShareIndexBuffer)
     }
 }
 
-ANGLE_INSTANTIATE_TEST_ES2_AND(LineLoopTest,
-                               ES2_WEBGPU(),
-                               ES2_OPENGLES().enable(Feature::ForcePassthroughShaders));
+ANGLE_INSTANTIATE_TEST_ES2_AND(LineLoopTest, ES2_WEBGPU());
 ANGLE_INSTANTIATE_TEST_ES3(LineLoopTestES3);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(LineLoopPrimitiveRestartTest);

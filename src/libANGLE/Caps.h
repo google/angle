@@ -712,9 +712,6 @@ struct DisplayExtensions
 
     // EGL_EXT_surface_compression
     bool surfaceCompressionEXT = false;
-
-    // EXT_ANGLE_create_context_passthrough_shaders
-    bool createContextPassthroughShadersANGLE = false;
 };
 
 struct DeviceExtensions

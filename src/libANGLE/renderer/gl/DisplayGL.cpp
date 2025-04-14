@@ -163,11 +163,6 @@ void DisplayGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
     // Advertise robust resource initialization on all OpenGL backends for testing even though it is
     // not fully implemented.
     outExtensions->robustResourceInitializationANGLE = true;
-
-    if (getRenderer()->getFunctions()->standard == STANDARD_GL_ES)
-    {
-        outExtensions->createContextPassthroughShadersANGLE = true;
-    }
 }
 
 egl::Error DisplayGL::makeCurrentSurfaceless(gl::Context *context)

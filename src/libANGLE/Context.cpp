@@ -360,13 +360,6 @@ bool GetProtectedContent(const egl::AttributeMap &attribs)
     return static_cast<bool>(attribs.getAsInt(EGL_PROTECTED_CONTENT_EXT, EGL_FALSE));
 }
 
-bool GetPassthroughShaders(egl::Display *display, const egl::AttributeMap &attribs)
-{
-    const angle::FrontendFeatures &frontendFeatures = display->getFrontendFeatures();
-    return frontendFeatures.forcePassthroughShaders.enabled ||
-           static_cast<bool>(attribs.getAsInt(EGL_CONTEXT_PASSTHROUGH_SHADERS_ANGLE, EGL_FALSE));
-}
-
 std::string GetObjectLabelFromPointer(GLsizei length, const GLchar *label)
 {
     std::string labelName;
@@ -668,8 +661,7 @@ Context::Context(egl::Display *display,
              GetContextPriority(attribs),
              GetRobustAccess(attribs),
              GetProtectedContent(attribs),
-             GetIsExternal(attribs),
-             GetPassthroughShaders(display, attribs)),
+             GetIsExternal(attribs)),
       mShared(shareContext != nullptr || shareTextures != nullptr || shareSemaphores != nullptr),
       mDisplayTextureShareGroup(shareTextures != nullptr),
       mDisplaySemaphoreShareGroup(shareSemaphores != nullptr),
@@ -4062,22 +4054,6 @@ Extensions Context::generateSupportedExtensions() const
 
     // Blob cache extension is provided by the ANGLE frontend
     supportedExtensions.blobCacheANGLE = true;
-
-    // Disable extensions that are implemented through shader compiler transformations
-    if (mState.usesPassthroughShaders())
-    {
-        supportedExtensions.multiDrawANGLE                       = false;
-        supportedExtensions.shaderPixelLocalStorageANGLE         = false;
-        supportedExtensions.shaderPixelLocalStorageCoherentANGLE = false;
-        if (frontendFeatures.clipCullDistanceBrokenWithPassthroughShaders.enabled)
-        {
-            supportedExtensions.clipCullDistanceEXT = false;
-        }
-        if (frontendFeatures.noperspectiveInterpolationBrokenWithPassthroughShaders.enabled)
-        {
-            supportedExtensions.shaderNoperspectiveInterpolationNV = false;
-        }
-    }
 
     return supportedExtensions;
 }

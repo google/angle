@@ -477,13 +477,10 @@ ImmutableString ArrayString(const TType &type)
     return arrayString;
 }
 
-ImmutableString GetTypeName(const TType &type,
-                            char prefix,
-                            ShHashFunction64 hashFunction,
-                            NameMap *nameMap)
+ImmutableString GetTypeName(const TType &type, ShHashFunction64 hashFunction, NameMap *nameMap)
 {
     if (type.getBasicType() == EbtStruct)
-        return HashName(type.getStruct(), prefix, hashFunction, nameMap);
+        return HashName(type.getStruct(), hashFunction, nameMap);
     else
         return ImmutableString(type.getBuiltInTypeNameString());
 }

@@ -137,7 +137,6 @@ class TCompiler : public TShHandleBase
     }
 
     ShHashFunction64 getHashFunction() const { return mResources.HashFunction; }
-    char getUserVariableNamePrefix() const { return mResources.UserVariableNamePrefix; }
     NameMap &getNameMap() { return mNameMap; }
     TSymbolTable &getSymbolTable() { return mSymbolTable; }
     ShShaderSpec getShaderSpec() const { return mShaderSpec; }
@@ -301,7 +300,6 @@ class TCompiler : public TShHandleBase
     bool tagUsedFunctions();
     void internalTagUsedFunction(size_t index);
 
-    void collectVariables(TIntermBlock *root);
     void collectInterfaceBlocks();
 
     bool mVariablesCollected;
