@@ -568,7 +568,7 @@ void main()
                                        GLenum format,
                                        GLenum type,
                                        const EGLint *attribs,
-                                       void *data,
+                                       const void *data,
                                        GLTexture &sourceTexture,
                                        EGLImageKHR *outSourceImage)
     {
@@ -601,7 +601,7 @@ void main()
                                             GLenum format,
                                             GLenum type,
                                             const EGLint *attribs,
-                                            uint8_t *data,
+                                            const uint8_t *data,
                                             size_t dataStride,
                                             EGLenum imageTarget,
                                             GLTexture &sourceTexture,
@@ -641,7 +641,7 @@ void main()
                                        GLenum format,
                                        GLenum type,
                                        const EGLint *attribs,
-                                       void *data,
+                                       const void *data,
                                        GLTexture &sourceTexture,
                                        EGLImageKHR *outSourceImage)
     {
@@ -9391,6 +9391,245 @@ TEST_P(ImageTestES3, DmaBufNegativeValidation)
         ASSERT_EGL_ERROR(EGL_BAD_ATTRIBUTE);
         ASSERT_EQ(image, EGL_NO_IMAGE_KHR);
     }
+}
+
+// Test redefining the source GL texture
+TEST_P(ImageTestES3, RedefineSourceTexture)
+{
+    EGLWindow *window = getEGLWindow();
+
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+
+    const GLColor originalColor = GLColor::yellow;
+    const std::vector<GLColor> updateColor(4, GLColor::blue);
+
+    // Create the Image
+    GLTexture source;
+    EGLImageKHR image;
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
+                                  originalColor.data(), source, &image);
+
+    // Create texture & bind to Image
+    GLTexture target;
+    createEGLImageTargetTexture2D(image, target);
+
+    // Verify that the target texture has the expected color, makes sure everything is synced and
+    // |texture| is fully set up.
+    verifyResults2D(target, originalColor.data());
+
+    // Change the source texture.  The size is changed to make sure a new image is definitely
+    // created for the texture.
+    glBindTexture(GL_TEXTURE_2D, source);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, updateColor.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+
+    // Make sure source is fully set up.
+    verifyResults2D(source, updateColor[0].data());
+
+    // Make sure the target still points to the old image.
+    verifyResults2D(target, originalColor.data());
+
+    // Clean up
+    eglDestroyImageKHR(window->getDisplay(), image);
+
+    ASSERT_EGL_SUCCESS();
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test fully overwriting the source GL texture
+TEST_P(ImageTestES3, RewriteSourceTexture)
+{
+    EGLWindow *window = getEGLWindow();
+
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+
+    const GLColor originalColor = GLColor::yellow;
+    const GLColor updateColor   = GLColor::blue;
+
+    // Create the Image
+    GLTexture source;
+    EGLImageKHR image;
+    createEGLImage2DTextureSource(1, 1, GL_RGBA, GL_UNSIGNED_BYTE, kDefaultAttribs,
+                                  originalColor.data(), source, &image);
+
+    // Create texture & bind to Image
+    GLTexture target;
+    createEGLImageTargetTexture2D(image, target);
+
+    // Verify that the target texture has the expected color, makes sure everything is synced and
+    // |texture| is fully set up.
+    verifyResults2D(target, originalColor.data());
+
+    // Upload new data to source texture such that it's completely overwritten.
+    glBindTexture(GL_TEXTURE_2D, source);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, updateColor.data());
+
+    // Make sure the target sees the update written to the source texture.
+    verifyResults2D(target, updateColor.data());
+
+    // For completeness, check source too
+    verifyResults2D(source, updateColor.data());
+
+    // Clean up
+    eglDestroyImageKHR(window->getDisplay(), image);
+
+    ASSERT_EGL_SUCCESS();
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test using the source GL texture as a storage image.  Internally, the Vulkan backend recreates
+// the Texture's image backing.
+TEST_P(ImageTestES31, UseSourceTextureAsStorageImage)
+{
+    EGLWindow *window = getEGLWindow();
+
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+
+    const GLColor originalColor = GLColor::yellow;
+
+    // Create the Image, use glTexStorage2D for storage image use later.
+    GLTexture source;
+    glBindTexture(GL_TEXTURE_2D, source);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 1, 1);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, originalColor.data());
+
+    EGLImageKHR image =
+        eglCreateImageKHR(window->getDisplay(), window->getContext(), EGL_GL_TEXTURE_2D_KHR,
+                          reinterpretHelper<EGLClientBuffer>(source), kDefaultAttribs);
+    ASSERT_EGL_SUCCESS();
+
+    // Create texture & bind to Image
+    GLTexture target;
+    createEGLImageTargetTexture2D(image, target);
+
+    // Verify that the target texture has the expected color, makes sure everything is synced and
+    // |texture| is fully set up.
+    verifyResults2D(target, originalColor.data());
+
+    // Use the source texture as a storage image
+    const char kCS[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(rgba8) uniform highp writeonly image2D img;
+void main()
+{
+    imageStore(img, ivec2(0, 0), vec4(0, 0, 1, 1));
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+    glUseProgram(program);
+
+    glBindImageTexture(0, source, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA8);
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Make sure the target sees the update written to the source texture.
+    glMemoryBarrier(GL_TEXTURE_FETCH_BARRIER_BIT);
+    verifyResults2D(target, GLColor::blue.data());
+
+    // For completeness, check source too
+    verifyResults2D(source, GLColor::blue.data());
+
+    // Clean up
+    eglDestroyImageKHR(window->getDisplay(), image);
+
+    ASSERT_EGL_SUCCESS();
+    ASSERT_GL_NO_ERROR();
+}
+
+// Test overwriting the base level and calling glGenerateMipmap on the source GL texture while the
+// texture is in use.
+TEST_P(ImageTestES3, ImmutableTextureOverwriteBaseLevelAndGenerateMipmapWhileInUse)
+{
+    EGLWindow *window = getEGLWindow();
+
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+
+    constexpr char kVS[] = R"(#version 300 es
+out vec2 texcoord;
+in vec4 position;
+void main()
+{
+    gl_Position = vec4(position.xy, 0.0, 1.0);
+    texcoord = (position.xy * 0.5) + 0.5;
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision highp float;
+uniform sampler2D tex;
+in vec2 texcoord;
+out vec4 fragColor;
+void main()
+{
+    vec4 test = vec4(0.8, 0.8, 0.8, 0.8);
+    for (int i = 0; i < 500; i++)
+    {
+        test = sqrt(test);
+    }
+    fragColor = texture(tex, texcoord * test.xy);
+})";
+
+    constexpr uint32_t kWidth  = 16;
+    constexpr uint32_t kHeight = 24;
+    const std::vector<GLColor> originalColor(kWidth * kHeight, GLColor::yellow);
+    const std::vector<GLColor> updateColor1(kWidth * kHeight, GLColor::red);
+    const std::vector<GLColor> updateColor2(kWidth * kHeight, GLColor::green);
+    const std::vector<GLColor> updateColor3(kWidth * kHeight, GLColor::blue);
+    const std::vector<GLColor> *updateColors[] = {&updateColor1, &updateColor2, &updateColor3};
+
+    // Create the Image, use glTexStorage2D for glGenerateMipmap not to orphan the EGL image.
+    GLTexture source;
+    glBindTexture(GL_TEXTURE_2D, source);
+    glTexStorage2D(GL_TEXTURE_2D, 5, GL_RGBA8, kWidth, kHeight);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE,
+                    originalColor.data());
+
+    EGLImageKHR image =
+        eglCreateImageKHR(window->getDisplay(), window->getContext(), EGL_GL_TEXTURE_2D_KHR,
+                          reinterpretHelper<EGLClientBuffer>(source), kDefaultAttribs);
+    ASSERT_EGL_SUCCESS();
+
+    // Create texture & bind to Image
+    GLTexture target;
+    createEGLImageTargetTexture2D(image, target);
+
+    // Verify that the target texture has the expected color, makes sure everything is synced and
+    // |texture| is fully set up.
+    verifyResults2D(target, originalColor[0].data());
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glBindTexture(GL_TEXTURE_2D, source);
+
+    // Use the source texture in an expensive draw call.  Then completely overwrite the base level,
+    // then generate mipmap.  Do this multiple times, for any "redefines base level then generates
+    // mipmap" tracking heuristics that might trigger recreating the backing image of the texture to
+    // make sure the target texture still points to the same backing image.
+    for (uint32_t i = 0; i < 13; ++i)
+    {
+        for (const auto *updateColor : updateColors)
+        {
+            drawQuad(program, "position", 0.0f);
+
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE,
+                            updateColor->data());
+            glGenerateMipmap(GL_TEXTURE_2D);
+        }
+    }
+
+    // http://anglebug.com/410584007
+    ANGLE_SKIP_TEST_IF(getEGLWindow()->isFeatureEnabled(Feature::AllowGenerateMipmapWithCompute));
+
+    // Make sure the target sees the update written to the source texture.
+    verifyResults2D(target, updateColor3[0].data());
+
+    // For completeness, check source too
+    verifyResults2D(source, updateColor3[0].data());
+
+    // Clean up
+    eglDestroyImageKHR(window->getDisplay(), image);
+
+    ASSERT_EGL_SUCCESS();
+    ASSERT_GL_NO_ERROR();
 }
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(ImageTest,
