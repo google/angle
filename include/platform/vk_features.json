@@ -2077,6 +2077,13 @@
                 "Enable support for GL_ANGLE_shader_pixel_local_storage extension"
             ],
             "issue": "https://anglebug.com/40096838"
+        },
+        {
+            "name": "debug_cl_dump_command_stream",
+            "category": "Features",
+            "description": [
+                "Dump OpenCL-Vulkan CommandBuffer stream to stdout."
+            ]
         }
     ]
 }

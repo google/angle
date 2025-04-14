@@ -78,6 +78,7 @@ enum class Feature
     CopyIOSurfaceToNonIOSurfaceForReadOptimization,
     CopyTextureToBufferForReadOptimization,
     CorruptProgramBinaryForTesting,
+    DebugClDumpCommandStream,
     DecodeEncodeSRGBForGenerateMipmap,
     DepthStencilBlitExtraCopy,
     DescriptorSetCache,

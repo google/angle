@@ -472,6 +472,8 @@ class CLCommandQueueVk : public CLCommandQueueImpl
 
     angle::Result submitEmptyCommand();
 
+    void addCommandBufferDiagnostics(const std::string &addCommandBufferDiagnostics);
+
     CLContextVk *mContext;
     const CLDeviceVk *mDevice;
     cl::Memory *mPrintfBuffer;
@@ -508,6 +510,8 @@ class CLCommandQueueVk : public CLCommandQueueImpl
     angle::Result addToHostTransferList(CLImageVk *srcImage, HostTransferConfig<T> transferEntry);
 
     DispatchWorkThread mFinishHandler;
+
+    std::vector<std::string> mCommandBufferDiagnostics;
 };
 
 }  // namespace rx

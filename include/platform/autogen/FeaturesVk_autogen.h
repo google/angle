@@ -1580,6 +1580,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo debugClDumpCommandStream = {
+        "debugClDumpCommandStream",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;
