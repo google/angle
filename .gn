@@ -44,6 +44,9 @@ default_args = {
   # Saves on importing extra dependencies and ANGLE doesn't use JS.
   enable_js_protobuf = false
 
+  # Needed only for std::atomic_ref<T> for large Ts http://crbug.com/402171653
+  use_llvm_libatomic = false
+
   # Disable location tags in isolates.
   tests_have_location_tags = false
 
