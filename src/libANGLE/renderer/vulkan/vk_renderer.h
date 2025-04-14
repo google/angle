@@ -1069,6 +1069,9 @@ class Renderer : angle::NonCopyable
 
     // Cached value for the buffer memory size limit.
     VkDeviceSize mMaxBufferMemorySizeLimit;
+
+    // Record submitted queue serials not belongs to any context.
+    vk::ResourceUse mSubmittedResourceUse;
 };
 
 ANGLE_INLINE Serial Renderer::generateQueueSerial(SerialIndex index)

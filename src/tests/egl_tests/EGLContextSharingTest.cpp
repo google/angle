@@ -1592,6 +1592,97 @@ TEST_P(EGLContextSharingTestNoFixture, ImmediateContextDestroyAfterCreation)
     EXPECT_TRUE(SafeDestroyContext(mDisplay, mContexts[0]));
     ASSERT_EGL_SUCCESS();
 }
+
+class EGLPriorityContextSharingTestNoFixture : public EGLContextSharingTest
+{
+  public:
+    EGLPriorityContextSharingTestNoFixture() : EGLContextSharingTest() {}
+
+    void testSetUp() override
+    {
+        mMajorVersion          = GetParam().majorVersion;
+        EGLAttrib dispattrs[3] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(),
+                                  EGL_NONE};
+        mDisplay               = eglGetPlatformDisplay(EGL_PLATFORM_ANGLE_ANGLE,
+                                                       reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY), dispattrs);
+        EXPECT_TRUE(mDisplay != EGL_NO_DISPLAY);
+        EXPECT_EGL_TRUE(eglInitialize(mDisplay, nullptr, nullptr));
+    }
+
+    void testTearDown() override
+    {
+        ASSERT_EGL_SUCCESS() << "Error during EGLPriorityContextSharingTestNoFixture TearDown";
+    }
+
+    bool chooseConfig(EGLConfig *config) const
+    {
+        bool result          = false;
+        EGLint count         = 0;
+        EGLint clientVersion = mMajorVersion == 3 ? EGL_OPENGL_ES3_BIT : EGL_OPENGL_ES2_BIT;
+        EGLint attribs[]     = {EGL_RENDERABLE_TYPE, clientVersion, EGL_SURFACE_TYPE,
+                                EGL_WINDOW_BIT | EGL_PBUFFER_BIT, EGL_NONE};
+
+        result = eglChooseConfig(mDisplay, attribs, config, 1, &count);
+        EXPECT_EGL_TRUE(result && (count > 0));
+        return result;
+    }
+
+    EGLDisplay mDisplay  = EGL_NO_DISPLAY;
+    const EGLint kWidth  = 64;
+    const EGLint kHeight = 64;
+    EGLint mMajorVersion = 0;
+};
+
+// Tests that create and destroy higher priority shared context
+TEST_P(EGLPriorityContextSharingTestNoFixture, MultiContextsCreateDestroy)
+{
+    ANGLE_SKIP_TEST_IF(!IsEGLDisplayExtensionEnabled(mDisplay, "EGL_IMG_context_priority"));
+
+    EGLConfig config = EGL_NO_CONFIG_KHR;
+    EXPECT_TRUE(chooseConfig(&config));
+
+    // Initialize contexts
+    constexpr size_t kContextCount = 2;
+
+    EGLSurface surface[kContextCount] = {EGL_NO_SURFACE, EGL_NO_SURFACE};
+    EGLContext ctx[kContextCount]     = {EGL_NO_CONTEXT, EGL_NO_CONTEXT};
+
+    EGLint priorities[kContextCount] = {EGL_CONTEXT_PRIORITY_LOW_IMG,
+                                        EGL_CONTEXT_PRIORITY_HIGH_IMG};
+
+    EGLint pbufferAttributes[] = {EGL_WIDTH, 1, EGL_HEIGHT, 1, EGL_NONE, EGL_NONE};
+
+    EGLint attributes[] = {EGL_CONTEXT_PRIORITY_LEVEL_IMG, EGL_NONE, EGL_NONE};
+
+    for (size_t t = 0; t < kContextCount; ++t)
+    {
+        surface[t] = eglCreatePbufferSurface(mDisplay, config, pbufferAttributes);
+        EXPECT_EGL_SUCCESS();
+
+        attributes[1] = priorities[t];
+
+        ctx[t] = eglCreateContext(mDisplay, config, t == 0 ? EGL_NO_CONTEXT : ctx[0], attributes);
+        EXPECT_NE(EGL_NO_CONTEXT, ctx[t]);
+        EXPECT_EGL_SUCCESS();
+
+        eglMakeCurrent(mDisplay, surface[t], surface[t], ctx[t]);
+        EXPECT_EGL_SUCCESS();
+    }
+
+    eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    for (size_t t = 0; t < kContextCount; ++t)
+    {
+        eglDestroySurface(mDisplay, surface[t]);
+        eglDestroyContext(mDisplay, ctx[t]);
+        EXPECT_EGL_SUCCESS();
+    }
+
+    eglTerminate(mDisplay);
+    mDisplay = EGL_NO_DISPLAY;
+    ASSERT_EGL_SUCCESS();
+    eglReleaseThread();
+    ASSERT_EGL_SUCCESS();
+}
 }  // anonymous namespace
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLContextSharingTest);
@@ -1620,3 +1711,6 @@ GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLContextSharingTestNoSyncTexture
 ANGLE_INSTANTIATE_TEST(EGLContextSharingTestNoSyncTextureUploads,
                        ES2_VULKAN().enable(Feature::ForceSubmitImmutableTextureUpdates),
                        ES3_VULKAN().enable(Feature::ForceSubmitImmutableTextureUpdates));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLPriorityContextSharingTestNoFixture);
+ANGLE_INSTANTIATE_TEST(EGLPriorityContextSharingTestNoFixture, WithNoFixture(ES3_VULKAN()));
