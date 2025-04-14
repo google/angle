@@ -87,6 +87,15 @@ b/267953710 GALAXYS22 VULKAN : KHR-GLES3.framebuffer_blit.scissor_blit = FAIL
 42266598 GALAXYS23 VULKAN : KHR-GLES3.shaders.function.global_variable_aliasing_fragment = SKIP
 341780527 GALAXYS23 VULKAN : KHR-GLES3.clip_distance.coverage = FAIL
 
+// Samsung Galaxy S24 (Xclipse)
+b/410630704 GALAXYS24EXYNOS VULKAN : KHR-GLES3.clip_distance.coverage = SKIP
+b/410630704 GALAXYS24EXYNOS VULKAN : KHR-GLES3.cull_distance.functional_test_item_8_primitive_mode_points_max_culldist_1 = SKIP
+b/410630704 GALAXYS24EXYNOS VULKAN : KHR-GLES3.cull_distance.functional_test_item_8_primitive_mode_points_max_culldist_2 = SKIP
+b/410630704 GALAXYS24EXYNOS VULKAN : KHR-GLES3.cull_distance.functional_test_item_8_primitive_mode_points_max_culldist_3 = SKIP
+b/410630704 GALAXYS24EXYNOS VULKAN : KHR-GLES3.cull_distance.functional_test_item_8_primitive_mode_points_max_culldist_5 = SKIP
+b/410630704 GALAXYS24EXYNOS VULKAN : KHR-GLES3.cull_distance.functional_test_item_8_primitive_mode_points_max_culldist_6 = SKIP
+b/410630704 GALAXYS24EXYNOS VULKAN : KHR-GLES3.cull_distance.functional_test_item_8_primitive_mode_points_max_culldist_7 = SKIP
+
 // Snapdragon 8 Gen3 Mobile Reference Device
 b/328156792 PINEAPPLE VULKAN : KHR-GLES3.copy_tex_image_conversions.required.* = SKIP
 b/328156792 PINEAPPLE VULKAN : KHR-GLES3.shaders.function.global_variable_aliasing_fragment = SKIP

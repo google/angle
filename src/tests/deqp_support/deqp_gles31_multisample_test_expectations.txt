@@ -32,3 +32,11 @@ b/267953710 GALAXYS22 VULKAN : dEQP-GLES31.functional.shaders.multisample_interp
 b/267953710 GALAXYS22 VULKAN : dEQP-GLES31.functional.shaders.sample_variables.sample_id.default_framebuffer = SKIP
 b/267953710 GALAXYS22 VULKAN : dEQP-GLES31.functional.shaders.sample_variables.sample_mask_in.bit_count_per_sample.default_framebuffer = SKIP
 b/267953710 GALAXYS22 VULKAN : dEQP-GLES31.functional.shaders.sample_variables.sample_mask_in.bit_count_per_two_samples.default_framebuffer = SKIP
+
+// Samsung Galaxy S24 (Xclipse)
+b/410630704 GALAXYS24EXYNOS VULKAN : dEQP-GLES31.functional.sample_shading.min_sample_shading.default_framebuffer_color = SKIP
+b/410630704 GALAXYS24EXYNOS VULKAN : dEQP-GLES31.functional.sample_shading.min_sample_shading.default_framebuffer_discard = SKIP
+b/410630704 GALAXYS24EXYNOS VULKAN : dEQP-GLES31.functional.shaders.multisample_interpolation.sample_qualifier.default_framebuffer = SKIP
+b/410630704 GALAXYS24EXYNOS VULKAN : dEQP-GLES31.functional.shaders.sample_variables.sample_id.default_framebuffer = SKIP
+b/410630704 GALAXYS24EXYNOS VULKAN : dEQP-GLES31.functional.shaders.sample_variables.sample_mask_in.bit_count_per_sample.default_framebuffer = SKIP
+b/410630704 GALAXYS24EXYNOS VULKAN : dEQP-GLES31.functional.shaders.sample_variables.sample_mask_in.bit_count_per_two_samples.default_framebuffer = SKIP
