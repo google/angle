@@ -128,9 +128,11 @@ TextureState::TextureState(TextureType type)
       mMaxLevel(kInitialMaxLevel),
       mDepthStencilTextureMode(GL_DEPTH_COMPONENT),
       mIsInternalIncompleteTexture(false),
+      mIsExternalMemoryTexture(false),
       mHasBeenBoundAsImage(false),
       mHasBeenBoundAsAttachment(false),
       mHasBeenBoundToMSRTTFramebuffer(false),
+      mHasBeenBoundAsSourceOfEglImage(false),
       mImmutableFormat(false),
       mImmutableLevels(0),
       mUsage(GL_NONE),
@@ -1817,6 +1819,7 @@ angle::Result Texture::setStorageExternalMemory(Context *context,
                                                  memoryObject, offset, createFlags, usageFlags,
                                                  imageCreateInfoPNext));
 
+    mState.mIsExternalMemoryTexture = true;
     mState.mImmutableFormat = true;
     mState.mImmutableLevels = static_cast<GLuint>(levels);
     mState.clearImageDescs();
@@ -2735,6 +2738,11 @@ void Texture::onBindAsImageTexture()
         mDirtyBits.set(DIRTY_BIT_BOUND_AS_IMAGE);
         mState.mHasBeenBoundAsImage = true;
     }
+}
+
+void Texture::onBindAsEglImageSource()
+{
+    mState.mHasBeenBoundAsSourceOfEglImage = true;
 }
 
 }  // namespace gl

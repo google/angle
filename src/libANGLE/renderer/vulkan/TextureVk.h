@@ -422,6 +422,12 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                                 const vk::Format &format,
                                 const gl::Extents &size);
 
+    // If an image is in use by the GPU but is overwritten completely, a new VkImage can be created
+    // instead to avoid creating an unnecessary dependency.
+    angle::Result ghostOnOverwrite(ContextVk *contextVk,
+                                   const gl::ImageIndex &index,
+                                   const gl::Box &area);
+
     angle::Result setImageImpl(const gl::Context *context,
                                const gl::ImageIndex &index,
                                const gl::InternalFormat &formatInfo,

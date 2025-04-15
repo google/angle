@@ -1506,7 +1506,10 @@ Error Display::createImage(const gl::Context *context,
     egl::ImageSibling *sibling = nullptr;
     if (IsTextureTarget(target))
     {
-        sibling = context->getTexture({egl_gl::EGLClientBufferToGLObjectHandle(buffer)});
+        gl::Texture *texture =
+            context->getTexture({egl_gl::EGLClientBufferToGLObjectHandle(buffer)});
+        texture->onBindAsEglImageSource();
+        sibling = texture;
     }
     else if (IsRenderbufferTarget(target))
     {

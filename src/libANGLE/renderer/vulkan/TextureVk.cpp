@@ -1119,6 +1119,78 @@ angle::Result TextureVk::ensureImageInitializedIfUpdatesNeedStageOrFlush(
     return angle::Result::Continue;
 }
 
+angle::Result TextureVk::ghostOnOverwrite(ContextVk *contextVk,
+                                          const gl::ImageIndex &index,
+                                          const gl::Box &area)
+{
+    // If the texture's image is in use by the GPU but is overwritten completely, release the old
+    // image and create a fresh one.  If the texture was used in a render pass, this avoids breaking
+    // the render pass.  Otherwise, it allows the new image to be initialized with
+    // VK_EXT_host_image_copy functionality.  In the very least, an unnecessary ?->Transfer barrier
+    // is avoided.
+
+    // Can't ghost the image if it's not owned by this texture.  For simplicity, also don't ghost
+    // images if it's the target of an EGL image; this avoids the need to have to get the image
+    // siblings to sync their ImageHelper pointers (http://anglebug.com/410584007).  This limitation
+    // can likely be more easily lifted once http://anglebug.com/352005188 is implemented.
+    //
+    // If the allocateNonZeroMemory feature is enabled, the image's memory is going to be
+    // initialized which puts the image back in GPU use so there's no point in ghosting the image
+    // either.
+    vk::Renderer *renderer = contextVk->getRenderer();
+    if (!mOwnsImage || mImage == nullptr || !mImage->valid() || mImage->isForeignImage() ||
+        mState.hasBeenBoundAsSourceOfEglImage() || mState.isExternalMemoryTexture() ||
+        renderer->getFeatures().allocateNonZeroMemory.enabled)
+    {
+        return angle::Result::Continue;
+    }
+
+    // Only ghost the image if it's in use by the GPU.
+    if (renderer->hasResourceUseFinished(mImage->getResourceUse()))
+    {
+        return angle::Result::Continue;
+    }
+
+    // Size check: Can only ghost the image if the area being overwritten covers the entire image.
+    //
+    // As a targeted optimization, only limit to non-array 2D color textures.  Other texture types
+    // can be very easily added if need, but need additional tests similar to those that have landed
+    // in http://anglebug.com/42265356 for 2D textures.
+    const gl::LevelIndex overwriteLevel = gl::LevelIndex(index.getLevelIndex());
+    const gl::LevelIndex imageLevel     = mImage->getFirstAllocatedLevel();
+
+    const bool is2DImage = mImage->getLevelCount() == 1 && mImage->getLayerCount() == 1 &&
+                           mImage->getType() == VK_IMAGE_TYPE_2D;
+    const bool is2DUpdate  = mState.getType() == gl::TextureType::_2D && index.getLayerCount() == 1;
+    const bool isWholeArea = area.x == 0 && area.y == 0 && area.z == 0 &&
+                             mImage->getExtents().width == static_cast<uint32_t>(area.width) &&
+                             mImage->getExtents().height == static_cast<uint32_t>(area.height) &&
+                             mImage->getExtents().depth == static_cast<uint32_t>(area.depth);
+    const bool isColor = mImage->getAspectFlags() == VK_IMAGE_ASPECT_COLOR_BIT;
+
+    if (!is2DImage || !is2DUpdate || overwriteLevel != imageLevel || !isWholeArea || !isColor)
+    {
+        return angle::Result::Continue;
+    }
+
+    const vk::Format &format = getBaseLevelFormat(renderer);
+
+    // Since the entire image is being overwritten, there's no reason to keep the previous contents
+    // of the image around.  Just start over with a completely new image; data is about to be
+    // uploaded to it.
+    releaseImage(contextVk);
+    ANGLE_TRY(ensureImageAllocated(contextVk, format));
+    ANGLE_TRY(initImage(contextVk, format.getIntendedFormatID(),
+                        format.getActualImageFormatID(getRequiredImageAccess()),
+                        ImageMipLevels::EnabledLevels));
+
+    // The new image is now ready to be used with no dependency to the texture's previous use.  Note
+    // that |releaseimage| already includes a notification to observers that the image has changed.
+    ASSERT(renderer->hasResourceUseFinished(mImage->getResourceUse()));
+
+    return angle::Result::Continue;
+}
+
 angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
                                          const gl::ImageIndex &index,
                                          const gl::Box &area,
@@ -1130,6 +1202,8 @@ angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
                                          const vk::Format &vkFormat)
 {
     ContextVk *contextVk = vk::GetImpl(context);
+
+    ANGLE_TRY(ghostOnOverwrite(contextVk, index, area));
 
     bool mustStage = updateMustBeStaged(gl::LevelIndex(index.getLevelIndex()),
                                         vkFormat.getActualImageFormatID(getRequiredImageAccess()));

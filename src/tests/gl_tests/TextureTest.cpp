@@ -8296,8 +8296,8 @@ TEST_P(Texture2DTestES3, TextureRGBUpdateWithPBO)
     glViewport(0, 0, 16, 16);
 
     GLTexture tex1;
-    std::vector<GLColor> texDataRed(16u * 16u, GLColor::red);
-    std::vector<GLColor> texDataGreen(16u * 16u, GLColor::green);
+    const std::vector<GLColor> texDataRed(16u * 16u, GLColor::red);
+    const std::vector<GLColor> texDataGreen(16u * 16u, GLColor::green);
 
     glBindTexture(GL_TEXTURE_2D, tex1);
     glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB8, 16, 16);
@@ -8332,8 +8332,8 @@ TEST_P(Texture2DTestES3, RenderToTextureThenFullUpdateAndGenerateMipmap)
     GLSampler sampler;
     GLTexture tex1;
     GLTexture tex2;
-    std::vector<GLColor> texDataBlue(kWidth * kHeight, GLColor::blue);
-    std::vector<GLColor> texDataGreen(kWidth * kHeight, GLColor::green);
+    const std::vector<GLColor> texDataBlue(kWidth * kHeight, GLColor::blue);
+    const std::vector<GLColor> texDataGreen(kWidth * kHeight, GLColor::green);
 
     glBindTexture(GL_TEXTURE_2D, tex1);
     glTexStorage2D(GL_TEXTURE_2D, 2, GL_RGBA8, kWidth, kHeight);
@@ -8509,6 +8509,48 @@ TEST_P(Texture2DTestES3, SampleThenUpdateBaseLevelAndGenerateMipmapInLoop)
     EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, updateColor3[0]);
 }
 
+// Test sampling from a texture with base level 1, then add level 0 with same size as level 1, and
+// sample again.  The contents of level 1 shouldn't be discarded.
+TEST_P(Texture2DTestES3, SampleThenAddLevel0ThenSampleAgain)
+{
+    constexpr uint32_t kWidth  = 16;
+    constexpr uint32_t kHeight = 24;
+
+    ANGLE_GL_PROGRAM(program, getVertexShaderSource(), getExpensiveFragmentShaderSource());
+
+    glViewport(0, 0, kWidth, kHeight);
+
+    GLTexture tex;
+    const std::vector<GLColor> texDataBlue(kWidth * kHeight, GLColor::blue);
+    const std::vector<GLColor> texDataGreen(kWidth * kHeight, GLColor::green);
+
+    // Use an expensive draw call to sample from tex.  Then add level 0 to it with the same size and
+    // sample again.  In the Vulkan backend, the backing image of the texture may be changed on
+    // write.  This test makes sure the backing image's level (0) is not mistaken with the GL level
+    // being written (also 0), in which case the contents of the image would be lost.
+
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 texDataBlue.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+    ASSERT_GL_NO_ERROR();
+
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(0, 0, kWidth / 2, kHeight);
+    drawQuad(program, "position", 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 texDataGreen.data());
+
+    glScissor(kWidth / 2, 0, kWidth - kWidth / 2, kHeight);
+    drawQuad(program, "position", 0.0f);
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::blue);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test glGenerateMipmap followed by sample (of a non-base level) in a draw call, then a full update
 // of the base level of the image and sample the same level again.
 TEST_P(Texture2DTestES3, GenerateMipmapThenSampleThenFullUpdateThenSampleAgain)
@@ -8521,8 +8563,8 @@ TEST_P(Texture2DTestES3, GenerateMipmapThenSampleThenFullUpdateThenSampleAgain)
     glViewport(0, 0, kWidth, kHeight);
 
     GLTexture tex;
-    std::vector<GLColor> texDataRed(kWidth * kHeight, GLColor::red);
-    std::vector<GLColor> texDataGreen(kWidth * kHeight, GLColor::green);
+    const std::vector<GLColor> texDataRed(kWidth * kHeight, GLColor::red);
+    const std::vector<GLColor> texDataGreen(kWidth * kHeight, GLColor::green);
     GLSampler sampler;
     glBindSampler(0, sampler);
     glSamplerParameteri(sampler, GL_TEXTURE_MIN_LOD, 1);
@@ -8559,12 +8601,16 @@ TEST_P(Texture2DTestES3, SampleThenFullUpdateThenSampleAgain)
     glViewport(0, 0, kWidth, kHeight);
 
     GLTexture tex;
-    std::vector<GLColor> texDataRed(kWidth * kHeight, GLColor::red);
-    std::vector<GLColor> texDataGreen(kWidth * kHeight, GLColor::green);
+    const std::vector<GLColor> texDataRed(kWidth * kHeight, GLColor::red);
+    const std::vector<GLColor> texDataGreen(kWidth * kHeight, GLColor::green);
+    const std::vector<GLColor> texDataBlue(kWidth * kHeight, GLColor::blue);
 
     glBindTexture(GL_TEXTURE_2D, tex);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                  texDataRed.data());
+    // Include an unused level in the texture
+    glTexImage2D(GL_TEXTURE_2D, 7, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 texDataBlue.data());
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
     drawQuad(program, "position", 0.0f);
@@ -8575,6 +8621,13 @@ TEST_P(Texture2DTestES3, SampleThenFullUpdateThenSampleAgain)
     drawQuad(program, "position", 0.0f);
 
     EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::green);
+    ASSERT_GL_NO_ERROR();
+
+    // Ensure the unused level is not lost.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 7);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 7);
+    drawQuad(program, "position", 0.0f);
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::blue);
     ASSERT_GL_NO_ERROR();
 }
 
@@ -8592,8 +8645,8 @@ TEST_P(Texture2DTestES3, SampleThenFullUpdateThenSampleAgainLUMA)
 
     GLTexture tex;
     // For simplicity, one GLColor is used for two LUMA pixel values.
-    std::vector<GLColor> texData1(kWidth * kHeight / 2, GLColor(127, 63, 127, 63));
-    std::vector<GLColor> texData2(kWidth * kHeight / 2, GLColor(191, 31, 191, 31));
+    const std::vector<GLColor> texData1(kWidth * kHeight / 2, GLColor(127, 63, 127, 63));
+    const std::vector<GLColor> texData2(kWidth * kHeight / 2, GLColor(191, 31, 191, 31));
 
     glBindTexture(GL_TEXTURE_2D, tex);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE_ALPHA, kWidth, kHeight, 0, GL_LUMINANCE_ALPHA,
@@ -8658,6 +8711,63 @@ TEST_P(Texture2DTestES3, SampleThenFullUpdateThenSampleAgainCompressed)
     EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(0x1F, 0x5F, 0xEF, 0xFF), 1);
     EXPECT_PIXEL_COLOR_NEAR(kWidth - 1, kHeight - 1, GLColor(0x1F, 0x5F, 0xEF, 0xFF), 1);
     ASSERT_GL_NO_ERROR();
+}
+
+// Test completely overwriting a texture with a data upload while the texture is being sampled from
+// by the GPU.
+// Tests uses a depth/stencil format.
+TEST_P(Texture2DTestES3, SampleThenFullUpdateThenSampleAgainDepthStencil)
+{
+    constexpr uint32_t kWidth  = 16;
+    constexpr uint32_t kHeight = 24;
+
+    ANGLE_GL_PROGRAM(program, getVertexShaderSource(), getExpensiveFragmentShaderSource());
+
+    glViewport(0, 0, kWidth, kHeight);
+
+    GLTexture tex;
+    const std::vector<GLuint> originalData(kWidth * kHeight, 0x800000'C0);
+    const std::vector<GLuint> updateData(kWidth * kHeight, 0x400000'0A);
+
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, kWidth, kHeight, 0, GL_DEPTH_STENCIL,
+                 GL_UNSIGNED_INT_24_8, originalData.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+    drawQuad(program, "position", 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8,
+                    updateData.data());
+    drawQuad(program, "position", 0.0f);
+
+    // Verify that depth is correct after update.
+    EXPECT_NEAR(63, angle::ReadColor(0, 0).R, 1);
+    EXPECT_NEAR(63, angle::ReadColor(kWidth - 1, kHeight - 1).R, 1);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that stencil is correct as well.
+    if (IsGLExtensionEnabled("GL_ANGLE_stencil_texturing"))
+    {
+        constexpr char kStencilFS[] = R"(#version 300 es
+precision mediump float;
+uniform highp usampler2D tex;
+out vec4 color;
+void main()
+{
+    color = vec4(texelFetch(tex, ivec2(0, 0), 0)) / 255.0;
+})";
+
+        ANGLE_GL_PROGRAM(stencilProgram, getVertexShaderSource(), kStencilFS);
+        glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_STENCIL_TEXTURE_MODE_ANGLE, GL_STENCIL_INDEX);
+        drawQuad(stencilProgram, "position", 0.0f);
+
+        EXPECT_NEAR(10, angle::ReadColor(0, 0).R, 1);
+        EXPECT_NEAR(10, angle::ReadColor(kWidth - 1, kHeight - 1).R, 1);
+        ASSERT_GL_NO_ERROR();
+    }
 }
 
 // Copied from Texture2DTest::TexStorage

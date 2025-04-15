@@ -147,9 +147,11 @@ class TextureState final : private angle::NonCopyable
     bool renderabilityValidation() const { return mRenderabilityValidation; }
     GLenum getDepthStencilTextureMode() const { return mDepthStencilTextureMode; }
 
+    bool isExternalMemoryTexture() const { return mIsExternalMemoryTexture; }
     bool hasBeenBoundAsImage() const { return mHasBeenBoundAsImage; }
     bool hasBeenBoundAsAttachment() const { return mHasBeenBoundAsAttachment; }
     bool hasBeenBoundToMSRTTFramebuffer() const { return mHasBeenBoundToMSRTTFramebuffer; }
+    bool hasBeenBoundAsSourceOfEglImage() const { return mHasBeenBoundAsSourceOfEglImage; }
 
     gl::SrgbOverride getSRGBOverride() const { return mSrgbOverride; }
 
@@ -244,9 +246,14 @@ class TextureState final : private angle::NonCopyable
     // overhead of tail-call checks to draw calls.
     bool mIsInternalIncompleteTexture;
 
+    // Whether this is an external memory texture created via EXT_external_objects or
+    // ANGLE_external_objects_flags.
+    bool mIsExternalMemoryTexture;
+
     bool mHasBeenBoundAsImage;
     bool mHasBeenBoundAsAttachment;
     bool mHasBeenBoundToMSRTTFramebuffer;
+    bool mHasBeenBoundAsSourceOfEglImage;
 
     bool mImmutableFormat;
     GLuint mImmutableLevels;
@@ -608,6 +615,7 @@ class Texture final : public RefCountObject<TextureID>,
                                 const uint8_t *data);
 
     void onBindAsImageTexture();
+    void onBindAsEglImageSource();
 
     egl::Surface *getBoundSurface() const;
     egl::Stream *getBoundStream() const;

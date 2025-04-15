@@ -8367,6 +8367,48 @@ TEST_P(VulkanPerformanceCounterTest_Prerotation, swapchainCreateCounterTest)
     EXPECT_EQ(getPerfCounters().swapchainCreate, expectedSwapchainCreateCounter);
 }
 
+// Test that fully overwriting a sampled texture does not close the render pass due to texture
+// ghosting.
+TEST_P(VulkanPerformanceCounterTest, TextureOverwriteDoesNotBreakRenderPass)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled(kPerfMonitorExtensionName));
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
+    glUseProgram(program);
+    GLint textureLoc = glGetUniformLocation(program, essl1_shaders::Texture2DUniform());
+    ASSERT_NE(-1, textureLoc);
+
+    constexpr uint32_t kWidth  = 16;
+    constexpr uint32_t kHeight = 24;
+
+    const std::vector<GLColor> texDataRed(kWidth * kHeight, GLColor::red);
+    const std::vector<GLColor> texDataGreen(kWidth * kHeight, GLColor::green);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 texDataRed.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+
+    uint64_t expectedRenderPassCount = getPerfCounters().renderPasses + 1;
+
+    // Draw multiple times, completely overwriting the texture each time.
+    for (uint32_t i = 0; i < 10; ++i)
+    {
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE,
+                        i % 2 == 0 ? texDataGreen.data() : texDataRed.data());
+        drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    }
+
+    // There should be only one render pass.
+    uint64_t actualRenderPassCount = getPerfCounters().renderPasses;
+    EXPECT_EQ(expectedRenderPassCount, actualRenderPassCount);
+
+    // For completeness, verify rendering results.
+    EXPECT_PIXEL_RECT_EQ(0, 0, getWindowWidth(), getWindowHeight(), GLColor::red);
+}
+
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(VulkanPerformanceCounterTest);
 ANGLE_INSTANTIATE_TEST(
     VulkanPerformanceCounterTest,
