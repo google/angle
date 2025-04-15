@@ -385,7 +385,8 @@ def angle_builder(name, cpu):
         )
 
         # Don't add experimental bots to CQ.
-        if not is_exp:
+        # Also exclude mac-arm64-test for now anglebug.com/42266214
+        if not is_exp and not name == "mac-arm64-test":
             luci.cq_tryjob_verifier(
                 cq_group = "main",
                 builder = "angle:try/" + name,
@@ -538,6 +539,7 @@ angle_builder("linux-tsan-test", cpu = "x64")
 angle_builder("linux-dbg-compile", cpu = "x64")
 angle_builder("linux-test", cpu = "x64")
 angle_builder("mac-dbg-compile", cpu = "x64")
+angle_builder("mac-arm64-test", cpu = "arm64")
 angle_builder("mac-exp-test", cpu = "x64")
 angle_builder("mac-test", cpu = "x64")
 angle_builder("win-asan-test", cpu = "x64")

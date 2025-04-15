@@ -6692,6 +6692,7 @@
       }
     ]
   },
+  "mac-arm64-apple": {},
   "mac-exp-amd": {
     "gtest_tests": [
       {
