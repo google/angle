@@ -324,7 +324,7 @@ def get_test_time():
             break
 
     if measured_time is None:
-        if '[  PASSED  ]' in result.stdout:
+        if '[  PASSED  ]' in result:
             measured_time = 'missing'
         else:
             measured_time = 'crashed'
@@ -593,6 +593,7 @@ def get_thermal_info():
     out = run_adb_shell_command('dumpsys android.hardware.thermal.IThermal/default')
     result = []
     for line in out.splitlines():
+        logging.debug('Checking line in get_thermal_info: %a', line)
         if 'ThrottlingStatus:' in line:
             name = re.search('Name: ([^ ]*)', line).group(1)
             if ('VIRTUAL-SKIN' in name and
