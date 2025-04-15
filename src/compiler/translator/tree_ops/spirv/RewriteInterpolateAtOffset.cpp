@@ -26,7 +26,7 @@ namespace
 class Traverser : public TIntermTraverser
 {
   public:
-    Traverser(TSymbolTable *symbolTable, SpecConst *specConst, const DriverUniform *driverUniforms);
+    Traverser(TSymbolTable *symbolTable, const DriverUniform *driverUniforms);
 
     bool update(TCompiler *compiler, TIntermBlock *root);
 
@@ -35,17 +35,14 @@ class Traverser : public TIntermTraverser
 
     const TFunction *getRotateFunc();
 
-    SpecConst *mSpecConst                = nullptr;
     const DriverUniform *mDriverUniforms = nullptr;
 
     TIntermFunctionDefinition *mRotateFunc = nullptr;
 };
 
 Traverser::Traverser(TSymbolTable *symbolTable,
-                     SpecConst *specConst,
                      const DriverUniform *driverUniforms)
     : TIntermTraverser(true, false, false, symbolTable),
-      mSpecConst(specConst),
       mDriverUniforms(driverUniforms)
 {}
 
@@ -122,12 +119,7 @@ const TFunction *Traverser::getRotateFunc()
     //
     //     return (swap ? offset.yx : offset) * flip;
 
-    TIntermTyped *swapXY = mSpecConst->getSwapXY();
-    if (swapXY == nullptr)
-    {
-        swapXY = mDriverUniforms->getSwapXY();
-    }
-
+    TIntermTyped *swapXY = mDriverUniforms->getSwapXY();
     TIntermTyped *flipXY = mDriverUniforms->getFlipXY(mSymbolTable, DriverUniformFlip::Fragment);
 
     TIntermSwizzle *offsetYX = new TIntermSwizzle(new TIntermSymbol(offsetParam), {1, 0});
@@ -149,7 +141,6 @@ bool RewriteInterpolateAtOffset(TCompiler *compiler,
                                 TIntermBlock *root,
                                 TSymbolTable *symbolTable,
                                 int shaderVersion,
-                                SpecConst *specConst,
                                 const DriverUniform *driverUniforms)
 {
     // interpolateAtOffset is only valid in GLSL 3.0 and later.
@@ -158,7 +149,7 @@ bool RewriteInterpolateAtOffset(TCompiler *compiler,
         return true;
     }
 
-    Traverser traverser(symbolTable, specConst, driverUniforms);
+    Traverser traverser(symbolTable, driverUniforms);
     root->traverse(&traverser);
     return traverser.update(compiler, root);
 }

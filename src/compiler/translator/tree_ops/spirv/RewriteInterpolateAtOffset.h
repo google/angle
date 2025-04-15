@@ -23,7 +23,6 @@ namespace sh
 class TCompiler;
 class TIntermBlock;
 class TSymbolTable;
-class SpecConst;
 class DriverUniform;
 
 // If fragRotation = nullptr, no rotation will be applied.
@@ -31,7 +30,6 @@ class DriverUniform;
                                               TIntermBlock *root,
                                               TSymbolTable *symbolTable,
                                               int shaderVersion,
-                                              SpecConst *specConst,
                                               const DriverUniform *driverUniforms);
 
 }  // namespace sh

@@ -232,10 +232,7 @@ vk::SpecializationConstants MakeSpecConsts(ProgramTransformOptions transformOpti
                                            const vk::GraphicsPipelineDesc &desc)
 {
     vk::SpecializationConstants specConsts;
-
-    specConsts.surfaceRotation = transformOptions.surfaceRotation;
     specConsts.dither          = desc.getEmulatedDitherControl();
-
     return specConsts;
 }
 
@@ -467,13 +464,11 @@ class ProgramExecutableVk::WarmUpGraphicsTask : public WarmUpTaskCommon
                        vk::PipelineRobustness pipelineRobustness,
                        vk::PipelineProtectedAccess pipelineProtectedAccess,
                        vk::GraphicsPipelineSubset subset,
-                       const bool isSurfaceRotated,
                        const vk::GraphicsPipelineDesc &graphicsPipelineDesc,
                        SharedRenderPass *compatibleRenderPass,
                        vk::PipelineHelper *placeholderPipelineHelper)
         : WarmUpTaskCommon(renderer, executableVk, pipelineRobustness, pipelineProtectedAccess),
           mPipelineSubset(subset),
-          mIsSurfaceRotated(isSurfaceRotated),
           mGraphicsPipelineDesc(graphicsPipelineDesc),
           mWarmUpPipelineHelper(placeholderPipelineHelper),
           mCompatibleRenderPass(compatibleRenderPass)
@@ -486,7 +481,7 @@ class ProgramExecutableVk::WarmUpGraphicsTask : public WarmUpTaskCommon
     void operator()() override
     {
         angle::Result result = mExecutableVk->warmUpGraphicsPipelineCache(
-            this, mPipelineRobustness, mPipelineProtectedAccess, mPipelineSubset, mIsSurfaceRotated,
+            this, mPipelineRobustness, mPipelineProtectedAccess, mPipelineSubset,
             mGraphicsPipelineDesc, mCompatibleRenderPass->get(), mWarmUpPipelineHelper);
         ASSERT((result == angle::Result::Continue) == (mErrorCode == VK_SUCCESS));
 
@@ -508,7 +503,6 @@ class ProgramExecutableVk::WarmUpGraphicsTask : public WarmUpTaskCommon
 
   private:
     vk::GraphicsPipelineSubset mPipelineSubset;
-    bool mIsSurfaceRotated;
     vk::GraphicsPipelineDesc mGraphicsPipelineDesc;
     vk::PipelineHelper *mWarmUpPipelineHelper;
 
@@ -883,14 +877,13 @@ angle::Result ProgramExecutableVk::getPipelineCacheWarmUpTasks(
     const vk::GraphicsPipelineSubset subset = GetWarmUpSubset(renderer->getFeatures());
 
     bool isCompute                                        = false;
-    angle::FixedVector<bool, 2> surfaceRotationVariations = {false};
     vk::GraphicsPipelineDesc *graphicsPipelineDesc        = nullptr;
     vk::RenderPass compatibleRenderPass;
 
     WarmUpTaskCommon prepForWarmUpContext(renderer);
-    ANGLE_TRY(prepareForWarmUpPipelineCache(
-        &prepForWarmUpContext, pipelineRobustness, pipelineProtectedAccess, subset, &isCompute,
-        &surfaceRotationVariations, &graphicsPipelineDesc, &compatibleRenderPass));
+    ANGLE_TRY(prepareForWarmUpPipelineCache(&prepForWarmUpContext, pipelineRobustness,
+                                            pipelineProtectedAccess, subset, &isCompute,
+                                            &graphicsPipelineDesc, &compatibleRenderPass));
 
     std::vector<std::shared_ptr<rx::LinkSubTask>> warmUpSubTasks;
     if (isCompute)
@@ -904,28 +897,25 @@ angle::Result ProgramExecutableVk::getPipelineCacheWarmUpTasks(
     {
         ProgramTransformOptions transformOptions = {};
         SharedRenderPass *sharedRenderPass = new SharedRenderPass(std::move(compatibleRenderPass));
-        for (bool surfaceRotation : surfaceRotationVariations)
-        {
-            // Add a placeholder entry in GraphicsPipelineCache
-            transformOptions.surfaceRotation   = surfaceRotation;
-            const uint8_t programIndex         = transformOptions.permutationIndex;
-            vk::PipelineHelper *pipelineHelper = nullptr;
-            if (subset == vk::GraphicsPipelineSubset::Complete)
-            {
-                CompleteGraphicsPipelineCache &pipelines = mCompleteGraphicsPipelines[programIndex];
-                pipelines.populate(mWarmUpGraphicsPipelineDesc, vk::Pipeline(), &pipelineHelper);
-            }
-            else
-            {
-                ASSERT(subset == vk::GraphicsPipelineSubset::Shaders);
-                ShadersGraphicsPipelineCache &pipelines = mShadersGraphicsPipelines[programIndex];
-                pipelines.populate(mWarmUpGraphicsPipelineDesc, vk::Pipeline(), &pipelineHelper);
-            }
 
-            warmUpSubTasks.push_back(std::make_shared<WarmUpGraphicsTask>(
-                renderer, this, pipelineRobustness, pipelineProtectedAccess, subset,
-                surfaceRotation, *graphicsPipelineDesc, sharedRenderPass, pipelineHelper));
+        // Add a placeholder entry in GraphicsPipelineCache
+        const uint8_t programIndex         = transformOptions.permutationIndex;
+        vk::PipelineHelper *pipelineHelper = nullptr;
+        if (subset == vk::GraphicsPipelineSubset::Complete)
+        {
+            CompleteGraphicsPipelineCache &pipelines = mCompleteGraphicsPipelines[programIndex];
+            pipelines.populate(mWarmUpGraphicsPipelineDesc, vk::Pipeline(), &pipelineHelper);
         }
+        else
+        {
+            ASSERT(subset == vk::GraphicsPipelineSubset::Shaders);
+            ShadersGraphicsPipelineCache &pipelines = mShadersGraphicsPipelines[programIndex];
+            pipelines.populate(mWarmUpGraphicsPipelineDesc, vk::Pipeline(), &pipelineHelper);
+        }
+
+        warmUpSubTasks.push_back(std::make_shared<WarmUpGraphicsTask>(
+            renderer, this, pipelineRobustness, pipelineProtectedAccess, subset,
+            *graphicsPipelineDesc, sharedRenderPass, pipelineHelper));
     }
 
     // If the caller hasn't provided a valid async task container, inline the warmUp tasks.
@@ -953,12 +943,10 @@ angle::Result ProgramExecutableVk::prepareForWarmUpPipelineCache(
     vk::PipelineProtectedAccess pipelineProtectedAccess,
     vk::GraphicsPipelineSubset subset,
     bool *isComputeOut,
-    angle::FixedVector<bool, 2> *surfaceRotationVariationsOut,
     vk::GraphicsPipelineDesc **graphicsPipelineDescOut,
     vk::RenderPass *renderPassOut)
 {
     ASSERT(isComputeOut);
-    ASSERT(surfaceRotationVariationsOut);
     ASSERT(graphicsPipelineDescOut);
     ASSERT(renderPassOut);
     ASSERT(context->getFeatures().warmUpPipelineCacheAtLink.enabled);
@@ -1002,31 +990,12 @@ angle::Result ProgramExecutableVk::prepareForWarmUpPipelineCache(
 
     *graphicsPipelineDescOut = &mWarmUpGraphicsPipelineDesc;
 
-    // Variations that definitely matter:
-    //
-    // - PreRotation: It's a boolean specialization constant
-    // - Depth correction: It's a SPIR-V transformation
-    //
     // There are a number of states that are not currently dynamic (and may never be, such as sample
     // shading), but pre-creating shaders for them is impractical.  Most such state is likely unused
     // by most applications, but variations can be added here for certain apps that are known to
     // benefit from it.
-    *surfaceRotationVariationsOut = {false};
-    if (context->getFeatures().warmUpPreRotatePipelineVariations.enabled)
-    {
-        ASSERT(!context->getFeatures().preferDriverUniformOverSpecConst.enabled);
-        surfaceRotationVariationsOut->push_back(true);
-    }
-
     ProgramTransformOptions transformOptions = {};
-    for (bool rotation : *surfaceRotationVariationsOut)
-    {
-        // Initialize graphics programs.
-        transformOptions.surfaceRotation = rotation;
-        ANGLE_TRY(initGraphicsShaderPrograms(context, transformOptions));
-    }
-
-    return angle::Result::Continue;
+    return initGraphicsShaderPrograms(context, transformOptions);
 }
 
 angle::Result ProgramExecutableVk::warmUpComputePipelineCache(
@@ -1061,7 +1030,6 @@ angle::Result ProgramExecutableVk::warmUpGraphicsPipelineCache(
     vk::PipelineRobustness pipelineRobustness,
     vk::PipelineProtectedAccess pipelineProtectedAccess,
     vk::GraphicsPipelineSubset subset,
-    const bool isSurfaceRotated,
     const vk::GraphicsPipelineDesc &graphicsPipelineDesc,
     const vk::RenderPass &renderPass,
     vk::PipelineHelper *placeholderPipelineHelper)
@@ -1076,7 +1044,6 @@ angle::Result ProgramExecutableVk::warmUpGraphicsPipelineCache(
 
     const vk::GraphicsPipelineDesc *descPtr  = nullptr;
     ProgramTransformOptions transformOptions = {};
-    transformOptions.surfaceRotation         = isSurfaceRotated;
 
     ANGLE_TRY(createGraphicsPipelineImpl(context, transformOptions, subset, &pipelineCache,
                                          PipelineSource::WarmUp, graphicsPipelineDesc, renderPass,
@@ -1455,7 +1422,6 @@ ProgramTransformOptions ProgramExecutableVk::getTransformOptions(
 {
     ProgramTransformOptions transformOptions = {};
 
-    transformOptions.surfaceRotation = desc.getSurfaceRotation();
     transformOptions.removeTransformFeedbackEmulation =
         contextVk->getFeatures().emulateTransformFeedback.enabled &&
         !contextVk->getState().isTransformFeedbackActiveUnpaused();

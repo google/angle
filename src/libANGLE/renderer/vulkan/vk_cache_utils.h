@@ -598,13 +598,12 @@ struct PackedPreRasterizationAndFragmentStates final
         // Dynamic in VK_EXT_extended_dynamic_state2
         uint32_t depthCompareOp : 4;
 
-        // Affecting specialization constants
-        uint32_t surfaceRotation : 1;
-
         // Whether the pipeline is robust (shader stages copy)
         uint32_t isRobustContext : 1;
         // Whether the pipeline needs access to protected content (shader stages copy)
         uint32_t isProtectedContext : 1;
+
+        uint32_t padding : 1;
     } bits;
 
     // Affecting specialization constants
@@ -1087,10 +1086,6 @@ class GraphicsPipelineDesc final
     void nextSubpass(GraphicsPipelineTransitionBits *transition);
     void setSubpass(uint32_t subpass);
     uint32_t getSubpass() const;
-
-    void updateSurfaceRotation(GraphicsPipelineTransitionBits *transition,
-                               bool isRotatedAspectRatio);
-    bool getSurfaceRotation() const { return mShaders.shaders.bits.surfaceRotation; }
 
     void updateEmulatedDitherControl(GraphicsPipelineTransitionBits *transition, uint16_t value);
     uint32_t getEmulatedDitherControl() const { return mShaders.shaders.emulatedDitherControl; }

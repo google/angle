@@ -115,8 +115,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
     }
     if (!IsOutputSPIRV(shaderOutput))
     {
-        hasUnsupportedOptions = hasUnsupportedOptions || options.useSpecializationConstant ||
-                                options.addVulkanXfbEmulationSupportCode ||
+        hasUnsupportedOptions = hasUnsupportedOptions || options.addVulkanXfbEmulationSupportCode ||
                                 options.roundOutputAfterDithering ||
                                 options.addAdvancedBlendEquationsEmulation;
     }

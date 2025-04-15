@@ -17,14 +17,12 @@ namespace sh
 class TCompiler;
 class TIntermBlock;
 class TSymbolTable;
-class SpecConst;
 class DriverUniform;
 
 [[nodiscard]] bool RewriteDfdy(TCompiler *compiler,
                                TIntermBlock *root,
                                TSymbolTable *symbolTable,
                                int shaderVersion,
-                               SpecConst *specConst,
                                const DriverUniform *driverUniforms);
 
 }  // namespace sh

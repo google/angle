@@ -1270,8 +1270,7 @@ bool TranslatorMSL::translateImpl(TInfoSinkBase &sink,
             DeclareRightBeforeMain(*root, *fragCoord);
         }
 
-        if (!RewriteDfdy(this, root, &getSymbolTable(), getShaderVersion(), specConst,
-                         driverUniforms))
+        if (!RewriteDfdy(this, root, &getSymbolTable(), getShaderVersion(), driverUniforms))
         {
             return false;
         }
@@ -1484,7 +1483,7 @@ bool TranslatorMSL::translate(TIntermBlock *root,
     mValidateASTOptions.validatePrecision = false;
 
     TInfoSinkBase &sink = getInfoSink().obj;
-    SpecConst specConst(&getSymbolTable(), compileOptions, getShaderType());
+    SpecConst specConst(&getSymbolTable(), getShaderType());
     DriverUniformMetal driverUniforms(DriverUniformMode::Structure);
     if (!translateImpl(sink, root, compileOptions, perfDiagnostics, &specConst, &driverUniforms))
     {

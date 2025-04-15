@@ -5351,23 +5351,6 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsShaderFloat64,
                             mPhysicalDeviceFeatures.shaderFloat64 == VK_TRUE);
 
-    // Prefer driver uniforms over specialization constants in the following:
-    //
-    // - Older Qualcomm drivers where specialization constants severely degrade the performance of
-    //   pipeline creation.  http://issuetracker.google.com/173636783
-    // - ARM hardware
-    // - Imagination hardware
-    // - Samsung hardware
-    // - SwiftShader
-    //
-    ANGLE_FEATURE_CONDITION(
-        &mFeatures, preferDriverUniformOverSpecConst,
-        (isQualcommProprietary && driverVersion < angle::VersionTriple(512, 513, 0)) || isARM ||
-            isPowerVR || isSamsung || isSwiftShader);
-
-    ANGLE_FEATURE_CONDITION(&mFeatures, warmUpPreRotatePipelineVariations,
-                            !mFeatures.preferDriverUniformOverSpecConst.enabled && IsAndroid());
-
     ANGLE_FEATURE_CONDITION(&mFeatures, preferCachedNoncoherentForDynamicStreamBufferUsage,
                             IsMeteorLake(mPhysicalDeviceProperties.deviceID));
 

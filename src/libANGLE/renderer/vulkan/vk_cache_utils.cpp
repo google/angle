@@ -1615,11 +1615,6 @@ void InitializeSpecializationInfo(
         (*specializationEntriesOut)[id].constantID = static_cast<uint32_t>(id);
         switch (id)
         {
-            case sh::vk::SpecializationConstantId::SurfaceRotation:
-                (*specializationEntriesOut)[id].offset =
-                    offsetof(SpecializationConstants, surfaceRotation);
-                (*specializationEntriesOut)[id].size = sizeof(specConsts.surfaceRotation);
-                break;
             case sh::vk::SpecializationConstantId::Dither:
                 (*specializationEntriesOut)[id].offset =
                     offsetof(vk::SpecializationConstants, dither);
@@ -1737,7 +1732,6 @@ enum class PipelineState
     PolygonMode,
     CullMode,
     FrontFace,
-    SurfaceRotation,
     ViewportNegativeOneToOne,
     SampleShadingEnable,
     RasterizationSamples,
@@ -1844,7 +1838,6 @@ using PipelineStateBitSet   = angle::BitSetArray<angle::EnumSize<PipelineState>(
         (*valuesOut)[PipelineState::DepthWrite]              = shaders.bits.depthWrite;
         (*valuesOut)[PipelineState::StencilTest]             = shaders.bits.stencilTest;
         (*valuesOut)[PipelineState::DepthCompareOp]          = shaders.bits.depthCompareOp;
-        (*valuesOut)[PipelineState::SurfaceRotation]         = shaders.bits.surfaceRotation;
         (*valuesOut)[PipelineState::EmulatedDitherControl]   = shaders.emulatedDitherControl;
         (*valuesOut)[PipelineState::StencilOpFailFront]      = shaders.front.fail;
         (*valuesOut)[PipelineState::StencilOpPassFront]      = shaders.front.pass;
@@ -2054,7 +2047,6 @@ PipelineState GetPipelineState(size_t stateIndex, bool *isRangedOut, size_t *sub
         {PipelineState::PolygonMode, "polygon_mode"},
         {PipelineState::CullMode, "cull_mode"},
         {PipelineState::FrontFace, "front_face"},
-        {PipelineState::SurfaceRotation, "rotated_surface"},
         {PipelineState::ViewportNegativeOneToOne, "viewport_depth_[-1,1]"},
         {PipelineState::SampleShadingEnable, "sample_shading"},
         {PipelineState::RasterizationSamples, "rasterization_samples"},
@@ -2112,7 +2104,6 @@ PipelineState GetPipelineState(size_t stateIndex, bool *isRangedOut, size_t *sub
         case PipelineState::RenderPassUnresolveDepth:
         case PipelineState::RenderPassUnresolveStencil:
         case PipelineState::PrimitiveRestartEnable:
-        case PipelineState::SurfaceRotation:
         case PipelineState::ViewportNegativeOneToOne:
         case PipelineState::SampleShadingEnable:
         case PipelineState::AlphaToCoverageEnable:
@@ -2503,7 +2494,6 @@ PipelineState GetPipelineState(size_t stateIndex, bool *isRangedOut, size_t *sub
         {PipelineState::DepthWrite, 0},
         {PipelineState::StencilTest, 0},
         {PipelineState::DepthCompareOp, hasShaders ? VK_COMPARE_OP_LESS : 0},
-        {PipelineState::SurfaceRotation, 0},
         {PipelineState::EmulatedDitherControl, 0},
         {PipelineState::StencilOpFailFront, hasShaders ? VK_STENCIL_OP_KEEP : 0},
         {PipelineState::StencilOpPassFront, hasShaders ? VK_STENCIL_OP_KEEP : 0},
@@ -3386,8 +3376,8 @@ void GraphicsPipelineDesc::initDefaults(const ErrorContext *context,
         mShaders.shaders.bits.depthWrite                        = 0;
         mShaders.shaders.bits.stencilTest                       = 0;
         mShaders.shaders.bits.nonZeroStencilWriteMaskWorkaround = 0;
+        mShaders.shaders.bits.padding                           = 0;
         SetBitField(mShaders.shaders.bits.depthCompareOp, VK_COMPARE_OP_LESS);
-        mShaders.shaders.bits.surfaceRotation  = 0;
         mShaders.shaders.emulatedDitherControl = 0;
         mShaders.shaders.padding               = 0;
         SetBitField(mShaders.shaders.front.fail, VK_STENCIL_OP_KEEP);
@@ -4663,13 +4653,6 @@ void GraphicsPipelineDesc::updateDepthClampEnabled(GraphicsPipelineTransitionBit
                                                    bool enabled)
 {
     setDepthClampEnabled(enabled);
-    transition->set(ANGLE_GET_TRANSITION_BIT(mShaders.shaders.bits));
-}
-
-void GraphicsPipelineDesc::updateSurfaceRotation(GraphicsPipelineTransitionBits *transition,
-                                                 bool isRotatedAspectRatio)
-{
-    SetBitField(mShaders.shaders.bits.surfaceRotation, isRotatedAspectRatio);
     transition->set(ANGLE_GET_TRANSITION_BIT(mShaders.shaders.bits));
 }
 

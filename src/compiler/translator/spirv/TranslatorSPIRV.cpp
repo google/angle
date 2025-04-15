@@ -530,7 +530,6 @@ TIntermSequence *GetMainSequence(TIntermBlock *root)
                                                   const ShCompileOptions &compileOptions,
                                                   TIntermBlock *root,
                                                   TSymbolTable *symbolTable,
-                                                  SpecConst *specConst,
                                                   const DriverUniform *driverUniforms)
 {
     // In GL the viewport transformation is slightly different - see the GL 2.0 spec section "2.12.1
@@ -561,11 +560,7 @@ TIntermSequence *GetMainSequence(TIntermBlock *root)
     TIntermSymbol *positionSymbol = new TIntermSymbol(positionVar);
 
     // swapXY ? position.yx : position.xy
-    TIntermTyped *swapXY = specConst->getSwapXY();
-    if (swapXY == nullptr)
-    {
-        swapXY = driverUniforms->getSwapXY();
-    }
+    TIntermTyped *swapXY = driverUniforms->getSwapXY();
 
     TIntermTyped *xy        = new TIntermSwizzle(positionSymbol, {0, 1});
     TIntermTyped *swappedXY = new TIntermSwizzle(positionSymbol->deepCopy(), {1, 0});
@@ -627,17 +622,12 @@ TIntermSequence *GetMainSequence(TIntermBlock *root)
                                              TIntermBlock *root,
                                              TIntermSequence *insertSequence,
                                              TSymbolTable *symbolTable,
-                                             SpecConst *specConst,
                                              const DriverUniform *driverUniforms)
 {
     TIntermTyped *flipXY = driverUniforms->getFlipXY(symbolTable, DriverUniformFlip::Fragment);
     TIntermTyped *pivot  = driverUniforms->getHalfRenderArea();
 
-    TIntermTyped *swapXY = specConst->getSwapXY();
-    if (swapXY == nullptr)
-    {
-        swapXY = driverUniforms->getSwapXY();
-    }
+    TIntermTyped *swapXY = driverUniforms->getSwapXY();
 
     const TVariable *fragCoord = static_cast<const TVariable *>(
         symbolTable->findBuiltIn(ImmutableString("gl_FragCoord"), compiler->getShaderVersion()));
@@ -953,7 +943,7 @@ bool TranslatorSPIRV::translateImpl(TIntermBlock *root,
 
         // Add support code for pre-rotation and depth correction in the vertex processing stages.
         if (!AddVertexTransformationSupport(this, compileOptions, root, &getSymbolTable(),
-                                            specConst, driverUniforms))
+                                            driverUniforms))
         {
             return false;
         }
@@ -1046,11 +1036,8 @@ bool TranslatorSPIRV::translateImpl(TIntermBlock *root,
                 TIntermTyped *flipNegXY =
                     driverUniforms->getNegFlipXY(&getSymbolTable(), DriverUniformFlip::Fragment);
                 TIntermConstantUnion *pivot = CreateFloatNode(0.5f, EbpMedium);
-                TIntermTyped *swapXY        = specConst->getSwapXY();
-                if (swapXY == nullptr)
-                {
-                    swapXY = driverUniforms->getSwapXY();
-                }
+                TIntermTyped *swapXY        = driverUniforms->getSwapXY();
+
                 if (!RotateAndFlipBuiltinVariable(
                         this, root, GetMainSequence(root), swapXY, flipNegXY, &getSymbolTable(),
                         BuiltInVariable::gl_PointCoord(), kFlippedPointCoordName, pivot))
@@ -1064,11 +1051,7 @@ bool TranslatorSPIRV::translateImpl(TIntermBlock *root,
                 TIntermTyped *flipXY =
                     driverUniforms->getFlipXY(&getSymbolTable(), DriverUniformFlip::Fragment);
                 TIntermConstantUnion *pivot = CreateFloatNode(0.5f, EbpMedium);
-                TIntermTyped *swapXY        = specConst->getSwapXY();
-                if (swapXY == nullptr)
-                {
-                    swapXY = driverUniforms->getSwapXY();
-                }
+                TIntermTyped *swapXY        = driverUniforms->getSwapXY();
 
                 const TVariable *samplePositionBuiltin =
                     static_cast<const TVariable *>(getSymbolTable().findBuiltIn(
@@ -1084,7 +1067,7 @@ bool TranslatorSPIRV::translateImpl(TIntermBlock *root,
             if (usesFragCoord)
             {
                 if (!InsertFragCoordCorrection(this, compileOptions, root, GetMainSequence(root),
-                                               &getSymbolTable(), specConst, driverUniforms))
+                                               &getSymbolTable(), driverUniforms))
                 {
                     return false;
                 }
@@ -1124,14 +1107,13 @@ bool TranslatorSPIRV::translateImpl(TIntermBlock *root,
             // emulation.  Declare their SPIR-V ids.
             assignInputAttachmentIds(inputAttachmentMap);
 
-            if (!RewriteDfdy(this, root, &getSymbolTable(), getShaderVersion(), specConst,
-                             driverUniforms))
+            if (!RewriteDfdy(this, root, &getSymbolTable(), getShaderVersion(), driverUniforms))
             {
                 return false;
             }
 
             if (!RewriteInterpolateAtOffset(this, root, &getSymbolTable(), getShaderVersion(),
-                                            specConst, driverUniforms))
+                                            driverUniforms))
             {
                 return false;
             }
@@ -1272,7 +1254,7 @@ bool TranslatorSPIRV::translate(TIntermBlock *root,
     mUniqueToSpirvIdMap.clear();
     mFirstUnusedSpirvId = 0;
 
-    SpecConst specConst(&getSymbolTable(), compileOptions, getShaderType());
+    SpecConst specConst(&getSymbolTable(), getShaderType());
 
     DriverUniform driverUniforms(DriverUniformMode::InterfaceBlock);
     DriverUniformExtended driverUniformsExt(DriverUniformMode::InterfaceBlock);

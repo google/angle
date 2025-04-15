@@ -314,12 +314,6 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
-    FeatureInfo warmUpPreRotatePipelineVariations = {
-        "warmUpPreRotatePipelineVariations",
-        FeatureCategory::VulkanFeatures,
-        &members,
-    };
-
     FeatureInfo enablePrecisionQualifiers = {
         "enablePrecisionQualifiers",
         FeatureCategory::VulkanFeatures,
@@ -508,12 +502,6 @@ struct FeaturesVk : FeatureSetBase
 
     FeatureInfo emulatedPrerotation270 = {
         "emulatedPrerotation270",
-        FeatureCategory::VulkanFeatures,
-        &members,
-    };
-
-    FeatureInfo preferDriverUniformOverSpecConst = {
-        "preferDriverUniformOverSpecConst",
         FeatureCategory::VulkanFeatures,
         &members,
     };

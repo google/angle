@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 374
+#define ANGLE_SH_VERSION 375
 
 enum ShShaderSpec
 {
@@ -395,9 +395,6 @@ struct ShCompileOptions
     uint64_t addVulkanDepthCorrection : 1;
 
     uint64_t forceShaderPrecisionHighpToMediump : 1;
-
-    // Allow compiler to use specialization constant to do pre-rotation and y flip.
-    uint64_t useSpecializationConstant : 1;
 
     // Ask compiler to generate Vulkan transform feedback emulation support code.
     uint64_t addVulkanXfbEmulationSupportCode : 1;
@@ -1008,19 +1005,17 @@ namespace vk
 // Specialization constant ids
 enum class SpecializationConstantId : uint32_t
 {
-    SurfaceRotation = 0,
-    Dither          = 1,
+    Dither = 0,
 
-    InvalidEnum = 2,
+    InvalidEnum = 1,
     EnumCount   = InvalidEnum,
 };
 
 enum class SpecConstUsage : uint32_t
 {
-    Rotation = 0,
-    Dither   = 1,
+    Dither = 0,
 
-    InvalidEnum = 2,
+    InvalidEnum = 1,
     EnumCount   = InvalidEnum,
 };
 

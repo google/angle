@@ -6204,21 +6204,6 @@ void ContextVk::updateSurfaceRotationDrawFramebuffer(const gl::State &glState,
     const SurfaceRotation rotation =
         getSurfaceRotationImpl(glState.getDrawFramebuffer(), currentDrawSurface);
     mCurrentRotationDrawFramebuffer = rotation;
-
-    if (!getFeatures().preferDriverUniformOverSpecConst.enabled)
-    {
-        const bool isRotatedAspectRatio = IsRotatedAspectRatio(rotation);
-        // Update spec consts
-        if (isRotatedAspectRatio != mGraphicsPipelineDesc->getSurfaceRotation())
-        {
-            // surface rotation are specialization constants, which affects program compilation.
-            // When rotation changes, we need to update GraphicsPipelineDesc so that the correct
-            // pipeline program object will be retrieved.
-            mGraphicsPipelineDesc->updateSurfaceRotation(&mGraphicsPipelineTransition,
-                                                         isRotatedAspectRatio);
-            invalidateCurrentGraphicsPipeline();
-        }
-    }
 }
 
 void ContextVk::updateSurfaceRotationReadFramebuffer(const gl::State &glState,

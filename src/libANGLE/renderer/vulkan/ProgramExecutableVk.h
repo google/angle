@@ -57,15 +57,14 @@ union ProgramTransformOptions final
 {
     struct
     {
-        uint8_t surfaceRotation : 1;
         uint8_t removeTransformFeedbackEmulation : 1;
         uint8_t multiSampleFramebufferFetch : 1;
         uint8_t enableSampleShading : 1;
         uint8_t removeDepthStencilInput : 1;
-        uint8_t reserved : 3;  // must initialize to zero
+        uint8_t reserved : 4;  // must initialize to zero
     };
     uint8_t permutationIndex;
-    static constexpr uint32_t kPermutationCount = 0x1 << 5;
+    static constexpr uint32_t kPermutationCount = 0x1 << 4;
 };
 static_assert(sizeof(ProgramTransformOptions) == 1, "Size check failed");
 static_assert(static_cast<int>(SurfaceRotation::EnumCount) <= 8, "Size check failed");
@@ -482,7 +481,6 @@ class ProgramExecutableVk : public ProgramExecutableImpl
         vk::PipelineProtectedAccess pipelineProtectedAccess,
         vk::GraphicsPipelineSubset subset,
         bool *isComputeOut,
-        angle::FixedVector<bool, 2> *surfaceRotationVariationsOut,
         vk::GraphicsPipelineDesc **graphicsPipelineDescOut,
         vk::RenderPass *renderPassOut);
     angle::Result warmUpComputePipelineCache(vk::ErrorContext *context,
@@ -492,7 +490,6 @@ class ProgramExecutableVk : public ProgramExecutableImpl
                                               vk::PipelineRobustness pipelineRobustness,
                                               vk::PipelineProtectedAccess pipelineProtectedAccess,
                                               vk::GraphicsPipelineSubset subset,
-                                              const bool isSurfaceRotated,
                                               const vk::GraphicsPipelineDesc &graphicsPipelineDesc,
                                               const vk::RenderPass &renderPass,
                                               vk::PipelineHelper *placeholderPipelineHelper);
@@ -534,8 +531,8 @@ class ProgramExecutableVk : public ProgramExecutableImpl
 
     ShaderInterfaceVariableInfoMap mVariableInfoMap;
 
-    static_assert((ProgramTransformOptions::kPermutationCount == 32),
-                  "ProgramTransformOptions::kPermutationCount must be 32.");
+    static_assert((ProgramTransformOptions::kPermutationCount == 16),
+                  "ProgramTransformOptions::kPermutationCount must be 16.");
     angle::BitSet32<ProgramTransformOptions::kPermutationCount> mValidGraphicsPermutations;
 
     static_assert((vk::ComputePipelineOptions::kPermutationCount == 4),
