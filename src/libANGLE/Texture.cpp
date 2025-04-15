@@ -1906,9 +1906,6 @@ GLint Texture::getFormatSupportedCompressionRates(const Context *context,
 
 angle::Result Texture::generateMipmap(Context *context)
 {
-    // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
-    ANGLE_TRY(releaseTexImageInternal(context));
-
     // EGL_KHR_gl_image states that images are only orphaned when generating mipmaps if the texture
     // is not mip complete.
     egl::RefCountObjectReleaser<egl::Image> releaseImage;
@@ -1960,6 +1957,10 @@ angle::Result Texture::generateMipmap(Context *context)
     // to have faces of the same size and format so any faces can be picked.
     mState.setImageDescChain(baseLevel, maxLevel, baseImageInfo.size, baseImageInfo.format,
                              InitState::Initialized);
+
+    // Disconnect the texture from the surface
+    releaseTexImageInternalNoRedefinition(context);
+    mBoundSurface = nullptr;
 
     signalDirtyStorage(InitState::Initialized);
 
@@ -2094,7 +2095,7 @@ angle::Result Texture::releaseImageFromStream(const Context *context)
     return angle::Result::Continue;
 }
 
-angle::Result Texture::releaseTexImageInternal(Context *context)
+void Texture::releaseTexImageInternalNoRedefinition(Context *context)
 {
     if (mBoundSurface)
     {
@@ -2106,8 +2107,16 @@ angle::Result Texture::releaseTexImageInternal(Context *context)
             context->handleError(GL_INVALID_OPERATION, "Error releasing tex image from texture",
                                  __FILE__, ANGLE_FUNCTION, __LINE__);
         }
+    }
+}
 
-        // Then, call the same method as from the surface
+angle::Result Texture::releaseTexImageInternal(Context *context)
+{
+    releaseTexImageInternalNoRedefinition(context);
+
+    // Then, call the same method as from the surface
+    if (mBoundSurface)
+    {
         ANGLE_TRY(releaseTexImageFromSurface(context));
     }
     return angle::Result::Continue;

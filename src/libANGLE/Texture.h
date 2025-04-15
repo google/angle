@@ -778,6 +778,8 @@ class Texture final : public RefCountObject<TextureID>,
     angle::Result releaseImageFromStream(const Context *context);
 
     void invalidateCompletenessCache() const;
+
+    void releaseTexImageInternalNoRedefinition(Context *context);
     angle::Result releaseTexImageInternal(Context *context);
 
     bool doesSubImageNeedInit(const Context *context,

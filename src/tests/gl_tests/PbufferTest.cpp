@@ -894,6 +894,82 @@ TEST_P(PbufferTest, BindTexImageAndRedefineTexture)
     glDeleteTextures(1, &texture);
 }
 
+// Bind a Pbuffer, generate mipmap for it, and verify it renders correctly
+TEST_P(PbufferTest, BindTexImageAndGenerateMipmap)
+{
+    // Test skipped because Pbuffers are not supported or Pbuffer does not support binding to RGBA
+    // textures.
+    ANGLE_SKIP_TEST_IF(!mSupportsPbuffers || !mSupportsBindTexImage);
+    // Crash in drawQuad. http://anglebug.com/412867392
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+
+    EGLWindow *window = getEGLWindow();
+
+    EGLSurface pbuffer;
+    GLuint texture = 0;
+
+    static EGLint pbufferAttributes[] = {
+        EGL_WIDTH,          2,
+        EGL_HEIGHT,         1,
+        EGL_TEXTURE_FORMAT, EGL_TEXTURE_RGBA,
+        EGL_TEXTURE_TARGET, EGL_TEXTURE_2D,
+        EGL_MIPMAP_TEXTURE, GL_TRUE,
+        EGL_NONE,
+    };
+
+    pbuffer = eglCreatePbufferSurface(window->getDisplay(), window->getConfig(), pbufferAttributes);
+    ASSERT_EGL_SUCCESS();
+
+    ASSERT_NE(EGL_NO_SURFACE, pbuffer);
+
+    // create texture
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    EXPECT_GL_NO_ERROR();
+
+    // bind pbuffer as texture storage
+    eglBindTexImage(window->getDisplay(), pbuffer, EGL_BACK_BUFFER);
+    ASSERT_EGL_SUCCESS();
+    EXPECT_GL_NO_ERROR();
+
+    unsigned int pixelValue = 0xFFFF00FF;
+    std::vector<unsigned int> pixelData(2, pixelValue);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 1, GL_RGBA, GL_UNSIGNED_BYTE, &pixelData[0]);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    glViewport(0, 0, 1, 1);
+    // Draw a quad and verify that it is magenta
+    glUseProgram(mTextureProgram);
+    glUniform1i(mTextureUniformLocation, 0);
+
+    drawQuad(mTextureProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    // Verify that magenta was drawn
+    EXPECT_PIXEL_EQ(0, 0, 255, 0, 255, 255);
+
+    EXPECT_TRUE(eglMakeCurrent(window->getDisplay(), pbuffer, pbuffer, window->getContext()));
+    ASSERT_EGL_SUCCESS();
+    glClearColor(1.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify that yellow was drawn to pbuffer
+    EXPECT_PIXEL_EQ(0, 0, 255, 255, 0, 255);
+
+    drawQuad(mTextureProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    // Verify that the texture color is still magenta (texture is disconnected from pbuffer)
+    EXPECT_PIXEL_EQ(0, 0, 255, 0, 255, 255);
+
+    glDeleteTextures(1, &texture);
+    window->makeCurrent();
+    eglDestroySurface(window->getDisplay(), pbuffer);
+}
+
 // Bind the Pbuffer to a texture, use that texture as Framebuffer color attachment and then
 // destroy framebuffer, texture and Pbuffer.
 TEST_P(PbufferTest, UseAsFramebufferColorThenDestroy)
