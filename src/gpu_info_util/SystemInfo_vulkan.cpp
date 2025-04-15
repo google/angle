@@ -99,13 +99,17 @@ VersionInfo ParseNvidiaVulkanDriverVersion(uint32_t driverVersion)
 
 VersionInfo ParseQualcommVulkanDriverVersion(uint32_t driverVersion)
 {
+    VersionInfo version = {};
     if ((driverVersion & 0x80000000) != 0)
     {
-        return ParseGenericDriverVersion(driverVersion);
+        // The major version of the new QCOM drivers seem to be 512. However, the value parsed from
+        // the physical device properties shows this field as 0.
+        version       = ParseGenericDriverVersion(driverVersion);
+        version.major = 512;
+        return version;
     }
 
     // Older drivers with an unknown format, consider them version 0.
-    VersionInfo version = {};
     version.minor       = driverVersion;
     return version;
 }
