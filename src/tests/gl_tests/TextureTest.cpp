@@ -953,7 +953,6 @@ class TextureCubeTest : public TexCoordDrawTest
             uniform samplerCube texCube;
             uniform int cubeFace;
             varying vec2 texcoord;
-
             void main()
             {
                 gl_FragColor = texture2D(tex2D, texcoord);
@@ -2351,6 +2350,49 @@ TEST_P(TextureCubeTest, CubeMapBug)
     glUniform1i(mTexture2DUniformLocation, 0);
     glUniform1i(mTextureCubeUniformLocation, 1);
     drawQuad(mProgram, "position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Duplicate of CubeMapBug test and change texture bind unit to trigger an ANGLE bug in validation
+TEST_P(TextureCubeTest, CubeMapBug2)
+{
+    const char *vertexShaderSource   = getVertexShaderSource();
+    const char *fragmentShaderSource = R"(precision highp float;
+            uniform sampler2D tex2D;
+            uniform sampler2D tex2DUnused;
+            uniform samplerCube texCube;
+            uniform int cubeFace;
+            varying vec2 texcoord;
+            void main()
+            {
+                gl_FragColor = texture2D(tex2D, texcoord);
+
+                vec2 scaled = vec2(1) - vec2(2) * texcoord.xy;
+                vec3 cubecoord = vec3(1, scaled.xy);
+                if (cubeFace == 1)
+                    cubecoord = vec3(-1, scaled.xy);
+                else if (cubeFace == 2)
+                    cubecoord = vec3(scaled.x, 1, scaled.y);
+                else if (cubeFace == 3)
+                    cubecoord = vec3(scaled.x, -1, scaled.y);
+                else if (cubeFace == 4)
+                    cubecoord = vec3(scaled.xy, 1);
+                else if (cubeFace == 5)
+                    cubecoord = vec3(scaled.xy, -1);
+
+                gl_FragColor += textureCube(texCube, cubecoord) + texture2D(tex2DUnused, texcoord);
+            })";
+    ANGLE_GL_PROGRAM(cubeMapBug2Program, vertexShaderSource, fragmentShaderSource);
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, mTextureCube);
+    EXPECT_GL_ERROR(GL_NO_ERROR);
+
+    glUseProgram(cubeMapBug2Program);
+    glUniform1i(mTexture2DUniformLocation, 3);
+    glUniform1i(mTextureCubeUniformLocation, 0);
+    drawQuad(cubeMapBug2Program, "position", 0.5f);
     EXPECT_GL_NO_ERROR();
 }
 

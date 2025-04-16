@@ -236,6 +236,9 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 
 379758210 LINUX INTEL OPENGL : GLSLTest_ES3.SwizzledToBoolCoercion/* = SKIP
 
+//Angle has bugs for sampler validation
+401546698 : TextureCubeTest.CubeMapBug2/* = SKIP
+
 // Nvidia
 42264645 NVIDIA OPENGL : GLSLTestLoops.DoWhileContinue/* = SKIP
 42264645 NVIDIA OPENGL : GLSLTestLoops.DoWhileUnconditionalContinue/* = SKIP
