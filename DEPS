@@ -804,7 +804,7 @@ deps = {
   },
 
   'third_party/libpng/src': {
-    'url': Var('android_git') + '/platform/external/libpng@d2ece84bd73af1cd5fae5e7574f79b40e5de4fba',
+    'url': Var('android_git') + '/platform/external/libpng@8cc222cd3e79fa5190f3aa039a03a4cbea6cfbe7',
     'condition': 'not build_with_chromium',
   },
 
