@@ -950,8 +950,6 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
 
     if (traceNameIs("genshin_impact"))
     {
-        addExtensionPrerequisite("GL_KHR_texture_compression_astc_ldr");
-
         if (!Is64Bit())
         {
             skipTest("Genshin is too large to handle in 32-bit mode");
@@ -1093,7 +1091,6 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
 
     if (traceNameIs("cookie_run_kingdom"))
     {
-        addExtensionPrerequisite("GL_EXT_texture_cube_map_array");
         addExtensionPrerequisite("GL_OES_EGL_image_external");
     }
 
@@ -1113,11 +1110,6 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
     }
 
     if (traceNameIs("nier_reincarnation"))
-    {
-        addExtensionPrerequisite("GL_KHR_texture_compression_astc_ldr");
-    }
-
-    if (traceNameIs("pokemon_unite"))
     {
         addExtensionPrerequisite("GL_KHR_texture_compression_astc_ldr");
     }

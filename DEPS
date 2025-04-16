@@ -1458,7 +1458,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/balatro',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -1818,7 +1818,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/cookie_run_kingdom',
-            'version': 'version:5',
+            'version': 'version:6',
         },
       ],
       'dep_type': 'cipd',
@@ -2158,7 +2158,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/final_fantasy',
-            'version': 'version:5',
+            'version': 'version:6',
         },
       ],
       'dep_type': 'cipd',
@@ -2268,7 +2268,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/genshin_impact',
-            'version': 'version:5',
+            'version': 'version:6',
         },
       ],
       'dep_type': 'cipd',
@@ -2728,7 +2728,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/marvel_strike_force',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -3128,7 +3128,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/pokemon_unite',
-            'version': 'version:5',
+            'version': 'version:6',
         },
       ],
       'dep_type': 'cipd',
@@ -3438,7 +3438,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/shadowgun_legends',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -3528,7 +3528,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/solar_smash',
-            'version': 'version:2',
+            'version': 'version:3',
         },
       ],
       'dep_type': 'cipd',
@@ -3618,7 +3618,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/state_of_survival',
-            'version': 'version:1',
+            'version': 'version:2',
         },
       ],
       'dep_type': 'cipd',
@@ -3858,7 +3858,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/toca_life_world',
-            'version': 'version:2',
+            'version': 'version:3',
         },
       ],
       'dep_type': 'cipd',
@@ -3868,7 +3868,7 @@ deps = {
       'packages': [
         {
             'package': 'angle/traces/toon_blast',
-            'version': 'version:5',
+            'version': 'version:6',
         },
       ],
       'dep_type': 'cipd',
