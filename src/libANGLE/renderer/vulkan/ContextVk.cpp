@@ -1542,8 +1542,6 @@ angle::Result ContextVk::finish(const gl::Context *context)
 
     ANGLE_TRY(finishImpl(RenderPassClosureReason::GLFinish));
 
-    syncObjectPerfCounters(mRenderer->getCommandQueuePerfCounters());
-
     if (!mCurrentWindowSurface || singleBufferedFlush)
     {
         ANGLE_TRY(onFramebufferBoundary(context));
@@ -7867,6 +7865,8 @@ angle::Result ContextVk::finishImpl(RenderPassClosureReason renderPassClosureRea
             ANGLE_TRY(synchronizeCpuGpuTime());
         }
     }
+
+    syncObjectPerfCounters(mRenderer->getCommandQueuePerfCounters());
 
     return angle::Result::Continue;
 }
