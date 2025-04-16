@@ -136,6 +136,7 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 402532204 WIN OPENGL : PbufferTest.ZeroSizedSurfaceFormatQuery/* = SKIP
 402532204 WIN GLES : PbufferTest.ZeroSizedSurfaceFormatQuery/* = SKIP
 410591534 WIN INTEL OPENGL : Texture2DTestES3.SampleThenFullUpdateThenSampleAgain/* = SKIP
+410591534 WIN INTEL OPENGL : TextureCubeTestES3.IncompatibleCubeFacesThenSingleFaceCompatibleUploadAndIncompatibleAgain*/* = SKIP
 411157348 WIN D3D11 : ImageTestES31.UseSourceTextureAsStorageImage/* = SKIP
 
 // Failures on Intel Comet Lake S UHD Graphics 630 (8086:9bc5-31.0.101.2111)
