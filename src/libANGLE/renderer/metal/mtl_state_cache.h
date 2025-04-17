@@ -34,23 +34,25 @@ class ContextMtl;
 
 namespace mtl
 {
-struct alignas(1) StencilDesc
+
+ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
+struct alignas(4) StencilDesc
 {
     bool operator==(const StencilDesc &rhs) const;
 
     // Set default values
     void reset();
 
-    // Use uint8_t instead of MTLStencilOperation to compact space
-    uint8_t stencilFailureOperation : 3;
-    uint8_t depthFailureOperation : 3;
-    uint8_t depthStencilPassOperation : 3;
+    // Use bitfield instead of MTLStencilOperation to compact space
+    uint16_t stencilFailureOperation : 4;
+    uint16_t depthFailureOperation : 4;
+    uint16_t depthStencilPassOperation : 4;
 
-    // Use uint8_t instead of MTLCompareFunction to compact space
-    uint8_t stencilCompareFunction : 3;
+    // Use bitfield instead of MTLCompareFunction to compact space
+    uint16_t stencilCompareFunction : 4;
 
-    uint8_t readMask : 8;
-    uint8_t writeMask : 8;
+    uint16_t readMask : 8;
+    uint16_t writeMask : 8;
 };
 
 struct alignas(4) DepthStencilDesc
@@ -83,9 +85,9 @@ struct alignas(4) DepthStencilDesc
     StencilDesc backFaceStencil;
     StencilDesc frontFaceStencil;
 
-    // Use uint8_t instead of MTLCompareFunction to compact space
-    uint8_t depthCompareFunction : 3;
-    bool depthWriteEnabled : 1;
+    // Use bitfield instead of MTLCompareFunction to compact space
+    uint16_t depthCompareFunction;
+    uint16_t depthWriteEnabled;
 };
 
 struct alignas(4) SamplerDesc
@@ -105,20 +107,20 @@ struct alignas(4) SamplerDesc
 
     size_t hash() const;
 
-    // Use uint8_t instead of MTLSamplerAddressMode to compact space
-    uint8_t rAddressMode : 3;
-    uint8_t sAddressMode : 3;
-    uint8_t tAddressMode : 3;
+    // Use bitfield instead of MTLSamplerAddressMode to compact space
+    uint16_t rAddressMode : 3;
+    uint16_t sAddressMode : 3;
+    uint16_t tAddressMode : 3;
 
-    // Use uint8_t instead of MTLSamplerMinMagFilter to compact space
-    uint8_t minFilter : 1;
-    uint8_t magFilter : 1;
-    uint8_t mipFilter : 2;
+    uint16_t maxAnisotropy : 5;
 
-    uint8_t maxAnisotropy : 5;
+    // Use bitfield instead of MTLSamplerMinMagFilter to compact space
+    uint16_t minFilter : 1;
+    uint16_t magFilter : 1;
+    uint16_t mipFilter : 2;
 
-    // Use uint8_t instead of MTLCompareFunction to compact space
-    uint8_t compareFunction : 3;
+    // Use bitfield instead of MTLCompareFunction to compact space
+    uint16_t compareFunction : 14;
 };
 
 struct VertexAttributeDesc
@@ -129,11 +131,11 @@ struct VertexAttributeDesc
     }
     inline bool operator!=(const VertexAttributeDesc &rhs) const { return !(*this == rhs); }
 
-    // Use uint8_t instead of MTLVertexFormat to compact space
-    uint8_t format : 6;
+    // Use uint16_t instead of MTLVertexFormat to compact space
+    uint16_t format;
     // Offset is only used for default attributes buffer. So 8 bits are enough.
-    uint8_t offset : 8;
-    uint8_t bufferIndex : 5;
+    uint16_t offset : 8;
+    uint16_t bufferIndex : 8;
 };
 
 struct VertexBufferLayoutDesc
@@ -147,8 +149,7 @@ struct VertexBufferLayoutDesc
     uint32_t stepRate;
     uint32_t stride;
 
-    // Use uint8_t instead of MTLVertexStepFunction to compact space
-    uint8_t stepFunction;
+    uint32_t stepFunction;
 };
 
 struct VertexDesc
@@ -156,11 +157,11 @@ struct VertexDesc
     VertexAttributeDesc attributes[kMaxVertexAttribs];
     VertexBufferLayoutDesc layouts[kMaxVertexAttribs];
 
-    uint8_t numAttribs;
-    uint8_t numBufferLayouts;
+    uint16_t numAttribs;
+    uint16_t numBufferLayouts;
 };
 
-struct BlendDesc
+struct alignas(2) BlendDesc
 {
     bool operator==(const BlendDesc &rhs) const;
     BlendDesc &operator=(const BlendDesc &src) = default;
@@ -171,20 +172,20 @@ struct BlendDesc
 
     void updateWriteMask(const uint8_t angleMask);
 
-    // Use uint8_t instead of MTLColorWriteMask to compact space
-    uint8_t writeMask : 4;
+    // Use bitfield instead of MTLColorWriteMask to compact space
+    uint16_t writeMask : 4;
 
-    // Use uint8_t instead of MTLBlendOperation to compact space
-    uint8_t alphaBlendOperation : 3;
-    uint8_t rgbBlendOperation : 3;
+    uint16_t blendingEnabled : 1;
 
-    // Use uint8_t instead of MTLBlendFactor to compact space
-    uint8_t destinationAlphaBlendFactor : 5;
-    uint8_t destinationRGBBlendFactor : 5;
-    uint8_t sourceAlphaBlendFactor : 5;
-    uint8_t sourceRGBBlendFactor : 5;
+    // Use bitfield instead of MTLBlendOperation to compact space
+    uint16_t alphaBlendOperation : 3;
+    uint16_t rgbBlendOperation : 3;
 
-    bool blendingEnabled : 1;
+    // Use bitfield instead of MTLBlendFactor to compact space
+    uint16_t destinationAlphaBlendFactor : 5;
+    uint16_t destinationRGBBlendFactor : 5;
+    uint16_t sourceAlphaBlendFactor : 5;
+    uint16_t sourceRGBBlendFactor : 6;
 };
 
 using BlendDescArray = std::array<BlendDesc, kMaxRenderTargets>;
@@ -205,21 +206,21 @@ struct alignas(2) RenderPipelineColorAttachmentDesc : public BlendDesc
     void reset(MTLPixelFormat format, const BlendDesc &blendDesc);
 
     // Use uint16_t instead of MTLPixelFormat to compact space
-    uint16_t pixelFormat : 16;
+    uint16_t pixelFormat;
 };
 
-struct RenderPipelineOutputDesc
+struct alignas(2) RenderPipelineOutputDesc
 {
     void updateEnabledDrawBuffers(gl::DrawBufferMask enabledBuffers);
 
     std::array<RenderPipelineColorAttachmentDesc, kMaxRenderTargets> colorAttachments;
 
     // Use uint16_t instead of MTLPixelFormat to compact space
-    uint16_t depthAttachmentPixelFormat : 16;
-    uint16_t stencilAttachmentPixelFormat : 16;
+    uint16_t depthAttachmentPixelFormat;
+    uint16_t stencilAttachmentPixelFormat;
 
-    uint8_t numColorAttachments;
-    uint8_t rasterSampleCount;
+    uint16_t numColorAttachments : 8;
+    uint16_t rasterSampleCount : 8;
 };
 
 enum class RenderPipelineRasterization : uint32_t
@@ -264,15 +265,15 @@ struct alignas(4) RenderPipelineDesc
 
     RenderPipelineOutputDesc outputDescriptor;
 
-    // Use uint8_t instead of MTLPrimitiveTopologyClass to compact space.
-    uint8_t inputPrimitiveTopology : 2;
+    // Use bitfield instead of MTLPrimitiveTopologyClass to compact space.
+    uint16_t inputPrimitiveTopology : 8;
 
-    bool alphaToCoverageEnabled : 1;
+    uint16_t alphaToCoverageEnabled : 8;
 
     // These flags are for emulation and do not correspond to any flags in
     // MTLRenderPipelineDescriptor descriptor. These flags should be used by
     // RenderPipelineCacheSpecializeShaderFactory.
-    RenderPipelineRasterization rasterizationType : 2;
+    RenderPipelineRasterization rasterizationType;
 };
 
 struct alignas(4) ProvokingVertexComputePipelineDesc
@@ -292,6 +293,8 @@ struct alignas(4) ProvokingVertexComputePipelineDesc
     bool primitiveRestartEnabled;
     bool generateIndices;
 };
+
+ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 
 struct RenderPassAttachmentDesc
 {
