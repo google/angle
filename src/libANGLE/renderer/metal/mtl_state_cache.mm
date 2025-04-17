@@ -576,25 +576,6 @@ void RenderPipelineColorAttachmentDesc::reset(MTLPixelFormat format, const Blend
 }
 
 // RenderPipelineOutputDesc implementation
-bool RenderPipelineOutputDesc::operator==(const RenderPipelineOutputDesc &rhs) const
-{
-    if (numColorAttachments != rhs.numColorAttachments)
-    {
-        return false;
-    }
-
-    for (uint8_t i = 0; i < numColorAttachments; ++i)
-    {
-        if (colorAttachments[i] != rhs.colorAttachments[i])
-        {
-            return false;
-        }
-    }
-
-    return ANGLE_PROP_EQ(*this, rhs, depthAttachmentPixelFormat) &&
-           ANGLE_PROP_EQ(*this, rhs, stencilAttachmentPixelFormat);
-}
-
 void RenderPipelineOutputDesc::updateEnabledDrawBuffers(gl::DrawBufferMask enabledBuffers)
 {
     for (uint32_t colorIndex = 0; colorIndex < this->numColorAttachments; ++colorIndex)
@@ -819,6 +800,11 @@ bool RenderPassDesc::equalIgnoreLoadStoreOptions(const RenderPassDesc &other) co
     }
 
     if (defaultWidth != other.defaultWidth || defaultHeight != other.defaultHeight)
+    {
+        return false;
+    }
+
+    if (rasterSampleCount != other.rasterSampleCount)
     {
         return false;
     }

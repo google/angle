@@ -210,8 +210,6 @@ struct alignas(2) RenderPipelineColorAttachmentDesc : public BlendDesc
 
 struct RenderPipelineOutputDesc
 {
-    bool operator==(const RenderPipelineOutputDesc &rhs) const;
-
     void updateEnabledDrawBuffers(gl::DrawBufferMask enabledBuffers);
 
     std::array<RenderPipelineColorAttachmentDesc, kMaxRenderTargets> colorAttachments;
