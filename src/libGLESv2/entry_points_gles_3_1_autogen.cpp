@@ -31,7 +31,7 @@ void GL_APIENTRY GL_ActiveShaderProgram(GLuint pipeline, GLuint program)
     EVENT(context, GLActiveShaderProgram, "context = %d, pipeline = %u, program = %u", CID(context),
           pipeline, program);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ProgramPipelineID pipelinePacked = PackParam<ProgramPipelineID>(pipeline);
         ShaderProgramID programPacked    = PackParam<ShaderProgramID>(program);
@@ -58,7 +58,7 @@ void GL_APIENTRY GL_ActiveShaderProgram(GLuint pipeline, GLuint program)
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLActiveShaderProgram);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -80,7 +80,7 @@ void GL_APIENTRY GL_BindImageTexture(GLuint unit,
           GLenumToString(GLESEnum::BufferAccessARB, access),
           GLenumToString(GLESEnum::InternalFormat, format));
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         TextureID texturePacked = PackParam<TextureID>(texture);
         SCOPED_SHARE_CONTEXT_LOCK(context);
@@ -107,7 +107,7 @@ void GL_APIENTRY GL_BindImageTexture(GLuint unit,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLBindImageTexture);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -118,7 +118,7 @@ void GL_APIENTRY GL_BindProgramPipeline(GLuint pipeline)
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBindProgramPipeline, "context = %d, pipeline = %u", CID(context), pipeline);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ProgramPipelineID pipelinePacked = PackParam<ProgramPipelineID>(pipeline);
         SCOPED_SHARE_CONTEXT_LOCK(context);
@@ -143,7 +143,7 @@ void GL_APIENTRY GL_BindProgramPipeline(GLuint pipeline)
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLBindProgramPipeline);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -159,7 +159,7 @@ void GL_APIENTRY GL_BindVertexBuffer(GLuint bindingindex,
           "context = %d, bindingindex = %u, buffer = %u, offset = %llu, stride = %d", CID(context),
           bindingindex, buffer, static_cast<unsigned long long>(offset), stride);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         BufferID bufferPacked = PackParam<BufferID>(buffer);
         SCOPED_SHARE_CONTEXT_LOCK(context);
@@ -186,7 +186,7 @@ void GL_APIENTRY GL_BindVertexBuffer(GLuint bindingindex,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLBindVertexBuffer);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -200,7 +200,7 @@ GLuint GL_APIENTRY GL_CreateShaderProgramv(GLenum type, GLsizei count, const GLc
           GLenumToString(GLESEnum::ShaderType, type), count, (uintptr_t)strings);
 
     GLuint returnValue;
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderType typePacked = PackParam<ShaderType>(type);
         SCOPED_SHARE_CONTEXT_LOCK(context);
@@ -231,7 +231,7 @@ GLuint GL_APIENTRY GL_CreateShaderProgramv(GLenum type, GLsizei count, const GLc
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLCreateShaderProgramv);
         returnValue = GetDefaultReturnValue<angle::EntryPoint::GLCreateShaderProgramv, GLuint>();
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
@@ -245,7 +245,7 @@ void GL_APIENTRY GL_DeleteProgramPipelines(GLsizei n, const GLuint *pipelines)
     EVENT(context, GLDeleteProgramPipelines, "context = %d, n = %d, pipelines = 0x%016" PRIxPTR "",
           CID(context), n, (uintptr_t)pipelines);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         const ProgramPipelineID *pipelinesPacked = PackParam<const ProgramPipelineID *>(pipelines);
         SCOPED_SHARE_CONTEXT_LOCK(context);
@@ -270,7 +270,7 @@ void GL_APIENTRY GL_DeleteProgramPipelines(GLsizei n, const GLuint *pipelines)
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLDeleteProgramPipelines);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -283,7 +283,7 @@ void GL_APIENTRY GL_DispatchCompute(GLuint num_groups_x, GLuint num_groups_y, GL
           "context = %d, num_groups_x = %u, num_groups_y = %u, num_groups_z = %u", CID(context),
           num_groups_x, num_groups_y, num_groups_z);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
@@ -308,7 +308,7 @@ void GL_APIENTRY GL_DispatchCompute(GLuint num_groups_x, GLuint num_groups_y, GL
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLDispatchCompute);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -320,7 +320,7 @@ void GL_APIENTRY GL_DispatchComputeIndirect(GLintptr indirect)
     EVENT(context, GLDispatchComputeIndirect, "context = %d, indirect = %llu", CID(context),
           static_cast<unsigned long long>(indirect));
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
@@ -344,7 +344,8 @@ void GL_APIENTRY GL_DispatchComputeIndirect(GLintptr indirect)
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(
+            angle::EntryPoint::GLDispatchComputeIndirect);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -356,7 +357,7 @@ void GL_APIENTRY GL_DrawArraysIndirect(GLenum mode, const void *indirect)
     EVENT(context, GLDrawArraysIndirect, "context = %d, mode = %s, indirect = 0x%016" PRIxPTR "",
           CID(context), GLenumToString(GLESEnum::PrimitiveType, mode), (uintptr_t)indirect);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         PrimitiveMode modePacked = PackParam<PrimitiveMode>(mode);
         SCOPED_SHARE_CONTEXT_LOCK(context);
@@ -381,7 +382,7 @@ void GL_APIENTRY GL_DrawArraysIndirect(GLenum mode, const void *indirect)
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLDrawArraysIndirect);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -395,7 +396,7 @@ void GL_APIENTRY GL_DrawElementsIndirect(GLenum mode, GLenum type, const void *i
           GLenumToString(GLESEnum::PrimitiveType, mode),
           GLenumToString(GLESEnum::DrawElementsType, type), (uintptr_t)indirect);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         PrimitiveMode modePacked    = PackParam<PrimitiveMode>(mode);
         DrawElementsType typePacked = PackParam<DrawElementsType>(type);
@@ -423,7 +424,7 @@ void GL_APIENTRY GL_DrawElementsIndirect(GLenum mode, GLenum type, const void *i
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLDrawElementsIndirect);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -436,7 +437,7 @@ void GL_APIENTRY GL_FramebufferParameteri(GLenum target, GLenum pname, GLint par
           CID(context), GLenumToString(GLESEnum::FramebufferTarget, target),
           GLenumToString(GLESEnum::FramebufferParameterName, pname), param);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
         if (context->getState().getPixelLocalStorageActivePlanes() != 0)
@@ -464,7 +465,7 @@ void GL_APIENTRY GL_FramebufferParameteri(GLenum target, GLenum pname, GLint par
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLFramebufferParameteri);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -476,7 +477,7 @@ void GL_APIENTRY GL_GenProgramPipelines(GLsizei n, GLuint *pipelines)
     EVENT(context, GLGenProgramPipelines, "context = %d, n = %d, pipelines = 0x%016" PRIxPTR "",
           CID(context), n, (uintptr_t)pipelines);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ProgramPipelineID *pipelinesPacked = PackParam<ProgramPipelineID *>(pipelines);
         SCOPED_SHARE_CONTEXT_LOCK(context);
@@ -501,7 +502,7 @@ void GL_APIENTRY GL_GenProgramPipelines(GLsizei n, GLuint *pipelines)
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLGenProgramPipelines);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -514,7 +515,7 @@ void GL_APIENTRY GL_GetBooleani_v(GLenum target, GLuint index, GLboolean *data)
           "context = %d, target = %s, index = %u, data = 0x%016" PRIxPTR "", CID(context),
           GLenumToString(GLESEnum::BufferTargetARB, target), index, (uintptr_t)data);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
@@ -538,7 +539,7 @@ void GL_APIENTRY GL_GetBooleani_v(GLenum target, GLuint index, GLboolean *data)
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLGetBooleani_v);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -552,7 +553,7 @@ void GL_APIENTRY GL_GetFramebufferParameteriv(GLenum target, GLenum pname, GLint
           GLenumToString(GLESEnum::FramebufferTarget, target),
           GLenumToString(GLESEnum::FramebufferAttachmentParameterName, pname), (uintptr_t)params);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
@@ -576,7 +577,8 @@ void GL_APIENTRY GL_GetFramebufferParameteriv(GLenum target, GLenum pname, GLint
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(
+            angle::EntryPoint::GLGetFramebufferParameteriv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -589,7 +591,7 @@ void GL_APIENTRY GL_GetMultisamplefv(GLenum pname, GLuint index, GLfloat *val)
           "context = %d, pname = %s, index = %u, val = 0x%016" PRIxPTR "", CID(context),
           GLenumToString(GLESEnum::AllEnums, pname), index, (uintptr_t)val);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
@@ -613,7 +615,7 @@ void GL_APIENTRY GL_GetMultisamplefv(GLenum pname, GLuint index, GLfloat *val)
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLGetMultisamplefv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -631,7 +633,7 @@ void GL_APIENTRY GL_GetProgramInterfaceiv(GLuint program,
           CID(context), program, GLenumToString(GLESEnum::ProgramInterface, programInterface),
           GLenumToString(GLESEnum::ProgramInterfacePName, pname), (uintptr_t)params);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked = PackParam<ShaderProgramID>(program);
         SCOPED_SHARE_CONTEXT_LOCK(context);
@@ -658,7 +660,7 @@ void GL_APIENTRY GL_GetProgramInterfaceiv(GLuint program,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLGetProgramInterfaceiv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -675,7 +677,7 @@ void GL_APIENTRY GL_GetProgramPipelineInfoLog(GLuint pipeline,
           ", infoLog = 0x%016" PRIxPTR "",
           CID(context), pipeline, bufSize, (uintptr_t)length, (uintptr_t)infoLog);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ProgramPipelineID pipelinePacked = PackParam<ProgramPipelineID>(pipeline);
         SCOPED_SHARE_CONTEXT_LOCK(context);
@@ -702,7 +704,8 @@ void GL_APIENTRY GL_GetProgramPipelineInfoLog(GLuint pipeline,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(
+            angle::EntryPoint::GLGetProgramPipelineInfoLog);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -715,7 +718,7 @@ void GL_APIENTRY GL_GetProgramPipelineiv(GLuint pipeline, GLenum pname, GLint *p
           "context = %d, pipeline = %u, pname = %s, params = 0x%016" PRIxPTR "", CID(context),
           pipeline, GLenumToString(GLESEnum::PipelineParameterName, pname), (uintptr_t)params);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ProgramPipelineID pipelinePacked = PackParam<ProgramPipelineID>(pipeline);
         SCOPED_SHARE_CONTEXT_LOCK(context);
@@ -741,7 +744,7 @@ void GL_APIENTRY GL_GetProgramPipelineiv(GLuint pipeline, GLenum pname, GLint *p
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLGetProgramPipelineiv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -758,7 +761,7 @@ GLuint GL_APIENTRY GL_GetProgramResourceIndex(GLuint program,
           (uintptr_t)name);
 
     GLuint returnValue;
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked = PackParam<ShaderProgramID>(program);
         SCOPED_SHARE_CONTEXT_LOCK(context);
@@ -790,7 +793,8 @@ GLuint GL_APIENTRY GL_GetProgramResourceIndex(GLuint program,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(
+            angle::EntryPoint::GLGetProgramResourceIndex);
         returnValue = GetDefaultReturnValue<angle::EntryPoint::GLGetProgramResourceIndex, GLuint>();
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
@@ -809,7 +813,7 @@ GLint GL_APIENTRY GL_GetProgramResourceLocation(GLuint program,
           (uintptr_t)name);
 
     GLint returnValue;
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked = PackParam<ShaderProgramID>(program);
         SCOPED_SHARE_CONTEXT_LOCK(context);
@@ -842,7 +846,8 @@ GLint GL_APIENTRY GL_GetProgramResourceLocation(GLuint program,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(
+            angle::EntryPoint::GLGetProgramResourceLocation);
         returnValue =
             GetDefaultReturnValue<angle::EntryPoint::GLGetProgramResourceLocation, GLint>();
     }
@@ -865,7 +870,7 @@ void GL_APIENTRY GL_GetProgramResourceName(GLuint program,
           CID(context), program, GLenumToString(GLESEnum::ProgramInterface, programInterface),
           index, bufSize, (uintptr_t)length, (uintptr_t)name);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked = PackParam<ShaderProgramID>(program);
         SCOPED_SHARE_CONTEXT_LOCK(context);
@@ -893,7 +898,7 @@ void GL_APIENTRY GL_GetProgramResourceName(GLuint program,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLGetProgramResourceName);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -915,7 +920,7 @@ void GL_APIENTRY GL_GetProgramResourceiv(GLuint program,
           CID(context), program, GLenumToString(GLESEnum::ProgramInterface, programInterface),
           index, propCount, (uintptr_t)props, count, (uintptr_t)length, (uintptr_t)params);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked = PackParam<ShaderProgramID>(program);
         SCOPED_SHARE_CONTEXT_LOCK(context);
@@ -943,7 +948,7 @@ void GL_APIENTRY GL_GetProgramResourceiv(GLuint program,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLGetProgramResourceiv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -960,7 +965,7 @@ void GL_APIENTRY GL_GetTexLevelParameterfv(GLenum target,
           CID(context), GLenumToString(GLESEnum::TextureTarget, target), level,
           GLenumToString(GLESEnum::GetTextureParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         TextureTarget targetPacked = PackParam<TextureTarget>(target);
         SCOPED_SHARE_CONTEXT_LOCK(context);
@@ -987,7 +992,7 @@ void GL_APIENTRY GL_GetTexLevelParameterfv(GLenum target,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLGetTexLevelParameterfv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -1001,7 +1006,7 @@ void GL_APIENTRY GL_GetTexLevelParameteriv(GLenum target, GLint level, GLenum pn
           CID(context), GLenumToString(GLESEnum::TextureTarget, target), level,
           GLenumToString(GLESEnum::GetTextureParameter, pname), (uintptr_t)params);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         TextureTarget targetPacked = PackParam<TextureTarget>(target);
         SCOPED_SHARE_CONTEXT_LOCK(context);
@@ -1028,7 +1033,7 @@ void GL_APIENTRY GL_GetTexLevelParameteriv(GLenum target, GLint level, GLenum pn
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLGetTexLevelParameteriv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -1040,7 +1045,7 @@ GLboolean GL_APIENTRY GL_IsProgramPipeline(GLuint pipeline)
     EVENT(context, GLIsProgramPipeline, "context = %d, pipeline = %u", CID(context), pipeline);
 
     GLboolean returnValue;
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ProgramPipelineID pipelinePacked = PackParam<ProgramPipelineID>(pipeline);
         SCOPED_SHARE_CONTEXT_LOCK(context);
@@ -1070,7 +1075,7 @@ GLboolean GL_APIENTRY GL_IsProgramPipeline(GLuint pipeline)
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLIsProgramPipeline);
         returnValue = GetDefaultReturnValue<angle::EntryPoint::GLIsProgramPipeline, GLboolean>();
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
@@ -1084,7 +1089,7 @@ void GL_APIENTRY GL_MemoryBarrier(GLbitfield barriers)
     EVENT(context, GLMemoryBarrier, "context = %d, barriers = %s", CID(context),
           GLbitfieldToString(GLESEnum::MemoryBarrierMask, barriers).c_str());
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
@@ -1108,7 +1113,7 @@ void GL_APIENTRY GL_MemoryBarrier(GLbitfield barriers)
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLMemoryBarrier);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -1120,7 +1125,7 @@ void GL_APIENTRY GL_MemoryBarrierByRegion(GLbitfield barriers)
     EVENT(context, GLMemoryBarrierByRegion, "context = %d, barriers = %s", CID(context),
           GLbitfieldToString(GLESEnum::MemoryBarrierMask, barriers).c_str());
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
@@ -1144,7 +1149,7 @@ void GL_APIENTRY GL_MemoryBarrierByRegion(GLbitfield barriers)
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLMemoryBarrierByRegion);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -1156,7 +1161,7 @@ void GL_APIENTRY GL_ProgramUniform1f(GLuint program, GLint location, GLfloat v0)
     EVENT(context, GLProgramUniform1f, "context = %d, program = %u, location = %d, v0 = %f",
           CID(context), program, location, v0);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -1183,7 +1188,7 @@ void GL_APIENTRY GL_ProgramUniform1f(GLuint program, GLint location, GLfloat v0)
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLProgramUniform1f);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -1199,7 +1204,7 @@ void GL_APIENTRY GL_ProgramUniform1fv(GLuint program,
           "context = %d, program = %u, location = %d, count = %d, value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -1227,7 +1232,7 @@ void GL_APIENTRY GL_ProgramUniform1fv(GLuint program,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLProgramUniform1fv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -1239,7 +1244,7 @@ void GL_APIENTRY GL_ProgramUniform1i(GLuint program, GLint location, GLint v0)
     EVENT(context, GLProgramUniform1i, "context = %d, program = %u, location = %d, v0 = %d",
           CID(context), program, location, v0);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -1266,7 +1271,7 @@ void GL_APIENTRY GL_ProgramUniform1i(GLuint program, GLint location, GLint v0)
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLProgramUniform1i);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -1282,7 +1287,7 @@ void GL_APIENTRY GL_ProgramUniform1iv(GLuint program,
           "context = %d, program = %u, location = %d, count = %d, value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -1310,7 +1315,7 @@ void GL_APIENTRY GL_ProgramUniform1iv(GLuint program,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLProgramUniform1iv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -1322,7 +1327,7 @@ void GL_APIENTRY GL_ProgramUniform1ui(GLuint program, GLint location, GLuint v0)
     EVENT(context, GLProgramUniform1ui, "context = %d, program = %u, location = %d, v0 = %u",
           CID(context), program, location, v0);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -1350,7 +1355,7 @@ void GL_APIENTRY GL_ProgramUniform1ui(GLuint program, GLint location, GLuint v0)
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLProgramUniform1ui);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -1366,7 +1371,7 @@ void GL_APIENTRY GL_ProgramUniform1uiv(GLuint program,
           "context = %d, program = %u, location = %d, count = %d, value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -1394,7 +1399,7 @@ void GL_APIENTRY GL_ProgramUniform1uiv(GLuint program,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLProgramUniform1uiv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -1407,7 +1412,7 @@ void GL_APIENTRY GL_ProgramUniform2f(GLuint program, GLint location, GLfloat v0,
           "context = %d, program = %u, location = %d, v0 = %f, v1 = %f", CID(context), program,
           location, v0, v1);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -1435,7 +1440,7 @@ void GL_APIENTRY GL_ProgramUniform2f(GLuint program, GLint location, GLfloat v0,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLProgramUniform2f);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -1451,7 +1456,7 @@ void GL_APIENTRY GL_ProgramUniform2fv(GLuint program,
           "context = %d, program = %u, location = %d, count = %d, value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -1479,7 +1484,7 @@ void GL_APIENTRY GL_ProgramUniform2fv(GLuint program,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLProgramUniform2fv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -1492,7 +1497,7 @@ void GL_APIENTRY GL_ProgramUniform2i(GLuint program, GLint location, GLint v0, G
           "context = %d, program = %u, location = %d, v0 = %d, v1 = %d", CID(context), program,
           location, v0, v1);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -1520,7 +1525,7 @@ void GL_APIENTRY GL_ProgramUniform2i(GLuint program, GLint location, GLint v0, G
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLProgramUniform2i);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -1536,7 +1541,7 @@ void GL_APIENTRY GL_ProgramUniform2iv(GLuint program,
           "context = %d, program = %u, location = %d, count = %d, value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -1564,7 +1569,7 @@ void GL_APIENTRY GL_ProgramUniform2iv(GLuint program,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLProgramUniform2iv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -1577,7 +1582,7 @@ void GL_APIENTRY GL_ProgramUniform2ui(GLuint program, GLint location, GLuint v0,
           "context = %d, program = %u, location = %d, v0 = %u, v1 = %u", CID(context), program,
           location, v0, v1);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -1605,7 +1610,7 @@ void GL_APIENTRY GL_ProgramUniform2ui(GLuint program, GLint location, GLuint v0,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLProgramUniform2ui);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -1621,7 +1626,7 @@ void GL_APIENTRY GL_ProgramUniform2uiv(GLuint program,
           "context = %d, program = %u, location = %d, count = %d, value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -1649,7 +1654,7 @@ void GL_APIENTRY GL_ProgramUniform2uiv(GLuint program,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLProgramUniform2uiv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -1663,7 +1668,7 @@ GL_ProgramUniform3f(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfl
           "context = %d, program = %u, location = %d, v0 = %f, v1 = %f, v2 = %f", CID(context),
           program, location, v0, v1, v2);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -1691,7 +1696,7 @@ GL_ProgramUniform3f(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfl
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLProgramUniform3f);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -1707,7 +1712,7 @@ void GL_APIENTRY GL_ProgramUniform3fv(GLuint program,
           "context = %d, program = %u, location = %d, count = %d, value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -1735,7 +1740,7 @@ void GL_APIENTRY GL_ProgramUniform3fv(GLuint program,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLProgramUniform3fv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -1748,7 +1753,7 @@ void GL_APIENTRY GL_ProgramUniform3i(GLuint program, GLint location, GLint v0, G
           "context = %d, program = %u, location = %d, v0 = %d, v1 = %d, v2 = %d", CID(context),
           program, location, v0, v1, v2);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -1776,7 +1781,7 @@ void GL_APIENTRY GL_ProgramUniform3i(GLuint program, GLint location, GLint v0, G
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLProgramUniform3i);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -1792,7 +1797,7 @@ void GL_APIENTRY GL_ProgramUniform3iv(GLuint program,
           "context = %d, program = %u, location = %d, count = %d, value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -1820,7 +1825,7 @@ void GL_APIENTRY GL_ProgramUniform3iv(GLuint program,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLProgramUniform3iv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -1834,7 +1839,7 @@ GL_ProgramUniform3ui(GLuint program, GLint location, GLuint v0, GLuint v1, GLuin
           "context = %d, program = %u, location = %d, v0 = %u, v1 = %u, v2 = %u", CID(context),
           program, location, v0, v1, v2);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -1862,7 +1867,7 @@ GL_ProgramUniform3ui(GLuint program, GLint location, GLuint v0, GLuint v1, GLuin
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLProgramUniform3ui);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -1878,7 +1883,7 @@ void GL_APIENTRY GL_ProgramUniform3uiv(GLuint program,
           "context = %d, program = %u, location = %d, count = %d, value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -1906,7 +1911,7 @@ void GL_APIENTRY GL_ProgramUniform3uiv(GLuint program,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLProgramUniform3uiv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -1920,7 +1925,7 @@ GL_ProgramUniform4f(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfl
           "context = %d, program = %u, location = %d, v0 = %f, v1 = %f, v2 = %f, v3 = %f",
           CID(context), program, location, v0, v1, v2, v3);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -1948,7 +1953,7 @@ GL_ProgramUniform4f(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfl
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLProgramUniform4f);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -1964,7 +1969,7 @@ void GL_APIENTRY GL_ProgramUniform4fv(GLuint program,
           "context = %d, program = %u, location = %d, count = %d, value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -1992,7 +1997,7 @@ void GL_APIENTRY GL_ProgramUniform4fv(GLuint program,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLProgramUniform4fv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -2006,7 +2011,7 @@ GL_ProgramUniform4i(GLuint program, GLint location, GLint v0, GLint v1, GLint v2
           "context = %d, program = %u, location = %d, v0 = %d, v1 = %d, v2 = %d, v3 = %d",
           CID(context), program, location, v0, v1, v2, v3);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -2034,7 +2039,7 @@ GL_ProgramUniform4i(GLuint program, GLint location, GLint v0, GLint v1, GLint v2
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLProgramUniform4i);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -2050,7 +2055,7 @@ void GL_APIENTRY GL_ProgramUniform4iv(GLuint program,
           "context = %d, program = %u, location = %d, count = %d, value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -2078,7 +2083,7 @@ void GL_APIENTRY GL_ProgramUniform4iv(GLuint program,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLProgramUniform4iv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -2092,7 +2097,7 @@ GL_ProgramUniform4ui(GLuint program, GLint location, GLuint v0, GLuint v1, GLuin
           "context = %d, program = %u, location = %d, v0 = %u, v1 = %u, v2 = %u, v3 = %u",
           CID(context), program, location, v0, v1, v2, v3);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -2120,7 +2125,7 @@ GL_ProgramUniform4ui(GLuint program, GLint location, GLuint v0, GLuint v1, GLuin
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLProgramUniform4ui);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -2136,7 +2141,7 @@ void GL_APIENTRY GL_ProgramUniform4uiv(GLuint program,
           "context = %d, program = %u, location = %d, count = %d, value = 0x%016" PRIxPTR "",
           CID(context), program, location, count, (uintptr_t)value);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -2164,7 +2169,7 @@ void GL_APIENTRY GL_ProgramUniform4uiv(GLuint program,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLProgramUniform4uiv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -2182,7 +2187,7 @@ void GL_APIENTRY GL_ProgramUniformMatrix2fv(GLuint program,
           "0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -2211,7 +2216,8 @@ void GL_APIENTRY GL_ProgramUniformMatrix2fv(GLuint program,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(
+            angle::EntryPoint::GLProgramUniformMatrix2fv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -2229,7 +2235,7 @@ void GL_APIENTRY GL_ProgramUniformMatrix2x3fv(GLuint program,
           "0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -2258,7 +2264,8 @@ void GL_APIENTRY GL_ProgramUniformMatrix2x3fv(GLuint program,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(
+            angle::EntryPoint::GLProgramUniformMatrix2x3fv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -2276,7 +2283,7 @@ void GL_APIENTRY GL_ProgramUniformMatrix2x4fv(GLuint program,
           "0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -2305,7 +2312,8 @@ void GL_APIENTRY GL_ProgramUniformMatrix2x4fv(GLuint program,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(
+            angle::EntryPoint::GLProgramUniformMatrix2x4fv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -2323,7 +2331,7 @@ void GL_APIENTRY GL_ProgramUniformMatrix3fv(GLuint program,
           "0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -2352,7 +2360,8 @@ void GL_APIENTRY GL_ProgramUniformMatrix3fv(GLuint program,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(
+            angle::EntryPoint::GLProgramUniformMatrix3fv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -2370,7 +2379,7 @@ void GL_APIENTRY GL_ProgramUniformMatrix3x2fv(GLuint program,
           "0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -2399,7 +2408,8 @@ void GL_APIENTRY GL_ProgramUniformMatrix3x2fv(GLuint program,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(
+            angle::EntryPoint::GLProgramUniformMatrix3x2fv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -2417,7 +2427,7 @@ void GL_APIENTRY GL_ProgramUniformMatrix3x4fv(GLuint program,
           "0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -2446,7 +2456,8 @@ void GL_APIENTRY GL_ProgramUniformMatrix3x4fv(GLuint program,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(
+            angle::EntryPoint::GLProgramUniformMatrix3x4fv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -2464,7 +2475,7 @@ void GL_APIENTRY GL_ProgramUniformMatrix4fv(GLuint program,
           "0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -2493,7 +2504,8 @@ void GL_APIENTRY GL_ProgramUniformMatrix4fv(GLuint program,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(
+            angle::EntryPoint::GLProgramUniformMatrix4fv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -2511,7 +2523,7 @@ void GL_APIENTRY GL_ProgramUniformMatrix4x2fv(GLuint program,
           "0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -2540,7 +2552,8 @@ void GL_APIENTRY GL_ProgramUniformMatrix4x2fv(GLuint program,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(
+            angle::EntryPoint::GLProgramUniformMatrix4x2fv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -2558,7 +2571,7 @@ void GL_APIENTRY GL_ProgramUniformMatrix4x3fv(GLuint program,
           "0x%016" PRIxPTR "",
           CID(context), program, location, count, GLbooleanToString(transpose), (uintptr_t)value);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ShaderProgramID programPacked  = PackParam<ShaderProgramID>(program);
         UniformLocation locationPacked = PackParam<UniformLocation>(location);
@@ -2587,7 +2600,8 @@ void GL_APIENTRY GL_ProgramUniformMatrix4x3fv(GLuint program,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(
+            angle::EntryPoint::GLProgramUniformMatrix4x3fv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -2599,7 +2613,7 @@ void GL_APIENTRY GL_SampleMaski(GLuint maskNumber, GLbitfield mask)
     EVENT(context, GLSampleMaski, "context = %d, maskNumber = %u, mask = %s", CID(context),
           maskNumber, GLbitfieldToString(GLESEnum::AllEnums, mask).c_str());
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
@@ -2624,7 +2638,7 @@ void GL_APIENTRY GL_SampleMaski(GLuint maskNumber, GLbitfield mask)
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLSampleMaski);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -2645,7 +2659,7 @@ void GL_APIENTRY GL_TexStorage2DMultisample(GLenum target,
           GLenumToString(GLESEnum::SizedInternalFormat, internalformat), width, height,
           GLbooleanToString(fixedsamplelocations));
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         TextureType targetPacked = PackParam<TextureType>(target);
         SCOPED_SHARE_CONTEXT_LOCK(context);
@@ -2673,7 +2687,8 @@ void GL_APIENTRY GL_TexStorage2DMultisample(GLenum target,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(
+            angle::EntryPoint::GLTexStorage2DMultisample);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -2686,7 +2701,7 @@ void GL_APIENTRY GL_UseProgramStages(GLuint pipeline, GLbitfield stages, GLuint 
           CID(context), pipeline, GLbitfieldToString(GLESEnum::UseProgramStageMask, stages).c_str(),
           program);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ProgramPipelineID pipelinePacked = PackParam<ProgramPipelineID>(pipeline);
         ShaderProgramID programPacked    = PackParam<ShaderProgramID>(program);
@@ -2714,7 +2729,7 @@ void GL_APIENTRY GL_UseProgramStages(GLuint pipeline, GLbitfield stages, GLuint 
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLUseProgramStages);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -2726,7 +2741,7 @@ void GL_APIENTRY GL_ValidateProgramPipeline(GLuint pipeline)
     EVENT(context, GLValidateProgramPipeline, "context = %d, pipeline = %u", CID(context),
           pipeline);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         ProgramPipelineID pipelinePacked = PackParam<ProgramPipelineID>(pipeline);
         SCOPED_SHARE_CONTEXT_LOCK(context);
@@ -2751,7 +2766,8 @@ void GL_APIENTRY GL_ValidateProgramPipeline(GLuint pipeline)
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(
+            angle::EntryPoint::GLValidateProgramPipeline);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -2763,7 +2779,7 @@ void GL_APIENTRY GL_VertexAttribBinding(GLuint attribindex, GLuint bindingindex)
     EVENT(context, GLVertexAttribBinding, "context = %d, attribindex = %u, bindingindex = %u",
           CID(context), attribindex, bindingindex);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
@@ -2787,7 +2803,7 @@ void GL_APIENTRY GL_VertexAttribBinding(GLuint attribindex, GLuint bindingindex)
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLVertexAttribBinding);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -2806,7 +2822,7 @@ void GL_APIENTRY GL_VertexAttribFormat(GLuint attribindex,
           CID(context), attribindex, size, GLenumToString(GLESEnum::VertexAttribType, type),
           GLbooleanToString(normalized), relativeoffset);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         VertexAttribType typePacked = PackParam<VertexAttribType>(type);
         SCOPED_SHARE_CONTEXT_LOCK(context);
@@ -2833,7 +2849,7 @@ void GL_APIENTRY GL_VertexAttribFormat(GLuint attribindex,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLVertexAttribFormat);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -2849,7 +2865,7 @@ void GL_APIENTRY GL_VertexAttribIFormat(GLuint attribindex,
           "context = %d, attribindex = %u, size = %d, type = %s, relativeoffset = %u", CID(context),
           attribindex, size, GLenumToString(GLESEnum::VertexAttribIType, type), relativeoffset);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         VertexAttribType typePacked = PackParam<VertexAttribType>(type);
         SCOPED_SHARE_CONTEXT_LOCK(context);
@@ -2876,7 +2892,7 @@ void GL_APIENTRY GL_VertexAttribIFormat(GLuint attribindex,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLVertexAttribIFormat);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -2888,7 +2904,7 @@ void GL_APIENTRY GL_VertexBindingDivisor(GLuint bindingindex, GLuint divisor)
     EVENT(context, GLVertexBindingDivisor, "context = %d, bindingindex = %u, divisor = %u",
           CID(context), bindingindex, divisor);
 
-    if (context)
+    if (ANGLE_LIKELY(context != nullptr))
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
@@ -2912,7 +2928,7 @@ void GL_APIENTRY GL_VertexBindingDivisor(GLuint bindingindex, GLuint divisor)
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext();
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLVertexBindingDivisor);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }

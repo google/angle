@@ -1882,15 +1882,15 @@ def get_context_getter_function(cmd_name):
 
 
 def get_valid_context_check(cmd_name):
-    return "context"
+    return "ANGLE_LIKELY(context != nullptr)"
 
 
-def get_constext_lost_error_generator(cmd_name):
+def get_constext_lost_error_generator(cmd_name, entry_point_name):
     # Don't generate context lost errors on commands that accept lost contexts
     if is_context_lost_acceptable_cmd(cmd_name):
         return ""
 
-    return "GenerateContextLostErrorOnCurrentGlobalContext();"
+    return "GenerateContextLostErrorOnCurrentGlobalContext({name});".format(name=entry_point_name)
 
 
 def strip_suffix_always(api, name):
@@ -2056,7 +2056,7 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, cmd_packe
         "valid_context_check":
             get_valid_context_check(cmd_name),
         "constext_lost_error_generator":
-            get_constext_lost_error_generator(cmd_name),
+            get_constext_lost_error_generator(cmd_name, entry_point_name),
         "event_comment":
             event_comment,
         "labeled_object":

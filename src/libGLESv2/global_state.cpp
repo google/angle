@@ -191,23 +191,19 @@ bool IsEGLValidationEnabled()
 
 namespace gl
 {
-void GenerateContextLostErrorOnContext(Context *context)
-{
-    if (context && context->isContextLost())
-    {
-        context->getMutableErrorSetForValidation()->validationError(
-            angle::EntryPoint::Invalid, GL_CONTEXT_LOST, err::kContextLost);
-    }
-}
-
-void GenerateContextLostErrorOnCurrentGlobalContext()
+void GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint entryPoint)
 {
     // If the client starts issuing GL calls before ANGLE has had a chance to initialize,
     // GenerateContextLostErrorOnCurrentGlobalContext can be called before AllocateCurrentThread has
     // had a chance to run. Calling GetCurrentThread() ensures that TLS thread state is set up.
     egl::GetCurrentThread();
 
-    GenerateContextLostErrorOnContext(GetGlobalContext());
+    Context *context = GetGlobalContext();
+    if (context != nullptr && context->isContextLost())
+    {
+        context->getMutableErrorSetForValidation()->validationError(entryPoint, GL_CONTEXT_LOST,
+                                                                    err::kContextLost);
+    }
 }
 }  // namespace gl
 
