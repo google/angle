@@ -56,15 +56,13 @@ class Debug : angle::NonCopyable
                        GLuint id,
                        GLenum severity,
                        const std::string &message,
-                       gl::LogSeverity logSeverity,
-                       angle::EntryPoint entryPoint) const;
+                       gl::LogSeverity logSeverity) const;
     void insertMessage(GLenum source,
                        GLenum type,
                        GLuint id,
                        GLenum severity,
                        std::string &&message,
-                       gl::LogSeverity logSeverity,
-                       angle::EntryPoint entryPoint) const;
+                       gl::LogSeverity logSeverity) const;
 
     void setMessageControl(GLenum source,
                            GLenum type,

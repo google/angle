@@ -4,6 +4,7 @@
 
 angle_white_box_tests_sources = [
   "egl_tests/EGLFeatureControlTest.cpp",
+  "gl_tests/ErrorMessages.cpp",
   "gl_tests/FormatPrintTest.cpp",
   "test_utils/ANGLETest.cpp",
   "test_utils/ANGLETest.h",
@@ -14,7 +15,6 @@ angle_white_box_tests_win_sources = [
   "gl_tests/D3D11FormatTablesTest.cpp",
   "gl_tests/D3D11InputLayoutCacheTest.cpp",
   "gl_tests/D3DTextureTest.cpp",
-  "gl_tests/ErrorMessages.cpp",
 ]
 angle_white_box_tests_vulkan_sources = [
   "gl_tests/VulkanDescriptorSetTest.cpp",

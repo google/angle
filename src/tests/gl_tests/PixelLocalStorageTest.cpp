@@ -42,15 +42,15 @@ using namespace angle;
         EXPECT_EQ(nextError, GLenum(GL_NO_ERROR)); \
     }
 
-#define EXPECT_GL_SINGLE_ERROR_MSG(msg)                         \
-    if (mHasDebugKHR)                                           \
-    {                                                           \
-        EXPECT_EQ(mErrorMessages.size(), size_t(1));            \
-        if (mErrorMessages.size() == 1)                         \
-        {                                                       \
-            EXPECT_EQ(std::string(msg), mErrorMessages.back()); \
-        }                                                       \
-        mErrorMessages.clear();                                 \
+#define EXPECT_GL_SINGLE_ERROR_MSG(msg)                                                 \
+    if (mHasDebugKHR)                                                                   \
+    {                                                                                   \
+        EXPECT_EQ(mErrorMessages.size(), size_t(1));                                    \
+        if (mErrorMessages.size() == 1)                                                 \
+        {                                                                               \
+            EXPECT_NE(mErrorMessages.back().find(std::string(msg)), std::string::npos); \
+        }                                                                               \
+        mErrorMessages.clear();                                                         \
     }
 
 #define EXPECT_PIXEL_LOCAL_CLEAR_VALUE_FLOAT(plane, rgba)                             \

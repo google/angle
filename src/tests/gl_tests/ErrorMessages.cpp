@@ -85,7 +85,8 @@ TEST_P(ErrorMessagesTest, ErrorMessages)
     constexpr GLenum type      = GL_DEBUG_TYPE_ERROR;
     constexpr GLenum severity  = GL_DEBUG_SEVERITY_HIGH;
     constexpr GLuint id1       = 1282;
-    const std::string message1 = gl::err::kWebglBindAttribLocationReservedPrefix;
+    const std::string message1 =
+        std::string("glBindAttribLocation: ") + gl::err::kWebglBindAttribLocationReservedPrefix;
     Message expectedMessage;
 
     GLint numMessages = 0;
