@@ -588,12 +588,6 @@ bool ValidateMultiDrawIndirectBase(const Context *context,
                                    GLsizei drawcount,
                                    GLsizei stride)
 {
-    if (!context->getExtensions().multiDrawIndirectEXT)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     // An INVALID_VALUE error is generated if stride is neither 0 nor a multiple of 4.
     if ((stride & 3) != 0)
     {
@@ -1065,12 +1059,6 @@ bool ValidateTexStorageMem2DMultisampleEXT(const Context *context,
                                            MemoryObjectID memory,
                                            GLuint64 offset)
 {
-    if (!context->getExtensions().memoryObjectEXT)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     UNIMPLEMENTED();
     return false;
 }
@@ -2444,12 +2432,6 @@ bool ValidateMinSampleShadingOES(const PrivateState &state,
                                  angle::EntryPoint entryPoint,
                                  GLfloat value)
 {
-    if (!state.getExtensions().sampleShadingOES)
-    {
-        errors->validationError(entryPoint, GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     return true;
 }
 
@@ -2508,12 +2490,6 @@ bool ValidateFramebufferTextureEXT(const Context *context,
                                    TextureID texture,
                                    GLint level)
 {
-    if (!context->getExtensions().geometryShaderEXT)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kGeometryShaderExtensionNotEnabled);
-        return false;
-    }
-
     return ValidateFramebufferTextureCommon(context, entryPoint, target, attachment, texture,
                                             level);
 }
@@ -2525,12 +2501,6 @@ bool ValidateFramebufferTextureOES(const Context *context,
                                    TextureID texture,
                                    GLint level)
 {
-    if (!context->getExtensions().geometryShaderOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kGeometryShaderExtensionNotEnabled);
-        return false;
-    }
-
     return ValidateFramebufferTextureCommon(context, entryPoint, target, attachment, texture,
                                             level);
 }
@@ -2547,12 +2517,6 @@ bool ValidateTexStorageMem3DMultisampleEXT(const Context *context,
                                            MemoryObjectID memory,
                                            GLuint64 offset)
 {
-    if (!context->getExtensions().memoryObjectEXT)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     UNIMPLEMENTED();
     return false;
 }
@@ -2563,11 +2527,6 @@ bool ValidateGetProgramResourceLocationIndexEXT(const Context *context,
                                                 GLenum programInterface,
                                                 const char *name)
 {
-    if (!context->getExtensions().blendFuncExtendedEXT)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
     if (context->getClientVersion() < ES_3_1)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES31Required);
@@ -2602,12 +2561,6 @@ bool ValidateTexBufferOES(const Context *context,
                           GLenum internalformat,
                           BufferID bufferPacked)
 {
-    if (!context->getExtensions().textureBufferOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kTextureBufferExtensionNotAvailable);
-        return false;
-    }
-
     return ValidateTexBufferBase(context, entryPoint, target, internalformat, bufferPacked);
 }
 
@@ -2619,12 +2572,6 @@ bool ValidateTexBufferRangeOES(const Context *context,
                                GLintptr offset,
                                GLsizeiptr size)
 {
-    if (!context->getExtensions().textureBufferOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kTextureBufferExtensionNotAvailable);
-        return false;
-    }
-
     return ValidateTexBufferRangeBase(context, entryPoint, target, internalformat, bufferPacked,
                                       offset, size);
 }
@@ -2636,12 +2583,6 @@ bool ValidateTexBufferEXT(const Context *context,
                           GLenum internalformat,
                           BufferID bufferPacked)
 {
-    if (!context->getExtensions().textureBufferEXT)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kTextureBufferExtensionNotAvailable);
-        return false;
-    }
-
     return ValidateTexBufferBase(context, entryPoint, target, internalformat, bufferPacked);
 }
 
@@ -2653,12 +2594,6 @@ bool ValidateTexBufferRangeEXT(const Context *context,
                                GLintptr offset,
                                GLsizeiptr size)
 {
-    if (!context->getExtensions().textureBufferEXT)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kTextureBufferExtensionNotAvailable);
-        return false;
-    }
-
     return ValidateTexBufferRangeBase(context, entryPoint, target, internalformat, bufferPacked,
                                       offset, size);
 }

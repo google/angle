@@ -111,18 +111,6 @@ bool ValidateCopyTexture3DCommon(const Context *context,
                                  GLint internalFormat,
                                  TextureTarget destTarget)
 {
-    if (context->getClientVersion() < ES_3_0)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
-        return false;
-    }
-
-    if (!context->getExtensions().copyTexture3dANGLE)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kANGLECopyTexture3DUnavailable);
-        return false;
-    }
-
     if (!ValidTexture3DTarget(context, source->getType()))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidTextureTarget);
@@ -3605,11 +3593,6 @@ bool ValidateMultiDrawArraysInstancedANGLE(const Context *context,
                                            const GLsizei *instanceCounts,
                                            GLsizei drawcount)
 {
-    if (!context->getExtensions().multiDrawANGLE)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
     if (context->getClientVersion() < ES_3_0)
     {
         if (!context->getExtensions().instancedArraysAny())
@@ -3642,11 +3625,6 @@ bool ValidateMultiDrawElementsInstancedANGLE(const Context *context,
                                              const GLsizei *instanceCounts,
                                              GLsizei drawcount)
 {
-    if (!context->getExtensions().multiDrawANGLE)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
     if (context->getClientVersion() < ES_3_0)
     {
         if (!context->getExtensions().instancedArraysAny())
@@ -4675,11 +4653,6 @@ bool ValidateBindFragDataLocationIndexedEXT(const Context *context,
                                             GLuint index,
                                             const char *name)
 {
-    if (!context->getExtensions().blendFuncExtendedEXT)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
     if (context->getClientVersion() < ES_3_0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
@@ -4736,11 +4709,6 @@ bool ValidateGetFragDataIndexEXT(const Context *context,
                                  ShaderProgramID program,
                                  const char *name)
 {
-    if (!context->getExtensions().blendFuncExtendedEXT)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
     if (context->getClientVersion() < ES_3_0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
@@ -4772,12 +4740,6 @@ bool ValidateTexStorage2DMultisampleANGLE(const Context *context,
                                           GLsizei height,
                                           GLboolean fixedSampleLocations)
 {
-    if (!context->getExtensions().textureMultisampleANGLE)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kMultisampleTextureExtensionOrES31Required);
-        return false;
-    }
-
     return ValidateTexStorage2DMultisampleBase(context, entryPoint, target, samples, internalFormat,
                                                width, height);
 }
@@ -4789,12 +4751,6 @@ bool ValidateGetTexLevelParameterfvANGLE(const Context *context,
                                          GLenum pname,
                                          const GLfloat *params)
 {
-    if (!context->getExtensions().getTexLevelParameterANGLE)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     return ValidateGetTexLevelParameterBase(context, entryPoint, target, level, pname, nullptr);
 }
 
@@ -4805,12 +4761,6 @@ bool ValidateGetTexLevelParameterivANGLE(const Context *context,
                                          GLenum pname,
                                          const GLint *params)
 {
-    if (!context->getExtensions().getTexLevelParameterANGLE)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     return ValidateGetTexLevelParameterBase(context, entryPoint, target, level, pname, nullptr);
 }
 
@@ -4820,12 +4770,6 @@ bool ValidateGetMultisamplefvANGLE(const Context *context,
                                    GLuint index,
                                    const GLfloat *val)
 {
-    if (!context->getExtensions().textureMultisampleANGLE)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kMultisampleTextureExtensionOrES31Required);
-        return false;
-    }
-
     return ValidateGetMultisamplefvBase(context, entryPoint, pname, index, val);
 }
 
@@ -4835,13 +4779,6 @@ bool ValidateSampleMaskiANGLE(const PrivateState &state,
                               GLuint maskNumber,
                               GLbitfield mask)
 {
-    if (!state.getExtensions().textureMultisampleANGLE)
-    {
-        errors->validationError(entryPoint, GL_INVALID_OPERATION,
-                                kMultisampleTextureExtensionOrES31Required);
-        return false;
-    }
-
     return ValidateSampleMaskiBase(state, errors, entryPoint, maskNumber, mask);
 }
 }  // namespace gl

@@ -4563,12 +4563,6 @@ bool ValidateDrawArraysInstancedANGLE(const Context *context,
                                       GLsizei count,
                                       GLsizei primcount)
 {
-    if (!context->getExtensions().instancedArraysANGLE)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     if (!ValidateDrawArraysInstancedBase(context, entryPoint, mode, first, count, primcount, 0))
     {
         return false;
@@ -4584,12 +4578,6 @@ bool ValidateDrawArraysInstancedEXT(const Context *context,
                                     GLsizei count,
                                     GLsizei primcount)
 {
-    if (!context->getExtensions().instancedArraysEXT)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     if (!ValidateDrawArraysInstancedBase(context, entryPoint, mode, first, count, primcount, 0))
     {
         return false;
@@ -4654,12 +4642,6 @@ bool ValidateDrawElementsInstancedANGLE(const Context *context,
                                         const void *indices,
                                         GLsizei primcount)
 {
-    if (!context->getExtensions().instancedArraysANGLE)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     if (!ValidateDrawElementsInstancedBase(context, entryPoint, mode, count, type, indices,
                                            primcount, 0))
     {
@@ -4677,12 +4659,6 @@ bool ValidateDrawElementsInstancedEXT(const Context *context,
                                       const void *indices,
                                       GLsizei primcount)
 {
-    if (!context->getExtensions().instancedArraysEXT)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     if (!ValidateDrawElementsInstancedBase(context, entryPoint, mode, count, type, indices,
                                            primcount, 0))
     {
@@ -4976,12 +4952,6 @@ bool ValidateInsertEventMarkerEXT(const Context *context,
                                   GLsizei length,
                                   const char *marker)
 {
-    if (!context->getExtensions().debugMarkerEXT)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     return true;
 }
 
@@ -4990,12 +4960,6 @@ bool ValidatePushGroupMarkerEXT(const Context *context,
                                 GLsizei length,
                                 const char *marker)
 {
-    if (!context->getExtensions().debugMarkerEXT)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     return true;
 }
 
@@ -8815,12 +8779,6 @@ bool ValidateLoseContextCHROMIUM(const Context *context,
                                  GraphicsResetStatus current,
                                  GraphicsResetStatus other)
 {
-    if (!context->getExtensions().loseContextCHROMIUM)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     switch (current)
     {
         case GraphicsResetStatus::GuiltyContextReset:
@@ -8848,7 +8806,6 @@ bool ValidateLoseContextCHROMIUM(const Context *context,
     return true;
 }
 
-// GL_ANGLE_texture_storage_external
 bool ValidateTexImage2DExternalANGLE(const Context *context,
                                      angle::EntryPoint entryPoint,
                                      TextureTarget target,
@@ -8860,12 +8817,6 @@ bool ValidateTexImage2DExternalANGLE(const Context *context,
                                      GLenum format,
                                      GLenum type)
 {
-    if (!context->getExtensions().textureExternalUpdateANGLE)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     if (!ValidTexture2DDestinationTarget(context, target) &&
         !ValidTextureExternalTarget(context, target))
     {
@@ -8899,12 +8850,6 @@ bool ValidateInvalidateTextureANGLE(const Context *context,
                                     angle::EntryPoint entryPoint,
                                     TextureType target)
 {
-    if (!context->getExtensions().textureExternalUpdateANGLE)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     if (!ValidTextureTarget(context, target) && !ValidTextureExternalTarget(context, target))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidTextureTarget);

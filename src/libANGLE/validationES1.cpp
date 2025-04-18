@@ -665,12 +665,6 @@ bool ValidateDrawTexCommon(const Context *context,
                            float width,
                            float height)
 {
-    if (!context->getExtensions().drawTextureOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     if (width <= 0.0f || height <= 0.0f)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNonPositiveDrawTextureDimension);
@@ -1758,12 +1752,6 @@ bool ValidatePointSizePointerOES(const Context *context,
                                  GLsizei stride,
                                  const void *pointer)
 {
-    if (!context->getExtensions().pointSizeArrayOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     return ValidateBuiltinVertexAttributeCommon(
         context, entryPoint, ClientVertexArrayType::PointSize, 1, type, stride, pointer);
 }
@@ -1782,12 +1770,6 @@ bool ValidateGenFramebuffersOES(const Context *context,
                                 GLsizei n,
                                 const FramebufferID *framebuffers)
 {
-    if (!context->getExtensions().framebufferObjectOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     return ValidateGenOrDelete(context, entryPoint, n, framebuffers);
 }
 
@@ -1796,12 +1778,6 @@ bool ValidateDeleteFramebuffersOES(const Context *context,
                                    GLsizei n,
                                    const FramebufferID *framebuffers)
 {
-    if (!context->getExtensions().framebufferObjectOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     return ValidateGenOrDelete(context, entryPoint, n, framebuffers);
 }
 
@@ -1810,12 +1786,6 @@ bool ValidateGenRenderbuffersOES(const Context *context,
                                  GLsizei n,
                                  const RenderbufferID *renderbuffers)
 {
-    if (!context->getExtensions().framebufferObjectOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     return ValidateGenOrDelete(context, entryPoint, n, renderbuffers);
 }
 
@@ -1824,12 +1794,6 @@ bool ValidateDeleteRenderbuffersOES(const Context *context,
                                     GLsizei n,
                                     const RenderbufferID *renderbuffers)
 {
-    if (!context->getExtensions().framebufferObjectOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     return ValidateGenOrDelete(context, entryPoint, n, renderbuffers);
 }
 
@@ -1838,12 +1802,6 @@ bool ValidateBindFramebufferOES(const Context *context,
                                 GLenum target,
                                 FramebufferID framebuffer)
 {
-    if (!context->getExtensions().framebufferObjectOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     return ValidateBindFramebufferBase(context, entryPoint, target, framebuffer);
 }
 
@@ -1852,12 +1810,6 @@ bool ValidateBindRenderbufferOES(const Context *context,
                                  GLenum target,
                                  RenderbufferID renderbuffer)
 {
-    if (!context->getExtensions().framebufferObjectOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     return ValidateBindRenderbufferBase(context, entryPoint, target, renderbuffer);
 }
 
@@ -1865,12 +1817,6 @@ bool ValidateCheckFramebufferStatusOES(const Context *context,
                                        angle::EntryPoint entryPoint,
                                        GLenum target)
 {
-    if (!context->getExtensions().framebufferObjectOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     if (!ValidFramebufferTarget(context, target))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidFramebufferTarget);
@@ -1887,12 +1833,6 @@ bool ValidateFramebufferRenderbufferOES(const Context *context,
                                         GLenum rbtarget,
                                         RenderbufferID renderbuffer)
 {
-    if (!context->getExtensions().framebufferObjectOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     return ValidateFramebufferRenderbufferBase(context, entryPoint, target, attachment, rbtarget,
                                                renderbuffer);
 }
@@ -1905,12 +1845,6 @@ bool ValidateFramebufferTexture2DOES(const Context *context,
                                      TextureID texture,
                                      GLint level)
 {
-    if (!context->getExtensions().framebufferObjectOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     if (level != 0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidFramebufferTextureLevel);
@@ -1985,12 +1919,6 @@ bool ValidateGenerateMipmapOES(const Context *context,
                                angle::EntryPoint entryPoint,
                                TextureType target)
 {
-    if (!context->getExtensions().framebufferObjectOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     return ValidateGenerateMipmapBase(context, entryPoint, target);
 }
 
@@ -2001,12 +1929,6 @@ bool ValidateGetFramebufferAttachmentParameterivOES(const Context *context,
                                                     GLenum pname,
                                                     const GLint *params)
 {
-    if (!context->getExtensions().framebufferObjectOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     return ValidateGetFramebufferAttachmentParameterivBase(context, entryPoint, target, attachment,
                                                            pname, nullptr);
 }
@@ -2017,12 +1939,6 @@ bool ValidateGetRenderbufferParameterivOES(const Context *context,
                                            GLenum pname,
                                            const GLint *params)
 {
-    if (!context->getExtensions().framebufferObjectOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     return ValidateGetRenderbufferParameterivBase(context, entryPoint, target, pname, nullptr);
 }
 
@@ -2030,12 +1946,6 @@ bool ValidateIsFramebufferOES(const Context *context,
                               angle::EntryPoint entryPoint,
                               FramebufferID framebuffer)
 {
-    if (!context->getExtensions().framebufferObjectOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     return true;
 }
 
@@ -2043,12 +1953,6 @@ bool ValidateIsRenderbufferOES(const Context *context,
                                angle::EntryPoint entryPoint,
                                RenderbufferID renderbuffer)
 {
-    if (!context->getExtensions().framebufferObjectOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     return true;
 }
 
@@ -2059,12 +1963,6 @@ bool ValidateRenderbufferStorageOES(const Context *context,
                                     GLsizei width,
                                     GLsizei height)
 {
-    if (!context->getExtensions().framebufferObjectOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     return ValidateRenderbufferStorageParametersBase(context, entryPoint, target, 0, internalformat,
                                                      width, height);
 }

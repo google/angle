@@ -14,7 +14,9 @@
 
 namespace gl
 {
-// Nothing here yet.
+
+void RecordVersionErrorESEXT(const Context *context, angle::EntryPoint entryPoint);
+
 }  // namespace gl
 
 #endif  // LIBANGLE_VALIDATION_ESEXT_H_
