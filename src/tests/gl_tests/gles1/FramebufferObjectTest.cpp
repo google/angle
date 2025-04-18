@@ -40,6 +40,8 @@ class FramebufferObjectTest : public ANGLETest<>
 // Checks that framebuffer object can be used without GL errors.
 TEST_P(FramebufferObjectTest, FramebufferObject)
 {
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_framebuffer_object"));
+
     GLuint fboId;
     GLint params;
 
@@ -56,7 +58,7 @@ TEST_P(FramebufferObjectTest, FramebufferObject)
                                              GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE, &params);
     EXPECT_GL_NO_ERROR();
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindFramebufferOES(GL_FRAMEBUFFER, 0);
     glDeleteFramebuffersOES(1, &fboId);
     EXPECT_GL_NO_ERROR();
 }
@@ -64,21 +66,25 @@ TEST_P(FramebufferObjectTest, FramebufferObject)
 // Checks that texture object can be bound for framebuffer object.
 TEST_P(FramebufferObjectTest, TextureObject)
 {
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_framebuffer_object"));
+
     GLuint fboId;
 
-    glGenFramebuffers(1, &fboId);
-    glBindFramebuffer(GL_FRAMEBUFFER, fboId);
+    glGenFramebuffersOES(1, &fboId);
+    glBindFramebufferOES(GL_FRAMEBUFFER, fboId);
     glFramebufferTexture2DOES(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTexture->get(),
                               0);
     EXPECT_GL_NO_ERROR();
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glDeleteFramebuffers(1, &fboId);
+    glBindFramebufferOES(GL_FRAMEBUFFER, 0);
+    glDeleteFramebuffersOES(1, &fboId);
 }
 
 // Checks different formats for a texture object bound to a framebuffer object.
 TEST_P(FramebufferObjectTest, TextureObjectDifferentFormats)
 {
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_framebuffer_object"));
+
     // http://anglebug.com/42264178
     ANGLE_SKIP_TEST_IF(IsMac() && IsOpenGL());
 
@@ -120,8 +126,8 @@ TEST_P(FramebufferObjectTest, RenderbufferObject)
     GLuint rboId;
     GLint params;
 
-    glGenFramebuffers(1, &fboId);
-    glBindFramebuffer(GL_FRAMEBUFFER, fboId);
+    glGenFramebuffersOES(1, &fboId);
+    glBindFramebufferOES(GL_FRAMEBUFFER, fboId);
 
     glGenRenderbuffersOES(1, &rboId);
     EXPECT_GL_NO_ERROR();
@@ -143,8 +149,8 @@ TEST_P(FramebufferObjectTest, RenderbufferObject)
     glGetRenderbufferParameterivOES(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, &params);
     EXPECT_GL_NO_ERROR();
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glDeleteFramebuffers(1, &fboId);
+    glBindFramebufferOES(GL_FRAMEBUFFER, 0);
+    glDeleteFramebuffersOES(1, &fboId);
     glDeleteRenderbuffersOES(1, &rboId);
     EXPECT_GL_NO_ERROR();
 }
@@ -158,8 +164,8 @@ TEST_P(FramebufferObjectTest, RGBA8Renderbuffer)
     GLuint fbo;
     GLuint rbo;
 
-    glGenFramebuffers(1, &fbo);
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glGenFramebuffersOES(1, &fbo);
+    glBindFramebufferOES(GL_FRAMEBUFFER, fbo);
 
     glGenRenderbuffersOES(1, &rbo);
     EXPECT_GL_NO_ERROR();
@@ -178,8 +184,8 @@ TEST_P(FramebufferObjectTest, RGBA8Renderbuffer)
 
     EXPECT_PIXEL_RECT_EQ(0, 0, 16, 16, GLColor::white);
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glDeleteFramebuffers(1, &fbo);
+    glBindFramebufferOES(GL_FRAMEBUFFER, 0);
+    glDeleteFramebuffersOES(1, &fbo);
     glDeleteRenderbuffersOES(1, &rbo);
     EXPECT_GL_NO_ERROR();
 }
@@ -194,8 +200,8 @@ TEST_P(FramebufferObjectTest, RGB8AndRGBA8Renderbuffers)
     GLuint fbo;
     GLuint rbo[2];
 
-    glGenFramebuffers(1, &fbo);
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glGenFramebuffersOES(1, &fbo);
+    glBindFramebufferOES(GL_FRAMEBUFFER, fbo);
 
     glGenRenderbuffersOES(2, rbo);
     EXPECT_GL_NO_ERROR();
@@ -222,8 +228,8 @@ TEST_P(FramebufferObjectTest, RGB8AndRGBA8Renderbuffers)
     glClear(GL_COLOR_BUFFER_BIT);
     EXPECT_PIXEL_RECT_EQ(0, 0, 16, 16, GLColor::magenta);
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glDeleteFramebuffers(1, &fbo);
+    glBindFramebufferOES(GL_FRAMEBUFFER, 0);
+    glDeleteFramebuffersOES(1, &fbo);
     glDeleteRenderbuffersOES(2, rbo);
     EXPECT_GL_NO_ERROR();
 }
@@ -231,6 +237,8 @@ TEST_P(FramebufferObjectTest, RGB8AndRGBA8Renderbuffers)
 // Checks that generateMipmap can be called without GL errors.
 TEST_P(FramebufferObjectTest, GenerateMipmap)
 {
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_framebuffer_object"));
+
     constexpr uint32_t kSize = 32;
     std::vector<unsigned char> pixelData(kSize * kSize * 4, 0);
 

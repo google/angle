@@ -8563,5 +8563,4 @@ TEST_P(PixelLocalStorageTestPreES3, UnsupportedClientVersion)
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(PixelLocalStorageTestPreES3);
 ANGLE_INSTANTIATE_TEST(PixelLocalStorageTestPreES3,
-                       ES1_NULL().enable(Feature::EmulatePixelLocalStorage),
                        ES2_NULL().enable(Feature::EmulatePixelLocalStorage));

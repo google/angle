@@ -126,6 +126,13 @@ TEST_P(DebugTest, ObjectLabelsEXT)
         bool skip = false;
         switch (identifier)
         {
+            case GL_PROGRAM_OBJECT_EXT:
+            case GL_SHADER_OBJECT_EXT:
+                if (getClientMajorVersion() < 2)
+                {
+                    skip = true;
+                }
+                break;
             case GL_PROGRAM_PIPELINE_OBJECT_EXT:
                 if (!(getClientMajorVersion() >= 3 && getClientMinorVersion() >= 1) ||
                     !IsGLExtensionEnabled("GL_EXT_separate_shader_objects"))
