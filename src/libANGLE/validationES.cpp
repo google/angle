@@ -3254,12 +3254,6 @@ bool ValidateGetInteger64vRobustANGLE(const Context *context,
         return false;
     }
 
-    if (nativeType == GL_INT_64_ANGLEX)
-    {
-        CastStateValues(context, nativeType, pname, numParams, data);
-        return false;
-    }
-
     SetRobustLengthParam(length, numParams);
     return true;
 }

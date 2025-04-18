@@ -86,6 +86,28 @@ TEST_P(RobustClientMemoryTest, GetInteger)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test basic usage and validation of glGetInteger64vRobustANGLE
+TEST_P(RobustClientMemoryTest, GetInteger64)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_robust_client_memory"));
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
+
+    constexpr GLint64 kMinRequiredMaxElementIndex = 16777215;
+
+    // Verify that the regular and robust entry points return the same values
+    GLint64 resultRegular;
+    glGetInteger64v(GL_MAX_ELEMENT_INDEX, &resultRegular);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GE(resultRegular, kMinRequiredMaxElementIndex);
+
+    GLsizei length;
+    GLint64 resultRobust;
+    glGetInteger64vRobustANGLE(GL_MAX_ELEMENT_INDEX, 1, &length, &resultRobust);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(1, length);
+    EXPECT_EQ(resultRegular, resultRobust);
+}
+
 // Test basic usage and validation of glTexImage2DRobustANGLE and glTexSubImage2DRobustANGLE
 TEST_P(RobustClientMemoryTest, TexImage2D)
 {

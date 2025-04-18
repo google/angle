@@ -1367,7 +1367,7 @@ void CaptureGetInteger64vRobustANGLE_length(const State &glState,
                                             GLint64 *data,
                                             ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = sizeof(GLsizei);
 }
 
 void CaptureGetInteger64vRobustANGLE_data(const State &glState,
@@ -1378,7 +1378,7 @@ void CaptureGetInteger64vRobustANGLE_data(const State &glState,
                                           GLint64 *data,
                                           ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureGetParameter(glState, pname, sizeof(GLint64), paramCapture);
 }
 
 void CaptureGetInteger64i_vRobustANGLE_length(const State &glState,
