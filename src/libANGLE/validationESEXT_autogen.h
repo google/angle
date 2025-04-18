@@ -1394,13 +1394,6 @@ bool ValidateBufferStorageExternalEXT(const Context *context,
                                       GLsizeiptr size,
                                       GLeglClientBufferEXT clientBuffer,
                                       GLbitfield flags);
-bool ValidateNamedBufferStorageExternalEXT(const Context *context,
-                                           angle::EntryPoint entryPoint,
-                                           GLuint buffer,
-                                           GLintptr offset,
-                                           GLsizeiptr size,
-                                           GLeglClientBufferEXT clientBuffer,
-                                           GLbitfield flags);
 
 // GL_EXT_float_blend
 

@@ -784,7 +784,6 @@ enum class EntryPoint
     GLMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE,
     GLMultiTexCoord4f,
     GLMultiTexCoord4x,
-    GLNamedBufferStorageExternalEXT,
     GLNormal3f,
     GLNormal3x,
     GLNormalPointer,

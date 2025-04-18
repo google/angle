@@ -312,6 +312,8 @@ gles1_extensions = [
 gles_skipped_commands = [
     # GL_EXT_EGL_image_storage
     "glEGLImageTargetTextureStorageEXT",
+    # GL_EXT_external_buffer
+    "glNamedBufferStorageExternalEXT",
     # GL_EXT_memory_object
     "glTextureStorageMem2DEXT",
     "glTextureStorageMem2DMultisampleEXT",

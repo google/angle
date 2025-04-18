@@ -4304,13 +4304,6 @@ CallCapture ParseCallCapture(const Token &nameToken,
             paramTokens, strings);
         return CallCapture(EntryPoint::GLMultiTexCoord4x, std::move(params));
     }
-    if (strcmp(nameToken, "glNamedBufferStorageExternalEXT") == 0)
-    {
-        ParamBuffer params =
-            ParseParameters<std::remove_pointer<PFNGLNAMEDBUFFERSTORAGEEXTERNALEXTPROC>::type>(
-                paramTokens, strings);
-        return CallCapture(EntryPoint::GLNamedBufferStorageExternalEXT, std::move(params));
-    }
     if (strcmp(nameToken, "glNormal3f") == 0)
     {
         ParamBuffer params =

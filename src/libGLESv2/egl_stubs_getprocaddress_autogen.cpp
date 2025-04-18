@@ -698,7 +698,6 @@ const ProcEntry g_procTable[] = {
     {"glMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE", P(GL_MultiDrawElementsInstancedBaseVertexBaseInstanceANGLE)},
     {"glMultiTexCoord4f", P(GL_MultiTexCoord4f)},
     {"glMultiTexCoord4x", P(GL_MultiTexCoord4x)},
-    {"glNamedBufferStorageExternalEXT", P(GL_NamedBufferStorageExternalEXT)},
     {"glNormal3f", P(GL_Normal3f)},
     {"glNormal3x", P(GL_Normal3x)},
     {"glNormalPointer", P(GL_NormalPointer)},

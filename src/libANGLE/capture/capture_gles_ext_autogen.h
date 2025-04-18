@@ -1392,13 +1392,6 @@ angle::CallCapture CaptureBufferStorageExternalEXT(const State &glState,
                                                    GLsizeiptr size,
                                                    GLeglClientBufferEXT clientBuffer,
                                                    GLbitfield flags);
-angle::CallCapture CaptureNamedBufferStorageExternalEXT(const State &glState,
-                                                        bool isCallValid,
-                                                        GLuint buffer,
-                                                        GLintptr offset,
-                                                        GLsizeiptr size,
-                                                        GLeglClientBufferEXT clientBuffer,
-                                                        GLbitfield flags);
 
 // GL_EXT_float_blend
 

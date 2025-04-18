@@ -2417,12 +2417,6 @@ void ReplayTraceFunctionCall(const CallCapture &call, const TraceFunctionMap &cu
                               captures[2].value.GLfixedVal, captures[3].value.GLfixedVal,
                               captures[4].value.GLfixedVal);
             break;
-        case angle::EntryPoint::GLNamedBufferStorageExternalEXT:
-            glNamedBufferStorageExternalEXT(
-                captures[0].value.GLuintVal, captures[1].value.GLintptrVal,
-                captures[2].value.GLsizeiptrVal, captures[3].value.GLeglClientBufferEXTVal,
-                captures[4].value.GLbitfieldVal);
-            break;
         case angle::EntryPoint::GLNormal3f:
             glNormal3f(captures[0].value.GLfloatVal, captures[1].value.GLfloatVal,
                        captures[2].value.GLfloatVal);

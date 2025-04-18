@@ -794,7 +794,6 @@ EXPORTS
 
     ; GL_EXT_external_buffer
     glBufferStorageExternalEXT
-    glNamedBufferStorageExternalEXT
 
     ; GL_EXT_float_blend
 

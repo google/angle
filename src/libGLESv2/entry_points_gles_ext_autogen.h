@@ -984,11 +984,6 @@ ANGLE_EXPORT void GL_APIENTRY GL_BufferStorageExternalEXT(GLenum target,
                                                           GLsizeiptr size,
                                                           GLeglClientBufferEXT clientBuffer,
                                                           GLbitfield flags);
-ANGLE_EXPORT void GL_APIENTRY GL_NamedBufferStorageExternalEXT(GLuint buffer,
-                                                               GLintptr offset,
-                                                               GLsizeiptr size,
-                                                               GLeglClientBufferEXT clientBuffer,
-                                                               GLbitfield flags);
 
 // GL_EXT_float_blend
 

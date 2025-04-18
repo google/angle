@@ -4376,14 +4376,6 @@ void GL_APIENTRY glBufferStorageExternalEXT(GLenum target,
     return GL_BufferStorageExternalEXT(target, offset, size, clientBuffer, flags);
 }
 
-void GL_APIENTRY glNamedBufferStorageExternalEXT(GLuint buffer,
-                                                 GLintptr offset,
-                                                 GLsizeiptr size,
-                                                 GLeglClientBufferEXT clientBuffer,
-                                                 GLbitfield flags)
-{
-    return GL_NamedBufferStorageExternalEXT(buffer, offset, size, clientBuffer, flags);
-}
 
 // GL_EXT_float_blend
 

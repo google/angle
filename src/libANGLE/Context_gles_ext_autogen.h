@@ -142,8 +142,6 @@
     /* GL_EXT_external_buffer */                                                                   \
     void bufferStorageExternal(BufferBinding targetPacked, GLintptr offset, GLsizeiptr size,       \
                                GLeglClientBufferEXT clientBuffer, GLbitfield flags);               \
-    void namedBufferStorageExternal(GLuint buffer, GLintptr offset, GLsizeiptr size,               \
-                                    GLeglClientBufferEXT clientBuffer, GLbitfield flags);          \
     /* GL_EXT_float_blend */                                                                       \
     /* GL_EXT_frag_depth */                                                                        \
     /* GL_EXT_geometry_shader */                                                                   \

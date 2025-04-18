@@ -6605,42 +6605,6 @@ void GL_APIENTRY GL_BufferStorageExternalEXT(GLenum target,
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
 
-void GL_APIENTRY GL_NamedBufferStorageExternalEXT(GLuint buffer,
-                                                  GLintptr offset,
-                                                  GLsizeiptr size,
-                                                  GLeglClientBufferEXT clientBuffer,
-                                                  GLbitfield flags)
-{
-    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
-    Context *context = GetValidGlobalContext();
-    EVENT(context, GLNamedBufferStorageExternalEXT,
-          "context = %d, buffer = %u, offset = %llu, size = %llu, clientBuffer = 0x%016" PRIxPTR
-          ", flags = %s",
-          CID(context), buffer, static_cast<unsigned long long>(offset),
-          static_cast<unsigned long long>(size), (uintptr_t)clientBuffer,
-          GLbitfieldToString(GLESEnum::BufferStorageMask, flags).c_str());
-
-    if (ANGLE_LIKELY(context != nullptr))
-    {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateNamedBufferStorageExternalEXT(
-                                context, angle::EntryPoint::GLNamedBufferStorageExternalEXT, buffer,
-                                offset, size, clientBuffer, flags));
-        if (ANGLE_LIKELY(isCallValid))
-        {
-            context->namedBufferStorageExternal(buffer, offset, size, clientBuffer, flags);
-        }
-        ANGLE_CAPTURE_GL(NamedBufferStorageExternalEXT, isCallValid, context, buffer, offset, size,
-                         clientBuffer, flags);
-    }
-    else
-    {
-        GenerateContextLostErrorOnCurrentGlobalContext(
-            angle::EntryPoint::GLNamedBufferStorageExternalEXT);
-    }
-    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
-}
 
 // GL_EXT_float_blend
 

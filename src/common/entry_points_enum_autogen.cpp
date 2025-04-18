@@ -1556,8 +1556,6 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glMultiTexCoord4f";
         case EntryPoint::GLMultiTexCoord4x:
             return "glMultiTexCoord4x";
-        case EntryPoint::GLNamedBufferStorageExternalEXT:
-            return "glNamedBufferStorageExternalEXT";
         case EntryPoint::GLNormal3f:
             return "glNormal3f";
         case EntryPoint::GLNormal3x:

@@ -6686,25 +6686,6 @@ CallCapture CaptureBufferStorageExternalEXT(const State &glState,
     return CallCapture(angle::EntryPoint::GLBufferStorageExternalEXT, std::move(paramBuffer));
 }
 
-CallCapture CaptureNamedBufferStorageExternalEXT(const State &glState,
-                                                 bool isCallValid,
-                                                 GLuint buffer,
-                                                 GLintptr offset,
-                                                 GLsizeiptr size,
-                                                 GLeglClientBufferEXT clientBuffer,
-                                                 GLbitfield flags)
-{
-    ParamBuffer paramBuffer;
-
-    paramBuffer.addValueParam("buffer", ParamType::TGLuint, buffer);
-    paramBuffer.addValueParam("offset", ParamType::TGLintptr, offset);
-    paramBuffer.addValueParam("size", ParamType::TGLsizeiptr, size);
-    paramBuffer.addValueParam("clientBuffer", ParamType::TGLeglClientBufferEXT, clientBuffer);
-    paramBuffer.addEnumParam("flags", GLESEnum::BufferStorageMask, ParamType::TGLbitfield, flags);
-
-    return CallCapture(angle::EntryPoint::GLNamedBufferStorageExternalEXT, std::move(paramBuffer));
-}
-
 CallCapture CaptureFramebufferTextureEXT(const State &glState,
                                          bool isCallValid,
                                          GLenum target,

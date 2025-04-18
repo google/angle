@@ -3186,18 +3186,6 @@ bool ValidateBufferStorageExternalEXT(const Context *context,
     return true;
 }
 
-bool ValidateNamedBufferStorageExternalEXT(const Context *context,
-                                           angle::EntryPoint entryPoint,
-                                           GLuint buffer,
-                                           GLintptr offset,
-                                           GLsizeiptr size,
-                                           GLeglClientBufferEXT clientBuffer,
-                                           GLbitfield flags)
-{
-    UNIMPLEMENTED();
-    return false;
-}
-
 // GL_ANGLE_polygon_mode
 bool ValidatePolygonModeANGLE(const PrivateState &state,
                               ErrorSet *errors,
