@@ -36,6 +36,11 @@ namespace gl
 {
 using namespace err;
 
+void RecordVersionErrorES20(const Context *context, angle::EntryPoint entryPoint)
+{
+    ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kEntryPointRequiresES20);
+}
+
 namespace
 {
 

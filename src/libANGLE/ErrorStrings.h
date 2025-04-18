@@ -116,6 +116,7 @@ inline constexpr const char *kElementArrayBufferBoundForTransformFeedback = "It 
 inline constexpr const char *kElementArrayNoBufferOrPointer = "No element array buffer and no pointer.";
 inline constexpr const char *kEntryPointRequiresES10 = "Command requires OpenGL ES 1.0.";
 inline constexpr const char *kEntryPointRequiresES10or32 = "Command requires OpenGL ES 1.0 or 3.2.";
+inline constexpr const char *kEntryPointRequiresES20 = "Command requires OpenGL ES 2.0.";
 inline constexpr const char *kEntryPointRequiresES30 = "Command requires OpenGL ES 3.0.";
 inline constexpr const char *kEntryPointRequiresES31 = "Command requires OpenGL ES 3.1.";
 inline constexpr const char *kEntryPointRequiresES32 = "Command requires OpenGL ES 3.2.";

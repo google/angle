@@ -15,6 +15,9 @@
 
 namespace gl
 {
+
+void RecordVersionErrorES20(const Context *context, angle::EntryPoint entryPoint);
+
 ANGLE_INLINE bool ValidateDrawArrays(const Context *context,
                                      angle::EntryPoint entryPoint,
                                      PrimitiveMode mode,

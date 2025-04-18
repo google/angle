@@ -1666,8 +1666,8 @@ def get_validation_expression(api, cmd_name, entry_point_name, internal_params, 
     expr = "Validate{name}({params})".format(
         name=name, params=", ".join(extra_params + [entry_point_name] + internal_params))
 
-    # Validation expression for ES 2.0 and extension entry points
-    if "2_0" in sources or sources[0].startswith("GL_"):
+    # Validation expression for always present and extension entry points
+    if sorted(sources) == ["1_0", "2_0"] or sources[0].startswith("GL_"):
         return "bool isCallValid = (context->skipValidation() || {validation_expression});".format(
             validation_expression=expr)
 
