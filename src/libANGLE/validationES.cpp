@@ -2823,7 +2823,7 @@ bool ValidateGetQueryObjecti64vEXT(const Context *context,
                                    angle::EntryPoint entryPoint,
                                    QueryID id,
                                    GLenum pname,
-                                   GLint64 *params)
+                                   const GLint64 *params)
 {
     if (!context->getExtensions().disjointTimerQueryEXT)
     {
@@ -2839,7 +2839,7 @@ bool ValidateGetQueryObjecti64vRobustANGLE(const Context *context,
                                            GLenum pname,
                                            GLsizei bufSize,
                                            const GLsizei *length,
-                                           GLint64 *params)
+                                           const GLint64 *params)
 {
     if (!context->getExtensions().disjointTimerQueryEXT)
     {
@@ -2873,7 +2873,7 @@ bool ValidateGetQueryObjectui64vEXT(const Context *context,
                                     angle::EntryPoint entryPoint,
                                     QueryID id,
                                     GLenum pname,
-                                    GLuint64 *params)
+                                    const GLuint64 *params)
 {
     if (!context->getExtensions().disjointTimerQueryEXT)
     {
@@ -2889,7 +2889,7 @@ bool ValidateGetQueryObjectui64vRobustANGLE(const Context *context,
                                             GLenum pname,
                                             GLsizei bufSize,
                                             const GLsizei *length,
-                                            GLuint64 *params)
+                                            const GLuint64 *params)
 {
     if (!context->getExtensions().disjointTimerQueryEXT)
     {
@@ -3244,7 +3244,7 @@ bool ValidateGetInteger64vRobustANGLE(const Context *context,
                                       GLenum pname,
                                       GLsizei bufSize,
                                       const GLsizei *length,
-                                      GLint64 *data)
+                                      const GLint64 *data)
 {
     GLenum nativeType;
     unsigned int numParams = 0;
