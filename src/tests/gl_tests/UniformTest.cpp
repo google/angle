@@ -1276,29 +1276,33 @@ class UniformTest : public ANGLETest<>
 
 TEST_P(UniformTest, GetUniformNoCurrentProgram)
 {
-
     glUseProgram(mProgram);
     glUniform1f(mUniformFLocation, 1.0f);
     glUniform1i(mUniformILocation, 1);
     glUseProgram(0);
 
-    GLfloat f;
-    glGetnUniformfvEXT(mProgram, mUniformFLocation, 4, &f);
-    ASSERT_GL_NO_ERROR();
-    EXPECT_EQ(1.0f, f);
-
+    GLfloat f = 0.0f;
     glGetUniformfv(mProgram, mUniformFLocation, &f);
     ASSERT_GL_NO_ERROR();
     EXPECT_EQ(1.0f, f);
 
-    GLint i;
-    glGetnUniformivEXT(mProgram, mUniformILocation, 4, &i);
-    ASSERT_GL_NO_ERROR();
-    EXPECT_EQ(1, i);
-
+    GLint i = 0;
     glGetUniformiv(mProgram, mUniformILocation, &i);
     ASSERT_GL_NO_ERROR();
     EXPECT_EQ(1, i);
+
+    if (IsGLExtensionEnabled("GL_EXT_robustness"))
+    {
+        f = 0.0f;
+        glGetnUniformfvEXT(mProgram, mUniformFLocation, 4, &f);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_EQ(1.0f, f);
+
+        i = 0;
+        glGetnUniformivEXT(mProgram, mUniformILocation, 4, &i);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_EQ(1, i);
+    }
 }
 
 TEST_P(UniformTest, UniformArrayLocations)
