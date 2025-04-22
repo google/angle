@@ -1537,6 +1537,16 @@ void Format::initialize(Renderer *renderer, const angle::Format &angleFormat)
             mVertexLoadRequiresConversion  = true;
             break;
 
+        case angle::FormatID::R10X6G10X6B10X6A10X6_UNORM:
+            mIntendedGLFormat              = GL_R10X6G10X6B10X6A10X6_UNORM_ANGLEX;
+            mActualSampleOnlyImageFormatID = angle::FormatID::R10X6G10X6B10X6A10X6_UNORM;
+            mImageInitializerFunction      = nullptr;
+            mActualBufferFormatID          = angle::FormatID::R10X6G10X6B10X6A10X6_UNORM;
+            mVkBufferFormatIsPacked        = false;
+            mVertexLoadFunction            = nullptr;
+            mVertexLoadRequiresConversion  = false;
+            break;
+
         case angle::FormatID::R11G11B10_FLOAT:
             mIntendedGLFormat              = GL_R11F_G11F_B10F;
             mActualSampleOnlyImageFormatID = angle::FormatID::R11G11B10_FLOAT;
@@ -2915,6 +2925,7 @@ VkFormat GetVkFormatFromFormatID(const Renderer *renderer, angle::FormatID forma
         {angle::FormatID::R10G10B10A2_UINT, VK_FORMAT_A2B10G10R10_UINT_PACK32},
         {angle::FormatID::R10G10B10A2_UNORM, VK_FORMAT_A2B10G10R10_UNORM_PACK32},
         {angle::FormatID::R10G10B10A2_USCALED, VK_FORMAT_A2B10G10R10_USCALED_PACK32},
+        {angle::FormatID::R10X6G10X6B10X6A10X6_UNORM, VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16},
         {angle::FormatID::R11G11B10_FLOAT, VK_FORMAT_B10G11R11_UFLOAT_PACK32},
         {angle::FormatID::R16G16B16A16_FLOAT, VK_FORMAT_R16G16B16A16_SFLOAT},
         {angle::FormatID::R16G16B16A16_SINT, VK_FORMAT_R16G16B16A16_SINT},
@@ -3147,6 +3158,8 @@ angle::FormatID GetFormatIDFromVkFormat(VkFormat vkFormat)
             return angle::FormatID::R10G10B10A2_UNORM;
         case VK_FORMAT_A2B10G10R10_USCALED_PACK32:
             return angle::FormatID::R10G10B10A2_USCALED;
+        case VK_FORMAT_R10X6G10X6B10X6A10X6_UNORM_4PACK16:
+            return angle::FormatID::R10X6G10X6B10X6A10X6_UNORM;
         case VK_FORMAT_B10G11R11_UFLOAT_PACK32:
             return angle::FormatID::R11G11B10_FLOAT;
         case VK_FORMAT_R16G16B16A16_SFLOAT:

@@ -300,5 +300,9 @@
   },
   "G8_B8R8_2PLANE_420_UNORM": {
     "channelStruct": "R8G8B8"
+  },
+  "R10X6G10X6B10X6A10X6_UNORM": {
+    "glInternalFormat": "GL_R10X6G10X6B10X6A10X6_UNORM_ANGLEX",
+    "channelStruct": "R10X6G10X6B10X6A10X6"
   }
 }

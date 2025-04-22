@@ -163,6 +163,7 @@ const Format gFormatInfoTable[] = {
     { FormatID::R10G10B10A2_UNORM, GL_RGB10_A2, GL_RGB10_A2, GenerateMip<R10G10B10A2>, NoCopyFunctions, ReadColor<R10G10B10A2, GLfloat>, WriteColor<R10G10B10A2, GLfloat>, GL_UNSIGNED_NORMALIZED, 10, 10, 10, 2, 0, 0, 0, 4, std::numeric_limits<GLuint>::max(), false, false, false, false, false, gl::VertexAttribType::UnsignedInt2101010 },
     { FormatID::R10G10B10A2_USCALED, GL_RGB10_A2_USCALED_ANGLEX, GL_RGB10_A2_USCALED_ANGLEX, GenerateMip<R10G10B10A2>, NoCopyFunctions, ReadColor<R10G10B10A2, GLuint>, WriteColor<R10G10B10A2, GLuint>, GL_UNSIGNED_INT, 10, 10, 10, 2, 0, 0, 0, 4, std::numeric_limits<GLuint>::max(), false, false, true, false, false, gl::VertexAttribType::UnsignedInt2101010 },
     { FormatID::R10G10B10X2_UNORM, GL_RGB10_EXT, GL_RGB10_EXT, GenerateMip<R10G10B10X2>, NoCopyFunctions, ReadColor<R10G10B10X2, GLfloat>, WriteColor<R10G10B10X2, GLfloat>, GL_UNSIGNED_NORMALIZED, 10, 10, 10, 0, 0, 0, 0, 4, std::numeric_limits<GLuint>::max(), false, false, false, false, false, gl::VertexAttribType::UnsignedInt2101010 },
+    { FormatID::R10X6G10X6B10X6A10X6_UNORM, GL_R10X6G10X6B10X6A10X6_UNORM_ANGLEX, GL_R10X6G10X6B10X6A10X6_UNORM_ANGLEX, GenerateMip<R10X6G10X6B10X6A10X6>, NoCopyFunctions, ReadColor<R10X6G10X6B10X6A10X6, GLfloat>, WriteColor<R10X6G10X6B10X6A10X6, GLfloat>, GL_UNSIGNED_NORMALIZED, 10, 10, 10, 10, 0, 0, 0, 6, std::numeric_limits<GLuint>::max(), false, false, false, false, false, gl::VertexAttribType::InvalidEnum },
     { FormatID::R11G11B10_FLOAT, GL_R11F_G11F_B10F, GL_R11F_G11F_B10F, GenerateMip<R11G11B10F>, NoCopyFunctions, ReadColor<R11G11B10F, GLfloat>, WriteColor<R11G11B10F, GLfloat>, GL_FLOAT, 11, 11, 10, 0, 0, 0, 0, 4, std::numeric_limits<GLuint>::max(), false, false, false, false, false, gl::VertexAttribType::Float },
     { FormatID::R16G16B16A16_FLOAT, GL_RGBA16F, GL_RGBA16F, GenerateMip<R16G16B16A16F>, NoCopyFunctions, ReadColor<R16G16B16A16F, GLfloat>, WriteColor<R16G16B16A16F, GLfloat>, GL_FLOAT, 16, 16, 16, 16, 0, 0, 0, 8, 1, false, false, false, false, false, gl::VertexAttribType::HalfFloat },
     { FormatID::R16G16B16A16_SINT, GL_RGBA16I, GL_RGBA16I, GenerateMip<R16G16B16A16S>, NoCopyFunctions, ReadColor<R16G16B16A16S, GLint>, WriteColor<R16G16B16A16S, GLint>, GL_INT, 16, 16, 16, 16, 0, 0, 0, 8, 1, false, false, false, false, false, gl::VertexAttribType::Short },
@@ -542,6 +543,8 @@ FormatID Format::InternalFormatToID(GLenum internalFormat)
             return FormatID::PALETTE8_R4G4B4A4_UNORM;
         case GL_PALETTE8_RGBA8_OES:
             return FormatID::PALETTE8_R8G8B8A8_UNORM;
+        case GL_R10X6G10X6B10X6A10X6_UNORM_ANGLEX:
+            return FormatID::R10X6G10X6B10X6A10X6_UNORM;
         case GL_R11F_G11F_B10F:
             return FormatID::R11G11B10_FLOAT;
         case GL_R16F:

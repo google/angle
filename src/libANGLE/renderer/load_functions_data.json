@@ -595,6 +595,11 @@
       "GL_UNSIGNED_BYTE": "UnreachableLoadFunction"
     }
   },
+  "GL_R10X6G10X6B10X6A10X6_UNORM_ANGLEX": {
+    "R10X6G10X6B10X6A10X6_UNORM": {
+      "GL_UNSIGNED_SHORT": "LoadToNative<GLushort, 4>"
+    }
+  },
   "GL_COMPRESSED_RG11_EAC": {
     "R16G16_UNORM": {
       "GL_UNSIGNED_BYTE": "LoadEACRG11ToRG16"

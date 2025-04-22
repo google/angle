@@ -248,6 +248,21 @@
     },
     "glInternalFormat": "GL_RGB10_A2"
   },
+  "R10X6G10X6B10X6A10X6_UNORM": {
+    "texFormat": "DXGI_FORMAT_R16G16B16A16_UNORM",
+    "srvFormat": "DXGI_FORMAT_R16G16B16A16_UNORM",
+    "rtvFormat": "DXGI_FORMAT_R16G16B16A16_UNORM",
+    "typelessFormat": "DXGI_FORMAT_R16G16B16A16_TYPELESS",
+    "channels": "rgba",
+    "componentType": "unorm",
+    "bits": {
+      "red": 10,
+      "green": 10,
+      "blue": 10,
+      "alpha": 10
+    },
+    "glInternalFormat": "GL_R10X6G10X6B10X6A10X6_UNORM_ANGLEX"
+  },
   "BC1_RGBA_UNORM_BLOCK": {
     "texFormat": "DXGI_FORMAT_BC1_UNORM",
     "srvFormat": "DXGI_FORMAT_BC1_UNORM",

@@ -349,6 +349,8 @@ inline bool IsLittleEndian()
 // fake format for GL_ANGLE_rgbx_internal_format
 #define GL_RGBX8_SRGB_ANGLEX 0x6AFA
 
+#define GL_R10X6G10X6B10X6A10X6_UNORM_ANGLEX 0x6AFD
+
 // These are fake formats used to fit typeless D3D textures that can be bound to EGL pbuffers into
 // the format system (for extension EGL_ANGLE_d3d_texture_client_buffer):
 #define GL_RGBA8_TYPELESS_ANGLEX 0x6AC1

@@ -1151,6 +1151,10 @@ void Format::initialize(const angle::Format &angleFormat)
             mVertexLoadRequiresConversion = true;
             break;
 
+        case angle::FormatID::R10X6G10X6B10X6A10X6_UNORM:
+            // This format is not implemented in WebGPU.
+            break;
+
         case angle::FormatID::R11G11B10_FLOAT:
             mIntendedGLFormat         = GL_R11F_G11F_B10F;
             mActualImageFormatID      = angle::FormatID::R11G11B10_FLOAT;

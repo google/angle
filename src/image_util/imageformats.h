@@ -738,6 +738,27 @@ struct B10G10R10A2
 };
 static_assert(sizeof(B10G10R10A2) == 4, "B10G10R10A2 struct not 32-bits.");
 
+struct R10X6G10X6B10X6A10X6
+{
+    uint16_t R : 10;
+    uint16_t RX : 6;
+    uint16_t G : 10;
+    uint16_t GX : 6;
+    uint16_t B : 10;
+    uint16_t BX : 6;
+    uint16_t A : 10;
+    uint16_t AX : 6;
+
+    static void readColor(gl::ColorF *dst, const R10X6G10X6B10X6A10X6 *src);
+    static void readColor(gl::ColorUI *dst, const R10X6G10X6B10X6A10X6 *src);
+    static void writeColor(R10X6G10X6B10X6A10X6 *dst, const gl::ColorF *src);
+    static void writeColor(R10X6G10X6B10X6A10X6 *dst, const gl::ColorUI *src);
+    static void average(R10X6G10X6B10X6A10X6 *dst,
+                        const R10X6G10X6B10X6A10X6 *src1,
+                        const R10X6G10X6B10X6A10X6 *src2);
+};
+static_assert(sizeof(R10X6G10X6B10X6A10X6) == 8, "R10X6G10X6B10X6A10X6 struct not 64-bits.");
+
 struct R9G9B9E5
 {
     uint32_t R : 9;

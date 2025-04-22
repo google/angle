@@ -1146,6 +1146,7 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
     // Special format which is not really supported, so always false for all supports.
     AddRGBAFormat(&map, GL_BGR565_ANGLEX,     true,  5,  6,  5,  0, 0, GL_BGRA_EXT,     GL_UNSIGNED_SHORT_5_6_5,           GL_UNSIGNED_NORMALIZED, false, NeverSupported,                                    NeverSupported,  NeverSupported,                                    NeverSupported,                                NeverSupported);
     AddRGBAFormat(&map, GL_BGR10_A2_ANGLEX,   true, 10, 10, 10,  2, 0, GL_BGRA_EXT,     GL_UNSIGNED_INT_2_10_10_10_REV,    GL_UNSIGNED_NORMALIZED, false, NeverSupported,                                    NeverSupported,  NeverSupported,                                    NeverSupported,                                NeverSupported);
+    AddRGBAFormat(&map, GL_R10X6G10X6B10X6A10X6_UNORM_ANGLEX,   true, 10, 10, 10,  10, 0, GL_RGBA,    GL_UNSIGNED_SHORT,   GL_UNSIGNED_NORMALIZED, false, RequireES<3, 0>,                                    NeverSupported,  NeverSupported,                                    NeverSupported,                                NeverSupported);
 
     // Special format to emulate RGB8 with RGBA8 within ANGLE.
     AddRGBAXFormat(&map, GL_RGBX8_ANGLE,      true,   FB< 8,  8,  8,  0, 8, 0>(), GL_RGB,          GL_UNSIGNED_BYTE,                  GL_UNSIGNED_NORMALIZED, false, AlwaysSupported,                                   AlwaysSupported, AlwaysSupported,                                   AlwaysSupported,                               NeverSupported);
