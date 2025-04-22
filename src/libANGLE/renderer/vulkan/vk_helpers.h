@@ -3231,7 +3231,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                         uint32_t baseArrayLayer,
                                         uint32_t layerCount);
 
-    angle::Result updateSubresourceOnHost(ContextVk *contextVk,
+    angle::Result updateSubresourceOnHost(ErrorContext *context,
                                           ApplyImageUpdate applyUpdate,
                                           const gl::ImageIndex &index,
                                           const gl::Extents &glExtents,
@@ -3275,9 +3275,6 @@ class ImageHelper final : public Resource, public angle::Subject
     void pruneSupersededUpdatesForLevel(ContextVk *contextVk,
                                         const gl::LevelIndex level,
                                         const PruneReason reason);
-    void pruneSupersededUpdatesForLevelImpl(ContextVk *contextVk,
-                                            const gl::LevelIndex level,
-                                            const gl::Box &upcomingUpdateBoundingBox);
 
     // Whether there are any updates in [start, end).
     bool hasStagedUpdatesInLevels(gl::LevelIndex levelStart, gl::LevelIndex levelEnd) const;
