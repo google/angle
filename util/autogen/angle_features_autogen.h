@@ -182,6 +182,7 @@ enum class Feature
     ForceFlushAfterDrawcallUsingShadowmap,
     ForceFragmentShaderPrecisionHighpToMediump,
     ForceGlErrorChecking,
+    ForceHostImageCopyForLuma,
     ForceInitShaderVariables,
     ForceMaxCombinedShaderOutputResources,
     ForceMaxUniformBufferSize16KB,

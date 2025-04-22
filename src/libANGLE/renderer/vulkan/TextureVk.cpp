@@ -4110,10 +4110,13 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
                 &perfQuery, vk::ImageHelper::FormatSupportCheck::OnlyQuerySuccess))
         {
             // Only enable it if it has no performance impact whatsoever (or impact is tiny, given
-            // feature).
+            // feature).  For luminance/alpha formats, on some platforms it's known to be an overall
+            // win despite non-optimal layout.
+            const bool isLUMA = angle::Format::Get(intendedImageFormatID).isLUMA();
             if (perfQuery.identicalMemoryLayout ||
                 (perfQuery.optimalDeviceAccess &&
-                 renderer->getFeatures().allowHostImageCopyDespiteNonIdenticalLayout.enabled))
+                 renderer->getFeatures().allowHostImageCopyDespiteNonIdenticalLayout.enabled) ||
+                (isLUMA && renderer->getFeatures().forceHostImageCopyForLuma.enabled))
             {
                 mImageUsageFlags |= VK_IMAGE_USAGE_HOST_TRANSFER_BIT_EXT;
             }

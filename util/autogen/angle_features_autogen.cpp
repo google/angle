@@ -182,6 +182,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::ForceFlushAfterDrawcallUsingShadowmap, "forceFlushAfterDrawcallUsingShadowmap"},
     {Feature::ForceFragmentShaderPrecisionHighpToMediump, "forceFragmentShaderPrecisionHighpToMediump"},
     {Feature::ForceGlErrorChecking, "forceGlErrorChecking"},
+    {Feature::ForceHostImageCopyForLuma, "forceHostImageCopyForLuma"},
     {Feature::ForceInitShaderVariables, "forceInitShaderVariables"},
     {Feature::ForceMaxCombinedShaderOutputResources, "forceMaxCombinedShaderOutputResources"},
     {Feature::ForceMaxUniformBufferSize16KB, "forceMaxUniformBufferSize16KB"},
