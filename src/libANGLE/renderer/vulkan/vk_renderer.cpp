@@ -283,8 +283,6 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdDraw-None-09462",
     // https://anglebug.com/394598758
     "VUID-vkBindBufferMemory-size-01037",
-    // https://anglebug.com/408190758
-    "VUID-vkQueueSubmit-pSignalSemaphores-00067",
 };
 
 // Validation messages that should be ignored only when VK_EXT_primitive_topology_list_restart is
@@ -344,6 +342,11 @@ constexpr const char *kSkippedMessagesWithDynamicRendering[] = {
     "VUID-vkCmdDrawIndexed-multisampledRenderToSingleSampled-07285",
     "VUID-vkCmdDrawIndexed-multisampledRenderToSingleSampled-07286",
     "VUID-vkCmdDrawIndexed-multisampledRenderToSingleSampled-07287",
+};
+
+constexpr const char *kSkippedMessagesWithoutSwapchainMaintenance1[] = {
+    // https://anglebug.com/408190758
+    "VUID-vkQueueSubmit-pSignalSemaphores-00067",
 };
 
 // Some syncval errors are resolved in the presence of the NONE load or store render pass ops.  For
@@ -4499,6 +4502,14 @@ void Renderer::initializeValidationMessageSuppressions()
         mSkippedValidationMessages.insert(
             mSkippedValidationMessages.end(), kSkippedMessagesWithDynamicRendering,
             kSkippedMessagesWithDynamicRendering + ArraySize(kSkippedMessagesWithDynamicRendering));
+    }
+
+    if (!getFeatures().supportsSwapchainMaintenance1.enabled)
+    {
+        mSkippedValidationMessages.insert(
+            mSkippedValidationMessages.end(), kSkippedMessagesWithoutSwapchainMaintenance1,
+            kSkippedMessagesWithoutSwapchainMaintenance1 +
+                ArraySize(kSkippedMessagesWithoutSwapchainMaintenance1));
     }
 
     // Build the list of syncval errors that are currently expected and should be skipped.
