@@ -138,6 +138,16 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
         static_cast<uint32_t>(options.pls.fragmentSyncType) %
         static_cast<uint32_t>(ShFragmentSynchronizationType::InvalidEnum));
 
+    // Force enable options that are required by the output generators.
+    if (IsOutputSPIRV(shaderOutput))
+    {
+        options.removeInactiveVariables = true;
+    }
+    if (IsOutputMSL(shaderOutput))
+    {
+        options.removeInactiveVariables = true;
+    }
+
     std::vector<uint32_t> validOutputs;
     validOutputs.push_back(SH_ESSL_OUTPUT);
     validOutputs.push_back(SH_GLSL_COMPATIBILITY_OUTPUT);
