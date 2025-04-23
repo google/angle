@@ -319,6 +319,11 @@ class SubjectBindingPointer : protected BindingPointer<SubjectT>, public angle::
 
     void bind(const Context *context, SubjectT *subject)
     {
+        if (subject == get())
+        {
+            return;
+        }
+
         // AddRef first in case subject == get()
         if (subject)
         {

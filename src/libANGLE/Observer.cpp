@@ -88,6 +88,12 @@ ObserverBinding &ObserverBinding::operator=(const ObserverBinding &other)
 void ObserverBinding::bind(Subject *subject)
 {
     ASSERT(getObserver() || !subject);
+
+    if (subject == mSubject)
+    {
+        return;
+    }
+
     if (mSubject)
     {
         mSubject->removeObserver(this);
