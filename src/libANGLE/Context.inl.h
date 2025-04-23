@@ -205,7 +205,7 @@ ANGLE_INLINE void Context::bindBuffer(BufferBinding target, BufferID buffer)
     mState.setBufferBinding(this, target, bufferObject);
     mStateCache.onBufferBindingChange(this);
 
-    if (bufferObject)
+    if (bufferObject && isWebGL())
     {
         bufferObject->onBind(this, target);
     }
@@ -441,9 +441,13 @@ ANGLE_INLINE void Context::vertexAttribPointer(GLuint index,
                                                GLsizei stride,
                                                const void *ptr)
 {
+    bool vertexAttribDirty = false;
     mState.setVertexAttribPointer(this, index, mState.getTargetBuffer(BufferBinding::Array), size,
-                                  type, normalized != GL_FALSE, stride, ptr);
-    mStateCache.onVertexArrayStateChange(this);
+                                  type, normalized != GL_FALSE, stride, ptr, &vertexAttribDirty);
+    if (vertexAttribDirty)
+    {
+        mStateCache.onVertexArrayStateChange(this);
+    }
 }
 
 }  // namespace gl

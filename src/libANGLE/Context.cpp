@@ -6023,6 +6023,12 @@ void Context::disableVertexAttribArray(GLuint index)
 
 void Context::enableVertexAttribArray(GLuint index)
 {
+    const VertexArray *vao = getState().getVertexArray();
+    if (vao->getEnabledAttributesMask().test(index))
+    {
+        return;
+    }
+
     mState.setEnableVertexAttribArray(index, true);
     mStateCache.onVertexArrayStateChange(this);
 }
@@ -6065,9 +6071,13 @@ void Context::vertexAttribIPointer(GLuint index,
                                    GLsizei stride,
                                    const void *pointer)
 {
+    bool vertexAttribDirty = false;
     mState.setVertexAttribIPointer(this, index, mState.getTargetBuffer(BufferBinding::Array), size,
-                                   type, stride, pointer);
-    mStateCache.onVertexArrayStateChange(this);
+                                   type, stride, pointer, &vertexAttribDirty);
+    if (vertexAttribDirty)
+    {
+        mStateCache.onVertexArrayStateChange(this);
+    }
 }
 
 void Context::getVertexAttribivImpl(GLuint index, GLenum pname, GLint *params) const
@@ -6342,7 +6352,7 @@ void Context::bindBufferRange(BufferBinding target,
         mStateCache.onBufferBindingChange(this);
     }
 
-    if (object)
+    if (object && isWebGL())
     {
         object->onBind(this, target);
     }

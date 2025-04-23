@@ -564,8 +564,10 @@ ANGLE_INLINE void VertexArray::setVertexAttribPointerImpl(const Context *context
                                                           VertexAttribType type,
                                                           bool normalized,
                                                           GLsizei stride,
-                                                          const void *pointer)
+                                                          const void *pointer,
+                                                          bool *isVertexAttribDirtyOut)
 {
+    ASSERT(isVertexAttribDirtyOut);
     ASSERT(attribIndex < getMaxAttribs());
 
     VertexAttribute &attrib = mState.mVertexAttributes[attribIndex];
@@ -612,10 +614,12 @@ ANGLE_INLINE void VertexArray::setVertexAttribPointerImpl(const Context *context
     if (attribDirty)
     {
         setDirtyAttribBit(attribIndex, DIRTY_ATTRIB_POINTER);
+        *isVertexAttribDirtyOut = true;
     }
     else if (dirtyBindingBits.any())
     {
         setDirtyAttribBit(attribIndex, DIRTY_ATTRIB_POINTER_BUFFER);
+        *isVertexAttribDirtyOut = true;
     }
 
     mState.mNullPointerClientMemoryAttribsMask.set(attribIndex,
@@ -629,10 +633,11 @@ void VertexArray::setVertexAttribPointer(const Context *context,
                                          VertexAttribType type,
                                          bool normalized,
                                          GLsizei stride,
-                                         const void *pointer)
+                                         const void *pointer,
+                                         bool *isVertexAttribDirtyOut)
 {
     setVertexAttribPointerImpl(context, ComponentType::Float, false, attribIndex, boundBuffer, size,
-                               type, normalized, stride, pointer);
+                               type, normalized, stride, pointer, isVertexAttribDirtyOut);
 }
 
 void VertexArray::setVertexAttribIPointer(const Context *context,
@@ -641,11 +646,12 @@ void VertexArray::setVertexAttribIPointer(const Context *context,
                                           GLint size,
                                           VertexAttribType type,
                                           GLsizei stride,
-                                          const void *pointer)
+                                          const void *pointer,
+                                          bool *isVertexAttribDirtyOut)
 {
     ComponentType componentType = GetVertexAttributeComponentType(true, type);
     setVertexAttribPointerImpl(context, componentType, true, attribIndex, boundBuffer, size, type,
-                               false, stride, pointer);
+                               false, stride, pointer, isVertexAttribDirtyOut);
 }
 
 angle::Result VertexArray::syncState(const Context *context)

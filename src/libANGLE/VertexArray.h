@@ -245,7 +245,8 @@ class VertexArray final : public angle::ObserverInterface,
                                 VertexAttribType type,
                                 bool normalized,
                                 GLsizei stride,
-                                const void *pointer);
+                                const void *pointer,
+                                bool *isVertexAttribDirtyOut);
 
     void setVertexAttribIPointer(const Context *context,
                                  size_t attribIndex,
@@ -253,7 +254,8 @@ class VertexArray final : public angle::ObserverInterface,
                                  GLint size,
                                  VertexAttribType type,
                                  GLsizei stride,
-                                 const void *pointer);
+                                 const void *pointer,
+                                 bool *isVertexAttribDirtyOut);
 
     void setVertexAttribFormat(size_t attribIndex,
                                GLint size,
@@ -363,7 +365,8 @@ class VertexArray final : public angle::ObserverInterface,
                                     VertexAttribType type,
                                     bool normalized,
                                     GLsizei stride,
-                                    const void *pointer);
+                                    const void *pointer,
+                                    bool *isVertexAttribDirtyOut);
 
     // These two functions return true if the state was dirty.
     bool setVertexAttribFormatImpl(VertexAttribute *attrib,

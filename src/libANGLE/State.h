@@ -1023,11 +1023,16 @@ class State : angle::NonCopyable
                                              VertexAttribType type,
                                              bool normalized,
                                              GLsizei stride,
-                                             const void *pointer)
+                                             const void *pointer,
+                                             bool *isVertexAttribDirtyOut)
     {
+        ASSERT(isVertexAttribDirtyOut);
         mVertexArray->setVertexAttribPointer(context, attribNum, boundBuffer, size, type,
-                                             normalized, stride, pointer);
-        mDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
+                                             normalized, stride, pointer, isVertexAttribDirtyOut);
+        if (*isVertexAttribDirtyOut)
+        {
+            mDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
+        }
     }
 
     ANGLE_INLINE void setVertexAttribIPointer(const Context *context,
@@ -1036,11 +1041,16 @@ class State : angle::NonCopyable
                                               GLint size,
                                               VertexAttribType type,
                                               GLsizei stride,
-                                              const void *pointer)
+                                              const void *pointer,
+                                              bool *isVertexAttribDirtyOut)
     {
+        ASSERT(isVertexAttribDirtyOut);
         mVertexArray->setVertexAttribIPointer(context, attribNum, boundBuffer, size, type, stride,
-                                              pointer);
-        mDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
+                                              pointer, isVertexAttribDirtyOut);
+        if (*isVertexAttribDirtyOut)
+        {
+            mDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
+        }
     }
 
     void setVertexAttribDivisor(const Context *context, GLuint index, GLuint divisor);

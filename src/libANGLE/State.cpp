@@ -188,13 +188,14 @@ void UpdateBufferBinding(const Context *context,
     }
 }
 
-void UpdateIndexedBufferBinding(const Context *context,
+bool UpdateIndexedBufferBinding(const Context *context,
                                 OffsetBindingPointer<Buffer> *binding,
                                 Buffer *buffer,
                                 BufferBinding target,
                                 GLintptr offset,
                                 GLsizeiptr size)
 {
+    bool isBindingDirty = context->isWebGL();
     if (context->isWebGL())
     {
         if (target == BufferBinding::TransformFeedback)
@@ -208,8 +209,16 @@ void UpdateIndexedBufferBinding(const Context *context,
     }
     else
     {
-        binding->set(context, buffer, offset, size);
+        ASSERT(!isBindingDirty);
+        isBindingDirty = binding->get() != buffer || binding->getOffset() != offset ||
+                         binding->getSize() != size;
+        if (isBindingDirty)
+        {
+            binding->set(context, buffer, offset, size);
+        }
     }
+
+    return isBindingDirty;
 }
 
 // These template functions must be defined before they are instantiated in kBufferSetters.
@@ -3182,7 +3191,10 @@ angle::Result State::setIndexedBufferBinding(const Context *context,
                                              GLintptr offset,
                                              GLsizeiptr size)
 {
-    setBufferBinding(context, target, buffer);
+    if (mBoundBuffers[target].get() != buffer)
+    {
+        setBufferBinding(context, target, buffer);
+    }
 
     switch (target)
     {
@@ -3192,19 +3204,27 @@ angle::Result State::setIndexedBufferBinding(const Context *context,
             break;
         case BufferBinding::Uniform:
             mBoundUniformBuffersMask.set(index, buffer != nullptr);
-            UpdateIndexedBufferBinding(context, &mUniformBuffers[index], buffer, target, offset,
-                                       size);
-            onUniformBufferStateChange(index);
+            if (UpdateIndexedBufferBinding(context, &mUniformBuffers[index], buffer, target, offset,
+                                           size))
+            {
+                onUniformBufferStateChange(index);
+            }
             break;
         case BufferBinding::AtomicCounter:
             mBoundAtomicCounterBuffersMask.set(index, buffer != nullptr);
-            UpdateIndexedBufferBinding(context, &mAtomicCounterBuffers[index], buffer, target,
-                                       offset, size);
+            if (UpdateIndexedBufferBinding(context, &mAtomicCounterBuffers[index], buffer, target,
+                                           offset, size))
+            {
+                onAtomicCounterBufferStateChange(index);
+            }
             break;
         case BufferBinding::ShaderStorage:
             mBoundShaderStorageBuffersMask.set(index, buffer != nullptr);
-            UpdateIndexedBufferBinding(context, &mShaderStorageBuffers[index], buffer, target,
-                                       offset, size);
+            if (UpdateIndexedBufferBinding(context, &mShaderStorageBuffers[index], buffer, target,
+                                           offset, size))
+            {
+                onShaderStorageBufferStateChange(index);
+            }
             break;
         default:
             UNREACHABLE();
