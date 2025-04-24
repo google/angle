@@ -281,6 +281,25 @@ TEST_P(DebugTest, TimerQueryObjectLabelsEXT)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Simple test for GetDebugMessageLogKHR validation
+TEST_P(DebugTest, GetDebugMessageLog)
+{
+    ANGLE_SKIP_TEST_IF(!mDebugExtensionAvailable);
+
+    glGetDebugMessageLogKHR(1, -1, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
+    EXPECT_GL_NO_ERROR();
+
+    glGetDebugMessageLogKHR(1, 0, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
+    EXPECT_GL_NO_ERROR();
+
+    std::vector<char> messageBuf(1);
+    glGetDebugMessageLogKHR(1, -1, nullptr, nullptr, nullptr, nullptr, nullptr, messageBuf.data());
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glGetDebugMessageLogKHR(1, 0, nullptr, nullptr, nullptr, nullptr, nullptr, messageBuf.data());
+    EXPECT_GL_NO_ERROR();
+}
+
 class DebugTestES3 : public DebugTest
 {};
 
@@ -816,6 +835,23 @@ TEST_P(DebugTestES32, ObjectPtrLabels)
     glGetObjectPtrLabel(sync, static_cast<GLsizei>(labelBuf.size()), &labelLengthBuf,
                         labelBuf.data());
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
+}
+
+// Simple test for GetDebugMessageLog validation using ES32 core API
+TEST_P(DebugTestES32, GetDebugMessageLog)
+{
+    glGetDebugMessageLog(1, -1, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
+    EXPECT_GL_NO_ERROR();
+
+    glGetDebugMessageLog(1, 0, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
+    EXPECT_GL_NO_ERROR();
+
+    std::vector<char> messageBuf(1);
+    glGetDebugMessageLog(1, -1, nullptr, nullptr, nullptr, nullptr, nullptr, messageBuf.data());
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glGetDebugMessageLog(1, 0, nullptr, nullptr, nullptr, nullptr, nullptr, messageBuf.data());
+    EXPECT_GL_NO_ERROR();
 }
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(DebugTestES3);

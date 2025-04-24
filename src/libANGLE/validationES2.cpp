@@ -2137,6 +2137,26 @@ bool ValidateDebugMessageInsertBase(const Context *context,
     return true;
 }
 
+bool ValidateGetDebugMessageLogBase(const Context *context,
+                                    angle::EntryPoint entryPoint,
+                                    GLuint count,
+                                    GLsizei bufSize,
+                                    const GLenum *sources,
+                                    const GLenum *types,
+                                    const GLuint *ids,
+                                    const GLenum *severities,
+                                    const GLsizei *lengths,
+                                    const GLchar *messageLog)
+{
+    if (bufSize < 0 && messageLog != nullptr)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeBufSize);
+        return false;
+    }
+
+    return true;
+}
+
 bool ValidateDebugMessageControlKHR(const Context *context,
                                     angle::EntryPoint entryPoint,
                                     GLenum source,
@@ -2181,13 +2201,8 @@ bool ValidateGetDebugMessageLogKHR(const Context *context,
                                    const GLsizei *lengths,
                                    const GLchar *messageLog)
 {
-    if (bufSize < 0 && messageLog != nullptr)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeBufSize);
-        return false;
-    }
-
-    return true;
+    return ValidateGetDebugMessageLogBase(context, entryPoint, count, bufSize, sources, types, ids,
+                                          severities, lengths, messageLog);
 }
 
 bool ValidatePushDebugGroupBase(const Context *context,
@@ -2403,12 +2418,7 @@ bool ValidateObjectLabelKHR(const Context *context,
                             GLsizei length,
                             const GLchar *label)
 {
-    if (!ValidateObjectLabelBase(context, entryPoint, identifier, name, length, label))
-    {
-        return false;
-    }
-
-    return true;
+    return ValidateObjectLabelBase(context, entryPoint, identifier, name, length, label);
 }
 
 bool ValidateGetObjectLabelBase(const Context *context,
@@ -2441,12 +2451,8 @@ bool ValidateGetObjectLabelKHR(const Context *context,
                                const GLsizei *length,
                                const GLchar *label)
 {
-    if (!ValidateGetObjectLabelBase(context, entryPoint, identifier, name, bufSize, length, label))
-    {
-        return false;
-    }
-
-    return true;
+    return ValidateGetObjectLabelBase(context, entryPoint, identifier, name, bufSize, length,
+                                      label);
 }
 
 static bool ValidateObjectPtrName(const Context *context,
@@ -2487,12 +2493,7 @@ bool ValidateObjectPtrLabelKHR(const Context *context,
                                GLsizei length,
                                const GLchar *label)
 {
-    if (!ValidateObjectPtrLabelBase(context, entryPoint, ptr, length, label))
-    {
-        return false;
-    }
-
-    return true;
+    return ValidateObjectPtrLabelBase(context, entryPoint, ptr, length, label);
 }
 
 bool ValidateGetObjectPtrLabelBase(const Context *context,
@@ -2523,12 +2524,7 @@ bool ValidateGetObjectPtrLabelKHR(const Context *context,
                                   const GLsizei *length,
                                   const GLchar *label)
 {
-    if (!ValidateGetObjectPtrLabelBase(context, entryPoint, ptr, bufSize, length, label))
-    {
-        return false;
-    }
-
-    return true;
+    return ValidateGetObjectPtrLabelBase(context, entryPoint, ptr, bufSize, length, label);
 }
 
 bool ValidateGetPointervKHR(const Context *context,

@@ -676,6 +676,17 @@ bool ValidateDebugMessageInsertBase(const Context *context,
                                     GLsizei length,
                                     const GLchar *buf);
 
+bool ValidateGetDebugMessageLogBase(const Context *context,
+                                    angle::EntryPoint entryPoint,
+                                    GLuint count,
+                                    GLsizei bufSize,
+                                    const GLenum *sources,
+                                    const GLenum *types,
+                                    const GLuint *ids,
+                                    const GLenum *severities,
+                                    const GLsizei *lengths,
+                                    const GLchar *messageLog);
+
 // Validation of ObjectLabel
 bool ValidateObjectLabelBase(const Context *context,
                              angle::EntryPoint entryPoint,

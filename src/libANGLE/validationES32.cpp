@@ -363,7 +363,8 @@ bool ValidateGetDebugMessageLog(const Context *context,
                                 const GLsizei *lengths,
                                 const GLchar *messageLog)
 {
-    return true;
+    return ValidateGetDebugMessageLogBase(context, entryPoint, count, bufSize, sources, types, ids,
+                                          severities, lengths, messageLog);
 }
 
 bool ValidateGetGraphicsResetStatus(const Context *context, angle::EntryPoint entryPoint)
@@ -379,12 +380,8 @@ bool ValidateGetObjectLabel(const Context *context,
                             const GLsizei *length,
                             const GLchar *label)
 {
-    if (!ValidateGetObjectLabelBase(context, entryPoint, identifier, name, bufSize, length, label))
-    {
-        return false;
-    }
-
-    return true;
+    return ValidateGetObjectLabelBase(context, entryPoint, identifier, name, bufSize, length,
+                                      label);
 }
 
 bool ValidateGetObjectPtrLabel(const Context *context,
@@ -394,12 +391,7 @@ bool ValidateGetObjectPtrLabel(const Context *context,
                                const GLsizei *length,
                                const GLchar *label)
 {
-    if (!ValidateGetObjectPtrLabelBase(context, entryPoint, ptr, bufSize, length, label))
-    {
-        return false;
-    }
-
-    return true;
+    return ValidateGetObjectPtrLabelBase(context, entryPoint, ptr, bufSize, length, label);
 }
 
 bool ValidateGetPointerv(const Context *context,
@@ -551,12 +543,7 @@ bool ValidateObjectLabel(const Context *context,
                          GLsizei length,
                          const GLchar *label)
 {
-    if (!ValidateObjectLabelBase(context, entryPoint, identifier, name, length, label))
-    {
-        return false;
-    }
-
-    return true;
+    return ValidateObjectLabelBase(context, entryPoint, identifier, name, length, label);
 }
 
 bool ValidateObjectPtrLabel(const Context *context,
@@ -565,12 +552,7 @@ bool ValidateObjectPtrLabel(const Context *context,
                             GLsizei length,
                             const GLchar *label)
 {
-    if (!ValidateObjectPtrLabelBase(context, entryPoint, ptr, length, label))
-    {
-        return false;
-    }
-
-    return true;
+    return ValidateObjectPtrLabelBase(context, entryPoint, ptr, length, label);
 }
 
 bool ValidatePatchParameteri(const PrivateState &state,
