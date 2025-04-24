@@ -2359,6 +2359,11 @@ void ReplayTraceFunctionCall(const CallCapture &call, const TraceFunctionMap &cu
                 captures[0].value.GLenumVal, captures[1].value.GLintConstPointerVal,
                 captures[2].value.GLsizeiConstPointerVal, captures[3].value.GLsizeiVal);
             break;
+        case angle::EntryPoint::GLMultiDrawArraysEXT:
+            glMultiDrawArraysEXT(
+                captures[0].value.GLenumVal, captures[1].value.GLintConstPointerVal,
+                captures[2].value.GLsizeiConstPointerVal, captures[3].value.GLsizeiVal);
+            break;
         case angle::EntryPoint::GLMultiDrawArraysIndirectEXT:
             glMultiDrawArraysIndirectEXT(
                 captures[0].value.GLenumVal, captures[1].value.voidConstPointerVal,
@@ -2387,6 +2392,12 @@ void ReplayTraceFunctionCall(const CallCapture &call, const TraceFunctionMap &cu
                 captures[0].value.GLenumVal, captures[1].value.GLsizeiConstPointerVal,
                 captures[2].value.GLenumVal, captures[3].value.voidConstPointerPointerVal,
                 captures[4].value.GLsizeiVal, captures[5].value.GLintConstPointerVal);
+            break;
+        case angle::EntryPoint::GLMultiDrawElementsEXT:
+            glMultiDrawElementsEXT(
+                captures[0].value.GLenumVal, captures[1].value.GLsizeiConstPointerVal,
+                captures[2].value.GLenumVal, captures[3].value.voidConstPointerPointerVal,
+                captures[4].value.GLsizeiVal);
             break;
         case angle::EntryPoint::GLMultiDrawElementsIndirectEXT:
             glMultiDrawElementsIndirectEXT(captures[0].value.GLenumVal, captures[1].value.GLenumVal,

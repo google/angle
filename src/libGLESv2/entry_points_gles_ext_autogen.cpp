@@ -9100,6 +9100,99 @@ void GL_APIENTRY GL_ImportMemoryFdEXT(GLuint memory, GLuint64 size, GLenum handl
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
 
+// GL_EXT_multi_draw_arrays
+void GL_APIENTRY GL_MultiDrawArraysEXT(GLenum mode,
+                                       const GLint *first,
+                                       const GLsizei *count,
+                                       GLsizei primcount)
+{
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLMultiDrawArraysEXT,
+          "context = %d, mode = %s, first = 0x%016" PRIxPTR ", count = 0x%016" PRIxPTR
+          ", primcount = %d",
+          CID(context), GLenumToString(GLESEnum::PrimitiveType, mode), (uintptr_t)first,
+          (uintptr_t)count, primcount);
+
+    if (ANGLE_LIKELY(context != nullptr))
+    {
+        PrimitiveMode modePacked = PackParam<PrimitiveMode>(mode);
+        SCOPED_SHARE_CONTEXT_LOCK(context);
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().multiDrawArraysEXT))
+            {
+                isCallValid =
+                    ValidateMultiDrawArraysEXT(context, angle::EntryPoint::GLMultiDrawArraysEXT,
+                                               modePacked, first, count, primcount);
+            }
+            else
+            {
+                RecordVersionErrorESEXT(context, angle::EntryPoint::GLMultiDrawArraysEXT);
+            }
+        }
+        if (ANGLE_LIKELY(isCallValid))
+        {
+            context->multiDrawArrays(modePacked, first, count, primcount);
+        }
+        ANGLE_CAPTURE_GL(MultiDrawArraysEXT, isCallValid, context, modePacked, first, count,
+                         primcount);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLMultiDrawArraysEXT);
+    }
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+}
+
+void GL_APIENTRY GL_MultiDrawElementsEXT(GLenum mode,
+                                         const GLsizei *count,
+                                         GLenum type,
+                                         const void *const *indices,
+                                         GLsizei primcount)
+{
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLMultiDrawElementsEXT,
+          "context = %d, mode = %s, count = 0x%016" PRIxPTR ", type = %s, indices = 0x%016" PRIxPTR
+          ", primcount = %d",
+          CID(context), GLenumToString(GLESEnum::PrimitiveType, mode), (uintptr_t)count,
+          GLenumToString(GLESEnum::DrawElementsType, type), (uintptr_t)indices, primcount);
+
+    if (ANGLE_LIKELY(context != nullptr))
+    {
+        PrimitiveMode modePacked    = PackParam<PrimitiveMode>(mode);
+        DrawElementsType typePacked = PackParam<DrawElementsType>(type);
+        SCOPED_SHARE_CONTEXT_LOCK(context);
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().multiDrawArraysEXT))
+            {
+                isCallValid =
+                    ValidateMultiDrawElementsEXT(context, angle::EntryPoint::GLMultiDrawElementsEXT,
+                                                 modePacked, count, typePacked, indices, primcount);
+            }
+            else
+            {
+                RecordVersionErrorESEXT(context, angle::EntryPoint::GLMultiDrawElementsEXT);
+            }
+        }
+        if (ANGLE_LIKELY(isCallValid))
+        {
+            context->multiDrawElements(modePacked, count, typePacked, indices, primcount);
+        }
+        ANGLE_CAPTURE_GL(MultiDrawElementsEXT, isCallValid, context, modePacked, count, typePacked,
+                         indices, primcount);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLMultiDrawElementsEXT);
+    }
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+}
+
 // GL_EXT_multi_draw_indirect
 void GL_APIENTRY GL_MultiDrawArraysIndirectEXT(GLenum mode,
                                                const void *indirect,

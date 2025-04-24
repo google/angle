@@ -1536,6 +1536,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glMultMatrixx";
         case EntryPoint::GLMultiDrawArraysANGLE:
             return "glMultiDrawArraysANGLE";
+        case EntryPoint::GLMultiDrawArraysEXT:
+            return "glMultiDrawArraysEXT";
         case EntryPoint::GLMultiDrawArraysIndirectEXT:
             return "glMultiDrawArraysIndirectEXT";
         case EntryPoint::GLMultiDrawArraysInstancedANGLE:
@@ -1546,6 +1548,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glMultiDrawElementsANGLE";
         case EntryPoint::GLMultiDrawElementsBaseVertexEXT:
             return "glMultiDrawElementsBaseVertexEXT";
+        case EntryPoint::GLMultiDrawElementsEXT:
+            return "glMultiDrawElementsEXT";
         case EntryPoint::GLMultiDrawElementsIndirectEXT:
             return "glMultiDrawElementsIndirectEXT";
         case EntryPoint::GLMultiDrawElementsInstancedANGLE:

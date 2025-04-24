@@ -314,6 +314,9 @@ struct Extensions
     // GL_EXT_memory_object_fd
     bool memoryObjectFdEXT = false;
 
+    // GL_EXT_multi_draw_arrays
+    bool multiDrawArraysEXT = false;
+
     // GL_EXT_multi_draw_indirect
     bool multiDrawIndirectEXT = false;
 

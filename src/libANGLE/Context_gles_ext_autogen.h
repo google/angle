@@ -178,6 +178,7 @@
     /* GL_EXT_memory_object_fd */                                                                  \
     void importMemoryFd(MemoryObjectID memoryPacked, GLuint64 size, HandleType handleTypePacked,   \
                         GLint fd);                                                                 \
+    /* GL_EXT_multi_draw_arrays */                                                                 \
     /* GL_EXT_multi_draw_indirect */                                                               \
     void multiDrawArraysIndirect(PrimitiveMode modePacked, const void *indirect,                   \
                                  GLsizei drawcount, GLsizei stride);                               \

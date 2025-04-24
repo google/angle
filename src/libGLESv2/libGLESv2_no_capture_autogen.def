@@ -830,6 +830,10 @@ EXPORTS
     ; GL_EXT_memory_object_fd
     glImportMemoryFdEXT
 
+    ; GL_EXT_multi_draw_arrays
+    glMultiDrawArraysEXT
+    glMultiDrawElementsEXT
+
     ; GL_EXT_multi_draw_indirect
     glMultiDrawArraysIndirectEXT
     glMultiDrawElementsIndirectEXT

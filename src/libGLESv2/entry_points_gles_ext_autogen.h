@@ -1073,6 +1073,17 @@ ANGLE_EXPORT void GL_APIENTRY GL_ImportMemoryFdEXT(GLuint memory,
                                                    GLenum handleType,
                                                    GLint fd);
 
+// GL_EXT_multi_draw_arrays
+ANGLE_EXPORT void GL_APIENTRY GL_MultiDrawArraysEXT(GLenum mode,
+                                                    const GLint *first,
+                                                    const GLsizei *count,
+                                                    GLsizei primcount);
+ANGLE_EXPORT void GL_APIENTRY GL_MultiDrawElementsEXT(GLenum mode,
+                                                      const GLsizei *count,
+                                                      GLenum type,
+                                                      const void *const *indices,
+                                                      GLsizei primcount);
+
 // GL_EXT_multi_draw_indirect
 ANGLE_EXPORT void GL_APIENTRY GL_MultiDrawArraysIndirectEXT(GLenum mode,
                                                             const void *indirect,

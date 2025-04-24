@@ -6,9 +6,9 @@
   "scripts/gl_angle_ext.xml":
     "da4ecccdd77635f1b0e9d4664f856706",
   "scripts/registry_xml.py":
-    "65b329b7d89e1e4e1299c81f7b00eef5",
+    "6f3a9c2a797d9ab7951c23811dce2a11",
   "src/libGLESv2/egl_stubs_getprocaddress_autogen.cpp":
-    "bee087c143956edbafaac563c638c4c5",
+    "0509998531cd46780dda07f371be3277",
   "src/libGLESv2/proc_table_cl_autogen.cpp":
     "ed003b0f041aaaa35b67d3fe07e61f91",
   "src/libOpenCL/libOpenCL_autogen.map":
