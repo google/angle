@@ -1669,7 +1669,6 @@ def get_validation_expression(api, cmd_name, entry_point_name, internal_params, 
     # Extensions temporarily skipped from autogen
     skipped_exts = [
         'GL_ANGLE_base_vertex_base_instance',
-        'GL_ANGLE_robust_client_memory',
         'GL_CHROMIUM_sync_query',
         'GL_EXT_disjoint_timer_query',
         'GL_EXT_draw_elements_base_vertex',
