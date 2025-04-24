@@ -1967,6 +1967,8 @@ void GenerateCaps(const FunctionsGL *functions,
          functions->hasGLESExtension("GL_OES_draw_elements_base_vertex") ||
          functions->hasGLESExtension("GL_EXT_draw_elements_base_vertex") ||
          functions->hasGLESExtension("GL_EXT_base_instance"));
+    limitations->baseInstanceEmulated = !functions->isAtLeastGL(gl::Version(4, 2)) &&
+                                        !functions->hasGLESExtension("GL_EXT_base_instance");
 
     // ANGLE_base_vertex_base_instance_shader_builtin
     extensions->baseVertexBaseInstanceShaderBuiltinANGLE = extensions->baseVertexBaseInstanceANGLE;

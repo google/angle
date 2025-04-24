@@ -175,9 +175,8 @@ struct Limitations
     // by default in shared renderer code.
     bool baseInstanceBaseVertexEmulated = true;
 
-    // EXT_base_instance is emulated and should only be exposed to WebGL. Emulated by default in
-    // shared renderer code.
-    bool baseInstanceEmulated = true;
+    // EXT_base_instance may be emulated on GL backend.
+    bool baseInstanceEmulated = false;
 };
 
 struct TypePrecision

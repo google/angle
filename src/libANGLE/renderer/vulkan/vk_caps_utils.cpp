@@ -418,7 +418,6 @@ void Renderer::ensureCapsInitialized() const
 
     // Enable EXT_base_instance
     mNativeExtensions.baseInstanceEXT       = true;
-    mNativeLimitations.baseInstanceEmulated = false;
 
     // Enable ANGLE_base_vertex_base_instance
     mNativeExtensions.baseVertexBaseInstanceANGLE              = true;

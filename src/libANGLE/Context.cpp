@@ -3975,7 +3975,7 @@ Extensions Context::generateSupportedExtensions() const
     }
 
     if (limitations.baseInstanceEmulated &&
-        !frontendFeatures.alwaysEnableEmulatedMultidrawExtensions.enabled && !mWebGLContext)
+        !frontendFeatures.alwaysEnableEmulatedMultidrawExtensions.enabled)
     {
         supportedExtensions.baseInstanceEXT = false;
     }

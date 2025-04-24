@@ -63,7 +63,8 @@ enum class DrawCallVariants
     DrawElementsInstancedBaseVertexOES,
     DrawRangeElementsBaseVertexEXT,
     DrawRangeElementsBaseVertexOES,
-    DrawElementsInstancedBaseVertexBaseInstance
+    DrawElementsInstancedBaseVertexBaseInstanceEXT,
+    DrawElementsInstancedBaseVertexBaseInstanceANGLE
 };
 
 using DrawBaseVertexVariantsTestParams = std::tuple<angle::PlatformParameters, GLenum>;
@@ -299,6 +300,31 @@ void main()
         }
     }
 
+    void doDrawElementsInstancedBaseVertexBaseInstance(DrawCallVariants drawCallType,
+                                                       GLenum mode,
+                                                       GLsizei count,
+                                                       GLenum type,
+                                                       const void *indices,
+                                                       GLsizei instancecount,
+                                                       GLint basevertex,
+                                                       GLuint baseinstance)
+    {
+        switch (drawCallType)
+        {
+            case DrawCallVariants::DrawElementsInstancedBaseVertexBaseInstanceEXT:
+                glDrawElementsInstancedBaseVertexBaseInstanceEXT(
+                    mode, count, type, indices, instancecount, basevertex, baseinstance);
+                break;
+            case DrawCallVariants::DrawElementsInstancedBaseVertexBaseInstanceANGLE:
+                glDrawElementsInstancedBaseVertexBaseInstanceANGLE(
+                    mode, count, type, indices, instancecount, basevertex, baseinstance);
+                break;
+            default:
+                UNREACHABLE();
+                break;
+        }
+    }
+
     void doDrawElementsBaseVertexVariants(DrawCallVariants drawCallType)
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -319,9 +345,10 @@ void main()
 
             switch (drawCallType)
             {
-                case DrawCallVariants::DrawElementsInstancedBaseVertexBaseInstance:
-                    glDrawElementsInstancedBaseVertexBaseInstanceANGLE(
-                        GL_TRIANGLES, repetitionCount * 6, GL_UNSIGNED_SHORT,
+                case DrawCallVariants::DrawElementsInstancedBaseVertexBaseInstanceEXT:
+                case DrawCallVariants::DrawElementsInstancedBaseVertexBaseInstanceANGLE:
+                    doDrawElementsInstancedBaseVertexBaseInstance(
+                        drawCallType, GL_TRIANGLES, repetitionCount * 6, GL_UNSIGNED_SHORT,
                         reinterpret_cast<GLvoid *>(
                             static_cast<uintptr_t>(baseRepetition * 6 * sizeof(GLushort))),
                         1, (i - baseRepetition) * 4, 0);
@@ -547,8 +574,29 @@ TEST_P(DrawBaseVertexVariantsTest, DrawRangeElementsBaseVertexOES)
     doDrawElementsBaseVertexVariants(DrawCallVariants::DrawRangeElementsBaseVertexOES);
 }
 
+// Test drawElementsInstancedBaseVertexBaseInstance from EXT_base_instance
+TEST_P(DrawBaseVertexVariantsTest, DrawElementsInstancedBaseVertexBaseInstanceEXT)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_base_instance") ||
+                       !EnsureGLExtensionEnabled("GL_EXT_draw_elements_base_vertex"));
+
+    GLProgram program;
+    setupProgram(program);
+
+    GLBuffer indexBuffer;
+    GLBuffer vertexPositionBuffer;
+    GLBuffer vertexColorBuffer;
+    setupIndexedBuffers(vertexPositionBuffer, vertexColorBuffer, indexBuffer);
+
+    // for potential update vertex color later
+    glBindBuffer(GL_ARRAY_BUFFER, vertexColorBuffer);
+
+    doDrawElementsBaseVertexVariants(
+        DrawCallVariants::DrawElementsInstancedBaseVertexBaseInstanceEXT);
+}
+
 // Test drawElementsInstancedBaseVertexBaseInstance from ANGLE_base_vertex_base_instance
-TEST_P(DrawBaseVertexVariantsTest, DrawElementsInstancedBaseVertexBaseInstance)
+TEST_P(DrawBaseVertexVariantsTest, DrawElementsInstancedBaseVertexBaseInstanceANGLE)
 {
     ANGLE_SKIP_TEST_IF(!requestAngleBaseVertexBaseInstanceExtensions());
 
@@ -563,17 +611,19 @@ TEST_P(DrawBaseVertexVariantsTest, DrawElementsInstancedBaseVertexBaseInstance)
     // for potential update vertex color later
     glBindBuffer(GL_ARRAY_BUFFER, vertexColorBuffer);
 
-    doDrawElementsBaseVertexVariants(DrawCallVariants::DrawElementsInstancedBaseVertexBaseInstance);
+    doDrawElementsBaseVertexVariants(
+        DrawCallVariants::DrawElementsInstancedBaseVertexBaseInstanceANGLE);
 }
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(DrawBaseVertexVariantsTest);
-ANGLE_INSTANTIATE_TEST_COMBINE_1(DrawBaseVertexVariantsTest,
-                                 DrawBaseVertexVariantsTestPrint,
-                                 testing::ValuesIn(kBufferDataUsage),
-                                 ES3_D3D11(),
-                                 ES3_METAL(),
-                                 ES3_OPENGL(),
-                                 ES3_OPENGLES(),
-                                 ES3_VULKAN());
+ANGLE_INSTANTIATE_TEST_COMBINE_1(
+    DrawBaseVertexVariantsTest,
+    DrawBaseVertexVariantsTestPrint,
+    testing::ValuesIn(kBufferDataUsage),
+    ES3_D3D11(),
+    ES3_METAL(),
+    ES3_OPENGL().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions),
+    ES3_OPENGLES().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions),
+    ES3_VULKAN());
 
 }  // namespace
