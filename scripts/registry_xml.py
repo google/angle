@@ -128,6 +128,7 @@ gles_requestable_extensions = [
     "GL_EXT_multisampled_render_to_texture2",
     "GL_EXT_occlusion_query_boolean",
     "GL_EXT_polygon_offset_clamp",
+    "GL_EXT_primitive_bounding_box",
     "GL_EXT_protected_textures",
     "GL_EXT_pvrtc_sRGB",
     "GL_EXT_read_format_bgra",
@@ -213,6 +214,7 @@ gles_requestable_extensions = [
     "GL_OES_get_program_binary",
     "GL_OES_gpu_shader5",
     "GL_OES_mapbuffer",
+    "GL_OES_primitive_bounding_box",
     "GL_OES_required_internalformat",
     "GL_OES_rgb8_rgba8",
     "GL_OES_sample_shading",
@@ -276,7 +278,6 @@ gles_es_only_extensions = [
     "GL_EXT_debug_marker",
     "GL_EXT_discard_framebuffer",
     "GL_EXT_multisample_compatibility",
-    "GL_EXT_primitive_bounding_box",
     "GL_EXT_robustness",
     "GL_EXT_sRGB_write_control",
     "GL_EXT_texture_format_sRGB_override",
@@ -292,7 +293,6 @@ gles_es_only_extensions = [
     "GL_OES_depth_texture",
     "GL_OES_EGL_sync",
     "GL_OES_packed_depth_stencil",
-    "GL_OES_primitive_bounding_box",
     "GL_OES_surfaceless_context",
 ]
 
