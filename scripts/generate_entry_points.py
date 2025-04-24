@@ -1674,7 +1674,6 @@ def get_validation_expression(api, cmd_name, entry_point_name, internal_params, 
         'GL_EXT_occlusion_query_boolean',
         'GL_OES_EGL_image',
         'GL_OES_EGL_image_external',
-        'GL_OVR_multiview',
     ]
 
     # Validation expression for always present entry points

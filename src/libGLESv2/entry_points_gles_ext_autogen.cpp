@@ -17521,10 +17521,21 @@ void GL_APIENTRY GL_FramebufferTextureMultiviewOVR(GLenum target,
         {
             context->endPixelLocalStorageImplicit();
         }
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateFramebufferTextureMultiviewOVR(
-                                context, angle::EntryPoint::GLFramebufferTextureMultiviewOVR,
-                                target, attachment, texturePacked, level, baseViewIndex, numViews));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().multiviewOVR))
+            {
+                isCallValid = ValidateFramebufferTextureMultiviewOVR(
+                    context, angle::EntryPoint::GLFramebufferTextureMultiviewOVR, target,
+                    attachment, texturePacked, level, baseViewIndex, numViews);
+            }
+            else
+            {
+                RecordVersionErrorESEXT(context,
+                                        angle::EntryPoint::GLFramebufferTextureMultiviewOVR);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->framebufferTextureMultiview(target, attachment, texturePacked, level,

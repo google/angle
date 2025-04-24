@@ -3751,12 +3751,6 @@ bool ValidateFramebufferTextureMultiviewOVR(const Context *context,
                                             GLint baseViewIndex,
                                             GLsizei numViews)
 {
-    if (!context->getExtensions().multiviewOVR)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     if (!ValidateFramebufferTextureMultiviewBase(context, entryPoint, target, attachment, texture,
                                                  level, numViews))
     {
