@@ -975,6 +975,74 @@ TEST_P(PixelLocalStorageTest, ClearValues_r32)
     EXPECT_PIXEL_RECT32UI_EQ(0, 0, 1, 1, GLColor32UI(0xbaadbeef, 0, 0, 1));
 }
 
+// Check type conversions of PLS state queries.
+TEST_P(PixelLocalStorageTest, ClearValueConversions)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    glFramebufferPixelLocalClearValuefvANGLE(0, ClearF(1.0f, 2.0f, 3.0f, 4.0f));
+    glFramebufferPixelLocalClearValueivANGLE(0, ClearI(-5, -6, -7, -8));
+    glFramebufferPixelLocalClearValueuivANGLE(
+        0, ClearUI(2147483648, 2147483649, 2147483650, 2147483651));
+    ASSERT_GL_NO_ERROR();
+
+    {
+        GLfloat value[4]{};
+        glGetFramebufferPixelLocalStorageParameterfvANGLE(0, GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE,
+                                                          value);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_EQ(value[0], 1.0f);
+        EXPECT_EQ(value[1], 2.0f);
+        EXPECT_EQ(value[2], 3.0f);
+        EXPECT_EQ(value[3], 4.0f);
+
+        glGetFramebufferPixelLocalStorageParameterfvANGLE(0, GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE,
+                                                          value);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_EQ(value[0], -5.0f);
+        EXPECT_EQ(value[1], -6.0f);
+        EXPECT_EQ(value[2], -7.0f);
+        EXPECT_EQ(value[3], -8.0f);
+
+        glGetFramebufferPixelLocalStorageParameterfvANGLE(
+            0, GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE, value);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_EQ(value[0], 2147483648.0f);
+        EXPECT_EQ(value[1], 2147483648.0f);  // closest f32 to 2147483649
+        EXPECT_EQ(value[2], 2147483648.0f);  // closest f32 to 2147483650
+        EXPECT_EQ(value[3], 2147483648.0f);  // closest f32 to 2147483651
+    }
+    {
+        GLint value[4]{};
+        glGetFramebufferPixelLocalStorageParameterivANGLE(0, GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE,
+                                                          value);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_EQ(value[0], 1);
+        EXPECT_EQ(value[1], 2);
+        EXPECT_EQ(value[2], 3);
+        EXPECT_EQ(value[3], 4);
+
+        glGetFramebufferPixelLocalStorageParameterivANGLE(0, GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE,
+                                                          value);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_EQ(value[0], -5);
+        EXPECT_EQ(value[1], -6);
+        EXPECT_EQ(value[2], -7);
+        EXPECT_EQ(value[3], -8);
+
+        glGetFramebufferPixelLocalStorageParameterivANGLE(
+            0, GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE, value);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_EQ(static_cast<GLuint>(value[0]), 2147483648);
+        EXPECT_EQ(static_cast<GLuint>(value[1]), 2147483649);
+        EXPECT_EQ(static_cast<GLuint>(value[2]), 2147483650);
+        EXPECT_EQ(static_cast<GLuint>(value[3]), 2147483651);
+    }
+}
+
 // Check proper support of GL_LOAD_OP_ZERO_ANGLE, GL_LOAD_OP_LOAD_ANGLE, and GL_LOAD_OP_CLEAR_ANGLE
 // loadOps. Also verify that it works do draw with GL_MAX_LOCAL_STORAGE_PLANES_ANGLE planes.
 TEST_P(PixelLocalStorageTest, LoadOps)
@@ -4597,7 +4665,7 @@ class PixelLocalStorageValidationTest : public ANGLETest<>
   protected:
     void testSetUp() override
     {
-        ASSERT(EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+        ASSERT_TRUE(EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
         glGetIntegerv(GL_MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE, &MAX_PIXEL_LOCAL_STORAGE_PLANES);
         glGetIntegerv(GL_MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES_ANGLE,
                       &MAX_COMBINED_DRAW_BUFFERS_AND_PIXEL_LOCAL_STORAGE_PLANES);
@@ -6329,24 +6397,20 @@ TEST_P(PixelLocalStorageValidationTest, GetFramebufferPixelLocalStorageParameter
     GLFramebuffer fbo;
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
 
-    // INVALID_FRAMEBUFFER_OPERATION is generated if pixel local storage on the draw framebuffer is
+    // No error is generated if pixel local storage on the draw framebuffer is
     // in an interrupted state.
     glFramebufferPixelLocalStorageInterruptANGLE();
     glGetFramebufferPixelLocalStorageParameterfvRobustANGLE(
         0, GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE, 4, &length, floats);
-    EXPECT_GL_SINGLE_ERROR(GL_INVALID_FRAMEBUFFER_OPERATION);
-    EXPECT_GL_SINGLE_ERROR_MSG("Pixel local storage on the draw framebuffer is interrupted.");
+    EXPECT_GL_NO_ERROR();
     glGetFramebufferPixelLocalStorageParameterfvANGLE(0, GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE,
                                                       floats);
-    EXPECT_GL_SINGLE_ERROR(GL_INVALID_FRAMEBUFFER_OPERATION);
-    EXPECT_GL_SINGLE_ERROR_MSG("Pixel local storage on the draw framebuffer is interrupted.");
+    EXPECT_GL_NO_ERROR();
     glGetFramebufferPixelLocalStorageParameterivRobustANGLE(1, GL_PIXEL_LOCAL_FORMAT_ANGLE, 4,
                                                             &length, ints);
-    EXPECT_GL_SINGLE_ERROR(GL_INVALID_FRAMEBUFFER_OPERATION);
-    EXPECT_GL_SINGLE_ERROR_MSG("Pixel local storage on the draw framebuffer is interrupted.");
+    EXPECT_GL_NO_ERROR();
     glGetFramebufferPixelLocalStorageParameterivANGLE(1, GL_PIXEL_LOCAL_FORMAT_ANGLE, ints);
-    EXPECT_GL_SINGLE_ERROR(GL_INVALID_FRAMEBUFFER_OPERATION);
-    EXPECT_GL_SINGLE_ERROR_MSG("Pixel local storage on the draw framebuffer is interrupted.");
+    EXPECT_GL_NO_ERROR();
     glFramebufferPixelLocalStorageRestoreANGLE();
     ASSERT_GL_NO_ERROR();
 
@@ -6386,76 +6450,43 @@ TEST_P(PixelLocalStorageValidationTest, GetFramebufferPixelLocalStorageParameter
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_VALUE);
     EXPECT_GL_SINGLE_ERROR_MSG("Plane must be less than GL_MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE.");
 
-    // INVALID_ENUM is generated if the command issued is not the associated "Get Command" for
-    // <pname> in Table 6.Y.
-    glGetFramebufferPixelLocalStorageParameterivRobustANGLE(
-        0, GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE, 4, &length, ints);
-    EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
-    EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x96EB is currently not supported.");
-    glGetFramebufferPixelLocalStorageParameterivANGLE(0, GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE,
-                                                      ints);
-    EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
-    EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x96EB is currently not supported.");
-    glGetFramebufferPixelLocalStorageParameterivRobustANGLE(
-        0, GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE, 4, &length, ints);
-    EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
-    EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x8CD0 is currently not supported.");
-    glGetFramebufferPixelLocalStorageParameterivANGLE(0, GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE,
-                                                      ints);
-    EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
-    EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x8CD0 is currently not supported.");
-    glGetFramebufferPixelLocalStorageParameterfvRobustANGLE(1, GL_PIXEL_LOCAL_FORMAT_ANGLE, 4,
-                                                            &length, floats);
-    EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
-    EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x96E7 is currently not supported.");
-    glGetFramebufferPixelLocalStorageParameterfvANGLE(1, GL_PIXEL_LOCAL_FORMAT_ANGLE, floats);
-    EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
-    EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x96E7 is currently not supported.");
-    glGetFramebufferPixelLocalStorageParameterfvRobustANGLE(1, GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, 1,
-                                                            &length, floats);
-    EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
-    EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x96E8 is currently not supported.");
-    glGetFramebufferPixelLocalStorageParameterfvANGLE(1, GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE, floats);
-    EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
-    EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x96E8 is currently not supported.");
-    glGetFramebufferPixelLocalStorageParameterfvRobustANGLE(1, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE,
-                                                            1, &length, floats);
-    EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
-    EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x96E9 is currently not supported.");
-    glGetFramebufferPixelLocalStorageParameterfvANGLE(1, GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE,
-                                                      floats);
-    EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
-    EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x96E9 is currently not supported.");
-    glGetFramebufferPixelLocalStorageParameterfvRobustANGLE(1, GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE,
-                                                            1, &length, floats);
-    EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
-    EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x96EA is currently not supported.");
-    glGetFramebufferPixelLocalStorageParameterfvANGLE(1, GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE,
-                                                      floats);
-    EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
-    EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x96EA is currently not supported.");
-    glGetFramebufferPixelLocalStorageParameterfvRobustANGLE(1, GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE,
-                                                            1, &length, floats);
-    EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
-    EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x96EC is currently not supported.");
-    glGetFramebufferPixelLocalStorageParameterfvANGLE(1, GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE,
-                                                      floats);
-    EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
-    EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x96EC is currently not supported.");
-    glGetFramebufferPixelLocalStorageParameterfvRobustANGLE(
-        1, GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE, 1, &length, floats);
-    EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
-    EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x96ED is currently not supported.");
-    glGetFramebufferPixelLocalStorageParameterfvANGLE(
-        1, GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE, floats);
-    EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
-    EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x96ED is currently not supported.");
+    // No error for known enums
+    const GLenum params[] = {
+        GL_PIXEL_LOCAL_FORMAT_ANGLE,
+        GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE,
+        GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE,
+        GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE,
+        GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE,
+        GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE,
+        GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE,
+    };
+    for (GLenum param : params)
+    {
+        glGetFramebufferPixelLocalStorageParameterfvANGLE(0, param, floats);
+        EXPECT_GL_NO_ERROR();
+        glGetFramebufferPixelLocalStorageParameterivANGLE(0, param, ints);
+        EXPECT_GL_NO_ERROR();
+        glGetFramebufferPixelLocalStorageParameterfvRobustANGLE(0, param, 4, &length, floats);
+        EXPECT_GL_NO_ERROR();
+        glGetFramebufferPixelLocalStorageParameterivRobustANGLE(0, param, 4, &length, ints);
+        EXPECT_GL_NO_ERROR();
+    }
+
+    // INVALID_ENUM is generated if <pname> is not in Table 6.Y.
     glGetFramebufferPixelLocalStorageParameterfvRobustANGLE(
         1, GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE, 1, &length, floats);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
     EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x8CD3 is currently not supported.");
     glGetFramebufferPixelLocalStorageParameterfvANGLE(
         1, GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE, floats);
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
+    EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x8CD3 is currently not supported.");
+    glGetFramebufferPixelLocalStorageParameterivRobustANGLE(
+        1, GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE, 1, &length, ints);
+    EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
+    EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x8CD3 is currently not supported.");
+    glGetFramebufferPixelLocalStorageParameterivANGLE(
+        1, GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE, ints);
     EXPECT_GL_SINGLE_ERROR(GL_INVALID_ENUM);
     EXPECT_GL_SINGLE_ERROR_MSG("Enum 0x8CD3 is currently not supported.");
 
@@ -7665,7 +7696,7 @@ class PixelLocalStorageCompilerTest : public ANGLETest<>
   protected:
     void testSetUp() override
     {
-        ASSERT(EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
+        ASSERT_TRUE(EnsureGLExtensionEnabled("GL_ANGLE_shader_pixel_local_storage"));
 
         // INVALID_OPERATION is generated if DITHER is enabled.
         glDisable(GL_DITHER);

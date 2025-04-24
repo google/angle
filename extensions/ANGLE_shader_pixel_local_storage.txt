@@ -216,24 +216,14 @@ New Tokens
         STORE_OP_STORE_ANGLE                                              0x96E6
 
     Accepted by the <pname> parameter of
-    GetFramebufferPixelLocalStorageParameterivANGLE() and
-    GetFramebufferPixelLocalStorageParameterivRobustANGLE():
+    GetFramebufferPixelLocalStorageParameter{f,i}vANGLE() and
+    GetFramebufferPixelLocalStorageParameter{f,i}vRobustANGLE():
 
         PIXEL_LOCAL_FORMAT_ANGLE                                          0x96E7
         PIXEL_LOCAL_TEXTURE_NAME_ANGLE                                    0x96E8
         PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE                                   0x96E9
         PIXEL_LOCAL_TEXTURE_LAYER_ANGLE                                   0x96EA
-
-    Accepted by the <pname> parameter of
-    GetFramebufferPixelLocalStorageParameterfvANGLE() and
-    GetFramebufferPixelLocalStorageParameterfvRobustANGLE():
-
         PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE                               0x96EB
-
-    Accepted by the <pname> parameter of
-    GetFramebufferPixelLocalStorageParameterivANGLE() and
-    GetFramebufferPixelLocalStorageParameterivRobustANGLE():
-
         PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE                                 0x96EC
         PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE                        0x96ED
 
@@ -851,14 +841,10 @@ Additions to the OpenGL ES Specification, Version 3.0.6
 
       void GetFramebufferPixelLocalStorageParameterfvANGLE(int plane,
                                                            enum pname,
-                                                           GLsizei bufSize,
-                                                           GLsizei *length,
                                                            GLfloat *params)
 
       void GetFramebufferPixelLocalStorageParameterivANGLE(int plane,
                                                            enum pname,
-                                                           GLsizei bufSize,
-                                                           GLsizei *length,
                                                            GLint *params)
 
     Parameters:
@@ -903,16 +889,10 @@ Additions to the OpenGL ES Specification, Version 3.0.6
       * INVALID_FRAMEBUFFER_OPERATION is generated if the default framebuffer
         object name 0 is bound to DRAW_FRAMEBUFFER.
 
-      * INVALID_FRAMEBUFFER_OPERATION is generated if pixel local storage on the
-        draw framebuffer is in an interrupted state. (See section 2.X.2
-        "Interrupting Pixel Local Storage")
-
       * INVALID_VALUE is generated if
         <plane> < 0 or <plane> >= MAX_PIXEL_LOCAL_STORAGE_PLANES_ANGLE.
 
-      * INVALID_ENUM is generated if <pname> is not in Table 6.Y, or if the
-        command issued is not the associated "Get Command" for <pname> in Table
-        6.Y.
+      * INVALID_ENUM is generated if <pname> is not in Table 6.Y.
 
       * INVALID_VALUE is generated if <params> is NULL.
 

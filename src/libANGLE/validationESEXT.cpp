@@ -1786,6 +1786,87 @@ bool ValidatePLSCommon(const Context *context,
     return true;
 }
 
+bool ValidateGetFramebufferPixelLocalStorageParameterCommon(const Context *context,
+                                                            angle::EntryPoint entryPoint,
+                                                            GLint plane,
+                                                            GLenum pname,
+                                                            const void *params)
+{
+    if (context->getState().getDrawFramebuffer()->id().value == 0)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_FRAMEBUFFER_OPERATION, kPLSDefaultFramebufferBound);
+        return false;
+    }
+
+    if (plane < 0)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kPLSPlaneLessThanZero);
+        return false;
+    }
+
+    if (plane >= static_cast<GLint>(context->getCaps().maxPixelLocalStoragePlanes))
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kPLSPlaneOutOfRange);
+        return false;
+    }
+
+    switch (pname)
+    {
+        case GL_PIXEL_LOCAL_FORMAT_ANGLE:
+        case GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE:
+        case GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE:
+        case GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE:
+        case GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE:
+        case GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE:
+        case GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE:
+            break;
+        default:
+            ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
+            return false;
+    }
+
+    if (params == nullptr)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kPLSParamsNULL);
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetFramebufferPixelLocalStorageParameterRobustCommon(const Context *context,
+                                                                  angle::EntryPoint entryPoint,
+                                                                  GLint plane,
+                                                                  GLenum pname,
+                                                                  GLsizei bufSize,
+                                                                  const void *params)
+{
+    if (!ValidateGetFramebufferPixelLocalStorageParameterCommon(context, entryPoint, plane, pname,
+                                                                params))
+    {
+        // Error already generated.
+        return false;
+    }
+
+    GLsizei paramCount = 1;
+    switch (pname)
+    {
+        case GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE:
+        case GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE:
+        case GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE:
+            paramCount = 4;
+            break;
+    }
+
+    if (paramCount > bufSize)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInsufficientParams);
+        return false;
+    }
+
+    return true;
+}
+
 bool ValidatePLSInternalformat(const Context *context,
                                angle::EntryPoint entryPoint,
                                GLenum internalformat)
@@ -1916,28 +1997,6 @@ bool ValidatePLSStoreOperation(const Context *context, angle::EntryPoint entryPo
             ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kPLSInvalidStoreOperation, storeop);
             return false;
     }
-}
-
-bool ValidatePLSQueryCommon(const Context *context,
-                            angle::EntryPoint entryPoint,
-                            GLsizei paramCount,
-                            GLsizei bufSize,
-                            const void *params)
-{
-    // INVALID_OPERATION is generated if <bufSize> is not large enough to receive the requested
-    // parameter.
-    if (paramCount > bufSize)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInsufficientParams);
-        return false;
-    }
-    // INVALID_VALUE is generated if <params> is NULL.
-    if (params == nullptr)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kPLSParamsNULL);
-        return false;
-    }
-    return true;
 }
 }  // namespace
 
@@ -2415,8 +2474,14 @@ bool ValidateGetFramebufferPixelLocalStorageParameterfvANGLE(const Context *cont
                                                              GLenum pname,
                                                              const GLfloat *params)
 {
-    return ValidateGetFramebufferPixelLocalStorageParameterfvRobustANGLE(
-        context, entryPoint, plane, pname, std::numeric_limits<GLsizei>::max(), nullptr, params);
+    if (!context->getExtensions().shaderPixelLocalStorageANGLE)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateGetFramebufferPixelLocalStorageParameterCommon(context, entryPoint, plane, pname,
+                                                                  params);
 }
 
 bool ValidateGetFramebufferPixelLocalStorageParameterivANGLE(const Context *context,
@@ -2425,8 +2490,14 @@ bool ValidateGetFramebufferPixelLocalStorageParameterivANGLE(const Context *cont
                                                              GLenum pname,
                                                              const GLint *params)
 {
-    return ValidateGetFramebufferPixelLocalStorageParameterivRobustANGLE(
-        context, entryPoint, plane, pname, std::numeric_limits<GLsizei>::max(), nullptr, params);
+    if (!context->getExtensions().shaderPixelLocalStorageANGLE)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    return ValidateGetFramebufferPixelLocalStorageParameterCommon(context, entryPoint, plane, pname,
+                                                                  params);
 }
 
 bool ValidateGetFramebufferPixelLocalStorageParameterfvRobustANGLE(const Context *context,
@@ -2437,23 +2508,20 @@ bool ValidateGetFramebufferPixelLocalStorageParameterfvRobustANGLE(const Context
                                                                    const GLsizei *length,
                                                                    const GLfloat *params)
 {
-    if (!ValidatePLSCommon(context, entryPoint, plane, PLSExpectedStatus::Any))
+    if (!context->getExtensions().robustClientMemoryANGLE)
     {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
     }
-    GLsizei paramCount = 0;
-    switch (pname)
+
+    if (!context->getExtensions().shaderPixelLocalStorageANGLE)
     {
-        case GL_PIXEL_LOCAL_CLEAR_VALUE_FLOAT_ANGLE:
-            paramCount = 4;
-            break;
-        default:
-            // INVALID_ENUM is generated if <pname> is not in Table 6.Y, or if the command issued is
-            // not the associated "Get Command" for <pname> in Table 6.Y.
-            ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
-            return false;
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
     }
-    return ValidatePLSQueryCommon(context, entryPoint, paramCount, bufSize, params);
+
+    return ValidateGetFramebufferPixelLocalStorageParameterRobustCommon(context, entryPoint, plane,
+                                                                        pname, bufSize, params);
 }
 
 bool ValidateGetFramebufferPixelLocalStorageParameterivRobustANGLE(const Context *context,
@@ -2464,30 +2532,20 @@ bool ValidateGetFramebufferPixelLocalStorageParameterivRobustANGLE(const Context
                                                                    const GLsizei *length,
                                                                    const GLint *params)
 {
-    if (!ValidatePLSCommon(context, entryPoint, plane, PLSExpectedStatus::Any))
+    if (!context->getExtensions().robustClientMemoryANGLE)
     {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
     }
-    GLsizei paramCount = 0;
-    switch (pname)
+
+    if (!context->getExtensions().shaderPixelLocalStorageANGLE)
     {
-        case GL_PIXEL_LOCAL_FORMAT_ANGLE:
-        case GL_PIXEL_LOCAL_TEXTURE_NAME_ANGLE:
-        case GL_PIXEL_LOCAL_TEXTURE_LEVEL_ANGLE:
-        case GL_PIXEL_LOCAL_TEXTURE_LAYER_ANGLE:
-            paramCount = 1;
-            break;
-        case GL_PIXEL_LOCAL_CLEAR_VALUE_INT_ANGLE:
-        case GL_PIXEL_LOCAL_CLEAR_VALUE_UNSIGNED_INT_ANGLE:
-            paramCount = 4;
-            break;
-        default:
-            // INVALID_ENUM is generated if <pname> is not in Table 6.Y, or if the command issued is
-            // not the associated "Get Command" for <pname> in Table 6.Y.
-            ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
-            return false;
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
     }
-    return ValidatePLSQueryCommon(context, entryPoint, paramCount, bufSize, params);
+
+    return ValidateGetFramebufferPixelLocalStorageParameterRobustCommon(context, entryPoint, plane,
+                                                                        pname, bufSize, params);
 }
 
 bool ValidateFramebufferFetchBarrierEXT(const Context *context, angle::EntryPoint entryPoint)
