@@ -1676,8 +1676,8 @@ def get_validation_expression(api, cmd_name, entry_point_name, internal_params, 
         'GL_OES_EGL_image_external',
     ]
 
-    # Validation expression for always present entry points
-    if sorted(sources) == ["1_0", "2_0"] or sources[0] in skipped_exts:
+    # Validation expression for the entry points from the extensions above
+    if sources[0] in skipped_exts:
         return "bool isCallValid = (context->skipValidation() || {validation_expression});".format(
             validation_expression=expr)
 
@@ -1688,7 +1688,10 @@ def get_validation_expression(api, cmd_name, entry_point_name, internal_params, 
 
     condition = ""
     error_suffix = sources[0].replace("_", "")
-    if sorted(sources) == ["1_0", "3_2"]:
+    if sorted(sources) == ["1_0", "2_0"]:
+        # Entry points existing in all context versions
+        condition = "true"
+    elif sorted(sources) == ["1_0", "3_2"]:
         # glGetPointerv is a special case: defined in ES 1.0 and ES 3.2 only
         condition = "context->getClientVersion() < ES_2_0 || context->getClientVersion() >= ES_3_2"
         error_suffix = "1Or32"
@@ -1699,10 +1702,11 @@ def get_validation_expression(api, cmd_name, entry_point_name, internal_params, 
     else:
         assert (sources[0].startswith("GL_"))
         exts = map(lambda x: "context->getExtensions().{}".format(get_camel_case(x)), sources)
-        condition = " || ".join(list(exts))
+        condition = " || ".join(sorted(list(exts)))
         error_suffix = "EXT"
 
-    record_error = "RecordVersionErrorES{}(context, {});".format(error_suffix, entry_point_name)
+    record_error = "else {{RecordVersionErrorES{}(context, {});}}".format(
+        error_suffix, entry_point_name) if condition != "true" else ""
 
     # Validation logic for entry points with conditional support
     return """bool isCallValid = context->skipValidation();
@@ -1712,10 +1716,7 @@ if (!isCallValid)
     {{
         isCallValid = {validation_expression};
     }}
-    else
-    {{
-        {record_error}
-    }}
+    {record_error}
 }}""".format(
         support_condition=condition, validation_expression=expr, record_error=record_error)
 
