@@ -179,7 +179,14 @@ GLuint TextureState::getEffectiveMaxLevel() const
         clampedMaxLevel        = std::min(clampedMaxLevel, mImmutableLevels - 1);
         return clampedMaxLevel;
     }
-    return mMaxLevel;
+    if (IsMipmapSupported(mType) && IsMipmapFiltered(mSamplerState.getMinFilter()))
+    {
+        return mMaxLevel;
+    }
+    else
+    {
+        return std::max(mMaxLevel, mBaseLevel);
+    }
 }
 
 GLuint TextureState::getMipmapMaxLevel() const
@@ -417,10 +424,6 @@ bool TextureState::computeSamplerCompletenessForCopyImage(const SamplerState &sa
         return mBuffer.get() != nullptr;
     }
 
-    if (!mImmutableFormat && mBaseLevel > mMaxLevel)
-    {
-        return false;
-    }
     const ImageDesc &baseImageDesc = getImageDesc(getBaseImageTarget(), getEffectiveBaseLevel());
     if (baseImageDesc.size.width == 0 || baseImageDesc.size.height == 0 ||
         baseImageDesc.size.depth == 0)
@@ -503,7 +506,12 @@ bool TextureState::computeSamplerCompletenessForCopyImage(const SamplerState &sa
 
 bool TextureState::computeMipmapCompleteness() const
 {
-    const GLuint maxLevel = getMipmapMaxLevel();
+    const GLuint maxLevel  = getMipmapMaxLevel();
+    const GLuint baseLevel = getEffectiveBaseLevel();
+    if (baseLevel > maxLevel)
+    {
+        return false;
+    }
 
     for (GLuint level = getEffectiveBaseLevel(); level <= maxLevel; level++)
     {
@@ -597,7 +605,7 @@ GLuint TextureState::getEnabledLevelCount() const
 {
     GLuint levelCount      = 0;
     const GLuint baseLevel = getEffectiveBaseLevel();
-    const GLuint maxLevel  = getMipmapMaxLevel();
+    GLuint maxLevel        = getMipmapMaxLevel();
 
     // The mip chain will have either one or more sequential levels, or max levels,
     // but not a sparse one.

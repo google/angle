@@ -234,6 +234,8 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 362545033 LINUX NVIDIA OPENGL : TextureCubeTestES3.SpecifyAndSampleFromBaseLevel1/* = SKIP
 // Intel/mesa does not ignore gl_Layer for non-layered framebuffers
 374790899 LINUX INTEL OPENGL : GeometryShaderTest.GLLayerIneffectiveWithoutLayeredFramebuffer/* = SKIP
+// Base level greater than max level fails on Linux/OpenGL
+42267266 LINUX INTEL OPENGL : Texture2DTestES3.TextureBaseLevelGreaterThanMaxLevel3Levels/* = SKIP
 
 379758210 LINUX INTEL OPENGL : GLSLTest_ES3.SwizzledToBoolCoercion/* = SKIP
 

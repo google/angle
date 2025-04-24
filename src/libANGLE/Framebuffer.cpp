@@ -138,8 +138,11 @@ FramebufferStatus CheckAttachmentCompleteness(const Context *context,
             // range[levelbase, q], where levelbase is the value of TEXTURE_BASE_LEVEL and q is
             // the effective maximum texture level defined in the Mipmapping discussion of
             // section 3.8.10.4.
-            if (attachmentMipLevel < texture->getBaseLevel() ||
-                attachmentMipLevel > texture->getMipmapMaxLevel())
+            // The above condition works only if FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL is not
+            // the same as levelbase.
+            if (attachmentMipLevel != texture->getBaseLevel() &&
+                (attachmentMipLevel < texture->getBaseLevel() ||
+                 attachmentMipLevel > texture->getMipmapMaxLevel()))
             {
                 return FramebufferStatus::Incomplete(
                     GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT,

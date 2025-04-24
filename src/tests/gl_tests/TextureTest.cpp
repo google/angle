@@ -5907,7 +5907,8 @@ TEST_P(Texture2DBaseMaxTestES3, Fuzz545ImmutableTexRenderFeedback)
                             {  // "...does not name an immutable-format texture..."
                                 // * "...the value of [level] must be in the range `[level_base,
                                 // q]`"
-                                fbComplete &= (level_base <= dstMip && dstMip <= q);
+                                fbComplete &=
+                                    (level_base == dstMip || (level_base <= dstMip && dstMip <= q));
 
                                 // * "...the value of [level] is not `level_base`, then the texture
                                 // must be mipmap complete"
@@ -7636,6 +7637,107 @@ TEST_P(Texture2DTestES3, TextureBaseLevelGreaterThanMaxLevel)
 
     // Texture should be incomplete.
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+}
+
+// Test base level is greater than max level for 2-level textures.
+TEST_P(Texture2DTestES3, TextureBaseLevelGreaterThanMax2Levels)
+{
+    std::vector<GLColor> texDataRed(2u * 2u, GLColor::red);
+
+    GLTexture tex2D;
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex2D);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, texDataRed.data());
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::green);
+
+    EXPECT_GL_NO_ERROR();
+
+    // Texture should be complete.
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Texture should be incomplete.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+
+    // Texture should be complete.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    drawQuad(mProgram, "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test base level is greater than max level for 3-level textures.
+TEST_P(Texture2DTestES3, TextureBaseLevelGreaterThanMaxLevel3Levels)
+{
+    GLColor expectedColor[] = {GLColor::red, GLColor::green, GLColor::blue, GLColor::black};
+    std::vector<GLColor> texDataRed(4u * 4u, GLColor::red);
+    std::vector<GLColor> texDataGreen(2u * 2u, GLColor::green);
+
+    GLTexture tex2D;
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex2D);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, texDataRed.data());
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 texDataGreen.data());
+    glTexImage2D(GL_TEXTURE_2D, 2, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::blue);
+
+    EXPECT_GL_NO_ERROR();
+
+    for (int base = 0; base < 3; ++base)
+    {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, base);
+        for (int max = 0; max < 3; ++max)
+        {
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, max);
+            drawQuad(mProgram, "position", 0.5f);
+            EXPECT_PIXEL_COLOR_EQ(0, 0, expectedColor[base <= max ? base : 3]);
+        }
+    }
+
+    for (int max = 0; max < 3; ++max)
+    {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, max);
+        for (int base = 0; base < 3; ++base)
+        {
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, base);
+            drawQuad(mProgram, "position", 0.5f);
+            EXPECT_PIXEL_COLOR_EQ(0, 0, expectedColor[base <= max ? base : 3]);
+        }
+    }
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    for (int base = 0; base < 3; ++base)
+    {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, base);
+        for (int max = 0; max < 3; ++max)
+        {
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, max);
+            drawQuad(mProgram, "position", 0.5f);
+            EXPECT_PIXEL_COLOR_EQ(0, 0, expectedColor[base]);
+        }
+    }
+
+    for (int max = 0; max < 3; ++max)
+    {
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, max);
+        for (int base = 0; base < 3; ++base)
+        {
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, base);
+            drawQuad(mProgram, "position", 0.5f);
+            EXPECT_PIXEL_COLOR_EQ(0, 0, expectedColor[base]);
+        }
+    }
 }
 
 // Test that immutable texture base level and max level are clamped.
