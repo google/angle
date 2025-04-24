@@ -158,7 +158,8 @@ bool ValidateObjectIdentifierAndName(const Context *context,
             return true;
 
         case GL_QUERY_OBJECT_EXT:
-            if (!isGLES3 && !context->getExtensions().occlusionQueryBooleanEXT)
+            if (!isGLES3 && !(context->getExtensions().disjointTimerQueryEXT ||
+                              context->getExtensions().occlusionQueryBooleanEXT))
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidType);
                 return false;

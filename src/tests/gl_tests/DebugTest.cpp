@@ -35,11 +35,12 @@ class DebugTest : public ANGLETest<>
         setConfigAlphaBits(8);
         setConfigDepthBits(24);
         setDebugEnabled(true);
+        setExtensionsEnabled(false);
     }
 
     void testSetUp() override
     {
-        mDebugExtensionAvailable = IsGLExtensionEnabled("GL_KHR_debug");
+        mDebugExtensionAvailable = EnsureGLExtensionEnabled("GL_KHR_debug");
         if (mDebugExtensionAvailable)
         {
             glEnable(GL_DEBUG_OUTPUT);
@@ -49,7 +50,11 @@ class DebugTest : public ANGLETest<>
     bool mDebugExtensionAvailable;
 };
 
-void createGLObjectAndLabel(GLenum identifier, GLuint &object, const char **label)
+void createGLObjectAndLabel(GLenum identifier,
+                            GLuint &object,
+                            const char **label,
+                            int major,
+                            int minor)
 {
     switch (identifier)
     {
@@ -67,18 +72,42 @@ void createGLObjectAndLabel(GLenum identifier, GLuint &object, const char **labe
             *label = kProgramObjLabel;
             break;
         case GL_VERTEX_ARRAY_OBJECT_EXT:
-            glGenVertexArrays(1, &object);
-            glBindVertexArray(object);
+            if (major < 3)
+            {
+                glGenVertexArraysOES(1, &object);
+                glBindVertexArrayOES(object);
+            }
+            else
+            {
+                glGenVertexArrays(1, &object);
+                glBindVertexArray(object);
+            }
             *label = kVertexArrayObjLabel;
             break;
         case GL_QUERY_OBJECT_EXT:
-            glGenQueries(1, &object);
-            glBeginQuery(GL_ANY_SAMPLES_PASSED, object);
+            if (major < 3)
+            {
+                glGenQueriesEXT(1, &object);
+                glBeginQueryEXT(GL_ANY_SAMPLES_PASSED, object);
+            }
+            else
+            {
+                glGenQueries(1, &object);
+                glBeginQuery(GL_ANY_SAMPLES_PASSED, object);
+            }
             *label = kQueryObjLabel;
             break;
         case GL_PROGRAM_PIPELINE_OBJECT_EXT:
-            glGenProgramPipelines(1, &object);
-            glBindProgramPipeline(object);
+            if (major < 3 || minor < 1)
+            {
+                glGenProgramPipelinesEXT(1, &object);
+                glBindProgramPipelineEXT(object);
+            }
+            else
+            {
+                glGenProgramPipelines(1, &object);
+                glBindProgramPipeline(object);
+            }
             *label = kProgramPipelineObjLabel;
             break;
         default:
@@ -87,7 +116,7 @@ void createGLObjectAndLabel(GLenum identifier, GLuint &object, const char **labe
     }
 }
 
-void deleteGLObject(GLenum identifier, GLuint &object)
+void deleteGLObject(GLenum identifier, GLuint &object, int major, int minor)
 {
     switch (identifier)
     {
@@ -101,14 +130,36 @@ void deleteGLObject(GLenum identifier, GLuint &object)
             glDeleteProgram(object);
             break;
         case GL_VERTEX_ARRAY_OBJECT_EXT:
-            glDeleteVertexArrays(1, &object);
+            if (major < 3)
+            {
+                glDeleteVertexArraysOES(1, &object);
+            }
+            else
+            {
+                glDeleteVertexArrays(1, &object);
+            }
             break;
         case GL_QUERY_OBJECT_EXT:
-            glEndQuery(GL_ANY_SAMPLES_PASSED);
-            glDeleteQueries(1, &object);
+            if (major < 3)
+            {
+                glEndQueryEXT(GL_ANY_SAMPLES_PASSED);
+                glDeleteQueriesEXT(1, &object);
+            }
+            else
+            {
+                glEndQuery(GL_ANY_SAMPLES_PASSED);
+                glDeleteQueries(1, &object);
+            }
             break;
         case GL_PROGRAM_PIPELINE_OBJECT_EXT:
-            glDeleteProgramPipelines(1, &object);
+            if (major < 3 || minor < 1)
+            {
+                glDeleteProgramPipelinesEXT(1, &object);
+            }
+            else
+            {
+                glDeleteProgramPipelines(1, &object);
+            }
             break;
         default:
             UNREACHABLE();
@@ -134,22 +185,22 @@ TEST_P(DebugTest, ObjectLabelsEXT)
                 }
                 break;
             case GL_PROGRAM_PIPELINE_OBJECT_EXT:
-                if (!(getClientMajorVersion() >= 3 && getClientMinorVersion() >= 1) ||
-                    !IsGLExtensionEnabled("GL_EXT_separate_shader_objects"))
+                if ((getClientMajorVersion() < 3 || getClientMinorVersion() < 1) &&
+                    !EnsureGLExtensionEnabled("GL_EXT_separate_shader_objects"))
                 {
                     skip = true;
                 }
                 break;
             case GL_QUERY_OBJECT_EXT:
-                // GLES3 context is required for glGenQueries()
-                if (getClientMajorVersion() < 3 ||
-                    !IsGLExtensionEnabled("GL_EXT_occlusion_query_boolean"))
+                if (getClientMajorVersion() < 3 &&
+                    !EnsureGLExtensionEnabled("GL_EXT_occlusion_query_boolean"))
                 {
                     skip = true;
                 }
                 break;
             case GL_VERTEX_ARRAY_OBJECT_EXT:
-                if (getClientMajorVersion() < 3)
+                if (getClientMajorVersion() < 3 &&
+                    !EnsureGLExtensionEnabled("GL_OES_vertex_array_object"))
                 {
                     skip = true;
                 }
@@ -166,7 +217,9 @@ TEST_P(DebugTest, ObjectLabelsEXT)
 
         GLuint object;
         const char *label;
-        createGLObjectAndLabel(identifier, object, &label);
+        createGLObjectAndLabel(identifier, object, &label, getClientMajorVersion(),
+                               getClientMinorVersion());
+        ASSERT_GL_NO_ERROR();
 
         glLabelObjectEXT(identifier, object, 0, label);
         ASSERT_GL_NO_ERROR();
@@ -180,9 +233,8 @@ TEST_P(DebugTest, ObjectLabelsEXT)
         EXPECT_EQ(static_cast<GLsizei>(strlen(label)), labelLengthBuf);
         EXPECT_STREQ(label, labelBuf.data());
 
+        deleteGLObject(identifier, object, getClientMajorVersion(), getClientMinorVersion());
         ASSERT_GL_NO_ERROR();
-
-        deleteGLObject(identifier, object);
 
         glLabelObjectEXT(identifier, object, 0, label);
         EXPECT_GL_ERROR(GL_INVALID_OPERATION);
@@ -191,6 +243,42 @@ TEST_P(DebugTest, ObjectLabelsEXT)
                             &labelLengthBuf, labelBuf.data());
         EXPECT_GL_ERROR(GL_INVALID_OPERATION);
     }
+}
+
+// Test basic usage of setting and getting labels using GL_EXT_debug_label on timer query objects
+TEST_P(DebugTest, TimerQueryObjectLabelsEXT)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_debug_label"));
+
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_disjoint_timer_query"));
+
+    GLuint object;
+    glGenQueriesEXT(1, &object);
+    glBeginQueryEXT(GL_TIME_ELAPSED_EXT, object);
+    ASSERT_GL_NO_ERROR();
+
+    glLabelObjectEXT(GL_QUERY_OBJECT_EXT, object, 0, kQueryObjLabel);
+    EXPECT_GL_NO_ERROR();
+
+    std::vector<char> labelBuf(strlen(kQueryObjLabel) + 1);
+    GLsizei labelLengthBuf = 0;
+    glGetObjectLabelEXT(GL_QUERY_OBJECT_EXT, object, static_cast<GLsizei>(labelBuf.size()),
+                        &labelLengthBuf, labelBuf.data());
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_EQ(static_cast<GLsizei>(strlen(kQueryObjLabel)), labelLengthBuf);
+    EXPECT_STREQ(kQueryObjLabel, labelBuf.data());
+
+    glEndQueryEXT(GL_TIME_ELAPSED_EXT);
+    glDeleteQueriesEXT(1, &object);
+    ASSERT_GL_NO_ERROR();
+
+    glLabelObjectEXT(GL_QUERY_OBJECT_EXT, object, 0, kQueryObjLabel);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glGetObjectLabelEXT(GL_QUERY_OBJECT_EXT, object, static_cast<GLsizei>(labelBuf.size()),
+                        &labelLengthBuf, labelBuf.data());
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
 class DebugTestES3 : public DebugTest
