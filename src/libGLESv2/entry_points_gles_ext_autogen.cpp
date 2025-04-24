@@ -4612,11 +4612,21 @@ void GL_APIENTRY GL_FramebufferMemorylessPixelLocalStorageANGLE(GLint plane, GLe
         {
             context->endPixelLocalStorageImplicit();
         }
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateFramebufferMemorylessPixelLocalStorageANGLE(
-                 context, angle::EntryPoint::GLFramebufferMemorylessPixelLocalStorageANGLE, plane,
-                 internalformat));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().shaderPixelLocalStorageANGLE))
+            {
+                isCallValid = ValidateFramebufferMemorylessPixelLocalStorageANGLE(
+                    context, angle::EntryPoint::GLFramebufferMemorylessPixelLocalStorageANGLE,
+                    plane, internalformat);
+            }
+            else
+            {
+                RecordVersionErrorESEXT(
+                    context, angle::EntryPoint::GLFramebufferMemorylessPixelLocalStorageANGLE);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->framebufferMemorylessPixelLocalStorage(plane, internalformat);
@@ -4651,11 +4661,21 @@ void GL_APIENTRY GL_FramebufferTexturePixelLocalStorageANGLE(GLint plane,
         {
             context->endPixelLocalStorageImplicit();
         }
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateFramebufferTexturePixelLocalStorageANGLE(
-                 context, angle::EntryPoint::GLFramebufferTexturePixelLocalStorageANGLE, plane,
-                 backingtexturePacked, level, layer));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().shaderPixelLocalStorageANGLE))
+            {
+                isCallValid = ValidateFramebufferTexturePixelLocalStorageANGLE(
+                    context, angle::EntryPoint::GLFramebufferTexturePixelLocalStorageANGLE, plane,
+                    backingtexturePacked, level, layer);
+            }
+            else
+            {
+                RecordVersionErrorESEXT(
+                    context, angle::EntryPoint::GLFramebufferTexturePixelLocalStorageANGLE);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->framebufferTexturePixelLocalStorage(plane, backingtexturePacked, level, layer);
@@ -4682,11 +4702,21 @@ void GL_APIENTRY GL_FramebufferPixelLocalClearValuefvANGLE(GLint plane, const GL
     if (ANGLE_LIKELY(context != nullptr))
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateFramebufferPixelLocalClearValuefvANGLE(
-                 context, angle::EntryPoint::GLFramebufferPixelLocalClearValuefvANGLE, plane,
-                 value));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().shaderPixelLocalStorageANGLE))
+            {
+                isCallValid = ValidateFramebufferPixelLocalClearValuefvANGLE(
+                    context, angle::EntryPoint::GLFramebufferPixelLocalClearValuefvANGLE, plane,
+                    value);
+            }
+            else
+            {
+                RecordVersionErrorESEXT(
+                    context, angle::EntryPoint::GLFramebufferPixelLocalClearValuefvANGLE);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->framebufferPixelLocalClearValuefv(plane, value);
@@ -4713,11 +4743,21 @@ void GL_APIENTRY GL_FramebufferPixelLocalClearValueivANGLE(GLint plane, const GL
     if (ANGLE_LIKELY(context != nullptr))
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateFramebufferPixelLocalClearValueivANGLE(
-                 context, angle::EntryPoint::GLFramebufferPixelLocalClearValueivANGLE, plane,
-                 value));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().shaderPixelLocalStorageANGLE))
+            {
+                isCallValid = ValidateFramebufferPixelLocalClearValueivANGLE(
+                    context, angle::EntryPoint::GLFramebufferPixelLocalClearValueivANGLE, plane,
+                    value);
+            }
+            else
+            {
+                RecordVersionErrorESEXT(
+                    context, angle::EntryPoint::GLFramebufferPixelLocalClearValueivANGLE);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->framebufferPixelLocalClearValueiv(plane, value);
@@ -4744,11 +4784,21 @@ void GL_APIENTRY GL_FramebufferPixelLocalClearValueuivANGLE(GLint plane, const G
     if (ANGLE_LIKELY(context != nullptr))
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateFramebufferPixelLocalClearValueuivANGLE(
-                 context, angle::EntryPoint::GLFramebufferPixelLocalClearValueuivANGLE, plane,
-                 value));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().shaderPixelLocalStorageANGLE))
+            {
+                isCallValid = ValidateFramebufferPixelLocalClearValueuivANGLE(
+                    context, angle::EntryPoint::GLFramebufferPixelLocalClearValueuivANGLE, plane,
+                    value);
+            }
+            else
+            {
+                RecordVersionErrorESEXT(
+                    context, angle::EntryPoint::GLFramebufferPixelLocalClearValueuivANGLE);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->framebufferPixelLocalClearValueuiv(plane, value);
@@ -4774,10 +4824,19 @@ void GL_APIENTRY GL_BeginPixelLocalStorageANGLE(GLsizei n, const GLenum *loadops
     if (ANGLE_LIKELY(context != nullptr))
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateBeginPixelLocalStorageANGLE(
-                 context, angle::EntryPoint::GLBeginPixelLocalStorageANGLE, n, loadops));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().shaderPixelLocalStorageANGLE))
+            {
+                isCallValid = ValidateBeginPixelLocalStorageANGLE(
+                    context, angle::EntryPoint::GLBeginPixelLocalStorageANGLE, n, loadops);
+            }
+            else
+            {
+                RecordVersionErrorESEXT(context, angle::EntryPoint::GLBeginPixelLocalStorageANGLE);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->beginPixelLocalStorage(n, loadops);
@@ -4803,10 +4862,19 @@ void GL_APIENTRY GL_EndPixelLocalStorageANGLE(GLsizei n, const GLenum *storeops)
     if (ANGLE_LIKELY(context != nullptr))
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateEndPixelLocalStorageANGLE(
-                 context, angle::EntryPoint::GLEndPixelLocalStorageANGLE, n, storeops));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().shaderPixelLocalStorageANGLE))
+            {
+                isCallValid = ValidateEndPixelLocalStorageANGLE(
+                    context, angle::EntryPoint::GLEndPixelLocalStorageANGLE, n, storeops);
+            }
+            else
+            {
+                RecordVersionErrorESEXT(context, angle::EntryPoint::GLEndPixelLocalStorageANGLE);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->endPixelLocalStorage(n, storeops);
@@ -4830,9 +4898,20 @@ void GL_APIENTRY GL_PixelLocalStorageBarrierANGLE()
     if (ANGLE_LIKELY(context != nullptr))
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidatePixelLocalStorageBarrierANGLE(
-                                context, angle::EntryPoint::GLPixelLocalStorageBarrierANGLE));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().shaderPixelLocalStorageANGLE))
+            {
+                isCallValid = ValidatePixelLocalStorageBarrierANGLE(
+                    context, angle::EntryPoint::GLPixelLocalStorageBarrierANGLE);
+            }
+            else
+            {
+                RecordVersionErrorESEXT(context,
+                                        angle::EntryPoint::GLPixelLocalStorageBarrierANGLE);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->pixelLocalStorageBarrier();
@@ -4856,10 +4935,20 @@ void GL_APIENTRY GL_FramebufferPixelLocalStorageInterruptANGLE()
     if (ANGLE_LIKELY(context != nullptr))
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateFramebufferPixelLocalStorageInterruptANGLE(
-                 context, angle::EntryPoint::GLFramebufferPixelLocalStorageInterruptANGLE));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().shaderPixelLocalStorageANGLE))
+            {
+                isCallValid = ValidateFramebufferPixelLocalStorageInterruptANGLE(
+                    context, angle::EntryPoint::GLFramebufferPixelLocalStorageInterruptANGLE);
+            }
+            else
+            {
+                RecordVersionErrorESEXT(
+                    context, angle::EntryPoint::GLFramebufferPixelLocalStorageInterruptANGLE);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->framebufferPixelLocalStorageInterrupt();
@@ -4883,10 +4972,20 @@ void GL_APIENTRY GL_FramebufferPixelLocalStorageRestoreANGLE()
     if (ANGLE_LIKELY(context != nullptr))
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateFramebufferPixelLocalStorageRestoreANGLE(
-                 context, angle::EntryPoint::GLFramebufferPixelLocalStorageRestoreANGLE));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().shaderPixelLocalStorageANGLE))
+            {
+                isCallValid = ValidateFramebufferPixelLocalStorageRestoreANGLE(
+                    context, angle::EntryPoint::GLFramebufferPixelLocalStorageRestoreANGLE);
+            }
+            else
+            {
+                RecordVersionErrorESEXT(
+                    context, angle::EntryPoint::GLFramebufferPixelLocalStorageRestoreANGLE);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->framebufferPixelLocalStorageRestore();
@@ -4914,11 +5013,21 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterfvANGLE(GLint plane,
     if (ANGLE_LIKELY(context != nullptr))
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetFramebufferPixelLocalStorageParameterfvANGLE(
-                 context, angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterfvANGLE,
-                 plane, pname, params));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().shaderPixelLocalStorageANGLE))
+            {
+                isCallValid = ValidateGetFramebufferPixelLocalStorageParameterfvANGLE(
+                    context, angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterfvANGLE,
+                    plane, pname, params);
+            }
+            else
+            {
+                RecordVersionErrorESEXT(
+                    context, angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterfvANGLE);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->getFramebufferPixelLocalStorageParameterfv(plane, pname, params);
@@ -4947,11 +5056,21 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterivANGLE(GLint plane,
     if (ANGLE_LIKELY(context != nullptr))
     {
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetFramebufferPixelLocalStorageParameterivANGLE(
-                 context, angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterivANGLE,
-                 plane, pname, params));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().shaderPixelLocalStorageANGLE))
+            {
+                isCallValid = ValidateGetFramebufferPixelLocalStorageParameterivANGLE(
+                    context, angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterivANGLE,
+                    plane, pname, params);
+            }
+            else
+            {
+                RecordVersionErrorESEXT(
+                    context, angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterivANGLE);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->getFramebufferPixelLocalStorageParameteriv(plane, pname, params);

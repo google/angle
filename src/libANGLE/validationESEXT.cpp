@@ -1711,13 +1711,6 @@ bool ValidatePLSCommon(const Context *context,
                        angle::EntryPoint entryPoint,
                        PLSExpectedStatus expectedStatus)
 {
-    // Check that the pixel local storage extension is enabled at all.
-    if (!context->getExtensions().shaderPixelLocalStorageANGLE)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kPLSExtensionNotEnabled);
-        return false;
-    }
-
     Framebuffer *framebuffer = context->getState().getDrawFramebuffer();
     if (expectedStatus != PLSExpectedStatus::Active)
     {
@@ -2419,13 +2412,6 @@ bool ValidatePixelLocalStorageBarrierANGLE(const Context *context, angle::EntryP
 bool ValidateFramebufferPixelLocalStorageInterruptANGLE(const Context *context,
                                                         angle::EntryPoint entryPoint)
 {
-    // Check that the pixel local storage extension is enabled at all.
-    if (!context->getExtensions().shaderPixelLocalStorageANGLE)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kPLSExtensionNotEnabled);
-        return false;
-    }
-
     // INVALID_FRAMEBUFFER_OPERATION is generated if the current interrupt count on the draw
     // framebuffer is greater than or equal to 255.
     const PixelLocalStorage *pls =
@@ -2442,13 +2428,6 @@ bool ValidateFramebufferPixelLocalStorageInterruptANGLE(const Context *context,
 bool ValidateFramebufferPixelLocalStorageRestoreANGLE(const Context *context,
                                                       angle::EntryPoint entryPoint)
 {
-    // Check that the pixel local storage extension is enabled at all.
-    if (!context->getExtensions().shaderPixelLocalStorageANGLE)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kPLSExtensionNotEnabled);
-        return false;
-    }
-
     // This command is ignored when the default framebuffer object name 0 is bound.
     const Framebuffer *framebuffer = context->getState().getDrawFramebuffer();
     if (context->getState().getDrawFramebuffer()->id().value == 0)
@@ -2474,12 +2453,6 @@ bool ValidateGetFramebufferPixelLocalStorageParameterfvANGLE(const Context *cont
                                                              GLenum pname,
                                                              const GLfloat *params)
 {
-    if (!context->getExtensions().shaderPixelLocalStorageANGLE)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     return ValidateGetFramebufferPixelLocalStorageParameterCommon(context, entryPoint, plane, pname,
                                                                   params);
 }
@@ -2490,12 +2463,6 @@ bool ValidateGetFramebufferPixelLocalStorageParameterivANGLE(const Context *cont
                                                              GLenum pname,
                                                              const GLint *params)
 {
-    if (!context->getExtensions().shaderPixelLocalStorageANGLE)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     return ValidateGetFramebufferPixelLocalStorageParameterCommon(context, entryPoint, plane, pname,
                                                                   params);
 }

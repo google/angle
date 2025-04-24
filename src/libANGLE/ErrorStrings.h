@@ -522,7 +522,6 @@ inline constexpr const char *kPLSDrawProgramActivePlanesUnused = "Active pixel l
 inline constexpr const char *kPLSDrawProgramFormatMismatch = "Pixel local storage formats in the draw program do not match actively bound planes.";
 inline constexpr const char *kPLSDrawProgramPlanesInactive = "Draw program references pixel local storage plane(s) that are not currently active.";
 inline constexpr const char *kPLSEnablingDeinitializedPlane = "Attempted to enable a pixel local storage plane that is in a deinitialized state.";
-inline constexpr const char *kPLSExtensionNotEnabled = "GL_ANGLE_shader_pixel_local_storage not enabled.";
 inline constexpr const char *kPLSInactive = "Pixel local storage is not active.";
 inline constexpr const char *kPLSInvalidInternalformat = "Invalid pixel local storage internal format.";
 inline constexpr const char *kPLSInvalidLoadOperation = "Invalid pixel local storage Load Operation: 0x%04X.";
