@@ -3272,6 +3272,11 @@ void FramebufferVk::restageDeferredClearsForReadFramebuffer(ContextVk *contextVk
     restageDeferredClearsImpl(contextVk);
 }
 
+void FramebufferVk::restageDeferredClearsAfterNoopDraw(ContextVk *contextVk)
+{
+    restageDeferredClearsImpl(contextVk);
+}
+
 void FramebufferVk::restageDeferredClearsImpl(ContextVk *contextVk)
 {
     // Set the appropriate aspect and clear values for depth and stencil.

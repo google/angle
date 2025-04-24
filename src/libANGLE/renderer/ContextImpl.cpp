@@ -49,6 +49,11 @@ angle::Result ContextImpl::handleNoopDrawEvent()
     return angle::Result::Continue;
 }
 
+angle::Result ContextImpl::handleNoopMultiDrawEvent()
+{
+    return angle::Result::Continue;
+}
+
 void ContextImpl::setMemoryProgramCache(gl::MemoryProgramCache *memoryProgramCache)
 {
     mMemoryProgramCache = memoryProgramCache;

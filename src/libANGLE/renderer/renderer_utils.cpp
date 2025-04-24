@@ -1508,6 +1508,7 @@ void GetSamplePosition(GLsizei sampleCount, size_t index, GLfloat *xy)
 #define MULTI_DRAW_BLOCK(drawType, instanced, bvbi, hasDrawID, hasBaseVertex, hasBaseInstance) \
     do                                                                                         \
     {                                                                                          \
+        bool anyDraw = false;                                                                  \
         for (GLsizei drawID = 0; drawID < drawcount; ++drawID)                                 \
         {                                                                                      \
             if (ANGLE_NOOP_DRAW(instanced))                                                    \
@@ -1521,9 +1522,14 @@ void GetSamplePosition(GLsizei sampleCount, size_t index, GLfloat *xy)
             ANGLE_TRY(DRAW_CALL(drawType, instanced, bvbi));                                   \
             ANGLE_MARK_TRANSFORM_FEEDBACK_USAGE(instanced);                                    \
             gl::MarkShaderStorageUsage(context);                                               \
+            anyDraw = true;                                                                    \
         }                                                                                      \
         /* reset the uniform to zero for non-multi-draw uses of the program */                 \
         ANGLE_SET_DRAW_ID_UNIFORM(hasDrawID)(0);                                               \
+        if (!anyDraw)                                                                          \
+        {                                                                                      \
+            ANGLE_TRY(contextImpl->handleNoopMultiDrawEvent());                                \
+        }                                                                                      \
     } while (0)
 
 angle::Result MultiDrawArraysGeneral(ContextImpl *contextImpl,

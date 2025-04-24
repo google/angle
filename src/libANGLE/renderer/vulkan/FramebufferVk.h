@@ -136,6 +136,7 @@ class FramebufferVk : public FramebufferImpl
     bool hasDeferredStencilClear() const { return mDeferredClears.testStencil(); }
     angle::Result flushDepthStencilDeferredClear(ContextVk *contextVk,
                                                  VkImageAspectFlagBits aspect);
+    void restageDeferredClearsAfterNoopDraw(ContextVk *contextVk);
 
     void switchToColorFramebufferFetchMode(ContextVk *contextVk, bool hasColorFramebufferFetch);
 

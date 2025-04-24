@@ -1240,6 +1240,48 @@ TEST_P(MultiDrawNoInstancingSupportTest, InvalidOperation)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Test that a no-op multi-draw call does not leave deferred clears around in the backends that do
+// that.
+TEST_P(MultiDrawTest, ClearThenNoopMultiDraw)
+{
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_multi_draw"));
+
+    SetupProgram();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    GLRenderbuffer rbo;
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 16, 16);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    // Clear the framebuffer first; this clear may be deferred.
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Issue a multi-draw call that is no-op
+    constexpr GLsizei kDrawCount    = 3;
+    GLsizei counts[kDrawCount]      = {};
+    const void *indices[kDrawCount] = {};
+    glMultiDrawElementsANGLE(GL_TRIANGLES, counts, GL_UNSIGNED_BYTE, indices, kDrawCount);
+
+    // Modify the framebuffer so it's sync'ed again on the next call.
+    GLRenderbuffer rbo2;
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo2);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 8, 8);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo2);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    // Issue any command that uses the framebuffer.
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+}
+
 #define ANGLE_ALL_MULTIDRAW_TEST_PLATFORMS_ES2                                             \
     ES2_D3D11().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions),                  \
         ES2_OPENGL().enable(Feature::AlwaysEnableEmulatedMultidrawExtensions),             \
