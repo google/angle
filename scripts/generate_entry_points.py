@@ -2553,6 +2553,8 @@ def get_decls(api,
         if is_context_private_state_command(api, cmd_name):
             continue
 
+        already_included.append(name_no_suffix)
+
         param_text = ["".join(param.itertext()) for param in command.findall('param')]
         proto_text = "".join(proto.itertext())
         decls.append(
@@ -3695,7 +3697,6 @@ def main():
 
     for name in extension_commands:
         all_commands_with_suffix.append(name)
-        all_commands_no_suffix.append(strip_suffix(apis.GLES, name))
 
     # OpenCL
     clxml = registry_xml.RegistryXML('cl.xml')
