@@ -8037,10 +8037,20 @@ void GL_APIENTRY GL_DrawElementsBaseVertexEXT(GLenum mode,
         PrimitiveMode modePacked    = PackParam<PrimitiveMode>(mode);
         DrawElementsType typePacked = PackParam<DrawElementsType>(type);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateDrawElementsBaseVertexEXT(
-                                context, angle::EntryPoint::GLDrawElementsBaseVertexEXT, modePacked,
-                                count, typePacked, indices, basevertex));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().drawElementsBaseVertexEXT))
+            {
+                isCallValid = ValidateDrawElementsBaseVertexEXT(
+                    context, angle::EntryPoint::GLDrawElementsBaseVertexEXT, modePacked, count,
+                    typePacked, indices, basevertex);
+            }
+            else
+            {
+                RecordVersionErrorESEXT(context, angle::EntryPoint::GLDrawElementsBaseVertexEXT);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->drawElementsBaseVertex(modePacked, count, typePacked, indices, basevertex);
@@ -8077,10 +8087,21 @@ void GL_APIENTRY GL_DrawElementsInstancedBaseVertexEXT(GLenum mode,
         PrimitiveMode modePacked    = PackParam<PrimitiveMode>(mode);
         DrawElementsType typePacked = PackParam<DrawElementsType>(type);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateDrawElementsInstancedBaseVertexEXT(
-                                context, angle::EntryPoint::GLDrawElementsInstancedBaseVertexEXT,
-                                modePacked, count, typePacked, indices, instancecount, basevertex));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().drawElementsBaseVertexEXT))
+            {
+                isCallValid = ValidateDrawElementsInstancedBaseVertexEXT(
+                    context, angle::EntryPoint::GLDrawElementsInstancedBaseVertexEXT, modePacked,
+                    count, typePacked, indices, instancecount, basevertex);
+            }
+            else
+            {
+                RecordVersionErrorESEXT(context,
+                                        angle::EntryPoint::GLDrawElementsInstancedBaseVertexEXT);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->drawElementsInstancedBaseVertex(modePacked, count, typePacked, indices,
@@ -8118,10 +8139,21 @@ void GL_APIENTRY GL_DrawRangeElementsBaseVertexEXT(GLenum mode,
         PrimitiveMode modePacked    = PackParam<PrimitiveMode>(mode);
         DrawElementsType typePacked = PackParam<DrawElementsType>(type);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateDrawRangeElementsBaseVertexEXT(
-                                context, angle::EntryPoint::GLDrawRangeElementsBaseVertexEXT,
-                                modePacked, start, end, count, typePacked, indices, basevertex));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().drawElementsBaseVertexEXT))
+            {
+                isCallValid = ValidateDrawRangeElementsBaseVertexEXT(
+                    context, angle::EntryPoint::GLDrawRangeElementsBaseVertexEXT, modePacked, start,
+                    end, count, typePacked, indices, basevertex);
+            }
+            else
+            {
+                RecordVersionErrorESEXT(context,
+                                        angle::EntryPoint::GLDrawRangeElementsBaseVertexEXT);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->drawRangeElementsBaseVertex(modePacked, start, end, count, typePacked, indices,
@@ -8159,10 +8191,22 @@ void GL_APIENTRY GL_MultiDrawElementsBaseVertexEXT(GLenum mode,
         PrimitiveMode modePacked    = PackParam<PrimitiveMode>(mode);
         DrawElementsType typePacked = PackParam<DrawElementsType>(type);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateMultiDrawElementsBaseVertexEXT(
-                                context, angle::EntryPoint::GLMultiDrawElementsBaseVertexEXT,
-                                modePacked, count, typePacked, indices, drawcount, basevertex));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().drawElementsBaseVertexEXT ||
+                             context->getExtensions().drawElementsBaseVertexOES))
+            {
+                isCallValid = ValidateMultiDrawElementsBaseVertexEXT(
+                    context, angle::EntryPoint::GLMultiDrawElementsBaseVertexEXT, modePacked, count,
+                    typePacked, indices, drawcount, basevertex);
+            }
+            else
+            {
+                RecordVersionErrorESEXT(context,
+                                        angle::EntryPoint::GLMultiDrawElementsBaseVertexEXT);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->multiDrawElementsBaseVertex(modePacked, count, typePacked, indices, drawcount,
@@ -14436,10 +14480,20 @@ void GL_APIENTRY GL_DrawElementsBaseVertexOES(GLenum mode,
         PrimitiveMode modePacked    = PackParam<PrimitiveMode>(mode);
         DrawElementsType typePacked = PackParam<DrawElementsType>(type);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateDrawElementsBaseVertexOES(
-                                context, angle::EntryPoint::GLDrawElementsBaseVertexOES, modePacked,
-                                count, typePacked, indices, basevertex));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().drawElementsBaseVertexOES))
+            {
+                isCallValid = ValidateDrawElementsBaseVertexOES(
+                    context, angle::EntryPoint::GLDrawElementsBaseVertexOES, modePacked, count,
+                    typePacked, indices, basevertex);
+            }
+            else
+            {
+                RecordVersionErrorESEXT(context, angle::EntryPoint::GLDrawElementsBaseVertexOES);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->drawElementsBaseVertex(modePacked, count, typePacked, indices, basevertex);
@@ -14476,10 +14530,21 @@ void GL_APIENTRY GL_DrawElementsInstancedBaseVertexOES(GLenum mode,
         PrimitiveMode modePacked    = PackParam<PrimitiveMode>(mode);
         DrawElementsType typePacked = PackParam<DrawElementsType>(type);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateDrawElementsInstancedBaseVertexOES(
-                                context, angle::EntryPoint::GLDrawElementsInstancedBaseVertexOES,
-                                modePacked, count, typePacked, indices, instancecount, basevertex));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().drawElementsBaseVertexOES))
+            {
+                isCallValid = ValidateDrawElementsInstancedBaseVertexOES(
+                    context, angle::EntryPoint::GLDrawElementsInstancedBaseVertexOES, modePacked,
+                    count, typePacked, indices, instancecount, basevertex);
+            }
+            else
+            {
+                RecordVersionErrorESEXT(context,
+                                        angle::EntryPoint::GLDrawElementsInstancedBaseVertexOES);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->drawElementsInstancedBaseVertex(modePacked, count, typePacked, indices,
@@ -14517,10 +14582,21 @@ void GL_APIENTRY GL_DrawRangeElementsBaseVertexOES(GLenum mode,
         PrimitiveMode modePacked    = PackParam<PrimitiveMode>(mode);
         DrawElementsType typePacked = PackParam<DrawElementsType>(type);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateDrawRangeElementsBaseVertexOES(
-                                context, angle::EntryPoint::GLDrawRangeElementsBaseVertexOES,
-                                modePacked, start, end, count, typePacked, indices, basevertex));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().drawElementsBaseVertexOES))
+            {
+                isCallValid = ValidateDrawRangeElementsBaseVertexOES(
+                    context, angle::EntryPoint::GLDrawRangeElementsBaseVertexOES, modePacked, start,
+                    end, count, typePacked, indices, basevertex);
+            }
+            else
+            {
+                RecordVersionErrorESEXT(context,
+                                        angle::EntryPoint::GLDrawRangeElementsBaseVertexOES);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->drawRangeElementsBaseVertex(modePacked, start, end, count, typePacked, indices,

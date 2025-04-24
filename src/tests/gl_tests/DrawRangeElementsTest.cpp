@@ -102,8 +102,6 @@ class WebGLDrawRangeElementsTest : public DrawRangeElementsTest
 // equals 0.
 TEST_P(WebGLDrawRangeElementsTest, DrawRangeElementArrayZeroCount)
 {
-    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
-
     doDrawRangeElementsVariant(DrawCallVariants::DrawRangeElements);
 }
 
@@ -128,6 +126,6 @@ TEST_P(WebGLDrawRangeElementsTest, DrawRangeElementBaseVertexOESArrayZeroCount)
 }
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(DrawRangeElementsTest);
-ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(WebGLDrawRangeElementsTest);
+ANGLE_INSTANTIATE_TEST_ES3(WebGLDrawRangeElementsTest);
 
 }  // namespace

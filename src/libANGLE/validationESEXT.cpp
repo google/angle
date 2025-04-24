@@ -495,12 +495,6 @@ bool ValidateDrawElementsBaseVertexEXT(const Context *context,
                                        const void *indices,
                                        GLint basevertex)
 {
-    if (!context->getExtensions().drawElementsBaseVertexAny())
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     return ValidateDrawElementsCommon(context, entryPoint, mode, count, type, indices, 1);
 }
 
@@ -513,7 +507,9 @@ bool ValidateDrawElementsInstancedBaseVertexEXT(const Context *context,
                                                 GLsizei instancecount,
                                                 GLint basevertex)
 {
-    if (!context->getExtensions().drawElementsBaseVertexAny())
+    if (context->getClientVersion() < ES_3_0 && !context->getExtensions().drawInstancedEXT &&
+        !context->getExtensions().instancedArraysANGLE &&
+        !context->getExtensions().instancedArraysEXT)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -533,9 +529,9 @@ bool ValidateDrawRangeElementsBaseVertexEXT(const Context *context,
                                             const void *indices,
                                             GLint basevertex)
 {
-    if (!context->getExtensions().drawElementsBaseVertexAny())
+    if (context->getClientVersion() < ES_3_0)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
         return false;
     }
 
@@ -579,6 +575,13 @@ bool ValidateMultiDrawElementsBaseVertexEXT(const Context *context,
                                             GLsizei drawcount,
                                             const GLint *basevertex)
 {
+    if (!context->getExtensions().multiDrawArraysEXT)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    UNIMPLEMENTED();
     return true;
 }
 
@@ -718,12 +721,6 @@ bool ValidateDrawElementsBaseVertexOES(const Context *context,
                                        const void *indices,
                                        GLint basevertex)
 {
-    if (!context->getExtensions().drawElementsBaseVertexAny())
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     return ValidateDrawElementsCommon(context, entryPoint, mode, count, type, indices, 1);
 }
 
@@ -736,7 +733,9 @@ bool ValidateDrawElementsInstancedBaseVertexOES(const Context *context,
                                                 GLsizei instancecount,
                                                 GLint basevertex)
 {
-    if (!context->getExtensions().drawElementsBaseVertexAny())
+    if (context->getClientVersion() < ES_3_0 && !context->getExtensions().drawInstancedEXT &&
+        !context->getExtensions().instancedArraysANGLE &&
+        !context->getExtensions().instancedArraysEXT)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -756,9 +755,9 @@ bool ValidateDrawRangeElementsBaseVertexOES(const Context *context,
                                             const void *indices,
                                             GLint basevertex)
 {
-    if (!context->getExtensions().drawElementsBaseVertexAny())
+    if (context->getClientVersion() < ES_3_0)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kES3Required);
         return false;
     }
 
