@@ -6667,43 +6667,6 @@ CallCapture CaptureMultiDrawElementsBaseVertexEXT(const State &glState,
     return CallCapture(angle::EntryPoint::GLMultiDrawElementsBaseVertexEXT, std::move(paramBuffer));
 }
 
-CallCapture CaptureBufferStorageExternalEXT(const State &glState,
-                                            bool isCallValid,
-                                            BufferBinding targetPacked,
-                                            GLintptr offset,
-                                            GLsizeiptr size,
-                                            GLeglClientBufferEXT clientBuffer,
-                                            GLbitfield flags)
-{
-    ParamBuffer paramBuffer;
-
-    paramBuffer.addValueParam("targetPacked", ParamType::TBufferBinding, targetPacked);
-    paramBuffer.addValueParam("offset", ParamType::TGLintptr, offset);
-    paramBuffer.addValueParam("size", ParamType::TGLsizeiptr, size);
-    paramBuffer.addValueParam("clientBuffer", ParamType::TGLeglClientBufferEXT, clientBuffer);
-    paramBuffer.addEnumParam("flags", GLESEnum::BufferStorageMask, ParamType::TGLbitfield, flags);
-
-    return CallCapture(angle::EntryPoint::GLBufferStorageExternalEXT, std::move(paramBuffer));
-}
-
-CallCapture CaptureFramebufferTextureEXT(const State &glState,
-                                         bool isCallValid,
-                                         GLenum target,
-                                         GLenum attachment,
-                                         TextureID texturePacked,
-                                         GLint level)
-{
-    ParamBuffer paramBuffer;
-
-    paramBuffer.addEnumParam("target", GLESEnum::FramebufferTarget, ParamType::TGLenum, target);
-    paramBuffer.addEnumParam("attachment", GLESEnum::FramebufferAttachment, ParamType::TGLenum,
-                             attachment);
-    paramBuffer.addValueParam("texturePacked", ParamType::TTextureID, texturePacked);
-    paramBuffer.addValueParam("level", ParamType::TGLint, level);
-
-    return CallCapture(angle::EntryPoint::GLFramebufferTextureEXT, std::move(paramBuffer));
-}
-
 CallCapture CaptureDrawArraysInstancedEXT(const State &glState,
                                           bool isCallValid,
                                           PrimitiveMode modePacked,
@@ -6754,6 +6717,43 @@ CallCapture CaptureDrawElementsInstancedEXT(const State &glState,
     paramBuffer.addValueParam("primcount", ParamType::TGLsizei, primcount);
 
     return CallCapture(angle::EntryPoint::GLDrawElementsInstancedEXT, std::move(paramBuffer));
+}
+
+CallCapture CaptureBufferStorageExternalEXT(const State &glState,
+                                            bool isCallValid,
+                                            BufferBinding targetPacked,
+                                            GLintptr offset,
+                                            GLsizeiptr size,
+                                            GLeglClientBufferEXT clientBuffer,
+                                            GLbitfield flags)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("targetPacked", ParamType::TBufferBinding, targetPacked);
+    paramBuffer.addValueParam("offset", ParamType::TGLintptr, offset);
+    paramBuffer.addValueParam("size", ParamType::TGLsizeiptr, size);
+    paramBuffer.addValueParam("clientBuffer", ParamType::TGLeglClientBufferEXT, clientBuffer);
+    paramBuffer.addEnumParam("flags", GLESEnum::BufferStorageMask, ParamType::TGLbitfield, flags);
+
+    return CallCapture(angle::EntryPoint::GLBufferStorageExternalEXT, std::move(paramBuffer));
+}
+
+CallCapture CaptureFramebufferTextureEXT(const State &glState,
+                                         bool isCallValid,
+                                         GLenum target,
+                                         GLenum attachment,
+                                         TextureID texturePacked,
+                                         GLint level)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addEnumParam("target", GLESEnum::FramebufferTarget, ParamType::TGLenum, target);
+    paramBuffer.addEnumParam("attachment", GLESEnum::FramebufferAttachment, ParamType::TGLenum,
+                             attachment);
+    paramBuffer.addValueParam("texturePacked", ParamType::TTextureID, texturePacked);
+    paramBuffer.addValueParam("level", ParamType::TGLint, level);
+
+    return CallCapture(angle::EntryPoint::GLFramebufferTextureEXT, std::move(paramBuffer));
 }
 
 CallCapture CaptureVertexAttribDivisorEXT(const State &glState,

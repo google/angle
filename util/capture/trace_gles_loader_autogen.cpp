@@ -692,10 +692,10 @@ ANGLE_TRACE_LOADER_EXPORT PFNGLDRAWRANGEELEMENTSBASEVERTEXEXTPROC
     t_glDrawRangeElementsBaseVertexEXT;
 ANGLE_TRACE_LOADER_EXPORT PFNGLMULTIDRAWELEMENTSBASEVERTEXEXTPROC
     t_glMultiDrawElementsBaseVertexEXT;
-ANGLE_TRACE_LOADER_EXPORT PFNGLBUFFERSTORAGEEXTERNALEXTPROC t_glBufferStorageExternalEXT;
-ANGLE_TRACE_LOADER_EXPORT PFNGLFRAMEBUFFERTEXTUREEXTPROC t_glFramebufferTextureEXT;
 ANGLE_TRACE_LOADER_EXPORT PFNGLDRAWARRAYSINSTANCEDEXTPROC t_glDrawArraysInstancedEXT;
 ANGLE_TRACE_LOADER_EXPORT PFNGLDRAWELEMENTSINSTANCEDEXTPROC t_glDrawElementsInstancedEXT;
+ANGLE_TRACE_LOADER_EXPORT PFNGLBUFFERSTORAGEEXTERNALEXTPROC t_glBufferStorageExternalEXT;
+ANGLE_TRACE_LOADER_EXPORT PFNGLFRAMEBUFFERTEXTUREEXTPROC t_glFramebufferTextureEXT;
 ANGLE_TRACE_LOADER_EXPORT PFNGLVERTEXATTRIBDIVISOREXTPROC t_glVertexAttribDivisorEXT;
 ANGLE_TRACE_LOADER_EXPORT PFNGLFLUSHMAPPEDBUFFERRANGEEXTPROC t_glFlushMappedBufferRangeEXT;
 ANGLE_TRACE_LOADER_EXPORT PFNGLMAPBUFFERRANGEEXTPROC t_glMapBufferRangeEXT;
@@ -1945,14 +1945,14 @@ void LoadTraceGLES(LoadProc loadProc)
         loadProc("glDrawRangeElementsBaseVertexEXT"));
     t_glMultiDrawElementsBaseVertexEXT = reinterpret_cast<PFNGLMULTIDRAWELEMENTSBASEVERTEXEXTPROC>(
         loadProc("glMultiDrawElementsBaseVertexEXT"));
-    t_glBufferStorageExternalEXT =
-        reinterpret_cast<PFNGLBUFFERSTORAGEEXTERNALEXTPROC>(loadProc("glBufferStorageExternalEXT"));
-    t_glFramebufferTextureEXT =
-        reinterpret_cast<PFNGLFRAMEBUFFERTEXTUREEXTPROC>(loadProc("glFramebufferTextureEXT"));
     t_glDrawArraysInstancedEXT =
         reinterpret_cast<PFNGLDRAWARRAYSINSTANCEDEXTPROC>(loadProc("glDrawArraysInstancedEXT"));
     t_glDrawElementsInstancedEXT =
         reinterpret_cast<PFNGLDRAWELEMENTSINSTANCEDEXTPROC>(loadProc("glDrawElementsInstancedEXT"));
+    t_glBufferStorageExternalEXT =
+        reinterpret_cast<PFNGLBUFFERSTORAGEEXTERNALEXTPROC>(loadProc("glBufferStorageExternalEXT"));
+    t_glFramebufferTextureEXT =
+        reinterpret_cast<PFNGLFRAMEBUFFERTEXTUREEXTPROC>(loadProc("glFramebufferTextureEXT"));
     t_glVertexAttribDivisorEXT =
         reinterpret_cast<PFNGLVERTEXATTRIBDIVISOREXTPROC>(loadProc("glVertexAttribDivisorEXT"));
     t_glFlushMappedBufferRangeEXT = reinterpret_cast<PFNGLFLUSHMAPPEDBUFFERRANGEEXTPROC>(

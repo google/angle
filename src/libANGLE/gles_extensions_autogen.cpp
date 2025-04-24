@@ -84,6 +84,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_draw_buffers_indexed"] = enableableExtension(&Extensions::drawBuffersIndexedOES);
         map["GL_EXT_draw_elements_base_vertex"] = enableableExtension(&Extensions::drawElementsBaseVertexEXT);
         map["GL_OES_draw_elements_base_vertex"] = enableableExtension(&Extensions::drawElementsBaseVertexOES);
+        map["GL_EXT_draw_instanced"] = enableableExtension(&Extensions::drawInstancedEXT);
         map["GL_OES_EGL_image"] = enableableExtension(&Extensions::EGLImageOES);
         map["GL_EXT_EGL_image_array"] = enableableExtension(&Extensions::EGLImageArrayEXT);
         map["GL_OES_EGL_image_external"] = enableableExtension(&Extensions::EGLImageExternalOES);

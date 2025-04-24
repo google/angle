@@ -108,6 +108,7 @@ gles_requestable_extensions = [
     "GL_EXT_draw_buffers",
     "GL_EXT_draw_buffers_indexed",
     "GL_EXT_draw_elements_base_vertex",
+    "GL_EXT_draw_instanced",
     "GL_EXT_EGL_image_array",
     "GL_EXT_EGL_image_external_wrap_modes",
     "GL_EXT_EGL_image_storage",

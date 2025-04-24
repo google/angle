@@ -4366,6 +4366,24 @@ void GL_APIENTRY glMultiDrawElementsBaseVertexEXT(GLenum mode,
     return GL_MultiDrawElementsBaseVertexEXT(mode, count, type, indices, drawcount, basevertex);
 }
 
+// GL_EXT_draw_instanced
+void GL_APIENTRY glDrawArraysInstancedEXT(GLenum mode,
+                                          GLint start,
+                                          GLsizei count,
+                                          GLsizei primcount)
+{
+    return GL_DrawArraysInstancedEXT(mode, start, count, primcount);
+}
+
+void GL_APIENTRY glDrawElementsInstancedEXT(GLenum mode,
+                                            GLsizei count,
+                                            GLenum type,
+                                            const void *indices,
+                                            GLsizei primcount)
+{
+    return GL_DrawElementsInstancedEXT(mode, count, type, indices, primcount);
+}
+
 // GL_EXT_external_buffer
 void GL_APIENTRY glBufferStorageExternalEXT(GLenum target,
                                             GLintptr offset,
@@ -4391,23 +4409,6 @@ void GL_APIENTRY glFramebufferTextureEXT(GLenum target,
 // GL_EXT_gpu_shader5
 
 // GL_EXT_instanced_arrays
-void GL_APIENTRY glDrawArraysInstancedEXT(GLenum mode,
-                                          GLint start,
-                                          GLsizei count,
-                                          GLsizei primcount)
-{
-    return GL_DrawArraysInstancedEXT(mode, start, count, primcount);
-}
-
-void GL_APIENTRY glDrawElementsInstancedEXT(GLenum mode,
-                                            GLsizei count,
-                                            GLenum type,
-                                            const void *indices,
-                                            GLsizei primcount)
-{
-    return GL_DrawElementsInstancedEXT(mode, count, type, indices, primcount);
-}
-
 void GL_APIENTRY glVertexAttribDivisorEXT(GLuint index, GLuint divisor)
 {
     return GL_VertexAttribDivisorEXT(index, divisor);

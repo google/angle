@@ -68,6 +68,7 @@ using data from registry_xml.py and gl.xml.
 | [GL_OES_draw_buffers_indexed](https://khronos.org/registry/OpenGL/extensions/OES/OES_draw_buffers_indexed.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_EXT_draw_elements_base_vertex](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_draw_elements_base_vertex.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_OES_draw_elements_base_vertex](https://khronos.org/registry/OpenGL/extensions/OES/OES_draw_elements_base_vertex.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
+| [GL_EXT_draw_instanced](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_draw_instanced.txt) |  |  |  |  |  |  |  |
 | [GL_OES_EGL_image](https://khronos.org/registry/OpenGL/extensions/OES/OES_EGL_image.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_EXT_EGL_image_array](https://khronos.org/registry/OpenGL/extensions/EXT/EXT_EGL_image_array.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |
 | [GL_OES_EGL_image_external](https://khronos.org/registry/OpenGL/extensions/OES/OES_EGL_image_external.txt) | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; | &#x2714; |

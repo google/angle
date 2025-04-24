@@ -218,6 +218,9 @@ struct Extensions
     // GL_OES_draw_elements_base_vertex
     bool drawElementsBaseVertexOES = false;
 
+    // GL_EXT_draw_instanced
+    bool drawInstancedEXT = false;
+
     // GL_OES_EGL_image
     bool EGLImageOES = false;
 

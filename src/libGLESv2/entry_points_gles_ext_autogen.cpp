@@ -8179,6 +8179,100 @@ void GL_APIENTRY GL_MultiDrawElementsBaseVertexEXT(GLenum mode,
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
 
+// GL_EXT_draw_instanced
+void GL_APIENTRY GL_DrawArraysInstancedEXT(GLenum mode,
+                                           GLint start,
+                                           GLsizei count,
+                                           GLsizei primcount)
+{
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLDrawArraysInstancedEXT,
+          "context = %d, mode = %s, start = %d, count = %d, primcount = %d", CID(context),
+          GLenumToString(GLESEnum::PrimitiveType, mode), start, count, primcount);
+
+    if (ANGLE_LIKELY(context != nullptr))
+    {
+        PrimitiveMode modePacked = PackParam<PrimitiveMode>(mode);
+        SCOPED_SHARE_CONTEXT_LOCK(context);
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().drawInstancedEXT ||
+                             context->getExtensions().instancedArraysEXT))
+            {
+                isCallValid = ValidateDrawArraysInstancedEXT(
+                    context, angle::EntryPoint::GLDrawArraysInstancedEXT, modePacked, start, count,
+                    primcount);
+            }
+            else
+            {
+                RecordVersionErrorESEXT(context, angle::EntryPoint::GLDrawArraysInstancedEXT);
+            }
+        }
+        if (ANGLE_LIKELY(isCallValid))
+        {
+            context->drawArraysInstanced(modePacked, start, count, primcount);
+        }
+        ANGLE_CAPTURE_GL(DrawArraysInstancedEXT, isCallValid, context, modePacked, start, count,
+                         primcount);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLDrawArraysInstancedEXT);
+    }
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+}
+
+void GL_APIENTRY GL_DrawElementsInstancedEXT(GLenum mode,
+                                             GLsizei count,
+                                             GLenum type,
+                                             const void *indices,
+                                             GLsizei primcount)
+{
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLDrawElementsInstancedEXT,
+          "context = %d, mode = %s, count = %d, type = %s, indices = 0x%016" PRIxPTR
+          ", primcount = %d",
+          CID(context), GLenumToString(GLESEnum::PrimitiveType, mode), count,
+          GLenumToString(GLESEnum::DrawElementsType, type), (uintptr_t)indices, primcount);
+
+    if (ANGLE_LIKELY(context != nullptr))
+    {
+        PrimitiveMode modePacked    = PackParam<PrimitiveMode>(mode);
+        DrawElementsType typePacked = PackParam<DrawElementsType>(type);
+        SCOPED_SHARE_CONTEXT_LOCK(context);
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().drawInstancedEXT ||
+                             context->getExtensions().instancedArraysEXT))
+            {
+                isCallValid = ValidateDrawElementsInstancedEXT(
+                    context, angle::EntryPoint::GLDrawElementsInstancedEXT, modePacked, count,
+                    typePacked, indices, primcount);
+            }
+            else
+            {
+                RecordVersionErrorESEXT(context, angle::EntryPoint::GLDrawElementsInstancedEXT);
+            }
+        }
+        if (ANGLE_LIKELY(isCallValid))
+        {
+            context->drawElementsInstanced(modePacked, count, typePacked, indices, primcount);
+        }
+        ANGLE_CAPTURE_GL(DrawElementsInstancedEXT, isCallValid, context, modePacked, count,
+                         typePacked, indices, primcount);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext(
+            angle::EntryPoint::GLDrawElementsInstancedEXT);
+    }
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+}
+
 // GL_EXT_external_buffer
 void GL_APIENTRY GL_BufferStorageExternalEXT(GLenum target,
                                              GLintptr offset,
@@ -8227,7 +8321,6 @@ void GL_APIENTRY GL_BufferStorageExternalEXT(GLenum target,
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
-
 
 // GL_EXT_float_blend
 
@@ -8283,97 +8376,6 @@ void GL_APIENTRY GL_FramebufferTextureEXT(GLenum target,
 // GL_EXT_gpu_shader5
 
 // GL_EXT_instanced_arrays
-void GL_APIENTRY GL_DrawArraysInstancedEXT(GLenum mode,
-                                           GLint start,
-                                           GLsizei count,
-                                           GLsizei primcount)
-{
-    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
-    Context *context = GetValidGlobalContext();
-    EVENT(context, GLDrawArraysInstancedEXT,
-          "context = %d, mode = %s, start = %d, count = %d, primcount = %d", CID(context),
-          GLenumToString(GLESEnum::PrimitiveType, mode), start, count, primcount);
-
-    if (ANGLE_LIKELY(context != nullptr))
-    {
-        PrimitiveMode modePacked = PackParam<PrimitiveMode>(mode);
-        SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = context->skipValidation();
-        if (!isCallValid)
-        {
-            if (ANGLE_LIKELY(context->getExtensions().instancedArraysEXT))
-            {
-                isCallValid = ValidateDrawArraysInstancedEXT(
-                    context, angle::EntryPoint::GLDrawArraysInstancedEXT, modePacked, start, count,
-                    primcount);
-            }
-            else
-            {
-                RecordVersionErrorESEXT(context, angle::EntryPoint::GLDrawArraysInstancedEXT);
-            }
-        }
-        if (ANGLE_LIKELY(isCallValid))
-        {
-            context->drawArraysInstanced(modePacked, start, count, primcount);
-        }
-        ANGLE_CAPTURE_GL(DrawArraysInstancedEXT, isCallValid, context, modePacked, start, count,
-                         primcount);
-    }
-    else
-    {
-        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLDrawArraysInstancedEXT);
-    }
-    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
-}
-
-void GL_APIENTRY GL_DrawElementsInstancedEXT(GLenum mode,
-                                             GLsizei count,
-                                             GLenum type,
-                                             const void *indices,
-                                             GLsizei primcount)
-{
-    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
-    Context *context = GetValidGlobalContext();
-    EVENT(context, GLDrawElementsInstancedEXT,
-          "context = %d, mode = %s, count = %d, type = %s, indices = 0x%016" PRIxPTR
-          ", primcount = %d",
-          CID(context), GLenumToString(GLESEnum::PrimitiveType, mode), count,
-          GLenumToString(GLESEnum::DrawElementsType, type), (uintptr_t)indices, primcount);
-
-    if (ANGLE_LIKELY(context != nullptr))
-    {
-        PrimitiveMode modePacked    = PackParam<PrimitiveMode>(mode);
-        DrawElementsType typePacked = PackParam<DrawElementsType>(type);
-        SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = context->skipValidation();
-        if (!isCallValid)
-        {
-            if (ANGLE_LIKELY(context->getExtensions().instancedArraysEXT))
-            {
-                isCallValid = ValidateDrawElementsInstancedEXT(
-                    context, angle::EntryPoint::GLDrawElementsInstancedEXT, modePacked, count,
-                    typePacked, indices, primcount);
-            }
-            else
-            {
-                RecordVersionErrorESEXT(context, angle::EntryPoint::GLDrawElementsInstancedEXT);
-            }
-        }
-        if (ANGLE_LIKELY(isCallValid))
-        {
-            context->drawElementsInstanced(modePacked, count, typePacked, indices, primcount);
-        }
-        ANGLE_CAPTURE_GL(DrawElementsInstancedEXT, isCallValid, context, modePacked, count,
-                         typePacked, indices, primcount);
-    }
-    else
-    {
-        GenerateContextLostErrorOnCurrentGlobalContext(
-            angle::EntryPoint::GLDrawElementsInstancedEXT);
-    }
-    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
-}
-
 void GL_APIENTRY GL_VertexAttribDivisorEXT(GLuint index, GLuint divisor)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
@@ -8409,6 +8411,10 @@ void GL_APIENTRY GL_VertexAttribDivisorEXT(GLuint index, GLuint divisor)
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
+
+// DrawArraysInstancedEXT is already defined.
+
+// DrawElementsInstancedEXT is already defined.
 
 // GL_EXT_map_buffer_range
 void GL_APIENTRY GL_FlushMappedBufferRangeEXT(GLenum target, GLintptr offset, GLsizeiptr length)
