@@ -344,7 +344,7 @@ std::shared_ptr<ShaderTranslateTask> ShaderD3D::compile(const gl::Context *conte
     {
         options->allowTranslateUniformBlockToStructuredBuffer = true;
     }
-    if (extensions.multiviewOVR || extensions.multiview2OVR)
+    if (extensions.multiviewOVR)
     {
         options->initializeBuiltinsForInstancedMultiview = true;
     }

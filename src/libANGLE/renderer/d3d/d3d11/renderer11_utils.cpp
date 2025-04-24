@@ -1662,7 +1662,7 @@ void GenerateCaps(ID3D11Device *device,
     extensions->stencilTexturingANGLE       = (featureLevel >= D3D_FEATURE_LEVEL_10_1);
     extensions->multiviewOVR                = IsMultiviewSupported(featureLevel);
     extensions->multiview2OVR               = IsMultiviewSupported(featureLevel);
-    if (extensions->multiviewOVR || extensions->multiview2OVR)
+    if (extensions->multiviewOVR)
     {
         caps->maxViews = std::min(static_cast<GLuint>(GetMaximum2DTextureArraySize(featureLevel)),
                                   GetMaxViewportAndScissorRectanglesPerPipeline(featureLevel));
@@ -1695,8 +1695,7 @@ void GenerateCaps(ID3D11Device *device,
         caps->maxInterpolationOffset          = +0.4375f;  // +0.5 - (2 ^ -4)
     }
     extensions->multiviewMultisampleANGLE =
-        ((extensions->multiviewOVR || extensions->multiview2OVR) &&
-         extensions->textureStorageMultisample2dArrayOES);
+        (extensions->multiviewOVR && extensions->textureStorageMultisample2dArrayOES);
     extensions->copyTexture3dANGLE      = true;
     extensions->textureBorderClampEXT   = true;
     extensions->textureBorderClampOES   = true;

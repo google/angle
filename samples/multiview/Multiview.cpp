@@ -68,7 +68,7 @@ class MultiviewSample : public SampleApplication
         // initialization.
         const char *allExtensions = reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS));
         const std::string paddedExtensions = std::string(" ") + allExtensions + std::string(" ");
-        if ((paddedExtensions.find(std::string(" GL_OVR_multiview2 ")) == std::string::npos) &&
+        if ((paddedExtensions.find(std::string(" GL_OVR_multiview2 ")) == std::string::npos) ||
             (paddedExtensions.find(std::string(" GL_OVR_multiview ")) == std::string::npos))
         {
             std::cout << "GL_OVR_multiview(2) is not available." << std::endl;

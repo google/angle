@@ -36,20 +36,14 @@ void RecordVersionErrorES30(const Context *context, angle::EntryPoint entryPoint
 
 namespace
 {
-bool ValidateFramebufferTextureMultiviewBaseANGLE(const Context *context,
-                                                  angle::EntryPoint entryPoint,
-                                                  GLenum target,
-                                                  GLenum attachment,
-                                                  TextureID texture,
-                                                  GLint level,
-                                                  GLsizei numViews)
+bool ValidateFramebufferTextureMultiviewBase(const Context *context,
+                                             angle::EntryPoint entryPoint,
+                                             GLenum target,
+                                             GLenum attachment,
+                                             TextureID texture,
+                                             GLint level,
+                                             GLsizei numViews)
 {
-    if (!(context->getExtensions().multiviewOVR || context->getExtensions().multiview2OVR))
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kMultiviewNotAvailable);
-        return false;
-    }
-
     if (!ValidateFramebufferTextureBase(context, entryPoint, target, attachment, texture, level))
     {
         return false;
@@ -3757,8 +3751,14 @@ bool ValidateFramebufferTextureMultiviewOVR(const Context *context,
                                             GLint baseViewIndex,
                                             GLsizei numViews)
 {
-    if (!ValidateFramebufferTextureMultiviewBaseANGLE(context, entryPoint, target, attachment,
-                                                      texture, level, numViews))
+    if (!context->getExtensions().multiviewOVR)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
+
+    if (!ValidateFramebufferTextureMultiviewBase(context, entryPoint, target, attachment, texture,
+                                                 level, numViews))
     {
         return false;
     }

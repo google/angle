@@ -900,8 +900,9 @@ class ProgramExecutable final : public angle::Subject
         int32_t geometryShaderMaxVertices;
         GLenum transformFeedbackBufferMode;
 
-        // 4 bytes each. GL_OVR_multiview / GL_OVR_multiview2
+        // GL_OVR_multiview
         int32_t numViews;
+
         // GL_ANGLE_multi_draw
         int32_t drawIDLocation;
 

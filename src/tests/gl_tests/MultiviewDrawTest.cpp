@@ -34,6 +34,12 @@ std::vector<Vector2> ConvertPixelCoordinatesToClipSpace(const std::vector<Vector
 }
 }  // namespace
 
+class MultiviewDependencyTest : public ANGLETest<>
+{
+  protected:
+    MultiviewDependencyTest() { setExtensionsEnabled(false); }
+};
+
 struct MultiviewRenderTestParams final : public MultiviewImplementationParams
 {
     MultiviewRenderTestParams(int samples,
@@ -529,6 +535,68 @@ class MultiviewLayeredRenderTest : public MultiviewFramebufferTestBase
     void SetUp() final { MultiviewFramebufferTestBase::FramebufferTestSetUp(); }
     void TearDown() final { MultiviewFramebufferTestBase::FramebufferTestTearDown(); }
 };
+
+// Tests that GL_OVR_multiview requires ES 3.0+ and does not enable GL_OVR_multiview2.
+TEST_P(MultiviewDependencyTest, MV1)
+{
+    ASSERT_FALSE(IsGLExtensionEnabled("GL_OVR_multiview"));
+    ASSERT_FALSE(IsGLExtensionEnabled("GL_OVR_multiview2"));
+
+    GLint maxViews = -1;
+    glGetIntegerv(GL_MAX_VIEWS_OVR, &maxViews);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+    EXPECT_EQ(maxViews, -1);
+
+    EnsureGLExtensionEnabled("GL_OVR_multiview");
+
+    // GL_OVR_multiview never enables GL_OVR_multiview2
+    EXPECT_FALSE(IsGLExtensionEnabled("GL_OVR_multiview2"));
+
+    if (getClientMajorVersion() < 3)
+    {
+        EXPECT_FALSE(IsGLExtensionEnabled("GL_OVR_multiview"));
+    }
+    else
+    {
+        glGetIntegerv(GL_MAX_VIEWS_OVR, &maxViews);
+        if (IsGLExtensionEnabled("GL_OVR_multiview"))
+        {
+            EXPECT_GL_NO_ERROR();
+            EXPECT_GE(maxViews, 2);
+        }
+        else
+        {
+            EXPECT_GL_ERROR(GL_INVALID_ENUM);
+            EXPECT_EQ(maxViews, -1);
+        }
+    }
+}
+
+// Tests that GL_OVR_multiview2 requires ES 3.0+ and does enable GL_OVR_multiview.
+TEST_P(MultiviewDependencyTest, MV2)
+{
+    ASSERT_FALSE(IsGLExtensionEnabled("GL_OVR_multiview"));
+    ASSERT_FALSE(IsGLExtensionEnabled("GL_OVR_multiview2"));
+
+    EnsureGLExtensionEnabled("GL_OVR_multiview2");
+
+    if (getClientMajorVersion() < 3)
+    {
+        EXPECT_FALSE(IsGLExtensionEnabled("GL_OVR_multiview"));
+        EXPECT_FALSE(IsGLExtensionEnabled("GL_OVR_multiview2"));
+    }
+    else
+    {
+        if (IsGLExtensionEnabled("GL_OVR_multiview2"))
+        {
+            EXPECT_TRUE(IsGLExtensionEnabled("GL_OVR_multiview"));
+        }
+        else
+        {
+            EXPECT_FALSE(IsGLExtensionEnabled("GL_OVR_multiview"));
+        }
+    }
+}
 
 // The test verifies that glDraw*Indirect works for any number of views.
 TEST_P(MultiviewDrawValidationTest, IndirectDraw)
@@ -2539,6 +2607,8 @@ MultiviewRenderTestParams MultisampledVertexShaderD3D11(ExtensionName multiviewE
         MultisampledVertexShaderOpenGL(ExtensionName::multiview2), \
         MultisampledVertexShaderVulkan(ExtensionName::multiview2), \
         MultisampledVertexShaderD3D11(ExtensionName::multiview2)
+
+ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(MultiviewDependencyTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MultiviewDrawValidationTest);
 ANGLE_INSTANTIATE_TEST(MultiviewDrawValidationTest, ALL_VERTEX_SHADER_CONFIGS(1));

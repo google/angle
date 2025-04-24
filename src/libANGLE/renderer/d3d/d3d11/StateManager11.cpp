@@ -1192,7 +1192,7 @@ void StateManager11::syncState(const gl::Context *context,
                     mInternalDirtyBits.set(DIRTY_BIT_PRIMITIVE_TOPOLOGY);
                     invalidateVertexBuffer();
                     invalidateRenderTarget();
-                    // If OVR_multiview2 is enabled, the attribute divisor has to be updated for
+                    // If OVR_multiview is enabled, the attribute divisor has to be updated for
                     // each binding. When using compute, there could be no vertex array.
                     if (mIsMultiviewEnabled && mVertexArray11)
                     {
@@ -1993,7 +1993,7 @@ angle::Result StateManager11::ensureInitialized(const gl::Context *context)
 
     mShaderConstants.init(caps);
 
-    mIsMultiviewEnabled = extensions.multiviewOVR || extensions.multiview2OVR;
+    mIsMultiviewEnabled = extensions.multiviewOVR;
 
     mIndependentBlendStates = extensions.drawBuffersIndexedAny();  // requires FL10_1
 

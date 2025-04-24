@@ -456,7 +456,6 @@ inline constexpr const char *kMultisampleArrayExtensionOrES32Required = "GL_OES_
 inline constexpr const char *kMultisampleTextureExtensionOrES31Required = "GL_ANGLE_texture_multisample or GLES 3.1 required.";
 inline constexpr const char *kMultiviewActive = "The number of views in the active draw framebuffer is greater than 1.";
 inline constexpr const char *kMultiviewMismatch = "The number of views in the active program and draw framebuffer does not match.";
-inline constexpr const char *kMultiviewNotAvailable = "OVR_multiview or OVR_multiview2 are not available.";
 inline constexpr const char *kMultiviewReadFramebuffer = "The active read framebuffer object has multiview attachments.";
 inline constexpr const char *kMultiviewTimerQuery = "There is an active query for target GL_TIME_ELAPSED_EXT when the number of views in the active draw framebuffer is greater than 1.";
 inline constexpr const char *kMultiviewTransformFeedback = "There is an active transform feedback object when the number of views in the active draw framebuffer is greater than 1.";

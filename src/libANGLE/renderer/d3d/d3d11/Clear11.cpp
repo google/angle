@@ -390,7 +390,7 @@ angle::Result Clear11::clearFramebuffer(const gl::Context *context,
             clearParams.scissor.height == 0)
         {
             // The check assumes that the viewport offsets are not negative as according to the
-            // OVR_multiview2 spec.
+            // OVR_multiview spec.
             // Scissor rect is outside the renderbuffer or is an empty rect.
             return angle::Result::Continue;
         }

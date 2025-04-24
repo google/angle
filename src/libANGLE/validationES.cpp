@@ -641,7 +641,7 @@ ANGLE_INLINE const char *ValidateProgramDrawStates(const Context *context,
                                                    const ProgramExecutable &executable)
 {
     const State &state = context->getState();
-    if (extensions.multiviewOVR || extensions.multiview2OVR)
+    if (extensions.multiviewOVR)
     {
         const int programNumViews     = executable.usesMultiview() ? executable.getNumViews() : 1;
         const bool hasVertexShader    = executable.hasLinkedShaderStage(ShaderType::Vertex);
@@ -1897,7 +1897,7 @@ bool ValidateBlitFramebufferParameters(const Context *context,
         }
     }
 
-    // OVR_multiview2:
+    // OVR_multiview:
     // Calling BlitFramebuffer will result in an INVALID_FRAMEBUFFER_OPERATION error if the
     // current draw framebuffer isMultiview() or the number of
     // views in the current read framebuffer is more than one.
@@ -5638,8 +5638,7 @@ bool ValidateGetFramebufferAttachmentParameterivBase(const Context *context,
 
         case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_NUM_VIEWS_OVR:
         case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_BASE_VIEW_INDEX_OVR:
-            if (clientVersion < ES_3_0 ||
-                !(context->getExtensions().multiviewOVR || context->getExtensions().multiview2OVR))
+            if (!context->getExtensions().multiviewOVR)
             {
                 ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
                 return false;
@@ -7601,7 +7600,7 @@ bool ValidateReadPixelsBase(const Context *context,
             break;
     }
 
-    // OVR_multiview2, Revision 1:
+    // OVR_multiview, Revision 1:
     // ReadPixels generates an INVALID_FRAMEBUFFER_OPERATION error if
     // the number of views in the current read framebuffer is more than one.
     if (readFramebuffer->readDisallowedByMultiview())
