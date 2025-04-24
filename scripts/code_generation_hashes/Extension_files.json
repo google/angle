@@ -22,11 +22,11 @@
   "scripts/gl_angle_ext.xml":
     "da4ecccdd77635f1b0e9d4664f856706",
   "scripts/registry_xml.py":
-    "d0a5b788c0f61fdb3678289c02fa4326",
+    "7c904a7b62373ab2d6cdda794f81c038",
   "src/libANGLE/gen_extensions.py":
-    "6ea1cb1733c4df98b527bbf2752e118b",
+    "dc4727460d1ece9f98a2ae47bf15ddb3",
   "src/libANGLE/gles_extensions_autogen.cpp":
-    "66a213c1f976dfa41565bcda469edb11",
+    "228d5af7a60d0036f0712c8fed26f0ae",
   "src/libANGLE/gles_extensions_autogen.h":
     "3811b29b898bebfdfbab423f3495471b",
   "third_party/EGL-Registry/src/api/egl.xml":

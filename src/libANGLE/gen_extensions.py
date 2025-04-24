@@ -138,7 +138,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
             return info;
         }};
 
-        auto enableableDisablableExtension = [&](ExtensionBool member) {{
+        [[maybe_unused]] auto enableableDisablableExtension = [&](ExtensionBool member) {{
             ExtensionInfo info = enableableExtension(member);
             info.Disablable    = true;
             return info;

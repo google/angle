@@ -1029,14 +1029,6 @@ TEST_P(WebGLCompatibilityTest, EnableTextureRectangle)
         glTexImage2D(GL_TEXTURE_RECTANGLE_ANGLE, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                      nullptr);
         EXPECT_GL_NO_ERROR();
-
-        glDisableExtensionANGLE("GL_ANGLE_texture_rectangle");
-        EXPECT_GL_NO_ERROR();
-
-        EXPECT_FALSE(IsGLExtensionEnabled("GL_ANGLE_texture_rectangle"));
-
-        glBindTexture(GL_TEXTURE_RECTANGLE_ANGLE, texture);
-        EXPECT_GL_ERROR(GL_INVALID_ENUM);
     }
 }
 

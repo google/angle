@@ -41,7 +41,6 @@ xml_inputs = sorted(khronos_xml_inputs + angle_xml_inputs)
 # We document those extensions in gl_angle_ext.xml instead of the canonical gl.xml.
 
 angle_toggleable_extensions = [
-    "GL_ANGLE_texture_rectangle",
 ]
 
 angle_requestable_extensions = [
@@ -74,6 +73,7 @@ angle_requestable_extensions = [
     "GL_ANGLE_texture_compression_dxt5",
     "GL_ANGLE_texture_external_update",
     "GL_ANGLE_texture_multisample",
+    "GL_ANGLE_texture_rectangle",
     "GL_ANGLE_vulkan_image",
     "GL_ANGLE_yuv_internal_format",
     "GL_CHROMIUM_color_buffer_float_rgb",
