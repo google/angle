@@ -6212,7 +6212,8 @@ void Context::debugMessageInsert(GLenum source,
         return;
     }
 
-    std::string msg(buf, (length > 0) ? static_cast<size_t>(length) : strlen(buf));
+    ASSERT(buf != nullptr);
+    const std::string msg(buf, (length < 0) ? strlen(buf) : static_cast<size_t>(length));
     mState.getDebug().insertMessage(source, type, id, severity, std::move(msg), gl::LOG_INFO);
 }
 
@@ -6236,7 +6237,8 @@ GLuint Context::getDebugMessageLog(GLuint count,
 
 void Context::pushDebugGroup(GLenum source, GLuint id, GLsizei length, const GLchar *message)
 {
-    std::string msg(message, (length > 0) ? static_cast<size_t>(length) : strlen(message));
+    ASSERT(message != nullptr);
+    std::string msg(message, (length < 0) ? strlen(message) : static_cast<size_t>(length));
     ANGLE_CONTEXT_TRY(mImplementation->pushDebugGroup(this, source, id, msg));
     mState.getDebug().pushGroup(source, id, std::move(msg));
 }

@@ -461,6 +461,185 @@ TEST_P(DebugTestES3, InsertMessageMultiple)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that a too long label fails
+TEST_P(DebugTest, ObjectLabelTooLong)
+{
+    ANGLE_SKIP_TEST_IF(!mDebugExtensionAvailable);
+
+    // Limit includes the null terminator
+    GLint maxLength = 0;
+    glGetIntegerv(GL_MAX_LABEL_LENGTH_KHR, &maxLength);
+    ASSERT_GE(maxLength, 1);
+
+    GLBuffer object;
+    glBindBuffer(GL_ARRAY_BUFFER, object);
+    ASSERT_GL_NO_ERROR();
+
+    // Implicit length
+    glObjectLabelKHR(GL_BUFFER_KHR, object, -1, std::string(maxLength - 1, 'A').c_str());
+    EXPECT_GL_NO_ERROR();
+
+    glObjectLabelKHR(GL_BUFFER_KHR, object, -1, std::string(maxLength, 'A').c_str());
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glObjectLabelKHR(GL_BUFFER_KHR, object, -1, std::string(maxLength + 1, 'A').c_str());
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    // Explicit length
+    const std::string label = std::string(maxLength + 1, 'B');
+
+    glObjectLabelKHR(GL_BUFFER_KHR, object, maxLength - 1, label.c_str());
+    EXPECT_GL_NO_ERROR();
+
+    glObjectLabelKHR(GL_BUFFER_KHR, object, maxLength, label.c_str());
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glObjectLabelKHR(GL_BUFFER_KHR, object, maxLength + 1, label.c_str());
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+}
+
+// Test that a too long sync object label fails
+TEST_P(DebugTestES3, ObjectPtrLabelTooLong)
+{
+    ANGLE_SKIP_TEST_IF(!mDebugExtensionAvailable);
+
+    // Limit includes the null terminator
+    GLint maxLength = 0;
+    glGetIntegerv(GL_MAX_LABEL_LENGTH_KHR, &maxLength);
+    ASSERT_GE(maxLength, 1);
+
+    GLsync object = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+    ASSERT_GL_NO_ERROR();
+
+    // Implicit length
+    glObjectPtrLabelKHR(object, -1, std::string(maxLength - 1, 'A').c_str());
+    EXPECT_GL_NO_ERROR();
+
+    glObjectPtrLabelKHR(object, -1, std::string(maxLength, 'A').c_str());
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glObjectPtrLabelKHR(object, -1, std::string(maxLength + 1, 'A').c_str());
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    // Explicit length
+    const std::string label = std::string(maxLength + 1, 'B');
+
+    glObjectPtrLabelKHR(object, maxLength - 1, label.c_str());
+    EXPECT_GL_NO_ERROR();
+
+    glObjectPtrLabelKHR(object, maxLength, label.c_str());
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glObjectPtrLabelKHR(object, maxLength + 1, label.c_str());
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glDeleteSync(object);
+}
+
+// Test that a too long debug group fails
+TEST_P(DebugTest, PushDebugGroupTooLong)
+{
+    ANGLE_SKIP_TEST_IF(!mDebugExtensionAvailable);
+
+    // Limit includes the null terminator
+    GLint maxLength = 0;
+    glGetIntegerv(GL_MAX_DEBUG_MESSAGE_LENGTH_KHR, &maxLength);
+    ASSERT_GE(maxLength, 1);
+
+    const GLenum source = GL_DEBUG_SOURCE_APPLICATION_KHR;
+
+    // Implicit length
+    glPushDebugGroupKHR(source, 1, -1, std::string(maxLength - 1, 'A').c_str());
+    EXPECT_GL_NO_ERROR();
+
+    glPushDebugGroupKHR(source, 1, -1, std::string(maxLength, 'A').c_str());
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glPushDebugGroupKHR(source, 1, -1, std::string(maxLength + 1, 'A').c_str());
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    // Explicit length
+    const std::string message = std::string(maxLength + 1, 'B');
+
+    glPushDebugGroupKHR(source, 1, maxLength - 1, message.c_str());
+    EXPECT_GL_NO_ERROR();
+
+    glPushDebugGroupKHR(source, 1, maxLength, message.c_str());
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glPushDebugGroupKHR(source, 1, maxLength + 1, message.c_str());
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+}
+
+// Test that a too long message fails
+TEST_P(DebugTest, InsertMessageTooLong)
+{
+    ANGLE_SKIP_TEST_IF(!mDebugExtensionAvailable);
+
+    // Limit includes the null terminator
+    GLint maxLength = 0;
+    glGetIntegerv(GL_MAX_DEBUG_MESSAGE_LENGTH_KHR, &maxLength);
+    ASSERT_GE(maxLength, 1);
+
+    const GLenum source   = GL_DEBUG_SOURCE_APPLICATION_KHR;
+    const GLenum type     = GL_DEBUG_TYPE_OTHER_KHR;
+    const GLenum severity = GL_DEBUG_SEVERITY_NOTIFICATION_KHR;
+
+    // Implicit length
+    glDebugMessageInsertKHR(source, type, 1, severity, -1, std::string(maxLength - 1, 'A').c_str());
+    EXPECT_GL_NO_ERROR();
+
+    glDebugMessageInsertKHR(source, type, 1, severity, -1, std::string(maxLength, 'A').c_str());
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glDebugMessageInsertKHR(source, type, 1, severity, -1, std::string(maxLength + 1, 'A').c_str());
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    // Explicit length
+    const std::string message = std::string(maxLength + 1, 'B');
+
+    glDebugMessageInsertKHR(source, type, 1, severity, maxLength - 1, message.c_str());
+    EXPECT_GL_NO_ERROR();
+
+    glDebugMessageInsertKHR(source, type, 1, severity, maxLength, message.c_str());
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glDebugMessageInsertKHR(source, type, 1, severity, maxLength + 1, message.c_str());
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+}
+
+// Test that passing a zero length inserts an empty message
+TEST_P(DebugTest, InsertMessageZeroLength)
+{
+    ANGLE_SKIP_TEST_IF(!mDebugExtensionAvailable);
+
+    GLint numMessages = 0;
+    glGetIntegerv(GL_DEBUG_LOGGED_MESSAGES_KHR, &numMessages);
+    ASSERT_EQ(0, numMessages);
+
+    const GLenum source   = GL_DEBUG_SOURCE_APPLICATION_KHR;
+    const GLenum type     = GL_DEBUG_TYPE_OTHER_KHR;
+    const GLenum severity = GL_DEBUG_SEVERITY_NOTIFICATION_KHR;
+
+    glDebugMessageInsertKHR(source, type, 1, severity, 0, "abc");
+    EXPECT_GL_NO_ERROR();
+
+    GLsizei lengthBuf = 0;
+    std::vector<char> messageBuf(4, 0xFF);
+    GLuint ret = glGetDebugMessageLogKHR(1, static_cast<GLsizei>(messageBuf.size()), nullptr,
+                                         nullptr, nullptr, nullptr, &lengthBuf, messageBuf.data());
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(1u, ret);
+    EXPECT_EQ(lengthBuf, 1);
+    EXPECT_EQ('\x00', messageBuf[0]);
+    EXPECT_EQ('\xFF', messageBuf[1]);
+    EXPECT_EQ('\xFF', messageBuf[2]);
+    EXPECT_EQ('\xFF', messageBuf[3]);
+
+    glGetIntegerv(GL_DEBUG_LOGGED_MESSAGES_KHR, &numMessages);
+    EXPECT_EQ(0, numMessages);
+}
+
 // Test using a debug callback
 TEST_P(DebugTestES3, DebugCallback)
 {

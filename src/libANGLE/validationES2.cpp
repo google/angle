@@ -2103,7 +2103,7 @@ bool ValidateDebugMessageInsertBase(const Context *context,
                                     GLsizei length,
                                     const GLchar *buf)
 {
-    if (!ValidDebugSeverity(severity))
+    if (!ValidDebugSource(source, true))
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidDebugSource);
         return false;
@@ -2115,20 +2115,21 @@ bool ValidateDebugMessageInsertBase(const Context *context,
         return false;
     }
 
-    if (!ValidDebugSource(source, true))
+    if (!ValidDebugSeverity(severity))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidDebugSource);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidDebugSeverity);
         return false;
     }
 
     if (buf == nullptr)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kDebugMessageInsertBufNULL);
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kDebugMessageNULL);
         return false;
     }
 
-    size_t messageLength = (length < 0) ? strlen(buf) : length;
-    if (messageLength > context->getCaps().maxDebugMessageLength)
+    const GLuint maxMessageLength = context->getCaps().maxDebugMessageLength;
+    const size_t messageLength    = (length < 0) ? strnlen(buf, maxMessageLength) : length;
+    if (messageLength >= maxMessageLength)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kExceedsMaxDebugMessageLength);
         return false;
@@ -2218,8 +2219,15 @@ bool ValidatePushDebugGroupBase(const Context *context,
         return false;
     }
 
-    size_t messageLength = (length < 0) ? strlen(message) : length;
-    if (messageLength > context->getCaps().maxDebugMessageLength)
+    if (message == nullptr)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kDebugMessageNULL);
+        return false;
+    }
+
+    const GLuint maxMessageLength = context->getCaps().maxDebugMessageLength;
+    const size_t messageLength    = (length < 0) ? strnlen(message, maxMessageLength) : length;
+    if (messageLength >= maxMessageLength)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kExceedsMaxDebugMessageLength);
         return false;
@@ -2368,13 +2376,14 @@ static bool ValidateLabelLength(const Context *context,
                                 GLsizei length,
                                 const GLchar *label)
 {
+    const GLuint maxLabelLength = context->getCaps().maxLabelLength;
     size_t labelLength = 0;
 
     if (length < 0)
     {
         if (label != nullptr)
         {
-            labelLength = strlen(label);
+            labelLength = strnlen(label, maxLabelLength);
         }
     }
     else
@@ -2382,7 +2391,7 @@ static bool ValidateLabelLength(const Context *context,
         labelLength = static_cast<size_t>(length);
     }
 
-    if (labelLength > context->getCaps().maxLabelLength)
+    if (labelLength >= maxLabelLength)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kExceedsMaxLabelLength);
         return false;
