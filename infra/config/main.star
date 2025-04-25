@@ -423,7 +423,7 @@ luci.bucket(
     name = "ci.shadow",
     shadows = "ci",
     constraints = luci.bucket_constraints(
-        pools = ["luci.angle.ci"],
+        pools = ["luci.angle.ci", "luci.chromium.gpu.ci"],
     ),
     bindings = [
         luci.binding(
@@ -458,7 +458,7 @@ luci.bucket(
     name = "try.shadow",
     shadows = "try",
     constraints = luci.bucket_constraints(
-        pools = ["luci.angle.try"],
+        pools = ["luci.angle.try", "luci.chromium.gpu.try"],
         service_accounts = [
             "angle-try-builder@chops-service-accounts.iam.gserviceaccount.com",
         ],
