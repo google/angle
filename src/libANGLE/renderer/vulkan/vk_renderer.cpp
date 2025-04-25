@@ -5899,6 +5899,10 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, preferMonolithicPipelinesOverLibraries,
                             mFeatures.supportsGraphicsPipelineLibrary.enabled && false);
 
+    // To avoid memory bloating due to using pipeline caches per program, the pipeline cache in the
+    // renderer can be used.
+    ANGLE_FEATURE_CONDITION(&mFeatures, preferGlobalPipelineCache, isNvidia || isAMD);
+
     // Whether the pipeline caches should merge into the global pipeline cache.  This should only be
     // enabled on platforms if:
     //
@@ -6325,6 +6329,7 @@ angle::Result Renderer::getPipelineCache(vk::ErrorContext *context,
 
     angle::SimpleMutex *pipelineCacheMutex =
         context->getFeatures().mergeProgramPipelineCachesToGlobalCache.enabled ||
+                context->getFeatures().preferGlobalPipelineCache.enabled ||
                 context->getFeatures().preferMonolithicPipelinesOverLibraries.enabled
             ? &mPipelineCacheMutex
             : nullptr;

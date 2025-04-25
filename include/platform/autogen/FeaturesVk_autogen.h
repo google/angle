@@ -170,6 +170,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo preferGlobalPipelineCache = {
+        "preferGlobalPipelineCache",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
     FeatureInfo supportsYUVSamplerConversion = {
         "supportsYUVSamplerConversion",
         FeatureCategory::VulkanFeatures,

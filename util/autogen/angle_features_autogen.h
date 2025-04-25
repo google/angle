@@ -251,6 +251,7 @@ enum class Feature
     PreferDoubleBufferSwapchainOnFifoMode,
     PreferDrawClearOverVkCmdClearAttachments,
     PreferDynamicRendering,
+    PreferGlobalPipelineCache,
     PreferHostCachedForNonStaticBufferUsage,
     PreferLinearFilterForYUV,
     PreferMonolithicPipelinesOverLibraries,

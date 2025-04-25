@@ -193,6 +193,14 @@
             ]
         },
         {
+            "name": "prefer_global_pipeline_cache",
+            "category": "Features",
+            "description": [
+                "The renderer's pipeline cache will be used instead of the separate caches per program."
+            ],
+            "issue": "http://anglebug.com/411442610"
+        },
+        {
             "name": "supports_YUV_sampler_conversion",
             "category": "Features",
             "description": [

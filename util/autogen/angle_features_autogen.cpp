@@ -251,6 +251,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::PreferDoubleBufferSwapchainOnFifoMode, "preferDoubleBufferSwapchainOnFifoMode"},
     {Feature::PreferDrawClearOverVkCmdClearAttachments, "preferDrawClearOverVkCmdClearAttachments"},
     {Feature::PreferDynamicRendering, "preferDynamicRendering"},
+    {Feature::PreferGlobalPipelineCache, "preferGlobalPipelineCache"},
     {Feature::PreferHostCachedForNonStaticBufferUsage, "preferHostCachedForNonStaticBufferUsage"},
     {Feature::PreferLinearFilterForYUV, "preferLinearFilterForYUV"},
     {Feature::PreferMonolithicPipelinesOverLibraries, "preferMonolithicPipelinesOverLibraries"},

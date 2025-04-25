@@ -789,7 +789,7 @@ angle::Result ProgramExecutableVk::load(ContextVk *contextVk,
     gl::ShaderMap<size_t> requiredBufferSize;
     stream->readPackedEnumMap(&requiredBufferSize);
 
-    if (!isSeparable)
+    if (!isSeparable && !contextVk->getFeatures().preferGlobalPipelineCache.enabled)
     {
         size_t compressedPipelineDataSize = 0;
         stream->readInt<size_t>(&compressedPipelineDataSize);
@@ -847,7 +847,7 @@ void ProgramExecutableVk::save(ContextVk *contextVk,
     // pipelines do.  However, currently ANGLE doesn't sync program pipelines to cache.  ANGLE could
     // potentially use VK_EXT_graphics_pipeline_library to create separate pipelines for
     // pre-rasterization and fragment subsets, but currently those subsets are bundled together.
-    if (!isSeparable)
+    if (!isSeparable && !contextVk->getFeatures().preferGlobalPipelineCache.enabled)
     {
         angle::MemoryBuffer cacheData;
 
@@ -1012,9 +1012,16 @@ angle::Result ProgramExecutableVk::warmUpComputePipelineCache(
     // Make sure the shader module for compute shader stage is valid.
     ASSERT(mComputeProgramInfo.valid(gl::ShaderType::Compute));
 
-    // No synchronization necessary since mPipelineCache is internally synchronized.
     vk::PipelineCacheAccess pipelineCache;
-    pipelineCache.init(&mPipelineCache, nullptr);
+    if (context->getFeatures().preferGlobalPipelineCache.enabled)
+    {
+        ANGLE_TRY(context->getRenderer()->getPipelineCache(context, &pipelineCache));
+    }
+    else
+    {
+        // No synchronization necessary since mPipelineCache is internally synchronized.
+        pipelineCache.init(&mPipelineCache, nullptr);
+    }
 
     // There is no state associated with compute programs, so only one pipeline needs creation
     // to warm up the cache.
@@ -1038,9 +1045,17 @@ angle::Result ProgramExecutableVk::warmUpGraphicsPipelineCache(
 
     ASSERT(placeholderPipelineHelper && !placeholderPipelineHelper->valid());
 
-    // No synchronization necessary since mPipelineCache is internally synchronized.
     vk::PipelineCacheAccess pipelineCache;
-    pipelineCache.init(&mPipelineCache, nullptr);
+
+    if (context->getFeatures().preferGlobalPipelineCache.enabled)
+    {
+        ANGLE_TRY(context->getRenderer()->getPipelineCache(context, &pipelineCache));
+    }
+    else
+    {
+        // No synchronization necessary since mPipelineCache is internally synchronized.
+        pipelineCache.init(&mPipelineCache, nullptr);
+    }
 
     const vk::GraphicsPipelineDesc *descPtr  = nullptr;
     ProgramTransformOptions transformOptions = {};
@@ -1575,9 +1590,12 @@ angle::Result ProgramExecutableVk::createGraphicsPipeline(
     ProgramTransformOptions transformOptions = getTransformOptions(contextVk, desc);
 
     // When creating monolithic pipelines, the renderer's pipeline cache is used as passed in.
-    // When creating the shaders subset of pipelines, the program's own pipeline cache is used.
+    // When creating the shaders subset of pipelines, the program's own pipeline cache is used,
+    // unless the renderer's pipeline cache is preferred.
     vk::PipelineCacheAccess perProgramPipelineCache;
-    const bool useProgramPipelineCache = pipelineSubset == vk::GraphicsPipelineSubset::Shaders;
+    const bool useProgramPipelineCache =
+        !contextVk->getFeatures().preferGlobalPipelineCache.enabled &&
+        pipelineSubset == vk::GraphicsPipelineSubset::Shaders;
     if (useProgramPipelineCache)
     {
         ANGLE_TRY(ensurePipelineCacheInitialized(contextVk));
@@ -1618,7 +1636,8 @@ angle::Result ProgramExecutableVk::createLinkedGraphicsPipeline(
     // to be created, otherwise there is effectively a merge to global pipeline cache happening.
     vk::PipelineCacheAccess programPipelineCache;
     vk::PipelineCacheAccess *linkPipelineCache = pipelineCache;
-    if (!contextVk->getFeatures().preferMonolithicPipelinesOverLibraries.enabled)
+    if (!contextVk->getFeatures().preferGlobalPipelineCache.enabled &&
+        !contextVk->getFeatures().preferMonolithicPipelinesOverLibraries.enabled)
     {
         // No synchronization necessary since mPipelineCache is internally synchronized.
         programPipelineCache.init(&mPipelineCache, nullptr);
