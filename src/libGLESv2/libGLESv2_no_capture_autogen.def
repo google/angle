@@ -575,6 +575,8 @@ EXPORTS
     glGetFloatvRobustANGLE
     glGetFramebufferAttachmentParameterivRobustANGLE
     glGetFramebufferParameterivRobustANGLE
+    glGetFramebufferPixelLocalStorageParameterfvRobustANGLE
+    glGetFramebufferPixelLocalStorageParameterivRobustANGLE
     glGetInteger64i_vRobustANGLE
     glGetInteger64vRobustANGLE
     glGetIntegeri_vRobustANGLE
@@ -647,9 +649,7 @@ EXPORTS
     glFramebufferPixelLocalStorageRestoreANGLE
     glFramebufferTexturePixelLocalStorageANGLE
     glGetFramebufferPixelLocalStorageParameterfvANGLE
-    glGetFramebufferPixelLocalStorageParameterfvRobustANGLE
     glGetFramebufferPixelLocalStorageParameterivANGLE
-    glGetFramebufferPixelLocalStorageParameterivRobustANGLE
     glPixelLocalStorageBarrierANGLE
 
     ; GL_ANGLE_stencil_texturing

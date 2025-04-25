@@ -1171,6 +1171,9 @@
                 <command name="glGetQueryObjectivRobustANGLE"/>
                 <command name="glGetQueryObjecti64vRobustANGLE"/>
                 <command name="glGetQueryObjectui64vRobustANGLE"/>
+                <!-- The following two are added by GL_ANGLE_shader_pixel_local_storage -->
+                <command name="glGetFramebufferPixelLocalStorageParameterfvRobustANGLE"/>
+                <command name="glGetFramebufferPixelLocalStorageParameterivRobustANGLE"/>
             </require>
         </extension>
         <extension name="GL_ANGLE_robust_resource_initialization" supported='gles2'>
@@ -1365,8 +1368,6 @@
                 <command name="glFramebufferPixelLocalStorageRestoreANGLE"/>
                 <command name="glGetFramebufferPixelLocalStorageParameterfvANGLE"/>
                 <command name="glGetFramebufferPixelLocalStorageParameterivANGLE"/>
-                <command name="glGetFramebufferPixelLocalStorageParameterfvRobustANGLE"/>
-                <command name="glGetFramebufferPixelLocalStorageParameterivRobustANGLE"/>
             </require>
         </extension>
         <extension name="GL_ANGLE_logic_op" supported="gles2">

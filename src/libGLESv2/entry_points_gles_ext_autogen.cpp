@@ -4076,6 +4076,84 @@ void GL_APIENTRY GL_GetQueryObjectui64vRobustANGLE(GLuint id,
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
 
+void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterfvRobustANGLE(GLint plane,
+                                                                          GLenum pname,
+                                                                          GLsizei bufSize,
+                                                                          GLsizei *length,
+                                                                          GLfloat *params)
+{
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLGetFramebufferPixelLocalStorageParameterfvRobustANGLE,
+          "context = %d, plane = %d, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
+          ", params = 0x%016" PRIxPTR "",
+          CID(context), plane, GLenumToString(GLESEnum::PLSQueryFloat, pname), bufSize,
+          (uintptr_t)length, (uintptr_t)params);
+
+    if (ANGLE_LIKELY(context != nullptr))
+    {
+        SCOPED_SHARE_CONTEXT_LOCK(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetFramebufferPixelLocalStorageParameterfvRobustANGLE(
+                 context,
+                 angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterfvRobustANGLE, plane,
+                 pname, bufSize, length, params));
+        if (ANGLE_LIKELY(isCallValid))
+        {
+            context->getFramebufferPixelLocalStorageParameterfvRobust(plane, pname, bufSize, length,
+                                                                      params);
+        }
+        ANGLE_CAPTURE_GL(GetFramebufferPixelLocalStorageParameterfvRobustANGLE, isCallValid,
+                         context, plane, pname, bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext(
+            angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterfvRobustANGLE);
+    }
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+}
+
+void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterivRobustANGLE(GLint plane,
+                                                                          GLenum pname,
+                                                                          GLsizei bufSize,
+                                                                          GLsizei *length,
+                                                                          GLint *params)
+{
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLGetFramebufferPixelLocalStorageParameterivRobustANGLE,
+          "context = %d, plane = %d, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
+          ", params = 0x%016" PRIxPTR "",
+          CID(context), plane, GLenumToString(GLESEnum::PLSQueryInt, pname), bufSize,
+          (uintptr_t)length, (uintptr_t)params);
+
+    if (ANGLE_LIKELY(context != nullptr))
+    {
+        SCOPED_SHARE_CONTEXT_LOCK(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateGetFramebufferPixelLocalStorageParameterivRobustANGLE(
+                 context,
+                 angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterivRobustANGLE, plane,
+                 pname, bufSize, length, params));
+        if (ANGLE_LIKELY(isCallValid))
+        {
+            context->getFramebufferPixelLocalStorageParameterivRobust(plane, pname, bufSize, length,
+                                                                      params);
+        }
+        ANGLE_CAPTURE_GL(GetFramebufferPixelLocalStorageParameterivRobustANGLE, isCallValid,
+                         context, plane, pname, bufSize, length, params);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext(
+            angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterivRobustANGLE);
+    }
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+}
+
 // GL_ANGLE_robust_fragment_shader_output
 
 // GL_ANGLE_robust_resource_initialization
@@ -4488,83 +4566,6 @@ void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterivANGLE(GLint plane,
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
 
-void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterfvRobustANGLE(GLint plane,
-                                                                          GLenum pname,
-                                                                          GLsizei bufSize,
-                                                                          GLsizei *length,
-                                                                          GLfloat *params)
-{
-    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
-    Context *context = GetValidGlobalContext();
-    EVENT(context, GLGetFramebufferPixelLocalStorageParameterfvRobustANGLE,
-          "context = %d, plane = %d, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
-          ", params = 0x%016" PRIxPTR "",
-          CID(context), plane, GLenumToString(GLESEnum::PLSQueryFloat, pname), bufSize,
-          (uintptr_t)length, (uintptr_t)params);
-
-    if (ANGLE_LIKELY(context != nullptr))
-    {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetFramebufferPixelLocalStorageParameterfvRobustANGLE(
-                 context,
-                 angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterfvRobustANGLE, plane,
-                 pname, bufSize, length, params));
-        if (ANGLE_LIKELY(isCallValid))
-        {
-            context->getFramebufferPixelLocalStorageParameterfvRobust(plane, pname, bufSize, length,
-                                                                      params);
-        }
-        ANGLE_CAPTURE_GL(GetFramebufferPixelLocalStorageParameterfvRobustANGLE, isCallValid,
-                         context, plane, pname, bufSize, length, params);
-    }
-    else
-    {
-        GenerateContextLostErrorOnCurrentGlobalContext(
-            angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterfvRobustANGLE);
-    }
-    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
-}
-
-void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterivRobustANGLE(GLint plane,
-                                                                          GLenum pname,
-                                                                          GLsizei bufSize,
-                                                                          GLsizei *length,
-                                                                          GLint *params)
-{
-    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
-    Context *context = GetValidGlobalContext();
-    EVENT(context, GLGetFramebufferPixelLocalStorageParameterivRobustANGLE,
-          "context = %d, plane = %d, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
-          ", params = 0x%016" PRIxPTR "",
-          CID(context), plane, GLenumToString(GLESEnum::PLSQueryInt, pname), bufSize,
-          (uintptr_t)length, (uintptr_t)params);
-
-    if (ANGLE_LIKELY(context != nullptr))
-    {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateGetFramebufferPixelLocalStorageParameterivRobustANGLE(
-                 context,
-                 angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterivRobustANGLE, plane,
-                 pname, bufSize, length, params));
-        if (ANGLE_LIKELY(isCallValid))
-        {
-            context->getFramebufferPixelLocalStorageParameterivRobust(plane, pname, bufSize, length,
-                                                                      params);
-        }
-        ANGLE_CAPTURE_GL(GetFramebufferPixelLocalStorageParameterivRobustANGLE, isCallValid,
-                         context, plane, pname, bufSize, length, params);
-    }
-    else
-    {
-        GenerateContextLostErrorOnCurrentGlobalContext(
-            angle::EntryPoint::GLGetFramebufferPixelLocalStorageParameterivRobustANGLE);
-    }
-    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
-}
 
 // GL_ANGLE_stencil_texturing
 

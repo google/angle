@@ -609,6 +609,10 @@
                                   GLsizei *length, GLint64 *params);                               \
     void getQueryObjectui64vRobust(QueryID idPacked, GLenum pname, GLsizei bufSize,                \
                                    GLsizei *length, GLuint64 *params);                             \
+    void getFramebufferPixelLocalStorageParameterfvRobust(                                         \
+        GLint plane, GLenum pname, GLsizei bufSize, GLsizei *length, GLfloat *params);             \
+    void getFramebufferPixelLocalStorageParameterivRobust(                                         \
+        GLint plane, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *params);               \
     /* GL_ANGLE_robust_fragment_shader_output */                                                   \
     /* GL_ANGLE_robust_resource_initialization */                                                  \
     /* GL_ANGLE_semaphore_fuchsia */                                                               \
@@ -629,10 +633,6 @@
     void framebufferPixelLocalStorageRestore();                                                    \
     void getFramebufferPixelLocalStorageParameterfv(GLint plane, GLenum pname, GLfloat *params);   \
     void getFramebufferPixelLocalStorageParameteriv(GLint plane, GLenum pname, GLint *params);     \
-    void getFramebufferPixelLocalStorageParameterfvRobust(                                         \
-        GLint plane, GLenum pname, GLsizei bufSize, GLsizei *length, GLfloat *params);             \
-    void getFramebufferPixelLocalStorageParameterivRobust(                                         \
-        GLint plane, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *params);               \
     /* GL_ANGLE_shader_pixel_local_storage_coherent */                                             \
     /* GL_ANGLE_stencil_texturing */                                                               \
     /* GL_ANGLE_texture_compression_dxt3 */                                                        \

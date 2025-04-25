@@ -660,6 +660,18 @@ ANGLE_EXPORT void GL_APIENTRY GL_GetQueryObjectui64vRobustANGLE(GLuint id,
                                                                 GLsizei bufSize,
                                                                 GLsizei *length,
                                                                 GLuint64 *params);
+ANGLE_EXPORT void GL_APIENTRY
+GL_GetFramebufferPixelLocalStorageParameterfvRobustANGLE(GLint plane,
+                                                         GLenum pname,
+                                                         GLsizei bufSize,
+                                                         GLsizei *length,
+                                                         GLfloat *params);
+ANGLE_EXPORT void GL_APIENTRY
+GL_GetFramebufferPixelLocalStorageParameterivRobustANGLE(GLint plane,
+                                                         GLenum pname,
+                                                         GLsizei bufSize,
+                                                         GLsizei *length,
+                                                         GLint *params);
 
 // GL_ANGLE_robust_fragment_shader_output
 
@@ -696,18 +708,6 @@ ANGLE_EXPORT void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterfvANGLE
 ANGLE_EXPORT void GL_APIENTRY GL_GetFramebufferPixelLocalStorageParameterivANGLE(GLint plane,
                                                                                  GLenum pname,
                                                                                  GLint *params);
-ANGLE_EXPORT void GL_APIENTRY
-GL_GetFramebufferPixelLocalStorageParameterfvRobustANGLE(GLint plane,
-                                                         GLenum pname,
-                                                         GLsizei bufSize,
-                                                         GLsizei *length,
-                                                         GLfloat *params);
-ANGLE_EXPORT void GL_APIENTRY
-GL_GetFramebufferPixelLocalStorageParameterivRobustANGLE(GLint plane,
-                                                         GLenum pname,
-                                                         GLsizei bufSize,
-                                                         GLsizei *length,
-                                                         GLint *params);
 
 // GL_ANGLE_stencil_texturing
 

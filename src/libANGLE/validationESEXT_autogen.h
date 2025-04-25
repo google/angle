@@ -880,6 +880,20 @@ bool ValidateGetQueryObjectui64vRobustANGLE(const Context *context,
                                             GLsizei bufSize,
                                             const GLsizei *length,
                                             const GLuint64 *params);
+bool ValidateGetFramebufferPixelLocalStorageParameterfvRobustANGLE(const Context *context,
+                                                                   angle::EntryPoint entryPoint,
+                                                                   GLint plane,
+                                                                   GLenum pname,
+                                                                   GLsizei bufSize,
+                                                                   const GLsizei *length,
+                                                                   const GLfloat *params);
+bool ValidateGetFramebufferPixelLocalStorageParameterivRobustANGLE(const Context *context,
+                                                                   angle::EntryPoint entryPoint,
+                                                                   GLint plane,
+                                                                   GLenum pname,
+                                                                   GLsizei bufSize,
+                                                                   const GLsizei *length,
+                                                                   const GLint *params);
 
 // GL_ANGLE_robust_fragment_shader_output
 
@@ -940,20 +954,6 @@ bool ValidateGetFramebufferPixelLocalStorageParameterivANGLE(const Context *cont
                                                              GLint plane,
                                                              GLenum pname,
                                                              const GLint *params);
-bool ValidateGetFramebufferPixelLocalStorageParameterfvRobustANGLE(const Context *context,
-                                                                   angle::EntryPoint entryPoint,
-                                                                   GLint plane,
-                                                                   GLenum pname,
-                                                                   GLsizei bufSize,
-                                                                   const GLsizei *length,
-                                                                   const GLfloat *params);
-bool ValidateGetFramebufferPixelLocalStorageParameterivRobustANGLE(const Context *context,
-                                                                   angle::EntryPoint entryPoint,
-                                                                   GLint plane,
-                                                                   GLenum pname,
-                                                                   GLsizei bufSize,
-                                                                   const GLsizei *length,
-                                                                   const GLint *params);
 
 // GL_ANGLE_stencil_texturing
 
