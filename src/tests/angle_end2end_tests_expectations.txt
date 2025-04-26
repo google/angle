@@ -39,6 +39,9 @@
 
 381742474 : ShaderStorageBufferTest31.ExceedMaxShaderStorageBlockSize/* = SKIP
 
+// Angle does not support Array of Arrays in tessellation shader.
+413447006 : ProgramInterfaceTestES31.ArrayofArraysQueries/* = SKIP
+
 // ES 3.2 tests are skipped on SwS.
 376899587 VULKAN SWIFTSHADER : */ES3_2* = SKIP
 
