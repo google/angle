@@ -16098,6 +16098,24 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
 }
 
+// Test when a constant constructor is nested inside a constructor of a different type, where the
+// outer constructor itself is not a constant.
+TEST_P(GLSLTest, ConstantConstructorNestedInConstructorOfDifferentType)
+{
+    constexpr char kFS[] = R"(precision mediump float;
+void main()
+{
+    float e = 1.;
+    gl_FragColor.xyz = vec3(ivec2(1, 0),e);
+    gl_FragColor.a = 1.;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::magenta);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test that initializing global variables with non-constant values work
 TEST_P(GLSLTest_ES3, InitGlobalNonConstant)
 {
