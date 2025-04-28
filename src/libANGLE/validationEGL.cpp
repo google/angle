@@ -697,6 +697,7 @@ bool ValidateGetPlatformDisplayCommon(const ValidationContext *val,
         Optional<EGLAttrib> minorVersion;
         Optional<EGLAttrib> deviceType;
         Optional<EGLAttrib> eglHandle;
+        Optional<EGLAttrib> dawnProcTable;
 
         for (const auto &curAttrib : attribMap)
         {
@@ -889,6 +890,14 @@ bool ValidateGetPlatformDisplayCommon(const ValidationContext *val,
                     }
                     deviceIdSpecified = true;
                     break;
+
+                case EGL_PLATFORM_ANGLE_DAWN_PROC_TABLE_ANGLE:
+                    if (value != 0)
+                    {
+                        dawnProcTable = value;
+                    }
+                    break;
+
                 default:
                     break;
             }
@@ -1049,6 +1058,14 @@ bool ValidateGetPlatformDisplayCommon(const ValidationContext *val,
             val->setError(EGL_BAD_ATTRIBUTE,
                           "EGL_PLATFORM_ANGLE_EGL_HANDLE_ANGLE requires a "
                           "device type of EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE.");
+            return false;
+        }
+
+        if (dawnProcTable.valid() && platformType != EGL_PLATFORM_ANGLE_TYPE_WEBGPU_ANGLE)
+        {
+            val->setError(EGL_BAD_ATTRIBUTE,
+                          "EGL_PLATFORM_ANGLE_DAWN_PROC_TABLE_ANGLE requires a "
+                          "device type of EGL_PLATFORM_ANGLE_TYPE_WEBGPU_ANGLE.");
             return false;
         }
     }

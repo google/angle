@@ -31,7 +31,10 @@ DisplayWgpu::~DisplayWgpu() {}
 
 egl::Error DisplayWgpu::initialize(egl::Display *display)
 {
-    mProcTable = webgpu::GetDefaultProcTable();
+    const egl::AttributeMap &attribs = display->getAttributeMap();
+    mProcTable                       = *reinterpret_cast<DawnProcTable *>(
+        attribs.get(EGL_PLATFORM_ANGLE_DAWN_PROC_TABLE_ANGLE,
+                                          reinterpret_cast<EGLAttrib>(&webgpu::GetDefaultProcTable())));
 
     ANGLE_TRY(createWgpuDevice());
 
