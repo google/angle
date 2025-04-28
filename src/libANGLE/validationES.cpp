@@ -3662,6 +3662,53 @@ const InternalFormat *GetValidFormatInfoForCopyImageSubData(const Context *conte
                                                             GLenum target,
                                                             GLint level)
 {
+    // An INVALID_ENUM error is generated if either target is not
+    // RENDERBUFFER or a valid texture target; is TEXTURE_BUFFER or one of the
+    // cubemap face selectors.
+    switch (target)
+    {
+        case GL_RENDERBUFFER:
+        case GL_TEXTURE_2D:
+        case GL_TEXTURE_CUBE_MAP:
+        case GL_TEXTURE_3D:
+        case GL_TEXTURE_2D_ARRAY:
+            break;
+        case GL_TEXTURE_2D_MULTISAMPLE:
+            if (context->getClientVersion() < ES_3_1 &&
+                !context->getExtensions().textureMultisampleANGLE)
+            {
+                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kMultisampleTextureExtensionOrES31Required);
+                return nullptr;
+            }
+            break;
+        case GL_TEXTURE_2D_MULTISAMPLE_ARRAY:
+            if (context->getClientVersion() < ES_3_2 &&
+                !context->getExtensions().textureStorageMultisample2dArrayOES)
+            {
+                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kMultisampleArrayExtensionOrES32Required);
+                return nullptr;
+            }
+            break;
+        case GL_TEXTURE_CUBE_MAP_ARRAY:
+            if (context->getClientVersion() < ES_3_2 &&
+                !context->getExtensions().textureCubeMapArrayAny())
+            {
+                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidTarget);
+                return nullptr;
+            }
+            break;
+        case GL_TEXTURE_EXTERNAL_OES:
+            if (!context->getExtensions().EGLImageExternalOES)
+            {
+                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidTarget);
+                return nullptr;
+            }
+            break;
+        default:
+            ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidTarget);
+            return nullptr;
+    }
+
     if (target == GL_RENDERBUFFER)
     {
         Renderbuffer *renderbufferObject =
@@ -3689,9 +3736,9 @@ const InternalFormat *GetValidFormatInfoForCopyImageSubData(const Context *conte
         return nullptr;
     }
 
-    // Buffer textures are not allowed and the target must match the texture type.
+    // the target must match the texture type.
     const TextureType textureType = textureObject->getType();
-    if (textureType == TextureType::Buffer || ToGLenum(textureType) != target)
+    if (ToGLenum(textureType) != target)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kTextureTargetInvalidForCopyImage);
         return nullptr;

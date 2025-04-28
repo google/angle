@@ -16049,6 +16049,56 @@ class CopyImageTestES31 : public ANGLETest<>
     }
 };
 
+// Test validation of target
+TEST_P(CopyImageTestES31, InvalidTarget)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_copy_image"));
+
+    // INVALID_ENUM is generated
+    // if either srcTarget or dstTarget
+    //   - is not RENDERBUFFER or a valid non-proxy texture target
+    //   - is TEXTURE_BUFFER, or
+    //   - is one of the cubemap face selectors described in table 3.17,
+    // if the target does not match the type of the object.
+    GLenum invalidTargets[] = {
+        GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+        GL_TEXTURE_CUBE_MAP_POSITIVE_Y, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
+        GL_TEXTURE_CUBE_MAP_POSITIVE_Z, GL_TEXTURE_CUBE_MAP_NEGATIVE_Z,
+        GL_TEXTURE_BUFFER_EXT,          GL_ARRAY_BUFFER,
+    };
+    GLTexture texSrc;
+    GLTexture texDest;
+    const uint32_t invalidTargetsSize = sizeof(invalidTargets) / sizeof((invalidTargets)[0]);
+    for (uint32_t i = 0; i < invalidTargetsSize; ++i)
+    {
+        for (uint32_t j = 0; j < invalidTargetsSize; ++j)
+        {
+            glCopyImageSubDataEXT(texSrc, invalidTargets[i], 0, 0, 0, 0, texDest, invalidTargets[j],
+                                  0, 0, 0, 0, 1, 1, 1);
+            EXPECT_GL_ERROR(GL_INVALID_ENUM);
+        }
+    }
+
+    // Target does not match the type of the object
+    glBindTexture(GL_TEXTURE_2D, texSrc);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 32, 32, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+
+    glBindTexture(GL_TEXTURE_3D, texDest);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 32, 32, 32, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+
+    glCopyImageSubDataEXT(texSrc, GL_TEXTURE_2D, 0, 0, 0, 0, texDest, GL_TEXTURE_2D, 0, 0, 0, 0, 0,
+                          0, 1);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    glCopyImageSubDataEXT(texSrc, GL_TEXTURE_3D, 0, 0, 0, 0, texDest, GL_TEXTURE_3D, 0, 0, 0, 0, 0,
+                          0, 1);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+}
+
 // Test that copies between RGB formats doesn't affect the emulated alpha channel, if any.
 TEST_P(CopyImageTestES31, PreserveEmulatedAlpha)
 {
