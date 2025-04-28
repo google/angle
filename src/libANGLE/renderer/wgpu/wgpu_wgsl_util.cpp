@@ -10,6 +10,8 @@
 
 #include "common/PackedEnums.h"
 #include "common/PackedGLEnums_autogen.h"
+#include "common/log_utils.h"
+#include "compiler/translator/wgsl/OutputUniformBlocks.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/ProgramExecutable.h"
 
@@ -22,11 +24,57 @@ namespace
 {
 const bool kOutputReplacements = false;
 
-std::string WgslReplaceLocationMarkers(const std::string &shaderSource,
-                                       std::map<std::string, int> varNameToLocation)
+void ReplaceFoundMarker(const std::string &shaderSource,
+                        std::string &newSource,
+                        const std::map<std::string, int> &varNameToLocation,
+                        const char *marker,
+                        const char *markerReplacement,
+                        const char *replacementEnd,
+                        size_t nextMarker,
+                        size_t &currPos)
 {
-    const char *marker    = "@location(@@@@@@) ";
     const char *endOfName = " : ";
+
+    // Copy up to the next marker
+    newSource.append(shaderSource, currPos, nextMarker - currPos);
+
+    // Extract name from something like `@location(@@@@@@) NAME : TYPE`.
+    size_t startOfNamePos = nextMarker + strlen(marker);
+    size_t endOfNamePos   = shaderSource.find(endOfName, startOfNamePos, strlen(endOfName));
+    std::string name(shaderSource.c_str() + startOfNamePos, endOfNamePos - startOfNamePos);
+
+    // Use the shader variable's name to get the assigned location
+    auto locationIter = varNameToLocation.find(name);
+    if (locationIter == varNameToLocation.end())
+    {
+        // This should be an ignored sampler, so just delete it.
+        size_t endOfLine = shaderSource.find(";\n", nextMarker);
+        currPos          = endOfLine + 2;
+        return;
+    }
+
+    // TODO(anglebug.com/42267100): if the GLSL input is a matrix there should be multiple
+    // WGSL input variables (multiple vectors representing the columns of the matrix).
+    int location = locationIter->second;
+    std::ostringstream locationReplacementStream;
+    locationReplacementStream << markerReplacement << location << replacementEnd << " " << name;
+
+    if (kOutputReplacements)
+    {
+        std::cout << "Replace \"" << marker << name << "\" with \""
+                  << locationReplacementStream.str() << "\"" << std::endl;
+    }
+
+    // Append the new `@location(N) name` and then continue from the ` : type`.
+    newSource.append(locationReplacementStream.str());
+    currPos = endOfNamePos;
+}
+
+std::string WgslReplaceMarkers(const std::string &shaderSource,
+                               const std::map<std::string, int> &varNameToLocation)
+{
+    const char *locationMarker = "@location(@@@@@@) ";
+    const char *bindingMarker  = "@group(1) @binding(@@@@@@) var ";
 
     std::string newSource;
     newSource.reserve(shaderSource.size());
@@ -34,46 +82,24 @@ std::string WgslReplaceLocationMarkers(const std::string &shaderSource,
     size_t currPos = 0;
     while (true)
     {
-        size_t nextMarker = shaderSource.find(marker, currPos, strlen(marker));
-        if (nextMarker == std::string::npos)
+        size_t nextMarker = shaderSource.find(locationMarker, currPos, strlen(locationMarker));
+        if (nextMarker != std::string::npos)
+        {
+            ReplaceFoundMarker(shaderSource, newSource, varNameToLocation, locationMarker,
+                               "@location(", ")", nextMarker, currPos);
+        }
+        else if ((nextMarker = shaderSource.find(bindingMarker, currPos, strlen(bindingMarker))) !=
+                 std::string::npos)
+        {
+
+            ReplaceFoundMarker(shaderSource, newSource, varNameToLocation, bindingMarker,
+                               "@group(1) @binding(", ") var", nextMarker, currPos);
+        }
+        else
         {
             // Copy the rest of the shader and end the loop.
             newSource.append(shaderSource, currPos);
             break;
-        }
-        else
-        {
-            // Copy up to the next marker
-            newSource.append(shaderSource, currPos, nextMarker - currPos);
-
-            // Extract name from something like `@location(@@@@@@) NAME : TYPE`.
-            size_t startOfNamePos = nextMarker + strlen(marker);
-            size_t endOfNamePos   = shaderSource.find(endOfName, startOfNamePos, strlen(endOfName));
-            std::string name(shaderSource.c_str() + startOfNamePos, endOfNamePos - startOfNamePos);
-
-            // Use the shader variable's name to get the assigned location
-            auto locationIter = varNameToLocation.find(name);
-            if (locationIter == varNameToLocation.end())
-            {
-                ASSERT(false);
-                return "";
-            }
-
-            // TODO(anglebug.com/42267100): if the GLSL input is a matrix there should be multiple
-            // WGSL input variables (multiple vectors representing the columns of the matrix).
-            int location = locationIter->second;
-            std::ostringstream locationReplacementStream;
-            locationReplacementStream << "@location(" << location << ") " << name;
-
-            if (kOutputReplacements)
-            {
-                std::cout << "Replace \"" << marker << name << "\" with \""
-                          << locationReplacementStream.str() << "\"" << std::endl;
-            }
-
-            // Append the new `@location(N) name` and then continue from the ` : type`.
-            newSource.append(locationReplacementStream.str());
-            currPos = endOfNamePos;
         }
     }
     return newSource;
@@ -82,10 +108,11 @@ std::string WgslReplaceLocationMarkers(const std::string &shaderSource,
 }  // namespace
 
 template <typename T>
-std::string WgslAssignLocations(const std::string &shaderSource,
-                                const std::vector<T> shaderVars,
-                                const gl::ProgramMergedVaryings &mergedVaryings,
-                                gl::ShaderType shaderType)
+std::string WgslAssignLocationsAndSamplerBindings(const gl::ProgramExecutable &executable,
+                                                  const std::string &shaderSource,
+                                                  const std::vector<T> shaderVars,
+                                                  const gl::ProgramMergedVaryings &mergedVaryings,
+                                                  gl::ShaderType shaderType)
 {
     std::map<std::string, int> varNameToLocation;
     for (const T &shaderVar : shaderVars)
@@ -137,16 +164,43 @@ std::string WgslAssignLocations(const std::string &shaderSource,
         }
     }
 
-    return WgslReplaceLocationMarkers(shaderSource, varNameToLocation);
+    const std::vector<gl::SamplerBinding> &samplerBindings = executable.getSamplerBindings();
+
+    // GLSL samplers are split into WGSL samplers/textures and need to be assigned consecutive
+    // locations, alternating between a sampler and its corresponding texture.
+    // The WGPU backend will read the same metadata and lay out its bind groups in the same
+    // alternating fashion.
+    for (uint32_t textureIndex = 0; textureIndex < samplerBindings.size(); ++textureIndex)
+    {
+        if (samplerBindings[textureIndex].textureUnitsCount != 1)
+        {
+            // TODO(anglebug.com/389145696): implement sampler arrays.
+            UNIMPLEMENTED();
+            continue;
+        }
+        // Get the name of the sampler variable from the uniform metadata.
+        uint32_t uniformIndex          = executable.getUniformIndexFromSamplerIndex(textureIndex);
+        const std::string &uniformName = executable.getUniformNames()[uniformIndex];
+        std::string mappedSamplerName  = sh::WGSLGetMappedSamplerName(uniformName);
+
+        varNameToLocation[std::string(sh::kAngleSamplerPrefix) + mappedSamplerName] =
+            textureIndex * 2;
+        varNameToLocation[std::string(sh::kAngleTexturePrefix) + mappedSamplerName] =
+            textureIndex * 2 + 1;
+    }
+
+    return WgslReplaceMarkers(shaderSource, varNameToLocation);
 }
 
-template std::string WgslAssignLocations<gl::ProgramInput>(
+template std::string WgslAssignLocationsAndSamplerBindings<gl::ProgramInput>(
+    const gl::ProgramExecutable &executable,
     const std::string &shaderSource,
     const std::vector<gl::ProgramInput> shaderVars,
     const gl::ProgramMergedVaryings &mergedVaryings,
     gl::ShaderType shaderType);
 
-template std::string WgslAssignLocations<gl::ProgramOutput>(
+template std::string WgslAssignLocationsAndSamplerBindings<gl::ProgramOutput>(
+    const gl::ProgramExecutable &executable,
     const std::string &shaderSource,
     const std::vector<gl::ProgramOutput> shaderVars,
     const gl::ProgramMergedVaryings &mergedVaryings,

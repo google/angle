@@ -12,13 +12,19 @@
 #include "angle_gl.h"
 #include "anglebase/numerics/safe_conversions.h"
 #include "common/PackedGLEnums_autogen.h"
+#include "common/log_utils.h"
+#include "common/mathutil.h"
+#include "common/utilities.h"
 #include "compiler/translator/wgsl/OutputUniformBlocks.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/Program.h"
+#include "libANGLE/ProgramExecutable.h"
 #include "libANGLE/renderer/renderer_utils.h"
 #include "libANGLE/renderer/wgpu/ContextWgpu.h"
+#include "libANGLE/renderer/wgpu/TextureWgpu.h"
 #include "libANGLE/renderer/wgpu/wgpu_helpers.h"
 #include "libANGLE/renderer/wgpu/wgpu_pipeline_state.h"
+#include "libANGLE/renderer/wgpu/wgpu_utils.h"
 
 namespace rx
 {
@@ -108,6 +114,94 @@ angle::Result ProgramExecutableWgpu::updateUniformsAndGetBindGroup(ContextWgpu *
     return angle::Result::Continue;
 }
 
+angle::Result ProgramExecutableWgpu::getSamplerAndTextureBindGroup(ContextWgpu *contextWgpu,
+                                                                   wgpu::BindGroup *outBindGroup)
+{
+    if (mSamplerBindingsDirty)
+    {
+        const gl::ActiveTexturesCache &completeTextures =
+            contextWgpu->getState().getActiveTexturesCache();
+
+        std::vector<wgpu::BindGroupEntry> bindings;
+        bindings.reserve(mExecutable->getSamplerBindings().size() * 2);
+
+        for (uint32_t textureIndex = 0; textureIndex < mExecutable->getSamplerBindings().size();
+             ++textureIndex)
+        {
+            const gl::SamplerBinding &samplerBinding =
+                mExecutable->getSamplerBindings()[textureIndex];
+
+            if (samplerBinding.textureUnitsCount != 1)
+            {
+                // TODO(anglebug.com/389145696): arrays of samplers not yet supported
+                UNIMPLEMENTED();
+                return angle::Result::Stop;
+            }
+            for (uint32_t arrayElement = 0; arrayElement < samplerBinding.textureUnitsCount;
+                 ++arrayElement)
+            {
+                GLuint textureUnit = samplerBinding.getTextureUnit(
+                    mExecutable->getSamplerBoundTextureUnits(), arrayElement);
+                gl::Texture *texture = completeTextures[textureUnit];
+                gl::Sampler *sampler = contextWgpu->getState().getSampler(textureUnit);
+                uint32_t samplerSlot = (textureIndex + arrayElement) * 2;
+                uint32_t textureSlot = samplerSlot + 1;
+                if (!texture)
+                {
+                    // TODO(anglebug.com/389145696): no support for incomplete textures.
+                    UNIMPLEMENTED();
+                    return angle::Result::Stop;
+                }
+                const gl::SamplerState *samplerState =
+                    sampler ? &sampler->getSamplerState() : &texture->getSamplerState();
+                if (samplerBinding.format == gl::SamplerFormat::Shadow)
+                {
+                    // TODO(anglebug.com/389145696): no support for shadow samplers yet.
+                    UNIMPLEMENTED();
+                    return angle::Result::Stop;
+                }
+                TextureWgpu *textureWgpu = webgpu::GetImpl(texture);
+
+                // TODO(anglebug.com/389145696): potentially cache sampler.
+                wgpu::SamplerDescriptor sampleDesc = gl_wgpu::GetWgpuSamplerDesc(samplerState);
+                wgpu::Sampler wgpuSampler = contextWgpu->getDevice().CreateSampler(&sampleDesc);
+
+                wgpu::BindGroupEntry samplerBindGroupEntry;
+                samplerBindGroupEntry.binding = samplerSlot;
+                samplerBindGroupEntry.sampler = wgpuSampler;
+
+                bindings.push_back(samplerBindGroupEntry);
+
+                wgpu::BindGroupEntry textureBindGroupEntry;
+                textureBindGroupEntry.binding = textureSlot;
+
+                ANGLE_TRY(textureWgpu->getImage()->createFullTextureView(
+                    textureBindGroupEntry.textureView,
+                    /*desiredViewDimension=*/gl_wgpu::GetWgpuTextureViewDimension(
+                        samplerBinding.textureType)));
+                bindings.push_back(textureBindGroupEntry);
+
+            }  // for array elements
+        }  // for sampler bindings
+
+        // A bind group contains one or multiple bindings
+        wgpu::BindGroupDescriptor bindGroupDesc{};
+        ASSERT(mSamplersAndTexturesBindGroupLayout);
+        bindGroupDesc.layout = mSamplersAndTexturesBindGroupLayout;
+        // There must be as many bindings as declared in the layout!
+        bindGroupDesc.entryCount      = bindings.size();
+        bindGroupDesc.entries         = bindings.data();
+        mSamplersAndTexturesBindGroup = contextWgpu->getDevice().CreateBindGroup(&bindGroupDesc);
+
+        mSamplerBindingsDirty = false;
+    }
+
+    ASSERT(mSamplersAndTexturesBindGroup);
+    *outBindGroup = mSamplersAndTexturesBindGroup;
+
+    return angle::Result::Continue;
+}
+
 angle::CheckedNumeric<size_t> ProgramExecutableWgpu::getDefaultUniformAlignedSize(
     ContextWgpu *context,
     gl::ShaderType shaderType) const
@@ -192,7 +286,7 @@ void ProgramExecutableWgpu::setUniform1iv(GLint location, GLsizei count, const G
     const gl::LinkedUniform &linkedUniform   = mExecutable->getUniforms()[locationInfo.index];
     if (linkedUniform.isSampler())
     {
-        // TODO(anglebug.com/42267100): handle samplers.
+        mSamplerBindingsDirty = true;
         return;
     }
 
@@ -371,42 +465,88 @@ void ProgramExecutableWgpu::genBindingLayoutIfNecessary(ContextWgpu *context)
         return;
     }
     // TODO(anglebug.com/42267100): for now, only create a wgpu::PipelineLayout with the default
-    // uniform block. Will need to be extended for driver uniforms, UBOs, and textures/samplers.
+    // uniform block and textures/samplers. Will need to be extended for driver uniforms and UBOs.
     // Also, possibly provide this layout as a compilation hint to createShaderModule().
 
-    std::vector<wgpu::BindGroupLayoutEntry> bindGroupLayoutEntries;
-    auto addBindGroupLayoutEntryIfNecessary = [&](uint32_t bindingIndex, gl::ShaderType shaderType,
-                                                  wgpu::ShaderStage wgpuVisibility) {
-        if (mDefaultUniformBlocks[shaderType]->uniformData.size() != 0)
-        {
-            wgpu::BindGroupLayoutEntry bindGroupLayoutEntry;
-            bindGroupLayoutEntry.visibility  = wgpuVisibility;
-            bindGroupLayoutEntry.binding     = bindingIndex;
-            bindGroupLayoutEntry.buffer.type = wgpu::BufferBindingType::Uniform;
-            // By setting a `minBindingSize`, some validation is pushed from every draw call to
-            // pipeline creation time.
-            bindGroupLayoutEntry.buffer.minBindingSize =
-                mDefaultUniformBlocks[shaderType]->uniformData.size();
-            bindGroupLayoutEntries.push_back(bindGroupLayoutEntry);
-        }
-    };
+    std::vector<wgpu::BindGroupLayoutEntry> defaultBindGroupLayoutEntries;
+    auto addDefaultBindGroupLayoutEntryIfNecessary =
+        [&](uint32_t bindingIndex, gl::ShaderType shaderType, wgpu::ShaderStage wgpuVisibility) {
+            if (mDefaultUniformBlocks[shaderType]->uniformData.size() != 0)
+            {
+                wgpu::BindGroupLayoutEntry bindGroupLayoutEntry;
+                bindGroupLayoutEntry.visibility  = wgpuVisibility;
+                bindGroupLayoutEntry.binding     = bindingIndex;
+                bindGroupLayoutEntry.buffer.type = wgpu::BufferBindingType::Uniform;
+                // By setting a `minBindingSize`, some validation is pushed from every draw call to
+                // pipeline creation time.
+                bindGroupLayoutEntry.buffer.minBindingSize =
+                    mDefaultUniformBlocks[shaderType]->uniformData.size();
+                defaultBindGroupLayoutEntries.push_back(bindGroupLayoutEntry);
+            }
+        };
     // Default uniform blocks for each of the vertex shader and the fragment shader.
-    addBindGroupLayoutEntryIfNecessary(sh::kDefaultVertexUniformBlockBinding,
-                                       gl::ShaderType::Vertex, wgpu::ShaderStage::Vertex);
-    addBindGroupLayoutEntryIfNecessary(sh::kDefaultFragmentUniformBlockBinding,
-                                       gl::ShaderType::Fragment, wgpu::ShaderStage::Fragment);
+    addDefaultBindGroupLayoutEntryIfNecessary(sh::kDefaultVertexUniformBlockBinding,
+                                              gl::ShaderType::Vertex, wgpu::ShaderStage::Vertex);
+    addDefaultBindGroupLayoutEntryIfNecessary(sh::kDefaultFragmentUniformBlockBinding,
+                                              gl::ShaderType::Fragment,
+                                              wgpu::ShaderStage::Fragment);
 
     // Create a bind group layout with these entries.
-    wgpu::BindGroupLayoutDescriptor bindGroupLayoutDesc{};
-    bindGroupLayoutDesc.entryCount = bindGroupLayoutEntries.size();
-    bindGroupLayoutDesc.entries    = bindGroupLayoutEntries.data();
-    mDefaultBindGroupLayout = context->getDevice().CreateBindGroupLayout(&bindGroupLayoutDesc);
+    wgpu::BindGroupLayoutDescriptor defaultBindGroupLayoutDesc{};
+    defaultBindGroupLayoutDesc.entryCount = defaultBindGroupLayoutEntries.size();
+    defaultBindGroupLayoutDesc.entries    = defaultBindGroupLayoutEntries.data();
+    mDefaultBindGroupLayout =
+        context->getDevice().CreateBindGroupLayout(&defaultBindGroupLayoutDesc);
 
-    // Create the pipeline layout. This is a list where each element N corresponds to the @group(N)
-    // in the compiled shaders.
+    // Add the textures/samplers to the second bind group.
+    std::vector<wgpu::BindGroupLayoutEntry> samplersAndTexturesBindGroupLayoutEntries;
+
+    // For each sampler binding, the translator should have generated 2 WGSL bindings, a sampler and
+    // a texture, with incrementing binding numbers starting from 0.
+    for (size_t i = 0; i < mExecutable->getSamplerBindings().size(); i++)
+    {
+        const gl::SamplerBinding &samplerBinding = mExecutable->getSamplerBindings()[i];
+
+        wgpu::BindGroupLayoutEntry samplerBindGroupLayoutEntry;
+        samplerBindGroupLayoutEntry.visibility =
+            wgpu::ShaderStage::Vertex | wgpu::ShaderStage::Fragment;
+        samplerBindGroupLayoutEntry.binding = angle::base::checked_cast<uint32_t>(i * 2);
+        samplerBindGroupLayoutEntry.sampler.type =
+            samplerBinding.format == gl::SamplerFormat::Shadow
+                ? wgpu::SamplerBindingType::Comparison
+                : wgpu::SamplerBindingType::Filtering;
+        samplersAndTexturesBindGroupLayoutEntries.push_back(samplerBindGroupLayoutEntry);
+
+        wgpu::BindGroupLayoutEntry textureBindGroupLayoutEntry;
+        textureBindGroupLayoutEntry.visibility =
+            wgpu::ShaderStage::Vertex | wgpu::ShaderStage::Fragment;
+        textureBindGroupLayoutEntry.binding = angle::base::checked_cast<uint32_t>(i * 2 + 1);
+        textureBindGroupLayoutEntry.texture.sampleType =
+            gl_wgpu::GetTextureSampleType(samplerBinding.format);
+        textureBindGroupLayoutEntry.texture.viewDimension =
+            gl_wgpu::GetWgpuTextureViewDimension(samplerBinding.textureType);
+        samplersAndTexturesBindGroupLayoutEntries.push_back(textureBindGroupLayoutEntry);
+    }
+
+    // Create a bind group layout with these entries.
+    wgpu::BindGroupLayoutDescriptor texturesAndSamplersBindGroupLayoutDesc{};
+    texturesAndSamplersBindGroupLayoutDesc.entryCount =
+        samplersAndTexturesBindGroupLayoutEntries.size();
+    texturesAndSamplersBindGroupLayoutDesc.entries =
+        samplersAndTexturesBindGroupLayoutEntries.data();
+    mSamplersAndTexturesBindGroupLayout =
+        context->getDevice().CreateBindGroupLayout(&texturesAndSamplersBindGroupLayoutDesc);
+
+    // Create the pipeline layout. This is a list where each element N corresponds to the
+    // @group(N) in the compiled shaders.
+    std::array<wgpu::BindGroupLayout, sh::kMaxBindGroup> groupLayouts = {};
+
+    groupLayouts[sh::kDefaultUniformBlockBindGroup] = mDefaultBindGroupLayout;
+    groupLayouts[sh::kTextureAndSamplerBindGroup]   = mSamplersAndTexturesBindGroupLayout;
+
     wgpu::PipelineLayoutDescriptor layoutDesc{};
-    layoutDesc.bindGroupLayoutCount = 1;
-    layoutDesc.bindGroupLayouts     = &mDefaultBindGroupLayout;
+    layoutDesc.bindGroupLayoutCount = groupLayouts.size();
+    layoutDesc.bindGroupLayouts     = groupLayouts.data();
     mPipelineLayout                 = context->getDevice().CreatePipelineLayout(&layoutDesc);
 }
 

@@ -288,6 +288,7 @@ class ContextWgpu : public ContextImpl
     void invalidateVertexBuffer(size_t slot);
     void invalidateVertexBuffers();
     void invalidateIndexBuffer();
+    void invalidateCurrentTextures();
 
     void ensureCommandEncoderCreated();
     wgpu::CommandEncoder &getCurrentCommandEncoder();

@@ -174,6 +174,14 @@ void ContextWgpu::invalidateIndexBuffer()
     mDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
 }
 
+void ContextWgpu::invalidateCurrentTextures()
+{
+
+    ProgramExecutableWgpu *executableWgpu = webgpu::GetImpl(mState.getProgramExecutable());
+    executableWgpu->markSamplerBindingsDirty();
+    mDirtyBits.set(DIRTY_BIT_BIND_GROUPS);
+}
+
 void ContextWgpu::ensureCommandEncoderCreated()
 {
     if (!mCurrentCommandEncoder)
@@ -784,12 +792,16 @@ angle::Result ContextWgpu::syncState(const gl::Context *context,
             case gl::state::DIRTY_BIT_PROGRAM_BINDING:
             case gl::state::DIRTY_BIT_PROGRAM_EXECUTABLE:
                 invalidateCurrentRenderPipeline();
+                iter.setLaterBit(gl::state::DIRTY_BIT_TEXTURE_BINDINGS);
                 break;
             case gl::state::DIRTY_BIT_SAMPLER_BINDINGS:
+                invalidateCurrentTextures();
                 break;
             case gl::state::DIRTY_BIT_TEXTURE_BINDINGS:
+                invalidateCurrentTextures();
                 break;
             case gl::state::DIRTY_BIT_IMAGE_BINDINGS:
+                invalidateCurrentTextures();
                 break;
             case gl::state::DIRTY_BIT_TRANSFORM_FEEDBACK_BINDING:
                 break;
@@ -1093,7 +1105,7 @@ angle::Result ContextWgpu::setupDraw(const gl::Context *context,
     }
 
     ProgramExecutableWgpu *executableWgpu = webgpu::GetImpl(mState.getProgramExecutable());
-    if (executableWgpu->checkDirtyUniforms())
+    if (executableWgpu->checkDirtyUniforms() || executableWgpu->hasDirtySamplerBindings())
     {
         mDirtyBits.set(DIRTY_BIT_BIND_GROUPS);
     }
@@ -1356,10 +1368,14 @@ angle::Result ContextWgpu::handleDirtyIndexBuffer(gl::DrawElementsType indexType
 angle::Result ContextWgpu::handleDirtyBindGroups(DirtyBits::Iterator *dirtyBitsIterator)
 {
     ProgramExecutableWgpu *executableWgpu = webgpu::GetImpl(mState.getProgramExecutable());
-    wgpu::BindGroup bindGroup;
-    ANGLE_TRY(executableWgpu->updateUniformsAndGetBindGroup(this, &bindGroup));
+    wgpu::BindGroup defaultUniformBindGroup;
+    ANGLE_TRY(executableWgpu->updateUniformsAndGetBindGroup(this, &defaultUniformBindGroup));
+    mCommandBuffer.setBindGroup(sh::kDefaultUniformBlockBindGroup, defaultUniformBindGroup);
+
+    wgpu::BindGroup samplerAndTextureBindGroup;
+    ANGLE_TRY(executableWgpu->getSamplerAndTextureBindGroup(this, &samplerAndTextureBindGroup));
     // TODO(anglebug.com/376553328): need to set up every bind group here.
-    mCommandBuffer.setBindGroup(sh::kDefaultUniformBlockBindGroup, bindGroup);
+    mCommandBuffer.setBindGroup(sh::kTextureAndSamplerBindGroup, samplerAndTextureBindGroup);
 
     return angle::Result::Continue;
 }

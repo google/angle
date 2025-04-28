@@ -426,6 +426,20 @@ b/328156792 PINEAPPLE VULKAN : dEQP-GLES2.functional.uniform_api.value.assigned.
 356399840 WGPU : dEQP-GLES2.functional.rasterization.* = FAIL
 356399840 WGPU : dEQP-GLES2.functional.shaders.* = FAIL
 356399840 WGPU : dEQP-GLES2.functional.state_query.shader.uniform_value_* = FAIL
-356399840 WGPU : dEQP-GLES2.functional.texture.* = FAIL
+// Unfortunately Intel and AMD GPUs on Mac fail texture filtering tests.
+389145696 WGPU MAC INTEL : dEQP-GLES2.functional.texture.filtering.2d.* = FAIL
+389145696 WGPU MAC AMD : dEQP-GLES2.functional.texture.filtering.2d.* = FAIL
+// 2D filtering tests pass but cube textures do not work yet.
+389145696 WGPU : dEQP-GLES2.functional.texture.filtering.cube.* = SKIP
+// Except luminance format doesn't work
+389145696 WGPU : dEQP-GLES2.functional.texture.filtering.2d.*_l8* = FAIL
+389145696 WGPU : dEQP-GLES2.functional.texture.wrap.*_l8* = FAIL
+// The 2D mipmap tests fail because their y coordinate is flipped.
+389145696 WGPU : dEQP-GLES2.functional.texture.mipmap.* = SKIP
+389145696 WGPU : dEQP-GLES2.functional.texture.format.* = SKIP
+389145696 WGPU : dEQP-GLES2.functional.texture.size.* = SKIP
+389145696 WGPU : dEQP-GLES2.functional.texture.specification.* = SKIP
+389145696 WGPU : dEQP-GLES2.functional.texture.completeness.* = SKIP
+389145696 WGPU : dEQP-GLES2.functional.texture.vertex.* = SKIP
 356399840 WGPU : dEQP-GLES2.functional.uniform_api.* = FAIL
 392542001 WGPU : dEQP-GLES2.functional.vertex_arrays.multiple_attributes* = FAIL

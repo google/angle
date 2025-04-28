@@ -16,11 +16,17 @@ namespace sh
 
 const char kDefaultUniformBlockVarType[]           = "ANGLE_DefaultUniformBlock";
 const char kDefaultUniformBlockVarName[]           = "ANGLE_defaultUniformBlock";
-const uint32_t kDefaultUniformBlockBindGroup       = 0;
+
+enum WgslBindGroupNumbers : uint32_t
+{
+    kDefaultUniformBlockBindGroup = 0,
+    kTextureAndSamplerBindGroup   = 1,
+    kMaxBindGroup                 = 2
+};
+
 const uint32_t kDefaultVertexUniformBlockBinding   = 0;
 const uint32_t kDefaultFragmentUniformBlockBinding = 1;
 
-const uint32_t kTextureAndSamplerBindGroup = 1;
 // The translator emits this dummy location, which needs to be replaced when linking the two
 // separate shader stages.
 const char kTextureSamplerBindingMarker[] = "@group(1) @binding(@@@@@@) var ";

@@ -21,11 +21,17 @@ namespace webgpu
 // `shaderVars` which is a vector of either gl::ProgramInputs or gl::ProgramOutputs, and for
 // `mergedVaryings` which get assigned sequentially increasing locations. There should be at most
 // vertex and fragment shader stages or this function will not assign locations correctly.
+//
+// Also assigns sampler bindings, which are split into two separate sampler/texture
+// variables in WGSL and are assigned binding numbers as such:
+// @binding(n*2) for the WGSL sampler variable corresponding to the n-th GLSL sampler
+// @binding(n*2+1) for the WGSL texture variable corresponding to the n-th GLSL sampler.
 template <typename T>
-std::string WgslAssignLocations(const std::string &shaderSource,
-                                const std::vector<T> shaderVars,
-                                const gl::ProgramMergedVaryings &mergedVaryings,
-                                gl::ShaderType shaderType);
+std::string WgslAssignLocationsAndSamplerBindings(const gl::ProgramExecutable &executable,
+                                                  const std::string &shaderSource,
+                                                  const std::vector<T> shaderVars,
+                                                  const gl::ProgramMergedVaryings &mergedVaryings,
+                                                  gl::ShaderType shaderType);
 
 }  // namespace webgpu
 }  // namespace rx

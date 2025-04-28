@@ -33,6 +33,8 @@ class ProgramExecutableWgpu : public ProgramExecutableImpl
 
     angle::Result updateUniformsAndGetBindGroup(ContextWgpu *context,
                                                 wgpu::BindGroup *outBindGroup);
+    angle::Result getSamplerAndTextureBindGroup(ContextWgpu *contextWgpu,
+                                                wgpu::BindGroup *outBindGroup);
 
     angle::Result resizeUniformBlockMemory(const gl::ShaderMap<size_t> &requiredBufferSize);
 
@@ -43,6 +45,8 @@ class ProgramExecutableWgpu : public ProgramExecutableImpl
 
     void markDefaultUniformsDirty();
     bool checkDirtyUniforms() { return mDefaultUniformBlocksDirty.any(); }
+    void markSamplerBindingsDirty() { mSamplerBindingsDirty = true; }
+    bool hasDirtySamplerBindings() { return mSamplerBindingsDirty; }
 
     void setUniform1fv(GLint location, GLsizei count, const GLfloat *v) override;
     void setUniform2fv(GLint location, GLsizei count, const GLfloat *v) override;
@@ -128,6 +132,15 @@ class ProgramExecutableWgpu : public ProgramExecutableImpl
     // similarly to a UBO.
     DefaultUniformBlockMap mDefaultUniformBlocks;
     gl::ShaderBitSet mDefaultUniformBlocksDirty;
+
+    // Tracks when a sampler binding has been changed with glUniform1i(). Starts true to ensure the
+    // bind group is created the first time around.
+    bool mSamplerBindingsDirty = true;
+    // Holds the binding group layout for the samplers and textures.
+    wgpu::BindGroupLayout mSamplersAndTexturesBindGroupLayout;
+    // Holds the most recent samplers and textures BindGroup. Note there may be others in the
+    // command buffer.
+    wgpu::BindGroup mSamplersAndTexturesBindGroup;
 };
 
 }  // namespace rx

@@ -8,10 +8,87 @@
 
 #include "test_utils/ANGLETest.h"
 
+#include "test_utils/angle_test_configs.h"
 #include "test_utils/gl_raii.h"
 
 namespace angle
 {
+
+using BasicSamplersTest = ANGLETest<>;
+
+// Basic sampler test.
+TEST_P(BasicSamplersTest, SampleATexture)
+{
+    constexpr int kWidth  = 2;
+    constexpr int kHeight = 2;
+
+    const GLchar *vertString = R"(precision highp float;
+attribute vec2 a_position;
+varying vec2 texCoord;
+void main()
+{
+    gl_Position = vec4(a_position.x, a_position.y, 0.0, 1.0);
+    texCoord = a_position * 0.5 + vec2(0.5);
+})";
+
+    const GLchar *fragString = R"(precision highp float;
+varying vec2 texCoord;
+uniform sampler2D tex;
+void main()
+{
+    gl_FragColor = texture2D(tex, texCoord);
+})";
+
+    std::array<GLColor, kWidth * kHeight> redColor = {
+        {GLColor::red, GLColor::red, GLColor::red, GLColor::red}};
+    std::array<GLColor, kWidth * kHeight> greenColor = {
+        {GLColor::green, GLColor::green, GLColor::green, GLColor::green}};
+
+    // Create a red texture and bind to texture unit 0
+    GLTexture redTex;
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, redTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 redColor.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+    // Create a green texture and bind to texture unit 1
+    GLTexture greenTex;
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, greenTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 greenColor.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glActiveTexture(GL_TEXTURE0);
+    ASSERT_GL_NO_ERROR();
+
+    GLProgram program;
+    program.makeRaster(vertString, fragString);
+    ASSERT_NE(0u, program);
+    glUseProgram(program);
+
+    GLint location = glGetUniformLocation(program, "tex");
+    ASSERT_NE(location, -1);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw red
+    glUniform1i(location, 0);
+    ASSERT_GL_NO_ERROR();
+    drawQuad(program, "a_position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::red);
+
+    // Draw green
+    glUniform1i(location, 1);
+    ASSERT_GL_NO_ERROR();
+    drawQuad(program, "a_position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::green);
+}
 
 class SamplersTest : public ANGLETest<>
 {
@@ -168,6 +245,9 @@ void main()
 
     EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::yellow);
 }
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(BasicSamplersTest);
+ANGLE_INSTANTIATE_TEST_ES2_AND(BasicSamplersTest, ES2_WEBGPU());
 
 // Samplers are only supported on ES3.
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(SamplersTest);
