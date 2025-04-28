@@ -16585,6 +16585,146 @@ TEST_P(CopyImageTestES31, MultisampleRenderbufferCopyImageSubData)
     EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::red);
 }
 
+// Test glCopyImageSubDataEXT with GL_EXT_texture_norm16
+void CopyImageCompressedWithNorm16(bool isCompressedToNorm16)
+{
+    struct CompressedFormatDesc
+    {
+        GLenum format;
+        GLsizei blockX;
+        GLsizei blockY;
+        GLsizei size;
+        std::string extension;
+    };
+
+    const CompressedFormatDesc possibleCompressedFormats[] = {
+        {GL_COMPRESSED_RGB_S3TC_DXT1_EXT, 4, 4, 8, "GL_EXT_texture_compression_dxt1"},
+        {GL_COMPRESSED_SRGB_S3TC_DXT1_EXT, 4, 4, 8, "GL_EXT_texture_compression_s3tc_srgb"},
+        {GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, 4, 4, 8, "GL_EXT_texture_compression_dxt1"},
+        {GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT, 4, 4, 8, "GL_EXT_texture_compression_s3tc_srgb"},
+        {GL_COMPRESSED_RED_RGTC1_EXT, 4, 4, 8, "GL_EXT_texture_compression_rgtc"},
+        {GL_COMPRESSED_SIGNED_RED_RGTC1_EXT, 4, 4, 8, "GL_EXT_texture_compression_rgtc"},
+        {GL_COMPRESSED_RGB8_ETC2, 4, 4, 8, ""},
+        {GL_COMPRESSED_SRGB8_ETC2, 4, 4, 8, ""},
+        {GL_COMPRESSED_R11_EAC, 4, 4, 8, ""},
+        {GL_COMPRESSED_SIGNED_R11_EAC, 4, 4, 8, ""},
+        {GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2, 4, 4, 8, ""},
+        {GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2, 4, 4, 8, ""}};
+    struct Norm16FormatDesc
+    {
+        GLint internalformat;
+        GLenum format;
+        GLenum type;
+    };
+    constexpr Norm16FormatDesc possibleNorm16Formats[] = {
+        {GL_RGBA16_EXT, GL_RGBA, GL_UNSIGNED_SHORT}, {GL_RGBA16_SNORM_EXT, GL_RGBA, GL_SHORT}};
+
+    for (CompressedFormatDesc compressedFormat : possibleCompressedFormats)
+    {
+        if (!compressedFormat.extension.empty() &&
+            !IsGLExtensionEnabled(compressedFormat.extension))
+        {
+            std::cout << "subtest skipped due to missing " << compressedFormat.extension << "."
+                      << std::endl;
+            continue;
+        }
+        for (Norm16FormatDesc norm16Format : possibleNorm16Formats)
+        {
+            // Compressed: each 4x4 block = 8 bytes
+            // 4x4 image => (4/4)*(4/4) = 1 blocks => 1 * 8 = 8 bytes
+            // Assume uncompressed target is just a raw memory buffer with same size
+            // To match the compressed size exactly, we simulate the destination as a 1x1 texture
+            // with RGBA16
+            const int norm16Width  = compressedFormat.blockX / 4;
+            const int norm16Height = compressedFormat.blockY / 4;
+            // RGBA16 = 4 channels * 2 bytes = 8 bytes per pixel
+            // 1x1 pixels = 8 bytes
+            const int norm16Size = norm16Width * norm16Height * 4 * sizeof(uint16_t);
+            // Expect exact match
+            ASSERT_EQ(compressedFormat.size, norm16Size);
+
+            // Create compressed texture with 0x0 (1 block = 4x4 pixels, 8 bytes)
+            std::vector<uint8_t> compressedInitColor(compressedFormat.size, 0x0);
+
+            // Create Compressed Texture
+            GLTexture compressedTex;
+            glBindTexture(GL_TEXTURE_2D, compressedTex);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glCompressedTexImage2D(GL_TEXTURE_2D, 0, compressedFormat.format,
+                                   compressedFormat.blockX, compressedFormat.blockY, 0,
+                                   compressedFormat.size, compressedInitColor.data());
+            ASSERT_GL_NO_ERROR();
+
+            // Create a texture with 0x33
+            std::vector<uint8_t> norm16InitColor(norm16Size, 0x33);
+
+            // Create Uncompressed Texture
+            GLTexture norm16Tex;
+            glBindTexture(GL_TEXTURE_2D, norm16Tex);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glTexImage2D(GL_TEXTURE_2D, 0, norm16Format.internalformat, norm16Width, norm16Height,
+                         0, norm16Format.format, norm16Format.type, norm16InitColor.data());
+            ASSERT_GL_NO_ERROR();
+
+            if (isCompressedToNorm16)
+            {
+                // Copy from compressed to uncompressed
+                glCopyImageSubDataEXT(compressedTex, GL_TEXTURE_2D, 0, 0, 0, 0, norm16Tex,
+                                      GL_TEXTURE_2D, 0, 0, 0, 0, compressedFormat.blockX,
+                                      compressedFormat.blockY, 1);
+                ASSERT_GL_NO_ERROR();
+
+                // Read back destination texture memory
+                std::vector<uint8_t> readback(norm16Size);
+                glBindTexture(GL_TEXTURE_2D, norm16Tex);
+                glGetTexImageANGLE(GL_TEXTURE_2D, 0, norm16Format.format, norm16Format.type,
+                                   readback.data());
+                ASSERT_GL_NO_ERROR();
+
+                // Raw memory comparison
+                EXPECT_EQ(memcmp(readback.data(), compressedInitColor.data(), norm16Size), 0);
+            }
+            else
+            {
+                // Copy from uncompressed to compressed
+                glCopyImageSubDataEXT(norm16Tex, GL_TEXTURE_2D, 0, 0, 0, 0, compressedTex,
+                                      GL_TEXTURE_2D, 0, 0, 0, 0, norm16Width, norm16Height, 1);
+                ASSERT_GL_NO_ERROR();
+
+                // Read back destination texture memory
+                std::vector<uint8_t> readback(compressedFormat.size);
+                glBindTexture(GL_TEXTURE_2D, compressedTex);
+                glGetCompressedTexImageANGLE(GL_TEXTURE_2D, 0, readback.data());
+                ASSERT_GL_NO_ERROR();
+
+                // Raw memory comparison
+                EXPECT_EQ(memcmp(readback.data(), norm16InitColor.data(), compressedFormat.size),
+                          0);
+            }
+        }
+    }
+}
+
+// Test glCopyImageSubDataEXT from a compressed 2D texture to RGBA16_EXT/RGBA16_SNORM_EXT
+TEST_P(CopyImageTestES31, CompressedToNorm16)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_copy_image") ||
+                       !IsGLExtensionEnabled("GL_EXT_texture_norm16") ||
+                       !IsGLExtensionEnabled("GL_ANGLE_get_image"));
+    CopyImageCompressedWithNorm16(true);
+}
+
+// Test glCopyImageSubDataEXT from RGBA16_EXT/RGBA16_SNORM_EXT to compressed 2D texture
+TEST_P(CopyImageTestES31, Norm16ToCompressed)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_copy_image") ||
+                       !IsGLExtensionEnabled("GL_EXT_texture_norm16") ||
+                       !IsGLExtensionEnabled("GL_ANGLE_get_image"));
+    CopyImageCompressedWithNorm16(false);
+}
+
 class TextureChangeStorageUploadTest : public ANGLETest<>
 {
   protected:

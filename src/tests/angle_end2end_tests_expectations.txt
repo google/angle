@@ -1755,6 +1755,9 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 412738262 D3D11 : AtomicCounterBufferTest31.AtomicCounterQueries/* = SKIP
 416573908 D3D11 : ComputeShaderTest.AdvancedSyncVertexArray/* = SKIP
 
+351867710 NVIDIA VULKAN : CopyImageTestES31.CompressedToNorm16/* = SKIP
+351867710 NVIDIA VULKAN : CopyImageTestES31.Norm16ToCompressed/* = SKIP
+
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Slow tests, should appear last in this file
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
