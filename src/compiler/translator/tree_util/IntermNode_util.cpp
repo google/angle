@@ -9,7 +9,9 @@
 #include "compiler/translator/tree_util/IntermNode_util.h"
 
 #include "compiler/translator/FunctionLookup.h"
+#include "compiler/translator/Name.h"
 #include "compiler/translator/SymbolTable.h"
+#include "compiler/translator/SymbolUniqueId.h"
 
 namespace sh
 {
@@ -341,6 +343,65 @@ const TVariable *DeclareInterfaceBlock(TIntermBlock *root,
     root->insertChildNodes(firstFunctionIndex, insertSequence);
 
     return interfaceBlockVar;
+}
+
+const TVariable &CreateStructTypeVariable(TSymbolTable &symbolTable, const TStructure &structure)
+{
+    TType *type    = new TType(&structure, true);
+    TVariable *var = new TVariable(&symbolTable, ImmutableString(""), type, SymbolType::Empty);
+    return *var;
+}
+
+const TVariable &CreateInstanceVariable(TSymbolTable &symbolTable,
+                                        const TStructure &structure,
+                                        const Name &name,
+                                        TQualifier qualifier,
+                                        const angle::Span<const unsigned int> *arraySizes)
+{
+    TType *type = new TType(&structure, false);
+    type->setQualifier(qualifier);
+    if (arraySizes)
+    {
+        type->makeArrays(*arraySizes);
+    }
+    TVariable *var = new TVariable(&symbolTable, name.rawName(), type, name.symbolType());
+    return *var;
+}
+
+TIntermBinary &AccessField(const TVariable &structInstanceVar, const Name &name)
+{
+    return AccessField(*new TIntermSymbol(&structInstanceVar), name);
+}
+
+TIntermBinary &AccessField(TIntermTyped &object, const Name &name)
+{
+    const TStructure *structure = object.getType().getStruct();
+    ASSERT(structure);
+    const TFieldList &fieldList = structure->fields();
+    for (int i = 0; i < static_cast<int>(fieldList.size()); ++i)
+    {
+        TField *current = fieldList[i];
+        if (Name(*current) == name)
+        {
+            return AccessFieldByIndex(object, i);
+        }
+    }
+    UNREACHABLE();
+    return AccessFieldByIndex(object, -1);
+}
+
+TIntermBinary &AccessFieldByIndex(TIntermTyped &object, int index)
+{
+    const TType &type = object.getType();
+    ASSERT(!type.isArray());
+    const TStructure *structure = type.getStruct();
+    ASSERT(structure);
+    ASSERT(0 <= index);
+    ASSERT(static_cast<size_t>(index) < structure->fields().size());
+
+    return *new TIntermBinary(
+        TOperator::EOpIndexDirectStruct, &object,
+        new TIntermConstantUnion(new TConstantUnion(index), *new TType(TBasicType::EbtInt)));
 }
 
 TIntermBlock *EnsureBlock(TIntermNode *node)

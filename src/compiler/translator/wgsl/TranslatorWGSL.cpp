@@ -25,10 +25,13 @@
 #include "compiler/translator/SymbolUniqueId.h"
 #include "compiler/translator/Types.h"
 #include "compiler/translator/tree_ops/MonomorphizeUnsupportedFunctions.h"
+#include "compiler/translator/tree_ops/ReduceInterfaceBlocks.h"
 #include "compiler/translator/tree_ops/RewriteArrayOfArrayOfOpaqueUniforms.h"
 #include "compiler/translator/tree_ops/RewriteStructSamplers.h"
+#include "compiler/translator/tree_ops/SeparateDeclarations.h"
 #include "compiler/translator/tree_ops/SeparateStructFromUniformDeclarations.h"
 #include "compiler/translator/tree_util/BuiltIn_autogen.h"
+#include "compiler/translator/tree_util/DriverUniform.h"
 #include "compiler/translator/tree_util/FindMain.h"
 #include "compiler/translator/tree_util/IntermNode_util.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
@@ -2011,8 +2014,8 @@ bool OutputWGSLTraverser::visitGlobalQualifierDeclaration(Visit,
 
 void OutputWGSLTraverser::emitStructDeclaration(const TType &type)
 {
-    ASSERT(type.getBasicType() == TBasicType::EbtStruct);
-    ASSERT(type.isStructSpecifier());
+    ASSERT((type.getBasicType() == TBasicType::EbtStruct && type.isStructSpecifier()) ||
+           type.getBasicType() == TBasicType::EbtInterfaceBlock);
 
     mSink << "struct ";
     emitBareTypeName(type);
@@ -2085,9 +2088,10 @@ void OutputWGSLTraverser::emitVariableDeclaration(const VarDecl &decl,
 {
     const TBasicType basicType = decl.type.getBasicType();
 
-    if (decl.type.getQualifier() == EvqUniform)
+    if (decl.type.getQualifier() == EvqUniform || decl.type.getQualifier() == EvqBuffer)
     {
-        // Uniforms are declared in a pre-pass, and don't need to be outputted here.
+        // Uniforms/interface blocks are declared in a pre-pass, and don't need to be outputted
+        // here.
         return;
     }
 
@@ -2369,7 +2373,6 @@ TranslatorWGSL::TranslatorWGSL(sh::GLenum type, ShShaderSpec spec, ShShaderOutpu
 
 bool TranslatorWGSL::preTranslateTreeModifications(TIntermBlock *root)
 {
-
     int aggregateTypesUsedForUniforms = 0;
     for (const auto &uniform : getUniforms())
     {
@@ -2378,6 +2381,10 @@ bool TranslatorWGSL::preTranslateTreeModifications(TIntermBlock *root)
             ++aggregateTypesUsedForUniforms;
         }
     }
+
+    DriverUniform driverUniforms(DriverUniformMode::InterfaceBlock);
+    ASSERT(getShaderType() != GL_COMPUTE_SHADER);
+    driverUniforms.addGraphicsDriverUniformsToShader(root, &getSymbolTable());
 
     // Samplers are legal as function parameters, but samplers within structs or arrays are not
     // allowed in WGSL
@@ -2424,6 +2431,15 @@ bool TranslatorWGSL::preTranslateTreeModifications(TIntermBlock *root)
         return false;
     }
 
+    int uniqueStructId = 0;
+    if (!ReduceInterfaceBlocks(*this, *root, [&uniqueStructId]() -> ImmutableString {
+            return BuildConcatenatedImmutableString("ANGLE_unnamed_interface_block_",
+                                                    uniqueStructId++);
+        }))
+    {
+        return false;
+    }
+
     return true;
 }
 
@@ -2440,6 +2456,13 @@ bool TranslatorWGSL::translate(TIntermBlock *root,
     if (!preTranslateTreeModifications(root))
     {
         return false;
+    }
+
+    if (kOutputTreeBeforeTranslation)
+    {
+        std::cout << "After preTranslateTreeModifications(): " << std::endl;
+        OutputTree(root, getInfoSink().info);
+        std::cout << getInfoSink().info.c_str();
     }
     enableValidateNoMoreTransformations();
 

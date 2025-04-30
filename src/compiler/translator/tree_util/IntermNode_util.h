@@ -10,6 +10,7 @@
 #define COMPILER_TRANSLATOR_INTERMNODEUTIL_H_
 
 #include "compiler/translator/IntermNode.h"
+#include "compiler/translator/Name.h"
 #include "compiler/translator/tree_util/FindFunction.h"
 
 namespace sh
@@ -73,6 +74,29 @@ const TVariable *DeclareInterfaceBlock(TIntermBlock *root,
                                        uint32_t arraySize,
                                        const ImmutableString &blockTypeName,
                                        const ImmutableString &blockVariableName);
+
+// Creates a variable for a struct type.
+const TVariable &CreateStructTypeVariable(TSymbolTable &symbolTable, const TStructure &structure);
+
+// Creates a variable for a struct instance.
+const TVariable &CreateInstanceVariable(
+    TSymbolTable &symbolTable,
+    const TStructure &structure,
+    const Name &name,
+    TQualifier qualifier                              = TQualifier::EvqTemporary,
+    const angle::Span<const unsigned int> *arraySizes = nullptr);
+
+// Accesses a field for the given node with the given field name.
+// The node must be a struct instance.
+TIntermBinary &AccessField(const TVariable &structInstanceVar, const Name &field);
+
+// Accesses a field for the given node with the given field name.
+// The node must be a struct instance.
+TIntermBinary &AccessField(TIntermTyped &object, const Name &field);
+
+// Accesses a field for the given node by its field index.
+// The node must be a struct instance.
+TIntermBinary &AccessFieldByIndex(TIntermTyped &object, int index);
 
 // If the input node is nullptr, return nullptr.
 // If the input node is a block node, return it.

@@ -43,6 +43,10 @@ enum class DriverUniformFlip
     PreFragment,
 };
 
+constexpr ImmutableString kEmulatedDepthRangeParams = ImmutableString("ANGLEDepthRangeParams");
+constexpr ImmutableString kDriverUniformsBlockName  = ImmutableString("ANGLEUniformBlock");
+constexpr ImmutableString kDriverUniformsVarName    = ImmutableString("ANGLEUniforms");
+
 class DriverUniform
 {
   public:

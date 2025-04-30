@@ -21,11 +21,14 @@ enum WgslBindGroupNumbers : uint32_t
 {
     kDefaultUniformBlockBindGroup = 0,
     kTextureAndSamplerBindGroup   = 1,
+    kDriverUniformBindGroup       = 2,
     kMaxBindGroup                 = 2
 };
 
 const uint32_t kDefaultVertexUniformBlockBinding   = 0;
 const uint32_t kDefaultFragmentUniformBlockBinding = 1;
+
+const uint32_t kDriverUniformBlockBinding = 0;
 
 // The translator emits this dummy location, which needs to be replaced when linking the two
 // separate shader stages.

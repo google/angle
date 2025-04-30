@@ -7,12 +7,16 @@
 #ifndef COMPILER_TRANSLATOR_TREEOPS_MSL_REDUCEINTERFACEBLOCKS_H_
 #define COMPILER_TRANSLATOR_TREEOPS_MSL_REDUCEINTERFACEBLOCKS_H_
 
+#include <functional>
+
 #include "common/angleutils.h"
 #include "compiler/translator/Compiler.h"
 
 namespace sh
 {
 class TSymbolTable;
+
+using InterfaceBlockInstanceVarNameGen = std::function<ImmutableString()>;
 
 // This rewrites interface block declarations only.
 //
@@ -30,7 +34,9 @@ class TSymbolTable;
 //  struct Foo { int x; }; uniform Foo x;
 //
 
-[[nodiscard]] bool ReduceInterfaceBlocks(TCompiler &compiler, TIntermBlock &root, IdGen &idGen);
+[[nodiscard]] bool ReduceInterfaceBlocks(TCompiler &compiler,
+                                         TIntermBlock &root,
+                                         InterfaceBlockInstanceVarNameGen nameGen);
 
 }  // namespace sh
 

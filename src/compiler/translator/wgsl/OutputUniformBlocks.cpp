@@ -6,6 +6,9 @@
 
 #include "compiler/translator/wgsl/OutputUniformBlocks.h"
 
+#include <iostream>
+
+#include "GLSLANG/ShaderVars.h"
 #include "angle_gl.h"
 #include "common/mathutil.h"
 #include "common/utilities.h"
@@ -17,6 +20,7 @@
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/SymbolUniqueId.h"
+#include "compiler/translator/tree_util/DriverUniform.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
 #include "compiler/translator/util.h"
 #include "compiler/translator/wgsl/Utils.h"
@@ -285,9 +289,7 @@ bool OutputUniformBlocksAndSamplers(TCompiler *compiler, TIntermBlock *root)
 
         output << ",\n";
     }
-    // TODO(anglebug.com/42267100): might need string replacement for @group(0) and @binding(0)
-    // annotations. All WGSL resources available to shaders share the same (group, binding) ID
-    // space.
+
     if (outputStructHeader)
     {
         ASSERT(compiler->getShaderType() == GL_VERTEX_SHADER ||
@@ -301,6 +303,14 @@ bool OutputUniformBlocksAndSamplers(TCompiler *compiler, TIntermBlock *root)
                << kDefaultUniformBlockVarType << ";\n";
     }
 
+    // Output interface blocks. Start with driver uniforms in their own bind group.
+    output << "@group(" << kDriverUniformBindGroup << ") @binding(" << kDriverUniformBlockBinding
+           << ") var<uniform> " << kDriverUniformsVarName << " : " << kDriverUniformsBlockName
+           << ";\n";
+    // TODO(anglebug.com/376553328): now output the UBOs in `compiler->getUniformBlocks()` in its
+    // own bind group.
+
+    // Output split texture/sampler variables.
     for (const auto &globalVarIter : globalVars)
     {
         TIntermDeclaration *declNode = globalVarIter.second;
