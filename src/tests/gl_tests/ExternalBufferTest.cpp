@@ -134,6 +134,7 @@ TEST_P(ExternalBufferTestES31, BufferSubData)
     unlockAndroidHardwareBuffer(aHardwareBuffer);
 
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    buffer.reset();
     // Delete the source AHB
     destroyAndroidHardwareBuffer(aHardwareBuffer);
 }
@@ -187,6 +188,8 @@ TEST_P(ExternalBufferTestES31, SubDataDoesNotCauseOrphaning)
 
     glBindBuffer(GL_COPY_READ_BUFFER, 0);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    copyReadBuffer.reset();
+    externalBuffer.reset();
     // Delete the source AHB
     destroyAndroidHardwareBuffer(aHardwareBuffer);
 }
@@ -244,6 +247,7 @@ TEST_P(ExternalBufferTestES31, DispatchCompute)
     unlockAndroidHardwareBuffer(aHardwareBuffer);
 
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    buffer.reset();
     // Delete the source AHB
     destroyAndroidHardwareBuffer(aHardwareBuffer);
 }
@@ -282,6 +286,7 @@ TEST_P(ExternalBufferTestES31, MapBuffer)
     glUnmapBufferOES(GL_SHADER_STORAGE_BUFFER);
 
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    buffer.reset();
     // Delete the source AHB
     destroyAndroidHardwareBuffer(aHardwareBuffer);
 }
@@ -344,6 +349,8 @@ TEST_P(ExternalBufferTestES31, MapBufferDoesNotCauseOrphaning)
 
     glBindBuffer(GL_COPY_READ_BUFFER, 0);
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    copyReadBuffer.reset();
+    buffer.reset();
     // Delete the source AHB
     destroyAndroidHardwareBuffer(aHardwareBuffer);
 }
@@ -368,6 +375,7 @@ TEST_P(ExternalBufferTestES31, BufferDoesNotLeakAHB)
         glBufferStorageExternalEXT(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize,
                                    eglGetNativeClientBufferANDROID(aHardwareBuffer), kFlags);
         ASSERT_GL_NO_ERROR();
+        buffer.reset();
         // Delete the source AHB
         destroyAndroidHardwareBuffer(aHardwareBuffer);
     }
