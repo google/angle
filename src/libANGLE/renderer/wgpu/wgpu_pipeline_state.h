@@ -14,6 +14,7 @@
 #include "libANGLE/Constants.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/angletypes.h"
+#include "libANGLE/renderer/wgpu/wgpu_utils.h"
 
 #include "common/PackedEnums.h"
 
@@ -142,24 +143,24 @@ class RenderPipelineDesc final
 
     bool setBlendEnabled(size_t colorIndex, bool enabled);
     bool setBlendFuncs(size_t colorIndex,
-                       wgpu::BlendFactor srcRGB,
-                       wgpu::BlendFactor dstRGB,
-                       wgpu::BlendFactor srcAlpha,
-                       wgpu::BlendFactor dstAlpha);
-    bool setBlendEquations(size_t colorIndex, wgpu::BlendOperation rgb, wgpu::BlendOperation alpha);
+                       WGPUBlendFactor srcRGB,
+                       WGPUBlendFactor dstRGB,
+                       WGPUBlendFactor srcAlpha,
+                       WGPUBlendFactor dstAlpha);
+    bool setBlendEquations(size_t colorIndex, WGPUBlendOperation rgb, WGPUBlendOperation alpha);
 
     bool setVertexAttribute(size_t attribIndex, PackedVertexAttribute &newAttrib);
-    bool setColorAttachmentFormat(size_t colorIndex, wgpu::TextureFormat format);
+    bool setColorAttachmentFormat(size_t colorIndex, WGPUTextureFormat format);
     bool setDepthStencilAttachmentFormat(wgpu::TextureFormat format);
-    bool setDepthFunc(wgpu::CompareFunction compareFunc);
-    bool setStencilFrontFunc(wgpu::CompareFunction compareFunc);
-    bool setStencilFrontOps(wgpu::StencilOperation failOp,
-                            wgpu::StencilOperation depthFailOp,
-                            wgpu::StencilOperation passOp);
-    bool setStencilBackFunc(wgpu::CompareFunction compareFunc);
-    bool setStencilBackOps(wgpu::StencilOperation failOp,
-                           wgpu::StencilOperation depthFailOp,
-                           wgpu::StencilOperation passOp);
+    bool setDepthFunc(WGPUCompareFunction compareFunc);
+    bool setStencilFrontFunc(WGPUCompareFunction compareFunc);
+    bool setStencilFrontOps(WGPUStencilOperation failOp,
+                            WGPUStencilOperation depthFailOp,
+                            WGPUStencilOperation passOp);
+    bool setStencilBackFunc(WGPUCompareFunction compareFunc);
+    bool setStencilBackOps(WGPUStencilOperation failOp,
+                           WGPUStencilOperation depthFailOp,
+                           WGPUStencilOperation passOp);
 
     bool setStencilReadMask(uint8_t readeMask);
     bool setStencilWriteMask(uint8_t writeMask);
@@ -167,9 +168,9 @@ class RenderPipelineDesc final
     size_t hash() const;
 
     angle::Result createPipeline(ContextWgpu *context,
-                                 const wgpu::PipelineLayout &pipelineLayout,
-                                 const gl::ShaderMap<wgpu::ShaderModule> &shaders,
-                                 wgpu::RenderPipeline *pipelineOut) const;
+                                 const PipelineLayoutHandle &pipelineLayout,
+                                 const gl::ShaderMap<ShaderModuleHandle> &shaders,
+                                 RenderPipelineHandle *pipelineOut) const;
 
   private:
     PackedVertexAttribute mVertexAttributes[gl::MAX_VERTEX_ATTRIBS];
@@ -213,12 +214,12 @@ class PipelineCache final
 
     angle::Result getRenderPipeline(ContextWgpu *context,
                                     const RenderPipelineDesc &desc,
-                                    const wgpu::PipelineLayout &pipelineLayout,
-                                    const gl::ShaderMap<wgpu::ShaderModule> &shaders,
-                                    wgpu::RenderPipeline *pipelineOut);
+                                    const PipelineLayoutHandle &pipelineLayout,
+                                    const gl::ShaderMap<ShaderModuleHandle> &shaders,
+                                    RenderPipelineHandle *pipelineOut);
 
   private:
-    std::unordered_map<RenderPipelineDesc, wgpu::RenderPipeline> mRenderPipelines;
+    std::unordered_map<RenderPipelineDesc, RenderPipelineHandle> mRenderPipelines;
 };
 
 }  // namespace webgpu

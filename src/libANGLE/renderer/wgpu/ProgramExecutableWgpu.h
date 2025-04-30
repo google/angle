@@ -105,7 +105,7 @@ class ProgramExecutableWgpu : public ProgramExecutableImpl
 
     angle::Result getRenderPipeline(ContextWgpu *context,
                                     const webgpu::RenderPipelineDesc &desc,
-                                    wgpu::RenderPipeline *pipelineOut);
+                                    webgpu::RenderPipelineHandle *pipelineOut);
 
   private:
     angle::CheckedNumeric<size_t> getDefaultUniformAlignedSize(ContextWgpu *context,

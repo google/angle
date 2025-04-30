@@ -311,12 +311,12 @@ void GenerateCaps(const wgpu::Limits &limitsWgpu,
     eglExtensions->robustResourceInitializationANGLE  = true;
 }
 
-bool IsStripPrimitiveTopology(wgpu::PrimitiveTopology topology)
+bool IsStripPrimitiveTopology(WGPUPrimitiveTopology topology)
 {
     switch (topology)
     {
-        case wgpu::PrimitiveTopology::LineStrip:
-        case wgpu::PrimitiveTopology::TriangleStrip:
+        case WGPUPrimitiveTopology_LineStrip:
+        case WGPUPrimitiveTopology_TriangleStrip:
             return true;
 
         default:
@@ -410,180 +410,180 @@ wgpu::Extent3D getExtent3D(const gl::Extents &glExtent)
     return wgpuExtent;
 }
 
-wgpu::PrimitiveTopology GetPrimitiveTopology(gl::PrimitiveMode mode)
+WGPUPrimitiveTopology GetPrimitiveTopology(gl::PrimitiveMode mode)
 {
     switch (mode)
     {
         case gl::PrimitiveMode::Points:
-            return wgpu::PrimitiveTopology::PointList;
+            return WGPUPrimitiveTopology_PointList;
         case gl::PrimitiveMode::Lines:
-            return wgpu::PrimitiveTopology::LineList;
+            return WGPUPrimitiveTopology_LineList;
         case gl::PrimitiveMode::LineLoop:
-            return wgpu::PrimitiveTopology::LineStrip;  // Emulated
+            return WGPUPrimitiveTopology_LineStrip;  // Emulated
         case gl::PrimitiveMode::LineStrip:
-            return wgpu::PrimitiveTopology::LineStrip;
+            return WGPUPrimitiveTopology_LineStrip;
         case gl::PrimitiveMode::Triangles:
-            return wgpu::PrimitiveTopology::TriangleList;
+            return WGPUPrimitiveTopology_TriangleList;
         case gl::PrimitiveMode::TriangleStrip:
-            return wgpu::PrimitiveTopology::TriangleStrip;
+            return WGPUPrimitiveTopology_TriangleStrip;
         case gl::PrimitiveMode::TriangleFan:
             UNIMPLEMENTED();
-            return wgpu::PrimitiveTopology::TriangleList;  // Emulated
+            return WGPUPrimitiveTopology_TriangleList;  // Emulated
         default:
             UNREACHABLE();
-            return wgpu::PrimitiveTopology::Undefined;
+            return WGPUPrimitiveTopology_Undefined;
     }
 }
 
-wgpu::IndexFormat GetIndexFormat(gl::DrawElementsType drawElementsType)
+WGPUIndexFormat GetIndexFormat(gl::DrawElementsType drawElementsType)
 {
     switch (drawElementsType)
     {
         case gl::DrawElementsType::UnsignedByte:
-            return wgpu::IndexFormat::Uint16;  // Emulated
+            return WGPUIndexFormat_Uint16;  // Emulated
         case gl::DrawElementsType::UnsignedShort:
-            return wgpu::IndexFormat::Uint16;
+            return WGPUIndexFormat_Uint16;
         case gl::DrawElementsType::UnsignedInt:
-            return wgpu::IndexFormat::Uint32;
+            return WGPUIndexFormat_Uint32;
 
         default:
             UNREACHABLE();
-            return wgpu::IndexFormat::Undefined;
+            return WGPUIndexFormat_Undefined;
     }
 }
 
-wgpu::FrontFace GetFrontFace(GLenum frontFace)
+WGPUFrontFace GetFrontFace(GLenum frontFace)
 {
     switch (frontFace)
     {
         case GL_CW:
-            return wgpu::FrontFace::CW;
+            return WGPUFrontFace_CW;
         case GL_CCW:
-            return wgpu::FrontFace::CCW;
+            return WGPUFrontFace_CCW;
 
         default:
             UNREACHABLE();
-            return wgpu::FrontFace::Undefined;
+            return WGPUFrontFace_Undefined;
     }
 }
 
-wgpu::CullMode GetCullMode(gl::CullFaceMode mode, bool cullFaceEnabled)
+WGPUCullMode GetCullMode(gl::CullFaceMode mode, bool cullFaceEnabled)
 {
     if (!cullFaceEnabled)
     {
-        return wgpu::CullMode::None;
+        return WGPUCullMode_None;
     }
 
     switch (mode)
     {
         case gl::CullFaceMode::Front:
-            return wgpu::CullMode::Front;
+            return WGPUCullMode_Front;
         case gl::CullFaceMode::Back:
-            return wgpu::CullMode::Back;
+            return WGPUCullMode_Back;
         case gl::CullFaceMode::FrontAndBack:
             UNIMPLEMENTED();
-            return wgpu::CullMode::None;  // Emulated
+            return WGPUCullMode_None;  // Emulated
         default:
             UNREACHABLE();
-            return wgpu::CullMode::None;
+            return WGPUCullMode_None;
     }
 }
 
-wgpu::ColorWriteMask GetColorWriteMask(bool r, bool g, bool b, bool a)
+WGPUColorWriteMask GetColorWriteMask(bool r, bool g, bool b, bool a)
 {
-    return (r ? wgpu::ColorWriteMask::Red : wgpu::ColorWriteMask::None) |
-           (g ? wgpu::ColorWriteMask::Green : wgpu::ColorWriteMask::None) |
-           (b ? wgpu::ColorWriteMask::Blue : wgpu::ColorWriteMask::None) |
-           (a ? wgpu::ColorWriteMask::Alpha : wgpu::ColorWriteMask::None);
+    return (r ? WGPUColorWriteMask_Red : WGPUColorWriteMask_None) |
+           (g ? WGPUColorWriteMask_Green : WGPUColorWriteMask_None) |
+           (b ? WGPUColorWriteMask_Blue : WGPUColorWriteMask_None) |
+           (a ? WGPUColorWriteMask_Alpha : WGPUColorWriteMask_None);
 }
 
-wgpu::BlendFactor GetBlendFactor(gl::BlendFactorType blendFactor)
+WGPUBlendFactor GetBlendFactor(gl::BlendFactorType blendFactor)
 {
     switch (blendFactor)
     {
         case gl::BlendFactorType::Zero:
-            return wgpu::BlendFactor::Zero;
+            return WGPUBlendFactor_Zero;
 
         case gl::BlendFactorType::One:
-            return wgpu::BlendFactor::One;
+            return WGPUBlendFactor_One;
 
         case gl::BlendFactorType::SrcColor:
-            return wgpu::BlendFactor::Src;
+            return WGPUBlendFactor_Src;
 
         case gl::BlendFactorType::OneMinusSrcColor:
-            return wgpu::BlendFactor::OneMinusSrc;
+            return WGPUBlendFactor_OneMinusSrc;
 
         case gl::BlendFactorType::SrcAlpha:
-            return wgpu::BlendFactor::SrcAlpha;
+            return WGPUBlendFactor_SrcAlpha;
 
         case gl::BlendFactorType::OneMinusSrcAlpha:
-            return wgpu::BlendFactor::OneMinusSrcAlpha;
+            return WGPUBlendFactor_OneMinusSrcAlpha;
 
         case gl::BlendFactorType::DstAlpha:
-            return wgpu::BlendFactor::DstAlpha;
+            return WGPUBlendFactor_DstAlpha;
 
         case gl::BlendFactorType::OneMinusDstAlpha:
-            return wgpu::BlendFactor::OneMinusDstAlpha;
+            return WGPUBlendFactor_OneMinusDstAlpha;
 
         case gl::BlendFactorType::DstColor:
-            return wgpu::BlendFactor::Dst;
+            return WGPUBlendFactor_Dst;
 
         case gl::BlendFactorType::OneMinusDstColor:
-            return wgpu::BlendFactor::OneMinusDst;
+            return WGPUBlendFactor_OneMinusDst;
 
         case gl::BlendFactorType::SrcAlphaSaturate:
-            return wgpu::BlendFactor::SrcAlphaSaturated;
+            return WGPUBlendFactor_SrcAlphaSaturated;
 
         case gl::BlendFactorType::ConstantColor:
-            return wgpu::BlendFactor::Constant;
+            return WGPUBlendFactor_Constant;
 
         case gl::BlendFactorType::OneMinusConstantColor:
-            return wgpu::BlendFactor::OneMinusConstant;
+            return WGPUBlendFactor_OneMinusConstant;
 
         case gl::BlendFactorType::ConstantAlpha:
             UNIMPLEMENTED();
-            return wgpu::BlendFactor::Undefined;
+            return WGPUBlendFactor_Undefined;
 
         case gl::BlendFactorType::OneMinusConstantAlpha:
             UNIMPLEMENTED();
-            return wgpu::BlendFactor::Undefined;
+            return WGPUBlendFactor_Undefined;
 
         case gl::BlendFactorType::Src1Alpha:
-            return wgpu::BlendFactor::Src1Alpha;
+            return WGPUBlendFactor_Src1Alpha;
 
         case gl::BlendFactorType::Src1Color:
-            return wgpu::BlendFactor::Src1;
+            return WGPUBlendFactor_Src1;
 
         case gl::BlendFactorType::OneMinusSrc1Color:
-            return wgpu::BlendFactor::OneMinusSrc1;
+            return WGPUBlendFactor_OneMinusSrc1;
 
         case gl::BlendFactorType::OneMinusSrc1Alpha:
-            return wgpu::BlendFactor::OneMinusSrc1Alpha;
+            return WGPUBlendFactor_OneMinusSrc1Alpha;
 
         default:
             UNREACHABLE();
-            return wgpu::BlendFactor::Undefined;
+            return WGPUBlendFactor_Undefined;
     }
 }
 
-wgpu::BlendOperation GetBlendEquation(gl::BlendEquationType blendEquation)
+WGPUBlendOperation GetBlendEquation(gl::BlendEquationType blendEquation)
 {
     switch (blendEquation)
     {
         case gl::BlendEquationType::Add:
-            return wgpu::BlendOperation::Add;
+            return WGPUBlendOperation_Add;
 
         case gl::BlendEquationType::Min:
-            return wgpu::BlendOperation::Min;
+            return WGPUBlendOperation_Min;
 
         case gl::BlendEquationType::Max:
-            return wgpu::BlendOperation::Max;
+            return WGPUBlendOperation_Max;
 
         case gl::BlendEquationType::Subtract:
-            return wgpu::BlendOperation::Subtract;
+            return WGPUBlendOperation_Subtract;
 
         case gl::BlendEquationType::ReverseSubtract:
-            return wgpu::BlendOperation::ReverseSubtract;
+            return WGPUBlendOperation_ReverseSubtract;
 
         case gl::BlendEquationType::Multiply:
         case gl::BlendEquationType::Screen:
@@ -604,11 +604,11 @@ wgpu::BlendOperation GetBlendEquation(gl::BlendEquationType blendEquation)
         case gl::BlendEquationType::HslLuminosity:
             // EXT_blend_equation_advanced
             UNIMPLEMENTED();
-            return wgpu::BlendOperation::Undefined;
+            return WGPUBlendOperation_Undefined;
 
         default:
             UNREACHABLE();
-            return wgpu::BlendOperation::Undefined;
+            return WGPUBlendOperation_Undefined;
     }
 }
 
@@ -658,34 +658,34 @@ wgpu::TextureDimension GetWgpuTextureDimension(gl::TextureType glTextureType)
     }
 }
 
-wgpu::CompareFunction GetCompareFunc(const GLenum glCompareFunc, bool testEnabled)
+WGPUCompareFunction GetCompareFunc(const GLenum glCompareFunc, bool testEnabled)
 {
     if (!testEnabled)
     {
-        return wgpu::CompareFunction::Always;
+        return WGPUCompareFunction_Always;
     }
 
     switch (glCompareFunc)
     {
         case GL_NEVER:
-            return wgpu::CompareFunction::Never;
+            return WGPUCompareFunction_Never;
         case GL_LESS:
-            return wgpu::CompareFunction::Less;
+            return WGPUCompareFunction_Less;
         case GL_EQUAL:
-            return wgpu::CompareFunction::Equal;
+            return WGPUCompareFunction_Equal;
         case GL_LEQUAL:
-            return wgpu::CompareFunction::LessEqual;
+            return WGPUCompareFunction_LessEqual;
         case GL_GREATER:
-            return wgpu::CompareFunction::Greater;
+            return WGPUCompareFunction_Greater;
         case GL_NOTEQUAL:
-            return wgpu::CompareFunction::NotEqual;
+            return WGPUCompareFunction_NotEqual;
         case GL_GEQUAL:
-            return wgpu::CompareFunction::GreaterEqual;
+            return WGPUCompareFunction_GreaterEqual;
         case GL_ALWAYS:
-            return wgpu::CompareFunction::Always;
+            return WGPUCompareFunction_Always;
         default:
             UNREACHABLE();
-            return wgpu::CompareFunction::Always;
+            return WGPUCompareFunction_Always;
     }
 }
 
@@ -707,29 +707,29 @@ wgpu::TextureSampleType GetTextureSampleType(gl::SamplerFormat samplerFormat)
     }
 }
 
-wgpu::StencilOperation getStencilOp(const GLenum glStencilOp)
+WGPUStencilOperation GetStencilOp(const GLenum glStencilOp)
 {
     switch (glStencilOp)
     {
         case GL_KEEP:
-            return wgpu::StencilOperation::Keep;
+            return WGPUStencilOperation_Keep;
         case GL_ZERO:
-            return wgpu::StencilOperation::Zero;
+            return WGPUStencilOperation_Zero;
         case GL_REPLACE:
-            return wgpu::StencilOperation::Replace;
+            return WGPUStencilOperation_Replace;
         case GL_INCR:
-            return wgpu::StencilOperation::IncrementClamp;
+            return WGPUStencilOperation_IncrementClamp;
         case GL_DECR:
-            return wgpu::StencilOperation::DecrementClamp;
+            return WGPUStencilOperation_DecrementClamp;
         case GL_INCR_WRAP:
-            return wgpu::StencilOperation::IncrementWrap;
+            return WGPUStencilOperation_IncrementWrap;
         case GL_DECR_WRAP:
-            return wgpu::StencilOperation::DecrementWrap;
+            return WGPUStencilOperation_DecrementWrap;
         case GL_INVERT:
-            return wgpu::StencilOperation::Invert;
+            return WGPUStencilOperation_Invert;
         default:
             UNREACHABLE();
-            return wgpu::StencilOperation::Keep;
+            return WGPUStencilOperation_Keep;
     }
 }
 
@@ -801,7 +801,8 @@ wgpu::CompareFunction GetSamplerCompareFunc(const gl::SamplerState *samplerState
         return wgpu::CompareFunction::Undefined;
     }
 
-    return GetCompareFunc(samplerState->getCompareFunc(), /*testEnabled=*/true);
+    return static_cast<wgpu::CompareFunction>(
+        GetCompareFunc(samplerState->getCompareFunc(), /*testEnabled=*/true));
 }
 
 wgpu::SamplerDescriptor GetWgpuSamplerDesc(const gl::SamplerState *samplerState)

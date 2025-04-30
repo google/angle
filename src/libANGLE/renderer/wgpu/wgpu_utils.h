@@ -391,7 +391,7 @@ wgpu::RenderPassDepthStencilAttachment CreateNewDepthStencilAttachment(
 bool IsWgpuError(wgpu::WaitStatus waitStatus);
 bool IsWgpuError(wgpu::MapAsyncStatus mapAsyncStatus);
 
-bool IsStripPrimitiveTopology(wgpu::PrimitiveTopology topology);
+bool IsStripPrimitiveTopology(WGPUPrimitiveTopology topology);
 
 // Required alignments for buffer sizes and mapping
 constexpr size_t kBufferSizeAlignment         = 4;
@@ -421,19 +421,19 @@ wgpu::TextureViewDimension GetWgpuTextureViewDimension(gl::TextureType textureTy
 wgpu::TextureDimension GetWgpuTextureDimension(gl::TextureType glTextureType);
 wgpu::Extent3D getExtent3D(const gl::Extents &glExtent);
 
-wgpu::PrimitiveTopology GetPrimitiveTopology(gl::PrimitiveMode mode);
+WGPUPrimitiveTopology GetPrimitiveTopology(gl::PrimitiveMode mode);
 
-wgpu::IndexFormat GetIndexFormat(gl::DrawElementsType drawElementsTYpe);
-wgpu::FrontFace GetFrontFace(GLenum frontFace);
-wgpu::CullMode GetCullMode(gl::CullFaceMode mode, bool cullFaceEnabled);
-wgpu::ColorWriteMask GetColorWriteMask(bool r, bool g, bool b, bool a);
+WGPUIndexFormat GetIndexFormat(gl::DrawElementsType drawElementsTYpe);
+WGPUFrontFace GetFrontFace(GLenum frontFace);
+WGPUCullMode GetCullMode(gl::CullFaceMode mode, bool cullFaceEnabled);
+WGPUColorWriteMask GetColorWriteMask(bool r, bool g, bool b, bool a);
 
-wgpu::BlendFactor GetBlendFactor(gl::BlendFactorType blendFactor);
-wgpu::BlendOperation GetBlendEquation(gl::BlendEquationType blendEquation);
+WGPUBlendFactor GetBlendFactor(gl::BlendFactorType blendFactor);
+WGPUBlendOperation GetBlendEquation(gl::BlendEquationType blendEquation);
 
-wgpu::CompareFunction GetCompareFunc(const GLenum glCompareFunc, bool testEnabled);
+WGPUCompareFunction GetCompareFunc(const GLenum glCompareFunc, bool testEnabled);
 wgpu::TextureSampleType GetTextureSampleType(gl::SamplerFormat samplerFormat);
-wgpu::StencilOperation getStencilOp(const GLenum glStencilOp);
+WGPUStencilOperation GetStencilOp(const GLenum glStencilOp);
 wgpu::FilterMode GetFilter(const GLenum filter);
 wgpu::MipmapFilterMode GetSamplerMipmapMode(const GLenum filter);
 wgpu::AddressMode GetSamplerAddressMode(const GLenum wrap);

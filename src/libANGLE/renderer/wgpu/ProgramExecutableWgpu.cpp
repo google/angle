@@ -444,9 +444,9 @@ TranslatedWGPUShaderModule &ProgramExecutableWgpu::getShaderModule(gl::ShaderTyp
 
 angle::Result ProgramExecutableWgpu::getRenderPipeline(ContextWgpu *context,
                                                        const webgpu::RenderPipelineDesc &desc,
-                                                       wgpu::RenderPipeline *pipelineOut)
+                                                       webgpu::RenderPipelineHandle *pipelineOut)
 {
-    gl::ShaderMap<wgpu::ShaderModule> shaders;
+    gl::ShaderMap<webgpu::ShaderModuleHandle> shaders;
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
         shaders[shaderType] = mShaderModules[shaderType].module;

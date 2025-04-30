@@ -417,7 +417,7 @@ class ContextWgpu : public ContextImpl
     webgpu::CommandBuffer mCommandBuffer;
 
     webgpu::RenderPipelineDesc mRenderPipelineDesc;
-    wgpu::RenderPipeline mCurrentGraphicsPipeline;
+    webgpu::RenderPipelineHandle mCurrentGraphicsPipeline;
     gl::AttributesMask mCurrentRenderPipelineAllAttributes;
 
     gl::DrawElementsType mCurrentIndexBufferType = gl::DrawElementsType::InvalidEnum;

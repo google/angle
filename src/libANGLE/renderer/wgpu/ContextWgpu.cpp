@@ -146,7 +146,8 @@ angle::Result ContextWgpu::flush(webgpu::RenderPassClosureReason closureReason)
 
 void ContextWgpu::setColorAttachmentFormat(size_t colorIndex, wgpu::TextureFormat format)
 {
-    if (mRenderPipelineDesc.setColorAttachmentFormat(colorIndex, format))
+    if (mRenderPipelineDesc.setColorAttachmentFormat(colorIndex,
+                                                     static_cast<WGPUTextureFormat>(format)))
     {
         invalidateCurrentRenderPipeline();
     }
@@ -743,12 +744,12 @@ angle::Result ContextWgpu::syncState(const gl::Context *context,
                 break;
             case gl::state::DIRTY_BIT_STENCIL_OPS_FRONT:
             {
-                wgpu::StencilOperation failOp =
-                    gl_wgpu::getStencilOp(glState.getDepthStencilState().stencilFail);
-                wgpu::StencilOperation depthFailOp =
-                    gl_wgpu::getStencilOp(glState.getDepthStencilState().stencilPassDepthFail);
-                wgpu::StencilOperation passOp =
-                    gl_wgpu::getStencilOp(glState.getDepthStencilState().stencilPassDepthPass);
+                WGPUStencilOperation failOp =
+                    gl_wgpu::GetStencilOp(glState.getDepthStencilState().stencilFail);
+                WGPUStencilOperation depthFailOp =
+                    gl_wgpu::GetStencilOp(glState.getDepthStencilState().stencilPassDepthFail);
+                WGPUStencilOperation passOp =
+                    gl_wgpu::GetStencilOp(glState.getDepthStencilState().stencilPassDepthPass);
                 if (mRenderPipelineDesc.setStencilFrontOps(failOp, depthFailOp, passOp))
                 {
                     invalidateCurrentRenderPipeline();
@@ -757,12 +758,12 @@ angle::Result ContextWgpu::syncState(const gl::Context *context,
             break;
             case gl::state::DIRTY_BIT_STENCIL_OPS_BACK:
             {
-                wgpu::StencilOperation failOp =
-                    gl_wgpu::getStencilOp(glState.getDepthStencilState().stencilBackFail);
-                wgpu::StencilOperation depthFailOp =
-                    gl_wgpu::getStencilOp(glState.getDepthStencilState().stencilBackPassDepthFail);
-                wgpu::StencilOperation passOp =
-                    gl_wgpu::getStencilOp(glState.getDepthStencilState().stencilBackPassDepthPass);
+                WGPUStencilOperation failOp =
+                    gl_wgpu::GetStencilOp(glState.getDepthStencilState().stencilBackFail);
+                WGPUStencilOperation depthFailOp =
+                    gl_wgpu::GetStencilOp(glState.getDepthStencilState().stencilBackPassDepthFail);
+                WGPUStencilOperation passOp =
+                    gl_wgpu::GetStencilOp(glState.getDepthStencilState().stencilBackPassDepthPass);
                 if (mRenderPipelineDesc.setStencilBackOps(failOp, depthFailOp, passOp))
                 {
                     invalidateCurrentRenderPipeline();
@@ -1250,9 +1251,9 @@ angle::Result ContextWgpu::handleDirtyRenderPipelineDesc(DirtyBits::Iterator *di
     ProgramExecutableWgpu *executable = webgpu::GetImpl(mState.getProgramExecutable());
     ASSERT(executable);
 
-    wgpu::RenderPipeline previousPipeline = std::move(mCurrentGraphicsPipeline);
+    webgpu::RenderPipelineHandle previousPipeline = std::move(mCurrentGraphicsPipeline);
     ANGLE_TRY(executable->getRenderPipeline(this, mRenderPipelineDesc, &mCurrentGraphicsPipeline));
-    if (mCurrentGraphicsPipeline.Get() != previousPipeline.Get())
+    if (mCurrentGraphicsPipeline != previousPipeline)
     {
         dirtyBitsIterator->setLaterBit(DIRTY_BIT_RENDER_PIPELINE_BINDING);
     }

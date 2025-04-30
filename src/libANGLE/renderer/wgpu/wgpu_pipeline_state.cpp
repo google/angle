@@ -10,41 +10,39 @@
 #include "common/hash_utils.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/renderer/wgpu/ContextWgpu.h"
-#include "libANGLE/renderer/wgpu/wgpu_utils.h"
 
 namespace rx
 {
 namespace webgpu
 {
 // Can pack the index format into 1 bit since it has 2 values and Undefined is not used.
-static_assert(static_cast<uint32_t>(wgpu::IndexFormat::Uint32) == 2U,
-              "Max wgpu::IndexFormat is not 2");
-static_assert(static_cast<uint32_t>(wgpu::IndexFormat::Undefined) == 0,
-              "wgpu::IndexFormat::Undefined unexpected value");
-constexpr uint32_t PackIndexFormat(wgpu::IndexFormat unpackedFormat)
+static_assert(static_cast<uint32_t>(WGPUIndexFormat_Uint32) == 2U, "Max WGPUIndexFormat is not 2");
+static_assert(static_cast<uint32_t>(WGPUIndexFormat_Undefined) == 0,
+              "WGPUIndexFormat::Undefined unexpected value");
+constexpr uint32_t PackIndexFormat(WGPUIndexFormat unpackedFormat)
 {
     ASSERT(static_cast<uint32_t>(unpackedFormat) > 0);
     return static_cast<uint32_t>(unpackedFormat) - 1;
 }
 
-constexpr wgpu::IndexFormat UnpackIndexFormat(uint32_t packedIndexFormat)
+constexpr WGPUIndexFormat UnpackIndexFormat(uint32_t packedIndexFormat)
 {
-    return static_cast<wgpu::IndexFormat>(packedIndexFormat + 1);
+    return static_cast<WGPUIndexFormat>(packedIndexFormat + 1);
 }
 
 // Can pack the front face into 1 bit since it has 2 values and Undefined is not used.
-static_assert(static_cast<uint32_t>(wgpu::FrontFace::CW) == 2U, "Max wgpu::FrontFace is not 2");
-static_assert(static_cast<uint32_t>(wgpu::FrontFace::Undefined) == 0,
-              "wgpu::FrontFace::Undefined unexpected value");
-constexpr uint32_t PackFrontFace(wgpu::FrontFace unpackedFrontFace)
+static_assert(static_cast<uint32_t>(WGPUFrontFace_CW) == 2U, "Max WGPUFrontFace is not 2");
+static_assert(static_cast<uint32_t>(WGPUFrontFace_Undefined) == 0,
+              "WGPUFrontFace_Undefined unexpected value");
+constexpr uint32_t PackFrontFace(WGPUFrontFace unpackedFrontFace)
 {
     ASSERT(static_cast<uint32_t>(unpackedFrontFace) > 0);
     return static_cast<uint32_t>(unpackedFrontFace) - 1;
 }
 
-constexpr wgpu::FrontFace UnpackFrontFace(uint32_t packedFrontFace)
+constexpr WGPUFrontFace UnpackFrontFace(uint32_t packedFrontFace)
 {
-    return static_cast<wgpu::FrontFace>(packedFrontFace + 1);
+    return static_cast<WGPUFrontFace>(packedFrontFace + 1);
 }
 
 PackedVertexAttribute::PackedVertexAttribute()
@@ -77,7 +75,7 @@ bool RenderPipelineDesc::setPrimitiveMode(gl::PrimitiveMode primitiveMode,
 {
     bool changed = false;
 
-    wgpu::PrimitiveTopology topology = gl_wgpu::GetPrimitiveTopology(primitiveMode);
+    WGPUPrimitiveTopology topology = gl_wgpu::GetPrimitiveTopology(primitiveMode);
     if (mPrimitiveState.topology != static_cast<uint8_t>(topology))
     {
         SetBitField(mPrimitiveState.topology, topology);
@@ -110,10 +108,10 @@ bool RenderPipelineDesc::setBlendEnabled(size_t colorIndex, bool enabled)
 }
 
 bool RenderPipelineDesc::setBlendFuncs(size_t colorIndex,
-                                       wgpu::BlendFactor srcRGB,
-                                       wgpu::BlendFactor dstRGB,
-                                       wgpu::BlendFactor srcAlpha,
-                                       wgpu::BlendFactor dstAlpha)
+                                       WGPUBlendFactor srcRGB,
+                                       WGPUBlendFactor dstRGB,
+                                       WGPUBlendFactor srcAlpha,
+                                       WGPUBlendFactor dstAlpha)
 {
     bool changed                        = false;
     PackedColorTargetState &colorTarget = mColorTargetStates[colorIndex];
@@ -146,8 +144,8 @@ bool RenderPipelineDesc::setBlendFuncs(size_t colorIndex,
 }
 
 bool RenderPipelineDesc::setBlendEquations(size_t colorIndex,
-                                           wgpu::BlendOperation rgb,
-                                           wgpu::BlendOperation alpha)
+                                           WGPUBlendOperation rgb,
+                                           WGPUBlendOperation alpha)
 {
     bool changed                        = false;
     PackedColorTargetState &colorTarget = mColorTargetStates[colorIndex];
@@ -195,7 +193,7 @@ bool RenderPipelineDesc::setVertexAttribute(size_t attribIndex, PackedVertexAttr
     return true;
 }
 
-bool RenderPipelineDesc::setColorAttachmentFormat(size_t colorIndex, wgpu::TextureFormat format)
+bool RenderPipelineDesc::setColorAttachmentFormat(size_t colorIndex, WGPUTextureFormat format)
 {
     if (mColorTargetStates[colorIndex].format == static_cast<uint8_t>(format))
     {
@@ -217,7 +215,7 @@ bool RenderPipelineDesc::setDepthStencilAttachmentFormat(wgpu::TextureFormat for
     return true;
 }
 
-bool RenderPipelineDesc::setDepthFunc(wgpu::CompareFunction compareFunc)
+bool RenderPipelineDesc::setDepthFunc(WGPUCompareFunction compareFunc)
 {
     if (mDepthStencilState.depthCompare == static_cast<uint8_t>(compareFunc))
     {
@@ -227,7 +225,7 @@ bool RenderPipelineDesc::setDepthFunc(wgpu::CompareFunction compareFunc)
     return true;
 }
 
-bool RenderPipelineDesc::setStencilFrontFunc(wgpu::CompareFunction compareFunc)
+bool RenderPipelineDesc::setStencilFrontFunc(WGPUCompareFunction compareFunc)
 {
     if (mDepthStencilState.stencilFrontCompare == static_cast<uint8_t>(compareFunc))
     {
@@ -237,9 +235,9 @@ bool RenderPipelineDesc::setStencilFrontFunc(wgpu::CompareFunction compareFunc)
     return true;
 }
 
-bool RenderPipelineDesc::setStencilFrontOps(wgpu::StencilOperation failOp,
-                                            wgpu::StencilOperation depthFailOp,
-                                            wgpu::StencilOperation passOp)
+bool RenderPipelineDesc::setStencilFrontOps(WGPUStencilOperation failOp,
+                                            WGPUStencilOperation depthFailOp,
+                                            WGPUStencilOperation passOp)
 {
     if (mDepthStencilState.stencilFrontFailOp == static_cast<uint8_t>(failOp) &&
         mDepthStencilState.stencilFrontDepthFailOp == static_cast<uint8_t>(depthFailOp) &&
@@ -253,7 +251,7 @@ bool RenderPipelineDesc::setStencilFrontOps(wgpu::StencilOperation failOp,
     return true;
 }
 
-bool RenderPipelineDesc::setStencilBackFunc(wgpu::CompareFunction compareFunc)
+bool RenderPipelineDesc::setStencilBackFunc(WGPUCompareFunction compareFunc)
 {
     if (mDepthStencilState.stencilBackCompare == static_cast<uint8_t>(compareFunc))
     {
@@ -263,9 +261,9 @@ bool RenderPipelineDesc::setStencilBackFunc(wgpu::CompareFunction compareFunc)
     return true;
 }
 
-bool RenderPipelineDesc::setStencilBackOps(wgpu::StencilOperation failOp,
-                                           wgpu::StencilOperation depthFailOp,
-                                           wgpu::StencilOperation passOp)
+bool RenderPipelineDesc::setStencilBackOps(WGPUStencilOperation failOp,
+                                           WGPUStencilOperation depthFailOp,
+                                           WGPUStencilOperation passOp)
 {
     if (mDepthStencilState.stencilBackFailOp == static_cast<uint8_t>(failOp) &&
         mDepthStencilState.stencilBackDepthFailOp == static_cast<uint8_t>(depthFailOp) &&
@@ -306,22 +304,23 @@ size_t RenderPipelineDesc::hash() const
 }
 
 angle::Result RenderPipelineDesc::createPipeline(ContextWgpu *context,
-                                                 const wgpu::PipelineLayout &pipelineLayout,
-                                                 const gl::ShaderMap<wgpu::ShaderModule> &shaders,
-                                                 wgpu::RenderPipeline *pipelineOut) const
+                                                 const PipelineLayoutHandle &pipelineLayout,
+                                                 const gl::ShaderMap<ShaderModuleHandle> &shaders,
+                                                 RenderPipelineHandle *pipelineOut) const
 {
-    wgpu::RenderPipelineDescriptor pipelineDesc;
-    pipelineDesc.layout = pipelineLayout;
+    constexpr const char *kShaderEntryPoint = "wgslMain";
 
-    pipelineDesc.vertex.module        = shaders[gl::ShaderType::Vertex];
-    pipelineDesc.vertex.entryPoint    = "wgslMain";
+    WGPURenderPipelineDescriptor pipelineDesc = WGPU_RENDER_PIPELINE_DESCRIPTOR_INIT;
+    pipelineDesc.layout                       = pipelineLayout.get();
+
+    pipelineDesc.vertex.module        = shaders[gl::ShaderType::Vertex].get();
+    pipelineDesc.vertex.entryPoint    = {kShaderEntryPoint, std::strlen(kShaderEntryPoint)};
     pipelineDesc.vertex.constantCount = 0;
     pipelineDesc.vertex.constants     = nullptr;
     pipelineDesc.vertex.bufferCount   = 0;
     pipelineDesc.vertex.buffers       = nullptr;
 
-    pipelineDesc.primitive.topology =
-        static_cast<wgpu::PrimitiveTopology>(mPrimitiveState.topology);
+    pipelineDesc.primitive.topology = static_cast<WGPUPrimitiveTopology>(mPrimitiveState.topology);
     if (webgpu::IsStripPrimitiveTopology(pipelineDesc.primitive.topology))
     {
         pipelineDesc.primitive.stripIndexFormat =
@@ -329,14 +328,14 @@ angle::Result RenderPipelineDesc::createPipeline(ContextWgpu *context,
     }
     else
     {
-        pipelineDesc.primitive.stripIndexFormat = wgpu::IndexFormat::Undefined;
+        pipelineDesc.primitive.stripIndexFormat = WGPUIndexFormat_Undefined;
     }
     pipelineDesc.primitive.frontFace = UnpackFrontFace(mPrimitiveState.frontFace);
-    pipelineDesc.primitive.cullMode  = static_cast<wgpu::CullMode>(mPrimitiveState.cullMode);
+    pipelineDesc.primitive.cullMode  = static_cast<WGPUCullMode>(mPrimitiveState.cullMode);
 
     size_t attribCount = 0;
-    gl::AttribArray<wgpu::VertexBufferLayout> vertexBuffers;
-    gl::AttribArray<wgpu::VertexAttribute> vertexAttribs;
+    gl::AttribArray<WGPUVertexBufferLayout> vertexBuffers;
+    gl::AttribArray<WGPUVertexAttribute> vertexAttribs;
 
     for (PackedVertexAttribute packedAttrib : mVertexAttributes)
     {
@@ -345,14 +344,16 @@ angle::Result RenderPipelineDesc::createPipeline(ContextWgpu *context,
             continue;
         }
 
-        wgpu::VertexAttribute &newAttribute = vertexAttribs[attribCount];
-        newAttribute.format                 = static_cast<wgpu::VertexFormat>(packedAttrib.format);
+        WGPUVertexAttribute &newAttribute   = vertexAttribs[attribCount];
+        newAttribute                        = WGPU_VERTEX_ATTRIBUTE_INIT;
+        newAttribute.format                 = static_cast<WGPUVertexFormat>(packedAttrib.format);
         newAttribute.offset                 = packedAttrib.offset;
         newAttribute.shaderLocation         = packedAttrib.shaderLocation;
 
-        wgpu::VertexBufferLayout &newBufferLayout = vertexBuffers[attribCount];
+        WGPUVertexBufferLayout &newBufferLayout   = vertexBuffers[attribCount];
+        newBufferLayout                           = WGPU_VERTEX_BUFFER_LAYOUT_INIT;
         newBufferLayout.arrayStride               = packedAttrib.stride;
-        newBufferLayout.stepMode                  = wgpu::VertexStepMode::Undefined;
+        newBufferLayout.stepMode                  = WGPUVertexStepMode_Undefined;
         newBufferLayout.attributeCount            = 1;
         newBufferLayout.attributes                = &newAttribute;
 
@@ -362,13 +363,13 @@ angle::Result RenderPipelineDesc::createPipeline(ContextWgpu *context,
     pipelineDesc.vertex.bufferCount = attribCount;
     pipelineDesc.vertex.buffers     = vertexBuffers.data();
 
-    wgpu::FragmentState fragmentState;
-    std::array<wgpu::ColorTargetState, gl::IMPLEMENTATION_MAX_DRAW_BUFFERS> colorTargets;
-    std::array<wgpu::BlendState, gl::IMPLEMENTATION_MAX_DRAW_BUFFERS> blendStates;
+    WGPUFragmentState fragmentState = WGPU_FRAGMENT_STATE_INIT;
+    std::array<WGPUColorTargetState, gl::IMPLEMENTATION_MAX_DRAW_BUFFERS> colorTargets;
+    std::array<WGPUBlendState, gl::IMPLEMENTATION_MAX_DRAW_BUFFERS> blendStates;
     if (shaders[gl::ShaderType::Fragment])
     {
-        fragmentState.module        = shaders[gl::ShaderType::Fragment];
-        fragmentState.entryPoint    = "wgslMain";
+        fragmentState.module        = shaders[gl::ShaderType::Fragment].get();
+        fragmentState.entryPoint    = {kShaderEntryPoint, std::strlen(kShaderEntryPoint)};
         fragmentState.constantCount = 0;
         fragmentState.constants     = nullptr;
 
@@ -378,32 +379,34 @@ angle::Result RenderPipelineDesc::createPipeline(ContextWgpu *context,
         {
             const webgpu::PackedColorTargetState &packedColorTarget =
                 mColorTargetStates[colorTargetIndex];
-            wgpu::ColorTargetState &outputColorTarget = colorTargets[colorTargetIndex];
+            WGPUColorTargetState &outputColorTarget = colorTargets[colorTargetIndex];
+            outputColorTarget                       = WGPU_COLOR_TARGET_STATE_INIT;
 
-            outputColorTarget.format = static_cast<wgpu::TextureFormat>(packedColorTarget.format);
+            outputColorTarget.format = static_cast<WGPUTextureFormat>(packedColorTarget.format);
             if (packedColorTarget.blendEnabled)
             {
+                blendStates[colorTargetIndex] = WGPU_BLEND_STATE_INIT;
                 blendStates[colorTargetIndex].color.srcFactor =
-                    static_cast<wgpu::BlendFactor>(packedColorTarget.colorBlendSrcFactor);
+                    static_cast<WGPUBlendFactor>(packedColorTarget.colorBlendSrcFactor);
                 blendStates[colorTargetIndex].color.dstFactor =
-                    static_cast<wgpu::BlendFactor>(packedColorTarget.colorBlendDstFactor);
+                    static_cast<WGPUBlendFactor>(packedColorTarget.colorBlendDstFactor);
                 blendStates[colorTargetIndex].color.operation =
-                    static_cast<wgpu::BlendOperation>(packedColorTarget.colorBlendOp);
+                    static_cast<WGPUBlendOperation>(packedColorTarget.colorBlendOp);
 
                 blendStates[colorTargetIndex].alpha.srcFactor =
-                    static_cast<wgpu::BlendFactor>(packedColorTarget.alphaBlendSrcFactor);
+                    static_cast<WGPUBlendFactor>(packedColorTarget.alphaBlendSrcFactor);
                 blendStates[colorTargetIndex].alpha.dstFactor =
-                    static_cast<wgpu::BlendFactor>(packedColorTarget.alphaBlendDstFactor);
+                    static_cast<WGPUBlendFactor>(packedColorTarget.alphaBlendDstFactor);
                 blendStates[colorTargetIndex].alpha.operation =
-                    static_cast<wgpu::BlendOperation>(packedColorTarget.alphaBlendOp);
+                    static_cast<WGPUBlendOperation>(packedColorTarget.alphaBlendOp);
 
                 outputColorTarget.blend = &blendStates[colorTargetIndex];
             }
 
             outputColorTarget.writeMask =
-                static_cast<wgpu::ColorWriteMask>(packedColorTarget.writeMask);
+                static_cast<WGPUColorWriteMask>(packedColorTarget.writeMask);
 
-            if (outputColorTarget.format != wgpu::TextureFormat::Undefined)
+            if (outputColorTarget.format != WGPUTextureFormat_Undefined)
             {
                 colorTargetCount = colorTargetIndex + 1;
             }
@@ -414,35 +417,34 @@ angle::Result RenderPipelineDesc::createPipeline(ContextWgpu *context,
         pipelineDesc.fragment = &fragmentState;
     }
 
-    wgpu::DepthStencilState depthStencilState;
-    if (static_cast<wgpu::TextureFormat>(mDepthStencilState.format) !=
-        wgpu::TextureFormat::Undefined)
+    WGPUDepthStencilState depthStencilState = WGPU_DEPTH_STENCIL_STATE_INIT;
+    if (static_cast<WGPUTextureFormat>(mDepthStencilState.format) != WGPUTextureFormat_Undefined)
     {
-        const webgpu::PackedDepthStencilState &packedDepthStencilState = mDepthStencilState;
+        const PackedDepthStencilState &packedDepthStencilState = mDepthStencilState;
 
-        depthStencilState.format = static_cast<wgpu::TextureFormat>(packedDepthStencilState.format);
+        depthStencilState.format = static_cast<WGPUTextureFormat>(packedDepthStencilState.format);
         depthStencilState.depthWriteEnabled =
-            static_cast<bool>(packedDepthStencilState.depthWriteEnabled);
+            static_cast<WGPUOptionalBool>(packedDepthStencilState.depthWriteEnabled);
         depthStencilState.depthCompare =
-            static_cast<wgpu::CompareFunction>(packedDepthStencilState.depthCompare);
+            static_cast<WGPUCompareFunction>(packedDepthStencilState.depthCompare);
 
         depthStencilState.stencilFront.compare =
-            static_cast<wgpu::CompareFunction>(packedDepthStencilState.stencilFrontCompare);
+            static_cast<WGPUCompareFunction>(packedDepthStencilState.stencilFrontCompare);
         depthStencilState.stencilFront.failOp =
-            static_cast<wgpu::StencilOperation>(packedDepthStencilState.stencilFrontFailOp);
+            static_cast<WGPUStencilOperation>(packedDepthStencilState.stencilFrontFailOp);
         depthStencilState.stencilFront.depthFailOp =
-            static_cast<wgpu::StencilOperation>(packedDepthStencilState.stencilFrontDepthFailOp);
+            static_cast<WGPUStencilOperation>(packedDepthStencilState.stencilFrontDepthFailOp);
         depthStencilState.stencilFront.passOp =
-            static_cast<wgpu::StencilOperation>(packedDepthStencilState.stencilFrontPassOp);
+            static_cast<WGPUStencilOperation>(packedDepthStencilState.stencilFrontPassOp);
 
         depthStencilState.stencilBack.compare =
-            static_cast<wgpu::CompareFunction>(packedDepthStencilState.stencilBackCompare);
+            static_cast<WGPUCompareFunction>(packedDepthStencilState.stencilBackCompare);
         depthStencilState.stencilBack.failOp =
-            static_cast<wgpu::StencilOperation>(packedDepthStencilState.stencilBackFailOp);
+            static_cast<WGPUStencilOperation>(packedDepthStencilState.stencilBackFailOp);
         depthStencilState.stencilBack.depthFailOp =
-            static_cast<wgpu::StencilOperation>(packedDepthStencilState.stencilBackDepthFailOp);
+            static_cast<WGPUStencilOperation>(packedDepthStencilState.stencilBackDepthFailOp);
         depthStencilState.stencilBack.passOp =
-            static_cast<wgpu::StencilOperation>(packedDepthStencilState.stencilBackPassOp);
+            static_cast<WGPUStencilOperation>(packedDepthStencilState.stencilBackPassOp);
 
         depthStencilState.stencilReadMask  = packedDepthStencilState.stencilReadMask;
         depthStencilState.stencilWriteMask = packedDepthStencilState.stencilWriteMask;
@@ -454,8 +456,10 @@ angle::Result RenderPipelineDesc::createPipeline(ContextWgpu *context,
         pipelineDesc.depthStencil = &depthStencilState;
     }
 
-    wgpu::Device device = context->getDevice();
-    ANGLE_WGPU_SCOPED_DEBUG_TRY(context, *pipelineOut = device.CreateRenderPipeline(&pipelineDesc));
+    DeviceHandle device = context->getDevice();
+    ANGLE_WGPU_SCOPED_DEBUG_TRY(context,
+                                *pipelineOut = RenderPipelineHandle::Acquire(
+                                    wgpuDeviceCreateRenderPipeline(device.get(), &pipelineDesc)));
 
     return angle::Result::Continue;
 }
@@ -471,9 +475,9 @@ PipelineCache::~PipelineCache() = default;
 
 angle::Result PipelineCache::getRenderPipeline(ContextWgpu *context,
                                                const RenderPipelineDesc &desc,
-                                               const wgpu::PipelineLayout &pipelineLayout,
-                                               const gl::ShaderMap<wgpu::ShaderModule> &shaders,
-                                               wgpu::RenderPipeline *pipelineOut)
+                                               const PipelineLayoutHandle &pipelineLayout,
+                                               const gl::ShaderMap<ShaderModuleHandle> &shaders,
+                                               RenderPipelineHandle *pipelineOut)
 {
     auto iter = mRenderPipelines.find(desc);
     if (iter != mRenderPipelines.end())
