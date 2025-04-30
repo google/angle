@@ -1252,7 +1252,7 @@ angle::Result ContextWgpu::handleDirtyRenderPipelineDesc(DirtyBits::Iterator *di
 
     wgpu::RenderPipeline previousPipeline = std::move(mCurrentGraphicsPipeline);
     ANGLE_TRY(executable->getRenderPipeline(this, mRenderPipelineDesc, &mCurrentGraphicsPipeline));
-    if (mCurrentGraphicsPipeline != previousPipeline)
+    if (mCurrentGraphicsPipeline.Get() != previousPipeline.Get())
     {
         dirtyBitsIterator->setLaterBit(DIRTY_BIT_RENDER_PIPELINE_BINDING);
     }
@@ -1402,7 +1402,9 @@ angle::Result ContextWgpu::handleDirtyIndexBuffer(gl::DrawElementsType indexType
     {
         ANGLE_TRY(buffer->unmap());
     }
-    mCommandBuffer.setIndexBuffer(buffer->getBuffer(), gl_wgpu::GetIndexFormat(indexType), 0, -1);
+    mCommandBuffer.setIndexBuffer(buffer->getBuffer(),
+                                  static_cast<WGPUIndexFormat>(gl_wgpu::GetIndexFormat(indexType)),
+                                  0, -1);
     mCurrentIndexBufferType = indexType;
     return angle::Result::Continue;
 }

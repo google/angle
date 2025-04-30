@@ -13,10 +13,10 @@ namespace webgpu
 namespace
 {
 template <typename T>
-const T *GetReferencedObject(std::unordered_set<T> &referenceList, const T &item)
+T::ObjectType GetReferencedObject(std::unordered_set<T> &referenceList, const T &item)
 {
     auto iter = referenceList.insert(item).first;
-    return &(*iter);
+    return (*iter).get();
 }
 
 // Get the packed command ID from the current command data
@@ -66,7 +66,7 @@ void CommandBuffer::drawIndexed(uint32_t indexCount,
     drawIndexedCommand->firstInstance      = firstInstance;
 }
 
-void CommandBuffer::setBindGroup(uint32_t groupIndex, wgpu::BindGroup bindGroup)
+void CommandBuffer::setBindGroup(uint32_t groupIndex, BindGroupHandle bindGroup)
 {
     SetBindGroupCommand *setBindGroupCommand = initCommand<CommandID::SetBindGroup>();
     setBindGroupCommand->groupIndex          = groupIndex;
@@ -84,7 +84,7 @@ void CommandBuffer::setBlendConstant(float r, float g, float b, float a)
     mHasSetBlendConstantCommand = true;
 }
 
-void CommandBuffer::setPipeline(wgpu::RenderPipeline pipeline)
+void CommandBuffer::setPipeline(RenderPipelineHandle pipeline)
 {
     SetPipelineCommand *setPiplelineCommand = initCommand<CommandID::SetPipeline>();
     setPiplelineCommand->pipeline = GetReferencedObject(mReferencedRenderPipelines, pipeline);
@@ -119,8 +119,8 @@ void CommandBuffer::setViewport(float x,
     mHasSetViewportCommand = true;
 }
 
-void CommandBuffer::setIndexBuffer(wgpu::Buffer buffer,
-                                   wgpu::IndexFormat format,
+void CommandBuffer::setIndexBuffer(BufferHandle buffer,
+                                   WGPUIndexFormat format,
                                    uint64_t offset,
                                    uint64_t size)
 {
@@ -132,7 +132,7 @@ void CommandBuffer::setIndexBuffer(wgpu::Buffer buffer,
 }
 
 void CommandBuffer::setVertexBuffer(uint32_t slot,
-                                    wgpu::Buffer buffer,
+                                    BufferHandle buffer,
                                     uint64_t offset,
                                     uint64_t size)
 {
@@ -165,7 +165,7 @@ void CommandBuffer::clear()
     mReferencedBuffers.clear();
 }
 
-void CommandBuffer::recordCommands(wgpu::RenderPassEncoder encoder)
+void CommandBuffer::recordCommands(RenderPassEncoderHandle encoder)
 {
     ASSERT(hasCommands());
     ASSERT(!mCommandBlocks.empty());
@@ -190,8 +190,9 @@ void CommandBuffer::recordCommands(wgpu::RenderPassEncoder encoder)
                 {
                     const DrawCommand &drawCommand =
                         GetCommandAndIterate<CommandID::Draw>(&currentCommand);
-                    encoder.Draw(drawCommand.vertexCount, drawCommand.instanceCount,
-                                 drawCommand.firstVertex, drawCommand.firstInstance);
+                    wgpuRenderPassEncoderDraw(encoder.get(), drawCommand.vertexCount,
+                                              drawCommand.instanceCount, drawCommand.firstVertex,
+                                              drawCommand.firstInstance);
                     break;
                 }
 
@@ -199,10 +200,10 @@ void CommandBuffer::recordCommands(wgpu::RenderPassEncoder encoder)
                 {
                     const DrawIndexedCommand &drawIndexedCommand =
                         GetCommandAndIterate<CommandID::DrawIndexed>(&currentCommand);
-                    encoder.DrawIndexed(
-                        drawIndexedCommand.indexCount, drawIndexedCommand.instanceCount,
-                        drawIndexedCommand.firstIndex, drawIndexedCommand.baseVertex,
-                        drawIndexedCommand.firstInstance);
+                    wgpuRenderPassEncoderDrawIndexed(
+                        encoder.get(), drawIndexedCommand.indexCount,
+                        drawIndexedCommand.instanceCount, drawIndexedCommand.firstIndex,
+                        drawIndexedCommand.baseVertex, drawIndexedCommand.firstInstance);
                     break;
                 }
 
@@ -210,8 +211,8 @@ void CommandBuffer::recordCommands(wgpu::RenderPassEncoder encoder)
                 {
                     const SetBindGroupCommand &setBindGroupCommand =
                         GetCommandAndIterate<CommandID::SetBindGroup>(&currentCommand);
-                    encoder.SetBindGroup(setBindGroupCommand.groupIndex,
-                                         *setBindGroupCommand.bindGroup);
+                    wgpuRenderPassEncoderSetBindGroup(encoder.get(), setBindGroupCommand.groupIndex,
+                                                      setBindGroupCommand.bindGroup, 0, nullptr);
                     break;
                 }
 
@@ -219,9 +220,9 @@ void CommandBuffer::recordCommands(wgpu::RenderPassEncoder encoder)
                 {
                     const SetBlendConstantCommand &setBlendConstantCommand =
                         GetCommandAndIterate<CommandID::SetBlendConstant>(&currentCommand);
-                    wgpu::Color color{setBlendConstantCommand.r, setBlendConstantCommand.g,
-                                      setBlendConstantCommand.b, setBlendConstantCommand.a};
-                    encoder.SetBlendConstant(&color);
+                    WGPUColor color{setBlendConstantCommand.r, setBlendConstantCommand.g,
+                                    setBlendConstantCommand.b, setBlendConstantCommand.a};
+                    wgpuRenderPassEncoderSetBlendConstant(encoder.get(), &color);
                     break;
                 }
 
@@ -229,8 +230,8 @@ void CommandBuffer::recordCommands(wgpu::RenderPassEncoder encoder)
                 {
                     const SetIndexBufferCommand &setIndexBufferCommand =
                         GetCommandAndIterate<CommandID::SetIndexBuffer>(&currentCommand);
-                    encoder.SetIndexBuffer(
-                        *setIndexBufferCommand.buffer, setIndexBufferCommand.format,
+                    wgpuRenderPassEncoderSetIndexBuffer(
+                        encoder.get(), setIndexBufferCommand.buffer, setIndexBufferCommand.format,
                         setIndexBufferCommand.offset, setIndexBufferCommand.size);
                     break;
                 }
@@ -239,7 +240,7 @@ void CommandBuffer::recordCommands(wgpu::RenderPassEncoder encoder)
                 {
                     const SetPipelineCommand &setPiplelineCommand =
                         GetCommandAndIterate<CommandID::SetPipeline>(&currentCommand);
-                    encoder.SetPipeline(*setPiplelineCommand.pipeline);
+                    wgpuRenderPassEncoderSetPipeline(encoder.get(), setPiplelineCommand.pipeline);
                     break;
                 }
 
@@ -247,9 +248,9 @@ void CommandBuffer::recordCommands(wgpu::RenderPassEncoder encoder)
                 {
                     const SetScissorRectCommand &setScissorRectCommand =
                         GetCommandAndIterate<CommandID::SetScissorRect>(&currentCommand);
-                    encoder.SetScissorRect(setScissorRectCommand.x, setScissorRectCommand.y,
-                                           setScissorRectCommand.width,
-                                           setScissorRectCommand.height);
+                    wgpuRenderPassEncoderSetScissorRect(
+                        encoder.get(), setScissorRectCommand.x, setScissorRectCommand.y,
+                        setScissorRectCommand.width, setScissorRectCommand.height);
                     break;
                 }
 
@@ -257,9 +258,10 @@ void CommandBuffer::recordCommands(wgpu::RenderPassEncoder encoder)
                 {
                     const SetViewportCommand &setViewportCommand =
                         GetCommandAndIterate<CommandID::SetViewport>(&currentCommand);
-                    encoder.SetViewport(setViewportCommand.x, setViewportCommand.y,
-                                        setViewportCommand.width, setViewportCommand.height,
-                                        setViewportCommand.minDepth, setViewportCommand.maxDepth);
+                    wgpuRenderPassEncoderSetViewport(
+                        encoder.get(), setViewportCommand.x, setViewportCommand.y,
+                        setViewportCommand.width, setViewportCommand.height,
+                        setViewportCommand.minDepth, setViewportCommand.maxDepth);
                     break;
                 }
 
@@ -267,8 +269,8 @@ void CommandBuffer::recordCommands(wgpu::RenderPassEncoder encoder)
                 {
                     const SetVertexBufferCommand &setVertexBufferCommand =
                         GetCommandAndIterate<CommandID::SetVertexBuffer>(&currentCommand);
-                    encoder.SetVertexBuffer(
-                        setVertexBufferCommand.slot, *setVertexBufferCommand.buffer,
+                    wgpuRenderPassEncoderSetVertexBuffer(
+                        encoder.get(), setVertexBufferCommand.slot, setVertexBufferCommand.buffer,
                         setVertexBufferCommand.offset, setVertexBufferCommand.size);
                     break;
                 }
