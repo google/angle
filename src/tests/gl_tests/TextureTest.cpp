@@ -2392,8 +2392,12 @@ TEST_P(TextureCubeTest, CubeMapBug2)
     EXPECT_GL_ERROR(GL_NO_ERROR);
 
     glUseProgram(cubeMapBug2Program);
-    glUniform1i(mTexture2DUniformLocation, 3);
-    glUniform1i(mTextureCubeUniformLocation, 0);
+    GLint tex2DUniformLocation = glGetUniformLocation(cubeMapBug2Program, "tex2D");
+    ASSERT_NE(tex2DUniformLocation, -1);
+    GLint texCubeUniformLocation = glGetUniformLocation(cubeMapBug2Program, "texCube");
+    ASSERT_NE(texCubeUniformLocation, -1);
+    glUniform1i(tex2DUniformLocation, 3);
+    glUniform1i(texCubeUniformLocation, 0);
     drawQuad(cubeMapBug2Program, "position", 0.5f);
     EXPECT_GL_NO_ERROR();
 }
