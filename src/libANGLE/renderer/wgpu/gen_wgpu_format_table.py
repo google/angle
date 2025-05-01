@@ -49,16 +49,16 @@ void Format::initialize(const angle::Format &angleFormat)
     }}
 }}
 
-wgpu::TextureFormat GetWgpuTextureFormatFromFormatID(angle::FormatID formatID)
+WGPUTextureFormat GetWgpuTextureFormatFromFormatID(angle::FormatID formatID)
 {{
-    static constexpr angle::FormatMap<wgpu::TextureFormat> kMap = {{
+    static constexpr angle::FormatMap<WGPUTextureFormat> kMap = {{
 {image_format_id_cases}
     }};
 
     return kMap[formatID];
 }}
 
-angle::FormatID GetFormatIDFromWgpuTextureFormat(wgpu::TextureFormat wgpuFormat)
+angle::FormatID GetFormatIDFromWgpuTextureFormat(WGPUTextureFormat wgpuFormat)
 {{
     switch (wgpuFormat)
     {{
@@ -69,16 +69,16 @@ angle::FormatID GetFormatIDFromWgpuTextureFormat(wgpu::TextureFormat wgpuFormat)
     }}
 }}
 
-wgpu::VertexFormat GetWgpuVertexFormatFromFormatID(angle::FormatID formatID)
+WGPUVertexFormat GetWgpuVertexFormatFromFormatID(angle::FormatID formatID)
 {{
-    static constexpr angle::FormatMap<wgpu::VertexFormat> kMap = {{
+    static constexpr angle::FormatMap<WGPUVertexFormat> kMap = {{
 {buffer_format_id_cases}
     }};
 
     return kMap[formatID];
 }}
 
-angle::FormatID GetFormatIDFromWgpuBufferFormat(wgpu::VertexFormat wgpuFormat)
+angle::FormatID GetFormatIDFromWgpuBufferFormat(WGPUVertexFormat wgpuFormat)
 {{
     switch (wgpuFormat)
     {{
@@ -225,15 +225,15 @@ def gen_format_case(angle, internal_format, wgpu_json_data):
 
 
 def get_format_id_case(format_id, format_type, wgpu_format):
-    # wgpu::VertexFormat::Undefined was replaced with wgpu::VertexFormat(0u)
+    # WGPUVertexFormat_Undefined was replaced with WGPUVertexFormat(0u)
     # in https://dawn-review.googlesource.com/c/dawn/+/193360
     if 'Undefined' in wgpu_format and 'VertexFormat' in format_type:
-        return "{angle::FormatID::%s, wgpu::%s(0u)}" % (format_id, format_type)
-    return "{angle::FormatID::%s, wgpu::%s::%s}" % (format_id, format_type, wgpu_format)
+        return "{angle::FormatID::%s, WGPU%s(0u)}" % (format_id, format_type)
+    return "{angle::FormatID::%s, WGPU%s_%s}" % (format_id, format_type, wgpu_format)
 
 
 def get_wgpu_format_case(format_type, format_id, wgpu_format):
-    # wgpu::VertexFormat::Undefined was replaced with wgpu::VertexFormat(0u)
+    # WGPUVertexFormat_Undefined was replaced with WGPUVertexFormat(0u)
     # in https://dawn-review.googlesource.com/c/dawn/+/193360
     # so there is no 'case' needed for it.
     if 'Undefined' in wgpu_format and 'VertexFormat' in format_type:
@@ -243,7 +243,7 @@ def get_wgpu_format_case(format_type, format_id, wgpu_format):
     if 'EXTERNAL' in format_id:
         return ''
     return """\
-        case wgpu::%s::%s:
+        case WGPU%s_%s:
             return angle::FormatID::%s;
 """ % (format_type, wgpu_format, format_id)
 

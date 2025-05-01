@@ -306,7 +306,7 @@ class ContextWgpu : public ContextImpl
     {
         return mDisplay->getFormat(internalFormat);
     }
-    angle::Result startRenderPass(const wgpu::RenderPassDescriptor &desc);
+    angle::Result startRenderPass(const WGPURenderPassDescriptor &desc);
     angle::Result endRenderPass(webgpu::RenderPassClosureReason closureReason);
 
     bool hasActiveRenderPass() { return mCurrentRenderPass != nullptr; }
@@ -315,9 +315,9 @@ class ContextWgpu : public ContextImpl
 
     angle::Result flush(webgpu::RenderPassClosureReason);
 
-    void setColorAttachmentFormat(size_t colorIndex, wgpu::TextureFormat format);
-    void setColorAttachmentFormats(const gl::DrawBuffersArray<wgpu::TextureFormat> &formats);
-    void setDepthStencilFormat(wgpu::TextureFormat format);
+    void setColorAttachmentFormat(size_t colorIndex, WGPUTextureFormat format);
+    void setColorAttachmentFormats(const gl::DrawBuffersArray<WGPUTextureFormat> &formats);
+    void setDepthStencilFormat(WGPUTextureFormat format);
     void setVertexAttribute(size_t attribIndex, webgpu::PackedVertexAttribute newAttrib);
 
     void invalidateVertexBuffer(size_t slot);

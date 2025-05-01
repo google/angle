@@ -163,6 +163,7 @@ angle::Result ProgramExecutableWgpu::getSamplerAndTextureBindGroup(ContextWgpu *
 
                 // TODO(anglebug.com/389145696): potentially cache sampler.
                 wgpu::SamplerDescriptor sampleDesc = gl_wgpu::GetWgpuSamplerDesc(samplerState);
+                // TODO(geofflang): Store this sampler since the descriptor will not hold a ref.
                 wgpu::Sampler wgpuSampler = contextWgpu->getDevice().CreateSampler(&sampleDesc);
 
                 wgpu::BindGroupEntry samplerBindGroupEntry;
@@ -174,10 +175,14 @@ angle::Result ProgramExecutableWgpu::getSamplerAndTextureBindGroup(ContextWgpu *
                 wgpu::BindGroupEntry textureBindGroupEntry;
                 textureBindGroupEntry.binding = textureSlot;
 
+                webgpu::TextureViewHandle textureView;
                 ANGLE_TRY(textureWgpu->getImage()->createFullTextureView(
-                    textureBindGroupEntry.textureView,
+                    textureView,
                     /*desiredViewDimension=*/gl_wgpu::GetWgpuTextureViewDimension(
                         samplerBinding.textureType)));
+                // TODO(geofflang): Store this texture view since the descriptor will not hold a
+                // ref.
+                textureBindGroupEntry.textureView = wgpu::TextureView(textureView.get());
                 bindings.push_back(textureBindGroupEntry);
 
             }  // for array elements
@@ -522,8 +527,8 @@ void ProgramExecutableWgpu::genBindingLayoutIfNecessary(ContextWgpu *context)
         textureBindGroupLayoutEntry.binding = angle::base::checked_cast<uint32_t>(i * 2 + 1);
         textureBindGroupLayoutEntry.texture.sampleType =
             gl_wgpu::GetTextureSampleType(samplerBinding.format);
-        textureBindGroupLayoutEntry.texture.viewDimension =
-            gl_wgpu::GetWgpuTextureViewDimension(samplerBinding.textureType);
+        textureBindGroupLayoutEntry.texture.viewDimension = static_cast<wgpu::TextureViewDimension>(
+            gl_wgpu::GetWgpuTextureViewDimension(samplerBinding.textureType));
         samplersAndTexturesBindGroupLayoutEntries.push_back(textureBindGroupLayoutEntry);
     }
 

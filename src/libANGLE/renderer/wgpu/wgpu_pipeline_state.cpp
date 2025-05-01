@@ -204,7 +204,7 @@ bool RenderPipelineDesc::setColorAttachmentFormat(size_t colorIndex, WGPUTexture
     return true;
 }
 
-bool RenderPipelineDesc::setDepthStencilAttachmentFormat(wgpu::TextureFormat format)
+bool RenderPipelineDesc::setDepthStencilAttachmentFormat(WGPUTextureFormat format)
 {
     if (mDepthStencilState.format == static_cast<uint8_t>(format))
     {

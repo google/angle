@@ -144,17 +144,15 @@ angle::Result ContextWgpu::flush(webgpu::RenderPassClosureReason closureReason)
     return angle::Result::Continue;
 }
 
-void ContextWgpu::setColorAttachmentFormat(size_t colorIndex, wgpu::TextureFormat format)
+void ContextWgpu::setColorAttachmentFormat(size_t colorIndex, WGPUTextureFormat format)
 {
-    if (mRenderPipelineDesc.setColorAttachmentFormat(colorIndex,
-                                                     static_cast<WGPUTextureFormat>(format)))
+    if (mRenderPipelineDesc.setColorAttachmentFormat(colorIndex, format))
     {
         invalidateCurrentRenderPipeline();
     }
 }
 
-void ContextWgpu::setColorAttachmentFormats(
-    const gl::DrawBuffersArray<wgpu::TextureFormat> &formats)
+void ContextWgpu::setColorAttachmentFormats(const gl::DrawBuffersArray<WGPUTextureFormat> &formats)
 {
     for (size_t i = 0; i < formats.size(); i++)
     {
@@ -162,7 +160,7 @@ void ContextWgpu::setColorAttachmentFormats(
     }
 }
 
-void ContextWgpu::setDepthStencilFormat(wgpu::TextureFormat format)
+void ContextWgpu::setDepthStencilFormat(WGPUTextureFormat format)
 {
     if (mRenderPipelineDesc.setDepthStencilAttachmentFormat(format))
     {
@@ -1081,11 +1079,12 @@ void ContextWgpu::handleError(GLenum errorCode,
     mErrors->handleError(errorCode, errorStream.str().c_str(), file, function, line);
 }
 
-angle::Result ContextWgpu::startRenderPass(const wgpu::RenderPassDescriptor &desc)
+angle::Result ContextWgpu::startRenderPass(const WGPURenderPassDescriptor &desc)
 {
     ensureCommandEncoderCreated();
 
-    mCurrentRenderPass = mCurrentCommandEncoder.BeginRenderPass(&desc);
+    mCurrentRenderPass = wgpu::RenderPassEncoder::Acquire(
+        wgpuCommandEncoderBeginRenderPass(mCurrentCommandEncoder.Get(), &desc));
     mDirtyBits |= mNewRenderPassDirtyBits;
 
     return angle::Result::Continue;

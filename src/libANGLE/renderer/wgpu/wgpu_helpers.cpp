@@ -19,15 +19,16 @@ namespace webgpu
 {
 namespace
 {
-wgpu::TextureDescriptor TextureDescriptorFromTexture(const wgpu::Texture &texture)
+WGPUTextureDescriptor TextureDescriptorFromTexture(const webgpu::TextureHandle &texture)
 {
-    wgpu::TextureDescriptor descriptor = {};
-    descriptor.usage                   = texture.GetUsage();
-    descriptor.dimension               = texture.GetDimension();
-    descriptor.size   = {texture.GetWidth(), texture.GetHeight(), texture.GetDepthOrArrayLayers()};
-    descriptor.format = texture.GetFormat();
-    descriptor.mipLevelCount   = texture.GetMipLevelCount();
-    descriptor.sampleCount     = texture.GetSampleCount();
+    WGPUTextureDescriptor descriptor = WGPU_TEXTURE_DESCRIPTOR_INIT;
+    descriptor.usage                 = wgpuTextureGetUsage(texture.get());
+    descriptor.dimension             = wgpuTextureGetDimension(texture.get());
+    descriptor.size   = {wgpuTextureGetWidth(texture.get()), wgpuTextureGetHeight(texture.get()),
+                         wgpuTextureGetDepthOrArrayLayers(texture.get())};
+    descriptor.format = wgpuTextureGetFormat(texture.get());
+    descriptor.mipLevelCount   = wgpuTextureGetMipLevelCount(texture.get());
+    descriptor.sampleCount     = wgpuTextureGetSampleCount(texture.get());
     descriptor.viewFormatCount = 0;
     return descriptor;
 }
@@ -67,15 +68,15 @@ ImageHelper::~ImageHelper() {}
 
 angle::Result ImageHelper::initImage(angle::FormatID intendedFormatID,
                                      angle::FormatID actualFormatID,
-                                     wgpu::Device &device,
+                                     DeviceHandle device,
                                      gl::LevelIndex firstAllocatedLevel,
-                                     wgpu::TextureDescriptor textureDescriptor)
+                                     WGPUTextureDescriptor textureDescriptor)
 {
     mIntendedFormatID    = intendedFormatID;
     mActualFormatID      = actualFormatID;
     mTextureDescriptor   = textureDescriptor;
     mFirstAllocatedLevel = firstAllocatedLevel;
-    mTexture             = device.CreateTexture(&mTextureDescriptor);
+    mTexture = TextureHandle::Acquire(wgpuDeviceCreateTexture(device.get(), &mTextureDescriptor));
     mInitialized         = true;
 
     return angle::Result::Continue;
@@ -83,7 +84,7 @@ angle::Result ImageHelper::initImage(angle::FormatID intendedFormatID,
 
 angle::Result ImageHelper::initExternal(angle::FormatID intendedFormatID,
                                         angle::FormatID actualFormatID,
-                                        wgpu::Texture externalTexture)
+                                        webgpu::TextureHandle externalTexture)
 {
     mIntendedFormatID    = intendedFormatID;
     mActualFormatID      = actualFormatID;
@@ -119,13 +120,14 @@ angle::Result ImageHelper::flushSingleLevelUpdates(ContextWgpu *contextWgpu,
     {
         return angle::Result::Continue;
     }
-    wgpu::Device device          = contextWgpu->getDevice();
-    wgpu::Queue queue            = contextWgpu->getQueue();
-    wgpu::CommandEncoder encoder = device.CreateCommandEncoder();
-    wgpu::TexelCopyTextureInfo dst;
-    dst.texture = mTexture;
-    std::vector<wgpu::RenderPassColorAttachment> colorAttachments;
-    wgpu::TextureView textureView;
+    DeviceHandle device = contextWgpu->getDevice();
+    QueueHandle queue   = contextWgpu->getQueue();
+    CommandEncoderHandle encoder =
+        CommandEncoderHandle::Acquire(wgpuDeviceCreateCommandEncoder(device.get(), nullptr));
+    WGPUTexelCopyTextureInfo dst = WGPU_TEXEL_COPY_TEXTURE_INFO_INIT;
+    dst.texture                  = mTexture.get();
+    std::vector<WGPURenderPassColorAttachment> colorAttachments;
+    TextureViewHandle textureView;
     ANGLE_TRY(createTextureViewSingleLevel(levelGL, 0, textureView));
     bool updateDepth      = false;
     bool updateStencil    = false;
@@ -142,16 +144,19 @@ angle::Result ImageHelper::flushSingleLevelUpdates(ContextWgpu *contextWgpu,
             case UpdateSource::Texture:
             {
                 dst.mipLevel              = toWgpuLevel(srcUpdate.targetLevel).get();
-                wgpu::Extent3D copyExtent = mTextureDescriptor.size;
+                WGPUExtent3D copyExtent   = mTextureDescriptor.size;
                 // https://www.w3.org/TR/webgpu/#abstract-opdef-logical-miplevel-specific-texture-extent
                 copyExtent.width  = std::max(1u, copyExtent.width >> dst.mipLevel);
                 copyExtent.height = std::max(1u, copyExtent.height >> dst.mipLevel);
-                if (mTextureDescriptor.dimension == wgpu::TextureDimension::e3D)
+                if (mTextureDescriptor.dimension == WGPUTextureDimension_3D)
                 {
                     copyExtent.depthOrArrayLayers =
                         std::max(1u, copyExtent.depthOrArrayLayers >> dst.mipLevel);
                 }
-                encoder.CopyBufferToTexture(&srcUpdate.textureData, &dst, &copyExtent);
+                WGPUTexelCopyBufferInfo copyInfo = WGPU_TEXEL_COPY_BUFFER_INFO_INIT;
+                copyInfo.layout                  = srcUpdate.textureDataLayout;
+                copyInfo.buffer                  = srcUpdate.textureData.get();
+                wgpuCommandEncoderCopyBufferToTexture(encoder.get(), &copyInfo, &dst, &copyExtent);
             }
             break;
 
@@ -203,22 +208,23 @@ angle::Result ImageHelper::flushSingleLevelUpdates(ContextWgpu *contextWgpu,
         frameBuffer->updateDepthStencilAttachment(CreateNewDepthStencilAttachment(
             depthValue, stencilValue, textureView, updateDepth, updateStencil));
     }
-    wgpu::CommandBuffer commandBuffer = encoder.Finish();
-    queue.Submit(1, &commandBuffer);
+    CommandBufferHandle commandBuffer =
+        CommandBufferHandle::Acquire(wgpuCommandEncoderFinish(encoder.get(), nullptr));
+    wgpuQueueSubmit(queue.get(), 1, &commandBuffer.get());
     encoder = nullptr;
     currentLevelQueue->clear();
 
     return angle::Result::Continue;
 }
 
-wgpu::TextureDescriptor ImageHelper::createTextureDescriptor(wgpu::TextureUsage usage,
-                                                             wgpu::TextureDimension dimension,
-                                                             wgpu::Extent3D size,
-                                                             wgpu::TextureFormat format,
-                                                             std::uint32_t mipLevelCount,
-                                                             std::uint32_t sampleCount)
+WGPUTextureDescriptor ImageHelper::createTextureDescriptor(WGPUTextureUsage usage,
+                                                           WGPUTextureDimension dimension,
+                                                           WGPUExtent3D size,
+                                                           WGPUTextureFormat format,
+                                                           std::uint32_t mipLevelCount,
+                                                           std::uint32_t sampleCount)
 {
-    wgpu::TextureDescriptor textureDescriptor = {};
+    WGPUTextureDescriptor textureDescriptor   = WGPU_TEXTURE_DESCRIPTOR_INIT;
     textureDescriptor.usage                   = usage;
     textureDescriptor.dimension               = dimension;
     textureDescriptor.size                    = size;
@@ -245,12 +251,13 @@ angle::Result ImageHelper::stageTextureUpload(ContextWgpu *contextWgpu,
     {
         return angle::Result::Continue;
     }
-    wgpu::Device device = contextWgpu->getDevice();
-    wgpu::Queue queue   = contextWgpu->getQueue();
+    webgpu::DeviceHandle device = contextWgpu->getDevice();
+    webgpu::QueueHandle queue   = contextWgpu->getQueue();
     gl::LevelIndex levelGL(index.getLevelIndex());
     BufferHelper bufferHelper;
     wgpu::BufferUsage usage = wgpu::BufferUsage::CopySrc | wgpu::BufferUsage::CopyDst;
-    ANGLE_TRY(bufferHelper.initBuffer(device, allocationSize, usage, MapAtCreation::Yes));
+    ANGLE_TRY(bufferHelper.initBuffer(wgpu::Device(device.get()), allocationSize, usage,
+                                      MapAtCreation::Yes));
     LoadImageFunctionInfo loadFunctionInfo = webgpuFormat.getTextureLoadFunction(type);
     uint8_t *data                          = bufferHelper.getMapWritePointer(0, allocationSize);
     loadFunctionInfo.loadFunction(contextWgpu->getImageLoadContext(), glExtents.width,
@@ -258,14 +265,12 @@ angle::Result ImageHelper::stageTextureUpload(ContextWgpu *contextWgpu,
                                   inputDepthPitch, data, outputRowPitch, outputDepthPitch);
     ANGLE_TRY(bufferHelper.unmap());
 
-    wgpu::TexelCopyBufferLayout textureDataLayout = {};
+    WGPUTexelCopyBufferLayout textureDataLayout = WGPU_TEXEL_COPY_BUFFER_LAYOUT_INIT;
     textureDataLayout.bytesPerRow             = outputRowPitch;
     textureDataLayout.rowsPerImage            = outputDepthPitch;
-    wgpu::TexelCopyBufferInfo imageCopyBuffer;
-    imageCopyBuffer.layout = textureDataLayout;
-    imageCopyBuffer.buffer = bufferHelper.getBuffer();
-    appendSubresourceUpdate(levelGL,
-                            SubresourceUpdate(UpdateSource::Texture, levelGL, imageCopyBuffer));
+    appendSubresourceUpdate(levelGL, SubresourceUpdate(UpdateSource::Texture, levelGL,
+                                                       BufferHandle(bufferHelper.getBuffer().Get()),
+                                                       textureDataLayout));
     return angle::Result::Continue;
 }
 
@@ -291,9 +296,10 @@ void ImageHelper::resetImage()
 {
     if (mTexture)
     {
-        mTexture.Destroy();
+        wgpuTextureDestroy(mTexture.get());
     }
-    mTextureDescriptor   = {};
+    mTexture             = nullptr;
+    mTextureDescriptor   = WGPU_TEXTURE_DESCRIPTOR_INIT;
     mInitialized         = false;
     mFirstAllocatedLevel = gl::LevelIndex(0);
 }
@@ -334,42 +340,42 @@ angle::Result ImageHelper::readPixels(rx::ContextWgpu *contextWgpu,
         return angle::Result::Stop;
     }
 
-    wgpu::Device device          = contextWgpu->getDisplay()->getDevice();
-    wgpu::CommandEncoder encoder = device.CreateCommandEncoder();
-    wgpu::Queue queue            = contextWgpu->getDisplay()->getQueue();
+    DeviceHandle device = contextWgpu->getDisplay()->getDevice();
+    CommandEncoderHandle encoder =
+        CommandEncoderHandle::Acquire(wgpuDeviceCreateCommandEncoder(device.get(), nullptr));
+    QueueHandle queue = contextWgpu->getDisplay()->getQueue();
 
     const angle::Format &actualFormat = angle::Format::Get(mActualFormatID);
     uint32_t textureBytesPerRow =
         roundUp(actualFormat.pixelBytes * area.width, kCopyBufferAlignment);
-    wgpu::TexelCopyBufferLayout textureDataLayout;
+    WGPUTexelCopyBufferLayout textureDataLayout = WGPU_TEXEL_COPY_BUFFER_LAYOUT_INIT;
     textureDataLayout.bytesPerRow  = textureBytesPerRow;
     textureDataLayout.rowsPerImage = area.height;
 
     size_t allocationSize = textureBytesPerRow * area.height;
 
     BufferHelper bufferHelper;
-    ANGLE_TRY(bufferHelper.initBuffer(device, allocationSize,
+    ANGLE_TRY(bufferHelper.initBuffer(device.get(), allocationSize,
                                       wgpu::BufferUsage::MapRead | wgpu::BufferUsage::CopyDst,
                                       MapAtCreation::No));
-    wgpu::TexelCopyBufferInfo copyBuffer;
-    copyBuffer.buffer = bufferHelper.getBuffer();
+    WGPUTexelCopyBufferInfo copyBuffer = WGPU_TEXEL_COPY_BUFFER_INFO_INIT;
+    copyBuffer.buffer                  = bufferHelper.getBuffer().Get();
     copyBuffer.layout = textureDataLayout;
 
-    wgpu::TexelCopyTextureInfo copyTexture;
-    wgpu::Origin3D textureOrigin;
-    textureOrigin.x      = area.x;
-    textureOrigin.y      = area.y;
-    copyTexture.origin   = textureOrigin;
-    copyTexture.texture  = mTexture;
+    WGPUTexelCopyTextureInfo copyTexture WGPU_TEXEL_COPY_TEXTURE_INFO_INIT;
+    copyTexture.origin.x = area.x;
+    copyTexture.origin.y = area.y;
+    copyTexture.texture  = mTexture.get();
     copyTexture.mipLevel = toWgpuLevel(mFirstAllocatedLevel).get();
 
-    wgpu::Extent3D copySize;
+    WGPUExtent3D copySize = WGPU_EXTENT_3D_INIT;
     copySize.width  = area.width;
     copySize.height = area.height;
-    encoder.CopyTextureToBuffer(&copyTexture, &copyBuffer, &copySize);
+    wgpuCommandEncoderCopyTextureToBuffer(encoder.get(), &copyTexture, &copyBuffer, &copySize);
 
-    wgpu::CommandBuffer commandBuffer = encoder.Finish();
-    queue.Submit(1, &commandBuffer);
+    CommandBufferHandle commandBuffer =
+        CommandBufferHandle::Acquire(wgpuCommandEncoderFinish(encoder.get(), nullptr));
+    wgpuQueueSubmit(queue.get(), 1, &commandBuffer.get());
     encoder = nullptr;
 
     ANGLE_TRY(bufferHelper.mapImmediate(contextWgpu, wgpu::MapMode::Read, 0, allocationSize));
@@ -381,14 +387,14 @@ angle::Result ImageHelper::readPixels(rx::ContextWgpu *contextWgpu,
 
 angle::Result ImageHelper::createTextureViewSingleLevel(gl::LevelIndex targetLevel,
                                                         uint32_t layerIndex,
-                                                        wgpu::TextureView &textureViewOut)
+                                                        TextureViewHandle &textureViewOut)
 {
     return createTextureView(targetLevel, /*levelCount=*/1, layerIndex, /*arrayLayerCount=*/1,
-                             textureViewOut, wgpu::TextureViewDimension::Undefined);
+                             textureViewOut, WGPUTextureViewDimension_Undefined);
 }
 
-angle::Result ImageHelper::createFullTextureView(wgpu::TextureView &textureViewOut,
-                                                 wgpu::TextureViewDimension desiredViewDimension)
+angle::Result ImageHelper::createFullTextureView(TextureViewHandle &textureViewOut,
+                                                 WGPUTextureViewDimension desiredViewDimension)
 {
     return createTextureView(mFirstAllocatedLevel, mTextureDescriptor.mipLevelCount, 0,
                              mTextureDescriptor.size.depthOrArrayLayers, textureViewOut,
@@ -399,34 +405,34 @@ angle::Result ImageHelper::createTextureView(gl::LevelIndex targetLevel,
                                              uint32_t levelCount,
                                              uint32_t layerIndex,
                                              uint32_t arrayLayerCount,
-                                             wgpu::TextureView &textureViewOut,
-                                             wgpu::TextureViewDimension desiredViewDimension)
+                                             TextureViewHandle &textureViewOut,
+                                             WGPUTextureViewDimension desiredViewDimension)
 {
     if (!isTextureLevelInAllocatedImage(targetLevel))
     {
         return angle::Result::Stop;
     }
-    wgpu::TextureViewDescriptor textureViewDesc;
-    textureViewDesc.aspect          = wgpu::TextureAspect::All;
+    WGPUTextureViewDescriptor textureViewDesc = WGPU_TEXTURE_VIEW_DESCRIPTOR_INIT;
+    textureViewDesc.aspect                    = WGPUTextureAspect_All;
     textureViewDesc.baseArrayLayer  = layerIndex;
     textureViewDesc.arrayLayerCount = arrayLayerCount;
     textureViewDesc.baseMipLevel    = toWgpuLevel(targetLevel).get();
     textureViewDesc.mipLevelCount   = levelCount;
-    if (desiredViewDimension == wgpu::TextureViewDimension::Undefined)
+    if (desiredViewDimension == WGPUTextureViewDimension_Undefined)
     {
         switch (mTextureDescriptor.dimension)
         {
-            case wgpu::TextureDimension::Undefined:
-                textureViewDesc.dimension = wgpu::TextureViewDimension::Undefined;
+            case WGPUTextureDimension_Undefined:
+                textureViewDesc.dimension = WGPUTextureViewDimension_Undefined;
                 break;
-            case wgpu::TextureDimension::e1D:
-                textureViewDesc.dimension = wgpu::TextureViewDimension::e1D;
+            case WGPUTextureDimension_1D:
+                textureViewDesc.dimension = WGPUTextureViewDimension_1D;
                 break;
-            case wgpu::TextureDimension::e2D:
-                textureViewDesc.dimension = wgpu::TextureViewDimension::e2D;
+            case WGPUTextureDimension_2D:
+                textureViewDesc.dimension = WGPUTextureViewDimension_2D;
                 break;
-            case wgpu::TextureDimension::e3D:
-                textureViewDesc.dimension = wgpu::TextureViewDimension::e3D;
+            case WGPUTextureDimension_3D:
+                textureViewDesc.dimension = WGPUTextureViewDimension_3D;
                 break;
             default:
                 UNIMPLEMENTED();
@@ -438,7 +444,8 @@ angle::Result ImageHelper::createTextureView(gl::LevelIndex targetLevel,
         textureViewDesc.dimension = desiredViewDimension;
     }
     textureViewDesc.format = mTextureDescriptor.format;
-    textureViewOut         = mTexture.CreateView(&textureViewDesc);
+    textureViewOut =
+        TextureViewHandle::Acquire(wgpuTextureCreateView(mTexture.get(), &textureViewDesc));
     return angle::Result::Continue;
 }
 
@@ -454,7 +461,7 @@ LevelIndex ImageHelper::toWgpuLevel(gl::LevelIndex levelIndexGl) const
 
 gl::LevelIndex ImageHelper::toGlLevel(LevelIndex levelIndexWgpu) const
 {
-    return wgpu_gl::getLevelIndex(levelIndexWgpu, mFirstAllocatedLevel);
+    return wgpu_gl::GetLevelIndex(levelIndexWgpu, mFirstAllocatedLevel);
 }
 
 bool ImageHelper::isTextureLevelInAllocatedImage(gl::LevelIndex textureLevel)

@@ -35,7 +35,7 @@ class SurfaceWgpu : public SurfaceImpl
     angle::Result createDepthStencilAttachment(uint32_t width,
                                                uint32_t height,
                                                const webgpu::Format &webgpuFormat,
-                                               wgpu::Device &device,
+                                               webgpu::DeviceHandle device,
                                                AttachmentImage *outDepthStencilAttachment);
 };
 
@@ -132,16 +132,16 @@ class WindowSurfaceWgpu : public SurfaceWgpu
     angle::Result updateCurrentTexture(const egl::Display *display);
 
     virtual angle::Result createWgpuSurface(const egl::Display *display,
-                                            wgpu::Surface *outSurface) = 0;
+                                            webgpu::SurfaceHandle *outSurface) = 0;
     virtual angle::Result getCurrentWindowSize(const egl::Display *display,
                                                gl::Extents *outSize)   = 0;
 
     EGLNativeWindowType mNativeWindow;
-    wgpu::Surface mSurface;
+    webgpu::SurfaceHandle mSurface;
 
     const webgpu::Format *mSurfaceTextureFormat = nullptr;
-    wgpu::TextureUsage mSurfaceTextureUsage;
-    wgpu::PresentMode mPresentMode;
+    WGPUTextureUsage mSurfaceTextureUsage;
+    WGPUPresentMode mPresentMode;
 
     const webgpu::Format *mDepthStencilFormat = nullptr;
 

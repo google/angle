@@ -77,7 +77,7 @@ bool IsTextureLevelDefinitionCompatibleWithImage(webgpu::ImageHelper *image,
                                                  const gl::Extents &size,
                                                  const webgpu::Format &format)
 {
-    return size == wgpu_gl::getExtents(image->getSize()) &&
+    return size == wgpu_gl::GetExtents(image->getSize()) &&
            image->getIntendedFormatID() == format.getIntendedFormatID() &&
            image->getActualFormatID() == format.getActualImageFormatID();
 }
@@ -433,15 +433,15 @@ angle::Result TextureWgpu::initializeImage(ContextWgpu *contextWgpu, ImageMipLev
     uint32_t levelCount                     = getMipLevelCount(mipLevels);
     gl::LevelIndex firstLevel               = gl::LevelIndex(mState.getEffectiveBaseLevel());
     const gl::Extents &firstLevelExtents    = firstLevelDesc->size;
-    wgpu::TextureDimension textureDimension = gl_wgpu::GetWgpuTextureDimension(mState.getType());
-    wgpu::TextureUsage textureUsage = wgpu::TextureUsage::CopySrc | wgpu::TextureUsage::CopyDst |
-                                      wgpu::TextureUsage::RenderAttachment |
-                                      wgpu::TextureUsage::TextureBinding;
+    WGPUTextureDimension textureDimension   = gl_wgpu::GetWgpuTextureDimension(mState.getType());
+    WGPUTextureUsage textureUsage           = WGPUTextureUsage_CopySrc | WGPUTextureUsage_CopyDst |
+                                    WGPUTextureUsage_RenderAttachment |
+                                    WGPUTextureUsage_TextureBinding;
     return mImage->initImage(
         webgpuFormat.getIntendedFormatID(), webgpuFormat.getActualImageFormatID(),
         displayWgpu->getDevice(), firstLevel,
         mImage->createTextureDescriptor(
-            textureUsage, textureDimension, gl_wgpu::getExtent3D(firstLevelExtents),
+            textureUsage, textureDimension, gl_wgpu::GetExtent3D(firstLevelExtents),
             webgpu::GetWgpuTextureFormatFromFormatID(webgpuFormat.getActualImageFormatID()),
             levelCount, 1));
 }
@@ -661,7 +661,7 @@ angle::Result TextureWgpu::initSingleLayerRenderTargets(
 
     for (uint32_t layerIndex = 0; layerIndex < layerCount; ++layerIndex)
     {
-        wgpu::TextureView textureView;
+        webgpu::TextureViewHandle textureView;
         ANGLE_TRY(mImage->createTextureViewSingleLevel(levelIndex, layerIndex, textureView));
 
         renderTargets[layerIndex].set(mImage, textureView, mImage->toWgpuLevel(levelIndex),

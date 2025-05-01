@@ -151,7 +151,7 @@ class RenderPipelineDesc final
 
     bool setVertexAttribute(size_t attribIndex, PackedVertexAttribute &newAttrib);
     bool setColorAttachmentFormat(size_t colorIndex, WGPUTextureFormat format);
-    bool setDepthStencilAttachmentFormat(wgpu::TextureFormat format);
+    bool setDepthStencilAttachmentFormat(WGPUTextureFormat format);
     bool setDepthFunc(WGPUCompareFunction compareFunc);
     bool setStencilFrontFunc(WGPUCompareFunction compareFunc);
     bool setStencilFrontOps(WGPUStencilOperation failOp,

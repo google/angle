@@ -21,19 +21,20 @@ WindowSurfaceWgpuWin32::WindowSurfaceWgpuWin32(const egl::SurfaceState &surfaceS
 {}
 
 angle::Result WindowSurfaceWgpuWin32::createWgpuSurface(const egl::Display *display,
-                                                        wgpu::Surface *outSurface)
+                                                        webgpu::SurfaceHandle *outSurface)
 {
     DisplayWgpu *displayWgpu = webgpu::GetImpl(display);
-    wgpu::Instance instance = displayWgpu->getInstance();
+    webgpu::InstanceHandle instance = displayWgpu->getInstance();
 
-    wgpu::SurfaceDescriptorFromWindowsHWND hwndDesc;
-    hwndDesc.hinstance = GetModuleHandle(nullptr);
-    hwndDesc.hwnd      = getNativeWindow();
+    WGPUSurfaceSourceWindowsHWND hwndDesc = WGPU_SURFACE_SOURCE_WINDOWS_HWND_INIT;
+    hwndDesc.hinstance                    = GetModuleHandle(nullptr);
+    hwndDesc.hwnd                         = getNativeWindow();
 
-    wgpu::SurfaceDescriptor surfaceDesc;
-    surfaceDesc.nextInChain = &hwndDesc;
+    WGPUSurfaceDescriptor surfaceDesc = WGPU_SURFACE_DESCRIPTOR_INIT;
+    surfaceDesc.nextInChain           = &hwndDesc.chain;
 
-    wgpu::Surface surface = instance.CreateSurface(&surfaceDesc);
+    webgpu::SurfaceHandle surface =
+        webgpu::SurfaceHandle::Acquire(wgpuInstanceCreateSurface(instance.get(), &surfaceDesc));
     *outSurface           = surface;
 
     return angle::Result::Continue;

@@ -2077,324 +2077,324 @@ void Format::initialize(const angle::Format &angleFormat)
     }
 }
 
-wgpu::TextureFormat GetWgpuTextureFormatFromFormatID(angle::FormatID formatID)
+WGPUTextureFormat GetWgpuTextureFormatFromFormatID(angle::FormatID formatID)
 {
-    static constexpr angle::FormatMap<wgpu::TextureFormat> kMap = {
-        {angle::FormatID::ASTC_10x10_SRGB_BLOCK, wgpu::TextureFormat::ASTC10x10UnormSrgb},
-        {angle::FormatID::ASTC_10x10_UNORM_BLOCK, wgpu::TextureFormat::ASTC10x10Unorm},
-        {angle::FormatID::ASTC_10x5_SRGB_BLOCK, wgpu::TextureFormat::ASTC10x5UnormSrgb},
-        {angle::FormatID::ASTC_10x5_UNORM_BLOCK, wgpu::TextureFormat::ASTC10x5Unorm},
-        {angle::FormatID::ASTC_10x6_SRGB_BLOCK, wgpu::TextureFormat::ASTC10x6UnormSrgb},
-        {angle::FormatID::ASTC_10x6_UNORM_BLOCK, wgpu::TextureFormat::ASTC10x6Unorm},
-        {angle::FormatID::ASTC_10x8_SRGB_BLOCK, wgpu::TextureFormat::ASTC10x8UnormSrgb},
-        {angle::FormatID::ASTC_10x8_UNORM_BLOCK, wgpu::TextureFormat::ASTC10x8Unorm},
-        {angle::FormatID::ASTC_12x10_SRGB_BLOCK, wgpu::TextureFormat::ASTC12x10UnormSrgb},
-        {angle::FormatID::ASTC_12x10_UNORM_BLOCK, wgpu::TextureFormat::ASTC12x10Unorm},
-        {angle::FormatID::ASTC_12x12_SRGB_BLOCK, wgpu::TextureFormat::ASTC12x12UnormSrgb},
-        {angle::FormatID::ASTC_12x12_UNORM_BLOCK, wgpu::TextureFormat::ASTC12x12Unorm},
-        {angle::FormatID::ASTC_4x4_SRGB_BLOCK, wgpu::TextureFormat::ASTC4x4UnormSrgb},
-        {angle::FormatID::ASTC_4x4_UNORM_BLOCK, wgpu::TextureFormat::ASTC4x4Unorm},
-        {angle::FormatID::ASTC_5x4_SRGB_BLOCK, wgpu::TextureFormat::ASTC5x4UnormSrgb},
-        {angle::FormatID::ASTC_5x4_UNORM_BLOCK, wgpu::TextureFormat::ASTC5x4Unorm},
-        {angle::FormatID::ASTC_5x5_SRGB_BLOCK, wgpu::TextureFormat::ASTC5x5UnormSrgb},
-        {angle::FormatID::ASTC_5x5_UNORM_BLOCK, wgpu::TextureFormat::ASTC5x5Unorm},
-        {angle::FormatID::ASTC_6x5_SRGB_BLOCK, wgpu::TextureFormat::ASTC6x5UnormSrgb},
-        {angle::FormatID::ASTC_6x5_UNORM_BLOCK, wgpu::TextureFormat::ASTC6x5Unorm},
-        {angle::FormatID::ASTC_6x6_SRGB_BLOCK, wgpu::TextureFormat::ASTC6x6UnormSrgb},
-        {angle::FormatID::ASTC_6x6_UNORM_BLOCK, wgpu::TextureFormat::ASTC6x6Unorm},
-        {angle::FormatID::ASTC_8x5_SRGB_BLOCK, wgpu::TextureFormat::ASTC8x5UnormSrgb},
-        {angle::FormatID::ASTC_8x5_UNORM_BLOCK, wgpu::TextureFormat::ASTC8x5Unorm},
-        {angle::FormatID::ASTC_8x6_SRGB_BLOCK, wgpu::TextureFormat::ASTC8x6UnormSrgb},
-        {angle::FormatID::ASTC_8x6_UNORM_BLOCK, wgpu::TextureFormat::ASTC8x6Unorm},
-        {angle::FormatID::ASTC_8x8_SRGB_BLOCK, wgpu::TextureFormat::ASTC8x8UnormSrgb},
-        {angle::FormatID::ASTC_8x8_UNORM_BLOCK, wgpu::TextureFormat::ASTC8x8Unorm},
-        {angle::FormatID::B8G8R8A8_UNORM, wgpu::TextureFormat::BGRA8Unorm},
-        {angle::FormatID::B8G8R8A8_UNORM_SRGB, wgpu::TextureFormat::BGRA8UnormSrgb},
-        {angle::FormatID::BC1_RGBA_UNORM_BLOCK, wgpu::TextureFormat::BC1RGBAUnorm},
-        {angle::FormatID::BC1_RGBA_UNORM_SRGB_BLOCK, wgpu::TextureFormat::BC1RGBAUnormSrgb},
-        {angle::FormatID::BC2_RGBA_UNORM_BLOCK, wgpu::TextureFormat::BC2RGBAUnorm},
-        {angle::FormatID::BC2_RGBA_UNORM_SRGB_BLOCK, wgpu::TextureFormat::BC2RGBAUnormSrgb},
-        {angle::FormatID::BC3_RGBA_UNORM_BLOCK, wgpu::TextureFormat::BC3RGBAUnorm},
-        {angle::FormatID::BC3_RGBA_UNORM_SRGB_BLOCK, wgpu::TextureFormat::BC3RGBAUnormSrgb},
-        {angle::FormatID::BC4_RED_SNORM_BLOCK, wgpu::TextureFormat::BC4RSnorm},
-        {angle::FormatID::BC4_RED_UNORM_BLOCK, wgpu::TextureFormat::BC4RUnorm},
-        {angle::FormatID::BC5_RG_SNORM_BLOCK, wgpu::TextureFormat::BC5RGSnorm},
-        {angle::FormatID::BC5_RG_UNORM_BLOCK, wgpu::TextureFormat::BC5RGUnorm},
-        {angle::FormatID::BC6H_RGB_SFLOAT_BLOCK, wgpu::TextureFormat::BC6HRGBFloat},
-        {angle::FormatID::BC6H_RGB_UFLOAT_BLOCK, wgpu::TextureFormat::BC6HRGBUfloat},
-        {angle::FormatID::BC7_RGBA_UNORM_BLOCK, wgpu::TextureFormat::BC7RGBAUnorm},
-        {angle::FormatID::BC7_RGBA_UNORM_SRGB_BLOCK, wgpu::TextureFormat::BC7RGBAUnormSrgb},
-        {angle::FormatID::D16_UNORM, wgpu::TextureFormat::Depth16Unorm},
-        {angle::FormatID::D24_UNORM_S8_UINT, wgpu::TextureFormat::Depth24PlusStencil8},
-        {angle::FormatID::D32_FLOAT, wgpu::TextureFormat::Depth32Float},
-        {angle::FormatID::EAC_R11G11_SNORM_BLOCK, wgpu::TextureFormat::EACRG11Snorm},
-        {angle::FormatID::EAC_R11G11_UNORM_BLOCK, wgpu::TextureFormat::EACRG11Unorm},
-        {angle::FormatID::EAC_R11_SNORM_BLOCK, wgpu::TextureFormat::EACR11Snorm},
-        {angle::FormatID::EAC_R11_UNORM_BLOCK, wgpu::TextureFormat::EACR11Unorm},
-        {angle::FormatID::ETC2_R8G8B8A1_SRGB_BLOCK, wgpu::TextureFormat::ETC2RGB8A1UnormSrgb},
-        {angle::FormatID::ETC2_R8G8B8A1_UNORM_BLOCK, wgpu::TextureFormat::ETC2RGB8A1Unorm},
-        {angle::FormatID::ETC2_R8G8B8A8_SRGB_BLOCK, wgpu::TextureFormat::ETC2RGBA8UnormSrgb},
-        {angle::FormatID::ETC2_R8G8B8A8_UNORM_BLOCK, wgpu::TextureFormat::ETC2RGBA8Unorm},
-        {angle::FormatID::ETC2_R8G8B8_SRGB_BLOCK, wgpu::TextureFormat::ETC2RGB8UnormSrgb},
-        {angle::FormatID::ETC2_R8G8B8_UNORM_BLOCK, wgpu::TextureFormat::ETC2RGB8Unorm},
-        {angle::FormatID::EXTERNAL0, wgpu::TextureFormat::Undefined},
-        {angle::FormatID::EXTERNAL1, wgpu::TextureFormat::Undefined},
-        {angle::FormatID::EXTERNAL2, wgpu::TextureFormat::Undefined},
-        {angle::FormatID::EXTERNAL3, wgpu::TextureFormat::Undefined},
-        {angle::FormatID::EXTERNAL4, wgpu::TextureFormat::Undefined},
-        {angle::FormatID::EXTERNAL5, wgpu::TextureFormat::Undefined},
-        {angle::FormatID::EXTERNAL6, wgpu::TextureFormat::Undefined},
-        {angle::FormatID::EXTERNAL7, wgpu::TextureFormat::Undefined},
-        {angle::FormatID::NONE, wgpu::TextureFormat::Undefined},
-        {angle::FormatID::R10G10B10A2_SINT, wgpu::TextureFormat::RGB10A2Uint},
-        {angle::FormatID::R10G10B10A2_UNORM, wgpu::TextureFormat::RGB10A2Unorm},
-        {angle::FormatID::R11G11B10_FLOAT, wgpu::TextureFormat::RG11B10Ufloat},
-        {angle::FormatID::R16G16B16A16_FLOAT, wgpu::TextureFormat::RGBA16Float},
-        {angle::FormatID::R16G16B16A16_SINT, wgpu::TextureFormat::RGBA16Sint},
-        {angle::FormatID::R16G16B16A16_SNORM, wgpu::TextureFormat::RGBA16Snorm},
-        {angle::FormatID::R16G16B16A16_UINT, wgpu::TextureFormat::RGBA16Uint},
-        {angle::FormatID::R16G16B16A16_UNORM, wgpu::TextureFormat::RGBA16Unorm},
-        {angle::FormatID::R16G16_FLOAT, wgpu::TextureFormat::RG16Float},
-        {angle::FormatID::R16G16_SINT, wgpu::TextureFormat::RG16Sint},
-        {angle::FormatID::R16G16_SNORM, wgpu::TextureFormat::RG16Snorm},
-        {angle::FormatID::R16G16_UINT, wgpu::TextureFormat::RG16Uint},
-        {angle::FormatID::R16G16_UNORM, wgpu::TextureFormat::RG16Unorm},
-        {angle::FormatID::R16_FLOAT, wgpu::TextureFormat::R16Float},
-        {angle::FormatID::R16_SINT, wgpu::TextureFormat::R16Sint},
-        {angle::FormatID::R16_SNORM, wgpu::TextureFormat::R16Snorm},
-        {angle::FormatID::R16_UINT, wgpu::TextureFormat::R16Uint},
-        {angle::FormatID::R16_UNORM, wgpu::TextureFormat::R16Unorm},
-        {angle::FormatID::R32G32B32A32_FLOAT, wgpu::TextureFormat::RGBA32Float},
-        {angle::FormatID::R32G32B32A32_SINT, wgpu::TextureFormat::RGBA32Sint},
-        {angle::FormatID::R32G32B32A32_UINT, wgpu::TextureFormat::RGBA32Uint},
-        {angle::FormatID::R32G32_FLOAT, wgpu::TextureFormat::RG32Float},
-        {angle::FormatID::R32G32_SINT, wgpu::TextureFormat::RG32Sint},
-        {angle::FormatID::R32G32_UINT, wgpu::TextureFormat::RG32Uint},
-        {angle::FormatID::R32_FLOAT, wgpu::TextureFormat::R32Float},
-        {angle::FormatID::R32_SINT, wgpu::TextureFormat::R32Sint},
-        {angle::FormatID::R32_UINT, wgpu::TextureFormat::R32Uint},
-        {angle::FormatID::R8G8B8A8_SINT, wgpu::TextureFormat::RGBA8Sint},
-        {angle::FormatID::R8G8B8A8_SNORM, wgpu::TextureFormat::RGBA8Snorm},
-        {angle::FormatID::R8G8B8A8_UINT, wgpu::TextureFormat::RGBA8Uint},
-        {angle::FormatID::R8G8B8A8_UNORM, wgpu::TextureFormat::RGBA8Unorm},
-        {angle::FormatID::R8G8B8A8_UNORM_SRGB, wgpu::TextureFormat::RGBA8UnormSrgb},
-        {angle::FormatID::R8G8_SINT, wgpu::TextureFormat::RG8Sint},
-        {angle::FormatID::R8G8_SNORM, wgpu::TextureFormat::RG8Snorm},
-        {angle::FormatID::R8G8_UINT, wgpu::TextureFormat::RG8Uint},
-        {angle::FormatID::R8G8_UNORM, wgpu::TextureFormat::RG8Unorm},
-        {angle::FormatID::R8_SINT, wgpu::TextureFormat::R8Sint},
-        {angle::FormatID::R8_SNORM, wgpu::TextureFormat::R8Snorm},
-        {angle::FormatID::R8_UINT, wgpu::TextureFormat::R8Uint},
-        {angle::FormatID::R8_UNORM, wgpu::TextureFormat::R8Unorm},
-        {angle::FormatID::R9G9B9E5_SHAREDEXP, wgpu::TextureFormat::RGB9E5Ufloat},
-        {angle::FormatID::S8_UINT, wgpu::TextureFormat::Stencil8}};
+    static constexpr angle::FormatMap<WGPUTextureFormat> kMap = {
+        {angle::FormatID::ASTC_10x10_SRGB_BLOCK, WGPUTextureFormat_ASTC10x10UnormSrgb},
+        {angle::FormatID::ASTC_10x10_UNORM_BLOCK, WGPUTextureFormat_ASTC10x10Unorm},
+        {angle::FormatID::ASTC_10x5_SRGB_BLOCK, WGPUTextureFormat_ASTC10x5UnormSrgb},
+        {angle::FormatID::ASTC_10x5_UNORM_BLOCK, WGPUTextureFormat_ASTC10x5Unorm},
+        {angle::FormatID::ASTC_10x6_SRGB_BLOCK, WGPUTextureFormat_ASTC10x6UnormSrgb},
+        {angle::FormatID::ASTC_10x6_UNORM_BLOCK, WGPUTextureFormat_ASTC10x6Unorm},
+        {angle::FormatID::ASTC_10x8_SRGB_BLOCK, WGPUTextureFormat_ASTC10x8UnormSrgb},
+        {angle::FormatID::ASTC_10x8_UNORM_BLOCK, WGPUTextureFormat_ASTC10x8Unorm},
+        {angle::FormatID::ASTC_12x10_SRGB_BLOCK, WGPUTextureFormat_ASTC12x10UnormSrgb},
+        {angle::FormatID::ASTC_12x10_UNORM_BLOCK, WGPUTextureFormat_ASTC12x10Unorm},
+        {angle::FormatID::ASTC_12x12_SRGB_BLOCK, WGPUTextureFormat_ASTC12x12UnormSrgb},
+        {angle::FormatID::ASTC_12x12_UNORM_BLOCK, WGPUTextureFormat_ASTC12x12Unorm},
+        {angle::FormatID::ASTC_4x4_SRGB_BLOCK, WGPUTextureFormat_ASTC4x4UnormSrgb},
+        {angle::FormatID::ASTC_4x4_UNORM_BLOCK, WGPUTextureFormat_ASTC4x4Unorm},
+        {angle::FormatID::ASTC_5x4_SRGB_BLOCK, WGPUTextureFormat_ASTC5x4UnormSrgb},
+        {angle::FormatID::ASTC_5x4_UNORM_BLOCK, WGPUTextureFormat_ASTC5x4Unorm},
+        {angle::FormatID::ASTC_5x5_SRGB_BLOCK, WGPUTextureFormat_ASTC5x5UnormSrgb},
+        {angle::FormatID::ASTC_5x5_UNORM_BLOCK, WGPUTextureFormat_ASTC5x5Unorm},
+        {angle::FormatID::ASTC_6x5_SRGB_BLOCK, WGPUTextureFormat_ASTC6x5UnormSrgb},
+        {angle::FormatID::ASTC_6x5_UNORM_BLOCK, WGPUTextureFormat_ASTC6x5Unorm},
+        {angle::FormatID::ASTC_6x6_SRGB_BLOCK, WGPUTextureFormat_ASTC6x6UnormSrgb},
+        {angle::FormatID::ASTC_6x6_UNORM_BLOCK, WGPUTextureFormat_ASTC6x6Unorm},
+        {angle::FormatID::ASTC_8x5_SRGB_BLOCK, WGPUTextureFormat_ASTC8x5UnormSrgb},
+        {angle::FormatID::ASTC_8x5_UNORM_BLOCK, WGPUTextureFormat_ASTC8x5Unorm},
+        {angle::FormatID::ASTC_8x6_SRGB_BLOCK, WGPUTextureFormat_ASTC8x6UnormSrgb},
+        {angle::FormatID::ASTC_8x6_UNORM_BLOCK, WGPUTextureFormat_ASTC8x6Unorm},
+        {angle::FormatID::ASTC_8x8_SRGB_BLOCK, WGPUTextureFormat_ASTC8x8UnormSrgb},
+        {angle::FormatID::ASTC_8x8_UNORM_BLOCK, WGPUTextureFormat_ASTC8x8Unorm},
+        {angle::FormatID::B8G8R8A8_UNORM, WGPUTextureFormat_BGRA8Unorm},
+        {angle::FormatID::B8G8R8A8_UNORM_SRGB, WGPUTextureFormat_BGRA8UnormSrgb},
+        {angle::FormatID::BC1_RGBA_UNORM_BLOCK, WGPUTextureFormat_BC1RGBAUnorm},
+        {angle::FormatID::BC1_RGBA_UNORM_SRGB_BLOCK, WGPUTextureFormat_BC1RGBAUnormSrgb},
+        {angle::FormatID::BC2_RGBA_UNORM_BLOCK, WGPUTextureFormat_BC2RGBAUnorm},
+        {angle::FormatID::BC2_RGBA_UNORM_SRGB_BLOCK, WGPUTextureFormat_BC2RGBAUnormSrgb},
+        {angle::FormatID::BC3_RGBA_UNORM_BLOCK, WGPUTextureFormat_BC3RGBAUnorm},
+        {angle::FormatID::BC3_RGBA_UNORM_SRGB_BLOCK, WGPUTextureFormat_BC3RGBAUnormSrgb},
+        {angle::FormatID::BC4_RED_SNORM_BLOCK, WGPUTextureFormat_BC4RSnorm},
+        {angle::FormatID::BC4_RED_UNORM_BLOCK, WGPUTextureFormat_BC4RUnorm},
+        {angle::FormatID::BC5_RG_SNORM_BLOCK, WGPUTextureFormat_BC5RGSnorm},
+        {angle::FormatID::BC5_RG_UNORM_BLOCK, WGPUTextureFormat_BC5RGUnorm},
+        {angle::FormatID::BC6H_RGB_SFLOAT_BLOCK, WGPUTextureFormat_BC6HRGBFloat},
+        {angle::FormatID::BC6H_RGB_UFLOAT_BLOCK, WGPUTextureFormat_BC6HRGBUfloat},
+        {angle::FormatID::BC7_RGBA_UNORM_BLOCK, WGPUTextureFormat_BC7RGBAUnorm},
+        {angle::FormatID::BC7_RGBA_UNORM_SRGB_BLOCK, WGPUTextureFormat_BC7RGBAUnormSrgb},
+        {angle::FormatID::D16_UNORM, WGPUTextureFormat_Depth16Unorm},
+        {angle::FormatID::D24_UNORM_S8_UINT, WGPUTextureFormat_Depth24PlusStencil8},
+        {angle::FormatID::D32_FLOAT, WGPUTextureFormat_Depth32Float},
+        {angle::FormatID::EAC_R11G11_SNORM_BLOCK, WGPUTextureFormat_EACRG11Snorm},
+        {angle::FormatID::EAC_R11G11_UNORM_BLOCK, WGPUTextureFormat_EACRG11Unorm},
+        {angle::FormatID::EAC_R11_SNORM_BLOCK, WGPUTextureFormat_EACR11Snorm},
+        {angle::FormatID::EAC_R11_UNORM_BLOCK, WGPUTextureFormat_EACR11Unorm},
+        {angle::FormatID::ETC2_R8G8B8A1_SRGB_BLOCK, WGPUTextureFormat_ETC2RGB8A1UnormSrgb},
+        {angle::FormatID::ETC2_R8G8B8A1_UNORM_BLOCK, WGPUTextureFormat_ETC2RGB8A1Unorm},
+        {angle::FormatID::ETC2_R8G8B8A8_SRGB_BLOCK, WGPUTextureFormat_ETC2RGBA8UnormSrgb},
+        {angle::FormatID::ETC2_R8G8B8A8_UNORM_BLOCK, WGPUTextureFormat_ETC2RGBA8Unorm},
+        {angle::FormatID::ETC2_R8G8B8_SRGB_BLOCK, WGPUTextureFormat_ETC2RGB8UnormSrgb},
+        {angle::FormatID::ETC2_R8G8B8_UNORM_BLOCK, WGPUTextureFormat_ETC2RGB8Unorm},
+        {angle::FormatID::EXTERNAL0, WGPUTextureFormat_Undefined},
+        {angle::FormatID::EXTERNAL1, WGPUTextureFormat_Undefined},
+        {angle::FormatID::EXTERNAL2, WGPUTextureFormat_Undefined},
+        {angle::FormatID::EXTERNAL3, WGPUTextureFormat_Undefined},
+        {angle::FormatID::EXTERNAL4, WGPUTextureFormat_Undefined},
+        {angle::FormatID::EXTERNAL5, WGPUTextureFormat_Undefined},
+        {angle::FormatID::EXTERNAL6, WGPUTextureFormat_Undefined},
+        {angle::FormatID::EXTERNAL7, WGPUTextureFormat_Undefined},
+        {angle::FormatID::NONE, WGPUTextureFormat_Undefined},
+        {angle::FormatID::R10G10B10A2_SINT, WGPUTextureFormat_RGB10A2Uint},
+        {angle::FormatID::R10G10B10A2_UNORM, WGPUTextureFormat_RGB10A2Unorm},
+        {angle::FormatID::R11G11B10_FLOAT, WGPUTextureFormat_RG11B10Ufloat},
+        {angle::FormatID::R16G16B16A16_FLOAT, WGPUTextureFormat_RGBA16Float},
+        {angle::FormatID::R16G16B16A16_SINT, WGPUTextureFormat_RGBA16Sint},
+        {angle::FormatID::R16G16B16A16_SNORM, WGPUTextureFormat_RGBA16Snorm},
+        {angle::FormatID::R16G16B16A16_UINT, WGPUTextureFormat_RGBA16Uint},
+        {angle::FormatID::R16G16B16A16_UNORM, WGPUTextureFormat_RGBA16Unorm},
+        {angle::FormatID::R16G16_FLOAT, WGPUTextureFormat_RG16Float},
+        {angle::FormatID::R16G16_SINT, WGPUTextureFormat_RG16Sint},
+        {angle::FormatID::R16G16_SNORM, WGPUTextureFormat_RG16Snorm},
+        {angle::FormatID::R16G16_UINT, WGPUTextureFormat_RG16Uint},
+        {angle::FormatID::R16G16_UNORM, WGPUTextureFormat_RG16Unorm},
+        {angle::FormatID::R16_FLOAT, WGPUTextureFormat_R16Float},
+        {angle::FormatID::R16_SINT, WGPUTextureFormat_R16Sint},
+        {angle::FormatID::R16_SNORM, WGPUTextureFormat_R16Snorm},
+        {angle::FormatID::R16_UINT, WGPUTextureFormat_R16Uint},
+        {angle::FormatID::R16_UNORM, WGPUTextureFormat_R16Unorm},
+        {angle::FormatID::R32G32B32A32_FLOAT, WGPUTextureFormat_RGBA32Float},
+        {angle::FormatID::R32G32B32A32_SINT, WGPUTextureFormat_RGBA32Sint},
+        {angle::FormatID::R32G32B32A32_UINT, WGPUTextureFormat_RGBA32Uint},
+        {angle::FormatID::R32G32_FLOAT, WGPUTextureFormat_RG32Float},
+        {angle::FormatID::R32G32_SINT, WGPUTextureFormat_RG32Sint},
+        {angle::FormatID::R32G32_UINT, WGPUTextureFormat_RG32Uint},
+        {angle::FormatID::R32_FLOAT, WGPUTextureFormat_R32Float},
+        {angle::FormatID::R32_SINT, WGPUTextureFormat_R32Sint},
+        {angle::FormatID::R32_UINT, WGPUTextureFormat_R32Uint},
+        {angle::FormatID::R8G8B8A8_SINT, WGPUTextureFormat_RGBA8Sint},
+        {angle::FormatID::R8G8B8A8_SNORM, WGPUTextureFormat_RGBA8Snorm},
+        {angle::FormatID::R8G8B8A8_UINT, WGPUTextureFormat_RGBA8Uint},
+        {angle::FormatID::R8G8B8A8_UNORM, WGPUTextureFormat_RGBA8Unorm},
+        {angle::FormatID::R8G8B8A8_UNORM_SRGB, WGPUTextureFormat_RGBA8UnormSrgb},
+        {angle::FormatID::R8G8_SINT, WGPUTextureFormat_RG8Sint},
+        {angle::FormatID::R8G8_SNORM, WGPUTextureFormat_RG8Snorm},
+        {angle::FormatID::R8G8_UINT, WGPUTextureFormat_RG8Uint},
+        {angle::FormatID::R8G8_UNORM, WGPUTextureFormat_RG8Unorm},
+        {angle::FormatID::R8_SINT, WGPUTextureFormat_R8Sint},
+        {angle::FormatID::R8_SNORM, WGPUTextureFormat_R8Snorm},
+        {angle::FormatID::R8_UINT, WGPUTextureFormat_R8Uint},
+        {angle::FormatID::R8_UNORM, WGPUTextureFormat_R8Unorm},
+        {angle::FormatID::R9G9B9E5_SHAREDEXP, WGPUTextureFormat_RGB9E5Ufloat},
+        {angle::FormatID::S8_UINT, WGPUTextureFormat_Stencil8}};
 
     return kMap[formatID];
 }
 
-angle::FormatID GetFormatIDFromWgpuTextureFormat(wgpu::TextureFormat wgpuFormat)
+angle::FormatID GetFormatIDFromWgpuTextureFormat(WGPUTextureFormat wgpuFormat)
 {
     switch (wgpuFormat)
     {
-        case wgpu::TextureFormat::ASTC10x10UnormSrgb:
+        case WGPUTextureFormat_ASTC10x10UnormSrgb:
             return angle::FormatID::ASTC_10x10_SRGB_BLOCK;
-        case wgpu::TextureFormat::ASTC10x10Unorm:
+        case WGPUTextureFormat_ASTC10x10Unorm:
             return angle::FormatID::ASTC_10x10_UNORM_BLOCK;
-        case wgpu::TextureFormat::ASTC10x5UnormSrgb:
+        case WGPUTextureFormat_ASTC10x5UnormSrgb:
             return angle::FormatID::ASTC_10x5_SRGB_BLOCK;
-        case wgpu::TextureFormat::ASTC10x5Unorm:
+        case WGPUTextureFormat_ASTC10x5Unorm:
             return angle::FormatID::ASTC_10x5_UNORM_BLOCK;
-        case wgpu::TextureFormat::ASTC10x6UnormSrgb:
+        case WGPUTextureFormat_ASTC10x6UnormSrgb:
             return angle::FormatID::ASTC_10x6_SRGB_BLOCK;
-        case wgpu::TextureFormat::ASTC10x6Unorm:
+        case WGPUTextureFormat_ASTC10x6Unorm:
             return angle::FormatID::ASTC_10x6_UNORM_BLOCK;
-        case wgpu::TextureFormat::ASTC10x8UnormSrgb:
+        case WGPUTextureFormat_ASTC10x8UnormSrgb:
             return angle::FormatID::ASTC_10x8_SRGB_BLOCK;
-        case wgpu::TextureFormat::ASTC10x8Unorm:
+        case WGPUTextureFormat_ASTC10x8Unorm:
             return angle::FormatID::ASTC_10x8_UNORM_BLOCK;
-        case wgpu::TextureFormat::ASTC12x10UnormSrgb:
+        case WGPUTextureFormat_ASTC12x10UnormSrgb:
             return angle::FormatID::ASTC_12x10_SRGB_BLOCK;
-        case wgpu::TextureFormat::ASTC12x10Unorm:
+        case WGPUTextureFormat_ASTC12x10Unorm:
             return angle::FormatID::ASTC_12x10_UNORM_BLOCK;
-        case wgpu::TextureFormat::ASTC12x12UnormSrgb:
+        case WGPUTextureFormat_ASTC12x12UnormSrgb:
             return angle::FormatID::ASTC_12x12_SRGB_BLOCK;
-        case wgpu::TextureFormat::ASTC12x12Unorm:
+        case WGPUTextureFormat_ASTC12x12Unorm:
             return angle::FormatID::ASTC_12x12_UNORM_BLOCK;
-        case wgpu::TextureFormat::ASTC4x4UnormSrgb:
+        case WGPUTextureFormat_ASTC4x4UnormSrgb:
             return angle::FormatID::ASTC_4x4_SRGB_BLOCK;
-        case wgpu::TextureFormat::ASTC4x4Unorm:
+        case WGPUTextureFormat_ASTC4x4Unorm:
             return angle::FormatID::ASTC_4x4_UNORM_BLOCK;
-        case wgpu::TextureFormat::ASTC5x4UnormSrgb:
+        case WGPUTextureFormat_ASTC5x4UnormSrgb:
             return angle::FormatID::ASTC_5x4_SRGB_BLOCK;
-        case wgpu::TextureFormat::ASTC5x4Unorm:
+        case WGPUTextureFormat_ASTC5x4Unorm:
             return angle::FormatID::ASTC_5x4_UNORM_BLOCK;
-        case wgpu::TextureFormat::ASTC5x5UnormSrgb:
+        case WGPUTextureFormat_ASTC5x5UnormSrgb:
             return angle::FormatID::ASTC_5x5_SRGB_BLOCK;
-        case wgpu::TextureFormat::ASTC5x5Unorm:
+        case WGPUTextureFormat_ASTC5x5Unorm:
             return angle::FormatID::ASTC_5x5_UNORM_BLOCK;
-        case wgpu::TextureFormat::ASTC6x5UnormSrgb:
+        case WGPUTextureFormat_ASTC6x5UnormSrgb:
             return angle::FormatID::ASTC_6x5_SRGB_BLOCK;
-        case wgpu::TextureFormat::ASTC6x5Unorm:
+        case WGPUTextureFormat_ASTC6x5Unorm:
             return angle::FormatID::ASTC_6x5_UNORM_BLOCK;
-        case wgpu::TextureFormat::ASTC6x6UnormSrgb:
+        case WGPUTextureFormat_ASTC6x6UnormSrgb:
             return angle::FormatID::ASTC_6x6_SRGB_BLOCK;
-        case wgpu::TextureFormat::ASTC6x6Unorm:
+        case WGPUTextureFormat_ASTC6x6Unorm:
             return angle::FormatID::ASTC_6x6_UNORM_BLOCK;
-        case wgpu::TextureFormat::ASTC8x5UnormSrgb:
+        case WGPUTextureFormat_ASTC8x5UnormSrgb:
             return angle::FormatID::ASTC_8x5_SRGB_BLOCK;
-        case wgpu::TextureFormat::ASTC8x5Unorm:
+        case WGPUTextureFormat_ASTC8x5Unorm:
             return angle::FormatID::ASTC_8x5_UNORM_BLOCK;
-        case wgpu::TextureFormat::ASTC8x6UnormSrgb:
+        case WGPUTextureFormat_ASTC8x6UnormSrgb:
             return angle::FormatID::ASTC_8x6_SRGB_BLOCK;
-        case wgpu::TextureFormat::ASTC8x6Unorm:
+        case WGPUTextureFormat_ASTC8x6Unorm:
             return angle::FormatID::ASTC_8x6_UNORM_BLOCK;
-        case wgpu::TextureFormat::ASTC8x8UnormSrgb:
+        case WGPUTextureFormat_ASTC8x8UnormSrgb:
             return angle::FormatID::ASTC_8x8_SRGB_BLOCK;
-        case wgpu::TextureFormat::ASTC8x8Unorm:
+        case WGPUTextureFormat_ASTC8x8Unorm:
             return angle::FormatID::ASTC_8x8_UNORM_BLOCK;
-        case wgpu::TextureFormat::BGRA8Unorm:
+        case WGPUTextureFormat_BGRA8Unorm:
             return angle::FormatID::B8G8R8A8_UNORM;
-        case wgpu::TextureFormat::BGRA8UnormSrgb:
+        case WGPUTextureFormat_BGRA8UnormSrgb:
             return angle::FormatID::B8G8R8A8_UNORM_SRGB;
-        case wgpu::TextureFormat::BC1RGBAUnorm:
+        case WGPUTextureFormat_BC1RGBAUnorm:
             return angle::FormatID::BC1_RGBA_UNORM_BLOCK;
-        case wgpu::TextureFormat::BC1RGBAUnormSrgb:
+        case WGPUTextureFormat_BC1RGBAUnormSrgb:
             return angle::FormatID::BC1_RGBA_UNORM_SRGB_BLOCK;
-        case wgpu::TextureFormat::BC2RGBAUnorm:
+        case WGPUTextureFormat_BC2RGBAUnorm:
             return angle::FormatID::BC2_RGBA_UNORM_BLOCK;
-        case wgpu::TextureFormat::BC2RGBAUnormSrgb:
+        case WGPUTextureFormat_BC2RGBAUnormSrgb:
             return angle::FormatID::BC2_RGBA_UNORM_SRGB_BLOCK;
-        case wgpu::TextureFormat::BC3RGBAUnorm:
+        case WGPUTextureFormat_BC3RGBAUnorm:
             return angle::FormatID::BC3_RGBA_UNORM_BLOCK;
-        case wgpu::TextureFormat::BC3RGBAUnormSrgb:
+        case WGPUTextureFormat_BC3RGBAUnormSrgb:
             return angle::FormatID::BC3_RGBA_UNORM_SRGB_BLOCK;
-        case wgpu::TextureFormat::BC4RSnorm:
+        case WGPUTextureFormat_BC4RSnorm:
             return angle::FormatID::BC4_RED_SNORM_BLOCK;
-        case wgpu::TextureFormat::BC4RUnorm:
+        case WGPUTextureFormat_BC4RUnorm:
             return angle::FormatID::BC4_RED_UNORM_BLOCK;
-        case wgpu::TextureFormat::BC5RGSnorm:
+        case WGPUTextureFormat_BC5RGSnorm:
             return angle::FormatID::BC5_RG_SNORM_BLOCK;
-        case wgpu::TextureFormat::BC5RGUnorm:
+        case WGPUTextureFormat_BC5RGUnorm:
             return angle::FormatID::BC5_RG_UNORM_BLOCK;
-        case wgpu::TextureFormat::BC6HRGBFloat:
+        case WGPUTextureFormat_BC6HRGBFloat:
             return angle::FormatID::BC6H_RGB_SFLOAT_BLOCK;
-        case wgpu::TextureFormat::BC6HRGBUfloat:
+        case WGPUTextureFormat_BC6HRGBUfloat:
             return angle::FormatID::BC6H_RGB_UFLOAT_BLOCK;
-        case wgpu::TextureFormat::BC7RGBAUnorm:
+        case WGPUTextureFormat_BC7RGBAUnorm:
             return angle::FormatID::BC7_RGBA_UNORM_BLOCK;
-        case wgpu::TextureFormat::BC7RGBAUnormSrgb:
+        case WGPUTextureFormat_BC7RGBAUnormSrgb:
             return angle::FormatID::BC7_RGBA_UNORM_SRGB_BLOCK;
-        case wgpu::TextureFormat::Depth16Unorm:
+        case WGPUTextureFormat_Depth16Unorm:
             return angle::FormatID::D16_UNORM;
-        case wgpu::TextureFormat::Depth24PlusStencil8:
+        case WGPUTextureFormat_Depth24PlusStencil8:
             return angle::FormatID::D24_UNORM_S8_UINT;
-        case wgpu::TextureFormat::Depth32Float:
+        case WGPUTextureFormat_Depth32Float:
             return angle::FormatID::D32_FLOAT;
-        case wgpu::TextureFormat::EACRG11Snorm:
+        case WGPUTextureFormat_EACRG11Snorm:
             return angle::FormatID::EAC_R11G11_SNORM_BLOCK;
-        case wgpu::TextureFormat::EACRG11Unorm:
+        case WGPUTextureFormat_EACRG11Unorm:
             return angle::FormatID::EAC_R11G11_UNORM_BLOCK;
-        case wgpu::TextureFormat::EACR11Snorm:
+        case WGPUTextureFormat_EACR11Snorm:
             return angle::FormatID::EAC_R11_SNORM_BLOCK;
-        case wgpu::TextureFormat::EACR11Unorm:
+        case WGPUTextureFormat_EACR11Unorm:
             return angle::FormatID::EAC_R11_UNORM_BLOCK;
-        case wgpu::TextureFormat::ETC2RGB8A1UnormSrgb:
+        case WGPUTextureFormat_ETC2RGB8A1UnormSrgb:
             return angle::FormatID::ETC2_R8G8B8A1_SRGB_BLOCK;
-        case wgpu::TextureFormat::ETC2RGB8A1Unorm:
+        case WGPUTextureFormat_ETC2RGB8A1Unorm:
             return angle::FormatID::ETC2_R8G8B8A1_UNORM_BLOCK;
-        case wgpu::TextureFormat::ETC2RGBA8UnormSrgb:
+        case WGPUTextureFormat_ETC2RGBA8UnormSrgb:
             return angle::FormatID::ETC2_R8G8B8A8_SRGB_BLOCK;
-        case wgpu::TextureFormat::ETC2RGBA8Unorm:
+        case WGPUTextureFormat_ETC2RGBA8Unorm:
             return angle::FormatID::ETC2_R8G8B8A8_UNORM_BLOCK;
-        case wgpu::TextureFormat::ETC2RGB8UnormSrgb:
+        case WGPUTextureFormat_ETC2RGB8UnormSrgb:
             return angle::FormatID::ETC2_R8G8B8_SRGB_BLOCK;
-        case wgpu::TextureFormat::ETC2RGB8Unorm:
+        case WGPUTextureFormat_ETC2RGB8Unorm:
             return angle::FormatID::ETC2_R8G8B8_UNORM_BLOCK;
-        case wgpu::TextureFormat::Undefined:
+        case WGPUTextureFormat_Undefined:
             return angle::FormatID::NONE;
-        case wgpu::TextureFormat::RGB10A2Uint:
+        case WGPUTextureFormat_RGB10A2Uint:
             return angle::FormatID::R10G10B10A2_SINT;
-        case wgpu::TextureFormat::RGB10A2Unorm:
+        case WGPUTextureFormat_RGB10A2Unorm:
             return angle::FormatID::R10G10B10A2_UNORM;
-        case wgpu::TextureFormat::RG11B10Ufloat:
+        case WGPUTextureFormat_RG11B10Ufloat:
             return angle::FormatID::R11G11B10_FLOAT;
-        case wgpu::TextureFormat::RGBA16Float:
+        case WGPUTextureFormat_RGBA16Float:
             return angle::FormatID::R16G16B16A16_FLOAT;
-        case wgpu::TextureFormat::RGBA16Sint:
+        case WGPUTextureFormat_RGBA16Sint:
             return angle::FormatID::R16G16B16A16_SINT;
-        case wgpu::TextureFormat::RGBA16Snorm:
+        case WGPUTextureFormat_RGBA16Snorm:
             return angle::FormatID::R16G16B16A16_SNORM;
-        case wgpu::TextureFormat::RGBA16Uint:
+        case WGPUTextureFormat_RGBA16Uint:
             return angle::FormatID::R16G16B16A16_UINT;
-        case wgpu::TextureFormat::RGBA16Unorm:
+        case WGPUTextureFormat_RGBA16Unorm:
             return angle::FormatID::R16G16B16A16_UNORM;
-        case wgpu::TextureFormat::RG16Float:
+        case WGPUTextureFormat_RG16Float:
             return angle::FormatID::R16G16_FLOAT;
-        case wgpu::TextureFormat::RG16Sint:
+        case WGPUTextureFormat_RG16Sint:
             return angle::FormatID::R16G16_SINT;
-        case wgpu::TextureFormat::RG16Snorm:
+        case WGPUTextureFormat_RG16Snorm:
             return angle::FormatID::R16G16_SNORM;
-        case wgpu::TextureFormat::RG16Uint:
+        case WGPUTextureFormat_RG16Uint:
             return angle::FormatID::R16G16_UINT;
-        case wgpu::TextureFormat::RG16Unorm:
+        case WGPUTextureFormat_RG16Unorm:
             return angle::FormatID::R16G16_UNORM;
-        case wgpu::TextureFormat::R16Float:
+        case WGPUTextureFormat_R16Float:
             return angle::FormatID::R16_FLOAT;
-        case wgpu::TextureFormat::R16Sint:
+        case WGPUTextureFormat_R16Sint:
             return angle::FormatID::R16_SINT;
-        case wgpu::TextureFormat::R16Snorm:
+        case WGPUTextureFormat_R16Snorm:
             return angle::FormatID::R16_SNORM;
-        case wgpu::TextureFormat::R16Uint:
+        case WGPUTextureFormat_R16Uint:
             return angle::FormatID::R16_UINT;
-        case wgpu::TextureFormat::R16Unorm:
+        case WGPUTextureFormat_R16Unorm:
             return angle::FormatID::R16_UNORM;
-        case wgpu::TextureFormat::RGBA32Float:
+        case WGPUTextureFormat_RGBA32Float:
             return angle::FormatID::R32G32B32A32_FLOAT;
-        case wgpu::TextureFormat::RGBA32Sint:
+        case WGPUTextureFormat_RGBA32Sint:
             return angle::FormatID::R32G32B32A32_SINT;
-        case wgpu::TextureFormat::RGBA32Uint:
+        case WGPUTextureFormat_RGBA32Uint:
             return angle::FormatID::R32G32B32A32_UINT;
-        case wgpu::TextureFormat::RG32Float:
+        case WGPUTextureFormat_RG32Float:
             return angle::FormatID::R32G32_FLOAT;
-        case wgpu::TextureFormat::RG32Sint:
+        case WGPUTextureFormat_RG32Sint:
             return angle::FormatID::R32G32_SINT;
-        case wgpu::TextureFormat::RG32Uint:
+        case WGPUTextureFormat_RG32Uint:
             return angle::FormatID::R32G32_UINT;
-        case wgpu::TextureFormat::R32Float:
+        case WGPUTextureFormat_R32Float:
             return angle::FormatID::R32_FLOAT;
-        case wgpu::TextureFormat::R32Sint:
+        case WGPUTextureFormat_R32Sint:
             return angle::FormatID::R32_SINT;
-        case wgpu::TextureFormat::R32Uint:
+        case WGPUTextureFormat_R32Uint:
             return angle::FormatID::R32_UINT;
-        case wgpu::TextureFormat::RGBA8Sint:
+        case WGPUTextureFormat_RGBA8Sint:
             return angle::FormatID::R8G8B8A8_SINT;
-        case wgpu::TextureFormat::RGBA8Snorm:
+        case WGPUTextureFormat_RGBA8Snorm:
             return angle::FormatID::R8G8B8A8_SNORM;
-        case wgpu::TextureFormat::RGBA8Uint:
+        case WGPUTextureFormat_RGBA8Uint:
             return angle::FormatID::R8G8B8A8_UINT;
-        case wgpu::TextureFormat::RGBA8Unorm:
+        case WGPUTextureFormat_RGBA8Unorm:
             return angle::FormatID::R8G8B8A8_UNORM;
-        case wgpu::TextureFormat::RGBA8UnormSrgb:
+        case WGPUTextureFormat_RGBA8UnormSrgb:
             return angle::FormatID::R8G8B8A8_UNORM_SRGB;
-        case wgpu::TextureFormat::RG8Sint:
+        case WGPUTextureFormat_RG8Sint:
             return angle::FormatID::R8G8_SINT;
-        case wgpu::TextureFormat::RG8Snorm:
+        case WGPUTextureFormat_RG8Snorm:
             return angle::FormatID::R8G8_SNORM;
-        case wgpu::TextureFormat::RG8Uint:
+        case WGPUTextureFormat_RG8Uint:
             return angle::FormatID::R8G8_UINT;
-        case wgpu::TextureFormat::RG8Unorm:
+        case WGPUTextureFormat_RG8Unorm:
             return angle::FormatID::R8G8_UNORM;
-        case wgpu::TextureFormat::R8Sint:
+        case WGPUTextureFormat_R8Sint:
             return angle::FormatID::R8_SINT;
-        case wgpu::TextureFormat::R8Snorm:
+        case WGPUTextureFormat_R8Snorm:
             return angle::FormatID::R8_SNORM;
-        case wgpu::TextureFormat::R8Uint:
+        case WGPUTextureFormat_R8Uint:
             return angle::FormatID::R8_UINT;
-        case wgpu::TextureFormat::R8Unorm:
+        case WGPUTextureFormat_R8Unorm:
             return angle::FormatID::R8_UNORM;
-        case wgpu::TextureFormat::RGB9E5Ufloat:
+        case WGPUTextureFormat_RGB9E5Ufloat:
             return angle::FormatID::R9G9B9E5_SHAREDEXP;
-        case wgpu::TextureFormat::Stencil8:
+        case WGPUTextureFormat_Stencil8:
             return angle::FormatID::S8_UINT;
 
         default:
@@ -2403,106 +2403,106 @@ angle::FormatID GetFormatIDFromWgpuTextureFormat(wgpu::TextureFormat wgpuFormat)
     }
 }
 
-wgpu::VertexFormat GetWgpuVertexFormatFromFormatID(angle::FormatID formatID)
+WGPUVertexFormat GetWgpuVertexFormatFromFormatID(angle::FormatID formatID)
 {
-    static constexpr angle::FormatMap<wgpu::VertexFormat> kMap = {
-        {angle::FormatID::EXTERNAL0, wgpu::VertexFormat(0u)},
-        {angle::FormatID::EXTERNAL1, wgpu::VertexFormat(0u)},
-        {angle::FormatID::EXTERNAL2, wgpu::VertexFormat(0u)},
-        {angle::FormatID::EXTERNAL3, wgpu::VertexFormat(0u)},
-        {angle::FormatID::EXTERNAL4, wgpu::VertexFormat(0u)},
-        {angle::FormatID::EXTERNAL5, wgpu::VertexFormat(0u)},
-        {angle::FormatID::EXTERNAL6, wgpu::VertexFormat(0u)},
-        {angle::FormatID::EXTERNAL7, wgpu::VertexFormat(0u)},
-        {angle::FormatID::NONE, wgpu::VertexFormat(0u)},
-        {angle::FormatID::R10G10B10A2_UNORM, wgpu::VertexFormat::Unorm10_10_10_2},
-        {angle::FormatID::R16G16B16A16_FLOAT, wgpu::VertexFormat::Float16x4},
-        {angle::FormatID::R16G16B16A16_SINT, wgpu::VertexFormat::Sint16x4},
-        {angle::FormatID::R16G16B16A16_SNORM, wgpu::VertexFormat::Snorm16x4},
-        {angle::FormatID::R16G16B16A16_UINT, wgpu::VertexFormat::Uint16x4},
-        {angle::FormatID::R16G16B16A16_UNORM, wgpu::VertexFormat::Unorm16x4},
-        {angle::FormatID::R16G16_FLOAT, wgpu::VertexFormat::Float16x2},
-        {angle::FormatID::R16G16_SINT, wgpu::VertexFormat::Sint16x2},
-        {angle::FormatID::R16G16_SNORM, wgpu::VertexFormat::Snorm16x2},
-        {angle::FormatID::R16G16_UINT, wgpu::VertexFormat::Uint16x2},
-        {angle::FormatID::R16G16_UNORM, wgpu::VertexFormat::Unorm16x2},
-        {angle::FormatID::R32G32B32A32_FLOAT, wgpu::VertexFormat::Float32x4},
-        {angle::FormatID::R32G32B32A32_SINT, wgpu::VertexFormat::Sint32x4},
-        {angle::FormatID::R32G32B32A32_UINT, wgpu::VertexFormat::Uint32x4},
-        {angle::FormatID::R32G32B32_FLOAT, wgpu::VertexFormat::Float32x3},
-        {angle::FormatID::R32G32B32_SINT, wgpu::VertexFormat::Sint32x3},
-        {angle::FormatID::R32G32B32_UINT, wgpu::VertexFormat::Uint32x3},
-        {angle::FormatID::R32G32_FLOAT, wgpu::VertexFormat::Float32x2},
-        {angle::FormatID::R32G32_SINT, wgpu::VertexFormat::Sint32x2},
-        {angle::FormatID::R32G32_UINT, wgpu::VertexFormat::Uint32x2},
-        {angle::FormatID::R32_FLOAT, wgpu::VertexFormat::Float32},
-        {angle::FormatID::R32_SINT, wgpu::VertexFormat::Sint32},
-        {angle::FormatID::R32_UINT, wgpu::VertexFormat::Uint32},
-        {angle::FormatID::R8G8B8A8_SINT, wgpu::VertexFormat::Sint8x4},
-        {angle::FormatID::R8G8B8A8_SNORM, wgpu::VertexFormat::Snorm8x4},
-        {angle::FormatID::R8G8B8A8_UINT, wgpu::VertexFormat::Uint8x4},
-        {angle::FormatID::R8G8B8A8_UNORM, wgpu::VertexFormat::Unorm8x4}};
+    static constexpr angle::FormatMap<WGPUVertexFormat> kMap = {
+        {angle::FormatID::EXTERNAL0, WGPUVertexFormat(0u)},
+        {angle::FormatID::EXTERNAL1, WGPUVertexFormat(0u)},
+        {angle::FormatID::EXTERNAL2, WGPUVertexFormat(0u)},
+        {angle::FormatID::EXTERNAL3, WGPUVertexFormat(0u)},
+        {angle::FormatID::EXTERNAL4, WGPUVertexFormat(0u)},
+        {angle::FormatID::EXTERNAL5, WGPUVertexFormat(0u)},
+        {angle::FormatID::EXTERNAL6, WGPUVertexFormat(0u)},
+        {angle::FormatID::EXTERNAL7, WGPUVertexFormat(0u)},
+        {angle::FormatID::NONE, WGPUVertexFormat(0u)},
+        {angle::FormatID::R10G10B10A2_UNORM, WGPUVertexFormat_Unorm10_10_10_2},
+        {angle::FormatID::R16G16B16A16_FLOAT, WGPUVertexFormat_Float16x4},
+        {angle::FormatID::R16G16B16A16_SINT, WGPUVertexFormat_Sint16x4},
+        {angle::FormatID::R16G16B16A16_SNORM, WGPUVertexFormat_Snorm16x4},
+        {angle::FormatID::R16G16B16A16_UINT, WGPUVertexFormat_Uint16x4},
+        {angle::FormatID::R16G16B16A16_UNORM, WGPUVertexFormat_Unorm16x4},
+        {angle::FormatID::R16G16_FLOAT, WGPUVertexFormat_Float16x2},
+        {angle::FormatID::R16G16_SINT, WGPUVertexFormat_Sint16x2},
+        {angle::FormatID::R16G16_SNORM, WGPUVertexFormat_Snorm16x2},
+        {angle::FormatID::R16G16_UINT, WGPUVertexFormat_Uint16x2},
+        {angle::FormatID::R16G16_UNORM, WGPUVertexFormat_Unorm16x2},
+        {angle::FormatID::R32G32B32A32_FLOAT, WGPUVertexFormat_Float32x4},
+        {angle::FormatID::R32G32B32A32_SINT, WGPUVertexFormat_Sint32x4},
+        {angle::FormatID::R32G32B32A32_UINT, WGPUVertexFormat_Uint32x4},
+        {angle::FormatID::R32G32B32_FLOAT, WGPUVertexFormat_Float32x3},
+        {angle::FormatID::R32G32B32_SINT, WGPUVertexFormat_Sint32x3},
+        {angle::FormatID::R32G32B32_UINT, WGPUVertexFormat_Uint32x3},
+        {angle::FormatID::R32G32_FLOAT, WGPUVertexFormat_Float32x2},
+        {angle::FormatID::R32G32_SINT, WGPUVertexFormat_Sint32x2},
+        {angle::FormatID::R32G32_UINT, WGPUVertexFormat_Uint32x2},
+        {angle::FormatID::R32_FLOAT, WGPUVertexFormat_Float32},
+        {angle::FormatID::R32_SINT, WGPUVertexFormat_Sint32},
+        {angle::FormatID::R32_UINT, WGPUVertexFormat_Uint32},
+        {angle::FormatID::R8G8B8A8_SINT, WGPUVertexFormat_Sint8x4},
+        {angle::FormatID::R8G8B8A8_SNORM, WGPUVertexFormat_Snorm8x4},
+        {angle::FormatID::R8G8B8A8_UINT, WGPUVertexFormat_Uint8x4},
+        {angle::FormatID::R8G8B8A8_UNORM, WGPUVertexFormat_Unorm8x4}};
 
     return kMap[formatID];
 }
 
-angle::FormatID GetFormatIDFromWgpuBufferFormat(wgpu::VertexFormat wgpuFormat)
+angle::FormatID GetFormatIDFromWgpuBufferFormat(WGPUVertexFormat wgpuFormat)
 {
     switch (wgpuFormat)
     {
-        case wgpu::VertexFormat::Unorm10_10_10_2:
+        case WGPUVertexFormat_Unorm10_10_10_2:
             return angle::FormatID::R10G10B10A2_UNORM;
-        case wgpu::VertexFormat::Float16x4:
+        case WGPUVertexFormat_Float16x4:
             return angle::FormatID::R16G16B16A16_FLOAT;
-        case wgpu::VertexFormat::Sint16x4:
+        case WGPUVertexFormat_Sint16x4:
             return angle::FormatID::R16G16B16A16_SINT;
-        case wgpu::VertexFormat::Snorm16x4:
+        case WGPUVertexFormat_Snorm16x4:
             return angle::FormatID::R16G16B16A16_SNORM;
-        case wgpu::VertexFormat::Uint16x4:
+        case WGPUVertexFormat_Uint16x4:
             return angle::FormatID::R16G16B16A16_UINT;
-        case wgpu::VertexFormat::Unorm16x4:
+        case WGPUVertexFormat_Unorm16x4:
             return angle::FormatID::R16G16B16A16_UNORM;
-        case wgpu::VertexFormat::Float16x2:
+        case WGPUVertexFormat_Float16x2:
             return angle::FormatID::R16G16_FLOAT;
-        case wgpu::VertexFormat::Sint16x2:
+        case WGPUVertexFormat_Sint16x2:
             return angle::FormatID::R16G16_SINT;
-        case wgpu::VertexFormat::Snorm16x2:
+        case WGPUVertexFormat_Snorm16x2:
             return angle::FormatID::R16G16_SNORM;
-        case wgpu::VertexFormat::Uint16x2:
+        case WGPUVertexFormat_Uint16x2:
             return angle::FormatID::R16G16_UINT;
-        case wgpu::VertexFormat::Unorm16x2:
+        case WGPUVertexFormat_Unorm16x2:
             return angle::FormatID::R16G16_UNORM;
-        case wgpu::VertexFormat::Float32x4:
+        case WGPUVertexFormat_Float32x4:
             return angle::FormatID::R32G32B32A32_FLOAT;
-        case wgpu::VertexFormat::Sint32x4:
+        case WGPUVertexFormat_Sint32x4:
             return angle::FormatID::R32G32B32A32_SINT;
-        case wgpu::VertexFormat::Uint32x4:
+        case WGPUVertexFormat_Uint32x4:
             return angle::FormatID::R32G32B32A32_UINT;
-        case wgpu::VertexFormat::Float32x3:
+        case WGPUVertexFormat_Float32x3:
             return angle::FormatID::R32G32B32_FLOAT;
-        case wgpu::VertexFormat::Sint32x3:
+        case WGPUVertexFormat_Sint32x3:
             return angle::FormatID::R32G32B32_SINT;
-        case wgpu::VertexFormat::Uint32x3:
+        case WGPUVertexFormat_Uint32x3:
             return angle::FormatID::R32G32B32_UINT;
-        case wgpu::VertexFormat::Float32x2:
+        case WGPUVertexFormat_Float32x2:
             return angle::FormatID::R32G32_FLOAT;
-        case wgpu::VertexFormat::Sint32x2:
+        case WGPUVertexFormat_Sint32x2:
             return angle::FormatID::R32G32_SINT;
-        case wgpu::VertexFormat::Uint32x2:
+        case WGPUVertexFormat_Uint32x2:
             return angle::FormatID::R32G32_UINT;
-        case wgpu::VertexFormat::Float32:
+        case WGPUVertexFormat_Float32:
             return angle::FormatID::R32_FLOAT;
-        case wgpu::VertexFormat::Sint32:
+        case WGPUVertexFormat_Sint32:
             return angle::FormatID::R32_SINT;
-        case wgpu::VertexFormat::Uint32:
+        case WGPUVertexFormat_Uint32:
             return angle::FormatID::R32_UINT;
-        case wgpu::VertexFormat::Sint8x4:
+        case WGPUVertexFormat_Sint8x4:
             return angle::FormatID::R8G8B8A8_SINT;
-        case wgpu::VertexFormat::Snorm8x4:
+        case WGPUVertexFormat_Snorm8x4:
             return angle::FormatID::R8G8B8A8_SNORM;
-        case wgpu::VertexFormat::Uint8x4:
+        case WGPUVertexFormat_Uint8x4:
             return angle::FormatID::R8G8B8A8_UINT;
-        case wgpu::VertexFormat::Unorm8x4:
+        case WGPUVertexFormat_Unorm8x4:
             return angle::FormatID::R8G8B8A8_UNORM;
 
         default:

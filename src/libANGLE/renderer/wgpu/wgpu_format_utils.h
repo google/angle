@@ -33,10 +33,10 @@ struct BufferFormatInitInfo final
     bool VertexLoadRequiresConversion;
 };
 
-wgpu::TextureFormat GetWgpuTextureFormatFromFormatID(angle::FormatID formatID);
-angle::FormatID GetFormatIDFromWgpuTextureFormat(wgpu::TextureFormat wgpuFormat);
-wgpu::VertexFormat GetWgpuVertexFormatFromFormatID(angle::FormatID formatID);
-angle::FormatID GetFormatIDFromWgpuBufferFormat(wgpu::VertexFormat wgpuFormat);
+WGPUTextureFormat GetWgpuTextureFormatFromFormatID(angle::FormatID formatID);
+angle::FormatID GetFormatIDFromWgpuTextureFormat(WGPUTextureFormat wgpuFormat);
+WGPUVertexFormat GetWgpuVertexFormatFromFormatID(angle::FormatID formatID);
+angle::FormatID GetFormatIDFromWgpuBufferFormat(WGPUVertexFormat wgpuFormat);
 
 // Describes a WebGPU format. WebGPU has separate formats for images and vertex buffers, this class
 // describes both.
@@ -64,13 +64,13 @@ class Format final : private angle::NonCopyable
         return mTextureLoadFunctions(type);
     }
 
-    wgpu::TextureFormat getActualWgpuTextureFormat() const
+    WGPUTextureFormat getActualWgpuTextureFormat() const
     {
         return GetWgpuTextureFormatFromFormatID(mActualImageFormatID);
     }
     angle::FormatID getActualImageFormatID() const { return mActualImageFormatID; }
 
-    wgpu::VertexFormat getActualWgpuVertexFormat() const
+    WGPUVertexFormat getActualWgpuVertexFormat() const
     {
         return GetWgpuVertexFormatFromFormatID(mActualBufferFormatID);
     }

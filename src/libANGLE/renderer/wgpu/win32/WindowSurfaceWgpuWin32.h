@@ -21,7 +21,7 @@ class WindowSurfaceWgpuWin32 : public WindowSurfaceWgpu
 
   private:
     angle::Result createWgpuSurface(const egl::Display *display,
-                                    wgpu::Surface *outSurface) override;
+                                    webgpu::SurfaceHandle *outSurface) override;
     angle::Result getCurrentWindowSize(const egl::Display *display, gl::Extents *outSize) override;
 };
 

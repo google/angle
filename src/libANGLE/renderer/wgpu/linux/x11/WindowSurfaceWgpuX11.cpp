@@ -26,22 +26,23 @@ WindowSurfaceWgpuX11::WindowSurfaceWgpuX11(const egl::SurfaceState &surfaceState
 {}
 
 angle::Result WindowSurfaceWgpuX11::createWgpuSurface(const egl::Display *display,
-                                                      wgpu::Surface *outSurface)
+                                                      webgpu::SurfaceHandle *outSurface)
 {
     DisplayWgpu *displayWgpu = webgpu::GetImpl(display);
 
     EGLNativeWindowType window = getNativeWindow();
 
-    wgpu::Instance instance = displayWgpu->getInstance();
+    webgpu::InstanceHandle instance = displayWgpu->getInstance();
 
-    wgpu::SurfaceDescriptorFromXlibWindow x11Desc;
+    WGPUSurfaceSourceXlibWindow x11Desc = WGPU_SURFACE_SOURCE_XLIB_WINDOW_INIT;
     x11Desc.display = reinterpret_cast<Display *>(display->getNativeDisplayId());
     x11Desc.window  = window;
 
-    wgpu::SurfaceDescriptor surfaceDesc;
-    surfaceDesc.nextInChain = &x11Desc;
+    WGPUSurfaceDescriptor surfaceDesc = WGPU_SURFACE_DESCRIPTOR_INIT;
+    surfaceDesc.nextInChain           = &x11Desc.chain;
 
-    wgpu::Surface surface = instance.CreateSurface(&surfaceDesc);
+    webgpu::SurfaceHandle surface =
+        webgpu::SurfaceHandle::Acquire(wgpuInstanceCreateSurface(instance.get(), &surfaceDesc));
     *outSurface           = surface;
 
     return angle::Result::Continue;

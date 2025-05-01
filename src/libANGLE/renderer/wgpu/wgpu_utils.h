@@ -313,7 +313,7 @@ enum class RenderPassClosureReason
 
 struct ClearValues
 {
-    wgpu::Color clearColor;
+    WGPUColor clearColor;
     uint32_t depthSlice;
     float depthValue;
     uint32_t stencilValue;
@@ -380,15 +380,14 @@ void GenerateCaps(const wgpu::Limits &limitWgpu,
 DisplayWgpu *GetDisplay(const gl::Context *context);
 wgpu::Device GetDevice(const gl::Context *context);
 wgpu::Instance GetInstance(const gl::Context *context);
-wgpu::RenderPassColorAttachment CreateNewClearColorAttachment(wgpu::Color clearValue,
-                                                              uint32_t depthSlice,
-                                                              wgpu::TextureView textureView);
-wgpu::RenderPassDepthStencilAttachment CreateNewDepthStencilAttachment(
-    float depthClearValue,
-    uint32_t stencilClearValue,
-    wgpu::TextureView textureView,
-    bool hasDepthValue   = false,
-    bool hasStencilValue = false);
+WGPURenderPassColorAttachment CreateNewClearColorAttachment(WGPUColor clearValue,
+                                                            uint32_t depthSlice,
+                                                            TextureViewHandle textureView);
+WGPURenderPassDepthStencilAttachment CreateNewDepthStencilAttachment(float depthClearValue,
+                                                                     uint32_t stencilClearValue,
+                                                                     TextureViewHandle textureView,
+                                                                     bool hasDepthValue   = false,
+                                                                     bool hasStencilValue = false);
 
 bool IsWgpuError(wgpu::WaitStatus waitStatus);
 bool IsWgpuError(wgpu::MapAsyncStatus mapAsyncStatus);
@@ -412,16 +411,16 @@ constexpr float kWGPUMaxLod = 32.0;
 
 namespace wgpu_gl
 {
-gl::LevelIndex getLevelIndex(webgpu::LevelIndex levelWgpu, gl::LevelIndex baseLevel);
-gl::Extents getExtents(wgpu::Extent3D wgpuExtent);
+gl::LevelIndex GetLevelIndex(webgpu::LevelIndex levelWgpu, gl::LevelIndex baseLevel);
+gl::Extents GetExtents(WGPUExtent3D wgpuExtent);
 }  // namespace wgpu_gl
 
 namespace gl_wgpu
 {
 webgpu::LevelIndex getLevelIndex(gl::LevelIndex levelGl, gl::LevelIndex baseLevel);
-wgpu::TextureViewDimension GetWgpuTextureViewDimension(gl::TextureType textureType);
-wgpu::TextureDimension GetWgpuTextureDimension(gl::TextureType glTextureType);
-wgpu::Extent3D getExtent3D(const gl::Extents &glExtent);
+WGPUTextureViewDimension GetWgpuTextureViewDimension(gl::TextureType textureType);
+WGPUTextureDimension GetWgpuTextureDimension(gl::TextureType glTextureType);
+WGPUExtent3D GetExtent3D(const gl::Extents &glExtent);
 
 WGPUPrimitiveTopology GetPrimitiveTopology(gl::PrimitiveMode mode);
 

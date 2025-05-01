@@ -19,9 +19,9 @@
 namespace rx
 {
 
-constexpr wgpu::TextureUsage kSurfaceTextureUsage =
-    wgpu::TextureUsage::TextureBinding | wgpu::TextureUsage::RenderAttachment |
-    wgpu::TextureUsage::CopySrc | wgpu::TextureUsage::CopyDst;
+constexpr WGPUTextureUsage kSurfaceTextureUsage =
+    WGPUTextureUsage_TextureBinding | WGPUTextureUsage_RenderAttachment | WGPUTextureUsage_CopySrc |
+    WGPUTextureUsage_CopyDst;
 
 SurfaceWgpu::SurfaceWgpu(const egl::SurfaceState &surfaceState) : SurfaceImpl(surfaceState) {}
 
@@ -30,11 +30,11 @@ SurfaceWgpu::~SurfaceWgpu() {}
 angle::Result SurfaceWgpu::createDepthStencilAttachment(uint32_t width,
                                                         uint32_t height,
                                                         const webgpu::Format &webgpuFormat,
-                                                        wgpu::Device &device,
+                                                        webgpu::DeviceHandle device,
                                                         AttachmentImage *outDepthStencilAttachment)
 {
-    wgpu::TextureDescriptor desc = outDepthStencilAttachment->texture.createTextureDescriptor(
-        kSurfaceTextureUsage, wgpu::TextureDimension::e2D, {width, height, 1},
+    WGPUTextureDescriptor desc = outDepthStencilAttachment->texture.createTextureDescriptor(
+        kSurfaceTextureUsage, WGPUTextureDimension_2D, {width, height, 1},
         webgpuFormat.getActualWgpuTextureFormat(), 1, 1);
 
     constexpr uint32_t level = 0;
@@ -44,7 +44,7 @@ angle::Result SurfaceWgpu::createDepthStencilAttachment(uint32_t width,
                                                            webgpuFormat.getActualImageFormatID(),
                                                            device, gl::LevelIndex(level), desc));
 
-    wgpu::TextureView view;
+    webgpu::TextureViewHandle view;
     ANGLE_TRY(outDepthStencilAttachment->texture.createTextureViewSingleLevel(gl::LevelIndex(level),
                                                                               layer, view));
     outDepthStencilAttachment->renderTarget.set(
@@ -148,15 +148,15 @@ angle::Result OffscreenSurfaceWgpu::getAttachmentRenderTarget(
 angle::Result OffscreenSurfaceWgpu::initializeImpl(const egl::Display *display)
 {
     DisplayWgpu *displayWgpu = webgpu::GetImpl(display);
-    wgpu::Device &device     = displayWgpu->getDevice();
+    webgpu::DeviceHandle device = displayWgpu->getDevice();
 
     const egl::Config *config = mState.config;
 
     if (config->renderTargetFormat != GL_NONE)
     {
         const webgpu::Format &webgpuFormat = displayWgpu->getFormat(config->renderTargetFormat);
-        wgpu::TextureDescriptor desc       = mColorAttachment.texture.createTextureDescriptor(
-            kSurfaceTextureUsage, wgpu::TextureDimension::e2D,
+        WGPUTextureDescriptor desc         = mColorAttachment.texture.createTextureDescriptor(
+            kSurfaceTextureUsage, WGPUTextureDimension_2D,
             {static_cast<uint32_t>(mWidth), static_cast<uint32_t>(mHeight), 1},
             webgpuFormat.getActualWgpuTextureFormat(), 1, 1);
 
@@ -167,7 +167,7 @@ angle::Result OffscreenSurfaceWgpu::initializeImpl(const egl::Display *display)
                                                      webgpuFormat.getActualImageFormatID(), device,
                                                      gl::LevelIndex(level), desc));
 
-        wgpu::TextureView view;
+        webgpu::TextureViewHandle view;
         ANGLE_TRY(mColorAttachment.texture.createTextureViewSingleLevel(gl::LevelIndex(level),
                                                                         layer, view));
         mColorAttachment.renderTarget.set(&mColorAttachment.texture, view,
@@ -290,18 +290,19 @@ angle::Result WindowSurfaceWgpu::getAttachmentRenderTarget(
 angle::Result WindowSurfaceWgpu::initializeImpl(const egl::Display *display)
 {
     DisplayWgpu *displayWgpu = webgpu::GetImpl(display);
-    wgpu::Adapter &adapter   = displayWgpu->getAdapter();
+    webgpu::AdapterHandle adapter = displayWgpu->getAdapter();
 
     ANGLE_TRY(createWgpuSurface(display, &mSurface));
 
     gl::Extents size;
     ANGLE_TRY(getCurrentWindowSize(display, &size));
 
-    wgpu::SurfaceCapabilities surfaceCapabilities;
-    wgpu::Status getCapabilitiesStatus = mSurface.GetCapabilities(adapter, &surfaceCapabilities);
-    if (getCapabilitiesStatus != wgpu::Status::Success)
+    WGPUSurfaceCapabilities surfaceCapabilities = WGPU_SURFACE_CAPABILITIES_INIT;
+    WGPUStatus getCapabilitiesStatus =
+        wgpuSurfaceGetCapabilities(mSurface.get(), adapter.get(), &surfaceCapabilities);
+    if (getCapabilitiesStatus != WGPUStatus_Success)
     {
-        ERR() << "wgpu::Surface::GetCapabilities failed: "
+        ERR() << "wgpuSurfaceGetCapabilities failed: "
               << gl::FmtHex(static_cast<uint32_t>(getCapabilitiesStatus));
         return angle::Result::Stop;
     }
@@ -314,17 +315,17 @@ angle::Result WindowSurfaceWgpu::initializeImpl(const egl::Display *display)
                      mSurfaceTextureFormat->getActualWgpuTextureFormat()) !=
            (surfaceCapabilities.formats + surfaceCapabilities.formatCount));
 
-    mSurfaceTextureUsage = wgpu::TextureUsage::RenderAttachment | wgpu::TextureUsage::CopySrc |
-                           wgpu::TextureUsage::CopyDst;
+    mSurfaceTextureUsage =
+        WGPUTextureUsage_RenderAttachment | WGPUTextureUsage_CopySrc | WGPUTextureUsage_CopyDst;
     ASSERT((surfaceCapabilities.usages & mSurfaceTextureUsage) == mSurfaceTextureUsage);
 
     // Default to the always supported Fifo present mode. Use Mailbox if it's available.
-    mPresentMode = wgpu::PresentMode::Fifo;
+    mPresentMode = WGPUPresentMode_Fifo;
     for (size_t i = 0; i < surfaceCapabilities.presentModeCount; i++)
     {
-        if (surfaceCapabilities.presentModes[i] == wgpu::PresentMode::Mailbox)
+        if (surfaceCapabilities.presentModes[i] == WGPUPresentMode_Mailbox)
         {
-            mPresentMode = wgpu::PresentMode::Mailbox;
+            mPresentMode = WGPUPresentMode_Mailbox;
         }
     }
 
@@ -350,7 +351,7 @@ angle::Result WindowSurfaceWgpu::swapImpl(const gl::Context *context)
 
     ANGLE_TRY(contextWgpu->flush(webgpu::RenderPassClosureReason::EGLSwapBuffers));
 
-    mSurface.Present();
+    wgpuSurfacePresent(mSurface.get());
 
     gl::Extents size;
     ANGLE_TRY(getCurrentWindowSize(display, &size));
@@ -368,19 +369,19 @@ angle::Result WindowSurfaceWgpu::configureSurface(const egl::Display *display,
                                                   const gl::Extents &size)
 {
     DisplayWgpu *displayWgpu = webgpu::GetImpl(display);
-    wgpu::Device &device     = displayWgpu->getDevice();
+    webgpu::DeviceHandle device = displayWgpu->getDevice();
 
     ASSERT(mSurfaceTextureFormat != nullptr);
 
-    wgpu::SurfaceConfiguration surfaceConfig = {};
-    surfaceConfig.device                     = device;
+    WGPUSurfaceConfiguration surfaceConfig   = WGPU_SURFACE_CONFIGURATION_INIT;
+    surfaceConfig.device                     = device.get();
     surfaceConfig.format                     = mSurfaceTextureFormat->getActualWgpuTextureFormat();
     surfaceConfig.usage                      = mSurfaceTextureUsage;
     surfaceConfig.width                      = size.width;
     surfaceConfig.height                     = size.height;
     surfaceConfig.presentMode                = mPresentMode;
 
-    mSurface.Configure(&surfaceConfig);
+    wgpuSurfaceConfigure(mSurface.get(), &surfaceConfig);
 
     if (mDepthStencilFormat)
     {
@@ -395,22 +396,23 @@ angle::Result WindowSurfaceWgpu::configureSurface(const egl::Display *display,
 
 angle::Result WindowSurfaceWgpu::updateCurrentTexture(const egl::Display *display)
 {
-    wgpu::SurfaceTexture texture;
-    mSurface.GetCurrentTexture(&texture);
-    if (texture.status != wgpu::SurfaceGetCurrentTextureStatus::SuccessOptimal &&
-        texture.status != wgpu::SurfaceGetCurrentTextureStatus::SuccessSuboptimal)
+    WGPUSurfaceTexture surfaceTexture = WGPU_SURFACE_TEXTURE_INIT;
+    wgpuSurfaceGetCurrentTexture(mSurface.get(), &surfaceTexture);
+    webgpu::TextureHandle texture = webgpu::TextureHandle::Acquire(surfaceTexture.texture);
+    if (surfaceTexture.status != WGPUSurfaceGetCurrentTextureStatus_SuccessOptimal &&
+        surfaceTexture.status != WGPUSurfaceGetCurrentTextureStatus_SuccessSuboptimal)
     {
-        ERR() << "wgpu::Surface::GetCurrentTexture failed: "
-              << gl::FmtHex(static_cast<uint32_t>(texture.status));
+        ERR() << "wgpuSurfaceGetCurrentTexture failed: "
+              << gl::FmtHex(static_cast<uint32_t>(surfaceTexture.status));
         return angle::Result::Stop;
     }
 
-    wgpu::TextureFormat wgpuFormat = texture.texture.GetFormat();
+    WGPUTextureFormat wgpuFormat   = wgpuTextureGetFormat(texture.get());
     angle::FormatID angleFormat    = webgpu::GetFormatIDFromWgpuTextureFormat(wgpuFormat);
 
-    ANGLE_TRY(mColorAttachment.texture.initExternal(angleFormat, angleFormat, texture.texture));
+    ANGLE_TRY(mColorAttachment.texture.initExternal(angleFormat, angleFormat, texture));
 
-    wgpu::TextureView view;
+    webgpu::TextureViewHandle view;
     ANGLE_TRY(mColorAttachment.texture.createTextureViewSingleLevel(gl::LevelIndex(0), 0, view));
 
     mColorAttachment.renderTarget.set(&mColorAttachment.texture, view, webgpu::LevelIndex(0), 0,

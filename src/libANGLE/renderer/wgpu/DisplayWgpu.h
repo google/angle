@@ -16,6 +16,7 @@
 #include "libANGLE/renderer/DisplayImpl.h"
 #include "libANGLE/renderer/ShareGroupImpl.h"
 #include "libANGLE/renderer/wgpu/wgpu_format_utils.h"
+#include "libANGLE/renderer/wgpu/wgpu_utils.h"
 
 namespace rx
 {

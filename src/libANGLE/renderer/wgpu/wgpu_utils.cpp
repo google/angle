@@ -35,29 +35,29 @@ wgpu::Instance GetInstance(const gl::Context *context)
     return display->getInstance();
 }
 
-wgpu::RenderPassColorAttachment CreateNewClearColorAttachment(wgpu::Color clearValue,
-                                                              uint32_t depthSlice,
-                                                              wgpu::TextureView textureView)
+WGPURenderPassColorAttachment CreateNewClearColorAttachment(WGPUColor clearValue,
+                                                            uint32_t depthSlice,
+                                                            TextureViewHandle textureView)
 {
-    wgpu::RenderPassColorAttachment colorAttachment;
-    colorAttachment.view       = textureView;
+    WGPURenderPassColorAttachment colorAttachment = WGPU_RENDER_PASS_COLOR_ATTACHMENT_INIT;
+    colorAttachment.view                          = textureView.get();
     colorAttachment.depthSlice = depthSlice;
-    colorAttachment.loadOp     = wgpu::LoadOp::Clear;
-    colorAttachment.storeOp    = wgpu::StoreOp::Store;
+    colorAttachment.loadOp                        = WGPULoadOp_Clear;
+    colorAttachment.storeOp                       = WGPUStoreOp_Store;
     colorAttachment.clearValue = clearValue;
 
     return colorAttachment;
 }
 
-wgpu::RenderPassDepthStencilAttachment CreateNewDepthStencilAttachment(
-    float depthClearValue,
-    uint32_t stencilClearValue,
-    wgpu::TextureView textureView,
-    bool hasDepthValue,
-    bool hasStencilValue)
+WGPURenderPassDepthStencilAttachment CreateNewDepthStencilAttachment(float depthClearValue,
+                                                                     uint32_t stencilClearValue,
+                                                                     TextureViewHandle textureView,
+                                                                     bool hasDepthValue,
+                                                                     bool hasStencilValue)
 {
-    wgpu::RenderPassDepthStencilAttachment depthStencilAttachment;
-    depthStencilAttachment.view = textureView;
+    WGPURenderPassDepthStencilAttachment depthStencilAttachment =
+        WGPU_RENDER_PASS_DEPTH_STENCIL_ATTACHMENT_INIT;
+    depthStencilAttachment.view = textureView.get();
     // WebGPU requires that depth/stencil attachments have a load op if the correlated ReadOnly
     // value is set to false, so we make sure to set the value here to to support cases where only a
     // depth or stencil mask is set.
@@ -65,14 +65,14 @@ wgpu::RenderPassDepthStencilAttachment CreateNewDepthStencilAttachment(
     depthStencilAttachment.stencilReadOnly = !hasStencilValue;
     if (hasDepthValue)
     {
-        depthStencilAttachment.depthLoadOp     = wgpu::LoadOp::Clear;
-        depthStencilAttachment.depthStoreOp    = wgpu::StoreOp::Store;
+        depthStencilAttachment.depthLoadOp     = WGPULoadOp_Clear;
+        depthStencilAttachment.depthStoreOp    = WGPUStoreOp_Store;
         depthStencilAttachment.depthClearValue = depthClearValue;
     }
     if (hasStencilValue)
     {
-        depthStencilAttachment.stencilLoadOp     = wgpu::LoadOp::Clear;
-        depthStencilAttachment.stencilStoreOp    = wgpu::StoreOp::Store;
+        depthStencilAttachment.stencilLoadOp     = WGPULoadOp_Clear;
+        depthStencilAttachment.stencilStoreOp    = WGPUStoreOp_Store;
         depthStencilAttachment.stencilClearValue = stencilClearValue;
     }
 
@@ -378,12 +378,12 @@ angle::Result ErrorScope::PopScope(ContextWgpu *context,
 
 namespace wgpu_gl
 {
-gl::LevelIndex getLevelIndex(webgpu::LevelIndex levelWgpu, gl::LevelIndex baseLevel)
+gl::LevelIndex GetLevelIndex(webgpu::LevelIndex levelWgpu, gl::LevelIndex baseLevel)
 {
     return gl::LevelIndex(levelWgpu.get() + baseLevel.get());
 }
 
-gl::Extents getExtents(wgpu::Extent3D wgpuExtent)
+gl::Extents GetExtents(WGPUExtent3D wgpuExtent)
 {
     gl::Extents glExtent;
     glExtent.width  = wgpuExtent.width;
@@ -401,9 +401,9 @@ webgpu::LevelIndex getLevelIndex(gl::LevelIndex levelGl, gl::LevelIndex baseLeve
     return webgpu::LevelIndex(levelGl.get() - baseLevel.get());
 }
 
-wgpu::Extent3D getExtent3D(const gl::Extents &glExtent)
+WGPUExtent3D GetExtent3D(const gl::Extents &glExtent)
 {
-    wgpu::Extent3D wgpuExtent;
+    WGPUExtent3D wgpuExtent       = WGPU_EXTENT_3D_INIT;
     wgpuExtent.width              = glExtent.width;
     wgpuExtent.height             = glExtent.height;
     wgpuExtent.depthOrArrayLayers = glExtent.depth;
@@ -612,29 +612,29 @@ WGPUBlendOperation GetBlendEquation(gl::BlendEquationType blendEquation)
     }
 }
 
-wgpu::TextureViewDimension GetWgpuTextureViewDimension(gl::TextureType textureType)
+WGPUTextureViewDimension GetWgpuTextureViewDimension(gl::TextureType textureType)
 {
     switch (textureType)
     {
         case gl::TextureType::_2D:
         case gl::TextureType::_2DMultisample:
-            return wgpu::TextureViewDimension::e2D;
+            return WGPUTextureViewDimension_2D;
         case gl::TextureType::_2DArray:
         case gl::TextureType::_2DMultisampleArray:
-            return wgpu::TextureViewDimension::e2DArray;
+            return WGPUTextureViewDimension_2DArray;
         case gl::TextureType::_3D:
-            return wgpu::TextureViewDimension::e3D;
+            return WGPUTextureViewDimension_3D;
         case gl::TextureType::CubeMap:
-            return wgpu::TextureViewDimension::Cube;
+            return WGPUTextureViewDimension_Cube;
         case gl::TextureType::CubeMapArray:
-            return wgpu::TextureViewDimension::CubeArray;
+            return WGPUTextureViewDimension_CubeArray;
         default:
             UNIMPLEMENTED();
-            return wgpu::TextureViewDimension::Undefined;
+            return WGPUTextureViewDimension_Undefined;
     }
 }
 
-wgpu::TextureDimension GetWgpuTextureDimension(gl::TextureType glTextureType)
+WGPUTextureDimension GetWgpuTextureDimension(gl::TextureType glTextureType)
 {
     switch (glTextureType)
     {
@@ -648,13 +648,13 @@ wgpu::TextureDimension GetWgpuTextureDimension(gl::TextureType glTextureType)
         case gl::TextureType::Rectangle:
         case gl::TextureType::External:
         case gl::TextureType::Buffer:
-            return wgpu::TextureDimension::e2D;
+            return WGPUTextureDimension_2D;
         case gl::TextureType::_3D:
         case gl::TextureType::VideoImage:
-            return wgpu::TextureDimension::e3D;
+            return WGPUTextureDimension_3D;
         default:
             UNREACHABLE();
-            return wgpu::TextureDimension::Undefined;
+            return WGPUTextureDimension_Undefined;
     }
 }
 

@@ -49,10 +49,12 @@ struct SubresourceUpdate
 
     SubresourceUpdate(UpdateSource targetUpdateSource,
                       gl::LevelIndex newTargetLevel,
-                      wgpu::TexelCopyBufferInfo targetBuffer)
+                      BufferHandle targetBuffer,
+                      const WGPUTexelCopyBufferLayout &targetBufferLayout)
     {
         updateSource = targetUpdateSource;
         textureData  = targetBuffer;
+        textureDataLayout = targetBufferLayout;
         targetLevel  = newTargetLevel;
     }
 
@@ -71,12 +73,13 @@ struct SubresourceUpdate
 
     UpdateSource updateSource;
     ClearUpdate clearData;
-    wgpu::TexelCopyBufferInfo textureData;
+    BufferHandle textureData;
+    WGPUTexelCopyBufferLayout textureDataLayout;
 
     gl::LevelIndex targetLevel;
 };
 
-wgpu::TextureDimension toWgpuTextureDimension(gl::TextureType glTextureType);
+WGPUTextureDimension ToWgpuTextureDimension(gl::TextureType glTextureType);
 
 class ImageHelper
 {
@@ -86,12 +89,12 @@ class ImageHelper
 
     angle::Result initImage(angle::FormatID intendedFormatID,
                             angle::FormatID actualFormatID,
-                            wgpu::Device &device,
+                            DeviceHandle device,
                             gl::LevelIndex firstAllocatedLevel,
-                            wgpu::TextureDescriptor textureDescriptor);
+                            WGPUTextureDescriptor textureDescriptor);
     angle::Result initExternal(angle::FormatID intendedFormatID,
                                angle::FormatID actualFormatID,
-                               wgpu::Texture externalTexture);
+                               webgpu::TextureHandle externalTexture);
 
     angle::Result flushStagedUpdates(ContextWgpu *contextWgpu);
     angle::Result flushSingleLevelUpdates(ContextWgpu *contextWgpu,
@@ -99,12 +102,12 @@ class ImageHelper
                                           ClearValuesArray *deferredClears,
                                           uint32_t deferredClearIndex);
 
-    wgpu::TextureDescriptor createTextureDescriptor(wgpu::TextureUsage usage,
-                                                    wgpu::TextureDimension dimension,
-                                                    wgpu::Extent3D size,
-                                                    wgpu::TextureFormat format,
-                                                    std::uint32_t mipLevelCount,
-                                                    std::uint32_t sampleCount);
+    WGPUTextureDescriptor createTextureDescriptor(WGPUTextureUsage usage,
+                                                  WGPUTextureDimension dimension,
+                                                  WGPUExtent3D size,
+                                                  WGPUTextureFormat format,
+                                                  std::uint32_t mipLevelCount,
+                                                  std::uint32_t sampleCount);
 
     angle::Result stageTextureUpload(ContextWgpu *contextWgpu,
                                      const webgpu::Format &webgpuFormat,
@@ -144,35 +147,35 @@ class ImageHelper
 
     angle::Result createTextureViewSingleLevel(gl::LevelIndex targetLevel,
                                                uint32_t layerIndex,
-                                               wgpu::TextureView &textureViewOut);
-    angle::Result createFullTextureView(wgpu::TextureView &textureViewOut,
-                                        wgpu::TextureViewDimension desiredViewDimension);
+                                               TextureViewHandle &textureViewOut);
+    angle::Result createFullTextureView(TextureViewHandle &textureViewOut,
+                                        WGPUTextureViewDimension desiredViewDimension);
     angle::Result createTextureView(gl::LevelIndex targetLevel,
                                     uint32_t levelCount,
                                     uint32_t layerIndex,
                                     uint32_t arrayLayerCount,
-                                    wgpu::TextureView &textureViewOut,
-                                    wgpu::TextureViewDimension desiredViewDimension);
+                                    TextureViewHandle &textureViewOut,
+                                    WGPUTextureViewDimension desiredViewDimension);
     LevelIndex toWgpuLevel(gl::LevelIndex levelIndexGl) const;
     gl::LevelIndex toGlLevel(LevelIndex levelIndexWgpu) const;
     bool isTextureLevelInAllocatedImage(gl::LevelIndex textureLevel);
-    wgpu::Texture &getTexture() { return mTexture; }
-    wgpu::TextureFormat toWgpuTextureFormat() const { return mTextureDescriptor.format; }
+    TextureHandle &getTexture() { return mTexture; }
+    WGPUTextureFormat toWgpuTextureFormat() const { return mTextureDescriptor.format; }
     angle::FormatID getIntendedFormatID() { return mIntendedFormatID; }
     angle::FormatID getActualFormatID() { return mActualFormatID; }
-    const wgpu::TextureDescriptor &getTextureDescriptor() const { return mTextureDescriptor; }
+    const WGPUTextureDescriptor &getTextureDescriptor() const { return mTextureDescriptor; }
     gl::LevelIndex getFirstAllocatedLevel() { return mFirstAllocatedLevel; }
     gl::LevelIndex getLastAllocatedLevel();
     uint32_t getLevelCount() { return mTextureDescriptor.mipLevelCount; }
-    wgpu::Extent3D getSize() { return mTextureDescriptor.size; }
+    WGPUExtent3D getSize() { return mTextureDescriptor.size; }
     bool isInitialized() { return mInitialized; }
 
   private:
     void appendSubresourceUpdate(gl::LevelIndex level, SubresourceUpdate &&update);
     std::vector<SubresourceUpdate> *getLevelUpdates(gl::LevelIndex level);
 
-    wgpu::Texture mTexture;
-    wgpu::TextureDescriptor mTextureDescriptor = {};
+    TextureHandle mTexture;
+    WGPUTextureDescriptor mTextureDescriptor   = {};
     bool mInitialized                          = false;
 
     gl::LevelIndex mFirstAllocatedLevel = gl::LevelIndex(0);
