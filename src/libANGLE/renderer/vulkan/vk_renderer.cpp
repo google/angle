@@ -5238,11 +5238,15 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
 
     // MSRTSS is disabled if the driver does not support it for RGBA8 and RGBA8_SRGB.
     // This is used to filter out known drivers where support for sRGB formats are missing.
+    //
+    // Qualcomm driver 512.821 is known to have rendering bugs with this extension.
+    // http://crbug.com/413427770
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsMultisampledRenderToSingleSampled,
         mMultisampledRenderToSingleSampledFeatures.multisampledRenderToSingleSampled == VK_TRUE &&
             mFeatures.supportsRenderpass2.enabled &&
-            mFeatures.supportsDepthStencilResolve.enabled && CanSupportMSRTSSForRGBA8(this));
+            mFeatures.supportsDepthStencilResolve.enabled && CanSupportMSRTSSForRGBA8(this) &&
+            !(isQualcommProprietary && driverVersion < angle::VersionTriple(512, 822, 0)));
 
     // Preferring the MSRTSS flag is for texture initialization. If the MSRTSS is not used at first,
     // it will be used (if available) when recreating the image if it is bound to an MSRTT
