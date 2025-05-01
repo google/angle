@@ -629,45 +629,57 @@ TEST_P(EGLLockSurface3Test, WindowMsaaSurfaceReadTest)
     EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, windowSurface, windowSurface, context));
     ASSERT_EGL_SUCCESS() << "eglMakeCurrent failed.";
 
-    glClearColor(kFloatGreen.R, kFloatGreen.G, kFloatGreen.B, kFloatGreen.A);
-    glClear(GL_COLOR_BUFFER_BIT);
-    ASSERT_GL_NO_ERROR() << "glClear failed";
+    // EGL 1.5 Spec:
+    // 3.5.1 Creating On-Screen Rendering Surfaces
+    // Client APIs may not be able to respect the requested rendering buffer. To determine the
+    // actual buffer that a context will render to by default, call eglQueryContext with attribute
+    // EGL_RENDER_BUFFER(see section 3.7.4).
+    EGLint buffer = 0;
+    EXPECT_EGL_TRUE(eglQueryContext(mDisplay, context, EGL_RENDER_BUFFER, &buffer));
+    if (buffer == EGL_SINGLE_BUFFER)
+    {
+        glClearColor(kFloatGreen.R, kFloatGreen.G, kFloatGreen.B, kFloatGreen.A);
+        glClear(GL_COLOR_BUFFER_BIT);
+        ASSERT_GL_NO_ERROR() << "glClear failed";
 
-    const GLColor drawColor = GLColor::red;
-    GLuint texture          = createTexture();
-    EXPECT_TRUE(fillTexture(texture, drawColor));
-    renderTexture(texture);
-    eglSwapBuffers(mDisplay, windowSurface);
+        const GLColor drawColor = GLColor::red;
+        GLuint texture          = createTexture();
+        EXPECT_TRUE(fillTexture(texture, drawColor));
+        renderTexture(texture);
+        eglSwapBuffers(mDisplay, windowSurface);
 
-    EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, context));
+        EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, context));
 
-    EGLint lockAttribs[] = {EGL_LOCK_USAGE_HINT_KHR, EGL_READ_SURFACE_BIT_KHR,
-                            EGL_MAP_PRESERVE_PIXELS_KHR, EGL_TRUE, EGL_NONE};
-    EXPECT_EGL_TRUE(eglLockSurfaceKHR(mDisplay, windowSurface, lockAttribs));
+        EGLint lockAttribs[] = {EGL_LOCK_USAGE_HINT_KHR, EGL_READ_SURFACE_BIT_KHR,
+                                EGL_MAP_PRESERVE_PIXELS_KHR, EGL_TRUE, EGL_NONE};
+        EXPECT_EGL_TRUE(eglLockSurfaceKHR(mDisplay, windowSurface, lockAttribs));
 
-    EGLAttribKHR bitMap = 0;
-    EXPECT_EGL_TRUE(eglQuerySurface64KHR(mDisplay, windowSurface, EGL_BITMAP_POINTER_KHR, &bitMap));
-    EGLAttribKHR bitMapPitch = 0;
-    EXPECT_EGL_TRUE(
-        eglQuerySurface64KHR(mDisplay, windowSurface, EGL_BITMAP_PITCH_KHR, &bitMapPitch));
+        EGLAttribKHR bitMap = 0;
+        EXPECT_EGL_TRUE(
+            eglQuerySurface64KHR(mDisplay, windowSurface, EGL_BITMAP_POINTER_KHR, &bitMap));
+        EGLAttribKHR bitMapPitch = 0;
+        EXPECT_EGL_TRUE(
+            eglQuerySurface64KHR(mDisplay, windowSurface, EGL_BITMAP_PITCH_KHR, &bitMapPitch));
 
-    uint32_t *bitMapPtr = (uint32_t *)(bitMap);
-    EXPECT_TRUE(checkBitMapRGBA32(drawColor, bitMapPtr, bitMapPitch));
+        uint32_t *bitMapPtr = (uint32_t *)(bitMap);
+        EXPECT_TRUE(checkBitMapRGBA32(drawColor, bitMapPtr, bitMapPitch));
 
-    EXPECT_TRUE(eglUnlockSurfaceKHR(mDisplay, windowSurface));
+        EXPECT_TRUE(eglUnlockSurfaceKHR(mDisplay, windowSurface));
 
-    EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, windowSurface, windowSurface, context));
-    ASSERT_EGL_SUCCESS() << "eglMakeCurrent failed.";
-    EXPECT_TRUE(checkSurfaceRGBA32(drawColor));
-    EXPECT_EGL_TRUE(eglSwapBuffers(mDisplay, windowSurface));
+        EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, windowSurface, windowSurface, context));
+        ASSERT_EGL_SUCCESS() << "eglMakeCurrent failed.";
+        EXPECT_TRUE(checkSurfaceRGBA32(drawColor));
+        EXPECT_EGL_TRUE(eglSwapBuffers(mDisplay, windowSurface));
 
-    glDeleteTextures(1, &texture);
-
+        glDeleteTextures(1, &texture);
+    }
     EXPECT_EGL_TRUE(eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
     EXPECT_EGL_TRUE(eglDestroySurface(mDisplay, windowSurface));
     EXPECT_EGL_TRUE(eglDestroyContext(mDisplay, context));
+
     osWindow->destroy();
     OSWindow::Delete(&osWindow);
+    ANGLE_SKIP_TEST_IF(buffer != EGL_SINGLE_BUFFER);
 }
 
 // Create WindowSurface, Lock surface, Write pixels red, Unlock, check pixels,

@@ -1380,6 +1380,10 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk, bool *anyMat
         mSwapchainPresentMode = vk::PresentMode::SharedDemandRefreshKHR;
         setDesiredSwapchainPresentMode(vk::PresentMode::SharedDemandRefreshKHR);
     }
+    else
+    {
+        WARN() << "Shared presentation mode requested, but not supported";
+    }
 
     mCompressionFlags    = VK_IMAGE_COMPRESSION_DISABLED_EXT;
     mFixedRateFlags      = 0;
@@ -3491,6 +3495,11 @@ egl::Error WindowSurfaceVk::setRenderBuffer(EGLint renderBuffer)
         setDesiredSwapInterval(mState.swapInterval);
     }
     return egl::NoError();
+}
+
+bool WindowSurfaceVk::supportsSingleRenderBuffer() const
+{
+    return supportsPresentMode(vk::PresentMode::SharedDemandRefreshKHR);
 }
 
 egl::Error WindowSurfaceVk::lockSurface(const egl::Display *display,

@@ -232,6 +232,13 @@ Error Surface::initialize(const Display *display)
     // Must happen after implementation initialize for Android.
     mState.swapBehavior = mImplementation->getSwapBehavior();
 
+    // Update render buffer based on what the impl supports.
+    if ((mType == EGL_WINDOW_BIT) && mRenderBuffer == EGL_SINGLE_BUFFER &&
+        !mImplementation->supportsSingleRenderBuffer())
+    {
+        mRenderBuffer = EGL_BACK_BUFFER;
+    }
+
     if (mBuftype == EGL_IOSURFACE_ANGLE)
     {
         GLenum internalFormat =

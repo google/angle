@@ -127,6 +127,8 @@ class SurfaceImpl : public FramebufferAttachmentObjectImpl
 
     virtual EGLint getCompressionRate(const egl::Display *display) const;
 
+    virtual bool supportsSingleRenderBuffer() const;
+
   protected:
     const egl::SurfaceState &mState;
 };

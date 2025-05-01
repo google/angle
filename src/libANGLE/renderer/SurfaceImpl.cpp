@@ -189,4 +189,9 @@ EGLint SurfaceImpl::getCompressionRate(const egl::Display *display) const
     return EGL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT;
 }
 
+bool SurfaceImpl::supportsSingleRenderBuffer() const
+{
+    return false;
+}
+
 }  // namespace rx
