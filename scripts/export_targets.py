@@ -115,7 +115,7 @@ def dag_traverse(root_keys: Sequence[str], pre_recurse_func: Callable[[str], lis
 print('Importing graph', file=sys.stderr)
 
 try:
-    p = run_checked('gn', 'desc', '--format=json', str(OUT_DIR), '*', stdout=subprocess.PIPE,
+    p = run_checked(sys.executable, 'third_party/depot_tools/gn.py', 'desc', '--format=json', str(OUT_DIR), '*', stdout=subprocess.PIPE,
                 env=GN_ENV, shell=(True if sys.platform == 'win32' else False))
 except subprocess.CalledProcessError:
     sys.stderr.buffer.write(b'"gn desc" failed. Is depot_tools in your PATH?\n')

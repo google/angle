@@ -97,7 +97,7 @@ def winext(name, ext):
     return ("%s.%s" % (name, ext)) if sys.platform == "win32" else name
 
 
-GN_PATH = os.path.join('third_party', 'depot_tools', winext('gn', 'bat'))
+GN_PATH = os.path.join('third_party', 'depot_tools', 'gn.py')
 AUTONINJA_PATH = os.path.join('third_party', 'depot_tools', 'autoninja.py')
 
 
@@ -697,7 +697,9 @@ def main(args):
                 logging.info('Removing %s to switch from Ninja to Siso', build_dir)
                 shutil.rmtree(build_dir)
 
-    subprocess.check_call([GN_PATH, 'gen', '--args=%s' % GetGnArgsStr(args), capture_build_dir])
+    subprocess.check_call(
+        [sys.executable, GN_PATH, 'gen',
+         '--args=%s' % GetGnArgsStr(args), capture_build_dir])
     subprocess.check_call(
         [sys.executable, AUTONINJA_PATH, '-C', capture_build_dir, args.test_suite])
 
@@ -771,9 +773,10 @@ def main(args):
         extra_gn_args = [('angle_build_capture_replay_tests', 'true'),
                          ('angle_capture_replay_test_trace_dir', '"%s"' % trace_dir),
                          ('angle_capture_replay_composite_file_id', str(composite_file_id))]
-        subprocess.check_call(
-            [GN_PATH, 'gen',
-             '--args=%s' % GetGnArgsStr(args, extra_gn_args), replay_build_dir])
+        subprocess.check_call([
+            sys.executable, GN_PATH, 'gen',
+            '--args=%s' % GetGnArgsStr(args, extra_gn_args), replay_build_dir
+        ])
         subprocess.check_call(
             [sys.executable, AUTONINJA_PATH, '-C', replay_build_dir, REPLAY_BINARY])
 

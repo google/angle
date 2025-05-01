@@ -307,7 +307,8 @@ def _CheckExportValidity(input_api, output_api):
     use_shell = input_api.is_windows
     try:
         try:
-            subprocess.check_output(['gn', 'gen', outdir], shell=use_shell)
+            subprocess.check_output(
+                [sys.executable, 'third_party/depot_tools/gn.py', 'gen', outdir], shell=use_shell)
         except subprocess.CalledProcessError as e:
             return [
                 output_api.PresubmitError('Unable to run gn gen for export_targets.py: %s' %
