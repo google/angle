@@ -15,7 +15,7 @@
 #    include <DispatcherQueue.h>
 #    include <VersionHelpers.h>
 #    include <Windows.Foundation.h>
-#    include <windows.ui.composition.Desktop.h>
+#    include <windows.ui.composition.desktop.h>
 #    include <windows.ui.composition.h>
 #    include <windows.ui.composition.interop.h>
 #    include <wrl.h>
