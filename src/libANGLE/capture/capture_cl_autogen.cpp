@@ -6924,4 +6924,69 @@ CallCapture CaptureIcdGetPlatformIDsKHR(bool isCallValid,
     return CallCapture(angle::EntryPoint::CLIcdGetPlatformIDsKHR, std::move(paramBuffer));
 }
 
+CallCapture CaptureIcdGetFunctionAddressForPlatformKHR(bool isCallValid,
+                                                       cl_platform_id platform,
+                                                       const char *func_name,
+                                                       void *returnValue)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("platform", ParamType::Tcl_platform_id, platform);
+
+    if (isCallValid)
+    {
+        ParamCapture func_nameParam("func_name", ParamType::TcharConstPointer);
+        InitParamValue(ParamType::TcharConstPointer, func_name, &func_nameParam.value);
+        CaptureIcdGetFunctionAddressForPlatformKHR_func_name(isCallValid, platform, func_name,
+                                                             &func_nameParam);
+        paramBuffer.addParam(std::move(func_nameParam));
+    }
+    else
+    {
+        ParamCapture func_nameParam("func_name", ParamType::TcharConstPointer);
+        InitParamValue(ParamType::TcharConstPointer, static_cast<const char *>(nullptr),
+                       &func_nameParam.value);
+        paramBuffer.addParam(std::move(func_nameParam));
+    }
+
+    ParamCapture returnValueCapture("returnValue", ParamType::TvoidPointer);
+    InitParamValue(ParamType::TvoidPointer, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
+
+    return CallCapture(angle::EntryPoint::CLIcdGetFunctionAddressForPlatformKHR,
+                       std::move(paramBuffer));
+}
+
+CallCapture CaptureIcdSetPlatformDispatchDataKHR(bool isCallValid,
+                                                 cl_platform_id platform,
+                                                 void *dispatch_data,
+                                                 cl_int returnValue)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("platform", ParamType::Tcl_platform_id, platform);
+
+    if (isCallValid)
+    {
+        ParamCapture dispatch_dataParam("dispatch_data", ParamType::TvoidPointer);
+        InitParamValue(ParamType::TvoidPointer, dispatch_data, &dispatch_dataParam.value);
+        CaptureIcdSetPlatformDispatchDataKHR_dispatch_data(isCallValid, platform, dispatch_data,
+                                                           &dispatch_dataParam);
+        paramBuffer.addParam(std::move(dispatch_dataParam));
+    }
+    else
+    {
+        ParamCapture dispatch_dataParam("dispatch_data", ParamType::TvoidPointer);
+        InitParamValue(ParamType::TvoidPointer, static_cast<void *>(nullptr),
+                       &dispatch_dataParam.value);
+        paramBuffer.addParam(std::move(dispatch_dataParam));
+    }
+
+    ParamCapture returnValueCapture("returnValue", ParamType::Tcl_int);
+    InitParamValue(ParamType::Tcl_int, returnValue, &returnValueCapture.value);
+    paramBuffer.addReturnValue(std::move(returnValueCapture));
+
+    return CallCapture(angle::EntryPoint::CLIcdSetPlatformDispatchDataKHR, std::move(paramBuffer));
+}
+
 }  // namespace cl

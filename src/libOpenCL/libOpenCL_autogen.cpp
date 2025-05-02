@@ -1183,4 +1183,15 @@ cl_int CL_API_CALL clIcdGetPlatformIDsKHR(cl_uint num_entries,
     return cl::GetDispatch().clIcdGetPlatformIDsKHR(num_entries, platforms, num_platforms);
 }
 
+void *CL_API_CALL clIcdGetFunctionAddressForPlatformKHR(cl_platform_id platform,
+                                                        const char *func_name)
+{
+    return cl::GetDispatch().clIcdGetFunctionAddressForPlatformKHR(platform, func_name);
+}
+
+cl_int CL_API_CALL clIcdSetPlatformDispatchDataKHR(cl_platform_id platform, void *dispatch_data)
+{
+    return cl::GetDispatch().clIcdSetPlatformDispatchDataKHR(platform, dispatch_data);
+}
+
 }  // extern "C"

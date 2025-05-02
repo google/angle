@@ -2881,4 +2881,33 @@ cl_int CL_API_CALL clIcdGetPlatformIDsKHR(cl_uint num_entries,
     return returnValue;
 }
 
+void *CL_API_CALL clIcdGetFunctionAddressForPlatformKHR(cl_platform_id platform,
+                                                        const char *func_name)
+{
+    CL_EVENT(IcdGetFunctionAddressForPlatformKHR,
+             "platform = 0x%016" PRIxPTR ", func_name = 0x%016" PRIxPTR "", (uintptr_t)platform,
+             (uintptr_t)func_name);
+
+    cl::gClErrorTls = CL_SUCCESS;
+    ANGLE_CL_VALIDATE_POINTER(IcdGetFunctionAddressForPlatformKHR, platform, func_name);
+
+    void *returnValue = IcdGetFunctionAddressForPlatformKHR(platform, func_name);
+    ANGLE_CAPTURE_CL(IcdGetFunctionAddressForPlatformKHR, true, platform, func_name, returnValue);
+    return returnValue;
+}
+
+cl_int CL_API_CALL clIcdSetPlatformDispatchDataKHR(cl_platform_id platform, void *dispatch_data)
+{
+    CL_EVENT(IcdSetPlatformDispatchDataKHR,
+             "platform = 0x%016" PRIxPTR ", dispatch_data = 0x%016" PRIxPTR "", (uintptr_t)platform,
+             (uintptr_t)dispatch_data);
+
+    ANGLE_CL_VALIDATE_ERROR(IcdSetPlatformDispatchDataKHR, platform, dispatch_data);
+
+    cl::gClErrorTls    = CL_SUCCESS;
+    cl_int returnValue = IcdSetPlatformDispatchDataKHR(platform, dispatch_data);
+    ANGLE_CAPTURE_CL(IcdSetPlatformDispatchDataKHR, true, platform, dispatch_data, returnValue);
+    return returnValue;
+}
+
 }  // namespace cl

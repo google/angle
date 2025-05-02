@@ -23,6 +23,8 @@ struct IcdDispatch : public _cl_icd_dispatch
     clIcdGetPlatformIDsKHR_fn clIcdGetPlatformIDsKHR;
     // TODO: below extensions will be refactored to not to expose them publicly later
     // http://anglebug.com/378017028
+    clIcdGetFunctionAddressForPlatformKHR_fn clIcdGetFunctionAddressForPlatformKHR;
+    clIcdSetPlatformDispatchDataKHR_fn clIcdSetPlatformDispatchDataKHR;
     clEnqueueAcquireExternalMemObjectsKHR_fn clEnqueueAcquireExternalMemObjectsKHR;
     clEnqueueReleaseExternalMemObjectsKHR_fn clEnqueueReleaseExternalMemObjectsKHR;
 };

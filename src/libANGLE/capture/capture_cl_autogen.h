@@ -839,6 +839,14 @@ angle::CallCapture CaptureIcdGetPlatformIDsKHR(bool isCallValid,
                                                cl_platform_id *platforms,
                                                cl_uint *num_platforms,
                                                cl_int returnValue);
+angle::CallCapture CaptureIcdGetFunctionAddressForPlatformKHR(bool isCallValid,
+                                                              cl_platform_id platform,
+                                                              const char *func_name,
+                                                              void *returnValue);
+angle::CallCapture CaptureIcdSetPlatformDispatchDataKHR(bool isCallValid,
+                                                        cl_platform_id platform,
+                                                        void *dispatch_data,
+                                                        cl_int returnValue);
 
 // Parameter Captures
 
@@ -3291,6 +3299,14 @@ void CaptureIcdGetPlatformIDsKHR_num_platforms(bool isCallValid,
                                                cl_platform_id *platforms,
                                                cl_uint *num_platforms,
                                                angle::ParamCapture *paramCapture);
+void CaptureIcdGetFunctionAddressForPlatformKHR_func_name(bool isCallValid,
+                                                          cl_platform_id platform,
+                                                          const char *func_name,
+                                                          angle::ParamCapture *paramCapture);
+void CaptureIcdSetPlatformDispatchDataKHR_dispatch_data(bool isCallValid,
+                                                        cl_platform_id platform,
+                                                        void *dispatch_data,
+                                                        angle::ParamCapture *paramCapture);
 }  // namespace cl
 
 #endif  // LIBANGLE_CAPTURE_CL_AUTOGEN_H_

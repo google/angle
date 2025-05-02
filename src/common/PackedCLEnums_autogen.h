@@ -237,17 +237,13 @@ std::ostream &operator<<(std::ostream &os, ExecutionStatus value);
 
 enum class ExternalMemoryHandle : uint8_t
 {
-    OpaqueFd        = 0,
-    OpaqueWin32     = 1,
-    OpaqueWin32Kmt  = 2,
-    D3D11Texture    = 3,
-    D3D11TextureKmt = 4,
-    D3D12Heap       = 5,
-    D3D12Resource   = 6,
-    DmaBuf          = 7,
+    OpaqueFd       = 0,
+    OpaqueWin32    = 1,
+    OpaqueWin32Kmt = 2,
+    DmaBuf         = 3,
 
-    InvalidEnum = 8,
-    EnumCount   = 8,
+    InvalidEnum = 4,
+    EnumCount   = 4,
 };
 
 template <>

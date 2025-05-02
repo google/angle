@@ -110,18 +110,6 @@ bool GetExternalMemoryHandleInfo(const cl_mem_properties *properties,
             case CL_EXTERNAL_MEMORY_HANDLE_OPAQUE_WIN32_KMT_KHR:
                 *vkExtMemoryHandleType = VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT;
                 break;
-            case CL_EXTERNAL_MEMORY_HANDLE_D3D11_TEXTURE_KHR:
-                *vkExtMemoryHandleType = VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT;
-                break;
-            case CL_EXTERNAL_MEMORY_HANDLE_D3D11_TEXTURE_KMT_KHR:
-                *vkExtMemoryHandleType = VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT;
-                break;
-            case CL_EXTERNAL_MEMORY_HANDLE_D3D12_HEAP_KHR:
-                *vkExtMemoryHandleType = VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT;
-                break;
-            case CL_EXTERNAL_MEMORY_HANDLE_D3D12_RESOURCE_KHR:
-                *vkExtMemoryHandleType = VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT;
-                break;
             default:
                 propertyStatus = false;
                 break;

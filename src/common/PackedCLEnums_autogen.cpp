@@ -1185,14 +1185,6 @@ ExternalMemoryHandle FromCLenum<ExternalMemoryHandle>(CLenum from)
             return ExternalMemoryHandle::OpaqueWin32;
         case CL_EXTERNAL_MEMORY_HANDLE_OPAQUE_WIN32_KMT_KHR:
             return ExternalMemoryHandle::OpaqueWin32Kmt;
-        case CL_EXTERNAL_MEMORY_HANDLE_D3D11_TEXTURE_KHR:
-            return ExternalMemoryHandle::D3D11Texture;
-        case CL_EXTERNAL_MEMORY_HANDLE_D3D11_TEXTURE_KMT_KHR:
-            return ExternalMemoryHandle::D3D11TextureKmt;
-        case CL_EXTERNAL_MEMORY_HANDLE_D3D12_HEAP_KHR:
-            return ExternalMemoryHandle::D3D12Heap;
-        case CL_EXTERNAL_MEMORY_HANDLE_D3D12_RESOURCE_KHR:
-            return ExternalMemoryHandle::D3D12Resource;
         case CL_EXTERNAL_MEMORY_HANDLE_DMA_BUF_KHR:
             return ExternalMemoryHandle::DmaBuf;
         default:
@@ -1210,14 +1202,6 @@ CLenum ToCLenum(ExternalMemoryHandle from)
             return CL_EXTERNAL_MEMORY_HANDLE_OPAQUE_WIN32_KHR;
         case ExternalMemoryHandle::OpaqueWin32Kmt:
             return CL_EXTERNAL_MEMORY_HANDLE_OPAQUE_WIN32_KMT_KHR;
-        case ExternalMemoryHandle::D3D11Texture:
-            return CL_EXTERNAL_MEMORY_HANDLE_D3D11_TEXTURE_KHR;
-        case ExternalMemoryHandle::D3D11TextureKmt:
-            return CL_EXTERNAL_MEMORY_HANDLE_D3D11_TEXTURE_KMT_KHR;
-        case ExternalMemoryHandle::D3D12Heap:
-            return CL_EXTERNAL_MEMORY_HANDLE_D3D12_HEAP_KHR;
-        case ExternalMemoryHandle::D3D12Resource:
-            return CL_EXTERNAL_MEMORY_HANDLE_D3D12_RESOURCE_KHR;
         case ExternalMemoryHandle::DmaBuf:
             return CL_EXTERNAL_MEMORY_HANDLE_DMA_BUF_KHR;
         default:
@@ -1238,18 +1222,6 @@ std::ostream &operator<<(std::ostream &os, ExternalMemoryHandle value)
             break;
         case ExternalMemoryHandle::OpaqueWin32Kmt:
             os << "CL_EXTERNAL_MEMORY_HANDLE_OPAQUE_WIN32_KMT_KHR";
-            break;
-        case ExternalMemoryHandle::D3D11Texture:
-            os << "CL_EXTERNAL_MEMORY_HANDLE_D3D11_TEXTURE_KHR";
-            break;
-        case ExternalMemoryHandle::D3D11TextureKmt:
-            os << "CL_EXTERNAL_MEMORY_HANDLE_D3D11_TEXTURE_KMT_KHR";
-            break;
-        case ExternalMemoryHandle::D3D12Heap:
-            os << "CL_EXTERNAL_MEMORY_HANDLE_D3D12_HEAP_KHR";
-            break;
-        case ExternalMemoryHandle::D3D12Resource:
-            os << "CL_EXTERNAL_MEMORY_HANDLE_D3D12_RESOURCE_KHR";
             break;
         case ExternalMemoryHandle::DmaBuf:
             os << "CL_EXTERNAL_MEMORY_HANDLE_DMA_BUF_KHR";

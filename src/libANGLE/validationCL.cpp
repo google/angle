@@ -4298,4 +4298,14 @@ cl_int ValidateIcdGetPlatformIDsKHR(cl_uint num_entries,
     return CL_SUCCESS;
 }
 
+cl_int ValidateIcdGetFunctionAddressForPlatformKHR(cl_platform_id platform, const char *func_name)
+{
+    return CL_SUCCESS;
+}
+
+cl_int ValidateIcdSetPlatformDispatchDataKHR(cl_platform_id platform, const void *dispatch_data)
+{
+    return CL_SUCCESS;
+}
+
 }  // namespace cl

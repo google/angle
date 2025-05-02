@@ -627,6 +627,9 @@ cl_int CL_API_CALL clEnqueueReleaseExternalMemObjectsKHR(cl_command_queue comman
 cl_int CL_API_CALL clIcdGetPlatformIDsKHR(cl_uint num_entries,
                                           cl_platform_id *platforms,
                                           cl_uint *num_platforms);
+void *CL_API_CALL clIcdGetFunctionAddressForPlatformKHR(cl_platform_id platform,
+                                                        const char *func_name);
+cl_int CL_API_CALL clIcdSetPlatformDispatchDataKHR(cl_platform_id platform, void *dispatch_data);
 }  // namespace cl
 
 #endif  // LIBGLESV2_ENTRY_POINTS_CL_AUTOGEN_H_

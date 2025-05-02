@@ -594,6 +594,8 @@ cl_int ValidateEnqueueReleaseExternalMemObjectsKHR(cl_command_queue command_queu
 cl_int ValidateIcdGetPlatformIDsKHR(cl_uint num_entries,
                                     const cl_platform_id *platforms,
                                     const cl_uint *num_platforms);
+cl_int ValidateIcdGetFunctionAddressForPlatformKHR(cl_platform_id platform, const char *func_name);
+cl_int ValidateIcdSetPlatformDispatchDataKHR(cl_platform_id platform, const void *dispatch_data);
 }  // namespace cl
 
 #endif  // LIBANGLE_VALIDATION_CL_AUTOGEN_H_

@@ -80,6 +80,18 @@ cl_int IcdGetPlatformIDsKHR(cl_uint num_entries, cl_platform_id *platforms, cl_u
     CL_RETURN_ERROR((Platform::GetPlatformIDs(num_entries, platforms, num_platforms)));
 }
 
+void *IcdGetFunctionAddressForPlatformKHR(cl_platform_id platform, const char *func_name)
+{
+    WARN_NOT_SUPPORTED(IcdGetFunctionAddressForPlatformKHR);
+    return 0;
+}
+
+cl_int IcdSetPlatformDispatchDataKHR(cl_platform_id platform, void *dispatch_data)
+{
+    WARN_NOT_SUPPORTED(IcdSetPlatformDispatchDataKHR);
+    return CL_INVALID_OPERATION;
+}
+
 cl_int GetPlatformIDs(cl_uint num_entries, cl_platform_id *platforms, cl_uint *num_platforms)
 {
     CL_RETURN_ERROR(Platform::GetPlatformIDs(num_entries, platforms, num_platforms));

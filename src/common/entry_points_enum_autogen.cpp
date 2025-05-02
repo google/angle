@@ -186,8 +186,12 @@ const char *GetEntryPointName(EntryPoint ep)
             return "clGetSamplerInfo";
         case EntryPoint::CLGetSupportedImageFormats:
             return "clGetSupportedImageFormats";
+        case EntryPoint::CLIcdGetFunctionAddressForPlatformKHR:
+            return "clIcdGetFunctionAddressForPlatformKHR";
         case EntryPoint::CLIcdGetPlatformIDsKHR:
             return "clIcdGetPlatformIDsKHR";
+        case EntryPoint::CLIcdSetPlatformDispatchDataKHR:
+            return "clIcdSetPlatformDispatchDataKHR";
         case EntryPoint::CLLinkProgram:
             return "clLinkProgram";
         case EntryPoint::CLReleaseCommandQueue:
