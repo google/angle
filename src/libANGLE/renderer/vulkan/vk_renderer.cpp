@@ -5901,7 +5901,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
 
     // To avoid memory bloating due to using pipeline caches per program, the pipeline cache in the
     // renderer can be used.
-    ANGLE_FEATURE_CONDITION(&mFeatures, preferGlobalPipelineCache, isNvidia || isAMD);
+    ANGLE_FEATURE_CONDITION(&mFeatures, preferGlobalPipelineCache, isNvidia || (isAMD && !isRADV));
 
     // Whether the pipeline caches should merge into the global pipeline cache.  This should only be
     // enabled on platforms if:
