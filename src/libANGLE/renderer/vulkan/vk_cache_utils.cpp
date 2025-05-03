@@ -3473,7 +3473,12 @@ VkResult GraphicsPipelineDesc::initializePipeline(ErrorContext *context,
     {
         initializePipelineVertexInputState(context, &vertexInputState, &dynamicStateList);
 
-        createInfo.pVertexInputState   = &vertexInputState.vertexInputState;
+        if (!context->getFeatures().supportsVertexInputDynamicState.enabled)
+        {
+            // Note: If vertex inpute state is dynamic, no need to set pVertexInputState;
+            // vertexInputState is not initialized either.
+            createInfo.pVertexInputState = &vertexInputState.vertexInputState;
+        }
         createInfo.pInputAssemblyState = &vertexInputState.inputAssemblyState;
     }
 
@@ -3755,64 +3760,71 @@ void GraphicsPipelineDesc::initializePipelineVertexInputState(
     // TODO(jmadill): Possibly use different path for ES 3.1 split bindings/attribs.
     uint32_t vertexAttribCount = 0;
 
-    stateOut->divisorState.sType =
-        VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_EXT;
-    stateOut->divisorState.pVertexBindingDivisors = stateOut->divisorDesc.data();
-    for (size_t attribIndexSizeT :
-         gl::AttributesMask(mVertexInput.inputAssembly.bits.programActiveAttributeLocations))
+    if (!context->getFeatures().supportsVertexInputDynamicState.enabled)
     {
-        const uint32_t attribIndex = static_cast<uint32_t>(attribIndexSizeT);
-
-        VkVertexInputBindingDescription &bindingDesc  = stateOut->bindingDescs[vertexAttribCount];
-        VkVertexInputAttributeDescription &attribDesc = stateOut->attributeDescs[vertexAttribCount];
-        const PackedAttribDesc &packedAttrib          = mVertexInput.vertex.attribs[attribIndex];
-
-        bindingDesc.binding = attribIndex;
-        bindingDesc.stride  = static_cast<uint32_t>(mVertexInput.vertex.strides[attribIndex]);
-        if (packedAttrib.divisor != 0)
+        stateOut->divisorState.sType =
+            VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_DIVISOR_STATE_CREATE_INFO_EXT;
+        stateOut->divisorState.pVertexBindingDivisors = stateOut->divisorDesc.data();
+        for (size_t attribIndexSizeT :
+             gl::AttributesMask(mVertexInput.inputAssembly.bits.programActiveAttributeLocations))
         {
-            bindingDesc.inputRate = static_cast<VkVertexInputRate>(VK_VERTEX_INPUT_RATE_INSTANCE);
-            stateOut->divisorDesc[stateOut->divisorState.vertexBindingDivisorCount].binding =
-                bindingDesc.binding;
-            stateOut->divisorDesc[stateOut->divisorState.vertexBindingDivisorCount].divisor =
-                packedAttrib.divisor;
-            ++stateOut->divisorState.vertexBindingDivisorCount;
+            const uint32_t attribIndex = static_cast<uint32_t>(attribIndexSizeT);
+
+            VkVertexInputBindingDescription &bindingDesc =
+                stateOut->bindingDescs[vertexAttribCount];
+            VkVertexInputAttributeDescription &attribDesc =
+                stateOut->attributeDescs[vertexAttribCount];
+            const PackedAttribDesc &packedAttrib = mVertexInput.vertex.attribs[attribIndex];
+
+            bindingDesc.binding = attribIndex;
+            bindingDesc.stride  = static_cast<uint32_t>(mVertexInput.vertex.strides[attribIndex]);
+            if (packedAttrib.divisor != 0)
+            {
+                bindingDesc.inputRate =
+                    static_cast<VkVertexInputRate>(VK_VERTEX_INPUT_RATE_INSTANCE);
+                stateOut->divisorDesc[stateOut->divisorState.vertexBindingDivisorCount].binding =
+                    bindingDesc.binding;
+                stateOut->divisorDesc[stateOut->divisorState.vertexBindingDivisorCount].divisor =
+                    packedAttrib.divisor;
+                ++stateOut->divisorState.vertexBindingDivisorCount;
+            }
+            else
+            {
+                bindingDesc.inputRate = static_cast<VkVertexInputRate>(VK_VERTEX_INPUT_RATE_VERTEX);
+            }
+
+            // If using dynamic state for stride, the value for stride is unconditionally 0 here.
+            // |ContextVk::handleDirtyGraphicsVertexBuffers| implements the same fix when setting
+            // stride dynamically.
+            ASSERT(!context->getFeatures().useVertexInputBindingStrideDynamicState.enabled ||
+                   bindingDesc.stride == 0);
+
+            // Get the corresponding VkFormat for the attrib's format.
+            angle::FormatID formatID = static_cast<angle::FormatID>(packedAttrib.format);
+            const gl::ComponentType programAttribType = gl::GetComponentTypeMask(
+                gl::ComponentTypeMask(mVertexInput.vertex.shaderAttribComponentType), attribIndex);
+
+            attribDesc.binding = attribIndex;
+            attribDesc.format  = getPipelineVertexInputStateFormat(
+                context, formatID, packedAttrib.compressed, programAttribType, attribIndex);
+            attribDesc.location = static_cast<uint32_t>(attribIndex);
+            attribDesc.offset   = packedAttrib.offset;
+
+            vertexAttribCount++;
         }
-        else
+
+        // The binding descriptions are filled in at draw time.
+        stateOut->vertexInputState.sType =
+            VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+        stateOut->vertexInputState.flags                           = 0;
+        stateOut->vertexInputState.vertexBindingDescriptionCount   = vertexAttribCount;
+        stateOut->vertexInputState.pVertexBindingDescriptions      = stateOut->bindingDescs.data();
+        stateOut->vertexInputState.vertexAttributeDescriptionCount = vertexAttribCount;
+        stateOut->vertexInputState.pVertexAttributeDescriptions = stateOut->attributeDescs.data();
+        if (stateOut->divisorState.vertexBindingDivisorCount)
         {
-            bindingDesc.inputRate = static_cast<VkVertexInputRate>(VK_VERTEX_INPUT_RATE_VERTEX);
+            stateOut->vertexInputState.pNext = &stateOut->divisorState;
         }
-
-        // If using dynamic state for stride, the value for stride is unconditionally 0 here.
-        // |ContextVk::handleDirtyGraphicsVertexBuffers| implements the same fix when setting stride
-        // dynamically.
-        ASSERT(!context->getFeatures().useVertexInputBindingStrideDynamicState.enabled ||
-               bindingDesc.stride == 0);
-
-        // Get the corresponding VkFormat for the attrib's format.
-        angle::FormatID formatID = static_cast<angle::FormatID>(packedAttrib.format);
-        const gl::ComponentType programAttribType = gl::GetComponentTypeMask(
-            gl::ComponentTypeMask(mVertexInput.vertex.shaderAttribComponentType), attribIndex);
-
-        attribDesc.binding = attribIndex;
-        attribDesc.format  = getPipelineVertexInputStateFormat(
-            context, formatID, packedAttrib.compressed, programAttribType, attribIndex);
-        attribDesc.location = static_cast<uint32_t>(attribIndex);
-        attribDesc.offset   = packedAttrib.offset;
-
-        vertexAttribCount++;
-    }
-
-    // The binding descriptions are filled in at draw time.
-    stateOut->vertexInputState.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-    stateOut->vertexInputState.flags = 0;
-    stateOut->vertexInputState.vertexBindingDescriptionCount   = vertexAttribCount;
-    stateOut->vertexInputState.pVertexBindingDescriptions      = stateOut->bindingDescs.data();
-    stateOut->vertexInputState.vertexAttributeDescriptionCount = vertexAttribCount;
-    stateOut->vertexInputState.pVertexAttributeDescriptions    = stateOut->attributeDescs.data();
-    if (stateOut->divisorState.vertexBindingDivisorCount)
-    {
-        stateOut->vertexInputState.pNext = &stateOut->divisorState;
     }
 
     const PackedInputAssemblyState &inputAssembly = mVertexInput.inputAssembly;
