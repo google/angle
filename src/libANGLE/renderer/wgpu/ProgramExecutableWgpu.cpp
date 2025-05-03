@@ -99,7 +99,6 @@ angle::Result ProgramExecutableWgpu::updateUniformsAndGetBindGroup(ContextWgpu *
         addBindingToGroupIfNecessary(sh::kDefaultFragmentUniformBlockBinding,
                                      gl::ShaderType::Fragment);
 
-        // A bind group contains one or multiple bindings
         wgpu::BindGroupDescriptor bindGroupDesc{};
         bindGroupDesc.layout = mDefaultBindGroupLayout;
         // There must be as many bindings as declared in the layout!
@@ -465,8 +464,8 @@ void ProgramExecutableWgpu::genBindingLayoutIfNecessary(ContextWgpu *context)
         return;
     }
     // TODO(anglebug.com/42267100): for now, only create a wgpu::PipelineLayout with the default
-    // uniform block and textures/samplers. Will need to be extended for driver uniforms and UBOs.
-    // Also, possibly provide this layout as a compilation hint to createShaderModule().
+    // uniform block, driver uniform block, and textures/samplers. Will need to be extended for
+    // UBOs. Also, possibly provide this layout as a compilation hint to createShaderModule().
 
     std::vector<wgpu::BindGroupLayoutEntry> defaultBindGroupLayoutEntries;
     auto addDefaultBindGroupLayoutEntryIfNecessary =
@@ -537,12 +536,19 @@ void ProgramExecutableWgpu::genBindingLayoutIfNecessary(ContextWgpu *context)
     mSamplersAndTexturesBindGroupLayout =
         context->getDevice().CreateBindGroupLayout(&texturesAndSamplersBindGroupLayoutDesc);
 
+    // Driver uniforms bind groups are handled by ContextWgpu.
+
+    // TODO(anglebug.com/376553328): now add UBO bindings.
+
     // Create the pipeline layout. This is a list where each element N corresponds to the
     // @group(N) in the compiled shaders.
-    std::array<wgpu::BindGroupLayout, sh::kMaxBindGroup> groupLayouts = {};
+    std::array<wgpu::BindGroupLayout, sh::kMaxBindGroup + 1> groupLayouts = {};
 
     groupLayouts[sh::kDefaultUniformBlockBindGroup] = mDefaultBindGroupLayout;
     groupLayouts[sh::kTextureAndSamplerBindGroup]   = mSamplersAndTexturesBindGroupLayout;
+    groupLayouts[sh::kDriverUniformBindGroup]       = context->getDriverUniformBindGroupLayout();
+    static_assert(sh::kDriverUniformBindGroup == sh::kMaxBindGroup,
+                  "More bind groups added without changing the layout");
 
     wgpu::PipelineLayoutDescriptor layoutDesc{};
     layoutDesc.bindGroupLayoutCount = groupLayouts.size();

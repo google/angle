@@ -26,7 +26,42 @@ namespace rx
 
 class ContextWgpu : public ContextImpl
 {
+  private:
+    // Must keep this in sync with DriverUniform::createUniformFields in:
+    // src/compiler/translator/tree_util/DriverUniform.cpp
+    // For shader uniforms such as gl_DepthRange and the viewport size.
+    //
+    // Note: this struct was originally for Vulkan, but may be able to be pared down for WGSL.
+    struct DriverUniforms
+    {
+        std::array<uint32_t, 2> acbBufferOffsets;
+
+        // .x is near, .y is far
+        std::array<float, 2> depthRange;
+
+        // Used to flip gl_FragCoord.  Packed uvec2
+        uint32_t renderArea;
+
+        // Packed vec4 of snorm8
+        uint32_t flipXY;
+
+        // Only the lower 16 bits used
+        uint32_t dither;
+
+        // Various bits of state:
+        // - Surface rotation
+        // - Advanced blend equation
+        // - Sample count
+        // - Enabled clip planes
+        // - Depth transformation
+        // - layered FBO
+        uint32_t misc;
+    };
+    static_assert(sizeof(DriverUniforms) % (sizeof(uint32_t) * 4) == 0,
+                  "DriverUniforms should be 16 bytes aligned");
+
   public:
+    static constexpr size_t kDriverUniformSize = sizeof(DriverUniforms);
     ContextWgpu(const gl::State &state, gl::ErrorSet *errorSet, DisplayWgpu *display);
     ~ContextWgpu() override;
 
@@ -289,9 +324,17 @@ class ContextWgpu : public ContextImpl
     void invalidateVertexBuffers();
     void invalidateIndexBuffer();
     void invalidateCurrentTextures();
+    void invalidateDriverUniforms();
 
     void ensureCommandEncoderCreated();
     wgpu::CommandEncoder &getCurrentCommandEncoder();
+
+    // Driver uniforms are managed by ContextWgpu.
+    wgpu::BindGroupLayout getDriverUniformBindGroupLayout()
+    {
+        ASSERT(mDriverUniformsBindGroupLayout);
+        return mDriverUniformsBindGroupLayout;
+    }
 
   private:
     // Dirty bits.
@@ -310,6 +353,7 @@ class ContextWgpu : public ContextImpl
         DIRTY_BIT_VERTEX_BUFFERS,
         DIRTY_BIT_INDEX_BUFFER,
 
+        DIRTY_BIT_DRIVER_UNIFORMS,
         DIRTY_BIT_BIND_GROUPS,
 
         DIRTY_BIT_MAX,
@@ -322,6 +366,9 @@ class ContextWgpu : public ContextImpl
     // that will be used for the draw call must be specified after DIRTY_BIT_RENDER_PASS.
     static_assert(DIRTY_BIT_RENDER_PIPELINE_BINDING > DIRTY_BIT_RENDER_PASS,
                   "Render pass using dirty bit must be handled after the render pass dirty bit");
+
+    static_assert(DIRTY_BIT_BIND_GROUPS > DIRTY_BIT_DRIVER_UNIFORMS,
+                  "Bind group creation must be handled after editing driver uniforms");
 
     using DirtyBits = angle::BitSet<DIRTY_BIT_MAX>;
 
@@ -356,6 +403,7 @@ class ContextWgpu : public ContextImpl
     angle::Result handleDirtyIndexBuffer(gl::DrawElementsType indexType,
                                          DirtyBits::Iterator *dirtyBitsIterator);
     angle::Result handleDirtyBindGroups(DirtyBits::Iterator *dirtyBitsIterator);
+    angle::Result handleDirtyDriverUniforms(DirtyBits::Iterator *dirtyBitsIterator);
 
     angle::Result handleDirtyRenderPass(DirtyBits::Iterator *dirtyBitsIterator);
 
@@ -373,6 +421,15 @@ class ContextWgpu : public ContextImpl
     gl::AttributesMask mCurrentRenderPipelineAllAttributes;
 
     gl::DrawElementsType mCurrentIndexBufferType = gl::DrawElementsType::InvalidEnum;
+
+    // Actual struct of driver uniforms that is copied to the GPU. Only stored to check if the next
+    // set of driver uniforms has changed.
+    DriverUniforms mDriverUniforms;
+    // Holds the binding group layout for the driver uniforms.
+    wgpu::BindGroupLayout mDriverUniformsBindGroupLayout;
+    // Holds the most recent driver uniforms BindGroup. Note there may be others in the
+    // command buffer.
+    wgpu::BindGroup mDriverUniformsBindGroup;
 };
 
 }  // namespace rx
