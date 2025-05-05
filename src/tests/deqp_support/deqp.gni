@@ -1196,6 +1196,8 @@ deqp_khr_gl_sources = [
   "$deqp_path/external/openglcts/modules/gl/gl4cTextureFilterMinmaxTests.hpp",
   "$deqp_path/external/openglcts/modules/gl/gl4cTextureGatherTests.cpp",
   "$deqp_path/external/openglcts/modules/gl/gl4cTextureGatherTests.hpp",
+  "$deqp_path/external/openglcts/modules/gl/gl4cTextureQueryLodTests.cpp",
+  "$deqp_path/external/openglcts/modules/gl/gl4cTextureQueryLodTests.hpp",
   "$deqp_path/external/openglcts/modules/gl/gl4cTextureViewTests.cpp",
   "$deqp_path/external/openglcts/modules/gl/gl4cTextureViewTests.hpp",
   "$deqp_path/external/openglcts/modules/gl/gl4cVertexAttrib64BitTest.cpp",
