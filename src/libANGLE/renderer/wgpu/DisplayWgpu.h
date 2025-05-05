@@ -10,8 +10,7 @@
 #ifndef LIBANGLE_RENDERER_WGPU_DISPLAYWGPU_H_
 #define LIBANGLE_RENDERER_WGPU_DISPLAYWGPU_H_
 
-#include <dawn/native/DawnNative.h>
-#include <dawn/webgpu_cpp.h>
+#include <webgpu/webgpu.h>
 
 #include "libANGLE/renderer/DisplayImpl.h"
 #include "libANGLE/renderer/ShareGroupImpl.h"

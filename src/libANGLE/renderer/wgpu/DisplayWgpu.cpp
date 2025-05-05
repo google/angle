@@ -10,6 +10,7 @@
 #include "libANGLE/renderer/wgpu/DisplayWgpu.h"
 
 #include <dawn/dawn_proc.h>
+#include <dawn/native/DawnNative.h>
 
 #include "common/debug.h"
 #include "common/platform.h"

@@ -9,7 +9,7 @@
 #ifndef LIBANGLE_RENDERER_WGPU_WGPU_FORMAT_UTILS_H_
 #define LIBANGLE_RENDERER_WGPU_WGPU_FORMAT_UTILS_H_
 
-#include <dawn/webgpu_cpp.h>
+#include <webgpu/webgpu.h>
 
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/Format.h"

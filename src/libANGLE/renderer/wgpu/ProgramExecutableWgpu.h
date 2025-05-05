@@ -14,7 +14,7 @@
 #include "libANGLE/renderer/renderer_utils.h"
 #include "libANGLE/renderer/wgpu/wgpu_pipeline_state.h"
 
-#include <dawn/webgpu_cpp.h>
+#include <webgpu/webgpu.h>
 
 namespace rx
 {

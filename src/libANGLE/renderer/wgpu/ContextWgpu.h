@@ -10,7 +10,7 @@
 #ifndef LIBANGLE_RENDERER_WGPU_CONTEXTWGPU_H_
 #define LIBANGLE_RENDERER_WGPU_CONTEXTWGPU_H_
 
-#include <dawn/webgpu_cpp.h>
+#include <webgpu/webgpu.h>
 
 #include "image_util/loadimage.h"
 #include "libANGLE/renderer/ContextImpl.h"

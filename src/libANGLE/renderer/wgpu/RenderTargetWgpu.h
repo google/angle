@@ -10,8 +10,8 @@
 #ifndef LIBANGLE_RENDERER_WGPU_RENDERTARGETWGPU_H_
 #define LIBANGLE_RENDERER_WGPU_RENDERTARGETWGPU_H_
 
-#include <dawn/webgpu_cpp.h>
 #include <stdint.h>
+#include <webgpu/webgpu.h>
 
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/renderer/wgpu/wgpu_helpers.h"

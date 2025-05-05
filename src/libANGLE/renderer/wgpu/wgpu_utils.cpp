@@ -79,21 +79,9 @@ PackedRenderPassDepthStencilAttachment CreateNewDepthStencilAttachment(
     return depthStencilAttachment;
 }
 
-// TOOD(geofflang): Remove after transition to C API
-bool IsWgpuError(wgpu::WaitStatus waitStatus)
-{
-    return waitStatus != wgpu::WaitStatus::Success;
-}
-
 bool IsWgpuError(WGPUWaitStatus waitStatus)
 {
     return waitStatus != WGPUWaitStatus_Success;
-}
-
-// TOOD(geofflang): Remove after transition to C API
-bool IsWgpuError(wgpu::MapAsyncStatus mapAsyncStatus)
-{
-    return mapAsyncStatus != wgpu::MapAsyncStatus::Success;
 }
 
 bool IsWgpuError(WGPUMapAsyncStatus mapAsyncStatus)
@@ -144,7 +132,7 @@ bool operator!=(const PackedRenderPassDescriptor &a, const PackedRenderPassDescr
     return !(a == b);
 }
 
-wgpu::RenderPassEncoder CreateRenderPass(webgpu::CommandEncoderHandle commandEncoder,
+RenderPassEncoderHandle CreateRenderPass(webgpu::CommandEncoderHandle commandEncoder,
                                          const webgpu::PackedRenderPassDescriptor &packedDesc)
 {
     WGPURenderPassDescriptor renderPassDesc = WGPU_RENDER_PASS_DESCRIPTOR_INIT;
@@ -191,7 +179,7 @@ wgpu::RenderPassEncoder CreateRenderPass(webgpu::CommandEncoderHandle commandEnc
         renderPassDesc.depthStencilAttachment = &depthStencilAttachment;
     }
 
-    return wgpu::RenderPassEncoder::Acquire(
+    return RenderPassEncoderHandle::Acquire(
         wgpuCommandEncoderBeginRenderPass(commandEncoder.get(), &renderPassDesc));
 }
 

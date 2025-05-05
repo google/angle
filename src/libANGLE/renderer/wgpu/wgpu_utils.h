@@ -7,8 +7,8 @@
 #ifndef LIBANGLE_RENDERER_WGPU_WGPU_UTILS_H_
 #define LIBANGLE_RENDERER_WGPU_WGPU_UTILS_H_
 
-#include <dawn/webgpu_cpp.h>
 #include <stdint.h>
+#include <webgpu/webgpu.h>
 #include <climits>
 
 #include "libANGLE/Caps.h"
@@ -121,33 +121,21 @@ namespace webgpu
 ANGLE_WGPU_OBJECTS_X(ANGLE_DECLARE_WGPU_HANDLE_REF_FUNCS)
 #undef ANGLE_DECLARE_WGPU_HANDLE_REF_FUNCS
 
-template <typename CType, typename CppType>
+template <typename CType>
 class WrapperBase
 {
   public:
     using ObjectType = CType;
 
     WrapperBase() = default;
-    WrapperBase(const WrapperBase<CType, CppType> &other) : mHandle(other.mHandle)
+    WrapperBase(const WrapperBase<CType> &other) : mHandle(other.mHandle)
     {
         AddRefWGPUCHandle(mHandle);
     }
 
     ~WrapperBase() { ReleaseWGPUCHandle(mHandle); }
 
-    // Convert from the wgpu_cpp wrapper types.
-    // TODO: Remove once this wrapper is used everywhere
-    WrapperBase(const CppType &other) : mHandle(other.Get()) { AddRefWGPUCHandle(mHandle); }
-
-    WrapperBase<CType, CppType> &operator=(const CppType &other)
-    {
-        ReleaseWGPUCHandle(mHandle);
-        mHandle = other.Get();
-        AddRefWGPUCHandle(mHandle);
-        return *this;
-    }
-
-    WrapperBase<CType, CppType> &operator=(const WrapperBase<CType, CppType> &other)
+    WrapperBase<CType> &operator=(const WrapperBase<CType> &other)
     {
         if (&other != this)
         {
@@ -158,13 +146,13 @@ class WrapperBase
         return *this;
     }
 
-    WrapperBase(WrapperBase<CType, CppType> &&other)
+    WrapperBase(WrapperBase<CType> &&other)
     {
         mHandle       = other.mHandle;
         other.mHandle = nullptr;
     }
 
-    WrapperBase &operator=(WrapperBase<CType, CppType> &&other)
+    WrapperBase &operator=(WrapperBase<CType> &&other)
     {
         if (&other != this)
         {
@@ -184,12 +172,9 @@ class WrapperBase
         return *this;
     }
 
-    bool operator==(const WrapperBase<CType, CppType> &other) const
-    {
-        return mHandle == other.mHandle;
-    }
+    bool operator==(const WrapperBase<CType> &other) const { return mHandle == other.mHandle; }
 
-    bool operator!=(const WrapperBase<CType, CppType> &other) const { return !(*this == other); }
+    bool operator!=(const WrapperBase<CType> &other) const { return !(*this == other); }
 
     bool operator==(std::nullptr_t) const { return mHandle == nullptr; }
 
@@ -199,9 +184,9 @@ class WrapperBase
 
     const CType &get() const { return mHandle; }
 
-    static WrapperBase<CType, CppType> Acquire(CType handle)
+    static WrapperBase<CType> Acquire(CType handle)
     {
-        WrapperBase<CType, CppType> result;
+        WrapperBase<CType> result;
         result.mHandle = handle;
         return result;
     }
@@ -216,8 +201,7 @@ class WrapperBase
     CType mHandle = nullptr;
 };
 
-#define ANGLE_DECLARE_WGPU_OBJECT_WRAPPER(OBJ) \
-    using OBJ##Handle = WrapperBase<WGPU##OBJ, wgpu::OBJ>;
+#define ANGLE_DECLARE_WGPU_OBJECT_WRAPPER(OBJ) using OBJ##Handle = WrapperBase<WGPU##OBJ>;
 
 ANGLE_WGPU_OBJECTS_X(ANGLE_DECLARE_WGPU_OBJECT_WRAPPER)
 #undef ANGLE_DECLARE_WGPU_OBJECT_WRAPPER
@@ -410,7 +394,7 @@ struct PackedRenderPassDescriptor
 bool operator==(const PackedRenderPassDescriptor &a, const PackedRenderPassDescriptor &b);
 bool operator!=(const PackedRenderPassDescriptor &a, const PackedRenderPassDescriptor &b);
 
-wgpu::RenderPassEncoder CreateRenderPass(webgpu::CommandEncoderHandle commandEncoder,
+RenderPassEncoderHandle CreateRenderPass(webgpu::CommandEncoderHandle commandEncoder,
                                          const webgpu::PackedRenderPassDescriptor &desc);
 
 void GenerateCaps(const WGPULimits &limitWgpu,
@@ -435,12 +419,7 @@ PackedRenderPassDepthStencilAttachment CreateNewDepthStencilAttachment(
     bool hasDepthValue   = false,
     bool hasStencilValue = false);
 
-// TODO(geofflang): Delete after moving to the C API
-bool IsWgpuError(wgpu::WaitStatus waitStatus);
 bool IsWgpuError(WGPUWaitStatus waitStatus);
-
-// TODO(geofflang): Delete after moving to the C API
-bool IsWgpuError(wgpu::MapAsyncStatus mapAsyncStatus);
 bool IsWgpuError(WGPUMapAsyncStatus mapAsyncStatus);
 
 bool IsStripPrimitiveTopology(WGPUPrimitiveTopology topology);
@@ -502,13 +481,10 @@ constexpr uint32_t kReservedPerStageDefaultUniformSlotCount = 0;
 
 namespace std
 {
-template <typename CType, typename CppType>
-struct hash<rx::webgpu::WrapperBase<CType, CppType>>
+template <typename CType>
+struct hash<rx::webgpu::WrapperBase<CType>>
 {
-    size_t operator()(const rx::webgpu::WrapperBase<CType, CppType> &obj) const
-    {
-        return obj.hash();
-    }
+    size_t operator()(const rx::webgpu::WrapperBase<CType> &obj) const { return obj.hash(); }
 };
 }  // namespace std
 

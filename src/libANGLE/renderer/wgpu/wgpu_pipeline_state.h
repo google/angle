@@ -7,8 +7,8 @@
 #ifndef LIBANGLE_RENDERER_WGPU_PIPELINE_STATE_H_
 #define LIBANGLE_RENDERER_WGPU_PIPELINE_STATE_H_
 
-#include <dawn/webgpu_cpp.h>
 #include <stdint.h>
+#include <webgpu/webgpu.h>
 #include <limits>
 
 #include "libANGLE/Constants.h"

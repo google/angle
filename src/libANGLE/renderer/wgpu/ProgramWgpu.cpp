@@ -21,8 +21,6 @@
 #include "libANGLE/renderer/wgpu/wgpu_wgsl_util.h"
 #include "libANGLE/trace.h"
 
-#include <dawn/webgpu_cpp.h>
-
 namespace rx
 {
 namespace
