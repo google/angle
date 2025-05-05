@@ -434,13 +434,21 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
          "old_layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL",
          "new_layout = VK_IMAGE_LAYOUT_GENERAL",
      }},
-
     // From: TraceTest.special_forces_group_2 http://anglebug.com/42264123
-    {
-        "SYNC-HAZARD-WRITE-AFTER-READ",
-        "Access info (usage: SYNC_IMAGE_LAYOUT_TRANSITION, prior_usage: "
-        "SYNC_FRAGMENT_SHADER_SHADER_",
-    },
+    // http://anglebug.com/397775556
+    {"SYNC-HAZARD-READ-AFTER-WRITE",
+     nullptr,
+     nullptr,
+     false,
+     {
+         "message_type = BufferError",
+         "access = "
+         "VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT(VK_ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT)",
+         "prior_access = "
+         "VK_PIPELINE_STAGE_2_COPY_BIT(VK_ACCESS_2_TRANSFER_WRITE_BIT)",
+         "command = vkCmdDrawIndexed",
+         "prior_command = vkCmdCopyBuffer",
+     }},
     // http://anglebug.com/42265504
     {"SYNC-HAZARD-READ-AFTER-WRITE",
      "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, imageLayout: "
@@ -491,12 +499,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
         "access = VK_PIPELINE_STAGE_2_COPY_BIT(VK_ACCESS_2_TRANSFER_WRITE_BIT)",
         "prior_access = "
         "VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT(VK_ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT)",
-    },
-    // http://anglebug.com/397775556
-    {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
-        "vkCmdDrawIndexed reads vertex VkBuffer",
-        "which was previously written by vkCmdCopyBuffer.",
     },
     // http://anglebug.com/399191283
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
