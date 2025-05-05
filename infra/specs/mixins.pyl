@@ -78,7 +78,7 @@
                                        'swarming': { 'dimensions': { 'cpu': 'x86-64',
                                                                      'display_attached': '1',
                                                                      'gpu': '8086:3e9b',
-                                                                     'os': 'Mac-14.5'}}},
+                                                                     'os': 'Mac-15.4'}}},
   'mac_mini_intel_gpu_stable': { 'fail_if_unused': False,
                                  'swarming': { 'dimensions': { 'cpu': 'x86-64',
                                                                'display_attached': '1',
