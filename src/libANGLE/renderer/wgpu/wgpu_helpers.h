@@ -186,7 +186,7 @@ class ImageHelper
 };
 struct BufferMapState
 {
-    wgpu::MapMode mode;
+    WGPUMapMode mode;
     size_t offset;
     size_t size;
 };
@@ -208,15 +208,12 @@ class BufferHelper : public angle::NonCopyable
     bool valid() const { return mBuffer.operator bool(); }
     void reset();
 
-    angle::Result initBuffer(wgpu::Device device,
+    angle::Result initBuffer(webgpu::DeviceHandle device,
                              size_t size,
-                             wgpu::BufferUsage usage,
+                             WGPUBufferUsage usage,
                              MapAtCreation mappedAtCreation);
 
-    angle::Result mapImmediate(ContextWgpu *context,
-                               wgpu::MapMode mode,
-                               size_t offset,
-                               size_t size);
+    angle::Result mapImmediate(ContextWgpu *context, WGPUMapMode mode, size_t offset, size_t size);
     angle::Result unmap();
 
     uint8_t *getMapWritePointer(size_t offset, size_t size) const;
@@ -230,7 +227,7 @@ class BufferHelper : public angle::NonCopyable
     bool isMappedForRead() const;
     bool isMappedForWrite() const;
 
-    wgpu::Buffer &getBuffer();
+    webgpu::BufferHandle getBuffer() const;
     uint64_t requestedSize() const;
     uint64_t actualSize() const;
 
@@ -243,7 +240,7 @@ class BufferHelper : public angle::NonCopyable
                                     BufferReadback *result);
 
   private:
-    wgpu::Buffer mBuffer;
+    webgpu::BufferHandle mBuffer;
     size_t mRequestedSize = 0;
 
     std::optional<BufferMapState> mMappedState;

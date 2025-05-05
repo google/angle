@@ -20,7 +20,7 @@ namespace rx
 {
 struct TranslatedWGPUShaderModule
 {
-    wgpu::ShaderModule module;
+    webgpu::ShaderModuleHandle module;
 };
 
 class ProgramExecutableWgpu : public ProgramExecutableImpl
@@ -32,9 +32,9 @@ class ProgramExecutableWgpu : public ProgramExecutableImpl
     void destroy(const gl::Context *context) override;
 
     angle::Result updateUniformsAndGetBindGroup(ContextWgpu *context,
-                                                wgpu::BindGroup *outBindGroup);
+                                                webgpu::BindGroupHandle *outBindGroup);
     angle::Result getSamplerAndTextureBindGroup(ContextWgpu *contextWgpu,
-                                                wgpu::BindGroup *outBindGroup);
+                                                webgpu::BindGroupHandle *outBindGroup);
 
     angle::Result resizeUniformBlockMemory(const gl::ShaderMap<size_t> &requiredBufferSize);
 
@@ -122,11 +122,11 @@ class ProgramExecutableWgpu : public ProgramExecutableImpl
     webgpu::PipelineCache mPipelineCache;
     // Holds the binding layout of resources (buffers, textures, samplers) required by the linked
     // shaders.
-    wgpu::PipelineLayout mPipelineLayout;
+    webgpu::PipelineLayoutHandle mPipelineLayout;
     // Holds the binding group layout for the default bind group.
-    wgpu::BindGroupLayout mDefaultBindGroupLayout;
+    webgpu::BindGroupLayoutHandle mDefaultBindGroupLayout;
     // Holds the most recent BindGroup. Note there may be others in the command buffer.
-    wgpu::BindGroup mDefaultBindGroup;
+    webgpu::BindGroupHandle mDefaultBindGroup;
 
     // Holds layout info for basic GL uniforms, which needs to be laid out in a buffer for WGSL
     // similarly to a UBO.
@@ -137,10 +137,10 @@ class ProgramExecutableWgpu : public ProgramExecutableImpl
     // bind group is created the first time around.
     bool mSamplerBindingsDirty = true;
     // Holds the binding group layout for the samplers and textures.
-    wgpu::BindGroupLayout mSamplersAndTexturesBindGroupLayout;
+    webgpu::BindGroupLayoutHandle mSamplersAndTexturesBindGroupLayout;
     // Holds the most recent samplers and textures BindGroup. Note there may be others in the
     // command buffer.
-    wgpu::BindGroup mSamplersAndTexturesBindGroup;
+    webgpu::BindGroupHandle mSamplersAndTexturesBindGroup;
 };
 
 }  // namespace rx

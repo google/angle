@@ -135,10 +135,11 @@ angle::Result ContextWgpu::flush(webgpu::RenderPassClosureReason closureReason)
 
     if (mCurrentCommandEncoder)
     {
-        wgpu::CommandBuffer commandBuffer = mCurrentCommandEncoder.Finish();
+        webgpu::CommandBufferHandle commandBuffer = webgpu::CommandBufferHandle::Acquire(
+            wgpuCommandEncoderFinish(mCurrentCommandEncoder.get(), nullptr));
         mCurrentCommandEncoder            = nullptr;
 
-        getQueue().Submit(1, &commandBuffer);
+        wgpuQueueSubmit(getQueue().Get(), 1, &commandBuffer.get());
     }
 
     return angle::Result::Continue;
@@ -216,7 +217,7 @@ void ContextWgpu::ensureCommandEncoderCreated()
     }
 }
 
-wgpu::CommandEncoder &ContextWgpu::getCurrentCommandEncoder()
+webgpu::CommandEncoderHandle &ContextWgpu::getCurrentCommandEncoder()
 {
     return mCurrentCommandEncoder;
 }
@@ -1102,7 +1103,7 @@ angle::Result ContextWgpu::endRenderPass(webgpu::RenderPassClosureReason closure
             mCommandBuffer.clear();
         }
 
-        mCurrentRenderPass.End();
+        wgpuRenderPassEncoderEnd(mCurrentRenderPass.get());
         mCurrentRenderPass = nullptr;
     }
 
@@ -1411,11 +1412,11 @@ angle::Result ContextWgpu::handleDirtyIndexBuffer(gl::DrawElementsType indexType
 angle::Result ContextWgpu::handleDirtyBindGroups(DirtyBits::Iterator *dirtyBitsIterator)
 {
     ProgramExecutableWgpu *executableWgpu = webgpu::GetImpl(mState.getProgramExecutable());
-    wgpu::BindGroup defaultUniformBindGroup;
+    webgpu::BindGroupHandle defaultUniformBindGroup;
     ANGLE_TRY(executableWgpu->updateUniformsAndGetBindGroup(this, &defaultUniformBindGroup));
     mCommandBuffer.setBindGroup(sh::kDefaultUniformBlockBindGroup, defaultUniformBindGroup);
 
-    wgpu::BindGroup samplerAndTextureBindGroup;
+    webgpu::BindGroupHandle samplerAndTextureBindGroup;
     ANGLE_TRY(executableWgpu->getSamplerAndTextureBindGroup(this, &samplerAndTextureBindGroup));
     mCommandBuffer.setBindGroup(sh::kTextureAndSamplerBindGroup, samplerAndTextureBindGroup);
 
@@ -1472,9 +1473,9 @@ angle::Result ContextWgpu::handleDirtyDriverUniforms(DirtyBits::Iterator *dirtyB
     // Upload the new driver uniforms to a new GPU buffer.
     webgpu::BufferHelper driverUniformBuffer;
 
-    ANGLE_TRY(driverUniformBuffer.initBuffer(
-        getDevice(), sizeof(DriverUniforms),
-        wgpu::BufferUsage::Uniform | wgpu::BufferUsage::CopyDst, webgpu::MapAtCreation::Yes));
+    ANGLE_TRY(driverUniformBuffer.initBuffer(getDevice(), sizeof(DriverUniforms),
+                                             WGPUBufferUsage_Uniform | WGPUBufferUsage_CopyDst,
+                                             webgpu::MapAtCreation::Yes));
 
     ASSERT(driverUniformBuffer.valid());
 
@@ -1484,17 +1485,18 @@ angle::Result ContextWgpu::handleDirtyDriverUniforms(DirtyBits::Iterator *dirtyB
     ANGLE_TRY(driverUniformBuffer.unmap());
 
     // Now create the bind group containing the driver uniform buffer.
-    wgpu::BindGroupEntry bindGroupEntry;
+    WGPUBindGroupEntry bindGroupEntry = WGPU_BIND_GROUP_ENTRY_INIT;
     bindGroupEntry.binding = sh::kDriverUniformBlockBinding;
-    bindGroupEntry.buffer  = driverUniformBuffer.getBuffer();
+    bindGroupEntry.buffer             = driverUniformBuffer.getBuffer().get();
     bindGroupEntry.offset  = 0;
     bindGroupEntry.size    = sizeof(DriverUniforms);
 
-    wgpu::BindGroupDescriptor bindGroupDesc{};
-    bindGroupDesc.layout     = mDriverUniformsBindGroupLayout;
+    WGPUBindGroupDescriptor bindGroupDesc = WGPU_BIND_GROUP_DESCRIPTOR_INIT;
+    bindGroupDesc.layout                  = mDriverUniformsBindGroupLayout.get();
     bindGroupDesc.entryCount = 1;
     bindGroupDesc.entries    = &bindGroupEntry;
-    mDriverUniformsBindGroup = getDevice().CreateBindGroup(&bindGroupDesc);
+    mDriverUniformsBindGroup              = webgpu::BindGroupHandle::Acquire(
+        wgpuDeviceCreateBindGroup(getDevice().Get(), &bindGroupDesc));
 
     // This bind group needs to be updated on the same draw call as the driver uniforms are updated.
     dirtyBitsIterator->setLaterBit(DIRTY_BIT_BIND_GROUPS);

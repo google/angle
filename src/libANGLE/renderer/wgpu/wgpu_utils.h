@@ -405,7 +405,7 @@ struct PackedRenderPassDescriptor
 bool operator==(const PackedRenderPassDescriptor &a, const PackedRenderPassDescriptor &b);
 bool operator!=(const PackedRenderPassDescriptor &a, const PackedRenderPassDescriptor &b);
 
-wgpu::RenderPassEncoder CreateRenderPass(wgpu::CommandEncoder commandEncoder,
+wgpu::RenderPassEncoder CreateRenderPass(webgpu::CommandEncoderHandle commandEncoder,
                                          const webgpu::PackedRenderPassDescriptor &desc);
 
 void GenerateCaps(const wgpu::Limits &limitWgpu,
@@ -430,8 +430,13 @@ PackedRenderPassDepthStencilAttachment CreateNewDepthStencilAttachment(
     bool hasDepthValue   = false,
     bool hasStencilValue = false);
 
+// TODO(geofflang): Delete after moving to the C API
 bool IsWgpuError(wgpu::WaitStatus waitStatus);
+bool IsWgpuError(WGPUWaitStatus waitStatus);
+
+// TODO(geofflang): Delete after moving to the C API
 bool IsWgpuError(wgpu::MapAsyncStatus mapAsyncStatus);
+bool IsWgpuError(WGPUMapAsyncStatus mapAsyncStatus);
 
 bool IsStripPrimitiveTopology(WGPUPrimitiveTopology topology);
 
@@ -474,13 +479,13 @@ WGPUBlendFactor GetBlendFactor(gl::BlendFactorType blendFactor);
 WGPUBlendOperation GetBlendEquation(gl::BlendEquationType blendEquation);
 
 WGPUCompareFunction GetCompareFunc(const GLenum glCompareFunc, bool testEnabled);
-wgpu::TextureSampleType GetTextureSampleType(gl::SamplerFormat samplerFormat);
+WGPUTextureSampleType GetTextureSampleType(gl::SamplerFormat samplerFormat);
 WGPUStencilOperation GetStencilOp(const GLenum glStencilOp);
-wgpu::FilterMode GetFilter(const GLenum filter);
-wgpu::MipmapFilterMode GetSamplerMipmapMode(const GLenum filter);
-wgpu::AddressMode GetSamplerAddressMode(const GLenum wrap);
+WGPUFilterMode GetFilter(const GLenum filter);
+WGPUMipmapFilterMode GetSamplerMipmapMode(const GLenum filter);
+WGPUAddressMode GetSamplerAddressMode(const GLenum wrap);
 
-wgpu::SamplerDescriptor GetWgpuSamplerDesc(const gl::SamplerState *samplerState);
+WGPUSamplerDescriptor GetWgpuSamplerDesc(const gl::SamplerState *samplerState);
 
 uint32_t GetFirstIndexForDrawCall(gl::DrawElementsType indexType, const void *indices);
 }  // namespace gl_wgpu

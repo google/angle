@@ -327,10 +327,10 @@ class ContextWgpu : public ContextImpl
     void invalidateDriverUniforms();
 
     void ensureCommandEncoderCreated();
-    wgpu::CommandEncoder &getCurrentCommandEncoder();
+    webgpu::CommandEncoderHandle &getCurrentCommandEncoder();
 
     // Driver uniforms are managed by ContextWgpu.
-    wgpu::BindGroupLayout getDriverUniformBindGroupLayout()
+    webgpu::BindGroupLayoutHandle getDriverUniformBindGroupLayout()
     {
         ASSERT(mDriverUniformsBindGroupLayout);
         return mDriverUniformsBindGroupLayout;
@@ -411,8 +411,8 @@ class ContextWgpu : public ContextImpl
 
     DisplayWgpu *mDisplay;
 
-    wgpu::CommandEncoder mCurrentCommandEncoder;
-    wgpu::RenderPassEncoder mCurrentRenderPass;
+    webgpu::CommandEncoderHandle mCurrentCommandEncoder;
+    webgpu::RenderPassEncoderHandle mCurrentRenderPass;
 
     webgpu::CommandBuffer mCommandBuffer;
 
@@ -426,10 +426,10 @@ class ContextWgpu : public ContextImpl
     // set of driver uniforms has changed.
     DriverUniforms mDriverUniforms;
     // Holds the binding group layout for the driver uniforms.
-    wgpu::BindGroupLayout mDriverUniformsBindGroupLayout;
+    webgpu::BindGroupLayoutHandle mDriverUniformsBindGroupLayout;
     // Holds the most recent driver uniforms BindGroup. Note there may be others in the
     // command buffer.
-    wgpu::BindGroup mDriverUniformsBindGroup;
+    webgpu::BindGroupHandle mDriverUniformsBindGroup;
 };
 
 }  // namespace rx

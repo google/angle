@@ -79,14 +79,26 @@ PackedRenderPassDepthStencilAttachment CreateNewDepthStencilAttachment(
     return depthStencilAttachment;
 }
 
+// TOOD(geofflang): Remove after transition to C API
 bool IsWgpuError(wgpu::WaitStatus waitStatus)
 {
     return waitStatus != wgpu::WaitStatus::Success;
 }
 
+bool IsWgpuError(WGPUWaitStatus waitStatus)
+{
+    return waitStatus != WGPUWaitStatus_Success;
+}
+
+// TOOD(geofflang): Remove after transition to C API
 bool IsWgpuError(wgpu::MapAsyncStatus mapAsyncStatus)
 {
     return mapAsyncStatus != wgpu::MapAsyncStatus::Success;
+}
+
+bool IsWgpuError(WGPUMapAsyncStatus mapAsyncStatus)
+{
+    return mapAsyncStatus != WGPUMapAsyncStatus_Success;
 }
 
 ClearValuesArray::ClearValuesArray() : mValues{}, mEnabled{} {}
@@ -132,7 +144,7 @@ bool operator!=(const PackedRenderPassDescriptor &a, const PackedRenderPassDescr
     return !(a == b);
 }
 
-wgpu::RenderPassEncoder CreateRenderPass(wgpu::CommandEncoder commandEncoder,
+wgpu::RenderPassEncoder CreateRenderPass(webgpu::CommandEncoderHandle commandEncoder,
                                          const webgpu::PackedRenderPassDescriptor &packedDesc)
 {
     WGPURenderPassDescriptor renderPassDesc = WGPU_RENDER_PASS_DESCRIPTOR_INIT;
@@ -180,7 +192,7 @@ wgpu::RenderPassEncoder CreateRenderPass(wgpu::CommandEncoder commandEncoder,
     }
 
     return wgpu::RenderPassEncoder::Acquire(
-        wgpuCommandEncoderBeginRenderPass(commandEncoder.Get(), &renderPassDesc));
+        wgpuCommandEncoderBeginRenderPass(commandEncoder.get(), &renderPassDesc));
 }
 
 void GenerateCaps(const wgpu::Limits &limitsWgpu,
@@ -766,21 +778,21 @@ WGPUCompareFunction GetCompareFunc(const GLenum glCompareFunc, bool testEnabled)
     }
 }
 
-wgpu::TextureSampleType GetTextureSampleType(gl::SamplerFormat samplerFormat)
+WGPUTextureSampleType GetTextureSampleType(gl::SamplerFormat samplerFormat)
 {
     switch (samplerFormat)
     {
         case gl::SamplerFormat::Float:
-            return wgpu::TextureSampleType::Float;
+            return WGPUTextureSampleType_Float;
         case gl::SamplerFormat::Unsigned:
-            return wgpu::TextureSampleType::Uint;
+            return WGPUTextureSampleType_Uint;
         case gl::SamplerFormat::Signed:
-            return wgpu::TextureSampleType::Sint;
+            return WGPUTextureSampleType_Sint;
         case gl::SamplerFormat::Shadow:
-            return wgpu::TextureSampleType::Depth;
+            return WGPUTextureSampleType_Depth;
         default:
             UNIMPLEMENTED();
-            return wgpu::TextureSampleType::Undefined;
+            return WGPUTextureSampleType_Undefined;
     }
 }
 
@@ -810,82 +822,80 @@ WGPUStencilOperation GetStencilOp(const GLenum glStencilOp)
     }
 }
 
-wgpu::FilterMode GetFilter(const GLenum filter)
+WGPUFilterMode GetFilter(const GLenum filter)
 {
     switch (filter)
     {
         case GL_LINEAR_MIPMAP_LINEAR:
         case GL_LINEAR_MIPMAP_NEAREST:
         case GL_LINEAR:
-            return wgpu::FilterMode::Linear;
+            return WGPUFilterMode_Linear;
         case GL_NEAREST_MIPMAP_LINEAR:
         case GL_NEAREST_MIPMAP_NEAREST:
         case GL_NEAREST:
-            return wgpu::FilterMode::Nearest;
+            return WGPUFilterMode_Nearest;
         default:
             UNREACHABLE();
-            return wgpu::FilterMode::Undefined;
+            return WGPUFilterMode_Undefined;
     }
 }
 
-wgpu::MipmapFilterMode GetSamplerMipmapMode(const GLenum filter)
+WGPUMipmapFilterMode GetSamplerMipmapMode(const GLenum filter)
 {
     switch (filter)
     {
         case GL_LINEAR_MIPMAP_LINEAR:
         case GL_NEAREST_MIPMAP_LINEAR:
-            return wgpu::MipmapFilterMode::Linear;
+            return WGPUMipmapFilterMode_Linear;
         // GL_LINEAR and GL_NEAREST do not map directly to WebGPU but can be easily emulated,
         // see below.
         case GL_LINEAR:
         case GL_NEAREST:
         case GL_NEAREST_MIPMAP_NEAREST:
         case GL_LINEAR_MIPMAP_NEAREST:
-            return wgpu::MipmapFilterMode::Nearest;
+            return WGPUMipmapFilterMode_Nearest;
         default:
             UNREACHABLE();
-            return wgpu::MipmapFilterMode::Undefined;
+            return WGPUMipmapFilterMode_Undefined;
     }
 }
 
-wgpu::AddressMode GetSamplerAddressMode(const GLenum wrap)
+WGPUAddressMode GetSamplerAddressMode(const GLenum wrap)
 {
     switch (wrap)
     {
         case GL_REPEAT:
-            return wgpu::AddressMode::Repeat;
+            return WGPUAddressMode_Repeat;
         case GL_MIRRORED_REPEAT:
-            return wgpu::AddressMode::MirrorRepeat;
+            return WGPUAddressMode_MirrorRepeat;
         case GL_CLAMP_TO_BORDER:
             // Not in WebGPU and not available in ES 3.0 or before.
             UNIMPLEMENTED();
-            return wgpu::AddressMode::ClampToEdge;
+            return WGPUAddressMode_ClampToEdge;
         case GL_CLAMP_TO_EDGE:
-            return wgpu::AddressMode::ClampToEdge;
+            return WGPUAddressMode_ClampToEdge;
         case GL_MIRROR_CLAMP_TO_EDGE_EXT:
             // Not in WebGPU and not available in ES 3.0 or before.
-            return wgpu::AddressMode::ClampToEdge;
+            return WGPUAddressMode_ClampToEdge;
         default:
             UNREACHABLE();
-            return wgpu::AddressMode::Undefined;
+            return WGPUAddressMode_Undefined;
     }
 }
 
-wgpu::CompareFunction GetSamplerCompareFunc(const gl::SamplerState *samplerState)
+WGPUCompareFunction GetSamplerCompareFunc(const gl::SamplerState *samplerState)
 {
     if (samplerState->getCompareMode() != GL_COMPARE_REF_TO_TEXTURE)
     {
-        return wgpu::CompareFunction::Undefined;
+        return WGPUCompareFunction_Undefined;
     }
 
-    return static_cast<wgpu::CompareFunction>(
-        GetCompareFunc(samplerState->getCompareFunc(), /*testEnabled=*/true));
+    return GetCompareFunc(samplerState->getCompareFunc(), /*testEnabled=*/true);
 }
 
-wgpu::SamplerDescriptor GetWgpuSamplerDesc(const gl::SamplerState *samplerState)
+WGPUSamplerDescriptor GetWgpuSamplerDesc(const gl::SamplerState *samplerState)
 {
-    wgpu::MipmapFilterMode wgpuMipmapFilterMode =
-        GetSamplerMipmapMode(samplerState->getMinFilter());
+    WGPUMipmapFilterMode wgpuMipmapFilterMode = GetSamplerMipmapMode(samplerState->getMinFilter());
     // Negative values don't seem to make a difference to the behavior of GLES, a min lod of 0.0
     // functions the same.
     float wgpuLodMinClamp =
@@ -897,12 +907,12 @@ wgpu::SamplerDescriptor GetWgpuSamplerDesc(const gl::SamplerState *samplerState)
     {
         // Similarly to Vulkan, GL_NEAREST and GL_LINEAR do not map directly to WGPU, so
         // they must be emulated (See "Mapping of OpenGL to Vulkan filter modes")
-        wgpuMipmapFilterMode = wgpu::MipmapFilterMode::Nearest;
+        wgpuMipmapFilterMode = WGPUMipmapFilterMode_Nearest;
         wgpuLodMinClamp      = 0.0f;
         wgpuLodMaxClamp      = 0.25f;
     }
 
-    wgpu::SamplerDescriptor samplerDesc;
+    WGPUSamplerDescriptor samplerDesc = WGPU_SAMPLER_DESCRIPTOR_INIT;
     samplerDesc.addressModeU = GetSamplerAddressMode(samplerState->getWrapS());
     samplerDesc.addressModeV = GetSamplerAddressMode(samplerState->getWrapT());
     samplerDesc.addressModeW = GetSamplerAddressMode(samplerState->getWrapR());
