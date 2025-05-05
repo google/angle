@@ -289,7 +289,10 @@ void ImageHelper::removeStagedUpdates(gl::LevelIndex levelToRemove)
 
 void ImageHelper::resetImage()
 {
-    mTexture.Destroy();
+    if (mTexture)
+    {
+        mTexture.Destroy();
+    }
     mTextureDescriptor   = {};
     mInitialized         = false;
     mFirstAllocatedLevel = gl::LevelIndex(0);
