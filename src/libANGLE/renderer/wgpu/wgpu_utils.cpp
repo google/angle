@@ -23,13 +23,13 @@ DisplayWgpu *GetDisplay(const gl::Context *context)
     return contextWgpu->getDisplay();
 }
 
-wgpu::Device GetDevice(const gl::Context *context)
+webgpu::DeviceHandle GetDevice(const gl::Context *context)
 {
     DisplayWgpu *display = GetDisplay(context);
     return display->getDevice();
 }
 
-wgpu::Instance GetInstance(const gl::Context *context)
+webgpu::InstanceHandle GetInstance(const gl::Context *context)
 {
     DisplayWgpu *display = GetDisplay(context);
     return display->getInstance();
@@ -195,7 +195,7 @@ wgpu::RenderPassEncoder CreateRenderPass(webgpu::CommandEncoderHandle commandEnc
         wgpuCommandEncoderBeginRenderPass(commandEncoder.get(), &renderPassDesc));
 }
 
-void GenerateCaps(const wgpu::Limits &limitsWgpu,
+void GenerateCaps(const WGPULimits &limitsWgpu,
                   gl::Caps *glCaps,
                   gl::TextureCapsMap *glTextureCapsMap,
                   gl::Extensions *glExtensions,
@@ -413,10 +413,12 @@ bool IsStripPrimitiveTopology(WGPUPrimitiveTopology topology)
     }
 }
 
-ErrorScope::ErrorScope(wgpu::Instance instance, wgpu::Device device, wgpu::ErrorFilter errorType)
+ErrorScope::ErrorScope(webgpu::InstanceHandle instance,
+                       webgpu::DeviceHandle device,
+                       WGPUErrorFilter errorType)
     : mInstance(instance), mDevice(device)
 {
-    mDevice.PushErrorScope(errorType);
+    wgpuDevicePushErrorScope(mDevice.get(), errorType);
     mActive = true;
 }
 
@@ -436,31 +438,49 @@ angle::Result ErrorScope::PopScope(ContextWgpu *context,
     }
     mActive = false;
 
-    bool hadError  = false;
-    wgpu::Future f = mDevice.PopErrorScope(
-        wgpu::CallbackMode::WaitAnyOnly,
-        [context, file, function, line, &hadError](wgpu::PopErrorScopeStatus status,
-                                                   wgpu::ErrorType type, char const *message) {
-            if (type == wgpu::ErrorType::NoError)
-            {
-                return;
-            }
+    struct PopScopeContext
+    {
+        ContextWgpu *context = nullptr;
+        const char *file     = nullptr;
+        const char *function = nullptr;
+        unsigned int line    = 0;
+        bool hadError        = false;
+    };
+    PopScopeContext popScopeContext{context, file, function, line, false};
 
-            if (context)
-            {
-                ASSERT(file);
-                ASSERT(function);
-                context->handleError(GL_INVALID_OPERATION, message, file, function, line);
-            }
-            else
-            {
-                ERR() << "Unhandled WebGPU error: " << message;
-            }
-            hadError = true;
-        });
-    mInstance.WaitAny(f, -1);
+    WGPUPopErrorScopeCallbackInfo callbackInfo = WGPU_POP_ERROR_SCOPE_CALLBACK_INFO_INIT;
+    callbackInfo.mode                          = WGPUCallbackMode_WaitAnyOnly;
+    callbackInfo.callback = [](WGPUPopErrorScopeStatus status, WGPUErrorType type,
+                               struct WGPUStringView message, void *userdata1, void *userdata2) {
+        PopScopeContext *ctx = reinterpret_cast<PopScopeContext *>(userdata1);
+        ASSERT(userdata2 == nullptr);
 
-    return hadError ? angle::Result::Stop : angle::Result::Continue;
+        if (type == WGPUErrorType_NoError)
+        {
+            return;
+        }
+
+        if (ctx->context)
+        {
+            ASSERT(ctx->file);
+            ASSERT(ctx->function);
+            std::string msgStr(message.data, message.length);
+            ctx->context->handleError(GL_INVALID_OPERATION, msgStr.c_str(), ctx->file,
+                                      ctx->function, ctx->line);
+        }
+        else
+        {
+            ERR() << "Unhandled WebGPU error: " << std::string(message.data, message.length);
+        }
+        ctx->hadError = true;
+    };
+    callbackInfo.userdata1 = &popScopeContext;
+
+    WGPUFutureWaitInfo future = WGPU_FUTURE_WAIT_INFO_INIT;
+    future.future             = wgpuDevicePopErrorScope(mDevice.get(), callbackInfo);
+    wgpuInstanceWaitAny(mInstance.get(), 1, &future, -1);
+
+    return popScopeContext.hadError ? angle::Result::Stop : angle::Result::Continue;
 }
 
 }  // namespace webgpu

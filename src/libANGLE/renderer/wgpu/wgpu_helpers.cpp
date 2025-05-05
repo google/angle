@@ -252,7 +252,6 @@ angle::Result ImageHelper::stageTextureUpload(ContextWgpu *contextWgpu,
         return angle::Result::Continue;
     }
     webgpu::DeviceHandle device = contextWgpu->getDevice();
-    webgpu::QueueHandle queue   = contextWgpu->getQueue();
     gl::LevelIndex levelGL(index.getLevelIndex());
     BufferHelper bufferHelper;
     WGPUBufferUsage usage = WGPUBufferUsage_CopySrc | WGPUBufferUsage_CopyDst;

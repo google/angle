@@ -72,7 +72,7 @@ angle::Result BufferWgpu::setData(const gl::Context *context,
                                   BufferFeedback *feedback)
 {
     ContextWgpu *contextWgpu = webgpu::GetImpl(context);
-    wgpu::Device device      = webgpu::GetDevice(context);
+    webgpu::DeviceHandle device = webgpu::GetDevice(context);
 
     bool hasData = data && size > 0;
 
@@ -110,7 +110,6 @@ angle::Result BufferWgpu::setSubData(const gl::Context *context,
                                      BufferFeedback *feedback)
 {
     ContextWgpu *contextWgpu = webgpu::GetImpl(context);
-    wgpu::Device device      = webgpu::GetDevice(context);
 
     ASSERT(mBuffer.valid());
     if (mBuffer.canMapForWrite())

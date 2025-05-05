@@ -29,7 +29,7 @@
 
 #define ANGLE_WGPU_BEGIN_DEBUG_ERROR_SCOPE(context)                             \
     ::rx::webgpu::DebugErrorScope(context->getInstance(), context->getDevice(), \
-                                  wgpu::ErrorFilter::Validation)
+                                  WGPUErrorFilter_Validation)
 #define ANGLE_WGPU_END_DEBUG_ERROR_SCOPE(context, scope) \
     ANGLE_TRY(scope.PopScope(context, __FILE__, ANGLE_FUNCTION, __LINE__))
 
@@ -259,7 +259,9 @@ using LevelIndex = gl::LevelIndexWrapper<uint32_t>;
 class ErrorScope : public angle::NonCopyable
 {
   public:
-    ErrorScope(wgpu::Instance instance, wgpu::Device device, wgpu::ErrorFilter errorType);
+    ErrorScope(webgpu::InstanceHandle instance,
+               webgpu::DeviceHandle device,
+               WGPUErrorFilter errorType);
     ~ErrorScope();
 
     angle::Result PopScope(ContextWgpu *context,
@@ -268,15 +270,18 @@ class ErrorScope : public angle::NonCopyable
                            unsigned int line);
 
   private:
-    wgpu::Instance mInstance;
-    wgpu::Device mDevice;
+    webgpu::InstanceHandle mInstance;
+    webgpu::DeviceHandle mDevice;
     bool mActive = false;
 };
 
 class NoOpErrorScope : public angle::NonCopyable
 {
   public:
-    NoOpErrorScope(wgpu::Instance instance, wgpu::Device device, wgpu::ErrorFilter errorType) {}
+    NoOpErrorScope(webgpu::InstanceHandle instance,
+                   webgpu::DeviceHandle device,
+                   WGPUErrorFilter errorType)
+    {}
     ~NoOpErrorScope() {}
 
     angle::Result PopScope(ContextWgpu *context,
@@ -408,7 +413,7 @@ bool operator!=(const PackedRenderPassDescriptor &a, const PackedRenderPassDescr
 wgpu::RenderPassEncoder CreateRenderPass(webgpu::CommandEncoderHandle commandEncoder,
                                          const webgpu::PackedRenderPassDescriptor &desc);
 
-void GenerateCaps(const wgpu::Limits &limitWgpu,
+void GenerateCaps(const WGPULimits &limitWgpu,
                   gl::Caps *glCaps,
                   gl::TextureCapsMap *glTextureCapsMap,
                   gl::Extensions *glExtensions,
@@ -418,8 +423,8 @@ void GenerateCaps(const wgpu::Limits &limitWgpu,
                   gl::Version *maxSupportedESVersion);
 
 DisplayWgpu *GetDisplay(const gl::Context *context);
-wgpu::Device GetDevice(const gl::Context *context);
-wgpu::Instance GetInstance(const gl::Context *context);
+webgpu::DeviceHandle GetDevice(const gl::Context *context);
+webgpu::InstanceHandle GetInstance(const gl::Context *context);
 PackedRenderPassColorAttachment CreateNewClearColorAttachment(const gl::ColorF &clearValue,
                                                               uint32_t depthSlice,
                                                               TextureViewHandle textureView);

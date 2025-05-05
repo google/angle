@@ -92,18 +92,21 @@ angle::Result ContextWgpu::initialize(const angle::ImageLoadContext &imageLoadCo
     mImageLoadContext = imageLoadContext;
 
     // Create the driver uniform bind group layout, which won't ever change.
-    wgpu::BindGroupLayoutEntry driverUniformBindGroupEntry;
-    driverUniformBindGroupEntry.visibility =
-        wgpu::ShaderStage::Vertex | wgpu::ShaderStage::Fragment;
+    WGPUBindGroupLayoutEntry driverUniformBindGroupEntry = WGPU_BIND_GROUP_LAYOUT_ENTRY_INIT;
+    driverUniformBindGroupEntry.visibility = WGPUShaderStage_Vertex | WGPUShaderStage_Fragment;
     driverUniformBindGroupEntry.binding               = sh::kDriverUniformBlockBinding;
-    driverUniformBindGroupEntry.buffer.type           = wgpu::BufferBindingType::Uniform;
+    driverUniformBindGroupEntry.buffer.type           = WGPUBufferBindingType_Uniform;
     driverUniformBindGroupEntry.buffer.minBindingSize = kDriverUniformSize;
+    driverUniformBindGroupEntry.texture.sampleType    = WGPUTextureSampleType_BindingNotUsed;
+    driverUniformBindGroupEntry.sampler.type          = WGPUSamplerBindingType_BindingNotUsed;
+    driverUniformBindGroupEntry.storageTexture.access = WGPUStorageTextureAccess_BindingNotUsed;
     // Create a bind group layout with these entries.
-    wgpu::BindGroupLayoutDescriptor driverUniformsBindGroupLayoutDesc{};
+    WGPUBindGroupLayoutDescriptor driverUniformsBindGroupLayoutDesc =
+        WGPU_BIND_GROUP_LAYOUT_DESCRIPTOR_INIT;
     driverUniformsBindGroupLayoutDesc.entryCount = 1;
     driverUniformsBindGroupLayoutDesc.entries    = &driverUniformBindGroupEntry;
-    mDriverUniformsBindGroupLayout =
-        getDevice().CreateBindGroupLayout(&driverUniformsBindGroupLayoutDesc);
+    mDriverUniformsBindGroupLayout               = webgpu::BindGroupLayoutHandle::Acquire(
+        wgpuDeviceCreateBindGroupLayout(getDevice().get(), &driverUniformsBindGroupLayoutDesc));
 
     // Driver uniforms should be set to 0 for later memcmp.
     memset(&mDriverUniforms, 0, sizeof(mDriverUniforms));
@@ -139,7 +142,7 @@ angle::Result ContextWgpu::flush(webgpu::RenderPassClosureReason closureReason)
             wgpuCommandEncoderFinish(mCurrentCommandEncoder.get(), nullptr));
         mCurrentCommandEncoder            = nullptr;
 
-        wgpuQueueSubmit(getQueue().Get(), 1, &commandBuffer.get());
+        wgpuQueueSubmit(getQueue().get(), 1, &commandBuffer.get());
     }
 
     return angle::Result::Continue;
@@ -213,7 +216,8 @@ void ContextWgpu::ensureCommandEncoderCreated()
 {
     if (!mCurrentCommandEncoder)
     {
-        mCurrentCommandEncoder = getDevice().CreateCommandEncoder(nullptr);
+        mCurrentCommandEncoder = webgpu::CommandEncoderHandle::Acquire(
+            wgpuDeviceCreateCommandEncoder(getDevice().get(), nullptr));
     }
 }
 
@@ -226,9 +230,17 @@ angle::Result ContextWgpu::finish(const gl::Context *context)
 {
     ANGLE_TRY(flush(webgpu::RenderPassClosureReason::GLFinish));
 
-    wgpu::Future onWorkSubmittedFuture = getQueue().OnSubmittedWorkDone(
-        wgpu::CallbackMode::WaitAnyOnly, [](wgpu::QueueWorkDoneStatus status) {});
-    wgpu::WaitStatus status = getInstance().WaitAny(onWorkSubmittedFuture, -1);
+    WGPUQueueWorkDoneCallbackInfo callback = WGPU_QUEUE_WORK_DONE_CALLBACK_INFO_INIT;
+    callback.mode                          = WGPUCallbackMode_WaitAnyOnly;
+    callback.callback = [](WGPUQueueWorkDoneStatus status, void *userdata1, void *userdata2) {
+        ASSERT(userdata1 == nullptr);
+        ASSERT(userdata2 == nullptr);
+    };
+
+    WGPUFutureWaitInfo onWorkSubmittedFuture = WGPU_FUTURE_WAIT_INFO_INIT;
+    onWorkSubmittedFuture.future = wgpuQueueOnSubmittedWorkDone(getQueue().get(), callback);
+
+    WGPUWaitStatus status = wgpuInstanceWaitAny(getInstance().get(), 1, &onWorkSubmittedFuture, -1);
     ASSERT(!webgpu::IsWgpuError(status));
 
     return angle::Result::Continue;
@@ -1496,7 +1508,7 @@ angle::Result ContextWgpu::handleDirtyDriverUniforms(DirtyBits::Iterator *dirtyB
     bindGroupDesc.entryCount = 1;
     bindGroupDesc.entries    = &bindGroupEntry;
     mDriverUniformsBindGroup              = webgpu::BindGroupHandle::Acquire(
-        wgpuDeviceCreateBindGroup(getDevice().Get(), &bindGroupDesc));
+        wgpuDeviceCreateBindGroup(getDevice().get(), &bindGroupDesc));
 
     // This bind group needs to be updated on the same draw call as the driver uniforms are updated.
     dirtyBitsIterator->setLaterBit(DIRTY_BIT_BIND_GROUPS);

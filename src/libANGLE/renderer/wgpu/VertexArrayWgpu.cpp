@@ -215,7 +215,7 @@ angle::Result VertexArrayWgpu::syncClientArrays(
 
     gl::Buffer *elementArrayBuffer = mState.getElementArrayBuffer();
     ContextWgpu *contextWgpu       = webgpu::GetImpl(context);
-    wgpu::Device device            = webgpu::GetDevice(context);
+    webgpu::DeviceHandle device    = webgpu::GetDevice(context);
     GLsizei adjustedCount          = count;
     const uint8_t *srcIndexData    = static_cast<const uint8_t *>(indices);
     if (elementArrayBuffer)
@@ -579,7 +579,7 @@ angle::Result VertexArrayWgpu::ensureBufferCreated(const gl::Context *context,
     if (!buffer.valid() || buffer.requestedSize() < size ||
         wgpuBufferGetUsage(buffer.getBuffer().get()) != usage)
     {
-        wgpu::Device device = webgpu::GetDevice(context);
+        webgpu::DeviceHandle device = webgpu::GetDevice(context);
         ANGLE_TRY(buffer.initBuffer(device, size, usage, webgpu::MapAtCreation::No));
 
         if (bufferType == BufferType::IndexBuffer)

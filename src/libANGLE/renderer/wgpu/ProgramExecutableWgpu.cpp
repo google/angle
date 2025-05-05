@@ -106,7 +106,7 @@ angle::Result ProgramExecutableWgpu::updateUniformsAndGetBindGroup(
         bindGroupDesc.entryCount = bindings.size();
         bindGroupDesc.entries    = bindings.data();
         mDefaultBindGroup        = webgpu::BindGroupHandle::Acquire(
-            wgpuDeviceCreateBindGroup(contextWgpu->getDevice().Get(), &bindGroupDesc));
+            wgpuDeviceCreateBindGroup(contextWgpu->getDevice().get(), &bindGroupDesc));
     }
 
     ASSERT(mDefaultBindGroup);
@@ -175,7 +175,7 @@ angle::Result ProgramExecutableWgpu::getSamplerAndTextureBindGroup(
                 // TODO(anglebug.com/389145696): potentially cache sampler.
                 WGPUSamplerDescriptor sampleDesc  = gl_wgpu::GetWgpuSamplerDesc(samplerState);
                 webgpu::SamplerHandle wgpuSampler = webgpu::SamplerHandle::Acquire(
-                    wgpuDeviceCreateSampler(contextWgpu->getDevice().Get(), &sampleDesc));
+                    wgpuDeviceCreateSampler(contextWgpu->getDevice().get(), &sampleDesc));
                 samplers.push_back(wgpuSampler);
 
                 WGPUBindGroupEntry samplerBindGroupEntry = WGPU_BIND_GROUP_ENTRY_INIT;
@@ -207,7 +207,7 @@ angle::Result ProgramExecutableWgpu::getSamplerAndTextureBindGroup(
         bindGroupDesc.entryCount      = bindings.size();
         bindGroupDesc.entries         = bindings.data();
         mSamplersAndTexturesBindGroup = webgpu::BindGroupHandle::Acquire(
-            wgpuDeviceCreateBindGroup(contextWgpu->getDevice().Get(), &bindGroupDesc));
+            wgpuDeviceCreateBindGroup(contextWgpu->getDevice().get(), &bindGroupDesc));
 
         mSamplerBindingsDirty = false;
     }
@@ -516,7 +516,7 @@ void ProgramExecutableWgpu::genBindingLayoutIfNecessary(ContextWgpu *context)
     defaultBindGroupLayoutDesc.entryCount = defaultBindGroupLayoutEntries.size();
     defaultBindGroupLayoutDesc.entries    = defaultBindGroupLayoutEntries.data();
     mDefaultBindGroupLayout               = webgpu::BindGroupLayoutHandle::Acquire(
-        wgpuDeviceCreateBindGroupLayout(context->getDevice().Get(), &defaultBindGroupLayoutDesc));
+        wgpuDeviceCreateBindGroupLayout(context->getDevice().get(), &defaultBindGroupLayoutDesc));
 
     // Add the textures/samplers to the second bind group.
     std::vector<WGPUBindGroupLayoutEntry> samplersAndTexturesBindGroupLayoutEntries;
@@ -572,7 +572,7 @@ void ProgramExecutableWgpu::genBindingLayoutIfNecessary(ContextWgpu *context)
         samplersAndTexturesBindGroupLayoutEntries.data();
     mSamplersAndTexturesBindGroupLayout =
         webgpu::BindGroupLayoutHandle::Acquire(wgpuDeviceCreateBindGroupLayout(
-            context->getDevice().Get(), &texturesAndSamplersBindGroupLayoutDesc));
+            context->getDevice().get(), &texturesAndSamplersBindGroupLayoutDesc));
 
     // Driver uniforms bind groups are handled by ContextWgpu.
 
@@ -592,7 +592,7 @@ void ProgramExecutableWgpu::genBindingLayoutIfNecessary(ContextWgpu *context)
     layoutDesc.bindGroupLayoutCount = groupLayouts.size();
     layoutDesc.bindGroupLayouts     = groupLayouts.data();
     mPipelineLayout                         = webgpu::PipelineLayoutHandle::Acquire(
-        wgpuDeviceCreatePipelineLayout(context->getDevice().Get(), &layoutDesc));
+        wgpuDeviceCreatePipelineLayout(context->getDevice().get(), &layoutDesc));
 }
 
 }  // namespace rx
