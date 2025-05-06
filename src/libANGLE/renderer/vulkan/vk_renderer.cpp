@@ -5772,10 +5772,13 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // Older Samsung drivers with version < 24.0.0 have a bug in imageless framebuffer support.
     const bool isSamsungDriverWithImagelessFramebufferBug =
         isSamsung && driverVersion < angle::VersionTriple(24, 0, 0);
-    // Qualcomm with imageless framebuffers, vkCreateFramebuffer loops forever.
+    // Qualcomm with imageless framebuffers, vkCreateFramebuffer loops forever (512.801).
     // http://issuetracker.google.com/369693310
+    //
+    // On some devices, crashes are seen with vkCmdBeginRenderPass, likely due to imageless
+    // framebuffers (512.805).  http://crbug.com/415968761
     const bool isQualcommWithImagelessFramebufferBug =
-        isQualcommProprietary && driverVersion < angle::VersionTriple(512, 802, 0);
+        isQualcommProprietary && driverVersion < angle::VersionTriple(512, 806, 0);
     // Some ARM-based phones with the 38.0 and 38.1 driver crash when creating imageless
     // framebuffers.
     const bool isArmDriverWithImagelessFramebufferBug =
@@ -6144,6 +6147,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // Use of dynamic rendering is disabled on older ARM drivers due to driver bugs
     // (http://issuetracker.google.com/356051947).
     //
+    // Use of dynamic rendering is disabled on older Qualcomm drivers due to driver bugs
+    // (http://crbug.com/415738891).
+    //
     // Use of dynamic rendering on PowerVR devices is disabled for performance reasons
     // (http://issuetracker.google.com/372273294).
     const bool hasLegacyDitheringV1 =
@@ -6152,12 +6158,14 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     const bool emulatesMultisampledRenderToTexture =
         mFeatures.enableMultisampledRenderToTexture.enabled &&
         !mFeatures.supportsMultisampledRenderToSingleSampled.enabled;
-    ANGLE_FEATURE_CONDITION(&mFeatures, preferDynamicRendering,
-                            mFeatures.supportsDynamicRendering.enabled &&
-                                mFeatures.supportsDynamicRenderingLocalRead.enabled &&
-                                !hasLegacyDitheringV1 && !emulatesMultisampledRenderToTexture &&
-                                !(isARM && driverVersion < angle::VersionTriple(52, 0, 0)) &&
-                                !isPowerVR);
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, preferDynamicRendering,
+        mFeatures.supportsDynamicRendering.enabled &&
+            mFeatures.supportsDynamicRenderingLocalRead.enabled && !hasLegacyDitheringV1 &&
+            !emulatesMultisampledRenderToTexture &&
+            !(isARM && driverVersion < angle::VersionTriple(52, 0, 0)) &&
+            !(isQualcommProprietary && driverVersion < angle::VersionTriple(512, 801, 0)) &&
+            !isPowerVR);
 
     // On tile-based renderers, breaking the render pass is costly.  Changing into and out of
     // framebuffer fetch causes the render pass to break so that the layout of the color attachments
