@@ -24,21 +24,11 @@ angle::Result WindowSurfaceWgpuWin32::createWgpuSurface(const egl::Display *disp
                                                         wgpu::Surface *outSurface)
 {
     DisplayWgpu *displayWgpu = webgpu::GetImpl(display);
-    auto &surfaceCache       = displayWgpu->getSurfaceCache();
-
-    EGLNativeWindowType window = getNativeWindow();
-    auto cachedSurfaceIter     = surfaceCache.find(window);
-    if (cachedSurfaceIter != surfaceCache.end())
-    {
-        *outSurface = cachedSurfaceIter->second;
-        return angle::Result::Continue;
-    }
-
     wgpu::Instance instance = displayWgpu->getInstance();
 
     wgpu::SurfaceDescriptorFromWindowsHWND hwndDesc;
     hwndDesc.hinstance = GetModuleHandle(nullptr);
-    hwndDesc.hwnd      = window;
+    hwndDesc.hwnd      = getNativeWindow();
 
     wgpu::SurfaceDescriptor surfaceDesc;
     surfaceDesc.nextInChain = &hwndDesc;
@@ -46,7 +36,6 @@ angle::Result WindowSurfaceWgpuWin32::createWgpuSurface(const egl::Display *disp
     wgpu::Surface surface = instance.CreateSurface(&surfaceDesc);
     *outSurface           = surface;
 
-    surfaceCache.insert_or_assign(window, surface);
     return angle::Result::Continue;
 }
 

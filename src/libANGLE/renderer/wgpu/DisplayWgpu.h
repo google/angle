@@ -105,8 +105,6 @@ class DisplayWgpu : public DisplayImpl
     const gl::Limitations &getGLLimitations() const { return mGLLimitations; }
     const ShPixelLocalStorageOptions &getPLSOptions() const { return mPLSOptions; }
 
-    std::map<EGLNativeWindowType, wgpu::Surface> &getSurfaceCache() { return mSurfaceCache; }
-
     const webgpu::Format &getFormat(GLenum internalFormat) const
     {
         return mFormatTable[internalFormat];
@@ -133,13 +131,6 @@ class DisplayWgpu : public DisplayImpl
     egl::DisplayExtensions mEGLExtensions;
     gl::Version mMaxSupportedClientVersion;
     ShPixelLocalStorageOptions mPLSOptions;
-
-    // http://anglebug.com/342213844
-    // Dawn currently holds references to the internal swap chains for an unknown amount of time
-    // after destroying a surface and can fail to create a new swap chain for the same window.
-    // ANGLE tests re-create EGL surfaces for the same window each test. As a workaround, cache the
-    // wgpu::Surface created for each window for the lifetime of the display.
-    std::map<EGLNativeWindowType, wgpu::Surface> mSurfaceCache;
 
     webgpu::FormatTable mFormatTable;
 };

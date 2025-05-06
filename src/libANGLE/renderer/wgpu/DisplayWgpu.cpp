@@ -43,7 +43,13 @@ egl::Error DisplayWgpu::initialize(egl::Display *display)
     return egl::NoError();
 }
 
-void DisplayWgpu::terminate() {}
+void DisplayWgpu::terminate()
+{
+    mAdapter  = nullptr;
+    mInstance = nullptr;
+    mDevice   = nullptr;
+    mQueue    = nullptr;
+}
 
 egl::Error DisplayWgpu::makeCurrent(egl::Display *display,
                                     egl::Surface *drawSurface,

@@ -171,10 +171,8 @@ bool gReuseDisplays = false;
 
 bool ShouldAlwaysForceNewDisplay(const PlatformParameters &params)
 {
-    // When running WebGPU tests on linux always force a new display. The underlying vulkan swap
-    // chain appears to fail to get a new image after swapping when rapidly creating new swap chains
-    // for an existing window.
-    if (params.isWebGPU() && IsLinux())
+    // When running WebGPU tests always force a new display.
+    if (params.isWebGPU())
     {
         return true;
     }
@@ -187,6 +185,18 @@ bool ShouldAlwaysForceNewDisplay(const PlatformParameters &params)
     // Conservatively enable the feature only on Windows Intel and NVIDIA for now.
     SystemInfo *systemInfo = GetTestSystemInfo();
     return (!systemInfo || !IsWindows() || systemInfo->hasAMDGPU());
+}
+
+bool ShouldAlwaysForceNewWindow(const PlatformParameters &params)
+{
+    // The WebGPU underlying vulkan and D3D swap chain appears to fail to get a new image after
+    // swapping when rapidly creating new swap chains for an existing window.
+    if (params.isWebGPU())
+    {
+        return true;
+    }
+
+    return false;
 }
 }  // anonymous namespace
 
@@ -701,6 +711,12 @@ void ANGLETestBase::ANGLETestSetUp()
         SetupEnvironmentVarsForCaptureReplay();
     }
 
+    if (ShouldAlwaysForceNewWindow(*mCurrentParams))
+    {
+        OSWindow::Delete(&mFixture->osWindow);
+        initOSWindow();
+    }
+
     if (!mFixture->osWindow->valid())
     {
         mIsSetUp = true;
@@ -828,7 +844,7 @@ void ANGLETestBase::ANGLETestTearDown()
         WriteDebugMessage("Exiting %s.%s\n", info->test_suite_name(), info->name());
     }
 
-    if (mCurrentParams->noFixture || !mFixture->osWindow->valid())
+    if (mCurrentParams->noFixture || !mFixture->osWindow || !mFixture->osWindow->valid())
     {
         mRenderDoc.endFrame();
         return;
@@ -861,12 +877,17 @@ void ANGLETestBase::ANGLETestTearDown()
     }
 
     Event myEvent;
-    while (mFixture->osWindow->popEvent(&myEvent))
+    while (mFixture->osWindow && mFixture->osWindow->popEvent(&myEvent))
     {
         if (myEvent.Type == Event::EVENT_CLOSED)
         {
             exit(0);
         }
+    }
+
+    if (ShouldAlwaysForceNewWindow(*mCurrentParams))
+    {
+        OSWindow::Delete(&mFixture->osWindow);
     }
 }
 
