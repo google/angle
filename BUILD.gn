@@ -873,35 +873,13 @@ action("angle_commit_id") {
   _commit_id_header = "$root_gen_dir/angle/angle_commit.h"
   script = "src/commit_id.py"
   outputs = [ _commit_id_header ]
-
+  depfile = "${_commit_id_header}.d"
   visibility = [ ":angle_version" ]
-
-  # Add git as a dependency if it is available.
-  if (angle_enable_commit_id &&
-      exec_script("src/commit_id.py", [ "check" ], "value") == 1) {
-    # commit id should depend on angle's HEAD revision
-    git_dirs = exec_script("src/commit_id.py", [ "get_git_dirs" ], "list lines")
-    inputs = [ git_dirs[0] + "/HEAD" ]
-    branch = read_file(git_dirs[0] + "/HEAD", "string")
-    result = string_split(branch)
-    if (result[0] == "ref:") {
-      _ref_file = result[1]
-
-      # If git has packed the contents of .git/refs/heads/ in .git/packed-refs,
-      # unpack the head before depending on it.
-      exec_script("src/commit_id.py",
-                  [
-                    "unpack",
-                    _ref_file,
-                  ],
-                  "")
-      inputs += [ git_dirs[1] + "/" + _ref_file ]
-    }
-  }
 
   args = [
     "gen",
     rebase_path(_commit_id_header, root_build_dir),
+    rebase_path(depfile, root_build_dir),
   ]
 
   public_configs = [ ":angle_commit_id_config" ]
