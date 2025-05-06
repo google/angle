@@ -5263,7 +5263,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // it will be used (if available) when recreating the image if it is bound to an MSRTT
     // framebuffer.
     ANGLE_FEATURE_CONDITION(&mFeatures, preferMSRTSSFlagByDefault,
-                            mFeatures.supportsMultisampledRenderToSingleSampled.enabled && isARM);
+                            mFeatures.supportsMultisampledRenderToSingleSampled.enabled &&
+                                (isARM || (isQualcommProprietary &&
+                                           driverVersion >= angle::VersionTriple(512, 777, 0))));
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsImage2dViewOf3d,
                             mImage2dViewOf3dFeatures.image2DViewOf3D == VK_TRUE);
