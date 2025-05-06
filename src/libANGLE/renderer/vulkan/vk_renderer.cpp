@@ -449,12 +449,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
          "command = vkCmdDrawIndexed",
          "prior_command = vkCmdCopyBuffer",
      }},
-    // http://anglebug.com/42265504
-    {"SYNC-HAZARD-READ-AFTER-WRITE",
-     "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, imageLayout: "
-     "VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, binding #0, index 0. Access info (usage: "
-     "SYNC_COMPUTE_SHADER_SHADER_",
-     "", false},
     // http://anglebug.com/42265925
     {
         "SYNC-HAZARD-READ-AFTER-WRITE",
