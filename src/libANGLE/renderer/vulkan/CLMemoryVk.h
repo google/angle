@@ -98,6 +98,9 @@ class CLBufferVk : public CLMemoryVk
     CLBufferVk *getParent() { return static_cast<CLBufferVk *>(mParent); }
     const cl::Buffer &getFrontendObject() { return reinterpret_cast<const cl::Buffer &>(mMemory); }
 
+    bool supportsZeroCopy() const;
+    bool isHostPtrAligned() const;
+
     angle::Result create(void *hostPtr);
     angle::Result createStagingBuffer(size_t size);
     angle::Result copyToWithPitch(void *hostPtr,

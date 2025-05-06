@@ -2742,6 +2742,7 @@ angle::Result Renderer::initializeMemoryAllocator(vk::ErrorContext *context)
 //                                                     deviceFaultVendorBinary (feature)
 // - VK_EXT_astc_decode_mode                           decodeModeSharedExponent (feature)
 // - VK_EXT_global_priority_query                      globalPriorityQuery (feature)
+// - VK_EXT_external_memory_host                       minImportedHostPointerAlignment (property)
 //
 
 void Renderer::appendDeviceExtensionFeaturesNotPromoted(
@@ -2938,6 +2939,10 @@ void Renderer::appendDeviceExtensionFeaturesNotPromoted(
     if (ExtensionFound(VK_EXT_GLOBAL_PRIORITY_QUERY_EXTENSION_NAME, deviceExtensionNames))
     {
         vk::AddToPNextChain(deviceFeatures, &mPhysicalDeviceGlobalPriorityQueryFeatures);
+    }
+    if (ExtensionFound(VK_EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME, deviceExtensionNames))
+    {
+        vk::AddToPNextChain(deviceProperties, &mExternalMemoryHostProperties);
     }
 }
 
@@ -3359,6 +3364,10 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
     mPhysicalDeviceGlobalPriorityQueryFeatures.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_GLOBAL_PRIORITY_QUERY_FEATURES_EXT;
 
+    mExternalMemoryHostProperties = {};
+    mExternalMemoryHostProperties.sType =
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTERNAL_MEMORY_HOST_PROPERTIES_EXT;
+
 #if defined(ANGLE_PLATFORM_ANDROID)
     mExternalFormatResolveFeatures = {};
     mExternalFormatResolveFeatures.sType =
@@ -3450,6 +3459,7 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
     mShaderIntegerDotProductFeatures.pNext            = nullptr;
     mShaderIntegerDotProductProperties.pNext          = nullptr;
     mPhysicalDeviceGlobalPriorityQueryFeatures.pNext  = nullptr;
+    mExternalMemoryHostProperties.pNext               = nullptr;
 #if defined(ANGLE_PLATFORM_ANDROID)
     mExternalFormatResolveFeatures.pNext   = nullptr;
     mExternalFormatResolveProperties.pNext = nullptr;

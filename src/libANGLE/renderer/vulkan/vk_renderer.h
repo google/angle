@@ -210,6 +210,12 @@ class Renderer : angle::NonCopyable
                                               VkSurfaceKHR surface,
                                               bool *supportedOut);
 
+    const VkPhysicalDeviceExternalMemoryHostPropertiesEXT &
+    getPhysicalDeviceExternalMemoryHostProperties() const
+    {
+        return mExternalMemoryHostProperties;
+    }
+
     const gl::Caps &getNativeCaps() const;
     const gl::TextureCapsMap &getNativeTextureCaps() const;
     const gl::Extensions &getNativeExtensions() const;
@@ -914,6 +920,7 @@ class Renderer : angle::NonCopyable
     VkPhysicalDeviceShaderIntegerDotProductFeatures mShaderIntegerDotProductFeatures;
     VkPhysicalDeviceShaderIntegerDotProductProperties mShaderIntegerDotProductProperties;
     VkPhysicalDeviceGlobalPriorityQueryFeaturesEXT mPhysicalDeviceGlobalPriorityQueryFeatures;
+    VkPhysicalDeviceExternalMemoryHostPropertiesEXT mExternalMemoryHostProperties;
 
     uint32_t mLegacyDitheringVersion = 0;
 

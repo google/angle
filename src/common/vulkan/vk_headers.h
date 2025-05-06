@@ -154,6 +154,9 @@ extern PFN_vkCmdWriteTimestamp2KHR vkCmdWriteTimestamp2KHR;
 extern PFN_vkGetMemoryFdKHR vkGetMemoryFdKHR;
 extern PFN_vkGetMemoryFdPropertiesKHR vkGetMemoryFdPropertiesKHR;
 
+// VK_EXT_external_memory_host
+extern PFN_vkGetMemoryHostPointerPropertiesEXT vkGetMemoryHostPointerPropertiesEXT;
+
 }  // namespace rx
 
 #endif  // ANGLE_SHARED_LIBVULKAN

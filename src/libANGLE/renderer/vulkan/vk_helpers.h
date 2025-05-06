@@ -1066,6 +1066,10 @@ class BufferHelper : public ReadWriteResource
         const VkBufferCreateInfo &requestedCreateInfo,
         const VkExternalMemoryHandleTypeFlagBits externalMemoryHandleType,
         const int32_t sharedBufferFD);
+    angle::Result initHostExternal(ErrorContext *context,
+                                   VkMemoryPropertyFlags memoryProperties,
+                                   const VkBufferCreateInfo &requestedCreateInfo,
+                                   void *hostPtr);
     VkResult initSuballocation(Context *context,
                                uint32_t memoryTypeIndex,
                                size_t size,

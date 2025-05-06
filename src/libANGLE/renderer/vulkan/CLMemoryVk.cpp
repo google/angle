@@ -244,6 +244,20 @@ CLBufferVk::~CLBufferVk()
     mBuffer.destroy(mRenderer);
 }
 
+bool CLBufferVk::isHostPtrAligned() const
+{
+    VkDeviceSize alignment =
+        mRenderer->getPhysicalDeviceExternalMemoryHostProperties().minImportedHostPointerAlignment;
+    return reinterpret_cast<uintptr_t>(mMemory.getHostPtr()) % alignment == 0 &&
+           getSize() % alignment == 0;
+}
+
+bool CLBufferVk::supportsZeroCopy() const
+{
+    return mRenderer->getFeatures().supportsExternalMemoryHost.enabled &&
+           mMemory.getFlags().intersects(CL_MEM_USE_HOST_PTR) && isHostPtrAligned();
+}
+
 vk::BufferHelper &CLBufferVk::getBuffer()
 {
     if (isSubBuffer())
@@ -271,10 +285,13 @@ angle::Result CLBufferVk::create(void *hostPtr)
         VkBufferCreateInfo createInfo  = mDefaultBufferCreateInfo;
         createInfo.size                = getSize();
         VkMemoryPropertyFlags memFlags = getVkMemPropertyFlags();
-        if (IsError(mBuffer.init(mContext, createInfo, memFlags)))
+
+        if (supportsZeroCopy())
         {
-            ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+            return mBuffer.initHostExternal(mContext, memFlags, createInfo, hostPtr);
         }
+
+        ANGLE_CL_IMPL_TRY_ERROR(mBuffer.init(mContext, createInfo, memFlags), CL_OUT_OF_RESOURCES);
         if (mMemory.getFlags().intersects(CL_MEM_USE_HOST_PTR | CL_MEM_COPY_HOST_PTR))
         {
             ASSERT(hostPtr);

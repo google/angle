@@ -572,8 +572,9 @@ angle::Result CLCommandQueueVk::enqueueMapBuffer(const cl::Buffer &buffer,
 
     CLBufferVk *bufferVk = &buffer.getImpl<CLBufferVk>();
     uint8_t *mapPointer  = nullptr;
-    if (buffer.getFlags().intersects(CL_MEM_USE_HOST_PTR))
+    if (buffer.getFlags().intersects(CL_MEM_USE_HOST_PTR) && !bufferVk->supportsZeroCopy())
     {
+        // UHP needs special handling when zero-copy is not supported
         ANGLE_TRY(finishInternal());
         mapPointer = static_cast<uint8_t *>(buffer.getHostPtr()) + offset;
         ANGLE_TRY(bufferVk->copyTo(mapPointer, offset, size));
@@ -581,6 +582,7 @@ angle::Result CLCommandQueueVk::enqueueMapBuffer(const cl::Buffer &buffer,
     }
     else
     {
+        // When zero-copy is supported, map would give hostptr for UHP
         ANGLE_TRY(bufferVk->map(mapPointer, offset));
     }
     mapPtr = static_cast<void *>(mapPointer);
