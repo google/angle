@@ -469,7 +469,13 @@ class CLCommandQueueVk : public CLCommandQueueImpl
     bool hasUserEventDependency() const;
 
     angle::Result insertBarrier();
-    angle::Result addMemoryDependencies(cl::Memory *clMem);
+    angle::Result addMemoryDependencies(const CLKernelArgument *arg);
+    enum class MemoryHandleAccess
+    {
+        ReadOnly,
+        Writeable,
+    };
+    angle::Result addMemoryDependencies(cl::Memory *mem, MemoryHandleAccess access);
 
     angle::Result submitEmptyCommand();
 

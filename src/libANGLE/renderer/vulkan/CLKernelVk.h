@@ -8,13 +8,14 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_CLKERNELVK_H_
 #define LIBANGLE_RENDERER_VULKAN_CLKERNELVK_H_
 
+#include "libANGLE/renderer/vulkan/CLMemoryVk.h"
 #include "libANGLE/renderer/vulkan/cl_types.h"
 #include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
 #include "libANGLE/renderer/vulkan/vk_utils.h"
 
-#include "libANGLE/CLMemory.h"
 #include "libANGLE/renderer/CLKernelImpl.h"
+
 #include "vulkan/vulkan_core.h"
 
 namespace rx
@@ -64,6 +65,8 @@ struct CLKernelArgument
 };
 using CLKernelArguments = std::vector<CLKernelArgument>;
 using CLKernelArgsMap   = angle::HashMap<std::string, CLKernelArguments>;
+bool IsCLKernelArgumentReadonly(const CLKernelArgument &kernelArgument);
+cl::Memory *GetCLKernelArgumentMemoryHandle(const CLKernelArgument &kernelArgument);
 
 class CLKernelVk : public CLKernelImpl
 {

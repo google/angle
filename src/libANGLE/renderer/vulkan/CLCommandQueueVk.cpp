@@ -1565,16 +1565,31 @@ angle::Result CLCommandQueueVk::syncPendingHostTransfers(HostTransferEntries &ho
     return angle::Result::Continue;
 }
 
-angle::Result CLCommandQueueVk::addMemoryDependencies(cl::Memory *clMem)
+angle::Result CLCommandQueueVk::addMemoryDependencies(const CLKernelArgument *arg)
 {
-    cl::Memory *parentMem = clMem->getParent() ? clMem->getParent().get() : nullptr;
+    if (IsCLKernelArgumentReadonly(*arg))
+    {
+        return addMemoryDependencies(GetCLKernelArgumentMemoryHandle(*arg),
+                                     MemoryHandleAccess::ReadOnly);
+    }
+    else
+    {
+        return addMemoryDependencies(GetCLKernelArgumentMemoryHandle(*arg),
+                                     MemoryHandleAccess::Writeable);
+    }
+}
+
+angle::Result CLCommandQueueVk::addMemoryDependencies(cl::Memory *clMem, MemoryHandleAccess access)
+{
+    bool isWritable       = access == MemoryHandleAccess::Writeable;
+    cl::Memory *parentMem = clMem->getParent().get();
 
     // Take an usage count
     mCommandsStateMap[mComputePassCommands->getQueueSerial()].memories.emplace_back(clMem);
 
     // Handle possible resource RAW hazard
     bool needsBarrier = false;
-    if (clMem->getFlags().intersects(CL_MEM_READ_WRITE))
+    if (isWritable)
     {
         // Texel buffers have backing buffer objects
         if (mDependencyTracker.contains(clMem) || mDependencyTracker.contains(parentMem) ||
@@ -1693,10 +1708,11 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk)
             case NonSemanticClspvReflectionArgumentUniform:
             case NonSemanticClspvReflectionArgumentStorageBuffer:
             {
-                cl::Memory *clMem = cl::Buffer::Cast(static_cast<const cl_mem>(arg.handle));
+                cl::Memory *clMem = GetCLKernelArgumentMemoryHandle(arg);
+                ASSERT(clMem);
                 CLBufferVk &vkMem = clMem->getImpl<CLBufferVk>();
 
-                ANGLE_TRY(addMemoryDependencies(clMem));
+                ANGLE_TRY(addMemoryDependencies(&arg));
 
                 // Update buffer/descriptor info
                 VkDescriptorBufferInfo &bufferInfo =
@@ -1776,10 +1792,11 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk)
             case NonSemanticClspvReflectionArgumentStorageImage:
             case NonSemanticClspvReflectionArgumentSampledImage:
             {
-                cl::Memory *clMem = cl::Image::Cast(static_cast<const cl_mem>(arg.handle));
-                CLImageVk &vkMem  = clMem->getImpl<CLImageVk>();
+                cl::Memory *clMem = GetCLKernelArgumentMemoryHandle(arg);
+                ASSERT(clMem);
+                CLImageVk &vkMem = clMem->getImpl<CLImageVk>();
 
-                ANGLE_TRY(addMemoryDependencies(clMem));
+                ANGLE_TRY(addMemoryDependencies(&arg));
 
                 cl_image_format imageFormat = vkMem.getFormat();
                 const VkPushConstantRange *imageDataChannelOrderRange =
@@ -1827,10 +1844,10 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk)
             case NonSemanticClspvReflectionArgumentUniformTexelBuffer:
             case NonSemanticClspvReflectionArgumentStorageTexelBuffer:
             {
-                cl::Memory *clMem = cl::Image::Cast(static_cast<const cl_mem>(arg.handle));
+                cl::Memory *clMem = GetCLKernelArgumentMemoryHandle(arg);
                 CLImageVk &vkMem  = clMem->getImpl<CLImageVk>();
 
-                ANGLE_TRY(addMemoryDependencies(clMem));
+                ANGLE_TRY(addMemoryDependencies(&arg));
 
                 VkBufferView &bufferView           = kernelArgDescSetBuilder.allocBufferView();
                 const vk::BufferView *vkBufferView = nullptr;
@@ -1877,6 +1894,8 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk)
     }
     if (podBufferPresent)
     {
+        // POD arguments exceeded the push constant size and are packaged in a storage buffer. Setup
+        // commands and dependencies accordingly.
         cl::MemoryPtr clMem = kernelVk.getPodBuffer();
         ASSERT(clMem != nullptr);
         CLBufferVk &vkMem = clMem->getImpl<CLBufferVk>();
@@ -1886,7 +1905,14 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk)
         bufferInfo.offset                  = clMem->getOffset();
         bufferInfo.buffer                  = vkMem.getBuffer().getBuffer().getHandle();
 
-        ANGLE_TRY(addMemoryDependencies(clMem.get()));
+        if (clMem->getFlags().intersects(CL_MEM_READ_WRITE | CL_MEM_WRITE_ONLY))
+        {
+            ANGLE_TRY(addMemoryDependencies(clMem.get(), MemoryHandleAccess::Writeable));
+        }
+        else
+        {
+            ANGLE_TRY(addMemoryDependencies(clMem.get(), MemoryHandleAccess::ReadOnly));
+        }
 
         VkWriteDescriptorSet &writeDescriptorSet =
             kernelArgDescSetBuilder.allocWriteDescriptorSet();

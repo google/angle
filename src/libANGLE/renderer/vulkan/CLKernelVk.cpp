@@ -23,11 +23,57 @@
 #include "libANGLE/CLContext.h"
 #include "libANGLE/CLKernel.h"
 #include "libANGLE/CLProgram.h"
-#include "libANGLE/cl_utils.h"
 #include "spirv/unified1/NonSemanticClspvReflection.h"
 
 namespace rx
 {
+
+cl::Memory *GetCLKernelArgumentMemoryHandle(const CLKernelArgument &kernelArgument)
+{
+    if (!kernelArgument.used)
+    {
+        return nullptr;
+    }
+
+    return cl::Memory::Cast(static_cast<cl_mem>(kernelArgument.handle));
+}
+
+// Function to check if a kernel argument is read only. This will be used to insert appropriate
+// barriers in the command buffer. Ideally, we could use the kernel argument access qualifier to
+// determine read only attribute. For now, the query is based on the cl memory flags to keep the
+// existing functionality in tact.
+bool IsCLKernelArgumentReadonly(const CLKernelArgument &kernelArgument)
+{
+    // if not used, can safely assume readonly
+    if (!kernelArgument.used)
+    {
+        return true;
+    }
+
+    switch (kernelArgument.type)
+    {
+        case NonSemanticClspvReflectionArgumentPodUniform:
+        case NonSemanticClspvReflectionArgumentUniform:
+        case NonSemanticClspvReflectionArgumentPointerUniform:
+        case NonSemanticClspvReflectionArgumentUniformTexelBuffer:
+        case NonSemanticClspvReflectionConstantDataStorageBuffer:
+        {
+            return true;
+        }
+        case NonSemanticClspvReflectionArgumentStorageBuffer:
+        case NonSemanticClspvReflectionArgumentStorageTexelBuffer:
+        case NonSemanticClspvReflectionArgumentStorageImage:
+        case NonSemanticClspvReflectionArgumentSampledImage:
+        {
+            const cl::Memory *mem = cl::Memory::Cast(*static_cast<cl_mem *>(kernelArgument.handle));
+            return mem->getFlags().intersects(CL_MEM_READ_ONLY);
+        }
+        default:
+        {
+            return false;
+        }
+    }
+}
 
 CLKernelVk::CLKernelVk(const cl::Kernel &kernel,
                        std::string &name,
