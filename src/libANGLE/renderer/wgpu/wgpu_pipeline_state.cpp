@@ -308,6 +308,8 @@ angle::Result RenderPipelineDesc::createPipeline(ContextWgpu *context,
                                                  const gl::ShaderMap<ShaderModuleHandle> &shaders,
                                                  RenderPipelineHandle *pipelineOut) const
 {
+    const DawnProcTable *wgpu = webgpu::GetProcs(context);
+
     constexpr const char *kShaderEntryPoint = "wgslMain";
 
     WGPURenderPipelineDescriptor pipelineDesc = WGPU_RENDER_PIPELINE_DESCRIPTOR_INIT;
@@ -457,9 +459,9 @@ angle::Result RenderPipelineDesc::createPipeline(ContextWgpu *context,
     }
 
     DeviceHandle device = context->getDevice();
-    ANGLE_WGPU_SCOPED_DEBUG_TRY(context,
-                                *pipelineOut = RenderPipelineHandle::Acquire(
-                                    wgpuDeviceCreateRenderPipeline(device.get(), &pipelineDesc)));
+    ANGLE_WGPU_SCOPED_DEBUG_TRY(
+        context, *pipelineOut = RenderPipelineHandle::Acquire(
+                     wgpu, wgpu->deviceCreateRenderPipeline(device.get(), &pipelineDesc)));
 
     return angle::Result::Continue;
 }

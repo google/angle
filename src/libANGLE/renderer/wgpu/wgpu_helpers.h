@@ -87,12 +87,14 @@ class ImageHelper : public angle::Subject
     ImageHelper();
     ~ImageHelper() override;
 
-    angle::Result initImage(angle::FormatID intendedFormatID,
+    angle::Result initImage(const DawnProcTable *wgpu,
+                            angle::FormatID intendedFormatID,
                             angle::FormatID actualFormatID,
                             DeviceHandle device,
                             gl::LevelIndex firstAllocatedLevel,
                             WGPUTextureDescriptor textureDescriptor);
-    angle::Result initExternal(angle::FormatID intendedFormatID,
+    angle::Result initExternal(const DawnProcTable *wgpu,
+                               angle::FormatID intendedFormatID,
                                angle::FormatID actualFormatID,
                                webgpu::TextureHandle externalTexture);
 
@@ -175,6 +177,7 @@ class ImageHelper : public angle::Subject
     void appendSubresourceUpdate(gl::LevelIndex level, SubresourceUpdate &&update);
     std::vector<SubresourceUpdate> *getLevelUpdates(gl::LevelIndex level);
 
+    const DawnProcTable *mProcTable = nullptr;
     TextureHandle mTexture;
     WGPUTextureDescriptor mTextureDescriptor   = {};
     bool mInitialized                          = false;
@@ -209,7 +212,8 @@ class BufferHelper : public angle::NonCopyable
     bool valid() const { return mBuffer.operator bool(); }
     void reset();
 
-    angle::Result initBuffer(webgpu::DeviceHandle device,
+    angle::Result initBuffer(const DawnProcTable *wgpu,
+                             webgpu::DeviceHandle device,
                              size_t size,
                              WGPUBufferUsage usage,
                              MapAtCreation mappedAtCreation);
@@ -241,6 +245,7 @@ class BufferHelper : public angle::NonCopyable
                                     BufferReadback *result);
 
   private:
+    const DawnProcTable *mProcTable = nullptr;
     webgpu::BufferHandle mBuffer;
     size_t mRequestedSize = 0;
 

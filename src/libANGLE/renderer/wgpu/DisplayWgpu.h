@@ -92,6 +92,7 @@ class DisplayWgpu : public DisplayImpl
 
     angle::NativeWindowSystem getWindowSystem() const override;
 
+    const DawnProcTable *getProcs() const { return &mProcTable; }
     webgpu::AdapterHandle getAdapter() { return mAdapter; }
     webgpu::DeviceHandle getDevice() { return mDevice; }
     webgpu::QueueHandle getQueue() { return mQueue; }
@@ -115,6 +116,8 @@ class DisplayWgpu : public DisplayImpl
     void generateCaps(egl::Caps *outCaps) const override;
 
     egl::Error createWgpuDevice();
+
+    DawnProcTable mProcTable;
 
     webgpu::AdapterHandle mAdapter;
     webgpu::InstanceHandle mInstance;

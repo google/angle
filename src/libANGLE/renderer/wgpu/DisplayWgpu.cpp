@@ -31,9 +31,12 @@ DisplayWgpu::~DisplayWgpu() {}
 
 egl::Error DisplayWgpu::initialize(egl::Display *display)
 {
+    mProcTable = dawn::native::GetProcs();
+    dawnProcSetProcs(&mProcTable);
+
     ANGLE_TRY(createWgpuDevice());
 
-    mQueue = webgpu::QueueHandle::Acquire(wgpuDeviceGetQueue(mDevice.get()));
+    mQueue = webgpu::QueueHandle::Acquire(&mProcTable, mProcTable.deviceGetQueue(mDevice.get()));
 
     mFormatTable.initialize();
 
@@ -249,11 +252,10 @@ void DisplayWgpu::generateCaps(egl::Caps *outCaps) const
 
 egl::Error DisplayWgpu::createWgpuDevice()
 {
-    dawnProcSetProcs(&dawn::native::GetProcs());
-
     WGPUInstanceDescriptor instanceDescriptor          = WGPU_INSTANCE_DESCRIPTOR_INIT;
     instanceDescriptor.capabilities.timedWaitAnyEnable = true;
-    mInstance = webgpu::InstanceHandle::Acquire(wgpuCreateInstance(&instanceDescriptor));
+    mInstance = webgpu::InstanceHandle::Acquire(&mProcTable,
+                                                mProcTable.createInstance(&instanceDescriptor));
 
     struct RequestAdapterResult
     {
@@ -271,13 +273,14 @@ egl::Error DisplayWgpu::createWgpuDevice()
                                          struct WGPUStringView message, void *userdata1,
                                          void *userdata2) {
         RequestAdapterResult *result = reinterpret_cast<RequestAdapterResult *>(userdata1);
-        ASSERT(userdata2 == nullptr);
+        const DawnProcTable *wgpu    = reinterpret_cast<const DawnProcTable *>(userdata2);
 
         result->status  = status;
-        result->adapter = webgpu::AdapterHandle::Acquire(adapter);
+        result->adapter = webgpu::AdapterHandle::Acquire(wgpu, adapter);
         result->message = std::string(message.data, message.length);
     };
     requestAdapterCallback.userdata1 = &adapterResult;
+    requestAdapterCallback.userdata2 = &mProcTable;
 
     WGPUFutureWaitInfo futureWaitInfo;
     futureWaitInfo.future =
@@ -307,7 +310,8 @@ egl::Error DisplayWgpu::createWgpuDevice()
                   << " - message: " << std::string(message.data, message.length);
         };
 
-    mDevice = webgpu::DeviceHandle::Acquire(wgpuAdapterCreateDevice(mAdapter.get(), &deviceDesc));
+    mDevice = webgpu::DeviceHandle::Acquire(
+        &mProcTable, mProcTable.adapterCreateDevice(mAdapter.get(), &deviceDesc));
     return egl::NoError();
 }
 

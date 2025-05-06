@@ -23,6 +23,18 @@ DisplayWgpu *GetDisplay(const gl::Context *context)
     return contextWgpu->getDisplay();
 }
 
+const DawnProcTable *GetProcs(const gl::Context *context)
+{
+    DisplayWgpu *display = GetDisplay(context);
+    return display->getProcs();
+}
+
+const DawnProcTable *GetProcs(const ContextWgpu *context)
+{
+    DisplayWgpu *display = context->getDisplay();
+    return display->getProcs();
+}
+
 webgpu::DeviceHandle GetDevice(const gl::Context *context)
 {
     DisplayWgpu *display = GetDisplay(context);
@@ -132,7 +144,8 @@ bool operator!=(const PackedRenderPassDescriptor &a, const PackedRenderPassDescr
     return !(a == b);
 }
 
-RenderPassEncoderHandle CreateRenderPass(webgpu::CommandEncoderHandle commandEncoder,
+RenderPassEncoderHandle CreateRenderPass(const DawnProcTable *wgpu,
+                                         webgpu::CommandEncoderHandle commandEncoder,
                                          const webgpu::PackedRenderPassDescriptor &packedDesc)
 {
     WGPURenderPassDescriptor renderPassDesc = WGPU_RENDER_PASS_DESCRIPTOR_INIT;
@@ -180,7 +193,7 @@ RenderPassEncoderHandle CreateRenderPass(webgpu::CommandEncoderHandle commandEnc
     }
 
     return RenderPassEncoderHandle::Acquire(
-        wgpuCommandEncoderBeginRenderPass(commandEncoder.get(), &renderPassDesc));
+        wgpu, wgpu->commandEncoderBeginRenderPass(commandEncoder.get(), &renderPassDesc));
 }
 
 void GenerateCaps(const WGPULimits &limitsWgpu,

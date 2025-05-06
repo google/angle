@@ -68,10 +68,11 @@ angle::Result WindowSurfaceWgpuMetalLayer::createWgpuSurface(const egl::Display 
     surfaceDesc.nextInChain           = &metalLayerDesc.chain;
 
     DisplayWgpu *displayWgpu = webgpu::GetImpl(display);
+    const DawnProcTable *wgpu       = displayWgpu->getProcs();
     webgpu::InstanceHandle instance = displayWgpu->getInstance();
 
-    webgpu::SurfaceHandle surface =
-        webgpu::SurfaceHandle::Acquire(wgpuInstanceCreateSurface(instance.get(), &surfaceDesc));
+    webgpu::SurfaceHandle surface = webgpu::SurfaceHandle::Acquire(
+        wgpu, wgpu->instanceCreateSurface(instance.get(), &surfaceDesc));
     *outSurface           = surface;
 
     return angle::Result::Continue;

@@ -442,6 +442,9 @@ angle::Result TextureWgpu::initializeImage(ContextWgpu *contextWgpu, ImageMipLev
     {
         return angle::Result::Continue;
     }
+
+    const DawnProcTable *wgpu = webgpu::GetProcs(contextWgpu);
+
     const webgpu::Format &webgpuFormat      = getBaseLevelFormat(contextWgpu);
     DisplayWgpu *displayWgpu                = contextWgpu->getDisplay();
     const gl::ImageDesc *firstLevelDesc     = &mState.getBaseLevelDesc();
@@ -453,7 +456,7 @@ angle::Result TextureWgpu::initializeImage(ContextWgpu *contextWgpu, ImageMipLev
                                     WGPUTextureUsage_RenderAttachment |
                                     WGPUTextureUsage_TextureBinding;
     return mImage->initImage(
-        webgpuFormat.getIntendedFormatID(), webgpuFormat.getActualImageFormatID(),
+        wgpu, webgpuFormat.getIntendedFormatID(), webgpuFormat.getActualImageFormatID(),
         displayWgpu->getDevice(), firstLevel,
         mImage->createTextureDescriptor(
             textureUsage, textureDimension, gl_wgpu::GetExtent3D(firstLevelExtents),

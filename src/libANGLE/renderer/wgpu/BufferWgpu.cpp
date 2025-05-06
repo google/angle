@@ -72,6 +72,7 @@ angle::Result BufferWgpu::setData(const gl::Context *context,
                                   BufferFeedback *feedback)
 {
     ContextWgpu *contextWgpu = webgpu::GetImpl(context);
+    const DawnProcTable *wgpu   = webgpu::GetProcs(contextWgpu);
     webgpu::DeviceHandle device = webgpu::GetDevice(context);
 
     bool hasData = data && size > 0;
@@ -82,7 +83,8 @@ angle::Result BufferWgpu::setData(const gl::Context *context,
         (hasData && !mBuffer.canMapForWrite()))
     {
         // Allocate a new buffer
-        ANGLE_TRY(mBuffer.initBuffer(device, size, GetDefaultWGPUBufferUsageForBinding(target),
+        ANGLE_TRY(mBuffer.initBuffer(wgpu, device, size,
+                                     GetDefaultWGPUBufferUsageForBinding(target),
                                      webgpu::MapAtCreation::Yes));
     }
 

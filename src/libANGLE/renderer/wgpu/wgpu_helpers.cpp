@@ -66,26 +66,31 @@ ImageHelper::ImageHelper() {}
 
 ImageHelper::~ImageHelper() {}
 
-angle::Result ImageHelper::initImage(angle::FormatID intendedFormatID,
+angle::Result ImageHelper::initImage(const DawnProcTable *wgpu,
+                                     angle::FormatID intendedFormatID,
                                      angle::FormatID actualFormatID,
                                      DeviceHandle device,
                                      gl::LevelIndex firstAllocatedLevel,
                                      WGPUTextureDescriptor textureDescriptor)
 {
+    mProcTable           = wgpu;
     mIntendedFormatID    = intendedFormatID;
     mActualFormatID      = actualFormatID;
     mTextureDescriptor   = textureDescriptor;
     mFirstAllocatedLevel = firstAllocatedLevel;
-    mTexture = TextureHandle::Acquire(wgpuDeviceCreateTexture(device.get(), &mTextureDescriptor));
+    mTexture =
+        TextureHandle::Acquire(wgpu, wgpu->deviceCreateTexture(device.get(), &mTextureDescriptor));
     mInitialized         = true;
 
     return angle::Result::Continue;
 }
 
-angle::Result ImageHelper::initExternal(angle::FormatID intendedFormatID,
+angle::Result ImageHelper::initExternal(const DawnProcTable *wgpu,
+                                        angle::FormatID intendedFormatID,
                                         angle::FormatID actualFormatID,
                                         webgpu::TextureHandle externalTexture)
 {
+    mProcTable           = wgpu;
     mIntendedFormatID    = intendedFormatID;
     mActualFormatID      = actualFormatID;
     mTextureDescriptor   = TextureDescriptorFromTexture(externalTexture);
@@ -150,7 +155,8 @@ angle::Result ImageHelper::flushSingleLevelUpdates(ContextWgpu *contextWgpu,
                 WGPUTexelCopyBufferInfo copyInfo = WGPU_TEXEL_COPY_BUFFER_INFO_INIT;
                 copyInfo.layout                  = srcUpdate.textureDataLayout;
                 copyInfo.buffer                  = srcUpdate.textureData.get();
-                wgpuCommandEncoderCopyBufferToTexture(encoder.get(), &copyInfo, &dst, &copyExtent);
+                mProcTable->commandEncoderCopyBufferToTexture(encoder.get(), &copyInfo, &dst,
+                                                              &copyExtent);
             }
             break;
 
@@ -241,11 +247,13 @@ angle::Result ImageHelper::stageTextureUpload(ContextWgpu *contextWgpu,
     {
         return angle::Result::Continue;
     }
+    mProcTable                  = webgpu::GetProcs(contextWgpu);
     webgpu::DeviceHandle device = contextWgpu->getDevice();
     gl::LevelIndex levelGL(index.getLevelIndex());
     BufferHelper bufferHelper;
     WGPUBufferUsage usage = WGPUBufferUsage_CopySrc | WGPUBufferUsage_CopyDst;
-    ANGLE_TRY(bufferHelper.initBuffer(device, allocationSize, usage, MapAtCreation::Yes));
+    ANGLE_TRY(
+        bufferHelper.initBuffer(mProcTable, device, allocationSize, usage, MapAtCreation::Yes));
     LoadImageFunctionInfo loadFunctionInfo = webgpuFormat.getTextureLoadFunction(type);
     uint8_t *data                          = bufferHelper.getMapWritePointer(0, allocationSize);
     loadFunctionInfo.loadFunction(contextWgpu->getImageLoadContext(), glExtents.width,
@@ -286,6 +294,7 @@ void ImageHelper::resetImage()
     {
         wgpuTextureDestroy(mTexture.get());
     }
+    mProcTable           = nullptr;
     mTexture             = nullptr;
     mTextureDescriptor   = WGPU_TEXTURE_DESCRIPTOR_INIT;
     mInitialized         = false;
@@ -328,9 +337,9 @@ angle::Result ImageHelper::readPixels(rx::ContextWgpu *contextWgpu,
         return angle::Result::Stop;
     }
 
-    DeviceHandle device = contextWgpu->getDisplay()->getDevice();
-    CommandEncoderHandle encoder =
-        CommandEncoderHandle::Acquire(wgpuDeviceCreateCommandEncoder(device.get(), nullptr));
+    DeviceHandle device          = contextWgpu->getDisplay()->getDevice();
+    CommandEncoderHandle encoder = CommandEncoderHandle::Acquire(
+        mProcTable, mProcTable->deviceCreateCommandEncoder(device.get(), nullptr));
     QueueHandle queue = contextWgpu->getDisplay()->getQueue();
 
     const angle::Format &actualFormat = angle::Format::Get(mActualFormatID);
@@ -343,7 +352,7 @@ angle::Result ImageHelper::readPixels(rx::ContextWgpu *contextWgpu,
     size_t allocationSize = textureBytesPerRow * area.height;
 
     BufferHelper bufferHelper;
-    ANGLE_TRY(bufferHelper.initBuffer(device, allocationSize,
+    ANGLE_TRY(bufferHelper.initBuffer(mProcTable, device, allocationSize,
                                       WGPUBufferUsage_MapRead | WGPUBufferUsage_CopyDst,
                                       MapAtCreation::No));
     WGPUTexelCopyBufferInfo copyBuffer = WGPU_TEXEL_COPY_BUFFER_INFO_INIT;
@@ -361,8 +370,8 @@ angle::Result ImageHelper::readPixels(rx::ContextWgpu *contextWgpu,
     copySize.height = area.height;
     wgpuCommandEncoderCopyTextureToBuffer(encoder.get(), &copyTexture, &copyBuffer, &copySize);
 
-    CommandBufferHandle commandBuffer =
-        CommandBufferHandle::Acquire(wgpuCommandEncoderFinish(encoder.get(), nullptr));
+    CommandBufferHandle commandBuffer = CommandBufferHandle::Acquire(
+        mProcTable, mProcTable->commandEncoderFinish(encoder.get(), nullptr));
     wgpuQueueSubmit(queue.get(), 1, &commandBuffer.get());
     encoder = nullptr;
 
@@ -432,8 +441,8 @@ angle::Result ImageHelper::createTextureView(gl::LevelIndex targetLevel,
         textureViewDesc.dimension = desiredViewDimension;
     }
     textureViewDesc.format = mTextureDescriptor.format;
-    textureViewOut =
-        TextureViewHandle::Acquire(wgpuTextureCreateView(mTexture.get(), &textureViewDesc));
+    textureViewOut         = TextureViewHandle::Acquire(
+        mProcTable, mProcTable->textureCreateView(mTexture.get(), &textureViewDesc));
     return angle::Result::Continue;
 }
 
@@ -499,22 +508,27 @@ BufferHelper::~BufferHelper() {}
 
 void BufferHelper::reset()
 {
+    mProcTable = nullptr;
     mBuffer = nullptr;
     mMappedState.reset();
 }
 
-angle::Result BufferHelper::initBuffer(webgpu::DeviceHandle device,
+angle::Result BufferHelper::initBuffer(const DawnProcTable *wgpu,
+                                       webgpu::DeviceHandle device,
                                        size_t size,
                                        WGPUBufferUsage usage,
                                        MapAtCreation mappedAtCreation)
 {
+    mProcTable = wgpu;
+
     size_t safeBufferSize = rx::roundUpPow2(size, kBufferSizeAlignment);
     WGPUBufferDescriptor descriptor = WGPU_BUFFER_DESCRIPTOR_INIT;
     descriptor.size             = safeBufferSize;
     descriptor.usage            = usage;
     descriptor.mappedAtCreation = mappedAtCreation == MapAtCreation::Yes;
 
-    mBuffer = webgpu::BufferHandle::Acquire(wgpuDeviceCreateBuffer(device.get(), &descriptor));
+    mBuffer = webgpu::BufferHandle::Acquire(
+        mProcTable, mProcTable->deviceCreateBuffer(device.get(), &descriptor));
 
     if (mappedAtCreation == MapAtCreation::Yes)
     {
@@ -665,9 +679,9 @@ angle::Result BufferHelper::readDataImmediate(ContextWgpu *context,
     const size_t stagingBufferSize = roundUpPow2(
         size, std::max(webgpu::kBufferCopyToBufferAlignment, webgpu::kBufferMapOffsetAlignment));
 
-    ANGLE_TRY(result->buffer.initBuffer(context->getDisplay()->getDevice(), stagingBufferSize,
-                                        WGPUBufferUsage_CopyDst | WGPUBufferUsage_MapRead,
-                                        webgpu::MapAtCreation::No));
+    ANGLE_TRY(result->buffer.initBuffer(
+        mProcTable, context->getDisplay()->getDevice(), stagingBufferSize,
+        WGPUBufferUsage_CopyDst | WGPUBufferUsage_MapRead, webgpu::MapAtCreation::No));
 
     // Copy the source buffer to staging and flush the commands
     context->ensureCommandEncoderCreated();
