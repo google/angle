@@ -1740,10 +1740,14 @@ if (is_android && symbol_level != 0 &&
 
 if ((angle_standalone || build_with_chromium) && is_android &&
     current_toolchain == default_toolchain) {
-  apk_version_code = "0"
-  if (angle_enable_commit_id) {
+  if (build_with_chromium) {
+    import("//chrome/version.gni")
+    apk_version_code = chrome_version_code
+  } else if (angle_enable_commit_id) {
     apk_version_code =
         exec_script("src/commit_id.py", [ "position" ], "trim string")
+  } else {
+    apk_version_code = "0"
   }
 
   # Package ANGLE libraries for normal use on Android
