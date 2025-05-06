@@ -4881,6 +4881,42 @@ bool Renderer::canSupportFoveatedRendering() const
             framebufferSampleCounts) == framebufferSampleCounts;
 }
 
+bool CanSupportAstcHdr3D(const Renderer *renderer)
+{
+    // New formats added in VK_EXT_texture_compression_astc_hdr
+    std::vector<VkFormat> astcHdrFormats = {
+        VK_FORMAT_ASTC_10x10_SFLOAT_BLOCK_EXT, VK_FORMAT_ASTC_10x5_SFLOAT_BLOCK_EXT,
+        VK_FORMAT_ASTC_10x6_SFLOAT_BLOCK_EXT,  VK_FORMAT_ASTC_10x8_SFLOAT_BLOCK_EXT,
+        VK_FORMAT_ASTC_12x10_SFLOAT_BLOCK_EXT, VK_FORMAT_ASTC_12x12_SFLOAT_BLOCK_EXT,
+        VK_FORMAT_ASTC_4x4_SFLOAT_BLOCK_EXT,   VK_FORMAT_ASTC_5x4_SFLOAT_BLOCK_EXT,
+        VK_FORMAT_ASTC_5x5_SFLOAT_BLOCK_EXT,   VK_FORMAT_ASTC_6x5_SFLOAT_BLOCK_EXT,
+        VK_FORMAT_ASTC_6x6_SFLOAT_BLOCK_EXT,   VK_FORMAT_ASTC_8x5_SFLOAT_BLOCK_EXT,
+        VK_FORMAT_ASTC_8x6_SFLOAT_BLOCK_EXT,   VK_FORMAT_ASTC_8x8_SFLOAT_BLOCK_EXT};
+
+    for (VkFormat format : astcHdrFormats)
+    {
+        // If any ASTC HDR format does not support 3D, return false
+        if (false == vk::ImageHelper::FormatSupportsUsage(
+                         renderer, format, VK_IMAGE_TYPE_3D, VK_IMAGE_TILING_OPTIMAL,
+                         VK_IMAGE_USAGE_SAMPLED_BIT, 0, nullptr, nullptr,
+                         vk::ImageHelper::FormatSupportCheck::OnlyQuerySuccess))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool Renderer::supportsAstcHdr() const
+{
+    // When determining whether we support this, have to check for both the Vulkan
+    // feaure and explicity check for 3D texture types.  The latter could be emulated
+    // in the future. (http://anglebug.com/416095435)
+    return getFeatures().supportsTextureCompressionAstcHdr.enabled &&
+           getFeatures().supportsAstcHdr3dTextures.enabled;
+}
+
 bool Renderer::canPreferDeviceLocalMemoryHostVisible(VkPhysicalDeviceType deviceType)
 {
     if (deviceType == VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU)
@@ -6230,6 +6266,11 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsTextureCompressionAstcHdr,
         mTextureCompressionASTCHDRFeatures.textureCompressionASTC_HDR == VK_TRUE);
+
+    // Not all hardware can support 3D textures with ASTC HDR (http://anglebug.com/416095435)
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsAstcHdr3dTextures,
+        mFeatures.supportsTextureCompressionAstcHdr.enabled && CanSupportAstcHdr3D(this));
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsUniformBufferStandardLayout,

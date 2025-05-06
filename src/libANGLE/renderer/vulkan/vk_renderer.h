@@ -694,6 +694,8 @@ class Renderer : angle::NonCopyable
     // VK_EXT_device_fault allows gathering more info if the device is lost.
     VkResult retrieveDeviceLostDetails() const;
 
+    bool supportsAstcHdr() const;
+
   private:
     angle::Result setupDevice(vk::ErrorContext *context,
                               const angle::FeatureOverrides &featureOverrides,

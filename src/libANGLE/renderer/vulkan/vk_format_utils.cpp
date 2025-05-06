@@ -575,8 +575,7 @@ angle::FormatID GetTranscodeBCFormatID(angle::FormatID formatID)
 VkFormat AdjustASTCFormatForHDR(const vk::Renderer *renderer, VkFormat vkFormat)
 {
     ASSERT(renderer != nullptr);
-    const bool hdrEnabled = renderer->getFeatures().supportsTextureCompressionAstcHdr.enabled;
-
+    const bool hdrEnabled = renderer->supportsAstcHdr();
     if (hdrEnabled == false)
     {
         return vkFormat;

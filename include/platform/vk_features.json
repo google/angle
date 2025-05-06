@@ -1890,6 +1890,14 @@
             "issue": "https://anglebug.com/379186304"
         },
         {
+            "name": "supports_astc_hdr_3d_textures",
+            "category": "Features",
+            "description": [
+                "Whether the device supports 3D textures with ASTC HDR compression"
+            ],
+            "issue": "https://anglebug.com/416095435"
+        },
+        {
             "name": "supports_image_compression_control_swapchain",
             "category": "Features",
             "description": [

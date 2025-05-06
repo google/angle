@@ -306,6 +306,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SupportsAndroidNativeFenceSync, "supportsAndroidNativeFenceSync"},
     {Feature::SupportsAngleRgbxInternalFormat, "supportsAngleRgbxInternalFormat"},
     {Feature::SupportsAppleClipDistance, "supportsAppleClipDistance"},
+    {Feature::SupportsAstcHdr3dTextures, "supportsAstcHdr3dTextures"},
     {Feature::SupportsAstcSliced3d, "supportsAstcSliced3d"},
     {Feature::SupportsBindMemory2, "supportsBindMemory2"},
     {Feature::SupportsBlendOperationAdvanced, "supportsBlendOperationAdvanced"},

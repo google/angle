@@ -362,8 +362,7 @@ void Renderer::ensureCapsInitialized() const
 
     // Enable KHR_texture_compression_astc_hdr
     mNativeExtensions.textureCompressionAstcHdrKHR =
-        mNativeExtensions.textureCompressionAstcLdrKHR &&
-        getFeatures().supportsTextureCompressionAstcHdr.enabled;
+        mNativeExtensions.textureCompressionAstcLdrKHR && supportsAstcHdr();
 
     // Enable EXT_compressed_ETC1_RGB8_sub_texture
     mNativeExtensions.compressedETC1RGB8SubTextureEXT =
