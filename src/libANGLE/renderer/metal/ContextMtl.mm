@@ -2395,6 +2395,12 @@ void ContextMtl::serverWaitEvent(id<MTLEvent> event, uint64_t value)
     mCmdBuffer.serverWaitEvent(event, value);
 }
 
+void ContextMtl::markResourceWrittenByCommandBuffer(const mtl::ResourceRef &resource)
+{
+    ensureCommandBufferReady();
+    mCmdBuffer.setWriteDependency(resource, /*isRenderCommand=*/false);
+}
+
 void ContextMtl::updateProgramExecutable(const gl::Context *context)
 {
     // Need to rebind textures

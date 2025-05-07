@@ -320,6 +320,8 @@ class ContextMtl : public ContextImpl, public mtl::Context
     uint64_t queueEventSignal(id<MTLEvent> event, uint64_t value);
     void serverWaitEvent(id<MTLEvent> event, uint64_t value);
 
+    void markResourceWrittenByCommandBuffer(const mtl::ResourceRef &resource);
+
     const mtl::ClearColorValue &getClearColorValue() const;
     const mtl::WriteMaskArray &getWriteMaskArray() const;
     float getClearDepthValue() const;

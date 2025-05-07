@@ -129,6 +129,15 @@ egl::Error IOSurfaceSurfaceMtl::bindTexImage(const gl::Context *context,
     // Initialize offscreen texture if needed:
     ANGLE_TO_EGL_TRY(ensureColorTextureCreated(context));
 
+    if (mColorTexture)
+    {
+        // Mark the resource as written by command buffer so that we wait for command buffer finish
+        // before doing a readback on the CPU via getBytes. It's necessary to synchronize with the
+        // shared event wait in the command buffer if the previous user of the IOSurface did not
+        // call waitUntilScheduled e.g. Chromium will skip waitUntilScheduled on single GPU systems.
+        contextMtl->markResourceWrittenByCommandBuffer(mColorTexture);
+    }
+
     return OffscreenSurfaceMtl::bindTexImage(context, texture, buffer);
 }
 
