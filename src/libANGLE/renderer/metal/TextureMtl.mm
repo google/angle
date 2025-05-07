@@ -1096,14 +1096,14 @@ angle::Result TextureMtl::ensureSamplerStateCreated(const gl::Context *context)
     {
         // On devices not supporting filtering for depth textures, we need to convert to nearest
         // here.
-        samplerDesc.setMinFilter(MTLSamplerMinMagFilterNearest);
-        samplerDesc.setMagFilter(MTLSamplerMinMagFilterNearest);
-        if (samplerDesc.getMipFilter() != MTLSamplerMipFilterNotMipmapped)
+        samplerDesc.minFilter = MTLSamplerMinMagFilterNearest;
+        samplerDesc.magFilter = MTLSamplerMinMagFilterNearest;
+        if (samplerDesc.mipFilter != MTLSamplerMipFilterNotMipmapped)
         {
-            samplerDesc.setMipFilter(MTLSamplerMipFilterNearest);
+            samplerDesc.mipFilter = MTLSamplerMipFilterNearest;
         }
 
-        samplerDesc.setMaxAnisotropy(1);
+        samplerDesc.maxAnisotropy = 1;
     }
 
     // OpenGL ES 3.x: The rules for texel selection are modified
@@ -1112,9 +1112,9 @@ angle::Result TextureMtl::ensureSamplerStateCreated(const gl::Context *context)
          mState.getType() == gl::TextureType::CubeMapArray) &&
         context->getState().getClientMajorVersion() >= 3)
     {
-        samplerDesc.setRAddressMode(MTLSamplerAddressModeClampToEdge);
-        samplerDesc.setSAddressMode(MTLSamplerAddressModeClampToEdge);
-        samplerDesc.setTAddressMode(MTLSamplerAddressModeClampToEdge);
+        samplerDesc.rAddressMode = MTLSamplerAddressModeClampToEdge;
+        samplerDesc.sAddressMode = MTLSamplerAddressModeClampToEdge;
+        samplerDesc.tAddressMode = MTLSamplerAddressModeClampToEdge;
     }
     mMetalSamplerState = contextMtl->getDisplay()->getStateCache().getSamplerState(
         contextMtl->getMetalDevice(), samplerDesc);
