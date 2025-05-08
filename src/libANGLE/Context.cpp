@@ -390,6 +390,16 @@ void GetObjectLabelBase(const std::string &objectLabel,
     }
 }
 
+GLsizei GetMarkerLength(GLsizei length, const char *marker)
+{
+    if (length == 0)
+    {
+        return static_cast<GLsizei>(
+            std::min<size_t>(strlen(marker), std::numeric_limits<GLsizei>::max()));
+    }
+    return length;
+}
+
 enum SubjectIndexes : angle::SubjectIndex
 {
     kTexture0SubjectIndex       = 0,
@@ -3016,7 +3026,8 @@ void Context::insertEventMarker(GLsizei length, const char *marker)
         return;  // no-op, not an error
     }
 
-    ANGLE_CONTEXT_TRY(mImplementation->insertEventMarker(length, marker));
+    // If <length> is 0 then <marker> is assumed to be null-terminated.
+    ANGLE_CONTEXT_TRY(mImplementation->insertEventMarker(GetMarkerLength(length, marker), marker));
 }
 
 void Context::pushGroupMarker(GLsizei length, const char *marker)
@@ -3028,13 +3039,14 @@ void Context::pushGroupMarker(GLsizei length, const char *marker)
 
     if (marker == nullptr)
     {
-        // From the EXT_debug_marker spec,
-        // "If <marker> is null then an empty string is pushed on the stack."
+        // If <marker> is null then an empty string is pushed on the stack.
         ANGLE_CONTEXT_TRY(mImplementation->pushGroupMarker(0, ""));
     }
     else
     {
-        ANGLE_CONTEXT_TRY(mImplementation->pushGroupMarker(length, marker));
+        // If <length> is 0 then <marker> is assumed to be null-terminated.
+        ANGLE_CONTEXT_TRY(
+            mImplementation->pushGroupMarker(GetMarkerLength(length, marker), marker));
     }
 }
 
