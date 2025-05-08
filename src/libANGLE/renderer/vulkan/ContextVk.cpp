@@ -4649,7 +4649,8 @@ gl::GraphicsResetStatus ContextVk::getResetStatus()
 
 angle::Result ContextVk::insertEventMarker(GLsizei length, const char *marker)
 {
-    insertEventMarkerImpl(GL_DEBUG_SOURCE_APPLICATION, marker);
+    // Use length because marker does not have to be null-terminated.
+    insertEventMarkerImpl(GL_DEBUG_SOURCE_APPLICATION, std::string(marker, length).c_str());
     return angle::Result::Continue;
 }
 
@@ -4675,7 +4676,8 @@ void ContextVk::insertEventMarkerImpl(GLenum source, const char *marker)
 
 angle::Result ContextVk::pushGroupMarker(GLsizei length, const char *marker)
 {
-    return pushDebugGroupImpl(GL_DEBUG_SOURCE_APPLICATION, 0, marker);
+    // Use length because marker does not have to be null-terminated.
+    return pushDebugGroupImpl(GL_DEBUG_SOURCE_APPLICATION, 0, std::string(marker, length).c_str());
 }
 
 angle::Result ContextVk::popGroupMarker()
