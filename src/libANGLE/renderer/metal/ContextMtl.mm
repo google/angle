@@ -125,20 +125,6 @@ bool IsTransformFeedbackOnly(const gl::State &glState)
     return glState.isTransformFeedbackActiveUnpaused() && glState.isRasterizerDiscardEnabled();
 }
 
-std::string ConvertMarkerToString(GLsizei length, const char *marker)
-{
-    std::string cppString;
-    if (length == 0)
-    {
-        cppString = marker;
-    }
-    else
-    {
-        cppString.assign(marker, length);
-    }
-    return cppString;
-}
-
 // This class constructs line loop's last segment buffer inside begin() method
 // and perform the draw of the line loop's last segment inside destructor
 class LineLoopLastSegmentHelper
@@ -1076,12 +1062,13 @@ gl::GraphicsResetStatus ContextMtl::getResetStatus()
 // EXT_debug_marker
 angle::Result ContextMtl::insertEventMarker(GLsizei length, const char *marker)
 {
+    mCmdBuffer.insertDebugSignpost(std::string(marker, length));
     return checkCommandBufferError();
 }
 
 angle::Result ContextMtl::pushGroupMarker(GLsizei length, const char *marker)
 {
-    mCmdBuffer.pushDebugGroup(ConvertMarkerToString(length, marker));
+    mCmdBuffer.pushDebugGroup(std::string(marker, length));
     return checkCommandBufferError();
 }
 

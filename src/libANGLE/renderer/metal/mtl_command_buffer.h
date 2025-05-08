@@ -189,7 +189,7 @@ class CommandBuffer final : public WrappedObject<id<MTLCommandBuffer>>, angle::N
     uint64_t queueEventSignal(id<MTLEvent> event, uint64_t value);
     void serverWaitEvent(id<MTLEvent> event, uint64_t value);
 
-    void insertDebugSign(const std::string &marker);
+    void insertDebugSignpost(const std::string &marker);
     void pushDebugGroup(const std::string &marker);
     void popDebugGroup();
 
@@ -240,7 +240,7 @@ class CommandBuffer final : public WrappedObject<id<MTLCommandBuffer>>, angle::N
 
     mutable std::mutex mLock;
 
-    std::vector<std::string> mPendingDebugSigns;
+    std::vector<std::string> mPendingDebugSignposts;
     struct PendingEvent
     {
         angle::ObjCPtr<id<MTLEvent>> event;
@@ -275,7 +275,7 @@ class CommandEncoder : public WrappedObject<id<MTLCommandEncoder>>, angle::NonCo
     CommandEncoder &markResourceBeingWrittenByGPU(const BufferRef &buffer);
     CommandEncoder &markResourceBeingWrittenByGPU(const TextureRef &texture);
 
-    void insertDebugSign(NSString *label);
+    void insertDebugSignpost(NSString *label);
 
     virtual void pushDebugGroup(NSString *label);
     virtual void popDebugGroup();
@@ -290,7 +290,7 @@ class CommandEncoder : public WrappedObject<id<MTLCommandEncoder>>, angle::NonCo
 
     void set(id<MTLCommandEncoder> metalCmdEncoder);
 
-    virtual void insertDebugSignImpl(NSString *marker);
+    virtual void insertDebugSignpostImpl(NSString *marker);
 
   private:
     bool isRenderEncoder() const { return getType() == Type::RENDER; }
@@ -602,7 +602,7 @@ class RenderCommandEncoder final : public CommandEncoder
     {
         return static_cast<id<MTLRenderCommandEncoder>>(CommandEncoder::get());
     }
-    void insertDebugSignImpl(NSString *label) override;
+    void insertDebugSignpostImpl(NSString *label) override;
 
     void initAttachmentWriteDependencyAndScissorRect(const RenderPassAttachmentDesc &attachment);
     void initWriteDependency(const TextureRef &texture);
