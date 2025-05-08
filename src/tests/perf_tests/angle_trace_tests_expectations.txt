@@ -6,7 +6,10 @@
 
 42266611 SWIFTSHADER : gangstar_vegas = SKIP
 42266679 SWIFTSHADER : street_fighter_iv_ce = SKIP
-42266627 NATIVE : respawnables = SKIP
+42266627 WIN NATIVE : respawnables = SKIP
+42266627 LINUX NATIVE : respawnables = SKIP
+42266627 PIXEL4ORXL NATIVE : respawnables = SKIP
+42266627 PIXEL6 NATIVE : respawnables = SKIP
 42266034 LINUX SWIFTSHADER : star_wars_kotor = SKIP
 
 267953710 GALAXYS22 : cod_mobile = SKIP
