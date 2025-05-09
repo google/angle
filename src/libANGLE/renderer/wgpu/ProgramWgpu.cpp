@@ -183,9 +183,9 @@ class CreateWGPUShaderModuleTask : public LinkSubTask
         getCompilationInfoCallback.userdata1 = this;
 
         WGPUFutureWaitInfo waitInfo = WGPU_FUTURE_WAIT_INFO_INIT;
-        waitInfo.future             = wgpuShaderModuleGetCompilationInfo(mShaderModule.module.get(),
-                                                                         getCompilationInfoCallback);
-        WGPUWaitStatus waitStatus   = wgpuInstanceWaitAny(mInstance.get(), 1, &waitInfo, -1);
+        waitInfo.future = mProcTable->shaderModuleGetCompilationInfo(mShaderModule.module.get(),
+                                                                     getCompilationInfoCallback);
+        WGPUWaitStatus waitStatus = mProcTable->instanceWaitAny(mInstance.get(), 1, &waitInfo, -1);
         if (waitStatus != WGPUWaitStatus_Success)
         {
             mResult = angle::Result::Stop;

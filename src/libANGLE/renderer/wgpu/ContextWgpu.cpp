@@ -148,7 +148,7 @@ angle::Result ContextWgpu::flush(webgpu::RenderPassClosureReason closureReason)
             wgpu, wgpu->commandEncoderFinish(mCurrentCommandEncoder.get(), nullptr));
         mCurrentCommandEncoder            = nullptr;
 
-        wgpuQueueSubmit(getQueue().get(), 1, &commandBuffer.get());
+        wgpu->queueSubmit(getQueue().get(), 1, &commandBuffer.get());
     }
 
     return angle::Result::Continue;
@@ -235,6 +235,8 @@ webgpu::CommandEncoderHandle &ContextWgpu::getCurrentCommandEncoder()
 
 angle::Result ContextWgpu::finish(const gl::Context *context)
 {
+    const DawnProcTable *wgpu = webgpu::GetProcs(this);
+
     ANGLE_TRY(flush(webgpu::RenderPassClosureReason::GLFinish));
 
     WGPUQueueWorkDoneCallbackInfo callback = WGPU_QUEUE_WORK_DONE_CALLBACK_INFO_INIT;
@@ -245,9 +247,10 @@ angle::Result ContextWgpu::finish(const gl::Context *context)
     };
 
     WGPUFutureWaitInfo onWorkSubmittedFuture = WGPU_FUTURE_WAIT_INFO_INIT;
-    onWorkSubmittedFuture.future = wgpuQueueOnSubmittedWorkDone(getQueue().get(), callback);
+    onWorkSubmittedFuture.future = wgpu->queueOnSubmittedWorkDone(getQueue().get(), callback);
 
-    WGPUWaitStatus status = wgpuInstanceWaitAny(getInstance().get(), 1, &onWorkSubmittedFuture, -1);
+    WGPUWaitStatus status =
+        wgpu->instanceWaitAny(getInstance().get(), 1, &onWorkSubmittedFuture, -1);
     ASSERT(!webgpu::IsWgpuError(status));
 
     return angle::Result::Continue;
@@ -1115,16 +1118,19 @@ angle::Result ContextWgpu::endRenderPass(webgpu::RenderPassClosureReason closure
 {
     if (mCurrentRenderPass)
     {
+        const DawnProcTable *wgpu = webgpu::GetProcs(this);
+
         const char *reasonText = kRenderPassClosureReason[closureReason];
         ASSERT(reasonText);
 
         if (mCommandBuffer.hasCommands())
         {
-            ANGLE_WGPU_SCOPED_DEBUG_TRY(this, mCommandBuffer.recordCommands(mCurrentRenderPass));
+            ANGLE_WGPU_SCOPED_DEBUG_TRY(this,
+                                        mCommandBuffer.recordCommands(wgpu, mCurrentRenderPass));
             mCommandBuffer.clear();
         }
 
-        wgpuRenderPassEncoderEnd(mCurrentRenderPass.get());
+        wgpu->renderPassEncoderEnd(mCurrentRenderPass.get());
         mCurrentRenderPass = nullptr;
     }
 

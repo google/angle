@@ -126,10 +126,11 @@ angle::Result BufferWgpu::setSubData(const gl::Context *context,
     }
     else
     {
+        const DawnProcTable *wgpu = webgpu::GetProcs(context);
         // TODO: Upload into a staging buffer and copy to the destination buffer so that the copy
         // happens at the right point in time for command buffer recording.
         webgpu::QueueHandle queue = contextWgpu->getQueue();
-        wgpuQueueWriteBuffer(queue.get(), mBuffer.getBuffer().get(), offset, data, size);
+        wgpu->queueWriteBuffer(queue.get(), mBuffer.getBuffer().get(), offset, data, size);
     }
 
     return angle::Result::Continue;

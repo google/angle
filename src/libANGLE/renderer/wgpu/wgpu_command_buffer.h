@@ -260,7 +260,7 @@ class CommandBuffer
     bool hasSetViewportCommand() const { return mHasSetViewportCommand; }
     bool hasSetBlendConstantCommand() const { return mHasSetBlendConstantCommand; }
 
-    void recordCommands(RenderPassEncoderHandle encoder);
+    void recordCommands(const DawnProcTable *wgpu, RenderPassEncoderHandle encoder);
 
   private:
     struct CommandBlock

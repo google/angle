@@ -414,12 +414,13 @@ bool IsStripPrimitiveTopology(WGPUPrimitiveTopology topology)
     }
 }
 
-ErrorScope::ErrorScope(webgpu::InstanceHandle instance,
+ErrorScope::ErrorScope(const DawnProcTable *procTable,
+                       webgpu::InstanceHandle instance,
                        webgpu::DeviceHandle device,
                        WGPUErrorFilter errorType)
-    : mInstance(instance), mDevice(device)
+    : mProcTable(procTable), mInstance(instance), mDevice(device)
 {
-    wgpuDevicePushErrorScope(mDevice.get(), errorType);
+    mProcTable->devicePushErrorScope(mDevice.get(), errorType);
     mActive = true;
 }
 
@@ -478,8 +479,8 @@ angle::Result ErrorScope::PopScope(ContextWgpu *context,
     callbackInfo.userdata1 = &popScopeContext;
 
     WGPUFutureWaitInfo future = WGPU_FUTURE_WAIT_INFO_INIT;
-    future.future             = wgpuDevicePopErrorScope(mDevice.get(), callbackInfo);
-    wgpuInstanceWaitAny(mInstance.get(), 1, &future, -1);
+    future.future             = mProcTable->devicePopErrorScope(mDevice.get(), callbackInfo);
+    mProcTable->instanceWaitAny(mInstance.get(), 1, &future, -1);
 
     return popScopeContext.hadError ? angle::Result::Stop : angle::Result::Continue;
 }

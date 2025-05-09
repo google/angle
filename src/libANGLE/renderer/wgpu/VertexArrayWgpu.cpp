@@ -500,9 +500,9 @@ angle::Result VertexArrayWgpu::syncClientArrays(
 
     for (const BufferCopy &copy : stagingUploads)
     {
-        wgpuCommandEncoderCopyBufferToBuffer(commandEncoder.get(), copy.src->getBuffer().get(),
-                                             copy.sourceOffset, copy.dest->getBuffer().get(),
-                                             copy.destOffset, copy.size);
+        wgpu->commandEncoderCopyBufferToBuffer(commandEncoder.get(), copy.src->getBuffer().get(),
+                                               copy.sourceOffset, copy.dest->getBuffer().get(),
+                                               copy.destOffset, copy.size);
     }
 
     return angle::Result::Continue;
@@ -580,7 +580,7 @@ angle::Result VertexArrayWgpu::ensureBufferCreated(const gl::Context *context,
     ContextWgpu *contextWgpu = webgpu::GetImpl(context);
     const DawnProcTable *wgpu = webgpu::GetProcs(contextWgpu);
     if (!buffer.valid() || buffer.requestedSize() < size ||
-        wgpuBufferGetUsage(buffer.getBuffer().get()) != usage)
+        wgpu->bufferGetUsage(buffer.getBuffer().get()) != usage)
     {
         webgpu::DeviceHandle device = webgpu::GetDevice(context);
         ANGLE_TRY(buffer.initBuffer(wgpu, device, size, usage, webgpu::MapAtCreation::No));

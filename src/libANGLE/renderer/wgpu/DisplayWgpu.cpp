@@ -10,7 +10,6 @@
 #include "libANGLE/renderer/wgpu/DisplayWgpu.h"
 
 #include <dawn/dawn_proc.h>
-#include <dawn/native/DawnNative.h>
 
 #include "common/debug.h"
 #include "common/platform.h"
@@ -21,6 +20,7 @@
 #include "libANGLE/renderer/wgpu/DisplayWgpu_api.h"
 #include "libANGLE/renderer/wgpu/ImageWgpu.h"
 #include "libANGLE/renderer/wgpu/SurfaceWgpu.h"
+#include "libANGLE/renderer/wgpu/wgpu_proc_utils.h"
 
 namespace rx
 {
@@ -31,8 +31,7 @@ DisplayWgpu::~DisplayWgpu() {}
 
 egl::Error DisplayWgpu::initialize(egl::Display *display)
 {
-    mProcTable = dawn::native::GetProcs();
-    dawnProcSetProcs(&mProcTable);
+    mProcTable = webgpu::GetDefaultProcTable();
 
     ANGLE_TRY(createWgpuDevice());
 
@@ -41,7 +40,7 @@ egl::Error DisplayWgpu::initialize(egl::Display *display)
     mFormatTable.initialize();
 
     mLimitsWgpu = WGPU_LIMITS_INIT;
-    wgpuDeviceGetLimits(mDevice.get(), &mLimitsWgpu);
+    mProcTable.deviceGetLimits(mDevice.get(), &mLimitsWgpu);
 
     webgpu::GenerateCaps(mLimitsWgpu, &mGLCaps, &mGLTextureCaps, &mGLExtensions, &mGLLimitations,
                          &mEGLCaps, &mEGLExtensions, &mMaxSupportedClientVersion);
@@ -283,10 +282,10 @@ egl::Error DisplayWgpu::createWgpuDevice()
     requestAdapterCallback.userdata2 = &mProcTable;
 
     WGPUFutureWaitInfo futureWaitInfo;
-    futureWaitInfo.future =
-        wgpuInstanceRequestAdapter(mInstance.get(), &requestAdapterOptions, requestAdapterCallback);
+    futureWaitInfo.future = mProcTable.instanceRequestAdapter(
+        mInstance.get(), &requestAdapterOptions, requestAdapterCallback);
 
-    WGPUWaitStatus status = wgpuInstanceWaitAny(mInstance.get(), 1, &futureWaitInfo, -1);
+    WGPUWaitStatus status = mProcTable.instanceWaitAny(mInstance.get(), 1, &futureWaitInfo, -1);
     if (webgpu::IsWgpuError(status))
     {
         std::ostringstream err;

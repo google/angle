@@ -28,9 +28,9 @@
         }                                                                                    \
     } while (0)
 
-#define ANGLE_WGPU_BEGIN_DEBUG_ERROR_SCOPE(context)                             \
-    ::rx::webgpu::DebugErrorScope(context->getInstance(), context->getDevice(), \
-                                  WGPUErrorFilter_Validation)
+#define ANGLE_WGPU_BEGIN_DEBUG_ERROR_SCOPE(context)                            \
+    ::rx::webgpu::DebugErrorScope(context->getProcs(), context->getInstance(), \
+                                  context->getDevice(), WGPUErrorFilter_Validation)
 #define ANGLE_WGPU_END_DEBUG_ERROR_SCOPE(context, scope) \
     ANGLE_TRY(scope.PopScope(context, __FILE__, ANGLE_FUNCTION, __LINE__))
 
@@ -254,7 +254,8 @@ using LevelIndex = gl::LevelIndexWrapper<uint32_t>;
 class ErrorScope : public angle::NonCopyable
 {
   public:
-    ErrorScope(webgpu::InstanceHandle instance,
+    ErrorScope(const DawnProcTable *procTable,
+               webgpu::InstanceHandle instance,
                webgpu::DeviceHandle device,
                WGPUErrorFilter errorType);
     ~ErrorScope();
@@ -265,6 +266,7 @@ class ErrorScope : public angle::NonCopyable
                            unsigned int line);
 
   private:
+    const DawnProcTable *mProcTable = nullptr;
     webgpu::InstanceHandle mInstance;
     webgpu::DeviceHandle mDevice;
     bool mActive = false;
