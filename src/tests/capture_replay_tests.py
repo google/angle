@@ -834,7 +834,6 @@ if __name__ == '__main__':
         help='Whether to keep the temp files and folders. Off by default')
     parser.add_argument(
         '--use-remoteexec',
-        '--use-reclient',  # TODO: crbug.com/401959048 - remove after siso migration.
         default=False,
         action='store_true',
         help='Set use_remoteexec=true in args.gn.')
