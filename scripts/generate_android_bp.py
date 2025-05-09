@@ -458,6 +458,19 @@ def gn_action_args_to_blueprint_args(blueprint_inputs, blueprint_outputs, args):
         ('gen/', ''),
     ]
 
+    # some args have special prefix added in front of the file name, we need to
+    # take them out before transforming the file path, and then add them back:
+    # e.g.
+    # transform
+    # --extinst=,../../third_party/spirv-headers/src/include/spirv/unified1/extinst.debuginfo.grammar.json
+    # to
+    # --extinst=,$(location third_party/spirv-headers/src/include/spirv/unified1/extinst.debuginfo.grammar.json)
+    special_prefixs = [
+        '--extinst=,',
+        '--extinst=SHDEBUG100_,',
+        '--extinst=CLDEBUG100_,',
+    ]
+
     result_args = []
     for arg in args:
         # Attempt to find if this arg is a path to one of the inputs. If it is, use the blueprint
@@ -466,12 +479,23 @@ def gn_action_args_to_blueprint_args(blueprint_inputs, blueprint_outputs, args):
         remapped_path_arg = arg
         for (remap_source, remap_dest) in remap_folders:
             remapped_path_arg = remapped_path_arg.replace(remap_source, remap_dest)
+        special_prefix = ''
+        for special_item in special_prefixs:
+            if remapped_path_arg.startswith(special_item):
+                special_prefix = special_item
+                break
+        if special_prefix != '':
+            remapped_path_arg = remapped_path_arg[len(special_prefix):]
 
         if remapped_path_arg in blueprint_inputs or remapped_path_arg in blueprint_outputs:
-            result_args.append('$(location %s)' % remapped_path_arg)
+            remapped_path_arg = remapped_path_arg
+            result_args.append('%s$(location %s)' % (special_prefix, remapped_path_arg))
         elif os.path.basename(remapped_path_arg) in blueprint_outputs:
-            result_args.append('$(location %s)' % os.path.basename(remapped_path_arg))
+            remapped_path_arg = remapped_path_arg
+            result_args.append('%s$(location %s)' %
+                               (special_prefix, os.path.basename(remapped_path_arg)))
         else:
+            remapped_path_arg = special_prefix + remapped_path_arg
             result_args.append(remapped_path_arg)
 
     return result_args
@@ -493,6 +517,19 @@ outputs_remap = {
 
 def is_input_in_tool_files(tool_files, input):
     return input in tool_files
+
+
+def separate_py_files_from_bp_srcs_entry(input_list):
+    bp_tools_list = []  # Initialize the new list for ".py" items
+    remaining_gn_input_list = []  # Initialize the list for the items that are not ".py"
+
+    for item in input_list:
+        if item.endswith(".py"):
+            bp_tools_list.append(item)
+        else:
+            remaining_gn_input_list.append(item)
+
+    return remaining_gn_input_list, bp_tools_list
 
 
 # special handling the {{response_file_name}} args in GN:
@@ -543,7 +580,15 @@ def action_target_to_blueprint(abi, target, build_info):
             if not is_input_in_tool_files(target_info['script'], input)
         ]
 
-    bp_srcs = gn_paths_to_blueprint_paths(gn_inputs)
+    # Take "*.py" out from gn_inputs, they need to be listed in tool_files entry
+    # in Android.bp.
+    gn_inputs_without_python_script = gn_inputs
+    extra_tool_files = []
+    if 'script' in target_info:
+        gn_inputs_without_python_script, extra_tool_files = separate_py_files_from_bp_srcs_entry(
+            gn_inputs)
+
+    bp_srcs = gn_paths_to_blueprint_paths(gn_inputs_without_python_script)
 
     bp['srcs'] = bp_srcs
 
@@ -559,6 +604,17 @@ def action_target_to_blueprint(abi, target, build_info):
     bp['out'] = bp_outputs
 
     bp['tool_files'] = [gn_path_to_blueprint_path(target_info['script'])]
+    if 'script' in target_info:
+        # if there are more than 1 python script listed in "tool_files" entry in
+        # Android.bp action target, we need to specify which script we are
+        # invoking.
+        if len(extra_tool_files) > 0:
+            location = '$(location ' + target_info['script'].lstrip('/') + ')'
+        else:
+            location = '$(location)'
+        bp['tool_files'] += gn_paths_to_blueprint_paths(extra_tool_files)
+    else:
+        location = '$(location)'
 
     new_temporary_gn_response_file, updated_args = handle_gn_build_arg_response_file_name(
         target_info['args'])
@@ -566,11 +622,11 @@ def action_target_to_blueprint(abi, target, build_info):
     if new_temporary_gn_response_file:
         # add the command 'echo $(in) > $(genDir)/gn_response_file' to
         # write $response_file_contents into the new_temporary_gn_response_file.
-        cmd = ['echo $(in) >', new_temporary_gn_response_file, '&&', '$(location)'
+        cmd = ['echo $(in) >', new_temporary_gn_response_file, '&&', location
               ] + gn_action_args_to_blueprint_args(bp_srcs, bp_outputs, updated_args)
     else:
-        cmd = ['$(location)'] + gn_action_args_to_blueprint_args(bp_srcs, bp_outputs,
-                                                                 target_info['args'])
+        cmd = [location] + gn_action_args_to_blueprint_args(bp_srcs, bp_outputs,
+                                                            target_info['args'])
 
     bp['cmd'] = ' '.join(cmd)
 
