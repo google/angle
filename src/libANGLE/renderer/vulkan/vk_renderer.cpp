@@ -436,6 +436,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
      }},
     // From: TraceTest.special_forces_group_2 http://anglebug.com/42264123
     // http://anglebug.com/397775556
+    // From: TraceTest.life_is_strange http://anglebug.com/42266180 (Linux AMD)
     {"SYNC-HAZARD-READ-AFTER-WRITE",
      nullptr,
      nullptr,
@@ -449,11 +450,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
          "command = vkCmdDrawIndexed",
          "prior_command = vkCmdCopyBuffer",
      }},
-    // From: TraceTest.life_is_strange http://anglebug.com/42266180
-    {"SYNC-HAZARD-WRITE-AFTER-READ",
-     "with storeOp VK_ATTACHMENT_STORE_OP_DONT_CARE. "
-     "Access info (usage: SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE, "
-     "prior_usage: SYNC_FRAGMENT_SHADER_SHADER_"},
     // From: TraceTest.life_is_strange http://anglebug.com/42266180
     {"SYNC-HAZARD-READ-AFTER-WRITE",
      "type: VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, "
