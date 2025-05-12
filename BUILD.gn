@@ -1391,7 +1391,8 @@ set_defaults("angle_libGLESv2") {
 
 template("angle_libGLESv2") {
   angle_shared_library(target_name) {
-    sources = invoker.sources + libglesv2_sources
+    sources =
+        invoker.sources + libglesv2_entry_point_sources + libglesv2_sources
     deps = invoker.deps + [ ":includes" ]
     defines = [ "LIBGLESV2_IMPLEMENTATION" ]
 
@@ -1450,8 +1451,8 @@ if (angle_has_frame_capture) {
   }
 }
 
-angle_static_library("libGLESv2_static") {
-  sources = libglesv2_sources
+angle_static_library("libGLESv2_thin_static") {
+  sources = libglesv2_entry_point_sources
   if (angle_enable_cl) {
     sources += libglesv2_cl_sources
   }
@@ -1460,6 +1461,11 @@ angle_static_library("libGLESv2_static") {
   public_configs += [ ":angle_static_config" ]
   deps = [ ":includes" ]
   public_deps = [ ":libANGLE" ]
+}
+
+angle_static_library("libGLESv2_static") {
+  sources = libglesv2_sources
+  public_deps = [ ":libGLESv2_thin_static" ]
 }
 
 angle_shared_library("libGLESv1_CM") {
