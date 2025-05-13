@@ -973,6 +973,8 @@ angle::Result ProgramExecutableVk::prepareForWarmUpPipelineCache(
     gl::PrimitiveMode mode = (mExecutable->hasLinkedShaderStage(gl::ShaderType::TessControl) ||
                               mExecutable->hasLinkedShaderStage(gl::ShaderType::TessEvaluation))
                                  ? gl::PrimitiveMode::Patches
+                             : mExecutable->hasLinkedShaderStage(gl::ShaderType::Geometry)
+                                 ? mExecutable->getGeometryShaderInputPrimitiveType()
                                  : gl::PrimitiveMode::TriangleStrip;
     SetupDefaultPipelineState(context, *mExecutable, mode, pipelineRobustness,
                               pipelineProtectedAccess, subset, &mWarmUpGraphicsPipelineDesc);
