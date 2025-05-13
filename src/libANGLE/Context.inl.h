@@ -60,7 +60,7 @@ ANGLE_INLINE void MarkShaderStorageUsage(const Context *context)
         Buffer *buffer = context->getState().getIndexedShaderStorageBuffer(index).get();
         if (buffer)
         {
-            buffer->onDataChanged();
+            buffer->onDataChanged(context);
         }
     }
 

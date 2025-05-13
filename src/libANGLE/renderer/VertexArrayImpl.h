@@ -45,16 +45,19 @@ class VertexArrayImpl : angle::NonCopyable
 
     const gl::VertexArrayState &getState() const { return mState; }
 
-    void setContentsObservers(gl::VertexArrayBufferContentsObservers *observers)
+    gl::VertexArrayBufferBindingMask getContentObserversBindingMask() const
     {
-        mContentsObservers = observers;
+        return mContentsObserverBindingsMask;
     }
 
     virtual angle::Result onLabelUpdate(const gl::Context *context);
 
   protected:
     const gl::VertexArrayState &mState;
-    gl::VertexArrayBufferContentsObservers *mContentsObservers = nullptr;
+    // Tracks back end's needs for buffer content change at each binding index. If the bit is set,
+    // current context's VertexArray will be notified when a related buffer data has changed along
+    // with this bit mask.
+    gl::VertexArrayBufferBindingMask mContentsObserverBindingsMask;
 };
 
 inline angle::Result VertexArrayImpl::syncState(const gl::Context *context,

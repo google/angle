@@ -1790,7 +1790,7 @@ angle::Result Framebuffer::readPixels(const Context *context,
 
     if (packBuffer)
     {
-        packBuffer->onDataChanged();
+        packBuffer->onDataChanged(context);
     }
 
     return angle::Result::Continue;

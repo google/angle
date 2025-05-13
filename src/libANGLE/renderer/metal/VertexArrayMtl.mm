@@ -647,6 +647,7 @@ angle::Result VertexArrayMtl::syncDirtyAttrib(const gl::Context *glContext,
 {
     ContextMtl *contextMtl = mtl::GetImpl(glContext);
     ASSERT(mtl::kMaxVertexAttribs > attribIndex);
+    mContentsObserverBindingsMask.reset(attrib.bindingIndex);
 
     if (attrib.enabled)
     {
@@ -659,7 +660,7 @@ angle::Result VertexArrayMtl::syncDirtyAttrib(const gl::Context *glContext,
             // https://bugs.webkit.org/show_bug.cgi?id=236733
             // even non-converted buffers need to be observed for potential
             // data rebinds.
-            mContentsObservers->enableForBuffer(bufferGL, static_cast<uint32_t>(attribIndex));
+            mContentsObserverBindingsMask.set(attrib.bindingIndex);
             bool needConversion =
                 format.actualFormatId != format.intendedFormatId ||
                 (binding.getOffset() % mtl::kVertexAttribBufferStrideAlignment) != 0 ||

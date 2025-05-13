@@ -755,7 +755,7 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
                 // internal storage and take action if buffer storage has changed while not
                 // observing.
                 if (contextVk->getFeatures().compressVertexData.enabled ||
-                    mContentsObservers->any())
+                    mContentsObserverBindingsMask.any())
                 {
                     // We may have lost buffer content change when it became non-current. In that
                     // case we always assume buffer has changed. If compressVertexData.enabled is
@@ -935,7 +935,7 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
 
         if (bufferGL)
         {
-            mContentsObservers->disableForBuffer(bufferGL, static_cast<uint32_t>(attribIndex));
+            mContentsObserverBindingsMask.reset(attrib.bindingIndex);
         }
 
         if (!isStreamingVertexAttrib && bufferGL->getSize() > 0)
@@ -968,7 +968,7 @@ angle::Result VertexArrayVk::syncDirtyAttrib(ContextVk *contextVk,
                 ASSERT(vertexFormat.getVertexInputAlignment(compressed) <=
                        vk::kVertexBufferAlignment);
 
-                mContentsObservers->enableForBuffer(bufferGL, static_cast<uint32_t>(attribIndex));
+                mContentsObserverBindingsMask.set(attrib.bindingIndex);
 
                 WarnOnVertexFormatConversion(contextVk, vertexFormat, compressed, true);
 

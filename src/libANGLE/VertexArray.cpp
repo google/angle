@@ -117,10 +117,8 @@ VertexArray::VertexArray(rx::GLImplFactory *factory,
     : mId(id),
       mState(this, maxAttribs, maxAttribBindings),
       mVertexArray(factory->createVertexArray(mState)),
-      mBufferAccessValidationEnabled(false),
-      mContentsObservers(this)
+      mBufferAccessValidationEnabled(false)
 {
-    mVertexArray->setContentsObservers(&mContentsObservers);
 }
 
 void VertexArray::onDestroy(const Context *context)
@@ -135,8 +133,6 @@ void VertexArray::onDestroy(const Context *context)
         {
             buffer->onNonTFBindingChanged(-1);
         }
-        // Note: the non-contents observer is unbound in the ObserverBinding destructor.
-        buffer->removeContentsObserver(this, static_cast<uint32_t>(bindingIndex));
         binding.setBuffer(context, nullptr);
     }
     mState.mBufferBindingMask.reset();
@@ -193,7 +189,6 @@ bool VertexArray::detachBuffer(const Context *context, BufferID bufferID)
                     bufferBinding->onNonTFBindingChanged(-1);
             }
             bufferBinding->removeVertexArrayBinding(context, bindingIndex);
-            bufferBinding->removeContentsObserver(this, static_cast<uint32_t>(bindingIndex));
             binding.setBuffer(context, nullptr);
             mState.mBufferBindingMask.reset(bindingIndex);
 
@@ -361,7 +356,6 @@ ANGLE_INLINE VertexArray::DirtyBindingBits VertexArray::bindVertexBufferImpl(con
         {
             oldBuffer->onNonTFBindingChanged(-1);
             oldBuffer->removeVertexArrayBinding(context, bindingIndex);
-            oldBuffer->removeContentsObserver(this, static_cast<uint32_t>(bindingIndex));
             oldBuffer->release(context);
             mState.mBufferBindingMask.reset(bindingIndex);
         }
@@ -839,22 +833,32 @@ void VertexArray::onBufferContentsChange(uint32_t bufferIndex)
     setDependentDirtyBit(true, bufferIndex);
 }
 
-VertexArrayBufferContentsObservers::VertexArrayBufferContentsObservers(VertexArray *vertexArray)
-    : mVertexArray(vertexArray)
-{}
-
-void VertexArrayBufferContentsObservers::enableForBuffer(Buffer *buffer, uint32_t attribIndex)
+void VertexArray::onBufferChanged(const Context *context,
+                                  angle::SubjectMessage message,
+                                  VertexArrayBufferBindingMask vertexArrayBufferBindingMask)
 {
-    buffer->addContentsObserver(mVertexArray, attribIndex);
-    mBufferObserversBitMask.set(attribIndex);
-}
-
-void VertexArrayBufferContentsObservers::disableForBuffer(Buffer *buffer, uint32_t attribIndex)
-{
-    if (mBufferObserversBitMask.test(attribIndex))
+    if (message == angle::SubjectMessage::ContentsChanged)
     {
-        buffer->removeContentsObserver(mVertexArray, attribIndex);
-        mBufferObserversBitMask.reset(attribIndex);
+        VertexArrayBufferBindingMask bufferBindingMask =
+            vertexArrayBufferBindingMask & mVertexArray->getContentObserversBindingMask();
+        for (size_t bindingIndex : bufferBindingMask)
+        {
+            setDependentDirtyBit(true, bindingIndex);
+        }
+    }
+    else
+    {
+        ASSERT(message == angle::SubjectMessage::SubjectMapped ||
+               message == angle::SubjectMessage::SubjectUnmapped ||
+               message == angle::SubjectMessage::SubjectChanged ||
+               message == angle::SubjectMessage::InternalMemoryAllocationChanged ||
+               message == angle::SubjectMessage::BindingChanged);
+        VertexArrayBufferBindingMask bufferBindingMask =
+            vertexArrayBufferBindingMask & mState.mBufferBindingMask;
+        for (size_t bindingIndex : bufferBindingMask)
+        {
+            onSubjectStateChange(bindingIndex, message);
+        }
     }
 }
 }  // namespace gl

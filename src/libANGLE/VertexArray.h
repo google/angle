@@ -121,20 +121,6 @@ class VertexArrayState final : angle::NonCopyable
     AttributesMask mCachedInvalidMappedArrayBuffer;
 };
 
-class VertexArrayBufferContentsObservers final : angle::NonCopyable
-{
-  public:
-    VertexArrayBufferContentsObservers(VertexArray *vertexArray);
-    void enableForBuffer(Buffer *buffer, uint32_t bufferIndex);
-    void disableForBuffer(Buffer *buffer, uint32_t bufferIndex);
-    bool any() const { return mBufferObserversBitMask.any(); }
-
-  private:
-    VertexArray *mVertexArray;
-    // Bit is set when it is observing the buffer content change
-    gl::AttributesMask mBufferObserversBitMask;
-};
-
 class VertexArray final : public angle::ObserverInterface,
                           public LabeledObject,
                           public angle::Subject
@@ -338,15 +324,7 @@ class VertexArray final : public angle::ObserverInterface,
 
     void onBufferChanged(const Context *context,
                          angle::SubjectMessage message,
-                         VertexArrayBufferBindingMask vertexArrayBufferBindingMask)
-    {
-        VertexArrayBufferBindingMask bufferBindingMask =
-            vertexArrayBufferBindingMask & mState.mBufferBindingMask;
-        for (size_t bindingIndex : bufferBindingMask)
-        {
-            onSubjectStateChange(bindingIndex, message);
-        }
-    }
+                         VertexArrayBufferBindingMask vertexArrayBufferBindingMask);
 
   private:
     ~VertexArray() override;
@@ -413,7 +391,6 @@ class VertexArray final : public angle::ObserverInterface,
 
     mutable IndexRangeInlineCache mIndexRangeInlineCache;
     bool mBufferAccessValidationEnabled;
-    VertexArrayBufferContentsObservers mContentsObservers;
 };
 
 inline angle::Result VertexArray::getIndexRange(const Context *context,
