@@ -43,7 +43,7 @@ std::string StringPrintf(const char *fmt, ...)
 
 std::string NumberToString(size_t value)
 {
-    return StringPrintf("%u", value);
+    return StringPrintf("%zu", value);
 }
 
 std::string NumberToString(double value)
