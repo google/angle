@@ -85,7 +85,7 @@ operation = sys.argv[1]
 # Set the root of ANGLE's repo as the working directory
 aosp_angle_path = os.path.join(os.path.dirname('.'), 'external', 'angle')
 aosp = os.path.exists(aosp_angle_path)
-cwd = aosp_angle_path if aosp else os.path.join(os.path.dirname(os.path.realpath(__file__)), '..')
+cwd = aosp_angle_path if aosp else os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 git_dir_exists = does_git_dir_exist(cwd)
 
 if operation == 'position':
