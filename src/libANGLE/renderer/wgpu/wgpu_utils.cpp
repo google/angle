@@ -35,29 +35,29 @@ wgpu::Instance GetInstance(const gl::Context *context)
     return display->getInstance();
 }
 
-WGPURenderPassColorAttachment CreateNewClearColorAttachment(WGPUColor clearValue,
-                                                            uint32_t depthSlice,
-                                                            TextureViewHandle textureView)
+PackedRenderPassColorAttachment CreateNewClearColorAttachment(const gl::ColorF &clearValue,
+                                                              uint32_t depthSlice,
+                                                              TextureViewHandle textureView)
 {
-    WGPURenderPassColorAttachment colorAttachment = WGPU_RENDER_PASS_COLOR_ATTACHMENT_INIT;
-    colorAttachment.view                          = textureView.get();
+    PackedRenderPassColorAttachment colorAttachment;
+    colorAttachment.view       = textureView;
     colorAttachment.depthSlice = depthSlice;
-    colorAttachment.loadOp                        = WGPULoadOp_Clear;
-    colorAttachment.storeOp                       = WGPUStoreOp_Store;
+    colorAttachment.loadOp     = WGPULoadOp_Clear;
+    colorAttachment.storeOp    = WGPUStoreOp_Store;
     colorAttachment.clearValue = clearValue;
 
     return colorAttachment;
 }
 
-WGPURenderPassDepthStencilAttachment CreateNewDepthStencilAttachment(float depthClearValue,
-                                                                     uint32_t stencilClearValue,
-                                                                     TextureViewHandle textureView,
-                                                                     bool hasDepthValue,
-                                                                     bool hasStencilValue)
+PackedRenderPassDepthStencilAttachment CreateNewDepthStencilAttachment(
+    float depthClearValue,
+    uint32_t stencilClearValue,
+    TextureViewHandle textureView,
+    bool hasDepthValue,
+    bool hasStencilValue)
 {
-    WGPURenderPassDepthStencilAttachment depthStencilAttachment =
-        WGPU_RENDER_PASS_DEPTH_STENCIL_ATTACHMENT_INIT;
-    depthStencilAttachment.view = textureView.get();
+    PackedRenderPassDepthStencilAttachment depthStencilAttachment;
+    depthStencilAttachment.view = textureView;
     // WebGPU requires that depth/stencil attachments have a load op if the correlated ReadOnly
     // value is set to false, so we make sure to set the value here to to support cases where only a
     // depth or stencil mask is set.
@@ -104,6 +104,83 @@ void ClearValuesArray::store(uint32_t index, const ClearValues &clearValues)
 gl::DrawBufferMask ClearValuesArray::getColorMask() const
 {
     return gl::DrawBufferMask(mEnabled.bits() & kUnpackedColorBuffersMask);
+}
+
+bool operator==(const PackedRenderPassColorAttachment &a, const PackedRenderPassColorAttachment &b)
+{
+    return std::tie(a.view, a.depthSlice, a.loadOp, a.storeOp, a.clearValue) ==
+           std::tie(b.view, b.depthSlice, b.loadOp, b.storeOp, b.clearValue);
+}
+
+bool operator==(const PackedRenderPassDepthStencilAttachment &a,
+                const PackedRenderPassDepthStencilAttachment &b)
+{
+    return std::tie(a.view, a.depthLoadOp, a.depthStoreOp, a.depthReadOnly, a.depthClearValue,
+                    a.stencilLoadOp, a.stencilStoreOp, a.stencilReadOnly, a.stencilClearValue) ==
+           std::tie(b.view, b.depthLoadOp, b.depthStoreOp, b.depthReadOnly, b.depthClearValue,
+                    b.stencilLoadOp, b.stencilStoreOp, b.stencilReadOnly, b.stencilClearValue);
+}
+
+bool operator==(const PackedRenderPassDescriptor &a, const PackedRenderPassDescriptor &b)
+{
+    return std::tie(a.colorAttachments, a.depthStencilAttachment) ==
+           std::tie(b.colorAttachments, b.depthStencilAttachment);
+}
+
+bool operator!=(const PackedRenderPassDescriptor &a, const PackedRenderPassDescriptor &b)
+{
+    return !(a == b);
+}
+
+wgpu::RenderPassEncoder CreateRenderPass(wgpu::CommandEncoder commandEncoder,
+                                         const webgpu::PackedRenderPassDescriptor &packedDesc)
+{
+    WGPURenderPassDescriptor renderPassDesc = WGPU_RENDER_PASS_DESCRIPTOR_INIT;
+
+    angle::FixedVector<WGPURenderPassColorAttachment, gl::IMPLEMENTATION_MAX_DRAW_BUFFERS>
+        colorAttachments;
+    for (size_t i = 0; i < packedDesc.colorAttachments.size(); i++)
+    {
+        const webgpu::PackedRenderPassColorAttachment &packedColorAttachment =
+            packedDesc.colorAttachments[i];
+        WGPURenderPassColorAttachment colorAttachment = WGPU_RENDER_PASS_COLOR_ATTACHMENT_INIT;
+
+        colorAttachment.view          = packedColorAttachment.view.get();
+        colorAttachment.depthSlice    = packedColorAttachment.depthSlice;
+        colorAttachment.resolveTarget = nullptr;
+        colorAttachment.loadOp        = packedColorAttachment.loadOp;
+        colorAttachment.storeOp       = packedColorAttachment.storeOp;
+        colorAttachment.clearValue    = {
+            packedColorAttachment.clearValue.red, packedColorAttachment.clearValue.green,
+            packedColorAttachment.clearValue.blue, packedColorAttachment.clearValue.alpha};
+
+        colorAttachments.push_back(colorAttachment);
+    }
+    renderPassDesc.colorAttachments     = colorAttachments.data();
+    renderPassDesc.colorAttachmentCount = colorAttachments.size();
+
+    WGPURenderPassDepthStencilAttachment depthStencilAttachment =
+        WGPU_RENDER_PASS_DEPTH_STENCIL_ATTACHMENT_INIT;
+    if (packedDesc.depthStencilAttachment.has_value())
+    {
+        const webgpu::PackedRenderPassDepthStencilAttachment &packedDepthStencilAttachment =
+            packedDesc.depthStencilAttachment.value();
+
+        depthStencilAttachment.view              = packedDepthStencilAttachment.view.get();
+        depthStencilAttachment.depthLoadOp       = packedDepthStencilAttachment.depthLoadOp;
+        depthStencilAttachment.depthStoreOp      = packedDepthStencilAttachment.depthStoreOp;
+        depthStencilAttachment.depthReadOnly     = packedDepthStencilAttachment.depthReadOnly;
+        depthStencilAttachment.depthClearValue   = packedDepthStencilAttachment.depthClearValue;
+        depthStencilAttachment.stencilLoadOp     = packedDepthStencilAttachment.stencilLoadOp;
+        depthStencilAttachment.stencilStoreOp    = packedDepthStencilAttachment.stencilStoreOp;
+        depthStencilAttachment.stencilReadOnly   = packedDepthStencilAttachment.stencilReadOnly;
+        depthStencilAttachment.stencilClearValue = packedDepthStencilAttachment.stencilClearValue;
+
+        renderPassDesc.depthStencilAttachment = &depthStencilAttachment;
+    }
+
+    return wgpu::RenderPassEncoder::Acquire(
+        wgpuCommandEncoderBeginRenderPass(commandEncoder.Get(), &renderPassDesc));
 }
 
 void GenerateCaps(const wgpu::Limits &limitsWgpu,

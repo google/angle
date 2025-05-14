@@ -313,7 +313,7 @@ enum class RenderPassClosureReason
 
 struct ClearValues
 {
-    WGPUColor clearColor;
+    gl::ColorF clearColor;
     uint32_t depthSlice;
     float depthValue;
     uint32_t stencilValue;
@@ -368,6 +368,46 @@ class ClearValuesArray final
     gl::AttachmentsMask mEnabled;
 };
 
+struct PackedRenderPassColorAttachment
+{
+    TextureViewHandle view;
+    uint32_t depthSlice = WGPU_DEPTH_SLICE_UNDEFINED;
+    WGPULoadOp loadOp   = WGPULoadOp_Undefined;
+    WGPUStoreOp storeOp = WGPUStoreOp_Undefined;
+    gl::ColorF clearValue;
+};
+
+bool operator==(const PackedRenderPassColorAttachment &a, const PackedRenderPassColorAttachment &b);
+
+struct PackedRenderPassDepthStencilAttachment
+{
+    TextureViewHandle view;
+    WGPULoadOp depthLoadOp     = WGPULoadOp_Undefined;
+    WGPUStoreOp depthStoreOp   = WGPUStoreOp_Undefined;
+    bool depthReadOnly         = false;
+    float depthClearValue      = NAN;
+    WGPULoadOp stencilLoadOp   = WGPULoadOp_Undefined;
+    WGPUStoreOp stencilStoreOp = WGPUStoreOp_Undefined;
+    bool stencilReadOnly       = false;
+    uint32_t stencilClearValue = 0;
+};
+
+bool operator==(const PackedRenderPassDepthStencilAttachment &a,
+                const PackedRenderPassDepthStencilAttachment &b);
+
+struct PackedRenderPassDescriptor
+{
+    angle::FixedVector<PackedRenderPassColorAttachment, gl::IMPLEMENTATION_MAX_DRAW_BUFFERS>
+        colorAttachments;
+    std::optional<PackedRenderPassDepthStencilAttachment> depthStencilAttachment;
+};
+
+bool operator==(const PackedRenderPassDescriptor &a, const PackedRenderPassDescriptor &b);
+bool operator!=(const PackedRenderPassDescriptor &a, const PackedRenderPassDescriptor &b);
+
+wgpu::RenderPassEncoder CreateRenderPass(wgpu::CommandEncoder commandEncoder,
+                                         const webgpu::PackedRenderPassDescriptor &desc);
+
 void GenerateCaps(const wgpu::Limits &limitWgpu,
                   gl::Caps *glCaps,
                   gl::TextureCapsMap *glTextureCapsMap,
@@ -380,14 +420,15 @@ void GenerateCaps(const wgpu::Limits &limitWgpu,
 DisplayWgpu *GetDisplay(const gl::Context *context);
 wgpu::Device GetDevice(const gl::Context *context);
 wgpu::Instance GetInstance(const gl::Context *context);
-WGPURenderPassColorAttachment CreateNewClearColorAttachment(WGPUColor clearValue,
-                                                            uint32_t depthSlice,
-                                                            TextureViewHandle textureView);
-WGPURenderPassDepthStencilAttachment CreateNewDepthStencilAttachment(float depthClearValue,
-                                                                     uint32_t stencilClearValue,
-                                                                     TextureViewHandle textureView,
-                                                                     bool hasDepthValue   = false,
-                                                                     bool hasStencilValue = false);
+PackedRenderPassColorAttachment CreateNewClearColorAttachment(const gl::ColorF &clearValue,
+                                                              uint32_t depthSlice,
+                                                              TextureViewHandle textureView);
+PackedRenderPassDepthStencilAttachment CreateNewDepthStencilAttachment(
+    float depthClearValue,
+    uint32_t stencilClearValue,
+    TextureViewHandle textureView,
+    bool hasDepthValue   = false,
+    bool hasStencilValue = false);
 
 bool IsWgpuError(wgpu::WaitStatus waitStatus);
 bool IsWgpuError(wgpu::MapAsyncStatus mapAsyncStatus);

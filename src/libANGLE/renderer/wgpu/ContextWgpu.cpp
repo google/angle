@@ -1079,12 +1079,11 @@ void ContextWgpu::handleError(GLenum errorCode,
     mErrors->handleError(errorCode, errorStream.str().c_str(), file, function, line);
 }
 
-angle::Result ContextWgpu::startRenderPass(const WGPURenderPassDescriptor &desc)
+angle::Result ContextWgpu::startRenderPass(const webgpu::PackedRenderPassDescriptor &desc)
 {
     ensureCommandEncoderCreated();
 
-    mCurrentRenderPass = wgpu::RenderPassEncoder::Acquire(
-        wgpuCommandEncoderBeginRenderPass(mCurrentCommandEncoder.Get(), &desc));
+    mCurrentRenderPass = webgpu::CreateRenderPass(mCurrentCommandEncoder, desc);
     mDirtyBits |= mNewRenderPassDirtyBits;
 
     return angle::Result::Continue;

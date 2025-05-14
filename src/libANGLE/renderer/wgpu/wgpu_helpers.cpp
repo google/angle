@@ -126,7 +126,7 @@ angle::Result ImageHelper::flushSingleLevelUpdates(ContextWgpu *contextWgpu,
         CommandEncoderHandle::Acquire(wgpuDeviceCreateCommandEncoder(device.get(), nullptr));
     WGPUTexelCopyTextureInfo dst = WGPU_TEXEL_COPY_TEXTURE_INFO_INIT;
     dst.texture                  = mTexture.get();
-    std::vector<WGPURenderPassColorAttachment> colorAttachments;
+    std::vector<PackedRenderPassColorAttachment> colorAttachments;
     TextureViewHandle textureView;
     ANGLE_TRY(createTextureViewSingleLevel(levelGL, 0, textureView));
     bool updateDepth      = false;

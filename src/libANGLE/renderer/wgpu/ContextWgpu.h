@@ -306,7 +306,7 @@ class ContextWgpu : public ContextImpl
     {
         return mDisplay->getFormat(internalFormat);
     }
-    angle::Result startRenderPass(const WGPURenderPassDescriptor &desc);
+    angle::Result startRenderPass(const webgpu::PackedRenderPassDescriptor &desc);
     angle::Result endRenderPass(webgpu::RenderPassClosureReason closureReason);
 
     bool hasActiveRenderPass() { return mCurrentRenderPass != nullptr; }
