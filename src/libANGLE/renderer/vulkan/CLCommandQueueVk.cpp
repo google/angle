@@ -1587,21 +1587,45 @@ angle::Result CLCommandQueueVk::addMemoryDependencies(cl::Memory *clMem, MemoryH
     // Take an usage count
     mCommandsStateMap[mComputePassCommands->getQueueSerial()].memories.emplace_back(clMem);
 
-    // Handle possible resource RAW hazard
+    // Handle possible resource hazards
     bool needsBarrier = false;
+    // A barrier is needed in the following cases
+    //  - Presence of a pending write, irrespective of the current usage
+    //  - A write usage with a pending read
+    if (mWriteDependencyTracker.contains(clMem) || mWriteDependencyTracker.contains(parentMem) ||
+        mWriteDependencyTracker.size() == kMaxDependencyTrackerSize)
+    {
+        needsBarrier = true;
+    }
+    else if (isWritable && (mReadDependencyTracker.contains(clMem) ||
+                            mReadDependencyTracker.contains(parentMem) ||
+                            mReadDependencyTracker.size() == kMaxDependencyTrackerSize))
+    {
+        needsBarrier = true;
+    }
+
+    // If a barrier is inserted with the current usage, we can safely clear existing dependencies as
+    // this barrier signalling ensures their completion.
+    if (needsBarrier)
+    {
+        mReadDependencyTracker.clear();
+        mWriteDependencyTracker.clear();
+    }
+    // Add the current mem object, to the appropriate dependency list
     if (isWritable)
     {
-        // Texel buffers have backing buffer objects
-        if (mDependencyTracker.contains(clMem) || mDependencyTracker.contains(parentMem) ||
-            mDependencyTracker.size() == kMaxDependencyTrackerSize)
-        {
-            needsBarrier = true;
-            mDependencyTracker.clear();
-        }
-        mDependencyTracker.insert(clMem);
+        mWriteDependencyTracker.insert(clMem);
         if (parentMem)
         {
-            mDependencyTracker.insert(parentMem);
+            mWriteDependencyTracker.insert(parentMem);
+        }
+    }
+    else
+    {
+        mReadDependencyTracker.insert(clMem);
+        if (parentMem)
+        {
+            mReadDependencyTracker.insert(parentMem);
         }
     }
 

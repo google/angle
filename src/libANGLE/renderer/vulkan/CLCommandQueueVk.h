@@ -497,7 +497,8 @@ class CLCommandQueueVk : public CLCommandQueueImpl
     cl::EventPtrs mExternalEvents;
 
     // Keep track of kernel resources on prior kernel enqueues
-    angle::HashSet<cl::Object *> mDependencyTracker;
+    angle::HashSet<cl::Object *> mWriteDependencyTracker;
+    angle::HashSet<cl::Object *> mReadDependencyTracker;
 
     CommandsStateMap mCommandsStateMap;
 
