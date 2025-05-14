@@ -357,6 +357,11 @@ bool IsSwiftshaderDevice()
     return HasSystemDeviceID(kVendorID_GOOGLE, kDeviceID_Swiftshader);
 }
 
+bool IsLavapipeDevice()
+{
+    return HasSystemDeviceID(kVendorID_Mesa, kDeviceID_Lavapipe);
+}
+
 bool SwiftshaderTestsEnabled()
 {
 #if defined(ANGLE_ENABLE_SWIFTSHADER)
