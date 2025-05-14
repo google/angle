@@ -359,6 +359,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     // Hit in the asphalt_9
     // http://anglebug.com/42265363
     // dead_by_daylight
+    // From: TraceTest.diablo_immortal http://anglebug.com/42266309 (Linux AMD)
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
      nullptr,
      nullptr,
@@ -437,6 +438,7 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     // From: TraceTest.special_forces_group_2 http://anglebug.com/42264123
     // http://anglebug.com/397775556
     // From: TraceTest.life_is_strange http://anglebug.com/42266180 (Linux AMD)
+    // From: TraceTest.diablo_immortal http://anglebug.com/42266309 (Linux AMD)
     {"SYNC-HAZARD-READ-AFTER-WRITE",
      nullptr,
      nullptr,
@@ -450,11 +452,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
          "command = vkCmdDrawIndexed",
          "prior_command = vkCmdCopyBuffer",
      }},
-    // From: TraceTest.diablo_immortal http://anglebug.com/42266309
-    {"SYNC-HAZARD-WRITE-AFTER-WRITE",
-     "Access info (usage: "
-     "SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_WRITE, prior_usage: "
-     "SYNC_IMAGE_LAYOUT_TRANSITION, write_barriers: 0"},
     // From: TraceTest.diablo_immortal http://anglebug.com/42266309
     {"SYNC-HAZARD-WRITE-AFTER-READ",
      "with loadOp VK_ATTACHMENT_LOAD_OP_DONT_CARE. Access info (usage: "
