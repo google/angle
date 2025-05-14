@@ -2011,9 +2011,6 @@ TEST_P(EGLSingleBufferTest, OnCreateWindowSurface)
 // EGL_SINGLE_BUFFER is being returned erroneously.
 TEST_P(EGLSingleBufferTest, VerifyMutableRenderBufferKHR)
 {
-    // TODO(b/417459061): Fails on Intel + Windows.
-    ANGLE_SKIP_TEST_IF(IsIntel() && IsWindows());
-
     EGLConfig config = EGL_NO_CONFIG_KHR;
     ANGLE_SKIP_TEST_IF(!chooseConfig(&config, false));
 
