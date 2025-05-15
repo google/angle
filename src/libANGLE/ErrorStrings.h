@@ -469,6 +469,7 @@ inline constexpr const char *kNegativeAttachments = "Negative number of attachme
 inline constexpr const char *kNegativeBaseViewIndex = "Negative baseViewIndex.";
 inline constexpr const char *kNegativeBufSize = "Negative bufSize.";
 inline constexpr const char *kNegativeCount = "Negative count.";
+inline constexpr const char *kNegativeDrawcount = "Negative drawcount.";
 inline constexpr const char *kNegativeHeightWidthDepth = "Negative height, width, or depth.";
 inline constexpr const char *kNegativeLayer = "Negative layer.";
 inline constexpr const char *kNegativeLength = "Negative length.";

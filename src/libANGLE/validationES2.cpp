@@ -5889,6 +5889,11 @@ bool ValidateMultiDrawArraysANGLE(const Context *context,
                                   const GLsizei *counts,
                                   GLsizei drawcount)
 {
+    if (drawcount < 0)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeDrawcount);
+        return false;
+    }
     for (GLsizei drawID = 0; drawID < drawcount; ++drawID)
     {
         if (!ValidateDrawArrays(context, entryPoint, mode, firsts[drawID], counts[drawID]))
@@ -5907,6 +5912,11 @@ bool ValidateMultiDrawElementsANGLE(const Context *context,
                                     const GLvoid *const *indices,
                                     GLsizei drawcount)
 {
+    if (drawcount < 0)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeDrawcount);
+        return false;
+    }
     for (GLsizei drawID = 0; drawID < drawcount; ++drawID)
     {
         if (!ValidateDrawElements(context, entryPoint, mode, counts[drawID], type, indices[drawID]))

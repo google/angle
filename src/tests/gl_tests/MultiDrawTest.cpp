@@ -592,6 +592,47 @@ TEST_P(MultiDrawTest, CanCompile)
     SetupProgram();
 }
 
+// Tests basic drawcount validation
+TEST_P(MultiDrawTest, Validation)
+{
+    ANGLE_SKIP_TEST_IF(!requestMultiDrawExtension());
+
+    const GLint first   = 0;
+    const GLsizei count = 0;
+    const GLvoid *const indices[1]{nullptr};
+
+    glMultiDrawArraysANGLE(GL_TRIANGLES, &first, &count, -1);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glMultiDrawArraysANGLE(GL_TRIANGLES, &first, &count, 0);
+    EXPECT_GL_NO_ERROR();
+
+    glMultiDrawElementsANGLE(GL_TRIANGLES, &count, GL_UNSIGNED_SHORT, indices, -1);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glMultiDrawElementsANGLE(GL_TRIANGLES, &count, GL_UNSIGNED_SHORT, indices, 0);
+    EXPECT_GL_NO_ERROR();
+
+    if (IsInstancedTest())
+    {
+        const GLsizei instances = 0;
+
+        glMultiDrawArraysInstancedANGLE(GL_TRIANGLES, &first, &count, &instances, -1);
+        EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+        glMultiDrawArraysInstancedANGLE(GL_TRIANGLES, &first, &count, &instances, 0);
+        EXPECT_GL_NO_ERROR();
+
+        glMultiDrawElementsInstancedANGLE(GL_TRIANGLES, &count, GL_UNSIGNED_SHORT, indices,
+                                          &instances, -1);
+        EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+        glMultiDrawElementsInstancedANGLE(GL_TRIANGLES, &count, GL_UNSIGNED_SHORT, indices,
+                                          &instances, 0);
+        EXPECT_GL_NO_ERROR();
+    }
+}
+
 // Tests basic functionality of glMultiDrawArraysANGLE
 TEST_P(MultiDrawTest, MultiDrawArrays)
 {

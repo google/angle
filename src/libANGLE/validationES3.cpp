@@ -3599,6 +3599,11 @@ bool ValidateMultiDrawArraysInstancedANGLE(const Context *context,
             return false;
         }
     }
+    if (drawcount < 0)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeDrawcount);
+        return false;
+    }
     for (GLsizei drawID = 0; drawID < drawcount; ++drawID)
     {
         if (!ValidateDrawArraysInstancedBase(context, entryPoint, mode, firsts[drawID],
@@ -3630,6 +3635,11 @@ bool ValidateMultiDrawElementsInstancedANGLE(const Context *context,
         {
             return false;
         }
+    }
+    if (drawcount < 0)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeDrawcount);
+        return false;
     }
     for (GLsizei drawID = 0; drawID < drawcount; ++drawID)
     {
@@ -3689,6 +3699,11 @@ bool ValidateMultiDrawArraysInstancedBaseInstanceANGLE(const Context *context,
                                                        const GLuint *baseInstances,
                                                        GLsizei drawcount)
 {
+    if (!context->getExtensions().baseVertexBaseInstanceANGLE)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
     if (!context->getExtensions().multiDrawANGLE)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
@@ -3696,6 +3711,7 @@ bool ValidateMultiDrawArraysInstancedBaseInstanceANGLE(const Context *context,
     }
     if (drawcount < 0)
     {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeDrawcount);
         return false;
     }
     for (GLsizei drawID = 0; drawID < drawcount; ++drawID)
@@ -3721,6 +3737,11 @@ bool ValidateMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(const Context
                                                                    const GLuint *baseInstances,
                                                                    GLsizei drawcount)
 {
+    if (!context->getExtensions().baseVertexBaseInstanceANGLE)
+    {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
+        return false;
+    }
     if (!context->getExtensions().multiDrawANGLE)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
@@ -3728,6 +3749,7 @@ bool ValidateMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(const Context
     }
     if (drawcount < 0)
     {
+        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeDrawcount);
         return false;
     }
     for (GLsizei drawID = 0; drawID < drawcount; ++drawID)
