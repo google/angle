@@ -580,10 +580,27 @@ void GL_APIENTRY GL_DrawArraysInstancedBaseInstanceANGLE(GLenum mode,
     {
         PrimitiveMode modePacked = PackParam<PrimitiveMode>(mode);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateDrawArraysInstancedBaseInstanceANGLE(
-                                context, angle::EntryPoint::GLDrawArraysInstancedBaseInstanceANGLE,
-                                modePacked, first, count, instanceCount, baseInstance));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().baseVertexBaseInstanceANGLE))
+            {
+#if defined(ANGLE_ENABLE_ASSERTS)
+                const uint32_t errorCount = context->getPushedErrorCount();
+#endif
+                isCallValid = ValidateDrawArraysInstancedBaseInstanceANGLE(
+                    context, angle::EntryPoint::GLDrawArraysInstancedBaseInstanceANGLE, modePacked,
+                    first, count, instanceCount, baseInstance);
+#if defined(ANGLE_ENABLE_ASSERTS)
+                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+#endif
+            }
+            else
+            {
+                RecordVersionErrorESEXT(context,
+                                        angle::EntryPoint::GLDrawArraysInstancedBaseInstanceANGLE);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->drawArraysInstancedBaseInstanceANGLE(modePacked, first, count, instanceCount,
@@ -622,11 +639,28 @@ void GL_APIENTRY GL_DrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode
         PrimitiveMode modePacked    = PackParam<PrimitiveMode>(mode);
         DrawElementsType typePacked = PackParam<DrawElementsType>(type);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateDrawElementsInstancedBaseVertexBaseInstanceANGLE(
-                 context, angle::EntryPoint::GLDrawElementsInstancedBaseVertexBaseInstanceANGLE,
-                 modePacked, count, typePacked, indices, instanceCount, baseVertex, baseInstance));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().baseVertexBaseInstanceANGLE))
+            {
+#if defined(ANGLE_ENABLE_ASSERTS)
+                const uint32_t errorCount = context->getPushedErrorCount();
+#endif
+                isCallValid = ValidateDrawElementsInstancedBaseVertexBaseInstanceANGLE(
+                    context, angle::EntryPoint::GLDrawElementsInstancedBaseVertexBaseInstanceANGLE,
+                    modePacked, count, typePacked, indices, instanceCount, baseVertex,
+                    baseInstance);
+#if defined(ANGLE_ENABLE_ASSERTS)
+                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+#endif
+            }
+            else
+            {
+                RecordVersionErrorESEXT(
+                    context, angle::EntryPoint::GLDrawElementsInstancedBaseVertexBaseInstanceANGLE);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->drawElementsInstancedBaseVertexBaseInstanceANGLE(
@@ -663,11 +697,27 @@ void GL_APIENTRY GL_MultiDrawArraysInstancedBaseInstanceANGLE(GLenum mode,
     {
         PrimitiveMode modePacked = PackParam<PrimitiveMode>(mode);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateMultiDrawArraysInstancedBaseInstanceANGLE(
-                 context, angle::EntryPoint::GLMultiDrawArraysInstancedBaseInstanceANGLE,
-                 modePacked, firsts, counts, instanceCounts, baseInstances, drawcount));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().baseVertexBaseInstanceANGLE))
+            {
+#if defined(ANGLE_ENABLE_ASSERTS)
+                const uint32_t errorCount = context->getPushedErrorCount();
+#endif
+                isCallValid = ValidateMultiDrawArraysInstancedBaseInstanceANGLE(
+                    context, angle::EntryPoint::GLMultiDrawArraysInstancedBaseInstanceANGLE,
+                    modePacked, firsts, counts, instanceCounts, baseInstances, drawcount);
+#if defined(ANGLE_ENABLE_ASSERTS)
+                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+#endif
+            }
+            else
+            {
+                RecordVersionErrorESEXT(
+                    context, angle::EntryPoint::GLMultiDrawArraysInstancedBaseInstanceANGLE);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->multiDrawArraysInstancedBaseInstance(modePacked, firsts, counts,
@@ -709,13 +759,30 @@ GL_MultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
         PrimitiveMode modePacked    = PackParam<PrimitiveMode>(mode);
         DrawElementsType typePacked = PackParam<DrawElementsType>(type);
         SCOPED_SHARE_CONTEXT_LOCK(context);
-        bool isCallValid =
-            (context->skipValidation() ||
-             ValidateMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(
-                 context,
-                 angle::EntryPoint::GLMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE,
-                 modePacked, counts, typePacked, indices, instanceCounts, baseVertices,
-                 baseInstances, drawcount));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().baseVertexBaseInstanceANGLE))
+            {
+#if defined(ANGLE_ENABLE_ASSERTS)
+                const uint32_t errorCount = context->getPushedErrorCount();
+#endif
+                isCallValid = ValidateMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(
+                    context,
+                    angle::EntryPoint::GLMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE,
+                    modePacked, counts, typePacked, indices, instanceCounts, baseVertices,
+                    baseInstances, drawcount);
+#if defined(ANGLE_ENABLE_ASSERTS)
+                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+#endif
+            }
+            else
+            {
+                RecordVersionErrorESEXT(
+                    context,
+                    angle::EntryPoint::GLMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->multiDrawElementsInstancedBaseVertexBaseInstance(

@@ -1666,16 +1666,6 @@ def get_validation_expression(api, cmd_name, entry_point_name, internal_params, 
     expr = "Validate{name}({params})".format(
         name=name, params=", ".join(extra_params + [entry_point_name] + internal_params))
 
-    # Extensions temporarily skipped from autogen
-    skipped_exts = [
-        'GL_ANGLE_base_vertex_base_instance',
-    ]
-
-    # Validation expression for the entry points from the extensions above
-    if sources[0] in skipped_exts:
-        return "bool isCallValid = (context->skipValidation() || {validation_expression});".format(
-            validation_expression=expr)
-
     def get_camel_case(name_with_underscores):
         words = name_with_underscores.split('_')
         words = [words[2]] + [(word[0].upper() + word[1:]) for word in words[3:]] + [words[1]]
@@ -1715,7 +1705,6 @@ def get_validation_expression(api, cmd_name, entry_point_name, internal_params, 
     ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
 #endif""" if check_consistency else ""
 
-    # Validation logic for entry points with conditional support
     return """bool isCallValid = context->skipValidation();
 if (!isCallValid)
 {{

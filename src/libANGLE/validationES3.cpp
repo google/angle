@@ -3660,12 +3660,6 @@ bool ValidateDrawArraysInstancedBaseInstanceANGLE(const Context *context,
                                                   GLsizei instanceCount,
                                                   GLuint baseInstance)
 {
-    if (!context->getExtensions().baseVertexBaseInstanceANGLE)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     return ValidateDrawArraysInstancedBase(context, entryPoint, mode, first, count, instanceCount,
                                            baseInstance);
 }
@@ -3680,12 +3674,6 @@ bool ValidateDrawElementsInstancedBaseVertexBaseInstanceANGLE(const Context *con
                                                               GLint baseVertex,
                                                               GLuint baseInstance)
 {
-    if (!context->getExtensions().baseVertexBaseInstanceANGLE)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     return ValidateDrawElementsInstancedBase(context, entryPoint, mode, count, type, indices,
                                              instanceCount, baseInstance);
 }
@@ -3699,11 +3687,6 @@ bool ValidateMultiDrawArraysInstancedBaseInstanceANGLE(const Context *context,
                                                        const GLuint *baseInstances,
                                                        GLsizei drawcount)
 {
-    if (!context->getExtensions().baseVertexBaseInstanceANGLE)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
     if (!context->getExtensions().multiDrawANGLE)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
@@ -3737,11 +3720,6 @@ bool ValidateMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(const Context
                                                                    const GLuint *baseInstances,
                                                                    GLsizei drawcount)
 {
-    if (!context->getExtensions().baseVertexBaseInstanceANGLE)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
     if (!context->getExtensions().multiDrawANGLE)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
