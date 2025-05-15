@@ -2241,48 +2241,93 @@ oo = 1.0;
     EXPECT_EQ(0u, program);
 }
 
-// Tests bindAttribLocations for reserved prefixes and length limits
+// Tests bindAttribLocation for reserved prefixes and length limits
 TEST_P(WebGLCompatibilityTest, BindAttribLocationLimitation)
 {
-    constexpr int maxLocStringLength = 256;
-    const std::string tooLongString(maxLocStringLength + 1, '_');
+    // A program must exist for binding attribute locations
+    ANGLE_GL_PROGRAM(p, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
 
-    glBindAttribLocation(0, 0, "_webgl_var");
-
+    glBindAttribLocation(p, 0, "gl_attr");
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
-    glBindAttribLocation(0, 0, static_cast<const GLchar *>(tooLongString.c_str()));
+    glBindAttribLocation(p, 0, "webgl_attr");
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
+    glBindAttribLocation(p, 0, "_webgl_attr");
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    const int maxStringLength = getClientMajorVersion() < 3 ? 256 : 1024;
+    const std::string tooLongString(maxStringLength + 1, '_');
+
+    glBindAttribLocation(p, 0, static_cast<const GLchar *>(tooLongString.c_str()));
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 }
 
-// Tests getAttribLocation for reserved prefixes
-TEST_P(WebGLCompatibilityTest, GetAttribLocationNameLimitation)
+// Tests getAttribLocation for reserved prefixes and length limits
+TEST_P(WebGLCompatibilityTest, GetAttribLocationLimitation)
 {
-    GLint attrLocation;
+    // A program must exist for querying attribute locations
+    ANGLE_GL_PROGRAM(p, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
 
-    attrLocation = glGetAttribLocation(0, "gl_attr");
-    EXPECT_GL_NO_ERROR();
-    EXPECT_EQ(-1, attrLocation);
+    GLint location = -2;
 
-    attrLocation = glGetAttribLocation(0, "webgl_attr");
+    location = glGetAttribLocation(p, "gl_attr");
     EXPECT_GL_NO_ERROR();
-    EXPECT_EQ(-1, attrLocation);
+    EXPECT_EQ(-1, location);
 
-    attrLocation = glGetAttribLocation(0, "_webgl_attr");
+    location = glGetAttribLocation(p, "webgl_attr");
     EXPECT_GL_NO_ERROR();
-    EXPECT_EQ(-1, attrLocation);
+    EXPECT_EQ(-1, location);
+
+    location = glGetAttribLocation(p, "_webgl_attr");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(-1, location);
+
+    const int maxStringLength = getClientMajorVersion() < 3 ? 256 : 1024;
+    const std::string tooLongString(maxStringLength + 1, '_');
+
+    location = glGetAttribLocation(p, static_cast<const GLchar *>(tooLongString.c_str()));
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+    EXPECT_EQ(-1, location);
 }
 
-// Tests getAttribLocation for length limits
-TEST_P(WebGLCompatibilityTest, GetAttribLocationLengthLimitation)
+// Tests bindUniformLocation for reserved prefixes
+TEST_P(WebGLCompatibilityTest, BindUniformLocationLimitation)
 {
-    constexpr int maxLocStringLength = 256;
-    const std::string tooLongString(maxLocStringLength + 1, '_');
+    ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_CHROMIUM_bind_uniform_location"));
 
-    glGetAttribLocation(0, static_cast<const GLchar *>(tooLongString.c_str()));
+    // A program must exist for binding uniform locations
+    ANGLE_GL_PROGRAM(p, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
 
-    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+    glBindUniformLocationCHROMIUM(p, 0, "gl_var");
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glBindUniformLocationCHROMIUM(p, 0, "webgl_var");
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glBindUniformLocationCHROMIUM(p, 0, "_webgl_var");
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
+// Tests getUniformLocation for reserved prefixes
+TEST_P(WebGLCompatibilityTest, GetUniformLocationLimitation)
+{
+    // A program must exist for querying uniform locations
+    ANGLE_GL_PROGRAM(p, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+
+    GLint location = -2;
+
+    location = glGetUniformLocation(p, "gl_var");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(-1, location);
+
+    location = glGetUniformLocation(p, "webgl_var");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(-1, location);
+
+    location = glGetUniformLocation(p, "_webgl_var");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(-1, location);
 }
 
 // Test that having no attributes with a zero divisor is valid in WebGL2

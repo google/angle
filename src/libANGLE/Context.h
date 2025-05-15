@@ -709,6 +709,12 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     Shader *getShaderResolveCompile(ShaderProgramID handle) const;
     Shader *getShaderNoResolveCompile(ShaderProgramID handle) const;
 
+    bool nameStartsWithReservedPrefix(const GLchar *name) const
+    {
+        return (strncmp(name, "gl_", 3) == 0) ||
+               (isWebGL() && (strncmp(name, "webgl_", 6) == 0 || strncmp(name, "_webgl_", 7) == 0));
+    }
+
     ANGLE_INLINE bool isTextureGenerated(TextureID texture) const
     {
         return mState.mTextureManager->isHandleGenerated(texture);
