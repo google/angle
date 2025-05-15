@@ -7826,7 +7826,7 @@ CallCapture CaptureCreateShaderProgramvEXT(const State &glState,
                                            bool isCallValid,
                                            ShaderType typePacked,
                                            GLsizei count,
-                                           const GLchar **strings,
+                                           const GLchar *const *strings,
                                            GLuint returnValue)
 {
     ParamBuffer paramBuffer;
@@ -7845,8 +7845,8 @@ CallCapture CaptureCreateShaderProgramvEXT(const State &glState,
     else
     {
         ParamCapture stringsParam("strings", ParamType::TGLcharConstPointerPointer);
-        InitParamValue(ParamType::TGLcharConstPointerPointer, static_cast<const GLchar **>(nullptr),
-                       &stringsParam.value);
+        InitParamValue(ParamType::TGLcharConstPointerPointer,
+                       static_cast<const GLchar *const *>(nullptr), &stringsParam.value);
         paramBuffer.addParam(std::move(stringsParam));
     }
 

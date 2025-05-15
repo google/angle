@@ -574,9 +574,8 @@ void ReplayTraceFunctionCall(const CallCapture &call, const TraceFunctionMap &cu
                                    captures[2].value.GLcharConstPointerPointerVal);
             break;
         case angle::EntryPoint::GLCreateShaderProgramvEXT:
-            glCreateShaderProgramvEXT(
-                captures[0].value.GLenumVal, captures[1].value.GLsizeiVal,
-                const_cast<const char **>(captures[2].value.GLcharConstPointerPointerVal));
+            glCreateShaderProgramvEXT(captures[0].value.GLenumVal, captures[1].value.GLsizeiVal,
+                                      captures[2].value.GLcharConstPointerPointerVal);
             break;
         case angle::EntryPoint::GLCullFace:
             glCullFace(captures[0].value.GLenumVal);

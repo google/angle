@@ -1403,7 +1403,7 @@ void GL_APIENTRY GL_DrawElementsInstancedANGLE(GLenum mode,
           "context = %d, mode = %s, count = %d, type = %s, indices = 0x%016" PRIxPTR
           ", primcount = %d",
           CID(context), GLenumToString(GLESEnum::PrimitiveType, mode), count,
-          GLenumToString(GLESEnum::PrimitiveType, type), (uintptr_t)indices, primcount);
+          GLenumToString(GLESEnum::DrawElementsType, type), (uintptr_t)indices, primcount);
 
     if (ANGLE_LIKELY(context != nullptr))
     {
@@ -7315,7 +7315,7 @@ void GL_APIENTRY GL_DrawElementsInstancedBaseInstanceEXT(GLenum mode,
           "context = %d, mode = %s, count = %d, type = %s, indices = 0x%016" PRIxPTR
           ", instancecount = %d, baseinstance = %u",
           CID(context), GLenumToString(GLESEnum::PrimitiveType, mode), count,
-          GLenumToString(GLESEnum::PrimitiveType, type), (uintptr_t)indices, instancecount,
+          GLenumToString(GLESEnum::DrawElementsType, type), (uintptr_t)indices, instancecount,
           baseinstance);
 
     if (ANGLE_LIKELY(context != nullptr))
@@ -11498,7 +11498,9 @@ void GL_APIENTRY GL_BindProgramPipelineEXT(GLuint pipeline)
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
 
-GLuint GL_APIENTRY GL_CreateShaderProgramvEXT(GLenum type, GLsizei count, const GLchar **strings)
+GLuint GL_APIENTRY GL_CreateShaderProgramvEXT(GLenum type,
+                                              GLsizei count,
+                                              const GLchar *const *strings)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
     Context *context = GetValidGlobalContext();
@@ -15756,6 +15758,8 @@ void GL_APIENTRY GL_BlitFramebufferNV(GLint srcX0,
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
 
+// GL_NV_pack_subimage
+
 // GL_NV_pixel_buffer_object
 
 // GL_NV_polygon_mode
@@ -15873,6 +15877,7 @@ void GL_APIENTRY GL_EGLImageTargetTexture2DOES(GLenum target, GLeglImageOES imag
 }
 
 // GL_OES_EGL_image_external
+// EGLImageTargetTexture2DOES is already defined.
 
 // GL_OES_EGL_image_external_essl3
 

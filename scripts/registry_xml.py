@@ -326,6 +326,8 @@ gles_skipped_commands = [
     "glTextureStorage1DEXT",
     "glTextureStorage2DEXT",
     "glTextureStorage3DEXT",
+    # GL_OVR_multiview
+    "glNamedFramebufferTextureMultiviewOVR",
 ]
 
 def check_sorted(name, l):

@@ -4723,7 +4723,9 @@ void GL_APIENTRY glBindProgramPipelineEXT(GLuint pipeline)
     return GL_BindProgramPipelineEXT(pipeline);
 }
 
-GLuint GL_APIENTRY glCreateShaderProgramvEXT(GLenum type, GLsizei count, const GLchar **strings)
+GLuint GL_APIENTRY glCreateShaderProgramvEXT(GLenum type,
+                                             GLsizei count,
+                                             const GLchar *const *strings)
 {
     return GL_CreateShaderProgramvEXT(type, count, strings);
 }
@@ -5393,6 +5395,8 @@ void GL_APIENTRY glBlitFramebufferNV(GLint srcX0,
     return GL_BlitFramebufferNV(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask,
                                 filter);
 }
+
+// GL_NV_pack_subimage
 
 // GL_NV_pixel_buffer_object
 

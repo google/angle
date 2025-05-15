@@ -1813,16 +1813,6 @@ bool ValidateCreateShaderProgramvBase(const Context *context,
     return true;
 }
 
-bool ValidateCreateShaderProgramvBase(const Context *context,
-                                      angle::EntryPoint entryPoint,
-                                      ShaderType type,
-                                      GLsizei count,
-                                      const GLchar **strings)
-{
-    const GLchar *const *tmpStrings = strings;
-    return ValidateCreateShaderProgramvBase(context, entryPoint, type, count, tmpStrings);
-}
-
 bool ValidateGetProgramPipelineivBase(const Context *context,
                                       angle::EntryPoint entryPoint,
                                       ProgramPipelineID pipeline,

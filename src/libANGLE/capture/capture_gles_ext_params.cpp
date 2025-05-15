@@ -3812,7 +3812,7 @@ void CaptureCreateShaderProgramvEXT_strings(const State &glState,
                                             bool isCallValid,
                                             ShaderType typePacked,
                                             GLsizei count,
-                                            const GLchar **strings,
+                                            const GLchar *const *strings,
                                             angle::ParamCapture *paramCapture)
 {
     UNIMPLEMENTED();

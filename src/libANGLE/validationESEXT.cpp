@@ -2914,7 +2914,7 @@ bool ValidateCreateShaderProgramvEXT(const Context *context,
                                      angle::EntryPoint entryPoint,
                                      ShaderType typePacked,
                                      GLsizei count,
-                                     const GLchar **strings)
+                                     const GLchar *const *strings)
 {
     return ValidateCreateShaderProgramvBase(context, entryPoint, typePacked, count, strings);
 }

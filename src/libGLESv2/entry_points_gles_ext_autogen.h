@@ -1193,7 +1193,7 @@ ANGLE_EXPORT void GL_APIENTRY GL_ActiveShaderProgramEXT(GLuint pipeline, GLuint 
 ANGLE_EXPORT void GL_APIENTRY GL_BindProgramPipelineEXT(GLuint pipeline);
 ANGLE_EXPORT GLuint GL_APIENTRY GL_CreateShaderProgramvEXT(GLenum type,
                                                            GLsizei count,
-                                                           const GLchar **strings);
+                                                           const GLchar *const *strings);
 ANGLE_EXPORT void GL_APIENTRY GL_DeleteProgramPipelinesEXT(GLsizei n, const GLuint *pipelines);
 ANGLE_EXPORT void GL_APIENTRY GL_GenProgramPipelinesEXT(GLsizei n, GLuint *pipelines);
 ANGLE_EXPORT void GL_APIENTRY GL_GetProgramPipelineInfoLogEXT(GLuint pipeline,
@@ -1571,6 +1571,8 @@ ANGLE_EXPORT void GL_APIENTRY GL_BlitFramebufferNV(GLint srcX0,
                                                    GLint dstY1,
                                                    GLbitfield mask,
                                                    GLenum filter);
+
+// GL_NV_pack_subimage
 
 // GL_NV_pixel_buffer_object
 

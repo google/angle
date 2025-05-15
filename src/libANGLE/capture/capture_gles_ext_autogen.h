@@ -1697,7 +1697,7 @@ angle::CallCapture CaptureCreateShaderProgramvEXT(const State &glState,
                                                   bool isCallValid,
                                                   ShaderType typePacked,
                                                   GLsizei count,
-                                                  const GLchar **strings,
+                                                  const GLchar *const *strings,
                                                   GLuint returnValue);
 angle::CallCapture CaptureDeleteProgramPipelinesEXT(const State &glState,
                                                     bool isCallValid,
@@ -2282,6 +2282,8 @@ angle::CallCapture CaptureBlitFramebufferNV(const State &glState,
                                             GLint dstY1,
                                             GLbitfield mask,
                                             GLenum filter);
+
+// GL_NV_pack_subimage
 
 // GL_NV_pixel_buffer_object
 
@@ -4903,7 +4905,7 @@ void CaptureCreateShaderProgramvEXT_strings(const State &glState,
                                             bool isCallValid,
                                             ShaderType typePacked,
                                             GLsizei count,
-                                            const GLchar **strings,
+                                            const GLchar *const *strings,
                                             angle::ParamCapture *paramCapture);
 void CaptureDeleteProgramPipelinesEXT_pipelinesPacked(const State &glState,
                                                       bool isCallValid,
