@@ -358,15 +358,15 @@ TEST_P(EGLMultiContextTest, RepeatedEglInitAndTerminate)
     EGLDisplay dpy;
     EGLSurface srf;
     EGLContext ctx;
-    EGLint dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(),
-                          EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE, GetParam().getDeviceType(),
-                          EGL_NONE};
+    EGLAttrib dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(),
+                             EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE, GetParam().getDeviceType(),
+                             EGL_NONE};
 
     for (int i = 0; i < 50; i++)  // Note: this test is fairly slow b/303089709
     {
         std::thread thread = std::thread([&]() {
-            dpy = eglGetPlatformDisplayEXT(
-                EGL_PLATFORM_ANGLE_ANGLE, reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY), dispattrs);
+            dpy = eglGetPlatformDisplay(EGL_PLATFORM_ANGLE_ANGLE,
+                                        reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY), dispattrs);
             EXPECT_TRUE(dpy != EGL_NO_DISPLAY);
             EXPECT_EGL_TRUE(eglInitialize(dpy, nullptr, nullptr));
 
@@ -405,13 +405,13 @@ TEST_P(EGLMultiContextTest, ReuseUnterminatedDisplay)
     getEGLWindow()->destroyGL();
 
     EGLDisplay dpy;
-    EGLint dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(),
-                          EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE, GetParam().getDeviceType(),
-                          EGL_NONE};
+    EGLAttrib dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(),
+                             EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE, GetParam().getDeviceType(),
+                             EGL_NONE};
 
     std::thread threadA = std::thread([&]() {
-        dpy = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE,
-                                       reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY), dispattrs);
+        dpy = eglGetPlatformDisplay(EGL_PLATFORM_ANGLE_ANGLE,
+                                    reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY), dispattrs);
         EXPECT_TRUE(dpy != EGL_NO_DISPLAY);
         EXPECT_EGL_TRUE(eglInitialize(dpy, nullptr, nullptr));
     });

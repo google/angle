@@ -90,15 +90,15 @@ class EGLSyncControlTest : public testing::Test
 
     void InitializeDisplay()
     {
-        EGLint displayAttribs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE,
-                                   EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
-                                   EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE,
-                                   EGL_DONT_CARE,
-                                   EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE,
-                                   EGL_DONT_CARE,
-                                   EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE,
-                                   EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE,
-                                   EGL_NONE};
+        EGLAttrib displayAttribs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE,
+                                      EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
+                                      EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE,
+                                      EGL_DONT_CARE,
+                                      EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE,
+                                      EGL_DONT_CARE,
+                                      EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE,
+                                      EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE,
+                                      EGL_NONE};
 
         // Create an OS Window
         mOSWindow = OSWindow::New();
@@ -106,9 +106,9 @@ class EGLSyncControlTest : public testing::Test
         mOSWindow->setVisible(true);
 
         // Create an EGLDisplay using the EGLDevice
-        mDisplay = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE,
-                                            reinterpret_cast<void *>(mOSWindow->getNativeDisplay()),
-                                            displayAttribs);
+        mDisplay = eglGetPlatformDisplay(EGL_PLATFORM_ANGLE_ANGLE,
+                                         reinterpret_cast<void *>(mOSWindow->getNativeDisplay()),
+                                         displayAttribs);
         ASSERT_TRUE(mDisplay != EGL_NO_DISPLAY);
 
         EGLint majorVersion, minorVersion;

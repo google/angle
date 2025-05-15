@@ -198,7 +198,7 @@ TEST_P(EGLDisplayTestES3, GetPlatformDisplayAndroidValidation)
     ANGLE_SKIP_TEST_IF(!IsAndroid());
 
     // Get an EGLDisplay on GBM platform, expect EGL_BAD_PARAMETER
-    EGLDisplay display1 = eglGetPlatformDisplayEXT(
+    EGLDisplay display1 = eglGetPlatformDisplay(
         EGL_PLATFORM_GBM_KHR, reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY), nullptr);
     ASSERT_EQ(EGL_NO_DISPLAY, display1);
     ASSERT_EGL_ERROR(EGL_BAD_PARAMETER);

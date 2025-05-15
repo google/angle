@@ -35,7 +35,7 @@ class EGLRobustnessTest : public ANGLETest<>
 
         const auto &platform = GetParam().eglParameters;
 
-        std::vector<EGLint> displayAttributes;
+        std::vector<EGLAttrib> displayAttributes;
         displayAttributes.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
         displayAttributes.push_back(platform.renderer);
         displayAttributes.push_back(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE);
@@ -51,9 +51,9 @@ class EGLRobustnessTest : public ANGLETest<>
 
         displayAttributes.push_back(EGL_NONE);
 
-        mDisplay = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE,
-                                            reinterpret_cast<void *>(mOSWindow->getNativeDisplay()),
-                                            &displayAttributes[0]);
+        mDisplay = eglGetPlatformDisplay(EGL_PLATFORM_ANGLE_ANGLE,
+                                         reinterpret_cast<void *>(mOSWindow->getNativeDisplay()),
+                                         &displayAttributes[0]);
         ASSERT_NE(EGL_NO_DISPLAY, mDisplay);
 
         ASSERT_TRUE(eglInitialize(mDisplay, nullptr, nullptr) == EGL_TRUE);

@@ -146,20 +146,20 @@ class EGLDirectCompositionTest : public ANGLETest<>
             EGL_RED_SIZE,   8, EGL_GREEN_SIZE,   8, EGL_BLUE_SIZE, 8, EGL_ALPHA_SIZE, 8,
             EGL_DEPTH_SIZE, 8, EGL_STENCIL_SIZE, 8, EGL_NONE};
 
-        const EGLint defaultDisplayAttributes[] = {
+        const EGLAttrib defaultDisplayAttributes[] = {
             EGL_PLATFORM_ANGLE_TYPE_ANGLE,
             EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
             EGL_NONE,
         };
 
-        PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT =
-            reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(
-                eglGetProcAddress("eglGetPlatformDisplayEXT"));
-        ASSERT_TRUE(eglGetPlatformDisplayEXT != nullptr);
+        PFNEGLGETPLATFORMDISPLAYPROC eglGetPlatformDisplay =
+            reinterpret_cast<PFNEGLGETPLATFORMDISPLAYPROC>(
+                eglGetProcAddress("eglGetPlatformDisplay"));
+        ASSERT_TRUE(eglGetPlatformDisplay != nullptr);
 
-        mEglDisplay = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE,
-                                               reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY),
-                                               defaultDisplayAttributes);
+        mEglDisplay = eglGetPlatformDisplay(EGL_PLATFORM_ANGLE_ANGLE,
+                                            reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY),
+                                            defaultDisplayAttributes);
         ASSERT_TRUE(mEglDisplay != EGL_NO_DISPLAY);
 
         ASSERT_EGL_TRUE(eglInitialize(mEglDisplay, nullptr, nullptr));

@@ -79,7 +79,7 @@ EGLInitializePerfTest::EGLInitializePerfTest()
 {
     auto platform = GetParam().eglParameters;
 
-    std::vector<EGLint> displayAttributes;
+    std::vector<EGLAttrib> displayAttributes;
     displayAttributes.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
     displayAttributes.push_back(platform.renderer);
     displayAttributes.push_back(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE);
@@ -98,17 +98,17 @@ EGLInitializePerfTest::EGLInitializePerfTest()
     mOSWindow = OSWindow::New();
     mOSWindow->initialize("EGLInitialize Test", 64, 64);
 
-    auto eglGetPlatformDisplayEXT = reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(
-        eglGetProcAddress("eglGetPlatformDisplayEXT"));
-    if (eglGetPlatformDisplayEXT == nullptr)
+    auto eglGetPlatformDisplay =
+        reinterpret_cast<PFNEGLGETPLATFORMDISPLAYPROC>(eglGetProcAddress("eglGetPlatformDisplay"));
+    if (eglGetPlatformDisplay == nullptr)
     {
         std::cerr << "Error getting platform display!" << std::endl;
         return;
     }
 
-    mDisplay = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE,
-                                        reinterpret_cast<void *>(mOSWindow->getNativeDisplay()),
-                                        &displayAttributes[0]);
+    mDisplay = eglGetPlatformDisplay(EGL_PLATFORM_ANGLE_ANGLE,
+                                     reinterpret_cast<void *>(mOSWindow->getNativeDisplay()),
+                                     &displayAttributes[0]);
 }
 
 void EGLInitializePerfTest::SetUp()

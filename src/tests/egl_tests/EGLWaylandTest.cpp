@@ -26,9 +26,9 @@ const EGLint contextAttribs[] = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE};
 class EGLWaylandTest : public ANGLETest<>
 {
   public:
-    std::vector<EGLint> getDisplayAttributes() const
+    std::vector<EGLAttrib> getDisplayAttributes() const
     {
-        std::vector<EGLint> attribs;
+        std::vector<EGLAttrib> attribs;
 
         attribs.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
         attribs.push_back(GetParam().getRenderer());
@@ -44,9 +44,9 @@ class EGLWaylandTest : public ANGLETest<>
         setWindowVisible(mOsWindow, true);
 
         EGLNativeDisplayType waylandDisplay = mOsWindow->getNativeDisplay();
-        std::vector<EGLint> attribs         = getDisplayAttributes();
-        mDisplay = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE, (void *)waylandDisplay,
-                                            attribs.data());
+        std::vector<EGLAttrib> attribs      = getDisplayAttributes();
+        mDisplay =
+            eglGetPlatformDisplay(EGL_PLATFORM_ANGLE_ANGLE, (void *)waylandDisplay, attribs.data());
         ASSERT_NE(EGL_NO_DISPLAY, mDisplay);
 
         ASSERT_TRUE(EGL_TRUE == eglInitialize(mDisplay, nullptr, nullptr));

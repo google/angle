@@ -27,9 +27,9 @@ TEST_P(EGLReadinessCheckTest, IsRunningOnANGLE)
 }
 
 // Checks that getting function pointer works
-TEST_P(EGLReadinessCheckTest, HasGetPlatformDisplayEXT)
+TEST_P(EGLReadinessCheckTest, HasGetPlatformDisplay)
 {
-    ASSERT_NE(eglGetPlatformDisplayEXT, nullptr);
+    ASSERT_NE(eglGetPlatformDisplay, nullptr);
 }
 
 // Checks that calling GetProcAddress for a non-existent function fails.

@@ -25,18 +25,18 @@ class EGLDisplayLuidTest : public ANGLETest<>
         }
     }
 
-    void testInvalidAttribs(const EGLint displayAttribs[])
+    void testInvalidAttribs(const EGLAttrib displayAttribs[])
     {
         EXPECT_EQ(
-            eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE, EGL_DEFAULT_DISPLAY, displayAttribs),
+            eglGetPlatformDisplay(EGL_PLATFORM_ANGLE_ANGLE, EGL_DEFAULT_DISPLAY, displayAttribs),
             EGL_NO_DISPLAY);
         EXPECT_EGL_ERROR(EGL_BAD_ATTRIBUTE);
     }
 
-    void testValidAttribs(const EGLint displayAttribs[])
+    void testValidAttribs(const EGLAttrib displayAttribs[])
     {
         mDisplay =
-            eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE, EGL_DEFAULT_DISPLAY, displayAttribs);
+            eglGetPlatformDisplay(EGL_PLATFORM_ANGLE_ANGLE, EGL_DEFAULT_DISPLAY, displayAttribs);
 
         EXPECT_EGL_SUCCESS();
         EXPECT_NE(mDisplay, EGL_NO_DISPLAY);
@@ -56,28 +56,29 @@ class EGLDisplayLuidTest : public ANGLETest<>
 // if D3D9 is specified in the attributes.
 TEST_P(EGLDisplayLuidTest, D3D9Failure)
 {
-    EGLint displayAttribs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE,
-                               EGL_PLATFORM_ANGLE_D3D_LUID_HIGH_ANGLE, 1, EGL_NONE};
+    EGLAttrib displayAttribs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE,
+                                  EGL_PLATFORM_ANGLE_D3D_LUID_HIGH_ANGLE, 1, EGL_NONE};
     testInvalidAttribs(displayAttribs);
 }
 
 // Verify failure if the specified LUID is zero.
 TEST_P(EGLDisplayLuidTest, ZeroLuidFailure)
 {
-    EGLint displayAttribs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE,
-                               EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
-                               EGL_PLATFORM_ANGLE_D3D_LUID_HIGH_ANGLE,
-                               0,
-                               EGL_PLATFORM_ANGLE_D3D_LUID_LOW_ANGLE,
-                               0,
-                               EGL_NONE};
+    EGLAttrib displayAttribs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE,
+                                  EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
+                                  EGL_PLATFORM_ANGLE_D3D_LUID_HIGH_ANGLE,
+                                  0,
+                                  EGL_PLATFORM_ANGLE_D3D_LUID_LOW_ANGLE,
+                                  0,
+                                  EGL_NONE};
     testInvalidAttribs(displayAttribs);
 }
 
 TEST_P(EGLDisplayLuidTest, D3D11)
 {
-    EGLint displayAttribs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
-                               EGL_PLATFORM_ANGLE_D3D_LUID_HIGH_ANGLE, 1, EGL_NONE};
+    EGLAttrib displayAttribs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE,
+                                  EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
+                                  EGL_PLATFORM_ANGLE_D3D_LUID_HIGH_ANGLE, 1, EGL_NONE};
     testValidAttribs(displayAttribs);
 }
 
