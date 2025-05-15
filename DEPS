@@ -1021,7 +1021,7 @@ deps = {
   },
 
   'third_party/vulkan-deps': {
-    'url': Var('chromium_git') + '/vulkan-deps@2a67a9b1a73a076e5aab8773e773ab19807f85d5',
+    'url': Var('chromium_git') + '/vulkan-deps@bac8bd2de3c4470697edee557d7ac29fff036b3d',
     'condition': 'not build_with_chromium',
   },
 
@@ -1031,7 +1031,7 @@ deps = {
   },
 
   'third_party/lunarg-vulkantools/src': {
-    'url': '{chromium_git}/external/github.com/LunarG/VulkanTools@47ee4dce39b5e8b594ed2e9c9cccd10342949683',
+    'url': '{chromium_git}/external/github.com/LunarG/VulkanTools@e80c133ef66664e0cb91a10186658bb87cf0f74a',
     'condition': 'not build_with_chromium',
   },
 
@@ -1041,12 +1041,12 @@ deps = {
   },
 
   'third_party/spirv-headers/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Headers@6d0784e9f1ab92c17eeea94821b2465c14a52be9',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Headers@c9aad99f9276817f18f72a4696239237c83cb775',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/spirv-tools/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Tools@75f2e873ab2bbc44e87d788dbbc136482c99e9d8',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Tools@eac930caa2bc7209ca71ecea7c15cbab33d5bc66',
     'condition': 'not build_with_chromium',
   },
 
@@ -1056,7 +1056,7 @@ deps = {
   },
 
   'third_party/vulkan-loader/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Loader@a8bec310845ce80af5c00342243ae972cbe95e3b',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Loader@0f4bd6649d19b5df4e76381725ab6f5a2eeb9f30',
     'condition': 'not build_with_chromium',
   },
 
@@ -1071,7 +1071,7 @@ deps = {
   },
 
   'third_party/vulkan-validation-layers/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@eeb22f1138b079841efbb445d4d60e14f3e8ecae',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@40d64d8f544194b82f658dcecd85d03d120a51ef',
     'condition': 'not build_with_chromium',
   },
 
