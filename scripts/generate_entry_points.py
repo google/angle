@@ -1708,17 +1708,33 @@ def get_validation_expression(api, cmd_name, entry_point_name, internal_params, 
     record_error = "else {{RecordVersionErrorES{}(context, {});}}".format(
         error_suffix, entry_point_name) if condition != "true" else ""
 
+    check_consistency = not is_context_private_state_command(api, cmd_name)
+
+    pre_validation = """#if defined(ANGLE_ENABLE_ASSERTS)
+    const uint32_t errorCount = context->getPushedErrorCount();
+#endif
+""" if check_consistency else ""
+
+    post_validation = """
+#if defined(ANGLE_ENABLE_ASSERTS)
+    ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+#endif""" if check_consistency else ""
+
     # Validation logic for entry points with conditional support
     return """bool isCallValid = context->skipValidation();
 if (!isCallValid)
 {{
     if (ANGLE_LIKELY({support_condition}))
     {{
-        isCallValid = {validation_expression};
+        {pre_validation}isCallValid = {validation_expression};{post_validation}
     }}
     {record_error}
 }}""".format(
-        support_condition=condition, validation_expression=expr, record_error=record_error)
+        support_condition=condition,
+        pre_validation=pre_validation,
+        validation_expression=expr,
+        post_validation=post_validation,
+        record_error=record_error)
 
 
 def entry_point_export(api):

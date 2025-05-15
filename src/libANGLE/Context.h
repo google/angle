@@ -119,6 +119,7 @@ class ErrorSet : angle::NonCopyable
     GLenum getGraphicsResetStatus(rx::ContextImpl *contextImpl);
     GLenum getResetStrategy() const { return mResetStrategy; }
     GLenum getErrorForCapture() const;
+    uint32_t getPushedErrorCount() const { return mPushedErrors; }
 
   private:
     void setContextLost();
@@ -148,6 +149,9 @@ class ErrorSet : angle::NonCopyable
     std::atomic_int mSkipValidation;
     std::atomic_int mContextLost;
     std::atomic_int mHasAnyErrors;
+
+    // Error counter for asserting validation layer consistency
+    uint32_t mPushedErrors;
 };
 
 enum class VertexAttribTypeCase
@@ -783,6 +787,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
         return mTransformFeedbackMap;
     }
     GLenum getErrorForCapture() const { return mErrors.getErrorForCapture(); }
+    uint32_t getPushedErrorCount() const { return mErrors.getPushedErrorCount(); }
 
     void onPreSwap();
 

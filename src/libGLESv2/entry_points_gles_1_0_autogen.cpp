@@ -190,8 +190,14 @@ void GL_APIENTRY GL_ClientActiveTexture(GLenum texture)
         {
             if (ANGLE_LIKELY(context->getClientVersion() < ES_2_0))
             {
+#if defined(ANGLE_ENABLE_ASSERTS)
+                const uint32_t errorCount = context->getPushedErrorCount();
+#endif
                 isCallValid = ValidateClientActiveTexture(
                     context, angle::EntryPoint::GLClientActiveTexture, texture);
+#if defined(ANGLE_ENABLE_ASSERTS)
+                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+#endif
             }
             else
             {
@@ -414,8 +420,14 @@ void GL_APIENTRY GL_ColorPointer(GLint size, GLenum type, GLsizei stride, const 
         {
             if (ANGLE_LIKELY(context->getClientVersion() < ES_2_0))
             {
+#if defined(ANGLE_ENABLE_ASSERTS)
+                const uint32_t errorCount = context->getPushedErrorCount();
+#endif
                 isCallValid = ValidateColorPointer(context, angle::EntryPoint::GLColorPointer, size,
                                                    typePacked, stride, pointer);
+#if defined(ANGLE_ENABLE_ASSERTS)
+                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+#endif
             }
             else
             {
@@ -487,8 +499,14 @@ void GL_APIENTRY GL_DisableClientState(GLenum array)
         {
             if (ANGLE_LIKELY(context->getClientVersion() < ES_2_0))
             {
+#if defined(ANGLE_ENABLE_ASSERTS)
+                const uint32_t errorCount = context->getPushedErrorCount();
+#endif
                 isCallValid = ValidateDisableClientState(
                     context, angle::EntryPoint::GLDisableClientState, arrayPacked);
+#if defined(ANGLE_ENABLE_ASSERTS)
+                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+#endif
             }
             else
             {
@@ -524,8 +542,14 @@ void GL_APIENTRY GL_EnableClientState(GLenum array)
         {
             if (ANGLE_LIKELY(context->getClientVersion() < ES_2_0))
             {
+#if defined(ANGLE_ENABLE_ASSERTS)
+                const uint32_t errorCount = context->getPushedErrorCount();
+#endif
                 isCallValid = ValidateEnableClientState(
                     context, angle::EntryPoint::GLEnableClientState, arrayPacked);
+#if defined(ANGLE_ENABLE_ASSERTS)
+                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+#endif
             }
             else
             {
@@ -857,8 +881,14 @@ void GL_APIENTRY GL_GetFixedv(GLenum pname, GLfixed *params)
         {
             if (ANGLE_LIKELY(context->getClientVersion() < ES_2_0))
             {
+#if defined(ANGLE_ENABLE_ASSERTS)
+                const uint32_t errorCount = context->getPushedErrorCount();
+#endif
                 isCallValid =
                     ValidateGetFixedv(context, angle::EntryPoint::GLGetFixedv, pname, params);
+#if defined(ANGLE_ENABLE_ASSERTS)
+                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+#endif
             }
             else
             {
@@ -1184,8 +1214,14 @@ void GL_APIENTRY GL_GetTexParameterxv(GLenum target, GLenum pname, GLfixed *para
         {
             if (ANGLE_LIKELY(context->getClientVersion() < ES_2_0))
             {
+#if defined(ANGLE_ENABLE_ASSERTS)
+                const uint32_t errorCount = context->getPushedErrorCount();
+#endif
                 isCallValid = ValidateGetTexParameterxv(
                     context, angle::EntryPoint::GLGetTexParameterxv, targetPacked, pname, params);
+#if defined(ANGLE_ENABLE_ASSERTS)
+                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+#endif
             }
             else
             {
@@ -2134,8 +2170,14 @@ void GL_APIENTRY GL_NormalPointer(GLenum type, GLsizei stride, const void *point
         {
             if (ANGLE_LIKELY(context->getClientVersion() < ES_2_0))
             {
+#if defined(ANGLE_ENABLE_ASSERTS)
+                const uint32_t errorCount = context->getPushedErrorCount();
+#endif
                 isCallValid = ValidateNormalPointer(context, angle::EntryPoint::GLNormalPointer,
                                                     typePacked, stride, pointer);
+#if defined(ANGLE_ENABLE_ASSERTS)
+                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+#endif
             }
             else
             {
@@ -2806,8 +2848,14 @@ void GL_APIENTRY GL_TexCoordPointer(GLint size, GLenum type, GLsizei stride, con
         {
             if (ANGLE_LIKELY(context->getClientVersion() < ES_2_0))
             {
+#if defined(ANGLE_ENABLE_ASSERTS)
+                const uint32_t errorCount = context->getPushedErrorCount();
+#endif
                 isCallValid = ValidateTexCoordPointer(context, angle::EntryPoint::GLTexCoordPointer,
                                                       size, typePacked, stride, pointer);
+#if defined(ANGLE_ENABLE_ASSERTS)
+                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+#endif
             }
             else
             {
@@ -3090,8 +3138,14 @@ void GL_APIENTRY GL_TexParameterx(GLenum target, GLenum pname, GLfixed param)
         {
             if (ANGLE_LIKELY(context->getClientVersion() < ES_2_0))
             {
+#if defined(ANGLE_ENABLE_ASSERTS)
+                const uint32_t errorCount = context->getPushedErrorCount();
+#endif
                 isCallValid = ValidateTexParameterx(context, angle::EntryPoint::GLTexParameterx,
                                                     targetPacked, pname, param);
+#if defined(ANGLE_ENABLE_ASSERTS)
+                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+#endif
             }
             else
             {
@@ -3129,8 +3183,14 @@ void GL_APIENTRY GL_TexParameterxv(GLenum target, GLenum pname, const GLfixed *p
         {
             if (ANGLE_LIKELY(context->getClientVersion() < ES_2_0))
             {
+#if defined(ANGLE_ENABLE_ASSERTS)
+                const uint32_t errorCount = context->getPushedErrorCount();
+#endif
                 isCallValid = ValidateTexParameterxv(context, angle::EntryPoint::GLTexParameterxv,
                                                      targetPacked, pname, params);
+#if defined(ANGLE_ENABLE_ASSERTS)
+                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+#endif
             }
             else
             {
@@ -3241,8 +3301,14 @@ void GL_APIENTRY GL_VertexPointer(GLint size, GLenum type, GLsizei stride, const
         {
             if (ANGLE_LIKELY(context->getClientVersion() < ES_2_0))
             {
+#if defined(ANGLE_ENABLE_ASSERTS)
+                const uint32_t errorCount = context->getPushedErrorCount();
+#endif
                 isCallValid = ValidateVertexPointer(context, angle::EntryPoint::GLVertexPointer,
                                                     size, typePacked, stride, pointer);
+#if defined(ANGLE_ENABLE_ASSERTS)
+                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+#endif
             }
             else
             {
