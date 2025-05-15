@@ -133,6 +133,8 @@ class WrapperBase
         AddRefWGPUCHandle(mHandle);
     }
 
+    ~WrapperBase() { ReleaseWGPUCHandle(mHandle); }
+
     // Convert from the wgpu_cpp wrapper types.
     // TODO: Remove once this wrapper is used everywhere
     WrapperBase(const CppType &other) : mHandle(other.Get()) { AddRefWGPUCHandle(mHandle); }
