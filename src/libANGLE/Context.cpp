@@ -3988,12 +3988,6 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.baseVertexBaseInstanceANGLE = false;
     }
 
-    if (limitations.baseInstanceEmulated &&
-        !frontendFeatures.alwaysEnableEmulatedMultidrawExtensions.enabled)
-    {
-        supportedExtensions.baseInstanceEXT = false;
-    }
-
     // Enable the no error extension if the context was created with the flag.
     supportedExtensions.noErrorKHR = skipValidation();
 

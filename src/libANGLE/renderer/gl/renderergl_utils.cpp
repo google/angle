@@ -1961,14 +1961,11 @@ void GenerateCaps(const FunctionsGL *functions,
          functions->hasGLESExtension("GL_EXT_draw_elements_base_vertex"));
 
     // EXT_base_instance
-    extensions->baseInstanceEXT =
-        !features.disableBaseInstanceVertex.enabled &&
-        (functions->isAtLeastGL(gl::Version(3, 2)) || functions->isAtLeastGLES(gl::Version(3, 2)) ||
-         functions->hasGLESExtension("GL_OES_draw_elements_base_vertex") ||
-         functions->hasGLESExtension("GL_EXT_draw_elements_base_vertex") ||
-         functions->hasGLESExtension("GL_EXT_base_instance"));
-    limitations->baseInstanceEmulated = !functions->isAtLeastGL(gl::Version(4, 2)) &&
-                                        !functions->hasGLESExtension("GL_EXT_base_instance");
+    // Unlike the ANGLE variant, this extension is exposed only if supported natively.
+    extensions->baseInstanceEXT = !features.disableBaseInstanceVertex.enabled &&
+                                  (functions->isAtLeastGL(gl::Version(4, 2)) ||
+                                   functions->hasGLExtension("GL_ARB_base_instance") ||
+                                   functions->hasGLESExtension("GL_EXT_base_instance"));
 
     // ANGLE_base_vertex_base_instance_shader_builtin
     extensions->baseVertexBaseInstanceShaderBuiltinANGLE = extensions->baseVertexBaseInstanceANGLE;

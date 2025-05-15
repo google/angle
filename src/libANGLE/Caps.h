@@ -174,9 +174,6 @@ struct Limitations
     // GL_ANGLE_base_vertex_base_instance is emulated and should only be exposed to WebGL. Emulated
     // by default in shared renderer code.
     bool baseInstanceBaseVertexEmulated = true;
-
-    // EXT_base_instance may be emulated on GL backend.
-    bool baseInstanceEmulated = false;
 };
 
 struct TypePrecision
