@@ -433,6 +433,10 @@ constexpr size_t kBufferMapOffsetAlignment = 8;
 // Required alignments for texture row uploads
 constexpr size_t kTextureRowSizeAlignment = 256;
 
+// Structs in WGPU's uniform address space are always aligned to 16. I.e. RequiredAlignOf(struct S,
+// uniform) = roundUp(16, AlignOf(S)) and AlignOf(S) is at most 16.
+constexpr size_t kUniformStructAlignment = 16;
+
 // min and max LOD clamp values.
 constexpr float kWGPUMinLod = 0.0;
 constexpr float kWGPUMaxLod = 32.0;

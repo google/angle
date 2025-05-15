@@ -47,21 +47,34 @@ class WgpuDefaultBlockEncoder : public sh::Std140BlockEncoder
     }
 };
 
-void InitDefaultUniformBlock(const std::vector<sh::ShaderVariable> &uniforms,
-                             sh::BlockLayoutMap *blockLayoutMapOut,
-                             size_t *blockSizeOut)
+angle::Result InitDefaultUniformBlock(const std::vector<sh::ShaderVariable> &uniforms,
+                                      sh::BlockLayoutMap *blockLayoutMapOut,
+                                      size_t *blockSizeOut)
 {
     if (uniforms.empty())
     {
         *blockSizeOut = 0;
-        return;
+        return angle::Result::Continue;
     }
 
     WgpuDefaultBlockEncoder blockEncoder;
     sh::GetActiveUniformBlockInfo(uniforms, "", &blockEncoder, blockLayoutMapOut);
 
-    *blockSizeOut = blockEncoder.getCurrentOffset();
-    return;
+    // The default uniforms are packed into a struct, and so the size of the struct must be aligned
+    // to kUniformStructAlignment;
+    angle::CheckedNumeric blockSize =
+        CheckedRoundUp(blockEncoder.getCurrentOffset(), webgpu::kUniformStructAlignment);
+    if (!blockSize.IsValid())
+    {
+        ERR() << "Packing the default uniforms into a struct results in a struct that is too "
+                 "large. Unaligned size = "
+              << blockEncoder.getCurrentOffset()
+              << ", alignment = " << webgpu::kUniformStructAlignment;
+        return angle::Result::Stop;
+    }
+
+    *blockSizeOut = blockSize.ValueOrDie();
+    return angle::Result::Continue;
 }
 
 class CreateWGPUShaderModuleTask : public LinkSubTask
@@ -251,7 +264,7 @@ class LinkTaskWgpu : public LinkTask
         gl::ShaderMap<size_t> requiredBufferSize;
         requiredBufferSize.fill(0);
 
-        generateUniformLayoutMapping(&layoutMap, &requiredBufferSize);
+        ANGLE_TRY(generateUniformLayoutMapping(&layoutMap, &requiredBufferSize));
         initDefaultUniformLayoutMapping(&layoutMap);
 
         // All uniform initializations are complete, now resize the buffers accordingly and return
@@ -262,8 +275,8 @@ class LinkTaskWgpu : public LinkTask
         return angle::Result::Continue;
     }
 
-    void generateUniformLayoutMapping(gl::ShaderMap<sh::BlockLayoutMap> *layoutMapOut,
-                                      gl::ShaderMap<size_t> *requiredBufferSizeOut)
+    angle::Result generateUniformLayoutMapping(gl::ShaderMap<sh::BlockLayoutMap> *layoutMapOut,
+                                               gl::ShaderMap<size_t> *requiredBufferSizeOut)
     {
         for (const gl::ShaderType shaderType : mExecutable->getLinkedShaderStages())
         {
@@ -273,10 +286,12 @@ class LinkTaskWgpu : public LinkTask
             if (shader)
             {
                 const std::vector<sh::ShaderVariable> &uniforms = shader->uniforms;
-                InitDefaultUniformBlock(uniforms, &(*layoutMapOut)[shaderType],
-                                        &(*requiredBufferSizeOut)[shaderType]);
+                ANGLE_TRY(InitDefaultUniformBlock(uniforms, &(*layoutMapOut)[shaderType],
+                                                  &(*requiredBufferSizeOut)[shaderType]));
             }
         }
+
+        return angle::Result::Continue;
     }
 
     void initDefaultUniformLayoutMapping(gl::ShaderMap<sh::BlockLayoutMap> *layoutMapOut)
