@@ -268,30 +268,7 @@ template <>
 void State::setGenericBufferBinding<BufferBinding::ElementArray>(const Context *context,
                                                                  Buffer *buffer)
 {
-    Buffer *oldBuffer = mVertexArray->mState.mElementArrayBuffer.get();
-    if (oldBuffer)
-    {
-        oldBuffer->removeObserver(&mVertexArray->mState.mElementArrayBuffer);
-        oldBuffer->removeContentsObserver(mVertexArray, kElementArrayBufferIndex);
-        if (context->isWebGL())
-        {
-            oldBuffer->onNonTFBindingChanged(-1);
-        }
-        oldBuffer->release(context);
-    }
-    mVertexArray->mState.mElementArrayBuffer.assign(buffer);
-    if (buffer)
-    {
-        buffer->addObserver(&mVertexArray->mState.mElementArrayBuffer);
-        buffer->addContentsObserver(mVertexArray, kElementArrayBufferIndex);
-        if (context->isWebGL())
-        {
-            buffer->onNonTFBindingChanged(1);
-        }
-        buffer->addRef();
-    }
-    mVertexArray->mDirtyBits.set(VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER);
-    mVertexArray->mIndexRangeInlineCache = {};
+    mVertexArray->bindElementBuffer(context, buffer);
     mDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
 }
 

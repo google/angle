@@ -33,8 +33,6 @@ namespace gl
 {
 class Buffer;
 
-constexpr uint32_t kElementArrayBufferIndex = MAX_VERTEX_ATTRIBS;
-
 class VertexArrayState final : angle::NonCopyable
 {
   public:
@@ -96,7 +94,7 @@ class VertexArrayState final : angle::NonCopyable
     VertexArrayID mId;
     std::string mLabel;
     std::vector<VertexAttribute> mVertexAttributes;
-    SubjectBindingPointer<Buffer> mElementArrayBuffer;
+    BindingPointer<Buffer> mElementArrayBuffer;
     std::vector<VertexBinding> mVertexBindings;
     AttributesMask mEnabledAttributesMask;
     ComponentTypeMask mVertexAttributesTypeMask;
@@ -249,6 +247,9 @@ class VertexArray final : public angle::ObserverInterface,
                                bool normalized,
                                bool pureInteger,
                                GLuint relativeOffset);
+
+    void bindElementBuffer(const Context *context, Buffer *boundBuffer);
+
     void bindVertexBuffer(const Context *context,
                           size_t bindingIndex,
                           Buffer *boundBuffer,

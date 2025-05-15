@@ -31,7 +31,11 @@ class ContextImpl;
 class VertexArrayImpl : angle::NonCopyable
 {
   public:
-    VertexArrayImpl(const gl::VertexArrayState &state) : mState(state) {}
+    VertexArrayImpl(const gl::VertexArrayState &state) : mState(state)
+    {
+        // ElementBuffer always observe the buffer content change.
+        mContentsObserverBindingsMask.set(gl::kElementArrayBufferIndex);
+    }
 
     // It's up to the implementation to reset the attrib and binding dirty bits.
     // This is faster than the front-end having to clear all the bits after they have been scanned.
