@@ -789,7 +789,9 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
         return mTransformFeedbackMap;
     }
     GLenum getErrorForCapture() const { return mErrors.getErrorForCapture(); }
+#if defined(ANGLE_ENABLE_ASSERTS)
     uint32_t getPushedErrorCount() const { return mErrors.getPushedErrorCount(); }
+#endif
 
     void onPreSwap();
 
