@@ -9880,8 +9880,10 @@ ErrorSet::ErrorSet(Debug *debug,
       mResetStatus(GraphicsResetStatus::NoError),
       mSkipValidation(GetNoError(attribs)),
       mContextLost(0),
-      mHasAnyErrors(0),
-      mPushedErrors(0)
+#if defined(ANGLE_ENABLE_ASSERTS)
+      mPushedErrors(0),
+#endif
+      mHasAnyErrors(0)
 {}
 
 ErrorSet::~ErrorSet() = default;
@@ -9959,8 +9961,10 @@ void ErrorSet::pushError(GLenum errorCode)
     {
         std::lock_guard<std::mutex> lock(mMutex);
         mErrors.insert(errorCode);
-        mHasAnyErrors = 1;
+#if defined(ANGLE_ENABLE_ASSERTS)
         mPushedErrors++;
+#endif
+        mHasAnyErrors = 1;
     }
 }
 
