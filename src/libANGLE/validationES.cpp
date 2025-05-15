@@ -6620,7 +6620,7 @@ bool ValidateGetVertexAttribfvRobustANGLE(const Context *context,
 
     GLsizei writeLength = 0;
 
-    if (!ValidateGetVertexAttribBase(context, entryPoint, index, pname, &writeLength, false, false))
+    if (!ValidateGetVertexAttribBase(context, entryPoint, index, pname, &writeLength, false))
     {
         return false;
     }
@@ -6649,7 +6649,7 @@ bool ValidateGetVertexAttribivRobustANGLE(const Context *context,
 
     GLsizei writeLength = 0;
 
-    if (!ValidateGetVertexAttribBase(context, entryPoint, index, pname, &writeLength, false, false))
+    if (!ValidateGetVertexAttribBase(context, entryPoint, index, pname, &writeLength, false))
     {
         return false;
     }
@@ -6679,7 +6679,7 @@ bool ValidateGetVertexAttribPointervRobustANGLE(const Context *context,
 
     GLsizei writeLength = 0;
 
-    if (!ValidateGetVertexAttribBase(context, entryPoint, index, pname, &writeLength, true, false))
+    if (!ValidateGetVertexAttribBase(context, entryPoint, index, pname, &writeLength, true))
     {
         return false;
     }
@@ -6715,7 +6715,7 @@ bool ValidateGetVertexAttribIivRobustANGLE(const Context *context,
 
     GLsizei writeLength = 0;
 
-    if (!ValidateGetVertexAttribBase(context, entryPoint, index, pname, &writeLength, false, true))
+    if (!ValidateGetVertexAttribBase(context, entryPoint, index, pname, &writeLength, false))
     {
         return false;
     }
@@ -6751,7 +6751,7 @@ bool ValidateGetVertexAttribIuivRobustANGLE(const Context *context,
 
     GLsizei writeLength = 0;
 
-    if (!ValidateGetVertexAttribBase(context, entryPoint, index, pname, &writeLength, false, true))
+    if (!ValidateGetVertexAttribBase(context, entryPoint, index, pname, &writeLength, false))
     {
         return false;
     }
@@ -7347,8 +7347,7 @@ bool ValidateGetVertexAttribBase(const Context *context,
                                  GLuint index,
                                  GLenum pname,
                                  GLsizei *length,
-                                 bool pointer,
-                                 bool pureIntegerEntryPoint)
+                                 bool pointer)
 {
     if (length)
     {

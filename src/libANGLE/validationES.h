@@ -548,8 +548,7 @@ bool ValidateGetVertexAttribBase(const Context *context,
                                  GLuint index,
                                  GLenum pname,
                                  GLsizei *length,
-                                 bool pointer,
-                                 bool pureIntegerEntryPoint);
+                                 bool pointer);
 
 ANGLE_INLINE bool ValidateVertexFormat(const Context *context,
                                        angle::EntryPoint entryPoint,
