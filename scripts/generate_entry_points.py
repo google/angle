@@ -1669,8 +1669,6 @@ def get_validation_expression(api, cmd_name, entry_point_name, internal_params, 
     # Extensions temporarily skipped from autogen
     skipped_exts = [
         'GL_ANGLE_base_vertex_base_instance',
-        'GL_OES_EGL_image',
-        'GL_OES_EGL_image_external',
     ]
 
     # Validation expression for the entry points from the extensions above

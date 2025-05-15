@@ -15825,10 +15825,27 @@ void GL_APIENTRY GL_EGLImageTargetRenderbufferStorageOES(GLenum target, GLeglIma
     {
         egl::ImageID imagePacked = PackParam<egl::ImageID>(image);
         SCOPED_EGL_IMAGE_SHARE_CONTEXT_LOCK(context, imagePacked);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateEGLImageTargetRenderbufferStorageOES(
-                                context, angle::EntryPoint::GLEGLImageTargetRenderbufferStorageOES,
-                                target, imagePacked));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().EGLImageOES))
+            {
+#if defined(ANGLE_ENABLE_ASSERTS)
+                const uint32_t errorCount = context->getPushedErrorCount();
+#endif
+                isCallValid = ValidateEGLImageTargetRenderbufferStorageOES(
+                    context, angle::EntryPoint::GLEGLImageTargetRenderbufferStorageOES, target,
+                    imagePacked);
+#if defined(ANGLE_ENABLE_ASSERTS)
+                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+#endif
+            }
+            else
+            {
+                RecordVersionErrorESEXT(context,
+                                        angle::EntryPoint::GLEGLImageTargetRenderbufferStorageOES);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->eGLImageTargetRenderbufferStorage(target, imagePacked);
@@ -15857,10 +15874,27 @@ void GL_APIENTRY GL_EGLImageTargetTexture2DOES(GLenum target, GLeglImageOES imag
         TextureType targetPacked = PackParam<TextureType>(target);
         egl::ImageID imagePacked = PackParam<egl::ImageID>(image);
         SCOPED_EGL_IMAGE_SHARE_CONTEXT_LOCK(context, imagePacked);
-        bool isCallValid = (context->skipValidation() ||
-                            ValidateEGLImageTargetTexture2DOES(
-                                context, angle::EntryPoint::GLEGLImageTargetTexture2DOES,
-                                targetPacked, imagePacked));
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().EGLImageExternalOES ||
+                             context->getExtensions().EGLImageOES))
+            {
+#if defined(ANGLE_ENABLE_ASSERTS)
+                const uint32_t errorCount = context->getPushedErrorCount();
+#endif
+                isCallValid = ValidateEGLImageTargetTexture2DOES(
+                    context, angle::EntryPoint::GLEGLImageTargetTexture2DOES, targetPacked,
+                    imagePacked);
+#if defined(ANGLE_ENABLE_ASSERTS)
+                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+#endif
+            }
+            else
+            {
+                RecordVersionErrorESEXT(context, angle::EntryPoint::GLEGLImageTargetTexture2DOES);
+            }
+        }
         if (ANGLE_LIKELY(isCallValid))
         {
             context->eGLImageTargetTexture2D(targetPacked, imagePacked);

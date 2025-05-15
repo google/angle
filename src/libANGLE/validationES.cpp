@@ -5029,12 +5029,6 @@ bool ValidateEGLImageTargetTexture2DOES(const Context *context,
                                         TextureType type,
                                         egl::ImageID image)
 {
-    if (!context->getExtensions().EGLImageOES && !context->getExtensions().EGLImageExternalOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     switch (type)
     {
         case TextureType::_2D:
@@ -5074,12 +5068,6 @@ bool ValidateEGLImageTargetRenderbufferStorageOES(const Context *context,
                                                   GLenum target,
                                                   egl::ImageID image)
 {
-    if (!context->getExtensions().EGLImageOES)
-    {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
-        return false;
-    }
-
     switch (target)
     {
         case GL_RENDERBUFFER:
