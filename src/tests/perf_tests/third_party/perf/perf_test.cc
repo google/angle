@@ -4,6 +4,7 @@
 
 #include "perf_test.h"
 
+#include "common/angleutils.h"
 #include "common/base/anglebase/no_destructor.h"
 
 #include <stdarg.h>
@@ -32,6 +33,7 @@ std::string FormatString(const char *fmt, va_list vararg)
     return std::string(buffer->data(), len);
 }
 
+ANGLE_FORMAT_PRINTF(1, 2)
 std::string StringPrintf(const char *fmt, ...)
 {
     va_list vararg;
