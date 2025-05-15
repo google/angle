@@ -560,7 +560,6 @@ inline constexpr const char *kProgramInterfaceMustBeProgramOutput = "programInte
 inline constexpr const char *kProgramNotBound = "A program must be bound.";
 inline constexpr const char *kProgramNotLinked = "Program not linked.";
 inline constexpr const char *kQueryActive = "Query is active.";
-inline constexpr const char *kQueryExtensionNotEnabled = "Query extension not enabled.";
 inline constexpr const char *kQueryInactive = "Query is not active.";
 inline constexpr const char *kQueryTargetMismatch = "Query type does not match target.";
 inline constexpr const char *kReadBufferNone = "Read buffer is GL_NONE.";
