@@ -17,7 +17,7 @@ public class AngleUnitTestActivity extends NativeActivity
 {
     private static final String TAG = "NativeTest";
 
-    private AngleNativeTest mTest = new AngleNativeTest();
+    private final AngleNativeTest mTest = new AngleNativeTest();
 
     @Override
     public void onCreate(Bundle savedInstanceState)
