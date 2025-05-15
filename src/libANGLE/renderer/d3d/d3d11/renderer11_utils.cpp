@@ -1680,7 +1680,6 @@ void GenerateCaps(ID3D11Device *device,
     extensions->unpackSubimageEXT                   = true;
     extensions->packSubimageNV                      = true;
     extensions->lossyEtcDecodeANGLE                 = true;
-    extensions->syncQueryCHROMIUM                   = GetEventQuerySupport(featureLevel);
     extensions->copyTextureCHROMIUM                 = true;
     extensions->copyCompressedTextureCHROMIUM       = true;
     extensions->textureStorageMultisample2dArrayOES = true;
@@ -2143,8 +2142,6 @@ D3D11_QUERY ConvertQueryType(gl::QueryType type)
         case gl::QueryType::Timestamp:
             // A disjoint query is also created for timestamp
             return D3D11_QUERY_TIMESTAMP_DISJOINT;
-        case gl::QueryType::CommandsCompleted:
-            return D3D11_QUERY_EVENT;
         default:
             UNREACHABLE();
             return D3D11_QUERY_EVENT;

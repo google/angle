@@ -111,7 +111,6 @@
     {
         "AnySamples": "GL_ANY_SAMPLES_PASSED",
         "AnySamplesConservative": "GL_ANY_SAMPLES_PASSED_CONSERVATIVE",
-        "CommandsCompleted": "GL_COMMANDS_COMPLETED_CHROMIUM",
         "PrimitivesGenerated": "GL_PRIMITIVES_GENERATED_EXT",
         "TimeElapsed": "GL_TIME_ELAPSED_EXT",
         "Timestamp": "GL_TIMESTAMP_EXT",

@@ -1456,8 +1456,6 @@ QueryType FromGLenum<QueryType>(GLenum from)
             return QueryType::AnySamples;
         case GL_ANY_SAMPLES_PASSED_CONSERVATIVE:
             return QueryType::AnySamplesConservative;
-        case GL_COMMANDS_COMPLETED_CHROMIUM:
-            return QueryType::CommandsCompleted;
         case GL_PRIMITIVES_GENERATED_EXT:
             return QueryType::PrimitivesGenerated;
         case GL_TIME_ELAPSED_EXT:
@@ -1479,8 +1477,6 @@ GLenum ToGLenum(QueryType from)
             return GL_ANY_SAMPLES_PASSED;
         case QueryType::AnySamplesConservative:
             return GL_ANY_SAMPLES_PASSED_CONSERVATIVE;
-        case QueryType::CommandsCompleted:
-            return GL_COMMANDS_COMPLETED_CHROMIUM;
         case QueryType::PrimitivesGenerated:
             return GL_PRIMITIVES_GENERATED_EXT;
         case QueryType::TimeElapsed:
@@ -1504,9 +1500,6 @@ std::ostream &operator<<(std::ostream &os, QueryType value)
             break;
         case QueryType::AnySamplesConservative:
             os << "GL_ANY_SAMPLES_PASSED_CONSERVATIVE";
-            break;
-        case QueryType::CommandsCompleted:
-            os << "GL_COMMANDS_COMPLETED_CHROMIUM";
             break;
         case QueryType::PrimitivesGenerated:
             os << "GL_PRIMITIVES_GENERATED_EXT";

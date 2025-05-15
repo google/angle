@@ -383,14 +383,13 @@ enum class QueryType : uint8_t
 {
     AnySamples                         = 0,
     AnySamplesConservative             = 1,
-    CommandsCompleted                  = 2,
-    PrimitivesGenerated                = 3,
-    TimeElapsed                        = 4,
-    Timestamp                          = 5,
-    TransformFeedbackPrimitivesWritten = 6,
+    PrimitivesGenerated                = 2,
+    TimeElapsed                        = 3,
+    Timestamp                          = 4,
+    TransformFeedbackPrimitivesWritten = 5,
 
-    InvalidEnum = 7,
-    EnumCount   = 7,
+    InvalidEnum = 6,
+    EnumCount   = 6,
 };
 
 template <>

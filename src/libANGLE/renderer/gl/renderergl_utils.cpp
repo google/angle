@@ -1788,7 +1788,6 @@ void GenerateCaps(const FunctionsGL *functions,
     }
 
     extensions->copyTextureCHROMIUM = true;
-    extensions->syncQueryCHROMIUM   = SyncQueryGL::IsSupported(functions);
 
     // Note that OES_texture_storage_multisample_2d_array support could be extended down to GL 3.2
     // if we emulated texStorage* API on top of texImage*.
@@ -2800,12 +2799,6 @@ bool SupportsCompute(const FunctionsGL *functions)
             (functions->isAtLeastGL(gl::Version(4, 2)) &&
              functions->hasGLExtension("GL_ARB_compute_shader") &&
              functions->hasGLExtension("GL_ARB_shader_storage_buffer_object")));
-}
-
-bool SupportsFenceSync(const FunctionsGL *functions)
-{
-    return functions->isAtLeastGL(gl::Version(3, 2)) || functions->hasGLExtension("GL_ARB_sync") ||
-           functions->isAtLeastGLES(gl::Version(3, 0));
 }
 
 bool SupportsOcclusionQueries(const FunctionsGL *functions)

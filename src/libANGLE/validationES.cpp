@@ -1436,8 +1436,6 @@ bool ValidQueryType(const Context *context, QueryType queryType)
             return context->getClientVersion() >= ES_3_0;
         case QueryType::TimeElapsed:
             return context->getExtensions().disjointTimerQueryEXT;
-        case QueryType::CommandsCompleted:
-            return context->getExtensions().syncQueryCHROMIUM;
         case QueryType::PrimitivesGenerated:
             return context->getClientVersion() >= ES_3_2 ||
                    context->getExtensions().geometryShaderAny();
@@ -2492,8 +2490,7 @@ bool ValidateBeginQueryEXT(const Context *context,
                            QueryID id)
 {
     if (!context->getExtensions().occlusionQueryBooleanEXT &&
-        !context->getExtensions().disjointTimerQueryEXT &&
-        !context->getExtensions().syncQueryCHROMIUM)
+        !context->getExtensions().disjointTimerQueryEXT)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kQueryExtensionNotEnabled);
         return false;
@@ -2524,8 +2521,7 @@ bool ValidateEndQueryBase(const Context *context, angle::EntryPoint entryPoint, 
 bool ValidateEndQueryEXT(const Context *context, angle::EntryPoint entryPoint, QueryType target)
 {
     if (!context->getExtensions().occlusionQueryBooleanEXT &&
-        !context->getExtensions().disjointTimerQueryEXT &&
-        !context->getExtensions().syncQueryCHROMIUM)
+        !context->getExtensions().disjointTimerQueryEXT)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kQueryExtensionNotEnabled);
         return false;
@@ -2629,8 +2625,7 @@ bool ValidateGetQueryivEXT(const Context *context,
                            const GLint *params)
 {
     if (!context->getExtensions().occlusionQueryBooleanEXT &&
-        !context->getExtensions().disjointTimerQueryEXT &&
-        !context->getExtensions().syncQueryCHROMIUM)
+        !context->getExtensions().disjointTimerQueryEXT)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2648,8 +2643,7 @@ bool ValidateGetQueryivRobustANGLE(const Context *context,
                                    const GLint *params)
 {
     if ((context->getClientVersion() < ES_3_0) && !context->getExtensions().disjointTimerQueryEXT &&
-        !context->getExtensions().occlusionQueryBooleanEXT &&
-        !context->getExtensions().syncQueryCHROMIUM)
+        !context->getExtensions().occlusionQueryBooleanEXT)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kEntryPointBaseUnsupported);
         return false;
@@ -2787,8 +2781,7 @@ bool ValidateGetQueryObjectuivEXT(const Context *context,
                                   const GLuint *params)
 {
     if (!context->getExtensions().disjointTimerQueryEXT &&
-        !context->getExtensions().occlusionQueryBooleanEXT &&
-        !context->getExtensions().syncQueryCHROMIUM)
+        !context->getExtensions().occlusionQueryBooleanEXT)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kExtensionNotEnabled);
         return false;
@@ -2805,8 +2798,7 @@ bool ValidateGetQueryObjectuivRobustANGLE(const Context *context,
                                           const GLuint *params)
 {
     if ((context->getClientVersion() < ES_3_0) && !context->getExtensions().disjointTimerQueryEXT &&
-        !context->getExtensions().occlusionQueryBooleanEXT &&
-        !context->getExtensions().syncQueryCHROMIUM)
+        !context->getExtensions().occlusionQueryBooleanEXT)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kEntryPointBaseUnsupported);
         return false;

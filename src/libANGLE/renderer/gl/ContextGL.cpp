@@ -171,14 +171,7 @@ VertexArrayImpl *ContextGL::createVertexArray(const gl::VertexArrayState &data)
 
 QueryImpl *ContextGL::createQuery(gl::QueryType type)
 {
-    switch (type)
-    {
-        case gl::QueryType::CommandsCompleted:
-            return new SyncQueryGL(type, getFunctions());
-
-        default:
-            return new StandardQueryGL(type, getFunctions(), getStateManager());
-    }
+    return new StandardQueryGL(type, getFunctions(), getStateManager());
 }
 
 FenceNVImpl *ContextGL::createFenceNV()

@@ -782,9 +782,6 @@ struct Extensions
     // GL_ANGLE_stencil_texturing
     bool stencilTexturingANGLE = false;
 
-    // GL_CHROMIUM_sync_query
-    bool syncQueryCHROMIUM = false;
-
     // GL_ANGLE_texture_compression_dxt3
     bool textureCompressionDxt3ANGLE = false;
 

@@ -791,7 +791,6 @@ TEST_P(WebGLCompatibilityTest, EnableQueryExtensions)
 {
     EXPECT_FALSE(IsGLExtensionEnabled("GL_EXT_occlusion_query_boolean"));
     EXPECT_FALSE(IsGLExtensionEnabled("GL_EXT_disjoint_timer_query"));
-    EXPECT_FALSE(IsGLExtensionEnabled("GL_CHROMIUM_sync_query"));
 
     // This extensions become core in in ES3/WebGL2.
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() >= 3);
@@ -808,9 +807,6 @@ TEST_P(WebGLCompatibilityTest, EnableQueryExtensions)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
     glQueryCounterEXT(GL_TIMESTAMP_EXT, badQuery);
-    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
-
-    glBeginQueryEXT(GL_COMMANDS_COMPLETED_CHROMIUM, badQuery);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
     if (IsGLExtensionRequestable("GL_EXT_occlusion_query_boolean"))
@@ -836,17 +832,6 @@ TEST_P(WebGLCompatibilityTest, EnableQueryExtensions)
 
         GLQueryEXT query2;
         glQueryCounterEXT(query2, GL_TIMESTAMP_EXT);
-        EXPECT_GL_NO_ERROR();
-    }
-
-    if (IsGLExtensionRequestable("GL_CHROMIUM_sync_query"))
-    {
-        glRequestExtensionANGLE("GL_CHROMIUM_sync_query");
-        EXPECT_GL_NO_ERROR();
-
-        GLQueryEXT query;
-        glBeginQueryEXT(GL_COMMANDS_COMPLETED_CHROMIUM, query);
-        glEndQueryEXT(GL_COMMANDS_COMPLETED_CHROMIUM);
         EXPECT_GL_NO_ERROR();
     }
 }
