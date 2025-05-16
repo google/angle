@@ -143,16 +143,10 @@ angle::Result ImageHelper::flushSingleLevelUpdates(ContextWgpu *contextWgpu,
         {
             case UpdateSource::Texture:
             {
-                dst.mipLevel              = toWgpuLevel(srcUpdate.targetLevel).get();
-                WGPUExtent3D copyExtent   = mTextureDescriptor.size;
-                // https://www.w3.org/TR/webgpu/#abstract-opdef-logical-miplevel-specific-texture-extent
-                copyExtent.width  = std::max(1u, copyExtent.width >> dst.mipLevel);
-                copyExtent.height = std::max(1u, copyExtent.height >> dst.mipLevel);
-                if (mTextureDescriptor.dimension == WGPUTextureDimension_3D)
-                {
-                    copyExtent.depthOrArrayLayers =
-                        std::max(1u, copyExtent.depthOrArrayLayers >> dst.mipLevel);
-                }
+                LevelIndex wgpuLevel    = toWgpuLevel(srcUpdate.targetLevel);
+                dst.mipLevel            = wgpuLevel.get();
+                WGPUExtent3D copyExtent = getLevelSize(wgpuLevel);
+
                 WGPUTexelCopyBufferInfo copyInfo = WGPU_TEXEL_COPY_BUFFER_INFO_INIT;
                 copyInfo.layout                  = srcUpdate.textureDataLayout;
                 copyInfo.buffer                  = srcUpdate.textureData.get();
@@ -470,6 +464,20 @@ bool ImageHelper::isTextureLevelInAllocatedImage(gl::LevelIndex textureLevel)
     }
     LevelIndex wgpuTextureLevel = toWgpuLevel(textureLevel);
     return wgpuTextureLevel < LevelIndex(mTextureDescriptor.mipLevelCount);
+}
+
+WGPUExtent3D ImageHelper::getLevelSize(LevelIndex wgpuLevel)
+{
+    WGPUExtent3D copyExtent = mTextureDescriptor.size;
+    // https://www.w3.org/TR/webgpu/#abstract-opdef-logical-miplevel-specific-texture-extent
+    copyExtent.width  = std::max(1u, copyExtent.width >> wgpuLevel.get());
+    copyExtent.height = std::max(1u, copyExtent.height >> wgpuLevel.get());
+    if (mTextureDescriptor.dimension == WGPUTextureDimension_3D)
+    {
+        copyExtent.depthOrArrayLayers =
+            std::max(1u, copyExtent.depthOrArrayLayers >> wgpuLevel.get());
+    }
+    return copyExtent;
 }
 
 void ImageHelper::appendSubresourceUpdate(gl::LevelIndex level, SubresourceUpdate &&update)

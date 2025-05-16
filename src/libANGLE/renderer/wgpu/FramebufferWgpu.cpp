@@ -204,6 +204,7 @@ angle::Result FramebufferWgpu::readPixels(const gl::Context *context,
         // nothing to read
         return angle::Result::Continue;
     }
+    gl::Rectangle flippedArea = getReadArea(context, clippedArea);
 
     ContextWgpu *contextWgpu = GetImplAs<ContextWgpu>(context);
 
@@ -217,10 +218,13 @@ angle::Result FramebufferWgpu::readPixels(const gl::Context *context,
                                                        origArea, clippedArea, &params,
                                                        &outputSkipBytes));
 
-    params.reverseRowOrder = !params.reverseRowOrder;
+    if (mFlipY)
+    {
+        params.reverseRowOrder = !params.reverseRowOrder;
+    }
 
     webgpu::ImageHelper *sourceImageHelper = getReadPixelsRenderTarget()->getImage();
-    ANGLE_TRY(sourceImageHelper->readPixels(contextWgpu, params.area, params,
+    ANGLE_TRY(sourceImageHelper->readPixels(contextWgpu, flippedArea, params,
                                             static_cast<uint8_t *>(pixels) + outputSkipBytes));
 
     return angle::Result::Continue;
@@ -563,6 +567,25 @@ void FramebufferWgpu::mergeClearWithDeferredClears(const gl::ColorF &clearValue,
         mDeferredClears.store(webgpu::kUnpackedStencilIndex,
                               {clearValue, WGPU_DEPTH_SLICE_UNDEFINED, 0, stencilValue});
     }
+}
+
+gl::Rectangle FramebufferWgpu::getReadArea(const gl::Context *context,
+                                           const gl::Rectangle &glArea) const
+{
+    RenderTargetWgpu *readRT = getReadPixelsRenderTarget();
+    if (!readRT)
+    {
+        readRT = mRenderTargetCache.getDepthStencil();
+    }
+    ASSERT(readRT);
+    gl::Rectangle flippedArea = glArea;
+    if (mFlipY)
+    {
+        flippedArea.y = readRT->getImage()->getLevelSize(readRT->getLevelIndex()).height -
+                        flippedArea.y - flippedArea.height;
+    }
+
+    return flippedArea;
 }
 
 }  // namespace rx

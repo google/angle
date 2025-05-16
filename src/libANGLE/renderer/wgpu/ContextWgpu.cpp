@@ -1315,6 +1315,13 @@ angle::Result ContextWgpu::handleDirtyViewport(DirtyBits::Iterator *dirtyBitsIte
         return angle::Result::Continue;
     }
 
+    FramebufferWgpu *drawFramebufferWgpu = webgpu::GetImpl(mState.getDrawFramebuffer());
+    if (drawFramebufferWgpu->flipY())
+    {
+        clampedViewport.y =
+            drawFramebufferWgpu->getState().getDimensions().height - clampedViewport.y1();
+    }
+
     ASSERT(mCurrentGraphicsPipeline);
     mCommandBuffer.setViewport(clampedViewport.x, clampedViewport.y, clampedViewport.width,
                                clampedViewport.height, depthMin, depthMax);
@@ -1345,6 +1352,13 @@ angle::Result ContextWgpu::handleDirtyScissor(DirtyBits::Iterator *dirtyBitsIter
         // Each render pass has a default scissor set equal to the size of the render targets. We
         // can skip setting the scissor.
         return angle::Result::Continue;
+    }
+
+    FramebufferWgpu *framebufferWgpu = webgpu::GetImpl(framebuffer);
+    if (framebufferWgpu->flipY())
+    {
+        clampedScissor.y = framebufferWgpu->getState().getDimensions().height - clampedScissor.y -
+                           clampedScissor.height;
     }
 
     ASSERT(mCurrentGraphicsPipeline);
@@ -1451,8 +1465,8 @@ angle::Result ContextWgpu::handleDirtyDriverUniforms(DirtyBits::Iterator *dirtyB
     newDriverUniforms.renderArea = drawFramebufferWgpu->getState().getDimensions().height << 16 |
                                    drawFramebufferWgpu->getState().getDimensions().width;
 
-    const float flipX        = 1.0;
-    const float flipY        = 1.0f;
+    const float flipX        = 1.0f;
+    const float flipY        = drawFramebufferWgpu->flipY() ? -1.0f : 1.0f;
     newDriverUniforms.flipXY = gl::PackSnorm4x8(
         flipX, flipY, flipX, mState.getClipOrigin() == gl::ClipOrigin::LowerLeft ? -flipY : flipY);
 

@@ -2365,6 +2365,35 @@ void OutputWGSLTraverser::emitType(const TType &type)
     WriteWgslType(mSink, type, {});
 }
 
+// Unlike Vulkan having auto viewport flipping extension, in WGPU we have to flip gl_Position.y
+// manually.
+// This operation performs flipping the gl_Position.y using this expression:
+// gl_Position.y = gl_Position.y * negViewportScaleY
+[[nodiscard]] bool AppendVertexShaderPositionYCorrectionToMain(TCompiler *compiler,
+                                                               TIntermBlock *root,
+                                                               TSymbolTable *symbolTable,
+                                                               TIntermTyped *negFlipY)
+{
+    // Create a symbol reference to "gl_Position"
+    const TVariable *position  = BuiltInVariable::gl_Position();
+    TIntermSymbol *positionRef = new TIntermSymbol(position);
+
+    // Create a swizzle to "gl_Position.y"
+    TVector<uint32_t> swizzleOffsetY;
+    swizzleOffsetY.push_back(1);
+    TIntermSwizzle *positionY = new TIntermSwizzle(positionRef, swizzleOffsetY);
+
+    // Create the expression "gl_Position.y * negFlipY"
+    TIntermBinary *inverseY = new TIntermBinary(EOpMul, positionY->deepCopy(), negFlipY);
+
+    // Create the assignment "gl_Position.y = gl_Position.y * negViewportScaleY
+    TIntermTyped *positionYLHS = positionY->deepCopy();
+    TIntermBinary *assignment  = new TIntermBinary(TOperator::EOpAssign, positionYLHS, inverseY);
+
+    // Append the assignment as a statement at the end of the shader.
+    return RunAtTheEndOfShader(compiler, root, assignment, symbolTable);
+}
+
 }  // namespace
 
 TranslatorWGSL::TranslatorWGSL(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
@@ -2385,6 +2414,18 @@ bool TranslatorWGSL::preTranslateTreeModifications(TIntermBlock *root)
     DriverUniform driverUniforms(DriverUniformMode::InterfaceBlock);
     ASSERT(getShaderType() != GL_COMPUTE_SHADER);
     driverUniforms.addGraphicsDriverUniformsToShader(root, &getSymbolTable());
+
+    if (getShaderType() == GL_VERTEX_SHADER)
+    {
+        TIntermTyped *flipNegY =
+            driverUniforms.getFlipXY(&getSymbolTable(), DriverUniformFlip::PreFragment);
+        flipNegY = (new TIntermSwizzle(flipNegY, {1}))->fold(nullptr);
+
+        if (!AppendVertexShaderPositionYCorrectionToMain(this, root, &getSymbolTable(), flipNegY))
+        {
+            return false;
+        }
+    }
 
     // Samplers are legal as function parameters, but samplers within structs or arrays are not
     // allowed in WGSL

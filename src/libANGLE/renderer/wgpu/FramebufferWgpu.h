@@ -104,6 +104,10 @@ class FramebufferWgpu : public FramebufferImpl
 
     angle::Result startNewRenderPass(ContextWgpu *contextWgpu);
 
+    // WGPU's Framebuffer coordinates are Y down. OpenGL's are Y up. This corrects the coordinates
+    // of the read area based on the currently active RenderTarget.
+    gl::Rectangle getReadArea(const gl::Context *context, const gl::Rectangle &glArea) const;
+
     const gl::DrawBuffersArray<WGPUTextureFormat> &getCurrentColorAttachmentFormats() const
     {
         return mCurrentColorAttachmentFormats;
@@ -113,6 +117,9 @@ class FramebufferWgpu : public FramebufferImpl
     {
         return mCurrentDepthStencilFormat;
     }
+
+    void setFlipY(bool flipY) { mFlipY = flipY; }
+    bool flipY() const { return mFlipY; }
 
   private:
     void mergeClearWithDeferredClears(const gl::ColorF &clearValue,
@@ -134,6 +141,9 @@ class FramebufferWgpu : public FramebufferImpl
     std::optional<webgpu::PackedRenderPassDescriptor> mNewRenderPassDesc;
 
     webgpu::ClearValuesArray mDeferredClears;
+
+    // Whether this framebuffer should be rendered to with a negated y coordinate.
+    bool mFlipY = false;
 };
 
 }  // namespace rx

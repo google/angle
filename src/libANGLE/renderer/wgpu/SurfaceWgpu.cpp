@@ -258,12 +258,16 @@ angle::Result WindowSurfaceWgpu::initializeContents(const gl::Context *context,
 egl::Error WindowSurfaceWgpu::attachToFramebuffer(const gl::Context *context,
                                                   gl::Framebuffer *framebuffer)
 {
+    FramebufferWgpu *framebufferWgpu = GetImplAs<FramebufferWgpu>(framebuffer);
+    framebufferWgpu->setFlipY(true);
     return egl::NoError();
 }
 
 egl::Error WindowSurfaceWgpu::detachFromFramebuffer(const gl::Context *context,
                                                     gl::Framebuffer *framebuffer)
 {
+    FramebufferWgpu *framebufferWgpu = GetImplAs<FramebufferWgpu>(framebuffer);
+    framebufferWgpu->setFlipY(false);
     return egl::NoError();
 }
 

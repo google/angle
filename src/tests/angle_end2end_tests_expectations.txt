@@ -1629,6 +1629,11 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 360083331 LINUX INTEL WGPU : Texture2DTest.QueryBinding/* = SKIP
 360083331 LINUX INTEL WGPU : Texture2DTest.SubImageValidationOverflow/* = SKIP
 360083331 LINUX INTEL WGPU : Texture2DTest.ZeroSizedUploads/* = SKIP
+// Mac Nvidia devices just draw black screens.
+389145696 WGPU MAC NVIDIA : BasicUniformUsageTest* = SKIP
+389145696 WGPU MAC NVIDIA : SimpleUniformUsageTest* = SKIP
+389145696 WGPU MAC NVIDIA : BasicSamplersTest* = SKIP
+389145696 WGPU MAC NVIDIA : SampleFromRenderedTextureTest* = SKIP
 
 // SPIR-V compilation error
 384593678 VULKAN : SimpleUniformUsageTestES3.CopyOfUniformsWithArrays/* = SKIP

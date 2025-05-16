@@ -1372,6 +1372,7 @@ fn _umain()
   (ANGLE_output_global.gl_Position_) += (textureSampleLevel(ANGLE_texture_samp2D, ANGLE_sampler_samp2D, (vec3<f32>(0.0f, 0.0f, 0.0f)).xy / (vec3<f32>(0.0f, 0.0f, 0.0f)).z, 0.0f));
   (ANGLE_output_global.gl_Position_) += (textureSampleLevel(ANGLE_texture_samp2D, ANGLE_sampler_samp2D, (vec4<f32>(0.0f, 0.0f, 0.0f, 0.0f)).xy / (vec4<f32>(0.0f, 0.0f, 0.0f, 0.0f)).w, 0.0f));
   (ANGLE_output_global.gl_Position_) += (textureSampleLevel(ANGLE_texture_sampCube, ANGLE_sampler_sampCube, (vec3<f32>(0.0f, 0.0f, 0.0f)).xyz, 0.0f));
+  ((ANGLE_output_global.gl_Position_).y) = (((ANGLE_output_global.gl_Position_).y) * ((unpack4x8snorm((ANGLEUniforms).flipXY)).w));
 }
 @vertex
 fn wgslMain() -> ANGLE_Output_Annotated

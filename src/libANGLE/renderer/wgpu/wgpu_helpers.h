@@ -168,6 +168,7 @@ class ImageHelper
     gl::LevelIndex getLastAllocatedLevel();
     uint32_t getLevelCount() { return mTextureDescriptor.mipLevelCount; }
     WGPUExtent3D getSize() { return mTextureDescriptor.size; }
+    WGPUExtent3D getLevelSize(LevelIndex wgpuLevel);
     bool isInitialized() { return mInitialized; }
 
   private:
