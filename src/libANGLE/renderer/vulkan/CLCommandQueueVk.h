@@ -369,7 +369,7 @@ class CLCommandQueueVk : public CLCommandQueueImpl
     // event status updates etc. This is a blocking call.
     angle::Result finishQueueSerialInternal(const QueueSerial queueSerial);
 
-    angle::Result syncHostBuffers(HostTransferEntries &hostTransferList);
+    angle::Result syncPendingHostTransfers(HostTransferEntries &hostTransferList);
     angle::Result flushComputePassCommands();
     angle::Result processWaitlist(const cl::EventPtrs &waitEvents);
     angle::Result createEvent(CLEventImpl::CreateFunc *createFunc,

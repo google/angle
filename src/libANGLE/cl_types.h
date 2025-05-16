@@ -120,8 +120,12 @@ struct BufferRect
                (mSlicePitch * (mOrigin.z + slice));                              // slice offset
     }
 
-    size_t getRowPitch() { return mRowPitch; }
-    size_t getSlicePitch() { return mSlicePitch; }
+    size_t getRowPitch() const { return mRowPitch; }
+    size_t getSlicePitch() const { return mSlicePitch; }
+    // Given the offset, row pitch, slice pitch, this returns the size of the buffer in which this
+    // rect sits.
+    size_t getRectSize() const { return getRowOffset(mSize.depth, mSize.height); }
+    const Extents &getExtents() const { return mSize; }
     Offset mOrigin;
     Extents mSize;
     size_t mRowPitch;
