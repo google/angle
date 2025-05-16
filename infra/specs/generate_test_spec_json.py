@@ -46,7 +46,7 @@ ADDITIONAL_MIXINS = {
     'samsung_s24': {
         'swarming': {
             'dimensions': {
-                'device_os': 'UP1A.231005.007',
+                'device_os': 'AP3A.240905.015.A2',
                 'device_os_type': 'user',
                 'device_type': 's5e9945',
                 'os': 'Android'
