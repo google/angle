@@ -17,7 +17,7 @@
 
 namespace rx
 {
-class TextureWgpu : public TextureImpl
+class TextureWgpu : public TextureImpl, public angle::ObserverInterface
 {
   public:
     TextureWgpu(const gl::TextureState &state);
@@ -173,6 +173,10 @@ class TextureWgpu : public TextureImpl
 
     webgpu::ImageHelper *getImage() { return mImage; }
 
+    // We monitor the ImageHelper and set dirty bits if the ImageHelper changes. This can
+    // support changes in the ImageHelper even outside the TextureWgpu class.
+    void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
+
   private:
     angle::Result setImageImpl(const gl::Context *context,
                                GLenum internalFormat,
@@ -213,6 +217,8 @@ class TextureWgpu : public TextureImpl
     gl::LevelIndex mCurrentBaseLevel;
     gl::LevelIndex mCurrentMaxLevel;
     gl::CubeFaceArray<gl::TexLevelMask> mRedefinedLevels;
+
+    angle::ObserverBinding mImageObserverBinding;
 
     // Render targets stored as array of vector of vectors
     //

@@ -81,11 +81,11 @@ struct SubresourceUpdate
 
 WGPUTextureDimension ToWgpuTextureDimension(gl::TextureType glTextureType);
 
-class ImageHelper
+class ImageHelper : public angle::Subject
 {
   public:
     ImageHelper();
-    ~ImageHelper();
+    ~ImageHelper() override;
 
     angle::Result initImage(angle::FormatID intendedFormatID,
                             angle::FormatID actualFormatID,

@@ -22,6 +22,8 @@ namespace rx
 namespace
 {
 
+constexpr angle::SubjectIndex kTextureImageSubjectIndex = 0;
+
 void GetRenderTargetLayerCountAndIndex(webgpu::ImageHelper *image,
                                        const gl::ImageIndex &index,
                                        GLuint *layerIndex,
@@ -88,8 +90,11 @@ TextureWgpu::TextureWgpu(const gl::TextureState &state)
     : TextureImpl(state),
       mImage(new webgpu::ImageHelper()),
       mCurrentBaseLevel(state.getBaseLevel()),
-      mCurrentMaxLevel(state.getMaxLevel())
-{}
+      mCurrentMaxLevel(state.getMaxLevel()),
+      mImageObserverBinding(this, kTextureImageSubjectIndex)
+{
+    mImageObserverBinding.bind(mImage);
+}
 
 TextureWgpu::~TextureWgpu() {}
 
@@ -363,6 +368,16 @@ angle::Result TextureWgpu::getAttachmentRenderTarget(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+void TextureWgpu::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message)
+{
+    ASSERT(index == kTextureImageSubjectIndex &&
+           (message == angle::SubjectMessage::SubjectChanged ||
+            message == angle::SubjectMessage::InitializationComplete));
+
+    // Forward the notification to the parent that the staging buffer changed.
+    onStateChange(message);
+}
+
 angle::Result TextureWgpu::setImageImpl(const gl::Context *context,
                                         GLenum internalFormat,
                                         GLenum type,
@@ -481,6 +496,7 @@ angle::Result TextureWgpu::redefineLevel(const gl::Context *context,
     else
     {
         mImage = new webgpu::ImageHelper;
+        mImageObserverBinding.bind(mImage);
     }
 
     return angle::Result::Continue;

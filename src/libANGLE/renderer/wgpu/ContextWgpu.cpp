@@ -61,6 +61,8 @@ constexpr angle::PackedEnumMap<webgpu::RenderPassClosureReason, const char *>
          "Render pass closed for uploading streamed client data"},
         {webgpu::RenderPassClosureReason::VertexArrayLineLoop,
          "Render pass closed for line loop emulation"},
+        {webgpu::RenderPassClosureReason::CopyBufferToTexture,
+         "Render pass closed to update texture"},
     }};
 
 }  // namespace

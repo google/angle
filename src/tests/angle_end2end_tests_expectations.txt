@@ -1605,7 +1605,6 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 42266974 WGPU : Texture2DTest.Tex* = SKIP
 42266974 WGPU : Texture2DTest.Upload* = SKIP
 42266974 WGPU : Texture2DTest.*Superseding* = SKIP
-42266974 WGPU : Texture2DTest.*Multiple* = SKIP
 42266974 WGPU : Texture2DTest.*Copy* = SKIP
 42266974 WGPU : Texture2DTest.*Mutable* = SKIP
 // 383356846 ubyte index formats are not fully supported yet.
@@ -1634,6 +1633,7 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 389145696 WGPU MAC NVIDIA : SimpleUniformUsageTest* = SKIP
 389145696 WGPU MAC NVIDIA : BasicSamplersTest* = SKIP
 389145696 WGPU MAC NVIDIA : SampleFromRenderedTextureTest* = SKIP
+389145696 WGPU MAC NVIDIA : Texture2DTest.*Multiple* = SKIP
 
 // SPIR-V compilation error
 384593678 VULKAN : SimpleUniformUsageTestES3.CopyOfUniformsWithArrays/* = SKIP

@@ -295,6 +295,7 @@ enum class RenderPassClosureReason
     IndexRangeReadback,
     VertexArrayStreaming,
     VertexArrayLineLoop,
+    CopyBufferToTexture,
 
     InvalidEnum,
     EnumCount = InvalidEnum,

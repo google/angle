@@ -120,10 +120,6 @@ angle::Result ImageHelper::flushSingleLevelUpdates(ContextWgpu *contextWgpu,
     {
         return angle::Result::Continue;
     }
-    DeviceHandle device = contextWgpu->getDevice();
-    QueueHandle queue   = contextWgpu->getQueue();
-    CommandEncoderHandle encoder =
-        CommandEncoderHandle::Acquire(wgpuDeviceCreateCommandEncoder(device.get(), nullptr));
     WGPUTexelCopyTextureInfo dst = WGPU_TEXEL_COPY_TEXTURE_INFO_INIT;
     dst.texture                  = mTexture.get();
     std::vector<PackedRenderPassColorAttachment> colorAttachments;
@@ -146,6 +142,10 @@ angle::Result ImageHelper::flushSingleLevelUpdates(ContextWgpu *contextWgpu,
                 LevelIndex wgpuLevel    = toWgpuLevel(srcUpdate.targetLevel);
                 dst.mipLevel            = wgpuLevel.get();
                 WGPUExtent3D copyExtent = getLevelSize(wgpuLevel);
+
+                ANGLE_TRY(contextWgpu->flush(webgpu::RenderPassClosureReason::CopyBufferToTexture));
+                contextWgpu->ensureCommandEncoderCreated();
+                CommandEncoderHandle encoder = contextWgpu->getCurrentCommandEncoder();
 
                 WGPUTexelCopyBufferInfo copyInfo = WGPU_TEXEL_COPY_BUFFER_INFO_INIT;
                 copyInfo.layout                  = srcUpdate.textureDataLayout;
@@ -202,10 +202,6 @@ angle::Result ImageHelper::flushSingleLevelUpdates(ContextWgpu *contextWgpu,
         frameBuffer->updateDepthStencilAttachment(CreateNewDepthStencilAttachment(
             depthValue, stencilValue, textureView, updateDepth, updateStencil));
     }
-    CommandBufferHandle commandBuffer =
-        CommandBufferHandle::Acquire(wgpuCommandEncoderFinish(encoder.get(), nullptr));
-    wgpuQueueSubmit(queue.get(), 1, &commandBuffer.get());
-    encoder = nullptr;
     currentLevelQueue->clear();
 
     return angle::Result::Continue;
@@ -487,6 +483,7 @@ void ImageHelper::appendSubresourceUpdate(gl::LevelIndex level, SubresourceUpdat
         mSubresourceQueue.resize(level.get() + 1);
     }
     mSubresourceQueue[level.get()].emplace_back(std::move(update));
+    onStateChange(angle::SubjectMessage::SubjectChanged);
 }
 
 std::vector<SubresourceUpdate> *ImageHelper::getLevelUpdates(gl::LevelIndex level)
