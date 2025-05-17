@@ -429,7 +429,7 @@ egl::Error SurfaceD3D::querySurfacePointerANGLE(EGLint attribute, void **value)
     return egl::NoError();
 }
 
-const angle::Format *SurfaceD3D::getD3DTextureColorFormat() const
+const angle::Format *SurfaceD3D::getClientBufferTextureColorFormat() const
 {
     return mColorFormat;
 }

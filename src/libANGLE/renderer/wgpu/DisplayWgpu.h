@@ -46,6 +46,15 @@ class DisplayWgpu : public DisplayImpl
     bool testDeviceLost() override;
     egl::Error restoreLostDevice(const egl::Display *display) override;
 
+    egl::Error validateClientBuffer(const egl::Config *configuration,
+                                    EGLenum buftype,
+                                    EGLClientBuffer clientBuffer,
+                                    const egl::AttributeMap &attribs) const override;
+    egl::Error validateImageClientBuffer(const gl::Context *context,
+                                         EGLenum target,
+                                         EGLClientBuffer clientBuffer,
+                                         const egl::AttributeMap &attribs) const override;
+
     bool isValidNativeWindow(EGLNativeWindowType window) const override;
 
     std::string getRendererDescription() override;
@@ -76,6 +85,10 @@ class DisplayWgpu : public DisplayImpl
                            const gl::Context *context,
                            EGLenum target,
                            const egl::AttributeMap &attribs) override;
+    ExternalImageSiblingImpl *createExternalImageSibling(const gl::Context *context,
+                                                         EGLenum target,
+                                                         EGLClientBuffer buffer,
+                                                         const egl::AttributeMap &attribs) override;
 
     ContextImpl *createContext(const gl::State &state,
                                gl::ErrorSet *errorSet,
@@ -111,7 +124,13 @@ class DisplayWgpu : public DisplayImpl
         return mFormatTable[internalFormat];
     }
 
+    const webgpu::Format *getFormatForImportedTexture(const egl::AttributeMap &attribs,
+                                                      WGPUTextureFormat wgpuFormat) const;
+
   private:
+    egl::Error validateExternalWebGPUTexture(EGLClientBuffer buffer,
+                                             const egl::AttributeMap &attribs) const;
+
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;
 

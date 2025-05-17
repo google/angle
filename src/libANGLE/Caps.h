@@ -711,6 +711,9 @@ struct DisplayExtensions
 
     // EGL_EXT_surface_compression
     bool surfaceCompressionEXT = false;
+
+    // EGL_ANGLE_webgpu_texture_client_buffer
+    bool webgpuTextureClientBuffer = false;
 };
 
 struct DeviceExtensions
@@ -743,6 +746,9 @@ struct DeviceExtensions
 
     // EGL_EXT_device_drm_render_node
     bool deviceDrmRenderNodeEXT = false;
+
+    // EGL_ANGLE_device_webgpu
+    bool deviceWebGPU = false;
 };
 
 struct ClientExtensions

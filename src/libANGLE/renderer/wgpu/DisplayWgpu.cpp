@@ -124,6 +124,54 @@ egl::Error DisplayWgpu::restoreLostDevice(const egl::Display *display)
     return egl::NoError();
 }
 
+egl::Error DisplayWgpu::validateClientBuffer(const egl::Config *configuration,
+                                             EGLenum buftype,
+                                             EGLClientBuffer clientBuffer,
+                                             const egl::AttributeMap &attribs) const
+{
+    switch (buftype)
+    {
+        case EGL_WEBGPU_TEXTURE_ANGLE:
+            return validateExternalWebGPUTexture(clientBuffer, attribs);
+        default:
+            return DisplayImpl::validateClientBuffer(configuration, buftype, clientBuffer, attribs);
+    }
+}
+
+egl::Error DisplayWgpu::validateImageClientBuffer(const gl::Context *context,
+                                                  EGLenum target,
+                                                  EGLClientBuffer clientBuffer,
+                                                  const egl::AttributeMap &attribs) const
+{
+    switch (target)
+    {
+        case EGL_WEBGPU_TEXTURE_ANGLE:
+            return validateExternalWebGPUTexture(clientBuffer, attribs);
+        default:
+            return DisplayImpl::validateImageClientBuffer(context, target, clientBuffer, attribs);
+    }
+}
+
+egl::Error DisplayWgpu::validateExternalWebGPUTexture(EGLClientBuffer buffer,
+                                                      const egl::AttributeMap &attribs) const
+{
+    WGPUTexture externalTexture = reinterpret_cast<WGPUTexture>(buffer);
+    if (externalTexture == nullptr)
+    {
+        return egl::Error(EGL_BAD_PARAMETER, "NULL Buffer");
+    }
+
+    WGPUTextureFormat externalTextureFormat = mProcTable.textureGetFormat(externalTexture);
+    const webgpu::Format *webgpuFormat =
+        getFormatForImportedTexture(attribs, externalTextureFormat);
+    if (webgpuFormat == nullptr)
+    {
+        return egl::Error(EGL_BAD_PARAMETER, "Invalid format.");
+    }
+
+    return egl::NoError();
+}
+
 bool DisplayWgpu::isValidNativeWindow(EGLNativeWindowType window) const
 {
     return true;
@@ -179,7 +227,7 @@ SurfaceImpl *DisplayWgpu::createWindowSurface(const egl::SurfaceState &state,
 SurfaceImpl *DisplayWgpu::createPbufferSurface(const egl::SurfaceState &state,
                                                const egl::AttributeMap &attribs)
 {
-    return new OffscreenSurfaceWgpu(state);
+    return new OffscreenSurfaceWgpu(state, EGL_NONE, nullptr);
 }
 
 SurfaceImpl *DisplayWgpu::createPbufferFromClientBuffer(const egl::SurfaceState &state,
@@ -187,8 +235,7 @@ SurfaceImpl *DisplayWgpu::createPbufferFromClientBuffer(const egl::SurfaceState 
                                                         EGLClientBuffer buffer,
                                                         const egl::AttributeMap &attribs)
 {
-    UNIMPLEMENTED();
-    return nullptr;
+    return new OffscreenSurfaceWgpu(state, buftype, buffer);
 }
 
 SurfaceImpl *DisplayWgpu::createPixmapSurface(const egl::SurfaceState &state,
@@ -205,6 +252,20 @@ ImageImpl *DisplayWgpu::createImage(const egl::ImageState &state,
                                     const egl::AttributeMap &attribs)
 {
     return new ImageWgpu(state, context);
+}
+
+ExternalImageSiblingImpl *DisplayWgpu::createExternalImageSibling(const gl::Context *context,
+                                                                  EGLenum target,
+                                                                  EGLClientBuffer buffer,
+                                                                  const egl::AttributeMap &attribs)
+{
+    switch (target)
+    {
+        case EGL_WEBGPU_TEXTURE_ANGLE:
+            return new WebGPUTextureImageSiblingWgpu(buffer, attribs);
+        default:
+            return DisplayImpl::createExternalImageSibling(context, target, buffer, attribs);
+    }
 }
 
 rx::ContextImpl *DisplayWgpu::createContext(const gl::State &state,
@@ -240,6 +301,35 @@ angle::NativeWindowSystem DisplayWgpu::getWindowSystem() const
 #else
     return angle::NativeWindowSystem::Other;
 #endif
+}
+
+const webgpu::Format *DisplayWgpu::getFormatForImportedTexture(const egl::AttributeMap &attribs,
+                                                               WGPUTextureFormat wgpuFormat) const
+{
+    GLenum requestedGLFormat = attribs.getAsInt(EGL_TEXTURE_INTERNAL_FORMAT_ANGLE, GL_NONE);
+    GLenum requestedGLType   = attribs.getAsInt(EGL_TEXTURE_TYPE_ANGLE, GL_NONE);
+
+    if (requestedGLFormat != GL_NONE)
+    {
+        const gl::InternalFormat &internalFormat =
+            gl::GetInternalFormatInfo(requestedGLFormat, requestedGLType);
+        if (internalFormat.internalFormat == GL_NONE)
+        {
+            return nullptr;
+        }
+
+        const webgpu::Format &format = mFormatTable[internalFormat.sizedInternalFormat];
+        if (format.getActualWgpuTextureFormat() != wgpuFormat)
+        {
+            return nullptr;
+        }
+
+        return &format;
+    }
+    else
+    {
+        return mFormatTable.findClosestTextureFormat(wgpuFormat);
+    }
 }
 
 void DisplayWgpu::generateExtensions(egl::DisplayExtensions *outExtensions) const

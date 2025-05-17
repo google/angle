@@ -65,7 +65,7 @@ class D3DTextureSurfaceWGL : public SurfaceWGL
     EGLint getSwapBehavior() const override;
 
     HDC getDC() const override;
-    const angle::Format *getD3DTextureColorFormat() const override;
+    const angle::Format *getClientBufferTextureColorFormat() const override;
 
     egl::Error attachToFramebuffer(const gl::Context *context,
                                    gl::Framebuffer *framebuffer) override;

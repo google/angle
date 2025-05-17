@@ -377,6 +377,15 @@ if (is_win || is_linux || is_chromeos || is_android || is_fuchsia || is_apple) {
       # Need to bundle the libraries inside the .app.
       deps += [ "$angle_root:angle" ]
     }
+
+    if (angle_enable_wgpu) {
+      deps += [
+        "${angle_dawn_dir}/include/dawn:headers",
+        "${angle_dawn_dir}/src/dawn:proc",
+        "${angle_dawn_dir}/src/dawn/native",
+      ]
+      defines += [ "ANGLE_ENABLE_WGPU" ]
+    }
   }
 }
 

@@ -510,7 +510,7 @@ HDC D3DTextureSurfaceWGL::getDC() const
     return mDeviceContext;
 }
 
-const angle::Format *D3DTextureSurfaceWGL::getD3DTextureColorFormat() const
+const angle::Format *D3DTextureSurfaceWGL::getClientBufferTextureColorFormat() const
 {
     return mColorFormat;
 }

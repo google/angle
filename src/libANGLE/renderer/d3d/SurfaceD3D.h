@@ -70,7 +70,7 @@ class SurfaceD3D : public SurfaceImpl
                                      GLenum binding,
                                      const gl::ImageIndex &imageIndex) override;
 
-    const angle::Format *getD3DTextureColorFormat() const override;
+    const angle::Format *getClientBufferTextureColorFormat() const override;
 
     egl::Error attachToFramebuffer(const gl::Context *context,
                                    gl::Framebuffer *framebuffer) override;

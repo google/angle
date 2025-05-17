@@ -448,7 +448,7 @@ angle::Result ImageHelper::createTextureView(gl::LevelIndex targetLevel,
     return angle::Result::Continue;
 }
 
-gl::LevelIndex ImageHelper::getLastAllocatedLevel()
+gl::LevelIndex ImageHelper::getLastAllocatedLevel() const
 {
     return mFirstAllocatedLevel + mTextureDescriptor.mipLevelCount - 1;
 }
@@ -463,7 +463,7 @@ gl::LevelIndex ImageHelper::toGlLevel(LevelIndex levelIndexWgpu) const
     return wgpu_gl::GetLevelIndex(levelIndexWgpu, mFirstAllocatedLevel);
 }
 
-bool ImageHelper::isTextureLevelInAllocatedImage(gl::LevelIndex textureLevel)
+bool ImageHelper::isTextureLevelInAllocatedImage(gl::LevelIndex textureLevel) const
 {
     if (!mInitialized || textureLevel < mFirstAllocatedLevel)
     {
@@ -473,7 +473,7 @@ bool ImageHelper::isTextureLevelInAllocatedImage(gl::LevelIndex textureLevel)
     return wgpuTextureLevel < LevelIndex(mTextureDescriptor.mipLevelCount);
 }
 
-WGPUExtent3D ImageHelper::getLevelSize(LevelIndex wgpuLevel)
+WGPUExtent3D ImageHelper::getLevelSize(LevelIndex wgpuLevel) const
 {
     WGPUExtent3D copyExtent = mTextureDescriptor.size;
     // https://www.w3.org/TR/webgpu/#abstract-opdef-logical-miplevel-specific-texture-extent

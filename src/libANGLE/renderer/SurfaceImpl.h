@@ -94,8 +94,8 @@ class SurfaceImpl : public FramebufferAttachmentObjectImpl
     virtual egl::Error detachFromFramebuffer(const gl::Context *context,
                                              gl::Framebuffer *framebuffer) = 0;
 
-    // Used to query color format from pbuffers created from D3D textures.
-    virtual const angle::Format *getD3DTextureColorFormat() const;
+    // Used to query color format from pbuffers created from D3D and WebGPU textures.
+    virtual const angle::Format *getClientBufferTextureColorFormat() const;
 
     // EGL_ANDROID_get_frame_timestamps
     virtual void setTimestampsEnabled(bool enabled);

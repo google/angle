@@ -13,6 +13,11 @@
 #include "util/EGLWindow.h"
 #include "util/test_utils.h"
 
+#if defined(ANGLE_ENABLE_WGPU)
+#    include <dawn/native/DawnNative.h>
+#    include <webgpu/webgpu.h>
+#endif
+
 #include "common/android_util.h"
 
 #if defined(ANGLE_PLATFORM_ANDROID) && __ANDROID_API__ >= 29
@@ -50,6 +55,8 @@ constexpr char kEGLAndroidImageNativeBufferExt[] = "EGL_ANDROID_image_native_buf
 constexpr char kEGLImageStorageExt[]             = "GL_EXT_EGL_image_storage";
 constexpr char kEGLImageStorageCompressionExt[]  = "GL_EXT_EGL_image_storage_compression";
 constexpr char kTextureStorageCompressionExt[]   = "GL_EXT_texture_storage_compression";
+constexpr char kWebGPUDeviceExt[]                = "EGL_ANGLE_device_webgpu";
+constexpr char kWebGPUTextureExt[]               = "EGL_ANGLE_webgpu_texture_client_buffer";
 constexpr EGLint kDefaultAttribs[]               = {
     EGL_IMAGE_PRESERVED,
     EGL_TRUE,
@@ -1084,6 +1091,66 @@ void main()
         *outSourceImage = image;
     }
 
+#if defined(ANGLE_ENABLE_WGPU)
+    const DawnProcTable &getWebGPUProcs() { return dawn::native::GetProcs(); }
+
+    WGPUDevice getWebGPUDevice()
+    {
+        EXPECT_TRUE(IsEGLClientExtensionEnabled("EGL_EXT_device_query"));
+        EGLAttrib eglDevice = 0;
+        EXPECT_EGL_TRUE(
+            eglQueryDisplayAttribEXT(getEGLWindow()->getDisplay(), EGL_DEVICE_EXT, &eglDevice));
+        EXPECT_TRUE(IsEGLDeviceExtensionEnabled(reinterpret_cast<EGLDeviceEXT>(eglDevice),
+                                                kWebGPUDeviceExt));
+
+        EGLAttrib wgpuDevice = 0;
+        EXPECT_TRUE(eglQueryDeviceAttribEXT(reinterpret_cast<EGLDeviceEXT>(eglDevice),
+                                            EGL_WEBGPU_DEVICE_ANGLE, &wgpuDevice));
+
+        return reinterpret_cast<WGPUDevice>(wgpuDevice);
+    }
+
+    void createEGLImageWebGPUTextureClientBufferSource(const WGPUTextureDescriptor &desc,
+                                                       const EGLint *attribsImage,
+                                                       const std::vector<GLubyte> &data,
+                                                       uint32_t bytesPerRow,
+                                                       WGPUTexture *outSourceWebGPUTexture,
+                                                       EGLImageKHR *outSourceImage)
+    {
+        const DawnProcTable &wgpu = getWebGPUProcs();
+
+        WGPUDevice device   = getWebGPUDevice();
+        WGPUTexture texture = wgpu.deviceCreateTexture(device, &desc);
+
+        EGLImageKHR image = eglCreateImageKHR(getEGLWindow()->getDisplay(), EGL_NO_CONTEXT,
+                                              EGL_WEBGPU_TEXTURE_ANGLE, texture, attribsImage);
+        ASSERT_EGL_SUCCESS();
+
+        if (!data.empty())
+        {
+            WGPUQueue queue = wgpu.deviceGetQueue(device);
+
+            WGPUTexelCopyTextureInfo copyDest = WGPU_TEXEL_COPY_TEXTURE_INFO_INIT;
+            copyDest.texture                  = texture;
+            copyDest.mipLevel                 = 0;
+            copyDest.origin                   = {0, 0, 0};
+
+            WGPUTexelCopyBufferLayout dataLayout = WGPU_TEXEL_COPY_BUFFER_LAYOUT_INIT;
+            dataLayout.bytesPerRow               = bytesPerRow;
+
+            wgpu.queueWriteTexture(queue, &copyDest, data.data(), data.size(), &dataLayout,
+                                   &desc.size);
+
+            wgpu.queueRelease(queue);
+        }
+
+        wgpu.deviceRelease(device);
+
+        *outSourceWebGPUTexture = texture;
+        *outSourceImage         = image;
+    }
+#endif  // defined(ANGLE_ENABLE_WGPU)
+
     void createEGLImageTargetRenderbuffer(EGLImageKHR image, GLuint targetRenderbuffer)
     {
         // Create a target texture from the image
@@ -1528,6 +1595,24 @@ void main()
         return IsEGLDisplayExtensionEnabled(getEGLWindow()->getDisplay(), kCubemapExt);
     }
 
+    bool hasWebGPUDeviceExt() const
+    {
+        if (!IsEGLClientExtensionEnabled("EGL_EXT_device_query"))
+        {
+            return false;
+        }
+        EGLAttrib device = 0;
+        EXPECT_EGL_TRUE(
+            eglQueryDisplayAttribEXT(getEGLWindow()->getDisplay(), EGL_DEVICE_EXT, &device));
+        return IsEGLDeviceExtensionEnabled(reinterpret_cast<EGLDeviceEXT>(device),
+                                           kWebGPUDeviceExt);
+    }
+
+    bool hasWebGPUTextureExt() const
+    {
+        return IsEGLDisplayExtensionEnabled(getEGLWindow()->getDisplay(), kWebGPUTextureExt);
+    }
+
     angle::VulkanPerfCounters getPerfCounters()
     {
         ASSERT(IsVulkan());
@@ -1801,6 +1886,11 @@ TEST_P(ImageTest, ANGLEExtensionAvailability)
         EXPECT_FALSE(hasCubemapExt());
         EXPECT_FALSE(has3DTextureExt());
         EXPECT_TRUE(hasRenderbufferExt());
+        EXPECT_TRUE(hasWebGPUDeviceExt());
+        EXPECT_TRUE(hasWebGPUTextureExt());
+#if !defined(ANGLE_ENABLE_WGPU)
+        FAIL() << "ANGLE_ENABLE_WGPU not defined when running on WebGPU backend";
+#endif
     }
     else
     {
@@ -3339,6 +3429,90 @@ TEST_P(ImageTest, ImageSiblingAsSourceTarget)
     eglDestroyImageKHR(window->getDisplay(), image1);
     eglDestroyImageKHR(window->getDisplay(), image2);
 }
+
+#if defined(ANGLE_ENABLE_WGPU)
+// Testing source WebGPU Texture EGL image, target 2D texture
+TEST_P(ImageTest, SourceWebGPUTextureTarget2D)
+{
+    EGLWindow *window = getEGLWindow();
+
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+    ANGLE_SKIP_TEST_IF(!hasWebGPUDeviceExt() || !hasWebGPUTextureExt());
+
+    const DawnProcTable &wgpu = getWebGPUProcs();
+
+    std::vector<GLubyte> data = {190, 128, 238, 255};
+    uint32_t dataBytesPerRow  = 4;
+
+    WGPUTextureDescriptor desc = WGPU_TEXTURE_DESCRIPTOR_INIT;
+    desc.usage                 = WGPUTextureUsage_CopySrc | WGPUTextureUsage_CopyDst |
+                 WGPUTextureUsage_RenderAttachment | WGPUTextureUsage_TextureBinding;
+    desc.dimension = WGPUTextureDimension_2D;
+    desc.size      = {1, 1, 1};
+    desc.format    = WGPUTextureFormat_RGBA8Unorm;
+
+    const EGLint attribs[] = {EGL_NONE};
+
+    // Create the Image
+    WGPUTexture source;
+    EGLImageKHR image;
+    createEGLImageWebGPUTextureClientBufferSource(desc, attribs, data, dataBytesPerRow, &source,
+                                                  &image);
+
+    // Create a texture target to bind the egl image
+    GLTexture target;
+    createEGLImageTargetTexture2D(image, target);
+
+    // Use texture target bound to egl image as source and render to framebuffer
+    // Verify that the target texture has the expected color
+    verifyResults2D(target, getExpected2DColorForAttribList(attribs));
+
+    // Clean up
+    eglDestroyImageKHR(window->getDisplay(), image);
+    wgpu.textureRelease(source);
+}
+
+// Testing source WebGPU Texture EGL image, target 2D renderbuffer
+TEST_P(ImageTest, SourceWebGPUTextureRenderbuffer)
+{
+    EGLWindow *window = getEGLWindow();
+
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+    ANGLE_SKIP_TEST_IF(!hasWebGPUDeviceExt() || !hasWebGPUTextureExt());
+
+    const DawnProcTable &wgpu = getWebGPUProcs();
+
+    std::vector<GLubyte> data = {190, 128, 238, 255};
+    uint32_t dataBytesPerRow  = 4;
+
+    WGPUTextureDescriptor desc = WGPU_TEXTURE_DESCRIPTOR_INIT;
+    desc.usage                 = WGPUTextureUsage_CopySrc | WGPUTextureUsage_CopyDst |
+                 WGPUTextureUsage_RenderAttachment | WGPUTextureUsage_TextureBinding;
+    desc.dimension = WGPUTextureDimension_2D;
+    desc.size      = {1, 1, 1};
+    desc.format    = WGPUTextureFormat_RGBA8Unorm;
+
+    const EGLint attribs[] = {EGL_NONE};
+
+    // Create the Image
+    WGPUTexture source;
+    EGLImageKHR image;
+    createEGLImageWebGPUTextureClientBufferSource(desc, attribs, data, dataBytesPerRow, &source,
+                                                  &image);
+
+    // Create a renderbuffer target to bind the egl image
+    GLRenderbuffer target;
+    createEGLImageTargetRenderbuffer(image, target);
+
+    // Use renderbuffer target bound to egl image as source and render to framebuffer
+    // Verify that the target renderbuffer has the expected color
+    verifyResultsRenderbuffer(target, getExpected2DColorForAttribList(attribs));
+
+    // Clean up
+    eglDestroyImageKHR(window->getDisplay(), image);
+    wgpu.textureRelease(source);
+}
+#endif  // defined(ANGLE_ENABLE_WGPU)
 
 // Testing source AHB EGL image, target 2D texture and delete when in use
 // If refcounted correctly, the test should pass without issues

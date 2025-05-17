@@ -88,7 +88,7 @@ void SurfaceImpl::setTimestampsEnabled(bool enabled)
     UNREACHABLE();
 }
 
-const angle::Format *SurfaceImpl::getD3DTextureColorFormat() const
+const angle::Format *SurfaceImpl::getClientBufferTextureColorFormat() const
 {
     UNREACHABLE();
     return nullptr;

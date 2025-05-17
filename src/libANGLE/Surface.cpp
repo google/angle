@@ -255,7 +255,7 @@ Error Surface::initialize(const Display *display)
     }
     if (mBuftype == EGL_D3D_TEXTURE_ANGLE)
     {
-        const angle::Format *colorFormat = mImplementation->getD3DTextureColorFormat();
+        const angle::Format *colorFormat = mImplementation->getClientBufferTextureColorFormat();
         ASSERT(colorFormat != nullptr);
         GLenum internalFormat = colorFormat->fboImplementationInternalFormat;
         mColorFormat          = gl::Format(internalFormat, colorFormat->componentType);

@@ -400,6 +400,7 @@ void GenerateCaps(const WGPULimits &limitsWgpu,
     eglExtensions->createContextClientArrays          = true;
     eglExtensions->programCacheControlANGLE           = true;
     eglExtensions->robustResourceInitializationANGLE  = true;
+    eglExtensions->webgpuTextureClientBuffer          = true;
 }
 
 bool IsStripPrimitiveTopology(WGPUPrimitiveTopology topology)

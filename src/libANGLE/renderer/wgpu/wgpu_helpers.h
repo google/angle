@@ -160,18 +160,20 @@ class ImageHelper : public angle::Subject
                                     WGPUTextureViewDimension desiredViewDimension);
     LevelIndex toWgpuLevel(gl::LevelIndex levelIndexGl) const;
     gl::LevelIndex toGlLevel(LevelIndex levelIndexWgpu) const;
-    bool isTextureLevelInAllocatedImage(gl::LevelIndex textureLevel);
+    bool isTextureLevelInAllocatedImage(gl::LevelIndex textureLevel) const;
     TextureHandle &getTexture() { return mTexture; }
     WGPUTextureFormat toWgpuTextureFormat() const { return mTextureDescriptor.format; }
-    angle::FormatID getIntendedFormatID() { return mIntendedFormatID; }
-    angle::FormatID getActualFormatID() { return mActualFormatID; }
+    angle::FormatID getIntendedFormatID() const { return mIntendedFormatID; }
+    angle::FormatID getActualFormatID() const { return mActualFormatID; }
     const WGPUTextureDescriptor &getTextureDescriptor() const { return mTextureDescriptor; }
-    gl::LevelIndex getFirstAllocatedLevel() { return mFirstAllocatedLevel; }
-    gl::LevelIndex getLastAllocatedLevel();
-    uint32_t getLevelCount() { return mTextureDescriptor.mipLevelCount; }
-    WGPUExtent3D getSize() { return mTextureDescriptor.size; }
-    WGPUExtent3D getLevelSize(LevelIndex wgpuLevel);
-    bool isInitialized() { return mInitialized; }
+    gl::LevelIndex getFirstAllocatedLevel() const { return mFirstAllocatedLevel; }
+    gl::LevelIndex getLastAllocatedLevel() const;
+    uint32_t getLevelCount() const { return mTextureDescriptor.mipLevelCount; }
+    WGPUExtent3D getSize() const { return mTextureDescriptor.size; }
+    WGPUExtent3D getLevelSize(LevelIndex wgpuLevel) const;
+    uint32_t getSamples() const { return mTextureDescriptor.sampleCount; }
+    WGPUTextureUsage getUsage() const { return mTextureDescriptor.usage; }
+    bool isInitialized() const { return mInitialized; }
 
   private:
     void appendSubresourceUpdate(gl::LevelIndex level, SubresourceUpdate &&update);

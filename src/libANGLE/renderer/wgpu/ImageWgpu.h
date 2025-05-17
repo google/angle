@@ -10,11 +10,51 @@
 #ifndef LIBANGLE_RENDERER_WGPU_IMAGEWGPU_H_
 #define LIBANGLE_RENDERER_WGPU_IMAGEWGPU_H_
 
+#include "libANGLE/AttributeMap.h"
 #include "libANGLE/renderer/ImageImpl.h"
 #include "libANGLE/renderer/wgpu/wgpu_helpers.h"
 
 namespace rx
 {
+class ExternalImageSiblingWgpu : public ExternalImageSiblingImpl
+{
+  public:
+    ExternalImageSiblingWgpu() {}
+    ~ExternalImageSiblingWgpu() override {}
+
+    virtual webgpu::ImageHelper *getImage() const = 0;
+};
+
+class WebGPUTextureImageSiblingWgpu : public ExternalImageSiblingWgpu
+{
+  public:
+    WebGPUTextureImageSiblingWgpu(EGLClientBuffer buffer, const egl::AttributeMap &attribs);
+    ~WebGPUTextureImageSiblingWgpu() override;
+
+    egl::Error initialize(const egl::Display *display) override;
+    void onDestroy(const egl::Display *display) override;
+
+    // ExternalImageSiblingImpl interface
+    gl::Format getFormat() const override;
+    bool isRenderable(const gl::Context *context) const override;
+    bool isTexturable(const gl::Context *context) const override;
+    bool isYUV() const override;
+    bool hasFrontBufferUsage() const override;
+    bool isCubeMap() const override;
+    bool hasProtectedContent() const override;
+    gl::Extents getSize() const override;
+    size_t getSamples() const override;
+    uint32_t getLevelCount() const override;
+
+    webgpu::ImageHelper *getImage() const override;
+
+  private:
+    angle::Result initializeImpl(const egl::Display *display);
+
+    EGLClientBuffer mBuffer = nullptr;
+    egl::AttributeMap mAttribs;
+    webgpu::ImageHelper mImage;
+};
 
 class ImageWgpu : public ImageImpl
 {
