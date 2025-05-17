@@ -1634,6 +1634,11 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 389145696 WGPU MAC NVIDIA : BasicSamplersTest* = SKIP
 389145696 WGPU MAC NVIDIA : SampleFromRenderedTextureTest* = SKIP
 389145696 WGPU MAC NVIDIA : Texture2DTest.*Multiple* = SKIP
+389145696 WGPU MAC NVIDIA : ImageTest* = SKIP
+// Unimplemented cube map and non-zero mipmap EGLImages
+418022112 WGPU : ImageTest.MipLevels/* = SKIP
+418022112 WGPU : ImageTest.RespecificationOfOtherLevel/* = SKIP
+418022112 WGPU : ImageTest.SourceCubeAndSameTargetTextureWithEachCubeFace/* = SKIP
 
 // SPIR-V compilation error
 384593678 VULKAN : SimpleUniformUsageTestES3.CopyOfUniformsWithArrays/* = SKIP

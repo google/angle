@@ -10,6 +10,7 @@
 #include "libANGLE/renderer/wgpu/RenderbufferWgpu.h"
 
 #include "common/debug.h"
+#include "libANGLE/renderer/wgpu/ImageWgpu.h"
 
 namespace rx
 {
@@ -77,6 +78,10 @@ angle::Result RenderbufferWgpu::setStorageMultisample(const gl::Context *context
 angle::Result RenderbufferWgpu::setStorageEGLImageTarget(const gl::Context *context,
                                                          egl::Image *image)
 {
+    ImageWgpu *imageWgpu = webgpu::GetImpl(image);
+    setImageHelper(imageWgpu->getImage(), false);
+    ASSERT(mImage->isInitialized());
+
     return angle::Result::Continue;
 }
 
@@ -104,6 +109,12 @@ angle::Result RenderbufferWgpu::getAttachmentRenderTarget(const gl::Context *con
 
     *rtOut = &mRenderTarget;
     return angle::Result::Continue;
+}
+
+void RenderbufferWgpu::releaseOwnershipOfImage(const gl::Context *context)
+{
+    mOwnsImage = false;
+    setImageHelper(nullptr, true);
 }
 
 void RenderbufferWgpu::onSubjectStateChange(angle::SubjectIndex index,

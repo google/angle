@@ -1784,6 +1784,24 @@ TEST_P(ImageTest, ANGLEExtensionAvailability)
         EXPECT_FALSE(has3DTextureExt());
         EXPECT_FALSE(hasRenderbufferExt());
     }
+    else if (IsWebGPU())
+    {
+        EXPECT_TRUE(hasOESExt());
+        EXPECT_TRUE(hasBaseExt());
+        EXPECT_TRUE(hasExternalExt());
+        if (getClientMajorVersion() >= 3)
+        {
+            EXPECT_TRUE(hasExternalESSL3Ext());
+        }
+        else
+        {
+            EXPECT_FALSE(hasExternalESSL3Ext());
+        }
+        EXPECT_TRUE(has2DTextureExt());
+        EXPECT_FALSE(hasCubemapExt());
+        EXPECT_FALSE(has3DTextureExt());
+        EXPECT_TRUE(hasRenderbufferExt());
+    }
     else
     {
         EXPECT_FALSE(hasOESExt());
@@ -9788,7 +9806,8 @@ void main()
 }
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(ImageTest,
-                                       ES3_VULKAN().enable(Feature::AllocateNonZeroMemory));
+                                       ES3_VULKAN().enable(Feature::AllocateNonZeroMemory),
+                                       ES2_WEBGPU());
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ImageTestES3);
 ANGLE_INSTANTIATE_TEST_ES3_AND(ImageTestES3, ES3_VULKAN().enable(Feature::AllocateNonZeroMemory));

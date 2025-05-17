@@ -11,6 +11,7 @@
 #define LIBANGLE_RENDERER_WGPU_IMAGEWGPU_H_
 
 #include "libANGLE/renderer/ImageImpl.h"
+#include "libANGLE/renderer/wgpu/wgpu_helpers.h"
 
 namespace rx
 {
@@ -18,11 +19,19 @@ namespace rx
 class ImageWgpu : public ImageImpl
 {
   public:
-    ImageWgpu(const egl::ImageState &state);
+    ImageWgpu(const egl::ImageState &state, const gl::Context *context);
     ~ImageWgpu() override;
     egl::Error initialize(const egl::Display *display) override;
 
     angle::Result orphan(const gl::Context *context, egl::ImageSibling *sibling) override;
+
+    webgpu::ImageHelper *getImage() const { return mImage; }
+
+  private:
+    bool mOwnsImage             = false;
+    webgpu::ImageHelper *mImage = nullptr;
+
+    const gl::Context *mContext = nullptr;
 };
 
 }  // namespace rx

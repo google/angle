@@ -82,8 +82,8 @@ egl::ConfigSet DisplayWgpu::generateConfigs()
     config.blueSize              = 8;
     config.alphaSize             = 8;
     config.alphaMaskSize         = 0;
-    config.bindToTextureRGB      = EGL_TRUE;
-    config.bindToTextureRGBA     = EGL_TRUE;
+    config.bindToTextureRGB      = EGL_FALSE;
+    config.bindToTextureRGBA     = EGL_FALSE;
     config.colorBufferType       = EGL_RGB_BUFFER;
     config.configCaveat          = EGL_NONE;
     config.conformant            = EGL_OPENGL_ES2_BIT | EGL_OPENGL_ES3_BIT;
@@ -131,12 +131,12 @@ bool DisplayWgpu::isValidNativeWindow(EGLNativeWindowType window) const
 
 std::string DisplayWgpu::getRendererDescription()
 {
-    return "Wgpu";
+    return "WebGPU";
 }
 
 std::string DisplayWgpu::getVendorString()
 {
-    return "Wgpu";
+    return "WebGPU";
 }
 
 std::string DisplayWgpu::getVersionString(bool includeFullVersion)
@@ -204,7 +204,7 @@ ImageImpl *DisplayWgpu::createImage(const egl::ImageState &state,
                                     EGLenum target,
                                     const egl::AttributeMap &attribs)
 {
-    return new ImageWgpu(state);
+    return new ImageWgpu(state, context);
 }
 
 rx::ContextImpl *DisplayWgpu::createContext(const gl::State &state,

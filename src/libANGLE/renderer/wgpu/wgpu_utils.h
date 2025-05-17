@@ -57,6 +57,7 @@
 
 #define ANGLE_EGL_OBJECTS_X(PROC) \
     PROC(Display)                 \
+    PROC(ExternalImageSibling)    \
     PROC(Image)                   \
     PROC(Surface)                 \
     PROC(Sync)
@@ -88,6 +89,18 @@
     PROC(Surface, surface)                         \
     PROC(Texture, texture)                         \
     PROC(TextureView, textureView)
+
+namespace gl
+{
+#define ANGLE_PRE_DECLARE_GL_OBJECT(OBJ) class OBJ;
+ANGLE_GL_OBJECTS_X(ANGLE_PRE_DECLARE_GL_OBJECT)
+}  // namespace gl
+
+namespace egl
+{
+#define ANGLE_PRE_DECLARE_EGL_OBJECT(OBJ) class OBJ;
+ANGLE_EGL_OBJECTS_X(ANGLE_PRE_DECLARE_EGL_OBJECT)
+}  // namespace egl
 
 namespace rx
 {

@@ -218,6 +218,11 @@ void GenerateCaps(const WGPULimits &limitsWgpu,
     glExtensions->textureStorageEXT = true;
     glExtensions->rgb8Rgba8OES      = true;
 
+    glExtensions->EGLImageOES                  = true;
+    glExtensions->EGLImageExternalOES          = true;
+    glExtensions->EGLImageExternalEssl3OES     = true;
+    glExtensions->EGLImageExternalWrapModesEXT = true;
+
     // OpenGL ES caps
     glCaps->maxElementIndex       = std::numeric_limits<GLuint>::max() - 1;
     glCaps->max3DTextureSize      = rx::LimitToInt(limitsWgpu.maxTextureDimension3D);
@@ -382,16 +387,12 @@ void GenerateCaps(const WGPULimits &limitsWgpu,
     eglExtensions->image                              = true;
     eglExtensions->imageBase                          = true;
     eglExtensions->glTexture2DImage                   = true;
-    eglExtensions->glTextureCubemapImage              = true;
-    eglExtensions->glTexture3DImage                   = true;
     eglExtensions->glRenderbufferImage                = true;
     eglExtensions->getAllProcAddresses                = true;
     eglExtensions->noConfigContext                    = true;
-    eglExtensions->directComposition                  = true;
     eglExtensions->createContextNoError               = true;
     eglExtensions->createContextWebGLCompatibility    = true;
     eglExtensions->createContextBindGeneratesResource = true;
-    eglExtensions->swapBuffersWithDamage              = true;
     eglExtensions->pixelFormatFloat                   = true;
     eglExtensions->surfacelessContext                 = true;
     eglExtensions->displayTextureShareGroup           = true;

@@ -48,6 +48,7 @@ class RenderbufferWgpu : public RenderbufferImpl, public angle::ObserverInterfac
                                             GLsizei samples,
                                             FramebufferAttachmentRenderTarget **rtOut) override;
 
+    void releaseOwnershipOfImage(const gl::Context *context);
     webgpu::ImageHelper *getImage() const { return mImage; }
 
     // We monitor the ImageHelper and set dirty bits if the ImageHelper changes. This can
