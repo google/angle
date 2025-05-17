@@ -7155,6 +7155,7 @@ void ImageTest::SourceRenderbufferTargetTexture_helper(const EGLint *attribs)
     glClearColor(kSrgbColor[0] / 255.0f, kSrgbColor[1] / 255.0f, kSrgbColor[2] / 255.0f,
                  kSrgbColor[3] / 255.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
     ASSERT_GL_NO_ERROR();
 
     // Create the target
@@ -7200,6 +7201,7 @@ void ImageTest::SourceRenderbufferTargetTextureExternal_helper(const EGLint *att
     glClearColor(kSrgbColor[0] / 255.0f, kSrgbColor[1] / 255.0f, kSrgbColor[2] / 255.0f,
                  kSrgbColor[3] / 255.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
     ASSERT_GL_NO_ERROR();
 
     // Create the target

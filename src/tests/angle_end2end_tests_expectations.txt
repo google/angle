@@ -1695,7 +1695,6 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 404958320 WIN NVIDIA VULKAN : BlitFramebufferTest.BlitSmallColorLargeDepthAttachments/* = SKIP
 
 // EGLImage colorspace renderbuffer failures on NVIDIA, INTEL and ANDROID
-40644776 D3D11                : ImageTest.SourceRenderbufferTargetTexture* = SKIP
 40644776 D3D11                : ImageTestES3.SourceRenderbufferTargetTextureExternalESSL3* = SKIP
 40644776 WIN INTEL VULKAN     : ImageTest.SourceRenderbufferTargetTexture* = SKIP
 40644776 WIN INTEL VULKAN     : ImageTestES3.SourceRenderbufferTargetTextureExternalESSL3* = SKIP
