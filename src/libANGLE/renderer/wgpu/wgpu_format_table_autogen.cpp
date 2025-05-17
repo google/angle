@@ -709,7 +709,11 @@ void Format::initialize(const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::D24_UNORM_X8_UINT:
-            // This format is not implemented in WebGPU.
+            mIntendedGLFormat         = GL_DEPTH_COMPONENT24;
+            mActualImageFormatID      = angle::FormatID::D24_UNORM_S8_UINT;
+            mImageInitializerFunction = nullptr;
+            mIsRenderable             = true;
+
             break;
 
         case angle::FormatID::D32_FLOAT:
@@ -1706,11 +1710,19 @@ void Format::initialize(const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R5G5B5A1_UNORM:
-            // This format is not implemented in WebGPU.
+            mIntendedGLFormat         = GL_RGB5_A1;
+            mActualImageFormatID      = angle::FormatID::R8G8B8A8_UNORM;
+            mImageInitializerFunction = nullptr;
+            mIsRenderable             = true;
+
             break;
 
         case angle::FormatID::R5G6B5_UNORM:
-            // This format is not implemented in WebGPU.
+            mIntendedGLFormat         = GL_RGB565;
+            mActualImageFormatID      = angle::FormatID::R8G8B8A8_UNORM;
+            mImageInitializerFunction = Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>;
+            mIsRenderable             = true;
+
             break;
 
         case angle::FormatID::R8G8B8A8_SINT:

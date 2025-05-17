@@ -49,6 +49,7 @@
     PROC(Query)                  \
     PROC(Program)                \
     PROC(ProgramExecutable)      \
+    PROC(Renderbuffer)           \
     PROC(Sampler)                \
     PROC(Texture)                \
     PROC(TransformFeedback)      \
