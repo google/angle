@@ -176,6 +176,22 @@ TEST_P(EGLDisplayTest, ContextLeakAfterTerminate)
     EXPECT_EQ(eglGetError(), EGL_NOT_INITIALIZED);
 }
 
+// Tests eglGetPlatformDisplayEXT() when EGL_EXT_platform_base is enabled.
+TEST_P(EGLDisplayTest, GetPlatformDisplayEXT)
+{
+    // eglGetPlatformDisplayEXT() requires EGL_EXT_platform_base.
+    ANGLE_SKIP_TEST_IF(!IsEGLClientExtensionEnabled("EGL_EXT_platform_base"));
+
+    ASSERT_TRUE(eglGetPlatformDisplayEXT != nullptr);
+
+    EGLint dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(), EGL_NONE};
+    EGLDisplay display = eglGetPlatformDisplayEXT(
+        EGL_PLATFORM_ANGLE_ANGLE, reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY), dispattrs);
+
+    ASSERT_NE(EGL_NO_DISPLAY, display);
+    ASSERT_EGL_SUCCESS();
+}
+
 // Tests current Context leaking when call eglTerminate() while it is current.
 TEST_P(EGLDisplayTestES3, GetPlatformDisplayAndroidValidation)
 {
