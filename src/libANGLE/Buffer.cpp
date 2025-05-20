@@ -557,15 +557,8 @@ void Buffer::onContentsChange(const Context *context)
 {
     for (const ContentsObserver &contentsObserver : mContentsObservers)
     {
-        if (contentsObserver.bufferIndex != ContentsObserver::kBufferTextureIndex)
-        {
-            static_cast<VertexArray *>(contentsObserver.observer)
-                ->onBufferContentsChange(contentsObserver.bufferIndex);
-        }
-        else
-        {
-            static_cast<Texture *>(contentsObserver.observer)->onBufferContentsChange();
-        }
+        ASSERT(contentsObserver.bufferIndex == ContentsObserver::kBufferTextureIndex);
+        static_cast<Texture *>(contentsObserver.observer)->onBufferContentsChange();
     }
 
     context->onBufferChanged(angle::SubjectMessage::ContentsChanged,

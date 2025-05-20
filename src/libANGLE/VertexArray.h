@@ -119,9 +119,7 @@ class VertexArrayState final : angle::NonCopyable
     AttributesMask mCachedInvalidMappedArrayBuffer;
 };
 
-class VertexArray final : public angle::ObserverInterface,
-                          public LabeledObject,
-                          public angle::Subject
+class VertexArray final : public LabeledObject, public angle::Subject
 {
   public:
     // Dirty bits for VertexArrays use a hierarchical design. At the top level, each attribute
@@ -140,19 +138,18 @@ class VertexArray final : public angle::ObserverInterface,
         // required.
         DIRTY_BIT_LOST_OBSERVATION,
 
-        DIRTY_BIT_ELEMENT_ARRAY_BUFFER,
-        DIRTY_BIT_ELEMENT_ARRAY_BUFFER_DATA,
-
         // Dirty bits for bindings.
         DIRTY_BIT_BINDING_0,
-        DIRTY_BIT_BINDING_MAX = DIRTY_BIT_BINDING_0 + MAX_VERTEX_ATTRIB_BINDINGS,
+        DIRTY_BIT_BINDING_MAX          = DIRTY_BIT_BINDING_0 + MAX_VERTEX_ATTRIB_BINDINGS,
+        DIRTY_BIT_ELEMENT_ARRAY_BUFFER = DIRTY_BIT_BINDING_MAX,
 
         // We keep separate dirty bits for bound buffers whose data changed since last update.
-        DIRTY_BIT_BUFFER_DATA_0   = DIRTY_BIT_BINDING_MAX,
-        DIRTY_BIT_BUFFER_DATA_MAX = DIRTY_BIT_BUFFER_DATA_0 + MAX_VERTEX_ATTRIB_BINDINGS,
+        DIRTY_BIT_BUFFER_DATA_0,
+        DIRTY_BIT_BUFFER_DATA_MAX           = DIRTY_BIT_BUFFER_DATA_0 + MAX_VERTEX_ATTRIB_BINDINGS,
+        DIRTY_BIT_ELEMENT_ARRAY_BUFFER_DATA = DIRTY_BIT_BUFFER_DATA_MAX,
 
         // Dirty bits for attributes.
-        DIRTY_BIT_ATTRIB_0   = DIRTY_BIT_BUFFER_DATA_MAX,
+        DIRTY_BIT_ATTRIB_0,
         DIRTY_BIT_ATTRIB_MAX = DIRTY_BIT_ATTRIB_0 + MAX_VERTEX_ATTRIBS,
 
         DIRTY_BIT_UNKNOWN = DIRTY_BIT_ATTRIB_MAX,
@@ -294,12 +291,6 @@ class VertexArray final : public angle::ObserverInterface,
 
     bool isBufferAccessValidationEnabled() const { return mBufferAccessValidationEnabled; }
 
-    // Observer implementation
-    void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
-    void onBufferContentsChange(uint32_t bufferIndex);
-
-    static size_t GetVertexIndexFromDirtyBit(size_t dirtyBit);
-
     angle::Result syncState(const Context *context);
     bool hasAnyDirtyBit() const { return mDirtyBits.any(); }
 
@@ -337,8 +328,8 @@ class VertexArray final : public angle::ObserverInterface,
     void setDirtyBindingBit(size_t bindingIndex, DirtyBindingBitType dirtyBindingBit);
     void clearDirtyAttribBit(size_t attribIndex, DirtyAttribBitType dirtyAttribBit);
 
-    DirtyBitType getDirtyBitFromIndex(bool contentsChanged, angle::SubjectIndex index) const;
-    void setDependentDirtyBit(bool contentsChanged, angle::SubjectIndex index);
+    void setDependentDirtyBits(bool contentsChanged,
+                               VertexArrayBufferBindingMask bufferBindingMask);
 
     // These are used to optimize draw call validation.
     void updateCachedBufferBindingSize(VertexBinding *binding);
