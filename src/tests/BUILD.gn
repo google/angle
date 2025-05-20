@@ -339,8 +339,8 @@ if (is_win || is_linux || is_chromeos || is_android || is_fuchsia || is_apple) {
       deps += [ "$angle_root/src/common/vulkan" ]
     }
 
-    if (build_angle_end2end_tests_library) {
-      # Don't bundle the ANGLE libraries if we're just interested in the test library.
+    if (angle_test_enable_system_egl) {
+      # Don't bundle the ANGLE libraries.
     } else {
       data_deps = [ "$angle_root:angle" ]
     }

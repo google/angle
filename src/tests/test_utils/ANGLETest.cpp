@@ -378,6 +378,14 @@ GLColor32F ReadColor32F(GLint x, GLint y)
 void LoadEntryPointsWithUtilLoader(angle::GLESDriverType driverType)
 {
 #if defined(ANGLE_USE_UTIL_LOADER)
+    Library *driverLibrary = ANGLETestEnvironment::GetDriverLibrary(driverType);
+    if (driverLibrary == nullptr)
+    {
+        WriteDebugMessage("Failed to load library! (driverType = %d)",
+                          static_cast<int>(driverType));
+        return;
+    }
+
     PFNEGLGETPROCADDRESSPROC getProcAddress;
     ANGLETestEnvironment::GetDriverLibrary(driverType)->getAs("eglGetProcAddress", &getProcAddress);
     ASSERT(nullptr != getProcAddress);
@@ -765,7 +773,7 @@ void ANGLETestBase::ANGLETestSetUp()
     // Only allow skipping tests due to unsupported ANGLE extensions when testing the system EGL,
     // since we want it to be obvious if ANGLE itself stops exposing them.
     // Must be checked before initializing the Display, since
-    if (mCurrentParams->driver == GLESDriverType::SystemEGL)
+    if (isDriverSystemEgl())
     {
         if ((!mCurrentParams->eglParameters.enabledFeatureOverrides.empty() ||
              !mCurrentParams->eglParameters.disabledFeatureOverrides.empty()) &&
@@ -1224,8 +1232,7 @@ void ANGLETestBase::drawIndexedQuad(GLuint program,
                                     GLfloat positionAttribZ,
                                     GLfloat positionAttribXYScale)
 {
-    ASSERT(!mFixture || !mFixture->configParams.webGLCompatibility ||
-           !mFixture->configParams.webGLCompatibility);
+    ASSERT(!mFixture || !mFixture->configParams.webGLCompatibility);
     drawIndexedQuad(program, positionAttribName, positionAttribZ, positionAttribXYScale, false);
 }
 

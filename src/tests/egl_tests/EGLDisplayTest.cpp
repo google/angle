@@ -192,10 +192,11 @@ TEST_P(EGLDisplayTest, GetPlatformDisplayEXT)
     ASSERT_EGL_SUCCESS();
 }
 
-// Tests current Context leaking when call eglTerminate() while it is current.
+// Tests that eglGetPlatformDisplayEXT can use EGL_PLATFORM_ANDROID_KHR to get a display.
 TEST_P(EGLDisplayTestES3, GetPlatformDisplayAndroidValidation)
 {
     ANGLE_SKIP_TEST_IF(!IsAndroid());
+    ANGLE_SKIP_TEST_IF(getDriverType() != GLESDriverType::SystemEGL);
 
     // Get an EGLDisplay on GBM platform, expect EGL_BAD_PARAMETER
     EGLDisplay display1 = eglGetPlatformDisplay(
@@ -222,4 +223,4 @@ ANGLE_INSTANTIATE_TEST(EGLDisplayTest,
                        WithNoFixture(ES3_VULKAN()));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLDisplayTestES3);
-ANGLE_INSTANTIATE_TEST(EGLDisplayTestES3, WithNoFixture(ES3_EGL()));
+ANGLE_INSTANTIATE_TEST(EGLDisplayTestES3, WithNoFixture(ES3_VULKAN()));

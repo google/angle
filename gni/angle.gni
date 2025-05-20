@@ -221,6 +221,11 @@ declare_args() {
 }
 
 declare_args() {
+  # Test the system EGL.
+  # If "true", this disables testing any ANGLE libraries packaged with the
+  # end2end tests. Meaning, only either System EGL or ANGLE EGL libraries can
+  # be tested with the full suite, including all supported/enabled backends, but
+  # not both drivers at the same time.
   angle_test_enable_system_egl = false
 }
 

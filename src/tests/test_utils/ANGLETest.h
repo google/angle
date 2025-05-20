@@ -588,6 +588,8 @@ class ANGLETestBase : public ::testing::Test
         return mCurrentParams->driver == angle::GLESDriverType::SystemEGL;
     }
 
+    angle::GLESDriverType getDriverType() const { return mCurrentParams->driver; }
+
     bool platformSupportsMultithreading() const;
 
     bool mIsSetUp = false;
