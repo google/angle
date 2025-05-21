@@ -1762,6 +1762,9 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 351867710 NVIDIA VULKAN : CopyImageTestES31.CompressedToNorm16/* = SKIP
 351867710 NVIDIA VULKAN : CopyImageTestES31.Norm16ToCompressed/* = SKIP
 
+// Pixel4's GLES driver fails new test: TransformFeedbackTest.CaptureThenUseAsUBO.
+419403192 PIXEL4ORXL GLES : TransformFeedbackTest.CaptureThenUseAsUBO/* = SKIP
+
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Slow tests, should appear last in this file
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
