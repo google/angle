@@ -1587,7 +1587,7 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
             error(line, "gl_FragDepth can only be redeclared as float", identifier);
             return false;
         }
-        needsReservedCheck = false;
+        needsReservedCheck = (symbolType == SymbolType::UserDefined);
     }
     else if (isExtensionEnabled(TExtension::EXT_separate_shader_objects) &&
              mShaderType == GL_VERTEX_SHADER)
