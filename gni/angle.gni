@@ -140,9 +140,7 @@ declare_args() {
   if (!is_android) {
     ndk_api_level_at_least_26 = false
   } else {
-    ndk_api_level_at_least_26 =
-        (!angle_64bit_current_cpu && android32_ndk_api_level >= 26) ||
-        (angle_64bit_current_cpu && android64_ndk_api_level >= 26)
+    ndk_api_level_at_least_26 = android_ndk_api_level >= 26
   }
 
   # Vulkan loader is statically linked on Mac. http://anglebug.com/40096682

@@ -47,8 +47,7 @@ function generate_Android_bp_file() {
             "target_cpu = \"$abi\""
 
             # Target ndk API 26 to make sure ANGLE can use the Vulkan backend on Android
-            "android32_ndk_api_level = 26"
-            "android64_ndk_api_level = 26"
+            "android_ndk_api_level = 26"
 
             # Disable all backends except Vulkan
             "angle_enable_vulkan = true"

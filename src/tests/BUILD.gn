@@ -1346,10 +1346,7 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     if (is_android) {
       include_dirs += [ "$deqp_path/framework/platform/android" ]
 
-      _android_api = android64_ndk_api_level
-      if (!angle_64bit_current_cpu) {
-        _android_api = android32_ndk_api_level
-      }
+      _android_api = android_ndk_api_level
 
       defines += [ "DE_ANDROID_API=" + "${_android_api}" ]
     }
