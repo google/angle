@@ -1330,6 +1330,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     void writeAtomicCounterBufferDriverUniformOffsets(uint32_t *offsetsOut, size_t offsetsSize);
 
+    void updateUniformBufferBlocksOffset();
+
     enum class Submit
     {
         OutsideRenderPassCommandsOnly,

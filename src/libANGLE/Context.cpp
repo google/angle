@@ -9331,7 +9331,7 @@ void Context::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMess
             }
             else if (index < kUniformBufferMaxSubjectIndex)
             {
-                mState.onUniformBufferStateChange(index - kUniformBuffer0SubjectIndex);
+                mState.onUniformBufferStateChange(index - kUniformBuffer0SubjectIndex, message);
                 mStateCache.onUniformBufferStateChange(this);
             }
             else if (index < kAtomicCounterBufferMaxSubjectIndex)

@@ -6715,6 +6715,34 @@ void DescriptorSetDescBuilder::updateAtomicCounters(
     }
 }
 
+void DescriptorSetDescBuilder::updateOneShaderBufferOffset(
+    const size_t blockIndex,
+    const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding,
+    VkDescriptorType descriptorType,
+    const WriteDescriptorDescs &writeDescriptorDescs)
+{
+    uint32_t infoDescIndex =
+        writeDescriptorDescs.getDescriptorDescIndexForBufferBlockIndex(descriptorType, blockIndex);
+    if (infoDescIndex == kInvalidDescriptorDescIndex)
+    {
+        return;
+    }
+
+    ASSERT(infoDescIndex != kInvalidDescriptorDescIndex && infoDescIndex < mDesc.size());
+    ASSERT(bufferBinding.get() != nullptr);
+
+    DescriptorInfoDesc &infoDesc = mDesc.getInfoDesc(infoDescIndex);
+    BufferVk *bufferVk           = vk::GetImpl(bufferBinding.get());
+    BufferHelper &bufferHelper   = bufferVk->getBuffer();
+    ASSERT(infoDesc.samplerOrBufferSerial == bufferHelper.getBlockSerial().getValue());
+    // Reachable only by program executables with dynamic descriptor type
+    ASSERT(infoDesc.imageViewSerialOrOffset == 0);
+
+    VkDeviceSize newOffset = bufferBinding.getOffset() + bufferHelper.getOffset();
+    ASSERT(infoDescIndex < mDynamicOffsets.size());
+    SetBitField(mDynamicOffsets[infoDescIndex], newOffset);
+}
+
 // Explicit instantiation
 template void DescriptorSetDescBuilder::updateOneShaderBuffer<vk::RenderPassCommandBufferHelper>(
     Context *context,

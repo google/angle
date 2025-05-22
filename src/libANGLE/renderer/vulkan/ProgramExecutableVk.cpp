@@ -1946,6 +1946,19 @@ angle::Result ProgramExecutableVk::getOrAllocateDescriptorSet(
     return angle::Result::Continue;
 }
 
+void ProgramExecutableVk::updateShaderResourcesOffsets(
+    const vk::WriteDescriptorDescs &writeDescriptorDescs,
+    const vk::DescriptorSetDescBuilder &shaderResourcesDesc)
+{
+    size_t numOffsets = writeDescriptorDescs.getDynamicDescriptorSetCount();
+    mDynamicShaderResourceDescriptorOffsets.resize(numOffsets);
+    if (numOffsets > 0)
+    {
+        memcpy(mDynamicShaderResourceDescriptorOffsets.data(),
+               shaderResourcesDesc.getDynamicOffsets(), numOffsets * sizeof(uint32_t));
+    }
+}
+
 angle::Result ProgramExecutableVk::updateShaderResourcesDescriptorSet(
     vk::Context *context,
     uint32_t currentFrame,
@@ -1964,13 +1977,7 @@ angle::Result ProgramExecutableVk::updateShaderResourcesDescriptorSet(
                                          writeDescriptorDescs, DescriptorSetIndex::ShaderResource,
                                          newSharedCacheKeyOut));
 
-    size_t numOffsets = writeDescriptorDescs.getDynamicDescriptorSetCount();
-    mDynamicShaderResourceDescriptorOffsets.resize(numOffsets);
-    if (numOffsets > 0)
-    {
-        memcpy(mDynamicShaderResourceDescriptorOffsets.data(),
-               shaderResourcesDesc.getDynamicOffsets(), numOffsets * sizeof(uint32_t));
-    }
+    updateShaderResourcesOffsets(writeDescriptorDescs, shaderResourcesDesc);
 
     return angle::Result::Continue;
 }

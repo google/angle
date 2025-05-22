@@ -2091,6 +2091,10 @@ class DescriptorSetDescBuilder final
                               const VkDeviceSize requiredOffsetAlignment,
                               const BufferHelper &emptyBuffer,
                               const WriteDescriptorDescs &writeDescriptorDescs);
+    void updateOneShaderBufferOffset(const size_t blockIndex,
+                                     const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding,
+                                     VkDescriptorType descriptorType,
+                                     const WriteDescriptorDescs &writeDescriptorDescs);
     angle::Result updateImages(Context *context,
                                const gl::ProgramExecutable &executable,
                                const ShaderInterfaceVariableInfoMap &variableInfoMap,

@@ -553,6 +553,18 @@ using ProgramUniformBlockArray = std::array<T, IMPLEMENTATION_MAX_COMBINED_SHADE
 template <typename T>
 using UniformBufferBindingArray = std::array<T, IMPLEMENTATION_MAX_UNIFORM_BUFFER_BINDINGS>;
 
+// Fine grained dirty type for buffers updates.
+enum class BufferDirtyType
+{
+    Binding,
+    Offset,
+    Size,
+
+    InvalidEnum,
+    EnumCount = InvalidEnum,
+};
+using BufferDirtyTypeBitMask = angle::PackedEnumBitSet<BufferDirtyType>;
+
 // Used in Framebuffer / Program
 using DrawBufferMask = angle::BitSet8<IMPLEMENTATION_MAX_DRAW_BUFFERS>;
 

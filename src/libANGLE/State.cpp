@@ -3192,13 +3192,28 @@ angle::Result State::setIndexedBufferBinding(const Context *context,
             setBufferBinding(context, target, buffer);
             break;
         case BufferBinding::Uniform:
+        {
             mBoundUniformBuffersMask.set(index, buffer != nullptr);
+            BufferDirtyTypeBitMask dirtyTypeMask = {};
+            if (mUniformBuffers[index].get() != buffer)
+            {
+                dirtyTypeMask.set();
+            }
+            else
+            {
+                dirtyTypeMask.set(BufferDirtyType::Offset,
+                                  buffer && mUniformBuffers[index].getOffset() != offset);
+                dirtyTypeMask.set(BufferDirtyType::Size,
+                                  buffer && mUniformBuffers[index].getSize() != size);
+            }
+            mUniformBufferBlocksDirtyTypeMask |= dirtyTypeMask;
             if (UpdateIndexedBufferBinding(context, &mUniformBuffers[index], buffer, target, offset,
                                            size))
             {
-                onUniformBufferStateChange(index);
+                onUniformBufferStateChange(index, angle::SubjectMessage::SubjectChanged);
             }
-            break;
+        }
+        break;
         case BufferBinding::AtomicCounter:
             mBoundAtomicCounterBuffersMask.set(index, buffer != nullptr);
             if (UpdateIndexedBufferBinding(context, &mAtomicCounterBuffers[index], buffer, target,
@@ -4067,6 +4082,8 @@ angle::Result State::onExecutableChange(const Context *context)
     // Mark uniform blocks as _not_ dirty. When an executable changes, the backends should already
     // reprocess all uniform blocks.  These dirty bits only track what's made dirty afterwards.
     mDirtyUniformBlocks.reset();
+    // Reset dirty type mask on executable change
+    mUniformBufferBlocksDirtyTypeMask.reset();
 
     return angle::Result::Continue;
 }
@@ -4168,14 +4185,27 @@ void State::onImageStateChange(const Context *context, size_t unit)
     }
 }
 
-void State::onUniformBufferStateChange(size_t uniformBufferIndex)
+void State::onUniformBufferStateChange(size_t uniformBufferIndex, angle::SubjectMessage message)
 {
     if (mExecutable)
     {
         // When a buffer at a given binding changes, set all blocks mapped to it dirty.
         mDirtyUniformBlocks |=
             mExecutable->getUniformBufferBlocksMappedToBinding(uniformBufferIndex);
+
+        if (message == angle::SubjectMessage::InternalMemoryAllocationChanged)
+        {
+            mUniformBufferBlocksDirtyTypeMask.set(BufferDirtyType::Binding);
+        }
+        else
+        {
+            ASSERT(message == angle::SubjectMessage::SubjectChanged ||   // buffer state change
+                   message == angle::SubjectMessage::SubjectMapped ||    // buffer map
+                   message == angle::SubjectMessage::SubjectUnmapped ||  // buffer unmap
+                   message == angle::SubjectMessage::BindingChanged);    // XFB state change
+        }
     }
+
     // This could be represented by a different dirty bit. Using the same one keeps it simple.
     mDirtyBits.set(state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS);
 }

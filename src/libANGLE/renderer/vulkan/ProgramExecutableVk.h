@@ -219,6 +219,9 @@ class ProgramExecutableVk : public ProgramExecutableImpl
                                               PipelineType pipelineType,
                                               UpdateDescriptorSetsBuilder *updateBuilder);
 
+    void updateShaderResourcesOffsets(const vk::WriteDescriptorDescs &writeDescriptorDescs,
+                                      const vk::DescriptorSetDescBuilder &shaderResourcesDesc);
+
     angle::Result updateShaderResourcesDescriptorSet(
         vk::Context *context,
         uint32_t currentFrame,

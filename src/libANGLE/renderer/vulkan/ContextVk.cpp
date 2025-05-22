@@ -2887,6 +2887,31 @@ angle::Result ContextVk::handleDirtyComputeShaderResources(DirtyBits::Iterator *
                                           dirtyBitsIterator);
 }
 
+void ContextVk::updateUniformBufferBlocksOffset()
+{
+    gl::ProgramExecutable *executable = mState.getProgramExecutable();
+    ASSERT(executable);
+    ASSERT(executable->hasUniformBuffers());
+    ProgramExecutableVk *executableVk = vk::GetImpl(executable);
+    ASSERT(executableVk);
+    ASSERT(executableVk->usesDynamicUniformBufferDescriptors());
+
+    gl::ProgramUniformBlockMask dirtyBlocks = mState.getAndResetDirtyUniformBlocks();
+    for (size_t blockIndex : dirtyBlocks)
+    {
+        const GLuint binding = executable->getUniformBlockBinding(blockIndex);
+        mShaderBuffersDescriptorDesc.updateOneShaderBufferOffset(
+            blockIndex, mState.getOffsetBindingPointerUniformBuffers()[binding],
+            executableVk->getUniformBufferDescriptorType(), mShaderBufferWriteDescriptorDescs);
+    }
+
+    executableVk->updateShaderResourcesOffsets(mShaderBufferWriteDescriptorDescs,
+                                               mShaderBuffersDescriptorDesc);
+
+    // Mark descriptor sets dirty
+    mGraphicsDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
+}
+
 template <typename CommandBufferT>
 angle::Result ContextVk::handleDirtyUniformBuffersImpl(CommandBufferT *commandBufferHelper)
 {
@@ -5920,8 +5945,23 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 iter.setLaterBit(gl::state::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING);
                 break;
             case gl::state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS:
-                ANGLE_TRY(invalidateCurrentShaderUniformBuffers());
+            {
+                constexpr gl::BufferDirtyTypeBitMask kOnlyOffsetDirtyMask{
+                    gl::BufferDirtyType::Offset};
+                const gl::BufferDirtyTypeBitMask currentDirtyTypeMask =
+                    glState.getAndResetUniformBufferBlocksDirtyTypeMask();
+                ASSERT(programExecutable);
+                if (vk::GetImpl(programExecutable)->usesDynamicUniformBufferDescriptors() &&
+                    currentDirtyTypeMask == kOnlyOffsetDirtyMask)
+                {
+                    updateUniformBufferBlocksOffset();
+                }
+                else
+                {
+                    ANGLE_TRY(invalidateCurrentShaderUniformBuffers());
+                }
                 break;
+            }
             case gl::state::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING:
                 ANGLE_TRY(invalidateCurrentShaderResources(command));
                 invalidateDriverUniforms();

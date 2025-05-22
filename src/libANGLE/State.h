@@ -139,6 +139,7 @@ enum DirtyBitType
     DIRTY_BIT_TEXTURE_BINDINGS,
     DIRTY_BIT_IMAGE_BINDINGS,
     DIRTY_BIT_TRANSFORM_FEEDBACK_BINDING,
+    // Top-level dirty bit. Also see mUniformBufferBlocksDirtyTypeMask.
     DIRTY_BIT_UNIFORM_BUFFER_BINDINGS,
     DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING,
     DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING,
@@ -1188,7 +1189,7 @@ class State : angle::NonCopyable
 
     void onImageStateChange(const Context *context, size_t unit);
 
-    void onUniformBufferStateChange(size_t uniformBufferIndex);
+    void onUniformBufferStateChange(size_t uniformBufferIndex, angle::SubjectMessage message);
     void onAtomicCounterBufferStateChange(size_t atomicCounterBufferIndex);
     void onShaderStorageBufferStateChange(size_t shaderStorageBufferIndex);
 
@@ -1467,6 +1468,12 @@ class State : angle::NonCopyable
         mDirtyUniformBlocks.reset();
         return dirtyBits;
     }
+    BufferDirtyTypeBitMask getAndResetUniformBufferBlocksDirtyTypeMask() const
+    {
+        BufferDirtyTypeBitMask dirtyTypeMask = mUniformBufferBlocksDirtyTypeMask;
+        mUniformBufferBlocksDirtyTypeMask.reset();
+        return dirtyTypeMask;
+    }
     const PrivateState &privateState() const { return mPrivateState; }
     const GLES1State &gles1() const { return mPrivateState.gles1(); }
 
@@ -1655,6 +1662,8 @@ class State : angle::NonCopyable
     // changed, or buffers in their mapped bindings have changed.  This is in State because every
     // context needs to react to such changes.
     mutable ProgramUniformBlockMask mDirtyUniformBlocks;
+    // Fine grained dirty type for uniform buffers.
+    mutable BufferDirtyTypeBitMask mUniformBufferBlocksDirtyTypeMask;
 
     PrivateState mPrivateState;
 };
