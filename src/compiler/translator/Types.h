@@ -254,6 +254,7 @@ class TType
     }
     bool isScalarFloat() const { return isScalar() && type == EbtFloat; }
     bool isScalarInt() const { return isScalar() && (type == EbtInt || type == EbtUInt); }
+    bool isSignedInt() const { return type == EbtInt; }
 
     bool canBeConstructed() const;
 

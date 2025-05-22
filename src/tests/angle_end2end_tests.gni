@@ -89,6 +89,7 @@ angle_end2end_tests_sources = [
   "gl_tests/FramebufferRenderMipmapTest.cpp",
   "gl_tests/FramebufferTest.cpp",
   "gl_tests/GLSLTest.cpp",
+  "gl_tests/GLSLUBTest.cpp",
   "gl_tests/GeometryShaderTest.cpp",
   "gl_tests/GetImageTest.cpp",
   "gl_tests/GetTexLevelParameterTest.cpp",
