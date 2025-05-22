@@ -329,24 +329,20 @@ if (is_win || is_linux || is_chromeos || is_android || is_fuchsia || is_apple) {
       deps += [ "$angle_root:angle_json_serializer" ]
     }
 
+    if (angle_enable_vulkan) {
+      sources += [
+        "gl_tests/VulkanExternalImageTest.cpp",
+        "gl_tests/VulkanImageTest.cpp",
+        "test_utils/VulkanHelper.cpp",
+        "test_utils/VulkanHelper.h",
+      ]
+      deps += [ "$angle_root/src/common/vulkan" ]
+    }
+
     if (build_angle_end2end_tests_library) {
-      # AOSP end2end tests builds don't bundle ANGLE libs or Vulkan tests and don't need the NDK path
+      # Don't bundle the ANGLE libraries if we're just interested in the test library.
     } else {
-      if (is_android) {
-        include_dirs += [ "${android_ndk_root}/sysroot/usr/includes" ]
-      }
-
       data_deps = [ "$angle_root:angle" ]
-
-      if (angle_enable_vulkan) {
-        sources += [
-          "gl_tests/VulkanExternalImageTest.cpp",
-          "gl_tests/VulkanImageTest.cpp",
-          "test_utils/VulkanHelper.cpp",
-          "test_utils/VulkanHelper.h",
-        ]
-        deps += [ "$angle_root/src/common/vulkan" ]
-      }
     }
 
     if (is_android) {
