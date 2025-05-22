@@ -2814,15 +2814,15 @@ angle::Result ContextVk::handleDirtyShaderResourcesImpl(CommandBufferHelperT *co
     if (hasUniformBuffers)
     {
         mShaderBuffersDescriptorDesc.updateShaderBuffers(
-            this, commandBufferHelper, *executable, variableInfoMap,
-            mState.getOffsetBindingPointerUniformBuffers(), executable->getUniformBlocks(),
-            executableVk->getUniformBufferDescriptorType(), limits.maxUniformBufferRange,
-            mEmptyBuffer, mShaderBufferWriteDescriptorDescs, mDeferredMemoryBarriers);
+            this, commandBufferHelper, *executable, mState.getOffsetBindingPointerUniformBuffers(),
+            executable->getUniformBlocks(), executableVk->getUniformBufferDescriptorType(),
+            limits.maxUniformBufferRange, mEmptyBuffer, mShaderBufferWriteDescriptorDescs,
+            mDeferredMemoryBarriers);
     }
     if (hasStorageBuffers)
     {
         mShaderBuffersDescriptorDesc.updateShaderBuffers(
-            this, commandBufferHelper, *executable, variableInfoMap,
+            this, commandBufferHelper, *executable,
             mState.getOffsetBindingPointerShaderStorageBuffers(),
             executable->getShaderStorageBlocks(), executableVk->getStorageBufferDescriptorType(),
             limits.maxStorageBufferRange, mEmptyBuffer, mShaderBufferWriteDescriptorDescs,
@@ -2896,16 +2896,14 @@ angle::Result ContextVk::handleDirtyUniformBuffersImpl(CommandBufferT *commandBu
 
     const VkPhysicalDeviceLimits &limits = mRenderer->getPhysicalDeviceProperties().limits;
     ProgramExecutableVk *executableVk    = vk::GetImpl(executable);
-    const ShaderInterfaceVariableInfoMap &variableInfoMap = executableVk->getVariableInfoMap();
 
     gl::ProgramUniformBlockMask dirtyBits = mState.getAndResetDirtyUniformBlocks();
     for (size_t blockIndex : dirtyBits)
     {
         const GLuint binding = executable->getUniformBlockBinding(blockIndex);
         mShaderBuffersDescriptorDesc.updateOneShaderBuffer(
-            this, commandBufferHelper, variableInfoMap,
-            mState.getOffsetBindingPointerUniformBuffers(),
-            executable->getUniformBlocks()[blockIndex], binding,
+            this, commandBufferHelper, blockIndex, executable->getUniformBlocks()[blockIndex],
+            mState.getOffsetBindingPointerUniformBuffers()[binding],
             executableVk->getUniformBufferDescriptorType(), limits.maxUniformBufferRange,
             mEmptyBuffer, mShaderBufferWriteDescriptorDescs, mDeferredMemoryBarriers);
     }
