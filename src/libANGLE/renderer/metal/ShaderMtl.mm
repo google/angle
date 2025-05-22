@@ -114,6 +114,10 @@ std::shared_ptr<ShaderTranslateTask> ShaderMtl::compile(const gl::Context *conte
     {
         options->metal.injectAsmStatementIntoLoopBodies = true;
     }
+    if (displayMtl->getFeatures().ensureLoopForwardProgress.enabled)
+    {
+        options->ensureLoopForwardProgress = true;
+    }
 
     return std::shared_ptr<ShaderTranslateTask>(new ShaderTranslateTaskMtl(mCompiledState));
 }

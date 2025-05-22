@@ -344,6 +344,12 @@ struct FeaturesMtl : FeatureSetBase
         &members,
     };
 
+    FeatureInfo ensureLoopForwardProgress = {
+        "ensureLoopForwardProgress",
+        FeatureCategory::MetalFeatures,
+        &members,
+    };
+
 };
 
 inline FeaturesMtl::FeaturesMtl()  = default;

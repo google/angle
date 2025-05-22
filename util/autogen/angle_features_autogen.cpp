@@ -160,6 +160,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::EnableShaderSubstitution, "enableShaderSubstitution"},
     {Feature::EnableTimestampQueries, "enableTimestampQueries"},
     {Feature::EnableTranslatedShaderSubstitution, "enableTranslatedShaderSubstitution"},
+    {Feature::EnsureLoopForwardProgress, "ensureLoopForwardProgress"},
     {Feature::EnsureNonEmptyBufferIsBoundForDraw, "ensureNonEmptyBufferIsBoundForDraw"},
     {Feature::ExpandIntegerPowExpressions, "expandIntegerPowExpressions"},
     {Feature::ExplicitFragmentLocations, "explicitFragmentLocations"},

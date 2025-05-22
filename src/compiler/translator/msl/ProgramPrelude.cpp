@@ -285,6 +285,7 @@ class ProgramPrelude : public TIntermTraverser
     void addAssignInt();
     void subInt();
     void subAssignInt();
+    void loopForwardProgress();
 
   private:
     TInfoSinkBase &mOut;
@@ -2860,6 +2861,14 @@ ANGLE_ALWAYS_INLINE thread X &ANGLE_subAssignInt(thread X &x, Y y)
 }
 )")
 
+PROGRAM_PRELUDE_DECLARE(loopForwardProgress,
+                        R"(
+ANGLE_ALWAYS_INLINE void ANGLE_loopForwardProgress()
+{
+    volatile bool p = true;
+}
+)")
+
 ////////////////////////////////////////////////////////////////////////////////
 
 // Returned Name is valid for as long as `buffer` is still alive.
@@ -3773,6 +3782,10 @@ void ProgramPrelude::visitOperator(TOperator op,
 
         case TOperator::EOpConstruct:
             ASSERT(!func);
+            break;
+
+        case TOperator::EOpLoopForwardProgress:
+            loopForwardProgress();
             break;
 
         case TOperator::EOpCallFunctionInAST:

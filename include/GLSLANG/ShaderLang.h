@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 375
+#define ANGLE_SH_VERSION 376
 
 enum ShShaderSpec
 {
@@ -476,6 +476,9 @@ struct ShCompileOptions
 
     // Whether inactive shader variables from the output.
     uint64_t removeInactiveVariables : 1;
+
+    // Ensure all loops execute side-effects or terminate.
+    uint64_t ensureLoopForwardProgress : 1;
 
     ShCompileOptionsMetal metal;
     ShPixelLocalStorageOptions pls;

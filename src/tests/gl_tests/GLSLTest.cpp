@@ -6995,6 +6995,7 @@ TEST_P(GLSLTest_ES3, ConditionInitializerDeclaresVariable)
         "}\n";
 
     ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    ASSERT_GL_NO_ERROR();
     drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }

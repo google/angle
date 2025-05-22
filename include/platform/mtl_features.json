@@ -418,6 +418,14 @@
                 "having side effects and not optimized out."
             ],
             "issue": "http://crbug.com/1513738"
+        },
+        {
+            "name": "ensure_loop_forward_progress",
+            "category": "Features",
+            "description": [
+                "Inject statements into loop bodies when needed to ensure infinite loops are optimized out."
+            ],
+            "issue": "http://crbug.com/1513738"
         }
     ]
 }

@@ -126,6 +126,10 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
                                 options.allowTranslateUniformBlockToStructuredBuffer ||
                                 options.rewriteIntegerUnaryMinusOperator;
     }
+    if (!IsOutputMSL(shaderOutput))
+    {
+        hasUnsupportedOptions = hasUnsupportedOptions || options.ensureLoopForwardProgress;
+    }
 
     // If there are any options not supported with this output, don't attempt to run the translator.
     if (hasUnsupportedOptions)

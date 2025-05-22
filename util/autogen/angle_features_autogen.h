@@ -160,6 +160,7 @@ enum class Feature
     EnableShaderSubstitution,
     EnableTimestampQueries,
     EnableTranslatedShaderSubstitution,
+    EnsureLoopForwardProgress,
     EnsureNonEmptyBufferIsBoundForDraw,
     ExpandIntegerPowExpressions,
     ExplicitFragmentLocations,

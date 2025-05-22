@@ -175,6 +175,7 @@ angle_unittests_gl_sources =
 
 angle_unittests_msl_sources = [
   "../common/apple/ObjCPtr_test.mm",
+  "../tests/compiler_tests/EnsureLoopForwardProgress_test.cpp",
   "../tests/compiler_tests/MSLOutput_test.cpp",
 ]
 
