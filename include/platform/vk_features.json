@@ -1890,6 +1890,22 @@
             "issue": "https://anglebug.com/379186304"
         },
         {
+            "name": "supports_astc_decode_mode",
+            "category": "Features",
+            "description": [
+                "VkDevice supports VK_EXT_astc_decode_mode extension"
+            ],
+            "issue": "https://anglebug.com/419403188"
+        },
+        {
+            "name": "supports_astc_decode_mode_rgb9e5",
+            "category": "Features",
+            "description": [
+                "VkDevice supports VK_EXT_astc_decode_mode extension"
+            ],
+            "issue": "https://anglebug.com/419403188"
+        },
+        {
             "name": "supports_astc_hdr_3d_textures",
             "category": "Features",
             "description": [

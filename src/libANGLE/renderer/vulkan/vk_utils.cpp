@@ -1706,6 +1706,22 @@ VkImageTiling GetTilingMode(gl::TilingMode tilingMode)
     }
 }
 
+VkFormat GetAstcDecodeMode(const GLenum astcDecodePrecision)
+{
+    switch (astcDecodePrecision)
+    {
+        case GL_RGBA16F:
+            return VK_FORMAT_R16G16B16A16_SFLOAT;
+        case GL_RGBA8:
+            return VK_FORMAT_R8G8B8A8_UNORM;
+        case GL_RGB9_E5:
+            return VK_FORMAT_E5B9G9R9_UFLOAT_PACK32;
+        default:
+            UNREACHABLE();
+            return VK_FORMAT_R16G16B16A16_SFLOAT;
+    }
+}
+
 VkImageCompressionFixedRateFlagsEXT ConvertEGLFixedRateToVkFixedRate(
     const EGLenum eglCompressionRate,
     const angle::FormatID actualFormatID)

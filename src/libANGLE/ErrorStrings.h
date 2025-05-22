@@ -672,6 +672,8 @@ inline constexpr const char *kNoExecutableCodeInstalled = "There is no current p
 inline constexpr const char *kProgramPipelineLinkFailed = "Program pipeline link failed.";
 inline constexpr const char *kProgramPipelineInfoLogNULL = "Program pipeline infolog cannot be null.";
 inline constexpr const char *kProtectedTexturesExtensionRequired = "GL_EXT_protected_textures not enabled.";
+inline constexpr const char *kTextureCompressionASTCDecodeModeExtensionRequired = "GL_EXT_texture_compression_astc_decode_mode not enabled.";
+inline constexpr const char *kTextureCompressionASTCDecodeModeRGB9E5ExtensionRequired = "GL_EXT_texture_compression_astc_decode_mode_rgb9e5 not enabled.";
 inline constexpr const char *kProgramNotValid = "Program is not a program object.";
 // clang-format on
 

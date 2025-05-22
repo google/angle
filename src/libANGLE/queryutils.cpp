@@ -393,6 +393,9 @@ void QueryTexParameterBase(const Context *context,
             *params = CastFromGLintStateValue<ParamType>(pname,
                                                          texture->getImageCompressionRate(context));
             break;
+        case GL_TEXTURE_ASTC_DECODE_PRECISION_EXT:
+            *params = CastFromGLintStateValue<ParamType>(pname, texture->getASTCDecodePrecision());
+            break;
         default:
             UNREACHABLE();
             break;
@@ -517,6 +520,9 @@ void SetTexParameterBase(Context *context, Texture *texture, GLenum pname, const
             break;
         case GL_TEXTURE_FOVEATED_MIN_PIXEL_DENSITY_QCOM:
             texture->setMinPixelDensity(ConvertToGLfloat(params[0]));
+            break;
+        case GL_TEXTURE_ASTC_DECODE_PRECISION_EXT:
+            texture->setASTCDecodePrecision(context, ConvertToGLenum(pname, params[0]));
             break;
         default:
             UNREACHABLE();

@@ -9019,6 +9019,180 @@ void main()
     }
 }
 
+// Test for ASTC decode mode queries
+TEST_P(Texture2DTestES3, ASTCDecodeModeQueries)
+{
+    GLint value = 0, result = 0, defaultValue = GL_RGBA16F;
+    if (IsGLExtensionEnabled("GL_EXT_texture_compression_astc_decode_mode"))
+    {
+        // Set invalid ASTC decode mode
+        value = GL_RGBA32F;
+        glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_ASTC_DECODE_PRECISION_EXT, &value);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+        glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_ASTC_DECODE_PRECISION_EXT, &result);
+        EXPECT_EQ(result, defaultValue);
+
+        // Set valid ASTC decode mode
+        value = GL_RGBA8;
+        glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_ASTC_DECODE_PRECISION_EXT, &value);
+        EXPECT_GL_NO_ERROR();
+        glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_ASTC_DECODE_PRECISION_EXT, &result);
+        EXPECT_EQ(result, value);
+
+        value = GL_RGBA16F;
+        glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_ASTC_DECODE_PRECISION_EXT, &value);
+        EXPECT_GL_NO_ERROR();
+        glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_ASTC_DECODE_PRECISION_EXT, &result);
+        EXPECT_EQ(result, value);
+
+        if (IsGLExtensionEnabled("GL_EXT_texture_compression_astc_decode_mode_rgb9e5"))
+        {
+            value = GL_RGB9_E5;
+            glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_ASTC_DECODE_PRECISION_EXT, &value);
+            EXPECT_GL_NO_ERROR();
+            glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_ASTC_DECODE_PRECISION_EXT, &result);
+            EXPECT_EQ(result, value);
+        }
+        else
+        {
+            value = GL_RGB9_E5;
+            glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_ASTC_DECODE_PRECISION_EXT, &value);
+            EXPECT_GL_ERROR(GL_INVALID_ENUM);
+            glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_ASTC_DECODE_PRECISION_EXT, &result);
+            EXPECT_GL_ERROR(GL_NO_ERROR);
+            EXPECT_EQ(result, GL_RGBA16F);
+        }
+    }
+    else
+    {
+        value = GL_RGBA8;
+        glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_ASTC_DECODE_PRECISION_EXT, &value);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+        glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_ASTC_DECODE_PRECISION_EXT, &result);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+        value = GL_RGBA16F;
+        glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_ASTC_DECODE_PRECISION_EXT, &value);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+        glGetTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_ASTC_DECODE_PRECISION_EXT, &result);
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+    }
+}
+
+// Test that rendering with ASTC texture formats with different decode modes on GL_TEXTURE_2D works.
+TEST_P(Texture2DTestES3, ASTCDecodeModeDrawTexture)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_astc_decode_mode"));
+
+    GLTexture tex;
+    constexpr uint32_t kWidth       = 4;
+    constexpr uint32_t kHeight      = 4;
+    std::vector<GLenum> decodemodes = {GL_RGBA16F, GL_RGBA8, GL_RGB9_E5};
+
+    ANGLE_GL_PROGRAM(program, getVertexShaderSource(), getFragmentShaderSource());
+    EXPECT_GL_NO_ERROR();
+
+    constexpr uint8_t block[16] = {0xFC, 0xFD, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+                                   0x7F, 0x7F, 0x3F, 0x3F, 0xBF, 0xBF, 0xFF, 0xFF};
+    std::vector<uint8_t> texData(kWidth * kHeight);
+    memcpy(texData.data(), block, 16);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_ASTC_4x4_KHR, kWidth, kHeight, 0,
+                           kWidth * kHeight, texData.data());
+    EXPECT_GL_NO_ERROR();
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    for (GLenum mode : decodemodes)
+    {
+        if (mode == GL_RGB9_E5 &&
+            !IsGLExtensionEnabled("GL_EXT_texture_compression_astc_decode_mode_rgb9e5"))
+        {
+            std::cout << "GL_RGB9_E5 subtest skipped: "
+                         "GL_EXT_texture_compression_astc_decode_mode_rgb9e5 is not enabled.\n";
+            continue;
+        }
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_ASTC_DECODE_PRECISION_EXT, mode);
+        EXPECT_GL_NO_ERROR();
+
+        drawQuad(program, "position", 0.0f);
+        EXPECT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(127, 63, 191, 255), 1);
+        EXPECT_PIXEL_COLOR_NEAR(0, kHeight - 1, GLColor(127, 63, 191, 255), 1);
+        EXPECT_PIXEL_COLOR_NEAR(kWidth - 1, 0, GLColor(127, 63, 191, 255), 1);
+        EXPECT_PIXEL_COLOR_NEAR(kWidth - 1, kHeight - 1, GLColor(127, 63, 191, 255), 1);
+        ASSERT_GL_NO_ERROR();
+    }
+}
+
+// Test that the selected decode precision is actually used for texture decoding.
+TEST_P(Texture2DTestES3, ASTCDecodeModeSwitch)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_astc_decode_mode"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_KHR_texture_compression_astc_hdr"));
+
+    GLTexture tex, colorBuf;
+    constexpr uint32_t kWidth  = 4;
+    constexpr uint32_t kHeight = 4;
+
+    ANGLE_GL_PROGRAM(program, getVertexShaderSource(), getFragmentShaderSource());
+    EXPECT_GL_NO_ERROR();
+
+    constexpr uint8_t block[16] = {0xFC, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+                                   0x00, 0xBC, 0x00, 0x40, 0x00, 0xC2, 0x00, 0x44};
+    std::vector<uint8_t> texData(kWidth * kHeight);
+    memcpy(texData.data(), block, 16);
+    // Load compressed texture data into tex.
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_ASTC_4x4_KHR, kWidth, kHeight, 0,
+                           kWidth * kHeight, texData.data());
+    EXPECT_GL_NO_ERROR();
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    // Create an empty texture and bind it to the frame buffer.
+    glBindTexture(GL_TEXTURE_2D, colorBuf);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, kWidth, kHeight, 0, GL_RGBA, GL_FLOAT, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBuf, 0);
+
+    glViewport(0, 0, kWidth, kHeight);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // The default value of the decode precision is RGBA16F.
+    glBindTexture(GL_TEXTURE_2D, tex);
+    drawQuad(program, "position", 0.0f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT32F_EQ(0, 0, kWidth, kHeight, GLColor32F(-1.0f, 2.0f, -3.0f, 4.0f));
+
+    // Switch the decode precision to RGB9_E5 and verify the results.
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_astc_decode_mode_rgb9e5"));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_ASTC_DECODE_PRECISION_EXT, GL_RGB9_E5);
+    EXPECT_GL_NO_ERROR();
+    drawQuad(program, "position", 0.0f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT32F_EQ(0, 0, kWidth, kHeight, GLColor32F(0.0f, 2.0f, 0.0f, 1.0f));
+
+    // Switch the decode precision back to RGBA16F and verify the results.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_ASTC_DECODE_PRECISION_EXT, GL_RGBA16F);
+    EXPECT_GL_NO_ERROR();
+    drawQuad(program, "position", 0.0f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_RECT32F_EQ(0, 0, kWidth, kHeight, GLColor32F(-1.0f, 2.0f, -3.0f, 4.0f));
+}
+
 // Copied from Texture2DTest::TexStorage
 // Test that glTexSubImage2D works properly when glTexStorage2DEXT has initialized the image with a
 // default color.

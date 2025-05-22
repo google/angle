@@ -146,7 +146,8 @@ TextureState::TextureState(TextureType type)
       mCachedSamplerFormat(SamplerFormat::InvalidEnum),
       mCachedSamplerCompareMode(GL_NONE),
       mCachedSamplerFormatValid(false),
-      mCompressionFixedRate(GL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT)
+      mCompressionFixedRate(GL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT),
+      mAstcDecodePrecision(GL_RGBA16F)
 {}
 
 TextureState::~TextureState() {}
@@ -216,6 +217,21 @@ bool TextureState::setBaseLevel(GLuint baseLevel)
         return true;
     }
     return false;
+}
+
+bool TextureState::setASTCDecodePrecision(GLenum astcDecodePrecision)
+{
+    if (mAstcDecodePrecision != astcDecodePrecision)
+    {
+        mAstcDecodePrecision = astcDecodePrecision;
+        return true;
+    }
+    return false;
+}
+
+GLenum TextureState::getASTCDecodePrecision() const
+{
+    return mAstcDecodePrecision;
 }
 
 bool TextureState::setMaxLevel(GLuint maxLevel)
@@ -1031,6 +1047,19 @@ void Texture::setCompareMode(const Context *context, GLenum compareMode)
 GLenum Texture::getCompareMode() const
 {
     return mState.mSamplerState.getCompareMode();
+}
+
+void Texture::setASTCDecodePrecision(const Context *context, GLenum astcDecodePrecision)
+{
+    if (mState.setASTCDecodePrecision(astcDecodePrecision))
+    {
+        signalDirtyState(DIRTY_BIT_ASTC_DECODE_PRECISION);
+    }
+}
+
+GLenum Texture::getASTCDecodePrecision() const
+{
+    return mState.getASTCDecodePrecision();
 }
 
 void Texture::setCompareFunc(const Context *context, GLenum compareFunc)

@@ -7240,6 +7240,14 @@ bool ValidateGetTexParameterBase(const Context *context,
                 return false;
             }
             break;
+        case GL_TEXTURE_ASTC_DECODE_PRECISION_EXT:
+            if (!context->getExtensions().textureCompressionAstcDecodeModeEXT)
+            {
+                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM,
+                                       kTextureCompressionASTCDecodeModeExtensionRequired);
+                return false;
+            }
+            break;
 
         default:
             ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
@@ -8038,6 +8046,33 @@ bool ValidateTexParameterBase(const Context *context,
             }
             break;
 
+        case GL_TEXTURE_ASTC_DECODE_PRECISION_EXT:
+            if (!context->getExtensions().textureCompressionAstcDecodeModeEXT)
+            {
+                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM,
+                                       kTextureCompressionASTCDecodeModeExtensionRequired);
+                return false;
+            }
+            switch (ConvertToGLenum(params[0]))
+            {
+                case GL_RGBA16F:
+                case GL_RGBA8:
+                    break;
+                case GL_RGB9_E5:
+                    if (!context->getExtensions().textureCompressionAstcDecodeModeRgb9e5EXT)
+                    {
+                        ANGLE_VALIDATION_ERROR(
+                            GL_INVALID_ENUM,
+                            kTextureCompressionASTCDecodeModeRGB9E5ExtensionRequired);
+                        return false;
+                    }
+                    break;
+
+                default:
+                    ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kEnumInvalid);
+                    return false;
+            }
+            break;
         default:
             ANGLE_VALIDATION_ERRORF(GL_INVALID_ENUM, kEnumNotSupported, pname);
             return false;

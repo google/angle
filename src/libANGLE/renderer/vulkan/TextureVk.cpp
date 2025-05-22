@@ -3747,7 +3747,8 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     if (localBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_RED) ||
         localBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_GREEN) ||
         localBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_BLUE) ||
-        localBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_ALPHA))
+        localBits.test(gl::Texture::DIRTY_BIT_SWIZZLE_ALPHA) ||
+        localBits.test(gl::Texture::DIRTY_BIT_ASTC_DECODE_PRECISION))
     {
         ANGLE_TRY(refreshImageViews(contextVk));
     }
@@ -4203,13 +4204,20 @@ angle::Result TextureVk::initImageViews(ContextVk *contextVk, uint32_t levelCoun
     // Use this as a proxy for the SRGB override & skip decode settings.
     bool createExtraSRGBViews = mRequiresMutableStorage;
 
+    GLenum astcDecodePrecision = GL_NONE;
+    vk::Renderer *renderer     = contextVk->getRenderer();
+    if (renderer->getFeatures().supportsAstcDecodeMode.enabled)
+    {
+        astcDecodePrecision = mState.getASTCDecodePrecision();
+    }
+
     const VkImageUsageFlags kDisallowedSwizzledUsage =
         VK_IMAGE_USAGE_STORAGE_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT |
         VK_IMAGE_USAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR;
-    ANGLE_TRY(getImageViews().initReadViews(contextVk, mState.getType(), *mImage, formatSwizzle,
-                                            readSwizzle, baseLevelVk, levelCount, baseLayer,
-                                            getImageViewLayerCount(), createExtraSRGBViews,
-                                            getImage().getUsage() & ~kDisallowedSwizzledUsage));
+    ANGLE_TRY(getImageViews().initReadViews(
+        contextVk, mState.getType(), *mImage, formatSwizzle, readSwizzle, baseLevelVk, levelCount,
+        baseLayer, getImageViewLayerCount(), createExtraSRGBViews,
+        getImage().getUsage() & ~kDisallowedSwizzledUsage, astcDecodePrecision));
 
     updateCachedImageViewSerials();
 

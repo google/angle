@@ -635,6 +635,14 @@ void Renderer::ensureCapsInitialized() const
     // Always enable ANGLE_rgbx_internal_format to expose GL_RGBX8_ANGLE except for Samsung.
     mNativeExtensions.rgbxInternalFormatANGLE = mFeatures.supportsAngleRgbxInternalFormat.enabled;
 
+    // Enable EXT_texture_compression_astc_decode_mode
+    mNativeExtensions.textureCompressionAstcDecodeModeEXT =
+        mNativeExtensions.textureCompressionAstcLdrKHR &&
+        getFeatures().supportsAstcDecodeMode.enabled;
+    mNativeExtensions.textureCompressionAstcDecodeModeRgb9e5EXT =
+        mNativeExtensions.textureCompressionAstcLdrKHR &&
+        getFeatures().supportsAstcDecodeModeRgb9e5.enabled;
+
     // https://vulkan.lunarg.com/doc/view/1.0.30.0/linux/vkspec.chunked/ch31s02.html
     mNativeCaps.maxElementIndex  = std::numeric_limits<GLuint>::max() - 1;
     mNativeCaps.max3DTextureSize = rx::LimitToInt(limitsVk.maxImageDimension3D);

@@ -1436,6 +1436,18 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo supportsAstcDecodeMode = {
+        "supportsAstcDecodeMode",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
+    FeatureInfo supportsAstcDecodeModeRgb9e5 = {
+        "supportsAstcDecodeModeRgb9e5",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
     FeatureInfo supportsAstcHdr3dTextures = {
         "supportsAstcHdr3dTextures",
         FeatureCategory::VulkanFeatures,
