@@ -451,12 +451,18 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
          "prior_command = vkCmdCopyBuffer",
      }},
     // http://anglebug.com/394598470
-    {
-        "SYNC-HAZARD-WRITE-AFTER-READ",
-        "access = VK_PIPELINE_STAGE_2_COPY_BIT(VK_ACCESS_2_TRANSFER_WRITE_BIT)",
-        "prior_access = "
-        "VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT(VK_ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT)",
-    },
+    {"SYNC-HAZARD-WRITE-AFTER-READ",
+     nullptr,
+     nullptr,
+     false,
+     {
+         "message_type = BufferCopyError",
+         "access = VK_PIPELINE_STAGE_2_COPY_BIT(VK_ACCESS_2_TRANSFER_WRITE_BIT)",
+         "prior_access = "
+         "VK_PIPELINE_STAGE_2_VERTEX_ATTRIBUTE_INPUT_BIT(VK_ACCESS_2_VERTEX_ATTRIBUTE_READ_BIT)",
+         "command = vkCmdCopyBuffer",
+         "prior_command = vkCmdDrawIndexed",
+     }},
     // http://anglebug.com/399191283
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
      "vkCmdBeginRenderingKHR potentially modifies",
