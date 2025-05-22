@@ -36,7 +36,22 @@ egl::Error DisplayWgpu::initialize(egl::Display *display)
         attribs.get(EGL_PLATFORM_ANGLE_DAWN_PROC_TABLE_ANGLE,
                                           reinterpret_cast<EGLAttrib>(&webgpu::GetDefaultProcTable())));
 
-    ANGLE_TRY(createWgpuDevice());
+    WGPUDevice providedDevice =
+        reinterpret_cast<WGPUDevice>(attribs.get(EGL_PLATFORM_ANGLE_WEBGPU_DEVICE_ANGLE, 0));
+    if (providedDevice)
+    {
+        mProcTable.deviceAddRef(providedDevice);
+        mDevice = webgpu::DeviceHandle::Acquire(&mProcTable, providedDevice);
+
+        mAdapter =
+            webgpu::AdapterHandle::Acquire(&mProcTable, mProcTable.deviceGetAdapter(mDevice.get()));
+        mInstance = webgpu::InstanceHandle::Acquire(&mProcTable,
+                                                    mProcTable.adapterGetInstance(mAdapter.get()));
+    }
+    else
+    {
+        ANGLE_TRY(createWgpuDevice());
+    }
 
     mQueue = webgpu::QueueHandle::Acquire(&mProcTable, mProcTable.deviceGetQueue(mDevice.get()));
 

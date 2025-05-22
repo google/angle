@@ -59,6 +59,7 @@ New Tokens
     eglGetPlatformDisplayEXT:
 
         EGL_PLATFORM_ANGLE_DAWN_PROC_TABLE_ANGLE           0x3480
+        EGL_PLATFORM_ANGLE_WEBGPU_DEVICE_ANGLE             0x34F6
 
 
 Additions to the EGL Specification
@@ -77,6 +78,12 @@ New Behavior
     a DawnProcTable. If a proc table is not provided or the provided
     proc table is NULL, an implementation specific one will be used.
 
+    To use an existing WebGPU adapter and device, use the attribute
+    EGL_PLATFORM_ANGLE_WEBGPU_DEVICE_ANGLE.
+    EGL_PLATFORM_ANGLE_WEBGPU_DEVICE_ANGLE should be a WGPUDevice handle.
+    If a device is not provided or is NULL, an implementation specific
+    one will be used.
+
 Issues
 
     None
@@ -87,3 +94,5 @@ Revision History
       - Initial draft
     Version 2, 2025-04-28 (Geoff Lang)
       - Add EGL_PLATFORM_ANGLE_DAWN_PROC_TABLE_ANGLE
+    Version 3, 2025-05-22 (Geoff Lang)
+      - Add EGL_PLATFORM_ANGLE_WEBGPU_DEVICE_ANGLE

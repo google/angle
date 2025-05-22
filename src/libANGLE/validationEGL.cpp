@@ -698,6 +698,7 @@ bool ValidateGetPlatformDisplayCommon(const ValidationContext *val,
         Optional<EGLAttrib> deviceType;
         Optional<EGLAttrib> eglHandle;
         Optional<EGLAttrib> dawnProcTable;
+        Optional<EGLAttrib> webgpuDevice;
 
         for (const auto &curAttrib : attribMap)
         {
@@ -892,9 +893,30 @@ bool ValidateGetPlatformDisplayCommon(const ValidationContext *val,
                     break;
 
                 case EGL_PLATFORM_ANGLE_DAWN_PROC_TABLE_ANGLE:
+                    if (!clientExtensions.platformANGLEWebgpu)
+                    {
+                        val->setError(EGL_BAD_ATTRIBUTE,
+                                      "EGL_ANGLE_platform_angle_webgpu is not supported");
+                        return false;
+                    }
+
                     if (value != 0)
                     {
                         dawnProcTable = value;
+                    }
+                    break;
+
+                case EGL_PLATFORM_ANGLE_WEBGPU_DEVICE_ANGLE:
+                    if (!clientExtensions.platformANGLEWebgpu)
+                    {
+                        val->setError(EGL_BAD_ATTRIBUTE,
+                                      "EGL_ANGLE_platform_angle_webgpu is not supported");
+                        return false;
+                    }
+
+                    if (value != 0)
+                    {
+                        webgpuDevice = value;
                     }
                     break;
 
@@ -1065,7 +1087,15 @@ bool ValidateGetPlatformDisplayCommon(const ValidationContext *val,
         {
             val->setError(EGL_BAD_ATTRIBUTE,
                           "EGL_PLATFORM_ANGLE_DAWN_PROC_TABLE_ANGLE requires a "
-                          "device type of EGL_PLATFORM_ANGLE_TYPE_WEBGPU_ANGLE.");
+                          "platform type of EGL_PLATFORM_ANGLE_TYPE_WEBGPU_ANGLE.");
+            return false;
+        }
+
+        if (webgpuDevice.valid() && platformType != EGL_PLATFORM_ANGLE_TYPE_WEBGPU_ANGLE)
+        {
+            val->setError(EGL_BAD_ATTRIBUTE,
+                          "EGL_PLATFORM_ANGLE_WEBGPU_DEVICE_ANGLE requires a "
+                          "platform type of EGL_PLATFORM_ANGLE_TYPE_WEBGPU_ANGLE.");
             return false;
         }
     }
