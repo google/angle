@@ -329,7 +329,7 @@ if (is_win || is_linux || is_chromeos || is_android || is_fuchsia || is_apple) {
       deps += [ "$angle_root:angle_json_serializer" ]
     }
 
-    if (build_angle_end2end_tests_aosp) {
+    if (build_angle_end2end_tests_library) {
       # AOSP end2end tests builds don't bundle ANGLE libs or Vulkan tests and don't need the NDK path
     } else {
       if (is_android) {

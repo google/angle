@@ -23,7 +23,9 @@ declare_args() {
   # Don't build dEQP by default.
   build_angle_deqp_tests = false
 
-  build_angle_end2end_tests_aosp = false
+  # Build the ANGLE end2end tests as a shared library. This shared library can (for example) be
+  # loaded by an Android APK to execute the end2end tests outside of the normal GTest framework.
+  build_angle_end2end_tests_library = false
 
   # List of traces for benchmark mode
   angle_standalone_benchmark_traces = []
@@ -535,7 +537,8 @@ template("angle_static_library") {
   }
 }
 
-if (angle_standalone || build_with_chromium || build_angle_end2end_tests_aosp) {
+if (angle_standalone || build_with_chromium ||
+    build_angle_end2end_tests_library) {
   template("angle_test") {
     test(target_name) {
       forward_variables_from(invoker,

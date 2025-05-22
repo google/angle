@@ -125,8 +125,8 @@ if (angle_build_all) {
   }
 }
 
-if (build_angle_end2end_tests_aosp) {
-  group("angle_end2end_tests_aosp") {
+if (build_angle_end2end_tests_library) {
+  group("angle_end2end_tests_library") {
     testonly = true
     deps = [ "src/tests:angle_end2end_tests" ]
   }
@@ -1607,7 +1607,8 @@ angle_executable("angle_shader_translator") {
   }
 }
 
-if (angle_standalone || build_with_chromium || build_angle_end2end_tests_aosp) {
+if (angle_standalone || build_with_chromium ||
+    build_angle_end2end_tests_library) {
   config("angle_feature_support_config") {
     include_dirs = [
       "include",
