@@ -289,7 +289,8 @@ class ErrorScope : public angle::NonCopyable
 class NoOpErrorScope : public angle::NonCopyable
 {
   public:
-    NoOpErrorScope(webgpu::InstanceHandle instance,
+    NoOpErrorScope(const DawnProcTable *procTable,
+                   webgpu::InstanceHandle instance,
                    webgpu::DeviceHandle device,
                    WGPUErrorFilter errorType)
     {}
