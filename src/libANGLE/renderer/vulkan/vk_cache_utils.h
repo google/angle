@@ -2331,8 +2331,9 @@ class SharedCacheKeyManager
     bool allValidEntriesAreCached(ContextVk *contextVk) const;
 
   private:
-    size_t updateEmptySlotBits();
-    void addKeyImpl(const SharedCacheKeyT &key);
+    bool addKeyToEmptySlot(const SharedCacheKeyT &key);
+    bool releaseUnusedKeysAndReplaceWithKey(const SharedCacheKeyT &key);
+    void addKeyToNewSlot(const SharedCacheKeyT &key);
 
     bool containsKeyWithOwnerEqual(const SharedCacheKeyT &key) const;
     void assertAllEntriesDestroyed() const;

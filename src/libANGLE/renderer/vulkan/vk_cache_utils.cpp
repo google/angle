@@ -7012,24 +7012,7 @@ void DescriptorSetDescBuilder::updateDescriptorSet(Renderer *renderer,
 
 // SharedCacheKeyManager implementation.
 template <class SharedCacheKeyT>
-size_t SharedCacheKeyManager<SharedCacheKeyT>::updateEmptySlotBits()
-{
-    ASSERT(mSharedCacheKeys.size() == mEmptySlotBits.size() * kSlotBitCount);
-    size_t emptySlot = kInvalidSlot;
-    for (size_t slot = 0; slot < mSharedCacheKeys.size(); ++slot)
-    {
-        SharedCacheKeyT &sharedCacheKey = mSharedCacheKeys[slot];
-        if (!sharedCacheKey->valid())
-        {
-            mEmptySlotBits[slot / kSlotBitCount].set(slot % kSlotBitCount);
-            emptySlot = slot;
-        }
-    }
-    return emptySlot;
-}
-
-template <class SharedCacheKeyT>
-void SharedCacheKeyManager<SharedCacheKeyT>::addKeyImpl(const SharedCacheKeyT &key)
+bool SharedCacheKeyManager<SharedCacheKeyT>::addKeyToEmptySlot(const SharedCacheKeyT &key)
 {
     // Search for available slots and use that if any
     size_t slot = 0;
@@ -7042,32 +7025,48 @@ void SharedCacheKeyManager<SharedCacheKeyT>::addKeyImpl(const SharedCacheKeyT &k
             ASSERT(!sharedCacheKey->valid());
             sharedCacheKey = key;
             emptyBits.reset(slot % kSlotBitCount);
-            return;
+            return true;
         }
         slot += kSlotBitCount;
     }
+    return false;
+}
 
-    // Some cached entries may have been released. Try to update and use any available slot if any.
-    slot = updateEmptySlotBits();
-    if (slot != kInvalidSlot)
+template <class SharedCacheKeyT>
+bool SharedCacheKeyManager<SharedCacheKeyT>::releaseUnusedKeysAndReplaceWithKey(
+    const SharedCacheKeyT &key)
+{
+    ASSERT(mSharedCacheKeys.size() == mEmptySlotBits.size() * kSlotBitCount);
+    size_t emptySlot = kInvalidSlot;
+
+    for (size_t slot = 0; slot < mSharedCacheKeys.size(); ++slot)
     {
         SharedCacheKeyT &sharedCacheKey = mSharedCacheKeys[slot];
-        ASSERT(!sharedCacheKey->valid());
-        sharedCacheKey         = key;
-        SlotBitMask &emptyBits = mEmptySlotBits[slot / kSlotBitCount];
-        emptyBits.reset(slot % kSlotBitCount);
-        return;
+        if (!sharedCacheKey->valid())
+        {
+            mEmptySlotBits[slot / kSlotBitCount].set(slot % kSlotBitCount);
+            emptySlot = slot;
+        }
     }
 
+    if (emptySlot != kInvalidSlot)
+    {
+        SharedCacheKeyT &sharedCacheKey = mSharedCacheKeys[emptySlot];
+        ASSERT(!sharedCacheKey->valid());
+        sharedCacheKey         = key;
+        SlotBitMask &emptyBits = mEmptySlotBits[emptySlot / kSlotBitCount];
+        emptyBits.reset(emptySlot % kSlotBitCount);
+        return true;
+    }
+
+    return false;
+}
+
+template <class SharedCacheKeyT>
+void SharedCacheKeyManager<SharedCacheKeyT>::addKeyToNewSlot(const SharedCacheKeyT &key)
+{
     // No slot available, expand mSharedCacheKeys
     ASSERT(mSharedCacheKeys.size() == mEmptySlotBits.size() * kSlotBitCount);
-    if (!mEmptySlotBits.empty())
-    {
-        // On first insertion, let std::vector allocate a single entry for minimal memory overhead,
-        // since this is the most common usage case. If that exceeds, reserve a larger chunk to
-        // avoid storage reallocation for efficiency (enough storage enough for 512 cache entries).
-        mEmptySlotBits.reserve(8);
-    }
     mEmptySlotBits.emplace_back(0xFFFFFFFE);
     mSharedCacheKeys.emplace_back(key);
     while (mSharedCacheKeys.size() < mEmptySlotBits.size() * kSlotBitCount)
@@ -7182,7 +7181,27 @@ template class SharedCacheKeyManager<SharedFramebufferCacheKey>;
 template <>
 void SharedCacheKeyManager<SharedFramebufferCacheKey>::addKey(const SharedFramebufferCacheKey &key)
 {
-    addKeyImpl(key);
+    if (addKeyToEmptySlot(key))
+    {
+        return;
+    }
+
+    // Some cached entries may have been released. Try to update and use any available slot if
+    // any.
+    if (releaseUnusedKeysAndReplaceWithKey(key))
+    {
+        return;
+    }
+
+    // No slot available, expand mSharedCacheKeys
+    if (!mEmptySlotBits.empty())
+    {
+        // On first insertion, let std::vector allocate a single entry for minimal memory overhead,
+        // since this is the most common usage case. If that exceeds, reserve a larger chunk to
+        // avoid storage reallocation for efficiency (enough storage enough for 512 cache entries).
+        mEmptySlotBits.reserve(8);
+    }
+    addKeyToNewSlot(key);
 }
 
 // Explict instantiate for DescriptorSetCacheManager
@@ -7202,7 +7221,7 @@ void SharedCacheKeyManager<SharedDescriptorSetCacheKey>::addKey(
     // In case of the texture or buffer is part of many descriptorSets, lets not track it any more
     // to alleviate the overhead associated with this. We will rely on eviction to free the
     // descriptorSets when needed.
-    static constexpr size_t kMaxEmptySlots            = 4;
+    static constexpr size_t kMaxEmptySlots            = 1;
     static constexpr size_t kMaxSharedCacheKeyTracked = kSlotBitCount * kMaxEmptySlots;
     if (mSharedCacheKeys.size() >= kMaxSharedCacheKeyTracked)
     {
@@ -7212,7 +7231,14 @@ void SharedCacheKeyManager<SharedDescriptorSetCacheKey>::addKey(
     mLastAddedSharedCacheKey = key;
     ASSERT(!containsKeyWithOwnerEqual(key));
 
-    addKeyImpl(key);
+    if (addKeyToEmptySlot(key))
+    {
+        return;
+    }
+
+    // No slot available, expand mSharedCacheKeys
+    addKeyToNewSlot(key);
+    ASSERT(mEmptySlotBits.size() <= kMaxEmptySlots);
 }
 
 // PipelineCacheAccess implementation.
