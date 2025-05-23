@@ -72,7 +72,7 @@ if (is_win) {
   ]
 }
 
-if (is_mac) {
+if (is_mac || is_ios) {
   wgpu_backend_sources += [
     "mac/WindowSurfaceWgpuMetalLayer.h",
     "mac/WindowSurfaceWgpuMetalLayer.mm",

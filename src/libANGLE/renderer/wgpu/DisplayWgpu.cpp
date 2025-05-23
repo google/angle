@@ -22,8 +22,33 @@
 #include "libANGLE/renderer/wgpu/SurfaceWgpu.h"
 #include "libANGLE/renderer/wgpu/wgpu_proc_utils.h"
 
+#if defined(ANGLE_PLATFORM_LINUX)
+#    if defined(ANGLE_USE_X11)
+#        define ANGLE_WEBGPU_HAS_WINDOW_SURFACE_TYPE 1
+#        define ANGLE_WEBGPU_WINDOW_SYSTEM angle::NativeWindowSystem::X11
+#    elif defined(ANGLE_USE_WAYLAND)
+#        define ANGLE_WEBGPU_HAS_WINDOW_SURFACE_TYPE 1
+#        define ANGLE_WEBGPU_WINDOW_SYSTEM angle::NativeWindowSystem::Wayland
+#    else
+#        define ANGLE_WEBGPU_HAS_WINDOW_SURFACE_TYPE 0
+#        define ANGLE_WEBGPU_WINDOW_SYSTEM angle::NativeWindowSystem::Other
+#    endif
+#else
+#    define ANGLE_WEBGPU_HAS_WINDOW_SURFACE_TYPE 1
+#    define ANGLE_WEBGPU_WINDOW_SYSTEM angle::NativeWindowSystem::Other
+#endif
+
 namespace rx
 {
+
+#if !ANGLE_WEBGPU_HAS_WINDOW_SURFACE_TYPE
+WindowSurfaceWgpu *CreateWgpuWindowSurface(const egl::SurfaceState &surfaceState,
+                                           EGLNativeWindowType window)
+{
+    UNIMPLEMENTED();
+    return nullptr;
+}
+#endif
 
 DisplayWgpu::DisplayWgpu(const egl::DisplayState &state) : DisplayImpl(state) {}
 
@@ -117,7 +142,10 @@ egl::ConfigSet DisplayWgpu::generateConfigs()
     config.sampleBuffers         = 0;
     config.samples               = 0;
     config.stencilSize           = 8;
-    config.surfaceType           = EGL_WINDOW_BIT | EGL_PBUFFER_BIT;
+    config.surfaceType           = EGL_PBUFFER_BIT;
+#if ANGLE_WEBGPU_HAS_WINDOW_SURFACE_TYPE
+    config.surfaceType |= EGL_WINDOW_BIT;
+#endif
     config.optimalOrientation    = 0;
     config.transparentType       = EGL_NONE;
     config.transparentRedValue   = 0;
@@ -307,15 +335,7 @@ ShareGroupImpl *DisplayWgpu::createShareGroup(const egl::ShareGroupState &state)
 
 angle::NativeWindowSystem DisplayWgpu::getWindowSystem() const
 {
-#if defined(ANGLE_PLATFORM_LINUX)
-#    if defined(ANGLE_USE_X11)
-    return angle::NativeWindowSystem::X11;
-#    elif defined(ANGLE_USE_WAYLAND)
-    return angle::NativeWindowSystem::Wayland;
-#    endif
-#else
-    return angle::NativeWindowSystem::Other;
-#endif
+    return ANGLE_WEBGPU_WINDOW_SYSTEM;
 }
 
 const webgpu::Format *DisplayWgpu::getFormatForImportedTexture(const egl::AttributeMap &attribs,
