@@ -1374,15 +1374,17 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk, bool *anyMat
                    VK_ERROR_INITIALIZATION_FAILED);
 
     // Single buffer, if supported
-    if ((mState.attributes.getAsInt(EGL_RENDER_BUFFER, EGL_BACK_BUFFER) == EGL_SINGLE_BUFFER) &&
-        supportsPresentMode(vk::PresentMode::SharedDemandRefreshKHR))
+    if (mState.attributes.getAsInt(EGL_RENDER_BUFFER, EGL_BACK_BUFFER) == EGL_SINGLE_BUFFER)
     {
-        mSwapchainPresentMode = vk::PresentMode::SharedDemandRefreshKHR;
-        setDesiredSwapchainPresentMode(vk::PresentMode::SharedDemandRefreshKHR);
-    }
-    else
-    {
-        WARN() << "Shared presentation mode requested, but not supported";
+        if (supportsPresentMode(vk::PresentMode::SharedDemandRefreshKHR))
+        {
+            mSwapchainPresentMode = vk::PresentMode::SharedDemandRefreshKHR;
+            setDesiredSwapchainPresentMode(vk::PresentMode::SharedDemandRefreshKHR);
+        }
+        else
+        {
+            WARN() << "Shared presentation mode requested, but not supported";
+        }
     }
 
     mCompressionFlags    = VK_IMAGE_COMPRESSION_DISABLED_EXT;
