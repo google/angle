@@ -46,7 +46,9 @@ ANGLE_INLINE bool operator<(const AttributeRange &a, const AttributeRange &b)
 class VertexArrayVk : public VertexArrayImpl
 {
   public:
-    VertexArrayVk(ContextVk *contextVk, const gl::VertexArrayState &state);
+    VertexArrayVk(ContextVk *contextVk,
+                  const gl::VertexArrayState &state,
+                  const gl::VertexArrayBuffers &vertexArrayBuffers);
     ~VertexArrayVk() override;
 
     void destroy(const gl::Context *context) override;

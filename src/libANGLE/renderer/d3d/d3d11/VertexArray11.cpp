@@ -19,8 +19,9 @@ using namespace angle;
 
 namespace rx
 {
-VertexArray11::VertexArray11(const gl::VertexArrayState &data)
-    : VertexArrayImpl(data),
+VertexArray11::VertexArray11(const gl::VertexArrayState &data,
+                             const gl::VertexArrayBuffers &vertexArrayBuffers)
+    : VertexArrayImpl(data, vertexArrayBuffers),
       mAttributeStorageTypes(data.getMaxAttribs(), VertexStorageType::CURRENT_VALUE),
       mTranslatedAttribs(data.getMaxAttribs()),
       mAppliedNumViewsToDivisor(1),
@@ -206,7 +207,7 @@ angle::Result VertexArray11::updateElementArrayStorage(const gl::Context *contex
     unsigned int offset = static_cast<unsigned int>(reinterpret_cast<uintptr_t>(indices));
 
     mCurrentElementArrayStorage =
-        ClassifyIndexStorage(context->getState(), mState.getElementArrayBuffer(), indexType,
+        ClassifyIndexStorage(context->getState(), getElementArrayBuffer(), indexType,
                              mCachedDestinationIndexType, offset);
 
     return angle::Result::Continue;
@@ -218,8 +219,9 @@ void VertexArray11::updateVertexAttribStorage(const gl::Context *context,
 {
     const gl::VertexAttribute &attrib = mState.getVertexAttribute(attribIndex);
     const gl::VertexBinding &binding  = mState.getBindingFromAttribIndex(attribIndex);
+    const gl::Buffer *buffer          = getVertexArrayBuffer(attrib.bindingIndex);
 
-    VertexStorageType newStorageType = ClassifyAttributeStorage(context, attrib, binding);
+    VertexStorageType newStorageType = ClassifyAttributeStorage(context, attrib, binding, buffer);
 
     // Note: having an unchanged storage type doesn't mean the attribute is clean.
     mAttribsToTranslate.set(attribIndex, newStorageType != VertexStorageType::DYNAMIC);
@@ -259,6 +261,8 @@ angle::Result VertexArray11::updateDirtyAttribs(const gl::Context *context,
         // Record basic attrib info
         translatedAttrib->attribute        = &attribs[dirtyAttribIndex];
         translatedAttrib->binding          = &bindings[translatedAttrib->attribute->bindingIndex];
+        translatedAttrib->bufferBindingPointer =
+            &getBufferBindingPointer(translatedAttrib->attribute->bindingIndex);
         translatedAttrib->currentValueType = currentValue.Type;
         translatedAttrib->divisor =
             translatedAttrib->binding->getDivisor() * mAppliedNumViewsToDivisor;
@@ -317,6 +321,8 @@ angle::Result VertexArray11::updateDynamicAttribs(const gl::Context *context,
         // Record basic attrib info
         dynamicAttrib->attribute        = &attribs[dynamicAttribIndex];
         dynamicAttrib->binding          = &bindings[dynamicAttrib->attribute->bindingIndex];
+        dynamicAttrib->bufferBindingPointer =
+            &getBufferBindingPointer(dynamicAttrib->attribute->bindingIndex);
         dynamicAttrib->currentValueType = currentValue.Type;
         dynamicAttrib->divisor = dynamicAttrib->binding->getDivisor() * mAppliedNumViewsToDivisor;
     }

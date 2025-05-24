@@ -633,6 +633,7 @@ void SetSamplerParameterBase(Context *context,
 template <typename ParamType, typename CurrentDataType, size_t CurrentValueCount>
 void QueryVertexAttribBase(const VertexAttribute &attrib,
                            const VertexBinding &binding,
+                           const Buffer *buffer,
                            const CurrentDataType (&currentValueData)[CurrentValueCount],
                            GLenum pname,
                            ParamType *params)
@@ -663,7 +664,7 @@ void QueryVertexAttribBase(const VertexAttribute &attrib,
                 CastFromStateValue<ParamType>(pname, static_cast<GLint>(attrib.format->isNorm()));
             break;
         case GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING:
-            *params = CastFromGLintStateValue<ParamType>(pname, binding.getBuffer().id().value);
+            *params = CastFromGLintStateValue<ParamType>(pname, buffer ? buffer->id().value : 0);
             break;
         case GL_VERTEX_ATTRIB_ARRAY_DIVISOR:
             *params = CastFromStateValue<ParamType>(pname, binding.getDivisor());
@@ -1686,20 +1687,24 @@ void QuerySamplerParameterIuiv(const Sampler *sampler, GLenum pname, GLuint *par
 
 void QueryVertexAttribfv(const VertexAttribute &attrib,
                          const VertexBinding &binding,
+                         const Buffer *buffer,
                          const VertexAttribCurrentValueData &currentValueData,
                          GLenum pname,
                          GLfloat *params)
 {
-    QueryVertexAttribBase(attrib, binding, currentValueData.Values.FloatValues, pname, params);
+    QueryVertexAttribBase(attrib, binding, buffer, currentValueData.Values.FloatValues, pname,
+                          params);
 }
 
 void QueryVertexAttribiv(const VertexAttribute &attrib,
                          const VertexBinding &binding,
+                         const Buffer *buffer,
                          const VertexAttribCurrentValueData &currentValueData,
                          GLenum pname,
                          GLint *params)
 {
-    QueryVertexAttribBase(attrib, binding, currentValueData.Values.FloatValues, pname, params);
+    QueryVertexAttribBase(attrib, binding, buffer, currentValueData.Values.FloatValues, pname,
+                          params);
 }
 
 void QueryVertexAttribPointerv(const VertexAttribute &attrib, GLenum pname, void **pointer)
@@ -1718,20 +1723,23 @@ void QueryVertexAttribPointerv(const VertexAttribute &attrib, GLenum pname, void
 
 void QueryVertexAttribIiv(const VertexAttribute &attrib,
                           const VertexBinding &binding,
+                          const Buffer *buffer,
                           const VertexAttribCurrentValueData &currentValueData,
                           GLenum pname,
                           GLint *params)
 {
-    QueryVertexAttribBase(attrib, binding, currentValueData.Values.IntValues, pname, params);
+    QueryVertexAttribBase(attrib, binding, buffer, currentValueData.Values.IntValues, pname,
+                          params);
 }
 
 void QueryVertexAttribIuiv(const VertexAttribute &attrib,
                            const VertexBinding &binding,
+                           const Buffer *buffer,
                            const VertexAttribCurrentValueData &currentValueData,
                            GLenum pname,
                            GLuint *params)
 {
-    QueryVertexAttribBase(attrib, binding, currentValueData.Values.UnsignedIntValues, pname,
+    QueryVertexAttribBase(attrib, binding, buffer, currentValueData.Values.UnsignedIntValues, pname,
                           params);
 }
 

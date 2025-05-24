@@ -35,15 +35,8 @@ VertexBinding &VertexBinding::operator=(VertexBinding &&binding)
         mDivisor             = binding.mDivisor;
         mOffset              = binding.mOffset;
         mBoundAttributesMask = binding.mBoundAttributesMask;
-        std::swap(binding.mBuffer, mBuffer);
     }
     return *this;
-}
-
-void VertexBinding::onContainerBindingChanged(const Context *context, int incr) const
-{
-    if (mBuffer.get())
-        mBuffer->onNonTFBindingChanged(incr);
 }
 
 VertexAttribute::VertexAttribute(GLuint bindingIndex)
@@ -81,9 +74,8 @@ VertexAttribute &VertexAttribute::operator=(VertexAttribute &&attrib)
     return *this;
 }
 
-void VertexAttribute::updateCachedElementLimit(const VertexBinding &binding)
+void VertexAttribute::updateCachedElementLimit(const VertexBinding &binding, const Buffer *buffer)
 {
-    Buffer *buffer = binding.getBuffer().get();
     if (!buffer)
     {
         mCachedElementLimit = 0;

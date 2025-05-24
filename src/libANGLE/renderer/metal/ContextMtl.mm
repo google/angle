@@ -1509,9 +1509,10 @@ BufferImpl *ContextMtl::createBuffer(const gl::BufferState &state)
 }
 
 // Vertex Array creation
-VertexArrayImpl *ContextMtl::createVertexArray(const gl::VertexArrayState &state)
+VertexArrayImpl *ContextMtl::createVertexArray(const gl::VertexArrayState &state,
+                                               const gl::VertexArrayBuffers &vertexArrayBuffers)
 {
-    return new VertexArrayMtl(state, this);
+    return new VertexArrayMtl(state, vertexArrayBuffers, this);
 }
 
 // Query and Fence creation

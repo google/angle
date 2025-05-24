@@ -3672,7 +3672,7 @@ void State::getIntegeri_v(const Context *context, GLenum target, GLuint index, G
             break;
         case GL_VERTEX_BINDING_BUFFER:
             ASSERT(static_cast<size_t>(index) < mVertexArray->getMaxBindings());
-            *data = mVertexArray->getVertexBinding(index).getBuffer().id().value;
+            *data = mVertexArray->getVertexArrayBufferID(index).value;
             break;
         case GL_VERTEX_BINDING_DIVISOR:
             ASSERT(static_cast<size_t>(index) < mVertexArray->getMaxBindings());

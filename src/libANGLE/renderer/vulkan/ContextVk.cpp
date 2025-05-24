@@ -1615,7 +1615,7 @@ angle::Result ContextVk::setupIndexedDraw(const gl::Context *context,
     }
 
     VertexArrayVk *vertexArrayVk         = getVertexArray();
-    const gl::Buffer *elementArrayBuffer = vertexArrayVk->getState().getElementArrayBuffer();
+    const gl::Buffer *elementArrayBuffer = vertexArrayVk->getElementArrayBuffer();
     if (!elementArrayBuffer)
     {
         BufferBindingDirty bindingDirty;
@@ -6209,9 +6209,10 @@ BufferImpl *ContextVk::createBuffer(const gl::BufferState &state)
     return new BufferVk(state);
 }
 
-VertexArrayImpl *ContextVk::createVertexArray(const gl::VertexArrayState &state)
+VertexArrayImpl *ContextVk::createVertexArray(const gl::VertexArrayState &state,
+                                              const gl::VertexArrayBuffers &vertexArrayBuffers)
 {
-    return new VertexArrayVk(this, state);
+    return new VertexArrayVk(this, state, vertexArrayBuffers);
 }
 
 QueryImpl *ContextVk::createQuery(gl::QueryType type)

@@ -206,9 +206,10 @@ BufferImpl *Context11::createBuffer(const gl::BufferState &state)
     return buffer;
 }
 
-VertexArrayImpl *Context11::createVertexArray(const gl::VertexArrayState &data)
+VertexArrayImpl *Context11::createVertexArray(const gl::VertexArrayState &data,
+                                              const gl::VertexArrayBuffers &vertexArrayBuffers)
 {
-    return new VertexArray11(data);
+    return new VertexArray11(data, vertexArrayBuffers);
 }
 
 QueryImpl *Context11::createQuery(gl::QueryType type)

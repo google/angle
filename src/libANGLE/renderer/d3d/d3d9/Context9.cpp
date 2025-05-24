@@ -103,9 +103,10 @@ BufferImpl *Context9::createBuffer(const gl::BufferState &state)
     return new Buffer9(state, mRenderer);
 }
 
-VertexArrayImpl *Context9::createVertexArray(const gl::VertexArrayState &data)
+VertexArrayImpl *Context9::createVertexArray(const gl::VertexArrayState &data,
+                                             const gl::VertexArrayBuffers &vertexArrayBuffers)
 {
-    return new VertexArray9(data);
+    return new VertexArray9(data, vertexArrayBuffers);
 }
 
 QueryImpl *Context9::createQuery(gl::QueryType type)

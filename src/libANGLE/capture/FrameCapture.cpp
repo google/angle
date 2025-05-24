@@ -2684,6 +2684,7 @@ void CaptureVertexArrayState(std::vector<CallCapture> *setupCalls,
 
         const gl::VertexAttribute &attrib = vertexAttribs[attribIndex];
         const gl::VertexBinding &binding  = vertexBindings[attrib.bindingIndex];
+        gl::Buffer *buffer                = vertexArray->getVertexArrayBuffer(attrib.bindingIndex);
 
         if (attrib.enabled != defaultAttrib.enabled)
         {
@@ -2702,17 +2703,15 @@ void CaptureVertexArrayState(std::vector<CallCapture> *setupCalls,
 
         // Don't capture CaptureVertexAttribPointer calls when a non-default VAO is bound, the array
         // buffer is null and a non-null attrib pointer is used.
-        bool skipInvalidAttrib = vertexArray->id().value != 0 &&
-                                 binding.getBuffer().get() == nullptr && attrib.pointer != nullptr;
+        bool skipInvalidAttrib =
+            vertexArray->id().value != 0 && buffer == nullptr && attrib.pointer != nullptr;
 
         if (!skipInvalidAttrib &&
             (attrib.format != defaultAttrib.format || attrib.pointer != defaultAttrib.pointer ||
              binding.getStride() != defaultBinding.getStride() ||
-             attrib.bindingIndex != defaultAttrib.bindingIndex ||
-             binding.getBuffer().get() != nullptr))
+             attrib.bindingIndex != defaultAttrib.bindingIndex || buffer != nullptr))
         {
             // Each attribute can pull from a separate buffer, so check the binding
-            gl::Buffer *buffer = binding.getBuffer().get();
             if (buffer != replayState->getArrayBuffer())
             {
                 replayState->setBufferBinding(context, gl::BufferBinding::Array, buffer);
@@ -2798,13 +2797,13 @@ void CaptureVertexArrayState(std::vector<CallCapture> *setupCalls,
     for (size_t bindingIndex : vertexPointerBindings.flip())
     {
         const gl::VertexBinding &binding = vertexBindings[bindingIndex];
+        gl::Buffer *buffer               = vertexArray->getVertexArrayBuffer(bindingIndex);
 
-        if (binding.getBuffer().id().value != 0)
+        if (buffer)
         {
-            Capture(setupCalls,
-                    CaptureBindVertexBuffer(*replayState, true, static_cast<GLuint>(bindingIndex),
-                                            binding.getBuffer().id(), binding.getOffset(),
-                                            binding.getStride()));
+            Capture(setupCalls, CaptureBindVertexBuffer(
+                                    *replayState, true, static_cast<GLuint>(bindingIndex),
+                                    buffer->id(), binding.getOffset(), binding.getStride()));
         }
 
         if (binding.getDivisor() != 0)

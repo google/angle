@@ -1018,9 +1018,10 @@ BufferImpl *ContextWgpu::createBuffer(const gl::BufferState &state)
     return new BufferWgpu(state);
 }
 
-VertexArrayImpl *ContextWgpu::createVertexArray(const gl::VertexArrayState &data)
+VertexArrayImpl *ContextWgpu::createVertexArray(const gl::VertexArrayState &data,
+                                                const gl::VertexArrayBuffers &vertexArrayBuffers)
 {
-    return new VertexArrayWgpu(data);
+    return new VertexArrayWgpu(data, vertexArrayBuffers);
 }
 
 QueryImpl *ContextWgpu::createQuery(gl::QueryType type)

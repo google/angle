@@ -6148,8 +6148,9 @@ void Context::getVertexAttribivImpl(GLuint index, GLenum pname, GLint *params) c
     const VertexAttribCurrentValueData &currentValues =
         getState().getVertexAttribCurrentValue(index);
     const VertexArray *vao = getState().getVertexArray();
+    size_t bindingIndex    = vao->getBindingIndexFromAttribIndex(index);
     QueryVertexAttribiv(vao->getVertexAttribute(index), vao->getBindingFromAttribIndex(index),
-                        currentValues, pname, params);
+                        vao->getVertexArrayBuffer(bindingIndex), currentValues, pname, params);
 }
 
 void Context::getVertexAttribiv(GLuint index, GLenum pname, GLint *params)
@@ -6171,8 +6172,9 @@ void Context::getVertexAttribfv(GLuint index, GLenum pname, GLfloat *params)
     const VertexAttribCurrentValueData &currentValues =
         getState().getVertexAttribCurrentValue(index);
     const VertexArray *vao = getState().getVertexArray();
+    size_t bindingIndex    = vao->getBindingIndexFromAttribIndex(index);
     QueryVertexAttribfv(vao->getVertexAttribute(index), vao->getBindingFromAttribIndex(index),
-                        currentValues, pname, params);
+                        vao->getVertexArrayBuffer(bindingIndex), currentValues, pname, params);
 }
 
 void Context::getVertexAttribfvRobust(GLuint index,
@@ -6189,8 +6191,9 @@ void Context::getVertexAttribIiv(GLuint index, GLenum pname, GLint *params)
     const VertexAttribCurrentValueData &currentValues =
         getState().getVertexAttribCurrentValue(index);
     const VertexArray *vao = getState().getVertexArray();
+    size_t bindingIndex    = vao->getBindingIndexFromAttribIndex(index);
     QueryVertexAttribIiv(vao->getVertexAttribute(index), vao->getBindingFromAttribIndex(index),
-                         currentValues, pname, params);
+                         vao->getVertexArrayBuffer(bindingIndex), currentValues, pname, params);
 }
 
 void Context::getVertexAttribIivRobust(GLuint index,
@@ -6207,8 +6210,9 @@ void Context::getVertexAttribIuiv(GLuint index, GLenum pname, GLuint *params)
     const VertexAttribCurrentValueData &currentValues =
         getState().getVertexAttribCurrentValue(index);
     const VertexArray *vao = getState().getVertexArray();
+    size_t bindingIndex    = vao->getBindingIndexFromAttribIndex(index);
     QueryVertexAttribIuiv(vao->getVertexAttribute(index), vao->getBindingFromAttribIndex(index),
-                          currentValues, pname, params);
+                          vao->getVertexArrayBuffer(bindingIndex), currentValues, pname, params);
 }
 
 void Context::getVertexAttribIuivRobust(GLuint index,

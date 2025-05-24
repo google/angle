@@ -21,7 +21,9 @@ class Renderer9;
 class VertexArray9 : public VertexArrayImpl
 {
   public:
-    VertexArray9(const gl::VertexArrayState &data) : VertexArrayImpl(data) {}
+    VertexArray9(const gl::VertexArrayState &data, const gl::VertexArrayBuffers &vertexArrayBuffers)
+        : VertexArrayImpl(data, vertexArrayBuffers)
+    {}
 
     angle::Result syncState(const gl::Context *context,
                             const gl::VertexArray::DirtyBits &dirtyBits,
