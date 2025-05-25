@@ -56,7 +56,9 @@ angle::Result WindowSurfaceWgpuMetalLayer::createWgpuSurface(const egl::Display 
         CGSizeMake(mMetalLayer.bounds.size.width * mMetalLayer.contentsScale,
                    mMetalLayer.bounds.size.height * mMetalLayer.contentsScale);
     mMetalLayer.framebufferOnly  = NO;
+#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
     mMetalLayer.autoresizingMask = kCALayerWidthSizable | kCALayerHeightSizable;
+#endif
     mMetalLayer.contentsScale    = layer.contentsScale;
 
     [layer addSublayer:mMetalLayer];
