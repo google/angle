@@ -5865,6 +5865,11 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                     "Dirty bit order");
                 iter.setLaterBit(gl::state::DIRTY_BIT_TEXTURE_BINDINGS);
                 ANGLE_TRY(invalidateCurrentShaderResources(command));
+                // invalidateCurrentShaderResources(...) already dirties all uniform buffers
+                static_assert(gl::state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS >
+                                  gl::state::DIRTY_BIT_PROGRAM_BINDING,
+                              "Dirty bit order");
+                iter.resetLaterBit(gl::state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS);
                 ANGLE_TRY(invalidateProgramExecutableHelper(context));
 
                 static_assert(
