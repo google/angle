@@ -20,6 +20,7 @@
 #include "libANGLE/renderer/wgpu/wgpu_utils.h"
 #include "libANGLE/renderer/wgpu/wgpu_wgsl_util.h"
 #include "libANGLE/trace.h"
+#include "platform/autogen/FeaturesWgpu_autogen.h"
 
 namespace rx
 {
@@ -77,12 +78,21 @@ angle::Result InitDefaultUniformBlock(const std::vector<sh::ShaderVariable> &uni
     return angle::Result::Continue;
 }
 
+std::string FormatWGPUCompilationMessage(const WGPUCompilationMessage &message)
+{
+    std::ostringstream oss;
+    oss << message.lineNum << ":" << message.linePos << ": "
+        << std::string(message.message.data, message.message.length);
+    return oss.str();
+}
+
 class CreateWGPUShaderModuleTask : public LinkSubTask
 {
   public:
     CreateWGPUShaderModuleTask(const DawnProcTable *wgpu,
                                webgpu::InstanceHandle instance,
                                webgpu::DeviceHandle device,
+                               const angle::FeaturesWgpu &features,
                                const gl::SharedCompiledShaderState &compiledShaderState,
                                const gl::ProgramExecutable &executable,
                                gl::ProgramMergedVaryings mergedVaryings,
@@ -90,6 +100,7 @@ class CreateWGPUShaderModuleTask : public LinkSubTask
         : mProcTable(wgpu),
           mInstance(instance),
           mDevice(device),
+          mFeatures(features),
           mCompiledShaderState(compiledShaderState),
           mExecutable(executable),
           mMergedVaryings(std::move(mergedVaryings)),
@@ -143,52 +154,90 @@ class CreateWGPUShaderModuleTask : public LinkSubTask
             mProcTable,
             mProcTable->deviceCreateShaderModule(mDevice.get(), &shaderModuleDescriptor));
 
-        WGPUCompilationInfoCallbackInfo getCompilationInfoCallback =
-            WGPU_COMPILATION_INFO_CALLBACK_INFO_INIT;
-        getCompilationInfoCallback.mode     = WGPUCallbackMode_WaitAnyOnly;
-        getCompilationInfoCallback.callback = [](WGPUCompilationInfoRequestStatus status,
-                                                 struct WGPUCompilationInfo const *compilationInfo,
-                                                 void *userdata1, void *userdata2) {
-            CreateWGPUShaderModuleTask *task =
-                reinterpret_cast<CreateWGPUShaderModuleTask *>(userdata1);
-            ASSERT(userdata2 == nullptr);
-            if (status != WGPUCompilationInfoRequestStatus_Success)
-            {
-                task->mResult = angle::Result::Stop;
-            }
-
-            for (size_t msgIdx = 0; msgIdx < compilationInfo->messageCount; ++msgIdx)
-            {
-                const WGPUCompilationMessage &message = compilationInfo->messages[msgIdx];
-                switch (message.type)
-                {
-                    case WGPUCompilationMessageType_Error:
-                        task->mLog << "Error: ";
-                        break;
-                    case WGPUCompilationMessageType_Warning:
-                        task->mLog << "Warning: ";
-                        break;
-                    case WGPUCompilationMessageType_Info:
-                        task->mLog << "Info: ";
-                        break;
-                    default:
-                        task->mLog << "Unknown: ";
-                        break;
-                }
-                task->mLog << message.lineNum << ":" << message.linePos << ": "
-                           << std::string(message.message.data, message.message.length)
-                           << std::endl;
-            }
-        };
-        getCompilationInfoCallback.userdata1 = this;
-
-        WGPUFutureWaitInfo waitInfo = WGPU_FUTURE_WAIT_INFO_INIT;
-        waitInfo.future = mProcTable->shaderModuleGetCompilationInfo(mShaderModule.module.get(),
-                                                                     getCompilationInfoCallback);
-        WGPUWaitStatus waitStatus = mProcTable->instanceWaitAny(mInstance.get(), 1, &waitInfo, -1);
-        if (waitStatus != WGPUWaitStatus_Success)
+        if (mFeatures.avoidWaitAny.enabled)
         {
-            mResult = angle::Result::Stop;
+            WGPUCompilationInfoCallbackInfo getCompilationInfoCallback =
+                WGPU_COMPILATION_INFO_CALLBACK_INFO_INIT;
+            getCompilationInfoCallback.mode = WGPUCallbackMode_AllowSpontaneous;
+            getCompilationInfoCallback.callback =
+                [](WGPUCompilationInfoRequestStatus status,
+                   struct WGPUCompilationInfo const *compilationInfo, void *userdata1,
+                   void *userdata2) {
+                    ASSERT(userdata1 == nullptr);
+                    ASSERT(userdata2 == nullptr);
+                    for (size_t msgIdx = 0; msgIdx < compilationInfo->messageCount; ++msgIdx)
+                    {
+                        const WGPUCompilationMessage &message = compilationInfo->messages[msgIdx];
+                        switch (message.type)
+                        {
+                            case WGPUCompilationMessageType_Error:
+                                ERR() << FormatWGPUCompilationMessage(message);
+                                break;
+                            case WGPUCompilationMessageType_Warning:
+                                WARN() << FormatWGPUCompilationMessage(message);
+                                break;
+                            case WGPUCompilationMessageType_Info:
+                                INFO() << FormatWGPUCompilationMessage(message);
+                                break;
+                            default:
+                                UNIMPLEMENTED();
+                                break;
+                        }
+                    }
+                };
+
+            mProcTable->shaderModuleGetCompilationInfo(mShaderModule.module.get(),
+                                                       getCompilationInfoCallback);
+        }
+        else
+        {
+            WGPUCompilationInfoCallbackInfo getCompilationInfoCallback =
+                WGPU_COMPILATION_INFO_CALLBACK_INFO_INIT;
+            getCompilationInfoCallback.mode = WGPUCallbackMode_WaitAnyOnly;
+            getCompilationInfoCallback.callback =
+                [](WGPUCompilationInfoRequestStatus status,
+                   struct WGPUCompilationInfo const *compilationInfo, void *userdata1,
+                   void *userdata2) {
+                    CreateWGPUShaderModuleTask *task =
+                        reinterpret_cast<CreateWGPUShaderModuleTask *>(userdata1);
+                    ASSERT(userdata2 == nullptr);
+                    if (status != WGPUCompilationInfoRequestStatus_Success)
+                    {
+                        task->mResult = angle::Result::Stop;
+                    }
+
+                    for (size_t msgIdx = 0; msgIdx < compilationInfo->messageCount; ++msgIdx)
+                    {
+                        const WGPUCompilationMessage &message = compilationInfo->messages[msgIdx];
+                        switch (message.type)
+                        {
+                            case WGPUCompilationMessageType_Error:
+                                task->mLog << "Error: ";
+                                break;
+                            case WGPUCompilationMessageType_Warning:
+                                task->mLog << "Warning: ";
+                                break;
+                            case WGPUCompilationMessageType_Info:
+                                task->mLog << "Info: ";
+                                break;
+                            default:
+                                task->mLog << "Unknown: ";
+                                break;
+                        }
+                        task->mLog << FormatWGPUCompilationMessage(message) << std::endl;
+                    }
+                };
+            getCompilationInfoCallback.userdata1 = this;
+
+            WGPUFutureWaitInfo waitInfo = WGPU_FUTURE_WAIT_INFO_INIT;
+            waitInfo.future             = mProcTable->shaderModuleGetCompilationInfo(
+                mShaderModule.module.get(), getCompilationInfoCallback);
+            WGPUWaitStatus waitStatus =
+                mProcTable->instanceWaitAny(mInstance.get(), 1, &waitInfo, -1);
+            if (waitStatus != WGPUWaitStatus_Success)
+            {
+                mResult = angle::Result::Stop;
+            }
         }
     }
 
@@ -196,6 +245,7 @@ class CreateWGPUShaderModuleTask : public LinkSubTask
     const DawnProcTable *mProcTable = nullptr;
     webgpu::InstanceHandle mInstance;
     webgpu::DeviceHandle mDevice;
+    const angle::FeaturesWgpu &mFeatures;
     gl::SharedCompiledShaderState mCompiledShaderState;
     const gl::ProgramExecutable &mExecutable;
     gl::ProgramMergedVaryings mMergedVaryings;
@@ -212,10 +262,12 @@ class LinkTaskWgpu : public LinkTask
     LinkTaskWgpu(const DawnProcTable *wgpu,
                  webgpu::InstanceHandle instance,
                  webgpu::DeviceHandle device,
+                 const angle::FeaturesWgpu &features,
                  ProgramWgpu *program)
         : mProcTable(wgpu),
           mInstance(instance),
           mDevice(device),
+          mFeatures(features),
           mProgram(program),
           mExecutable(&mProgram->getState().getExecutable())
     {}
@@ -239,7 +291,7 @@ class LinkTaskWgpu : public LinkTask
             if (shaders[shaderType])
             {
                 auto task = std::make_shared<CreateWGPUShaderModuleTask>(
-                    mProcTable, mInstance, mDevice, shaders[shaderType],
+                    mProcTable, mInstance, mDevice, mFeatures, shaders[shaderType],
                     *executable->getExecutable(), mergedVaryings,
                     executable->getShaderModule(shaderType));
                 linkSubTasksOut->push_back(task);
@@ -355,6 +407,7 @@ class LinkTaskWgpu : public LinkTask
     const DawnProcTable *mProcTable = nullptr;
     webgpu::InstanceHandle mInstance;
     webgpu::DeviceHandle mDevice;
+    const angle::FeaturesWgpu &mFeatures;
     ProgramWgpu *mProgram = nullptr;
     const gl::ProgramExecutable *mExecutable;
     angle::Result mLinkResult = angle::Result::Stop;
@@ -384,10 +437,12 @@ void ProgramWgpu::setSeparable(bool separable) {}
 angle::Result ProgramWgpu::link(const gl::Context *context, std::shared_ptr<LinkTask> *linkTaskOut)
 {
     const DawnProcTable *wgpu       = webgpu::GetProcs(context);
+    const angle::FeaturesWgpu &features = webgpu::GetFeatures(context);
     webgpu::DeviceHandle device     = webgpu::GetDevice(context);
     webgpu::InstanceHandle instance = webgpu::GetInstance(context);
 
-    *linkTaskOut = std::shared_ptr<LinkTask>(new LinkTaskWgpu(wgpu, instance, device, this));
+    *linkTaskOut =
+        std::shared_ptr<LinkTask>(new LinkTaskWgpu(wgpu, instance, device, features, this));
     return angle::Result::Continue;
 }
 

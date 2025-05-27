@@ -102,6 +102,11 @@ namespace egl
 ANGLE_EGL_OBJECTS_X(ANGLE_PRE_DECLARE_EGL_OBJECT)
 }  // namespace egl
 
+namespace angle
+{
+struct FeaturesWgpu;
+}
+
 namespace rx
 {
 
@@ -439,6 +444,8 @@ void GenerateCaps(const WGPULimits &limitWgpu,
 DisplayWgpu *GetDisplay(const gl::Context *context);
 const DawnProcTable *GetProcs(const gl::Context *context);
 const DawnProcTable *GetProcs(const ContextWgpu *context);
+const angle::FeaturesWgpu &GetFeatures(const gl::Context *context);
+const angle::FeaturesWgpu &GetFeatures(const ContextWgpu *context);
 webgpu::DeviceHandle GetDevice(const gl::Context *context);
 webgpu::InstanceHandle GetInstance(const gl::Context *context);
 PackedRenderPassColorAttachment CreateNewClearColorAttachment(const gl::ColorF &clearValue,

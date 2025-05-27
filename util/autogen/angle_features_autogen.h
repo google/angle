@@ -55,6 +55,7 @@ enum class Feature
     AvoidInvisibleWindowSwapchainRecreate,
     AvoidOpSelectWithMismatchingRelaxedPrecision,
     AvoidStencilTextureSwizzle,
+    AvoidWaitAny,
     BgraTexImageFormatsBroken,
     BindCompleteFramebufferForTimerQueries,
     BindTransformFeedbackBufferBeforeBindBufferRange,

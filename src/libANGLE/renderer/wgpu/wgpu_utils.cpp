@@ -35,6 +35,18 @@ const DawnProcTable *GetProcs(const ContextWgpu *context)
     return display->getProcs();
 }
 
+const angle::FeaturesWgpu &GetFeatures(const gl::Context *context)
+{
+    DisplayWgpu *display = GetDisplay(context);
+    return display->getFeatures();
+}
+
+const angle::FeaturesWgpu &GetFeatures(const ContextWgpu *context)
+{
+    DisplayWgpu *display = context->getDisplay();
+    return display->getFeatures();
+}
+
 webgpu::DeviceHandle GetDevice(const gl::Context *context)
 {
     DisplayWgpu *display = GetDisplay(context);
@@ -450,10 +462,9 @@ angle::Result ErrorScope::PopScope(ContextWgpu *context,
         unsigned int line    = 0;
         bool hadError        = false;
     };
-    PopScopeContext popScopeContext{context, file, function, line, false};
 
     WGPUPopErrorScopeCallbackInfo callbackInfo = WGPU_POP_ERROR_SCOPE_CALLBACK_INFO_INIT;
-    callbackInfo.mode                          = WGPUCallbackMode_WaitAnyOnly;
+    callbackInfo.mode                          = WGPUCallbackMode_AllowSpontaneous;
     callbackInfo.callback = [](WGPUPopErrorScopeStatus status, WGPUErrorType type,
                                struct WGPUStringView message, void *userdata1, void *userdata2) {
         PopScopeContext *ctx = reinterpret_cast<PopScopeContext *>(userdata1);
@@ -464,27 +475,39 @@ angle::Result ErrorScope::PopScope(ContextWgpu *context,
             return;
         }
 
-        if (ctx->context)
+        if (ctx)
         {
             ASSERT(ctx->file);
             ASSERT(ctx->function);
             std::string msgStr(message.data, message.length);
             ctx->context->handleError(GL_INVALID_OPERATION, msgStr.c_str(), ctx->file,
                                       ctx->function, ctx->line);
+            ctx->hadError = true;
         }
         else
         {
             ERR() << "Unhandled WebGPU error: " << std::string(message.data, message.length);
         }
-        ctx->hadError = true;
     };
-    callbackInfo.userdata1 = &popScopeContext;
 
-    WGPUFutureWaitInfo future = WGPU_FUTURE_WAIT_INFO_INIT;
-    future.future             = mProcTable->devicePopErrorScope(mDevice.get(), callbackInfo);
-    mProcTable->instanceWaitAny(mInstance.get(), 1, &future, -1);
+    const angle::FeaturesWgpu &features = GetFeatures(context);
+    if (features.avoidWaitAny.enabled)
+    {
+        // End the error scope but don't wait on it. The error messages will be printed later.
+        mProcTable->devicePopErrorScope(mDevice.get(), callbackInfo);
+        return angle::Result::Continue;
+    }
+    else
+    {
+        PopScopeContext popScopeContext{context, file, function, line, false};
+        callbackInfo.userdata1 = &popScopeContext;
 
-    return popScopeContext.hadError ? angle::Result::Stop : angle::Result::Continue;
+        WGPUFutureWaitInfo future = WGPU_FUTURE_WAIT_INFO_INIT;
+        future.future             = mProcTable->devicePopErrorScope(mDevice.get(), callbackInfo);
+        mProcTable->instanceWaitAny(mInstance.get(), 1, &future, -1);
+
+        return popScopeContext.hadError ? angle::Result::Stop : angle::Result::Continue;
+    }
 }
 
 }  // namespace webgpu
