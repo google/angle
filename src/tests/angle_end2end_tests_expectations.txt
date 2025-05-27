@@ -1638,6 +1638,7 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 418022112 WGPU : ImageTest.MipLevels/* = SKIP
 418022112 WGPU : ImageTest.RespecificationOfOtherLevel/* = SKIP
 418022112 WGPU : ImageTest.SourceCubeAndSameTargetTextureWithEachCubeFace/* = SKIP
+423702346 WGPU : SimpleUniformUsageTestES3.PackUniformFP16Test/* = SKIP
 
 // SPIR-V compilation error
 384593678 VULKAN : SimpleUniformUsageTestES3.CopyOfUniformsWithArrays/* = SKIP

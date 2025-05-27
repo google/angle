@@ -124,8 +124,6 @@ struct ANGLEDepthRangeParams
   diff : f32,
 };
 
-;
-
 struct _uFoo
 {
   _ux : f32,
@@ -133,6 +131,8 @@ struct _uFoo
   _umultiArray : array<array<vec3<f32>, 3>, 2>,
   _uaMatrix : mat3x3<f32>,
 };
+
+;
 
 struct ANGLEUniformBlock
 {
