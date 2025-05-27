@@ -3693,20 +3693,21 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
                 }
             }
 
-            if (unresolveDepth || unresolveStencil)
+            if (unresolveDepth)
             {
-                if (unresolveDepth)
-                {
-                    mRenderPassDesc.packDepthUnresolveAttachment();
-                }
-                if (unresolveStencil)
-                {
-                    mRenderPassDesc.packStencilUnresolveAttachment();
-                }
+                mRenderPassDesc.packDepthUnresolveAttachment();
             }
             else
             {
-                mRenderPassDesc.removeDepthStencilUnresolveAttachment();
+                mRenderPassDesc.removeDepthUnresolveAttachment();
+            }
+            if (unresolveStencil)
+            {
+                mRenderPassDesc.packStencilUnresolveAttachment();
+            }
+            else
+            {
+                mRenderPassDesc.removeStencilUnresolveAttachment();
             }
         }
 

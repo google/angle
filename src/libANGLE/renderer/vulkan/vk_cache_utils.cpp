@@ -2863,9 +2863,13 @@ void RenderPassDesc::packStencilUnresolveAttachment()
     mUnresolveStencil = true;
 }
 
-void RenderPassDesc::removeDepthStencilUnresolveAttachment()
+void RenderPassDesc::removeDepthUnresolveAttachment()
 {
-    mUnresolveDepth   = false;
+    mUnresolveDepth = false;
+}
+
+void RenderPassDesc::removeStencilUnresolveAttachment()
+{
     mUnresolveStencil = false;
 }
 

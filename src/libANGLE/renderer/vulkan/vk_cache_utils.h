@@ -214,7 +214,8 @@ class alignas(4) RenderPassDesc final
     // initially.
     void packDepthUnresolveAttachment();
     void packStencilUnresolveAttachment();
-    void removeDepthStencilUnresolveAttachment();
+    void removeDepthUnresolveAttachment();
+    void removeStencilUnresolveAttachment();
 
     PackedAttachmentIndex getPackedColorAttachmentIndex(size_t colorIndexGL);
 
