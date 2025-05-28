@@ -496,38 +496,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
       "prior_command = vkCmdEndRenderPass"}},
 };
 
-// Messages that shouldn't be generated if storeOp=NONE is supported, otherwise they are expected.
-constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithoutStoreOpNone[] = {
-    // These errors are generated when simultaneously using a read-only depth/stencil attachment as
-    // sampler.  This is valid Vulkan.
-    //
-    // When storeOp=NONE is not present, ANGLE uses storeOp=STORE, but considers the image read-only
-    // and produces a hazard.  ANGLE relies on storeOp=NONE and so this is not expected to be worked
-    // around.
-    //
-    // With storeOp=NONE, there is another bug where a depth/stencil attachment may use storeOp=NONE
-    // for depth while storeOp=DONT_CARE for stencil, and the latter causes a synchronization error
-    // (similarly to the previous case as DONT_CARE is also a write operation).
-    // http://anglebug.com/42264496
-    {
-        "SYNC-HAZARD-WRITE-AFTER-READ",
-        "VK_ATTACHMENT_STORE_OP_STORE. Access info (usage: "
-        "SYNC_LATE_FRAGMENT_TESTS_DEPTH_STENCIL_ATTACHMENT_WRITE",
-        "usage: SYNC_FRAGMENT_SHADER_SHADER_",
-    },
-    {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
-        "imageLayout: VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL",
-        "usage: SYNC_FRAGMENT_SHADER_SHADER_",
-    },
-    // From: TraceTest.antutu_refinery http://anglebug.com/42265159
-    {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
-        "imageLayout: VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL",
-        "usage: SYNC_COMPUTE_SHADER_SHADER_SAMPLED_READ",
-    },
-};
-
 // Messages that shouldn't be generated if both loadOp=NONE and storeOp=NONE are supported,
 // otherwise they are expected.
 constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithoutLoadStoreOpNone[] = {
@@ -4435,14 +4403,6 @@ void Renderer::initializeValidationMessageSuppressions()
     // Build the list of syncval errors that are currently expected and should be skipped.
     mSkippedSyncvalMessages.insert(mSkippedSyncvalMessages.end(), kSkippedSyncvalMessages,
                                    kSkippedSyncvalMessages + ArraySize(kSkippedSyncvalMessages));
-    if (!getFeatures().supportsRenderPassStoreOpNone.enabled &&
-        !getFeatures().supportsRenderPassLoadStoreOpNone.enabled)
-    {
-        mSkippedSyncvalMessages.insert(mSkippedSyncvalMessages.end(),
-                                       kSkippedSyncvalMessagesWithoutStoreOpNone,
-                                       kSkippedSyncvalMessagesWithoutStoreOpNone +
-                                           ArraySize(kSkippedSyncvalMessagesWithoutStoreOpNone));
-    }
     if (!getFeatures().supportsRenderPassLoadStoreOpNone.enabled)
     {
         mSkippedSyncvalMessages.insert(
