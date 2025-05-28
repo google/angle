@@ -11,6 +11,7 @@
 #endif
 
 #include "common/PackedCLEnums_autogen.h"
+#include "common/log_utils.h"
 #include "common/system_utils.h"
 
 #include "libANGLE/renderer/vulkan/CLCommandQueueVk.h"
@@ -189,6 +190,69 @@ egl::ContextPriority convertClToEglPriority(cl_queue_priority_khr priority)
     }
 }
 
+class HostTransferConfigVisitor
+{
+  public:
+    HostTransferConfigVisitor(CLBufferVk &buffer) : bufferVk(buffer) {}
+
+    angle::Result operator()(const HostReadTransferConfig &transferConfig)
+    {
+        switch (transferConfig.getType())
+        {
+            case CL_COMMAND_READ_BUFFER:
+                ANGLE_TRY(bufferVk.syncHost(CLBufferVk::SyncHostDirection::ToHost,
+                                            transferConfig.getOffset(), transferConfig.getSize()));
+                break;
+            case CL_COMMAND_READ_BUFFER_RECT:
+                ANGLE_TRY(bufferVk.syncHost(CLBufferVk::SyncHostDirection::ToHost,
+                                            transferConfig.getBufferRect(),
+                                            transferConfig.getHostRect()));
+                break;
+            case CL_COMMAND_READ_IMAGE:
+                if (transferConfig.getRowPitch() == 0 && transferConfig.getSlicePitch() == 0)
+                {
+                    ANGLE_TRY(bufferVk.copyTo(transferConfig.getHostPtr(),
+                                              transferConfig.getOffset(),
+                                              transferConfig.getSize()));
+                }
+                else
+                {
+                    ANGLE_TRY(bufferVk.copyToWithPitch(
+                        transferConfig.getHostPtr(), transferConfig.getOffset(),
+                        transferConfig.getSize(), transferConfig.getRowPitch(),
+                        transferConfig.getSlicePitch(), transferConfig.getRegion(),
+                        transferConfig.getElementSize()));
+                }
+                break;
+            default:
+                UNREACHABLE();
+                break;
+        }
+        return angle::Result::Continue;
+    }
+
+    angle::Result operator()(const HostWriteTransferConfig &transferConfig)
+    {
+        switch (transferConfig.getType())
+        {
+
+            case CL_COMMAND_WRITE_BUFFER:
+            case CL_COMMAND_WRITE_BUFFER_RECT:
+            case CL_COMMAND_FILL_BUFFER:
+            case CL_COMMAND_WRITE_IMAGE:
+                // Nothing to do here
+                break;
+            default:
+                UNIMPLEMENTED();
+                break;
+        }
+        return angle::Result::Continue;
+    }
+
+  private:
+    CLBufferVk &bufferVk;
+};
+
 }  // namespace
 
 CLCommandQueueVk::CLCommandQueueVk(const cl::CommandQueue &commandQueue)
@@ -292,11 +356,7 @@ angle::Result CLCommandQueueVk::enqueueReadBuffer(const cl::Buffer &buffer,
     else
     {
         // Stage a transfer routine
-        HostTransferConfig transferConfig;
-        transferConfig.type       = CL_COMMAND_READ_BUFFER;
-        transferConfig.offset     = offset;
-        transferConfig.size       = size;
-        transferConfig.dstHostPtr = ptr;
+        HostReadTransferConfig transferConfig(CL_COMMAND_READ_BUFFER, size, offset, ptr);
         ANGLE_TRY(addToHostTransferList(bufferVk, transferConfig));
 
         ANGLE_TRY(createEvent(eventCreateFunc, cl::ExecutionStatus::Queued));
@@ -329,11 +389,7 @@ angle::Result CLCommandQueueVk::enqueueWriteBuffer(const cl::Buffer &buffer,
     else
     {
         // Stage a transfer routine
-        HostTransferConfig config;
-        config.type       = CL_COMMAND_WRITE_BUFFER;
-        config.offset     = offset;
-        config.size       = size;
-        config.srcHostPtr = ptr;
+        HostWriteTransferConfig config(CL_COMMAND_WRITE_BUFFER, size, offset, ptr);
         ANGLE_TRY(addToHostTransferList(bufferVk, config));
 
         ANGLE_TRY(createEvent(eventCreateFunc, cl::ExecutionStatus::Queued));
@@ -376,12 +432,8 @@ angle::Result CLCommandQueueVk::enqueueReadBufferRect(const cl::Buffer &buffer,
     else
     {
         // Stage a transfer routine
-        HostTransferConfig config;
-        config.type       = CL_COMMAND_READ_BUFFER_RECT;
-        config.srcRect    = bufferRect;
-        config.dstRect    = ptrRect;
-        config.dstHostPtr = ptr;
-        config.size       = ptrRect.getRectSize();
+        HostReadTransferConfig config(CL_COMMAND_READ_BUFFER_RECT, ptrRect.getRectSize(), ptr,
+                                      bufferRect, ptrRect);
         ANGLE_TRY(addToHostTransferList(bufferVk, config));
     }
 
@@ -424,12 +476,8 @@ angle::Result CLCommandQueueVk::enqueueWriteBufferRect(const cl::Buffer &buffer,
     else
     {
         // Stage a transfer routine
-        HostTransferConfig config;
-        config.type       = CL_COMMAND_WRITE_BUFFER_RECT;
-        config.srcRect    = ptrRect;
-        config.dstRect    = bufferRect;
-        config.srcHostPtr = ptr;
-        config.size       = ptrRect.getRectSize();
+        HostWriteTransferConfig config(CL_COMMAND_WRITE_BUFFER_RECT, ptrRect.getRectSize(),
+                                       const_cast<void *>(ptr), ptrRect, bufferRect);
         ANGLE_TRY(addToHostTransferList(bufferVk, config));
     }
 
@@ -537,12 +585,7 @@ angle::Result CLCommandQueueVk::enqueueFillBuffer(const cl::Buffer &buffer,
     CLBufferVk *bufferVk = &buffer.getImpl<CLBufferVk>();
 
     // Stage a transfer routine
-    HostTransferConfig config;
-    config.type        = CL_COMMAND_FILL_BUFFER;
-    config.patternSize = patternSize;
-    config.offset      = offset;
-    config.size        = size;
-    config.srcHostPtr  = pattern;
+    HostWriteTransferConfig config(CL_COMMAND_FILL_BUFFER, size, offset, pattern, patternSize);
     ANGLE_TRY(addToHostTransferList(bufferVk, config));
 
     ANGLE_TRY(createEvent(eventCreateFunc, cl::ExecutionStatus::Queued));
@@ -662,28 +705,24 @@ angle::Result CLCommandQueueVk::copyImageToFromBuffer(CLImageVk &imageVk,
     return angle::Result::Continue;
 }
 
+template <typename T>
 angle::Result CLCommandQueueVk::addToHostTransferList(CLBufferVk *srcBuffer,
-                                                      HostTransferConfig transferConfig)
+                                                      HostTransferConfig<T> transferConfig)
 {
     // TODO(aannestrand): Flush here if we reach some max-transfer-buffer heuristic
     // http://anglebug.com/377545840
 
     cl::Memory *transferBufferHandle   = nullptr;
     cl::MemFlags transferBufferMemFlag = cl::MemFlags(CL_MEM_READ_WRITE);
-    void *transferHostPtr              = nullptr;
 
     // We insert an appropriate copy command in the command stream. For the host ptr, we create CL
     // buffer with UHP flags to reflect the contents on the host side.
-    switch (transferConfig.type)
+    switch (transferConfig.getType())
     {
         case CL_COMMAND_WRITE_BUFFER:
         case CL_COMMAND_WRITE_BUFFER_RECT:
-            transferHostPtr = const_cast<void *>(transferConfig.srcHostPtr);
-            transferBufferMemFlag.set(CL_MEM_USE_HOST_PTR);
-            break;
         case CL_COMMAND_READ_BUFFER:
         case CL_COMMAND_READ_BUFFER_RECT:
-            transferHostPtr = const_cast<void *>(transferConfig.dstHostPtr);
             transferBufferMemFlag.set(CL_MEM_USE_HOST_PTR);
             break;
         default:  // zero-copy attempt is not supported for CL_COMMAND_FILL_BUFFER
@@ -691,7 +730,8 @@ angle::Result CLCommandQueueVk::addToHostTransferList(CLBufferVk *srcBuffer,
     }
 
     transferBufferHandle = cl::Buffer::Cast(this->mContext->getFrontendObject().createBuffer(
-        nullptr, transferBufferMemFlag, transferConfig.size, transferHostPtr));
+        nullptr, transferBufferMemFlag, transferConfig.getSize(),
+        const_cast<void *>(transferConfig.getHostPtr())));
     if (transferBufferHandle == nullptr)
     {
         ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
@@ -722,11 +762,11 @@ angle::Result CLCommandQueueVk::addToHostTransferList(CLBufferVk *srcBuffer,
     VkMemoryBarrier memBarrier         = {};
     memBarrier.sType                   = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
     CLBufferVk &transferBufferHandleVk = transferBufferHandle->getImpl<CLBufferVk>();
-    switch (transferConfig.type)
+    switch (transferConfig.getType())
     {
         case CL_COMMAND_WRITE_BUFFER:
         {
-            VkBufferCopy copyRegion = {0, transferConfig.offset, transferConfig.size};
+            VkBufferCopy copyRegion = {0, transferConfig.getOffset(), transferConfig.getSize()};
             copyRegion.srcOffset += transferBufferHandleVk.getOffset();
             copyRegion.dstOffset += srcBuffer->getOffset();
             mComputePassCommands->getCommandBuffer().copyBuffer(
@@ -741,8 +781,8 @@ angle::Result CLCommandQueueVk::addToHostTransferList(CLBufferVk *srcBuffer,
         }
         case CL_COMMAND_WRITE_BUFFER_RECT:
         {
-            for (VkBufferCopy &copyRegion :
-                 cl_vk::CalculateRectCopyRegions(transferConfig.srcRect, transferConfig.dstRect))
+            for (VkBufferCopy &copyRegion : cl_vk::CalculateRectCopyRegions(
+                     transferConfig.getHostRect(), transferConfig.getBufferRect()))
             {
                 copyRegion.srcOffset += transferBufferHandleVk.getOffset();
                 copyRegion.dstOffset += srcBuffer->getOffset();
@@ -760,7 +800,7 @@ angle::Result CLCommandQueueVk::addToHostTransferList(CLBufferVk *srcBuffer,
         }
         case CL_COMMAND_READ_BUFFER:
         {
-            VkBufferCopy copyRegion = {0, transferConfig.offset, transferConfig.size};
+            VkBufferCopy copyRegion = {0, transferConfig.getOffset(), transferConfig.getSize()};
             copyRegion.srcOffset += srcBuffer->getOffset();
             copyRegion.dstOffset += transferBufferHandleVk.getOffset();
             mComputePassCommands->getCommandBuffer().copyBuffer(
@@ -775,8 +815,8 @@ angle::Result CLCommandQueueVk::addToHostTransferList(CLBufferVk *srcBuffer,
         }
         case CL_COMMAND_READ_BUFFER_RECT:
         {
-            for (VkBufferCopy &copyRegion :
-                 cl_vk::CalculateRectCopyRegions(transferConfig.srcRect, transferConfig.dstRect))
+            for (VkBufferCopy &copyRegion : cl_vk::CalculateRectCopyRegions(
+                     transferConfig.getBufferRect(), transferConfig.getHostRect()))
             {
                 copyRegion.srcOffset += srcBuffer->getOffset();
                 copyRegion.dstOffset += transferBufferHandleVk.getOffset();
@@ -796,11 +836,12 @@ angle::Result CLCommandQueueVk::addToHostTransferList(CLBufferVk *srcBuffer,
         {
             // Fill the staging buffer with the pattern and then insert a copy command from staging
             // buffer to buffer
-            ANGLE_TRY(transferBufferHandleVk.fillWithPattern(
-                transferConfig.srcHostPtr, transferConfig.patternSize, 0, transferConfig.size));
+            ANGLE_TRY(transferBufferHandleVk.fillWithPattern(transferConfig.getHostPtr(),
+                                                             transferConfig.getPatternSize(), 0,
+                                                             transferConfig.getSize()));
             VkBufferCopy copyRegion = {
                 transferBufferHandleVk.getOffset(),  // source is the staging buffer
-                transferConfig.offset + srcBuffer->getOffset(), transferConfig.size};
+                transferConfig.getOffset() + srcBuffer->getOffset(), transferConfig.getSize()};
             mComputePassCommands->getCommandBuffer().copyBuffer(
                 transferBufferHandleVk.getBuffer().getBuffer(), srcBuffer->getBuffer().getBuffer(),
                 1, &copyRegion);
@@ -825,8 +866,9 @@ angle::Result CLCommandQueueVk::addToHostTransferList(CLBufferVk *srcBuffer,
     return angle::Result::Continue;
 }
 
+template <typename T>
 angle::Result CLCommandQueueVk::addToHostTransferList(CLImageVk *srcImage,
-                                                      HostTransferConfig transferConfig)
+                                                      HostTransferConfig<T> transferConfig)
 {
     // TODO(aannestrand): Flush here if we reach some max-transfer-buffer heuristic
     // http://anglebug.com/377545840
@@ -849,7 +891,7 @@ angle::Result CLCommandQueueVk::addToHostTransferList(CLImageVk *srcImage,
     // Enqueue blit
     CLBufferVk &transferBufferHandleVk = transferBufferHandle->getImpl<CLBufferVk>();
     ANGLE_TRY(copyImageToFromBuffer(*srcImage, transferBufferHandleVk.getBuffer(),
-                                    transferConfig.origin, transferConfig.region, 0,
+                                    transferConfig.getMemOffsets(), transferConfig.getRegion(), 0,
                                     ImageBufferCopyDirection::ToBuffer));
 
     return angle::Result::Continue;
@@ -895,15 +937,8 @@ angle::Result CLCommandQueueVk::enqueueReadImage(const cl::Image &image,
     else
     {
         // Create a transfer buffer and push it in update list
-        HostTransferConfig transferConfig;
-        transferConfig.type        = CL_COMMAND_READ_IMAGE;
-        transferConfig.size        = size;
-        transferConfig.dstHostPtr  = ptr;
-        transferConfig.origin      = origin;
-        transferConfig.region      = region;
-        transferConfig.rowPitch    = rowPitch;
-        transferConfig.slicePitch  = slicePitch;
-        transferConfig.elementSize = imageVk.getElementSize();
+        HostReadTransferConfig transferConfig(CL_COMMAND_READ_IMAGE, size, ptr, rowPitch,
+                                              slicePitch, imageVk.getElementSize(), origin, region);
         ANGLE_TRY(addToHostTransferList(&imageVk, transferConfig));
 
         ANGLE_TRY(createEvent(eventCreateFunc, cl::ExecutionStatus::Queued));
@@ -1520,52 +1555,13 @@ angle::Result CLCommandQueueVk::enqueueReleaseExternalMemObjectsKHR(
 
 angle::Result CLCommandQueueVk::syncPendingHostTransfers(HostTransferEntries &hostTransferList)
 {
-    if (!hostTransferList.empty())
+    for (const HostTransferEntry &hostTransferEntry : hostTransferList)
     {
-        for (const HostTransferEntry &hostTransferEntry : hostTransferList)
-        {
-            const HostTransferConfig &transferConfig = hostTransferEntry.transferConfig;
-            CLBufferVk &transferBufferVk =
-                hostTransferEntry.transferBufferHandle->getImpl<CLBufferVk>();
-            switch (hostTransferEntry.transferConfig.type)
-            {
-                case CL_COMMAND_WRITE_BUFFER:
-                case CL_COMMAND_WRITE_BUFFER_RECT:
-                case CL_COMMAND_FILL_BUFFER:
-                    // Nothing to do here
-                    break;
-                case CL_COMMAND_READ_BUFFER:
-                    ANGLE_TRY(transferBufferVk.syncHost(CLBufferVk::SyncHostDirection::ToHost,
-                                                        transferConfig.offset,
-                                                        transferConfig.size));
-                    break;
-                case CL_COMMAND_READ_BUFFER_RECT:
-                    ANGLE_TRY(transferBufferVk.syncHost(CLBufferVk::SyncHostDirection::ToHost,
-                                                        transferConfig.srcRect,
-                                                        transferConfig.dstRect));
-                    break;
-                case CL_COMMAND_READ_IMAGE:
-                    if (transferConfig.rowPitch == 0 && transferConfig.slicePitch == 0)
-                    {
-                        ANGLE_TRY(transferBufferVk.copyTo(
-                            transferConfig.dstHostPtr, transferConfig.offset, transferConfig.size));
-                    }
-                    else
-                    {
-                        ANGLE_TRY(transferBufferVk.copyToWithPitch(
-                            transferConfig.dstHostPtr, transferConfig.offset, transferConfig.size,
-                            transferConfig.rowPitch, transferConfig.slicePitch,
-                            transferConfig.region, transferConfig.elementSize));
-                    }
-                    break;
-                default:
-                    UNIMPLEMENTED();
-                    break;
-            }
-        }
+        ANGLE_TRY(std::visit(HostTransferConfigVisitor(
+                                 hostTransferEntry.transferBufferHandle->getImpl<CLBufferVk>()),
+                             hostTransferEntry.transferConfig));
     }
     hostTransferList.clear();
-
     return angle::Result::Continue;
 }
 
