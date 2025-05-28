@@ -723,6 +723,12 @@ void ANGLETestBase::ANGLETestSetUp()
         return;
     }
 
+    // WGL tests are currently disabled.
+    if (mFixture->wglWindow)
+    {
+        FAIL() << "Unsupported driver.";
+    }
+
     // Resize the window before creating the context so that the first make current
     // sets the viewport and scissor box to the right size.
     bool needSwap = false;
@@ -752,58 +758,51 @@ void ANGLETestBase::ANGLETestSetUp()
         }
         needSwap = true;
     }
-    // WGL tests are currently disabled.
-    if (mFixture->wglWindow)
+
+    Library *driverLib = ANGLETestEnvironment::GetDriverLibrary(mCurrentParams->driver);
+
+    if (mForceNewDisplay || !mFixture->eglWindow->isDisplayInitialized())
     {
-        FAIL() << "Unsupported driver.";
+        mFixture->eglWindow->destroyGL();
+        if (!mFixture->eglWindow->initializeDisplay(mFixture->osWindow, driverLib,
+                                                    mCurrentParams->driver,
+                                                    mCurrentParams->eglParameters))
+        {
+            FAIL() << "EGL Display init failed.";
+        }
     }
-    else
+    else if (mCurrentParams->eglParameters != mFixture->eglWindow->getPlatform())
     {
-        Library *driverLib = ANGLETestEnvironment::GetDriverLibrary(mCurrentParams->driver);
+        FAIL() << "Internal parameter conflict error.";
+    }
 
-        if (mForceNewDisplay || !mFixture->eglWindow->isDisplayInitialized())
-        {
-            mFixture->eglWindow->destroyGL();
-            if (!mFixture->eglWindow->initializeDisplay(mFixture->osWindow, driverLib,
-                                                        mCurrentParams->driver,
-                                                        mCurrentParams->eglParameters))
-            {
-                FAIL() << "EGL Display init failed.";
-            }
-        }
-        else if (mCurrentParams->eglParameters != mFixture->eglWindow->getPlatform())
-        {
-            FAIL() << "Internal parameter conflict error.";
-        }
+    const GLWindowResult windowResult = mFixture->eglWindow->initializeSurface(
+        mFixture->osWindow, driverLib, mFixture->configParams);
 
-        const GLWindowResult windowResult = mFixture->eglWindow->initializeSurface(
-            mFixture->osWindow, driverLib, mFixture->configParams);
-
-        if (windowResult != GLWindowResult::NoError)
+    if (windowResult != GLWindowResult::NoError)
+    {
+        if (windowResult != GLWindowResult::Error)
         {
-            if (windowResult != GLWindowResult::Error)
-            {
-                // If the test requests an extension that isn't supported, automatically skip the
-                // test.
-                GTEST_SKIP() << "Test skipped due to missing extension";
-            }
-            else if (mFixture->configParams.multisample)
-            {
-                // If the test requests a multisampled window that isn't supported, automatically
-                // skip the test.
-                GTEST_SKIP() << "Test skipped due to no multisampled configs available";
-            }
-            else
-            {
-                // Otherwise fail the test.
-                FAIL() << "egl surface init failed.";
-            }
+            // If the test requests an extension that isn't supported, automatically skip the
+            // test.
+            GTEST_SKIP() << "Test skipped due to missing extension";
         }
-
-        if (!mDeferContextInit && !mFixture->eglWindow->initializeContext())
+        else if (mFixture->configParams.multisample)
         {
-            FAIL() << "GL Context init failed.";
+            // If the test requests a multisampled window that isn't supported, automatically
+            // skip the test.
+            GTEST_SKIP() << "Test skipped due to no multisampled configs available";
         }
+        else
+        {
+            // Otherwise fail the test.
+            FAIL() << "egl surface init failed.";
+        }
+    }
+
+    if (!mDeferContextInit && !mFixture->eglWindow->initializeContext())
+    {
+        FAIL() << "GL Context init failed.";
     }
 
     if (needSwap)
