@@ -1762,6 +1762,11 @@ if (build_angle_deqp_tests && !is_fuchsia) {
       ":angle_deqp_framework_egl",
       ":angle_deqp_glshared",
     ]
+
+    # TODO(http://anglebug.com/420728429): It should be removed once the issue is resolved on the CTS code.
+    if (is_clang) {
+      cflags_cc = [ "-Wno-unused-private-field" ]
+    }
   }
 
   angle_deqp_source_set("angle_deqp_gles3_common") {
@@ -1778,6 +1783,11 @@ if (build_angle_deqp_tests && !is_fuchsia) {
       ":angle_deqp_framework_egl",
       ":angle_deqp_glshared",
     ]
+
+    # TODO(http://anglebug.com/420728429): It should be removed once the issue is resolved on the CTS code.
+    if (is_clang) {
+      cflags_cc = [ "-Wno-unused-private-field" ]
+    }
   }
 
   template("angle_deqp_core_gtest") {
