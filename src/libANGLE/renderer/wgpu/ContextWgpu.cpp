@@ -241,7 +241,11 @@ angle::Result ContextWgpu::finish(const gl::Context *context)
 
     WGPUQueueWorkDoneCallbackInfo callback = WGPU_QUEUE_WORK_DONE_CALLBACK_INFO_INIT;
     callback.mode                          = WGPUCallbackMode_WaitAnyOnly;
-    callback.callback = [](WGPUQueueWorkDoneStatus status, void *userdata1, void *userdata2) {
+    callback.callback                      = [](WGPUQueueWorkDoneStatus status,
+#ifdef WGPU_BREAKING_CHANGE_QUEUE_WORK_DONE_CALLBACK_MESSAGE
+                           WGPUStringView message,
+#endif
+                           void *userdata1, void *userdata2) {
         ASSERT(userdata1 == nullptr);
         ASSERT(userdata2 == nullptr);
     };
