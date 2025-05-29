@@ -1111,6 +1111,8 @@ deqp_khr_gl_sources = [
   "$deqp_path/external/openglcts/modules/gl/gl4cComputeShaderTests.hpp",
   "$deqp_path/external/openglcts/modules/gl/gl4cConditionalRenderInvertedTests.cpp",
   "$deqp_path/external/openglcts/modules/gl/gl4cConditionalRenderInvertedTests.hpp",
+  "$deqp_path/external/openglcts/modules/gl/gl4cTextureBufferTests.cpp",
+  "$deqp_path/external/openglcts/modules/gl/gl4cTextureBufferTests.hpp",
 
   # These tests are also disabled in the dEQP CMake build.
   # "$deqp_path/external/openglcts/modules/gl/gl4cContextFlushControlTests.cpp",
