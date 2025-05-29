@@ -2059,6 +2059,8 @@ TEST_P(CopyTextureTestWebGL, NPOT)
 
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 
+    // The final GL_INVALID_VALUE check is invalid if the device supports NPOT.
+    ANGLE_SKIP_TEST_IF(IsGLExtensionEnabled("GL_OES_texture_npot"));
     // Do the same operation with destLevel 1, which should fail
     glCopyTextureCHROMIUM(mTextures[0], 0, GL_TEXTURE_2D, mTextures[1], 1, GL_RGBA,
                           GL_UNSIGNED_BYTE, false, false, false);

@@ -31,15 +31,29 @@ ConfigParameters::ConfigParameters()
       alphaBits(-1),
       depthBits(-1),
       stencilBits(-1),
+      // The default value of EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE is EGL_FALSE.
+      webGLCompatibility(false),
+      // The default value of EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE is EGL_FALSE.
+      robustResourceInit(false),
       componentType(EGL_COLOR_COMPONENT_TYPE_FIXED_EXT),
       multisample(false),
+      // The default value of EGL_CONTEXT_OPENGL_DEBUG is EGL_FALSE.
       debug(false),
+      // The default value of EGL_CONTEXT_OPENGL_NO_ERROR_KHR is EGL_FALSE.
       noError(false),
+      // The default value of EGL_EXTENSIONS_ENABLED_ANGLE is EGL_TRUE.
+      extensionsEnabled(true),
+      // The default value of EGL_CONTEXT_BIND_GENERATES_RESOURCE_CHROMIUM is EGL_TRUE.
       bindGeneratesResource(true),
+      // The default value of CLIENT_ARRAYS_ANGLE is EGL_TRUE.
       clientArraysEnabled(true),
+      // The default value of EGL_CONTEXT_OPENGL_ROBUST_ACCESS_EXT is EGL_FALSE.
       robustAccess(false),
+      // EGL_RENDER_BUFFER requires EGL 1.4+ or extension support.
       mutableRenderBuffer(false),
       samples(-1),
+      // The default value of EGL_CONTEXT_PROGRAM_BINARY_CACHE_ENABLED_ANGLE is EGL_TRUE.
+      contextProgramCacheEnabled(true),
       resetStrategy(EGL_NO_RESET_NOTIFICATION_EXT),
       colorSpace(EGL_COLORSPACE_LINEAR),
       swapInterval(kDefaultSwapInterval)
@@ -381,11 +395,10 @@ GLWindowResult EGLWindow::initializeSurface(OSWindow *osWindow,
 
     bool hasRobustResourceInit =
         strstr(displayExtensions, "EGL_ANGLE_robust_resource_initialization") != nullptr;
-    if (hasRobustResourceInit && mConfigParams.robustResourceInit.valid())
+    if (hasRobustResourceInit)
     {
         surfaceAttributes.push_back(EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE);
-        surfaceAttributes.push_back(mConfigParams.robustResourceInit.value() ? EGL_TRUE
-                                                                             : EGL_FALSE);
+        surfaceAttributes.push_back(mConfigParams.robustResourceInit ? EGL_TRUE : EGL_FALSE);
     }
 
     bool hasGLColorSpace = strstr(displayExtensions, "EGL_KHR_gl_colorspace") != nullptr;
@@ -463,7 +476,7 @@ EGLContext EGLWindow::createContext(EGLContext share, EGLint *extraAttributes)
 
     bool hasWebGLCompatibility =
         strstr(displayExtensions, "EGL_ANGLE_create_context_webgl_compatibility") != nullptr;
-    if (mConfigParams.webGLCompatibility.valid() && !hasWebGLCompatibility)
+    if (mConfigParams.webGLCompatibility && !hasWebGLCompatibility)
     {
         fprintf(stderr, "EGL_ANGLE_create_context_webgl_compatibility missing.\n");
         return EGL_NO_CONTEXT;
@@ -471,7 +484,7 @@ EGLContext EGLWindow::createContext(EGLContext share, EGLint *extraAttributes)
 
     bool hasCreateContextExtensionsEnabled =
         strstr(displayExtensions, "EGL_ANGLE_create_context_extensions_enabled") != nullptr;
-    if (mConfigParams.extensionsEnabled.valid() && !hasCreateContextExtensionsEnabled)
+    if (!mConfigParams.extensionsEnabled && !hasCreateContextExtensionsEnabled)
     {
         fprintf(stderr, "EGL_ANGLE_create_context_extensions_enabled missing.\n");
         return EGL_NO_CONTEXT;
@@ -490,6 +503,7 @@ EGLContext EGLWindow::createContext(EGLContext share, EGLint *extraAttributes)
         strstr(displayExtensions, "EGL_CHROMIUM_create_context_bind_generates_resource") != nullptr;
     if (!mConfigParams.bindGeneratesResource && !hasBindGeneratesResource)
     {
+        // Non-default state requested without the extension present
         fprintf(stderr, "EGL_CHROMIUM_create_context_bind_generates_resource missing.\n");
         return EGL_NO_CONTEXT;
     }
@@ -505,8 +519,9 @@ EGLContext EGLWindow::createContext(EGLContext share, EGLint *extraAttributes)
 
     bool hasProgramCacheControlExtension =
         strstr(displayExtensions, "EGL_ANGLE_program_cache_control ") != nullptr;
-    if (mConfigParams.contextProgramCacheEnabled.valid() && !hasProgramCacheControlExtension)
+    if (!mConfigParams.contextProgramCacheEnabled && !hasProgramCacheControlExtension)
     {
+        // Non-default state requested without the extension present
         fprintf(stderr, "EGL_ANGLE_program_cache_control missing.\n");
         return EGL_NO_CONTEXT;
     }
@@ -516,6 +531,14 @@ EGLContext EGLWindow::createContext(EGLContext share, EGLint *extraAttributes)
     if (mConfigParams.noError && !hasKHRCreateContextNoError)
     {
         fprintf(stderr, "EGL_KHR_create_context_no_error missing.\n");
+        return EGL_NO_CONTEXT;
+    }
+
+    bool hasRobustResourceInit =
+        strstr(displayExtensions, "EGL_ANGLE_robust_resource_initialization") != nullptr;
+    if (mConfigParams.robustResourceInit && !hasRobustResourceInit)
+    {
+        fprintf(stderr, "EGL_ANGLE_robust_resource_initialization missing.\n");
         return EGL_NO_CONTEXT;
     }
 
@@ -558,18 +581,16 @@ EGLContext EGLWindow::createContext(EGLContext share, EGLint *extraAttributes)
             contextAttributes.push_back(mConfigParams.noError ? EGL_TRUE : EGL_FALSE);
         }
 
-        if (mConfigParams.webGLCompatibility.valid())
+        if (hasWebGLCompatibility)
         {
             contextAttributes.push_back(EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE);
-            contextAttributes.push_back(mConfigParams.webGLCompatibility.value() ? EGL_TRUE
-                                                                                 : EGL_FALSE);
+            contextAttributes.push_back(mConfigParams.webGLCompatibility ? EGL_TRUE : EGL_FALSE);
         }
 
-        if (mConfigParams.extensionsEnabled.valid())
+        if (hasCreateContextExtensionsEnabled)
         {
             contextAttributes.push_back(EGL_EXTENSIONS_ENABLED_ANGLE);
-            contextAttributes.push_back(mConfigParams.extensionsEnabled.value() ? EGL_TRUE
-                                                                                : EGL_FALSE);
+            contextAttributes.push_back(mConfigParams.extensionsEnabled ? EGL_TRUE : EGL_FALSE);
         }
 
         if (hasRobustness)
@@ -593,11 +614,11 @@ EGLContext EGLWindow::createContext(EGLContext share, EGLint *extraAttributes)
             contextAttributes.push_back(mConfigParams.clientArraysEnabled ? EGL_TRUE : EGL_FALSE);
         }
 
-        if (mConfigParams.contextProgramCacheEnabled.valid())
+        if (hasProgramCacheControlExtension)
         {
             contextAttributes.push_back(EGL_CONTEXT_PROGRAM_BINARY_CACHE_ENABLED_ANGLE);
-            contextAttributes.push_back(
-                mConfigParams.contextProgramCacheEnabled.value() ? EGL_TRUE : EGL_FALSE);
+            contextAttributes.push_back(mConfigParams.contextProgramCacheEnabled ? EGL_TRUE
+                                                                                 : EGL_FALSE);
         }
 
         bool hasBackwardsCompatibleContextExtension =
@@ -609,13 +630,10 @@ EGLContext EGLWindow::createContext(EGLContext share, EGLint *extraAttributes)
             contextAttributes.push_back(EGL_FALSE);
         }
 
-        bool hasRobustResourceInit =
-            strstr(displayExtensions, "EGL_ANGLE_robust_resource_initialization") != nullptr;
-        if (hasRobustResourceInit && mConfigParams.robustResourceInit.valid())
+        if (hasRobustResourceInit)
         {
             contextAttributes.push_back(EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE);
-            contextAttributes.push_back(mConfigParams.robustResourceInit.value() ? EGL_TRUE
-                                                                                 : EGL_FALSE);
+            contextAttributes.push_back(mConfigParams.robustResourceInit ? EGL_TRUE : EGL_FALSE);
         }
     }
     contextAttributes.push_back(EGL_NONE);

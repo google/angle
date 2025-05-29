@@ -583,6 +583,11 @@ class ANGLETestBase
                mCurrentParams->isSwiftshader();
     }
 
+    bool isDriverSystemEgl() const
+    {
+        return mCurrentParams->driver == angle::GLESDriverType::SystemEGL;
+    }
+
     bool platformSupportsMultithreading() const;
 
     bool mIsSetUp = false;

@@ -1152,8 +1152,8 @@ void ANGLETestBase::drawIndexedQuad(GLuint program,
                                     GLfloat positionAttribZ,
                                     GLfloat positionAttribXYScale)
 {
-    ASSERT(!mFixture || !mFixture->configParams.webGLCompatibility.valid() ||
-           !mFixture->configParams.webGLCompatibility.value());
+    ASSERT(!mFixture || !mFixture->configParams.webGLCompatibility ||
+           !mFixture->configParams.webGLCompatibility);
     drawIndexedQuad(program, positionAttribName, positionAttribZ, positionAttribXYScale, false);
 }
 
