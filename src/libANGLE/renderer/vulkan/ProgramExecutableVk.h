@@ -513,6 +513,7 @@ class ProgramExecutableVk : public ProgramExecutableImpl
     void initializeWriteDescriptorDesc(vk::ErrorContext *context);
 
     // Descriptor sets and pools for shader resources for this program.
+    angle::PackedEnumBitSet<DescriptorSetIndex, uint8_t> mValidDescriptorSetIndices;
     vk::DescriptorSetArray<vk::DescriptorSetPointer> mDescriptorSets;
     vk::DescriptorSetArray<vk::DynamicDescriptorPoolPointer> mDynamicDescriptorPools;
     vk::BufferSerial mCurrentDefaultUniformBufferSerial;

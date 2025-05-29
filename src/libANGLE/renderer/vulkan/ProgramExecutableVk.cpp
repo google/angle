@@ -682,6 +682,7 @@ void ProgramExecutableVk::resetLayout(ContextVk *contextVk)
     {
         descriptorSet.reset();
     }
+    mValidDescriptorSetIndices.reset();
 
     for (vk::DynamicDescriptorPoolPointer &pool : mDynamicDescriptorPools)
     {
@@ -1941,6 +1942,7 @@ angle::Result ProgramExecutableVk::getOrAllocateDescriptorSet(
                                               mDescriptorSets[setIndex]->getDescriptorSet());
     }
 
+    mValidDescriptorSetIndices.set(setIndex);
     return angle::Result::Continue;
 }
 
@@ -2043,6 +2045,7 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(
             textures, samplers, mDescriptorSets[DescriptorSetIndex::Texture]->getDescriptorSet()));
     }
 
+    mValidDescriptorSetIndices.set(DescriptorSetIndex::Texture);
     return angle::Result::Continue;
 }
 
@@ -2054,60 +2057,39 @@ angle::Result ProgramExecutableVk::bindDescriptorSets(
     CommandBufferT *commandBuffer,
     PipelineType pipelineType)
 {
-    // Can probably use better dirty bits here.
-
-    // Find the maximum non-null descriptor set.  This is used in conjunction with a driver
-    // workaround to bind empty descriptor sets only for gaps in between 0 and max and avoid
-    // binding unnecessary empty descriptor sets for the sets beyond max.
-    DescriptorSetIndex lastNonNullDescriptorSetIndex = DescriptorSetIndex::InvalidEnum;
-    for (DescriptorSetIndex descriptorSetIndex : angle::AllEnums<DescriptorSetIndex>())
-    {
-        if (mDescriptorSets[descriptorSetIndex])
-        {
-            lastNonNullDescriptorSetIndex = descriptorSetIndex;
-        }
-    }
-
     const VkPipelineBindPoint pipelineBindPoint = pipelineType == PipelineType::Compute
                                                       ? VK_PIPELINE_BIND_POINT_COMPUTE
                                                       : VK_PIPELINE_BIND_POINT_GRAPHICS;
 
-    for (DescriptorSetIndex descriptorSetIndex : angle::AllEnums<DescriptorSetIndex>())
+    for (DescriptorSetIndex descriptorSetIndex : mValidDescriptorSetIndices)
     {
-        if (ToUnderlying(descriptorSetIndex) > ToUnderlying(lastNonNullDescriptorSetIndex))
-        {
-            continue;
-        }
-
-        if (!mDescriptorSets[descriptorSetIndex])
-        {
-            continue;
-        }
-
+        ASSERT(mDescriptorSets[descriptorSetIndex]);
         VkDescriptorSet descSet = mDescriptorSets[descriptorSetIndex]->getDescriptorSet();
         ASSERT(descSet != VK_NULL_HANDLE);
 
-        // Default uniforms are encompassed in a block per shader stage, and they are assigned
-        // through dynamic uniform buffers (requiring dynamic offsets).  No other descriptor
-        // requires a dynamic offset.
-        if (descriptorSetIndex == DescriptorSetIndex::UniformsAndXfb)
+        switch (descriptorSetIndex)
         {
-            commandBuffer->bindDescriptorSets(
-                getPipelineLayout(), pipelineBindPoint, descriptorSetIndex, 1, &descSet,
-                static_cast<uint32_t>(mDynamicUniformDescriptorOffsets.size()),
-                mDynamicUniformDescriptorOffsets.data());
-        }
-        else if (descriptorSetIndex == DescriptorSetIndex::ShaderResource)
-        {
-            commandBuffer->bindDescriptorSets(
-                getPipelineLayout(), pipelineBindPoint, descriptorSetIndex, 1, &descSet,
-                static_cast<uint32_t>(mDynamicShaderResourceDescriptorOffsets.size()),
-                mDynamicShaderResourceDescriptorOffsets.data());
-        }
-        else
-        {
-            commandBuffer->bindDescriptorSets(getPipelineLayout(), pipelineBindPoint,
-                                              descriptorSetIndex, 1, &descSet, 0, nullptr);
+            case DescriptorSetIndex::UniformsAndXfb:
+                // Default uniforms are encompassed in a block per shader stage, and they are
+                // assigned through dynamic uniform buffers (requiring dynamic offsets).
+                commandBuffer->bindDescriptorSets(
+                    getPipelineLayout(), pipelineBindPoint, descriptorSetIndex, 1, &descSet,
+                    static_cast<uint32_t>(mDynamicUniformDescriptorOffsets.size()),
+                    mDynamicUniformDescriptorOffsets.data());
+                break;
+            case DescriptorSetIndex::ShaderResource:
+                commandBuffer->bindDescriptorSets(
+                    getPipelineLayout(), pipelineBindPoint, descriptorSetIndex, 1, &descSet,
+                    static_cast<uint32_t>(mDynamicShaderResourceDescriptorOffsets.size()),
+                    mDynamicShaderResourceDescriptorOffsets.data());
+                break;
+            case DescriptorSetIndex::Texture:
+                commandBuffer->bindDescriptorSets(getPipelineLayout(), pipelineBindPoint,
+                                                  descriptorSetIndex, 1, &descSet, 0, nullptr);
+                break;
+            default:
+                UNREACHABLE();
+                break;
         }
 
         commandBufferHelper->retainResource(mDescriptorSets[descriptorSetIndex].get());
