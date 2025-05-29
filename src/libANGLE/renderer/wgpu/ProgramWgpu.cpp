@@ -165,7 +165,8 @@ class CreateWGPUShaderModuleTask : public LinkSubTask
                    void *userdata2) {
                     ASSERT(userdata1 == nullptr);
                     ASSERT(userdata2 == nullptr);
-                    for (size_t msgIdx = 0; msgIdx < compilationInfo->messageCount; ++msgIdx)
+                    for (size_t msgIdx = 0;
+                         compilationInfo && msgIdx < compilationInfo->messageCount; ++msgIdx)
                     {
                         const WGPUCompilationMessage &message = compilationInfo->messages[msgIdx];
                         switch (message.type)
@@ -206,7 +207,8 @@ class CreateWGPUShaderModuleTask : public LinkSubTask
                         task->mResult = angle::Result::Stop;
                     }
 
-                    for (size_t msgIdx = 0; msgIdx < compilationInfo->messageCount; ++msgIdx)
+                    for (size_t msgIdx = 0;
+                         compilationInfo && msgIdx < compilationInfo->messageCount; ++msgIdx)
                     {
                         const WGPUCompilationMessage &message = compilationInfo->messages[msgIdx];
                         switch (message.type)
