@@ -132,13 +132,15 @@ angle::Result Event::initBackend(const rx::CLEventImpl::CreateFunc &createFunc)
     }
     else
     {
+        // execute the create func lambda that was passed into this method
         mImpl = createFunc(*this);
         if (mImpl == nullptr)
         {
             ANGLE_CL_RETURN_ERROR(CL_OUT_OF_HOST_MEMORY);
         }
-        return mImpl->onEventCreate();
     }
+
+    return angle::Result::Continue;
 }
 
 Event::~Event() = default;
