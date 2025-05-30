@@ -251,8 +251,6 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdDrawIndexed-None-09003",
     // https://anglebug.com/42266764
     "VUID-VkDescriptorImageInfo-imageView-07796",
-    // https://issuetracker.google.com/303441816
-    "VUID-VkRenderPassBeginInfo-renderPass-00904",
     // http://anglebug.com/42266888
     "VUID-VkMemoryAllocateInfo-allocationSize-01742",
     "VUID-VkMemoryDedicatedAllocateInfo-image-01878",
