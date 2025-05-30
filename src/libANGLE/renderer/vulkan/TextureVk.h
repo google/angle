@@ -594,7 +594,8 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                               GLuint imageHeightPixels,
                               const vk::Format &vkFormat,
                               size_t offset,
-                              const vk::Format &bufferVkFormat) const;
+                              const vk::Format &bufferVkFormat,
+                              GLenum type) const;
 
     bool updateMustBeStaged(gl::LevelIndex textureLevelIndexGL, angle::FormatID dstFormatID) const;
     bool updateMustBeFlushed(gl::LevelIndex textureLevelIndexGL, angle::FormatID dstFormatID) const;

@@ -7569,6 +7569,75 @@ TEST_P(Texture3DTestES3, PixelUnpackParamsChangeTexImage)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test that texture reload using unpack buffer and different type
+TEST_P(Texture3DTestES3, PixelUnpackReloadTexImage)
+{
+    constexpr GLsizei kTexWidth  = 2;
+    constexpr GLsizei kTexHeight = 2;
+    constexpr GLsizei kTexDepth  = 2;
+
+    float in_fp[kTexWidth * kTexHeight * kTexDepth * 3];
+    std::fill(in_fp, in_fp + kTexWidth * kTexHeight * kTexDepth * 3, 0.2f);
+
+    GLTexture tex;
+    glActiveTexture(GL_TEXTURE0);
+
+    glBindTexture(GL_TEXTURE_3D, tex);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_R11F_G11F_B10F, kTexWidth, kTexHeight, kTexDepth, 0, GL_RGB,
+                 GL_HALF_FLOAT, in_fp);
+    EXPECT_GL_NO_ERROR();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    GLRenderbuffer rbo;
+    glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA32F, kTexWidth, kTexHeight);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rbo);
+    EXPECT_GL_NO_ERROR();
+
+    // Flush memory
+    glUseProgram(mProgram);
+    glUniform1i(mTexture3DUniformLocation, 0);
+    drawQuad(mProgram, "position", (1 + 0.5f) / 2.0f);
+    EXPECT_GL_NO_ERROR();
+
+    // Use default unpacking parameters
+    GLBuffer buf;
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buf);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glPixelStorei(GL_UNPACK_IMAGE_HEIGHT, 0);
+    glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+    glPixelStorei(GL_UNPACK_SKIP_IMAGES, 0);
+
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, sizeof(in_fp), in_fp, GL_DYNAMIC_DRAW);
+    EXPECT_GL_NO_ERROR();
+
+    // Change the data type of the pixel data to GL_FLOAT
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_R11F_G11F_B10F, kTexWidth, kTexHeight, kTexDepth, 0, GL_RGB,
+                 GL_FLOAT, nullptr);
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(mProgram);
+    glUniform1i(mTexture3DUniformLocation, 0);
+    drawQuad(mProgram, "position", (1 + 0.5f) / 2.0f);
+    EXPECT_GL_NO_ERROR();
+
+    for (int i = 0; i < kTexWidth; i++)
+    {
+        for (int j = 0; j < kTexHeight; j++)
+        {
+            EXPECT_PIXEL_32F_NEAR(i, j, 0.199219f, 0.199219f, 0.199219f, 1.0f, 0.00001f);
+        }
+    }
+    EXPECT_GL_NO_ERROR();
+}
+
 // Test that 3D texture completeness is updated if texture max level changes.
 // GLES 3.0.4 section 3.8.13 Texture completeness
 TEST_P(Texture3DTestES3, Texture3DCompletenessChangesWithMaxLevel)

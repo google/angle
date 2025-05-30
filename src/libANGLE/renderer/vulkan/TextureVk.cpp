@@ -716,7 +716,8 @@ bool TextureVk::isFastUnpackPossible(const gl::Box &area,
                                      GLuint imageHeightPixels,
                                      const vk::Format &vkFormat,
                                      size_t offset,
-                                     const vk::Format &bufferVkFormat) const
+                                     const vk::Format &bufferVkFormat,
+                                     GLenum type) const
 {
     // Conditions to determine if fast unpacking is possible
     // 1. Image must be well defined to unpack directly to it
@@ -730,6 +731,8 @@ bool TextureVk::isFastUnpackPossible(const gl::Box &area,
     // 5. Actual texture format and intended buffer format must match for color formats
     // 6. rowLengthPixels must not smaller than the width of the copy area.
     // 7. imageHeight must not smaller than the height of the copy area.
+    // 8. Don't need conversion to load Texture.
+
     if (!mImage->valid())
     {
         return false;
@@ -745,12 +748,15 @@ bool TextureVk::isFastUnpackPossible(const gl::Box &area,
                                bufferVkFormat.getIntendedFormatID());
     const bool overlapRow   = rowLengthPixels < static_cast<uint32_t>(area.width);
     const bool overlapImage = imageHeightPixels < static_cast<uint32_t>(area.height);
+    const bool needConversion =
+        vkFormat.getTextureLoadFunction(getRequiredImageAccess(), type).requiresConversion;
 
     return !isCombinedDepthStencil &&
            (vkFormat.getIntendedFormatID() ==
                 vkFormat.getActualImageFormatID(getRequiredImageAccess()) ||
             (isDepthXorStencil && isCompatibleDepth)) &&
-           (offset % imageCopyAlignment) == 0 && formatsMatch && !overlapRow && !overlapImage;
+           (offset % imageCopyAlignment) == 0 && formatsMatch && !overlapRow && !overlapImage &&
+           !needConversion;
 }
 
 bool TextureVk::isMipImageDescDefined(gl::TextureTarget textureTarget, size_t level)
@@ -1272,7 +1278,7 @@ angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
         if ((shouldUpdateBeFlushed(gl::LevelIndex(index.getLevelIndex()),
                                    vkFormat.getActualImageFormatID(getRequiredImageAccess()))) &&
             isFastUnpackPossible(area, rowLengthPixels, imageHeightPixels, vkFormat, offsetBytes,
-                                 bufferVkFormat))
+                                 bufferVkFormat, type))
         {
             ANGLE_TRY(copyBufferDataToImage(contextVk, &bufferHelper, index, rowLengthPixels,
                                             imageHeightPixels, area, offsetBytes, aspectFlags));
