@@ -1053,3 +1053,35 @@ precision mediump float;
 void main(){vec2 c;bvec2 U=bvec2(c.xx);if (U.x) gl_FragColor = vec4(1);})";
     compile(kShader, options);
 }
+
+// The following tests check that the SeparateCompoundExpressions step during MSL shader translation
+// handles comma expressions correctly when at least one of the operands is a function call.
+TEST_F(MSLOutputTest, CommaOpTwoFunctionCallsWithGlobalsNoCrash)
+{
+    ShCompileOptions options = defaultOptions();
+    const char kShader[]     = R"(
+int g;
+void F(int v) { g = v; }
+void main() { F(g), F(g); })";
+    compile(kShader, options);
+}
+
+TEST_F(MSLOutputTest, CommaOpLeftFunctionCallWithGlobalsNoCrash)
+{
+    ShCompileOptions options = defaultOptions();
+    const char kShader[]     = R"(
+int g;
+void F(int v) { g = v; }
+void main() { F(g), F(1); })";
+    compile(kShader, options);
+}
+
+TEST_F(MSLOutputTest, CommaOpRightFunctionCallWithGlobalsNoCrash)
+{
+    ShCompileOptions options = defaultOptions();
+    const char kShader[]     = R"(
+int g;
+void F(int v) { g = v; }
+void main() { F(1), F(g); })";
+    compile(kShader, options);
+}

@@ -4547,6 +4547,35 @@ TEST_P(GLSLTest_ES31, FindMSBAndFindLSBCornerCases)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that a comma expression does not add any redundant statements
+// during shader translation rewrite steps. The test will verify the
+// correct color is drawn as a result of the called functions being
+// executed in the correct order and only once each.
+TEST_P(GLSLTest, CommaTestNoRedundantStatements)
+{
+    const char kFS[] = R"(
+precision mediump float;
+int g = 1;
+void F() { g *= 3; }
+void G() { g += 5; }
+void main() {
+    F(), G();
+    if (g == 8)
+    {
+        gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
+    }
+    else
+    {
+        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    }
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Test that reading from a swizzled vector that is dynamically indexed succeeds.
 TEST_P(GLSLTest_ES3, ReadFromDynamicIndexingOfSwizzledVector)
 {
