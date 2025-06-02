@@ -316,7 +316,6 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 // vk_icdNegotiateLoaderICDInterfaceVersion crashes (possibly Mesa bug?)
 40096893 LINUX INTEL VULKAN : RGBTextureBufferTestES31.* = SKIP
 40096893 LINUX INTEL VULKAN : TextureBufferTestES31.TexBufferFormatMismatch/* = SKIP
-417459061 WIN INTEL VULKAN : EGLSingleBufferTest.VerifyMutableRenderBufferKHR/* = SKIP
 
 // Advanced blend tests fail on Intel (ES 3.2)
 340942999 WIN INTEL VULKAN : AdvancedBlendTestES32.* = SKIP
