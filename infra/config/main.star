@@ -313,6 +313,8 @@ def angle_builder(name, cpu):
 
     if is_perf:
         timeout_hours = 5
+    elif name == "linux-asan-test":
+        timeout_hours = 4
     else:
         timeout_hours = 3
 
