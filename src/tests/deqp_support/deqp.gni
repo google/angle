@@ -1117,6 +1117,8 @@ deqp_khr_gl_sources = [
   # These tests are also disabled in the dEQP CMake build.
   # "$deqp_path/external/openglcts/modules/gl/gl4cContextFlushControlTests.cpp",
   # "$deqp_path/external/openglcts/modules/gl/gl4cContextFlushControlTests.hpp",
+  "$deqp_path/external/openglcts/modules/gl/gl4cClearTexImageAndSubImageTests.cpp",
+  "$deqp_path/external/openglcts/modules/gl/gl4cClearTexImageAndSubImageTests.hpp",
   "$deqp_path/external/openglcts/modules/gl/gl4cCopyImageTests.cpp",
   "$deqp_path/external/openglcts/modules/gl/gl4cCopyImageTests.hpp",
   "$deqp_path/external/openglcts/modules/gl/gl4cDirectStateAccessBuffersTests.cpp",
