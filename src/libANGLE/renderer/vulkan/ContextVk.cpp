@@ -5873,17 +5873,21 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 iter.resetLaterBit(gl::state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS);
                 ANGLE_TRY(invalidateProgramExecutableHelper(context));
 
-                const bool programEnablesSampleShading =
-                    programExecutable->enablesPerSampleShading();
-                if ((mSampleShadingEnabled || programEnablesSampleShading) &&
-                    getFeatures().explicitlyEnablePerSampleShading.enabled)
+                // Handle sample shading state transitions for graphics programs
+                if (programExecutable->hasLinkedGraphicsShader())
                 {
-                    static_assert(gl::state::DIRTY_BIT_SAMPLE_SHADING >
-                                      gl::state::DIRTY_BIT_PROGRAM_EXECUTABLE,
-                                  "Dirty bit order");
-                    iter.setLaterBit(gl::state::DIRTY_BIT_SAMPLE_SHADING);
+                    const bool programEnablesSampleShading =
+                        programExecutable->enablesPerSampleShading();
+                    if ((mSampleShadingEnabled || programEnablesSampleShading) &&
+                        getFeatures().explicitlyEnablePerSampleShading.enabled)
+                    {
+                        static_assert(gl::state::DIRTY_BIT_SAMPLE_SHADING >
+                                          gl::state::DIRTY_BIT_PROGRAM_EXECUTABLE,
+                                      "Dirty bit order");
+                        iter.setLaterBit(gl::state::DIRTY_BIT_SAMPLE_SHADING);
+                    }
+                    mSampleShadingEnabled = programEnablesSampleShading;
                 }
-                mSampleShadingEnabled = programEnablesSampleShading;
 
                 break;
             }
