@@ -169,7 +169,6 @@ vars = {
   'checkout_angle_restricted_trace_animal_crossing': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_antistress': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_antutu_refinery': 'checkout_angle_restricted_traces',
-  'checkout_angle_restricted_trace_aquarium': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_arena_of_valor': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_arknights': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_asphalt_8': 'checkout_angle_restricted_traces',
@@ -1365,16 +1364,6 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_antutu_refinery',
-  },
-  'src/tests/restricted_traces/aquarium': {
-      'packages': [
-        {
-            'package': 'angle/traces/aquarium',
-            'version': 'version:1',
-        },
-      ],
-      'dep_type': 'cipd',
-      'condition': 'checkout_angle_restricted_trace_aquarium',
   },
   'src/tests/restricted_traces/arena_of_valor': {
       'packages': [
