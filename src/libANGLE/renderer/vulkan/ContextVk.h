@@ -1560,6 +1560,10 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     IncompleteTextureSet mIncompleteTextures;
 
+    // Track sample shading state, this helps avoid redundant work by
+    // conditionally dirtying DIRTY_BIT_SAMPLE_SHADING bit
+    bool mSampleShadingEnabled;
+
     // If the current surface bound to this context wants to have all rendering flipped vertically.
     // Updated on calls to onMakeCurrent.
     bool mFlipYForCurrentSurface;

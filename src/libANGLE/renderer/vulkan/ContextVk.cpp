@@ -840,6 +840,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
       mClearDepthStencilValue{},
       mClearColorMasks(0),
       mDeferredMemoryBarriers(0),
+      mSampleShadingEnabled(false),
       mFlipYForCurrentSurface(false),
       mFlipViewportForDrawFramebuffer(false),
       mFlipViewportForReadFramebuffer(false),
@@ -5872,13 +5873,17 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 iter.resetLaterBit(gl::state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS);
                 ANGLE_TRY(invalidateProgramExecutableHelper(context));
 
-                static_assert(
-                    gl::state::DIRTY_BIT_SAMPLE_SHADING > gl::state::DIRTY_BIT_PROGRAM_EXECUTABLE,
-                    "Dirty bit order");
-                if (getFeatures().explicitlyEnablePerSampleShading.enabled)
+                const bool programEnablesSampleShading =
+                    programExecutable->enablesPerSampleShading();
+                if ((mSampleShadingEnabled || programEnablesSampleShading) &&
+                    getFeatures().explicitlyEnablePerSampleShading.enabled)
                 {
+                    static_assert(gl::state::DIRTY_BIT_SAMPLE_SHADING >
+                                      gl::state::DIRTY_BIT_PROGRAM_EXECUTABLE,
+                                  "Dirty bit order");
                     iter.setLaterBit(gl::state::DIRTY_BIT_SAMPLE_SHADING);
                 }
+                mSampleShadingEnabled = programEnablesSampleShading;
 
                 break;
             }
