@@ -120,6 +120,7 @@ CONTEXT_PRIVATE_LIST = [
     'glSampleMaski',
     'glScissor',
     'glShadingRate',
+    'glShadingRateCombinerOps',
     'glStencilFunc',
     'glStencilFuncSeparate',
     'glStencilMask',

@@ -1106,6 +1106,11 @@ void PrivateState::setShadingRate(GLenum rate)
     mExtendedDirtyBits.set(state::EXTENDED_DIRTY_BIT_SHADING_RATE);
 }
 
+void PrivateState::setShadingRateCombinerOps(GLenum combinerOp0, GLenum combinerOp1)
+{
+    return;
+}
+
 void PrivateState::setPackAlignment(GLint alignment)
 {
     mPack.alignment = alignment;

@@ -6287,6 +6287,25 @@ void Context::bufferStorageExternal(BufferBinding target,
     ANGLE_CONTEXT_TRY(buffer->bufferStorageExternal(this, target, size, clientBuffer, flags));
 }
 
+void Context::getFragmentShadingRates(GLsizei samples,
+                                      GLsizei maxCount,
+                                      GLsizei *count,
+                                      GLenum *shadingRates)
+{
+    return;
+}
+
+void Context::framebufferShadingRate(GLenum target,
+                                     GLenum attachment,
+                                     GLuint texture,
+                                     GLint baseLayer,
+                                     GLsizei numLayers,
+                                     GLsizei texelWidth,
+                                     GLsizei texelHeight)
+{
+    return;
+}
+
 void Context::bufferData(BufferBinding target, GLsizeiptr size, const void *data, BufferUsage usage)
 {
     Buffer *buffer = mState.getTargetBuffer(target);

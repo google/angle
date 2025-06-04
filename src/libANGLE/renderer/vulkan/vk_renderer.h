@@ -898,7 +898,7 @@ class Renderer : angle::NonCopyable
 
     uint32_t mLegacyDitheringVersion = 0;
 
-    angle::PackedEnumBitSet<gl::ShadingRate, uint8_t> mSupportedFragmentShadingRates;
+    angle::PackedEnumBitSet<gl::ShadingRate, uint16_t> mSupportedFragmentShadingRates;
     angle::PackedEnumMap<gl::ShadingRate, VkSampleCountFlags>
         mSupportedFragmentShadingRateSampleCounts;
     std::vector<VkQueueFamilyProperties> mQueueFamilyProperties;

@@ -9633,6 +9633,202 @@ void GL_APIENTRY GL_BufferStorageExternalEXT(GLenum target,
 
 // GL_EXT_float_blend
 
+// GL_EXT_fragment_shading_rate
+void GL_APIENTRY GL_FramebufferShadingRateEXT(GLenum target,
+                                              GLenum attachment,
+                                              GLuint texture,
+                                              GLint baseLayer,
+                                              GLsizei numLayers,
+                                              GLsizei texelWidth,
+                                              GLsizei texelHeight)
+{
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLFramebufferShadingRateEXT,
+          "context = %d, target = %s, attachment = %s, texture = %u, baseLayer = %d, numLayers = "
+          "%d, texelWidth = %d, texelHeight = %d",
+          CID(context), GLenumToString(GLESEnum::FramebufferTarget, target),
+          GLenumToString(GLESEnum::FramebufferAttachment, attachment), texture, baseLayer,
+          numLayers, texelWidth, texelHeight);
+
+    if (ANGLE_LIKELY(context != nullptr))
+    {
+        SCOPED_SHARE_CONTEXT_LOCK(context);
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().fragmentShadingRateEXT))
+            {
+#if defined(ANGLE_ENABLE_ASSERTS)
+                const uint32_t errorCount = context->getPushedErrorCount();
+#endif
+                isCallValid = ValidateFramebufferShadingRateEXT(
+                    context, angle::EntryPoint::GLFramebufferShadingRateEXT, target, attachment,
+                    texture, baseLayer, numLayers, texelWidth, texelHeight);
+#if defined(ANGLE_ENABLE_ASSERTS)
+                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+#endif
+            }
+            else
+            {
+                RecordVersionErrorESEXT(context, angle::EntryPoint::GLFramebufferShadingRateEXT);
+            }
+        }
+        if (ANGLE_LIKELY(isCallValid))
+        {
+            context->framebufferShadingRate(target, attachment, texture, baseLayer, numLayers,
+                                            texelWidth, texelHeight);
+        }
+        ANGLE_CAPTURE_GL(FramebufferShadingRateEXT, isCallValid, context, target, attachment,
+                         texture, baseLayer, numLayers, texelWidth, texelHeight);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext(
+            angle::EntryPoint::GLFramebufferShadingRateEXT);
+    }
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+}
+
+void GL_APIENTRY GL_GetFragmentShadingRatesEXT(GLsizei samples,
+                                               GLsizei maxCount,
+                                               GLsizei *count,
+                                               GLenum *shadingRates)
+{
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLGetFragmentShadingRatesEXT,
+          "context = %d, samples = %d, maxCount = %d, count = 0x%016" PRIxPTR
+          ", shadingRates = 0x%016" PRIxPTR "",
+          CID(context), samples, maxCount, (uintptr_t)count, (uintptr_t)shadingRates);
+
+    if (ANGLE_LIKELY(context != nullptr))
+    {
+        SCOPED_SHARE_CONTEXT_LOCK(context);
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().fragmentShadingRateEXT))
+            {
+#if defined(ANGLE_ENABLE_ASSERTS)
+                const uint32_t errorCount = context->getPushedErrorCount();
+#endif
+                isCallValid = ValidateGetFragmentShadingRatesEXT(
+                    context, angle::EntryPoint::GLGetFragmentShadingRatesEXT, samples, maxCount,
+                    count, shadingRates);
+#if defined(ANGLE_ENABLE_ASSERTS)
+                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+#endif
+            }
+            else
+            {
+                RecordVersionErrorESEXT(context, angle::EntryPoint::GLGetFragmentShadingRatesEXT);
+            }
+        }
+        if (ANGLE_LIKELY(isCallValid))
+        {
+            context->getFragmentShadingRates(samples, maxCount, count, shadingRates);
+        }
+        ANGLE_CAPTURE_GL(GetFragmentShadingRatesEXT, isCallValid, context, samples, maxCount, count,
+                         shadingRates);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext(
+            angle::EntryPoint::GLGetFragmentShadingRatesEXT);
+    }
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+}
+
+void GL_APIENTRY GL_ShadingRateEXT(GLenum rate)
+{
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLShadingRateEXT, "context = %d, rate = %s", CID(context),
+          GLenumToString(GLESEnum::ShadingRate, rate));
+
+    if (ANGLE_LIKELY(context != nullptr))
+    {
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().fragmentShadingRateEXT))
+            {
+#if defined(ANGLE_ENABLE_ASSERTS)
+                const uint32_t errorCount = context->getPushedErrorCount();
+#endif
+                isCallValid = ValidateShadingRateEXT(context->getPrivateState(),
+                                                     context->getMutableErrorSetForValidation(),
+                                                     angle::EntryPoint::GLShadingRateEXT, rate);
+#if defined(ANGLE_ENABLE_ASSERTS)
+                ASSERT(isCallValid || context->getPushedErrorCount() != errorCount);
+#endif
+            }
+            else
+            {
+                RecordVersionErrorESEXT(context, angle::EntryPoint::GLShadingRateEXT);
+            }
+        }
+        if (ANGLE_LIKELY(isCallValid))
+        {
+            ContextPrivateShadingRate(context->getMutablePrivateState(),
+                                      context->getMutablePrivateStateCache(), rate);
+        }
+        ANGLE_CAPTURE_GL(ShadingRateEXT, isCallValid, context, rate);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLShadingRateEXT);
+    }
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+}
+
+void GL_APIENTRY GL_ShadingRateCombinerOpsEXT(GLenum combinerOp0, GLenum combinerOp1)
+{
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLShadingRateCombinerOpsEXT, "context = %d, combinerOp0 = %s, combinerOp1 = %s",
+          CID(context), GLenumToString(GLESEnum::ShadingRateCombinerOp, combinerOp0),
+          GLenumToString(GLESEnum::ShadingRateCombinerOp, combinerOp1));
+
+    if (ANGLE_LIKELY(context != nullptr))
+    {
+        bool isCallValid = context->skipValidation();
+        if (!isCallValid)
+        {
+            if (ANGLE_LIKELY(context->getExtensions().fragmentShadingRateEXT))
+            {
+#if defined(ANGLE_ENABLE_ASSERTS)
+                const uint32_t errorCount = context->getPushedErrorCount();
+#endif
+                isCallValid = ValidateShadingRateCombinerOpsEXT(
+                    context->getPrivateState(), context->getMutableErrorSetForValidation(),
+                    angle::EntryPoint::GLShadingRateCombinerOpsEXT, combinerOp0, combinerOp1);
+#if defined(ANGLE_ENABLE_ASSERTS)
+                ASSERT(isCallValid || context->getPushedErrorCount() != errorCount);
+#endif
+            }
+            else
+            {
+                RecordVersionErrorESEXT(context, angle::EntryPoint::GLShadingRateCombinerOpsEXT);
+            }
+        }
+        if (ANGLE_LIKELY(isCallValid))
+        {
+            ContextPrivateShadingRateCombinerOps(context->getMutablePrivateState(),
+                                                 context->getMutablePrivateStateCache(),
+                                                 combinerOp0, combinerOp1);
+        }
+        ANGLE_CAPTURE_GL(ShadingRateCombinerOpsEXT, isCallValid, context, combinerOp0, combinerOp1);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext(
+            angle::EntryPoint::GLShadingRateCombinerOpsEXT);
+    }
+    ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
+}
+
 // GL_EXT_geometry_shader
 void GL_APIENTRY GL_FramebufferTextureEXT(GLenum target,
                                           GLenum attachment,

@@ -422,6 +422,10 @@ class PrivateState : angle::NonCopyable
     void setShadingRate(GLenum rate);
     ShadingRate getShadingRate() const { return mShadingRate; }
 
+    // GL_EXT_fragment_shading_rate helpers
+    void setShadingRateCombinerOps(GLenum combinerOp0, GLenum combinerOp1);
+    CombinerOp *getShadingRateCombinerOps() { return mCombinerOps; }
+
     // Pixel pack state manipulation
     void setPackAlignment(GLint alignment);
     GLint getPackAlignment() const { return mPack.alignment; }
@@ -731,6 +735,9 @@ class PrivateState : angle::NonCopyable
     // QCOM_shading_rate
     bool mShadingRatePreserveAspectRatio;
     ShadingRate mShadingRate;
+
+    // GL_EXT_fragment_shading_rate
+    CombinerOp mCombinerOps[2];
 
     // GL_ARM_shader_framebuffer_fetch
     bool mFetchPerSample;
@@ -1364,6 +1371,7 @@ class State : angle::NonCopyable
     bool isProgramBinaryCacheEnabled() const { return mPrivateState.isProgramBinaryCacheEnabled(); }
     const Rectangle &getViewport() const { return mPrivateState.getViewport(); }
     ShadingRate getShadingRate() const { return mPrivateState.getShadingRate(); }
+    CombinerOp *getShadingRateCombinerOps() { return mPrivateState.getShadingRateCombinerOps(); }
     GLint getPackAlignment() const { return mPrivateState.getPackAlignment(); }
     bool getPackReverseRowOrder() const { return mPrivateState.getPackReverseRowOrder(); }
     GLint getPackRowLength() const { return mPrivateState.getPackRowLength(); }
