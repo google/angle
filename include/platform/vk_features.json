@@ -248,6 +248,15 @@
             "issue": "http://anglebug.com/42262239"
         },
         {
+            "name": "uses_second_component_for_stencil_border_color",
+            "category": "Features",
+            "description": [
+                "Implementation utilizes second component of the INT custom border color ",
+                "for undefined format when sampling from a stencil texture."
+            ],
+            "issue": "http://issuetracker.google.com/390710636"
+        },
+        {
             "name": "supports_multi_draw_indirect",
             "category": "Features",
             "description": [

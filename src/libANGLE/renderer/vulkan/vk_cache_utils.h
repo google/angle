@@ -1421,7 +1421,9 @@ class SamplerDesc final
     // Values from angle::ColorGeneric::Type. Float is 0 and others are 1.
     uint16_t mBorderColorType : 1;
 
-    uint16_t mPadding : 15;
+    uint16_t mUsesSecondComponentForStencil : 1;
+
+    uint16_t mPadding : 14;
 
     // 16*8 bits for BorderColor
     angle::ColorF mBorderColor;

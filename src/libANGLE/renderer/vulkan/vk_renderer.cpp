@@ -5199,6 +5199,13 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         mCustomBorderColorFeatures.customBorderColors == VK_TRUE &&
             mCustomBorderColorFeatures.customBorderColorWithoutFormat == VK_TRUE);
 
+    // If format is undefined, the borderColor is VK_BORDER_COLOR_INT_CUSTOM_EXT, and the sampler is
+    // used with an image with a stencil format, then the implementation must source the custom
+    // border color from either the first or second components of the borderColor, although it is
+    // recommended to source it from the first component.
+    ANGLE_FEATURE_CONDITION(&mFeatures, usesSecondComponentForStencilBorderColor,
+                            mFeatures.supportsCustomBorderColor.enabled && isQualcommProprietary);
+
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsMultiDrawIndirect,
                             mPhysicalDeviceFeatures.multiDrawIndirect == VK_TRUE);
 

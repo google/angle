@@ -190,6 +190,10 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 373818282 WIN INTEL OPENGL : ClearTest.ChangeFramebufferAttachmentFromRGBAtoRGB/* = SKIP
 388144480 WIN INTEL VULKAN : OcclusionQueriesTest.WrongSkippedQuery/* = SKIP
 
+// Texture border clamp ES 3.2 test failures
+b/390710636 PIXEL4ORXL VULKAN : TextureBorderClampTestES32.CustomBorderColorWithStencil/* = SKIP
+b/390710636 LINUX NVIDIA VULKAN : TextureBorderClampTestES32.CustomBorderColorWithStencil/* = SKIP
+
 // Failures on NVIDIA GTX 1660 driver 31.0.15.4601
 42267037 WIN NVIDIA VULKAN : RobustResourceInitTest.MaskedStencilClear/ES2_Vulkan_AllocateNonZeroMemory = SKIP
 42267037 WIN NVIDIA VULKAN : RobustResourceInitTestES3.MaskedStencilClearBuffer/ES3_Vulkan_AllocateNonZeroMemory = SKIP

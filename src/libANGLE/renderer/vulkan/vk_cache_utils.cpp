@@ -5640,6 +5640,7 @@ void SamplerDesc::reset()
     mBorderColor.blue  = 0.0f;
     mBorderColor.alpha = 0.0f;
     mReserved          = 0;
+    mUsesSecondComponentForStencil = 0;
 }
 
 void SamplerDesc::update(Renderer *renderer,
@@ -5752,6 +5753,15 @@ void SamplerDesc::update(Renderer *renderer,
     const vk::Format &vkFormat = renderer->getFormat(intendedFormatID);
     gl::ColorGeneric adjustedBorderColor =
         AdjustBorderColor(samplerState.getBorderColor(), vkFormat.getIntendedFormat(), stencilMode);
+
+    // As per the spec, for custom borders for textures with a stencil component, the implementation
+    // is required to use either the first or the second component of the border color. Although it
+    // is recommended to use the first, using the second is also valid.
+    mUsesSecondComponentForStencil =
+        vkFormat.getIntendedFormat().hasDepthOrStencilBits() && stencilMode &&
+                renderer->getFeatures().usesSecondComponentForStencilBorderColor.enabled
+            ? 1
+            : 0;
     mBorderColor = adjustedBorderColor.colorF;
 
     mReserved = 0;
@@ -5805,14 +5815,13 @@ angle::Result SamplerDesc::init(ContextVk *contextVk, Sampler *sampler) const
         createInfo.addressModeV == VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER ||
         createInfo.addressModeW == VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER)
     {
-        ASSERT((contextVk->getFeatures().supportsCustomBorderColor.enabled));
+        ASSERT(contextVk->getFeatures().supportsCustomBorderColor.enabled);
         customBorderColorInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CUSTOM_BORDER_COLOR_CREATE_INFO_EXT;
 
-        customBorderColorInfo.customBorderColor.float32[0] = mBorderColor.red;
-        customBorderColorInfo.customBorderColor.float32[1] = mBorderColor.green;
-        customBorderColorInfo.customBorderColor.float32[2] = mBorderColor.blue;
-        customBorderColorInfo.customBorderColor.float32[3] = mBorderColor.alpha;
-
+        // Currently it is not required to set the format in customBorderColorInfo, because the
+        // feature supportsCustomBorderColor currently requires customBorderColorWithoutFormat to
+        // be enabled.
+        angle::ColorF customColor = mBorderColor;
         if (mBorderColorType == static_cast<uint32_t>(angle::ColorGeneric::Type::Float))
         {
             createInfo.borderColor = VK_BORDER_COLOR_FLOAT_CUSTOM_EXT;
@@ -5820,7 +5829,16 @@ angle::Result SamplerDesc::init(ContextVk *contextVk, Sampler *sampler) const
         else
         {
             createInfo.borderColor = VK_BORDER_COLOR_INT_CUSTOM_EXT;
+            if (mUsesSecondComponentForStencil)
+            {
+                customColor.green = customColor.red;
+            }
         }
+
+        customBorderColorInfo.customBorderColor.float32[0] = customColor.red;
+        customBorderColorInfo.customBorderColor.float32[1] = customColor.green;
+        customBorderColorInfo.customBorderColor.float32[2] = customColor.blue;
+        customBorderColorInfo.customBorderColor.float32[3] = customColor.alpha;
 
         vk::AddToPNextChain(&createInfo, &customBorderColorInfo);
     }

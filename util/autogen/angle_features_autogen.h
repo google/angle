@@ -452,6 +452,7 @@ enum class Feature
     UseResetCommandBufferBitForSecondaryPools,
     UseShadowBuffersWhenAppropriate,
     UsesNativeBuiltinClKernel,
+    UsesSecondComponentForStencilBorderColor,
     UseStencilOpDynamicState,
     UseStencilTestEnableDynamicState,
     UseSystemMemoryForConstantBuffers,

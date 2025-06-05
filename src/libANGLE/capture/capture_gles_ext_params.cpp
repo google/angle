@@ -2941,7 +2941,7 @@ void CaptureTexParameterIuivEXT_params(const State &glState,
                                        const GLuint *params,
                                        angle::ParamCapture *paramCapture)
 {
-    // Skipped
+    CaptureTexParameterIuiv_params(glState, isCallValid, targetPacked, pname, params, paramCapture);
 }
 
 void CaptureDebugMessageCallbackKHR_userParam(const State &glState,
