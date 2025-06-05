@@ -2654,7 +2654,7 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
 
     // No-op redundant changes to prevent closing the RenderPass.
     if (mCurrentFramebufferDesc == priorFramebufferDesc &&
-        mCurrentFramebufferDesc.attachmentCount() > 0)
+        mCurrentFramebufferDesc.attachmentCount() > 0 && mRenderPassDesc.samples() == getSamples())
     {
         return angle::Result::Continue;
     }
