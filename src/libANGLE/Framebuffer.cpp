@@ -397,7 +397,7 @@ FramebufferState::FramebufferState(rx::UniqueSerial serial)
       mLabel(),
       mColorAttachments(1),
       mColorAttachmentsMask(0),
-      mDrawBufferStates(1, GL_BACK),
+      mDrawBufferStates(1, GL_NONE),
       mReadBufferState(GL_BACK),
       mDrawBufferTypeMask(),
       mDefaultWidth(0),
@@ -904,6 +904,11 @@ egl::Error Framebuffer::setSurfaces(const Context *context,
 
         // Ensure the backend has a chance to synchronize its content for a new backbuffer.
         mDirtyBits.set(DIRTY_BIT_COLOR_BUFFER_CONTENTS_0);
+        mState.mDrawBufferStates[0] = GL_BACK;
+    }
+    else
+    {
+        mState.mDrawBufferStates[0] = GL_NONE;
     }
 
     setReadSurface(context, readSurface);
