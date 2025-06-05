@@ -186,8 +186,8 @@ enum DirtyObjectType
     DIRTY_OBJECT_ACTIVE_TEXTURES,  // Top-level dirty bit. Also see mDirtyActiveTextures.
     DIRTY_OBJECT_TEXTURES_INIT,
     DIRTY_OBJECT_IMAGES_INIT,
-    DIRTY_OBJECT_READ_ATTACHMENTS,
-    DIRTY_OBJECT_DRAW_ATTACHMENTS,
+    DIRTY_OBJECT_READ_ATTACHMENTS,  // Only used if robust resource init is enabled
+    DIRTY_OBJECT_DRAW_ATTACHMENTS,  // Only used if robust resource init is enabled
     DIRTY_OBJECT_READ_FRAMEBUFFER,
     DIRTY_OBJECT_DRAW_FRAMEBUFFER,
     DIRTY_OBJECT_VERTEX_ARRAY,
@@ -1126,7 +1126,15 @@ class State : angle::NonCopyable
         mDirtyObjects.reset();
         mPrivateState.clearDirtyObjects();
     }
-    void setAllDirtyObjects() { mDirtyObjects.set(); }
+    void setAllDirtyObjects()
+    {
+        mDirtyObjects.set();
+        if (!isRobustResourceInitEnabled())
+        {
+            mDirtyObjects.reset(state::DIRTY_OBJECT_READ_ATTACHMENTS);
+            mDirtyObjects.reset(state::DIRTY_OBJECT_DRAW_ATTACHMENTS);
+        }
+    }
     angle::Result syncDirtyObjects(const Context *context,
                                    const state::DirtyObjects &bitset,
                                    Command command);
@@ -1138,13 +1146,19 @@ class State : angle::NonCopyable
     ANGLE_INLINE void setReadFramebufferDirty()
     {
         mDirtyObjects.set(state::DIRTY_OBJECT_READ_FRAMEBUFFER);
-        mDirtyObjects.set(state::DIRTY_OBJECT_READ_ATTACHMENTS);
+        if (isRobustResourceInitEnabled())
+        {
+            mDirtyObjects.set(state::DIRTY_OBJECT_READ_ATTACHMENTS);
+        }
     }
 
     ANGLE_INLINE void setDrawFramebufferDirty()
     {
         mDirtyObjects.set(state::DIRTY_OBJECT_DRAW_FRAMEBUFFER);
-        mDirtyObjects.set(state::DIRTY_OBJECT_DRAW_ATTACHMENTS);
+        if (isRobustResourceInitEnabled())
+        {
+            mDirtyObjects.set(state::DIRTY_OBJECT_DRAW_ATTACHMENTS);
+        }
     }
 
     void setImageUnit(const Context *context,
@@ -1645,6 +1659,10 @@ ANGLE_INLINE angle::Result State::syncDirtyObjects(const Context *context,
     mDirtyObjects |= mPrivateState.getDirtyObjects();
     mPrivateState.clearDirtyObjects();
 
+    ASSERT(isRobustResourceInitEnabled() ||
+           (!mDirtyObjects.test(state::DIRTY_OBJECT_DRAW_ATTACHMENTS) &&
+            !mDirtyObjects.test(state::DIRTY_OBJECT_READ_ATTACHMENTS)));
+
     const state::DirtyObjects &dirtyObjects = mDirtyObjects & bitset;
 
     for (size_t dirtyObject : dirtyObjects)
@@ -1653,6 +1671,7 @@ ANGLE_INLINE angle::Result State::syncDirtyObjects(const Context *context,
     }
 
     mDirtyObjects &= ~dirtyObjects;
+
     return angle::Result::Continue;
 }
 
