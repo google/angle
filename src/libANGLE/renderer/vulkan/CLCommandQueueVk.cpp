@@ -537,11 +537,19 @@ angle::Result CLCommandQueueVk::enqueueCopyBufferRect(const cl::Buffer &srcBuffe
                            cl::Extents{region.x, region.y, region.z}, dstRowPitch, dstSlicePitch,
                            1};
 
-    auto srcBufferVk    = &srcBuffer.getImpl<CLBufferVk>();
-    auto dstBufferVk    = &dstBuffer.getImpl<CLBufferVk>();
+    auto srcBufferVk = &srcBuffer.getImpl<CLBufferVk>();
+    auto dstBufferVk = &dstBuffer.getImpl<CLBufferVk>();
+
     uint8_t *mapPointer = nullptr;
     ANGLE_TRY(srcBufferVk->map(mapPointer));
-    ASSERT(mapPointer);
+    cl::Defer deferUnmap([&srcBufferVk]() { srcBufferVk->unmap(); });
+
+    if (srcBuffer.getFlags().intersects(CL_MEM_USE_HOST_PTR) && !srcBufferVk->supportsZeroCopy())
+    {
+        // UHP needs special handling when zero-copy is not supported
+        ANGLE_TRY(srcBufferVk->copyTo(mapPointer, 0, srcBufferVk->getSize()));
+    }
+
     ANGLE_TRY(dstBufferVk->setRect(static_cast<const void *>(mapPointer), srcRect, dstRect));
 
     return postEnqueueOps(event);
@@ -591,19 +599,14 @@ angle::Result CLCommandQueueVk::enqueueMapBuffer(const cl::Buffer &buffer,
 
     CLBufferVk *bufferVk = &buffer.getImpl<CLBufferVk>();
     uint8_t *mapPointer  = nullptr;
+    ANGLE_TRY(bufferVk->map(mapPointer, offset));
+    mapPtr = mapPointer;
+
     if (buffer.getFlags().intersects(CL_MEM_USE_HOST_PTR) && !bufferVk->supportsZeroCopy())
     {
         // UHP needs special handling when zero-copy is not supported
-        ANGLE_TRY(finishInternal());
-        mapPointer = static_cast<uint8_t *>(buffer.getHostPtr()) + offset;
         ANGLE_TRY(bufferVk->copyTo(mapPointer, offset, size));
     }
-    else
-    {
-        // When zero-copy is supported, map would give hostptr for UHP
-        ANGLE_TRY(bufferVk->map(mapPointer, offset));
-    }
-    mapPtr = static_cast<void *>(mapPointer);
 
     return postEnqueueOps(event);
 }
@@ -888,14 +891,11 @@ angle::Result CLCommandQueueVk::enqueueReadImage(const cl::Image &image,
     CLImageVk &imageVk = image.getImpl<CLImageVk>();
     size_t size        = (region.x * region.y * region.z * imageVk.getElementSize());
 
-    if (imageVk.isStagingBufferInitialized() == false)
-    {
-        ANGLE_TRY(imageVk.createStagingBuffer(imageVk.getSize()));
-    }
-
     if (blocking)
     {
-        ANGLE_TRY(copyImageToFromBuffer(imageVk, imageVk.getStagingBuffer(), origin, region, 0,
+        vk::BufferHelper *stagingBuffer = nullptr;
+        ANGLE_TRY(imageVk.getOrCreateStagingBuffer(&stagingBuffer));
+        ANGLE_TRY(copyImageToFromBuffer(imageVk, *stagingBuffer, origin, region, 0,
                                         ImageBufferCopyDirection::ToBuffer));
         ANGLE_TRY(finishInternal());
         if (rowPitch == 0 && slicePitch == 0)
@@ -937,10 +937,6 @@ angle::Result CLCommandQueueVk::enqueueWriteImage(const cl::Image &image,
 
     CLImageVk &imageVk = image.getImpl<CLImageVk>();
     size_t size        = (region.x * region.y * region.z * imageVk.getElementSize());
-    if (imageVk.isStagingBufferInitialized() == false)
-    {
-        ANGLE_TRY(imageVk.createStagingBuffer(imageVk.getSize()));
-    }
 
     if (inputRowPitch == 0 && inputSlicePitch == 0)
     {
@@ -953,7 +949,9 @@ angle::Result CLCommandQueueVk::enqueueWriteImage(const cl::Image &image,
                                                      StagingBufferCopyDirection::ToStagingBuffer));
     }
 
-    ANGLE_TRY(copyImageToFromBuffer(imageVk, imageVk.getStagingBuffer(), origin, region, 0,
+    vk::BufferHelper *stagingBuffer = nullptr;
+    ANGLE_TRY(imageVk.getOrCreateStagingBuffer(&stagingBuffer));
+    ANGLE_TRY(copyImageToFromBuffer(imageVk, *stagingBuffer, origin, region, 0,
                                     ImageBufferCopyDirection::ToImage));
 
     if (blocking)
@@ -1030,22 +1028,15 @@ angle::Result CLCommandQueueVk::enqueueFillImage(const cl::Image &image,
 
     imageVk.packPixels(fillColor, &packedColor);
 
-    if (imageVk.isStagingBufferInitialized() == false)
-    {
-        ANGLE_TRY(imageVk.createStagingBuffer(imageVk.getSize()));
-    }
-
-    ANGLE_TRY(copyImageToFromBuffer(imageVk, imageVk.getStagingBuffer(), cl::kMemOffsetsZero,
+    vk::BufferHelper *stagingBuffer = nullptr;
+    ANGLE_TRY(imageVk.getOrCreateStagingBuffer(&stagingBuffer));
+    ANGLE_TRY(copyImageToFromBuffer(imageVk, *stagingBuffer, cl::kMemOffsetsZero,
                                     {extent.width, extent.height, extent.depth}, 0,
                                     ImageBufferCopyDirection::ToBuffer));
     ANGLE_TRY(finishInternal());
 
-    uint8_t *mapPointer = nullptr;
-    ANGLE_TRY(imageVk.map(mapPointer, 0));
-    imageVk.fillImageWithColor(origin, region, mapPointer, &packedColor);
-    imageVk.unmap();
-    mapPointer = nullptr;
-    ANGLE_TRY(copyImageToFromBuffer(imageVk, imageVk.getStagingBuffer(), cl::kMemOffsetsZero,
+    ANGLE_TRY(imageVk.fillImageWithColor(origin, region, &packedColor));
+    ANGLE_TRY(copyImageToFromBuffer(imageVk, *stagingBuffer, cl::kMemOffsetsZero,
                                     {extent.width, extent.height, extent.depth}, 0,
                                     ImageBufferCopyDirection::ToImage));
 
@@ -1110,24 +1101,20 @@ angle::Result CLCommandQueueVk::enqueueMapImage(const cl::Image &image,
     ANGLE_TRY(preEnqueueOps(event, cl::ExecutionStatus::Complete));
     ANGLE_TRY(processWaitlist(waitEvents));
 
-    // TODO: Look into better enqueue handling of this map-op if non-blocking
-    // https://anglebug.com/376722715
     CLImageVk *imageVk = &image.getImpl<CLImageVk>();
     cl::Extents extent = imageVk->getImageExtent();
-    if (blocking)
-    {
-        ANGLE_TRY(finishInternal());
-    }
+    size_t elementSize = imageVk->getElementSize();
+    size_t rowPitch    = imageVk->getRowPitch();
+    size_t offset =
+        (origin.x * elementSize) + (origin.y * rowPitch) + (origin.z * extent.height * rowPitch);
+    size_t size = (region.x * region.y * region.z * elementSize);
 
     mComputePassCommands->imageRead(mContext, imageVk->getImage().getAspectFlags(),
                                     vk::ImageAccess::TransferSrc, &imageVk->getImage());
 
-    if (imageVk->isStagingBufferInitialized() == false)
-    {
-        ANGLE_TRY(imageVk->createStagingBuffer(imageVk->getSize()));
-    }
-
-    ANGLE_TRY(copyImageToFromBuffer(*imageVk, imageVk->getStagingBuffer(), cl::kMemOffsetsZero,
+    vk::BufferHelper *stagingBuffer = nullptr;
+    ANGLE_TRY(imageVk->getOrCreateStagingBuffer(&stagingBuffer));
+    ANGLE_TRY(copyImageToFromBuffer(*imageVk, *stagingBuffer, cl::kMemOffsetsZero,
                                     {extent.width, extent.height, extent.depth}, 0,
                                     ImageBufferCopyDirection::ToBuffer));
     if (blocking)
@@ -1136,25 +1123,17 @@ angle::Result CLCommandQueueVk::enqueueMapImage(const cl::Image &image,
     }
 
     uint8_t *mapPointer = nullptr;
-    size_t elementSize  = imageVk->getElementSize();
-    size_t rowPitch     = (extent.width * elementSize);
-    size_t offset =
-        (origin.x * elementSize) + (origin.y * rowPitch) + (origin.z * extent.height * rowPitch);
-    size_t size = (region.x * region.y * region.z * elementSize);
+    ANGLE_TRY(imageVk->map(mapPointer, offset));
+    mapPtr = mapPointer;
 
     if (image.getFlags().intersects(CL_MEM_USE_HOST_PTR))
     {
-        mapPointer = static_cast<uint8_t *>(image.getHostPtr()) + offset;
         ANGLE_TRY(imageVk->copyTo(mapPointer, offset, size));
     }
-    else
-    {
-        ANGLE_TRY(imageVk->map(mapPointer, offset));
-    }
-    mapPtr = static_cast<void *>(mapPointer);
 
-    *imageRowPitch = rowPitch;
-
+    // The staging buffer is tightly packed, with no rowpitch and slicepitch. And in UHP case, row
+    // and slice are always zero.
+    *imageRowPitch = extent.width * elementSize;
     switch (imageVk->getDescriptor().type)
     {
         case cl::MemObjectType::Image1D:
@@ -1213,8 +1192,10 @@ angle::Result CLCommandQueueVk::enqueueUnmapMemObject(const cl::Memory &memory,
             uint8_t *mapPointer = static_cast<uint8_t *>(memory.getHostPtr());
             ANGLE_TRY(imageVk.copyStagingFrom(mapPointer, 0, imageVk.getSize()));
         }
-        cl::Extents extent = imageVk.getImageExtent();
-        ANGLE_TRY(copyImageToFromBuffer(imageVk, imageVk.getStagingBuffer(), cl::kMemOffsetsZero,
+        cl::Extents extent              = imageVk.getImageExtent();
+        vk::BufferHelper *stagingBuffer = nullptr;
+        ANGLE_TRY(imageVk.getOrCreateStagingBuffer(&stagingBuffer));
+        ANGLE_TRY(copyImageToFromBuffer(imageVk, *stagingBuffer, cl::kMemOffsetsZero,
                                         {extent.width, extent.height, extent.depth}, 0,
                                         ImageBufferCopyDirection::ToImage));
         ANGLE_TRY(finishInternal());

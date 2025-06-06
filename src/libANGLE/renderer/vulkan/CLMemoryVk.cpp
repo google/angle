@@ -159,38 +159,39 @@ VkMemoryPropertyFlags CLMemoryVk::getVkMemPropertyFlags()
 
 angle::Result CLMemoryVk::map(uint8_t *&ptrOut, size_t offset)
 {
-    if (!isMapped())
+    if (getFlags().intersects(CL_MEM_USE_HOST_PTR))
     {
-        ANGLE_TRY(mapImpl());
+        // as per spec, the returned pointer for USE_HOST_PTR will be derived from the hostptr...
+        ASSERT(mMemory.getHostPtr());
+        ptrOut = static_cast<uint8_t *>(mMemory.getHostPtr()) + offset;
     }
-    ptrOut = mMappedMemory + offset;
+    else
+    {
+        // ...otherwise we just map the VK memory to cpu va space
+        ANGLE_TRY(mapBufferHelper(ptrOut));
+        ptrOut += offset;
+    }
+
     return angle::Result::Continue;
 }
 
 angle::Result CLMemoryVk::copyTo(void *dst, size_t srcOffset, size_t size)
 {
     uint8_t *src = nullptr;
-    ANGLE_TRY(map(src, srcOffset));
+    ANGLE_TRY(mapBufferHelper(src));
+    src += srcOffset;
     std::memcpy(dst, src, size);
-    unmap();
-    return angle::Result::Continue;
-}
-
-angle::Result CLMemoryVk::copyTo(CLMemoryVk *dst, size_t srcOffset, size_t dstOffset, size_t size)
-{
-    uint8_t *dstPtr = nullptr;
-    ANGLE_TRY(dst->map(dstPtr, dstOffset));
-    ANGLE_TRY(copyTo(dstPtr, srcOffset, size));
-    dst->unmap();
+    unmapBufferHelper();
     return angle::Result::Continue;
 }
 
 angle::Result CLMemoryVk::copyFrom(const void *src, size_t srcOffset, size_t size)
 {
     uint8_t *dst = nullptr;
-    ANGLE_TRY(map(dst, srcOffset));
+    ANGLE_TRY(mapBufferHelper(dst));
+    dst += srcOffset;
     std::memcpy(dst, src, size);
-    unmap();
+    unmapBufferHelper();
     return angle::Result::Continue;
 }
 
@@ -230,7 +231,7 @@ CLBufferVk::~CLBufferVk()
 {
     if (isMapped())
     {
-        unmap();
+        unmapBufferHelper();
     }
     mBuffer.destroy(mRenderer);
 }
@@ -401,7 +402,8 @@ angle::Result CLBufferVk::copyToWithPitch(void *hostPtr,
         elementSize};
 
     ptrOutBase = static_cast<uint8_t *>(hostPtr);
-    ANGLE_TRY(getBuffer().map(mContext, &ptrInBase));
+    ANGLE_TRY(mapBufferHelper(ptrInBase));
+    cl::Defer deferUnmap([this]() { unmapBufferHelper(); });
 
     for (size_t slice = 0; slice < region.z; slice++)
     {
@@ -414,29 +416,42 @@ angle::Result CLBufferVk::copyToWithPitch(void *hostPtr,
             memcpy(dst, src, region.x * elementSize);
         }
     }
-    getBuffer().unmap(mContext->getRenderer());
     return angle::Result::Continue;
 }
 
-angle::Result CLBufferVk::mapImpl()
+angle::Result CLBufferVk::mapBufferHelper(uint8_t *&ptrOut)
 {
-    ASSERT(!isMapped());
+    if (!isMapped())
+    {
+        if (isSubBuffer())
+        {
+            return mapParentBufferHelper(ptrOut);
+        }
+        ANGLE_TRY(mBuffer.map(mContext, &mMappedMemory));
+    }
+    ptrOut = mMappedMemory;
+    ASSERT(ptrOut);
 
+    return angle::Result::Continue;
+}
+
+angle::Result CLBufferVk::mapParentBufferHelper(uint8_t *&ptrOut)
+{
+    ASSERT(getParent());
+
+    ANGLE_TRY(getParent()->mapBufferHelper(ptrOut));
+    ptrOut += getOffset();
+    return angle::Result::Continue;
+}
+
+void CLBufferVk::unmapBufferHelper()
+{
     if (isSubBuffer())
     {
-        ANGLE_TRY(mParent->map(mMappedMemory, getOffset()));
-        return angle::Result::Continue;
+        getParent()->unmapBufferHelper();
+        return;
     }
-    ANGLE_TRY(mBuffer.map(mContext, &mMappedMemory));
-    return angle::Result::Continue;
-}
-
-void CLBufferVk::unmapImpl()
-{
-    if (!isSubBuffer())
-    {
-        mBuffer.unmap(mRenderer);
-    }
+    getBuffer().unmap(mContext->getRenderer());
     mMappedMemory = nullptr;
 }
 
@@ -448,7 +463,9 @@ angle::Result CLBufferVk::setRect(const void *data,
     ASSERT(srcRect.mSize == rect.mSize);
 
     uint8_t *mapPtr = nullptr;
-    ANGLE_TRY(map(mapPtr));
+    ANGLE_TRY(mapBufferHelper(mapPtr));
+    cl::Defer deferUnmap([this]() { unmapBufferHelper(); });
+
     const uint8_t *srcData = reinterpret_cast<const uint8_t *>(data);
     for (size_t slice = 0; slice < rect.mSize.depth; slice++)
     {
@@ -472,7 +489,9 @@ angle::Result CLBufferVk::getRect(const cl::BufferRect &srcRect,
     ASSERT(srcRect.mSize == outRect.mSize);
 
     uint8_t *mapPtr = nullptr;
-    ANGLE_TRY(map(mapPtr));
+    ANGLE_TRY(mapBufferHelper(mapPtr));
+    cl::Defer deferUnmap([this]() { unmapBufferHelper(); });
+
     uint8_t *dstData = reinterpret_cast<uint8_t *>(outData);
     for (size_t slice = 0; slice < srcRect.mSize.depth; slice++)
     {
@@ -520,6 +539,28 @@ bool CLBufferVk::isCurrentlyInUse() const
     return !mRenderer->hasResourceUseFinished(mBuffer.getResourceUse());
 }
 
+template <>
+CLBufferVk *CLImageVk::getParent<CLBufferVk>() const
+{
+    if (mParent)
+    {
+        ASSERT(cl::IsBufferType(getParentType()));
+        return static_cast<CLBufferVk *>(mParent);
+    }
+    return nullptr;
+}
+
+template <>
+CLImageVk *CLImageVk::getParent<CLImageVk>() const
+{
+    if (mParent)
+    {
+        ASSERT(cl::IsImageType(getParentType()));
+        return static_cast<CLImageVk *>(mParent);
+    }
+    return nullptr;
+}
+
 VkImageUsageFlags CLImageVk::getVkImageUsageFlags()
 {
     VkImageUsageFlags usageFlags =
@@ -563,22 +604,25 @@ VkImageType CLImageVk::getVkImageType(const cl::ImageDescriptor &desc)
     return imageType;
 }
 
-angle::Result CLImageVk::createStagingBuffer(size_t size)
+angle::Result CLImageVk::getOrCreateStagingBuffer(vk::BufferHelper **stagingBufferOut)
 {
-    const VkBufferCreateInfo createInfo = {VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
-                                           nullptr,
-                                           0,
-                                           size,
-                                           getVkUsageFlags(),
-                                           VK_SHARING_MODE_EXCLUSIVE,
-                                           0,
-                                           nullptr};
-    if (IsError(mStagingBuffer.init(mContext, createInfo, getVkMemPropertyFlags())))
+    if (!mStagingBuffer.valid())
     {
-        ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+        const VkBufferCreateInfo createInfo = {VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
+                                               nullptr,
+                                               0,
+                                               getSize(),
+                                               getVkUsageFlags(),
+                                               VK_SHARING_MODE_EXCLUSIVE,
+                                               0,
+                                               nullptr};
+        if (IsError(mStagingBuffer.init(mContext, createInfo, getVkMemPropertyFlags())))
+        {
+            ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+        }
     }
+    *stagingBufferOut = &mStagingBuffer;
 
-    mStagingBufferInitialized = true;
     return angle::Result::Continue;
 }
 
@@ -586,20 +630,24 @@ angle::Result CLImageVk::copyStagingFrom(void *ptr, size_t offset, size_t size)
 {
     uint8_t *ptrOut;
     uint8_t *ptrIn = static_cast<uint8_t *>(ptr);
-    ANGLE_TRY(getStagingBuffer().map(mContext, &ptrOut));
+
+    ANGLE_TRY(mapBufferHelper(ptrOut));
+    cl::Defer deferUnmap([this]() { unmapBufferHelper(); });
+
     std::memcpy(ptrOut, ptrIn + offset, size);
-    ANGLE_TRY(getStagingBuffer().flush(mRenderer));
-    getStagingBuffer().unmap(mContext->getRenderer());
+
     return angle::Result::Continue;
 }
 
 angle::Result CLImageVk::copyStagingTo(void *ptr, size_t offset, size_t size)
 {
     uint8_t *ptrOut;
-    ANGLE_TRY(getStagingBuffer().map(mContext, &ptrOut));
-    ANGLE_TRY(getStagingBuffer().invalidate(mRenderer));
+
+    ANGLE_TRY(mapBufferHelper(ptrOut));
+    cl::Defer deferUnmap([this]() { unmapBufferHelper(); });
+
     std::memcpy(ptr, ptrOut + offset, size);
-    getStagingBuffer().unmap(mContext->getRenderer());
+
     return angle::Result::Continue;
 }
 
@@ -616,13 +664,15 @@ angle::Result CLImageVk::copyStagingToFromWithPitch(void *hostPtr,
     if (copyStagingTo == StagingBufferCopyDirection::ToHost)
     {
         ptrOutBase = static_cast<uint8_t *>(hostPtr);
-        ANGLE_TRY(getStagingBuffer().map(mContext, &ptrInBase));
+        ANGLE_TRY(mapBufferHelper(ptrInBase));
     }
     else
     {
         ptrInBase = static_cast<uint8_t *>(hostPtr);
-        ANGLE_TRY(getStagingBuffer().map(mContext, &ptrOutBase));
+        ANGLE_TRY(mapBufferHelper(ptrOutBase));
     }
+    cl::Defer deferUnmap([this]() { unmapBufferHelper(); });
+
     for (size_t slice = 0; slice < region.z; slice++)
     {
         for (size_t row = 0; row < region.y; row++)
@@ -638,7 +688,6 @@ angle::Result CLImageVk::copyStagingToFromWithPitch(void *hostPtr,
             memcpy(dst, src, region.x * getElementSize());
         }
     }
-    getStagingBuffer().unmap(mContext->getRenderer());
     return angle::Result::Continue;
 }
 
@@ -646,7 +695,6 @@ CLImageVk::CLImageVk(const cl::Image &image)
     : CLMemoryVk(image),
       mExtent(cl::GetExtentFromDescriptor(image.getDescriptor())),
       mAngleFormat(CLImageFormatToAngleFormat(image.getFormat())),
-      mStagingBufferInitialized(false),
       mImageViewType(cl_vk::GetImageViewType(image.getDescriptor().type))
 {
     if (image.getParent())
@@ -669,7 +717,7 @@ CLImageVk::~CLImageVk()
 
     mImage.destroy(mRenderer);
     mImageView.destroy(mContext->getDevice());
-    if (isStagingBufferInitialized())
+    if (mStagingBuffer.valid())
     {
         mStagingBuffer.destroy(mRenderer);
     }
@@ -711,7 +759,7 @@ angle::Result CLImageVk::create(void *hostPtr)
     if (mMemory.getFlags().intersects(CL_MEM_USE_HOST_PTR | CL_MEM_COPY_HOST_PTR))
     {
         ASSERT(hostPtr);
-        ANGLE_CL_IMPL_TRY_ERROR(createStagingBuffer(getSize()), CL_OUT_OF_RESOURCES);
+
         if (getDescriptor().rowPitch == 0 && getDescriptor().slicePitch == 0)
         {
             ANGLE_CL_IMPL_TRY_ERROR(copyStagingFrom(hostPtr, 0, getSize()), CL_OUT_OF_RESOURCES);
@@ -733,7 +781,10 @@ angle::Result CLImageVk::create(void *hostPtr)
             cl::kMemOffsetsZero, {mExtent.width, mExtent.height, mExtent.depth}, getType(),
             ImageCopyWith::Buffer);
 
-        ANGLE_CL_IMPL_TRY_ERROR(mImage.copyToBufferOneOff(mContext, &mStagingBuffer, copyRegion),
+        // copy over the hostptr bits here to image in a one-off copy cmd
+        vk::BufferHelper *stagingBuffer = nullptr;
+        ANGLE_TRY(getOrCreateStagingBuffer(&stagingBuffer));
+        ANGLE_CL_IMPL_TRY_ERROR(mImage.copyToBufferOneOff(mContext, stagingBuffer, copyRegion),
                                 CL_OUT_OF_RESOURCES);
     }
 
@@ -908,16 +959,21 @@ void CLImageVk::packPixels(const void *fillColor, PixelColor *packedColor)
     }
 }
 
-void CLImageVk::fillImageWithColor(const cl::MemOffsets &origin,
-                                   const cl::Coordinate &region,
-                                   uint8_t *imagePtr,
-                                   PixelColor *packedColor)
+angle::Result CLImageVk::fillImageWithColor(const cl::MemOffsets &origin,
+                                            const cl::Coordinate &region,
+                                            PixelColor *packedColor)
 {
     size_t elementSize = getElementSize();
     cl::BufferRect stagingBufferRect{
         {}, {mExtent.width, mExtent.height, mExtent.depth}, 0, 0, elementSize};
+
+    uint8_t *imagePtr = nullptr;
+    ANGLE_TRY(mapBufferHelper(imagePtr));
+    cl::Defer deferUnmap([this]() { unmapBufferHelper(); });
+
     uint8_t *ptrBase = imagePtr + (origin.z * stagingBufferRect.getSlicePitch()) +
                        (origin.y * stagingBufferRect.getRowPitch()) + (origin.x * elementSize);
+
     for (size_t slice = 0; slice < region.z; slice++)
     {
         for (size_t row = 0; row < region.y; row++)
@@ -931,6 +987,8 @@ void CLImageVk::fillImageWithColor(const cl::MemOffsets &origin,
             }
         }
     }
+
+    return angle::Result::Continue;
 }
 
 cl::Extents CLImageVk::getExtentForCopy(const cl::Coordinate &region)
@@ -1021,27 +1079,53 @@ VkImageSubresourceLayers CLImageVk::getSubresourceLayersForCopy(const cl::MemOff
     return subresource;
 }
 
-angle::Result CLImageVk::mapImpl()
+angle::Result CLImageVk::mapBufferHelper(uint8_t *&ptrOut)
 {
-    ASSERT(!isMapped());
-
-    if (mParent)
+    if (!isMapped())
     {
-        ANGLE_TRY(mParent->map(mMappedMemory, getOffset()));
-        return angle::Result::Continue;
+        if (mParent)
+        {
+            return mapParentBufferHelper(ptrOut);
+        }
+        vk::BufferHelper *stagingBuffer = nullptr;
+        ANGLE_TRY(getOrCreateStagingBuffer(&stagingBuffer));
+        ANGLE_TRY(stagingBuffer->map(mContext, &mMappedMemory));
     }
-
-    ASSERT(isStagingBufferInitialized());
-    ANGLE_TRY(getStagingBuffer().map(mContext, &mMappedMemory));
+    ASSERT(mMappedMemory);
+    ptrOut = mMappedMemory;
 
     return angle::Result::Continue;
 }
-void CLImageVk::unmapImpl()
+
+angle::Result CLImageVk::mapParentBufferHelper(uint8_t *&ptrOut)
 {
-    if (!mParent)
+    ASSERT(mParent);
+
+    if (cl::IsBufferType(getParentType()))
     {
-        getStagingBuffer().unmap(mContext->getRenderer());
+        ANGLE_TRY(getParent<CLBufferVk>()->mapBufferHelper(ptrOut));
     }
+    else if (cl::IsImageType(getParentType()))
+    {
+        ANGLE_TRY(getParent<CLImageVk>()->mapBufferHelper(ptrOut));
+    }
+    else
+    {
+        UNREACHABLE();
+    }
+    ptrOut += getOffset();
+    return angle::Result::Continue;
+}
+
+void CLImageVk::unmapBufferHelper()
+{
+    if (mParent)
+    {
+        getParent<CLImageVk>()->unmapBufferHelper();
+        return;
+    }
+    ASSERT(mStagingBuffer.valid());
+    mStagingBuffer.unmap(mContext->getRenderer());
     mMappedMemory = nullptr;
 }
 
@@ -1053,28 +1137,6 @@ size_t CLImageVk::getRowPitch() const
 size_t CLImageVk::getSlicePitch() const
 {
     return getFrontendObject().getSliceSize();
-}
-
-template <>
-CLBufferVk *CLImageVk::getParent<CLBufferVk>() const
-{
-    if (mParent)
-    {
-        ASSERT(cl::IsBufferType(getParentType()));
-        return static_cast<CLBufferVk *>(mParent);
-    }
-    return nullptr;
-}
-
-template <>
-CLImageVk *CLImageVk::getParent<CLImageVk>() const
-{
-    if (mParent)
-    {
-        ASSERT(cl::IsImageType(getParentType()));
-        return static_cast<CLImageVk *>(mParent);
-    }
-    return nullptr;
 }
 
 cl::MemObjectType CLImageVk::getParentType() const

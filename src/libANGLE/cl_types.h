@@ -20,6 +20,7 @@
 #    include "libANGLE/angletypes.h"
 
 #    include "common/PackedCLEnums_autogen.h"
+#    include "common/WorkerThread.h"
 #    include "common/angleutils.h"
 
 // Include frequently used standard headers
@@ -329,6 +330,19 @@ struct NameValueProperty
 {
     intptr_t name;
     intptr_t value;
+};
+
+// this Defer class provides the user with a closure that executes on its destruction
+template <typename F>
+class Defer : public angle::Closure
+{
+  public:
+    Defer(F &&func) : mFunc(std::forward<F>(func)) {}
+    ~Defer() override { operator()(); }
+    void operator()() override { mFunc(); }
+
+  private:
+    F mFunc;
 };
 
 }  // namespace cl
