@@ -407,6 +407,19 @@ bool IsFormatEmulated(GLenum target)
     return gl::IsEmulatedCompressedFormat(readFormat);
 }
 
+EGLenum GetEglPlatform()
+{
+    EGLenum eglPlatform = EGL_PLATFORM_ANGLE_ANGLE;
+
+#if defined(ANGLE_TEST_ENABLE_SYSTEM_EGL)
+    if (angle::IsAndroid())
+    {
+        eglPlatform = EGL_PLATFORM_ANDROID_KHR;
+    }
+#endif
+    return eglPlatform;
+}
+
 }  // namespace angle
 
 using namespace angle;

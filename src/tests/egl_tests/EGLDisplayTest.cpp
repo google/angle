@@ -186,7 +186,7 @@ TEST_P(EGLDisplayTest, GetPlatformDisplayEXT)
 
     EGLint dispattrs[] = {EGL_PLATFORM_ANGLE_TYPE_ANGLE, GetParam().getRenderer(), EGL_NONE};
     EGLDisplay display = eglGetPlatformDisplayEXT(
-        EGL_PLATFORM_ANGLE_ANGLE, reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY), dispattrs);
+        GetEglPlatform(), reinterpret_cast<void *>(EGL_DEFAULT_DISPLAY), dispattrs);
 
     ASSERT_NE(EGL_NO_DISPLAY, display);
     ASSERT_EGL_SUCCESS();
