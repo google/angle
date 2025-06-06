@@ -395,7 +395,7 @@ struct TestPlatformContext final : private angle::NonCopyable
     ANGLETestBase *currentTest = nullptr;
 };
 
-class ANGLETestBase
+class ANGLETestBase : public ::testing::Test
 {
   protected:
     ANGLETestBase(const angle::PlatformParameters &params);
@@ -594,6 +594,7 @@ class ANGLETestBase
 
   private:
     void checkD3D11SDKLayersMessages();
+    void checkUnsupportedExtensions();
 
     void drawQuad(GLuint program,
                   const std::string &positionAttribName,
@@ -661,7 +662,7 @@ class ANGLETestBase
 };
 
 template <typename Params = angle::PlatformParameters>
-class ANGLETest : public ANGLETestBase, public ::testing::TestWithParam<Params>
+class ANGLETest : public ANGLETestBase, public ::testing::WithParamInterface<Params>
 {
   protected:
     ANGLETest();

@@ -64,7 +64,7 @@ std::ostream &operator<<(std::ostream &os, const MultiviewRenderTestParams &para
 }
 
 class MultiviewFramebufferTestBase : public MultiviewTestBase,
-                                     public ::testing::TestWithParam<MultiviewRenderTestParams>
+                                     public ::testing::WithParamInterface<MultiviewRenderTestParams>
 {
   protected:
     MultiviewFramebufferTestBase(const PlatformParameters &params, int samples)

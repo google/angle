@@ -163,7 +163,7 @@ std::string EGLConfigName(EGLDisplay display, EGLConfig config)
 
 const std::array<EGLint, 3> kContextAttribs = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE};
 
-class EGLContextCompatibilityTest : public ANGLETestBase, public testing::Test
+class EGLContextCompatibilityTest : public ANGLETestBase
 {
   public:
     EGLContextCompatibilityTest(EGLint renderer)

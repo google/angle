@@ -761,6 +761,20 @@ void ANGLETestBase::ANGLETestSetUp()
 
     Library *driverLib = ANGLETestEnvironment::GetDriverLibrary(mCurrentParams->driver);
 
+    // Overriding ANGLE features requires the extension EGL_ANGLE_feature_control.
+    // Only allow skipping tests due to unsupported ANGLE extensions when testing the system EGL,
+    // since we want it to be obvious if ANGLE itself stops exposing them.
+    // Must be checked before initializing the Display, since
+    if (mCurrentParams->driver == GLESDriverType::SystemEGL)
+    {
+        if ((!mCurrentParams->eglParameters.enabledFeatureOverrides.empty() ||
+             !mCurrentParams->eglParameters.disabledFeatureOverrides.empty()) &&
+            !IsEGLClientExtensionEnabled("EGL_ANGLE_feature_control"))
+        {
+            GTEST_SKIP() << "Test skipped because EGL_ANGLE_feature_control is not available.";
+        }
+    }
+
     if (mForceNewDisplay || !mFixture->eglWindow->isDisplayInitialized())
     {
         mFixture->eglWindow->destroyGL();
@@ -774,6 +788,13 @@ void ANGLETestBase::ANGLETestSetUp()
     else if (mCurrentParams->eglParameters != mFixture->eglWindow->getPlatform())
     {
         FAIL() << "Internal parameter conflict error.";
+    }
+
+    // Skip tests that require unsupported ANGLE extensions.
+    checkUnsupportedExtensions();
+    if (IsSkipped())
+    {
+        return;
     }
 
     const GLWindowResult windowResult = mFixture->eglWindow->initializeSurface(
@@ -821,6 +842,57 @@ void ANGLETestBase::ANGLETestSetUp()
     mIsSetUp = true;
 
     mRenderDoc.startFrame();
+}
+
+void ANGLETestBase::checkUnsupportedExtensions()
+{
+    // Only allow skipping tests due to unsupported ANGLE extensions when testing the system EGL,
+    // since we want it to be obvious if ANGLE itself stops exposing them.
+    if (mCurrentParams->driver != GLESDriverType::SystemEGL)
+    {
+        return;
+    }
+
+    if (mFixture->configParams.webGLCompatibility &&
+        !IsEGLDisplayExtensionEnabled(mFixture->eglWindow->getDisplay(),
+                                      "EGL_ANGLE_create_context_webgl_compatibility"))
+    {
+        GTEST_SKIP()
+            << "Test skipped due to EGL_ANGLE_create_context_webgl_compatibility not available";
+    }
+    if (mFixture->configParams.robustResourceInit &&
+        !IsEGLDisplayExtensionEnabled(mFixture->eglWindow->getDisplay(),
+                                      "EGL_ANGLE_robust_resource_initialization"))
+    {
+        GTEST_SKIP()
+            << "Test skipped due to EGL_ANGLE_robust_resource_initialization not available";
+    }
+    if (!mFixture->configParams.extensionsEnabled &&
+        !IsEGLDisplayExtensionEnabled(mFixture->eglWindow->getDisplay(),
+                                      "EGL_ANGLE_create_context_extensions_enabled"))
+    {
+        GTEST_SKIP()
+            << "Test skipped due to EGL_ANGLE_create_context_extensions_enabled not available";
+    }
+    if (!mFixture->configParams.bindGeneratesResource &&
+        !IsEGLDisplayExtensionEnabled(mFixture->eglWindow->getDisplay(),
+                                      "EGL_CHROMIUM_create_context_bind_generates_resource"))
+    {
+        GTEST_SKIP() << "Test skipped due to "
+                        "EGL_CHROMIUM_create_context_bind_generates_resource not available";
+    }
+    if (!mFixture->configParams.clientArraysEnabled &&
+        !IsEGLDisplayExtensionEnabled(mFixture->eglWindow->getDisplay(),
+                                      "EGL_ANGLE_create_context_client_arrays"))
+    {
+        GTEST_SKIP() << "Test skipped due to EGL_ANGLE_create_context_client_arrays not available";
+    }
+    if (!mFixture->configParams.contextProgramCacheEnabled &&
+        !IsEGLDisplayExtensionEnabled(mFixture->eglWindow->getDisplay(),
+                                      "EGL_ANGLE_program_cache_control"))
+    {
+        GTEST_SKIP() << "Test skipped due to EGL_ANGLE_program_cache_control not available";
+    }
 }
 
 void ANGLETestBase::ANGLETestPreTearDown()
