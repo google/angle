@@ -286,6 +286,14 @@ void CommandBuffer::recordCommands(const DawnProcTable *wgpu, RenderPassEncoderH
 
 void CommandBuffer::nextCommandBlock()
 {
+    if (!mCommandBlocks.empty())
+    {
+        ASSERT(mCurrentCommandBlock < mCommandBlocks.size());
+
+        // Finish the current command block before moving to a new one
+        mCommandBlocks[mCurrentCommandBlock]->finalize();
+    }
+
     if (mCurrentCommandBlock + 1 < mCommandBlocks.size())
     {
         // There is already a command block allocated. Make sure it's been cleared and use it.
