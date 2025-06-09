@@ -298,6 +298,12 @@ class MultiviewRenderTest : public MultiviewFramebufferTestBase
     void SetUp() override
     {
         MultiviewFramebufferTestBase::FramebufferTestSetUp();
+        // SetUp() may have determined the test should be skipped and returned before completing.
+        if (Test::IsSkipped())
+        {
+            return;
+        }
+
         testSetUp();
     }
     void TearDown() override
