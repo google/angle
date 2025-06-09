@@ -1023,6 +1023,8 @@ class ProgramExecutable final : public angle::Subject
     // Flag for an easy check for PPO without inspecting mPPOProgramExecutables
     bool mIsPPO;
 
+    bool mBinaryRetrieveableHint;
+
     // Cache for sampler validation
     mutable Optional<bool> mCachedValidateSamplersResult;
 

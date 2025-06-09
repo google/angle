@@ -744,7 +744,8 @@ ProgramExecutable::ProgramExecutable(rx::GLImplFactory *factory, InfoLog *infoLo
       mInfoLog(infoLog),
       mCachedBaseVertex(0),
       mCachedBaseInstance(0),
-      mIsPPO(false)
+      mIsPPO(false),
+      mBinaryRetrieveableHint(false)
 {
     memset(&mPod, 0, sizeof(mPod));
     reset();
