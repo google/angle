@@ -98,7 +98,6 @@ class MultiviewTestBase : public ANGLETestBase
     {
         setWindowWidth(128);
         setWindowHeight(128);
-        setWebGLCompatibilityEnabled(true);
     }
     virtual ~MultiviewTestBase() {}
 
