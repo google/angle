@@ -6106,6 +6106,24 @@ bool ValidateGetProgramivBase(const Context *context,
             }
             break;
         case GL_TESS_CONTROL_OUTPUT_VERTICES_EXT:
+            if (!context->getExtensions().tessellationShaderAny() &&
+                context->getClientVersion() < ES_3_2)
+            {
+                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kTessellationShaderEXTNotEnabled);
+                return false;
+            }
+            if (!programObject->isLinked())
+            {
+                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kProgramNotLinked);
+                return false;
+            }
+            if (!programObject->getExecutable().hasLinkedShaderStage(ShaderType::TessControl))
+            {
+                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION,
+                                       kNoActiveTessellationControlShaderStage);
+                return false;
+            }
+            break;
         case GL_TESS_GEN_MODE_EXT:
         case GL_TESS_GEN_SPACING_EXT:
         case GL_TESS_GEN_VERTEX_ORDER_EXT:
@@ -6119,6 +6137,12 @@ bool ValidateGetProgramivBase(const Context *context,
             if (!programObject->isLinked())
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kProgramNotLinked);
+                return false;
+            }
+            if (!programObject->getExecutable().hasLinkedShaderStage(ShaderType::TessEvaluation))
+            {
+                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION,
+                                       kNoActiveTessellationEvaluationShaderStage);
                 return false;
             }
             break;
