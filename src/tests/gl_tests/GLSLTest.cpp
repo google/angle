@@ -16003,6 +16003,66 @@ void main() {
     EXPECT_NE(compileResult, 0);
 }
 
+// Test that separable program with multiple shaders with mismatching shader interface works.
+TEST_P(GLSLTest_ES31, SeparableProgramWithMismatchingShaderInterface)
+{
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
+    constexpr char kVS[] =
+        "#version 300 es\n"
+        "in vec4 a_position;\n"
+        "out float out_val;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = a_position;\n"
+        "}\n";
+
+    constexpr char kFS[] =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "out vec4 fragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    fragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
+        "}\n";
+
+    GLuint vs      = CompileShader(GL_VERTEX_SHADER, kVS);
+    GLuint fs      = CompileShader(GL_FRAGMENT_SHADER, kFS);
+    GLuint program = glCreateProgram();
+    glAttachShader(program, vs);
+    glAttachShader(program, fs);
+
+    glProgramParameteri(program, GL_PROGRAM_SEPARABLE, GL_TRUE);
+    glLinkProgram(program);
+    EXPECT_GL_NO_ERROR();
+
+    GLuint pipeline = 0;
+    glGenProgramPipelines(1, &pipeline);
+    glBindProgramPipeline(pipeline);
+    glUseProgramStages(pipeline, GL_VERTEX_SHADER_BIT, program);
+    glUseProgramStages(pipeline, GL_FRAGMENT_SHADER_BIT, program);
+
+    std::array<Vector3, 6> quadVertices = ANGLETestBase::GetQuadVertices();
+    GLint positionLocation              = glGetAttribLocation(program, "a_position");
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, quadVertices.data());
+    glEnableVertexAttribArray(positionLocation);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glDisableVertexAttribArray(positionLocation);
+    glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+
+    glDetachShader(program, vs);
+    glDetachShader(program, fs);
+    glDeleteShader(vs);
+    glDeleteShader(fs);
+    glDeleteProgram(program);
+    glDeleteProgramPipelines(1, &pipeline);
+
+    ASSERT_GL_NO_ERROR();
+}
+
 // Regression test based on fuzzer issue resulting in an AST validation failure.  Struct definition
 // was not found in the tree.  Tests that struct declaration in function return value is visible to
 // instantiations later on.
