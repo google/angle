@@ -342,11 +342,6 @@ constexpr const char *kSkippedMessagesWithDynamicRendering[] = {
     "VUID-vkCmdDrawIndexed-multisampledRenderToSingleSampled-07287",
 };
 
-constexpr const char *kSkippedMessagesWithoutSwapchainMaintenance1[] = {
-    // https://anglebug.com/408190758
-    "VUID-vkQueueSubmit-pSignalSemaphores-00067",
-};
-
 // Some syncval errors are resolved in the presence of the NONE load or store render pass ops.  For
 // those, ANGLE makes no further attempt to resolve them and expects vendor support for the
 // extensions instead.  The list of skipped messages is split based on this support.
@@ -4437,14 +4432,6 @@ void Renderer::initializeValidationMessageSuppressions()
         mSkippedValidationMessages.insert(
             mSkippedValidationMessages.end(), kSkippedMessagesWithDynamicRendering,
             kSkippedMessagesWithDynamicRendering + ArraySize(kSkippedMessagesWithDynamicRendering));
-    }
-
-    if (!getFeatures().supportsSwapchainMaintenance1.enabled)
-    {
-        mSkippedValidationMessages.insert(
-            mSkippedValidationMessages.end(), kSkippedMessagesWithoutSwapchainMaintenance1,
-            kSkippedMessagesWithoutSwapchainMaintenance1 +
-                ArraySize(kSkippedMessagesWithoutSwapchainMaintenance1));
     }
 
     // Build the list of syncval errors that are currently expected and should be skipped.
