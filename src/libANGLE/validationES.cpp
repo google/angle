@@ -3237,6 +3237,7 @@ bool ValidateCopyImageSubDataTargetRegion(const Context *context,
                                           GLint offsetZ,
                                           GLsizei width,
                                           GLsizei height,
+                                          GLsizei depth,
                                           GLsizei *samples)
 {
     // INVALID_VALUE is generated if the dimensions of the either subregion exceeds the boundaries
@@ -3283,10 +3284,16 @@ bool ValidateCopyImageSubDataTargetRegion(const Context *context,
             texture->getWidth(PackParam<TextureTarget>(textureTargetToUse), level));
         const GLsizei textureHeight = static_cast<GLsizei>(
             texture->getHeight(PackParam<TextureTarget>(textureTargetToUse), level));
+        const GLsizei textureDepth =
+            target == GL_TEXTURE_CUBE_MAP
+                ? 6
+                : static_cast<GLsizei>(
+                      texture->getDepth(PackParam<TextureTarget>(textureTargetToUse), level));
 
         // INVALID_VALUE is generated if the dimensions of the either subregion exceeds the
         // boundaries of the corresponding image object
-        if ((textureWidth - offsetX < width) || (textureHeight - offsetY < height))
+        if ((textureWidth - offsetX < width) || (textureHeight - offsetY < height) ||
+            (textureDepth - offsetZ < depth))
         {
             ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kSourceTextureTooSmall);
             return false;
@@ -3740,6 +3747,7 @@ bool ValidateCopyImageSubDataBase(const Context *context,
 
     GLsizei dstWidth   = srcWidth;
     GLsizei dstHeight  = srcHeight;
+    GLsizei dstDepth   = srcDepth;
     GLsizei srcSamples = 1;
     GLsizei dstSamples = 1;
 
@@ -3753,7 +3761,8 @@ bool ValidateCopyImageSubDataBase(const Context *context,
     }
 
     if (!ValidateCopyImageSubDataTargetRegion(context, entryPoint, srcName, srcTarget, srcLevel,
-                                              srcX, srcY, srcZ, srcWidth, srcHeight, &srcSamples))
+                                              srcX, srcY, srcZ, srcWidth, srcHeight, srcDepth,
+                                              &srcSamples))
     {
         return false;
     }
@@ -3779,12 +3788,32 @@ bool ValidateCopyImageSubDataBase(const Context *context,
     }
 
     if (!ValidateCopyImageSubDataTargetRegion(context, entryPoint, dstName, dstTarget, dstLevel,
-                                              dstX, dstY, dstZ, dstWidth, dstHeight, &dstSamples))
+                                              dstX, dstY, dstZ, dstWidth, dstHeight, dstDepth,
+                                              &dstSamples))
     {
         return false;
     }
 
-    bool fillsEntireMip               = false;
+    bool srcFillsEntireMip            = false;
+    gl::Texture *srcTexture           = context->getTexture({srcName});
+    gl::TextureTarget srcTargetPacked = gl::PackParam<gl::TextureTarget>(srcTarget);
+    if (srcTargetPacked != gl::TextureTarget::InvalidEnum)
+    {
+        const gl::Extents &srcExtents = srcTexture->getExtents(srcTargetPacked, srcLevel);
+        srcFillsEntireMip             = srcX == 0 && srcY == 0 && srcWidth == srcExtents.width &&
+                            srcHeight == srcExtents.height;
+        // srcFillsEntireMap doesn't consider depth, this is only valid if
+        // srcFormatInfo->compressedBlockDepth <= 1
+        ASSERT(srcFormatInfo->compressedBlockDepth <= 1);
+    }
+
+    if (srcFormatInfo->compressed && !srcFillsEntireMip &&
+        !ValidateCompressedRegion(context, entryPoint, *srcFormatInfo, srcWidth, srcHeight))
+    {
+        return false;
+    }
+
+    bool dstFillsEntireMip            = false;
     gl::Texture *dstTexture           = context->getTexture({dstName});
     gl::TextureTarget dstTargetPacked = gl::PackParam<gl::TextureTarget>(dstTarget);
     // TODO(http://anglebug.com/42264179): Some targets (e.g., GL_TEXTURE_CUBE_MAP, GL_RENDERBUFFER)
@@ -3793,17 +3822,14 @@ bool ValidateCopyImageSubDataBase(const Context *context,
     if (dstTargetPacked != gl::TextureTarget::InvalidEnum)
     {
         const gl::Extents &dstExtents = dstTexture->getExtents(dstTargetPacked, dstLevel);
-        fillsEntireMip = dstX == 0 && dstY == 0 && dstZ == 0 && srcWidth == dstExtents.width &&
-                         srcHeight == dstExtents.height && srcDepth == dstExtents.depth;
+        dstFillsEntireMip             = dstX == 0 && dstY == 0 && dstWidth == dstExtents.width &&
+                            dstHeight == dstExtents.height;
+        // dstFillsEntireMip doesn't consider depth, this is only valid if
+        // dstFormatInfo->compressedBlockDepth <= 1
+        ASSERT(dstFormatInfo->compressedBlockDepth <= 1);
     }
 
-    if (srcFormatInfo->compressed && !fillsEntireMip &&
-        !ValidateCompressedRegion(context, entryPoint, *srcFormatInfo, srcWidth, srcHeight))
-    {
-        return false;
-    }
-
-    if (dstFormatInfo->compressed && !fillsEntireMip &&
+    if (dstFormatInfo->compressed && !dstFillsEntireMip &&
         !ValidateCompressedRegion(context, entryPoint, *dstFormatInfo, dstWidth, dstHeight))
     {
         return false;
