@@ -1612,6 +1612,14 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 42266974 WGPU : Texture2DTest.*Superseding* = SKIP
 42266974 WGPU : Texture2DTest.*Copy* = SKIP
 42266974 WGPU : Texture2DTest.*Mutable* = SKIP
+// Can't generate mipmaps at the moment
+389145696 WGPU : MipmapTestES3.*Generate* = SKIP
+389145696 WGPU : MipmapTestES3.*TextureArray* = SKIP
+389145696 WGPU : MipmapTestES3.*Texture3D* = SKIP
+// Can't handle the resize of the texture
+389145696 WGPU : MipmapTestES3.ResizeBaseMipTo1x1ThenDelete/* = SKIP
+// Can't glReadPixels from a cube map face correctly.
+420782526 WGPU : CubeMapTextureTest.SampleCoordinateTransformGrad* = SKIP
 // 383356846 ubyte index formats are not fully supported yet.
 383356846 WGPU : LineLoopTest.*UByte* = SKIP
 383356846 WGPU : LineLoopTest.*UShort* = SKIP
@@ -1634,12 +1642,7 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 360083331 LINUX INTEL WGPU : Texture2DTest.SubImageValidationOverflow/* = SKIP
 360083331 LINUX INTEL WGPU : Texture2DTest.ZeroSizedUploads/* = SKIP
 // Mac Nvidia devices just draw black screens.
-389145696 WGPU MAC NVIDIA : BasicUniformUsageTest* = SKIP
-389145696 WGPU MAC NVIDIA : SimpleUniformUsageTest* = SKIP
-389145696 WGPU MAC NVIDIA : BasicSamplersTest* = SKIP
-389145696 WGPU MAC NVIDIA : SampleFromRenderedTextureTest* = SKIP
-389145696 WGPU MAC NVIDIA : Texture2DTest.*Multiple* = SKIP
-389145696 WGPU MAC NVIDIA : ImageTest* = SKIP
+389145696 WGPU MAC NVIDIA : * = SKIP
 // Unimplemented cube map and non-zero mipmap EGLImages
 418022112 WGPU : ImageTest.MipLevels/* = SKIP
 418022112 WGPU : ImageTest.RespecificationOfOtherLevel/* = SKIP

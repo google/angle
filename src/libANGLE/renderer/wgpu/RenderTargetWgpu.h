@@ -42,6 +42,7 @@ class RenderTargetWgpu final : public FramebufferAttachmentRenderTarget
     webgpu::TextureViewHandle getTextureView() { return mTextureView; }
     webgpu::ImageHelper *getImage() { return mImage; }
     webgpu::LevelIndex getLevelIndex() const { return mLevelIndex; }
+    uint32_t getLayer() const { return mLayerIndex; }
 
   private:
     webgpu::ImageHelper *mImage = nullptr;

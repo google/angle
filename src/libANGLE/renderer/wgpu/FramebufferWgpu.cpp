@@ -223,8 +223,11 @@ angle::Result FramebufferWgpu::readPixels(const gl::Context *context,
         params.reverseRowOrder = !params.reverseRowOrder;
     }
 
-    webgpu::ImageHelper *sourceImageHelper = getReadPixelsRenderTarget()->getImage();
-    ANGLE_TRY(sourceImageHelper->readPixels(contextWgpu, flippedArea, params,
+    RenderTargetWgpu *readRT = getReadPixelsRenderTarget();
+    uint32_t layer           = readRT->getLayer();
+
+    webgpu::ImageHelper *sourceImageHelper = readRT->getImage();
+    ANGLE_TRY(sourceImageHelper->readPixels(contextWgpu, flippedArea, params, layer,
                                             static_cast<uint8_t *>(pixels) + outputSkipBytes));
 
     return angle::Result::Continue;
