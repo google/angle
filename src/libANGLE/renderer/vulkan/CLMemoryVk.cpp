@@ -389,14 +389,14 @@ angle::Result CLBufferVk::copyToWithPitch(void *hostPtr,
                                           size_t size,
                                           size_t rowPitch,
                                           size_t slicePitch,
-                                          cl::Coordinate region,
+                                          cl::Extents region,
                                           const size_t elementSize)
 {
     uint8_t *ptrInBase  = nullptr;
     uint8_t *ptrOutBase = nullptr;
     cl::BufferRect stagingBufferRect{
         {static_cast<int>(0), static_cast<int>(0), static_cast<int>(0)},
-        {region.x, region.y, region.z},
+        {region.width, region.height, region.depth},
         0,
         0,
         elementSize};
@@ -405,15 +405,15 @@ angle::Result CLBufferVk::copyToWithPitch(void *hostPtr,
     ANGLE_TRY(mapBufferHelper(ptrInBase));
     cl::Defer deferUnmap([this]() { unmapBufferHelper(); });
 
-    for (size_t slice = 0; slice < region.z; slice++)
+    for (size_t slice = 0; slice < region.depth; slice++)
     {
-        for (size_t row = 0; row < region.y; row++)
+        for (size_t row = 0; row < region.height; row++)
         {
             size_t stagingBufferOffset = stagingBufferRect.getRowOffset(slice, row);
             size_t hostPtrOffset       = (slice * slicePitch + row * rowPitch);
             uint8_t *dst               = ptrOutBase + hostPtrOffset;
             uint8_t *src               = ptrInBase + stagingBufferOffset;
-            memcpy(dst, src, region.x * elementSize);
+            memcpy(dst, src, region.width * elementSize);
         }
     }
     return angle::Result::Continue;
@@ -660,14 +660,15 @@ angle::Result CLImageVk::copyStagingTo(void *ptr, size_t offset, size_t size)
 }
 
 angle::Result CLImageVk::copyStagingToFromWithPitch(void *hostPtr,
-                                                    const cl::Coordinate &region,
+                                                    const cl::Extents &region,
                                                     const size_t rowPitch,
                                                     const size_t slicePitch,
                                                     StagingBufferCopyDirection copyStagingTo)
 {
     uint8_t *ptrInBase  = nullptr;
     uint8_t *ptrOutBase = nullptr;
-    cl::BufferRect stagingBufferRect{{}, {region.x, region.y, region.z}, 0, 0, getElementSize()};
+    cl::BufferRect stagingBufferRect{
+        {}, {region.width, region.height, region.depth}, 0, 0, getElementSize()};
 
     if (copyStagingTo == StagingBufferCopyDirection::ToHost)
     {
@@ -681,9 +682,9 @@ angle::Result CLImageVk::copyStagingToFromWithPitch(void *hostPtr,
     }
     cl::Defer deferUnmap([this]() { unmapBufferHelper(); });
 
-    for (size_t slice = 0; slice < region.z; slice++)
+    for (size_t slice = 0; slice < region.depth; slice++)
     {
-        for (size_t row = 0; row < region.y; row++)
+        for (size_t row = 0; row < region.height; row++)
         {
             size_t stagingBufferOffset = stagingBufferRect.getRowOffset(slice, row);
             size_t hostPtrOffset       = (slice * slicePitch + row * rowPitch);
@@ -693,7 +694,7 @@ angle::Result CLImageVk::copyStagingToFromWithPitch(void *hostPtr,
             uint8_t *src               = (copyStagingTo == StagingBufferCopyDirection::ToHost)
                                              ? ptrInBase + stagingBufferOffset
                                              : ptrInBase + hostPtrOffset;
-            memcpy(dst, src, region.x * getElementSize());
+            memcpy(dst, src, region.width * getElementSize());
         }
     }
     return angle::Result::Continue;
@@ -784,9 +785,9 @@ angle::Result CLImageVk::create(void *hostPtr)
         copyRegion.bufferImageHeight = 0;
         copyRegion.imageExtent =
             cl_vk::GetExtent(getExtentForCopy({mExtent.width, mExtent.height, mExtent.depth}));
-        copyRegion.imageOffset      = cl_vk::GetOffset(getOffsetForCopy(cl::kMemOffsetsZero));
+        copyRegion.imageOffset      = cl_vk::GetOffset(cl::kOffsetZero);
         copyRegion.imageSubresource = getSubresourceLayersForCopy(
-            cl::kMemOffsetsZero, {mExtent.width, mExtent.height, mExtent.depth}, getType(),
+            cl::kOffsetZero, {mExtent.width, mExtent.height, mExtent.depth}, getType(),
             ImageCopyWith::Buffer);
 
         // copy over the hostptr bits here to image in a one-off copy cmd
@@ -967,8 +968,8 @@ void CLImageVk::packPixels(const void *fillColor, PixelColor *packedColor)
     }
 }
 
-angle::Result CLImageVk::fillImageWithColor(const cl::MemOffsets &origin,
-                                            const cl::Coordinate &region,
+angle::Result CLImageVk::fillImageWithColor(const cl::Offset &origin,
+                                            const cl::Extents &region,
                                             PixelColor *packedColor)
 {
     size_t elementSize = getElementSize();
@@ -982,13 +983,13 @@ angle::Result CLImageVk::fillImageWithColor(const cl::MemOffsets &origin,
     uint8_t *ptrBase = imagePtr + (origin.z * stagingBufferRect.getSlicePitch()) +
                        (origin.y * stagingBufferRect.getRowPitch()) + (origin.x * elementSize);
 
-    for (size_t slice = 0; slice < region.z; slice++)
+    for (size_t slice = 0; slice < region.depth; slice++)
     {
-        for (size_t row = 0; row < region.y; row++)
+        for (size_t row = 0; row < region.height; row++)
         {
             size_t stagingBufferOffset = stagingBufferRect.getRowOffset(slice, row);
             uint8_t *pixelPtr          = ptrBase + stagingBufferOffset;
-            for (size_t x = 0; x < region.x; x++)
+            for (size_t x = 0; x < region.width; x++)
             {
                 memcpy(pixelPtr, packedColor, elementSize);
                 pixelPtr += elementSize;
@@ -999,12 +1000,12 @@ angle::Result CLImageVk::fillImageWithColor(const cl::MemOffsets &origin,
     return angle::Result::Continue;
 }
 
-cl::Extents CLImageVk::getExtentForCopy(const cl::Coordinate &region)
+cl::Extents CLImageVk::getExtentForCopy(const cl::Extents &region)
 {
     cl::Extents extent = {};
-    extent.width       = region.x;
-    extent.height      = region.y;
-    extent.depth       = region.z;
+    extent.width       = region.width;
+    extent.height      = region.height;
+    extent.depth       = region.depth;
     switch (getDescriptor().type)
     {
         case cl::MemObjectType::Image1D_Array:
@@ -1021,7 +1022,7 @@ cl::Extents CLImageVk::getExtentForCopy(const cl::Coordinate &region)
     return extent;
 }
 
-cl::Offset CLImageVk::getOffsetForCopy(const cl::MemOffsets &origin)
+cl::Offset CLImageVk::getOffsetForCopy(const cl::Offset &origin)
 {
     cl::Offset offset = {};
     offset.x          = origin.x;
@@ -1042,8 +1043,8 @@ cl::Offset CLImageVk::getOffsetForCopy(const cl::MemOffsets &origin)
     return offset;
 }
 
-VkImageSubresourceLayers CLImageVk::getSubresourceLayersForCopy(const cl::MemOffsets &origin,
-                                                                const cl::Coordinate &region,
+VkImageSubresourceLayers CLImageVk::getSubresourceLayersForCopy(const cl::Offset &origin,
+                                                                const cl::Extents &region,
                                                                 cl::MemObjectType copyToType,
                                                                 ImageCopyWith imageCopy)
 {
@@ -1056,7 +1057,7 @@ VkImageSubresourceLayers CLImageVk::getSubresourceLayersForCopy(const cl::MemOff
             subresource.baseArrayLayer = static_cast<uint32_t>(origin.y);
             if (imageCopy == ImageCopyWith::Image)
             {
-                subresource.layerCount = static_cast<uint32_t>(region.y);
+                subresource.layerCount = static_cast<uint32_t>(region.height);
             }
             else
             {
@@ -1072,7 +1073,7 @@ VkImageSubresourceLayers CLImageVk::getSubresourceLayersForCopy(const cl::MemOff
             }
             else if (imageCopy == ImageCopyWith::Image)
             {
-                subresource.layerCount = static_cast<uint32_t>(region.z);
+                subresource.layerCount = static_cast<uint32_t>(region.depth);
             }
             else
             {

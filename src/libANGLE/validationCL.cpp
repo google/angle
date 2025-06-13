@@ -592,8 +592,8 @@ cl_int ValidateImageForDevice(const Image &image,
     // CL_INVALID_VALUE if the region being read or written
     // specified by origin and region is out of bounds.
 
-    if (!image.isRegionValid(cl::MemOffsets{origin[0], origin[1], origin[2]},
-                             cl::Coordinate{region[0], region[1], region[2]}))
+    if (!image.isRegionValid(cl::Offset{origin[0], origin[1], origin[2]},
+                             cl::Extents{region[0], region[1], region[2]}))
     {
         return CL_INVALID_VALUE;
     }

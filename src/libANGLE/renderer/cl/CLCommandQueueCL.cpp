@@ -125,9 +125,9 @@ angle::Result CLCommandQueueCL::enqueueWriteBuffer(const cl::Buffer &buffer,
 
 angle::Result CLCommandQueueCL::enqueueReadBufferRect(const cl::Buffer &buffer,
                                                       bool blocking,
-                                                      const cl::MemOffsets &bufferOrigin,
-                                                      const cl::MemOffsets &hostOrigin,
-                                                      const cl::Coordinate &region,
+                                                      const cl::Offset &bufferOrigin,
+                                                      const cl::Offset &hostOrigin,
+                                                      const cl::Extents &region,
                                                       size_t bufferRowPitch,
                                                       size_t bufferSlicePitch,
                                                       size_t hostRowPitch,
@@ -145,7 +145,7 @@ angle::Result CLCommandQueueCL::enqueueReadBufferRect(const cl::Buffer &buffer,
     cl_event *const nativeEventPtr           = event != nullptr ? &nativeEvent : nullptr;
     size_t bufferOriginArray[3]              = {bufferOrigin.x, bufferOrigin.y, bufferOrigin.z};
     size_t hostOriginArray[3]                = {hostOrigin.x, hostOrigin.y, hostOrigin.z};
-    size_t regionArray[3]                    = {region.x, region.y, region.z};
+    size_t regionArray[3]                    = {region.width, region.height, region.depth};
 
     ANGLE_CL_TRY(mNative->getDispatch().clEnqueueReadBufferRect(
         mNative, nativeBuffer, block, bufferOriginArray, hostOriginArray, regionArray,
@@ -157,9 +157,9 @@ angle::Result CLCommandQueueCL::enqueueReadBufferRect(const cl::Buffer &buffer,
 
 angle::Result CLCommandQueueCL::enqueueWriteBufferRect(const cl::Buffer &buffer,
                                                        bool blocking,
-                                                       const cl::MemOffsets &bufferOrigin,
-                                                       const cl::MemOffsets &hostOrigin,
-                                                       const cl::Coordinate &region,
+                                                       const cl::Offset &bufferOrigin,
+                                                       const cl::Offset &hostOrigin,
+                                                       const cl::Extents &region,
                                                        size_t bufferRowPitch,
                                                        size_t bufferSlicePitch,
                                                        size_t hostRowPitch,
@@ -177,7 +177,7 @@ angle::Result CLCommandQueueCL::enqueueWriteBufferRect(const cl::Buffer &buffer,
     cl_event *const nativeEventPtr           = event != nullptr ? &nativeEvent : nullptr;
     size_t bufferOriginArray[3]              = {bufferOrigin.x, bufferOrigin.y, bufferOrigin.z};
     size_t hostOriginArray[3]                = {hostOrigin.x, hostOrigin.y, hostOrigin.z};
-    size_t regionArray[3]                    = {region.x, region.y, region.z};
+    size_t regionArray[3]                    = {region.width, region.height, region.depth};
 
     ANGLE_CL_TRY(mNative->getDispatch().clEnqueueWriteBufferRect(
         mNative, nativeBuffer, block, bufferOriginArray, hostOriginArray, regionArray,
@@ -212,9 +212,9 @@ angle::Result CLCommandQueueCL::enqueueCopyBuffer(const cl::Buffer &srcBuffer,
 
 angle::Result CLCommandQueueCL::enqueueCopyBufferRect(const cl::Buffer &srcBuffer,
                                                       const cl::Buffer &dstBuffer,
-                                                      const cl::MemOffsets &srcOrigin,
-                                                      const cl::MemOffsets &dstOrigin,
-                                                      const cl::Coordinate &region,
+                                                      const cl::Offset &srcOrigin,
+                                                      const cl::Offset &dstOrigin,
+                                                      const cl::Extents &region,
                                                       size_t srcRowPitch,
                                                       size_t srcSlicePitch,
                                                       size_t dstRowPitch,
@@ -231,7 +231,7 @@ angle::Result CLCommandQueueCL::enqueueCopyBufferRect(const cl::Buffer &srcBuffe
     cl_event *const nativeEventPtr           = event != nullptr ? &nativeEvent : nullptr;
     size_t srcOriginArray[3]                 = {srcOrigin.x, srcOrigin.y, srcOrigin.z};
     size_t dstOriginArray[3]                 = {dstOrigin.x, dstOrigin.y, dstOrigin.z};
-    size_t regionArray[3]                    = {region.x, region.y, region.z};
+    size_t regionArray[3]                    = {region.width, region.height, region.depth};
 
     ANGLE_CL_TRY(mNative->getDispatch().clEnqueueCopyBufferRect(
         mNative, nativeSrc, nativeDst, srcOriginArray, dstOriginArray, regionArray, srcRowPitch,
@@ -290,8 +290,8 @@ angle::Result CLCommandQueueCL::enqueueMapBuffer(const cl::Buffer &buffer,
 
 angle::Result CLCommandQueueCL::enqueueReadImage(const cl::Image &image,
                                                  bool blocking,
-                                                 const cl::MemOffsets &origin,
-                                                 const cl::Coordinate &region,
+                                                 const cl::Offset &origin,
+                                                 const cl::Extents &region,
                                                  size_t rowPitch,
                                                  size_t slicePitch,
                                                  void *ptr,
@@ -306,7 +306,7 @@ angle::Result CLCommandQueueCL::enqueueReadImage(const cl::Image &image,
     cl_event nativeEvent                     = nullptr;
     cl_event *const nativeEventPtr           = event != nullptr ? &nativeEvent : nullptr;
     size_t originArray[3]                    = {origin.x, origin.y, origin.z};
-    size_t regionArray[3]                    = {region.x, region.y, region.z};
+    size_t regionArray[3]                    = {region.width, region.height, region.depth};
 
     ANGLE_CL_TRY(mNative->getDispatch().clEnqueueReadImage(
         mNative, nativeImage, block, originArray, regionArray, rowPitch, slicePitch, ptr, numEvents,
@@ -317,8 +317,8 @@ angle::Result CLCommandQueueCL::enqueueReadImage(const cl::Image &image,
 
 angle::Result CLCommandQueueCL::enqueueWriteImage(const cl::Image &image,
                                                   bool blocking,
-                                                  const cl::MemOffsets &origin,
-                                                  const cl::Coordinate &region,
+                                                  const cl::Offset &origin,
+                                                  const cl::Extents &region,
                                                   size_t inputRowPitch,
                                                   size_t inputSlicePitch,
                                                   const void *ptr,
@@ -333,7 +333,7 @@ angle::Result CLCommandQueueCL::enqueueWriteImage(const cl::Image &image,
     cl_event nativeEvent                     = nullptr;
     cl_event *const nativeEventPtr           = event != nullptr ? &nativeEvent : nullptr;
     size_t originArray[3]                    = {origin.x, origin.y, origin.z};
-    size_t regionArray[3]                    = {region.x, region.y, region.z};
+    size_t regionArray[3]                    = {region.width, region.height, region.depth};
 
     ANGLE_CL_TRY(mNative->getDispatch().clEnqueueWriteImage(
         mNative, nativeImage, block, originArray, regionArray, inputRowPitch, inputSlicePitch, ptr,
@@ -344,9 +344,9 @@ angle::Result CLCommandQueueCL::enqueueWriteImage(const cl::Image &image,
 
 angle::Result CLCommandQueueCL::enqueueCopyImage(const cl::Image &srcImage,
                                                  const cl::Image &dstImage,
-                                                 const cl::MemOffsets &srcOrigin,
-                                                 const cl::MemOffsets &dstOrigin,
-                                                 const cl::Coordinate &region,
+                                                 const cl::Offset &srcOrigin,
+                                                 const cl::Offset &dstOrigin,
+                                                 const cl::Extents &region,
                                                  const cl::EventPtrs &waitEvents,
                                                  cl::EventPtr &event)
 {
@@ -359,7 +359,7 @@ angle::Result CLCommandQueueCL::enqueueCopyImage(const cl::Image &srcImage,
     cl_event *const nativeEventPtr           = event != nullptr ? &nativeEvent : nullptr;
     size_t srcOriginArray[3]                 = {srcOrigin.x, srcOrigin.y, srcOrigin.z};
     size_t dstOriginArray[3]                 = {dstOrigin.x, dstOrigin.y, dstOrigin.z};
-    size_t regionArray[3]                    = {region.x, region.y, region.z};
+    size_t regionArray[3]                    = {region.width, region.height, region.depth};
 
     ANGLE_CL_TRY(mNative->getDispatch().clEnqueueCopyImage(
         mNative, nativeSrc, nativeDst, srcOriginArray, dstOriginArray, regionArray, numEvents,
@@ -370,8 +370,8 @@ angle::Result CLCommandQueueCL::enqueueCopyImage(const cl::Image &srcImage,
 
 angle::Result CLCommandQueueCL::enqueueFillImage(const cl::Image &image,
                                                  const void *fillColor,
-                                                 const cl::MemOffsets &origin,
-                                                 const cl::Coordinate &region,
+                                                 const cl::Offset &origin,
+                                                 const cl::Extents &region,
                                                  const cl::EventPtrs &waitEvents,
                                                  cl::EventPtr &event)
 {
@@ -382,7 +382,7 @@ angle::Result CLCommandQueueCL::enqueueFillImage(const cl::Image &image,
     cl_event nativeEvent                     = nullptr;
     cl_event *const nativeEventPtr           = event != nullptr ? &nativeEvent : nullptr;
     size_t originArray[3]                    = {origin.x, origin.y, origin.z};
-    size_t regionArray[3]                    = {region.x, region.y, region.z};
+    size_t regionArray[3]                    = {region.width, region.height, region.depth};
 
     ANGLE_CL_TRY(mNative->getDispatch().clEnqueueFillImage(mNative, nativeImage, fillColor,
                                                            originArray, regionArray, numEvents,
@@ -393,8 +393,8 @@ angle::Result CLCommandQueueCL::enqueueFillImage(const cl::Image &image,
 
 angle::Result CLCommandQueueCL::enqueueCopyImageToBuffer(const cl::Image &srcImage,
                                                          const cl::Buffer &dstBuffer,
-                                                         const cl::MemOffsets &srcOrigin,
-                                                         const cl::Coordinate &region,
+                                                         const cl::Offset &srcOrigin,
+                                                         const cl::Extents &region,
                                                          size_t dstOffset,
                                                          const cl::EventPtrs &waitEvents,
                                                          cl::EventPtr &event)
@@ -407,7 +407,7 @@ angle::Result CLCommandQueueCL::enqueueCopyImageToBuffer(const cl::Image &srcIma
     cl_event nativeEvent                     = nullptr;
     cl_event *const nativeEventPtr           = event != nullptr ? &nativeEvent : nullptr;
     size_t srcOriginArray[3]                 = {srcOrigin.x, srcOrigin.y, srcOrigin.z};
-    size_t regionArray[3]                    = {region.x, region.y, region.z};
+    size_t regionArray[3]                    = {region.width, region.height, region.depth};
 
     ANGLE_CL_TRY(mNative->getDispatch().clEnqueueCopyImageToBuffer(
         mNative, nativeSrc, nativeDst, srcOriginArray, regionArray, dstOffset, numEvents,
@@ -419,8 +419,8 @@ angle::Result CLCommandQueueCL::enqueueCopyImageToBuffer(const cl::Image &srcIma
 angle::Result CLCommandQueueCL::enqueueCopyBufferToImage(const cl::Buffer &srcBuffer,
                                                          const cl::Image &dstImage,
                                                          size_t srcOffset,
-                                                         const cl::MemOffsets &dstOrigin,
-                                                         const cl::Coordinate &region,
+                                                         const cl::Offset &dstOrigin,
+                                                         const cl::Extents &region,
                                                          const cl::EventPtrs &waitEvents,
                                                          cl::EventPtr &event)
 {
@@ -432,7 +432,7 @@ angle::Result CLCommandQueueCL::enqueueCopyBufferToImage(const cl::Buffer &srcBu
     cl_event nativeEvent                     = nullptr;
     cl_event *const nativeEventPtr           = event != nullptr ? &nativeEvent : nullptr;
     size_t dstOriginArray[3]                 = {dstOrigin.x, dstOrigin.y, dstOrigin.z};
-    size_t regionArray[3]                    = {region.x, region.y, region.z};
+    size_t regionArray[3]                    = {region.width, region.height, region.depth};
 
     ANGLE_CL_TRY(mNative->getDispatch().clEnqueueCopyBufferToImage(
         mNative, nativeSrc, nativeDst, srcOffset, dstOriginArray, regionArray, numEvents,
@@ -444,8 +444,8 @@ angle::Result CLCommandQueueCL::enqueueCopyBufferToImage(const cl::Buffer &srcBu
 angle::Result CLCommandQueueCL::enqueueMapImage(const cl::Image &image,
                                                 bool blocking,
                                                 cl::MapFlags mapFlags,
-                                                const cl::MemOffsets &origin,
-                                                const cl::Coordinate &region,
+                                                const cl::Offset &origin,
+                                                const cl::Extents &region,
                                                 size_t *imageRowPitch,
                                                 size_t *imageSlicePitch,
                                                 const cl::EventPtrs &waitEvents,
@@ -460,7 +460,7 @@ angle::Result CLCommandQueueCL::enqueueMapImage(const cl::Image &image,
     cl_event nativeEvent                     = nullptr;
     cl_event *const nativeEventPtr           = event != nullptr ? &nativeEvent : nullptr;
     size_t originArray[3]                    = {origin.x, origin.y, origin.z};
-    size_t regionArray[3]                    = {region.x, region.y, region.z};
+    size_t regionArray[3]                    = {region.width, region.height, region.depth};
 
     cl_int errorCode = CL_SUCCESS;
     mapPtr           = mNative->getDispatch().clEnqueueMapImage(

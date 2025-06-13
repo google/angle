@@ -110,7 +110,7 @@ class CLBufferVk : public CLMemoryVk
                                   size_t size,
                                   size_t rowPitch,
                                   size_t slicePitch,
-                                  cl::Coordinate region,
+                                  cl::Extents region,
                                   const size_t elementSize);
 
     angle::Result fillWithPattern(const void *pattern,
@@ -206,7 +206,7 @@ class CLImageVk : public CLMemoryVk
     angle::Result copyStagingFrom(void *ptr, size_t offset, size_t size);
     angle::Result copyStagingTo(void *ptr, size_t offset, size_t size);
     angle::Result copyStagingToFromWithPitch(void *ptr,
-                                             const cl::Coordinate &region,
+                                             const cl::Extents &region,
                                              const size_t rowPitch,
                                              const size_t slicePitch,
                                              StagingBufferCopyDirection copyStagingTo);
@@ -215,13 +215,13 @@ class CLImageVk : public CLMemoryVk
     cl::Extents getImageExtent() const { return mExtent; }
     vk::ImageView &getImageView() { return mImageView; }
     void packPixels(const void *fillColor, PixelColor *packedColor);
-    angle::Result fillImageWithColor(const cl::MemOffsets &origin,
-                                     const cl::Coordinate &region,
+    angle::Result fillImageWithColor(const cl::Offset &origin,
+                                     const cl::Extents &region,
                                      PixelColor *packedColor);
-    cl::Extents getExtentForCopy(const cl::Coordinate &region);
-    cl::Offset getOffsetForCopy(const cl::MemOffsets &origin);
-    VkImageSubresourceLayers getSubresourceLayersForCopy(const cl::MemOffsets &origin,
-                                                         const cl::Coordinate &region,
+    cl::Offset getOffsetForCopy(const cl::Offset &origin);
+    cl::Extents getExtentForCopy(const cl::Extents &region);
+    VkImageSubresourceLayers getSubresourceLayersForCopy(const cl::Offset &origin,
+                                                         const cl::Extents &region,
                                                          cl::MemObjectType copyToType,
                                                          ImageCopyWith imageCopy);
 

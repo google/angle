@@ -78,6 +78,7 @@ template <typename T>
 using EventStatusMap = std::array<T, 3>;
 
 using Extents = angle::Extents<size_t>;
+constexpr Extents kExtentsZero(0, 0, 0);
 using Offset  = angle::Offset<size_t>;
 constexpr Offset kOffsetZero(0, 0, 0);
 
@@ -225,18 +226,6 @@ struct ImageDescriptor
         }
     }
 };
-
-struct MemOffsets
-{
-    size_t x, y, z;
-};
-constexpr MemOffsets kMemOffsetsZero{0, 0, 0};
-
-struct Coordinate
-{
-    size_t x, y, z;
-};
-constexpr Coordinate kCoordinateZero{0, 0, 0};
 
 struct NDRange
 {

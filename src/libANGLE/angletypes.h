@@ -39,8 +39,9 @@ namespace angle
 template <typename T>
 struct Extents
 {
-    Extents() : width(0), height(0), depth(0) {}
-    Extents(T width_, T height_, T depth_) : width(width_), height(height_), depth(depth_) {}
+    constexpr Extents() : width(0), height(0), depth(0) {}
+    constexpr Extents(T width_, T height_, T depth_) : width(width_), height(height_), depth(depth_)
+    {}
 
     Extents(const Extents &other)            = default;
     Extents &operator=(const Extents &other) = default;
