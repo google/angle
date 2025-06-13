@@ -837,6 +837,15 @@ void ANGLETestBase::ANGLETestSetUp()
         FAIL() << "GL Context init failed.";
     }
 
+    if (mFixture->eglWindow->getClientMajorVersion() != mCurrentParams->majorVersion ||
+        mFixture->eglWindow->getClientMinorVersion() != mCurrentParams->minorVersion)
+    {
+        WARN() << "Requested Context version does not match the version created. Requested: "
+               << mCurrentParams->majorVersion << "." << mCurrentParams->minorVersion
+               << ", Actual: " << mFixture->eglWindow->getClientMajorVersion() << "."
+               << mFixture->eglWindow->getClientMinorVersion();
+    }
+
     if (needSwap)
     {
         // Swap the buffers so that the default framebuffer picks up the resize

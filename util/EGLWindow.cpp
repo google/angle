@@ -664,6 +664,31 @@ bool EGLWindow::initializeContext()
         return false;
     }
 
+    // Without EGL_ANGLE_create_context_backwards_compatible and specifying
+    // EGL_CONTEXT_OPENGL_BACKWARDS_COMPATIBLE_ANGLE = EGL_FALSE, ANGLE will create a context with
+    // the maximum conformant version the display supports. If the extension is not supported, we
+    // need to query the actual context version, so each test can behave accordingly.
+    // EGL 1.5 Spec
+    // 3.7.1.1 OpenGL and OpenGL ES Context Versions
+    //   The context returned must be the specified version, or a later version which is
+    //   backwards compatible with that version.
+    bool hasBackwardsCompatibleContextExtension = angle::CheckExtensionExists(
+        eglQueryString(mDisplay, EGL_EXTENSIONS), "EGL_ANGLE_create_context_backwards_compatible");
+    if (!hasBackwardsCompatibleContextExtension)
+    {
+        std::pair<EGLint, EGLint> version = angle::GetCurrentContextVersion();
+        // There's no OpenGL ES version "0.x". There is "x.0", though, so we can only check the
+        // first.
+        if (version.first == 0)
+        {
+            fprintf(stderr, "Failed to query the current context version: 0x%X\n", eglGetError());
+            return false;
+        }
+
+        mClientMajorVersion = version.first;
+        mClientMinorVersion = version.second;
+    }
+
     return true;
 }
 
