@@ -14,6 +14,7 @@
 #include "libANGLE/renderer/wgpu/ContextWgpu.h"
 #include "libANGLE/renderer/wgpu/DisplayWgpu.h"
 #include "libANGLE/renderer/wgpu/FramebufferWgpu.h"
+#include "libANGLE/renderer/wgpu/wgpu_utils.h"
 #include "webgpu/webgpu.h"
 
 namespace rx
@@ -368,6 +369,7 @@ angle::Result ImageHelper::getReadPixelsParams(rx::ContextWgpu *contextWgpu,
 angle::Result ImageHelper::readPixels(rx::ContextWgpu *contextWgpu,
                                       const gl::Rectangle &area,
                                       const rx::PackPixelsParams &packPixelsParams,
+                                      webgpu::LevelIndex level,
                                       uint32_t layer,
                                       void *pixels)
 {
@@ -405,7 +407,7 @@ angle::Result ImageHelper::readPixels(rx::ContextWgpu *contextWgpu,
     copyTexture.origin.y = area.y;
     copyTexture.origin.z = layer;
     copyTexture.texture  = mTexture.get();
-    copyTexture.mipLevel = toWgpuLevel(mFirstAllocatedLevel).get();
+    copyTexture.mipLevel = level.get();
 
     WGPUExtent3D copySize = WGPU_EXTENT_3D_INIT;
     copySize.width  = area.width;

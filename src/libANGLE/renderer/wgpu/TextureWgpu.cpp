@@ -530,6 +530,8 @@ angle::Result TextureWgpu::redefineLevel(const gl::Context *context,
                                      mImage->getLevelCount(), layerIndex, index,
                                      mImage->getFirstAllocatedLevel(), &mRedefinedLevels))
             {
+                // TODO(anglebug.com/425449020): release any views or references to this image,
+                // including RenderTargets.
                 mImage->resetImage();
             }
         }

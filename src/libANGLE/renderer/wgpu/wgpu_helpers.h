@@ -165,6 +165,7 @@ class ImageHelper : public angle::Subject
     angle::Result readPixels(rx::ContextWgpu *contextWgpu,
                              const gl::Rectangle &area,
                              const rx::PackPixelsParams &packPixelsParams,
+                             webgpu::LevelIndex level,
                              uint32_t layer,
                              void *pixels);
 
