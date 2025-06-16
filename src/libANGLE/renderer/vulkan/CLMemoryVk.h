@@ -125,10 +125,10 @@ class CLBufferVk : public CLMemoryVk
     bool isSubBuffer() const { return mParent != nullptr; }
 
     angle::Result setRect(const void *data,
-                          const cl::BufferRect &srcRect,
+                          const cl::BufferRect &dataRect,
                           const cl::BufferRect &bufferRect);
-    angle::Result getRect(const cl::BufferRect &srcRect,
-                          const cl::BufferRect &outRect,
+    angle::Result getRect(const cl::BufferRect &bufferRect,
+                          const cl::BufferRect &dataRect,
                           void *outData);
 
     bool isCurrentlyInUse() const override;
@@ -140,10 +140,8 @@ class CLBufferVk : public CLMemoryVk
         ToHost,
         FromHost
     };
-    angle::Result syncHost(CLBufferVk::SyncHostDirection direction, size_t offset, size_t size);
-    angle::Result syncHost(CLBufferVk::SyncHostDirection direction,
-                           cl::BufferRect bufferRect,
-                           cl::BufferRect hostRect);
+    angle::Result syncHost(CLBufferVk::SyncHostDirection direction);
+    angle::Result syncHost(CLBufferVk::SyncHostDirection direction, cl::BufferRect hostRect);
 
   private:
     angle::Result mapBufferHelper(uint8_t *&ptrOut) override;
@@ -151,6 +149,16 @@ class CLBufferVk : public CLMemoryVk
     void unmapBufferHelper() override;
     angle::Result setDataImpl(const uint8_t *data, size_t size, size_t offset);
     angle::Result createWithProperties();
+
+    enum class UpdateRectOperation
+    {
+        Read,
+        Write
+    };
+    angle::Result updateRect(UpdateRectOperation readWriteOp,
+                             void *data,
+                             const cl::BufferRect &dataRect,
+                             const cl::BufferRect &bufferRect);
 
     vk::BufferHelper mBuffer;
     VkBufferCreateInfo mDefaultBufferCreateInfo;

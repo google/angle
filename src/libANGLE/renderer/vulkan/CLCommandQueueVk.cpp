@@ -182,12 +182,10 @@ class HostTransferConfigVisitor
         switch (transferConfig.getType())
         {
             case CL_COMMAND_READ_BUFFER:
-                ANGLE_TRY(bufferVk.syncHost(CLBufferVk::SyncHostDirection::ToHost,
-                                            transferConfig.getOffset(), transferConfig.getSize()));
+                ANGLE_TRY(bufferVk.syncHost(CLBufferVk::SyncHostDirection::ToHost));
                 break;
             case CL_COMMAND_READ_BUFFER_RECT:
                 ANGLE_TRY(bufferVk.syncHost(CLBufferVk::SyncHostDirection::ToHost,
-                                            transferConfig.getBufferRect(),
                                             transferConfig.getHostRect()));
                 break;
             case CL_COMMAND_READ_IMAGE:
@@ -456,7 +454,7 @@ angle::Result CLCommandQueueVk::enqueueWriteBufferRect(const cl::Buffer &buffer,
     {
         // Stage a transfer routine
         HostWriteTransferConfig config(CL_COMMAND_WRITE_BUFFER_RECT, ptrRect.getRectSize(),
-                                       const_cast<void *>(ptr), ptrRect, bufferRect);
+                                       const_cast<void *>(ptr), bufferRect, ptrRect);
         ANGLE_TRY(addToHostTransferList(bufferVk, config));
     }
 
@@ -774,7 +772,7 @@ angle::Result CLCommandQueueVk::addToHostTransferList(CLBufferVk *srcBuffer,
         }
         case CL_COMMAND_READ_BUFFER:
         {
-            VkBufferCopy copyRegion = {0, transferConfig.getOffset(), transferConfig.getSize()};
+            VkBufferCopy copyRegion = {transferConfig.getOffset(), 0, transferConfig.getSize()};
             copyRegion.srcOffset += srcBuffer->getOffset();
             copyRegion.dstOffset += transferBufferHandleVk.getOffset();
             mComputePassCommands->getCommandBuffer().copyBuffer(

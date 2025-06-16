@@ -120,12 +120,56 @@ struct BufferRect
         return ((mRowPitch * (mOrigin.y + row)) + (mOrigin.x * mElementSize)) +  // row offset
                (mSlicePitch * (mOrigin.z + slice));                              // slice offset
     }
+    // Calculates the offset of the starting position of the rectangle
+    size_t getBufferOffset() const { return getRowOffset(0, 0); }
 
     size_t getRowPitch() const { return mRowPitch; }
     size_t getSlicePitch() const { return mSlicePitch; }
+
     // Given the offset, row pitch, slice pitch, this returns the size of the buffer in which this
     // rect sits.
-    size_t getRectSize() const { return getRowOffset(mSize.depth, mSize.height); }
+    //
+    //            row_pitch
+    // +------------------------------+
+    // |   origin                     |
+    // |      +---------------+       |
+    // |      |               |height |
+    // |      |               |       |
+    // |      |   width       |       |
+    // +------+---------------+-------+
+    //   - size of the buffer is
+    //      - initial offset to start of rect
+    //      - + size of the rectangle
+    //      - - (extra regions for the last slice and row)
+    size_t getRectSize() const
+    {
+        // Treat:
+        //  S: mSlicePitch, R: mRowPitch, O: Offset(xyz_dim), D: mSize.depth, H: mSize.height,
+        //  W: mSize.width, E: mElementSize
+        //
+        //  strideHeightPadding == (S / R) - H
+        //  strideRowPadding    == R - (W * E)
+        //
+        // getRectSize() =
+        //    getBufferOffset()         // initial offset to the start of rect
+        //  + (S * D)                   // size of the rectangle
+        //  - (strideHeightPadding * R) // extraneous region for the last slice
+        //  - strideRowPadding          // extraneous region for the last row
+        //
+        // Where:
+        //  getBufferOffset()   == getRowOffset(0,0) == S(Oz) + R(Oy) + (Ox * E)
+        //  getRowOffset(s, r)  == S(Oz + s) + R(Oy + r) + (Ox * E)
+        //
+        // Simplifies to:
+        //  getRectSize() = S(Oz) + R(Oy) + (Ox * E) + (S * D) - R(S/R - H) - R - (W * E)
+        //  getRectSize() = S(Oz + (D - 1)) + R(Oy + (H - 1)) + (Ox * E) + (W * E)
+        //  ...
+        //  getRectSize() = getRowOffset((D - 1), (H - 1)) + (W * E)
+
+        // The end of the rect is the beginning of the last row + the length of the row.
+        // This logic excludes paddings for the last row / slice.
+        return getRowOffset(mSize.depth - 1, mSize.height - 1) + mSize.width * mElementSize;
+    }
     const Extents &getExtents() const { return mSize; }
     Offset mOrigin;
     Extents mSize;
