@@ -279,6 +279,7 @@ b/390710636 LINUX NVIDIA VULKAN : TextureBorderClampTestES32.CustomBorderColorWi
 // Nvidia does not ignore gl_Layer for non-layered framebuffers
 374790899 NVIDIA OPENGL : GeometryShaderTest.GLLayerIneffectiveWithoutLayeredFramebuffer/* = SKIP
 374790899 NVIDIA GLES : GeometryShaderTest.GLLayerIneffectiveWithoutLayeredFramebuffer/* = SKIP
+42265887 NVIDIA VULKAN : CopyCompressedTextureTestES31.CopyFromUncompressedToCompressed/* = SKIP
 
 // Nvidia Vulkan
 42265709 NVIDIA VULKAN : GLSLTest_ES31.TessellationControlShaderMatrixCopyBug/* = SKIP

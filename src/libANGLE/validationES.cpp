@@ -3308,16 +3308,44 @@ bool ValidateCopyImageSubDataTargetRegion(const Context *context,
 
 bool ValidateCompressedRegion(const Context *context,
                               angle::EntryPoint entryPoint,
+                              const gl::Texture &Texture,
+                              GLenum textureTarget,
+                              const GLint textureLevel,
                               const InternalFormat &formatInfo,
-                              GLsizei width,
-                              GLsizei height)
+                              const GLint offsetX,
+                              const GLint offsetY,
+                              const GLint offsetZ,
+                              const GLsizei width,
+                              const GLsizei height,
+                              const GLsizei depth)
 {
     ASSERT(formatInfo.compressed);
 
+    bool subregionAlignedWithCompressedBlock = false;
+    if (textureTarget == GL_TEXTURE_CUBE_MAP)
+    {
+        // Use GL_TEXTURE_CUBE_MAP_POSITIVE_X to properly gather the textureWidth/textureHeight
+        textureTarget = GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+    }
+    const gl::TextureTarget textureTargetPacked = gl::PackParam<gl::TextureTarget>(textureTarget);
+    ASSERT(textureTargetPacked != gl::TextureTarget::InvalidEnum);
+
+    const gl::Extents &textureExtents   = Texture.getExtents(textureTargetPacked, textureLevel);
+    subregionAlignedWithCompressedBlock = ((offsetX % formatInfo.compressedBlockWidth) == 0) &&
+                                          ((offsetX + width == textureExtents.width) ||
+                                           (width % formatInfo.compressedBlockWidth == 0));
+    subregionAlignedWithCompressedBlock = subregionAlignedWithCompressedBlock &&
+                                          ((offsetY % formatInfo.compressedBlockHeight) == 0) &&
+                                          ((offsetY + height == textureExtents.height) ||
+                                           (height % formatInfo.compressedBlockHeight == 0));
+    subregionAlignedWithCompressedBlock = subregionAlignedWithCompressedBlock &&
+                                          ((offsetZ % formatInfo.compressedBlockDepth) == 0) &&
+                                          ((offsetZ + depth == textureExtents.depth) ||
+                                           (depth % formatInfo.compressedBlockDepth == 0));
+
     // INVALID_VALUE is generated if the image format is compressed and the dimensions of the
     // subregion fail to meet the alignment constraints of the format.
-    if ((width % formatInfo.compressedBlockWidth != 0) ||
-        (height % formatInfo.compressedBlockHeight != 0))
+    if (!subregionAlignedWithCompressedBlock)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidCompressedRegionSize);
         return false;
@@ -3794,43 +3822,18 @@ bool ValidateCopyImageSubDataBase(const Context *context,
         return false;
     }
 
-    bool srcFillsEntireMip            = false;
     gl::Texture *srcTexture           = context->getTexture({srcName});
-    gl::TextureTarget srcTargetPacked = gl::PackParam<gl::TextureTarget>(srcTarget);
-    if (srcTargetPacked != gl::TextureTarget::InvalidEnum)
-    {
-        const gl::Extents &srcExtents = srcTexture->getExtents(srcTargetPacked, srcLevel);
-        srcFillsEntireMip             = srcX == 0 && srcY == 0 && srcWidth == srcExtents.width &&
-                            srcHeight == srcExtents.height;
-        // srcFillsEntireMap doesn't consider depth, this is only valid if
-        // srcFormatInfo->compressedBlockDepth <= 1
-        ASSERT(srcFormatInfo->compressedBlockDepth <= 1);
-    }
-
-    if (srcFormatInfo->compressed && !srcFillsEntireMip &&
-        !ValidateCompressedRegion(context, entryPoint, *srcFormatInfo, srcWidth, srcHeight))
+    if (srcFormatInfo->compressed &&
+        !ValidateCompressedRegion(context, entryPoint, *srcTexture, srcTarget, srcLevel,
+                                  *srcFormatInfo, srcX, srcY, srcZ, srcWidth, srcHeight, srcDepth))
     {
         return false;
     }
 
-    bool dstFillsEntireMip            = false;
     gl::Texture *dstTexture           = context->getTexture({dstName});
-    gl::TextureTarget dstTargetPacked = gl::PackParam<gl::TextureTarget>(dstTarget);
-    // TODO(http://anglebug.com/42264179): Some targets (e.g., GL_TEXTURE_CUBE_MAP, GL_RENDERBUFFER)
-    // are unsupported when used with compressed formats due to gl::PackParam() returning
-    // TextureTarget::InvalidEnum.
-    if (dstTargetPacked != gl::TextureTarget::InvalidEnum)
-    {
-        const gl::Extents &dstExtents = dstTexture->getExtents(dstTargetPacked, dstLevel);
-        dstFillsEntireMip             = dstX == 0 && dstY == 0 && dstWidth == dstExtents.width &&
-                            dstHeight == dstExtents.height;
-        // dstFillsEntireMip doesn't consider depth, this is only valid if
-        // dstFormatInfo->compressedBlockDepth <= 1
-        ASSERT(dstFormatInfo->compressedBlockDepth <= 1);
-    }
-
-    if (dstFormatInfo->compressed && !dstFillsEntireMip &&
-        !ValidateCompressedRegion(context, entryPoint, *dstFormatInfo, dstWidth, dstHeight))
+    if (dstFormatInfo->compressed &&
+        !ValidateCompressedRegion(context, entryPoint, *dstTexture, dstTarget, dstLevel,
+                                  *dstFormatInfo, dstX, dstY, dstZ, dstWidth, dstHeight, dstDepth))
     {
         return false;
     }
