@@ -9266,6 +9266,172 @@ TEST_P(ImageTestES3, ResolveForeignDraw)
     useAHBByGLThenForeignThenGLHelper(first, second);
 }
 
+// Tests that uploading to a foreign image until the outside RP command buffer is submitted does not
+// break the render pass.
+TEST_P(ImageTest, UploadForeignUntilSubmitDoesNotBreakRenderPass)
+{
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !hasRenderbufferExt());
+    ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+
+    constexpr size_t kMaxBufferToImageCopySize = 64 * 1024 * 1024;
+    constexpr uint64_t kNumOutsideSubmits      = 1;
+    constexpr uint32_t kWidth                  = 53;
+    constexpr uint32_t kHeight                 = 37;
+
+    ANGLE_GL_PROGRAM(drawTextureProgram, essl1_shaders::vs::Texture2D(),
+                     essl1_shaders::fs::Texture2D());
+    glUseProgram(drawTextureProgram);
+    GLint texLocation = glGetUniformLocation(drawTextureProgram, essl1_shaders::Texture2DUniform());
+    ASSERT_NE(-1, texLocation);
+    glUniform1i(texLocation, 0);
+
+    // Set up FBO.
+    GLFramebuffer fbo;
+    GLTexture colorTexFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glBindTexture(GL_TEXTURE_2D, colorTexFBO);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexFBO, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    glViewport(0, 0, kWidth, kHeight);
+
+    // Create the EGL image and a texture target to bind it.
+    AHardwareBuffer *source;
+    EGLImageKHR image;
+    createEGLImageAndroidHardwareBufferSource(
+        kWidth, kHeight, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM, kDefaultAHBUsage,
+        kDefaultAttribs, {}, &source, &image);
+
+    GLTexture target;
+    createEGLImageTargetTexture2D(image, target);
+
+    // Use the image in GL once.
+    glBindTexture(GL_TEXTURE_2D, target);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    std::vector<GLColor> kDrawData1(kWidth * kHeight, GLColor::blue);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE,
+                    kDrawData1.data());
+    drawQuad(drawTextureProgram, essl1_shaders::PositionAttrib(), 0.5f);
+
+    // Upload data to and draw with a temp texture. In the Vulkan backend, the data may get flushed
+    // without closing the render pass.
+    // The draw will be limited to one pixel via glScissor().
+    std::vector<GLColor> kDrawData2(kWidth * kHeight, GLColor::green);
+    glEnable(GL_SCISSOR_TEST);
+    glScissor(0, 0, 1, 1);
+
+    constexpr size_t kMaxLoadCount =
+        kMaxBufferToImageCopySize / (kWidth * kHeight * 4) * kNumOutsideSubmits + 1;
+    for (size_t loadCount = 0; loadCount < kMaxLoadCount; loadCount++)
+    {
+        GLTexture tempTexture;
+        glBindTexture(GL_TEXTURE_2D, tempTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     kDrawData2.data());
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        drawQuad(drawTextureProgram, essl1_shaders::PositionAttrib(), 0.5f);
+        ASSERT_GL_NO_ERROR();
+    }
+
+    // Verify the draws.
+    EXPECT_PIXEL_RECT_EQ(1, 0, kWidth - 1, kHeight, GLColor::blue);
+    EXPECT_PIXEL_RECT_EQ(0, 1, kWidth, kHeight - 1, GLColor::blue);
+    EXPECT_PIXEL_RECT_EQ(0, 0, 1, 1, GLColor::green);
+
+    glDisable(GL_SCISSOR_TEST);
+    ASSERT_GL_NO_ERROR();
+}
+
+// Tests that copying to a foreign image until the outside RP command buffer is submitted does not
+// break the render pass.
+TEST_P(ImageTest, CopyToForeignUntilSubmitDoesNotBreakRenderPass)
+{
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !hasRenderbufferExt());
+    ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_copy_image"));
+
+    constexpr size_t kMaxBufferToImageCopySize = 64 * 1024 * 1024;
+    constexpr uint64_t kNumOutsideSubmits      = 1;
+    constexpr uint32_t kWidth                  = 53;
+    constexpr uint32_t kHeight                 = 37;
+
+    ANGLE_GL_PROGRAM(drawTextureProgram, essl1_shaders::vs::Texture2D(),
+                     essl1_shaders::fs::Texture2D());
+    glUseProgram(drawTextureProgram);
+    GLint texLocation = glGetUniformLocation(drawTextureProgram, essl1_shaders::Texture2DUniform());
+    ASSERT_NE(-1, texLocation);
+    glUniform1i(texLocation, 0);
+
+    // Set up FBO.
+    GLFramebuffer fbo;
+    GLTexture colorTexFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glBindTexture(GL_TEXTURE_2D, colorTexFBO);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexFBO, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    glViewport(0, 0, kWidth, kHeight);
+
+    // Create the EGL images and the texture targets to bind them.
+    AHardwareBuffer *source1;
+    EGLImageKHR image1;
+    createEGLImageAndroidHardwareBufferSource(
+        kWidth, kHeight, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM, kDefaultAHBUsage,
+        kDefaultAttribs, {}, &source1, &image1);
+
+    GLTexture target1;
+    createEGLImageTargetTexture2D(image1, target1);
+
+    AHardwareBuffer *source2;
+    EGLImageKHR image2;
+    createEGLImageAndroidHardwareBufferSource(
+        kWidth, kHeight, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM, kDefaultAHBUsage,
+        kDefaultAttribs, {}, &source2, &image2);
+
+    GLTexture target2;
+    createEGLImageTargetTexture2D(image2, target2);
+
+    // Use the first image in GL.
+    glBindTexture(GL_TEXTURE_2D, target1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    std::vector<GLColor> kDrawData(kWidth * kHeight, GLColor::blue);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE,
+                    kDrawData.data());
+    drawQuad(drawTextureProgram, essl1_shaders::PositionAttrib(), 0.5f);
+
+    // Copy to the second image in GL.
+    std::vector<GLColor> kCopyData(kWidth * kHeight, GLColor::green);
+    constexpr size_t kMaxLoadCount =
+        kMaxBufferToImageCopySize / (kWidth * kHeight * 4) * kNumOutsideSubmits + 1;
+
+    for (size_t loadCount = 0; loadCount < kMaxLoadCount; loadCount++)
+    {
+        GLTexture tempTexture;
+        glBindTexture(GL_TEXTURE_2D, tempTexture);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     kCopyData.data());
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        glCopyImageSubDataEXT(tempTexture, GL_TEXTURE_2D, 0, 0, 0, 0, target2, GL_TEXTURE_2D, 0, 0,
+                              0, 0, kWidth, kHeight, 1);
+        ASSERT_GL_NO_ERROR();
+    }
+
+    // Verify the draw.
+    EXPECT_PIXEL_RECT_EQ(0, 0, kWidth, kHeight, GLColor::blue);
+}
+
 // Test upload, use in foreign, then draw
 TEST_P(ImageTest, UploadForeignDraw)
 {

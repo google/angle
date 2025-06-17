@@ -3674,7 +3674,11 @@ angle::Result ContextVk::submitCommands(const vk::Semaphore *signalSemaphore,
     ASSERT(QueueSerialsHaveDifferentIndexOrSmaller(mLastSubmittedQueueSerial,
                                                    mLastFlushedQueueSerial));
 
-    finalizeAllForeignImages();
+    if (submission == Submit::AllCommands)
+    {
+        finalizeAllForeignImages();
+    }
+
     ANGLE_TRY(mRenderer->submitCommands(
         this, getProtectionType(), mContextPriority, signalSemaphore, externalFence,
         std::move(mImagesToTransitionToForeign), mLastFlushedQueueSerial));
