@@ -2046,6 +2046,13 @@
                 "Use BGR565 instead of RGB565 for performance reasons"
             ],
             "issue": "https://issuetracker.google.com/409867243"
+        },
+        {
+            "name": "cl_serialized_execution",
+            "category": "Features",
+            "description": [
+                "Force each OpenCL enqueue command to submit and wait for fence."
+            ]
         }
     ]
 }

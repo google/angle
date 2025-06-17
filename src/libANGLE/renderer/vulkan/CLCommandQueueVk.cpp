@@ -2226,6 +2226,11 @@ angle::Result CLCommandQueueVk::postEnqueueOps(const cl::EventPtr &event)
         mCommandsStateMap[eventQueueSerial].events.push_back(event);
     }
 
+    if (mContext->getRenderer()->getFeatures().clSerializedExecution.enabled)
+    {
+        ANGLE_TRY(finishInternal());
+    }
+
     return angle::Result::Continue;
 }
 

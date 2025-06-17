@@ -72,6 +72,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::ClearsWithGapsNeedFlush, "clearsWithGapsNeedFlush"},
     {Feature::ClipCullDistanceBrokenWithPassthroughShaders, "clipCullDistanceBrokenWithPassthroughShaders"},
     {Feature::ClipSrcRegionForBlitFramebuffer, "clipSrcRegionForBlitFramebuffer"},
+    {Feature::ClSerializedExecution, "clSerializedExecution"},
     {Feature::CompileJobIsThreadSafe, "compileJobIsThreadSafe"},
     {Feature::ConvertLowpAndMediumpFloatUniformsTo16Bits, "convertLowpAndMediumpFloatUniformsTo16Bits"},
     {Feature::CopyIOSurfaceToNonIOSurfaceForReadOptimization, "copyIOSurfaceToNonIOSurfaceForReadOptimization"},

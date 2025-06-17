@@ -72,6 +72,7 @@ enum class Feature
     ClearsWithGapsNeedFlush,
     ClipCullDistanceBrokenWithPassthroughShaders,
     ClipSrcRegionForBlitFramebuffer,
+    ClSerializedExecution,
     CompileJobIsThreadSafe,
     ConvertLowpAndMediumpFloatUniformsTo16Bits,
     CopyIOSurfaceToNonIOSurfaceForReadOptimization,

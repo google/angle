@@ -1556,6 +1556,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo clSerializedExecution = {
+        "clSerializedExecution",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;
