@@ -83,7 +83,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
         return 0;
     }
 
-    if (spec != SH_GLES2_SPEC && type != SH_WEBGL_SPEC && spec != SH_GLES3_SPEC &&
+    if (spec != SH_GLES2_SPEC && spec != SH_WEBGL_SPEC && spec != SH_GLES3_SPEC &&
         spec != SH_WEBGL2_SPEC)
     {
         return 0;
