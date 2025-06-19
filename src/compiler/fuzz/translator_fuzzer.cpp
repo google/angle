@@ -93,10 +93,8 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
 
     bool hasUnsupportedOptions = false;
 
-    const bool hasMacGLSLOptions = options.rewriteFloatUnaryMinusOperator ||
-                                   options.addAndTrueToLoopCondition ||
-                                   options.rewriteDoWhileLoops || options.unfoldShortCircuit ||
-                                   options.rewriteRowMajorMatrices;
+    const bool hasMacGLSLOptions = options.addAndTrueToLoopCondition ||
+                                   options.unfoldShortCircuit || options.rewriteRowMajorMatrices;
 
     if (!IsOutputGLSL(shaderOutput) && !IsOutputESSL(shaderOutput))
     {

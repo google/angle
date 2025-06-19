@@ -59,7 +59,6 @@
 #include "compiler/translator/tree_ops/glsl/RewriteRepeatedAssignToSwizzled.h"
 #include "compiler/translator/tree_ops/glsl/UseInterfaceBlockFields.h"
 #include "compiler/translator/tree_ops/glsl/apple/AddAndTrueToLoopCondition.h"
-#include "compiler/translator/tree_ops/glsl/apple/RewriteDoWhile.h"
 #include "compiler/translator/tree_ops/glsl/apple/UnfoldShortCircuitAST.h"
 #include "compiler/translator/tree_ops/msl/EnsureLoopForwardProgress.h"
 #include "compiler/translator/tree_util/BuiltIn.h"
@@ -1105,15 +1104,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     {
         if (!DeclareAndInitBuiltinsForInstancedMultiview(
                 this, root, mNumViews, mShaderType, compileOptions, mOutputType, &mSymbolTable))
-        {
-            return false;
-        }
-    }
-
-    // This pass might emit short circuits so keep it before the short circuit unfolding
-    if (compileOptions.rewriteDoWhileLoops)
-    {
-        if (!RewriteDoWhile(this, root, &mSymbolTable))
         {
             return false;
         }
