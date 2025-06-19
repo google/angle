@@ -216,8 +216,6 @@ enum class Feature
     InitFragmentOutputVariables,
     InitializeCurrentVertexAttributes,
     InjectAsmStatementIntoLoopBodies,
-    IntelDisableFastMath,
-    IntelExplicitBoolCastWorkaround,
     KeepBufferShadowCopy,
     LimitMax3dArrayTextureSizeTo1024,
     LimitMaxColorTargetBitsForTesting,

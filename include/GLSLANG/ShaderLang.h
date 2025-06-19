@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 376
+#define ANGLE_SH_VERSION 377
 
 enum ShShaderSpec
 {
@@ -410,9 +410,6 @@ struct ShCompileOptions
 
     // Always write explicit location layout qualifiers for fragment outputs.
     uint64_t explicitFragmentLocations : 1;
-
-    // Insert explicit casts for float/double/unsigned/signed int on macOS 10.15 with Intel driver
-    uint64_t addExplicitBoolCasts : 1;
 
     // Add round() after applying dither.  This works around a Qualcomm quirk where values can get
     // ceil()ed instead.
