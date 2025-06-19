@@ -588,6 +588,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     bool isVertexArrayGenerated(VertexArrayID vertexArray) const;
     bool isTransformFeedbackGenerated(TransformFeedbackID transformFeedback) const;
 
+    bool isZeroTextureBound(TextureType textureType) const;
+
     bool isExternal() const { return mState.isExternal(); }
 
     void getBooleanvImpl(GLenum pname, GLboolean *params) const;

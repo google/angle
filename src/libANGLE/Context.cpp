@@ -3222,6 +3222,12 @@ bool Context::isTransformFeedbackGenerated(TransformFeedbackID transformFeedback
     return mTransformFeedbackMap.contains(transformFeedback);
 }
 
+bool Context::isZeroTextureBound(TextureType textureType) const
+{
+    Texture *texture = mState.getTargetTexture(textureType);
+    return mZeroTextures[textureType].get() == texture;
+}
+
 void Context::detachTexture(TextureID texture)
 {
     // The State cannot unbind image observers itself, they are owned by the Context
