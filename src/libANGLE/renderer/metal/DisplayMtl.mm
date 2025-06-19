@@ -746,15 +746,7 @@ void DisplayMtl::ensureCapsInitialized() const
     // Metal-Feature-Set-Tables.pdf says that max supported point size is 511. We limit it to 64
     // for now. http://anglebug.com/42263403
 
-    // NOTE(kpiddington): This seems to be fixed in macOS Monterey
-    if (@available(macOS 12.0, *))
-    {
-        mNativeCaps.maxAliasedPointSize = 511;
-    }
-    else
-    {
-        mNativeCaps.maxAliasedPointSize = 64;
-    }
+    mNativeCaps.maxAliasedPointSize = 511;
     mNativeCaps.minAliasedLineWidth = 1.0f;
     mNativeCaps.maxAliasedLineWidth = 1.0f;
 
