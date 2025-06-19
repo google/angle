@@ -53,6 +53,31 @@ namespace rx
 
 namespace
 {
+// Given an image and rect region to copy in to a buffer, calculate the VKBufferImageCopy struct to
+// be using in VkCmd's.
+VkBufferImageCopy CalculateBufferImageCopyRegion(const size_t bufferOffset,
+                                                 const uint32_t rowPitch,
+                                                 const uint32_t slicePitch,
+                                                 const cl::Offset &origin,
+                                                 const cl::Extents &region,
+                                                 CLImageVk *imageVk)
+{
+    VkBufferImageCopy copyRegion{
+        .bufferOffset = bufferOffset,
+        .bufferRowLength =
+            rowPitch == 0 ? 0 : rowPitch / static_cast<uint32_t>(imageVk->getElementSize()),
+        .bufferImageHeight = rowPitch == 0 ? 0 : slicePitch / rowPitch,
+        .imageSubresource = imageVk->getSubresourceLayersForCopy(origin, region, imageVk->getType(),
+                                                                 ImageCopyWith::Buffer),
+        .imageOffset      = cl_vk::GetOffset(origin),
+        .imageExtent      = cl_vk::GetExtent(region)};
+    ASSERT((copyRegion.bufferRowLength == 0 && copyRegion.bufferImageHeight == 0) ||
+           (copyRegion.bufferRowLength >= region.width &&
+            copyRegion.bufferImageHeight >= region.height));
+
+    return copyRegion;
+}
+
 static constexpr size_t kTimeoutInMS            = 10000;
 static constexpr size_t kSleepInMS              = 500;
 static constexpr size_t kTimeoutCheckIterations = kTimeoutInMS / kSleepInMS;
@@ -621,14 +646,9 @@ angle::Result CLCommandQueueVk::copyImageToFromBuffer(CLImageVk &imageVk,
     }
     ANGLE_TRY(getCommandBuffer(resources, &commandBuffer));
 
-    VkBufferImageCopy copyRegion = {};
-    copyRegion.bufferOffset      = bufferOffset;
-    copyRegion.bufferRowLength   = 0;
-    copyRegion.bufferImageHeight = 0;
-    copyRegion.imageExtent       = cl_vk::GetExtent(region);
-    copyRegion.imageOffset       = cl_vk::GetOffset(origin);
-    copyRegion.imageSubresource  = imageVk.getSubresourceLayersForCopy(
-        origin, region, imageVk.getType(), ImageCopyWith::Buffer);
+    VkBufferImageCopy copyRegion =
+        CalculateBufferImageCopyRegion(bufferOffset, 0, 0, origin, region, &imageVk);
+
     if (imageVk.isWritable())
     {
         // We need an execution barrier if image can be written to by kernel
