@@ -279,9 +279,9 @@ static const char *GetOperatorString(TOperator op,
         case TOperator::EOpInitialize:
             return "=";
         case TOperator::EOpAddAssign:
-            return resultType.isSignedInt() ? "ANGLE_addAssignInt" : "+=";
+            return "+=";
         case TOperator::EOpSubAssign:
-            return resultType.isSignedInt() ? "ANGLE_subAssignInt" : "-=";
+            return "-=";
         case TOperator::EOpMulAssign:
             return "*=";
         case TOperator::EOpDivAssign:
@@ -299,9 +299,9 @@ static const char *GetOperatorString(TOperator op,
         case TOperator::EOpBitwiseOrAssign:
             return "|=";
         case TOperator::EOpAdd:
-            return resultType.isSignedInt() ? "ANGLE_addInt" : "+";
+            return "+";
         case TOperator::EOpSub:
-            return resultType.isSignedInt() ? "ANGLE_subInt" : "-";
+            return "-";
         case TOperator::EOpMul:
             return "*";
         case TOperator::EOpDiv:
@@ -356,13 +356,13 @@ static const char *GetOperatorString(TOperator op,
         case TOperator::EOpBitwiseNot:
             return "~";
         case TOperator::EOpPostIncrement:
-            return resultType.isSignedInt() ? "ANGLE_postIncrementInt" : "++";
+            return "++";
         case TOperator::EOpPostDecrement:
-            return resultType.isSignedInt() ? "ANGLE_postDecrementInt" : "--";
+            return "--";
         case TOperator::EOpPreIncrement:
-            return resultType.isSignedInt() ? "ANGLE_preIncrementInt" : "++";
+            return "++";
         case TOperator::EOpPreDecrement:
-            return resultType.isSignedInt() ? "ANGLE_preDecrementInt" : "--";
+            return "--";
         case TOperator::EOpVectorTimesScalarAssign:
             return "*=";
         case TOperator::EOpVectorTimesMatrixAssign:
