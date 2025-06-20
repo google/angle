@@ -4137,8 +4137,9 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
     }
 
     // Fixed rate compression
-    VkImageCompressionControlEXT *compressionInfo   = nullptr;
-    VkImageCompressionControlEXT compressionInfoVar = {};
+    VkImageCompressionControlEXT *compressionInfo        = nullptr;
+    VkImageCompressionControlEXT compressionInfoVar      = {};
+    VkImageCompressionFixedRateFlagsEXT compressionRates = VK_IMAGE_COMPRESSION_FIXED_RATE_NONE_EXT;
     if (renderer->getFeatures().supportsImageCompressionControl.enabled && mOwnsImage &&
         mState.getSurfaceCompressionFixedRate() != GL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT)
     {
@@ -4154,8 +4155,6 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
         if (!mImage->isYuvResolve() &&
             (GetFormatSupportedCompressionRates(renderer, format, 0, nullptr) != 0))
         {
-            VkImageCompressionFixedRateFlagsEXT compressionRates =
-                VK_IMAGE_COMPRESSION_FIXED_RATE_NONE_EXT;
             GetCompressionFixedRate(&compressionInfoVar, &compressionRates,
                                     mState.getSurfaceCompressionFixedRate());
             compressionInfo = &compressionInfoVar;
