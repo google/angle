@@ -222,10 +222,6 @@ class Buffer final : public ThreadSafeRefCountObject<BufferID>,
     {
         mVertexArrayBufferBindingMaskAndContext.remove(context, bindingIndex);
     }
-    VertexArrayBufferBindingMask getVertexArrayBinding(const gl::Context *context) const
-    {
-        return mVertexArrayBufferBindingMaskAndContext.getBufferBindingMask(context);
-    }
 
     void addContentsObserver(VertexArray *vertexArray, uint32_t bufferIndex);
     void removeContentsObserver(VertexArray *vertexArray, uint32_t bufferIndex);
