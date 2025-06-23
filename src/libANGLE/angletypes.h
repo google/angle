@@ -538,10 +538,8 @@ struct PixelPackState : PixelStoreStateBase
     bool reverseRowOrder = false;
 };
 
-// Used in VertexArray. For ease of tracking, we add vertex array element buffer to the end of
-// vertex array buffer bindings.
-constexpr uint32_t kElementArrayBufferIndex = MAX_VERTEX_ATTRIB_BINDINGS;
-using VertexArrayBufferBindingMask          = angle::BitSet<kElementArrayBufferIndex + 1>;
+// Used in VertexArray.
+using VertexArrayBufferBindingMask = angle::BitSet<MAX_VERTEX_ATTRIB_BINDINGS>;
 
 // Used in Program and VertexArray.
 using AttributesMask = angle::BitSet<MAX_VERTEX_ATTRIBS>;
