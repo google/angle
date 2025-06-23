@@ -2353,6 +2353,10 @@ void Program::postResolveLink(const Context *context)
     mState.mExecutable->initInterfaceBlockBindings();
     mState.mExecutable->setUniformValuesFromBindingQualifiers();
 
+    // Update active uniform and storage buffer block indices mask
+    mState.mExecutable->updateActiveUniformBufferBlocks();
+    mState.mExecutable->updateActiveStorageBufferBlocks();
+
     if (context->getExtensions().multiDrawANGLE)
     {
         mState.mExecutable->mPod.drawIDLocation =

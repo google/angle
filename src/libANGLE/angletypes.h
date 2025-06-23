@@ -545,7 +545,12 @@ using VertexArrayBufferBindingMask = angle::BitSet<MAX_VERTEX_ATTRIB_BINDINGS>;
 using AttributesMask = angle::BitSet<MAX_VERTEX_ATTRIBS>;
 
 // Used in Program
-using ProgramUniformBlockMask = angle::BitSet<IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS>;
+static_assert(IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS >
+                  IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS,
+              "maxCombinedShaderStorageBlocks must be greater than maxCombinedUniformBlocks");
+using ProgramBufferBlockMask  = angle::BitSet<IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS>;
+using ProgramUniformBlockMask = ProgramBufferBlockMask;
+using ProgramStorageBlockMask = ProgramBufferBlockMask;
 template <typename T>
 using ProgramUniformBlockArray = std::array<T, IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS>;
 template <typename T>

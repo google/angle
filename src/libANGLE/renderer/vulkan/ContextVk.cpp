@@ -2896,7 +2896,8 @@ void ContextVk::updateUniformBufferBlocksOffset()
     ASSERT(executableVk);
     ASSERT(executableVk->usesDynamicUniformBufferDescriptors());
 
-    gl::ProgramUniformBlockMask dirtyBlocks = mState.getAndResetDirtyUniformBlocks();
+    gl::ProgramUniformBlockMask dirtyBlocks =
+        mState.getAndResetDirtyUniformBlocks() & executable->getActiveUniformBufferBlocks();
     for (size_t blockIndex : dirtyBlocks)
     {
         const GLuint binding = executable->getUniformBlockBinding(blockIndex);
@@ -2922,8 +2923,9 @@ angle::Result ContextVk::handleDirtyUniformBuffersImpl(CommandBufferT *commandBu
     const VkPhysicalDeviceLimits &limits = mRenderer->getPhysicalDeviceProperties().limits;
     ProgramExecutableVk *executableVk    = vk::GetImpl(executable);
 
-    gl::ProgramUniformBlockMask dirtyBits = mState.getAndResetDirtyUniformBlocks();
-    for (size_t blockIndex : dirtyBits)
+    gl::ProgramUniformBlockMask dirtyBlocks =
+        mState.getAndResetDirtyUniformBlocks() & executable->getActiveUniformBufferBlocks();
+    for (size_t blockIndex : dirtyBlocks)
     {
         const GLuint binding = executable->getUniformBlockBinding(blockIndex);
         mShaderBuffersDescriptorDesc.updateOneShaderBuffer(

@@ -6530,11 +6530,6 @@ void DescriptorSetDescBuilder::updateOneShaderBuffer(
 {
     uint32_t infoDescIndex =
         writeDescriptorDescs.getDescriptorDescIndexForBufferBlockIndex(descriptorType, blockIndex);
-    if (infoDescIndex == kInvalidDescriptorDescIndex)
-    {
-        return;
-    }
-
     ASSERT(infoDescIndex != kInvalidDescriptorDescIndex && infoDescIndex < mDesc.size());
 
     if (bufferBinding.get() == nullptr)
@@ -6629,8 +6624,12 @@ void DescriptorSetDescBuilder::updateShaderBuffers(Context *context,
 {
     const bool isUniformBuffer = IsUniformBuffer(descriptorType);
 
+    gl::ProgramBufferBlockMask dirtyBlocks = isUniformBuffer
+                                                 ? executable.getActiveUniformBufferBlocks()
+                                                 : executable.getActiveStorageBufferBlocks();
+
     // Now that we have the proper array elements counts, initialize the info structures.
-    for (uint32_t blockIndex = 0; blockIndex < blocks.size(); ++blockIndex)
+    for (size_t blockIndex : dirtyBlocks)
     {
         const GLuint binding = isUniformBuffer
                                    ? executable.getUniformBlockBinding(blockIndex)
@@ -6723,11 +6722,6 @@ void DescriptorSetDescBuilder::updateOneShaderBufferOffset(
 {
     uint32_t infoDescIndex =
         writeDescriptorDescs.getDescriptorDescIndexForBufferBlockIndex(descriptorType, blockIndex);
-    if (infoDescIndex == kInvalidDescriptorDescIndex)
-    {
-        return;
-    }
-
     ASSERT(infoDescIndex != kInvalidDescriptorDescIndex && infoDescIndex < mDesc.size());
     ASSERT(bufferBinding.get() != nullptr);
 

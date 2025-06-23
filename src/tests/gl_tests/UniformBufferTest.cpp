@@ -1239,7 +1239,7 @@ void main()
 
     // Draw with uniform buffer range = [0, size / 2)
     glBindBufferRange(GL_UNIFORM_BUFFER, 0, ubo, 0, kVec4Size);
-    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f);
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.5f, 1.0f);
     EXPECT_GL_NO_ERROR();
 
     // Update last-half of the buffer with Greenish yellow
@@ -1251,7 +1251,7 @@ void main()
 
     // Draw with uniform buffer range = [size / 2, size)
     glBindBufferRange(GL_UNIFORM_BUFFER, 0, ubo, alignment, kVec4Size);
-    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f);
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.5f, 1.0f);
     EXPECT_GL_NO_ERROR();
 
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
@@ -1340,13 +1340,13 @@ void main()
     // Draw with ubo0 with buffer range = [0, size / 2) and uboA
     glBindBufferRange(GL_UNIFORM_BUFFER, 0, ubo0, 0, kVec4Size);
     glBindBufferRange(GL_UNIFORM_BUFFER, 1, uboA, 0, kVec4Size);
-    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f);
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.5f, 1.0f);
     EXPECT_GL_NO_ERROR();
 
     // Draw with ubo0 with buffer range = [size / 2, size) and uboB
     glBindBufferRange(GL_UNIFORM_BUFFER, 0, ubo0, alignment, kVec4Size);
     glBindBufferRange(GL_UNIFORM_BUFFER, 1, uboB, 0, kVec4Size);
-    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f, 1.0f);
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.5f, 1.0f);
     EXPECT_GL_NO_ERROR();
 
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
@@ -1420,10 +1420,6 @@ void main()
     // Setup program for draw
     ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
     glUseProgram(program);
-    const GLint positionLoc = glGetAttribLocation(program, essl3_shaders::PositionAttrib());
-    setupQuadVertexBuffer(0.5f, 1.0f);
-    glEnableVertexAttribArray(positionLoc);
-    glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
     // Enable blending
     glEnable(GL_BLEND);
@@ -1436,12 +1432,13 @@ void main()
     glUseProgram(program);
     glBindBufferRange(GL_SHADER_STORAGE_BUFFER, 0, ssbo, 0, kBytesPerComponent);
     glBindBufferRange(GL_UNIFORM_BUFFER, 0, ubo, 0, kVec4Size);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.5f, 1.0f);
+    EXPECT_GL_NO_ERROR();
 
     // Draw with ssbo and ubo range = [size / 2, size)
     glBindBufferRange(GL_SHADER_STORAGE_BUFFER, 0, ssbo, ssboAlignment, kBytesPerComponent);
     glBindBufferRange(GL_UNIFORM_BUFFER, 0, ubo, uboAlignment, kVec4Size);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.5f, 1.0f);
     EXPECT_GL_NO_ERROR();
 
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
@@ -1506,10 +1503,6 @@ void main()
     // Setup program for draw
     ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
     glUseProgram(program);
-    const GLint positionLoc = glGetAttribLocation(program, essl3_shaders::PositionAttrib());
-    setupQuadVertexBuffer(0.5f, 1.0f);
-    glEnableVertexAttribArray(positionLoc);
-    glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
 
     // Enable blending
     glEnable(GL_BLEND);
@@ -1522,15 +1515,116 @@ void main()
     glUseProgram(program);
     glBindBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0, acb, 0, kBytesPerComponent);
     glBindBufferRange(GL_UNIFORM_BUFFER, 0, ubo, 0, kVec4Size);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.5f, 1.0f);
+    EXPECT_GL_NO_ERROR();
 
     // Draw with acb and ubo range = [size / 2, size)
     glBindBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0, acb, kBytesPerComponent, kBytesPerComponent);
     glBindBufferRange(GL_UNIFORM_BUFFER, 0, ubo, alignment, kVec4Size);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.5f, 1.0f);
     EXPECT_GL_NO_ERROR();
 
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
+}
+
+// Test that buffer range changes to both UBO and storage image works.
+TEST_P(UniformBufferTest31, UniformBufferBindingRangeChangeWithStorageImage)
+{
+    constexpr char kFS[] = R"(#version 310 es
+precision highp float;
+layout(rgba8, binding = 0) uniform highp writeonly image2D img;
+uniform uni { vec4 color; };
+out vec4 colorOut;
+void main()
+{
+    colorOut = color;
+    imageStore(img, ivec2(gl_FragCoord.xy), color);
+})";
+
+    // Setup UBO
+    constexpr GLsizei kVec4Size = 4 * sizeof(float);
+    GLint alignment;
+    glGetIntegerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, &alignment);
+    if (alignment < kVec4Size)
+    {
+        alignment = kVec4Size;
+    }
+    ASSERT_EQ(alignment % 4, 0);
+
+    // Put two colors in the uniform buffer, the sum of which is yellow.
+    // Note: |alignment| is in bytes, so we can place each uniform in |alignment/4| floats.
+    std::vector<float> colors(alignment / 2, 0);
+    // Set first-half of buffer to red color
+    colors[0] = 1.0;
+    colors[1] = 0.0;
+    colors[2] = 0.0;
+    colors[3] = 1.0;
+    // Set last-half of the buffer to green color
+    colors[alignment / 4 + 0] = 0.0;
+    colors[alignment / 4 + 1] = 1.0;
+    colors[alignment / 4 + 2] = 0.0;
+    colors[alignment / 4 + 3] = 1.0;
+
+    GLBuffer ubo;
+    glBindBuffer(GL_UNIFORM_BUFFER, ubo);
+    glBufferData(GL_UNIFORM_BUFFER, alignment * 2, colors.data(), GL_STATIC_DRAW);
+
+    // Setup storage images
+    static constexpr int kTextureSize = 1;
+    GLTexture imageA;
+    glBindTexture(GL_TEXTURE_2D, imageA);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kTextureSize, kTextureSize);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kTextureSize, kTextureSize, GL_RGBA, GL_UNSIGNED_BYTE,
+                    GLColor::transparentBlack.data());
+
+    GLTexture imageB;
+    glBindTexture(GL_TEXTURE_2D, imageB);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kTextureSize, kTextureSize);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kTextureSize, kTextureSize, GL_RGBA, GL_UNSIGNED_BYTE,
+                    GLColor::transparentBlack.data());
+
+    // Setup program for draw
+    ANGLE_GL_PROGRAM(program, essl31_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+
+    // Enable blending
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Draw with imageA and ubo range = [0, size / 2)
+    glBindImageTexture(0, imageA, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA8);
+    glBindBufferRange(GL_UNIFORM_BUFFER, 0, ubo, 0, kVec4Size);
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.5f, 1.0f);
+    EXPECT_GL_NO_ERROR();
+
+    // Draw with imageB and ubo range = [size / 2, size)
+    glBindImageTexture(0, imageB, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA8);
+    glBindBufferRange(GL_UNIFORM_BUFFER, 0, ubo, alignment, kVec4Size);
+    drawQuad(program, essl31_shaders::PositionAttrib(), 0.5f, 1.0f);
+    EXPECT_GL_NO_ERROR();
+    glFinish();
+
+    // Verify framebuffer content
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
+
+    // Verify storage image content
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    glBindTexture(GL_TEXTURE_2D, imageA);
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, imageA, 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_READ_FRAMEBUFFER);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    glBindTexture(GL_TEXTURE_2D, imageB);
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, imageB, 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_READ_FRAMEBUFFER);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
 // Test with a block containing an array of structs.
