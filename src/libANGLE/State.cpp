@@ -3969,7 +3969,7 @@ angle::Result State::syncProgramPipelineObject(const Context *context, Command c
     return angle::Result::Continue;
 }
 
-angle::Result State::syncDirtyObject(const Context *context, GLenum target)
+angle::Result State::syncDirtyObject(const Context *context, GLenum target, Command command)
 {
     state::DirtyObjects localSet;
 
@@ -3994,7 +3994,7 @@ angle::Result State::syncDirtyObject(const Context *context, GLenum target)
             break;
     }
 
-    return syncDirtyObjects(context, localSet, Command::Other);
+    return syncDirtyObjects(context, localSet, command);
 }
 
 void State::setObjectDirty(GLenum target)

@@ -108,6 +108,7 @@ enum class Command
     Invalidate,
     ReadPixels,
     TexImage,
+    GetMultisample,
     Other,
 };
 
@@ -116,6 +117,8 @@ enum CommandBlitBuffer
     CommandBlitBufferColor   = 0x1,
     CommandBlitBufferDepth   = 0x2,
     CommandBlitBufferStencil = 0x4,
+
+    CommandBlitBufferDepthStencil = CommandBlitBufferDepth | CommandBlitBufferStencil,
 };
 
 enum class InitState
