@@ -119,9 +119,7 @@ class VertexArrayState final : angle::NonCopyable
     AttributesMask mCachedInvalidMappedArrayBuffer;
 };
 
-class VertexArray final : public angle::ObserverInterface,
-                          public LabeledObject,
-                          public angle::Subject
+class VertexArray final : public LabeledObject, public angle::Subject
 {
   public:
     // Dirty bits for VertexArrays use a hierarchical design. At the top level, each attribute
@@ -293,12 +291,6 @@ class VertexArray final : public angle::ObserverInterface,
 
     bool isBufferAccessValidationEnabled() const { return mBufferAccessValidationEnabled; }
 
-    // Observer implementation
-    void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
-    void onBufferContentsChange(uint32_t bufferIndex);
-
-    static size_t GetVertexIndexFromDirtyBit(size_t dirtyBit);
-
     angle::Result syncState(const Context *context);
     bool hasAnyDirtyBit() const { return mDirtyBits.any(); }
 
@@ -336,8 +328,6 @@ class VertexArray final : public angle::ObserverInterface,
     void setDirtyBindingBit(size_t bindingIndex, DirtyBindingBitType dirtyBindingBit);
     void clearDirtyAttribBit(size_t attribIndex, DirtyAttribBitType dirtyAttribBit);
 
-    DirtyBitType getDirtyBitFromIndex(bool contentsChanged, angle::SubjectIndex index) const;
-    void setDependentDirtyBit(bool contentsChanged, angle::SubjectIndex index);
     void setDependentDirtyBits(bool contentsChanged,
                                VertexArrayBufferBindingMask bufferBindingMask);
 
