@@ -2225,7 +2225,7 @@ void GL_APIENTRY GL_GetProgramBinary(GLuint program,
 void GL_APIENTRY GL_GetQueryObjectuiv(GLuint id, GLenum pname, GLuint *params)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
-    Context *context = GetValidGlobalContext();
+    Context *context = GetGlobalContext();
     EVENT(context, GLGetQueryObjectuiv,
           "context = %d, id = %u, pname = %s, params = 0x%016" PRIxPTR "", CID(context), id,
           GLenumToString(GLESEnum::QueryObjectParameterName, pname), (uintptr_t)params);
@@ -2261,7 +2261,6 @@ void GL_APIENTRY GL_GetQueryObjectuiv(GLuint id, GLenum pname, GLuint *params)
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLGetQueryObjectuiv);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }

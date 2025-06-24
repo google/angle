@@ -201,6 +201,11 @@ angle::Result GetQueryObjectParameter(const Context *context, Query *query, GLen
                 break;
             case GL_QUERY_RESULT_AVAILABLE_EXT:
                 *params = GL_FALSE;
+                if (context->isContextLost())
+                {
+                    context->contextLostErrorOnBlockingCall(angle::EntryPoint::GLGetQueryObjectuiv);
+                    *params = GL_TRUE;
+                }
                 break;
             default:
                 UNREACHABLE();

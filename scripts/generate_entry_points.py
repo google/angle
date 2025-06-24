@@ -1898,6 +1898,7 @@ def is_context_lost_acceptable_cmd(cmd_name):
         "glGetError",
         "glGetSync",
         "glGetQueryObjecti",
+        "glGetQueryObjectui",
         "glGetProgramiv",
         "glGetGraphicsResetStatus",
         "glGetShaderiv",

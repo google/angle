@@ -3846,7 +3846,7 @@ void GL_APIENTRY GL_GetQueryObjectuivRobustANGLE(GLuint id,
                                                  GLuint *params)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
-    Context *context = GetValidGlobalContext();
+    Context *context = GetGlobalContext();
     EVENT(context, GLGetQueryObjectuivRobustANGLE,
           "context = %d, id = %u, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
           ", params = 0x%016" PRIxPTR "",
@@ -3886,8 +3886,6 @@ void GL_APIENTRY GL_GetQueryObjectuivRobustANGLE(GLuint id,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext(
-            angle::EntryPoint::GLGetQueryObjectuivRobustANGLE);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -5765,7 +5763,7 @@ void GL_APIENTRY GL_GetQueryObjectui64vRobustANGLE(GLuint id,
                                                    GLuint64 *params)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
-    Context *context = GetValidGlobalContext();
+    Context *context = GetGlobalContext();
     EVENT(context, GLGetQueryObjectui64vRobustANGLE,
           "context = %d, id = %u, pname = %s, bufSize = %d, length = 0x%016" PRIxPTR
           ", params = 0x%016" PRIxPTR "",
@@ -5806,8 +5804,6 @@ void GL_APIENTRY GL_GetQueryObjectui64vRobustANGLE(GLuint id,
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext(
-            angle::EntryPoint::GLGetQueryObjectui64vRobustANGLE);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -8604,7 +8600,7 @@ void GL_APIENTRY GL_GetQueryObjectivEXT(GLuint id, GLenum pname, GLint *params)
 void GL_APIENTRY GL_GetQueryObjectui64vEXT(GLuint id, GLenum pname, GLuint64 *params)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
-    Context *context = GetValidGlobalContext();
+    Context *context = GetGlobalContext();
     EVENT(context, GLGetQueryObjectui64vEXT,
           "context = %d, id = %u, pname = %s, params = 0x%016" PRIxPTR "", CID(context), id,
           GLenumToString(GLESEnum::QueryObjectParameterName, pname), (uintptr_t)params);
@@ -8640,7 +8636,6 @@ void GL_APIENTRY GL_GetQueryObjectui64vEXT(GLuint id, GLenum pname, GLuint64 *pa
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLGetQueryObjectui64vEXT);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
@@ -8648,7 +8643,7 @@ void GL_APIENTRY GL_GetQueryObjectui64vEXT(GLuint id, GLenum pname, GLuint64 *pa
 void GL_APIENTRY GL_GetQueryObjectuivEXT(GLuint id, GLenum pname, GLuint *params)
 {
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
-    Context *context = GetValidGlobalContext();
+    Context *context = GetGlobalContext();
     EVENT(context, GLGetQueryObjectuivEXT,
           "context = %d, id = %u, pname = %s, params = 0x%016" PRIxPTR "", CID(context), id,
           GLenumToString(GLESEnum::QueryObjectParameterName, pname), (uintptr_t)params);
@@ -8685,7 +8680,6 @@ void GL_APIENTRY GL_GetQueryObjectuivEXT(GLuint id, GLenum pname, GLuint *params
     }
     else
     {
-        GenerateContextLostErrorOnCurrentGlobalContext(angle::EntryPoint::GLGetQueryObjectuivEXT);
     }
     ASSERT(!egl::Display::GetCurrentThreadUnlockedTailCall()->any());
 }
