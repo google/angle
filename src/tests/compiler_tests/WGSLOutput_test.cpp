@@ -202,6 +202,101 @@ fn wgslMain() -> ANGLE_Output_Annotated
     EXPECT_TRUE(foundInCode(outputString.c_str()));
 }
 
+TEST_F(WGSLOutputTest, MultiElementSwizzle)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision highp float;
+
+        in vec3 inVec;
+        out vec4 outColor;
+
+        void main()
+        {
+          outColor = vec4(0.0, 0.0, 0.0, 0.0);
+
+          // Unimplemented or buggy:
+          // outColor.xy += 0.25;
+          // (outColor.xy + 0.25, outColor.yz) += 0.25;
+
+          outColor.zx = vec2(1.0, 1.0);
+
+          outColor.zx = inVec.xz;
+
+          outColor.xy *= mat2(1.0, 0.0, 0.0, 1.0);
+        })";
+    const std::string &outputString =
+        R"(struct ANGLE_Input_Global {
+  inVec : vec3<f32>,
+};
+
+var<private> ANGLE_input_global : ANGLE_Input_Global;
+
+struct ANGLE_Input_Annotated {
+  @location(@@@@@@) inVec : vec3<f32>,
+};
+
+struct ANGLE_Output_Global {
+  outColor : vec4<f32>,
+};
+
+var<private> ANGLE_output_global : ANGLE_Output_Global;
+
+struct ANGLE_Output_Annotated {
+  @location(@@@@@@) outColor : vec4<f32>,
+};
+
+@group(2) @binding(0) var<uniform> ANGLEUniforms : ANGLEUniformBlock;
+
+struct ANGLEDepthRangeParams
+{
+  near : f32,
+  far : f32,
+  diff : f32,
+};
+
+;
+;
+
+struct ANGLEUniformBlock
+{
+  @align(16) acbBufferOffsets : vec2<u32>,
+  depthRange : vec2<f32>,
+  renderArea : u32,
+  flipXY : u32,
+  dither : u32,
+  misc : u32,
+};
+
+;
+
+fn _umain()
+{
+  (ANGLE_output_global.outColor) = (vec4<f32>(0.0f, 0.0f, 0.0f, 0.0f));
+  var sbbc : vec2<f32> = (vec2<f32>(1.0f, 1.0f));
+  ((ANGLE_output_global.outColor).z) = ((sbbc).x);
+  ((ANGLE_output_global.outColor).x) = ((sbbc).y);
+  var sbbd : vec2<f32> = ((ANGLE_input_global.inVec).xz);
+  ((ANGLE_output_global.outColor).z) = ((sbbd).x);
+  ((ANGLE_output_global.outColor).x) = ((sbbd).y);
+  var sbbe : mat2x2<f32> = (mat2x2<f32>(1.0f, 0.0f, 0.0f, 1.0f));
+  ((ANGLE_output_global.outColor).x) = ((((ANGLE_output_global.outColor).xy) * (sbbe)).x);
+  ((ANGLE_output_global.outColor).y) = ((((ANGLE_output_global.outColor).xy) * (sbbe)).y);
+}
+@fragment
+fn wgslMain(ANGLE_input_annotated : ANGLE_Input_Annotated) -> ANGLE_Output_Annotated
+{
+  ANGLE_input_global.inVec = ANGLE_input_annotated.inVec;
+  _umain();
+  var ANGLE_output_annotated : ANGLE_Output_Annotated;
+  ANGLE_output_annotated.outColor = ANGLE_output_global.outColor;
+  return ANGLE_output_annotated;
+}
+)";
+    compile(shaderString);
+    EXPECT_TRUE(foundInCode(outputString.c_str()));
+}
+
 TEST_F(WGSLOutputTest, ControlFlow)
 {
     const std::string &shaderString =
