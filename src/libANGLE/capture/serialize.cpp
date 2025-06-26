@@ -291,6 +291,9 @@ Result SerializeFramebufferAttachment(const gl::Context *context,
     json->addScalar("ViewIndex", framebufferAttachment.getBaseViewIndex());
     json->addScalar("Samples", framebufferAttachment.getRenderToTextureSamples());
 
+    // Need to resolve the size before getting it below.
+    ANGLE_TRY(framebufferAttachment.ensureSizeResolved(context));
+
     {
         GroupScope extentsGroup(json, "Extents");
         SerializeExtents(json, framebufferAttachment.getSize());

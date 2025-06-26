@@ -4790,7 +4790,7 @@ egl::Error QuerySurfaceAttrib(const Display *display,
             *value = surface->getConfig()->configID;
             break;
         case EGL_HEIGHT:
-            ANGLE_TRY(surface->getUserHeight(display, value));
+            ANGLE_TRY(surface->getUserSize(display, nullptr, value));
             break;
         case EGL_HORIZONTAL_RESOLUTION:
             *value = surface->getHorizontalResolution();
@@ -4853,7 +4853,7 @@ egl::Error QuerySurfaceAttrib(const Display *display,
             *value = surface->getVerticalResolution();
             break;
         case EGL_WIDTH:
-            ANGLE_TRY(surface->getUserWidth(display, value));
+            ANGLE_TRY(surface->getUserSize(display, value, nullptr));
             break;
         case EGL_POST_SUB_BUFFER_SUPPORTED_NV:
             *value = surface->isPostSubBufferSupported();

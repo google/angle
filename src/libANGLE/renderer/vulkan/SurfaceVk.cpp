@@ -3132,33 +3132,48 @@ void WindowSurfaceVk::setSizeState(SurfaceSizeState sizeState)
     SetSizeState(&mSizeState, sizeState);
 }
 
-egl::Error WindowSurfaceVk::getUserWidth(const egl::Display *display, EGLint *value) const
+angle::Result WindowSurfaceVk::ensureSizeResolved(const gl::Context *context)
 {
     if (getSizeState() == SurfaceSizeState::Resolved)
     {
-        std::lock_guard<angle::SimpleMutex> lock(mSizeMutex);
-        // Surface size is resolved; use current size.
-        *value = getWidth();
-        return egl::NoError();
+        return angle::Result::Continue;
     }
+    ASSERT(mAcquireOperation.state == ImageAcquireState::Unacquired);
 
-    VkExtent2D extent;
-    angle::Result result = getUserExtentsImpl(vk::GetImpl(display), &extent);
-    if (result == angle::Result::Continue)
-    {
-        // The EGL spec states that value is not written if there is an error
-        *value = static_cast<EGLint>(extent.width);
-    }
-    return angle::ToEGL(result, EGL_BAD_SURFACE);
+    ANGLE_TRY(doDeferredAcquireNextImage(vk::GetImpl(context)));
+
+    ASSERT(mSizeState == SurfaceSizeState::Resolved);
+    return angle::Result::Continue;
 }
 
-egl::Error WindowSurfaceVk::getUserHeight(const egl::Display *display, EGLint *value) const
+EGLint WindowSurfaceVk::getWidth() const
+{
+    ASSERT(mSizeState == SurfaceSizeState::Resolved);
+    return mWidth;
+}
+
+EGLint WindowSurfaceVk::getHeight() const
+{
+    ASSERT(mSizeState == SurfaceSizeState::Resolved);
+    return mHeight;
+}
+
+egl::Error WindowSurfaceVk::getUserSize(const egl::Display *display,
+                                        EGLint *width,
+                                        EGLint *height) const
 {
     if (getSizeState() == SurfaceSizeState::Resolved)
     {
         std::lock_guard<angle::SimpleMutex> lock(mSizeMutex);
         // Surface size is resolved; use current size.
-        *value = getHeight();
+        if (width != nullptr)
+        {
+            *width = getWidth();
+        }
+        if (height != nullptr)
+        {
+            *height = getHeight();
+        }
         return egl::NoError();
     }
 
@@ -3167,8 +3182,17 @@ egl::Error WindowSurfaceVk::getUserHeight(const egl::Display *display, EGLint *v
     if (result == angle::Result::Continue)
     {
         // The EGL spec states that value is not written if there is an error
-        *value = static_cast<EGLint>(extent.height);
+        if (width != nullptr)
+        {
+            *width = static_cast<EGLint>(extent.width);
+        }
+        if (height != nullptr)
+        {
+            *height = static_cast<EGLint>(extent.height);
+        }
+        return egl::NoError();
     }
+
     return angle::ToEGL(result, EGL_BAD_SURFACE);
 }
 

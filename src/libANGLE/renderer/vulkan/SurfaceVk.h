@@ -305,9 +305,13 @@ class WindowSurfaceVk : public SurfaceVk
     egl::Error getMscRate(EGLint *numerator, EGLint *denominator) override;
     void setSwapInterval(const egl::Display *display, EGLint interval) override;
 
-    // Sizes that Surface will have after render target is first accessed (e.g. after draw).
-    egl::Error getUserWidth(const egl::Display *display, EGLint *value) const final;
-    egl::Error getUserHeight(const egl::Display *display, EGLint *value) const final;
+    // Explicitly resolves surface size to use before state synchronization (e.g. validation).
+    angle::Result ensureSizeResolved(const gl::Context *context) final;
+    EGLint getWidth() const final;
+    EGLint getHeight() const final;
+
+    // Unresolved Surface size until render target is first accessed (e.g. after draw).
+    egl::Error getUserSize(const egl::Display *display, EGLint *width, EGLint *height) const final;
 
     EGLint isPostSubBufferSupported() const override;
     EGLint getSwapBehavior() const override;
@@ -479,7 +483,7 @@ class WindowSurfaceVk : public SurfaceVk
 
     // Atomic is to allow update state without necessarily locking the mSizeMutex.
     std::atomic<impl::SurfaceSizeState> mSizeState;
-    // Protects mWidth and mHeight against getUserWidth()/getUserHeight() calls.
+    // Protects mWidth and mHeight against getUserSize() call.
     mutable angle::SimpleMutex mSizeMutex;
 
     std::vector<vk::PresentMode> mPresentModes;

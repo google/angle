@@ -1047,6 +1047,15 @@ egl::Error Context::makeCurrent(egl::Display *display,
 {
     mDisplay = display;
 
+    EGLint width  = 0;
+    EGLint height = 0;
+
+    angle::FrameCaptureShared *frameCaptureShared = getShareGroup()->getFrameCaptureShared();
+    if ((frameCaptureShared->enabled() || !mHasBeenCurrent) && drawSurface != nullptr)
+    {
+        ANGLE_TRY(drawSurface->getUserSize(display, &width, &height));
+    }
+
     if (!mHasBeenCurrent)
     {
         initializeDefaultResources();
@@ -1054,14 +1063,6 @@ egl::Error Context::makeCurrent(egl::Display *display,
         initVendorString();
         initVersionStrings();
         initExtensionStrings();
-
-        int width  = 0;
-        int height = 0;
-        if (drawSurface != nullptr)
-        {
-            width  = drawSurface->getWidth();
-            height = drawSurface->getHeight();
-        }
 
         ContextPrivateViewport(getMutablePrivateState(), getMutablePrivateStateCache(), 0, 0, width,
                                height);
@@ -1073,7 +1074,7 @@ egl::Error Context::makeCurrent(egl::Display *display,
 
     ANGLE_TRY(unsetDefaultFramebuffer());
 
-    getShareGroup()->getFrameCaptureShared()->onMakeCurrent(this, drawSurface);
+    frameCaptureShared->onMakeCurrent(this, drawSurface, width, height);
 
     // TODO(jmadill): Rework this when we support ContextImpl
     mState.setAllDirtyBits();

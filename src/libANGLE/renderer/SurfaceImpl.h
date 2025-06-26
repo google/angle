@@ -79,12 +79,16 @@ class SurfaceImpl : public FramebufferAttachmentObjectImpl
     virtual void setFixedWidth(EGLint width);
     virtual void setFixedHeight(EGLint height);
 
+    // Explicitly resolves surface size to use before state synchronization (e.g. validation).
+    virtual angle::Result ensureSizeResolved(const gl::Context *context);
     // width and height can change with client window resizing
+    // Size must be resolved before the call either during state synchronization or explicitly.
     virtual EGLint getWidth() const  = 0;
     virtual EGLint getHeight() const = 0;
-    // Sizes that Surface will have after render target is first accessed (e.g. after draw).
-    virtual egl::Error getUserWidth(const egl::Display *display, EGLint *value) const;
-    virtual egl::Error getUserHeight(const egl::Display *display, EGLint *value) const;
+    // Unresolved Surface size until render target is first accessed (e.g. after draw).
+    virtual egl::Error getUserSize(const egl::Display *display,
+                                   EGLint *width,
+                                   EGLint *height) const;
 
     virtual EGLint isPostSubBufferSupported() const;
     virtual EGLint getSwapBehavior() const = 0;

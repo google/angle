@@ -749,7 +749,10 @@ class FrameCaptureShared final : angle::NonCopyable
     void onEndFrame(gl::Context *context);
     void onDestroyContext(const gl::Context *context);
     bool onEndCLCapture();
-    void onMakeCurrent(const gl::Context *context, const egl::Surface *drawSurface);
+    void onMakeCurrent(const gl::Context *context,
+                       const egl::Surface *drawSurface,
+                       EGLint surfaceWidth,
+                       EGLint surfaceHeight);
     bool enabled() const { return mEnabled; }
 
     bool isCapturing() const;

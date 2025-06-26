@@ -8405,7 +8405,10 @@ void FrameCaptureShared::onDestroyContext(const gl::Context *context)
     }
 }
 
-void FrameCaptureShared::onMakeCurrent(const gl::Context *context, const egl::Surface *drawSurface)
+void FrameCaptureShared::onMakeCurrent(const gl::Context *context,
+                                       const egl::Surface *drawSurface,
+                                       EGLint surfaceWidth,
+                                       EGLint surfaceHeight)
 {
     if (!drawSurface)
     {
@@ -8414,7 +8417,7 @@ void FrameCaptureShared::onMakeCurrent(const gl::Context *context, const egl::Su
 
     // Track the width, height and color space of the draw surface as provided to makeCurrent
     SurfaceParams &params = mDrawSurfaceParams[context->id()];
-    params.extents        = gl::Extents(drawSurface->getWidth(), drawSurface->getHeight(), 1);
+    params.extents        = gl::Extents(surfaceWidth, surfaceHeight, 1);
     params.colorSpace     = egl::FromEGLenum<egl::ColorSpace>(drawSurface->getGLColorspace());
 }
 

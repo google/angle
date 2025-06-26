@@ -543,29 +543,24 @@ EGLint Surface::getHeight() const
     return mFixedSize ? static_cast<EGLint>(mFixedHeight) : mImplementation->getHeight();
 }
 
-egl::Error Surface::getUserWidth(const egl::Display *display, EGLint *value) const
+egl::Error Surface::getUserSize(const egl::Display *display, EGLint *width, EGLint *height) const
 {
+    ASSERT(width != nullptr || height != nullptr);
     if (mFixedSize)
     {
-        *value = static_cast<EGLint>(mFixedWidth);
+        if (width != nullptr)
+        {
+            *width = static_cast<EGLint>(mFixedWidth);
+        }
+        if (height != nullptr)
+        {
+            *height = static_cast<EGLint>(mFixedHeight);
+        }
         return NoError();
     }
     else
     {
-        return mImplementation->getUserWidth(display, value);
-    }
-}
-
-egl::Error Surface::getUserHeight(const egl::Display *display, EGLint *value) const
-{
-    if (mFixedSize)
-    {
-        *value = static_cast<EGLint>(mFixedHeight);
-        return NoError();
-    }
-    else
-    {
-        return mImplementation->getUserHeight(display, value);
+        return mImplementation->getUserSize(display, width, height);
     }
 }
 
@@ -615,6 +610,11 @@ Error Surface::releaseTexImageFromTexture(const gl::Context *context)
     ASSERT(mTexture);
     mTexture = nullptr;
     return releaseRef(context->getDisplay());
+}
+
+angle::Result Surface::ensureSizeResolved(const gl::Context *context) const
+{
+    return mImplementation->ensureSizeResolved(context);
 }
 
 bool Surface::isAttachmentSpecified(const gl::ImageIndex & /*imageIndex*/) const
