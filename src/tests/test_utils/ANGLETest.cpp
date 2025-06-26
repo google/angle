@@ -205,6 +205,9 @@ GPUTestConfig::API GetTestConfigAPIFromRenderer(angle::GLESDriverType driverType
                                                 EGLenum deviceType)
 {
     if (driverType != angle::GLESDriverType::AngleEGL &&
+#if defined(ANGLE_TEST_ENABLE_SYSTEM_EGL)
+        driverType != angle::GLESDriverType::SystemEGL &&
+#endif
         driverType != angle::GLESDriverType::AngleVulkanSecondariesEGL)
     {
         return GPUTestConfig::kAPIUnknown;
