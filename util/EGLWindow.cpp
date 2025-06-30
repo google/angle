@@ -428,9 +428,10 @@ GLWindowResult EGLWindow::initializeSurface(OSWindow *osWindow,
 
     mSurface = eglCreateWindowSurface(mDisplay, mConfig, osWindow->getNativeWindow(),
                                       &surfaceAttributes[0]);
-    if (eglGetError() != EGL_SUCCESS || (mSurface == EGL_NO_SURFACE))
+    EGLint error = eglGetError();
+    if (error != EGL_SUCCESS || (mSurface == EGL_NO_SURFACE))
     {
-        fprintf(stderr, "eglCreateWindowSurface failed: 0x%X\n", eglGetError());
+        fprintf(stderr, "eglCreateWindowSurface failed: 0x%X\n", error);
         destroyGL();
         return GLWindowResult::Error;
     }
