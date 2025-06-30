@@ -503,10 +503,10 @@ bool ValidateFragmentShaderColorBufferTypeMatch(const Context *context)
     const ProgramExecutable *executable = context->getState().getLinkedProgramExecutable(context);
     const Framebuffer *framebuffer      = context->getState().getDrawFramebuffer();
 
-    return ValidateComponentTypeMasks(executable->getFragmentOutputsTypeMask().to_ulong(),
-                                      framebuffer->getDrawBufferTypeMask().to_ulong(),
-                                      executable->getActiveOutputVariablesMask().to_ulong(),
-                                      framebuffer->getDrawBufferMask().to_ulong());
+    return ValidateComponentTypeMasks(executable->getFragmentOutputsTypeMask().bits(),
+                                      framebuffer->getDrawBufferTypeMask().bits(),
+                                      executable->getActiveOutputVariablesMask().bits(),
+                                      framebuffer->getDrawBufferMask().bits());
 }
 
 bool ValidateVertexShaderAttributeTypeMatch(const Context *context)
@@ -520,17 +520,16 @@ bool ValidateVertexShaderAttributeTypeMatch(const Context *context)
         return false;
     }
 
-    unsigned long stateCurrentValuesTypeBits = glState.getCurrentValuesTypeMask().to_ulong();
-    unsigned long vaoAttribTypeBits          = vao->getAttributesTypeMask().to_ulong();
-    unsigned long vaoAttribEnabledMask       = vao->getAttributesMask().to_ulong();
+    uint64_t stateCurrentValuesTypeBits = glState.getCurrentValuesTypeMask().bits();
+    uint64_t vaoAttribTypeBits          = vao->getAttributesTypeMask().bits();
+    uint64_t vaoAttribEnabledMask       = vao->getAttributesMask().bits();
 
     vaoAttribEnabledMask |= vaoAttribEnabledMask << kMaxComponentTypeMaskIndex;
     vaoAttribTypeBits = (vaoAttribEnabledMask & vaoAttribTypeBits);
     vaoAttribTypeBits |= (~vaoAttribEnabledMask & stateCurrentValuesTypeBits);
 
-    return ValidateComponentTypeMasks(executable->getAttributesTypeMask().to_ulong(),
-                                      vaoAttribTypeBits, executable->getAttributesMask().to_ulong(),
-                                      0xFFFF);
+    return ValidateComponentTypeMasks(executable->getAttributesTypeMask().bits(), vaoAttribTypeBits,
+                                      executable->getAttributesMask().bits(), 0xFFFF);
 }
 
 bool IsCompatibleDrawModeWithGeometryShader(PrimitiveMode drawMode,

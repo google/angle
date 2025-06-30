@@ -1016,10 +1016,10 @@ ANGLE_INLINE DrawBufferMask GetComponentTypeMaskDiff(ComponentTypeMask mask1,
     return DrawBufferMask(static_cast<uint8_t>(diff | (diff >> gl::kMaxComponentTypeMaskIndex)));
 }
 
-bool ValidateComponentTypeMasks(unsigned long outputTypes,
-                                unsigned long inputTypes,
-                                unsigned long outputMask,
-                                unsigned long inputMask);
+bool ValidateComponentTypeMasks(uint64_t outputTypes,
+                                uint64_t inputTypes,
+                                uint64_t outputMask,
+                                uint64_t inputMask);
 
 // Helpers for performing WebGL 2.0 clear validation
 // Extracted component type has always one of these four values:
