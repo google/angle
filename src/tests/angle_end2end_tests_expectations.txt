@@ -188,6 +188,8 @@ b/273271471 WIN INTEL VULKAN : ShaderAlgorithmTest.rgb_to_hsl_vertex_shader/* = 
 373818282 WIN INTEL OPENGL : ClearTest.ChangeFramebufferAttachmentFromRGBAtoRGB/* = SKIP
 388144480 WIN INTEL VULKAN : OcclusionQueriesTest.WrongSkippedQuery/* = SKIP
 
+434453468 WIN INTEL VULKAN : LineLoopIndirectTest.TwoIndirectDrawsInDifferentIndirectBuffer/* = SKIP
+
 // Texture border clamp ES 3.2 test failures
 b/390710636 PIXEL4ORXL VULKAN : TextureBorderClampTestES32.CustomBorderColorWithStencil/* = SKIP
 b/390710636 LINUX NVIDIA VULKAN : TextureBorderClampTestES32.CustomBorderColorWithStencil/* = SKIP

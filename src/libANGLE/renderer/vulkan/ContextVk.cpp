@@ -1773,6 +1773,10 @@ angle::Result ContextVk::setupLineLoopIndirectDraw(const gl::Context *context,
     vk::BufferHelper *indexBufferHelperOut    = nullptr;
     vk::BufferHelper *indirectBufferHelperOut = nullptr;
 
+    // Reset the index buffer offset
+    mGraphicsDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
+    mCurrentIndexBufferOffset = 0;
+
     VertexArrayVk *vertexArrayVk = getVertexArray();
     ANGLE_TRY(vertexArrayVk->handleLineLoopIndirectDraw(context, indirectBuffer,
                                                         indirectBufferOffset, &indexBufferHelperOut,
