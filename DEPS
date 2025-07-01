@@ -53,7 +53,7 @@ vars = {
 
   # Current revision of googletest.
   # Note: this dep cannot be auto-rolled b/c of nesting.
-  'googletest_revision': '2d924d7a971e9667d76ad09727fb2402b4f8a1e3',
+  'googletest_revision': 'c67de117379f4d1c889c7581a0a76aa0979c2083',
 
   # Current revision of Chrome's third_party googletest directory. This
   # repository is mirrored as a separate repository, with separate git hashes
@@ -64,7 +64,7 @@ vars = {
   # https://chromium.googlesource.com/chromium/src/third_party/googletest/
   # Then get the new hash for googletest_revision from the root Chrome DEPS
   # file: https://source.chromium.org/chromium/chromium/src/+/main:DEPS
-  'chromium_googletest_revision': '17bbed2084d3127bd7bcd27283f18d7a5861bea8',
+  'chromium_googletest_revision': '0784ddbe926a700e2216b224109791f7fa19eb2f',
 
   # Current revision of jsoncpp.
   # Note: this dep cannot be auto-rolled b/c of nesting.
@@ -972,6 +972,11 @@ deps = {
 
   'third_party/rapidjson/src': {
     'url': Var('chromium_git') + '/external/github.com/Tencent/rapidjson@781a4e667d84aeedbeb8184b7b62425ea66ec59f',
+  },
+
+  'third_party/re2/src': {
+    'url': Var('chromium_git') + '/external/github.com/google/re2.git@8ea5841693c6c0b837c6ed2189217e8f8d6fee9c',
+    'condition': 'not build_with_chromium',
   },
 
   'third_party/requests/src': {
