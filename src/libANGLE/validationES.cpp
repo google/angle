@@ -4293,7 +4293,7 @@ const char *ValidateDrawStates(const Context *context, GLenum *outErrorCode)
         }
     }
 
-    if (ANGLE_UNLIKELY(context->getStateCache().hasAnyEnabledClientAttrib()))
+    if (ANGLE_UNLIKELY(context->hasAnyEnabledClientAttrib()))
     {
         if (extensions.webglCompatibilityANGLE || !state.areClientArraysEnabled())
         {
@@ -8847,10 +8847,8 @@ bool ValidateSampleMaskiBase(const PrivateState &state,
 void RecordDrawAttribsError(const Context *context, angle::EntryPoint entryPoint)
 {
     // An overflow can happen when adding the offset. Check against a special constant.
-    if (context->getStateCache().getNonInstancedVertexElementLimit() ==
-            VertexAttribute::kIntegerOverflow ||
-        context->getStateCache().getInstancedVertexElementLimit() ==
-            VertexAttribute::kIntegerOverflow)
+    if (context->getNonInstancedVertexElementLimit() == VertexAttribute::kIntegerOverflow ||
+        context->getInstancedVertexElementLimit() == VertexAttribute::kIntegerOverflow)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kIntegerOverflow);
     }

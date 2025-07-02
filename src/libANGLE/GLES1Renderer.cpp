@@ -161,9 +161,10 @@ angle::Result GLES1Renderer::prepareForDraw(PrimitiveMode mode,
     if (gles1State->isDirty(GLES1State::DIRTY_GLES1_TEXTURE_UNIT_ENABLE) &&
         needToUpdateVertexAttribArray)
     {
-        glState->setEnableVertexAttribArray(
+        context->getMutablePrivateState()->setEnableVertexAttribArray(
             TexCoordArrayIndex(clientActiveTexture),
             isTextureEnabled && gles1State->isTexCoordArrayEnabled(clientActiveTexture));
+
         context->getStateCache().onGLES1TextureStateChange(context);
     }
 
@@ -1230,12 +1231,14 @@ void GLES1Renderer::setAttributesEnabled(Context *context,
         if (mask.test(index))
         {
             gles1State->setClientStateEnabled(attrib, true);
-            context->enableVertexAttribArray(index);
+            ContextPrivateEnableVertexAttribArray(context->getMutablePrivateState(),
+                                                  context->getMutablePrivateStateCache(), index);
         }
         else
         {
             gles1State->setClientStateEnabled(attrib, false);
-            context->disableVertexAttribArray(index);
+            ContextPrivateDisableVertexAttribArray(context->getMutablePrivateState(),
+                                                   context->getMutablePrivateStateCache(), index);
         }
     }
 
@@ -1246,12 +1249,14 @@ void GLES1Renderer::setAttributesEnabled(Context *context,
         if (mask.test(index))
         {
             gles1State->setTexCoordArrayEnabled(i, true);
-            context->enableVertexAttribArray(index);
+            ContextPrivateEnableVertexAttribArray(context->getMutablePrivateState(),
+                                                  context->getMutablePrivateStateCache(), index);
         }
         else
         {
             gles1State->setTexCoordArrayEnabled(i, false);
-            context->disableVertexAttribArray(index);
+            ContextPrivateDisableVertexAttribArray(context->getMutablePrivateState(),
+                                                   context->getMutablePrivateStateCache(), index);
         }
     }
 }

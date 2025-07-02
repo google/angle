@@ -840,8 +840,8 @@ ANGLE_INLINE bool ValidateDrawAttribs(const Context *context,
     // For non-instanced attributes, the maximum vertex must be accessible in the attribute buffers.
     // For instanced attributes, in non-instanced draw calls only attribute 0 is accessed.  In
     // instanced draw calls, the instance limit is checked in ValidateDrawInstancedAttribs.
-    if (ANGLE_UNLIKELY(maxVertex >= context->getStateCache().getNonInstancedVertexElementLimit()) ||
-        ANGLE_UNLIKELY(context->getStateCache().getInstancedVertexElementLimit() < 1))
+    if (ANGLE_UNLIKELY(maxVertex >= context->getNonInstancedVertexElementLimit()) ||
+        ANGLE_UNLIKELY(context->getInstancedVertexElementLimit() < 1))
     {
         RecordDrawAttribsError(context, entryPoint);
         return false;
@@ -889,7 +889,7 @@ ANGLE_INLINE bool ValidateDrawInstancedAttribs(const Context *context,
     // Validate that the buffers bound for the attributes can hold enough vertices for this
     // instanced draw.  For attributes with a divisor of 0, ValidateDrawAttribs already checks this.
     // Thus, the following only checks attributes with a non-zero divisor (i.e. "instanced").
-    const GLint64 limit = context->getStateCache().getInstancedVertexElementLimit();
+    const GLint64 limit = context->getInstancedVertexElementLimit();
     if (baseinstance >= limit || primcount > limit - baseinstance)
     {
         RecordDrawAttribsError(context, entryPoint);
@@ -973,7 +973,14 @@ ANGLE_INLINE bool ValidateDrawElementsBase(const Context *context,
         return false;
     }
 
-    intptr_t drawElementsError = context->getStateCache().getBasicDrawElementsError(context);
+    intptr_t drawElementsError;
+    if (!context->getPrivateStateCache().isCachedBasicDrawElementsErrorValid())
+    {
+        context->getPrivateStateCache().updateBasicDrawElementsError(
+            reinterpret_cast<intptr_t>(ValidateDrawElementsStates(context)));
+    }
+    drawElementsError = context->getPrivateStateCache().getBasicDrawElementsError();
+
     if (ANGLE_UNLIKELY(drawElementsError))
     {
         // All errors from ValidateDrawElementsStates return INVALID_OPERATION.

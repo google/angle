@@ -185,12 +185,6 @@ ANGLE_INLINE void Context::drawElements(PrimitiveMode mode,
     ANGLE_CONTEXT_TRY(mImplementation->drawElements(this, mode, count, type, indices));
 }
 
-ANGLE_INLINE void StateCache::onBufferBindingChange(Context *context)
-{
-    updateBasicDrawStatesError();
-    updateBasicDrawElementsError();
-}
-
 ANGLE_INLINE void Context::bindBuffer(BufferBinding target, BufferID buffer)
 {
     Buffer *bufferObject =
@@ -203,7 +197,7 @@ ANGLE_INLINE void Context::bindBuffer(BufferBinding target, BufferID buffer)
     }
 
     mState.setBufferBinding(this, target, bufferObject);
-    mStateCache.onBufferBindingChange(this);
+    mPrivateStateCache.onBufferBindingChange();
 
     if (bufferObject && isWebGL())
     {
@@ -446,7 +440,7 @@ ANGLE_INLINE void Context::vertexAttribPointer(GLuint index,
                                   type, normalized != GL_FALSE, stride, ptr, &vertexAttribDirty);
     if (vertexAttribDirty)
     {
-        mStateCache.onVertexArrayStateChange(this);
+        mPrivateStateCache.onVertexArrayStateChange();
     }
 }
 

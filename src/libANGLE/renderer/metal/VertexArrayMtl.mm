@@ -509,7 +509,7 @@ angle::Result VertexArrayMtl::updateClientAttribs(const gl::Context *context,
                                                   const void *indices)
 {
     ContextMtl *contextMtl                  = mtl::GetImpl(context);
-    const gl::AttributesMask &clientAttribs = context->getStateCache().getActiveClientAttribsMask();
+    const gl::AttributesMask &clientAttribs = context->getActiveClientAttribsMask();
 
     ASSERT(clientAttribs.any());
 

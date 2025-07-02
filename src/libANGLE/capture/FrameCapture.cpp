@@ -6807,7 +6807,7 @@ void FrameCaptureShared::maybeCaptureDrawArraysClientData(const gl::Context *con
                                                           CallCapture &call,
                                                           size_t instanceCount)
 {
-    if (!context->getStateCache().hasAnyActiveClientAttrib())
+    if (!context->hasAnyActiveClientAttrib())
     {
         return;
     }
@@ -6823,7 +6823,7 @@ void FrameCaptureShared::maybeCaptureDrawElementsClientData(const gl::Context *c
                                                             CallCapture &call,
                                                             size_t instanceCount)
 {
-    if (!context->getStateCache().hasAnyActiveClientAttrib())
+    if (!context->hasAnyActiveClientAttrib())
     {
         return;
     }
@@ -7976,7 +7976,7 @@ void FrameCaptureShared::captureClientArraySnapshot(const gl::Context *context,
     const gl::VertexArray *vao = context->getState().getVertexArray();
 
     // Capture client array data.
-    for (size_t attribIndex : context->getStateCache().getActiveClientAttribsMask())
+    for (size_t attribIndex : context->getActiveClientAttribsMask())
     {
         const gl::VertexAttribute &attrib = vao->getVertexAttribute(attribIndex);
         const gl::VertexBinding &binding  = vao->getVertexBinding(attrib.bindingIndex);

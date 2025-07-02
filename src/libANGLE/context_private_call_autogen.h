@@ -75,9 +75,15 @@ void ContextPrivateDepthRangef(PrivateState *privateState,
 void ContextPrivateDisable(PrivateState *privateState,
                            PrivateStateCache *privateStateCache,
                            GLenum cap);
+void ContextPrivateDisableVertexAttribArray(PrivateState *privateState,
+                                            PrivateStateCache *privateStateCache,
+                                            GLuint index);
 void ContextPrivateEnable(PrivateState *privateState,
                           PrivateStateCache *privateStateCache,
                           GLenum cap);
+void ContextPrivateEnableVertexAttribArray(PrivateState *privateState,
+                                           PrivateStateCache *privateStateCache,
+                                           GLuint index);
 void ContextPrivateFrontFace(PrivateState *privateState,
                              PrivateStateCache *privateStateCache,
                              GLenum mode);

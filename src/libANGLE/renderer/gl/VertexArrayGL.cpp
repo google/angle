@@ -208,8 +208,7 @@ angle::Result VertexArrayGL::syncDrawState(const gl::Context *context,
 
     // Check if any attributes need to be streamed, determines if the index range needs to be
     // computed
-    gl::AttributesMask needsStreamingAttribs =
-        context->getStateCache().getActiveClientAttribsMask();
+    gl::AttributesMask needsStreamingAttribs = context->getActiveClientAttribsMask();
     if (nativegl::CanUseClientSideArrays(functions, mVertexArrayID))
     {
         needsStreamingAttribs.reset();

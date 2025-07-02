@@ -5370,7 +5370,7 @@ angle::Result ContextVk::invalidateProgramExecutableHelper(const gl::Context *co
         invalidateCurrentGraphicsPipeline();
         // No additional work is needed here. We will update the pipeline desc
         // later.
-        invalidateDefaultAttributes(context->getStateCache().getActiveDefaultAttribsMask());
+        invalidateDefaultAttributes(context->getActiveDefaultAttribsMask());
         invalidateVertexAndIndexBuffers();
         // If VK_EXT_vertex_input_dynamic_state is enabled then vkCmdSetVertexInputEXT must be
         // called in the current command buffer prior to the draw command, even if there are no
@@ -5789,7 +5789,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 break;
             case gl::state::DIRTY_BIT_VERTEX_ARRAY_BINDING:
             {
-                invalidateDefaultAttributes(context->getStateCache().getActiveDefaultAttribsMask());
+                invalidateDefaultAttributes(context->getActiveDefaultAttribsMask());
                 ANGLE_TRY(vertexArrayVk->updateActiveAttribInfo(this));
                 ANGLE_TRY(onIndexBufferChange(vertexArrayVk->getCurrentElementArrayBuffer()));
                 break;

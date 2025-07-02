@@ -1728,7 +1728,6 @@ void GL_APIENTRY GL_DisableVertexAttribArray(GLuint index)
 
     if (ANGLE_LIKELY(context != nullptr))
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
         {
@@ -1738,9 +1737,10 @@ void GL_APIENTRY GL_DisableVertexAttribArray(GLuint index)
                 const uint32_t errorCount = context->getPushedErrorCount();
 #endif
                 isCallValid = ValidateDisableVertexAttribArray(
-                    context, angle::EntryPoint::GLDisableVertexAttribArray, index);
+                    context->getPrivateState(), context->getMutableErrorSetForValidation(),
+                    angle::EntryPoint::GLDisableVertexAttribArray, index);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                ASSERT(isCallValid || context->getPushedErrorCount() != errorCount);
 #endif
             }
             else
@@ -1750,7 +1750,8 @@ void GL_APIENTRY GL_DisableVertexAttribArray(GLuint index)
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->disableVertexAttribArray(index);
+            ContextPrivateDisableVertexAttribArray(context->getMutablePrivateState(),
+                                                   context->getMutablePrivateStateCache(), index);
         }
         ANGLE_CAPTURE_GL(DisableVertexAttribArray, isCallValid, context, index);
     }
@@ -1891,7 +1892,6 @@ void GL_APIENTRY GL_EnableVertexAttribArray(GLuint index)
 
     if (ANGLE_LIKELY(context != nullptr))
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
         {
@@ -1901,9 +1901,10 @@ void GL_APIENTRY GL_EnableVertexAttribArray(GLuint index)
                 const uint32_t errorCount = context->getPushedErrorCount();
 #endif
                 isCallValid = ValidateEnableVertexAttribArray(
-                    context, angle::EntryPoint::GLEnableVertexAttribArray, index);
+                    context->getPrivateState(), context->getMutableErrorSetForValidation(),
+                    angle::EntryPoint::GLEnableVertexAttribArray, index);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                ASSERT(isCallValid || context->getPushedErrorCount() != errorCount);
 #endif
             }
             else
@@ -1913,7 +1914,8 @@ void GL_APIENTRY GL_EnableVertexAttribArray(GLuint index)
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->enableVertexAttribArray(index);
+            ContextPrivateEnableVertexAttribArray(context->getMutablePrivateState(),
+                                                  context->getMutablePrivateStateCache(), index);
         }
         ANGLE_CAPTURE_GL(EnableVertexAttribArray, isCallValid, context, index);
     }

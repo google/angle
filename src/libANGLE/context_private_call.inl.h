@@ -1513,4 +1513,33 @@ inline void ContextPrivateTranslatex(PrivateState *privateState,
     ContextPrivateTranslatef(privateState, privateStateCache, ConvertFixedToFloat(x),
                              ConvertFixedToFloat(y), ConvertFixedToFloat(z));
 }
+
+inline void ContextPrivateDisableVertexAttribArray(PrivateState *privateState,
+                                                   PrivateStateCache *privateStateCache,
+                                                   GLuint index)
+{
+    const VertexArrayPrivate *vao = privateState->getVertexArrayPrivate();
+    if (!vao->getEnabledAttributesMask().test(index))
+    {
+        return;
+    }
+
+    privateState->setEnableVertexAttribArray(index, false);
+    privateStateCache->onVertexArrayStateChange();
+}
+
+inline void ContextPrivateEnableVertexAttribArray(PrivateState *privateState,
+                                                  PrivateStateCache *privateStateCache,
+                                                  GLuint index)
+{
+    const VertexArrayPrivate *vao = privateState->getVertexArrayPrivate();
+    if (vao->getEnabledAttributesMask().test(index))
+    {
+        return;
+    }
+
+    privateState->setEnableVertexAttribArray(index, true);
+    privateStateCache->onVertexArrayStateChange();
+}
+
 }  // namespace gl

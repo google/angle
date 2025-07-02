@@ -447,8 +447,7 @@ angle::Result VertexArrayVk::handleLineLoopIndirectDraw(const gl::Context *conte
 {
     size_t maxVertexCount = 0;
     ContextVk *contextVk  = vk::GetImpl(context);
-    const gl::AttributesMask activeAttribs =
-        context->getStateCache().getActiveBufferedAttribsMask();
+    const gl::AttributesMask activeAttribs = context->getActiveBufferedAttribsMask();
 
     const auto &attribs  = mState.getVertexAttributes();
     const auto &bindings = mState.getVertexBindings();
@@ -1244,8 +1243,7 @@ angle::Result VertexArrayVk::updateStreamedAttribs(const gl::Context *context,
     vk::Renderer *renderer = contextVk->getRenderer();
 
     const gl::AttributesMask activeAttribs =
-        context->getStateCache().getActiveClientAttribsMask() |
-        context->getStateCache().getActiveBufferedAttribsMask();
+        context->getActiveClientAttribsMask() | context->getActiveBufferedAttribsMask();
     const gl::AttributesMask activeStreamedAttribs = mStreamingVertexAttribsMask & activeAttribs;
 
     // Early return for corner case where emulated buffered attribs are not active

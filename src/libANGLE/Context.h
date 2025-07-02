@@ -172,6 +172,8 @@ class PrivateStateCache final : angle::NonCopyable
     PrivateStateCache();
     ~PrivateStateCache();
 
+    void initialize();
+
     void onCapChange() { mIsCachedBasicDrawStatesErrorValid = false; }
     void onColorMaskChange() { mIsCachedBasicDrawStatesErrorValid = false; }
     void onDefaultVertexAttributeChange() { mIsCachedBasicDrawStatesErrorValid = false; }
@@ -197,10 +199,69 @@ class PrivateStateCache final : angle::NonCopyable
 
     void onStencilStateChange() { mIsCachedBasicDrawStatesErrorValid = false; }
 
+    void onBufferBindingChange()
+    {
+        mIsCachedBasicDrawStatesErrorValid = false;
+        mCachedBasicDrawElementsError      = kInvalidPointer;
+    }
+
+    void onVertexArrayBindingChange()
+    {
+        mIsCachedActiveAttribMasksValid    = false;
+        mIsCachedVertexElementLimitValid   = false;
+        mIsCachedBasicDrawStatesErrorValid = false;
+        mCachedBasicDrawElementsError      = kInvalidPointer;
+    }
+    void onVertexArrayStateChange()
+    {
+        mIsCachedActiveAttribMasksValid    = false;
+        mIsCachedVertexElementLimitValid   = false;
+        mIsCachedBasicDrawStatesErrorValid = false;
+        mCachedBasicDrawElementsError      = kInvalidPointer;
+    }
+    void onVertexArrayFormatChange() { mIsCachedVertexElementLimitValid = false; }
+    void onVertexArrayBufferContentsChange()
+    {
+        mIsCachedVertexElementLimitValid   = false;
+        mIsCachedBasicDrawStatesErrorValid = false;
+    }
+    void onVertexArrayBufferStateChange()
+    {
+        mIsCachedBasicDrawStatesErrorValid = false;
+        mCachedBasicDrawElementsError      = kInvalidPointer;
+    }
+
     bool isCachedBasicDrawStatesErrorValid() const { return mIsCachedBasicDrawStatesErrorValid; }
     void setCachedBasicDrawStatesErrorValid() const { mIsCachedBasicDrawStatesErrorValid = true; }
 
+    bool isCachedActiveAttribMasksValid() const { return mIsCachedActiveAttribMasksValid; }
+    void setCachedActiveAttribMasksValid() const { mIsCachedActiveAttribMasksValid = true; }
+
+    bool isCachedVertexElementLimitValid() const { return mIsCachedVertexElementLimitValid; }
+    void setCachedVertexElementLimitValid() const { mIsCachedVertexElementLimitValid = true; }
+
+    bool isCachedBasicDrawElementsErrorValid() const
+    {
+        return mCachedBasicDrawElementsError != kInvalidPointer;
+    }
+    intptr_t getBasicDrawElementsError() const
+    {
+        ASSERT(isCachedBasicDrawElementsErrorValid());
+        return mCachedBasicDrawElementsError;
+    }
+    void invalidateCachedBasicDrawElementsError()
+    {
+        mCachedBasicDrawElementsError = kInvalidPointer;
+    }
+    void updateBasicDrawElementsError(intptr_t drawElementsError) const
+    {
+        ASSERT(drawElementsError != kInvalidPointer);
+        mCachedBasicDrawElementsError = drawElementsError;
+    }
+
   private:
+    static constexpr intptr_t kInvalidPointer = 1;
+
     // StateCache::mCachedBasicDrawStatesError* may be invalidated through numerous calls (see the
     // comment on getBasicDrawStatesErrorString), some of which may originate from other contexts
     // (through the observer interface).  However, ContextPrivate* helpers may also need to
@@ -208,6 +269,23 @@ class PrivateStateCache final : angle::NonCopyable
     // following tracks whether StateCache::mCachedBasicDrawStatesError* values are valid and is
     // accessed only by the context itself.
     mutable bool mIsCachedBasicDrawStatesErrorValid;
+
+    // When any one of these cached values needs to be updated, we will set
+    // mIsCachedActiveAttribMasksValid to false. Whenever these cached value are used, we check this
+    // boolean and update if needed: StateCache::mCachedActiveClientAttribsMask,
+    // StateCache::mCachedActiveBufferedAttribsMask, StateCache::mCachedActiveDefaultAttribsMask,
+    // StateCache::mCachedHasAnyEnabledClientAttrib,
+    mutable bool mIsCachedActiveAttribMasksValid;
+
+    // When any one of these cached values needs to be updated, we will set it to false. Whenever
+    // these cached value are used, we check this boolean and update if needed:
+    // StateCache::mCachedNonInstancedVertexElementLimit,
+    // StateCache::mCachedInstancedVertexElementLimit
+    mutable bool mIsCachedVertexElementLimitValid;
+
+    // This only gets modified by the current context, with or without shared lock. But it is always
+    // thread safe since context can only be current in one thread.
+    mutable intptr_t mCachedBasicDrawElementsError;
 };
 
 // Helper class for managing cache variables and state changes.
@@ -225,11 +303,31 @@ class StateCache final : angle::NonCopyable
     // 3. onVertexArrayStateChange.
     // 4. onGLES1ClientStateChange.
     // 5. onGLES1TextureStateChange.
-    AttributesMask getActiveBufferedAttribsMask() const { return mCachedActiveBufferedAttribsMask; }
-    AttributesMask getActiveClientAttribsMask() const { return mCachedActiveClientAttribsMask; }
-    AttributesMask getActiveDefaultAttribsMask() const { return mCachedActiveDefaultAttribsMask; }
-    bool hasAnyEnabledClientAttrib() const { return mCachedHasAnyEnabledClientAttrib; }
-    bool hasAnyActiveClientAttrib() const { return mCachedActiveClientAttribsMask.any(); }
+    AttributesMask getActiveBufferedAttribsMask(const PrivateStateCache &privateStateCache) const
+    {
+        ASSERT(privateStateCache.isCachedActiveAttribMasksValid());
+        return mCachedActiveBufferedAttribsMask;
+    }
+    AttributesMask getActiveClientAttribsMask(const PrivateStateCache &privateStateCache) const
+    {
+        ASSERT(privateStateCache.isCachedActiveAttribMasksValid());
+        return mCachedActiveClientAttribsMask;
+    }
+    AttributesMask getActiveDefaultAttribsMask(const PrivateStateCache &privateStateCache) const
+    {
+        ASSERT(privateStateCache.isCachedActiveAttribMasksValid());
+        return mCachedActiveDefaultAttribsMask;
+    }
+    bool hasAnyEnabledClientAttrib(const PrivateStateCache &privateStateCache) const
+    {
+        ASSERT(privateStateCache.isCachedActiveAttribMasksValid());
+        return mCachedHasAnyEnabledClientAttrib;
+    }
+    bool hasAnyActiveClientAttrib(const PrivateStateCache &privateStateCache) const
+    {
+        ASSERT(privateStateCache.isCachedActiveAttribMasksValid());
+        return mCachedActiveClientAttribsMask.any();
+    }
 
     // Places that can trigger updateVertexElementLimits:
     // 1. onVertexArrayBindingChange.
@@ -237,11 +335,16 @@ class StateCache final : angle::NonCopyable
     // 3. onVertexArrayFormatChange.
     // 4. onVertexArrayBufferChange.
     // 5. onVertexArrayStateChange.
-    GLint64 getNonInstancedVertexElementLimit() const
+    GLint64 getNonInstancedVertexElementLimit(const PrivateStateCache &privateStateCache) const
     {
+        ASSERT(privateStateCache.isCachedVertexElementLimitValid());
         return mCachedNonInstancedVertexElementLimit;
     }
-    GLint64 getInstancedVertexElementLimit() const { return mCachedInstancedVertexElementLimit; }
+    GLint64 getInstancedVertexElementLimit(const PrivateStateCache &privateStateCache) const
+    {
+        ASSERT(privateStateCache.isCachedVertexElementLimitValid());
+        return mCachedInstancedVertexElementLimit;
+    }
 
     // Places that can trigger updateBasicDrawStatesError:
     // 1. onVertexArrayBindingChange.
@@ -295,22 +398,6 @@ class StateCache final : angle::NonCopyable
         }
 
         return getProgramPipelineErrorImpl(context);
-    }
-
-    // Places that can trigger updateBasicDrawElementsError:
-    // 1. onActiveTransformFeedbackChange.
-    // 2. onVertexArrayBufferStateChange.
-    // 3. onBufferBindingChange.
-    // 4. onVertexArrayStateChange.
-    // 5. onVertexArrayBindingStateChange.
-    intptr_t getBasicDrawElementsError(const Context *context) const
-    {
-        if (mCachedBasicDrawElementsError != kInvalidPointer)
-        {
-            return mCachedBasicDrawElementsError;
-        }
-
-        return getBasicDrawElementsErrorImpl(context);
     }
 
     // Places that can trigger updateValidDrawModes:
@@ -367,12 +454,7 @@ class StateCache final : angle::NonCopyable
     bool getCanDraw() const { return mCachedCanDraw; }
 
     // State change notifications.
-    void onVertexArrayBindingChange(Context *context);
     void onProgramExecutableChange(Context *context);
-    void onVertexArrayFormatChange(Context *context);
-    void onVertexArrayBufferContentsChange(Context *context);
-    void onVertexArrayStateChange(Context *context);
-    void onVertexArrayBufferStateChange(Context *context);
     void onGLES1TextureStateChange(Context *context);
     void onGLES1ClientStateChange(Context *context);
     void onDrawFramebufferChange(Context *context);
@@ -382,15 +464,16 @@ class StateCache final : angle::NonCopyable
     void onUniformBufferStateChange(Context *context);
     void onAtomicCounterBufferStateChange(Context *context);
     void onShaderStorageBufferStateChange(Context *context);
-    void onBufferBindingChange(Context *context);
+
+    // Cache update functions.
+    void updateActiveAttribsMask(const Context *context);
+    void updateVertexElementLimits(const Context *context);
+    void updateVertexElementLimitsImpl(const Context *context);
 
   private:
     bool isCurrentContext(const Context *context, const PrivateStateCache *privateStateCache) const;
 
     // Cache update functions.
-    void updateActiveAttribsMask(Context *context);
-    void updateVertexElementLimits(Context *context);
-    void updateVertexElementLimitsImpl(Context *context);
     void updateValidDrawModes(Context *context);
     void updateValidBindTextureTypes(Context *context);
     void updateValidDrawElementsTypes(Context *context);
@@ -400,7 +483,6 @@ class StateCache final : angle::NonCopyable
         mCachedBasicDrawStatesErrorCode   = GL_NO_ERROR;
     }
     void updateProgramPipelineError() { mCachedProgramPipelineError = kInvalidPointer; }
-    void updateBasicDrawElementsError() { mCachedBasicDrawElementsError = kInvalidPointer; }
     void updateTransformFeedbackActiveUnpaused(Context *context);
     void updateVertexAttribTypesValidation(Context *context);
     void updateActiveShaderStorageBufferIndices(Context *context);
@@ -417,7 +499,6 @@ class StateCache final : angle::NonCopyable
     intptr_t getBasicDrawStatesErrorImpl(const Context *context,
                                          const PrivateStateCache *privateStateCache) const;
     intptr_t getProgramPipelineErrorImpl(const Context *context) const;
-    intptr_t getBasicDrawElementsErrorImpl(const Context *context) const;
 
     static constexpr intptr_t kInvalidPointer = 1;
 
@@ -473,7 +554,6 @@ class StateCache final : angle::NonCopyable
 
     mutable intptr_t mCachedBasicDrawStatesErrorString;
     mutable GLenum mCachedBasicDrawStatesErrorCode;
-    mutable intptr_t mCachedBasicDrawElementsError;
     // mCachedProgramPipelineError checks only the
     // current-program-exists subset of mCachedBasicDrawStatesError.
     // Therefore, mCachedProgramPipelineError follows
@@ -878,6 +958,15 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
         }
     }
 
+    AttributesMask getActiveBufferedAttribsMask() const;
+    AttributesMask getActiveClientAttribsMask() const;
+    AttributesMask getActiveDefaultAttribsMask() const;
+    bool hasAnyEnabledClientAttrib() const;
+    bool hasAnyActiveClientAttrib() const;
+    GLint64 getNonInstancedVertexElementLimit() const;
+    GLint64 getInstancedVertexElementLimit() const;
+    void onActiveTransformFeedbackChange();
+
   private:
     void initializeDefaultResources();
     void releaseSharedObjects();
@@ -938,6 +1027,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
                                             MultisamplingMode mode);
 
     void onUniformBlockBindingUpdated(GLuint uniformBlockIndex);
+    void updateActiveAttribsMaskIfNeeded() const;
 
     void endTilingImplicit();
 
@@ -1005,7 +1095,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     state::DirtyObjects mDrawDirtyObjects;
 
-    StateCache mStateCache;
+    mutable StateCache mStateCache;
     PrivateStateCache mPrivateStateCache;
 
     state::DirtyObjects mTexImageDirtyObjects;

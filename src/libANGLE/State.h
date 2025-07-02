@@ -563,6 +563,13 @@ class PrivateState : angle::NonCopyable
     void setVertexAttribu(GLuint index, const GLuint values[4]);
     void setVertexAttribi(GLuint index, const GLint values[4]);
 
+    void setEnableVertexAttribArray(unsigned int attribNum, bool enabled);
+    void setVertexArrayPrivate(VertexArrayPrivate *vertexArrayPrivate)
+    {
+        mVertexArrayPrivate = vertexArrayPrivate;
+    }
+    VertexArrayPrivate *getVertexArrayPrivate() const { return mVertexArrayPrivate; }
+
     // QCOM_tiled_rendering
     void setTiledRendering(bool tiledRendering) { mTiledRendering = tiledRendering; }
     bool isTiledRendering() const { return mTiledRendering; }
@@ -757,6 +764,8 @@ class PrivateState : angle::NonCopyable
     const bool mClientArraysEnabled;
     const bool mRobustResourceInit;
     const bool mProgramBinaryCacheEnabled;
+
+    VertexArrayPrivate *mVertexArrayPrivate;
 
     Debug mDebug;
 
@@ -1027,9 +1036,6 @@ class State : angle::NonCopyable
 
     // Detach a buffer from all bindings
     angle::Result detachBuffer(Context *context, const Buffer *buffer);
-
-    // Vertex attrib manipulation
-    void setEnableVertexAttribArray(unsigned int attribNum, bool enabled);
 
     ANGLE_INLINE void setVertexAttribPointer(const Context *context,
                                              unsigned int attribNum,

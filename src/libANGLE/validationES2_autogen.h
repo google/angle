@@ -210,7 +210,8 @@ bool ValidateDisable(const PrivateState &state,
                      ErrorSet *errors,
                      angle::EntryPoint entryPoint,
                      GLenum cap);
-bool ValidateDisableVertexAttribArray(const Context *context,
+bool ValidateDisableVertexAttribArray(const PrivateState &state,
+                                      ErrorSet *errors,
                                       angle::EntryPoint entryPoint,
                                       GLuint index);
 bool ValidateDrawArrays(const Context *context,
@@ -228,7 +229,8 @@ bool ValidateEnable(const PrivateState &state,
                     ErrorSet *errors,
                     angle::EntryPoint entryPoint,
                     GLenum cap);
-bool ValidateEnableVertexAttribArray(const Context *context,
+bool ValidateEnableVertexAttribArray(const PrivateState &state,
+                                     ErrorSet *errors,
                                      angle::EntryPoint entryPoint,
                                      GLuint index);
 bool ValidateFinish(const Context *context, angle::EntryPoint entryPoint);

@@ -794,7 +794,7 @@ bool VertexArrayPrivate::hasTransformFeedbackBindingConflict(const Context *cont
         return false;
     }
 
-    const AttributesMask &activeAttribues = context->getStateCache().getActiveBufferedAttribsMask();
+    const AttributesMask &activeAttribues = context->getActiveBufferedAttribsMask();
 
     // Slow check. We must ensure that the conflicting attributes are enabled/active.
     for (size_t attribIndex : activeAttribues)

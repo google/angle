@@ -251,7 +251,7 @@ ANGLE_INLINE angle::Result ContextGL::setDrawArraysState(const gl::Context *cont
                                                          GLsizei instanceCount)
 {
     const angle::FeaturesGL &features = getFeaturesGL();
-    if (context->getStateCache().hasAnyActiveClientAttrib() ||
+    if (context->hasAnyActiveClientAttrib() ||
         (features.shiftInstancedArrayDataWithOffset.enabled && first > 0))
     {
         const gl::State &glState                = context->getState();
@@ -296,7 +296,6 @@ ANGLE_INLINE angle::Result ContextGL::setDrawElementsState(const gl::Context *co
     const gl::State &glState                = context->getState();
     const gl::ProgramExecutable *executable = getState().getProgramExecutable();
     const gl::VertexArray *vao              = glState.getVertexArray();
-    const gl::StateCache &stateCache        = context->getStateCache();
 
     const angle::FeaturesGL &features = getFeaturesGL();
     if (features.shiftInstancedArrayDataWithOffset.enabled)
@@ -307,7 +306,7 @@ ANGLE_INLINE angle::Result ContextGL::setDrawElementsState(const gl::Context *co
         ANGLE_TRY(vaoGL->recoverForcedStreamingAttributesForDrawArraysInstanced(context));
     }
 
-    if (stateCache.hasAnyActiveClientAttrib() || vao->getElementArrayBuffer() == nullptr)
+    if (context->hasAnyActiveClientAttrib() || vao->getElementArrayBuffer() == nullptr)
     {
         const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
         ANGLE_TRY(vaoGL->syncDrawElementsState(context, executable->getActiveAttribLocationsMask(),

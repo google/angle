@@ -472,7 +472,7 @@ bool ValidateDrawIndirectBase(const Context *context,
         return false;
     }
 
-    if (context->getStateCache().hasAnyActiveClientAttrib())
+    if (context->hasAnyActiveClientAttrib())
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kClientDataInVertexArray);
         return false;

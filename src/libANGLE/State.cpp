@@ -392,6 +392,7 @@ PrivateState::PrivateState(const Version &clientVersion,
       mClientArraysEnabled(clientArraysEnabled),
       mRobustResourceInit(robustResourceInit),
       mProgramBinaryCacheEnabled(programBinaryCacheEnabled),
+      mVertexArrayPrivate(nullptr),
       mDebug(debug)
 {}
 
@@ -2981,6 +2982,8 @@ void State::setVertexArrayBinding(const Context *context, VertexArray *vertexArr
     }
 
     mVertexArray = vertexArray;
+    mPrivateState.setVertexArrayPrivate(vertexArray);
+
     mDirtyBits.set(state::DIRTY_BIT_VERTEX_ARRAY_BINDING);
 
     if (mVertexArray && mVertexArray->hasAnyDirtyBit())
@@ -2995,6 +2998,7 @@ bool State::removeVertexArrayBinding(const Context *context, VertexArrayID verte
     {
         mVertexArray->onBindingChanged(context, -1);
         mVertexArray = nullptr;
+        mPrivateState.setVertexArrayPrivate(nullptr);
         mDirtyBits.set(state::DIRTY_BIT_VERTEX_ARRAY_BINDING);
         mDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
         return true;
@@ -3296,13 +3300,13 @@ angle::Result State::detachBuffer(Context *context, const Buffer *buffer)
     if (curTransformFeedback)
     {
         ANGLE_TRY(curTransformFeedback->detachBuffer(context, bufferID));
-        context->getStateCache().onActiveTransformFeedbackChange(context);
+        context->onActiveTransformFeedbackChange();
     }
 
     if (mVertexArray && mVertexArray->detachBuffer(context, bufferID))
     {
         mDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
-        context->getStateCache().onVertexArrayStateChange(context);
+        context->getMutablePrivateStateCache()->onVertexArrayStateChange();
     }
 
     for (size_t uniformBufferIndex : mBoundUniformBuffersMask)
@@ -3343,9 +3347,9 @@ angle::Result State::detachBuffer(Context *context, const Buffer *buffer)
     return angle::Result::Continue;
 }
 
-void State::setEnableVertexAttribArray(unsigned int attribNum, bool enabled)
+void PrivateState::setEnableVertexAttribArray(unsigned int attribNum, bool enabled)
 {
-    getVertexArray()->enableAttribute(attribNum, enabled);
+    mVertexArrayPrivate->enableAttribute(attribNum, enabled);
     mDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
 }
 
