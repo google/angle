@@ -7,7 +7,7 @@
 import("../../../../gni/angle.gni")
 import("gl_backend.gni")
 
-if (angle_has_build && angle_use_gbm) {
+if (angle_use_gbm) {
   import("//build/config/linux/pkg_config.gni")
 }
 

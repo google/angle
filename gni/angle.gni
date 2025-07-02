@@ -84,6 +84,7 @@ if (angle_has_build) {
     dcheck_always_on = false
     angle_use_x11 = is_linux || is_chromeos
     angle_use_wayland = is_linux
+    angle_use_gbm = false
     use_ozone = false
     ozone_platform_drm = false
     ozone_platform_wayland = false
