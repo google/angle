@@ -1510,6 +1510,9 @@ void Renderer::ensureCapsInitialized() const
             mFragmentShadingRateProperties.fragmentShadingRateNonTrivialCombinerOps);
     }
 
+    // GL_OES_compressed_paletted_texture
+    mNativeExtensions.compressedPalettedTextureOES = true;
+
     // Log any missing extensions required for GLES 3.2.
     LogMissingExtensionsForGLES32(mNativeExtensions);
 }

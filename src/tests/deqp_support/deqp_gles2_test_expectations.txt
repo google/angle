@@ -331,11 +331,15 @@
 42264522 PIXEL4ORXL VULKAN : dEQP-GLES2.functional.fragment_ops.random.77* = SKIP
 42264522 PIXEL4ORXL VULKAN : dEQP-GLES2.functional.fragment_ops.random.82* = SKIP
 42267039 PIXEL4ORXL VULKAN : dEQP-GLES2.functional.texture.mipmap.cube.projected.nearest_linear = SKIP
+428802465 PIXEL4ORXL VULKAN : dEQP-GLES2.functional.negative_api.texture.generatemipmap_zero_level_array_compressed = FAIL
 
 42265027 PIXEL4ORXL GLES : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_array_function_arg_vertex = FAIL
 42265027 PIXEL4ORXL GLES : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_function_arg_vertex = FAIL
 42266310 PIXEL4ORXL GLES : dEQP-GLES2.functional.shaders.function.global_variable_aliasing_* = FAIL
 42267039 PIXEL4ORXL GLES : dEQP-GLES2.functional.texture.mipmap.cube.projected.nearest_linear = FAIL
+
+// Pixel 6 test expectations.
+428802465 PIXEL6 VULKAN : dEQP-GLES2.functional.negative_api.texture.generatemipmap_zero_level_array_compressed = FAIL
 
 42265203 LINUX NVIDIA GTX1660 VULKAN : dEQP-GLES2.functional.shaders.random.all_features.fragment.13 = FAIL
 42265203 LINUX NVIDIA GTX1660 VULKAN : dEQP-GLES2.functional.shaders.random.all_features.fragment.26 = FAIL

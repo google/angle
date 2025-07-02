@@ -1289,11 +1289,6 @@ bool ValidCompressedImageSize(const Context *context,
         {
             return false;
         }
-
-        if (!isPow2(width) || !isPow2(height))
-        {
-            return false;
-        }
     }
 
     return true;
@@ -2249,8 +2244,8 @@ bool ValidateGenerateMipmapBase(const Context *context,
                                    ? TextureTarget::CubeMapPositiveX
                                    : NonCubeTextureTypeToTarget(target);
     const auto &format       = *(texture->getFormat(baseTarget, effectiveBaseLevel).info);
-    if (format.sizedInternalFormat == GL_NONE || format.compressed || format.depthBits > 0 ||
-        format.stencilBits > 0)
+    if (format.sizedInternalFormat == GL_NONE || format.compressed || format.paletted ||
+        format.depthBits > 0 || format.stencilBits > 0)
     {
         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kGenerateMipmapNotAllowed);
         return false;
