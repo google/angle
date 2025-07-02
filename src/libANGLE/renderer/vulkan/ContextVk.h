@@ -1579,10 +1579,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // This info is used in the descriptor update step.
     gl::ActiveTextureArray<TextureVk *> mActiveTextures;
 
-    vk::DescriptorSetDescBuilder mShaderBuffersDescriptorDesc;
-    // The WriteDescriptorDescs from ProgramExecutableVk with InputAttachment update.
-    vk::WriteDescriptorDescs mShaderBufferWriteDescriptorDescs;
-
     gl::ActiveTextureArray<TextureVk *> mActiveImages;
 
     // "Current Value" aka default vertex attribute state.

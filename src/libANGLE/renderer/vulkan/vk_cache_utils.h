@@ -72,6 +72,7 @@ class PipelineCacheAccess;
 class RenderPassCommandBufferHelper;
 class PackedClearValuesArray;
 class AttachmentOpsArray;
+class CommandBufferHelperCommon;
 
 using PipelineLayoutPtr      = AtomicSharedPtr<PipelineLayout>;
 using DescriptorSetLayoutPtr = AtomicSharedPtr<DescriptorSetLayout>;
@@ -1955,11 +1956,7 @@ class DescriptorSetDesc
         return mDescriptorInfos[infoDescIndex];
     }
 
-    void updateDescriptorSet(Renderer *renderer,
-                             const WriteDescriptorDescs &writeDescriptorDescs,
-                             UpdateDescriptorSetsBuilder *updateBuilder,
-                             const DescriptorDescHandles *handles,
-                             VkDescriptorSet descriptorSet) const;
+    const DescriptorInfoDesc *getInfoDescs() const { return mDescriptorInfos.data(); }
 
   private:
     // After a preliminary minimum size, use heap memory.
@@ -2059,9 +2056,8 @@ class DescriptorSetDescBuilder final
                               TransformFeedbackVk *transformFeedbackVk);
 
     // Specific helpers for shader resource descriptors.
-    template <typename CommandBufferT>
     void updateOneShaderBuffer(Context *context,
-                               CommandBufferT *commandBufferHelper,
+                               CommandBufferHelperCommon *commandBufferHelper,
                                const size_t blockIndex,
                                const gl::InterfaceBlock &block,
                                const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding,
@@ -2070,9 +2066,8 @@ class DescriptorSetDescBuilder final
                                const BufferHelper &emptyBuffer,
                                const WriteDescriptorDescs &writeDescriptorDescs,
                                const GLbitfield memoryBarrierBits);
-    template <typename CommandBufferT>
     void updateShaderBuffers(Context *context,
-                             CommandBufferT *commandBufferHelper,
+                             CommandBufferHelperCommon *commandBufferHelper,
                              const gl::ProgramExecutable &executable,
                              const gl::BufferVector &buffers,
                              const std::vector<gl::InterfaceBlock> &blocks,
@@ -2081,9 +2076,8 @@ class DescriptorSetDescBuilder final
                              const BufferHelper &emptyBuffer,
                              const WriteDescriptorDescs &writeDescriptorDescs,
                              const GLbitfield memoryBarrierBits);
-    template <typename CommandBufferT>
     void updateAtomicCounters(Context *context,
-                              CommandBufferT *commandBufferHelper,
+                              CommandBufferHelperCommon *commandBufferHelper,
                               const gl::ProgramExecutable &executable,
                               const ShaderInterfaceVariableInfoMap &variableInfoMap,
                               const gl::BufferVector &buffers,
@@ -2111,15 +2105,13 @@ class DescriptorSetDescBuilder final
     void updatePreCacheActiveTextures(Context *context,
                                       const gl::ProgramExecutable &executable,
                                       const gl::ActiveTextureArray<TextureVk *> &textures,
-                                      const gl::SamplerBindingVector &samplers);
-
-    void updateDescriptorSet(Renderer *renderer,
-                             const WriteDescriptorDescs &writeDescriptorDescs,
-                             UpdateDescriptorSetsBuilder *updateBuilder,
-                             VkDescriptorSet descriptorSet) const;
+                                      const gl::SamplerBindingVector &samplers,
+                                      const WriteDescriptorDescs &writeDescriptorDescs);
 
     const uint32_t *getDynamicOffsets() const { return mDynamicOffsets.data(); }
     size_t getDynamicOffsetsSize() const { return mDynamicOffsets.size(); }
+
+    const DescriptorDescHandles *getHandles() const { return mHandles.data(); }
 
   private:
     void updateInputAttachment(Context *context,
@@ -3011,6 +3003,11 @@ class UpdateDescriptorSetsBuilder final : angle::NonCopyable
 
     // Returns the number of written descriptor sets.
     uint32_t flushDescriptorSetUpdates(VkDevice device);
+
+    void updateWriteDescriptorSet(vk::Renderer *renderer,
+                                  const vk::DescriptorSetDescBuilder &descriptorSetDescBuilder,
+                                  const vk::WriteDescriptorDescs &writeDescriptorDescs,
+                                  const VkDescriptorSet descriptorSet);
 
   private:
     // Manage the storage for VkDescriptorBufferInfo and VkDescriptorImageInfo. The storage is not
