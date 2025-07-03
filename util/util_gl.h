@@ -28,6 +28,7 @@
 #endif  // defined(ANGLE_USE_UTIL_LOADER)
 
 #include <string>
+#include <utility>
 
 namespace angle
 {
