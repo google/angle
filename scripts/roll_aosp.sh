@@ -161,6 +161,7 @@ copy_to_aosp_paths=(
     "build"
     "third_party/abseil-cpp"
     "third_party/glslang/src"
+    "third_party/re2/src"
     "third_party/rapidjson/src"
     "third_party/spirv-headers/src"
     "third_party/spirv-tools/src"
