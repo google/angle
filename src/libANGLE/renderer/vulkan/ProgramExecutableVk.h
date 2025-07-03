@@ -219,11 +219,29 @@ class ProgramExecutableVk : public ProgramExecutableImpl
                                               PipelineType pipelineType,
                                               UpdateDescriptorSetsBuilder *updateBuilder);
 
+    angle::Result updateUniformBuffersDescriptorSet(
+        vk::Context *context,
+        uint32_t currentFrame,
+        UpdateDescriptorSetsBuilder *updateBuilder,
+        vk::SharedDescriptorSetCacheKey *newSharedCacheKeyOut)
+    {
+        return updateBuffersDescriptorSet(
+            context, currentFrame, mUniformBuffersDescriptorDescBuilder,
+            mUniformBuffersWriteDescriptorDescs, DescriptorSetIndex::UniformBuffers, updateBuilder,
+            newSharedCacheKeyOut);
+    }
+
     angle::Result updateShaderResourcesDescriptorSet(
         vk::Context *context,
         uint32_t currentFrame,
         UpdateDescriptorSetsBuilder *updateBuilder,
-        vk::SharedDescriptorSetCacheKey *newSharedCacheKeyOut);
+        vk::SharedDescriptorSetCacheKey *newSharedCacheKeyOut)
+    {
+        return updateBuffersDescriptorSet(
+            context, currentFrame, mShaderResourceDescriptorDescBuilder,
+            mShaderResourceWriteDescriptorDescs, DescriptorSetIndex::ShaderResource, updateBuilder,
+            newSharedCacheKeyOut);
+    }
 
     angle::Result updateUniformsAndXfbDescriptorSet(
         vk::Context *context,
@@ -369,18 +387,18 @@ class ProgramExecutableVk : public ProgramExecutableImpl
                                         const GLbitfield memoryBarrierBits)
     {
         const gl::ProgramExecutable *executable = getExecutable();
-        mShaderResourceDescriptorDescBuilder.updateOneShaderBuffer(
+        mUniformBuffersDescriptorDescBuilder.updateOneShaderBuffer(
             context, commandBufferHelper, blockIndex, executable->getUniformBlocks()[blockIndex],
             bufferBinding, getUniformBufferDescriptorType(), maxBoundBufferRange, emptyBuffer,
-            mShaderResourceWriteDescriptorDescs, memoryBarrierBits);
+            mUniformBuffersWriteDescriptorDescs, memoryBarrierBits);
     }
 
     void updateOneUniformBufferOffset(const size_t blockIndex,
                                       const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding)
     {
-        mShaderResourceDescriptorDescBuilder.updateOneShaderBufferOffset(
+        mUniformBuffersDescriptorDescBuilder.updateOneShaderBufferOffset(
             blockIndex, bufferBinding, getUniformBufferDescriptorType(),
-            mShaderResourceWriteDescriptorDescs);
+            mUniformBuffersWriteDescriptorDescs);
     }
 
     void updateStorageBuffersDescInfo(vk::Context *context,
@@ -604,11 +622,24 @@ class ProgramExecutableVk : public ProgramExecutableImpl
                                const vk::BufferHelper &emptyBuffer,
                                const GLbitfield memoryBarrierBits)
     {
-        mShaderResourceDescriptorDescBuilder.updateShaderBuffers(
+        const bool isUniform = vk::IsUniformBuffer(descriptorType);
+        vk::DescriptorSetDescBuilder &descriptorSetDescBuilder =
+            isUniform ? mUniformBuffersDescriptorDescBuilder : mShaderResourceDescriptorDescBuilder;
+        const vk::WriteDescriptorDescs &writeDescriptorDescs =
+            isUniform ? mUniformBuffersWriteDescriptorDescs : mShaderResourceWriteDescriptorDescs;
+
+        descriptorSetDescBuilder.updateShaderBuffers(
             context, commandBufferHelper, executable, buffers, blocks, descriptorType,
-            maxBoundBufferRange, emptyBuffer, mShaderResourceWriteDescriptorDescs,
-            memoryBarrierBits);
+            maxBoundBufferRange, emptyBuffer, writeDescriptorDescs, memoryBarrierBits);
     }
+
+    angle::Result updateBuffersDescriptorSet(vk::Context *context,
+                                             const uint32_t currentFrame,
+                                             const vk::DescriptorSetDescBuilder &descriptorSetDesc,
+                                             const vk::WriteDescriptorDescs &writeDescriptorDescs,
+                                             const DescriptorSetIndex setIndex,
+                                             UpdateDescriptorSetsBuilder *updateBuilder,
+                                             vk::SharedDescriptorSetCacheKey *newSharedCacheKeyOut);
 
     // Descriptor sets and pools for shader resources for this program.
     angle::PackedEnumBitSet<DescriptorSetIndex, uint8_t> mValidDescriptorSetIndices;
@@ -676,15 +707,18 @@ class ProgramExecutableVk : public ProgramExecutableImpl
     vk::GraphicsPipelineDesc mWarmUpGraphicsPipelineDesc;
 
     // The "layout" information for descriptorSets
+    vk::WriteDescriptorDescs mUniformBuffersWriteDescriptorDescs;
     vk::WriteDescriptorDescs mShaderResourceWriteDescriptorDescs;
     vk::WriteDescriptorDescs mTextureWriteDescriptorDescs;
     vk::WriteDescriptorDescs mDefaultUniformAndXfbWriteDescriptorDescs;
 
     // The DescriptorSetDescBuilder for descriptorSets
+    vk::DescriptorSetDescBuilder mUniformBuffersDescriptorDescBuilder;
     vk::DescriptorSetDescBuilder mShaderResourceDescriptorDescBuilder;
     vk::DescriptorSetDescBuilder mTextureDescriptorDescBuilder;
     vk::DescriptorSetDescBuilder mDefaultUniformAndXfbDescriptorDescBuilder;
 
+    vk::DescriptorSetLayoutDesc mUniformBuffersSetDesc;
     vk::DescriptorSetLayoutDesc mShaderResourceSetDesc;
     vk::DescriptorSetLayoutDesc mTextureSetDesc;
     vk::DescriptorSetLayoutDesc mDefaultUniformAndXfbSetDesc;

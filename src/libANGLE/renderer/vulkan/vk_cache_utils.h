@@ -34,22 +34,23 @@ class UpdateDescriptorSetsBuilder;
 
 // Some descriptor set and pipeline layout constants.
 //
-// The set/binding assignment is done as following:
+// The set/binding assignment is done as follows:
 //
 // - Set 0 contains uniform blocks created to encompass default uniforms.  1 binding is used per
 //   pipeline stage.  Additionally, transform feedback buffers are bound from binding 2 and up.
 //   For internal shaders, set 0 is used for all the needed resources.
 // - Set 1 contains all textures (including texture buffers).
-// - Set 2 contains all other shader resources, such as uniform and storage blocks, atomic counter
+// - Set 2 contains all uniform buffers
+// - Set 3 contains all other shader resources, such as storage buffers, atomic counter
 //   buffers, images and image buffers.
-// - Set 3 reserved for OpenCL
 
 enum class DescriptorSetIndex : uint32_t
 {
     Internal       = 0,         // Internal shaders
     UniformsAndXfb = Internal,  // Uniforms set index
     Texture        = 1,         // Textures set index
-    ShaderResource = 2,         // Other shader resources set index
+    UniformBuffers = 2,         // Uniform buffers set index
+    ShaderResource = 3,         // Other shader resources set index
 
     // CL specific naming for set indices
     LiteralSampler  = 0,
@@ -1239,7 +1240,7 @@ class DescriptorSetLayoutDesc final
 #endif
 };
 
-// The following are for caching descriptor set layouts. Limited to max three descriptor set
+// The following are for caching descriptor set layouts. Limited to max four descriptor set
 // layouts. This can be extended in the future.
 constexpr size_t kMaxDescriptorSetLayouts = ToUnderlying(DescriptorSetIndex::EnumCount);
 
@@ -2445,9 +2446,9 @@ enum class VulkanCacheType
     Sampler,
     SamplerYcbcrConversion,
     DescriptorSetLayout,
-    DriverUniformsDescriptors,
-    TextureDescriptors,
     UniformsAndXfbDescriptors,
+    TextureDescriptors,
+    UniformBuffersDescriptors,
     ShaderResourcesDescriptors,
     Framebuffer,
     DescriptorMetaCache,

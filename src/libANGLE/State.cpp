@@ -4079,11 +4079,10 @@ angle::Result State::onExecutableChange(const Context *context)
         }
     }
 
-    // Mark uniform blocks as _not_ dirty. When an executable changes, the backends should already
-    // reprocess all uniform blocks.  These dirty bits only track what's made dirty afterwards.
-    mDirtyUniformBlocks.reset();
-    // Reset dirty type mask on executable change
-    mUniformBufferBlocksDirtyTypeMask.reset();
+    // Set all active blocks dirty on executable change
+    mDirtyUniformBlocks = mExecutable->getActiveUniformBufferBlocks();
+    // Set all types dirty on executable change
+    mUniformBufferBlocksDirtyTypeMask.set();
 
     return angle::Result::Continue;
 }

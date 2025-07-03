@@ -2776,26 +2776,14 @@ angle::Result ContextVk::handleDirtyShaderResourcesImpl(CommandBufferHelperT *co
     const gl::ProgramExecutable *executable = mState.getProgramExecutable();
     ASSERT(executable);
 
-    // DIRTY_BIT_UNIFORM_BUFFERS is set when uniform buffer bindings change.
-    // DIRTY_BIT_SHADER_RESOURCES gets set when the program executable has changed. In that case,
-    // this function will update entire the shader resource descriptorSet.  This means there is no
-    // need to process uniform buffer bindings again.
-    dirtyBitsIterator->resetLaterBit(DIRTY_BIT_UNIFORM_BUFFERS);
-
-    // This function processes uniform buffers, so it doesn't matter which are dirty.  The following
-    // makes sure the dirty bits are reset.
-    mState.getAndResetDirtyUniformBlocks();
-
     const bool hasImages               = executable->hasImages();
     const bool hasStorageBuffers       = executable->hasStorageBuffers();
     const bool hasAtomicCounterBuffers = executable->hasAtomicCounterBuffers();
-    const bool hasUniformBuffers       = executable->hasUniformBuffers();
     const bool hasFramebufferFetch     = executable->usesColorFramebufferFetch() ||
                                      executable->usesDepthFramebufferFetch() ||
                                      executable->usesStencilFramebufferFetch();
 
-    if (!hasUniformBuffers && !hasStorageBuffers && !hasAtomicCounterBuffers && !hasImages &&
-        !hasFramebufferFetch)
+    if (!hasStorageBuffers && !hasAtomicCounterBuffers && !hasImages && !hasFramebufferFetch)
     {
         return angle::Result::Continue;
     }
@@ -2808,12 +2796,6 @@ angle::Result ContextVk::handleDirtyShaderResourcesImpl(CommandBufferHelperT *co
     {
         ANGLE_TRY(executableVk->updateInputAttachmentsDescInfo(
             this, vk::GetImpl(mState.getDrawFramebuffer())));
-    }
-    if (hasUniformBuffers)
-    {
-        executableVk->updateUniformBuffersDescInfo(
-            this, commandBufferHelper, mState.getOffsetBindingPointerUniformBuffers(),
-            limits.maxUniformBufferRange, mEmptyBuffer, mDeferredMemoryBarriers);
     }
     if (hasStorageBuffers)
     {
@@ -2914,7 +2896,7 @@ angle::Result ContextVk::handleDirtyUniformBuffersImpl(CommandBufferT *commandBu
     }
 
     vk::SharedDescriptorSetCacheKey newSharedCacheKey;
-    ANGLE_TRY(executableVk->updateShaderResourcesDescriptorSet(
+    ANGLE_TRY(executableVk->updateUniformBuffersDescriptorSet(
         this, getCurrentFrameCount(), mShareGroupVk->getUpdateDescriptorSetsBuilder(),
         &newSharedCacheKey));
 
@@ -2923,7 +2905,7 @@ angle::Result ContextVk::handleDirtyUniformBuffersImpl(CommandBufferT *commandBu
         // A new cache entry has been created. We record this cache key in the images and
         // buffers so that the descriptorSet cache can be destroyed when buffer/image is
         // destroyed.
-        updateShaderResourcesWithSharedCacheKey(newSharedCacheKey);
+        updateUniformBuffersWithSharedCacheKey(newSharedCacheKey);
     }
 
     return angle::Result::Continue;
@@ -3474,6 +3456,8 @@ void ContextVk::syncObjectPerfCounters(const angle::VulkanPerfCounters &commandQ
             .accumulateDescriptorCacheStats(VulkanCacheType::UniformsAndXfbDescriptors, this);
         mShareGroupVk->getMetaDescriptorPools()[DescriptorSetIndex::Texture]
             .accumulateDescriptorCacheStats(VulkanCacheType::TextureDescriptors, this);
+        mShareGroupVk->getMetaDescriptorPools()[DescriptorSetIndex::UniformBuffers]
+            .accumulateDescriptorCacheStats(VulkanCacheType::UniformBuffersDescriptors, this);
         mShareGroupVk->getMetaDescriptorPools()[DescriptorSetIndex::ShaderResource]
             .accumulateDescriptorCacheStats(VulkanCacheType::ShaderResourcesDescriptors, this);
 
@@ -3488,6 +3472,12 @@ void ContextVk::syncObjectPerfCounters(const angle::VulkanPerfCounters &commandQ
         mPerfCounters.textureDescriptorSetCacheMisses    = texCacheStats.getMissCount();
         mPerfCounters.textureDescriptorSetCacheTotalSize = texCacheStats.getSize();
 
+        const CacheStats &uniBufCacheStats =
+            mVulkanCacheStats[VulkanCacheType::UniformBuffersDescriptors];
+        mPerfCounters.uniformBuffersDescriptorSetCacheHits      = uniBufCacheStats.getHitCount();
+        mPerfCounters.uniformBuffersDescriptorSetCacheMisses    = uniBufCacheStats.getMissCount();
+        mPerfCounters.uniformBuffersDescriptorSetCacheTotalSize = uniBufCacheStats.getSize();
+
         const CacheStats &resCacheStats =
             mVulkanCacheStats[VulkanCacheType::ShaderResourcesDescriptors];
         mPerfCounters.shaderResourcesDescriptorSetCacheHits      = resCacheStats.getHitCount();
@@ -3495,8 +3485,8 @@ void ContextVk::syncObjectPerfCounters(const angle::VulkanPerfCounters &commandQ
         mPerfCounters.shaderResourcesDescriptorSetCacheTotalSize = resCacheStats.getSize();
 
         mPerfCounters.descriptorSetCacheTotalSize =
-            uniCacheStats.getSize() + texCacheStats.getSize() + resCacheStats.getSize() +
-            mVulkanCacheStats[VulkanCacheType::DriverUniformsDescriptors].getSize();
+            uniCacheStats.getSize() + texCacheStats.getSize() + uniBufCacheStats.getSize() +
+            resCacheStats.getSize();
 
         mPerfCounters.descriptorSetCacheKeySizeBytes = 0;
 
@@ -5864,16 +5854,15 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 invalidateCurrentDefaultUniforms();
                 updateAdvancedBlendEquations(programExecutable);
                 vk::GetImpl(programExecutable)->onProgramBind();
+                static_assert(gl::state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS >
+                                  gl::state::DIRTY_BIT_PROGRAM_EXECUTABLE,
+                              "Dirty bit order");
+                iter.setLaterBit(gl::state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS);
                 static_assert(
                     gl::state::DIRTY_BIT_TEXTURE_BINDINGS > gl::state::DIRTY_BIT_PROGRAM_EXECUTABLE,
                     "Dirty bit order");
                 iter.setLaterBit(gl::state::DIRTY_BIT_TEXTURE_BINDINGS);
                 ANGLE_TRY(invalidateCurrentShaderResources(command));
-                // invalidateCurrentShaderResources(...) already dirties all uniform buffers
-                static_assert(gl::state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS >
-                                  gl::state::DIRTY_BIT_PROGRAM_BINDING,
-                              "Dirty bit order");
-                iter.resetLaterBit(gl::state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS);
                 ANGLE_TRY(invalidateProgramExecutableHelper(context));
 
                 // Handle sample shading state transitions for graphics programs
@@ -5922,11 +5911,6 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 break;
             case gl::state::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING:
                 ANGLE_TRY(invalidateCurrentShaderResources(command));
-                // invalidateCurrentShaderResources(...) already dirties all uniform buffers
-                static_assert(gl::state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS >
-                                  gl::state::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING,
-                              "Dirty bit order");
-                iter.resetLaterBit(gl::state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS);
                 invalidateDriverUniforms();
                 break;
             case gl::state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS:
@@ -6423,20 +6407,12 @@ angle::Result ContextVk::invalidateCurrentShaderResources(gl::Command command)
     const bool hasImages = executable->hasImages();
     const bool hasStorageBuffers =
         executable->hasStorageBuffers() || executable->hasAtomicCounterBuffers();
-    const bool hasUniformBuffers = executable->hasUniformBuffers();
 
-    if (hasUniformBuffers || hasStorageBuffers || hasImages ||
-        executable->usesColorFramebufferFetch() || executable->usesDepthFramebufferFetch() ||
-        executable->usesStencilFramebufferFetch())
+    if (hasStorageBuffers || hasImages || executable->usesColorFramebufferFetch() ||
+        executable->usesDepthFramebufferFetch() || executable->usesStencilFramebufferFetch())
     {
         mGraphicsDirtyBits |= kResourcesAndDescSetDirtyBits;
         mComputeDirtyBits |= kResourcesAndDescSetDirtyBits;
-    }
-
-    // Take care of read-after-write hazards that require implicit synchronization.
-    if (hasUniformBuffers)
-    {
-        ANGLE_TRY(endRenderPassIfUniformBufferReadAfterTransformFeedbackWrite());
     }
 
     // Take care of implicit layout transition by compute program access-after-read.
@@ -6482,7 +6458,7 @@ angle::Result ContextVk::invalidateCurrentShaderUniformBuffers()
     return angle::Result::Continue;
 }
 
-void ContextVk::updateShaderResourcesWithSharedCacheKey(
+void ContextVk::updateUniformBuffersWithSharedCacheKey(
     const vk::SharedDescriptorSetCacheKey &sharedCacheKey)
 {
     const gl::ProgramExecutable *executable = mState.getProgramExecutable();
@@ -6507,6 +6483,14 @@ void ContextVk::updateShaderResourcesWithSharedCacheKey(
                                            sharedCacheKey);
         }
     }
+}
+
+void ContextVk::updateShaderResourcesWithSharedCacheKey(
+    const vk::SharedDescriptorSetCacheKey &sharedCacheKey)
+{
+    const gl::ProgramExecutable *executable = mState.getProgramExecutable();
+    ProgramExecutableVk *executableVk       = vk::GetImpl(executable);
+
     if (executable->hasStorageBuffers() &&
         !executableVk->usesDynamicShaderStorageBufferDescriptors())
     {
@@ -9260,6 +9244,8 @@ void ContextVk::resetPerFramePerfCounters()
     mShareGroupVk->getMetaDescriptorPools()[DescriptorSetIndex::UniformsAndXfb]
         .resetDescriptorCacheStats();
     mShareGroupVk->getMetaDescriptorPools()[DescriptorSetIndex::Texture]
+        .resetDescriptorCacheStats();
+    mShareGroupVk->getMetaDescriptorPools()[DescriptorSetIndex::UniformBuffers]
         .resetDescriptorCacheStats();
     mShareGroupVk->getMetaDescriptorPools()[DescriptorSetIndex::ShaderResource]
         .resetDescriptorCacheStats();

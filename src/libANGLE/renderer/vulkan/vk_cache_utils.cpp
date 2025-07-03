@@ -6632,8 +6632,7 @@ void DescriptorSetDescBuilder::updateOneShaderBufferOffset(
     ASSERT(bufferBinding.get() != nullptr);
 
     DescriptorInfoDesc &infoDesc = mDesc.getInfoDesc(infoDescIndex);
-    BufferVk *bufferVk           = vk::GetImpl(bufferBinding.get());
-    BufferHelper &bufferHelper   = bufferVk->getBuffer();
+    BufferHelper &bufferHelper   = vk::GetImpl(bufferBinding.get())->getBuffer();
     ASSERT(infoDesc.samplerOrBufferSerial == bufferHelper.getBlockSerial().getValue());
     // Reachable only by program executables with dynamic descriptor type
     ASSERT(infoDesc.imageViewSerialOrOffset == 0);
