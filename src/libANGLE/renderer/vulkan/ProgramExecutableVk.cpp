@@ -640,7 +640,7 @@ ProgramExecutableVk::ProgramExecutableVk(const gl::ProgramExecutable *executable
     : ProgramExecutableImpl(executable),
       mImmutableSamplersMaxDescriptorCount(1),
       mUniformBufferDescriptorType(VK_DESCRIPTOR_TYPE_MAX_ENUM),
-      mDynamicUniformDescriptorOffsets{},
+      mDefaultUniformDynamicDescriptorOffsets{},
       mValidGraphicsPermutations{},
       mValidComputePermutations{}
 {
@@ -1410,30 +1410,20 @@ void ProgramExecutableVk::initializeWriteDescriptorDesc(vk::ErrorContext *contex
     mTextureWriteDescriptorDescs.updateDynamicDescriptorsCount();
     mTextureDescriptorDescBuilder.resize(mTextureWriteDescriptorDescs.getTotalDescriptorCount());
 
-    // Update mDefaultUniformWriteDescriptors and its builder
-    mDefaultUniformWriteDescriptorDescs.reset();
-    mDefaultUniformWriteDescriptorDescs.updateDefaultUniform(linkedShaderStages, mVariableInfoMap,
-                                                             *mExecutable);
-    mDefaultUniformWriteDescriptorDescs.updateDynamicDescriptorsCount();
-
+    // Update mDefaultUniformAndXfbWriteDescriptorDescs and its builder
     mDefaultUniformAndXfbWriteDescriptorDescs.reset();
+    mDefaultUniformAndXfbWriteDescriptorDescs.updateDefaultUniform(linkedShaderStages,
+                                                                   mVariableInfoMap, *mExecutable);
     if (mExecutable->hasTransformFeedbackOutput() &&
         context->getFeatures().emulateTransformFeedback.enabled)
     {
         // Update mDefaultUniformAndXfbWriteDescriptorDescs for the emulation code path.
-        mDefaultUniformAndXfbWriteDescriptorDescs.updateDefaultUniform(
-            linkedShaderStages, mVariableInfoMap, *mExecutable);
         if (linkedShaderStages[gl::ShaderType::Vertex])
         {
             mDefaultUniformAndXfbWriteDescriptorDescs.updateTransformFeedbackWrite(mVariableInfoMap,
                                                                                    *mExecutable);
         }
         mDefaultUniformAndXfbWriteDescriptorDescs.updateDynamicDescriptorsCount();
-    }
-    else
-    {
-        // Otherwise it will be the same as default uniform
-        mDefaultUniformAndXfbWriteDescriptorDescs = mDefaultUniformWriteDescriptorDescs;
     }
     mDefaultUniformAndXfbDescriptorDescBuilder.resize(
         mDefaultUniformAndXfbWriteDescriptorDescs.getTotalDescriptorCount());
@@ -1810,8 +1800,8 @@ angle::Result ProgramExecutableVk::createPipelineLayout(
     ANGLE_TRY(pipelineLayoutCache->getPipelineLayout(context, pipelineLayoutDesc,
                                                      mDescriptorSetLayouts, &mPipelineLayout));
 
-    mDynamicUniformDescriptorOffsets.clear();
-    mDynamicUniformDescriptorOffsets.resize(mExecutable->getLinkedShaderStageCount(), 0);
+    mDefaultUniformDynamicDescriptorOffsets.clear();
+    mDefaultUniformDynamicDescriptorOffsets.resize(mExecutable->getLinkedShaderStageCount(), 0);
 
     initializeWriteDescriptorDesc(context);
 
@@ -2070,8 +2060,8 @@ angle::Result ProgramExecutableVk::bindDescriptorSets(
                 // assigned through dynamic uniform buffers (requiring dynamic offsets).
                 commandBuffer->bindDescriptorSets(
                     getPipelineLayout(), pipelineBindPoint, descriptorSetIndex, 1, &descSet,
-                    static_cast<uint32_t>(mDynamicUniformDescriptorOffsets.size()),
-                    mDynamicUniformDescriptorOffsets.data());
+                    static_cast<uint32_t>(mDefaultUniformDynamicDescriptorOffsets.size()),
+                    mDefaultUniformDynamicDescriptorOffsets.data());
                 break;
             case DescriptorSetIndex::ShaderResource:
                 commandBuffer->bindDescriptorSets(
@@ -2165,7 +2155,7 @@ angle::Result ProgramExecutableVk::updateUniforms(vk::Context *context,
         {
             const angle::MemoryBuffer &uniformData = mDefaultUniformBlocks[shaderType]->uniformData;
             memcpy(&bufferData[offsets[shaderType]], uniformData.data(), uniformData.size());
-            mDynamicUniformDescriptorOffsets[offsetIndex] =
+            mDefaultUniformDynamicDescriptorOffsets[offsetIndex] =
                 static_cast<uint32_t>(bufferOffset + offsets[shaderType]);
             mDefaultUniformBlocksDirty.reset(shaderType);
         }

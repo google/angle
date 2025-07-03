@@ -625,7 +625,7 @@ class ProgramExecutableVk : public ProgramExecutableImpl
 
     // A set of dynamic offsets used with vkCmdBindDescriptorSets for the default uniform buffers.
     VkDescriptorType mUniformBufferDescriptorType;
-    gl::ShaderVector<uint32_t> mDynamicUniformDescriptorOffsets;
+    gl::ShaderVector<uint32_t> mDefaultUniformDynamicDescriptorOffsets;
 
     ShaderInterfaceVariableInfoMap mVariableInfoMap;
 
@@ -678,7 +678,6 @@ class ProgramExecutableVk : public ProgramExecutableImpl
     // The "layout" information for descriptorSets
     vk::WriteDescriptorDescs mShaderResourceWriteDescriptorDescs;
     vk::WriteDescriptorDescs mTextureWriteDescriptorDescs;
-    vk::WriteDescriptorDescs mDefaultUniformWriteDescriptorDescs;
     vk::WriteDescriptorDescs mDefaultUniformAndXfbWriteDescriptorDescs;
 
     // The DescriptorSetDescBuilder for descriptorSets
