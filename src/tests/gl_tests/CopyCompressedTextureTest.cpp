@@ -576,7 +576,8 @@ TEST_P(CopyCompressedTextureTestES31, CopyFromUncompressedToCompressed)
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(CopyCompressedTextureTest);
-GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(CopyCompressedTextureTestES32);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(CopyCompressedTextureTestES31);
 ANGLE_INSTANTIATE_TEST_ES31(CopyCompressedTextureTestES31);
 
 }  // namespace angle
