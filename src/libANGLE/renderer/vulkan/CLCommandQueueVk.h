@@ -114,11 +114,10 @@ class HostTransferConfig
           mOrigin(origin),
           mRegion(region),
           mBufferRect(cl::Offset{}, cl::Extents{}, 0, 0, 0),
-          mHostRect(cl::Offset{}, cl::Extents{}, 0, 0, 0)
+          mHostRect(cl::kOffsetZero, region, rowPitch, slicePitch, elementSize)
     {
-        ASSERT(type == CL_COMMAND_READ_IMAGE);
+        ASSERT(type == CL_COMMAND_READ_IMAGE || type == CL_COMMAND_WRITE_IMAGE);
     }
-
     cl_command_type getType() const { return mType; }
     size_t getSize() const { return mSize; }
     size_t getOffset() const { return mOffset; }
@@ -456,10 +455,8 @@ class CLCommandQueueVk : public CLCommandQueueImpl
 
     angle::Result processPrintfBuffer();
     angle::Result copyImageToFromBuffer(CLImageVk &imageVk,
-                                        vk::BufferHelper &buffer,
-                                        const cl::Offset &origin,
-                                        const cl::Extents &region,
-                                        size_t bufferOffset,
+                                        CLBufferVk &buffer,
+                                        VkBufferImageCopy copyRegion,
                                         ImageBufferCopyDirection writeToBuffer);
 
     bool hasUserEventDependency() const;

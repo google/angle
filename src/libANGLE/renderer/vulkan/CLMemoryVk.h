@@ -202,7 +202,7 @@ class CLImageVk : public CLMemoryVk
     bool isCurrentlyInUse() const override;
     bool containsHostMemExtension();
 
-    angle::Result getOrCreateStagingBuffer(vk::BufferHelper **stagingBufferOut);
+    angle::Result getOrCreateStagingBuffer(CLBufferVk **clBufferOut);
     angle::Result copyStagingFrom(void *ptr, size_t offset, size_t size);
     angle::Result copyStagingTo(void *ptr, size_t offset, size_t size);
     angle::Result copyStagingToFromWithPitch(void *ptr,
@@ -237,9 +237,10 @@ class CLImageVk : public CLMemoryVk
     size_t calculateSlicePitch(size_t imageRowPitch);
 
     vk::ImageHelper mImage;
-    vk::BufferHelper mStagingBuffer;
     cl::Extents mExtent;
     angle::FormatID mAngleFormat;
+
+    cl::Buffer *mStagingBuffer;
     vk::ImageView mImageView;
     VkImageViewType mImageViewType;
 
