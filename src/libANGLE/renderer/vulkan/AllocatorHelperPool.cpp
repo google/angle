@@ -17,8 +17,7 @@ namespace vk
 
 void DedicatedCommandBlockAllocator::resetAllocator()
 {
-    mAllocator.pop();
-    mAllocator.push();
+    mAllocator.reset();
 }
 
 void DedicatedCommandBlockPool::reset(CommandBufferCommandTracker *commandBufferTracker)

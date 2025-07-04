@@ -1810,7 +1810,6 @@ CommandBufferHelperCommon::~CommandBufferHelperCommon() {}
 
 void CommandBufferHelperCommon::initializeImpl()
 {
-    mCommandAllocator.init();
 }
 
 void CommandBufferHelperCommon::resetImpl(ErrorContext *context)

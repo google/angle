@@ -376,23 +376,6 @@ int GetMaxUniformVectorsForShaderType(GLenum shaderType, const ShBuiltInResource
 namespace
 {
 
-class [[nodiscard]] TScopedPoolAllocator
-{
-  public:
-    TScopedPoolAllocator(angle::PoolAllocator *allocator) : mAllocator(allocator)
-    {
-        mAllocator->push();
-        SetGlobalPoolAllocator(mAllocator);
-    }
-    ~TScopedPoolAllocator()
-    {
-        SetGlobalPoolAllocator(nullptr);
-        mAllocator->pop(angle::PoolAllocator::ReleaseStrategy::All);
-    }
-
-  private:
-    angle::PoolAllocator *mAllocator;
-};
 
 class [[nodiscard]] TScopedSymbolTableLevel
 {
@@ -482,14 +465,12 @@ bool ValidateFragColorAndFragData(GLenum shaderType,
 
 TShHandleBase::TShHandleBase()
 {
-    allocator.push();
     SetGlobalPoolAllocator(&allocator);
 }
 
 TShHandleBase::~TShHandleBase()
 {
     SetGlobalPoolAllocator(nullptr);
-    allocator.popAll();
 }
 
 TCompiler::TCompiler(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
@@ -1505,7 +1486,7 @@ bool TCompiler::compile(const char *const shaderStrings[],
         compileOptions.flattenPragmaSTDGLInvariantAll = true;
     }
 
-    TScopedPoolAllocator scopedAlloc(&allocator);
+    TScopedPoolAllocator scopedAlloc;
     TIntermBlock *root = compileTreeImpl(shaderStrings, numStrings, compileOptions);
 
     if (root)
