@@ -1026,7 +1026,7 @@ deps = {
   },
 
   'third_party/vulkan-deps': {
-    'url': Var('chromium_git') + '/vulkan-deps@e9520b14c6c95f8682786d5771bc8208cab960a7',
+    'url': Var('chromium_git') + '/vulkan-deps@61576f7bb0ed2d1560bf03ea018207eda497544a',
     'condition': 'not build_with_chromium',
   },
 
@@ -1036,7 +1036,7 @@ deps = {
   },
 
   'third_party/lunarg-vulkantools/src': {
-    'url': '{chromium_git}/external/github.com/LunarG/VulkanTools@0a2dad5cb501e1d201c62e6f9f6ba86079629829',
+    'url': '{chromium_git}/external/github.com/LunarG/VulkanTools@9d5196d657bdbd06d325790d56d586a3242f52cb',
     'condition': 'not build_with_chromium',
   },
 
@@ -1056,12 +1056,12 @@ deps = {
   },
 
   'third_party/vulkan-headers/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Headers@16cedde3564629c43808401ad1eb3ca6ef24709a',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Headers@2cd90f9d20df57eac214c148f3aed885372ddcfe',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/vulkan-loader/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Loader@8beef6cb63ffadb02300bf6321b4d3af85ea7417',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Loader@da8d2caad9341ca8c5a7c3deba217d7da50a7c24',
     'condition': 'not build_with_chromium',
   },
 
@@ -1071,12 +1071,12 @@ deps = {
   },
 
   'third_party/vulkan-utility-libraries/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Utility-Libraries@f3cfb7fa8994e37c7c0568e33a785591af2ca696',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Utility-Libraries@ec329e2721921f79743b90307ee047d08e057788',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/vulkan-validation-layers/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@8ee8c17b03f9e66b949fa70245bd3ec6642394df',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@42094612240193e0748bb7c19294ca144da4db97',
     'condition': 'not build_with_chromium',
   },
 
