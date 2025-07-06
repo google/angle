@@ -888,10 +888,10 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
     // begun.  However, using ANGLE's SecondaryCommandBuffer, the Vulkan command buffer (which is
     // the primary command buffer) is not ended, so technically we don't need to rebind these.
     mNewGraphicsCommandBufferDirtyBits = DirtyBits{
-        DIRTY_BIT_RENDER_PASS,      DIRTY_BIT_COLOR_ACCESS,     DIRTY_BIT_DEPTH_STENCIL_ACCESS,
-        DIRTY_BIT_PIPELINE_BINDING, DIRTY_BIT_TEXTURES,         DIRTY_BIT_VERTEX_BUFFERS,
-        DIRTY_BIT_INDEX_BUFFER,     DIRTY_BIT_SHADER_RESOURCES, DIRTY_BIT_DESCRIPTOR_SETS,
-        DIRTY_BIT_DRIVER_UNIFORMS,
+        DIRTY_BIT_RENDER_PASS,      DIRTY_BIT_COLOR_ACCESS,    DIRTY_BIT_DEPTH_STENCIL_ACCESS,
+        DIRTY_BIT_PIPELINE_BINDING, DIRTY_BIT_TEXTURES,        DIRTY_BIT_VERTEX_BUFFERS,
+        DIRTY_BIT_INDEX_BUFFER,     DIRTY_BIT_UNIFORM_BUFFERS, DIRTY_BIT_SHADER_RESOURCES,
+        DIRTY_BIT_DESCRIPTOR_SETS,  DIRTY_BIT_DRIVER_UNIFORMS,
     };
     if (getFeatures().supportsTransformFeedbackExtension.enabled ||
         getFeatures().emulateTransformFeedback.enabled)
@@ -900,8 +900,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
     }
 
     mNewComputeCommandBufferDirtyBits =
-        DirtyBits{DIRTY_BIT_PIPELINE_BINDING, DIRTY_BIT_TEXTURES, DIRTY_BIT_SHADER_RESOURCES,
-                  DIRTY_BIT_DESCRIPTOR_SETS, DIRTY_BIT_DRIVER_UNIFORMS};
+        DirtyBits{DIRTY_BIT_PIPELINE_BINDING, DIRTY_BIT_TEXTURES,        DIRTY_BIT_UNIFORM_BUFFERS,
+                  DIRTY_BIT_SHADER_RESOURCES, DIRTY_BIT_DESCRIPTOR_SETS, DIRTY_BIT_DRIVER_UNIFORMS};
 
     mDynamicStateDirtyBits = DirtyBits{
         DIRTY_BIT_DYNAMIC_VIEWPORT,           DIRTY_BIT_DYNAMIC_SCISSOR,
@@ -2879,13 +2879,20 @@ angle::Result ContextVk::handleDirtyUniformBuffersImpl(CommandBufferT *commandBu
 {
     gl::ProgramExecutable *executable = mState.getProgramExecutable();
     ASSERT(executable);
-    ASSERT(executable->hasUniformBuffers());
+
+    // Processes all uniform buffer blocks irrespective of dirty state.
+    // Reset dirty bits
+    mState.getAndResetDirtyUniformBlocks();
+
+    if (!executable->hasUniformBuffers())
+    {
+        return angle::Result::Continue;
+    }
 
     const VkPhysicalDeviceLimits &limits = mRenderer->getPhysicalDeviceProperties().limits;
     ProgramExecutableVk *executableVk    = vk::GetImpl(executable);
 
-    gl::ProgramUniformBlockMask dirtyBlocks =
-        mState.getAndResetDirtyUniformBlocks() & executable->getActiveUniformBufferBlocks();
+    gl::ProgramUniformBlockMask dirtyBlocks = executable->getActiveUniformBufferBlocks();
     for (size_t blockIndex : dirtyBlocks)
     {
         const GLuint binding = executable->getUniformBlockBinding(blockIndex);
@@ -5915,19 +5922,27 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 break;
             case gl::state::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS:
             {
-                constexpr gl::BufferDirtyTypeBitMask kOnlyOffsetDirtyMask{
-                    gl::BufferDirtyType::Offset};
-                const gl::BufferDirtyTypeBitMask currentDirtyTypeMask =
-                    glState.getAndResetUniformBufferBlocksDirtyTypeMask();
                 ASSERT(programExecutable);
-                if (vk::GetImpl(programExecutable)->usesDynamicUniformBufferDescriptors() &&
-                    currentDirtyTypeMask == kOnlyOffsetDirtyMask)
+                if (programExecutable->getActiveUniformBufferBlocks().any())
                 {
-                    updateUniformBufferBlocksOffset();
+                    constexpr gl::BufferDirtyTypeBitMask kOnlyOffsetDirtyMask{
+                        gl::BufferDirtyType::Offset};
+                    const gl::BufferDirtyTypeBitMask currentDirtyTypeMask =
+                        glState.getAndResetUniformBufferBlocksDirtyTypeMask();
+                    if (vk::GetImpl(programExecutable)->usesDynamicUniformBufferDescriptors() &&
+                        currentDirtyTypeMask == kOnlyOffsetDirtyMask)
+                    {
+                        updateUniformBufferBlocksOffset();
+                    }
+                    else
+                    {
+                        ANGLE_TRY(invalidateCurrentShaderUniformBuffers());
+                    }
                 }
                 else
                 {
-                    ANGLE_TRY(invalidateCurrentShaderUniformBuffers());
+                    // Current program has no active uniforms, reset dirty bits
+                    glState.getAndResetDirtyUniformBlocks();
                 }
                 break;
             }
@@ -6440,22 +6455,20 @@ angle::Result ContextVk::invalidateCurrentShaderUniformBuffers()
 {
     const gl::ProgramExecutable *executable = mState.getProgramExecutable();
     ASSERT(executable);
+    ASSERT(executable->hasUniformBuffers());
+    ASSERT(executable->getActiveUniformBufferBlocks().any());
 
-    if (executable->hasUniformBuffers())
+    if (executable->hasLinkedShaderStage(gl::ShaderType::Compute))
     {
-        if (executable->hasLinkedShaderStage(gl::ShaderType::Compute))
-        {
-            mComputeDirtyBits |= kUniformBuffersAndDescSetDirtyBits;
-        }
-        else
-        {
-            mGraphicsDirtyBits |= kUniformBuffersAndDescSetDirtyBits;
-        }
-
-        // Take care of read-after-write hazards that require implicit synchronization.
-        ANGLE_TRY(endRenderPassIfUniformBufferReadAfterTransformFeedbackWrite());
+        mComputeDirtyBits |= kUniformBuffersAndDescSetDirtyBits;
     }
-    return angle::Result::Continue;
+    else
+    {
+        mGraphicsDirtyBits |= kUniformBuffersAndDescSetDirtyBits;
+    }
+
+    // Take care of read-after-write hazards that require implicit synchronization.
+    return endRenderPassIfUniformBufferReadAfterTransformFeedbackWrite();
 }
 
 void ContextVk::updateUniformBuffersWithSharedCacheKey(

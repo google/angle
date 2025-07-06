@@ -1775,14 +1775,6 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 // Pixel4's GLES driver fails new test: TransformFeedbackTest.CaptureThenUseAsUBO.
 419403192 PIXEL4ORXL GLES : TransformFeedbackTest.CaptureThenUseAsUBO/* = SKIP
 
-// Intel's windows vulkan driver has a bug in descriptor set management
-429585235 WIN INTEL VULKAN : BufferDataTestES3.CopyBufferSubDataSelfDependency/* = SKIP
-429585235 WIN INTEL VULKAN : BufferSubDataTest.MapInvalidateThenBufferSubData/* = SKIP
-429585235 WIN INTEL VULKAN : SimpleStateChangeTestES31.DrawThenUpdateUBOThenDrawThenDrawIndexed/* = SKIP
-
-// Pixel6's vulkan driver has a bug in descriptor set management
-429585235 PIXEL6 VULKAN : BufferDataTestES3.CopyBufferSubDataSelfDependency/* = SKIP
-
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // Slow tests, should appear last in this file
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
