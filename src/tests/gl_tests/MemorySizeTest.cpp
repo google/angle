@@ -134,5 +134,5 @@ TEST_P(MemorySizeTest, BasicUsageRenderbuffer)
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
-ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(MemorySizeTest);
+ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND_ES31_AND_ES32(MemorySizeTest);
 }  // namespace angle

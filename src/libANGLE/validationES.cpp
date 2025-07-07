@@ -8737,6 +8737,14 @@ bool ValidateGetTexLevelParameterBase(const Context *context,
         case GL_TEXTURE_COMPRESSED:
             break;
 
+        case GL_MEMORY_SIZE_ANGLE:
+            if (context->getClientVersion() < ES_2_0 || !context->getExtensions().memorySizeANGLE)
+            {
+                ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kEnumNotSupported);
+                return false;
+            }
+            break;
+
         case GL_TEXTURE_DEPTH:
             if (context->getClientVersion() < ES_3_0 && !context->getExtensions().texture3DOES)
             {
