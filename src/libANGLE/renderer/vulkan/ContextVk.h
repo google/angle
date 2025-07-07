@@ -1431,12 +1431,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // avoided however, as on the affected driver that would disable certain optimizations.
     void updateStencilWriteWorkaround();
 
-    void updateUniformBuffersWithSharedCacheKey(
-        const vk::SharedDescriptorSetCacheKey &sharedCacheKey);
-
-    void updateShaderResourcesWithSharedCacheKey(
-        const vk::SharedDescriptorSetCacheKey &sharedCacheKey);
-
     angle::Result createGraphicsPipeline();
 
     angle::Result allocateQueueSerialIndex();

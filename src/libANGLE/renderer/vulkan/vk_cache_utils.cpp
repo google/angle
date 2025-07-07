@@ -6064,7 +6064,7 @@ void WriteDescriptorDescs::updateImages(const gl::ProgramExecutable &executable,
 void WriteDescriptorDescs::updateInputAttachments(
     const gl::ProgramExecutable &executable,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
-    FramebufferVk *framebufferVk)
+    const FramebufferVk *framebufferVk)
 {
     if (framebufferVk->getDepthStencilRenderTarget() != nullptr)
     {
@@ -6427,24 +6427,14 @@ void DescriptorSetDescBuilder::setEmptyBuffer(uint32_t infoDescIndex,
 void DescriptorSetDescBuilder::updateOneShaderBuffer(
     Context *context,
     CommandBufferHelperCommon *commandBufferHelper,
-    const size_t blockIndex,
+    const uint32_t infoDescIndex,
     const gl::InterfaceBlock &block,
     const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding,
     VkDescriptorType descriptorType,
     VkDeviceSize maxBoundBufferRange,
-    const BufferHelper &emptyBuffer,
-    const WriteDescriptorDescs &writeDescriptorDescs,
-    const GLbitfield memoryBarrierBits)
+    const BufferHelper &emptyBuffer)
 {
-    uint32_t infoDescIndex =
-        writeDescriptorDescs.getDescriptorDescIndexForBufferBlockIndex(descriptorType, blockIndex);
     ASSERT(infoDescIndex != kInvalidDescriptorDescIndex && infoDescIndex < mDesc.size());
-
-    if (bufferBinding.get() == nullptr)
-    {
-        setEmptyBuffer(infoDescIndex, descriptorType, emptyBuffer);
-        return;
-    }
 
     // Limit bound buffer size to maximum resource binding size.
     GLsizeiptr boundBufferSize = gl::GetBoundBufferAvailableSize(bufferBinding);
@@ -6457,49 +6447,7 @@ void DescriptorSetDescBuilder::updateOneShaderBuffer(
 
     BufferVk *bufferVk         = vk::GetImpl(bufferBinding.get());
     BufferHelper &bufferHelper = bufferVk->getBuffer();
-
-    if (IsUniformBuffer(descriptorType))
-    {
-        commandBufferHelper->bufferRead(context, VK_ACCESS_UNIFORM_READ_BIT, block.activeShaders(),
-                                        &bufferHelper);
-    }
-    else
-    {
-        ASSERT(descriptorType == VK_DESCRIPTOR_TYPE_STORAGE_BUFFER ||
-               descriptorType == VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC);
-        if (block.pod.isReadOnly)
-        {
-            // Avoid unnecessary barriers for readonly SSBOs by making sure the buffers are
-            // marked read-only.  This also helps BufferVk make better decisions during
-            // buffer data uploads and copies by knowing that the buffers are not actually
-            // being written to.
-            commandBufferHelper->bufferRead(context, VK_ACCESS_SHADER_READ_BIT,
-                                            block.activeShaders(), &bufferHelper);
-        }
-        else if (bufferHelper.isLastAccessShaderWriteOnly() &&
-                 (memoryBarrierBits & kBufferMemoryBarrierBits) == 0)
-        {
-            // Buffer is already in shader write access, and this is not from memoryBarrier call,
-            // then skip the WAW barrier since GL spec says driver is not required to insert barrier
-            // here. We still need to maintain object life time tracking here.
-            // Based on discussion here https://gitlab.khronos.org/opengl/API/-/issues/144, the
-            // above check of VK_ACCESS_SHADER_WRITE_BIT bit can be removed and instead rely on app
-            // issue glMemoryBarrier. But almost all usage I am seeing does not issue
-            // glMemoryBarrier before SSBO write. They only issue glMemoryBarrier after the SSBO
-            // write. This is to ensure we do not break the existing usage even if we think they are
-            // out of spec.
-            commandBufferHelper->retainResourceForWrite(&bufferHelper);
-        }
-        else
-        {
-            // We set the SHADER_READ_BIT to be conservative.
-            VkAccessFlags accessFlags = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
-            commandBufferHelper->bufferWrite(context, accessFlags, block.activeShaders(),
-                                             &bufferHelper);
-        }
-    }
-
-    VkDeviceSize offset = bufferBinding.getOffset() + bufferHelper.getOffset();
+    VkDeviceSize offset        = bufferBinding.getOffset() + bufferHelper.getOffset();
 
     DescriptorInfoDesc &infoDesc   = mDesc.getInfoDesc(infoDescIndex);
     infoDesc.samplerOrBufferSerial = bufferHelper.getBlockSerial().getValue();
@@ -6518,33 +6466,139 @@ void DescriptorSetDescBuilder::updateOneShaderBuffer(
     mHandles[infoDescIndex].buffer = bufferHelper.getBuffer().getHandle();
 }
 
-void DescriptorSetDescBuilder::updateShaderBuffers(Context *context,
-                                                   CommandBufferHelperCommon *commandBufferHelper,
-                                                   const gl::ProgramExecutable &executable,
-                                                   const gl::BufferVector &buffers,
-                                                   const std::vector<gl::InterfaceBlock> &blocks,
-                                                   VkDescriptorType descriptorType,
-                                                   VkDeviceSize maxBoundBufferRange,
-                                                   const BufferHelper &emptyBuffer,
-                                                   const WriteDescriptorDescs &writeDescriptorDescs,
-                                                   const GLbitfield memoryBarrierBits)
+void DescriptorSetDescBuilder::updateOneUniformBuffer(
+    Context *context,
+    CommandBufferHelperCommon *commandBufferHelper,
+    const size_t blockIndex,
+    const gl::InterfaceBlock &block,
+    const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding,
+    VkDescriptorType descriptorType,
+    VkDeviceSize maxBoundBufferRange,
+    const BufferHelper &emptyBuffer,
+    const WriteDescriptorDescs &writeDescriptorDescs)
 {
-    const bool isUniformBuffer = IsUniformBuffer(descriptorType);
+    ASSERT(IsUniformBuffer(descriptorType));
 
-    gl::ProgramBufferBlockMask dirtyBlocks = isUniformBuffer
-                                                 ? executable.getActiveUniformBufferBlocks()
-                                                 : executable.getActiveStorageBufferBlocks();
+    uint32_t infoDescIndex =
+        writeDescriptorDescs.getDescriptorDescIndexForUniformBufferBlockIndex(blockIndex);
 
-    // Now that we have the proper array elements counts, initialize the info structures.
-    for (size_t blockIndex : dirtyBlocks)
+    // Early return if empty buffer
+    if (bufferBinding.get() == nullptr)
     {
-        const GLuint binding = isUniformBuffer
-                                   ? executable.getUniformBlockBinding(blockIndex)
-                                   : executable.getShaderStorageBlockBinding(blockIndex);
+        setEmptyBuffer(infoDescIndex, descriptorType, emptyBuffer);
+        return;
+    }
 
-        updateOneShaderBuffer(context, commandBufferHelper, blockIndex, blocks[blockIndex],
-                              buffers[binding], descriptorType, maxBoundBufferRange, emptyBuffer,
-                              writeDescriptorDescs, memoryBarrierBits);
+    updateOneShaderBuffer(context, commandBufferHelper, infoDescIndex, block, bufferBinding,
+                          descriptorType, maxBoundBufferRange, emptyBuffer);
+
+    // Insert necessary barriers
+    commandBufferHelper->bufferRead(context, VK_ACCESS_UNIFORM_READ_BIT, block.activeShaders(),
+                                    &vk::GetImpl(bufferBinding.get())->getBuffer());
+}
+
+void DescriptorSetDescBuilder::updateOneUniformBufferOffset(
+    const size_t blockIndex,
+    const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding,
+    const WriteDescriptorDescs &writeDescriptorDescs)
+{
+    uint32_t infoDescIndex =
+        writeDescriptorDescs.getDescriptorDescIndexForUniformBufferBlockIndex(blockIndex);
+    ASSERT(infoDescIndex != kInvalidDescriptorDescIndex && infoDescIndex < mDesc.size());
+    ASSERT(bufferBinding.get() != nullptr);
+
+    DescriptorInfoDesc &infoDesc = mDesc.getInfoDesc(infoDescIndex);
+    BufferHelper &bufferHelper   = vk::GetImpl(bufferBinding.get())->getBuffer();
+    ASSERT(infoDesc.samplerOrBufferSerial == bufferHelper.getBlockSerial().getValue());
+    // Reachable only by program executables with dynamic descriptor type
+    ASSERT(infoDesc.imageViewSerialOrOffset == 0);
+
+    VkDeviceSize newOffset = bufferBinding.getOffset() + bufferHelper.getOffset();
+    ASSERT(infoDescIndex < mDynamicOffsets.size());
+    SetBitField(mDynamicOffsets[infoDescIndex], newOffset);
+}
+
+void DescriptorSetDescBuilder::updateOneStorageBuffer(
+    Context *context,
+    CommandBufferHelperCommon *commandBufferHelper,
+    const size_t blockIndex,
+    const gl::InterfaceBlock &block,
+    const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding,
+    VkDescriptorType descriptorType,
+    VkDeviceSize maxBoundBufferRange,
+    const BufferHelper &emptyBuffer,
+    const WriteDescriptorDescs &writeDescriptorDescs,
+    const GLbitfield memoryBarrierBits)
+{
+    ASSERT(IsStorageBuffer(descriptorType));
+
+    uint32_t infoDescIndex =
+        writeDescriptorDescs.getDescriptorDescIndexForStorageBufferBlockIndex(blockIndex);
+
+    // Early return if empty buffer
+    if (bufferBinding.get() == nullptr)
+    {
+        setEmptyBuffer(infoDescIndex, descriptorType, emptyBuffer);
+        return;
+    }
+
+    updateOneShaderBuffer(context, commandBufferHelper, infoDescIndex, block, bufferBinding,
+                          descriptorType, maxBoundBufferRange, emptyBuffer);
+
+    // Insert necessary barriers
+    BufferHelper &bufferHelper = vk::GetImpl(bufferBinding.get())->getBuffer();
+    if (block.pod.isReadOnly)
+    {
+        // Avoid unnecessary barriers for readonly SSBOs by making sure the buffers are
+        // marked read-only.  This also helps BufferVk make better decisions during
+        // buffer data uploads and copies by knowing that the buffers are not actually
+        // being written to.
+        commandBufferHelper->bufferRead(context, VK_ACCESS_SHADER_READ_BIT, block.activeShaders(),
+                                        &bufferHelper);
+    }
+    else if (bufferHelper.isLastAccessShaderWriteOnly() &&
+             (memoryBarrierBits & kBufferMemoryBarrierBits) == 0)
+    {
+        // Buffer is already in shader write access, and this is not from memoryBarrier call,
+        // then skip the WAW barrier since GL spec says driver is not required to insert barrier
+        // here. We still need to maintain object life time tracking here.
+        // Based on discussion here https://gitlab.khronos.org/opengl/API/-/issues/144, the
+        // above check of VK_ACCESS_SHADER_WRITE_BIT bit can be removed and instead rely on app
+        // issue glMemoryBarrier. But almost all usage I am seeing does not issue
+        // glMemoryBarrier before SSBO write. They only issue glMemoryBarrier after the SSBO
+        // write. This is to ensure we do not break the existing usage even if we think they are
+        // out of spec.
+        commandBufferHelper->retainResourceForWrite(&bufferHelper);
+    }
+    else
+    {
+        // We set the SHADER_READ_BIT to be conservative.
+        VkAccessFlags accessFlags = VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT;
+        commandBufferHelper->bufferWrite(context, accessFlags, block.activeShaders(),
+                                         &bufferHelper);
+    }
+}
+
+void DescriptorSetDescBuilder::updateStorageBuffers(
+    Context *context,
+    CommandBufferHelperCommon *commandBufferHelper,
+    const gl::ProgramExecutable &executable,
+    const gl::BufferVector &buffers,
+    const std::vector<gl::InterfaceBlock> &blocks,
+    VkDescriptorType descriptorType,
+    VkDeviceSize maxBoundBufferRange,
+    const BufferHelper &emptyBuffer,
+    const WriteDescriptorDescs &writeDescriptorDescs,
+    const GLbitfield memoryBarrierBits)
+{
+    // Now that we have the proper array elements counts, initialize the info structures.
+    for (size_t blockIndex : executable.getActiveStorageBufferBlocks())
+    {
+        const GLuint binding = executable.getShaderStorageBlockBinding(blockIndex);
+
+        updateOneStorageBuffer(context, commandBufferHelper, blockIndex, blocks[blockIndex],
+                               buffers[binding], descriptorType, maxBoundBufferRange, emptyBuffer,
+                               writeDescriptorDescs, memoryBarrierBits);
     }
 }
 
@@ -6618,28 +6672,6 @@ void DescriptorSetDescBuilder::updateAtomicCounters(
 
         mHandles[infoIndex].buffer = bufferHelper.getBuffer().getHandle();
     }
-}
-
-void DescriptorSetDescBuilder::updateOneShaderBufferOffset(
-    const size_t blockIndex,
-    const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding,
-    VkDescriptorType descriptorType,
-    const WriteDescriptorDescs &writeDescriptorDescs)
-{
-    uint32_t infoDescIndex =
-        writeDescriptorDescs.getDescriptorDescIndexForBufferBlockIndex(descriptorType, blockIndex);
-    ASSERT(infoDescIndex != kInvalidDescriptorDescIndex && infoDescIndex < mDesc.size());
-    ASSERT(bufferBinding.get() != nullptr);
-
-    DescriptorInfoDesc &infoDesc = mDesc.getInfoDesc(infoDescIndex);
-    BufferHelper &bufferHelper   = vk::GetImpl(bufferBinding.get())->getBuffer();
-    ASSERT(infoDesc.samplerOrBufferSerial == bufferHelper.getBlockSerial().getValue());
-    // Reachable only by program executables with dynamic descriptor type
-    ASSERT(infoDesc.imageViewSerialOrOffset == 0);
-
-    VkDeviceSize newOffset = bufferBinding.getOffset() + bufferHelper.getOffset();
-    ASSERT(infoDescIndex < mDynamicOffsets.size());
-    SetBitField(mDynamicOffsets[infoDescIndex], newOffset);
 }
 
 angle::Result DescriptorSetDescBuilder::updateImages(
@@ -6747,7 +6779,7 @@ angle::Result DescriptorSetDescBuilder::updateInputAttachments(
     vk::Context *context,
     const gl::ProgramExecutable &executable,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
-    FramebufferVk *framebufferVk,
+    const FramebufferVk *framebufferVk,
     const WriteDescriptorDescs &writeDescriptorDescs)
 {
     // Note: Depth/stencil input attachments are only supported in ANGLE when using

@@ -741,38 +741,6 @@ bool QueueSerialsHaveDifferentIndexOrSmaller(const QueueSerial &queueSerial1,
     return queueSerial1.getIndex() != queueSerial2.getIndex() || queueSerial1 < queueSerial2;
 }
 
-void UpdateImagesWithSharedCacheKey(const gl::ActiveTextureArray<TextureVk *> &activeImages,
-                                    const std::vector<gl::ImageBinding> &imageBindings,
-                                    const vk::SharedDescriptorSetCacheKey &sharedCacheKey)
-{
-    for (const gl::ImageBinding &imageBinding : imageBindings)
-    {
-        uint32_t arraySize = static_cast<uint32_t>(imageBinding.boundImageUnits.size());
-        for (uint32_t arrayElement = 0; arrayElement < arraySize; ++arrayElement)
-        {
-            GLuint imageUnit = imageBinding.boundImageUnits[arrayElement];
-            // For simplicity, we do not check if uniform is active or duplicate. The worst case is
-            // we unnecessarily delete the cache entry when image bound to inactive uniform is
-            // destroyed.
-            activeImages[imageUnit]->onNewDescriptorSet(sharedCacheKey);
-        }
-    }
-}
-
-void UpdateBufferWithSharedCacheKey(const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding,
-                                    const vk::SharedDescriptorSetCacheKey &sharedCacheKey)
-{
-    if (bufferBinding.get() != nullptr)
-    {
-        // For simplicity, we do not check if uniform is active or duplicate. The worst case is
-        // we unnecessarily delete the cache entry when buffer bound to inactive uniform is
-        // destroyed.
-        BufferVk *bufferVk             = vk::GetImpl(bufferBinding.get());
-        vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
-        bufferHelper.onNewDescriptorSet(sharedCacheKey);
-    }
-}
-
 void GenerateTextureUnitSamplerIndexMap(
     const std::vector<GLuint> &samplerBoundTextureUnits,
     std::unordered_map<size_t, uint32_t> *textureUnitSamplerIndexMapOut)
@@ -2775,68 +2743,24 @@ angle::Result ContextVk::handleDirtyShaderResourcesImpl(CommandBufferHelperT *co
 {
     const gl::ProgramExecutable *executable = mState.getProgramExecutable();
     ASSERT(executable);
-
-    const bool hasImages               = executable->hasImages();
-    const bool hasStorageBuffers       = executable->hasStorageBuffers();
-    const bool hasAtomicCounterBuffers = executable->hasAtomicCounterBuffers();
-    const bool hasFramebufferFetch     = executable->usesColorFramebufferFetch() ||
-                                     executable->usesDepthFramebufferFetch() ||
-                                     executable->usesStencilFramebufferFetch();
-
-    if (!hasStorageBuffers && !hasAtomicCounterBuffers && !hasImages && !hasFramebufferFetch)
+    if (executable->hasImages())
     {
-        return angle::Result::Continue;
-    }
-
-    const VkPhysicalDeviceLimits &limits = mRenderer->getPhysicalDeviceProperties().limits;
-    ProgramExecutableVk *executableVk    = vk::GetImpl(executable);
-
-    // Update input attachments first since it could change descriptor counts
-    if (hasFramebufferFetch)
-    {
-        ANGLE_TRY(executableVk->updateInputAttachmentsDescInfo(
-            this, vk::GetImpl(mState.getDrawFramebuffer())));
-    }
-    if (hasStorageBuffers)
-    {
-        executableVk->updateStorageBuffersDescInfo(
-            this, commandBufferHelper, mState.getOffsetBindingPointerShaderStorageBuffers(),
-            limits.maxStorageBufferRange, mEmptyBuffer, mDeferredMemoryBarriers);
-    }
-    if (hasAtomicCounterBuffers)
-    {
-        executableVk->updateAtomicCountersDescInfo(
-            this, commandBufferHelper, mState.getOffsetBindingPointerAtomicCounterBuffers(),
-            limits.minStorageBufferOffsetAlignment, mEmptyBuffer);
-    }
-    if (hasImages)
-    {
+        // Update active images
         ANGLE_TRY(updateActiveImages(commandBufferHelper));
-        ANGLE_TRY(executableVk->updateImagesDescInfo(this, mActiveImages, mState.getImageUnits()));
     }
 
-    mDeferredMemoryBarriers = 0;
+    ProgramExecutableVk *executableVk = vk::GetImpl(executable);
+    ASSERT(executableVk);
+    const VkPhysicalDeviceLimits &limits = mRenderer->getPhysicalDeviceProperties().limits;
+    GLbitfield memoryBarriers            = mDeferredMemoryBarriers;
+    mDeferredMemoryBarriers              = 0;
 
-    vk::SharedDescriptorSetCacheKey newSharedCacheKey;
-    ANGLE_TRY(executableVk->updateShaderResourcesDescriptorSet(
-        this, getCurrentFrameCount(), mShareGroupVk->getUpdateDescriptorSetsBuilder(),
-        &newSharedCacheKey));
-
-    if (newSharedCacheKey)
-    {
-        // A new cache entry has been created. We record this cache key in the images and buffers so
-        // that the descriptorSet cache can be destroyed when buffer/image is destroyed.
-        updateShaderResourcesWithSharedCacheKey(newSharedCacheKey);
-    }
-
-    // Record usage of storage buffers and images in the command buffer to aid handling of
-    // glMemoryBarrier.
-    if (hasImages || hasStorageBuffers || hasAtomicCounterBuffers)
-    {
-        commandBufferHelper->setHasShaderStorageOutput();
-    }
-
-    return angle::Result::Continue;
+    return executableVk->updateShaderResourcesDescInfo(
+        this, commandBufferHelper, vk::GetImpl(mState.getDrawFramebuffer()),
+        mState.getOffsetBindingPointerShaderStorageBuffers(),
+        mState.getOffsetBindingPointerAtomicCounterBuffers(), limits, mEmptyBuffer, memoryBarriers,
+        mActiveImages, mState.getImageUnits(), getCurrentFrameCount(),
+        mShareGroupVk->getUpdateDescriptorSetsBuilder());
 }
 
 angle::Result ContextVk::handleDirtyGraphicsShaderResources(DirtyBits::Iterator *dirtyBitsIterator,
@@ -2892,30 +2816,10 @@ angle::Result ContextVk::handleDirtyUniformBuffersImpl(CommandBufferT *commandBu
     const VkPhysicalDeviceLimits &limits = mRenderer->getPhysicalDeviceProperties().limits;
     ProgramExecutableVk *executableVk    = vk::GetImpl(executable);
 
-    gl::ProgramUniformBlockMask dirtyBlocks = executable->getActiveUniformBufferBlocks();
-    for (size_t blockIndex : dirtyBlocks)
-    {
-        const GLuint binding = executable->getUniformBlockBinding(blockIndex);
-        executableVk->updateOneUniformBufferDescInfo(
-            this, commandBufferHelper, blockIndex,
-            mState.getOffsetBindingPointerUniformBuffers()[binding], limits.maxUniformBufferRange,
-            mEmptyBuffer, mDeferredMemoryBarriers);
-    }
-
-    vk::SharedDescriptorSetCacheKey newSharedCacheKey;
-    ANGLE_TRY(executableVk->updateUniformBuffersDescriptorSet(
-        this, getCurrentFrameCount(), mShareGroupVk->getUpdateDescriptorSetsBuilder(),
-        &newSharedCacheKey));
-
-    if (newSharedCacheKey)
-    {
-        // A new cache entry has been created. We record this cache key in the images and
-        // buffers so that the descriptorSet cache can be destroyed when buffer/image is
-        // destroyed.
-        updateUniformBuffersWithSharedCacheKey(newSharedCacheKey);
-    }
-
-    return angle::Result::Continue;
+    return executableVk->updateUniformBuffersDescInfo(
+        this, commandBufferHelper, mState.getOffsetBindingPointerUniformBuffers(),
+        limits.maxUniformBufferRange, mEmptyBuffer, getCurrentFrameCount(),
+        mShareGroupVk->getUpdateDescriptorSetsBuilder());
 }
 
 angle::Result ContextVk::handleDirtyGraphicsUniformBuffers(DirtyBits::Iterator *dirtyBitsIterator,
@@ -2963,21 +2867,10 @@ angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersEmulation(
     ProgramExecutableVk *executableVk      = vk::GetImpl(executable);
     vk::BufferHelper *currentUniformBuffer = mDefaultUniformStorage.getCurrentBuffer();
 
-    executableVk->updateUniformsAndXfbDescInfo(this, currentUniformBuffer, mEmptyBuffer,
-                                               mState.isTransformFeedbackActiveUnpaused(),
-                                               transformFeedbackVk);
-
-    vk::SharedDescriptorSetCacheKey newSharedCacheKey;
-    ANGLE_TRY(executableVk->updateUniformsAndXfbDescriptorSet(
-        this, getCurrentFrameCount(), mShareGroupVk->getUpdateDescriptorSetsBuilder(),
-        currentUniformBuffer, &newSharedCacheKey));
-
-    if (newSharedCacheKey)
-    {
-        transformFeedbackVk->onNewDescriptorSet(*executable, newSharedCacheKey);
-    }
-
-    return angle::Result::Continue;
+    return executableVk->updateUniformsAndXfbDescInfo(
+        this, currentUniformBuffer, mEmptyBuffer, getCurrentFrameCount(),
+        mShareGroupVk->getUpdateDescriptorSetsBuilder(), mState.isTransformFeedbackActiveUnpaused(),
+        transformFeedbackVk);
 }
 
 angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersExtension(
@@ -6449,68 +6342,6 @@ angle::Result ContextVk::invalidateCurrentShaderUniformBuffers()
 
     // Take care of read-after-write hazards that require implicit synchronization.
     return endRenderPassIfUniformBufferReadAfterTransformFeedbackWrite();
-}
-
-void ContextVk::updateUniformBuffersWithSharedCacheKey(
-    const vk::SharedDescriptorSetCacheKey &sharedCacheKey)
-{
-    const gl::ProgramExecutable *executable = mState.getProgramExecutable();
-    ProgramExecutableVk *executableVk       = vk::GetImpl(executable);
-
-    // Dynamic descriptor type uses the underlying BufferBlock in the descriptorSet. There could be
-    // many BufferHelper objects sub-allocated from the same BufferBlock. And each BufferHelper
-    // could combine with other buffers to form a descriptorSet. This means the descriptorSet
-    // numbers for BufferBlock could potentially very large, in thousands with some app traces like
-    // seeing in honkai_star_rail. The overhead of maintaining mDescriptorSetCacheManager for
-    // BufferBlock could be too big. We chose to not maintain mDescriptorSetCacheManager in this
-    // case. The only downside is that when BufferBlock gets destroyed, we will not able to
-    // immediately destroy all cached descriptorSets that it is part of. They will still gets
-    // evicted later on if needed.
-    if (executable->hasUniformBuffers() && !executableVk->usesDynamicUniformBufferDescriptors())
-    {
-        const std::vector<gl::InterfaceBlock> &blocks = executable->getUniformBlocks();
-        for (uint32_t bufferIndex = 0; bufferIndex < blocks.size(); ++bufferIndex)
-        {
-            const GLuint binding = executable->getUniformBlockBinding(bufferIndex);
-            UpdateBufferWithSharedCacheKey(mState.getOffsetBindingPointerUniformBuffers()[binding],
-                                           sharedCacheKey);
-        }
-    }
-}
-
-void ContextVk::updateShaderResourcesWithSharedCacheKey(
-    const vk::SharedDescriptorSetCacheKey &sharedCacheKey)
-{
-    const gl::ProgramExecutable *executable = mState.getProgramExecutable();
-    ProgramExecutableVk *executableVk       = vk::GetImpl(executable);
-
-    if (executable->hasStorageBuffers() &&
-        !executableVk->usesDynamicShaderStorageBufferDescriptors())
-    {
-        const std::vector<gl::InterfaceBlock> &blocks = executable->getShaderStorageBlocks();
-        for (uint32_t bufferIndex = 0; bufferIndex < blocks.size(); ++bufferIndex)
-        {
-            const GLuint binding = executable->getShaderStorageBlockBinding(bufferIndex);
-            UpdateBufferWithSharedCacheKey(
-                mState.getOffsetBindingPointerShaderStorageBuffers()[binding], sharedCacheKey);
-        }
-    }
-    if (executable->hasAtomicCounterBuffers() &&
-        !executableVk->usesDynamicAtomicCounterBufferDescriptors())
-    {
-        const std::vector<gl::AtomicCounterBuffer> &blocks = executable->getAtomicCounterBuffers();
-        for (uint32_t bufferIndex = 0; bufferIndex < blocks.size(); ++bufferIndex)
-        {
-            const GLuint binding = executable->getAtomicCounterBufferBinding(bufferIndex);
-            UpdateBufferWithSharedCacheKey(
-                mState.getOffsetBindingPointerAtomicCounterBuffers()[binding], sharedCacheKey);
-        }
-    }
-    if (executable->hasImages())
-    {
-        UpdateImagesWithSharedCacheKey(mActiveImages, executable->getImageBindings(),
-                                       sharedCacheKey);
-    }
 }
 
 void ContextVk::invalidateGraphicsDriverUniforms()

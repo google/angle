@@ -347,6 +347,20 @@ angle::Result UpdateFullTexturesDescriptorSet(vk::ErrorContext *context,
 
     return angle::Result::Continue;
 }
+
+void UpdateBufferWithSharedCacheKey(const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding,
+                                    const vk::SharedDescriptorSetCacheKey &sharedCacheKey)
+{
+    if (bufferBinding.get() != nullptr)
+    {
+        // For simplicity, we do not check if uniform is active or duplicate. The worst case is
+        // we unnecessarily delete the cache entry when buffer bound to inactive uniform is
+        // destroyed.
+        BufferVk *bufferVk             = vk::GetImpl(bufferBinding.get());
+        vk::BufferHelper &bufferHelper = bufferVk->getBuffer();
+        bufferHelper.onNewDescriptorSet(sharedCacheKey);
+    }
+}
 }  // namespace
 
 class ProgramExecutableVk::WarmUpTaskCommon : public vk::ErrorContext, public LinkSubTask
@@ -1983,7 +1997,7 @@ angle::Result ProgramExecutableVk::updateUniformsAndXfbDescriptorSet(
     vk::Context *context,
     uint32_t currentFrame,
     UpdateDescriptorSetsBuilder *updateBuilder,
-    vk::BufferHelper *defaultUniformBuffer,
+    const vk::BufferHelper *defaultUniformBuffer,
     vk::SharedDescriptorSetCacheKey *sharedCacheKeyOut)
 {
     mCurrentDefaultUniformBufferSerial =
@@ -2049,6 +2063,220 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(
     }
 
     mValidDescriptorSetIndices.set(DescriptorSetIndex::Texture);
+    return angle::Result::Continue;
+}
+
+angle::Result ProgramExecutableVk::updateUniformsAndXfbDescInfo(
+    vk::Context *context,
+    const vk::BufferHelper *currentUniformBuffer,
+    const vk::BufferHelper &emptyBuffer,
+    uint32_t currentFrameCount,
+    UpdateDescriptorSetsBuilder *updateBuilder,
+    bool activeUnpaused,
+    TransformFeedbackVk *transformFeedbackVk)
+{
+    mDefaultUniformAndXfbDescriptorDescBuilder.updateUniformsAndXfb(
+        context, *getExecutable(), mDefaultUniformAndXfbWriteDescriptorDescs, currentUniformBuffer,
+        emptyBuffer, activeUnpaused, transformFeedbackVk);
+
+    vk::SharedDescriptorSetCacheKey newSharedCacheKey;
+    ANGLE_TRY(updateUniformsAndXfbDescriptorSet(context, currentFrameCount, updateBuilder,
+                                                currentUniformBuffer, &newSharedCacheKey));
+
+    if (newSharedCacheKey)
+    {
+        transformFeedbackVk->onNewDescriptorSet(*getExecutable(), newSharedCacheKey);
+    }
+
+    return angle::Result::Continue;
+}
+
+angle::Result ProgramExecutableVk::updateUniformBuffersDescInfo(
+    vk::Context *context,
+    vk::CommandBufferHelperCommon *commandBufferHelper,
+    const gl::BufferVector &bufferBindings,
+    VkDeviceSize maxBoundBufferRange,
+    const vk::BufferHelper &emptyBuffer,
+    uint32_t currentFrameCount,
+    UpdateDescriptorSetsBuilder *updateBuilder)
+{
+    const gl::ProgramExecutable *executable = getExecutable();
+    for (size_t blockIndex : executable->getActiveUniformBufferBlocks())
+    {
+        const GLuint binding = executable->getUniformBlockBinding(blockIndex);
+        mUniformBuffersDescriptorDescBuilder.updateOneUniformBuffer(
+            context, commandBufferHelper, blockIndex, executable->getUniformBlocks()[blockIndex],
+            bufferBindings[binding], getUniformBufferDescriptorType(), maxBoundBufferRange,
+            emptyBuffer, mUniformBuffersWriteDescriptorDescs);
+    }
+
+    vk::SharedDescriptorSetCacheKey newSharedCacheKey;
+    ANGLE_TRY(updateBuffersDescriptorSet(
+        context, currentFrameCount, mUniformBuffersDescriptorDescBuilder,
+        mUniformBuffersWriteDescriptorDescs, DescriptorSetIndex::UniformBuffers, updateBuilder,
+        &newSharedCacheKey));
+
+    if (newSharedCacheKey && !usesDynamicUniformBufferDescriptors())
+    {
+        // A new cache entry has been created. We record this cache key in the images and
+        // buffers so that the descriptorSet cache can be destroyed when buffer/image is
+        // destroyed.
+        //
+        // Dynamic descriptor type uses the underlying BufferBlock in the descriptorSet.
+        // There could be many BufferHelper objects sub-allocated from the same BufferBlock. And
+        // each BufferHelper could combine with other buffers to form a descriptorSet. This means
+        // the descriptorSet numbers for BufferBlock could potentially very large, in thousands with
+        // some app traces like seeing in honkai_star_rail. The overhead of maintaining
+        // mDescriptorSetCacheManager for BufferBlock could be too big. We chose to not maintain
+        // mDescriptorSetCacheManager in this case. The only downside is that when BufferBlock gets
+        // destroyed, we will not able to immediately destroy all cached descriptorSets that it is
+        // part of. They will still gets evicted later on if needed.
+        for (size_t blockIndex : executable->getActiveUniformBufferBlocks())
+        {
+            const GLuint binding = executable->getUniformBlockBinding(blockIndex);
+            const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding = bufferBindings[binding];
+            UpdateBufferWithSharedCacheKey(bufferBinding, newSharedCacheKey);
+        }
+    }
+
+    return angle::Result::Continue;
+}
+
+void ProgramExecutableVk::updateShaderResourcesWithSharedCacheKey(
+    const gl::BufferVector &shaderStorageBufferBindings,
+    const gl::BufferVector &atomicCounterBufferBindings,
+    const gl::ActiveTextureArray<TextureVk *> &activeImages,
+    const vk::SharedDescriptorSetCacheKey &newSharedCacheKey)
+{
+    const gl::ProgramExecutable *executable = getExecutable();
+    ASSERT(!usesDynamicShaderStorageBufferDescriptors());
+    ASSERT(!usesDynamicAtomicCounterBufferDescriptors());
+
+    // Update shader storage buffers with new shared key
+    for (size_t blockIndex : executable->getActiveStorageBufferBlocks())
+    {
+        const GLuint binding = executable->getShaderStorageBlockBinding(blockIndex);
+        const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding =
+            shaderStorageBufferBindings[binding];
+        UpdateBufferWithSharedCacheKey(bufferBinding, newSharedCacheKey);
+    }
+
+    // Update atomic counter buffers with new shared key
+    const std::vector<gl::AtomicCounterBuffer> &blocks = executable->getAtomicCounterBuffers();
+    for (uint32_t blockIndex = 0; blockIndex < blocks.size(); ++blockIndex)
+    {
+        const GLuint binding = executable->getAtomicCounterBufferBinding(blockIndex);
+        const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding =
+            atomicCounterBufferBindings[binding];
+        UpdateBufferWithSharedCacheKey(bufferBinding, newSharedCacheKey);
+    }
+
+    for (const gl::ImageBinding &imageBinding : executable->getImageBindings())
+    {
+        uint32_t arraySize = static_cast<uint32_t>(imageBinding.boundImageUnits.size());
+        for (uint32_t arrayElement = 0; arrayElement < arraySize; ++arrayElement)
+        {
+            GLuint imageUnit = imageBinding.boundImageUnits[arrayElement];
+            // For simplicity, we do not check if uniform is active or duplicate. The worst case is
+            // we unnecessarily delete the cache entry when image bound to inactive uniform is
+            // destroyed.
+            activeImages[imageUnit]->onNewDescriptorSet(newSharedCacheKey);
+        }
+    }
+}
+
+angle::Result ProgramExecutableVk::updateShaderResourcesDescInfo(
+    vk::Context *context,
+    vk::CommandBufferHelperCommon *commandBufferHelper,
+    const FramebufferVk *framebufferVk,
+    const gl::BufferVector &shaderStorageBufferBindings,
+    const gl::BufferVector &atomicCounterBufferBindings,
+    const VkPhysicalDeviceLimits &limits,
+    const vk::BufferHelper &emptyBuffer,
+    const GLbitfield memoryBarrierBits,
+    const gl::ActiveTextureArray<TextureVk *> &activeImages,
+    const std::vector<gl::ImageUnit> &imageUnits,
+    uint32_t currentFrameCount,
+    UpdateDescriptorSetsBuilder *updateBuilder)
+{
+    const gl::ProgramExecutable *executable = getExecutable();
+
+    const bool hasImages               = executable->hasImages();
+    const bool hasStorageBuffers       = executable->hasStorageBuffers();
+    const bool hasAtomicCounterBuffers = executable->hasAtomicCounterBuffers();
+    const bool hasFramebufferFetch     = executable->usesColorFramebufferFetch() ||
+                                     executable->usesDepthFramebufferFetch() ||
+                                     executable->usesStencilFramebufferFetch();
+
+    if (!hasStorageBuffers && !hasAtomicCounterBuffers && !hasImages && !hasFramebufferFetch)
+    {
+        return angle::Result::Continue;
+    }
+
+    // Update input attachments first since it could change descriptor counts
+    if (hasFramebufferFetch)
+    {
+        // Update writeDescriptorDescs with inputAttachments
+        mShaderResourceWriteDescriptorDescs.updateInputAttachments(*executable, mVariableInfoMap,
+                                                                   framebufferVk);
+
+        // Total descriptor count could have changed, resize DescriptorSetDescBuilder
+        mShaderResourceDescriptorDescBuilder.resize(
+            mShaderResourceWriteDescriptorDescs.getTotalDescriptorCount());
+
+        // Update DescriptorSetDescBuilder with inputAttachments
+        ANGLE_TRY(mShaderResourceDescriptorDescBuilder.updateInputAttachments(
+            context, *executable, mVariableInfoMap, framebufferVk,
+            mShaderResourceWriteDescriptorDescs));
+    }
+
+    if (hasStorageBuffers)
+    {
+        mShaderResourceDescriptorDescBuilder.updateStorageBuffers(
+            context, commandBufferHelper, *executable, shaderStorageBufferBindings,
+            executable->getShaderStorageBlocks(), getStorageBufferDescriptorType(),
+            limits.maxStorageBufferRange, emptyBuffer, mShaderResourceWriteDescriptorDescs,
+            memoryBarrierBits);
+    }
+
+    if (hasAtomicCounterBuffers)
+    {
+        mShaderResourceDescriptorDescBuilder.updateAtomicCounters(
+            context, commandBufferHelper, *executable, mVariableInfoMap,
+            atomicCounterBufferBindings, executable->getAtomicCounterBuffers(),
+            limits.minStorageBufferOffsetAlignment, emptyBuffer,
+            mShaderResourceWriteDescriptorDescs);
+    }
+
+    if (hasImages)
+    {
+        ANGLE_TRY(mShaderResourceDescriptorDescBuilder.updateImages(
+            context, *executable, mVariableInfoMap, activeImages, imageUnits,
+            mShaderResourceWriteDescriptorDescs));
+    }
+
+    // Record usage of storage buffers and images in the command buffer to aid handling of
+    // glMemoryBarrier.
+    if (hasImages || hasStorageBuffers || hasAtomicCounterBuffers)
+    {
+        commandBufferHelper->setHasShaderStorageOutput();
+    }
+
+    vk::SharedDescriptorSetCacheKey newSharedCacheKey;
+    ANGLE_TRY(updateBuffersDescriptorSet(
+        context, currentFrameCount, mShaderResourceDescriptorDescBuilder,
+        mShaderResourceWriteDescriptorDescs, DescriptorSetIndex::ShaderResource, updateBuilder,
+        &newSharedCacheKey));
+
+    if (newSharedCacheKey)
+    {
+        // A new cache entry has been created. We record this cache key in the images and buffers so
+        // that the descriptorSet cache can be destroyed when buffer/image is destroyed.
+        updateShaderResourcesWithSharedCacheKey(shaderStorageBufferBindings,
+                                                atomicCounterBufferBindings, activeImages,
+                                                newSharedCacheKey);
+    }
+
     return angle::Result::Continue;
 }
 
