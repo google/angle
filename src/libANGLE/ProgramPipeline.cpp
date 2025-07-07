@@ -678,6 +678,18 @@ bool ProgramPipeline::linkVaryings()
                 getShaderProgramExecutable(previousShaderType);
             ASSERT(previousExecutable);
 
+            if (previousExecutable == programExecutable)
+            {
+                continue;
+            }
+            if (!LinkValidateInOutNumberMatching(
+                    previousExecutable->getLinkedOutputVaryings(previousShaderType),
+                    programExecutable->getLinkedInputVaryings(shaderType), previousShaderType,
+                    shaderType, previousExecutable->getLinkedShaderVersion(previousShaderType),
+                    programExecutable->getLinkedShaderVersion(shaderType), mState.mInfoLog))
+            {
+                return false;
+            }
             if (!LinkValidateShaderInterfaceMatching(
                     previousExecutable->getLinkedOutputVaryings(previousShaderType),
                     programExecutable->getLinkedInputVaryings(shaderType), previousShaderType,
