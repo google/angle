@@ -3256,6 +3256,12 @@ void main()
 // 3.10
 TEST_P(ComputeShaderTestES3, NotSupported)
 {
+    // Allow the system EGL to skip the test if the context version is not exactly 3.0, which is
+    // possible when the driver does not support "EGL_ANGLE_create_context_backwards_compatible".
+    ANGLE_SKIP_TEST_IF(isDriverSystemEgl() &&
+                       (getClientMajorVersion() > 3 ||
+                        (getClientMajorVersion() == 3 && getClientMinorVersion() >= 1)));
+
     GLuint computeShaderHandle = glCreateShader(GL_COMPUTE_SHADER);
     EXPECT_EQ(0u, computeShaderHandle);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
