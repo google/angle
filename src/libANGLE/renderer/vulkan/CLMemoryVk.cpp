@@ -428,7 +428,10 @@ angle::Result CLBufferVk::mapBufferHelper(uint8_t *&ptrOut)
         {
             return mapParentBufferHelper(ptrOut);
         }
+
+        std::lock_guard<angle::SimpleMutex> lock(mMutex);
         ANGLE_TRY(mBuffer.map(mContext, &mMappedMemory));
+        ++mMapCount;
     }
     ptrOut = mMappedMemory;
     ASSERT(ptrOut);
@@ -452,8 +455,13 @@ void CLBufferVk::unmapBufferHelper()
         getParent()->unmapBufferHelper();
         return;
     }
+
+    std::lock_guard<angle::SimpleMutex> lock(mMutex);
     getBuffer().unmap(mContext->getRenderer());
-    mMappedMemory = nullptr;
+    if (--mMapCount == 0u)
+    {
+        mMappedMemory = nullptr;
+    }
 }
 
 angle::Result CLBufferVk::updateRect(UpdateRectOperation op,
@@ -616,6 +624,8 @@ VkImageType CLImageVk::getVkImageType(const cl::ImageDescriptor &desc)
 angle::Result CLImageVk::getOrCreateStagingBuffer(CLBufferVk **clBufferOut)
 {
     ASSERT(clBufferOut && "cannot pass nullptr to clBufferOut!");
+
+    std::lock_guard<angle::SimpleMutex> lock(mMutex);
 
     if (!cl::Buffer::IsValid(mStagingBuffer))
     {
@@ -1136,7 +1146,6 @@ void CLImageVk::unmapBufferHelper()
     }
     ASSERT(mStagingBuffer);
     mStagingBuffer->getImpl<CLBufferVk>().unmapBufferHelper();
-    mMappedMemory = nullptr;
 }
 
 size_t CLImageVk::getRowPitch() const

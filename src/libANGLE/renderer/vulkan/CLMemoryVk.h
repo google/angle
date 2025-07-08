@@ -84,7 +84,7 @@ class CLMemoryVk : public CLMemoryImpl
     CLContextVk *mContext;
     vk::Renderer *mRenderer;
     vk::Allocation mAllocation;
-    angle::SimpleMutex mMapLock;
+    angle::SimpleMutex mMutex;
     uint8_t *mMappedMemory;
     uint32_t mMapCount;
     CLMemoryVk *mParent;
