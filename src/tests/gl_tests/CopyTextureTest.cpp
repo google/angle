@@ -503,7 +503,9 @@ class CopyTextureVariationsTest : public ANGLETest<CopyTextureVariationsTestPara
 
         const bool hasMesaFbFlipYExt = IsGLExtensionEnabled("GL_MESA_framebuffer_flip_y");
         if (mesaYFlipParam && !hasMesaFbFlipYExt)
+        {
             ASSERT_TRUE(hasMesaFbFlipYExt);
+        }
 
         if (sourceFormat == GL_LUMINANCE || sourceFormat == GL_LUMINANCE_ALPHA ||
             sourceFormat == GL_ALPHA || destFormat == GL_LUMINANCE ||
@@ -596,7 +598,9 @@ class CopyTextureVariationsTest : public ANGLETest<CopyTextureVariationsTestPara
 
         const bool hasMesaFbFlipYExt = IsGLExtensionEnabled("GL_MESA_framebuffer_flip_y");
         if (mesaYFlipParam && !hasMesaFbFlipYExt)
+        {
             ASSERT_TRUE(hasMesaFbFlipYExt);
+        }
 
         if (sourceFormat == GL_LUMINANCE || sourceFormat == GL_LUMINANCE_ALPHA ||
             sourceFormat == GL_ALPHA || destFormat == GL_LUMINANCE ||
