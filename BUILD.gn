@@ -363,6 +363,7 @@ config("extra_warnings") {
       "-Wunused-but-set-variable",
       "-Wsuggest-destructor-override",
       "-Wsuggest-override",
+      "-Wno-thread-safety",
 
       # The below warnings are used by WebKit. We enable them to make rolling
       # ANGLE in WebKit easier.
