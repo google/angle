@@ -8738,7 +8738,7 @@ bool ValidateGetTexLevelParameterBase(const Context *context,
             break;
 
         case GL_MEMORY_SIZE_ANGLE:
-            if (context->getClientVersion() < ES_2_0 || !context->getExtensions().memorySizeANGLE)
+            if (!context->getExtensions().memorySizeANGLE)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kEnumNotSupported);
                 return false;

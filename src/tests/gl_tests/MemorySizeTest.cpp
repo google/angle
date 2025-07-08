@@ -62,6 +62,16 @@ TEST_P(MemorySizeTest, BasicUsageTexture)
         EXPECT_GL_NO_ERROR();
         EXPECT_GT(result, 0);
     }
+    else if (EnsureGLExtensionEnabled("GL_ANGLE_get_tex_level_parameter"))
+    {
+        glGetTexLevelParameterivANGLE(GL_TEXTURE_2D, 1, GL_MEMORY_SIZE_ANGLE, &result);
+        EXPECT_GL_NO_ERROR();
+        EXPECT_EQ(0, result);
+
+        glGetTexLevelParameterivANGLE(GL_TEXTURE_2D, 0, GL_MEMORY_SIZE_ANGLE, &result);
+        EXPECT_GL_NO_ERROR();
+        EXPECT_GT(result, 0);
+    }
 }
 
 // Test basic queries of buffers
