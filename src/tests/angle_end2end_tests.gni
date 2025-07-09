@@ -154,6 +154,7 @@ angle_end2end_tests_sources = [
   "gl_tests/ShaderNonConstGlobalInitializerTest.cpp",
   "gl_tests/ShaderOpTest.cpp",
   "gl_tests/ShaderStorageBufferTest.cpp",
+  "gl_tests/ShadingRateEXTTest.cpp",
   "gl_tests/ShadingRateQcomTest.cpp",
   "gl_tests/ShadowSamplerFunctionsTest.cpp",
   "gl_tests/SimpleOperationTest.cpp",

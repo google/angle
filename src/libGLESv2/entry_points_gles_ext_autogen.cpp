@@ -9743,6 +9743,7 @@ void GL_APIENTRY GL_ShadingRateEXT(GLenum rate)
 
     if (ANGLE_LIKELY(context != nullptr))
     {
+        ShadingRate ratePacked = PackParam<ShadingRate>(rate);
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
         {
@@ -9751,9 +9752,9 @@ void GL_APIENTRY GL_ShadingRateEXT(GLenum rate)
 #if defined(ANGLE_ENABLE_ASSERTS)
                 const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateShadingRateEXT(context->getPrivateState(),
-                                                     context->getMutableErrorSetForValidation(),
-                                                     angle::EntryPoint::GLShadingRateEXT, rate);
+                isCallValid = ValidateShadingRateEXT(
+                    context->getPrivateState(), context->getMutableErrorSetForValidation(),
+                    angle::EntryPoint::GLShadingRateEXT, ratePacked);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(isCallValid || context->getPushedErrorCount() != errorCount);
 #endif
@@ -9766,9 +9767,9 @@ void GL_APIENTRY GL_ShadingRateEXT(GLenum rate)
         if (ANGLE_LIKELY(isCallValid))
         {
             ContextPrivateShadingRateEXT(context->getMutablePrivateState(),
-                                         context->getMutablePrivateStateCache(), rate);
+                                         context->getMutablePrivateStateCache(), ratePacked);
         }
-        ANGLE_CAPTURE_GL(ShadingRateEXT, isCallValid, context, rate);
+        ANGLE_CAPTURE_GL(ShadingRateEXT, isCallValid, context, ratePacked);
     }
     else
     {
@@ -9787,6 +9788,8 @@ void GL_APIENTRY GL_ShadingRateCombinerOpsEXT(GLenum combinerOp0, GLenum combine
 
     if (ANGLE_LIKELY(context != nullptr))
     {
+        CombinerOp combinerOp0Packed = PackParam<CombinerOp>(combinerOp0);
+        CombinerOp combinerOp1Packed = PackParam<CombinerOp>(combinerOp1);
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
         {
@@ -9797,7 +9800,8 @@ void GL_APIENTRY GL_ShadingRateCombinerOpsEXT(GLenum combinerOp0, GLenum combine
 #endif
                 isCallValid = ValidateShadingRateCombinerOpsEXT(
                     context->getPrivateState(), context->getMutableErrorSetForValidation(),
-                    angle::EntryPoint::GLShadingRateCombinerOpsEXT, combinerOp0, combinerOp1);
+                    angle::EntryPoint::GLShadingRateCombinerOpsEXT, combinerOp0Packed,
+                    combinerOp1Packed);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(isCallValid || context->getPushedErrorCount() != errorCount);
 #endif
@@ -9811,9 +9815,10 @@ void GL_APIENTRY GL_ShadingRateCombinerOpsEXT(GLenum combinerOp0, GLenum combine
         {
             ContextPrivateShadingRateCombinerOps(context->getMutablePrivateState(),
                                                  context->getMutablePrivateStateCache(),
-                                                 combinerOp0, combinerOp1);
+                                                 combinerOp0Packed, combinerOp1Packed);
         }
-        ANGLE_CAPTURE_GL(ShadingRateCombinerOpsEXT, isCallValid, context, combinerOp0, combinerOp1);
+        ANGLE_CAPTURE_GL(ShadingRateCombinerOpsEXT, isCallValid, context, combinerOp0Packed,
+                         combinerOp1Packed);
     }
     else
     {
@@ -20422,6 +20427,7 @@ void GL_APIENTRY GL_ShadingRateQCOM(GLenum rate)
 
     if (ANGLE_LIKELY(context != nullptr))
     {
+        ShadingRate ratePacked = PackParam<ShadingRate>(rate);
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
         {
@@ -20430,9 +20436,9 @@ void GL_APIENTRY GL_ShadingRateQCOM(GLenum rate)
 #if defined(ANGLE_ENABLE_ASSERTS)
                 const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid = ValidateShadingRateQCOM(context->getPrivateState(),
-                                                      context->getMutableErrorSetForValidation(),
-                                                      angle::EntryPoint::GLShadingRateQCOM, rate);
+                isCallValid = ValidateShadingRateQCOM(
+                    context->getPrivateState(), context->getMutableErrorSetForValidation(),
+                    angle::EntryPoint::GLShadingRateQCOM, ratePacked);
 #if defined(ANGLE_ENABLE_ASSERTS)
                 ASSERT(isCallValid || context->getPushedErrorCount() != errorCount);
 #endif
@@ -20445,9 +20451,9 @@ void GL_APIENTRY GL_ShadingRateQCOM(GLenum rate)
         if (ANGLE_LIKELY(isCallValid))
         {
             ContextPrivateShadingRateQCOM(context->getMutablePrivateState(),
-                                          context->getMutablePrivateStateCache(), rate);
+                                          context->getMutablePrivateStateCache(), ratePacked);
         }
-        ANGLE_CAPTURE_GL(ShadingRateQCOM, isCallValid, context, rate);
+        ANGLE_CAPTURE_GL(ShadingRateQCOM, isCallValid, context, ratePacked);
     }
     else
     {

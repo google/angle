@@ -1869,6 +1869,11 @@ void Context::getBooleanvImpl(GLenum pname, GLboolean *params) const
         case GL_CONTEXT_ROBUST_ACCESS_EXT:
             *params = ConvertToGLBoolean(mState.hasRobustAccess());
             break;
+        case GL_FRAGMENT_SHADING_RATE_NON_TRIVIAL_COMBINERS_SUPPORTED_EXT:
+            *params =
+                mState.getCaps()
+                    .fragmentShadingRateProperties.fragmentShadingRateNonTrivialCombinersSupport;
+            break;
 
         default:
             mState.getBooleanv(pname, params);
@@ -2476,6 +2481,10 @@ void Context::getIntegervImpl(GLenum pname, GLint *params) const
 
         case GL_QUERY_COUNTER_BITS_EXT:
             *params = mState.getCaps().queryCounterBitsTimestamp;
+            break;
+
+        case GL_SHADING_RATE_EXT:
+            *params = ToGLenum(mState.getShadingRateEXT());
             break;
 
         default:
@@ -6335,7 +6344,41 @@ void Context::getFragmentShadingRates(GLsizei samples,
                                       GLsizei *count,
                                       GLenum *shadingRates)
 {
-    return;
+    // If <count> is NULL then it is ignored.
+    if (count == nullptr)
+    {
+        return;
+    }
+
+    uint32_t shadingRatesCounts = 0;
+    angle::ShadingRateMap SupportedFragmentShadingRateSampleCounts =
+        mImplementation->getSupportedFragmentShadingRateEXTSampleCounts();
+    uint32_t supportedShadingRateCounts = SupportedFragmentShadingRateSampleCounts.size();
+
+    for (uint32_t i = 1; i < supportedShadingRateCounts; i++)
+    {
+        gl::ShadingRate shadingRate = static_cast<gl::ShadingRate>(i);
+        ASSERT(shadingRate > gl::ShadingRate::Undefined &&
+               shadingRate < gl::ShadingRate::InvalidEnum);
+        // Assert samples is a power of two.
+        ASSERT(samples >= 1 && (samples & (samples - 1)) == 0);
+        if ((SupportedFragmentShadingRateSampleCounts[shadingRate] & samples) == samples)
+        {
+            if (shadingRates == nullptr)
+            {
+                shadingRatesCounts++;
+            }
+            else
+            {
+                shadingRates[shadingRatesCounts++] = ToGLenum(shadingRate);
+                if (maxCount <= static_cast<GLsizei>(shadingRatesCounts))
+                {
+                    break;
+                }
+            }
+        }
+    }
+    *count = shadingRatesCounts;
 }
 
 void Context::framebufferShadingRate(GLenum target,

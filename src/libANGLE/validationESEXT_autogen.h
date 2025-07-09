@@ -1431,12 +1431,12 @@ bool ValidateGetFragmentShadingRatesEXT(const Context *context,
 bool ValidateShadingRateEXT(const PrivateState &state,
                             ErrorSet *errors,
                             angle::EntryPoint entryPoint,
-                            GLenum rate);
+                            ShadingRate ratePacked);
 bool ValidateShadingRateCombinerOpsEXT(const PrivateState &state,
                                        ErrorSet *errors,
                                        angle::EntryPoint entryPoint,
-                                       GLenum combinerOp0,
-                                       GLenum combinerOp1);
+                                       CombinerOp combinerOp0Packed,
+                                       CombinerOp combinerOp1Packed);
 
 // GL_EXT_geometry_shader
 bool ValidateFramebufferTextureEXT(const Context *context,
@@ -2936,7 +2936,7 @@ bool ValidateFramebufferFoveationParametersQCOM(const Context *context,
 bool ValidateShadingRateQCOM(const PrivateState &state,
                              ErrorSet *errors,
                              angle::EntryPoint entryPoint,
-                             GLenum rate);
+                             ShadingRate ratePacked);
 
 // GL_QCOM_texture_foveated
 bool ValidateTextureFoveationParametersQCOM(const Context *context,

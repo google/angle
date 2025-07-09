@@ -388,6 +388,7 @@ inline constexpr const char *kMismatchedShaderBinaryType = "Mismatched shader bi
 inline constexpr const char *kInvalidShaderCount = "Invalid Shader count.";
 inline constexpr const char *kInvalidShaderName = "Shader object expected.";
 inline constexpr const char *kInvalidShaderType = "Invalid shader type.";
+inline constexpr const char *kInvalidShadingCombinerOp = "Invalid shading CombinerOp.";
 inline constexpr const char *kInvalidShadingModel = "Invalid shading model.";
 inline constexpr const char *kInvalidShadingRate = "Invalid shading rate.";
 inline constexpr const char *kInvalidSourceTexture = "Source texture is not a valid texture object.";

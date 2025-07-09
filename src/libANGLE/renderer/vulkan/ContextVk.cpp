@@ -932,7 +932,9 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
     }
     if (getFeatures().supportsFragmentShadingRate.enabled)
     {
-        mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE);
+        mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE_QCOM);
+        // EXT_fragment_shading_rate
+        mDynamicStateDirtyBits.set(DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE_EXT);
     }
 
     mNewGraphicsCommandBufferDirtyBits |= mDynamicStateDirtyBits;
@@ -1023,8 +1025,10 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
         &ContextVk::handleDirtyGraphicsDynamicLogicOp;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_PRIMITIVE_RESTART_ENABLE] =
         &ContextVk::handleDirtyGraphicsDynamicPrimitiveRestartEnable;
-    mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE] =
-        &ContextVk::handleDirtyGraphicsDynamicFragmentShadingRate;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE_QCOM] =
+        &ContextVk::handleDirtyGraphicsDynamicFragmentShadingRateQCOM;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE_EXT] =
+        &ContextVk::handleDirtyGraphicsDynamicFragmentShadingRateEXT;
 
     mComputeDirtyBitHandlers[DIRTY_BIT_MEMORY_BARRIER] =
         &ContextVk::handleDirtyComputeMemoryBarrier;
@@ -3211,7 +3215,7 @@ angle::Result ContextVk::handleDirtyGraphicsDynamicPrimitiveRestartEnable(
     return angle::Result::Continue;
 }
 
-angle::Result ContextVk::handleDirtyGraphicsDynamicFragmentShadingRate(
+angle::Result ContextVk::handleDirtyGraphicsDynamicFragmentShadingRateQCOM(
     DirtyBits::Iterator *dirtyBitsIterator,
     DirtyBits dirtyBitMask)
 {
@@ -3219,7 +3223,7 @@ angle::Result ContextVk::handleDirtyGraphicsDynamicFragmentShadingRate(
     const bool isFoveationEnabled    = drawFramebufferVk->isFoveationEnabled();
 
     gl::ShadingRate shadingRate =
-        isFoveationEnabled ? gl::ShadingRate::_1x1 : getState().getShadingRate();
+        isFoveationEnabled ? gl::ShadingRate::_1x1 : getState().getShadingRateQCOM();
     if (shadingRate == gl::ShadingRate::Undefined)
     {
         // Shading rate has not been set. Since this is dynamic state, set it to 1x1
@@ -3291,6 +3295,70 @@ angle::Result ContextVk::handleDirtyGraphicsDynamicFragmentShadingRate(
     {
         shadingRateCombinerOp[1] = VK_FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR;
     }
+
+    ASSERT(hasActiveRenderPass());
+    mRenderPassCommandBuffer->setFragmentShadingRate(&fragmentSize, shadingRateCombinerOp);
+
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::handleDirtyGraphicsDynamicFragmentShadingRateEXT(
+    DirtyBits::Iterator *dirtyBitsIterator,
+    DirtyBits dirtyBitMask)
+{
+    gl::ShadingRate shadingRateEXT = getState().getShadingRateEXT();
+
+    const bool shadingRateSupported = mRenderer->isShadingRateSupported(shadingRateEXT);
+    ASSERT(shadingRateSupported);
+
+    VkExtent2D fragmentSize = {};
+
+    switch (shadingRateEXT)
+    {
+        case gl::ShadingRate::_1x1:
+            fragmentSize.width  = 1;
+            fragmentSize.height = 1;
+            break;
+        case gl::ShadingRate::_1x2:
+            fragmentSize.width  = 1;
+            fragmentSize.height = 2;
+            break;
+        case gl::ShadingRate::_1x4:
+            fragmentSize.width  = 1;
+            fragmentSize.height = 4;
+            break;
+        case gl::ShadingRate::_2x1:
+            fragmentSize.width  = 2;
+            fragmentSize.height = 1;
+            break;
+        case gl::ShadingRate::_2x2:
+            fragmentSize.width  = 2;
+            fragmentSize.height = 2;
+            break;
+        case gl::ShadingRate::_2x4:
+            fragmentSize.width  = 2;
+            fragmentSize.height = 4;
+            break;
+        case gl::ShadingRate::_4x1:
+            fragmentSize.width  = 4;
+            fragmentSize.height = 1;
+            break;
+        case gl::ShadingRate::_4x2:
+            fragmentSize.width  = 4;
+            fragmentSize.height = 2;
+            break;
+        case gl::ShadingRate::_4x4:
+            fragmentSize.width  = 4;
+            fragmentSize.height = 4;
+            break;
+        default:
+            UNREACHABLE();
+            return angle::Result::Stop;
+    }
+
+    VkFragmentShadingRateCombinerOpKHR shadingRateCombinerOp[2] = {
+        VK_FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR,
+        VK_FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR};
 
     ASSERT(hasActiveRenderPass());
     mRenderPassCommandBuffer->setFragmentShadingRate(&fragmentSize, shadingRateCombinerOp);
@@ -5945,10 +6013,17 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                                     gl_vk::GetLogicOp(gl::ToGLenum(glState.getLogicOp())));
                             }
                             break;
-                        case gl::state::EXTENDED_DIRTY_BIT_SHADING_RATE:
+                        case gl::state::EXTENDED_DIRTY_BIT_SHADING_RATE_QCOM:
                             if (getFeatures().supportsFragmentShadingRate.enabled)
                             {
-                                mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE);
+                                mGraphicsDirtyBits.set(
+                                    DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE_QCOM);
+                            }
+                            break;
+                        case gl::state::EXTENDED_DIRTY_BIT_SHADING_RATE_EXT:
+                            if (getFeatures().supportsFragmentShadingRate.enabled)
+                            {
+                                mGraphicsDirtyBits.set(DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE_EXT);
                             }
                             break;
                         case gl::state::EXTENDED_DIRTY_BIT_BLEND_ADVANCED_COHERENT:
@@ -6151,6 +6226,11 @@ void ContextVk::updateSurfaceRotationReadFramebuffer(const gl::State &glState,
 gl::Caps ContextVk::getNativeCaps() const
 {
     return mRenderer->getNativeCaps();
+}
+
+const angle::ShadingRateMap &ContextVk::getSupportedFragmentShadingRateEXTSampleCounts() const
+{
+    return mRenderer->getSupportedFragmentShadingRateEXTSampleCounts();
 }
 
 const gl::TextureCapsMap &ContextVk::getNativeTextureCaps() const

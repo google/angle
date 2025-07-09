@@ -6809,26 +6809,24 @@ CallCapture CaptureGetFragmentShadingRatesEXT(const State &glState,
     return CallCapture(angle::EntryPoint::GLGetFragmentShadingRatesEXT, std::move(paramBuffer));
 }
 
-CallCapture CaptureShadingRateEXT(const State &glState, bool isCallValid, GLenum rate)
+CallCapture CaptureShadingRateEXT(const State &glState, bool isCallValid, ShadingRate ratePacked)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("rate", GLESEnum::ShadingRate, ParamType::TGLenum, rate);
+    paramBuffer.addValueParam("ratePacked", ParamType::TShadingRate, ratePacked);
 
     return CallCapture(angle::EntryPoint::GLShadingRateEXT, std::move(paramBuffer));
 }
 
 CallCapture CaptureShadingRateCombinerOpsEXT(const State &glState,
                                              bool isCallValid,
-                                             GLenum combinerOp0,
-                                             GLenum combinerOp1)
+                                             CombinerOp combinerOp0Packed,
+                                             CombinerOp combinerOp1Packed)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("combinerOp0", GLESEnum::ShadingRateCombinerOp, ParamType::TGLenum,
-                             combinerOp0);
-    paramBuffer.addEnumParam("combinerOp1", GLESEnum::ShadingRateCombinerOp, ParamType::TGLenum,
-                             combinerOp1);
+    paramBuffer.addValueParam("combinerOp0Packed", ParamType::TCombinerOp, combinerOp0Packed);
+    paramBuffer.addValueParam("combinerOp1Packed", ParamType::TCombinerOp, combinerOp1Packed);
 
     return CallCapture(angle::EntryPoint::GLShadingRateCombinerOpsEXT, std::move(paramBuffer));
 }
@@ -12442,11 +12440,11 @@ CallCapture CaptureFramebufferFoveationParametersQCOM(const State &glState,
                        std::move(paramBuffer));
 }
 
-CallCapture CaptureShadingRateQCOM(const State &glState, bool isCallValid, GLenum rate)
+CallCapture CaptureShadingRateQCOM(const State &glState, bool isCallValid, ShadingRate ratePacked)
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("rate", GLESEnum::ShadingRateQCOM, ParamType::TGLenum, rate);
+    paramBuffer.addValueParam("ratePacked", ParamType::TShadingRate, ratePacked);
 
     return CallCapture(angle::EntryPoint::GLShadingRateQCOM, std::move(paramBuffer));
 }

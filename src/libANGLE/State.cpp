@@ -381,7 +381,10 @@ PrivateState::PrivateState(const Version &clientVersion,
       mBoundingBoxMaxZ(1.0f),
       mBoundingBoxMaxW(1.0f),
       mShadingRatePreserveAspectRatio(false),
-      mShadingRate(ShadingRate::Undefined),
+      mShadingRateQCOM(ShadingRate::Undefined),
+      // If the shading rate has not been set, the shading rate will be SHADING_RATE_1X1_PIXELS_EXT
+      mShadingRateEXT(ShadingRate::_1x1),
+      mCombinerOps{CombinerOp::Keep, CombinerOp::Keep},
       mFetchPerSample(false),
       mIsPerfMonitorActive(false),
       mTiledRendering(false),
@@ -1099,16 +1102,26 @@ void PrivateState::setViewportParams(GLint x, GLint y, GLsizei width, GLsizei he
     }
 }
 
-void PrivateState::setShadingRate(GLenum rate)
+void PrivateState::setShadingRateQCOM(ShadingRate rate)
 {
-    mShadingRate = FromGLenum<ShadingRate>(rate);
+    mShadingRateQCOM = rate;
     mDirtyBits.set(state::DIRTY_BIT_EXTENDED);
-    mExtendedDirtyBits.set(state::EXTENDED_DIRTY_BIT_SHADING_RATE);
+    mExtendedDirtyBits.set(state::EXTENDED_DIRTY_BIT_SHADING_RATE_QCOM);
 }
 
-void PrivateState::setShadingRateCombinerOps(GLenum combinerOp0, GLenum combinerOp1)
+void PrivateState::setShadingRateEXT(ShadingRate rate)
 {
-    return;
+    mShadingRateEXT = rate;
+    mDirtyBits.set(state::DIRTY_BIT_EXTENDED);
+    mExtendedDirtyBits.set(state::EXTENDED_DIRTY_BIT_SHADING_RATE_EXT);
+}
+
+void PrivateState::setShadingRateCombinerOps(CombinerOp combinerOp0, CombinerOp combinerOp1)
+{
+    mCombinerOps[0] = combinerOp0;
+    mCombinerOps[1] = combinerOp1;
+    mDirtyBits.set(state::DIRTY_BIT_EXTENDED);
+    mExtendedDirtyBits.set(state::EXTENDED_DIRTY_BIT_SHADING_RATE_EXT);
 }
 
 void PrivateState::setPackAlignment(GLint alignment)
@@ -1918,6 +1931,11 @@ void PrivateState::getBooleanv(GLenum pname, GLboolean *params) const
         case GL_FRAGMENT_SHADER_FRAMEBUFFER_FETCH_MRT_ARM:
             *params = mCaps.fragmentShaderFramebufferFetchMRT;
             break;
+        // EXT_fragment_shading_rate
+        case GL_FRAGMENT_SHADING_RATE_NON_TRIVIAL_COMBINERS_SUPPORTED_EXT:
+            *params =
+                mCaps.fragmentShadingRateProperties.fragmentShadingRateNonTrivialCombinersSupport;
+            break;
         default:
             if (mClientVersion < ES_2_0)
             {
@@ -2256,7 +2274,12 @@ void PrivateState::getIntegerv(GLenum pname, GLint *params) const
 
         // GL_QCOM_shading_rate
         case GL_SHADING_RATE_QCOM:
-            *params = ToGLenum(mShadingRate);
+            *params = ToGLenum(mShadingRateQCOM);
+            break;
+
+        // GL_EXT_fragment_shading_rate
+        case GL_SHADING_RATE_EXT:
+            *params = ToGLenum(mShadingRateEXT);
             break;
 
         // GL_ANGLE_shader_pixel_local_storage

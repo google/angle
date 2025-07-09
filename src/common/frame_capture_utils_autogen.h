@@ -46,6 +46,7 @@ enum class ParamType
     TClientVertexArrayType,
     TClipDepthMode,
     TClipOrigin,
+    TCombinerOp,
     TCommandQueueInfo,
     TCommandQueueProperties,
     TCompositorTiming,
@@ -194,6 +195,7 @@ enum class ParamType
     TShaderProgramIDPointer,
     TShaderType,
     TShadingModel,
+    TShadingRate,
     TSurfaceID,
     TSyncID,
     TTextureEnvParameter,
@@ -271,7 +273,7 @@ enum class ParamType
     TvoidPointerPointer,
 };
 
-constexpr uint32_t kParamTypeCount = 234;
+constexpr uint32_t kParamTypeCount = 236;
 
 union ParamValue
 {
@@ -287,6 +289,7 @@ union ParamValue
     gl::ClientVertexArrayType ClientVertexArrayTypeVal;
     gl::ClipDepthMode ClipDepthModeVal;
     gl::ClipOrigin ClipOriginVal;
+    gl::CombinerOp CombinerOpVal;
     egl::CompositorTiming CompositorTimingVal;
     gl::ContextID ContextIDVal;
     gl::CullFaceMode CullFaceModeVal;
@@ -410,6 +413,7 @@ union ParamValue
     gl::ShaderProgramID *ShaderProgramIDPointerVal;
     gl::ShaderType ShaderTypeVal;
     gl::ShadingModel ShadingModelVal;
+    gl::ShadingRate ShadingRateVal;
     egl::SurfaceID SurfaceIDVal;
     gl::SyncID SyncIDVal;
     gl::TextureEnvParameter TextureEnvParameterVal;
@@ -584,6 +588,12 @@ template <>
 inline gl::ClipOrigin GetParamVal<ParamType::TClipOrigin, gl::ClipOrigin>(const ParamValue &value)
 {
     return value.ClipOriginVal;
+}
+
+template <>
+inline gl::CombinerOp GetParamVal<ParamType::TCombinerOp, gl::CombinerOp>(const ParamValue &value)
+{
+    return value.CombinerOpVal;
 }
 
 template <>
@@ -1390,6 +1400,13 @@ inline gl::ShadingModel GetParamVal<ParamType::TShadingModel, gl::ShadingModel>(
 }
 
 template <>
+inline gl::ShadingRate GetParamVal<ParamType::TShadingRate, gl::ShadingRate>(
+    const ParamValue &value)
+{
+    return value.ShadingRateVal;
+}
+
+template <>
 inline egl::SurfaceID GetParamVal<ParamType::TSurfaceID, egl::SurfaceID>(const ParamValue &value)
 {
     return value.SurfaceIDVal;
@@ -2103,6 +2120,8 @@ T AccessParamValue(ParamType paramType, const ParamValue &value)
             return GetParamVal<ParamType::TClipDepthMode, T>(value);
         case ParamType::TClipOrigin:
             return GetParamVal<ParamType::TClipOrigin, T>(value);
+        case ParamType::TCombinerOp:
+            return GetParamVal<ParamType::TCombinerOp, T>(value);
         case ParamType::TCommandQueueInfo:
             return GetParamVal<ParamType::TCommandQueueInfo, T>(value);
         case ParamType::TCommandQueueProperties:
@@ -2399,6 +2418,8 @@ T AccessParamValue(ParamType paramType, const ParamValue &value)
             return GetParamVal<ParamType::TShaderType, T>(value);
         case ParamType::TShadingModel:
             return GetParamVal<ParamType::TShadingModel, T>(value);
+        case ParamType::TShadingRate:
+            return GetParamVal<ParamType::TShadingRate, T>(value);
         case ParamType::TSurfaceID:
             return GetParamVal<ParamType::TSurfaceID, T>(value);
         case ParamType::TSyncID:
@@ -2618,6 +2639,12 @@ template <>
 inline void SetParamVal<ParamType::TClipOrigin>(gl::ClipOrigin valueIn, ParamValue *valueOut)
 {
     valueOut->ClipOriginVal = valueIn;
+}
+
+template <>
+inline void SetParamVal<ParamType::TCombinerOp>(gl::CombinerOp valueIn, ParamValue *valueOut)
+{
+    valueOut->CombinerOpVal = valueIn;
 }
 
 template <>
@@ -3407,6 +3434,12 @@ inline void SetParamVal<ParamType::TShadingModel>(gl::ShadingModel valueIn, Para
 }
 
 template <>
+inline void SetParamVal<ParamType::TShadingRate>(gl::ShadingRate valueIn, ParamValue *valueOut)
+{
+    valueOut->ShadingRateVal = valueIn;
+}
+
+template <>
 inline void SetParamVal<ParamType::TSurfaceID>(egl::SurfaceID valueIn, ParamValue *valueOut)
 {
     valueOut->SurfaceIDVal = valueIn;
@@ -4114,6 +4147,9 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
         case ParamType::TClipOrigin:
             SetParamVal<ParamType::TClipOrigin>(valueIn, valueOut);
             break;
+        case ParamType::TCombinerOp:
+            SetParamVal<ParamType::TCombinerOp>(valueIn, valueOut);
+            break;
         case ParamType::TCommandQueueInfo:
             SetParamVal<ParamType::TCommandQueueInfo>(valueIn, valueOut);
             break;
@@ -4557,6 +4593,9 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
             break;
         case ParamType::TShadingModel:
             SetParamVal<ParamType::TShadingModel>(valueIn, valueOut);
+            break;
+        case ParamType::TShadingRate:
+            SetParamVal<ParamType::TShadingRate>(valueIn, valueOut);
             break;
         case ParamType::TSurfaceID:
             SetParamVal<ParamType::TSurfaceID>(valueIn, valueOut);

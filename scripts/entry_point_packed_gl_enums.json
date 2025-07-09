@@ -1506,6 +1506,13 @@
     "glShaderStorageBlockBinding": {
         "program": "ShaderProgramID"
     },
+    "glShadingRate": {
+        "rate": "ShadingRate"
+    },
+    "glShadingRateCombinerOps": {
+        "combinerOp0": "CombinerOp",
+        "combinerOp1": "CombinerOp"
+    },
     "glSignalSemaphore": {
         "buffers": "const BufferID *",
         "semaphore": "SemaphoreID",

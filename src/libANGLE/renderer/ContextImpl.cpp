@@ -108,4 +108,11 @@ const angle::PerfMonitorCounterGroups &ContextImpl::getPerfMonitorCounters()
     static angle::base::NoDestructor<angle::PerfMonitorCounterGroups> sCounters;
     return *sCounters;
 }
+
+const angle::ShadingRateMap &ContextImpl::getSupportedFragmentShadingRateEXTSampleCounts() const
+{
+    UNREACHABLE();
+    static angle::ShadingRateMap empty;
+    return empty;
+}
 }  // namespace rx

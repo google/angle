@@ -565,7 +565,13 @@ class Renderer : angle::NonCopyable
 
     bool isShadingRateSupported(gl::ShadingRate shadingRate) const
     {
-        return mSupportedFragmentShadingRates.test(shadingRate);
+        return mSupportedFragmentShadingRatesEXT.test(shadingRate);
+    }
+
+    const angle::ShadingRateMap &getSupportedFragmentShadingRateEXTSampleCounts() const
+    {
+        ASSERT(mFeatures.supportsFragmentShadingRate.enabled);
+        return mSupportedFragmentShadingRateEXTSampleCounts;
     }
 
     VkExtent2D getMaxFragmentShadingRateAttachmentTexelSize() const
@@ -896,9 +902,10 @@ class Renderer : angle::NonCopyable
 
     uint32_t mLegacyDitheringVersion = 0;
 
-    angle::PackedEnumBitSet<gl::ShadingRate, uint16_t> mSupportedFragmentShadingRates;
-    angle::PackedEnumMap<gl::ShadingRate, VkSampleCountFlags>
-        mSupportedFragmentShadingRateSampleCounts;
+    // EXT_fragment_shading_rate
+    angle::ShadingRateSet mSupportedFragmentShadingRatesEXT;
+    angle::ShadingRateMap mSupportedFragmentShadingRateEXTSampleCounts;
+
     std::vector<VkQueueFamilyProperties> mQueueFamilyProperties;
     uint32_t mCurrentQueueFamilyIndex;
     uint32_t mMaxVertexAttribDivisor;

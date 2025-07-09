@@ -475,22 +475,22 @@ inline void ContextPrivateClipControl(PrivateState *privateState,
 
 inline void ContextPrivateShadingRateQCOM(PrivateState *privateState,
                                           PrivateStateCache *privateStateCache,
-                                          GLenum rate)
+                                          ShadingRate rate)
 {
-    privateState->setShadingRate(rate);
+    privateState->setShadingRateQCOM(rate);
 }
 
 inline void ContextPrivateShadingRateEXT(PrivateState *privateState,
                                          PrivateStateCache *privateStateCache,
-                                         GLenum rate)
+                                         ShadingRate rate)
 {
-    return;
+    privateState->setShadingRateEXT(rate);
 }
 
 inline void ContextPrivateShadingRateCombinerOps(PrivateState *privateState,
                                                  PrivateStateCache *privateStateCache,
-                                                 GLenum combinerOp0,
-                                                 GLenum combinerOp1)
+                                                 CombinerOp combinerOp0,
+                                                 CombinerOp combinerOp1)
 {
     privateState->setShadingRateCombinerOps(combinerOp0, combinerOp1);
 }

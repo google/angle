@@ -3675,6 +3675,22 @@ bool GetQueryParameterInfo(const State &glState,
             *type      = GL_INT;
             *numParams = 1;
             return true;
+        case GL_SHADING_RATE_EXT:
+            if (!extensions.fragmentShadingRateEXT)
+            {
+                return false;
+            }
+            *type      = GL_INT;
+            *numParams = 1;
+            return true;
+        case GL_FRAGMENT_SHADING_RATE_NON_TRIVIAL_COMBINERS_SUPPORTED_EXT:
+            if (!extensions.fragmentShadingRateEXT)
+            {
+                return false;
+            }
+            *type      = GL_BOOL;
+            *numParams = 1;
+            return true;
     }
 
     if (glState.getClientVersion() >= Version(3, 2))
