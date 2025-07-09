@@ -904,9 +904,11 @@ EGLAttribKHR Surface::getBitmapPointer() const
     return static_cast<EGLAttribKHR>((intptr_t)mLockBufferPtr);
 }
 
-EGLint Surface::getCompressionRate(const egl::Display *display) const
+egl::Error Surface::getCompressionRate(const egl::Display *display,
+                                       const gl::Context *context,
+                                       EGLint *rate)
 {
-    return mImplementation->getCompressionRate(display);
+    return mImplementation->getCompressionRate(display, context, rate);
 }
 
 egl::Error Surface::lockSurfaceKHR(const egl::Display *display, const AttributeMap &attributes)

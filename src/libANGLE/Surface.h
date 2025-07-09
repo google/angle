@@ -147,7 +147,9 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
     EGLint getLuminanceOffset() const;
     EGLint getBitmapPixelSize() const;
     EGLAttribKHR getBitmapPointer() const;
-    EGLint getCompressionRate(const egl::Display *display) const;
+    egl::Error getCompressionRate(const egl::Display *display,
+                                  const gl::Context *context,
+                                  EGLint *rate);
     egl::Error lockSurfaceKHR(const egl::Display *display, const AttributeMap &attributes);
     egl::Error unlockSurfaceKHR(const egl::Display *display);
 

@@ -4896,7 +4896,7 @@ egl::Error QuerySurfaceAttrib(const Display *display,
             *value = surface->hasProtectedContent();
             break;
         case EGL_SURFACE_COMPRESSION_EXT:
-            *value = surface->getCompressionRate(display);
+            ANGLE_TRY(surface->getCompressionRate(display, context, value));
             break;
         default:
             UNREACHABLE();

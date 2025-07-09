@@ -3325,9 +3325,10 @@ def get_prepare_swap_buffers_call(api, cmd_name, params):
     prepareCall = "ANGLE_EGLBOOLEAN_TRY(EGL_PrepareSwapBuffersANGLE(%s));" % (", ".join(
         [just_the_name(param) for param in passed_params]))
 
-    # For eglQuerySurface, the prepare call is only needed for EGL_BUFFER_AGE
+    # For eglQuerySurface, the prepare call is needed for EGL_BUFFER_AGE
+    # and EGL_SURFACE_COMPRESSION_EXT
     if cmd_name in ["eglQuerySurface", "eglQuerySurface64KHR"]:
-        prepareCall = "if (attribute == EGL_BUFFER_AGE_EXT) {" + prepareCall + "}"
+        prepareCall = "if (attribute == EGL_BUFFER_AGE_EXT || attribute == EGL_SURFACE_COMPRESSION_EXT) {" + prepareCall + "}"
 
     return prepareCall
 

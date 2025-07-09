@@ -3568,15 +3568,34 @@ egl::Error WindowSurfaceVk::detachFromFramebuffer(const gl::Context *context,
     return egl::NoError();
 }
 
-EGLint WindowSurfaceVk::getCompressionRate(const egl::Display *display) const
+egl::Error WindowSurfaceVk::getCompressionRate(const egl::Display *display,
+                                               const gl::Context *context,
+                                               EGLint *rate)
 {
+    ASSERT(mSwapchain != VK_NULL_HANDLE);
     ASSERT(!mSwapchainImages.empty());
 
     DisplayVk *displayVk   = vk::GetImpl(display);
+    ContextVk *contextVk   = vk::GetImpl(context);
     vk::Renderer *renderer = displayVk->getRenderer();
+
+    ANGLE_TRACE_EVENT0("gpu.angle", "getCompressionRate");
 
     ASSERT(renderer->getFeatures().supportsImageCompressionControl.enabled);
     ASSERT(renderer->getFeatures().supportsImageCompressionControlSwapchain.enabled);
+
+    // Image must be already acquired in the |prepareSwap| call.
+    ASSERT(mAcquireOperation.state != ImageAcquireState::Unacquired);
+
+    // If the result of vkAcquireNextImageKHR is not yet processed, do so now.
+    if (mAcquireOperation.state == ImageAcquireState::NeedToProcessResult)
+    {
+        egl::Error result = angle::ToEGL(doDeferredAcquireNextImage(contextVk), EGL_BAD_SURFACE);
+        if (result.isError())
+        {
+            return result;
+        }
+    }
 
     VkImageSubresource2EXT imageSubresource2      = {};
     imageSubresource2.sType                       = VK_STRUCTURE_TYPE_IMAGE_SUBRESOURCE_2_EXT;
@@ -3594,7 +3613,10 @@ EGLint WindowSurfaceVk::getCompressionRate(const egl::Display *display) const
 
     std::vector<EGLint> eglFixedRates = vk_gl::ConvertCompressionFlagsToEGLFixedRate(
         compressionProperties.imageCompressionFixedRateFlags, 1);
-    return eglFixedRates.empty() ? EGL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT : eglFixedRates[0];
+    *rate =
+        (eglFixedRates.empty() ? EGL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT : eglFixedRates[0]);
+
+    return egl::NoError();
 }
 
 }  // namespace rx

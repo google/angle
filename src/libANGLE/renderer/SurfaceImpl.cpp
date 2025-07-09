@@ -183,10 +183,12 @@ egl::Error SurfaceImpl::setRenderBuffer(EGLint renderBuffer)
     return egl::NoError();
 }
 
-EGLint SurfaceImpl::getCompressionRate(const egl::Display *display) const
+egl::Error SurfaceImpl::getCompressionRate(const egl::Display *display,
+                                           const gl::Context *context,
+                                           EGLint *rate)
 {
-    UNREACHABLE();
-    return EGL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT;
+    *rate = EGL_SURFACE_COMPRESSION_FIXED_RATE_NONE_EXT;
+    return egl::NoError();
 }
 
 bool SurfaceImpl::supportsSingleRenderBuffer() const

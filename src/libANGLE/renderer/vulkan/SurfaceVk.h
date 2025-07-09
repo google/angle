@@ -365,7 +365,9 @@ class WindowSurfaceVk : public SurfaceVk
 
     void setTimestampsEnabled(bool enabled) override;
 
-    EGLint getCompressionRate(const egl::Display *display) const override;
+    egl::Error getCompressionRate(const egl::Display *display,
+                                  const gl::Context *context,
+                                  EGLint *rate) override;
 
   protected:
     angle::Result swapImpl(ContextVk *contextVk,
