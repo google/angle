@@ -1026,17 +1026,17 @@ deps = {
   },
 
   'third_party/vulkan-deps': {
-    'url': Var('chromium_git') + '/vulkan-deps@7c32c6e7a3da78531be5733971b9885eebb93ff7',
+    'url': Var('chromium_git') + '/vulkan-deps@c91d04c5a3ae3e17fd2f0e311dae3f17e02c5e44',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/glslang/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/glslang@a45e175a45fe2792bf62e3acebcc817fecfc8422',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/glslang@2e24222cd9d19e737f8c790a2f485d5ba0d62166',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/lunarg-vulkantools/src': {
-    'url': '{chromium_git}/external/github.com/LunarG/VulkanTools@e1d9499713162ca7053844479d84f73860417d4c',
+    'url': '{chromium_git}/external/github.com/LunarG/VulkanTools@9d0dbe9d59159ac936cdc56f9fc85e001afed183',
     'condition': 'not build_with_chromium',
   },
 
@@ -1051,7 +1051,7 @@ deps = {
   },
 
   'third_party/spirv-tools/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Tools@edce8bd5e7275462709d4c6610c0caec5457f678',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Tools@54fc95232ced45f39348c091f6f95545588e350a',
     'condition': 'not build_with_chromium',
   },
 
@@ -1071,12 +1071,12 @@ deps = {
   },
 
   'third_party/vulkan-utility-libraries/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Utility-Libraries@ec329e2721921f79743b90307ee047d08e057788',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Utility-Libraries@cb20eb451cf2e272daaf40099e864a916d8b5542',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/vulkan-validation-layers/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@a5639cedf4d9f6009d11a43865003bb889982d5e',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@2991293a9a1d1d3a9d87d7737dbe812252c1fb40',
     'condition': 'not build_with_chromium',
   },
 
