@@ -1329,15 +1329,9 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     void updateUniformBufferBlocksOffset();
 
-    enum class Submit
-    {
-        OutsideRenderPassCommandsOnly,
-        AllCommands,
-    };
-
+    void prepareToSubmitAllCommands();
     angle::Result submitCommands(const vk::Semaphore *signalSemaphore,
-                                 const vk::SharedExternalFence *externalFence,
-                                 Submit submission);
+                                 const vk::SharedExternalFence *externalFence);
     angle::Result flushImpl(const gl::Context *context);
 
     angle::Result synchronizeCpuGpuTime();

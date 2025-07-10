@@ -3650,31 +3650,11 @@ void ContextVk::addOverlayUsedBuffersCount(vk::CommandBufferHelperCommon *comman
 }
 
 angle::Result ContextVk::submitCommands(const vk::Semaphore *signalSemaphore,
-                                        const vk::SharedExternalFence *externalFence,
-                                        Submit submission)
+                                        const vk::SharedExternalFence *externalFence)
 {
     if (kEnableCommandStreamDiagnostics)
     {
         dumpCommandStreamDiagnostics();
-    }
-
-    if (!mCurrentGarbage.empty() && submission == Submit::AllCommands)
-    {
-        // Clean up garbage.
-        vk::ResourceUse use(mLastFlushedQueueSerial);
-        size_t capacity = mCurrentGarbage.capacity();
-        mRenderer->collectGarbage(use, std::move(mCurrentGarbage));
-        // Make sure we don't lose capacity after the move to avoid storage reallocation.
-        mCurrentGarbage.reserve(capacity);
-    }
-
-    ASSERT(mLastFlushedQueueSerial.valid());
-    ASSERT(QueueSerialsHaveDifferentIndexOrSmaller(mLastSubmittedQueueSerial,
-                                                   mLastFlushedQueueSerial));
-
-    if (submission == Submit::AllCommands)
-    {
-        finalizeAllForeignImages();
     }
 
     ANGLE_TRY(mRenderer->submitCommands(
@@ -7753,6 +7733,23 @@ angle::Result ContextVk::updateActiveImages(CommandBufferHelperT *commandBufferH
     return angle::Result::Continue;
 }
 
+void ContextVk::prepareToSubmitAllCommands()
+{
+    if (!mCurrentGarbage.empty())
+    {
+        // Clean up garbage.
+        vk::ResourceUse use(mLastFlushedQueueSerial);
+        size_t capacity = mCurrentGarbage.capacity();
+        mRenderer->collectGarbage(use, std::move(mCurrentGarbage));
+        // Make sure we don't lose capacity after the move to avoid storage reallocation.
+        mCurrentGarbage.reserve(capacity);
+    }
+    ASSERT(mLastFlushedQueueSerial.valid());
+    ASSERT(QueueSerialsHaveDifferentIndexOrSmaller(mLastSubmittedQueueSerial,
+                                                   mLastFlushedQueueSerial));
+    finalizeAllForeignImages();
+}
+
 angle::Result ContextVk::flushAndSubmitCommands(const vk::Semaphore *signalSemaphore,
                                                 const vk::SharedExternalFence *externalFence,
                                                 RenderPassClosureReason renderPassClosureReason)
@@ -7850,7 +7847,8 @@ angle::Result ContextVk::flushAndSubmitCommands(const vk::Semaphore *signalSemap
     ASSERT(mWaitSemaphores.empty());
     ASSERT(mWaitSemaphoreStageMasks.empty());
 
-    ANGLE_TRY(submitCommands(signalSemaphore, externalFence, Submit::AllCommands));
+    prepareToSubmitAllCommands();
+    ANGLE_TRY(submitCommands(signalSemaphore, externalFence));
     mCommandsPendingSubmissionCount = 0;
 
     ASSERT(mOutsideRenderPassCommands->getQueueSerial() > mLastSubmittedQueueSerial);
@@ -8479,7 +8477,10 @@ angle::Result ContextVk::flushAndSubmitOutsideRenderPassCommands()
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::flushAndSubmitOutsideRenderPassCommands");
     ANGLE_TRY(flushOutsideRenderPassCommands());
-    return submitCommands(nullptr, nullptr, Submit::OutsideRenderPassCommandsOnly);
+    ASSERT(mLastFlushedQueueSerial.valid());
+    ASSERT(QueueSerialsHaveDifferentIndexOrSmaller(mLastSubmittedQueueSerial,
+                                                   mLastFlushedQueueSerial));
+    return submitCommands(nullptr, nullptr);
 }
 
 angle::Result ContextVk::flushOutsideRenderPassCommands()
