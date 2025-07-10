@@ -568,27 +568,24 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithoutLoadStoreOpNon
 // Messages that are only generated with MSRTT emulation.  Some of these are syncval bugs (discussed
 // in https://gitlab.khronos.org/vulkan/vulkan/-/issues/3840)
 constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithMSRTTEmulation[] = {
-    // False positive: https://gitlab.khronos.org/vulkan/vulkan/-/issues/3840
-    {
-        "SYNC-HAZARD-READ-AFTER-WRITE",
-        "during depth/stencil resolve read",
-        "SYNC_COLOR_ATTACHMENT_OUTPUT_COLOR_ATTACHMENT_READ",
-    },
     // Unknown whether ANGLE or syncval bug.
+    // To repro: see http://anglebug.com/40644740#comment69
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
-     "image layout transition (old_layout: VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL, "
-     "new_layout: VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL). Access info (usage: "
-     "SYNC_IMAGE_LAYOUT_TRANSITION",
-     "",
+     nullptr,
+     nullptr,
      false,
      // TODO: it seems if this filter is removed then the error will be
      // intersepted by a different filter. Investigate the nature of the
      // error if necessary how to improve its detection.
      {
          "message_type = RenderPassLayoutTransitionError",
+         "access = SYNC_IMAGE_LAYOUT_TRANSITION",
+         "prior_access = "
+         "VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT(VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT)",
+         "command = vkCmdBeginRenderPass",
+         "prior_command = vkCmdEndRenderPass",
          "old_layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL",
          "new_layout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL",
-         "access = SYNC_IMAGE_LAYOUT_TRANSITION",  // probably not needed, message_type implies this
      }},
 };
 
