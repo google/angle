@@ -1987,7 +1987,9 @@ bool Program::linkUniforms(const Caps &caps,
 
         if (locationSize > caps.maxUniformLocations)
         {
-            mState.mInfoLog << "Exceeded maximum uniform location size";
+            mState.mInfoLog
+                << "Exceeded maximum uniform location size: number of uniform locations = "
+                << locationSize << ", max uniform locations = " << caps.maxUniformLocations;
             return false;
         }
     }

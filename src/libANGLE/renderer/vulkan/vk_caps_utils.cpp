@@ -745,7 +745,6 @@ void Renderer::ensureCapsInitialized() const
     {
         mNativeCaps.maxShaderUniformComponents[shaderType] = maxUniformComponents;
     }
-    mNativeCaps.maxUniformLocations = maxUniformVectors;
 
     const int32_t maxPerStageUniformBuffers = rx::LimitToInt(
         limitsVk.maxPerStageDescriptorUniformBuffers - kReservedPerStageDefaultUniformBindingCount);
@@ -775,6 +774,10 @@ void Renderer::ensureCapsInitialized() const
         mNativeCaps.maxShaderTextureImageUnits[shaderType] = rx::LimitToInt(maxPerStageTextures);
     }
     mNativeCaps.maxCombinedTextureImageUnits = rx::LimitToInt(maxCombinedTextures);
+
+    // All uniforms (variables + samplers) consume a location when a shader is linked.
+    mNativeCaps.maxUniformLocations =
+        LimitToInt(maxUniformVectors + LimitToInt(maxPerStageTextures));
 
     uint32_t maxPerStageStorageBuffers    = limitsVk.maxPerStageDescriptorStorageBuffers;
     uint32_t maxVertexStageStorageBuffers = maxPerStageStorageBuffers;

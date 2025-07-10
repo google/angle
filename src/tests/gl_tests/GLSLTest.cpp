@@ -11035,7 +11035,7 @@ bool SubrectEquals(const std::vector<GLColor> &bigArray,
     return badPixels == 0;
 }
 
-// Tests that FragCoord behaves the same betweeen a user FBO and the back buffer.
+// Tests that FragCoord behaves the same between a user FBO and the back buffer.
 TEST_P(GLSLTest, FragCoordConsistency)
 {
     constexpr char kFragCoordShader[] = R"(uniform mediump vec2 viewportSize;
@@ -21312,7 +21312,7 @@ void main() {
 }
 }  // anonymous namespace
 
-ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(
+ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND_ES31_AND_ES32(
     GLSLTest,
     ES3_OPENGL().enable(Feature::ForceInitShaderVariables),
     ES3_OPENGL().enable(Feature::ScalarizeVecAndMatConstructorArgs),

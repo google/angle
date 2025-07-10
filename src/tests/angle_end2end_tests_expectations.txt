@@ -512,6 +512,9 @@ b/390710636 LINUX NVIDIA VULKAN : TextureBorderClampTestES32.CustomBorderColorWi
 42267092 WIN D3D11 : BlitFramebufferTest.FlippedBlits/* = SKIP
 343249129 WIN D3D11 : GLSLTest_ES31.TernaryOnStructsInDifferentBlockStorages/* = SKIP
 433462527 WIN D3D11 : MultisampledRenderToTextureES3Test.MixedMultisampleSingleSampledDraw/* = SKIP
+432303915 WIN D3D11 : GLSLTest.VerifyMaxFragmentUniformVectorsWithSamplers/ES3_1_D3D11 = SKIP
+432303915 WIN D3D11 : GLSLTest.VerifyMaxVertexUniformVectors/ES3_1_D3D11 = SKIP
+432303915 WIN D3D11 : GLSLTest.VerifyMaxVertexUniformVectorsWithSamplers/ES3_1_D3D11 = SKIP
 
 // Android
 42264624 ANDROID GLES : GLSLTest_ES3.InitGlobalComplexConstant/* = SKIP
