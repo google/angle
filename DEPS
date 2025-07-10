@@ -1006,7 +1006,7 @@ deps = {
   },
 
   'third_party/SwiftShader': {
-    'url': Var('swiftshader_git') + '/SwiftShader@be6ed66fa563d5c022991968fc34da3cb58269af',
+    'url': Var('swiftshader_git') + '/SwiftShader@c1f7fbbec4e17769c0182daae185466cb806d0d5',
     'condition': 'not build_with_chromium',
   },
 
