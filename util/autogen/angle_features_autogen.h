@@ -362,6 +362,7 @@ enum class Feature
     SupportsLockSurfaceExtension,
     SupportsLogicOpDynamicState,
     SupportsMaintenance5,
+    SupportsMaintenance9,
     SupportsMemoryBudget,
     SupportsMultiDrawIndirect,
     SupportsMultisampledRenderToSingleSampled,

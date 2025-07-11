@@ -1967,6 +1967,14 @@
                 "VkDevice supports VK_KHR_swapchain_mutable_format extension"
             ],
             "issue": "http://anglebug.com/386688871"
+        },
+        {
+            "name": "supports_maintenance9",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_KHR_maintenance9 extension"
+            ],
+            "issue": "https://anglebug.com/429339330"
         }
     ]
 }

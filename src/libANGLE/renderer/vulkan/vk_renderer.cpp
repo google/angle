@@ -294,6 +294,12 @@ constexpr const char *kNoMaintenance5SkippedMessages[] = {
     "VUID-VkBufferViewCreateInfo-format-08779",
 };
 
+// Validation messages that should be ignored only when VK_KHR_maintenance9 is not present.
+constexpr const char *kNoMaintenance9SkippedMessages[] = {
+    // http://issuetracker.google.com/429339330
+    "WARNING-VkImageSubresourceRange-layerCount-compatibility",
+};
+
 // Validation messages that should be ignored only when exposeNonConformantExtensionsAndVersions is
 // enabled on certain test platforms.
 constexpr const char *kExposeNonConformantSkippedMessages[] = {
@@ -595,12 +601,17 @@ enum class DebugMessageReport
     Print,
 };
 
-bool IsMessageInSkipList(const char *message,
+bool IsMessageInSkipList(const char *messageId,
+                         const char *message,
                          const char *const skippedList[],
                          size_t skippedListSize)
 {
     for (size_t index = 0; index < skippedListSize; ++index)
     {
+        if (strstr(messageId, skippedList[index]) != nullptr)
+        {
+            return true;
+        }
         if (strstr(message, skippedList[index]) != nullptr)
         {
             return true;
@@ -659,7 +670,7 @@ DebugMessageReport ShouldReportDebugMessage(Renderer *renderer,
 
     // Check with non-syncval messages:
     const std::vector<const char *> &skippedMessages = renderer->getSkippedValidationMessages();
-    if (IsMessageInSkipList(message, skippedMessages.data(), skippedMessages.size()))
+    if (IsMessageInSkipList(messageId, message, skippedMessages.data(), skippedMessages.size()))
     {
         return DebugMessageReport::Ignore;
     }
@@ -4414,6 +4425,13 @@ void Renderer::initializeValidationMessageSuppressions()
         mSkippedValidationMessages.insert(
             mSkippedValidationMessages.end(), kNoMaintenance5SkippedMessages,
             kNoMaintenance5SkippedMessages + ArraySize(kNoMaintenance5SkippedMessages));
+    }
+
+    if (!getFeatures().supportsMaintenance9.enabled)
+    {
+        mSkippedValidationMessages.insert(
+            mSkippedValidationMessages.end(), kNoMaintenance9SkippedMessages,
+            kNoMaintenance9SkippedMessages + ArraySize(kNoMaintenance9SkippedMessages));
     }
 
     if (getFeatures().useVkEventForImageBarrier.enabled &&

@@ -362,6 +362,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SupportsLockSurfaceExtension, "supportsLockSurfaceExtension"},
     {Feature::SupportsLogicOpDynamicState, "supportsLogicOpDynamicState"},
     {Feature::SupportsMaintenance5, "supportsMaintenance5"},
+    {Feature::SupportsMaintenance9, "supportsMaintenance9"},
     {Feature::SupportsMemoryBudget, "supportsMemoryBudget"},
     {Feature::SupportsMultiDrawIndirect, "supportsMultiDrawIndirect"},
     {Feature::SupportsMultisampledRenderToSingleSampled, "supportsMultisampledRenderToSingleSampled"},
