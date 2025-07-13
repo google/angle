@@ -225,7 +225,7 @@ angle::Result CLKernelVk::init()
 
     // initialize the descriptor pools
     // descriptor pools are setup as per their indices
-    return initializeDescriptorPools();
+    return mContext->initializeDescriptorPools(this);
 }
 
 angle::Result CLKernelVk::setArg(cl_uint argIndex, size_t argSize, const void *argValue)

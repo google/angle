@@ -106,6 +106,7 @@ class CLContextVk : public CLContextImpl, public vk::Context
         DescriptorSetIndex index,
         angle::EnumIterator<DescriptorSetIndex> layoutIndex,
         vk::OutsideRenderPassCommandBufferHelper *computePassCommands);
+    angle::Result initializeDescriptorPools(CLKernelVk *kernelVk);
 
     void addCommandBufferDiagnostics(const std::string &commandBufferDiagnostics);
     void dumpCommandStreamDiagnostics();
