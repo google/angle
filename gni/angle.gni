@@ -339,6 +339,7 @@ if (!defined(angle_zlib_compression_utils_dir)) {
 angle_common_configs = [
   angle_root + ":angle_asserts_config",
   angle_root + ":constructor_and_destructor_warnings",
+  angle_root + ":no_thread_safety_warnings",
   angle_root + ":extra_warnings",
   angle_root + ":internal_config",
   angle_root + ":angle_uwp_env",
