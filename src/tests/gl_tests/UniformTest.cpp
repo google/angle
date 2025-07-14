@@ -2342,6 +2342,22 @@ void main() {
     glDeleteProgram(program);
 }
 
+// Test that TCompiler::sortUniforms() does not break the shader code when there are multiple
+// uniforms of the same struct data type, and one of them is the struct specifier.
+TEST_P(UniformTestES31, UniformReorderDoesNotBreakStructUniforms)
+{
+    constexpr char kFS[] =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "out highp vec4 my_FragColor;\n"
+        "uniform struct{vec3 b;}G[1],S;\n"
+        "void main()\n"
+        "{}";
+
+    GLuint program = CompileProgram(essl31_shaders::vs::Simple(), kFS);
+    ASSERT_NE(program, 0u);
+}
+
 // Test a uniform struct containing a non-square matrix and a boolean.
 // Minimal test case for a bug revealed by dEQP tests.
 TEST_P(UniformTestES3, StructWithNonSquareMatrixAndBool)
