@@ -47,6 +47,7 @@ enum class CommandID : uint16_t
     BindDescriptorSets,
     BindGraphicsPipeline,
     BindIndexBuffer,
+    BindIndexBuffer2,
     BindTransformFeedbackBuffers,
     BindVertexBuffers,
     BindVertexBuffers2,
@@ -171,6 +172,17 @@ struct BindIndexBufferParams
     VkDeviceSize offset;
 };
 VERIFY_8_BYTE_ALIGNMENT(BindIndexBufferParams)
+
+struct BindIndexBuffer2Params
+{
+    CommandHeader header;
+
+    VkIndexType indexType;
+    VkBuffer buffer;
+    VkDeviceSize offset;
+    VkDeviceSize size;
+};
+VERIFY_8_BYTE_ALIGNMENT(BindIndexBuffer2Params)
 
 struct BindPipelineParams
 {
@@ -862,6 +874,10 @@ class SecondaryCommandBuffer final : angle::NonCopyable
     void bindGraphicsPipeline(const Pipeline &pipeline);
 
     void bindIndexBuffer(const Buffer &buffer, VkDeviceSize offset, VkIndexType indexType);
+    void bindIndexBuffer2(const Buffer &buffer,
+                          VkDeviceSize offset,
+                          VkDeviceSize size,
+                          VkIndexType indexType);
 
     void bindTransformFeedbackBuffers(uint32_t firstBinding,
                                       uint32_t bindingCount,
@@ -1363,6 +1379,19 @@ ANGLE_INLINE void SecondaryCommandBuffer::bindIndexBuffer(const Buffer &buffer,
         initCommand<BindIndexBufferParams>(CommandID::BindIndexBuffer);
     paramStruct->buffer    = buffer.getHandle();
     paramStruct->offset    = offset;
+    paramStruct->indexType = indexType;
+}
+
+ANGLE_INLINE void SecondaryCommandBuffer::bindIndexBuffer2(const Buffer &buffer,
+                                                           VkDeviceSize offset,
+                                                           VkDeviceSize size,
+                                                           VkIndexType indexType)
+{
+    BindIndexBuffer2Params *paramStruct =
+        initCommand<BindIndexBuffer2Params>(CommandID::BindIndexBuffer2);
+    paramStruct->buffer    = buffer.getHandle();
+    paramStruct->offset    = offset;
+    paramStruct->size      = size;
     paramStruct->indexType = indexType;
 }
 

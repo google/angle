@@ -2698,12 +2698,27 @@ angle::Result ContextVk::handleDirtyGraphicsIndexBuffer(DirtyBits::Iterator *dir
     vk::BufferHelper *elementArrayBuffer = mCurrentIndexBuffer;
     ASSERT(elementArrayBuffer != nullptr);
 
-    VkDeviceSize bufferOffset;
-    const vk::Buffer &buffer = elementArrayBuffer->getBufferForVertexArray(
-        this, elementArrayBuffer->getSize(), &bufferOffset);
+    if (getFeatures().supportsMaintenance5.enabled)
+    {
+        // The bound size is from the start offset to the end of the element buffer, and should be
+        // aligned to the element type byte size.
+        VkDeviceSize alignedSize =
+            roundDownPow2(elementArrayBuffer->getSize() - mCurrentIndexBufferOffset,
+                          static_cast<VkDeviceSize>(1 << ToUnderlying(mCurrentDrawElementsType)));
+        mRenderPassCommandBuffer->bindIndexBuffer2(
+            elementArrayBuffer->getBuffer(),
+            elementArrayBuffer->getOffset() + mCurrentIndexBufferOffset, alignedSize,
+            getVkIndexType(mCurrentDrawElementsType));
+    }
+    else
+    {
+        VkDeviceSize bufferOffset;
+        const vk::Buffer &buffer = elementArrayBuffer->getBufferForVertexArray(
+            this, elementArrayBuffer->getSize(), &bufferOffset);
 
-    mRenderPassCommandBuffer->bindIndexBuffer(buffer, bufferOffset + mCurrentIndexBufferOffset,
-                                              getVkIndexType(mCurrentDrawElementsType));
+        mRenderPassCommandBuffer->bindIndexBuffer(buffer, bufferOffset + mCurrentIndexBufferOffset,
+                                                  getVkIndexType(mCurrentDrawElementsType));
+    }
 
     mRenderPassCommands->bufferRead(this, VK_ACCESS_INDEX_READ_BIT, vk::PipelineStage::VertexInput,
                                     elementArrayBuffer);

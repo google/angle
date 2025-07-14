@@ -40,6 +40,8 @@ const char *GetCommandString(CommandID id)
             return "BindGraphicsPipeline";
         case CommandID::BindIndexBuffer:
             return "BindIndexBuffer";
+        case CommandID::BindIndexBuffer2:
+            return "BindIndexBuffer2";
         case CommandID::BindTransformFeedbackBuffers:
             return "BindTransformFeedbackBuffers";
         case CommandID::BindVertexBuffers:
@@ -275,6 +277,14 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                         getParamPtr<BindIndexBufferParams>(currentCommand);
                     vkCmdBindIndexBuffer(cmdBuffer, params->buffer, params->offset,
                                          params->indexType);
+                    break;
+                }
+                case CommandID::BindIndexBuffer2:
+                {
+                    const BindIndexBuffer2Params *params =
+                        getParamPtr<BindIndexBuffer2Params>(currentCommand);
+                    vkCmdBindIndexBuffer2KHR(cmdBuffer, params->buffer, params->offset,
+                                             params->size, params->indexType);
                     break;
                 }
                 case CommandID::BindTransformFeedbackBuffers:

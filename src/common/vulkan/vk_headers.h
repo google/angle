@@ -65,6 +65,9 @@ extern PFN_vkGetImageMemoryRequirements2KHR vkGetImageMemoryRequirements2KHR;
 extern PFN_vkBindBufferMemory2KHR vkBindBufferMemory2KHR;
 extern PFN_vkBindImageMemory2KHR vkBindImageMemory2KHR;
 
+// VK_KHR_maintenance5
+extern PFN_vkCmdBindIndexBuffer2KHR vkCmdBindIndexBuffer2KHR;
+
 // VK_KHR_external_fence_capabilities
 extern PFN_vkGetPhysicalDeviceExternalFencePropertiesKHR
     vkGetPhysicalDeviceExternalFencePropertiesKHR;
