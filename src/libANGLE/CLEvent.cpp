@@ -23,6 +23,10 @@ namespace cl
 
 angle::Result Event::setUserEventStatus(cl_int executionStatus)
 {
+    // we need to retain in the case of situations where any waiting thread(s) on clWaitForEvents
+    // get signaled here from backend/mImpl call before we completely finish this routine.
+    cl::EventPtr implicitRetain(this);
+
     ANGLE_TRY(mImpl->setUserEventStatus(executionStatus));
     mStatusWasChanged = true;
     return angle::Result::Continue;
@@ -172,9 +176,7 @@ EventPtrs Event::Cast(cl_uint numEvents, const cl_event *eventList)
 }
 
 Event::Event(Context &context) : mContext(&context), mCommandType(CL_COMMAND_USER), mImpl(nullptr)
-{
-    ANGLE_CL_IMPL_TRY(context.getImpl().createUserEvent(*this, &mImpl));
-}
+{}
 
 Event::Event(CommandQueue &queue, cl_command_type commandType)
     : mContext(&queue.getContext()),

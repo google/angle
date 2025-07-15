@@ -121,17 +121,18 @@ angle::Result CLEventVk::waitForUserEventStatus()
 {
     ASSERT(isUserEvent());
 
-    cl_int status = CL_QUEUED;
+    // User is responsible for setting the user-event object, we need to wait for that event
+    // (We dont care what the outcome is, just need to wait until that event triggers)
     std::unique_lock<std::mutex> ul(mUserEventMutex);
-    ANGLE_TRY(getCommandExecutionStatus(status));
-    if (status > CL_COMPLETE)
-    {
-        // User is responsible for setting the user-event object, we need to wait for that event
-        // (We dont care what the outcome is, just need to wait until that event triggers)
-        INFO() << "Waiting for user-event (" << &mEvent
-               << ") to be set! (aka clSetUserEventStatus)";
-        mUserEventCondition.wait(ul);
-    }
+    mUserEventCondition.wait(ul, [this]() {
+        cl_int status = *mStatus;
+        if (status > CL_COMPLETE)
+        {
+            INFO() << "waiting for user-event (" << &mEvent << ") to be set";
+            return false;
+        }
+        return true;
+    });
 
     return angle::Result::Continue;
 }
