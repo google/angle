@@ -41,9 +41,12 @@ class VertexArrayState final : angle::NonCopyable
 
     const std::string &getLabel() const { return mLabel; }
 
-    Buffer *getElementArrayBuffer() const { return mElementArrayBuffer.get(); }
+    Buffer *getElementArrayBuffer() const
+    {
+        return mVertexBindings[kElementArrayBufferIndex].getBuffer().get();
+    }
     size_t getMaxAttribs() const { return mVertexAttributes.size(); }
-    size_t getMaxBindings() const { return mVertexBindings.size(); }
+    size_t getMaxBindings() const { return mMaxVertexAttribBindings; }
     const AttributesMask &getEnabledAttributesMask() const { return mEnabledAttributesMask; }
     const std::vector<VertexAttribute> &getVertexAttributes() const { return mVertexAttributes; }
     const VertexAttribute &getVertexAttribute(size_t attribIndex) const
@@ -92,8 +95,10 @@ class VertexArrayState final : angle::NonCopyable
     VertexArrayID mId;
     std::string mLabel;
     std::vector<VertexAttribute> mVertexAttributes;
-    BindingPointer<Buffer> mElementArrayBuffer;
+    // mMaxVertexAttribBindings is the max size of vertex attributes. element buffer is stored in
+    // mVertexBindings[kElementArrayBufferIndex].
     std::vector<VertexBinding> mVertexBindings;
+    size_t mMaxVertexAttribBindings;
     AttributesMask mEnabledAttributesMask;
     ComponentTypeMask mVertexAttributesTypeMask;
     AttributesMask mLastSyncedEnabledAttributesMask;
@@ -388,7 +393,7 @@ inline angle::Result VertexArray::getIndexRange(const Context *context,
                                                 bool primitiveRestartEnabled,
                                                 IndexRange *indexRangeOut) const
 {
-    Buffer *elementArrayBuffer = mState.mElementArrayBuffer.get();
+    Buffer *elementArrayBuffer = mState.getElementArrayBuffer();
     if (!elementArrayBuffer)
     {
         *indexRangeOut = ComputeIndexRange(type, indices, indexCount, primitiveRestartEnabled);
