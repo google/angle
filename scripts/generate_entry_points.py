@@ -44,6 +44,8 @@ ALIASING_EXCEPTIONS = [
     'drawArraysInstancedBaseInstanceANGLE',
     'drawElementsInstancedBaseVertexBaseInstanceANGLE',
     'logicOpANGLE',
+    'shadingRateEXT',
+    'shadingRateQCOM',
 ]
 
 # These are the entry points which potentially are used first by an application
@@ -119,8 +121,9 @@ CONTEXT_PRIVATE_LIST = [
     'glSampleCoverage',
     'glSampleMaski',
     'glScissor',
-    'glShadingRate',
     'glShadingRateCombinerOps',
+    'glShadingRateEXT',
+    'glShadingRateQCOM',
     'glStencilFunc',
     'glStencilFuncSeparate',
     'glStencilMask',

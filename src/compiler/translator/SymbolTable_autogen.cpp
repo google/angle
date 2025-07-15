@@ -25,7 +25,7 @@ using TableBase = TSymbolTableBase;
 
 struct SymbolIdChecker
 {
-    static_assert(TSymbolTable::kFirstUserDefinedSymbolId > 2022);
+    static_assert(TSymbolTable::kFirstUserDefinedSymbolId > 2023);
 };
 
 namespace BuiltInName
@@ -230,6 +230,7 @@ constexpr const ImmutableString gl_SampleMaskIn("gl_SampleMaskIn");
 constexpr const ImmutableString gl_SamplePosition("gl_SamplePosition");
 constexpr const ImmutableString gl_SecondaryFragColorEXT("gl_SecondaryFragColorEXT");
 constexpr const ImmutableString gl_SecondaryFragDataEXT("gl_SecondaryFragDataEXT");
+constexpr const ImmutableString gl_ShadingRateEXT("gl_ShadingRateEXT");
 constexpr const ImmutableString gl_TessCoord("gl_TessCoord");
 constexpr const ImmutableString gl_TessLevelInner("gl_TessLevelInner");
 constexpr const ImmutableString gl_TessLevelOuter("gl_TessLevelOuter");
@@ -720,6 +721,12 @@ constexpr const TVariable kgl_SecondaryFragColorEXT(
     SymbolType::BuiltIn,
     std::array<TExtension, 1u>{{TExtension::EXT_blend_func_extended}},
     StaticType::Get<EbtFloat, EbpMedium, EvqSecondaryFragColorEXT, 4, 1>());
+constexpr const TVariable kgl_ShadingRateEXT(
+    BuiltInId::gl_ShadingRateEXT,
+    BuiltInName::gl_ShadingRateEXT,
+    SymbolType::BuiltIn,
+    std::array<TExtension, 1u>{{TExtension::EXT_fragment_shading_rate}},
+    StaticType::Get<EbtInt, EbpMedium, EvqShadingRateEXT, 1, 1>());
 constexpr const TVariable kgl_TessCoord(BuiltInId::gl_TessCoord,
                                         BuiltInName::gl_TessCoord,
                                         SymbolType::BuiltIn,
@@ -1549,6 +1556,11 @@ const TVariable *gl_SamplePositionES3_2()
 const TVariable *gl_SecondaryFragColorEXT()
 {
     return &kgl_SecondaryFragColorEXT;
+}
+
+const TVariable *gl_ShadingRateEXT()
+{
+    return &kgl_ShadingRateEXT;
 }
 
 const TVariable *gl_TessCoord()
@@ -19480,6 +19492,8 @@ constexpr SymbolRule kRules[] = {
         &BuiltInVariable::kgl_LayerGS),
     Rule::Get<310, Shader::GEOMETRY_EXT, EXT_INDEX(OES_geometry_shader)>(
         &BuiltInVariable::kgl_LayerGS),
+    Rule::Get<310, Shader::FRAGMENT, EXT_INDEX(EXT_fragment_shading_rate)>(
+        &BuiltInVariable::kgl_ShadingRateEXT),
     Rule::Get<320, Shader::FRAGMENT, 0>(&BuiltInVariable::kgl_SampleIDES3_2),
     Rule::Get<300, Shader::FRAGMENT, EXT_INDEX(OES_sample_variables)>(
         &BuiltInVariable::kgl_SampleID),
@@ -21027,6 +21041,7 @@ constexpr const char *kMangledNames[] = {"radians(00B",
                                          "gl_LastFragStencilARM",
                                          "gl_PrimitiveID",
                                          "gl_Layer",
+                                         "gl_ShadingRateEXT",
                                          "gl_SampleID",
                                          "gl_SamplePosition",
                                          "gl_SampleMaskIn",
@@ -22453,42 +22468,43 @@ constexpr uint16_t kMangledOffsets[] = {
     1931,  // gl_LastFragStencilARM
     1932,  // gl_PrimitiveID
     1944,  // gl_Layer
-    1951,  // gl_SampleID
-    1953,  // gl_SamplePosition
-    1955,  // gl_SampleMaskIn
-    1957,  // gl_SampleMask
-    1959,  // gl_Position
-    1969,  // gl_PointSize
-    1971,  // gl_InstanceID
-    1972,  // gl_InstanceIndex
-    1973,  // gl_VertexID
-    1974,  // gl_VertexIndex
-    1975,  // gl_DrawID
-    1976,  // gl_BaseVertex
-    1977,  // gl_BaseInstance
-    1978,  // angle_BaseVertex
-    1979,  // angle_BaseInstance
-    1980,  // gl_ClipDistance
-    1983,  // gl_NumWorkGroups
-    1984,  // gl_WorkGroupSize
-    1985,  // gl_WorkGroupID
-    1986,  // gl_LocalInvocationID
-    1987,  // gl_GlobalInvocationID
-    1988,  // gl_LocalInvocationIndex
-    1989,  // gl_PrimitiveIDIn
-    1992,  // gl_InvocationID
-    1998,  // gl_PerVertex
-    2007,  // gl_in
-    2016,  // gl_PatchVerticesIn
-    2022,  // gl_TessLevelOuter
-    2028,  // gl_TessLevelInner
-    2034,  // gl_out
-    2040,  // gl_BoundingBox
-    2043,  // gl_BoundingBoxEXT
-    2046,  // gl_BoundingBoxOES
-    2049,  // gl_TessCoord
-    2050,  // gl_ViewID_OVR
-    2051,  // gl_CullDistance
+    1951,  // gl_ShadingRateEXT
+    1952,  // gl_SampleID
+    1954,  // gl_SamplePosition
+    1956,  // gl_SampleMaskIn
+    1958,  // gl_SampleMask
+    1960,  // gl_Position
+    1970,  // gl_PointSize
+    1972,  // gl_InstanceID
+    1973,  // gl_InstanceIndex
+    1974,  // gl_VertexID
+    1975,  // gl_VertexIndex
+    1976,  // gl_DrawID
+    1977,  // gl_BaseVertex
+    1978,  // gl_BaseInstance
+    1979,  // angle_BaseVertex
+    1980,  // angle_BaseInstance
+    1981,  // gl_ClipDistance
+    1984,  // gl_NumWorkGroups
+    1985,  // gl_WorkGroupSize
+    1986,  // gl_WorkGroupID
+    1987,  // gl_LocalInvocationID
+    1988,  // gl_GlobalInvocationID
+    1989,  // gl_LocalInvocationIndex
+    1990,  // gl_PrimitiveIDIn
+    1993,  // gl_InvocationID
+    1999,  // gl_PerVertex
+    2008,  // gl_in
+    2017,  // gl_PatchVerticesIn
+    2023,  // gl_TessLevelOuter
+    2029,  // gl_TessLevelInner
+    2035,  // gl_out
+    2041,  // gl_BoundingBox
+    2044,  // gl_BoundingBoxEXT
+    2047,  // gl_BoundingBoxOES
+    2050,  // gl_TessCoord
+    2051,  // gl_ViewID_OVR
+    2052,  // gl_CullDistance
 };
 
 using Ext = TExtension;
@@ -24107,7 +24123,7 @@ namespace
 {
 uint16_t GetNextRuleIndex(uint32_t nameHash)
 {
-    if (nameHash == 1423 - 1)
+    if (nameHash == 1424 - 1)
     {
         return ArraySize(BuiltInArray::kRules);
     }
@@ -24121,7 +24137,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
         return nullptr;
 
     uint32_t nameHash = name.mangledNameHash();
-    if (nameHash >= 1423)
+    if (nameHash >= 1424)
     {
         return nullptr;
     }
@@ -24146,9 +24162,7 @@ bool TSymbolTable::isUnmangledBuiltInName(const ImmutableString &name,
 
     uint32_t nameHash = name.unmangledNameHash();
     if (nameHash >= 180)
-    {
         return false;
-    }
 
     return BuiltInArray::unmangled[nameHash].matches(name, mShaderSpec, shaderVersion, mShaderType,
                                                      extensions);

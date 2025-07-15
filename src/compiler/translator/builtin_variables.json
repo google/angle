@@ -946,6 +946,19 @@
                     }
                 }
             },
+            "EXTFragmentShadingRate":{
+                "variables":{
+                    "gl_ShadingRateEXT":{
+                        "essl_level":"ESSL3_1_BUILTINS",
+                        "essl_extension":"EXT_fragment_shading_rate",
+                        "type":{
+                            "basic":"Int",
+                            "precision":"Medium",
+                            "qualifier":"ShadingRateEXT"
+                        }
+                    }
+                }
+            },
             "OESSampleVariables":{
                 "variables":{
                     "gl_SampleID":{

@@ -771,6 +771,9 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
         case EvqLayerIn:
             message = "can't modify gl_Layer in a fragment shader";
             break;
+        case EvqShadingRateEXT:
+            message = "can't modify gl_ShadingRateEXT";
+            break;
         case EvqSampleID:
             message = "can't modify gl_SampleID";
             break;

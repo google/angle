@@ -1628,6 +1628,7 @@ void TCompiler::setResourceString()
         << ":OES_tessellation_shader:" << mResources.OES_tessellation_shader
         << ":OES_texture_buffer:" << mResources.OES_texture_buffer
         << ":EXT_texture_buffer:" << mResources.EXT_texture_buffer
+        << ":EXT_fragment_shading_rate:" << mResources.EXT_fragment_shading_rate
         << ":OES_sample_variables:" << mResources.OES_sample_variables
         << ":EXT_clip_cull_distance:" << mResources.EXT_clip_cull_distance
         << ":ANGLE_clip_cull_distance:" << mResources.ANGLE_clip_cull_distance

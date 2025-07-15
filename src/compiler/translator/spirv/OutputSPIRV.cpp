@@ -447,6 +447,7 @@ spv::StorageClass GetStorageClass(const ShCompileOptions &compileOptions,
         case EvqFragCoord:
         case EvqFrontFacing:
         case EvqPointCoord:
+        case EvqShadingRateEXT:
         case EvqSampleID:
         case EvqSamplePosition:
         case EvqSampleMaskIn:
@@ -601,6 +602,12 @@ spirv::IdRef OutputSPIRVTraverser::getSymbolIdAndStorageClass(const TSymbol *sym
             mBuilder.addCapability(spv::CapabilitySampleRateShading);
             uniqueId = &symbol->uniqueId();
             break;
+        case EvqShadingRateEXT:
+            name              = "gl_ShadingRateEXT";
+            builtInDecoration = spv::BuiltInShadingRateKHR;
+            mBuilder.addCapability(spv::CapabilityFragmentShadingRateKHR);
+            mBuilder.addExtension(SPIRVExtensions::FragmentShadingRate);
+            break;
         case EvqSamplePosition:
             name              = "gl_SamplePosition";
             builtInDecoration = spv::BuiltInSamplePosition;
@@ -719,6 +726,7 @@ spirv::IdRef OutputSPIRVTraverser::getSymbolIdAndStorageClass(const TSymbol *sym
     switch (type.getQualifier())
     {
         case EvqLayerIn:
+        case EvqShadingRateEXT:
         case EvqSampleID:
         case EvqPrimitiveID:
         case EvqViewIDOVR:

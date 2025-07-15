@@ -217,6 +217,7 @@ class CollectVariablesTraverser : public TIntermTraverser
     bool mFragDepthAdded;
     bool mSecondaryFragColorEXTAdded;
     bool mSecondaryFragDataEXTAdded;
+    bool mShadingRateEXTAdded;
     bool mSampleIDAdded;
     bool mSamplePositionAdded;
     bool mSampleMaskAdded;
@@ -301,6 +302,7 @@ CollectVariablesTraverser::CollectVariablesTraverser(
       mFragDepthAdded(false),
       mSecondaryFragColorEXTAdded(false),
       mSecondaryFragDataEXTAdded(false),
+      mShadingRateEXTAdded(false),
       mSampleIDAdded(false),
       mSamplePositionAdded(false),
       mSampleMaskAdded(false),
@@ -669,6 +671,9 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
                 recordBuiltInVaryingUsed(
                     symbol->variable(), &mCullDistanceAdded,
                     mShaderType == GL_FRAGMENT_SHADER ? mInputVaryings : mOutputVaryings);
+                return;
+            case EvqShadingRateEXT:
+                recordBuiltInVaryingUsed(symbol->variable(), &mShadingRateEXTAdded, mInputVaryings);
                 return;
             case EvqSampleID:
                 recordBuiltInVaryingUsed(symbol->variable(), &mSampleIDAdded, mInputVaryings);

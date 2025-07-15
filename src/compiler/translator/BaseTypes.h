@@ -1026,6 +1026,9 @@ enum TQualifier
     EvqNoPerspectiveCentroidIn,
     EvqNoPerspectiveSampleIn,
 
+    // GL_EXT_fragment_shading_rate
+    EvqShadingRateEXT,
+
     // GLSL ES 3.0 extension OES_sample_variables
     EvqSampleID,
     EvqSamplePosition,
@@ -1590,6 +1593,7 @@ inline const char *getQualifierString(TQualifier q)
     case EvqSample:                    return "sample";
     case EvqSampleIn:                  return "sample in";
     case EvqSampleOut:                 return "sample out";
+    case EvqShadingRateEXT:            return "ShadingRateEXT";
     case EvqSampleID:                  return "SampleID";
     case EvqSamplePosition:            return "SamplePosition";
     case EvqSampleMaskIn:              return "SampleMaskIn";

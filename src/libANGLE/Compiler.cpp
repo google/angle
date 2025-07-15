@@ -168,6 +168,9 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state, egl::Disp
     mResources.MaxCombinedDrawBuffersAndPixelLocalStoragePlanes =
         caps.maxCombinedDrawBuffersAndPixelLocalStoragePlanes;
 
+    // EXT_fragment_shading_rate
+    mResources.EXT_fragment_shading_rate = extensions.fragmentShadingRateEXT;
+
     // OES_sample_variables
     mResources.OES_sample_variables = extensions.sampleVariablesOES;
     mResources.MaxSamples           = caps.maxSamples;

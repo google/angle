@@ -9765,8 +9765,8 @@ void GL_APIENTRY GL_ShadingRateEXT(GLenum rate)
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            ContextPrivateShadingRate(context->getMutablePrivateState(),
-                                      context->getMutablePrivateStateCache(), rate);
+            ContextPrivateShadingRateEXT(context->getMutablePrivateState(),
+                                         context->getMutablePrivateStateCache(), rate);
         }
         ANGLE_CAPTURE_GL(ShadingRateEXT, isCallValid, context, rate);
     }
@@ -20444,8 +20444,8 @@ void GL_APIENTRY GL_ShadingRateQCOM(GLenum rate)
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            ContextPrivateShadingRate(context->getMutablePrivateState(),
-                                      context->getMutablePrivateStateCache(), rate);
+            ContextPrivateShadingRateQCOM(context->getMutablePrivateState(),
+                                          context->getMutablePrivateStateCache(), rate);
         }
         ANGLE_CAPTURE_GL(ShadingRateQCOM, isCallValid, context, rate);
     }
