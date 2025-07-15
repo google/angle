@@ -1652,6 +1652,35 @@ TEST_P(SimpleOperationTest, GetRenderbufferParameter)
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
 }
 
+// Test that passing NULL to the shader parameter in the glGetAttachedShaders function
+// should return GL_INVALID_VALUE.
+TEST_P(SimpleOperationTest, NullParameterInGetAttachedShaders)
+{
+    GLsizei length;
+    GLuint attachedShaders[2] = {0u};
+    GLuint program            = glCreateProgram();
+    ASSERT_GL_NO_ERROR();
+
+    glGetAttachedShaders(program, 0, &length, NULL);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glGetAttachedShaders(program, 0, NULL, attachedShaders);
+    EXPECT_GL_ERROR(GL_NO_ERROR);
+}
+
+// Test that passing NULL separately to the range and precision parameters
+// in the glGetShaderPrecisionFormat function should return GL_INVALID_VALUE.
+TEST_P(SimpleOperationTest, NullParameterInGetShaderPrecisionFormat)
+{
+    GLint range[2], precision;
+
+    glGetShaderPrecisionFormat(GL_VERTEX_SHADER, GL_LOW_FLOAT, range, NULL);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+
+    glGetShaderPrecisionFormat(GL_VERTEX_SHADER, GL_LOW_FLOAT, NULL, &precision);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(

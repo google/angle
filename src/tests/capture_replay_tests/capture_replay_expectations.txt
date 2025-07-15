@@ -171,6 +171,8 @@
 
 42265218 : EGLMultiContextTest.ReuseUnterminatedDisplay/* = SKIP_FOR_CAPTURE
 
+434453466 : SimpleOperationTest.NullParameterInGetAttachedShaders/* = SKIP_FOR_CAPTURE
+
 # No support yet for Capture/Replay of External Textures using other attribs
 42266040 : ImageTest.MipLevels/* = SKIP_FOR_CAPTURE
 42266040 : ImageTest.Source2DTarget2D_Colorspace/* = SKIP_FOR_CAPTURE

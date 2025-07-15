@@ -7304,6 +7304,8 @@ void Context::getShaderPrecisionFormat(GLenum shadertype,
                                        GLint *range,
                                        GLint *precision)
 {
+    ASSERT(range != nullptr && precision != nullptr);
+
     switch (shadertype)
     {
         case GL_VERTEX_SHADER:

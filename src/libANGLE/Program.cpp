@@ -1596,6 +1596,8 @@ unsigned int Program::getRefCount() const
 
 void Program::getAttachedShaders(GLsizei maxCount, GLsizei *count, ShaderProgramID *shaders) const
 {
+    ASSERT(shaders != nullptr);
+
     int total = 0;
 
     for (const Shader *shader : mAttachedShaders)
