@@ -178,9 +178,9 @@ angle_unittests_msl_sources = [
 
 # TODO(crbug.com/426055001): EnsureLoopForwardProgressTest failed on iOS, where
 # GLSL is not enabled.
-if (!angle_enable_glsl) {
+if (angle_enable_glsl) {
   angle_unittests_msl_sources +=
-      [ "../compiler_tests/EnsureLoopForwardProgress_test.cpp" ]
+      [ "../tests/compiler_tests/EnsureLoopForwardProgress_test.cpp" ]
 }
 
 angle_unittests_wgsl_sources = [ "../tests/compiler_tests/WGSLOutput_test.cpp" ]
