@@ -4906,6 +4906,86 @@ TEST_P(ImageTestES3, PartialClearYUVAHB)
     destroyAndroidHardwareBuffer(source);
 }
 
+// Test initial YUV AHB content is preserved during rendering by rendering to only half of the YUV
+// AHB.
+TEST_P(ImageTestES3, PartialRenderToYUVAHB)
+{
+    EGLWindow *window = getEGLWindow();
+
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt() || !hasYUVTargetExt());
+    ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+    ANGLE_SKIP_TEST_IF(!hasAhbLockPlanesSupport());
+
+    // 3 planes of data, initialize to a color
+    GLubyte dataY[8]  = {kYUVColorBlackY[0], kYUVColorBlackY[0], kYUVColorBlackY[0],
+                         kYUVColorBlackY[0], kYUVColorBlackY[0], kYUVColorBlackY[0],
+                         kYUVColorBlackY[0], kYUVColorBlackY[0]};
+    GLubyte dataCb[2] = {
+        kYUVColorBlackCb[0],
+        kYUVColorBlackCb[0],
+    };
+    GLubyte dataCr[2] = {
+        kYUVColorBlackCr[0],
+        kYUVColorBlackCr[0],
+    };
+
+    // Create the Image
+    AHardwareBuffer *source;
+    EGLImageKHR image;
+    createEGLImageAndroidHardwareBufferSource(
+        4, 2, 1, AHARDWAREBUFFER_FORMAT_Y8Cb8Cr8_420, kDefaultAHBUsage, kDefaultAttribs,
+        {{dataY, 1}, {dataCb, 1}, {dataCr, 1}}, &source, &image);
+
+    // Create a texture target to bind the egl image
+    GLTexture target;
+    createEGLImageTargetTextureExternal(image, target);
+
+    // Set up a framebuffer to render into the AHB
+    glViewport(0, 0, 4, 2);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_EXTERNAL_OES, target,
+                           0);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+    // Set up draw to only render to the left half of AHB
+    GLint positionLocation              = glGetAttribLocation(mRenderYUVProgram, "position");
+    std::array<Vector3, 6> quadVertices = GetQuadVertices();
+    for (Vector3 &vertex : quadVertices)
+    {
+        vertex.x() = (vertex.x() * 0.5f) - 0.5f;
+        vertex.z() = 0.0f;
+    }
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, quadVertices.data());
+    glEnableVertexAttribArray(positionLocation);
+
+    glUseProgram(mRenderYUVProgram);
+    glUniform4f(mRenderYUVUniformLocation, kYUVColorRedY[0] / 255.0f, kYUVColorRedCb[0] / 255.0f,
+                kYUVColorRedCr[0] / 255.0f, 1.0f);
+
+    // Only draw to left half of AHB
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+
+    // Finish before reading back AHB data
+    glFinish();
+
+    // Check left half of AHB is draw color
+    verifyResultAHB(source, {{kYUVColorRedY, 1}, {kYUVColorRedCb, 1}, {kYUVColorRedCr, 1}},
+                    AHBVerifyRegion::LeftHalf);
+
+    // Check right half of AHB is original color
+    verifyResultAHB(source, {{kYUVColorBlackY, 1}, {kYUVColorBlackCb, 1}, {kYUVColorBlackCr, 1}},
+                    AHBVerifyRegion::RightHalf);
+
+    // Clean up
+    glViewport(0, 0, getWindowWidth(), getWindowHeight());
+    eglDestroyImageKHR(window->getDisplay(), image);
+    destroyAndroidHardwareBuffer(source);
+}
+
 // Test glClear on FBO with AHB attachment is applied to the AHB image before we read back
 TEST_P(ImageTestES3, AHBClearAppliedBeforeReadBack)
 {

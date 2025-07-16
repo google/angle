@@ -7537,6 +7537,45 @@ angle::Result ImageHelper::initImplicitMultisampledRenderToTexture(
     return angle::Result::Continue;
 }
 
+angle::Result ImageHelper::initRgbDrawImageForYuvResolve(ErrorContext *context,
+                                                         const MemoryProperties &memoryProperties,
+                                                         const ImageHelper &resolveImage,
+                                                         bool isRobustResourceInitEnabled)
+{
+    // Find the RGB format corresponding to the YUV format
+    const vk::ExternalYuvFormatInfo &externalFormatInfo =
+        context->getRenderer()->getExternalFormatTable()->getExternalFormatInfo(
+            resolveImage.getActualFormatID());
+    const angle::FormatID formatID =
+        vk::GetFormatIDFromVkFormat(externalFormatInfo.colorAttachmentFormat);
+
+    // Create RGB draw image
+    const VkImageUsageFlags usageFlags =
+        VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT;
+
+    const bool hasProtectedContent =
+        (resolveImage.getCreateFlags() & VK_IMAGE_CREATE_PROTECTED_BIT) != 0;
+    const VkImageCreateFlags createFlags = hasProtectedContent ? VK_IMAGE_CREATE_PROTECTED_BIT : 0;
+
+    ANGLE_TRY(initExternal(context, gl::TextureType::_2D, resolveImage.getExtents(), formatID,
+                           formatID, 1, usageFlags, createFlags, ImageLayout::Undefined, nullptr,
+                           resolveImage.getFirstAllocatedLevel(), resolveImage.getLevelCount(),
+                           resolveImage.getLayerCount(), isRobustResourceInitEnabled,
+                           hasProtectedContent, YcbcrConversionDesc{}, nullptr));
+
+    ASSERT(!hasEmulatedImageChannels());
+
+    const VkMemoryPropertyFlags yuvMemoryFlags =
+        VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT |
+        (hasProtectedContent ? VK_MEMORY_PROPERTY_PROTECTED_BIT : 0);
+
+    ANGLE_TRY(initMemoryAndNonZeroFillIfNeeded(context, hasProtectedContent, memoryProperties,
+                                               yuvMemoryFlags,
+                                               vk::MemoryAllocationType::ImplicitYuvTargetImage));
+
+    return angle::Result::Continue;
+}
+
 VkImageAspectFlags ImageHelper::getAspectFlags() const
 {
     return GetFormatAspectFlags(angle::Format::Get(mActualFormatID));

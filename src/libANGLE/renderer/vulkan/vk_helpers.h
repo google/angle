@@ -2411,6 +2411,11 @@ class ImageHelper final : public Resource, public angle::Subject
                                                           const ImageHelper &resolveImage,
                                                           const VkExtent3D &multisampleImageExtents,
                                                           bool isRobustResourceInitEnabled);
+    // Create a 2d image for use as the implicit RGB draw image in YUV rendering.
+    angle::Result initRgbDrawImageForYuvResolve(ErrorContext *context,
+                                                const MemoryProperties &memoryProperties,
+                                                const ImageHelper &resolveImage,
+                                                bool isRobustResourceInitEnabled);
 
     // Helper for initExternal and users to automatically derive the appropriate VkImageCreateInfo
     // pNext chain based on the given parameters, and adjust create flags.  In some cases, these

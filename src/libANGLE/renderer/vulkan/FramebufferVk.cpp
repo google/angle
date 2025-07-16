@@ -407,6 +407,38 @@ bool AllowAddingResolveAttachmentsToSubpass(const vk::RenderPassDesc &desc)
     // For the same reason, adding resolve attachments after the fact is disabled with YUV resolve.
     return !desc.isRenderToTexture() && !desc.hasYUVResolveAttachment();
 }
+
+angle::Result UnresolveYuvImage(ContextVk *contextVk,
+                                RenderTargetVk *colorRenderTarget,
+                                const gl::Rectangle &renderArea)
+{
+    vk::ImageHelper *dst = &colorRenderTarget->getImageForRenderPass();
+    vk::ImageHelper *src = &colorRenderTarget->getResolveImageForRenderPass();
+
+    // The Y2Y sampler is used for the source image in the unresolve copy.
+    vk::DeviceScoped<vk::ImageView> srcViewY2Y(contextVk->getDevice());
+    ANGLE_TRY(src->initLayerImageViewWithYuvModeOverride(
+        contextVk, gl::TextureType::_2D, VK_IMAGE_ASPECT_COLOR_BIT, gl::SwizzleState(),
+        &srcViewY2Y.get(), vk::LevelIndex(0), 1, 0, 1, gl::YuvSamplingMode::Y2Y,
+        VK_IMAGE_USAGE_SAMPLED_BIT, GL_NONE));
+    const vk::ImageView *dstView = nullptr;
+    ANGLE_TRY(colorRenderTarget->getImageView(contextVk, &dstView));
+
+    UtilsVk::CopyImageParameters params  = {};
+    params.srcOffset[0]                  = renderArea.x;
+    params.srcOffset[1]                  = renderArea.y;
+    params.srcExtents[0]                 = renderArea.width;
+    params.srcExtents[1]                 = renderArea.height;
+    params.copyYuvWithoutColorConversion = true;
+
+    ANGLE_TRY(
+        contextVk->getUtils().copyImage(contextVk, dst, dstView, src, &srcViewY2Y.get(), params));
+
+    // Mark our temp view as garbage immediately
+    vk::ImageView srcViewObject = srcViewY2Y.release();
+    contextVk->addGarbage(&srcViewObject);
+    return angle::Result::Continue;
+}
 }  // anonymous namespace
 
 FramebufferVk::FramebufferVk(vk::Renderer *renderer, const gl::FramebufferState &state)
@@ -3038,8 +3070,15 @@ angle::Result FramebufferVk::createNewFramebuffer(
             continue;
         }
 
+        // Use the resolve image for both draw and resolve attachments when rendering to YUV
+        // with the nullColorAttachmentWithExternalFormatResolve feature enabled.
+        // If nullColorAttachmentWithExternalFormatResolve is not supported, follow default
+        // behaviour.
+        const bool overrideDrawAttachmentWithResolveAttachment =
+            info.renderTarget->isYuvResolve() &&
+            contextVk->getRenderer()->nullColorAttachmentWithExternalFormatResolve();
         vk::ImageHelper *image = (info.renderTargetImage == RenderTargetImage::Resolve ||
-                                  info.renderTarget->isYuvResolve())
+                                  overrideDrawAttachmentWithResolveAttachment)
                                      ? &info.renderTarget->getResolveImageForRenderPass()
                                      : &info.renderTarget->getImageForRenderPass();
 
@@ -3601,10 +3640,20 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         {
             if (renderPassAttachmentOps[colorIndexVk].loadOp == VK_ATTACHMENT_LOAD_OP_LOAD)
             {
-                renderPassAttachmentOps[colorIndexVk].loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+                // Unresolve for YUV render targets is done using a separate renderpass
+                if (colorRenderTarget->isYuvResolve())
+                {
+                    ASSERT(!mRenderPassDesc.getColorUnresolveAttachmentMask().test(colorIndexGL));
+                    ANGLE_TRY(UnresolveYuvImage(contextVk, colorRenderTarget, renderArea));
+                }
+                else
+                {
+                    renderPassAttachmentOps[colorIndexVk].loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 
-                // Update the render pass desc to specify that this attachment should be unresolved.
-                mRenderPassDesc.packColorUnresolveAttachment(colorIndexGL);
+                    // Update the render pass desc to specify that this attachment should be
+                    // unresolved.
+                    mRenderPassDesc.packColorUnresolveAttachment(colorIndexGL);
+                }
             }
             else
             {

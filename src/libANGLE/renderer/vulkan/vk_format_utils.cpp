@@ -343,6 +343,7 @@ angle::FormatID ExternalFormatTable::getOrAllocExternalFormatID(uint64_t externa
     {
         ERR() << "ANGLE only suports maximum " << kMaxExternalFormatCountSupported
               << " external renderable formats";
+        ASSERT(false);
         return angle::FormatID::NONE;
     }
 

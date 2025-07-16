@@ -3333,8 +3333,13 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
     vk::SamplerDesc samplerDesc;
     if (isYUV)
     {
-        samplerDesc = vk::SamplerDesc(contextVk, gl::SamplerState(), false,
-                                      &src->getYcbcrConversionDesc(), srcIntendedFormat.id);
+        // copyYuvWithoutColorConversion indicates whether we need to perform the copy
+        // with or without color conversion
+        const vk::YcbcrConversionDesc ycbcrConversionDesc = params.copyYuvWithoutColorConversion
+                                                                ? src->getY2YConversionDesc()
+                                                                : src->getYcbcrConversionDesc();
+        samplerDesc = vk::SamplerDesc(contextVk, gl::SamplerState(), false, &ycbcrConversionDesc,
+                                      srcIntendedFormat.id);
 
         ANGLE_TRY(ensureImageCopyResourcesInitializedWithSampler(contextVk, samplerDesc));
     }
