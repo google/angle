@@ -348,7 +348,7 @@ void ScalarizeTraverser::createConstructorMatrixFromScalar(TIntermAggregate *nod
         {
             if (columnIndex == rowIndex)
             {
-                constructorArgsOut->push_back(scalar->deepCopy());
+                constructorArgsOut->push_back(CastScalar(node, scalar->deepCopy()));
             }
             else
             {
@@ -385,7 +385,7 @@ void ScalarizeTraverser::createConstructorMatrixFromMatrix(TIntermAggregate *nod
                 TIntermTyped *col = new TIntermBinary(EOpIndexDirect, matrix->deepCopy(),
                                                       CreateIndexNode(columnIndex));
                 constructorArgsOut->push_back(
-                    new TIntermSwizzle(col, {static_cast<uint32_t>(rowIndex)}));
+                    CastScalar(node, new TIntermSwizzle(col, {static_cast<uint32_t>(rowIndex)})));
             }
             else
             {
