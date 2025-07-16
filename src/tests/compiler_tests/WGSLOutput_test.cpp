@@ -100,7 +100,11 @@ TEST_F(WGSLOutputTest, BasicTranslation)
             doFoo(returnFoo(foo), returnFloat(3.0));
             takeArgs(vec2(1.0, 2.0), foo.x);
             returnFloat(doFoo(foo, 7.0 + 9.0).x);
-            outColor = vec4(0.0, 0.0, 0.0, 0.0);
+
+            vec3 comp1 = vec3(0.0, 0.0, 0.0);
+            float f3 = float(comp1 == foo.multiArray[0][0]);
+
+            outColor = vec4(f3, 0.0, 0.0, 0.0);
         })";
     const std::string &outputString =
         R"(struct ANGLE_Output_Global {
@@ -180,7 +184,9 @@ fn _umain()
   _udoFoo(_ureturnFoo(_ufoo), _ureturnFloat(3.0f));
   _utakeArgs(vec2<f32>(1.0f, 2.0f), (_ufoo)._ux);
   _ureturnFloat((_udoFoo(_ufoo, 16.0f)).x);
-  (ANGLE_output_global.outColor) = (vec4<f32>(0.0f, 0.0f, 0.0f, 0.0f));
+  var _ucomp1 : vec3<f32> = (vec3<f32>(0.0f, 0.0f, 0.0f));
+  var _uf3 : f32 = (f32(all((_ucomp1) == ((((_ufoo)._umultiArray)[0i])[0i]))));
+  (ANGLE_output_global.outColor) = (vec4<f32>(_uf3, 0.0f, 0.0f, 0.0f));
 }
 @fragment
 fn wgslMain() -> ANGLE_Output_Annotated

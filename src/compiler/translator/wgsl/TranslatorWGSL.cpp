@@ -439,11 +439,19 @@ bool OutputWGSLTraverser::visitSwizzle(Visit, TIntermSwizzle *swizzleNode)
     return false;
 }
 
-const char *GetOperatorString(TOperator op,
-                              const TType &resultType,
-                              const TType *argType0,
-                              const TType *argType1,
-                              const TType *argType2)
+struct OperatorInfo
+{
+    const char *opName;
+    const char *wgslWrapperFn = nullptr;
+
+    bool IsSymbolicOperator() const { return opName && !std::isalnum(opName[0]); }
+};
+
+OperatorInfo GetOperatorInfo(TOperator op,
+                             const TType &resultType,
+                             const TType *argType0,
+                             const TType *argType1,
+                             const TType *argType2)
 {
     switch (op)
     {
@@ -451,158 +459,169 @@ const char *GetOperatorString(TOperator op,
             // WGSL does not have a comma operator or any other way to implement "statement list as
             // an expression", so nested expressions will have to be pulled out into statements.
             UNIMPLEMENTED();
-            return "TODO_operator";
+            return {"TODO_operator"};
         case TOperator::EOpAssign:
-            return "=";
+            return {"="};
         case TOperator::EOpInitialize:
-            return "=";
+            return {"="};
         // Compound assignments now exist: https://www.w3.org/TR/WGSL/#compound-assignment-sec
         case TOperator::EOpAddAssign:
-            return "+=";
+            return {"+="};
         case TOperator::EOpSubAssign:
-            return "-=";
+            return {"-="};
         case TOperator::EOpMulAssign:
-            return "*=";
+            return {"*="};
         case TOperator::EOpDivAssign:
-            return "/=";
+            return {"/="};
         case TOperator::EOpIModAssign:
-            return "%=";
+            return {"%="};
         case TOperator::EOpBitShiftLeftAssign:
-            return "<<=";
+            return {"<<="};
         case TOperator::EOpBitShiftRightAssign:
-            return ">>=";
+            return {">>="};
         case TOperator::EOpBitwiseAndAssign:
-            return "&=";
+            return {"&="};
         case TOperator::EOpBitwiseXorAssign:
-            return "^=";
+            return {"^="};
         case TOperator::EOpBitwiseOrAssign:
-            return "|=";
+            return {"|="};
         case TOperator::EOpAdd:
-            return "+";
+            return {"+"};
         case TOperator::EOpSub:
-            return "-";
+            return {"-"};
         case TOperator::EOpMul:
-            return "*";
+            return {"*"};
         case TOperator::EOpDiv:
-            return "/";
+            return {"/"};
         // TODO(anglebug.com/42267100): Works different from GLSL for negative numbers.
         // https://github.com/gpuweb/gpuweb/discussions/2204#:~:text=not%20WGSL%3B%20etc.-,Inconsistent%20mod/%25%20operator,-At%20first%20glance
         // GLSL does `x - y * floor(x/y)`, WGSL does x - y * trunc(x/y).
         case TOperator::EOpIMod:
         case TOperator::EOpMod:
-            return "%";
+            return {"%"};
+        // TODO(anglebug.com/42267100): bitwise operations can be between scalars and vectors, but
+        // not in WGSL.
         case TOperator::EOpBitShiftLeft:
-            return "<<";
+            return {"<<"};
         case TOperator::EOpBitShiftRight:
-            return ">>";
+            return {">>"};
         case TOperator::EOpBitwiseAnd:
-            return "&";
+            return {"&"};
         case TOperator::EOpBitwiseXor:
-            return "^";
+            return {"^"};
         case TOperator::EOpBitwiseOr:
-            return "|";
+            return {"|"};
         case TOperator::EOpLessThan:
-            return "<";
+            return {"<"};
         case TOperator::EOpGreaterThan:
-            return ">";
+            return {">"};
         case TOperator::EOpLessThanEqual:
-            return "<=";
+            return {"<="};
         case TOperator::EOpGreaterThanEqual:
-            return ">=";
+            return {">="};
         // Component-wise comparisons are done with regular infix operators in WGSL:
         // https://www.w3.org/TR/WGSL/#comparison-expr
         case TOperator::EOpLessThanComponentWise:
-            return "<";
+            return {"<"};
         case TOperator::EOpLessThanEqualComponentWise:
-            return "<=";
+            return {"<="};
         case TOperator::EOpGreaterThanEqualComponentWise:
-            return ">=";
+            return {">="};
         case TOperator::EOpGreaterThanComponentWise:
-            return ">";
+            return {">"};
         case TOperator::EOpLogicalOr:
-            return "||";
+            return {"||"};
         // Logical XOR is only applied to boolean expressions so it's the same as "not equals".
         // Neither short-circuits.
         case TOperator::EOpLogicalXor:
-            return "!=";
+            return {"!="};
         case TOperator::EOpLogicalAnd:
-            return "&&";
+            return {"&&"};
         case TOperator::EOpNegative:
-            return "-";
+            return {"-"};
         case TOperator::EOpPositive:
             if (argType0->isMatrix())
             {
-                return "";
+                return {""};
             }
-            return "+";
+            return {"+"};
         case TOperator::EOpLogicalNot:
-            return "!";
+            return {"!"};
         // Component-wise not done with normal prefix unary operator in WGSL:
         // https://www.w3.org/TR/WGSL/#logical-expr
         case TOperator::EOpNotComponentWise:
-            return "!";
+            return {"!"};
         case TOperator::EOpBitwiseNot:
-            return "~";
+            return {"~"};
         // TODO(anglebug.com/42267100): increment operations cannot be used as expressions in WGSL.
         case TOperator::EOpPostIncrement:
-            return "++";
+            return {"++"};
         case TOperator::EOpPostDecrement:
-            return "--";
+            return {"--"};
         case TOperator::EOpPreIncrement:
         case TOperator::EOpPreDecrement:
             // TODO(anglebug.com/42267100): pre increments and decrements do not exist in WGSL.
             UNIMPLEMENTED();
-            return "TODO_operator";
+            return {"TODO_operator"};
         case TOperator::EOpVectorTimesScalarAssign:
-            return "*=";
+            return {"*="};
         case TOperator::EOpVectorTimesMatrixAssign:
-            return "*=";
+            return {"*="};
         case TOperator::EOpMatrixTimesScalarAssign:
-            return "*=";
+            return {"*="};
         case TOperator::EOpMatrixTimesMatrixAssign:
-            return "*=";
+            return {"*="};
         case TOperator::EOpVectorTimesScalar:
-            return "*";
+            return {"*"};
         case TOperator::EOpVectorTimesMatrix:
-            return "*";
+            return {"*"};
         case TOperator::EOpMatrixTimesVector:
-            return "*";
+            return {"*"};
         case TOperator::EOpMatrixTimesScalar:
-            return "*";
+            return {"*"};
         case TOperator::EOpMatrixTimesMatrix:
-            return "*";
+            return {"*"};
         case TOperator::EOpEqualComponentWise:
-            return "==";
+            return {"=="};
         case TOperator::EOpNotEqualComponentWise:
-            return "!=";
+            return {"!="};
 
         // TODO(anglebug.com/42267100): structs, matrices, and arrays are not comparable with WGSL's
         // == or !=. Comparing vectors results in a component-wise comparison returning a boolean
         // vector, which is different from GLSL (which use equal(vec, vec) for component-wise
         // comparison)
         case TOperator::EOpEqual:
-            if ((argType0->isVector() && argType1->isVector()) ||
-                (argType0->getStruct() && argType1->getStruct()) ||
+            if (argType0->isVector() && argType1->isVector())
+            {
+                return {"==", "all"};
+            }
+
+            if ((argType0->getStruct() && argType1->getStruct()) ||
                 (argType0->isArray() && argType1->isArray()) ||
                 (argType0->isMatrix() && argType1->isMatrix()))
 
             {
                 UNIMPLEMENTED();
-                return "TODO_operator";
+                return {"TODO_operator"};
             }
 
-            return "==";
+            return {"=="};
 
         case TOperator::EOpNotEqual:
-            if ((argType0->isVector() && argType1->isVector()) ||
-                (argType0->getStruct() && argType1->getStruct()) ||
+            if ((argType0->isVector() && argType1->isVector()))
+            {
+                return {"!=", "all"};
+            }
+
+            if ((argType0->getStruct() && argType1->getStruct()) ||
                 (argType0->isArray() && argType1->isArray()) ||
                 (argType0->isMatrix() && argType1->isMatrix()))
             {
                 UNIMPLEMENTED();
-                return "TODO_operator";
+                return {"TODO_operator"};
             }
-            return "!=";
+
+            return {"!="};
 
         case TOperator::EOpKill:
         case TOperator::EOpReturn:
@@ -610,158 +629,160 @@ const char *GetOperatorString(TOperator op,
         case TOperator::EOpContinue:
             // These should all be emitted in visitBranch().
             UNREACHABLE();
-            return "UNREACHABLE_operator";
+            return {"UNREACHABLE_operator"};
         case TOperator::EOpRadians:
-            return "radians";
+            return {"radians"};
         case TOperator::EOpDegrees:
-            return "degrees";
+            return {"degrees"};
         case TOperator::EOpAtan:
-            return argType1 == nullptr ? "atan" : "atan2";
+            return argType1 == nullptr ? OperatorInfo{"atan"} : OperatorInfo{"atan2"};
         case TOperator::EOpRefract:
-            return argType0->isVector() ? "refract" : "TODO_operator";
+            return argType0->isVector() ? OperatorInfo{"refract"} : OperatorInfo{"TODO_operator"};
         case TOperator::EOpDistance:
-            return "distance";
+            return {"distance"};
         case TOperator::EOpLength:
-            return "length";
+            return {"length"};
         case TOperator::EOpDot:
-            return argType0->isVector() ? "dot" : "*";
+            return argType0->isVector() ? OperatorInfo{"dot"} : OperatorInfo{"*"};
         case TOperator::EOpNormalize:
-            return argType0->isVector() ? "normalize" : "sign";
+            return argType0->isVector() ? OperatorInfo{"normalize"} : OperatorInfo{"sign"};
         case TOperator::EOpFaceforward:
-            return argType0->isVector() ? "faceForward" : "TODO_Operator";
+            return argType0->isVector() ? OperatorInfo{"faceForward"}
+                                        : OperatorInfo{"TODO_Operator"};
         case TOperator::EOpReflect:
-            return argType0->isVector() ? "reflect" : "TODO_Operator";
+            return argType0->isVector() ? OperatorInfo{"reflect"} : OperatorInfo{"TODO_Operator"};
         case TOperator::EOpMatrixCompMult:
-            return "TODO_Operator";
+            return {"TODO_Operator"};
         case TOperator::EOpOuterProduct:
-            return "TODO_Operator";
+            return {"TODO_Operator"};
         case TOperator::EOpSign:
-            return "sign";
+            return {"sign"};
 
         case TOperator::EOpAbs:
-            return "abs";
+            return {"abs"};
         case TOperator::EOpAll:
-            return "all";
+            return {"all"};
         case TOperator::EOpAny:
-            return "any";
+            return {"any"};
         case TOperator::EOpSin:
-            return "sin";
+            return {"sin"};
         case TOperator::EOpCos:
-            return "cos";
+            return {"cos"};
         case TOperator::EOpTan:
-            return "tan";
+            return {"tan"};
         case TOperator::EOpAsin:
-            return "asin";
+            return {"asin"};
         case TOperator::EOpAcos:
-            return "acos";
+            return {"acos"};
         case TOperator::EOpSinh:
-            return "sinh";
+            return {"sinh"};
         case TOperator::EOpCosh:
-            return "cosh";
+            return {"cosh"};
         case TOperator::EOpTanh:
-            return "tanh";
+            return {"tanh"};
         case TOperator::EOpAsinh:
-            return "asinh";
+            return {"asinh"};
         case TOperator::EOpAcosh:
-            return "acosh";
+            return {"acosh"};
         case TOperator::EOpAtanh:
-            return "atanh";
+            return {"atanh"};
         case TOperator::EOpFma:
-            return "fma";
+            return {"fma"};
         // TODO(anglebug.com/42267100): Won't accept pow(vec<f32>, f32).
         // https://github.com/gpuweb/gpuweb/discussions/2204#:~:text=Similarly%20pow(vec3%3Cf32%3E%2C%20f32)%20works%20in%20GLSL%20but%20not%20WGSL
         case TOperator::EOpPow:
-            return "pow";  // GLSL's pow excludes negative x
+            return {"pow"};  // GLSL's pow excludes negative x
         case TOperator::EOpExp:
-            return "exp";
+            return {"exp"};
         case TOperator::EOpExp2:
-            return "exp2";
+            return {"exp2"};
         case TOperator::EOpLog:
-            return "log";
+            return {"log"};
         case TOperator::EOpLog2:
-            return "log2";
+            return {"log2"};
         case TOperator::EOpSqrt:
-            return "sqrt";
+            return {"sqrt"};
         case TOperator::EOpFloor:
-            return "floor";
+            return {"floor"};
         case TOperator::EOpTrunc:
-            return "trunc";
+            return {"trunc"};
         case TOperator::EOpCeil:
-            return "ceil";
+            return {"ceil"};
         case TOperator::EOpFract:
-            return "fract";
+            return {"fract"};
         case TOperator::EOpMin:
-            return "min";
+            return {"min"};
         case TOperator::EOpMax:
-            return "max";
+            return {"max"};
         case TOperator::EOpRound:
-            return "round";  // TODO(anglebug.com/42267100): this is wrong and must round away from
-                             // zero if there is a tie. This always rounds to the even number.
+            return {
+                "round"};  // TODO(anglebug.com/42267100): this is wrong and must round away from
+                           // zero if there is a tie. This always rounds to the even number.
         case TOperator::EOpRoundEven:
-            return "round";
+            return {"round"};
         // TODO(anglebug.com/42267100):
         // https://github.com/gpuweb/gpuweb/discussions/2204#:~:text=clamp(vec2%3Cf32%3E%2C%20f32%2C%20f32)%20works%20in%20GLSL%20but%20not%20WGSL%3B%20etc.
         // Need to expand clamp(vec<f32>, low : f32, high : f32) ->
         // clamp(vec<f32>, vec<f32>(low), vec<f32>(high))
         case TOperator::EOpClamp:
-            return "clamp";
+            return {"clamp"};
         case TOperator::EOpSaturate:
-            return "saturate";
+            return {"saturate"};
         case TOperator::EOpMix:
             if (!argType1->isScalar() && argType2 && argType2->getBasicType() == EbtBool)
             {
-                return "TODO_Operator";
+                return {"TODO_Operator"};
             }
-            return "mix";
+            return {"mix"};
         case TOperator::EOpStep:
-            return "step";
+            return {"step"};
         case TOperator::EOpSmoothstep:
-            return "smoothstep";
+            return {"smoothstep"};
         case TOperator::EOpModf:
             UNIMPLEMENTED();  // TODO(anglebug.com/42267100): in WGSL this returns a struct, GLSL it
                               // uses a return value and an outparam
-            return "modf";
+            return {"modf"};
         case TOperator::EOpIsnan:
         case TOperator::EOpIsinf:
             UNIMPLEMENTED();  // TODO(anglebug.com/42267100): WGSL does not allow NaNs or infinity.
                               // What to do about shaders that require this?
             // Implementations are allowed to assume overflow, infinities, and NaNs are not present
             // at runtime, however. https://www.w3.org/TR/WGSL/#floating-point-evaluation
-            return "TODO_Operator";
+            return {"TODO_Operator"};
         case TOperator::EOpLdexp:
             // TODO(anglebug.com/42267100): won't accept first arg vector, second arg scalar
-            return "ldexp";
+            return {"ldexp"};
         case TOperator::EOpFrexp:
-            return "frexp";  // TODO(anglebug.com/42267100): returns a struct
+            return {"frexp"};  // TODO(anglebug.com/42267100): returns a struct
         case TOperator::EOpInversesqrt:
-            return "inverseSqrt";
+            return {"inverseSqrt"};
         case TOperator::EOpCross:
-            return "cross";
+            return {"cross"};
             // TODO(anglebug.com/42267100): are these the same? dpdxCoarse() vs dpdxFine()?
         case TOperator::EOpDFdx:
-            return "dpdx";
+            return {"dpdx"};
         case TOperator::EOpDFdy:
-            return "dpdy";
+            return {"dpdy"};
         case TOperator::EOpFwidth:
-            return "fwidth";
+            return {"fwidth"};
         case TOperator::EOpTranspose:
-            return "transpose";
+            return {"transpose"};
         case TOperator::EOpDeterminant:
-            return "determinant";
+            return {"determinant"};
 
         case TOperator::EOpInverse:
-            return "TODO_Operator";  // No builtin invert().
-                                     // https://github.com/gpuweb/gpuweb/issues/4115
+            return {"TODO_Operator"};  // No builtin invert().
+                                       // https://github.com/gpuweb/gpuweb/issues/4115
 
         // TODO(anglebug.com/42267100): these interpolateAt*() are not builtin
         case TOperator::EOpInterpolateAtCentroid:
-            return "TODO_Operator";
+            return {"TODO_Operator"};
         case TOperator::EOpInterpolateAtSample:
-            return "TODO_Operator";
+            return {"TODO_Operator"};
         case TOperator::EOpInterpolateAtOffset:
-            return "TODO_Operator";
+            return {"TODO_Operator"};
         case TOperator::EOpInterpolateAtCenter:
-            return "TODO_Operator";
+            return {"TODO_Operator"};
 
         case TOperator::EOpFloatBitsToInt:
         case TOperator::EOpFloatBitsToUint:
@@ -773,31 +794,31 @@ const char *GetOperatorString(TOperator op,
         switch (resultType.getBasicType()) \
         {                                  \
             case TBasicType::EbtInt:       \
-                return "bitcast<i32>";     \
+                return {"bitcast<i32>"};   \
             case TBasicType::EbtUInt:      \
-                return "bitcast<u32>";     \
+                return {"bitcast<u32>"};   \
             case TBasicType::EbtFloat:     \
-                return "bitcast<f32>";     \
+                return {"bitcast<f32>"};   \
             default:                       \
                 UNIMPLEMENTED();           \
-                return "TOperator_TODO";   \
+                return {"TOperator_TODO"}; \
         }                                  \
     while (false)
 
-#define BITCAST_VECTOR(vecSize)                        \
-    do                                                 \
-        switch (resultType.getBasicType())             \
-        {                                              \
-            case TBasicType::EbtInt:                   \
-                return "bitcast<vec" vecSize "<i32>>"; \
-            case TBasicType::EbtUInt:                  \
-                return "bitcast<vec" vecSize "<u32>>"; \
-            case TBasicType::EbtFloat:                 \
-                return "bitcast<vec" vecSize "<f32>>"; \
-            default:                                   \
-                UNIMPLEMENTED();                       \
-                return "TOperator_TODO";               \
-        }                                              \
+#define BITCAST_VECTOR(vecSize)                          \
+    do                                                   \
+        switch (resultType.getBasicType())               \
+        {                                                \
+            case TBasicType::EbtInt:                     \
+                return {"bitcast<vec" vecSize "<i32>>"}; \
+            case TBasicType::EbtUInt:                    \
+                return {"bitcast<vec" vecSize "<u32>>"}; \
+            case TBasicType::EbtFloat:                   \
+                return {"bitcast<vec" vecSize "<f32>>"}; \
+            default:                                     \
+                UNIMPLEMENTED();                         \
+                return {"TOperator_TODO"};               \
+        }                                                \
     while (false)
 
             if (resultType.isScalar())
@@ -816,13 +837,13 @@ const char *GetOperatorString(TOperator op,
                         BITCAST_VECTOR("4");
                     default:
                         UNREACHABLE();
-                        return nullptr;
+                        return {nullptr};
                 }
             }
             else
             {
                 UNIMPLEMENTED();
-                return "TOperator_TODO";
+                return {"TOperator_TODO"};
             }
 
 #undef BITCAST_SCALAR
@@ -830,61 +851,61 @@ const char *GetOperatorString(TOperator op,
         }
 
         case TOperator::EOpPackUnorm2x16:
-            return "pack2x16unorm";
+            return {"pack2x16unorm"};
         case TOperator::EOpPackSnorm2x16:
-            return "pack2x16snorm";
+            return {"pack2x16snorm"};
 
         case TOperator::EOpPackUnorm4x8:
-            return "pack4x8unorm";
+            return {"pack4x8unorm"};
         case TOperator::EOpPackSnorm4x8:
-            return "pack4x8snorm";
+            return {"pack4x8snorm"};
 
         case TOperator::EOpUnpackUnorm2x16:
-            return "unpack2x16unorm";
+            return {"unpack2x16unorm"};
         case TOperator::EOpUnpackSnorm2x16:
-            return "unpack2x16snorm";
+            return {"unpack2x16snorm"};
 
         case TOperator::EOpUnpackUnorm4x8:
-            return "unpack4x8unorm";
+            return {"unpack4x8unorm"};
         case TOperator::EOpUnpackSnorm4x8:
-            return "unpack4x8snorm";
+            return {"unpack4x8snorm"};
 
         case TOperator::EOpPackHalf2x16:
-            return "pack2x16float";
+            return {"pack2x16float"};
         case TOperator::EOpUnpackHalf2x16:
-            return "unpack2x16float";
+            return {"unpack2x16float"};
 
         case TOperator::EOpBarrier:
             UNREACHABLE();
-            return "TOperator_TODO";
+            return {"TOperator_TODO"};
         case TOperator::EOpMemoryBarrier:
             // TODO(anglebug.com/42267100): does this exist in WGPU? Device-scoped memory barrier?
             // Maybe storageBarrier()?
             UNREACHABLE();
-            return "TOperator_TODO";
+            return {"TOperator_TODO"};
         case TOperator::EOpGroupMemoryBarrier:
-            return "workgroupBarrier";
+            return {"workgroupBarrier"};
         case TOperator::EOpMemoryBarrierAtomicCounter:
         case TOperator::EOpMemoryBarrierBuffer:
         case TOperator::EOpMemoryBarrierShared:
             UNREACHABLE();
-            return "TOperator_TODO";
+            return {"TOperator_TODO"};
         case TOperator::EOpAtomicAdd:
-            return "atomicAdd";
+            return {"atomicAdd"};
         case TOperator::EOpAtomicMin:
-            return "atomicMin";
+            return {"atomicMin"};
         case TOperator::EOpAtomicMax:
-            return "atomicMax";
+            return {"atomicMax"};
         case TOperator::EOpAtomicAnd:
-            return "atomicAnd";
+            return {"atomicAnd"};
         case TOperator::EOpAtomicOr:
-            return "atomicOr";
+            return {"atomicOr"};
         case TOperator::EOpAtomicXor:
-            return "atomicXor";
+            return {"atomicXor"};
         case TOperator::EOpAtomicExchange:
-            return "atomicExchange";
+            return {"atomicExchange"};
         case TOperator::EOpAtomicCompSwap:
-            return "atomicCompareExchangeWeak";  // TODO(anglebug.com/42267100): returns a struct.
+            return {"atomicCompareExchangeWeak"};  // TODO(anglebug.com/42267100): returns a struct.
         case TOperator::EOpBitfieldExtract:
         case TOperator::EOpBitfieldInsert:
         case TOperator::EOpBitfieldReverse:
@@ -899,7 +920,7 @@ const char *GetOperatorString(TOperator op,
         case TOperator::EOpEndPrimitive:
         case TOperator::EOpArrayLength:
             UNIMPLEMENTED();
-            return "TOperator_TODO";
+            return {"TOperator_TODO"};
 
         case TOperator::EOpNull:
         case TOperator::EOpConstruct:
@@ -910,24 +931,11 @@ const char *GetOperatorString(TOperator op,
         case TOperator::EOpIndexDirectStruct:
         case TOperator::EOpIndexDirectInterfaceBlock:
             UNREACHABLE();
-            return nullptr;
+            return {nullptr};
         default:
             // Any other built-in function.
-            return nullptr;
+            return {nullptr};
     }
-}
-
-bool IsSymbolicOperator(TOperator op,
-                        const TType &resultType,
-                        const TType *argType0,
-                        const TType *argType1)
-{
-    const char *operatorString = GetOperatorString(op, resultType, argType0, argType1, nullptr);
-    if (operatorString == nullptr)
-    {
-        return false;
-    }
-    return !std::isalnum(operatorString[0]);
 }
 
 const TField &OutputWGSLTraverser::getDirectField(const TIntermTyped &fieldsNode,
@@ -1138,24 +1146,37 @@ bool OutputWGSLTraverser::visitBinary(Visit, TIntermBinary *binaryNode)
             const TType &leftType   = leftNode.getType();
             const TType &rightType  = rightNode.getType();
 
+            const OperatorInfo opInfo =
+                GetOperatorInfo(op, resultType, &leftType, &rightType, nullptr);
+
+            if (opInfo.wgslWrapperFn)
+            {
+                mSink << opInfo.wgslWrapperFn << "(";
+            }
+
             // x * y, x ^ y, etc.
-            if (IsSymbolicOperator(op, resultType, &leftType, &rightType))
+            if (opInfo.IsSymbolicOperator())
             {
                 groupedTraverse(leftNode);
                 if (op != TOperator::EOpComma)
                 {
                     mSink << " ";
                 }
-                mSink << GetOperatorString(op, resultType, &leftType, &rightType, nullptr) << " ";
+                mSink << opInfo.opName << " ";
                 groupedTraverse(rightNode);
             }
             // E.g. builtin function calls
             else
             {
-                mSink << GetOperatorString(op, resultType, &leftType, &rightType, nullptr) << "(";
+                mSink << opInfo.opName << "(";
                 leftNode.traverse(this);
                 mSink << ", ";
                 rightNode.traverse(this);
+                mSink << ")";
+            }
+
+            if (opInfo.wgslWrapperFn)
+            {
                 mSink << ")";
             }
         }
@@ -1185,26 +1206,36 @@ bool OutputWGSLTraverser::visitUnary(Visit, TIntermUnary *unaryNode)
     TIntermTyped &arg    = *unaryNode->getOperand();
     const TType &argType = arg.getType();
 
-    const char *name = GetOperatorString(op, resultType, &argType, nullptr, nullptr);
+    const OperatorInfo opInfo = GetOperatorInfo(op, resultType, &argType, nullptr, nullptr);
+
+    if (opInfo.wgslWrapperFn)
+    {
+        mSink << opInfo.wgslWrapperFn << "(";
+    }
 
     // Examples: -x, ~x, ~x
-    if (IsSymbolicOperator(op, resultType, &argType, nullptr))
+    if (opInfo.IsSymbolicOperator())
     {
         const bool postfix = IsPostfix(op);
         if (!postfix)
         {
-            mSink << name;
+            mSink << opInfo.opName;
         }
         groupedTraverse(arg);
         if (postfix)
         {
-            mSink << name;
+            mSink << opInfo.opName;
         }
     }
     else
     {
-        mSink << name << "(";
+        mSink << opInfo.opName << "(";
         arg.traverse(this);
+        mSink << ")";
+    }
+
+    if (opInfo.wgslWrapperFn)
+    {
         mSink << ")";
     }
 
@@ -1892,9 +1923,10 @@ bool OutputWGSLTraverser::visitAggregate(Visit, TIntermAggregate *aggregateNode)
                 const TType *argType1 = getArgType(1);
                 const TType *argType2 = getArgType(2);
 
-                const char *opName = GetOperatorString(op, retType, argType0, argType1, argType2);
+                const OperatorInfo opInfo =
+                    GetOperatorInfo(op, retType, argType0, argType1, argType2);
 
-                if (IsSymbolicOperator(op, retType, argType0, argType1))
+                if (opInfo.IsSymbolicOperator())
                 {
                     switch (args.size())
                     {
@@ -1903,16 +1935,16 @@ bool OutputWGSLTraverser::visitAggregate(Visit, TIntermAggregate *aggregateNode)
                             TIntermNode &operandNode = *aggregateNode->getChildNode(0);
                             if (IsPostfix(op))
                             {
-                                mSink << opName;
+                                mSink << opInfo.opName;
                                 groupedTraverse(operandNode);
                             }
                             else
                             {
                                 groupedTraverse(operandNode);
-                                mSink << opName;
+                                mSink << opInfo.opName;
                             }
-                            return false;
                         }
+                        break;
 
                         case 2:
                         {
@@ -1920,10 +1952,10 @@ bool OutputWGSLTraverser::visitAggregate(Visit, TIntermAggregate *aggregateNode)
                             TIntermNode &leftNode  = *aggregateNode->getChildNode(0);
                             TIntermNode &rightNode = *aggregateNode->getChildNode(1);
                             groupedTraverse(leftNode);
-                            mSink << " " << opName << " ";
+                            mSink << " " << opInfo.opName << " ";
                             groupedTraverse(rightNode);
-                            return false;
                         }
+                        break;
 
                         default:
                             UNREACHABLE();
@@ -1936,14 +1968,21 @@ bool OutputWGSLTraverser::visitAggregate(Visit, TIntermAggregate *aggregateNode)
                     if (BuiltInGroup::IsTexture(op))
                     {
                         emitTextureBuiltin(op, args);
+                        ASSERT(opInfo.wgslWrapperFn == nullptr);
                         return false;
                     }
                     // If the operator is not symbolic then it is a builtin that uses function call
                     // syntax: builtin(arg1, arg2, ..);
-                    mSink << (opName == nullptr ? "TODO_Operator" : opName);
+                    mSink << (opInfo.opName == nullptr ? "TODO_Operator" : opInfo.opName);
                     emitArgList();
-                    return false;
                 }
+
+                if (opInfo.wgslWrapperFn)
+                {
+                    mSink << ")";
+                }
+
+                return false;
         }
     }
 }
