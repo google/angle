@@ -78,22 +78,7 @@ void VertexArrayState::setAttribBinding(const Context *context,
         attrib.updateCachedElementLimit(newBinding);
     }
 
-    bool isMapped = newBinding.getBuffer().get() && newBinding.getBuffer()->isMapped();
-    mCachedMappedArrayBuffers.set(attribIndex, isMapped);
     mEnabledAttributesMask.set(attribIndex, attrib.enabled);
-    updateCachedMutableOrNonPersistentArrayBuffers(attribIndex);
-    mCachedInvalidMappedArrayBuffer = mCachedMappedArrayBuffers & mEnabledAttributesMask &
-                                      mCachedMutableOrImpersistentArrayBuffers;
-}
-
-void VertexArrayState::updateCachedMutableOrNonPersistentArrayBuffers(size_t index)
-{
-    const VertexBinding &vertexBinding   = mVertexBindings[index];
-    const BindingPointer<Buffer> &buffer = vertexBinding.getBuffer();
-    bool isMutableOrImpersistentArrayBuffer =
-        buffer.get() &&
-        (!buffer->isImmutable() || (buffer->getAccessFlags() & GL_MAP_PERSISTENT_BIT_EXT) == 0);
-    mCachedMutableOrImpersistentArrayBuffers.set(index, isMutableOrImpersistentArrayBuffer);
 }
 
 bool VertexArrayState::isDefault() const
@@ -294,25 +279,24 @@ ANGLE_INLINE void VertexArray::updateCachedArrayBuffersMasks(
 {
     if (isMapped)
     {
-        mState.mCachedMappedArrayBuffers |= boundAttributesMask;
+        mCachedMappedArrayBuffers |= boundAttributesMask;
     }
     else
     {
-        mState.mCachedMappedArrayBuffers &= ~boundAttributesMask;
+        mCachedMappedArrayBuffers &= ~boundAttributesMask;
     }
 
     if (!isImmutable || !isPersistent)
     {
-        mState.mCachedMutableOrImpersistentArrayBuffers |= boundAttributesMask;
+        mCachedMutableOrImpersistentArrayBuffers |= boundAttributesMask;
     }
     else
     {
-        mState.mCachedMutableOrImpersistentArrayBuffers &= ~boundAttributesMask;
+        mCachedMutableOrImpersistentArrayBuffers &= ~boundAttributesMask;
     }
 
-    mState.mCachedInvalidMappedArrayBuffer = mState.mCachedMappedArrayBuffers &
-                                             mState.mEnabledAttributesMask &
-                                             mState.mCachedMutableOrImpersistentArrayBuffers;
+    mCachedInvalidMappedArrayBuffer = mCachedMappedArrayBuffers & mState.mEnabledAttributesMask &
+                                      mCachedMutableOrImpersistentArrayBuffers;
 }
 
 ANGLE_INLINE void VertexArray::updateCachedMappedArrayBuffersBinding(const VertexBinding &binding)
@@ -323,6 +307,16 @@ ANGLE_INLINE void VertexArray::updateCachedMappedArrayBuffersBinding(const Verte
     bool isPersistent    = buffer && (buffer->getAccessFlags() & GL_MAP_PERSISTENT_BIT_EXT) != 0;
     return updateCachedArrayBuffersMasks(isMapped, isImmutable, isPersistent,
                                          binding.getBoundAttributesMask());
+}
+
+ANGLE_INLINE void VertexArray::updateCachedMutableOrNonPersistentArrayBuffers(size_t attribIndex)
+{
+    const VertexBinding &vertexBinding   = mState.mVertexBindings[attribIndex];
+    const BindingPointer<Buffer> &buffer = vertexBinding.getBuffer();
+    bool isMutableOrImpersistentArrayBuffer =
+        buffer.get() &&
+        (!buffer->isImmutable() || (buffer->getAccessFlags() & GL_MAP_PERSISTENT_BIT_EXT) == 0);
+    mCachedMutableOrImpersistentArrayBuffers.set(attribIndex, isMutableOrImpersistentArrayBuffer);
 }
 
 ANGLE_INLINE void VertexArray::updateCachedTransformFeedbackBindingValidation(size_t bindingIndex,
@@ -476,8 +470,15 @@ void VertexArray::setVertexAttribBinding(const Context *context,
     setDirtyAttribBit(attribIndex, DIRTY_ATTRIB_BINDING);
 
     // Update client attribs mask.
-    bool hasBuffer = mState.mVertexBindings[bindingIndex].getBuffer().get() != nullptr;
+    const VertexBinding &newBinding = mState.mVertexBindings[bindingIndex];
+    bool hasBuffer                  = newBinding.getBuffer().get() != nullptr;
     mState.mClientMemoryAttribsMask.set(attribIndex, !hasBuffer);
+
+    bool isMapped = hasBuffer && newBinding.getBuffer()->isMapped();
+    mCachedMappedArrayBuffers.set(attribIndex, isMapped);
+    updateCachedMutableOrNonPersistentArrayBuffers(attribIndex);
+    mCachedInvalidMappedArrayBuffer = mCachedMappedArrayBuffers & mState.mEnabledAttributesMask &
+                                      mCachedMutableOrImpersistentArrayBuffers;
 }
 
 void VertexArray::setVertexBindingDivisor(const Context *context,
@@ -571,10 +572,8 @@ void VertexArray::enableAttribute(size_t attribIndex, bool enabledState)
         clearDirtyAttribBit(attribIndex, DIRTY_ATTRIB_ENABLED);
     }
 
-    mState.updateCachedMutableOrNonPersistentArrayBuffers(attribIndex);
-    mState.mCachedInvalidMappedArrayBuffer = mState.mCachedMappedArrayBuffers &
-                                             mState.mEnabledAttributesMask &
-                                             mState.mCachedMutableOrImpersistentArrayBuffers;
+    mCachedInvalidMappedArrayBuffer = mCachedMappedArrayBuffers & mState.mEnabledAttributesMask &
+                                      mCachedMutableOrImpersistentArrayBuffers;
 }
 
 ANGLE_INLINE void VertexArray::setVertexAttribPointerImpl(const Context *context,

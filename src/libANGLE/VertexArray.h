@@ -88,8 +88,6 @@ class VertexArrayState final : angle::NonCopyable
     bool isDefault() const;
 
   private:
-    void updateCachedMutableOrNonPersistentArrayBuffers(size_t index);
-
     friend class VertexArray;
     VertexArrayID mId;
     std::string mLabel;
@@ -112,11 +110,6 @@ class VertexArrayState final : angle::NonCopyable
     // attribs.
     AttributesMask mClientMemoryAttribsMask;
     AttributesMask mNullPointerClientMemoryAttribsMask;
-
-    // Used for validation cache. Indexed by attribute.
-    AttributesMask mCachedMappedArrayBuffers;
-    AttributesMask mCachedMutableOrImpersistentArrayBuffers;
-    AttributesMask mCachedInvalidMappedArrayBuffer;
 };
 
 class VertexArray final : public LabeledObject, public angle::Subject
@@ -282,10 +275,7 @@ class VertexArray final : public LabeledObject, public angle::Subject
         return mState.hasEnabledNullPointerClientArray();
     }
 
-    bool hasInvalidMappedArrayBuffer() const
-    {
-        return mState.mCachedInvalidMappedArrayBuffer.any();
-    }
+    bool hasInvalidMappedArrayBuffer() const { return mCachedInvalidMappedArrayBuffer.any(); }
 
     const VertexArrayState &getState() const { return mState; }
 
@@ -339,6 +329,7 @@ class VertexArray final : public LabeledObject, public angle::Subject
                                        bool isPersistent,
                                        const AttributesMask &boundAttributesMask);
     void updateCachedMappedArrayBuffersBinding(const VertexBinding &binding);
+    void updateCachedMutableOrNonPersistentArrayBuffers(size_t attribIndex);
 
     void setVertexAttribPointerImpl(const Context *context,
                                     ComponentType componentType,
@@ -383,6 +374,11 @@ class VertexArray final : public LabeledObject, public angle::Subject
 
     mutable IndexRangeInlineCache mIndexRangeInlineCache;
     bool mBufferAccessValidationEnabled;
+
+    // Used for validation cache. Indexed by attribute.
+    AttributesMask mCachedMappedArrayBuffers;
+    AttributesMask mCachedMutableOrImpersistentArrayBuffers;
+    AttributesMask mCachedInvalidMappedArrayBuffer;
 };
 
 inline angle::Result VertexArray::getIndexRange(const Context *context,
