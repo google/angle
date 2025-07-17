@@ -264,6 +264,8 @@ bool OutputUniformBlocksAndSamplers(TCompiler *compiler, TIntermBlock *root)
         // size < 16).
         if (shaderVar.type == GL_BOOL)
         {
+            ANGLE_LOG(ERR)
+                << "Failing to output uniform blocks and samplers because of boolean uniform";
             return false;
         }
 

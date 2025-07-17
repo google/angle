@@ -2529,8 +2529,14 @@ bool TranslatorWGSL::translate(TIntermBlock *root,
 {
     if (kOutputTreeBeforeTranslation)
     {
-        OutputTree(root, getInfoSink().info);
-        std::cout << getInfoSink().info.c_str();
+        TInfoSinkBase treeOut;
+        std::cout << "Initial tree for shader type "
+                  << (getShaderType() == GL_VERTEX_SHADER     ? "vertex shader"
+                      : getShaderType() == GL_FRAGMENT_SHADER ? "fragment shader "
+                                                              : "unknown")
+                  << std::endl;
+        OutputTree(root, treeOut);
+        std::cout << treeOut.c_str();
     }
 
     if (!preTranslateTreeModifications(root))
@@ -2540,9 +2546,11 @@ bool TranslatorWGSL::translate(TIntermBlock *root,
 
     if (kOutputTreeBeforeTranslation)
     {
+        TInfoSinkBase treeOut;
         std::cout << "After preTranslateTreeModifications(): " << std::endl;
-        OutputTree(root, getInfoSink().info);
-        std::cout << getInfoSink().info.c_str();
+        getInfoSink().info.erase();
+        OutputTree(root, treeOut);
+        std::cout << treeOut.c_str();
     }
     enableValidateNoMoreTransformations();
 
@@ -2553,6 +2561,7 @@ bool TranslatorWGSL::translate(TIntermBlock *root,
     // builtin variables are used.
     if (!GenerateMainFunctionAndIOStructs(*this, *root, rewritePipelineVarOutput))
     {
+        ANGLE_LOG(ERR) << "Failed to generate WGSL main functions";
         return false;
     }
 
@@ -2560,17 +2569,20 @@ bool TranslatorWGSL::translate(TIntermBlock *root,
     // Start writing the output structs that will be referred to by the `traverser`'s output.'
     if (!rewritePipelineVarOutput.OutputStructs(sink))
     {
+        ANGLE_LOG(ERR) << "Failed to output pipeline structs";
         return false;
     }
 
     if (!OutputUniformBlocksAndSamplers(this, root))
     {
+        ANGLE_LOG(ERR) << "Failed to output uniform blocks and samplers";
         return false;
     }
 
     UniformBlockMetadata uniformBlockMetadata;
     if (!RecordUniformBlockMetadata(root, uniformBlockMetadata))
     {
+        ANGLE_LOG(ERR) << "Failed to record uniform block metadata";
         return false;
     }
 
@@ -2590,6 +2602,7 @@ bool TranslatorWGSL::translate(TIntermBlock *root,
     // Write the actual WGSL main function, wgslMain(), which calls the GLSL main function.
     if (!rewritePipelineVarOutput.OutputMainFunction(sink))
     {
+        ANGLE_LOG(ERR) << "Failed to output WGSL main function";
         return false;
     }
 
