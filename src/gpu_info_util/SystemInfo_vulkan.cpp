@@ -283,7 +283,7 @@ class VulkanLibrary final : NonCopyable
         }
 
         mPfnEnumerateInstanceExtensionProperties =
-            getProc<PFN_vkEnumerateInstanceExtensionProperties>(
+            getProcWithDLSym<PFN_vkEnumerateInstanceExtensionProperties>(
                 "vkEnumerateInstanceExtensionProperties");
         if (!mPfnEnumerateInstanceExtensionProperties)
         {
