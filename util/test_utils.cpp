@@ -14,6 +14,7 @@
 #include <cstring>
 #include <fstream>
 #include <iostream>
+#include <iterator>
 
 namespace angle
 {
