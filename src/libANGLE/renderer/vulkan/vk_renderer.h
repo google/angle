@@ -54,13 +54,9 @@ using ExtensionNameList                    = angle::FixedVector<const char *, kM
 
 static constexpr size_t kMaxSyncValExtraProperties = 9;
 // Information used to accurately skip known synchronization issues in ANGLE.
-// TODO: remove messageContents1 and messageContents2 fields after all
-// supressions have transitioned to using extraProperties.
 struct SkippedSyncvalMessage
 {
     const char *messageId;
-    const char *messageContents1;
-    const char *messageContents2                            = "";
     bool isDueToNonConformantCoherentColorFramebufferFetch  = false;
     const char *extraProperties[kMaxSyncValExtraProperties] = {};
 };

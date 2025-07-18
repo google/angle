@@ -364,8 +364,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     // dead_by_daylight
     // From: TraceTest.diablo_immortal http://anglebug.com/42266309 (Linux AMD)
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
-     nullptr,
-     nullptr,
      false,
      {
          "message_type = BeginRenderingError",
@@ -378,8 +376,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
          "load_op = VK_ATTACHMENT_LOAD_OP_DONT_CARE",
      }},
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
-     nullptr,
-     nullptr,
      false,
      {
          "message_type = RenderPassLoadOpError",
@@ -395,8 +391,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     // From: TraceTest.blade_and_soul_revolution
     // FramebufferFetchES31.ReopenRenderPass/ES3_1_Vulkan
     {"SYNC-HAZARD-READ-AFTER-WRITE",
-     nullptr,
-     nullptr,
      true,
      {
          "message_type = RenderPassLoadOpError",
@@ -410,8 +404,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     // http://anglebug.com/42265363
     // http://anglebug.com/415382790
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
-     nullptr,
-     nullptr,
      true,
      {
          "message_type = RenderPassLayoutTransitionError",
@@ -425,8 +417,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
      }},
     // http://anglebug.com/415383266
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
-     nullptr,
-     nullptr,
      true,
      {
          "message_type = RenderPassLayoutTransitionError",
@@ -443,8 +433,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
     // From: TraceTest.life_is_strange http://anglebug.com/42266180 (Linux AMD)
     // From: TraceTest.diablo_immortal http://anglebug.com/42266309 (Linux AMD)
     {"SYNC-HAZARD-READ-AFTER-WRITE",
-     nullptr,
-     nullptr,
      false,
      {
          "message_type = BufferError",
@@ -457,8 +445,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
      }},
     // http://anglebug.com/394598470
     {"SYNC-HAZARD-WRITE-AFTER-READ",
-     nullptr,
-     nullptr,
      false,
      {
          "message_type = BufferCopyError",
@@ -470,8 +456,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
      }},
     // http://anglebug.com/399191283
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
-     nullptr,
-     nullptr,
      false,
      {"message_type = BeginRenderingError",
       "access = "
@@ -481,8 +465,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
       "command = vkCmdBeginRenderingKHR", "load_op = VK_ATTACHMENT_LOAD_OP_DONT_CARE"}},
     // https://anglebug.com/400789178
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
-     nullptr,
-     nullptr,
      false,
      {"message_type = ImageBarrierError", "hazard_type = WRITE_AFTER_WRITE",
       "access = SYNC_IMAGE_LAYOUT_TRANSITION",
@@ -491,8 +473,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessages[] = {
       "command = vkCmdPipelineBarrier", "prior_command = vkCmdEndRenderPass"}},
     // https://anglebug.com/400789178
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
-     nullptr,
-     nullptr,
      false,
      {"message_type = RenderPassAttachmentError", "hazard_type = WRITE_AFTER_WRITE",
       "access = "
@@ -511,8 +491,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithoutLoadStoreOpNon
     // running following test,
     // dEQP-GLES2.functional.shaders.builtin_variable.pointcoord
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
-     nullptr,
-     nullptr,
      false,
      {
          "message_type = BeginRenderingError",
@@ -534,8 +512,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithoutLoadStoreOpNon
     // dEQP-GLES3.functional.fbo.blit.default_framebuffer.rgb8
     // TraceTest.life_is_strange
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
-     nullptr,
-     nullptr,
      false,
      {
          "message_type = ImageBarrierError",
@@ -555,8 +531,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithoutLoadStoreOpNon
     // VulkanPerformanceCounterTest.ClearColorBufferAndReadOnlyDepthStencilUsesSingleRenderPass*
     // VulkanPerformanceCounterTest.ReadOnlyDepthStencilFeedbackLoopUsesSingleRenderPass/ES3_Vulkan_SwiftShader_PreferMonolithicPipelinesOverLibraries_NoMergeProgramPipelineCachesToGlobalCache
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
-     nullptr,
-     nullptr,
      false,
      {
          "message_type = ImageBarrierError",
@@ -577,8 +551,6 @@ constexpr vk::SkippedSyncvalMessage kSkippedSyncvalMessagesWithMSRTTEmulation[] 
     // Unknown whether ANGLE or syncval bug.
     // To repro: see http://anglebug.com/40644740#comment69
     {"SYNC-HAZARD-WRITE-AFTER-WRITE",
-     nullptr,
-     nullptr,
      false,
      // TODO: it seems if this filter is removed then the error will be
      // intersepted by a different filter. Investigate the nature of the
@@ -626,36 +598,28 @@ bool SyncvalMessageMatchesSkip(const char *messageId,
                                const vk::SkippedSyncvalMessage &skip)
 {
     // TODO(http://angleproject:391284743): Ongoing transition: textual matches -> extraProperties.
-    // When a skip includes the extraProperties list, use that list and ignore messageContents1/2.
-    // When extraProperties list is not present, use messageContents1/2 as before.
-    if (skip.extraProperties[0])
+    // The skip should include at least one extraProperty
+    ASSERT(skip.extraProperties[0]);
+
+    if (strstr(messageId, skip.messageId) == nullptr)
     {
-        if (strstr(messageId, skip.messageId) == nullptr)
-        {
-            return false;
-        }
-        // Check that all extraProperties entries are present in the message
-        bool mismatch = false;
-        for (uint32_t i = 0; i < kMaxSyncValExtraProperties; i++)
-        {
-            if (skip.extraProperties[i] == nullptr)
-            {
-                break;
-            }
-            if (strstr(message, skip.extraProperties[i]) == nullptr)
-            {
-                mismatch = true;
-                break;
-            }
-        }
-        return !mismatch;
+        return false;
     }
-    else
+    // Check that all extraProperties entries are present in the message
+    bool mismatch = false;
+    for (uint32_t i = 0; i < kMaxSyncValExtraProperties; i++)
     {
-        return (strstr(messageId, skip.messageId) != nullptr &&
-                strstr(message, skip.messageContents1) != nullptr &&
-                strstr(message, skip.messageContents2) != nullptr);
+        if (skip.extraProperties[i] == nullptr)
+        {
+            break;
+        }
+        if (strstr(message, skip.extraProperties[i]) == nullptr)
+        {
+            mismatch = true;
+            break;
+        }
     }
+    return !mismatch;
 }
 
 // Suppress validation errors that are known.  Returns DebugMessageReport::Ignore in that case.
