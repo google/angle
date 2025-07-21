@@ -1285,10 +1285,6 @@ void SPIRVBuilder::getImageTypeParameters(TBasicType type,
         case EbtImageRect:
             *dimOut = spv::DimRect;
             break;
-        case EbtSampler2DRectShadow:
-            *dimOut = spv::DimRect;
-            isDepth = true;
-            break;
         case EbtISampler2DRect:
         case EbtIImageRect:
             sampledType = EbtInt;

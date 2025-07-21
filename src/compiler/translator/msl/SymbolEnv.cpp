@@ -518,7 +518,6 @@ static TBasicType GetTextureBasicType(TBasicType basicType)
         case EbtSamplerBuffer:
         case EbtSamplerCubeArray:
         case EbtSamplerCubeArrayShadow:
-        case EbtSampler2DRectShadow:
             return TBasicType::EbtFloat;
 
         case EbtISampler2D:
@@ -637,7 +636,6 @@ Name sh::GetTextureTypeName(TBasicType samplerType)
             break;
 
         // Shadow
-        case EbtSampler2DRectShadow:
         case EbtSampler2DShadow:
             HANDLE_TEXTURE_NAME("depth2d");
             break;

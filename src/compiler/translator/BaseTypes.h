@@ -89,7 +89,6 @@ enum TBasicType
     EbtSamplerBuffer,
     EbtSamplerCubeArray,
     EbtSamplerCubeArrayShadow,
-    EbtSampler2DRectShadow,
     EbtISampler2DRect,
     EbtISamplerBuffer,
     EbtISamplerCubeArray,
@@ -271,7 +270,6 @@ inline bool IsIntegerSampler(TBasicType type)
         case EbtSamplerBuffer:
         case EbtSamplerCubeArray:
         case EbtSamplerCubeArrayShadow:
-        case EbtSampler2DRectShadow:
         case EbtSamplerVideoWEBGL:
             return false;
         default:
@@ -436,7 +434,6 @@ inline bool IsSampler2D(TBasicType type)
         case EbtSampler2DRect:
         case EbtISampler2DRect:
         case EbtUSampler2DRect:
-        case EbtSampler2DRectShadow:
         case EbtSamplerExternalOES:
         case EbtSamplerExternal2DY2YEXT:
         case EbtSampler2DShadow:
@@ -506,7 +503,6 @@ inline bool IsSamplerCube(TBasicType type)
         case EbtSamplerBuffer:
         case EbtSamplerCubeArray:
         case EbtSamplerCubeArrayShadow:
-        case EbtSampler2DRectShadow:
         case EbtISampler2DRect:
         case EbtISamplerBuffer:
         case EbtISamplerCubeArray:
@@ -554,7 +550,6 @@ inline bool IsSampler3D(TBasicType type)
         case EbtSamplerBuffer:
         case EbtSamplerCubeArray:
         case EbtSamplerCubeArrayShadow:
-        case EbtSampler2DRectShadow:
         case EbtISampler2DRect:
         case EbtISamplerBuffer:
         case EbtISamplerCubeArray:
@@ -604,7 +599,6 @@ inline bool IsSamplerArray(TBasicType type)
         case EbtISampler2DMS:
         case EbtUSampler2DMS:
         case EbtSamplerBuffer:
-        case EbtSampler2DRectShadow:
         case EbtISampler2DRect:
         case EbtISamplerBuffer:
         case EbtUSampler2DRect:
@@ -636,7 +630,6 @@ inline bool IsSampler2DArray(TBasicType type)
         case EbtSampler2DRect:
         case EbtISampler2DRect:
         case EbtUSampler2DRect:
-        case EbtSampler2DRectShadow:
         case EbtSamplerExternalOES:
         case EbtSamplerExternal2DY2YEXT:
         case EbtSampler2DShadow:
@@ -687,7 +680,6 @@ inline bool IsShadowSampler(TBasicType type)
         case EbtSamplerCubeShadow:
         case EbtSampler2DArrayShadow:
         case EbtSamplerCubeArrayShadow:
-        case EbtSampler2DRectShadow:
             return true;
         case EbtISampler2D:
         case EbtISampler3D:

@@ -3898,7 +3898,6 @@ spirv::IdRef OutputSPIRVTraverser::createImageTextureBuiltIn(TIntermOperator *no
         // - sampler2DRect, vec4 P
         // - sampler3D, vec4 P
         // - sampler2DShadow, vec4 P
-        // - sampler2DRectShadow, vec4 P
         //
         // Of these cases, only (sampler2D*, vec4 P) requires moving the proj channel from .w to the
         // appropriate location (.y for 1D and .z for 2D).
