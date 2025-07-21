@@ -716,7 +716,10 @@ void VertexArray::onBind(const Context *context)
         }
     }
 
-    mDirtyBits.set(DIRTY_BIT_LOST_OBSERVATION);
+    // Buffers may have changed while vertex array was not current, we need to check buffer's
+    // internal storage and set proper dirty bits if buffer has changed since last syncState.
+    mDirtyBits |= mVertexArray->checkBufferForDirtyBits(context, mState.mBufferBindingMask);
+
     // Always reset mIndexRangeInlineCache since we lost buffer observation while unbind
     mIndexRangeInlineCache = {};
 

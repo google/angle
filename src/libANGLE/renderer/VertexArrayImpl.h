@@ -37,6 +37,12 @@ class VertexArrayImpl : angle::NonCopyable
         mContentsObserverBindingsMask.set(gl::kElementArrayBufferIndex);
     }
 
+    // This gives backend an opportunity to check buffers to see if buffer has been modified that
+    // requires VertexArray sync.
+    virtual gl::VertexArray::DirtyBits checkBufferForDirtyBits(
+        const gl::Context *context,
+        const gl::VertexArrayBufferBindingMask bufferBindingMask);
+
     // It's up to the implementation to reset the attrib and binding dirty bits.
     // This is faster than the front-end having to clear all the bits after they have been scanned.
     virtual angle::Result syncState(const gl::Context *context,
@@ -63,6 +69,17 @@ class VertexArrayImpl : angle::NonCopyable
     // with this bit mask.
     gl::VertexArrayBufferBindingMask mContentsObserverBindingsMask;
 };
+
+inline gl::VertexArray::DirtyBits VertexArrayImpl::checkBufferForDirtyBits(
+    const gl::Context *context,
+    const gl::VertexArrayBufferBindingMask bufferBindingMask)
+{
+    // For now we just simply assume buffer storage has changed and always dirty all
+    // binding points.
+    uint64_t bits = bufferBindingMask.bits();
+    bits <<= gl::VertexArray::DIRTY_BIT_BINDING_0;
+    return gl::VertexArray::DirtyBits(bits);
+}
 
 inline angle::Result VertexArrayImpl::syncState(const gl::Context *context,
                                                 const gl::VertexArray::DirtyBits &dirtyBits,

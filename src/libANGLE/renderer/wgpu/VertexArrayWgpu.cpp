@@ -133,9 +133,6 @@ angle::Result VertexArrayWgpu::syncState(const gl::Context *context,
         size_t dirtyBit = *iter;
         switch (dirtyBit)
         {
-            case gl::VertexArray::DIRTY_BIT_LOST_OBSERVATION:
-                break;
-
             case gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER:
             case gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER_DATA:
                 ANGLE_TRY(syncDirtyElementArrayBuffer(contextWgpu));

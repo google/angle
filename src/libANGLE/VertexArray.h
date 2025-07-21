@@ -132,10 +132,6 @@ class VertexArray final : public LabeledObject, public angle::Subject
     // the Vulkan back-end to skip performing a pipeline change for performance.
     enum DirtyBitType
     {
-        // This vertex array has lost buffer observation. Check against actual buffer storage is
-        // required.
-        DIRTY_BIT_LOST_OBSERVATION,
-
         // Dirty bits for bindings.
         DIRTY_BIT_BINDING_0,
         DIRTY_BIT_BINDING_MAX          = DIRTY_BIT_BINDING_0 + MAX_VERTEX_ATTRIB_BINDINGS,
@@ -163,8 +159,6 @@ class VertexArray final : public LabeledObject, public angle::Subject
                   "BINDING dirty bits should come before DATA.");
     static_assert(DIRTY_BIT_BUFFER_DATA_0 < DIRTY_BIT_ATTRIB_0,
                   "DATA dirty bits should come before ATTRIB.");
-    static_assert(DIRTY_BIT_LOST_OBSERVATION < DIRTY_BIT_BINDING_0,
-                  "LOST_OBSERVATION dirty bits should come before BINDING.");
 
     enum DirtyAttribBitType
     {

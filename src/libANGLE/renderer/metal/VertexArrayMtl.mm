@@ -289,18 +289,6 @@ angle::Result VertexArrayMtl::syncState(const gl::Context *context,
         size_t dirtyBit = *iter;
         switch (dirtyBit)
         {
-            case gl::VertexArray::DIRTY_BIT_LOST_OBSERVATION:
-            {
-                // If vertex array was not observing while unbound, we need to check buffer's
-                // internal storage and take action if buffer has changed while not observing.
-                // For now we just simply assume buffer storage has changed and always dirty all
-                // binding points.
-                uint64_t bits = mState.getBufferBindingMask().bits();
-                bits <<= gl::VertexArray::DIRTY_BIT_BINDING_0;
-                iter.setLaterBits(gl::VertexArray::DirtyBits(bits));
-                break;
-            }
-
             case gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER:
             case gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER_DATA:
             {

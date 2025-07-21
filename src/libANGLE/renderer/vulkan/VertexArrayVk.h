@@ -51,6 +51,10 @@ class VertexArrayVk : public VertexArrayImpl
 
     void destroy(const gl::Context *context) override;
 
+    gl::VertexArray::DirtyBits checkBufferForDirtyBits(
+        const gl::Context *context,
+        const gl::VertexArrayBufferBindingMask bufferBindingMask) override;
+
     angle::Result syncState(const gl::Context *context,
                             const gl::VertexArray::DirtyBits &dirtyBits,
                             gl::VertexArray::DirtyAttribBitsArray *attribBits,

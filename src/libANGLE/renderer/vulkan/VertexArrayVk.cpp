@@ -731,6 +731,56 @@ void VertexArrayVk::updateCurrentElementArrayBuffer()
     mCurrentElementArrayBuffer = &bufferVk->getBuffer();
 }
 
+gl::VertexArray::DirtyBits VertexArrayVk::checkBufferForDirtyBits(
+    const gl::Context *context,
+    const gl::VertexArrayBufferBindingMask bufferBindingMask)
+{
+    ContextVk *contextVk = vk::GetImpl(context);
+    gl::VertexArray::DirtyBits dirtyBits;
+
+    // If vertex array was not observing while unbound, we need to check buffer's
+    // internal storage and take action if buffer storage has changed while not
+    // observing.
+    if (contextVk->getFeatures().compressVertexData.enabled || mContentsObserverBindingsMask.any())
+    {
+        // We may have lost buffer content change when it became non-current. In that
+        // case we always assume buffer has changed. If compressVertexData.enabled is
+        // true, it also depends on buffer usage which may have changed.
+        uint64_t bits = bufferBindingMask.bits();
+        bits <<= gl::VertexArray::DIRTY_BIT_BINDING_0;
+        dirtyBits = gl::VertexArray::DirtyBits(bits);
+    }
+    else
+    {
+        const std::vector<gl::VertexAttribute> &attribs = mState.getVertexAttributes();
+        const std::vector<gl::VertexBinding> &bindings  = mState.getVertexBindings();
+
+        // Element buffer is not in bindings yet, has to handle separately.
+        dirtyBits.set(gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER);
+
+        gl::VertexArrayBufferBindingMask bindingMask = bufferBindingMask;
+        bindingMask.reset(gl::kElementArrayBufferIndex);
+
+        for (size_t bindingIndex : bindingMask)
+        {
+            const gl::Buffer *bufferGL    = mState.getVertexBinding(bindingIndex).getBuffer().get();
+            vk::BufferSerial bufferSerial = vk::GetImpl(bufferGL)->getBufferSerial();
+            for (size_t attribIndex : bindings[bindingIndex].getBoundAttributesMask())
+            {
+                if (attribs[attribIndex].enabled &&
+                    (!bufferSerial.valid() ||
+                     bufferSerial != mCurrentArrayBufferSerial[attribIndex]))
+                {
+                    dirtyBits.set(gl::VertexArray::DIRTY_BIT_BINDING_0 + bindingIndex);
+                    break;
+                }
+            }
+        }
+    }
+
+    return dirtyBits;
+}
+
 angle::Result VertexArrayVk::syncState(const gl::Context *context,
                                        const gl::VertexArray::DirtyBits &dirtyBits,
                                        gl::VertexArray::DirtyAttribBitsArray *attribBits,
@@ -749,48 +799,6 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
         size_t dirtyBit = *iter;
         switch (dirtyBit)
         {
-            case gl::VertexArray::DIRTY_BIT_LOST_OBSERVATION:
-            {
-                // If vertex array was not observing while unbound, we need to check buffer's
-                // internal storage and take action if buffer storage has changed while not
-                // observing.
-                if (contextVk->getFeatures().compressVertexData.enabled ||
-                    mContentsObserverBindingsMask.any())
-                {
-                    // We may have lost buffer content change when it became non-current. In that
-                    // case we always assume buffer has changed. If compressVertexData.enabled is
-                    // true, it also depends on buffer usage which may have changed.
-                    uint64_t bits = mState.getBufferBindingMask().bits();
-                    bits <<= gl::VertexArray::DIRTY_BIT_BINDING_0;
-                    iter.setLaterBits(gl::VertexArray::DirtyBits(bits));
-                }
-                else
-                {
-                    // Element buffer is not in bindings yet, has to handle separately.
-                    iter.setLaterBit(gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER);
-                    gl::VertexArrayBufferBindingMask bindingMask = mState.getBufferBindingMask();
-                    bindingMask.reset(gl::kElementArrayBufferIndex);
-
-                    for (size_t bindingIndex : bindingMask)
-                    {
-                        const gl::Buffer *bufferGL    = bindings[bindingIndex].getBuffer().get();
-                        vk::BufferSerial bufferSerial = vk::GetImpl(bufferGL)->getBufferSerial();
-                        for (size_t attribIndex : bindings[bindingIndex].getBoundAttributesMask())
-                        {
-                            if (attribs[attribIndex].enabled &&
-                                (!bufferSerial.valid() ||
-                                 bufferSerial != mCurrentArrayBufferSerial[attribIndex]))
-                            {
-                                iter.setLaterBit(gl::VertexArray::DIRTY_BIT_BINDING_0 +
-                                                 bindingIndex);
-                                break;
-                            }
-                        }
-                    }
-                }
-                break;
-            }
-
             case gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER:
             case gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER_DATA:
             {
