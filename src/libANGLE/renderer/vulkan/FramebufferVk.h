@@ -127,7 +127,7 @@ class FramebufferVk : public FramebufferImpl
 
     GLint getSamples() const
     {
-        ASSERT(mRasterizationSamples >= 0);
+        ASSERT(mRasterizationSamples > 0);
         return mRasterizationSamples;
     }
 

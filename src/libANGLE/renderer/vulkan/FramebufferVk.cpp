@@ -2585,8 +2585,9 @@ angle::Result FramebufferVk::syncState(const gl::Context *context,
         }
     }
 
-    // Update cached value of samples
-    mRasterizationSamples = getSamplesImpl();
+    // Update cached value of samples. Always ensure we have at least one sample since
+    // GraphicsPipelineDesc can't handle 0 samples.
+    mRasterizationSamples = std::max(getSamplesImpl(), 1);
 
     // A shared attachment's colospace could have been modified in another context, update
     // colorspace of all attachments to reflect current context's colorspace.
@@ -3931,7 +3932,7 @@ GLint FramebufferVk::getSamplesImpl() const
 
     // If none of the attachments are multisampled-render-to-texture, take the sample count from the
     // last attachment (any would have worked, as they would all have the same sample count).
-    return std::max(lastAttachment ? lastAttachment->getSamples() : 1, 1);
+    return lastAttachment ? lastAttachment->getSamples() : 1;
 }
 
 angle::Result FramebufferVk::flushDepthStencilDeferredClear(ContextVk *contextVk,
