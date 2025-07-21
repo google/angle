@@ -1667,6 +1667,9 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     VkDeviceSize mTotalBufferToImageCopySize;
     VkDeviceSize mEstimatedPendingImageGarbageSize;
 
+    // The number of render passes since the last submission of all commands.
+    VkDeviceSize mRenderPassCountSinceSubmit;
+
     // Semaphores that must be flushed before the current commands. Flushed semaphores will be
     // waited on in the next submission.
     std::vector<VkSemaphore> mWaitSemaphores;

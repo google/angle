@@ -54,6 +54,9 @@ namespace
 // If the total size of copyBufferToImage commands in the outside command buffer reaches the
 // threshold below, the latter is flushed.
 static constexpr VkDeviceSize kMaxBufferToImageCopySize = 64 * 1024 * 1024;
+// If the number of render passes in a command buffer reaches the threshold below, it will be
+// flushed and submitted.
+static constexpr VkDeviceSize kMaxRenderPassCountPerCommandBuffer = 128;
 // The number of queueSerials we will reserve for outsideRenderPassCommands when we generate one for
 // RenderPassCommands.
 static constexpr size_t kMaxReservedOutsideRenderPassQueueSerials = 15;
@@ -825,6 +828,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, vk::Rendere
       mAllowRenderPassToReactivate(true),
       mTotalBufferToImageCopySize(0),
       mEstimatedPendingImageGarbageSize(0),
+      mRenderPassCountSinceSubmit(0),
       mHasWaitSemaphoresPendingSubmission(false),
       mGpuClockSync{std::numeric_limits<double>::max(), std::numeric_limits<double>::max()},
       mGpuEventTimestampOrigin(0),
@@ -7686,6 +7690,7 @@ angle::Result ContextVk::flushAndSubmitCommands(const vk::Semaphore *signalSemap
     prepareToSubmitAllCommands();
     ANGLE_TRY(submitCommands(signalSemaphore, externalFence));
     mCommandsPendingSubmissionCount = 0;
+    mRenderPassCountSinceSubmit     = 0;
 
     ASSERT(mOutsideRenderPassCommands->getQueueSerial() > mLastSubmittedQueueSerial);
 
@@ -7919,6 +7924,7 @@ angle::Result ContextVk::beginNewRenderPass(
         this, std::move(framebuffer), renderArea, renderPassDesc, renderPassAttachmentOps,
         colorAttachmentCount, depthStencilAttachmentIndex, clearValues, renderPassQueueSerial,
         commandBufferOut));
+    mRenderPassCountSinceSubmit++;
 
     // By default all render pass should allow to be reactivated.
     mAllowRenderPassToReactivate = true;
@@ -8113,16 +8119,31 @@ angle::Result ContextVk::flushCommandsAndEndRenderPass(RenderPassClosureReason r
 
     ANGLE_TRY(flushCommandsAndEndRenderPassWithoutSubmit(reason));
 
-    if (mHasDeferredFlush || hasExcessPendingGarbage())
+    // In some cases, it is recommended to flush and submit the command buffer to boost performance
+    // or avoid too much memory allocation.
+    RenderPassClosureReason submitReason;
+    if (mHasDeferredFlush)
     {
-        // If we have deferred glFlush call in the middle of render pass, or if there is too much
-        // pending garbage, perform a flush now.
-        RenderPassClosureReason flushImplReason =
-            (hasExcessPendingGarbage()) ? RenderPassClosureReason::ExcessivePendingGarbage
-                                        : RenderPassClosureReason::AlreadySpecifiedElsewhere;
-        ANGLE_TRY(flushAndSubmitCommands(nullptr, nullptr, flushImplReason));
+        // If we have deferred glFlush call in the middle of render pass, perform a flush now.
+        submitReason = RenderPassClosureReason::AlreadySpecifiedElsewhere;
     }
-    return angle::Result::Continue;
+    else if (hasExcessPendingGarbage())
+    {
+        // If there is too much pending garbage, perform a flush now.
+        submitReason = RenderPassClosureReason::ExcessivePendingGarbage;
+    }
+    else if (mRenderPassCountSinceSubmit >= kMaxRenderPassCountPerCommandBuffer)
+    {
+        // If there are too many render passes in the command buffer, perform a flush now.
+        submitReason = RenderPassClosureReason::RenderPassCountLimitReached;
+    }
+    else
+    {
+        // Let more commands accumulate before submitting the command buffer.
+        return angle::Result::Continue;
+    }
+
+    return flushAndSubmitCommands(nullptr, nullptr, submitReason);
 }
 
 angle::Result ContextVk::flushDirtyGraphicsRenderPass(DirtyBits::Iterator *dirtyBitsIterator,

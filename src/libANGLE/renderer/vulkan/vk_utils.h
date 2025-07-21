@@ -1625,6 +1625,9 @@ enum class RenderPassClosureReason
     ExcessivePendingGarbage,
     OutOfMemory,
 
+    // In case of reaching the render pass limit in the command buffer, it should be submitted.
+    RenderPassCountLimitReached,
+
     InvalidEnum,
     EnumCount = InvalidEnum,
 };
