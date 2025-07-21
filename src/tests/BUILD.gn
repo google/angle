@@ -1886,7 +1886,10 @@ if (build_angle_deqp_tests && !is_fuchsia) {
               deqp_khr_gl_sources + deqp_khr_gles2_sources +
               deqp_khr_gles3_sources + deqp_khr_gles31_sources +
               deqp_khr_gles32_sources + deqp_khr_glesext_sources +
-              [ "deqp_support/glcTestPackageEntry_override.cpp" ]
+              [
+                "deqp_support/gl4cEnhancedLayoutsTests_override.cpp",
+                "deqp_support/glcTestPackageEntry_override.cpp",
+              ]
     public_deps = [
       ":angle_deqp_framework_platform",
       ":angle_deqp_glshared",
