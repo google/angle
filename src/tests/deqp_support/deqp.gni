@@ -1135,10 +1135,7 @@ deqp_khr_gl_sources = [
   "$deqp_path/external/openglcts/modules/gl/gl4cDirectStateAccessXFBTests.cpp",
   "$deqp_path/external/openglcts/modules/gl/gl4cES31CompatibilityTests.cpp",
   "$deqp_path/external/openglcts/modules/gl/gl4cES31CompatibilityTests.hpp",
-
-  # Overriden with an include fix until fix
-  # (https://gerrit.khronos.org/c/vk-gl-cts/+/17729) lands upstream.
-  # "$deqp_path/external/openglcts/modules/gl/gl4cEnhancedLayoutsTests.cpp",
+  "$deqp_path/external/openglcts/modules/gl/gl4cEnhancedLayoutsTests.cpp",
   "$deqp_path/external/openglcts/modules/gl/gl4cEnhancedLayoutsTests.hpp",
   "$deqp_path/external/openglcts/modules/gl/gl4cGPUShaderFP64Tests.cpp",
   "$deqp_path/external/openglcts/modules/gl/gl4cGPUShaderFP64Tests.hpp",
