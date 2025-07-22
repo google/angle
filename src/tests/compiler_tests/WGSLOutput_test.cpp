@@ -1392,3 +1392,88 @@ fn wgslMain() -> ANGLE_Output_Annotated
     compile(shaderString);
     EXPECT_TRUE(foundInCode(outputString.c_str()));
 }
+
+TEST_F(WGSLVertexOutputTest, MatrixAttributesAndVaryings)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+        precision highp float;
+
+        in mat3 inMat;
+        out mat3 outMatArr;
+
+        void main()
+        {
+          outMatArr = inMat;
+        })";
+    const std::string &outputString =
+        R"(struct ANGLE_Input_Global {
+  inMat : mat3x3<f32>,
+};
+
+var<private> ANGLE_input_global : ANGLE_Input_Global;
+
+struct ANGLE_Input_Annotated {
+  @location(@@@@@@) inMat_col0 : vec3<f32>,
+  @location(@@@@@@) inMat_col1 : vec3<f32>,
+  @location(@@@@@@) inMat_col2 : vec3<f32>,
+};
+
+struct ANGLE_Output_Global {
+  gl_Position_ : vec4<f32>,
+  outMatArr : mat3x3<f32>,
+};
+
+var<private> ANGLE_output_global : ANGLE_Output_Global;
+
+struct ANGLE_Output_Annotated {
+  @builtin(position) gl_Position_ : vec4<f32>,
+  @location(@@@@@@) outMatArr_col0 : vec3<f32>,
+  @location(@@@@@@) outMatArr_col1 : vec3<f32>,
+  @location(@@@@@@) outMatArr_col2 : vec3<f32>,
+};
+
+@group(2) @binding(0) var<uniform> ANGLEUniforms : ANGLEUniformBlock;
+
+struct ANGLEDepthRangeParams
+{
+  near : f32,
+  far : f32,
+  diff : f32,
+};
+
+;
+;
+
+struct ANGLEUniformBlock
+{
+  acbBufferOffsets : vec2<u32>,
+  depthRange : vec2<f32>,
+  renderArea : u32,
+  flipXY : u32,
+  dither : u32,
+  misc : u32,
+};
+
+;
+
+fn _umain()
+{
+  (ANGLE_output_global.outMatArr) = (ANGLE_input_global.inMat);
+  ((ANGLE_output_global.gl_Position_).y) = (((ANGLE_output_global.gl_Position_).y) * ((unpack4x8snorm((ANGLEUniforms).flipXY)).w));
+}
+@vertex
+fn wgslMain(ANGLE_input_annotated : ANGLE_Input_Annotated) -> ANGLE_Output_Annotated
+{
+  ANGLE_input_global.inMat = mat3x3<f32>(ANGLE_input_annotated.inMat_col0, ANGLE_input_annotated.inMat_col1, ANGLE_input_annotated.inMat_col2);
+  _umain();
+  var ANGLE_output_annotated : ANGLE_Output_Annotated;
+  ANGLE_output_annotated.gl_Position_ = ANGLE_output_global.gl_Position_;
+  ANGLE_output_annotated.outMatArr_col0 = ANGLE_output_global.outMatArr[0];
+  ANGLE_output_annotated.outMatArr_col1 = ANGLE_output_global.outMatArr[1];
+  ANGLE_output_annotated.outMatArr_col2 = ANGLE_output_global.outMatArr[2];
+  return ANGLE_output_annotated;
+})";
+    compile(shaderString);
+    EXPECT_TRUE(foundInCode(outputString.c_str()));
+}

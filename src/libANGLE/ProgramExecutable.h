@@ -146,10 +146,12 @@ struct ProgramOutput
 {
     ProgramOutput() = default;
     ProgramOutput(const sh::ShaderVariable &var);
+    GLenum getType() const { return pod.type; }
     bool isBuiltIn() const { return pod.isBuiltIn; }
     bool isArray() const { return pod.isArray; }
     int getLocation() const { return pod.location; }
     unsigned int getOutermostArraySize() const { return pod.outermostArraySize; }
+    unsigned int getBasicTypeElementCount() const { return pod.basicTypeElementCount; }
     void resetEffectiveLocation()
     {
         if (pod.hasImplicitLocation)
