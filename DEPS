@@ -275,6 +275,7 @@ vars = {
   'checkout_angle_restricted_trace_higgs_domino_island': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_hill_climb_racing': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_homescapes': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_honkai_impact_3rd': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_honkai_star_rail': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_hungry_shark_evolution': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_idle_heroes': 'checkout_angle_restricted_traces',
@@ -2430,6 +2431,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_homescapes',
+  },
+  'src/tests/restricted_traces/honkai_impact_3rd': {
+      'packages': [
+        {
+            'package': 'angle/traces/honkai_impact_3rd',
+            'version': 'version:2',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_honkai_impact_3rd',
   },
   'src/tests/restricted_traces/honkai_star_rail': {
       'packages': [
