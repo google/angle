@@ -654,16 +654,7 @@ bool ValidateMultiDrawElementsIndirectEXT(const Context *context,
     {
         // EXT_geometry_shader allows transform feedback to work with all draw commands.
         // [EXT_geometry_shader] Section 12.1, "Transform Feedback"
-        if (context->getExtensions().geometryShaderAny() || context->getClientVersion() >= ES_3_2)
-        {
-            if (!ValidateTransformFeedbackPrimitiveMode(
-                    context, entryPoint, curTransformFeedback->getPrimitiveMode(), modePacked))
-            {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidDrawModeTransformFeedback);
-                return false;
-            }
-        }
-        else
+        if (!context->getExtensions().geometryShaderAny() && context->getClientVersion() < ES_3_2)
         {
             // An INVALID_OPERATION error is generated if transform feedback is active and not
             // paused.
