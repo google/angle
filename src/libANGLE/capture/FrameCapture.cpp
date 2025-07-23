@@ -3540,34 +3540,33 @@ void CompressPalettedTexture(angle::MemoryBuffer &data,
     );
 }
 
-bool BlendStateEqualPerDrawBuffer(const gl::State &replayState, const gl::State &currentState)
+bool BlendStateEqualPerDrawBuffer(const gl::State &currentState)
 {
-    const gl::BlendStateExt &defaultBlend = replayState.getBlendStateExt();
     const gl::BlendStateExt &currentBlend = currentState.getBlendStateExt();
 
     // For each buffer, compare again the zero buffer state
     for (unsigned int idx = 1; idx < currentBlend.getDrawBufferCount(); idx++)
     {
-        if (currentBlend.getEnabledMask().test(0) != defaultBlend.getEnabledMask().test(idx))
+        if (currentBlend.getEnabledMask().test(0) != currentBlend.getEnabledMask().test(idx))
         {
             return false;
         }
 
-        if (currentBlend.getSrcColorIndexed(0) != defaultBlend.getSrcColorIndexed(idx) ||
-            currentBlend.getDstColorIndexed(0) != defaultBlend.getDstColorIndexed(idx) ||
-            currentBlend.getSrcAlphaIndexed(0) != defaultBlend.getSrcAlphaIndexed(idx) ||
-            currentBlend.getDstAlphaIndexed(0) != defaultBlend.getDstAlphaIndexed(idx))
+        if (currentBlend.getSrcColorIndexed(0) != currentBlend.getSrcColorIndexed(idx) ||
+            currentBlend.getDstColorIndexed(0) != currentBlend.getDstColorIndexed(idx) ||
+            currentBlend.getSrcAlphaIndexed(0) != currentBlend.getSrcAlphaIndexed(idx) ||
+            currentBlend.getDstAlphaIndexed(0) != currentBlend.getDstAlphaIndexed(idx))
         {
             return false;
         }
 
-        if (currentBlend.getEquationColorIndexed(0) != defaultBlend.getEquationColorIndexed(idx) ||
-            currentBlend.getEquationAlphaIndexed(0) != defaultBlend.getEquationAlphaIndexed(idx))
+        if (currentBlend.getEquationColorIndexed(0) != currentBlend.getEquationColorIndexed(idx) ||
+            currentBlend.getEquationAlphaIndexed(0) != currentBlend.getEquationAlphaIndexed(idx))
         {
             return false;
         }
 
-        if (currentBlend.getColorMaskIndexed(0) != defaultBlend.getColorMaskIndexed(idx))
+        if (currentBlend.getColorMaskIndexed(0) != currentBlend.getColorMaskIndexed(idx))
         {
             return false;
         }
@@ -5299,7 +5298,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
 
     // First, check if every draw buffer blend state matches zero buffer.
     // If so, we can set them all the same using calls available before ES 3.2
-    if (BlendStateEqualPerDrawBuffer(replayState, apiState))
+    if (BlendStateEqualPerDrawBuffer(apiState))
     {
         const gl::BlendState &defaultBlendState = replayState.getBlendState();
         const gl::BlendState &currentBlendState = apiState.getBlendState();
