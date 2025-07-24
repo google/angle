@@ -51,6 +51,7 @@ inline constexpr const char *kBlitMultisampledFormatOrBoundsMismatch = "Attempt 
 inline constexpr const char *kBlitOnlyNearestForNonColor = "Only nearest filtering can be used when blitting buffers other than the color buffer.";
 inline constexpr const char *kBlitSameImageColor = "Read and write color attachments cannot be the same image.";
 inline constexpr const char *kBlitSameImageDepthOrStencil = "Read and write depth stencil attachments cannot be the same image.";
+inline constexpr const char *kBlitSameResource = "Read and write attachments cannot be the same resource.";
 inline constexpr const char *kBlitToMultiview = "Attempt to write to a multi-view framebuffer.";
 inline constexpr const char *kBlitTypeMismatchFixedOrFloat = "If the read buffer contains fixed-point or floating-point values, the draw buffer must as well.";
 inline constexpr const char *kBlitTypeMismatchFixedPoint = "If the read buffer contains fixed-point values, the draw buffer must as well.";

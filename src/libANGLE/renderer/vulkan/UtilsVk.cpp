@@ -2967,6 +2967,11 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
     pipelineDesc.initDefaults(contextVk, vk::GraphicsPipelineSubset::Complete,
                               contextVk->pipelineRobustness(),
                               contextVk->pipelineProtectedAccess());
+
+    vk::ImageAccess srcImagelayout = src->isDepthOrStencil()
+                                         ? vk::ImageAccess::DepthReadStencilReadFragmentShaderRead
+                                         : vk::ImageAccess::FragmentShaderReadOnly;
+
     if (blitColor)
     {
         constexpr VkColorComponentFlags kAllColorComponents =
@@ -2978,6 +2983,15 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
                 kAllColorComponents, gl::BlendStateExt::ColorMaskStorage::GetMask(
                                          framebuffer->getRenderPassDesc().colorAttachmentRange())),
             framebuffer->getEmulatedAlphaAttachmentMask(), ~gl::DrawBufferMask());
+
+        for (size_t colorIndexGL : framebuffer->getState().getEnabledDrawBuffers())
+        {
+            if (&framebuffer->getColorDrawRenderTarget(colorIndexGL)->getImageForWrite() == src)
+            {
+                srcImagelayout = vk::ImageAccess::ColorWriteFragmentShaderFeedback;
+                break;
+            }
+        }
     }
     else
     {
@@ -2994,6 +3008,12 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
         SetStencilStateForWrite(renderer, &pipelineDesc);
     }
 
+    if ((blitDepth || blitStencil) &&
+        &framebuffer->getDepthStencilRenderTarget()->getImageForWrite() == src)
+    {
+        srcImagelayout = vk::ImageAccess::DepthStencilFragmentShaderFeedback;
+    }
+
     // All deferred clear must have been flushed, otherwise it will conflict with params.blitArea.
     ASSERT(!framebuffer->hasDeferredClears());
     vk::RenderPassCommandBuffer *commandBuffer;
@@ -3004,14 +3024,28 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
                                     Function::BlitResolve, &descriptorSet));
 
     // Pick layout consistent with GetImageReadAccess() to avoid unnecessary layout change.
-    vk::ImageAccess srcImagelayout = src->isDepthOrStencil()
-                                         ? vk::ImageAccess::DepthReadStencilReadFragmentShaderRead
-                                         : vk::ImageAccess::FragmentShaderReadOnly;
     contextVk->onImageRenderPassRead(src->getAspectFlags(), srcImagelayout, src);
 
     UpdateColorAccess(contextVk, framebuffer->getState().getColorAttachmentsMask(),
                       framebuffer->getState().getEnabledDrawBuffers());
     UpdateDepthStencilAccess(contextVk, blitDepth, blitStencil);
+
+    if (srcImagelayout == vk::ImageAccess::ColorWriteFragmentShaderFeedback)
+    {
+        src->setRenderPassUsageFlag(vk::RenderPassUsage::ColorTextureSampler);
+    }
+
+    if (srcImagelayout == vk::ImageAccess::DepthStencilFragmentShaderFeedback)
+    {
+        if (blitDepth)
+        {
+            src->setRenderPassUsageFlag(vk::RenderPassUsage::DepthTextureSampler);
+        }
+        if (blitStencil)
+        {
+            src->setRenderPassUsageFlag(vk::RenderPassUsage::StencilTextureSampler);
+        }
+    }
 
     VkDescriptorImageInfo imageInfos[2] = {};
 
@@ -3222,10 +3256,20 @@ angle::Result UtilsVk::stencilBlitResolveNoShaderExport(ContextVk *contextVk,
 
     // Change layouts prior to computation.
     vk::CommandResources resources;
-    resources.onImageComputeShaderRead(src->getAspectFlags(), src);
-    resources.onImageTransferWrite(depthStencilRenderTarget->getLevelIndex(), 1,
-                                   depthStencilRenderTarget->getLayerIndex(), 1,
-                                   depthStencilImage->getAspectFlags(), depthStencilImage);
+    if (&depthStencilRenderTarget->getImageForWrite() != src)
+    {
+        resources.onImageComputeShaderRead(src->getAspectFlags(), src);
+        resources.onImageTransferWrite(depthStencilRenderTarget->getLevelIndex(), 1,
+                                       depthStencilRenderTarget->getLayerIndex(), 1,
+                                       depthStencilImage->getAspectFlags(), depthStencilImage);
+    }
+    else
+    {
+        resources.onImageSelfCopy(depthStencilRenderTarget->getLevelIndex(), 1,
+                                  depthStencilRenderTarget->getLayerIndex(), 1,
+                                  depthStencilRenderTarget->getLevelIndex(), 1, params.srcLayer, 1,
+                                  src->getAspectFlags(), src);
+    }
     resources.onBufferComputeShaderWrite(&blitBuffer.get());
 
     VkDescriptorSet descriptorSet;

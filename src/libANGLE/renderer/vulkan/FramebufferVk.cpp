@@ -1188,9 +1188,21 @@ angle::Result FramebufferVk::blitWithCommand(ContextVk *contextVk,
     }
 
     vk::CommandResources resources;
-    resources.onImageTransferRead(imageAspectMask, srcImage);
-    resources.onImageTransferWrite(drawRenderTarget->getLevelIndex(), 1,
-                                   drawRenderTarget->getLayerIndex(), 1, imageAspectMask, dstImage);
+    if (srcImage != dstImage)
+    {
+        resources.onImageTransferRead(imageAspectMask, srcImage);
+        resources.onImageTransferWrite(drawRenderTarget->getLevelIndex(), 1,
+                                       drawRenderTarget->getLayerIndex(), 1, imageAspectMask,
+                                       dstImage);
+    }
+    else
+    {
+        resources.onImageSelfCopy(readRenderTarget->getLevelIndex(), 1,
+                                  readRenderTarget->getLayerIndex(), 1,
+                                  drawRenderTarget->getLevelIndex(), 1,
+                                  drawRenderTarget->getLayerIndex(), 1, imageAspectMask, srcImage);
+    }
+
     vk::OutsideRenderPassCommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &commandBuffer));
 

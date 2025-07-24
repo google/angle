@@ -582,6 +582,28 @@ bool IsValidGLES1TextureParameter(GLenum pname)
     }
 }
 
+bool IsBlitSameResource(const FramebufferAttachment *read, const FramebufferAttachment *draw)
+{
+    if (read->getResource() == draw->getResource())
+    {
+        if (read->type() == GL_TEXTURE)
+        {
+            bool sameMipLevel = read->mipLevel() == draw->mipLevel();
+            bool sameLayer    = read->layer() == draw->layer();
+            bool sameFace     = read->cubeMapFace() == draw->cubeMapFace();
+            if (sameMipLevel && sameLayer && sameFace)
+            {
+                return true;
+            }
+        }
+        else
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 unsigned int GetSamplerParameterCount(GLenum pname)
 {
     return pname == GL_TEXTURE_BORDER_COLOR ? 4 : 1;
@@ -1839,6 +1861,12 @@ bool ValidateBlitFramebufferParameters(const Context *context,
                         ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kBlitSameImageColor);
                         return false;
                     }
+
+                    if (IsBlitSameResource(readColorBuffer, attachment))
+                    {
+                        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kBlitSameResource);
+                        return false;
+                    }
                 }
             }
 
@@ -1885,6 +1913,12 @@ bool ValidateBlitFramebufferParameters(const Context *context,
                 if (context->isWebGL() && *readBuffer == *drawBuffer)
                 {
                     ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kBlitSameImageDepthOrStencil);
+                    return false;
+                }
+
+                if (IsBlitSameResource(readBuffer, drawBuffer))
+                {
+                    ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kBlitSameResource);
                     return false;
                 }
             }
