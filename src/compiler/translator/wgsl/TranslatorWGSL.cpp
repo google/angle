@@ -972,6 +972,7 @@ void OutputWGSLTraverser::emitArrayIndex(TIntermTyped &leftNode, TIntermTyped &r
     // entire array back to the unwrapped type).
     bool needsUnwrapping                  = false;
     bool isUniformMatrixNeedingConversion = false;
+    bool isUniformBoolNeedingConversion   = false;
     TIntermBinary *leftNodeBinary         = leftNode.getAsBinaryNode();
     if (leftNodeBinary && leftNodeBinary->getOp() == TOperator::EOpIndexDirectStruct)
     {
@@ -985,11 +986,14 @@ void OutputWGSLTraverser::emitArrayIndex(TIntermTyped &leftNode, TIntermTyped &r
 
         isUniformMatrixNeedingConversion = isInUniformAddressSpace && IsMatCx2(&leftType);
 
+        isUniformBoolNeedingConversion =
+            isInUniformAddressSpace && leftType.getBasicType() == EbtBool;
+
         ASSERT(!needsUnwrapping || !isUniformMatrixNeedingConversion);
     }
 
     // Emit the left side, which should be of type array.
-    if (needsUnwrapping || isUniformMatrixNeedingConversion)
+    if (needsUnwrapping || isUniformMatrixNeedingConversion || isUniformBoolNeedingConversion)
     {
         if (isUniformMatrixNeedingConversion)
         {
@@ -1003,6 +1007,12 @@ void OutputWGSLTraverser::emitArrayIndex(TIntermTyped &leftNode, TIntermTyped &r
             // Make sure the conversion function referenced here is actually generated in the
             // resulting WGSL.
             mWGSLGenerationMetadataForUniforms->outputMatCx2Conversion.insert(baseType);
+        }
+        else if (isUniformBoolNeedingConversion)
+        {
+            // Convert just this one array element into a bool instead of converting the entire
+            // array into an array of booleans and indexing into that.
+            mSink << "bool(";
         }
         emitStructIndexNoUnwrapping(leftNodeBinary);
     }
@@ -1064,7 +1074,8 @@ void OutputWGSLTraverser::emitArrayIndex(TIntermTyped &leftNode, TIntermTyped &r
     {
         mSink << "." << kWrappedStructFieldName;
     }
-    else if (isUniformMatrixNeedingConversion)
+
+    if (isUniformMatrixNeedingConversion || isUniformBoolNeedingConversion)
     {
         // Close conversion function call
         mSink << ")";
@@ -1085,6 +1096,9 @@ void OutputWGSLTraverser::emitStructIndex(TIntermBinary *binaryNode)
 
     bool isUniformMatrixNeedingConversion = isInUniformAddressSpace && IsMatCx2(binaryNodeType);
 
+    bool isUniformBoolNeedingConversion =
+        isInUniformAddressSpace && binaryNode->getBasicType() == EbtBool;
+
     bool needsUnwrapping =
         ElementTypeNeedsUniformWrapperStruct(isInUniformAddressSpace, binaryNodeType);
     if (needsUnwrapping)
@@ -1104,8 +1118,13 @@ void OutputWGSLTraverser::emitStructIndex(TIntermBinary *binaryNode)
         // WGSL.
         mWGSLGenerationMetadataForUniforms->outputMatCx2Conversion.insert(*binaryNodeType);
     }
+    else if (isUniformBoolNeedingConversion)
+    {
+        // Should only trigger in case of a boolean not in an array.
+        mSink << "bool(";
+    }
     emitStructIndexNoUnwrapping(binaryNode);
-    if (needsUnwrapping || isUniformMatrixNeedingConversion)
+    if (needsUnwrapping || isUniformMatrixNeedingConversion || isUniformBoolNeedingConversion)
     {
         mSink << ")";
     }

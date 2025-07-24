@@ -102,7 +102,7 @@ bool OutputUniformWrapperStructsAndConversions(
     auto generate16AlignedWrapperStruct = [&output](const TType &type) {
         output << "struct " << MakeUniformWrapperStructName(&type) << "\n{\n";
         output << "  @align(16) " << kWrappedStructFieldName << " : ";
-        WriteWgslType(output, type, {});
+        WriteWgslType(output, type, {WgslAddressSpace::Uniform});
         output << "\n};\n";
     };
 
@@ -150,7 +150,19 @@ bool OutputUniformWrapperStructsAndConversions(
         WriteWgslType(output, type, {WgslAddressSpace::NonUniform});
         output << ";\n";
         output << "  for (var i : u32 = 0; i < " << type.getOutermostArraySize() << "; i++) {;\n";
-        output << "    retVal[i] = wrappedArr[i]." << kWrappedStructFieldName << ";\n";
+        output << "    retVal[i] = ";
+        if (type.getBasicType() == EbtBool)
+        {
+            // Bools are represented by u32s in the uniform address space, and so the u32s need to
+            // be casted.
+            output << "bool(";
+        }
+        output << "wrappedArr[i]." << kWrappedStructFieldName;
+        if (type.getBasicType() == EbtBool)
+        {
+            output << ")";
+        }
+        output << ";\n";
         output << "  }\n";
         output << "  return retVal;\n";
         output << "}\n";
@@ -256,17 +268,6 @@ bool OutputUniformBlocksAndSamplers(TCompiler *compiler, TIntermBlock *root)
             // gl_DepthRange and also the GLSL 4.2 gl_NumSamples are uniforms.
             // TODO(anglebug.com/42267100): put gl_DepthRange into default uniform block.
             continue;
-        }
-
-        // TODO(anglebug.com/42267100): some types will NOT match std140 layout here, namely matCx2,
-        // bool, and arrays with stride less than 16.
-        // (this check does not cover the unsupported case where there is an array of structs of
-        // size < 16).
-        if (shaderVar.type == GL_BOOL)
-        {
-            ANGLE_LOG(ERR)
-                << "Failing to output uniform blocks and samplers because of boolean uniform";
-            return false;
         }
 
         // Some uniform variables might have been deleted, for example if they were structs that

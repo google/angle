@@ -32,8 +32,19 @@ void WriteWgslBareTypeName(StringStreamType &output,
     switch (basicType)
     {
         case TBasicType::EbtVoid:
-        case TBasicType::EbtBool:
             output << type.getBasicString();
+            break;
+        case TBasicType::EbtBool:
+            if (config.addressSpace == WgslAddressSpace::Uniform)
+            {
+                // The uniform address space does not support bools in WGSL, so they are emulated
+                // with u32 (which matches gles because bools are 4-bytes long in std140).
+                output << "u32";
+            }
+            else
+            {
+                output << "bool";
+            }
             break;
         // TODO(anglebug.com/42267100): is there double precision (f64) in GLSL? It doesn't really
         // exist in WGSL (i.e. f64 does not exist but AbstractFloat can handle 64 bits???) Metal
@@ -294,7 +305,19 @@ template void WriteWgslSamplerType<TStringStream>(TStringStream &output,
 
 ImmutableString MakeUniformWrapperStructName(const TType *type)
 {
-    return BuildConcatenatedImmutableString(kWrappedPrefix, type->getBuiltInTypeNameString());
+    const char *typeStr;
+    // Bools are represented as u32s in the uniform address space.
+    // TODO(anglebug.com/376553328): simplify by using WriteWgslType({WgslAddressSpace::Uniform})
+    // here.
+    if (type->getBasicType() == EbtBool)
+    {
+        typeStr = "u32";
+    }
+    else
+    {
+        typeStr = type->getBuiltInTypeNameString();
+    }
+    return BuildConcatenatedImmutableString(kWrappedPrefix, typeStr);
 }
 
 bool ElementTypeNeedsUniformWrapperStruct(bool inUniformAddressSpace, const TType *type)
@@ -317,9 +340,7 @@ bool ElementTypeNeedsUniformWrapperStruct(bool inUniformAddressSpace, const TTyp
     // - vec3 and vec4 are already aligned to 16, but vec2 needs to be aligned.
     // - Matrices are aligned to 16 automatically, except matCx2 which already needs to be handled
     // by specialized code anyway.
-    // TODO(anglebug.com/376553328): re-enable this ASSERT once matCx2 are handled.
-    // ASSERT(!type->isMatrix() || type->getRows() != 2);
-    // - WebGL2 doesn't support nested arrays so this won't either, though support wouldn't be hard.
+    // - WebGL2 doesn't support nested arrays so this won't either.
     ASSERT(!elementType.isArray());
 
     return elementType.isScalar() || (elementType.isVector() && elementType.getNominalSize() == 2);
