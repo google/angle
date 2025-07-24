@@ -1963,7 +1963,6 @@ void GenerateCaps(const FunctionsGL *functions,
     // Unlike the ANGLE variant, this extension is exposed only if supported natively.
     extensions->baseInstanceEXT = !features.disableBaseInstanceVertex.enabled &&
                                   (functions->isAtLeastGL(gl::Version(4, 2)) ||
-                                   functions->hasGLExtension("GL_ARB_base_instance") ||
                                    functions->hasGLESExtension("GL_EXT_base_instance"));
 
     // ANGLE_base_vertex_base_instance_shader_builtin
