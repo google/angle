@@ -153,6 +153,8 @@ CONTEXT_PRIVATE_LIST = [
     'glPushMatrix',
     'glSampleCoveragex',
     'glShadeModel',
+    'glVertexAttribBinding',
+    'glVertexBindingDivisor',
 ]
 CONTEXT_PRIVATE_WILDCARDS = [
     'glBlendFunc*',
@@ -161,6 +163,7 @@ CONTEXT_PRIVATE_WILDCARDS = [
     'glVertexAttribI[1-4]*',
     'glVertexAttribP[1-4]*',
     'glVertexAttribL[1-4]*',
+    'glVertexAttribDivisor*',
     # GLES1 entry points
     'glClipPlane[fx]',
     'glGetClipPlane[fx]',

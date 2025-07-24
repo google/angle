@@ -4537,13 +4537,13 @@ bool ValidateBindSampler(const Context *context,
     return true;
 }
 
-bool ValidateVertexAttribDivisor(const Context *context,
+bool ValidateVertexAttribDivisor(const PrivateState &privateState,
+                                 ErrorSet *errors,
                                  angle::EntryPoint entryPoint,
                                  GLuint index,
                                  GLuint divisor)
 {
-    return ValidateVertexAttribIndex(context->getPrivateState(),
-                                     context->getMutableErrorSetForValidation(), entryPoint, index);
+    return ValidateVertexAttribIndex(privateState, errors, entryPoint, index);
 }
 
 bool ValidateTexStorage2D(const Context *context,

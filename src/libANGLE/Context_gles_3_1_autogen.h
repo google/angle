@@ -122,11 +122,9 @@
     void useProgramStages(ProgramPipelineID pipelinePacked, GLbitfield stages,                     \
                           ShaderProgramID programPacked);                                          \
     void validateProgramPipeline(ProgramPipelineID pipelinePacked);                                \
-    void vertexAttribBinding(GLuint attribindex, GLuint bindingindex);                             \
     void vertexAttribFormat(GLuint attribindex, GLint size, VertexAttribType typePacked,           \
                             GLboolean normalized, GLuint relativeoffset);                          \
     void vertexAttribIFormat(GLuint attribindex, GLint size, VertexAttribType typePacked,          \
-                             GLuint relativeoffset);                                               \
-    void vertexBindingDivisor(GLuint bindingindex, GLuint divisor);
+                             GLuint relativeoffset);
 
 #endif  // ANGLE_CONTEXT_API_3_1_AUTOGEN_H_

@@ -1170,23 +1170,24 @@ bool ValidateBindVertexBuffer(const Context *context,
     return true;
 }
 
-bool ValidateVertexBindingDivisor(const Context *context,
+bool ValidateVertexBindingDivisor(const PrivateState &privateState,
+                                  ErrorSet *errors,
                                   angle::EntryPoint entryPoint,
                                   GLuint bindingIndex,
                                   GLuint divisor)
 {
-    const Caps &caps = context->getCaps();
+    const Caps &caps = privateState.getCaps();
     if (bindingIndex >= static_cast<GLuint>(caps.maxVertexAttribBindings))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kExceedsMaxVertexAttribBindings);
+        errors->validationError(entryPoint, GL_INVALID_VALUE, kExceedsMaxVertexAttribBindings);
         return false;
     }
 
     // [OpenGL ES 3.1] Section 10.3.1 page 243:
     // An INVALID_OPERATION error is generated if the default vertex array object is bound.
-    if (context->getState().getVertexArrayId().value == 0)
+    if (privateState.getVertexArrayId().value == 0)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kDefaultVertexArray);
+        errors->validationError(entryPoint, GL_INVALID_OPERATION, kDefaultVertexArray);
         return false;
     }
 
@@ -1224,29 +1225,30 @@ bool ValidateVertexAttribIFormat(const Context *context,
     return ValidateIntegerVertexFormat(context, entryPoint, attribindex, size, type);
 }
 
-bool ValidateVertexAttribBinding(const Context *context,
+bool ValidateVertexAttribBinding(const PrivateState &privateState,
+                                 ErrorSet *errors,
                                  angle::EntryPoint entryPoint,
                                  GLuint attribIndex,
                                  GLuint bindingIndex)
 {
     // [OpenGL ES 3.1] Section 10.3.1 page 243:
     // An INVALID_OPERATION error is generated if the default vertex array object is bound.
-    if (context->getState().getVertexArrayId().value == 0)
+    if (privateState.getVertexArrayId().value == 0)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kDefaultVertexArray);
+        errors->validationError(entryPoint, GL_INVALID_OPERATION, kDefaultVertexArray);
         return false;
     }
 
-    const Caps &caps = context->getCaps();
+    const Caps &caps = privateState.getCaps();
     if (attribIndex >= static_cast<GLuint>(caps.maxVertexAttributes))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kIndexExceedsMaxVertexAttribute);
+        errors->validationError(entryPoint, GL_INVALID_VALUE, kIndexExceedsMaxVertexAttribute);
         return false;
     }
 
     if (bindingIndex >= static_cast<GLuint>(caps.maxVertexAttribBindings))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kExceedsMaxVertexAttribBindings);
+        errors->validationError(entryPoint, GL_INVALID_VALUE, kExceedsMaxVertexAttribBindings);
         return false;
     }
 

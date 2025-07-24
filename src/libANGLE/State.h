@@ -619,6 +619,11 @@ class PrivateState : angle::NonCopyable
     void setPerfMonitorActive(bool active) { mIsPerfMonitorActive = active; }
     bool isPerfMonitorActive() const { return mIsPerfMonitorActive; }
 
+    void setVertexAttribBinding(GLuint attribIndex, GLuint bindingIndex);
+    void setVertexBindingDivisor(GLuint bindingIndex, GLuint divisor);
+    void setVertexAttribDivisor(GLuint index, GLuint divisor);
+    VertexArrayID getVertexArrayId() const;
+
   private:
     bool hasConstantColor(GLenum sourceRGB, GLenum destRGB) const;
     bool hasConstantAlpha(GLenum sourceRGB, GLenum destRGB) const;
@@ -1074,7 +1079,6 @@ class State : angle::NonCopyable
         }
     }
 
-    void setVertexAttribDivisor(GLuint index, GLuint divisor);
     const void *getVertexAttribPointer(unsigned int attribNum) const;
 
     void bindVertexBuffer(const Context *context,
@@ -1088,14 +1092,6 @@ class State : angle::NonCopyable
                                bool normalized,
                                bool pureInteger,
                                GLuint relativeOffset);
-
-    void setVertexAttribBinding(GLuint attribIndex, GLuint bindingIndex)
-    {
-        mVertexArray->setVertexAttribBinding(attribIndex, bindingIndex);
-        mDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
-    }
-
-    void setVertexBindingDivisor(GLuint bindingIndex, GLuint divisor);
 
     // State query functions
     void getBooleanv(GLenum pname, GLboolean *params) const;

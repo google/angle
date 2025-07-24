@@ -3347,12 +3347,6 @@ void Context::detachProgramPipeline(ProgramPipelineID pipeline)
     mState.detachProgramPipeline(this, pipeline);
 }
 
-void Context::vertexAttribDivisor(GLuint index, GLuint divisor)
-{
-    mState.setVertexAttribDivisor(index, divisor);
-    mPrivateStateCache.onVertexArrayStateChange();
-}
-
 void Context::samplerParameteri(SamplerID sampler, GLenum pname, GLint param)
 {
     Sampler *const samplerObject =
@@ -6107,20 +6101,6 @@ void Context::vertexAttribIFormat(GLuint attribIndex,
                                   GLuint relativeOffset)
 {
     mState.setVertexAttribFormat(attribIndex, size, type, false, true, relativeOffset);
-    mPrivateStateCache.onVertexArrayFormatChange();
-}
-
-void Context::vertexAttribBinding(GLuint attribIndex, GLuint bindingIndex)
-{
-    // In ES 3.0 contexts, the binding cannot change, hence the code below is unreachable.
-    ASSERT(getClientVersion() >= ES_3_1 && !mState.getVertexArray()->getState().isDefault());
-    mState.setVertexAttribBinding(attribIndex, bindingIndex);
-    mPrivateStateCache.onVertexArrayStateChange();
-}
-
-void Context::vertexBindingDivisor(GLuint bindingIndex, GLuint divisor)
-{
-    mState.setVertexBindingDivisor(bindingIndex, divisor);
     mPrivateStateCache.onVertexArrayFormatChange();
 }
 

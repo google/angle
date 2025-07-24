@@ -1542,4 +1542,31 @@ inline void ContextPrivateEnableVertexAttribArray(PrivateState *privateState,
     privateStateCache->onVertexArrayStateChange();
 }
 
+inline void ContextPrivateVertexAttribDivisor(PrivateState *privateState,
+                                              PrivateStateCache *privateStateCache,
+                                              GLuint index,
+                                              GLuint divisor)
+{
+    privateState->setVertexAttribDivisor(index, divisor);
+    privateStateCache->onVertexArrayStateChange();
+}
+
+inline void ContextPrivateVertexAttribBinding(PrivateState *privateState,
+                                              PrivateStateCache *privateStateCache,
+                                              GLuint attribIndex,
+                                              GLuint bindingIndex)
+{
+    privateState->setVertexAttribBinding(attribIndex, bindingIndex);
+    privateStateCache->onVertexArrayStateChange();
+}
+
+inline void ContextPrivateVertexBindingDivisor(PrivateState *privateState,
+                                               PrivateStateCache *privateStateCache,
+                                               GLuint bindingIndex,
+                                               GLuint divisor)
+{
+    privateState->setVertexBindingDivisor(bindingIndex, divisor);
+    privateStateCache->onVertexArrayFormatChange();
+}
+
 }  // namespace gl

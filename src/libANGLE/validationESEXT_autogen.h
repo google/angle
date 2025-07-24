@@ -242,7 +242,8 @@ bool ValidateDrawElementsInstancedANGLE(const Context *context,
                                         DrawElementsType typePacked,
                                         const void *indices,
                                         GLsizei primcount);
-bool ValidateVertexAttribDivisorANGLE(const Context *context,
+bool ValidateVertexAttribDivisorANGLE(const PrivateState &state,
+                                      ErrorSet *errors,
                                       angle::EntryPoint entryPoint,
                                       GLuint index,
                                       GLuint divisor);
@@ -1449,7 +1450,8 @@ bool ValidateFramebufferTextureEXT(const Context *context,
 // GL_EXT_gpu_shader5
 
 // GL_EXT_instanced_arrays
-bool ValidateVertexAttribDivisorEXT(const Context *context,
+bool ValidateVertexAttribDivisorEXT(const PrivateState &state,
+                                    ErrorSet *errors,
                                     angle::EntryPoint entryPoint,
                                     GLuint index,
                                     GLuint divisor);

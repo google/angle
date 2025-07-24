@@ -1521,7 +1521,6 @@ void GL_APIENTRY GL_VertexAttribDivisorANGLE(GLuint index, GLuint divisor)
 
     if (ANGLE_LIKELY(context != nullptr))
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
         {
@@ -1531,9 +1530,10 @@ void GL_APIENTRY GL_VertexAttribDivisorANGLE(GLuint index, GLuint divisor)
                 const uint32_t errorCount = context->getPushedErrorCount();
 #endif
                 isCallValid = ValidateVertexAttribDivisorANGLE(
-                    context, angle::EntryPoint::GLVertexAttribDivisorANGLE, index, divisor);
+                    context->getPrivateState(), context->getMutableErrorSetForValidation(),
+                    angle::EntryPoint::GLVertexAttribDivisorANGLE, index, divisor);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                ASSERT(isCallValid || context->getPushedErrorCount() != errorCount);
 #endif
             }
             else
@@ -1543,7 +1543,9 @@ void GL_APIENTRY GL_VertexAttribDivisorANGLE(GLuint index, GLuint divisor)
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->vertexAttribDivisor(index, divisor);
+            ContextPrivateVertexAttribDivisor(context->getMutablePrivateState(),
+                                              context->getMutablePrivateStateCache(), index,
+                                              divisor);
         }
         ANGLE_CAPTURE_GL(VertexAttribDivisorANGLE, isCallValid, context, index, divisor);
     }
@@ -9895,7 +9897,6 @@ void GL_APIENTRY GL_VertexAttribDivisorEXT(GLuint index, GLuint divisor)
 
     if (ANGLE_LIKELY(context != nullptr))
     {
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
         {
@@ -9905,9 +9906,10 @@ void GL_APIENTRY GL_VertexAttribDivisorEXT(GLuint index, GLuint divisor)
                 const uint32_t errorCount = context->getPushedErrorCount();
 #endif
                 isCallValid = ValidateVertexAttribDivisorEXT(
-                    context, angle::EntryPoint::GLVertexAttribDivisorEXT, index, divisor);
+                    context->getPrivateState(), context->getMutableErrorSetForValidation(),
+                    angle::EntryPoint::GLVertexAttribDivisorEXT, index, divisor);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                ASSERT(isCallValid || context->getPushedErrorCount() != errorCount);
 #endif
             }
             else
@@ -9917,7 +9919,9 @@ void GL_APIENTRY GL_VertexAttribDivisorEXT(GLuint index, GLuint divisor)
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->vertexAttribDivisor(index, divisor);
+            ContextPrivateVertexAttribDivisor(context->getMutablePrivateState(),
+                                              context->getMutablePrivateStateCache(), index,
+                                              divisor);
         }
         ANGLE_CAPTURE_GL(VertexAttribDivisorEXT, isCallValid, context, index, divisor);
     }
