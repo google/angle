@@ -1028,11 +1028,6 @@ deps = {
     'url': Var('chromium_git') + '/external/github.com/KhronosGroup/VK-GL-CTS' + '@' + Var('vk_gl_cts_revision'),
   },
 
-  'third_party/vulkan-deps': {
-    'url': Var('chromium_git') + '/vulkan-deps@b7374531e4a2dcec81a18fe09d02a2c16668c1a5',
-    'condition': 'not build_with_chromium',
-  },
-
   'third_party/glslang/src': {
     'url': '{chromium_git}/external/github.com/KhronosGroup/glslang@f43df42fe69bb38d43625b53e0706bbee43d74b4',
     'condition': 'not build_with_chromium',

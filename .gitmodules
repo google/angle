@@ -199,10 +199,6 @@
 [submodule "third_party/VK-GL-CTS/src"]
 	path = third_party/VK-GL-CTS/src
 	url = https://chromium.googlesource.com/external/github.com/KhronosGroup/VK-GL-CTS
-[submodule "third_party/vulkan-deps"]
-	path = third_party/vulkan-deps
-	url = https://chromium.googlesource.com/vulkan-deps
-	gclient-condition = not build_with_chromium
 [submodule "third_party/glslang/src"]
 	path = third_party/glslang/src
 	url = https://chromium.googlesource.com/external/github.com/KhronosGroup/glslang
