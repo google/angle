@@ -103,6 +103,7 @@
 /third_party/SwiftShader
 /third_party/turbine/cipd
 /third_party/VK-GL-CTS/src
+/third_party/vulkan-deps
 /third_party/vulkan-headers/src
 /third_party/vulkan-loader/src
 /third_party/vulkan-tools/src

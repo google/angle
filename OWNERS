@@ -87,6 +87,7 @@ per-file third_party/spirv-headers/src=*
 per-file third_party/spirv-tools/src=*
 per-file third_party/SwiftShader=*
 per-file third_party/VK-GL-CTS/src=*
+per-file third_party/vulkan-deps=*
 per-file third_party/vulkan-headers/src=*
 per-file third_party/vulkan-loader/src=*
 per-file third_party/vulkan-tools/src=*
