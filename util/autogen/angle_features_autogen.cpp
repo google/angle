@@ -312,6 +312,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SupportsBindMemory2, "supportsBindMemory2"},
     {Feature::SupportsBlendOperationAdvanced, "supportsBlendOperationAdvanced"},
     {Feature::SupportsBlendOperationAdvancedCoherent, "supportsBlendOperationAdvancedCoherent"},
+    {Feature::SupportsClipCullDistanceInGSAndTS, "supportsClipCullDistanceInGSAndTS"},
     {Feature::SupportsColorWriteEnable, "supportsColorWriteEnable"},
     {Feature::SupportsComputeTranscodeEtcToBc, "supportsComputeTranscodeEtcToBc"},
     {Feature::SupportsCustomBorderColor, "supportsCustomBorderColor"},

@@ -1969,6 +1969,14 @@
             "issue": "http://anglebug.com/386688871"
         },
         {
+            "name": "supports_clip_cull_distance_in_GS_and_TS",
+            "category": "Features",
+            "description": [
+                "Supports using clip/cull distance features in geometry and tessellation shaders"
+            ],
+            "issue": "http://anglebug.com/42264006"
+        },
+        {
             "name": "supports_maintenance9",
             "category": "Features",
             "description": [

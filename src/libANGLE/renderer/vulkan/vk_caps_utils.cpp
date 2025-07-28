@@ -1267,7 +1267,9 @@ void Renderer::ensureCapsInitialized() const
     // After implementing EXT_geometry_shader, EXT_clip_cull_distance should be additionally
     // implemented to support the geometry shader. Until then, EXT_clip_cull_distance is enabled
     // only in the experimental cases.
-    if (mPhysicalDeviceFeatures.shaderClipDistance &&
+    if ((mFeatures.supportsClipCullDistanceInGSAndTS.enabled ||
+         (!mNativeExtensions.geometryShaderAny() && !mNativeExtensions.tessellationShaderAny())) &&
+        mPhysicalDeviceFeatures.shaderClipDistance &&
         limitsVk.maxClipDistances >= kMaxClipDistancePerSpec)
     {
         // Do not enable GL_APPLE_clip_distance for Samsung devices.
