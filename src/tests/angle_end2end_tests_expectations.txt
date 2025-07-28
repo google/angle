@@ -144,6 +144,7 @@
 447556589 WIN INTEL OPENGL : GeometryShaderTest.ImplicitSizedArrayMatchesExplicitSizedArray/* = SKIP
 447556589 WIN INTEL OPENGL : GeometryShaderTest.ImplicitSizedArrayMatchesExplicitSizedArray2/* = SKIP
 451644991 WIN INTEL OPENGL : WebGL2GLSLTest.NotInfiniteLoop/* = SKIP
+436598955 WIN D3D11 : DepthStencilFormatsTest.DepthTextureRender/ES3*D3D11 = SKIP
 
 // Failures on Intel Comet Lake S UHD Graphics 630 (8086:9bc5-31.0.101.2111)
 40644896 WIN INTEL OPENGL : D3DImageFormatConversionTest.WriteColorFunctionR8G8B8A8/* = SKIP
@@ -548,6 +549,8 @@
 // Reading back the contents of an RGBX image initialized with non-255 alpha returns the original alpha (instead of 255)
 42264972 ANDROID GLES : ImageTestES3.RGBXAHBImportThenUpload/* = SKIP
 42264972 ANDROID GLES : ImageTestES3.RGBXAHBImportMultipleLayers/* = SKIP
+
+436598955 ANDROID GLES : DepthStencilFormatsTest.DepthTextureRender/ES3*OpenGLES = SKIP
 
 // Unimplemented fallback path for when format is not renderable or AHB hasn't specified the GPU_FRAMEBUFFER usage.
 42264676 ANDROID VULKAN : ImageTestES3.RGBXAHBImportNoFramebufferUsage/* = SKIP
