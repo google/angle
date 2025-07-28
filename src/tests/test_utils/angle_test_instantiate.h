@@ -271,6 +271,13 @@ struct CombinedPrintToStringParamName
     INSTANTIATE_TEST_SUITE_P(, testName, ANGLE_INSTANTIATE_TEST_PLATFORMS(testName),            \
                              testing::PrintToStringParamName())
 
+#define ANGLE_INSTANTIATE_TEST_ES3_AND_ES31_AND_ES32(testName, ...)                             \
+    const PlatformParameters testName##params[] = {ANGLE_ALL_TEST_PLATFORMS_ES3,                \
+                                                   ANGLE_ALL_TEST_PLATFORMS_ES31,               \
+                                                   ANGLE_ALL_TEST_PLATFORMS_ES32, __VA_ARGS__}; \
+    INSTANTIATE_TEST_SUITE_P(, testName, ANGLE_INSTANTIATE_TEST_PLATFORMS(testName),            \
+                             testing::PrintToStringParamName())
+
 // Instantiate the test for a combination of N parameters and the
 // enumeration of platforms in the extra args, similar to
 // ANGLE_INSTANTIATE_TEST.  The macros are defined only for the Ns
