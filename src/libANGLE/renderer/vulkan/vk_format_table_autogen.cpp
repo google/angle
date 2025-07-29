@@ -2350,13 +2350,18 @@ void Format::initialize(Renderer *renderer, const angle::Format &angleFormat)
             break;
 
         case angle::FormatID::R5G6B5_UNORM:
-            mIntendedGLFormat              = GL_RGB565;
-            mActualSampleOnlyImageFormatID = angle::FormatID::R5G6B5_UNORM;
-            mImageInitializerFunction      = nullptr;
-            mActualBufferFormatID          = angle::FormatID::R5G6B5_UNORM;
-            mVkBufferFormatIsPacked        = true;
-            mVertexLoadFunction            = CopyNativeVertexData<GLushort, 1, 1, 0>;
-            mVertexLoadRequiresConversion  = false;
+            mIntendedGLFormat = GL_RGB565;
+            {
+                static constexpr ImageFormatInitInfo kInfo[] = {
+                    {angle::FormatID::R5G6B5_UNORM, nullptr},
+                    {angle::FormatID::B5G6R5_UNORM, nullptr},
+                };
+                initImageFallback(renderer, kInfo, ArraySize(kInfo));
+            }
+            mActualBufferFormatID         = angle::FormatID::R5G6B5_UNORM;
+            mVkBufferFormatIsPacked       = true;
+            mVertexLoadFunction           = CopyNativeVertexData<GLushort, 1, 1, 0>;
+            mVertexLoadRequiresConversion = false;
             break;
 
         case angle::FormatID::R8G8B8A8_SINT:

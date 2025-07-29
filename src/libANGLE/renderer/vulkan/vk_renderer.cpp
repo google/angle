@@ -306,6 +306,12 @@ constexpr const char *kNoMaintenance9SkippedMessages[] = {
     "WARNING-VkImageSubresourceRange-layerCount-compatibility",
 };
 
+// Validation messages that should be ignored only when preferBGR565ToRGB565 is enabled.
+constexpr const char *kPreferBGR565SkippedMessages[] = {
+    // http://anglebug.com/42264464
+    "VUID-VkSamplerCustomBorderColorCreateInfoEXT-format-04015",
+};
+
 // Validation messages that should be ignored only when exposeNonConformantExtensionsAndVersions is
 // enabled on certain test platforms.
 constexpr const char *kExposeNonConformantSkippedMessages[] = {
@@ -4590,6 +4596,13 @@ void Renderer::initializeValidationMessageSuppressions()
             kNoMaintenance9SkippedMessages + ArraySize(kNoMaintenance9SkippedMessages));
     }
 
+    if (getFeatures().preferBGR565ToRGB565.enabled)
+    {
+        mSkippedValidationMessages.insert(
+            mSkippedValidationMessages.end(), kPreferBGR565SkippedMessages,
+            kPreferBGR565SkippedMessages + ArraySize(kPreferBGR565SkippedMessages));
+    }
+
     if (getFeatures().useVkEventForImageBarrier.enabled &&
         (!vk::OutsideRenderPassCommandBuffer::ExecutesInline() ||
          !vk::RenderPassCommandBuffer::ExecutesInline()))
@@ -5491,11 +5504,13 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
 
     // http://anglebug.com/42261756
     // Precision qualifiers are disabled for Pixel 2 before the driver included relaxed precision.
+    const bool isPixel4 =
+        IsPixel4(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID);
     ANGLE_FEATURE_CONDITION(
         &mFeatures, enablePrecisionQualifiers,
         !(IsPixel2(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID) &&
           (driverVersion < angle::VersionTriple(512, 490, 0))) &&
-            !IsPixel4(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID));
+            !isPixel4);
 
     // http://anglebug.com/42265957
     ANGLE_FEATURE_CONDITION(&mFeatures, varyingsRequireMatchingPrecisionInSpirv,
@@ -5635,8 +5650,7 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(
         &mFeatures, exposeES32ForTesting,
         mFeatures.exposeNonConformantExtensionsAndVersions.enabled &&
-            (isSoftwareRenderer ||
-             IsPixel4(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID) ||
+            (isSoftwareRenderer || isPixel4 ||
              (IsLinux() && isNvidia && driverVersion < angle::VersionTriple(441, 0, 0)) ||
              (IsWindows() && isIntel)));
 
@@ -5784,7 +5798,10 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, useVmaForImageSuballocation, true);
 
     // Some platforms perform better using BGR565 than RGB565.
-    ANGLE_FEATURE_CONDITION(&mFeatures, preferBGR565ToRGB565, false);
+    bool isBGR565Renderable = hasImageFormatFeatureBits(angle::FormatID::B5G6R5_UNORM,
+                                                        VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT);
+    ANGLE_FEATURE_CONDITION(&mFeatures, preferBGR565ToRGB565,
+                            isBGR565Renderable && isQualcommProprietary && !isPixel4);
 
     // Emit SPIR-V 1.4 when supported.  The following old drivers have various bugs with SPIR-V 1.4:
     //

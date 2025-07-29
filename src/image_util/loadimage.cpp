@@ -1151,6 +1151,40 @@ void LoadRGB10A2ToRGB565(const ImageLoadContext &context,
     }
 }
 
+void LoadRGB10A2ToBGR565(const ImageLoadContext &context,
+                         size_t width,
+                         size_t height,
+                         size_t depth,
+                         const uint8_t *input,
+                         size_t inputRowPitch,
+                         size_t inputDepthPitch,
+                         uint8_t *output,
+                         size_t outputRowPitch,
+                         size_t outputDepthPitch)
+{
+    ASSERT(IsLittleEndian());
+    for (size_t z = 0; z < depth; z++)
+    {
+        for (size_t y = 0; y < height; y++)
+        {
+            const R10G10B10A2 *source =
+                priv::OffsetDataPointer<R10G10B10A2>(input, y, z, inputRowPitch, inputDepthPitch);
+            uint16_t *dest =
+                priv::OffsetDataPointer<uint16_t>(output, y, z, outputRowPitch, outputDepthPitch);
+            for (size_t x = 0; x < width; x++)
+            {
+                R10G10B10A2 rgb10a2 = source[x];
+
+                uint16_t r5 = static_cast<uint16_t>(rgb10a2.R >> 5u);
+                uint16_t g6 = static_cast<uint16_t>(rgb10a2.G >> 4u);
+                uint16_t b5 = static_cast<uint16_t>(rgb10a2.B >> 5u);
+
+                dest[x] = (b5 << 11) | (g6 << 5) | r5;
+            }
+        }
+    }
+}
+
 void LoadRGB5A1ToA1RGB5(const ImageLoadContext &context,
                         size_t width,
                         size_t height,

@@ -18661,7 +18661,8 @@ ANGLE_INSTANTIATE_TEST_ES2(SamplerArrayAsFunctionParameterTest);
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DTestES3);
 ANGLE_INSTANTIATE_TEST_ES3_AND(Texture2DTestES3,
                                ES3_VULKAN().enable(Feature::AllocateNonZeroMemory),
-                               ES3_VULKAN().enable(Feature::ForceFallbackFormat));
+                               ES3_VULKAN().enable(Feature::ForceFallbackFormat),
+                               ES3_VULKAN_SWIFTSHADER().enable(Feature::PreferBGR565ToRGB565));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Texture2DMemoryTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(Texture2DMemoryTestES3);
@@ -18719,7 +18720,8 @@ ANGLE_INSTANTIATE_TEST_ES2(SamplerInStructArrayAsFunctionParameterTest);
 ANGLE_INSTANTIATE_TEST_ES2(SamplerInNestedStructAsFunctionParameterTest);
 ANGLE_INSTANTIATE_TEST_ES2(SamplerInStructAndOtherVariableTest);
 ANGLE_INSTANTIATE_TEST_ES2(TextureAnisotropyTest);
-ANGLE_INSTANTIATE_TEST_ES2(TextureBorderClampTest);
+ANGLE_INSTANTIATE_TEST_ES2_AND(TextureBorderClampTest,
+                               ES2_VULKAN_SWIFTSHADER().enable(Feature::PreferBGR565ToRGB565));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureBorderClampTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(TextureBorderClampTestES3);

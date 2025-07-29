@@ -1181,6 +1181,14 @@ angle::FormatID WindowSurfaceVk::getActualFormatID(vk::Renderer *renderer)
     {
         actualFormatID = angle::FormatID::R8G8B8A8_UNORM;
     }
+
+    // For the devices that prefer using BGR565 instead of RGB565, the swapchain images should
+    // remain as RGB565, since creating BGR565 surfaces is currently not supported.
+    if (renderer->getFeatures().preferBGR565ToRGB565.enabled &&
+        intendedFormatID == angle::FormatID::R5G6B5_UNORM)
+    {
+        actualFormatID = angle::FormatID::R5G6B5_UNORM;
+    }
     return actualFormatID;
 }
 
