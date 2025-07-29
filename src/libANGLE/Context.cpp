@@ -4460,6 +4460,14 @@ void Context::initCaps()
                   "mobile";
         extensions->depth32OES = false;
 
+        // The corresponding Vulkan extension is presently limited to ARM and Qualcomm
+        INFO()
+            << "Disabling GL_EXT_texture_compression_astc_decode_mode and "
+               "GL_EXT_texture_compression_astc_decode_mode_rgb9e5 during capture, which are not "
+               "yet widely supported";
+        extensions->textureCompressionAstcDecodeModeEXT       = false;
+        extensions->textureCompressionAstcDecodeModeRgb9e5EXT = false;
+
         // Pixel 4 (Qualcomm) only supports 6 atomic counter buffer bindings.
         constexpr GLint maxAtomicCounterBufferBindings = 6;
         INFO() << "Limiting max atomic counter buffer bindings to "
