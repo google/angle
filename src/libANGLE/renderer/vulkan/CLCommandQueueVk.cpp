@@ -2348,7 +2348,6 @@ angle::Result CLCommandQueueVk::finishQueueSerialInternal(const QueueSerial queu
     // Events associated with this queue serial and ready to be marked complete
     ANGLE_TRY(setEventsWithQueueSerialToState(queueSerial, cl::ExecutionStatus::Complete));
 
-    mExternalEvents.clear();
     mCommandsStateMap.erase(queueSerial);
 
     return angle::Result::Continue;
