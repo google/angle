@@ -3264,7 +3264,7 @@ angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
     // create an RGB image that is otherwise identical to the YUV image. This new RGB image
     // will be used as the draw attachment, while the original YUV image is used as the resolve
     // attachment.
-    if (mImage->isYuvResolve() && mRgbDrawImageForYuvResolve == nullptr &&
+    if (mImage->isYuvExternalFormat() && mRgbDrawImageForYuvResolve == nullptr &&
         !contextVk->getRenderer()->nullColorAttachmentWithExternalFormatResolve())
     {
         vk::Renderer *renderer = contextVk->getRenderer();
@@ -3387,7 +3387,7 @@ void TextureVk::initSingleLayerRenderTargets(ContextVk *contextVk,
     if (isMultisampledRenderToTexture)
     {
         ASSERT(mMultisampledImages->at(renderToTextureIndex)[requestedLevel].valid());
-        ASSERT(!mImage->isYuvResolve());
+        ASSERT(!mImage->isYuvExternalFormat());
 
         resolveImage      = drawImage;
         resolveImageViews = drawImageViews;
@@ -3406,7 +3406,7 @@ void TextureVk::initSingleLayerRenderTargets(ContextVk *contextVk,
             transience = RenderTargetTransience::MultisampledTransient;
         }
     }
-    else if (mImage->isYuvResolve())
+    else if (mImage->isYuvExternalFormat())
     {
         // If rendering to YUV, similar to multisampled render to texture
         resolveImage      = drawImage;
@@ -4170,7 +4170,7 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
 
         // If fixed rate compression is supported by this type, not support YUV now.
         const vk::Format &format = renderer->getFormat(intendedImageFormatID);
-        if (!mImage->isYuvResolve() &&
+        if (!mImage->isYuvExternalFormat() &&
             (GetFormatSupportedCompressionRates(renderer, format, 0, nullptr) != 0))
         {
             GetCompressionFixedRate(&compressionInfoVar, &compressionRates,

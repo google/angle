@@ -158,7 +158,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     }
     bool isYuvResolve() const
     {
-        return mResolveImage != nullptr ? mResolveImage->isYuvResolve() : false;
+        return mResolveImage != nullptr ? mResolveImage->isYuvExternalFormat() : false;
     }
 
     void onNewFramebuffer(const vk::SharedFramebufferCacheKey &sharedFramebufferCacheKey)

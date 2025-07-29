@@ -12748,7 +12748,7 @@ angle::Result ImageViewHelper::initReadViewsImpl(ContextVk *contextVk,
             contextVk, viewType, aspectFlags, readSwizzle, &getReadImageView(), baseLevel,
             levelCount, baseLayer, layerCount, imageUsageFlags, astcDecodePrecision));
 
-        if (image.getActualFormat().isYUV)
+        if (image.hasImmutableSampler())
         {
             ANGLE_TRY(image.initLayerImageViewWithYuvModeOverride(
                 contextVk, viewType, aspectFlags, readSwizzle,
@@ -12845,7 +12845,7 @@ angle::Result ImageViewHelper::initLinearAndSrgbReadViewsImpl(ContextVk *context
                 baseLayer, layerCount, imageUsageFlags, srgbFormat, astcDecodePrecision));
         }
 
-        if (image.getActualFormat().isYUV)
+        if (image.hasImmutableSampler())
         {
             ANGLE_TRY(image.initLayerImageViewWithYuvModeOverride(
                 contextVk, viewType, aspectFlags, readSwizzle,

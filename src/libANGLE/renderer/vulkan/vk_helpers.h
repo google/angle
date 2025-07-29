@@ -2943,7 +2943,7 @@ class ImageHelper final : public Resource, public angle::Subject
                  VkImageAspectFlags aspectFlags);
     bool hasImmutableSampler() const { return mYcbcrConversionDesc.valid(); }
     uint64_t getExternalFormat() const { return mYcbcrConversionDesc.getExternalFormat(); }
-    bool isYuvResolve() const { return mYcbcrConversionDesc.getExternalFormat() != 0; }
+    bool isYuvExternalFormat() const { return mYcbcrConversionDesc.getExternalFormat() != 0; }
     bool updateChromaFilter(Renderer *renderer, VkFilter filter)
     {
         return mYcbcrConversionDesc.updateChromaFilter(renderer, filter);
