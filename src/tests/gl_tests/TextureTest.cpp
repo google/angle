@@ -4953,6 +4953,8 @@ TEST_P(Texture3DTestES2, CopySubImageAlpha)
 // Test that defining a 2D texture array fails with Texture3DOES on ES2.
 TEST_P(Texture3DTestES2, DefineTexture2DArrayShouldFail)
 {
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() > 2);
+
     ANGLE_SKIP_TEST_IF(!hasTexture3DExt());
 
     // http://anglebug.com/42264265
