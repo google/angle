@@ -202,14 +202,9 @@ void IOSurfaceSurfaceCGL::setSwapInterval(const egl::Display *display, EGLint in
     UNREACHABLE();
 }
 
-EGLint IOSurfaceSurfaceCGL::getWidth() const
+gl::Extents IOSurfaceSurfaceCGL::getSize() const
 {
-    return mWidth;
-}
-
-EGLint IOSurfaceSurfaceCGL::getHeight() const
-{
-    return mHeight;
+    return gl::Extents(mWidth, mHeight, 1);
 }
 
 EGLint IOSurfaceSurfaceCGL::isPostSubBufferSupported() const

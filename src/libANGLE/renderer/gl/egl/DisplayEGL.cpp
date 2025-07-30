@@ -454,8 +454,19 @@ class ExternalSurfaceEGL : public SurfaceEGL
 
     egl::Error initialize(const egl::Display *display) override { return egl::NoError(); }
     EGLint getSwapBehavior() const override { return EGL_BUFFER_DESTROYED; }
-    EGLint getWidth() const override { return mWidth; }
-    EGLint getHeight() const override { return mHeight; }
+    gl::Extents getSize() const final { return gl::Extents(mWidth, mHeight, 1); }
+    egl::Error getUserSize(const egl::Display *display, EGLint *width, EGLint *height) const final
+    {
+        if (width != nullptr)
+        {
+            *width = mWidth;
+        }
+        if (height != nullptr)
+        {
+            *height = mHeight;
+        }
+        return egl::NoError();
+    }
     bool isExternal() const override { return true; }
 
   private:

@@ -1396,8 +1396,7 @@ angle::Result TextureD3D_2D::bindTexImage(const gl::Context *context, egl::Surfa
 {
     GLenum internalformat = surface->getConfig()->renderTargetFormat;
 
-    gl::Extents size(surface->getWidth(), surface->getHeight(), 1);
-    ANGLE_TRY(redefineImage(context, 0, internalformat, size, true));
+    ANGLE_TRY(redefineImage(context, 0, internalformat, surface->getSize(), true));
 
     ANGLE_TRY(releaseTexStorage(context, gl::TexLevelMask()));
 

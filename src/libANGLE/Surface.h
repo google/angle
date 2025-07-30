@@ -112,10 +112,9 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
 
     const Config *getConfig() const;
 
-    // width and height can change with client window resizing
+    // size can change with client window resizing
     // Size must be resolved before the call either during state synchronization or explicitly.
-    EGLint getWidth() const;
-    EGLint getHeight() const;
+    gl::Extents getSize() const;
     // Unresolved Surface size until render target is first accessed (e.g. after draw).
     egl::Error getUserSize(const egl::Display *display, EGLint *width, EGLint *height) const;
     EGLint getPixelAspectRatio() const;

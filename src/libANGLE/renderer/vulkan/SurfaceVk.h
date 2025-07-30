@@ -37,9 +37,8 @@ class SurfaceVk : public SurfaceImpl, public angle::ObserverInterface, public vk
     // We monitor the staging buffer for changes. This handles staged data from outside this class.
     void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
 
-    // width and height can change with client window resizing
-    EGLint getWidth() const override;
-    EGLint getHeight() const override;
+    // size can change with client window resizing
+    gl::Extents getSize() const override;
 
     EGLint mWidth;
     EGLint mHeight;
@@ -308,8 +307,7 @@ class WindowSurfaceVk : public SurfaceVk
 
     // Explicitly resolves surface size to use before state synchronization (e.g. validation).
     angle::Result ensureSizeResolved(const gl::Context *context) final;
-    EGLint getWidth() const final;
-    EGLint getHeight() const final;
+    gl::Extents getSize() const final;
 
     // Unresolved Surface size until render target is first accessed (e.g. after draw).
     egl::Error getUserSize(const egl::Display *display, EGLint *width, EGLint *height) const final;

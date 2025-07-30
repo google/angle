@@ -138,13 +138,17 @@ egl::Error SurfaceImpl::getUserSize(const egl::Display *display,
                                     EGLint *width,
                                     EGLint *height) const
 {
+    // Override getUserSize() if it is not the same as getSize() or if its usage is suboptimal.
+    // In case of override use "final" for both methods when possible to prevent accidental bugs.
+    const gl::Extents size = getSize();
+    ASSERT(size.depth == 1);
     if (width != nullptr)
     {
-        *width = getWidth();
+        *width = size.width;
     }
     if (height != nullptr)
     {
-        *height = getHeight();
+        *height = size.height;
     }
     return egl::NoError();
 }

@@ -48,8 +48,7 @@ class SurfaceD3D : public SurfaceImpl
     void setFixedWidth(EGLint width) override;
     void setFixedHeight(EGLint height) override;
 
-    EGLint getWidth() const override;
-    EGLint getHeight() const override;
+    gl::Extents getSize() const override;
 
     EGLint isPostSubBufferSupported() const override;
     EGLint getSwapBehavior() const override;

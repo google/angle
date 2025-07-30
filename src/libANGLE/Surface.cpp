@@ -533,14 +533,11 @@ EGLint Surface::isFixedSize() const
     return mFixedSize;
 }
 
-EGLint Surface::getWidth() const
+gl::Extents Surface::getSize() const
 {
-    return mFixedSize ? static_cast<EGLint>(mFixedWidth) : mImplementation->getWidth();
-}
-
-EGLint Surface::getHeight() const
-{
-    return mFixedSize ? static_cast<EGLint>(mFixedHeight) : mImplementation->getHeight();
+    return mFixedSize
+               ? gl::Extents(static_cast<EGLint>(mFixedWidth), static_cast<EGLint>(mFixedHeight), 1)
+               : mImplementation->getSize();
 }
 
 egl::Error Surface::getUserSize(const egl::Display *display, EGLint *width, EGLint *height) const
@@ -625,7 +622,7 @@ bool Surface::isAttachmentSpecified(const gl::ImageIndex & /*imageIndex*/) const
 
 gl::Extents Surface::getAttachmentSize(const gl::ImageIndex & /*target*/) const
 {
-    return gl::Extents(getWidth(), getHeight(), 1);
+    return getSize();
 }
 
 gl::Format Surface::getAttachmentFormat(GLenum binding, const gl::ImageIndex &target) const

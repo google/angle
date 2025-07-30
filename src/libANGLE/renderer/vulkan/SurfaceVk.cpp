@@ -608,14 +608,9 @@ void SurfaceVk::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMe
     onStateChange(angle::SubjectMessage::SubjectChanged);
 }
 
-EGLint SurfaceVk::getWidth() const
+gl::Extents SurfaceVk::getSize() const
 {
-    return mWidth;
-}
-
-EGLint SurfaceVk::getHeight() const
-{
-    return mHeight;
+    return gl::Extents(mWidth, mHeight, 1);
 }
 
 OffscreenSurfaceVk::AttachmentImage::AttachmentImage(SurfaceVk *surfaceVk)
@@ -857,8 +852,8 @@ egl::Error OffscreenSurfaceVk::lockSurface(const egl::Display *display,
     ASSERT(image->valid());
 
     angle::Result result =
-        LockSurfaceImpl(vk::GetImpl(display), image, mLockBufferHelper, getWidth(), getHeight(),
-                        usageHint, preservePixels, bufferPtrOut, bufferPitchOut);
+        LockSurfaceImpl(vk::GetImpl(display), image, mLockBufferHelper, mWidth, mHeight, usageHint,
+                        preservePixels, bufferPtrOut, bufferPitchOut);
     return angle::ToEGL(result, EGL_BAD_ACCESS);
 }
 
@@ -868,8 +863,8 @@ egl::Error OffscreenSurfaceVk::unlockSurface(const egl::Display *display, bool p
     ASSERT(image->valid());
     ASSERT(mLockBufferHelper.valid());
 
-    return angle::ToEGL(UnlockSurfaceImpl(vk::GetImpl(display), image, mLockBufferHelper,
-                                          getWidth(), getHeight(), preservePixels),
+    return angle::ToEGL(UnlockSurfaceImpl(vk::GetImpl(display), image, mLockBufferHelper, mWidth,
+                                          mHeight, preservePixels),
                         EGL_BAD_ACCESS);
 }
 
@@ -2560,8 +2555,8 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
     std::vector<VkRectLayerKHR> vkRects;
     if (contextVk->getFeatures().supportsIncrementalPresent.enabled && (n_rects > 0))
     {
-        EGLint width  = getWidth();
-        EGLint height = getHeight();
+        EGLint width  = mWidth;
+        EGLint height = mHeight;
 
         const EGLint *eglRects       = rects;
         presentRegion.rectangleCount = n_rects;
@@ -3170,16 +3165,10 @@ angle::Result WindowSurfaceVk::ensureSizeResolved(const gl::Context *context)
     return angle::Result::Continue;
 }
 
-EGLint WindowSurfaceVk::getWidth() const
+gl::Extents WindowSurfaceVk::getSize() const
 {
     ASSERT(mSizeState == SurfaceSizeState::Resolved);
-    return mWidth;
-}
-
-EGLint WindowSurfaceVk::getHeight() const
-{
-    ASSERT(mSizeState == SurfaceSizeState::Resolved);
-    return mHeight;
+    return gl::Extents(mWidth, mHeight, 1);
 }
 
 egl::Error WindowSurfaceVk::getUserSize(const egl::Display *display,
@@ -3192,11 +3181,11 @@ egl::Error WindowSurfaceVk::getUserSize(const egl::Display *display,
         // Surface size is resolved; use current size.
         if (width != nullptr)
         {
-            *width = getWidth();
+            *width = mWidth;
         }
         if (height != nullptr)
         {
-            *height = getHeight();
+            *height = mHeight;
         }
         return egl::NoError();
     }
@@ -3574,9 +3563,8 @@ egl::Error WindowSurfaceVk::lockSurface(const egl::Display *display,
     vk::ImageHelper *image = mSwapchainImages[mCurrentSwapchainImageIndex].image.get();
     ASSERT(image->valid());
 
-    angle::Result result =
-        LockSurfaceImpl(displayVk, image, mLockBufferHelper, getWidth(), getHeight(), usageHint,
-                        preservePixels, bufferPtrOut, bufferPitchOut);
+    angle::Result result = LockSurfaceImpl(displayVk, image, mLockBufferHelper, mWidth, mHeight,
+                                           usageHint, preservePixels, bufferPtrOut, bufferPitchOut);
     return angle::ToEGL(result, EGL_BAD_ACCESS);
 }
 
@@ -3588,8 +3576,8 @@ egl::Error WindowSurfaceVk::unlockSurface(const egl::Display *display, bool pres
     ASSERT(image->valid());
     ASSERT(mLockBufferHelper.valid());
 
-    return angle::ToEGL(UnlockSurfaceImpl(vk::GetImpl(display), image, mLockBufferHelper,
-                                          getWidth(), getHeight(), preservePixels),
+    return angle::ToEGL(UnlockSurfaceImpl(vk::GetImpl(display), image, mLockBufferHelper, mWidth,
+                                          mHeight, preservePixels),
                         EGL_BAD_ACCESS);
 }
 

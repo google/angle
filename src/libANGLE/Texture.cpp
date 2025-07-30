@@ -2056,8 +2056,7 @@ angle::Result Texture::bindTexImageFromSurface(Context *context, egl::Surface *s
 
     // Set the image info to the size and format of the surface
     ASSERT(mState.mType == TextureType::_2D || mState.mType == TextureType::Rectangle);
-    Extents size(surface->getWidth(), surface->getHeight(), 1);
-    ImageDesc desc(size, surface->getBindTexImageFormat(), InitState::Initialized);
+    ImageDesc desc(surface->getSize(), surface->getBindTexImageFormat(), InitState::Initialized);
     mState.setImageDesc(NonCubeTextureTypeToTarget(mState.mType), 0, desc);
     mState.mHasProtectedContent = surface->hasProtectedContent();
 

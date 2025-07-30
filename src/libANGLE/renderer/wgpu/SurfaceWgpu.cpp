@@ -96,15 +96,11 @@ egl::Error OffscreenSurfaceWgpu::releaseTexImage(const gl::Context *context, EGL
 
 void OffscreenSurfaceWgpu::setSwapInterval(const egl::Display *display, EGLint interval) {}
 
-EGLint OffscreenSurfaceWgpu::getWidth() const
+gl::Extents OffscreenSurfaceWgpu::getSize() const
 {
-    return mWidth;
+    return gl::Extents(mWidth, mHeight, 1);
 }
 
-EGLint OffscreenSurfaceWgpu::getHeight() const
-{
-    return mHeight;
-}
 
 EGLint OffscreenSurfaceWgpu::getSwapBehavior() const
 {
@@ -269,14 +265,9 @@ void WindowSurfaceWgpu::setSwapInterval(const egl::Display *display, EGLint inte
     UNIMPLEMENTED();
 }
 
-EGLint WindowSurfaceWgpu::getWidth() const
+gl::Extents WindowSurfaceWgpu::getSize() const
 {
-    return mCurrentSurfaceSize.width;
-}
-
-EGLint WindowSurfaceWgpu::getHeight() const
-{
-    return mCurrentSurfaceSize.height;
+    return mCurrentSurfaceSize;
 }
 
 EGLint WindowSurfaceWgpu::getSwapBehavior() const
