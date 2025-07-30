@@ -5938,12 +5938,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     // Only enable VK_EXT_host_image_copy on hardware where identicalMemoryTypeRequirements is set.
     // That lets ANGLE avoid having to fallback to non-host-copyable image allocations if the
     // host-copyable one fails due to out-of-that-specific-kind-of-memory.
-    //
-    // Disabled on Fuchsia until they upgrade their version of VVL.
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsHostImageCopy,
                             mHostImageCopyFeatures.hostImageCopy == VK_TRUE &&
-                                mHostImageCopyProperties.identicalMemoryTypeRequirements &&
-                                !IsFuchsia());
+                                mHostImageCopyProperties.identicalMemoryTypeRequirements);
 
     // 1) host vk driver does not natively support ETC format.
     // 2) host vk driver supports BC format.
