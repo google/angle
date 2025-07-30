@@ -131,8 +131,27 @@ TEST_P(RendererTest, RequestedRendererCreated)
         ASSERT_TRUE(IsVulkan());
     }
 
-    EGLint glesMajorVersion = GetParam().majorVersion;
-    EGLint glesMinorVersion = GetParam().minorVersion;
+    // EGL_ANGLE_create_context_backwards_compatible is required to guarantee the expected context
+    // version.
+    EGLint glesMajorVersion;
+    EGLint glesMinorVersion;
+    EGLWindow *window  = getEGLWindow();
+    EGLDisplay display = window->getDisplay();
+    if (IsEGLDisplayExtensionEnabled(display, "EGL_ANGLE_create_context_backwards_compatible"))
+    {
+        // If the extension is available, verify the requested version matches the returned version.
+        glesMajorVersion = GetParam().majorVersion;
+        glesMinorVersion = GetParam().minorVersion;
+    }
+    else
+    {
+        // Otherwise, get the created context's (maximally conformant) version.
+        glesMajorVersion = getClientMajorVersion();
+        glesMinorVersion = getClientMinorVersion();
+        // Verify that the returned version is >= the requested version.
+        ASSERT_GE(glesMajorVersion, GetParam().majorVersion);
+        ASSERT_GE(glesMinorVersion, GetParam().minorVersion);
+    }
 
     std::ostringstream expectedVersionString;
     expectedVersionString << "es " << glesMajorVersion << "." << glesMinorVersion;
