@@ -573,6 +573,7 @@ void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
 
     outExtensions->bufferAgeEXT = true;
 
+    outExtensions->presentationTime    = getFeatures().supportsTimestampSurfaceAttribute.enabled;
     outExtensions->protectedContentEXT = (getFeatures().supportsProtectedMemory.enabled &&
                                           getFeatures().supportsSurfaceProtectedSwapchains.enabled);
 

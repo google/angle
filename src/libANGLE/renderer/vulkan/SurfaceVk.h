@@ -10,6 +10,7 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_SURFACEVK_H_
 #define LIBANGLE_RENDERER_VULKAN_SURFACEVK_H_
 
+#include <optional>
 #include "common/CircularBuffer.h"
 #include "common/SimpleMutex.h"
 #include "common/vulkan/vk_headers.h"
@@ -368,6 +369,7 @@ class WindowSurfaceVk : public SurfaceVk
     bool hasStagedUpdates() const;
 
     void setTimestampsEnabled(bool enabled) override;
+    egl::Error setPresentationTime(EGLnsecsANDROID time) override;
 
     egl::Error getCompressionRate(const egl::Display *display,
                                   const gl::Context *context,
@@ -549,6 +551,10 @@ class WindowSurfaceVk : public SurfaceVk
 
     // EGL_EXT_buffer_age: Track frame count.
     uint64_t mFrameCount;
+    // EGL_ANDROID_presentation_time: Next frame's id and presentation time
+    // used for VK_GOOGLE_display_timing.
+    uint32_t mPresentID;
+    std::optional<EGLnsecsANDROID> mDesiredPresentTime;
 
     // EGL_KHR_lock_surface3
     vk::BufferHelper mLockBufferHelper;

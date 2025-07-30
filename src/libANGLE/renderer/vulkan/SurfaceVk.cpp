@@ -1032,6 +1032,7 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState, EGLNativ
       mDepthStencilImageBinding(this, kAnySurfaceImageSubjectIndex),
       mColorImageMSBinding(this, kAnySurfaceImageSubjectIndex),
       mFrameCount(1),
+      mPresentID(0),
       mBufferAgeQueryFrameNumber(0)
 {
     // Initialize the color render target with the multisampled targets.  If not multisampled, the
@@ -2618,6 +2619,23 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
                 .image->getAcquireNextImageSemaphore()
                 .valid());
 
+    // EGL_ANDROID_presentation_time: set the desired presentation time for the frame.
+    VkPresentTimesInfoGOOGLE presentTimesInfo = {};
+    VkPresentTimeGOOGLE presentTime           = {};
+    if (mDesiredPresentTime.has_value())
+    {
+        ASSERT(contextVk->getFeatures().supportsTimestampSurfaceAttribute.enabled);
+        presentTime.presentID          = mPresentID++;
+        presentTime.desiredPresentTime = mDesiredPresentTime.value();
+        mDesiredPresentTime.reset();
+
+        presentTimesInfo.sType          = VK_STRUCTURE_TYPE_PRESENT_TIMES_INFO_GOOGLE;
+        presentTimesInfo.swapchainCount = 1;
+        presentTimesInfo.pTimes         = &presentTime;
+
+        vk::AddToPNextChain(&presentInfo, &presentTimesInfo);
+    }
+
     VkResult presentResult =
         renderer->queuePresent(contextVk, contextVk->getPriority(), presentInfo);
 
@@ -2833,6 +2851,12 @@ void WindowSurfaceVk::setTimestampsEnabled(bool enabled)
 {
     // The frontend has already cached the state, nothing to do.
     ASSERT(IsAndroid());
+}
+
+egl::Error WindowSurfaceVk::setPresentationTime(EGLnsecsANDROID time)
+{
+    mDesiredPresentTime = time;
+    return egl::NoError();
 }
 
 void WindowSurfaceVk::deferAcquireNextImage()
