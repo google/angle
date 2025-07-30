@@ -65,7 +65,7 @@ struct VertexAttribute final : private angle::NonCopyable
     VertexAttribute &operator=(VertexAttribute &&attrib);
 
     // Called from VertexArray.
-    void updateCachedElementLimit(const VertexBinding &binding, const Buffer *buffer);
+    void updateCachedElementLimit(const VertexBinding &binding, GLint64 bufferSize);
     GLint64 getCachedElementLimit() const { return mCachedElementLimit; }
 
     bool enabled;  // For glEnable/DisableVertexAttribArray

@@ -63,10 +63,7 @@ class VertexArrayState final : angle::NonCopyable
         return mVertexAttributes[attribIndex].bindingIndex;
     }
 
-    void setAttribBindingAndBuffer(const Context *context,
-                                   size_t attribIndex,
-                                   GLuint newBindingIndex,
-                                   const Buffer *newBindingBuffer);
+    void setAttribBinding(size_t attribIndex, GLuint newBindingIndex);
 
     // Extra validation performed on the Vertex Array.
     bool hasEnabledNullPointerClientArray() const;
@@ -238,6 +235,10 @@ class VertexArrayPrivate : public angle::NonCopyable
     void setBufferAccessValidationEnabled(bool enabled)
     {
         mBufferAccessValidationEnabled = enabled;
+        if (mBufferAccessValidationEnabled)
+        {
+            mCachedBufferSize.resize(mState.getMaxBindings(), 0);
+        }
     }
 
     size_t getBindingIndexFromAttribIndex(size_t attribIndex) const
@@ -251,12 +252,14 @@ class VertexArrayPrivate : public angle::NonCopyable
     // This is a performance optimization for buffer binding. Allows element array buffer updates.
     friend class State;
 
+    void setAttribBinding(size_t attribIndex, GLuint newBindingIndex);
+
     void setDirtyAttribBit(size_t attribIndex, DirtyAttribBitType dirtyAttribBit);
     void setDirtyBindingBit(size_t bindingIndex, DirtyBindingBitType dirtyBindingBit);
     void clearDirtyAttribBit(size_t attribIndex, DirtyAttribBitType dirtyAttribBit);
 
     // These are used to optimize draw call validation.
-    void updateCachedBufferBindingSize(VertexBinding *binding, const Buffer *buffer);
+    void updateCachedElementLimit(const VertexBinding &binding, GLint64 bufferSize);
     void updateCachedTransformFeedbackBindingValidation(size_t bindingIndex, const Buffer *buffer);
     void updateCachedArrayBuffersMasks(bool isMapped,
                                        bool isImmutable,
@@ -285,13 +288,16 @@ class VertexArrayPrivate : public angle::NonCopyable
     mutable IndexRangeInlineCache mIndexRangeInlineCache;
     bool mBufferAccessValidationEnabled;
 
+    // Cached buffer properties indexed by bindingIndex
+    std::vector<GLint64> mCachedBufferSize;
+
     // Used for validation cache. Indexed by attribute.
     AttributesMask mCachedMappedArrayBuffers;
     AttributesMask mCachedMutableOrImpersistentArrayBuffers;
     AttributesMask mCachedInvalidMappedArrayBuffer;
 };
 
-using VertexArrayBuffers = std::vector<gl::BindingPointer<gl::Buffer>>;
+using VertexArrayBuffers = std::array<gl::BindingPointer<gl::Buffer>, kElementArrayBufferIndex + 1>;
 
 class VertexArray final : public VertexArrayPrivate, public LabeledObject, public angle::Subject
 {
@@ -379,12 +385,6 @@ class VertexArray final : public VertexArrayPrivate, public LabeledObject, publi
                          VertexArrayBufferBindingMask vertexArrayBufferBindingMask);
 
     const VertexArrayBuffers &getBufferBindingPointers() const { return mVertexArrayBuffers; }
-
-    void setAttribBinding(const Context *context, size_t attribIndex, GLuint newBindingIndex)
-    {
-        const Buffer *newBindingBuffer = mVertexArrayBuffers[newBindingIndex].get();
-        mState.setAttribBindingAndBuffer(context, attribIndex, newBindingIndex, newBindingBuffer);
-    }
 
   private:
     ~VertexArray() override;
