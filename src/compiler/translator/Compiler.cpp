@@ -920,24 +920,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    // For now, rewrite pixel local storage before collecting variables or any operations on images.
-    //
-    // TODO(anglebug.com/40096838):
-    //   Should this actually run after collecting variables?
-    //   Do we need more introspection?
-    //   Do we want to hide rewritten shader image uniforms from glGetActiveUniform?
-    if (hasPixelLocalStorageUniforms())
-    {
-        ASSERT(
-            IsExtensionEnabled(mExtensionBehavior, TExtension::ANGLE_shader_pixel_local_storage));
-        if (!RewritePixelLocalStorage(this, root, getSymbolTable(), compileOptions,
-                                      getShaderVersion()))
-        {
-            mDiagnostics.globalError("internal compiler error translating pixel local storage");
-            return false;
-        }
-    }
-
     if (shouldRunLoopAndIndexingValidation(compileOptions) &&
         !ValidateLimitations(root, mShaderType, &mSymbolTable, &mDiagnostics))
     {
@@ -1077,6 +1059,24 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
                          IsWebGLBasedSpec(mShaderSpec), &mDiagnostics))
     {
         return false;
+    }
+
+    // For now, rewrite pixel local storage before collecting variables or any operations on images.
+    //
+    // TODO(anglebug.com/40096838):
+    //   Should this actually run after collecting variables?
+    //   Do we need more introspection?
+    //   Do we want to hide rewritten shader image uniforms from glGetActiveUniform?
+    if (hasPixelLocalStorageUniforms())
+    {
+        ASSERT(
+            IsExtensionEnabled(mExtensionBehavior, TExtension::ANGLE_shader_pixel_local_storage));
+        if (!RewritePixelLocalStorage(this, root, getSymbolTable(), compileOptions,
+                                      getShaderVersion()))
+        {
+            mDiagnostics.globalError("internal compiler error translating pixel local storage");
+            return false;
+        }
     }
 
     // Clamping uniform array bounds needs to happen after validateLimitations pass.

@@ -4475,6 +4475,37 @@ TEST_P(GLSLTest_ES3, NestedDynamicIndexingInLValue)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that an inout value in a location beyond the MaxDrawBuffer limit when using the shader
+// framebuffer fetch extension results in a compilation error.
+// (Based on a fuzzer-discovered issue)
+TEST_P(GLSLTest_ES3, CompileFSWithInoutLocBeyondMaxDrawBuffers)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+
+    GLint maxDrawBuffers;
+    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
+
+    const std::string fs = R"(#version 300 es
+#extension GL_EXT_shader_framebuffer_fetch : require
+precision highp float;
+layout(location = )" + std::to_string(maxDrawBuffers) +
+                           R"() inout vec4 inoutArray[1];
+void main()
+{
+    vec4 val = inoutArray[0];
+    inoutArray[0] = val + vec4(0.1, 0.2, 0.3, 0.4);
+})";
+
+    GLuint shader              = glCreateShader(GL_FRAGMENT_SHADER);
+    const char *sourceArray[1] = {fs.c_str()};
+    glShaderSource(shader, 1, sourceArray, nullptr);
+    glCompileShader(shader);
+
+    GLint compileResult;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
+    EXPECT_EQ(compileResult, 0);
+}
+
 class WebGLGLSLTest : public GLSLTest
 {
   protected:
