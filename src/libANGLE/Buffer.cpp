@@ -278,10 +278,10 @@ angle::Result Buffer::bufferExternalDataImpl(Context *context,
     }
 
     ANGLE_TRY(setDataWithUsageFlags(context, target, clientBuffer, nullptr, size,
-                                    BufferUsage::InvalidEnum, flags, BufferStorage::Immutable));
+                                    BufferUsage::DynamicDraw, flags, BufferStorage::Immutable));
 
     mIndexRangeCache.clear();
-    mState.mUsage                = BufferUsage::InvalidEnum;
+    mState.mUsage                = BufferUsage::DynamicDraw;
     mState.mSize                 = size;
     mState.mImmutable            = GL_TRUE;
     mState.mStorageExtUsageFlags = flags;
