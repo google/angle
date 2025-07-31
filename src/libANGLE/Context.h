@@ -147,6 +147,9 @@ class ErrorSet : angle::NonCopyable
     bool mContextLostForced;
     GraphicsResetStatus mResetStatus;
 
+    std::atomic<uint32_t> mErrorMessageCount;
+    uint32_t mMaxErrorMessages;
+
     // The following are atomic and lockless as they are very frequently accessed.
     std::atomic_int mSkipValidation;
     std::atomic_int mContextLost;

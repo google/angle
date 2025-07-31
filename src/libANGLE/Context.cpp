@@ -10036,6 +10036,8 @@ ErrorSet::ErrorSet(Debug *debug,
       mLoseContextOnOutOfMemory(frontendFeatures.loseContextOnOutOfMemory.enabled),
       mContextLostForced(false),
       mResetStatus(GraphicsResetStatus::NoError),
+      mErrorMessageCount(0),
+      mMaxErrorMessages(GetDebug(attribs) ? std::numeric_limits<uint32_t>::max() / 2 : 16),
       mSkipValidation(GetNoError(attribs)),
       mContextLost(0),
 #if defined(ANGLE_ENABLE_ASSERTS)
@@ -10073,9 +10075,29 @@ void ErrorSet::handleError(GLenum errorCode,
 
 void ErrorSet::validationError(angle::EntryPoint entryPoint, GLenum errorCode, const char *message)
 {
-    mDebug->insertMessage(
-        GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_ERROR, errorCode, GL_DEBUG_SEVERITY_HIGH,
-        std::string(GetEntryPointName(entryPoint)) + ": " + message, gl::LOG_INFO);
+    bool reportMessage = true;
+    bool isLastMessage = false;
+
+#if !defined(ANGLE_ENABLE_ASSERTS)
+    // In release mode, don't spam validation errors as they come with a performance cost, affecting
+    // applications that make lots of invalid but otherwise harmless calls. Instead, only report the
+    // first few messages. This can still be helpful to application developers who can fix the first
+    // few errors more easily and get more messages on the next run.
+    reportMessage =
+        MessageCounterBelowMaxRepeat(&mErrorMessageCount, mMaxErrorMessages, &isLastMessage);
+#endif
+
+    if (reportMessage)
+    {
+        std::string completeMessage = std::string(GetEntryPointName(entryPoint)) + ": " + message;
+        if (isLastMessage)
+        {
+            completeMessage += " (No more validation messages will be reported)";
+        }
+
+        mDebug->insertMessage(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_ERROR, errorCode,
+                              GL_DEBUG_SEVERITY_HIGH, completeMessage, gl::LOG_INFO);
+    }
 
     pushError(errorCode);
 }
