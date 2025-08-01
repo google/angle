@@ -193,7 +193,7 @@ class VertexArrayPrivate : public angle::NonCopyable
         return mState.getBindingFromAttribIndex(attribIndex);
     }
 
-    void setVertexBindingDivisor(const Context *context, size_t bindingIndex, GLuint divisor);
+    void setVertexBindingDivisor(size_t bindingIndex, GLuint divisor);
 
     size_t getMaxAttribs() const { return mState.getMaxAttribs(); }
     size_t getMaxBindings() const { return mState.getMaxBindings(); }
@@ -246,13 +246,14 @@ class VertexArrayPrivate : public angle::NonCopyable
         return mState.getBindingIndexFromAttribIndex(attribIndex);
     }
 
+    void setVertexAttribBinding(size_t attribIndex, GLuint bindingIndex);
+    void setVertexAttribDivisor(size_t index, GLuint divisor);
+
   protected:
     ~VertexArrayPrivate();
 
     // This is a performance optimization for buffer binding. Allows element array buffer updates.
     friend class State;
-
-    void setAttribBinding(size_t attribIndex, GLuint newBindingIndex);
 
     void setDirtyAttribBit(size_t attribIndex, DirtyAttribBitType dirtyAttribBit);
     void setDirtyBindingBit(size_t bindingIndex, DirtyBindingBitType dirtyBindingBit);
@@ -265,7 +266,6 @@ class VertexArrayPrivate : public angle::NonCopyable
                                        bool isImmutable,
                                        bool isPersistent,
                                        const AttributesMask &boundAttributesMask);
-    void updateCachedMappedArrayBuffersBinding(const VertexBinding &binding, const Buffer *buffer);
 
     // These two functions return true if the state was dirty.
     bool setVertexAttribFormatImpl(VertexAttribute *attrib,
@@ -288,8 +288,14 @@ class VertexArrayPrivate : public angle::NonCopyable
     mutable IndexRangeInlineCache mIndexRangeInlineCache;
     bool mBufferAccessValidationEnabled;
 
-    // Cached buffer properties indexed by bindingIndex
+    // Cached buffer size indexed by bindingIndex, only used when mBufferAccessValidationEnabled is
+    // true.
     std::vector<GLint64> mCachedBufferSize;
+
+    // Cached buffer properties indexed by bindingIndex
+    VertexArrayBufferBindingMask mBufferBindingMask;
+    VertexArrayBufferBindingMask mCachedBufferPropertyMapped;
+    VertexArrayBufferBindingMask mCachedBufferPropertyMutableOrImpersistent;
 
     // Used for validation cache. Indexed by attribute.
     AttributesMask mCachedMappedArrayBuffers;
@@ -348,9 +354,6 @@ class VertexArray final : public VertexArrayPrivate, public LabeledObject, publi
                           Buffer *boundBuffer,
                           GLintptr offset,
                           GLsizei stride);
-
-    void setVertexAttribBinding(const Context *context, size_t attribIndex, GLuint bindingIndex);
-    void setVertexAttribDivisor(const Context *context, size_t index, GLuint divisor);
 
     Buffer *getElementArrayBuffer() const
     {
@@ -412,12 +415,9 @@ class VertexArray final : public VertexArrayPrivate, public LabeledObject, publi
 
     void setDependentDirtyBits(bool contentsChanged,
                                VertexArrayBufferBindingMask bufferBindingMask);
-    void updateCachedMutableOrNonPersistentArrayBuffers(size_t attribIndex);
+    void updateCachedMappedArrayBuffersBinding(size_t bindingIndex);
 
     VertexArrayBuffers mVertexArrayBuffers;
-    // Track which binding index has a buffer bound
-    VertexArrayBufferBindingMask mBufferBindingMask;
-
     rx::VertexArrayImpl *mVertexArray;
 };
 

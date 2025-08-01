@@ -3035,9 +3035,9 @@ void State::setVertexAttribFormat(GLuint attribIndex,
     mDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
 }
 
-void State::setVertexBindingDivisor(const Context *context, GLuint bindingIndex, GLuint divisor)
+void State::setVertexBindingDivisor(GLuint bindingIndex, GLuint divisor)
 {
-    getVertexArray()->setVertexBindingDivisor(context, bindingIndex, divisor);
+    getVertexArray()->setVertexBindingDivisor(bindingIndex, divisor);
     mDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
 }
 
@@ -3353,9 +3353,9 @@ void PrivateState::setEnableVertexAttribArray(unsigned int attribNum, bool enabl
     mDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
 }
 
-void State::setVertexAttribDivisor(const Context *context, GLuint index, GLuint divisor)
+void State::setVertexAttribDivisor(GLuint index, GLuint divisor)
 {
-    getVertexArray()->setVertexAttribDivisor(context, index, divisor);
+    getVertexArray()->setVertexAttribDivisor(index, divisor);
     mDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
 }
 

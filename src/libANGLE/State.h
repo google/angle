@@ -1074,7 +1074,7 @@ class State : angle::NonCopyable
         }
     }
 
-    void setVertexAttribDivisor(const Context *context, GLuint index, GLuint divisor);
+    void setVertexAttribDivisor(GLuint index, GLuint divisor);
     const void *getVertexAttribPointer(unsigned int attribNum) const;
 
     void bindVertexBuffer(const Context *context,
@@ -1089,13 +1089,13 @@ class State : angle::NonCopyable
                                bool pureInteger,
                                GLuint relativeOffset);
 
-    void setVertexAttribBinding(const Context *context, GLuint attribIndex, GLuint bindingIndex)
+    void setVertexAttribBinding(GLuint attribIndex, GLuint bindingIndex)
     {
-        mVertexArray->setVertexAttribBinding(context, attribIndex, bindingIndex);
+        mVertexArray->setVertexAttribBinding(attribIndex, bindingIndex);
         mDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
     }
 
-    void setVertexBindingDivisor(const Context *context, GLuint bindingIndex, GLuint divisor);
+    void setVertexBindingDivisor(GLuint bindingIndex, GLuint divisor);
 
     // State query functions
     void getBooleanv(GLenum pname, GLboolean *params) const;
