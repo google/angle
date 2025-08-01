@@ -315,12 +315,12 @@ ANGLE_INLINE void VertexArray::updateCachedMappedArrayBuffersBinding(size_t bind
                                          binding.getBoundAttributesMask());
 }
 
-ANGLE_INLINE void VertexArrayPrivate::updateCachedTransformFeedbackBindingValidation(
-    size_t bindingIndex,
-    const Buffer *buffer)
+ANGLE_INLINE void VertexArray::updateCachedTransformFeedbackBindingValidation(size_t bindingIndex)
 {
-    const bool hasConflict = buffer && buffer->hasWebGLXFBBindingConflict(true);
-    mCachedTransformFeedbackConflictedBindingsMask.set(bindingIndex, hasConflict);
+    const Buffer *buffer = mVertexArrayBuffers[bindingIndex].get();
+    ASSERT(buffer != nullptr);
+    const bool hasConflict = buffer->hasWebGLXFBBindingConflict(true);
+    mCachedBufferPropertyTransformFeedbackConflict.set(bindingIndex, hasConflict);
 }
 
 void VertexArray::bindElementBuffer(const Context *context, Buffer *boundBuffer)
@@ -399,7 +399,7 @@ ANGLE_INLINE VertexArray::DirtyBindingBits VertexArray::bindVertexBufferImpl(con
             boundBuffer->addVertexArrayBinding(context, bindingIndex);
             if (context->isWebGL())
             {
-                mCachedTransformFeedbackConflictedBindingsMask.set(
+                mCachedBufferPropertyTransformFeedbackConflict.set(
                     bindingIndex, boundBuffer->hasWebGLXFBBindingConflict(true));
             }
             mBufferBindingMask.set(bindingIndex);
@@ -410,7 +410,7 @@ ANGLE_INLINE VertexArray::DirtyBindingBits VertexArray::bindVertexBufferImpl(con
         {
             if (context->isWebGL())
             {
-                mCachedTransformFeedbackConflictedBindingsMask.set(bindingIndex, false);
+                mCachedBufferPropertyTransformFeedbackConflict.set(bindingIndex, false);
             }
             mState.mClientMemoryAttribsMask |= binding->getBoundAttributesMask();
             mCachedBufferPropertyMapped.set(bindingIndex, false);
@@ -709,8 +709,7 @@ void VertexArray::onBind(const Context *context)
     {
         for (size_t bindingIndex : bufferBindingMask)
         {
-            Buffer *bufferGL = mVertexArrayBuffers[bindingIndex].get();
-            updateCachedTransformFeedbackBindingValidation(bindingIndex, bufferGL);
+            updateCachedTransformFeedbackBindingValidation(bindingIndex);
         }
     }
 
@@ -784,7 +783,7 @@ void VertexArray::setDependentDirtyBits(bool contentsChanged,
 bool VertexArrayPrivate::hasTransformFeedbackBindingConflict(const Context *context) const
 {
     // Fast check first.
-    if (!mCachedTransformFeedbackConflictedBindingsMask.any())
+    if (!mCachedBufferPropertyTransformFeedbackConflict.any())
     {
         return false;
     }
@@ -795,7 +794,7 @@ bool VertexArrayPrivate::hasTransformFeedbackBindingConflict(const Context *cont
     for (size_t attribIndex : activeAttribues)
     {
         const VertexAttribute &attrib = mState.mVertexAttributes[attribIndex];
-        if (mCachedTransformFeedbackConflictedBindingsMask[attrib.bindingIndex])
+        if (mCachedBufferPropertyTransformFeedbackConflict[attrib.bindingIndex])
         {
             return true;
         }
@@ -833,11 +832,13 @@ void VertexArray::onBufferChanged(const Context *context,
             break;
 
         case angle::SubjectMessage::BindingChanged:
-            bufferBindingMask.reset(kElementArrayBufferIndex);
-            for (size_t bindingIndex : bufferBindingMask)
+            if (context->isWebGL())
             {
-                const Buffer *buffer = mVertexArrayBuffers[bindingIndex].get();
-                updateCachedTransformFeedbackBindingValidation(bindingIndex, buffer);
+                bufferBindingMask.reset(kElementArrayBufferIndex);
+                for (size_t bindingIndex : bufferBindingMask)
+                {
+                    updateCachedTransformFeedbackBindingValidation(bindingIndex);
+                }
             }
             break;
 
