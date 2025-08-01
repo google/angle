@@ -1526,6 +1526,18 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo supportsGlobalPriority = {
+        "supportsGlobalPriority",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
+    FeatureInfo supportsGlobalPriorityQuery = {
+        "supportsGlobalPriorityQuery",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

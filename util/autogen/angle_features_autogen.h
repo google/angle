@@ -353,6 +353,8 @@ enum class Feature
     SupportsFullScreenExclusive,
     SupportsGeometryStreamsCapability,
     SupportsGetMemoryRequirements2,
+    SupportsGlobalPriority,
+    SupportsGlobalPriorityQuery,
     SupportsGraphicsPipelineLibrary,
     SupportsHostImageCopy,
     SupportsHostQueryReset,
