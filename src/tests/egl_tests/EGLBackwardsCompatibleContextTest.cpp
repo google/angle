@@ -85,6 +85,9 @@ class EGLBackwardsCompatibleContextTest : public ANGLETest<>
 // Test extension presence.  All backends should expose this extension
 TEST_P(EGLBackwardsCompatibleContextTest, PbufferDifferentConfig)
 {
+    // The system EGL may not expose ANGLE-specific extensions, which is not a failure.
+    ANGLE_SKIP_TEST_IF(isDriverSystemEgl());
+
     EXPECT_TRUE(
         IsEGLDisplayExtensionEnabled(mDisplay, "EGL_ANGLE_create_context_backwards_compatible"));
 }
