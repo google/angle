@@ -200,6 +200,7 @@ class CLImageVk : public CLMemoryVk
     angle::Result createFromBuffer();
 
     bool isCurrentlyInUse() const override;
+    bool isImage2DFromBuffer() const { return mIsImage2DFromBuffer; }
     bool containsHostMemExtension();
 
     angle::Result getOrCreateStagingBuffer(CLBufferVk **clBufferOut);
@@ -243,6 +244,7 @@ class CLImageVk : public CLMemoryVk
     cl::Buffer *mStagingBuffer;
     vk::ImageView mImageView;
     VkImageViewType mImageViewType;
+    bool mIsImage2DFromBuffer;
 
     // Images created from buffer create texel buffer views. BufferViewHelper contain the view
     // corresponding to the attached buffer.

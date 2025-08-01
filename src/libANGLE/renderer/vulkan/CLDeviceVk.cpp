@@ -16,6 +16,7 @@
 #include "libANGLE/renderer/vulkan/vk_renderer.h"
 
 #include "libANGLE/renderer/cl_types.h"
+#include "libANGLE/renderer/driver_utils.h"
 
 #include "libANGLE/cl_utils.h"
 
@@ -183,10 +184,12 @@ CLDeviceImpl::Info CLDeviceVk::createInfo(cl::DeviceType type) const
     info.image3D_MaxHeight = properties.limits.maxImageDimension3D;
     info.image3D_MaxDepth  = properties.limits.maxImageDimension3D;
     // Max number of pixels for a 1D image created from a buffer object.
-    info.imageMaxBufferSize        = properties.limits.maxTexelBufferElements;
-    info.imageMaxArraySize         = properties.limits.maxImageArrayLayers;
-    info.imagePitchAlignment       = 0u;
-    info.imageBaseAddressAlignment = 0u;
+    info.imageMaxBufferSize = properties.limits.maxTexelBufferElements;
+    info.imageMaxArraySize  = properties.limits.maxImageArrayLayers;
+    // The following are queried when image2d is created from buffer. We mimic its support for now
+    // by doing a copy and as such dont have alignment requirements.
+    info.imagePitchAlignment       = 1u;
+    info.imageBaseAddressAlignment = 1u;
 
     info.execCapabilities     = CL_EXEC_KERNEL;
     info.queueOnDeviceMaxSize = 0u;
@@ -291,6 +294,13 @@ CLDeviceImpl::Info CLDeviceVk::createInfo(cl::DeviceType type) const
     {
         versionedExtensionList.push_back(
             cl_name_version{.version = CL_MAKE_VERSION(1, 0, 0), .name = "cl_khr_depth_images"});
+    }
+
+    // cl_khr_image2d_from_buffer
+    if (info.version >= CL_MAKE_VERSION(3, 0, 0) && info.imageSupport)
+    {
+        versionedExtensionList.push_back(cl_name_version{.version = CL_MAKE_VERSION(1, 0, 0),
+                                                         .name    = "cl_khr_image2d_from_buffer"});
     }
 
     info.initializeVersionedExtensions(std::move(versionedExtensionList));

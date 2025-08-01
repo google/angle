@@ -225,6 +225,15 @@ struct ImageDescriptor
             arraySize = 1;
         }
     }
+
+    bool operator==(const ImageDescriptor &other) const
+    {
+        return (type == other.type && width == other.width && height == other.height &&
+                depth == other.depth && arraySize == other.arraySize &&
+                rowPitch == other.rowPitch && slicePitch == other.slicePitch &&
+                numMipLevels == other.numMipLevels && numSamples == other.numSamples);
+    }
+    bool operator!=(const ImageDescriptor &other) const { return !(*this == other); }
 };
 
 struct NDRange

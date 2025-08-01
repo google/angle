@@ -13,6 +13,7 @@
 #include "common/log_utils.h"
 
 #include <cstddef>
+#include <cstdint>
 #include "libANGLE/renderer/vulkan/CLContextVk.h"
 #include "libANGLE/renderer/vulkan/CLMemoryVk.h"
 #include "libANGLE/renderer/vulkan/vk_cl_utils.h"
@@ -710,11 +711,14 @@ CLImageVk::CLImageVk(const cl::Image &image)
       mExtent(cl::GetExtentFromDescriptor(image.getDescriptor())),
       mAngleFormat(CLImageFormatToAngleFormat(image.getFormat())),
       mStagingBuffer(nullptr),
-      mImageViewType(cl_vk::GetImageViewType(image.getDescriptor().type))
+      mImageViewType(cl_vk::GetImageViewType(image.getDescriptor().type)),
+      mIsImage2DFromBuffer(false)
 {
     if (image.getParent())
     {
         mParent = &image.getParent()->getImpl<CLMemoryVk>();
+        mIsImage2DFromBuffer =
+            cl::Is2DImage(image.getType()) && cl::IsBufferType(mParent->getType());
     }
 }
 
@@ -751,14 +755,25 @@ angle::Result CLImageVk::createFromBuffer()
 
 angle::Result CLImageVk::create(void *hostPtr)
 {
+    // There will be a parent memory object in the following cases
+    // - image1d_buffer
+    // - image2d_from_buffer
+    // - image2d from image2d
     if (mParent)
     {
         if (getType() == cl::MemObjectType::Image1D_Buffer)
         {
             return createFromBuffer();
         }
+        else if (mIsImage2DFromBuffer)
+        {
+            // Request for image2d_from_buffer - nothing to do for now
+            // We would liked to create this as a buffer view as well, clspv for now cannot mark
+            // this usage with texel buffer descriptor type usage.
+        }
         else
         {
+            // image2d from image2d is unimplemented at the moment
             UNIMPLEMENTED();
             ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
         }
@@ -770,37 +785,41 @@ angle::Result CLImageVk::create(void *hostPtr)
                                                getVkImageUsageFlags(), 1, (uint32_t)getArraySize()),
                             CL_OUT_OF_RESOURCES);
 
-    if (mMemory.getFlags().intersects(CL_MEM_USE_HOST_PTR | CL_MEM_COPY_HOST_PTR))
+    if (getFlags().intersects(CL_MEM_USE_HOST_PTR | CL_MEM_COPY_HOST_PTR))
     {
-        ASSERT(hostPtr);
-
-        if (getDescriptor().rowPitch == 0 && getDescriptor().slicePitch == 0)
+        // in case of image2d from buffer, hostptr flag could be inherited from parent flags
+        if (!mIsImage2DFromBuffer)
         {
-            ANGLE_CL_IMPL_TRY_ERROR(copyStagingFrom(hostPtr, 0, getSize()), CL_OUT_OF_RESOURCES);
-        }
-        else
-        {
-            ANGLE_TRY(copyStagingToFromWithPitch(
-                hostPtr, {mExtent.width, mExtent.height, mExtent.depth}, getDescriptor().rowPitch,
-                getDescriptor().slicePitch, StagingBufferCopyDirection::ToStagingBuffer));
-        }
-        VkBufferImageCopy copyRegion{};
-        copyRegion.bufferOffset      = 0;
-        copyRegion.bufferRowLength   = 0;
-        copyRegion.bufferImageHeight = 0;
-        copyRegion.imageExtent =
-            cl_vk::GetExtent(getExtentForCopy({mExtent.width, mExtent.height, mExtent.depth}));
-        copyRegion.imageOffset      = cl_vk::GetOffset(cl::kOffsetZero);
-        copyRegion.imageSubresource = getSubresourceLayersForCopy(
-            cl::kOffsetZero, {mExtent.width, mExtent.height, mExtent.depth}, getType(),
-            ImageCopyWith::Buffer);
+            ASSERT(hostPtr);
 
-        // copy over the hostptr bits here to image in a one-off copy cmd
+            if (getDescriptor().rowPitch == 0 && getDescriptor().slicePitch == 0)
+            {
+                ANGLE_CL_IMPL_TRY_ERROR(copyStagingFrom(hostPtr, 0, getSize()),
+                                        CL_OUT_OF_RESOURCES);
+            }
+            else
+            {
+                ANGLE_TRY(copyStagingToFromWithPitch(
+                    hostPtr, {mExtent.width, mExtent.height, mExtent.depth},
+                    getDescriptor().rowPitch, getDescriptor().slicePitch,
+                    StagingBufferCopyDirection::ToStagingBuffer));
+            }
+        }
+
+        // copy over the hostptr bits/parent buffer here to image in a one-off copy cmd
         CLBufferVk *stagingBuffer = nullptr;
         ANGLE_TRY(getOrCreateStagingBuffer(&stagingBuffer));
         ASSERT(stagingBuffer);
+        VkBufferImageCopy copyRegion = cl_vk::CalculateBufferImageCopyRegion(
+            mIsImage2DFromBuffer ? getParent<CLBufferVk>()->getOffset() : 0,
+            mIsImage2DFromBuffer ? static_cast<uint32_t>(getRowPitch()) : 0, 0, cl::kOffsetZero,
+            getImageExtent(), this);
         ANGLE_CL_IMPL_TRY_ERROR(
-            mImage.copyToBufferOneOff(mContext, &stagingBuffer->getBuffer(), copyRegion),
+            mImage.copyToBufferOneOff(mContext,
+                                      mIsImage2DFromBuffer
+                                          ? &static_cast<CLBufferVk *>(mParent)->getBuffer()
+                                          : &stagingBuffer->getBuffer(),
+                                      copyRegion),
             CL_OUT_OF_RESOURCES);
     }
 

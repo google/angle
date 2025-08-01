@@ -47,6 +47,8 @@ class Image final : public Memory
     size_t getHeight() const { return mDesc.height; }
     size_t getDepth() const { return mDesc.depth; }
 
+    static Image *Cast(cl_mem memobj);
+
   private:
     Image(Context &context,
           PropArray &&properties,
@@ -95,6 +97,12 @@ inline size_t Image::getRowSize() const
 inline size_t Image::getSliceSize() const
 {
     return mDesc.slicePitch != 0u ? mDesc.slicePitch : getRowSize() * getHeight();
+}
+
+inline Image *Image::Cast(cl_mem memobj)
+{
+    ASSERT(cl::IsImageType(Memory::Cast(memobj)->getType()));
+    return static_cast<Image *>(memobj);
 }
 
 }  // namespace cl

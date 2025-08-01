@@ -38,6 +38,28 @@ std::vector<VkBufferCopy> CalculateRectCopyRegions(const cl::BufferRect &srcRect
     return copyRegions;
 }
 
+// Given an image and rect region to copy in to a buffer, calculate the VKBufferImageCopy struct to
+// be using in VkCmd's.
+VkBufferImageCopy CalculateBufferImageCopyRegion(const size_t bufferOffset,
+                                                 const uint32_t rowPitch,
+                                                 const uint32_t slicePitch,
+                                                 const cl::Offset &origin,
+                                                 const cl::Extents &region,
+                                                 CLImageVk *imageVk)
+{
+    VkBufferImageCopy copyRegion{
+        .bufferOffset = bufferOffset,
+        .bufferRowLength =
+            rowPitch == 0 ? 0 : rowPitch / static_cast<uint32_t>(imageVk->getElementSize()),
+        .bufferImageHeight = rowPitch == 0 ? 0 : slicePitch / rowPitch,
+        .imageSubresource = imageVk->getSubresourceLayersForCopy(origin, region, imageVk->getType(),
+                                                                 ImageCopyWith::Buffer),
+        .imageOffset      = GetOffset(imageVk->getOffsetForCopy(origin)),
+        .imageExtent      = GetExtent(imageVk->getExtentForCopy(region))};
+
+    return copyRegion;
+}
+
 VkExtent3D GetExtent(const cl::Extents &extent)
 {
     VkExtent3D vkExtent{};
