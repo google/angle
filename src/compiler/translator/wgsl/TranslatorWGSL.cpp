@@ -409,7 +409,7 @@ const TConstantUnion *OutputWGSLTraverser::emitConstantUnion(const TType &type,
     else
     {
         size_t size = type.getObjectSize();
-        // If the type's size is more than 1, the type needs to be written with parantheses. This
+        // If the type's size is more than 1, the type needs to be written with parentheses. This
         // applies for vectors, matrices, and arrays.
         bool writeType = size > 1;
         if (writeType)
@@ -1012,7 +1012,7 @@ void OutputWGSLTraverser::emitArrayIndex(TIntermTyped &leftNode, TIntermTyped &r
         {
             // Convert just this one array element into a bool instead of converting the entire
             // array into an array of booleans and indexing into that.
-            mSink << "bool(";
+            OutputUniformBoolOrBvecConversion(mSink, leftType);
         }
         emitStructIndexNoUnwrapping(leftNodeBinary);
     }
@@ -1121,7 +1121,7 @@ void OutputWGSLTraverser::emitStructIndex(TIntermBinary *binaryNode)
     else if (isUniformBoolNeedingConversion)
     {
         // Should only trigger in case of a boolean not in an array.
-        mSink << "bool(";
+        OutputUniformBoolOrBvecConversion(mSink, *binaryNodeType);
     }
     emitStructIndexNoUnwrapping(binaryNode);
     if (needsUnwrapping || isUniformMatrixNeedingConversion || isUniformBoolNeedingConversion)

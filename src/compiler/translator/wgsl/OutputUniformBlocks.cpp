@@ -94,6 +94,24 @@ bool RecordUniformBlockMetadata(TIntermBlock *root, UniformBlockMetadata &outMet
     return true;
 }
 
+bool OutputUniformBoolOrBvecConversion(TInfoSinkBase &output, const TType &type)
+{
+    ASSERT(type.getBasicType() == EbtBool);
+    // Bools are represented by u32s in the uniform address space, and so the u32s need to
+    // be casted.
+    if (type.isVector())
+    {
+        // Compare != to a vector of 0s, in WGSL this is componentwise and returns a bvec.
+        output << "(vec" << static_cast<unsigned int>(type.getNominalSize()) << "<u32>(0u) != ";
+    }
+    else
+    {
+        output << "bool(";
+    }
+
+    return true;
+}
+
 bool OutputUniformWrapperStructsAndConversions(
     TInfoSinkBase &output,
     const WGSLGenerationMetadataForUniforms &wgslGenerationMetadataForUniforms)
@@ -153,9 +171,7 @@ bool OutputUniformWrapperStructsAndConversions(
         output << "    retVal[i] = ";
         if (type.getBasicType() == EbtBool)
         {
-            // Bools are represented by u32s in the uniform address space, and so the u32s need to
-            // be casted.
-            output << "bool(";
+            OutputUniformBoolOrBvecConversion(output, type);
         }
         output << "wrappedArr[i]." << kWrappedStructFieldName;
         if (type.getBasicType() == EbtBool)

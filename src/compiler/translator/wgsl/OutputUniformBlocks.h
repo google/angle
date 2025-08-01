@@ -91,6 +91,13 @@ bool IsMatCx2(const TType *type);
 ImmutableString MakeUnwrappingArrayConversionFunctionName(const TType *type);
 ImmutableString MakeMatCx2ConversionFunctionName(const TType *type);
 
+// Bools and bvecN are represented in WGSL's uniform address space with u32 and uvecN respectively.
+// This outputs the beginning of a conversion necessary to convert the bool or bvecN represented by
+// `type` into an actual WGSL bool or vecN<bool>. E.g. for regular bools this will output `bool(`.
+// The caller is responsible for closing the parentheses, e.g. output <<
+// "uniforms.bool_represented_by_u32)";
+bool OutputUniformBoolOrBvecConversion(TInfoSinkBase &output, const TType &type);
+
 // TODO(anglebug.com/42267100): for now does not output all uniform blocks,
 // just the default block. (fails for  matCx2, bool.)
 bool OutputUniformBlocksAndSamplers(TCompiler *compiler, TIntermBlock *root);

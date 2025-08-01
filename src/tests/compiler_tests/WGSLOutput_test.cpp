@@ -760,11 +760,11 @@ struct ANGLE_DefaultUniformBlock {
 @group(0) @binding(1) var<uniform> ANGLE_defaultUniformBlock : ANGLE_DefaultUniformBlock;
 @group(2) @binding(0) var<uniform> ANGLEUniforms : ANGLEUniformBlock;
 
-struct ANGLE_wrapped_u32
+struct ANGLE_wrapped_uint
 {
   @align(16) elem : u32
 };
-fn ANGLE_Convert_Array2_ANGLE_wrapped_u32_ElementsTo_bool_Elements(wrappedArr : array<ANGLE_wrapped_u32, 2>) -> array<bool, 2>
+fn ANGLE_Convert_Array2_ANGLE_wrapped_uint_ElementsTo_bool_Elements(wrappedArr : array<ANGLE_wrapped_uint, 2>) -> array<bool, 2>
 {
   var retVal : array<bool, 2>;
   for (var i : u32 = 0; i < 2; i++) {;
@@ -782,7 +782,7 @@ struct ANGLEDepthRangeParams
 struct _uUniforms
 {
   @align(16) _ua : u32,
-  @align(16) _uaArr : array<ANGLE_wrapped_u32, 2>,
+  @align(16) _uaArr : array<ANGLE_wrapped_uint, 2>,
 };
 
 ;
@@ -803,7 +803,7 @@ struct ANGLEUniformBlock
 fn _umain()
 {
   var _ua : bool = (bool((ANGLE_defaultUniformBlock.unis)._ua));
-  var _uaArr : array<bool, 2> = (ANGLE_Convert_Array2_ANGLE_wrapped_u32_ElementsTo_bool_Elements((ANGLE_defaultUniformBlock.unis)._uaArr));
+  var _uaArr : array<bool, 2> = (ANGLE_Convert_Array2_ANGLE_wrapped_uint_ElementsTo_bool_Elements((ANGLE_defaultUniformBlock.unis)._uaArr));
   var _uaIndexed : bool = (bool((ANGLE_defaultUniformBlock.unis)._uaArr[1i].elem));
   (ANGLE_output_global.fragColor) = (vec4<f32>(_ua, (_uaArr)[0i], _uaIndexed, 1.0f));
 }
@@ -1573,6 +1573,94 @@ fn wgslMain(ANGLE_input_annotated : ANGLE_Input_Annotated) -> ANGLE_Output_Annot
   ANGLE_output_annotated.outMatArr_col2 = ANGLE_output_global.outMatArr[2];
   return ANGLE_output_annotated;
 })";
+    compile(shaderString);
+    EXPECT_TRUE(foundInCode(outputString.c_str()));
+}
+
+TEST_F(WGSLOutputTest, BVecsUniforms)
+{
+    const std::string &shaderString =
+        R"(#version 300 es
+precision mediump float;
+
+uniform bvec2 uni_bvec;
+
+uniform bvec2[2] uni_bvec_array;
+
+out vec4 fragColor;
+
+void main() {
+  bvec2[2] local_bvec_array = uni_bvec_array;
+  if (uni_bvec_array[0] == uni_bvec && uni_bvec == local_bvec_array[1]) {
+    fragColor = vec4(1.0);
+  } else {
+    fragColor = vec4(0.0);
+  }
+}
+)";
+    const std::string &outputString =
+        R"(struct ANGLE_Output_Global {
+  fragColor : vec4<f32>,
+};
+
+var<private> ANGLE_output_global : ANGLE_Output_Global;
+
+struct ANGLE_Output_Annotated {
+  @location(@@@@@@) fragColor : vec4<f32>,
+};
+
+struct ANGLE_DefaultUniformBlock {
+  uni_bvec : vec2<u32>,
+  uni_bvec_array : array<ANGLE_wrapped_uvec2, 2>,
+};
+
+@group(0) @binding(1) var<uniform> ANGLE_defaultUniformBlock : ANGLE_DefaultUniformBlock;
+@group(2) @binding(0) var<uniform> ANGLEUniforms : ANGLEUniformBlock;
+
+struct ANGLEDepthRangeParams
+{
+  near : f32,
+  far : f32,
+  diff : f32,
+};
+
+;
+;
+;
+
+struct ANGLEUniformBlock
+{
+  acbBufferOffsets : vec2<u32>,
+  depthRange : vec2<f32>,
+  renderArea : u32,
+  flipXY : u32,
+  dither : u32,
+  misc : u32,
+};
+
+;
+
+fn _umain()
+{
+  var _ulocal_bvec_array : array<vec2<bool>, 2> = (ANGLE_defaultUniformBlock.uni_bvec_array);
+  if ((all(((ANGLE_defaultUniformBlock.uni_bvec_array)[0i]) == (ANGLE_defaultUniformBlock.uni_bvec))) && (all((ANGLE_defaultUniformBlock.uni_bvec) == ((_ulocal_bvec_array)[1i]))))
+  {
+    (ANGLE_output_global.fragColor) = (vec4<f32>(1.0f, 1.0f, 1.0f, 1.0f));
+  }
+  else
+  {
+    (ANGLE_output_global.fragColor) = (vec4<f32>(0.0f, 0.0f, 0.0f, 0.0f));
+  }
+}
+@fragment
+fn wgslMain() -> ANGLE_Output_Annotated
+{
+  _umain();
+  var ANGLE_output_annotated : ANGLE_Output_Annotated;
+  ANGLE_output_annotated.fragColor = ANGLE_output_global.fragColor;
+  return ANGLE_output_annotated;
+}
+)";
     compile(shaderString);
     EXPECT_TRUE(foundInCode(outputString.c_str()));
 }

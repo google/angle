@@ -305,18 +305,19 @@ template void WriteWgslSamplerType<TStringStream>(TStringStream &output,
 
 ImmutableString MakeUniformWrapperStructName(const TType *type)
 {
+    TType typeToOutput(*type);
+
     const char *typeStr;
-    // Bools are represented as u32s in the uniform address space.
+    // Bools are represented as u32s in the uniform address space (and bvecs as uvecs).
     // TODO(anglebug.com/376553328): simplify by using WriteWgslType({WgslAddressSpace::Uniform})
     // here.
-    if (type->getBasicType() == EbtBool)
+    if (typeToOutput.getBasicType() == EbtBool)
     {
-        typeStr = "u32";
+        typeToOutput.setBasicType(TBasicType::EbtUInt);
     }
-    else
-    {
-        typeStr = type->getBuiltInTypeNameString();
-    }
+
+    typeStr = typeToOutput.getBuiltInTypeNameString();
+
     return BuildConcatenatedImmutableString(kWrappedPrefix, typeStr);
 }
 
