@@ -3217,7 +3217,6 @@ void GL_APIENTRY GL_VertexAttribFormat(GLuint attribindex,
     if (ANGLE_LIKELY(context != nullptr))
     {
         VertexAttribType typePacked = PackParam<VertexAttribType>(type);
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
         {
@@ -3227,10 +3226,12 @@ void GL_APIENTRY GL_VertexAttribFormat(GLuint attribindex,
                 const uint32_t errorCount = context->getPushedErrorCount();
 #endif
                 isCallValid = ValidateVertexAttribFormat(
-                    context, angle::EntryPoint::GLVertexAttribFormat, attribindex, size, typePacked,
+                    context->getPrivateState(), context->getPrivateStateCache(),
+                    context->getMutableErrorSetForValidation(),
+                    angle::EntryPoint::GLVertexAttribFormat, attribindex, size, typePacked,
                     normalized, relativeoffset);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                ASSERT(isCallValid || context->getPushedErrorCount() != errorCount);
 #endif
             }
             else
@@ -3240,7 +3241,9 @@ void GL_APIENTRY GL_VertexAttribFormat(GLuint attribindex,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->vertexAttribFormat(attribindex, size, typePacked, normalized, relativeoffset);
+            ContextPrivateVertexAttribFormat(context->getMutablePrivateState(),
+                                             context->getMutablePrivateStateCache(), attribindex,
+                                             size, typePacked, normalized, relativeoffset);
         }
         ANGLE_CAPTURE_GL(VertexAttribFormat, isCallValid, context, attribindex, size, typePacked,
                          normalized, relativeoffset);
@@ -3266,7 +3269,6 @@ void GL_APIENTRY GL_VertexAttribIFormat(GLuint attribindex,
     if (ANGLE_LIKELY(context != nullptr))
     {
         VertexAttribType typePacked = PackParam<VertexAttribType>(type);
-        SCOPED_SHARE_CONTEXT_LOCK(context);
         bool isCallValid = context->skipValidation();
         if (!isCallValid)
         {
@@ -3275,11 +3277,13 @@ void GL_APIENTRY GL_VertexAttribIFormat(GLuint attribindex,
 #if defined(ANGLE_ENABLE_ASSERTS)
                 const uint32_t errorCount = context->getPushedErrorCount();
 #endif
-                isCallValid =
-                    ValidateVertexAttribIFormat(context, angle::EntryPoint::GLVertexAttribIFormat,
-                                                attribindex, size, typePacked, relativeoffset);
+                isCallValid = ValidateVertexAttribIFormat(
+                    context->getPrivateState(), context->getPrivateStateCache(),
+                    context->getMutableErrorSetForValidation(),
+                    angle::EntryPoint::GLVertexAttribIFormat, attribindex, size, typePacked,
+                    relativeoffset);
 #if defined(ANGLE_ENABLE_ASSERTS)
-                ASSERT(context->getPushedErrorCount() - errorCount == (isCallValid ? 0 : 1));
+                ASSERT(isCallValid || context->getPushedErrorCount() != errorCount);
 #endif
             }
             else
@@ -3289,7 +3293,9 @@ void GL_APIENTRY GL_VertexAttribIFormat(GLuint attribindex,
         }
         if (ANGLE_LIKELY(isCallValid))
         {
-            context->vertexAttribIFormat(attribindex, size, typePacked, relativeoffset);
+            ContextPrivateVertexAttribIFormat(context->getMutablePrivateState(),
+                                              context->getMutablePrivateStateCache(), attribindex,
+                                              size, typePacked, relativeoffset);
         }
         ANGLE_CAPTURE_GL(VertexAttribIFormat, isCallValid, context, attribindex, size, typePacked,
                          relativeoffset);

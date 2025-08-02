@@ -550,42 +550,45 @@ bool ValidateGetVertexAttribBase(const Context *context,
                                  GLsizei *length,
                                  bool pointer);
 
-ANGLE_INLINE bool ValidateVertexFormat(const Context *context,
+ANGLE_INLINE bool ValidateVertexFormat(const PrivateState &privateState,
+                                       ErrorSet *errors,
                                        angle::EntryPoint entryPoint,
                                        GLuint index,
                                        GLint size,
                                        VertexAttribTypeCase validation)
 {
-    const Caps &caps = context->getCaps();
+    const Caps &caps = privateState.getCaps();
     if (ANGLE_UNLIKELY(index >= static_cast<GLuint>(caps.maxVertexAttributes)))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, err::kIndexExceedsMaxVertexAttribute);
+        errors->validationError(entryPoint, GL_INVALID_VALUE, err::kIndexExceedsMaxVertexAttribute);
         return false;
     }
 
     switch (validation)
     {
         case VertexAttribTypeCase::Invalid:
-            ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, err::kInvalidType);
+            errors->validationError(entryPoint, GL_INVALID_ENUM, err::kInvalidType);
             return false;
         case VertexAttribTypeCase::Valid:
             if (size < 1 || size > 4)
             {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, err::kInvalidVertexAttrSize);
+                errors->validationError(entryPoint, GL_INVALID_VALUE, err::kInvalidVertexAttrSize);
                 return false;
             }
             break;
         case VertexAttribTypeCase::ValidSize4Only:
             if (size != 4)
             {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, err::kInvalidVertexAttribSize2101010);
+                errors->validationError(entryPoint, GL_INVALID_OPERATION,
+                                        err::kInvalidVertexAttribSize2101010);
                 return false;
             }
             break;
         case VertexAttribTypeCase::ValidSize3or4:
             if (size != 3 && size != 4)
             {
-                ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, err::kInvalidVertexAttribSize1010102);
+                errors->validationError(entryPoint, GL_INVALID_OPERATION,
+                                        err::kInvalidVertexAttribSize1010102);
                 return false;
             }
             break;
@@ -595,25 +598,28 @@ ANGLE_INLINE bool ValidateVertexFormat(const Context *context,
 }
 
 // Note: These byte, short, and int types are all converted to float for the shader.
-ANGLE_INLINE bool ValidateFloatVertexFormat(const Context *context,
+ANGLE_INLINE bool ValidateFloatVertexFormat(const PrivateState &privateState,
+                                            const PrivateStateCache &privateStateCache,
+                                            ErrorSet *errors,
                                             angle::EntryPoint entryPoint,
                                             GLuint index,
                                             GLint size,
                                             VertexAttribType type)
 {
-    return ValidateVertexFormat(context, entryPoint, index, size,
-                                context->getStateCache().getVertexAttribTypeValidation(type));
+    return ValidateVertexFormat(privateState, errors, entryPoint, index, size,
+                                privateStateCache.getVertexAttribTypeValidation(type));
 }
 
-ANGLE_INLINE bool ValidateIntegerVertexFormat(const Context *context,
+ANGLE_INLINE bool ValidateIntegerVertexFormat(const PrivateState &privateState,
+                                              const PrivateStateCache &privateStateCache,
+                                              ErrorSet *errors,
                                               angle::EntryPoint entryPoint,
                                               GLuint index,
                                               GLint size,
                                               VertexAttribType type)
 {
-    return ValidateVertexFormat(
-        context, entryPoint, index, size,
-        context->getStateCache().getIntegerVertexAttribTypeValidation(type));
+    return ValidateVertexFormat(privateState, errors, entryPoint, index, size,
+                                privateStateCache.getIntegerVertexAttribTypeValidation(type));
 }
 
 ANGLE_INLINE bool ValidateColorMasksForSharedExponentColorBuffers(const BlendStateExt &blendState,

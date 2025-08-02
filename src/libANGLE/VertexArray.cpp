@@ -480,12 +480,12 @@ ANGLE_INLINE bool VertexArrayPrivate::setVertexAttribFormatImpl(VertexAttribute 
     return false;
 }
 
-void VertexArray::setVertexAttribFormat(size_t attribIndex,
-                                        GLint size,
-                                        VertexAttribType type,
-                                        bool normalized,
-                                        bool pureInteger,
-                                        GLuint relativeOffset)
+void VertexArrayPrivate::setVertexAttribFormat(size_t attribIndex,
+                                               GLint size,
+                                               VertexAttribType type,
+                                               bool normalized,
+                                               bool pureInteger,
+                                               GLuint relativeOffset)
 {
     VertexAttribute &attrib = mState.mVertexAttributes[attribIndex];
 
@@ -499,10 +499,6 @@ void VertexArray::setVertexAttribFormat(size_t attribIndex,
 
     if (mBufferAccessValidationEnabled)
     {
-        ASSERT(mCachedBufferSize[attrib.bindingIndex] ==
-               (mVertexArrayBuffers[attrib.bindingIndex].get() != nullptr
-                    ? mVertexArrayBuffers[attrib.bindingIndex].get()->getSize()
-                    : 0));
         attrib.updateCachedElementLimit(mState.mVertexBindings[attrib.bindingIndex],
                                         mCachedBufferSize[attrib.bindingIndex]);
     }

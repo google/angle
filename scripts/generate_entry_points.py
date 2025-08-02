@@ -154,6 +154,8 @@ CONTEXT_PRIVATE_LIST = [
     'glSampleCoveragex',
     'glShadeModel',
     'glVertexAttribBinding',
+    'glVertexAttribFormat',
+    'glVertexAttribIFormat',
     'glVertexBindingDivisor',
 ]
 CONTEXT_PRIVATE_WILDCARDS = [
@@ -185,6 +187,12 @@ CONTEXT_PRIVATE_WILDCARDS = [
     'glScale[fx]',
     'glTexEnv[fix]*',
     'glTranslate[fx]',
+]
+
+# These context private APIs needs to pass PrivateStateCache to validation function
+VALIDATION_NEEDS_PRIVATE_STATE_CACHE_LIST = [
+    'glVertexAttribFormat',
+    'glVertexAttribIFormat',
 ]
 
 TEMPLATE_ENTRY_POINT_HEADER = """\
@@ -738,6 +746,7 @@ namespace gl
 {{
 class Context;
 class PrivateState;
+class PrivateStateCache;
 class ErrorSet;
 
 {prototypes}
@@ -1664,12 +1673,18 @@ def is_egl_entry_point_accessing_both_sync_and_non_sync_API_resources(cmd_name):
     return False
 
 
+def validation_needs_private_state_cache(name):
+    return name in VALIDATION_NEEDS_PRIVATE_STATE_CACHE_LIST
+
 def get_validation_expression(api, cmd_name, entry_point_name, internal_params, sources):
     if api != "GLES":
         return ""
 
     name = strip_api_prefix(cmd_name)
-    private_params = ["context->getPrivateState()", "context->getMutableErrorSetForValidation()"]
+    private_params = ["context->getPrivateState()"]
+    if validation_needs_private_state_cache(cmd_name):
+        private_params += ["context->getPrivateStateCache()"]
+    private_params += ["context->getMutableErrorSetForValidation()"]
     is_private = is_context_private_state_command(api, cmd_name)
     extra_params = private_params if is_private else ["context"]
     expr = "Validate{name}({params})".format(
@@ -2348,9 +2363,14 @@ def format_validation_proto(api, cmd_name, params, cmd_packed_gl_enums, packed_p
     else:
         return_type = "bool"
     if api in [apis.GL, apis.GLES]:
-        with_extra_params = ["const PrivateState &state",
-                             "ErrorSet *errors"] if is_context_private_state_command(
-                                 api, cmd_name) else ["Context *context"]
+        with_extra_params = []
+        if is_context_private_state_command(api, cmd_name):
+            with_extra_params += ["const PrivateState &state"]
+            if validation_needs_private_state_cache(cmd_name):
+                with_extra_params += ["const PrivateStateCache &privateStateCache"]
+            with_extra_params += ["ErrorSet *errors"]
+        else:
+            with_extra_params += ["Context *context"]
         with_extra_params += ["angle::EntryPoint entryPoint"] + params
     elif api == apis.EGL:
         with_extra_params = ["ValidationContext *val"] + params

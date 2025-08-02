@@ -1569,4 +1569,28 @@ inline void ContextPrivateVertexBindingDivisor(PrivateState *privateState,
     privateStateCache->onVertexArrayFormatChange();
 }
 
+inline void ContextPrivateVertexAttribFormat(PrivateState *privateState,
+                                             PrivateStateCache *privateStateCache,
+                                             GLuint attribIndex,
+                                             GLint size,
+                                             VertexAttribType type,
+                                             GLboolean normalized,
+                                             GLuint relativeOffset)
+{
+    privateState->setVertexAttribFormat(attribIndex, size, type, ConvertToBool(normalized), false,
+                                        relativeOffset);
+    privateStateCache->onVertexArrayFormatChange();
+}
+
+inline void ContextPrivateVertexAttribIFormat(PrivateState *privateState,
+                                              PrivateStateCache *privateStateCache,
+                                              GLuint attribIndex,
+                                              GLint size,
+                                              VertexAttribType type,
+                                              GLuint relativeOffset)
+{
+    privateState->setVertexAttribFormat(attribIndex, size, type, false, true, relativeOffset);
+    privateStateCache->onVertexArrayFormatChange();
+}
+
 }  // namespace gl

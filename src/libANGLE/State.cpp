@@ -3029,15 +3029,15 @@ void State::bindVertexBuffer(const Context *context,
     mDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
 }
 
-void State::setVertexAttribFormat(GLuint attribIndex,
-                                  GLint size,
-                                  VertexAttribType type,
-                                  bool normalized,
-                                  bool pureInteger,
-                                  GLuint relativeOffset)
+void PrivateState::setVertexAttribFormat(GLuint attribIndex,
+                                         GLint size,
+                                         VertexAttribType type,
+                                         bool normalized,
+                                         bool pureInteger,
+                                         GLuint relativeOffset)
 {
-    getVertexArray()->setVertexAttribFormat(attribIndex, size, type, normalized, pureInteger,
-                                            relativeOffset);
+    mVertexArrayPrivate->setVertexAttribFormat(attribIndex, size, type, normalized, pureInteger,
+                                               relativeOffset);
     mDirtyObjects.set(state::DIRTY_OBJECT_VERTEX_ARRAY);
 }
 

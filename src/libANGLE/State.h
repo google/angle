@@ -623,6 +623,12 @@ class PrivateState : angle::NonCopyable
     void setVertexBindingDivisor(GLuint bindingIndex, GLuint divisor);
     void setVertexAttribDivisor(GLuint index, GLuint divisor);
     VertexArrayID getVertexArrayId() const;
+    void setVertexAttribFormat(GLuint attribIndex,
+                               GLint size,
+                               VertexAttribType type,
+                               bool normalized,
+                               bool pureInteger,
+                               GLuint relativeOffset);
 
   private:
     bool hasConstantColor(GLenum sourceRGB, GLenum destRGB) const;
@@ -1086,12 +1092,6 @@ class State : angle::NonCopyable
                           Buffer *boundBuffer,
                           GLintptr offset,
                           GLsizei stride);
-    void setVertexAttribFormat(GLuint attribIndex,
-                               GLint size,
-                               VertexAttribType type,
-                               bool normalized,
-                               bool pureInteger,
-                               GLuint relativeOffset);
 
     // State query functions
     void getBooleanv(GLenum pname, GLboolean *params) const;

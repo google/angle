@@ -3462,7 +3462,9 @@ bool ValidateVertexAttribIPointer(const Context *context,
                                   GLsizei stride,
                                   const void *pointer)
 {
-    if (!ValidateIntegerVertexFormat(context, entryPoint, index, size, type))
+    if (!ValidateIntegerVertexFormat(context->getPrivateState(), context->getPrivateStateCache(),
+                                     context->getMutableErrorSetForValidation(), entryPoint, index,
+                                     size, type))
     {
         return false;
     }

@@ -4729,7 +4729,7 @@ void Context::updateCaps()
 
     // Reinitialize state cache after extension changes.
     mStateCache.initialize(this);
-    mPrivateStateCache.initialize();
+    mPrivateStateCache.initialize(this);
 }
 
 angle::Result Context::prepareForClear(GLbitfield mask)
@@ -6082,26 +6082,6 @@ void Context::activeShaderProgram(ProgramPipelineID pipeline, ShaderProgramID pr
 void Context::blendBarrier()
 {
     mImplementation->blendBarrier();
-}
-
-void Context::vertexAttribFormat(GLuint attribIndex,
-                                 GLint size,
-                                 VertexAttribType type,
-                                 GLboolean normalized,
-                                 GLuint relativeOffset)
-{
-    mState.setVertexAttribFormat(attribIndex, size, type, ConvertToBool(normalized), false,
-                                 relativeOffset);
-    mPrivateStateCache.onVertexArrayFormatChange();
-}
-
-void Context::vertexAttribIFormat(GLuint attribIndex,
-                                  GLint size,
-                                  VertexAttribType type,
-                                  GLuint relativeOffset)
-{
-    mState.setVertexAttribFormat(attribIndex, size, type, false, true, relativeOffset);
-    mPrivateStateCache.onVertexArrayFormatChange();
 }
 
 void Context::vertexAttribIPointer(GLuint index,
@@ -10272,12 +10252,12 @@ void StateCache::initialize(Context *context)
     updateValidBindTextureTypes(context);
     updateValidDrawElementsTypes(context);
     updateBasicDrawStatesError();
-    updateVertexAttribTypesValidation(context);
     updateCanDraw(context);
 }
 
-void PrivateStateCache::initialize()
+void PrivateStateCache::initialize(const Context *context)
 {
+    updateVertexAttribTypesValidation(context);
     mCachedBasicDrawElementsError = kInvalidPointer;
 }
 
@@ -10630,7 +10610,7 @@ void StateCache::updateTransformFeedbackActiveUnpaused(Context *context)
     mCachedTransformFeedbackActiveUnpaused = xfb && xfb->isActive() && !xfb->isPaused();
 }
 
-void StateCache::updateVertexAttribTypesValidation(Context *context)
+void PrivateStateCache::updateVertexAttribTypesValidation(const Context *context)
 {
     VertexAttribTypeCase halfFloatValidity = (context->getExtensions().vertexHalfFloatOES)
                                                  ? VertexAttribTypeCase::Valid

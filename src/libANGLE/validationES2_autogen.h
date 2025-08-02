@@ -18,6 +18,7 @@ namespace gl
 {
 class Context;
 class PrivateState;
+class PrivateStateCache;
 class ErrorSet;
 
 bool ValidateActiveTexture(const PrivateState &state,

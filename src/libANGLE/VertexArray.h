@@ -248,6 +248,12 @@ class VertexArrayPrivate : public angle::NonCopyable
 
     void setVertexAttribBinding(size_t attribIndex, GLuint bindingIndex);
     void setVertexAttribDivisor(size_t index, GLuint divisor);
+    void setVertexAttribFormat(size_t attribIndex,
+                               GLint size,
+                               VertexAttribType type,
+                               bool normalized,
+                               bool pureInteger,
+                               GLuint relativeOffset);
 
   protected:
     ~VertexArrayPrivate();
@@ -338,13 +344,6 @@ class VertexArray final : public VertexArrayPrivate, public LabeledObject, publi
                                  GLsizei stride,
                                  const void *pointer,
                                  bool *isVertexAttribDirtyOut);
-
-    void setVertexAttribFormat(size_t attribIndex,
-                               GLint size,
-                               VertexAttribType type,
-                               bool normalized,
-                               bool pureInteger,
-                               GLuint relativeOffset);
 
     void bindElementBuffer(const Context *context, Buffer *boundBuffer);
 

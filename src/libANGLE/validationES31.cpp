@@ -378,22 +378,23 @@ bool ValidateProgramUniformMatrixBase(const Context *context,
     return ValidateUniformMatrixValue(context, entryPoint, valueType, uniform->getType());
 }
 
-bool ValidateVertexAttribFormatCommon(const Context *context,
+bool ValidateVertexAttribFormatCommon(const PrivateState &privateState,
+                                      ErrorSet *errors,
                                       angle::EntryPoint entryPoint,
                                       GLuint relativeOffset)
 {
-    const Caps &caps = context->getCaps();
+    const Caps &caps = privateState.getCaps();
     if (relativeOffset > static_cast<GLuint>(caps.maxVertexAttribRelativeOffset))
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kRelativeOffsetTooLarge);
+        errors->validationError(entryPoint, GL_INVALID_VALUE, kRelativeOffsetTooLarge);
         return false;
     }
 
     // [OpenGL ES 3.1] Section 10.3.1 page 243:
     // An INVALID_OPERATION error is generated if the default vertex array object is bound.
-    if (context->getState().getVertexArrayId().value == 0)
+    if (privateState.getVertexArrayId().value == 0)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kDefaultVertexArray);
+        errors->validationError(entryPoint, GL_INVALID_OPERATION, kDefaultVertexArray);
         return false;
     }
 
@@ -1194,7 +1195,9 @@ bool ValidateVertexBindingDivisor(const PrivateState &privateState,
     return true;
 }
 
-bool ValidateVertexAttribFormat(const Context *context,
+bool ValidateVertexAttribFormat(const PrivateState &privateState,
+                                const PrivateStateCache &privateStateCache,
+                                ErrorSet *errors,
                                 angle::EntryPoint entryPoint,
                                 GLuint attribindex,
                                 GLint size,
@@ -1202,27 +1205,31 @@ bool ValidateVertexAttribFormat(const Context *context,
                                 GLboolean normalized,
                                 GLuint relativeoffset)
 {
-    if (!ValidateVertexAttribFormatCommon(context, entryPoint, relativeoffset))
+    if (!ValidateVertexAttribFormatCommon(privateState, errors, entryPoint, relativeoffset))
     {
         return false;
     }
 
-    return ValidateFloatVertexFormat(context, entryPoint, attribindex, size, type);
+    return ValidateFloatVertexFormat(privateState, privateStateCache, errors, entryPoint,
+                                     attribindex, size, type);
 }
 
-bool ValidateVertexAttribIFormat(const Context *context,
+bool ValidateVertexAttribIFormat(const PrivateState &privateState,
+                                 const PrivateStateCache &privateStateCache,
+                                 ErrorSet *errors,
                                  angle::EntryPoint entryPoint,
                                  GLuint attribindex,
                                  GLint size,
                                  VertexAttribType type,
                                  GLuint relativeoffset)
 {
-    if (!ValidateVertexAttribFormatCommon(context, entryPoint, relativeoffset))
+    if (!ValidateVertexAttribFormatCommon(privateState, errors, entryPoint, relativeoffset))
     {
         return false;
     }
 
-    return ValidateIntegerVertexFormat(context, entryPoint, attribindex, size, type);
+    return ValidateIntegerVertexFormat(privateState, privateStateCache, errors, entryPoint,
+                                       attribindex, size, type);
 }
 
 bool ValidateVertexAttribBinding(const PrivateState &privateState,

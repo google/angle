@@ -18,6 +18,7 @@ namespace gl
 {
 class Context;
 class PrivateState;
+class PrivateStateCache;
 class ErrorSet;
 
 bool ValidateActiveShaderProgram(const Context *context,
@@ -397,14 +398,18 @@ bool ValidateVertexAttribBinding(const PrivateState &state,
                                  angle::EntryPoint entryPoint,
                                  GLuint attribindex,
                                  GLuint bindingindex);
-bool ValidateVertexAttribFormat(const Context *context,
+bool ValidateVertexAttribFormat(const PrivateState &state,
+                                const PrivateStateCache &privateStateCache,
+                                ErrorSet *errors,
                                 angle::EntryPoint entryPoint,
                                 GLuint attribindex,
                                 GLint size,
                                 VertexAttribType typePacked,
                                 GLboolean normalized,
                                 GLuint relativeoffset);
-bool ValidateVertexAttribIFormat(const Context *context,
+bool ValidateVertexAttribIFormat(const PrivateState &state,
+                                 const PrivateStateCache &privateStateCache,
+                                 ErrorSet *errors,
                                  angle::EntryPoint entryPoint,
                                  GLuint attribindex,
                                  GLint size,
