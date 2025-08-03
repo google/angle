@@ -90,6 +90,7 @@ enum class EntryPoint
     CLGetKernelArgInfo,
     CLGetKernelInfo,
     CLGetKernelSubGroupInfo,
+    CLGetKernelSubGroupInfoKHR,
     CLGetKernelWorkGroupInfo,
     CLGetMemObjectInfo,
     CLGetPipeInfo,

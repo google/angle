@@ -330,6 +330,7 @@ enum class Feature
     SupportsBlendOperationAdvancedCoherent,
     SupportsBufferDeviceAddress,
     SupportsClipCullDistanceInGSAndTS,
+    SupportsClKhrSubgroups,
     SupportsColorWriteEnable,
     SupportsComputeTranscodeEtcToBc,
     SupportsCustomBorderColor,

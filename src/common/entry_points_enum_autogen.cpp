@@ -168,6 +168,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "clGetKernelInfo";
         case EntryPoint::CLGetKernelSubGroupInfo:
             return "clGetKernelSubGroupInfo";
+        case EntryPoint::CLGetKernelSubGroupInfoKHR:
+            return "clGetKernelSubGroupInfoKHR";
         case EntryPoint::CLGetKernelWorkGroupInfo:
             return "clGetKernelWorkGroupInfo";
         case EntryPoint::CLGetMemObjectInfo:

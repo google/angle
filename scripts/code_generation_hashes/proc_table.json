@@ -6,11 +6,11 @@
   "scripts/gl_angle_ext.xml":
     "0a899dd0782d39209e17d7cbe4b2ca40",
   "scripts/registry_xml.py":
-    "707f20f8253be5157e062d94b052ab49",
+    "788e8f48cf7298bd34555c7255e26826",
   "src/libGLESv2/egl_stubs_getprocaddress_autogen.cpp":
     "96971b68b66226dc4b5cac8ced61c8ca",
   "src/libGLESv2/proc_table_cl_autogen.cpp":
-    "0fb2b75591e12301065ce19696222cb1",
+    "c574d0cc27530b51e3fdc99b13bc740a",
   "src/libOpenCL/libOpenCL_autogen.map":
     "bc5f5cf48227149ed321258a16eff1d7",
   "third_party/EGL-Registry/src/api/egl.xml":
