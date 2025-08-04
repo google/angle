@@ -133,8 +133,8 @@ class CLBufferVk : public CLMemoryVk
   private:
     angle::Result mapImpl() override;
     void unmapImpl() override;
-
     angle::Result setDataImpl(const uint8_t *data, size_t size, size_t offset);
+    angle::Result createWithProperties();
 
     vk::BufferHelper mBuffer;
     VkBufferCreateInfo mDefaultBufferCreateInfo;

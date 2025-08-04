@@ -1056,6 +1056,12 @@ class BufferHelper : public ReadWriteResource
                                VkMemoryPropertyFlags memoryProperties,
                                const VkBufferCreateInfo &requestedCreateInfo,
                                GLeglClientBufferEXT clientBuffer);
+    angle::Result initAndAcquireFromExternalMemory(
+        Context *context,
+        VkMemoryPropertyFlags memoryProperties,
+        const VkBufferCreateInfo &requestedCreateInfo,
+        const VkExternalMemoryHandleTypeFlagBits externalMemoryHandleType,
+        const int32_t sharedBufferFD);
     VkResult initSuballocation(Context *context,
                                uint32_t memoryTypeIndex,
                                size_t size,
@@ -1091,6 +1097,7 @@ class BufferHelper : public ReadWriteResource
     // Returns the main buffer block's pointer.
     uint8_t *getBlockMemory() const { return mSuballocation.getBlockMemory(); }
     VkDeviceSize getBlockMemorySize() const { return mSuballocation.getBlockMemorySize(); }
+    VkDeviceMemory getDeviceMemory() const { return mSuballocation.getDeviceMemory().getHandle(); }
     bool isHostVisible() const { return mSuballocation.isHostVisible(); }
     bool isCoherent() const { return mSuballocation.isCoherent(); }
     bool isCached() const { return mSuballocation.isCached(); }

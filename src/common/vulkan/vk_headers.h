@@ -150,6 +150,10 @@ extern PFN_vkCmdSetRenderingInputAttachmentIndicesKHR vkCmdSetRenderingInputAtta
 extern PFN_vkCmdPipelineBarrier2KHR vkCmdPipelineBarrier2KHR;
 extern PFN_vkCmdWriteTimestamp2KHR vkCmdWriteTimestamp2KHR;
 
+// VK_KHR_external_memory_fd
+extern PFN_vkGetMemoryFdKHR vkGetMemoryFdKHR;
+extern PFN_vkGetMemoryFdPropertiesKHR vkGetMemoryFdPropertiesKHR;
+
 }  // namespace rx
 
 #endif  // ANGLE_SHARED_LIBVULKAN

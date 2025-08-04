@@ -322,6 +322,16 @@ class CLCommandQueueVk : public CLCommandQueueImpl
 
     angle::Result finish() override;
 
+    angle::Result enqueueAcquireExternalMemObjectsKHR(
+        const cl::MemoryPtrs &memObjects,
+        const cl::EventPtrs &waitEvents,
+        CLEventImpl::CreateFunc *eventCreateFunc) override;
+
+    angle::Result enqueueReleaseExternalMemObjectsKHR(
+        const cl::MemoryPtrs &memObjects,
+        const cl::EventPtrs &waitEvents,
+        CLEventImpl::CreateFunc *eventCreateFunc) override;
+
     CLPlatformVk *getPlatform() { return mContext->getPlatform(); }
     CLContextVk *getContext() { return mContext; }
 

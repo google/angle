@@ -354,10 +354,18 @@
             "issue": "http://anglebug.com/42263049"
         },
         {
-            "name": "supports_external_memory_dma_buf_and_modifiers",
+            "name": "supports_external_memory_dma_buf",
             "category": "Features",
             "description": [
-                "VkDevice supports the VK_EXT_external_memory_dma_buf and VK_EXT_image_drm_format_modifier ",
+              "VkDevice supports the VK_EXT_external_memory_dma_buf",
+              "extensions"
+            ]
+        },
+        {
+            "name": "supports_image_drm_format_modifier",
+            "category": "Features",
+            "description": [
+              "VkDevice supports the VK_EXT_image_drm_format_modifier",
                 "extensions"
             ],
             "issue": "http://anglebug.com/42264767"

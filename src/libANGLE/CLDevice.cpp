@@ -151,7 +151,16 @@ angle::Result Device::getInfo(DeviceInfo name,
             ANGLE_TRY(mImpl->getInfoString(name, copySize, valString.data()));
             copyValue = valString.data();
             break;
-
+        case DeviceInfo::ExternalMemoryImportHandleTypes:
+            copyValue = mInfo.externalMemoryHandleSupportList.data();
+            copySize  = mInfo.externalMemoryHandleSupportList.size() *
+                       sizeof(*mInfo.externalMemoryHandleSupportList.data());
+            break;
+        case DeviceInfo::ExternalMemoryLinearImagesHandleTypes:
+            // TODO: revisit this later
+            // http://anglebug.com/378017028
+            ANGLE_CL_RETURN_ERROR(CL_INVALID_VALUE);
+            break;
         // Handle all cached values
         case DeviceInfo::Type:
             copyValue = &mInfo.type;

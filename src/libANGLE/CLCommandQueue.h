@@ -241,6 +241,18 @@ class CommandQueue final : public _cl_command_queue, public Object
     angle::Result flush();
     angle::Result finish();
 
+    angle::Result enqueueAcquireExternalMemObjectsKHR(cl_uint numMemObjects,
+                                                      const cl_mem *memObjects,
+                                                      cl_uint numEventsInWaitList,
+                                                      const cl_event *eventWaitList,
+                                                      cl_event *event);
+
+    angle::Result enqueueReleaseExternalMemObjectsKHR(cl_uint numMemObjects,
+                                                      const cl_mem *memObjects,
+                                                      cl_uint numEventsInWaitList,
+                                                      const cl_event *eventWaitList,
+                                                      cl_event *event);
+
   public:
     using PropArray = std::vector<cl_queue_properties>;
 

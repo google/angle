@@ -5585,6 +5585,47 @@ angle::Result BufferHelper::initExternal(ErrorContext *context,
     return angle::Result::Continue;
 }
 
+angle::Result BufferHelper::initAndAcquireFromExternalMemory(
+    Context *context,
+    VkMemoryPropertyFlags memoryProperties,
+    const VkBufferCreateInfo &requestedCreateInfo,
+    const VkExternalMemoryHandleTypeFlagBits externalMemoryHandleType,
+    const int32_t sharedBufferFD)
+{
+    Renderer *renderer = context->getRenderer();
+    ASSERT(renderer);
+
+    initializeBarrierTracker(context);
+
+    VkBufferCreateInfo modifiedCreateInfo             = requestedCreateInfo;
+    VkExternalMemoryBufferCreateInfo externCreateInfo = {};
+    externCreateInfo.sType       = VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_BUFFER_CREATE_INFO;
+    externCreateInfo.handleTypes = externalMemoryHandleType;
+    externCreateInfo.pNext       = nullptr;
+    modifiedCreateInfo.pNext     = &externCreateInfo;
+
+    DeviceScoped<Buffer> buffer(renderer->getDevice());
+    ANGLE_VK_TRY(context, buffer.get().init(renderer->getDevice(), modifiedCreateInfo));
+
+    DeviceScoped<DeviceMemory> deviceMemory(renderer->getDevice());
+    VkMemoryPropertyFlags memoryPropertyFlagsOut;
+    VkDeviceSize allocatedSize = 0;
+    uint32_t memoryTypeIndex;
+    ANGLE_TRY(InitExternalSharedFDMemory(context, externalMemoryHandleType, sharedBufferFD,
+                                         memoryProperties, &buffer.get(), &memoryPropertyFlagsOut,
+                                         &memoryTypeIndex, &deviceMemory.get(), &allocatedSize));
+
+    mSuballocation.initWithEntireBuffer(context, buffer.get(), MemoryAllocationType::BufferExternal,
+                                        memoryTypeIndex, deviceMemory.get(), memoryPropertyFlagsOut,
+                                        requestedCreateInfo.size, allocatedSize);
+    if (isHostVisible())
+    {
+        uint8_t *ptrOut;
+        ANGLE_TRY(map(context, &ptrOut));
+    }
+    return angle::Result::Continue;
+}
+
 VkResult BufferHelper::initSuballocation(Context *context,
                                          uint32_t memoryTypeIndex,
                                          size_t size,

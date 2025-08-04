@@ -6,6 +6,7 @@
 // CLMemoryVk.cpp: Implements the class methods for CLMemoryVk.
 
 #include "libANGLE/renderer/vulkan/CLMemoryVk.h"
+#include "common/log_utils.h"
 #include "libANGLE/renderer/vulkan/CLContextVk.h"
 #include "libANGLE/renderer/vulkan/vk_cl_utils.h"
 #include "libANGLE/renderer/vulkan/vk_renderer.h"
@@ -77,6 +78,61 @@ angle::FormatID CLImageFormatToAngleFormat(cl_image_format format)
         default:
             return angle::FormatID::NONE;
     }
+}
+
+bool GetExternalMemoryHandleInfo(const cl_mem_properties *properties,
+                                 VkExternalMemoryHandleTypeFlagBits *vkExtMemoryHandleType,
+                                 int32_t *fd)
+{
+    bool propertyStatus = true;
+    const cl::NameValueProperty *propertyIterator =
+        reinterpret_cast<const cl::NameValueProperty *>(properties);
+    while (propertyIterator->name != 0)
+    {
+        switch (propertyIterator->name)
+        {
+            case CL_EXTERNAL_MEMORY_HANDLE_OPAQUE_FD_KHR:
+                *vkExtMemoryHandleType = VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_FD_BIT;
+                break;
+            case CL_EXTERNAL_MEMORY_HANDLE_DMA_BUF_KHR:
+                *vkExtMemoryHandleType = VK_EXTERNAL_MEMORY_HANDLE_TYPE_DMA_BUF_BIT_EXT;
+                break;
+            case CL_EXTERNAL_MEMORY_HANDLE_OPAQUE_WIN32_KHR:
+                *vkExtMemoryHandleType = VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_BIT;
+                break;
+            case CL_EXTERNAL_MEMORY_HANDLE_OPAQUE_WIN32_KMT_KHR:
+                *vkExtMemoryHandleType = VK_EXTERNAL_MEMORY_HANDLE_TYPE_OPAQUE_WIN32_KMT_BIT;
+                break;
+            case CL_EXTERNAL_MEMORY_HANDLE_D3D11_TEXTURE_KHR:
+                *vkExtMemoryHandleType = VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_BIT;
+                break;
+            case CL_EXTERNAL_MEMORY_HANDLE_D3D11_TEXTURE_KMT_KHR:
+                *vkExtMemoryHandleType = VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D11_TEXTURE_KMT_BIT;
+                break;
+            case CL_EXTERNAL_MEMORY_HANDLE_D3D12_HEAP_KHR:
+                *vkExtMemoryHandleType = VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_HEAP_BIT;
+                break;
+            case CL_EXTERNAL_MEMORY_HANDLE_D3D12_RESOURCE_KHR:
+                *vkExtMemoryHandleType = VK_EXTERNAL_MEMORY_HANDLE_TYPE_D3D12_RESOURCE_BIT;
+                break;
+            default:
+                propertyStatus = false;
+                break;
+        }
+
+        if (propertyStatus)
+        {
+            *fd = *(reinterpret_cast<int32_t *>(propertyIterator->value));
+            if (*fd < 0)
+            {
+                propertyStatus = false;
+            }
+            break;
+        }
+        propertyIterator++;
+    }
+
+    return propertyStatus;
 }
 
 }  // namespace
@@ -194,6 +250,17 @@ vk::BufferHelper &CLBufferVk::getBuffer()
 
 angle::Result CLBufferVk::create(void *hostPtr)
 {
+    const cl_mem_properties *properties = getFrontendObject().getProperties().data();
+    if (properties)
+    {
+        const cl::NameValueProperty *property =
+            reinterpret_cast<const cl::NameValueProperty *>(properties);
+        if (property->name != 0)
+        {
+            return createWithProperties();
+        }
+    }
+
     if (!isSubBuffer())
     {
         VkBufferCreateInfo createInfo  = mDefaultBufferCreateInfo;
@@ -210,6 +277,43 @@ angle::Result CLBufferVk::create(void *hostPtr)
                                     CL_OUT_OF_RESOURCES);
         }
     }
+    return angle::Result::Continue;
+}
+
+angle::Result CLBufferVk::createWithProperties()
+{
+    ASSERT(!isSubBuffer());
+
+    int32_t sharedBufferFD = -1;
+    VkExternalMemoryHandleTypeFlagBits vkExtMemoryHandleType;
+    const cl_mem_properties *properties = getFrontendObject().getProperties().data();
+    if (GetExternalMemoryHandleInfo(properties, &vkExtMemoryHandleType, &sharedBufferFD))
+    {
+#if defined(ANGLE_PLATFORM_WINDOWS)
+        UNIMPLEMENTED();
+        ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+#else
+        VkBufferCreateInfo createInfo  = mDefaultBufferCreateInfo;
+        createInfo.size                = getSize();
+        VkMemoryPropertyFlags memFlags = getVkMemPropertyFlags();
+
+        // VK_KHR_external_memory assumes the ownership of the buffer as part of the import
+        // operation. No such requirement is present with cl_khr_external_memory and
+        // cl_arm_import_memory extension. So we dup the fd for now, and let the application still
+        // hold on to the fd.
+        if (IsError(mBuffer.initAndAcquireFromExternalMemory(
+                mContext, memFlags, createInfo, vkExtMemoryHandleType, dup(sharedBufferFD))))
+        {
+            ANGLE_CL_RETURN_ERROR(CL_OUT_OF_RESOURCES);
+        }
+#endif
+    }
+    else
+    {
+        // Don't expect to be here, as validation layer should have caught unsupported uses.
+        UNREACHABLE();
+    }
+
     return angle::Result::Continue;
 }
 
@@ -655,8 +759,10 @@ void CLImageVk::packPixels(const void *fillColor, PixelColor *packedColor)
             else
             {
                 for (unsigned int i = 0; i < channelCount; i++)
+                {
                     packedColor->u8[i] =
                         static_cast<unsigned char>(NormalizeFloatValue(srcVector[i], 255.f));
+                }
             }
             break;
         }
@@ -664,68 +770,86 @@ void CLImageVk::packPixels(const void *fillColor, PixelColor *packedColor)
         {
             int *srcVector = static_cast<int *>(const_cast<void *>(fillColor));
             for (unsigned int i = 0; i < channelCount; i++)
+            {
                 packedColor->s8[i] = static_cast<char>(std::clamp(srcVector[i], -128, 127));
+            }
             break;
         }
         case CL_UNSIGNED_INT8:
         {
             unsigned int *srcVector = static_cast<unsigned int *>(const_cast<void *>(fillColor));
             for (unsigned int i = 0; i < channelCount; i++)
+            {
                 packedColor->u8[i] = static_cast<unsigned char>(
                     std::clamp(static_cast<unsigned int>(srcVector[i]),
                                static_cast<unsigned int>(0), static_cast<unsigned int>(255)));
+            }
             break;
         }
         case CL_UNORM_INT16:
         {
             float *srcVector = static_cast<float *>(const_cast<void *>(fillColor));
             for (unsigned int i = 0; i < channelCount; i++)
+            {
                 packedColor->u16[i] =
                     static_cast<unsigned short>(NormalizeFloatValue(srcVector[i], 65535.f));
+            }
             break;
         }
         case CL_SIGNED_INT16:
         {
             int *srcVector = static_cast<int *>(const_cast<void *>(fillColor));
             for (unsigned int i = 0; i < channelCount; i++)
+            {
                 packedColor->s16[i] = static_cast<short>(std::clamp(srcVector[i], -32768, 32767));
+            }
             break;
         }
         case CL_UNSIGNED_INT16:
         {
             unsigned int *srcVector = static_cast<unsigned int *>(const_cast<void *>(fillColor));
             for (unsigned int i = 0; i < channelCount; i++)
+            {
                 packedColor->u16[i] = static_cast<unsigned short>(
                     std::clamp(static_cast<unsigned int>(srcVector[i]),
                                static_cast<unsigned int>(0), static_cast<unsigned int>(65535)));
+            }
             break;
         }
         case CL_HALF_FLOAT:
         {
             float *srcVector = static_cast<float *>(const_cast<void *>(fillColor));
             for (unsigned int i = 0; i < channelCount; i++)
+            {
                 packedColor->fp16[i] = cl_half_from_float(srcVector[i], CL_HALF_RTE);
+            }
             break;
         }
         case CL_SIGNED_INT32:
         {
             int *srcVector = static_cast<int *>(const_cast<void *>(fillColor));
             for (unsigned int i = 0; i < channelCount; i++)
+            {
                 packedColor->s32[i] = static_cast<int>(srcVector[i]);
+            }
             break;
         }
         case CL_UNSIGNED_INT32:
         {
             unsigned int *srcVector = static_cast<unsigned int *>(const_cast<void *>(fillColor));
             for (unsigned int i = 0; i < channelCount; i++)
+            {
                 packedColor->u32[i] = static_cast<unsigned int>(srcVector[i]);
+            }
             break;
         }
         case CL_FLOAT:
         {
             float *srcVector = static_cast<float *>(const_cast<void *>(fillColor));
             for (unsigned int i = 0; i < channelCount; i++)
+            {
                 packedColor->fp32[i] = srcVector[i];
+            }
             break;
         }
         default:

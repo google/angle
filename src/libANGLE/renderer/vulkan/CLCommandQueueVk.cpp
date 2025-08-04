@@ -1449,6 +1449,37 @@ angle::Result CLCommandQueueVk::finish()
     return finishInternal();
 }
 
+angle::Result CLCommandQueueVk::enqueueAcquireExternalMemObjectsKHR(
+    const cl::MemoryPtrs &memObjects,
+    const cl::EventPtrs &waitEvents,
+    CLEventImpl::CreateFunc *eventCreateFunc)
+{
+    std::scoped_lock<std::mutex> sl(mCommandQueueMutex);
+
+    // for Vulkan imported memory, Vulkan driver already acquired ownership during buffer/image
+    // create with properties, so nothing left to do here other than event processing
+    ANGLE_TRY(processWaitlist(waitEvents));
+    ANGLE_TRY(createEvent(eventCreateFunc, cl::ExecutionStatus::Complete));
+
+    return angle::Result::Continue;
+}
+
+angle::Result CLCommandQueueVk::enqueueReleaseExternalMemObjectsKHR(
+    const cl::MemoryPtrs &memObjects,
+    const cl::EventPtrs &waitEvents,
+    CLEventImpl::CreateFunc *eventCreateFunc)
+{
+    std::scoped_lock<std::mutex> sl(mCommandQueueMutex);
+
+    // since we dup'ed the fd during buffer/image create with properties, there is no "releasing"
+    // back to user (unlike VkImportMemoryFdInfoKHR), thus nothing left to do here except for
+    // event processing
+    ANGLE_TRY(processWaitlist(waitEvents));
+    ANGLE_TRY(createEvent(eventCreateFunc, cl::ExecutionStatus::Complete));
+
+    return angle::Result::Continue;
+}
+
 angle::Result CLCommandQueueVk::syncHostBuffers(HostTransferEntries &hostTransferList)
 {
     if (!hostTransferList.empty())

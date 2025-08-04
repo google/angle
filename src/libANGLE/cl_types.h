@@ -315,6 +315,13 @@ struct NDRange
     bool nullLocalWorkSize{false};
 };
 
+// Memory property element from cl_khr_external_memory
+struct NameValueProperty
+{
+    intptr_t name;
+    intptr_t value;
+};
+
 }  // namespace cl
 
 #endif  // ANGLE_ENABLE_CL

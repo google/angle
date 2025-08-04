@@ -211,7 +211,16 @@ CLDeviceImpl::Info CLDeviceVk::createInfo(cl::DeviceType type) const
                         .name    = "cl_khr_local_int32_extended_atomics"},
     };
 
+    CLExtensions::ExternalMemoryHandleBitset supportedHandles;
+    supportedHandles.set(cl::ExternalMemoryHandle::OpaqueFd, supportsExternalMemoryFd());
+    supportedHandles.set(cl::ExternalMemoryHandle::DmaBuf, supportsExternalMemoryDmaBuf());
+
     // Populate other extensions based on feature support
+    if (info.populateSupportedExternalMemoryHandleTypes(supportedHandles))
+    {
+        versionedExtensionList.push_back(
+            cl_name_version{.version = CL_MAKE_VERSION(1, 0, 0), .name = "cl_khr_external_memory"});
+    }
     if (mRenderer->getFeatures().supportsShaderFloat16.enabled)
     {
         versionedExtensionList.push_back(
@@ -326,6 +335,16 @@ angle::Result CLDeviceVk::getInfoString(cl::DeviceInfo name, size_t size, char *
     ANGLE_CL_RETURN_ERROR(CL_INVALID_VALUE);
 }
 
+bool CLDeviceVk::supportsExternalMemoryFd() const
+{
+    return mRenderer->getFeatures().supportsExternalMemoryFd.enabled;
+}
+
+bool CLDeviceVk::supportsExternalMemoryDmaBuf() const
+{
+    return mRenderer->getFeatures().supportsExternalMemoryDmaBuf.enabled;
+}
+
 angle::Result CLDeviceVk::createSubDevices(const cl_device_partition_property *properties,
                                            cl_uint numDevices,
                                            CreateFuncs &subDevices,
@@ -431,4 +450,5 @@ CLDeviceVk::getIntegerDotProductAccelerationProperties4x8BitPacked() const
 
     return integerDotProductAccelerationProperties;
 }
+
 }  // namespace rx

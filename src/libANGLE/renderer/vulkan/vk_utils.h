@@ -613,6 +613,17 @@ VkResult AllocateBufferMemoryWithRequirements(ErrorContext *context,
                                               uint32_t *memoryTypeIndexOut,
                                               DeviceMemory *deviceMemoryOut);
 
+angle::Result InitExternalSharedFDMemory(
+    ErrorContext *context,
+    const VkExternalMemoryHandleTypeFlagBits externalMemoryHandleType,
+    const int32_t sharedBufferFD,
+    VkMemoryPropertyFlags memoryProperties,
+    Buffer *buffer,
+    VkMemoryPropertyFlags *memoryPropertyFlagsOut,
+    uint32_t *memoryTypeIndexOut,
+    DeviceMemory *deviceMemoryOut,
+    VkDeviceSize *sizeOut);
+
 gl::TextureType Get2DTextureType(uint32_t layerCount, GLint samples);
 
 enum class RecordingMode
@@ -1430,6 +1441,9 @@ void InitHostImageCopyFunctions(VkDevice device);
 
 // VK_KHR_Synchronization2
 void InitSynchronization2Functions(VkDevice device);
+
+// VK_KHR_external_memory_fd
+void InitExternalMemoryFdFunctions(VkDevice device);
 
 #endif  // !defined(ANGLE_SHARED_LIBVULKAN)
 

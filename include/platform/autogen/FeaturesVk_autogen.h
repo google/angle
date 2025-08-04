@@ -284,8 +284,14 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
-    FeatureInfo supportsExternalMemoryDmaBufAndModifiers = {
-        "supportsExternalMemoryDmaBufAndModifiers",
+    FeatureInfo supportsExternalMemoryDmaBuf = {
+        "supportsExternalMemoryDmaBuf",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
+    FeatureInfo supportsImageDrmFormatModifier = {
+        "supportsImageDrmFormatModifier",
         FeatureCategory::VulkanFeatures,
         &members,
     };
