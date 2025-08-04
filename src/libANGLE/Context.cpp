@@ -319,10 +319,11 @@ bool GetRobustAccess(const egl::AttributeMap &attribs)
     return (attribRobustAccess || contextFlagsRobustAccess);
 }
 
-bool GetDebug(const egl::AttributeMap &attribs)
+bool GetDebug(const angle::FrontendFeatures &frontendFeatures, const egl::AttributeMap &attribs)
 {
-    return (attribs.get(EGL_CONTEXT_OPENGL_DEBUG, EGL_FALSE) == EGL_TRUE) ||
-           ((attribs.get(EGL_CONTEXT_FLAGS_KHR, 0) & EGL_CONTEXT_OPENGL_DEBUG_BIT_KHR) != 0);
+    return frontendFeatures.forceDebugContexts.enabled ||
+           attribs.get(EGL_CONTEXT_OPENGL_DEBUG, EGL_FALSE) == EGL_TRUE ||
+           (attribs.get(EGL_CONTEXT_FLAGS_KHR, 0) & EGL_CONTEXT_OPENGL_DEBUG_BIT_KHR) != 0;
 }
 
 bool GetNoError(const egl::AttributeMap &attribs)
@@ -675,7 +676,7 @@ Context::Context(egl::Display *display,
              AllocateOrUseContextMutex(sharedContextMutex),
              &mOverlay,
              GetClientVersion(display, attribs),
-             GetDebug(attribs),
+             GetDebug(display->getFrontendFeatures(), attribs),
              GetBindGeneratesResource(attribs),
              GetClientArraysEnabled(attribs),
              GetRobustResourceInit(display, attribs),
@@ -10037,7 +10038,11 @@ ErrorSet::ErrorSet(Debug *debug,
       mContextLostForced(false),
       mResetStatus(GraphicsResetStatus::NoError),
       mErrorMessageCount(0),
-      mMaxErrorMessages(GetDebug(attribs) ? std::numeric_limits<uint32_t>::max() / 2 : 16),
+      // Note: mMaxErrorMessages is kept far from max to avoid overflowing mErrorMessageCount in
+      // case of multiple contexts simultaneously adding (context loss) errors, hence the division
+      // by 2.
+      mMaxErrorMessages(
+          GetDebug(frontendFeatures, attribs) ? std::numeric_limits<uint32_t>::max() / 2 : 16),
       mSkipValidation(GetNoError(attribs)),
       mContextLost(0),
 #if defined(ANGLE_ENABLE_ASSERTS)

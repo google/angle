@@ -201,6 +201,12 @@ struct FrontendFeatures : FeatureSetBase
         &members,
     };
 
+    FeatureInfo forceDebugContexts = {
+        "forceDebugContexts",
+        FeatureCategory::FrontendFeatures,
+        &members,
+    };
+
 };
 
 inline FrontendFeatures::FrontendFeatures()  = default;

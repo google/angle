@@ -176,6 +176,7 @@ enum class Feature
     ForceContinuousRefreshOnSharedPresent,
     ForceD16TexFilter,
     ForceD24S8AsUnsupported,
+    ForceDebugContexts,
     ForceDepthAttachmentInitOnClear,
     ForceDisableFullScreenExclusive,
     ForceFallbackFormat,
