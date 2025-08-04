@@ -190,9 +190,11 @@ enum class DeviceInfo : uint8_t
     IntegerDotProductCapabilities                       = 109,
     IntegerDotProductAccelerationProperties8bit         = 110,
     IntegerDotProductAccelerationProperties4x8bitPacked = 111,
+    ExternalMemoryImportHandleTypes                     = 112,
+    ExternalMemoryLinearImagesHandleTypes               = 113,
 
-    InvalidEnum = 112,
-    EnumCount   = 112,
+    InvalidEnum = 114,
+    EnumCount   = 114,
 };
 
 template <>
@@ -232,6 +234,26 @@ template <>
 ExecutionStatus FromCLenum<ExecutionStatus>(CLenum from);
 CLenum ToCLenum(ExecutionStatus from);
 std::ostream &operator<<(std::ostream &os, ExecutionStatus value);
+
+enum class ExternalMemoryHandle : uint8_t
+{
+    OpaqueFd        = 0,
+    OpaqueWin32     = 1,
+    OpaqueWin32Kmt  = 2,
+    D3D11Texture    = 3,
+    D3D11TextureKmt = 4,
+    D3D12Heap       = 5,
+    D3D12Resource   = 6,
+    DmaBuf          = 7,
+
+    InvalidEnum = 8,
+    EnumCount   = 8,
+};
+
+template <>
+ExternalMemoryHandle FromCLenum<ExternalMemoryHandle>(CLenum from);
+CLenum ToCLenum(ExternalMemoryHandle from);
+std::ostream &operator<<(std::ostream &os, ExternalMemoryHandle value);
 
 enum class FilterMode : uint8_t
 {
@@ -397,6 +419,20 @@ MemObjectType FromCLenum<MemObjectType>(CLenum from);
 CLenum ToCLenum(MemObjectType from);
 std::ostream &operator<<(std::ostream &os, MemObjectType value);
 
+enum class MemProperties : uint8_t
+{
+    ExternalMemoryHandleListStart = 0,
+    ExternalMemoryHandleListEnd   = 1,
+
+    InvalidEnum = 2,
+    EnumCount   = 2,
+};
+
+template <>
+MemProperties FromCLenum<MemProperties>(CLenum from);
+CLenum ToCLenum(MemProperties from);
+std::ostream &operator<<(std::ostream &os, MemProperties value);
+
 enum class PipeInfo : uint8_t
 {
     PacketSize = 0,
@@ -423,9 +459,10 @@ enum class PlatformInfo : uint8_t
     NumericVersion        = 6,
     ExtensionsWithVersion = 7,
     IcdSuffix             = 8,
+    ExternalMemory        = 9,
 
-    InvalidEnum = 9,
-    EnumCount   = 9,
+    InvalidEnum = 10,
+    EnumCount   = 10,
 };
 
 template <>

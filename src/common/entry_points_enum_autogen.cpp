@@ -70,6 +70,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "clCreateSubDevices";
         case EntryPoint::CLCreateUserEvent:
             return "clCreateUserEvent";
+        case EntryPoint::CLEnqueueAcquireExternalMemObjectsKHR:
+            return "clEnqueueAcquireExternalMemObjectsKHR";
         case EntryPoint::CLEnqueueBarrier:
             return "clEnqueueBarrier";
         case EntryPoint::CLEnqueueBarrierWithWaitList:
@@ -108,6 +110,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "clEnqueueReadBufferRect";
         case EntryPoint::CLEnqueueReadImage:
             return "clEnqueueReadImage";
+        case EntryPoint::CLEnqueueReleaseExternalMemObjectsKHR:
+            return "clEnqueueReleaseExternalMemObjectsKHR";
         case EntryPoint::CLEnqueueSVMFree:
             return "clEnqueueSVMFree";
         case EntryPoint::CLEnqueueSVMMap:

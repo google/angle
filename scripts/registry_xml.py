@@ -438,6 +438,9 @@ supported_cl_extensions = [
     "cl_khr_depth_images",
     "cl_khr_image2d_from_buffer",
 
+    # OpenCL 3.0
+    "cl_khr_external_memory",
+
     # Optional
     "cl_khr_extended_versioning",
     "cl_khr_fp64",

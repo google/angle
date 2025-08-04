@@ -1130,6 +1130,28 @@ cl_int EnqueueSVMMigrateMem(cl_command_queue command_queue,
     return CL_INVALID_OPERATION;
 }
 
+cl_int EnqueueAcquireExternalMemObjectsKHR(cl_command_queue command_queue,
+                                           cl_uint num_mem_objects,
+                                           const cl_mem *mem_objects,
+                                           cl_uint num_events_in_wait_list,
+                                           const cl_event *event_wait_list,
+                                           cl_event *event)
+{
+    WARN_NOT_SUPPORTED(EnqueueAcquireExternalMemObjectsKHR);
+    return CL_INVALID_OPERATION;
+}
+
+cl_int EnqueueReleaseExternalMemObjectsKHR(cl_command_queue command_queue,
+                                           cl_uint num_mem_objects,
+                                           const cl_mem *mem_objects,
+                                           cl_uint num_events_in_wait_list,
+                                           const cl_event *event_wait_list,
+                                           cl_event *event)
+{
+    WARN_NOT_SUPPORTED(EnqueueReleaseExternalMemObjectsKHR);
+    return CL_INVALID_OPERATION;
+}
+
 void *GetExtensionFunctionAddressForPlatform(cl_platform_id platform, const char *func_name)
 {
     return GetExtensionFunctionAddress(func_name);
