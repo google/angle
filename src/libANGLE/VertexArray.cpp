@@ -369,54 +369,48 @@ ANGLE_INLINE VertexArray::DirtyBindingBits VertexArray::bindVertexBufferImpl(con
     Buffer *oldBuffer = mVertexArrayBuffers[bindingIndex].get();
 
     DirtyBindingBits dirtyBindingBits;
-    dirtyBindingBits.set(DIRTY_BINDING_BUFFER, oldBuffer != boundBuffer);
+    // Even if we are rebinding the same buffer, buffer could have been changed in another context.
+    // We must dirty it so that buffer will be checked again.
+    dirtyBindingBits.set(DIRTY_BINDING_BUFFER, true);
     dirtyBindingBits.set(DIRTY_BINDING_STRIDE, static_cast<GLuint>(stride) != binding->getStride());
     dirtyBindingBits.set(DIRTY_BINDING_OFFSET, offset != binding->getOffset());
 
-    if (dirtyBindingBits.none())
+    // Several nullptr checks are combined here for optimization purposes.
+    if (oldBuffer)
     {
-        return dirtyBindingBits;
+        oldBuffer->onNonTFBindingChanged(-1);
+        oldBuffer->removeVertexArrayBinding(context, bindingIndex);
+        oldBuffer->release(context);
+        mBufferBindingMask.reset(bindingIndex);
     }
 
-    if (boundBuffer != oldBuffer)
+    mVertexArrayBuffers[bindingIndex].assign(boundBuffer);
+
+    // Update client memory attribute pointers. Affects all bound attributes.
+    if (boundBuffer)
     {
-        // Several nullptr checks are combined here for optimization purposes.
-        if (oldBuffer)
+        boundBuffer->addRef();
+        boundBuffer->onNonTFBindingChanged(1);
+        boundBuffer->addVertexArrayBinding(context, bindingIndex);
+        if (context->isWebGL())
         {
-            oldBuffer->onNonTFBindingChanged(-1);
-            oldBuffer->removeVertexArrayBinding(context, bindingIndex);
-            oldBuffer->release(context);
-            mBufferBindingMask.reset(bindingIndex);
+            mCachedTransformFeedbackConflictedBindingsMask.set(
+                bindingIndex, boundBuffer->hasWebGLXFBBindingConflict(true));
         }
-
-        mVertexArrayBuffers[bindingIndex].assign(boundBuffer);
-
-        // Update client memory attribute pointers. Affects all bound attributes.
-        if (boundBuffer)
+        mBufferBindingMask.set(bindingIndex);
+        mState.mClientMemoryAttribsMask &= ~binding->getBoundAttributesMask();
+        updateCachedMappedArrayBuffersBinding(bindingIndex);
+    }
+    else
+    {
+        if (context->isWebGL())
         {
-            boundBuffer->addRef();
-            boundBuffer->onNonTFBindingChanged(1);
-            boundBuffer->addVertexArrayBinding(context, bindingIndex);
-            if (context->isWebGL())
-            {
-                mCachedTransformFeedbackConflictedBindingsMask.set(
-                    bindingIndex, boundBuffer->hasWebGLXFBBindingConflict(true));
-            }
-            mBufferBindingMask.set(bindingIndex);
-            mState.mClientMemoryAttribsMask &= ~binding->getBoundAttributesMask();
-            updateCachedMappedArrayBuffersBinding(bindingIndex);
+            mCachedTransformFeedbackConflictedBindingsMask.set(bindingIndex, false);
         }
-        else
-        {
-            if (context->isWebGL())
-            {
-                mCachedTransformFeedbackConflictedBindingsMask.set(bindingIndex, false);
-            }
-            mState.mClientMemoryAttribsMask |= binding->getBoundAttributesMask();
-            mCachedBufferPropertyMapped.set(bindingIndex, false);
-            mCachedBufferPropertyMutableOrImpersistent.set(bindingIndex, false);
-            updateCachedArrayBuffersMasks(false, false, false, binding->getBoundAttributesMask());
-        }
+        mState.mClientMemoryAttribsMask |= binding->getBoundAttributesMask();
+        mCachedBufferPropertyMapped.set(bindingIndex, false);
+        mCachedBufferPropertyMutableOrImpersistent.set(bindingIndex, false);
+        updateCachedArrayBuffersMasks(false, false, false, binding->getBoundAttributesMask());
     }
 
     binding->setOffset(offset);
