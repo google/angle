@@ -1314,8 +1314,8 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         addExtensionPrerequisite("GL_OES_framebuffer_object");
     }
 
-    // glDebugMessageControlKHR and glDebugMessageCallbackKHR crash on ARM GLES1.
-    if (IsARM() && mParams->traceInfo.contextClientMajorVersion == 1)
+    // GL_KHR_debug does not work on Android for GLES1
+    if (IsAndroid() && mParams->traceInfo.contextClientMajorVersion == 1)
     {
         mEnableDebugCallback = false;
     }
