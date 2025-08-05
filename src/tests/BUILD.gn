@@ -594,7 +594,7 @@ template("angle_perftests_common") {
     public_deps = [
       "$angle_root:angle_gl_enum_utils",
       "$angle_root/src/tests:angle_test_expectations",
-      "$angle_root/third_party/rapidjson:rapidjson",
+      "$angle_root/third_party/rapidjson",
       "${invoker.test_utils}",
     ]
     public_configs += [
@@ -1996,6 +1996,12 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     api = "gles32"
   }
 
+  angle_deqp_khr_gtest("khr_glesext") {
+    defines = [ "ANGLE_DEQP_KHR_GLESEXT_TESTS" ]
+    mustpass_name = "gles32-khr-glesext.txt"
+    api = "gles32"
+  }
+
   template("angle_deqp_rotate_gtest") {
     split_target = string_split(target_name, "_")
     _api = split_target[0]
@@ -2119,6 +2125,7 @@ group("angle_tests") {
       ":angle_deqp_khr_gles31_tests",
       ":angle_deqp_khr_gles32_tests",
       ":angle_deqp_khr_gles3_tests",
+      ":angle_deqp_khr_glesext_tests",
       ":angle_deqp_khr_noctx_gles2_tests",
       ":angle_deqp_khr_noctx_gles32_tests",
       ":angle_deqp_khr_single_gles32_tests",
