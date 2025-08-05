@@ -893,6 +893,29 @@
       },
     },
 
+    'angle_deqp_khr_glesext_vulkan_gtests': {
+      'angle_deqp_khr_glesext_vulkan_tests': {
+        'args': [
+          '--use-angle=vulkan',
+          '--surface-height=64',
+          '--surface-width=64',
+          '--deqp-base-seed=1',
+        ],
+        'android_args': [
+          '-v',
+          '--shard-timeout=500',
+        ],
+        'linux_args': [
+          '--no-xvfb',
+        ],
+        'merge': {
+          'script': '//scripts/angle_deqp_test_merge.py',
+        },
+        'test': 'angle_deqp_khr_glesext_tests',
+        'use_isolated_scripts_api': True,
+      },
+    },
+
     'angle_deqp_khr_noctx_gles2_vulkan_gtests': {
       'angle_deqp_khr_noctx_gles2_vulkan_tests': {
         'args': [
@@ -1541,6 +1564,7 @@
       'angle_deqp_khr_gles31_vulkan_gtests',
       'angle_deqp_khr_gles32_vulkan_gtests',
       'angle_deqp_khr_gles3_vulkan_gtests',
+      'angle_deqp_khr_glesext_vulkan_gtests',
       'angle_deqp_khr_noctx_gles2_vulkan_gtests',
       'angle_deqp_khr_noctx_gles32_vulkan_gtests',
       'angle_deqp_khr_single_gles32_vulkan_gtests',
@@ -1562,6 +1586,7 @@
       'angle_deqp_khr_gles31_vulkan_gtests',
       'angle_deqp_khr_gles32_vulkan_gtests',
       'angle_deqp_khr_gles3_vulkan_gtests',
+      'angle_deqp_khr_glesext_vulkan_gtests',
       'angle_deqp_khr_noctx_gles2_vulkan_gtests',
       'angle_deqp_khr_noctx_gles32_vulkan_gtests',
       'angle_deqp_khr_single_gles32_vulkan_gtests',
@@ -1622,6 +1647,7 @@
       'angle_deqp_khr_gles31_vulkan_gtests',
       'angle_deqp_khr_gles32_vulkan_gtests',
       'angle_deqp_khr_gles3_vulkan_gtests',
+      'angle_deqp_khr_glesext_vulkan_gtests',
       'angle_deqp_khr_noctx_gles2_vulkan_gtests',
       'angle_deqp_khr_noctx_gles32_vulkan_gtests',
       'angle_deqp_khr_single_gles32_vulkan_gtests',
@@ -1746,6 +1772,7 @@
       'angle_deqp_khr_gles31_vulkan_gtests',
       'angle_deqp_khr_gles32_vulkan_gtests',
       'angle_deqp_khr_gles3_vulkan_gtests',
+      'angle_deqp_khr_glesext_vulkan_gtests',
       'angle_deqp_khr_noctx_gles2_vulkan_gtests',
       'angle_deqp_khr_noctx_gles32_vulkan_gtests',
       'angle_deqp_khr_single_gles32_vulkan_gtests',
