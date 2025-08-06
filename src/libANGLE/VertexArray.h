@@ -383,7 +383,13 @@ class VertexArray final : public VertexArrayPrivate, public LabeledObject, publi
 
     void onBufferChanged(const Context *context,
                          angle::SubjectMessage message,
-                         VertexArrayBufferBindingMask vertexArrayBufferBindingMask);
+                         VertexArrayBufferBindingMask bufferBindingMask);
+
+    // A buffer attached to this vertex array is being bound. It might have been modified by other
+    // context.
+    void onSharedBufferBind(const Context *context,
+                            const Buffer *buffer,
+                            VertexArrayBufferBindingMask bufferBindingMask);
 
     const VertexArrayBuffers &getBufferBindingPointers() const { return mVertexArrayBuffers; }
 

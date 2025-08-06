@@ -71,6 +71,10 @@
 42267047 PIXEL4ORXL VULKAN : GLSLTest_ES3.VaryingAnonymousStructWithInlineDefinition2/* = SKIP
 42267047 PIXEL4ORXL VULKAN : GLSLTest_ES3.VaryingAnonymousStructWithInlineDefinition3/* = SKIP
 
+// Propagate buffer changes to VertexArray fail on some desktop drivers
+433331119 LINUX NVIDIA OPENGL : ValidationStateChangeTest.RebindBufferShouldPickupBufferChange/* = SKIP
+433331119 LINUX INTEL OPENGL : ValidationStateChangeTest.RebindBufferShouldPickupBufferChange/* = SKIP
+
 // Shared context failing on OpenGL and D3D11
 42266326 METAL : MultithreadingTest.CreateMultiSharedContextAndDraw/* = SKIP
 42266326 OPENGL : MultithreadingTest.CreateMultiSharedContextAndDraw/* = SKIP

@@ -685,7 +685,6 @@ void VertexArray::onBind(const Context *context)
         Buffer *bufferGL = mVertexArrayBuffers[bindingIndex].get();
         ASSERT(bufferGL != nullptr);
         ASSERT(bindingIndex != kElementArrayBufferIndex);
-
         bufferGL->addVertexArrayBinding(context, bindingIndex);
         updateCachedMappedArrayBuffersBinding(bindingIndex);
     }
@@ -797,6 +796,52 @@ bool VertexArrayPrivate::hasTransformFeedbackBindingConflict(const Context *cont
     }
 
     return false;
+}
+
+void VertexArray::onSharedBufferBind(const Context *context,
+                                     const Buffer *buffer,
+                                     VertexArrayBufferBindingMask bufferBindingMask)
+{
+    bufferBindingMask &= mBufferBindingMask;
+    ASSERT(bufferBindingMask.any());
+
+    // vertexBufferBindingMask is bufferBindingMask without elementBuffer.
+    VertexArrayBufferBindingMask vertexBufferBindingMask = bufferBindingMask;
+    vertexBufferBindingMask.reset(kElementArrayBufferIndex);
+
+    for (size_t bindingIndex : vertexBufferBindingMask)
+    {
+        updateCachedMappedArrayBuffersBinding(bindingIndex);
+    }
+
+    if (mBufferAccessValidationEnabled)
+    {
+        for (size_t bindingIndex : vertexBufferBindingMask)
+        {
+            ASSERT(buffer == mVertexArrayBuffers[bindingIndex].get());
+            mCachedBufferSize[bindingIndex] = buffer->getSize();
+            updateCachedElementLimit(mState.mVertexBindings[bindingIndex],
+                                     mCachedBufferSize[bindingIndex]);
+        }
+    }
+
+    if (context->isWebGL())
+    {
+        if (buffer->hasWebGLXFBBindingConflict(true))
+        {
+            mCachedBufferPropertyTransformFeedbackConflict |= vertexBufferBindingMask;
+        }
+        else
+        {
+            mCachedBufferPropertyTransformFeedbackConflict &= ~vertexBufferBindingMask;
+        }
+    }
+
+    // Set proper dirty bits on VertexArray
+    mDirtyBits |= mVertexArray->checkBufferForDirtyBits(context, bufferBindingMask);
+
+    // mIndexRangeInlineCache is no longer invalid
+    mIndexRangeInlineCache = {};
 }
 
 void VertexArray::onBufferChanged(const Context *context,

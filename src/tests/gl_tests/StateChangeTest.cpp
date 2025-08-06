@@ -5638,6 +5638,103 @@ TEST_P(ValidationStateChangeTest, MapBufferWithAttribDisabledThenEnableAndDraw)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
 }
 
+// Test draw with mapped buffer in context2 generates GL_INVALID_OPERATION. Rebind the same buffer
+// in context1 should pick up the buffer changes.
+TEST_P(ValidationStateChangeTest, RebindBufferShouldPickupBufferChange)
+{
+    EGLWindow *window   = getEGLWindow();
+    EGLDisplay display  = window->getDisplay();
+    EGLConfig config    = window->getConfig();
+    EGLContext context1 = window->getContext();
+    EGLSurface surface1 = window->getSurface();
+
+    // Initialize program and set up state.
+    ANGLE_GL_PROGRAM(program, kColorVS, kColorFS);
+
+    glUseProgram(program);
+    GLint positionLoc = glGetAttribLocation(program, "position");
+    ASSERT_NE(-1, positionLoc);
+    GLint colorLoc = glGetAttribLocation(program, "color");
+    ASSERT_NE(-1, colorLoc);
+
+    const std::array<Vector3, 6> &quadVertices = GetQuadVertices();
+    const size_t posBufferSize                 = quadVertices.size() * sizeof(Vector3);
+
+    // Start with context 1, with position and color enabled and unmapped. Draw should success.
+    GLBuffer posBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, posBuffer);
+    glBufferData(GL_ARRAY_BUFFER, posBufferSize, quadVertices.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(positionLoc);
+    std::vector<GLColor> colorVertices(6, GLColor::blue);
+    const size_t colorBufferSize = sizeof(GLColor) * 6;
+    GLBuffer colorBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+    glBufferData(GL_ARRAY_BUFFER, colorBufferSize, colorVertices.data(), GL_STATIC_DRAW);
+    glVertexAttribPointer(colorLoc, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, nullptr);
+    glEnableVertexAttribArray(colorLoc);
+    glVertexAttrib4f(colorLoc, 0, 1, 0, 1);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    // Created shared context2, and switch to context2 and draw. Should success.
+    EGLint pbufferAttributes[] = {EGL_WIDTH,         getWindowWidth(), EGL_HEIGHT,
+                                  getWindowHeight(), EGL_NONE,         EGL_NONE};
+    EGLSurface surface2        = eglCreatePbufferSurface(display, config, pbufferAttributes);
+    EGLContext context2        = window->createContext(context1, nullptr);
+    EXPECT_EGL_SUCCESS();
+    ASSERT_NE(context2, EGL_NO_CONTEXT);
+    eglMakeCurrent(display, surface2, surface2, context2);
+    EXPECT_EGL_SUCCESS();
+    glUseProgram(program);
+    glBindBuffer(GL_ARRAY_BUFFER, posBuffer);
+    glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(positionLoc);
+    glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+    glVertexAttribPointer(colorLoc, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, nullptr);
+    glEnableVertexAttribArray(colorLoc);
+    glVertexAttrib4f(colorLoc, 0, 1, 0, 1);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    // In context2, map color buffer again and draw, should produce produce GL_INVALID_OPERATION
+    GLColor *bufferPtr =
+        (GLColor *)glMapBufferRange(GL_ARRAY_BUFFER, 0, colorBufferSize, GL_MAP_WRITE_BIT);
+    for (size_t i = 0; i < 6; i++)
+    {
+        bufferPtr[i] = GLColor::red;
+    }
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Now switch back to context1 and draw. Since buffer is modified (map) in context2, we need to
+    // rebind the buffer. Rebind should pick up the buffer change and produce GL_INVALID_OPERATION.
+    eglMakeCurrent(display, surface1, surface1, context1);
+    EXPECT_EGL_SUCCESS();
+    glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Back to context2 and unmap the color buffer without draw
+    eglMakeCurrent(display, surface2, surface2, context2);
+    EXPECT_EGL_SUCCESS();
+    glUnmapBuffer(GL_ARRAY_BUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    // Switch back to context1 and rebind and draw. Rebind should pick up the buffer change and draw
+    // should succeed.
+    eglMakeCurrent(display, surface1, surface1, context1);
+    EXPECT_EGL_SUCCESS();
+    glBindBuffer(GL_ARRAY_BUFFER, colorBuffer);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Clean up and destroy context2
+    eglMakeCurrent(display, surface1, surface1, context1);
+    eglDestroyContext(display, context2);
+}
+
 // Tests that mapping an immutable and persistent buffer after calling glVertexAttribPointer()
 // allows rendering to succeed.
 TEST_P(ValidationStateChangeTest, MapImmutablePersistentBufferAndDraw)

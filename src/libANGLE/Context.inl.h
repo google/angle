@@ -190,6 +190,22 @@ ANGLE_INLINE void Context::bindBuffer(BufferBinding target, BufferID buffer)
     Buffer *bufferObject =
         mState.mBufferManager->checkBufferAllocation(mImplementation.get(), buffer);
 
+    // If there is a shared context, buffer may have been modified by other context. bindBuffer
+    // supposedly should pick up the changes other contexts have made and update current vertex
+    // array.
+    if (bufferObject != nullptr && isSharedContext())
+    {
+        VertexArrayBufferBindingMask bindingMask = bufferObject->getVertexArrayBinding(this);
+        if (bindingMask.any())
+        {
+            ASSERT(mState.mVertexArray != nullptr);
+            // Update vertex array only if buffer is attached to current vertex array.
+            mState.mVertexArray->onSharedBufferBind(this, bufferObject, bindingMask);
+            mState.setObjectDirty(GL_VERTEX_ARRAY);
+            mPrivateStateCache.onVertexArrayBufferContentsChange();
+        }
+    }
+
     // Early return if rebinding the same buffer
     if (bufferObject == mState.getTargetBuffer(target))
     {

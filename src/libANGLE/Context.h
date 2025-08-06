@@ -754,9 +754,14 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
         return mState.isCurrentVertexArray(va);
     }
 
-    ANGLE_INLINE bool isShared() const { return mShared; }
+    bool isShared() const { return mShared; }
+    bool isSharedContext() const { return mSharedContext; }
     // Once a context is setShared() it cannot be undone
-    void setShared() { mShared = true; }
+    void setShared()
+    {
+        mShared        = true;
+        mSharedContext = true;
+    }
 
     const State &getState() const { return mState; }
     const PrivateState &getPrivateState() const { return mState.privateState(); }
@@ -1035,6 +1040,7 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     State mState;
     bool mShared;
+    bool mSharedContext;
     bool mDisplayTextureShareGroup;
     bool mDisplaySemaphoreShareGroup;
 
