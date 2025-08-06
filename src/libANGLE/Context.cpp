@@ -10040,11 +10040,17 @@ ErrorSet::ErrorSet(Debug *debug,
       mContextLostForced(false),
       mResetStatus(GraphicsResetStatus::NoError),
       mErrorMessageCount(0),
+      // Limit the error message spam to a small number when the context is not in debug mode, as
+      // some apps make invalid but harmless calls and the spam has a non-trivial cost. The error
+      // messages are always reported for WebGL since Chromium uses the debug callback to detect
+      // errors instead of glGetError().
+      //
       // Note: mMaxErrorMessages is kept far from max to avoid overflowing mErrorMessageCount in
       // case of multiple contexts simultaneously adding (context loss) errors, hence the division
       // by 2.
-      mMaxErrorMessages(
-          GetDebug(frontendFeatures, attribs) ? std::numeric_limits<uint32_t>::max() / 2 : 16),
+      mMaxErrorMessages(GetWebGLContext(attribs) || GetDebug(frontendFeatures, attribs)
+                            ? std::numeric_limits<uint32_t>::max() / 2
+                            : 16),
       mSkipValidation(GetNoError(attribs)),
       mContextLost(0),
 #if defined(ANGLE_ENABLE_ASSERTS)
