@@ -10041,16 +10041,13 @@ ErrorSet::ErrorSet(Debug *debug,
       mResetStatus(GraphicsResetStatus::NoError),
       mErrorMessageCount(0),
       // Limit the error message spam to a small number when the context is not in debug mode, as
-      // some apps make invalid but harmless calls and the spam has a non-trivial cost. The error
-      // messages are always reported for WebGL since Chromium uses the debug callback to detect
-      // errors instead of glGetError().
+      // some apps make invalid but harmless calls and the spam has a non-trivial cost.
       //
       // Note: mMaxErrorMessages is kept far from max to avoid overflowing mErrorMessageCount in
       // case of multiple contexts simultaneously adding (context loss) errors, hence the division
       // by 2.
-      mMaxErrorMessages(GetWebGLContext(attribs) || GetDebug(frontendFeatures, attribs)
-                            ? std::numeric_limits<uint32_t>::max() / 2
-                            : 16),
+      mMaxErrorMessages(
+          GetDebug(frontendFeatures, attribs) ? std::numeric_limits<uint32_t>::max() / 2 : 16),
       mSkipValidation(GetNoError(attribs)),
       mContextLost(0),
 #if defined(ANGLE_ENABLE_ASSERTS)
@@ -10091,11 +10088,14 @@ void ErrorSet::validationError(angle::EntryPoint entryPoint, GLenum errorCode, c
     bool reportMessage = true;
     bool isLastMessage = false;
 
-#if !defined(ANGLE_ENABLE_ASSERTS)
+#if !defined(ANGLE_ENABLE_ASSERTS) && !defined(ANGLE_ALWAYS_REPORT_VALIDATION_ERRORS)
     // In release mode, don't spam validation errors as they come with a performance cost, affecting
     // applications that make lots of invalid but otherwise harmless calls. Instead, only report the
     // first few messages. This can still be helpful to application developers who can fix the first
     // few errors more easily and get more messages on the next run.
+    //
+    // The error messages are always reported for Chromium which uses the debug callback to detect
+    // errors instead of glGetError().
     reportMessage =
         MessageCounterBelowMaxRepeat(&mErrorMessageCount, mMaxErrorMessages, &isLastMessage);
 #endif

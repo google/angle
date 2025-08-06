@@ -700,7 +700,7 @@ angle_static_library("angle_gpu_info_util") {
 
     if (angle_use_x11 && angle_has_build) {
       sources += libangle_gpu_info_util_x11_sources
-      deps += [ "src/third_party/libXNVCtrl:libXNVCtrl" ]
+      deps += [ "src/third_party/libXNVCtrl" ]
       defines += [ "GPU_INFO_USE_X11" ]
       libs += [
         "X11",
@@ -1151,6 +1151,9 @@ angle_source_set("libANGLE_no_vulkan") {
 
   if (is_debug) {
     defines += [ "ANGLE_GENERATE_SHADER_DEBUG_INFO" ]
+  }
+  if (build_with_chromium) {
+    defines += [ "ANGLE_ALWAYS_REPORT_VALIDATION_ERRORS" ]
   }
 
   configs += [ ":debug_annotations_config" ]
