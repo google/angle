@@ -1136,11 +1136,6 @@ angle_source_set("libANGLE_no_vulkan") {
     public_deps += [ "src/libANGLE/renderer/cl:angle_cl_backend" ]
   }
 
-  # Enable extra Chromium style warnings for libANGLE.
-  if (is_clang && angle_has_build) {
-    suppressed_configs -= [ "//build/config/clang:find_bad_constructs" ]
-  }
-
   if (is_apple) {
     sources += libangle_mac_sources
   }
