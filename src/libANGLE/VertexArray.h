@@ -382,6 +382,7 @@ class VertexArray final : public VertexArrayPrivate, public LabeledObject, publi
                                 IndexRange *indexRangeOut) const;
 
     void onBufferChanged(const Context *context,
+                         const Buffer *buffer,
                          angle::SubjectMessage message,
                          VertexArrayBufferBindingMask bufferBindingMask);
 
@@ -420,7 +421,7 @@ class VertexArray final : public VertexArrayPrivate, public LabeledObject, publi
     void setDependentDirtyBits(bool contentsChanged,
                                VertexArrayBufferBindingMask bufferBindingMask);
     void updateCachedMappedArrayBuffersBinding(size_t bindingIndex);
-    void updateCachedTransformFeedbackBindingValidation(size_t bindingIndex);
+    bool bufferMaskBitsPointToTheSameBuffer(VertexArrayBufferBindingMask bufferBindingMask) const;
 
     VertexArrayBuffers mVertexArrayBuffers;
     rx::VertexArrayImpl *mVertexArray;

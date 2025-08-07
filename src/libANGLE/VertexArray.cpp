@@ -315,14 +315,6 @@ ANGLE_INLINE void VertexArray::updateCachedMappedArrayBuffersBinding(size_t bind
                                          binding.getBoundAttributesMask());
 }
 
-ANGLE_INLINE void VertexArray::updateCachedTransformFeedbackBindingValidation(size_t bindingIndex)
-{
-    const Buffer *buffer = mVertexArrayBuffers[bindingIndex].get();
-    ASSERT(buffer != nullptr);
-    const bool hasConflict = buffer->hasWebGLXFBBindingConflict(true);
-    mCachedBufferPropertyTransformFeedbackConflict.set(bindingIndex, hasConflict);
-}
-
 void VertexArray::bindElementBuffer(const Context *context, Buffer *boundBuffer)
 {
     Buffer *oldBuffer = getElementArrayBuffer();
@@ -660,6 +652,24 @@ angle::Result VertexArray::syncState(const Context *context)
     return angle::Result::Continue;
 }
 
+bool VertexArray::bufferMaskBitsPointToTheSameBuffer(
+    VertexArrayBufferBindingMask bufferBindingMask) const
+{
+    const Buffer *buffer = nullptr;
+    for (size_t bindingIndex : bufferBindingMask)
+    {
+        if (buffer == nullptr)
+        {
+            buffer = mVertexArrayBuffers[bindingIndex].get();
+        }
+        else if (buffer != mVertexArrayBuffers[bindingIndex].get())
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 // This becomes current vertex array on the context
 void VertexArray::onBind(const Context *context)
 {
@@ -704,7 +714,8 @@ void VertexArray::onBind(const Context *context)
     {
         for (size_t bindingIndex : bufferBindingMask)
         {
-            updateCachedTransformFeedbackBindingValidation(bindingIndex);
+            bool hasConflict = mVertexArrayBuffers[bindingIndex]->hasWebGLXFBBindingConflict(true);
+            mCachedBufferPropertyTransformFeedbackConflict.set(bindingIndex, hasConflict);
         }
     }
 
@@ -845,12 +856,15 @@ void VertexArray::onSharedBufferBind(const Context *context,
 }
 
 void VertexArray::onBufferChanged(const Context *context,
+                                  const Buffer *buffer,
                                   angle::SubjectMessage message,
                                   VertexArrayBufferBindingMask vertexArrayBufferBindingMask)
 {
     VertexArrayBufferBindingMask bufferBindingMask =
         vertexArrayBufferBindingMask & mBufferBindingMask;
+    ASSERT(buffer);
     ASSERT(bufferBindingMask.any());
+    ASSERT(bufferMaskBitsPointToTheSameBuffer(bufferBindingMask));
 
     switch (message)
     {
@@ -861,7 +875,6 @@ void VertexArray::onBufferChanged(const Context *context,
                 VertexBufferBindingMask.reset(kElementArrayBufferIndex);
                 for (size_t bindingIndex : VertexBufferBindingMask)
                 {
-                    const Buffer *buffer = mVertexArrayBuffers[bindingIndex].get();
                     mCachedBufferSize[bindingIndex] = buffer->getSize();
                     updateCachedElementLimit(mState.mVertexBindings[bindingIndex],
                                              mCachedBufferSize[bindingIndex]);
@@ -876,9 +889,15 @@ void VertexArray::onBufferChanged(const Context *context,
             if (context->isWebGL())
             {
                 bufferBindingMask.reset(kElementArrayBufferIndex);
-                for (size_t bindingIndex : bufferBindingMask)
+
+                bool hasConflict = buffer->hasWebGLXFBBindingConflict(true);
+                if (hasConflict)
                 {
-                    updateCachedTransformFeedbackBindingValidation(bindingIndex);
+                    mCachedBufferPropertyTransformFeedbackConflict |= bufferBindingMask;
+                }
+                else
+                {
+                    mCachedBufferPropertyTransformFeedbackConflict &= ~bufferBindingMask;
                 }
             }
             break;
