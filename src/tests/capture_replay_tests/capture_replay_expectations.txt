@@ -236,7 +236,6 @@
 
 # error: duplicate case value '1'
 42264614 : EGLSyncTest.GlobalFenceSync/* = COMPILE_FAIL
-433331119 : ValidationStateChangeTest.RebindBufferShouldPickupBufferChange/* = COMPILE_FAIL
 
 # VVL error
 42264614 LINUX : VulkanExternalImageTestES31.UninitializedOnGLImportAndStorageWrite/* = SKIP_FOR_CAPTURE
