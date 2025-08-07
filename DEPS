@@ -267,6 +267,7 @@ vars = {
   'checkout_angle_restricted_trace_goddess_of_victory_nikke': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_going_balls': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_google_maps': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_gossip_harbor': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_grand_mountain_adventure': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_grimvalor': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_gwent_witcher_card_game': 'checkout_angle_restricted_traces',
@@ -2357,6 +2358,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_google_maps',
+  },
+  'src/tests/restricted_traces/gossip_harbor': {
+      'packages': [
+        {
+            'package': 'angle/traces/gossip_harbor',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_gossip_harbor',
   },
   'src/tests/restricted_traces/grand_mountain_adventure': {
       'packages': [
