@@ -1034,7 +1034,7 @@ deps = {
   },
 
   'third_party/vulkan-deps': {
-    'url': Var('chromium_git') + '/vulkan-deps@ab8547a94528dc751f036751ba56eb33d57e5ac8',
+    'url': Var('chromium_git') + '/vulkan-deps@588672b6b2e5cd87fe1eec2f0ac9e70a6b343cac',
     'condition': 'not build_with_chromium',
   },
 
@@ -1044,7 +1044,7 @@ deps = {
   },
 
   'third_party/lunarg-vulkantools/src': {
-    'url': '{chromium_git}/external/github.com/LunarG/VulkanTools@6ff473ebd460d2f8463b1c45542ed4dd4086cd95',
+    'url': '{chromium_git}/external/github.com/LunarG/VulkanTools@7d91d6f4df4e32fda3021e2923be7f92140d31c4',
     'condition': 'not build_with_chromium',
   },
 
@@ -1054,12 +1054,12 @@ deps = {
   },
 
   'third_party/spirv-headers/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Headers@97e96f9e9defeb4bba3cfbd034dec516671dd7a3',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Headers@a7361efd139bf65de0e86d43b01b01e0b34d387f',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/spirv-tools/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Tools@3aeaaa088d37b86cff036eee1a9bf452abad7d9d',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Tools@b8b90dba56eb8c75050a712188d662fd51c953df',
     'condition': 'not build_with_chromium',
   },
 
@@ -1069,7 +1069,7 @@ deps = {
   },
 
   'third_party/vulkan-loader/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Loader@7a1d96aae809216705b2d0ed6c36ec747ab00845',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Loader@07aa86589862b3888c3f09a11bbb34243f1efc13',
     'condition': 'not build_with_chromium',
   },
 
@@ -1084,7 +1084,7 @@ deps = {
   },
 
   'third_party/vulkan-validation-layers/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@4a7bd3884fac006445a87b7eacf2770e0e4c9fc6',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@438279c224e786e44aa1027fff9b51b3b1ba8520',
     'condition': 'not build_with_chromium',
   },
 
