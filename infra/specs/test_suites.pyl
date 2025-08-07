@@ -996,7 +996,7 @@
           '--no-xvfb',
         ],
         'swarming': {
-          'shards': 2,
+          'shards': 3,
         },
         'use_isolated_scripts_api': True,
       },
@@ -1141,6 +1141,9 @@
         'mixins': [
           'angle_skia_gold_test',
         ],
+        'swarming': {
+          'shards': 3,
+        },
         'android_swarming': {
           'shards': 6,
         },
@@ -1418,7 +1421,7 @@
           '--use-angle=swiftshader',
         ],
         'swarming': {
-          'shards': 8,
+          'shards': 11,
         },
         'use_isolated_scripts_api': True,
       },
@@ -1511,7 +1514,7 @@
         ],
         'use_isolated_scripts_api': True,
         'swarming': {
-          'shards': 10,
+          'shards': 14,
         },
       },
     },
