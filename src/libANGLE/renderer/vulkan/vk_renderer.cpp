@@ -2143,14 +2143,25 @@ angle::Result Renderer::enableInstanceExtensions(vk::ErrorContext *context,
             mEnabledInstanceExtensions.push_back(VK_EXT_SWAPCHAIN_COLOR_SPACE_EXTENSION_NAME);
         }
 
+        const bool hasSurfaceMaintenance1EXT =
+            ExtensionFound(VK_EXT_SURFACE_MAINTENANCE_1_EXTENSION_NAME, instanceExtensionNames);
+        const bool hasSurfaceMaintenance1KHR =
+            ExtensionFound(VK_KHR_SURFACE_MAINTENANCE_1_EXTENSION_NAME, instanceExtensionNames);
+
         ANGLE_FEATURE_CONDITION(
             &mFeatures, supportsSurfaceMaintenance1,
-            !isMockICDEnabled() && ExtensionFound(VK_EXT_SURFACE_MAINTENANCE_1_EXTENSION_NAME,
-                                                  instanceExtensionNames));
+            !isMockICDEnabled() && (hasSurfaceMaintenance1KHR || hasSurfaceMaintenance1EXT));
 
         if (mFeatures.supportsSurfaceMaintenance1.enabled)
         {
-            mEnabledInstanceExtensions.push_back(VK_EXT_SURFACE_MAINTENANCE_1_EXTENSION_NAME);
+            if (hasSurfaceMaintenance1KHR)
+            {
+                mEnabledInstanceExtensions.push_back(VK_KHR_SURFACE_MAINTENANCE_1_EXTENSION_NAME);
+            }
+            if (hasSurfaceMaintenance1EXT)
+            {
+                mEnabledInstanceExtensions.push_back(VK_EXT_SURFACE_MAINTENANCE_1_EXTENSION_NAME);
+            }
         }
     }
 
@@ -2704,7 +2715,8 @@ angle::Result Renderer::initializeMemoryAllocator(vk::ErrorContext *context)
 //                                                                                   (feature)
 //                                                     rasterizationOrderStencilAttachmentAccess
 //                                                                                   (feature)
-// - VK_EXT_swapchain_maintenance1:                    swapchainMaintenance1 (feature)
+// - VK_KHR_swapchain_maintenance1 or
+//   VK_EXT_swapchain_maintenance1:                    swapchainMaintenance1 (feature)
 // - VK_EXT_legacy_dithering:                          supportsLegacyDithering (feature)
 // - VK_EXT_physical_device_drm:                       hasPrimary (property),
 //                                                     hasRender (property)
@@ -2839,7 +2851,8 @@ void Renderer::appendDeviceExtensionFeaturesNotPromoted(
         vk::AddToPNextChain(deviceFeatures, &mShaderAtomicFloatFeatures);
     }
 
-    if (ExtensionFound(VK_EXT_SWAPCHAIN_MAINTENANCE_1_EXTENSION_NAME, deviceExtensionNames))
+    if (ExtensionFound(VK_KHR_SWAPCHAIN_MAINTENANCE_1_EXTENSION_NAME, deviceExtensionNames) ||
+        ExtensionFound(VK_EXT_SWAPCHAIN_MAINTENANCE_1_EXTENSION_NAME, deviceExtensionNames))
     {
         vk::AddToPNextChain(deviceFeatures, &mSwapchainMaintenance1Features);
     }
@@ -3254,7 +3267,7 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
 
     mSwapchainMaintenance1Features = {};
     mSwapchainMaintenance1Features.sType =
-        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SWAPCHAIN_MAINTENANCE_1_FEATURES_EXT;
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SWAPCHAIN_MAINTENANCE_1_FEATURES_KHR;
 
     mDitheringFeatures       = {};
     mDitheringFeatures.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_LEGACY_DITHERING_FEATURES_EXT;
@@ -3669,7 +3682,11 @@ void Renderer::enableDeviceExtensionsNotPromoted(const vk::ExtensionNameList &de
 
     if (mFeatures.supportsSwapchainMaintenance1.enabled)
     {
-        mEnabledDeviceExtensions.push_back(VK_EXT_SWAPCHAIN_MAINTENANCE_1_EXTENSION_NAME);
+        const bool hasSwapchainMaintenance1KHR =
+            ExtensionFound(VK_KHR_SWAPCHAIN_MAINTENANCE_1_EXTENSION_NAME, deviceExtensionNames);
+        mEnabledDeviceExtensions.push_back(hasSwapchainMaintenance1KHR
+                                               ? VK_KHR_SWAPCHAIN_MAINTENANCE_1_EXTENSION_NAME
+                                               : VK_EXT_SWAPCHAIN_MAINTENANCE_1_EXTENSION_NAME);
         vk::AddToPNextChain(&mEnabledFeatures, &mSwapchainMaintenance1Features);
     }
 
@@ -3758,16 +3775,7 @@ void Renderer::enableDeviceExtensionsNotPromoted(const vk::ExtensionNameList &de
 #endif
 }
 
-// See comment above appendDeviceExtensionFeaturesPromotedTo11.  Additional extensions are enabled
-// here which don't have feature structs:
-//
-// - VK_KHR_get_memory_requirements2
-// - VK_KHR_bind_memory2
-// - VK_KHR_maintenance1
-// - VK_KHR_external_memory
-// - VK_KHR_external_semaphore
-// - VK_KHR_external_fence
-//
+// See comment above appendDeviceExtensionFeaturesPromotedTo11.
 void Renderer::enableDeviceExtensionsPromotedTo11(const vk::ExtensionNameList &deviceExtensionNames)
 {
     // OVR_multiview disallows multiview with geometry and tessellation, so don't request these
