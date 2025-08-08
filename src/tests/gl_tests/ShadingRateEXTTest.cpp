@@ -78,12 +78,15 @@ const char *kSimpleShadingRateFS()
 #extension GL_EXT_fragment_shading_rate : require
 precision highp float;
 layout(location = 0) out vec4 fragColor;
+uniform mediump vec4 u_color;
 void main()
 {
     // Emit red color if ShadingRateEXT == gl_ShadingRateFlag2VerticalPixelsEXT | gl_ShadingRateFlag2HorizontalPixelsEXT
     if (gl_ShadingRateEXT == 5) {
         fragColor = vec4(1.0, 0.0, 0.0, 1.0); // red
-    } else {
+    } else if (gl_ShadingRateEXT == 0) {
+        fragColor = u_color;
+    }else {
         fragColor = vec4(0.0, 1.0, 0.0, 1.0);
     }
 })";
@@ -284,6 +287,43 @@ TEST_P(ShadingRateEXTTest, Error)
                                     GL_FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_EXT);
         EXPECT_GL_ERROR(GL_INVALID_OPERATION);
     }
+}
+
+// Test that when FETCH_PER_SAMPLE_ARM is enabled, the fragment shading rate
+// is set to GL_SHADING_RATE_1X1_PIXELS_EXT.
+TEST_P(ShadingRateEXTTest, ShadingRateFramebufferFetchPerSample)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_fragment_shading_rate"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ARM_shader_framebuffer_fetch"));
+
+    glShadingRateEXT(GL_SHADING_RATE_2X2_PIXELS_EXT);
+    ASSERT_GL_NO_ERROR();
+
+    ANGLE_GL_PROGRAM(program, kSimpleShadingRateVS(), kSimpleShadingRateFS());
+    glUseProgram(program);
+
+    GLint colorLoc = glGetUniformLocation(program, "u_color");
+    ASSERT_NE(colorLoc, -1);
+
+    glClearColor(0, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    glEnable(GL_FETCH_PER_SAMPLE_ARM);
+    glUniform4f(colorLoc, 0, 0, 1, 0);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+
+    glDisable(GL_FETCH_PER_SAMPLE_ARM);
+    glUniform4f(colorLoc, 0, 0, 0, 1);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+
+    glEnable(GL_FETCH_PER_SAMPLE_ARM);
+    glUniform4f(colorLoc, 0, 0.5, 0, 0);
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.5f);
+
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(255, 128, 255, 255), 1);
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these

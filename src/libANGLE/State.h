@@ -172,6 +172,7 @@ enum ExtendedDirtyBitType
     EXTENDED_DIRTY_BIT_POLYGON_OFFSET_POINT_ENABLED,  // NV_polygon_mode
     EXTENDED_DIRTY_BIT_POLYGON_OFFSET_LINE_ENABLED,   // NV_polygon_mode
     EXTENDED_DIRTY_BIT_SHADER_DERIVATIVE_HINT,        // shader derivative hint
+    EXTENDED_DIRTY_BIT_FETCH_PER_SAMPLE_ENABLED,      // FETCH_PER_SAMPLE_ARM
     EXTENDED_DIRTY_BIT_SHADING_RATE_QCOM,             // QCOM_shading_rate
     EXTENDED_DIRTY_BIT_SHADING_RATE_EXT,              // EXT_fragment_shading_rate
     EXTENDED_DIRTY_BIT_LOGIC_OP_ENABLED,              // ANGLE_logic_op
@@ -278,6 +279,9 @@ class PrivateState : angle::NonCopyable
     // Primitive restart
     bool isPrimitiveRestartEnabled() const { return mPrimitiveRestart; }
     void setPrimitiveRestart(bool enabled);
+
+    // FETCH_PER_SAMPLE_ARM
+    void setFetchPerSample(bool enabled);
 
     // Face culling state manipulation
     bool isCullFaceEnabled() const { return mRasterizer.cullFace; }
@@ -433,6 +437,7 @@ class PrivateState : angle::NonCopyable
     ShadingRate getShadingRateEXT() const { return mShadingRateEXT; }
     void setShadingRateCombinerOps(CombinerOp combinerOp0, CombinerOp combinerOp1);
     const std::array<CombinerOp, 2> &getShadingRateCombinerOps() const { return mCombinerOps; }
+    bool getFetchPerSample() const { return mFetchPerSample; }
 
     // Pixel pack state manipulation
     void setPackAlignment(GLint alignment);
@@ -1418,6 +1423,7 @@ class State : angle::NonCopyable
     const Rectangle &getViewport() const { return mPrivateState.getViewport(); }
     ShadingRate getShadingRateQCOM() const { return mPrivateState.getShadingRateQCOM(); }
     ShadingRate getShadingRateEXT() const { return mPrivateState.getShadingRateEXT(); }
+    bool getFetchPerSample() const { return mPrivateState.getFetchPerSample(); }
     const std::array<CombinerOp, 2> &getShadingRateCombinerOps() const
     {
         return mPrivateState.getShadingRateCombinerOps();

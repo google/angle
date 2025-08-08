@@ -937,6 +937,8 @@ angle::Result ContextWgpu::syncState(const gl::Context *context,
                             break;
                         case gl::state::EXTENDED_DIRTY_BIT_BLEND_ADVANCED_COHERENT:
                             break;
+                        case gl::state::EXTENDED_DIRTY_BIT_FETCH_PER_SAMPLE_ENABLED:
+                            break;
                         default:
                             UNREACHABLE();
                     }

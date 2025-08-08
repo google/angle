@@ -961,6 +961,16 @@ void PrivateState::setPolygonOffsetFill(bool enabled)
     }
 }
 
+void PrivateState::setFetchPerSample(bool enabled)
+{
+    if (mFetchPerSample != enabled)
+    {
+        mFetchPerSample = enabled;
+        mDirtyBits.set(state::DIRTY_BIT_EXTENDED);
+        mExtendedDirtyBits.set(state::EXTENDED_DIRTY_BIT_FETCH_PER_SAMPLE_ENABLED);
+    }
+}
+
 void PrivateState::setPolygonOffsetParams(GLfloat factor, GLfloat units, GLfloat clamp)
 {
     // An application can pass NaN values here, so handle this gracefully
@@ -1556,7 +1566,7 @@ void PrivateState::setEnableFeature(GLenum feature, bool enabled)
             mShadingRatePreserveAspectRatio = enabled;
             return;
         case GL_FETCH_PER_SAMPLE_ARM:
-            mFetchPerSample = enabled;
+            setFetchPerSample(enabled);
             return;
         default:
             break;

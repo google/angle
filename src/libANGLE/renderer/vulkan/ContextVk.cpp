@@ -3401,6 +3401,13 @@ angle::Result ContextVk::handleDirtyGraphicsDynamicFragmentShadingRateEXT(
     const bool shadingRateSupported = mRenderer->isShadingRateSupported(shadingRateEXT);
     ASSERT(shadingRateSupported);
 
+    bool isPerSample = getState().getFetchPerSample();
+    if (isPerSample)
+    {
+        // If FETCH_PER_SAMPLE_ARM is enabled, the fragment shading rate is set to {1,1}
+        shadingRateEXT = gl::ShadingRate::_1x1;
+    }
+
     VkExtent2D fragmentSize = {};
 
     switch (shadingRateEXT)
@@ -6135,6 +6142,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                                     DIRTY_BIT_DYNAMIC_FRAGMENT_SHADING_RATE_QCOM);
                             }
                             break;
+                        case gl::state::EXTENDED_DIRTY_BIT_FETCH_PER_SAMPLE_ENABLED:
                         case gl::state::EXTENDED_DIRTY_BIT_SHADING_RATE_EXT:
                             if (getFeatures().supportsFragmentShadingRate.enabled)
                             {
