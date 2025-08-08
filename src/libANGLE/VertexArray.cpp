@@ -431,6 +431,16 @@ void VertexArray::bindVertexBuffer(const Context *context,
 {
     const VertexArray::DirtyBindingBits dirtyBindingBits =
         bindVertexBufferImpl(context, bindingIndex, boundBuffer, offset, stride);
+
+    if (!dirtyBindingBits.test(DIRTY_BINDING_BUFFER) && context->isSharedContext() &&
+        boundBuffer != nullptr)
+    {
+        ASSERT(boundBuffer == mVertexArrayBuffers[bindingIndex].get());
+        VertexArrayBufferBindingMask bindingMask = boundBuffer->getVertexArrayBinding(context);
+        ASSERT(!bindingMask.none());
+        onSharedBufferBind(context, boundBuffer, bindingMask);
+    }
+
     if (dirtyBindingBits.any())
     {
         mDirtyBits.set(DIRTY_BIT_BINDING_0 + bindingIndex);
