@@ -13320,6 +13320,100 @@ TEST_P(TextureCubeTestES3,
     incompatibleCubeFacesThenSingleFaceCompatibleUploadAndIncompatibleAgain(GL_ALPHA);
 }
 
+// Test that glCopyImageSubData works with GL_TEXTURE_CUBE_MAP_ARRAY layers unique to array cubes
+TEST_P(TextureCubeTestES32, CopyImageSubDataCubeMapArray)
+{
+    // Test copying from GL_TEXTURE_CUBE_MAP_ARRAY to GL_TEXTURE_CUBE_MAP_ARRAY
+    {
+        // Create source CubeMapArray with 3 cubes (18 layers total)
+        GLTexture srcCubeArray;
+        glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, srcCubeArray);
+        glTexStorage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_RGBA8, 128, 128, 18);
+
+        std::vector<GLColor> redData(128 * 128, GLColor::red);
+        std::vector<GLColor> greenData(128 * 128, GLColor::green);
+        std::vector<GLColor> blueData(128 * 128, GLColor::blue);
+
+        // Fill layer 0 (first cube, first face)
+        glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0, 0, 128, 128, 1, GL_RGBA,
+                        GL_UNSIGNED_BYTE, redData.data());
+        // Fill layer 7 (second cube, second face)
+        glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0, 7, 128, 128, 1, GL_RGBA,
+                        GL_UNSIGNED_BYTE, greenData.data());
+        // Fill layer 15 (third cube, fourth face)
+        glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0, 15, 128, 128, 1, GL_RGBA,
+                        GL_UNSIGNED_BYTE, blueData.data());
+
+        // Create destination CubeMapArray with 3 cubes
+        GLTexture dstCubeArray;
+        glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, dstCubeArray);
+        glTexStorage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_RGBA8, 128, 128, 18);
+
+        // Copy from the source to the destination
+        glCopyImageSubData(srcCubeArray, GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0, 0, dstCubeArray,
+                           GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0, 0, 128, 128, 1);
+        glCopyImageSubData(srcCubeArray, GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0, 7, dstCubeArray,
+                           GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0, 7, 128, 128, 1);
+        glCopyImageSubData(srcCubeArray, GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0, 15, dstCubeArray,
+                           GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0, 15, 128, 128, 1);
+        ASSERT_GL_NO_ERROR();
+
+        // Verify the copied data
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+        // Check layer 0 (red)
+        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, dstCubeArray, 0, 0);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+        // Check layer 7 (green)
+        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, dstCubeArray, 0, 7);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+        // Check layer 15 (blue)
+        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, dstCubeArray, 0, 15);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+    }
+
+    // Test copying from GL_RENDERBUFFER to GL_TEXTURE_CUBE_MAP_ARRAY
+    {
+        // Create a renderbuffer as source
+        GLRenderbuffer srcRenderbuffer;
+        glBindRenderbuffer(GL_RENDERBUFFER, srcRenderbuffer);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 128, 128);
+
+        // Fill renderbuffer with color using FBO
+        GLFramebuffer srcFbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, srcFbo);
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                                  srcRenderbuffer);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        glClearColor(1.0f, 0.0f, 1.0f, 1.0f);  // Set clear color to magenta
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        // Create destination CubeMapArray
+        GLTexture dstCubeArrayFromRB;
+        glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, dstCubeArrayFromRB);
+        glTexStorage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_RGBA8, 128, 128, 12);  // 2 cubes
+
+        // Copy from renderbuffer to CubeMapArray layer 8 (second cube, third face)
+        glCopyImageSubData(srcRenderbuffer, GL_RENDERBUFFER, 0, 0, 0, 0, dstCubeArrayFromRB,
+                           GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0, 8, 128, 128, 1);
+        ASSERT_GL_NO_ERROR();
+
+        // Verify the copied data
+        GLFramebuffer verifyFbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, verifyFbo);
+        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, dstCubeArrayFromRB, 0, 8);
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::magenta);
+    }
+}
+
 // Test that the maximum texture layer can allocate enough memory.
 TEST_P(TextureCubeTestES32, MaxArrayTextureLayersVerify)
 {
