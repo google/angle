@@ -258,6 +258,7 @@ vars = {
   'checkout_angle_restricted_trace_five_nights_at_freddys': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_free_fire': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_free_fire_max': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_frost_and_flame': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_gacha_club': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_gacha_life': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_gangstar_vegas': 'checkout_angle_restricted_traces',
@@ -2270,6 +2271,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_free_fire_max',
+  },
+  'src/tests/restricted_traces/frost_and_flame': {
+      'packages': [
+        {
+            'package': 'angle/traces/frost_and_flame',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_frost_and_flame',
   },
   'src/tests/restricted_traces/gacha_club': {
       'packages': [
