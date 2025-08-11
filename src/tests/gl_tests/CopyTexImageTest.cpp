@@ -1665,6 +1665,32 @@ TEST_P(CopyTexImageTestES3, BGRAAndRGBAConversions)
     testRGBAToBGRAConversion();
 }
 
+// Test that the implementation can handle uploading data with mixed formats to cube maps even if it
+// the cube map is not complete.
+TEST_P(CopyTexImageTest, MixedCubeMapFormats)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_texture_compression_dxt3"));
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texture);
+
+    constexpr GLsizei size          = 512;
+    constexpr GLenum internalFormat = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
+    const std::vector<uint8_t> data(size * size, 129);
+
+    glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, internalFormat, size, size, 0,
+                           data.size(), data.data());
+    EXPECT_GL_NO_ERROR();
+
+    glCopyTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, GL_LUMINANCE_ALPHA, 0, 0, size, size, 0);
+    EXPECT_GL_NO_ERROR();
+
+    const std::vector<uint8_t> subData(size * size, 124);
+    glCompressedTexSubImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, 0, 0, size, size, internalFormat,
+                              subData.size(), subData.data());
+    EXPECT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND(
     CopyTexImageTest,
     ES2_D3D11_PRESENT_PATH_FAST(),

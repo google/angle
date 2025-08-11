@@ -393,6 +393,7 @@ b/390710636 LINUX NVIDIA VULKAN : TextureBorderClampTestES32.CustomBorderColorWi
 410601694 MAC NVIDIA OPENGL : Texture2DTestES3.SampleThenAddLevel0ThenSampleAgain/* = SKIP
 410601694 MAC AMD OPENGL : Texture2DTestES3.SampleThenAddLevel0ThenSampleAgain/* = SKIP
 409821658 MAC NVIDIA OPENGL : SRGBTextureTestES3.SRGBSkipEncodeAndDecodeInGenerateMipmap/ES3_OpenGL* = SKIP
+435683799 MAC OPENGL : CopyTexImageTest.MixedCubeMapFormats/ES2_OpenGL* = SKIP
 
 // BlitFramebufferTest.ScissoredMultisampleStencil failures
 42262159 MAC INTEL OPENGL : BlitFramebufferTest.ScissoredMultisampleStencil/* = SKIP
