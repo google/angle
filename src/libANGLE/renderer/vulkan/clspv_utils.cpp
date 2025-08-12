@@ -463,6 +463,11 @@ std::string ClspvGetCompilerOptions(const CLDeviceVk *device)
     options += " --enable-printf";
     options += " --cl-kernel-arg-info";
 
+    // add opencl atomic feature macros
+    featureMacros.push_back("__opencl_c_atomic_order_acq_rel");
+    featureMacros.push_back("__opencl_c_atomic_order_seq_cst");
+    featureMacros.push_back("__opencl_c_atomic_scope_device");
+
     // check for int8 support
     if (rendererVk->getFeatures().supportsShaderInt8.enabled)
     {
