@@ -629,6 +629,9 @@ struct Extensions
     // GL_EXT_texture_type_2_10_10_10_REV
     bool textureType2101010REVEXT = false;
 
+    // GL_ARM_texture_unnormalized_coordinates
+    bool textureUnnormalizedCoordinatesARM = false;
+
     // GL_ANGLE_texture_usage
     bool textureUsageANGLE = false;
 

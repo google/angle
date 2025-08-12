@@ -90,6 +90,7 @@ gles_requestable_extensions = [
     "GL_ARM_rgba8",
     "GL_ARM_shader_framebuffer_fetch",
     "GL_ARM_shader_framebuffer_fetch_depth_stencil",
+    "GL_ARM_texture_unnormalized_coordinates",
     "GL_EXT_base_instance",
     "GL_EXT_blend_func_extended",
     "GL_EXT_blend_minmax",

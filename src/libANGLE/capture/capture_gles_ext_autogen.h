@@ -1029,6 +1029,8 @@ angle::CallCapture CaptureReleaseTexturesANGLE(const State &glState,
 
 // GL_ARM_shader_framebuffer_fetch_depth_stencil
 
+// GL_ARM_texture_unnormalized_coordinates
+
 // GL_CHROMIUM_bind_uniform_location
 angle::CallCapture CaptureBindUniformLocationCHROMIUM(const State &glState,
                                                       bool isCallValid,
