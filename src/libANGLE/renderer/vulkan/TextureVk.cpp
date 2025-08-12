@@ -4165,9 +4165,6 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
         // Use default compression control flag for query
         compressionInfoVar.flags = VK_IMAGE_COMPRESSION_FIXED_RATE_DEFAULT_EXT;
 
-        VkImageCompressionPropertiesEXT compressionProp = {};
-        compressionProp.sType = VK_STRUCTURE_TYPE_IMAGE_COMPRESSION_PROPERTIES_EXT;
-
         // If fixed rate compression is supported by this type, not support YUV now.
         const vk::Format &format = renderer->getFormat(intendedImageFormatID);
         if (!mImage->isYuvExternalFormat() &&
