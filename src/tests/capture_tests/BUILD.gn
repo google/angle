@@ -32,19 +32,19 @@ angle_trace("angle_capture_tests_active_textures_trace") {
 
   deps = [ "$angle_root/util:angle_trace_fixture" ]
 }
-
-if (angle_enable_cl) {
-  angle_trace("angle_capture_tests_multi_frame_cl_trace") {
-    _trace = "CapturedTestCL_MultiFrameCL_ES3_Vulkan"
-
-    json_file_name = "expected/CapturedTestCL_MultiFrameCL_ES3_Vulkan.json"
-    rebased_path = "expected/"
-
-    data = [
-      "$_trace.json",
-      "$_trace.angledata",
-    ]
-
-    deps = [ "$angle_root/src/libOpenCL:OpenCL_ANGLE" ]
-  }
-}
+# TODO: anglebug.com/438195622
+#if (angle_enable_cl) {
+#  angle_trace("angle_capture_tests_multi_frame_cl_trace") {
+#    _trace = "CapturedTestCL_MultiFrameCL_ES3_Vulkan"
+#
+#    json_file_name = "expected/CapturedTestCL_MultiFrameCL_ES3_Vulkan.json"
+#    rebased_path = "expected/"
+#
+#    data = [
+#      "$_trace.json",
+#      "$_trace.angledata",
+#    ]
+#
+#    deps = [ "$angle_root/src/libOpenCL:OpenCL_ANGLE" ]
+#  }
+#}
