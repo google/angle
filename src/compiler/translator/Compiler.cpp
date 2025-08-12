@@ -237,12 +237,16 @@ struct UniformSortComparator
                                       ->getAsSymbolNode()
                                       ->variable()
                                       .getType();
+        // If both uniforms are structs, do not reorder them
+        if (firstType.getStruct() != nullptr && secondType.getStruct() != nullptr)
+        {
+            return false;
+        }
         // First, sort by precision: lowp and mediump are smaller than highp
         if (firstType.getPrecision() != secondType.getPrecision())
         {
             return firstType.getPrecision() != TPrecision::EbpHigh;
         }
-
         // We don't sort highp uniforms. If both uniforms are highp, consider them as equivalent
         if (firstType.getPrecision() == TPrecision::EbpHigh &&
             secondType.getPrecision() == TPrecision::EbpHigh)
@@ -261,11 +265,6 @@ struct UniformSortComparator
         if ((firstType.getStruct() == nullptr) != (secondType.getStruct() == nullptr))
         {
             return firstType.getStruct() == nullptr;
-        }
-        // If both are struct, place the one that has specifier in the front
-        if (firstType.getStruct() != nullptr && secondType.getStruct() != nullptr)
-        {
-            return firstType.isStructSpecifier();
         }
         // criteria 3, non-matrix is smaller than matrix
         if (firstType.isMatrix() != secondType.isMatrix())
