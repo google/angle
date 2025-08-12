@@ -1548,22 +1548,26 @@ class State : angle::NonCopyable
         handlers[state::DIRTY_OBJECT_SAMPLERS]                = &State::syncSamplers;
         handlers[state::DIRTY_OBJECT_PROGRAM_PIPELINE_OBJECT] = &State::syncProgramPipelineObject;
 
-        // If a handler is missing, reset everything for ease of static_assert
-        for (auto handler : handlers)
-        {
-            if (handler == nullptr)
-            {
-                return DirtyObjectHandlerArray();
-            }
-        }
-
         return handlers;
     }
 
     angle::Result dirtyObjectHandler(size_t dirtyObject, const Context *context, Command command)
     {
         static constexpr DirtyObjectHandlerArray handlers = MakeDirtyObjectHandlers();
-        static_assert(handlers[0] != nullptr, "MakeDirtyObjectHandlers missing a handler");
+
+        // Fail with static_assert if any handler is missing.
+        constexpr auto existEmptyHandler = []() constexpr {
+            for (auto handler : handlers)
+            {
+                if (handler == nullptr)
+                {
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        static_assert(!existEmptyHandler(), "MakeDirtyObjectHandlers missing a handler");
 
         return (this->*handlers[dirtyObject])(context, command);
     }
