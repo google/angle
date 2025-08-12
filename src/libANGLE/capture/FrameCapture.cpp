@@ -3741,7 +3741,7 @@ void CaptureShareGroupMidExecutionSetup(
         gl::TextureID id     = {textureIter.first};
         gl::Texture *texture = textureIter.second;
 
-        if (id.value == 0)
+        if (id.value == 0 || texture == nullptr)
         {
             continue;
         }
