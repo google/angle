@@ -3225,7 +3225,8 @@ void GenerateLinkedProgram(const gl::Context *context,
          uniformBlockIndex < static_cast<uint32_t>(executable.getUniformBlocks().size());
          uniformBlockIndex++)
     {
-        GLuint blockBinding = executable.getUniformBlocks()[uniformBlockIndex].pod.inShaderBinding;
+        // Ensure that runtime API bindings are picked up
+        GLuint blockBinding = executable.getUniformBlockBinding(uniformBlockIndex);
         CallCapture updateCallCapture =
             CaptureUniformBlockBinding(replayState, true, id, {uniformBlockIndex}, blockBinding);
         CaptureCustomUniformBlockBinding(updateCallCapture, *setupCalls);
