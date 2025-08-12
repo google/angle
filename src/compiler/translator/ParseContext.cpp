@@ -7045,6 +7045,11 @@ bool TParseContext::binaryOpCommonCheck(TOperator op,
                 error(loc, "comparison operator only defined for scalars", GetOperatorString(op));
                 return false;
             }
+            if (left->getBasicType() == EbtBool || right->getBasicType() == EbtBool)
+            {
+                error(loc, "comparison operator not defined for booleans", GetOperatorString(op));
+                return false;
+            }
             break;
         case EOpAdd:
         case EOpSub:

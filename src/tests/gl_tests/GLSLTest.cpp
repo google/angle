@@ -610,6 +610,22 @@ void main()
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
 }
 
+// Test relational operations between bools is rejected.
+TEST_P(GLSLTest, BoolLessThan)
+{
+    constexpr char kFS[] = R"(uniform mediump vec4 u;
+void main() {
+  bool a = bool(u.x);
+  bool b = bool(u.y);
+  bool c = a < b;
+  gl_FragColor = vec4(c, !c, c, !c);
+}
+)";
+
+    GLuint shader = CompileShader(GL_FRAGMENT_SHADER, kFS);
+    EXPECT_EQ(0u, shader);
+}
+
 TEST_P(GLSLTest_ES3, CompareEqualityOfArrayOfVectors)
 {
     constexpr char kFS[] = R"(#version 300 es
