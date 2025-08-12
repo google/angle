@@ -2485,6 +2485,22 @@ TEST_P(UniformTestES31, UniformReorderDoesNotBreakStructUniforms)
     ASSERT_NE(program, 0u);
 }
 
+// That that TCompiler::sortUniforms() does not break the shader code when there are multiple
+// uniforms of the struct data type, and both of them are struct specifiers, and one struct
+// references the other struct.
+TEST_P(UniformTestES31, UniformReorderDoesNotBreakStructUniformsV2)
+{
+    constexpr char kFS[] =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "uniform struct S1 { samplerCube ar; } a1;\n"
+        "uniform struct S2 { S1 s; } a2;\n"
+        "void main (void)\n"
+        "{}";
+    GLuint program = CompileProgram(essl31_shaders::vs::Simple(), kFS);
+    ASSERT_NE(program, 0u);
+}
+
 // Test a uniform struct containing a non-square matrix and a boolean.
 // Minimal test case for a bug revealed by dEQP tests.
 TEST_P(UniformTestES3, StructWithNonSquareMatrixAndBool)
