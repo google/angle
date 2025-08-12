@@ -258,7 +258,9 @@ void SecondaryCommandBuffer::executeCommands(PrimaryCommandBuffer *primary)
                         GetFirstArrayParameter<VkDescriptorSet>(params);
                     const uint32_t *dynamicOffsets =
                         GetNextArrayParameter<uint32_t>(descriptorSets, params->descriptorSetCount);
-                    vkCmdBindDescriptorSets(cmdBuffer, params->pipelineBindPoint, params->layout,
+                    const VkPipelineBindPoint pipelineBindPoint =
+                        static_cast<VkPipelineBindPoint>(params->pipelineBindPoint);
+                    vkCmdBindDescriptorSets(cmdBuffer, pipelineBindPoint, params->layout,
                                             params->firstSet, params->descriptorSetCount,
                                             descriptorSets, params->dynamicOffsetCount,
                                             dynamicOffsets);

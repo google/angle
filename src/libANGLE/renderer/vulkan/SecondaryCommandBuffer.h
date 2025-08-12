@@ -154,7 +154,8 @@ struct BindDescriptorSetParams
 {
     CommandHeader header;
 
-    VkPipelineBindPoint pipelineBindPoint : 8;
+    // Actually a VkPipelineBindPoint; valid values are GRAPHICS or COMPUTE.
+    uint32_t pipelineBindPoint : 8;
     uint32_t firstSet : 8;
     uint32_t descriptorSetCount : 8;
     uint32_t dynamicOffsetCount : 8;
@@ -1343,6 +1344,9 @@ ANGLE_INLINE void SecondaryCommandBuffer::bindDescriptorSets(const PipelineLayou
                                                              uint32_t dynamicOffsetCount,
                                                              const uint32_t *dynamicOffsets)
 {
+    // Only GRAPHICS and COMPUTE pipeline bind points are valid here.
+    ASSERT(pipelineBindPoint == VK_PIPELINE_BIND_POINT_GRAPHICS ||
+           pipelineBindPoint == VK_PIPELINE_BIND_POINT_COMPUTE);
     const ArrayParamSize descSize =
         calculateArrayParameterSize<VkDescriptorSet>(descriptorSetCount);
     const ArrayParamSize offsetSize = calculateArrayParameterSize<uint32_t>(dynamicOffsetCount);
