@@ -679,7 +679,7 @@ void WriteParamValueReplay<ParamType::TcharConstPointer>(std::ostream &os,
     }
     else
     {
-        os << NULL;
+        os << "NULL";
     }
 }
 
