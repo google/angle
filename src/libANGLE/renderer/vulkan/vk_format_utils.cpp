@@ -492,7 +492,12 @@ bool HasFullTextureFormatSupport(vk::Renderer *renderer, angle::FormatID formatI
         case angle::FormatID::R32G32B32A32_FLOAT:
             break;
         default:
-            kBitsColorFull |= VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT;
+            const angle::Format &format = angle::Format::Get(formatID);
+            if (!format.isYUV)
+            {
+                // EXT_yuv_target does not support blend anyway, so no need to ask for blend bit.
+                kBitsColorFull |= VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BLEND_BIT;
+            }
             break;
     }
 
