@@ -14666,6 +14666,86 @@ TEST_P(Texture2DTestES3, RespecifyWithMoreMips)
     }
 }
 
+// Test to verify that reinitializing an image with incompatible mipmap levels, and enabling mipmap
+// filtering after it was disabled, does not cause a crash.
+TEST_P(Texture2DTestES3, ReinitIncompatibleLevelsNoMipmapThenMipmap)
+{
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, mTexture2D);
+
+    constexpr const GLsizei kSize                         = 8;
+    const std::vector<std::vector<GLColor>> kMipLevelData = {
+        std::vector<GLColor>(8 * 8, GLColor::red), std::vector<GLColor>(4 * 4, GLColor::green),
+        std::vector<GLColor>(2 * 2, GLColor::blue), std::vector<GLColor>(1 * 1, GLColor::yellow)};
+    const std::vector<uint16_t> kSingleLevelData(4 * 4, 0x001f);
+
+    // Store an image with a level count of 4.
+    for (GLint mip = 0; mip < static_cast<GLint>(kMipLevelData.size()); ++mip)
+    {
+        GLint size = kSize >> mip;
+        glTexImage2D(GL_TEXTURE_2D, mip, GL_RGBA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                     kMipLevelData[mip].data());
+    }
+
+    // Use mipmap filtering.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    EXPECT_GL_NO_ERROR();
+
+    // Set up the lod program.
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Texture2DLod(), essl3_shaders::fs::Texture2DLod());
+    glUseProgram(program);
+    GLint textureLoc = glGetUniformLocation(program, essl3_shaders::Texture2DUniform());
+    GLint lodLoc     = glGetUniformLocation(program, essl3_shaders::LodUniform());
+    ASSERT_NE(-1, textureLoc);
+    ASSERT_NE(-1, lodLoc);
+    glUniform1i(textureLoc, 0);
+
+    // Set lod = 0.
+    glUniform1f(lodLoc, 0);
+
+    // Verify draw and the texture image will be stored.
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    EXPECT_GL_NO_ERROR();
+
+    // Use GL_LINEAR filtering so that mipmap is not used.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    EXPECT_GL_NO_ERROR();
+
+    // Reinit image with a different sized internal format with a single level.
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB565, 4, 4, 0, GL_RGB, GL_UNSIGNED_SHORT_5_6_5,
+                 kSingleLevelData.data());
+    EXPECT_GL_NO_ERROR();
+
+    // Verify draw with mip level 0 and expect that the color matches kSingleLevelData.
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+    EXPECT_GL_NO_ERROR();
+
+    // Use mipmap filtering again.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    EXPECT_GL_NO_ERROR();
+
+    // Restore mip level 0 to the mipmap format and ensure all levels are included in the texture.
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kMipLevelData[0].data());
+    EXPECT_GL_NO_ERROR();
+
+    // Verify that all the mips are still correct.
+    for (GLint mip = 0; mip < static_cast<GLint>(kMipLevelData.size()); ++mip)
+    {
+        glUniform1f(lodLoc, mip);
+
+        drawQuad(program, essl3_shaders::PositionAttrib(), 0.5f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, kMipLevelData[mip].data()[0]);
+        EXPECT_GL_NO_ERROR();
+        ASSERT_GL_NO_ERROR();
+    }
+}
+
 // Covers a bug in the D3D11 backend: http://anglebug.com/42261476
 // When using a sampler the texture was created as if it has mipmaps,
 // regardless what you specified in GL_TEXTURE_MIN_FILTER via

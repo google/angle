@@ -3147,7 +3147,9 @@ angle::Result TextureVk::respecifyImageStorage(ContextVk *contextVk)
     else
     {
         const vk::Format &format = getBaseLevelFormat(contextVk->getRenderer());
-        if (mImage->getActualFormatID() != format.getActualImageFormatID(getRequiredImageAccess()))
+        if (mImage->getActualFormatID() !=
+                format.getActualImageFormatID(getRequiredImageAccess()) &&
+            mImage->getLevelCount() == getMipLevelCount(ImageMipLevels::EnabledLevels))
         {
             ANGLE_TRY(reinitImageAsRenderable(contextVk, format));
         }

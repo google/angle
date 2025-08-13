@@ -623,15 +623,18 @@ GLuint TextureState::getEnabledLevelCount() const
     const GLuint baseLevel = getEffectiveBaseLevel();
     GLuint maxLevel        = getMipmapMaxLevel();
 
+    // Note: for cube textures, we only check the first face.
+    TextureTarget target         = TextureTypeToTarget(mType, 0);
+    const Format &expectedFormat = mImageDescs[GetImageDescIndex(target, baseLevel)].format;
+
     // The mip chain will have either one or more sequential levels, or max levels,
     // but not a sparse one.
     Optional<Extents> expectedSize;
     for (size_t enabledLevel = baseLevel; enabledLevel <= maxLevel; ++enabledLevel, ++levelCount)
     {
-        // Note: for cube textures, we only check the first face.
-        TextureTarget target     = TextureTypeToTarget(mType, 0);
         size_t descIndex         = GetImageDescIndex(target, enabledLevel);
         const Extents &levelSize = mImageDescs[descIndex].size;
+        const Format &levelFormat = mImageDescs[descIndex].format;
 
         if (levelSize.empty())
         {
@@ -652,6 +655,14 @@ GLuint TextureState::getEnabledLevelCount() const
             {
                 break;
             }
+        }
+        // If the texture is bound without mipmap filtering, the max level could be incompatible
+        // with the base level while respecifying image storage. In this case, we check the sized
+        // internal format for the compatibility and enable only the effective level when it has
+        // changed compared to the previous image.
+        if (!Format::SameSized(expectedFormat, levelFormat))
+        {
+            break;
         }
         expectedSize = levelSize;
     }
