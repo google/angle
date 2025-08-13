@@ -10,8 +10,10 @@
 
 #include "compiler/translator/FunctionLookup.h"
 #include "compiler/translator/Name.h"
+#include "compiler/translator/Symbol.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/SymbolUniqueId.h"
+#include "compiler/translator/Types.h"
 
 namespace sh
 {
@@ -396,12 +398,27 @@ TIntermBinary &AccessFieldByIndex(TIntermTyped &object, int index)
     ASSERT(!type.isArray());
     const TStructure *structure = type.getStruct();
     ASSERT(structure);
+
     ASSERT(0 <= index);
     ASSERT(static_cast<size_t>(index) < structure->fields().size());
 
     return *new TIntermBinary(
         TOperator::EOpIndexDirectStruct, &object,
         new TIntermConstantUnion(new TConstantUnion(index), *new TType(TBasicType::EbtInt)));
+}
+
+TIntermBinary *AccessFieldOfNamedInterfaceBlock(const TVariable *object, int index)
+{
+    ASSERT(object->getType().getInterfaceBlock());
+    const TFieldList &fieldList = object->getType().getInterfaceBlock()->fields();
+
+    ASSERT(0 <= index);
+    ASSERT(static_cast<size_t>(index) < fieldList.size());
+
+    ASSERT(object->symbolType() != SymbolType::Empty);
+
+    return new TIntermBinary(TOperator::EOpIndexDirectInterfaceBlock, new TIntermSymbol(object),
+                             CreateIndexNode(index));
 }
 
 TIntermBlock *EnsureBlock(TIntermNode *node)

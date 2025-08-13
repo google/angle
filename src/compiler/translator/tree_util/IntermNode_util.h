@@ -98,6 +98,12 @@ TIntermBinary &AccessField(TIntermTyped &object, const Name &field);
 // The node must be a struct instance.
 TIntermBinary &AccessFieldByIndex(TIntermTyped &object, int index);
 
+// Accesses `object` by index, returning a binary referencing the field of the named interface
+// block.
+// Note: nameless interface blocks' fields are represented by individual TVariables, and so this
+// helper cannot generate an access to them.
+TIntermBinary *AccessFieldOfNamedInterfaceBlock(const TVariable *object, int index);
+
 // If the input node is nullptr, return nullptr.
 // If the input node is a block node, return it.
 // If the input node is not a block node, put it inside a block node and return that.

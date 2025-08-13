@@ -20,6 +20,7 @@
 #include "compiler/translator/spirv/BuiltinsWorkaround.h"
 #include "compiler/translator/spirv/OutputSPIRV.h"
 #include "compiler/translator/tree_ops/DeclarePerVertexBlocks.h"
+#include "compiler/translator/tree_ops/GatherDefaultUniforms.h"
 #include "compiler/translator/tree_ops/MonomorphizeUnsupportedFunctions.h"
 #include "compiler/translator/tree_ops/RecordConstantPrecision.h"
 #include "compiler/translator/tree_ops/RemoveAtomicCounterBuiltins.h"
@@ -61,127 +62,6 @@ namespace
 constexpr ImmutableString kFlippedPointCoordName    = ImmutableString("flippedPointCoord");
 constexpr ImmutableString kFlippedFragCoordName     = ImmutableString("flippedFragCoord");
 constexpr ImmutableString kDefaultUniformsBlockName = ImmutableString("defaultUniforms");
-
-bool IsDefaultUniform(const TType &type)
-{
-    return type.getQualifier() == EvqUniform && type.getInterfaceBlock() == nullptr &&
-           !IsOpaqueType(type.getBasicType());
-}
-
-class ReplaceDefaultUniformsTraverser : public TIntermTraverser
-{
-  public:
-    ReplaceDefaultUniformsTraverser(const VariableReplacementMap &variableMap)
-        : TIntermTraverser(true, false, false), mVariableMap(variableMap)
-    {}
-
-    bool visitDeclaration(Visit visit, TIntermDeclaration *node) override
-    {
-        const TIntermSequence &sequence = *(node->getSequence());
-
-        TIntermTyped *variable = sequence.front()->getAsTyped();
-        const TType &type      = variable->getType();
-
-        if (IsDefaultUniform(type))
-        {
-            // Remove the uniform declaration.
-            TIntermSequence emptyReplacement;
-            mMultiReplacements.emplace_back(getParentNode()->getAsBlock(), node,
-                                            std::move(emptyReplacement));
-
-            return false;
-        }
-
-        return true;
-    }
-
-    void visitSymbol(TIntermSymbol *symbol) override
-    {
-        const TVariable &variable = symbol->variable();
-        const TType &type         = variable.getType();
-
-        if (!IsDefaultUniform(type) || gl::IsBuiltInName(variable.name().data()))
-        {
-            return;
-        }
-
-        ASSERT(mVariableMap.count(&variable) > 0);
-
-        queueReplacement(mVariableMap.at(&variable)->deepCopy(), OriginalNode::IS_DROPPED);
-    }
-
-  private:
-    const VariableReplacementMap &mVariableMap;
-};
-
-bool DeclareDefaultUniforms(TranslatorSPIRV *compiler,
-                            TIntermBlock *root,
-                            TSymbolTable *symbolTable,
-                            gl::ShaderType shaderType)
-{
-    // First, collect all default uniforms and declare a uniform block.
-    TFieldList *uniformList = new TFieldList;
-    TVector<const TVariable *> uniformVars;
-
-    for (TIntermNode *node : *root->getSequence())
-    {
-        TIntermDeclaration *decl = node->getAsDeclarationNode();
-        if (decl == nullptr)
-        {
-            continue;
-        }
-
-        const TIntermSequence &sequence = *(decl->getSequence());
-
-        TIntermSymbol *symbol = sequence.front()->getAsSymbolNode();
-        if (symbol == nullptr)
-        {
-            continue;
-        }
-
-        const TType &type = symbol->getType();
-        if (IsDefaultUniform(type))
-        {
-            TType *fieldType = new TType(type);
-
-            uniformList->push_back(new TField(fieldType, symbol->getName(), symbol->getLine(),
-                                              symbol->variable().symbolType()));
-            uniformVars.push_back(&symbol->variable());
-        }
-    }
-
-    TLayoutQualifier layoutQualifier = TLayoutQualifier::Create();
-    layoutQualifier.blockStorage     = EbsStd140;
-    const TVariable *uniformBlock    = DeclareInterfaceBlock(
-        root, symbolTable, uniformList, EvqUniform, layoutQualifier, TMemoryQualifier::Create(), 0,
-        kDefaultUniformsBlockName, ImmutableString(""));
-
-    compiler->assignSpirvId(uniformBlock->getType().getInterfaceBlock()->uniqueId(),
-                            vk::spirv::kIdDefaultUniformsBlock);
-
-    // Create a map from the uniform variables to new variables that reference the fields of the
-    // block.
-    VariableReplacementMap variableMap;
-    for (size_t fieldIndex = 0; fieldIndex < uniformVars.size(); ++fieldIndex)
-    {
-        const TVariable *variable = uniformVars[fieldIndex];
-
-        TType *replacementType = new TType(variable->getType());
-        replacementType->setInterfaceBlockField(uniformBlock->getType().getInterfaceBlock(),
-                                                fieldIndex);
-
-        TVariable *replacementVariable =
-            new TVariable(symbolTable, variable->name(), replacementType, variable->symbolType());
-
-        variableMap[variable] = new TIntermSymbol(replacementVariable);
-    }
-
-    // Finally transform the AST and make sure references to the uniforms are replaced with the new
-    // variables.
-    ReplaceDefaultUniformsTraverser defaultTraverser(variableMap);
-    root->traverse(&defaultTraverser);
-    return defaultTraverser.updateTree(compiler, root);
-}
 
 // Replaces a builtin variable with a version that is rotated and corrects the X and Y coordinates.
 [[nodiscard]] bool RotateAndFlipBuiltinVariable(TCompiler *compiler,
@@ -833,10 +713,16 @@ bool TranslatorSPIRV::translateImpl(TIntermBlock *root,
 
     if (defaultUniformCount > 0)
     {
-        if (!DeclareDefaultUniforms(this, root, &getSymbolTable(), packedShaderType))
+        const TVariable *uniformBlock;
+        if (!GatherDefaultUniforms(this, root, &getSymbolTable(), packedShaderType,
+                                   kDefaultUniformsBlockName, ImmutableString(""), &uniformBlock))
         {
             return false;
         }
+        ASSERT(uniformBlock);
+
+        assignSpirvId(uniformBlock->getType().getInterfaceBlock()->uniqueId(),
+                      vk::spirv::kIdDefaultUniformsBlock);
     }
 
     if (getShaderType() == GL_COMPUTE_SHADER)
