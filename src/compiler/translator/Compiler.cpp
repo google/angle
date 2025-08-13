@@ -1143,6 +1143,17 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
+    // https://crbug.com/437678149:
+    // On Mac, if ANGLE internal uniforms are not placed on the top of ANGLE_UserUniforms struct,
+    // the other user-defined uniforms are not intercepted correctly by the shader code.
+    // Sort user-defined uniforms first before adding ANGLE internal uniforms like
+    // angle_DrawID on top of them, so that the sort doesn't reorder the ANGLE internal uniforms
+    // and trigger the bug on Mac.
+    if (!sortUniforms(root))
+    {
+        return false;
+    }
+
     if (mShaderType == GL_VERTEX_SHADER &&
         IsExtensionEnabled(mExtensionBehavior, TExtension::ANGLE_multi_draw))
     {
@@ -1307,10 +1318,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     }
 
     ASSERT(!mVariablesCollected);
-    if (!sortUniforms(root))
-    {
-        return false;
-    }
     CollectVariables(root, &mAttributes, &mOutputVariables, &mUniforms, &mInputVaryings,
                      &mOutputVaryings, &mSharedVariables, &mUniformBlocks, &mShaderStorageBlocks,
                      mResources.HashFunction, &mSymbolTable, mShaderType, mExtensionBehavior,
