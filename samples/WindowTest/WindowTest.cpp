@@ -47,34 +47,34 @@ int main(int argc, char *argv[])
                 int newY      = y;
                 switch (event.Key.Code)
                 {
-                    case KEY_ESCAPE:
+                    case KeyType::ESCAPE:
                         running = false;
                         break;
 
-                    case KEY_W:
+                    case KeyType::W:
                         newWidth = std::max(0, width + (event.Key.Shift ? -20 : 20));
                         break;
-                    case KEY_H:
+                    case KeyType::H:
                         newHeight = std::max(0, height + (event.Key.Shift ? -20 : 20));
                         break;
 
-                    case KEY_LEFT:
+                    case KeyType::LEFT:
                         newX = x - 20;
                         break;
-                    case KEY_RIGHT:
+                    case KeyType::RIGHT:
                         newX = x + 20;
                         break;
-                    case KEY_UP:
+                    case KeyType::UP:
                         newY = y - 20;
                         break;
-                    case KEY_DOWN:
+                    case KeyType::DOWN:
                         newY = y + 20;
                         break;
 
-                    case KEY_C:
+                    case KeyType::C:
                         window->setMousePosition(width / 2, height / 2);
                         break;
-                    case KEY_T:
+                    case KeyType::T:
                         window->signalTestEvent();
                         window->messageLoop();
                         if (window->didTestEventFire())
@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
                             std::cout << "Test event did not fire" << std::endl;
                         }
                         break;
-                    case KEY_S:
+                    case KeyType::S:
                         window->setVisible(false);
                         window->messageLoop();
                         angle::Sleep(1000);

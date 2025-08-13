@@ -23,21 +23,21 @@
 #endif
 
 #if DEBUG_EVENTS
-static const char *MouseButtonName(MouseButton button)
+static const char *MouseButtonName(MouseButtonType button)
 {
     switch (button)
     {
-        case MOUSEBUTTON_UNKNOWN:
+        case MouseButtonType::UNKNOWN:
             return "Unknown";
-        case MOUSEBUTTON_LEFT:
+        case MouseButtonType::LEFT:
             return "Left";
-        case MOUSEBUTTON_RIGHT:
+        case MouseButtonType::RIGHT:
             return "Right";
-        case MOUSEBUTTON_MIDDLE:
+        case MouseButtonType::MIDDLE:
             return "Middle";
-        case MOUSEBUTTON_BUTTON4:
+        case MouseButtonType::BUTTON4:
             return "Button4";
-        case MOUSEBUTTON_BUTTON5:
+        case MouseButtonType::BUTTON5:
             return "Button5";
         default:
             UNREACHABLE();
@@ -45,213 +45,213 @@ static const char *MouseButtonName(MouseButton button)
     }
 }
 
-static const char *KeyName(Key key)
+static const char *KeyName(KeyType key)
 {
     switch (key)
     {
-        case KEY_UNKNOWN:
+        case KeyType::UNKNOWN:
             return "Unknown";
-        case KEY_A:
+        case KeyType::A:
             return "A";
-        case KEY_B:
+        case KeyType::B:
             return "B";
-        case KEY_C:
+        case KeyType::C:
             return "C";
-        case KEY_D:
+        case KeyType::D:
             return "D";
-        case KEY_E:
+        case KeyType::E:
             return "E";
-        case KEY_F:
+        case KeyType::F:
             return "F";
-        case KEY_G:
+        case KeyType::G:
             return "G";
-        case KEY_H:
+        case KeyType::H:
             return "H";
-        case KEY_I:
+        case KeyType::I:
             return "I";
-        case KEY_J:
+        case KeyType::J:
             return "J";
-        case KEY_K:
+        case KeyType::K:
             return "K";
-        case KEY_L:
+        case KeyType::L:
             return "L";
-        case KEY_M:
+        case KeyType::M:
             return "M";
-        case KEY_N:
+        case KeyType::N:
             return "N";
-        case KEY_O:
+        case KeyType::O:
             return "O";
-        case KEY_P:
+        case KeyType::P:
             return "P";
-        case KEY_Q:
+        case KeyType::Q:
             return "Q";
-        case KEY_R:
+        case KeyType::R:
             return "R";
-        case KEY_S:
+        case KeyType::S:
             return "S";
-        case KEY_T:
+        case KeyType::T:
             return "T";
-        case KEY_U:
+        case KeyType::U:
             return "U";
-        case KEY_V:
+        case KeyType::V:
             return "V";
-        case KEY_W:
+        case KeyType::W:
             return "W";
-        case KEY_X:
+        case KeyType::X:
             return "X";
-        case KEY_Y:
+        case KeyType::Y:
             return "Y";
-        case KEY_Z:
+        case KeyType::Z:
             return "Z";
-        case KEY_NUM0:
+        case KeyType::NUM0:
             return "Num0";
-        case KEY_NUM1:
+        case KeyType::NUM1:
             return "Num1";
-        case KEY_NUM2:
+        case KeyType::NUM2:
             return "Num2";
-        case KEY_NUM3:
+        case KeyType::NUM3:
             return "Num3";
-        case KEY_NUM4:
+        case KeyType::NUM4:
             return "Num4";
-        case KEY_NUM5:
+        case KeyType::NUM5:
             return "Num5";
-        case KEY_NUM6:
+        case KeyType::NUM6:
             return "Num6";
-        case KEY_NUM7:
+        case KeyType::NUM7:
             return "Num7";
-        case KEY_NUM8:
+        case KeyType::NUM8:
             return "Num8";
-        case KEY_NUM9:
+        case KeyType::NUM9:
             return "Num9";
-        case KEY_ESCAPE:
+        case KeyType::ESCAPE:
             return "Escape";
-        case KEY_LCONTROL:
+        case KeyType::LCONTROL:
             return "Left Control";
-        case KEY_LSHIFT:
+        case KeyType::LSHIFT:
             return "Left Shift";
-        case KEY_LALT:
+        case KeyType::LALT:
             return "Left Alt";
-        case KEY_LSYSTEM:
+        case KeyType::LSYSTEM:
             return "Left System";
-        case KEY_RCONTROL:
+        case KeyType::RCONTROL:
             return "Right Control";
-        case KEY_RSHIFT:
+        case KeyType::RSHIFT:
             return "Right Shift";
-        case KEY_RALT:
+        case KeyType::RALT:
             return "Right Alt";
-        case KEY_RSYSTEM:
+        case KeyType::RSYSTEM:
             return "Right System";
-        case KEY_MENU:
+        case KeyType::MENU:
             return "Menu";
-        case KEY_LBRACKET:
+        case KeyType::LBRACKET:
             return "Left Bracket";
-        case KEY_RBRACKET:
+        case KeyType::RBRACKET:
             return "Right Bracket";
-        case KEY_SEMICOLON:
+        case KeyType::SEMICOLON:
             return "Semicolon";
-        case KEY_COMMA:
+        case KeyType::COMMA:
             return "Comma";
-        case KEY_PERIOD:
+        case KeyType::PERIOD:
             return "Period";
-        case KEY_QUOTE:
+        case KeyType::QUOTE:
             return "Quote";
-        case KEY_SLASH:
+        case KeyType::SLASH:
             return "Slash";
-        case KEY_BACKSLASH:
+        case KeyType::BACKSLASH:
             return "Backslash";
-        case KEY_TILDE:
+        case KeyType::TILDE:
             return "Tilde";
-        case KEY_EQUAL:
+        case KeyType::EQUAL:
             return "Equal";
-        case KEY_DASH:
+        case KeyType::DASH:
             return "Dash";
-        case KEY_SPACE:
+        case KeyType::SPACE:
             return "Space";
-        case KEY_RETURN:
+        case KeyType::RETURN:
             return "Return";
-        case KEY_BACK:
+        case KeyType::BACK:
             return "Back";
-        case KEY_TAB:
+        case KeyType::TAB:
             return "Tab";
-        case KEY_PAGEUP:
+        case KeyType::PAGEUP:
             return "Page Up";
-        case KEY_PAGEDOWN:
+        case KeyType::PAGEDOWN:
             return "Page Down";
-        case KEY_END:
+        case KeyType::END:
             return "End";
-        case KEY_HOME:
+        case KeyType::HOME:
             return "Home";
-        case KEY_INSERT:
+        case KeyType::INSERT:
             return "Insert";
-        case KEY_DELETE:
+        case KeyType::DEL:
             return "Delete";
-        case KEY_ADD:
+        case KeyType::ADD:
             return "Add";
-        case KEY_SUBTRACT:
+        case KeyType::SUBTRACT:
             return "Substract";
-        case KEY_MULTIPLY:
+        case KeyType::MULTIPLY:
             return "Multiply";
-        case KEY_DIVIDE:
+        case KeyType::DIVIDE:
             return "Divide";
-        case KEY_LEFT:
+        case KeyType::LEFT:
             return "Left";
-        case KEY_RIGHT:
+        case KeyType::RIGHT:
             return "Right";
-        case KEY_UP:
+        case KeyType::UP:
             return "Up";
-        case KEY_DOWN:
+        case KeyType::DOWN:
             return "Down";
-        case KEY_NUMPAD0:
+        case KeyType::NUMPAD0:
             return "Numpad 0";
-        case KEY_NUMPAD1:
+        case KeyType::NUMPAD1:
             return "Numpad 1";
-        case KEY_NUMPAD2:
+        case KeyType::NUMPAD2:
             return "Numpad 2";
-        case KEY_NUMPAD3:
+        case KeyType::NUMPAD3:
             return "Numpad 3";
-        case KEY_NUMPAD4:
+        case KeyType::NUMPAD4:
             return "Numpad 4";
-        case KEY_NUMPAD5:
+        case KeyType::NUMPAD5:
             return "Numpad 5";
-        case KEY_NUMPAD6:
+        case KeyType::NUMPAD6:
             return "Numpad 6";
-        case KEY_NUMPAD7:
+        case KeyType::NUMPAD7:
             return "Numpad 7";
-        case KEY_NUMPAD8:
+        case KeyType::NUMPAD8:
             return "Numpad 8";
-        case KEY_NUMPAD9:
+        case KeyType::NUMPAD9:
             return "Numpad 9";
-        case KEY_F1:
+        case KeyType::F1:
             return "F1";
-        case KEY_F2:
+        case KeyType::F2:
             return "F2";
-        case KEY_F3:
+        case KeyType::F3:
             return "F3";
-        case KEY_F4:
+        case KeyType::F4:
             return "F4";
-        case KEY_F5:
+        case KeyType::F5:
             return "F5";
-        case KEY_F6:
+        case KeyType::F6:
             return "F6";
-        case KEY_F7:
+        case KeyType::F7:
             return "F7";
-        case KEY_F8:
+        case KeyType::F8:
             return "F8";
-        case KEY_F9:
+        case KeyType::F9:
             return "F9";
-        case KEY_F10:
+        case KeyType::F10:
             return "F10";
-        case KEY_F11:
+        case KeyType::F11:
             return "F11";
-        case KEY_F12:
+        case KeyType::F12:
             return "F12";
-        case KEY_F13:
+        case KeyType::F13:
             return "F13";
-        case KEY_F14:
+        case KeyType::F14:
             return "F14";
-        case KEY_F15:
+        case KeyType::F15:
             return "F15";
-        case KEY_PAUSE:
+        case KeyType::PAUSE:
             return "Pause";
         default:
             return "Unknown Key";
