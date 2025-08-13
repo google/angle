@@ -155,7 +155,7 @@ bool ValidateObjectIdentifierAndName(const Context *context,
                 ANGLE_VALIDATION_ERROR(GL_INVALID_ENUM, kInvalidType);
                 return false;
             }
-            if (context->getVertexArray({name}) == nullptr)
+            if (context->getPrivateState().getVertexArray({name}) == nullptr)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_OPERATION, kInvalidVertexArrayName);
                 return false;
@@ -1160,7 +1160,8 @@ bool ValidateCreateMemoryObjectsEXT(const Context *context,
                                     GLsizei n,
                                     const MemoryObjectID *memoryObjects)
 {
-    return ValidateGenOrDelete(context, entryPoint, n, memoryObjects);
+    return ValidateGenOrDelete(context->getMutableErrorSetForValidation(), entryPoint, n,
+                               memoryObjects);
 }
 
 bool ValidateDeleteMemoryObjectsEXT(const Context *context,
@@ -1168,7 +1169,8 @@ bool ValidateDeleteMemoryObjectsEXT(const Context *context,
                                     GLsizei n,
                                     const MemoryObjectID *memoryObjects)
 {
-    return ValidateGenOrDelete(context, entryPoint, n, memoryObjects);
+    return ValidateGenOrDelete(context->getMutableErrorSetForValidation(), entryPoint, n,
+                               memoryObjects);
 }
 
 bool ValidateGetMemoryObjectParameterivEXT(const Context *context,
@@ -1325,7 +1327,8 @@ bool ValidateDeleteSemaphoresEXT(const Context *context,
                                  GLsizei n,
                                  const SemaphoreID *semaphores)
 {
-    return ValidateGenOrDelete(context, entryPoint, n, semaphores);
+    return ValidateGenOrDelete(context->getMutableErrorSetForValidation(), entryPoint, n,
+                               semaphores);
 }
 
 bool ValidateGenSemaphoresEXT(const Context *context,
@@ -1333,7 +1336,8 @@ bool ValidateGenSemaphoresEXT(const Context *context,
                               GLsizei n,
                               const SemaphoreID *semaphores)
 {
-    return ValidateGenOrDelete(context, entryPoint, n, semaphores);
+    return ValidateGenOrDelete(context->getMutableErrorSetForValidation(), entryPoint, n,
+                               semaphores);
 }
 
 bool ValidateGetSemaphoreParameterui64vEXT(const Context *context,

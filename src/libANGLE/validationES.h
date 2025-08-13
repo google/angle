@@ -477,10 +477,7 @@ bool ValidateFlushMappedBufferRangeBase(const Context *context,
                                         GLintptr offset,
                                         GLsizeiptr length);
 
-bool ValidateGenOrDelete(const Context *context,
-                         angle::EntryPoint entryPoint,
-                         GLint n,
-                         const void *ids);
+bool ValidateGenOrDelete(ErrorSet *errors, angle::EntryPoint entryPoint, GLint n, const void *ids);
 
 bool ValidateRobustEntryPoint(const Context *context,
                               angle::EntryPoint entryPoint,
@@ -1143,7 +1140,7 @@ ANGLE_INLINE bool ValidateBindVertexArrayBase(const Context *context,
                                               angle::EntryPoint entryPoint,
                                               VertexArrayID array)
 {
-    if (ANGLE_UNLIKELY(!context->isVertexArrayGenerated(array)))
+    if (ANGLE_UNLIKELY(!context->getPrivateState().isVertexArrayGenerated(array)))
     {
         // The default VAO should always exist
         ASSERT(array.value != 0);

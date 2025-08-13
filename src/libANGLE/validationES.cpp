@@ -2426,7 +2426,7 @@ bool ValidateGenQueriesEXT(const Context *context,
                            GLsizei n,
                            const QueryID *ids)
 {
-    return ValidateGenOrDelete(context, entryPoint, n, ids);
+    return ValidateGenOrDelete(context->getMutableErrorSetForValidation(), entryPoint, n, ids);
 }
 
 bool ValidateDeleteQueriesEXT(const Context *context,
@@ -2434,7 +2434,7 @@ bool ValidateDeleteQueriesEXT(const Context *context,
                               GLsizei n,
                               const QueryID *ids)
 {
-    return ValidateGenOrDelete(context, entryPoint, n, ids);
+    return ValidateGenOrDelete(context->getMutableErrorSetForValidation(), entryPoint, n, ids);
 }
 
 bool ValidateIsQueryEXT(const Context *context, angle::EntryPoint entryPoint, QueryID id)
@@ -5550,20 +5550,17 @@ bool ValidateFlushMappedBufferRangeBase(const Context *context,
     return true;
 }
 
-bool ValidateGenOrDelete(const Context *context,
-                         angle::EntryPoint entryPoint,
-                         GLint n,
-                         const void *ids)
+bool ValidateGenOrDelete(ErrorSet *errors, angle::EntryPoint entryPoint, GLint n, const void *ids)
 {
     if (n < 0)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kNegativeCount);
+        errors->validationError(entryPoint, GL_INVALID_VALUE, kNegativeCount);
         return false;
     }
 
     if (n > 0 && ids == nullptr)
     {
-        ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kPLSParamsNULL);
+        errors->validationError(entryPoint, GL_INVALID_VALUE, kPLSParamsNULL);
         return false;
     }
 

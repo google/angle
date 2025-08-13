@@ -59,7 +59,6 @@
     void genQueries(GLsizei n, QueryID *idsPacked);                                                \
     void genSamplers(GLsizei count, SamplerID *samplersPacked);                                    \
     void genTransformFeedbacks(GLsizei n, TransformFeedbackID *idsPacked);                         \
-    void genVertexArrays(GLsizei n, VertexArrayID *arraysPacked);                                  \
     void getActiveUniformBlockName(ShaderProgramID programPacked,                                  \
                                    UniformBlockIndex uniformBlockIndexPacked, GLsizei bufSize,     \
                                    GLsizei *length, GLchar *uniformBlockName);                     \
@@ -102,7 +101,6 @@
     GLboolean isSampler(SamplerID samplerPacked) const;                                            \
     GLboolean isSync(SyncID syncPacked) const;                                                     \
     GLboolean isTransformFeedback(TransformFeedbackID idPacked) const;                             \
-    GLboolean isVertexArray(VertexArrayID arrayPacked) const;                                      \
     void *mapBufferRange(BufferBinding targetPacked, GLintptr offset, GLsizeiptr length,           \
                          GLbitfield access);                                                       \
     void pauseTransformFeedback();                                                                 \

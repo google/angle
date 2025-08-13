@@ -493,6 +493,7 @@ void PrivateState::initializeForCapture(const Context *context)
 void PrivateState::reset()
 {
     mClipDistancesEnabled.reset();
+    mVertexArrayMap.clear();
 }
 
 void PrivateState::setColorClearValue(float red, float green, float blue, float alpha)

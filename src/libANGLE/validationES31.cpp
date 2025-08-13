@@ -1625,7 +1625,8 @@ bool ValidateGenProgramPipelinesBase(const Context *context,
                                      GLsizei n,
                                      const ProgramPipelineID *pipelines)
 {
-    return ValidateGenOrDelete(context, entryPoint, n, pipelines);
+    return ValidateGenOrDelete(context->getMutableErrorSetForValidation(), entryPoint, n,
+                               pipelines);
 }
 
 bool ValidateDeleteProgramPipelinesBase(const Context *context,
@@ -1633,7 +1634,8 @@ bool ValidateDeleteProgramPipelinesBase(const Context *context,
                                         GLsizei n,
                                         const ProgramPipelineID *pipelines)
 {
-    return ValidateGenOrDelete(context, entryPoint, n, pipelines);
+    return ValidateGenOrDelete(context->getMutableErrorSetForValidation(), entryPoint, n,
+                               pipelines);
 }
 
 bool ValidateBindProgramPipelineBase(const Context *context,

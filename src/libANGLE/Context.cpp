@@ -977,14 +977,13 @@ egl::Error Context::onDestroy(const egl::Display *display)
     }
     mQueryMap.clear();
 
-    for (auto vertexArray : UnsafeResourceMapIter(mVertexArrayMap))
+    for (auto vertexArray : UnsafeResourceMapIter(getPrivateState().getVertexArrayMap()))
     {
         if (vertexArray.second)
         {
             vertexArray.second->onDestroy(this);
         }
     }
-    mVertexArrayMap.clear();
 
     for (auto transformFeedback : UnsafeResourceMapIter(mTransformFeedbackMap))
     {
@@ -1393,11 +1392,6 @@ Sync *Context::getSync(SyncID syncPacked) const
     return mState.mSyncManager->getSync(syncPacked);
 }
 
-VertexArray *Context::getVertexArray(VertexArrayID handle) const
-{
-    return mVertexArrayMap.query(handle);
-}
-
 Sampler *Context::getSampler(SamplerID handle) const
 {
     return mState.mSamplerManager->getSampler(handle);
@@ -1428,7 +1422,7 @@ gl::LabeledObject *Context::getLabeledObject(GLenum identifier, GLuint name) con
             return getProgramNoResolveLink({name});
         case GL_VERTEX_ARRAY:
         case GL_VERTEX_ARRAY_OBJECT_EXT:
-            return getVertexArray({name});
+            return getPrivateState().getVertexArray({name});
         case GL_QUERY:
         case GL_QUERY_OBJECT_EXT:
             return getQuery({name});
@@ -3202,10 +3196,12 @@ EGLenum Context::getRenderBuffer() const
     return backAttachment->getSurface()->getRenderBuffer();
 }
 
+// This function should only be called by the thread where the context is current (i.e., it's not
+// thread safe).
 VertexArray *Context::checkVertexArrayAllocation(VertexArrayID vertexArrayHandle)
 {
     // Only called after a prior call to Gen.
-    VertexArray *vertexArray = getVertexArray(vertexArrayHandle);
+    VertexArray *vertexArray = getPrivateState().getVertexArray(vertexArrayHandle);
     if (!vertexArray)
     {
         vertexArray = new VertexArray(mImplementation.get(), vertexArrayHandle,
@@ -3213,7 +3209,7 @@ VertexArray *Context::checkVertexArrayAllocation(VertexArrayID vertexArrayHandle
                                       mState.getCaps().maxVertexAttribBindings);
         vertexArray->setBufferAccessValidationEnabled(mBufferAccessValidationEnabled);
 
-        mVertexArrayMap.assign(vertexArrayHandle, vertexArray);
+        getMutablePrivateState()->setVertexArray(vertexArrayHandle, vertexArray);
     }
 
     return vertexArray;
@@ -3233,12 +3229,6 @@ TransformFeedback *Context::checkTransformFeedbackAllocation(
     }
 
     return transformFeedback;
-}
-
-bool Context::isVertexArrayGenerated(VertexArrayID vertexArray) const
-{
-    ASSERT(mVertexArrayMap.contains({0}));
-    return mVertexArrayMap.contains(vertexArray);
 }
 
 bool Context::isTransformFeedbackGenerated(TransformFeedbackID transformFeedback) const
@@ -4731,7 +4721,7 @@ void Context::updateCaps()
 
     // Cache this in the VertexArrays. They need to check it in state change notifications.
     // Note: vertex array objects are private to context and so the map doesn't need locking
-    for (auto vaoIter : UnsafeResourceMapIter(mVertexArrayMap))
+    for (auto vaoIter : UnsafeResourceMapIter(getPrivateState().getVertexArrayMap()))
     {
         VertexArray *vao = vaoIter.second;
         vao->setBufferAccessValidationEnabled(mBufferAccessValidationEnabled);
@@ -7704,39 +7694,14 @@ void Context::deleteVertexArrays(GLsizei n, const VertexArrayID *arrays)
         if (arrays[arrayIndex].value != 0)
         {
             VertexArray *vertexArrayObject = nullptr;
-            if (mVertexArrayMap.erase(vertexArray, &vertexArrayObject))
+            getMutablePrivateState()->eraseVertexArray(vertexArray, &vertexArrayObject);
+            if (vertexArrayObject != nullptr)
             {
-                if (vertexArrayObject != nullptr)
-                {
-                    detachVertexArray(vertexArray);
-                    vertexArrayObject->onDestroy(this);
-                }
-
-                mVertexArrayHandleAllocator.release(vertexArray.value);
+                detachVertexArray(vertexArray);
+                vertexArrayObject->onDestroy(this);
             }
         }
     }
-}
-
-void Context::genVertexArrays(GLsizei n, VertexArrayID *arrays)
-{
-    for (int arrayIndex = 0; arrayIndex < n; arrayIndex++)
-    {
-        VertexArrayID vertexArray = {mVertexArrayHandleAllocator.allocate()};
-        mVertexArrayMap.assign(vertexArray, nullptr);
-        arrays[arrayIndex] = vertexArray;
-    }
-}
-
-GLboolean Context::isVertexArray(VertexArrayID array) const
-{
-    if (array.value == 0)
-    {
-        return GL_FALSE;
-    }
-
-    VertexArray *vao = getVertexArray(array);
-    return ConvertToGLBoolean(vao != nullptr);
 }
 
 void Context::endTransformFeedback()

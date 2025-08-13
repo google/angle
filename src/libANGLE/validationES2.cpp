@@ -1946,18 +1946,20 @@ bool ValidateDeleteVertexArraysOES(const Context *context,
                                    GLsizei n,
                                    const VertexArrayID *arrays)
 {
-    return ValidateGenOrDelete(context, entryPoint, n, arrays);
+    return ValidateGenOrDelete(context->getMutableErrorSetForValidation(), entryPoint, n, arrays);
 }
 
-bool ValidateGenVertexArraysOES(const Context *context,
+bool ValidateGenVertexArraysOES(const PrivateState &state,
+                                ErrorSet *errors,
                                 angle::EntryPoint entryPoint,
                                 GLsizei n,
                                 const VertexArrayID *arrays)
 {
-    return ValidateGenOrDelete(context, entryPoint, n, arrays);
+    return ValidateGenOrDelete(errors, entryPoint, n, arrays);
 }
 
-bool ValidateIsVertexArrayOES(const Context *context,
+bool ValidateIsVertexArrayOES(const PrivateState &state,
+                              ErrorSet *errors,
                               angle::EntryPoint entryPoint,
                               VertexArrayID array)
 {
@@ -2304,7 +2306,7 @@ static bool ValidateObjectIdentifierAndName(const Context *context,
             return true;
 
         case GL_VERTEX_ARRAY:
-            if (context->getVertexArray({name}) == nullptr)
+            if (context->getPrivateState().getVertexArray({name}) == nullptr)
             {
                 ANGLE_VALIDATION_ERROR(GL_INVALID_VALUE, kInvalidVertexArrayName);
                 return false;
@@ -5310,7 +5312,7 @@ bool ValidateDeleteBuffers(const Context *context,
                            GLint n,
                            const BufferID *buffers)
 {
-    return ValidateGenOrDelete(context, entryPoint, n, buffers);
+    return ValidateGenOrDelete(context->getMutableErrorSetForValidation(), entryPoint, n, buffers);
 }
 
 bool ValidateDeleteFramebuffers(const Context *context,
@@ -5318,7 +5320,8 @@ bool ValidateDeleteFramebuffers(const Context *context,
                                 GLint n,
                                 const FramebufferID *framebuffers)
 {
-    return ValidateGenOrDelete(context, entryPoint, n, framebuffers);
+    return ValidateGenOrDelete(context->getMutableErrorSetForValidation(), entryPoint, n,
+                               framebuffers);
 }
 
 bool ValidateDeleteRenderbuffers(const Context *context,
@@ -5326,7 +5329,8 @@ bool ValidateDeleteRenderbuffers(const Context *context,
                                  GLint n,
                                  const RenderbufferID *renderbuffers)
 {
-    return ValidateGenOrDelete(context, entryPoint, n, renderbuffers);
+    return ValidateGenOrDelete(context->getMutableErrorSetForValidation(), entryPoint, n,
+                               renderbuffers);
 }
 
 bool ValidateDeleteTextures(const Context *context,
@@ -5334,7 +5338,7 @@ bool ValidateDeleteTextures(const Context *context,
                             GLint n,
                             const TextureID *textures)
 {
-    return ValidateGenOrDelete(context, entryPoint, n, textures);
+    return ValidateGenOrDelete(context->getMutableErrorSetForValidation(), entryPoint, n, textures);
 }
 
 bool ValidateDisable(const PrivateState &state,

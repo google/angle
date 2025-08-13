@@ -2008,7 +2008,8 @@ bool ValidateBindVertexArray(const Context *context,
     return ValidateBindVertexArrayBase(context, entryPoint, array);
 }
 
-bool ValidateIsVertexArray(const Context *context,
+bool ValidateIsVertexArray(const PrivateState &state,
+                           ErrorSet *errors,
                            angle::EntryPoint entryPoint,
                            VertexArrayID array)
 {
@@ -2830,7 +2831,7 @@ bool ValidateGenQueries(const Context *context,
                         GLsizei n,
                         const QueryID *queries)
 {
-    return ValidateGenOrDelete(context, entryPoint, n, queries);
+    return ValidateGenOrDelete(context->getMutableErrorSetForValidation(), entryPoint, n, queries);
 }
 
 bool ValidateDeleteQueries(const Context *context,
@@ -2838,7 +2839,7 @@ bool ValidateDeleteQueries(const Context *context,
                            GLsizei n,
                            const QueryID *queries)
 {
-    return ValidateGenOrDelete(context, entryPoint, n, queries);
+    return ValidateGenOrDelete(context->getMutableErrorSetForValidation(), entryPoint, n, queries);
 }
 
 bool ValidateGenSamplers(const Context *context,
@@ -2874,7 +2875,7 @@ bool ValidateGenTransformFeedbacks(const Context *context,
                                    GLsizei n,
                                    const TransformFeedbackID *ids)
 {
-    return ValidateGenOrDelete(context, entryPoint, n, ids);
+    return ValidateGenOrDelete(context->getMutableErrorSetForValidation(), entryPoint, n, ids);
 }
 
 bool ValidateDeleteTransformFeedbacks(const Context *context,
@@ -2882,7 +2883,7 @@ bool ValidateDeleteTransformFeedbacks(const Context *context,
                                       GLsizei n,
                                       const TransformFeedbackID *ids)
 {
-    if (!ValidateGenOrDelete(context, entryPoint, n, ids))
+    if (!ValidateGenOrDelete(context->getMutableErrorSetForValidation(), entryPoint, n, ids))
     {
         return false;
     }
@@ -2899,12 +2900,13 @@ bool ValidateDeleteTransformFeedbacks(const Context *context,
     return true;
 }
 
-bool ValidateGenVertexArrays(const Context *context,
+bool ValidateGenVertexArrays(const PrivateState &state,
+                             ErrorSet *errors,
                              angle::EntryPoint entryPoint,
                              GLsizei n,
                              const VertexArrayID *arrays)
 {
-    return ValidateGenOrDelete(context, entryPoint, n, arrays);
+    return ValidateGenOrDelete(errors, entryPoint, n, arrays);
 }
 
 bool ValidateDeleteVertexArrays(const Context *context,
@@ -2912,7 +2914,7 @@ bool ValidateDeleteVertexArrays(const Context *context,
                                 GLsizei n,
                                 const VertexArrayID *arrays)
 {
-    return ValidateGenOrDelete(context, entryPoint, n, arrays);
+    return ValidateGenOrDelete(context->getMutableErrorSetForValidation(), entryPoint, n, arrays);
 }
 
 bool ValidateBeginTransformFeedback(const Context *context,
