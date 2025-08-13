@@ -99,8 +99,11 @@ ImmutableString MakeMatCx2ConversionFunctionName(const TType *type);
 bool OutputUniformBoolOrBvecConversion(TInfoSinkBase &output, const TType &type);
 
 // TODO(anglebug.com/42267100): for now does not output all uniform blocks,
-// just the default block. (fails for  matCx2, bool.)
-bool OutputUniformBlocksAndSamplers(TCompiler *compiler, TIntermBlock *root);
+// just the default block.
+// `uniformBlock` is the variable declaring an interface block of default uniforms.
+bool OutputUniformBlocksAndSamplers(TCompiler *compiler,
+                                    TIntermBlock *root,
+                                    const TVariable *defaultUniformBlock);
 
 // GLSL sampler uniforms are extracted from structs. Given a GLSL sampler's associated name string,
 // this function retrieves its new WGSL name and strips off array indices.

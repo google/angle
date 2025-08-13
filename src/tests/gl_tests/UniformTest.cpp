@@ -696,6 +696,44 @@ void main() {
     glDeleteProgram(program);
 }
 
+// Tests that inactive uniforms do not cause buffer offsets to be incorrectly calculated.
+TEST_P(SimpleUniformUsageTest, MiddleInactiveUniform)
+{
+    constexpr char kFragShader[] = R"(
+precision mediump float;
+
+uniform vec4 one;
+uniform vec4 two;
+uniform vec4 three;
+
+void main() {
+    gl_FragColor = vec4(0.0);
+    gl_FragColor += one;
+    gl_FragColor += three;
+})";
+
+    GLuint program = CompileProgram(essl1_shaders::vs::Simple(), kFragShader);
+    ASSERT_NE(program, 0u);
+    glUseProgram(program);
+
+    GLint uniformOneLocation = glGetUniformLocation(program, "one");
+    ASSERT_NE(uniformOneLocation, -1);
+    GLint uniformTwoLocation = glGetUniformLocation(program, "two");
+    ASSERT_EQ(uniformTwoLocation, -1);
+    GLint uniformThreeLocation = glGetUniformLocation(program, "three");
+    ASSERT_NE(uniformThreeLocation, -1);
+
+    // Set to magenta.
+    glUniform4f(uniformOneLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+    glUniform4f(uniformThreeLocation, 0.0f, 0.0f, 1.0f, 1.0f);
+
+    drawQuad(program, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::magenta);
+
+    glDeleteProgram(program);
+}
+
 using SimpleUniformUsageTestES3 = SimpleUniformUsageTest;
 
 // Tests that making a copy of a struct of uniforms functions correctly.
