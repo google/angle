@@ -168,6 +168,22 @@ angle::Result DispatchWorkThread::finishLoop()
     return angle::Result::Continue;
 }
 
+egl::ContextPriority convertClToEglPriority(cl_queue_priority_khr priority)
+{
+    switch (priority)
+    {
+        case CL_QUEUE_PRIORITY_HIGH_KHR:
+            return egl::ContextPriority::High;
+        case CL_QUEUE_PRIORITY_MED_KHR:
+            return egl::ContextPriority::Medium;
+        case CL_QUEUE_PRIORITY_LOW_KHR:
+            return egl::ContextPriority::Low;
+        default:
+            UNREACHABLE();
+            return egl::ContextPriority::Medium;
+    }
+}
+
 }  // namespace
 
 CLCommandQueueVk::CLCommandQueueVk(const cl::CommandQueue &commandQueue)
@@ -1769,8 +1785,8 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk)
                 imageInfo.imageLayout = arg.type == NonSemanticClspvReflectionArgumentStorageImage
                                             ? VK_IMAGE_LAYOUT_GENERAL
                                             : vkMem.getImage().getCurrentLayout();
-                imageInfo.imageView = vkMem.getImageView().getHandle();
-                imageInfo.sampler   = VK_NULL_HANDLE;
+                imageInfo.imageView   = vkMem.getImageView().getHandle();
+                imageInfo.sampler     = VK_NULL_HANDLE;
                 VkWriteDescriptorSet &writeDescriptorSet =
                     kernelArgDescSetBuilder.allocWriteDescriptorSet();
                 writeDescriptorSet.descriptorCount = 1;
@@ -1989,7 +2005,8 @@ angle::Result CLCommandQueueVk::flushComputePassCommands()
     mLastFlushedQueueSerial = mComputePassCommands->getQueueSerial();
     // Here, we flush our compute cmds to RendererVk's primary command buffer
     ANGLE_TRY(mContext->getRenderer()->flushOutsideRPCommands(
-        mContext, getProtectionType(), egl::ContextPriority::Medium, &mComputePassCommands));
+        mContext, getProtectionType(), convertClToEglPriority(mCommandQueue.getPriority()),
+        &mComputePassCommands));
 
     mContext->getPerfCounters().flushedOutsideRenderPassCommandBuffers++;
 
@@ -2036,9 +2053,9 @@ angle::Result CLCommandQueueVk::submitCommands()
     ASSERT(hasCommandsPendingSubmission());
 
     // Kick off renderer submit
-    ANGLE_TRY(mContext->getRenderer()->submitCommands(mContext, getProtectionType(),
-                                                      egl::ContextPriority::Medium, nullptr,
-                                                      nullptr, {}, mLastFlushedQueueSerial));
+    ANGLE_TRY(mContext->getRenderer()->submitCommands(
+        mContext, getProtectionType(), convertClToEglPriority(mCommandQueue.getPriority()), nullptr,
+        nullptr, {}, mLastFlushedQueueSerial));
 
     mLastSubmittedQueueSerial = mLastFlushedQueueSerial;
 

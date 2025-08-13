@@ -447,6 +447,7 @@ supported_cl_extensions = [
     "cl_khr_icd",
     "cl_khr_int64_base_atomics",
     "cl_khr_int64_extended_atomics",
+    "cl_khr_priority_hints",
 ]
 
 # Strip these suffixes from Context entry point names. NV is excluded (for now).

@@ -3788,8 +3788,9 @@ cl_int ValidateCreateCommandQueueWithProperties(cl_context context,
     // CL_INVALID_VALUE if values specified in properties are not valid.
     if (properties != nullptr)
     {
-        bool isQueueOnDevice = false;
-        bool hasQueueSize    = false;
+        bool isQueueOnDevice  = false;
+        bool hasQueueSize     = false;
+        bool hasQueuePriority = false;
         while (*properties != 0)
         {
             switch (*properties++)
@@ -3824,6 +3825,18 @@ cl_int ValidateCreateCommandQueueWithProperties(cl_context context,
                     hasQueueSize = true;
                     break;
                 }
+                case CL_QUEUE_PRIORITY_KHR:
+                {
+                    if (*properties != CL_QUEUE_PRIORITY_HIGH_KHR &&
+                        *properties != CL_QUEUE_PRIORITY_MED_KHR &&
+                        *properties != CL_QUEUE_PRIORITY_LOW_KHR)
+                    {
+                        return CL_INVALID_VALUE;
+                    }
+                    hasQueuePriority = true;
+                    properties++;
+                    break;
+                }
                 default:
                     return CL_INVALID_VALUE;
             }
@@ -3833,6 +3846,14 @@ cl_int ValidateCreateCommandQueueWithProperties(cl_context context,
         if (hasQueueSize && !isQueueOnDevice)
         {
             return CL_INVALID_VALUE;
+        }
+
+        // CL_INVALID_QUEUE_PROPERTIES if the cl_khr_priority_hints extension is supported, the
+        // CL_QUEUE_PRIORITY_KHR property is specified, and the queue is a CL_QUEUE_ON_DEVICE.
+        if (device->cast<Device>().getInfo().khrPriorityHints && hasQueuePriority &&
+            isQueueOnDevice)
+        {
+            return CL_INVALID_QUEUE_PROPERTIES;
         }
     }
 

@@ -52,6 +52,7 @@ void CLExtensions::initializeExtensions(std::string &&extensionStr)
     khrInt64ExtendedAtomics = hasExtension("cl_khr_int64_extended_atomics");
     khrIntegerDotProduct    = hasExtension("cl_khr_integer_dot_product");
     khrExternalMemory       = hasExtension("cl_khr_external_memory");
+    khrPriorityHints        = hasExtension("cl_khr_priority_hints");
 }
 
 void CLExtensions::initializeVersionedExtensions(const NameVersionVector &versionedExtList)

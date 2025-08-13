@@ -71,6 +71,7 @@ struct CLExtensions
     bool khrInt64ExtendedAtomics = false;  // cl_khr_int64_extended_atomics
     bool khrIntegerDotProduct    = false;  // cl_khr_integer_dot_product
     bool khrExternalMemory       = false;  // cl_khr_external_memory
+    bool khrPriorityHints        = false;  // cl_khr_priority_hints
 };
 
 }  // namespace rx

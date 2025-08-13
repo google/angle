@@ -763,6 +763,7 @@ size_t CommandQueue::getDeviceIndex() const
 CommandQueue::CommandQueue(Context &context,
                            Device &device,
                            PropArray &&propArray,
+                           Priority priority,
                            CommandQueueProperties properties,
                            cl_uint size)
     : mContext(&context),
@@ -770,6 +771,7 @@ CommandQueue::CommandQueue(Context &context,
       mPropArray(std::move(propArray)),
       mProperties(properties),
       mSize(size),
+      mPriority(priority),
       mImpl(nullptr)
 {
     ANGLE_CL_IMPL_TRY(context.getImpl().createCommandQueue(*this, &mImpl));
@@ -780,7 +782,11 @@ CommandQueue::CommandQueue(Context &context,
 }
 
 CommandQueue::CommandQueue(Context &context, Device &device, CommandQueueProperties properties)
-    : mContext(&context), mDevice(&device), mProperties(properties), mImpl(nullptr)
+    : mContext(&context),
+      mDevice(&device),
+      mProperties(properties),
+      mPriority(CL_QUEUE_PRIORITY_MED_KHR),
+      mImpl(nullptr)
 {
     ANGLE_CL_IMPL_TRY(context.getImpl().createCommandQueue(*this, &mImpl));
 }
