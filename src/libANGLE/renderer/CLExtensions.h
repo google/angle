@@ -33,6 +33,12 @@ struct CLExtensions
     std::string extensions;
     NameVersionVector extensionsWithVersion;
 
+    cl_device_integer_dot_product_capabilities_khr integerDotProductCapabilities;
+    cl_device_integer_dot_product_acceleration_properties_khr
+        integerDotProductAccelerationProperties8Bit;
+    cl_device_integer_dot_product_acceleration_properties_khr
+        integerDotProductAccelerationProperties4x8BitPacked;
+
     // These Khronos extension names must be returned by all devices that support OpenCL 1.1.
     bool khrByteAddressableStore       = false;  // cl_khr_byte_addressable_store
     bool khrGlobalInt32BaseAtomics     = false;  // cl_khr_global_int32_base_atomics
@@ -53,6 +59,7 @@ struct CLExtensions
     bool khrICD                  = false;  // cl_khr_icd
     bool khrInt64BaseAtomics     = false;  // cl_khr_int64_base_atomics
     bool khrInt64ExtendedAtomics = false;  // cl_khr_int64_extended_atomics
+    bool khrIntegerDotProduct    = false;  // cl_khr_integer_dot_product
 };
 
 }  // namespace rx

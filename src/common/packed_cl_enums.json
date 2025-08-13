@@ -119,7 +119,10 @@
         "OpenCL_C_Features": "CL_DEVICE_OPENCL_C_FEATURES",
         "DeviceEnqueueCapabilities": "CL_DEVICE_DEVICE_ENQUEUE_CAPABILITIES",
         "PipeSupport": "CL_DEVICE_PIPE_SUPPORT",
-        "LatestConformanceVersionPassed": "CL_DEVICE_LATEST_CONFORMANCE_VERSION_PASSED"
+        "LatestConformanceVersionPassed": "CL_DEVICE_LATEST_CONFORMANCE_VERSION_PASSED",
+        "IntegerDotProductCapabilities": "CL_DEVICE_INTEGER_DOT_PRODUCT_CAPABILITIES_KHR",
+        "IntegerDotProductAccelerationProperties8bit": "CL_DEVICE_INTEGER_DOT_PRODUCT_ACCELERATION_PROPERTIES_8BIT_KHR",
+        "IntegerDotProductAccelerationProperties4x8bitPacked": "CL_DEVICE_INTEGER_DOT_PRODUCT_ACCELERATION_PROPERTIES_4x8BIT_PACKED_KHR"
     },
     "ContextInfo": {
         "ReferenceCount": "CL_CONTEXT_REFERENCE_COUNT",

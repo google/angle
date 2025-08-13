@@ -443,6 +443,12 @@ DeviceInfo FromCLenum<DeviceInfo>(CLenum from)
             return DeviceInfo::PipeSupport;
         case CL_DEVICE_LATEST_CONFORMANCE_VERSION_PASSED:
             return DeviceInfo::LatestConformanceVersionPassed;
+        case CL_DEVICE_INTEGER_DOT_PRODUCT_CAPABILITIES_KHR:
+            return DeviceInfo::IntegerDotProductCapabilities;
+        case CL_DEVICE_INTEGER_DOT_PRODUCT_ACCELERATION_PROPERTIES_8BIT_KHR:
+            return DeviceInfo::IntegerDotProductAccelerationProperties8bit;
+        case CL_DEVICE_INTEGER_DOT_PRODUCT_ACCELERATION_PROPERTIES_4x8BIT_PACKED_KHR:
+            return DeviceInfo::IntegerDotProductAccelerationProperties4x8bitPacked;
         default:
             return DeviceInfo::InvalidEnum;
     }
@@ -670,6 +676,12 @@ CLenum ToCLenum(DeviceInfo from)
             return CL_DEVICE_PIPE_SUPPORT;
         case DeviceInfo::LatestConformanceVersionPassed:
             return CL_DEVICE_LATEST_CONFORMANCE_VERSION_PASSED;
+        case DeviceInfo::IntegerDotProductCapabilities:
+            return CL_DEVICE_INTEGER_DOT_PRODUCT_CAPABILITIES_KHR;
+        case DeviceInfo::IntegerDotProductAccelerationProperties8bit:
+            return CL_DEVICE_INTEGER_DOT_PRODUCT_ACCELERATION_PROPERTIES_8BIT_KHR;
+        case DeviceInfo::IntegerDotProductAccelerationProperties4x8bitPacked:
+            return CL_DEVICE_INTEGER_DOT_PRODUCT_ACCELERATION_PROPERTIES_4x8BIT_PACKED_KHR;
         default:
             UNREACHABLE();
             return 0;
@@ -1006,6 +1018,15 @@ std::ostream &operator<<(std::ostream &os, DeviceInfo value)
             break;
         case DeviceInfo::LatestConformanceVersionPassed:
             os << "CL_DEVICE_LATEST_CONFORMANCE_VERSION_PASSED";
+            break;
+        case DeviceInfo::IntegerDotProductCapabilities:
+            os << "CL_DEVICE_INTEGER_DOT_PRODUCT_CAPABILITIES_KHR";
+            break;
+        case DeviceInfo::IntegerDotProductAccelerationProperties8bit:
+            os << "CL_DEVICE_INTEGER_DOT_PRODUCT_ACCELERATION_PROPERTIES_8BIT_KHR";
+            break;
+        case DeviceInfo::IntegerDotProductAccelerationProperties4x8bitPacked:
+            os << "CL_DEVICE_INTEGER_DOT_PRODUCT_ACCELERATION_PROPERTIES_4x8BIT_PACKED_KHR";
             break;
         default:
             os << "GL_INVALID_ENUM";

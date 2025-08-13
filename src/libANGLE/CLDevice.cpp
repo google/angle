@@ -278,6 +278,19 @@ angle::Result Device::getInfo(DeviceInfo name,
             copySize =
                 mInfo.partitionType.size() * sizeof(decltype(mInfo.partitionType)::value_type);
             break;
+        case DeviceInfo::IntegerDotProductCapabilities:
+            copyValue = &mInfo.integerDotProductCapabilities;
+            copySize  = sizeof(mInfo.integerDotProductCapabilities);
+            break;
+        case DeviceInfo::IntegerDotProductAccelerationProperties8bit:
+            copyValue = &mInfo.integerDotProductAccelerationProperties8Bit;
+            copySize  = sizeof(mInfo.integerDotProductAccelerationProperties8Bit);
+            break;
+
+        case DeviceInfo::IntegerDotProductAccelerationProperties4x8bitPacked:
+            copyValue = &mInfo.integerDotProductAccelerationProperties4x8BitPacked;
+            copySize  = sizeof(mInfo.integerDotProductAccelerationProperties4x8BitPacked);
+            break;
 
         // Handle all mapped values
         case DeviceInfo::Platform:

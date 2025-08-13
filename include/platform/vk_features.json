@@ -1983,6 +1983,13 @@
                 "VkDevice supports the VK_KHR_maintenance9 extension"
             ],
             "issue": "https://anglebug.com/429339330"
+        },
+        {
+            "name": "supports_shader_integer_dot_product",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_KHR_shader_integer_dot_product extension"
+            ]
         }
     ]
 }

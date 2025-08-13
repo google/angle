@@ -194,6 +194,12 @@ class Renderer : angle::NonCopyable
     {
         return mPhysicalDeviceFeatures;
     }
+    const VkPhysicalDeviceShaderIntegerDotProductProperties &
+    getPhysicalDeviceShaderIntegerDotProductProperties() const
+    {
+        return mShaderIntegerDotProductProperties;
+    }
+
     const VkPhysicalDeviceFeatures2KHR &getEnabledFeatures() const { return mEnabledFeatures; }
     VkDevice getDevice() const { return mDevice; }
 
@@ -899,6 +905,8 @@ class Renderer : angle::NonCopyable
     VkPhysicalDeviceMaintenance3Properties mMaintenance3Properties;
     VkPhysicalDeviceFaultFeaturesEXT mFaultFeatures;
     VkPhysicalDeviceASTCDecodeFeaturesEXT mPhysicalDeviceAstcDecodeFeatures;
+    VkPhysicalDeviceShaderIntegerDotProductFeatures mShaderIntegerDotProductFeatures;
+    VkPhysicalDeviceShaderIntegerDotProductProperties mShaderIntegerDotProductProperties;
 
     uint32_t mLegacyDitheringVersion = 0;
 

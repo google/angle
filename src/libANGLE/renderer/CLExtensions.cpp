@@ -50,6 +50,7 @@ void CLExtensions::initializeExtensions(std::string &&extensionStr)
     khrICD                  = hasExtension("cl_khr_icd");
     khrInt64BaseAtomics     = hasExtension("cl_khr_int64_base_atomics");
     khrInt64ExtendedAtomics = hasExtension("cl_khr_int64_extended_atomics");
+    khrIntegerDotProduct    = hasExtension("cl_khr_integer_dot_product");
 }
 
 void CLExtensions::initializeVersionedExtensions(const NameVersionVector &versionedExtList)

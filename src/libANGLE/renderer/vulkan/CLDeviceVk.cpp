@@ -198,6 +198,18 @@ CLDeviceImpl::Info CLDeviceVk::createInfo(cl::DeviceType type) const
         versionedExtensionList.push_back(
             cl_name_version{.version = CL_MAKE_VERSION(1, 0, 0), .name = "cl_khr_3d_image_writes"});
     }
+
+    info.integerDotProductCapabilities = getIntegerDotProductCapabilities();
+    info.integerDotProductAccelerationProperties8Bit =
+        getIntegerDotProductAccelerationProperties8Bit();
+    info.integerDotProductAccelerationProperties4x8BitPacked =
+        getIntegerDotProductAccelerationProperties4x8BitPacked();
+
+    if (mRenderer->getFeatures().supportsShaderIntegerDotProduct.enabled)
+    {
+        versionedExtensionList.push_back(cl_name_version{.version = CL_MAKE_VERSION(2, 0, 0),
+                                                         .name    = "cl_khr_integer_dot_product"});
+    }
     info.initializeVersionedExtensions(std::move(versionedExtensionList));
 
     if (!mRenderer->getFeatures().supportsUniformBufferStandardLayout.enabled)
@@ -220,6 +232,16 @@ CLDeviceImpl::Info CLDeviceVk::createInfo(cl::DeviceType type) const
     {
         info.OpenCL_C_Features.push_back(
             cl_name_version{.version = CL_MAKE_VERSION(3, 0, 0), .name = "__opencl_c_int64"});
+    }
+
+    if (mRenderer->getFeatures().supportsShaderIntegerDotProduct.enabled)
+    {
+        info.OpenCL_C_Features.push_back(
+            cl_name_version{.version = CL_MAKE_VERSION(3, 0, 0),
+                            .name    = "__opencl_c_integer_dot_product_input_4x8bit"});
+        info.OpenCL_C_Features.push_back(
+            cl_name_version{.version = CL_MAKE_VERSION(3, 0, 0),
+                            .name    = "__opencl_c_integer_dot_product_input_4x8bit_packed"});
     }
 
     return info;
@@ -313,4 +335,71 @@ cl::WorkgroupSize CLDeviceVk::selectWorkGroupSize(const cl::NDRange &ndrange) co
     return localSize;
 }
 
+cl_device_integer_dot_product_capabilities_khr CLDeviceVk::getIntegerDotProductCapabilities() const
+{
+    cl_device_integer_dot_product_capabilities_khr integerDotProductCapabilities = {};
+
+    if (mRenderer->getFeatures().supportsShaderIntegerDotProduct.enabled)
+    {
+        // If the VK extension is supported, then all the caps mentioned in the CL spec are
+        // supported by default.
+        integerDotProductCapabilities = (CL_DEVICE_INTEGER_DOT_PRODUCT_INPUT_4x8BIT_PACKED_KHR |
+                                         CL_DEVICE_INTEGER_DOT_PRODUCT_INPUT_4x8BIT_KHR);
+    }
+
+    return integerDotProductCapabilities;
+}
+
+cl_device_integer_dot_product_acceleration_properties_khr
+CLDeviceVk::getIntegerDotProductAccelerationProperties8Bit() const
+{
+
+    cl_device_integer_dot_product_acceleration_properties_khr
+        integerDotProductAccelerationProperties = {};
+    const VkPhysicalDeviceShaderIntegerDotProductProperties &integerDotProductProps =
+        mRenderer->getPhysicalDeviceShaderIntegerDotProductProperties();
+
+    integerDotProductAccelerationProperties.signed_accelerated =
+        integerDotProductProps.integerDotProduct8BitSignedAccelerated;
+    integerDotProductAccelerationProperties.unsigned_accelerated =
+        integerDotProductProps.integerDotProduct8BitUnsignedAccelerated;
+    integerDotProductAccelerationProperties.mixed_signedness_accelerated =
+        integerDotProductProps.integerDotProduct8BitMixedSignednessAccelerated;
+    integerDotProductAccelerationProperties.accumulating_saturating_signed_accelerated =
+        integerDotProductProps.integerDotProductAccumulatingSaturating8BitSignedAccelerated;
+    integerDotProductAccelerationProperties.accumulating_saturating_unsigned_accelerated =
+        integerDotProductProps.integerDotProductAccumulatingSaturating8BitUnsignedAccelerated;
+    integerDotProductAccelerationProperties.accumulating_saturating_mixed_signedness_accelerated =
+        integerDotProductProps
+            .integerDotProductAccumulatingSaturating8BitMixedSignednessAccelerated;
+
+    return integerDotProductAccelerationProperties;
+}
+
+cl_device_integer_dot_product_acceleration_properties_khr
+CLDeviceVk::getIntegerDotProductAccelerationProperties4x8BitPacked() const
+{
+
+    cl_device_integer_dot_product_acceleration_properties_khr
+        integerDotProductAccelerationProperties = {};
+    const VkPhysicalDeviceShaderIntegerDotProductProperties &integerDotProductProps =
+        mRenderer->getPhysicalDeviceShaderIntegerDotProductProperties();
+
+    integerDotProductAccelerationProperties.signed_accelerated =
+        integerDotProductProps.integerDotProduct4x8BitPackedSignedAccelerated;
+    integerDotProductAccelerationProperties.unsigned_accelerated =
+        integerDotProductProps.integerDotProduct4x8BitPackedUnsignedAccelerated;
+    integerDotProductAccelerationProperties.mixed_signedness_accelerated =
+        integerDotProductProps.integerDotProduct4x8BitPackedMixedSignednessAccelerated;
+    integerDotProductAccelerationProperties.accumulating_saturating_signed_accelerated =
+        integerDotProductProps.integerDotProductAccumulatingSaturating4x8BitPackedSignedAccelerated;
+    integerDotProductAccelerationProperties.accumulating_saturating_unsigned_accelerated =
+        integerDotProductProps
+            .integerDotProductAccumulatingSaturating4x8BitPackedUnsignedAccelerated;
+    integerDotProductAccelerationProperties.accumulating_saturating_mixed_signedness_accelerated =
+        integerDotProductProps
+            .integerDotProductAccumulatingSaturating4x8BitPackedMixedSignednessAccelerated;
+
+    return integerDotProductAccelerationProperties;
+}
 }  // namespace rx

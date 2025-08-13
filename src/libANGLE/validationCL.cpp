@@ -689,6 +689,12 @@ cl_int ValidateGetDeviceInfo(cl_device_id device,
             ANGLE_VALIDATE_VERSION_OR_EXTENSION(version, 1, 2, info.khrFP64);
             break;
 
+        case DeviceInfo::IntegerDotProductCapabilities:
+        case DeviceInfo::IntegerDotProductAccelerationProperties8bit:
+        case DeviceInfo::IntegerDotProductAccelerationProperties4x8bitPacked:
+            ANGLE_VALIDATE_VERSION_OR_EXTENSION(version, 3, 0, info.khrIntegerDotProduct);
+            break;
+
         case DeviceInfo::InvalidEnum:
             return CL_INVALID_VALUE;
         default:

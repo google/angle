@@ -402,6 +402,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::SupportsShaderFramebufferFetchNonCoherent, "supportsShaderFramebufferFetchNonCoherent"},
     {Feature::SupportsShaderFramebufferFetchNonCoherentEXT, "supportsShaderFramebufferFetchNonCoherentEXT"},
     {Feature::SupportsShaderInt8, "supportsShaderInt8"},
+    {Feature::SupportsShaderIntegerDotProduct, "supportsShaderIntegerDotProduct"},
     {Feature::SupportsShaderNonSemanticInfo, "supportsShaderNonSemanticInfo"},
     {Feature::SupportsShaderStencilExport, "supportsShaderStencilExport"},
     {Feature::SupportsSharedPresentableImageExtension, "supportsSharedPresentableImageExtension"},

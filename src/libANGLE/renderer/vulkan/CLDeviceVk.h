@@ -51,6 +51,11 @@ class CLDeviceVk : public CLDeviceImpl
     angle::HashMap<cl::DeviceInfo, cl_ulong> mInfoULong;
     angle::HashMap<cl::DeviceInfo, size_t> mInfoSizeT;
     angle::HashMap<cl::DeviceInfo, std::string> mInfoString;
+    cl_device_integer_dot_product_capabilities_khr getIntegerDotProductCapabilities() const;
+    cl_device_integer_dot_product_acceleration_properties_khr
+    getIntegerDotProductAccelerationProperties8Bit() const;
+    cl_device_integer_dot_product_acceleration_properties_khr
+    getIntegerDotProductAccelerationProperties4x8BitPacked() const;
 };
 
 }  // namespace rx

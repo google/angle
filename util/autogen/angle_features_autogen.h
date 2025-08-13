@@ -402,6 +402,7 @@ enum class Feature
     SupportsShaderFramebufferFetchNonCoherent,
     SupportsShaderFramebufferFetchNonCoherentEXT,
     SupportsShaderInt8,
+    SupportsShaderIntegerDotProduct,
     SupportsShaderNonSemanticInfo,
     SupportsShaderStencilExport,
     SupportsSharedPresentableImageExtension,
