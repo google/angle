@@ -1020,6 +1020,7 @@ enum TQualifier
 
     // GL_EXT_fragment_shading_rate
     EvqShadingRateEXT,
+    EvqPrimitiveShadingRateEXT,
 
     // GLSL ES 3.0 extension OES_sample_variables
     EvqSampleID,
@@ -1586,6 +1587,7 @@ inline const char *getQualifierString(TQualifier q)
     case EvqSampleIn:                  return "sample in";
     case EvqSampleOut:                 return "sample out";
     case EvqShadingRateEXT:            return "ShadingRateEXT";
+    case EvqPrimitiveShadingRateEXT:   return "PrimitiveShadingRateEXT";
     case EvqSampleID:                  return "SampleID";
     case EvqSamplePosition:            return "SamplePosition";
     case EvqSampleMaskIn:              return "SampleMaskIn";

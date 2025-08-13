@@ -37,6 +37,7 @@
     OP(EXT_draw_buffers,                               100, 100) \
     OP(EXT_frag_depth,                                 100, 100) \
     OP(EXT_fragment_shading_rate,                      310, 320) \
+    OP(EXT_fragment_shading_rate_primitive,            310, 320) \
     OP(EXT_geometry_shader,                            310, 320) \
     OP(OES_geometry_shader,                            310, 320) \
     OP(OES_shader_io_blocks,                           310, 320) \

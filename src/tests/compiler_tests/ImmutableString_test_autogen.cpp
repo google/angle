@@ -1374,99 +1374,108 @@ TEST(ImmutableStringTest, ScriptGeneratedHashesMatch)
     ASSERT_EQ(0x00000538u, ImmutableString("gl_MaxFragmentAtomicCounterBuffers").mangledNameHash());
     ASSERT_EQ(0x00000539u, ImmutableString("gl_MaxCombinedAtomicCounterBuffers").mangledNameHash());
     ASSERT_EQ(0x0000053au, ImmutableString("gl_MaxAtomicCounterBufferSize").mangledNameHash());
-    ASSERT_EQ(0x0000053bu, ImmutableString("gl_MaxGeometryInputComponents").mangledNameHash());
-    ASSERT_EQ(0x0000053cu, ImmutableString("gl_MaxGeometryOutputComponents").mangledNameHash());
-    ASSERT_EQ(0x0000053du, ImmutableString("gl_MaxGeometryImageUniforms").mangledNameHash());
-    ASSERT_EQ(0x0000053eu, ImmutableString("gl_MaxGeometryTextureImageUnits").mangledNameHash());
-    ASSERT_EQ(0x0000053fu, ImmutableString("gl_MaxGeometryOutputVertices").mangledNameHash());
-    ASSERT_EQ(0x00000540u,
+    ASSERT_EQ(0x0000053bu,
+              ImmutableString("gl_ShadingRateFlag2VerticalPixelsEXT").mangledNameHash());
+    ASSERT_EQ(0x0000053cu,
+              ImmutableString("gl_ShadingRateFlag4VerticalPixelsEXT").mangledNameHash());
+    ASSERT_EQ(0x0000053du,
+              ImmutableString("gl_ShadingRateFlag2HorizontalPixelsEXT").mangledNameHash());
+    ASSERT_EQ(0x0000053eu,
+              ImmutableString("gl_ShadingRateFlag4HorizontalPixelsEXT").mangledNameHash());
+    ASSERT_EQ(0x0000053fu, ImmutableString("gl_MaxGeometryInputComponents").mangledNameHash());
+    ASSERT_EQ(0x00000540u, ImmutableString("gl_MaxGeometryOutputComponents").mangledNameHash());
+    ASSERT_EQ(0x00000541u, ImmutableString("gl_MaxGeometryImageUniforms").mangledNameHash());
+    ASSERT_EQ(0x00000542u, ImmutableString("gl_MaxGeometryTextureImageUnits").mangledNameHash());
+    ASSERT_EQ(0x00000543u, ImmutableString("gl_MaxGeometryOutputVertices").mangledNameHash());
+    ASSERT_EQ(0x00000544u,
               ImmutableString("gl_MaxGeometryTotalOutputComponents").mangledNameHash());
-    ASSERT_EQ(0x00000541u, ImmutableString("gl_MaxGeometryUniformComponents").mangledNameHash());
-    ASSERT_EQ(0x00000542u, ImmutableString("gl_MaxGeometryAtomicCounters").mangledNameHash());
-    ASSERT_EQ(0x00000543u, ImmutableString("gl_MaxGeometryAtomicCounterBuffers").mangledNameHash());
-    ASSERT_EQ(0x00000544u, ImmutableString("gl_MaxTessControlInputComponents").mangledNameHash());
-    ASSERT_EQ(0x00000545u, ImmutableString("gl_MaxTessControlOutputComponents").mangledNameHash());
-    ASSERT_EQ(0x00000546u, ImmutableString("gl_MaxTessControlTextureImageUnits").mangledNameHash());
-    ASSERT_EQ(0x00000547u, ImmutableString("gl_MaxTessControlUniformComponents").mangledNameHash());
-    ASSERT_EQ(0x00000548u,
+    ASSERT_EQ(0x00000545u, ImmutableString("gl_MaxGeometryUniformComponents").mangledNameHash());
+    ASSERT_EQ(0x00000546u, ImmutableString("gl_MaxGeometryAtomicCounters").mangledNameHash());
+    ASSERT_EQ(0x00000547u, ImmutableString("gl_MaxGeometryAtomicCounterBuffers").mangledNameHash());
+    ASSERT_EQ(0x00000548u, ImmutableString("gl_MaxTessControlInputComponents").mangledNameHash());
+    ASSERT_EQ(0x00000549u, ImmutableString("gl_MaxTessControlOutputComponents").mangledNameHash());
+    ASSERT_EQ(0x0000054au, ImmutableString("gl_MaxTessControlTextureImageUnits").mangledNameHash());
+    ASSERT_EQ(0x0000054bu, ImmutableString("gl_MaxTessControlUniformComponents").mangledNameHash());
+    ASSERT_EQ(0x0000054cu,
               ImmutableString("gl_MaxTessControlTotalOutputComponents").mangledNameHash());
-    ASSERT_EQ(0x00000549u, ImmutableString("gl_MaxTessControlImageUniforms").mangledNameHash());
-    ASSERT_EQ(0x0000054au, ImmutableString("gl_MaxTessControlAtomicCounters").mangledNameHash());
-    ASSERT_EQ(0x0000054bu,
-              ImmutableString("gl_MaxTessControlAtomicCounterBuffers").mangledNameHash());
-    ASSERT_EQ(0x0000054cu, ImmutableString("gl_MaxTessPatchComponents").mangledNameHash());
-    ASSERT_EQ(0x0000054du, ImmutableString("gl_MaxPatchVertices").mangledNameHash());
-    ASSERT_EQ(0x0000054eu, ImmutableString("gl_MaxTessGenLevel").mangledNameHash());
+    ASSERT_EQ(0x0000054du, ImmutableString("gl_MaxTessControlImageUniforms").mangledNameHash());
+    ASSERT_EQ(0x0000054eu, ImmutableString("gl_MaxTessControlAtomicCounters").mangledNameHash());
     ASSERT_EQ(0x0000054fu,
+              ImmutableString("gl_MaxTessControlAtomicCounterBuffers").mangledNameHash());
+    ASSERT_EQ(0x00000550u, ImmutableString("gl_MaxTessPatchComponents").mangledNameHash());
+    ASSERT_EQ(0x00000551u, ImmutableString("gl_MaxPatchVertices").mangledNameHash());
+    ASSERT_EQ(0x00000552u, ImmutableString("gl_MaxTessGenLevel").mangledNameHash());
+    ASSERT_EQ(0x00000553u,
               ImmutableString("gl_MaxTessEvaluationInputComponents").mangledNameHash());
-    ASSERT_EQ(0x00000550u,
+    ASSERT_EQ(0x00000554u,
               ImmutableString("gl_MaxTessEvaluationOutputComponents").mangledNameHash());
-    ASSERT_EQ(0x00000551u,
-              ImmutableString("gl_MaxTessEvaluationTextureImageUnits").mangledNameHash());
-    ASSERT_EQ(0x00000552u,
-              ImmutableString("gl_MaxTessEvaluationUniformComponents").mangledNameHash());
-    ASSERT_EQ(0x00000553u, ImmutableString("gl_MaxTessEvaluationImageUniforms").mangledNameHash());
-    ASSERT_EQ(0x00000554u, ImmutableString("gl_MaxTessEvaluationAtomicCounters").mangledNameHash());
     ASSERT_EQ(0x00000555u,
+              ImmutableString("gl_MaxTessEvaluationTextureImageUnits").mangledNameHash());
+    ASSERT_EQ(0x00000556u,
+              ImmutableString("gl_MaxTessEvaluationUniformComponents").mangledNameHash());
+    ASSERT_EQ(0x00000557u, ImmutableString("gl_MaxTessEvaluationImageUniforms").mangledNameHash());
+    ASSERT_EQ(0x00000558u, ImmutableString("gl_MaxTessEvaluationAtomicCounters").mangledNameHash());
+    ASSERT_EQ(0x00000559u,
               ImmutableString("gl_MaxTessEvaluationAtomicCounterBuffers").mangledNameHash());
-    ASSERT_EQ(0x00000556u, ImmutableString("gl_MaxSamples").mangledNameHash());
-    ASSERT_EQ(0x00000557u, ImmutableString("gl_MaxClipDistances").mangledNameHash());
-    ASSERT_EQ(0x00000558u, ImmutableString("gl_MaxCullDistances").mangledNameHash());
-    ASSERT_EQ(0x00000559u, ImmutableString("gl_MaxCombinedClipAndCullDistances").mangledNameHash());
-    ASSERT_EQ(0x0000055au, ImmutableString("gl_FragCoord").mangledNameHash());
-    ASSERT_EQ(0x0000055bu, ImmutableString("gl_FrontFacing").mangledNameHash());
-    ASSERT_EQ(0x0000055cu, ImmutableString("gl_PointCoord").mangledNameHash());
-    ASSERT_EQ(0x0000055du, ImmutableString("gl_FragColor").mangledNameHash());
-    ASSERT_EQ(0x0000055eu, ImmutableString("gl_FragData").mangledNameHash());
-    ASSERT_EQ(0x0000055fu, ImmutableString("gl_FragDepth").mangledNameHash());
-    ASSERT_EQ(0x00000560u, ImmutableString("gl_HelperInvocation").mangledNameHash());
-    ASSERT_EQ(0x00000561u, ImmutableString("gl_SecondaryFragColorEXT").mangledNameHash());
-    ASSERT_EQ(0x00000562u, ImmutableString("gl_SecondaryFragDataEXT").mangledNameHash());
-    ASSERT_EQ(0x00000563u, ImmutableString("gl_FragDepthEXT").mangledNameHash());
-    ASSERT_EQ(0x00000564u, ImmutableString("gl_LastFragData").mangledNameHash());
-    ASSERT_EQ(0x00000565u, ImmutableString("gl_LastFragColor").mangledNameHash());
-    ASSERT_EQ(0x00000566u, ImmutableString("gl_LastFragColorARM").mangledNameHash());
-    ASSERT_EQ(0x00000567u, ImmutableString("gl_LastFragDepthARM").mangledNameHash());
-    ASSERT_EQ(0x00000568u, ImmutableString("gl_LastFragStencilARM").mangledNameHash());
-    ASSERT_EQ(0x00000569u, ImmutableString("gl_PrimitiveID").mangledNameHash());
-    ASSERT_EQ(0x0000056au, ImmutableString("gl_Layer").mangledNameHash());
-    ASSERT_EQ(0x0000056bu, ImmutableString("gl_ShadingRateEXT").mangledNameHash());
-    ASSERT_EQ(0x0000056cu, ImmutableString("gl_SampleID").mangledNameHash());
-    ASSERT_EQ(0x0000056du, ImmutableString("gl_SamplePosition").mangledNameHash());
-    ASSERT_EQ(0x0000056eu, ImmutableString("gl_SampleMaskIn").mangledNameHash());
-    ASSERT_EQ(0x0000056fu, ImmutableString("gl_SampleMask").mangledNameHash());
-    ASSERT_EQ(0x00000570u, ImmutableString("gl_Position").mangledNameHash());
-    ASSERT_EQ(0x00000571u, ImmutableString("gl_PointSize").mangledNameHash());
-    ASSERT_EQ(0x00000572u, ImmutableString("gl_InstanceID").mangledNameHash());
-    ASSERT_EQ(0x00000573u, ImmutableString("gl_InstanceIndex").mangledNameHash());
-    ASSERT_EQ(0x00000574u, ImmutableString("gl_VertexID").mangledNameHash());
-    ASSERT_EQ(0x00000575u, ImmutableString("gl_VertexIndex").mangledNameHash());
-    ASSERT_EQ(0x00000576u, ImmutableString("gl_DrawID").mangledNameHash());
-    ASSERT_EQ(0x00000577u, ImmutableString("gl_BaseVertex").mangledNameHash());
-    ASSERT_EQ(0x00000578u, ImmutableString("gl_BaseInstance").mangledNameHash());
-    ASSERT_EQ(0x00000579u, ImmutableString("angle_BaseVertex").mangledNameHash());
-    ASSERT_EQ(0x0000057au, ImmutableString("angle_BaseInstance").mangledNameHash());
-    ASSERT_EQ(0x0000057bu, ImmutableString("gl_ClipDistance").mangledNameHash());
-    ASSERT_EQ(0x0000057cu, ImmutableString("gl_NumWorkGroups").mangledNameHash());
-    ASSERT_EQ(0x0000057du, ImmutableString("gl_WorkGroupSize").mangledNameHash());
-    ASSERT_EQ(0x0000057eu, ImmutableString("gl_WorkGroupID").mangledNameHash());
-    ASSERT_EQ(0x0000057fu, ImmutableString("gl_LocalInvocationID").mangledNameHash());
-    ASSERT_EQ(0x00000580u, ImmutableString("gl_GlobalInvocationID").mangledNameHash());
-    ASSERT_EQ(0x00000581u, ImmutableString("gl_LocalInvocationIndex").mangledNameHash());
-    ASSERT_EQ(0x00000582u, ImmutableString("gl_PrimitiveIDIn").mangledNameHash());
-    ASSERT_EQ(0x00000583u, ImmutableString("gl_InvocationID").mangledNameHash());
-    ASSERT_EQ(0x00000584u, ImmutableString("gl_PerVertex").mangledNameHash());
-    ASSERT_EQ(0x00000585u, ImmutableString("gl_in").mangledNameHash());
-    ASSERT_EQ(0x00000586u, ImmutableString("gl_PatchVerticesIn").mangledNameHash());
-    ASSERT_EQ(0x00000587u, ImmutableString("gl_TessLevelOuter").mangledNameHash());
-    ASSERT_EQ(0x00000588u, ImmutableString("gl_TessLevelInner").mangledNameHash());
-    ASSERT_EQ(0x00000589u, ImmutableString("gl_out").mangledNameHash());
-    ASSERT_EQ(0x0000058au, ImmutableString("gl_BoundingBox").mangledNameHash());
-    ASSERT_EQ(0x0000058bu, ImmutableString("gl_BoundingBoxEXT").mangledNameHash());
-    ASSERT_EQ(0x0000058cu, ImmutableString("gl_BoundingBoxOES").mangledNameHash());
-    ASSERT_EQ(0x0000058du, ImmutableString("gl_TessCoord").mangledNameHash());
-    ASSERT_EQ(0x0000058eu, ImmutableString("gl_ViewID_OVR").mangledNameHash());
-    ASSERT_EQ(0x0000058fu, ImmutableString("gl_CullDistance").mangledNameHash());
+    ASSERT_EQ(0x0000055au, ImmutableString("gl_MaxSamples").mangledNameHash());
+    ASSERT_EQ(0x0000055bu, ImmutableString("gl_MaxClipDistances").mangledNameHash());
+    ASSERT_EQ(0x0000055cu, ImmutableString("gl_MaxCullDistances").mangledNameHash());
+    ASSERT_EQ(0x0000055du, ImmutableString("gl_MaxCombinedClipAndCullDistances").mangledNameHash());
+    ASSERT_EQ(0x0000055eu, ImmutableString("gl_FragCoord").mangledNameHash());
+    ASSERT_EQ(0x0000055fu, ImmutableString("gl_FrontFacing").mangledNameHash());
+    ASSERT_EQ(0x00000560u, ImmutableString("gl_PointCoord").mangledNameHash());
+    ASSERT_EQ(0x00000561u, ImmutableString("gl_FragColor").mangledNameHash());
+    ASSERT_EQ(0x00000562u, ImmutableString("gl_FragData").mangledNameHash());
+    ASSERT_EQ(0x00000563u, ImmutableString("gl_FragDepth").mangledNameHash());
+    ASSERT_EQ(0x00000564u, ImmutableString("gl_HelperInvocation").mangledNameHash());
+    ASSERT_EQ(0x00000565u, ImmutableString("gl_SecondaryFragColorEXT").mangledNameHash());
+    ASSERT_EQ(0x00000566u, ImmutableString("gl_SecondaryFragDataEXT").mangledNameHash());
+    ASSERT_EQ(0x00000567u, ImmutableString("gl_FragDepthEXT").mangledNameHash());
+    ASSERT_EQ(0x00000568u, ImmutableString("gl_LastFragData").mangledNameHash());
+    ASSERT_EQ(0x00000569u, ImmutableString("gl_LastFragColor").mangledNameHash());
+    ASSERT_EQ(0x0000056au, ImmutableString("gl_LastFragColorARM").mangledNameHash());
+    ASSERT_EQ(0x0000056bu, ImmutableString("gl_LastFragDepthARM").mangledNameHash());
+    ASSERT_EQ(0x0000056cu, ImmutableString("gl_LastFragStencilARM").mangledNameHash());
+    ASSERT_EQ(0x0000056du, ImmutableString("gl_PrimitiveID").mangledNameHash());
+    ASSERT_EQ(0x0000056eu, ImmutableString("gl_Layer").mangledNameHash());
+    ASSERT_EQ(0x0000056fu, ImmutableString("gl_ShadingRateEXT").mangledNameHash());
+    ASSERT_EQ(0x00000570u, ImmutableString("gl_SampleID").mangledNameHash());
+    ASSERT_EQ(0x00000571u, ImmutableString("gl_SamplePosition").mangledNameHash());
+    ASSERT_EQ(0x00000572u, ImmutableString("gl_SampleMaskIn").mangledNameHash());
+    ASSERT_EQ(0x00000573u, ImmutableString("gl_SampleMask").mangledNameHash());
+    ASSERT_EQ(0x00000574u, ImmutableString("gl_Position").mangledNameHash());
+    ASSERT_EQ(0x00000575u, ImmutableString("gl_PointSize").mangledNameHash());
+    ASSERT_EQ(0x00000576u, ImmutableString("gl_InstanceID").mangledNameHash());
+    ASSERT_EQ(0x00000577u, ImmutableString("gl_InstanceIndex").mangledNameHash());
+    ASSERT_EQ(0x00000578u, ImmutableString("gl_VertexID").mangledNameHash());
+    ASSERT_EQ(0x00000579u, ImmutableString("gl_VertexIndex").mangledNameHash());
+    ASSERT_EQ(0x0000057au, ImmutableString("gl_DrawID").mangledNameHash());
+    ASSERT_EQ(0x0000057bu, ImmutableString("gl_BaseVertex").mangledNameHash());
+    ASSERT_EQ(0x0000057cu, ImmutableString("gl_BaseInstance").mangledNameHash());
+    ASSERT_EQ(0x0000057du, ImmutableString("angle_BaseVertex").mangledNameHash());
+    ASSERT_EQ(0x0000057eu, ImmutableString("angle_BaseInstance").mangledNameHash());
+    ASSERT_EQ(0x0000057fu, ImmutableString("gl_ClipDistance").mangledNameHash());
+    ASSERT_EQ(0x00000580u, ImmutableString("gl_PrimitiveShadingRateEXT").mangledNameHash());
+    ASSERT_EQ(0x00000581u, ImmutableString("gl_NumWorkGroups").mangledNameHash());
+    ASSERT_EQ(0x00000582u, ImmutableString("gl_WorkGroupSize").mangledNameHash());
+    ASSERT_EQ(0x00000583u, ImmutableString("gl_WorkGroupID").mangledNameHash());
+    ASSERT_EQ(0x00000584u, ImmutableString("gl_LocalInvocationID").mangledNameHash());
+    ASSERT_EQ(0x00000585u, ImmutableString("gl_GlobalInvocationID").mangledNameHash());
+    ASSERT_EQ(0x00000586u, ImmutableString("gl_LocalInvocationIndex").mangledNameHash());
+    ASSERT_EQ(0x00000587u, ImmutableString("gl_PrimitiveIDIn").mangledNameHash());
+    ASSERT_EQ(0x00000588u, ImmutableString("gl_InvocationID").mangledNameHash());
+    ASSERT_EQ(0x00000589u, ImmutableString("gl_PerVertex").mangledNameHash());
+    ASSERT_EQ(0x0000058au, ImmutableString("gl_in").mangledNameHash());
+    ASSERT_EQ(0x0000058bu, ImmutableString("gl_PatchVerticesIn").mangledNameHash());
+    ASSERT_EQ(0x0000058cu, ImmutableString("gl_TessLevelOuter").mangledNameHash());
+    ASSERT_EQ(0x0000058du, ImmutableString("gl_TessLevelInner").mangledNameHash());
+    ASSERT_EQ(0x0000058eu, ImmutableString("gl_out").mangledNameHash());
+    ASSERT_EQ(0x0000058fu, ImmutableString("gl_BoundingBox").mangledNameHash());
+    ASSERT_EQ(0x00000590u, ImmutableString("gl_BoundingBoxEXT").mangledNameHash());
+    ASSERT_EQ(0x00000591u, ImmutableString("gl_BoundingBoxOES").mangledNameHash());
+    ASSERT_EQ(0x00000592u, ImmutableString("gl_TessCoord").mangledNameHash());
+    ASSERT_EQ(0x00000593u, ImmutableString("gl_ViewID_OVR").mangledNameHash());
+    ASSERT_EQ(0x00000594u, ImmutableString("gl_CullDistance").mangledNameHash());
     ASSERT_EQ(0x00000000u, ImmutableString("radians").unmangledNameHash());
     ASSERT_EQ(0x00000001u, ImmutableString("degrees").unmangledNameHash());
     ASSERT_EQ(0x00000002u, ImmutableString("sin").unmangledNameHash());

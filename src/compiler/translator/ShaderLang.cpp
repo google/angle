@@ -170,14 +170,18 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     memset(resources, 0, sizeof(*resources));
 
     // Constants.
-    resources->MaxVertexAttribs             = 8;
-    resources->MaxVertexUniformVectors      = 128;
-    resources->MaxVaryingVectors            = 8;
-    resources->MaxVertexTextureImageUnits   = 0;
-    resources->MaxCombinedTextureImageUnits = 8;
-    resources->MaxTextureImageUnits         = 8;
-    resources->MaxFragmentUniformVectors    = 16;
-    resources->MaxDrawBuffers               = 1;
+    resources->MaxVertexAttribs                    = 8;
+    resources->MaxVertexUniformVectors             = 128;
+    resources->MaxVaryingVectors                   = 8;
+    resources->MaxVertexTextureImageUnits          = 0;
+    resources->MaxCombinedTextureImageUnits        = 8;
+    resources->MaxTextureImageUnits                = 8;
+    resources->MaxFragmentUniformVectors           = 16;
+    resources->MaxDrawBuffers                      = 1;
+    resources->ShadingRateFlag2VerticalPixelsEXT   = 1;
+    resources->ShadingRateFlag4VerticalPixelsEXT   = 2;
+    resources->ShadingRateFlag2HorizontalPixelsEXT = 4;
+    resources->ShadingRateFlag4HorizontalPixelsEXT = 8;
 
     // Extensions.
     resources->OES_standard_derivatives                       = 0;
@@ -228,6 +232,7 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     resources->OES_texture_buffer                             = 0;
     resources->EXT_texture_buffer                             = 0;
     resources->EXT_fragment_shading_rate                      = 0;
+    resources->EXT_fragment_shading_rate_primitive            = 0;
     resources->OES_sample_variables                           = 0;
     resources->EXT_clip_cull_distance                         = 0;
     resources->ANGLE_clip_cull_distance                       = 0;

@@ -1586,6 +1586,10 @@ void TCompiler::setResourceString()
         << ":MaxTextureImageUnits:" << mResources.MaxTextureImageUnits
         << ":MaxFragmentUniformVectors:" << mResources.MaxFragmentUniformVectors
         << ":MaxDrawBuffers:" << mResources.MaxDrawBuffers
+        << ":ShadingRateFlag2VerticalPixelsEXT:" << mResources.ShadingRateFlag2VerticalPixelsEXT
+        << ":ShadingRateFlag2VerticalPixelsEXT:" << mResources.ShadingRateFlag2VerticalPixelsEXT
+        << ":ShadingRateFlag2HorizontalPixelsEXT:" << mResources.ShadingRateFlag2HorizontalPixelsEXT
+        << ":ShadingRateFlag4HorizontalPixelsEXT:" << mResources.ShadingRateFlag4HorizontalPixelsEXT
         << ":OES_standard_derivatives:" << mResources.OES_standard_derivatives
         << ":OES_EGL_image_external:" << mResources.OES_EGL_image_external
         << ":OES_EGL_image_external_essl3:" << mResources.OES_EGL_image_external_essl3
@@ -1640,6 +1644,7 @@ void TCompiler::setResourceString()
         << ":OES_texture_buffer:" << mResources.OES_texture_buffer
         << ":EXT_texture_buffer:" << mResources.EXT_texture_buffer
         << ":EXT_fragment_shading_rate:" << mResources.EXT_fragment_shading_rate
+        << ":EXT_fragment_shading_rate_primitive:" << mResources.EXT_fragment_shading_rate_primitive
         << ":OES_sample_variables:" << mResources.OES_sample_variables
         << ":EXT_clip_cull_distance:" << mResources.EXT_clip_cull_distance
         << ":ANGLE_clip_cull_distance:" << mResources.ANGLE_clip_cull_distance

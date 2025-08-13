@@ -473,6 +473,7 @@ spv::StorageClass GetStorageClass(const ShCompileOptions &compileOptions,
         case EvqFragDepth:
         case EvqSampleMask:
         case EvqLayerOut:
+        case EvqPrimitiveShadingRateEXT:
             return spv::StorageClassOutput;
 
         case EvqClipDistance:
@@ -605,6 +606,12 @@ spirv::IdRef OutputSPIRVTraverser::getSymbolIdAndStorageClass(const TSymbol *sym
         case EvqShadingRateEXT:
             name              = "gl_ShadingRateEXT";
             builtInDecoration = spv::BuiltInShadingRateKHR;
+            mBuilder.addCapability(spv::CapabilityFragmentShadingRateKHR);
+            mBuilder.addExtension(SPIRVExtensions::FragmentShadingRate);
+            break;
+        case EvqPrimitiveShadingRateEXT:
+            name              = "gl_PrimitiveShadingRateEXT";
+            builtInDecoration = spv::BuiltInPrimitiveShadingRateKHR;
             mBuilder.addCapability(spv::CapabilityFragmentShadingRateKHR);
             mBuilder.addExtension(SPIRVExtensions::FragmentShadingRate);
             break;

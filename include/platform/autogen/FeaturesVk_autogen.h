@@ -806,6 +806,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo supportsPrimitiveFragmentShadingRate = {
+        "supportsPrimitiveFragmentShadingRate",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
     FeatureInfo supportsFoveatedRendering = {
         "supportsFoveatedRendering",
         FeatureCategory::VulkanFeatures,

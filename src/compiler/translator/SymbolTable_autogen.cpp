@@ -25,7 +25,7 @@ using TableBase = TSymbolTableBase;
 
 struct SymbolIdChecker
 {
-    static_assert(TSymbolTable::kFirstUserDefinedSymbolId > 2023);
+    static_assert(TSymbolTable::kFirstUserDefinedSymbolId > 2029);
 };
 
 namespace BuiltInName
@@ -224,6 +224,7 @@ constexpr const ImmutableString gl_PointSize("gl_PointSize");
 constexpr const ImmutableString gl_Position("gl_Position");
 constexpr const ImmutableString gl_PrimitiveID("gl_PrimitiveID");
 constexpr const ImmutableString gl_PrimitiveIDIn("gl_PrimitiveIDIn");
+constexpr const ImmutableString gl_PrimitiveShadingRateEXT("gl_PrimitiveShadingRateEXT");
 constexpr const ImmutableString gl_SampleID("gl_SampleID");
 constexpr const ImmutableString gl_SampleMask("gl_SampleMask");
 constexpr const ImmutableString gl_SampleMaskIn("gl_SampleMaskIn");
@@ -231,6 +232,14 @@ constexpr const ImmutableString gl_SamplePosition("gl_SamplePosition");
 constexpr const ImmutableString gl_SecondaryFragColorEXT("gl_SecondaryFragColorEXT");
 constexpr const ImmutableString gl_SecondaryFragDataEXT("gl_SecondaryFragDataEXT");
 constexpr const ImmutableString gl_ShadingRateEXT("gl_ShadingRateEXT");
+constexpr const ImmutableString gl_ShadingRateFlag2HorizontalPixelsEXT(
+    "gl_ShadingRateFlag2HorizontalPixelsEXT");
+constexpr const ImmutableString gl_ShadingRateFlag2VerticalPixelsEXT(
+    "gl_ShadingRateFlag2VerticalPixelsEXT");
+constexpr const ImmutableString gl_ShadingRateFlag4HorizontalPixelsEXT(
+    "gl_ShadingRateFlag4HorizontalPixelsEXT");
+constexpr const ImmutableString gl_ShadingRateFlag4VerticalPixelsEXT(
+    "gl_ShadingRateFlag4VerticalPixelsEXT");
 constexpr const ImmutableString gl_TessCoord("gl_TessCoord");
 constexpr const ImmutableString gl_TessLevelInner("gl_TessLevelInner");
 constexpr const ImmutableString gl_TessLevelOuter("gl_TessLevelOuter");
@@ -692,6 +701,18 @@ constexpr const TVariable kgl_PrimitiveIDTESES3_2(
     SymbolType::BuiltIn,
     std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
     StaticType::Get<EbtInt, EbpHigh, EvqPrimitiveID, 1, 1>());
+constexpr const TVariable kgl_PrimitiveShadingRateEXT(
+    BuiltInId::gl_PrimitiveShadingRateEXT,
+    BuiltInName::gl_PrimitiveShadingRateEXT,
+    SymbolType::BuiltIn,
+    std::array<TExtension, 1u>{{TExtension::EXT_fragment_shading_rate_primitive}},
+    StaticType::Get<EbtInt, EbpMedium, EvqPrimitiveShadingRateEXT, 1, 1>());
+constexpr const TVariable kgl_PrimitiveShadingRateEXTGS(
+    BuiltInId::gl_PrimitiveShadingRateEXTGS,
+    BuiltInName::gl_PrimitiveShadingRateEXT,
+    SymbolType::BuiltIn,
+    std::array<TExtension, 1u>{{TExtension::EXT_fragment_shading_rate_primitive}},
+    StaticType::Get<EbtInt, EbpMedium, EvqPrimitiveShadingRateEXT, 1, 1>());
 constexpr const TVariable kgl_SampleID(BuiltInId::gl_SampleID,
                                        BuiltInName::gl_SampleID,
                                        SymbolType::BuiltIn,
@@ -1531,6 +1552,16 @@ const TVariable *gl_PrimitiveIDTES()
 const TVariable *gl_PrimitiveIDTESES3_2()
 {
     return &kgl_PrimitiveIDTESES3_2;
+}
+
+const TVariable *gl_PrimitiveShadingRateEXT()
+{
+    return &kgl_PrimitiveShadingRateEXT;
+}
+
+const TVariable *gl_PrimitiveShadingRateEXTGS()
+{
+    return &kgl_PrimitiveShadingRateEXTGS;
 }
 
 const TVariable *gl_SampleID()
@@ -19285,6 +19316,10 @@ constexpr SymbolRule kRules[] = {
     Rule::Get<310, Shader::ALL, 0>(&TableBase::m_gl_MaxFragmentAtomicCounterBuffers),
     Rule::Get<310, Shader::ALL, 0>(&TableBase::m_gl_MaxCombinedAtomicCounterBuffers),
     Rule::Get<310, Shader::ALL, 0>(&TableBase::m_gl_MaxAtomicCounterBufferSize),
+    Rule::Get<310, Shader::ALL, 0>(&TableBase::m_gl_ShadingRateFlag2VerticalPixelsEXT),
+    Rule::Get<310, Shader::ALL, 0>(&TableBase::m_gl_ShadingRateFlag4VerticalPixelsEXT),
+    Rule::Get<310, Shader::ALL, 0>(&TableBase::m_gl_ShadingRateFlag2HorizontalPixelsEXT),
+    Rule::Get<310, Shader::ALL, 0>(&TableBase::m_gl_ShadingRateFlag4HorizontalPixelsEXT),
     Rule::Get<320, Shader::ALL, 0>(&TableBase::m_gl_MaxGeometryInputComponentsES3_2),
     Rule::Get<310, Shader::ALL, EXT_INDEX(EXT_geometry_shader)>(
         &TableBase::m_gl_MaxGeometryInputComponents),
@@ -19542,6 +19577,10 @@ constexpr SymbolRule kRules[] = {
         &TableBase::m_gl_ClipDistance),
     Rule::Get<300, Shader::NOT_COMPUTE, EXT_INDEX(ANGLE_clip_cull_distance)>(
         &TableBase::m_gl_ClipDistance),
+    Rule::Get<310, Shader::VERTEX, EXT_INDEX(EXT_fragment_shading_rate_primitive)>(
+        &BuiltInVariable::kgl_PrimitiveShadingRateEXT),
+    Rule::Get<310, Shader::GEOMETRY_EXT, EXT_INDEX(EXT_fragment_shading_rate_primitive)>(
+        &BuiltInVariable::kgl_PrimitiveShadingRateEXTGS),
     Rule::Get<310, Shader::COMPUTE, 0>(&BuiltInVariable::kgl_NumWorkGroups),
     Rule::Get<310, Shader::COMPUTE, 0>(&BuiltInVariable::kgl_WorkGroupSize),
     Rule::Get<310, Shader::COMPUTE, 0>(&BuiltInVariable::kgl_WorkGroupID),
@@ -20993,6 +21032,10 @@ constexpr const char *kMangledNames[] = {"radians(00B",
                                          "gl_MaxFragmentAtomicCounterBuffers",
                                          "gl_MaxCombinedAtomicCounterBuffers",
                                          "gl_MaxAtomicCounterBufferSize",
+                                         "gl_ShadingRateFlag2VerticalPixelsEXT",
+                                         "gl_ShadingRateFlag4VerticalPixelsEXT",
+                                         "gl_ShadingRateFlag2HorizontalPixelsEXT",
+                                         "gl_ShadingRateFlag4HorizontalPixelsEXT",
                                          "gl_MaxGeometryInputComponents",
                                          "gl_MaxGeometryOutputComponents",
                                          "gl_MaxGeometryImageUniforms",
@@ -21058,6 +21101,7 @@ constexpr const char *kMangledNames[] = {"radians(00B",
                                          "angle_BaseVertex",
                                          "angle_BaseInstance",
                                          "gl_ClipDistance",
+                                         "gl_PrimitiveShadingRateEXT",
                                          "gl_NumWorkGroups",
                                          "gl_WorkGroupSize",
                                          "gl_WorkGroupID",
@@ -22420,91 +22464,96 @@ constexpr uint16_t kMangledOffsets[] = {
     1821,  // gl_MaxFragmentAtomicCounterBuffers
     1822,  // gl_MaxCombinedAtomicCounterBuffers
     1823,  // gl_MaxAtomicCounterBufferSize
-    1824,  // gl_MaxGeometryInputComponents
-    1827,  // gl_MaxGeometryOutputComponents
-    1830,  // gl_MaxGeometryImageUniforms
-    1833,  // gl_MaxGeometryTextureImageUnits
-    1836,  // gl_MaxGeometryOutputVertices
-    1839,  // gl_MaxGeometryTotalOutputComponents
-    1842,  // gl_MaxGeometryUniformComponents
-    1845,  // gl_MaxGeometryAtomicCounters
-    1848,  // gl_MaxGeometryAtomicCounterBuffers
-    1851,  // gl_MaxTessControlInputComponents
-    1854,  // gl_MaxTessControlOutputComponents
-    1857,  // gl_MaxTessControlTextureImageUnits
-    1860,  // gl_MaxTessControlUniformComponents
-    1863,  // gl_MaxTessControlTotalOutputComponents
-    1866,  // gl_MaxTessControlImageUniforms
-    1869,  // gl_MaxTessControlAtomicCounters
-    1872,  // gl_MaxTessControlAtomicCounterBuffers
-    1875,  // gl_MaxTessPatchComponents
-    1878,  // gl_MaxPatchVertices
-    1881,  // gl_MaxTessGenLevel
-    1884,  // gl_MaxTessEvaluationInputComponents
-    1887,  // gl_MaxTessEvaluationOutputComponents
-    1890,  // gl_MaxTessEvaluationTextureImageUnits
-    1893,  // gl_MaxTessEvaluationUniformComponents
-    1896,  // gl_MaxTessEvaluationImageUniforms
-    1899,  // gl_MaxTessEvaluationAtomicCounters
-    1902,  // gl_MaxTessEvaluationAtomicCounterBuffers
-    1905,  // gl_MaxSamples
-    1907,  // gl_MaxClipDistances
-    1910,  // gl_MaxCullDistances
-    1912,  // gl_MaxCombinedClipAndCullDistances
-    1914,  // gl_FragCoord
-    1916,  // gl_FrontFacing
-    1917,  // gl_PointCoord
-    1918,  // gl_FragColor
-    1919,  // gl_FragData
-    1920,  // gl_FragDepth
-    1921,  // gl_HelperInvocation
-    1922,  // gl_SecondaryFragColorEXT
-    1923,  // gl_SecondaryFragDataEXT
-    1924,  // gl_FragDepthEXT
-    1925,  // gl_LastFragData
-    1928,  // gl_LastFragColor
-    1929,  // gl_LastFragColorARM
-    1930,  // gl_LastFragDepthARM
-    1931,  // gl_LastFragStencilARM
-    1932,  // gl_PrimitiveID
-    1944,  // gl_Layer
-    1951,  // gl_ShadingRateEXT
-    1952,  // gl_SampleID
-    1954,  // gl_SamplePosition
-    1956,  // gl_SampleMaskIn
-    1958,  // gl_SampleMask
-    1960,  // gl_Position
-    1970,  // gl_PointSize
-    1972,  // gl_InstanceID
-    1973,  // gl_InstanceIndex
-    1974,  // gl_VertexID
-    1975,  // gl_VertexIndex
-    1976,  // gl_DrawID
-    1977,  // gl_BaseVertex
-    1978,  // gl_BaseInstance
-    1979,  // angle_BaseVertex
-    1980,  // angle_BaseInstance
-    1981,  // gl_ClipDistance
-    1984,  // gl_NumWorkGroups
-    1985,  // gl_WorkGroupSize
-    1986,  // gl_WorkGroupID
-    1987,  // gl_LocalInvocationID
-    1988,  // gl_GlobalInvocationID
-    1989,  // gl_LocalInvocationIndex
-    1990,  // gl_PrimitiveIDIn
-    1993,  // gl_InvocationID
-    1999,  // gl_PerVertex
-    2008,  // gl_in
-    2017,  // gl_PatchVerticesIn
-    2023,  // gl_TessLevelOuter
-    2029,  // gl_TessLevelInner
-    2035,  // gl_out
-    2041,  // gl_BoundingBox
-    2044,  // gl_BoundingBoxEXT
-    2047,  // gl_BoundingBoxOES
-    2050,  // gl_TessCoord
-    2051,  // gl_ViewID_OVR
-    2052,  // gl_CullDistance
+    1824,  // gl_ShadingRateFlag2VerticalPixelsEXT
+    1825,  // gl_ShadingRateFlag4VerticalPixelsEXT
+    1826,  // gl_ShadingRateFlag2HorizontalPixelsEXT
+    1827,  // gl_ShadingRateFlag4HorizontalPixelsEXT
+    1828,  // gl_MaxGeometryInputComponents
+    1831,  // gl_MaxGeometryOutputComponents
+    1834,  // gl_MaxGeometryImageUniforms
+    1837,  // gl_MaxGeometryTextureImageUnits
+    1840,  // gl_MaxGeometryOutputVertices
+    1843,  // gl_MaxGeometryTotalOutputComponents
+    1846,  // gl_MaxGeometryUniformComponents
+    1849,  // gl_MaxGeometryAtomicCounters
+    1852,  // gl_MaxGeometryAtomicCounterBuffers
+    1855,  // gl_MaxTessControlInputComponents
+    1858,  // gl_MaxTessControlOutputComponents
+    1861,  // gl_MaxTessControlTextureImageUnits
+    1864,  // gl_MaxTessControlUniformComponents
+    1867,  // gl_MaxTessControlTotalOutputComponents
+    1870,  // gl_MaxTessControlImageUniforms
+    1873,  // gl_MaxTessControlAtomicCounters
+    1876,  // gl_MaxTessControlAtomicCounterBuffers
+    1879,  // gl_MaxTessPatchComponents
+    1882,  // gl_MaxPatchVertices
+    1885,  // gl_MaxTessGenLevel
+    1888,  // gl_MaxTessEvaluationInputComponents
+    1891,  // gl_MaxTessEvaluationOutputComponents
+    1894,  // gl_MaxTessEvaluationTextureImageUnits
+    1897,  // gl_MaxTessEvaluationUniformComponents
+    1900,  // gl_MaxTessEvaluationImageUniforms
+    1903,  // gl_MaxTessEvaluationAtomicCounters
+    1906,  // gl_MaxTessEvaluationAtomicCounterBuffers
+    1909,  // gl_MaxSamples
+    1911,  // gl_MaxClipDistances
+    1914,  // gl_MaxCullDistances
+    1916,  // gl_MaxCombinedClipAndCullDistances
+    1918,  // gl_FragCoord
+    1920,  // gl_FrontFacing
+    1921,  // gl_PointCoord
+    1922,  // gl_FragColor
+    1923,  // gl_FragData
+    1924,  // gl_FragDepth
+    1925,  // gl_HelperInvocation
+    1926,  // gl_SecondaryFragColorEXT
+    1927,  // gl_SecondaryFragDataEXT
+    1928,  // gl_FragDepthEXT
+    1929,  // gl_LastFragData
+    1932,  // gl_LastFragColor
+    1933,  // gl_LastFragColorARM
+    1934,  // gl_LastFragDepthARM
+    1935,  // gl_LastFragStencilARM
+    1936,  // gl_PrimitiveID
+    1948,  // gl_Layer
+    1955,  // gl_ShadingRateEXT
+    1956,  // gl_SampleID
+    1958,  // gl_SamplePosition
+    1960,  // gl_SampleMaskIn
+    1962,  // gl_SampleMask
+    1964,  // gl_Position
+    1974,  // gl_PointSize
+    1976,  // gl_InstanceID
+    1977,  // gl_InstanceIndex
+    1978,  // gl_VertexID
+    1979,  // gl_VertexIndex
+    1980,  // gl_DrawID
+    1981,  // gl_BaseVertex
+    1982,  // gl_BaseInstance
+    1983,  // angle_BaseVertex
+    1984,  // angle_BaseInstance
+    1985,  // gl_ClipDistance
+    1988,  // gl_PrimitiveShadingRateEXT
+    1990,  // gl_NumWorkGroups
+    1991,  // gl_WorkGroupSize
+    1992,  // gl_WorkGroupID
+    1993,  // gl_LocalInvocationID
+    1994,  // gl_GlobalInvocationID
+    1995,  // gl_LocalInvocationIndex
+    1996,  // gl_PrimitiveIDIn
+    1999,  // gl_InvocationID
+    2005,  // gl_PerVertex
+    2014,  // gl_in
+    2023,  // gl_PatchVerticesIn
+    2029,  // gl_TessLevelOuter
+    2035,  // gl_TessLevelInner
+    2041,  // gl_out
+    2047,  // gl_BoundingBox
+    2050,  // gl_BoundingBoxEXT
+    2053,  // gl_BoundingBoxOES
+    2056,  // gl_TessCoord
+    2057,  // gl_ViewID_OVR
+    2058,  // gl_CullDistance
 };
 
 using Ext = TExtension;
@@ -23067,6 +23116,50 @@ void TSymbolTable::initializeBuiltInVariables(sh::GLenum shaderType,
         TConstantUnion *unionArray = new TConstantUnion[1];
         unionArray[0].setIConst(resources.MaxAtomicCounterBufferSize);
         static_cast<TVariable *>(m_gl_MaxAtomicCounterBufferSize)->shareConstPointer(unionArray);
+    }
+    m_gl_ShadingRateFlag2VerticalPixelsEXT =
+        new TVariable(BuiltInId::gl_ShadingRateFlag2VerticalPixelsEXT,
+                      BuiltInName::gl_ShadingRateFlag2VerticalPixelsEXT, SymbolType::BuiltIn,
+                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+                      StaticType::Get<EbtInt, EbpMedium, EvqConst, 1, 1>());
+    {
+        TConstantUnion *unionArray = new TConstantUnion[1];
+        unionArray[0].setIConst(resources.ShadingRateFlag2VerticalPixelsEXT);
+        static_cast<TVariable *>(m_gl_ShadingRateFlag2VerticalPixelsEXT)
+            ->shareConstPointer(unionArray);
+    }
+    m_gl_ShadingRateFlag4VerticalPixelsEXT =
+        new TVariable(BuiltInId::gl_ShadingRateFlag4VerticalPixelsEXT,
+                      BuiltInName::gl_ShadingRateFlag4VerticalPixelsEXT, SymbolType::BuiltIn,
+                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+                      StaticType::Get<EbtInt, EbpMedium, EvqConst, 1, 1>());
+    {
+        TConstantUnion *unionArray = new TConstantUnion[1];
+        unionArray[0].setIConst(resources.ShadingRateFlag4VerticalPixelsEXT);
+        static_cast<TVariable *>(m_gl_ShadingRateFlag4VerticalPixelsEXT)
+            ->shareConstPointer(unionArray);
+    }
+    m_gl_ShadingRateFlag2HorizontalPixelsEXT =
+        new TVariable(BuiltInId::gl_ShadingRateFlag2HorizontalPixelsEXT,
+                      BuiltInName::gl_ShadingRateFlag2HorizontalPixelsEXT, SymbolType::BuiltIn,
+                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+                      StaticType::Get<EbtInt, EbpMedium, EvqConst, 1, 1>());
+    {
+        TConstantUnion *unionArray = new TConstantUnion[1];
+        unionArray[0].setIConst(resources.ShadingRateFlag2HorizontalPixelsEXT);
+        static_cast<TVariable *>(m_gl_ShadingRateFlag2HorizontalPixelsEXT)
+            ->shareConstPointer(unionArray);
+    }
+    m_gl_ShadingRateFlag4HorizontalPixelsEXT =
+        new TVariable(BuiltInId::gl_ShadingRateFlag4HorizontalPixelsEXT,
+                      BuiltInName::gl_ShadingRateFlag4HorizontalPixelsEXT, SymbolType::BuiltIn,
+                      std::array<TExtension, 1u>{{TExtension::UNDEFINED}},
+                      StaticType::Get<EbtInt, EbpMedium, EvqConst, 1, 1>());
+    {
+        TConstantUnion *unionArray = new TConstantUnion[1];
+        unionArray[0].setIConst(resources.ShadingRateFlag4HorizontalPixelsEXT);
+        static_cast<TVariable *>(m_gl_ShadingRateFlag4HorizontalPixelsEXT)
+            ->shareConstPointer(unionArray);
     }
     m_gl_MaxGeometryInputComponents =
         new TVariable(BuiltInId::gl_MaxGeometryInputComponents,
@@ -24123,8 +24216,10 @@ namespace
 {
 uint16_t GetNextRuleIndex(uint32_t nameHash)
 {
-    if (nameHash == 1424 - 1)
+    if (nameHash == 1429 - 1)
+    {
         return ArraySize(BuiltInArray::kRules);
+    }
     return BuiltInArray::kMangledOffsets[nameHash + 1];
 }
 }  // namespace
@@ -24135,8 +24230,10 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
         return nullptr;
 
     uint32_t nameHash = name.mangledNameHash();
-    if (nameHash >= 1424)
+    if (nameHash >= 1429)
+    {
         return nullptr;
+    }
 
     const char *actualName = BuiltInArray::kMangledNames[nameHash];
     if (name != actualName)

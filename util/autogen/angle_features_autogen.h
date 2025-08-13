@@ -380,6 +380,7 @@ enum class Feature
     SupportsPipelineStatisticsQuery,
     SupportsPortabilityEnumeration,
     SupportsPresentation,
+    SupportsPrimitiveFragmentShadingRate,
     SupportsPrimitivesGeneratedQuery,
     SupportsPrimitiveTopologyListRestart,
     SupportsProtectedMemory,

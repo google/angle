@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 380
+#define ANGLE_SH_VERSION 381
 
 enum ShShaderSpec
 {
@@ -500,6 +500,10 @@ struct ShBuiltInResources
     int MaxTextureImageUnits;
     int MaxFragmentUniformVectors;
     int MaxDrawBuffers;
+    int ShadingRateFlag2VerticalPixelsEXT;
+    int ShadingRateFlag4VerticalPixelsEXT;
+    int ShadingRateFlag2HorizontalPixelsEXT;
+    int ShadingRateFlag4HorizontalPixelsEXT;
 
     // Extensions.
     // Set to 1 to enable the extension, else 0.
@@ -524,6 +528,7 @@ struct ShBuiltInResources
     int EXT_multisampled_render_to_texture;
     int EXT_multisampled_render_to_texture2;
     int EXT_fragment_shading_rate;
+    int EXT_fragment_shading_rate_primitive;
     int EXT_YUV_target;
     int EXT_geometry_shader;
     int OES_geometry_shader;

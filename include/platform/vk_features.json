@@ -1045,6 +1045,14 @@
             "issue": "http://anglebug.com/42265647"
         },
         {
+            "name": "supports_primitive_fragment_shading_rate",
+            "category": "Features",
+            "description": [
+                "VkDevice supports primitiveFragmentShadingRate feature"
+            ],
+            "issue": "http://anglebug.com/397255625"
+        },
+        {
             "name": "supports_foveated_rendering",
             "category": "Features",
             "description": [

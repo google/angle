@@ -205,6 +205,7 @@ class CollectVariablesTraverser : public TIntermTraverser
     bool mPositionAdded;
     bool mClipDistanceAdded;
     bool mCullDistanceAdded;
+    bool mPrimitiveShadingRateEXTAdded;
 
     // Fragment Shader builtins
     bool mPointCoordAdded;
@@ -294,6 +295,7 @@ CollectVariablesTraverser::CollectVariablesTraverser(
       mPositionAdded(false),
       mClipDistanceAdded(false),
       mCullDistanceAdded(false),
+      mPrimitiveShadingRateEXTAdded(false),
       mPointCoordAdded(false),
       mFrontFacingAdded(false),
       mHelperInvocationAdded(false),
@@ -675,6 +677,10 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
                 recordBuiltInVaryingUsed(
                     symbol->variable(), &mCullDistanceAdded,
                     mShaderType == GL_FRAGMENT_SHADER ? mInputVaryings : mOutputVaryings);
+                return;
+            case EvqPrimitiveShadingRateEXT:
+                recordBuiltInVaryingUsed(symbol->variable(), &mPrimitiveShadingRateEXTAdded,
+                                         mOutputVaryings);
                 return;
             case EvqShadingRateEXT:
                 recordBuiltInVaryingUsed(symbol->variable(), &mShadingRateEXTAdded, mInputVaryings);

@@ -37,6 +37,7 @@ enum class TExtension : uint8_t
     EXT_draw_buffers,
     EXT_frag_depth,
     EXT_fragment_shading_rate,
+    EXT_fragment_shading_rate_primitive,
     EXT_geometry_shader,
     EXT_gpu_shader5,
     EXT_primitive_bounding_box,
