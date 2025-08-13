@@ -732,6 +732,9 @@ struct DisplayExtensions
 
     // EXT_ANGLE_create_context_passthrough_shaders
     bool createContextPassthroughShadersANGLE = false;
+
+    // EGL_NV_context_priority_realtime
+    bool contextPriorityRealtimeNV = false;
 };
 
 struct DeviceExtensions

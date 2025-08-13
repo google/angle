@@ -1402,6 +1402,7 @@ std::vector<std::string> DisplayExtensions::getStrings() const
     InsertExtensionString("EGL_EXT_surface_compression",                         surfaceCompressionEXT,              &extensionStrings);
     InsertExtensionString("EGL_ANGLE_webgpu_texture_client_buffer",              webgpuTextureClientBuffer,          &extensionStrings);
     InsertExtensionString("EGL_ANGLE_create_context_passthrough_shaders",        createContextPassthroughShadersANGLE, &extensionStrings);
+    InsertExtensionString("EGL_NV_context_priority_realtime",                    contextPriorityRealtimeNV,          &extensionStrings);
     // clang-format on
 
     return extensionStrings;

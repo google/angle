@@ -619,6 +619,9 @@ void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
 
     outExtensions->surfaceCompressionEXT =
         getFeatures().supportsImageCompressionControlSwapchain.enabled;
+
+    outExtensions->contextPriorityRealtimeNV = (getFeatures().supportsGlobalPriority.enabled &&
+                                                getFeatures().supportsGlobalPriorityQuery.enabled);
 }
 
 void DisplayVk::generateCaps(egl::Caps *outCaps) const

@@ -1304,6 +1304,24 @@ GLenum CalculateGenerateMipmapFilter(ContextVk *contextVk, angle::FormatID forma
     return formatSupportsLinearFiltering && !hintFastest ? GL_LINEAR : GL_NEAREST;
 }
 
+bool HasRequiredGlobalPriority(
+    const std::vector<VkQueueFamilyGlobalPriorityPropertiesEXT> &globalPriorityProperties,
+    VkQueueGlobalPriorityEXT requiredGlobalPriority)
+{
+    for (const auto &globalPriorityProperty : globalPriorityProperties)
+    {
+        for (uint32_t i = 0; i < globalPriorityProperty.priorityCount; i++)
+        {
+            if (globalPriorityProperty.priorities[i] == requiredGlobalPriority)
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 namespace gl_vk
 {
 
