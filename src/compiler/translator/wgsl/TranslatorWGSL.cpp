@@ -62,6 +62,23 @@ struct VarDecl
     const TType &type;
 };
 
+TUnorderedSet<TSymbolUniqueId> FindOverloadedFunctions(TIntermBlock *root)
+{
+    TSet<ImmutableString> funcNames;
+    TUnorderedSet<TSymbolUniqueId> uniqueIds;
+    for (TIntermNode *node : *root->getSequence())
+    {
+        if (TIntermFunctionDefinition *funcDef = node->getAsFunctionDefinition())
+        {
+            if (!funcNames.insert(funcDef->getFunction()->name()).second)
+            {
+                uniqueIds.insert(funcDef->getFunction()->uniqueId());
+            }
+        }
+    }
+    return uniqueIds;
+}
+
 // When emitting a list of statements, this determines whether a semicolon follows the statement.
 bool RequiresSemicolonTerminator(TIntermNode &node)
 {
@@ -121,7 +138,8 @@ class OutputWGSLTraverser : public TIntermTraverser
     OutputWGSLTraverser(TInfoSinkBase *sink,
                         RewritePipelineVarOutput *rewritePipelineVarOutput,
                         UniformBlockMetadata *uniformBlockMetadata,
-                        WGSLGenerationMetadataForUniforms *arrayElementTypesInUniforms);
+                        WGSLGenerationMetadataForUniforms *arrayElementTypesInUniforms,
+                        const TUnorderedSet<TSymbolUniqueId> *overloadedFunctions);
     ~OutputWGSLTraverser() override;
 
   protected:
@@ -169,6 +187,7 @@ class OutputWGSLTraverser : public TIntermTraverser
     void emitOpenBrace();
     void emitCloseBrace();
     bool emitBlock(angle::Span<TIntermNode *> nodes);
+    void emitFunctionName(const TFunction &func);
     void emitFunctionSignature(const TFunction &func);
     void emitFunctionReturn(const TFunction &func);
     void emitFunctionParameter(const TFunction &func, const TVariable &param);
@@ -188,6 +207,7 @@ class OutputWGSLTraverser : public TIntermTraverser
     const RewritePipelineVarOutput *mRewritePipelineVarOutput;
     const UniformBlockMetadata *mUniformBlockMetadata;
     WGSLGenerationMetadataForUniforms *mWGSLGenerationMetadataForUniforms;
+    const TUnorderedSet<TSymbolUniqueId> *mOverloadedFunctions;
 
     int mIndentLevel        = -1;
     int mLastIndentationPos = -1;
@@ -197,12 +217,14 @@ OutputWGSLTraverser::OutputWGSLTraverser(
     TInfoSinkBase *sink,
     RewritePipelineVarOutput *rewritePipelineVarOutput,
     UniformBlockMetadata *uniformBlockMetadata,
-    WGSLGenerationMetadataForUniforms *wgslGenerationMetadataForUniforms)
+    WGSLGenerationMetadataForUniforms *wgslGenerationMetadataForUniforms,
+    const TUnorderedSet<TSymbolUniqueId> *overloadedFunctions)
     : TIntermTraverser(true, false, false),
       mSink(*sink),
       mRewritePipelineVarOutput(rewritePipelineVarOutput),
       mUniformBlockMetadata(uniformBlockMetadata),
-      mWGSLGenerationMetadataForUniforms(wgslGenerationMetadataForUniforms)
+      mWGSLGenerationMetadataForUniforms(wgslGenerationMetadataForUniforms),
+      mOverloadedFunctions(overloadedFunctions)
 {}
 
 OutputWGSLTraverser::~OutputWGSLTraverser() = default;
@@ -1412,15 +1434,25 @@ void OutputWGSLTraverser::emitFunctionReturn(const TFunction &func)
     emitType(returnType);
 }
 
-// TODO(anglebug.com/42267100): Function overloads are not supported in WGSL, so function names
-// should either be emitted mangled or overloaded functions should be renamed in the AST as a
-// pre-pass. As of Apr 2024, WGSL function overloads are "not coming soon"
-// (https://github.com/gpuweb/gpuweb/issues/876).
+void OutputWGSLTraverser::emitFunctionName(const TFunction &func)
+{
+    // As of Apr 2024, WGSL function overloads are "not coming soon"
+    // (https://github.com/gpuweb/gpuweb/issues/876).
+    // As of Sept 2025, WESL is working on overloads:
+    // https://github.com/wgsl-tooling-wg/wesl-spec/issues/58.
+    // So, append the symbol's ID to the overloaded functions..
+    if (mOverloadedFunctions->contains(func.uniqueId()))
+    {
+        mSink << "ANGLEfunc" << func.uniqueId().get();
+    }
+    WriteNameOf(mSink, func);
+}
+
 void OutputWGSLTraverser::emitFunctionSignature(const TFunction &func)
 {
     mSink << "fn ";
 
-    WriteNameOf(mSink, func);
+    emitFunctionName(func);
     mSink << "(";
 
     bool emitComma          = false;
@@ -1922,7 +1954,7 @@ bool OutputWGSLTraverser::visitAggregate(Visit, TIntermAggregate *aggregateNode)
         switch (op)
         {
             case TOperator::EOpCallFunctionInAST:
-                WriteNameOf(mSink, *aggregateNode->getFunction());
+                emitFunctionName(*aggregateNode->getFunction());
                 emitArgList();
                 return false;
 
@@ -2646,10 +2678,13 @@ bool TranslatorWGSL::translate(TIntermBlock *root,
         return false;
     }
 
+    TUnorderedSet<TSymbolUniqueId> overloadedFunctions = FindOverloadedFunctions(root);
+
     // Generate the body of the WGSL including the GLSL main() function.
     TInfoSinkBase traverserOutput;
     OutputWGSLTraverser traverser(&traverserOutput, &rewritePipelineVarOutput,
-                                  &uniformBlockMetadata, &wgslGenerationMetadataForUniforms);
+                                  &uniformBlockMetadata, &wgslGenerationMetadataForUniforms,
+                                  &overloadedFunctions);
     root->traverse(&traverser);
 
     sink << "\n";
