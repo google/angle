@@ -74,6 +74,7 @@ constexpr PackedEnumMap<Feature, const char *> kFeatureNames = {{
     {Feature::ClipSrcRegionForBlitFramebuffer, "clipSrcRegionForBlitFramebuffer"},
     {Feature::CompileJobIsThreadSafe, "compileJobIsThreadSafe"},
     {Feature::CompressVertexData, "compressVertexData"},
+    {Feature::ConvertLowpAndMediumpFloatUniformsTo16Bits, "convertLowpAndMediumpFloatUniformsTo16Bits"},
     {Feature::CopyIOSurfaceToNonIOSurfaceForReadOptimization, "copyIOSurfaceToNonIOSurfaceForReadOptimization"},
     {Feature::CopyTextureToBufferForReadOptimization, "copyTextureToBufferForReadOptimization"},
     {Feature::CorruptProgramBinaryForTesting, "corruptProgramBinaryForTesting"},

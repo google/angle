@@ -1990,6 +1990,14 @@
             "description": [
                 "VkDevice supports the VK_KHR_shader_integer_dot_product extension"
             ]
+        },
+        {
+            "name": "convert_lowp_and_mediump_float_uniforms_to_16_bits",
+            "category": "Features",
+            "description": [
+                "transform lowp and mediump float uniforms into 16 bits"
+            ],
+            "issue": "http://anglebug.com/405795981"
         }
     ]
 }

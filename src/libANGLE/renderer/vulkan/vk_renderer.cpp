@@ -6276,6 +6276,10 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsAstcDecodeModeRgb9e5,
                             mPhysicalDeviceAstcDecodeFeatures.decodeModeSharedExponent == VK_TRUE &&
                                 mFeatures.supportsAstcDecodeMode.enabled);
+
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, convertLowpAndMediumpFloatUniformsTo16Bits,
+        m16BitStorageFeatures.uniformAndStorageBuffer16BitAccess == VK_TRUE && false);
 }
 
 void Renderer::appBasedFeatureOverrides(const vk::ExtensionNameList &extensions) {}

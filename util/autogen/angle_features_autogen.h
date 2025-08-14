@@ -74,6 +74,7 @@ enum class Feature
     ClipSrcRegionForBlitFramebuffer,
     CompileJobIsThreadSafe,
     CompressVertexData,
+    ConvertLowpAndMediumpFloatUniformsTo16Bits,
     CopyIOSurfaceToNonIOSurfaceForReadOptimization,
     CopyTextureToBufferForReadOptimization,
     CorruptProgramBinaryForTesting,
