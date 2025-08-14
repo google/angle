@@ -2811,8 +2811,8 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
-// Regression test for D3D11 packing of 3x3 matrices followed by a single float. The setting of the
-// matrix would overwrite the float which is packed right after. http://anglebug.com/42266878,
+// Regression test for D3D11 packing of 3x3 matrices followed by three floats. The setting of the
+// matrix would overwrite the floats which is packed right after. http://anglebug.com/42266878,
 // http://crbug.com/345525082
 TEST_P(UniformTestES3, ExpandedFloatMatrix3Packing)
 {
@@ -2827,11 +2827,13 @@ void main()
 struct s
 {
     mat3 umat3;
-    float ufloat;
+    float ufloat1;
+    float ufloat2;
+    float ufloat3;
 };
 uniform s u;
 void main() {
-    gl_FragColor = vec4(u.umat3[0][0], u.ufloat, 1.0, 1.0);
+    gl_FragColor = vec4(u.umat3[0][0], u.ufloat1, u.ufloat2, u.ufloat3);
 })";
 
     ANGLE_GL_PROGRAM(program, vs, fs);
@@ -2840,16 +2842,25 @@ void main() {
     GLint umat3Location = glGetUniformLocation(program, "u.umat3");
     ASSERT_NE(umat3Location, -1);
 
-    GLint ufloatLocation = glGetUniformLocation(program, "u.ufloat");
-    ASSERT_NE(ufloatLocation, -1);
+    GLint ufloat1Location = glGetUniformLocation(program, "u.ufloat1");
+    ASSERT_NE(ufloat1Location, -1);
+
+    GLint ufloat2Location = glGetUniformLocation(program, "u.ufloat2");
+    ASSERT_NE(ufloat2Location, -1);
+
+    GLint ufloat3Location = glGetUniformLocation(program, "u.ufloat3");
+    ASSERT_NE(ufloat3Location, -1);
 
     constexpr GLfloat mat3[9] = {
         0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
     };
 
-    glUniform1f(ufloatLocation, 1.0f);
+    glUniform1f(ufloat1Location, 1.0f);
+    glUniform1f(ufloat2Location, 1.0f);
+    glUniform1f(ufloat3Location, 1.0f);
     glUniformMatrix3fv(umat3Location, 1, GL_FALSE, mat3);
     drawQuad(program, "position", 0.5f);
+
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor(0, 255, 255, 255));
 }
 

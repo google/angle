@@ -257,7 +257,8 @@ struct SetFloatUniformMatrixGLSL
                     GLsizei countIn,
                     GLboolean transpose,
                     const GLfloat *value,
-                    uint8_t *targetData);
+                    uint8_t *targetData,
+                    bool isFloat16);
 };
 
 template <int cols, int rows>
@@ -268,14 +269,23 @@ struct SetFloatUniformMatrixHLSL
                     GLsizei countIn,
                     GLboolean transpose,
                     const GLfloat *value,
-                    uint8_t *targetData);
+                    uint8_t *targetData,
+                    bool isFloat16);
 };
 
 // Helper method to de-tranpose a matrix uniform for an API query.
-void GetMatrixUniform(GLenum type, GLfloat *dataOut, const GLfloat *source, bool transpose);
+void GetMatrixUniform(GLenum type,
+                      GLfloat *dataOut,
+                      const GLfloat *source,
+                      bool transpose,
+                      bool isFloat16);
 
 template <typename NonFloatT>
-void GetMatrixUniform(GLenum type, NonFloatT *dataOut, const NonFloatT *source, bool transpose);
+void GetMatrixUniform(GLenum type,
+                      NonFloatT *dataOut,
+                      const NonFloatT *source,
+                      bool transpose,
+                      bool isFloat16);
 
 // Contains a CPU-side buffer and its data layout, used as a shadow buffer for default uniform
 // blocks in VK and WGPU backends.
@@ -305,7 +315,8 @@ void ReadFromBufferWithLayout(int componentCount,
                               uint32_t arrayIndex,
                               T *dst,
                               const sh::BlockMemberInfo &layoutInfo,
-                              const angle::MemoryBuffer *uniformData);
+                              const angle::MemoryBuffer *uniformData,
+                              bool isFloat16);
 
 using DefaultUniformBlockMap = gl::ShaderMap<std::shared_ptr<BufferAndLayout>>;
 
