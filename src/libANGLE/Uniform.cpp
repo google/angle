@@ -77,6 +77,7 @@ LinkedUniform::LinkedUniform(const UsedUniform &usedUniform)
 
     SetBitField(pod.flagBits.isFragmentInOut, usedUniform.isFragmentInOut);
     SetBitField(pod.flagBits.texelFetchStaticUse, usedUniform.texelFetchStaticUse);
+    SetBitField(pod.flagBits.isFloat16, usedUniform.isFloat16);
     ASSERT(!usedUniform.isArray() || pod.arraySize == usedUniform.getArraySizeProduct());
 }
 
