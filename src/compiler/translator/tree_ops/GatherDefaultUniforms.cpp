@@ -168,9 +168,17 @@ bool GatherDefaultUniforms(TCompiler *compiler,
     {
         TLayoutQualifier layoutQualifier = TLayoutQualifier::Create();
         layoutQualifier.blockStorage     = EbsStd140;
-        *outUniformBlock = DeclareInterfaceBlock(root, symbolTable, uniformList, EvqUniform,
-                                                 layoutQualifier, TMemoryQualifier::Create(), 0,
-                                                 uniformBlockType, uniformBlockVarName);
+        TInterfaceBlock *interfaceBlock =
+            DeclareInterfaceBlock(symbolTable, uniformList, layoutQualifier, uniformBlockType);
+        // Set the mIsDefaultUniformBlock bit because the interfaceBlock represents default uniform
+        // interfaceBlock.
+        // Later when traversing the AST and output SPIRV, we will rely on this bit to decide if we
+        // want to transform FP32 to FP16 for float based on if the float vars are inside the
+        // default uniform block.
+        interfaceBlock->setDefaultUniformBlock();
+        *outUniformBlock = DeclareInterfaceBlockVariable(
+            root, symbolTable, EvqUniform, interfaceBlock, layoutQualifier,
+            TMemoryQualifier::Create(), 0, uniformBlockVarName);
 
         // Create a map from the uniform variables to new variables that reference the fields of the
         // block.

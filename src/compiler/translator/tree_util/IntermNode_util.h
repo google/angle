@@ -65,15 +65,19 @@ std::pair<const TVariable *, const TVariable *> DeclareStructure(
     uint32_t arraySize,
     const ImmutableString &structTypeName,
     const ImmutableString *structInstanceName);
-const TVariable *DeclareInterfaceBlock(TIntermBlock *root,
-                                       TSymbolTable *symbolTable,
+TInterfaceBlock *DeclareInterfaceBlock(TSymbolTable *symbolTable,
                                        TFieldList *fieldList,
-                                       TQualifier qualifier,
                                        const TLayoutQualifier &layoutQualifier,
-                                       const TMemoryQualifier &memoryQualifier,
-                                       uint32_t arraySize,
-                                       const ImmutableString &blockTypeName,
-                                       const ImmutableString &blockVariableName);
+                                       const ImmutableString &blockTypeName);
+
+const TVariable *DeclareInterfaceBlockVariable(TIntermBlock *root,
+                                               TSymbolTable *symbolTable,
+                                               TQualifier qualifier,
+                                               const TInterfaceBlock *interfaceBlock,
+                                               const TLayoutQualifier &layoutQualifier,
+                                               const TMemoryQualifier &memoryQualifier,
+                                               uint32_t arraySize,
+                                               const ImmutableString &blockVariableName);
 
 // Creates a variable for a struct type.
 const TVariable &CreateStructTypeVariable(TSymbolTable &symbolTable, const TStructure &structure);

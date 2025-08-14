@@ -163,7 +163,8 @@ TInterfaceBlock::TInterfaceBlock(TSymbolTable *symbolTable,
     : TSymbol(symbolTable, name, symbolType, SymbolClass::InterfaceBlock, extension),
       TFieldListCollection(fields),
       mBlockStorage(layoutQualifier.blockStorage),
-      mBinding(layoutQualifier.binding)
+      mBinding(layoutQualifier.binding),
+      mIsDefaultUniformBlock(false)
 {
     ASSERT(name != nullptr);
 }
@@ -177,7 +178,8 @@ TInterfaceBlock::TInterfaceBlock(TSymbolTable *symbolTable,
     : TSymbol(symbolTable, name, symbolType, SymbolClass::InterfaceBlock, extensions),
       TFieldListCollection(fields),
       mBlockStorage(layoutQualifier.blockStorage),
-      mBinding(layoutQualifier.binding)
+      mBinding(layoutQualifier.binding),
+      mIsDefaultUniformBlock(false)
 {
     ASSERT(name != nullptr);
 }

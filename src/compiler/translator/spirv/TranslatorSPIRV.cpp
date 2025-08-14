@@ -11,7 +11,6 @@
 
 #include "compiler/translator/spirv/TranslatorSPIRV.h"
 
-#include "angle_gl.h"
 #include "common/PackedEnums.h"
 #include "common/utilities.h"
 #include "compiler/translator/ImmutableStringBuilder.h"
@@ -22,7 +21,6 @@
 #include "compiler/translator/tree_ops/DeclarePerVertexBlocks.h"
 #include "compiler/translator/tree_ops/GatherDefaultUniforms.h"
 #include "compiler/translator/tree_ops/MonomorphizeUnsupportedFunctions.h"
-#include "compiler/translator/tree_ops/RecordConstantPrecision.h"
 #include "compiler/translator/tree_ops/RemoveAtomicCounterBuiltins.h"
 #include "compiler/translator/tree_ops/RewriteArrayOfArrayOfOpaqueUniforms.h"
 #include "compiler/translator/tree_ops/RewriteAtomicCounters.h"
@@ -49,7 +47,6 @@
 #include "compiler/translator/tree_util/ReplaceClipCullDistanceVariable.h"
 #include "compiler/translator/tree_util/ReplaceVariable.h"
 #include "compiler/translator/tree_util/RewriteSampleMaskVariable.h"
-#include "compiler/translator/tree_util/RunAtTheBeginningOfShader.h"
 #include "compiler/translator/tree_util/RunAtTheEndOfShader.h"
 #include "compiler/translator/tree_util/SpecializationConstant.h"
 #include "compiler/translator/util.h"
@@ -337,9 +334,11 @@ TIntermSequence *GetMainSequence(TIntermBlock *root)
         TLayoutQualifier layoutQualifier = TLayoutQualifier::Create();
         layoutQualifier.blockStorage     = EbsStd430;
 
+        const TInterfaceBlock *interfaceBlock =
+            DeclareInterfaceBlock(symbolTable, fieldList, layoutQualifier, blockName);
         const TVariable *xfbBuffer =
-            DeclareInterfaceBlock(root, symbolTable, fieldList, EvqBuffer, layoutQualifier,
-                                  TMemoryQualifier::Create(), 0, blockName, varName);
+            DeclareInterfaceBlockVariable(root, symbolTable, EvqBuffer, interfaceBlock,
+                                          layoutQualifier, TMemoryQualifier::Create(), 0, varName);
 
         static_assert(vk::spirv::kIdXfbEmulationBufferBlockOne ==
                       vk::spirv::kIdXfbEmulationBufferBlockZero + 1);
