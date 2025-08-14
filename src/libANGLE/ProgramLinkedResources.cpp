@@ -418,6 +418,7 @@ class FlattenUniformVisitor : public sh::VariableNameVisitor
         bool isImage                          = IsImageType(variable.type);
         bool isAtomicCounter                  = IsAtomicCounterType(variable.type);
         bool isFragmentInOut                  = variable.isFragmentInOut;
+        bool isTransformedFP16FloatUniform    = variable.isFloat16;
         std::vector<UsedUniform> *uniformList = mUniforms;
         if (isSampler)
         {
@@ -464,6 +465,7 @@ class FlattenUniformVisitor : public sh::VariableNameVisitor
             }
             if (mMarkActive)
             {
+                existingUniform->isFloat16 = isTransformedFP16FloatUniform;
                 existingUniform->active = true;
                 existingUniform->setActive(mShaderType, true, variable.id);
             }
@@ -485,6 +487,7 @@ class FlattenUniformVisitor : public sh::VariableNameVisitor
             linkedUniform.id                  = variable.id;
             linkedUniform.imageUnitFormat     = variable.imageUnitFormat;
             linkedUniform.isFragmentInOut     = variable.isFragmentInOut;
+            linkedUniform.isFloat16           = variable.isFloat16;
             if (variable.hasParentArrayIndex())
             {
                 linkedUniform.setParentArrayIndex(variable.parentArrayIndex());

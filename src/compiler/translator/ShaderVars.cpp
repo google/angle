@@ -56,6 +56,7 @@ ShaderVariable::ShaderVariable(GLenum typeIn)
       isPatch(false),
       texelFetchStaticUse(false),
       id(0),
+      isFloat16(false),
       flattenedOffsetInParentArrays(-1)
 {}
 
@@ -96,6 +97,7 @@ ShaderVariable::ShaderVariable(const ShaderVariable &other)
       isPatch(other.isPatch),
       texelFetchStaticUse(other.texelFetchStaticUse),
       id(other.id),
+      isFloat16(other.isFloat16),
       flattenedOffsetInParentArrays(other.flattenedOffsetInParentArrays)
 {}
 
@@ -130,6 +132,7 @@ ShaderVariable &ShaderVariable::operator=(const ShaderVariable &other)
     isPatch                       = other.isPatch;
     texelFetchStaticUse           = other.texelFetchStaticUse;
     id                            = other.id;
+    isFloat16                     = other.isFloat16;
     return *this;
 }
 
@@ -148,7 +151,7 @@ bool ShaderVariable::operator==(const ShaderVariable &other) const
         interpolation != other.interpolation || isInvariant != other.isInvariant ||
         isShaderIOBlock != other.isShaderIOBlock || isPatch != other.isPatch ||
         texelFetchStaticUse != other.texelFetchStaticUse ||
-        isFragmentInOut != other.isFragmentInOut)
+        isFragmentInOut != other.isFragmentInOut || isFloat16 != other.isFloat16)
     {
         return false;
     }
