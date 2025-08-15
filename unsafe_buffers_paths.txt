@@ -1,0 +1,17 @@
+# Copyright 2025 The ANGLE Project Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+# See https://source.chromium.org/chromium/chromium/src/+/main:docs/unsafe_buffers.md
+
+# Checks to enforce
+.buffers,libc
+
+# These directories are excluded
+-build/
+-samples/
+-src/
+-testing/
+-third_party/
+-tools/
+-util/
