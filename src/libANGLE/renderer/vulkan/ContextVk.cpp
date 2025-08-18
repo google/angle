@@ -3371,9 +3371,34 @@ angle::Result ContextVk::handleDirtyGraphicsDynamicFragmentShadingRateEXT(
             return angle::Result::Stop;
     }
 
+    const std::array<gl::CombinerOp, 2> &combinerOps = getState().getShadingRateCombinerOps();
+
+    VkFragmentShadingRateCombinerOpKHR vkCombinerOp0 =
+        VK_FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR;
+    switch (combinerOps[0])
+    {
+        case gl::CombinerOp::Keep:
+            vkCombinerOp0 = VK_FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR;
+            break;
+        case gl::CombinerOp::Replace:
+            vkCombinerOp0 = VK_FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR;
+            break;
+        case gl::CombinerOp::Min:
+            vkCombinerOp0 = VK_FRAGMENT_SHADING_RATE_COMBINER_OP_MIN_KHR;
+            break;
+        case gl::CombinerOp::Max:
+            vkCombinerOp0 = VK_FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR;
+            break;
+        case gl::CombinerOp::Mul:
+            vkCombinerOp0 = VK_FRAGMENT_SHADING_RATE_COMBINER_OP_MUL_KHR;
+            break;
+        default:
+            UNREACHABLE();
+            return angle::Result::Stop;
+    }
+
     VkFragmentShadingRateCombinerOpKHR shadingRateCombinerOp[2] = {
-        VK_FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR,
-        VK_FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR};
+        vkCombinerOp0, VK_FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR};
 
     ASSERT(hasActiveRenderPass());
     mRenderPassCommandBuffer->setFragmentShadingRate(&fragmentSize, shadingRateCombinerOp);

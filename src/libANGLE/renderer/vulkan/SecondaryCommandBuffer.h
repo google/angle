@@ -665,7 +665,8 @@ struct SetFragmentShadingRateParams
 
     uint32_t fragmentWidth : 8;
     uint32_t fragmentHeight : 8;
-    uint32_t vkFragmentShadingRateCombinerOp1 : 16;
+    uint32_t vkFragmentShadingRateCombinerOp0 : 8;
+    uint32_t vkFragmentShadingRateCombinerOp1 : 8;
 };
 VERIFY_8_BYTE_ALIGNMENT(SetFragmentShadingRateParams)
 
@@ -2094,18 +2095,16 @@ ANGLE_INLINE void SecondaryCommandBuffer::setFragmentShadingRate(
     ASSERT(fragmentSize != nullptr);
 
     // Supported parameter values -
-    // 1. CombinerOp for ops[0] needs to be VK_FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR
-    //    as there are no current usecases in ANGLE to use primitive fragment shading rates
-    // 2. The largest fragment size supported is 4x4
-    ASSERT(ops[0] == VK_FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR);
+    // The largest fragment size supported is 4x4
     ASSERT(fragmentSize->width <= 4);
     ASSERT(fragmentSize->height <= 4);
 
     SetFragmentShadingRateParams *paramStruct =
         initCommand<SetFragmentShadingRateParams>(CommandID::SetFragmentShadingRate);
-    paramStruct->fragmentWidth                    = static_cast<uint16_t>(fragmentSize->width);
-    paramStruct->fragmentHeight                   = static_cast<uint16_t>(fragmentSize->height);
-    paramStruct->vkFragmentShadingRateCombinerOp1 = static_cast<uint16_t>(ops[1]);
+    SetBitField(paramStruct->fragmentWidth, fragmentSize->width);
+    SetBitField(paramStruct->fragmentHeight, fragmentSize->height);
+    SetBitField(paramStruct->vkFragmentShadingRateCombinerOp0, ops[0]);
+    SetBitField(paramStruct->vkFragmentShadingRateCombinerOp1, ops[1]);
 }
 
 ANGLE_INLINE void SecondaryCommandBuffer::setFrontFace(VkFrontFace frontFace)

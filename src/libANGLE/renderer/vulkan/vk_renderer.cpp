@@ -5875,6 +5875,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsFragmentShadingRate,
                             canSupportFragmentShadingRate());
 
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsPrimitiveFragmentShadingRate,
+                            mFragmentShadingRateFeatures.primitiveFragmentShadingRate == VK_TRUE);
+
     // Support QCOM foveated rendering extensions.
     // Gated on supportsImagelessFramebuffer and supportsRenderPassLoadStoreOpNone
     // to reduce code complexity.

@@ -189,7 +189,7 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state, egl::Disp
 
     // EXT_fragment_shading_rate
     mResources.EXT_fragment_shading_rate = extensions.fragmentShadingRateEXT;
-    mResources.EXT_fragment_shading_rate_primitive = false;
+    mResources.EXT_fragment_shading_rate_primitive = extensions.fragmentShadingRatePrimitiveEXT;
 
     // OES_sample_variables
     mResources.OES_sample_variables = extensions.sampleVariablesOES;

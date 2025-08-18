@@ -1347,8 +1347,9 @@ void Renderer::ensureCapsInitialized() const
     // GL_QCOM_shading_rate
     mNativeExtensions.shadingRateQCOM = mFeatures.supportsFragmentShadingRate.enabled;
 
-    // GL_EXT_fragment_shading_rate
+    // GL_EXT_fragment_shading_rate, will enable after CTS fix patch merged.
     mNativeExtensions.fragmentShadingRateEXT = false;
+    mNativeExtensions.fragmentShadingRatePrimitiveEXT = false;
 
     // GL_QCOM_framebuffer_foveated
     mNativeExtensions.framebufferFoveatedQCOM = mFeatures.supportsFoveatedRendering.enabled;
