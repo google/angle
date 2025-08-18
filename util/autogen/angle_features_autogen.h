@@ -405,6 +405,7 @@ enum class Feature
     SupportsRoundingModeRtzFp64,
     SupportsSampler2dViewOf3d,
     SupportsSamplerMirrorClampToEdge,
+    SupportsShaderAtomicInt64,
     SupportsShaderFloat16,
     SupportsShaderFloat64,
     SupportsShaderFramebufferFetch,

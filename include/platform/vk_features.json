@@ -2084,6 +2084,13 @@
             "description": [
                 "Dump OpenCL-Vulkan CommandBuffer stream to stdout."
             ]
+        },
+        {
+            "name": "supports_shader_atomic_int64",
+            "category": "Features",
+            "description": [
+                "VkDevice supports the VK_KHR_shader_atomic_int64 extension "
+            ]
         }
     ]
 }

@@ -262,6 +262,16 @@ CLDeviceImpl::Info CLDeviceVk::createInfo(cl::DeviceType type) const
         versionedExtensionList.push_back(cl_name_version{.version = CL_MAKE_VERSION(2, 0, 0),
                                                          .name    = "cl_khr_integer_dot_product"});
     }
+
+    // cl_khr_int64_base_atomics and cl_khr_int64_extended_atomics
+    if (mRenderer->getFeatures().supportsShaderAtomicInt64.enabled)
+    {
+        versionedExtensionList.push_back(cl_name_version{.version = CL_MAKE_VERSION(1, 0, 0),
+                                                         .name    = "cl_khr_int64_base_atomics"});
+        versionedExtensionList.push_back(cl_name_version{.version = CL_MAKE_VERSION(1, 0, 0),
+                                                         .name = "cl_khr_int64_extended_atomics"});
+    }
+
     info.initializeVersionedExtensions(std::move(versionedExtensionList));
 
     if (!mRenderer->getFeatures().supportsUniformBufferStandardLayout.enabled)

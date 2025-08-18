@@ -935,6 +935,7 @@ class Renderer : angle::NonCopyable
     VkPhysicalDeviceGlobalPriorityQueryFeaturesEXT mPhysicalDeviceGlobalPriorityQueryFeatures;
     VkPhysicalDeviceExternalMemoryHostPropertiesEXT mExternalMemoryHostProperties;
     VkPhysicalDeviceBufferDeviceAddressFeaturesKHR mBufferDeviceAddressFeatures;
+    VkPhysicalDeviceShaderAtomicInt64Features mShaderAtomicInt64Features;
 
     uint32_t mLegacyDitheringVersion = 0;
 
