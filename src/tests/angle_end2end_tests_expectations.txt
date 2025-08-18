@@ -444,6 +444,7 @@ b/390710636 LINUX NVIDIA VULKAN : TextureBorderClampTestES32.CustomBorderColorWi
 40644744 MAC METAL AMD : BlitFramebufferTest.MultisampleDepth/* = SKIP
 40644777 MAC METAL AMD : ColorMaskForDrawBuffersTest.Blit/* = SKIP
 440536251 MAC METAL AMD : GLSLTest_ES3.ManySamplerFieldsInStructComplex/* = SKIP
+409867243 MAC METAL : Texture2DTestES3.RGB565RenderAndReadIntoRGB565PBO/* = SKIP
 
 // The workaround is not intended to be enabled in this configuration so
 // skip it as the failure is likely a driver bug.
