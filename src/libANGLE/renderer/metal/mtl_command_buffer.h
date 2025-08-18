@@ -78,7 +78,7 @@ class CommandQueue final : public WrappedObject<id<MTLCommandQueue>>, angle::Non
 
     // This method will ensure that every GPU command buffer using this resource will finish before
     // returning. Note: this doesn't include the "in-progress" command buffer, i.e. the one hasn't
-    // been commmitted yet. It's the responsibility of caller to make sure that command buffer is
+    // been committed yet. It's the responsibility of caller to make sure that command buffer is
     // commited/flushed first before calling this method.
     void ensureResourceReadyForCPU(const ResourceRef &resource);
     void ensureResourceReadyForCPU(Resource *resource);
