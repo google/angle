@@ -6,6 +6,7 @@
 // IntermNode_util.cpp: High-level utilities for creating AST nodes and node hierarchies. Mostly
 // meant to be used in AST transforms.
 
+#include "compiler/translator/util.h"
 #ifdef UNSAFE_BUFFERS_BUILD
 #    pragma allow_unsafe_buffers
 #endif
@@ -532,6 +533,18 @@ bool EndsInBranch(TIntermBlock *block)
     }
 
     return false;
+}
+
+TIntermNode *CastScalar(const TType &type, TIntermTyped *scalar)
+{
+    const TBasicType basicType = type.getBasicType();
+    if (scalar->getType().getBasicType() == basicType)
+    {
+        return scalar;
+    }
+
+    TType castDestType(basicType, type.getPrecision());
+    return TIntermAggregate::CreateConstructor(castDestType, {scalar});
 }
 
 }  // namespace sh

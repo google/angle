@@ -9,6 +9,8 @@
 #ifndef COMPILER_TRANSLATOR_INTERMNODEUTIL_H_
 #define COMPILER_TRANSLATOR_INTERMNODEUTIL_H_
 
+#include <optional>
+
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/Name.h"
 #include "compiler/translator/tree_util/FindFunction.h"
@@ -161,6 +163,9 @@ TIntermSwizzle *CreateSwizzle(TIntermTyped *reference, ArgsT... args)
 // i.e. a block can only end in a branch if its last statement is a branch or is a block ending in
 // branch.
 bool EndsInBranch(TIntermBlock *block);
+
+// Cast a scalar to the basic type of type. No-ops if scalar is already the right type.
+TIntermNode *CastScalar(const TType &type, TIntermTyped *scalar);
 
 }  // namespace sh
 

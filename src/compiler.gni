@@ -447,6 +447,8 @@ angle_translator_lib_msl_sources = [
 ]
 
 angle_translator_lib_wgsl_sources = [
+  "src/compiler/translator/tree_ops/wgsl/RewriteMixedTypeMathExprs.cpp",
+  "src/compiler/translator/tree_ops/wgsl/RewriteMixedTypeMathExprs.h",
   "src/compiler/translator/tree_ops/wgsl/RewriteMultielementSwizzleAssignment.cpp",
   "src/compiler/translator/tree_ops/wgsl/RewriteMultielementSwizzleAssignment.h",
   "src/compiler/translator/wgsl/OutputUniformBlocks.cpp",
