@@ -713,6 +713,38 @@ TEST_P(DrawElementsTest, TwoVertexArraysWithSameElementBuffer)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that drawing with index value a little bit less than or equal to GL_MAX_ELEMENT_INDEX
+// should not have error
+TEST_P(DrawElementsTest, MaxElementIndex)
+{
+    constexpr GLuint indicesNumber = 10;
+    std::array<GLuint, indicesNumber> indices;
+    GLint64 maxIndex = 0;
+    GLBuffer vertexBuffer;
+
+    ANGLE_GL_PROGRAM(programDrawRed, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
+    glUseProgram(programDrawRed);
+    GLint posLocation = glGetAttribLocation(programDrawRed, essl3_shaders::PositionAttrib());
+    ASSERT_NE(-1, posLocation);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+
+    glEnableVertexAttribArray(posLocation);
+    glVertexAttribPointer(posLocation, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glVertexAttribDivisor(posLocation, 0xFFFFFFFF);
+
+    glGetInteger64v(GL_MAX_ELEMENT_INDEX, &maxIndex);
+    // Draw using index from maxIndex - 9 to maxIndex. Should have no error
+    for (GLuint i = 0; i < indicesNumber; ++i)
+    {
+        indices[i] = static_cast<GLuint>(maxIndex) - (indicesNumber - 1) + i;
+    }
+
+    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indicesNumber), GL_UNSIGNED_INT,
+                   indices.data());
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test that the offset in the index buffer is forced to be a multiple of the element size
 TEST_P(WebGLDrawElementsTest, DrawElementsTypeAlignment)
 {

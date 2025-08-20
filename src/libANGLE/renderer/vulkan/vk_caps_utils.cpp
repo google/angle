@@ -643,8 +643,12 @@ void Renderer::ensureCapsInitialized() const
         mNativeExtensions.textureCompressionAstcLdrKHR &&
         getFeatures().supportsAstcDecodeModeRgb9e5.enabled;
 
-    // https://vulkan.lunarg.com/doc/view/1.0.30.0/linux/vkspec.chunked/ch31s02.html
-    mNativeCaps.maxElementIndex  = std::numeric_limits<GLuint>::max() - 1;
+    // The Vulkan limit maxDrawIndexedIndexValue has a minimum required value of 2^32-1.
+    // OpenGL ES 3.2 requires a minimum value of 2^24-1 for GL_MAX_ELEMENT_INDEX.
+    // 2^30-1 is chosen as an arbitrary value larger than the minimum requirement, but
+    // avoiding integer limits and overflows in math.
+    mNativeCaps.maxElementIndex = (1 << 30) - 1;
+
     mNativeCaps.max3DTextureSize = rx::LimitToInt(limitsVk.maxImageDimension3D);
     mNativeCaps.max2DTextureSize =
         std::min(limitsVk.maxFramebufferWidth, limitsVk.maxImageDimension2D);
