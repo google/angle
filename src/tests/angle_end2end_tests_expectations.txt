@@ -1660,6 +1660,14 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 418022112 WGPU : ImageTest.RespecificationOfOtherLevel/* = SKIP
 418022112 WGPU : ImageTest.SourceCubeAndSameTargetTextureWithEachCubeFace/* = SKIP
 423702346 WGPU : SimpleUniformUsageTestES3.PackUniformFP16Test/* = SKIP
+438268609 WGPU : CopyTexImageTest.CopyTex*Cube*/* = SKIP
+// Unimplemented format conversions for image copies 
+438268609 WGPU : CopyTexImageTest.RGBAToL*/* = SKIP
+438268609 WGPU : CopyTexImageTest.RGBAToRGB8/* = SKIP
+438268609 WGPU : CopyTexImageTest.RGBToL/* = SKIP
+438268609 WGPU : CopyTexImageTest.RGBAToA*/* = SKIP
+438268609 WGPU : CopyTexImageTest.SubImageRGB*To*/* = SKIP
+438268609 WGPU : CopyTexImageTest.DeleteAfterCopyingToTextures/* = SKIP
 
 // SPIR-V compilation error
 384593678 VULKAN : SimpleUniformUsageTestES3.CopyOfUniformsWithArrays/* = SKIP

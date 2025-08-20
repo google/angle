@@ -234,6 +234,7 @@ void GenerateCaps(const WGPULimits &limitsWgpu,
     glExtensions->EGLImageExternalOES          = true;
     glExtensions->EGLImageExternalEssl3OES     = true;
     glExtensions->EGLImageExternalWrapModesEXT = true;
+    glExtensions->requiredInternalformatOES    = true;
 
     // OpenGL ES caps
     glCaps->maxElementIndex       = std::numeric_limits<GLuint>::max() - 1;

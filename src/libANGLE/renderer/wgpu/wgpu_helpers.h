@@ -152,6 +152,14 @@ class ImageHelper : public angle::Subject
 
     void resetImage();
 
+    angle::Result CopyImage(ContextWgpu *contextWgpu,
+                            ImageHelper *srcImage,
+                            const gl::ImageIndex &dstIndex,
+                            const gl::Offset &dstOffset,
+                            gl::LevelIndex sourceLevelGL,
+                            uint32_t sourceLayer,
+                            const gl::Box &sourceBox);
+
     static angle::Result getReadPixelsParams(rx::ContextWgpu *contextWgpu,
                                              const gl::PixelPackState &packState,
                                              gl::Buffer *packBuffer,

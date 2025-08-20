@@ -341,6 +341,44 @@ void ImageHelper::resetImage()
     mInitialized         = false;
     mFirstAllocatedLevel = gl::LevelIndex(0);
 }
+
+angle::Result ImageHelper::CopyImage(ContextWgpu *contextWgpu,
+                                     ImageHelper *srcImage,
+                                     const gl::ImageIndex &dstIndex,
+                                     const gl::Offset &dstOffset,
+                                     gl::LevelIndex sourceLevelGL,
+                                     uint32_t sourceLayer,
+                                     const gl::Box &sourceBox)
+{
+    gl::LevelIndex dstLevel(dstIndex.getLevelIndex());
+    uint32_t dstLayerOrZOffset = dstIndex.hasLayer() ? dstIndex.getLayerIndex() : dstOffset.z;
+
+    WGPUTexelCopyTextureInfo src = WGPU_TEXEL_COPY_TEXTURE_INFO_INIT;
+    src.texture                  = srcImage->getTexture().get();
+    src.mipLevel                 = srcImage->toWgpuLevel(sourceLevelGL).get();
+    src.origin.x                 = static_cast<uint32_t>(sourceBox.x);
+    src.origin.y                 = static_cast<uint32_t>(sourceBox.y);
+    src.origin.z                 = sourceLayer;
+
+    WGPUTexelCopyTextureInfo dst = WGPU_TEXEL_COPY_TEXTURE_INFO_INIT;
+    dst.texture                  = mTexture.get();
+    dst.mipLevel                 = toWgpuLevel(dstLevel).get();
+    dst.origin.x                 = static_cast<uint32_t>(dstOffset.x);
+    dst.origin.y                 = static_cast<uint32_t>(dstOffset.y);
+    dst.origin.z                 = dstLayerOrZOffset;
+
+    WGPUExtent3D copySize = {static_cast<uint32_t>(sourceBox.width),
+                             static_cast<uint32_t>(sourceBox.height),
+                             static_cast<uint32_t>(sourceBox.depth)};
+
+    ANGLE_TRY(contextWgpu->flush(webgpu::RenderPassClosureReason::CopyTextureToTexture));
+    contextWgpu->ensureCommandEncoderCreated();
+    CommandEncoderHandle encoder = contextWgpu->getCurrentCommandEncoder();
+    mProcTable->commandEncoderCopyTextureToTexture(encoder.get(), &src, &dst, &copySize);
+
+    return angle::Result::Continue;
+}
+
 // static
 angle::Result ImageHelper::getReadPixelsParams(rx::ContextWgpu *contextWgpu,
                                                const gl::PixelPackState &packState,
@@ -380,7 +418,8 @@ angle::Result ImageHelper::readPixels(rx::ContextWgpu *contextWgpu,
         return angle::Result::Stop;
     }
 
-    DeviceHandle device          = contextWgpu->getDisplay()->getDevice();
+    DeviceHandle device = contextWgpu->getDisplay()->getDevice();
+
     CommandEncoderHandle encoder = CommandEncoderHandle::Acquire(
         mProcTable, mProcTable->deviceCreateCommandEncoder(device.get(), nullptr));
     QueueHandle queue = contextWgpu->getDisplay()->getQueue();

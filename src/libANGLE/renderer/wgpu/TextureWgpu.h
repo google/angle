@@ -17,6 +17,7 @@
 
 namespace rx
 {
+
 class TextureWgpu : public TextureImpl, public angle::ObserverInterface
 {
   public:
@@ -199,7 +200,19 @@ class TextureWgpu : public TextureImpl, public angle::ObserverInterface
                                   const gl::PixelUnpackState &unpack,
                                   const uint8_t *pixels);
 
+    angle::Result copySubImageImpl(const gl::Context *context,
+                                   const gl::ImageIndex &index,
+                                   const gl::Offset &destOffset,
+                                   const gl::Rectangle &sourceArea,
+                                   const gl::InternalFormat &internalFormat,
+                                   gl::Framebuffer *source);
+
     angle::Result initializeImage(ContextWgpu *contextWgpu, ImageMipLevels mipLevels);
+    angle::Result initializeImageImpl(ContextWgpu *contextWgpu,
+                                      const webgpu::Format &webgpuFormat,
+                                      uint32_t levelCount,
+                                      gl::LevelIndex firstLevel,
+                                      const gl::Extents &size);
 
     angle::Result redefineLevel(const gl::Context *context,
                                 const webgpu::Format &webgpuFormat,
