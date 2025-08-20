@@ -107,7 +107,8 @@ TEST_F(WGSLOutputTest, BasicTranslation)
             outColor = vec4(f3, 0.0, 0.0, 0.0);
         })";
     const std::string &outputString =
-        R"(struct ANGLE_Output_Global {
+        R"(diagnostic(warning,derivative_uniformity);
+struct ANGLE_Output_Global {
   outColor : vec4<f32>,
   gl_FragDepth_ : f32,
 };
@@ -226,7 +227,8 @@ TEST_F(WGSLOutputTest, MultiElementSwizzle)
           outColor.xy *= mat2(1.0, 0.0, 0.0, 1.0);
         })";
     const std::string &outputString =
-        R"(struct ANGLE_Input_Global {
+        R"(diagnostic(warning,derivative_uniformity);
+struct ANGLE_Input_Global {
   inVec : vec3<f32>,
 };
 
@@ -363,7 +365,8 @@ TEST_F(WGSLOutputTest, ControlFlow)
           whileLoopDemo();
         })";
     const std::string &outputString =
-        R"(@group(2) @binding(0) var<uniform> ANGLEUniforms : ANGLEUniformBlock;
+        R"(diagnostic(warning,derivative_uniformity);
+@group(2) @binding(0) var<uniform> ANGLEUniforms : ANGLEUniformBlock;
 
 struct ANGLEDepthRangeParams
 {
@@ -493,7 +496,8 @@ void main(void)
     gl_FragColor = u_color;
 })";
     const std::string &outputString =
-        R"(struct ANGLE_Output_Global {
+        R"(diagnostic(warning,derivative_uniformity);
+struct ANGLE_Output_Global {
   gl_FragColor_ : vec4<f32>,
 };
 
@@ -574,7 +578,8 @@ void main() {
     fragColor += vec4(unis.d[2], unis.e, unis.f[0][2], (unis.e > 0.5 ? unis.d : unis.g)[1]);
 })";
     const std::string &outputString =
-        R"(struct ANGLE_Output_Global {
+        R"(diagnostic(warning,derivative_uniformity);
+struct ANGLE_Output_Global {
   fragColor : vec4<f32>,
 };
 
@@ -696,7 +701,8 @@ void main() {
   fragColor += vec4(aIndexed[0][0], bIndexed[0][0], cIndexed[0][0], 1.0);
 })";
     const std::string &outputString =
-        R"(struct ANGLE_Output_Global {
+        R"(diagnostic(warning,derivative_uniformity);
+struct ANGLE_Output_Global {
   fragColor : vec4<f32>,
 };
 
@@ -843,7 +849,8 @@ void main() {
   fragColor = vec4(a, aArr[0], aIndexed, 1.0);
 })";
     const std::string &outputString =
-        R"(struct ANGLE_Output_Global {
+        R"(diagnostic(warning,derivative_uniformity);
+struct ANGLE_Output_Global {
   fragColor : vec4<f32>,
 };
 
@@ -1022,7 +1029,8 @@ void main() {
 }
 )";
     const std::string &outputString =
-        R"(struct ANGLE_Output_Global {
+        R"(diagnostic(warning,derivative_uniformity);
+struct ANGLE_Output_Global {
   fragColor : vec4<f32>,
 };
 
@@ -1197,7 +1205,8 @@ void main() {
 }
 )";
     const std::string &outputString =
-        R"(struct ANGLE_Output_Global {
+        R"(diagnostic(warning,derivative_uniformity);
+struct ANGLE_Output_Global {
   fragColor : vec4<f32>,
 };
 
@@ -1324,7 +1333,8 @@ void main() {
 }
 )";
     const std::string &outputString =
-        R"(struct ANGLE_Output_Global {
+        R"(diagnostic(warning,derivative_uniformity);
+struct ANGLE_Output_Global {
   fragColor : vec4<f32>,
 };
 
@@ -1426,7 +1436,8 @@ void main() {
 }
 )";
     const std::string &outputString =
-        R"(struct ANGLE_Output_Global {
+        R"(diagnostic(warning,derivative_uniformity);
+struct ANGLE_Output_Global {
   gl_FragColor_ : vec4<f32>,
 };
 
@@ -1530,7 +1541,8 @@ void main() {
     // be textureLoad(), as the basic textureSample*() functions aren't available in WGSL vertex
     // shaders.
     const std::string &outputString =
-        R"(struct ANGLE_Output_Global {
+        R"(diagnostic(warning,derivative_uniformity);
+struct ANGLE_Output_Global {
   gl_Position_ : vec4<f32>,
 };
 
@@ -1608,7 +1620,8 @@ TEST_F(WGSLVertexOutputTest, MatrixAttributesAndVaryings)
           outMatArr = inMat;
         })";
     const std::string &outputString =
-        R"(struct ANGLE_Input_Global {
+        R"(diagnostic(warning,derivative_uniformity);
+struct ANGLE_Input_Global {
   inMat : mat3x3<f32>,
 };
 
@@ -1701,7 +1714,8 @@ void main() {
 }
 )";
     const std::string &outputString =
-        R"(struct ANGLE_Output_Global {
+        R"(diagnostic(warning,derivative_uniformity);
+struct ANGLE_Output_Global {
   fragColor : vec4<f32>,
 };
 
@@ -1805,7 +1819,8 @@ void main() {
 }
 )";
     const std::string &outputString =
-        R"(struct ANGLE_Output_Global {
+        R"(diagnostic(warning,derivative_uniformity);
+struct ANGLE_Output_Global {
   fragColor : vec4<f32>,
 };
 

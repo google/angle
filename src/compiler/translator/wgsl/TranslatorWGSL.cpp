@@ -2610,6 +2610,16 @@ bool TranslatorWGSL::translate(TIntermBlock *root,
     }
 
     TInfoSinkBase &sink = getInfoSink().obj;
+
+    // GLSL allows derivatives to be calculated as long as control flow is dynamically uniform. WGSL
+    // triggers a derivative_uniformity diagnostic whenever it cannot statically determine that
+    // control flow is uniform, which is by default an error. Since this compiler must implement
+    // GLSL semantics, use a global diagnostic filter to turn derivative_uniformity diagnostics into
+    // warnings instead of the default error.
+    // See https://github.com/gpuweb/gpuweb/issues/3479 and the spec:
+    // https://www.w3.org/TR/WGSL/#uniformity
+    sink << "diagnostic(warning,derivative_uniformity);\n";
+
     // Start writing the output structs that will be referred to by the `traverser`'s output.'
     if (!rewritePipelineVarOutput.OutputStructs(sink))
     {
