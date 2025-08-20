@@ -24,7 +24,7 @@ Bool WaitForMapNotify(Display *dpy, XEvent *event, XPointer window)
     return event->type == MapNotify && event->xmap.window == reinterpret_cast<Window>(window);
 }
 
-static KeyType X11CodeToKey(Display *display, unsigned int scancode)
+static Key X11CodeToKey(Display *display, unsigned int scancode)
 {
     int temp;
     KeySym *keySymbols;
@@ -36,214 +36,214 @@ static KeyType X11CodeToKey(Display *display, unsigned int scancode)
     switch (keySymbol)
     {
         case XK_Shift_L:
-            return KeyType::LSHIFT;
+            return KEY_LSHIFT;
         case XK_Shift_R:
-            return KeyType::RSHIFT;
+            return KEY_RSHIFT;
         case XK_Alt_L:
-            return KeyType::LALT;
+            return KEY_LALT;
         case XK_Alt_R:
-            return KeyType::RALT;
+            return KEY_RALT;
         case XK_Control_L:
-            return KeyType::LCONTROL;
+            return KEY_LCONTROL;
         case XK_Control_R:
-            return KeyType::RCONTROL;
+            return KEY_RCONTROL;
         case XK_Super_L:
-            return KeyType::LSYSTEM;
+            return KEY_LSYSTEM;
         case XK_Super_R:
-            return KeyType::RSYSTEM;
+            return KEY_RSYSTEM;
         case XK_Menu:
-            return KeyType::MENU;
+            return KEY_MENU;
 
         case XK_semicolon:
-            return KeyType::SEMICOLON;
+            return KEY_SEMICOLON;
         case XK_slash:
-            return KeyType::SLASH;
+            return KEY_SLASH;
         case XK_equal:
-            return KeyType::EQUAL;
+            return KEY_EQUAL;
         case XK_minus:
-            return KeyType::DASH;
+            return KEY_DASH;
         case XK_bracketleft:
-            return KeyType::LBRACKET;
+            return KEY_LBRACKET;
         case XK_bracketright:
-            return KeyType::RBRACKET;
+            return KEY_RBRACKET;
         case XK_comma:
-            return KeyType::COMMA;
+            return KEY_COMMA;
         case XK_period:
-            return KeyType::PERIOD;
+            return KEY_PERIOD;
         case XK_backslash:
-            return KeyType::BACKSLASH;
+            return KEY_BACKSLASH;
         case XK_asciitilde:
-            return KeyType::TILDE;
+            return KEY_TILDE;
         case XK_Escape:
-            return KeyType::ESCAPE;
+            return KEY_ESCAPE;
         case XK_space:
-            return KeyType::SPACE;
+            return KEY_SPACE;
         case XK_Return:
-            return KeyType::RETURN;
+            return KEY_RETURN;
         case XK_BackSpace:
-            return KeyType::BACK;
+            return KEY_BACK;
         case XK_Tab:
-            return KeyType::TAB;
+            return KEY_TAB;
         case XK_Page_Up:
-            return KeyType::PAGEUP;
+            return KEY_PAGEUP;
         case XK_Page_Down:
-            return KeyType::PAGEDOWN;
+            return KEY_PAGEDOWN;
         case XK_End:
-            return KeyType::END;
+            return KEY_END;
         case XK_Home:
-            return KeyType::HOME;
+            return KEY_HOME;
         case XK_Insert:
-            return KeyType::INSERT;
+            return KEY_INSERT;
         case XK_Delete:
-            return KeyType::DEL;
+            return KEY_DELETE;
         case XK_KP_Add:
-            return KeyType::ADD;
+            return KEY_ADD;
         case XK_KP_Subtract:
-            return KeyType::SUBTRACT;
+            return KEY_SUBTRACT;
         case XK_KP_Multiply:
-            return KeyType::MULTIPLY;
+            return KEY_MULTIPLY;
         case XK_KP_Divide:
-            return KeyType::DIVIDE;
+            return KEY_DIVIDE;
         case XK_Pause:
-            return KeyType::PAUSE;
+            return KEY_PAUSE;
 
         case XK_F1:
-            return KeyType::F1;
+            return KEY_F1;
         case XK_F2:
-            return KeyType::F2;
+            return KEY_F2;
         case XK_F3:
-            return KeyType::F3;
+            return KEY_F3;
         case XK_F4:
-            return KeyType::F4;
+            return KEY_F4;
         case XK_F5:
-            return KeyType::F5;
+            return KEY_F5;
         case XK_F6:
-            return KeyType::F6;
+            return KEY_F6;
         case XK_F7:
-            return KeyType::F7;
+            return KEY_F7;
         case XK_F8:
-            return KeyType::F8;
+            return KEY_F8;
         case XK_F9:
-            return KeyType::F9;
+            return KEY_F9;
         case XK_F10:
-            return KeyType::F10;
+            return KEY_F10;
         case XK_F11:
-            return KeyType::F11;
+            return KEY_F11;
         case XK_F12:
-            return KeyType::F12;
+            return KEY_F12;
         case XK_F13:
-            return KeyType::F13;
+            return KEY_F13;
         case XK_F14:
-            return KeyType::F14;
+            return KEY_F14;
         case XK_F15:
-            return KeyType::F15;
+            return KEY_F15;
 
         case XK_Left:
-            return KeyType::LEFT;
+            return KEY_LEFT;
         case XK_Right:
-            return KeyType::RIGHT;
+            return KEY_RIGHT;
         case XK_Down:
-            return KeyType::DOWN;
+            return KEY_DOWN;
         case XK_Up:
-            return KeyType::UP;
+            return KEY_UP;
 
         case XK_KP_Insert:
-            return KeyType::NUMPAD0;
+            return KEY_NUMPAD0;
         case XK_KP_End:
-            return KeyType::NUMPAD1;
+            return KEY_NUMPAD1;
         case XK_KP_Down:
-            return KeyType::NUMPAD2;
+            return KEY_NUMPAD2;
         case XK_KP_Page_Down:
-            return KeyType::NUMPAD3;
+            return KEY_NUMPAD3;
         case XK_KP_Left:
-            return KeyType::NUMPAD4;
+            return KEY_NUMPAD4;
         case XK_KP_5:
-            return KeyType::NUMPAD5;
+            return KEY_NUMPAD5;
         case XK_KP_Right:
-            return KeyType::NUMPAD6;
+            return KEY_NUMPAD6;
         case XK_KP_Home:
-            return KeyType::NUMPAD7;
+            return KEY_NUMPAD7;
         case XK_KP_Up:
-            return KeyType::NUMPAD8;
+            return KEY_NUMPAD8;
         case XK_KP_Page_Up:
-            return KeyType::NUMPAD9;
+            return KEY_NUMPAD9;
 
         case XK_a:
-            return KeyType::A;
+            return KEY_A;
         case XK_b:
-            return KeyType::B;
+            return KEY_B;
         case XK_c:
-            return KeyType::C;
+            return KEY_C;
         case XK_d:
-            return KeyType::D;
+            return KEY_D;
         case XK_e:
-            return KeyType::E;
+            return KEY_E;
         case XK_f:
-            return KeyType::F;
+            return KEY_F;
         case XK_g:
-            return KeyType::G;
+            return KEY_G;
         case XK_h:
-            return KeyType::H;
+            return KEY_H;
         case XK_i:
-            return KeyType::I;
+            return KEY_I;
         case XK_j:
-            return KeyType::J;
+            return KEY_J;
         case XK_k:
-            return KeyType::K;
+            return KEY_K;
         case XK_l:
-            return KeyType::L;
+            return KEY_L;
         case XK_m:
-            return KeyType::M;
+            return KEY_M;
         case XK_n:
-            return KeyType::N;
+            return KEY_N;
         case XK_o:
-            return KeyType::O;
+            return KEY_O;
         case XK_p:
-            return KeyType::P;
+            return KEY_P;
         case XK_q:
-            return KeyType::Q;
+            return KEY_Q;
         case XK_r:
-            return KeyType::R;
+            return KEY_R;
         case XK_s:
-            return KeyType::S;
+            return KEY_S;
         case XK_t:
-            return KeyType::T;
+            return KEY_T;
         case XK_u:
-            return KeyType::U;
+            return KEY_U;
         case XK_v:
-            return KeyType::V;
+            return KEY_V;
         case XK_w:
-            return KeyType::W;
+            return KEY_W;
         case XK_x:
-            return KeyType::X;
+            return KEY_X;
         case XK_y:
-            return KeyType::Y;
+            return KEY_Y;
         case XK_z:
-            return KeyType::Z;
+            return KEY_Z;
 
         case XK_1:
-            return KeyType::NUM1;
+            return KEY_NUM1;
         case XK_2:
-            return KeyType::NUM2;
+            return KEY_NUM2;
         case XK_3:
-            return KeyType::NUM3;
+            return KEY_NUM3;
         case XK_4:
-            return KeyType::NUM4;
+            return KEY_NUM4;
         case XK_5:
-            return KeyType::NUM5;
+            return KEY_NUM5;
         case XK_6:
-            return KeyType::NUM6;
+            return KEY_NUM6;
         case XK_7:
-            return KeyType::NUM7;
+            return KEY_NUM7;
         case XK_8:
-            return KeyType::NUM8;
+            return KEY_NUM8;
         case XK_9:
-            return KeyType::NUM9;
+            return KEY_NUM9;
         case XK_0:
-            return KeyType::NUM0;
+            return KEY_NUM0;
     }
 
-    return KeyType(0);
+    return Key(0);
 }
 
 static void AddX11KeyStateToEvent(Event *event, unsigned int state)
@@ -591,8 +591,8 @@ void X11Window::processEvent(const XEvent &xEvent)
         case ButtonPress:
         {
             Event event;
-            MouseButtonType button = MouseButtonType::UNKNOWN;
-            int wheelY             = 0;
+            MouseButton button = MOUSEBUTTON_UNKNOWN;
+            int wheelY         = 0;
 
             // The mouse wheel updates are sent via button events.
             switch (xEvent.xbutton.button)
@@ -609,19 +609,19 @@ void X11Window::processEvent(const XEvent &xEvent)
                     break;
 
                 case Button1:
-                    button = MouseButtonType::LEFT;
+                    button = MOUSEBUTTON_LEFT;
                     break;
                 case Button2:
-                    button = MouseButtonType::MIDDLE;
+                    button = MOUSEBUTTON_MIDDLE;
                     break;
                 case Button3:
-                    button = MouseButtonType::RIGHT;
+                    button = MOUSEBUTTON_RIGHT;
                     break;
                 case 8:
-                    button = MouseButtonType::BUTTON4;
+                    button = MOUSEBUTTON_BUTTON4;
                     break;
                 case 9:
-                    button = MouseButtonType::BUTTON5;
+                    button = MOUSEBUTTON_BUTTON5;
                     break;
 
                 default:
@@ -635,7 +635,7 @@ void X11Window::processEvent(const XEvent &xEvent)
                 pushEvent(event);
             }
 
-            if (button != MouseButtonType::UNKNOWN)
+            if (button != MOUSEBUTTON_UNKNOWN)
             {
                 event.Type               = Event::EVENT_MOUSE_BUTTON_RELEASED;
                 event.MouseButton.Button = button;
@@ -649,31 +649,31 @@ void X11Window::processEvent(const XEvent &xEvent)
         case ButtonRelease:
         {
             Event event;
-            MouseButtonType button = MouseButtonType::UNKNOWN;
+            MouseButton button = MOUSEBUTTON_UNKNOWN;
 
             switch (xEvent.xbutton.button)
             {
                 case Button1:
-                    button = MouseButtonType::LEFT;
+                    button = MOUSEBUTTON_LEFT;
                     break;
                 case Button2:
-                    button = MouseButtonType::MIDDLE;
+                    button = MOUSEBUTTON_MIDDLE;
                     break;
                 case Button3:
-                    button = MouseButtonType::RIGHT;
+                    button = MOUSEBUTTON_RIGHT;
                     break;
                 case 8:
-                    button = MouseButtonType::BUTTON4;
+                    button = MOUSEBUTTON_BUTTON4;
                     break;
                 case 9:
-                    button = MouseButtonType::BUTTON5;
+                    button = MOUSEBUTTON_BUTTON5;
                     break;
 
                 default:
                     break;
             }
 
-            if (button != MouseButtonType::UNKNOWN)
+            if (button != MOUSEBUTTON_UNKNOWN)
             {
                 event.Type               = Event::EVENT_MOUSE_BUTTON_RELEASED;
                 event.MouseButton.Button = button;

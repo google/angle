@@ -181,219 +181,219 @@ static float YCoordToFromCG(float y)
 }
 @end
 
-static KeyType NSCodeToKey(int keyCode)
+static Key NSCodeToKey(int keyCode)
 {
     // Missing KEY_PAUSE
     switch (keyCode)
     {
         case kVK_Shift:
-            return KeyType::LSHIFT;
+            return KEY_LSHIFT;
         case kVK_RightShift:
-            return KeyType::RSHIFT;
+            return KEY_RSHIFT;
         case kVK_Option:
-            return KeyType::LALT;
+            return KEY_LALT;
         case kVK_RightOption:
-            return KeyType::RALT;
+            return KEY_RALT;
         case kVK_Control:
-            return KeyType::LCONTROL;
+            return KEY_LCONTROL;
         case kVK_RightControl:
-            return KeyType::RCONTROL;
+            return KEY_RCONTROL;
         case kVK_Command:
-            return KeyType::LSYSTEM;
+            return KEY_LSYSTEM;
         // Right System doesn't have a name, but shows up as 0x36.
         case 0x36:
-            return KeyType::RSYSTEM;
+            return KEY_RSYSTEM;
         case kVK_Function:
-            return KeyType::MENU;
+            return KEY_MENU;
 
         case kVK_ANSI_Semicolon:
-            return KeyType::SEMICOLON;
+            return KEY_SEMICOLON;
         case kVK_ANSI_Slash:
-            return KeyType::SLASH;
+            return KEY_SLASH;
         case kVK_ANSI_Equal:
-            return KeyType::EQUAL;
+            return KEY_EQUAL;
         case kVK_ANSI_Minus:
-            return KeyType::DASH;
+            return KEY_DASH;
         case kVK_ANSI_LeftBracket:
-            return KeyType::LBRACKET;
+            return KEY_LBRACKET;
         case kVK_ANSI_RightBracket:
-            return KeyType::RBRACKET;
+            return KEY_RBRACKET;
         case kVK_ANSI_Comma:
-            return KeyType::COMMA;
+            return KEY_COMMA;
         case kVK_ANSI_Period:
-            return KeyType::PERIOD;
+            return KEY_PERIOD;
         case kVK_ANSI_Backslash:
-            return KeyType::BACKSLASH;
+            return KEY_BACKSLASH;
         case kVK_ANSI_Grave:
-            return KeyType::TILDE;
+            return KEY_TILDE;
         case kVK_Escape:
-            return KeyType::ESCAPE;
+            return KEY_ESCAPE;
         case kVK_Space:
-            return KeyType::SPACE;
+            return KEY_SPACE;
         case kVK_Return:
-            return KeyType::RETURN;
+            return KEY_RETURN;
         case kVK_Delete:
-            return KeyType::BACK;
+            return KEY_BACK;
         case kVK_Tab:
-            return KeyType::TAB;
+            return KEY_TAB;
         case kVK_PageUp:
-            return KeyType::PAGEUP;
+            return KEY_PAGEUP;
         case kVK_PageDown:
-            return KeyType::PAGEDOWN;
+            return KEY_PAGEDOWN;
         case kVK_End:
-            return KeyType::END;
+            return KEY_END;
         case kVK_Home:
-            return KeyType::HOME;
+            return KEY_HOME;
         case kVK_Help:
-            return KeyType::INSERT;
+            return KEY_INSERT;
         case kVK_ForwardDelete:
-            return KeyType::DEL;
+            return KEY_DELETE;
         case kVK_ANSI_KeypadPlus:
-            return KeyType::ADD;
+            return KEY_ADD;
         case kVK_ANSI_KeypadMinus:
-            return KeyType::SUBTRACT;
+            return KEY_SUBTRACT;
         case kVK_ANSI_KeypadMultiply:
-            return KeyType::MULTIPLY;
+            return KEY_MULTIPLY;
         case kVK_ANSI_KeypadDivide:
-            return KeyType::DIVIDE;
+            return KEY_DIVIDE;
 
         case kVK_F1:
-            return KeyType::F1;
+            return KEY_F1;
         case kVK_F2:
-            return KeyType::F2;
+            return KEY_F2;
         case kVK_F3:
-            return KeyType::F3;
+            return KEY_F3;
         case kVK_F4:
-            return KeyType::F4;
+            return KEY_F4;
         case kVK_F5:
-            return KeyType::F5;
+            return KEY_F5;
         case kVK_F6:
-            return KeyType::F6;
+            return KEY_F6;
         case kVK_F7:
-            return KeyType::F7;
+            return KEY_F7;
         case kVK_F8:
-            return KeyType::F8;
+            return KEY_F8;
         case kVK_F9:
-            return KeyType::F9;
+            return KEY_F9;
         case kVK_F10:
-            return KeyType::F10;
+            return KEY_F10;
         case kVK_F11:
-            return KeyType::F11;
+            return KEY_F11;
         case kVK_F12:
-            return KeyType::F12;
+            return KEY_F12;
         case kVK_F13:
-            return KeyType::F13;
+            return KEY_F13;
         case kVK_F14:
-            return KeyType::F14;
+            return KEY_F14;
         case kVK_F15:
-            return KeyType::F15;
+            return KEY_F15;
 
         case kVK_LeftArrow:
-            return KeyType::LEFT;
+            return KEY_LEFT;
         case kVK_RightArrow:
-            return KeyType::RIGHT;
+            return KEY_RIGHT;
         case kVK_DownArrow:
-            return KeyType::DOWN;
+            return KEY_DOWN;
         case kVK_UpArrow:
-            return KeyType::UP;
+            return KEY_UP;
 
         case kVK_ANSI_Keypad0:
-            return KeyType::NUMPAD0;
+            return KEY_NUMPAD0;
         case kVK_ANSI_Keypad1:
-            return KeyType::NUMPAD1;
+            return KEY_NUMPAD1;
         case kVK_ANSI_Keypad2:
-            return KeyType::NUMPAD2;
+            return KEY_NUMPAD2;
         case kVK_ANSI_Keypad3:
-            return KeyType::NUMPAD3;
+            return KEY_NUMPAD3;
         case kVK_ANSI_Keypad4:
-            return KeyType::NUMPAD4;
+            return KEY_NUMPAD4;
         case kVK_ANSI_Keypad5:
-            return KeyType::NUMPAD5;
+            return KEY_NUMPAD5;
         case kVK_ANSI_Keypad6:
-            return KeyType::NUMPAD6;
+            return KEY_NUMPAD6;
         case kVK_ANSI_Keypad7:
-            return KeyType::NUMPAD7;
+            return KEY_NUMPAD7;
         case kVK_ANSI_Keypad8:
-            return KeyType::NUMPAD8;
+            return KEY_NUMPAD8;
         case kVK_ANSI_Keypad9:
-            return KeyType::NUMPAD9;
+            return KEY_NUMPAD9;
 
         case kVK_ANSI_A:
-            return KeyType::A;
+            return KEY_A;
         case kVK_ANSI_B:
-            return KeyType::B;
+            return KEY_B;
         case kVK_ANSI_C:
-            return KeyType::C;
+            return KEY_C;
         case kVK_ANSI_D:
-            return KeyType::D;
+            return KEY_D;
         case kVK_ANSI_E:
-            return KeyType::E;
+            return KEY_E;
         case kVK_ANSI_F:
-            return KeyType::F;
+            return KEY_F;
         case kVK_ANSI_G:
-            return KeyType::G;
+            return KEY_G;
         case kVK_ANSI_H:
-            return KeyType::H;
+            return KEY_H;
         case kVK_ANSI_I:
-            return KeyType::I;
+            return KEY_I;
         case kVK_ANSI_J:
-            return KeyType::J;
+            return KEY_J;
         case kVK_ANSI_K:
-            return KeyType::K;
+            return KEY_K;
         case kVK_ANSI_L:
-            return KeyType::L;
+            return KEY_L;
         case kVK_ANSI_M:
-            return KeyType::M;
+            return KEY_M;
         case kVK_ANSI_N:
-            return KeyType::N;
+            return KEY_N;
         case kVK_ANSI_O:
-            return KeyType::O;
+            return KEY_O;
         case kVK_ANSI_P:
-            return KeyType::P;
+            return KEY_P;
         case kVK_ANSI_Q:
-            return KeyType::Q;
+            return KEY_Q;
         case kVK_ANSI_R:
-            return KeyType::R;
+            return KEY_R;
         case kVK_ANSI_S:
-            return KeyType::S;
+            return KEY_S;
         case kVK_ANSI_T:
-            return KeyType::T;
+            return KEY_T;
         case kVK_ANSI_U:
-            return KeyType::U;
+            return KEY_U;
         case kVK_ANSI_V:
-            return KeyType::V;
+            return KEY_V;
         case kVK_ANSI_W:
-            return KeyType::W;
+            return KEY_W;
         case kVK_ANSI_X:
-            return KeyType::X;
+            return KEY_X;
         case kVK_ANSI_Y:
-            return KeyType::Y;
+            return KEY_Y;
         case kVK_ANSI_Z:
-            return KeyType::Z;
+            return KEY_Z;
 
         case kVK_ANSI_1:
-            return KeyType::NUM1;
+            return KEY_NUM1;
         case kVK_ANSI_2:
-            return KeyType::NUM2;
+            return KEY_NUM2;
         case kVK_ANSI_3:
-            return KeyType::NUM3;
+            return KEY_NUM3;
         case kVK_ANSI_4:
-            return KeyType::NUM4;
+            return KEY_NUM4;
         case kVK_ANSI_5:
-            return KeyType::NUM5;
+            return KEY_NUM5;
         case kVK_ANSI_6:
-            return KeyType::NUM6;
+            return KEY_NUM6;
         case kVK_ANSI_7:
-            return KeyType::NUM7;
+            return KEY_NUM7;
         case kVK_ANSI_8:
-            return KeyType::NUM8;
+            return KEY_NUM8;
         case kVK_ANSI_9:
-            return KeyType::NUM9;
+            return KEY_NUM9;
         case kVK_ANSI_0:
-            return KeyType::NUM0;
+            return KEY_NUM0;
     }
 
-    return KeyType(0);
+    return Key(0);
 }
 
 static void AddNSKeyStateToEvent(Event *event, NSEventModifierFlags state)
@@ -404,18 +404,18 @@ static void AddNSKeyStateToEvent(Event *event, NSEventModifierFlags state)
     event->Key.System  = state & NSCommandKeyMask;
 }
 
-static MouseButtonType TranslateMouseButton(NSInteger button)
+static MouseButton TranslateMouseButton(NSInteger button)
 {
     switch (button)
     {
         case 2:
-            return MouseButtonType::MIDDLE;
+            return MOUSEBUTTON_MIDDLE;
         case 3:
-            return MouseButtonType::BUTTON4;
+            return MOUSEBUTTON_BUTTON4;
         case 4:
-            return MouseButtonType::BUTTON5;
+            return MOUSEBUTTON_BUTTON5;
         default:
-            return MouseButtonType::UNKNOWN;
+            return MOUSEBUTTON_UNKNOWN;
     }
 }
 
@@ -486,7 +486,7 @@ static MouseButtonType TranslateMouseButton(NSInteger button)
 
 - (void)addButtonEvent:(NSEvent *)nsEvent
                   type:(Event::EventType)eventType
-                button:(MouseButtonType)button
+                button:(MouseButton)button
 {
     Event event;
     event.Type               = eventType;
@@ -498,7 +498,7 @@ static MouseButtonType TranslateMouseButton(NSInteger button)
 
 - (void)mouseDown:(NSEvent *)event
 {
-    [self addButtonEvent:event type:Event::EVENT_MOUSE_BUTTON_PRESSED button:MouseButtonType::LEFT];
+    [self addButtonEvent:event type:Event::EVENT_MOUSE_BUTTON_PRESSED button:MOUSEBUTTON_LEFT];
 }
 
 - (void)mouseDragged:(NSEvent *)event
@@ -508,9 +508,7 @@ static MouseButtonType TranslateMouseButton(NSInteger button)
 
 - (void)mouseUp:(NSEvent *)event
 {
-    [self addButtonEvent:event
-                    type:Event::EVENT_MOUSE_BUTTON_RELEASED
-                  button:MouseButtonType::LEFT];
+    [self addButtonEvent:event type:Event::EVENT_MOUSE_BUTTON_RELEASED button:MOUSEBUTTON_LEFT];
 }
 
 - (void)mouseMoved:(NSEvent *)nsEvent
@@ -538,9 +536,7 @@ static MouseButtonType TranslateMouseButton(NSInteger button)
 
 - (void)rightMouseDown:(NSEvent *)event
 {
-    [self addButtonEvent:event
-                    type:Event::EVENT_MOUSE_BUTTON_PRESSED
-                  button:MouseButtonType::RIGHT];
+    [self addButtonEvent:event type:Event::EVENT_MOUSE_BUTTON_PRESSED button:MOUSEBUTTON_RIGHT];
 }
 
 - (void)rightMouseDragged:(NSEvent *)event
@@ -550,9 +546,7 @@ static MouseButtonType TranslateMouseButton(NSInteger button)
 
 - (void)rightMouseUp:(NSEvent *)event
 {
-    [self addButtonEvent:event
-                    type:Event::EVENT_MOUSE_BUTTON_RELEASED
-                  button:MouseButtonType::RIGHT];
+    [self addButtonEvent:event type:Event::EVENT_MOUSE_BUTTON_RELEASED button:MOUSEBUTTON_RIGHT];
 }
 
 - (void)otherMouseDown:(NSEvent *)event

@@ -13,7 +13,7 @@
 
 #include "common/debug.h"
 
-KeyType VirtualKeyCodeToKey(WPARAM key, LPARAM flags)
+Key VirtualKeyCodeToKey(WPARAM key, LPARAM flags)
 {
     switch (key)
     {
@@ -22,211 +22,211 @@ KeyType VirtualKeyCodeToKey(WPARAM key, LPARAM flags)
         {
             static unsigned int lShift = MapVirtualKey(VK_LSHIFT, MAPVK_VK_TO_VSC);
             unsigned int scancode      = static_cast<unsigned int>((flags & (0xFF << 16)) >> 16);
-            return scancode == lShift ? KeyType::LSHIFT : KeyType::RSHIFT;
+            return scancode == lShift ? KEY_LSHIFT : KEY_RSHIFT;
         }
 
         // Check the "extended" flag to distinguish between left and right alt
         case VK_MENU:
-            return (HIWORD(flags) & KF_EXTENDED) ? KeyType::RALT : KeyType::LALT;
+            return (HIWORD(flags) & KF_EXTENDED) ? KEY_RALT : KEY_LALT;
 
         // Check the "extended" flag to distinguish between left and right control
         case VK_CONTROL:
-            return (HIWORD(flags) & KF_EXTENDED) ? KeyType::RCONTROL : KeyType::LCONTROL;
+            return (HIWORD(flags) & KF_EXTENDED) ? KEY_RCONTROL : KEY_LCONTROL;
 
         // Other keys are reported properly
         case VK_LWIN:
-            return KeyType::LSYSTEM;
+            return KEY_LSYSTEM;
         case VK_RWIN:
-            return KeyType::RSYSTEM;
+            return KEY_RSYSTEM;
         case VK_APPS:
-            return KeyType::MENU;
+            return KEY_MENU;
         case VK_OEM_1:
-            return KeyType::SEMICOLON;
+            return KEY_SEMICOLON;
         case VK_OEM_2:
-            return KeyType::SLASH;
+            return KEY_SLASH;
         case VK_OEM_PLUS:
-            return KeyType::EQUAL;
+            return KEY_EQUAL;
         case VK_OEM_MINUS:
-            return KeyType::DASH;
+            return KEY_DASH;
         case VK_OEM_4:
-            return KeyType::LBRACKET;
+            return KEY_LBRACKET;
         case VK_OEM_6:
-            return KeyType::RBRACKET;
+            return KEY_RBRACKET;
         case VK_OEM_COMMA:
-            return KeyType::COMMA;
+            return KEY_COMMA;
         case VK_OEM_PERIOD:
-            return KeyType::PERIOD;
+            return KEY_PERIOD;
         case VK_OEM_7:
-            return KeyType::QUOTE;
+            return KEY_QUOTE;
         case VK_OEM_5:
-            return KeyType::BACKSLASH;
+            return KEY_BACKSLASH;
         case VK_OEM_3:
-            return KeyType::TILDE;
+            return KEY_TILDE;
         case VK_ESCAPE:
-            return KeyType::ESCAPE;
+            return KEY_ESCAPE;
         case VK_SPACE:
-            return KeyType::SPACE;
+            return KEY_SPACE;
         case VK_RETURN:
-            return KeyType::RETURN;
+            return KEY_RETURN;
         case VK_BACK:
-            return KeyType::BACK;
+            return KEY_BACK;
         case VK_TAB:
-            return KeyType::TAB;
+            return KEY_TAB;
         case VK_PRIOR:
-            return KeyType::PAGEUP;
+            return KEY_PAGEUP;
         case VK_NEXT:
-            return KeyType::PAGEDOWN;
+            return KEY_PAGEDOWN;
         case VK_END:
-            return KeyType::END;
+            return KEY_END;
         case VK_HOME:
-            return KeyType::HOME;
+            return KEY_HOME;
         case VK_INSERT:
-            return KeyType::INSERT;
+            return KEY_INSERT;
         case VK_DELETE:
-            return KeyType::DEL;
+            return KEY_DELETE;
         case VK_ADD:
-            return KeyType::ADD;
+            return KEY_ADD;
         case VK_SUBTRACT:
-            return KeyType::SUBTRACT;
+            return KEY_SUBTRACT;
         case VK_MULTIPLY:
-            return KeyType::MULTIPLY;
+            return KEY_MULTIPLY;
         case VK_DIVIDE:
-            return KeyType::DIVIDE;
+            return KEY_DIVIDE;
         case VK_PAUSE:
-            return KeyType::PAUSE;
+            return KEY_PAUSE;
         case VK_F1:
-            return KeyType::F1;
+            return KEY_F1;
         case VK_F2:
-            return KeyType::F2;
+            return KEY_F2;
         case VK_F3:
-            return KeyType::F3;
+            return KEY_F3;
         case VK_F4:
-            return KeyType::F4;
+            return KEY_F4;
         case VK_F5:
-            return KeyType::F5;
+            return KEY_F5;
         case VK_F6:
-            return KeyType::F6;
+            return KEY_F6;
         case VK_F7:
-            return KeyType::F7;
+            return KEY_F7;
         case VK_F8:
-            return KeyType::F8;
+            return KEY_F8;
         case VK_F9:
-            return KeyType::F9;
+            return KEY_F9;
         case VK_F10:
-            return KeyType::F10;
+            return KEY_F10;
         case VK_F11:
-            return KeyType::F11;
+            return KEY_F11;
         case VK_F12:
-            return KeyType::F12;
+            return KEY_F12;
         case VK_F13:
-            return KeyType::F13;
+            return KEY_F13;
         case VK_F14:
-            return KeyType::F14;
+            return KEY_F14;
         case VK_F15:
-            return KeyType::F15;
+            return KEY_F15;
         case VK_LEFT:
-            return KeyType::LEFT;
+            return KEY_LEFT;
         case VK_RIGHT:
-            return KeyType::RIGHT;
+            return KEY_RIGHT;
         case VK_UP:
-            return KeyType::UP;
+            return KEY_UP;
         case VK_DOWN:
-            return KeyType::DOWN;
+            return KEY_DOWN;
         case VK_NUMPAD0:
-            return KeyType::NUMPAD0;
+            return KEY_NUMPAD0;
         case VK_NUMPAD1:
-            return KeyType::NUMPAD1;
+            return KEY_NUMPAD1;
         case VK_NUMPAD2:
-            return KeyType::NUMPAD2;
+            return KEY_NUMPAD2;
         case VK_NUMPAD3:
-            return KeyType::NUMPAD3;
+            return KEY_NUMPAD3;
         case VK_NUMPAD4:
-            return KeyType::NUMPAD4;
+            return KEY_NUMPAD4;
         case VK_NUMPAD5:
-            return KeyType::NUMPAD5;
+            return KEY_NUMPAD5;
         case VK_NUMPAD6:
-            return KeyType::NUMPAD6;
+            return KEY_NUMPAD6;
         case VK_NUMPAD7:
-            return KeyType::NUMPAD7;
+            return KEY_NUMPAD7;
         case VK_NUMPAD8:
-            return KeyType::NUMPAD8;
+            return KEY_NUMPAD8;
         case VK_NUMPAD9:
-            return KeyType::NUMPAD9;
+            return KEY_NUMPAD9;
         case 'A':
-            return KeyType::A;
+            return KEY_A;
         case 'Z':
-            return KeyType::Z;
+            return KEY_Z;
         case 'E':
-            return KeyType::E;
+            return KEY_E;
         case 'R':
-            return KeyType::R;
+            return KEY_R;
         case 'T':
-            return KeyType::T;
+            return KEY_T;
         case 'Y':
-            return KeyType::Y;
+            return KEY_Y;
         case 'U':
-            return KeyType::U;
+            return KEY_U;
         case 'I':
-            return KeyType::I;
+            return KEY_I;
         case 'O':
-            return KeyType::O;
+            return KEY_O;
         case 'P':
-            return KeyType::P;
+            return KEY_P;
         case 'Q':
-            return KeyType::Q;
+            return KEY_Q;
         case 'S':
-            return KeyType::S;
+            return KEY_S;
         case 'D':
-            return KeyType::D;
+            return KEY_D;
         case 'F':
-            return KeyType::F;
+            return KEY_F;
         case 'G':
-            return KeyType::G;
+            return KEY_G;
         case 'H':
-            return KeyType::H;
+            return KEY_H;
         case 'J':
-            return KeyType::J;
+            return KEY_J;
         case 'K':
-            return KeyType::K;
+            return KEY_K;
         case 'L':
-            return KeyType::L;
+            return KEY_L;
         case 'M':
-            return KeyType::M;
+            return KEY_M;
         case 'W':
-            return KeyType::W;
+            return KEY_W;
         case 'X':
-            return KeyType::X;
+            return KEY_X;
         case 'C':
-            return KeyType::C;
+            return KEY_C;
         case 'V':
-            return KeyType::V;
+            return KEY_V;
         case 'B':
-            return KeyType::B;
+            return KEY_B;
         case 'N':
-            return KeyType::N;
+            return KEY_N;
         case '0':
-            return KeyType::NUM0;
+            return KEY_NUM0;
         case '1':
-            return KeyType::NUM1;
+            return KEY_NUM1;
         case '2':
-            return KeyType::NUM2;
+            return KEY_NUM2;
         case '3':
-            return KeyType::NUM3;
+            return KEY_NUM3;
         case '4':
-            return KeyType::NUM4;
+            return KEY_NUM4;
         case '5':
-            return KeyType::NUM5;
+            return KEY_NUM5;
         case '6':
-            return KeyType::NUM6;
+            return KEY_NUM6;
         case '7':
-            return KeyType::NUM7;
+            return KEY_NUM7;
         case '8':
-            return KeyType::NUM8;
+            return KEY_NUM8;
         case '9':
-            return KeyType::NUM9;
+            return KEY_NUM9;
     }
 
-    return KeyType(0);
+    return Key(0);
 }
 
 LRESULT CALLBACK Win32Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -352,7 +352,7 @@ LRESULT CALLBACK Win32Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
             {
                 Event event;
                 event.Type               = Event::EVENT_MOUSE_BUTTON_PRESSED;
-                event.MouseButton.Button = MouseButtonType::LEFT;
+                event.MouseButton.Button = MOUSEBUTTON_LEFT;
                 event.MouseButton.X      = static_cast<short>(LOWORD(lParam));
                 event.MouseButton.Y      = static_cast<short>(HIWORD(lParam));
                 window->pushEvent(event);
@@ -363,7 +363,7 @@ LRESULT CALLBACK Win32Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
             {
                 Event event;
                 event.Type               = Event::EVENT_MOUSE_BUTTON_RELEASED;
-                event.MouseButton.Button = MouseButtonType::LEFT;
+                event.MouseButton.Button = MOUSEBUTTON_LEFT;
                 event.MouseButton.X      = static_cast<short>(LOWORD(lParam));
                 event.MouseButton.Y      = static_cast<short>(HIWORD(lParam));
                 window->pushEvent(event);
@@ -375,7 +375,7 @@ LRESULT CALLBACK Win32Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
             {
                 Event event;
                 event.Type               = Event::EVENT_MOUSE_BUTTON_PRESSED;
-                event.MouseButton.Button = MouseButtonType::RIGHT;
+                event.MouseButton.Button = MOUSEBUTTON_RIGHT;
                 event.MouseButton.X      = static_cast<short>(LOWORD(lParam));
                 event.MouseButton.Y      = static_cast<short>(HIWORD(lParam));
                 window->pushEvent(event);
@@ -387,7 +387,7 @@ LRESULT CALLBACK Win32Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
             {
                 Event event;
                 event.Type               = Event::EVENT_MOUSE_BUTTON_RELEASED;
-                event.MouseButton.Button = MouseButtonType::RIGHT;
+                event.MouseButton.Button = MOUSEBUTTON_RIGHT;
                 event.MouseButton.X      = static_cast<short>(LOWORD(lParam));
                 event.MouseButton.Y      = static_cast<short>(HIWORD(lParam));
                 window->pushEvent(event);
@@ -400,7 +400,7 @@ LRESULT CALLBACK Win32Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
             {
                 Event event;
                 event.Type               = Event::EVENT_MOUSE_BUTTON_PRESSED;
-                event.MouseButton.Button = MouseButtonType::MIDDLE;
+                event.MouseButton.Button = MOUSEBUTTON_MIDDLE;
                 event.MouseButton.X      = static_cast<short>(LOWORD(lParam));
                 event.MouseButton.Y      = static_cast<short>(HIWORD(lParam));
                 window->pushEvent(event);
@@ -412,7 +412,7 @@ LRESULT CALLBACK Win32Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
             {
                 Event event;
                 event.Type               = Event::EVENT_MOUSE_BUTTON_RELEASED;
-                event.MouseButton.Button = MouseButtonType::MIDDLE;
+                event.MouseButton.Button = MOUSEBUTTON_MIDDLE;
                 event.MouseButton.X      = static_cast<short>(LOWORD(lParam));
                 event.MouseButton.Y      = static_cast<short>(HIWORD(lParam));
                 window->pushEvent(event);
@@ -424,11 +424,11 @@ LRESULT CALLBACK Win32Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
             case WM_XBUTTONDBLCLK:
             {
                 Event event;
-                event.Type               = Event::EVENT_MOUSE_BUTTON_PRESSED;
-                event.MouseButton.Button = (HIWORD(wParam) == XBUTTON1) ? MouseButtonType::BUTTON4
-                                                                        : MouseButtonType::BUTTON5;
-                event.MouseButton.X      = static_cast<short>(LOWORD(lParam));
-                event.MouseButton.Y      = static_cast<short>(HIWORD(lParam));
+                event.Type = Event::EVENT_MOUSE_BUTTON_PRESSED;
+                event.MouseButton.Button =
+                    (HIWORD(wParam) == XBUTTON1) ? MOUSEBUTTON_BUTTON4 : MOUSEBUTTON_BUTTON5;
+                event.MouseButton.X = static_cast<short>(LOWORD(lParam));
+                event.MouseButton.Y = static_cast<short>(HIWORD(lParam));
                 window->pushEvent(event);
                 break;
             }
@@ -437,11 +437,11 @@ LRESULT CALLBACK Win32Window::WndProc(HWND hWnd, UINT message, WPARAM wParam, LP
             case WM_XBUTTONUP:
             {
                 Event event;
-                event.Type               = Event::EVENT_MOUSE_BUTTON_RELEASED;
-                event.MouseButton.Button = (HIWORD(wParam) == XBUTTON1) ? MouseButtonType::BUTTON4
-                                                                        : MouseButtonType::BUTTON5;
-                event.MouseButton.X      = static_cast<short>(LOWORD(lParam));
-                event.MouseButton.Y      = static_cast<short>(HIWORD(lParam));
+                event.Type = Event::EVENT_MOUSE_BUTTON_RELEASED;
+                event.MouseButton.Button =
+                    (HIWORD(wParam) == XBUTTON1) ? MOUSEBUTTON_BUTTON4 : MOUSEBUTTON_BUTTON5;
+                event.MouseButton.X = static_cast<short>(LOWORD(lParam));
+                event.MouseButton.Y = static_cast<short>(HIWORD(lParam));
                 window->pushEvent(event);
                 break;
             }
