@@ -331,6 +331,7 @@ vars = {
   'checkout_angle_restricted_trace_off_the_road': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_one_piece_treasure_cruise': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_one_punch_man': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_onmyoji': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_oxenfree': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_passmark_complex': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_passmark_simple': 'checkout_angle_restricted_traces',
@@ -3114,6 +3115,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_one_punch_man',
+  },
+  'src/tests/restricted_traces/onmyoji': {
+      'packages': [
+        {
+            'package': 'angle/traces/onmyoji',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_onmyoji',
   },
   'src/tests/restricted_traces/oxenfree': {
       'packages': [
