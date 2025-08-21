@@ -81,9 +81,9 @@
 [submodule "third_party/glmark2/src"]
 	path = third_party/glmark2/src
 	url = https://chromium.googlesource.com/external/github.com/glmark2/glmark2
-[submodule "third_party/googletest"]
-	path = third_party/googletest
-	url = https://chromium.googlesource.com/chromium/src/third_party/googletest
+[submodule "third_party/googletest/src"]
+	path = third_party/googletest/src
+	url = https://chromium.googlesource.com/external/github.com/google/googletest
 	gclient-condition = not build_with_chromium
 [submodule "third_party/ijar"]
 	path = third_party/ijar
@@ -295,3 +295,7 @@
 	path = tools/valgrind
 	url = https://chromium.googlesource.com/chromium/src/tools/valgrind
 	gclient-condition = not build_with_chromium
+[submodule "tools/win"]
+	path = tools/win
+	url = https://chromium.googlesource.com/chromium/src/tools/win
+	gclient-condition = checkout_win and not build_with_chromium

@@ -60,6 +60,9 @@ default_args = {
 
   # Use Siso instead of Ninja.
   use_siso = true
+
+  # TODO(439777063): llvm and Dawn need to fix includes
+  use_clang_modules = false
 }
 
 no_check_targets = [ "third_party/dawn/*" ]
