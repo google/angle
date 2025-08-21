@@ -7,6 +7,10 @@
 //   Helper methods pertaining to most or all back-ends.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #ifndef LIBANGLE_RENDERER_RENDERER_UTILS_H_
 #define LIBANGLE_RENDERER_RENDERER_UTILS_H_
 

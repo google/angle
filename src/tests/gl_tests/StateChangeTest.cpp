@@ -8,6 +8,10 @@
 //   ANGLE's dirty bits systems don't get confused by certain sequences of state changes.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 #include "util/random_utils.h"

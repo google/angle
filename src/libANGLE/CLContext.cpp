@@ -4,6 +4,11 @@
 // found in the LICENSE file.
 //
 // CLContext.cpp: Implements the cl::Context class.
+//
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
 
 #include "libANGLE/CLContext.h"
 

@@ -6,6 +6,10 @@
 
 // formatutils.cpp: Queries for GL image formats.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_libc_calls
+#endif
+
 #include "libANGLE/formatutils.h"
 
 #include "anglebase/no_destructor.h"

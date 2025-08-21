@@ -6,6 +6,10 @@
 
 // StateManagerGL.h: Defines a class for caching applied OpenGL state
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "libANGLE/renderer/gl/StateManagerGL.h"
 
 #include <string.h>

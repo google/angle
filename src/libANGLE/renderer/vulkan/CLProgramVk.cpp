@@ -4,6 +4,11 @@
 // found in the LICENSE file.
 //
 // CLProgramVk.cpp: Implements the class methods for CLProgramVk.
+//
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
 
 #include "libANGLE/renderer/vulkan/CLProgramVk.h"
 #include "libANGLE/renderer/vulkan/CLContextVk.h"

@@ -8,6 +8,10 @@
 //    Also contains the structures for the packed descriptions for the RenderPass and Pipeline.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "libANGLE/renderer/vulkan/vk_cache_utils.h"
 
 #include "common/aligned_memory.h"

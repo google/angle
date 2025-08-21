@@ -6,6 +6,10 @@
 // Utilities to map clspv interface variables to OpenCL and Vulkan mappings.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "libANGLE/renderer/vulkan/clspv_utils.h"
 #include "common/log_utils.h"
 #include "libANGLE/renderer/vulkan/CLDeviceVk.h"

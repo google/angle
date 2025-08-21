@@ -7,6 +7,10 @@
 //   Implementation of common ANGLE testing fixture.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "ANGLETest.h"
 
 #include <algorithm>

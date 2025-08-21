@@ -6,6 +6,10 @@
 
 // DmaBufImageSiblingVkLinux.cpp: Implements DmaBufImageSiblingVkLinux.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "libANGLE/renderer/vulkan/linux/DmaBufImageSiblingVkLinux.h"
 
 #include "common/linux/dma_buf_utils.h"

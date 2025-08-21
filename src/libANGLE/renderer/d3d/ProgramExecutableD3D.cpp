@@ -4,6 +4,11 @@
 // found in the LICENSE file.
 //
 // ProgramExecutableD3D.cpp: Implementation of ProgramExecutableD3D.
+//
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
 
 #include "libANGLE/renderer/d3d/ProgramExecutableD3D.h"
 

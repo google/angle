@@ -6,6 +6,10 @@
 
 // Context_gles_1_0.cpp: Implements the GLES1-specific parts of Context.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
 #include "libANGLE/context_private_call.inl.h"

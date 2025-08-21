@@ -7,6 +7,10 @@
 //   dEQP and GoogleTest integration logic. Calls through to the random
 //   order executor.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include <stdint.h>
 #include <array>
 #include <fstream>

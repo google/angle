@@ -4,6 +4,11 @@
 // found in the LICENSE file.
 //
 // CLDevice.cpp: Implements the cl::Device class.
+//
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
 
 #include "libANGLE/CLDevice.h"
 

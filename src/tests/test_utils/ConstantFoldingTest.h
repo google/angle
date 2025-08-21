@@ -7,6 +7,10 @@
 //   Utilities for constant folding tests.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #ifndef TESTS_TEST_UTILS_CONSTANTFOLDINGTEST_H_
 #define TESTS_TEST_UTILS_CONSTANTFOLDINGTEST_H_
 

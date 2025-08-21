@@ -7,6 +7,10 @@
 //    Helper functions for the Vulkan Caps.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "libANGLE/renderer/vulkan/vk_caps_utils.h"
 
 #include <type_traits>

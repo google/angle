@@ -7,6 +7,10 @@
 //  Methods for GL variable types (varyings, uniforms, etc)
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include <GLSLANG/ShaderLang.h>
 
 #include "common/debug.h"

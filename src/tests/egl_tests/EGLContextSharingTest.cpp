@@ -6,6 +6,10 @@
 // EGLContextSharingTest.cpp:
 //   Tests relating to shared Contexts.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include <gtest/gtest.h>
 
 #include "common/tls.h"

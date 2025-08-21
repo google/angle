@@ -7,6 +7,10 @@
 //    Implements the class methods for BufferWgpu.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_libc_calls
+#endif
+
 #include "libANGLE/renderer/wgpu/BufferWgpu.h"
 
 #include "common/debug.h"

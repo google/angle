@@ -7,6 +7,10 @@
 //    Manages the pool allocators used in the command buffers.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #ifndef LIBANGLE_RENDERER_VULKAN_ALLOCATORHELPERPOOL_H_
 #define LIBANGLE_RENDERER_VULKAN_ALLOCATORHELPERPOOL_H_
 

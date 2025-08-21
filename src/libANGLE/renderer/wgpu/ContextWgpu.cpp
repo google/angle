@@ -7,6 +7,10 @@
 //    Implements the class methods for ContextWgpu.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_libc_calls
+#endif
+
 #include "libANGLE/renderer/wgpu/ContextWgpu.h"
 
 #include "common/PackedEnums.h"

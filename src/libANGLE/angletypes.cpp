@@ -4,7 +4,12 @@
 // found in the LICENSE file.
 //
 
-// angletypes.h : Defines a variety of structures and enum types that are used throughout libGLESv2
+// angletypes.cpp : Defines a variety of structures and enum types that are used throughout
+// libGLESv2
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
 
 #include "libANGLE/angletypes.h"
 #include "libANGLE/Program.h"

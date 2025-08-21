@@ -4,8 +4,12 @@
 // found in the LICENSE file.
 //
 
-// context_private_call.cpp:
+// context_private_call.inl.h:
 //   Helpers that set/get state that is entirely locally accessed by the context.
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
 
 #include "libANGLE/context_private_call_autogen.h"
 

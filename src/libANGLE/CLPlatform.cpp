@@ -4,6 +4,11 @@
 // found in the LICENSE file.
 //
 // CLPlatform.cpp: Implements the cl::Platform class.
+//
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
 
 #include "libANGLE/Context.h"
 #include "libANGLE/capture/FrameCapture.h"

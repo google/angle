@@ -6,6 +6,10 @@
 
 // SystemInfo_macos.mm: implementation of the macOS-specific parts of SystemInfo.h
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "gpu_info_util/SystemInfo_internal.h"
 
 #import <Cocoa/Cocoa.h>

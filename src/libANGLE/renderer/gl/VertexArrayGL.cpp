@@ -6,6 +6,10 @@
 
 // VertexArrayGL.cpp: Implements the class methods for VertexArrayGL.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "libANGLE/renderer/gl/VertexArrayGL.h"
 
 #include "common/bitset_utils.h"

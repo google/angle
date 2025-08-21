@@ -7,6 +7,10 @@
 //   D3D11-specific functionality associated with a GL Context.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "libANGLE/renderer/d3d/d3d11/Context11.h"
 
 #include "common/entry_points_enum_autogen.h"

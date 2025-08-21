@@ -7,6 +7,10 @@
 //    Implements the class methods for VertexArrayWgpu.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "libANGLE/renderer/wgpu/VertexArrayWgpu.h"
 
 #include "common/PackedEnums.h"

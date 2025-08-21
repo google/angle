@@ -6,6 +6,10 @@
 // BuildSPIRV: Helper for OutputSPIRV to build SPIR-V.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "compiler/translator/spirv/BuildSPIRV.h"
 
 #include "common/spirv/spirv_instruction_builder_autogen.h"

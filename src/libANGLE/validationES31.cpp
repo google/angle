@@ -6,6 +6,10 @@
 
 // validationES31.cpp: Validation functions for OpenGL ES 3.1 entry point parameters
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "libANGLE/validationES31_autogen.h"
 
 #include "libANGLE/Context.h"

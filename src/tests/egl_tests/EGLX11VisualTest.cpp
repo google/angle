@@ -6,6 +6,10 @@
 
 // EGLX11VisualTest.cpp: tests for EGL_ANGLE_x11_visual extension
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include <gtest/gtest.h>
 
 #include <EGL/egl.h>

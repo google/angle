@@ -7,6 +7,10 @@
 //   ANGLE GL state serialization.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_libc_calls
+#endif
+
 #include "libANGLE/capture/serialize.h"
 
 #include "common/Color.h"

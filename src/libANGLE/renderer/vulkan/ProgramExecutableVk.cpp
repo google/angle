@@ -5,6 +5,11 @@
 //
 // ProgramExecutableVk.cpp: Collects the information and interfaces common to both ProgramVks and
 // ProgramPipelineVks in order to execute/draw with either.
+//
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
 
 #include "libANGLE/renderer/vulkan/ProgramExecutableVk.h"
 

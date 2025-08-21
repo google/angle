@@ -1,4 +1,3 @@
-
 //
 // Copyright 2019 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -7,6 +6,10 @@
 // TextureMtl.mm:
 //    Implements the class methods for TextureMtl.
 //
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
 
 #include "libANGLE/renderer/metal/TextureMtl.h"
 

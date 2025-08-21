@@ -7,6 +7,10 @@
 //    Implements the class methods for FramebufferWgpu.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "libANGLE/renderer/wgpu/FramebufferWgpu.h"
 #include <__config>
 

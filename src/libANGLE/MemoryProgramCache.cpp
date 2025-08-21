@@ -7,6 +7,10 @@
 //   always have to be re-compiled. Can be used in conjunction with the platform
 //   layer to warm up the cache from disk.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_libc_calls
+#endif
+
 // Include zlib first, otherwise FAR gets defined elsewhere.
 #define USE_SYSTEM_ZLIB
 #include "compression_utils_portable.h"

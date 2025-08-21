@@ -2,7 +2,11 @@
 // Copyright 2015 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-//
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 // Matrix:
 //   Utility class implementing various matrix operations.
 //   Supports matrices with minimum 2 and maximum 4 number of rows/columns.

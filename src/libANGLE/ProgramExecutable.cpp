@@ -5,6 +5,11 @@
 //
 // ProgramExecutable.cpp: Collects the interfaces common to both Programs and
 // ProgramPipelines in order to execute/draw with either.
+//
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
 
 #include "libANGLE/ProgramExecutable.h"
 

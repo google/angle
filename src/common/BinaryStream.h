@@ -6,6 +6,10 @@
 
 // BinaryStream.h: Provides binary serialization of simple types.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #ifndef COMMON_BINARYSTREAM_H_
 #define COMMON_BINARYSTREAM_H_
 

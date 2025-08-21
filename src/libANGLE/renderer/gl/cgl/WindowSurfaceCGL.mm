@@ -6,6 +6,10 @@
 
 // WindowSurfaceCGL.cpp: CGL implementation of egl::Surface for windows
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #import "libANGLE/renderer/gl/cgl/WindowSurfaceCGL.h"
 
 #import <Cocoa/Cocoa.h>

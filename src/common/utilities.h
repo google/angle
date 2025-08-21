@@ -6,6 +6,10 @@
 
 // utilities.h: Conversion functions and other utility routines.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #ifndef COMMON_UTILITIES_H_
 #define COMMON_UTILITIES_H_
 

@@ -4,6 +4,11 @@
 // found in the LICENSE file.
 //
 // CLCommandQueueVk.cpp: Implements the class methods for CLCommandQueueVk.
+//
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
 
 #include "common/PackedCLEnums_autogen.h"
 #include "common/system_utils.h"

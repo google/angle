@@ -7,6 +7,10 @@
 //    Implements the class methods for SurfaceWgpu.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "libANGLE/renderer/wgpu/SurfaceWgpu.h"
 
 #include "common/debug.h"

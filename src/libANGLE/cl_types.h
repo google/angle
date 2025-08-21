@@ -4,6 +4,11 @@
 // found in the LICENSE file.
 //
 // cl_types.h: Defines common types for the OpenCL support in ANGLE.
+//
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
 
 #ifndef LIBANGLE_CLTYPES_H_
 #define LIBANGLE_CLTYPES_H_

@@ -7,6 +7,10 @@
 //    Implements the class methods for RenderUtils.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "libANGLE/renderer/metal/mtl_render_utils.h"
 
 #include <utility>

@@ -5,6 +5,11 @@
 //
 // ComputeShaderTest:
 //   Compute shader specific tests.
+//
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
 
 #include <vector>
 #include "test_utils/ANGLETest.h"

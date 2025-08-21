@@ -6,6 +6,10 @@
 // OutputSPIRV: Generate SPIR-V from the AST.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "compiler/translator/spirv/OutputSPIRV.h"
 
 #include "angle_gl.h"

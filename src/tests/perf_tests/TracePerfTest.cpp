@@ -3,9 +3,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// TracePerf:
+// TracePerfTest.cpp:
 //   Performance test for ANGLE replaying traces.
 //
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
 
 #include "tests/perf_tests/TracePerfTest.h"
 #include <gtest/gtest.h>

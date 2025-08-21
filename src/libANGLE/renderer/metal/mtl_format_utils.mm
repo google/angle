@@ -8,6 +8,10 @@
 //      to respective MTLPixelFormat and MTLVertexFormat.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "libANGLE/renderer/metal/mtl_format_utils.h"
 
 #include "common/debug.h"

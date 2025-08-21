@@ -7,6 +7,10 @@
 //   Common code for the ANGLE trace replay large trace binary data definition.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #define USE_SYSTEM_ZLIB
 #include "compression_utils_portable.h"
 

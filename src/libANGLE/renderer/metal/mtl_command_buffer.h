@@ -8,6 +8,10 @@
 //    MTLCommandBuffer.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #ifndef LIBANGLE_RENDERER_METAL_COMMANDENBUFFERMTL_H_
 #define LIBANGLE_RENDERER_METAL_COMMANDENBUFFERMTL_H_
 

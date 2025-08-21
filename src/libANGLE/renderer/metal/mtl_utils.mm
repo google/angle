@@ -8,6 +8,10 @@
 //    to Metal enums and so on.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "libANGLE/renderer/metal/mtl_utils.h"
 
 #include <Availability.h>

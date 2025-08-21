@@ -5,6 +5,11 @@
 //
 // TestSuite:
 //   Basic implementation of a test harness in ANGLE.
+//
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
 
 #include "TestSuite.h"
 

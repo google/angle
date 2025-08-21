@@ -4,6 +4,10 @@
 // found in the LICENSE file.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 // mathutil.h: Math and bit manipulation functions.
 
 #ifndef COMMON_MATHUTIL_H_

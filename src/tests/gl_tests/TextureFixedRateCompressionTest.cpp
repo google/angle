@@ -6,6 +6,10 @@
 
 // TextureFixedRateCompressionTest: Tests for GL_EXT_texture_storage_compression
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
 

@@ -4,6 +4,10 @@
 // found in the LICENSE file.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 // loadimage_astc.cpp: Decodes ASTC encoded textures.
 
 #include "image_util/AstcDecompressor.h"

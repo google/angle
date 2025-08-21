@@ -4,6 +4,11 @@
 // found in the LICENSE file.
 //
 // CLMemoryVk.cpp: Implements the class methods for CLMemoryVk.
+//
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
 
 #include "libANGLE/renderer/vulkan/CLMemoryVk.h"
 #include "common/log_utils.h"

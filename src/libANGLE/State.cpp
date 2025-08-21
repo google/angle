@@ -6,6 +6,10 @@
 
 // State.cpp: Implements the State class, encapsulating raw GL state.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "libANGLE/State.h"
 
 #include <string.h>

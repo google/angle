@@ -4,8 +4,12 @@
 // found in the LICENSE file.
 //
 
-// VertexDataManager.h: Defines the VertexDataManager, a class that
+// VertexDataManager.cpp: Defines the VertexDataManager, a class that
 // runs the Buffer translation process.
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
 
 #include "libANGLE/renderer/d3d/VertexDataManager.h"
 

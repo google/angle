@@ -8,6 +8,10 @@
 //      MTLCommandEncoder's wrappers.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_libc_calls
+#endif
+
 #include "libANGLE/renderer/metal/mtl_command_buffer.h"
 
 #include <cassert>

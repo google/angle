@@ -7,6 +7,10 @@
 //   Base class for google test performance tests
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_libc_calls
+#endif
+
 #include "ANGLEPerfTest.h"
 
 #if defined(ANGLE_PLATFORM_ANDROID)

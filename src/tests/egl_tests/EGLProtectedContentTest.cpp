@@ -7,6 +7,10 @@
 //   EGL extension EGL_EXT_protected_content
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include <gtest/gtest.h>
 
 #include <chrono>

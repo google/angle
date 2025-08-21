@@ -4,6 +4,11 @@
 // found in the LICENSE file.
 //
 // CLKernelVk.cpp: Implements the class methods for CLKernelVk.
+//
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_libc_calls
+#endif
 
 #include "common/PackedEnums.h"
 

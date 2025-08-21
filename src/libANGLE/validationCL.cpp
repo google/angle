@@ -6,6 +6,11 @@
 // validationCL.cpp: Validation functions for generic CL entry point parameters
 // based on the OpenCL Specification V3.0.7, see https://www.khronos.org/registry/OpenCL/
 // Each used CL error code is preceeded by a citation of the relevant rule in the spec.
+//
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
 
 #include "libANGLE/cl_utils.h"
 #include "libANGLE/validationCL_autogen.h"

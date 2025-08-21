@@ -6,6 +6,10 @@
 
 // DisplayMtl.mm: Metal implementation of DisplayImpl
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "libANGLE/renderer/metal/DisplayMtl.h"
 #include <sys/param.h>
 

@@ -7,6 +7,10 @@
 //   Helper methods pertaining to most or all back-ends.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "libANGLE/renderer/renderer_utils.h"
 
 #include "common/base/anglebase/numerics/checked_math.h"

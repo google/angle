@@ -7,6 +7,10 @@
 // angle_test_instantiate.h: Adds support for filtering parameterized
 // tests by platform, so we skip unsupported configs.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #ifndef ANGLE_TEST_INSTANTIATE_H_
 #define ANGLE_TEST_INSTANTIATE_H_
 

@@ -6,6 +6,10 @@
 
 // VertexArray9.h: Defines the rx::VertexArray9 class which implements rx::VertexArrayImpl.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #ifndef LIBANGLE_RENDERER_D3D_D3D9_VERTEXARRAY9_H_
 #define LIBANGLE_RENDERER_D3D_D3D9_VERTEXARRAY9_H_
 

@@ -4,6 +4,11 @@
 // found in the LICENSE file.
 //
 // CLCommandQueueCL.cpp: Implements the class methods for CLCommandQueueCL.
+//
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
 
 #include "libANGLE/renderer/cl/CLCommandQueueCL.h"
 

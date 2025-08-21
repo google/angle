@@ -6,6 +6,10 @@
 
 // validationEGL.cpp: Validation functions for generic EGL entry point parameters
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "libANGLE/validationEGL_autogen.h"
 
 #include "common/utilities.h"

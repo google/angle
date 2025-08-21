@@ -7,6 +7,10 @@
 //    Implements the class methods for DisplayVkLinux.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_libc_calls
+#endif
+
 #include "libANGLE/renderer/vulkan/linux/DisplayVkLinux.h"
 
 #include "common/linux/dma_buf_utils.h"

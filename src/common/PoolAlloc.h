@@ -7,6 +7,10 @@
 //    Defines the class interface for PoolAllocator.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #ifndef COMMON_POOLALLOC_H_
 #define COMMON_POOLALLOC_H_
 

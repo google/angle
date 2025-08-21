@@ -4,6 +4,10 @@
 // found in the LICENSE file.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #ifndef LIBANGLE_RENDERER_WGPU_WGPU_COMMAND_BUFFER_H_
 #define LIBANGLE_RENDERER_WGPU_WGPU_COMMAND_BUFFER_H_
 

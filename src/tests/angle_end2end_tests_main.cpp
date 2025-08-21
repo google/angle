@@ -4,6 +4,10 @@
 // found in the LICENSE file.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "gtest/gtest.h"
 #if defined(ANGLE_HAS_RAPIDJSON)
 #    include "test_utils/runner/TestSuite.h"

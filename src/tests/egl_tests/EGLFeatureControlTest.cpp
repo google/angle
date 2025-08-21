@@ -6,6 +6,10 @@
 // Tests the eglQueryStringiANGLE and eglQueryDisplayAttribANGLE functions exposed by the
 // extension EGL_ANGLE_feature_control.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include <gtest/gtest.h>
 #include <optional>
 

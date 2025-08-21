@@ -6,6 +6,10 @@
 // vk_helpers:
 //   Helper utility classes that manage Vulkan resources.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "libANGLE/renderer/vulkan/vk_helpers.h"
 
 #include "common/aligned_memory.h"

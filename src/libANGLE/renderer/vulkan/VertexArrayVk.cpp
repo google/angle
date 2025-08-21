@@ -7,6 +7,10 @@
 //    Implements the class methods for VertexArrayVk.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "libANGLE/renderer/vulkan/VertexArrayVk.h"
 
 #include "common/debug.h"

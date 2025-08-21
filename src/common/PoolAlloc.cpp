@@ -7,6 +7,10 @@
 //    Implements the class methods for PoolAllocator and Allocation classes.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "common/PoolAlloc.h"
 
 #include <assert.h>

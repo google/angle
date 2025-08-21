@@ -5,6 +5,10 @@
 //
 // CollectVariables.cpp: Collect lists of shader interface variables based on the AST.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "compiler/translator/CollectVariables.h"
 
 #include "angle_gl.h"

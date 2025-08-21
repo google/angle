@@ -7,6 +7,10 @@
 //   ANGLE Frame capture common classes.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "common/frame_capture_utils.h"
 
 namespace angle

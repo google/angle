@@ -7,6 +7,10 @@
 //   Tests for StaticType, TType and BasicType.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "angle_gl.h"
 #include "compiler/translator/PoolAlloc.h"
 #include "compiler/translator/StaticType.h"

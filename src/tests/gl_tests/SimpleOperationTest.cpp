@@ -5,6 +5,11 @@
 //
 // SimpleOperationTest:
 //   Basic GL commands such as linking a program, initializing a buffer, etc.
+//
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
 
 #include "test_utils/ANGLETest.h"
 

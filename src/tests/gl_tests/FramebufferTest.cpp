@@ -3,9 +3,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// Framebuffer tests:
+// FramebufferTest.cpp:
 //   Various tests related for Frambuffers.
 //
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
 
 #include "common/mathutil.h"
 #include "platform/autogen/FeaturesD3D_autogen.h"

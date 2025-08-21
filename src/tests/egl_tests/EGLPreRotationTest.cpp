@@ -7,6 +7,10 @@
 //   Tests pertaining to Android pre-rotation.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include <gtest/gtest.h>
 
 #include <vector>

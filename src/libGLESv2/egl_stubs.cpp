@@ -6,6 +6,10 @@
 // egl_stubs.cpp: Stubs for EGL entry points.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "libGLESv2/egl_stubs_autogen.h"
 
 #include "common/angle_version_info.h"

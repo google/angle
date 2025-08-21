@@ -4,6 +4,10 @@
 // found in the LICENSE file.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_libc_calls
+#endif
+
 // system_utils_posix.cpp: Implementation of POSIX OS-specific functions.
 
 #include "common/debug.h"

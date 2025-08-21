@@ -6,6 +6,10 @@
 
 // GLES1Renderer.cpp: Implements the GLES1Renderer renderer.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "libANGLE/GLES1Renderer.h"
 
 #include <string.h>

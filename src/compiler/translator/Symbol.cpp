@@ -6,6 +6,10 @@
 // Symbol.cpp: Symbols representing variables, functions, structures and interface blocks.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #if defined(_MSC_VER)
 #    pragma warning(disable : 4718)
 #endif

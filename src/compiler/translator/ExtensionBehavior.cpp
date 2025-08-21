@@ -6,6 +6,10 @@
 // ExtensionBehavior.cpp: Extension name enumeration and data structures for storing extension
 // behavior.
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "compiler/translator/ExtensionBehavior.h"
 
 #include "common/debug.h"

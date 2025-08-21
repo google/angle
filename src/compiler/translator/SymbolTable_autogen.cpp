@@ -24217,9 +24217,7 @@ namespace
 uint16_t GetNextRuleIndex(uint32_t nameHash)
 {
     if (nameHash == 1429 - 1)
-    {
         return ArraySize(BuiltInArray::kRules);
-    }
     return BuiltInArray::kMangledOffsets[nameHash + 1];
 }
 }  // namespace
@@ -24231,9 +24229,7 @@ const TSymbol *TSymbolTable::findBuiltIn(const ImmutableString &name, int shader
 
     uint32_t nameHash = name.mangledNameHash();
     if (nameHash >= 1429)
-    {
         return nullptr;
-    }
 
     const char *actualName = BuiltInArray::kMangledNames[nameHash];
     if (name != actualName)

@@ -4,6 +4,11 @@
 // found in the LICENSE file.
 //
 // CLDeviceVk.cpp: Implements the class methods for CLDeviceVk.
+//
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
 
 #include "libANGLE/renderer/vulkan/CLDeviceVk.h"
 #include "libANGLE/renderer/vulkan/clspv_utils.h"

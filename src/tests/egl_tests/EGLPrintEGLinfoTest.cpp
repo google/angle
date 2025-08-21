@@ -7,6 +7,10 @@
 //   This test prints out the extension strings, configs and their attributes
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include <gtest/gtest.h>
 
 #include "common/string_utils.h"

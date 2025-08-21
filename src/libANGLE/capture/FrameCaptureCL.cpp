@@ -6,6 +6,11 @@
 // FrameCaptureCL.cpp:
 //   ANGLE CL Frame capture implementation.
 //
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "libANGLE/capture/FrameCapture.h"
 
 #include "common/angle_version_info.h"

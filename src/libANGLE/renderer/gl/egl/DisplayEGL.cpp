@@ -6,6 +6,10 @@
 
 // DisplayEGL.cpp: Common across EGL parts of platform specific egl::Display implementations
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_libc_calls
+#endif
+
 #include "libANGLE/renderer/gl/egl/DisplayEGL.h"
 
 #include "common/debug.h"

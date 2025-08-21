@@ -6,6 +6,10 @@
 
 // StateManager11.cpp: Defines a class for caching D3D11 state
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "libANGLE/renderer/d3d/d3d11/StateManager11.h"
 
 #include "common/angleutils.h"

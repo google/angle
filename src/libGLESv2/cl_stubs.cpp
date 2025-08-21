@@ -4,6 +4,11 @@
 // found in the LICENSE file.
 //
 // cl_stubs.cpp: Stubs for CL entry points.
+//
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
 
 #include "libANGLE/cl_utils.h"
 #include "libGLESv2/cl_stubs_autogen.h"

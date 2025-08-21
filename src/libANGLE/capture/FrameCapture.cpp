@@ -7,6 +7,10 @@
 //   ANGLE Frame capture GL implementation.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "libANGLE/capture/FrameCapture.h"
 
 #include <cerrno>

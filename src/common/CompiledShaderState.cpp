@@ -8,6 +8,10 @@
 //   shader variables.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "common/CompiledShaderState.h"
 
 #include <cstring>

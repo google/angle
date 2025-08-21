@@ -7,6 +7,10 @@
 //   ANGLE Frame capture implementation for both GL and CL.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "libANGLE/capture/FrameCapture.h"
 
 #define USE_SYSTEM_ZLIB

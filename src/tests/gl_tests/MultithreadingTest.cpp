@@ -4,6 +4,11 @@
 // found in the LICENSE file.
 //
 // MulithreadingTest.cpp : Tests of multithreaded rendering
+//
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
 
 #include "test_utils/ANGLETest.h"
 #include "test_utils/MultiThreadSteps.h"

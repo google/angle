@@ -4,6 +4,11 @@
 // found in the LICENSE file.
 //
 // validationESEXT.cpp: Validation functions for OpenGL ES extension entry points.
+//
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
 
 #include "libANGLE/validationESEXT_autogen.h"
 

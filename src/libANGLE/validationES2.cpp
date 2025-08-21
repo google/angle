@@ -6,6 +6,10 @@
 
 // validationES2.cpp: Validation functions for OpenGL ES 2.0 entry point parameters
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "libANGLE/validationES2_autogen.h"
 
 #include <cstdint>
