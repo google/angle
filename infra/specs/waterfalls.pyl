@@ -35,6 +35,8 @@
         'mixins': [
           'gpu-swarming-pool',
           'samsung_s24',
+          # crbug.com/419062315
+          'no_tombstones',
         ],
         'test_suites': {
           'gtest_tests': 'android_vulkan_gtests',

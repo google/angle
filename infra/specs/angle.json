@@ -645,7 +645,8 @@
         "args": [
           "--use-angle=vulkan",
           "-v",
-          "--shard-timeout=500"
+          "--shard-timeout=500",
+          "--do-not-store-tombstones"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -671,7 +672,8 @@
         "args": [
           "--use-angle=vulkan",
           "-v",
-          "--shard-timeout=500"
+          "--shard-timeout=500",
+          "--do-not-store-tombstones"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -697,7 +699,8 @@
         "args": [
           "--use-angle=vulkan",
           "-v",
-          "--shard-timeout=500"
+          "--shard-timeout=500",
+          "--do-not-store-tombstones"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -722,7 +725,8 @@
         "args": [
           "--use-angle=vulkan",
           "-v",
-          "--shard-timeout=500"
+          "--shard-timeout=500",
+          "--do-not-store-tombstones"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -747,7 +751,8 @@
         "args": [
           "--use-angle=vulkan",
           "-v",
-          "--shard-timeout=500"
+          "--shard-timeout=500",
+          "--do-not-store-tombstones"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -773,7 +778,8 @@
         "args": [
           "--use-angle=vulkan",
           "-v",
-          "--shard-timeout=500"
+          "--shard-timeout=500",
+          "--do-not-store-tombstones"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -798,7 +804,8 @@
         "args": [
           "--use-angle=vulkan",
           "-v",
-          "--shard-timeout=500"
+          "--shard-timeout=500",
+          "--do-not-store-tombstones"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -823,7 +830,8 @@
         "args": [
           "--use-angle=vulkan",
           "-v",
-          "--shard-timeout=500"
+          "--shard-timeout=500",
+          "--do-not-store-tombstones"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -852,7 +860,8 @@
           "--surface-width=64",
           "--deqp-base-seed=1",
           "-v",
-          "--shard-timeout=500"
+          "--shard-timeout=500",
+          "--do-not-store-tombstones"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -880,7 +889,8 @@
           "--surface-width=64",
           "--deqp-base-seed=1",
           "-v",
-          "--shard-timeout=500"
+          "--shard-timeout=500",
+          "--do-not-store-tombstones"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -908,7 +918,8 @@
           "--surface-height=64",
           "--surface-width=64",
           "-v",
-          "--shard-timeout=500"
+          "--shard-timeout=500",
+          "--do-not-store-tombstones"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -936,7 +947,8 @@
           "--surface-width=113",
           "--surface-height=47",
           "-v",
-          "--shard-timeout=500"
+          "--shard-timeout=500",
+          "--do-not-store-tombstones"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -965,7 +977,8 @@
           "--surface-height=64",
           "--deqp-gl-config-name=rgba8888d24s8",
           "-v",
-          "--shard-timeout=500"
+          "--shard-timeout=500",
+          "--do-not-store-tombstones"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -994,7 +1007,8 @@
           "--surface-height=-1",
           "--deqp-gl-config-name=rgba8888d24s8",
           "-v",
-          "--shard-timeout=500"
+          "--shard-timeout=500",
+          "--do-not-store-tombstones"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -1022,7 +1036,8 @@
           "--surface-width=64",
           "--deqp-base-seed=1",
           "-v",
-          "--shard-timeout=500"
+          "--shard-timeout=500",
+          "--do-not-store-tombstones"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -1050,7 +1065,8 @@
           "--surface-width=64",
           "--deqp-base-seed=1",
           "-v",
-          "--shard-timeout=500"
+          "--shard-timeout=500",
+          "--do-not-store-tombstones"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -1075,7 +1091,8 @@
         "args": [
           "--use-angle=vulkan",
           "-v",
-          "--shard-timeout=500"
+          "--shard-timeout=500",
+          "--do-not-store-tombstones"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -1100,7 +1117,8 @@
         "args": [
           "--use-angle=vulkan",
           "-v",
-          "--shard-timeout=500"
+          "--shard-timeout=500",
+          "--do-not-store-tombstones"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -1125,7 +1143,8 @@
         "args": [
           "--use-angle=vulkan",
           "-v",
-          "--shard-timeout=500"
+          "--shard-timeout=500",
+          "--do-not-store-tombstones"
         ],
         "merge": {
           "script": "//scripts/angle_deqp_test_merge.py"
@@ -1151,7 +1170,8 @@
           "--gtest_filter=*Vulkan*:-*Vulkan_SwiftShader*",
           "--shard-timeout=300",
           "-v",
-          "--render-test-output-dir=${ISOLATED_OUTDIR}"
+          "--render-test-output-dir=${ISOLATED_OUTDIR}",
+          "--do-not-store-tombstones"
         ],
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
@@ -1175,7 +1195,8 @@
       },
       {
         "args": [
-          "-v"
+          "-v",
+          "--do-not-store-tombstones"
         ],
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
@@ -1203,7 +1224,8 @@
           "--test-machine-name",
           "${buildername}",
           "-v",
-          "--git-revision=${got_angle_revision}"
+          "--git-revision=${got_angle_revision}",
+          "--do-not-store-tombstones"
         ],
         "merge": {
           "script": "//testing/merge_scripts/standard_isolated_script_merge.py"
