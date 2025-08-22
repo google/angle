@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 381
+#define ANGLE_SH_VERSION 382
 
 enum ShShaderSpec
 {
@@ -472,6 +472,8 @@ struct ShCompileOptions
     // Do not preform any shader validation or perform any shader transformations. Shader state can
     // still be reflected.
     uint64_t skipAllValidationAndTransforms : 1;
+
+    uint64_t transformFloatUniformTo16Bits : 1;
 
     ShCompileOptionsMetal metal;
     ShPixelLocalStorageOptions pls;
@@ -1146,6 +1148,15 @@ enum ReservedIds
     kIdInputAttachment7 = kIdInputAttachment0 + 7,
     kIdDepthInputAttachment,
     kIdStencilInputAttachment,
+
+    // 16-bit storage extension
+    kIdFloat16,
+    kIdFloat16Vec2,
+    kIdFloat16Vec3,
+    kIdFloat16Vec4,
+    kIdFloat16Mat2,
+    kIdFloat16Mat3,
+    kIdFloat16Mat4,
 
     kIdFirstUnreserved,
 };

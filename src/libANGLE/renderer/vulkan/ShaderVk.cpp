@@ -141,6 +141,11 @@ std::shared_ptr<ShaderTranslateTask> ShaderVk::compile(const gl::Context *contex
 
     options->removeInactiveVariables = true;
 
+    if (contextVk->getFeatures().convertLowpAndMediumpFloatUniformsTo16Bits.enabled)
+    {
+        options->transformFloatUniformTo16Bits = true;
+    }
+
     // The Vulkan backend needs no post-processing of the translated shader.
     return std::shared_ptr<ShaderTranslateTask>(new ShaderTranslateTask);
 }

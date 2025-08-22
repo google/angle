@@ -41,7 +41,8 @@ bool operator==(const SpirvType &a, const SpirvType &b)
                a.typeSpec.isInvariantBlock == b.typeSpec.isInvariantBlock &&
                a.typeSpec.isRowMajorQualifiedBlock == b.typeSpec.isRowMajorQualifiedBlock &&
                a.typeSpec.isPatchIOBlock == b.typeSpec.isPatchIOBlock &&
-               a.typeSpec.isOrHasBoolInInterfaceBlock == b.typeSpec.isOrHasBoolInInterfaceBlock;
+               a.typeSpec.isOrHasBoolInInterfaceBlock == b.typeSpec.isOrHasBoolInInterfaceBlock &&
+               a.typeSpec.precision == b.typeSpec.precision;
     }
 
     // Otherwise, match by the type contents.  The AST transformations sometimes recreate types that
@@ -51,7 +52,8 @@ bool operator==(const SpirvType &a, const SpirvType &b)
            a.isSamplerBaseImage == b.isSamplerBaseImage &&
            a.typeSpec.blockStorage == b.typeSpec.blockStorage &&
            a.typeSpec.isRowMajorQualifiedArray == b.typeSpec.isRowMajorQualifiedArray &&
-           a.typeSpec.isOrHasBoolInInterfaceBlock == b.typeSpec.isOrHasBoolInInterfaceBlock;
+           a.typeSpec.isOrHasBoolInInterfaceBlock == b.typeSpec.isOrHasBoolInInterfaceBlock &&
+           a.typeSpec.precision == b.typeSpec.precision;
 }
 
 namespace
@@ -381,7 +383,9 @@ void ApplyDecorations(spirv::IdRef id,
 }
 }  // anonymous namespace
 
-void SpirvTypeSpec::inferDefaults(const TType &type, TCompiler *compiler)
+void SpirvTypeSpec::inferDefaults(const TType &type,
+                                  TCompiler *compiler,
+                                  const bool transformFloatUniformToFP16)
 {
     // Infer some defaults based on type.  If necessary, this overrides some fields (if not already
     // specified).  Otherwise, it leaves the pre-initialized values as-is.
@@ -422,11 +426,63 @@ void SpirvTypeSpec::inferDefaults(const TType &type, TCompiler *compiler)
                                           type.getBasicType() == EbtBool;
         }
 
+        if (precision == SPIRVPrecisionChoice::Unset)
+        {
+            // For a struct uniform and a float uniform declared as below:
+            // struct combo {
+            //   float a;
+            // };
+            // uniform float floatUniform;
+            // uniform combo comboUniform;
+
+            // ANGLE creates a UBO defaultUniform and places both uniforms into the UBO:
+            // uniform UniformBufferObject {
+            //      float floatUniform;
+            //      combo comboUniform;
+            // } defaultUniform
+
+            // defaultUniform: EbtInterfaceBlock
+            // defaultUniform.floatUniform: EbtFloat
+            // defaultUniform.comboUniform: EbtStruct
+
+            // We need to set precision to UseFP16 for EbtInterfaceBlock so that the
+            // OpTypeStruct instruction generated for defaultUniform is using halfFloat for its'
+            // members:
+            // %defaultUniformStruct = OpTypeStruct %typeComboStruct %halfFloat
+
+            // We need to set precision to UseFP16 for EbtFloat so that OpAccessChain
+            // instruction generated for accessing defaultUniform.floatUniform is using halfFloat:
+            // %floatUniformPtr = OpAccessChain %halfFloatUniformPtr %defaultUniformVar %const0
+
+            // We need to set precision to UseFP16 to EbtStruct so that OpAccessChain
+            // instruction generate for accessing defaultUniform.comboUniform.a is using halfFloat
+            // %floatUniformPtr = OpAccessChain %halfFloatUniformPtr %defaultUniformVar %const1
+            // %const0
+
+            if ((type.getBasicType() == EbtInterfaceBlock || type.getBasicType() == EbtFloat ||
+                 type.getBasicType() == EbtStruct) &&
+                type.getQualifier() == EvqUniform &&
+                (type.getInterfaceBlock() != nullptr &&
+                 type.getInterfaceBlock()->isDefaultUniformBlock()) &&
+                type.getPrecision() < EbpHigh)
+            {
+                precision = transformFloatUniformToFP16 ? SPIRVPrecisionChoice::UseFP16
+                                                        : SPIRVPrecisionChoice::Default;
+            }
+        }
+
         if (!isPatchIOBlock && type.isInterfaceBlock())
         {
             isPatchIOBlock =
                 type.getQualifier() == EvqPatchIn || type.getQualifier() == EvqPatchOut;
         }
+    }
+
+    // Make sure precision is set to Default before exiting this function.
+    // This is required before saving SpirvType to SPIRVBuilder.mTypeMap.
+    if (precision == SPIRVPrecisionChoice::Unset)
+    {
+        precision = SPIRVPrecisionChoice::Default;
     }
 
     // |invariant| is significant for structs as the fields of the type are decorated with Invariant
@@ -476,6 +532,25 @@ void SpirvTypeSpec::onBlockFieldSelection(const TType &fieldType)
         {
             isOrHasBoolInInterfaceBlock = false;
         }
+
+        // If the entire interface block is marked with UseFP16, but the individual component is not
+        // 16-bit float, reset the precision to Default
+        // For example, following uniforms:
+        // uniform float uniF;
+        // uniform int uniI;
+        // is grouped in:
+        // struct defaultUniform {
+        //    float unifF;
+        //    int uniI;
+        // }
+        // defaultUniform is processed first and has precision set to UseFP16.
+        // When processing defaultUniform's fields, we should set precision to Default
+        // for uniI.
+        if (precision == SPIRVPrecisionChoice::UseFP16 &&
+            (fieldType.getBasicType() != EbtFloat || fieldType.getPrecision() >= EbpHigh))
+        {
+            precision = SPIRVPrecisionChoice::Default;
+        }
     }
     else
     {
@@ -524,6 +599,13 @@ SPIRVBuilder::SPIRVBuilder(TCompiler *compiler,
 {
     // The Shader capability is always defined.
     addCapability(spv::CapabilityShader);
+
+    // Add Float16 Capability if we are going to transform mediump and lowp float uniforms to 16
+    // bits.
+    if (mCompileOptions.transformFloatUniformTo16Bits)
+    {
+        addCapability(spv::CapabilityFloat16);
+    }
 
     // Add Geometry or Tessellation capabilities based on shader type.
     if (mCompiler->getShaderType() == GL_GEOMETRY_SHADER)
@@ -602,7 +684,8 @@ SpirvType SPIRVBuilder::getSpirvType(const TType &type, const SpirvTypeSpec &typ
 
     // Automatically inherit or infer the type-specializing properties.
     spirvType.typeSpec = typeSpec;
-    spirvType.typeSpec.inferDefaults(type, mCompiler);
+    spirvType.typeSpec.inferDefaults(type, mCompiler,
+                                     mCompileOptions.transformFloatUniformTo16Bits);
 
     return spirvType;
 }
@@ -653,6 +736,14 @@ const SpirvTypeData &SPIRVBuilder::getSpirvTypeData(const SpirvType &type, const
         return getSpirvTypeData(uintType, block);
     }
 
+    if (type.typeSpec.precision == SPIRVPrecisionChoice::Unset)
+    {
+        SpirvType correctedType          = type;
+        correctedType.typeSpec.precision = SPIRVPrecisionChoice::Default;
+        return getSpirvTypeData(correctedType, block);
+    }
+
+    ASSERT(type.typeSpec.precision != SPIRVPrecisionChoice::Unset);
     auto iter = mTypeMap.find(type);
     if (iter == mTypeMap.end())
     {
@@ -790,12 +881,14 @@ void SPIRVBuilder::predefineCommonTypes()
     // void: used by OpExtInst non-semantic instructions. This type is always present due to void
     // main().
     type.type = EbtVoid;
+    type.typeSpec.precision = SPIRVPrecisionChoice::Default;
     id        = spirv::IdRef(kIdVoid);
     mTypeMap.insert({type, {id}});
     spirv::WriteTypeVoid(&mSpirvTypeAndConstantDecls, id);
 
     // float, vec and mat types
     type.type = EbtFloat;
+    type.typeSpec.precision = SPIRVPrecisionChoice::Default;
     id        = spirv::IdRef(kIdFloat);
     mTypeMap.insert({type, {id}});
     spirv::WriteTypeFloat(&mSpirvTypeAndConstantDecls, id, spirv::LiteralInteger(32), nullptr);
@@ -827,6 +920,7 @@ void SPIRVBuilder::predefineCommonTypes()
 
     type.primarySize   = 1;
     type.secondarySize = 1;
+    type.typeSpec.precision = SPIRVPrecisionChoice::Default;
 
     // Integer types
     type.type = EbtUInt;
@@ -898,6 +992,43 @@ void SPIRVBuilder::predefineCommonTypes()
             mTypePointerIdMap.insert({key, typePointerId});
         }
     }
+
+    if (mCompileOptions.transformFloatUniformTo16Bits)
+    {
+        // Add declarations for 16-bit float types
+        // 16-bit float (half float)
+        type.type               = EbtFloat;
+        type.primarySize        = 1;
+        type.secondarySize      = 1;
+        type.typeSpec.precision = SPIRVPrecisionChoice::UseFP16;
+        id                      = spirv::IdRef(kIdFloat16);
+        mTypeMap.insert({type, {id}});
+        spirv::WriteTypeFloat(&mSpirvTypeAndConstantDecls, id, spirv::LiteralInteger(16), nullptr);
+        // vecN ids equal vec2 id + (vec size - 2)
+        static_assert(kIdFloat16Vec3 == kIdFloat16Vec2 + 1);
+        static_assert(kIdFloat16Vec4 == kIdFloat16Vec2 + 2);
+        // mat type ids equal mat2 id + (primary - 2)
+        // Note that only square matrices are needed.
+        static_assert(kIdFloat16Mat3 == kIdFloat16Mat2 + 1);
+        static_assert(kIdFloat16Mat4 == kIdFloat16Mat2 + 2);
+        for (uint8_t vecSize = 2; vecSize <= 4; ++vecSize)
+        {
+            // 16-bit vec2 (half2), 16-bit vec3 (half3), 16-bit vec4 (half4)
+            type.primarySize         = vecSize;
+            type.secondarySize       = 1;
+            const spirv::IdRef vecId = spirv::IdRef(kIdFloat16Vec2 + (vecSize - 2));
+            mTypeMap.insert({type, {vecId}});
+            spirv::WriteTypeVector(&mSpirvTypeAndConstantDecls, vecId, spirv::IdRef(kIdFloat16),
+                                   spirv::LiteralInteger(vecSize));
+
+            // 16-bit mat2, 16-bit mat3, 16-bit mat4
+            type.secondarySize       = vecSize;
+            const spirv::IdRef matId = spirv::IdRef(kIdFloat16Mat2 + (vecSize - 2));
+            mTypeMap.insert({type, {matId}});
+            spirv::WriteTypeMatrix(&mSpirvTypeAndConstantDecls, matId, vecId,
+                                   spirv::LiteralInteger(vecSize));
+        }
+    }
 }
 
 void SPIRVBuilder::writeDebugName(spirv::IdRef id, const char *name)
@@ -932,6 +1063,7 @@ void SPIRVBuilder::writeBlockDebugNames(const TFieldListCollection *block,
 
 SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const TSymbol *block)
 {
+    ASSERT(type.typeSpec.precision != SPIRVPrecisionChoice::Unset);
     // Recursively declare the type.  Type id is allocated afterwards purely for better id order in
     // output.
     spirv::IdRef typeId;

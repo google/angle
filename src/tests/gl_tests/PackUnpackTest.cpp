@@ -223,7 +223,8 @@ TEST_P(PackUnpackTest, PackUnpackHalfZero)
 TEST_P(PackUnpackTest, PackUnpackUnormOverflow)
 {
     // Expect the shader to clamp the input to [0, 1]
-    compareBeforeAfter(mUNormProgram, 67000.0f, -67000.0f, 1.0f, 0.0f);
+    // mediump float data range is [2^-14, 2^14]
+    compareBeforeAfter(mUNormProgram, 16384.0f, -16384.0f, 1.0f, 0.0f);
 }
 
 // Test the correctness of packSnorm2x16 and unpackSnorm2x16 functions calculating overflow floating
@@ -231,7 +232,8 @@ TEST_P(PackUnpackTest, PackUnpackUnormOverflow)
 TEST_P(PackUnpackTest, PackUnpackSnormOverflow)
 {
     // Expect the shader to clamp the input to [-1, 1]
-    compareBeforeAfter(mSNormProgram, 67000.0f, -67000.0f, 1.0f, -1.0f);
+    // mediump float data range is [2^-14, 2^14]
+    compareBeforeAfter(mSNormProgram, 16384.0f, -16384.0f, 1.0f, -1.0f);
 }
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(PackUnpackTest);
