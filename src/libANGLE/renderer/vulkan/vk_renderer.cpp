@@ -2985,6 +2985,7 @@ angle::Result Renderer::initializeMemoryAllocator(vk::ErrorContext *context)
 // - VK_QCOM_tile_memory_heap                          tileMemoryHeapFeatures (feature)
 //                                                     tileMemoryHeapProperties (property)
 // - VK_EXT_texture_compression_astc_3d                textureCompressionASTC_3D (feature)
+// - VK_AMD_shader_core_properties
 //
 
 void Renderer::appendDeviceExtensionFeaturesNotPromoted(
@@ -3200,6 +3201,11 @@ void Renderer::appendDeviceExtensionFeaturesNotPromoted(
     {
         vk::AddToPNextChain(deviceFeatures, &mTileMemoryHeapFeatures);
         vk::AddToPNextChain(deviceProperties, &mTileMemoryHeapProperties);
+    }
+
+    if (ExtensionFound(VK_AMD_SHADER_CORE_PROPERTIES_EXTENSION_NAME, deviceExtensionNames))
+    {
+        vk::AddToPNextChain(deviceProperties, &mShaderCorePropertiesAMD);
     }
 }
 
@@ -3682,6 +3688,9 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
     mTileMemoryHeapProperties.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TILE_MEMORY_HEAP_PROPERTIES_QCOM;
 
+    mShaderCorePropertiesAMD       = {};
+    mShaderCorePropertiesAMD.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_CORE_PROPERTIES_AMD;
+
     // Query features and properties.
     VkPhysicalDeviceFeatures2KHR deviceFeatures = {};
     deviceFeatures.sType                        = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
@@ -3775,6 +3784,7 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
 #endif
     mTileMemoryHeapFeatures.pNext   = nullptr;
     mTileMemoryHeapProperties.pNext = nullptr;
+    mShaderCorePropertiesAMD.pNext  = nullptr;
 }
 
 // See comment above appendDeviceExtensionFeaturesNotPromoted.  Additional extensions are enabled
@@ -3801,6 +3811,7 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
 // - VK_EXT_full_screen_exclusive
 // - VK_EXT_image_compression_control
 // - VK_EXT_image_compression_control_swapchain
+// - VK_AMD_shader_core_properties
 //
 void Renderer::enableDeviceExtensionsNotPromoted(const vk::ExtensionNameList &deviceExtensionNames)
 {
@@ -4161,6 +4172,11 @@ void Renderer::enableDeviceExtensionsNotPromoted(const vk::ExtensionNameList &de
     {
         mEnabledDeviceExtensions.push_back(VK_QCOM_TILE_MEMORY_HEAP_EXTENSION_NAME);
         vk::AddToPNextChain(&mEnabledFeatures, &mTileMemoryHeapFeatures);
+    }
+
+    if (getFeatures().supportsAmdShaderCoreProperties.enabled)
+    {
+        mEnabledDeviceExtensions.push_back(VK_AMD_SHADER_CORE_PROPERTIES_EXTENSION_NAME);
     }
 }
 
@@ -6970,6 +6986,10 @@ void Renderer::initOpenCLFeatures(const vk::ExtensionNameList &deviceExtensionNa
     ANGLE_FEATURE_CONDITION(&mFeatures, usesNativeBuiltinClKernel, isSamsung);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, debugClDumpCommandStream, false);
+
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsAmdShaderCoreProperties,
+        ExtensionFound(VK_AMD_SHADER_CORE_PROPERTIES_EXTENSION_NAME, deviceExtensionNames));
 
     // Set limits to expose to OpenCL.
     // This information cannot yet be queried from the Vulkan device.

@@ -338,7 +338,7 @@ angle::Result CLKernelVk::createInfo(CLKernelImpl::Info *info) const
         workGroup.privateMemSize = 0;
         workGroup.localMemSize   = 0;
 
-        workGroup.prefWorkGroupSizeMultiple = 16u;
+        workGroup.prefWorkGroupSizeMultiple = deviceVk->getWorkGroupSizeMultiple();
         workGroup.globalWorkSize            = {0, 0, 0};
         if (deviceProgramData->reflectionData.kernelCompileWorkgroupSize.contains(mName))
         {

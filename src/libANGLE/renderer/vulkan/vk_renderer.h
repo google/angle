@@ -34,6 +34,7 @@
 #include "libANGLE/renderer/vulkan/vk_internal_shaders_autogen.h"
 #include "libANGLE/renderer/vulkan/vk_mem_alloc_wrapper.h"
 #include "libANGLE/renderer/vulkan/vk_resource.h"
+#include "vulkan/vulkan_core.h"
 
 namespace angle
 {
@@ -198,6 +199,10 @@ class Renderer : angle::NonCopyable
     const VkPhysicalDeviceSubgroupProperties &getPhysicalDeviceSubgroupProperties() const
     {
         return mSubgroupProperties;
+    }
+    const VkPhysicalDeviceShaderCorePropertiesAMD &getPhysicalDeviceShaderCorePropertiesAMD() const
+    {
+        return mShaderCorePropertiesAMD;
     }
 
     const VkPhysicalDeviceFeatures &getPhysicalDeviceFeatures() const
@@ -933,6 +938,7 @@ class Renderer : angle::NonCopyable
     VkPhysicalDeviceTileMemoryHeapFeaturesQCOM mTileMemoryHeapFeatures;
     VkPhysicalDeviceTileMemoryHeapPropertiesQCOM mTileMemoryHeapProperties;
     VkPhysicalDeviceTextureCompressionASTC3DFeaturesEXT mTextureCompressionASTC3DFeatures;
+    VkPhysicalDeviceShaderCorePropertiesAMD mShaderCorePropertiesAMD;
 
     uint32_t mLegacyDitheringVersion = 0;
 
