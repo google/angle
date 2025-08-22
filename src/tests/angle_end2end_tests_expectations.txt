@@ -414,10 +414,6 @@ b/390710636 LINUX NVIDIA VULKAN : TextureBorderClampTestES32.CustomBorderColorWi
 40644822 MAC INTEL METAL : CompressedTexturePVRTC1SRGBTest.Test/ES3_Metal__SRGB_PVRTC_2BPPV1 = SKIP
 42263887 MAC METAL AMD : TransformFeedbackTest.BufferOutOfMemory/* = SKIP
 42263887 MAC METAL INTEL : TransformFeedbackTest.BufferOutOfMemory/* = SKIP
-
-// Old Macs can't run these and there's apparently no way to filter the old Macs
-// from running these tests at the moment.
-
 40644829 MAC NVIDIA METAL : GLSLTest_ES3.DynamicIndexingOfSwizzledLValuesShouldWork/* = SKIP
 40644829 MAC NVIDIA METAL : GLSLTest_ES3.WriteIntoDynamicIndexingOfSwizzledVector/* = SKIP
 40644830 MAC NVIDIA METAL : PointSpritesTest.PointCoordRegressionTest/* = SKIP
@@ -439,17 +435,15 @@ b/390710636 LINUX NVIDIA VULKAN : TextureBorderClampTestES32.CustomBorderColorWi
 40644823 MAC NVIDIA METAL : UniformBlockWithOneLargeArrayMemberTest.TwoUniformBlocksInSameProgram/* = SKIP
 40644823 MAC NVIDIA METAL : UniformBlockWithOneLargeArrayMemberTest.SharedSameBufferWithOtherOne/* = SKIP
 40644823 MAC NVIDIA METAL : UniformBlockWithOneLargeArrayMemberTest.MemberTypeIsStruct/* = SKIP
-
 42265550 MAC METAL INTEL : MultisampleResolveTest.ResolveD32FS8F4Samples/ES3_Metal_AlwaysResolveMultisampleRenderBuffers = SKIP
 42265550 MAC METAL INTEL : MultisampleResolveTest.ResolveD24S8Samples/ES3_Metal_AlwaysResolveMultisampleRenderBuffers = SKIP
 42265550 MAC METAL INTEL : MultisampleResolveTest.ResolveD32FSamples/ES3_Metal_AlwaysResolveMultisampleRenderBuffers = SKIP
 42265550 MAC METAL INTEL : MultisampleResolveTest.ResolveD24Samples/ES3_Metal_AlwaysResolveMultisampleRenderBuffers = SKIP
 42265550 MAC METAL INTEL : MultisampleResolveTest.ResolveD16Samples/ES3_Metal_AlwaysResolveMultisampleRenderBuffers = SKIP
-
 40644744 MAC METAL INTEL : BlitFramebufferTest.MultisampleDepth/* = SKIP
 40644744 MAC METAL AMD : BlitFramebufferTest.MultisampleDepth/* = SKIP
-
 40644777 MAC METAL AMD : ColorMaskForDrawBuffersTest.Blit/* = SKIP
+440536251 MAC METAL AMD : GLSLTest_ES3.ManySamplerFieldsInStructComplex/* = SKIP
 
 // The workaround is not intended to be enabled in this configuration so
 // skip it as the failure is likely a driver bug.
