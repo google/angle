@@ -246,6 +246,7 @@ enum class Feature
     PreAddTexelFetchOffsets,
     PreemptivelyStartProvokingVertexCommandBuffer,
     PreferAggregateBarrierCalls,
+    PreferBGR565ToRGB565,
     PreferCachedNoncoherentForDynamicStreamBufferUsage,
     PreferCpuForBuffersubdata,
     PreferCPUForBufferSubData,
