@@ -1099,19 +1099,8 @@ void ReadFromBufferWithLayout(int componentCount,
 
     const int elementSize = sizeof(T) * componentCount;
     const uint8_t *source = uniformData->data() + layoutInfo.offset;
-
-    if (layoutInfo.arrayStride == 0 || layoutInfo.arrayStride == elementSize)
-    {
-        const uint8_t *readPtr = source + arrayIndex * layoutInfo.arrayStride;
-        memcpy(dst, readPtr, elementSize);
-    }
-    else
-    {
-        // Have to respect the arrayStride between each element of the array.
-        const int arrayOffset  = arrayIndex * layoutInfo.arrayStride;
-        const uint8_t *readPtr = source + arrayOffset;
-        memcpy(dst, readPtr, elementSize);
-    }
+    const uint8_t *readPtr = source + arrayIndex * layoutInfo.arrayStride;
+    memcpy(dst, readPtr, elementSize);
 }
 
 template <typename T>
