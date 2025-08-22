@@ -552,6 +552,7 @@ using VertexArrayBufferBindingMask          = angle::BitSet<kElementArrayBufferI
 
 // Used in Program and VertexArray.
 using AttributesMask = angle::BitSet<MAX_VERTEX_ATTRIBS>;
+using BufferBindingMask = angle::BitSet<MAX_VERTEX_ATTRIB_BINDINGS>;
 
 // Used in Program
 static_assert(IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS >
