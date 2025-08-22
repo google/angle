@@ -216,6 +216,9 @@ def gn_sources_to_blueprint_sources(sources):
 
 target_blockist = [
     '//build/config:shared_library_deps',
+    '//buildtools/third_party/libc++:all_modules',
+    '//buildtools/third_party/libc++:copy_custom_headers',
+    '//buildtools/third_party/libc++:copy_libcxx_headers',
     '//third_party/zlib:zlib',
     '//third_party/zlib/google:compression_utils_portable',
 
