@@ -241,18 +241,25 @@ struct UniformSortComparator
         {
             return false;
         }
-        // First, sort by precision: lowp and mediump are smaller than highp
-        if (firstType.getPrecision() != secondType.getPrecision())
+
+        // Next sort by precisions
+        // Group uniforms into high-precision and non-high-precision. A non-highp uniform is
+        // considered "smaller" than a highp uniform.
+        const TPrecision firstPrecision  = firstType.getPrecision();
+        const TPrecision secondPrecision = secondType.getPrecision();
+        const bool firstIsHighP          = (firstPrecision == TPrecision::EbpHigh);
+        const bool secondIsHighP         = (secondPrecision == TPrecision::EbpHigh);
+        if (firstIsHighP != secondIsHighP)
         {
-            return firstType.getPrecision() != TPrecision::EbpHigh;
+            return secondIsHighP;
         }
-        // We don't sort highp uniforms. If both uniforms are highp, consider them as equivalent
-        if (firstType.getPrecision() == TPrecision::EbpHigh &&
-            secondType.getPrecision() == TPrecision::EbpHigh)
+        // If both are highp, they are equivalent. Do not reorder them.
+        if (firstIsHighP)
         {
             return false;
         }
-        // If both uniforms are mediump or lowp, we further sort them based on a list of criteria
+        // If we reach here, both uniforms are non-highp. We further sort them based on a list of
+        // criteria
         ASSERT(firstType.getPrecision() != TPrecision::EbpHigh &&
                secondType.getPrecision() != TPrecision::EbpHigh);
         // criteria 1: sort by whether the uniform is a struct. Non-structs is smaller.
