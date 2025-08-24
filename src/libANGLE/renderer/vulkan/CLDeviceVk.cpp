@@ -362,7 +362,6 @@ angle::Result CLDeviceVk::createSubDevices(const cl_device_partition_property *p
 cl::WorkgroupSize CLDeviceVk::selectWorkGroupSize(const cl::NDRange &ndrange) const
 {
     // Limit total work-group size to the Vulkan device's limit
-    const VkPhysicalDeviceProperties &props = mRenderer->getPhysicalDeviceProperties();
     uint32_t maxSize = static_cast<uint32_t>(mInfoSizeT.at(cl::DeviceInfo::MaxWorkGroupSize));
     maxSize          = std::min(maxSize, 64u);
 
@@ -376,7 +375,7 @@ cl::WorkgroupSize CLDeviceVk::selectWorkGroupSize(const cl::NDRange &ndrange) co
             cl::WorkgroupSize newLocalSize = localSize;
             newLocalSize[i] *= 2;
 
-            if (newLocalSize[i] <= props.limits.maxComputeWorkGroupCount[i] &&
+            if (newLocalSize[i] <= ndrange.globalWorkSize[i] &&
                 newLocalSize[0] * newLocalSize[1] * newLocalSize[2] <= maxSize)
             {
                 localSize      = newLocalSize;
