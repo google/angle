@@ -345,6 +345,11 @@ std::string ProcessBuildOptions(const std::vector<std::string> &optionTokens,
             processedOptions += " --output-format=bc";
             continue;
         }
+        else if (optionToken == "-cl-std=CL2.0")
+        {
+            processedOptions += " -cl-std=CL2.0 -inline-entry-points";
+            continue;
+        }
         processedOptions += " " + optionToken;
     }
 
