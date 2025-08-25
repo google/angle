@@ -6351,10 +6351,13 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         &mFeatures, supportsGlobalPriority,
         ExtensionFound(VK_EXT_GLOBAL_PRIORITY_EXTENSION_NAME, deviceExtensionNames));
 
+    // REALTIME priority is not permitted on most operating systems.  This feature is limited to
+    // Android for now.
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsGlobalPriorityQuery,
         mFeatures.supportsGlobalPriority.enabled &&
-            (mPhysicalDeviceGlobalPriorityQueryFeatures.globalPriorityQuery == VK_TRUE));
+            mPhysicalDeviceGlobalPriorityQueryFeatures.globalPriorityQuery == VK_TRUE &&
+            IsAndroid());
 }
 
 void Renderer::appBasedFeatureOverrides(const vk::ExtensionNameList &extensions) {}
