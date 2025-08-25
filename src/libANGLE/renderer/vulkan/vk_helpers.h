@@ -2336,7 +2336,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                      VkMemoryPropertyFlags flags);
 
     static constexpr VkImageUsageFlags kDefaultImageViewUsageFlags = 0;
-    angle::Result initLayerImageView(ErrorContext *context,
+    angle::Result initLayerImageView(ContextVk *contextVk,
                                      gl::TextureType textureType,
                                      VkImageAspectFlags aspectMask,
                                      const gl::SwizzleState &swizzleMap,
@@ -2345,7 +2345,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                      uint32_t levelCount,
                                      uint32_t baseArrayLayer,
                                      uint32_t layerCount) const;
-    angle::Result initLayerImageViewWithUsage(ErrorContext *context,
+    angle::Result initLayerImageViewWithUsage(ContextVk *contextVk,
                                               gl::TextureType textureType,
                                               VkImageAspectFlags aspectMask,
                                               const gl::SwizzleState &swizzleMap,
@@ -2356,7 +2356,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                               uint32_t layerCount,
                                               VkImageUsageFlags imageUsageFlags,
                                               GLenum astcDecodePrecision) const;
-    angle::Result initLayerImageViewWithYuvModeOverride(ErrorContext *context,
+    angle::Result initLayerImageViewWithYuvModeOverride(ContextVk *contextVk,
                                                         gl::TextureType textureType,
                                                         VkImageAspectFlags aspectMask,
                                                         const gl::SwizzleState &swizzleMap,
@@ -2368,7 +2368,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                                         gl::YuvSamplingMode yuvSamplingMode,
                                                         VkImageUsageFlags imageUsageFlags,
                                                         GLenum astcDecodePrecision) const;
-    angle::Result initReinterpretedLayerImageView(ErrorContext *context,
+    angle::Result initReinterpretedLayerImageView(ContextVk *contextVk,
                                                   gl::TextureType textureType,
                                                   VkImageAspectFlags aspectMask,
                                                   const gl::SwizzleState &swizzleMap,
@@ -3335,7 +3335,7 @@ class ImageHelper final : public Resource, public angle::Subject
     const LevelContentDefinedMask &getLevelContentDefined(LevelIndex level) const;
     const LevelContentDefinedMask &getLevelStencilContentDefined(LevelIndex level) const;
 
-    angle::Result initLayerImageViewImpl(ErrorContext *context,
+    angle::Result initLayerImageViewImpl(ContextVk *contextVk,
                                          gl::TextureType textureType,
                                          VkImageAspectFlags aspectMask,
                                          const gl::SwizzleState &swizzleMap,
@@ -3644,7 +3644,7 @@ class ImageViewHelper final : angle::NonCopyable
                                 GLenum astcDecodePrecision);
 
     // Creates a storage view with all layers of the level.
-    angle::Result getLevelStorageImageView(ErrorContext *context,
+    angle::Result getLevelStorageImageView(ContextVk *contextVk,
                                            gl::TextureType viewType,
                                            const ImageHelper &image,
                                            LevelIndex levelVk,
@@ -3654,7 +3654,7 @@ class ImageViewHelper final : angle::NonCopyable
                                            const ImageView **imageViewOut);
 
     // Creates a storage view with a single layer of the level.
-    angle::Result getLevelLayerStorageImageView(ErrorContext *context,
+    angle::Result getLevelLayerStorageImageView(ContextVk *contextVk,
                                                 const ImageHelper &image,
                                                 LevelIndex levelVk,
                                                 uint32_t layer,
@@ -3663,7 +3663,7 @@ class ImageViewHelper final : angle::NonCopyable
                                                 const ImageView **imageViewOut);
 
     // Creates a draw view with a range of layers of the level.
-    angle::Result getLevelDrawImageView(ErrorContext *context,
+    angle::Result getLevelDrawImageView(ContextVk *contextVk,
                                         const ImageHelper &image,
                                         LevelIndex levelVk,
                                         uint32_t layer,
@@ -3671,14 +3671,14 @@ class ImageViewHelper final : angle::NonCopyable
                                         const ImageView **imageViewOut);
 
     // Creates a draw view with a single layer of the level.
-    angle::Result getLevelLayerDrawImageView(ErrorContext *context,
+    angle::Result getLevelLayerDrawImageView(ContextVk *contextVk,
                                              const ImageHelper &image,
                                              LevelIndex levelVk,
                                              uint32_t layer,
                                              const ImageView **imageViewOut);
 
     // Creates a depth-xor-stencil view with a range of layers of the level.
-    angle::Result getLevelDepthOrStencilImageView(ErrorContext *context,
+    angle::Result getLevelDepthOrStencilImageView(ContextVk *contextVk,
                                                   const ImageHelper &image,
                                                   LevelIndex levelVk,
                                                   uint32_t layer,
@@ -3687,7 +3687,7 @@ class ImageViewHelper final : angle::NonCopyable
                                                   const ImageView **imageViewOut);
 
     // Creates a  depth-xor-stencil view with a single layer of the level.
-    angle::Result getLevelLayerDepthOrStencilImageView(ErrorContext *context,
+    angle::Result getLevelLayerDepthOrStencilImageView(ContextVk *contextVk,
                                                        const ImageHelper &image,
                                                        LevelIndex levelVk,
                                                        uint32_t layer,
@@ -3840,13 +3840,13 @@ class ImageViewHelper final : angle::NonCopyable
         return imageViewVector[mCurrentBaseMaxLevelHash];
     }
 
-    angle::Result getLevelLayerDrawImageViewImpl(ErrorContext *context,
+    angle::Result getLevelLayerDrawImageViewImpl(ContextVk *contextVk,
                                                  const ImageHelper &image,
                                                  LevelIndex levelVk,
                                                  uint32_t layer,
                                                  uint32_t layerCount,
                                                  ImageView *imageViewOut);
-    angle::Result getLevelLayerDepthOrStencilImageViewImpl(ErrorContext *context,
+    angle::Result getLevelLayerDepthOrStencilImageViewImpl(ContextVk *contextVk,
                                                            const ImageHelper &image,
                                                            LevelIndex levelVk,
                                                            uint32_t layer,

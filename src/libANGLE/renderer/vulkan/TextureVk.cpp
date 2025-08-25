@@ -3902,7 +3902,7 @@ const vk::ImageView &TextureVk::getCopyImageView() const
     return imageViews.getLinearCopyImageView();
 }
 
-angle::Result TextureVk::getLevelLayerImageView(vk::ErrorContext *context,
+angle::Result TextureVk::getLevelLayerImageView(ContextVk *contextVk,
                                                 gl::LevelIndex level,
                                                 size_t layer,
                                                 const vk::ImageView **imageViewOut)
@@ -3913,15 +3913,15 @@ angle::Result TextureVk::getLevelLayerImageView(vk::ErrorContext *context,
     vk::LevelIndex levelVk = mImage->toVkLevel(levelGL);
     uint32_t nativeLayer   = getNativeImageLayer(static_cast<uint32_t>(layer));
 
-    return getImageViews().getLevelLayerDrawImageView(context, *mImage, levelVk, nativeLayer,
+    return getImageViews().getLevelLayerDrawImageView(contextVk, *mImage, levelVk, nativeLayer,
                                                       imageViewOut);
 }
 
-angle::Result TextureVk::getStorageImageView(vk::ErrorContext *context,
+angle::Result TextureVk::getStorageImageView(ContextVk *contextVk,
                                              const gl::ImageUnit &binding,
                                              const vk::ImageView **imageViewOut)
 {
-    vk::Renderer *renderer = context->getRenderer();
+    vk::Renderer *renderer = contextVk->getRenderer();
 
     angle::FormatID formatID = angle::Format::InternalFormatToID(binding.format);
     const vk::Format *format = &renderer->getFormat(formatID);
@@ -3939,7 +3939,7 @@ angle::Result TextureVk::getStorageImageView(vk::ErrorContext *context,
         uint32_t nativeLayer = getNativeImageLayer(static_cast<uint32_t>(binding.layer));
 
         return getImageViews().getLevelLayerStorageImageView(
-            context, *mImage, nativeLevelVk, nativeLayer,
+            contextVk, *mImage, nativeLevelVk, nativeLayer,
             VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_STORAGE_BIT,
             format->getActualImageFormatID(getRequiredImageAccess()), imageViewOut);
     }
@@ -3947,7 +3947,7 @@ angle::Result TextureVk::getStorageImageView(vk::ErrorContext *context,
     uint32_t nativeLayer = getNativeImageLayer(0);
 
     return getImageViews().getLevelStorageImageView(
-        context, mState.getType(), *mImage, nativeLevelVk, nativeLayer,
+        contextVk, mState.getType(), *mImage, nativeLevelVk, nativeLayer,
         VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_STORAGE_BIT,
         format->getActualImageFormatID(getRequiredImageAccess()), imageViewOut);
 }

@@ -2107,13 +2107,13 @@ class DescriptorSetDescBuilder final
     void updateOneUniformBufferOffset(const size_t blockIndex,
                                       const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding,
                                       const WriteDescriptorDescs &writeDescriptorDescs);
-    angle::Result updateImages(Context *context,
+    angle::Result updateImages(ContextVk *contextVk,
                                const gl::ProgramExecutable &executable,
                                const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                const gl::ActiveTextureArray<TextureVk *> &activeImages,
                                const std::vector<gl::ImageUnit> &imageUnits,
                                const WriteDescriptorDescs &writeDescriptorDescs);
-    angle::Result updateInputAttachments(vk::Context *context,
+    angle::Result updateInputAttachments(ContextVk *contextVk,
                                          const gl::ProgramExecutable &executable,
                                          const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                          const FramebufferVk *framebufferVk,

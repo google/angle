@@ -347,7 +347,7 @@ class ProgramExecutableVk : public ProgramExecutableImpl
     }
 
     angle::Result updateShaderResourcesDescInfo(
-        vk::Context *context,
+        ContextVk *contextVk,
         vk::CommandBufferHelperCommon *commandBufferHelper,
         const FramebufferVk *framebufferVk,
         const gl::BufferVector &shaderStorageBufferBindings,
