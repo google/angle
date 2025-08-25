@@ -5806,7 +5806,7 @@ angle::Result SamplerDesc::init(ContextVk *contextVk, Sampler *sampler) const
         ASSERT((contextVk->getFeatures().supportsYUVSamplerConversion.enabled));
         samplerYcbcrConversionInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO;
         samplerYcbcrConversionInfo.pNext = nullptr;
-        ANGLE_TRY(contextVk->getRenderer()->getYuvConversionCache().getSamplerYcbcrConversion(
+        ANGLE_TRY(contextVk->getShareGroup()->getYuvConversionCache().getSamplerYcbcrConversion(
             contextVk, mYcbcrConversionDesc, &samplerYcbcrConversionInfo.conversion));
         AddToPNextChain(&createInfo, &samplerYcbcrConversionInfo);
 
@@ -8512,27 +8512,44 @@ SamplerYcbcrConversionCache::~SamplerYcbcrConversionCache()
     ASSERT(mExternalFormatPayload.empty() && mVkFormatPayload.empty());
 }
 
-void SamplerYcbcrConversionCache::destroy(vk::Renderer *renderer)
+void SamplerYcbcrConversionCache::destroy(vk::Renderer *renderer, bool orphanConversionInfo)
 {
     renderer->accumulateCacheStats(VulkanCacheType::SamplerYcbcrConversion, mCacheStats);
 
-    VkDevice device = renderer->getDevice();
-
-    uint32_t count = static_cast<uint32_t>(mExternalFormatPayload.size());
-    for (auto &iter : mExternalFormatPayload)
+    // If the EGL_ANGLE_display_texture_share_group extension is causing some samplers to
+    // stay alive, there is no way to know which conversion info object needs to stay alive.
+    // stash them all in the renderer to be destroyed when possible.
+    if (orphanConversionInfo)
     {
-        vk::SamplerYcbcrConversion &samplerYcbcrConversion = iter.second;
-        samplerYcbcrConversion.destroy(device);
+        for (auto &iter : mExternalFormatPayload)
+        {
+            renderer->addSamplerYcbcrConversionToOrphanList(iter.second.release());
+        }
+        for (auto &iter : mVkFormatPayload)
+        {
+            renderer->addSamplerYcbcrConversionToOrphanList(iter.second.release());
+        }
     }
-    renderer->onDeallocateHandle(vk::HandleType::SamplerYcbcrConversion, count);
-
-    count = static_cast<uint32_t>(mExternalFormatPayload.size());
-    for (auto &iter : mVkFormatPayload)
+    else
     {
-        vk::SamplerYcbcrConversion &samplerYcbcrConversion = iter.second;
-        samplerYcbcrConversion.destroy(device);
+        VkDevice device = renderer->getDevice();
+
+        uint32_t count = static_cast<uint32_t>(mExternalFormatPayload.size());
+        for (auto &iter : mExternalFormatPayload)
+        {
+            vk::SamplerYcbcrConversion &samplerYcbcrConversion = iter.second;
+            samplerYcbcrConversion.destroy(device);
+        }
+        renderer->onDeallocateHandle(vk::HandleType::SamplerYcbcrConversion, count);
+
+        count = static_cast<uint32_t>(mExternalFormatPayload.size());
+        for (auto &iter : mVkFormatPayload)
+        {
+            vk::SamplerYcbcrConversion &samplerYcbcrConversion = iter.second;
+            samplerYcbcrConversion.destroy(device);
+        }
+        renderer->onDeallocateHandle(vk::HandleType::SamplerYcbcrConversion, count);
     }
-    renderer->onDeallocateHandle(vk::HandleType::SamplerYcbcrConversion, count);
 
     mExternalFormatPayload.clear();
     mVkFormatPayload.clear();
@@ -8581,14 +8598,34 @@ SamplerCache::~SamplerCache()
     ASSERT(mPayload.empty());
 }
 
-void SamplerCache::destroy(vk::Renderer *renderer)
+void SamplerCache::destroy(vk::Renderer *renderer, bool orphanReferencedSamplers)
 {
     renderer->accumulateCacheStats(VulkanCacheType::Sampler, mCacheStats);
 
     uint32_t count = static_cast<uint32_t>(mPayload.size());
-    ASSERT(AllCacheEntriesHaveUniqueReference(mPayload));
+
+    if (orphanReferencedSamplers)
+    {
+        for (auto &iter : mPayload)
+        {
+            // If the EGL_ANGLE_display_texture_share_group extension is causing some samplers to
+            // stay alive, stash them in the renderer to be destroyed when possible.
+            if (!iter.second.unique())
+            {
+                renderer->addSamplerToOrphanList(iter.second);
+            }
+            else
+            {
+                renderer->onDeallocateHandle(vk::HandleType::Sampler, 1);
+            }
+        }
+    }
+    else
+    {
+        ASSERT(AllCacheEntriesHaveUniqueReference(mPayload));
+        renderer->onDeallocateHandle(vk::HandleType::Sampler, count);
+    }
     mPayload.clear();
-    renderer->onDeallocateHandle(vk::HandleType::Sampler, count);
 }
 
 angle::Result SamplerCache::getSampler(ContextVk *contextVk,

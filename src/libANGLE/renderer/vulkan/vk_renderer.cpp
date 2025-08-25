@@ -1956,6 +1956,8 @@ void Renderer::onDestroy(vk::ErrorContext *context)
     cleanupGarbage(nullptr);
     ASSERT(!hasSharedGarbage());
     ASSERT(mOrphanedBufferBlockList.empty());
+    ASSERT(mOrphanedSamplers.empty());
+    ASSERT(mOrphanedSamplerYcbcrConversions.empty());
 
     mRefCountedEventRecycler.destroy(mDevice);
 
@@ -1967,8 +1969,6 @@ void Renderer::onDestroy(vk::ErrorContext *context)
     mPipelineCacheInitialized = false;
     mPipelineCache.destroy(mDevice);
 
-    mSamplerCache.destroy(this);
-    mYuvConversionCache.destroy(this);
     mVkFormatDescriptorCountMap.clear();
 
     mOutsideRenderPassCommandBufferRecycler.onDestroy();
@@ -6831,22 +6831,69 @@ void Renderer::cleanupGarbage(bool *anyGarbageCleanedOut)
     bool anyCleaned = false;
 
     // Clean up general garbage
-    anyCleaned = (mSharedGarbageList.cleanupSubmittedGarbage(this) > 0) || anyCleaned;
+    anyCleaned = mSharedGarbageList.cleanupSubmittedGarbage(this) > 0 || anyCleaned;
 
     // Clean up suballocation garbages
-    anyCleaned = (mSuballocationGarbageList.cleanupSubmittedGarbage(this) > 0) || anyCleaned;
+    anyCleaned = mSuballocationGarbageList.cleanupSubmittedGarbage(this) > 0 || anyCleaned;
 
     // Note: do this after clean up mSuballocationGarbageList so that we will have more chances to
     // find orphaned blocks being empty.
-    anyCleaned = (mOrphanedBufferBlockList.pruneEmptyBufferBlocks(this) > 0) || anyCleaned;
+    anyCleaned = mOrphanedBufferBlockList.pruneEmptyBufferBlocks(this) > 0 || anyCleaned;
 
     // Clean up RefCountedEvent that are done resetting
-    anyCleaned = (mRefCountedEventRecycler.cleanupResettingEvents(this) > 0) || anyCleaned;
+    anyCleaned = mRefCountedEventRecycler.cleanupResettingEvents(this) > 0 || anyCleaned;
+
+    // Clean up samplers that couldn't be destroyed when the share group was.
+    anyCleaned = cleanupOrphanedSamplers() || anyCleaned;
 
     if (anyGarbageCleanedOut != nullptr)
     {
         *anyGarbageCleanedOut = anyCleaned;
     }
+}
+
+bool Renderer::cleanupOrphanedSamplers()
+{
+    std::unique_lock<angle::SimpleMutex> lock(mOrphanedSamplerMutex);
+
+    if (mOrphanedSamplers.empty() && mOrphanedSamplerYcbcrConversions.empty())
+    {
+        return false;
+    }
+
+    // Destroy any sampler that is no longer referenced.
+    std::vector<SharedSamplerPtr> remainingSamplers;
+    for (SharedSamplerPtr &sampler : mOrphanedSamplers)
+    {
+        if (!sampler.unique())
+        {
+            remainingSamplers.push_back(sampler);
+        }
+    }
+    const uint32_t destroyedSamplerCount =
+        static_cast<uint32_t>(mOrphanedSamplers.size() - remainingSamplers.size());
+    onDeallocateHandle(vk::HandleType::Sampler, destroyedSamplerCount);
+    mOrphanedSamplers = std::move(remainingSamplers);
+
+    bool anyCleaned = destroyedSamplerCount > 0;
+
+    // If all samplers are gone, destroy all the ycbcr conversion objects too.  We don't track which
+    // samplers use which ycbcr conversion objects, so they are destroyed conservatively.
+    if (remainingSamplers.empty())
+    {
+        anyCleaned = anyCleaned || !mOrphanedSamplerYcbcrConversions.empty();
+        for (VkSamplerYcbcrConversion handle : mOrphanedSamplerYcbcrConversions)
+        {
+            vk::SamplerYcbcrConversion conversion;
+            conversion.setHandle(handle);
+            conversion.destroy(mDevice);
+        }
+        onDeallocateHandle(vk::HandleType::SamplerYcbcrConversion,
+                           static_cast<uint32_t>(mOrphanedSamplerYcbcrConversions.size()));
+        mOrphanedSamplerYcbcrConversions.clear();
+    }
+
+    return anyCleaned;
 }
 
 void Renderer::cleanupPendingSubmissionGarbage()
@@ -7279,6 +7326,18 @@ void Renderer::releaseQueueSerialIndex(SerialIndex index)
 angle::Result Renderer::cleanupSomeGarbage(ErrorContext *context, bool *anyGarbageCleanedOut)
 {
     return mCommandQueue.cleanupSomeGarbage(context, 0, anyGarbageCleanedOut);
+}
+
+void Renderer::addSamplerToOrphanList(SharedSamplerPtr sampler)
+{
+    std::unique_lock<angle::SimpleMutex> lock(mOrphanedSamplerMutex);
+    mOrphanedSamplers.push_back(sampler);
+}
+
+void Renderer::addSamplerYcbcrConversionToOrphanList(VkSamplerYcbcrConversion conversion)
+{
+    std::unique_lock<angle::SimpleMutex> lock(mOrphanedSamplerMutex);
+    mOrphanedSamplerYcbcrConversions.push_back(conversion);
 }
 
 // static

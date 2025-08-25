@@ -2661,8 +2661,6 @@ angle::Result TextureVk::copyBufferDataToImage(ContextVk *contextVk,
 
 angle::Result TextureVk::generateMipmapsWithCompute(ContextVk *contextVk)
 {
-    vk::Renderer *renderer = contextVk->getRenderer();
-
     // Requires that the image:
     //
     // - is not sRGB
@@ -2692,7 +2690,8 @@ angle::Result TextureVk::generateMipmapsWithCompute(ContextVk *contextVk)
     vk::SharedSamplerPtr sampler;
     vk::SamplerDesc samplerDesc(contextVk, samplerState, false, nullptr,
                                 static_cast<angle::FormatID>(0));
-    ANGLE_TRY(renderer->getSamplerCache().getSampler(contextVk, samplerDesc, &sampler));
+    ANGLE_TRY(
+        contextVk->getShareGroup()->getSamplerCache().getSampler(contextVk, samplerDesc, &sampler));
 
     // If the image has more levels than supported, generate as many mips as possible at a time.
     const vk::LevelIndex maxGenerateLevels(UtilsVk::GetGenerateMipmapMaxLevels(contextVk));
@@ -3805,9 +3804,10 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     vk::SamplerDesc samplerDescSamplerExternal2DY2YEXT(contextVk, mState.getSamplerState(),
                                                        mState.isStencilMode(), &y2yConversionDesc,
                                                        mImage->getIntendedFormatID());
-    ANGLE_TRY(renderer->getSamplerCache().getSampler(contextVk, samplerDesc, &mSampler));
-    ANGLE_TRY(renderer->getSamplerCache().getSampler(contextVk, samplerDescSamplerExternal2DY2YEXT,
-                                                     &mY2YSampler));
+    ANGLE_TRY(contextVk->getShareGroup()->getSamplerCache().getSampler(contextVk, samplerDesc,
+                                                                       &mSampler));
+    ANGLE_TRY(contextVk->getShareGroup()->getSamplerCache().getSampler(
+        contextVk, samplerDescSamplerExternal2DY2YEXT, &mY2YSampler));
 
     updateCachedImageViewSerials();
 

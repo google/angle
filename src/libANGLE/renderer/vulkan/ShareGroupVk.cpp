@@ -160,19 +160,24 @@ void ShareGroupVk::onDestroy(const egl::Display *display)
 {
     mRefCountedEventsGarbageRecycler.destroy(mRenderer);
 
+    // If any context uses display texture share group, it is expected that a
+    // BufferBlock may still in used by textures that outlive ShareGroup.  The
+    // non-empty BufferBlock will be put into Renderer's orphan list instead.
+    // Same with samplers in the sampler cache.
+    const bool hasDisplayTextureShareGroup = mState.hasAnyContextWithDisplayTextureShareGroup();
     for (std::unique_ptr<vk::BufferPool> &pool : mDefaultBufferPools)
     {
         if (pool)
         {
-            // If any context uses display texture share group, it is expected that a
-            // BufferBlock may still in used by textures that outlived ShareGroup.  The
-            // non-empty BufferBlock will be put into Renderer's orphan list instead.
-            pool->destroy(mRenderer, mState.hasAnyContextWithDisplayTextureShareGroup());
+            pool->destroy(mRenderer, hasDisplayTextureShareGroup);
         }
     }
 
     mPipelineLayoutCache.destroy(mRenderer);
     mDescriptorSetLayoutCache.destroy(mRenderer);
+
+    mSamplerCache.destroy(mRenderer, hasDisplayTextureShareGroup);
+    mYuvConversionCache.destroy(mRenderer, hasDisplayTextureShareGroup);
 
     mMetaDescriptorPools[DescriptorSetIndex::UniformsAndXfb].destroy(mRenderer);
     mMetaDescriptorPools[DescriptorSetIndex::Texture].destroy(mRenderer);

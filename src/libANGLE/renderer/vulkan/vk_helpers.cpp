@@ -7313,7 +7313,7 @@ angle::Result ImageHelper::initLayerImageViewImpl(ContextVk *contextVk,
         ASSERT((contextVk->getFeatures().supportsYUVSamplerConversion.enabled));
         yuvConversionInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_YCBCR_CONVERSION_INFO;
         yuvConversionInfo.pNext = nullptr;
-        ANGLE_TRY(contextVk->getRenderer()->getYuvConversionCache().getSamplerYcbcrConversion(
+        ANGLE_TRY(contextVk->getShareGroup()->getYuvConversionCache().getSamplerYcbcrConversion(
             contextVk, conversionDesc, &yuvConversionInfo.conversion));
         AddToPNextChain(&viewInfo, &yuvConversionInfo);
 

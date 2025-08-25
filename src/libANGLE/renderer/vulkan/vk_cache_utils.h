@@ -2886,7 +2886,7 @@ class SamplerCache final : public HasCacheStats<VulkanCacheType::Sampler>
     SamplerCache();
     ~SamplerCache() override;
 
-    void destroy(vk::Renderer *renderer);
+    void destroy(vk::Renderer *renderer, bool orphanReferencedSamplers);
 
     angle::Result getSampler(ContextVk *contextVk,
                              const vk::SamplerDesc &desc,
@@ -2904,7 +2904,7 @@ class SamplerYcbcrConversionCache final
     SamplerYcbcrConversionCache();
     ~SamplerYcbcrConversionCache() override;
 
-    void destroy(vk::Renderer *renderer);
+    void destroy(vk::Renderer *renderer, bool orphanConversionInfo);
 
     angle::Result getSamplerYcbcrConversion(vk::ErrorContext *context,
                                             const vk::YcbcrConversionDesc &ycbcrConversionDesc,
