@@ -6,6 +6,10 @@
 
 // X11Window.cpp: Implementation of OSWindow for X11
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "util/linux/x11/X11Window.h"
 
 #include "common/debug.h"

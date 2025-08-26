@@ -7,6 +7,10 @@
 //   OpenCL-specific code for the ANGLE trace replays.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "trace_fixture_cl.h"
 #include <string>
 

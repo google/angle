@@ -8,6 +8,10 @@
 #ifndef UTIL_GL_H_
 #define UTIL_GL_H_
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "common/platform.h"
 
 #if defined(ANGLE_USE_UTIL_LOADER)

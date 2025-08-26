@@ -7,6 +7,10 @@
 //   Common code for the ANGLE trace replays.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
+
 #include "trace_fixture.h"
 
 #include "angle_trace_gl.h"

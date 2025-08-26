@@ -7,6 +7,10 @@
 //   Helper functions for capture and replay of traces.
 //
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_libc_calls
+#endif
+
 #include "frame_capture_test_utils.h"
 
 #include "common/frame_capture_utils.h"

@@ -10,6 +10,10 @@
 #ifndef UTIL_CAPTURE_FRAME_CAPTURE_TEST_UTILS_H_
 #define UTIL_CAPTURE_FRAME_CAPTURE_TEST_UTILS_H_
 
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_libc_calls
+#endif
+
 #include <iostream>
 #include <map>
 #include <memory>
