@@ -1029,12 +1029,12 @@ deps = {
   },
 
   'third_party/vulkan-deps': {
-    'url': Var('chromium_git') + '/vulkan-deps@36fbc53c546cbf9acafcf7996d3aba2871026dae',
+    'url': Var('chromium_git') + '/vulkan-deps@edbec6047c6c456bfdeabeae6a8a101dde526cd3',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/glslang/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/glslang@7899f3c1bebd55594e405e0736abf43f700c2c8b',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/glslang@09d803cf217f1128b3111d58bf9853ae9be52bf1',
     'condition': 'not build_with_chromium',
   },
 
@@ -1054,7 +1054,7 @@ deps = {
   },
 
   'third_party/spirv-tools/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Tools@8a8bb6c89174ed753eb18a438092ee59356efc3c',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/SPIRV-Tools@eb500be643aa8f8eb23dc0e11fe4069ec09a5c88',
     'condition': 'not build_with_chromium',
   },
 
@@ -1064,12 +1064,12 @@ deps = {
   },
 
   'third_party/vulkan-loader/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Loader@484f3cd7dfb13f63a8b8930cb0397e9b849ab076',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Loader@ade310ac6b62af86e6c7bdbe08a2fab189ed76b6',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/vulkan-tools/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Tools@0eb12b4ea70b15be6a10f6212c1633e5c9ce0cca',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-Tools@037423da2b2a84f330cb037699ef604ba0d0c94f',
     'condition': 'not build_with_chromium',
   },
 
@@ -1079,7 +1079,7 @@ deps = {
   },
 
   'third_party/vulkan-validation-layers/src': {
-    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@f45d804fb84c4744667a298e85741161aa98c5d6',
+    'url': '{chromium_git}/external/github.com/KhronosGroup/Vulkan-ValidationLayers@f70655e25a677bb88ad6b50d14414091abf0d33d',
     'condition': 'not build_with_chromium',
   },
 
