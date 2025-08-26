@@ -8,12 +8,12 @@
 //    C struct versions of Metal sampler, depth stencil, render pass, render pipeline descriptors.
 //
 
+#ifndef LIBANGLE_RENDERER_METAL_MTL_STATE_CACHE_H_
+#define LIBANGLE_RENDERER_METAL_MTL_STATE_CACHE_H_
+
 #ifdef UNSAFE_BUFFERS_BUILD
 #    pragma allow_unsafe_buffers
 #endif
-
-#ifndef LIBANGLE_RENDERER_METAL_MTL_STATE_CACHE_H_
-#define LIBANGLE_RENDERER_METAL_MTL_STATE_CACHE_H_
 
 #import <Metal/Metal.h>
 

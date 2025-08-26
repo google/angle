@@ -9,12 +9,12 @@
 //   allocation list for the D3D renderer.
 //
 
+#ifndef LIBANGLE_VARYINGPACKING_H_
+#define LIBANGLE_VARYINGPACKING_H_
+
 #ifdef UNSAFE_BUFFERS_BUILD
 #    pragma allow_unsafe_buffers
 #endif
-
-#ifndef LIBANGLE_VARYINGPACKING_H_
-#define LIBANGLE_VARYINGPACKING_H_
 
 #include <GLSLANG/ShaderVars.h>
 

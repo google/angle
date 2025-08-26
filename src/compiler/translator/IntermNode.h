@@ -4,10 +4,6 @@
 // found in the LICENSE file.
 //
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 //
 // Definition of the in-memory high-level intermediate representation
 // of shaders.  This is a tree that parser creates.
@@ -19,6 +15,10 @@
 
 #ifndef COMPILER_TRANSLATOR_INTERMNODE_H_
 #define COMPILER_TRANSLATOR_INTERMNODE_H_
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
 
 #include "GLSLANG/ShaderLang.h"
 

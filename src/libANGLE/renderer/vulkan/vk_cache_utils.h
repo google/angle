@@ -8,12 +8,12 @@
 //    Also contains the structures for the packed descriptions for the RenderPass and Pipeline.
 //
 
+#ifndef LIBANGLE_RENDERER_VULKAN_VK_CACHE_UTILS_H_
+#define LIBANGLE_RENDERER_VULKAN_VK_CACHE_UTILS_H_
+
 #ifdef UNSAFE_BUFFERS_BUILD
 #    pragma allow_unsafe_buffers
 #endif
-
-#ifndef LIBANGLE_RENDERER_VULKAN_VK_CACHE_UTILS_H_
-#define LIBANGLE_RENDERER_VULKAN_VK_CACHE_UTILS_H_
 
 #include <deque>
 

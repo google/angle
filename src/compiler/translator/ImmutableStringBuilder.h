@@ -7,12 +7,12 @@
 // maximum length is known in advance.
 //
 
+#ifndef COMPILER_TRANSLATOR_IMMUTABLESTRINGBUILDER_H_
+#define COMPILER_TRANSLATOR_IMMUTABLESTRINGBUILDER_H_
+
 #ifdef UNSAFE_BUFFERS_BUILD
 #    pragma allow_unsafe_buffers
 #endif
-
-#ifndef COMPILER_TRANSLATOR_IMMUTABLESTRINGBUILDER_H_
-#define COMPILER_TRANSLATOR_IMMUTABLESTRINGBUILDER_H_
 
 #include <cstring>
 

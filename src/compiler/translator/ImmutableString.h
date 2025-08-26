@@ -7,12 +7,12 @@
 // valid and unchanged for the duration of the compilation.
 //
 
+#ifndef COMPILER_TRANSLATOR_IMMUTABLESTRING_H_
+#define COMPILER_TRANSLATOR_IMMUTABLESTRING_H_
+
 #ifdef UNSAFE_BUFFERS_BUILD
 #    pragma allow_unsafe_buffers
 #endif
-
-#ifndef COMPILER_TRANSLATOR_IMMUTABLESTRING_H_
-#define COMPILER_TRANSLATOR_IMMUTABLESTRING_H_
 
 #include <string>
 

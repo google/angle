@@ -6,12 +6,12 @@
 
 // Color.h : Defines the Color type used throughout the ANGLE libraries
 
+#ifndef COMMON_COLOR_H_
+#define COMMON_COLOR_H_
+
 #ifdef UNSAFE_BUFFERS_BUILD
 #    pragma allow_unsafe_buffers
 #endif
-
-#ifndef COMMON_COLOR_H_
-#define COMMON_COLOR_H_
 
 #include <cstdint>
 #include <cstring>

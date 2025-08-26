@@ -6,12 +6,12 @@
 //   Declares ANGLE-specific enums classes for GLEnum and functions operating
 //   on them.
 
+#ifndef COMMON_PACKEDGLENUMS_H_
+#define COMMON_PACKEDGLENUMS_H_
+
 #ifdef UNSAFE_BUFFERS_BUILD
 #    pragma allow_unsafe_buffers
 #endif
-
-#ifndef COMMON_PACKEDGLENUMS_H_
-#define COMMON_PACKEDGLENUMS_H_
 
 #include "common/PackedEGLEnums_autogen.h"
 #include "common/PackedGLEnums_autogen.h"

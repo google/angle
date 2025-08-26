@@ -8,12 +8,12 @@
 //   flat array, and then falls back to an unordered map for the higher handle values.
 //
 
+#ifndef LIBANGLE_RESOURCE_MAP_H_
+#define LIBANGLE_RESOURCE_MAP_H_
+
 #ifdef UNSAFE_BUFFERS_BUILD
 #    pragma allow_unsafe_buffers
 #endif
-
-#ifndef LIBANGLE_RESOURCE_MAP_H_
-#define LIBANGLE_RESOURCE_MAP_H_
 
 #include <mutex>
 #include <type_traits>

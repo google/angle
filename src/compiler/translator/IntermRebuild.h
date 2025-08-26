@@ -4,12 +4,12 @@
 // found in the LICENSE file.
 //
 
+#ifndef COMPILER_TRANSLATOR_INTERMREBUILD_H_
+#define COMPILER_TRANSLATOR_INTERMREBUILD_H_
+
 #ifdef UNSAFE_BUFFERS_BUILD
 #    pragma allow_unsafe_buffers
 #endif
-
-#ifndef COMPILER_TRANSLATOR_INTERMREBUILD_H_
-#define COMPILER_TRANSLATOR_INTERMREBUILD_H_
 
 #include "compiler/translator/NodeType.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"

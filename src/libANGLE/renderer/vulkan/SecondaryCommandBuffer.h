@@ -8,12 +8,12 @@
 //    it has to be submitted to GPU.
 //
 
+#ifndef LIBANGLE_RENDERER_VULKAN_SECONDARYCOMMANDBUFFERVK_H_
+#define LIBANGLE_RENDERER_VULKAN_SECONDARYCOMMANDBUFFERVK_H_
+
 #ifdef UNSAFE_BUFFERS_BUILD
 #    pragma allow_unsafe_buffers
 #endif
-
-#ifndef LIBANGLE_RENDERER_VULKAN_SECONDARYCOMMANDBUFFERVK_H_
-#define LIBANGLE_RENDERER_VULKAN_SECONDARYCOMMANDBUFFERVK_H_
 
 #include "common/vulkan/vk_headers.h"
 #include "libANGLE/renderer/vulkan/vk_command_buffer_utils.h"

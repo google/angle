@@ -7,12 +7,12 @@
 //   Basic implementation of C++20's span.
 //
 
+#ifndef COMMON_SPAN_H_
+#define COMMON_SPAN_H_
+
 #ifdef UNSAFE_BUFFERS_BUILD
 #    pragma allow_unsafe_buffers
 #endif
-
-#ifndef COMMON_SPAN_H_
-#define COMMON_SPAN_H_
 
 #include <type_traits>
 

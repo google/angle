@@ -7,12 +7,12 @@
 // (statically or dynamically) through the methods defined in the namespace.
 //
 
+#ifndef COMPILER_TRANSLATOR_STATIC_TYPE_H_
+#define COMPILER_TRANSLATOR_STATIC_TYPE_H_
+
 #ifdef UNSAFE_BUFFERS_BUILD
 #    pragma allow_unsafe_buffers
 #endif
-
-#ifndef COMPILER_TRANSLATOR_STATIC_TYPE_H_
-#define COMPILER_TRANSLATOR_STATIC_TYPE_H_
 
 #include "compiler/translator/Types.h"
 

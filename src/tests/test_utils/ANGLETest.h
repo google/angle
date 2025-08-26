@@ -7,12 +7,12 @@
 //   Implementation of common ANGLE testing fixture.
 //
 
+#ifndef ANGLE_TESTS_ANGLE_TEST_H_
+#define ANGLE_TESTS_ANGLE_TEST_H_
+
 #ifdef UNSAFE_BUFFERS_BUILD
 #    pragma allow_unsafe_buffers
 #endif
-
-#ifndef ANGLE_TESTS_ANGLE_TEST_H_
-#define ANGLE_TESTS_ANGLE_TEST_H_
 
 #include <gtest/gtest.h>
 #include <algorithm>

@@ -6,12 +6,12 @@
 // Symbol.h: Symbols representing variables, functions, structures and interface blocks.
 //
 
+#ifndef COMPILER_TRANSLATOR_SYMBOL_H_
+#define COMPILER_TRANSLATOR_SYMBOL_H_
+
 #ifdef UNSAFE_BUFFERS_BUILD
 #    pragma allow_unsafe_buffers
 #endif
-
-#ifndef COMPILER_TRANSLATOR_SYMBOL_H_
-#define COMPILER_TRANSLATOR_SYMBOL_H_
 
 #include "common/angleutils.h"
 #include "compiler/translator/ExtensionBehavior.h"

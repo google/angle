@@ -9,12 +9,12 @@
 //   permutations, this enum encapsulates them all. Formats apply to
 //   textures, but could also apply to any typed data.
 
+#ifndef LIBANGLE_RENDERER_FORMAT_H_
+#define LIBANGLE_RENDERER_FORMAT_H_
+
 #ifdef UNSAFE_BUFFERS_BUILD
 #    pragma allow_unsafe_buffers
 #endif
-
-#ifndef LIBANGLE_RENDERER_FORMAT_H_
-#define LIBANGLE_RENDERER_FORMAT_H_
 
 #include "libANGLE/cl_types.h"
 #include "libANGLE/renderer/FormatID_autogen.h"

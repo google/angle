@@ -6,12 +6,12 @@
 
 // angleutils.h: Common ANGLE utilities.
 
+#ifndef COMMON_ANGLEUTILS_H_
+#define COMMON_ANGLEUTILS_H_
+
 #ifdef UNSAFE_BUFFERS_BUILD
 #    pragma allow_unsafe_buffers
 #endif
-
-#ifndef COMMON_ANGLEUTILS_H_
-#define COMMON_ANGLEUTILS_H_
 
 #include "common/platform.h"
 

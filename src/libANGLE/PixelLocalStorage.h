@@ -4,16 +4,16 @@
 // found in the LICENSE file.
 //
 
-#ifdef UNSAFE_BUFFERS_BUILD
-#    pragma allow_unsafe_buffers
-#endif
-
 // PixelLocalStorage.h: Defines the renderer-agnostic container classes
 // gl::PixelLocalStorage and gl::PixelLocalStoragePlane for
 // ANGLE_shader_pixel_local_storage.
 
 #ifndef LIBANGLE_PIXEL_LOCAL_STORAGE_H_
 #define LIBANGLE_PIXEL_LOCAL_STORAGE_H_
+
+#ifdef UNSAFE_BUFFERS_BUILD
+#    pragma allow_unsafe_buffers
+#endif
 
 #include "GLSLANG/ShaderLang.h"
 #include "libANGLE/Caps.h"

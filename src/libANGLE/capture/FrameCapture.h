@@ -7,12 +7,12 @@
 //   ANGLE Frame capture interface.
 //
 
+#ifndef LIBANGLE_FRAME_CAPTURE_H_
+#define LIBANGLE_FRAME_CAPTURE_H_
+
 #ifdef UNSAFE_BUFFERS_BUILD
 #    pragma allow_unsafe_buffers
 #endif
-
-#ifndef LIBANGLE_FRAME_CAPTURE_H_
-#define LIBANGLE_FRAME_CAPTURE_H_
 
 #include <fstream>
 #include "sys/stat.h"

@@ -6,12 +6,12 @@
 
 // global_state.h : Defines functions for querying the thread-local GL and EGL state.
 
+#ifndef LIBGLESV2_GLOBALSTATE_H_
+#define LIBGLESV2_GLOBALSTATE_H_
+
 #ifdef UNSAFE_BUFFERS_BUILD
 #    pragma allow_unsafe_buffers
 #endif
-
-#ifndef LIBGLESV2_GLOBALSTATE_H_
-#define LIBGLESV2_GLOBALSTATE_H_
 
 #include "libANGLE/Context.h"
 #include "libANGLE/Debug.h"

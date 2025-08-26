@@ -4,12 +4,12 @@
 // found in the LICENSE file.
 //
 
+#ifndef LIBANGLE_UNIFORM_H_
+#define LIBANGLE_UNIFORM_H_
+
 #ifdef UNSAFE_BUFFERS_BUILD
 #    pragma allow_unsafe_buffers
 #endif
-
-#ifndef LIBANGLE_UNIFORM_H_
-#define LIBANGLE_UNIFORM_H_
 
 #include <string>
 #include <vector>

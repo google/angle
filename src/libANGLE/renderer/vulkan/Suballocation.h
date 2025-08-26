@@ -7,12 +7,12 @@
 //    Defines class interface for BufferBlock and Suballocation and other related classes.
 //
 
+#ifndef LIBANGLE_RENDERER_VULKAN_SUBALLOCATION_H_
+#define LIBANGLE_RENDERER_VULKAN_SUBALLOCATION_H_
+
 #ifdef UNSAFE_BUFFERS_BUILD
 #    pragma allow_unsafe_buffers
 #endif
-
-#ifndef LIBANGLE_RENDERER_VULKAN_SUBALLOCATION_H_
-#define LIBANGLE_RENDERER_VULKAN_SUBALLOCATION_H_
 
 #include "common/SimpleMutex.h"
 #include "common/debug.h"

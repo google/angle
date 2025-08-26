@@ -5,12 +5,12 @@
 //
 // vector_utils.h: Utility classes implementing various vector operations
 
+#ifndef COMMON_VECTOR_UTILS_H_
+#define COMMON_VECTOR_UTILS_H_
+
 #ifdef UNSAFE_BUFFERS_BUILD
 #    pragma allow_unsafe_buffers
 #endif
-
-#ifndef COMMON_VECTOR_UTILS_H_
-#define COMMON_VECTOR_UTILS_H_
 
 #include <cmath>
 #include <cstddef>

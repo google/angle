@@ -6,12 +6,12 @@
 // vk_helpers:
 //   Helper utility classes that manage Vulkan resources.
 
+#ifndef LIBANGLE_RENDERER_VULKAN_VK_HELPERS_H_
+#define LIBANGLE_RENDERER_VULKAN_VK_HELPERS_H_
+
 #ifdef UNSAFE_BUFFERS_BUILD
 #    pragma allow_unsafe_libc_calls
 #endif
-
-#ifndef LIBANGLE_RENDERER_VULKAN_VK_HELPERS_H_
-#define LIBANGLE_RENDERER_VULKAN_VK_HELPERS_H_
 
 #include "common/MemoryBuffer.h"
 #include "common/SimpleMutex.h"
