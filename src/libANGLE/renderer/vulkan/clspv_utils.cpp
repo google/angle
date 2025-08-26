@@ -27,6 +27,12 @@
 #include "spirv-tools/libspirv.h"
 #include "spirv-tools/libspirv.hpp"
 
+#if defined(ANGLE_ENABLE_ASSERTS)
+constexpr bool kAngleDebug = true;
+#else
+constexpr bool kAngleDebug = false;
+#endif
+
 namespace rx
 {
 constexpr std::string_view kPrintfConversionSpecifiers = "diouxXfFeEgGaAcsp";
@@ -98,30 +104,44 @@ std::string PrintFormattedString(const std::string &formatString,
             {
                 // all floats with same convention as snprintf
                 if (size == 2)
+                {
                     bytesWritten = snprintf(out.data(), outSize, formatString.c_str(),
                                             cl_half_to_float(ReadPtrAs<cl_half>(data)));
+                }
                 else if (size == 4)
+                {
                     bytesWritten =
                         snprintf(out.data(), outSize, formatString.c_str(), ReadPtrAs<float>(data));
+                }
                 else
+                {
                     bytesWritten = snprintf(out.data(), outSize, formatString.c_str(),
                                             ReadPtrAs<double>(data));
+                }
                 break;
             }
             default:
             {
                 if (size == 1)
+                {
                     bytesWritten = snprintf(out.data(), outSize, formatString.c_str(),
                                             ReadPtrAs<uint8_t>(data));
+                }
                 else if (size == 2)
+                {
                     bytesWritten = snprintf(out.data(), outSize, formatString.c_str(),
                                             ReadPtrAs<uint16_t>(data));
+                }
                 else if (size == 4)
+                {
                     bytesWritten = snprintf(out.data(), outSize, formatString.c_str(),
                                             ReadPtrAs<uint32_t>(data));
+                }
                 else
+                {
                     bytesWritten = snprintf(out.data(), outSize, formatString.c_str(),
                                             ReadPtrAs<uint64_t>(data));
+                }
                 break;
             }
         }
@@ -292,6 +312,11 @@ void ProcessPrintfStatement(unsigned char *&data,
     }
 
     std::printf("%s", printfOutput.c_str());
+
+    if (kAngleDebug)
+    {
+        INFO() << "ANGLE-CL.Kernel: " << printfOutput.c_str();
+    }
 }
 
 std::string GetSpvVersionAsClspvString(spv_target_env spvVersion)
