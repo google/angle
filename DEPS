@@ -173,6 +173,7 @@ vars = {
   'checkout_angle_restricted_trace_battle_of_polytopia': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_beach_buggy_racing': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_billiards_city': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_bingo_blitz': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_black_beacon': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_black_clover_m': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_black_desert_mobile': 'checkout_angle_restricted_traces',
@@ -1536,6 +1537,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_billiards_city',
+  },
+  'src/tests/restricted_traces/bingo_blitz': {
+      'packages': [
+        {
+            'package': 'angle/traces/bingo_blitz',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_bingo_blitz',
   },
   'src/tests/restricted_traces/black_beacon': {
       'packages': [
