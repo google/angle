@@ -571,7 +571,7 @@ angle::Result CLProgramVk::compile(const cl::DevicePtrs &devices,
             ERR() << "Failed to create output path(s) for header(s)!";
             ANGLE_CL_RETURN_ERROR(CL_INVALID_OPERATION);
         }
-        writeFile(headerFilePath.c_str(), inputHeaderSrc.data(), inputHeaderSrc.size());
+        writeFile(headerFilePath.c_str(), inputHeaderSrc);
     }
 
     setBuildStatus(devicePtrs, CL_BUILD_IN_PROGRESS);

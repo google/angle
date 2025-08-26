@@ -19,6 +19,7 @@
 
 #include <math.h>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include "angle_gl.h"
@@ -388,7 +389,7 @@ void FillWithNullptr(T *array)
 }
 }  // namespace angle
 
-void writeFile(const char *path, const void *data, size_t size);
+void writeFile(const char *path, std::string_view content);
 
 // Get the underlying type. Useful for indexing into arrays with enum values by avoiding the clutter
 // of the extraneous static_cast<>() calls.

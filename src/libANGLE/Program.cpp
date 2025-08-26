@@ -2443,7 +2443,7 @@ void Program::dumpProgramInfo(const Context *context) const
     pathStream << dumpHash << ".program";
     std::string path = pathStream.str();
 
-    writeFile(path.c_str(), dump.c_str(), dump.length());
+    writeFile(path.c_str(), dump);
     INFO() << "Dumped program: " << path;
 }
 }  // namespace gl

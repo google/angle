@@ -267,9 +267,7 @@ angle::Result CompileTask::postTranslate()
         else
         {
             std::string dumpFile = GetShaderDumpFilePath(mSourceHash, suffix);
-
-            const std::string &translatedSource = mCompiledState->translatedSource;
-            writeFile(dumpFile.c_str(), translatedSource.c_str(), translatedSource.length());
+            writeFile(dumpFile.c_str(), mCompiledState->translatedSource);
             INFO() << "Dumped translated source: " << dumpFile;
         }
     }
@@ -491,7 +489,7 @@ void Shader::setSource(const Context *context,
     {
         std::string dumpFile = GetShaderDumpFilePath(sourceHash, suffix);
 
-        writeFile(dumpFile.c_str(), source.c_str(), source.length());
+        writeFile(dumpFile.c_str(), source);
         INFO() << "Dumped shader source: " << dumpFile;
     }
 
