@@ -416,6 +416,11 @@ bool TType::isStructureContainingSamplers() const
     return mStructure ? mStructure->containsSamplers() : false;
 }
 
+bool TType::isStructureContainingOnlySamplers() const
+{
+    return mStructure ? mStructure->containsOnlySamplers() : false;
+}
+
 bool TType::isInterfaceBlockContainingType(TBasicType t) const
 {
     return isInterfaceBlock() ? mInterfaceBlock->containsType(t) : false;
@@ -837,6 +842,20 @@ bool TFieldListCollection::containsSamplers() const
             return true;
     }
     return false;
+}
+
+bool TFieldListCollection::containsOnlySamplers() const
+{
+    for (const auto *field : *mFields)
+    {
+        const TType *fieldType = field->type();
+        if (!IsSampler(fieldType->getBasicType()) &&
+            !fieldType->isStructureContainingOnlySamplers())
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 TString TFieldListCollection::buildMangledFieldList() const
