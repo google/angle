@@ -6996,6 +6996,82 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that nested structs with samplers work when the nested struct is not the last element.
+TEST_P(GLSLTest_ES3, NestedStructWithSamplers)
+{
+    const char kFS[] = R"(#version 300 es
+precision mediump float;
+
+struct Inner
+{
+    sampler2D s;
+    float a;
+};
+
+uniform struct Outer
+{
+    Inner i;
+    float b;
+} u;
+
+out vec4 color;
+
+void main()
+{
+    color = texture(u.i.s, vec2(0)) + vec4(u.i.a, u.b, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+
+    GLint uniLocA = glGetUniformLocation(program, "u.i.a");
+    ASSERT_NE(-1, uniLocA);
+    glUniform1f(uniLocA, 0.5f);
+
+    GLint uniLocB = glGetUniformLocation(program, "u.b");
+    ASSERT_NE(-1, uniLocB);
+    glUniform1f(uniLocB, 0.75f);
+
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(127, 191, 0, 255), 1);
+}
+
+// Test that nested structs with samplers work when the nested struct is not the last element and
+// includes nothing but samplers.
+TEST_P(GLSLTest_ES3, NestedStructWithOnlySamplers)
+{
+    const char kFS[] = R"(#version 300 es
+precision mediump float;
+
+struct Inner
+{
+    sampler2D s;
+};
+
+uniform struct Outer
+{
+    Inner i;
+    float a;
+} u;
+
+out vec4 color;
+
+void main()
+{
+    color = texture(u.i.s, vec2(0)) + vec4(u.a, 0, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS);
+    glUseProgram(program);
+
+    GLint uniLocA = glGetUniformLocation(program, "u.a");
+    ASSERT_NE(-1, uniLocA);
+    glUniform1f(uniLocA, 0.5f);
+
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, GLColor(127, 0, 0, 255), 1);
+}
+
 // Test that structs with samplers are not allowed in interface blocks.  This is forbidden per
 // GLES3:
 //

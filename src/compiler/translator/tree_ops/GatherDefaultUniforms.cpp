@@ -17,8 +17,6 @@
 #include "compiler/translator/tree_util/ReplaceVariable.h"
 #include "compiler/translator/util.h"
 
-#include "compiler/translator/OutputTree.h"
-
 namespace sh
 {
 
