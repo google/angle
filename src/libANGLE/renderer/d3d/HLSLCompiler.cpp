@@ -246,7 +246,7 @@ angle::Result HLSLCompiler::compileToBinary(d3d::Context *context,
             SafeRelease(errorMessage);
             ANGLE_TRACE_EVENT1("gpu.angle", "D3DCompile::Error", "error", errorMessage);
 
-            infoLog.appendSanitized(message.c_str());
+            infoLog.appendSanitized(message);
 
             // This produces unbelievable amounts of spam in about:gpu.
             // WARN() << std::endl << hlsl;
