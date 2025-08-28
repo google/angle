@@ -9258,4 +9258,62 @@ angle::Result ContextVk::ensureInterfacePipelineCache()
 
     return angle::Result::Continue;
 }
+
+angle::Result ContextVk::onVertexArrayChange(const gl::AttributesMask enabledAttribDirtyBits,
+                                             const gl::AttributesMask disabledAttribDirtyBits)
+{
+    const VertexArrayVk &vertexArray = *getVertexArray();
+
+    if (ANGLE_UNLIKELY(!getFeatures().supportsVertexInputDynamicState.enabled))
+    {
+        const gl::AttributesMask attribDirtyBits = enabledAttribDirtyBits | disabledAttribDirtyBits;
+
+        invalidateCurrentGraphicsPipeline();
+
+        for (size_t attribIndex : attribDirtyBits)
+        {
+            const GLuint staticStride =
+                mRenderer->getFeatures().useVertexInputBindingStrideDynamicState.enabled
+                    ? 0
+                    : vertexArray.getCurrentArrayBufferStrides()[attribIndex];
+
+            GLuint divisor = vertexArray.getCurrentArrayBufferDivisors()[attribIndex];
+            // Set divisor to 1 for attribs with emulated divisor
+            if (divisor > mRenderer->getMaxVertexAttribDivisor())
+            {
+                divisor = 1;
+            }
+
+            mGraphicsPipelineDesc->updateVertexInput(
+                this, &mGraphicsPipelineTransition, static_cast<uint32_t>(attribIndex),
+                staticStride, divisor, vertexArray.getCurrentArrayBufferFormats()[attribIndex],
+                vertexArray.getCurrentArrayBufferCompressed()[attribIndex],
+                vertexArray.getCurrentArrayBufferRelativeOffsets()[attribIndex]);
+        }
+    }
+
+    if (ANGLE_UNLIKELY(mCurrentTransformFeedbackQueueSerial.valid()))
+    {
+        const gl::AttribArray<vk::BufferHelper *> &buffers = vertexArray.getCurrentArrayBuffers();
+        bool breakRenderPass                               = false;
+        for (size_t attribIndex : enabledAttribDirtyBits)
+        {
+            ASSERT(buffers[attribIndex] != nullptr);
+            if (buffers[attribIndex]->writtenByCommandBuffer(mCurrentTransformFeedbackQueueSerial))
+            {
+                breakRenderPass = true;
+                break;
+            }
+        }
+
+        if (breakRenderPass)
+        {
+            ANGLE_TRY(flushCommandsAndEndRenderPass(
+                RenderPassClosureReason::XfbWriteThenVertexIndexBuffer));
+        }
+    }
+
+    mGraphicsDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
+    return angle::Result::Continue;
+}
 }  // namespace rx

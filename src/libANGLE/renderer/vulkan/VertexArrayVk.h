@@ -169,9 +169,9 @@ class VertexArrayVk : public VertexArrayImpl
         std::array<AttributeRange, gl::MAX_VERTEX_ATTRIBS> &mergeRangesOut,
         std::array<size_t, gl::MAX_VERTEX_ATTRIBS> &mergedIndexesOut) const;
 
-    angle::Result setDefaultPackedInput(ContextVk *contextVk,
-                                        size_t attribIndex,
-                                        angle::FormatID *formatOut);
+    void setDefaultPackedInput(ContextVk *contextVk,
+                               size_t attribIndex,
+                               angle::FormatID *formatOut);
 
     angle::Result convertVertexBufferGPU(ContextVk *contextVk,
                                          BufferVk *srcBuffer,

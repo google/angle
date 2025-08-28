@@ -947,23 +947,23 @@ angle::Result VertexArrayVk::syncState(const gl::Context *context,
         ANGLE_TRY(syncDirtyDisabledAttrib(contextVk, attribs[attribIndex], attribIndex));
     }
 
+    ANGLE_TRY(contextVk->onVertexArrayChange(enabledAttribDirtyBits, disabledAttribDirtyBits));
+
     attribBits->fill(gl::VertexArray::DirtyAttribBits());
     bindingBits->fill(gl::VertexArray::DirtyBindingBits());
 
     return angle::Result::Continue;
 }
 
-ANGLE_INLINE angle::Result VertexArrayVk::setDefaultPackedInput(ContextVk *contextVk,
-                                                                size_t attribIndex,
-                                                                angle::FormatID *formatOut)
+ANGLE_INLINE void VertexArrayVk::setDefaultPackedInput(ContextVk *contextVk,
+                                                       size_t attribIndex,
+                                                       angle::FormatID *formatOut)
 {
     const gl::State &glState = contextVk->getState();
     const gl::VertexAttribCurrentValueData &defaultValue =
         glState.getVertexAttribCurrentValues()[attribIndex];
 
     *formatOut = GetCurrentValueFormatID(defaultValue.Type);
-
-    return contextVk->onVertexAttributeChange(attribIndex, 0, 0, *formatOut, false, 0, nullptr);
 }
 
 angle::Result VertexArrayVk::updateActiveAttribInfo(ContextVk *contextVk)
@@ -1079,19 +1079,9 @@ angle::Result VertexArrayVk::syncDirtyEnabledAttrib(ContextVk *contextVk,
         }
     }
 
-    if (bufferOnly)
+    if (!bufferOnly)
     {
-        ANGLE_TRY(contextVk->onVertexBufferChange(mCurrentArrayBuffers[attribIndex]));
-    }
-    else
-    {
-        const angle::FormatID format = attrib.format->id;
-        ANGLE_TRY(contextVk->onVertexAttributeChange(
-            attribIndex, mCurrentArrayBufferStrides[attribIndex], binding.getDivisor(), format,
-            compressed, mCurrentArrayBufferRelativeOffsets[attribIndex],
-            mCurrentArrayBuffers[attribIndex]));
-
-        mCurrentArrayBufferFormats[attribIndex]  = format;
+        mCurrentArrayBufferFormats[attribIndex]  = attrib.format->id;
         mCurrentArrayBufferDivisors[attribIndex] = binding.getDivisor();
     }
 
@@ -1117,8 +1107,7 @@ angle::Result VertexArrayVk::syncDirtyDisabledAttrib(ContextVk *contextVk,
     mCurrentArrayBufferDivisors[attribIndex]        = 0;
     mCurrentArrayBufferRelativeOffsets[attribIndex] = 0;
 
-    ANGLE_TRY(
-        setDefaultPackedInput(contextVk, attribIndex, &mCurrentArrayBufferFormats[attribIndex]));
+    setDefaultPackedInput(contextVk, attribIndex, &mCurrentArrayBufferFormats[attribIndex]);
 
     mCurrentEnabledAttributesMask.reset(attribIndex);
     return angle::Result::Continue;
@@ -1228,13 +1217,7 @@ angle::Result VertexArrayVk::syncNeedsConversionAttrib(ContextVk *contextVk,
     mCurrentArrayBufferRelativeOffsets[attribIndex] = 0;
     mCurrentArrayBufferStrides[attribIndex]         = dstStride;
 
-    const angle::FormatID format = attrib.format->id;
-    ANGLE_TRY(contextVk->onVertexAttributeChange(
-        attribIndex, mCurrentArrayBufferStrides[attribIndex], binding.getDivisor(), format,
-        compressed, mCurrentArrayBufferRelativeOffsets[attribIndex],
-        mCurrentArrayBuffers[attribIndex]));
-
-    mCurrentArrayBufferFormats[attribIndex]  = format;
+    mCurrentArrayBufferFormats[attribIndex]  = attrib.format->id;
     mCurrentArrayBufferDivisors[attribIndex] = binding.getDivisor();
 
     mCurrentEnabledAttributesMask.set(attribIndex);
@@ -1578,8 +1561,10 @@ angle::Result VertexArrayVk::updateDefaultAttrib(ContextVk *contextVk, size_t at
         mCurrentArrayBufferStrides[attribIndex]  = 0;
         mCurrentArrayBufferDivisors[attribIndex] = 0;
 
-        ANGLE_TRY(setDefaultPackedInput(contextVk, attribIndex,
-                                        &mCurrentArrayBufferFormats[attribIndex]));
+        setDefaultPackedInput(contextVk, attribIndex, &mCurrentArrayBufferFormats[attribIndex]);
+
+        ANGLE_TRY(contextVk->onVertexAttributeChange(
+            attribIndex, 0, 0, mCurrentArrayBufferFormats[attribIndex], false, 0, nullptr));
     }
 
     return angle::Result::Continue;

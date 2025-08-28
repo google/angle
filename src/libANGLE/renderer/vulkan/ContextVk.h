@@ -413,8 +413,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         mGraphicsDirtyBits |= kIndexAndVertexDirtyBits;
     }
 
-    angle::Result onVertexBufferChange(const vk::BufferHelper *vertexBuffer);
-
+    angle::Result onVertexArrayChange(const gl::AttributesMask enabledAttribDirtyBits,
+                                      const gl::AttributesMask disabledAttribDirtyBits);
     angle::Result onVertexAttributeChange(size_t attribIndex,
                                           GLuint stride,
                                           GLuint divisor,
@@ -1751,12 +1751,6 @@ ANGLE_INLINE angle::Result ContextVk::onIndexBufferChange(
     return endRenderPassIfTransformFeedbackBuffer(currentIndexBuffer);
 }
 
-ANGLE_INLINE angle::Result ContextVk::onVertexBufferChange(const vk::BufferHelper *vertexBuffer)
-{
-    mGraphicsDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
-    return endRenderPassIfTransformFeedbackBuffer(vertexBuffer);
-}
-
 ANGLE_INLINE angle::Result ContextVk::onVertexAttributeChange(size_t attribIndex,
                                                               GLuint stride,
                                                               GLuint divisor,
@@ -1778,7 +1772,9 @@ ANGLE_INLINE angle::Result ContextVk::onVertexAttributeChange(size_t attribIndex
             divisor > mRenderer->getMaxVertexAttribDivisor() ? 1 : divisor, format, compressed,
             relativeOffset);
     }
-    return onVertexBufferChange(vertexBuffer);
+
+    mGraphicsDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
+    return endRenderPassIfTransformFeedbackBuffer(vertexBuffer);
 }
 
 ANGLE_INLINE bool ContextVk::hasUnsubmittedUse(const vk::ResourceUse &use) const
