@@ -275,6 +275,7 @@ vars = {
   'checkout_angle_restricted_trace_hungry_shark_evolution': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_hunter_assassin': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_idle_heroes': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_indian_bikes_driving_3d': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_infinity_ops': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_injustice_2': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_into_the_dead_2': 'checkout_angle_restricted_traces',
@@ -2565,6 +2566,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_idle_heroes',
+  },
+  'src/tests/restricted_traces/indian_bikes_driving_3d': {
+      'packages': [
+        {
+            'package': 'angle/traces/indian_bikes_driving_3d',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_indian_bikes_driving_3d',
   },
   'src/tests/restricted_traces/infinity_ops': {
       'packages': [
