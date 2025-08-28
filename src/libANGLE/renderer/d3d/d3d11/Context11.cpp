@@ -13,6 +13,8 @@
 
 #include "libANGLE/renderer/d3d/d3d11/Context11.h"
 
+#include <utility>
+
 #include "common/entry_points_enum_autogen.h"
 #include "common/string_utils.h"
 #include "image_util/loadimage.h"
@@ -792,12 +794,11 @@ angle::Result Context11::pushGroupMarker(GLsizei length, const char *marker)
 
 angle::Result Context11::popGroupMarker()
 {
-    const char *marker = nullptr;
     if (!mMarkerStack.empty())
     {
-        marker = mMarkerStack.top().c_str();
+        std::string marker = std::move(mMarkerStack.top());
         mMarkerStack.pop();
-        mRenderer->getDebugAnnotatorContext()->endEvent(marker,
+        mRenderer->getDebugAnnotatorContext()->endEvent(marker.c_str(),
                                                         angle::EntryPoint::GLPopGroupMarkerEXT);
     }
     return angle::Result::Continue;
