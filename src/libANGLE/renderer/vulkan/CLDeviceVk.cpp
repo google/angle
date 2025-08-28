@@ -132,7 +132,7 @@ CLDeviceVk::CLDeviceVk(const cl::Device &device, vk::Renderer *renderer)
         {cl::DeviceInfo::LatestConformanceVersionPassed, std::string("FIXME")}};
     mInfoSizeT = {
         {cl::DeviceInfo::MaxWorkGroupSize, props.limits.maxComputeWorkGroupInvocations},
-        {cl::DeviceInfo::MaxGlobalVariableSize, 1024 * 1024 * 1024},
+        {cl::DeviceInfo::MaxGlobalVariableSize, 0},
         {cl::DeviceInfo::GlobalVariablePreferredTotalSize, 0},
 
         // TODO(aannestrand) Update these hardcoded platform/device queries
