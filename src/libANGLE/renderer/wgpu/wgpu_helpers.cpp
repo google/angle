@@ -134,6 +134,19 @@ angle::Result ImageHelper::flushSingleLevelUpdates(ContextWgpu *contextWgpu,
     {
         return angle::Result::Continue;
     }
+
+    std::optional<CommandEncoderHandle> encoder;
+    auto ensureEncoder = [&]() -> angle::Result {
+        if (contextWgpu->hasActiveRenderPass())
+        {
+            ANGLE_TRY(
+                contextWgpu->endRenderPass(webgpu::RenderPassClosureReason::CopyBufferToTexture));
+        }
+        contextWgpu->ensureCommandEncoderCreated();
+        encoder.emplace(contextWgpu->getCurrentCommandEncoder());
+        return angle::Result::Continue;
+    };
+
     WGPUTexelCopyTextureInfo dst = WGPU_TEXEL_COPY_TEXTURE_INFO_INIT;
     dst.texture                  = mTexture.get();
     std::vector<PackedRenderPassColorAttachment> colorAttachments;
@@ -167,15 +180,16 @@ angle::Result ImageHelper::flushSingleLevelUpdates(ContextWgpu *contextWgpu,
                 ASSERT(srcUpdate.layerCount == 1);
                 copyExtent.depthOrArrayLayers = srcUpdate.layerCount;
 
-                ANGLE_TRY(contextWgpu->flush(webgpu::RenderPassClosureReason::CopyBufferToTexture));
-                contextWgpu->ensureCommandEncoderCreated();
-                CommandEncoderHandle encoder = contextWgpu->getCurrentCommandEncoder();
+                if (!encoder.has_value())
+                {
+                    ANGLE_TRY(ensureEncoder());
+                }
 
                 WGPUTexelCopyBufferInfo copyInfo = WGPU_TEXEL_COPY_BUFFER_INFO_INIT;
                 copyInfo.layout                  = srcUpdate.textureDataLayout;
                 copyInfo.buffer                  = srcUpdate.textureData.get();
-                mProcTable->commandEncoderCopyBufferToTexture(encoder.get(), &copyInfo, &dst,
-                                                              &copyExtent);
+                mProcTable->commandEncoderCopyBufferToTexture(encoder.value().get(), &copyInfo,
+                                                              &dst, &copyExtent);
             }
             break;
 
@@ -227,6 +241,7 @@ angle::Result ImageHelper::flushSingleLevelUpdates(ContextWgpu *contextWgpu,
         frameBuffer->updateDepthStencilAttachment(CreateNewDepthStencilAttachment(
             depthValue, stencilValue, textureView, updateDepth, updateStencil));
     }
+
     currentLevelQueue->clear();
 
     return angle::Result::Continue;
