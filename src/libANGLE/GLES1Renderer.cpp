@@ -703,7 +703,7 @@ angle::Result GLES1Renderer::linkProgram(Context *context,
     programObject->attachShader(context, getShader(vertexShader));
     programObject->attachShader(context, getShader(fragmentShader));
 
-    for (auto it : attribLocs)
+    for (const auto &it : attribLocs)
     {
         GLint index             = it.first;
         const std::string &name = it.second;

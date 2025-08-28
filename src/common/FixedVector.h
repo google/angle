@@ -341,9 +341,9 @@ template <class T, size_t N, class Storage>
 void FixedVector<T, N, Storage>::assign_from_initializer_list(
     std::initializer_list<value_type> init)
 {
-    for (auto element : init)
+    for (const auto &element : init)
     {
-        mStorage[mSize] = std::move(element);
+        mStorage[mSize] = element;
         mSize++;
     }
 }
