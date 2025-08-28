@@ -604,8 +604,8 @@ static const yytype_int8 yytranslate[] = {
 #if PPDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int16 yyrline[] = {0,   114, 114, 121, 122, 133, 133, 154, 154, 175,
-                                       178, 181, 184, 187, 190, 193, 196, 199, 202, 227,
-                                       249, 252, 255, 281, 308, 311, 314, 317, 329, 332};
+                                       178, 181, 184, 187, 190, 193, 196, 199, 202, 226,
+                                       247, 250, 253, 278, 304, 307, 310, 313, 325, 328};
 #endif
 
 /** Accessing symbol of state STATE.  */
@@ -1329,7 +1329,7 @@ yyreduce:
                     stream << yyvsp[-2] << " >> " << yyvsp[0];
                     std::string text = stream.str();
                     context->diagnostics->report(angle::pp::Diagnostics::PP_UNDEFINED_SHIFT,
-                                                 context->token->location, text.c_str());
+                                                 context->token->location, text);
                     *(context->valid) = false;
                 }
                 yyval = static_cast<YYSTYPE>(0);
@@ -1356,7 +1356,7 @@ yyreduce:
                     stream << yyvsp[-2] << " << " << yyvsp[0];
                     std::string text = stream.str();
                     context->diagnostics->report(angle::pp::Diagnostics::PP_UNDEFINED_SHIFT,
-                                                 context->token->location, text.c_str());
+                                                 context->token->location, text);
                     *(context->valid) = false;
                 }
                 yyval = static_cast<YYSTYPE>(0);
@@ -1392,7 +1392,7 @@ yyreduce:
                     stream << yyvsp[-2] << " % " << yyvsp[0];
                     std::string text = stream.str();
                     context->diagnostics->report(angle::pp::Diagnostics::PP_DIVISION_BY_ZERO,
-                                                 context->token->location, text.c_str());
+                                                 context->token->location, text);
                     *(context->valid) = false;
                 }
                 yyval = static_cast<YYSTYPE>(0);
@@ -1420,7 +1420,7 @@ yyreduce:
                     stream << yyvsp[-2] << " / " << yyvsp[0];
                     std::string text = stream.str();
                     context->diagnostics->report(angle::pp::Diagnostics::PP_DIVISION_BY_ZERO,
-                                                 context->token->location, text.c_str());
+                                                 context->token->location, text);
                     *(context->valid) = false;
                 }
                 yyval = static_cast<YYSTYPE>(0);

@@ -47,7 +47,7 @@ void ReplaceFoundMarker(const std::string &shaderSource,
     // Extract name from something like `@location(@@@@@@) NAME : TYPE`.
     size_t startOfNamePos = nextMarker + strlen(marker);
     size_t endOfNamePos   = shaderSource.find(endOfName, startOfNamePos, strlen(endOfName));
-    std::string name(shaderSource.c_str() + startOfNamePos, endOfNamePos - startOfNamePos);
+    std::string name      = shaderSource.substr(startOfNamePos, endOfNamePos - startOfNamePos);
 
     // Use the shader variable's name to get the assigned location
     auto locationIter = varNameToLocation.find(name);

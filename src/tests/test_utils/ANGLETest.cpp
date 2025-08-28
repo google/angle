@@ -597,7 +597,7 @@ void ANGLETestBase::initOSWindow()
             FATAL() << "Failed to create a new window";
         }
         mFixture->osWindow->disableErrorMessageDialog();
-        if (!mFixture->osWindow->initialize(windowName.c_str(), 128, 128))
+        if (!mFixture->osWindow->initialize(windowName, 128, 128))
         {
             std::cerr << "Failed to initialize OS Window.\n";
         }

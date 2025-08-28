@@ -626,7 +626,7 @@ void AssignTransformFeedbackQualifiers(const gl::ProgramExecutable &programExecu
                     std::string fieldName =
                         pos == std::string::npos ? tfVarying.name : tfVarying.name.substr(pos + 1);
 
-                    if (fieldName == varying->frontVarying.varying->name.c_str())
+                    if (fieldName == varying->frontVarying.varying->name)
                     {
                         originalVarying = varying;
                         break;

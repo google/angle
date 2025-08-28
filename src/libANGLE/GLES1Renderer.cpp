@@ -1056,8 +1056,8 @@ angle::Result GLES1Renderer::initializeRendererProgram(Context *context,
         ss2d << "tex_sampler" << i;
         sscube << "tex_cube_sampler" << i;
 
-        programState.tex2DSamplerLocs[i]   = executable.getUniformLocation(ss2d.str().c_str());
-        programState.texCubeSamplerLocs[i] = executable.getUniformLocation(sscube.str().c_str());
+        programState.tex2DSamplerLocs[i]   = executable.getUniformLocation(ss2d.str());
+        programState.texCubeSamplerLocs[i] = executable.getUniformLocation(sscube.str());
     }
 
     programState.textureEnvColorLoc = executable.getUniformLocation("texture_env_color");
