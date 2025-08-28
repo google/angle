@@ -276,7 +276,6 @@ bool OutputUniformBlocksAndSamplers(TCompiler *compiler,
                                     TIntermBlock *root,
                                     const TVariable *defaultUniformBlock)
 {
-    const std::vector<ShaderVariable> &basicUniforms = compiler->getUniforms();
     TInfoSinkBase &output                            = compiler->getInfoSink().obj;
     GlobalVars globalVars                            = FindGlobalVars(root);
 
@@ -285,6 +284,7 @@ bool OutputUniformBlocksAndSamplers(TCompiler *compiler,
     bool outputDefaultUniformBlockVar = false;
     if (defaultUniformBlock)
     {
+        const std::vector<ShaderVariable> &basicUniforms = compiler->getUniforms();
         for (const ShaderVariable &shaderVar : basicUniforms)
         {
             if (gl::IsOpaqueType(shaderVar.type) || !shaderVar.active)
