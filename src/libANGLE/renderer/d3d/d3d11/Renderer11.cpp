@@ -765,6 +765,25 @@ egl::Error Renderer11::initializeDXGIAdapter()
 
         if (!mDxgiAdapter)
         {
+            // Iterate through all adapters and choose the first non-WARP one
+            angle::ComPtr<IDXGIAdapter> temp;
+
+            for (UINT i = 0; SUCCEEDED(factory->EnumAdapters(i, &temp)); i++)
+            {
+                DXGI_ADAPTER_DESC desc;
+                if (SUCCEEDED(temp->GetDesc(&desc)))
+                {
+                    if (!IsMicrosoft(desc.VendorId))
+                    {
+                        mDxgiAdapter = std::move(temp);
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (!mDxgiAdapter)
+        {
             hr = factory->EnumAdapters(0, &mDxgiAdapter);
             if (FAILED(hr))
             {
