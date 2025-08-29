@@ -4230,7 +4230,7 @@ TConstantUnion *TIntermConstantUnion::FoldAggregateBuiltIn(TIntermAggregate *agg
 // TIntermPreprocessorDirective implementation.
 TIntermPreprocessorDirective::TIntermPreprocessorDirective(PreprocessorDirective directive,
                                                            ImmutableString command)
-    : mDirective(directive), mCommand(std::move(command))
+    : mDirective(directive), mCommand(command)
 {}
 
 TIntermPreprocessorDirective::TIntermPreprocessorDirective(const TIntermPreprocessorDirective &node)
