@@ -8385,6 +8385,7 @@ void FrameCaptureShared::onEndFrame(gl::Context *context)
         writeCppReplayIndexFiles(context, false);
 
         mWroteIndexFile = true;
+        INFO() << "Finished recording graphics API capture";
     }
 
     reset();
