@@ -4929,19 +4929,35 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         gl::Query *query = queryIter->second;
         if (query)
         {
-            gl::QueryType queryType = query->getType();
-
             // Defer active queries until we've created them all
             if (IsQueryActive(apiState, queryID))
             {
                 continue;
             }
 
-            // Begin the query to generate the object
-            cap(CaptureBeginQuery(replayState, true, queryType, queryID));
+            gl::QueryType queryType = query->getType();
+            switch (queryType)
+            {
+                case gl::QueryType::AnySamples:
+                case gl::QueryType::AnySamplesConservative:
+                case gl::QueryType::PrimitivesGenerated:
+                case gl::QueryType::TransformFeedbackPrimitivesWritten:
+                case gl::QueryType::TimeElapsed:
+                    // Begin the query to generate the object
+                    cap(CaptureBeginQuery(replayState, true, queryType, queryID));
+                    // End the query since it is not active
+                    cap(CaptureEndQuery(replayState, true, queryType));
+                    break;
 
-            // End the query if it was not active
-            cap(CaptureEndQuery(replayState, true, queryType));
+                case gl::QueryType::Timestamp:
+                    // Issue the query to create the object
+                    cap(CaptureQueryCounterEXT(replayState, true, queryID, queryType));
+                    break;
+
+                default:
+                    UNREACHABLE();
+                    break;
+            }
         }
     }
 
