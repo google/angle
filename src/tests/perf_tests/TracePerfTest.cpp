@@ -1318,6 +1318,11 @@ TracePerfTest::TracePerfTest(std::unique_ptr<const TracePerfParams> params)
         addExtensionPrerequisite("GL_OES_framebuffer_object");
     }
 
+    if (traceNameIs("minecraft_vibrant_visuals"))
+    {
+        addIntegerPrerequisite(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, 1024);
+    }
+
     // GL_KHR_debug does not work on Android for GLES1
     if (IsAndroid() && mParams->traceInfo.contextClientMajorVersion == 1)
     {

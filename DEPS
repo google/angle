@@ -312,6 +312,7 @@ vars = {
   'checkout_angle_restricted_trace_messenger_lite': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_minecraft': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_minecraft_bedrock': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_minecraft_vibrant_visuals': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_minetest': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_mini_block_craft': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_mini_world': 'checkout_angle_restricted_traces',
@@ -2937,6 +2938,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_minecraft_bedrock',
+  },
+  'src/tests/restricted_traces/minecraft_vibrant_visuals': {
+      'packages': [
+        {
+            'package': 'angle/traces/minecraft_vibrant_visuals',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_minecraft_vibrant_visuals',
   },
   'src/tests/restricted_traces/minetest': {
       'packages': [
