@@ -214,6 +214,67 @@ void main()
         return shader.str();
     }
 
+    std::string VertexShaderSourceWithUniforms()
+    {
+        std::stringstream shader;
+        shader << (IsDrawIDTest() ? "#extension GL_ANGLE_multi_draw : require\n" : "")
+               << (IsInstancedTest() ? "attribute float vInstance;" : "") << R"(
+uniform bool boolUniform;
+uniform highp vec4 colorId0Uniform;
+uniform highp vec4 colorId1Uniform;
+uniform highp vec4 colorId2Uniform;
+attribute vec2 vPosition;
+varying vec4 color;
+void main()
+{
+    int id = )" << (IsDrawIDTest() ? "gl_DrawID" : "0")
+               << ";" << R"(
+    float quad_id = float(id / 2);
+    float color_id = quad_id - (3.0 * floor(quad_id / 3.0));
+    if (color_id == 0.0) {
+      if (boolUniform) {
+        color = colorId0Uniform;
+      } else {
+        color = vec4(0, 0, 0, 1);
+      }
+    } else if (color_id == 1.0) {
+      if (boolUniform) {
+        color = colorId1Uniform;
+      } else {
+        color = vec4(0, 0, 0, 1);
+      }
+    } else {
+      if (boolUniform) {
+        color = colorId2Uniform;
+      } else {
+        color = vec4(0, 0, 0, 1);
+      }
+    }
+
+    mat3 transform = mat3(1.0);
+)"
+               << (IsInstancedTest() ? R"(
+    transform[0][0] = 0.5;
+    transform[1][1] = 0.5;
+    if (vInstance == 0.0) {
+
+    } else if (vInstance == 1.0) {
+        transform[2][0] = 0.5;
+    } else if (vInstance == 2.0) {
+        transform[2][1] = 0.5;
+    } else if (vInstance == 3.0) {
+        transform[2][0] = 0.5;
+        transform[2][1] = 0.5;
+    }
+)"
+                                     : "")
+               << R"(
+    gl_Position = vec4(transform * vec3(vPosition, 1.0) * 2.0 - 1.0, 1);
+})";
+
+        return shader.str();
+    }
+
     std::string FragmentShaderSource()
     {
         return
@@ -680,6 +741,52 @@ TEST_P(MultiDrawTest, MultiDrawElements)
     ANGLE_SKIP_TEST_IF(!requestExtensions());
     SetupBuffers();
     SetupProgram();
+    DoDrawElements();
+    EXPECT_GL_NO_ERROR();
+    CheckDrawResult(DrawIDOptionOverride::Default);
+}
+
+// Bool uniform does not have a precision. If the "uniform sort by precision" places bool uniform
+// in front of uniforms added by ANGLE (e.g. ANGLE_angle_DrawID), it can cause uniforms not
+// interpreted correctly on Mac. e.g. http://crbug.com/437678149 For example, following uniform
+// order can cause _umodelViewMatrix not being read correctly
+// struct ANGLE_UserUniforms {
+//  bool _uapplyOffset;
+//  int ANGLE_angle_DrawID;
+//  metal::float4x4 _umodelViewMatrix;
+//  metal::float4x4 _uprojectionMatrix;
+//}
+
+// Changing above to the following fix the bug on Mac
+// struct ANGLE_UserUniforms {
+//  int ANGLE_angle_DrawID;
+//  metal::float4x4 _umodelViewMatrix;
+//  metal::float4x4 _uprojectionMatrix;
+//  int _uapplyOffset;
+//}
+// Add a test that check "adding a bool uniform will not mess up other uniforms on Mac".
+TEST_P(MultiDrawTest, MultiDrawElementsWithBoolUniforms)
+{
+    ANGLE_SKIP_TEST_IF(!requestExtensions());
+    SetupBuffers();
+    mProgram =
+        CompileProgram(VertexShaderSourceWithUniforms().c_str(), FragmentShaderSource().c_str());
+    EXPECT_GL_NO_ERROR();
+    ASSERT_GE(mProgram, 1u);
+    glUseProgram(mProgram);
+    mPositionLoc         = glGetAttribLocation(mProgram, "vPosition");
+    mInstanceLoc         = glGetAttribLocation(mProgram, "vInstance");
+    GLint boolUniformLoc = glGetUniformLocation(mProgram, "boolUniform");
+    glUniform1i(boolUniformLoc, true);
+    GLfloat colorId0UniformValue[4] = {1.0, 0.0, 0.0, 1.0};
+    GLint colorId0UniformLoc        = glGetUniformLocation(mProgram, "colorId0Uniform");
+    glUniform4fv(colorId0UniformLoc, 1, colorId0UniformValue);
+    GLfloat colorId1UniformValue[4] = {0.0, 1.0, 0.0, 1.0};
+    GLint colorId1UniformLoc        = glGetUniformLocation(mProgram, "colorId1Uniform");
+    glUniform4fv(colorId1UniformLoc, 1, colorId1UniformValue);
+    GLfloat colorId2UniformValue[4] = {0.0, 0.0, 1.0, 1.0};
+    GLint colorId2UniformLoc        = glGetUniformLocation(mProgram, "colorId2Uniform");
+    glUniform4fv(colorId2UniformLoc, 1, colorId2UniformValue);
     DoDrawElements();
     EXPECT_GL_NO_ERROR();
     CheckDrawResult(DrawIDOptionOverride::Default);
