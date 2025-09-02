@@ -411,6 +411,7 @@ vars = {
   'checkout_angle_restricted_trace_subway_princess_runner': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_subway_surfers': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_summoners_war': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_super_bear_adventure': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_super_mario_run': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_supertuxkart': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_supreme_duelist': 'checkout_angle_restricted_traces',
@@ -3929,6 +3930,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_summoners_war',
+  },
+  'src/tests/restricted_traces/super_bear_adventure': {
+      'packages': [
+        {
+            'package': 'angle/traces/super_bear_adventure',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_super_bear_adventure',
   },
   'src/tests/restricted_traces/super_mario_run': {
       'packages': [
