@@ -318,8 +318,8 @@ angle::Result UpdateFullTexturesDescriptorSet(vk::ErrorContext *context,
             {
                 ASSERT(writeSet.descriptorType == VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER);
                 const vk::BufferView *view = nullptr;
-                ANGLE_TRY(
-                    textureVk->getBufferView(context, nullptr, &samplerBinding, false, &view));
+                ANGLE_TRY(textureVk->getBufferView(context, nullptr, &samplerBinding, false, &view,
+                                                   nullptr));
 
                 VkBufferView &bufferView  = updateBuilder->allocBufferView();
                 bufferView                = view->getHandle();

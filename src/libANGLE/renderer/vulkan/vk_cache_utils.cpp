@@ -6731,13 +6731,17 @@ angle::Result DescriptorSetDescBuilder::updateImages(
                                      arrayElement + imageUniform.getOuterArrayOffset();
 
                 const vk::BufferView *view = nullptr;
-                ANGLE_TRY(textureVk->getBufferView(contextVk, format, nullptr, true, &view));
+                VkFormat viewFormat;
+                ANGLE_TRY(
+                    textureVk->getBufferView(contextVk, format, nullptr, true, &view, &viewFormat));
 
                 DescriptorInfoDesc &infoDesc = mDesc.getInfoDesc(infoIndex);
                 infoDesc.imageViewSerialOrOffset =
                     textureVk->getBufferViewSerial().viewSerial.getValue();
                 infoDesc.imageLayoutOrRange    = 0;
-                infoDesc.imageSubresourceRange = 0;
+                // special handling for texture buffer to store the VK format here.
+                infoDesc.imageSubresourceRange = static_cast<uint32_t>(viewFormat);
+
                 infoDesc.samplerOrBufferSerial = 0;
 
                 mHandles[infoIndex].bufferView = view->getHandle();

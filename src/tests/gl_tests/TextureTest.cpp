@@ -16766,6 +16766,78 @@ TEST_P(TextureBufferTestES32, RGBANorm16)
                   GLColor::magenta);
 }
 
+// Verify that when two shaders are writing to the same texture buffer but using
+// different buffer view formats will result in correct value.
+TEST_P(TextureBufferTestES32, TexBufferViewFormatMismatch)
+{
+    // Requires ES 3.2 for testing texture buffer
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 ||
+                       (getClientMajorVersion() == 3 && getClientMinorVersion() < 2));
+
+    // Pass 1: write a 16-byte sentinel at texel index 1 (offset 16 bytes) with RGBA32UI view.
+    constexpr char kCS_RGBA32UI[] = R"(#version 320 es
+layout(local_size_x=1) in;
+layout(rgba32ui, binding = 0) uniform writeonly highp uimageBuffer img;
+void main() {
+    imageStore(img, 1, uvec4(1, 2, 3, 4));
+})";
+
+    // Pass 2: write a 4-byte marker at texel index 4 (offset 16 bytes if R32UI view is used).
+    constexpr char kCS_R32UI[] = R"(#version 320 es
+layout(local_size_x=1) in;
+layout(r32ui, binding = 0) uniform highp uimageBuffer img;
+void main() {
+    imageStore(img, 4, uvec4(5));
+})";
+
+    // Create buffer large enough for the intended writes:
+    //  - RGBA32UI write at index 1 (offset 16, size 16)
+    //  - R32UI write at index 4 (offset 16, size 4)
+    // Use 80 bytes so either intended or buggy writes are in-bounds.
+    constexpr GLsizeiptr kBufferBytes = 80;
+    GLBuffer buffer;
+    glBindBuffer(GL_TEXTURE_BUFFER, buffer);
+    glBufferData(GL_TEXTURE_BUFFER, kBufferBytes, nullptr, GL_DYNAMIC_DRAW);
+
+    // Create texture buffer and attach buffer with a base format
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_BUFFER, tex);
+    // Base internal format can be any integer format; use R32UI.
+    glTexBufferRange(GL_TEXTURE_BUFFER, GL_R32UI, buffer, 0, kBufferBytes);
+
+    ANGLE_GL_COMPUTE_PROGRAM(progRGBA1, kCS_RGBA32UI);
+    ANGLE_GL_COMPUTE_PROGRAM(progR1, kCS_R32UI);
+
+    // First dispatch: rgba32ui (creates/uses RGBA view). Writes at texel 1 (offset 16).
+    glUseProgram(progRGBA1);
+    glBindImageTexture(0, tex, 0, GL_FALSE, 0, GL_READ_WRITE, GL_RGBA32UI);
+    glDispatchCompute(1, 1, 1);
+    glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT | GL_BUFFER_UPDATE_BARRIER_BIT);
+
+    // Second dispatch: r32ui (should use an R32UI view). Writes at texel 4, which is offset 16
+    // when texel size is 4 bytes (R32UI).
+    glUseProgram(progR1);
+    glBindImageTexture(0, tex, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32UI);
+    glDispatchCompute(1, 1, 1);
+    glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT | GL_BUFFER_UPDATE_BARRIER_BIT);
+
+    // Read back buffer contents and validate marker at offset 16 bytes (index 4).
+    glBindBuffer(GL_TEXTURE_BUFFER, buffer);
+    void *ptr = glMapBufferRange(GL_TEXTURE_BUFFER, 0, kBufferBytes, GL_MAP_READ_BIT);
+    ASSERT_NE(nullptr, ptr);
+    const auto *bytes = static_cast<const uint8_t *>(ptr);
+
+    std::array<uint32_t, kBufferBytes / sizeof(uint32_t)> values;
+    memcpy(values.data(), bytes, kBufferBytes);
+    glUnmapBuffer(GL_TEXTURE_BUFFER);
+
+    EXPECT_EQ(values[4], 5u) << "values[16] is " << values[16];
+    EXPECT_EQ(values[5], 2u);
+    EXPECT_EQ(values[6], 3u);
+    EXPECT_EQ(values[7], 4u);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Test that uploading data to buffer that's in use then using it as texture buffer works.
 TEST_P(TextureBufferTestES31, UseAsUBOThenUpdateThenAsTextureBuffer)
 {

@@ -12532,12 +12532,17 @@ angle::Result BufferViewHelper::getView(ErrorContext *context,
                                         const BufferHelper &buffer,
                                         VkDeviceSize bufferOffset,
                                         const Format &format,
-                                        const BufferView **viewOut)
+                                        const BufferView **viewOut,
+                                        VkFormat *viewVkFormatOut)
 {
     ASSERT(format.valid());
 
     vk::Renderer *renderer = context->getRenderer();
     VkFormat viewVkFormat  = format.getActualBufferVkFormat(renderer, false);
+    if (viewVkFormatOut != nullptr)
+    {
+        *viewVkFormatOut = viewVkFormat;
+    }
 
     auto iter = mViews.find(viewVkFormat);
     if (iter != mViews.end())

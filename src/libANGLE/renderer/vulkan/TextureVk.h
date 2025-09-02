@@ -243,7 +243,8 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
                                 const vk::Format *imageUniformFormat,
                                 const gl::SamplerBinding *samplerBinding,
                                 bool isImage,
-                                const vk::BufferView **viewOut);
+                                const vk::BufferView **viewOut,
+                                VkFormat *viewVkFormatOut);
 
     // A special view used for texture copies that shouldn't perform swizzle.
     const vk::ImageView &getCopyImageView() const;

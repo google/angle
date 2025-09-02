@@ -1109,7 +1109,8 @@ angle::Result CLImageVk::getBufferView(const vk::BufferView **viewOut)
 
     return mBufferViews.getView(
         mContext, parent->getBuffer(), parent->getOffset(),
-        mContext->getRenderer()->getFormat(CLImageFormatToAngleFormat(getFormat())), viewOut);
+        mContext->getRenderer()->getFormat(CLImageFormatToAngleFormat(getFormat())), viewOut,
+        nullptr);
 }
 
 }  // namespace rx
