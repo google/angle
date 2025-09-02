@@ -36,6 +36,10 @@
 
 381742474 : ShaderStorageBufferTest31.ExceedMaxShaderStorageBlockSize/* = SKIP
 
+// Vulkan color attachment incorrectly configured when GL_RASTERIZER_DISCARD is enabled and no glClear is issued.
+// Fails on non-ARM Linux due to unsupported setConfigAlphaBits(0) causing EGL config error.
+419403194 VULKAN : VulkanPerformanceCounterTest_RGBSurface.UnrenderedSurfaceShouldNotClear/* = SKIP
+
 // Angle does not support Array of Arrays in tessellation shader.
 413447006 : ProgramInterfaceTestES31.ArrayofArraysQueries/* = SKIP
 
