@@ -564,7 +564,6 @@ WGPUPrimitiveTopology GetPrimitiveTopology(gl::PrimitiveMode mode)
         case gl::PrimitiveMode::TriangleStrip:
             return WGPUPrimitiveTopology_TriangleStrip;
         case gl::PrimitiveMode::TriangleFan:
-            UNIMPLEMENTED();
             return WGPUPrimitiveTopology_TriangleList;  // Emulated
         default:
             UNREACHABLE();

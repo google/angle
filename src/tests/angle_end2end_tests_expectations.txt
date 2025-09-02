@@ -1604,8 +1604,6 @@ b/292285899 PIXEL4ORXL GLES : EGLSurfaceTest.DestroyAndRecreateWhileCurrent/* = 
 42264369 ANDROID GLES : TextureBufferTestES31.DrawCompleteNonZeroTexture/* = SKIP
 
 // WebGPU failures
-42266907 WGPU : RendererTest.SimpleOperation/* = SKIP
-42266907 WGPU : RendererTest.Draw/* = SKIP
 // BasicUniformUsage tests fail too frequently with WGPU
 376553328 LINUX INTEL WGPU : BasicUniformUsageTest.* = SKIP
 // Can't use a uniform struct outside of uniform address space.
