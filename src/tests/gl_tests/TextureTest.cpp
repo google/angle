@@ -4879,6 +4879,32 @@ void main()
     ASSERT_GL_NO_ERROR();
 }
 
+// Test functionality of GL_ANGLE_yuv_internal_format glCopyTextureCHROMIUM
+TEST_P(Texture2DTestES3YUV, CopyTextureChromium)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_ANGLE_yuv_internal_format"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_CHROMIUM_copy_texture"));
+
+    // Create YUV texture
+    GLTexture yuvTexture;
+    GLubyte yuvColor[]         = {40, 40, 40, 40, 40, 40, 40, 40, 240, 109, 240, 109};
+    GLubyte expectedRgbColor[] = {0, 0, 255, 255};
+    createImmutableTexture2D(yuvTexture, 2, 4, GL_G8_B8R8_2PLANE_420_UNORM_ANGLE,
+                             GL_G8_B8R8_2PLANE_420_UNORM_ANGLE, GL_UNSIGNED_BYTE, 1, yuvColor);
+
+    verifyResults2D(yuvTexture, expectedRgbColor);
+
+    // Create an RGBA texture to copy into
+    GLTexture rgbTexture;
+    glBindTexture(GL_TEXTURE_2D, rgbTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glCopyTextureCHROMIUM(yuvTexture, 0, GL_TEXTURE_2D, rgbTexture, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                          GL_FALSE, GL_FALSE, GL_FALSE);
+    verifyResults2D(rgbTexture, expectedRgbColor);
+
+    ASSERT_GL_NO_ERROR();
+}
 // Tests CopySubImage for float formats
 TEST_P(Texture2DTest, CopySubImageFloat_R_R)
 {

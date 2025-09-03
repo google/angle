@@ -82,6 +82,8 @@ bool IsPartialBlit(const Context *context,
 bool IsValidCopyTextureSourceInternalFormatEnum(GLenum internalFormat)
 {
     // Table 1.1 from the CHROMIUM_copy_texture spec
+    // No extension checks for the source formats because the texture has already been created and
+    // passed validation.
     switch (GetUnsizedFormat(internalFormat))
     {
         case GL_RED:
@@ -95,6 +97,14 @@ bool IsValidCopyTextureSourceInternalFormatEnum(GLenum internalFormat)
         case GL_BGRA_EXT:
         case GL_BGRA8_EXT:
         case GL_SRGB_ALPHA_EXT:
+        case GL_G8_B8R8_2PLANE_420_UNORM_ANGLE:
+        case GL_G8_B8_R8_3PLANE_420_UNORM_ANGLE:
+        case GL_G10X6_B10X6R10X6_2PLANE_420_UNORM_3PACK16_ANGLE:
+        case GL_G10X6_B10X6_R10X6_3PLANE_420_UNORM_3PACK16_ANGLE:
+        case GL_G12X4_B12X4R12X4_2PLANE_420_UNORM_3PACK16_ANGLE:
+        case GL_G12X4_B12X4_R12X4_3PLANE_420_UNORM_3PACK16_ANGLE:
+        case GL_G16_B16R16_2PLANE_420_UNORM_ANGLE:
+        case GL_G16_B16_R16_3PLANE_420_UNORM_ANGLE:
             return true;
 
         default:
