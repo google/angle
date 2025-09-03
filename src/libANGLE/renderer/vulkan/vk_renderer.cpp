@@ -4119,6 +4119,10 @@ void Renderer::initDeviceExtensionEntryPoints()
     {
         InitHostImageCopyFunctions(mDevice);
     }
+    if (mFeatures.supportsImageCompressionControl.enabled)
+    {
+        InitImageCompressionControlFunctions(mDevice);
+    }
     if (mFeatures.supportsVertexInputDynamicState.enabled)
     {
         InitVertexInputDynamicStateEXTFunctions(mDevice);

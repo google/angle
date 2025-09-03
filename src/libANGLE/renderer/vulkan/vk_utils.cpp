@@ -1299,6 +1299,12 @@ void InitHostImageCopyFunctions(VkDevice device)
     GET_DEVICE_FUNC(vkTransitionImageLayoutEXT);
 }
 
+// VK_EXT_image_compression_control
+void InitImageCompressionControlFunctions(VkDevice device)
+{
+    GET_DEVICE_FUNC(vkGetImageSubresourceLayout2EXT);
+}
+
 void InitSynchronization2Functions(VkDevice device)
 {
     GET_DEVICE_FUNC(vkCmdPipelineBarrier2KHR);
