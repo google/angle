@@ -5757,10 +5757,15 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
         (isIntel && IsLinux() && driverVersion >= angle::VersionTriple(22, 0, 0)) ||
         mFeatures.exposeNonConformantExtensionsAndVersions.enabled;
 
-    ANGLE_FEATURE_CONDITION(&mFeatures, supportsShaderFramebufferFetch,
-                            supportsFramebufferFetchInSurface);
-    ANGLE_FEATURE_CONDITION(&mFeatures, supportsShaderFramebufferFetchNonCoherent,
-                            supportsFramebufferFetchInSurface);
+    // Emulating framebuffer fetch causes significant perf regressions on samsung
+    const bool framebufferFetchEmulationCausesPerfRegression = isSamsung;
+
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsShaderFramebufferFetch,
+        (supportsFramebufferFetchInSurface && !framebufferFetchEmulationCausesPerfRegression));
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsShaderFramebufferFetchNonCoherent,
+        (supportsFramebufferFetchInSurface && !framebufferFetchEmulationCausesPerfRegression));
 
     // On ARM hardware, framebuffer-fetch-like behavior on Vulkan is known to be coherent even
     // without the Vulkan extension.
