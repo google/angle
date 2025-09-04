@@ -1,7 +1,8 @@
 Name: The LLVM Project
 Short Name: llvm
 URL: https://github.com/llvm/llvm-project
-Version: d222fa4521531cc4ac14b8e157d231c108c003be
+Revision: d222fa4521531cc4ac14b8e157d231c108c003be
+Update Mechanism: Manual
 Security Critical: no
 Shipped: no
 License: Apache-2.0
