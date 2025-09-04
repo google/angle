@@ -309,6 +309,7 @@ vars = {
   'checkout_angle_restricted_trace_marvel_contest_of_champions': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_marvel_snap': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_marvel_strike_force': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_matching_story': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_merge_dragons': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_merge_mansion': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_messenger_lite': 'checkout_angle_restricted_traces',
@@ -2912,6 +2913,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_marvel_strike_force',
+  },
+  'src/tests/restricted_traces/matching_story': {
+      'packages': [
+        {
+            'package': 'angle/traces/matching_story',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_matching_story',
   },
   'src/tests/restricted_traces/merge_dragons': {
       'packages': [
