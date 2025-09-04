@@ -3,7 +3,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-
 #ifdef UNSAFE_BUFFERS_BUILD
 #    pragma allow_unsafe_buffers
 #endif
@@ -46,6 +45,7 @@
 #include "compiler/translator/wgsl/OutputUniformBlocks.h"
 #include "compiler/translator/wgsl/RewritePipelineVariables.h"
 #include "compiler/translator/wgsl/Utils.h"
+#include "compiler/translator/wgsl/WGSLProgramPrelude.h"
 
 namespace sh
 {
@@ -78,6 +78,15 @@ TUnorderedSet<TSymbolUniqueId> FindOverloadedFunctions(TIntermBlock *root)
     }
     return uniqueIds;
 }
+
+struct OperatorInfo
+{
+    const char *opName;
+    std::optional<WGSLWrapperFunction> wgslWrapperFn = std::nullopt;
+    bool isPostfix                                   = false;
+
+    bool IsSymbolicOperator() const { return opName && !std::isalnum(opName[0]); }
+};
 
 // When emitting a list of statements, this determines whether a semicolon follows the statement.
 bool RequiresSemicolonTerminator(TIntermNode &node)
@@ -139,7 +148,8 @@ class OutputWGSLTraverser : public TIntermTraverser
                         RewritePipelineVarOutput *rewritePipelineVarOutput,
                         UniformBlockMetadata *uniformBlockMetadata,
                         WGSLGenerationMetadataForUniforms *arrayElementTypesInUniforms,
-                        const TUnorderedSet<TSymbolUniqueId> *overloadedFunctions);
+                        const TUnorderedSet<TSymbolUniqueId> *overloadedFunctions,
+                        WGSLProgramPrelude *prelude);
     ~OutputWGSLTraverser() override;
 
   protected:
@@ -182,6 +192,13 @@ class OutputWGSLTraverser : public TIntermTraverser
                                                  const size_t size);
     const TConstantUnion *emitConstantUnion(const TType &type,
                                             const TConstantUnion *constUnionBegin);
+    bool isStatement(TIntermNode *current);
+    OperatorInfo useOperatorAndGetInfo(TIntermNode *current,
+                                       TOperator op,
+                                       const TType &resultType,
+                                       const TType *argType0,
+                                       const TType *argType1,
+                                       const TType *argType2);
     const TField &getDirectField(const TIntermTyped &fieldsNode, TIntermTyped &indexNode);
     void emitIndentation();
     void emitOpenBrace();
@@ -208,6 +225,7 @@ class OutputWGSLTraverser : public TIntermTraverser
     const UniformBlockMetadata *mUniformBlockMetadata;
     WGSLGenerationMetadataForUniforms *mWGSLGenerationMetadataForUniforms;
     const TUnorderedSet<TSymbolUniqueId> *mOverloadedFunctions;
+    WGSLProgramPrelude *mPrelude;
 
     int mIndentLevel        = -1;
     int mLastIndentationPos = -1;
@@ -218,13 +236,15 @@ OutputWGSLTraverser::OutputWGSLTraverser(
     RewritePipelineVarOutput *rewritePipelineVarOutput,
     UniformBlockMetadata *uniformBlockMetadata,
     WGSLGenerationMetadataForUniforms *wgslGenerationMetadataForUniforms,
-    const TUnorderedSet<TSymbolUniqueId> *overloadedFunctions)
+    const TUnorderedSet<TSymbolUniqueId> *overloadedFunctions,
+    WGSLProgramPrelude *prelude)
     : TIntermTraverser(true, false, false),
       mSink(*sink),
       mRewritePipelineVarOutput(rewritePipelineVarOutput),
       mUniformBlockMetadata(uniformBlockMetadata),
       mWGSLGenerationMetadataForUniforms(wgslGenerationMetadataForUniforms),
-      mOverloadedFunctions(overloadedFunctions)
+      mOverloadedFunctions(overloadedFunctions),
+      mPrelude(prelude)
 {}
 
 OutputWGSLTraverser::~OutputWGSLTraverser() = default;
@@ -462,19 +482,21 @@ bool OutputWGSLTraverser::visitSwizzle(Visit, TIntermSwizzle *swizzleNode)
     return false;
 }
 
-struct OperatorInfo
+bool OutputWGSLTraverser::isStatement(TIntermNode *current)
 {
-    const char *opName;
-    const char *wgslWrapperFn = nullptr;
+    if (getParentNode()->getAsLoopNode() != nullptr || getParentNode()->getAsBlock() != nullptr)
+    {
+        return current->getAsBlock() == nullptr;
+    }
+    return false;
+}
 
-    bool IsSymbolicOperator() const { return opName && !std::isalnum(opName[0]); }
-};
-
-OperatorInfo GetOperatorInfo(TOperator op,
-                             const TType &resultType,
-                             const TType *argType0,
-                             const TType *argType1,
-                             const TType *argType2)
+OperatorInfo OutputWGSLTraverser::useOperatorAndGetInfo(TIntermNode *current,
+                                                        TOperator op,
+                                                        const TType &resultType,
+                                                        const TType *argType0,
+                                                        const TType *argType1,
+                                                        const TType *argType2)
 {
     switch (op)
     {
@@ -576,16 +598,50 @@ OperatorInfo GetOperatorInfo(TOperator op,
             return {"!"};
         case TOperator::EOpBitwiseNot:
             return {"~"};
-        // TODO(anglebug.com/42267100): increment operations cannot be used as expressions in WGSL.
+        // ++ and -- are always statements in WGSL and do not yield a value, so they are
+        // implemented as functions, unless the current expression is a statement and is a scalar
+        // integer, in which case the normal postfix operator will do.
+        // Note that WGSL only allows increments of scalar integers, so this also uses a function to
+        // increment floats.
         case TOperator::EOpPostIncrement:
-            return {"++"};
+            if (isStatement(current) && argType0->isScalarInt())
+            {
+                return OperatorInfo{"++", std::nullopt, /*isPostfix=*/true};
+            }
+            else
+            {
+                return OperatorInfo{"", mPrelude->postIncrement(*argType0)};
+            }
         case TOperator::EOpPostDecrement:
-            return {"--"};
+            if (isStatement(current) && argType0->isScalarInt())
+            {
+                return OperatorInfo{"--", std::nullopt, /*isPostfix=*/true};
+            }
+            else
+            {
+                return OperatorInfo{"", mPrelude->postDecrement(*argType0)};
+            }
+        // NOTE: ++ and -- can only be postfix unary operators in WGSL. If the current expression is
+        // a statement and is a scalar integer, just use the postfix operator, otherwise use a
+        // function call as above.
         case TOperator::EOpPreIncrement:
+            if (isStatement(current) && argType0->isScalarInt())
+            {
+                return OperatorInfo{"++", std::nullopt, /*isPostfix=*/true};
+            }
+            else
+            {
+                return OperatorInfo{"", mPrelude->preIncrement(*argType0)};
+            }
         case TOperator::EOpPreDecrement:
-            // TODO(anglebug.com/42267100): pre increments and decrements do not exist in WGSL.
-            UNIMPLEMENTED();
-            return {"TODO_operator"};
+            if (isStatement(current) && argType0->isScalarInt())
+            {
+                return OperatorInfo{"--", std::nullopt, /*isPostfix=*/true};
+            }
+            else
+            {
+                return OperatorInfo{"", mPrelude->preDecrement(*argType0)};
+            }
         case TOperator::EOpVectorTimesScalarAssign:
             return {"*="};
         case TOperator::EOpVectorTimesMatrixAssign:
@@ -616,7 +672,7 @@ OperatorInfo GetOperatorInfo(TOperator op,
         case TOperator::EOpEqual:
             if (argType0->isVector() && argType1->isVector())
             {
-                return {"==", "all"};
+                return {"==", WGSLWrapperFunction{ImmutableString("all("), ImmutableString(")")}};
             }
 
             if ((argType0->getStruct() && argType1->getStruct()) ||
@@ -633,7 +689,7 @@ OperatorInfo GetOperatorInfo(TOperator op,
         case TOperator::EOpNotEqual:
             if ((argType0->isVector() && argType1->isVector()))
             {
-                return {"!=", "all"};
+                return {"!=", WGSLWrapperFunction{ImmutableString("all("), ImmutableString(")")}};
             }
 
             if ((argType0->getStruct() && argType1->getStruct()) ||
@@ -1190,11 +1246,11 @@ bool OutputWGSLTraverser::visitBinary(Visit, TIntermBinary *binaryNode)
             const TType &rightType  = rightNode.getType();
 
             const OperatorInfo opInfo =
-                GetOperatorInfo(op, resultType, &leftType, &rightType, nullptr);
+                useOperatorAndGetInfo(binaryNode, op, resultType, &leftType, &rightType, nullptr);
 
             if (opInfo.wgslWrapperFn)
             {
-                mSink << opInfo.wgslWrapperFn << "(";
+                mSink << opInfo.wgslWrapperFn->prefix;
             }
 
             // x * y, x ^ y, etc.
@@ -1220,25 +1276,12 @@ bool OutputWGSLTraverser::visitBinary(Visit, TIntermBinary *binaryNode)
 
             if (opInfo.wgslWrapperFn)
             {
-                mSink << ")";
+                mSink << opInfo.wgslWrapperFn->suffix;
             }
         }
     }
 
     return false;
-}
-
-bool IsPostfix(TOperator op)
-{
-    switch (op)
-    {
-        case TOperator::EOpPostIncrement:
-        case TOperator::EOpPostDecrement:
-            return true;
-
-        default:
-            return false;
-    }
 }
 
 bool OutputWGSLTraverser::visitUnary(Visit, TIntermUnary *unaryNode)
@@ -1249,23 +1292,23 @@ bool OutputWGSLTraverser::visitUnary(Visit, TIntermUnary *unaryNode)
     TIntermTyped &arg    = *unaryNode->getOperand();
     const TType &argType = arg.getType();
 
-    const OperatorInfo opInfo = GetOperatorInfo(op, resultType, &argType, nullptr, nullptr);
+    const OperatorInfo opInfo =
+        useOperatorAndGetInfo(unaryNode, op, resultType, &argType, nullptr, nullptr);
 
     if (opInfo.wgslWrapperFn)
     {
-        mSink << opInfo.wgslWrapperFn << "(";
+        mSink << opInfo.wgslWrapperFn->prefix;
     }
 
     // Examples: -x, ~x, ~x
     if (opInfo.IsSymbolicOperator())
     {
-        const bool postfix = IsPostfix(op);
-        if (!postfix)
+        if (!opInfo.isPostfix)
         {
             mSink << opInfo.opName;
         }
         groupedTraverse(arg);
-        if (postfix)
+        if (opInfo.isPostfix)
         {
             mSink << opInfo.opName;
         }
@@ -1279,7 +1322,7 @@ bool OutputWGSLTraverser::visitUnary(Visit, TIntermUnary *unaryNode)
 
     if (opInfo.wgslWrapperFn)
     {
-        mSink << ")";
+        mSink << opInfo.wgslWrapperFn->suffix;
     }
 
     return false;
@@ -1977,7 +2020,12 @@ bool OutputWGSLTraverser::visitAggregate(Visit, TIntermAggregate *aggregateNode)
                 const TType *argType2 = getArgType(2);
 
                 const OperatorInfo opInfo =
-                    GetOperatorInfo(op, retType, argType0, argType1, argType2);
+                    useOperatorAndGetInfo(aggregateNode, op, retType, argType0, argType1, argType2);
+
+                if (opInfo.wgslWrapperFn)
+                {
+                    mSink << opInfo.wgslWrapperFn->prefix;
+                }
 
                 if (opInfo.IsSymbolicOperator())
                 {
@@ -1986,16 +2034,8 @@ bool OutputWGSLTraverser::visitAggregate(Visit, TIntermAggregate *aggregateNode)
                         case 1:
                         {
                             TIntermNode &operandNode = *aggregateNode->getChildNode(0);
-                            if (IsPostfix(op))
-                            {
-                                mSink << opInfo.opName;
-                                groupedTraverse(operandNode);
-                            }
-                            else
-                            {
-                                groupedTraverse(operandNode);
-                                mSink << opInfo.opName;
-                            }
+                            mSink << opInfo.opName;
+                            groupedTraverse(operandNode);
                         }
                         break;
 
@@ -2021,7 +2061,7 @@ bool OutputWGSLTraverser::visitAggregate(Visit, TIntermAggregate *aggregateNode)
                     if (BuiltInGroup::IsTexture(op))
                     {
                         emitTextureBuiltin(op, args);
-                        ASSERT(opInfo.wgslWrapperFn == nullptr);
+                        ASSERT(!opInfo.wgslWrapperFn.has_value());
                         return false;
                     }
                     // If the operator is not symbolic then it is a builtin that uses function call
@@ -2032,7 +2072,7 @@ bool OutputWGSLTraverser::visitAggregate(Visit, TIntermAggregate *aggregateNode)
 
                 if (opInfo.wgslWrapperFn)
                 {
-                    mSink << ")";
+                    mSink << opInfo.wgslWrapperFn->suffix;
                 }
 
                 return false;
@@ -2212,7 +2252,6 @@ void OutputWGSLTraverser::emitVariableDeclaration(const VarDecl &decl,
         // "const" and "let" probably don't need to be ever emitted because they are more for
         // readability, and the GLSL compiler constant folds most (all?) the consts anyway.
         mSink << "var";
-        // TODO(anglebug.com/42267100): <workgroup> or <storage>?
         if (evdConfig.isGlobalScope)
         {
             if (decl.type.getQualifier() == EvqUniform)
@@ -2682,6 +2721,27 @@ bool TranslatorWGSL::translate(TIntermBlock *root,
     // https://www.w3.org/TR/WGSL/#uniformity
     sink << "diagnostic(warning,derivative_uniformity);\n";
 
+    UniformBlockMetadata uniformBlockMetadata;
+    if (!RecordUniformBlockMetadata(root, uniformBlockMetadata))
+    {
+        ANGLE_LOG(ERR) << "Failed to record uniform block metadata";
+        return false;
+    }
+
+    TUnorderedSet<TSymbolUniqueId> overloadedFunctions = FindOverloadedFunctions(root);
+    WGSLProgramPrelude prelude;
+
+    // Generate the body of the WGSL including the GLSL main() function.
+    TInfoSinkBase traverserOutput;
+    OutputWGSLTraverser traverser(&traverserOutput, &rewritePipelineVarOutput,
+                                  &uniformBlockMetadata, &wgslGenerationMetadataForUniforms,
+                                  &overloadedFunctions, &prelude);
+    root->traverse(&traverser);
+
+    // The makeup of the prelude is determined by the traverser, and then must be outputted near the
+    // top of the program.
+    prelude.outputPrelude(sink);
+
     // Start writing the output structs that will be referred to by the `traverser`'s output.'
     if (!rewritePipelineVarOutput.OutputStructs(sink))
     {
@@ -2694,22 +2754,6 @@ bool TranslatorWGSL::translate(TIntermBlock *root,
         ANGLE_LOG(ERR) << "Failed to output uniform blocks and samplers";
         return false;
     }
-
-    UniformBlockMetadata uniformBlockMetadata;
-    if (!RecordUniformBlockMetadata(root, uniformBlockMetadata))
-    {
-        ANGLE_LOG(ERR) << "Failed to record uniform block metadata";
-        return false;
-    }
-
-    TUnorderedSet<TSymbolUniqueId> overloadedFunctions = FindOverloadedFunctions(root);
-
-    // Generate the body of the WGSL including the GLSL main() function.
-    TInfoSinkBase traverserOutput;
-    OutputWGSLTraverser traverser(&traverserOutput, &rewritePipelineVarOutput,
-                                  &uniformBlockMetadata, &wgslGenerationMetadataForUniforms,
-                                  &overloadedFunctions);
-    root->traverse(&traverser);
 
     sink << "\n";
     OutputUniformWrapperStructsAndConversions(sink, wgslGenerationMetadataForUniforms);

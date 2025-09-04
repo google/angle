@@ -458,6 +458,8 @@ angle_translator_lib_wgsl_sources = [
   "src/compiler/translator/wgsl/TranslatorWGSL.cpp",
   "src/compiler/translator/wgsl/Utils.cpp",
   "src/compiler/translator/wgsl/Utils.h",
+  "src/compiler/translator/wgsl/WGSLProgramPrelude.cpp",
+  "src/compiler/translator/wgsl/WGSLProgramPrelude.h",
 ]
 
 angle_preprocessor_sources = [
