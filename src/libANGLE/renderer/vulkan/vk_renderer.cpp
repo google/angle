@@ -6390,9 +6390,12 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
 
     // http://anglebug.com/440941211:
     // Disable the feature on Windows Intel because some shaders using 16-bit floats crash
+    // http://crbug.com/443182226:
+    // Temporarily disable the feature because webgl_conformance_vulkan_passthrough_tests are
+    // failing.
     ANGLE_FEATURE_CONDITION(&mFeatures, convertLowpAndMediumpFloatUniformsTo16Bits,
                             m16BitStorageFeatures.uniformAndStorageBuffer16BitAccess == VK_TRUE &&
-                                !(IsWindows() && isIntel));
+                                !(IsWindows() && isIntel) && false);
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsGlobalPriority,
