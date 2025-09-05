@@ -120,8 +120,6 @@ class TextureD3D : public TextureImpl, public angle::ObserverInterface
                                      GLenum binding,
                                      const gl::ImageIndex &imageIndex) override;
 
-    GLsizei getRenderToTextureSamples();
-
     angle::Result ensureUnorderedAccess(const gl::Context *context);
     angle::Result onLabelUpdate(const gl::Context *context) override;
 
