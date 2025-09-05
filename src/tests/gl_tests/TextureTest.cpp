@@ -13854,10 +13854,45 @@ TEST_P(TextureCubeTestES3,
 // Test that glCopyImageSubData works with GL_TEXTURE_CUBE_MAP_ARRAY layers unique to array cubes
 TEST_P(TextureCubeTestES32, CopyImageSubDataCubeMapArray)
 {
+    // The test harness uses an FBO to work around an issue, which is not needed here
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    constexpr char kVS[] =
+        R"(#version 320 es
+        precision mediump float;
+        in vec3 pos;
+        void main() {
+            gl_Position = vec4(pos, 1.0);
+        })";
+
+    constexpr char kFS[] =
+        R"(#version 320 es
+        precision mediump float;
+        precision highp samplerCubeArray;
+
+        out vec4 color;
+        uniform samplerCubeArray uTex;
+        uniform int uTexCubeIndex;
+        uniform vec3 uDir;
+        void main(){
+            color = texture(uTex, vec4(normalize(uDir), float(uTexCubeIndex)));
+        })";
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+    GLint textureLoc = glGetUniformLocation(program, "uTex");
+    ASSERT_NE(-1, textureLoc);
+    glUniform1i(textureLoc, 0);
+
+    GLint cubeIndex = glGetUniformLocation(program, "uTexCubeIndex");
+    ASSERT_NE(-1, cubeIndex);
+    GLint dirLoc = glGetUniformLocation(program, "uDir");
+    ASSERT_NE(-1, dirLoc);
+    // Use nearest filtering to avoid cross-face blending at seams during testing
+    glTexParameteri(GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     // Test copying from GL_TEXTURE_CUBE_MAP_ARRAY to GL_TEXTURE_CUBE_MAP_ARRAY
     {
         // Create source CubeMapArray with 3 cubes (18 layers total)
         GLTexture srcCubeArray;
+        glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, srcCubeArray);
         glTexStorage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_RGBA8, 128, 128, 18);
 
@@ -13889,23 +13924,24 @@ TEST_P(TextureCubeTestES32, CopyImageSubDataCubeMapArray)
                            GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0, 15, 128, 128, 1);
         ASSERT_GL_NO_ERROR();
 
-        // Verify the copied data
-        GLFramebuffer fbo;
-        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glClearColor(1.0f, 0.0f, 1.0f, 1.0f);  // Set clear color to magenta
+        glClear(GL_COLOR_BUFFER_BIT);
 
-        // Check layer 0 (red)
-        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, dstCubeArray, 0, 0);
-        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        glUniform1i(cubeIndex, 0);
+        glUniform3f(dirLoc, 1.0f, 0.0f, 0.0f);  // layer 0 is cube 0, face +X
+        drawQuad(program, "pos", 0.5f);
         EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 
         // Check layer 7 (green)
-        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, dstCubeArray, 0, 7);
-        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        glUniform1i(cubeIndex, 1);
+        glUniform3f(dirLoc, -1.0f, 0.0f, 0.0f);  // layer 7 is cube 1, face -X
+        drawQuad(program, "pos", 0.5f);
         EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 
         // Check layer 15 (blue)
-        glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, dstCubeArray, 0, 15);
-        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+        glUniform1i(cubeIndex, 2);
+        glUniform3f(dirLoc, 0.0f, -1.0f, 0.0f);  // layer 15 is cube 2, face -Y
+        drawQuad(program, "pos", 0.5f);
         EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
     }
 
