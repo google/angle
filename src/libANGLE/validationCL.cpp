@@ -2531,6 +2531,18 @@ cl_int ValidateEnqueueNDRangeKernel(cl_command_queue command_queue,
         }
     }
 
+    cl_ulong maxLocalMemSize = 0;
+    if (IsError(queue.getDevice().getInfo(cl::DeviceInfo::LocalMemSize, sizeof(maxLocalMemSize),
+                                          &maxLocalMemSize, nullptr)))
+    {
+        return CL_INVALID_VALUE;
+    }
+    if (krnl.getImpl().getLocalMemSizeUsed(queue.getDevice()) > maxLocalMemSize)
+    {
+        ERR() << "Kernel exceeds the maximum local mem size capability";
+        return CL_OUT_OF_RESOURCES;
+    }
+
     return CL_SUCCESS;
 }
 
