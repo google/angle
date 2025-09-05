@@ -520,6 +520,10 @@ class Renderer : angle::NonCopyable
     {
         return mImageLayoutAndMemoryBarrierDataMap[imageAccess];
     }
+    VkImageLayout getVkImageLayout(ImageAccess imageAccess) const
+    {
+        return getImageMemoryBarrierData(imageAccess).layout;
+    }
 
     VkShaderStageFlags getSupportedVulkanShaderStageMask() const
     {

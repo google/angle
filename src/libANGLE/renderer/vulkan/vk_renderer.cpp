@@ -4523,8 +4523,8 @@ angle::Result Renderer::createDeviceAndQueue(vk::ErrorContext *context, uint32_t
     // Initialize the barrierData tables by removing unsupported pipeline stage bits
     InitializeEventStageToVkPipelineStageFlagsMap(&mEventStageToPipelineStageFlagsMap,
                                                   ~unsupportedStages);
-    InitializeImageLayoutAndMemoryBarrierDataMap(&mImageLayoutAndMemoryBarrierDataMap,
-                                                 ~unsupportedStages);
+    InitializeImageLayoutAndMemoryBarrierDataMap(
+        getFeatures(), &mImageLayoutAndMemoryBarrierDataMap, ~unsupportedStages);
 
     ANGLE_TRY(initializeMemoryAllocator(context));
 

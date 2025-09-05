@@ -131,10 +131,6 @@ enum class EventStage : uint32_t
 using EventStageBitMask = typename angle::PackedEnumBitSet<EventStage, uint64_t>;
 
 using EventStageToVkPipelineStageFlagsMap = angle::PackedEnumMap<EventStage, VkPipelineStageFlags>;
-// Initialize EventStage to VkPipelineStageFlags mapping table.
-void InitializeEventStageToVkPipelineStageFlagsMap(
-    EventStageToVkPipelineStageFlagsMap *map,
-    VkPipelineStageFlags supportedVulkanPipelineStageMask);
 
 // VkCmdWaitEvents requires srcStageMask must be the bitwise OR of the stageMask parameter used in
 // previous calls to vkCmdSetEvent (See VUID-vkCmdWaitEvents-srcStageMask-01158). This mean we must

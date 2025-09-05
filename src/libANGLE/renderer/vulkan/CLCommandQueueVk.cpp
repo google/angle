@@ -1647,6 +1647,7 @@ angle::Result CLCommandQueueVk::addMemoryDependencies(cl::Memory *clMem, MemoryH
 
 angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk)
 {
+    vk::Renderer *renderer             = mContext->getRenderer();
     bool podBufferPresent              = false;
     uint32_t podBinding                = 0;
     VkDescriptorType podDescriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -1848,7 +1849,7 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk)
                     kernelArgDescSetBuilder.allocDescriptorImageInfo();
                 imageInfo.imageLayout = arg.type == NonSemanticClspvReflectionArgumentStorageImage
                                             ? VK_IMAGE_LAYOUT_GENERAL
-                                            : vkMem.getImage().getCurrentLayout();
+                                            : vkMem.getImage().getCurrentLayout(renderer);
                 imageInfo.imageView   = vkMem.getImageView().getHandle();
                 imageInfo.sampler     = VK_NULL_HANDLE;
                 VkWriteDescriptorSet &writeDescriptorSet =
@@ -1990,7 +1991,7 @@ angle::Result CLCommandQueueVk::processKernelResources(CLKernelVk &kernelVk)
         {
             mContext->getPerfCounters().writeDescriptorSets =
                 updateDescriptorSetsBuilders[index].flushDescriptorSetUpdates(
-                    mContext->getRenderer()->getDevice());
+                    renderer->getDevice());
 
             VkDescriptorSet descriptorSet = kernelVk.getDescriptorSet(index);
             mComputePassCommands->getCommandBuffer().bindDescriptorSets(

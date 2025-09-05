@@ -1396,6 +1396,41 @@ angle::Result SetDebugUtilsObjectName(ContextVk *contextVk,
                                       uint64_t handle,
                                       const std::string &label);
 
+// This defines enum for VkPipelineStageFlagBits so that we can use it to compare and index into
+// array.
+enum class PipelineStage : uint32_t
+{
+    // Bellow are ordered based on Graphics Pipeline Stages
+    TopOfPipe              = 0,
+    DrawIndirect           = 1,
+    VertexInput            = 2,
+    VertexShader           = 3,
+    TessellationControl    = 4,
+    TessellationEvaluation = 5,
+    GeometryShader         = 6,
+    TransformFeedback      = 7,
+    FragmentShadingRate    = 8,
+    EarlyFragmentTest      = 9,
+    FragmentShader         = 10,
+    LateFragmentTest       = 11,
+    ColorAttachmentOutput  = 12,
+
+    // Compute specific pipeline Stage
+    ComputeShader = 13,
+
+    // Transfer specific pipeline Stage
+    Transfer     = 14,
+    BottomOfPipe = 15,
+
+    // Host specific pipeline stage
+    Host = 16,
+
+    InvalidEnum = 17,
+    EnumCount   = InvalidEnum,
+};
+using PipelineStagesMask = angle::PackedEnumBitSet<PipelineStage, uint32_t>;
+
+PipelineStage GetPipelineStage(gl::ShaderType stage);
 }  // namespace vk
 
 #if !defined(ANGLE_SHARED_LIBVULKAN)

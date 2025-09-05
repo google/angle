@@ -2503,7 +2503,7 @@ angle::Result WindowSurfaceVk::recordPresentLayoutBarrierIfNecessary(ContextVk *
 
         image->recordReadBarrier(contextVk, VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageAccess::Present,
                                  commandBufferHelper);
-        commandBufferHelper->retainImage(image);
+        commandBufferHelper->retainImage(contextVk->getRenderer(), image);
     }
 
     return angle::Result::Continue;

@@ -759,6 +759,37 @@ void GenerateTextureUnitSamplerIndexMap(
             {samplerBoundTextureUnits[samplerIndex], static_cast<uint32_t>(samplerIndex)});
     }
 }
+
+GLenum ConvertImageAccessToGLImageLayout(vk::Renderer *renderer, vk::ImageAccess imageAccess)
+{
+    switch (renderer->getVkImageLayout(imageAccess))
+    {
+        case VK_IMAGE_LAYOUT_UNDEFINED:
+            return GL_NONE;
+        case VK_IMAGE_LAYOUT_GENERAL:
+            return GL_LAYOUT_GENERAL_EXT;
+        case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:
+            return GL_LAYOUT_COLOR_ATTACHMENT_EXT;
+        case VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL:
+            return GL_LAYOUT_DEPTH_STENCIL_ATTACHMENT_EXT;
+        case VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL:
+            return GL_LAYOUT_DEPTH_STENCIL_READ_ONLY_EXT;
+        case VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL:
+            return GL_LAYOUT_SHADER_READ_ONLY_EXT;
+        case VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL:
+            return GL_LAYOUT_TRANSFER_SRC_EXT;
+        case VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL:
+            return GL_LAYOUT_TRANSFER_DST_EXT;
+        case VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL:
+            return GL_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_EXT;
+        case VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL:
+            return GL_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_EXT;
+        default:
+            break;
+    }
+    UNREACHABLE();
+    return GL_NONE;
+}
 }  // anonymous namespace
 
 void ContextVk::flushDescriptorSetUpdates()
@@ -6911,7 +6942,7 @@ angle::Result ContextVk::releaseTextures(const gl::Context *context,
         ANGLE_TRY(onImageReleaseToExternal(image));
 
         textureBarrier.layout =
-            vk::ConvertImageAccessToGLImageLayout(image.getCurrentImageAccess());
+            ConvertImageAccessToGLImageLayout(mRenderer, image.getCurrentImageAccess());
     }
 
     return flushAndSubmitCommands(nullptr, nullptr,
@@ -8834,7 +8865,7 @@ angle::Result ContextVk::onResourceAccess(const vk::CommandResources &resources)
 
         readImage.image->recordReadBarrier(this, readImage.aspectFlags, readImage.imageAccess,
                                            mOutsideRenderPassCommands);
-        mOutsideRenderPassCommands->retainImage(image);
+        mOutsideRenderPassCommands->retainImage(mRenderer, image);
     }
 
     for (const vk::CommandResourceImageSubresource &readImageSubresource :
@@ -8848,7 +8879,7 @@ angle::Result ContextVk::onResourceAccess(const vk::CommandResources &resources)
             readImageSubresource.levelStart, readImageSubresource.levelCount,
             readImageSubresource.layerStart, readImageSubresource.layerCount,
             mOutsideRenderPassCommands);
-        mOutsideRenderPassCommands->retainImage(image);
+        mOutsideRenderPassCommands->retainImage(mRenderer, image);
     }
 
     for (const vk::CommandResourceImageSubresource &writeImage : resources.getWriteImages())
@@ -8860,7 +8891,7 @@ angle::Result ContextVk::onResourceAccess(const vk::CommandResources &resources)
                                   writeImage.levelStart, writeImage.levelCount,
                                   writeImage.layerStart, writeImage.layerCount,
                                   mOutsideRenderPassCommands);
-        mOutsideRenderPassCommands->retainImage(image);
+        mOutsideRenderPassCommands->retainImage(mRenderer, image);
         image->onWrite(writeImage.levelStart, writeImage.levelCount, writeImage.layerStart,
                        writeImage.layerCount, writeImage.image.aspectFlags);
     }

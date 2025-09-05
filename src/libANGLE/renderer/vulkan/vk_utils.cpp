@@ -231,7 +231,6 @@ const char *kVkValidationLayerNames[]           = {
     "VK_LAYER_GOOGLE_threading", "VK_LAYER_LUNARG_parameter_validation",
     "VK_LAYER_LUNARG_object_tracker", "VK_LAYER_LUNARG_core_validation",
     "VK_LAYER_GOOGLE_unique_objects"};
-
 }  // anonymous namespace
 
 const char *VulkanResultString(VkResult result)
@@ -355,8 +354,17 @@ bool GetAvailableValidationLayers(const std::vector<VkLayerProperties> &layerPro
 
 namespace vk
 {
-const char *gLoaderLayersPathEnv   = "VK_LAYER_PATH";
-const char *gLoaderICDFilenamesEnv = "VK_ICD_FILENAMES";
+namespace
+{
+constexpr gl::ShaderMap<PipelineStage> kPipelineStageShaderMap = {
+    {gl::ShaderType::Vertex, PipelineStage::VertexShader},
+    {gl::ShaderType::TessControl, PipelineStage::TessellationControl},
+    {gl::ShaderType::TessEvaluation, PipelineStage::TessellationEvaluation},
+    {gl::ShaderType::Geometry, PipelineStage::GeometryShader},
+    {gl::ShaderType::Fragment, PipelineStage::FragmentShader},
+    {gl::ShaderType::Compute, PipelineStage::ComputeShader},
+};
+}  // anonymous namespace
 
 VkImageAspectFlags GetDepthStencilAspectFlags(const angle::Format &format)
 {
@@ -1001,6 +1009,18 @@ void ApplyPipelineCreationFeedback(ErrorContext *context,
 size_t MemoryAllocInfoMapKey::hash() const
 {
     return angle::ComputeGenericHash(*this);
+}
+
+PipelineStage GetPipelineStage(gl::ShaderType stage)
+{
+    const PipelineStage pipelineStage = kPipelineStageShaderMap[stage];
+    ASSERT(pipelineStage == PipelineStage::VertexShader ||
+           pipelineStage == PipelineStage::TessellationControl ||
+           pipelineStage == PipelineStage::TessellationEvaluation ||
+           pipelineStage == PipelineStage::GeometryShader ||
+           pipelineStage == PipelineStage::FragmentShader ||
+           pipelineStage == PipelineStage::ComputeShader);
+    return pipelineStage;
 }
 }  // namespace vk
 
