@@ -871,8 +871,6 @@ PipelineStage GetPipelineStage(gl::ShaderType stage);
 
 struct ImageMemoryBarrierData
 {
-    const char *name;
-
     // The Vk layout corresponding to the ImageLayout key.
     VkImageLayout layout;
 

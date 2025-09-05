@@ -93,7 +93,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::Undefined,
         ImageMemoryBarrierData{
-            "Undefined",
             VK_IMAGE_LAYOUT_UNDEFINED,
             VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
             VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
@@ -111,7 +110,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::ColorWrite,
         ImageMemoryBarrierData{
-            "ColorWrite",
             VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
@@ -128,7 +126,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::ColorWriteAndInput,
         ImageMemoryBarrierData{
-            "ColorWriteAndInput",
             VK_IMAGE_LAYOUT_RENDERING_LOCAL_READ_KHR,
             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
@@ -145,7 +142,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::MSRTTEmulationColorUnresolveAndResolve,
         ImageMemoryBarrierData{
-            "MSRTTEmulationColorUnresolveAndResolve",
             VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
@@ -162,7 +158,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::DepthWriteStencilWrite,
         ImageMemoryBarrierData{
-            "DepthWriteStencilWrite",
             VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
             kAllDepthStencilPipelineStageFlags,
             kAllDepthStencilPipelineStageFlags,
@@ -179,7 +174,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::DepthStencilWriteAndInput,
         ImageMemoryBarrierData{
-            "DepthStencilWriteAndInput",
             VK_IMAGE_LAYOUT_RENDERING_LOCAL_READ_KHR,
             kAllDepthStencilPipelineStageFlags,
             kAllDepthStencilPipelineStageFlags,
@@ -196,7 +190,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::DepthWriteStencilRead,
         ImageMemoryBarrierData{
-            "DepthWriteStencilRead",
             VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL,
             kAllDepthStencilPipelineStageFlags,
             kAllDepthStencilPipelineStageFlags,
@@ -213,7 +206,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::DepthWriteStencilReadFragmentShaderStencilRead,
         ImageMemoryBarrierData{
-            "DepthWriteStencilReadFragmentShaderStencilRead",
             VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL,
             VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT | kAllDepthStencilPipelineStageFlags,
             VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT | kAllDepthStencilPipelineStageFlags,
@@ -230,7 +222,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::DepthWriteStencilReadAllShadersStencilRead,
         ImageMemoryBarrierData{
-            "DepthWriteStencilReadAllShadersStencilRead",
             VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL,
             kAllShadersPipelineStageFlags | kAllDepthStencilPipelineStageFlags,
             kAllShadersPipelineStageFlags | kAllDepthStencilPipelineStageFlags,
@@ -247,7 +238,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::DepthReadStencilWrite,
         ImageMemoryBarrierData{
-            "DepthReadStencilWrite",
             VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL,
             kAllDepthStencilPipelineStageFlags,
             kAllDepthStencilPipelineStageFlags,
@@ -264,7 +254,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::DepthReadStencilWriteFragmentShaderDepthRead,
         ImageMemoryBarrierData{
-            "DepthReadStencilWriteFragmentShaderDepthRead",
             VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL,
             VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT | kAllDepthStencilPipelineStageFlags,
             VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT | kAllDepthStencilPipelineStageFlags,
@@ -281,7 +270,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::DepthReadStencilWriteAllShadersDepthRead,
         ImageMemoryBarrierData{
-            "DepthReadStencilWriteAllShadersDepthRead",
             VK_IMAGE_LAYOUT_DEPTH_READ_ONLY_STENCIL_ATTACHMENT_OPTIMAL,
             kAllShadersPipelineStageFlags | kAllDepthStencilPipelineStageFlags,
             kAllShadersPipelineStageFlags | kAllDepthStencilPipelineStageFlags,
@@ -298,7 +286,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::DepthReadStencilRead,
             ImageMemoryBarrierData{
-            "DepthReadStencilRead",
             VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL,
             kAllDepthStencilPipelineStageFlags,
             kAllDepthStencilPipelineStageFlags,
@@ -316,7 +303,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::DepthReadStencilReadFragmentShaderRead,
             ImageMemoryBarrierData{
-            "DepthReadStencilReadFragmentShaderRead",
             VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL,
             VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT | kAllDepthStencilPipelineStageFlags,
             VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT | kAllDepthStencilPipelineStageFlags,
@@ -333,7 +319,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::DepthReadStencilReadAllShadersRead,
             ImageMemoryBarrierData{
-            "DepthReadStencilReadAllShadersRead",
             VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL,
             kAllShadersPipelineStageFlags | kAllDepthStencilPipelineStageFlags,
             kAllShadersPipelineStageFlags | kAllDepthStencilPipelineStageFlags,
@@ -350,7 +335,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::ColorWriteFragmentShaderFeedback,
         ImageMemoryBarrierData{
-            "ColorWriteFragmentShaderFeedback",
             VK_IMAGE_LAYOUT_GENERAL,
             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
@@ -367,7 +351,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::ColorWriteAllShadersFeedback,
         ImageMemoryBarrierData{
-            "ColorWriteAllShadersFeedback",
             VK_IMAGE_LAYOUT_GENERAL,
             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | kAllShadersPipelineStageFlags,
             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | kAllShadersPipelineStageFlags,
@@ -385,7 +368,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::DepthStencilFragmentShaderFeedback,
         ImageMemoryBarrierData{
-            "DepthStencilFragmentShaderFeedback",
             VK_IMAGE_LAYOUT_GENERAL,
             kAllDepthStencilPipelineStageFlags | VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
             kAllDepthStencilPipelineStageFlags | VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
@@ -402,7 +384,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::DepthStencilAllShadersFeedback,
         ImageMemoryBarrierData{
-            "DepthStencilAllShadersFeedback",
             VK_IMAGE_LAYOUT_GENERAL,
             kAllDepthStencilPipelineStageFlags | kAllShadersPipelineStageFlags,
             kAllDepthStencilPipelineStageFlags | kAllShadersPipelineStageFlags,
@@ -420,7 +401,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::DepthStencilResolve,
         ImageMemoryBarrierData{
-            "DepthStencilResolve",
             VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
             // Note: depth/stencil resolve uses color output stage and mask!
             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT,
@@ -438,7 +418,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::MSRTTEmulationDepthStencilUnresolveAndResolve,
         ImageMemoryBarrierData{
-            "MSRTTEmulationDepthStencilUnresolveAndResolve",
             VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
             // Note: depth/stencil resolve uses color output stage and mask!
             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
@@ -456,7 +435,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::Present,
         ImageMemoryBarrierData{
-            "Present",
             VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
             // Transition to: do not delay execution of commands in the second synchronization
             // scope. Allow layout transition to be delayed until present semaphore is signaled.
@@ -484,7 +462,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::SharedPresent,
         ImageMemoryBarrierData{
-            "SharedPresent",
             VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR,
             // All currently possible stages for SharedPresent
             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_TRANSFER_BIT | VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
@@ -502,7 +479,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::ExternalPreInitialized,
         ImageMemoryBarrierData{
-            "ExternalPreInitialized",
             // Binding a VkImage with an initial layout of VK_IMAGE_LAYOUT_UNDEFINED to external
             // memory whose content has already been defined does not make the content undefined
             // (see 12.8.1.  External Resource Sharing).
@@ -529,7 +505,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::ExternalShadersReadOnly,
         ImageMemoryBarrierData{
-            "ExternalShadersReadOnly",
             VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
             VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
             VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
@@ -548,7 +523,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::ExternalShadersWrite,
         ImageMemoryBarrierData{
-            "ExternalShadersWrite",
             VK_IMAGE_LAYOUT_GENERAL,
             VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
             VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
@@ -567,7 +541,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::ForeignAccess,
         ImageMemoryBarrierData{
-            "ForeignAccess",
             VK_IMAGE_LAYOUT_GENERAL,
             // Transition to: we don't expect to transition into ForeignAccess, that's done at
             // submission time by the CommandQueue; the following value doesn't matter.
@@ -589,7 +562,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::TransferSrc,
         ImageMemoryBarrierData{
-            "TransferSrc",
             VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
             VK_PIPELINE_STAGE_TRANSFER_BIT,
             VK_PIPELINE_STAGE_TRANSFER_BIT,
@@ -606,7 +578,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::TransferDst,
         ImageMemoryBarrierData{
-            "TransferDst",
             VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
             VK_PIPELINE_STAGE_TRANSFER_BIT,
             VK_PIPELINE_STAGE_TRANSFER_BIT,
@@ -623,7 +594,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::TransferSrcDst,
         ImageMemoryBarrierData{
-            "TransferSrcDst",
             VK_IMAGE_LAYOUT_GENERAL,
             VK_PIPELINE_STAGE_TRANSFER_BIT,
             VK_PIPELINE_STAGE_TRANSFER_BIT,
@@ -640,7 +610,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::HostCopy,
         ImageMemoryBarrierData{
-            "HostCopy",
             VK_IMAGE_LAYOUT_GENERAL,
             VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
             VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
@@ -660,7 +629,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::VertexShaderReadOnly,
         ImageMemoryBarrierData{
-            "VertexShaderReadOnly",
             VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
             VK_PIPELINE_STAGE_VERTEX_SHADER_BIT,
             VK_PIPELINE_STAGE_VERTEX_SHADER_BIT,
@@ -677,7 +645,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::VertexShaderWrite,
         ImageMemoryBarrierData{
-            "VertexShaderWrite",
             VK_IMAGE_LAYOUT_GENERAL,
             VK_PIPELINE_STAGE_VERTEX_SHADER_BIT,
             VK_PIPELINE_STAGE_VERTEX_SHADER_BIT,
@@ -694,7 +661,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::PreFragmentShadersReadOnly,
         ImageMemoryBarrierData{
-            "PreFragmentShadersReadOnly",
             VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
             kPreFragmentStageFlags,
             kPreFragmentStageFlags,
@@ -712,7 +678,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::PreFragmentShadersWrite,
         ImageMemoryBarrierData{
-            "PreFragmentShadersWrite",
             VK_IMAGE_LAYOUT_GENERAL,
             kPreFragmentStageFlags,
             kPreFragmentStageFlags,
@@ -730,7 +695,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::FragmentShadingRateAttachmentReadOnly,
         ImageMemoryBarrierData{
-            "FragmentShadingRateAttachmentReadOnly",
             VK_IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR,
             VK_PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR,
             VK_PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR,
@@ -747,7 +711,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::FragmentShaderReadOnly,
         ImageMemoryBarrierData{
-            "FragmentShaderReadOnly",
             VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
             VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
             VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
@@ -764,7 +727,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::FragmentShaderWrite,
         ImageMemoryBarrierData{
-            "FragmentShaderWrite",
             VK_IMAGE_LAYOUT_GENERAL,
             VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
             VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
@@ -781,7 +743,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::ComputeShaderReadOnly,
         ImageMemoryBarrierData{
-            "ComputeShaderReadOnly",
             VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
             VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
             VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
@@ -798,7 +759,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::ComputeShaderWrite,
         ImageMemoryBarrierData{
-            "ComputeShaderWrite",
             VK_IMAGE_LAYOUT_GENERAL,
             VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
             VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT,
@@ -815,7 +775,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::AllGraphicsShadersReadOnly,
         ImageMemoryBarrierData{
-            "AllGraphicsShadersReadOnly",
             VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
             kAllShadersPipelineStageFlags,
             kAllShadersPipelineStageFlags,
@@ -833,7 +792,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::AllGraphicsShadersWrite,
         ImageMemoryBarrierData{
-            "AllGraphicsShadersWrite",
             VK_IMAGE_LAYOUT_GENERAL,
             kAllShadersPipelineStageFlags,
             kAllShadersPipelineStageFlags,
@@ -851,7 +809,6 @@ constexpr ImageLayoutToMemoryBarrierDataMap kImageMemoryBarrierData = {
     {
         ImageLayout::TransferDstAndComputeWrite,
         ImageMemoryBarrierData{
-            "TransferDstAndComputeWrite",
             VK_IMAGE_LAYOUT_GENERAL,
             VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT | VK_PIPELINE_STAGE_TRANSFER_BIT,
             VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT | VK_PIPELINE_STAGE_TRANSFER_BIT,
