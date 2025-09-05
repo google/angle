@@ -215,7 +215,7 @@ angle::Result InitImageHelper(DisplayVk *displayVk,
         hasProtectedContent ? VK_IMAGE_CREATE_PROTECTED_BIT : vk::kVkImageCreateFlagsNone;
     ANGLE_TRY(imageHelper->initExternal(
         displayVk, gl::TextureType::_2D, extents, vkFormat.getIntendedFormatID(),
-        renderableFormatId, samples, usage, imageCreateFlags, vk::ImageLayout::Undefined, nullptr,
+        renderableFormatId, samples, usage, imageCreateFlags, vk::ImageAccess::Undefined, nullptr,
         gl::LevelIndex(0), 1, 1, isRobustResourceInitEnabled, hasProtectedContent,
         vk::YcbcrConversionDesc{}, nullptr));
 
@@ -2399,8 +2399,8 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
     if (image.image->getAcquireNextImageSemaphore().valid())
     {
         ASSERT(!renderer->getFeatures().supportsPresentation.enabled ||
-               image.image->getCurrentImageLayout() == vk::ImageLayout::Present ||
-               image.image->getCurrentImageLayout() == vk::ImageLayout::Undefined);
+               image.image->getCurrentImageAccess() == vk::ImageAccess::Present ||
+               image.image->getCurrentImageAccess() == vk::ImageAccess::Undefined);
         contextVk->addWaitSemaphore(image.image->getAcquireNextImageSemaphore().getHandle(),
                                     vk::kSwapchainAcquireImageWaitStageFlags);
         image.image->resetAcquireNextImageSemaphore();
@@ -2470,8 +2470,8 @@ angle::Result WindowSurfaceVk::prePresentSubmit(ContextVk *contextVk,
             &presentSemaphore, nullptr, RenderPassClosureReason::AlreadySpecifiedElsewhere));
     }
 
-    ASSERT(image.image->getCurrentImageLayout() ==
-           (isSharedPresentMode() ? vk::ImageLayout::SharedPresent : vk::ImageLayout::Present));
+    ASSERT(image.image->getCurrentImageAccess() ==
+           (isSharedPresentMode() ? vk::ImageAccess::SharedPresent : vk::ImageAccess::Present));
 
     // This is to track |presentSemaphore| submission.
     mUse.setQueueSerial(contextVk->getLastSubmittedQueueSerial());
@@ -2496,12 +2496,12 @@ angle::Result WindowSurfaceVk::recordPresentLayoutBarrierIfNecessary(ContextVk *
     }
 
     // Image may be already in Present layout if swap without any draw.
-    if (image->getCurrentImageLayout() != vk::ImageLayout::Present)
+    if (image->getCurrentImageAccess() != vk::ImageAccess::Present)
     {
         vk::OutsideRenderPassCommandBufferHelper *commandBufferHelper;
         ANGLE_TRY(contextVk->getOutsideRenderPassCommandBufferHelper({}, &commandBufferHelper));
 
-        image->recordReadBarrier(contextVk, VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::Present,
+        image->recordReadBarrier(contextVk, VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageAccess::Present,
                                  commandBufferHelper);
         commandBufferHelper->retainImage(image);
     }
@@ -2928,7 +2928,7 @@ bool WindowSurfaceVk::skipAcquireNextSwapchainImageForSharedPresentMode() const
         ASSERT(mSwapchainImages.size());
         const SwapchainImage &image = mSwapchainImages[0];
         ASSERT(image.image->valid());
-        if (image.image->getCurrentImageLayout() == vk::ImageLayout::SharedPresent)
+        if (image.image->getCurrentImageAccess() == vk::ImageAccess::SharedPresent)
         {
             return true;
         }
@@ -2987,7 +2987,7 @@ VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::ErrorContext *context)
     if (isSharedPresentMode())
     {
         ASSERT(image.image->valid() &&
-               image.image->getCurrentImageLayout() != vk::ImageLayout::SharedPresent);
+               image.image->getCurrentImageAccess() != vk::ImageAccess::SharedPresent);
         vk::ScopedPrimaryCommandBuffer scopedCommandBuffer(device);
         auto protectionType = vk::ConvertProtectionBoolToType(mState.hasProtectedContent());
         if (renderer->getCommandBufferOneOff(context, protectionType, &scopedCommandBuffer) ==
@@ -2996,7 +2996,7 @@ VkResult WindowSurfaceVk::acquireNextSwapchainImage(vk::ErrorContext *context)
             vk::PrimaryCommandBuffer &primaryCommandBuffer = scopedCommandBuffer.get();
             VkSemaphore semaphore;
             // Note return errors is early exit may leave new Image and Swapchain in unknown state.
-            image.image->recordWriteBarrierOneOff(renderer, vk::ImageLayout::SharedPresent,
+            image.image->recordWriteBarrierOneOff(renderer, vk::ImageAccess::SharedPresent,
                                                   &primaryCommandBuffer, &semaphore);
             ASSERT(semaphore == acquireImageSemaphore);
             if (primaryCommandBuffer.end() != VK_SUCCESS)

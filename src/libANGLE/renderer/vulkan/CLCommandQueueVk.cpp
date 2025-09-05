@@ -1149,7 +1149,7 @@ angle::Result CLCommandQueueVk::enqueueMapImage(const cl::Image &image,
     }
 
     mComputePassCommands->imageRead(mContext, imageVk->getImage().getAspectFlags(),
-                                    vk::ImageLayout::TransferSrc, &imageVk->getImage());
+                                    vk::ImageAccess::TransferSrc, &imageVk->getImage());
 
     if (imageVk->isStagingBufferInitialized() == false)
     {
@@ -1635,7 +1635,7 @@ angle::Result CLCommandQueueVk::addMemoryDependencies(cl::Memory *clMem, MemoryH
         CLImageVk &vkMem = clMem->getImpl<CLImageVk>();
         mComputePassCommands->imageWrite(mContext, gl::LevelIndex(0), 0, 1,
                                          vkMem.getImage().getAspectFlags(),
-                                         vk::ImageLayout::ComputeShaderWrite, &vkMem.getImage());
+                                         vk::ImageAccess::ComputeShaderWrite, &vkMem.getImage());
     }
     if (needsBarrier)
     {

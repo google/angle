@@ -72,7 +72,7 @@ class Context;
 class BufferHelper;
 class DynamicDescriptorPool;
 class SamplerHelper;
-enum class ImageLayout;
+enum class ImageAccess;
 class PipelineCacheAccess;
 class RenderPassCommandBufferHelper;
 class PackedClearValuesArray;
@@ -452,7 +452,7 @@ struct PackedAttachmentOpsDesc final
     uint16_t isStencilInvalidated : 1;
     uint16_t padding1 : 6;
 
-    // Layouts take values from ImageLayout, so they are small.  Layouts that are possible here are
+    // Layouts take values from ImageAccess, so they are small.  Layouts that are possible here are
     // placed at the beginning of that enum.
     uint16_t initialLayout : 5;
     uint16_t finalLayout : 5;
@@ -478,12 +478,12 @@ class AttachmentOpsArray final
 
     // Initialize an attachment op with all load and store operations.
     void initWithLoadStore(PackedAttachmentIndex index,
-                           ImageLayout initialLayout,
-                           ImageLayout finalLayout);
+                           ImageAccess initialLayout,
+                           ImageAccess finalLayout);
 
     void setLayouts(PackedAttachmentIndex index,
-                    ImageLayout initialLayout,
-                    ImageLayout finalLayout);
+                    ImageAccess initialLayout,
+                    ImageAccess finalLayout);
     void setOps(PackedAttachmentIndex index, RenderPassLoadOp loadOp, RenderPassStoreOp storeOp);
     void setStencilOps(PackedAttachmentIndex index,
                        RenderPassLoadOp loadOp,

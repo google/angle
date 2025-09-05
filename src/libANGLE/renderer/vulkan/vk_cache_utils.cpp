@@ -385,15 +385,15 @@ void DeriveRenderingInfo(Renderer *renderer,
 
         if (subset == DynamicRenderingInfoSubset::Full)
         {
-            ASSERT(static_cast<vk::ImageLayout>(ops[attachmentCount].initialLayout) !=
-                       vk::ImageLayout::SharedPresent ||
-                   static_cast<vk::ImageLayout>(ops[attachmentCount].finalLayout) ==
-                       vk::ImageLayout::SharedPresent);
-            const VkImageLayout layout = vk::ConvertImageLayoutToVkImageLayout(
-                static_cast<vk::ImageLayout>(ops[attachmentCount].initialLayout));
+            ASSERT(static_cast<vk::ImageAccess>(ops[attachmentCount].initialLayout) !=
+                       vk::ImageAccess::SharedPresent ||
+                   static_cast<vk::ImageAccess>(ops[attachmentCount].finalLayout) ==
+                       vk::ImageAccess::SharedPresent);
+            const VkImageLayout layout = vk::ConvertImageAccessToVkImageLayout(
+                static_cast<vk::ImageAccess>(ops[attachmentCount].initialLayout));
             const VkImageLayout resolveImageLayout =
-                (static_cast<vk::ImageLayout>(ops[attachmentCount].finalResolveLayout) ==
-                         vk::ImageLayout::SharedPresent
+                (static_cast<vk::ImageAccess>(ops[attachmentCount].finalResolveLayout) ==
+                         vk::ImageAccess::SharedPresent
                      ? VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR
                      : VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
             const VkResolveModeFlagBits resolveMode =
@@ -468,8 +468,8 @@ void DeriveRenderingInfo(Renderer *renderer,
             const bool resolveStencil =
                 angleFormat.stencilBits != 0 && desc.hasStencilResolveAttachment();
 
-            const VkImageLayout layout = ConvertImageLayoutToVkImageLayout(
-                static_cast<vk::ImageLayout>(ops[attachmentCount].initialLayout));
+            const VkImageLayout layout = ConvertImageAccessToVkImageLayout(
+                static_cast<vk::ImageAccess>(ops[attachmentCount].initialLayout));
             const VkImageLayout resolveImageLayout =
                 VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
             const VkResolveModeFlagBits depthResolveMode =
@@ -654,9 +654,9 @@ void UnpackAttachmentDesc(Renderer *renderer,
     desc->stencilStoreOp =
         ConvertRenderPassStoreOpToVkStoreOp(static_cast<RenderPassStoreOp>(ops.stencilStoreOp));
     desc->initialLayout =
-        ConvertImageLayoutToVkImageLayout(static_cast<ImageLayout>(ops.initialLayout));
+        ConvertImageAccessToVkImageLayout(static_cast<ImageAccess>(ops.initialLayout));
     desc->finalLayout =
-        ConvertImageLayoutToVkImageLayout(static_cast<ImageLayout>(ops.finalLayout));
+        ConvertImageAccessToVkImageLayout(static_cast<ImageAccess>(ops.finalLayout));
 }
 
 struct AttachmentInfo
@@ -4866,8 +4866,8 @@ AttachmentOpsArray &AttachmentOpsArray::operator=(const AttachmentOpsArray &othe
 }
 
 void AttachmentOpsArray::initWithLoadStore(PackedAttachmentIndex index,
-                                           ImageLayout initialLayout,
-                                           ImageLayout finalLayout)
+                                           ImageAccess initialLayout,
+                                           ImageAccess finalLayout)
 {
     setLayouts(index, initialLayout, finalLayout);
     setOps(index, RenderPassLoadOp::Load, RenderPassStoreOp::Store);
@@ -4875,8 +4875,8 @@ void AttachmentOpsArray::initWithLoadStore(PackedAttachmentIndex index,
 }
 
 void AttachmentOpsArray::setLayouts(PackedAttachmentIndex index,
-                                    ImageLayout initialLayout,
-                                    ImageLayout finalLayout)
+                                    ImageAccess initialLayout,
+                                    ImageAccess finalLayout)
 {
     PackedAttachmentOpsDesc &ops = mOps[index.get()];
     SetBitField(ops.initialLayout, initialLayout);
@@ -7464,15 +7464,15 @@ void RenderPassCache::InitializeOpsForCompatibleRenderPass(const vk::RenderPassD
             continue;
         }
 
-        const vk::ImageLayout imageLayout = vk::ImageLayout::ColorWrite;
-        opsOut->initWithLoadStore(colorIndexVk, imageLayout, imageLayout);
+        const vk::ImageAccess imageAccess = vk::ImageAccess::ColorWrite;
+        opsOut->initWithLoadStore(colorIndexVk, imageAccess, imageAccess);
         ++colorIndexVk;
     }
 
     if (desc.hasDepthStencilAttachment())
     {
-        const vk::ImageLayout imageLayout = vk::ImageLayout::DepthWriteStencilWrite;
-        opsOut->initWithLoadStore(colorIndexVk, imageLayout, imageLayout);
+        const vk::ImageAccess imageAccess = vk::ImageAccess::DepthWriteStencilWrite;
+        opsOut->initWithLoadStore(colorIndexVk, imageAccess, imageAccess);
     }
 }
 
@@ -7590,7 +7590,7 @@ angle::Result RenderPassCache::MakeRenderPass(vk::ErrorContext *context,
                                               0};
 #endif
 
-    gl::DrawBuffersArray<vk::ImageLayout> colorResolveImageLayout = {};
+    gl::DrawBuffersArray<vk::ImageAccess> colorResolveImageLayout = {};
 
     // Pack color attachments
     vk::PackedAttachmentIndex attachmentCount(0);
@@ -7649,17 +7649,17 @@ angle::Result RenderPassCache::MakeRenderPass(vk::ErrorContext *context,
             continue;
         }
 
-        ASSERT(static_cast<vk::ImageLayout>(ops[attachmentCount].initialLayout) !=
-                   vk::ImageLayout::SharedPresent ||
-               static_cast<vk::ImageLayout>(ops[attachmentCount].finalLayout) ==
-                   vk::ImageLayout::SharedPresent);
+        ASSERT(static_cast<vk::ImageAccess>(ops[attachmentCount].initialLayout) !=
+                   vk::ImageAccess::SharedPresent ||
+               static_cast<vk::ImageAccess>(ops[attachmentCount].finalLayout) ==
+                   vk::ImageAccess::SharedPresent);
 
         VkAttachmentReference2 colorRef = {};
         colorRef.sType                  = VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2;
         colorRef.attachment             = attachmentCount.get();
         colorRef.layout                 = needInputAttachments
                                               ? VK_IMAGE_LAYOUT_GENERAL
-                                              : vk::ConvertImageLayoutToVkImageLayout(static_cast<vk::ImageLayout>(
+                                              : vk::ConvertImageAccessToVkImageLayout(static_cast<vk::ImageAccess>(
                                     ops[attachmentCount].initialLayout));
         colorRef.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
         colorAttachmentRefs.push_back(colorRef);
@@ -7667,7 +7667,7 @@ angle::Result RenderPassCache::MakeRenderPass(vk::ErrorContext *context,
         vk::UnpackAttachmentDesc(renderer, &attachmentDescs[attachmentCount.get()],
                                  attachmentFormatID, attachmentSamples, ops[attachmentCount]);
         colorResolveImageLayout[colorIndexGL] =
-            static_cast<vk::ImageLayout>(ops[attachmentCount].finalResolveLayout);
+            static_cast<vk::ImageAccess>(ops[attachmentCount].finalResolveLayout);
 
         if (isYUVExternalFormat)
         {
@@ -7705,8 +7705,8 @@ angle::Result RenderPassCache::MakeRenderPass(vk::ErrorContext *context,
 
         depthStencilAttachmentRef.sType      = VK_STRUCTURE_TYPE_ATTACHMENT_REFERENCE_2;
         depthStencilAttachmentRef.attachment = attachmentCount.get();
-        depthStencilAttachmentRef.layout     = ConvertImageLayoutToVkImageLayout(
-            static_cast<vk::ImageLayout>(ops[attachmentCount].initialLayout));
+        depthStencilAttachmentRef.layout     = ConvertImageAccessToVkImageLayout(
+            static_cast<vk::ImageAccess>(ops[attachmentCount].initialLayout));
         depthStencilAttachmentRef.aspectMask =
             VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
 
@@ -7758,7 +7758,7 @@ angle::Result RenderPassCache::MakeRenderPass(vk::ErrorContext *context,
         }
 
         const VkImageLayout finalLayout =
-            ConvertImageLayoutToVkImageLayout(colorResolveImageLayout[colorIndexGL]);
+            ConvertImageAccessToVkImageLayout(colorResolveImageLayout[colorIndexGL]);
         const VkImageLayout initialLayout = (finalLayout == VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR
                                                  ? VK_IMAGE_LAYOUT_SHARED_PRESENT_KHR
                                                  : VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);

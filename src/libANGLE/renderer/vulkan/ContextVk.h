@@ -528,23 +528,23 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result onImageReleaseToExternal(const vk::ImageHelper &image);
 
     void onImageRenderPassRead(VkImageAspectFlags aspectFlags,
-                               vk::ImageLayout imageLayout,
+                               vk::ImageAccess imageAccess,
                                vk::ImageHelper *image)
     {
         ASSERT(mRenderPassCommands->started());
-        mRenderPassCommands->imageRead(this, aspectFlags, imageLayout, image);
+        mRenderPassCommands->imageRead(this, aspectFlags, imageAccess, image);
     }
 
     void onImageRenderPassWrite(gl::LevelIndex level,
                                 uint32_t layerStart,
                                 uint32_t layerCount,
                                 VkImageAspectFlags aspectFlags,
-                                vk::ImageLayout imageLayout,
+                                vk::ImageAccess imageAccess,
                                 vk::ImageHelper *image)
     {
         ASSERT(mRenderPassCommands->started());
         mRenderPassCommands->imageWrite(this, level, layerStart, layerCount, aspectFlags,
-                                        imageLayout, image);
+                                        imageAccess, image);
     }
 
     void onColorDraw(gl::LevelIndex level,

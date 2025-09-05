@@ -99,8 +99,8 @@ angle::Result SemaphoreVk::wait(gl::Context *context,
         {
             TextureVk *textureVk   = vk::GetImpl(textureBarrier.texture);
             vk::ImageHelper &image = textureVk->getImage();
-            vk::ImageLayout layout =
-                vk::GetImageLayoutFromGLImageLayout(contextVk, textureBarrier.layout);
+            vk::ImageAccess imageAccess =
+                vk::GetImageAccessFromGLImageLayout(contextVk, textureBarrier.layout);
 
             vk::CommandResources resources;
             vk::OutsideRenderPassCommandBuffer *commandBuffer;
@@ -113,7 +113,7 @@ angle::Result SemaphoreVk::wait(gl::Context *context,
 
             // Queue ownership transfer and layout transition.
             image.acquireFromExternal(contextVk, vk::kExternalDeviceQueueIndex,
-                                      contextVk->getDeviceQueueIndex(), layout, commandBuffer);
+                                      contextVk->getDeviceQueueIndex(), imageAccess, commandBuffer);
         }
     }
 
@@ -154,15 +154,15 @@ angle::Result SemaphoreVk::signal(gl::Context *context,
         {
             TextureVk *textureVk   = vk::GetImpl(textureBarrier.texture);
             vk::ImageHelper &image = textureVk->getImage();
-            vk::ImageLayout layout =
-                vk::GetImageLayoutFromGLImageLayout(contextVk, textureBarrier.layout);
+            vk::ImageAccess imageAccess =
+                vk::GetImageAccessFromGLImageLayout(contextVk, textureBarrier.layout);
 
             // Don't transition to Undefined layout.  If external wants to transition the image away
             // from Undefined after this operation, it's perfectly fine to keep the layout as is in
             // ANGLE.  Note that vk::ImageHelper doesn't expect transitions to Undefined.
-            if (layout == vk::ImageLayout::Undefined)
+            if (imageAccess == vk::ImageAccess::Undefined)
             {
-                layout = image.getCurrentImageLayout();
+                imageAccess = image.getCurrentImageAccess();
             }
 
             ANGLE_TRY(textureVk->ensureImageInitialized(contextVk, ImageMipLevels::EnabledLevels));
@@ -174,7 +174,7 @@ angle::Result SemaphoreVk::signal(gl::Context *context,
             ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(resources, &commandBuffer));
 
             // Queue ownership transfer and layout transition.
-            image.releaseToExternal(contextVk, vk::kExternalDeviceQueueIndex, layout,
+            image.releaseToExternal(contextVk, vk::kExternalDeviceQueueIndex, imageAccess,
                                     commandBuffer);
         }
     }

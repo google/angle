@@ -2246,8 +2246,8 @@ angle::Result UtilsVk::clearTexture(ContextVk *contextVk,
         renderPassDesc.packDepthStencilAttachment(dstActualFormat.id);
     }
     vk::RenderPassCommandBuffer *commandBuffer;
-    vk::ImageLayout imageLayout =
-        isDepthOrStencil ? vk::ImageLayout::DepthWriteStencilWrite : vk::ImageLayout::ColorWrite;
+    vk::ImageAccess imageAccess =
+        isDepthOrStencil ? vk::ImageAccess::DepthWriteStencilWrite : vk::ImageAccess::ColorWrite;
 
     ANGLE_TRY(startRenderPass(contextVk, dst, &destView.get(), renderPassDesc, renderArea,
                               params.aspectFlags, &params.clearValue,
@@ -2258,7 +2258,7 @@ angle::Result UtilsVk::clearTexture(ContextVk *contextVk,
     contextVk->onImageRenderPassWrite(
         dst->toGLLevel(params.level), params.layer, 1,
         isFormatDS ? VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT : params.aspectFlags,
-        imageLayout, dst);
+        imageAccess, dst);
 
     vk::ImageView destViewObject = destView.release();
     contextVk->addGarbage(&destViewObject);
@@ -2474,9 +2474,9 @@ angle::Result UtilsVk::startRenderPass(ContextVk *contextVk,
 {
     ASSERT(aspectFlags == VK_IMAGE_ASPECT_COLOR_BIT ||
            (aspectFlags & (VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT)) != 0);
-    vk::ImageLayout imageLayout = aspectFlags == VK_IMAGE_ASPECT_COLOR_BIT
-                                      ? vk::ImageLayout::ColorWrite
-                                      : vk::ImageLayout::DepthWriteStencilWrite;
+    vk::ImageAccess imageAccess = aspectFlags == VK_IMAGE_ASPECT_COLOR_BIT
+                                      ? vk::ImageAccess::ColorWrite
+                                      : vk::ImageAccess::DepthWriteStencilWrite;
     vk::Framebuffer framebuffer;
     vk::Framebuffer framebufferHandle;
     vk::RenderPassFramebuffer renderPassFramebuffer;
@@ -2521,13 +2521,13 @@ angle::Result UtilsVk::startRenderPass(ContextVk *contextVk,
 
     if (clearValue == nullptr)
     {
-        renderPassAttachmentOps.initWithLoadStore(vk::kAttachmentIndexZero, imageLayout,
-                                                  imageLayout);
+        renderPassAttachmentOps.initWithLoadStore(vk::kAttachmentIndexZero, imageAccess,
+                                                  imageAccess);
     }
     else
     {
         attachmentClearValue = *clearValue;
-        renderPassAttachmentOps.setLayouts(vk::kAttachmentIndexZero, imageLayout, imageLayout);
+        renderPassAttachmentOps.setLayouts(vk::kAttachmentIndexZero, imageAccess, imageAccess);
         renderPassAttachmentOps.setClearOp(vk::kAttachmentIndexZero);
         renderPassAttachmentOps.setClearStencilOp(vk::kAttachmentIndexZero);
     }
@@ -2768,7 +2768,7 @@ angle::Result UtilsVk::clearImage(ContextVk *contextVk,
     UpdateColorAccess(contextVk, MakeColorBufferMask(0), MakeColorBufferMask(0));
 
     contextVk->onImageRenderPassWrite(dst->toGLLevel(params.dstMip), params.dstLayer, 1,
-                                      VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageLayout::ColorWrite, dst);
+                                      VK_IMAGE_ASPECT_COLOR_BIT, vk::ImageAccess::ColorWrite, dst);
 
     const uint32_t flags = GetImageClearFlags(dstActualFormat, 0, false);
 
@@ -3001,9 +3001,9 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
                                     Function::BlitResolve, &descriptorSet));
 
     // Pick layout consistent with GetImageReadLayout() to avoid unnecessary layout change.
-    vk::ImageLayout srcImagelayout = src->isDepthOrStencil()
-                                         ? vk::ImageLayout::DepthReadStencilReadFragmentShaderRead
-                                         : vk::ImageLayout::FragmentShaderReadOnly;
+    vk::ImageAccess srcImagelayout = src->isDepthOrStencil()
+                                         ? vk::ImageAccess::DepthReadStencilReadFragmentShaderRead
+                                         : vk::ImageAccess::FragmentShaderReadOnly;
     contextVk->onImageRenderPassRead(src->getAspectFlags(), srcImagelayout, src);
 
     UpdateColorAccess(contextVk, framebuffer->getState().getColorAttachmentsMask(),
@@ -3467,9 +3467,9 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
 
     // Change source layout inside render pass.
     contextVk->onImageRenderPassRead(VK_IMAGE_ASPECT_COLOR_BIT,
-                                     vk::ImageLayout::FragmentShaderReadOnly, src);
+                                     vk::ImageAccess::FragmentShaderReadOnly, src);
     contextVk->onImageRenderPassWrite(params.dstMip, params.dstLayer, 1, VK_IMAGE_ASPECT_COLOR_BIT,
-                                      vk::ImageLayout::ColorWrite, dst);
+                                      vk::ImageAccess::ColorWrite, dst);
 
     VkDescriptorImageInfo imageInfo = {};
     imageInfo.imageView             = srcView->getHandle();
@@ -4380,7 +4380,7 @@ angle::Result UtilsVk::generateMipmapWithDraw(ContextVk *contextVk,
                                        VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, barrier);
 
     // Update image's layout related state to shader read only optimal layout
-    image->setCurrentImageLayout(renderer, vk::ImageLayout::FragmentShaderReadOnly);
+    image->setCurrentImageAccess(renderer, vk::ImageAccess::FragmentShaderReadOnly);
 
     return angle::Result::Continue;
 }
@@ -4709,9 +4709,9 @@ angle::Result UtilsVk::drawOverlay(ContextVk *contextVk,
     commandBufferHelper->retainResource(textWidgetsBuffer);
     commandBufferHelper->retainResource(graphWidgetsBuffer);
     contextVk->onImageRenderPassRead(VK_IMAGE_ASPECT_COLOR_BIT,
-                                     vk::ImageLayout::FragmentShaderReadOnly, font);
+                                     vk::ImageAccess::FragmentShaderReadOnly, font);
     contextVk->onImageRenderPassWrite(gl::LevelIndex(0), 0, 1, VK_IMAGE_ASPECT_COLOR_BIT,
-                                      vk::ImageLayout::ColorWrite, dst);
+                                      vk::ImageAccess::ColorWrite, dst);
 
     VkDescriptorImageInfo imageInfo = {};
     imageInfo.imageView             = fontView->getHandle();

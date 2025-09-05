@@ -97,10 +97,10 @@ using StagingBufferOffsetArray = std::array<VkDeviceSize, 2>;
 //
 // Note that, while generally dstStage for the to-transition and srcStage for the from-transition
 // are the same, they may occasionally be BOTTOM_OF_PIPE and TOP_OF_PIPE respectively.
-enum class ImageLayout
+enum class ImageAccess
 {
     Undefined = 0,
-    // Framebuffer attachment layouts are placed first, so they can fit in fewer bits in
+    // Framebuffer attachment accesses are placed first, so they can fit in fewer bits in
     // PackedAttachmentOpsDesc.
 
     // Color (Write):
@@ -146,7 +146,7 @@ enum class ImageLayout
 
     Present,
     SharedPresent,
-    // The rest of the layouts.
+    // The rest of the accesses.
     ExternalPreInitialized,
     ExternalShadersReadOnly,
     ExternalShadersWrite,
@@ -176,11 +176,11 @@ enum class ImageLayout
 
 VkImageCreateFlags GetImageCreateFlags(gl::TextureType textureType);
 
-ImageLayout GetImageLayoutFromGLImageLayout(ErrorContext *context, GLenum layout);
+ImageAccess GetImageAccessFromGLImageLayout(ErrorContext *context, GLenum layout);
 
-GLenum ConvertImageLayoutToGLImageLayout(ImageLayout imageLayout);
+GLenum ConvertImageAccessToGLImageLayout(ImageAccess imageAccess);
 
-VkImageLayout ConvertImageLayoutToVkImageLayout(ImageLayout imageLayout);
+VkImageLayout ConvertImageAccessToVkImageLayout(ImageAccess imageAccess);
 
 class ImageHelper;
 
@@ -871,7 +871,7 @@ PipelineStage GetPipelineStage(gl::ShaderType stage);
 
 struct ImageMemoryBarrierData
 {
-    // The Vk layout corresponding to the ImageLayout key.
+    // The Vk layout corresponding to the ImageAccess key.
     VkImageLayout layout;
 
     // The stage in which the image is used (or Bottom/Top if not using any specific stage).  Unless
@@ -896,11 +896,11 @@ struct ImageMemoryBarrierData
     // The pipeline stage flags group that used for heuristic.
     PipelineStageGroup pipelineStageGroup;
 };
-using ImageLayoutToMemoryBarrierDataMap = angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData>;
+using ImageAccessToMemoryBarrierDataMap = angle::PackedEnumMap<ImageAccess, ImageMemoryBarrierData>;
 
-// Initialize ImageLayout to ImageMemoryBarrierData mapping table.
+// Initialize ImageAccess to ImageMemoryBarrierData mapping table.
 void InitializeImageLayoutAndMemoryBarrierDataMap(
-    ImageLayoutToMemoryBarrierDataMap *mapping,
+    ImageAccessToMemoryBarrierDataMap *mapping,
     VkPipelineStageFlags supportedVulkanPipelineStageMask);
 
 // This wraps data and API for vkCmdPipelineBarrier call
@@ -1611,7 +1611,7 @@ class CommandBufferHelperCommon : angle::NonCopyable
 
     void imageReadImpl(Context *context,
                        VkImageAspectFlags aspectFlags,
-                       ImageLayout imageLayout,
+                       ImageAccess imageAccess,
                        BarrierType barrierType,
                        ImageHelper *image);
 
@@ -1620,14 +1620,14 @@ class CommandBufferHelperCommon : angle::NonCopyable
                         uint32_t layerStart,
                         uint32_t layerCount,
                         VkImageAspectFlags aspectFlags,
-                        ImageLayout imageLayout,
+                        ImageAccess imageAccess,
                         BarrierType barrierType,
                         ImageHelper *image);
 
     void updateImageLayoutAndBarrier(Context *context,
                                      ImageHelper *image,
                                      VkImageAspectFlags aspectFlags,
-                                     ImageLayout imageLayout,
+                                     ImageAccess imageAccess,
                                      BarrierType barrierType);
 
     void addCommandDiagnosticsCommon(std::ostringstream *out);
@@ -1702,7 +1702,7 @@ class OutsideRenderPassCommandBufferHelper final : public CommandBufferHelperCom
 
     void imageRead(Context *context,
                    VkImageAspectFlags aspectFlags,
-                   ImageLayout imageLayout,
+                   ImageAccess imageAccess,
                    ImageHelper *image);
 
     void imageWrite(Context *context,
@@ -1710,7 +1710,7 @@ class OutsideRenderPassCommandBufferHelper final : public CommandBufferHelperCom
                     uint32_t layerStart,
                     uint32_t layerCount,
                     VkImageAspectFlags aspectFlags,
-                    ImageLayout imageLayout,
+                    ImageAccess imageAccess,
                     ImageHelper *image);
 
     // Update image with this command buffer's queueSerial.
@@ -1935,7 +1935,7 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
 
     void imageRead(ContextVk *contextVk,
                    VkImageAspectFlags aspectFlags,
-                   ImageLayout imageLayout,
+                   ImageAccess imageAccess,
                    ImageHelper *image);
 
     void imageWrite(ContextVk *contextVk,
@@ -1943,7 +1943,7 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
                     uint32_t layerStart,
                     uint32_t layerCount,
                     VkImageAspectFlags aspectFlags,
-                    ImageLayout imageLayout,
+                    ImageAccess imageAccess,
                     ImageHelper *image);
 
     void colorImagesDraw(gl::LevelIndex level,
@@ -2194,7 +2194,7 @@ class RenderPassCommandBufferHelper final : public CommandBufferHelperCommon
     // rendering, the barrier is recorded after the pass without needing an outside render pass
     // command buffer.
     ImageHelper *mImageOptimizeForPresent;
-    ImageLayout mImageOptimizeForPresentOriginalLayout;
+    ImageAccess mImageOptimizeForPresentOriginalLayout;
 
     // The list of VkEvents copied from RefCountedEventArray
     EventArray mVkEventArray;
@@ -2312,7 +2312,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                GLint samples,
                                VkImageUsageFlags usage,
                                VkImageCreateFlags additionalCreateFlags,
-                               ImageLayout initialLayout,
+                               ImageAccess initialAccess,
                                const void *externalImageCreateInfo,
                                gl::LevelIndex firstLevel,
                                uint32_t mipLevels,
@@ -2566,8 +2566,8 @@ class ImageHelper final : public Resource, public angle::Subject
         return mImageSerial;
     }
 
-    void setCurrentImageLayout(Renderer *renderer, ImageLayout newLayout);
-    ImageLayout getCurrentImageLayout() const { return mCurrentLayout; }
+    void setCurrentImageAccess(Renderer *renderer, ImageAccess newAccess);
+    ImageAccess getCurrentImageAccess() const { return mCurrentAccess; }
     VkImageLayout getCurrentLayout() const;
     const QueueSerial &getBarrierQueueSerial() const { return mBarrierQueueSerial; }
 
@@ -2770,7 +2770,7 @@ class ImageHelper final : public Resource, public angle::Subject
 
     void recordWriteBarrier(Context *context,
                             VkImageAspectFlags aspectMask,
-                            ImageLayout newLayout,
+                            ImageAccess newAccess,
                             gl::LevelIndex levelStart,
                             uint32_t levelCount,
                             uint32_t layerStart,
@@ -2779,7 +2779,7 @@ class ImageHelper final : public Resource, public angle::Subject
 
     void recordReadSubresourceBarrier(Context *context,
                                       VkImageAspectFlags aspectMask,
-                                      ImageLayout newLayout,
+                                      ImageAccess newAccess,
                                       gl::LevelIndex levelStart,
                                       uint32_t levelCount,
                                       uint32_t layerStart,
@@ -2787,22 +2787,22 @@ class ImageHelper final : public Resource, public angle::Subject
                                       OutsideRenderPassCommandBufferHelper *commands);
 
     void recordWriteBarrierOneOff(Renderer *renderer,
-                                  ImageLayout newLayout,
+                                  ImageAccess newAccess,
                                   PrimaryCommandBuffer *commandBuffer,
                                   VkSemaphore *acquireNextImageSemaphoreOut)
     {
-        recordBarrierOneOffImpl(renderer, getAspectFlags(), newLayout, mCurrentDeviceQueueIndex,
+        recordBarrierOneOffImpl(renderer, getAspectFlags(), newAccess, mCurrentDeviceQueueIndex,
                                 commandBuffer, acquireNextImageSemaphoreOut);
     }
 
     // This function can be used to prevent issuing redundant layout transition commands.
-    bool isReadBarrierNecessary(Renderer *renderer, ImageLayout newLayout) const;
-    bool isReadSubresourceBarrierNecessary(ImageLayout newLayout,
+    bool isReadBarrierNecessary(Renderer *renderer, ImageAccess newAccess) const;
+    bool isReadSubresourceBarrierNecessary(ImageAccess newAccess,
                                            gl::LevelIndex levelStart,
                                            uint32_t levelCount,
                                            uint32_t layerStart,
                                            uint32_t layerCount) const;
-    bool isWriteBarrierNecessary(ImageLayout newLayout,
+    bool isWriteBarrierNecessary(ImageAccess newAccess,
                                  gl::LevelIndex levelStart,
                                  uint32_t levelCount,
                                  uint32_t layerStart,
@@ -2810,7 +2810,7 @@ class ImageHelper final : public Resource, public angle::Subject
 
     void recordReadBarrier(Context *context,
                            VkImageAspectFlags aspectMask,
-                           ImageLayout newLayout,
+                           ImageAccess newAccess,
                            OutsideRenderPassCommandBufferHelper *commands);
 
     bool isQueueFamilyChangeNeccesary(DeviceQueueIndex newDeviceQueueIndex) const
@@ -2820,14 +2820,14 @@ class ImageHelper final : public Resource, public angle::Subject
 
     void changeLayoutAndQueue(Context *context,
                               VkImageAspectFlags aspectMask,
-                              ImageLayout newLayout,
+                              ImageAccess newAccess,
                               DeviceQueueIndex newDeviceQueueIndex,
                               OutsideRenderPassCommandBuffer *commandBuffer);
 
     // Returns true if barrier has been generated
     void updateLayoutAndBarrier(Context *context,
                                 VkImageAspectFlags aspectMask,
-                                ImageLayout newLayout,
+                                ImageAccess newAccess,
                                 BarrierType barrierType,
                                 const QueueSerial &queueSerial,
                                 PipelineBarrierArray *pipelineBarriers,
@@ -2839,13 +2839,13 @@ class ImageHelper final : public Resource, public angle::Subject
     void acquireFromExternal(Context *context,
                              DeviceQueueIndex externalQueueIndex,
                              DeviceQueueIndex newDeviceQueueIndex,
-                             ImageLayout currentLayout,
+                             ImageAccess currentAccess,
                              OutsideRenderPassCommandBuffer *commandBuffer);
 
     // Performs an ownership transfer to an external instance or API.
     void releaseToExternal(Context *context,
                            DeviceQueueIndex externalQueueIndex,
-                           ImageLayout desiredLayout,
+                           ImageAccess expectedAccess,
                            OutsideRenderPassCommandBuffer *commandBuffer);
 
     // Returns true if the image is owned by an external API or instance.
@@ -3175,7 +3175,7 @@ class ImageHelper final : public Resource, public angle::Subject
 
     void initImageMemoryBarrierStruct(Renderer *renderer,
                                       VkImageAspectFlags aspectMask,
-                                      ImageLayout newLayout,
+                                      ImageAccess newAccess,
                                       uint32_t newQueueFamilyIndex,
                                       VkImageMemoryBarrier *imageMemoryBarrier) const;
 
@@ -3183,7 +3183,7 @@ class ImageHelper final : public Resource, public angle::Subject
     template <typename CommandBufferT>
     void barrierImpl(Renderer *renderer,
                      VkImageAspectFlags aspectMask,
-                     ImageLayout newLayout,
+                     ImageAccess newAccess,
                      DeviceQueueIndex newDeviceQueueIndex,
                      RefCountedEventCollector *eventCollector,
                      CommandBufferT *commandBuffer,
@@ -3192,7 +3192,7 @@ class ImageHelper final : public Resource, public angle::Subject
     template <typename CommandBufferT>
     void recordBarrierImpl(Context *context,
                            VkImageAspectFlags aspectMask,
-                           ImageLayout newLayout,
+                           ImageAccess newAccess,
                            DeviceQueueIndex newDeviceQueueIndex,
                            RefCountedEventCollector *eventCollector,
                            CommandBufferT *commandBuffer,
@@ -3200,7 +3200,7 @@ class ImageHelper final : public Resource, public angle::Subject
 
     void recordBarrierOneOffImpl(Renderer *renderer,
                                  VkImageAspectFlags aspectMask,
-                                 ImageLayout newLayout,
+                                 ImageAccess newAccess,
                                  DeviceQueueIndex newDeviceQueueIndex,
                                  PrimaryCommandBuffer *commandBuffer,
                                  VkSemaphore *acquireNextImageSemaphoreOut);
@@ -3434,10 +3434,10 @@ class ImageHelper final : public Resource, public angle::Subject
     ImageSerial mImageSerial;
 
     // Current state.
-    ImageLayout mCurrentLayout;
+    ImageAccess mCurrentAccess;
     DeviceQueueIndex mCurrentDeviceQueueIndex;
     // For optimizing transition between different shader readonly layouts
-    ImageLayout mLastNonShaderReadOnlyLayout;
+    ImageAccess mLastNonShaderReadOnlyAccess;
     VkPipelineStageFlags mCurrentShaderReadStageMask;
     // Track how it is being used by current open renderpass.
     RenderPassUsageFlags mRenderPassUsageFlags;
@@ -4072,7 +4072,7 @@ struct CommandResourceImage
 {
     ImageHelper *image;
     VkImageAspectFlags aspectFlags;
-    ImageLayout imageLayout;
+    ImageAccess imageAccess;
 };
 struct CommandResourceImageSubresource
 {
@@ -4121,7 +4121,7 @@ class CommandResources : angle::NonCopyable
 
     void onImageTransferRead(VkImageAspectFlags aspectFlags, ImageHelper *image)
     {
-        onImageRead(aspectFlags, ImageLayout::TransferSrc, image);
+        onImageRead(aspectFlags, ImageAccess::TransferSrc, image);
     }
     void onImageTransferWrite(gl::LevelIndex levelStart,
                               uint32_t levelCount,
@@ -4131,7 +4131,7 @@ class CommandResources : angle::NonCopyable
                               ImageHelper *image)
     {
         onImageWrite(levelStart, levelCount, layerStart, layerCount, aspectFlags,
-                     ImageLayout::TransferDst, image);
+                     ImageAccess::TransferDst, image);
     }
     void onImageSelfCopy(gl::LevelIndex readLevelStart,
                          uint32_t readLevelCount,
@@ -4145,9 +4145,9 @@ class CommandResources : angle::NonCopyable
                          ImageHelper *image)
     {
         onImageReadSubresources(readLevelStart, readLevelCount, readLayerStart, readLayerCount,
-                                aspectFlags, ImageLayout::TransferSrcDst, image);
+                                aspectFlags, ImageAccess::TransferSrcDst, image);
         onImageWrite(writeLevelStart, writeLevelCount, writeLayerStart, writeLayerCount,
-                     aspectFlags, ImageLayout::TransferSrcDst, image);
+                     aspectFlags, ImageAccess::TransferSrcDst, image);
     }
     void onImageDrawMipmapGenerationWrite(gl::LevelIndex levelStart,
                                           uint32_t levelCount,
@@ -4157,11 +4157,11 @@ class CommandResources : angle::NonCopyable
                                           ImageHelper *image)
     {
         onImageWrite(levelStart, levelCount, layerStart, layerCount, aspectFlags,
-                     ImageLayout::ColorWrite, image);
+                     ImageAccess::ColorWrite, image);
     }
     void onImageComputeShaderRead(VkImageAspectFlags aspectFlags, ImageHelper *image)
     {
-        onImageRead(aspectFlags, ImageLayout::ComputeShaderReadOnly, image);
+        onImageRead(aspectFlags, ImageAccess::ComputeShaderReadOnly, image);
     }
     void onImageComputeMipmapGenerationRead(gl::LevelIndex levelStart,
                                             uint32_t levelCount,
@@ -4171,7 +4171,7 @@ class CommandResources : angle::NonCopyable
                                             ImageHelper *image)
     {
         onImageReadSubresources(levelStart, levelCount, layerStart, layerCount, aspectFlags,
-                                ImageLayout::ComputeShaderWrite, image);
+                                ImageAccess::ComputeShaderWrite, image);
     }
     void onImageComputeShaderWrite(gl::LevelIndex levelStart,
                                    uint32_t levelCount,
@@ -4181,7 +4181,7 @@ class CommandResources : angle::NonCopyable
                                    ImageHelper *image)
     {
         onImageWrite(levelStart, levelCount, layerStart, layerCount, aspectFlags,
-                     ImageLayout::ComputeShaderWrite, image);
+                     ImageAccess::ComputeShaderWrite, image);
     }
     void onImageTransferDstAndComputeWrite(gl::LevelIndex levelStart,
                                            uint32_t levelCount,
@@ -4191,7 +4191,7 @@ class CommandResources : angle::NonCopyable
                                            ImageHelper *image)
     {
         onImageWrite(levelStart, levelCount, layerStart, layerCount, aspectFlags,
-                     ImageLayout::TransferDstAndComputeWrite, image);
+                     ImageAccess::TransferDstAndComputeWrite, image);
     }
     void onExternalAcquireRelease(ImageHelper *image) { onResourceAccess(image); }
     void onQueryAccess(QueryHelper *query) { onResourceAccess(query); }
@@ -4227,13 +4227,13 @@ class CommandResources : angle::NonCopyable
                        PipelineStage writeStage,
                        BufferHelper *buffer);
 
-    void onImageRead(VkImageAspectFlags aspectFlags, ImageLayout imageLayout, ImageHelper *image);
+    void onImageRead(VkImageAspectFlags aspectFlags, ImageAccess imageAccess, ImageHelper *image);
     void onImageWrite(gl::LevelIndex levelStart,
                       uint32_t levelCount,
                       uint32_t layerStart,
                       uint32_t layerCount,
                       VkImageAspectFlags aspectFlags,
-                      ImageLayout imageLayout,
+                      ImageAccess imageAccess,
                       ImageHelper *image);
 
     void onImageReadSubresources(gl::LevelIndex levelStart,
@@ -4241,7 +4241,7 @@ class CommandResources : angle::NonCopyable
                                  uint32_t layerStart,
                                  uint32_t layerCount,
                                  VkImageAspectFlags aspectFlags,
-                                 ImageLayout imageLayout,
+                                 ImageAccess imageAccess,
                                  ImageHelper *image);
 
     void onResourceAccess(Resource *resource);

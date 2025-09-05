@@ -168,21 +168,21 @@ GLenum DefaultGLErrorCode(VkResult result)
     }
 }
 
-constexpr gl::ShaderMap<vk::ImageLayout> kShaderReadOnlyImageLayouts = {
-    {gl::ShaderType::Vertex, vk::ImageLayout::VertexShaderReadOnly},
-    {gl::ShaderType::TessControl, vk::ImageLayout::PreFragmentShadersReadOnly},
-    {gl::ShaderType::TessEvaluation, vk::ImageLayout::PreFragmentShadersReadOnly},
-    {gl::ShaderType::Geometry, vk::ImageLayout::PreFragmentShadersReadOnly},
-    {gl::ShaderType::Fragment, vk::ImageLayout::FragmentShaderReadOnly},
-    {gl::ShaderType::Compute, vk::ImageLayout::ComputeShaderReadOnly}};
+constexpr gl::ShaderMap<vk::ImageAccess> kShaderReadOnlyImageAccess = {
+    {gl::ShaderType::Vertex, vk::ImageAccess::VertexShaderReadOnly},
+    {gl::ShaderType::TessControl, vk::ImageAccess::PreFragmentShadersReadOnly},
+    {gl::ShaderType::TessEvaluation, vk::ImageAccess::PreFragmentShadersReadOnly},
+    {gl::ShaderType::Geometry, vk::ImageAccess::PreFragmentShadersReadOnly},
+    {gl::ShaderType::Fragment, vk::ImageAccess::FragmentShaderReadOnly},
+    {gl::ShaderType::Compute, vk::ImageAccess::ComputeShaderReadOnly}};
 
-constexpr gl::ShaderMap<vk::ImageLayout> kShaderWriteImageLayouts = {
-    {gl::ShaderType::Vertex, vk::ImageLayout::VertexShaderWrite},
-    {gl::ShaderType::TessControl, vk::ImageLayout::PreFragmentShadersWrite},
-    {gl::ShaderType::TessEvaluation, vk::ImageLayout::PreFragmentShadersWrite},
-    {gl::ShaderType::Geometry, vk::ImageLayout::PreFragmentShadersWrite},
-    {gl::ShaderType::Fragment, vk::ImageLayout::FragmentShaderWrite},
-    {gl::ShaderType::Compute, vk::ImageLayout::ComputeShaderWrite}};
+constexpr gl::ShaderMap<vk::ImageAccess> kShaderWriteImageAccess = {
+    {gl::ShaderType::Vertex, vk::ImageAccess::VertexShaderWrite},
+    {gl::ShaderType::TessControl, vk::ImageAccess::PreFragmentShadersWrite},
+    {gl::ShaderType::TessEvaluation, vk::ImageAccess::PreFragmentShadersWrite},
+    {gl::ShaderType::Geometry, vk::ImageAccess::PreFragmentShadersWrite},
+    {gl::ShaderType::Fragment, vk::ImageAccess::FragmentShaderWrite},
+    {gl::ShaderType::Compute, vk::ImageAccess::ComputeShaderWrite}};
 
 constexpr VkBufferUsageFlags kVertexBufferUsage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 constexpr size_t kDynamicVertexDataSize         = 16 * 1024;
@@ -390,7 +390,7 @@ bool IsStencilSamplerBinding(const gl::ProgramExecutable &executable, size_t tex
     return isStencilTexture;
 }
 
-vk::ImageLayout GetDepthStencilAttachmentImageReadLayout(const vk::ImageHelper &image,
+vk::ImageAccess GetDepthStencilAttachmentImageReadLayout(const vk::ImageHelper &image,
                                                          gl::ShaderType firstShader)
 {
     const bool isDepthTexture =
@@ -413,8 +413,8 @@ vk::ImageLayout GetDepthStencilAttachmentImageReadLayout(const vk::ImageHelper &
     if ((isDepthTexture && !isDepthReadOnlyAttachment) ||
         (isStencilTexture && !isStencilReadOnlyAttachment))
     {
-        return isFS ? vk::ImageLayout::DepthStencilFragmentShaderFeedback
-                    : vk::ImageLayout::DepthStencilAllShadersFeedback;
+        return isFS ? vk::ImageAccess::DepthStencilFragmentShaderFeedback
+                    : vk::ImageAccess::DepthStencilAllShadersFeedback;
     }
 
     if (isDepthReadOnlyAttachment)
@@ -422,14 +422,14 @@ vk::ImageLayout GetDepthStencilAttachmentImageReadLayout(const vk::ImageHelper &
         if (isStencilReadOnlyAttachment)
         {
             // Depth read + stencil read
-            return isFS ? vk::ImageLayout::DepthReadStencilReadFragmentShaderRead
-                        : vk::ImageLayout::DepthReadStencilReadAllShadersRead;
+            return isFS ? vk::ImageAccess::DepthReadStencilReadFragmentShaderRead
+                        : vk::ImageAccess::DepthReadStencilReadAllShadersRead;
         }
         else
         {
             // Depth read + stencil write
-            return isFS ? vk::ImageLayout::DepthReadStencilWriteFragmentShaderDepthRead
-                        : vk::ImageLayout::DepthReadStencilWriteAllShadersDepthRead;
+            return isFS ? vk::ImageAccess::DepthReadStencilWriteFragmentShaderDepthRead
+                        : vk::ImageAccess::DepthReadStencilWriteAllShadersDepthRead;
         }
     }
     else
@@ -437,19 +437,19 @@ vk::ImageLayout GetDepthStencilAttachmentImageReadLayout(const vk::ImageHelper &
         if (isStencilReadOnlyAttachment)
         {
             // Depth write + stencil read
-            return isFS ? vk::ImageLayout::DepthWriteStencilReadFragmentShaderStencilRead
-                        : vk::ImageLayout::DepthWriteStencilReadAllShadersStencilRead;
+            return isFS ? vk::ImageAccess::DepthWriteStencilReadFragmentShaderStencilRead
+                        : vk::ImageAccess::DepthWriteStencilReadAllShadersStencilRead;
         }
         else
         {
             // Depth write + stencil write: This is definitely a feedback loop and is handled above.
             UNREACHABLE();
-            return vk::ImageLayout::DepthStencilAllShadersFeedback;
+            return vk::ImageAccess::DepthStencilAllShadersFeedback;
         }
     }
 }
 
-vk::ImageLayout GetImageReadLayout(TextureVk *textureVk,
+vk::ImageAccess GetImageReadLayout(TextureVk *textureVk,
                                    const gl::ProgramExecutable &executable,
                                    size_t textureUnit,
                                    PipelineType pipelineType)
@@ -460,8 +460,8 @@ vk::ImageLayout GetImageReadLayout(TextureVk *textureVk,
     // we consider this image's layout as writeable.
     if (textureVk->hasBeenBoundAsImage() && executable.hasImages())
     {
-        return pipelineType == PipelineType::Compute ? vk::ImageLayout::ComputeShaderWrite
-                                                     : vk::ImageLayout::AllGraphicsShadersWrite;
+        return pipelineType == PipelineType::Compute ? vk::ImageAccess::ComputeShaderWrite
+                                                     : vk::ImageAccess::AllGraphicsShadersWrite;
     }
 
     gl::ShaderBitSet remainingShaderBits =
@@ -499,8 +499,8 @@ vk::ImageLayout GetImageReadLayout(TextureVk *textureVk,
 
         image.setRenderPassUsageFlag(vk::RenderPassUsage::ColorTextureSampler);
 
-        return isFragmentShaderOnly ? vk::ImageLayout::ColorWriteFragmentShaderFeedback
-                                    : vk::ImageLayout::ColorWriteAllShadersFeedback;
+        return isFragmentShaderOnly ? vk::ImageAccess::ColorWriteFragmentShaderFeedback
+                                    : vk::ImageAccess::ColorWriteAllShadersFeedback;
     }
 
     if (image.isDepthOrStencil())
@@ -510,8 +510,8 @@ vk::ImageLayout GetImageReadLayout(TextureVk *textureVk,
         // split a RenderPass to transition a depth texture from shader-read to read-only.
         // This improves performance in Manhattan. Future optimizations are likely possible
         // here including using specialized barriers without breaking the RenderPass.
-        return isFragmentShaderOnly ? vk::ImageLayout::DepthReadStencilReadFragmentShaderRead
-                                    : vk::ImageLayout::DepthReadStencilReadAllShadersRead;
+        return isFragmentShaderOnly ? vk::ImageAccess::DepthReadStencilReadFragmentShaderRead
+                                    : vk::ImageAccess::DepthReadStencilReadAllShadersRead;
     }
 
     // We barrier against either:
@@ -520,14 +520,14 @@ vk::ImageLayout GetImageReadLayout(TextureVk *textureVk,
     // - Pre-fragment only (vertex, geometry and tessellation together)
     if (remainingShaderBits.any() || firstShader != lastShader)
     {
-        return lastShader == gl::ShaderType::Fragment ? vk::ImageLayout::AllGraphicsShadersReadOnly
-                                                      : vk::ImageLayout::PreFragmentShadersReadOnly;
+        return lastShader == gl::ShaderType::Fragment ? vk::ImageAccess::AllGraphicsShadersReadOnly
+                                                      : vk::ImageAccess::PreFragmentShadersReadOnly;
     }
 
-    return kShaderReadOnlyImageLayouts[firstShader];
+    return kShaderReadOnlyImageAccess[firstShader];
 }
 
-vk::ImageLayout GetImageWriteLayoutAndSubresource(const gl::ImageUnit &imageUnit,
+vk::ImageAccess GetImageWriteAccessAndSubresource(const gl::ImageUnit &imageUnit,
                                                   vk::ImageHelper &image,
                                                   gl::ShaderBitSet shaderStages,
                                                   gl::LevelIndex *levelOut,
@@ -554,11 +554,11 @@ vk::ImageLayout GetImageWriteLayoutAndSubresource(const gl::ImageUnit &imageUnit
     // - Pre-fragment only (vertex, geometry and tessellation together)
     if (shaderStages.any() || firstShader != lastShader)
     {
-        return lastShader == gl::ShaderType::Fragment ? vk::ImageLayout::AllGraphicsShadersWrite
-                                                      : vk::ImageLayout::PreFragmentShadersWrite;
+        return lastShader == gl::ShaderType::Fragment ? vk::ImageAccess::AllGraphicsShadersWrite
+                                                      : vk::ImageAccess::PreFragmentShadersWrite;
     }
 
-    return kShaderWriteImageLayouts[firstShader];
+    return kShaderWriteImageAccess[firstShader];
 }
 
 template <typename CommandBufferT>
@@ -2535,11 +2535,11 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(
         // layers. Therefore we can't verify it has no staged updates right here.
         vk::ImageHelper &image = textureVk->getImage();
 
-        const vk::ImageLayout imageLayout =
+        const vk::ImageAccess imageAccess =
             GetImageReadLayout(textureVk, *executable, textureUnit, pipelineType);
 
         // Ensure the image is in the desired layout
-        commandBufferHelper->imageRead(this, image.getAspectFlags(), imageLayout, &image);
+        commandBufferHelper->imageRead(this, image.getAspectFlags(), imageAccess, &image);
     }
 
     if (executable->hasTextures())
@@ -4609,7 +4609,7 @@ angle::Result ContextVk::optimizeRenderPassForPresent(vk::ImageViewHelper *color
         mRenderPassCommands->addColorResolveAttachment(0, colorImage, resolveImageView->getHandle(),
                                                        gl::LevelIndex(0), 0, 1, {});
         onImageRenderPassWrite(gl::LevelIndex(0), 0, 1, VK_IMAGE_ASPECT_COLOR_BIT,
-                               vk::ImageLayout::ColorWrite, colorImage);
+                               vk::ImageAccess::ColorWrite, colorImage);
 
         // Invalidate the surface.
         // See comment in WindowSurfaceVk::acquireNextSwapchainImage on why this is not done when
@@ -6888,11 +6888,12 @@ angle::Result ContextVk::acquireTextures(const gl::Context *context,
     {
         TextureVk *textureVk   = vk::GetImpl(textureBarrier.texture);
         vk::ImageHelper &image = textureVk->getImage();
-        vk::ImageLayout layout = vk::GetImageLayoutFromGLImageLayout(this, textureBarrier.layout);
+        vk::ImageAccess imageAccess =
+            vk::GetImageAccessFromGLImageLayout(this, textureBarrier.layout);
         // Image should not be accessed while unowned. Emulated formats may have staged updates
         // to clear the image after initialization.
         ASSERT(!image.hasStagedUpdatesInAllocatedLevels() || image.hasEmulatedImageChannels());
-        image.setCurrentImageLayout(getRenderer(), layout);
+        image.setCurrentImageAccess(getRenderer(), imageAccess);
     }
     return angle::Result::Continue;
 }
@@ -6910,7 +6911,7 @@ angle::Result ContextVk::releaseTextures(const gl::Context *context,
         ANGLE_TRY(onImageReleaseToExternal(image));
 
         textureBarrier.layout =
-            vk::ConvertImageLayoutToGLImageLayout(image.getCurrentImageLayout());
+            vk::ConvertImageAccessToGLImageLayout(image.getCurrentImageAccess());
     }
 
     return flushAndSubmitCommands(nullptr, nullptr,
@@ -7677,10 +7678,10 @@ angle::Result ContextVk::updateActiveImages(CommandBufferHelperT *commandBufferH
         gl::LevelIndex level;
         uint32_t layerStart               = 0;
         uint32_t layerCount               = 0;
-        const vk::ImageLayout imageLayout = GetImageWriteLayoutAndSubresource(
+        const vk::ImageAccess imageAccess = GetImageWriteAccessAndSubresource(
             imageUnit, *image, shaderStages, &level, &layerStart, &layerCount);
 
-        if (imageLayout == image->getCurrentImageLayout() && !memoryBarrierRequired)
+        if (imageAccess == image->getCurrentImageAccess() && !memoryBarrierRequired)
         {
             // GL spec does not require implementation to do WAW barriers for shader image access.
             // If there is no layout change, we skip the barrier here unless there is prior
@@ -7690,7 +7691,7 @@ angle::Result ContextVk::updateActiveImages(CommandBufferHelperT *commandBufferH
         else
         {
             commandBufferHelper->imageWrite(this, level, layerStart, layerCount,
-                                            image->getAspectFlags(), imageLayout, image);
+                                            image->getAspectFlags(), imageAccess, image);
         }
     }
 
@@ -8831,7 +8832,7 @@ angle::Result ContextVk::onResourceAccess(const vk::CommandResources &resources)
         vk::ImageHelper *image = readImage.image;
         ASSERT(!isRenderPassStartedAndUsesImage(*image));
 
-        readImage.image->recordReadBarrier(this, readImage.aspectFlags, readImage.imageLayout,
+        readImage.image->recordReadBarrier(this, readImage.aspectFlags, readImage.imageAccess,
                                            mOutsideRenderPassCommands);
         mOutsideRenderPassCommands->retainImage(image);
     }
@@ -8843,7 +8844,7 @@ angle::Result ContextVk::onResourceAccess(const vk::CommandResources &resources)
         ASSERT(!isRenderPassStartedAndUsesImage(*image));
 
         image->recordReadSubresourceBarrier(
-            this, readImageSubresource.image.aspectFlags, readImageSubresource.image.imageLayout,
+            this, readImageSubresource.image.aspectFlags, readImageSubresource.image.imageAccess,
             readImageSubresource.levelStart, readImageSubresource.levelCount,
             readImageSubresource.layerStart, readImageSubresource.layerCount,
             mOutsideRenderPassCommands);
@@ -8855,7 +8856,7 @@ angle::Result ContextVk::onResourceAccess(const vk::CommandResources &resources)
         vk::ImageHelper *image = writeImage.image.image;
         ASSERT(!isRenderPassStartedAndUsesImage(*image));
 
-        image->recordWriteBarrier(this, writeImage.image.aspectFlags, writeImage.image.imageLayout,
+        image->recordWriteBarrier(this, writeImage.image.aspectFlags, writeImage.image.imageAccess,
                                   writeImage.levelStart, writeImage.levelCount,
                                   writeImage.layerStart, writeImage.layerCount,
                                   mOutsideRenderPassCommands);

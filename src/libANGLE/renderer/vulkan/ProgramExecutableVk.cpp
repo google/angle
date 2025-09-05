@@ -336,14 +336,14 @@ angle::Result UpdateFullTexturesDescriptorSet(vk::ErrorContext *context,
                 const gl::SamplerState &samplerState =
                     sampler ? sampler->getSamplerState() : textureVk->getState().getSamplerState();
 
-                vk::ImageLayout imageLayout    = textureVk->getImage().getCurrentImageLayout();
+                vk::ImageAccess imageAccess    = textureVk->getImage().getCurrentImageAccess();
                 const vk::ImageView &imageView = textureVk->getReadImageView(
                     samplerState.getSRGBDecode(), samplerUniform.isTexelFetchStaticUse(),
                     isSamplerExternalY2Y);
 
                 VkDescriptorImageInfo *imageInfo = const_cast<VkDescriptorImageInfo *>(
                     &writeSet.pImageInfo[arrayElement + samplerUniform.getOuterArrayOffset()]);
-                imageInfo->imageLayout = ConvertImageLayoutToVkImageLayout(imageLayout);
+                imageInfo->imageLayout = ConvertImageAccessToVkImageLayout(imageAccess);
                 imageInfo->imageView   = imageView.getHandle();
                 imageInfo->sampler     = samplerHelper.get().getHandle();
             }

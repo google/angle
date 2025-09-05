@@ -465,7 +465,7 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
 
     ANGLE_TRY(mImage->initExternal(displayVk, textureType, vkExtents,
                                    vkFormat->getIntendedFormatID(), actualRenderableFormatID, 1,
-                                   usage, imageCreateFlags, vk::ImageLayout::ExternalPreInitialized,
+                                   usage, imageCreateFlags, vk::ImageAccess::ExternalPreInitialized,
                                    imageCreateInfoPNext, gl::LevelIndex(0), mLevelCount, layerCount,
                                    robustInitEnabled, hasProtectedContent(), conversionDesc,
                                    nullptr));
