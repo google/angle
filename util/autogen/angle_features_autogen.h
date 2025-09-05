@@ -427,6 +427,7 @@ enum class Feature
     SupportsTimelineSemaphore,
     SupportsTimestampSurfaceAttribute,
     SupportsTransformFeedbackExtension,
+    SupportsUnifiedImageLayouts,
     SupportsUniformBufferStandardLayout,
     SupportsVertexInputDynamicState,
     SupportsYUVSamplerConversion,

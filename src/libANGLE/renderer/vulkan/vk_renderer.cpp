@@ -2764,6 +2764,7 @@ angle::Result Renderer::initializeMemoryAllocator(vk::ErrorContext *context)
 // - VK_EXT_device_fault                               deviceFault (feature),
 //                                                     deviceFaultVendorBinary (feature)
 // - VK_EXT_astc_decode_mode                           decodeModeSharedExponent (feature)
+// - VK_KHR_unified_image_layouts                      unifiedImageLayouts (feature)
 // - VK_EXT_global_priority_query                      globalPriorityQuery (feature)
 // - VK_EXT_external_memory_host                       minImportedHostPointerAlignment (property)
 //
@@ -2935,6 +2936,11 @@ void Renderer::appendDeviceExtensionFeaturesNotPromoted(
     if (ExtensionFound(VK_KHR_DYNAMIC_RENDERING_LOCAL_READ_EXTENSION_NAME, deviceExtensionNames))
     {
         vk::AddToPNextChain(deviceFeatures, &mDynamicRenderingLocalReadFeatures);
+    }
+
+    if (ExtensionFound(VK_KHR_UNIFIED_IMAGE_LAYOUTS_EXTENSION_NAME, deviceExtensionNames))
+    {
+        vk::AddToPNextChain(deviceFeatures, &mUnifiedImageLayoutsFeatures);
     }
 
     if (ExtensionFound(VK_EXT_BLEND_OPERATION_ADVANCED_EXTENSION_NAME, deviceExtensionNames))
@@ -3375,6 +3381,10 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
     mPhysicalDeviceAstcDecodeFeatures.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ASTC_DECODE_FEATURES_EXT;
 
+    mUnifiedImageLayoutsFeatures = {};
+    mUnifiedImageLayoutsFeatures.sType =
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_UNIFIED_IMAGE_LAYOUTS_FEATURES_KHR;
+
     mShaderIntegerDotProductFeatures = {};
     mShaderIntegerDotProductFeatures.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SHADER_INTEGER_DOT_PRODUCT_FEATURES;
@@ -3479,6 +3489,7 @@ void Renderer::queryDeviceExtensionFeatures(const vk::ExtensionNameList &deviceE
     mMaintenance3Properties.pNext                     = nullptr;
     mFaultFeatures.pNext                              = nullptr;
     mPhysicalDeviceAstcDecodeFeatures.pNext           = nullptr;
+    mUnifiedImageLayoutsFeatures.pNext                = nullptr;
     mShaderIntegerDotProductFeatures.pNext            = nullptr;
     mShaderIntegerDotProductProperties.pNext          = nullptr;
     mPhysicalDeviceGlobalPriorityQueryFeatures.pNext  = nullptr;
@@ -3795,6 +3806,12 @@ void Renderer::enableDeviceExtensionsNotPromoted(const vk::ExtensionNameList &de
     {
         mEnabledDeviceExtensions.push_back(VK_KHR_DYNAMIC_RENDERING_LOCAL_READ_EXTENSION_NAME);
         vk::AddToPNextChain(&mEnabledFeatures, &mDynamicRenderingLocalReadFeatures);
+    }
+
+    if (getFeatures().supportsUnifiedImageLayouts.enabled)
+    {
+        mEnabledDeviceExtensions.push_back(VK_KHR_UNIFIED_IMAGE_LAYOUTS_EXTENSION_NAME);
+        vk::AddToPNextChain(&mEnabledFeatures, &mUnifiedImageLayoutsFeatures);
     }
 
     if (getFeatures().supportsImageCompressionControl.enabled)
@@ -6396,6 +6413,9 @@ void Renderer::initFeatures(const vk::ExtensionNameList &deviceExtensionNames,
     ANGLE_FEATURE_CONDITION(&mFeatures, convertLowpAndMediumpFloatUniformsTo16Bits,
                             m16BitStorageFeatures.uniformAndStorageBuffer16BitAccess == VK_TRUE &&
                                 !(IsWindows() && isIntel) && false);
+
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsUnifiedImageLayouts,
+                            mUnifiedImageLayoutsFeatures.unifiedImageLayouts == VK_TRUE);
 
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsGlobalPriority,

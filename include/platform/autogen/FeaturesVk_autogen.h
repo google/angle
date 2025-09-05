@@ -1532,6 +1532,12 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
+    FeatureInfo supportsUnifiedImageLayouts = {
+        "supportsUnifiedImageLayouts",
+        FeatureCategory::VulkanFeatures,
+        &members,
+    };
+
     FeatureInfo supportsGlobalPriority = {
         "supportsGlobalPriority",
         FeatureCategory::VulkanFeatures,

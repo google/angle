@@ -2016,6 +2016,14 @@
             "issue": "http://anglebug.com/405795981"
         },
         {
+            "name": "supports_unified_image_layouts",
+            "category": "Features",
+            "description": [
+                "VkDevice supports VK_KHR_unified_image_layouts"
+            ],
+            "issue": "https://anglebug.com/422982681"
+        },
+        {
             "name": "supports_global_priority",
             "category": "Features",
             "description": [
