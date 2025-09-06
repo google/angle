@@ -1457,19 +1457,21 @@ ANGLE_INLINE void SecondaryCommandBuffer::bindVertexBuffers2(uint32_t firstBindi
                                                              const VkDeviceSize *strides)
 {
     ASSERT(firstBinding == 0);
-    ASSERT(sizes == nullptr);
     uint8_t *writePtr;
     const ArrayParamSize buffersSize      = calculateArrayParameterSize<VkBuffer>(bindingCount);
     const ArrayParamSize offsetsSize      = calculateArrayParameterSize<VkDeviceSize>(bindingCount);
+    const ArrayParamSize sizesSize        = offsetsSize;
     const ArrayParamSize stridesSize      = offsetsSize;
     BindVertexBuffers2Params *paramStruct = initCommand<BindVertexBuffers2Params>(
         CommandID::BindVertexBuffers2,
-        buffersSize.allocateBytes + offsetsSize.allocateBytes + stridesSize.allocateBytes,
+        buffersSize.allocateBytes + offsetsSize.allocateBytes + sizesSize.allocateBytes +
+            stridesSize.allocateBytes,
         &writePtr);
     // Copy params
     paramStruct->bindingCount = bindingCount;
     writePtr                  = storeArrayParameter(writePtr, buffers, buffersSize);
     writePtr                  = storeArrayParameter(writePtr, offsets, offsetsSize);
+    writePtr                  = storeArrayParameter(writePtr, sizes, sizesSize);
     storeArrayParameter(writePtr, strides, stridesSize);
 }
 

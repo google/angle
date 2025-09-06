@@ -103,6 +103,11 @@ class VertexArrayVk : public VertexArrayImpl
         return mCurrentArrayBufferOffsets;
     }
 
+    const gl::AttribArray<VkDeviceSize> &getCurrentArrayBufferSizes() const
+    {
+        return mCurrentArrayBufferSizes;
+    }
+
     const gl::AttribArray<VkVertexInputBindingDescription2EXT> &getVertexInputBindingDesc() const
     {
         return mVertexInputBindingDesc;
@@ -227,6 +232,7 @@ class VertexArrayVk : public VertexArrayImpl
 
     gl::AttribArray<VkBuffer> mCurrentArrayBufferHandles;
     gl::AttribArray<VkDeviceSize> mCurrentArrayBufferOffsets;
+    gl::AttribArray<VkDeviceSize> mCurrentArrayBufferSizes;
     gl::AttribArray<vk::BufferHelper *> mCurrentArrayBuffers;
     // Tracks BufferSerial of mCurrentArrayBuffers since they are always valid to access.
     gl::AttribArray<vk::BufferSerial> mCurrentArrayBufferSerial;
