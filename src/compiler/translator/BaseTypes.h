@@ -1382,7 +1382,7 @@ struct TLayoutQualifier
 
     // EXT_shader_framebuffer_fetch layout qualifiers.
     int inputAttachmentIndex;
-    bool noncoherent;
+    bool noncoherent;  // Also used by ANGLE_shader_pixel_local_storage.
 
     // KHR_blend_equation_advanced layout qualifiers.
     AdvancedBlendEquations advancedBlendEquations;
