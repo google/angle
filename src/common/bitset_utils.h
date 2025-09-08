@@ -700,10 +700,14 @@ class BitSetArray final
     constexpr value_type bits(size_t index) const;
     constexpr static size_t ArraySize() { return kArraySize; }
 
-    constexpr uint64_t bits() const
+    template <size_t M = N>
+    constexpr auto bits() const
+        -> std::enable_if_t<priv::kDefaultBitSetSize == 32 && M <= 64, uint64_t>
     {
-        static_assert(N < 64);
-        static_assert(priv::kDefaultBitSetSize == 32);
+        // This function should only exist when the default bitset size is 32 and N is not more
+        // than 64. When kDefaultBitSetSize is 32, BitSetArray is used for N > 32. This means N is
+        // in (32, 64], and kArraySize will be 2.
+        static_assert(kArraySize == 2);
         uint64_t result = mBaseBitSetArray[1].bits();
         return (result << 32) | mBaseBitSetArray[0].bits();
     }
