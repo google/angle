@@ -3676,13 +3676,7 @@ angle::Result Renderer11::packPixels(const gl::Context *context,
     const auto &formatInfo = textureHelper.getFormatSet();
     ASSERT(formatInfo.format().glInternalFormat != GL_NONE);
 
-    // Since B5G6R5 is being used instead of R5G6B5 in D3D11, the reading function should take this
-    // into account and use the RGB565-related functions to read/write pixels.
-    const angle::Format &packPixelFormat = (formatInfo.internalFormat == GL_RGB565 &&
-                                            formatInfo.formatID == angle::FormatID::B5G6R5_UNORM)
-                                               ? angle::Format::Get(angle::FormatID::R5G6B5_UNORM)
-                                               : formatInfo.format();
-    PackPixels(params, packPixelFormat, inputPitch, source, pixelsOut);
+    PackPixels(params, formatInfo.format(), inputPitch, source, pixelsOut);
 
     mDeviceContext->Unmap(readResource, 0);
 
