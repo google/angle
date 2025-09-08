@@ -270,6 +270,7 @@ vars = {
   'checkout_angle_restricted_trace_harry_potter_hogwarts_mystery': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_hay_day': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_hearthstone': 'checkout_angle_restricted_traces',
+  'checkout_angle_restricted_trace_hero_wars': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_higgs_domino_island': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_hill_climb_racing': 'checkout_angle_restricted_traces',
   'checkout_angle_restricted_trace_homescapes': 'checkout_angle_restricted_traces',
@@ -2529,6 +2530,16 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_trace_hearthstone',
+  },
+  'src/tests/restricted_traces/hero_wars': {
+      'packages': [
+        {
+            'package': 'angle/traces/hero_wars',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_trace_hero_wars',
   },
   'src/tests/restricted_traces/higgs_domino_island': {
       'packages': [
