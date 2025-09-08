@@ -330,7 +330,8 @@ class ContextWgpu : public ContextImpl
     void invalidateDriverUniforms();
 
     void ensureCommandEncoderCreated();
-    webgpu::CommandEncoderHandle &getCurrentCommandEncoder();
+    angle::Result getCurrentCommandEncoder(webgpu::RenderPassClosureReason closureReason,
+                                           webgpu::CommandEncoderHandle *outHandle);
 
     // Driver uniforms are managed by ContextWgpu.
     webgpu::BindGroupLayoutHandle getDriverUniformBindGroupLayout()

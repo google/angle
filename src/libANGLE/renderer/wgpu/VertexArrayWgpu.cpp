@@ -397,10 +397,9 @@ angle::Result VertexArrayWgpu::syncClientArrays(
     {
         ANGLE_TRY(stagingBuffer.unmap());
     }
-    ANGLE_TRY(contextWgpu->flush(webgpu::RenderPassClosureReason::VertexArrayStreaming));
-
-    contextWgpu->ensureCommandEncoderCreated();
-    webgpu::CommandEncoderHandle &commandEncoder = contextWgpu->getCurrentCommandEncoder();
+    webgpu::CommandEncoderHandle commandEncoder;
+    ANGLE_TRY(contextWgpu->getCurrentCommandEncoder(
+        webgpu::RenderPassClosureReason::VertexArrayStreaming, &commandEncoder));
 
     for (const BufferCopy &copy : stagingUploads)
     {

@@ -213,8 +213,6 @@ angle::Result FramebufferWgpu::readPixels(const gl::Context *context,
 
     ANGLE_TRY(flushDeferredClears(contextWgpu));
 
-    ANGLE_TRY(contextWgpu->flush(webgpu::RenderPassClosureReason::GLReadPixels));
-
     GLuint outputSkipBytes = 0;
     PackPixelsParams params;
     ANGLE_TRY(webgpu::ImageHelper::getReadPixelsParams(contextWgpu, pack, packBuffer, format, type,

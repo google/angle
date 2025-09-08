@@ -234,9 +234,16 @@ void ContextWgpu::ensureCommandEncoderCreated()
     }
 }
 
-webgpu::CommandEncoderHandle &ContextWgpu::getCurrentCommandEncoder()
+angle::Result ContextWgpu::getCurrentCommandEncoder(webgpu::RenderPassClosureReason closureReason,
+                                                    webgpu::CommandEncoderHandle *outHandle)
 {
-    return mCurrentCommandEncoder;
+    if (hasActiveRenderPass())
+    {
+        ANGLE_TRY(endRenderPass(closureReason));
+    }
+    ensureCommandEncoderCreated();
+    *outHandle = mCurrentCommandEncoder;
+    return angle::Result::Continue;
 }
 
 angle::Result ContextWgpu::finish(const gl::Context *context)

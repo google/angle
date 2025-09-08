@@ -137,13 +137,8 @@ angle::Result ImageHelper::flushSingleLevelUpdates(ContextWgpu *contextWgpu,
 
     std::optional<CommandEncoderHandle> encoder;
     auto ensureEncoder = [&]() -> angle::Result {
-        if (contextWgpu->hasActiveRenderPass())
-        {
-            ANGLE_TRY(
-                contextWgpu->endRenderPass(webgpu::RenderPassClosureReason::CopyBufferToTexture));
-        }
-        contextWgpu->ensureCommandEncoderCreated();
-        encoder.emplace(contextWgpu->getCurrentCommandEncoder());
+        ANGLE_TRY(contextWgpu->getCurrentCommandEncoder(
+            webgpu::RenderPassClosureReason::CopyBufferToTexture, &encoder.emplace()));
         return angle::Result::Continue;
     };
 
@@ -390,9 +385,9 @@ angle::Result ImageHelper::CopyImage(ContextWgpu *contextWgpu,
                              static_cast<uint32_t>(sourceBox.height),
                              static_cast<uint32_t>(sourceBox.depth)};
 
-    ANGLE_TRY(contextWgpu->flush(webgpu::RenderPassClosureReason::CopyTextureToTexture));
-    contextWgpu->ensureCommandEncoderCreated();
-    CommandEncoderHandle encoder = contextWgpu->getCurrentCommandEncoder();
+    webgpu::CommandEncoderHandle encoder;
+    ANGLE_TRY(contextWgpu->getCurrentCommandEncoder(
+        webgpu::RenderPassClosureReason::CopyTextureToTexture, &encoder));
     mProcTable->commandEncoderCopyTextureToTexture(encoder.get(), &src, &dst, &copySize);
 
     return angle::Result::Continue;
@@ -438,10 +433,9 @@ angle::Result ImageHelper::readPixels(rx::ContextWgpu *contextWgpu,
     }
 
     DeviceHandle device = contextWgpu->getDisplay()->getDevice();
-
-    CommandEncoderHandle encoder = CommandEncoderHandle::Acquire(
-        mProcTable, mProcTable->deviceCreateCommandEncoder(device.get(), nullptr));
-    QueueHandle queue = contextWgpu->getDisplay()->getQueue();
+    webgpu::CommandEncoderHandle encoder;
+    ANGLE_TRY(contextWgpu->getCurrentCommandEncoder(
+        webgpu::RenderPassClosureReason::CopyBufferToTexture, &encoder));
 
     const angle::Format &actualFormat = angle::Format::Get(mActualFormatID);
     uint32_t textureBytesPerRow =
@@ -473,10 +467,7 @@ angle::Result ImageHelper::readPixels(rx::ContextWgpu *contextWgpu,
     mProcTable->commandEncoderCopyTextureToBuffer(encoder.get(), &copyTexture, &copyBuffer,
                                                   &copySize);
 
-    CommandBufferHandle commandBuffer = CommandBufferHandle::Acquire(
-        mProcTable, mProcTable->commandEncoderFinish(encoder.get(), nullptr));
-    mProcTable->queueSubmit(queue.get(), 1, &commandBuffer.get());
-    encoder = nullptr;
+    ANGLE_TRY(contextWgpu->flush(webgpu::RenderPassClosureReason::GLReadPixels));
 
     ANGLE_TRY(bufferHelper.mapImmediate(contextWgpu, WGPUMapMode_Read, 0, allocationSize));
     const uint8_t *readPixelBuffer = bufferHelper.getMapReadPointer(0, allocationSize);
@@ -788,8 +779,8 @@ angle::Result BufferHelper::readDataImmediate(ContextWgpu *context,
         WGPUBufferUsage_CopyDst | WGPUBufferUsage_MapRead, webgpu::MapAtCreation::No));
 
     // Copy the source buffer to staging and flush the commands
-    context->ensureCommandEncoderCreated();
-    webgpu::CommandEncoderHandle &commandEncoder = context->getCurrentCommandEncoder();
+    webgpu::CommandEncoderHandle commandEncoder;
+    ANGLE_TRY(context->getCurrentCommandEncoder(reason, &commandEncoder));
     size_t safeCopyOffset   = rx::roundDownPow2(offset, webgpu::kBufferCopyToBufferAlignment);
     size_t offsetAdjustment = offset - safeCopyOffset;
     size_t copySize = roundUpPow2(size + offsetAdjustment, webgpu::kBufferCopyToBufferAlignment);
