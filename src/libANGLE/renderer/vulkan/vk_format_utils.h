@@ -36,7 +36,7 @@ class Renderer;
 // VkFormat values in range [0, kNumVkFormats) are used as indices in various tables.
 constexpr uint32_t kNumVkFormats = 185;
 
-enum ImageAccess
+enum ImageFormatSupport
 {
     SampleOnly,
     Renderable,
@@ -85,9 +85,9 @@ class Format final : private angle::NonCopyable
     const angle::Format &getIntendedFormat() const { return angle::Format::Get(mIntendedFormatID); }
 
     // The actual Image format is used to implement the front-end format for Texture/Renderbuffers.
-    const angle::Format &getActualImageFormat(ImageAccess access) const
+    const angle::Format &getActualImageFormat(ImageFormatSupport support) const
     {
-        return angle::Format::Get(getActualImageFormatID(access));
+        return angle::Format::Get(getActualImageFormatID(support));
     }
 
     angle::FormatID getActualRenderableImageFormatID() const
@@ -103,20 +103,20 @@ class Format final : private angle::NonCopyable
         return GetVkFormatFromFormatID(renderer, mActualRenderableImageFormatID);
     }
 
-    angle::FormatID getActualImageFormatID(ImageAccess access) const
+    angle::FormatID getActualImageFormatID(ImageFormatSupport support) const
     {
-        return ImageAccess::Renderable == access ? mActualRenderableImageFormatID
-                                                 : mActualSampleOnlyImageFormatID;
+        return support == ImageFormatSupport::Renderable ? mActualRenderableImageFormatID
+                                                         : mActualSampleOnlyImageFormatID;
     }
-    VkFormat getActualImageVkFormat(const Renderer *renderer, ImageAccess access) const
+    VkFormat getActualImageVkFormat(const Renderer *renderer, ImageFormatSupport support) const
     {
-        return GetVkFormatFromFormatID(renderer, getActualImageFormatID(access));
+        return GetVkFormatFromFormatID(renderer, getActualImageFormatID(support));
     }
 
-    LoadImageFunctionInfo getTextureLoadFunction(ImageAccess access, GLenum type) const
+    LoadImageFunctionInfo getTextureLoadFunction(ImageFormatSupport support, GLenum type) const
     {
-        return ImageAccess::Renderable == access ? mRenderableTextureLoadFunctions(type)
-                                                 : mTextureLoadFunctions(type);
+        return support == ImageFormatSupport::Renderable ? mRenderableTextureLoadFunctions(type)
+                                                         : mTextureLoadFunctions(type);
     }
 
     // The actual Buffer format is used to implement the front-end format for Buffers.  This format

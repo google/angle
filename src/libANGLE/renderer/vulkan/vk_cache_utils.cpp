@@ -5519,9 +5519,9 @@ void YcbcrConversionDesc::update(Renderer *renderer,
     SetBitField(mIsExternalFormat, (externalFormat) ? 1 : 0);
     SetBitField(mLinearFilterSupported,
                 linearFilterSupported == YcbcrLinearFilterSupport::Supported);
-    mExternalOrVkFormat =
-        (externalFormat) ? externalFormat
-                         : vkFormat.getActualImageVkFormat(renderer, vk::ImageAccess::SampleOnly);
+    mExternalOrVkFormat = (externalFormat) ? externalFormat
+                                           : vkFormat.getActualImageVkFormat(
+                                                 renderer, vk::ImageFormatSupport::SampleOnly);
 
     updateChromaFilter(renderer, chromaFilter);
 

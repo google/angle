@@ -2642,7 +2642,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                     GLenum type,
                                     const gl::InternalFormat &formatInfo,
                                     const Format &vkFormat,
-                                    ImageAccess access,
+                                    ImageFormatSupport formatSupport,
                                     const uint8_t *data);
 
     angle::Result stageSubresourceUpdateImpl(ContextVk *contextVk,
@@ -2654,7 +2654,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                              GLenum type,
                                              const uint8_t *pixels,
                                              const Format &vkFormat,
-                                             ImageAccess access,
+                                             ImageFormatSupport formatSupport,
                                              const GLuint inputRowPitch,
                                              const GLuint inputDepthPitch,
                                              const GLuint inputSkipBytes,
@@ -2670,7 +2670,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                          GLenum type,
                                          const uint8_t *pixels,
                                          const Format &vkFormat,
-                                         ImageAccess access,
+                                         ImageFormatSupport formatSupport,
                                          ApplyImageUpdate applyUpdate,
                                          bool *updateAppliedImmediatelyOut);
 
@@ -2688,7 +2688,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                                         const gl::Offset &dstOffset,
                                                         const gl::Extents &dstExtent,
                                                         const gl::InternalFormat &formatInfo,
-                                                        ImageAccess access,
+                                                        ImageFormatSupport formatSupport,
                                                         FramebufferVk *framebufferVk);
 
     void stageSubresourceUpdateFromImage(RefCounted<ImageHelper> *image,

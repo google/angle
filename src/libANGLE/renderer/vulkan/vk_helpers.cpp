@@ -8959,7 +8959,7 @@ angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
                                                       GLenum type,
                                                       const uint8_t *pixels,
                                                       const Format &vkFormat,
-                                                      ImageAccess access,
+                                                      ImageFormatSupport formatSupport,
                                                       const GLuint inputRowPitch,
                                                       const GLuint inputDepthPitch,
                                                       const GLuint inputSkipBytes,
@@ -8968,7 +8968,7 @@ angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
 {
     *updateAppliedImmediatelyOut = false;
 
-    const angle::Format &storageFormat = vkFormat.getActualImageFormat(access);
+    const angle::Format &storageFormat = vkFormat.getActualImageFormat(formatSupport);
 
     size_t outputRowPitch;
     size_t outputDepthPitch;
@@ -8977,7 +8977,7 @@ angle::Result ImageHelper::stageSubresourceUpdateImpl(ContextVk *contextVk,
     uint32_t bufferImageHeight;
     size_t allocationSize;
 
-    LoadImageFunctionInfo loadFunctionInfo = vkFormat.getTextureLoadFunction(access, type);
+    LoadImageFunctionInfo loadFunctionInfo = vkFormat.getTextureLoadFunction(formatSupport, type);
     LoadImageFunction stencilLoadFunction  = nullptr;
 
     bool useComputeTransCoding = false;
@@ -9788,12 +9788,12 @@ angle::Result ImageHelper::stagePartialClear(ContextVk *contextVk,
                                              GLenum type,
                                              const gl::InternalFormat &formatInfo,
                                              const Format &vkFormat,
-                                             ImageAccess access,
+                                             ImageFormatSupport formatSupport,
                                              const uint8_t *data)
 {
     // If the input data pointer is null, the texture is filled with zeros.
     const angle::Format &intendedFormat = vkFormat.getIntendedFormat();
-    const angle::Format &actualFormat   = vkFormat.getActualImageFormat(access);
+    const angle::Format &actualFormat   = vkFormat.getActualImageFormat(formatSupport);
     auto intendedPixelSize              = static_cast<uint32_t>(intendedFormat.pixelBytes);
     auto actualPixelSize                = static_cast<uint32_t>(actualFormat.pixelBytes);
 
@@ -9806,7 +9806,7 @@ angle::Result ImageHelper::stagePartialClear(ContextVk *contextVk,
     // The appropriate loading function is used to take the original value as a single pixel and
     // convert it into the format actually used for this image.
     std::vector<uint8_t> actualData(actualPixelSize, 0);
-    LoadImageFunctionInfo loadFunctionInfo = vkFormat.getTextureLoadFunction(access, type);
+    LoadImageFunctionInfo loadFunctionInfo = vkFormat.getTextureLoadFunction(formatSupport, type);
 
     bool stencilOnly = formatInfo.sizedInternalFormat == GL_STENCIL_INDEX8;
     if (stencilOnly)
@@ -9874,7 +9874,7 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
                                                   GLenum type,
                                                   const uint8_t *pixels,
                                                   const Format &vkFormat,
-                                                  ImageAccess access,
+                                                  ImageFormatSupport formatSupport,
                                                   ApplyImageUpdate applyUpdate,
                                                   bool *updateAppliedImmediatelyOut)
 {
@@ -9884,9 +9884,10 @@ angle::Result ImageHelper::stageSubresourceUpdate(ContextVk *contextVk,
     ANGLE_TRY(calculateBufferInfo(contextVk, glExtents, formatInfo, unpack, type, index.usesTex3D(),
                                   &inputRowPitch, &inputDepthPitch, &inputSkipBytes));
 
-    ANGLE_TRY(stageSubresourceUpdateImpl(
-        contextVk, index, glExtents, offset, formatInfo, unpack, type, pixels, vkFormat, access,
-        inputRowPitch, inputDepthPitch, inputSkipBytes, applyUpdate, updateAppliedImmediatelyOut));
+    ANGLE_TRY(stageSubresourceUpdateImpl(contextVk, index, glExtents, offset, formatInfo, unpack,
+                                         type, pixels, vkFormat, formatSupport, inputRowPitch,
+                                         inputDepthPitch, inputSkipBytes, applyUpdate,
+                                         updateAppliedImmediatelyOut));
 
     return angle::Result::Continue;
 }
@@ -9938,7 +9939,7 @@ angle::Result ImageHelper::stageSubresourceUpdateFromFramebuffer(
     const gl::Offset &dstOffset,
     const gl::Extents &dstExtent,
     const gl::InternalFormat &formatInfo,
-    ImageAccess access,
+    ImageFormatSupport formatSupport,
     FramebufferVk *framebufferVk)
 {
     ContextVk *contextVk = GetImpl(context);
@@ -9963,8 +9964,9 @@ angle::Result ImageHelper::stageSubresourceUpdateFromFramebuffer(
     Renderer *renderer = contextVk->getRenderer();
 
     const Format &vkFormat             = renderer->getFormat(formatInfo.sizedInternalFormat);
-    const angle::Format &storageFormat = vkFormat.getActualImageFormat(access);
-    LoadImageFunctionInfo loadFunction = vkFormat.getTextureLoadFunction(access, formatInfo.type);
+    const angle::Format &storageFormat = vkFormat.getActualImageFormat(formatSupport);
+    LoadImageFunctionInfo loadFunction =
+        vkFormat.getTextureLoadFunction(formatSupport, formatInfo.type);
 
     size_t outputRowPitch   = storageFormat.pixelBytes * clippedRectangle.width;
     size_t outputDepthPitch = outputRowPitch * clippedRectangle.height;

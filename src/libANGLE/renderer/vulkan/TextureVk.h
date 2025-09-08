@@ -624,7 +624,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     void handleImmutableSamplerTransition(const vk::ImageHelper *previousImage,
                                           const vk::ImageHelper *nextImage);
 
-    vk::ImageAccess getRequiredImageAccess() const { return mRequiredImageAccess; }
+    vk::ImageFormatSupport getRequiredFormatSupport() const { return mRequiredFormatSupport; }
 
     void stageSelfAsSubresourceUpdates(ContextVk *contextVk);
 
@@ -651,7 +651,7 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     UniqueSerial mImageSiblingSerial;
 
     bool mRequiresMutableStorage;
-    vk::ImageAccess mRequiredImageAccess;
+    vk::ImageFormatSupport mRequiredFormatSupport;
     bool mImmutableSamplerDirty;
 
     // Only valid if this texture is an "EGLImage target" and the associated EGL Image was

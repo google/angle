@@ -70,7 +70,7 @@ TEST_P(VulkanFormatTablesTest, TestFormatSupport)
         for (const ParametersToTest params : parametersToTest)
         {
             VkFormat actualImageVkFormat = rx::vk::GetVkFormatFromFormatID(
-                renderer, vkFormat.getActualImageFormatID(rx::vk::ImageAccess::SampleOnly));
+                renderer, vkFormat.getActualImageFormatID(rx::vk::ImageFormatSupport::SampleOnly));
 
             // Now let's verify that against vulkan.
             VkFormatProperties formatProperties;

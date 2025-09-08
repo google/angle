@@ -585,7 +585,8 @@ angle::Result DmaBufImageSiblingVkLinux::initImpl(DisplayVk *displayVk)
     vk::Renderer *renderer = displayVk->getRenderer();
 
     const vk::Format &vkFormat  = renderer->getFormat(mFormat.info->sizedInternalFormat);
-    const angle::Format &format = vkFormat.getActualImageFormat(rx::vk::ImageAccess::SampleOnly);
+    const angle::Format &format =
+        vkFormat.getActualImageFormat(rx::vk::ImageFormatSupport::SampleOnly);
 
     InitResult initResult;
 
