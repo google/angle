@@ -970,6 +970,14 @@ void Capture(std::vector<CallCapture> *setupCalls, CallCapture &&call)
     setupCalls->emplace_back(std::move(call));
 }
 
+void CaptureUpdateCurrentContext(gl::ContextID contextID, std::vector<CallCapture> *callsOut)
+{
+    ParamBuffer paramBuffer;
+    paramBuffer.addValueParam("context", ParamType::TGLuint, contextID.value);
+
+    callsOut->emplace_back("UpdateCurrentContext", std::move(paramBuffer));
+}
+
 void CaptureUpdateCurrentProgram(const CallCapture &call,
                                  int programParamPos,
                                  std::vector<CallCapture> *callsOut)
@@ -981,7 +989,7 @@ void CaptureUpdateCurrentProgram(const CallCapture &call,
     ParamBuffer paramBuffer;
     paramBuffer.addValueParam("program", ParamType::TGLuint, programID.value);
 
-    callsOut->emplace_back("UpdateCurrentProgram", std::move(paramBuffer));
+    callsOut->emplace_back("UpdateCurrentProgramPerContext", std::move(paramBuffer));
 }
 
 bool ProgramNeedsReset(const gl::Context *context,
@@ -1349,6 +1357,13 @@ void WriteCppReplayFunctionWithPartsMultiContext(const gl::ContextID contextID,
             egl::CaptureMakeCurrent(nullptr, true, nullptr, {0}, {0}, cID, EGL_TRUE);
         out << "    ";
         WriteCppReplayForCall(makeCurrentCall, replayWriter, out, header, binaryData,
+                              maxResourceIDBufferSize);
+        out << ";\n";
+        callCount++;
+        std::vector<CallCapture> updateCurrentContextCall;
+        CaptureUpdateCurrentContext(cID, &updateCurrentContextCall);
+        out << "    ";
+        WriteCppReplayForCall(updateCurrentContextCall[0], replayWriter, out, header, binaryData,
                               maxResourceIDBufferSize);
         out << ";\n";
         callCount++;
@@ -3034,7 +3049,6 @@ void CaptureCustomFenceSync(CallCapture &call, std::vector<CallCapture> &callsOu
     params.addValueParam("fenceSync", ParamType::TGLuint64,
                          params.getReturnValue().value.GLuint64Val);
     call.customFunctionName = "FenceSync2";
-    call.isSyncPoint        = true;
     callsOut.emplace_back(std::move(call));
 }
 
@@ -4486,6 +4500,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     auto cap = [setupCalls](CallCapture &&call) { setupCalls->emplace_back(std::move(call)); };
 
     cap(egl::CaptureMakeCurrent(nullptr, true, nullptr, {0}, {0}, context->id(), EGL_TRUE));
+    CaptureUpdateCurrentContext(context->id(), setupCalls);
 
     // Vertex input states. Must happen after buffer data initialization. Do not capture on GLES1.
     if (!context->isGLES1())
@@ -6803,11 +6818,51 @@ void FrameCaptureShared::maybeOverrideEntryPoint(const gl::Context *context,
             CaptureCustomCreateNativeClientbuffer(inCall, outCalls);
             break;
         }
-
         default:
         {
             // Pass the single call through
             outCalls.emplace_back(std::move(inCall));
+            break;
+        }
+    }
+}
+
+// Set flag if call is a syncpoint. Syncpoints are created in support of
+// context call grouping in which calls from side-contexts are group together
+// to minimize context transitions. Sidecontext calls are typically replayed
+// first in a frame followed by calls in the main context. However, some calls
+// affect global state and need to occur in their originally recorded
+// position. An example of this would be if in a side-context a shader was
+// deleted, but in the original trace the delete occurred in the middle of the
+// frame. Replaying all of the side-context calls before the main context calls
+// could result in a race condition for the shader's lifetime.
+// If any of the entrypoints below occurs in a side context:
+//   - the side-context replay will be interrupted
+//   - the context will be switched to the main context to replay those calls
+//   - at the point in the call stream where the side-context call originally
+//     appeared is reached, the context will switch back to the side-context
+//     and those calls will be replayed until the side-context is complete or
+//     until another syncpoint is found.
+// The intent is to ensure entrypoints that affect global state occur in their
+// proper order.
+void FrameCaptureShared::maybeSetSyncPoint(CallCapture &inCall)
+{
+    switch (inCall.entryPoint)
+    {
+        case EntryPoint::GLFenceSync:
+        case EntryPoint::GLCreateShader:
+        case EntryPoint::GLCreateProgram:
+        case EntryPoint::GLCreateShaderProgramv:
+        case EntryPoint::GLAttachShader:
+        case EntryPoint::GLDeleteShader:
+        case EntryPoint::GLDeleteProgram:
+        case EntryPoint::GLLinkProgram:
+        {
+            inCall.isSyncPoint = true;
+            break;
+        }
+        default:
+        {
             break;
         }
     }
@@ -7803,6 +7858,7 @@ void FrameCaptureShared::captureCall(gl::Context *context, CallCapture &&inCall,
 
         size_t j = mFrameCalls.size();
 
+        maybeSetSyncPoint(inCall);
         std::vector<CallCapture> outCalls;
         maybeOverrideEntryPoint(context, inCall, outCalls);
 
@@ -9019,6 +9075,7 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
                 out << "\n";
                 out << "    eglMakeCurrent(NULL, NULL, NULL, gContextMap2[" << context->id()
                     << "]);\n";
+                out << "    UpdateCurrentContext(" << context->id() << ");\n";
             }
 
             out << "}\n";
@@ -9127,7 +9184,8 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
                 {
                     contextChanged = true;
                     bodyStream << "    eglMakeCurrent(NULL, NULL, NULL, gContextMap2["
-                               << contextID.value << "]);\n\n";
+                               << contextID.value << "]);\n";
+                    bodyStream << "    UpdateCurrentContext(" << contextID.value << ");\n\n";
                 }
 
                 // Then append the Reset calls
@@ -9147,6 +9205,7 @@ void FrameCaptureShared::writeMainContextCppReplay(const gl::Context *context,
         {
             resetBodyStream << "    eglMakeCurrent(NULL, NULL, NULL, gContextMap2["
                             << context->id().value << "]);\n";
+            resetBodyStream << "    UpdateCurrentContext(" << context->id().value << ");\n";
         }
 
         // Now that we're back on the main context, reset any additional state

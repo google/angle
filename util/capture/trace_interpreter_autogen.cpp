@@ -6472,10 +6472,21 @@ CallCapture ParseCallCapture(const Token &nameToken,
             ParseParameters<decltype(UpdateClientBufferDataWithOffset)>(paramTokens, strings);
         return CallCapture("UpdateClientBufferDataWithOffset", std::move(params));
     }
+    if (strcmp(nameToken, "UpdateCurrentContext") == 0)
+    {
+        ParamBuffer params = ParseParameters<decltype(UpdateCurrentContext)>(paramTokens, strings);
+        return CallCapture("UpdateCurrentContext", std::move(params));
+    }
     if (strcmp(nameToken, "UpdateCurrentProgram") == 0)
     {
         ParamBuffer params = ParseParameters<decltype(UpdateCurrentProgram)>(paramTokens, strings);
         return CallCapture("UpdateCurrentProgram", std::move(params));
+    }
+    if (strcmp(nameToken, "UpdateCurrentProgramPerContext") == 0)
+    {
+        ParamBuffer params =
+            ParseParameters<decltype(UpdateCurrentProgramPerContext)>(paramTokens, strings);
+        return CallCapture("UpdateCurrentProgramPerContext", std::move(params));
     }
     if (strcmp(nameToken, "UpdateFenceNVID") == 0)
     {
@@ -6837,9 +6848,19 @@ void ReplayCustomFunctionCall(const CallCapture &call, const TraceFunctionMap &c
         DispatchCallCapture(UpdateClientBufferDataWithOffset, captures);
         return;
     }
+    if (call.customFunctionName == "UpdateCurrentContext")
+    {
+        DispatchCallCapture(UpdateCurrentContext, captures);
+        return;
+    }
     if (call.customFunctionName == "UpdateCurrentProgram")
     {
         DispatchCallCapture(UpdateCurrentProgram, captures);
+        return;
+    }
+    if (call.customFunctionName == "UpdateCurrentProgramPerContext")
+    {
+        DispatchCallCapture(UpdateCurrentProgramPerContext, captures);
         return;
     }
     if (call.customFunctionName == "UpdateFenceNVID")

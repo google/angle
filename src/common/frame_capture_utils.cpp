@@ -470,7 +470,7 @@ void WriteParamValueReplay<ParamType::TUniformLocation>(std::ostream &os,
     }
     else
     {
-        os << "gCurrentProgram";
+        os << "gCurrentProgramPerContext[gCurrentContext]";
     }
 
     os << "][" << value.value << "]";

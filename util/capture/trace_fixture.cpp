@@ -36,7 +36,7 @@ void UpdateResourceMapPerContext(GLuint **resourceArray,
     resourceArray[contextId][id] = returnedID;
 }
 
-uint32_t gMaxContexts                  = 0;
+uint32_t gMaxContexts                  = 1;
 angle::TraceCallbacks *gTraceCallbacks = nullptr;
 
 EGLClientBuffer GetClientBuffer(EGLenum target, uintptr_t key)
@@ -76,6 +76,8 @@ constexpr size_t kMaxClientArrays = 16;
 
 GLint **gUniformLocations;
 GLuint gCurrentProgram = 0;
+GLuint gCurrentContext = 0;
+GLuint *gCurrentProgramPerContext;
 
 // TODO(jmadill): Hide from the traces. http://anglebug.com/42266223
 BlockIndexesMap gUniformBlockIndexes;
@@ -116,6 +118,18 @@ void UniformBlockBinding(GLuint program, GLuint uniformblockIndex, GLuint bindin
 void UpdateCurrentProgram(GLuint program)
 {
     gCurrentProgram = program;
+    // gCurrentContext will be zero for legacy traces
+    gCurrentProgramPerContext[0] = program;
+}
+
+void UpdateCurrentContext(GLuint context)
+{
+    gCurrentContext = context;
+}
+
+void UpdateCurrentProgramPerContext(GLuint program)
+{
+    gCurrentProgramPerContext[gCurrentContext] = program;
 }
 
 uint8_t *gBinaryData;
@@ -235,14 +249,6 @@ void InitializeReplay4(const char *binaryDataFileName,
                       maxTransformFeedback, maxVertexArray);
     gEGLSyncMap = AllocateZeroedValues<EGLSync>(maxEGLSyncID);
     gEGLDisplay = eglGetCurrentDisplay();
-
-    gMaxContexts              = maxContext + 1;
-    gFramebufferMapPerContext = new GLuint *[gMaxContexts];
-    memset(gFramebufferMapPerContext, 0, sizeof(GLuint *) * (gMaxContexts));
-    for (uint8_t i = 0; i < gMaxContexts; i++)
-    {
-        gFramebufferMapPerContext[i] = AllocateZeroedValues<GLuint>(maxFramebuffer);
-    }
 }
 
 void InitializeReplay3(const char *binaryDataFileName,
@@ -299,6 +305,7 @@ void InitializeReplay2(const char *binaryDataFileName,
                        uint32_t maxTransformFeedback,
                        uint32_t maxVertexArray)
 {
+    gMaxContexts = maxContext + 1;
     InitializeReplay(binaryDataFileName, maxClientArraySize, readBufferSize, maxBuffer, maxFenceNV,
                      maxFramebuffer, maxMemoryObject, maxProgramPipeline, maxQuery, maxRenderbuffer,
                      maxSampler, maxSemaphore, maxShaderProgram, maxTexture, maxTransformFeedback,
@@ -361,6 +368,14 @@ void InitializeReplay(const char *binaryDataFileName,
     memset(gUniformLocations, 0, sizeof(GLint *) * (maxShaderProgram + 1));
 
     gContextMap[0] = EGL_NO_CONTEXT;
+
+    gCurrentProgramPerContext = new GLuint[gMaxContexts];
+    gFramebufferMapPerContext = new GLuint *[gMaxContexts];
+    memset(gFramebufferMapPerContext, 0, sizeof(GLuint *) * (gMaxContexts));
+    for (uint8_t i = 0; i < gMaxContexts; i++)
+    {
+        gFramebufferMapPerContext[i] = AllocateZeroedValues<GLuint>(maxFramebuffer);
+    }
 }
 
 void FinishReplay()
@@ -395,6 +410,7 @@ void FinishReplay()
         delete[] gFramebufferMapPerContext[i];
     }
     delete[] gFramebufferMapPerContext;
+    delete[] gCurrentProgramPerContext;
 
     if (gFrameCaptureBinaryData)
     {

@@ -3125,7 +3125,7 @@ def format_replay_params(api, command_name, param_text_list, packed_enums, resou
             elif packed_type in resource_id_types:
                 param_access = 'g%sMap[%s]' % (packed_type, param_access)
             elif packed_type == 'UniformLocation':
-                param_access = 'gUniformLocations[gCurrentProgram][%s]' % param_access
+                param_access = 'gUniformLocations[gCurrentProgramPerContext[gCurrentContext]][%s]' % param_access
             elif packed_type == 'egl::Image':
                 param_access = 'gEGLImageMap2[captures[%d].value.GLuintVal]' % i
             elif packed_type == 'egl::Sync':

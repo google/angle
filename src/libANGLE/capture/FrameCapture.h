@@ -1007,6 +1007,7 @@ class FrameCaptureShared final : angle::NonCopyable
 
     void reset();
     void resetMidExecutionCapture(gl::Context *context);
+    void maybeSetSyncPoint(CallCapture &inCall);
     void maybeOverrideEntryPoint(const gl::Context *context,
                                  CallCapture &call,
                                  std::vector<CallCapture> &newCalls);
